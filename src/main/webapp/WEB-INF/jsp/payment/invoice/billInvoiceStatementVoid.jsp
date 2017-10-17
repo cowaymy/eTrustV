@@ -142,143 +142,114 @@ var detailListLayout = [
 	});
 </script>
 <body>
-<form action="" id="invoiceForm" name="invoiceForm">
-	<div id="wrap"><!-- wrap start -->
-	<section id="content"><!-- content start -->
-		<ul class="path">
-		    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		    <li>Invoice/Statement</li>
-            <li>Billing Void Mgmt</li>
-		</ul>
-		<aside class="title_line"><!-- title_line start -->
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Billing Void Mgmt</h2>
-		</aside><!-- title_line end -->
-		<section class="search_table"><!-- search_table start -->
-		<aside class="title_line"><!-- title_line start -->
-            <h3>Invoice/Statement Search For Void</h3>
-        </aside><!-- title_line end -->
-		<table class="type1"><!-- table start -->
-			<caption>table</caption>
-			<colgroup>
-			    <col style="width:190px" />
-			    <col style="width:*" />
-			</colgroup>
-			<tbody>
-			<tr>
-			    <th scope="row">Invoice/Statement No</th>
-			    <td><input type="text" title="" placeholder="" class="" id="statementNo" name="statementNo" />
-			         <p class="btn_sky"><a href="javascript:searchList();" id="btnSearch">Search</a></p>
-			         <p class="btn_sky"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none">Reselect</a></p>
-			    </td>
-			</tr>
-			</tbody>
-        </table><!-- table end -->
-        <%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-        <dl class="link_list">
-            <dt>Link</dt>
-            <dd>
-            <ul class="btns">
-                <li><p class="link_btn"><a href="#">menu1</a></p></li>
-                <li><p class="link_btn"><a href="#">menu2</a></p></li>
-                <li><p class="link_btn"><a href="#">menu3</a></p></li>
-                <li><p class="link_btn"><a href="#">menu4</a></p></li>
-                <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-                <li><p class="link_btn"><a href="#">menu6</a></p></li>
-                <li><p class="link_btn"><a href="#">menu7</a></p></li>
-                <li><p class="link_btn"><a href="#">menu8</a></p></li>
-            </ul>
-            <ul class="btns">
-                <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-                <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-                <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-                <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-                <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-                <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-                <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-                <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-            </ul>
-            <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-            </dd>
-        </dl>
-        </aside> --%><!-- link_btns_wrap end -->
-        <div style="display: none" id="displayVisible">
-        <aside class="title_line"><!-- title_line start -->
-		      <h3>Invoice/Statement Particular Information</h3>
-		</aside><!-- title_line end -->
-		<table class="type1"><!-- table start -->
-			<caption>table</caption>
-			<colgroup>
-			    <col style="width:140px" />
-			    <col style="width:*" />
-			    <col style="width:100px" />
-			    <col style="width:*" />
-			</colgroup>
-			<tbody>
-			<tr>
-			    <th scope="row">Statement No</th>
-			    <td><span id="brNo"></span></td>
-			    <th scope="row">Date</th>
-			    <td><span id="startDt"></span></td>
-			</tr>
-			<tr>
-			    <th scope="row">Customer Name</th>
-			    <td colspan="3"><span id="custName"></span></td>
-			</tr>
-			<tr>
-			    <th scope="row">Contact Person</th>
-			    <td colspan="3"><span id="cntcPerson"></span></td>
-			</tr>
-			<tr>
-			    <th scope="row">Mailing Address</th>
-			    <td colspan="3"><span id="mailAddress"></span></td>
-			</tr>
-			<tr>
-			    <th scope="row"></th>
-			    <td colspan="3"><span id="mailAddress2"></span></td>
-			</tr>
-			<tr>
-			    <th scope="row"></th>
-			    <td colspan="3"><span id="mailAddress3"></span></td>
-			</tr>
-			<tr>
-			    <th scope="row">PostCode</th>
-			    <td><span id="postCode"></span></td>
-			    <th scope="row">State</th>
-			    <td><span id="stateName"></span></td>
-			</tr>
-			</tbody>
-		</table><!-- table end -->
-		<article id="detailGrid_wrap" class="grid_wrap"><!-- grid_wrap start -->
-		</article><!-- grid_wrap end -->
-		<section class="search_table"><!-- search_table start -->
-		
-		<aside class="title_line"><!-- title_line start -->
-		<h3>Billing Void Information</h3>
-		</aside><!-- title_line end -->
-		
-		<table class="type1"><!-- table start -->
-		<caption>table</caption>
-		<colgroup>
-		    <col style="width:190px" />
-		    <col style="width:*" />
-		</colgroup>
-		<tbody>
-		<tr>
-		    <th scope="row">Remark</th>
-		    <td><textarea cols="20" rows="5" id="remark"></textarea></td>
-		</tr>
-		</tbody>
-		</table><!-- table end -->
-		</section><!-- search_table end -->
-		<ul class="center_btns">
-		    <li><p class="btn_blue2"><a href="#" id="btnSave">Save</a></p></li>
-		</ul>
-	</div>
-	</section><!-- content end -->
-	<hr />
-	</section>
-	</div><!-- wrap end -->
-</form>
+	<form action="" id="invoiceForm" name="invoiceForm">
+		<div id="wrap"><!-- wrap start -->
+			<section id="content"><!-- content start -->
+				<ul class="path">
+				    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+				    <li>Invoice/Statement</li>
+		            <li>Billing Void Mgmt</li>
+				</ul>
+				<aside class="title_line"><!-- title_line start -->
+				<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+				<h2>Billing Void Mgmt</h2>
+				</aside><!-- title_line end -->
+				<section class="search_table"><!-- search_table start -->
+				<aside class="title_line"><!-- title_line start -->
+		            <h3>Invoice/Statement Search For Void</h3>
+		        </aside><!-- title_line end -->
+				<table class="type1"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:190px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+					<tr>
+					    <th scope="row">Invoice/Statement No</th>
+					    <td><input type="text" title="" placeholder="" class="" id="statementNo" name="statementNo" />
+					         <p class="btn_sky"><a href="javascript:searchList();" id="btnSearch">Search</a></p>
+					         <p class="btn_sky"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none">Reselect</a></p>
+					    </td>
+					</tr>
+					</tbody>
+		        </table><!-- table end -->
+		        <div style="display: none" id="displayVisible">
+			        <aside class="title_line"><!-- title_line start -->
+					      <h3>Invoice/Statement Particular Information</h3>
+					</aside><!-- title_line end -->
+				    <table class="type1"><!-- table start -->
+						<caption>table</caption>
+						<colgroup>
+						    <col style="width:140px" />
+						    <col style="width:*" />
+						    <col style="width:100px" />
+						    <col style="width:*" />
+						</colgroup>
+					     <tbody>
+							<tr>
+							    <th scope="row">Statement No</th>
+							    <td><span id="brNo"></span></td>
+							    <th scope="row">Date</th>
+							    <td><span id="startDt"></span></td>
+							</tr>
+							<tr>
+							    <th scope="row">Customer Name</th>
+							    <td colspan="3"><span id="custName"></span></td>
+							</tr>
+							<tr>
+							    <th scope="row">Contact Person</th>
+							    <td colspan="3"><span id="cntcPerson"></span></td>
+							</tr>
+							<tr>
+							    <th scope="row">Mailing Address</th>
+							    <td colspan="3"><span id="mailAddress"></span></td>
+							</tr>
+							<tr>
+							    <th scope="row"></th>
+							    <td colspan="3"><span id="mailAddress2"></span></td>
+							</tr>
+							<tr>
+							    <th scope="row"></th>
+							    <td colspan="3"><span id="mailAddress3"></span></td>
+							</tr>
+							<tr>
+							    <th scope="row">PostCode</th>
+							    <td><span id="postCode"></span></td>
+							    <th scope="row">State</th>
+							    <td><span id="stateName"></span></td>
+							</tr>
+					     </tbody>
+				      </table><!-- table end -->
+					  <article id="detailGrid_wrap" class="grid_wrap"><!-- grid_wrap start -->
+					  </article><!-- grid_wrap end -->
+				      <section class="search_table"><!-- search_table start -->
+				
+						<aside class="title_line"><!-- title_line start -->
+						    <h3>Billing Void Information</h3>
+						</aside><!-- title_line end -->
+				
+						<table class="type1"><!-- table start -->
+							<caption>table</caption>
+							<colgroup>
+							    <col style="width:190px" />
+							    <col style="width:*" />
+							</colgroup>
+							<tbody>
+								<tr>
+								    <th scope="row">Remark</th>
+								    <td><textarea cols="20" rows="5" id="remark"></textarea></td>
+								</tr>
+							</tbody>
+						</table><!-- table end -->
+				      </section><!-- search_table end -->
+					  <ul class="center_btns">
+					    <li><p class="btn_blue2"><a href="#" id="btnSave">Save</a></p></li>
+					  </ul>
+			       </div>
+			    </section><!-- content end -->
+			    <hr />
+			</section>
+		</div><!-- wrap end -->
+	 </form>
 </body>

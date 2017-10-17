@@ -115,75 +115,71 @@ function fn_generateInv(){
         <li>Billing</li>
         <li>Invoice/Statement</li>
     </ul>
-    
-    <!-- title_line start -->
-    <aside class="title_line">
-        <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Invoice/Statement</h2>   
-        <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_generateInv()">Generate Inv/Statement</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList();"><span class="search"></span>Search</a></p></li>
-        </ul>    
-    </aside>
-    <!-- title_line end -->
+
+	<!-- title_line start -->
+	<aside class="title_line">
+	    <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
+	    <h2>Invoice/Statement</h2>   
+	    <ul class="right_btns">
+	        <li><p class="btn_blue"><a href="javascript:fn_generateInv()">Generate Inv/Statement</a></p></li>
+	        <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList();"><span class="search"></span>Search</a></p></li>
+	    </ul>    
+	</aside>
+	<!-- title_line end -->
 
 
- <!-- search_table start -->
-    <section class="search_table">
-        <form name="searchForm" id="searchForm"  method="post">
+	<!-- search_table start -->
+	<section class="search_table">
+	    <form name="searchForm" id="searchForm"  method="post">
+	
+	        <table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+					<col style="width:144px" />
+					<col style="width:200px" />
+					<col style="width:144px" />
+					<col style="width:200px" />
+					<col style="width:*" />
+				</colgroup>
+		        <tbody>
+		            <tr>
+		                <th scope="row">Year</th>
+		                <td>
+		                    <select id="year" name="year" class="w100p"></select>
+		                </td>
+		                <th scope="row">Month</th>
+		                <td>
+		                   <select id="month" name="month" class="w100p"></select>
+		                </td>
+		                <td></td>
+		            </tr>
+		         </tbody>
+	       </table>
+	   </form>
+	   <!-- link_btns_wrap start -->
+	   <aside class="link_btns_wrap">
+	       <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+	       <dl class="link_list">
+	           <dt>Link</dt>
+	           <dd>
+	               <!-- <ul class="btns">
+	                   <li><p class="link_btn"><a href="/payment/initMonthlyRawData.do">Monthly Bill Raw Data</a></p></li>
+	               </ul> -->
+	               <ul class="btns">
+	                   <li><p class="link_btn type2"><a href="javascript:fn_view()">View Details</a></p></li>
+	               </ul>
+	               <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+	           </dd>
+	       </dl>
+	   </aside>
+    </section>
 
-            <table class="type1"><!-- table start -->
-                <caption>table</caption>
-                <colgroup>
-                    <col style="width:144px" />
-                    <col style="width:200px" />
-                    <col style="width:144px" />
-                    <col style="width:200px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Year</th>
-                        <td>
-                            <select id="year" name="year" class="w100p"></select>
-                        </td>
-                        <th scope="row">Month</th>
-                        <td>
-                           <select id="month" name="month" class="w100p"></select>
-                        </td>
-                        <td></td>
-                    </tr>
-                 </tbody>
-              </table>
-        </form>
-        <!-- link_btns_wrap start -->
-        <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-            <dl class="link_list">
-                <dt>Link</dt>
-                <dd>
-                    <!-- <ul class="btns">
-                        <li><p class="link_btn"><a href="/payment/initMonthlyRawData.do">Monthly Bill Raw Data</a></p></li>
-                    </ul> -->
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_view()">View Details</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                </dd>
-            </dl>
-        </aside>
-        </section>
-
- <!-- search_result start -->
-<section class="search_result">     
-
-    
-        <!-- link_btns_wrap end -->
-        
-    <!-- grid_wrap start -->
-    <article id="grid_wrap" class="grid_wrap"></article>
-    <!-- grid_wrap end -->
-</section>
+	<!-- search_result start -->
+	<section class="search_result">    
+        <!-- grid_wrap start -->
+		<article id="grid_wrap" class="grid_wrap"></article>
+		<!-- grid_wrap end -->
+	</section>
 </section>
 
 <!-- popup_wrap end -->

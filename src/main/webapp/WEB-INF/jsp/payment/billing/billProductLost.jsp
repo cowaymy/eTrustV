@@ -133,107 +133,107 @@ function fn_clickViewDetail(){
 </script>
 
 <section id="content"><!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Billing</li>
-    <li>Manual Billing</li>
-</ul>
-
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Product Lost Fee</h2>
-</aside><!-- title_line end -->
-
-
-<section class="search_table"><!-- search_table start -->
-<form action="#" id="billingForm" name="billingForm" method="post">
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:170px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Selected Order No.</th>
-    <td>
-    <input type="hidden" id="orderId" name="orderId" />
-    <input type="text" id="orderNo" name="orderNo" title="" placeholder="" class="readonly" readonly/>
-    <p class="btn_sky"><a href="javascript:fn_orderSearch();">Search</a></p>
-    <p class="btn_sky"><a href="javascript:fn_clickViewDetail();">View Details</a></p>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h3>Penalty Bill Info</h3>
-</aside><!-- title_line end -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:170px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Penalty Type</th>
-    <td>
-    <select>
-        <option value="">Product Lost</option>
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Product Price</th>
-    <td>
-    <input type="hidden" id="price" name="price" title="" placeholder="" class="readonly" readonly/>
-    <input type="text" id="price1" title="" placeholder="" class="readonly" readonly/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Total Outstanding</th>
-    <td>
-    <input type="hidden" id="outstanding" name="outstanding" title="" placeholder="" class="readonly" readonly/>
-    <input type="text" id="outstanding1" title="" placeholder="" class="readonly" readonly/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Bill Month</th>
-    <td>
-    <input type="hidden" id="month" name="month" title="" placeholder="" class="readonly" readonly/>
-    <input type="text" id="month1" title="" placeholder="" class="readonly" readonly/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Loss Fee</th>
-    <td>
-    <input type="hidden" id="lossFee" name="lossFee" title="" placeholder="" class="readonly" readonly/>
-    <input type="text" id="lossFee1" title="" placeholder="" class="readonly" readonly/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Remark</th>
-    <td>
-    <textarea id="remark" name="remark" cols="20" rows="5" placeholder=""></textarea>
-    </td>
-</tr>
-<tr>
-    <td colspan="2">
-        <p><span class="red_text">Note:  Please proceed OCR registration after bill generate.</span></p>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_createBills();">Create Bills</a></p></li>
-</ul>
-</form>
-</section><!-- search_table end -->
- <!-- grid_wrap start -->
-    <article id="grid_wrap" class="grid_wrap"></article>
- <!-- grid_wrap end -->
+	<ul class="path">
+	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+	    <li>Billing</li>
+	    <li>Manual Billing</li>
+	</ul>
+	
+	<aside class="title_line"><!-- title_line start -->
+		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<h2>Product Lost Fee</h2>
+	</aside><!-- title_line end -->
+	
+	
+	<section class="search_table"><!-- search_table start -->
+		<form action="#" id="billingForm" name="billingForm" method="post">
+		
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:170px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Selected Order No.</th>
+					    <td>
+					    <input type="hidden" id="orderId" name="orderId" />
+					    <input type="text" id="orderNo" name="orderNo" title="" placeholder="" class="readonly" readonly/>
+					    <p class="btn_sky"><a href="javascript:fn_orderSearch();">Search</a></p>
+					    <p class="btn_sky"><a href="javascript:fn_clickViewDetail();">View Details</a></p>
+					    </td>
+					</tr>
+					</tbody>
+					</table><!-- table end -->
+					
+					<aside class="title_line"><!-- title_line start -->
+					<h3>Penalty Bill Info</h3>
+					</aside><!-- title_line end -->
+					
+					<table class="type1"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:170px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+					<tr>
+					    <th scope="row">Penalty Type</th>
+					    <td>
+						    <select>
+						        <option value="">Product Lost</option>
+						    </select>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Product Price</th>
+					    <td>
+						    <input type="hidden" id="price" name="price" title="" placeholder="" class="readonly" readonly/>
+						    <input type="text" id="price1" title="" placeholder="" class="readonly" readonly/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Total Outstanding</th>
+					    <td>
+						    <input type="hidden" id="outstanding" name="outstanding" title="" placeholder="" class="readonly" readonly/>
+						    <input type="text" id="outstanding1" title="" placeholder="" class="readonly" readonly/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Bill Month</th>
+					    <td>
+						    <input type="hidden" id="month" name="month" title="" placeholder="" class="readonly" readonly/>
+						    <input type="text" id="month1" title="" placeholder="" class="readonly" readonly/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Loss Fee</th>
+					    <td>
+						    <input type="hidden" id="lossFee" name="lossFee" title="" placeholder="" class="readonly" readonly/>
+						    <input type="text" id="lossFee1" title="" placeholder="" class="readonly" readonly/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Remark</th>
+					    <td>
+					       <textarea id="remark" name="remark" cols="20" rows="5" placeholder=""></textarea>
+					    </td>
+					</tr>
+					<tr>
+					    <td colspan="2">
+					        <p><span class="red_text">Note:  Please proceed OCR registration after bill generate.</span></p>
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+		
+		<ul class="center_btns">
+		    <li><p class="btn_blue2 big"><a href="javascript:fn_createBills();">Create Bills</a></p></li>
+		</ul>
+		</form>
+	</section><!-- search_table end -->
+	 <!-- grid_wrap start -->
+	    <article id="grid_wrap" class="grid_wrap"></article>
+	 <!-- grid_wrap end -->
 </section><!-- content end -->

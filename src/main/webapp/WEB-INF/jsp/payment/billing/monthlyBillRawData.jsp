@@ -64,7 +64,7 @@ function fn_generateClick(){
  <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
-        <input type="hidden" name="taskId" id="taskId" value="${taskId }" />
+             <input type="hidden" name="taskId" id="taskId" value="${taskId }" />
              <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>

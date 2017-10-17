@@ -201,29 +201,29 @@ function fn_doSave(){
 </script>
 
 <!-- content start -->
-<section id="content">
-    <ul class="path">
-        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Billing</li>
-        <li>Invoice/Statement Purchase Order</li>
-    </ul>
-    
-    <!-- title_line start -->
-    <aside class="title_line">
-        <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Invoice/Statement Purchase Order</h2>   
-        <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_orderInfo();"><span class="search"></span>Search</a></p></li>
-        </ul>    
-    </aside>
-    <!-- title_line end -->
+  <section id="content">
+   <ul class="path">
+       <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+       <li>Billing</li>
+       <li>Invoice/Statement Purchase Order</li>
+   </ul>
+  
+   <!-- title_line start -->
+   <aside class="title_line">
+       <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
+       <h2>Invoice/Statement Purchase Order</h2>   
+       <ul class="right_btns">
+           <li><p class="btn_blue"><a href="javascript:fn_orderInfo();"><span class="search"></span>Search</a></p></li>
+       </ul>    
+   </aside>
+   <!-- title_line end -->
 
 
- <!-- search_table start -->
-    <section class="search_table">
-        <form name="searchForm" id="searchForm"  method="post">
-            <input type="hidden" id="poNo" name="poNo" />
-            <table class="type1"><!-- table start -->
+<!-- search_table start -->
+ <section class="search_table">
+     <form name="searchForm" id="searchForm"  method="post">
+         <input type="hidden" id="poNo" name="poNo" />
+         <table class="type1"><!-- table start -->
 			<caption>table</caption>
 			<colgroup>
 			    <col style="width:110px" />
@@ -244,84 +244,81 @@ function fn_doSave(){
 			    </td>
 			</tr>
 			</tbody>
-			</table><!-- table end -->
-        </form>
-        <!-- link_btns_wrap start -->
-        <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-            <dl class="link_list">
-                <dt>Link</dt>
-                <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_addEntry()">Add New Entry</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                </dd>
-            </dl>
-        </aside>
-        <!-- link_btns_wrap end -->
-        </section>
+		</table><!-- table end -->
+     </form>
+     <!-- link_btns_wrap start -->
+     <aside class="link_btns_wrap">
+         <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+         <dl class="link_list">
+             <dt>Link</dt>
+             <dd>
+                 <ul class="btns">
+                     <li><p class="link_btn type2"><a href="javascript:fn_addEntry()">Add New Entry</a></p></li>
+                 </ul>
+                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+             </dd>
+         </dl>
+     </aside>
+     <!-- link_btns_wrap end -->
+    </section>
 
- <!-- search_result start -->
-<section class="search_result">     
-
-    
-        
-    <!-- grid_wrap start -->
-    <article id="grid_wrap" class="grid_wrap"></article>
-    <!-- grid_wrap end -->
-</section>
+    <!-- search_result start -->
+    <section class="search_result">     
+  <!-- grid_wrap start -->
+  <article id="grid_wrap" class="grid_wrap"></article>
+  <!-- grid_wrap end -->
+    </section>
 </section>
 
-<div id="newEntry" class="popup_wrap size_mid" style="display:none;"><!-- popup_wrap start -->
+ <div id="newEntry" class="popup_wrap size_mid" style="display:none;"><!-- popup_wrap start -->
 
-<header class="pop_header"><!-- pop_header start -->
-<h1>INVOICE/STATEMENT P/O MAINTANENCE</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="" onclick="javascript:fn_hidePopup();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
+     <header class="pop_header"><!-- pop_header start -->
+         <h1>INVOICE/STATEMENT P/O MAINTANENCE</h1>
+         <ul class="right_opt">
+             <li><p class="btn_blue2"><a href="" onclick="javascript:fn_hidePopup();">CLOSE</a></p></li>
+         </ul>
+     </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
-<form id="newEntryForm" name="newEntryForm">
-	<table class="type1"><!-- table start -->
-	<caption>table</caption>
-	<colgroup>
-	    <col style="width:140px" />
-	    <col style="width:*" />
-	    <col style="width:180px" />
-	    <col style="width:*" />
-	</colgroup>
-	<tbody>
-	<tr>
-	    <th scope="row">Period</th>
-	    <td colspan="3">
-	        <div class="date_set w100p">
-	           <p><input type="text" id="startPeriod" name="startPeriod" title="" placeholder="" class="w100p" min="1" max="60"/></p>
-	        <span>~</span>
-               <p><input type="text" id="endPeriod" name="endPeriod" title="" placeholder="" class="w100p" min="1" max="60"/></p>
-            </div>
-	    </td>
-	</tr>
-	<tr>
-	    <th scope="row">P/O Reference No.</th>
-	    <td colspan="3">
-	        <input type="text" id="referenceNo" name="referenceNo" title="" placeholder="" class="w100p" />
-	    </td>
-	</tr>
-	<tr>
-        <th scope="row">Remarks</th>
-        <td colspan="3">
-            <input type="text" id="remark" name="remark" title="" placeholder="" class="w100p" />
-        </td>
-    </tr>
-	</tbody>
+     <section class="pop_body"><!-- pop_body start -->
+         <form id="newEntryForm" name="newEntryForm">
+         <table class="type1"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+		    <col style="width:140px" />
+		    <col style="width:*" />
+		    <col style="width:180px" />
+		    <col style="width:*" />
+		</colgroup>
+		<tbody>
+			<tr>
+			    <th scope="row">Period</th>
+			    <td colspan="3">
+			        <div class="date_set w100p">
+			           <p><input type="text" id="startPeriod" name="startPeriod" title="" placeholder="" class="w100p" min="1" max="60"/></p>
+			        <span>~</span>
+		               <p><input type="text" id="endPeriod" name="endPeriod" title="" placeholder="" class="w100p" min="1" max="60"/></p>
+		            </div>
+			    </td>
+			</tr>
+			<tr>
+			    <th scope="row">P/O Reference No.</th>
+			    <td colspan="3">
+			        <input type="text" id="referenceNo" name="referenceNo" title="" placeholder="" class="w100p" />
+			    </td>
+			</tr>
+			<tr>
+		        <th scope="row">Remarks</th>
+		        <td colspan="3">
+		            <input type="text" id="remark" name="remark" title="" placeholder="" class="w100p" />
+		        </td>
+		    </tr>
+		</tbody>
 	</table><!-- table end -->
-</form>
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_doSave();" id="btnSave" onclick="">SAVE</a></p></li>
-</ul>
+         </form>
+         <ul class="center_btns">
+             <li><p class="btn_blue2 big"><a href="javascript:fn_doSave();" id="btnSave" onclick="">SAVE</a></p></li>
+         </ul>
 
-</section><!-- pop_body end -->
+     </section><!-- pop_body end -->
 
-</div><!-- popup_wrap end -->
+ </div><!-- popup_wrap end -->
