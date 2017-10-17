@@ -7,6 +7,12 @@
 .my-custom-up div{
     color:#FF0000;
 }
+/* 커스텀 행 스타일 */
+.my-row-style {
+    background:#FFB6C1;
+    font-weight:bold;
+    color:#22741C;
+}
 </style>
 <script type="text/javaScript">
 //AUIGrid 그리드 객체
@@ -24,6 +30,23 @@ var gridPros = {
         // 상태 칼럼 사용
         showStateColumn : false
 };
+
+var gridPros2 = {
+        // 편집 가능 여부 (기본값 : false)
+        editable : false,
+        
+        // 상태 칼럼 사용
+        showStateColumn : false,
+        
+        // row Styling 함수
+        rowStyleFunction : function(rowIndex, item) {
+            if(item.validStusId == "21") {
+                return "my-row-style";
+            }
+            return "";
+        }
+};
+
 $(document).ready(function(){
     
     
@@ -301,7 +324,7 @@ var batchInfoLayout = [
                 $('#totalInvalid').text((result.totalItem) - (result.totalValidAmt.c1));
                 
                 AUIGrid.destroy(batchInfoGridID);
-                batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros);
+                batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros2);
                 AUIGrid.setGridData(batchInfoGridID, result.batchPaymentDetList);
                 AUIGrid.resize(batchInfoGridID,942, 280);
             });
@@ -327,7 +350,7 @@ var batchInfoLayout = [
                 }
     	    	
                 AUIGrid.destroy(batchInfoGridID);
-                batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros);
+                batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros2);
                 AUIGrid.setGridData(batchInfoGridID, result.batchPaymentDetList);
                 AUIGrid.resize(batchInfoGridID,942, 280);
                 
@@ -342,7 +365,7 @@ var batchInfoLayout = [
                 }
             	
                 AUIGrid.destroy(batchConfGridID);
-                batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros);
+                batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros2);
                 AUIGrid.setGridData(batchConfGridID, result.batchPaymentDetList);
                 AUIGrid.resize(batchConfGridID,942, 280);
             }
@@ -404,7 +427,7 @@ var batchInfoLayout = [
                     $('#totalInvalid_conf').text((result.totalItem) - (result.totalValidAmt.c1));
                     
                     AUIGrid.destroy(batchConfGridID);
-                    batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros);
+                    batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros2);
                     AUIGrid.setGridData(batchConfGridID, result.batchPaymentDetList);
                     AUIGrid.resize(batchConfGridID,942, 280);
                 });
