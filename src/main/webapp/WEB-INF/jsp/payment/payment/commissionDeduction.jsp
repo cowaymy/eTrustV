@@ -155,60 +155,47 @@ function fn_clickArea1(){
 	$("#grid_wrap_sub3").hide();
 }
 </script>
-
-
 <section id="content"><!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Payment</li>
-    <li>Commission Deduction</li>
-</ul>
-
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Commission Deduction</h2>
-</aside><!-- title_line end -->
-
-<ul class="right_btns">
-     <li><p class="btn_blue"><a href="javascript:fn_createPayment();">Create Payment</a></p></li>
-     <li><p class="btn_blue"><a href="javascript:fn_viewResult();">View Result</a></p></li>
-</ul>         
-<ul class="left_btns mt20">
-    <li>
-    <div class="auto_file"><!-- auto_file start -->
-    <input type="file" title="file add" id="uploadfile" name="uploadfile" />
-    </div><!-- auto_file end -->
-    </li>
-    <li><p class="btn_sky"><a href="javascript:fn_uploadFile();">Upload</a></p></li>
-    <!-- <li><p class="btn_sky"><a href="#">Download CSV Format</a></p></li> -->
-</ul>
-
-<section class="search_result mt20"><!-- search_result start -->
-
-<article class="grid_wrap" id="grid_wrap_main"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-</section><!-- search_result end -->
-
-<section class="tap_wrap"><!-- tap_wrap start -->
-<ul class="tap_type1">
-    <li><a href="#" class="on" onclick="fn_clickArea1()">Raw File Items Status</a></li>
-    <li><a href="#">Payment Results</a></li>
-</ul>
-
-<article class="tap_area" id="tap_area1"><!-- tap_area start -->
-	<article class="grid_wrap" id="grid_wrap_sub1"><!-- grid_wrap start -->
-	</article><!-- grid_wrap end -->
-</article><!-- tap_area end -->
-
-<article class="tap_area" id="tap_area2"><!-- tap_area start -->
-	<article class="grid_wrap " id="grid_wrap_sub2"><!-- grid_wrap start -->
-	</article><!-- grid_wrap end -->
-	
-	<article class="grid_wrap " id="grid_wrap_sub3"><!-- grid_wrap start -->
-    </article><!-- grid_wrap end -->
-</article><!-- tap_area end -->
-
-</section><!-- tap_wrap end -->
+	<ul class="path">
+	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+	    <li>Payment</li>
+	    <li>Commission Deduction</li>
+	</ul>
+	<aside class="title_line"><!-- title_line start -->
+		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<h2>Commission Deduction</h2>
+	</aside><!-- title_line end -->
+	<ul class="right_btns">
+	     <li><p class="btn_blue"><a href="javascript:fn_createPayment();">Create Payment</a></p></li>
+	     <li><p class="btn_blue"><a href="javascript:fn_viewResult();">View Result</a></p></li>
+	</ul>         
+	<ul class="left_btns mt20">
+	    <li>
+		    <div class="auto_file"><!-- auto_file start -->
+		      <input type="file" title="file add" id="uploadfile" name="uploadfile" />
+		    </div><!-- auto_file end -->
+	    </li>
+	    <li><p class="btn_sky"><a href="javascript:fn_uploadFile();">Upload</a></p></li>
+	    <!-- <li><p class="btn_sky"><a href="#">Download CSV Format</a></p></li> -->
+	</ul>
+	<section class="search_result mt20"><!-- search_result start -->
+		<article class="grid_wrap" id="grid_wrap_main"><!-- grid_wrap start -->
+		</article><!-- grid_wrap end -->
+	</section><!-- search_result end -->
+	<section class="tap_wrap"><!-- tap_wrap start -->
+		<ul class="tap_type1">
+		    <li><a href="#" class="on" onclick="fn_clickArea1()">Raw File Items Status</a></li>
+		    <li><a href="#">Payment Results</a></li>
+		</ul>
+		<article class="tap_area" id="tap_area1"><!-- tap_area start -->
+			<article class="grid_wrap" id="grid_wrap_sub1"><!-- grid_wrap start -->
+			</article><!-- grid_wrap end -->
+		</article><!-- tap_area end -->
+		<article class="tap_area" id="tap_area2"><!-- tap_area start -->
+			<article class="grid_wrap " id="grid_wrap_sub2"><!-- grid_wrap start -->
+			</article><!-- grid_wrap end -->
+			<article class="grid_wrap " id="grid_wrap_sub3"><!-- grid_wrap start -->
+		    </article><!-- grid_wrap end -->
+		</article><!-- tap_area end -->
+	</section><!-- tap_wrap end -->
 </section><!-- content end -->
-
