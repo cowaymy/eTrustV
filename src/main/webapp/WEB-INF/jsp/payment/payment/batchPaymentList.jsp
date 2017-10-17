@@ -547,12 +547,12 @@ var batchInfoLayout = [
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
-        <li> Batch Payment List</li>
+        <li>Batch Payment</li>
     </ul>
     <!-- title_line start -->
     <aside class="title_line">
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Batch Payment List</h2>
+		<h2>Batch Payment</h2>
 		<ul class="right_btns">
 		    <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span>Search</a></p></li>
 		    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
