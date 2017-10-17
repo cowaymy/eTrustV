@@ -2,10 +2,10 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 $(document).ready(function() {
-	
-	/* ##### cust CNTCID ##### */
-	fn_getCustCntcId();
-	/* ###  Page Param #### */
+    
+    /* ##### cust CNTCID ##### */
+    fn_getCustCntcId();
+    /* ###  Page Param #### */
     fn_selectPage();
     //j_date
     var pickerOpts={
@@ -163,12 +163,12 @@ $(document).ready(function() {
    function fn_customerContactInfoAddAjax(){
         Common.ajax("GET", "/sales/customer/insertCustomerContactAddAf.do",$("#addForm").serialize(), function(result) {
             
-        	if("" != $("#_callParam").val() && null != $("#_callParam").val()){
-        	   Common.alert(result.message);	
-        	}else{
-        	   Common.alert(result.message, fn_parentReload);
-        	}
-        	
+            if("" != $("#_callParam").val() && null != $("#_callParam").val()){
+               Common.alert(result.message);    
+            }else{
+               Common.alert(result.message, fn_parentReload);
+            }
+            
         });
     }
     
@@ -196,7 +196,7 @@ $(document).ready(function() {
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
                    
-            	    $("#_tempContactId").val(data.custCntcId);
+                    $("#_tempContactId").val(data.custCntcId);
                     
             },
             error: function(){
@@ -263,7 +263,7 @@ $(document).ready(function() {
     <td><input type="text" title="" placeholder="" class="w100p"   name="cntcNric" id="cntcNric" maxlength="18"/></td>
     <th scope="row">DOB</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"   name="cntcDob" readonly="readonly"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date3 w100p"   name="cntcDob" readonly="readonly"/>
     </td>
 </tr>
 <tr>

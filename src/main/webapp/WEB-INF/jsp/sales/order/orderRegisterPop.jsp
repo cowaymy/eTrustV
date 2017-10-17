@@ -4,7 +4,8 @@
 <script type="text/javaScript" language="javascript">
 
     var docGridID;
-
+    var docDefaultChk = false;
+    
     $(document).ready(function(){
 
         createAUIGrid();
@@ -18,26 +19,28 @@
 
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '0', 'exTrade', 'S'); //EX-TRADE
+        doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
 
         //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
         fn_tabOnOffSet('BIL_DTL', 'HIDE');
+        fn_tabOnOffSet('REL_CER', 'HIDE');
     });
 
     function createAUIGrid() {
 
         //AUIGrid 칼럼 설정
         var columnLayout = [{
-    		    dataField : "chkfield",
-    		    headerText : ' ',
-    		    width: 70,
-    		    renderer : {
-        			type : "CheckBoxEditRenderer",
-        			showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-        			editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-        			checkValue : 1, // true, false 인 경우가 기본
-        			unCheckValue : 0
+                dataField : "chkfield",
+                headerText : ' ',
+                width: 70,
+                renderer : {
+                    type : "CheckBoxEditRenderer",
+                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                    editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                    checkValue : 1, // true, false 인 경우가 기본
+                    unCheckValue : 0
                 }
             }, {
                 dataField   : "typeDesc",   headerText  : "Document",
@@ -210,6 +213,8 @@
                     RadWindowManager1.RadAlert("<b>Goverment Customer</b>", 450, 160, "Alert", "callBackFn", null);
                 }
                 */
+                
+                fn_checkDocList(false);
 
                 if(custInfo.codeName == 'Government') {
                     Common.alert('<b>Goverment Customer</b>');
@@ -232,14 +237,13 @@
                 console.log("hiddenBillAddId : " + billCustInfo.custAddId);
 
                 $("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
-                $("#billAdd1").val(billCustInfo.add1); //Address
-                $("#billAdd2").val(billCustInfo.add2); //Address
-                $("#billCntyName").removeClass("readonly").val(billCustInfo.country); //Country
-                $("#billStateName").removeClass("readonly").val(billCustInfo.state); //State
-                $("#billCity").removeClass("readonly").val(billCustInfo.city); //City
-                $("#billTown").removeClass("readonly").val(billCustInfo.town); //Town
-                $("#billStreet").removeClass("readonly").val(billCustInfo.street); //Street
-                $("#billPostCode").removeClass("readonly").val(billCustInfo.postcode); //Post Code
+                $("#billAddrDtl").val(billCustInfo.addrDtl); //Address
+                $("#billStreet").val(billCustInfo.street); //Street
+                $("#billArea").val(billCustInfo.area); //Area
+                $("#billCity").val(billCustInfo.city); //City
+                $("#billPostCode").val(billCustInfo.postcode); //Post Code
+                $("#billState").val(billCustInfo.state); //State
+                $("#billCountry").val(billCustInfo.country); //Country
                 
                 $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
 
@@ -256,21 +260,72 @@
             if(custInfo != null) {
 
                 console.log("성공.");
-                console.log("add1 : " + custInfo.add1);
+                console.log("gstChk : " + custInfo.gstChk);
 
                 //
                 $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
-                $("#add1").val(custInfo.add1); //Address
-                $("#add2").val(custInfo.add2); //Address
-                $("#cntyName").removeClass("readonly").val(custInfo.country); //Country
-                $("#stateName").removeClass("readonly").val(custInfo.state); //State
-                $("#city").removeClass("readonly").val(custInfo.city); //City
-                $("#town").removeClass("readonly").val(custInfo.town); //Town
-                $("#street").removeClass("readonly").val(custInfo.street); //Street
-                $("#postCode").removeClass("readonly").val(custInfo.postcode); //Post Code
+                $("#instAddrDtl").val(custInfo.addrDtl); //Address
+                $("#instStreet").val(custInfo.street); //Street
+                $("#instArea").val(custInfo.area); //Area
+                $("#instCity").val(custInfo.city); //City
+                $("#instPostCode").val(custInfo.postcode); //Post Code
+                $("#instState").val(custInfo.state); //State
+                $("#instCountry").val(custInfo.country); //Country
+                
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
+                
+                if(!$("#gstChk").is('[disabled]')) {
+
+                    if(custInfo.gstChk == '1') {
+                        $("#gstChk").val('1').prop("disabled", true);
+                    }
+                    else {
+                        $("#gstChk").val('0').removeAttr("disabled");
+                    }
+                }
             }
         });
+    }
+    
+    function fn_checkDocList(doCheck) {
+        
+        var vAppType  = $("#appType").val();
+        var vCustType = $("#typeId").val();
+        var vNational = $("#nationNm").val();
+        
+        console.log('fn_checkDocList()');
+        console.log('vAppType:'+vAppType);
+        console.log('vCustType:'+vCustType);
+        console.log('vNational:'+vNational);
+        
+        for(var i = 0; i < AUIGrid.getRowCount(docGridID) ; i++) {
+            
+            AUIGrid.setCellValue(docGridID, i, "chkfield", 0);
+
+            if(doCheck == true) {
+                var vCodeId = AUIGrid.getCellValue(docGridID, i, "codeId");
+                
+                if(vAppType == '66' && vCustType == '964') {
+                    if(vNational == 'MALAYSIA') {
+                        if(vCodeId == '250' || vCodeId == '1244' || vCodeId == '271') {
+                            AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
+                            
+                            if(docDefaultChk == false) docDefaultChk = true;
+                        }                    
+                    }
+                    else {
+                        if(vCodeId == '939' || vCodeId == '940' || vCodeId == '1244') {
+                            AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
+                            
+                            if(docDefaultChk == false) docDefaultChk = true;
+                        }
+                    }
+                }
+            }
+            else {
+                 docDefaultChk = false;
+            }
+        }
     }
 
     function fn_loadSrvCntcPerson(custCareCntId) {
@@ -618,6 +673,15 @@
                 fn_loadOrderSalesman(0, memCd);
             }
         });
+        $('#gstChk').change(function(event) {
+//          if($("#gstChk").val() == '1' && $('#appType').val() != '1412') {
+            if($("#gstChk").val() == '1') {
+                fn_tabOnOffSet('REL_CER', 'SHOW');
+            }
+            else {
+                fn_tabOnOffSet('REL_CER', 'HIDE');
+            }
+        });
         $('#salesmanCd').keydown(function (event) {  
             if (event.which === 13) {    //enter
                 var memCd = $('#salesmanCd').val().trim();
@@ -625,7 +689,7 @@
                 if(FormUtil.isNotEmpty(memCd)) {
                     fn_loadOrderSalesman(0, memCd);
                 }
-            }  
+            }
         });
         $('#thrdPartyId').change(function(event) {
             fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
@@ -672,19 +736,27 @@
                             //?FD문서에서 아래 항목 빠짐
                             $('[name="advPay"]').removeAttr("disabled");
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
+                            $("#gstChk").val('0').prop("disabled", true);
+                            
+                            break;
+
+                        case '67' : //INSTALLMENT
+                            $("#gstChk").removeAttr("disabled");
 
                             break;
 
                         case '68' : //INSTALLMENT
                             $('#installDur').removeAttr("readonly").removeClass("readonly");
-
+                            $("#gstChk").removeAttr("disabled");
+                            
                             break;
 
                         case '1412' : //Outright Plus
                             $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
 
                             $('[name="advPay"]').removeAttr("disabled");
-
+                            $("#gstChk").removeAttr("disabled");
+                            
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
@@ -693,7 +765,8 @@
                             break;
 
                         default :
-                            $('#installDur').val('').prop("readonly", true).addClass("readonly")
+                            $('#installDur').val('').prop("readonly", true).addClass("readonly");
+                            $("#gstChk").val('0').prop("disabled", true);
                             break;
                     }
 
@@ -1007,6 +1080,9 @@
 
     function fn_doSaveOrder() {
         console.log('!@# fn_doSaveOrder START');
+        
+        $("#gstChk").removeAttr("disabled");
+        
         //----------------------------------------------------------------------
         // salesOrderMVO
         //----------------------------------------------------------------------
@@ -1093,7 +1169,8 @@
                 promoDiscPeriod         : $('#promoDiscPeriod').val().trim(),
                 norAmt                  : $('#orgOrdPrice').val().trim(),
                 norRntFee               : $('#orgOrdRentalFees').val().trim(),
-                discRntFee              : $('#ordRentalFees').val().trim()
+                discRntFee              : $('#ordRentalFees').val().trim(),
+                gstChk                  : $('#gstChk').val()
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),
@@ -1104,7 +1181,7 @@
             installationVO : {
                 addId                   : $('#hiddenCustAddId').val(),
                 brnchId                 : $('#dscBrnchId').val(),
-                cntId                   : $('#hiddenCustCntcId').val(),
+                cntId                   : $('#hiddenInstCntcId').val(),
                 instct                  : $('#speclInstct').val(),
                 preDt                   : $('#prefInstDt').val(),
                 preTm                   : $('#prefInstTm').val()
@@ -1238,7 +1315,7 @@
             msg = "* Please select an individual customer<br>(Outright Plus).<br>";
         }
 
-        if($("#empChk option:selected").index()) {
+        if($("#empChk option:selected").index() <=0) {
             isValid = false;
             msg = "* Please select an employee.<br>";
         }
@@ -1461,6 +1538,12 @@
                                     msg += "* Invalid email address.<br>";
                                 }
                             }
+/*
+                            if(FormUtil.checkReqValue($('#billMthdEmailTxt1')) && !FormUtil.checkReqValue($('#billMthdEmailTxt2'))) {
+                                isValid = false;
+                                msg += "* Please key in the email address(1).<br>";
+                            }
+*/
                         }
                     }
                 }
@@ -1597,7 +1680,7 @@
     }
     
     function fn_loadCreditCard(crcId, custOriCrcNo, custCrcNo, custCrcType, custCrcName, custCrcExpr, custCRCBank, custCrcBankId, crcCardType) {
-        
+/*
         console.log(crcId);
         console.log(custOriCrcNo);
         console.log(custCrcNo);
@@ -1607,7 +1690,7 @@
         console.log(custCRCBank);
         console.log(custCrcBankId);
         console.log(crcCardType);
-        
+
         $('#hiddenRentPayCRCId').val(crcId);
         $('#rentPayCRCNo').removeClass("readonly").val(custOriCrcNo);
         $('#hiddenRentPayEncryptCRCNoId').val(custCrcNo);
@@ -1617,6 +1700,16 @@
         $('#rentPayCRCBank').removeClass("readonly").val(custCRCBank);
         $('#hiddenRentPayCRCBankId').val(custCrcBankId);
         $('#rentPayCRCCardType').removeClass("readonly").val(crcCardType);
+*/
+        $('#hiddenRentPayCRCId').val(crcId);
+        $('#rentPayCRCNo').val(custOriCrcNo);
+        $('#hiddenRentPayEncryptCRCNoId').val(custCrcNo);
+        $('#rentPayCRCType').val(custCrcType);
+        $('#rentPayCRCName').val(custCrcName);
+        $('#rentPayCRCExpiry').val(custCrcExpr);
+        $('#rentPayCRCBank').val(custCRCBank);
+        $('#hiddenRentPayCRCBankId').val(custCrcBankId);
+        $('#rentPayCRCCardType').val(crcCardType);
     }
 
     function fn_loadOrderSalesman(memId, memCode) {
@@ -1885,6 +1978,7 @@
         switch(tabNm) {
             case 'doc' :
                 AUIGrid.resize(docGridID, 900, 380);
+                if(docDefaultChk == false) fn_checkDocList(true);
                 break;
             default :
                 break;
@@ -2235,7 +2329,7 @@
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><textarea  id="ordRem" name="ordRem" cols="20" rows="5" placeholder="Remark" readonly></textarea></td>
+    <td colspan="3"><textarea  id="ordRem" name="ordRem" cols="20" rows="5" placeholder="Remark"></textarea></td>
 </tr>
 <tr>
     <th scope="row">Advance Rental Payment<span class="must">*</span></th>
@@ -2280,7 +2374,7 @@
 <section id="sctThrdParty" class="blind">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Third Party</h2>
+<h3>Third Party</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2291,7 +2385,7 @@
     Third Party - Form ID(thrdPartyForm)
 ------------------------------------------------------------------------------->
 <form id="thrdPartyForm" name="thrdPartyForm" action="#" method="post">
-<table class="type1 mb1m"><!-- table start -->
+<table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:170px" />
@@ -2351,7 +2445,7 @@
 <section id="sctCrCard" class="blind">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Credit Card</h2>
+<h3>Credit Card</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2405,7 +2499,7 @@
 <section id="sctDirectDebit" class="blind">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Direct Debit</h2>
+<h3>Direct Debit</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2417,7 +2511,7 @@
 ------------------------------------------------------------------------------->
 <form id="ddForm" name="ddForm" action="#" method="post">
 
-<table class="type1 mb1m"><!-- table start -->
+<table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:170px" />
@@ -2428,20 +2522,20 @@
 <tbody>
 <tr>
     <th scope="row">Account Number<span class="must">*</span></th>
-    <td><input id="rentPayBankAccNo" name="rentPayBankAccNo" type="text" title="" placeholder="Account Number" class="w100p" />
+    <td><input id="rentPayBankAccNo" name="rentPayBankAccNo" type="text" title="" placeholder="Account Number readonly" class="w100p readonly" readonly/>
         <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" /></td>
     <th scope="row">Account Type</th>
-    <td><input id="rentPayBankAccType" name="rentPayBankAccType" type="text" title="" placeholder="Account Type" class="w100p" /></td>
+    <td><input id="rentPayBankAccType" name="rentPayBankAccType" type="text" title="" placeholder="Account Type readonly" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Account Holder</th>
-    <td><input id="accName" name="accName" type="text" title="" placeholder="Account Holder" class="w100p" /></td>
+    <td><input id="accName" name="accName" type="text" title="" placeholder="Account Holder" class="w100p readonly" readonly/></td>
     <th scope="row">Issue Bank Branch</th>
-    <td><input id="accBranch" name="accBranch" type="text" title="" placeholder="Issue Bank Branch" class="w100p" /></td>
+    <td><input id="accBranch" name="accBranch" type="text" title="" placeholder="Issue Bank Branch" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Issue Bank</th>
-    <td colspan=3><input id="accBank" name="accBank" type="text" title="" placeholder="Issue Bank" class="w100p" />
+    <td colspan=3><input id="accBank" name="accBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
         <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" /></td>
 </tr>
 </tbody>
@@ -2546,7 +2640,7 @@
     <input id="hiddenBillStreetId"  name="hiddenBillStreetId"  type="hidden"/>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Billing Address</h2>
+<h3>Billing Address</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2554,7 +2648,7 @@
     <li id="liBillSelAddr" class="blind"><p class="btn_grid"><a id="billSelAddrBtn" href="#">Select Another Address</a></p></li>
 </ul>
 
-<table class="type1 mb1m"><!-- table start -->
+<table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:150px" />
@@ -2564,24 +2658,21 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="2">Address<span class="must">*</span></th>
+    <th scope="row">Address Detail<span class="must">*</span></th>
     <td colspan="3">
-    <input id="billAdd1" name="billAdd1" type="text" title="" placeholder="Address (1)" class="w100p" />
+    <input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
+    <th scope="row">Street</th>
     <td colspan="3">
-    <input id="billAdd2" name="billAdd2" type="text" title="" placeholder="Address (2)" class="w100p" />
+    <input id="billStreet" name="billStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Country<span class="must">*</span></th>
-    <td>
-    <input id="billCntyName" name="billCntyName" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
-    </td>
-    <th scope="row">Region<span class="must">*</span></th>
-    <td>
-    <input id="billStateName" name="billStateName" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    <th scope="row">Area<span class="must">*</span></th>
+    <td colspan="3">
+    <input id="billArea" name="billArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
@@ -2589,19 +2680,19 @@
     <td>
     <input id="billCity" name="billCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
     </td>
-    <th scope="row">Town<span class="must">*</span></th>
-    <td>
-    <input id="billTown" name="billTown" type="text" title="" placeholder="Town" class="w100p readonly" readonly/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Street<span class="must">*</span></th>
-    <td>
-    <input id="billStreet" name="billStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
-    </td>
     <th scope="row">PostCode<span class="must">*</span></th>
     <td>
     <input id="billPostCode" name="billPostCode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">State<span class="must">*</span></th>
+    <td>
+    <input id="billState" name="billState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    </td>
+    <th scope="row">Country<span class="must">*</span></th>
+    <td>
+    <input id="billCountry" name="billCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
     </td>
 </tr>
 
@@ -2614,7 +2705,7 @@
 
 <section id="sctBillPrefer" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h2>Billing Preference</h2>
+<h3>Billing Preference</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2639,7 +2730,7 @@
 <tbody>
 <tr>
     <th scope="row">Initials<span class="must">*</span></th>
-    <td colspan="3"><select id="billPreferInitial" name="billPreferInitial" class="w100p" disabled></select>
+    <td colspan="3"><select id="billPreferInitial" name="billPreferInitial" class="w100p"></select>
         </td>
 </tr>
 <tr>
@@ -2665,7 +2756,7 @@
 <form id="billSelForm" name="billSelForm" action="#" method="post">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Billing Group Selection</h2>
+<h3>Billing Group Selection</h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -2724,7 +2815,7 @@
 <section class="search_table"><!-- search_table start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Address</h2>
+<h3>Installation Address</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2748,42 +2839,38 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="2">Address<span class="must">*</span></th>
-    <td colspan="3"><input id="add1" name="add1" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Address Detail<span class="must">*</span></th>
+    <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <td colspan="3"><input id="add2" name="add2" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Street<span class="must">*</span></th>
+    <td colspan="3"><input id="instStreet" name="instStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Country<span class="must">*</span></th>
-    <td>
-    <input id="cntyName" name="cntyName" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
-    </td>
-    <th scope="row">Region<span class="must">*</span></th>
-    <td>
-    <input id="stateName" name="stateName" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
-    </td>
+    <th scope="row">Area<span class="must">*</span></th>
+    <td colspan="3"><input id="instArea" name="instArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">City<span class="must">*</span></th>
     <td>
-    <input id="city" name="city" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
-    </td>
-    <th scope="row">Town<span class="must">*</span></th>
-    <td>
-    <input id="town" name="town" type="text" title="" placeholder="Town" class="w100p readonly" readonly/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Street<span class="must">*</span></th>
-    <td>
-    <input id="street" name="street" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
+    <input id="instCity" name="instCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
     </td>
     <th scope="row">PostCode<span class="must">*</span></th>
     <td>
-    <input id="postCode" name="postCode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
+    <input id="instPostCode" name="instPostCode" type="text" title="" placeholder="Post Code" class="w100p readonly" readonly/>
     </td>
 </tr>
+<tr>
+    <th scope="row">State<span class="must">*</span></th>
+    <td>
+    <input id="instState" name="instState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    </td>
+    <th scope="row">Country<span class="must">*</span></th>
+    <td>
+    <input id="instCountry" name="instCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
+    </td>
+</tr>
+
 </tbody>
 </table><!-- table end -->
 </form>
@@ -2791,7 +2878,7 @@
 <section id="tbInstCntcPerson" class="blind">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Contact Person</h2>
+<h3>Installation Contact Person</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2862,7 +2949,7 @@
 </section>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Information</h2>
+<h3>Installation Information</h3>
 </aside><!-- title_line end -->
 
 <!------------------------------------------------------------------------------
@@ -2880,8 +2967,12 @@
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row">Zero GST<span class="must">*</span></th>
+    <td>
+    <select id="gstChk" name="gstChk" class="w100p" disabled></select>
+    </td>
     <th scope="row">DSC Branch<span class="must">*</span></th>
-    <td colspan="3">
+    <td>
     <select id="dscBrnchId" name="dscBrnchId" class="w100p"></select>
     </td>
 </tr>

@@ -48,6 +48,9 @@
             //Common.popupDiv("/sales/order/orderRegisterPop.do", $("#listSearchForm").serializeJSON());
             Common.popupDiv("/sales/order/orderRegisterPop.do");
         });
+        $('#btnNewNcv').click(function() {
+            Common.alert('<b>The program is under development.</b>');
+        });
         $('#btnEdit').click(function() {
             fn_orderModifyPop();
         });
@@ -59,6 +62,30 @@
         });
         $('#btnClear').click(function() {
         	$('#listSearchForm').clearForm();
+        });
+        $('#btnLedger1Link').click(function() {
+        	Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnLedger2Link').click(function() {
+        	Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnRqstOrdCancLink').click(function() {
+        	Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnRqstPrdExchLink').click(function() {
+        	Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnRqstAppExchLink').click(function() {
+        	Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnRqstOwnTranLink').click(function() {
+        	Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnRqstSchmConLink').click(function() {
+        	Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnRntlOutRSLink').click(function() {
+        	Common.alert('<b>The program is under development.</b>');
         });
     });
     
@@ -182,6 +209,7 @@
 <h2>Order List</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
+    <li><p class="btn_blue"><a id="btnNewNcv" href="#" >New (NCV)</a></p></li>
     <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
     <li><p class="btn_blue"><a id="btnReq" href="#">Request</a></p></li>
 	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
@@ -321,25 +349,19 @@
 <dl class="link_list">
 	<dt>Link</dt>
 	<dd>
+<!--
 	<ul class="btns">
-		<li><p class="link_btn"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn"><a href="#">menu2</a></p></li>
-		<li><p class="link_btn"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn"><a href="#">menu8</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnLedger1Link">View Ledger(1)</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnLedger2Link">View Ledger(2)</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnRqstOrdCancLink">Request Order Cancellation</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnRqstPrdExchLink>Request Product Exchange</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnRqstAppExchLink>Request Application Type Exchange</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnRqstOwnTranLink>Request Ownership Transfer</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnRqstSchmConLink>Request Scheme Conversion</a></p></li>
 	</ul>
+-->
 	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnRntlOutRSLink">Rental to Outright Simulator</a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
@@ -350,15 +372,14 @@
 
 <section class="search_result"><!-- search_result start -->
 
+<!--
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#">Rental to Outright Simulator</a></p></li>
-<!--
 	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
 	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
 	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
 	<li><p class="btn_grid"><a href="#">INS</a></p></li>
 	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
--->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

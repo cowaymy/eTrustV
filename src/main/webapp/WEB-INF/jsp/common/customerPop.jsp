@@ -11,7 +11,7 @@
 	    createAUIGrid();
 	    
         doGetCombo('/common/selectCodeList.do', '8', '964', 'cmbTypeId', 'S', ''); //Common Code
-        doGetCombo('/common/selectCodeList.do', '2', '',    'raceId',    'S', ''); //Common Code
+        doGetCombo('/common/selectCodeList.do', '2', '',    'cmbRaceId',    'S', ''); //Common Code
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -125,7 +125,7 @@
 <tr>
 	<th scope="row">Race</th>
 	<td>
-	<select id="raceId" name="raceId" class="w100p"></select>
+	<select id="cmbRaceId" name="raceId" class="w100p"></select>
 	</td>
 	<th scope="row">NRIC/Company Number</th>
 	<td><input id="nric" name="nric" type="text" title="" placeholder="NRIC/Company No." class="w100p" /></td>
