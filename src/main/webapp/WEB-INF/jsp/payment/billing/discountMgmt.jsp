@@ -267,11 +267,11 @@ var discountLayout = [
 	        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	        <li>Payment</li>
 	        <li>Billing</li>
-	        <li>Adjustment(Discount)</li>
+	        <li>Discount Mgmt</li>
 	</ul>
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Adjustment(Discount)</h2>
+<h2>Discount Mgmt</h2>
 </aside><!-- title_line end -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>

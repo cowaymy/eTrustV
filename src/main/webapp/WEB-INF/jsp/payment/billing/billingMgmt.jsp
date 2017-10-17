@@ -157,13 +157,14 @@ function fn_complete(){
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Billing</li>
-        <li>Billing Management</li>
+        <li>Monthly Batch Billing</li>
+        <li>Rental</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Billing Management</h2>   
+        <h2>Rental</h2>   
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_createBills()">Create Bills</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_createBills()">Create Early Bills</a></p></li>
