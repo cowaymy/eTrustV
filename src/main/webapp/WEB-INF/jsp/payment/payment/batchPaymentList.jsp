@@ -133,7 +133,7 @@ var batchInfoLayout = [
         headerText : "Order No",
         editable : false
     }, {
-        dataField : "name1",
+        dataField : "userTrNo",
         headerText : "TR No",
         editable : false
     }, {
@@ -149,7 +149,7 @@ var batchInfoLayout = [
         headerText : "Bank Acc",
         editable : false
     }, {
-        dataField : "",
+        dataField : "userChqNo",
         headerText : "Chq No",
         editable : false
     }, {
@@ -161,7 +161,7 @@ var batchInfoLayout = [
         headerText : "Running No",
         editable : false
     },{
-        dataField : "",
+        dataField : "userEftNo",
         headerText : "EFT No",
         editable : false
     },{
@@ -177,11 +177,11 @@ var batchInfoLayout = [
         headerText : "Ref Date(Year)",
         editable : false
     },{
-        dataField : "c2",
+        dataField : "userBcAmt",
         headerText : "Bank Charge Amt",
         editable : false
     },{
-        dataField : "c2",
+        dataField : "userBcAcc",
         headerText : "Bank Charge Acc",
         editable : false
     }];
@@ -218,7 +218,7 @@ var batchInfoLayout = [
             headerText : "Order No",
             editable : false
         }, {
-            dataField : "name1",
+            dataField : "userTrNo",
             headerText : "TR No",
             editable : false
         }, {
@@ -234,7 +234,7 @@ var batchInfoLayout = [
             headerText : "Bank Acc",
             editable : false
         }, {
-            dataField : "",
+            dataField : "userChqNo",
             headerText : "Chq No",
             editable : false
         }, {
@@ -246,7 +246,7 @@ var batchInfoLayout = [
             headerText : "Running No",
             editable : false
         },{
-            dataField : "",
+            dataField : "userEftNo",
             headerText : "EFT No",
             editable : false
         },{
@@ -262,11 +262,11 @@ var batchInfoLayout = [
             headerText : "Ref Date(Year)",
             editable : false
         },{
-            dataField : "c2",
+            dataField : "userBcAmt",
             headerText : "Bank Charge Amt",
             editable : false
         },{
-            dataField : "c2",
+            dataField : "userBcAcc",
             headerText : "Bank Charge Acc",
             editable : false
         }];
