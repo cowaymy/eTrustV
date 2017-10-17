@@ -268,7 +268,6 @@ var billingTargetLayout = [
 	            var j=0;
 	            
 	            for (var i = 0 ; i < checkedItems.length ; i++){
-	            	alert("액티브 민값 : "+Number(allItems[0].installment + j) +", 체크민값 : "+Number(checkedItems[i].installment) );
 	            	if(Number(allItems[0].installment + j) <  Number(checkedItems[i].installment)){
                         valid = false;
                     }else{
@@ -306,7 +305,6 @@ var billingTargetLayout = [
                 var rowList = [];
                 var j = 0;
                 for (var i = checkedItems.length-1 ; i >= 0; i--){
-                	alert("액티브 민값 : "+Number(allItems[allItems.length-1].installment - j) +", 체크민값 : "+Number(checkedItems[i].installment) );
                 	if(Number(allItems[allItems.length-1].installment - j) >  Number(checkedItems[i].installment)){
                         valid = false;
                     }else{
