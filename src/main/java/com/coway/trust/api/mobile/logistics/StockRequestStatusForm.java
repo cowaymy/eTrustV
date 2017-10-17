@@ -16,7 +16,7 @@ public class StockRequestStatusForm {
 	@ApiModelProperty(value = "조회할 CT/CODY ID [default : '' 전체] 예) requested / done, ", example = "requested / done")
 	String searchStatus;
 	@ApiModelProperty(value = "MRSL 고정값 [default : '' 전체] 예) MRSL, ", example = "MRSL")
-	String MRSL;
+	String reqStatus;
 
 	public static Map<String, Object> createMap(StockRequestStatusForm stockRequestStatusForm) {
 		Map<String, Object> map = BeanConverter.toMap(stockRequestStatusForm);
@@ -54,5 +54,11 @@ public class StockRequestStatusForm {
 	public void setSearchStatus(String searchStatus) {
 		this.searchStatus = searchStatus;
 	}
+	public String getReqStatus() {
+		return reqStatus;
+	}
 
+	public void setReqStatus(String reqStatus) {
+		this.reqStatus = reqStatus;
+	}
 }

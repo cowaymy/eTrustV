@@ -19,7 +19,7 @@ public class LogStockReceiveDto {
 
 	@ApiModelProperty(value = "상태")
 	private String reqStatus;
-	
+
 	@ApiModelProperty(value = "gi 요청자")
 	private String giCustName;
 
@@ -30,9 +30,9 @@ public class LogStockReceiveDto {
 	private String giDate;
 
 	@ApiModelProperty(value = "gr 날짜")
-	private int grDate;
+	private String grDate;
 
-	private List<LogStockPartsReceiveDto> sList = null;
+	private List<LogStockPartsReceiveDto> partsList = null;
 
 	public static LogStockReceiveDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, LogStockReceiveDto.class);
@@ -86,20 +86,20 @@ public class LogStockReceiveDto {
 		this.giDate = giDate;
 	}
 
-	public int getGrDate() {
+	public String getGrDate() {
 		return grDate;
 	}
 
-	public void setGrDate(int grDate) {
+	public void setGrDate(String grDate) {
 		this.grDate = grDate;
 	}
 
-	public List<LogStockPartsReceiveDto> getsList() {
-		return sList;
+	public List<LogStockPartsReceiveDto> getPartsList() {
+		return partsList;
 	}
 
-	public void setsList(List<LogStockPartsReceiveDto> sList) {
-		this.sList = sList;
+	public void setPartsList(List<LogStockPartsReceiveDto> partsList) {
+		this.partsList = partsList;
 	}
 
 }

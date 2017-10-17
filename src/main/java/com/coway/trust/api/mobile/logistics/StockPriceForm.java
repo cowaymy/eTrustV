@@ -4,25 +4,39 @@ import java.util.Map;
 
 import com.coway.trust.util.BeanConverter;
 
-public class StockPriceForm {
+import io.swagger.annotations.ApiModelProperty;
 
-	int productCode;
-	String searchType;
-	// String partCode;
-	// String partName;
-	String searchKeyword;
+public class StockPriceForm {
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) 1100305", example = "1100305")
+	private String productCode;
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) 312", example = "312")
+	private int productId;
+	@ApiModelProperty(value = "검색 type (all / partCode / partName)", example = "all / partCode / partName")
+	private String searchType;
+	@ApiModelProperty(value = "검색어 AC", example = "AC")
+	private String searchKeyword;
+	@ApiModelProperty(value = "Filter=62 / Part=63 구분", example = "62,63")
+	private int searchKinds;
 
 	public static Map<String, Object> createMap(StockPriceForm stockpriceForm) {
 		Map<String, Object> map = BeanConverter.toMap(stockpriceForm);
 		return map;
 	}
 
-	public int getProductCode() {
+	public String getProductCode() {
 		return productCode;
 	}
 
-	public void setProductCode(int productCode) {
+	public void setProductCode(String productCode) {
 		this.productCode = productCode;
+	}
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
 	}
 
 	public String getSearchType() {
@@ -33,28 +47,20 @@ public class StockPriceForm {
 		this.searchType = searchType;
 	}
 
-	// public String getPartCode() {
-	// return partCode;
-	// }
-	//
-	// public void setPartCode(String partCode) {
-	// this.partCode = partCode;
-	// }
-	//
-	// public String getPartName() {
-	// return partName;
-	// }
-	//
-	// public void setPartName(String partName) {
-	// this.partName = partName;
-	// }
-
 	public String getSearchKeyword() {
 		return searchKeyword;
 	}
 
 	public void setSearchKeyword(String searchKeyword) {
 		this.searchKeyword = searchKeyword;
+	}
+
+	public int getSearchKinds() {
+		return searchKinds;
+	}
+
+	public void setSearchKinds(int searchKinds) {
+		this.searchKinds = searchKinds;
 	}
 
 }

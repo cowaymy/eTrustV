@@ -15,7 +15,7 @@ public class InventoryAllListForm {
 	@ApiModelProperty(value = "productCode [default : '' 전체] 예) 1100305,110181,1206012", example = "1100305,110181")
 	private int productCode;
 
-	@ApiModelProperty(value = "searchType [default : '' 전체] 예) 1=Parts Code ,2=Parts Name, 3= ALL ", example = "1, 2, 3")
+	@ApiModelProperty(value = "searchType [default : '' 전체] 예) partsCode ,partsName,all ", example = " partsCode,partsName, all")
 	private int searchType;
 
 	@ApiModelProperty(value = "Input Keyword [default : '' 전체] 예) AP,DO,AN", example = "AP")

@@ -9,13 +9,13 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "ReturnOnHandStockListForm", description = "ReturnOnHandStockListForm")
 public class ReturnOnHandStockListForm {
 
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100337,T010", example = "CT100337")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) T010", example = "T010")
 	private String userId;
 
-	@ApiModelProperty(value = "GI Date 조회시작날짜 (YYYYMMDD) 예) 28092017", example = "28092017")
+	@ApiModelProperty(value = "GI Date 조회시작날짜 (YYYYMMDD) 예) 20170916,20170920", example = "28092017")
 	private String searchFromDate;
 
-	@ApiModelProperty(value = "GR Date 조회종료날짜 (YYYYMMDD) 예) 29092017", example = "29092017")
+	@ApiModelProperty(value = "GR Date 조회종료날짜 (YYYYMMDD) 예) 20170921", example = "29092017")
 	private String searchToDate;
 
 	@ApiModelProperty(value = "searchStatus 상태(requested / done) 예) requested/done", example = "A,B,C")

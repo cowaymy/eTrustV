@@ -15,6 +15,9 @@ public class LogStockPartsReceiveDto {
 	@ApiModelProperty(value = "부품코드")
 	private String partsCode;
 
+	@ApiModelProperty(value = "부품 id")
+	private int partsId;
+
 	@ApiModelProperty(value = "부품명")
 	private String partsName;
 
@@ -26,6 +29,14 @@ public class LogStockPartsReceiveDto {
 
 	public static LogStockPartsReceiveDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, LogStockPartsReceiveDto.class);
+	}
+
+	public int getPartsId() {
+		return partsId;
+	}
+
+	public void setPartsId(int partsId) {
+		this.partsId = partsId;
 	}
 
 	public int getSmoNoItem() {

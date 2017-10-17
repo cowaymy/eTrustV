@@ -6,8 +6,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "ReturnOnHandStockDListDto", description = "ReturnOnHandStockDListDto")
-public class ReturnOnHandStockDListDto {
+@ApiModel(value = "StockTransferReqStatusDListDto", description = "StockTransferReqStatusDListDto")
+public class StockTransferReqStatusDListDto {
 
 	@ApiModelProperty(value = "SMO item no")
 	private int smoNoItem;
@@ -15,20 +15,23 @@ public class ReturnOnHandStockDListDto {
 	@ApiModelProperty(value = "부품코드")
 	private String partsCode;
 
+	@ApiModelProperty(value = "부품명")
+	private String partsName;
+	
 	@ApiModelProperty(value = "부품 id")
 	private int partsId;
 
-	@ApiModelProperty(value = "부품명")
-	private String partsName;
-
+	@ApiModelProperty(value = "부품 타입(필터(62) / 부품(63) / MISC(64))")
+	private int partsType;
+	
 	@ApiModelProperty(value = "요청수량")
 	private int requestQty;
 
 	@ApiModelProperty(value = "부품 sn")
 	private String serialNo;
 
-	public static ReturnOnHandStockDListDto create(EgovMap egvoMap) {
-		return BeanConverter.toBean(egvoMap, ReturnOnHandStockDListDto.class);
+	public static StockTransferReqStatusDListDto create(EgovMap egvoMap) {
+		return BeanConverter.toBean(egvoMap, StockTransferReqStatusDListDto.class);
 	}
 
 	public int getSmoNoItem() {

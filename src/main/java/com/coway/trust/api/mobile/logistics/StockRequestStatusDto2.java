@@ -25,19 +25,19 @@ public class StockRequestStatusDto2 {
 	@ApiModelProperty(value = "선택 수량")
 	private String selectQty;
 
-	public static StockRequestStatusDto2 create(StrockMovementVoForMobile tmp) {
-		// TODO Auto-generated method stub
-		StockRequestStatusDto2 dto = new StockRequestStatusDto2();
-		dto.setSmoNoItem(tmp.getSmoNoItem());
-		dto.setPartsCode(tmp.getPartsCode());
-		dto.setPartsId(tmp.getPartsId());
-		dto.setPartsType(tmp.getPartsType());
-		dto.setPartsName(tmp.getPartsName());
-		dto.setRequestQty(tmp.getRequestQty());
-		dto.setSerialNo(tmp.getSerialNo());
-		dto.setSelectQty(tmp.getSelectQty());
-		return dto;
-	}
+//	public static StockRequestStatusDto2 create(StrockMovementVoForMobile tmp) {
+//		// TODO Auto-generated method stub
+//		StockRequestStatusDto2 dto = new StockRequestStatusDto2();
+//		dto.setSmoNoItem(tmp.getSmoNoItem());
+//		dto.setPartsCode(tmp.getPartsCode());
+//		dto.setPartsId(tmp.getPartsId());
+//		dto.setPartsType(tmp.getPartsType());
+//		dto.setPartsName(tmp.getPartsName());
+//		dto.setRequestQty(tmp.getRequestQty());
+//		dto.setSerialNo(tmp.getSerialNo());
+//		dto.setSelectQty(tmp.getSelectQty());
+//		return dto;
+//	}
 
 	public String getSmoNoItem() {
 		return smoNoItem;

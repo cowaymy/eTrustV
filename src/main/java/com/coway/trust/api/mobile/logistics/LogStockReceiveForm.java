@@ -9,19 +9,19 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "StockReceiveListForm", description = "공통코드 Form")
 public class LogStockReceiveForm {
 
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100337", example = "CT100337")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100337,T010", example = "CT100337")
 	private String userId;
 
-	@ApiModelProperty(value = "조회시작날짜 (YYYYMMDD) [default : '' 전체] 예) 20170601", example = "28092017")
+	@ApiModelProperty(value = "조회시작날짜 (YYYYMMDD) [default : '' 전체] 예) 20170820", example = "28092017")
 	private String searchFromDate;
 
-	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD [default : '' 전체] 예) 20170901", example = "29092017")
+	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD [default : '' 전체] 예) 20170827", example = "29092017")
 	private String searchToDate;
 
-	@ApiModelProperty(value = "searchType [default : '' 전체] 예) A=Auto,M=Manual,default=All", example = "A,B,C")
+	@ApiModelProperty(value = "searchType [default : '' 전체] 예) auto,manual,all", example = "auto/manual")
 	private String searchType;
 	
-	@ApiModelProperty(value = "searchStatus 상태상태(In-Transit / done) 예) Transit/done", example = "A,B,C")
+	@ApiModelProperty(value = "searchStatus 상태상태    (In-Transit / done) 예) transit/done", example = "A,B,C")
 	private String searchStatus;
 
 	public static Map<String, Object> createMap(LogStockReceiveForm StockReceiveListForm) {

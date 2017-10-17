@@ -28,20 +28,20 @@ public class StockRequestStatusDto {
 	// private String partsList;
 	private List<StockRequestStatusDto> partsList;
 
-	@ApiModelProperty(value = "SMO item no")
-	private String smoNoItem;
-	@ApiModelProperty(value = "부품코드")
-	private String partsCode;
-	@ApiModelProperty(value = "부품명")
-	private String partsName;
-	@ApiModelProperty(value = "요청수량")
-	private String requestQty;
-	@ApiModelProperty(value = "부품 sn")
-	private String serialNo;
-	@ApiModelProperty(value = "선택 수량")
-	private String selectQty;
-	@ApiModelProperty(value = "부품 타입(필터(62) / 부품(63) / MISC(64))")
-	private int getPartsType;
+//	@ApiModelProperty(value = "SMO item no")
+//	private String smoNoItem;
+//	@ApiModelProperty(value = "부품코드")
+//	private String partsCode;
+//	@ApiModelProperty(value = "부품명")
+//	private String partsName;
+//	@ApiModelProperty(value = "요청수량")
+//	private String requestQty;
+//	@ApiModelProperty(value = "부품 sn")
+//	private String serialNo;
+//	@ApiModelProperty(value = "선택 수량")
+//	private String selectQty;
+//	@ApiModelProperty(value = "부품 타입(필터(62) / 부품(63) / MISC(64))")
+//	private int getPartsType;
 	
 	
 	
@@ -66,13 +66,13 @@ public class StockRequestStatusDto {
 		this.reqDate = reqDate;
 	}
 
-	public int getGetPartsType() {
-		return getPartsType;
-	}
-
-	public void setGetPartsType(int getPartsType) {
-		this.getPartsType = getPartsType;
-	}
+//	public int getGetPartsType() {
+//		return getPartsType;
+//	}
+//
+//	public void setGetPartsType(int getPartsType) {
+//		this.getPartsType = getPartsType;
+//	}
 
 	public String getSmoNo() {
 		return smoNo;
@@ -145,52 +145,52 @@ public class StockRequestStatusDto {
 		this.partsList = partsList;
 	}
 
-	public String getSmoNoItem() {
-		return smoNoItem;
-	}
-
-	public void setSmoNoItem(String smoNoItem) {
-		this.smoNoItem = smoNoItem;
-	}
-
-	public String getPartsCode() {
-		return partsCode;
-	}
-
-	public void setPartsCode(String partsCode) {
-		this.partsCode = partsCode;
-	}
-
-	public String getPartsName() {
-		return partsName;
-	}
-
-	public void setPartsName(String partsName) {
-		this.partsName = partsName;
-	}
-
-	public String getRequestQty() {
-		return requestQty;
-	}
-
-	public void setRequestQty(String requestQty) {
-		this.requestQty = requestQty;
-	}
-
-	public String getSerialNo() {
-		return serialNo;
-	}
-
-	public void setSerialNo(String serialNo) {
-		this.serialNo = serialNo;
-	}
-
-	public String getSelectQty() {
-		return selectQty;
-	}
-
-	public void setSelectQty(String selectQty) {
-		this.selectQty = selectQty;
-	}
+//	public String getSmoNoItem() {
+//		return smoNoItem;
+//	}
+//
+//	public void setSmoNoItem(String smoNoItem) {
+//		this.smoNoItem = smoNoItem;
+//	}
+//
+//	public String getPartsCode() {
+//		return partsCode;
+//	}
+//
+//	public void setPartsCode(String partsCode) {
+//		this.partsCode = partsCode;
+//	}
+//
+//	public String getPartsName() {
+//		return partsName;
+//	}
+//
+//	public void setPartsName(String partsName) {
+//		this.partsName = partsName;
+//	}
+//
+//	public String getRequestQty() {
+//		return requestQty;
+//	}
+//
+//	public void setRequestQty(String requestQty) {
+//		this.requestQty = requestQty;
+//	}
+//
+//	public String getSerialNo() {
+//		return serialNo;
+//	}
+//
+//	public void setSerialNo(String serialNo) {
+//		this.serialNo = serialNo;
+//	}
+//
+//	public String getSelectQty() {
+//		return selectQty;
+//	}
+//
+//	public void setSelectQty(String selectQty) {
+//		this.selectQty = selectQty;
+//	}
 
 }

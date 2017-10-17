@@ -6,35 +6,31 @@ import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "RequestResultListForm", description = "RequestResultListForm")
-public class RequestResultListForm {
+@ApiModel(value = "StockTransferReqStatusListForm", description = "ReturnOnHandStockListForm")
+public class StockTransferReqStatusListForm {
 
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) T010", example = "CT100337")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100337", example = "T010")
 	private String userId;
 
-	@ApiModelProperty(value = "조회시작날짜 (YYYYMMDD) 예) 20170820", example = "28092017")
+	@ApiModelProperty(value = "조회시작날짜 (YYYYMMDD) 예) 01/01/2017", example = "28092017")
 	private String searchFromDate;
 
-	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD) 예) 20170827", example = "29092017")
+	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD) 예) 01/10/2017", example = "29092017")
 	private String searchToDate;
 
 	@ApiModelProperty(value = "searchStatus 상태(requested / done) 예) requested/done", example = "A,B,C")
 	private String searchStatus;
 
-	@ApiModelProperty(value = "searchType [default : '' 전체] 예) Auto,Manual,All", example = "Auto,Manual,All")
-	private String searchType;
-
-	@ApiModelProperty(value = "예) MRRL 고정값", example = "A,B,C")
+	@ApiModelProperty(value = "예) MRSL 고정값", example = "A,B,C")
 	private String reqStatus;
 
-	public static Map<String, Object> createMap(RequestResultListForm RequestResultListForm) {
+	public static Map<String, Object> createMap(StockTransferReqStatusListForm StockTransferReqStatusListForm) {
 		Map<String, Object> params = new HashMap<>();
-		params.put("userId", RequestResultListForm.getUserId());
-		params.put("searchFromDate", RequestResultListForm.getSearchFromDate());
-		params.put("searchToDate", RequestResultListForm.getSearchToDate());
-		params.put("searchStatus", RequestResultListForm.getSearchStatus());
-		params.put("searchType", RequestResultListForm.getSearchType());	
-		params.put("reqStatus", RequestResultListForm.getReqStatus());
+		params.put("userId", StockTransferReqStatusListForm.getUserId());
+		params.put("searchFromDate", StockTransferReqStatusListForm.getSearchFromDate());
+		params.put("searchToDate", StockTransferReqStatusListForm.getSearchToDate());
+		params.put("searchStatus", StockTransferReqStatusListForm.getSearchStatus());
+		params.put("reqStatus", StockTransferReqStatusListForm.getReqStatus());
 		return params;
 	}
 
@@ -68,14 +64,6 @@ public class RequestResultListForm {
 
 	public void setSearchStatus(String searchStatus) {
 		this.searchStatus = searchStatus;
-	}
-
-	public String getSearchType() {
-		return searchType;
-	}
-
-	public void setSearchType(String searchType) {
-		this.searchType = searchType;
 	}
 
 	public String getReqStatus() {

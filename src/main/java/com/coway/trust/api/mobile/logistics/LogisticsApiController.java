@@ -202,7 +202,7 @@ public class LogisticsApiController {
 
 				List<LogStockPartsReceiveDto> partsList = serialList.stream()
 						.map(r -> LogStockPartsReceiveDto.create(r)).collect(Collectors.toList());
-				hList.get(j).setsList(partsList);
+				hList.get(j).setPartsList(partsList);
 			}
 
 		}
@@ -423,6 +423,39 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(list);
 	}
+	
+	
+	@ApiOperation(value = "Stock Transfer - Request Status List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/StockTransferReqStatusList", method = RequestMethod.GET)
+	public ResponseEntity<List<StockTransferReqStatusMListDto>> getStockTransferReqStatusList(
+			@ModelAttribute StockTransferReqStatusListForm StockTransferReqStatusListForm) throws Exception {
+
+		Map<String, Object> params = StockTransferReqStatusListForm.createMap(StockTransferReqStatusListForm);
+
+		List<EgovMap> headerList = MlogApiService.getStockTransferReqStatusMList(params);
+
+		List<StockTransferReqStatusMListDto> hList = null;
+		for (int i = 0; i < headerList.size(); i++) {
+			LOGGER.debug("headerList 값 : {}", headerList.get(i));
+		}
+
+		for (int i = 0; i < headerList.size(); i++) {
+
+			hList = headerList.stream().map(r -> StockTransferReqStatusMListDto.create(r)).collect(Collectors.toList());
+
+			for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				List<EgovMap> reqParts = MlogApiService.getStockTransferReqStatusDList(tmpMap);
+
+				List<StockTransferReqStatusDListDto> partsList = reqParts.stream()
+						.map(r -> StockTransferReqStatusDListDto.create(r)).collect(Collectors.toList());
+				hList.get(j).setPartsList(partsList);
+			}
+
+		}
+		return ResponseEntity.ok(hList);
+	}
+	
 	
 	
 	
