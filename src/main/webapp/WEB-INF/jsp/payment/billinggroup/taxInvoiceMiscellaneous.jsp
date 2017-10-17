@@ -139,6 +139,7 @@ function fn_generateInvoice(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Tax Invoice - Miscellaneous</h2>
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getTaxInvoiceListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside>
@@ -188,23 +189,6 @@ function fn_generateInvoice(){
                 </tbody>
             </table>
             <!-- table end -->
-
-            <!-- link_btns_wrap start -->
-            <aside class="link_btns_wrap">
-                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-                <dl class="link_list">
-                    <dt>Link</dt>
-                    <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>                                                                
-                    </ul>
-                    <ul class="btns">                       
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                    </dd>
-                </dl>
-            </aside>
-            <!-- link_btns_wrap end -->
         </form>
     </section>
     <!-- search_table end -->
