@@ -146,7 +146,6 @@ hideViewPopup=function(val){
     $(val).hide();
 }
 </script>
-
 <!-- content start -->
 <section id="content">
     <ul class="path">
@@ -155,7 +154,6 @@ hideViewPopup=function(val){
         <li>Billing Group</li>
         <li>Company Statement</li>
     </ul>
-    
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
@@ -165,9 +163,7 @@ hideViewPopup=function(val){
         </ul>    
     </aside>
     <!-- title_line end -->
-
-
- <!-- search_table start -->
+    <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
 
@@ -203,33 +199,29 @@ hideViewPopup=function(val){
                     </tbody>
               </table>
         </form>
-        </section>
-
- <!-- search_result start -->
-<section class="search_result">     
-
-    <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-            <dl class="link_list">
-                <dt>Link</dt>
-                <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
-                    </ul>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_sendEStatementPop();">Send E-Statement</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                </dd>
-            </dl>
-        </aside>
-        <!-- link_btns_wrap end -->
-        
-    <!-- grid_wrap start -->
-    <article id="grid_wrap" class="grid_wrap"></article>
-    <!-- grid_wrap end -->
-</section>
+                <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+                <dl class="link_list">
+                    <dt>Link</dt>
+                    <dd>
+                        <ul class="btns">
+                            <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
+                        </ul>
+                        <ul class="btns">
+                            <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_sendEStatementPop();">Send E-Statement</a></p></li>
+                        </ul>
+                        <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                    </dd>
+                </dl>
+            </aside>
+    </section>
+    <!-- search_result start -->
+    <section class="search_result">
+        <!-- grid_wrap start -->
+        <article id="grid_wrap" class="grid_wrap"></article>
+        <!-- grid_wrap end -->
+    </section>
+    <!-- search_result end -->
 </section>
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/Official_StatementOfAccount(COMPANY)_PDF.rpt" />
@@ -242,8 +234,6 @@ hideViewPopup=function(val){
     <input type="hidden" id="emailText" name="emailText" value="" />
     <input type="hidden" id="emailTo" name="emailTo" value="" />
 </form>
-
-
 <!--------------------------------------------------------------- 
     POP-UP (E-INVOICE)
 ---------------------------------------------------------------->
