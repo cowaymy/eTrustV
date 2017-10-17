@@ -43,7 +43,6 @@ function fn_generateStatement(){
     });
 }
 </script>
-
 <!-- content start -->
 <section id="content">
     <ul class="path">
@@ -52,7 +51,6 @@ function fn_generateStatement(){
         <li>Billing Group</li>
         <li>Penalty Invoice</li>
     </ul>
-    
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
@@ -62,7 +60,6 @@ function fn_generateStatement(){
         </ul>    
     </aside>
     <!-- title_line end -->
-    
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
@@ -90,11 +87,9 @@ function fn_generateStatement(){
         </form>
     </section>
 </section>
-
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/PenantlyInvoice_PDF.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="v_orderNo" name="v_orderNo" />
     <input type="hidden" id="v_billNo" name="v_billNo" />
 </form>
-
