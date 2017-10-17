@@ -458,7 +458,7 @@ function fnSearchBtnSCMPrePOView()
 	           {
 	              console.log("성공 fnSearchBtnList: " + result.length);
 	              AUIGrid.setGridData(myGridID, result.selectScmPrePoItemViewList);
-	              AUIGrid.setGridData(myGridID2, result.selectScmPrePoItemViewList);
+	              //AUIGrid.setGridData(myGridID2, result.selectScmPrePoItemViewList);
 	              AUIGrid.setGridData(SCMPOViewGridID, result.selectScmPoViewList);
 	              if(result != null && result.length > 0)
 	              {
@@ -468,7 +468,7 @@ function fnSearchBtnSCMPrePOView()
 
 /****************************  Form Ready ******************************************/
 
-var myGridID , myGridID2;
+var myGridID , myGridID2 ,SCMPOViewGridID;
 
 $(document).ready(function()
 {
@@ -511,7 +511,6 @@ $(document).ready(function()
 	  gSelRowIdx = event.rowIndex;
 	
 	  console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
-	  
 	  console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
 	});
 	
@@ -565,7 +564,6 @@ $(document).ready(function()
     gSelRowIdx = event.rowIndex;
   
     console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID2,AUIGrid.getCellValue(myGridID2, event.rowIndex, 0)) );
-    
     console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex );        
   });
   
@@ -618,7 +616,6 @@ $(document).ready(function()
     gSelRowIdx = event.rowIndex;
   
     console.log("cellClick_Status: " + AUIGrid.isAddedById(SCMPOViewGridID,AUIGrid.getCellValue(SCMPOViewGridID, event.rowIndex, 0)) );
-    
     console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex );        
   });
   
