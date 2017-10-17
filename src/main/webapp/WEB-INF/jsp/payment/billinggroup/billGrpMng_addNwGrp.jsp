@@ -430,237 +430,209 @@ var contPersonLayout = [
     
 </script>
 <body>
-<form action="" id="newGroupForm" name="newGroupForm">
-<input type="hidden" name="salesOrdId" id="salesOrdId">
-<input type="hidden" name="custTypeId" id="custTypeId">
-<input type="hidden" name="custAddId" id="custAddId">
-<input type="hidden" name="custCntcId" id="custCntcId">
-<div id="wrap"><!-- wrap start -->
-<section id="content"><!-- content start -->
-	<ul class="path">
-	        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
-	        <li>Payment</li>
-	        <li>Billing Group</li>
-	        <li>Create New Group</li>
-	</ul>
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Create New Group</h2>
-</aside><!-- title_line end -->
-
-<section class="search_result"><!-- search_result start -->
-
-<section class="tap_wrap"><!-- tap_wrap start -->
-<ul class="tap_type1">
-    <li><a href="#" class="on" id="basciInfo">Basic Info</a></li>
-    <li><a href="#">Mailing Address</a></li>
-    <li><a href="#">Contact Info</a></li>
-</ul>
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Main Order</th>
-    <td id="" colspan="">
-        <input type="text" name="orderNo" id="orderNo" class="w100p" onblur="onblurOrderInfo();">
-    </td>
-    <td colspan="2">
-        <a id="trialNoBtn" name="trialNoBtn" href="javascript:fn_orderSearch();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Customer ID</th>
-    <td id="customerId">
-    </td>
-    <th scope="row">NRIC/Company No</th>
-    <td id="nric">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Customer Name</th>
-    <td colspan="3" id="customerName">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Billing Type</th>
-    <td colspan="">
-    <label><input type="checkbox"  id="post"  name="post" /><span>Post</span></label>
-    <label><input type="checkbox"  id="sms"  name="sms" /><span>SMS</span></label>
-    <label><input type="checkbox"  id="estm" name="estm" onclick="fn_estmEvent();"/><span>E-Statement</span></label>
-    </td>
-    <th scope="row">Email</th>
-    <td>
-        <input type="text"  id="email" name="email" disabled="disabled"/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Remark</th>
-    <td colspan="3"><textarea rows="" cols="" id="custBillRemark" name="custBillRemark"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue2"><a href="javascript:fn_addNewAddr();" id="addNewAddr">Add New Address</a></p></li>
-    <li><p class="btn_blue2"><a href="javascript:fn_selectMailAddr();" id="selectMailAddr">Select Mailing Address</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Mailing Address</th>
-    <td id="maillingAddr">
-    </td>
-</tr>
-</tbody>
-
-</table><!-- table end -->
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue2"><a href="javascript:fn_addNewConPerson();" id="addNewContact">Add New Contact</a></p></li>
-    <li><p class="btn_blue2"><a href="javascript:fn_selectContPerson();" id="selectContPerson">Select Contact Person</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Contact Person</th>
-    <td colspan="3" id="contactPerson">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Mobile Number</th>
-    <td id="mobileNumber">
-    </td>
-    <th scope="row">Office Number</th>
-    <td id="officeNumber">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Residence Number</th>
-    <td id="residenceNumber">
-    </td>
-    <th scope="row">Fax Number</th>
-    <td id="faxNumber">
-    </td>
-</tr>
-</tbody>
-
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-</section><!-- tap_wrap end -->
-<ul class="center_btns mt10">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_createNewGroup();" id="_btnSave">SAVE</a></p></li>
-</ul>
-</section><!-- content end -->
-</section><!-- container end -->
-<hr />
-</div><!-- wrap end -->
-<div id="selectMaillAddrPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Customer Address - Customer Address</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_custAddrClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span>Clear</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Address Keyword</th>
-    <td>
-    <input type="text" id="custAddr" name="custAddr" title="" placeholder="Keyword" class="w100p" />
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<article id="selMaillAddrGrid" class="grid_wrap mt30"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="selectContPersonPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>We Bring Wellness - Customer Contact</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_contPerPopClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span>Clear</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Contact Keyword</th>
-    <td>
-    <input type="text" id="personKeyword" name="personKeyword" title="" placeholder="Keyword" class="w100p" />
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<article id="selContPersonGrid" class="grid_wrap mt30"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-</form>
+	<form action="" id="newGroupForm" name="newGroupForm">
+		<input type="hidden" name="salesOrdId" id="salesOrdId">
+		<input type="hidden" name="custTypeId" id="custTypeId">
+		<input type="hidden" name="custAddId" id="custAddId">
+		<input type="hidden" name="custCntcId" id="custCntcId">
+		<div id="wrap"><!-- wrap start -->
+			<section id="content"><!-- content start -->
+				<ul class="path">
+				        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+				        <li>Payment</li>
+				        <li>Billing Group</li>
+				        <li>Create New Group</li>
+				</ul>
+				<aside class="title_line"><!-- title_line start -->
+				<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+				<h2>Create New Group</h2>
+				</aside><!-- title_line end -->
+				<section class="search_result"><!-- search_result start -->
+					<section class="tap_wrap"><!-- tap_wrap start -->
+						<ul class="tap_type1">
+						    <li><a href="#" class="on" id="basciInfo">Basic Info</a></li>
+						    <li><a href="#">Mailing Address</a></li>
+						    <li><a href="#">Contact Info</a></li>
+						</ul>
+						<article class="tap_area"><!-- tap_area start -->
+							<table class="type1 mt10"><!-- table start -->
+								<caption>table</caption>
+								<colgroup>
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								</colgroup>
+								<tbody>
+									<tr>
+									    <th scope="row">Main Order</th>
+									    <td id="" colspan="">
+									        <input type="text" name="orderNo" id="orderNo" class="w100p" onblur="onblurOrderInfo();">
+									    </td>
+									    <td colspan="2">
+									        <a id="trialNoBtn" name="trialNoBtn" href="javascript:fn_orderSearch();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Customer ID</th>
+									    <td id="customerId">
+									    </td>
+									    <th scope="row">NRIC/Company No</th>
+									    <td id="nric">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Customer Name</th>
+									    <td colspan="3" id="customerName">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Billing Type</th>
+									    <td colspan="">
+									    <label><input type="checkbox"  id="post"  name="post" /><span>Post</span></label>
+									    <label><input type="checkbox"  id="sms"  name="sms" /><span>SMS</span></label>
+									    <label><input type="checkbox"  id="estm" name="estm" onclick="fn_estmEvent();"/><span>E-Statement</span></label>
+									    </td>
+									    <th scope="row">Email</th>
+									    <td>
+									        <input type="text"  id="email" name="email" disabled="disabled"/>
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Remark</th>
+									    <td colspan="3"><textarea rows="" cols="" id="custBillRemark" name="custBillRemark"></textarea>
+									    </td>
+									</tr>
+								</tbody>
+							</table><!-- table end -->
+						</article><!-- tap_area end -->
+						<article class="tap_area"><!-- tap_area start -->
+							<ul class="right_btns">
+							    <li><p class="btn_blue2"><a href="javascript:fn_addNewAddr();" id="addNewAddr">Add New Address</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_selectMailAddr();" id="selectMailAddr">Select Mailing Address</a></p></li>
+							</ul>
+							<table class="type1 mt10"><!-- table start -->
+								<caption>table</caption>
+								<colgroup>
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								</colgroup>
+								<tbody>
+									<tr>
+									    <th scope="row">Mailing Address</th>
+									    <td id="maillingAddr">
+									    </td>
+									</tr>
+								</tbody>
+							</table><!-- table end -->
+						</article><!-- tap_area end -->
+						<article class="tap_area"><!-- tap_area start -->
+							<ul class="right_btns">
+							    <li><p class="btn_blue2"><a href="javascript:fn_addNewConPerson();" id="addNewContact">Add New Contact</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_selectContPerson();" id="selectContPerson">Select Contact Person</a></p></li>
+							</ul>
+							<table class="type1 mt10"><!-- table start -->
+								<caption>table</caption>
+								<colgroup>
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								</colgroup>
+								<tbody>
+									<tr>
+									    <th scope="row">Contact Person</th>
+									    <td colspan="3" id="contactPerson">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Mobile Number</th>
+									    <td id="mobileNumber">
+									    </td>
+									    <th scope="row">Office Number</th>
+									    <td id="officeNumber">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Residence Number</th>
+									    <td id="residenceNumber">
+									    </td>
+									    <th scope="row">Fax Number</th>
+									    <td id="faxNumber">
+									    </td>
+									</tr>
+								</tbody>
+							</table><!-- table end -->
+						</article><!-- tap_area end -->
+					</section><!-- tap_wrap end -->
+					<ul class="center_btns mt10">
+					    <li><p class="btn_blue2 big"><a href="javascript:fn_createNewGroup();" id="_btnSave">SAVE</a></p></li>
+					</ul>
+				</section><!-- content end -->
+			</section><!-- container end -->
+		  <hr />
+		</div><!-- wrap end -->
+		<div id="selectMaillAddrPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
+			<header class="pop_header"><!-- pop_header start -->
+				<h1>Customer Address - Customer Address</h1>
+				<ul class="right_opt">
+				    <li><p class="btn_blue2"><a href="#" onclick="fn_custAddrClose();">CLOSE</a></p></li>
+				</ul>
+			</header><!-- pop_header end -->
+			<section class="pop_body"><!-- pop_body start -->
+				<ul class="right_btns">
+				    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span>Search</a></p></li>
+				    <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span>Clear</a></p></li>
+				</ul>
+				<table class="type1 mt10"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:160px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+						<tr>
+						    <th scope="row">Address Keyword</th>
+						    <td>
+						    <input type="text" id="custAddr" name="custAddr" title="" placeholder="Keyword" class="w100p" />
+						    </td>
+						</tr>
+					</tbody>
+				</table><!-- table end -->
+				<article id="selMaillAddrGrid" class="grid_wrap mt30"><!-- grid_wrap start -->
+				</article><!-- grid_wrap end -->
+		  </section><!-- pop_body end -->
+		</div><!-- popup_wrap end -->
+		<div id="selectContPersonPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
+			<header class="pop_header"><!-- pop_header start -->
+				<h1>We Bring Wellness - Customer Contact</h1>
+				<ul class="right_opt">
+				    <li><p class="btn_blue2"><a href="#" onclick="fn_contPerPopClose();">CLOSE</a></p></li>
+				</ul>
+			</header><!-- pop_header end -->
+			<section class="pop_body"><!-- pop_body start -->
+				<ul class="right_btns">
+				    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span>Search</a></p></li>
+				    <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span>Clear</a></p></li>
+				</ul>
+				<table class="type1 mt10"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:160px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+						<tr>
+						    <th scope="row">Contact Keyword</th>
+						    <td>
+						    <input type="text" id="personKeyword" name="personKeyword" title="" placeholder="Keyword" class="w100p" />
+						    </td>
+						</tr>
+					</tbody>
+				</table><!-- table end -->
+				<article id="selContPersonGrid" class="grid_wrap mt30"><!-- grid_wrap start -->
+				</article><!-- grid_wrap end -->
+			</section><!-- pop_body end -->
+		</div><!-- popup_wrap end -->
+	</form>
 </body>
