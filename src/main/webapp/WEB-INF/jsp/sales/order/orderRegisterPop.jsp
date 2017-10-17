@@ -151,6 +151,7 @@
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#empChk").val('0'); //Employee
+                $("#gstChk").val('0').prop("disabled", true);
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -207,12 +208,6 @@
                 $('#liInstSelAddr').removeClass("blind");
                 $('#liInstNewAddr2').removeClass("blind");
                 $('#liInstSelAddr2').removeClass("blind");
-                /*
-                if (txtCustIndustry.Text == "Government")
-                {
-                    RadWindowManager1.RadAlert("<b>Goverment Customer</b>", 450, 160, "Alert", "callBackFn", null);
-                }
-                */
                 
                 fn_checkDocList(false);
 
@@ -278,9 +273,11 @@
 
                     if(custInfo.gstChk == '1') {
                         $("#gstChk").val('1').prop("disabled", true);
+                        fn_tabOnOffSet('REL_CER', 'SHOW');
                     }
                     else {
                         $("#gstChk").val('0').removeAttr("disabled");
+                        fn_tabOnOffSet('REL_CER', 'HIDE');
                     }
                 }
             }
@@ -674,7 +671,6 @@
             }
         });
         $('#gstChk').change(function(event) {
-//          if($("#gstChk").val() == '1' && $('#appType').val() != '1412') {
             if($("#gstChk").val() == '1') {
                 fn_tabOnOffSet('REL_CER', 'SHOW');
             }
@@ -737,10 +733,11 @@
                             $('[name="advPay"]').removeAttr("disabled");
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                             $("#gstChk").val('0').prop("disabled", true);
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
                             
                             break;
 
-                        case '67' : //INSTALLMENT
+                        case '67' : //OUTRIGHT
                             $("#gstChk").removeAttr("disabled");
 
                             break;
@@ -758,7 +755,7 @@
                             $("#gstChk").removeAttr("disabled");
                             
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
-                            fn_tabOnOffSet('REL_CER', 'HIDE');
+                          //fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             stkType = '3';
 
@@ -767,6 +764,8 @@
                         default :
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                             $("#gstChk").val('0').prop("disabled", true);
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+                            
                             break;
                     }
 
@@ -2312,7 +2311,7 @@
 <tr>
     <th scope="row">Discount Period/<br>Promotion Rental Fee</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p"></select></p>
-        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:44px;" class="readonly" readonly/></p>
+        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
         <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
     <th scope="row">Organization Code</th>
     <td><input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly />
@@ -2321,9 +2320,9 @@
 <tr>
     <th scope="row">PV</th>
     <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly /></td>
-    <th scope="row">Trial No </th>
+    <th scope="row">Trial No</th>
     <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
-               <input id="trialNo" name="trialNo" type="text" title="" placeholder="Trial No" class="readonly" readonly />
+               <input id="trialNo" name="trialNo" type="text" title="" placeholder="Trial No" style="width:210px;" class="readonly" readonly />
                <input id="trialId" name="trialId" type="hidden" />
                <a id="trialNoBtn" name="trialNoBtn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
