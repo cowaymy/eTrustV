@@ -94,6 +94,9 @@
     </insert>
     
     <insert id="insertBankStatementDetail" parameterType="Map">
+      <selectKey keyProperty="fTrnscId" resultType="int" order="BEFORE">
+            SELECT PAY0081D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
         INSERT INTO PAY0081D (
             F_TRNSC_ID,
             F_BANK_JRNL_ID,
@@ -112,7 +115,7 @@
             CRC_MAPPING_STUS_ID,
             OTH_KEYIN_STUS_ID
         ) VALUES (
-            PAY0081D_SEQ.NEXTVAL,
+            #{fTrnscId},
             #{fBankJrnlId},
             TO_DATE(#{fTrnscDt},'DD/MM/YYYY'),
             #{fTrnscRef1},
@@ -141,6 +144,8 @@
             RGST_DT,
             RGST_TM,
             RGST_ID,
+            BANKSID,
+            BANKSEQ,
             BANKCO,
             BANKAC,
             INDATE,
@@ -161,7 +166,9 @@
             '10',       
             TO_CHAR(SYSDATE,'YYYYMMDD'),
             TO_CHAR(SYSDATE,'HHMMSS'),
-            #{userNm},
+            #{userNm},            
+            #{fBankJrnlId},
+            #{fTrnscId},
             #{uploadIssueBank},
             #{uploadBankAccount},
             TO_CHAR(TO_DATE(#{fTrnscDt},'DD/MM/YYYY'),'YYYYMMDD'),

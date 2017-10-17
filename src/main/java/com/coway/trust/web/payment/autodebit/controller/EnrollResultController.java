@@ -111,8 +111,8 @@ public class EnrollResultController {
     		{
     			List<CsvFormatVO> csvList = new ArrayList();
     			
-    			if(gridList.size() > 1){
-    				for(int i=1; i<gridList.size(); i++){
+    			if(gridList.size() > 0){
+    				for(int i=0; i<gridList.size(); i++){
                 		Map<String, Object> map = (Map<String, Object>) gridList.get(i);
                 		try{
                     		if(CommonUtils.isNumCheck(map.get("1").toString()) && 
@@ -145,10 +145,10 @@ public class EnrollResultController {
                     			List<EgovMap> result = enrollResultService.saveNewEnrollment(enrollMaster, enrollDList, Integer.parseInt(formInfo.get("updateType").toString()));
                     			
                     			if(result.size() > 0){
-                        			message = "Enrollment information successfully updated.\n";
-                        			message += "Update Batch ID : " + result.get(0).get("enrlUpdId") + "\n";
-                        			message += "Total Update : " + result.get(0).get("totUpDt") + "\n";
-                        			message += "Total Success : " + result.get(0).get("totSucces")+ "\n";
+                        			message = "Enrollment information successfully updated.<br>";
+                        			message += "Update Batch ID : " + result.get(0).get("enrlUpdId") + "<br>";
+                        			message += "Total Update : " + result.get(0).get("totUpDt") + "<br>";
+                        			message += "Total Success : " + result.get(0).get("totSucces")+ "<br>";
                         			message += "Total Failed : " + result.get(0).get("totFail")+ "";
                         		}
         

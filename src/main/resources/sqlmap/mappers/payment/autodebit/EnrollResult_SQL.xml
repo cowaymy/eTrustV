@@ -45,8 +45,8 @@
             AND Project1.C1 = #{creator}
         </if>
         <if test="createDate1 != '' and createDate2 != '' ">
-            AND Project1.CRT_DT &gt; TO_DATE(#{createDate1}, 'DD-MM-YYYY hhmiss') + 1
-            AND Project1.CRT_DT &lt; TO_DATE(#{createDate2}, 'DD-MM-YYYY hhmiss')
+            AND Project1.CRT_DT &gt;= TO_DATE(#{createDate1}, 'DD-MM-YYYY hhmiss') 
+            AND Project1.CRT_DT &lt; TO_DATE(#{createDate2}, 'DD-MM-YYYY hhmiss') + 1
         </if> 
         <if test="updateType != '' and updateType != null">
             AND Project1.TYPE_ID = #{updateType}
@@ -154,7 +154,7 @@
             (
                 #{enrollUpdateId},
                 #{typeId},
-                TO_DATE(#{created}, 'yyyymmddhh24miss'),
+                SYSDATE,
                 #{creator},
                 #{totalUpdate},
                 #{totalSuccess},
@@ -199,8 +199,8 @@
                  #{inputMonth},
                  #{inputDay},
                  #{inputYear},
-                 #{resultDate},
-                 TO_DATE(#{created}, 'yyyymmddhh24miss'),
+                 TO_DATE('19000101','YYYYMMDD'),
+                 SYSDATE,
                  #{creator},
                  #{message},
                  #{inputRejectCode},

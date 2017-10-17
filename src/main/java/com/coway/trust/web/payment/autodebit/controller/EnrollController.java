@@ -27,9 +27,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.autodebit.service.EnrollService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -44,6 +46,17 @@ public class EnrollController {
 
 	@Resource(name = "enrollService")
 	private EnrollService enrollService ;
+	
+	@Autowired
+	private AdaptorService adaptorService;
+	
+	@Value("${autodebit.file.upload.path}")
+	private String filePath;
+	
+	@Value("${autodebit.email.receiver}")
+	private String emailReceiver;
+	
+	
 
 	/******************************************************
 	 * EnrollmentList  
@@ -175,7 +188,7 @@ public class EnrollController {
 		String sFile = "ALB" + CommonUtils.changeFormat(String.valueOf(enrollMap.get("debtDtFrom")), "yyyy-MM-dd" , "yyyyMMdd") + "ENROLL01.txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/ALB/Enroll/" + sFile);
+		File file = new File(filePath + "/ALB/Enroll/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -254,9 +267,16 @@ public class EnrollController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		String emailTitle = "ALB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("ALB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo"));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 	
 	/**
@@ -270,8 +290,8 @@ public class EnrollController {
 		String todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
 		String sFile = "AD_Enrolment_" + todayDate + ".txt";
 		
-		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/ALB/Enroll/" + sFile);
+		//파일 디렉토리		
+		File file = new File(filePath + "/ALB/Enroll/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -351,9 +371,16 @@ public class EnrollController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		String emailTitle = "ALB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("ALB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo"));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 	
 	
@@ -368,7 +395,7 @@ public class EnrollController {
 		String sFile = "CIMB" + CommonUtils.changeFormat(String.valueOf(enrollMap.get("debtDtFrom")), "yyyy-MM-dd" , "yyyyMMdd") + "E01.txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/CIMB/Enroll/" + sFile);
+		File file = new File(filePath + "/CIMB/Enroll/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -425,9 +452,17 @@ public class EnrollController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		String emailTitle = "CIMB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("CIMB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo"));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
+		
 	}
 	
 	/**
@@ -442,7 +477,7 @@ public class EnrollController {
 		long iHashTot = 0;
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/MBB/Enroll/" + sFile);
+		File file = new File(filePath + "/MBB/Enroll/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -537,9 +572,16 @@ public class EnrollController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		String emailTitle = "MBB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("MBB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo"));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 	
 	
@@ -555,7 +597,7 @@ public class EnrollController {
 		String sFile = "AB_00035_AutoMaint_" + todayDate + ".txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/RHB/Enroll/" + sFile);
+		File file = new File(filePath + "/RHB/Enroll/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -611,9 +653,16 @@ public class EnrollController {
 		out.close();
 		fileWriter.close();
 		
-		//메일 보내기는 나중에
-		String emailTitle = "RHB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("RHB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo"));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 	
 	/**
@@ -627,7 +676,7 @@ public class EnrollController {
 		String sFile = "BSN" + CommonUtils.changeFormat(String.valueOf(enrollMap.get("debtDtFrom")), "yyyy-MM-dd" , "yyyyMMdd") + "E01.txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/BSN/Enroll/" + sFile);
+		File file = new File(filePath + "/BSN/Enroll/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -666,9 +715,16 @@ public class EnrollController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		String emailTitle = "BSN Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("BSN Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo"));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 
 	/**

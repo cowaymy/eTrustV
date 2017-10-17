@@ -49,6 +49,9 @@ $(document).ready(function(){
                 if (typeof event.target.result != "undefined") {
                     // 그리드 CSV 데이터 적용시킴
                     AUIGrid.setCsvGridData(newGridID, event.target.result, false);
+                    
+                  //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                    AUIGrid.removeRow(newGridID,0);
                 } else {
                     alert('No data to import!');
                 }
@@ -90,6 +93,9 @@ $('#myForm').ajaxSubmit({
            AUIGrid.setCsvGridData(newGridID, csvText);
            
            AUIGrid.removeAjaxLoader(newGridID);
+           
+           //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+           AUIGrid.removeRow(newGridID,0);
        }
    },
    error : function(e) {
@@ -100,7 +106,8 @@ $('#myForm').ajaxSubmit({
 
 var gridPros = {
         editable: false,
-        showStateColumn: false
+        showStateColumn: false,
+        softRemoveRowMode:false
 };
 
 var columnLayout=[
@@ -237,7 +244,7 @@ function resetUpdatedItems() {
         <li>Auto Debit</li>
         <li>Enrollment Result</li>
     </ul>
-    
+
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
@@ -249,11 +256,11 @@ function resetUpdatedItems() {
     <!-- title_line end -->
 
 
- <!-- search_table start -->
+    <!-- search_table start -->
     <section class="search_table">
         <form name="resultForm" id="resultForm"  method="post">
-
-            <table class="type1"><!-- table start -->
+            <!-- table start -->
+            <table class="type1">
                 <caption>table</caption>
                 <colgroup>
                     <col style="width:140px" />
@@ -271,12 +278,12 @@ function resetUpdatedItems() {
                         </td>
                         <th scope="row">Creator</th>
                         <td>
-                           <input id="creator" name="creator" type="text" title="Creator(Username)" placeholder="Creator(USername)" class="w100p" />
+                            <input id="creator" name="creator" type="text" title="Creator(Username)" placeholder="Creator(USername)" class="w100p" />
                         </td>
                         <th scope="row">Create Date</th>
                         <td>
-                           <div class="date_set"><!-- date_set start -->
-                                <p><input type="text"  name="createDate1" id="createDate1" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <div class="date_set"><!-- date_set start -->
+                            <p><input type="text"  name="createDate1" id="createDate1" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             <span>To</span>
                             <p><input type="text"  name="createDate2" id="createDate2" title="Create Date To" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             </div>
@@ -292,25 +299,24 @@ function resetUpdatedItems() {
                             </select>
                         </td>
                     </tr>
-                    </tbody>
-              </table>
+                </tbody>
+            </table>
         </form>
-        </section>
+    </section>
 
- <!-- search_result start -->
-<section class="search_result">     
+    <!-- search_result start -->
+    <section class="search_result">     
 
-    <!-- link_btns_wrap start -->
+        <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
             <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <!-- <li><p class="link_btn"><a href="#">menu1</a></p></li> -->
+                        <li><p class="link_btn"><a href="#" onclick="javascript:showViewPopup()">View Enrollment Result</a></p></li>
                     </ul>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">View Enrollment Result</a></p></li>
+                    <ul class="btns">                        
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showNewPopup()">New Enrollment Result</a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -318,58 +324,63 @@ function resetUpdatedItems() {
             </dl>
         </aside>
         <!-- link_btns_wrap end -->
-        
-    <!-- grid_wrap start -->
-    <article id="grid_wrap" class="grid_wrap"></article>
-    <!-- grid_wrap end -->
-</section>
-</section>
 
-<div class="popup_wrap" id="view_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Enrollment Update Info</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-    <table class="type1"><!-- table start -->
-        <caption>table</caption>
-                <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Update Batch ID</th>
-                        <td id="viewEnrollId"></td>
-                        <th scope="row">Create Date</th>
-                        <td id="viewCreateDate"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Update Type</th>
-                        <td id="viewUpdateType"></td>
-                        <th scope="row">Creator</th>
-                        <td id="viewCreator"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Total Update</th>
-                        <td id="viewTotalUpdate"></td>
-                        <th scope="row">Total Success / Fail</th>
-                        <td id="viewTotalSuccess"></td>
-                    </tr>
-                </tbody>
-    </table>
-    <!-- grid_wrap start -->
-    <article id="grid_wrap_view" class="grid_wrap"></article>
-    <!-- grid_wrap end -->
+        <!-- grid_wrap start -->
+        <article id="grid_wrap" class="grid_wrap mt10"></article>
+        <!-- grid_wrap end -->
     </section>
-</div><!-- popup_wrap end -->
+</section>
+
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="view_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header">
+        <h1>Enrollment Update Info</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <section class="pop_body">
+        <!-- table start -->
+        <table class="type1">
+            <caption>table</caption>
+            <colgroup>
+                <col style="width:165px" />
+                <col style="width:*" />
+                <col style="width:165px" />
+                <col style="width:*" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th scope="row">Update Batch ID</th>
+                    <td id="viewEnrollId"></td>
+                    <th scope="row">Create Date</th>
+                    <td id="viewCreateDate"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Update Type</th>
+                    <td id="viewUpdateType"></td>
+                    <th scope="row">Creator</th>
+                    <td id="viewCreator"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Total Update</th>
+                    <td id="viewTotalUpdate"></td>
+                    <th scope="row">Total Success / Fail</th>
+                    <td id="viewTotalSuccess"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- grid_wrap start -->
+        <article id="grid_wrap_view" class="grid_wrap"></article>
+        <!-- grid_wrap end -->
+    </section>
+</div>
+<!-- popup_wrap end -->
 
 <div id="new_wrap" class="popup_wrap" style="display:none;">
     <header class="pop_header">
@@ -378,48 +389,51 @@ function resetUpdatedItems() {
             <li><p class="btn_blue2"><a href="#" onclick="hideNewPopup()">CLOSE</a></p></li>
         </ul>
     </header>
+    
     <!-- pop_body start -->
     <section class="pop_body">
         <!-- search_table start -->
+        <ul class="right_btns mb10">
+            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
+            <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/payment/EnrollmentResult_Format.csv">Download CSV Format</a></p></li>
+        </ul>
         <section class="search_table">
             <form name="myForm" id="myForm">
-	            <!-- table start -->
-	            <table class="type1">
-	                <caption>table</caption>
-	                <colgroup>
-	                    <col style="width:175px" />
-	                    <col style="width:*" />
-	                </colgroup>
-	                <tbody>
-	                    <tr>
-	                        <th scope="row">Update Type</th>
-	                        <td>
-	                            <select name="updateType" id="updateType"  style="width:100%">
-	                                <option value="978">Submit Date</option>
-	                                <option value="979">Start Date</option>
-	                                <option value="980">Reject Date</option>
-	                            </select>
-	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <th scope="row">Select your CSV file *</th>
-	                        <td>
-	                            <div class="auto_file"><!-- auto_file start -->
-	                                <input type="file" id="fileSelector" title="file add" accept=".csv"/>
-	                            </div><!-- auto_file end -->
-	                        </td>
-	                    </tr>
-	                </tbody>
-	            </table>
+                <!-- table start -->
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:175px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Update Type</th>
+                            <td>
+                                <select name="updateType" id="updateType"  style="width:100%">
+                                    <option value="978">Submit Date</option>
+                                    <option value="979">Start Date</option>
+                                    <option value="980">Reject Date</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Select your CSV file *</th>
+                            <td>
+                                <div class="auto_file"><!-- auto_file start -->
+                                    <input type="file" id="fileSelector" title="file add" accept=".csv"/>
+                                </div><!-- auto_file end -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </form>
         </section>
-        <ul class="center_btns" id="center_btns1">
-            <li><p class="btn_blue2"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
-            <li><p class="btn_blue2"><a href="#">Download CSV Format</a></p></li>
-        </ul>
+        
         <!-- grid_wrap start -->
-        <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
+            <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
         <!-- grid_wrap end -->
     </section>
     <!-- pop_body end -->
 </div>
+
