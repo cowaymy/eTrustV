@@ -367,8 +367,6 @@ var billingTargetLayout = [
 	        });
 	    }); //btnSave end
 	});
-
-	
 </script>
 <body>
 	<form action="" id="billingForm" name="billingForm">
@@ -437,10 +435,10 @@ var billingTargetLayout = [
 		</div><!-- wrap end -->
 	<div id="createBillsPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 		<header class="pop_header"><!-- pop_header start -->
-		<h1>Advance Bill Remark</h1>
-		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="" onclick="fn_createBillsPopClose();">CLOSE</a></p></li>
-		</ul>
+			<h1>Advance Bill Remark</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="" onclick="fn_createBillsPopClose();">CLOSE</a></p></li>
+			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
 			<table class="type1"><!-- table start -->
