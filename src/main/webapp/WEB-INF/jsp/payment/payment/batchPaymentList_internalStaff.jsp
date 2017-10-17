@@ -573,9 +573,9 @@ var batchInfoLayout = [
             <li><p class="link_btn"><a href="#">menu8</a></p></li>
         </ul> -->
         <ul class="btns">
-            <li><p class="link_btn type2"><a href="javascript:fn_uploadPopup();">Upload Batch Payment</a></p></li>
-            <li><p class="link_btn type2"><a href="javascript:fn_viewBatchPopup();">View Batch Payment</a></p></li>
-            <li><p class="link_btn type2"><a href="javascript:fn_confirmBatchPopup();">Confirm Batch Payment</a></p></li>
+            <li><p class="link_btn"><a href="javascript:fn_uploadPopup();">Upload Batch Payment</a></p></li>
+            <li><p class="link_btn"><a href="javascript:fn_viewBatchPopup();">View Batch Payment</a></p></li>
+            <li><p class="link_btn"><a href="javascript:fn_confirmBatchPopup();">Confirm Batch Payment</a></p></li>
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>
