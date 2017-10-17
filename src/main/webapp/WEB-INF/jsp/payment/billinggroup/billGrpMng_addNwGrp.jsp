@@ -441,11 +441,11 @@ var contPersonLayout = [
 				        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
 				        <li>Payment</li>
 				        <li>Billing Group</li>
-				        <li>Create New Group</li>
+				        <li>Add New Group</li>
 				</ul>
 				<aside class="title_line"><!-- title_line start -->
 				<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-				<h2>Create New Group</h2>
+				<h2>Add New Group</h2>
 				</aside><!-- title_line end -->
 				<section class="search_result"><!-- search_result start -->
 					<section class="tap_wrap"><!-- tap_wrap start -->
