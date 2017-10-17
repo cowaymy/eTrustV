@@ -407,38 +407,26 @@ function fnSettiingHeader()
                                                       } 
                                                        //,width : "5%"
                                                      ,renderer : 
-																			              {
-                                                      type : "CheckBoxEditRenderer"
-																					            ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
-																					            ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
-																					            ,checkValue : true // true, false 인 경우가 기본
-																					            ,unCheckValue : false
-																					                
-																					               // 체크박스 Visible 함수
-																					            ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
-																			                 {
-																					               if(item.isSaved == true)  // if 1 then
-																			                     return true; // CheckBox is Checked
-																			                   																					
-																			                   return true;  // just CheckBox Visible But Not Checked.
-																			                 }
-																						        } // renderer
-                                                      }
-                                                    , {                            
-                                                         dataField : result.header[0].categoryH1
-                                                         ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
-                                                         ,editable : true
-                                                         ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
-                                                          {
-                                                            if(item.divOdd == "0") 
-                                                              return "my-backColumn0";
-                                                            else 
-                                                              return "my-backColumn1";
-                                                          }
-                                                      }
-                                                    , {                            
-                                                         dataField : result.header[0].codeH1
-                                                        ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
+																			                {
+	                                                      type : "CheckBoxEditRenderer"
+																						            ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
+																						            ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+																						            ,checkValue : true // true, false 인 경우가 기본
+																						            ,unCheckValue : false
+																						                
+																						               // 체크박스 Visible 함수
+																						            ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+																				                 {
+																						               if(item.isSaved == true)  // if 1 then
+																				                     return true; // CheckBox is Checked
+																				                   																					
+																				                   return true;  // just CheckBox Visible But Not Checked.
+																				                 }
+																						          } // renderer
+                                                    }
+                                                  , {                            
+                                                        dataField : result.header[0].categoryH1
+                                                        ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
                                                         ,editable : true
                                                         ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
                                                          {
@@ -447,22 +435,10 @@ function fnSettiingHeader()
                                                            else 
                                                              return "my-backColumn1";
                                                          }
-                                                      }
-                                                    , {                            
-                                                         dataField : result.header[0].nameH1
-                                                        ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
-                                                        ,editable : true
-                                                        ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
-                                                         {
-                                                           if(item.divOdd == "0") 
-                                                             return "my-backColumn0";
-                                                           else 
-                                                             return "my-backColumn1";
-                                                         }
-                                                      }
-                                                    , { 
-                                                        dataField : result.header[0].supplyCorpHPsi
-                                                       ,headerText : "<spring:message code='sys.scm.supplyCorp.psi' />"
+                                                     }
+                                                   , {                            
+                                                        dataField : result.header[0].codeH1
+                                                       ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
                                                        ,editable : true
                                                        ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
                                                         {
@@ -471,8 +447,32 @@ function fnSettiingHeader()
                                                           else 
                                                             return "my-backColumn1";
                                                         }
-                                                        //,width : "5%"
-                                                      }
+                                                     }
+                                                   , {                            
+                                                        dataField : result.header[0].nameH1
+                                                       ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
+                                                       ,editable : true
+                                                       ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                        {
+                                                          if(item.divOdd == "0") 
+                                                            return "my-backColumn0";
+                                                          else 
+                                                            return "my-backColumn1";
+                                                        }
+                                                     }
+                                                   , { 
+                                                       dataField : result.header[0].supplyCorpHPsi
+                                                      ,headerText : "<spring:message code='sys.scm.supplyCorp.psi' />"
+                                                      ,editable : true
+                                                      ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                       {
+                                                         if(item.divOdd == "0") 
+                                                           return "my-backColumn0";
+                                                         else 
+                                                           return "my-backColumn1";
+                                                       }
+                                                       //,width : "5%"
+                                                     }
                                                      
                                                   ]// children
                                    } // Uppder Group   
@@ -858,16 +858,11 @@ $(document).ready(function()
 		<th scope="row">EST Year &amp; Week</th>
 		<td>
 	
-		<div class="date_set w100p"><!-- date_set start -->
-		<p>
-		  <select class="w100p" id="scmYearCbBox" name="scmYearCbBox">
-		  </select>  
-		</p>
-	  <span>&nbsp;</span>
-		<p>
-		  <select class="w100p" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
-		  </select>
-		</p>
+    <div class="date_set w100p"><!-- date_set start -->
+     <select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
+	   </select>  
+	  <select class="sel_date"  id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
+	  </select>
 		</div><!-- date_set end -->
 	
 		</td>

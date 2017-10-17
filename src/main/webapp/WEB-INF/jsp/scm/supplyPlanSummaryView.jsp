@@ -664,17 +664,13 @@ $(document).ready(function()
 	<tr>
 		<th scope="row">EST Year &amp; Week</th>
 		<td>
-			<div class="date_set w100p"><!-- date_set start -->
-			<p>
-	      <select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
-	      </select>   
-			</p>
-			<span>&nbsp;</span>
-			<p>
-		  <select class="sel_date" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
-		  </select>
-			</p>
-			</div><!-- date_set end -->
+		  <div class="date_set w100p"><!-- date_set start -->
+        <select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
+        </select>
+			
+			  <select class="sel_date" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
+		    </select>
+		  </div><!-- date_set end -->
 	
 		</td>
 		<th scope="row">Stock</th>

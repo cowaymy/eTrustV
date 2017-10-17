@@ -1199,8 +1199,8 @@ $(document).ready(function()
 	<td>
 
 	<div class="date_set w100p"><!-- date_set start -->
-	<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
-	</select>
+		<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
+		</select>
 	
 	<select class="sel_date" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
 	</select>
