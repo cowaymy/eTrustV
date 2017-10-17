@@ -1608,1077 +1608,956 @@ var addOrderLayout = [
     
 </script>
 <body>
-
-<div id="wrap"><!-- wrap start -->
-<section id="content"><!-- content start -->
-    <ul class="path">
-            <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-            <li>Payment</li>
-            <li>Billing Group</li>
-            <li>Management</li>
-    </ul>
-
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Billing Group</h2>
-</aside><!-- title_line end -->
-
-<section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:190px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Order Number</th>
-    <td>
-        <input type="text" name="orderNo" id="orderNo" title="" placeholder="Order Number" class="" />
-        <p class="btn_sky">
-            <a href="javascript:searchList();" id="confirm">Confirm</a>
-        </p>
-        <p class="btn_sky">
-            <a href="javascript:fn_reSelect();" id="reSelect" style="display: none">Reselect</a>
-        </p>
-     </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</form>
-</section><!-- search_table end -->
-
-<div style="display: none" id="displayVisible">
-<section class="search_result"><!-- search_result start -->
-
-<section class="tap_wrap"><!-- tap_wrap start -->
-<ul class="tap_type1">
-    <li><a href="#" class="on" id="basciInfo">Basic Info</a></li>
-    <li><a href="#">Mailing Address</a></li>
-    <li><a href="#">Contact Info</a></li>
-</ul>
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue2"><a href="javascript:fn_billGrpHistory();">View History</a></p></li>
-    <li><p class="btn_blue2"><a href="javascript:fn_changeMainOrder();">Change Main Order</a></p></li>
-    <li><p class="btn_blue2"><a href="javascript:fn_updRemark();">Update Remark</a></p></li>
-    <li><p class="btn_blue2"><a href="javascript:fn_changeBillType();">Change Billing Type</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Billing Group No</th>
-    <td id="custBillGrpNo">
-    </td>
-    <th scope="row">Creator</th>
-    <td id="creator">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Main Order</th>
-    <td id="mainOrder">
-    </td>
-    <th scope="row">Create Date</th>
-    <td id="createDate">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Customer ID</th>
-    <td id="customerId">
-    </td>
-    <th scope="row">NRIC/Company No</th>
-    <td id="nric">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Customer Name</th>
-    <td colspan="3" id="customerName">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Billing Type</th>
-    <td colspan="3">
-    <label><input type="checkbox" disabled="disabled" id="post" name="post"/><span>Post</span></label>
-    <label><input type="checkbox" disabled="disabled" id="sms" name="sms"/><span>SMS</span></label>
-    <label><input type="checkbox" disabled="disabled" id="estm" name="estm"/><span>E-Statement</span></label>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Email</th>
-    <td id="email">
-    </td>
-    <th scope="row">Additional Email</th>
-    <td id="additionalEmail">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Remark</th>
-    <td colspan="3" id="remark">
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue2"><a href="javascript:fn_changeMaillAddr();">Change Mailing Address</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Mailing Address</th>
-    <td id="maillingAddr">
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue2"><a href="javascript:fn_chgContPerson();">Change Contact Person</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Contact Person</th>
-    <td colspan="3" id="contractPerson">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Mobile Number</th>
-    <td id="mobileNumber">
-    </td>
-    <th scope="row">Office Number</th>
-    <td id="officeNumber">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Residence Number</th>
-    <td id="residenceNumber">
-    </td>
-    <th scope="row">Fax Number</th>
-    <td id="faxNumber">
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-</section><!-- tap_wrap end -->
-
-<div class="divine_auto mt30"><!-- divine_auto start -->
-
-<div style="width:50%;">
-
-<div class="border_box" style="height:350px;"><!-- border_box start -->
-
-<aside class="title_line"><!-- title_line start -->
-<h3 class="pt0">Order In Group</h3>
-<ul class="right_btns top0">
-    <li><p class="btn_grid"><a href="javascript:fn_addOrder();"><span class="search"></span>Add Order</a></p></li>
-</ul>
-</aside><!-- title_line end -->
-<!-- grid_wrap start -->
-        <article id="grid_wrap" class="grid_wrap"></article>
-<!-- grid_wrap end -->
-
-</div><!-- border_box end -->
-
-</div>
-
-<div style="width:50%;">
-
-<div class="border_box" style="height:350px;"><!-- border_box start -->
-
-<aside class="title_line"><!-- title_line start -->
-<h3 class="pt0">E-Statement Request History</h3>
-</aside><!-- title_line end -->
-<!-- grid_wrap start -->
-        <article id="grid_wrap2" class="grid_wrap"></article>
-<!-- grid_wrap end -->
-</div><!-- border_box end -->
-
-</div>
-<form name="myForm" id="myForm">
-    <input type="hidden" name="custBillId" id="custBillId">
-    <input type="hidden" name="custBillCustId" id="custBillCustId">
-    <input type="hidden" name="custAddId" id="custAddId">
-    <input type="hidden" name="custCntcId" id="custCntcId">
-    <input type="hidden" name="custTypeId" id="custTypeId">
-    <input type="hidden" name="reqId" id="reqId">
-    <input type="hidden" name="salesOrdId" id="salesOrdId">
-    <input type="hidden" name="salesOrdNo" id="salesOrdNo">
-    <input type="hidden" name="custBillSoId" id="custBillSoId">
-</form>
-
-
-</div><!-- divine_auto end -->
-</section><!-- content end -->
-</div>       
-</section><!-- container end -->
-<hr />
-</div><!-- wrap end -->
-<div id="viewHistorytPopup" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group - History</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_hisClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<article id="history_wrap" class="grid_wrap"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="changeMainOrderPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Change Main Order</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_changeOrderClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Billing Group</th>
-        <td id="changePop_grpNo">
-        </td>
-    <th scope="row">Total Order In Group</th>
-        <td id="changePop_ordGrp">
-        </td>
-</tr>
-<tr>
-    <th scope="row">Available Order</th>
-    <td colspan="3">
-        <article id="changeOrderGrid" class="grid_wrap" style="width:100%"></article>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="change_reasonUpd"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_chgMainOrd();">SAVE</a></p></li>
-</ul>
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<form action="" id="remarkForm" name="remarkForm">
-<div id="updRemPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Remark</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_updRemPopClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Billing Group</th>
-    <td id="updRem_grpNo">
-    </td>
-    <th scope="row">Total Order In Group</th>
-    <td id="updRem_ordGrp">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Current Remark</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" readonly="readonly" class="readonly" id="updRem_remark"></textarea>
-    </td>
-</tr>
-<tr>
-    <th scope="row">New Remark</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="newRem"></textarea>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="reasonUpd"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_saveRemark();">SAVE</a></p></li>
-</ul>
-</section><!-- pop_body end -->
-</div><!-- popup_wrap end -->
-</form>
-<div id="changeBillTypePop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Billing Type</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_chgBillClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<section class="tap_wrap"><!-- tap_wrap start -->
-<ul class="tap_type1">
-    <li><a href="#" class="on" id="tab_billType" >Billing Type Info</a></li>
-    <li><a href="#" id="tab_estmHis">E-Statement History</a></li>
-</ul>
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Billing Group</th>
-    <td id="changeBill_grpNo">
-    </td>
-    <th scope="row">Total Order In Group</th>
-    <td id="changeBill_ordGrp">
-    </td>
-</tr>
-<tr>
-    <th scope="row" rowspan="3">Current Bill Type</th>
-    <td colspan="3">
-    <label><input type="checkbox" id="changePop_post" name="changePop_post"/><span>Post</span></label>
-    </td>
-</tr>
-<tr>
-    <td colspan="3">
-    <label><input type="checkbox" id="changePop_sms" name="changePop_sms"/><span>SMS</span></label>
-    </td>
-</tr>
-<tr>
-    <td colspan="3">
-    <label><input type="checkbox" disabled="disabled"  id="changePop_estm" name="changePop_estm"/><span>E-Statement </span></label>
-    <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();">Request New Email</a></p>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="changePop_Reason"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_changeBillSave();">SAVE</a></p></li>
-</ul>
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<article id="estmHisPopGrid" class="grid_wrap" style="width: 100%"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-</article><!-- tap_area end -->
-
-</section><!-- tap_wrap end -->
-
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="chgMailAddrPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Mailing Address</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_chgMailClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue2"><a href="javascript:fn_addNewAddr();">Add New Address</a></p></li>
-    <li><p class="btn_blue2"><a href="javascript:fn_selectMailAddr();">Select Mailing Address</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Billing Group</th>
-    <td id="changeMail_grpNo">
-    </td>
-    <th scope="row">Total Order In Group</th>
-    <td id="changeMail_ordGrp">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Current Address</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" readonly="readonly" class="readonly" id="changeMail_currAddr"></textarea>
-    </td>
-</tr>
-<tr>
-    <th scope="row">New Address</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="changeMail_newAddr" readonly="readonly" class="readonly"></textarea>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="changeMail_resUpd"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_newAddrSave();">SAVE</a></p></li>
-</ul>
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="chgContPerPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Contact Person</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_chgContPerPopClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue2"><a href="javascript:fn_addNewConPerson();">Add New Contact</a></p></li>
-    <li><p class="btn_blue2"><a href="javascript:fn_selectContPerson();">Select Contact Person</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Billing Group</th>
-    <td id="chgContPer_grpNo">
-    </td>
-    <th scope="row">Total Order In Group</th>
-    <td id="chgContPer_ordGrp">
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h2>Current Contact Person</h2>
-</aside><!-- title_line end -->
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Contact Person</th>
-    <td colspan="3" id="curr_contPerson">
-    </td>
-</tr>
-<tr>
-    <th scope="row" >Mobile Number</th>
-    <td id="curr_contMobNum">
-    </td>
-    <th scope="row">Office Number</th>
-    <td id="curr_contOffNum">
-    </td>
-</tr>
-<tr>
-    <th scope="row" >Residence Number</th>
-    <td id="curr_resNum">
-    </td>
-    <th scope="row" >Fax Number</th>
-    <td id="curr_faxNum">
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h2>New Contact Person</h2>
-</aside><!-- title_line end -->
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Contact Person</th>
-    <td colspan="3" id="newContactPerson">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Mobile Number</th>
-    <td id="newMobNo">
-    </td>
-    <th scope="row">Office Number</th>
-    <td id="newOffNo">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Residence Number</th>
-    <td id="newResNo">
-    </td>
-    <th scope="row">Fax Number</th>
-    <td id="newFaxNo">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="newContPerReason"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_newContPersonSave();">SAVE</a></p></li>
-</ul>
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="detailhistoryViewPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group - History Details</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:100px" />
-    <col style="width:*" />
-    <col style="width:110px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Type</th>
-    <td colspan="" id="det_typeName">
-    </td>
-    <th scope="row">At</th>
-    <td colspan="" id="det_at">11
-    </td>
-</tr>
-<tr>
-    <th scope="row">System Remark</th>
-    <td colspan="" id="det_sysRemark">11
-    </td>
-    <th scope="row">By</th>
-    <td colspan="" id="det_by">11
-    </td>
-</tr>
-<tr>
-    <th scope="row">User Remark </th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" readonly="readonly"  id="det_userRemark"></textarea>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Description (From)</th>
-    <td colspan="" id="det_descFrom" height="150px">
-    </td>
-    <th scope="row">Description (To)</th>
-    <td colspan="" id="det_descTo">
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-</section><!-- pop_body end -->
-</div><!-- popup_wrap end -->
-<div id="selectMaillAddrPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Customer Address - Customer Address</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_custAddrClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span>Clear</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Address Keyword</th>
-    <td>
-    <input type="text" id="custAddr" name="custAddr" title="" placeholder="Keyword" class="w100p" />
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<article id="selMaillAddrGrid" class="grid_wrap mt30"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="selectContPersonPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>We Bring Wellness - Customer Contact</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_contPerPopClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span>Clear</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Contact Keyword</th>
-    <td>
-    <input type="text" id="personKeyword" name="personKeyword" title="" placeholder="Keyword" class="w100p" />
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<article id="selContPersonGrid" class="grid_wrap mt30"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="estmNewReqPop" class="popup_wrap size_small" style="display: none"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>E-Statement - New Request</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_estmReqPopClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:130px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Email</th>
-    <td>
-    <input type="text" id="newReqEmail" name="newReqEmail" title="" placeholder="" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td>
-    <textarea cols="20" rows="5" placeholder="" id="newReqReason"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_newReqSave();">SAVE</a></p></li>
-</ul>
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-
-<div id="contPersonAddPop" class="popup_wrap" style="display: none"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Contact Person</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:130px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Initial<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="cmbInitials" name="cmbInitials">
-    </select>
-    </td>
-    <th scope="row">Gender<span class="must">*</span></th>
-    <td>
-    <label><input type="radio" name="gender" /><span>Male</span></label>
-    <label><input type="radio" name="gender" /><span>Female</span></label>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Name<span class="must">*</span></th>
-    <td>
-    <input type="text" title="" placeholder="Name" class="w100p" />
-    </td>
-    <th scope="row">Race<span class="must">*</span></th>
-    <td>
-    <select id="raceId" name="raceId" class="w100p">
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">NRIC</th>
-    <td>
-    <input type="text" title="" placeholder="NRIC Number" class="w100p" />
-    </td>
-    <th scope="row">DOB</th>
-    <td>
-    <input type="text" title="Create start Date" placeholder="Date of Brith" class="j_date" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Tel (Mobile)<span class="must">*</span></th>
-    <td>
-    <input type="text" title="Telephone Number (Mobile)" placeholder="" class="w100p" />
-    </td>
-    <th scope="row">Tel (Office)<span class="must">*</span></th>
-    <td>
-    <input type="text" title="" placeholder="Telephone Number (Office)" class="w100p" />    
-    </td>
-</tr>
-<tr>
-    <th scope="row">Tel (Residence)<span class="must">*</span></th>
-    <td>
-    <input type="text" title="" placeholder="Telephone Number (Residence)" class="w100p" />
-    </td>
-    <th scope="row">Tel (Fax)<span class="must">*</span></th>
-    <td>
-    <input type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Department</th>
-    <td>
-    <input type="text" title="" placeholder="Department" class="w100p" />
-    </td>
-    <th scope="row">Job Position</th>
-    <td>
-    <input type="text" title="" placeholder="Job Position" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Ext No.</th>
-    <td>
-    <input type="text" title="" placeholder="Extension Number" class="w100p" />
-    </td>
-    <th scope="row">Email</th>
-    <td>
-    <input type="text" title="" placeholder="Email" class="w100p" />
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">Save Contact Person</a></p></li>
-</ul>
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="estmDetailHisPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>E-Statement - Approve Request</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="" onclick="fn_apprRequestClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Reference No</th>
-    <td id="apprReq_refNo">
-    </td>
-    <th scope="row">Create Date </th>
-    <td id="apprReq_crtDt">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Email</th>
-    <td id="apprReq_email">
-    </td>
-    <th scope="row">Create By</th>
-    <td id="apprReq_creBy">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="apprReq_reasonUpd"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_approveRequest('A');" id="btnApprReq">Approve Request</a></p></li>
-    <li><p class="btn_blue2 big"><a href="javascript:fn_approveRequest('C');" id="btnCancelReq">Cancel Request</a></p></li>
-</ul>
-</section><!-- pop_body end -->
-</div><!-- popup_wrap end -->
-<div id="removeOrderPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Remove Order From Group</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_removeClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Billing Group</th>
-    <td id="remove_billGroup">
-    </td>
-    <th scope="row">Total Order In Group</th>
-    <td id="remove_ordGroup">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Order Number</th>
-    <td id="remove_ordNo">
-    </td>
-    <th scope="row">Is Main</th>
-    <td id="remove_isMain">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Order Date</th>
-    <td id="remove_ordDate">
-    </td>
-    <th scope="row">Order Status</th>
-    <td id="remove_ordStatus">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Rental Fees</th>
-    <td id="remove_rentalFees">
-    </td>
-    <th scope="row">Product</th>
-    <td id="remove_product">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="remove_reasonUpd"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_removeOrdGrp();" id="btnSave">Save</a></p></li>
-</ul>
-</section><!-- pop_body end -->
-</div><!-- popup_wrap end -->
-<div id="addOrderPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Add Order Into Group</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="" onclick="fn_addOrdPopClose();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Billing Group</th>
-        <td id="addOrd_grpNo">
-        </td>
-    <th scope="row">Total Order In Group</th>
-        <td id="addOrd_ordGrp">
-        </td>
-</tr>
-<tr>
-    <th scope="row">Available Order</th>
-    <td colspan="3">
-        <article id="addOrdGrid" class="grid_wrap" style="width:100%"></article>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Reason Update</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="addOrd_reasonUpd"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_addOrdSave();">SAVE</a></p></li>
-</ul>
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
+	<div id="wrap"><!-- wrap start -->
+		<section id="content"><!-- content start -->
+		    <ul class="path">
+		            <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+		            <li>Payment</li>
+		            <li>Billing Group</li>
+		            <li>Management</li>
+		    </ul>
+		<aside class="title_line"><!-- title_line start -->
+			<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+			<h2>Billing Group</h2>
+		</aside><!-- title_line end -->
+		<section class="search_table"><!-- search_table start -->
+			<form action="#" method="post">
+				<table class="type1"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:190px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+						<tr>
+						    <th scope="row">Order Number</th>
+						    <td>
+						        <input type="text" name="orderNo" id="orderNo" title="" placeholder="Order Number" class="" />
+						        <p class="btn_sky">
+						            <a href="javascript:searchList();" id="confirm">Confirm</a>
+						        </p>
+						        <p class="btn_sky">
+						            <a href="javascript:fn_reSelect();" id="reSelect" style="display: none">Reselect</a>
+						        </p>
+						     </td>
+						</tr>
+					</tbody>
+				</table><!-- table end -->
+			</form>
+		</section><!-- search_table end -->
+		<div style="display: none" id="displayVisible">
+			<section class="search_result"><!-- search_result start -->
+				<section class="tap_wrap"><!-- tap_wrap start -->
+					<ul class="tap_type1">
+					    <li><a href="#" class="on" id="basciInfo">Basic Info</a></li>
+					    <li><a href="#">Mailing Address</a></li>
+					    <li><a href="#">Contact Info</a></li>
+					</ul>
+					<article class="tap_area"><!-- tap_area start -->
+						<ul class="right_btns">
+						    <li><p class="btn_blue2"><a href="javascript:fn_billGrpHistory();">View History</a></p></li>
+						    <li><p class="btn_blue2"><a href="javascript:fn_changeMainOrder();">Change Main Order</a></p></li>
+						    <li><p class="btn_blue2"><a href="javascript:fn_updRemark();">Update Remark</a></p></li>
+						    <li><p class="btn_blue2"><a href="javascript:fn_changeBillType();">Change Billing Type</a></p></li>
+						</ul>
+						<table class="type1 mt10"><!-- table start -->
+							<caption>table</caption>
+							<colgroup>
+							    <col style="width:160px" />
+							    <col style="width:*" />
+							    <col style="width:160px" />
+							    <col style="width:*" />
+							</colgroup>
+							<tbody>
+								<tr>
+								    <th scope="row">Billing Group No</th>
+								    <td id="custBillGrpNo">
+								    </td>
+								    <th scope="row">Creator</th>
+								    <td id="creator">
+								    </td>
+								</tr>
+								<tr>
+								    <th scope="row">Main Order</th>
+								    <td id="mainOrder">
+								    </td>
+								    <th scope="row">Create Date</th>
+								    <td id="createDate">
+								    </td>
+								</tr>
+								<tr>
+								    <th scope="row">Customer ID</th>
+								    <td id="customerId">
+								    </td>
+								    <th scope="row">NRIC/Company No</th>
+								    <td id="nric">
+								    </td>
+								</tr>
+								<tr>
+								    <th scope="row">Customer Name</th>
+								    <td colspan="3" id="customerName">
+								    </td>
+								</tr>
+								<tr>
+								    <th scope="row">Billing Type</th>
+								    <td colspan="3">
+								    <label><input type="checkbox" disabled="disabled" id="post" name="post"/><span>Post</span></label>
+								    <label><input type="checkbox" disabled="disabled" id="sms" name="sms"/><span>SMS</span></label>
+								    <label><input type="checkbox" disabled="disabled" id="estm" name="estm"/><span>E-Statement</span></label>
+								    </td>
+								</tr>
+								<tr>
+								    <th scope="row">Email</th>
+								    <td id="email">
+								    </td>
+								    <th scope="row">Additional Email</th>
+								    <td id="additionalEmail">
+								    </td>
+								</tr>
+								<tr>
+								    <th scope="row">Remark</th>
+								    <td colspan="3" id="remark">
+								    </td>
+								</tr>
+							</tbody>
+						</table><!-- table end -->
+					</article><!-- tap_area end -->
+					<article class="tap_area"><!-- tap_area start -->
+						<ul class="right_btns">
+						    <li><p class="btn_blue2"><a href="javascript:fn_changeMaillAddr();">Change Mailing Address</a></p></li>
+						</ul>
+						<table class="type1 mt10"><!-- table start -->
+							<caption>table</caption>
+							<colgroup>
+							    <col style="width:160px" />
+							    <col style="width:*" />
+							</colgroup>
+							<tbody>
+								<tr>
+								    <th scope="row">Mailing Address</th>
+								    <td id="maillingAddr">
+								    </td>
+								</tr>
+							</tbody>
+						</table><!-- table end -->
+					</article><!-- tap_area end -->
+					<article class="tap_area"><!-- tap_area start -->
+						<ul class="right_btns">
+						    <li><p class="btn_blue2"><a href="javascript:fn_chgContPerson();">Change Contact Person</a></p></li>
+						</ul>
+						<table class="type1 mt10"><!-- table start -->
+							<caption>table</caption>
+							<colgroup>
+							    <col style="width:160px" />
+							    <col style="width:*" />
+							    <col style="width:160px" />
+							    <col style="width:*" />
+							</colgroup>
+							<tbody>
+								<tr>
+								    <th scope="row">Contact Person</th>
+								    <td colspan="3" id="contractPerson">
+								    </td>
+								</tr>
+								<tr>
+								    <th scope="row">Mobile Number</th>
+								    <td id="mobileNumber">
+								    </td>
+								    <th scope="row">Office Number</th>
+								    <td id="officeNumber">
+								    </td>
+								</tr>
+								<tr>
+								    <th scope="row">Residence Number</th>
+								    <td id="residenceNumber">
+								    </td>
+								    <th scope="row">Fax Number</th>
+								    <td id="faxNumber">
+								    </td>
+								</tr>
+							</tbody>
+						</table><!-- table end -->
+					</article><!-- tap_area end -->
+				</section><!-- tap_wrap end -->
+				<div class="divine_auto mt30"><!-- divine_auto start -->
+					<div style="width:50%;">
+						<div class="border_box" style="height:350px;"><!-- border_box start -->
+							<aside class="title_line"><!-- title_line start -->
+							<h3 class="pt0">Order In Group</h3>
+							<ul class="right_btns top0">
+							    <li><p class="btn_grid"><a href="javascript:fn_addOrder();"><span class="search"></span>Add Order</a></p></li>
+							</ul>
+							</aside><!-- title_line end -->
+							<!-- grid_wrap start -->
+							        <article id="grid_wrap" class="grid_wrap"></article>
+							<!-- grid_wrap end -->
+						</div><!-- border_box end -->
+					</div>
+					<div style="width:50%;">
+					<div class="border_box" style="height:350px;"><!-- border_box start -->
+					
+					<aside class="title_line"><!-- title_line start -->
+					<h3 class="pt0">E-Statement Request History</h3>
+					</aside><!-- title_line end -->
+					<!-- grid_wrap start -->
+					        <article id="grid_wrap2" class="grid_wrap"></article>
+					<!-- grid_wrap end -->
+					</div><!-- border_box end -->
+					
+					</div>
+					<form name="myForm" id="myForm">
+					    <input type="hidden" name="custBillId" id="custBillId">
+					    <input type="hidden" name="custBillCustId" id="custBillCustId">
+					    <input type="hidden" name="custAddId" id="custAddId">
+					    <input type="hidden" name="custCntcId" id="custCntcId">
+					    <input type="hidden" name="custTypeId" id="custTypeId">
+					    <input type="hidden" name="reqId" id="reqId">
+					    <input type="hidden" name="salesOrdId" id="salesOrdId">
+					    <input type="hidden" name="salesOrdNo" id="salesOrdNo">
+					    <input type="hidden" name="custBillSoId" id="custBillSoId">
+					</form>
+				</div><!-- divine_auto end -->
+			</section><!-- content end -->
+		   </div>       
+		</section><!-- container end -->
+		<hr />
+	</div><!-- wrap end -->
+	<div id="viewHistorytPopup" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>Billing Group - History</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_hisClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<article id="history_wrap" class="grid_wrap"><!-- grid_wrap start -->
+			</article><!-- grid_wrap end -->
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="changeMainOrderPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>Billing Group Maintenance - Change Main Order</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_changeOrderClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Billing Group</th>
+					        <td id="changePop_grpNo">
+					        </td>
+					    <th scope="row">Total Order In Group</th>
+					        <td id="changePop_ordGrp">
+					        </td>
+					</tr>
+					<tr>
+					    <th scope="row">Available Order</th>
+					    <td colspan="3">
+					        <article id="changeOrderGrid" class="grid_wrap" style="width:100%"></article>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Reason Update</th>
+					    <td colspan="3">
+					    <textarea cols="20" rows="5" placeholder="" id="change_reasonUpd"></textarea>
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<ul class="center_btns">
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_chgMainOrd();">SAVE</a></p></li>
+			</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<form action="" id="remarkForm" name="remarkForm">
+		<div id="updRemPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+			<header class="pop_header"><!-- pop_header start -->
+				<h1>Billing Group Maintenance - Remark</h1>
+				<ul class="right_opt">
+				    <li><p class="btn_blue2"><a href="#" onclick="fn_updRemPopClose();">CLOSE</a></p></li>
+				</ul>
+			</header><!-- pop_header end -->
+			<section class="pop_body"><!-- pop_body start -->
+				<table class="type1"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:140px" />
+					    <col style="width:*" />
+					    <col style="width:180px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+						<tr>
+						    <th scope="row">Billing Group</th>
+						    <td id="updRem_grpNo">
+						    </td>
+						    <th scope="row">Total Order In Group</th>
+						    <td id="updRem_ordGrp">
+						    </td>
+						</tr>
+						<tr>
+						    <th scope="row">Current Remark</th>
+						    <td colspan="3">
+						    <textarea cols="20" rows="5" placeholder="" readonly="readonly" class="readonly" id="updRem_remark"></textarea>
+						    </td>
+						</tr>
+						<tr>
+						    <th scope="row">New Remark</th>
+						    <td colspan="3">
+						    <textarea cols="20" rows="5" placeholder="" id="newRem"></textarea>
+						    </td>
+						</tr>
+						<tr>
+						    <th scope="row">Reason Update</th>
+						    <td colspan="3">
+						    <textarea cols="20" rows="5" placeholder="" id="reasonUpd"></textarea>
+						    </td>
+						</tr>
+					</tbody>
+				</table><!-- table end -->
+				<ul class="center_btns">
+				    <li><p class="btn_blue2 big"><a href="javascript:fn_saveRemark();">SAVE</a></p></li>
+				</ul>
+			</section><!-- pop_body end -->
+		</div><!-- popup_wrap end -->
+	</form>
+	<div id="changeBillTypePop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>Billing Group Maintenance - Billing Type</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_chgBillClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<section class="tap_wrap"><!-- tap_wrap start -->
+				<ul class="tap_type1">
+				    <li><a href="#" class="on" id="tab_billType" >Billing Type Info</a></li>
+				    <li><a href="#" id="tab_estmHis">E-Statement History</a></li>
+				</ul>
+				<article class="tap_area"><!-- tap_area start -->
+					<table class="type1"><!-- table start -->
+						<caption>table</caption>
+						<colgroup>
+						    <col style="width:140px" />
+						    <col style="width:*" />
+						    <col style="width:180px" />
+						    <col style="width:*" />
+						</colgroup>
+						<tbody>
+						<tr>
+						    <th scope="row">Billing Group</th>
+						    <td id="changeBill_grpNo">
+						    </td>
+						    <th scope="row">Total Order In Group</th>
+						    <td id="changeBill_ordGrp">
+						    </td>
+						</tr>
+						<tr>
+						    <th scope="row" rowspan="3">Current Bill Type</th>
+						    <td colspan="3">
+						    <label><input type="checkbox" id="changePop_post" name="changePop_post"/><span>Post</span></label>
+						    </td>
+						</tr>
+						<tr>
+						    <td colspan="3">
+						    <label><input type="checkbox" id="changePop_sms" name="changePop_sms"/><span>SMS</span></label>
+						    </td>
+						</tr>
+						<tr>
+						    <td colspan="3">
+						    <label><input type="checkbox" disabled="disabled"  id="changePop_estm" name="changePop_estm"/><span>E-Statement </span></label>
+						    <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();">Request New Email</a></p>
+						    </td>
+						</tr>
+						<tr>
+						    <th scope="row">Reason Update</th>
+						    <td colspan="3">
+						    <textarea cols="20" rows="5" placeholder="" id="changePop_Reason"></textarea>
+						    </td>
+						</tr>
+						</tbody>
+					</table><!-- table end -->
+					<ul class="center_btns">
+					    <li><p class="btn_blue2 big"><a href="javascript:fn_changeBillSave();">SAVE</a></p></li>
+					</ul>
+				</article><!-- tap_area end -->
+				<article class="tap_area"><!-- tap_area start -->
+					<article id="estmHisPopGrid" class="grid_wrap" style="width: 100%"><!-- grid_wrap start -->
+					</article><!-- grid_wrap end -->
+				</article><!-- tap_area end -->
+			</section><!-- tap_wrap end -->
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="chgMailAddrPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>Billing Group Maintenance - Mailing Address</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_chgMailClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<ul class="right_btns">
+			    <li><p class="btn_blue2"><a href="javascript:fn_addNewAddr();">Add New Address</a></p></li>
+			    <li><p class="btn_blue2"><a href="javascript:fn_selectMailAddr();">Select Mailing Address</a></p></li>
+			</ul>
+			<table class="type1 mt10"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Billing Group</th>
+					    <td id="changeMail_grpNo">
+					    </td>
+					    <th scope="row">Total Order In Group</th>
+					    <td id="changeMail_ordGrp">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Current Address</th>
+					    <td colspan="3">
+					    <textarea cols="20" rows="5" placeholder="" readonly="readonly" class="readonly" id="changeMail_currAddr"></textarea>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">New Address</th>
+					    <td colspan="3">
+					    <textarea cols="20" rows="5" placeholder="" id="changeMail_newAddr" readonly="readonly" class="readonly"></textarea>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Reason Update</th>
+					    <td colspan="3">
+					    <textarea cols="20" rows="5" placeholder="" id="changeMail_resUpd"></textarea>
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<ul class="center_btns">
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_newAddrSave();">SAVE</a></p></li>
+			</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="chgContPerPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+		<h1>Billing Group Maintenance - Contact Person</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_chgContPerPopClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<ul class="right_btns">
+			    <li><p class="btn_blue2"><a href="javascript:fn_addNewConPerson();">Add New Contact</a></p></li>
+			    <li><p class="btn_blue2"><a href="javascript:fn_selectContPerson();">Select Contact Person</a></p></li>
+			</ul>
+			<table class="type1 mt10"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+				<tr>
+				    <th scope="row">Billing Group</th>
+				    <td id="chgContPer_grpNo">
+				    </td>
+				    <th scope="row">Total Order In Group</th>
+				    <td id="chgContPer_ordGrp">
+				    </td>
+				</tr>
+				</tbody>
+			</table><!-- table end -->
+			<aside class="title_line"><!-- title_line start -->
+			     <h2>Current Contact Person</h2>
+			 </aside><!-- title_line end -->
+			<table class="type1 mt10"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Contact Person</th>
+					    <td colspan="3" id="curr_contPerson">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row" >Mobile Number</th>
+					    <td id="curr_contMobNum">
+					    </td>
+					    <th scope="row">Office Number</th>
+					    <td id="curr_contOffNum">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row" >Residence Number</th>
+					    <td id="curr_resNum">
+					    </td>
+					    <th scope="row" >Fax Number</th>
+					    <td id="curr_faxNum">
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<aside class="title_line"><!-- title_line start -->
+			     <h2>New Contact Person</h2>
+			</aside><!-- title_line end -->
+			<table class="type1 mt10"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+				<tr>
+				    <th scope="row">Contact Person</th>
+				    <td colspan="3" id="newContactPerson">
+				    </td>
+				</tr>
+				<tr>
+				    <th scope="row">Mobile Number</th>
+				    <td id="newMobNo">
+				    </td>
+				    <th scope="row">Office Number</th>
+				    <td id="newOffNo">
+				    </td>
+				</tr>
+				<tr>
+				    <th scope="row">Residence Number</th>
+				    <td id="newResNo">
+				    </td>
+				    <th scope="row">Fax Number</th>
+				    <td id="newFaxNo">
+				    </td>
+				</tr>
+				<tr>
+				    <th scope="row">Reason Update</th>
+				    <td colspan="3">
+				    <textarea cols="20" rows="5" placeholder="" id="newContPerReason"></textarea>
+				    </td>
+				</tr>
+				</tbody>
+			</table><!-- table end -->
+			<ul class="center_btns">
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_newContPersonSave();">SAVE</a></p></li>
+			</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="detailhistoryViewPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>Billing Group - History Details</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<table class="type1 mt10"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:100px" />
+				    <col style="width:*" />
+				    <col style="width:110px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Type</th>
+					    <td colspan="" id="det_typeName">
+					    </td>
+					    <th scope="row">At</th>
+					    <td colspan="" id="det_at">11
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">System Remark</th>
+					    <td colspan="" id="det_sysRemark">11
+					    </td>
+					    <th scope="row">By</th>
+					    <td colspan="" id="det_by">11
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">User Remark </th>
+					    <td colspan="3">
+					    <textarea cols="20" rows="5" placeholder="" readonly="readonly"  id="det_userRemark"></textarea>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Description (From)</th>
+					    <td colspan="" id="det_descFrom" height="150px">
+					    </td>
+					    <th scope="row">Description (To)</th>
+					    <td colspan="" id="det_descTo">
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="selectMaillAddrPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>Customer Address - Customer Address</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_custAddrClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<ul class="right_btns">
+			    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span>Search</a></p></li>
+			    <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span>Clear</a></p></li>
+			</ul>
+			<table class="type1 mt10"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:160px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Address Keyword</th>
+					    <td>
+					    <input type="text" id="custAddr" name="custAddr" title="" placeholder="Keyword" class="w100p" />
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<article id="selMaillAddrGrid" class="grid_wrap mt30"><!-- grid_wrap start -->
+			</article><!-- grid_wrap end -->
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="selectContPersonPop" class="popup_wrap size_mid" style="display: none"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>We Bring Wellness - Customer Contact</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_contPerPopClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<ul class="right_btns">
+			    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span>Search</a></p></li>
+			    <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span>Clear</a></p></li>
+			</ul>
+			<table class="type1 mt10"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:160px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Contact Keyword</th>
+					    <td>
+					    <input type="text" id="personKeyword" name="personKeyword" title="" placeholder="Keyword" class="w100p" />
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<article id="selContPersonGrid" class="grid_wrap mt30"><!-- grid_wrap start -->
+			</article><!-- grid_wrap end -->
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="estmNewReqPop" class="popup_wrap size_small" style="display: none"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>E-Statement - New Request</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_estmReqPopClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Email</th>
+					    <td>
+					    <input type="text" id="newReqEmail" name="newReqEmail" title="" placeholder="" class="w100p" />
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Reason Update</th>
+					    <td>
+					    <textarea cols="20" rows="5" placeholder="" id="newReqReason"></textarea>
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<ul class="center_btns">
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_newReqSave();">SAVE</a></p></li>
+			</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="contPersonAddPop" class="popup_wrap" style="display: none"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+		<h1>Billing Group Maintenance - Contact Person</h1>
+		<ul class="right_opt">
+		    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+		</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<table class="type1 mt10"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:150px" />
+				    <col style="width:*" />
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Initial<span class="must">*</span></th>
+					    <td>
+					    <select class="w100p" id="cmbInitials" name="cmbInitials">
+					    </select>
+					    </td>
+					    <th scope="row">Gender<span class="must">*</span></th>
+					    <td>
+					    <label><input type="radio" name="gender" /><span>Male</span></label>
+					    <label><input type="radio" name="gender" /><span>Female</span></label>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Name<span class="must">*</span></th>
+					    <td>
+					    <input type="text" title="" placeholder="Name" class="w100p" />
+					    </td>
+					    <th scope="row">Race<span class="must">*</span></th>
+					    <td>
+					    <select id="raceId" name="raceId" class="w100p">
+					    </select>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">NRIC</th>
+					    <td>
+					    <input type="text" title="" placeholder="NRIC Number" class="w100p" />
+					    </td>
+					    <th scope="row">DOB</th>
+					    <td>
+					    <input type="text" title="Create start Date" placeholder="Date of Brith" class="j_date" />
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Tel (Mobile)<span class="must">*</span></th>
+					    <td>
+					    <input type="text" title="Telephone Number (Mobile)" placeholder="" class="w100p" />
+					    </td>
+					    <th scope="row">Tel (Office)<span class="must">*</span></th>
+					    <td>
+					    <input type="text" title="" placeholder="Telephone Number (Office)" class="w100p" />    
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Tel (Residence)<span class="must">*</span></th>
+					    <td>
+					    <input type="text" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+					    </td>
+					    <th scope="row">Tel (Fax)<span class="must">*</span></th>
+					    <td>
+					    <input type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Department</th>
+					    <td>
+					    <input type="text" title="" placeholder="Department" class="w100p" />
+					    </td>
+					    <th scope="row">Job Position</th>
+					    <td>
+					    <input type="text" title="" placeholder="Job Position" class="w100p" />
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Ext No.</th>
+					    <td>
+					    <input type="text" title="" placeholder="Extension Number" class="w100p" />
+					    </td>
+					    <th scope="row">Email</th>
+					    <td>
+					    <input type="text" title="" placeholder="Email" class="w100p" />
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<ul class="center_btns">
+			    <li><p class="btn_blue2 big"><a href="#">Save Contact Person</a></p></li>
+			</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="estmDetailHisPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>E-Statement - Approve Request</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="" onclick="fn_apprRequestClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Reference No</th>
+					    <td id="apprReq_refNo">
+					    </td>
+					    <th scope="row">Create Date </th>
+					    <td id="apprReq_crtDt">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Email</th>
+					    <td id="apprReq_email">
+					    </td>
+					    <th scope="row">Create By</th>
+					    <td id="apprReq_creBy">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Reason Update</th>
+					    <td colspan="3">
+					    <textarea cols="20" rows="5" placeholder="" id="apprReq_reasonUpd"></textarea>
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<ul class="center_btns">
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_approveRequest('A');" id="btnApprReq">Approve Request</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_approveRequest('C');" id="btnCancelReq">Cancel Request</a></p></li>
+			</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="removeOrderPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>Billing Group Maintenance - Remove Order From Group</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_removeClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Billing Group</th>
+					    <td id="remove_billGroup">
+					    </td>
+					    <th scope="row">Total Order In Group</th>
+					    <td id="remove_ordGroup">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Order Number</th>
+					    <td id="remove_ordNo">
+					    </td>
+					    <th scope="row">Is Main</th>
+					    <td id="remove_isMain">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Order Date</th>
+					    <td id="remove_ordDate">
+					    </td>
+					    <th scope="row">Order Status</th>
+					    <td id="remove_ordStatus">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Rental Fees</th>
+					    <td id="remove_rentalFees">
+					    </td>
+					    <th scope="row">Product</th>
+					    <td id="remove_product">
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Reason Update</th>
+					    <td colspan="3">
+					    <textarea cols="20" rows="5" placeholder="" id="remove_reasonUpd"></textarea>
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<ul class="center_btns">
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_removeOrdGrp();" id="btnSave">Save</a></p></li>
+			</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="addOrderPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+		<h1>Billing Group Maintenance - Add Order Into Group</h1>
+		<ul class="right_opt">
+		    <li><p class="btn_blue2"><a href="" onclick="fn_addOrdPopClose();">CLOSE</a></p></li>
+		</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Billing Group</th>
+					        <td id="addOrd_grpNo">
+					        </td>
+					    <th scope="row">Total Order In Group</th>
+					        <td id="addOrd_ordGrp">
+					        </td>
+					</tr>
+					<tr>
+					    <th scope="row">Available Order</th>
+					    <td colspan="3">
+					        <article id="addOrdGrid" class="grid_wrap" style="width:100%"></article>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Reason Update</th>
+					    <td colspan="3">
+					    <textarea cols="20" rows="5" placeholder="" id="addOrd_reasonUpd"></textarea>
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<ul class="center_btns">
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_addOrdSave();">SAVE</a></p></li>
+			</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
 </body>
