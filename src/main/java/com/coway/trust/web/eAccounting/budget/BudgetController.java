@@ -1,6 +1,7 @@
 package com.coway.trust.web.eAccounting.budget;
 
-import java.util.HashMap;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,16 +11,27 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.budget.BudgetService;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.eAccounting.expense.ExpenseController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -28,6 +40,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/eAccounting/budget") 
 public class BudgetController {
 
+	@Value("${com.file.upload.path}")
+	private String uploadDir;
+
+	@Autowired
+	private FileApplication fileApplication;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseController.class);
 	
@@ -148,7 +165,11 @@ public class BudgetController {
 		
 		String yearMonth =  CommonUtils.getNowDate().substring(4,6) +"/" +CommonUtils.getNowDate().substring(0,4);
 		
-		model.addAttribute("yearMonth",  yearMonth );	 
+
+		model.addAttribute("stYearMonth",  yearMonth );	
+		model.addAttribute("edYearMonth",  yearMonth );	
+
+		
 		return "eAccounting/budget/budgetAdjustmentList";
 	}
 	
@@ -171,7 +192,73 @@ public class BudgetController {
 	@RequestMapping(value = "/budgetAdjustmentPop.do")
 	public String budgetAdjustment (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
+		LOGGER.debug("params =====================================>>  " + params);
+		/*String yearMonth =  CommonUtils.getNowDate().substring(4,6) +"/" +CommonUtils.getNowDate().substring(0,4);*/
+		
+		model.addAttribute("stYearMonth",  params.get("stYearMonth") );	
+		model.addAttribute("edYearMonth",  params.get("edYearMonth") );	
 		return "eAccounting/budget/budgetAdjustmentPop";
 	}
+	
+	@RequestMapping(value = "/uploadFile.do", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> uploadFile (MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		LOGGER.debug("request =====================================>>  " + request);
+		
+		params.put("userId", sessionVO.getUserId());
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "eAccounting" + File.separator + "budget", AppConstants.UPLOAD_MAX_FILE_SIZE);
+		
+		LOGGER.debug("list.size : {}", list.size());
+		
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		if (list.size() > 0) {
+			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+		}
+		
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(params.get("fileGroupKey"));
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    	return ResponseEntity.ok(message);
+		
+	}		
+	
+	
+	@RequestMapping(value = "/saveAdjustmentList", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> saveAdjustmentList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		ArrayList<Object> addList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		ArrayList<Object> updList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_UPDATE); // Get grid addList
+		ArrayList<Object> delList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_REMOVE); // Get grid addList
+		
+		
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		params.put("addList", addList);
+		params.put("updList", updList);
+		params.put("delList", delList);
+		params.put("userId", sessionVO.getUserId());
+		
+		tmpCnt = budgetService.saveAdjustmentInfo(params);
+		totCnt = totCnt + tmpCnt;
+		
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(params.get("fileGroupKey"));
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    	return ResponseEntity.ok(message);
+		
+	}	
+	
 }
 
