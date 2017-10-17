@@ -1616,209 +1616,209 @@ var addOrderLayout = [
 		            <li>Billing Group</li>
 		            <li>Billing Group Mgmt</li>
 		    </ul>
-		<aside class="title_line"><!-- title_line start -->
-			<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-			<h2>Billing Group Mgmt</h2>
-		</aside><!-- title_line end -->
-		<section class="search_table"><!-- search_table start -->
-			<form action="#" method="post">
-				<table class="type1"><!-- table start -->
-					<caption>table</caption>
-					<colgroup>
-					    <col style="width:190px" />
-					    <col style="width:*" />
-					</colgroup>
-					<tbody>
-						<tr>
-						    <th scope="row">Order Number</th>
-						    <td>
-						        <input type="text" name="orderNo" id="orderNo" title="" placeholder="Order Number" class="" />
-						        <p class="btn_sky">
-						            <a href="javascript:searchList();" id="confirm">Confirm</a>
-						        </p>
-						        <p class="btn_sky">
-						            <a href="javascript:fn_reSelect();" id="reSelect" style="display: none">Reselect</a>
-						        </p>
-						     </td>
-						</tr>
-					</tbody>
-				</table><!-- table end -->
-			</form>
-		</section><!-- search_table end -->
-		<div style="display: none" id="displayVisible">
-			<section class="search_result"><!-- search_result start -->
-				<section class="tap_wrap"><!-- tap_wrap start -->
-					<ul class="tap_type1">
-					    <li><a href="#" class="on" id="basciInfo">Basic Info</a></li>
-					    <li><a href="#">Mailing Address</a></li>
-					    <li><a href="#">Contact Info</a></li>
-					</ul>
-					<article class="tap_area"><!-- tap_area start -->
-						<ul class="right_btns">
-						    <li><p class="btn_blue2"><a href="javascript:fn_billGrpHistory();">View History</a></p></li>
-						    <li><p class="btn_blue2"><a href="javascript:fn_changeMainOrder();">Change Main Order</a></p></li>
-						    <li><p class="btn_blue2"><a href="javascript:fn_updRemark();">Update Remark</a></p></li>
-						    <li><p class="btn_blue2"><a href="javascript:fn_changeBillType();">Change Billing Type</a></p></li>
+			<aside class="title_line"><!-- title_line start -->
+				<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+				<h2>Billing Group Mgmt</h2>
+			</aside><!-- title_line end -->
+			<section class="search_table"><!-- search_table start -->
+				<form action="#" method="post">
+					<table class="type1"><!-- table start -->
+						<caption>table</caption>
+						<colgroup>
+						    <col style="width:190px" />
+						    <col style="width:*" />
+						</colgroup>
+						<tbody>
+							<tr>
+							    <th scope="row">Order Number</th>
+							    <td>
+							        <input type="text" name="orderNo" id="orderNo" title="" placeholder="Order Number" class="" />
+							        <p class="btn_sky">
+							            <a href="javascript:searchList();" id="confirm">Confirm</a>
+							        </p>
+							        <p class="btn_sky">
+							            <a href="javascript:fn_reSelect();" id="reSelect" style="display: none">Reselect</a>
+							        </p>
+							     </td>
+							</tr>
+						</tbody>
+					</table><!-- table end -->
+				</form>
+			</section><!-- search_table end -->
+			<div style="display: none" id="displayVisible">
+				<section class="search_result"><!-- search_result start -->
+					<section class="tap_wrap"><!-- tap_wrap start -->
+						<ul class="tap_type1">
+						    <li><a href="#" class="on" id="basciInfo">Basic Info</a></li>
+						    <li><a href="#">Mailing Address</a></li>
+						    <li><a href="#">Contact Info</a></li>
 						</ul>
-						<table class="type1 mt10"><!-- table start -->
-							<caption>table</caption>
-							<colgroup>
-							    <col style="width:160px" />
-							    <col style="width:*" />
-							    <col style="width:160px" />
-							    <col style="width:*" />
-							</colgroup>
-							<tbody>
-								<tr>
-								    <th scope="row">Billing Group No</th>
-								    <td id="custBillGrpNo">
-								    </td>
-								    <th scope="row">Creator</th>
-								    <td id="creator">
-								    </td>
-								</tr>
-								<tr>
-								    <th scope="row">Main Order</th>
-								    <td id="mainOrder">
-								    </td>
-								    <th scope="row">Create Date</th>
-								    <td id="createDate">
-								    </td>
-								</tr>
-								<tr>
-								    <th scope="row">Customer ID</th>
-								    <td id="customerId">
-								    </td>
-								    <th scope="row">NRIC/Company No</th>
-								    <td id="nric">
-								    </td>
-								</tr>
-								<tr>
-								    <th scope="row">Customer Name</th>
-								    <td colspan="3" id="customerName">
-								    </td>
-								</tr>
-								<tr>
-								    <th scope="row">Billing Type</th>
-								    <td colspan="3">
-								    <label><input type="checkbox" disabled="disabled" id="post" name="post"/><span>Post</span></label>
-								    <label><input type="checkbox" disabled="disabled" id="sms" name="sms"/><span>SMS</span></label>
-								    <label><input type="checkbox" disabled="disabled" id="estm" name="estm"/><span>E-Statement</span></label>
-								    </td>
-								</tr>
-								<tr>
-								    <th scope="row">Email</th>
-								    <td id="email">
-								    </td>
-								    <th scope="row">Additional Email</th>
-								    <td id="additionalEmail">
-								    </td>
-								</tr>
-								<tr>
-								    <th scope="row">Remark</th>
-								    <td colspan="3" id="remark">
-								    </td>
-								</tr>
-							</tbody>
-						</table><!-- table end -->
-					</article><!-- tap_area end -->
-					<article class="tap_area"><!-- tap_area start -->
-						<ul class="right_btns">
-						    <li><p class="btn_blue2"><a href="javascript:fn_changeMaillAddr();">Change Mailing Address</a></p></li>
-						</ul>
-						<table class="type1 mt10"><!-- table start -->
-							<caption>table</caption>
-							<colgroup>
-							    <col style="width:160px" />
-							    <col style="width:*" />
-							</colgroup>
-							<tbody>
-								<tr>
-								    <th scope="row">Mailing Address</th>
-								    <td id="maillingAddr">
-								    </td>
-								</tr>
-							</tbody>
-						</table><!-- table end -->
-					</article><!-- tap_area end -->
-					<article class="tap_area"><!-- tap_area start -->
-						<ul class="right_btns">
-						    <li><p class="btn_blue2"><a href="javascript:fn_chgContPerson();">Change Contact Person</a></p></li>
-						</ul>
-						<table class="type1 mt10"><!-- table start -->
-							<caption>table</caption>
-							<colgroup>
-							    <col style="width:160px" />
-							    <col style="width:*" />
-							    <col style="width:160px" />
-							    <col style="width:*" />
-							</colgroup>
-							<tbody>
-								<tr>
-								    <th scope="row">Contact Person</th>
-								    <td colspan="3" id="contractPerson">
-								    </td>
-								</tr>
-								<tr>
-								    <th scope="row">Mobile Number</th>
-								    <td id="mobileNumber">
-								    </td>
-								    <th scope="row">Office Number</th>
-								    <td id="officeNumber">
-								    </td>
-								</tr>
-								<tr>
-								    <th scope="row">Residence Number</th>
-								    <td id="residenceNumber">
-								    </td>
-								    <th scope="row">Fax Number</th>
-								    <td id="faxNumber">
-								    </td>
-								</tr>
-							</tbody>
-						</table><!-- table end -->
-					</article><!-- tap_area end -->
-				</section><!-- tap_wrap end -->
-				<div class="divine_auto mt30"><!-- divine_auto start -->
-					<div style="width:50%;">
-						<div class="border_box" style="height:350px;"><!-- border_box start -->
-							<aside class="title_line"><!-- title_line start -->
-							<h3 class="pt0">Order In Group</h3>
-							<ul class="right_btns top0">
-							    <li><p class="btn_grid"><a href="javascript:fn_addOrder();"><span class="search"></span>Add Order</a></p></li>
+						<article class="tap_area"><!-- tap_area start -->
+							<ul class="right_btns">
+							    <li><p class="btn_blue2"><a href="javascript:fn_billGrpHistory();">View History</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_changeMainOrder();">Change Main Order</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_updRemark();">Update Remark</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_changeBillType();">Change Billing Type</a></p></li>
 							</ul>
-							</aside><!-- title_line end -->
-							<!-- grid_wrap start -->
-							        <article id="grid_wrap" class="grid_wrap"></article>
-							<!-- grid_wrap end -->
+							<table class="type1 mt10"><!-- table start -->
+								<caption>table</caption>
+								<colgroup>
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								</colgroup>
+								<tbody>
+									<tr>
+									    <th scope="row">Billing Group No</th>
+									    <td id="custBillGrpNo">
+									    </td>
+									    <th scope="row">Creator</th>
+									    <td id="creator">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Main Order</th>
+									    <td id="mainOrder">
+									    </td>
+									    <th scope="row">Create Date</th>
+									    <td id="createDate">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Customer ID</th>
+									    <td id="customerId">
+									    </td>
+									    <th scope="row">NRIC/Company No</th>
+									    <td id="nric">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Customer Name</th>
+									    <td colspan="3" id="customerName">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Billing Type</th>
+									    <td colspan="3">
+									    <label><input type="checkbox" disabled="disabled" id="post" name="post"/><span>Post</span></label>
+									    <label><input type="checkbox" disabled="disabled" id="sms" name="sms"/><span>SMS</span></label>
+									    <label><input type="checkbox" disabled="disabled" id="estm" name="estm"/><span>E-Statement</span></label>
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Email</th>
+									    <td id="email">
+									    </td>
+									    <th scope="row">Additional Email</th>
+									    <td id="additionalEmail">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Remark</th>
+									    <td colspan="3" id="remark">
+									    </td>
+									</tr>
+								</tbody>
+							</table><!-- table end -->
+						</article><!-- tap_area end -->
+						<article class="tap_area"><!-- tap_area start -->
+							<ul class="right_btns">
+							    <li><p class="btn_blue2"><a href="javascript:fn_changeMaillAddr();">Change Mailing Address</a></p></li>
+							</ul>
+							<table class="type1 mt10"><!-- table start -->
+								<caption>table</caption>
+								<colgroup>
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								</colgroup>
+								<tbody>
+									<tr>
+									    <th scope="row">Mailing Address</th>
+									    <td id="maillingAddr">
+									    </td>
+									</tr>
+								</tbody>
+							</table><!-- table end -->
+						</article><!-- tap_area end -->
+						<article class="tap_area"><!-- tap_area start -->
+							<ul class="right_btns">
+							    <li><p class="btn_blue2"><a href="javascript:fn_chgContPerson();">Change Contact Person</a></p></li>
+							</ul>
+							<table class="type1 mt10"><!-- table start -->
+								<caption>table</caption>
+								<colgroup>
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								    <col style="width:160px" />
+								    <col style="width:*" />
+								</colgroup>
+								<tbody>
+									<tr>
+									    <th scope="row">Contact Person</th>
+									    <td colspan="3" id="contractPerson">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Mobile Number</th>
+									    <td id="mobileNumber">
+									    </td>
+									    <th scope="row">Office Number</th>
+									    <td id="officeNumber">
+									    </td>
+									</tr>
+									<tr>
+									    <th scope="row">Residence Number</th>
+									    <td id="residenceNumber">
+									    </td>
+									    <th scope="row">Fax Number</th>
+									    <td id="faxNumber">
+									    </td>
+									</tr>
+								</tbody>
+							</table><!-- table end -->
+						</article><!-- tap_area end -->
+					   </section><!-- tap_wrap end -->
+					<div class="divine_auto mt30"><!-- divine_auto start -->
+						<div style="width:50%;">
+							<div class="border_box" style="height:350px;"><!-- border_box start -->
+								<aside class="title_line"><!-- title_line start -->
+								<h3 class="pt0">Order In Group</h3>
+								<ul class="right_btns top0">
+								    <li><p class="btn_grid"><a href="javascript:fn_addOrder();"><span class="search"></span>Add Order</a></p></li>
+								</ul>
+								</aside><!-- title_line end -->
+								<!-- grid_wrap start -->
+								        <article id="grid_wrap" class="grid_wrap"></article>
+								<!-- grid_wrap end -->
+							</div><!-- border_box end -->
+						</div>
+						<div style="width:50%;">
+						<div class="border_box" style="height:350px;"><!-- border_box start -->
+						
+						<aside class="title_line"><!-- title_line start -->
+						<h3 class="pt0">E-Statement Request History</h3>
+						</aside><!-- title_line end -->
+						<!-- grid_wrap start -->
+						        <article id="grid_wrap2" class="grid_wrap"></article>
+						<!-- grid_wrap end -->
 						</div><!-- border_box end -->
-					</div>
-					<div style="width:50%;">
-					<div class="border_box" style="height:350px;"><!-- border_box start -->
-					
-					<aside class="title_line"><!-- title_line start -->
-					<h3 class="pt0">E-Statement Request History</h3>
-					</aside><!-- title_line end -->
-					<!-- grid_wrap start -->
-					        <article id="grid_wrap2" class="grid_wrap"></article>
-					<!-- grid_wrap end -->
-					</div><!-- border_box end -->
-					
-					</div>
-					<form name="myForm" id="myForm">
-					    <input type="hidden" name="custBillId" id="custBillId">
-					    <input type="hidden" name="custBillCustId" id="custBillCustId">
-					    <input type="hidden" name="custAddId" id="custAddId">
-					    <input type="hidden" name="custCntcId" id="custCntcId">
-					    <input type="hidden" name="custTypeId" id="custTypeId">
-					    <input type="hidden" name="reqId" id="reqId">
-					    <input type="hidden" name="salesOrdId" id="salesOrdId">
-					    <input type="hidden" name="salesOrdNo" id="salesOrdNo">
-					    <input type="hidden" name="custBillSoId" id="custBillSoId">
-					</form>
-				</div><!-- divine_auto end -->
-			</section><!-- content end -->
-		   </div>       
+						
+						</div>
+						<form name="myForm" id="myForm">
+						    <input type="hidden" name="custBillId" id="custBillId">
+						    <input type="hidden" name="custBillCustId" id="custBillCustId">
+						    <input type="hidden" name="custAddId" id="custAddId">
+						    <input type="hidden" name="custCntcId" id="custCntcId">
+						    <input type="hidden" name="custTypeId" id="custTypeId">
+						    <input type="hidden" name="reqId" id="reqId">
+						    <input type="hidden" name="salesOrdId" id="salesOrdId">
+						    <input type="hidden" name="salesOrdNo" id="salesOrdNo">
+						    <input type="hidden" name="custBillSoId" id="custBillSoId">
+						</form>
+					</div><!-- divine_auto end -->
+				</section><!-- content end -->
+			   </div>       
 		</section><!-- container end -->
 		<hr />
 	</div><!-- wrap end -->
