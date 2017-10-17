@@ -111,7 +111,6 @@ hideViewPopup=function(val){
     $(val).hide();
 }
 </script>
-
 <!-- content start -->
 <section id="content">
     <ul class="path">
@@ -120,7 +119,6 @@ hideViewPopup=function(val){
         <li>Billing Group</li>
         <li>Outright Invoice</li>
     </ul>
-    
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
@@ -130,12 +128,9 @@ hideViewPopup=function(val){
         </ul>    
     </aside>
     <!-- title_line end -->
-
-
- <!-- search_table start -->
+    <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
-
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
@@ -167,12 +162,7 @@ hideViewPopup=function(val){
                     </tbody>
               </table>
         </form>
-        </section>
-
- <!-- search_result start -->
-<section class="search_result">     
-
-    <!-- link_btns_wrap start -->
+        <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
             <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
@@ -189,13 +179,14 @@ hideViewPopup=function(val){
             </dl>
         </aside>
         <!-- link_btns_wrap end -->
-        
-    <!-- grid_wrap start -->
-    <article id="grid_wrap" class="grid_wrap"></article>
-    <!-- grid_wrap end -->
+        </section>
+		 <!-- search_result start -->
+		<section class="search_result">     
+		    <!-- grid_wrap start -->
+		    <article id="grid_wrap" class="grid_wrap"></article>
+		    <!-- grid_wrap end -->
+		</section>
 </section>
-</section>
-
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/InstOutInvoice_PDF.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="" />
@@ -205,7 +196,6 @@ hideViewPopup=function(val){
     <input type="hidden" id="emailText" name="emailText" value="" />
     <input type="hidden" id="emailTo" name="emailTo" value="" /> 
 </form>
-
 <!--------------------------------------------------------------- 
     POP-UP (E-INVOICE)
 ---------------------------------------------------------------->
@@ -219,7 +209,6 @@ hideViewPopup=function(val){
         </ul>
     </header>
     <!-- pop_header end -->
-    
     <!-- pop_body start -->
     <form name="eInvoiceForm" id="eInvoiceForm"  method="post">
     <section class="pop_body">
@@ -232,7 +221,6 @@ hideViewPopup=function(val){
                     <col style="width:165px" />
                     <col style="width:*" />                
                 </colgroup>
-                
                 <tbody>
                     <tr>
                         <th scope="row">Email</th>
@@ -243,7 +231,6 @@ hideViewPopup=function(val){
                    </tbody>  
             </table>
         </section>
-        
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
         </ul>
