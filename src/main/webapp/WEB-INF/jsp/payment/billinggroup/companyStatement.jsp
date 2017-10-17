@@ -159,6 +159,7 @@ hideViewPopup=function(val){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Company Statement</h2>   
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getCompanyStatementListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
@@ -166,7 +167,6 @@ hideViewPopup=function(val){
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
-
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
@@ -204,9 +204,6 @@ hideViewPopup=function(val){
                 <dl class="link_list">
                     <dt>Link</dt>
                     <dd>
-                        <ul class="btns">
-                            <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
-                        </ul>
                         <ul class="btns">
                             <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_sendEStatementPop();">Send E-Statement</a></p></li>
                         </ul>

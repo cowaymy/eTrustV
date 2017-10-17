@@ -206,6 +206,7 @@ hideViewPopup=function(val){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Company Invoice</h2>   
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getCompanyInvoiceListtAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
@@ -264,9 +265,6 @@ hideViewPopup=function(val){
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
-                    </ul>
-                    <ul class="btns">
                         <li><p class="link_btn type2"><a href="javascript:fn_sendEInvoicePop();">Send E-Invoice</a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -275,7 +273,7 @@ hideViewPopup=function(val){
         </aside>
         <!-- link_btns_wrap end -->
         </section>
-		 <!-- search_result start -->
+		<!-- search_result start -->
 		<section class="search_result">     
 		    <!-- grid_wrap start -->
 		    <article id="grid_wrap" class="grid_wrap"></article>

@@ -137,6 +137,7 @@ function fn_sendEInvoicePop(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Membership Invoice</h2>   
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getMembershipInvoiceListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
@@ -192,9 +193,6 @@ function fn_sendEInvoicePop(){
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
-                    </ul>
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="javascript:fn_sendEInvoicePop();">Send E-Invoice</a></p></li>
                     </ul>
