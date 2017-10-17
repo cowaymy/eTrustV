@@ -30,13 +30,6 @@ public class AppConstants {
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
 	/**
-	 * 공통 첨부파일 Chenal(W:Web/M:Mobile/C:CallCenter)
-	 */
-	public static final String FILE_WEB = "W";
-	public static final String FILE_MOBILE = "M";
-	public static final String FILE_CALL_CENTER = "C";
-
-	/**
 	 * 로그인 히스토리
 	 */
 	public static final String LOGIN_WEB = "01";

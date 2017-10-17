@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import com.coway.trust.biz.common.type.FileType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,13 +241,13 @@ public class WebInvoiceController {
 		
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
-			fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
+			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
 		}
-		
+
 		String clmNo = webInvoiceService.selectNextClmNo();
 		params.put("clmNo", clmNo);
 		params.put("attachment", list);
-		
+
 		webInvoiceService.insertWebInvoiceInfo(params);
 		
 		ReturnMessage message = new ReturnMessage();

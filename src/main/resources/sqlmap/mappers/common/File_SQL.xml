@@ -53,4 +53,46 @@
         )
     </insert>
 
+    <select id="selectFilesByGroupId" parameterType="int" resultType="fileVO">
+        SELECT FILEDTL.ATCH_FILE_ID AS atchFileId
+              ,FILEDTL.ATCH_FILE_NAME AS atchFileName
+              ,FILEDTL.FILE_SUB_PATH AS fileSubPath
+              ,FILEDTL.PHYSICL_FILE_NAME AS physiclFileName
+              ,FILEDTL.FILE_EXTSN AS fileExtsn
+              ,FILEDTL.FILE_SIZE AS fileSize
+              ,FILEDTL.FILE_PASSWORD AS filePassword
+          FROM SYS0071D FILEDTL
+         WHERE FILEDTL.ATCH_FILE_ID IN (SELECT FILEGROUP.ATCH_FILE_ID
+                                          FROM SYS0070M FILEGROUP
+                                         WHERE FILEGROUP.ATCH_FILE_GRP_ID = #{groupId})
+    </select>
+
+    <select id="selectFileByFileId" parameterType="int" resultType="fileVO">
+        SELECT FILEDTL.ATCH_FILE_ID AS atchFileId
+        ,FILEDTL.ATCH_FILE_NAME AS atchFileName
+        ,FILEDTL.FILE_SUB_PATH AS fileSubPath
+        ,FILEDTL.PHYSICL_FILE_NAME AS physiclFileName
+        ,FILEDTL.FILE_EXTSN AS fileExtsn
+        ,FILEDTL.FILE_SIZE AS fileSize
+        ,FILEDTL.FILE_PASSWORD AS filePassword
+        FROM SYS0071D FILEDTL
+        WHERE FILEDTL.ATCH_FILE_ID  = #{fileId}
+    </select>
+
+    <delete id="deleteFileGroupByGroupId" parameterType="int">
+        DELETE
+        FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = #{fileGroupId}
+    </delete>
+
+    <delete id="deleteFileByGroupId" parameterType="int">
+        DELETE
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID IN (
+            SELECT  ATCH_FILE_ID
+              FROM SYS0070M
+            WHERE ATCH_FILE_GRP_ID = #{fileGroupId}
+        )
+    </delete>
+
 </mapper>

@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.coway.trust.biz.common.type.FileType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -510,7 +511,7 @@ public class AdjustmentController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		// serivce 에서 파일정보를 가지고, DB 처리.
-		fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
+		fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
 		Map<String, Object> setmap = new HashMap();
 		setmap.put("fileName", list.get(0).getFileName());
 		setmap.put("physicalName", list.get(0).getPhysicalName());

@@ -3,6 +3,7 @@ package com.coway.trust.api.callcenter.common;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.util.EgovFormBasedFileVo;
 
 import io.swagger.annotations.ApiModel;
@@ -14,16 +15,24 @@ public class FileDto {
 	@ApiModelProperty(value = "파일 그룹 아이디")
 	private int atchFileGrpId;
 	@ApiModelProperty(value = "첨부파일 리스트")
-	private List<FileVO> files;
+	private List<FileDetailVO> files;
 
 	public static FileDto create(List<EgovFormBasedFileVo> egovFormBasedFileVoList, int atchFileGrpId) {
 		FileDto dto = new FileDto();
-		dto.setFiles(FileVO.createList(egovFormBasedFileVoList));
+		dto.setFiles(FileDetailVO.createList(egovFormBasedFileVoList));
 		dto.setAtchFileGrpId(atchFileGrpId);
 		return dto;
 	}
 
-	static class FileVO {
+	public static FileDto createByFileVO(List<FileVO> fileVOList, int atchFileGrpId) {
+		FileDto dto = new FileDto();
+		List<FileDetailVO> fileDetailVOList = fileVOList.stream().map(r -> FileDetailVO.create(r)).collect(Collectors.toList());
+		dto.setFiles(fileDetailVOList);
+		dto.setAtchFileGrpId(atchFileGrpId);
+		return dto;
+	}
+
+	static class FileDetailVO {
 		@ApiModelProperty(value = "원본 첨부파일 명")
 		private String atchFileName;
 		@ApiModelProperty(value = "첨부파일 sub path")
@@ -35,19 +44,31 @@ public class FileDto {
 		@ApiModelProperty(value = "원본 첨부파일 사이즈")
 		private long fileSize;
 
-		public static List<FileVO> createList(List<EgovFormBasedFileVo> list) {
-			List<FileVO> fileVOList = list.stream().map(r -> FileVO.create(r)).collect(Collectors.toList());
-			return fileVOList;
+		public static List<FileDetailVO> createList(List<EgovFormBasedFileVo> list) {
+			List<FileDetailVO> fileDetailVOList = list.stream().map(r -> FileDetailVO.create(r)).collect(Collectors.toList());
+			return fileDetailVOList;
 		}
 
-		public static FileVO create(EgovFormBasedFileVo egovFormBasedFileVo) {
-			FileVO vo = new FileVO();
+		public static FileDetailVO create(EgovFormBasedFileVo egovFormBasedFileVo) {
+			FileDetailVO vo = new FileDetailVO();
 
 			vo.setAtchFileName(egovFormBasedFileVo.getFileName());
 			vo.setFileSubPath(egovFormBasedFileVo.getServerSubPath());
 			vo.setPhysiclFileName(egovFormBasedFileVo.getPhysicalName());
 			vo.setFileExtsn(egovFormBasedFileVo.getExtension());
 			vo.setFileSize(egovFormBasedFileVo.getSize());
+
+			return vo;
+		}
+
+		public static FileDetailVO create(FileVO fileVO) {
+			FileDetailVO vo = new FileDetailVO();
+
+			vo.setAtchFileName(fileVO.getAtchFileName());
+			vo.setFileSubPath(fileVO.getFileSubPath());
+			vo.setPhysiclFileName(fileVO.getPhysiclFileName());
+			vo.setFileExtsn(fileVO.getFileExtsn());
+			vo.setFileSize(fileVO.getFileSize());
 
 			return vo;
 		}
@@ -102,11 +123,11 @@ public class FileDto {
 		this.atchFileGrpId = atchFileGrpId;
 	}
 
-	public List<FileVO> getFiles() {
+	public List<FileDetailVO> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<FileVO> files) {
+	public void setFiles(List<FileDetailVO> files) {
 		this.files = files;
 	}
 }

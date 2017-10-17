@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.common.type.FileType;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -61,7 +62,7 @@ public class FileApiController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		// serivce 에서 파일정보를 가지고, DB 처리.
-		fileApplication.businessAttach(AppConstants.FILE_MOBILE, FileVO.createList(list), params);
+		fileApplication.businessAttach(FileType.MOBILE, FileVO.createList(list), params);
 
 		// TODO : 에러 발생시 파일 삭제 처리 예정.
 		return ResponseEntity.ok(list);

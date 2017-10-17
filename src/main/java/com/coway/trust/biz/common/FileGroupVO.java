@@ -1,6 +1,7 @@
 package com.coway.trust.biz.common;
 
 import java.util.Date;
+import java.util.List;
 
 public class FileGroupVO {
 	private int atchFileGrpId;
@@ -10,6 +11,8 @@ public class FileGroupVO {
 	private Date crtDt;
 	private int updUserId;
 	private Date updDt;
+
+	private List<FileVO> fileVOList;
 
 	public int getAtchFileGrpId() {
 		return atchFileGrpId;
@@ -65,5 +68,13 @@ public class FileGroupVO {
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
+	}
+
+	public List<FileVO> getFileVOList() {
+		return fileVOList;
+	}
+
+	public void setFileVOList(List<FileVO> fileVOList) {
+		this.fileVOList = fileVOList;
 	}
 }

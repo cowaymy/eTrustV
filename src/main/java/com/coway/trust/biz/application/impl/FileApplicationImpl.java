@@ -3,6 +3,7 @@ package com.coway.trust.biz.application.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.common.type.FileType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,9 @@ public class FileApplicationImpl implements FileApplication {
 	private CustomerService customerService;
 
 	@Override
-	public void businessAttach(String fileChannel, List<FileVO> list, Map<String, Object> params) {
+	public void businessAttach(FileType type, List<FileVO> list, Map<String, Object> params) {
 
-		int fileGroupKey = fileService.insertFiles(list, fileChannel, (Integer) params.get("userId"));
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
 		params.put("fileGroupKey", fileGroupKey);
 
 		// fileGroupKey 를 가지고 업무 처리..
@@ -44,8 +45,8 @@ public class FileApplicationImpl implements FileApplication {
 	}
 
 	@Override
-	public int commonAttach(String fileChannel, List<FileVO> list, Map<String, Object> params) {
-		int fileGroupKey = fileService.insertFiles(list, fileChannel, (Integer) params.get("userId"));
+	public int commonAttach(FileType type, List<FileVO> list, Map<String, Object> params) {
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
 		params.put("fileGroupKey", fileGroupKey);
 		return fileGroupKey;
 	}
