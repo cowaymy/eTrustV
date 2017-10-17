@@ -37,6 +37,30 @@
   color:#000;
 }
 
+.my_div_btn {
+    color: #fff !important;
+    background-color: #2a2d33;
+    line-height:2em;
+   /* 
+   font-weight: bold;
+    margin: 2px 4px;
+    padding : 2px 4px;
+   */
+    cursor: pointer;
+}
+.my_div_btn2 {
+    color: #fff !important;
+    background-color: #ee5315;
+     line-height:2em;
+    /*
+    font-weight: bold;
+    margin: 2px 4px;
+    padding : 2px 4px;
+    */
+    
+    cursor: pointer;
+}
+
 </style>
 
 <script type="text/javaScript">
@@ -308,6 +332,23 @@ function addUncheckedRowsByValue(selValue)
   AUIGrid.addUncheckedRowsByValue(myGridID, "code", selValue);
 }
 
+// 적용 버턴 클릭 핸들러
+function myApplyBtnClick(index, event) 
+{
+  console.log("pdf : "+ index + " 적용 버턴 클릭_" + +event.value );
+};
+
+//팝업 버턴 클릭 핸들러
+function myPopupBtnClick(index, event) 
+{
+  console.log("excel : "+ index + " 팝업 버턴 클릭_" +event.value );
+};
+
+
+/*************************************
+ **********  Grid-LayOut  ************
+ *************************************/
+
 var SCMPrePOViewLayout = 
     [      
         {    
@@ -370,9 +411,26 @@ var SCMPrePOViewLayout2 =
 var SCMPOViewLayout = 
     [ 
       {
-          dataField : "pdf",
+          //dataField : "pdf",
           headerText : "<spring:message code='sys.scm.pomngment.pdf'/>",
           width : "7%",
+          renderer : 
+				        	  { // HTML 템플릿 렌더러 사용
+				              type : "TemplateRenderer"
+				            }
+            // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
+            , labelFunction : function (rowIndex, columnIndex, value, headerText, item ) 
+								              { // HTML 템플릿 작성
+									              var template = '<div>';
+									              
+									              //template += '<span class="my_div_text_box">' + value + '</span>';
+									              template += '<span class="my_div_btn" onclick="javascript:myApplyBtnClick(' + 1 + ', event);">PDF</span>';
+									              template += '&nbsp;';
+									              template += '<span class="my_div_btn2" onclick="javascript:myPopupBtnClick(' + 2 + ', event);">EXCEL</span>';
+									              template += '</div>';
+									              return template;
+								              }
+          
       },{
           dataField : "no",
           headerText : "<spring:message code='sys.scm.pomngment.rowNo'/>",
@@ -503,8 +561,7 @@ $(document).ready(function()
 	
 	// 행 삭제 이벤트 바인딩 
 	AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
-	
-	
+
 	// cellClick event.
 	AUIGrid.bind(myGridID, "cellClick", function( event ) 
 	{
