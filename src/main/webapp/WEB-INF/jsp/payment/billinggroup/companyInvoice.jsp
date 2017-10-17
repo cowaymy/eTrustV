@@ -192,7 +192,6 @@ hideViewPopup=function(val){
     $(val).hide();
 }
 </script>
-
 <!-- content start -->
 <section id="content">
     <ul class="path">
@@ -214,7 +213,6 @@ hideViewPopup=function(val){
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
-
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
@@ -311,32 +309,30 @@ hideViewPopup=function(val){
     
     <!-- pop_body start -->
     <form name="eInvoiceForm" id="eInvoiceForm"  method="post">
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />                
-                </colgroup>
-                
-                <tbody>
-                    <tr>
-                        <th scope="row">Email</th>
-                        <td>
-                            <input type="text" id="send_email" name="send_email" title="Email Address" placeholder="Email Address" class="w100p" />
-                        </td>
-                    </tr>
-                   </tbody>  
-            </table>
-        </section>
-        
-        <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
-        </ul>
-    </section>
+	    <section class="pop_body">
+	        <!-- search_table start -->
+	        <section class="search_table">
+	            <!-- table start -->
+	            <table class="type1">
+	                <caption>table</caption>
+	                 <colgroup>
+	                    <col style="width:165px" />
+	                    <col style="width:*" />                
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">Email</th>
+	                        <td>
+	                            <input type="text" id="send_email" name="send_email" title="Email Address" placeholder="Email Address" class="w100p" />
+	                        </td>
+	                    </tr>
+	                 </tbody>  
+	            </table>
+	        </section>
+	        <ul class="center_btns" >
+	            <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
+	        </ul>
+	    </section>
     </form>       
     <!-- pop_body end -->
 </div>
