@@ -194,14 +194,12 @@ public class HsManualController {
 
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		ReturnMessage message = new ReturnMessage();
-		success = hsManualService.insertHsResult(formMap, updList);
+		resultValue = hsManualService.insertHsResult(formMap, updList);
 		
 
-		if(success){
-			message.setMessage("Complete to Add a HS Result.  " );
-		}else{
-			message.setMessage("저장실패");
-		}
+
+		message.setMessage("Complete to Add a HS Order.  " + resultValue.get("docNo"));
+
 		
 		return ResponseEntity.ok(message);
 		
@@ -217,10 +215,10 @@ public class HsManualController {
 
 		EgovMap  hsDefaultInfo = hsManualService.selectHsInitDetailPop(params);
 		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
-		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
+//		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//
 		List<EgovMap>  failReasonList = hsManualService.failReasonList(params);
-		List<EgovMap>  serMemList = hsManualService.serMemList(params);
+//		List<EgovMap>  serMemList = hsManualService.serMemList(params);
 
 		
 		logger.debug(" params : " , params);
@@ -228,10 +226,10 @@ public class HsManualController {
 		
 		model.addAttribute("hsDefaultInfo", hsDefaultInfo);
 		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
-		model.addAttribute("cmbServiceMemList", cmbServiceMemList);
+//		model.addAttribute("cmbServiceMemList", cmbServiceMemList);
 		model.addAttribute("orderDetail", orderDetail);
 		model.addAttribute("failReasonList", failReasonList);
-		model.addAttribute("serMemList", serMemList);
+//		model.addAttribute("serMemList", serMemList);
 
 		
 		
@@ -258,7 +256,7 @@ public class HsManualController {
 
 		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
 		List<EgovMap>  failReasonList = hsManualService.failReasonList(params);
-		List<EgovMap>  serMemList = hsManualService.serMemList(params);
+		//List<EgovMap>  serMemList = hsManualService.serMemList(params);
 		
 
 		
@@ -266,7 +264,7 @@ public class HsManualController {
 		model.addAttribute("orderDetail", orderDetail);
 		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
 		model.addAttribute("failReasonList", failReasonList);
-		model.addAttribute("serMemList", serMemList);
+		//model.addAttribute("serMemList", serMemList);
 		
 		return "services/bs/hsEditPop";
 
@@ -286,6 +284,30 @@ public class HsManualController {
 		return ResponseEntity.ok(hsViewfilterInfo);
 	}
 	
+
+	
+	@RequestMapping(value = "/selectHistoryHSResult.do")
+	public ResponseEntity<List<EgovMap>> selectHistoryHSResult(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {		
+		
+		List<EgovMap> historyHSResult = null;
+		
+		historyHSResult = hsManualService.selectHistoryHSResult(params);
+		
+		return ResponseEntity.ok(historyHSResult);
+	}
+
+	
+	
+	@RequestMapping(value = "/selectFilterTransaction.do")
+	public ResponseEntity<List<EgovMap>> selectFilterTransaction(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {		
+		
+		List<EgovMap> filterTransaction = null;
+		
+		filterTransaction = hsManualService.selectFilterTransaction(params);
+		
+		return ResponseEntity.ok(filterTransaction);
+	}
+
 	
 	
 
@@ -333,7 +355,7 @@ public class HsManualController {
 		
 		resultValue = hsManualService.addIHsResult(formMap, updList, sessionVO);
 
-		message.setMessage("Complete to Add a HS Result : " + resultValue.get("resultId") );
+		message.setMessage("Complete to Add a HS Order : " + resultValue.get("resultId") );
 		
 		return ResponseEntity.ok(message);
 	}
