@@ -40,7 +40,28 @@ $(document).ready(function() {
     	$("#ord_grid_wrap").css("display" , "");
     });
 	 
-});
+});//Doc Ready Func End
+
+//TODO 미개발
+function fn_underDevelop(){
+	Common.alert('The program is under development.');
+}
+
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
 
 
 function fn_selectCcpAgreementListAjax(){
@@ -141,7 +162,7 @@ function createOrdAUIGrid(){
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span>New</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -229,24 +250,12 @@ function createOrdAUIGrid(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">ROW Data</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Listing</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Summary</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Consignment Courier</a></p></li>
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

@@ -1,8 +1,14 @@
+<script type="text/javascript">
+//TODO 미개발
+function fn_underDevelop(){
+    Common.alert('The program is under development.');
+}
+</script>
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-        <li><p class="btn_blue2"><a href="#">View Ledger (1)</a></p></li>
-        <li><p class="btn_blue2"><a href="#">View Ledger (2)</a></p></li>
+        <li><p class="btn_blue2"><a href="#" onclick="javascript : fn_underDevelop()">View Ledger (1)</a></p></li>
+        <li><p class="btn_blue2"><a href="#" onclick="javascript : fn_underDevelop()">View Ledger (2)</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->

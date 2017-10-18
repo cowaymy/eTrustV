@@ -58,6 +58,26 @@
 	   });
    });//Document Ready Func End
    
+   //TODO 미개발
+   function fn_underDevelop(){
+       Common.alert('The program is under development.');
+   }
+   
+   $.fn.clearForm = function() {
+       return this.each(function() {
+           var type = this.type, tag = this.tagName.toLowerCase();
+           if (tag === 'form'){
+               return $(':input',this).clearForm();
+           }
+           if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+               this.value = '';
+           }else if (type === 'checkbox' || type === 'radio'){
+               this.checked = false;
+           }else if (tag === 'select'){
+               this.selectedIndex = -1;
+           }
+       });
+   };
   
    function creatememConfirmGrid(){
 	// Confirm List Column
@@ -147,7 +167,7 @@
                        <a href="#" id="_confirmBtn"><span class="search"></span>Confirm Result</a> 
                    </p></li>
 				<li><p class="btn_blue">
-						<a href="#"><span class="clear"></span>Clear</a>
+						<a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a>
 					</p></li>
 			</ul>
 		</aside>
@@ -246,7 +266,7 @@
 				</table>
 				<!-- table end -->
 
-				<aside class="link_btns_wrap">
+<%-- 				<aside class="link_btns_wrap">
 					<!-- link_btns_wrap start -->
 					<p class="show_btn">
 						<a href="#"><img
@@ -258,7 +278,7 @@
 						<dd>
 							<ul class="btns">
 								<li><p class="link_btn">
-										<a href="#">menu1</a>
+										<a href="#" onclick="javascript : fn_underDevelop()">menu1</a>
 									</p></li>
 								<li><p class="link_btn">
 										<a href="#">menu2</a>
@@ -283,30 +303,6 @@
 									</p></li>
 							</ul>
 							<ul class="btns">
-								<li><p class="link_btn type2">
-										<a href="#">menu1</a>
-									</p></li>
-								<li><p class="link_btn type2">
-										<a href="#">Search Payment</a>
-									</p></li>
-								<li><p class="link_btn type2">
-										<a href="#">menu3</a>
-									</p></li>
-								<li><p class="link_btn type2">
-										<a href="#">menu4</a>
-									</p></li>
-								<li><p class="link_btn type2">
-										<a href="#">Search Payment</a>
-									</p></li>
-								<li><p class="link_btn type2">
-										<a href="#">menu6</a>
-									</p></li>
-								<li><p class="link_btn type2">
-										<a href="#">menu7</a>
-									</p></li>
-								<li><p class="link_btn type2">
-										<a href="#">menu8</a>
-									</p></li>
 							</ul>
 							<p class="hide_btn">
 								<a href="#"><img
@@ -316,7 +312,7 @@
 						</dd>
 					</dl>
 				</aside>
-				<!-- link_btns_wrap end -->
+				<!-- link_btns_wrap end --> --%>
 
 			</form>
 		</section>

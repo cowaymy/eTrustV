@@ -103,14 +103,15 @@ function fn_reloadPage(){
     //Parent Window Method Call
     if($("#_selVisible").val() == null || $("#_selVisible").val() == ''){
         console.log("sleVisible == null");
-        fn_selectPstRequestDOListAjax();   
+        fn_selectPstRequestDOListAjax();
+        $("#_selectParam").val('6');
+        Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
+        $("#_close").click();
     }else{
         console.log("sleVisible == 1");
         $("#_calSearch").click();
     }
     
-    $("#_selectParam").val('6');
-    Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
     $("#_close").click();
 }
 

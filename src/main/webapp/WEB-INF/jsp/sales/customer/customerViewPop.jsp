@@ -234,7 +234,7 @@
                        labelText : "Ledger",
                        onclick : function(rowIndex, columnIndex, value, item) {
                        /* value 에 해당 키값 가져가야함 */
-                       alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                    	   fn_underDevelop();
                        }
                     }
                },
@@ -247,7 +247,7 @@
                        labelText : "Order",
                        onclick : function(rowIndex, columnIndex, value, item) {
                        /* value 에 해당 키값 가져가야함 */
-                       alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                       fn_underDevelop();
                    }
             }
         }];
@@ -293,7 +293,7 @@
                      labelText : "Ledger",
                      onclick : function(rowIndex, columnIndex, value, item) {
                          /* value 에 해당 키값 가져가야함 */
-                         alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                         fn_underDevelop();
                          }
                  }
              },{
@@ -305,7 +305,7 @@
                      labelText : "Order",
                      onclick : function(rowIndex, columnIndex, value, item) {
                        /* value 에 해당 키값 가져가야함 */
-                       alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                       fn_underDevelop();
                    }
             }
         }];
@@ -388,6 +388,10 @@
            window.moveTo(left, top);
     } */
 
+  //TODO 미개발
+    function fn_underDevelop(){
+        Common.alert('The program is under development.');
+    }
 </script>
 <div id="popup_wrap"><!-- popup_wrap start -->
 <!-- Pop up Form -->

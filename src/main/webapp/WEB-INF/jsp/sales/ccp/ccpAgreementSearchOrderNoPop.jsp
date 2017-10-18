@@ -43,6 +43,8 @@ $(document).ready(function() {
              $("#_salesOrderNo").val(event.item.ordNo);
              $("#_confirm").click();
 	  });
+	 
+	 doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
 	
 });
 
@@ -102,6 +104,31 @@ $(document).ready(function() {
      });
  }
  
+ function fn_multiCombo(){
+     $('#listAppType').change(function() {
+         //console.log($(this).val());
+     }).multipleSelect({
+         selectAll: true, // 전체선택 
+         width: '100%'
+     });
+     $('#listAppType').multipleSelect("checkAll");
+ }
+ 
+ $.fn.clearForm = function() {
+	    return this.each(function() {
+	        var type = this.type, tag = this.tagName.toLowerCase();
+	        if (tag === 'form'){
+	            return $(':input',this).clearForm();
+	        }
+	        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+	            this.value = '';
+	        }else if (type === 'checkbox' || type === 'radio'){
+	            this.checked = false;
+	        }else if (tag === 'select'){
+	            this.selectedIndex = -1;
+	        }
+	    });
+	};
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -117,7 +144,7 @@ $(document).ready(function() {
 
 <ul class="right_btns mb10">
     <li><p class="btn_blue"><span class="search"></span><a href="#" id="_orderSearchBtn">Search</a></p></li>
-    <li><p class="btn_blue"><span class="clear"></span><a href="#">Clear</a></p></li>
+    <li><p class="btn_blue"><span class="clear" ></span><a href="#" onclick="javascript:$('#_searchOrdForm').clearForm();">Clear</a></p></li>
 </ul>
 <form id="_searchOrdForm" method="get">
 <table class="type1"><!-- table start -->
@@ -136,7 +163,7 @@ $(document).ready(function() {
     <td><input type="text" title="" placeholder="Order No" class="w100p" name="searchOrdNo" /></td>
     <th scope="row">App Type</th><!-- ASIS Source Not Exist -->
     <td>
-    <select class="w100p"></select>
+    <select class="w100p" id="listAppType" name="searchOrdAppType"></select>
     </td>
     <th scope="row">Order Date</th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="searchOrdDate"/></td>

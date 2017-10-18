@@ -28,8 +28,13 @@
         });
         // 셀 클릭 이벤트 바인딩
     
+        //TODO 미개발
+        $("#_custVALetterBtn").click(function() {
+			Common.alert('The program is under development.');
+		});
+        
     });
- 
+	
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
         
@@ -132,7 +137,7 @@
     
     // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
     doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'M' , 'f_multiCombo');            // Customer Type Combo Box
-    doGetCombo('/sales/customer/getNationList', '338' , '1' ,'nation' , 'S');        // Nationality Combo Box
+    doGetCombo('/sales/customer/getNationList', '338' , '' ,'nation' , 'S');        // Nationality Combo Box
     doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'M' , 'f_multiCombo');     // Company Type Combo Box
     
     // 조회조건 combo box
@@ -258,24 +263,9 @@
 		<dt>Link</dt>
 		<dd>
 		<ul class="btns">
-			<li><p class="link_btn"><a href="#">menu1</a></p></li>
-			<li><p class="link_btn"><a href="#">menu2</a></p></li>
-			<li><p class="link_btn"><a href="#">menu3</a></p></li>
-			<li><p class="link_btn"><a href="#">menu4</a></p></li>
-			<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-			<li><p class="link_btn"><a href="#">menu6</a></p></li>
-			<li><p class="link_btn"><a href="#">menu7</a></p></li>
-			<li><p class="link_btn"><a href="#">menu8</a></p></li>
+			<li><p class="link_btn"><a href="#" id="_custVALetterBtn">Customer VA Letter</a></p></li>
 		</ul>
 		<ul class="btns">
-			<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-			<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-			<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
 		</ul>
 		<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 		</dd>

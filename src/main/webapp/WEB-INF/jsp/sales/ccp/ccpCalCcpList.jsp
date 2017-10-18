@@ -79,7 +79,23 @@ $(document).ready(function() {
         Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv6');
     });
 	
-});
+});//Doc Ready Func End
+
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
 
 function createCalGrid(){
 	
@@ -146,6 +162,11 @@ function f_multiCombo(){
        
     });
 }
+
+//TODO 미개발
+function fn_underDevelop(){
+    Common.alert('The program is under development.');
+}
 </script>
 <div id="wrap"><!-- wrap start -->
 <section id="content"><!-- content start -->
@@ -162,7 +183,7 @@ function f_multiCombo(){
     <li><p class="btn_blue"><a id="_updPayBtn"><span class="search"></span>Update Payment Channel</a></p></li> 
     <li><p class="btn_blue"><a id="_updCustBtn"><span class="search"></span>Update Customer Info</a></p></li>
     <li><p class="btn_blue"><a id="_calSearch"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="_detailForm">
@@ -275,24 +296,11 @@ function f_multiCombo(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Listing</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">RAW Data</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Performance</a></p></li>
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -304,13 +312,13 @@ function f_multiCombo(){
 
 <section class="search_result"><!-- search_result start -->
 
-<ul class="right_btns">
+<!-- <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
+</ul> -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="cal_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

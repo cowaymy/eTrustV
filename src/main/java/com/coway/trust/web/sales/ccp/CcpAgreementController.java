@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.tiles.request.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,9 +145,13 @@ public class CcpAgreementController {
 	
 	
 	@RequestMapping(value = "/selectsearchOrderNo")
-	public ResponseEntity<List<EgovMap>> selectsearchOrderNo (@RequestParam Map<String, Object> params) throws Exception{
+	public ResponseEntity<List<EgovMap>> selectsearchOrderNo (@RequestParam Map<String, Object> params , HttpServletRequest request) throws Exception{
 		
 		List<EgovMap> ordList = null;
+		
+		String appType [] = request.getParameterValues("searchOrdAppType");
+		
+		params.put("appType", appType);
 		
 		ordList = ccpAgreementService.selectSearchOrderNo(params);
 		

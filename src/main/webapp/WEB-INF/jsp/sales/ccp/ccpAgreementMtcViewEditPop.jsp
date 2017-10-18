@@ -502,13 +502,13 @@
 
 <article class="tap_area"><!-- tap_area start -->
 
-<ul class="right_btns">
+<!-- <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
+</ul> -->
 
 <article class="grid_wrap"><!-- grid_wrap start --> 
 <div id="order_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
@@ -523,11 +523,11 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+    <!-- <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
     <li><p class="btn_grid"><a href="#" id="_addNewConsign">Add New Consignment</a></p></li>
 </ul>
 
@@ -539,13 +539,13 @@
 <h2>Message Log</h2>
 </aside><!-- title_line end -->
 
-<ul class="right_btns">
+<!-- <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
+</ul> -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="msgLog_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
