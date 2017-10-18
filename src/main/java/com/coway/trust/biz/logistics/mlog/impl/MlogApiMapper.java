@@ -46,7 +46,10 @@ public interface MlogApiMapper {
 	List<EgovMap> getCommonReqParts(Map<String, Object> params);
 	
 	List<EgovMap> getAuditStockResultDetail(Map<String, Object> params);
+	
+	List<EgovMap> getStockTransferReqStatusMList(Map<String, Object> params);
 
+	List<EgovMap> getStockTransferReqStatusDList(Map<String, Object> params);
 	/**
 	 * 현창배 추가
 	 * 

@@ -129,6 +129,18 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getAuditStockResultDetail(params);
 	}
+	
+	@Override
+	public List<EgovMap> getStockTransferReqStatusMList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getStockTransferReqStatusMList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getStockTransferReqStatusDList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getStockTransferReqStatusDList(params);
+	}
 
 	// @Override
 	// public List<EgovMap> StockReceiveList(Map<String, Object> params) {

@@ -14,15 +14,15 @@ public class StrockMovementVoForMobile implements Serializable {
 	private String requestorName;
 	private String reqDate;
 	private List<StrockMovementVoForMobile> partsList;
-	private String smoNoD;
-	private String smoNoItem;
-	private int partsId;
-	private int partsType;
-	private String partsCode;
-	private String partsName;
-	private String requestQty;
-	private String serialNo;
-	private String selectQty;
+//	private String smoNoD;
+//	private String smoNoItem;
+//	private int partsId;
+//	private int partsType;
+//	private String partsCode;
+//	private String partsName;
+//	private String requestQty;
+//	private String serialNo;
+//	private String selectQty;
 
 	public String getSmoNo() {
 		return smoNo;
@@ -72,76 +72,77 @@ public class StrockMovementVoForMobile implements Serializable {
 		this.partsList = partsList;
 	}
 
-	public String getSmoNoD() {
-		return smoNoD;
-	}
-
-	public void setSmoNoD(String smoNoD) {
-		this.smoNoD = smoNoD;
-	}
-
-	public String getSmoNoItem() {
-		return smoNoItem;
-	}
-
-	public void setSmoNoItem(String smoNoItem) {
-		this.smoNoItem = smoNoItem;
-	}
-
-	public int getPartsId() {
-		return partsId;
-	}
-
-	public void setPartsId(int partsId) {
-		this.partsId = partsId;
-	}
-
-	public String getPartsCode() {
-		return partsCode;
-	}
-
-	public void setPartsCode(String partsCode) {
-		this.partsCode = partsCode;
-	}
-
-	public String getPartsName() {
-		return partsName;
-	}
-
-	public void setPartsName(String partsName) {
-		this.partsName = partsName;
-	}
-
-	public String getRequestQty() {
-		return requestQty;
-	}
-
-	public void setRequestQty(String requestQty) {
-		this.requestQty = requestQty;
-	}
-
-	public String getSerialNo() {
-		return serialNo;
-	}
-
-	public void setSerialNo(String serialNo) {
-		this.serialNo = serialNo;
-	}
-
-	public String getSelectQty() {
-		return selectQty;
-	}
-
-	public void setSelectQty(String selectQty) {
-		this.selectQty = selectQty;
-	}
-	public int getPartsType() {
-		return partsType;
-	}
-
-	public void setPartsType(int partsType) {
-		this.partsType = partsType;
-	}
+//	public String getSmoNoD() {
+//		return smoNoD;
+//	}
+//
+//	public void setSmoNoD(String smoNoD) {
+//		this.smoNoD = smoNoD;
+//	}
+//
+//	public String getSmoNoItem() {
+//		return smoNoItem;
+//	}
+//
+//	public void setSmoNoItem(String smoNoItem) {
+//		this.smoNoItem = smoNoItem;
+//	}
+//
+//	public int getPartsId() {
+//		return partsId;
+//	}
+//
+//	public void setPartsId(int partsId) {
+//		this.partsId = partsId;
+//	}
+//
+//	public String getPartsCode() {
+//		return partsCode;
+//	}
+//
+//	public void setPartsCode(String partsCode) {
+//		this.partsCode = partsCode;
+//	}
+//
+//	public String getPartsName() {
+//		return partsName;
+//	}
+//
+//	public void setPartsName(String partsName) {
+//		this.partsName = partsName;
+//	}
+//
+//	public String getRequestQty() {
+//		return requestQty;
+//	}
+//
+//	public void setRequestQty(String requestQty) {
+//		this.requestQty = requestQty;
+//	}
+//
+//	public String getSerialNo() {
+//		return serialNo;
+//	}
+//
+//	public void setSerialNo(String serialNo) {
+//		this.serialNo = serialNo;
+//	}
+//
+//	public String getSelectQty() {
+//		return selectQty;
+//	}
+//
+//	public void setSelectQty(String selectQty) {
+//		this.selectQty = selectQty;
+//	}
+//
+//	public int getPartsType() {
+//		return partsType;
+//	}
+//
+//	public void setPartsType(int partsType) {
+//		this.partsType = partsType;
+//	}
 	public String getReqDate() {
 		return reqDate;
 	}
