@@ -220,9 +220,7 @@
     <li><p class="btn_blue"><a id="btnNewNcv" href="#" >New (NCV)</a></p></li>
     <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
     <li><p class="btn_blue"><a id="btnReq" href="#">Request</a></p></li>
-<!--
-    <li><p class="btn_blue"><a id="btnSim" href="#">Rental to Outright Simulator</a></p></li>
--->
+    <li><p class="btn_blue"><a id="btnSim" href="#">Simulator</a></p></li>
 	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -365,7 +363,9 @@
 		<li><p class="link_btn"><a href="#" id="btnExport">Export Search List</a></p></li>
 	</ul>
 	<ul class="btns">
+<!--
 		<li><p class="link_btn type2"><a href="#" id="btnSim">Rental to Outright Simulator</a></p></li>
+-->
 		<li><p class="link_btn type2"><a href="#" id="btnRentalPaySet">Rental Pay Setting Update List</a></p></li>
 		<li><p class="link_btn type2"><a href="#" id="btnSof">Sales Order Form (SOF) List</a></p></li>
 		<li><p class="link_btn type2"><a href="#" id="btnDdCrc">DD/CRC List</a></p></li>
