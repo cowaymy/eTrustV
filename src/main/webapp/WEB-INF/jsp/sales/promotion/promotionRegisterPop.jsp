@@ -13,7 +13,7 @@
         
         doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '', 'promoAppTypeId',    'S', 'fn_delApptype'); //Promo Application
         doGetCombo('/common/selectCodeList.do', '76',  '', 'promoTypeId',       'S'); //Promo Type
-        doGetCombo('/common/selectCodeList.do', '8',   '', 'promoCustType',     'S'); //Customer Type
+        doGetCombo('/common/selectCodeList.do', '8',   '', 'promoCustType',     'S', 'fn_addOption'); //Customer Type
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '', 'exTrade',              'S'); //EX_Trade
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '', 'empChk',               'S'); //EMP_CHK
@@ -332,7 +332,8 @@
             msg += "* Please key in the promotion code.<br />";
         }
 */
-        if(FormUtil.checkReqValue($('#promoCustType'))) {
+//      if(FormUtil.checkReqValue($('#promoCustType'))) {
+        if($("#promoCustType option:selected").index() <=0) {
             isValid = false;
             msg += "* Please select the customer type.<br />";
         }

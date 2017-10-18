@@ -58,6 +58,10 @@
         });
     }
     
+    function fn_addOption() {
+        $("#promoCustType option:eq(0)").replaceWith("<option value=''>ALL</option>");
+    }
+
     function createAUIGrid() {
         
         //AUIGrid 칼럼 설정
