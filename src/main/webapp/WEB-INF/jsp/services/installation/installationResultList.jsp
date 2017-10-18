@@ -103,15 +103,19 @@ function createInstallationListAUIGrid() {
     }, {
         dataField : "installEntryId",
         headerText : "",
-        width : 130
+        width : 0
     }, {
         dataField : "codeid1",
         headerText : "",
-        width :130
+        width :0
     }, {
         dataField : "c1",
         headerText : "",
-        width : 130
+        width : 0
+    }, {
+        dataField : "salesOrdId",
+        headerText : "",
+        width : 0
     }];
      // 그리드 속성 설정
     var gridPros = {

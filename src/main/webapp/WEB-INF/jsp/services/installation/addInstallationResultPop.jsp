@@ -8,12 +8,6 @@ $(document).ready(function() {
     createInstallationViewAUIGrid();
     fn_viewInstallResultSearch();
     
-    $("#completedHide").hide();
-    $("#completedHide1").hide();
-    $("#completedHide2").hide();
-    $("#failHide3").hide();
-    
-  
     var callType = "${callType.typeId}";
     console.log(callType);
     if(callType == 0){
@@ -631,7 +625,7 @@ var gridPros = {
 <input type="hidden" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" />
 <input type="hidden" value="${installResult.installEntryNo}" id="hiddeninstallEntryNo" name="hiddeninstallEntryNo" />
 <input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" />
-<input type="text" value="" id="hidActualCTId" name="hidActualCTId" />
+<input type="hidden" value="" id="hidActualCTId" name="hidActualCTId" />
 <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
 <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" />
 <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" />

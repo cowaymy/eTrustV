@@ -921,18 +921,18 @@ function fn_installProductExchangeSave(){
 <h3>Installation Result</h3>
 </aside><!-- title_line end -->
 
-<input type="text" value="${viewDetail.installationInfo.c2}" id="hiddenAssignCTMemId" name="hiddenAssignCTMemId"/>
-<input type="text" value="${viewDetail.installationInfo.c5}" id="hiddenAssignCTWHId" name="hiddenAssignCTWHId"/>
-<input type="text" value="${viewDetail.installationInfo.installStkId}" id="hiddenInstallStkId" name="hiddenInstallStkId"/>
-<input type="text" value="${viewDetail.installationInfo.c8}" id="hiddenInstallStkCategoryId" name="hiddenInstallStkCategoryId"/>
-<input type="text" value="${viewDetail.installationInfo.c6}" id="hiddenDSCBranchId" name="hiddenDSCBranchId"/>
-<input type="text" value="${viewDetail.installationInfo.c10}" id="hiddenDOWarehouseCode" name="hiddenDOWarehouseCode"/>
-<input type="text" value="${viewDetail.installationInfo.c9}" id="hiddenDOWarehouseId" name="hiddenDOWarehouseId"/>
-<input type="text" value="${viewDetail.basicInfo.ordId}" id="hiddenOrderId" name="hiddenOrderId"/>
-<input type="text" value="${viewDetail.basicInfo.ordStusId}" id="hiddenOrderStatusId" name="hiddenOrderStatusId"/>
-<input type="text" value="${viewDetail.basicInfo.appTypeCode}" id="hiddenAppTypeCode" name="hiddenAppTypeCode"/>
-<input type="text" value="${viewDetail.installationInfo.installEntryNo}" id="hiddenInstallNo" name="hiddenInstallNo"/>
-<input type="text" value="${viewDetail.installationInfo.installEntryId}" id="hiddenInstallEntryId" name="hiddenInstallEntryId"/>
+<input type="hidden" value="${viewDetail.installationInfo.c2}" id="hiddenAssignCTMemId" name="hiddenAssignCTMemId"/>
+<input type="hidden" value="${viewDetail.installationInfo.c5}" id="hiddenAssignCTWHId" name="hiddenAssignCTWHId"/>
+<input type="hidden" value="${viewDetail.installationInfo.installStkId}" id="hiddenInstallStkId" name="hiddenInstallStkId"/>
+<input type="hidden" value="${viewDetail.installationInfo.c8}" id="hiddenInstallStkCategoryId" name="hiddenInstallStkCategoryId"/>
+<input type="hidden" value="${viewDetail.installationInfo.c6}" id="hiddenDSCBranchId" name="hiddenDSCBranchId"/>
+<input type="hidden" value="${viewDetail.installationInfo.c10}" id="hiddenDOWarehouseCode" name="hiddenDOWarehouseCode"/>
+<input type="hidden" value="${viewDetail.installationInfo.c9}" id="hiddenDOWarehouseId" name="hiddenDOWarehouseId"/>
+<input type="hidden" value="${viewDetail.basicInfo.ordId}" id="hiddenOrderId" name="hiddenOrderId"/>
+<input type="hidden" value="${viewDetail.basicInfo.ordStusId}" id="hiddenOrderStatusId" name="hiddenOrderStatusId"/>
+<input type="hidden" value="${viewDetail.basicInfo.appTypeCode}" id="hiddenAppTypeCode" name="hiddenAppTypeCode"/>
+<input type="hidden" value="${viewDetail.installationInfo.installEntryNo}" id="hiddenInstallNo" name="hiddenInstallNo"/>
+<input type="hidden" value="${viewDetail.installationInfo.installEntryId}" id="hiddenInstallEntryId" name="hiddenInstallEntryId"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
