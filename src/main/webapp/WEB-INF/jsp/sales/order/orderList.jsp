@@ -43,6 +43,12 @@
     }
 
     $(function(){
+        $('#btnCopy').click(function() {
+            Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnCopyBulk').click(function() {
+            Common.alert('<b>The program is under development.</b>');
+        });
         $('#btnNew').click(function() {
             //Common.popupWin("listSearchForm", "/sales/order/orderRegisterPop.do", _option);
             //Common.popupDiv("/sales/order/orderRegisterPop.do", $("#listSearchForm").serializeJSON());
@@ -63,28 +69,28 @@
         $('#btnClear').click(function() {
         	$('#listSearchForm').clearForm();
         });
-        $('#btnLedger1Link').click(function() {
+        $('#btnVaLetter').click(function() {
+            Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnExport').click(function() {
+            Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnSim').click(function() {
+            Common.alert('<b>The program is under development.</b>');
+        });
+        $('#btnRentalPaySet').click(function() {
         	Common.alert('<b>The program is under development.</b>');
         });
-        $('#btnLedger2Link').click(function() {
+        $('#btnSof').click(function() {
         	Common.alert('<b>The program is under development.</b>');
         });
-        $('#btnRqstOrdCancLink').click(function() {
+        $('#btnDdCrc').click(function() {
         	Common.alert('<b>The program is under development.</b>');
         });
-        $('#btnRqstPrdExchLink').click(function() {
+        $('#btnAsoSales').click(function() {
         	Common.alert('<b>The program is under development.</b>');
         });
-        $('#btnRqstAppExchLink').click(function() {
-        	Common.alert('<b>The program is under development.</b>');
-        });
-        $('#btnRqstOwnTranLink').click(function() {
-        	Common.alert('<b>The program is under development.</b>');
-        });
-        $('#btnRqstSchmConLink').click(function() {
-        	Common.alert('<b>The program is under development.</b>');
-        });
-        $('#btnRntlOutRSLink').click(function() {
+        $('#btnYsListing').click(function() {
         	Common.alert('<b>The program is under development.</b>');
         });
     });
@@ -208,10 +214,15 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order List</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a id="btnCopy" href="#" >Copy(Change)</a></p></li>
+    <li><p class="btn_blue"><a id="btnCopyBulk" href="#" >Copy(Bulk)</a></p></li>
     <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
     <li><p class="btn_blue"><a id="btnNewNcv" href="#" >New (NCV)</a></p></li>
     <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
     <li><p class="btn_blue"><a id="btnReq" href="#">Request</a></p></li>
+<!--
+    <li><p class="btn_blue"><a id="btnSim" href="#">Rental to Outright Simulator</a></p></li>
+-->
 	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -349,19 +360,17 @@
 <dl class="link_list">
 	<dt>Link</dt>
 	<dd>
-<!--
 	<ul class="btns">
-		<li><p class="link_btn"><a href="#" id="btnLedger1Link">View Ledger(1)</a></p></li>
-		<li><p class="link_btn"><a href="#" id="btnLedger2Link">View Ledger(2)</a></p></li>
-		<li><p class="link_btn"><a href="#" id="btnRqstOrdCancLink">Request Order Cancellation</a></p></li>
-		<li><p class="link_btn"><a href="#" id="btnRqstPrdExchLink>Request Product Exchange</a></p></li>
-		<li><p class="link_btn"><a href="#" id="btnRqstAppExchLink>Request Application Type Exchange</a></p></li>
-		<li><p class="link_btn"><a href="#" id="btnRqstOwnTranLink>Request Ownership Transfer</a></p></li>
-		<li><p class="link_btn"><a href="#" id="btnRqstSchmConLink>Request Scheme Conversion</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnVaLetter">Customer VA Letter</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnExport">Export Search List</a></p></li>
 	</ul>
--->
 	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#" id="btnRntlOutRSLink">Rental to Outright Simulator</a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnSim">Rental to Outright Simulator</a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnRentalPaySet">Rental Pay Setting Update List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnSof">Sales Order Form (SOF) List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnDdCrc">DD/CRC List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnAsoSales">ASO Sales Report</a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnYsListing">Sales YS Listing</a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
