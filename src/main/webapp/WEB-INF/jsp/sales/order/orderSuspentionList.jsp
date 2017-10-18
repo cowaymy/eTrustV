@@ -85,7 +85,7 @@
             
             fixedColumnCount : 1,
             
-            showStateColumn : true, 
+            showStateColumn : false, 
             
             displayTreeOpen : true,
             
@@ -128,17 +128,18 @@
 	}
 	
 	function fn_assignIncharge(){
-		if(detailForm.susId.value == ""){
-            Common.alert("No suspend record selected.");
-            return false;
-        }else{
-        	if(searchForm.susStusId.value == "33" || searchForm.susStusId.value == "2"){
-        		Common.popupDiv("/sales/order/inchargePersonPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
-        	}else{
-        		Common.alert("Reassign incharge person is disallowed.");
-        		return false;
-        	}
-        }
+		Common.alert('The program is under development.');
+//		if(detailForm.susId.value == ""){
+//            Common.alert("No suspend record selected.");
+//            return false;
+//        }else{
+//        	if(searchForm.susStusId.value == "33" || searchForm.susStusId.value == "2"){
+//        		Common.popupDiv("/sales/order/inchargePersonPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
+//        	}else{
+//        		Common.alert("Reassign incharge person is disallowed.");
+//        		return false;
+//        	}
+//        }
 	}
 </script>
 
@@ -156,7 +157,7 @@
     <li><p class="btn_blue"><a href="#" onClick="fn_newSuspend()">New</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="fn_assignIncharge()">Re-AssignIncharge</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
@@ -218,13 +219,13 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<!-- link_btns_wrap start 
+<aside class="link_btns_wrap">
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
-    <ul class="btns">
+     <ul class="btns">
         <li><p class="link_btn"><a href="#">menu1</a></p></li>
         <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
@@ -244,6 +245,7 @@
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
     </ul>
+
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>

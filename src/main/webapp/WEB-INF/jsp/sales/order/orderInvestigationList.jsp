@@ -68,7 +68,7 @@
             
             fixedColumnCount : 1,
             
-            showStateColumn : true, 
+            showStateColumn : false, 
             
             displayTreeOpen : true,
             
@@ -116,6 +116,7 @@
     function fn_goSingle(){
     	$("#searchForm").attr({"target": "_self" , "action" : getContextPath()+"/sales/order/orderNewRequestSingleList.do" }).submit();
     }
+    
     
 </script>
 <form id="popForm" method="post">
@@ -205,24 +206,7 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-    </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="#">Request Raw Data</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -233,9 +217,10 @@
 
 <section class="search_result"><!-- search_result start -->
 
-<aside class="title_line"><!-- title_line start -->
+<!-- title_line start 
+<aside class="title_line">
 <h3>Request Raw Data</h3>
-</aside><!-- title_line end -->
+</aside>!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
