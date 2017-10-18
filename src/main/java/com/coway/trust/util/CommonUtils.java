@@ -25,7 +25,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.web.common.CommonController;
 import com.coway.trust.web.sales.SalesConstants;
 
 /**
@@ -249,25 +248,24 @@ public final class CommonUtils {
 			option = "RIGHT";
 
 		option = option.toUpperCase();
-		String rtnValue = "";
+		StringBuilder rtnValue = new StringBuilder();
 
 		if (option.equals("RIGHT")) {
 			// 앞에 문자열을 채워서 리턴한다.
 			len = len - strTemp.length();
 			for (int i = 0; i < len; i++) {
-				rtnValue += fillString;
+				rtnValue.append(fillString);
 			}
-			rtnValue += strTemp;
-
+			rtnValue.append(strTemp);
 		} else {
 			// 뒤에 문자열을 채워서 리턴한다.
-			rtnValue += strTemp;
+			rtnValue.append(strTemp);
 			for (int i = strTemp.length(); i < len; i++) {
-				rtnValue += fillString;
+				rtnValue.append(fillString);
 			}
 		}
 
-		return rtnValue;
+		return rtnValue.toString();
 	}
 
 	// 숫자에 천단위로 콤마를 찍는다.
@@ -571,7 +569,7 @@ public final class CommonUtils {
 			return null;
 		}
 		if (value instanceof Integer) {
-			return (Long) value;
+			return ((Number) value).longValue();
 		} else if (value instanceof BigDecimal) {
 			return ((BigDecimal) value).longValue();
 		} else if (value instanceof BigInteger) {
@@ -944,8 +942,8 @@ public final class CommonUtils {
 		}
 		return clientIp;
 	}
-	
-/*
+
+	/*
 66	 --> 2284 REN	: Rental
 67	 --> 2285 OUT	: Outright
 68	 --> 2286 INS	: Installment
@@ -956,29 +954,22 @@ public final class CommonUtils {
  */
 	public static int changePromoAppTypeId(int iAppTypeId) {
 		int iPromoAppTypeId = 0;
-		
-		if(iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+
+		if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
 			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_REN;
-		}
-		else if(iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT) {
+		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT) {
 			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT;
-		}
-		else if(iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
+		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
 			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_INS;
-		}
-		else if(iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS) {
+		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS) {
 			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS;
-		}		
-		else if(iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN) {
+		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN) {
 			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_RENTAL;
-		}
-		else if(iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT) {
+		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT) {
 			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT;
-		}
-		else if(iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_INS) {
+		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_INS) {
 			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT;
-		}
-		else if(iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS) {
+		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS) {
 			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS;
 		}
 

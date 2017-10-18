@@ -1,48 +1,34 @@
 package com.coway.trust.util;
 
 import java.util.UUID;
-import java.nio.ByteBuffer;
 
 /**
  * UUID 생성 클래스
  */
-public final class UUIDGenerator
-{
-	private UUIDGenerator(){}
-	
-    private static final Object MUTEX = new Object();
+public final class UUIDGenerator {
+	private UUIDGenerator() {
+	}
 
-    /**
-     * 36 Bytes 체계의 UUID 를 생성 하여 반환
-     * 
-     * @see <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID on Wiki</a>
-     * @return UUID 36 Bytes 체계의 UUID
-     */
-    public static final String uuid()
-    {
-        synchronized ( MUTEX )
-        {
-            return UUID.randomUUID().toString();
-        }
-    }
+	private static final Object MUTEX = new Object();
 
-    /**
-     * 32 Bytes 체계의 UUID 를 생성 하여 반환 (하이픈 '-' 제거)
-     * 
-     * @return UUID
-     */
-    public static final String get()
-    {
-        return uuid().replace( "-", "" );
-    }
+	/**
+	 * 36 Bytes 체계의 UUID 를 생성 하여 반환
+	 * 
+	 * @see <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID on Wiki</a>
+	 * @return UUID 36 Bytes 체계의 UUID
+	 */
+	public static final String uuid() {
+		synchronized (MUTEX) {
+			return UUID.randomUUID().toString();
+		}
+	}
 
-    /**
-     * 요청에 대한 서비스의 처리 내역 추척을 위한 트랜잭션 아이디를 리턴
-     * 
-     * @return Global Transaction ID
-     */
-    public static long generateTXID()
-    {
-        return ByteBuffer.wrap( UUIDGenerator.uuid().getBytes() ).asLongBuffer().get();
-    }
+	/**
+	 * 32 Bytes 체계의 UUID 를 생성 하여 반환 (하이픈 '-' 제거)
+	 * 
+	 * @return UUID
+	 */
+	public static final String get() {
+		return uuid().replace("-", "");
+	}
 }
