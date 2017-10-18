@@ -81,6 +81,10 @@ public interface HsManualMapper {
 
 	void updateHsResultD(Map<String, Object> params);
 
+	List<EgovMap> selectFilterTransaction(Map<String, Object> params);
+
+	List<EgovMap> selectHistoryHSResult(Map<String, Object> params);
+
 
 
 	

@@ -195,14 +195,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 	
 	
-	public Boolean insertHsResult(Map<String, Object> params, List<Object> docType)  {
+	public Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType)  {
 
 		Boolean success = false;
 		
 		String appId="";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
-    	
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		
 
 		
 		for(int i=0; i< docType.size(); i++){
@@ -215,14 +216,36 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			int nextSchId  = hsManualMapper.getNextSchdulId();
 			String docNo= commonMapper.selectDocNo("10");
 			
+			
+			if(docSub.get("year") != null) {
+				StringTokenizer str1 = new StringTokenizer(docSub.get("year").toString());
+	    		
+	    		for(int k =0; k <= 1 ; k++) {
+	    			str1.hasMoreElements();
+	    			String result = str1.nextToken("/");            //특정문자로 자를시 사용
+	    			
+	    			logger.debug("iiiii: {}", i);
+	    			
+	    			if(k==0){
+	    				docSub.put("myBSMonth", result);
+	    				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
+	    			}else{
+	    				docSub.put("myBSYear", result);
+	    				logger.debug("myBSYear : {}", params.get("myBSYear"));
+	    			}
+	    		}		
+			
+		}
+			
+			
 			docSub.put("no", docNo);
 			docSub.put("schdulId", nextSchId);
 			docSub.put("salesOrdId", docSub.get("salesOrdId"));
     		docSub.put("resultID", 0);
     		//hsResult.put("custId", (params.get("custId").toString()));
     		docSub.put("salesOrdNo", String.format("%08d", fomSalesOrdNo));
-    		docSub.put("month", docSub.get("month"));
-    		docSub.put("year",docSub.get("year"));
+    		docSub.put("month", docSub.get("myBSMonth"));
+    		docSub.put("year",docSub.get("myBSYear"));
     		docSub.put("typeId", "438");
     		docSub.put("stus", docSub.get("stus"));
     		docSub.put("lok", "4");
@@ -234,11 +257,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			
     		hsManualMapper.insertHsResult(docSub);
 //    		hsManualMapper.insertHsResult((Map<String, Object>)obj);
+    		
+    		resultValue.put("docNo", docNo);
 		}
+		
+		
 		success=true;
 		//hsManualMapper.insertHsResult(MemApp);
 
-		return success;
+		return resultValue;
 	}
 	
 	
@@ -473,7 +500,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		
 		
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		resultValue.put("resultId", nextSeq);
+		resultValue.put("resultId",  params.get("hidSalesOrdCd"));
 		return resultValue;
 	}
 	
@@ -642,6 +669,22 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //			hsManualMapper.updateHsSrvConfigM(updateHsSrvConfigM);	
 		
 		return resultValue;
+	}
+
+
+
+	@Override
+	public List<EgovMap> selectFilterTransaction(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectFilterTransaction(params);
+	}
+
+
+
+	@Override
+	public List<EgovMap> selectHistoryHSResult(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectHistoryHSResult(params);
 	}
 	
 	

@@ -32,7 +32,7 @@ public interface HsManualService {
 
 	List<EgovMap> cmbServiceMemList(Map<String, Object> params);
 	
-	Boolean insertHsResult(Map<String, Object> params, List<Object> docType);
+	Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType);
 
 	Map<String, Object> addIHsResult(Map<String, Object> params,  List<Object> docType, SessionVO sessionVO)  throws ParseException;
 
@@ -48,7 +48,11 @@ public interface HsManualService {
 
 	EgovMap selectSettleInfo(Map<String, Object> params);
 
-	Map<String, Object> UpdateHsResult(Map<String, Object> formMap, List<Object> docType, SessionVO sessionVO) throws ParseException;;
+	Map<String, Object> UpdateHsResult(Map<String, Object> formMap, List<Object> docType, SessionVO sessionVO) throws ParseException;
+
+	List<EgovMap> selectFilterTransaction(Map<String, Object> params);
+
+	List<EgovMap> selectHistoryHSResult(Map<String, Object> params);;
 	
 	
 	
