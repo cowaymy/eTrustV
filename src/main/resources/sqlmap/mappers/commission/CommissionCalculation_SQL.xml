@@ -64,6 +64,7 @@
 		        ON T2.CODE_ID = T3.CAL_CODE
 		   LEFT JOIN CMM0053M T4 ON T4.CAL_SEQ = T3.CAL_SEQ
         WHERE 1=1
+           AND T2.DISAB =0
          ]]>
         <if test="mstId != null and mstId != ''">
             AND T1.CODE_MASTER_ID=#{mstId}
@@ -89,6 +90,7 @@
             AND T1.CODE_MASTER_ID=#{mstId}
         </if>
             AND CODE LIKE 'BSD%'
+            AND T2.DISAB =0
         ORDER BY NM
     </select>
     <select id="selectBasicStatus" parameterType="Map" resultType="Map">
