@@ -390,7 +390,7 @@
 	<li><p class="btn_grid"><a href="#">INS</a></p></li>
 	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
 </ul>
-
+-->
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
