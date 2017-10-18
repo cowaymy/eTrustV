@@ -835,10 +835,12 @@ var CommonCombo = {
 
             var dataObj = (data);
 
+            
             $.each(data, function (index, value) {
-                // console.log("selectArray.length(" + index + ") : " + selectArray.length + "   >    " + dataObj[index][option.id]);
-                if (selectArray.length > 0 && $.inArray(dataObj[index][option.id], selectArray) >= 0) {
-                    $('<option />', {
+            	//console.log("selectArray.length(" + index + ") : " + selectArray.length + "   >    " + dataObj[index][option.id]);
+//            	console.log("selectArray :[" + selectArray[0] + "] , inArray : [" +dataObj[index][option.id]+ '] , result : ' + $.inArray(dataObj[index][option.id]+"", selectArray));
+                if (selectArray.length > 0 && $.inArray(dataObj[index][option.id]+'', selectArray) >= 0) {
+                	$('<option />', {
                         value: dataObj[index][option.id],
                         text: dataObj[index][option.name]
                     }).appendTo($_comboId).attr("selected", "true");
