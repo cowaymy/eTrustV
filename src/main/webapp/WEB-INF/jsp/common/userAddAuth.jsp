@@ -208,7 +208,7 @@ function fn_detailSave(){
         }
     }
 
-    if(confirm("Do you want to save it?")){
+    Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax(
                 "POST",
                 "/common/saveUserAddAuthList.do",
@@ -221,7 +221,7 @@ function fn_detailSave(){
                 	Common.alert("Fail : " + jqXHR.responseJSON.message);
                 }
         )
-    }
+    });
 };
 
 function fn_commCodesearch(){
@@ -666,8 +666,12 @@ $(document).ready(function(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>User Additional Auth</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a  onclick="fn_detailSave()">Save</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a onclick="fn_search()"><span class="search"></span>Search</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 

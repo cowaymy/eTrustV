@@ -583,7 +583,7 @@ function fnUpdateTrans()
     var dfnDesc3 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn3");
     var dfnDesc4 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn4");
     var dfnDesc5 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn5");
-    
+
     if(dfnChk1 == "Y" && (dfnDesc1 == "" || typeof(dfnDesc1) == "undefined")){
     	//The {0} Must Exist.
         Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#1 Desc' htmlEscape='false'/>");

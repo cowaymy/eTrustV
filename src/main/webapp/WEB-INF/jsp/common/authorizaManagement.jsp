@@ -524,7 +524,9 @@ $(document).ready(function()
 <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
 <h2>Authorization Management</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a onclick="fnSelectAuthListAjax();"><span class="search"></span>Search</a></p></li>
+	</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -600,10 +602,12 @@ $(document).ready(function()
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Auth Management</h3>
 <ul class="right_opt">
+  <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
   <li id="delCancel"><p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p></li>
   <li><p class="btn_grid"><a onclick="fnRemoveRow();">DEL</a></p></li>
   <li><p class="btn_grid"><a onclick="fnAddRow();">ADD</a></p></li>
   <li><p class="btn_grid"><a onclick="fnSaveAuthCd();">SAVE</a></p></li>
+  </c:if>
 </ul>
 </aside><!-- title_line end -->
 

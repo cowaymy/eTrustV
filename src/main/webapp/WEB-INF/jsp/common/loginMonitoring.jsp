@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 /********************************Global Variable Start***********************************/
 // 행 추가, 삽입
@@ -364,7 +365,9 @@ $(document).ready(function(){
 <p class="fav"><a href="#" class="click_add_on">Monitoring</a></p>
 <h2>Login Monitoring</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a onclick="fn_search()"><span class="search"></span>Search</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 

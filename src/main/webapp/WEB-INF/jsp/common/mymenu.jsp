@@ -524,7 +524,9 @@ $(document).ready(function(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>My Menu Management</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a onclick="fn_search()"><span class="search"></span>Search</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -600,9 +602,11 @@ $(document).ready(function(){
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">My Menu Group</h3>
 <ul class="right_opt">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a onclick="addRow()">Add</a></p></li>
     <li><p class="btn_grid"><a onclick="delRow()">Del</a></p></li>
     <li><p class="btn_grid"><a onclick="fn_save()">Save</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -617,9 +621,11 @@ $(document).ready(function(){
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">My Menu</h3>
 <ul class="right_opt">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a onclick="addDetailRow()">Add</a></p></li>
     <li><p class="btn_grid"><a onclick="delDetailRow()">Del</a></p></li>
     <li><p class="btn_grid"><a onclick="fn_detailSave()">Save</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
