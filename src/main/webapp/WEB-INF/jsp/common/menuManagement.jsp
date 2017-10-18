@@ -446,12 +446,12 @@ function fnValidationCheck()
           break;
       }
 
-      if (statusCode == "")
-      {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='Status Code' htmlEscape='false'/>");
-          break;
-      }
+//       if (statusCode == "")
+//       {
+//           result = false;
+//           Common.alert("<spring:message code='sys.msg.necessary' arguments='Status Code' htmlEscape='false'/>");
+//           break;
+//       }
 
       if ( menuLvl != "1" && upperMenuCode.length != 0 && menuCode == upperMenuCode)
       {
