@@ -286,7 +286,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
               				
               				msg = "-SVM End Date : <b>" + (String)GetExpDate.get("srvPrdExprDtMmyy") + "</b>  SVM Expired Date : <b>" + (String)GetExpDate.get("srvPrdExprDtMmyyAdd") + "</b> <br/>";
               				
-              				if(custId != (int)validateRentOutright.get("custId")) {
+              				if(custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
                                 msg = msg + " -Different Customer is not allowed.";
                                 isInValid = "InValid";
               				}
@@ -351,18 +351,17 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public EgovMap selectLoginInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		LoginVO loignVO = new LoginVO();
+		EgovMap map = new EgovMap();
 		
-		loignVO.setUserId(Integer.parseInt((String)params.get("loginUserId")));
-		loignVO.setUserPassWord((String)params.get("userPassword"));
+		map.put("userName", (String)params.get("loginUserName"));
+		map.put("userPassWord", (String)params.get("userPassword"));
 		
-		return orderRegisterMapper.selectLoginInfo(loignVO);
+		return orderRegisterMapper.selectLoginInfo(map);
 	}
 	
 	@Override
 	public EgovMap selectCheckAccessRight(Map<String, Object> params, SessionVO sessionVO) {
 		
-		params.put("userId", sessionVO.getUserId());
 		params.put("moduleUnitId", 321);
 		
 		return orderRegisterMapper.selectCheckAccessRight(params);

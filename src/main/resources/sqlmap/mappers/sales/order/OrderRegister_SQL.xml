@@ -1752,7 +1752,7 @@
 		     )
     </insert>
 
-    <select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
+    <select id="selectLoginInfo" parameterType="Map" resultType="egovMap">
         SELECT USR.USER_ID AS userId
              , USR.USER_NAME AS userName
              , USR.USER_FULL_NAME AS userFullName
@@ -1791,7 +1791,7 @@
           LEFT
          OUTER
           JOIN SYS0040M SUPDEPT ON SUPDEPT.DEPT_ID = USR.USER_DEPT_ID
-         WHERE USR.USER_NAME = #{userId}
+         WHERE USR.USER_NAME = #{userName}
            AND USR.USER_PASSWD = #{userPassWord}
            AND USR.USER_STUS_ID = 1
            AND USR.USER_TYPE_ID NOT IN (1, 2, 3, 1161, 1165)

@@ -127,7 +127,7 @@ public interface OrderRegisterMapper {
 	
 	void updateCustBillId(SalesOrderMVO salesOrderMVO);
 	
-	EgovMap selectLoginInfo(LoginVO loignVO);
+	EgovMap selectLoginInfo(Map<String, Object> params);
 	
 	EgovMap selectCheckAccessRight(Map<String, Object> params);
 	
