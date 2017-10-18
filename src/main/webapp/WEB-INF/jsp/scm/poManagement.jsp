@@ -332,16 +332,16 @@ function addUncheckedRowsByValue(selValue)
   AUIGrid.addUncheckedRowsByValue(myGridID, "code", selValue);
 }
 
-// 적용 버턴 클릭 핸들러
-function myApplyBtnClick(index, event) 
+//적용 버턴 클릭 핸들러
+function fnExportPDF(index, flag) 
 {
-  console.log("pdf : "+ index + " 적용 버턴 클릭_" + +event.value );
+  Common.alert(" Test PDF RowIndex: "+ index + " PoNo_" + flag );
 };
 
 //팝업 버턴 클릭 핸들러
-function myPopupBtnClick(index, event) 
+function fnExportExcel(index, value) 
 {
-  console.log("excel : "+ index + " 팝업 버턴 클릭_" +event.value );
+  Common.alert("Test Excel RowIndex: "+ index + " PoNo_"+value);
 };
 
 
@@ -417,20 +417,18 @@ var SCMPOViewLayout =
           renderer : 
 				        	  { // HTML 템플릿 렌더러 사용
 				              type : "TemplateRenderer"
-				            }
+				            },
             // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-            , labelFunction : function (rowIndex, columnIndex, value, headerText, item ) 
-								              { // HTML 템플릿 작성
-									              var template = '<div>';
-									              
-									              //template += '<span class="my_div_text_box">' + value + '</span>';
-									              template += '<span class="my_div_btn" onclick="javascript:myApplyBtnClick(' + 1 + ', event);">PDF</span>';
-									              template += '&nbsp;';
-									              template += '<span class="my_div_btn2" onclick="javascript:myPopupBtnClick(' + 2 + ', event);">EXCEL</span>';
-									              template += '</div>';
-									              return template;
-								              }
-          
+          labelFunction : function (rowIndex, columnIndex, value, headerText, item ) 
+								                 { // HTML 템플릿 작성
+											              var template = '<div>';
+											              
+											              template += '<span class="my_div_btn" onclick="javascript:fnExportPDF(' + rowIndex + ', \''+item.poNo+'\');">PDF</span>';
+											              template += '&nbsp;';
+											              template += '<span class="my_div_btn2" onclick="javascript:fnExportExcel(' + rowIndex + ', \''+item.poNo+'\');">EXCEL</span>';
+											              template += '</div>';
+											              return template;
+								                 }
       },{
           dataField : "no",
           headerText : "<spring:message code='sys.scm.pomngment.rowNo'/>",
@@ -667,7 +665,7 @@ $(document).ready(function()
   AUIGrid.bind(SCMPOViewGridID, "removeRow", auiRemoveRowHandler);
   
   
-  // cellClick event.
+   // cellClick event.
   AUIGrid.bind(SCMPOViewGridID, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
@@ -675,14 +673,13 @@ $(document).ready(function()
     console.log("cellClick_Status: " + AUIGrid.isAddedById(SCMPOViewGridID,AUIGrid.getCellValue(SCMPOViewGridID, event.rowIndex, 0)) );
     console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex );        
   });
-  
+   
   // 셀 더블클릭 이벤트 바인딩
   AUIGrid.bind(SCMPOViewGridID, "cellDoubleClick", function(event) 
   {
     console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
   }); 
-
-	            
+         
 });   //$(document).ready
 
 </script>
@@ -748,8 +745,10 @@ $(document).ready(function()
 	</td>
 	<th scope="row">PO Status</th>
 	<td>
-	<label><input type="checkbox" disabled="disabled" /><span>PO Issue</span></label>
-	<label><input type="checkbox" disabled="disabled" /><span>Approval</span></label>
+	 <div class="status_result">
+	  <p><span id ="po_issue" class="circle circle_grey"></span> PO Issue</p>    
+    <p><span id ="po_issue" class="circle circle_grey"></span> Approval</p>
+   </div>
 	</td>
 </tr>
 </tbody>
