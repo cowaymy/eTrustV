@@ -993,7 +993,7 @@
 //             }
                 if($("#ordPromo option:selected").index() > 0) {
                     console.log('!@#### ordSaveBtn click START 00000');
-                    if(($("#ordPromo option:selected").text()).indexOf('EX-TRADE') > 0) {
+                    if($("#exTrade").val() == 1) {
                         console.log('!@#### ordSaveBtn click START 11111');
                         $('#txtOldOrderID').val('');
                         Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
@@ -1012,6 +1012,19 @@
         });
     });
 
+	
+	function fn_popOrderDetail() {	    
+//      Sales.Orders so = new Sales.Orders();
+//      this.RadWindow_Approval.VisibleOnPageLoad = false;
+//      int getOldOrderID = so.Get_oldOrderID(ntxtRW_oldorder.Text);
+//      this.txtOldOrderID.Text = getOldOrderID.ToString();
+//      this.txtInstSpecialInstruction.Text = "(Old order No.)" + ntxtRW_oldorder.Text.Trim() + " , " + get_PromoDesc() + " , SVM expired : " + get_Services_expired();
+//      this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
+//      this.LoadRadWindowOrderInfo();
+        
+	    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+	}
+	
     function fn_selectCustInfo() {
         var strCustId = $('#custId').val();
 
@@ -1066,10 +1079,8 @@
         console.log('!@#### fn_hiddenSave START');
         
         if($("#ordPromo option:selected").index() > 0) {
-            
-            console.log('!@#### fn_hiddenSave START 00000');
-            
-            if(($("#ordPromo option:selected").text()).indexOf('EX-TRADE') > 0) {
+
+            if($("#exTrade").val() == 1) {
                 
                 console.log('!@#### fn_hiddenSave START 11111');
                 
