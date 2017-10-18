@@ -128,10 +128,34 @@
                     console.log("data : " + result);
             }); */
 
+//111
+
+            
+           if("" == $("#settleDate").val() || null == $("#settleDate").val()){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='settleDate Type'/>");
+                return false;
+            }
+            
+            if("" == $("#remark").val() || null == $("#remark").val()){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='remark Type'/>");
+                return false;
+            }            
 
 
-
-                     var jsonObj =  GridCommon.getEditData(myDetailGridID);
+            if("" == $("#instruction").val() || null == $("#instruction").val()){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='instruction Type'/>");
+                return false;
+            }  
+            
+            
+/*             if("" == $("#srvBsWeek").val() || null == $("#srvBsWeek").val()){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Week Type'/>");
+                return false;
+            }  */
+                        
+            
+            
+             var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
               Common.ajax("POST", "/bs/addIHsResult.do", jsonObj, function(result) {
               Common.alert(result.message.message);
@@ -146,6 +170,43 @@
     }    
     
     
+        var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
+
+    function onChangeStatusType(val){
+
+        if($("#cmbStatusType1").val() == '4'){
+        
+          $("select[name=failReason]").attr('disabled', 'disabled');
+          //$("select[name=cmbCollectType]").attr("disabled ",true);
+          $("select[name=cmbCollectType]").attr('disabled',false);
+
+            /* $("select[name=cmbCorpTypeId]").removeClass("w100p disabled");
+            $("select[name=cmbCorpTypeId]").addClass("w100p");
+            $("#cmbCorpTypeId").val('1173');
+            $("#cmbNation").val('');
+            $("select[name=cmbNation]").addClass("w100p disabled");
+            $("select[name=cmbNation]").attr('disabled', 'disabled');
+            $("#cmbRace").val('');
+            $("select[name=cmbRace]").addClass("w100p disabled");
+            $("select[name=cmbRace]").attr('disabled', 'disabled');
+            $("#dob").val('');
+//            $("select[name=dob]").attr('readonly','readonly');
+            $("#dob").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'}); 
+            $("#genderForm").attr('disabled',true);
+            $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
+            $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
+            $("input:radio[name='gender']").attr("disabled" , "disabled");
+            $("#genderForm").attr('checked', false); */
+        }else if ($("#cmbStatusType1").val() == '21') {
+
+            $("select[name=cmbCollectType]").attr('disabled', 'disabled');
+           // $("select[name=failReason]").attr("enabled",true);
+            $("select[name=failReason]").attr('disabled',false);
+        }
+        
+    }
+            
+    
     </script>
     
     
@@ -157,10 +218,11 @@
  <input type="hidden" value="${hsDefaultInfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
  <input type="hidden" value="${hsDefaultInfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
  <input type="hidden" value="${hsDefaultInfo.codyId}" id="hidCodyId" name="hidCodyId"/>
+ <input type="hidden" value="${hsDefaultInfo.no}" id="hidSalesOrdCd" name="hidSalesOrdCd"/>
 <header class="pop_header"><!-- pop_header start -->
 
 <h1>HS - New HS Result</h1>
-<ul class="right_opt">
+<<ul class="right_opt">
     <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">Close</a></p></li>
 </ul>
@@ -219,10 +281,10 @@
 <tr>
     <th scope="row">HS Status<span class="must">*</span></th>
     <td>
-    <select class="w100p"  id ="cmbStatusType1" name = "cmbStatusType">
+    <select class="w100p"  id ="cmbStatusType1" name = "cmbStatusType"  onchange="onChangeStatusType(this.value)"" >
     </select>
     </td>
-    <th scope="row">Settle Date</th>
+    <th scope="row">Settle Date<span class="must">*</span></th>
     <td><input type="text" id ="settleDate" name = "settleDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 </tr>
 <tr>
@@ -246,7 +308,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Service Member</th>
+<%--     <th scope="row">Service Member</th>
     <td>
     <select class="w100p" id ="serMemList" name = "serMemList">
          <option value="" selected>Choose One</option> 
@@ -262,10 +324,10 @@
     </select>
     </td>
 </tr>
-<tr>
-    <th scope="row">Remark</th>
+<tr> --%>
+    <th scope="row">Remark<span class="must">*</span></th>
     <td><textarea cols="20" rows="5" id ="remark" name = "remark"></textarea></td>
-    <th scope="row">Instruction</th>
+    <th scope="row">Instruction<span class="must">*</span></th>
     <td><textarea cols="20" rows="5"id ="instruction" name = "instruction"></textarea></td>
 </tr>
 <tr>
@@ -286,7 +348,13 @@
 </aside><!-- title_line end -->
 <article class="grid_wrap"><!-- grid_wrap start -->
 	 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+	 
+<!-- 	 <ul class="center_btns">
+	    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
+	    <li><p class="btn_blue2 big"><a href="#">Close</a></p></li>
+    </ul> -->
 </article><!-- grid_wrap end -->
+
 
 
 </section><!-- pop_body end -->

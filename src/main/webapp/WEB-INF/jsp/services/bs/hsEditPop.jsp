@@ -100,19 +100,19 @@
                     width:200,
                     height:30
                 }, {                        
-                    dataField : "stkId",
+                    dataField : "no1",
                     headerText : "BSR No",
                     width : 140
                 }, {                        
-                    dataField : "stkDesc",
+                    dataField : "code",
                     headerText : "Status",
                     width : 440              
                 }, {
-                    dataField : "bsResultItmId",
+                    dataField : "memCode",
                     headerText : "Member",
                     width : 240  
                 }, {
-                    dataField : "bsResultItmId",
+                    dataField : "c1",
                     headerText : "Settle Date",
                     width : 240                     
                 }, {
@@ -277,20 +277,20 @@
         }); 
         
 
-//
-         Common.ajax("GET", "/bs/selectHistoryHSResult.do",{salesOrdId : selSalesOrdId}, function(result) {
-            console.log("성공 fn_getHsViewfilterInfoAjax.");
+
+          Common.ajax("GET", "/bs/selectHistoryHSResult.do",{salesOrdId : selSalesOrdId}, function(result) {
+            console.log("성공 selectHistoryHSResult.");
             console.log("data : " + result);
-            AUIGrid.setGridData(myDetailGridID, result);            
+            AUIGrid.setGridData(myDetailGridID2, result);            
         }); 
 
 
          Common.ajax("GET", "/bs/selectFilterTransaction.do",{salesOrdId : selSalesOrdId}, function(result) {
-            console.log("성공 fn_getHsViewfilterInfoAjax.");
+            console.log("성공 selectFilterTransaction.");
             console.log("data : " + result);
-            AUIGrid.setGridData(myDetailGridID, result);            
+            AUIGrid.setGridData(myDetailGridID3, result);            
         }); 
-        
+    
         
         
         
@@ -459,7 +459,7 @@
     </select>
     </td>
 </tr>
-<tr>
+<%-- <tr>
     <th scope="row">Service Member</th>
     <td>
     <select class="w100p" id ="cmbServiceMem" name = "cmbServiceMem">
@@ -474,7 +474,7 @@
 
     </select>
     </td>
-</tr>
+</tr> --%>
 <tr>
     <th scope="row">Remark</th>
     <td><span>${settleInfo.configBsRem}</span></td>

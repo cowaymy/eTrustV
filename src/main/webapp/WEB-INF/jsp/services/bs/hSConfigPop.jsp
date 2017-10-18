@@ -77,9 +77,9 @@
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
                 var assiinCd = fn_getCheckedRowItems();
                 
-                var aa = new Date(); 
-                var year = aa.getFullYear(); 
-                var month = aa.getMonth()+1;
+                var aa = new Date();
+/*                 var year = aa.getFullYear(); 
+                var month = aa.getMonth()+1; */
                 
                 if(item.c1 == 1){
                     AUIGrid.updateRow(myCustGridID, { 
@@ -90,8 +90,8 @@
                     AUIGrid.updateRow(myCustGridID, { 
                         "codyId" : assiinCd,
                         "c1" : "1" ,
-                          "year" : year,
-                          "month" : month,
+                          "year" : "${ManuaMyBSMonth}",
+/*                          "month" : month, */
                           "stus" : "1"
                       }, rowIndex); 
                 }
@@ -130,8 +130,9 @@
         }, {
             dataField : "year",
             headerText : "year",
-            visible : false,
             width : 130
+             ,
+                        visible : false,
         }, {
             dataField : "month",
             headerText : "month",
@@ -263,8 +264,10 @@
 
      function fn_codyAssignSave(){
             var jsonObj =  GridCommon.getEditData(myCustGridID);
-                 jsonObj.form = $("#searchForm").serializeJSON();
-                Common.ajax("POST", "/bs/hsOrderSave.do",  jsonObj, function(result) {
+                 jsonObj.form = $("#searchFormPop").serializeJSON();
+                 
+                Common.ajax("POST", "/bs/hsOrderSave.do",  jsonObj , function(result) {
+                
                 Common.alert(result.message, fn_parentReload);
         });
     }
@@ -280,7 +283,7 @@
     $(document).ready(function() {
     
     
-        console.log("성공 data : " + $("#searchForm"));
+        console.log("성공 data : " + $("#searchFormPop"));
         
         createAUIGridCd();
         createAUIGridCust();
@@ -302,14 +305,18 @@
     </script>
 
 
-<form action="#" method="post" id="searchForm">
+<form action="#" method="post" id="searchFormPop">
+    
+    <!-- <input type="hidden" name="manuaMyBSMonth"  id="_manuaMyBSMonth"/>  --> <!-- schdulId  -->
+  <!-- schdulId  -->
+    
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>HS Order Create</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();">Create</a></p></li>
-    <li><p class="btn_blue2"><a href="#" id="_close1">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close1">Close</a></p></li>
 </ul>
 
 </header><!-- pop_header end -->
@@ -326,6 +333,8 @@
 
 <div class="border_box" style="height:400px"><!-- border_box start -->
 
+    <input type="hidden" name="ManuaMyBSMonth"  id="ManuaMyBSMonth" value="${ManuaMyBSMonth}"/>
+    
 <ul class="right_btns">
 <!--     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->

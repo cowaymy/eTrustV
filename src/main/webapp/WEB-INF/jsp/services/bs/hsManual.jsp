@@ -82,7 +82,8 @@
                         }, {
                             dataField : "hsDate",
                             headerText : "HS Date",
-                            width : 120
+                            width : 120                             ,                             
+                            visible:false   
                         }, {                        
                             dataField : "no",
                             headerText : "HS Order",
@@ -96,7 +97,7 @@
                             headerText : "Cody Status",
                             width : 120
                         }, {
-                            dataField : "code",
+                            dataField : "code1",
                             headerText : "HS Status",
                             width : 120             
                         }, {
@@ -113,14 +114,18 @@
                             dataField : "schdulId",
                             headerText : "schdulId",
                             width : 120    
-                              ,                             
-                            visible:false     
+                          /*     ,                             
+                            visible:false      */
                         }, {
                             dataField : "salesOrdId",
                             headerText : "salesOrdId",
                             width : 120
                             ,                             
-                            visible:false                          
+                            visible:false                   
+                        }, {
+                            dataField : "codyBrnchCode",
+                            headerText : "BrnchCode",
+                            width : 120
                     }];
                             
 
@@ -167,7 +172,7 @@
                         dataField : "stusCodeId",
                         headerText : "HS Statuscd",
                         width : 120 ,                             
-                        visible:false                                
+                        visible:false     
                     }, {
                         dataField : "actnMemId",
                         headerText : "Complete Cody",
@@ -181,8 +186,8 @@
                         dataField : "schdulId",
                         headerText : "schdulId",
                         width : 120    
-                          ,                             
-                        visible:false     
+                           ,                             
+                        visible:false      
                     }, {
                         dataField : "salesOrdId",
                         headerText : "salesOrdId",
@@ -260,11 +265,51 @@
 
 			function fn_getHSAddListAjax(){
 //	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
-
+                var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+                
+	            if(checkedItems.length <= 0) {
+	                Common.alert('No data selected.');
+	                return;
+	            }else{
+	                var str = "";
+	                var custStr = "";
+	                var rowItem;
+	                var brnchId = "";
+	                var saleOrdList = "";
+	                var list = "";
+	                var brnchCnt = "";
+	                
+	                //var saleOrdList = [];
+	                var saleOrd = {
+	                     salesOrdNo : ""
+	                };
+	                
+	
+	                
+	                for(var i=0, len = checkedItems.length; i<len; i++) {
+	                    rowItem = checkedItems[i];
+	                    hsStuscd = rowItem.stusCodeId;
+	                    schdulId = rowItem.schdulId;
+	                    salesOrdId = rowItem.salesOrdId;
+	                    
+		                 if(hsStuscd == 4) {
+		                    Common.alert("already has result. Result entry is disallowed.");
+		                    return;
+		                 }
+	                }
+                }
+                
+                
+                
+                
+                
+/*                 alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId"));
+                alert(hsStuscd);
+                
                  if(hsStuscd == 4) {
-                    alert("already has result. Result entry is disallowed.");
-                    return false;
-                 }
+                    Common.alert("already has result. Result entry is disallowed.");
+                    return;
+                 } */
                  
 	           Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId);
 			}
@@ -340,6 +385,7 @@
                 var brnchId = "";
                 var saleOrdList = "";
                 var list = "";
+                var brnchCnt = "";
                 
                 //var saleOrdList = [];
                 var saleOrd = {
@@ -351,16 +397,27 @@
                 for(var i=0, len = checkedItems.length; i<len; i++) {
                     rowItem = checkedItems[i];
                     saleOrdList += rowItem.salesOrdNo;
+                    ctBrnchCode = rowItem.ctBrnchCode;
                     
                     if(i  != len -1){
                         saleOrdList += ",";
                     }
 
+                    if(ctBrnchCode !=rowItem.ctBrnchCode ){
+                        brnchCnt++;
+                    }
+                    
                     
                     if(i==0){
                          brnchId = rowItem.brnchId;
                     }
                     
+                }
+                
+                
+                if(brnchCnt > 0 ){
+                    Common.alert("Not Avaialable to Create HS Order With Several CDB in Single Time.");
+                    return;
                 }
                 
                 var jsonObj = {
@@ -369,6 +426,7 @@
                          "ManualCustId" : $("#manualCustomer").val(),
                          "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val()
                 };
+
 
                 
                   Common.popupDiv("/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
@@ -432,7 +490,7 @@
 			      schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
 			      salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
 			      hsStuscd = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId");
-			      
+
                     //Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
 			  }); 
 
@@ -451,6 +509,7 @@
                         $("#_salesOrdId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
                         $("#_brnchId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"));
 		                $("#_openGb").val("view");
+		                $("#_manuaMyBSMonth").val($("#ManuaMyBSMonth").val());
                          
 /*                          alert("_schdulId::"+  $("#_schdulId").val() +  $("#_salesOrdId").val()+  $("#_brnchId").val()); */
 
@@ -592,6 +651,7 @@
     <input type="hidden" name="salesOrdId"  id="_salesOrdId"/>  <!-- salesOrdId  -->
     <input type="hidden" name="openGb"  id="_openGb"/>  <!--   salesOrdId  -->
     <input type="hidden" name="brnchId"  id="_brnchId"/>  <!-- salesOrdId  -->
+    <input type="hidden" name="manuaMyBSMonth"  id="_manuaMyBSMonth"/>  <!-- salesOrdId  -->
 
 </form>
 
@@ -616,10 +676,10 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li>
-    <li><p class="btn_blue"><a href="#"  " onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
+<!--     <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li> -->
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
     <li><p class="btn_blue"><a id="hSConfiguration">Create HS Order</a></p></li>
-    <li><p class="btn_blue"><a href="#" " onclick="javascript:fn_getBSListAjax();">Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBSListAjax();">Search</a></p></li>
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
@@ -798,7 +858,7 @@
     <li><p class="btn_grid"><a href="#" " onclick="javascript:fn_getHSConfAjax();">HS Configuration</a></p></li>
 </ul> -->
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+    <div id="grid_wrap" style="width: 100%; height: 800px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
