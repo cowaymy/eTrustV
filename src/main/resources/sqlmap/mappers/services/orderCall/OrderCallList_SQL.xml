@@ -180,7 +180,7 @@
                             <![CDATA[  AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')    between TO_DATE(#{callStrDate},  'DD/MM/YYYY') and  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <![CDATA[
-                AND ROWNUM < 1000
+                AND ROWNUM < 100
             ]]> 
                    <if test="sortBy != null and sortBy != '' and sortBy == 1 " >
                      ORDER BY Extent1.SALES_ORD_NO ASC 
