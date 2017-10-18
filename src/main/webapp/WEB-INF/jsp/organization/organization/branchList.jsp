@@ -30,7 +30,6 @@
                         selectAll: true,
                         width: '80%'
                     });     
-                    $('#branchType').multipleSelect("checkAll");
                          
             });    
         }
@@ -38,7 +37,7 @@
         
             //Combo Data
         var statusTypeData = [{"codeId": "1","codeName": "Active"},{"codeId": "2","codeName": "Inactive"}];
-        doGetCombo('/common/selectCodeList.do', '45', '','branchType', 'M' , 'f_multiCombo'); //branchType
+        //doGetCombo('/common/selectCodeList.do', '45', '','branchType', 'M' , 'f_multiCombo'); //branchType
         doGetCombo('/common/selectCodeList.do', '49', '','region', 'M' , 'f_multiCombo'); //region
         
         
@@ -87,8 +86,7 @@
                  }, {
                         dataField : "brnchId",
                         headerText : "brnch_Id",
-                        width : 120,  
-                         visible:false                      
+                        width : 120,                        
                  }];
             
             // 그리드 속성 설정
@@ -140,8 +138,7 @@
         
         //insert
         function fn_newBranch() {
-//            Common.popupDiv("/organization/getBranchDetailPop.do?isPop=true&brnchId=" +"0", "searchForm");
-            Common.popupDiv("/organization/getBranchDetailPop.do?isPop=true", "searchForm");
+            Common.popupWin("searchForm", "/organization/getBranchDetailPop.do?isPop=true&brnchId=" +"0", option);
         }
         
     </script>
@@ -150,7 +147,7 @@
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order list</li>
 </ul>
@@ -159,8 +156,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Branch Management</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newBranch();">NEW</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBranchListAjax();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -182,11 +179,11 @@
 <tr>
     <th scope="row">Branch Code</th>
     <td>
-    <input id="branchCd" name="branchCd" type="text" title="" placeholder="Branch Code" class="w100p" />
+    <input type="text" title="" placeholder="Branch Code" class="w100p" />
     </td>
     <th scope="row">Branch Name</th>
     <td>
-    <input  id="branchNm" name="branchNm" type="text" title="" placeholder="Branch Name" class="w100p" />
+    <input type="text" title="" placeholder="Branch Name" class="w100p" />
     </td>
     <th scope="row">Status</th>
     <td>
@@ -210,7 +207,7 @@
     </td>
     <th scope="row">Country</th>
     <td>
-    <input type="text" title=""  id="countryCd" name="countryCd" placeholder="Country" class="w100p" />
+    <input type="text" title="" placeholder="Country" class="w100p" />
     </td>
 </tr>
 <tr>
@@ -231,15 +228,31 @@
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+        <li><p class="link_btn"><a href="#">menu3</a></p></li>
+        <li><p class="link_btn"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn"><a href="#">menu6</a></p></li>
+        <li><p class="link_btn"><a href="#">menu7</a></p></li>
+        <li><p class="link_btn"><a href="#">menu8</a></p></li>
     </ul>
     <ul class="btns">
+        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
     </ul>
-    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
@@ -250,11 +263,17 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
+    <li><p class="btn_grid"><a href="#">INS</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href=" javascript:fn_newBranch();">NEW</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
       <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+그리드 영역
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

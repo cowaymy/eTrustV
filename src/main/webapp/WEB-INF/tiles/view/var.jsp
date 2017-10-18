@@ -8,7 +8,6 @@
 <script>
 	var javascriptLoglevel = "debug";
 	var DEFAULT_DELIMITER = "|!|";
-	var DEFAULT_RESOURCE_FILE = "/resources/WebShare";
 	var _SESSION_EXPIRE_MESSAGE ="<spring:message code='sys.msg.session.expired'/>";
 
 	function getContextPath() {

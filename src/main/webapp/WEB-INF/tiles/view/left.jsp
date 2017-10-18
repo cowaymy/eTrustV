@@ -99,27 +99,8 @@
 <c:set var="preMenuCode" value="" />
 <c:set var="preMenuLvl" value="" />
 <c:set var="preIsLeaf" value="" />
-<c:set var="menuStatusClass" value="" />
 
 <c:forEach var="list" items="${MENU_KEY}"  varStatus="status">
-
-    <c:choose>
-        <c:when test="${list.statusCode == '1'}">
-            <c:set var="menuStatusClass" value="status_new" />
-        </c:when>
-        <c:when test="${list.statusCode == '2'}">
-            <c:set var="menuStatusClass" value="status_dev" />
-        </c:when>
-        <c:when test="${list.statusCode == '3'}">
-            <c:set var="menuStatusClass" value="status_upd" />
-        </c:when>
-        <c:when test="${list.statusCode == '4'}">
-            <c:set var="menuStatusClass" value="disabled" />
-        </c:when>
-        <c:otherwise>
-            <c:set var="menuStatusClass" value="" />
-        </c:otherwise>
-    </c:choose>
 
 
     <c:choose>
@@ -140,7 +121,7 @@
     <c:choose>
         <c:when test="${ list.menuLvl == 1}">
         <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-            <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+            <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
         </c:when>
         <c:otherwise>
 
@@ -148,11 +129,11 @@
                 <c:when test="${preMenuCode != '' && preMenuLvl < list.menuLvl}">
                 <ul>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
                 </c:when>
                 <c:otherwise>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                    <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                    <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
                 </c:otherwise>
             </c:choose>
 

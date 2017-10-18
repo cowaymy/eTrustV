@@ -175,13 +175,25 @@
 <tr>
 	<th scope="row">EST Year & Week</th>
 	<td>
+
 	<div class="date_set w100p"><!-- date_set start -->
-		<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
-		<option value="">Year</option><option value="2016">2016</option><option value="2017">2017</option></select>
-		
-		<select class="sel_date" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
-		<option value="">Select a WEEK</option><option value="1">1-1  [2017-01-01 ~ 07-JAN-17]</option><option value="2">2-1  [2017-01-08 ~ 14-JAN-17]</option><option value="3">3-1  [2017-01-15 ~ 21-JAN-17]</option><option value="4">4-1  [2017-01-22 ~ 28-JAN-17]</option><option value="5">5-1  [2017-01-29 ~ 31-JAN-17]</option><option value="6">6-1  [2017-02-05 ~ 11-FEB-17]</option><option value="7">7-1  [2017-02-12 ~ 18-FEB-17]</option><option value="8">8-1  [2017-02-19 ~ 25-FEB-17]</option><option value="9">9-1  [2017-02-26 ~ 28-FEB-17]</option><option value="10">10-1[2017-03-05 ~ 11-MAR-17]</option><option value="11">11-1[2017-03-12 ~ 18-MAR-17]</option><option value="12">12-1[2017-03-19 ~ 25-MAR-17]</option><option value="13">13-1[2017-03-26 ~ 31-MAR-17]</option><option value="14">14-1[2017-04-02 ~ 08-APR-17]</option><option value="15">15-1[2017-04-09 ~ 15-APR-17]</option><option value="16">16-1[2017-04-16 ~ 22-APR-17]</option><option value="17">17-1[2017-04-23 ~ 29-APR-17]</option><option value="18">18-1[2017-04-30 ~ 30-APR-17]</option><option value="19">19-1[2017-05-07 ~ 13-MAY-17]</option><option value="20">20-1[2017-05-14 ~ 20-MAY-17]</option><option value="21">21-1[2017-05-21 ~ 27-MAY-17]</option><option value="22">22-1[2017-05-28 ~ 31-MAY-17]</option><option value="23">23-1[2017-06-04 ~ 10-JUN-17]</option><option value="24">24-1[2017-06-11 ~ 17-JUN-17]</option><option value="25">25-1[2017-06-18 ~ 24-JUN-17]</option><option value="26">26-1[2017-06-25 ~ 30-JUN-17]</option><option value="27">27-1[2017-07-02 ~ 08-JUL-17]</option><option value="28">28-1[2017-07-09 ~ 15-JUL-17]</option><option value="29">29-1[2017-07-16 ~ 22-JUL-17]</option><option value="30">30-1[2017-07-23 ~ 29-JUL-17]</option><option value="31">31-1[2017-07-30 ~ 31-JUL-17]</option><option value="32">32-1[2017-08-06 ~ 12-AUG-17]</option><option value="33">33-1[2017-08-13 ~ 19-AUG-17]</option><option value="34">34-1[2017-08-20 ~ 26-AUG-17]</option><option value="35">35-1[2017-08-27 ~ 31-AUG-17]</option><option value="36">36-1[2017-09-03 ~ 09-SEP-17]</option><option value="37">37-1[2017-09-10 ~ 16-SEP-17]</option><option value="38">38-1[2017-09-17 ~ 23-SEP-17]</option><option value="39">39-1[2017-09-24 ~ 30-SEP-17]</option><option value="40">40-1[2017-10-01 ~ 07-OCT-17]</option><option value="41">41-1[2017-10-08 ~ 14-OCT-17]</option><option value="42">42-1[2017-10-15 ~ 21-OCT-17]</option><option value="43">43-1[2017-10-22 ~ 28-OCT-17]</option><option value="44">44-1[2017-10-29 ~ 31-OCT-17]</option><option value="45">45-1[2017-11-05 ~ 11-NOV-17]</option><option value="46">46-1[2017-11-12 ~ 18-NOV-17]</option><option value="47">47-1[2017-11-19 ~ 25-NOV-17]</option><option value="48">48-1[2017-11-26 ~ 30-NOV-17]</option><option value="49">49-1[2017-12-03 ~ 09-DEC-17]</option><option value="50">50-1[2017-12-10 ~ 16-DEC-17]</option><option value="51">51-1[2017-12-17 ~ 23-DEC-17]</option><option value="52">52-1[2017-12-24 ~ 30-DEC-17]</option></select>
-	</div>
+	<p>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</p>
+	<span>~</span>
+	<p>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</p>
+	</div><!-- date_set end -->
+
 	</td>
 	<th scope="row">CDC</th>
 	<td>
@@ -203,11 +215,8 @@
 	</td>
 	<th scope="row">PO Status</th>
 	<td>
-		<div class="status_result">
-			<p><span class="circle circle_red"></span> PO Issue</p>
-			<p><span class="circle circle_blue"></span> Approval</p>
-			<p><span class="circle circle_grey"></span> Status3</p>
-		</div>
+	<label><input type="checkbox" disabled="disabled" /><span>PO Issue</span></label>
+	<label><input type="checkbox" disabled="disabled" /><span>Approval</span></label>
 	</td>
 </tr>
 </tbody>

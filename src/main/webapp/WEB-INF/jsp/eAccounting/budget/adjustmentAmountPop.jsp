@@ -5,9 +5,6 @@
 .my-right-style {
     text-align:right;
 }
-.aui-grid-user-custom-left {
-    text-align:left;
-}
 </style>
 <script  type="text/javascript">
 
@@ -80,7 +77,6 @@ $(document).ready(function(){
 	     positionField : "budgetAdjMonth",
 	     dataField : "adjAmt",
 	     formatString : "#,##0",
-         style : "my-right-style",
 	     expFunction : function(columnValues) {
 	    	 
 	    	 var idx = AUIGrid.getRowCount(adjGridID); 
@@ -90,7 +86,7 @@ $(document).ready(function(){
 	                 amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");
 	    		 }
 	    	 }
-	    	 	    	 
+	    	 
              return amt; 
          }
 	 },{
@@ -100,7 +96,6 @@ $(document).ready(function(){
          positionField : "glAccDesc",
          dataField : "adjAmt",
          formatString : "#,##0",
-         style : "my-right-style",
          expFunction : function(columnValues) {
              
              var idx = AUIGrid.getRowCount(adjGridID); 
@@ -120,7 +115,6 @@ $(document).ready(function(){
          positionField : "adjRem",
          dataField : "adjAmt",
          formatString : "#,##0",
-         style : "my-right-style",
          expFunction : function(columnValues) {
              
              var idx = AUIGrid.getRowCount(adjGridID); 
@@ -153,7 +147,7 @@ $(document).ready(function(){
 //리스트 조회.
 function fn_selectListAjax() {  
      
-    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentAmountList", $("#adjPForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentAmountList", $("#pForm").serialize(), function(result) {
             
         console.log("성공.");
         console.log( result);
@@ -177,9 +171,9 @@ function comma(str) {
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
+<section class="pop_body"><!-- pop_body start -->
 
-<form action="#" method="post" id="adjPForm" name="adjPForm">
+<form action="#" method="post" id="pForm" name="pForm">
 	<input type="hidden" id="budgetPlanYear" name="budgetPlanYear"  value="${item.budgetPlanYear }"/>
 	<input type="hidden" id="budgetPlanMonth" name="budgetPlanMonth"  value="${item.budgetPlanMonth }"/>
 	<input type="hidden" id="costCentr" name ="costCentr" value="${item.costCentr }"/>
@@ -193,3 +187,6 @@ function comma(str) {
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
+
+</body>
+</html>

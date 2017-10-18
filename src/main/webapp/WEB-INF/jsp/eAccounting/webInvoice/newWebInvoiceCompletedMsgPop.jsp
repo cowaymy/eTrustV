@@ -2,18 +2,6 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-$(document).ready(function () {
-    $("#ok").click(fn_closePop);
-    
-});
-
-function fn_closePop() {
-    $("#completedMsgPop").remove();
-    
-    //Common.showLoader();
-    
-    window.location = "/eAccounting/webInvoice/webInvoice.do";
-}
 </script>
 
 <div id="popup_wrap" class="popup_wrap msg_box"><!-- popup_wrap start -->
@@ -26,7 +14,7 @@ function fn_closePop() {
 <section class="pop_body"><!-- pop_body start -->
 <p class="msg_txt"><spring:message code="newWebInvoRegistMsg.compleMsg" /></p>
 <ul class="center_btns">
-	<li><p class="btn_blue2" id="ok"><a href="#"><spring:message code="newWebInvoRegistMsg.ok" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoRegistMsg.ok" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

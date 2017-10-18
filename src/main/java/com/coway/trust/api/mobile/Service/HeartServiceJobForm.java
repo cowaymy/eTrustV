@@ -3,7 +3,7 @@ package com.coway.trust.api.mobile.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.coway.trust.api.mobile.logistics.StockByHolderQtyForm;
+import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyForm;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

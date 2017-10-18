@@ -37,11 +37,11 @@ var newGridID;
                            // 그리드 CSV 데이터 적용시킴
                            AUIGrid.setCsvGridData(newGridID, event.target.result, false);
                        } else {
-                    	   Common.alert('<spring:message code="sys.common.alert.upload.noDate"/>');
+                           alert('No data to import!');
                        }
                    };
                    reader.onerror = function() {
-                	   Common.alert("<spring:message code='sys.common.alert.upload.unable' arguments='"+file.fileName+"' htmlEscape='false'/>");
+                       alert('Unable to read ' + file.fileName);
                    };
                }
        });
@@ -65,7 +65,7 @@ var gridPros = {
 	    var fileNm = $("#uploadfile").val();
 		
 	    if(fileNm.substr(fileNm.indexOf("."),fileNm.length) != ".csv"){
-	    	Common.alert('<spring:message code="sys.common.alert.upload.csv"/>');
+	    	Common.alert('Select the CSV file on the loca PC');
             return;
 	    }else{
 	    	
@@ -101,13 +101,13 @@ var gridPros = {
 	        	
 	            data.all = gridList;
 	        }  else {
-	        	Common.alert('<spring:message code="sys.common.alert.upload.csv"/>');
+	            Common.alert('Select the CSV file on the loca PC');
 	            return;
 	        }
 	        
 	        //Ajax 호출
 	        Common.ajax("POST", "/commission/calculation/ctUploadFile", data, function(result) {
-	        	Common.alert('<spring:message code="sys.msg.success"/>');
+	            Common.alert(result.message);
 	            
 	            document.myForm.reset();
 	        },  function(jqXHR, textStatus, errorThrown) {
@@ -120,7 +120,7 @@ var gridPros = {
 	            } catch (e) {
 	                console.log(e);
 	            }
-	            Common.alert("<spring:message code='sys.common.alert.error.ajaxSubmit' arguments='"+jqXHR.responseJSON.message+"' htmlEscape='false'/>");
+	            alert("Fail : " + jqXHR.responseJSON.message);        
 	        });
 	    }
 	    
