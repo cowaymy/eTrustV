@@ -793,13 +793,14 @@
 
             var appTypeIdx = $("#appType option:selected").index();
             var appTypeVal = $("#appType").val();
+            var custTypeVal= $("#typeId").val();
             var stkIdx     = $("#ordProudct option:selected").index();
             var stkIdVal   = $("#ordProudct").val();
             var empChk     = $("#empChk").val();
 
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal);
-                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk);
+                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal);
             }
         });
         $('#rentPayMode').change(function() {
@@ -1797,14 +1798,15 @@
     }
 
     //LoadProductPromotion
-    function fn_loadProductPromotion(appTypeVal, stkId, empChk) {
+    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal) {
         console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
         console.log('fn_loadProductPromotion --> stkId:'+stkId);
         console.log('fn_loadProductPromotion --> empChk:'+empChk);
+        console.log('fn_loadProductPromotion --> custTypeVal:'+custTypeVal);
 
         $('#ordPromo').removeAttr("disabled");
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk}, '', 'ordPromo', 'S', ''); //Common Code
+        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal}, '', 'ordPromo', 'S', ''); //Common Code
     }
 
     //LoadProductPrice
