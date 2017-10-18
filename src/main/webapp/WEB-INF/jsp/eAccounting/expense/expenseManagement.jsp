@@ -92,11 +92,15 @@ function fn_expenseEdit(){
     // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
     var first = selectedItems[0];
     
-    var clmType = AUIGrid.getCellValue(myGridID , first.rowIndex , "clmType");
-    var expType = AUIGrid.getCellValue(myGridID , first.rowIndex , "expType");
+    $("#popClaimType").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "clmType"));
+    $("#popExpType").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "expType"));
+    $("#glAccCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCode"));
+    $("#budgetCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCode"));
+    $("#budgetCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCodeName"));
+    $("#glAccCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCodeName"));
 	
     
-   Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", {popClaimType:clmType, popExpType:expType}, null, true, "editExpenseTypePop");
+   Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", $("#popSForm").serializeJSON(), null, true, "editExpenseTypePop");
 } 
 
 function createAUIGrid() {
@@ -206,6 +210,16 @@ function createAUIGrid() {
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
+<form action="#"  id="popSForm" name="popSForm" method="post">
+<input type="hidden" id="popClaimType" name="popClaimType"/>
+<input type="hidden" id="popExpType" name="popExpType"/>
+<input type="hidden" id="popGlAccCode" name="popGlAccCode"/>
+<input type="hidden" id="popBudgetCode" name="popBudgetCode"/>
+<input type="hidden" id="popGlAccCodeName" name="popGlAccCodeName"/>
+<input type="hidden" id="popBudgetCodeName" name="popBudgetCodeName"/>
+</form>
+
+
 <form action="#"  id="listSForm" name="listSForm" method="post">
 
 <table class="type1"><!-- table start -->

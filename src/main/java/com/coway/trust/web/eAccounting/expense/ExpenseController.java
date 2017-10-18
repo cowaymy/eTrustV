@@ -87,9 +87,16 @@ public class ExpenseController {
 	
 	@RequestMapping(value = "/editExpenseTypePop.do")
 	public String editExpenseTypePop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{	
+
+		LOGGER.debug("params =====================================>>  " + params);
 		
 		model.addAttribute("popClaimType", params.get("popClaimType").toString());
 		model.addAttribute("popExpType", params.get("popExpType").toString());
+		model.addAttribute("glAccCode", params.get("popGlAccCode").toString());
+		model.addAttribute("glAccCodeName", params.get("popGlAccCodeName").toString());
+		model.addAttribute("budgetCode", params.get("popBudgetCode").toString());
+		model.addAttribute("budgetCodeName", params.get("popBudgetCodeName").toString());
+		
 		return "eAccounting/expense/editExpenseTypePop";
 	}
 		

@@ -6,19 +6,27 @@ var expensSearchGridID;
 
 $(document).ready(function() {
     
-    CommonCombo.make("popExpType", "/eAccounting/expense/selectExpenseList", {popExpType:"${popExpType}"}, "${popExpType}", {
+    CommonCombo.make("expTypeCombo", "/eAccounting/expense/selectExpenseList", {popExpType:"${popExpType}"}, "${popExpType}", {
         id: "expType",
         name: "expTypeName"
     });
 	    
-    CommonCombo.make("popClaimType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "${popClaimType}", {
+    CommonCombo.make("claimTypeCombo", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "${popClaimType}", {
         id: "code",
         name: "codeName"
     });
     
     $("#pClmType").val("${popClaimType}");
     $("#pExpType").val("${popExpType}");
+
+    alert("${glAccCode}");
+    alert("${glAccCodeName}");
     
+    $("#glAccCode").val("${glAccCode}");
+    $("#glAccCodeName").val( "${glAccCodeName}");
+    
+    $("#budgetCode").val("${budgetCode}");
+    $("#budgetCodeName").val( "${budgetCodeName}");  
     
 });
 
@@ -138,14 +146,14 @@ function  fn_setBudgetData(){
 <tr>
 	<th scope="row"><spring:message code="expense.ClaimType" /></th>
 	<td>
-    <select class="w100p" id="popClaimType" name="popClaimType" disabled="disabled" >
+    <select class="w100p" id="claimTypeCombo" name="claimTypeCombo" disabled="disabled" >
     </select>
 	</td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="expense.ExpenseType" /></th>
 	<td>
-	   <select class="w100p" id="popExpType" name="popExpType" disabled="disabled" >
+	   <select class="w100p" id="expTypeCombo" name="expTypeCombo" disabled="disabled" >
     </select>
 	</td>
 </tr>

@@ -121,7 +121,7 @@
    UPDATE FCM0001M
       SET  
       <if test ="disabFlag != nul and disabFlag !=''">
-            ,DISAB_FLAG = #{disabFlag}            
+            DISAB_FLAG = #{disabFlag}            
             ,DISAB_USER_ID   = #{userId}
             ,DISAB_DT        = SYSDATE
       </if>
