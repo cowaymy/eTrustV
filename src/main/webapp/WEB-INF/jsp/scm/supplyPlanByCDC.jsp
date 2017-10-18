@@ -50,7 +50,7 @@ $(function()
   // set PeriodByYear
   fnSelectPeriodReset(); 
   // set CDC
-  //fnSelectCDC();
+  fnSelectCDCComboList('349');
   //setting StockCode ComboBox 
   fnSetStockComboBox();   
 });
@@ -59,17 +59,17 @@ function fnSelectPeriodReset()
 {
    CommonCombo.initById("scmPeriodCbBox");  // reset...
    var periodCheckBox = document.getElementById("scmPeriodCbBox");
-       periodCheckBox.options[0] = new Option("Select a YEAR","");
+       periodCheckBox.options[0] = new Option("Select a WEEK","");
          
-   CommonCombo.initById("cdcCbBox");  // reset...
+  /*  CommonCombo.initById("cdcCbBox");  // reset...
    var periodCheckBox = document.getElementById("cdcCbBox");
-       periodCheckBox.options[0] = new Option("Select a CDC","");  
+       periodCheckBox.options[0] = new Option("Select a CDC",""); */  
 }
 
 function fnSelectCDC(selectYear, selectWeekTh)
 {
 	  CommonCombo.make("cdcCbBox"
-              , "/scm/selectSupplyCDC.do"  
+              , "/scm/selectComboSupplyCDC.do"  
               , { planYear: selectYear
                  //,planMonth : 1
                  ,planWeek : selectWeekTh
@@ -78,6 +78,20 @@ function fnSelectCDC(selectYear, selectWeekTh)
               , {  
                   id  : "codeValue",          
                   name: "codeView",
+                  chooseMessage: "Select a CDC"
+                 }
+              , "");     
+}
+
+function fnSelectCDCComboList(codeId)
+{
+	  CommonCombo.make("cdcCbBox"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "code",          
+                  name: "codeName",
                   chooseMessage: "Select a CDC"
                  }
               , "");     
@@ -95,7 +109,7 @@ function fnSelectExcuteYear()
             console.log("period_values: " + $this.val());
                 
             CommonCombo.initById("scmPeriodCbBox");  // Period reset... 
-            CommonCombo.initById("cdcCbBox");  // CDC reset... 
+            //CommonCombo.initById("cdcCbBox");  // CDC reset... 
 
             if (FormUtil.isNotEmpty($this.val())) 
             {
@@ -134,7 +148,7 @@ function fnChangeEventPeriod(object)
 {
   //alert("Year: " + $("#scmYearCbBox").val() + " /WeekTh: " + object.value   );  
   gWeekThValue = object.value;
-  fnSelectCDC( $("#scmYearCbBox").val() , object.value);
+  //fnSelectCDC( $("#scmYearCbBox").val() , object.value);
 }
 
 function fnSetStockComboBox()
@@ -166,11 +180,61 @@ function fnSearchBtnList()
            , $("#MainForm").serialize()
            , function(result) 
            {
-              console.log("성공 fnSearchBtnList: " + result.length);
+              console.log("성공 fnSearchBtnList: " + result.selectSupplyPlanCDCList.length);
+              console.log("성공 selectSupplyCdcSaveFlag: " + result.selectSupplyCdcSaveFlag[0].saveFlag);
+              console.log("성공 selectSalesPlanMasterList_Length: " + result.selectSalesPlanMasterList.length);
+              console.log("성공 selectSupplyPlanMasterList_Length: " + result.selectSupplyPlanMasterList.length
+                          +"plan status: " +  result.selectSupplyPlanMasterList[0].planStus );
+              
               AUIGrid.setGridData(myGridID, result.selectSupplyPlanCDCList);
-              if(result != null && result.length > 0)
+              if ( result != null)
               {
+                 //save
+	              if(result.selectSupplyCdcSaveFlag.length > 0 )
+	              {
+	                  if (result.selectSupplyCdcSaveFlag[0].saveFlag == "B")
+	                  {
+	            	      $("#cir_save").attr('class','circle circle_blue');
+
+	            	      if (result.selectSupplyPlanMasterList[0].planStus == 4) 
+	            	    	  $("#ConfirmBtn").attr("disabled",true)     //disabled
+	                    else $("#ConfirmBtn").attr("disabled",false) //enabled
+
+	                  }
+	                  else if (result.selectSupplyCdcSaveFlag[0].saveFlag == "R")
+	                  {
+	                	  $("#cir_save").attr('class','circle circle_red');
+	                  }
+	                  else
+	                  {
+	                	  $("#cir_save").attr('class','circle circle_grey');
+	                  }
+	                  
+	                 // $("#cir_cinfirm").attr('class','circle circle_blue');
+	              }
+
+	              // salses
+	              if (result.selectSalesPlanMasterList.length >= 2)
+	              {
+	            	  $("#cir_sales").attr('class','circle circle_blue');
+	              }
+	              else
+	              {
+	            	  $("#cir_sales").attr('class','circle circle_red');
+	              }
+
+	              //confirm
+                if (result.selectSupplyPlanMasterList.length > 0 && result.selectSupplyPlanMasterList[0].planStus == 4)
+                {
+                  $("#cir_cinfirm").attr('class','circle circle_blue');
+                }
+                else
+                {
+                  $("#cir_cinfirm").attr('class','circle circle_red');
+                }
               }
+
+             
            });
    
 }
@@ -880,9 +944,12 @@ $(document).ready(function()
 		</td>
 		<th scope="row">Planning Status</th>
 		<td>
-		<label><input type="checkbox" disabled="disabled" /><span>Sales Plan</span></label>
-		<label><input type="checkbox" disabled="disabled" /><span>Save</span></label>
-		<label><input type="checkbox" disabled="disabled" /><span>Confirm</span></label>
+		  <div class="status_result">
+		  <!-- circle_red, circle_blue, circle_grey -->
+	      <p><span id ="cir_sales" class="circle circle_grey"></span> Sales</p>    
+	      <p><span id ="cir_save" class="circle circle_grey"></span> Plan Save</p>
+	      <p><span id ="cir_cinfirm" class="circle circle_grey"></span> Confirm</p>
+    </div>
 		</td>
 	</tr>
 	</tbody>
@@ -935,14 +1002,14 @@ $(document).ready(function()
 	<li>
 	 <p class="btn_grid">
 	  <!--  <a href="javascript:void(0);">Confirm</a> -->
-	   <input type='button' id='ConfirmBtn' value='Confirm' disabled />
+	   <input type='button' id='ConfirmBtn' name='ConfirmBtn' value='Confirm' disabled />
 	 </p>
 	</li>
 	
 	<li>
 	 <p class="btn_grid">
 	   <!-- <a href="javascript:void(0);">Update M0 Data</a> -->
-	   <input type='button' id='UpdateBtn' value='Update M0 Data' disabled />
+	   <input type='button' id='UpdateBtn' name='UpdateBtn' value='Update M0 Data' disabled />
 	 </p>
 	</li>
 </ul>
@@ -951,13 +1018,13 @@ $(document).ready(function()
 	<li>
 	 <p class="btn_grid">
 	   <!-- <a href="javascript:void(0);">Re-Calculate</a> -->
-	   <input type='button' id='Re-CalculateBtn' value='Re-Calculate' disabled />
+	   <input type='button' id='Re-CalculateBtn' name='Re-CalculateBtn' value='Re-Calculate' disabled />
 	 </p>
 	</li>
 	<li>
 	 <p class="btn_grid">
    <!-- <a href="javascript:void(0);">Test</a> -->
-   <input type='button' id='Test' value='Test' disabled />
+   <input type='button' id='Test' name='Test' value='Test' disabled />
 	 </p></li>
 </ul>
 </div><!-- side_btns end -->
