@@ -99,22 +99,22 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 		
 		
-		for(int i =0; i <= 1 ; i++) {
-			str1.hasMoreElements();
-			String result = str1.nextToken("/");            //특정문자로 자를시 사용
-			
-			logger.debug("iiiii: {}", i);
-			
-			if(i==0){
-				params.put("myBSMonth", result);
-				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
-			}else{
-				params.put("myBSYear", result);
-				logger.debug("myBSYear : {}", params.get("myBSYear"));
-			}
-			
-			
-		}
+//		for(int i =0; i <= 1 ; i++) {
+//			str1.hasMoreElements();
+//			String result = str1.nextToken("/");            //특정문자로 자를시 사용
+//			
+//			logger.debug("iiiii: {}", i);
+//			
+//			if(i==0){
+//				params.put("myBSMonth", result);
+//				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
+//			}else{
+//				params.put("myBSYear", result);
+//				logger.debug("myBSYear : {}", params.get("myBSYear"));
+//			}
+//			
+//			
+//		}
 		
 		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
 		
