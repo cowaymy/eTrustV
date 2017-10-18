@@ -48,8 +48,9 @@
     }
 
     // 선택한 메뉴화면으로 이동.
-    function fn_menu(menuCode, menuPath, fullPath, myMenuGroupCode){
+    function fn_menu(obj, menuCode, menuPath, fullPath, myMenuGroupCode){
 
+        //if(FormUtil.isEmpty(menuPath) || $(obj).hasClass("disabled")){
         if(FormUtil.isEmpty(menuPath)){
             return;
         }
@@ -75,150 +76,169 @@
 
 <section id="container"><!-- container start -->
 
-<aside class="lnb_wrap"><!-- lnb_wrap start -->
+    <aside class="lnb_wrap"><!-- lnb_wrap start -->
 
-<header class="lnb_header"><!-- lnb_header start -->
-<form action="#" method="post">
-    <h1 class="logo_type">
-        <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/CowayLeftLogo.png" alt="COWAY" /></a>
-        <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
-    </h1>
-<p class="search">
-<input type="text" title="검색어 입력" />
-<input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
-</p>
+        <header class="lnb_header"><!-- lnb_header start -->
+            <form action="#" method="post">
+                <h1 class="logo_type">
+                    <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/CowayLeftLogo.png" alt="COWAY" /></a>
+                    <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
+                </h1>
+                <p class="search">
+                    <input type="text" title="검색어 입력" />
+                    <input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
+                </p>
 
-</form>
-</header><!-- lnb_header end -->
+            </form>
+        </header><!-- lnb_header end -->
 
-<section class="lnb_con"><!-- lnb_con start -->
-<p id="_leftMenu" class="click_add_on_solo<c:if test="${param.CURRENT_MENU_TYPE != 'MY_MENU'}"> on</c:if>"><a href="#">All menu</a></p>
-<ul class="inb_menu" id="leftMenu">
+        <section class="lnb_con"><!-- lnb_con start -->
+            <p id="_leftMenu" class="click_add_on_solo<c:if test="${param.CURRENT_MENU_TYPE != 'MY_MENU'}"> on</c:if>"><a href="#">All menu</a></p>
+            <ul class="inb_menu" id="leftMenu">
 
-<c:set var="cnt" value="0" />
-<c:set var="preMenuCode" value="" />
-<c:set var="preMenuLvl" value="" />
-<c:set var="preIsLeaf" value="" />
+                <c:set var="cnt" value="0" />
+                <c:set var="preMenuCode" value="" />
+                <c:set var="preMenuLvl" value="" />
+                <c:set var="preIsLeaf" value="" />
+                <c:set var="menuStatusClass" value="" />
 
-<c:forEach var="list" items="${MENU_KEY}"  varStatus="status">
+                <c:forEach var="list" items="${MENU_KEY}"  varStatus="status">
+
+                <c:choose>
+                    <c:when test="${list.statusCode == '1'}">
+                        <c:set var="menuStatusClass" value="status_new" />
+                    </c:when>
+                    <c:when test="${list.statusCode == '2'}">
+                        <c:set var="menuStatusClass" value="status_dev" />
+                    </c:when>
+                    <c:when test="${list.statusCode == '3'}">
+                        <c:set var="menuStatusClass" value="status_upd" />
+                    </c:when>
+                    <c:when test="${list.statusCode == '4'}">
+                        <c:set var="menuStatusClass" value="disabled" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="menuStatusClass" value="" />
+                    </c:otherwise>
+                </c:choose>
 
 
-    <c:choose>
-        <c:when test="${preMenuLvl == list.menuLvl}">
-            </li>
-        </c:when>
-        <c:when test="${preMenuLvl != '' && preMenuLvl > list.menuLvl}">
-            <c:forEach var="i" begin="1" end="${preMenuLvl - list.menuLvl}" step="1">
+                <c:choose>
+                <c:when test="${preMenuLvl == list.menuLvl}">
                     </li>
-                </ul>
+                </c:when>
+                <c:when test="${preMenuLvl != '' && preMenuLvl > list.menuLvl}">
+                <c:forEach var="i" begin="1" end="${preMenuLvl - list.menuLvl}" step="1">
+                </li>
+            </ul>
             </c:forEach>
-        </c:when>
-        <c:otherwise>
+            </c:when>
+            <c:otherwise>
 
-        </c:otherwise>
-    </c:choose>
-
-    <c:choose>
-        <c:when test="${ list.menuLvl == 1}">
-        <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-            <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
-        </c:when>
-        <c:otherwise>
+            </c:otherwise>
+            </c:choose>
 
             <c:choose>
+            <c:when test="${ list.menuLvl == 1}">
+            <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
+                <a id="a_${list.menuCode}" href="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                </c:when>
+                <c:otherwise>
+
+                <c:choose>
                 <c:when test="${preMenuCode != '' && preMenuLvl < list.menuLvl}">
                 <ul>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
-                </c:when>
-                <c:otherwise>
+                        <a id="a_${list.menuCode}" href="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                        </c:when>
+                        <c:otherwise>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                    <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
-                </c:otherwise>
-            </c:choose>
+                        <a id="a_${list.menuCode}" href="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                        </c:otherwise>
+                        </c:choose>
 
-        </c:otherwise>
-    </c:choose>
+                        </c:otherwise>
+                        </c:choose>
 
-    <!-- set pre Menu info -->
-    <c:set var="preMenuCode" value="${list.menuCode}" />
-    <c:set var="preMenuLvl" value="${list.menuLvl}" />
-    <c:set var="preIsLeaf" value="${list.isLeaf}" />
-    <c:set var="cnt" value="${cnt + 1}" />
+                        <!-- set pre Menu info -->
+                        <c:set var="preMenuCode" value="${list.menuCode}" />
+                        <c:set var="preMenuLvl" value="${list.menuLvl}" />
+                        <c:set var="preIsLeaf" value="${list.isLeaf}" />
+                        <c:set var="cnt" value="${cnt + 1}" />
 
-    <c:if test="${status.last}">
-        <c:if test="${list.menuLvl == 1}">
-            </li>
-        </c:if>
+                        <c:if test="${status.last}">
+                        <c:if test="${list.menuLvl == 1}">
+                    </li>
+                    </c:if>
 
-        <c:if test="${list.menuLvl > 1}">
-            <c:forEach var="i" begin="1" end="${list.menuLvl}" step="1">
-                </li>
+                    <c:if test="${list.menuLvl > 1}">
+                    <c:forEach var="i" begin="1" end="${list.menuLvl}" step="1">
+                    </li>
                 </ul>
-            </c:forEach>
-        </c:if>
-    </c:if>
+                </c:forEach>
+                </c:if>
+                </c:if>
 
-</c:forEach>
+                </c:forEach>
 
-</ul>
+                </ul>
 
-<!-- MY MENU -->
-<p id="_myMenu" class="click_add_on_solo<c:if test="${param.CURRENT_MENU_TYPE == 'MY_MENU'}"> on</c:if>"><a href="javascript:void(0);"><span></span>My menu</a></p>
-<ul class="inb_menu">
+                <!-- MY MENU -->
+                <p id="_myMenu" class="click_add_on_solo<c:if test="${param.CURRENT_MENU_TYPE == 'MY_MENU'}"> on</c:if>"><a href="javascript:void(0);"><span></span>My menu</a></p>
+                <ul class="inb_menu">
 
-    <c:set var="preMyMenuCode" value="" />
+                    <c:set var="preMyMenuCode" value="" />
 
-    <c:forEach var="groupList" items="${MENU_FAVORITES}">
+                    <c:forEach var="groupList" items="${MENU_FAVORITES}">
 
-        <c:if test="${preMyMenuCode != groupList.mymenuCode}">
-            <li id="li_${groupList.mymenuCode}">
-                <a id="a_${groupList.mymenuCode}" href="javascript:void(0);">${groupList.mymenuName}</a>
+                        <c:if test="${preMyMenuCode != groupList.mymenuCode}">
+                            <li id="li_${groupList.mymenuCode}">
+                            <a id="a_${groupList.mymenuCode}" href="javascript:void(0);">${groupList.mymenuName}</a>
 
-                    <c:set var="groupPerMenuCnt" value="0" />
-                    <c:set var="isBreak" value="0" />
+                            <c:set var="groupPerMenuCnt" value="0" />
+                            <c:set var="isBreak" value="0" />
 
-                    <c:forEach var="menuList" items="${MENU_FAVORITES}" varStatus="status">
-                        <c:if test="${isBreak == 0}">
-                            <c:choose>
-                                <c:when test="${groupList.mymenuCode == menuList.mymenuCode}">
-                                    <c:if test="${groupPerMenuCnt == 0}">
-                                        <ul>
-                                    </c:if>
-                                        <li  id="li_${menuList.menuCode}${groupList.mymenuCode}" group_my_menu_code="${groupList.mymenuCode}">
-                                            <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:fn_menu('${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
-                                        </li>
-                                    <c:set var="groupPerMenuCnt" value="${groupPerMenuCnt + 1}" />
-                                </c:when>
-                                <c:when test="${groupPerMenuCnt > 0}">
-                                    </ul>
-                                    <c:set var="isBreak" value="1" />
-                                </c:when>
-                            </c:choose>
+                            <c:forEach var="menuList" items="${MENU_FAVORITES}" varStatus="status">
+                                <c:if test="${isBreak == 0}">
+                                    <c:choose>
+                                        <c:when test="${groupList.mymenuCode == menuList.mymenuCode}">
+                                            <c:if test="${groupPerMenuCnt == 0}">
+                                                <ul>
+                                            </c:if>
+                                            <li  id="li_${menuList.menuCode}${groupList.mymenuCode}" group_my_menu_code="${groupList.mymenuCode}">
+                                                <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:fn_menu(this, '${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
+                                            </li>
+                                            <c:set var="groupPerMenuCnt" value="${groupPerMenuCnt + 1}" />
+                                        </c:when>
+                                        <c:when test="${groupPerMenuCnt > 0}">
+                                            </ul>
+                                            <c:set var="isBreak" value="1" />
+                                        </c:when>
+                                    </c:choose>
+                                </c:if>
+                            </c:forEach>
                         </c:if>
+
+                        </li>
+
+                        <c:set var="preMyMenuCode" value="${groupList.mymenuCode}" />
                     </c:forEach>
-        </c:if>
+                </ul>
+        </section><!-- lnb_con end -->
 
-        </li>
+    </aside><!-- lnb_wrap end -->
 
-        <c:set var="preMyMenuCode" value="${groupList.mymenuCode}" />
-    </c:forEach>
-</ul>
-</section><!-- lnb_con end -->
+    <form id="_menuForm">
 
-</aside><!-- lnb_wrap end -->
-
-<form id="_menuForm">
-
-    <c:choose>
-        <c:when test="${empty param.CURRENT_MENU_CODE}">
-            <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${CURRENT_MENU_CODE}"/>
-        </c:when>
-        <c:otherwise>
-            <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
-        </c:otherwise>
-    </c:choose>
-    <input type="hidden" id="CURRENT_MENU_FULL_PATH_NAME" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
-    <input type="hidden" id="CURRENT_GROUP_MY_MENU_CODE" name="CURRENT_GROUP_MY_MENU_CODE" value="${param.CURRENT_GROUP_MY_MENU_CODE}"/>
-    <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
-</form>
+        <c:choose>
+            <c:when test="${empty param.CURRENT_MENU_CODE}">
+                <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${CURRENT_MENU_CODE}"/>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
+            </c:otherwise>
+        </c:choose>
+        <input type="hidden" id="CURRENT_MENU_FULL_PATH_NAME" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
+        <input type="hidden" id="CURRENT_GROUP_MY_MENU_CODE" name="CURRENT_GROUP_MY_MENU_CODE" value="${param.CURRENT_GROUP_MY_MENU_CODE}"/>
+        <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
+    </form>
