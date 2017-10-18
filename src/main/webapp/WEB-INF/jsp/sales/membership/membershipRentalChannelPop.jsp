@@ -385,7 +385,7 @@ function fn_doViewHistory_Click(){
 	 var ORD_ID ='${srvCntrctOrdId}' ;
 	 
 	 var pram  ="?srvCntrctId="+SRV_CNTRCT_ID+"&ordId="+ORD_ID; 
-	 
+	 alert("The program is under development");
 	 alert("fn_doViewHistory_공통팝업 호출 " +pram);
 	 //Common.popupDiv("/sales/membershipRental/mRContSalesViewPop.do"+pram ,null, null , true , '_ViewHistoryDiv1');
 	      
@@ -862,7 +862,7 @@ function  fn_DisableControl(){
 	<aside class="title_line"><!-- title_line start -->
 	<h2>Payment Channel</h2>
 	<ul class="right_btns mb10">
-	    <li><p class="btn_blue2"><a href="#">View History</a></p></li>
+	    <li><p class="btn_blue2"><a href="#"  onclick="fn_doViewHistory_Click()">View History</a></p></li>
 	</ul>
 	</aside><!-- title_line end -->
 	
