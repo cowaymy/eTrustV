@@ -129,9 +129,13 @@
                                            sys064.area_id,
                                            sys064.CODY_BRNCH_CODE,
                                            sys064.CODY_MANGR_USER_ID,
-									       ME.MEM_CODE AS c5,
+									      (select  MEM_CODE
+									            from ORG0001D ME
+									            where 1=1
+									            and ME.MEM_ID = HSM.cody_ID )AS c5,
 									       HSM.STUS_CODE_ID STUS_CODE_ID,
-									       EXTENT2.code
+									       EXTENT2.code,
+                                            sys064.CT_BRNCH_CODE
                                 FROM SAL0001D SOM
                                         ,SAL0029D C
                                         ,SYS0013M CORPTYPE 
@@ -140,14 +144,12 @@
                                         ,SYS0038M EXTENT2
                                         ,sal0023d sal023
                                         ,SYS0064M sys064
-                                        ,ORG0001D ME
                                 WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
                                 AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
                                 AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID 
                                 AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
                                 AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
-                                and  me.MEM_ID = HSM.CODY_ID
                                 and som.cust_id = sal023.cust_id
                                 and sal023.area_id = sys064.area_id
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>   
@@ -179,8 +181,7 @@
           
                     <select id="selectHsManualListPop" parameterType="Map" resultType="egovMap">
               
-                            SELECT   rownum as rnum,C.CUST_ID CUST_ID
-                                        , C.NAME Name
+                            SELECT   distinct C.NAME Name
                                         , SOM.SALES_ORD_ID SALES_ORD_ID
                                          ,SOM.SALES_ORD_NO SALES_ORD_NO
                                          ,HSM.MONTH
@@ -298,6 +299,8 @@
 						                              ON MO.MEM_ID = HS.ACTN_MEM_ID 
 						                           left join ORG0005D Extent10
                                                       on ac.mem_id = extent10.mem_id    -->  
+									               LEFT JOIN SYS0005M BR
+									                  ON BR.CODE = MG.CODY_BRNCH_CODE                                                          
 						                     WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')                                        
 						                         AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')                                          
                                            <if test="cmdcodyCode != null and cmdcodyCode != ''">
@@ -322,10 +325,10 @@
                                                     AND SO.CUST_ID  = #{txtCustomer}
                                              </if>                                                      
                                               <if test="cmdBranchCode != null and cmdBranchCode != ''">
-                                                     AND ( SO.BRNCH_ID = #{cmdBranchCode})
+                                                     AND ( br.BRNCH_id = #{cmdBranchCode})
                                               </if>                    
                                               <if test="cmdCdManager != null and cmdCdManager != ''">
-                                                     AND Extent10.MEM_UP_ID = #{cmdCdManager}
+                                                     AND MG.CODY_MANGR_USER_ID = #{cmdCdManager}
                                               </if>
 						)Project2
 			              
@@ -827,7 +830,7 @@
          </select>
           
           
-         <insert id="insertHsResult" parameterType="Map">
+         <insert id="insertHsResult" parameterType="Map" >
               insert into SVC0008D (
 	                   SCHDUL_ID
 					    ,NO
