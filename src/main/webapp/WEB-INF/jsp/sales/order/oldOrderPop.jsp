@@ -103,7 +103,7 @@
                 if(RESULT.rootState == 'ROOT_4') {
                     $('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
-                    Common.confirm("Check Old Order No" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid));
+                    Common.confirm("Check Old Order No" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
                 }
                 if(RESULT.rootState == 'ROOT_5') {
                     $('#rwOldOrder').clearForm();
@@ -112,7 +112,7 @@
                 if(RESULT.rootState == 'ROOT_6') {
                     $('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
-                    Common.confirm("Confirm To Proceed" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid));
+                    Common.confirm("Confirm To Proceed" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
                 }
                 if(RESULT.rootState == 'ROOT_7') {
                     $('#txtOldOrderID').val(RESULT.oldOrderId);
@@ -126,34 +126,24 @@
 	    });
 	});
 	
+	function fn_apprvPopClose() {
+	    $('#orderApprvalCloseBtn').click();
+	}
+	
 	function btnHidden_Valid_Click(isInValid) {
 	    console.log('btnHidden_Valid_Click CALL START');
 	    console.log('isInValid :'+isInValid);
 	    
-	    
-	    //TODO InValid�ΰ�� Approval Popup�� ���Ͽ� Ȯ�� ���� ��ħ
-	    //�ϴ� ���� ����
 //	    if(isInValid == 'InValid') {
 //          this.txtApprovalCode.Text = "";
 //          this.txtApprovalBy.Text = "";
 //          this.lblErrorMsg_Approval.Text = "";
 //          this.RadWindow_Approval.VisibleOnPageLoad = true;
+            Common.popupDiv("/sales/order/orderApprovalPop.do");
 //	    }
 //	    else {
             fn_popOrderDetail();
 //	    }
-	}
-	
-	function fn_popOrderDetail() {	    
-//      Sales.Orders so = new Sales.Orders();
-//      this.RadWindow_Approval.VisibleOnPageLoad = false;
-//      int getOldOrderID = so.Get_oldOrderID(ntxtRW_oldorder.Text);
-//      this.txtOldOrderID.Text = getOldOrderID.ToString();
-//      this.txtInstSpecialInstruction.Text = "(Old order No.)" + ntxtRW_oldorder.Text.Trim() + " , " + get_PromoDesc() + " , SVM expired : " + get_Services_expired();
-//      this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
-//      this.LoadRadWindowOrderInfo();
-        
-	    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
 	}
 	
 //    //Get Contact by Ajax

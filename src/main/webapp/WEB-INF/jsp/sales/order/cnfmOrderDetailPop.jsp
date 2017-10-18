@@ -36,7 +36,7 @@ console.log('!@# fn_doSaveOrder before call');
 
 //          Data.LoginInfo li = Session["login"] as Data.LoginInfo;
 //          if (li != null) {
-                fn_doSaveOrder()
+                fn_doSaveOrder();
 //          }
 //          else {
 //              Common.confirm("Session Expired" + DEFAULT_DELIMITER + "<b>Your login session was expired. Please relogin to system.</b>");
