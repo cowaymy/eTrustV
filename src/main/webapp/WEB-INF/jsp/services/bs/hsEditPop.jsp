@@ -13,6 +13,8 @@
   
     // AUIGrid 생성 후 반환 ID
     var myDetailGridID;   
+    var myDetailGridID2;   
+    var myDetailGridID3;   
 
     
 
@@ -87,6 +89,147 @@
     }
     
     
+    
+
+
+    function createAUIGrid2(){
+        // AUIGrid 칼럼 설정
+        var columnLayout = [ {
+                    dataField:"stkCode",
+                    headerText:"Version",
+                    width:200,
+                    height:30
+                }, {                        
+                    dataField : "stkId",
+                    headerText : "BSR No",
+                    width : 140
+                }, {                        
+                    dataField : "stkDesc",
+                    headerText : "Status",
+                    width : 440              
+                }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Member",
+                    width : 240  
+                }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Settle Date",
+                    width : 240                     
+                }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Has Filter",
+                    width : 240                      
+                }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Key At",
+                    width : 240                   
+                }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Key By",
+                    width : 240                        
+                }, {
+                    dataField : "bsResultItmId",
+                    headerText : "View",
+                    width : 240    
+            }];
+            
+            // 그리드 속성 설정
+            var gridPros = {
+                // 페이징 사용       
+                //usePaging : true,
+                // 한 화면에 출력되는 행 개수 20(기본값:20)
+                //pageRowCount : 20,
+                
+                editable : true,
+                
+                //showStateColumn : true, 
+                
+                //displayTreeOpen : true,
+                
+                headerHeight : 30,
+                
+                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                skipReadonlyColumns : true,
+                
+                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                wrapSelectionMove : true,
+                
+                // 줄번호 칼럼 렌더러 출력
+                showRowNumColumn : true
+        
+            };
+                //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+                myDetailGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridPros);
+    }
+    
+
+
+
+
+    function createAUIGrid3(){
+        // AUIGrid 칼럼 설정
+        var columnLayout = [ {
+                    dataField:"stkCode",
+                    headerText:"BSR No",
+                    width:200,
+                    height:30
+                }, {                        
+                    dataField : "stkId",
+                    headerText : "Filter",
+                    width : 140
+                }, {                        
+                    dataField : "stkDesc",
+                    headerText : "Qty",
+                    width : 440              
+                }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Claim",
+                    width : 240    ,
+                    visible:false                       
+               }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Key At",
+                    width : 240    ,
+                    visible:false                       
+               }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Key By",
+                    width : 240    ,
+                    visible:false                       
+
+            }];
+            // 그리드 속성 설정
+            var gridPros = {
+                // 페이징 사용       
+                //usePaging : true,
+                // 한 화면에 출력되는 행 개수 20(기본값:20)
+                //pageRowCount : 20,
+                
+                editable : true,
+                
+                //showStateColumn : true, 
+                
+                //displayTreeOpen : true,
+                
+                headerHeight : 30,
+                
+                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                skipReadonlyColumns : true,
+                
+                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                wrapSelectionMove : true,
+                
+                // 줄번호 칼럼 렌더러 출력
+                showRowNumColumn : true
+        
+            };
+                //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+                myDetailGridID3 = AUIGrid.create("#grid_wrap3", columnLayout, gridPros);
+    }
+
+    
+                    
+    
     $(document).ready(function() {
 
     	   doDefCombo(StatusTypeData2, '' ,'cmbStatusType2', 'S', '');
@@ -101,7 +244,9 @@
            
              
            createAUIGrid();
-           
+           createAUIGrid2();
+           createAUIGrid3();
+          
            fn_getHsViewfilterInfoAjax();
            
            var statusCd = ${basicinfo.stusCodeId};
@@ -237,6 +382,26 @@
 <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
+
+
+<article class="acodi_wrap"><!-- acodi_wrap start -->
+<dl>
+    <dt class="click_add_on on"><a href="#">Current & History BS Result</a></dt>
+    <dd>
+		<article class="grid_wrap2"><!-- grid_wrap start -->
+		     <div id="grid_wrap2" style="width: 100%; height: 10px; margin: 0 auto;"></div>
+		</article><!-- grid_wrap end -->
+    </dd>
+    <dt class="click_add_on"><a href="#">Filter Transaction</a></dt>
+    <dd>
+	    <article class="grid_wrap3"><!-- grid_wrap start -->
+	     <div id="grid_wrap3" style="width: 100%; height: 10px; margin: 0 auto;"></div>
+	    </article><!-- grid_wrap end -->
+    </dd>
+</dl>
+</article><!-- acodi_wrap end -->
+
+
 <aside class="title_line mt20"><!-- title_line start -->
 <h2>HS Result Information</h2>
 </aside><!-- title_line end -->

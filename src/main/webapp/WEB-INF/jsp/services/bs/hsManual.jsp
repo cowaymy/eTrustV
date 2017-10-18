@@ -269,7 +269,61 @@
 
 
 
+        $(function(){
+           $("#codyChange").click(function(){
+            var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+            
+            if(checkedItems.length <= 0) {
+                Common.alert('No data selected.');
+                return false;
+            }else{
+                var str = "";
+                var custStr = "";
+                var rowItem;
+                var brnchId = "";
+                var saleOrdList = "";
+                var list = "";
+                
+                //var saleOrdList = [];
+                var saleOrd = {
+                     salesOrdNo : ""
+                };
+                
 
+                
+                for(var i=0, len = checkedItems.length; i<len; i++) {
+                    rowItem = checkedItems[i];
+                    saleOrdList += rowItem.salesOrdNo;
+                    
+                    if(i  != len -1){
+                        saleOrdList += ",";
+                    }
+
+                    
+                    if(i==0){
+                         brnchId = rowItem.brnchId;
+                    }
+                    
+                }
+                
+                var jsonObj = {
+                         "SaleOrdList" : saleOrdList,
+                         "BrnchId": brnchId,
+                         "ManualCustId" : $("#manualCustomer").val(),
+                         "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val()
+                };
+
+                
+                  Common.popupDiv("/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
+
+            }
+            
+        });
+    });
+    
+    
+    
+    
         $(function(){
            $("#hSConfiguration").click(function(){
             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
@@ -449,6 +503,7 @@
           // 한 화면에 출력되는 행 개수 20(기본값:20)
              pageRowCount : 20,
              editable :  false,
+             showRowCheckColumn : true
              };
     
            var gridProsManual = {
@@ -559,6 +614,7 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li>
     <li><p class="btn_blue"><a href="#"  " onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
     <li><p class="btn_blue"><a id="hSConfiguration">Create HS Order</a></p></li>
     <li><p class="btn_blue"><a href="#" " onclick="javascript:fn_getBSListAjax();">Search</a></p></li>
@@ -626,7 +682,7 @@
                 </td>
                 <th scope="row">Install Month</th>
                 <td>
-                    <input id="myInstallMonth" name="myInstallMonth" type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" readonly />
+                    <input id="myInstallMonth" name="myInstallMonth" type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p"  />
                 </td>
                 <th scope="row">HS Status</th>
                 <td>

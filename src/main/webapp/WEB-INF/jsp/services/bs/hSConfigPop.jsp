@@ -57,7 +57,7 @@
 		        rowItem = checkedItems[i];
 		        str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name  + "\n";
 		    }
-		    alert(str);
+/* 		    alert(str); */
 		}
     
                 
