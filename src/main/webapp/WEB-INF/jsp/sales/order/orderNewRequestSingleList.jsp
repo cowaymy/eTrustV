@@ -5,6 +5,7 @@
 
 	function fn_orderNoExist(){
 		$("#searchOrdDt").show();
+		$("#searchOrd").val('');
 	}
 	
 	function fn_orderNoExist2(){
@@ -40,6 +41,7 @@
 //            	alert(result.msg);
             	if(result.msg == "OK"){
             		var prod = result.stkCode + ' - ' + result.stkDesc;
+            		$("#salesOrdId").val(result.salesOrdId);
                     $("#ordNo").html(result.salesOrdNo);
                     $("#salesDt").html(result.salesDt);
                     $("#orderStus").html(result.name);
@@ -77,8 +79,8 @@
     	var today = new Date();
     	var todayMm = today.getMonth()+1;
     	var todayDd = today.getDate();
-    	var todayYMD = today.getFullYear() + (todayMm<10 ? '0' + todayMm : todayMm) + (todayDd<10 ? '0' + todayDd : todayDd);
-    	var callDay = document.viewForm.callDt.value;
+    	var todayYMD = today.getFullYear() +""+ (todayMm<10 ? '0' + todayMm : todayMm) +""+ (todayDd<10 ? '0' + todayDd : todayDd);
+    	var callDay = document.viewForm.insCallDt.value;
     	
     	var callDayValue = callDay.substr(6) + callDay.substr(3,2) + callDay.substr(0,2);
 
@@ -102,7 +104,7 @@
 //            Common.alert("* This order has ACTIVE investigation request. Request number : IRN0145325 By KRHQ9001 - KRHQ9001 on 2017-08-31 오전 10:37:08.");
 //            return false;
 //        }
-    	if(document.viewForm.visitDt.value == ""){
+    	if(document.viewForm.insVisitDt.value == ""){
             Common.alert("Visitation Date Cannot be Empty!");
             return false;
         }
@@ -116,9 +118,10 @@
               console.log("Order Investigation Request successfully saved.");
               console.log("data : " + result);
 
-              Common.alert("<b>"+result.message+"</b>");
+              Common.alert("",fn_orderNoExist2 );
+              
               $("#invReqId").html(result.invReqId);
-              Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#viewForm").serializeJSON());
+//              Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#viewForm").serializeJSON());
           },  function(jqXHR, textStatus, errorThrown) {
               try {
                   console.log("status : " + jqXHR.status);
@@ -218,6 +221,7 @@
 
 <form id="viewForm" name="viewForm">
 <input type="hidden" id="invReqId" name="invReqId">
+<input type="hidden" id="salesOrdId" name="salesOrdId">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -260,11 +264,11 @@
 </tr>
 <tr>
     <th scope="row">Called Date</th>
-    <td colspan="3"><input type="text" id="callDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+    <td colspan="3"><input type="text" id="insCallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
     <th scope="row">Visitation Date</th>
-    <td colspan="3"><input type="text" id="visitDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+    <td colspan="3"><input type="text" id="insVisitDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
     <th scope="row">Attachement</th>
