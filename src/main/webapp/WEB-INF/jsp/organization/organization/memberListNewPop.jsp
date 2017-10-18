@@ -7,11 +7,11 @@ var optionCity = {chooseMessage: "2. City"};
 var optionPostCode = {chooseMessage: "3. Post Code"};
 var optionArea = {chooseMessage: "4. Area"};
 
-
+var myGridID_Doc;
 function fn_memberSave(){
-	            $("#streetDtl").val(insAddressForm.streetDtl.value);
-	            $("#addrDtl").val(insAddressForm.addrDtl.value);
-			    var jsonObj =  GridCommon.getEditData(myGridID);
+	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
+	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
+			    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
 				console.log("message : " + result.message );
@@ -28,8 +28,8 @@ function fn_docSubmission(){
 	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memberType").serialize(), function(result) {
 		console.log("성공.");
         console.log("data : " + result);
-        AUIGrid.setGridData(myGridID, result);
-        AUIGrid.resize(myGridID,1000,400); 
+        AUIGrid.setGridData(myGridID_Doc, result);
+        AUIGrid.resize(myGridID_Doc,1000,400); 
     });
 }
 
@@ -130,11 +130,11 @@ function createAUIGridDoc() {
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
             	if(item.c1 == 1){
-	            	AUIGrid.updateRow(myGridID, { 
+	            	AUIGrid.updateRow(myGridID_Doc, { 
 	            		  "c1" : "0" 
 	            		}, rowIndex); 
             	}else{
-            		AUIGrid.updateRow(myGridID, { 
+            		AUIGrid.updateRow(myGridID_Doc, { 
                         "c1" : "1" 
                       }, rowIndex); 
             	}
@@ -178,7 +178,7 @@ function createAUIGridDoc() {
     };
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-    myGridID = AUIGrid.create("#grid_wrap_doc", columnLayout, gridPros);
+    myGridID_Doc = AUIGrid.create("#grid_wrap_doc", columnLayout, gridPros);
 }
 
 var gridPros = {
