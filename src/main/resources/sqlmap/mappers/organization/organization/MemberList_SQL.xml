@@ -64,7 +64,7 @@
 		 Extent1 . USER_GSEC_SYN_CHK   UserGsecSynCheck , 
 		 Extent1 . USER_PASSWD_LAST_UPD_DT   UserPasswdLastUpdateAt , 
 		 Extent1 . USER_TYPE_ID   UserTypeID , 
-		 Extent1 . USER_DFLT_PAS_SWD   UserDefaultPasswd , 
+		 Extent1 . USER_DFLT_PASS_WD   UserDefaultPasswd , 
 		 Extent1 . USER_VAL_ID_FROM   UserValidFrom , 
 		 Extent1 . USER_VAL_ID_TO   UserValidTo , 
 		 Extent1 . USER_SEC_QUES_ID   UserSecQuesID , 
@@ -1374,7 +1374,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , USER_GSEC_SYN_CHK
         , USER_PASSWD_LAST_UPD_DT
         , USER_TYPE_ID
-        , USER_DFLT_PAS_SWD
+        , USER_DFLT_PASS_WD
         , USER_VAL_ID_FROM
         , USER_VAL_ID_TO
         , USER_SEC_QUES_ID
@@ -1904,7 +1904,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		       Extent1.USER_GSEC_SYN_CHK USER_GSEC_SYN_CHK  ,
 		       Extent1.USER_PASSWD_LAST_UPD_DT USER_PASSWD_LAST_UPD_DT  ,
 		       Extent1.USER_TYPE_ID USER_TYPE_ID  ,
-		       Extent1.USER_DFLT_PAS_SWD USER_DFLT_PAS_SWD  ,
+		       Extent1.USER_DFLT_PASS_WD USER_DFLT_PAS_SWD  ,
 		       Extent1.USER_VAL_ID_FROM USER_VAL_ID_FROM  ,
 		       Extent1.USER_VAL_ID_TO USER_VAL_ID_TO  ,
 		       Extent1.USER_SEC_QUES_ID USER_SEC_QUES_ID  ,
