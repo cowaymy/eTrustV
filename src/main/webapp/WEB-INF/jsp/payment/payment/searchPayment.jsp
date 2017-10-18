@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
@@ -23,6 +23,17 @@ var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false     // 상태 칼럼 사용
 };
+
+//Grid Properties 설정 : 마스터 그리드용 
+var gridProsMaster = {
+        editable : false,                 // 편집 가능 여부 (기본값 : false)
+        showStateColumn : false,     // 상태 칼럼 사용
+        showRowNumColumn : false,
+        usePaging : false
+};
+
+//페이징에 사용될 변수
+var _totalRowCount;
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
@@ -56,7 +67,7 @@ $(document).ready(function(){
     });
 
     // Order 정보 (Master Grid) 그리드 생성
-    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridProsMaster);
     
     
     // Master Grid 셀 클릭시 이벤트
@@ -76,6 +87,7 @@ $(document).ready(function(){
 
 // AUIGrid 칼럼 설정
 var columnLayout = [ 
+    {dataField:"rnum", headerText:"No.", width : 80,editable : false },
     { dataField:"trxId" ,headerText:"TrxNo",editable : false },
 	{ dataField:"trxDt" ,headerText:"TrxDate",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
 	{ dataField:"trxAmt" ,headerText:"TrxTotal" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
@@ -246,21 +258,50 @@ var viewHistoryLayout=[
 
 
 
-// 리스트 조회.
-function fn_getOrderListAjax() {
+// 마스터 그리드 리스트 조회.
+function fn_getOrderListAjax(goPage) {
 	
-	if(FormUtil.checkReqValue($("#payDate1")) || FormUtil.checkReqValue($("#payDate2"))){
-        Common.alert('* Please select the Payment Date. <br />');
-        return;
-    }
+	//페이징 변수 세팅
+    $("#pageNo").val(goPage);   
 	
 	AUIGrid.destroy(subGridID);//subGrid 초기화
     Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
-        AUIGrid.setGridData(myGridID, result);
+        AUIGrid.setGridData(myGridID, result.resultList);
+        
+        //전체건수 세팅
+        _totalRowCount = result.totalRowCount;
+        
+        //페이징 처리를 위한 옵션 설정
+        var pagingPros = {
+                // 1페이지에서 보여줄 행의 수
+                rowCount : $("#rowCount").val()
+        };
+        
+        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+        
     });
 }
 
-//리스트 조회.
+
+//마스터 그리드 페이지 이동
+function moveToPage(goPage){
+  //페이징 변수 세팅
+  $("#pageNo").val(goPage);
+  
+  Common.ajax("GET", "/payment/selectOrderListPaging.do", $("#searchForm").serialize(), function(result) {        
+      AUIGrid.setGridData(myGridID, result.resultList);
+      
+      //페이징 처리를 위한 옵션 설정
+      var pagingPros = {
+              // 1페이지에서 보여줄 행의 수
+              rowCount : $("#rowCount").val()
+      };
+      
+      GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);        
+  });    
+}
+
+//상세 그리드 (Payment) 리스트 조회.
 function fn_getPaymentListAjax() {        
     Common.ajax("GET", "/payment/selectPaymentList", $("#detailForm").serialize(), function(result) {
         AUIGrid.setGridData(subGridID, result);
@@ -753,7 +794,7 @@ function fn_goSalesConfirm(){
         <h2>Search Payment</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>            
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax(1);"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -761,7 +802,9 @@ function fn_goSalesConfirm(){
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
-
+            <input type="hidden" name="rowCount" id="rowCount" value="20" />
+            <input type="hidden" name="pageNo" id="pageNo" />
+            
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
 				<colgroup>
@@ -879,10 +922,12 @@ function fn_goSalesConfirm(){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Details</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>                                                                      
                     </ul>
+                    <!-- 
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:alert('The program is under development.');">Fund Transfer</a></p></li>                        
-                        <li><p class="link_btn type2"><a href="javascript:alert('The program is under development.');">Refund</a></p></li>         
+                        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>                        
+                        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>         
                     </ul>
+                     -->
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
                 </dl>
@@ -896,10 +941,11 @@ function fn_goSalesConfirm(){
     <section class="search_result">
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
+        <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
         <!-- grid_wrap end -->
         
         <!-- grid_wrap start -->
-        <article id="grid_sub_wrap" class="grid_wrap"></article>
+        <article id="grid_sub_wrap" class="grid_wrap mt10"></article>
         <!-- grid_wrap end -->
     </section>
     <!-- search_result end -->
