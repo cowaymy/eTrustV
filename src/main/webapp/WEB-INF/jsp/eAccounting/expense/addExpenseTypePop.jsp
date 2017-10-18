@@ -104,7 +104,7 @@ $(document).ready(function(){
     
   //  AUIGrid.setSelectionMode(expPopGridID, "singleRow");
     
-    CommonCombo.make("popClaimType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
+    CommonCombo.make("claimTypeCombo", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
         id: "code",
         name: "codeName"
     }
@@ -172,7 +172,7 @@ function auiRemoveRowHandler(event)
 }
 
 function fn_selectPopListAjax(){
-	Common.ajax("GET", "/eAccounting/expense/selectExpenseList", $("#popSForm").serialize(), function(result) {
+	Common.ajax("GET", "/eAccounting/expense/selectExpenseList", $("#popAddForm").serialize(), function(result) {
         
         console.log("성공.");
         console.log( result);
@@ -186,14 +186,14 @@ function fn_AddRow()
 {
     var item = new Object();
         
-    if($("#popClaimType").val() == ''){
+    if($("#claimTypeCombo").val() == ''){
     	var msg = '<spring:message code="expense.ClaimType" />';
     	
     	Common.alert("<spring:message code='sys.msg.first.Select' arguments='"+msg+"' htmlEscape='false'/>");
     	return false;
     }else{
-        item.clmType = $("#popClaimType").val();
-        item.expType = $("#popClaimType").val() + "xxx";
+        item.clmType = $("#claimTypeCombo").val();
+        item.expType = $("#claimTypeCombo").val() + "xxx";
     } 
           item.expTypeName = "";
           item.budgetCode   ="";
@@ -340,7 +340,7 @@ function  fn_setBudgetData(){
 	<li><p class="btn_blue2"><a href="#" onClick="javascript:fn_selectPopListAjax();"><spring:message code="expense.btn.Search" /></a></p></li>
 </ul>    
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="popSForm" name ="popSForm">
+<form action="#" method="post" id="popAddForm" name ="popAddForm">
     <input type="hidden" id = "pBudgetCode" name="pBudgetCode" />
     <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
     <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
@@ -356,7 +356,7 @@ function  fn_setBudgetData(){
 <tr>
 	<th scope="row"><spring:message code="expense.ClaimType" /></th>
 	<td>
-	<select class="multy_select" id="popClaimType" name="popClaimType">
+	<select id="claimTypeCombo" name="claimTypeCombo">
 	</select>
 	</td>
 </tr>

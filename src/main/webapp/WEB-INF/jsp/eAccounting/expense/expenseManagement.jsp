@@ -65,6 +65,7 @@ function f_multiCombo(){
 
 // 리스트 조회.
 function fn_selectListAjax() {        
+		
     Common.ajax("GET", "/eAccounting/expense/selectExpenseList", $("#listSForm").serialize(), function(result) {
         
          console.log("성공.");
@@ -77,7 +78,7 @@ function fn_selectListAjax() {
 //Expense Type Pop 호출
 function fn_expenseTypePop(){
 	
-   Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, null, true, "addExpenseTypePop");
+   Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, fn_selectListAjax, true, "addExpenseTypePop");
 }
 
 //Expense Edit Pop 호출
@@ -94,10 +95,10 @@ function fn_expenseEdit(){
     
     $("#popClaimType").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "clmType"));
     $("#popExpType").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "expType"));
-    $("#glAccCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCode"));
-    $("#budgetCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCode"));
-    $("#budgetCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCodeName"));
-    $("#glAccCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCodeName"));
+    $("#popGlAccCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCode"));
+    $("#popBudgetCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCode"));
+    $("#popBudgetCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCodeName"));
+    $("#popGlAccCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCodeName"));
 	
     
    Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", $("#popSForm").serializeJSON(), null, true, "editExpenseTypePop");

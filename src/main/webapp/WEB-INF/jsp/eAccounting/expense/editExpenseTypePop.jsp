@@ -18,9 +18,6 @@ $(document).ready(function() {
     
     $("#pClmType").val("${popClaimType}");
     $("#pExpType").val("${popExpType}");
-
-    alert("${glAccCode}");
-    alert("${glAccCodeName}");
     
     $("#glAccCode").val("${glAccCode}");
     $("#glAccCodeName").val( "${glAccCodeName}");
