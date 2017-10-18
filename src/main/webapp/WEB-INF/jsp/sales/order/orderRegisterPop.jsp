@@ -781,6 +781,17 @@
         });
         $('#ordProudct').change(function() {
 
+            if(FormUtil.checkReqValue($('#exTrade'))) {
+                Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>* Please select an Ex-Trade.</b>");
+                $('#ordProudct').val('');
+                return;
+            }
+            
+            if(FormUtil.isEmpty($('#ordProudct').val())) {
+                $('#ordPromo option').remove();
+                return;
+            }
+                
             $('#ordCampgn option').remove();
             $('#ordCampgn').prop("readonly", true);
             $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
@@ -788,8 +799,8 @@
             $('#trialNo').val('').addClass("readonly");
             $('#ordPrice').val('').addClass("readonly");
             $('#ordPriceId').val('');
-            $('ordPv').val('').addClass("readonly");
-            $('ordRentalFees').val('').addClass("readonly");
+            $('#ordPv').val('').addClass("readonly");
+            $('#ordRentalFees').val('').addClass("readonly");
 
             var appTypeIdx = $("#appType option:selected").index();
             var appTypeVal = $("#appType").val();
@@ -797,10 +808,11 @@
             var stkIdx     = $("#ordProudct option:selected").index();
             var stkIdVal   = $("#ordProudct").val();
             var empChk     = $("#empChk").val();
+            var exTrade    = $("#exTrade").val();
 
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal);
-                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal);
+                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
         });
         $('#rentPayMode').change(function() {
@@ -840,12 +852,17 @@
             }
         });
         $('#exTrade').change(function() {
+            
+            $('#ordPromo option').remove();
+            
             if($("#exTrade").val() == '1') {
                 $('#relatedNo').removeAttr("readonly").removeClass("readonly");
             }
             else {
                 $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
             }
+            $('#ordProudct').val('');
+
         });
         $('#ordPromo').change(function() {
 
@@ -1798,7 +1815,7 @@
     }
 
     //LoadProductPromotion
-    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal) {
+    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
         console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
         console.log('fn_loadProductPromotion --> stkId:'+stkId);
         console.log('fn_loadProductPromotion --> empChk:'+empChk);
@@ -1806,7 +1823,7 @@
 
         $('#ordPromo').removeAttr("disabled");
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal}, '', 'ordPromo', 'S', ''); //Common Code
+        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade}, '', 'ordPromo', 'S', ''); //Common Code
     }
 
     //LoadProductPrice

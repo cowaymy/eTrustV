@@ -145,15 +145,17 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		if(isNew == 1) {
 			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockIDNew(params); //New Data(2018.01.01~)
 			
-			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(String.valueOf((BigDecimal)priceInfo.get("promoAppTypeId")))) { //Rental
-				orderPricePromo      = (BigDecimal)priceInfo.get("promoPrcRpf");
-				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
-				orderRentalFeesPromo = (BigDecimal)priceInfo.get("promoAmt");
-			}
-			else {
-				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
-				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
-				orderRentalFeesPromo = BigDecimal.ZERO;
+			if(priceInfo != null) {
+    			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(String.valueOf((BigDecimal)priceInfo.get("promoAppTypeId")))) { //Rental
+    				orderPricePromo      = (BigDecimal)priceInfo.get("promoPrcRpf");
+    				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+    				orderRentalFeesPromo = (BigDecimal)priceInfo.get("promoAmt");
+    			}
+    			else {
+    				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
+    				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+    				orderRentalFeesPromo = BigDecimal.ZERO;
+    			}
 			}
 		}
 		else {
