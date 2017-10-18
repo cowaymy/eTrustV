@@ -176,9 +176,10 @@ function getStatusComboListAjax(callBack)
 {
 	  Common.ajaxSync("GET", "/common/selectCodeList.do"
 // 	  Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
-    	           , $("#MainForm").serialize()
+    	           , $("#MainForm").serialize()+"&orderValue=code"
     	           , function(result)
     	           {
+    	        	   StatusCdList.push({id:"" ,value:"-Empty-"});
 					          for (var i = 0; i < result.length; i++)
 						        {
 					        	  var list = new Object();
@@ -203,7 +204,7 @@ function auiCellEditignHandler(event)
   if(event.type == "cellEditBegin")
   {
       console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-      //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
+      //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 11);
 
       if(event.dataField == "menuCode")
       {
@@ -407,11 +408,11 @@ function fnValidationCheck()
         break;
       }
 
-      if (menuCode.length != 9)
+      if (menuCode.length != 11)
       {
         result = false;
-        //Common.alert("Menu Code length must be 9 digits. ");
-        Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");
+        //Common.alert("Menu Code length must be 11 digits. ");
+        Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 11' htmlEscape='false' argumentSeparator=';' />");
         break;
       }
 
@@ -496,10 +497,10 @@ function fnValidationCheck()
           break;
         }
 
-        if (menuCode.length != 9)
+        if (menuCode.length != 11)
         {
           result = false;
-          Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");
+          Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 11' htmlEscape='false' argumentSeparator=';' />");
           break;
         }
 
@@ -562,7 +563,7 @@ function fnValidationCheck()
     {
         var menuCode  = delList[i].menuCode;
 
-        if (menuCode == "" || menuCode.length == 0 || menuCode.length != 9)
+        if (menuCode == "" || menuCode.length == 0 || menuCode.length != 11)
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
@@ -691,7 +692,9 @@ $(document).ready(function()
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Menu Management</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a onclick="fnSelectMenuListAjax();"><span class="search"></span>Search</a></p></li>
+	</c:if>
 <!-- 	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
@@ -768,10 +771,12 @@ $(document).ready(function()
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Menu Management</h3>
 <ul class="right_opt">
-  <li id="delCancel"><p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p></li>
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <li id="delCancel"><p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p></li>
 	<li><p class="btn_grid"><a onclick="removeRow();">DEL</a></p></li>
 	<li><p class="btn_grid"><a onclick="addRowMenu();">ADD</a></p></li>
 	<li><p class="btn_grid"><a onclick="fnSaveMenuCode();">SAVE</a></p></li>
+	</c:if>
 </ul>
 
 </aside><!-- title_line end -->
