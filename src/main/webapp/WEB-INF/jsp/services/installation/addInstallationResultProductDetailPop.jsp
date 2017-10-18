@@ -154,7 +154,15 @@ function fn_installProductExchangeSave(){
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
+<!------------------------------------------------------------------------------
+    Order Detail Page Include START
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp" %>
+<!------------------------------------------------------------------------------
+    Order Detail Page Include END
+------------------------------------------------------------------------------->
 
+<%-- 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
     <li><a href="#" class="on">Basic Info</a></li>
@@ -911,7 +919,7 @@ function fn_installProductExchangeSave(){
 
 </article><!-- tap_area end -->
 
-</section><!-- tap_wrap end -->
+</section><!-- tap_wrap end --> --%>
 
 </article><!-- tap_area end -->
 

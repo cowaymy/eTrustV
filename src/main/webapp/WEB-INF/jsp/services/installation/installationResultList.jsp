@@ -29,6 +29,7 @@ $(document).ready(function() {
       orderId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
       docId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "c1");
       statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
+      salesOrderId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
       
       //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
   }); 
@@ -50,7 +51,7 @@ function fn_addInstallation(codeid1){//active 일때만 열림
 		if(codeid1 == 257){
 	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
 	    }else{
-	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId);
+	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId+"&salesOrderId="+salesOrderId);
 	    }	
 	}else{
 		Common.alert("Installation is no longer active. Add new installatio result is disallowed.");
