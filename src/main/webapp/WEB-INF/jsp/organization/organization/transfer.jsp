@@ -164,14 +164,18 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Manual Search</th>
-    <td>
-    <input type="text" title="Manual Search" placeholder="" class="" /><p class="btn_sky"><a href="#">Confirm</a></p>
-    </td>
-    <th scope="row">Planned Transfer Date</th>
+<th scope="row">Planned Transfer Date</th>
     <td>
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="transferDate" name="transferDate" /></p>
     </td>
+    <th scope="row"></th>
+    <td>
+    </td>
+   <!--  <th scope="row">Manual Search</th>
+    <td>
+    <input type="text" title="Manual Search" placeholder="" class="" /><p class="btn_sky"><a href="#">Confirm</a></p>
+    </td> -->
+    
 </tr>
 </tbody>
 </table><!-- table end -->

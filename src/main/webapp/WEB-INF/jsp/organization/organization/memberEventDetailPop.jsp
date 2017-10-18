@@ -22,7 +22,10 @@
     });
 
 
-
+    function fn_parentReload() {
+    	fn_getOrgEventListAjax(); //parent Method (Reload)
+    }  
+    
     function fn_close(){
         window.close();
     }
@@ -56,7 +59,7 @@
     
         Common.ajax("GET", "/organization/selectMemberPromoEntries" ,  $("#myForm").serialize() , function(result) {
             AUIGrid.setGridData(newGridID, result);
-            Common.alert(result.message);
+            Common.alert(result.message,fn_parentReload);
         });
     }
 

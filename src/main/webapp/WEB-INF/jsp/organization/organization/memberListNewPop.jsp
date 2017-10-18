@@ -74,6 +74,16 @@ function fn_departmentCode(value){
         };
            doGetComboSepa("/common/selectBranchCodeList.do",100 , '-',''   , 'branch' , 'S', '');
            break;
+           
+	   case "5" :
+           var jsonObj = {
+                memberLvl : 3,
+                flag :  "%CCS%"
+        };
+           doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+           doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
+           break;
 	}
 }
 $(document).ready(function() {
@@ -475,6 +485,7 @@ function fn_selectState(selVal){
         <option value="2">Coway Lady (Cody)</option>
         <option value="3">Coway Technician (CT)</option>
         <option value="4">Coway Staff (Staff)</option>
+        <option value="5">Trainee</option>
     </select>
     </td>
 </tr>
@@ -649,6 +660,55 @@ function fn_selectState(selVal){
     <td>
     <select class="w100p disabled"  id="transportCd" name="transportCd">
     </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">e-Approval Status</th>
+    <td colspan="5">
+    <input type="text" title="" placeholder="e-Approval Status" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Religion</th>
+    <td colspan="2">
+    <select class="w100p">
+    </select>
+    </td>
+    <th scope="row">e-Approval Status</th>
+    <td colspan="2">
+    <select class="w100p">
+        <option value="">Pending</option>
+        <option value="">Approved</option>
+        <option value="">Rejected</option>
+    </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Training Course</th>
+    <td colspan="2">
+    <select class="w100p">
+    </select>
+    </td>
+    <th scope="row">Total Vacation</th>
+    <td colspan="2">
+    <input type="text" title="" placeholder="Total Vacation" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Application Status</th>
+    <td colspan="2">
+    <select class="w100p">
+        <option value="">Register</option>
+        <option value="">Training</option>
+        <option value="">Result-fail</option>
+        <option value="">Pass, Absent</option>
+        <option value="">Confirmed</option>
+        <option value="">Cancelled</option>
+    </select>
+    </td>
+    <th scope="row">Remain Vacation</th>
+    <td colspan="2">
+    <input type="text" title="" placeholder="Remain Vacation" class="w100p" />
     </td>
 </tr>
 </tbody>

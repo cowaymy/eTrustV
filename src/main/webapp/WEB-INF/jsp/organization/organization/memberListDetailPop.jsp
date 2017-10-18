@@ -578,17 +578,23 @@ function fn_requestTermiReSave(val){
 	    Common.ajax("POST", "/organization/terminateResignSave.do",  $("#requestTermiReForm").serializeJSON(), function(result) {
 		console.log("성공.");
 		console.log("data : " + result);
-		Common.alert(result.message);
+		Common.alert(result.message,fn_winClose);
+		
 	});
 	
 	}else{//Request Promote/Demote
 		   Common.ajax("POST", "/organization/terminateResignSave.do",  $("#requestProDeForm").serializeJSON(), function(result) {
 	        console.log("성공.");
 	        console.log("data : " + result);
-	        Common.alert(result.message);
+	        Common.alert(result.message,fn_winClose);
 	    });
 	}
 		//성공했으면.... 팝업 띄워주고.... 인설트한 내용들.... 비활성화....
+}
+
+function fn_winClose(){
+    
+    this.close();
 }
 </script>
 
@@ -980,11 +986,6 @@ function fn_requestTermiReSave(val){
 </tbody>
 </table><!-- table end -->
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
-
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1053,10 +1054,6 @@ function fn_requestTermiReSave(val){
 <div id="grid_wrap1" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
 
 </article><!-- tap_area end -->
 
@@ -1066,10 +1063,6 @@ function fn_requestTermiReSave(val){
 <div id="grid_wrap2" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1079,10 +1072,6 @@ function fn_requestTermiReSave(val){
 <div id="grid_wrap4" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1091,10 +1080,6 @@ function fn_requestTermiReSave(val){
 <div id="grid_wrap3" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
 </article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
@@ -1138,7 +1123,7 @@ function fn_requestTermiReSave(val){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="" onclick="javascript:fn_requestTermiReSave(1)">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_requestTermiReSave(1)">SAVE</a></p></li>
 </ul>
 </form>
 </div>
@@ -1196,7 +1181,7 @@ function fn_requestTermiReSave(val){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="" onclick="javascript:fn_requestTermiReSave(2)">Save Request</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_requestTermiReSave(2)">Save Request</a></p></li>
 </ul>
 </form>
 </div>
