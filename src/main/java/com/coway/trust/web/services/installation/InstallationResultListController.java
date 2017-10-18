@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -34,6 +35,8 @@ public class InstallationResultListController {
 	private InstallationResultListService installationResultListService;
 	@Resource(name = "commonService")
 	private CommonService commonService;
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
 	
 	/**
 	 * organization transfer page  
@@ -253,10 +256,13 @@ public class InstallationResultListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/addinstallationResultProductDetailPop.do")
-	public String installationResultProductExchangeDetail(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+	public String installationResultProductExchangeDetail(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		logger.debug("params : {}",params);
 		EgovMap viewDetail = installationResultListService.selectViewDetail(params);
+		//Order Detail Tab
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
 		model.addAttribute("viewDetail", viewDetail);
+		model.addAttribute("orderDetail", orderDetail);
 		
 		// 호출될 화면
 		return "services/installation/addInstallationResultProductDetailPop";
