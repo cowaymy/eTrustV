@@ -184,6 +184,8 @@ public class LocationController {
 		String cdccode       = (String) params.get("icdccode");
 		String rdccode       = (String) params.get("irdccode");
 		
+		String plant         = (String) params.get("iplant");
+		
 		if (ipdchk != null && "on".equals(ipdchk)){
 				ipdchk = "Y";
 		}
@@ -225,6 +227,8 @@ public class LocationController {
 		
 		insmap.put("inis_sync"   , inis_sync);
 		insmap.put("inmobile"    , inmobile);
+		
+		insmap.put("plant"       , plant);
 
 		loc.insertLocationInfo(insmap);
 

@@ -92,7 +92,8 @@
                         {dataField:"locstus"     ,headerText:"locstus"        ,width:100   ,height:30 , visible:false},
                         {dataField:"user_name"   ,headerText:"nser_name"      ,width:100   ,height:30 , visible:false},
                         {dataField:"cdccode"     ,headerText:"CDC_CODE"       ,width:100   ,height:30 , visible:false},
-                        {dataField:"rdccode"     ,headerText:"RDC_CODE"       ,width:100   ,height:30 , visible:false}
+                        {dataField:"rdccode"     ,headerText:"RDC_CODE"       ,width:100   ,height:30 , visible:false},
+                        {dataField:"plant"       ,headerText:"PLANT"          ,width:100   ,height:30 , visible:false}
                        ];
     
     var detailLayout = [{dataField:"stkid"      ,headerText:"stkid"          ,width:"12%" ,height:30 , visible:false},
@@ -252,8 +253,6 @@
         });
                
     });
-    
-  
     
     function fn_modyWare(rowid){
     	
@@ -435,6 +434,8 @@
         item.cdccode = $("#mcdccode").val();
         item.rdccode = $("#mrdccode").val();
         
+        item.plant   = $("#plant").val();
+        
         AUIGrid.updateRow(myGridID, item, selectedItem[0]);
     }
     
@@ -523,7 +524,18 @@
     	 
     	 var rtnVal = data[0].item.loccd;
     	 $("#loccd").val(rtnVal);
-    	} 
+     }
+     
+     function fn_plantchk(id , take){
+    	 
+    	 if($("#"+take+id).val() == '02'){
+    		 $("#"+take+"plant").val('5000');
+    	 }else if($("#"+take+id).val() == '03'){
+    		 $("#"+take+"plant").val('6000');
+         }else if($("#"+take+id).val() == '04'){
+             $("#"+take+"plant").val('5000');
+         }
+     }
      
 </script>
 </head>
@@ -691,7 +703,7 @@
 </tr>
 <tr>
     <th scope="row">Location Type</th>
-    <td><select id="locationtype" class="w100p"></select></td>
+    <td><select id="locationtype" name="locationtype"  class="w100p" onchange="fn_plantchk(this.id , '')"></select></td>
     <th scope="row">Location Grade</th>
     <td><select id="mstockgrade" class="w100p"></select></td>
 </tr>
@@ -707,8 +719,12 @@
 </tr>
 <tr>
     <th scope="row">Street search<span class="must">*</span></th>
-    <td colspan="3">
-    <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    <td >
+        <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="w100p" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+    <th scope="row">Plant</th>
+    <td >
+        <input type="text" title="" id="plant" name="plant" placeholder="" class="w100p" />
     </td>
 </tr>
 <tr>
@@ -718,8 +734,6 @@
 <tr>
 	<th scope="row" >Street</th>
 	<td colspan="3">
-	<input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
-	</td>
 </tr>
 <tr>
    <th scope="row">Area(4)<span class="must">*</span></th>
@@ -795,10 +809,10 @@
     <td><select id="irdccode" name="irdccode"></select></td>
 </tr>
 <tr>
+    <th scope="row">Location Type</th>
+    <td><select id="ilocationtype" name="ilocationtype"  class="w100p" onchange="fn_plantchk(this.id , 'i')"></select></td>
     <th scope="row">Location Grade</th>
     <td><select id="instockgrade" name="instockgrade" ></select></td>
-    <th scope="row">Location Type</th>
-    <td><select id="ilocationtype" name="ilocationtype"></select></td>
 </tr>
 <tr> 
     <th scope="row">Branch</th>
@@ -816,8 +830,12 @@
 </tr>
 <tr>
     <th scope="row">Street search<span class="must">*</span></th>
-    <td colspan="3">
-    <input type="text" title="" id="isearchSt" name="isearchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch1()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    <td>
+        <input type="text" title="" id="isearchSt" name="isearchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch1()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+    <th scope="row">Plant</th>
+    <td >
+        <input type="text" title="" id="iplant" name="iplant" placeholder="" class="w100p" />
     </td>
 </tr>
 <tr>

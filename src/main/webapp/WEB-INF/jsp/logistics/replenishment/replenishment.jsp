@@ -244,7 +244,7 @@ function validationchk(){
     	Common.alert('Please enter a Safety Stock Qty.');
         return false;
     }
-    
+    return true;
 }
 
 function fn_itempopList(d){
