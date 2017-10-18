@@ -275,6 +275,25 @@
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID, result);            
         }); 
+        
+
+//
+         Common.ajax("GET", "/bs/selectHistoryHSResult.do",{salesOrdId : selSalesOrdId}, function(result) {
+            console.log("성공 fn_getHsViewfilterInfoAjax.");
+            console.log("data : " + result);
+            AUIGrid.setGridData(myDetailGridID, result);            
+        }); 
+
+
+         Common.ajax("GET", "/bs/selectFilterTransaction.do",{salesOrdId : selSalesOrdId}, function(result) {
+            console.log("성공 fn_getHsViewfilterInfoAjax.");
+            console.log("data : " + result);
+            AUIGrid.setGridData(myDetailGridID, result);            
+        }); 
+        
+        
+        
+        
     }   
     
     

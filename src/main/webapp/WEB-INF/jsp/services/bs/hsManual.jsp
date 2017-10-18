@@ -92,7 +92,7 @@
                             headerText : "Assign Cody",
                             width : 120              
                         }, {
-                            dataField : "codyStatusNm",
+                            dataField : "code",
                             headerText : "Cody Status",
                             width : 120
                         }, {
@@ -107,6 +107,8 @@
                             dataField : "brnchId",
                             headerText : "Branch",
                             width : 120    
+                             ,                             
+                            visible:false   
                         }, {
                             dataField : "schdulId",
                             headerText : "schdulId",
