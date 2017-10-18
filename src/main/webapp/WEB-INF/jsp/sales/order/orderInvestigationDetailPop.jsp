@@ -125,7 +125,7 @@
     	var robj= '#'+obj;
     	$(robj).attr("disabled",false);
     	if(value == 3){
-    		getCmbChargeNm('/sales/order/inchargeJsonList.do', '' , value , selvalue,obj, 'S', '');
+    		getCmbChargeNm('/sales/order/inchargeJsonList.do', value , '' , selvalue,obj, 'S', '');
     	}else{
     		
     	}
@@ -135,7 +135,7 @@
     	$.ajax({
             type : "GET",
             url : url,
-            data : { groupCode : groupCd},
+            data : { roleId : groupCd},
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
@@ -194,9 +194,11 @@
         }
     	if(document.statusForm.statusPop.value == "6"){
     		if($('input:checkbox[id="cancelBs"]').is(":checked") == true){
-                alert("*Cannot Cancel BS Due to Current Month Are Not BS Month And BS Status Not Under Active.");
+                //alert("*Cannot Cancel BS Due to Current Month Are Not BS Month And BS Status Not Under Active.");
+    			document.statusForm.cancelBsChk.value = "true";
             }else if($('input:checkbox[id="cancelBs"]').is(":checked") == false){
-                alert("false");
+                //alert("false");
+            	document.statusForm.cancelBsChk.value = "false";
             }
     		if(document.statusForm.cmbRejReason.value == ""){
                 Common.alert("Please select a Reject Reason.");
@@ -207,23 +209,26 @@
     	
     	// $("#existChkCnt").val() check부터
     	
-//    	Common.ajax("GET", "/sales/order/orderInvestReject", $("#statusForm").serializeJSON(), function(result) {
-//            $("#existChkCnt").html(result.existChkCnt);
-//        },  function(jqXHR, textStatus, errorThrown) {
-//            try {
-//                console.log("status : " + jqXHR.status);
-//                console.log("code : " + jqXHR.responseJSON.code);
-//                console.log("message : " + jqXHR.responseJSON.message);
-//                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-//
-//                Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-//            }
-//            catch (e) {
-//                console.log(e);
-//              alert("Saving data prepration failed.");
-//            }
-//            alert("Fail : " + jqXHR.responseJSON.message);
-//      });
+    	Common.ajax("GET", "/sales/order/saveInvest.do", $("#statusForm").serializeJSON(), function(result) {
+            //$("#existChkCnt").html(result.existChkCnt);
+            Common.alert(result.msg);
+            $("#_close").click();
+            fn_orderInvestigationListAjax();
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+                Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+            }
+            catch (e) {
+                console.log(e);
+              alert("Saving data prepration failed.");
+            }
+            alert("Fail : " + jqXHR.responseJSON.message);
+        });
     }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -231,7 +236,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Order Investigation Request Details - Officer</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -313,22 +318,9 @@
     <th scope="row">Response</th>
     <td colspan="3">
 
-    <div>
-
-    <ul class="right_btns">
-        <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-        <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-        <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-        <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-        <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-        <li><p class="btn_grid"><a href="#">INS</a></p></li>
-        <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-    </ul>
-
     <article class="grid_wrap" ><!-- grid_wrap start -->
         <div id="pop_grid_wrap" style="width:100%; height:150px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
-    </div>
 
     </td>
 </tr>
@@ -453,6 +445,9 @@
 <div id="pendingDiv" style="display:none;"><!-- Status = Active일 경우 start -->
 <form id="statusForm" name="statusForm" method="POST">
     <input type="hidden" id="salesOrdId" name="salesOrdId" value="${orderCustomerInfo.soId }">
+    <input type="hidden" id="gridInvReqId" name="gridInvReqId" value="${orderInvestInfo.invReqId }">
+    <input type="hidden" id="invReqStusParam" name="invReqStusParam" value="${orderInvestInfo.invReqStusId }">
+    <input type="hidden" id="cancelBsChk" name="cancelBsChk" >
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
