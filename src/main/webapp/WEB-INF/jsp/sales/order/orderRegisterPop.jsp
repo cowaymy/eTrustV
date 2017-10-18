@@ -128,6 +128,9 @@
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
 
             if(result != null && result.length == 1) {
+                
+                fn_tabOnOffSet('BIL_DTL', 'SHOW');
+
                 var custInfo = result[0];
 
                 console.log("성공.");
@@ -363,8 +366,8 @@
                 console.log('custCntcInfo.custCntcId:'+custCntcInfo.custCntcId);
                 //
                 $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
-                $("#custCntcName").val(custCntcInfo.name);
-                $("#custInitial").val(custCntcInfo.custInitial);
+                $("#custCntcName").val(custCntcInfo.name1);
+                $("#custInitial").val(custCntcInfo.code);
                 $("#custCntcEmail").val(custCntcInfo.email);
                 $("#custCntcTelM").val(custCntcInfo.telM1);
                 $("#custCntcTelR").val(custCntcInfo.telR);
@@ -390,8 +393,8 @@
                 console.log("fn_loadInstallationCntcPerson instCntcEmail   :"+instCntcInfo.email);
 
                 $("#hiddenInstCntcId").val(instCntcInfo.custCntcId);
-                $("#instCntcName").val(instCntcInfo.name);
-                $("#instInitial").val(instCntcInfo.custInitial);
+                $("#instCntcName").val(instCntcInfo.name1);
+                $("#instInitial").val(instCntcInfo.code);
                 $("#instCntcEmail").val(instCntcInfo.email);
                 $("#instCntcTelM").val(instCntcInfo.telM1);
                 $("#instCntcTelR").val(instCntcInfo.telR);
@@ -1031,8 +1034,6 @@
 
         if(FormUtil.isNotEmpty(strCustId) && strCustId > 0) {
 
-            fn_tabOnOffSet('BIL_DTL', 'SHOW');
-
             fn_loadCustomer(strCustId);
         }
         else {
@@ -1081,6 +1082,7 @@
         console.log('!@# fn_doSaveOrder START');
         
         $("#gstChk").removeAttr("disabled");
+        $("#promoDiscPeriodTp").removeAttr("disabled");
         
         //----------------------------------------------------------------------
         // salesOrderMVO
@@ -1278,7 +1280,7 @@
 //            msg += "Application Type : " + cmbOrderAppType.SelectedItem.Text.ToString() + "<br />";
             
             //Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-            Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {
@@ -1296,6 +1298,11 @@
 
             alert("Fail : " + jqXHR.responseJSON.message);
       });
+    }
+    
+    function fn_orderRegPopClose() {
+        $('#btnCnfmOrderClose').click();
+        $('#btnOrdRegClose').click();
     }
 
 /*******************************************************************************
@@ -1328,7 +1335,6 @@
         var isValid = true, msg = "";
 
         if(FormUtil.checkReqValue($('#hiddenBillAddId'))) {
-            alert($('#hiddenBillAddId').val());
             isValid = false;
             msg += "* Please select an address.";
         }
@@ -2003,7 +2009,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>New Order</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="btnOrdRegClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -2310,7 +2316,7 @@
 </tr>
 <tr>
     <th scope="row">Discount Period/<br>Promotion Rental Fee</th>
-    <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p"></select></p>
+    <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
         <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
     <th scope="row">Organization Code</th>

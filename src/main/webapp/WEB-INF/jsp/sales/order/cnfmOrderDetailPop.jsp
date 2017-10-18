@@ -42,7 +42,6 @@ console.log('!@# fn_doSaveOrder before call');
 //              Common.confirm("Session Expired" + DEFAULT_DELIMITER + "<b>Your login session was expired. Please relogin to system.</b>");
 //          }        
 
-            $('#btnBack_RW').click();
 	    });
 	});
 
@@ -55,7 +54,7 @@ console.log('!@# fn_doSaveOrder before call');
 <header class="pop_header"><!-- pop_header start -->
 <h1>Order View</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="btnCnfmOrderClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -102,7 +101,9 @@ console.log('!@# fn_doSaveOrder before call');
 <ul class="center_btns">
 	<li><p><span style="line-height:34px;">Double check data before save:</span></p></li>
 	<li><p class="btn_blue2 big"><a id="btnConfirm_RW" href="#">Ok</a></p></li>
+<!--
 	<li><p class="btn_blue2 big"><a id="btnBack_RW" href="#">Back</a></p></li>
+-->
 </ul>
 </section><!-- pop_body end -->
 
