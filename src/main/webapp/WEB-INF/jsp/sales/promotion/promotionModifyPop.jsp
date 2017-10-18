@@ -404,10 +404,12 @@
         }
 */
 //      if(FormUtil.checkReqValue($('#promoCustType'))) {
+/*
         if($("#promoCustType option:selected").index() <=0) {
             isValid = false;
             msg += "* Please select the customer type.<br />";
         }
+*/
         if(FormUtil.checkReqValue($('#exTrade'))) {
             isValid = false;
             msg += "* Please select the Ex-Trade.<br />";

@@ -322,6 +322,7 @@
                   AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND T2.EMP_CHK = #{empChk}
+                  AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
              ) T

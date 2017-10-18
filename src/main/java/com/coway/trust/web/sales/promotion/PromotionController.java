@@ -52,6 +52,10 @@ public class PromotionController {
 	
 	@RequestMapping(value = "/promotionList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		
+		model.put("toDay", toDay);
+		
 		return "sales/promotion/promotionList";
 	}
 	

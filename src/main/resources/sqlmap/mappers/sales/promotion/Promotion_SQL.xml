@@ -344,7 +344,7 @@
              , PROMO_SRV_MEM_PAC_ID    = #{promoSrvMemPacId}
              , PROMO_DT_FROM           = TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
              , PROMO_DT_END            = TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
-             , PROMO_UPD_DT            = #{promoUpdDt}
+             , PROMO_UPD_DT            = SYSDATE
              , PROMO_UPD_USER_ID       = #{promoUpdUserId}
              , PROMO_IS_TRIAL_CNVR     = #{promoIsTrialCnvr}
              , PROMO_PRC_PRCNT         = #{promoPrcPrcnt}
@@ -366,7 +366,7 @@
            SET PROMO_ITM_PV          = #{promoItmPv}
              , PROMO_ITM_STUS_ID     = #{promoItmStusId}
              , PROMO_ITM_UPD_USER_ID = #{promoItmUpdUserId}
-             , PROMO_ITM_UPD_DT      = #{promoItmUpdDt}
+             , PROMO_ITM_UPD_DT      = SYSDATE
          WHERE PROMO_ITM_ID          = #{promoItmId}
     </update>
     
