@@ -23,7 +23,7 @@ $(document).ready(function(){
         var str = $("#startPeriod").val();
         var pattern_eng = /[A-za-z]/g;
 
-         if (pattern_special.test(str) || pattern_eng.test(str)) {
+         if (pattern_eng.test(str)) {
              $("#startPeriod").val(str.replace(/[^0-9]/g, ""));
          }
    });
@@ -32,7 +32,7 @@ $(document).ready(function(){
         var str = $("#endPeriod").val();
         var pattern_eng = /[A-za-z]/g;
 
-         if (pattern_special.test(str) || pattern_eng.test(str)) {
+         if (pattern_eng.test(str)) {
              $("#endPeriod").val(str.replace(/[^0-9]/g, ""));
          }
    });
