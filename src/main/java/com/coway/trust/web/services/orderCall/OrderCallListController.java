@@ -45,6 +45,9 @@ public class OrderCallListController {
 	 */
 	@RequestMapping(value = "/orderCallList.do")
 	public String orderCallList(@RequestParam Map<String, Object> params, ModelMap model) {
+		//FeedBack Code
+		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
+		model.addAttribute("callStatus", callStatus);
 		// 호출될 화면
 		return "services/orderCall/orderCallList";
 	}
@@ -120,6 +123,7 @@ public class OrderCallListController {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue = orderCallListService.insertCallResult(params,sessionVO);
 		message.setMessage("success Installation No : " + resultValue.get("installationNo") +"</br>SELES ORDER NO : " +  resultValue.get("salesOrdNo"));
+		message.setCode("1");
 		return ResponseEntity.ok(message);
 	}
 	

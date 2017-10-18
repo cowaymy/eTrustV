@@ -286,7 +286,7 @@ public class InstallationResultListController {
 	/**
 	 * Search rule book management list
 	 *
-	 * @param request
+	 * @param requestaddInstallation
 	 * @param model
 	 * @return
 	 * @throws ParseException 
