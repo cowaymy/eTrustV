@@ -45,111 +45,41 @@
     </select>
     <select id="installationResultList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-		SELECT * 
-		  FROM ( SELECT Project1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
-		                Project1.C1 C1  ,
-		                Project1.C2 C2  ,
-		                Project1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
-		                Project1.SALES_ORD_ID SALES_ORD_ID  ,
-		                Project1.SALES_ORD_NO SALES_ORD_NO  ,
-		                Project1.REF_NO REF_NO  ,
-		                Project1.CUST_PO_NO CUST_PO_NO  ,
-		                Project1.SALES_DT SALES_DT  ,
-		                Project1.C3 C3  ,
-		                Project1.STK_DESC STK_DESC  ,
-		                Project1.CODE_ID CODE_ID  ,
-		                Project1.CODE_NAME CODE_NAME  ,
-		                Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
-		                Project1.CODEID1 CODEID1  ,
-		                Project1.CODE1 CODE  ,
-		                Project1.STUS_CODE_ID STUS_CODE_ID  ,
-		                Project1.CODE CODE1  ,
-		                Project1.BRNCH_ID BRNCH_ID  ,
-		                Project1.CUST_ID CUST_ID  ,
-		                Project1.NAME NAME  ,
-		                Project1.NRIC NRIC  ,
-		                Project1.C4 C4  ,
-		                Project1.C5 C5  ,
-		                Project1.C6 C6  
-		  FROM ( SELECT Project1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
-		                Project1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
-		                Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
-		                Project1.SALES_ORD_ID SALES_ORD_ID  ,
-		                Project1.SALES_ORD_NO SALES_ORD_NO  ,
-		                Project1.REF_NO REF_NO  ,
-		                Project1.SALES_DT SALES_DT  ,
-		                Project1.CUST_PO_NO CUST_PO_NO  ,
-		                Project1.CODE_ID CODE_ID  ,
-		                Project1.CODE_NAME CODE_NAME  ,
-		                Project1.STK_DESC STK_DESC  ,
-		                Project1.CUST_ID CUST_ID  ,
-		                Project1.NAME NAME  ,
-		                Project1.NRIC NRIC  ,
-		                Project1.BRNCH_ID BRNCH_ID  ,
-		                Project1.STUS_CODE_ID STUS_CODE_ID  ,
-		                Project1.CODE CODE  ,
-		                Project1.CODEID1 CODEID1  ,
-		                Project1.CODE1 CODE1  ,
-		                Project1.C1 C1  ,
-		                Project1.C2 C2  ,
-		                Project1.C3 C3  ,
-		                Project1.C4 C4  ,
-		                Project1.C5 C5  ,
-		                Project1.C6 C6  ,
-		                ROW_NUMBER() OVER ( ORDER BY Project1.INSTALL_ENTRY_ID ASC  ) ROW_NUMBER  
-		         FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
-		                       Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
-		                       Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
-		                       Extent2.SALES_ORD_ID SALES_ORD_ID  ,
-		                       Extent2.SALES_ORD_NO SALES_ORD_NO  ,
-		                       Extent2.REF_NO REF_NO  ,
-		                       Extent2.SALES_DT SALES_DT  ,
-		                       Extent2.CUST_PO_NO CUST_PO_NO  ,
-		                       Extent3.CODE_ID CODE_ID  ,
-		                       Extent3.CODE_NAME CODE_NAME  ,
-		                       Extent5.STK_DESC STK_DESC  ,
-		                       Extent6.CUST_ID CUST_ID  ,
-		                       Extent6.NAME NAME  ,
-		                       Extent6.NRIC NRIC  ,
-		                       Extent7.BRNCH_ID BRNCH_ID  ,
-		                       Extent8.STUS_CODE_ID STUS_CODE_ID  ,
-		                       Extent8.CODE CODE  ,
-		                       Extent11.CODE_ID CODEID1  ,
-		                       Extent11.CODE CODE1  ,
-		                       CASE 
-		                            WHEN ( Extent10.DOC_ID IS NOT NULL ) THEN Extent10.DOC_ID
-		                       ELSE 0
-		                          END C1  ,
-		                       CASE 
-		                            WHEN ( Extent12.MEM_ID IS NOT NULL ) THEN Extent12.MEM_CODE
-		                       ELSE ''
-		                          END C2  ,
-		                       TO_CHAR(Extent1.INSTALL_DT,'DD-MM-YYYY')  C3  ,
-		                       CASE 
-		                            WHEN ( Extent9.SIRIM_NO IS NOT NULL ) THEN Extent9.SIRIM_NO
-		                       ELSE ''
-		                          END C4  ,
-		                       CASE 
-		                            WHEN ( Extent9.SERIAL_NO IS NOT NULL ) THEN Extent9.SERIAL_NO
-		                       ELSE ''
-		                          END C5  ,
-		                       CASE 
-		                          WHEN ( Extent9.INSTALL_DT IS NOT NULL ) THEN Extent9.INSTALL_DT
-		                       ELSE to_date('1900-01-01','yyyy-mm-dd')
-		                          END C6  
-		                FROM SAL0046D Extent1
-		                       JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
-		                       JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent2.APP_TYPE_ID
-		                       JOIN SAL0002D Extent4   ON Extent4.SALES_ORD_ID = Extent2.SALES_ORD_ID
-		                       JOIN SYS0026M Extent5   ON Extent5.STK_ID = Extent4.ITM_STK_ID
-		                       JOIN SAL0029D Extent6   ON Extent6.CUST_ID = Extent2.CUST_ID
-		                       JOIN SAL0045D Extent7   ON Extent7.SALES_ORD_ID = Extent2.SALES_ORD_ID
-		                       JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.STUS_CODE_ID
-		                       LEFT JOIN SAL0047D Extent9   ON Extent9.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
-		                       LEFT JOIN CCR0006D Extent10   ON Extent10.CALL_ENTRY_ID = Extent1.CALL_ENTRY_ID
-		                       LEFT JOIN SYS0013M Extent11   ON Extent11.CODE_ID = Extent10.TYPE_ID
-		                       LEFT JOIN ORG0001D Extent12   ON Extent12.MEM_ID = Extent1.CT_ID
-		                 WHERE  1=1 
+		          SELECT
+                        Extent7.CODE,
+                        Extent1.INSTALL_ENTRY_NO,
+                        Extent2.SALES_ORD_NO,
+                        Extent1.INSTALL_DT,
+                        Extent12.MEM_CODE,
+                        Extent5.STK_DESC,
+                        Extent6.NAME,
+                        Extent9.CODE as AppType,
+                        Extent8.CODE CODE1,
+                        Extent1.INSTALL_ENTRY_ID,
+                        Extent1.CALL_ENTRY_ID,
+                        Extent3.CODE_ID CODEID1,
+                        Extent3.CODE_NAME,
+                        Extent2.SALES_ORD_ID SALES_ORD_ID,
+                        TO_CHAR (Extent1.INSTALL_DT, 'DD-MM-YYYY') C3,
+                        Extent10.DOC_ID C1
+                        FROM SAL0029D Extent6
+                        INNER JOIN SAL0001D Extent2 ON Extent2.CUST_ID = Extent6.CUST_ID
+                        INNER JOIN SAL0046D Extent1 ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
+                        INNER JOIN SYS0026M Extent5 ON Extent1.INSTALL_STK_ID = Extent5.STK_ID
+                        INNER JOIN ORG0001D Extent12 ON Extent12.MEM_ID = Extent1.CT_ID
+                        INNER JOIN (SELECT SALES_ORD_ID
+                                          ,TYPE_ID
+                                          ,MAX(CALL_ENTRY_ID)  CALL_ENTRY_ID   ,MAX(DOC_ID)  DOC_ID           FROM CCR0006D
+                                      WHERE   STUS_CODE_ID = '20'
+                                        AND   TYPE_ID IN ('257', '258') 
+                                        GROUP BY SALES_ORD_ID,TYPE_ID 
+                                      ) Extent10 ON Extent10.SALES_ORD_ID = Extent1.SALES_ORD_ID
+                        INNER JOIN SYS0013M Extent3 ON Extent3.CODE_ID = Extent10.TYPE_ID
+                        INNER JOIN SYS0013M Extent7 ON Extent7.CODE_ID = Extent10.TYPE_ID
+                        INNER JOIN SYS0013M Extent9 ON Extent9.CODE_ID = Extent2.APP_TYPE_ID
+                        INNER JOIN SYS0038M Extent8 ON Extent8.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                        INNER JOIN SYS0013M Extent11  ON Extent11.CODE_ID = Extent10.TYPE_ID
+                        WHERE 1=1
 		                 ]]>
 		                 <if test="installStatusList != null and installStatusList != '' ">
                             and Extent8.STUS_CODE_ID IN
@@ -229,12 +159,6 @@
                          <if test="orderDate != null and orderDate != ''">
                          AND Extent2.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
                          </if>
-                         <![CDATA[
-		                          ) Project1
-		                  ) Project1
-		   WHERE  Project1.ROW_NUMBER > 0
-		  ORDER BY Project1.INSTALL_ENTRY_ID ASC )
-      ]]>
     </select>
     <select id="installationResultList2" parameterType="Map" resultType="egovMap">
     <![CDATA[
