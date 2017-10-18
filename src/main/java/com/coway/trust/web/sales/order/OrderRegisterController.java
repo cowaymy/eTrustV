@@ -73,6 +73,11 @@ public class OrderRegisterController {
 		return "sales/order/oldOrderPop";
 	}
 	
+	@RequestMapping(value = "/orderApprovalPop.do")
+	public String orderApprovalPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "sales/order/orderApprovalPop";
+	}
+	
 	@RequestMapping(value = "/cnfmOrderDetailPop.do")
 	public String cnfmOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "sales/order/cnfmOrderDetailPop";
@@ -275,4 +280,22 @@ public class OrderRegisterController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+    @RequestMapping(value = "/selectLoginInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectLoginInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+        EgovMap result = orderRegisterService.selectLoginInfo(params);
+    
+        // 데이터 리턴.
+        return ResponseEntity.ok(result);
+    }
+	
+    @RequestMapping(value = "/selectCheckAccessRight.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectCheckAccessRight(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
+
+        EgovMap result = orderRegisterService.selectCheckAccessRight(params, sessionVO);
+    
+        // 데이터 리턴.
+        return ResponseEntity.ok(result);
+    }
 }

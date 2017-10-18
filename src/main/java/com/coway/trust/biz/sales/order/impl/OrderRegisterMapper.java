@@ -29,6 +29,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
+import com.coway.trust.cmmn.model.LoginVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -125,5 +126,9 @@ public interface OrderRegisterMapper {
 	void insertSalesOrderContract(SalesOrderContractVO salesOrderContractVO);
 	
 	void updateCustBillId(SalesOrderMVO salesOrderMVO);
+	
+	EgovMap selectLoginInfo(LoginVO loignVO);
+	
+	EgovMap selectCheckAccessRight(Map<String, Object> params);
 	
 }

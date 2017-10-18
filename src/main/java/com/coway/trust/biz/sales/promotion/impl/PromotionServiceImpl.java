@@ -190,6 +190,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		salesPromoMVO.setPromoStusId(SalesConstants.STATUS_ACTIVE);
 		salesPromoMVO.setPromoUpdUserId(sessionVO.getUserId());
 		salesPromoMVO.setPromoIsTrialCnvr(0);
+		salesPromoMVO.setIsNew(1);
 	}
 	
 	private void preprocSalesPromotionDetail(List<SalesPromoDVO> salesPromoDVOList, int promoId, SessionVO sessionVO) {

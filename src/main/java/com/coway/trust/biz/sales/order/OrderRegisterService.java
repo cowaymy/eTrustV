@@ -40,4 +40,8 @@ public interface OrderRegisterService {
 
 	EgovMap checkOldOrderId(Map<String, Object> params);
 
+	EgovMap selectLoginInfo(Map<String, Object> params);
+
+	EgovMap selectCheckAccessRight(Map<String, Object> params, SessionVO sessionVO);
+
 }

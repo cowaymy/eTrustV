@@ -51,6 +51,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
@@ -343,6 +344,26 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	public EgovMap selectTrialNo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return orderRegisterMapper.selectTrialNo(params);
+	}
+	
+	@Override
+	public EgovMap selectLoginInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LoginVO loignVO = new LoginVO();
+		
+		loignVO.setUserId(Integer.parseInt((String)params.get("loginUserId")));
+		loignVO.setUserPassWord((String)params.get("userPassword"));
+		
+		return orderRegisterMapper.selectLoginInfo(loignVO);
+	}
+	
+	@Override
+	public EgovMap selectCheckAccessRight(Map<String, Object> params, SessionVO sessionVO) {
+		
+		params.put("userId", sessionVO.getUserId());
+		params.put("moduleUnitId", 321);
+		
+		return orderRegisterMapper.selectCheckAccessRight(params);
 	}
 	
 	@Override
@@ -1552,4 +1573,5 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	gSTEURCertificateVO.setEurcSalesOrdId(salesOrdId);
         }
 	}
+
 }
