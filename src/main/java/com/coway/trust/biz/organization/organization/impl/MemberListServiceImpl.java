@@ -463,6 +463,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         		logger.debug("nextDocNo : {}",nextDocNo);
         		selectMemberCode.put("nextDocNo", nextDocNo);
         		break;
+        		
+			case 5:
+				logger.debug("코디로 insert");
+        		selectMemberCode = getDocNo("155");
+        		memberCode = selectMemberCode.get("docNo").toString();
+        		params.put("memberCode", memberCode);
+        		ID=6;
+        		nextDocNo = getNextDocNo("TR",selectMemberCode.get("docNo").toString());
+        		logger.debug("nextDocNo : {}",nextDocNo);
+        		selectMemberCode.put("nextDocNo", nextDocNo);
+        		break;
 			}
 
 			logger.debug("selectMemberCode : {}",selectMemberCode);
