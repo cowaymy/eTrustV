@@ -250,10 +250,10 @@ function createOrdAUIGrid(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">ROW Data</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Listing</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Summary</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Consignment Courier</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">ROW Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">Listing</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">Summary</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">Consignment Courier</a></p></li>
     </ul>
     <ul class="btns">
     </ul>

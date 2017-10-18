@@ -33,6 +33,20 @@
 			Common.alert('The program is under development.');
 		});
         
+        //Search
+        $("#_listSearchBtn").click(function() {
+			
+        	//Validation
+        	//custId ,  nric , name
+        	if((null == $("#custId").val() || '' == $("#custId").val()) && 
+        	   (null == $("#nric").val() || '' == $("#nric").val())  && 
+        	   (null == $("#name").val() || '' == $("#name").val())){
+        		Common.alert("* Please Key in at least one of the 'Customer ID' , 'NRIC/Company No' , 'Customer Name'. ");
+        		return;
+        	}
+        	
+        	fn_selectPstRequestDOListAjax();
+		});
     });
 	
     function createAUIGrid() {
@@ -194,7 +208,7 @@
 
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insert()"><span class="new"></span>NEW</a></p></li>
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" id="_listSearchBtn"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
