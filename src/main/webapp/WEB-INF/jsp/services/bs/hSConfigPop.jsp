@@ -28,7 +28,6 @@
       // 체크된 아이템 얻기
 	function fn_getCheckedRowItems() {
 	
-	   alert(AUIGrid.getCheckedRowItems(myCdGridID));
 	    var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
 
 	    var str = "";
