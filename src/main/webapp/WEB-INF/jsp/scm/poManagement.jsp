@@ -512,13 +512,38 @@ function fnSearchBtnSCMPrePOView()
 	           , $("#MainForm").serialize()
 	           , function(result) 
 	           {
-	              console.log("성공 fnSearchBtnList: " + result.length);
+	              console.log("성공 fnSearchBtnList: " + result.selectScmPoViewList.length);
+	              console.log("성공 prePoitemCnt:    " + result.selectScmPoStatusCntList[0].prePoitemCnt);
+	              console.log("성공 scmpomasterCnt:  " + result.selectScmPoStatusCntList[0].scmpomasterCnt);
 	              AUIGrid.setGridData(myGridID, result.selectScmPrePoItemViewList);
 	              //AUIGrid.setGridData(myGridID2, result.selectScmPrePoItemViewList);
 	              AUIGrid.setGridData(SCMPOViewGridID, result.selectScmPoViewList);
-	              if(result != null && result.length > 0)
+	              	              
+	              if(result != null)
 	              {
+	                  if(result.selectScmPoStatusCntList.length > 0 )
+	                  {
+	                	  if (result.selectScmPoStatusCntList[0].prePoitemCnt < 1)  //notIssue
+                		    $("#po_issue").attr('class','circle circle_blue');
+		                  else
+		                	  ("#po_issue").attr('class','circle circle_red');
+		                  
+	                	  if (result.selectScmPoStatusCntList[0].scmpomasterCnt < 1)  //pomaster
+	                		   $("#appRoval").attr('class','circle circle_blue');
+	                	  else
+	                		   $("#appRoval").attr('class','circle circle_red');
+	                  }
+	                  else
+		                {
+	                    $("#po_issue").attr('class','circle circle_grey');
+	                    $("#appRoval").attr('class','circle circle_grey');
+			              }
 	              }
+	              else
+		            {
+	            	  $("#po_issue").attr('class','circle circle_grey');
+	            	  $("#appRoval").attr('class','circle circle_grey');
+			          }
 	           });	  
 }
 
@@ -747,7 +772,7 @@ $(document).ready(function()
 	<td>
 	 <div class="status_result">
 	  <p><span id ="po_issue" class="circle circle_grey"></span> PO Issue</p>    
-    <p><span id ="po_issue" class="circle circle_grey"></span> Approval</p>
+    <p><span id ="appRoval" class="circle circle_grey"></span> Approval</p>
    </div>
 	</td>
 </tr>
