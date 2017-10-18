@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.RoleManagementMapper">
+
+    <select id="selectRolesByParentRole" parameterType="int" resultType="egovMap">
+        SELECT
+        ROLE_ID
+        ,ROLE_CODE
+        ,ROLE_DESC
+        ,PARENT_ROLE
+        ,STUS
+        ,ROLE_LEV
+        FROM SYS0044M SROLE
+        START WITH SROLE.PARENT_ROLE = #{parentRole}
+        CONNECT BY PRIOR SROLE.ROLE_ID = SROLE.PARENT_ROLE
+        ORDER SIBLINGS BY SROLE.ROLE_CODE
+    </select>
+
+    <select id="selectRoleManagementList" parameterType="Map" resultType="egovMap">
+        SELECT STATECODE.STATE_ID,
+               STATECODE.CODE,
+               STATECODE.NAME,
+               STATECODE.CNTY_ID,
+               STATECODE.STUS_CODE_ID,
+               STATECODE.CRT_DT
+        FROM   SYS0035M STATECODE
+        WHERE  STATECODE.STUS_CODE_ID = #{stusCodeId}
+        ORDER  BY STATECODE.NAME ASC
+    </select>
+
+</mapper>

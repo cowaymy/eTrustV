@@ -21,6 +21,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.type.EmailTemplateType;
+import com.coway.trust.biz.common.type.SMSTemplateType;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.BulkSmsVO;
 import com.coway.trust.cmmn.model.EmailVO;
@@ -111,7 +112,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 			messageHelper.setSubject(email.getSubject());
 
 			if (templateType != null) {
-				messageHelper.setText(getMailTemplate(templateType, params), email.isHtml());
+				messageHelper.setText(getMailTextByTemplate(templateType, params), email.isHtml());
 			} else {
 				messageHelper.setText(email.getText(), email.isHtml());
 			}
@@ -138,17 +139,33 @@ public class AdaptorServiceImpl implements AdaptorService {
 		return isSuccess;
 	}
 
-	private String getMailTemplate(EmailTemplateType templateType, Map<String, Object> params) {
+	@Override
+	public String getMailTextByTemplate(EmailTemplateType templateType, Map<String, Object> params) {
+		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateType.getFileName(),
+				AppConstants.DEFAULT_CHARSET, params);
+	}
+
+	@Override
+	public String getSmsTextByTemplate(SMSTemplateType templateType, Map<String, Object> params) {
 		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateType.getFileName(),
 				AppConstants.DEFAULT_CHARSET, params);
 	}
 
 	@Override
 	public SmsResult sendSMS(SmsVO smsVO) {
+		return this.sendSMS(smsVO, null, null);
+	}
+
+	@Override
+	public SmsResult sendSMS(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> params) {
 
 		Map<String, String> reason = new HashMap<>();
 		SmsResult result = new SmsResult();
 		result.setReqCount(smsVO.getMobiles().size());
+
+		if (templateType != null) {
+			smsVO.setMessage(getSmsTextByTemplate(templateType, params));
+		}
 
 		String msgID = "";
 		smsVO.getMobiles().forEach(mobileNo -> {
@@ -198,10 +215,19 @@ public class AdaptorServiceImpl implements AdaptorService {
 	 */
 	@Override
 	public SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO) {
+		return this.sendSMSByBulk(bulkSmsVO, null, null);
+	}
+
+	@Override
+	public SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO, SMSTemplateType templateType, Map<String, Object> params) {
 
 		SmsResult result = new SmsResult();
 		Map<String, String> reason = new HashMap<>();
 		result.setReqCount(1);
+
+		if (templateType != null) {
+			bulkSmsVO.setMessage(getSmsTextByTemplate(templateType, params));
+		}
 
 		String trId = UUIDGenerator.get();
 

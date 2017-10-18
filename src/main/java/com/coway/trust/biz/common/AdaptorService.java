@@ -3,6 +3,7 @@ package com.coway.trust.biz.common;
 import java.util.Map;
 
 import com.coway.trust.biz.common.type.EmailTemplateType;
+import com.coway.trust.biz.common.type.SMSTemplateType;
 import com.coway.trust.cmmn.model.BulkSmsVO;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.SmsResult;
@@ -19,7 +20,8 @@ public interface AdaptorService {
 	 */
 	boolean sendEmail(EmailVO email, boolean isTransactional);
 
-	boolean sendEmail(EmailVO email, boolean isTransactional, EmailTemplateType templateType, Map<String, Object> params);
+	boolean sendEmail(EmailVO email, boolean isTransactional, EmailTemplateType templateType,
+			Map<String, Object> params);
 
 	/**
 	 * The speed is slow. It is mainly used for single-item transmission.
@@ -30,6 +32,8 @@ public interface AdaptorService {
 	 * @return
 	 */
 	SmsResult sendSMS(SmsVO smsVO);
+
+	SmsResult sendSMS(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> params);
 
 	/**
 	 * The transmission speed is fast and the price is relatively high. [Bulk shipment] Used mainly for invoicing and
@@ -42,4 +46,23 @@ public interface AdaptorService {
 	 */
 	SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO);
 
+	SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO, SMSTemplateType templateType, Map<String, Object> params);
+
+	/**
+	 * get template string
+	 * 
+	 * @param templateType
+	 * @param params
+	 * @return
+	 */
+	String getMailTextByTemplate(EmailTemplateType templateType, Map<String, Object> params);
+
+	/**
+	 * get template string
+	 * 
+	 * @param templateType
+	 * @param params
+	 * @return
+	 */
+	String getSmsTextByTemplate(SMSTemplateType templateType, Map<String, Object> params);
 }
