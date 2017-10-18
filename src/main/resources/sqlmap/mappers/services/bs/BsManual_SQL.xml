@@ -243,7 +243,8 @@
 						                Project2.cust_id,
 						                Project2.cody_status_nm,
 								        Project2.BRNCH_ID as BRNCH_ID,
-								        Project2.SCHDUL_ID SCHDUL_ID   
+								        Project2.SCHDUL_ID SCHDUL_ID   ,
+								        Project2.SALES_ORD_ID
 						 from(       SELECT HS.NO AS NO,
 						                           HS.STUS_CODE_ID as STUS_CODE_ID,
 						                           HS.MONTH || '/' || HS.YEAR as HS_DATE ,
@@ -265,7 +266,8 @@
 						                           where 1=1
 						                           and stus_code_id = cu.STUS_CODE_ID ) as cody_status_nm,
 									               SO.BRNCH_ID as BRNCH_ID,
-									               HS.SCHDUL_ID SCHDUL_ID    
+									               HS.SCHDUL_ID SCHDUL_ID  ,
+									                SO.SALES_ORD_ID  
 						                      FROM SVC0008D HS                                                       
 						                           INNER JOIN SAL0001D SO
 						                              ON SO.SALES_ORD_ID = HS.SALES_ORD_ID
