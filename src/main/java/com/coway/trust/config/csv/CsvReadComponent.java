@@ -33,7 +33,7 @@ public class CsvReadComponent {
 
 		csvFormat.withIgnoreEmptyLines().withIgnoreSurroundingSpaces();
 
-		Reader reader = new InputStreamReader(multipartFile.getInputStream());
+		Reader reader = new InputStreamReader(multipartFile.getInputStream(), AppConstants.DEFAULT_CHARSET);
 		BufferedReader br = new BufferedReader(reader);
 		CSVParser csvParser = new CSVParser(br, csvFormat);
 

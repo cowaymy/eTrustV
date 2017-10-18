@@ -27,9 +27,13 @@ public class ExcecutorInterceptor implements Interceptor {
 		Object[] args = invocation.getArgs();
 		MappedStatement ms = (MappedStatement) args[0];
 
-		LOGGER.debug("id : {}", ms.getId());
-		LOGGER.debug("SqlCommandType : {}", ms.getSqlCommandType());
-		LOGGER.debug("StatementType : {}", ms.getStatementType());
+		if (ms != null){
+			LOGGER.debug("id : {}", ms.getId());
+			LOGGER.debug("SqlCommandType : {}", ms.getSqlCommandType());
+			LOGGER.debug("StatementType : {}", ms.getStatementType());
+		}else{
+			LOGGER.debug("MappedStatement is null....");
+		}
 
 		if (ms != null && SqlCommandType.SELECT == ms.getSqlCommandType()
 				&& StatementType.CALLABLE != ms.getStatementType() && isNotLargeExcelQuery(ms.getId())) {

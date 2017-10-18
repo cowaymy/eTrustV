@@ -1,6 +1,8 @@
 package com.coway.trust.cmmn.model;
 
-public class LoginSubAuthVO {
+import java.io.Serializable;
+
+public class LoginSubAuthVO  implements Serializable {
 
 	private int userId;
 	private String authCode;
