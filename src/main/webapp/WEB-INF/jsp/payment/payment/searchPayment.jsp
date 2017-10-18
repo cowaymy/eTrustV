@@ -880,8 +880,8 @@ function fn_goSalesConfirm(){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>                                                                      
                     </ul>
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>                        
-                        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>         
+                        <li><p class="link_btn type2"><a href="javascript:alert('The program is under development.');">Fund Transfer</a></p></li>                        
+                        <li><p class="link_btn type2"><a href="javascript:alert('The program is under development.');">Refund</a></p></li>         
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
