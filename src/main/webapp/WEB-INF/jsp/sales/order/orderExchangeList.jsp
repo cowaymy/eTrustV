@@ -282,7 +282,7 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#" onClick="fn_rawData()">Exchange Raw Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()">Exchange Raw Data</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
