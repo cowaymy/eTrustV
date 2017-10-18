@@ -25,7 +25,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	EgovMap orderInvestInfo(Map<String, Object> params)throws Exception;
+	EgovMap orderInvestInfo(Map<String, Object> params);
 	
 	
 	/**
@@ -35,7 +35,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	EgovMap orderCustomerInfo(Map<String, Object> params)throws Exception;
+	EgovMap orderCustomerInfo(Map<String, Object> params);
 	
 	
 	/**
@@ -89,7 +89,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	EgovMap orderNoChk(Map<String, Object> params)throws Exception;
+	EgovMap orderNoChk(Map<String, Object> params);
 	
 	
 	/**
@@ -99,7 +99,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	EgovMap orderNoInfo(Map<String, Object> params)throws Exception;
+	EgovMap orderNoInfo(Map<String, Object> params);
 	
 	
 	/**
@@ -109,10 +109,10 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	EgovMap singleInvestView(Map<String, Object> params)throws Exception;
+	EgovMap singleInvestView(Map<String, Object> params);
 	
 	
-	void insertNewRequestSingleOk(Map<String, Object> params) throws Exception;
+	void insertNewRequestSingleOk(Map<String, Object> params) ;
 	
 	
 	/**
@@ -122,10 +122,10 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	int searchBSScheduleM(Map<String, Object> params)throws Exception;
+	int searchBSScheduleM(Map<String, Object> params);
 	
 	
-	void saveOrderInvestOk(Map<String, Object> params) throws Exception;
+	void saveOrderInvestOk(Map<String, Object> params) ;
 	
 	
 	/**
@@ -146,7 +146,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	EgovMap investCallResultInfo(Map<String, Object> params)throws Exception;
+	EgovMap investCallResultInfo(Map<String, Object> params);
 	
 	
 	/**
@@ -156,7 +156,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	EgovMap investCallResultCust(Map<String, Object> params)throws Exception;
+	EgovMap investCallResultCust(Map<String, Object> params);
 	
 	
 	/**
@@ -177,7 +177,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 *
-	EgovMap saveCallResultSearchFirst(Map<String, Object> params)throws Exception;
+	EgovMap saveCallResultSearchFirst(Map<String, Object> params);
 	
 	
 	/**
@@ -187,7 +187,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 *
-	EgovMap saveCallResultSearchSecond(Map<String, Object> params)throws Exception;
+	EgovMap saveCallResultSearchSecond(Map<String, Object> params);
 	
 	
 	/**
@@ -197,10 +197,10 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 장광렬 2017.07.21
 	 *
-	EgovMap saveCallResultSearchThird(Map<String, Object> params)throws Exception;
+	EgovMap saveCallResultSearchThird(Map<String, Object> params);
 	*/
 	
-	void saveCallResultOk(Map<String, Object> params) throws Exception;
+	void saveCallResultOk(Map<String, Object> params) ;
 	
 	
 	/**
@@ -210,5 +210,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	String bsMonthCheck(Map<String, Object> params)throws Exception;
+	String bsMonthCheck(Map<String, Object> params);
+	
+	void saveInvest(Map<String, Object> params);
 }
