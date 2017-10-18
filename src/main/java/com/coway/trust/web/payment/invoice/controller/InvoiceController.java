@@ -72,13 +72,22 @@ public class InvoiceController {
 		
 		EgovMap master = invoiceService.selectInvoiceMaster(params).get(0);	
 		List<EgovMap> detail = invoiceService.selectInvoiceDetail(params);
-		
-		for(int i=0; i<detail.size(); i++)
-			System.out.println("###detail : " + detail.get(i));
+		int totalRowCount = invoiceService.selectInvoiceDetailCount(params);
 		
 		result.put("master", master);
 		result.put("detail", detail);
+		result.put("totalRowCount", totalRowCount);
 
+		return ResponseEntity.ok(result);
+	}
+	
+	@RequestMapping(value = "/selectInvoiceResultListPaging.do")
+	public ResponseEntity<Map<String, Object>> selectInvoiceResultListPaging(@RequestParam Map<String, Object> params, ModelMap model) {	
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<EgovMap> detail = invoiceService.selectInvoiceDetail(params);
+		
+		result.put("detail", detail);
 		return ResponseEntity.ok(result);
 	}
 	

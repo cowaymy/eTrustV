@@ -256,6 +256,11 @@ var GridCommon = {
 	    	// 마지막
 	    	retStr += "<a href='javascript:" + pagingPros.funcName + "(" + totalPage + ")'><span class='aui-grid-paging-number aui-grid-paging-last'>last</span></a>";
 	    	
+	    	// 전체 카운트 수	    	
+	    	var startNo = (goPage * pagingPros.rowCount) -  pagingPros.rowCount + 1;
+	    	var endNo = Math.min(goPage *  pagingPros.rowCount, totalRowCount);	    	
+	    	retStr += "<span class='aui-grid-paging-info-text'>" + startNo + " ~ " + endNo + " of " + totalRowCount + " rows" + "</span>";
+	    	
 	    	document.getElementById(pagingPros.targetId).innerHTML = retStr;
 	    }	    
 };

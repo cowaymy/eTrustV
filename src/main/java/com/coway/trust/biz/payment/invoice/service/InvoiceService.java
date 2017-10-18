@@ -28,6 +28,13 @@ public interface InvoiceService{
 	List<EgovMap> selectInvoiceDetail(Map<String, Object> params);
 	
 	/**
+	 * Invoice Detail 전체 건수 조회
+	 * @param params
+	 * @return
+	 */
+	int selectInvoiceDetailCount(Map<String, Object> params);
+	
+	/**
 	 * Create Tax Invoice
 	 * @param params
 	 * @return

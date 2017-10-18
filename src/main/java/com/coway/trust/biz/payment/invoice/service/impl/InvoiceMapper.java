@@ -42,4 +42,11 @@ public interface InvoiceMapper {
 	 * @return
 	 */
 	List<EgovMap> selectInvoiceDetail(Map<String, Object> params);
+	
+	/**
+	 * Invoice Detai 전체 건수 조회
+	 * @param params
+	 * @return
+	 */
+	int selectInvoiceDetailCount(Map<String, Object> params);
 }

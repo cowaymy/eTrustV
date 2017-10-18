@@ -52,6 +52,11 @@ public class InvoiceServiceImpl extends EgovAbstractServiceImpl implements Invoi
 	public List<EgovMap> selectInvoiceDetail(Map<String, Object> params) {
 		return invoiceMapper.selectInvoiceDetail(params);
 	}
+	
+	@Override
+	public int selectInvoiceDetailCount(Map<String, Object> params) {
+		return invoiceMapper.selectInvoiceDetailCount(params);
+	}
 
 	@Override
 	@DataSource(value = DataSourceType.LONG_TIME)

@@ -45,7 +45,7 @@ $(document).ready(function(){
 
 function fn_getInvoiceList(goPage){ 
     //페이징 변수 세팅
-   // $("#pageNo").val(goPage);   
+    $("#pageNo").val(goPage);   
     
     Common.ajax("GET", "/payment/selectInvoiceResultList.do", $("#_billingResultPopForm").serialize(), function(result) {
         //AUIGrid.setGridData(myGridID, result);
@@ -61,8 +61,39 @@ function fn_getInvoiceList(goPage){
         $("#t_amount").text("RM"+amt+"."+temp[1]);
         AUIGrid.setGridData( _invoiceResultGridID, result.detail);
         
+      //전체건수 세팅
+        _totalRowCount = result.totalRowCount;
+        
+        //페이징 처리를 위한 옵션 설정
+        var pagingPros = {
+                // 1페이지에서 보여줄 행의 수
+                rowCount : $("#rowCount").val()
+        };
+        
+        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+        
     });
 }
+
+
+//페이지 이동
+function moveToPage(goPage){
+  //페이징 변수 세팅
+  $("#pageNo").val(goPage);
+  
+  Common.ajax("GET", "/payment/selectInvoiceResultListPaging.do", $("#_billingResultPopForm").serialize(), function(result) {        
+      AUIGrid.setGridData(_invoiceResultGridID, result.detail);
+      
+      //페이징 처리를 위한 옵션 설정
+      var pagingPros = {
+              // 1페이지에서 보여줄 행의 수
+              rowCount : $("#rowCount").val()
+      };
+      
+      GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);        
+  });    
+}
+
 
 function commaSeparateNumber(val){
     while (/(\d+)(\d{3})/.test(val.toString())){

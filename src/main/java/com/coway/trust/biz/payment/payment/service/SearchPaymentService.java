@@ -17,6 +17,13 @@ public interface SearchPaymentService
     List<EgovMap> selectOrderList(Map<String, Object> params);
     
     /**
+	 * SearchPayment Order List(Master Grid) 전체 건수
+	 * @param params
+	 * @return
+	 */
+	int selectOrderListCount(Map<String, Object> params);
+    
+    /**
 	 * SearchPayment Payment List(Slave Grid) 조회
 	 * @param params
 	 * @return

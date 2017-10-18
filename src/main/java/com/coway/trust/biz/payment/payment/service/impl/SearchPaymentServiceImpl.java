@@ -66,6 +66,16 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	/**
+	 * SearchPayment Order List(Master Grid) 전체 건수
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public int selectOrderListCount(Map<String, Object> params) {
+		return searchPaymentMapper.selectOrderListCount(params);
+	}
+	
+	/**
 	 * SearchPayment Payment List(Slave Grid) 조회
 	 * @param params
 	 * @return

@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.invoice.service.impl.InvoiceMapper">
 
+    <sql id="pagingStart">
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (  
+    </sql>
+    <sql id="pagingEnd">
+         ) Z
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </sql>
+    
     <!-- Reconciliation 리스트 조회 -->
 	<select id="selectInvoiceList" parameterType="Map" resultType="egovMap">
 		SELECT GroupBy1.ACC_BILL_NET_AMT ACC_BILL_NET_AMT  ,
@@ -54,6 +66,7 @@
 	
 	
     <select id="selectInvoiceDetail" parameterType="Map" resultType="egovMap">
+    <include refid="pagingStart" />
         SELECT Extent1.ACC_BILL_TASK_ID ACC_BILL_TASK_ID  ,
 			       Extent1.ACC_BILL_REF_NO ACC_BILL_REF_NO  ,
 			       Extent1.ACC_BILL_ORD_ID ACC_BILL_ORD_ID  ,
@@ -91,63 +104,33 @@
 	           AND ACC_BILL_MODE_ID = #{billType}
 	      </if>
 	 ORDER BY Extent1.ACC_BILL_ORD_ID ASC
+	 <include refid="pagingEnd" />
 	</select>
 	
-	<!-- <select id="selectBillingDetailCount" parameterType="Map" resultType="int">
+	<select id="selectInvoiceDetailCount" parameterType="Map" resultType="int">
         SELECT 
-            COUNT(1) AS CNT  
-        FROM 
-            PAY0048D Extent1
-            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TASK_BILL_TYPE_ID
-            JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.TASK_BILL_SO_ID
-            JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-        WHERE  
-            Extent1.TASK_ID = #{taskId}
-            <if test="orderNo != 'null' and orderNo != '' ">
-                AND Extent3.SALES_ORD_NO = #{orderNo}
-            </if>
-            <if test="billNo != null and billNo != '' ">
-                AND Extent1.TASK_REF_NO = #{billNo}
-            </if> 
-            <if test="custName != null and custName != '' ">
-                AND Extent4.NAME = #{custName}
-            </if>
-            <if test="group != null and group != '' ">
-                AND (CASE WHEN (Extent1.TASK_BILL_GRP_ID IS NULL) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END) = #{group}
-            </if>        
+            COUNT(1) AS CNT
+           FROM PAY0016D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.ACC_BILL_MODE_ID
+            JOIN PAY0047D Extent3   ON Extent3.TASK_ID = Extent1.ACC_BILL_TASK_ID
+            JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.ACC_BILL_ORD_ID
+            JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
+         WHERE  Extent1.ACC_BILL_TASK_ID = #{taskId}
+          <if test="orderNo != null and orderNo != '' ">
+             AND Extent4.SALES_ORD_NO = #{orderNo}
+          </if> 
+          <if test="billNo != null and billNo != '' ">
+              AND Extent1.ACC_BILL_REF_NO = #{billNo}
+          </if>
+          <if test="custName != null and custName != '' ">
+              AND Extent5.NAME LIKE '%' || #{custName} || '%'
+          </if>
+          <if test="group != null and group != '' ">
+              AND Extent1.ACC_BILL_GRP_ID = #{group}
+          </if>
+          <if test="billType != null and billType != '' ">
+               AND ACC_BILL_MODE_ID = #{billType}
+          </if>       
     </select>
 	
-	<resultMap id="earyBillMap" type="egovMap"></resultMap>
-	<select id="callEaryBillProcedure" statementType="CALLABLE" parameterType="Map">
-        {call SP_INITIIZE_BILL_GST_EARY_RENT(#{year}, #{month}, #{userId}), #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillillMap}}
-    </select>
-    
-    <resultMap id="billMap" type="egovMap"></resultMap>
-    <select id="callBillProcedure" statementType="CALLABLE" parameterType="Map">
-        {call SP_INITIIZE_BILL_GST_RENT(#{year}, #{month}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=billMap})}
-    </select>
-    
-    <select id="getExistBill" parameterType="Map" resultType ="java.lang.Integer">
-        SELECT count(*) cnt
-		FROM PAY0047D Extent1
-		WHERE  ( 1 = Extent1.IS_CNFM ) 
-                  AND ( Extent1.TASK_ID = #{taskId} )
-		<if test="month != '' and month != null">
-		          AND ( Extent1.BILLING_MONTH = #{month} )
-		</if>
-		<if test="year != '' and year != null">
-		          AND ( Extent1.BILLING_YEAR = #{year} )
-		</if>
-		          AND ROWNUM <![CDATA[<=]]> 1
-    </select>
-    
-    <resultMap id="cEarlyBills" type="egovMap"></resultMap>
-    <select id="confirmEarlyBills" statementType="CALLABLE" parameterType="Map">
-        {call SP_GEN_BILL_GST_EARLY_RENTAL(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cEarlyBills})}
-    </select>
-    
-    <resultMap id="cBills" type="egovMap"></resultMap>
-    <select id="confirmBills" statementType="CALLABLE" parameterType="Map">
-        {call SP_GEN_BILL_GST_RENTAL(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cBills})}
-    </select> -->
 </mapper>

@@ -162,11 +162,8 @@ function fn_generateInv(){
 	       <dl class="link_list">
 	           <dt>Link</dt>
 	           <dd>
-	               <!-- <ul class="btns">
-	                   <li><p class="link_btn"><a href="/payment/initMonthlyRawData.do">Monthly Bill Raw Data</a></p></li>
-	               </ul> -->
 	               <ul class="btns">
-	                   <li><p class="link_btn type2"><a href="javascript:fn_view()">View Details</a></p></li>
+	                   <li><p class="link_btn"><a href="javascript:fn_view()">View Details</a></p></li>
 	               </ul>
 	               <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	           </dd>
