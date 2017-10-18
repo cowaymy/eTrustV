@@ -179,7 +179,7 @@ function getStatusComboListAjax(callBack)
     	           , $("#MainForm").serialize()+"&orderValue=code"
     	           , function(result)
     	           {
-    	        	   StatusCdList.push({id:"" ,value:"-Empty-"});
+    	        	   StatusCdList.push({id:"" ,value:""});
 					          for (var i = 0; i < result.length; i++)
 						        {
 					        	  var list = new Object();
