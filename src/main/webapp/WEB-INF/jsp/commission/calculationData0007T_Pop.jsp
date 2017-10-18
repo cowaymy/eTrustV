@@ -144,6 +144,11 @@
         style : "my-column",
         editable : false
     },{
+        dataField : "memCode",
+        headerText : " MEM CODE",
+        style : "my-column",
+        editable : false
+    },{
         dataField : "code",
         headerText : " CODE",
         style : "my-column",

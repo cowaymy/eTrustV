@@ -143,6 +143,11 @@
         style : "my-column",
         editable : false
     },{
+        dataField : "emplycode",
+        headerText : "MEM CODE",
+        style : "my-column",
+        editable : false
+    },{
         dataField : "emplyTypeCode",
         headerText : "EMPLY TYPE CODE",
         style : "my-column",
