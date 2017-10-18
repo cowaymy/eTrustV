@@ -172,25 +172,25 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 		String docNo = "";
 		docNo = orderInvestMapper.getDocNo(insertMap);
 		
+		logger.debug("##### callDt #####" +params.toString());
+		
 		// parameter setting (investigationM)
 		String targetFolder = "~/WebShare/Investigation/";
 		String filename = "InvesNo_" + docNo + ".zip";
 		params.put("invReqNo", docNo);
-		params.put("soId", params.get("salesOrdNo"));
+		params.put("soId", params.get("salesOrdId"));
 		params.put("invReqStusId", 1);
 		params.put("invReqPartyId", 770);
 //		params.put("invReqRem", params.get("invReqRem"));
 //		params.put("invReqCrtUserId", params.get("userId"));
 //		params.put("invReqUpdUserId", params.get("userId"));
 		params.put("invReqUserIdAuto", 0);
-//		params.put("callDt", docNo);
-//		params.put("visitDt", docNo);
 		params.put("invReqTypeId", params.get("cmbInvType"));
 		params.put("invReqHasAttach", params.get("attachInvest") != null ? "1" : "0");
 		params.put("invReqAttachFile", targetFolder + filename);
 		params.put("invReqRejctResnId", 0);
 		
-		// parameter setting (investigationM)
+		// parameter setting (SalesOrderLog)
 		params.put("prgrsId", 8);
 		params.put("refId", 0);
 		params.put("isLok", 1);

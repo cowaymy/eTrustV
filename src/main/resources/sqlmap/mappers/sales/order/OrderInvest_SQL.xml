@@ -367,7 +367,6 @@
 			       Extent1.PAY_COM_DT PAY_COM_DT  ,
 			       Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
 			       Extent1.REF_DOC_ID REF_DOC_ID  ,
-			       Extent1.RENT_PROMO_ID RENT_PROMO_ID  ,
 			       Extent1.SALES_HM_ID SALES_HM_ID  ,
 			       Extent1.SALES_SM_ID SALES_SM_ID  ,
 			       Extent1.SALES_GM_ID SALES_GM_ID  ,

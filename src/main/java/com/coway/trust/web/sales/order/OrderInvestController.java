@@ -148,6 +148,7 @@ public class OrderInvestController {
 				if(orderNoChk != null && !"".equals(orderNoChk)){
 					retMsg = "OK";
 					EgovMap singleInvestView = orderInvestService.singleInvestView(params);
+					map.put("salesOrdId", singleInvestView.get("salesOrdId"));
 					map.put("salesOrdNo", singleInvestView.get("salesOrdNo"));
 					map.put("salesDt", singleInvestView.get("salesDt"));
 					map.put("name", singleInvestView.get("name"));
@@ -182,36 +183,36 @@ public class OrderInvestController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 		
-		String callDt = (String)params.get("callDt");
-		if(callDt != null && callDt != ""){
-			String insCallDt = callDt.substring(6) + "-" + callDt.substring(3, 5) + "-" + callDt.substring(0, 2) + " 00:00:00";
-			logger.info("##### callDt #####" +insCallDt);
-			params.put("callDt", insCallDt);
-		}
-		String visitDt = (String)params.get("visitDt");
-		if(visitDt != null && visitDt != ""){
-			String insVisitDt = visitDt.substring(6) + "-" + visitDt.substring(3, 5) + "-" + visitDt.substring(0, 2) + " 00:00:00";
-			logger.info("##### visitDt #####" +insVisitDt);
-			params.put("visitDt", insVisitDt);
-		}
-		
+//		String callDt = (String)params.get("callDt");
+//		if(callDt != null && callDt != ""){
+//			String insCallDt = callDt.substring(6) + "-" + callDt.substring(3, 5) + "-" + callDt.substring(0, 2) + " 00:00:00";
+//			logger.info("##### callDt #####" +insCallDt);
+//			params.put("callDt", insCallDt);
+//		}
+//		String visitDt = (String)params.get("visitDt");
+//		if(visitDt != null && visitDt != ""){
+//			String insVisitDt = visitDt.substring(6) + "-" + visitDt.substring(3, 5) + "-" + visitDt.substring(0, 2) + " 00:00:00";
+//			logger.info("##### visitDt #####" +insVisitDt);
+//			params.put("visitDt", insVisitDt);
+//		}
+//		
+//		logger.debug("##### callDt #####" +callDt);
+//		logger.debug("##### visitDt #####" +visitDt);
+//		
 		Map<String, Object> map = new HashMap();
 		
-		try{
+
 //			int orderInvestClosedDateChk = orderInvestService.orderInvestClosedDateChk();
 
 //			EgovMap singleInvestView = orderInvestService.singleInvestView(params);
 
 			orderInvestService.insertNewRequestSingleOk(params);
-			EgovMap orderNoInfo = orderInvestService.orderNoInfo(params);
+//			EgovMap orderNoInfo = orderInvestService.orderNoInfo(params);
 			
-			map.put("invReqId", orderNoInfo.get("invReqId"));
+//			map.put("invReqId", orderNoInfo.get("invReqId"));
 			
-		}catch(Exception ex){
-			retMsg = AppConstants.MSG_FAIL;
-		}finally{
+
 			map.put("msg", retMsg);
-		}
 		
 		return ResponseEntity.ok(map);
 	}
