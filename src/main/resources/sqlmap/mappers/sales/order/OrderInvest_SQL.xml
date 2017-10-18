@@ -67,12 +67,12 @@
 			        </if>
 			        <if test="startCrtDt != null and startCrtDt != ''">
 			             <![CDATA[
-			             AND Filter1.INV_REQ_CRT_DT >= TO_CHAR(TO_DATE( #{startCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD') 
+			             AND Filter1.INV_REQ_CRT_DT >= TO_DATE( #{startCrtDt} , 'DD/MM/YYYY') 
 			             ]]>
 			        </if>
 			        <if test="endCrtDt != null and endCrtDt != ''">
                          <![CDATA[
-                         AND Filter1.INV_REQ_CRT_DT <= TO_CHAR(TO_DATE( #{endCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                         AND Filter1.INV_REQ_CRT_DT <= TO_DATE( #{endCrtDt} , 'DD/MM/YYYY')
                          ]]>
                     </if>
 			        <if test="salesOrdId != null and salesOrdId != ''">
@@ -300,6 +300,14 @@
 		 WHERE INV_REQ_ID = #{gridInvReqId}
     </update>
     
+    <update id="updatePendingInvestReqM" parameterType="Map">
+        UPDATE SAL0050D
+             SET INV_REQ_STUS_ID = #{statusPop},
+                   INV_REQ_UPD_DT = SYSDATE,
+                   INV_REQ_UPD_USER_ID = #{userId}
+         WHERE INV_REQ_ID = #{gridInvReqId}
+    </update>
+    
     <insert id="insertInvestigateReqD" parameterType="Map">
         INSERT INTO SAL0051D
 		      ( INV_REQ_ITM_ID, INV_REQ_ID, INV_REQ_ITM_STUS_ID, INV_REQ_ITM_REM, INV_REQ_ITM_CRT_DT, INV_REQ_ITM_CRT_USER_ID )
@@ -329,8 +337,6 @@
 			       Extent1.MEM_ID MEM_ID  ,
 			       Extent1.BRNCH_ID BRNCH_ID  ,
 			       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
-			       Extent1.DSCNT_AMT DSCNT_AMT  ,
-			       Extent1.TAX_AMT TAX_AMT  ,
 			       Extent1.TOT_AMT TOT_AMT  ,
 			       Extent1.PROMO_ID PROMO_ID  ,
 			       Extent1.BINDING_NO BINDING_NO  ,
@@ -344,7 +350,6 @@
 			       Extent1.UPD_USER_ID UPD_USER_ID  ,
 			       Extent1.SYNC_CHK SYNC_CHK  ,
 			       Extent1.CUST_PO_NO CUST_PO_NO  ,
-			       Extent1.REN_CHK_ID REN_CHK_ID  ,
 			       Extent1.INST_PRIOD INST_PRIOD  ,
 			       Extent1.DO_NO DO_NO  ,
 			       Extent1.DEPT_CODE DEPT_CODE  ,
@@ -774,7 +779,7 @@
 						       UPD_USER_ID   ,
 						       SMS   ,
 						       SYNC_CHK   ,
-						       LOCK_   ,
+						       LOK   ,
 						       ACTN_MEM_ID   ,
 						       PREV_CODY_ID   
 					  FROM SVC0008D Extent1
@@ -783,6 +788,35 @@
 					 ORDER BY SCHDUL_ID DESC
 				    )
 		  WHERE ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+    
+    <select id="getBSScheduleId" parameterType="Map" resultType="egovMap">
+        SELECT * 
+           FROM (
+                    SELECT SCHDUL_ID   ,
+                               NO   ,
+                               SALES_ORD_ID   ,
+                               MONTH   ,
+                               YEAR   ,
+                               TYPE_ID   ,
+                               CODY_ID   ,
+                               REM   ,
+                               STUS_CODE_ID   ,
+                               LAST_SVC   ,
+                               CRT_DT   ,
+                               CRT_USER_ID   ,
+                               UPD_DT   ,
+                               UPD_USER_ID   ,
+                               SMS   ,
+                               SYNC_CHK   ,
+                               LOK   ,
+                               ACTN_MEM_ID   ,
+                               PREV_CODY_ID   
+                      FROM SVC0008D Extent1
+                    WHERE SALES_ORD_ID = #{salesOrdId}
+                     ORDER BY SCHDUL_ID DESC
+                    )
+          WHERE ROWNUM <![CDATA[ <= ]]> 1
     </select>
     
     <select id="saveCallResultSearchFourth" parameterType="Map" resultType="egovMap">
@@ -874,5 +908,197 @@
             MONTHS_BETWEEN( to_date( to_char(SYSDATE, 'YYYYmm') ||'01','yyyymmdd') ,to_date(#{EX_YYYY}||#{EX_MM}  ||'01','yyyymmdd')) expInt
         FROM DUAL
     </select>
+    
+    <select id="saveSVC0008D" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
+			       Extent1.NO NO  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.MONTH MONTH  ,
+			       Extent1.YEAR YEAR  ,
+			       Extent1.TYPE_ID TYPE_ID  ,
+			       Extent1.CODY_ID CODY_ID  ,
+			       Extent1.REM REM  ,
+			       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+			       Extent1.LAST_SVC LAST_SVC  ,
+			       Extent1.CRT_DT CRT_DT  ,
+			       Extent1.CRT_USER_ID CRT_USER_ID  ,
+			       Extent1.UPD_DT UPD_DT  ,
+			       Extent1.UPD_USER_ID UPD_USER_ID  ,
+			       Extent1.SMS SMS  ,
+			       Extent1.SYNC_CHK SYNC_CHK  ,
+			       Extent1.LOK LOK  ,
+			       Extent1.ACTN_MEM_ID ACTN_MEM_ID  ,
+			       Extent1.PREV_CODY_ID PREV_CODY_ID  
+		   FROM SVC0008D Extent1
+		 WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
+	         AND 1 = Extent1.STUS_CODE_ID
+	         AND Extent1.YEAR = (SELECT TO_CHAR(SYSDATE, 'YYYY') FROM DUAL)
+             AND Extent1.MONTH = (SELECT TO_CHAR(SYSDATE, 'mm') FROM DUAL)
+    </select>
+    
+    <select id="seqSAL0049D"  resultType="java.lang.String">
+        SELECT SAL0049D_INV_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertInvestigate" parameterType="Map">
+        INSERT INTO SAL0049D
+			  ( INV_ID, INV_NO, INV_STUS_ID, SALES_ORD_ID, INV_TO_CANCL_ACT_BS, INV_CANCL_BS_SCHDUL_ID
+			  , INV_CRT_DT, INV_CRT_USER_ID, INV_UPD_DT, INV_UPD_USER_ID, INV_TO_ACTVT_BS, INV_REQ_TICKET_ID
+			  , INV_CALL_ENTRY_ID, INV_REQ_ID, INV_DT_AUTO )
+	    VALUES 
+	          ( #{seqSAL0049D}, #{invNo}, #{invStusId}, #{salesOrdId}, #{invToCanclActBs}, #{invCanclBsSchdulId}
+	          , SYSDATE, #{userId}, SYSDATE, #{userId}, #{invToActvtBs}, #{invReqTicketId}
+	          , #{invCallEntryId}, #{gridInvReqId}, #{invDtAuto} )
+    </insert>
+    
+    <select id="seqSAL0052D"  resultType="java.lang.String">
+        SELECT SAL0052D_INV_IN_PERSON_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertInvestInchargePerson" parameterType="Map">
+        INSERT INTO SAL0052D
+              ( INV_IN_PERSON_ID, INV_ENTRY_ID, USER_ID, INV_IN_PERSON_STUS_ID, INV_IN_PERSON_CRT_DT
+              , INV_IN_PERSON_CRT_USER_ID, INV_IN_PERSON_UPD_DT, INV_IN_PERSON_UPD_USER_ID )
+        VALUES 
+              ( #{seqSAL0052D}, #{invEntryId}, #{inchargeNmId}, #{invInPersonStusId}, SYSDATE, #{userId}, SYSDATE, #{userId} )
+    </insert>
+    
+    <select id="saveSearchSAL0049D" parameterType="Map" resultType="egovMap">
+        SELECT INV_ID   ,
+                   INV_NO   ,
+                   INV_STUS_ID   ,
+                   SALES_ORD_ID   ,
+                   INV_TO_CANCL_ACT_BS   ,
+                   INV_CANCL_BS_SCHDUL_ID   ,
+                   INV_CRT_DT   ,
+                   INV_CRT_USER_ID   ,
+                   INV_UPD_DT   ,
+                   INV_UPD_USER_ID   ,
+                   INV_TO_ACTVT_BS   ,
+                   INV_REQ_TICKET_ID   ,
+                   INV_CALL_ENTRY_ID   ,
+                   INV_REQ_ID   ,
+                   INV_DT_AUTO   
+           FROM SAL0049D 
+         WHERE INV_REQ_ID = #{invReqId}
+    </select>
+    
+    <select id="saveSearchCCR0006DdocId" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.CALL_ENTRY_ID   ,
+	                Extent1.SALES_ORD_ID   ,
+	                Extent1.TYPE_ID   ,
+	                Extent1.STUS_CODE_ID   ,
+	                Extent1.RESULT_ID   ,
+	                Extent1.DOC_ID   ,
+	                Extent1.CRT_USER_ID   ,
+	                Extent1.CRT_DT   ,
+	                Extent1.CALL_DT   ,
+	                Extent1.IS_WAIT_FOR_CANCL   ,
+	                Extent1.HAPY_CALLER_ID   ,
+	                Extent1.UPD_DT   ,
+	                Extent1.UPD_USER_ID   ,
+	                Extent1.ORI_CALL_DT   
+	        FROM CCR0006D Extent1
+	      WHERE Extent1.DOC_ID = #{docId}
+	          AND 766 = Extent1.TYPE_ID
+	          <![CDATA[
+	          AND ROWNUM <= 1
+	          ]]>
+	       ORDER BY RESULT_ID DESC 
+            
+    </select>
+    
+    <update id="updateSAL0049DEntryId" parameterType="Map">
+        UPDATE SAL0049D
+    		 SET INV_CALL_ENTRY_ID = #{invCallEntryId}
+		 WHERE INV_ID = #{invId}
+    </update>
+    
+    <select id="saveSearchCCR0006D" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.TYPE_ID TYPE_ID  ,
+			       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+			       Extent1.RESULT_ID RESULT_ID  ,
+			       Extent1.DOC_ID DOC_ID  ,
+			       Extent1.CRT_USER_ID CRT_USER_ID  ,
+			       Extent1.CRT_DT CRT_DT  ,
+			       Extent1.CALL_DT CALL_DT  ,
+			       Extent1.IS_WAIT_FOR_CANCL IS_WAIT_FOR_CANCL  ,
+			       Extent1.HAPY_CALLER_ID HAPY_CALLER_ID  ,
+			       Extent1.UPD_DT UPD_DT  ,
+			       Extent1.UPD_USER_ID UPD_USER_ID  ,
+			       Extent1.ORI_CALL_DT ORI_CALL_DT  
+		  FROM CCR0006D Extent1
+		WHERE  Extent1.CALL_ENTRY_ID = #{callEntryId} 
+			AND ROWNUM <![CDATA[<= ]]>1 
+            
+    </select>
+    
+    <update id="updateSVC0008DBSSchd" parameterType="Map">
+        UPDATE SVC0008D
+		     SET STUS_CODE_ID = #{stusCodeId},
+		           UPD_DT = SYSDATE,
+		           UPD_USER_ID = #{userId}
+		 WHERE SCHDUL_ID = #{schdulId}
+    </update>
+    
+    <select id="seqSVC0006D"  resultType="java.lang.String">
+        SELECT SVC0006D_RESULT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertSVC0006DBSSchd" parameterType="Map">
+        INSERT INTO SVC0006D
+			  ( RESULT_ID, NO, TYPE_ID, SCHDUL_ID, SALES_ORD_ID, CODY_ID, SETL_DT, RESULT_STUS_CODE_ID, FAIL_RESN_ID
+			  , REN_COLCT_ID, WH_ID, RESULT_REM, RESULT_CRT_DT, RESULT_CRT_USER_ID, RESULT_UPD_DT, RESULT_UPD_USER_ID
+			  , RESULT_IS_SYNC, RESULT_IS_EDIT, RESULT_STOCK_USE, RESULT_IS_CURR, RESULT_MTCH_ID, RESULT_IS_ADJ
+			  , RESULT_ENTRY_POINT, RESULT_MOBILE_ID )
+	    VALUES ( #{seqSVC0006D}, #{bsNo}, #{typeId}, #{schdulId}, #{salesOrdId}, #{codyId}, TO_DATE( #{setlDt} , 'DD/MM/YYYY')
+	          , #{resultStusCodeId}, #{failResnId}, #{renColctId}, #{whId}, #{resultRem}, SYSDATE, #{userId}, SYSDATE, #{userId}
+	          , #{resultIsSync}, #{resultIsEdit}, #{resultStockUse}, #{resultIsCurr}, #{resultMtchId}, #{resultIsAd}, NULL, NULL )
+    </insert>
+    
+    <select id="saveSearchSVC0006D" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.RESULT_ID   ,
+			       Extent1.NO   ,
+			       Extent1.TYPE_ID   ,
+			       Extent1.SCHDUL_ID   ,
+			       Extent1.SALES_ORD_ID   ,
+			       Extent1.CODY_ID   ,
+			       Extent1.SETL_DT   ,
+			       Extent1.RESULT_STUS_CODE_ID   ,
+			       Extent1.FAIL_RESN_ID   ,
+			       Extent1.REN_COLCT_ID   ,
+			       Extent1.WH_ID   ,
+			       Extent1.RESULT_REM   ,
+			       Extent1.RESULT_CRT_DT   ,
+			       Extent1.RESULT_CRT_USER_ID   ,
+			       Extent1.RESULT_UPD_DT   ,
+			       Extent1.RESULT_UPD_USER_ID   ,
+			       Extent1.RESULT_IS_SYNC   ,
+			       Extent1.RESULT_IS_EDIT   ,
+			       Extent1.RESULT_STOCK_USE   ,
+			       Extent1.RESULT_IS_CURR   ,
+			       Extent1.RESULT_MTCH_ID   ,
+			       Extent1.RESULT_IS_ADJ   ,
+			       Extent1.RESULT_ENTRY_POINT   ,
+			       Extent1.RESULT_MOBILE_ID   
+		  FROM SVC0006D Extent1
+		WHERE Extent1.SCHDUL_ID = #{schdulId}
+            AND ROWNUM <![CDATA[<= ]]>1 
+            
+    </select>
+    
+    <select id="seqSVC0007D"  resultType="java.lang.String">
+        SELECT SVC0007D_BS_RESULT_ITM_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertSVC0007DBSSchd" parameterType="Map">
+        INSERT INTO SVC0007D
+			  ( BS_RESULT_ITM_ID, BS_RESULT_ID, BS_RESULT_PART_ID, BS_RESULT_PART_DESC, BS_RESULT_PART_QTY, BS_RESULT_REM
+			  , BS_RESULT_CRT_DT, BS_RESULT_CRT_USER_ID, BS_RESULT_FILTER_CLM )
+		VALUES ( #{seqSVC0007D}, #{bsResultId}, #{bsResultPartId}, #{bsResultPartDesc}, #{bsResultPartQty}, #{bsResultRem}
+		      , SYSDATE, #{userId}, #{bsResultFilterClm} )
+    </insert>
     
 </mapper>

@@ -96,10 +96,31 @@ public class OrderInvestController {
 	
 	@RequestMapping(value = "/inchargeJsonList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> inchargeJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+		logger.info("##### params #####" +params.toString());
 		List<EgovMap> inchargeList = orderInvestService.inchargeList(params);
 
 		return ResponseEntity.ok(inchargeList);
+	}
+	
+	
+	@RequestMapping(value = "/saveInvest.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> saveInvest(@RequestParam Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		params.put("inchargeNmId", params.get("inchargeNm"));
+		
+		String retMsg = "SUCCESS";
+		
+		Map<String, Object> map = new HashMap();
+		
+		orderInvestService.saveInvest(params);
+		
+		map.put("msg", retMsg);
+
+		return ResponseEntity.ok(map);
 	}
 	
 	

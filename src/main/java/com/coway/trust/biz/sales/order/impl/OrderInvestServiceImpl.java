@@ -34,6 +34,9 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	@Resource(name = "orderExchangeMapper")
 	private OrderExchangeMapper orderExchangeMapper;
 	
+	@Resource(name = "orderCancelMapper")
+	private OrderCancelMapper orderCancelMapper;
+	
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 	
@@ -60,7 +63,7 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	 * @author 이석희 2017.07.20
 	 */
 	@Override
-	public EgovMap orderInvestInfo(Map<String, Object> params) throws Exception{
+	public EgovMap orderInvestInfo(Map<String, Object> params)  {
 		
 		return orderInvestMapper.orderInvestInfo(params);
 	}
@@ -74,7 +77,7 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	 * @author 이석희 2017.07.20
 	 */
 	@Override
-	public EgovMap orderCustomerInfo(Map<String, Object> params) throws Exception{
+	public EgovMap orderCustomerInfo(Map<String, Object> params) {
 		
 		return orderInvestMapper.orderCustomerInfo(params);
 	}
@@ -139,28 +142,28 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	 * @author 이석희 2017.07.20
 	 */
 	@Override
-	public EgovMap orderNoChk(Map<String, Object> params) throws Exception{
+	public EgovMap orderNoChk(Map<String, Object> params) {
 		
 		return orderInvestMapper.orderNoChk(params);
 	}
 
 	
 	@Override
-	public EgovMap orderNoInfo(Map<String, Object> params) throws Exception{
+	public EgovMap orderNoInfo(Map<String, Object> params) {
 		
 		return orderInvestMapper.orderNoInfo(params);
 	}
 
 	
 	@Override
-	public EgovMap singleInvestView(Map<String, Object> params) throws Exception{
+	public EgovMap singleInvestView(Map<String, Object> params) {
 		
 		return orderInvestMapper.singleInvestView(params);
 	}
 	
 	
 	@Override
-	public void insertNewRequestSingleOk(Map<String, Object> params) throws Exception{
+	public void insertNewRequestSingleOk(Map<String, Object> params) {
 		
 		Map<String, Object> insertMap = new HashMap<String, Object>();
 		
@@ -199,14 +202,14 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	
 	
 	@Override
-	public int searchBSScheduleM(Map<String, Object> params) throws Exception{
+	public int searchBSScheduleM(Map<String, Object> params){
 		
 		return orderInvestMapper.searchBSScheduleM(params);
 	}
 	
 	
 	@Override
-	public void saveOrderInvestOk(Map<String, Object> params) throws Exception{
+	public void saveOrderInvestOk(Map<String, Object> params) {
 		
 		
 		// parameter setting (investigationM)
@@ -248,14 +251,14 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	
 	
 	@Override
-	public EgovMap investCallResultInfo(Map<String, Object> params) throws Exception{
+	public EgovMap investCallResultInfo(Map<String, Object> params) {
 		
 		return orderInvestMapper.investCallResultInfo(params);
 	}
 
 	
 	@Override
-	public EgovMap investCallResultCust(Map<String, Object> params) throws Exception{
+	public EgovMap investCallResultCust(Map<String, Object> params){
 		
 		return orderInvestMapper.investCallResultCust(params);
 	}
@@ -268,7 +271,7 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	
 	
 	@Override
-	public void saveCallResultOk(Map<String, Object> params) throws Exception{
+	public void saveCallResultOk(Map<String, Object> params){
 		
 		EgovMap getInvId = orderInvestMapper.saveCallResultSearchFirst(params);
 		params.put("salesOrdId", getInvId.get("salesOrdId"));
@@ -316,7 +319,7 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	}
 	
 	@Override
-	public String bsMonthCheck(Map<String, Object> params) throws Exception{
+	public String bsMonthCheck(Map<String, Object> params) {
 		int BSStatusID = 0;
         int BSFailReasonID = 0;
         String hidIsBSMonth = null;
@@ -368,5 +371,167 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 		
 		return hidIsBSMonth;
+	}
+	
+	
+	@Override
+	public void saveInvest(Map<String, Object> params) {
+		
+		int studId = 0;	// Pending : 44, Approve : 5, reject : 6
+		if((String)params.get("statusPop") != null && !"".equals((String)params.get("statusPop")) ){
+			studId = Integer.parseInt((String)params.get("statusPop"));
+		}
+		
+		Map<String, Object> saveInvestMap = new HashMap<String, Object>();
+		saveInvestMap.put("userId", params.get("userId"));
+		saveInvestMap.put("callCrtUserId", params.get("userId"));
+		//active
+		//Pendig
+		saveInvestMap.put("statusPop", studId);
+		saveInvestMap.put("gridInvReqId", params.get("gridInvReqId"));
+		saveInvestMap.put("statusRem", params.get("statusRem"));
+		saveInvestMap.put("salesOrdId", params.get("salesOrdId"));
+		
+		String cancelBsChk = (String)params.get("cancelBsChk");
+		
+		if(studId == 44){
+			orderInvestMapper.updatePendingInvestReqM(saveInvestMap);
+			orderInvestMapper.insertInvestigateReqD(saveInvestMap);
+		}else if(studId == 5){
+			int searchBSScheduleMCnt = orderInvestMapper.searchBSScheduleM(saveInvestMap);
+			
+			orderInvestMapper.updatePendingInvestReqM(saveInvestMap);
+			orderInvestMapper.insertInvestigateReqD(saveInvestMap);
+			
+			saveInvestMap.put("docNoId", 74);
+			String getDocId = orderInvestMapper.getDocNo(saveInvestMap);	//INV1134256
+			
+			saveInvestMap.put("invNo", getDocId);
+			saveInvestMap.put("invStusId", 1);
+			if(searchBSScheduleMCnt == 0){
+				saveInvestMap.put("invToCanclActBs", 0);
+			}else{
+				saveInvestMap.put("invToCanclActBs", 1);
+			}
+			EgovMap getBSScheduleStusCodeId = orderInvestMapper.getBSScheduleStusCodeId(saveInvestMap);
+			saveInvestMap.put("invCanclBsSchdulId", getBSScheduleStusCodeId.get("schdulId"));
+			saveInvestMap.put("invToActvtBs", 0);
+			saveInvestMap.put("invReqTicketId", 0);
+			saveInvestMap.put("invCallEntryId", 0);
+			saveInvestMap.put("invDtAuto", 0);
+			String seqSAL0049D = orderInvestMapper.seqSAL0049D();
+			saveInvestMap.put("seqSAL0049D", seqSAL0049D);
+			orderInvestMapper.insertInvestigate(saveInvestMap);
+			
+			saveInvestMap.put("invReqId", params.get("gridInvReqId"));
+			EgovMap saveSearchSAL0049D = orderInvestMapper.saveSearchSAL0049D(saveInvestMap);
+			String seqSAL0052D = orderInvestMapper.seqSAL0052D();
+			saveInvestMap.put("inchargeNmId", params.get("inchargeNmId"));
+			saveInvestMap.put("invInPersonStusId", 1);
+			saveInvestMap.put("invEntryId", saveSearchSAL0049D.get("invId"));
+			saveInvestMap.put("seqSAL0052D", seqSAL0052D);
+			orderInvestMapper.insertInvestInchargePerson(saveInvestMap);
+			
+			saveInvestMap.put("typeId", 766);
+			saveInvestMap.put("stusCodeId", 1);
+			saveInvestMap.put("resultId", 0);
+			saveInvestMap.put("docId", saveSearchSAL0049D.get("invId"));
+			saveInvestMap.put("callDt", SalesConstants.DEFAULT_DATE);
+			saveInvestMap.put("isWaitForCancl", 0);
+			saveInvestMap.put("hapyCallerId", params.get("userId"));
+			int getCallEntryIdMaxSeq = orderExchangeMapper.getCallEntryIdMaxSeq();
+			saveInvestMap.put("getCallEntryIdMaxSeq", getCallEntryIdMaxSeq);
+			orderCancelMapper.insertCancelCCR0006D(saveInvestMap);
+			
+			EgovMap getCallEntryId = orderInvestMapper.saveSearchCCR0006DdocId(saveInvestMap);
+			saveInvestMap.put("invCallEntryId", getCallEntryId.get("callEntryId"));
+			saveInvestMap.put("invId", saveSearchSAL0049D.get("invId"));
+			orderInvestMapper.updateSAL0049DEntryId(saveInvestMap);
+			
+			int getCallResultIdMaxSeq = orderExchangeMapper.getCallResultIdMaxSeq();
+			saveInvestMap.put("getCallResultIdMaxSeq", getCallResultIdMaxSeq);
+			saveInvestMap.put("soExchgNwCallEntryId", getCallEntryId.get("callEntryId"));
+			saveInvestMap.put("callStusId", 1);
+			saveInvestMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+			saveInvestMap.put("callFdbckId", 0);
+			saveInvestMap.put("callCtId", 0);
+			saveInvestMap.put("callRem", params.get("statusRem"));
+			saveInvestMap.put("callCrtUserId", params.get("userId"));
+			saveInvestMap.put("callCrtUserIdDept", 0);
+			saveInvestMap.put("callHcId", 0);
+			saveInvestMap.put("callRosAmt", 0);
+			saveInvestMap.put("callSms", 0);
+			saveInvestMap.put("callSmsRem", "");
+			orderExchangeMapper.insertCCR0007D(saveInvestMap);	//CallResult
+			
+			saveInvestMap.put("callEntryId", getCallEntryId.get("callEntryId"));
+			EgovMap getCallResultId = orderInvestMapper.saveCallResultSearchThird(saveInvestMap);
+			saveInvestMap.put("resultId", getCallResultId.get("callResultId"));
+			saveInvestMap.put("getCallEntryIdMaxSeq", getCallEntryId.get("callEntryId"));
+			orderExchangeMapper.updateResultIdCCR0006D(saveInvestMap);
+			
+			EgovMap getRentalScheme = orderInvestMapper.saveCallResultSearchFourth(saveInvestMap);
+			saveInvestMap.put("renSchId", getRentalScheme.get("renSchId"));
+			saveInvestMap.put("rentalSchemeStusId", "INV");
+			orderInvestMapper.updateSAL0071D(saveInvestMap);
+			
+			saveInvestMap.put("prgrsId", 9);
+			saveInvestMap.put("isLok", 1);
+			saveInvestMap.put("refId", 0);
+			orderInvestMapper.insertSalesOrdLog(saveInvestMap);
+		
+		}else if(studId == 6){
+			saveInvestMap.put("invReqStusParam", params.get("cmbRejReason"));
+			orderInvestMapper.updateInvestReqM(saveInvestMap);
+			orderInvestMapper.insertInvestigateReqD(saveInvestMap);
+			
+			saveInvestMap.put("prgrsId", 5);
+			saveInvestMap.put("isLok", 0);
+			saveInvestMap.put("refId", 0);
+			orderInvestMapper.insertSalesOrdLog(saveInvestMap);
+			
+			int searchBSScheduleMCnt = orderInvestMapper.searchBSScheduleM(saveInvestMap);
+			
+			if("true".equals(cancelBsChk) && searchBSScheduleMCnt > 0){
+				EgovMap getBSScheduleId = orderInvestMapper.getBSScheduleId(saveInvestMap);
+				saveInvestMap.put("schdulId", getBSScheduleId.get("schdulId"));
+				saveInvestMap.put("stusCodeId", 10);
+				orderInvestMapper.updateSVC0008DBSSchd(saveInvestMap);
+				
+				saveInvestMap.put("docNoId", 11);
+				String getDocIdRej = orderInvestMapper.getDocNo(saveInvestMap);	//INV1134256
+				String seqSVC0006D = orderInvestMapper.seqSVC0006D();
+				saveInvestMap.put("seqSVC0006D", seqSVC0006D);
+				saveInvestMap.put("bsNo", getDocIdRej);
+				saveInvestMap.put("typeId", 306);
+				saveInvestMap.put("codyId", 0);
+				saveInvestMap.put("setlDt", SalesConstants.DEFAULT_DATE);
+				saveInvestMap.put("resultStusCodeId", 10);
+				saveInvestMap.put("failResnId", 1770);
+				saveInvestMap.put("renColctId", 0);
+				saveInvestMap.put("whId", 0);
+				saveInvestMap.put("resultRem", "ORDER TO INVESTIGATE");
+				saveInvestMap.put("resultIsSync", 0);
+				saveInvestMap.put("resultIsEdit", 0);
+				saveInvestMap.put("resultStockUse", 0);
+				saveInvestMap.put("resultIsCurr", 1);		// setting - query profiler
+				saveInvestMap.put("resultMtchId", 0);		// setting - query profiler
+				saveInvestMap.put("resultIsAd", 0);			// setting - query profiler
+				orderInvestMapper.insertSVC0006DBSSchd(saveInvestMap);
+				
+				String seqSVC0007D = orderInvestMapper.seqSVC0007D();
+				EgovMap saveSearchSVC0006D = orderInvestMapper.saveSearchSVC0006D(saveInvestMap);
+				saveInvestMap.put("seqSVC0007D", seqSVC0007D);
+				saveInvestMap.put("bsResultId", saveSearchSVC0006D.get("resultId"));
+				saveInvestMap.put("bsResultPartId", 0);
+				saveInvestMap.put("bsResultPartDesc", "");
+				saveInvestMap.put("bsResultPartQty", 0);
+				saveInvestMap.put("bsResultRem", "ORDER TO INVESTIGATE");
+				saveInvestMap.put("bsResultFilterClm", 0);
+				orderInvestMapper.insertSVC0007DBSSchd(saveInvestMap);
+			}
+			
+		}
+		
 	}
 }

@@ -121,10 +121,26 @@ public interface OrderInvestMapper {
 	
 	/************************** Order Investigation save ****************************/
 	int searchBSScheduleM(Map<String, Object> params);
-	EgovMap searchInvestigateReqM(Map<String, Object> params) ;
+	EgovMap searchInvestigateReqM(Map<String, Object> params);
 	int updateInvestReqM(Map<String, Object> params);
 	int insertInvestigateReqD(Map<String, Object> params);
-	
+	void updatePendingInvestReqM(Map<String, Object> params);
+	EgovMap saveSearchCCR0006DdocId(Map<String, Object> params);
+	void updateSAL0049DEntryId(Map<String, Object> params);
+	EgovMap saveSearchCCR0006D(Map<String, Object> params);
+	String seqSAL0049D();
+	void insertInvestigate(Map<String, Object> params);
+	String seqSAL0052D();
+	void insertInvestInchargePerson(Map<String, Object> params);
+	EgovMap saveSearchSAL0049D(Map<String, Object> params);
+	EgovMap saveSVC0008D(Map<String, Object> params);
+	EgovMap getBSScheduleId(Map<String, Object> params);
+	void updateSVC0008DBSSchd(Map<String, Object> params);
+	void insertSVC0006DBSSchd(Map<String, Object> params);
+	String seqSVC0006D();
+	EgovMap saveSearchSVC0006D(Map<String, Object> params);
+	String seqSVC0007D();
+	void insertSVC0007DBSSchd(Map<String, Object> params);
 	
 	/************************** Order Investigation Request ****************************/
 	String getDocNo(Map<String, Object> params);
