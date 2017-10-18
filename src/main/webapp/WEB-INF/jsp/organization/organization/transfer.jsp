@@ -224,7 +224,7 @@ $(document).ready(function(){
 </section><!-- transfer_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_saveConfirm();">Confirm Transfer</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_saveConfirm();">Request Transfer</a></p></li>
 </ul>
 </form>
 </section><!-- content end -->
