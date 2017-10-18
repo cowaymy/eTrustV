@@ -216,7 +216,7 @@ var gridPros = {
 <tr>
     <th scope="row">Last updated by</th>
 	    <td>
-	    <span><c:out value="${installResult.userName}"/></span>
+	    <span><c:out value="${installResult.memCode}"/></span>
 	    </td>
     <th scope="row">Product</th>
     <c:if test="${installResult.codeid1  == '257' }">
@@ -382,6 +382,7 @@ var gridPros = {
     </td>
     <th scope="row">Assigned CT</th>
     <td colspan="3">
+     <span><c:out value="(${installResult.memCode}) ${installResult.name2}"/></span>
     </td>
 </tr>
 <tr>

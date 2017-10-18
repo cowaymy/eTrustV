@@ -7,6 +7,7 @@ $(document).ready(function() {
 
 	//grid 생성
 	createInstallationListAUIGrid();
+	AUIGrid.setSelectionMode(myGridID, "singleRow");
 	
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -102,15 +103,15 @@ function createInstallationListAUIGrid() {
     }, {
         dataField : "installEntryId",
         headerText : "",
-        width : 0
+        width : 130
     }, {
         dataField : "codeid1",
         headerText : "",
-        width : 0
+        width :130
     }, {
         dataField : "c1",
         headerText : "",
-        width : 0
+        width : 130
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -123,7 +124,7 @@ function createInstallationListAUIGrid() {
         
         editable : true,
         
-        showStateColumn : true, 
+        showStateColumn : false, 
         
         displayTreeOpen : true,
         
@@ -137,7 +138,7 @@ function createInstallationListAUIGrid() {
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
+        showRowNumColumn : true
 
     };
     

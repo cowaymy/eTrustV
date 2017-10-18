@@ -2,11 +2,37 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 
+function fn_saveValidation(){
+	if($("#callStatus").val() == ''){
+        Common.alert("Please select call log status");
+        return false;
+    }
+	
+	if($("#feedBackCode").val() == ''){
+        Common.alert("Please select feedback code");
+        return false;
+    }
+    return true;
+}
+
+function fn_saveConfirm(){
+    if(fn_saveValidation()){
+        Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_addCallSave);
+    }
+}
+
 function fn_addCallSave(){
 	Common.ajax("POST", "/callCenter/addCallLogResult.do", $("#addCallForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
         Common.alert(result.message);
+
+        $("#hideContent").hide();
+        $("#hideContent1").hide();
+        $("#hideContent3").hide();
+        $("#hideContent4").hide();
+        $("#hiddenBtn").hide();
+        
     });
 }
 
@@ -14,7 +40,7 @@ function fn_callLogTransaction(){
     Common.ajax("GET", "/callCenter/getCallLogTransaction.do", $("#addCallForm").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
-        AUIGrid.setGridData(myGridID, result);
+        AUIGrid.setGridData(callLogTranID, result);
     });
 }
 
@@ -23,7 +49,7 @@ $(document).ready(function() {
 	fn_callLogTransaction();
 	
 });
-var myGridID;
+var callLogTranID;
 function callLogTranGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -77,7 +103,7 @@ function callLogTranGrid() {
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
         
-        editable : true,
+        editable : false,
         
         showStateColumn : true, 
         
@@ -93,12 +119,12 @@ function callLogTranGrid() {
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
+        showRowNumColumn : true
 
     };
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-    myGridID = AUIGrid.create("#grid_wrap_callLogList", columnLayout, gridPros);
+    callLogTranID = AUIGrid.create("#grid_wrap_callLogList", columnLayout, gridPros);
 }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -186,11 +212,11 @@ function callLogTranGrid() {
 </dl>
 </article><!-- acodi_wrap end -->
 
-<aside class="title_line mt20"><!-- title_line start -->
+<aside class="title_line mt20" id="hideContent3"><!-- title_line start -->
 <h2>DSC Verification Remark</h2>
 </aside><!-- title_line end -->
 
-<table class="type1"><!-- table start -->
+<table class="type1" id="hideContent"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:130px" />
@@ -206,7 +232,7 @@ function callLogTranGrid() {
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line mt20"><!-- title_line start -->
+<aside class="title_line mt20"  id="hideContent4"><!-- title_line start -->
 <h2>New Call Log Result</h2>
 </aside><!-- title_line end -->
 <form action="#" id="addCallForm">
@@ -218,7 +244,7 @@ function callLogTranGrid() {
 <input type="hidden" value="${callEntryId}" id="callEntryId" name="callEntryId"/>
 <input type="hidden" value="${salesOrdNo}" id="salesOrdNo" name="salesOrdNo"/>
 
-<table class="type1"><!-- table start -->
+<table class="type1" id="hideContent1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:130px" />
@@ -292,8 +318,8 @@ function callLogTranGrid() {
 </table><!-- table end -->
 </form>
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_addCallSave()">Save</a></p></li>
+<ul class="center_btns" id="hiddenBtn">
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">Save</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
 </ul>
 

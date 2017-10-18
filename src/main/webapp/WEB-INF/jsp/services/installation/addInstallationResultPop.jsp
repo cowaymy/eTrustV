@@ -8,6 +8,12 @@ $(document).ready(function() {
     createInstallationViewAUIGrid();
     fn_viewInstallResultSearch();
     
+    $("#completedHide").hide();
+    $("#completedHide1").hide();
+    $("#completedHide2").hide();
+    $("#failHide3").hide();
+    
+  
     var callType = "${callType.typeId}";
     console.log(callType);
     if(callType == 0){
@@ -71,6 +77,15 @@ $(document).ready(function() {
 /*     ("#hiddenPostCode").val("${customerAddress.typeId}");
     ("#hiddenStateName").val("${customerAddress.typeId}");
     ("#hiddenCountryName").val("${customerAddress.typeId}"); */
+    
+    $("#installStatus").change(function (){
+        console.log($("#installStatus").val());
+        if($("#installStatus").val() == 4){
+            $("#completedHide").show();
+            $("#completedHide1").show();
+            $("#completedHide2").show();
+        }
+    });
     
 });
 
@@ -430,11 +445,11 @@ var gridPros = {
 <tr>
     <th scope="row">Request Install Date</th>
     <td>
-    <span><c:out value="${installResult.c3}"/></span>
+    <span><c:out value="${installResult.c1}"/></span>
     </td>
     <th scope="row">Assigned CT</th>
     <td colspan="3">
-       <span><c:out value="${stock.memCode} -  ${stock.name}"/></span> 
+        <span><c:out value="(${stock.memCode}) ${stock.name}"/></span>
     </td>
 </tr>
 <tr>
@@ -461,7 +476,7 @@ var gridPros = {
 <tr>
     <th scope="row">Special Instruction</th>
     <td>
-    <span></span>
+    <span><c:out value="${installation.instct}"/> </span>
     </td>
     <th scope="row">Preferred Date</th>
     <td>
@@ -616,7 +631,7 @@ var gridPros = {
 <input type="hidden" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" />
 <input type="hidden" value="${installResult.installEntryNo}" id="hiddeninstallEntryNo" name="hiddeninstallEntryNo" />
 <input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" />
-<input type="hidden" value="" id="hidActualCTId" name="hidActualCTId" />
+<input type="text" value="" id="hidActualCTId" name="hidActualCTId" />
 <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
 <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" />
 <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" />
@@ -682,7 +697,7 @@ var gridPros = {
 </tbody>
 </table><!-- table end -->
 
-<table class="type1"><!-- table start -->
+<table class="type1" id="completedHide"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:130px" />
@@ -717,11 +732,11 @@ var gridPros = {
 
 
 
-<aside class="title_line"><!-- title_line start -->
+<aside class="title_line" id="completedHide1"><!-- title_line start -->
 <h2>SMSInfo</h2>
 </aside><!-- title_line end -->
 
-<table class="type1"><!-- table start -->
+<table class="type1" id="completedHide2"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:110px" />
@@ -748,7 +763,7 @@ Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
 </tr>
 </tbody>
 </table><!-- table end -->
-<table class="type1"><!-- table start -->
+<table class="type1" id="failHide3"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:110px" />

@@ -134,7 +134,7 @@ $(document).ready(function() {
             
             editable : true,
             
-            showStateColumn : true, 
+            showStateColumn : false, 
             
             displayTreeOpen : true,
             
@@ -148,7 +148,7 @@ $(document).ready(function() {
             wrapSelectionMove : true,
             
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false,
+            showRowNumColumn : true
 
         };
         
