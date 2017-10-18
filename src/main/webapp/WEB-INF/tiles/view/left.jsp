@@ -50,8 +50,7 @@
     // 선택한 메뉴화면으로 이동.
     function fn_menu(obj, menuCode, menuPath, fullPath, myMenuGroupCode){
 
-        //if(FormUtil.isEmpty(menuPath) || $(obj).hasClass("disabled")){
-        if(FormUtil.isEmpty(menuPath)){
+        if(FormUtil.isEmpty(menuPath) || $(obj).hasClass("disabled")){
             return;
         }
 
@@ -141,7 +140,7 @@
             <c:choose>
             <c:when test="${ list.menuLvl == 1}">
             <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                <a id="a_${list.menuCode}" href="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
                 </c:when>
                 <c:otherwise>
 
@@ -149,11 +148,11 @@
                 <c:when test="${preMenuCode != '' && preMenuLvl < list.menuLvl}">
                 <ul>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
                         </c:when>
                         <c:otherwise>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
                         </c:otherwise>
                         </c:choose>
 
@@ -206,7 +205,7 @@
                                                 <ul>
                                             </c:if>
                                             <li  id="li_${menuList.menuCode}${groupList.mymenuCode}" group_my_menu_code="${groupList.mymenuCode}">
-                                                <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:fn_menu(this, '${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
+                                                <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
                                             </li>
                                             <c:set var="groupPerMenuCnt" value="${groupPerMenuCnt + 1}" />
                                         </c:when>
