@@ -1,17 +1,17 @@
 package com.coway.trust.config.datasource;
 
 public class ContextHolder {
-	private static final ThreadLocal<DataSourceType> contextHolder = new ThreadLocal<DataSourceType>();
+	private static final ThreadLocal<DataSourceType> CONTEXT_HOLDER = new ThreadLocal<DataSourceType>();
 
 	public static void setDataSourceType(DataSourceType dataSourceType) {
-		contextHolder.set(dataSourceType);
+		CONTEXT_HOLDER.set(dataSourceType);
 	}
 
 	public static DataSourceType getDataSourceType() {
-		return contextHolder.get();
+		return CONTEXT_HOLDER.get();
 	}
 
 	public static void clearDataSourceType() {
-		contextHolder.remove();
+		CONTEXT_HOLDER.remove();
 	}
 }

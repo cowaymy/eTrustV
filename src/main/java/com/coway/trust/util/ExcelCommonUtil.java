@@ -16,9 +16,9 @@ import com.coway.trust.AppConstants;
 
 public class ExcelCommonUtil {
 
-	private Workbook workbook;
-	private Map<String, Object> model;
-	private HttpServletResponse response;
+	private final Workbook workbook;
+	private final Map<String, Object> model;
+	private final HttpServletResponse response;
 
 	public ExcelCommonUtil(Workbook workbook, Map<String, Object> model, HttpServletResponse response) {
 		this.workbook = workbook;
@@ -53,17 +53,18 @@ public class ExcelCommonUtil {
 	}
 
 	private String setFileExtension(String fileName) {
+		String retStr = fileName;
 		if (workbook instanceof XSSFWorkbook) {
-			fileName += ".xlsx";
+			retStr += ".xlsx";
 		}
 		if (workbook instanceof SXSSFWorkbook) {
-			fileName += ".xlsx";
+			retStr += ".xlsx";
 		}
 		if (workbook instanceof HSSFWorkbook) {
-			fileName += ".xls";
+			retStr += ".xls";
 		}
 
-		return fileName;
+		return retStr;
 	}
 
 	private void createHead(Sheet sheet, List<String> headList) {
