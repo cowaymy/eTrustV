@@ -126,6 +126,14 @@ function callLogTranGrid() {
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     callLogTranID = AUIGrid.create("#grid_wrap_callLogList", columnLayout, gridPros);
 }
+
+function fn_doAllaction(){
+    var ord_id = $("#salesOrdId").val();
+    var  vdte = '';
+    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte}, null , true , '_doAllactionDiv');
+    
+
+}
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -270,17 +278,20 @@ function callLogTranGrid() {
     </td>
     <th scope="row">Appointment Date</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="appDate" name="appDate"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="appDate" name="appDate" onchange="javascript:fn_doAllaction()"/>
     </td>
 </tr>
 <tr>
     <th scope="row">CT Group</th>
     <td>
-    <select class="w100p" id="CTgroup"  name="CTgroup" >
+    
+    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="CTgroup" name="CTgroup"/>
+    
+   <!--  <select class="w100p" id="CTgroup"  name="CTgroup" >
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
-    </select>
+    </select> -->
     </td>
     <th scope="row">Feedback Code<span class="must">*</span></th>
     <td colspan="3">
@@ -298,8 +309,8 @@ function callLogTranGrid() {
 
     <div class="search_100p"><!-- search_100p start -->
     <input type="text" title="" placeholder="" class="w100p" id="CTCode" name="CTCode"/>
-    <input type="hidden" value="16495" placeholder="" class="w100p" id="CTID" name="CTID"/>
-    <a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    <input type="text" placeholder="" class="w100p" id="CTID" name="CTID"/>
+    <a href="#" class="search_btn" onclick="javascript:fn_doAllaction()"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </div><!-- search_100p end -->
 
     </td>
