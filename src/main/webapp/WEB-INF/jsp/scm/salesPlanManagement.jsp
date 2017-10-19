@@ -178,13 +178,6 @@ function fnSetStockCategoryComboBox()
 				            );  
 }
 
-
-//Make Use_yn ComboList, tooltip
-function getDisibledComboList()
-{     
-  return list =  ["Active", "InActive"];   
-}
-
 function getDealerComboListAjax(callBack) 
 {
     Common.ajaxSync("GET", "/common/selectGSTExportDealerList.do"

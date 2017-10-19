@@ -5,6 +5,9 @@
 .aui-grid-right-column {
   text-align:right;
 }
+.aui-grid-left-column {
+  text-align:right;
+}
 
 /* 커스텀 칼럼 스타일 정의 */
 .my-column {  
@@ -21,13 +24,21 @@
 
 <script type="text/javaScript">
 
-var gWeekThValue ="";
-
 $(function() 
 {
 	fnSelectTargetDateComboList('351');
 	fnSelectInterFaceTypeComboList('352');
 });
+
+function fnClick()
+{
+	$('#btn11').removeClass("btn_disabled");
+	//$('#btn11').addClass("btn_disabled");
+}
+function fnCallInterface()
+{
+	$("#intfTypeCbBox option:eq(1)").prop("selected",true);
+}
 
 function fnSelectTargetDateComboList(codeId)
 {
@@ -47,6 +58,13 @@ function fnSelectTargetDateComboList(codeId)
 function fnSelectInterFaceTypeComboList(codeId)
 {
 	CommonCombo.initById("intfTypeCbBox");  // reset...
+
+	 // Call Back
+    var fnSelectintfTypeCallback = function () 
+        {
+    	   $("#intfTypeCbBox>option:eq(1)").prop("selected",true);
+        }
+	
   CommonCombo.make("intfTypeCbBox"
             , "/scm/selectComboInterfaceDate.do"  
             , { codeMasterId: codeId }       
@@ -56,7 +74,7 @@ function fnSelectInterFaceTypeComboList(codeId)
                 name: "codeName",  //view
                 chooseMessage: "Select Interface Type"
                }
-            , "");     
+            , fnSelectintfTypeCallback);     
 }
 
 // excel export
@@ -83,35 +101,35 @@ function fnSearchBtnList()
      return false;
    }
 
-   Common.ajax("GET", "/scm/selectInterfaceSearch.do"
-           , $("#MainForm").serialize()
-           , function(result) 
-           {
-              console.log("성공 fnSearchBtnList: " + result.selectInterfaceList[0].length);
-              AUIGrid.setGridData(myGridID, result.selectInterfaceList);
-              if(result != null && result.selectInterfaceList[0].length > 0)
-              {
-                  console.log("success");
-              }
-              
-           }
-				   , function(jqXHR, textStatus, errorThrown)
-				   {
-				     try
-				     {
-				       console.log("Fail Status : " + jqXHR.status);
-				       console.log("code : "        + jqXHR.responseJSON.code);
-				       console.log("message : "     + jqXHR.responseJSON.message);
-				       console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-				     }
-				     catch (e)
-				     {
-				       console.log(e);
-				     }
+   Common.ajax("GET"
+		         , "/scm/selectInterfaceSearch.do"
+             , $("#MainForm").serialize()
+	           , function(result) 
+		           {
+		              console.log("성공 fnSearchBtnList: " + result.selectInterfaceList.length);
+		              AUIGrid.setGridData(myGridID, result.selectInterfaceList);
+		              if(result != null && result.selectInterfaceLastState.length > 0)
+		              {
+		                  $("#spanText").text(result.selectInterfaceLastState[0].lastState); 
+		              }
+		              
+		           }
+						 , function(jqXHR, textStatus, errorThrown)
+						   {
+						     try
+						     {
+						       console.log("Fail Status : " + jqXHR.status);
+						       console.log("code : "        + jqXHR.responseJSON.code);
+						       console.log("message : "     + jqXHR.responseJSON.message);
+						       console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+						     }
+						     catch (e)
+						     {
+						       console.log(e);
+						     }
 	
-				      Common.alert("Fail : " + jqXHR.responseJSON.message);
-			     });
-   
+						     Common.alert("Fail : " + jqXHR.responseJSON.message);
+						   });
 }
 
 function auiCellEditignHandler(event) 
@@ -169,20 +187,14 @@ function auiRemoveRowHandler(event)
     console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
-//그리드 헤더 클릭 핸들러
-function headerClickHandler(event) 
+function fnLastStateChange() 
 {
-  // checkFlag 칼럼 클릭 한 경우
-  if(event.dataField == "checkFlag") 
-  {
-    if(event.orgEvent.target.id == "allCheckbox") 
-    { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
-      var  isChecked = document.getElementById("allCheckbox").checked;
-      checkAll(isChecked);
-    }
-    return false;
-  }
+    var element = document.getElementById("span1");
+    element.style.fontSize = "10pt";
+    element.style.color = "#f00";
+    element.style.fontWeight = "bold";
 }
+
 
 /*************************************
  **********  Grid-LayOut  ************
@@ -201,7 +213,7 @@ var InterfaceLayout =
         }, {
             dataField : "matnrNm",
             headerText : "<spring:message code='sys.scm.interface.matnrNm'/>",
-            style : "aui-grid-right-column",
+            style : "aui-grid-left-column",
             width : "7%"
         }, {
             dataField : "stockType",
@@ -312,10 +324,6 @@ $(document).ready(function()
     console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
   });  
 
-/*   $(this).addClass(“class_name”);
-
-  $(this).removeClass(“class_name”); */
-  
          
 });   //$(document).ready
 
@@ -343,9 +351,11 @@ $(document).ready(function()
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:130px" />
+	<col style="width:110px" />
 	<col style="width:*" />
-	<col style="width:130px" />
+	<col style="width:110px" />
+	<col style="width:*" />
+	<col style="width:110px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -359,6 +369,10 @@ $(document).ready(function()
 	<td>
     <select id="targetDateCbBox" name="targetDateCbBox">
     </select>
+	</td>
+	 <th scope="row">Last Interface</th> 
+	<td>
+	 <span id="spanText" style="font-size:9pt;color:#FF0000"></span>
 	</td>
 </tr>
 </tbody>
@@ -395,7 +409,10 @@ $(document).ready(function()
 </aside><!-- link_btns_wrap end -->
 
 </form>
+
 </section><!-- search_table end -->
+
+
 
 <section class="search_result"><!-- search_result start -->
 
@@ -405,8 +422,7 @@ $(document).ready(function()
 	<li><p class="btn_grid"><a href="javascript:void(0);">DEL</a></p></li>
 	<li><p class="btn_grid"><a href="javascript:void(0);">INS</a></p></li> 
 -->
-	<li><p class="btn_grid"><a onclick="fnCallInterface();">DO INTERFACE</a></p></li>
-	<input type='button' id='Clear' value='Clear' disabled />
+	<li><p id='btn11' class="btn_grid btn_disabled"><a onclick="fnCallInterface();">DO INTERFACE</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start --> 

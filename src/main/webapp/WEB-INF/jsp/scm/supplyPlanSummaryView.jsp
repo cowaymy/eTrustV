@@ -98,7 +98,6 @@ function fnSelectExcuteYear()
 
 function fnChangeEventPeriod(object)
 {
-  //alert("fnChangeEventPeriod: " + object.value );
   gWeekThValue = object.value
 }
 
@@ -168,8 +167,8 @@ function fnSettiingHeader()
                     showRowNumColumn : false, //순번 칼럼 숨김
                     editable : false,
                     showStateColumn : false, // 행 상태 칼럼 보이기
-                    showEditedCellMarker : true, // 셀 병합 실행
-                    enableCellMerge : true,
+                    showEditedCellMarker : false, // 셀 병합 실행
+                    //enableCellMerge : true,
                     // 고정칼럼 카운트 지정
                     fixedColumnCount : 4               
                   };
@@ -188,10 +187,7 @@ function fnSettiingHeader()
               if(AUIGrid.isCreated(myGridID)){
                  AUIGrid.destroy(myGridID);
               }
-              if(AUIGrid.isCreated(summaryGridID)){
-                 AUIGrid.destroy(summaryGridID);
-              }
-
+              
               return false;  
             }
                             
@@ -202,7 +198,7 @@ function fnSettiingHeader()
                                         { 
                                           headerText : "Stock"
                                         , style : "my-header" 
-                                       // , width : 13 
+                                        //, width : "30%" 
                                         , children : [
                                                           
                                                           {                            
@@ -624,11 +620,10 @@ function fnSettiingHeader()
 
 /****************************  Form Ready ******************************************/
 
-var myGridID , summaryGridID;
+var myGridID ;
 
 $(document).ready(function()
 {
-		   		    
 });   //$(document).ready
 </script>
 

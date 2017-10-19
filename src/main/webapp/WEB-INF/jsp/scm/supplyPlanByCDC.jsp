@@ -60,27 +60,6 @@ function fnSelectPeriodReset()
    CommonCombo.initById("scmPeriodCbBox");  // reset...
    var periodCheckBox = document.getElementById("scmPeriodCbBox");
        periodCheckBox.options[0] = new Option("Select a WEEK","");
-         
-  /*  CommonCombo.initById("cdcCbBox");  // reset...
-   var periodCheckBox = document.getElementById("cdcCbBox");
-       periodCheckBox.options[0] = new Option("Select a CDC",""); */  
-}
-
-function fnSelectCDC(selectYear, selectWeekTh)
-{
-	  CommonCombo.make("cdcCbBox"
-              , "/scm/selectComboSupplyCDC.do"  
-              , { planYear: selectYear
-                 //,planMonth : 1
-                 ,planWeek : selectWeekTh
-                }       
-              , ""                         
-              , {  
-                  id  : "codeValue",          
-                  name: "codeView",
-                  chooseMessage: "Select a CDC"
-                 }
-              , "");     
 }
 
 function fnSelectCDCComboList(codeId)
@@ -90,7 +69,7 @@ function fnSelectCDCComboList(codeId)
               , { codeMasterId: codeId }       
               , ""                         
               , {  
-                  id  : "code",          
+                  id  : "code",     // use By query's parameter values                
                   name: "codeName",
                   chooseMessage: "Select a CDC"
                  }
@@ -146,9 +125,7 @@ function fnSelectExcuteYear()
 
 function fnChangeEventPeriod(object)
 {
-  //alert("Year: " + $("#scmYearCbBox").val() + " /WeekTh: " + object.value   );  
   gWeekThValue = object.value;
-  //fnSelectCDC( $("#scmYearCbBox").val() , object.value);
 }
 
 function fnSetStockComboBox()
