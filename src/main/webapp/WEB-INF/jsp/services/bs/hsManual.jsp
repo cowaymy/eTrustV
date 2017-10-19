@@ -126,7 +126,7 @@
                             visible:false                   
                         }, {
                             dataField : "codyBrnchCode",
-                            headerText : "BranchCode",
+                            headerText : "Branch Code",
                             width : 120
                     }];
                             
@@ -152,7 +152,7 @@
                         width : 120
                     }, {
                         dataField : "hsDate",
-                        headerText : "HS Date",
+                        headerText : "HS Period",
                         width : 120
                     }, {                        
                         dataField : "no",
