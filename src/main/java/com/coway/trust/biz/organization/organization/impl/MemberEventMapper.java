@@ -60,5 +60,7 @@ public interface MemberEventMapper {
 	
 	EgovMap selectDeptCode(int promoId);
 	
+	int selectMemUpId(String lastDeptCode);
+	
 	
 }	
