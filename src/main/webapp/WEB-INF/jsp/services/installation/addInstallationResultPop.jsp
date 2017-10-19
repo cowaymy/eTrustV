@@ -196,6 +196,14 @@ var gridPros = {
     showRowNumColumn : false
     
 };
+
+function fn_doAllaction(){
+    var ord_id = $("#hidSalesOrderId").val();
+    var  vdte = '';
+    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte}, null , true , '_doAllactionDiv');
+    
+
+}
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -678,12 +686,12 @@ var gridPros = {
     </select>
     </td>
     <th scope="row">Actual Install Date</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="installDate" name="installDate"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="installDate" name="installDate" onchange="javascript:fn_doAllaction()"/></td>
 </tr>
 <tr>
     <th scope="row">CT Code</th>
-    <td><input type="text" title="" placeholder="" class="" style="width:200px;" id="ctCode" name="ctCode" />
-    <input type="hidden" title="" value="16495" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
+    <td><input type="text" title="" placeholder="" class="" style="width:200px;" id="CTCode" name="CTCode" />
+    <input type="hidden" title=""  placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
     <p class="btn_sky"><a href="#">Search</a></p></td>
     <th scope="row">CT Name</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td>
