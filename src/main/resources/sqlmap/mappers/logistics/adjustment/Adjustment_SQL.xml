@@ -437,7 +437,9 @@
 			                ,0 L63CNT
 			                ,0 L74CNT
 			            FROM LOG0061D L61
-			           WHERE L61.SERIAL_NO = #{serial}
+			           WHERE 1=1
+			            AND  L61.DELVRY_NO IN (SELECT DELVRY_NO FROM LOG0054M WHERE NVL(DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y')
+                        AND  L61.SERIAL_NO = #{serial}
 			        GROUP BY L61.SERIAL_NO
 			        UNION
 			        SELECT   L63.SERIAL_NO
