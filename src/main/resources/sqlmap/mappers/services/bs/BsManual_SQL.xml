@@ -238,7 +238,8 @@
           
           
                   <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
-			              SELECT  Project2.No No  ,
+
+            			              SELECT  Project2.No No  ,
 						                Project2.HS_DATE HS_DATE  ,
 						                Project2.STUS_CODE_ID STUS_CODE_ID  ,
 						                Project2.Code Code  ,
@@ -331,8 +332,10 @@
                                               <if test="cmdCdManager != null and cmdCdManager != ''">
                                                      AND MG.CODY_MANGR_USER_ID = #{cmdCdManager}
                                               </if>
+                                    <![CDATA[                       and rownum  < 500 ]]>
 						)Project2
 			              
+
 
 <!-- 전명환선생 요청으로 변경 20171017       
                          SELECT Project2.C1 C1  ,
