@@ -210,7 +210,7 @@ var billGrpHistoryLayout = [
         headerText : "At",
         editable : false,
     },{
-        dataField : "hiscreator",
+        dataField : "username",
         headerText : "By",
         editable : false,
     }];
@@ -1112,14 +1112,9 @@ var addOrderLayout = [
             
             Common.ajax("GET","/payment/saveNewReq.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqEmail" : reqEmail}, function(result){
                 console.log(result);
-                
-                Common.alert(result.message);
-                
                 $("#newReqEmail").val("");
                 $("#newReqReason").val("");
-                
-                //this.SendConfirmEmail(requestMaster); 메일보내기 나중에하기
-                
+                Common.alert(result.message);
             });
             
         }else{

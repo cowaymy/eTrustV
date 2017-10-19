@@ -492,7 +492,7 @@
 			CONTACTIDOLD, 
 			TO_CHAR(HISCREATED,'DD-MM-YYYY hh:mi:ss A.M.') HISCREATED, 
 			HISCREATOR, 
-			C1, 
+			USERNAME, 
 			CUSTBILLID, 
 			EMAILNEW, 
 			EMAILOLD, 
@@ -519,7 +519,7 @@
 			                Project1.ContactIDOld ContactIDOld  ,
 			                Project1.HisCreated HisCreated  ,
 			                Project1.HisCreator HisCreator  ,
-			                Project1.C1 C1  ,
+			                Project1.userName userName  ,
 			                Project1.CustBillID CustBillID  ,
 			                Project1.EmailNew EmailNew  ,
 			                Project1.EmailOld EmailOld  ,
@@ -565,7 +565,7 @@
 			                Project1.TypeID TypeID  ,
 			                Project1.SysHisRemark SysHisRemark  ,
 			                Project1.CodeName CodeName  ,
-			                Project1.C1 C1  ,
+			                Project1.userName userName  ,
 			                ROW_NUMBER() OVER ( ORDER BY Project1.HistoryID DESC  ) row_number  
 			         FROM ( SELECT Extent1.HIST_ID HistoryID  ,
 			                       Extent1.CUST_BILL_ID CustBillID  ,
@@ -596,7 +596,7 @@
 			                       CASE 
 			                            WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
 			                       ELSE ''
-			                          END C1  
+			                          END userName  
 			                FROM SAL0025D Extent1
 			                       JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
 			                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.HIST_CRT_USER_ID
