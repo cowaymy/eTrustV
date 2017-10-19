@@ -87,7 +87,7 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     totalLength = addList.length + updateList.length + removeList.length;
 
 	if(totalLength == 0){
-		alert("No Change Data.");
+		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
 		return true; /* Failed */
 	}
 
@@ -130,38 +130,20 @@ function fn_detailSave(){
 	if(fn_checkChangeRows(grdMenuMapping)){
 		return;
 	}
-
-	var addList = AUIGrid.getAddedRowItems(grdMenuMapping);
-	if(addList.length > 0){
-		for(var idx = 0 ; idx < addList.length ; idx++){
-			if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
-				AUIGrid.selectRowsByRowId(grdMenuMapping, addList[idx].rowId);
-				alert("My Menu Code is essential field.");
-                return;
-            }
-			if(addList[idx].menuCode == "" || typeof(addList[idx].menuCode) == "undefined"){
-				AUIGrid.selectRowsByRowId(grdMenuMapping, addList[idx].rowId);
-				alert("Menu Code is essential field.");
-				return;
-			}
-		}
-	}
-
-
-    if(confirm("Do you want to save it?")){
+	Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax(
                 "POST",
                 "/common/saveAuthMenuMappingList.do",
                 GridCommon.getEditData(grdMenuMapping),
                 function(data, textStatus, jqXHR){ // Success
-                    alert("Saved.");
+                	Common.alert("<spring:message code='sys.msg.success'/>");
                     fn_search();
                 },
                 function(jqXHR, textStatus, errorThrown){ // Error
                     alert("Fail : " + jqXHR.responseJSON.message);
                 }
         )
-    }
+	});
 };
 
 /****************************Transaction End**********************************/
