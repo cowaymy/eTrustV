@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,14 +16,11 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
 @RequestMapping(value = "/payment")
 public class BillingGroupController {
-
-	private static final Logger logger = LoggerFactory.getLogger(BillingGroupController.class);
 	
 	@Resource(name = "billingGroupService")
 	private BillingGroupService billGroupService;
@@ -495,7 +490,7 @@ public class BillingGroupController {
 			 message.setMessage("E-Statement request has sent out.");
 		 }else{
 			 message.setCode(AppConstants.FAIL);
-				message.setMessage("Failed to request E-Statement. Please try again later.");
+			 message.setMessage("Failed to request E-Statement. Please try again later.");
 		 }
 		
 		return ResponseEntity.ok(message);
