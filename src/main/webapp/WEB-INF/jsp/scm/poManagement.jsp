@@ -164,7 +164,6 @@ function fnSelectExcuteYear()
 
 function fnChangeEventPeriod(object)
 {
-  //alert("Year: " + $("#scmYearCbBox").val() + " /WeekTh: " + object.value   );  
   gWeekThValue = object.value;
   //fnSelectCDC( $("#scmYearCbBox").val() , object.value);
 }
