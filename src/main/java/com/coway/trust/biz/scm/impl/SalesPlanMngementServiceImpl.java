@@ -42,6 +42,22 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		return salesPlanMngementMapper.selectSupplyCDC(params);
 	}
 	@Override
+	public List<EgovMap> selectSupplyPlanMaster(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectSupplyPlanMaster(params);
+	}
+	@Override
+	public List<EgovMap> selectSalesPlanMaster(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectSalesPlanMaster(params);
+	}
+	@Override
+	public List<EgovMap> selectComboSupplyCDC(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectComboSupplyCDC(params);
+	}
+	@Override
+	public List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectSupplyCdcSaveFlag(params);
+	}
+	@Override
 	public List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectSupplyCdcMainList(params);
 	}	

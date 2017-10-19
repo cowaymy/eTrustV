@@ -9,9 +9,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("POMngementMapper")
 public interface PoMngementMapper 
 {
+	/* Interface */
+	List<EgovMap> selectInterfaceList(Map<String, Object> params);
+	List<EgovMap> selectInterfaceLastState(Map<String, Object> params);
+	
+	
 	/* PO Management */
 	List<EgovMap> selectScmPrePoItemView(Map<String, Object> params);
 	List<EgovMap> selectScmPoView(Map<String, Object> params);
+	List<EgovMap> selectScmPoStatusCnt(Map<String, Object> params);
 
 
 	

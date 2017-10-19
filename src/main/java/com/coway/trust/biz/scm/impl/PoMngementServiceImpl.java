@@ -38,6 +38,17 @@ public class PoMngementServiceImpl implements PoMngementService {
 	@Autowired
 	private PoMngementMapper poMngementMapper;
 	
+	/* Interface */
+	@Override
+	public List<EgovMap> selectInterfaceList(Map<String, Object> params) {
+		return poMngementMapper.selectInterfaceList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectInterfaceLastState(Map<String, Object> params) {
+		return poMngementMapper.selectInterfaceLastState(params);
+	}
+	
 	
 	// PO Management - PO Issue
 	
@@ -49,6 +60,11 @@ public class PoMngementServiceImpl implements PoMngementService {
 	@Override
 	public List<EgovMap> selectScmPrePoItemView(Map<String, Object> params) {
 		return poMngementMapper.selectScmPrePoItemView(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectScmPoStatusCnt(Map<String, Object> params) {
+		return poMngementMapper.selectScmPoStatusCnt(params);
 	}
 	
 	//
