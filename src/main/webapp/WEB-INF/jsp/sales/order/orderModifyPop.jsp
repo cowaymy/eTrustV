@@ -84,14 +84,21 @@
         
         //AUIGrid 칼럼 설정
         var docColumnLayout = [
-            { headerText : "Order No",   dataField : "typeDesc",   editable : false }
-          , { headerText : "Name",       dataField : "docCopyQty", editable : true,  width : 100 }
-          , { headerText : "State",      dataField : "docCopyQty", editable : true,  width : 120 }
-          , { headerText : "Contact No", dataField : "docCopyQty", editable : true,  width : 120 }
-          , { headerText : "Remark",     dataField : "docCopyQty", editable : true,  width : 120 }
-          , { headerText : "Created",    dataField : "docCopyQty", editable : false,  width : 120 }
-          , { headerText : "Creator",    dataField : "docCopyQty", editable : false,  width : 120 }
-          , { headerText : "docSoId",    dataField : "docSoId",    visible  : true }
+            { headerText : ' ',
+    		  dataField : "chkfield",
+    		  width: 70,
+    		  renderer : {
+        	    type : "CheckBoxEditRenderer",
+        		showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+        		editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+        		checkValue : 1, // true, false 인 경우가 기본
+        		unCheckValue : 0
+              }
+            }
+          , { headerText : "Document",  dataField : "typeDesc",   editable : false }
+          , { headerText : "Qty",       dataField : "docCopyQty", editable : true,  width : 120 }
+          , { headerText : "docTypeId", dataField : "docTypeId",  visible  : false }
+          , { headerText : "docSoId",   dataField : "docSoId",    visible  : false }
           ];
 
         //그리드 속성 설정
@@ -594,7 +601,7 @@
                 
             return false;
         }
-        
+
         if(tabNm == 'DOC' && ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
             var msg = "This order is not in active/complete status.<br/>Edit document submission is disallowed.";
                     
@@ -2524,7 +2531,7 @@
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_mod_doc_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
+<div id="grid_mod_doc_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
