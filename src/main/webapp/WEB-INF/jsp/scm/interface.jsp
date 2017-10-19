@@ -35,6 +35,7 @@ function fnClick()
 	$('#btn11').removeClass("btn_disabled");
 	//$('#btn11').addClass("btn_disabled");
 }
+
 function fnCallInterface()
 {
 	$("#intfTypeCbBox option:eq(1)").prop("selected",true);
