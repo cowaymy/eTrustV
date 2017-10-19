@@ -1,8 +1,15 @@
 package com.coway.trust.web.common;
 
-import static com.coway.trust.AppConstants.*;
+import static com.coway.trust.AppConstants.FAIL;
+import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_CLIENT_DOCUMENT;
+import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
@@ -19,7 +26,11 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.config.handler.SessionHandler;
@@ -32,6 +43,7 @@ import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
 import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
 import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.Field;
 import com.crystaldecisions.sdk.occa.report.data.FieldDisplayNameType;
 import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.exportoptions.ExportOptions;
@@ -312,7 +324,18 @@ public class ReportController {
 				LOGGER.debug(" k : {}, V : {}", k, v);
 				int index = fields.find(k, FieldDisplayNameType.fieldName, Locale.getDefault());
 				if (index >= 0) {
-					paramController.setCurrentValue("", k, v);
+					if(((Field)fields.get(index)).getType() == com.crystaldecisions.sdk.occa.report.data.FieldValueType.dateField){
+						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD",  Locale.getDefault());
+						Date d = null;
+						  try {
+							d = format.parse(String.valueOf(v));
+						} catch (Exception e) {
+							throw new ApplicationException(e, e.getMessage());
+						}
+						paramController.setCurrentValue("", k, d);
+					}else{
+						paramController.setCurrentValue("", k, v);						
+					}
 				}
 			} catch (ReportSDKException e) {
 				throw new ApplicationException(e, e.getMessage());
