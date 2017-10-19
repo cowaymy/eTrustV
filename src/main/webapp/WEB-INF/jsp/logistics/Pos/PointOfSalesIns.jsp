@@ -554,7 +554,6 @@ function SearchSessionAjax() {
 
     	UserCode=result.UserCode;
     	UserBranchId=result.UserBranchId;
-    	alert("UserBranchId :   "+UserBranchId);
     	$("#insRequestor").val(result.UserName);
     });
 }
