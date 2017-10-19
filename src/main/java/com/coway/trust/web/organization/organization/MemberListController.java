@@ -441,4 +441,20 @@ public class MemberListController {
 		List<EgovMap> deptCode = memberListService.selectDeptCode(params);
 		return ResponseEntity.ok(deptCode);
 	}
+	
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCourse.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCourse(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		List<EgovMap> course = memberListService.selectCourse();
+		return ResponseEntity.ok(course);
+	}
+	
 }
