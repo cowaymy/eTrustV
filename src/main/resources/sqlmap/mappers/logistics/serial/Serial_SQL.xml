@@ -225,7 +225,7 @@
                 (
                 #{serialNo},
                 #{matnr},
-                TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
+                SYSDATE,
                 #{loginId} 
                 )    
     </insert>
