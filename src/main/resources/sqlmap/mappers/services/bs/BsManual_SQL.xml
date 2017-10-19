@@ -153,7 +153,8 @@
 <!--                                 and som.cust_id = sal023.cust_id -->
                                 AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
                                 and sal023.area_id = sys064.area_id
-                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>   
+                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8   
+                                and rownum  < 500 ]]>   
 			                 <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
 		                              AND  hsm.YEAR(+) = #{myBSYear} 
                                       AND  hsm.MONTH(+) = #{myBSMonth} 
