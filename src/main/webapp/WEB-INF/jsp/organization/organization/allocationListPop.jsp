@@ -11,7 +11,11 @@
     font-weight:bold;
     color:#fff;
 }
-
+.my-row-style {
+    background:#FFB2D9;
+    font-weight:bold;
+    color:#22741C;
+}
 
 </style>
 
@@ -57,6 +61,27 @@ $(document).ready(function(){
 
 
 
+function changeRowStyleFunction() {
+    
+    // row Styling 함수를 다른 함수로 변경
+    AUIGrid.setProp(mAgrid, "rowStyleFunction", function(rowIndex, item) {
+        
+        var isrow =false;
+        
+    	
+        if(item.dDate == '${cDate}')  isrow =true; 
+        
+    	if(isrow ){
+            return "my-row-style";
+    	}else{
+    		return "";
+    	}
+        
+    });
+    
+    // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+    AUIGrid.update(mAgrid);
+};
 
 
 //리스트 조회.
@@ -70,6 +95,8 @@ Common.ajax("GET", "/organization/allocation/selectList",{ORD_ID : '${ORD_ID}' ,
        
     console.log(result);
     AUIGrid.setGridData(mAgrid, result);
+    changeRowStyleFunction();
+    
  });
 }
 
@@ -436,6 +463,9 @@ function fn_AllocationConfirm(){
 	
     var selectedItems = AUIGrid.getSelectedItems(dAgrid);
     
+    console.log("===> "+selectedItems);
+    console.log(selectedItems);
+    
     if(selectedItems.length <= 0 ){
           Common.alert("There Are No selected Items.");
           return ;
@@ -470,8 +500,17 @@ function fn_AllocationConfirm(){
         }
     }
     
+    $("#CTCode").val(selectedItems[0].item.memCode);    
+    $("#CTID").val(selectedItems[0].item.ct);  
+    $("#CTgroup").val(selectedItems[0].item.ctSubGrp); 
     
     
+}
+
+
+function fn_doAllocationResult(){
+	
+	
 	
 }
 
