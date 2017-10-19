@@ -198,7 +198,11 @@
                                          ,SAL023.area_id,
                                            sys064.area_id,
                                            sys064.CODY_BRNCH_CODE,
-                                           sys064.CODY_MANGR_USER_ID
+                                           sys064.CODY_MANGR_USER_ID,
+                                           (select  MEM_CODE
+	                                           from ORG0001D ME
+	                                           where 1=1
+	                                           and ME.MEM_ID = HSM.cody_ID )AS cody_cd
                                 FROM SAL0001D SOM
                                         ,SAL0029D C
                                         ,SVC0008D HSM
