@@ -314,7 +314,7 @@ var gridPros = {
     <ul class="btns">
         <li><p class="link_btn"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
         <li><p class="link_btn"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
-        <li><p class="link_btn"><a href="#">Request Vacation </a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="Common.alert('The program is under development')">Request Vacation </a></p></li>
 <!--         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn"><a href="#">menu6</a></p></li>
