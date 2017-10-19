@@ -164,7 +164,7 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-<th scope="row">Planned Transfer Date</th>
+<th scope="row">Transfer Date</th>
     <td>
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="transferDate" name="transferDate" /></p>
     </td>
