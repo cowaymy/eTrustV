@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.scm.impl.PoMngementMapper"> 
+
+<!-- Interface -->
+
+<select id="selectInterfaceList" parameterType="Map" resultType="egovMap">
+	 SELECT 
+	        SPMON   
+	      , MATNR   
+	      , MATNR_NM   
+	      , STOCK_TYPE   
+	      , CTGRY   
+	      , MEASURE   
+	      , AMT_K   
+	      , WAERS_KRW   
+	      , TO_CHAR(AMT_SUB, 'fm999,999,999,999.00')  AMT_SUB     
+	      , WAERS_SUB   
+	      , CNT   
+	      , MEINS   
+	      , AMT_USD   
+	      , WAERS_USD   
+	  FROM SCM0045V  
+	 WHERE SPMON = #{targetDateCbBox}
+	 ORDER BY MATNR DESC
+</select>
+
+<select id="selectInterfaceLastState" parameterType="Map" resultType="egovMap">
+	 SELECT TO_CHAR(IF_DT,'mm/dd/yyyy hh12:mm:ss AM') ||' '|| MSG_FROM_HQ LAST_STATE
+		 FROM ( 
+					 SELECT 
+					        SN 
+					      , TRGET_YEAR 
+					      , IF_STUS 
+					      , IF_DT                 
+					      , MSG_FROM_HQ  
+					    FROM SCM0025D 
+					   WHERE  TRGET_YEAR = #{targetDateCbBox}
+					   ORDER BY SN DESC
+				  )
+		  WHERE ROWNUM = 1
+</select>
  
   <select id="selectScmPoView" parameterType="Map" resultType="egovMap">
 		SELECT
@@ -68,6 +107,28 @@
 		   </if>
 
      </select>
+ 
+  <select id="selectScmPoStatusCnt" parameterType="Map" resultType="egovMap">
+          SELECT  
+				        (
+				          SELECT COUNT(1) 
+				            FROM SCM0011D
+				           WHERE PRE_YEAR    = #{scmYearCbBox}  
+				             AND PRE_WEEK_TH = #{scmPeriodCbBox}  
+				             AND PRE_CDC     = #{cdcCbBox}
+				             AND (PRE_QTY - PO_QTY) <![CDATA[ > ]]> 0
+				         ) PRE_POITEM_CNT
+				       ,(
+				           SELECT COUNT(1)   CNT2 
+				             FROM SCM0009M 
+				            WHERE BAS_YEAR = #{scmYearCbBox}  
+				              AND EST_WEEK = #{scmPeriodCbBox}   
+				              AND CDC      = #{cdcCbBox}
+				              AND PO_STUS <![CDATA[ <> ]]> 5 
+				        )  SCMPOMASTER_CNT
+				   FROM DUAL   
+
+  </select>
  
   
 </mapper>
