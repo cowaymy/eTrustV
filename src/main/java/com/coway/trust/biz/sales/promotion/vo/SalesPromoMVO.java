@@ -62,7 +62,15 @@ public class SalesPromoMVO implements Serializable {
 	private int empChk;
 	
 	private int exTrade;
+
+	private int crtUserId;
 	
+	private Date crtDt;
+    
+	private int updUserId;
+    
+    private Date updDt;
+    
 	private int isNew;
 
 	public int getPromoId() {
@@ -255,6 +263,38 @@ public class SalesPromoMVO implements Serializable {
 
 	public void setExTrade(int exTrade) {
 		this.exTrade = exTrade;
+	}
+
+	public int getCrtUserId() {
+		return crtUserId;
+	}
+
+	public void setCrtUserId(int crtUserId) {
+		this.crtUserId = crtUserId;
+	}
+
+	public Date getCrtDt() {
+		return crtDt;
+	}
+
+	public void setCrtDt(Date crtDt) {
+		this.crtDt = crtDt;
+	}
+
+	public int getUpdUserId() {
+		return updUserId;
+	}
+
+	public void setUpdUserId(int updUserId) {
+		this.updUserId = updUserId;
+	}
+
+	public Date getUpdDt() {
+		return updDt;
+	}
+
+	public void setUpdDt(Date updDt) {
+		this.updDt = updDt;
 	}
 
 	public int getIsNew() {

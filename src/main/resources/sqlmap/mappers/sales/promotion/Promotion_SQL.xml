@@ -147,7 +147,12 @@
              , PROMO_ADD_DISC_PRC
              , PROMO_ADD_DISC_PV
              , EMP_CHK
-             , EX_TRADE)
+             , EX_TRADE
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             , IS_NEW)
         VALUES
              ( #{promoId}
              , #{promoMtchId}
@@ -172,7 +177,12 @@
              , #{promoAddDiscPrc}
              , #{promoAddDiscPv}
              , #{empChk}
-             , #{exTrade})
+             , #{exTrade}
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , SYSDATE
+             , #{isNew})
     </insert>
 
     <insert id="insertSalesPromoD" parameterType="salesPromoDVO">
@@ -358,6 +368,8 @@
              , PROMO_ADD_DISC_PV       = #{promoAddDiscPv}
              , EMP_CHK                 = #{empChk}
              , EX_TRADE                = #{exTrade}
+             , UPD_USER_ID             = #{updUserId}
+             , UPD_DT                  = SYSDATE
          WHERE PROMO_ID                = #{promoId}
     </update>
     

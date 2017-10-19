@@ -190,6 +190,8 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		salesPromoMVO.setPromoStusId(SalesConstants.STATUS_ACTIVE);
 		salesPromoMVO.setPromoUpdUserId(sessionVO.getUserId());
 		salesPromoMVO.setPromoIsTrialCnvr(0);
+		salesPromoMVO.setCrtUserId(sessionVO.getUserId());
+		salesPromoMVO.setUpdUserId(sessionVO.getUserId());
 		salesPromoMVO.setIsNew(1);
 	}
 	
