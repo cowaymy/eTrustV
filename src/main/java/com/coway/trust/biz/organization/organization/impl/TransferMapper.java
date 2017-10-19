@@ -28,4 +28,6 @@ public interface TransferMapper {
 	String selectPromoId();
 	
 	String selectBranchId(int codeId);
+	
+	EgovMap selectDeptCode(int mem_id);
 }

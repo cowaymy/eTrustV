@@ -44,6 +44,10 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 
 	@Resource(name = "memberEventMapper")
 	private MemberEventMapper memberEventMapper;
+	
+	@Resource(name = "transferMapper")
+	private TransferMapper transferMapper;
+	
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -106,9 +110,9 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			
 			String nextDocNo = "";
 			String newDeptCode1 = "";
-			
-			if(formList.get("memLvlTo").equals("4")) {
-				EgovMap newDeptCode = memberEventMapper.getMemberOrganizations(formList);
+			EgovMap newDeptCode = null;
+			if(formList.get("memLvlTo").toString().equals("4")) {
+				newDeptCode = memberEventMapper.getMemberOrganizations(formList);
 				logger.debug("newDeptCode::::" + newDeptCode );
 				
 			}else {
@@ -160,15 +164,16 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 				prevMemberLvl = mQryMemOrg.get("memLvl").toString();
 			else
 				prevMemberLvl = "0";
-			
-
+			//화면에서 memId가져와서 넣어줘야함
+			EgovMap deptCode = memberEventMapper.selectDeptCode(Integer.parseInt(params.get("promoId").toString()));
+			logger.debug("deptCode : {}", deptCode);
 			Map<String, Object> mMemOrg = new HashMap<String, Object>();
 			mQryMemOrg.put("prevDeptCode", prevDeptCode);
 			mQryMemOrg.put("prevMemIdId", prevMemberUpID);
 			mQryMemOrg.put("prevMemLvl", prevMemberLvl);
 			mQryMemOrg.put("prevGrpCode", mQryMemPrOrg.get("deptCode"));
-			mQryMemOrg.put("deptCode", newDeptCode1);
-			mQryMemOrg.put("memUpId", formList.get("memUpId"));
+			mQryMemOrg.put("deptCode", newDeptCode.get("lastDeptCode"));
+			mQryMemOrg.put("memUpId", Integer.parseInt(formList.get("memId").toString()));
 			mQryMemOrg.put("memLvlTo", formList.get("memLvlTo"));
 //			mMemOrg.put("orgUpdDt", sysdate);
 			mQryMemOrg.put("orgUpdUserId", formList.get("orgUpdUserId"));
@@ -177,6 +182,10 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mQryMemOrg.put("grandPrCode", mQryMemPrOrg.get("prCode"));
 			mQryMemOrg.put("grandPrMemId", mQryMemPrOrg.get("prMemId"));
 			mQryMemOrg.put("brnchId", formList.get("brnchId")  != null ? formList.get("brnchId") :0);
+			
+			mQryMemOrg.put("lastDeptCode", deptCode.get("lastDeptCode"));
+			mQryMemOrg.put("lastGrpCode", deptCode.get("lastGrpCode"));
+			mQryMemOrg.put("lastOrgCode", deptCode.get("lastOrgCode"));
 			
 			memberEventMapper.updateMemberOrganizations(mQryMemOrg);
 			

@@ -58,5 +58,7 @@ public interface MemberEventMapper {
 	void updateMemberPromoEntry(Map<String, Object> params);
 	
 	
+	EgovMap selectDeptCode(int promoId);
+	
 	
 }	

@@ -62,6 +62,8 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			EgovMap runningNo = getDocNo("66");
 			
 			//BranchId value
+			EgovMap deptCode = transferMapper.selectDeptCode(toMemberId);
+			logger.debug("deptCode : {}", deptCode);
 			String branchId = transferMapper.selectBranchId(toMemberId);
 			memberPromoEntry.put("requestNo", runningNo.get("docNo"));
 			nextDocNo = getNextDocNo(runningNo.get("prefix").toString(),runningNo.get("docNo").toString());
@@ -78,7 +80,7 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			memberPromoEntry.put("updated", new Date());
 			memberPromoEntry.put("updator", sessionVo.getUserId());
 			memberPromoEntry.put("deptCodeFrom", memberModel.get("deptcode1"));
-			memberPromoEntry.put("deptCodeTo", parentTo.get("deptCode"));
+			memberPromoEntry.put("deptCodeTo", deptCode.get("deptCode"));
 			memberPromoEntry.put("parentDeptCodeFrom", parentFrom.get("deptCode"));
 			memberPromoEntry.put("parentIDFrom", parentFrom.get("memId"));
 			memberPromoEntry.put("parentDeptCodeTo", parentTo.get("deptCode"));
@@ -89,6 +91,12 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			memberPromoEntry.put("remark", "Member"+ memCode[i] +"group transfer.");
 			memberPromoEntry.put("toMemberId", toMemberId);
 			memberPromoEntry.put("branchId", branchId);
+
+			memberPromoEntry.put("lastDeptCode",deptCode.get("lastDeptCode") );
+			memberPromoEntry.put("lastGrpCode", deptCode.get("lastGrpCode"));
+			memberPromoEntry.put("lastOrgCode", deptCode.get("lastOrgCode"));
+
+			
 			logger.debug("memberPromoEntry : {}",memberPromoEntry);
 			String returnPromoId = updatePromoEntry(memberPromoEntry);
 			
@@ -118,7 +126,7 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			singleDept.put("orgUpdateBy", memberPromoEntry.get("updator"));
 			
 			//Member Organization update
-			transferMapper.updateTransfrrOrganization(singleDept);
+			//transferMapper.updateTransfrrOrganization(singleDept);
 			
 		}
 		logger.debug("memberPromoEntry : {}",memberPromoEntry);
