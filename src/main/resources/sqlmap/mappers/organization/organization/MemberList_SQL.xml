@@ -1958,5 +1958,11 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           WHERE  ( Extent1.MEM_LVL = #{memberLvl} )
                    AND ( Extent1.DEPT_CODE LIKE #{flag})
                    AND ( 1 = Extent1.ORG_STUS_CODE_ID ) ) Distinct1
-                   </select>
+            </select>
+            
+          <select id="selectCourse" resultType="egovMap">
+                SELECT COURS_ID CODE_ID, COURS_NAME CODE_NAME FROM MSC0008D WHERE COURS_TYPE_CODE_ID = '1022' AND COURS_START >= TO_DATE('2017-01-01','YYYY-MM-DD')
+          </select>
+                   
+                  
 </mapper>
