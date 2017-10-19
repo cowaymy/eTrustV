@@ -163,6 +163,10 @@
                         headerText : "Assign Cody",
                         width : 120              
                     }, {
+                        dataField : "actnMemId",
+                        headerText : "Complete Cody",
+                        width : 120                        
+                    }, {
                         dataField : "codyStatusNm",
                         headerText : "Cody Status",
                         width : 120
@@ -172,7 +176,7 @@
                         width : 120           
                     }, {
                         dataField : "branchCd",
-                        headerText : "Branch Cd",
+                        headerText : "Branch CD",
                         width : 120           
                      }, {
                         dataField : "codyMangrUserId",
@@ -183,10 +187,6 @@
                         headerText : "HS Statuscd",
                         width : 120 ,                             
                         visible:false     
-                    }, {
-                        dataField : "actnMemId",
-                        headerText : "Complete Cody",
-                        width : 120
                     }, {
                         dataField : "brnchId",
                         headerText : "Branch",
