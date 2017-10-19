@@ -35,6 +35,7 @@ var myColumnLayout = [ {
 },{
     dataField : "expTypeName",
     headerText : '<spring:message code="expense.ExpenseType" />',
+    style : "aui-grid-user-custom-left",
     editable : false,
     colSpan : 2
 }, {
@@ -62,6 +63,7 @@ var myColumnLayout = [ {
 }, {
     dataField : "glAccCodeName",
     headerText : '<spring:message code="newWebInvoice.glAccountName" />',
+    style : "aui-grid-user-custom-left",
     editable : false
 }, {
     dataField : "budgetCode",
@@ -70,6 +72,7 @@ var myColumnLayout = [ {
 }, {
     dataField : "budgetCodeName",
     headerText : '<spring:message code="newWebInvoice.activityName" />',
+    style : "aui-grid-user-custom-left",
     editable : false
 }, {
     dataField : "taxCode",
@@ -81,28 +84,35 @@ var myColumnLayout = [ {
         valueField : "taxName" // value 에 해당되는 필드명
     }
 }, {
+    dataField : "cvrr",
+    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+    editable : false
+}, {
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
+    style : "aui-grid-user-custom-right",
     dataType: "numeric",
+    formatString : "#,##0.00",
     editRenderer : {
         type : "InputEditRenderer",
-        onlyNumeric : true, // 0~9만 입력가능
         autoThousandSeparator : true // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
     }
 }, {
     dataField : "taxAmt",
     headerText : '<spring:message code="newWebInvoice.taxAmount" />',
+    style : "aui-grid-user-custom-right",
     dataType: "numeric",
+    formatString : "#,##0.00",
     editRenderer : {
         type : "InputEditRenderer",
-        onlyNumeric : true, // 0~9만 입력가능
         autoThousandSeparator : true // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
     }
 }, {
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
+    style : "aui-grid-user-custom-right",
     dataType: "numeric",
-    formatString : "#,##0",
+    formatString : "#,##0.00",
     editable : false,
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
@@ -117,6 +127,7 @@ var myColumnLayout = [ {
 }, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
+    style : "aui-grid-user-custom-left",
     width : 200
 }, {
     dataField : "yN",
@@ -156,7 +167,7 @@ $(document).ready(function () {
     AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
         if(event.dataField == "netAmt" || event.dataField == "taxAmt") {
             var totAmt = fn_getTotalAmount();
-            $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0"));
+            $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
             $("#totAmt").val(totAmt);
         }
   });
@@ -245,7 +256,7 @@ function fn_approveLinePop() {
 }
 
 function fn_addRow() {
-	AUIGrid.addRow(newGridID, {netAmt:0,taxAmt:0,totAmt:0}, "last");
+	AUIGrid.addRow(newGridID, {cvrr:"MYR",netAmt:0,taxAmt:0,totAmt:0}, "last");
 }
 
 function fn_removeRow() {
@@ -253,7 +264,7 @@ function fn_removeRow() {
 	var value = fn_getValue(selectRowIdx);
 	value = Number(value.replace(',', ''));
 	total -= value;
-	$("#totalAmount").text(AUIGrid.formatNumber(total, "#,##0"));
+	$("#totalAmount").text(AUIGrid.formatNumber(total, "#,##0.00"));
 	$("#totAmt").val(total);
 	AUIGrid.removeRow(newGridID, selectRowIdx);
 }

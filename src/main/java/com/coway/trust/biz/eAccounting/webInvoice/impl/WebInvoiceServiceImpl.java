@@ -331,7 +331,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			String yN = webInvoiceMapper.budgetCheck(data);
 			LOGGER.debug("yN =====================================>>  " + yN);
 			if("N".equals(yN)) {
-				list.add(i, data.get("clmSeq"));
+				list.add(data.get("clmSeq"));
 			}
 		}
 		

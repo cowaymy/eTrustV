@@ -105,6 +105,7 @@ public class WebInvoiceController {
 		String clmNo = (String)params.get("clmNo");
 		EgovMap webInvoiceInfo = webInvoiceService.selectWebInvoiceInfo(clmNo);
 		List<EgovMap> webInvoiceItems = webInvoiceService.selectWebInvoiceItems(clmNo);
+		LOGGER.debug("webInvoiceItems =====================================>>  " + webInvoiceItems);
 		String atchFileGrpId = String.valueOf(webInvoiceInfo.get("atchFileGrpId"));
 		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
 		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)

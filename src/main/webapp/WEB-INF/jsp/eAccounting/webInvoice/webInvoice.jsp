@@ -40,24 +40,28 @@ var webInvoiceColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "invcType",
-    headerText : '<spring:message code="webInvoice.type" />'
+    headerText : '<spring:message code="webInvoice.type" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
     headerText : '<spring:message code="webInvoice.suppliers" />'
 }, {
     dataField : "memAccName",
-    headerText : '<spring:message code="webInvoice.name" />'
+    headerText : '<spring:message code="webInvoice.name" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "totAmt",
     headerText : '<spring:message code="webInvoice.amount" />',
     dataType: "numeric",
-    formatString : "#,##0"
+    formatString : "#,##0.00",
+    style : "aui-grid-user-custom-right"
 }, {
     dataField : "reqstDt",
     headerText : '<spring:message code="webInvoice.requestDate" />'
 }, {
     dataField : "appvPrcssStus",
-    headerText : '<spring:message code="webInvoice.status" />'
+    headerText : '<spring:message code="webInvoice.status" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvPrcssDt",
     headerText : '<spring:message code="webInvoice.approvedDate" />'
@@ -140,8 +144,8 @@ function fn_checkEmpty() {
 	        Common.alert("Please enter the invoice no.");
 	        checkResult = false;
 	    }
-	    if(FormUtil.isEmpty($("#gstRgistNo").val())) {
-	        Common.alert("Please enter the GST Registration No.");
+	    if(FormUtil.isEmpty($("#memAccName").val())) {
+	        Common.alert("Please enter the Supplier.");
 	        checkResult = false;
 	    }
 	}

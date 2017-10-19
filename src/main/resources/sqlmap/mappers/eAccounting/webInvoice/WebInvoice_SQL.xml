@@ -55,12 +55,12 @@ SELECT   T.CLM_NO
           WHERE 1=1
         <if test="startDt != null and startDt != ''">
         <![CDATA[ 
-             AND T.INVC_DT >= TO_DATE(#{startDt}, 'DD/MM/YY')
+             AND T.INVC_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
         ]]>
         </if>          
         <if test="endDt != null and endDt != ''">
         <![CDATA[ 
-             AND T.INVC_DT <= TO_DATE(#{endDt} || ' 23:59:59', 'DD/MM/YY HH24:MI:SS')
+             AND T.INVC_DT <= TO_DATE(#{endDt}', 'DD/MM/YYYY')
         ]]>
         </if>          
         <if test="memAccID != null and memAccID != ''">
@@ -117,6 +117,7 @@ SELECT   T.CLM_NO
                    ,BUDGET_CODE
                    ,BUDGET_CODE_NAME
                    ,TAX_CODE
+                   ,'MYR' AS CVRR
                    ,NET_AMT
                    ,TAX_AMT
                    ,TOT_AMT
