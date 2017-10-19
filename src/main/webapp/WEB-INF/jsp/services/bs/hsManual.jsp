@@ -103,7 +103,8 @@
                         }, {
                             dataField : "month",
                             headerText : "Complete Cody",
-                            width : 120
+                            width : 120                             ,                             
+                            visible:false   
                         }, {
                             dataField : "brnchId",
                             headerText : "Branch",
@@ -113,7 +114,8 @@
                         }, {
                             dataField : "schdulId",
                             headerText : "schdulId",
-                            width : 120    
+                            width : 120                                 ,                             
+                            visible:false   
                           /*     ,                             
                             visible:false      */
                         }, {
@@ -385,7 +387,8 @@
                 var brnchId = "";
                 var saleOrdList = "";
                 var list = "";
-                var brnchCnt = "";
+                var brnchCnt = 0;
+                var ctBrnchCodeOld = "";
                 
                 //var saleOrdList = [];
                 var saleOrd = {
@@ -397,23 +400,29 @@
                 for(var i=0, len = checkedItems.length; i<len; i++) {
                     rowItem = checkedItems[i];
                     saleOrdList += rowItem.salesOrdNo;
-                    ctBrnchCode = rowItem.ctBrnchCode;
+                    
                     
                     if(i  != len -1){
                         saleOrdList += ",";
                     }
 
-                    if(ctBrnchCode !=rowItem.ctBrnchCode ){
-                        brnchCnt++;
+                    
+                    if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
+                        brnchCnt += 1 ;
                     }
+                    
+                    ctBrnchCodeOld = rowItem.codyBrnchCode;
                     
                     
                     if(i==0){
                          brnchId = rowItem.brnchId;
                     }
                     
+                    
                 }
                 
+                
+
                 
                 if(brnchCnt > 0 ){
                     Common.alert("Not Avaialable to Create HS Order With Several CDB in Single Time.");
