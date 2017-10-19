@@ -58,6 +58,33 @@ public class SupplyCorpController {
 		List<EgovMap> selectSupplyCDCCodeList = salesPlanMngementService.selectSupplyCDC(params);
 		return ResponseEntity.ok(selectSupplyCDCCodeList);
 	}
+	
+	@RequestMapping(value = "/selectComboSupplyCDC.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectComboSupplyCDC(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectComboSupplyCDC_ComboList : {}", params.toString());
+		
+		List<EgovMap> selectComboListSupplyCDC = salesPlanMngementService.selectComboSupplyCDC(params);
+		return ResponseEntity.ok(selectComboListSupplyCDC);
+	}
+	
+	@RequestMapping(value = "/selectSupplyPlanMaster.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSupplyPlanMaster(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectSupplyPlanMaster_ComboList : {}", params.toString());
+		
+		List<EgovMap> selectSupplyPlanMaster = salesPlanMngementService.selectSupplyPlanMaster(params);
+		return ResponseEntity.ok(selectSupplyPlanMaster);
+	}
+	
+	@RequestMapping(value = "/selectSalesPlanMaster.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSalesPlanMaster(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectSalesPlanMaster_ComboList : {}", params.toString());
+		
+		List<EgovMap> selectSalesPlanMaster = salesPlanMngementService.selectSalesPlanMaster(params);
+		return ResponseEntity.ok(selectSalesPlanMaster);
+	}
 
 	@RequestMapping(value = "/selectSupplyPlanCDCSearch.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectSupplyPlanCDCSearch(@RequestParam Map<String, Object> params,
@@ -66,11 +93,17 @@ public class SupplyCorpController {
 		LOGGER.debug("selectSupplyPlanCDC_Input : {}", params.toString());
 		
 		List<EgovMap> selectSupplyPlanCDCList = salesPlanMngementService.selectSupplyCdcMainList(params);
+		List<EgovMap> selectSupplyCdcSaveFlag = salesPlanMngementService.selectSupplyCdcSaveFlag(params);
+		List<EgovMap> selectSalesPlanMasterList = salesPlanMngementService.selectSalesPlanMaster(params);
+		List<EgovMap> selectSupplyPlanMasterList = salesPlanMngementService.selectSupplyPlanMaster(params);
 		
 		Map<String, Object> map = new HashMap<>();
 		
 		//main Data
 		map.put("selectSupplyPlanCDCList", selectSupplyPlanCDCList);
+		map.put("selectSupplyCdcSaveFlag", selectSupplyCdcSaveFlag);
+		map.put("selectSalesPlanMasterList", selectSalesPlanMasterList);
+		map.put("selectSupplyPlanMasterList", selectSupplyPlanMasterList);
 
 		return ResponseEntity.ok(map);
 		

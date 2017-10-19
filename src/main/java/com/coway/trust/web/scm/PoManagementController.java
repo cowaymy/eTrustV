@@ -58,18 +58,20 @@ public class PoManagementController {
 		
 		List<EgovMap> selectScmPrePoItemViewList = poMngementService.selectScmPrePoItemView(params);
 		List<EgovMap> selectScmPoViewList = poMngementService.selectScmPoView(params);
+		List<EgovMap> selectScmPoStatusCntList = poMngementService.selectScmPoStatusCnt(params);
 		
 		Map<String, Object> map = new HashMap<>();
 		
 		//main Data
 		map.put("selectScmPrePoItemViewList", selectScmPrePoItemViewList);
 		map.put("selectScmPoViewList", selectScmPoViewList);
+		map.put("selectScmPoStatusCntList", selectScmPoStatusCntList);
 
 		return ResponseEntity.ok(map);
 		
 	}	
 	
-	// search btn
+	// 
 	@RequestMapping(value = "/selectScmPoView.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectScmPoView(@RequestParam Map<String, Object> params,
 			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
