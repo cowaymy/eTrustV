@@ -62,5 +62,7 @@ public interface MemberEventMapper {
 	
 	int selectMemUpId(String lastDeptCode);
 	
+	void updateMemberBranch(Map<String, Object> params);
+	
 	
 }	

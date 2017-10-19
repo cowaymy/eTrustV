@@ -175,7 +175,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mQryMemOrg.put("prevMemLvl", prevMemberLvl);
 			mQryMemOrg.put("prevGrpCode", mQryMemPrOrg.get("deptCode"));
 			mQryMemOrg.put("deptCode", deptCode.get("lastDeptCode"));
-			mQryMemOrg.put("memUpId", deptCode.get("memId"));
+			mQryMemOrg.put("memUpId", memberUpId);
 			mQryMemOrg.put("memLvlTo", formList.get("memLvlTo"));
 //			mMemOrg.put("orgUpdDt", sysdate);
 			mQryMemOrg.put("orgUpdUserId", formList.get("orgUpdUserId"));
@@ -183,13 +183,19 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mQryMemOrg.put("prMemId", 0);
 			mQryMemOrg.put("grandPrCode", mQryMemPrOrg.get("prCode"));
 			mQryMemOrg.put("grandPrMemId", mQryMemPrOrg.get("prMemId"));
-			mQryMemOrg.put("brnchId", formList.get("brnchId")  != null ? formList.get("brnchId") :0);
+			mQryMemOrg.put("brnchId", deptCode.get("brnchId")  != null ? deptCode.get("brnchId") :0);
 			
 			mQryMemOrg.put("lastDeptCode", deptCode.get("lastDeptCode"));
 			mQryMemOrg.put("lastGrpCode", deptCode.get("lastGrpCode"));
 			mQryMemOrg.put("lastOrgCode", deptCode.get("lastOrgCode"));
 			
 			memberEventMapper.updateMemberOrganizations(mQryMemOrg);
+			
+			Map<String, Object> updateValue = new HashMap<String, Object>(); // ORG0001D BRNCH_ID UPDATE
+			updateValue.put("brnchId", deptCode.get("brnchId"));
+			updateValue.put("memId", params.get("memId"));
+			memberEventMapper.updateMemberBranch(updateValue);
+			
 			
 			
             //Member
