@@ -23,6 +23,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.eAccounting.expense.ExpenseService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -53,7 +54,12 @@ public class ExpenseController {
 		String[] expType = request.getParameterValues("expType");
 
 		params.put("claimType", claimType);
-		params.put("expType", expType);
+		
+		if(CommonUtils.isEmpty(params.get("type"))){
+
+			params.put("expType", expType);
+		}
+
 		
 		LOGGER.debug("groupCd =====================================>>  " + params);
 		

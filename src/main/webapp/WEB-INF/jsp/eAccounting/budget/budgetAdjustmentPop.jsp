@@ -13,10 +13,36 @@
 
 var adjPGridID;
 
+var fileList = new Array();
+<c:forEach var="file" items="${fileList}">
+var obj = {
+        atchFileGrpId : "${file.atchFileGrpId}"
+        ,atchFileId : "${file.atchFileId}"
+        ,atchFileName : "${file.atchFileName}"
+        ,fileSubPath : "${file.fileSubPath}"
+        ,physiclFileName : "${file.physiclFileName}"
+};
+fileList.push(obj);
+</c:forEach>
+
 $(document).ready(function(){
+		
+	if("${fn:length(fileList)}" <= 0) {
+        setInputFile2();
+    }
 	
-	setInputFile2();
+	var adjustmentList = JSON.parse('${adjustmentList}');
 	
+   /*  for(var i = 0; i < fileList.length; i++) {
+		
+		console.log(fileList[i]);
+		var a ="#file"+i ;
+		
+		$(a).val(fileList[i].atchFileName);
+	} */
+
+//console.log(fileList);
+		
     CommonCombo.make("pAdjustmentType", "/common/selectCodeList.do", {groupCode:'347', orderValue:'CODE'}, "", {
         id: "code",
         name: "codeName",
@@ -30,10 +56,7 @@ $(document).ready(function(){
     	$("input").each(function(){
 	        $(this).val("");
 	    });
-    });
-    
-    $("#stYearMonth").val("${stYearMonth}");
-    $("#edYearMonth").val("${edYearMonth}");
+    });    
     
     $("#sendYearMonth").change(function(){
     	if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02" 
@@ -44,7 +67,7 @@ $(document).ready(function(){
     });
     
     $("#sendAmount").keydown(function (event) {
-    	 if (event.keyCode >= 48 && event.keyCode <= 57) { 
+    	 if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) { 
          }else if(event.keyCode == 8){
          }else{
         	return false;         
@@ -60,11 +83,45 @@ $(document).ready(function(){
     	$("#sendAmount").val(str);
     });
     
-    fn_chnCombo('01');   
+    //기본 콤보 셋팅
+    fn_chnCombo('01');
+  
+    //파일 다운
+    $(".input_text").dblclick(function() {
+    	var fileList = "${fileList}";
+    	
+        var oriFileName = $(this).val();
+        var atchFileName;
+        var fileSubPath;
+        var physiclFileName;
+        for(var i = 0; i < fileList.length; i++) {
+            if(fileList[i].atchFileName == oriFileName) {
+            	atchFileName = fileList[i].atchFileName;
+                fileSubPath = fileList[i].fileSubPath;
+                physiclFileName = fileList[i].physiclFileName;
+            }
+        }
+        
+        fn_atchViewDown(atchFileName, fileSubPath, physiclFileName);
+    });
     
-    var adjPLayout = [  {
+    var adjPLayout = [   {
+        dataField : "budgetDocNo",
+        headerText : '',
+        editable : false,
+        visible : false,
+        cellMerge : true ,
+        width : 150
+    }, {
+        dataField : "budgetDocSeq",
+        headerText : '',
+        editable : false,
+        visible : false,
+        width : 150
+    },{
         dataField : "budgetAdjType",
         headerText : '<spring:message code="budget.AdjustmentType" />',
+        editable : false,
         visible : false,
         cellMerge : true ,
         width : 150
@@ -75,6 +132,7 @@ $(document).ready(function(){
     },{
         dataField : "costCentr",
         headerText : '<spring:message code="budget.CostCenter" />',
+        editable : false,
         cellMerge : true ,
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict", 
@@ -82,6 +140,7 @@ $(document).ready(function(){
     },{
         dataField : "adjYearMonth",
         headerText : '<spring:message code="budget.Month" />/<spring:message code="budget.Year" />',
+        editable : false,
         cellMerge : true ,
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
@@ -89,6 +148,7 @@ $(document).ready(function(){
     },{
         dataField : "budgetCode",
         headerText : '<spring:message code="budget.BudgetCode" />',
+        editable : false,
         cellMerge : true ,
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict", 
@@ -96,6 +156,7 @@ $(document).ready(function(){
     },{
         dataField : "glAccCode",
         headerText : '<spring:message code="expense.GLAccount" />',
+        editable : false,
         cellMerge : true ,
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict", 
@@ -103,18 +164,21 @@ $(document).ready(function(){
     },{
         dataField : "budgetAdjTypeName",
         headerText : '<spring:message code="budget.AdjustmentType" />',
+        editable : false,
         width : 150
     },{
         dataField : "adjAmt",
         headerText : '<spring:message code="budget.Amount" />',
         dataType : "numeric",
         formatString : "#,##0",
+        editable : true,
         style : "my-right-style",
         width : 100
     },{
         dataField : "adjRem",
         headerText : '<spring:message code="budget.Remark" />',
         style : "aui-grid-user-custom-left ",
+        editable : true,
         cellMerge : true ,
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict", 
@@ -126,13 +190,35 @@ $(document).ready(function(){
             showStateColumn:true,
             showRowNumColumn : true,
             usePaging : false,
-            editable :false,
+            editable :true,
             softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
       }; 
     
     adjPGridID = GridCommon.createAUIGrid("#adjPGridID", adjPLayout, "rowId", adjPOptions);
+
+    AUIGrid.setGridData(adjPGridID, adjustmentList);
        
+    $("#pBudgetDocNo").val("${budgetDocNo}");
+    
 });
+
+//리스트 조회.
+function fn_selectListAjax() {        
+    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentPopList", $("#pAdjForm").serialize(), function(result) {
+        
+         console.log("성공.");
+         console.log( result);
+         
+        AUIGrid.setGridData(adjPGridID, result.adjustmentList);
+        
+        if(result.fileList <= 0){
+        	setInputFile2();
+        }
+        
+    });
+} 
+
+
 function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
 }
@@ -371,6 +457,9 @@ function fn_AddRow()
         return false;
     }
     
+    alert($("#pBudgetDocNo").val());
+    
+    item.budgetDocNo = $("#pBudgetDocNo").val();
     item.costCentr = $("#sendCostCenter").val();
     item.adjYearMonth = $("#sendYearMonth").val();
     item.budgetCode  = $("#sendBudgetCode").val();
@@ -428,7 +517,8 @@ function fn_AddRow()
             });
             return false;
         }
-    	
+
+        item2.budgetDocNo = $("#pBudgetDocNo").val();
         item2.costCentr = $("#recvCostCenter").val();
         item2.adjYearMonth   =$("#recvYearMonth").val();
         item2.budgetCode  = $("#recvBudgetCode").val();
@@ -447,32 +537,41 @@ function fn_AddRow()
     AUIGrid.addRow(adjPGridID, item2, 'last');                    
 }  
 
-function fn_uploadFile() {
+var atchFileGrpId;
+var type;
+
+function fn_uploadFile(str) {
    
-        var formData = Common.getFormData("pAdjForm");
+    var formData = Common.getFormData("pAdjForm");
+
+    type = str;
+    
+    if(AUIGrid.getCellValue(adjPGridID, 1, "budgetDocNo") != ""){
+    	
+    	atchFileGrpId="";
+        fn_saveAdjustement();
         
+    }else{
         Common.ajaxFile("/eAccounting/budget/uploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
 
             console.log(result);
           
-            $("#atchFileGrpId").val(result.data);
+            atchFileGrpId = result.data;
             
             fn_saveAdjustement();
+            
         }); 
-        
-        
+    }
 }
 
 function fn_saveAdjustement(){
-	
-	var atchFileGrpId = $("#atchFileGrpId").val();
-    
-    Common.ajax("POST", "/eAccounting/budget/saveAdjustmentList?atchFileGrpId="+atchFileGrpId, GridCommon.getEditData(adjPGridID), function(result)    {
+		    
+    Common.ajax("POST", "/eAccounting/budget/saveAdjustmentList?atchFileGrpId="+atchFileGrpId+"&type="+type, GridCommon.getEditData(adjPGridID), function(result)    {
         Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-        //fn_selectPopListAjax() ;
-
+        
         console.log("성공." + JSON.stringify(result));
         console.log("data : " + result.data);
+        fn_selectListAjax();
      }
      , function(jqXHR, textStatus, errorThrown){
             try {
@@ -487,6 +586,28 @@ function fn_saveAdjustement(){
           }
           alert("Fail : " + jqXHR.responseJSON.message);
     });
+}
+
+function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
+    
+	alert(atchFileName);
+	
+	var file = atchFileName.split(".");
+		
+	   if(file[1] == "jpg") {
+           // TODO View
+           var fileSubPath = fileSubPath;
+           fileSubPath = fileSubPath.replace('\', '/'');
+           console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + physiclFileName);
+           window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + physiclFileName);
+       } else {
+           var fileSubPath = fileSubPath;
+           fileSubPath = fileSubPath.replace('\', '/'');
+           console.log("/file/fileDown.do?subPath=" + fileSubPath
+                   + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
+           window.open("/file/fileDown.do?subPath=" + fileSubPath
+               + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
+       }
 }
 
 </script>
@@ -512,7 +633,9 @@ function fn_saveAdjustement(){
     
     <input type="hidden" id = "search_costCentr" name="search_costCentr" />
     <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />
-    <input type="hidden" id = "atchFileGrpId" name="atchFileGrpId" />
+    
+    <input type="hidden" id = "pBudgetDocNo" name="pBudgetDocNo" />
+    <input type="hidden" id = "atchFileGrpId" name="atchFileGrpId" value="${atchFileGrpId}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -682,19 +805,32 @@ function fn_saveAdjustement(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="budget.Attathment" /></th>
-	<td>
-	<div class="auto_file2"><!-- auto_file start -->
-	<input type="file" title="file add" />
-	</div><!-- auto_file end -->
-	</td>
+    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+    <td colspan="3">
+	      <c:forEach var="files" items="${fileList}" varStatus="st">
+		    <div class="auto_file2"><!-- auto_file start -->
+		    <input type="file" title="file add" style="width:300px" />
+		    <label>
+			    <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
+			    <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
+		    </label>
+		    <span class='label_text'><a href='#' id="add_btn"><spring:message code="viewEditWebInvoice.add" /></a></span>
+		    <span class='label_text'><a href='#' id="remove_btn"><spring:message code="viewEditWebInvoice.delete" /></a></span>
+		    </div><!-- auto_file end -->
+	    </c:forEach> 
+	    <c:if test="${fn:length(fileList) <= 0}">
+		    <div class="auto_file2"><!-- auto_file start -->
+		      <input type="file" title="file add" style="width:300px" />
+		    </div><!-- auto_file end -->
+	    </c:if>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns mt10">
-	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile();"><spring:message code="budget.Temp" /> <spring:message code="budget.Save" /></a></p></li>
-	<%-- <li><p class="btn_blue2"><a href="#"><spring:message code="budget.Submit" /></a></p></li> --%>
+	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('temp');"><spring:message code="budget.Temp" /> <spring:message code="budget.Save" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('approval');"><spring:message code="budget.Submit" /></a></p></li>
 </ul>
 
 </form>

@@ -1,6 +1,5 @@
 package com.coway.trust.biz.eAccounting.budget.impl;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.eAccounting.budget.BudgetService;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementServieImpl;
-import com.coway.trust.cmmn.file.EgovFileUploadUtil;
-import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -30,31 +27,26 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
 	@Override
 	public List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return budgetMapper.selectMonthlyBudgetList(params);
 	}
 
 	@Override
 	public EgovMap selectAvailableBudgetAmt(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return budgetMapper.selectAvailableBudgetAmt(params);
 	}
 
 	@Override
 	public List<EgovMap> selectAdjustmentAmount( Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return budgetMapper.selectAdjustmentAmount(params);
 	}
 	
 	@Override
 	public List<EgovMap> selectPenConAmount( Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return budgetMapper.selectPenConAmount(params);
 	}
 	
 	@Override
 	public List<EgovMap> selectAdjustmentList( Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return budgetMapper.selectAdjustmentList(params);
 	}
 
@@ -65,51 +57,59 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 		List<Object> updList = (List<Object>) params.get("updList");
 		List<Object> delList = (List<Object>) params.get("delList");
 		
+		//String atchFileGrpId = params.get("atchFileGrpId").toString();
+		
 		int addCnt=0;
 		int updCnt=0;
 		int delCnt=0;
 		
 		if(addList.size() > 0){
 			
+			Logger.debug(" >>>>> insertAdjustmentInfo ");
 			int i = 0;
+			String  budgetDocNo = null;
 			for (Object obj : addList) 
-			{
-				
+			{				
 				((Map<String, Object>) obj).put("userId", params.get("userId"));
 				
-				Logger.debug(" >>>>> insertAdjustmentInfo ");
-				Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("userId"));
-							
 				addCnt++;
 
-				if(addCnt == 1){
+				if(addCnt == 1 && CommonUtils.isEmpty(((Map<String, Object>) obj).get("budgetDocNo"))){
 					
 					((Map<String, Object>) obj).put("atchFileGrpId", params.get("atchFileGrpId"));
+					
+					//master table insert 
 					budgetMapper.insertAdjustmentM((Map<String, Object>) obj);
+
+					budgetDocNo= (String) ((Map<String, Object>) obj).get("budgetDocNo");
+					
+					//approval table insert
+					if(params.get("type").toString().equals("approval")){
+						budgetMapper.insertApprove((Map<String, Object>) obj); 
+					}
 				}
-				String  budgetDocNo = (String) ((Map<String, Object>) obj).get("id");
-				Logger.debug("id ===============>>> " +budgetDocNo) ;
-				((Map<String, Object>) obj).put("budgetDocNo",  budgetDocNo);
+				
+				//detail table insert
 				budgetMapper.insertAdjustmentD((Map<String, Object>) obj);
 			}
 		}
 		
 		if(updList.size() > 0){
-			for (Object obj : addList) 
+			
+			Logger.debug(" >>>>> updateAdjustmentInfo ");
+			
+			for (Object obj : updList) 
 			{
 				((Map<String, Object>) obj).put("userId", params.get("userId"));
-				
-				Logger.debug(" >>>>> updateAdjustmentInfo ");
-				Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("userId"));
 							
 				updCnt++;
 
-				budgetMapper.updateAdjustmentInfo((Map<String, Object>) obj);
+				budgetMapper.updateAdjustmentD((Map<String, Object>) obj);
 			}
 		}
 		
-		if(delList.size() > 0){
-			for (Object obj : addList) 
+		/*if(delList.size() > 0){
+			for (Object obj : delList) 
 			{
 				((Map<String, Object>) obj).put("userId", params.get("userId"));
 				
@@ -118,81 +118,26 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 							
 				delCnt++;
 
-				budgetMapper.deleteAdjustmentInfo((Map<String, Object>) obj);
+				budgetMapper.deleteAdjustmentD((Map<String, Object>) obj);
+				
+				Map param = new HashMap();
+				
+				param.put("budgetDocNo", ((Map<String, Object>) obj).get("budgetDocNo"));
+				
+				if(budgetMapper.selectAdjustmentList(param) == null){
+
+					budgetMapper.deleteAdjustmentM((Map<String, Object>) obj);
+				}
 			}
-		}
+		}*/
 		
 		
 		return addCnt+updCnt+delCnt;
 	}
-	
-	
-	/*
-	
+
 	@Override
-	public int insertAdjustmentInfo(List<Object> addList, Integer crtUserId) throws Exception 
-	{
-		int saveCnt = 0;
-		
-		for (Object obj : addList) 
-		{
-			((Map<String, Object>) obj).put("crtUserId", crtUserId);
-			((Map<String, Object>) obj).put("updUserId", crtUserId);
-			
-			Logger.debug(" >>>>> insertAdjustmentInfo ");
-			Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("userId"));
-						
-			saveCnt++;
-
-			budgetMapper.insertAdjustmentInfo((Map<String, Object>) obj);
-		}
-
-		return saveCnt;
+	public List<EgovMap> selectFileList(Map<String, Object> params) throws Exception {
+		return budgetMapper.selectFileList(params);
 	}
 	
-	@Override
-	public int updateAdjustmentInfo(List<Object> updList, Integer crtUserId) throws Exception 
-	{
-		int saveCnt = 0;
-		
-		for (Object obj : updList) 
-		{
-			((Map<String, Object>) obj).put("crtUserId", crtUserId);
-			((Map<String, Object>) obj).put("updUserId", crtUserId);
-			
-			Logger.debug(" >>>>> updateAdjustmentInfo ");
-			
-			Logger.debug("UserId : {}", ((Map<String, Object>) obj).get("userId"));
-			
-			saveCnt++;
-			
-			budgetMapper.updateAdjustmentInfo((Map<String, Object>) obj);
-			
-		}
-		
-		return saveCnt;
-	}	
-	
-	@Override
-	public int deleteAdjustmentInfo(List<Object> delList, Integer crtUserId) throws Exception 
-	{
-		int delCnt = 0;
-		
-		for (Object obj : delList) 
-		{
-			((Map<String, Object>) obj).put("crtUserId", crtUserId);
-			((Map<String, Object>) obj).put("updUserId", crtUserId);
-			
-			Logger.debug(" >>>>> deleteAdjustmentInfo ");
-			Logger.debug("UserId : {}", ((Map<String, Object>) obj).get("userId"));
-			
-			delCnt++;
-			
-			budgetMapper.deleteAdjustmentInfo((Map<String, Object>) obj);
-
-		}
-		
-		return delCnt;
-	}		
-	*/
 }

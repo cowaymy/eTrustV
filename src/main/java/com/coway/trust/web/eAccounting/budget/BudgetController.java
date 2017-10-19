@@ -2,6 +2,7 @@ package com.coway.trust.web.eAccounting.budget;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
-import com.coway.trust.web.eAccounting.expense.ExpenseController;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -46,7 +47,7 @@ public class BudgetController {
 	@Autowired
 	private FileApplication fileApplication;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BudgetController.class);
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -134,7 +135,7 @@ public class BudgetController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovMap> adjustmentList = null; 
-		
+
 		adjustmentList= budgetService.selectAdjustmentAmount(params);
 		
 		return ResponseEntity.ok(adjustmentList);
@@ -145,6 +146,7 @@ public class BudgetController {
 		
 		LOGGER.debug("params =====================================>>  " + params);		
 		model.addAttribute("item", params);
+		
 		return "eAccounting/budget/pendingConsumedAmountPop";
 	}
 	
@@ -174,7 +176,7 @@ public class BudgetController {
 	}
 	
 	@RequestMapping(value = "/selectAdjustmentList")
-	public ResponseEntity<List<EgovMap>>  selectAdjustmentList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+	public ResponseEntity <List<EgovMap>>  selectAdjustmentList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 		
 		LOGGER.debug("params =====================================>>  " + params);
 
@@ -188,15 +190,77 @@ public class BudgetController {
 		
 		return ResponseEntity.ok(adjustmentList);
 	}
-		
-	@RequestMapping(value = "/budgetAdjustmentPop.do")
-	public String budgetAdjustment (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	
+	@RequestMapping(value = "/selectAdjustmentPopList")
+	public ResponseEntity <EgovMap>  selectAdjustmentPopList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 		
 		LOGGER.debug("params =====================================>>  " + params);
-		/*String yearMonth =  CommonUtils.getNowDate().substring(4,6) +"/" +CommonUtils.getNowDate().substring(0,4);*/
 		
-		model.addAttribute("stYearMonth",  params.get("stYearMonth") );	
-		model.addAttribute("edYearMonth",  params.get("edYearMonth") );	
+		String[] budgetAdjType = request.getParameterValues("budgetAdjType");
+		
+		params.put("budgetAdjType", budgetAdjType);
+
+		params.put("budgetDocNo", params.get("pBudgetDocNo"));
+
+		LOGGER.debug("params =====================================>>  " + params);
+		EgovMap result = new EgovMap();
+		
+		List<EgovMap> adjustmentList = null; 
+		/*List<EgovMap> fileList = null; */
+		
+		adjustmentList= budgetService.selectAdjustmentList(params);
+		
+		/*if(!CommonUtils.isEmpty(params.get("atchFileGrpId"))){
+			fileList= budgetService.selectFileList(params);	
+		}*/
+		
+		result.put("adjustmentList", adjustmentList);
+		/*result.put("fileList", fileList);*/
+		
+		return ResponseEntity.ok(result);
+	}
+		
+	@RequestMapping(value = "/budgetAdjustmentPop.do")
+	public String budgetAdjustment (@RequestParam Map<String, Object> params,  HttpServletRequest request, ModelMap model) throws Exception{
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		Map param = new HashMap();
+		
+		if(!CommonUtils.isEmpty(params.get("gridBudgetDocNo"))){
+			/*String[] budgetAdjType = request.getParameterValues("budgetAdjType");
+			
+			params.put("budgetAdjType", budgetAdjType);*/
+			
+						
+			List<EgovMap> adjustmentList = null; 
+			List<EgovMap> fileList = null; 
+			
+			param.put("budgetDocNo", params.get("gridBudgetDocNo"));
+			adjustmentList= budgetService.selectAdjustmentList(param);
+			
+			
+			if(!CommonUtils.isEmpty(params.get("atchFileGrpId"))){
+				fileList= budgetService.selectFileList(params);	
+
+				//model.addAttribute("fileList", fileList);
+
+				model.addAttribute("fileList", fileList);
+			}
+			model.addAttribute("adjustmentList", new Gson().toJson(adjustmentList));
+			
+			LOGGER.debug(" fileList =======>>>" +  fileList);
+			LOGGER.debug(" new Gson().toJson(adjustmentList)=======>>>" +  new Gson().toJson(adjustmentList));
+			//model.addAttribute("adjustmentList", adjustmentList);
+		}
+		
+		//return ResponseEntity.ok(result);
+		
+		/*model.put("atchFileGrpId", params.get("atchFileGrpId"));*/
+		model.addAttribute("budgetDocNo", params.get("gridBudgetDocNo"));
+
+		LOGGER.debug("gridBudgetDocNo =======>>>" +  params.get("gridBudgetDocNo"));
+		
 		return "eAccounting/budget/budgetAdjustmentPop";
 	}
 	
@@ -230,21 +294,31 @@ public class BudgetController {
 	
 	
 	@RequestMapping(value = "/saveAdjustmentList", method = RequestMethod.POST) 
-	public ResponseEntity<ReturnMessage> saveAdjustmentList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+	public ResponseEntity<ReturnMessage> saveAdjustmentList (HttpServletRequest request, @RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
 		
 		LOGGER.debug("params =====================================>>  " + params);
+		LOGGER.debug("request :: atchFileGrpId ==============>> " + request.getParameter("atchFileGrpId"));
+		
+		if(!CommonUtils.isEmpty(request.getParameter("atchFileGrpId").toString())){
+
+			int atchFileGrpId =  Integer.parseInt(request.getParameter("atchFileGrpId").toString());
+			params.put("atchFileGrpId", atchFileGrpId);
+		}
+		String type =  request.getParameter("type").toString();
+		params.put("type", type);
+		
+		LOGGER.debug("params :: atchFileGrpId ==============>> " + params.get("atchFileGrpId"));
 		
 		ArrayList<Object> addList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		ArrayList<Object> updList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_UPDATE); // Get grid addList
-		ArrayList<Object> delList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_REMOVE); // Get grid addList
-		
+	/*	ArrayList<Object> delList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_REMOVE); // Get grid addList*/		
 		
 		int tmpCnt = 0;
 		int totCnt = 0;
 		
 		params.put("addList", addList);
 		params.put("updList", updList);
-		params.put("delList", delList);
+		/*params.put("delList", delList);*/
 		params.put("userId", sessionVO.getUserId());
 		
 		tmpCnt = budgetService.saveAdjustmentInfo(params);
@@ -253,7 +327,7 @@ public class BudgetController {
 		// 결과 만들기 예.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
-    	message.setData(params.get("fileGroupKey"));
+    	message.setData(totCnt);
     	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     
     	return ResponseEntity.ok(message);

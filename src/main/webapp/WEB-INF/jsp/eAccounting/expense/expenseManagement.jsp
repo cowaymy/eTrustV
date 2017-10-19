@@ -14,6 +14,8 @@ var glAccCode;
 var glAccDesc;
 
 $(document).ready(function(){
+	
+	fn_selectListAjax();
     
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid();
@@ -63,9 +65,13 @@ function f_multiCombo(){
     });
 }
 
+function fn_test(){
+	 location.reload();
+}
+
 // 리스트 조회.
 function fn_selectListAjax() {        
-		
+	
     Common.ajax("GET", "/eAccounting/expense/selectExpenseList", $("#listSForm").serialize(), function(result) {
         
          console.log("성공.");
@@ -78,7 +84,7 @@ function fn_selectListAjax() {
 //Expense Type Pop 호출
 function fn_expenseTypePop(){
 	
-   Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, fn_selectListAjax, true, "addExpenseTypePop");
+   Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, fn_test, true, "addExpenseTypePop");
 }
 
 //Expense Edit Pop 호출

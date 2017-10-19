@@ -19,12 +19,21 @@ public interface BudgetMapper {
 
 	List<EgovMap> selectAdjustmentList(Map<String, Object> params) throws Exception;
 
-	String insertAdjustmentM(Map<String, Object> params) throws Exception;
+	void insertAdjustmentM(Map<String, Object> params) throws Exception;
 	
-	int insertAdjustmentD(Map<String, Object> params) throws Exception;
+	void insertAdjustmentD(Map<String, Object> params) throws Exception;
 	
-	int updateAdjustmentInfo(Map<String, Object> params) throws Exception;
+	void updateAdjustmentM(Map<String, Object> params) throws Exception;
+
+	void updateAdjustmentD(Map<String, Object> params) throws Exception;
 	
-	int deleteAdjustmentInfo(Map<String, Object> params) throws Exception;
+	void deleteAdjustmentM(Map<String, Object> params) throws Exception;
 	
+	void deleteAdjustmentD(Map<String, Object> params) throws Exception;
+	
+	void insertApprove(Map<String, Object> params) throws Exception;
+
+	String selectBudgetDocNo(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectFileList(Map<String, Object> params) throws Exception;
 }

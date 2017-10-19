@@ -103,7 +103,7 @@
 		          ,(SELECT GL_ACC_DESC FROM FCM0009M A WHERE A.GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
 		          ,B.SIGNAL 
 		          ,ADJ_AMT
-		          ,A.ADJ_REM    
+		          ,B.ADJ_REM    
 		 FROM FCM0102M  A,  FCM0103D B
 		WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
 		    AND A.APPV_STUS = 'C' 
@@ -147,24 +147,39 @@
        SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' ELSE 'Open' END STATUS
 		         ,A.BUDGET_DOC_NO
 		         ,B.COST_CENTR
+		         ,BUDGET_DOC_SEQ		         
+		         ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
 		         ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
 		         ,B.BUDGET_CODE
 		         ,B.GL_ACC_CODE
 		         ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
+		         ,B.BUDGET_ADJ_TYPE
 		         ,B.ADJ_AMT
-		         ,A.ADJ_REM
+		         ,B.ADJ_REM
 		         ,A.ATCH_FILE_GRP_ID
-		         ,FD.FILE_SUB_PATH
-		         ,CASE WHEN A.APPV_STUS = 'C' THEN 'N' ELSE 'Y' END AS CHECK_ID                 
+                 ,( SELECT CASE WHEN FD.FILE_SUB_PATH IS NOT NULL THEN REPLACE (FD.FILE_SUB_PATH,'\','/') ||'/'||PHYSICL_FILE_NAME  ELSE ' ' END
+                       FROM SYS0070M FM
+                      INNER JOIN SYS0071D FD
+                          ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID 
+                       WHERE FM.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
+                           AND rownum=1) AS FILE_PATH  
+                 ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
+		         ,'N' AS CHECK_ID                 
 		FROM FCM0102M A
 	   INNER JOIN FCM0103D B 
 	       ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-	     LEFT OUTER JOIN SYS0070M FM
-	       ON A.ATCH_FILE_GRP_ID = FM.ATCH_FILE_GRP_ID
-	     LEFT OUTER JOIN SYS0071D FD
-	       ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
-	  WHERE  TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}  
-	  ]]>      
+	/*     LEFT OUTER JOIN  
+	     ( SELECT ATCH_FILE_GRP_ID, FILE_SUB_PATH, PHYSICL_FILE_NAME 
+	          FROM SYS0070M FM
+             INNER JOIN SYS0071D FD
+                 ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
+            WHERE ROWNUM = 1
+            ) F  ON A.ATCH_FILE_GRP_ID = F. ATCH_FILE_GRP_ID*/
+	  WHERE  1=1
+      ]]>     
+        <if test="stYearMonth != null and stYearMonth != ''">
+	    AND TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}
+	     </if>
         <if test="costCentr != null and costCentr != ''">
           AND B.COST_CENTR    = #{costCentr}
           </if>
@@ -186,12 +201,30 @@
         <if test="appvStus != null and appvStus != ''">
            AND A.APPV_STUS = #{appvStus}
            </if>
+           ORDER BY A.BUDGET_DOC_NO, BUDGET_ADJ_TYPE
   </select>
   
+     <select id="selectFileList" parameterType="Map"  resultType="egovMap">
+      SELECT FM.ATCH_FILE_GRP_ID
+		         ,FM.ATCH_FILE_ID
+		         ,FD.ATCH_FILE_NAME
+		         ,REPLACE (FD.FILE_SUB_PATH,'\','/') AS FILE_SUB_PATH
+		         ,FD.PHYSICL_FILE_NAME
+	      FROM SYS0070M FM
+	     INNER JOIN SYS0071D FD
+		     ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
+		WHERE FM.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </select>
+    
+     <!--  <select id="selectBudgetDocNo" parameterType="Map" resultType="String">
+      SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') budgetDocNo 
+            FROM FCM0102M
+          WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%' 
+    </select> -->
  
     <insert id="insertAdjustmentM" parameterType="Map">
-        <selectKey keyProperty="id" resultType="int" order="BEFORE">
-            SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') ID 
+        <selectKey keyProperty="budgetDocNo" resultType="String" order="BEFORE">
+            SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') budgetDocNo 
 		       FROM FCM0102M
 		     WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%' 
         </selectKey>
@@ -199,7 +232,6 @@
 		   INSERT INTO FCM0102M
 		   (
 		        BUDGET_DOC_NO
-		       ,ADJ_REM
 		       ,ATCH_FILE_GRP_ID
 		       ,APPV_STUS
 		       ,CRT_DT
@@ -209,10 +241,14 @@
 		   )
 		   VALUES
 		    (
-		        #{id}
-		       ,#{adjRem}
+		        #{budgetDocNo}
 		       ,#{atchFileGrpId}
+		        <if test='type == "temp"'>
 		       ,'O'
+		       </if>
+		        <if test='type == "approval"'>
+               ,'C'
+               </if>
 		       ,SYSDATE
 		       ,#{userId}
 		       ,SYSDATE
@@ -237,6 +273,7 @@
 		       ,BUDGET_CODE
 		       ,GL_ACC_CODE
 		       ,ADJ_AMT
+               ,ADJ_REM
 		       ,CRT_DT
 		       ,CRT_USER_ID
 		       ,UPD_DT
@@ -246,7 +283,7 @@
 		   (
 		        #{budgetDocNo}
 		       ,#{seq}
-		       ,SUBSTR(#{adjYearMonth}, 0,2)
+		       ,TO_NUMBER(SUBSTR(#{adjYearMonth}, 0,2))
 		       ,SUBSTR(#{adjYearMonth}, 4,4)
 		       ,#{budgetAdjType}
 		       ,#{signal}
@@ -254,33 +291,69 @@
 		       ,#{budgetCode}
 		       ,#{glAccCode}
 		       ,#{adjAmt}
+               ,#{adjRem} 
 		       ,SYSDATE
 		       ,#{userId}
 		       ,SYSDATE
 		       ,#{userId}
 		   )
     </insert>
-<!-- 
-  
-  
-  <update id="updateExpenseInfo" parameterType="Map">
-   UPDATE FCM0001M
-      SET  
-      <if test ="disabFlag != nul and disabFlag !=''">
-            ,DISAB_FLAG = #{disabFlag}            
-            ,DISAB_USER_ID   = #{userId}
-            ,DISAB_DT        = SYSDATE
-      </if>
-      <if test ="disabFlag == nul || disabFlag ==''">
-             GL_ACC_CODE = #{glAccCode}
-            ,GL_ACC_CODE_NAME = #{glAccCodeName}
-            ,BUDGET_CODE = #{budgetCode}
-            ,BUDGET_CODE_NAME = #{budgetCodeName}
-    </if>    
+
+  <update id="updateAdjustmentM" parameterType="Map">
+   UPDATE FCM0102M
+      SET ATCH_FILE_GRP_ID = #{atchFileGrpId}
+            ,APPV_STUS = #{appvStus}
             ,UPD_USER_ID   = #{userId}
             ,UPD_DT        = SYSDATE
-    WHERE  CLM_TYPE     = #{clmType}
-      AND  EXP_TYPE       = #{expType}
+    WHERE  BUDGET_DOC_NO     = #{budgetDocNo}
 </update>
- -->
+
+  <update id="updateAdjustmentD" parameterType="Map">
+   UPDATE FCM0103D
+      SET ADJ_AMT = #{adjAmt}
+           ,ADJ_REM = #{adjRem}
+           ,UPD_USER_ID   = #{userId}
+           ,UPD_DT        = SYSDATE
+    WHERE BUDGET_DOC_NO     = #{budgetDocNo}
+        AND BUDGET_DOC_SEQ = #{budgetDocSeq}
+</update>
+
+ <update id="deleteAdjustmentM" parameterType="Map">
+   DELETE FROM FCM0102M      
+    WHERE BUDGET_DOC_NO     = #{budgetDocNo}
+</update>
+
+  <update id="deleteAdjustmentD" parameterType="Map">
+   DELETE FROM FCM0103D      
+    WHERE BUDGET_DOC_NO     = #{budgetDocNo}
+        AND BUDGET_DOC_SEQ = #{budgetDocSeq}
+</update>
+
+   <insert id="insertApprove" parameterType="Map">
+        INSERT INTO FCM0105M
+           (
+                BUDGET_DOC_NO
+			   ,REQST_DT
+			   ,REQST_USER_ID
+			   ,APPV_PRCSS_STUS
+			   ,APPV_PRCSS_DT
+			   ,CRT_DT
+			   ,CRT_USER_ID
+			   ,UPD_DT
+			   ,UPD_USER_ID
+           )
+         VALUES
+           (
+                #{budgetDocNo}
+               ,SYSDATE
+               ,#{userId}
+               ,'R'
+               ,SYSDATE
+               ,SYSDATE
+               ,#{userId}
+               ,SYSDATE
+               ,#{userId}
+           )
+    </insert>
+
 </mapper>
