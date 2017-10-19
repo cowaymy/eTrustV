@@ -171,6 +171,14 @@
                         headerText : "HS Status",
                         width : 120           
                     }, {
+                        dataField : "branchCd",
+                        headerText : "Branch Cd",
+                        width : 120           
+                     }, {
+                        dataField : "codyMangrUserId",
+                        headerText : "CodyMangr",
+                        width : 120           
+                    }, {
                         dataField : "stusCodeId",
                         headerText : "HS Statuscd",
                         width : 120 ,                             

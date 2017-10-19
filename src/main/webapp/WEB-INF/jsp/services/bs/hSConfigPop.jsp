@@ -71,12 +71,11 @@
             showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
             editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
             checkValue : "1", // true, false 인 경우가 기본
-            size : "10",
+            width : 30,
             unCheckValue : "0",
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
                 var assiinCd = fn_getCheckedRowItems();
-                
                 var aa = new Date();
 /*                 var year = aa.getFullYear(); 
                 var month = aa.getMonth()+1; */
@@ -104,9 +103,9 @@
             width : 120,
             visible:false
         }, {   
-            dataField : "custId",
+            dataField : "name",
             headerText : "Customer",
-            width : 100
+            width : 200
         }, {   
             dataField : "salesOrdId",
             headerText : "salesordid",
@@ -126,13 +125,12 @@
             dataField : "codyId",
             headerText : "Cody",
             editable : false,
-            width : 90
+            width : 140
         }, {
             dataField : "year",
             headerText : "year",
-            width : 130
-             ,
-                        visible : false,
+            width : 130  ,
+            visible : false
         }, {
             dataField : "month",
             headerText : "month",
@@ -362,7 +360,7 @@
 </ul>
 
 <article class="grid_wrapCust"><!-- grid_wrap start -->
-      <div id="grid_wrapCust" style="width: 550px; height: 334px; margin: 0 auto;"></div>
+      <div id="grid_wrapCust" style="width: 530px; height: 334px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
