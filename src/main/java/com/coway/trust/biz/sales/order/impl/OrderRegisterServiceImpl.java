@@ -1227,7 +1227,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		regOrderVO.setsInstallDate(sInstallDate);
 		regOrderVO.setdInstallDate(dInstallDate);
 		
-		this.preprocSalesOrderMaster(salesOrderMVO, sessionVO);
 		this.preprocSalesOrderDetails(salesOrderDVO, sessionVO);
 		this.preprocInstallationMaster(installationVO, sessionVO);
 		
@@ -1240,6 +1239,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS) {
 			
 			this.preprocRentPaySetMaster(rentPaySetVO, sessionVO);
+			regOrderVO.setRentPaySetVO(rentPaySetVO);
 			
 			if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
 				
@@ -1424,7 +1424,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	//RENTAL PAY SETTING
         	if(rentPaySetVO != null && rentPaySetVO.getModeId() > 0) {
         		rentPaySetVO.setSalesOrdId(salesOrdId);
-        		orderRegisterMapper.insertInstallation(installationVO);
+        		orderRegisterMapper.insertRentPaySet(rentPaySetVO);
         	}
         	
         	//CUSTOMER BILL MASTER

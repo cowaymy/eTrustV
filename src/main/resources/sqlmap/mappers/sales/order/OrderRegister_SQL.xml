@@ -956,7 +956,7 @@
 		     , #{updUserId}
 		     , SYSDATE
 		     , #{stusCodeId}
-		     , #{is3RdParty}
+		     , #{is3rdParty}
 		     , #{custId}
 		     , #{editTypeId}
 		     , #{nricOld}
