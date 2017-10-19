@@ -719,7 +719,14 @@
                        PR_MEM_ID = '0',
                        GRAND_PR_CODE = #{prCode},
                        GRAND_PR_MEM_ID = #{prMemId},
-                       BRNCH_ID = #{branchId}
+                       BRNCH_ID = #{branchId},
+                       
+                       LAST_DEPT_CODE = #{lastDeptCode},
+                       LAST_GRP_CODE= #{lastGrpCode},
+                       LAST_ORG_CODE= #{lastOrgCode}             
+                       
+                       
+                       
                  WHERE  ( MEM_ID = #{memId} )                 
         </update>
         
@@ -734,6 +741,8 @@
 					 WHERE  ( PROMO_ID = #{promoId} )           
         </update>
         
-        
+        <select id="selectDeptCode" parameterType="int" resultType="egovMap">
+             select last_dept_code, last_grp_code, last_org_code from org0007d where PROMO_ID=#{promoId}
+        </select>
         
 </mapper>
