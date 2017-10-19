@@ -40,7 +40,7 @@
 			    Project1.C9 AS C9, 
 			    Project1.C10 AS C10, 
 			    Project1.C11 AS C11
-			    FROM ( /* Formatted on 2017/07/07 오후 2:26:18 (QP5 v5.215.12089.38647) */
+			    FROM ( 
 			SELECT stk.STK_ID AS StkID,
 			       stk.STK_CODE AS StkCode,
 			       stk.STK_DESC AS StkDesc,
@@ -72,29 +72,8 @@
 			          Name,
 			       CASE WHEN (usr.USER_ID IS NOT NULL) THEN usr.USER_NAME ELSE 'N' END
 			          AS C1,
-			       CASE
-			          WHEN (61 = stk.STK_TYPE_ID)
-			          THEN
-			             CASE WHEN (sp1.UOM_ID IS NOT NULL) THEN sp1.UOM_ID ELSE 0 END
-			          WHEN (sp2.UOM_ID IS NOT NULL)
-			          THEN
-			             sp2.UOM_ID
-			          ELSE
-			             0
-			       END
-			          AS C2,
-			       CASE
-			          WHEN (61 = stk.STK_TYPE_ID)
-			          THEN
-			             (SELECT CODE_NAME
-			                FROM SYS0013M
-			               WHERE CODE_ID = sp1.UOM_ID)
-			          ELSE
-			             (SELECT CODE_NAME
-			                FROM SYS0013M
-			               WHERE CODE_ID = sp2.UOM_ID)
-			       END
-			          AS C3,
+                   (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=stk.UOM) C2,
+                   (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=stk.UOM) C3,
 			       CASE
 			          WHEN (61 = stk.STK_TYPE_ID)
 			          THEN
@@ -207,40 +186,14 @@
 		       inv.IS_SIRIM issirim,
 		       inv.IS_NCV isncv,
 		       inv.STK_CODE stockcode,
-	           CASE
-		          WHEN INV.STK_TYPE_ID = 61
-		          THEN
-		             (SELECT 
-		                      <choose>
-                	              <when test="mode !=null and mode == 'edit'">
-					                 MAX(ct.CODE_ID)
-					              </when>
-					              <otherwise>
-					                 MAX(ct.CODE_NAME)
-					              </otherwise>
-					          </choose>		                      
-		                FROM SAL0016M sp, SYS0013M ct
-		               WHERE     sp.APP_TYPE_ID = 67
-		                     AND SP.MEM_PAC_ID = 0
-		                     AND sp.STUS_CODE_ID = 1
-		                     AND sp.UOM_ID = ct.CODE_ID
-		                     AND sp.STK_ID = inv.STK_ID)
-		          ELSE
-		             (SELECT <choose>
-                                  <when test="mode !=null and mode == 'edit'">
-                                     MAX(ct.CODE_ID)
-                                  </when>
-                                  <otherwise>
-                                     MAX(ct.CODE_NAME)
-                                  </otherwise>
-                              </choose>
-		                FROM SAL0016M sp, SYS0013M ct
-		               WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
-		                     AND SP.MEM_PAC_ID = 0
-		                     AND sp.STUS_CODE_ID = 1
-		                     AND sp.UOM_ID = ct.CODE_ID
-		                     AND sp.STK_ID = inv.STK_ID)
-		       END
+		       <choose>
+                     <when test="mode !=null and mode == 'edit'">
+                       (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=inv.UOM)  
+                     </when>
+                     <otherwise>
+					  (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=inv.UOM)
+                     </otherwise>
+                 </choose>
 		          uomname,
 		       inv.STK_DESC stockname,
 		       (SELECT <choose>
@@ -760,22 +713,8 @@
 		                     THEN EXTENT5.USER_NAME
 		                  ELSE ''
 		               END C1
-		              ,CASE
-		                  WHEN (61 = EXTENT1.STK_TYPE_ID)
-		                     THEN CASE
-		                            WHEN (EXTENT6.UOM_ID IS NOT NULL)
-		                               THEN EXTENT6.UOM_ID
-		                            ELSE 0
-		                         END
-		                  WHEN (EXTENT7.UOM_ID IS NOT NULL)
-		                     THEN EXTENT7.UOM_ID
-		                  ELSE 0
-		               END C2
-		              ,CASE
-		                  WHEN (61 = EXTENT1.STK_TYPE_ID)
-		                     THEN EXTENT8.CODE_NAME
-		                  ELSE EXTENT9.CODE_NAME
-		               END C3
+                      ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=EXTENT1.UOM)  C2
+                      ,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=EXTENT1.UOM) C3
 		              ,CASE
 		                  WHEN (61 = EXTENT1.STK_TYPE_ID)
 		                     THEN CASE

@@ -174,7 +174,8 @@
     </select>
     <select id="selectStockMovementItem" parameterType="String" resultType="egovMap">
         SELECT l48.REQST_NO_ITM resnoitm ,s26.STK_ID itmid, l48.ITM_CODE itmcd, l48.ITM_NAME itmname 
-             , l48.REQST_QTY rqty , UOM uom
+             , l48.REQST_QTY rqty 
+             , l48.UOM uom
              , l55.delvry_no delyno 
              , l55.delvry_qty delyqty
           FROM LOG0048D l48, sys0026m s26 , 
@@ -193,26 +194,7 @@
              , l56.stk_type_id typeid , s15.code_name typenm
              , l56.stk_ctgry_id cateid , s11.code_name catenm
              , (l56.qty - nvl(l75.bookqty , 0)) as qty , s26.stk_id stkid
-             , case
-                  when l56.stk_type_id = 61
-                  then
-                     (select max(ct.code_id)
-                        from sal0016m sp, sys0013m ct
-                       where     sp.app_type_id = 67
-                             and sp.mem_pac_id = 0
-                             and sp.stus_code_id = 1
-                             and sp.uom_id = ct.code_id
-                             and sp.stk_id = s26.stk_id)
-                  else
-                     (select max(ct.code_id)
-                        from sal0016m sp, sys0013m ct
-                       where     sp.app_type_id <![CDATA[<>]]> 61
-                             and sp.mem_pac_id = 0
-                             and sp.stus_code_id = 1
-                             and sp.uom_id = ct.code_id
-                             and sp.stk_id = s26.stk_id)
-               end
-                  uom
+             , (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=s26.UOM) uom
           from log0056m l56 , sys0026m s26
              ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
                 group by loc_id , itm_code ) l75

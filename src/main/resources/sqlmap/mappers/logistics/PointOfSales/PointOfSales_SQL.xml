@@ -185,26 +185,7 @@ WHERE 1 = 1
                <!-- L56.QTY AS QTY,  -->
                (L56.QTY - NVL(L75.BOOKQTY , 0)) AS QTY , S26.STK_ID STKID, 
                S26.SERIAL_CHK AS SERIAL_CHK
-                , CASE
-                  WHEN l56.stk_TYPE_ID = 61
-                  THEN
-                     (SELECT max(ct.CODE_id)
-                        FROM SAL0016M sp, SYS0013M ct
-                       WHERE     sp.APP_TYPE_ID = 67
-                             AND SP.MEM_PAC_ID = 0
-                             AND sp.STUS_CODE_ID = 1
-                             AND sp.UOM_ID = ct.CODE_ID
-                             AND sp.STK_ID = s26.stk_id)
-                  ELSE
-                     (SELECT max(ct.CODE_id)
-                        FROM SAL0016M sp, SYS0013M ct
-                       WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
-                             AND SP.MEM_PAC_ID = 0
-                             AND sp.STUS_CODE_ID = 1
-                             AND sp.UOM_ID = ct.CODE_ID
-                             AND sp.STK_ID = s26.stk_id)
-               END
-                  uom         
+                ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM)  uom         
     FROM  LOG0056M L56, 
               SYS0026M S26, 
              (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'  GROUP BY LOC_ID , ITM_CODE ) L75,  
@@ -394,7 +375,7 @@ WHERE 1 = 1
 	         L48.ITM_NAME ITMNAME, 
 	         L48.REQST_QTY RQTY , 
 	         S26.STK_ID ITMID,
-	         UOM UOM 
+	         L48.UOM 
          FROM 
 	         LOG0048D L48,
 	         SYS0026M S26
@@ -412,7 +393,7 @@ WHERE 1 = 1
          L48.ITM_CODE ITMCD, 
          L48.ITM_NAME ITMNAME, 
          L48.REQST_QTY RQTY , 
-         UOM UOM,
+         L48.UOM UOM,
          L61.SERIAL_NO
           FROM LOG0048D L48, SYS0026M S26 , LOG0061D L61 
          WHERE L48.ITM_CODE = S26.STK_CODE
@@ -424,31 +405,12 @@ WHERE 1 = 1
         </select>
      
     <select id="selectPosToItem" parameterType="Map" resultType="egovMap">
-         SELECT S13.CODE_NAME AS typenm, 
+     SELECT S13.CODE_NAME AS typenm, 
                L56.STK_CODE  AS stkcd , 
                DBMS_LOB.SUBSTR (l56.stk_desc, 4000)  stknm, 
                L56.QTY AS QTY, 
                S26.SERIAL_CHK AS SERIAL_CHK
-                , CASE
-                  WHEN l56.stk_TYPE_ID = 61
-                  THEN
-                     (SELECT max(ct.CODE_id)
-                        FROM SAL0016M sp, SYS0013M ct
-                       WHERE     sp.APP_TYPE_ID = 67
-                             AND SP.MEM_PAC_ID = 0
-                             AND sp.STUS_CODE_ID = 1
-                             AND sp.UOM_ID = ct.CODE_ID
-                             AND sp.STK_ID = s26.stk_id)
-                  ELSE
-                     (SELECT max(ct.CODE_id)
-                        FROM SAL0016M sp, SYS0013M ct
-                       WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
-                             AND SP.MEM_PAC_ID = 0
-                             AND sp.STUS_CODE_ID = 1
-                             AND sp.UOM_ID = ct.CODE_ID
-                             AND sp.STK_ID = s26.stk_id)
-               END
-                  uom         
+                ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM) UOM_NAME
     FROM  LOG0056M L56, 
               SYS0026M S26, 
              (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 15) S13

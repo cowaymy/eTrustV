@@ -118,27 +118,7 @@
               , (SELECT NAME
                    FROM SYS0038M
                   WHERE STUS_CODE_ID = s26m.STUS_CODE_ID) STUS_CODE_NM
-               , CASE
-                          WHEN s26m.STK_TYPE_ID = 61
-                          THEN
-                             (SELECT 
-                                             MAX(ct.CODE_NAME)
-                                FROM SAL0016M sp, SYS0013M ct
-                               WHERE     sp.APP_TYPE_ID = 67
-                                     AND SP.MEM_PAC_ID = 0
-                                     AND sp.STUS_CODE_ID = 1
-                                     AND sp.UOM_ID = ct.CODE_ID
-                                     AND sp.STK_ID = s26m.STK_ID)
-                          ELSE
-                             (SELECT 
-                                             MAX(ct.CODE_NAME)
-                                FROM SAL0016M sp, SYS0013M ct
-                           WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
-                                     AND SP.MEM_PAC_ID = 0
-                                     AND sp.STUS_CODE_ID = 1
-                                     AND sp.UOM_ID = ct.CODE_ID
-                                     AND sp.STK_ID = s26m.STK_ID)
-                       END UOM_NAME
+              ,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=S26M.UOM) UOM_NAME
               , s26m.IS_SIRIM IS_SIRIM
               , s26m.IS_NCV    IS_NCV
               , s26m.NET_WT NET_WT
@@ -165,27 +145,7 @@
 		      , (SELECT NAME
 		           FROM SYS0038M
 		          WHERE STUS_CODE_ID = s26m.STUS_CODE_ID) STUS_CODE_NM
-		       , CASE
-		                  WHEN s26m.STK_TYPE_ID = 61
-		                  THEN
-		                     (SELECT 
-		                                     MAX(ct.CODE_NAME)
-		                        FROM SAL0016M sp, SYS0013M ct
-		                       WHERE     sp.APP_TYPE_ID = 67
-		                             AND SP.MEM_PAC_ID = 0
-		                             AND sp.STUS_CODE_ID = 1
-		                             AND sp.UOM_ID = ct.CODE_ID
-		                             AND sp.STK_ID = s26m.STK_ID)
-		                  ELSE
-		                     (SELECT 
-		                                     MAX(ct.CODE_NAME)
-		                        FROM SAL0016M sp, SYS0013M ct
-		                   WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
-		                             AND SP.MEM_PAC_ID = 0
-		                             AND sp.STUS_CODE_ID = 1
-		                             AND sp.UOM_ID = ct.CODE_ID
-		                             AND sp.STK_ID = s26m.STK_ID)
-		               END UOM_NAME
+              ,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=S26M.UOM) UOM_NAME
 		      , s26m.IS_SIRIM IS_SIRIM
 		      , s26m.IS_NCV    IS_NCV
 		      , s26m.NET_WT NET_WT
