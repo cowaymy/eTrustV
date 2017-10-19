@@ -377,7 +377,7 @@ $(document).ready(function(){
             fn_newSerialCopy();
       });
 	    $('#excelUp').click(function() {
-	        $('.auto_file input[type=text]').val('');
+	       
 	        AUIGrid.clearGridData(myGridIDExcel);
 	        $("#popup_wrap_excel_up").show();
 	    });
@@ -406,18 +406,20 @@ $(document).ready(function(){
 	        
 	    });
 	    $('#cancelExcel').click(function() {
+	    	 $('.auto_file input[type=text]').val('');
 	        AUIGrid.clearGridData(myGridIDExcel);
 	        $("#popup_wrap_excel_up").hide();
 	    });
 	    $('#fileSelector').on('change', function(evt) {
 	        if (!checkHTML5Brower()) {
-	            alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
+	            //alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
+	            alert("This Browse doesn't support HTML5 .");
 	            return;
 	        } else {
 	            var data = null;
 	            var file = evt.target.files[0];
 	            if (typeof file == "undefined") {
-	                alert("파일 선택 시 오류 발생!!");
+	                Commom.alert("Please Select File.");
 	                return;
 	            }
 	            var reader = new FileReader();
@@ -609,7 +611,6 @@ function fn_itempopList(data){
    
    
 function fn_excelSave(){
-	console.log(AUIGrid.getAddedRowItems(myGridIDExcel));
     var param  =  {};
     for (var i = 0 ; i < AUIGrid.getRowCount(myGridIDExcel) ; i++){
         if (AUIGrid.getCellValue(myGridIDExcel , i , "exist") == 'Y'){
@@ -917,9 +918,9 @@ function f_multiCombo() {
 
 <header class="pop_header"><!-- pop_header start -->
 <h1 id="popup_title">Serial Number Excel Upload</h1>
-<ul class="right_opt">
+<!-- <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-</ul>
+</ul> -->
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 <ul class="right_btns">
