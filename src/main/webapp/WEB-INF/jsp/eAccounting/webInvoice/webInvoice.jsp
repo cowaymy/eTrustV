@@ -1,6 +1,22 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 행 스타일 */
+.my-row-style {
+    background:#9FC93C;
+    font-weight:bold;
+    color:#22741C;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+</style>
 <script type="text/javascript">
 var webInvoiceColumnLayout = [ {
     dataField : "clmNo",
@@ -20,7 +36,8 @@ var webInvoiceColumnLayout = [ {
     headerText : '<spring:message code="webInvoice.cc" />'
 }, {
     dataField : "costCentrName",
-    headerText : '<spring:message code="webInvoice.ccName" />'
+    headerText : '<spring:message code="webInvoice.ccName" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "invcType",
     headerText : '<spring:message code="webInvoice.type" />'
@@ -71,6 +88,8 @@ $(document).ready(function () {
 		        // TODO detail popup open
 		        fn_viewEditWebInvoicePop(event.item.clmNo);
 		    });
+	
+	$("#appvPrcssStus").multipleSelect("checkAll");
 });
 
 function fn_supplierSearchPop() {
@@ -94,7 +113,6 @@ function fn_viewEditWebInvoicePop(clmNo) {
             clmNo : clmNo,
             callType : 'view'
     };
-	
 	Common.popupDiv("/eAccounting/webInvoice/viewEditWebInvoicePop.do", data, null, true, "viewEditWebInvoicePop");
 }
 
@@ -113,6 +131,31 @@ function fn_setCostCenter() {
 function fn_setSupplier() {
     $("#memAccId").val($("#search_memAccId").val());
     $("#memAccName").val($("#search_memAccName").val());
+}
+
+function fn_checkEmpty() {
+	var checkResult = true;
+	if($("#invcType").val() == "F") {
+	    if(FormUtil.isEmpty($("#invcNo").val())) {
+	        Common.alert("Please enter the invoice no.");
+	        checkResult = false;
+	    }
+	    if(FormUtil.isEmpty($("#gstRgistNo").val())) {
+	        Common.alert("Please enter the GST Registration No.");
+	        checkResult = false;
+	    }
+	}
+	return checkResult;
+}
+
+function fn_selectWebInvoiceItemList(clmNo) {
+    var obj = {
+            clmNo : clmNo
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceItemList.do", obj, function(result) {
+        console.log(result);
+        AUIGrid.setGridData(newGridID, result);
+    });
 }
 </script>
 
@@ -161,7 +204,7 @@ function fn_setSupplier() {
     </td>
     <th scope="row"><spring:message code="webInvoice.status" /></th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" name="appvPrcssStus">
+    <select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
         <option value="T"><spring:message code="webInvoice.select.save" /></option>
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>

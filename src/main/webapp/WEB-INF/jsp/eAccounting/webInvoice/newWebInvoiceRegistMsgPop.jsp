@@ -13,51 +13,48 @@ function fn_closePop() {
 }
 
 function fn_approveLineSubmit() {
-	var newGridList = AUIGrid.getOrgGridData(newGridID);
-	var date = new Date();
-	var year = date.getFullYear();
-	var month = date.getMonth() + 1;
-	var costCentr = $("#newCostCenter").val();
-    var data = {
-    		newGridList : newGridList
-    		,year : year
-    		,month : month
-    		,costCentr : costCentr
-    };
+	$("#registMsgPop").remove();
 	
+    var newGridList = AUIGrid.getOrgGridData(newGridID);
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var costCentr = $("#newCostCenter").val();
+    var data = {
+            newGridList : newGridList
+            ,year : year
+            ,month : month
+            ,costCentr : costCentr
+    };
+    console.log(data);
+    
     // 예산확인
-	Common.ajax("POST", "/eAccounting/webInvoice/budgetCheck.do", data, function(result) {
+    Common.ajax("POST", "/eAccounting/webInvoice/budgetCheck.do", data, function(result) {
         console.log(result);
-        if(result.data.yesNo == "Y") {
-        	Common.alert("Budget exceeded.");
-        	return false;
+        if(result.length > 0) {
+            Common.alert("Budget exceeded.");
+            console.log(result.length);
+            for(var i = 0; i < result.length; i++) {
+                console.log(result[i]);
+                var rowIndex = AUIGrid.rowIdToIndex(newGridID, result[i])
+                // 0번째 행의 name 칼럼의 값을 "이름 고침" 으로 변경
+                AUIGrid.setCellValue(newGridID, rowIndex, "yN", "N");
+                $("#registMsgPop").remove();
+                $("#approveLineSearchPop").remove();
+            }
+        } else {
+        	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+            var obj = $("#form_newWebInvoice").serializeJSON();
+            obj.newGridList = newGridList;
+            obj.apprGridList = apprGridList;
+            
+            Common.ajax("POST", "/eAccounting/webInvoice/approveLineSubmit.do", obj, function(result) {
+                console.log(result);
+                Common.popupDiv("/eAccounting/webInvoice/newCompletedMsgPop.do", {callType:callType}, null, true, "completedMsgPop");
+                //Common.alert("Your authorization request was successful.");
+            });
         }
     });
-	
-	if(callType == "new"){
-		if(FormUtil.isEmpty($("#clmNo").val())) {
-			// 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
-			fn_attachmentUpload("");
-	    }
-	} else if(callType == "view") {
-		// 수정 후 temp save가 아닌 바로 submit
-		// 고려하여 update 후 approve
-		// 현재 파일 수정 미구현 상태
-		fn_updateWebInvoiceInfo("");
-	}
-	
-	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
-    var obj = $("#form_newWebInvoice").serializeJSON();
-    obj.newGridList = newGridList;
-    obj.apprGridList = apprGridList;
-    
-	Common.ajax("POST", "/eAccounting/webInvoice/approveLineSubmit.do", obj, function(result) {
-        console.log(result);
-        Common.popupDiv("/eAccounting/webInvoice/newCompletedMsgPop.do", null, null, true, "completedMsgPop");
-        Common.alert("Your authorization request was successful.");
-    });
-	
-	fn_closePop();
 }
 
 </script>

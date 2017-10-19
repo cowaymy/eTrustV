@@ -1,10 +1,30 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 행 스타일 */
+.my-cell-style {
+    background:#FF0000;
+    color:#005500;
+    font-weight:bold;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+/* 특정 칼럼 드랍 리스트 왼쪽 정렬 재정의*/
+#viewEditWebInvoice_grid_wrap-aui-grid-drop-list-taxCode .aui-grid-drop-list-ul {
+     text-align:left;
+ }
+</style>
 <script type="text/javascript">
 var newGridID;
 var selectRowIdx;
-var callType = "view";
+var callType = "${callType}";
 var removeOriFileName = new Array();
 var keyValueList = $.parseJSON('${taxCodeList}');
 var gridDataList = new Array();
@@ -115,11 +135,20 @@ var myColumnLayout = [ {
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.netAmt + item.taxAmt);
+    },
+    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
+        if(item.yN == "N") {
+            return "my-cell-style";
+        }
+        return null;
     }
 }, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
     width : 200
+}, {
+    dataField : "yN",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 ];
 
@@ -134,7 +163,8 @@ var myGridPros = {
     // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
     enableRestore : true,
     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-    softRemoveRowMode : true
+    softRemoveRowMode : true,
+    rowIdField : "clmSeq"
 
 };
 
@@ -184,7 +214,7 @@ $(document).ready(function () {
     			fileId = attachmentList[i].atchFileId;
     		}
     	}
-    	fn_attachmentDown(fileGrpId, fileId);
+    	fn_atchViewDown(fileGrpId, fileId);
     });
 });
 
@@ -250,8 +280,17 @@ function fn_expenseTypeSearchPop() {
 }
 
 function fn_approveLinePop() {
-    var value = $("#approveLine").val();
-    var object = {value:value};
+	var checkResult = fn_checkEmpty();
+    
+    if(!checkResult){
+        return false;
+    }
+    
+	// 수정 후 temp save가 아닌 바로 submit
+    // 고려하여 update 후 approve
+    // 현재 파일 수정 미구현 상태
+    fn_updateWebInvoiceInfo("");
+	
     Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
@@ -269,39 +308,51 @@ function fn_removeRow() {
     AUIGrid.removeRow(newGridID, selectRowIdx);
 }
 
-function fn_attachmentDown(fileGrpId, fileId) {
+function fn_atchViewDown(fileGrpId, fileId) {
 	var data = {
             atchFileGrpId : fileGrpId,
             atchFileId : fileId
     };
-    Common.ajax("POST", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+	Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
         console.log(result);
-        var subPath = result.fileSubPath;
-        var fileName = result.physiclFileName;
-        var orignlFileNm = result.atchFileName;
-        
-        window.open("/file/fileDown.do?subPath=" + subPath
-                + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
-                + "");
+        if(result.fileExtsn == "jpg") {
+            // TODO View
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDown.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDown.do?subPath=" + fileSubPath
+                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
     });
 }
 
 function fn_tempSave() {
-	fn_updateWebInvoiceInfo(callType);
+var checkResult = fn_checkEmpty();
+    
+    if(checkResult){
+    	fn_updateWebInvoiceInfo(callType);
+    }
 }
 
 function fn_attachmentUpload(st) {
     var formData = Common.getFormData("form_newWebInvoice");
     Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
         console.log(result);
-        $("#atchFileGrpId").val(result.data.atchFileGrpId);
+        // 신규 add return atchFileGrpId의 key = fileGroupKey
+        $("#atchFileGrpId").val(result.data.fileGroupKey);
     });
 }
 
 // 공통 코드에 현재 미구현으로 불가
 function fn_attachmentUpdate(st) {
 	// file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
-    // add인지 update or delete인지 분기 필요
+    // 신규 add or 추가 add인지 update or delete인지 분기 필요
     // 파일 수정해야 하는 경우 : delete 버튼 클릭 or file 버튼 클릭으로 수정
     // delete 버튼의 파일이름 찾아서 저장
     var formData = Common.getFormData("form_newWebInvoice");
@@ -318,6 +369,7 @@ function fn_updateWebInvoiceInfo(st) {
     console.log(obj);
     Common.ajax("POST", "/eAccounting/webInvoice/updateWebInvoiceInfo.do", obj, function(result) {
         console.log(result);
+        fn_selectWebInvoiceItemList(result.data.clmNo);
         if(st == "view"){
             Common.alert("Temporary save succeeded.");
             $("#viewEditWebInvoicePop").remove();
@@ -407,7 +459,7 @@ function fn_setSupplier() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceNo" /></th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" value="${webInvoiceInfo.invcNo}"/></td>
+	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off value="${webInvoiceInfo.invcNo}"/></td>
 	<th scope="row"><spring:message code="newWebInvoice.gstRegistNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstRgistNo" name="gstRgistNo" value="${webInvoiceInfo.gstRgistNo}"/></td>
 </tr>

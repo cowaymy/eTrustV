@@ -70,6 +70,7 @@ var approveLineGridPros = {
     enableRestore : true,
     showRowNumColumn : false,
     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+    softRemoveRowMode : false
 };
 
 var approveLineGridID;
@@ -103,12 +104,7 @@ function fn_addRow() {
 }
 
 function fn_deleteRow() {
-    //AUIGrid.removeRow(approveLineGridID, selectRowIdx);
-    AUIGrid.removeSoftRows(approveLineGridID, selectRowIdx);
-    // remove한 row를 화면상에서도 지우도록 구현 필요
-    // totalAmount를 할때 값이 포함된다
-    // TO DO
-    AUIGrid.update(); // update 해본 결과 : 실패
+    AUIGrid.removeRow(approveLineGridID, selectRowIdx);
 }
 
 function fn_searchUserIdPop() {

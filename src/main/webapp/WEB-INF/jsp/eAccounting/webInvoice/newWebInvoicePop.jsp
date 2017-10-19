@@ -1,12 +1,35 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 행 스타일 */
+.my-cell-style {
+    background:#FF0000;
+    color:#005500;
+    font-weight:bold;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+/* 특정 칼럼 드랍 리스트 왼쪽 정렬 재정의*/
+#newWebInvoice_grid_wrap-aui-grid-drop-list-taxCode .aui-grid-drop-list-ul {
+     text-align:left;
+ }
+</style>
 <script type="text/javascript">
 var newGridID;
 var selectRowIdx;
-var callType = "new";
+var callType = "${callType}";
 var keyValueList = $.parseJSON('${taxCodeList}');
 var myColumnLayout = [ {
+    dataField : "clmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+},{
     dataField : "expType",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 },{
@@ -84,11 +107,20 @@ var myColumnLayout = [ {
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.netAmt + item.taxAmt);
+    },
+    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
+        if(item.yN == "N") {
+            return "my-cell-style";
+        }
+        return null;
     }
 }, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
     width : 200
+}, {
+    dataField : "yN",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 ];
 
@@ -99,8 +131,8 @@ var myGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     editable : true,
-    softRemoveRowMode : false
-
+    softRemoveRowMode : false,
+    rowIdField : "clmSeq" 
 };
 
 $(document).ready(function () {
@@ -195,6 +227,20 @@ function fn_expenseTypeSearchPop() {
 }
 
 function fn_approveLinePop() {
+	var checkResult = fn_checkEmpty();
+    
+    if(!checkResult){
+        return false;
+    }
+    
+    // tempSave를 하지 않고 바로 submit인 경우
+    if(FormUtil.isEmpty($("#clmNo").val())) {
+        // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
+        fn_attachmentUpload("");
+    } else {
+    	fn_updateWebInvoiceInfo("");
+    }
+    
     Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
@@ -213,14 +259,19 @@ function fn_removeRow() {
 }
 
 function fn_tempSave() {
-	fn_attachmentUpload(callType);
+	var checkResult = fn_checkEmpty();
+	
+	if(checkResult){
+		fn_attachmentUpload(callType);
+	}
 }
 
 function fn_attachmentUpload(st) {
 	var formData = Common.getFormData("form_newWebInvoice");
     Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
         console.log(result);
-        $("#atchFileGrpId").val(result.data.atchFileGrpId);
+        // 신규 add return atchFileGrpId의 key = fileGroupKey
+        $("#atchFileGrpId").val(result.data.fileGroupKey);
         fn_insertWebInvoiceInfo(st);
     });
 }
@@ -233,12 +284,29 @@ function fn_insertWebInvoiceInfo(st) {
     Common.ajax("POST", "/eAccounting/webInvoice/insertWebInvoiceInfo.do", obj, function(result) {
         console.log(result);
         $("#clmNo").val(result.data.clmNo);
+        fn_selectWebInvoiceItemList(result.data.clmNo);
         
         if(st == 'new') {
             Common.alert("Temporary save succeeded.");
             $("#newWebInvoicePop").remove();
         }
     });
+}
+
+function fn_updateWebInvoiceInfo(st) {
+    var obj = $("#form_newWebInvoice").serializeJSON();
+    var gridData = GridCommon.getEditData(newGridID);
+    obj.gridData = gridData;
+    console.log(obj);
+    Common.ajax("POST", "/eAccounting/webInvoice/updateWebInvoiceInfo.do", obj, function(result) {
+        console.log(result);
+        fn_selectWebInvoiceItemList(result.data.clmNo);
+        if(st == "view"){
+            Common.alert("Temporary save succeeded.");
+            $("#viewEditWebInvoicePop").remove();
+        }
+    });
+    
 }
 
 function fn_setCostCenter() {
@@ -280,7 +348,7 @@ function fn_setSupplier() {
 
 <form action="#" method="post" enctype="multipart/form-data" id="form_newWebInvoice">
 <input type="hidden" id="clmNo" name="clmNo">
-<input type="hidden" id="atchFileGrpId" name="atchFileGrpID">
+<input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
 <input type="hidden" id="newCostCenter" name="costCentr">
 <input type="hidden" id="newMemAccId" name="memAccId">
 <input type="hidden" id="bankCode" name="bankCode">
@@ -320,7 +388,7 @@ function fn_setSupplier() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceNo" /></th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo"/></td>
+	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off/></td>
 	<th scope="row"><spring:message code="newWebInvoice.gstRegistNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstRgistNo" name="gstRgistNo"/></td>
 </tr>

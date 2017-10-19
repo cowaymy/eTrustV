@@ -1,5 +1,6 @@
 package com.coway.trust.biz.eAccounting.webInvoice.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -191,7 +192,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			for (Object map : newGridList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
-				int appvItmSeq = webInvoiceMapper.selectNextClmSeq(String.valueOf(params.get("appvPrcssNo")));
+				int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
 				hm.put("appvItmSeq", appvItmSeq);
 				hm.put("invcNo", params.get("invcNo"));
 				hm.put("invcDt", params.get("invcDt"));
@@ -211,16 +212,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 
 	@Override
-	public void updateAppvInfo(Map<String, Object> params) {
+	public void updateApprovalInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		LOGGER.debug("params =====================================>>  " + params);
-		
 		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
-		String type = (String) params.get("type");
-		String rejctResn = (String) params.get("rejctResn");
-		if("appv".equals(type)) {
-			for (int i = 0; i < invoAppvGridList.size(); i++) {
-				Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
+		for (int i = 0; i < invoAppvGridList.size(); i++) {
+			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
+			if("R".equals(invoAppvInfo.get("appvPrcssStusCode"))) {
 				String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
 				int appvLineSeq = (int) invoAppvInfo.get("appvLineSeq");
 				int appvLineCnt = webInvoiceMapper.selectAppvLineCnt(appvPrcssNo);
@@ -258,9 +255,17 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					}
 				}
 			}
-		} else if("rejct".equals(type)) {
-			for (int i = 0; i < invoAppvGridList.size(); i++) {
-				Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
+		}
+	}
+
+	@Override
+	public void updateRejectionInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
+		String rejctResn = (String) params.get("rejctResn");
+		for (int i = 0; i < invoAppvGridList.size(); i++) {
+			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
+			if("R".equals(invoAppvInfo.get("appvPrcssStusCode"))) {
 				String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
 				int appvLineCnt = webInvoiceMapper.selectAppvLineCnt(appvPrcssNo);
 				int appvLinePrcssCnt = webInvoiceMapper.selectAppvLinePrcssCnt(appvPrcssNo);
@@ -307,44 +312,33 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 
 	@Override
-	public int selectNextAppvItmSeq(String appvPrcssNo) {
-		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectNextAppvItmSeq(appvPrcssNo);
-	}
-
-	@Override
 	public String selectNextIfKey() {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectNextIfKey();
 	}
 
 	@Override
-	public int selectNextSeq(String ifKey) {
+	public List<Object> budgetCheck(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectNextSeq(ifKey);
-	}
-	
-	@Override
-	public Map<String, Object> budgetCheck(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		Map<String, Object> map = null;
+		List<Object> list = new ArrayList<Object>();
 		List<Object> newGridList = (List<Object>) params.get("newGridList");
 		for(int i = 0; i < newGridList.size(); i++) {
 			Map<String, Object> data = (Map<String, Object>) newGridList.get(i);
 			data.put("year", params.get("year"));
 			data.put("month", params.get("month"));
 			data.put("costCentr", params.get("costCentr"));
-			String yesNo = webInvoiceMapper.budgetCheck(data);
 			LOGGER.debug("data =====================================>>  " + data);
-			if("N".equals(yesNo)) {
-				map = data;
-				break;
+			String yN = webInvoiceMapper.budgetCheck(data);
+			LOGGER.debug("yN =====================================>>  " + yN);
+			if("N".equals(yN)) {
+				list.add(i, data.get("clmSeq"));
 			}
 		}
-		map = new HashMap<String, Object>();
-		map.put("result", true);
 		
-		return map;
+		LOGGER.debug("list =====================================>>  " + list);
+		LOGGER.debug("list.size() =====================================>>  " + list.size());
+		
+		return list;
 	}
 
 	@Override

@@ -9,10 +9,15 @@ $(document).ready(function () {
 
 function fn_closePop() {
     $("#completedMsgPop").remove();
+    $("#approveLineSearchPop").remove();
+    console.log(callType);
+    if(callType == "new") {
+    	$("#newWebInvoicePop").remove();
+    }else if(callType == "view") {
+    	$("#viewEditWebInvoicePop").remove();
+    }
     
-    //Common.showLoader();
-    
-    window.location = "/eAccounting/webInvoice/webInvoice.do";
+    fn_selectWebInvoiceList();
 }
 </script>
 

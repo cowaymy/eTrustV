@@ -67,7 +67,7 @@ $(document).ready(function () {
     $("#viewReqstUserId").text(myGridData[0].reqstUserId);
     $("#viewMemAccId").text(myGridData[0].memAccId);
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
-    $("#viewTotAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0"));
+    $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0"));
     
     fn_setGridData(myGridID, myGridData);
 })
@@ -135,7 +135,7 @@ $(document).ready(function () {
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="totAmt"></span></h2>
+<h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="viewAppvAmt"></span></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->

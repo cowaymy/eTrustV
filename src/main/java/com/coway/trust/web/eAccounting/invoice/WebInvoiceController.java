@@ -1,12 +1,11 @@
 package com.coway.trust.web.eAccounting.invoice;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.biz.common.type.FileType;
+import javax.servlet.http.HttpServletRequest;
+
 import com.coway.trust.biz.common.type.FileType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,6 +32,7 @@ import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.google.gson.Gson;
 
@@ -50,10 +50,8 @@ public class WebInvoiceController {
 	@Value("${app.name}")
 	private String appName;
 
-	@Value("${com.file.upload.path}")
+	@Value("${web.resource.upload.file}")
 	private String uploadDir;
-	
-	//web.resource.upload.file
 	
 	// DataBase message accessor....
 	@Autowired
@@ -68,16 +66,6 @@ public class WebInvoiceController {
 	@RequestMapping(value = "/webInvoice.do")
 	public String webInvoice(ModelMap model) {
 		return "eAccounting/webInvoice/webInvoice";
-	}
-	
-	@RequestMapping(value = "/selectAppvPrcssStus.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectAppvPrcssStus(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		LOGGER.debug("params =====================================>>  " + params);
-		
-		//List<EgovMap> statusList = webInvoiceService.selectAppvPrcssStus(params);
-		//return ResponseEntity.ok(statusList);
-		return null;
 	}
 	
 	@RequestMapping(value = "/supplierSearchPop.do")
@@ -95,11 +83,15 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/newWebInvoicePop.do")
-	public String newWebInvoice(ModelMap model, SessionVO sessionVO) {
+	public String newWebInvoice(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
 		List<EgovMap> taxCodeList = webInvoiceService.selectTaxCodeWebInvoiceFlag();
 		
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
+		model.addAttribute("callType", params.get("callType"));
 		
 		return "eAccounting/webInvoice/newWebInvoicePop";
 	}
@@ -114,12 +106,18 @@ public class WebInvoiceController {
 		EgovMap webInvoiceInfo = webInvoiceService.selectWebInvoiceInfo(clmNo);
 		List<EgovMap> webInvoiceItems = webInvoiceService.selectWebInvoiceItems(clmNo);
 		String atchFileGrpId = String.valueOf(webInvoiceInfo.get("atchFileGrpId"));
-		List<EgovMap> webInvoiceAttachList = webInvoiceService.selectAttachList(atchFileGrpId);
+		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
+		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+		if(atchFileGrpId != "null") {
+			List<EgovMap> webInvoiceAttachList = webInvoiceService.selectAttachList(atchFileGrpId);
+			model.addAttribute("attachmentList", webInvoiceAttachList);
+		}
 		
 		model.addAttribute("webInvoiceInfo", webInvoiceInfo);
 		model.addAttribute("gridDataList", webInvoiceItems);
-		model.addAttribute("attachmentList", webInvoiceAttachList);
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
+		model.addAttribute("callType", params.get("callType"));
 		
 		return "eAccounting/webInvoice/viewEditWebInvoicePop";
 	}
@@ -208,9 +206,13 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/selectWebInvoiceList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectWebInvoiceList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectWebInvoiceList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
+		
+		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+		
+		params.put("appvPrcssStus", appvPrcssStus);
 		
 		List<EgovMap> list = webInvoiceService.selectWebInvoiceList(params);
 		
@@ -218,10 +220,15 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/selectApproveList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectApproveList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	public ResponseEntity<List<EgovMap>> selectApproveList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
+		String[] clmType = request.getParameterValues("clmType");
+		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+		
+		params.put("clmType", clmType);
+		params.put("appvPrcssStus", appvPrcssStus);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 		
@@ -319,7 +326,7 @@ public class WebInvoiceController {
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
 			// TODO
-			// add는 forData로 인해 따로 구현 필요  (file upload 구현 참고) 
+			// add는 formData로 인해 따로 구현 필요  (file upload 구현 참고) 
 			// update or delete file 처리
 			// 공통 코드에 현재 미구현으로 불가
 			//fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
@@ -367,14 +374,31 @@ public class WebInvoiceController {
 		return ResponseEntity.ok(message);
 	}
 	
-	@RequestMapping(value = "/appvRejctSubmit.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/approvalSubmit.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> approvalSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		
-		webInvoiceService.updateAppvInfo(params);
+		webInvoiceService.updateApprovalInfo(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/rejectionSubmit.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> rejectionSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		
+		webInvoiceService.updateRejectionInfo(params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -385,18 +409,15 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/budgetCheck.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<Object>> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		Map<String, Object> result = webInvoiceService.budgetCheck(params);
+		List<Object> result = webInvoiceService.budgetCheck(params);
 		
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(result);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		LOGGER.debug("result =====================================>>  " + result);
 		
-		return ResponseEntity.ok(message);
+		return ResponseEntity.ok(result);
 	}
 	
 	@RequestMapping(value = "/selectWebInvoiceItemList.do", method = RequestMethod.GET)

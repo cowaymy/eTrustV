@@ -44,6 +44,9 @@ var invoAprveGridColLayout = [ {
     dataType: "numeric",
     formatString : "#,##0"
 }, {
+    dataField : "appvPrcssStusCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />'
 }, {
@@ -124,6 +127,7 @@ $(document).ready(function () {
     
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#search_costCenter_btn").click(fn_costCenterSearchPop);
+    $("#search_createUser_btn").click(fn_searchUserIdPop);
     $("#approve_btn").click(fn_approveRegistPop);
     $("#reject_btn").click(fn_rejectRegistPop);
     
@@ -144,6 +148,8 @@ $(document).ready(function () {
         name: "codeName",
         type:"M"
     });
+    
+    $("#appvPrcssStus").multipleSelect("checkAll");
 });
 
 function fn_supplierSearchPop() {
@@ -163,6 +169,26 @@ function fn_costCenterSearchPop() {
 function fn_setCostCenter() {
     $("#costCenter").val($("#search_costCentr").val());
     $("#costCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_searchUserIdPop() {
+    Common.popupDiv("/common/memberPop.do", null, null, true);
+}
+
+// set 하는 function
+function fn_loadOrderSalesman(memId, memCode) {
+
+    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+
+        if(memInfo == null) {
+            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+        }
+        else {
+            console.log(memInfo);
+            // TODO createUser set
+            $("#createUser").val(memInfo.memCode);
+        }
+    });
 }
 
 function fn_setSupplier() {
@@ -212,17 +238,24 @@ function fn_setGridData(gridId, data) {
 
 function fn_appvRejctSubmit(type, rejctResn) {
     var invoAppvGridList = AUIGrid.getCheckedRowItemsAll(invoAprveGridID);
+    var url = "";
     console.log(invoAppvGridList);
     if(invoAppvGridList.length == 0) {
         Common.alert("No data selected.");
     } else {
         var data = {
                 invoAppvGridList : invoAppvGridList
-                ,type : type
                 ,rejctResn : rejctResn
         };
+        if(type == "appv") {
+        	url = "/eAccounting/webInvoice/approvalSubmit.do";
+        }else if(type == "rejct") {
+        	url = "/eAccounting/webInvoice/rejectionSubmit.do";
+        }
         console.log(data);
-        Common.ajax("POST", "/eAccounting/webInvoice/appvRejctSubmit.do", data, function(result) {
+        console.log(type);
+        console.log(url);
+        Common.ajax("POST", url, data, function(result) {
             console.log(result);
             if(type == "appv") {
             	Common.popupDiv("/eAccounting/webInvoice/approveComplePop.do", null, null, true, "approveComplePop");
@@ -290,7 +323,7 @@ function fn_appvRejctSubmit(type, rejctResn) {
 	</td>
 	<th scope="row"><spring:message code="webInvoice.status" /></th>
 	<td>
-	<select class="multy_select w100p" multiple="multiple" name="appvPrcssStus">
+	<select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
 		<option value="A"><spring:message code="webInvoice.select.approved" /></option>
 		<option value="R"><spring:message code="webInvoice.select.request" /></option>
 		<option value="J"><spring:message code="webInvoice.select.reject" /></option>
