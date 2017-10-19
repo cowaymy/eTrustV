@@ -102,6 +102,8 @@ function fnSearchBtnList()
      return false;
    }
 
+   $("#spanText").text(""); 
+
    Common.ajax("GET"
 		         , "/scm/selectInterfaceSearch.do"
              , $("#MainForm").serialize()
@@ -113,7 +115,6 @@ function fnSearchBtnList()
 		              {
 		                  $("#spanText").text(result.selectInterfaceLastState[0].lastState); 
 		              }
-		              
 		           }
 						 , function(jqXHR, textStatus, errorThrown)
 						   {
@@ -128,7 +129,7 @@ function fnSearchBtnList()
 						     {
 						       console.log(e);
 						     }
-	
+						     
 						     Common.alert("Fail : " + jqXHR.responseJSON.message);
 						   });
 }
@@ -241,11 +242,12 @@ var InterfaceLayout =
         }, {
             dataField : "amtSub",
             headerText : "<spring:message code='sys.scm.interface.amtSub'/>",
+            style : "aui-grid-right-column",
             width : "7%"
         }, {
             dataField : "waersSub",
             headerText : "<spring:message code='sys.scm.interface.waersSub'/>",
-            style : "aui-grid-right-column",
+            //style : "aui-grid-right-column",
             width : "10%"
         }, {
             dataField : "cnt",
