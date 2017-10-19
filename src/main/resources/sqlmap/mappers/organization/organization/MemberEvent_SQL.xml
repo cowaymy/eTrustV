@@ -742,7 +742,7 @@
         </update>
         
         <select id="selectDeptCode" parameterType="int" resultType="egovMap">
-             select last_dept_code, last_grp_code, last_org_code from org0007d where PROMO_ID=#{promoId}
+             select last_dept_code, last_grp_code, last_org_code, brnch_idd from org0007d where PROMO_ID=#{promoId}
         </select>
         
 </mapper>
