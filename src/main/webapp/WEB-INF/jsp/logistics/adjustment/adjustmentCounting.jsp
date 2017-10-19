@@ -578,13 +578,12 @@ function fn_serialChck(rowindex , rowitem , str){
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" ,data[0].l62cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" ,data[0].l63cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt74" ,data[0].l74cnt );
-           /*   
+        
              if (data[0].l74cnt > 0){
                  schk = false;
              }else{
                  schk = true;
-             }  */
-                 schk = true;
+             }  
         } 
          
          if (schk){
