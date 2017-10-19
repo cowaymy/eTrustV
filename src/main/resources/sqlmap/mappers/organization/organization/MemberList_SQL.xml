@@ -1147,7 +1147,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , COURS_ID
         , STUS_ID )
           VALUES (
-          (select max(bill_id)+1 from PAY0007D)
+          PAY0007D_SEQ.NEXTVAL
           , #{billTypeId}
           , #{billSOID}
           , #{billMemId}
@@ -1268,7 +1268,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  , TAX_INVC_CRT_DT
 		  , TAX_INVC_CRT_USER_ID )
 		  VALUES ( 
-		  (select MAX(TAX_INVC_ID)+1 from PAY0031D)
+		  PAY0031D_SEQ.NEXTVAL
 		  , #{taxInvoiceRefNo}
 		  , SYSDATE
 		  , #{taxInvoiceServiceNo}
@@ -1320,7 +1320,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	         , INVC_ITM_RETN_DT
 	         , INVC_ITM_BILL_REF_NO )
 	           VALUES (
-	            (select max(INVC_ITM_ID)+1 from PAY0032D)
+	            PAY0032D_SEQ.NEXTVAL
 	           , #{taxInvoiceID}
 	           , #{invoiceItemType}
 	           , #{invoiceItemOrderNo}
