@@ -406,9 +406,10 @@
                         saleOrdList += ",";
                     }
 
-                    
-                    if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
-                        brnchCnt += 1 ;
+                    if(i !=0 ){
+	                    if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
+	                        brnchCnt += 1 ;
+	                    }
                     }
                     
                     ctBrnchCodeOld = rowItem.codyBrnchCode;
