@@ -15,10 +15,13 @@ function fn_memberSave(){
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
 				console.log("message : " + result.message );
-				Common.alert(result.message);
+				Common.alert(result.message,fn_close);
 		});
 }
 
+function fn_close(){
+	$("#popup_wrap").remove();
+}
 function fn_saveConfirm(){
 	if(fn_saveValidation()){
         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
