@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.AllocationMapper">
+
+	<select id="selectList" parameterType="Map" resultType="egovMap">
+
+			 SELECT MEM_ID ct ,
+				       TO_CHAR(C_DATE,'YYYY-MM-DD') C_DATE ,
+				       ASCNT||'-'||SUMSESION_CNT ascnt,
+				       INCNT||'-'||SUMSESION_CNT inscnt,
+				       0||'-'||SUMSESION_CNT rtncnt
+				FROM (
+				    SELECT  MAX(MEM_ID)   MEM_ID,   
+				            MAX(C_DATE)   C_DATE,
+				            MAX(ASCNT)    ASCNT ,
+				            MAX(INCNT)    INCNT ,
+				            SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0) ) SUMSESION_CNT
+				    FROM(
+				        SELECT  MEM_ID , 
+				                AS_APPNT_DT  AS C_DATE,
+				                COUNT(AS_NO) ASCNT ,
+				                0  INCNT 
+				        FROM ORG0005D RA  ,SVC0001D RB 
+				        WHERE  1=1
+				        AND RA.MEM_ID = RB.AS_MEM_ID  
+                        /* AND RB.AS_STUS_ID =4  */  
+			        AND RB.AS_APPNT_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'YYYY-MM-DD')
+				        AND RA. CT_SUB_GRP IN (
+				            SELECT
+				                 F.CT_SUB_GRP
+				            FROM SAL0001D  A , 
+				                 SAL0045D B ,
+				                 SAL0023D E , 
+				                 SYS0064M F
+				            WHERE 1=1
+				                AND A.SALES_ORD_ID =#{ORD_ID}
+				                AND A.SALES_ORD_ID = B.SALES_ORD_ID
+				                AND B.ADD_ID = E.CUST_ADD_ID
+				                AND E.AREA_ID = F.AREA_ID
+				        )GROUP BY MEM_ID , AS_APPNT_DT 
+				    UNION ALL 
+				        SELECT  MEM_ID , 
+				                    INSTALL_DT  AS C_DATE,
+				                    0 ASCNT, 
+				                    COUNT(INSTALL_ENTRY_NO) INSCNT
+				            FROM ORG0005D RA  ,SAL0046D RB ,ORG0015M P
+				            WHERE  1=1
+				            AND RA.MEM_ID = RB.CT_ID
+				            AND RA.MEM_ID=P.CT_ID
+                             /*AND RB.STUS_CODE_ID =4*/	           
+                             AND RB.INSTALL_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'YYYY-MM-DD')
+				            AND RA. CT_SUB_GRP IN (
+				                SELECT
+				                     F.CT_SUB_GRP
+				                FROM SAL0001D  A , 
+				                     SAL0045D B ,
+				                     SAL0023D E ,   
+				                     SYS0064M F
+				                WHERE 1=1
+				                    AND A.SALES_ORD_ID =#{ORD_ID}
+				                    AND A.SALES_ORD_ID = B.SALES_ORD_ID
+				                    AND B.ADD_ID = E.CUST_ADD_ID
+				                    AND E.AREA_ID = F.AREA_ID
+				            )GROUP BY MEM_ID , INSTALL_DT  
+				        ) S  , ORG0015M P 
+				        WHERE 1=1 
+				            AND S.MEM_ID = P.CT_ID(+)
+				            GROUP BY MEM_ID, C_DATE ,MORNG_SESION_INS ,AFTNON_SESION_INS ,EVNG_SESION_INS
+				  )SS  
+				  
+		
+	</select>
+	
+	
+    <select id="selectDetailList" parameterType="Map" resultType="egovMap">
+   
+										
+										
+					SELECT 
+					        MEM_ID CT,
+					       /*Summary*/
+					        SUM_AS_RE, SUM_INS_RE,SUM_RNS_RE,
+					        SUM_AS_RE||'-'||SESION_CNT  SUM_AS_CNT, SUM_INS_RE||'-'||SESION_CNT  SUM_INS_CNT ,SUM_RNS_RE||'-'||SESION_CNT SUM_RTN_CNT,
+					        /*Morning */
+					        AMOR, IMOR , RMOR,
+					        AMOR||'-'||M_SESION MOR_AS_CNT   , IMOR||'-'||M_SESION MOR_INS_CNT  ,  RMOR||'-'||M_SESION MOR_RTN_CNT,
+					        /* After*/
+					       AAFT,IAFT ,RAFT,
+					        AAFT||'-'||A_SESION AFT_AS_CNT   , IAFT||'-'||A_SESION AFT_INS_CNT  , RAFT||'-'||A_SESION AFT_RTN_CNT,
+					       /* Evening */
+					        AEVN,IEVN,REVN,
+					        AEVN||'-'||E_SESION  EVN_AS_CNT   , IEVN||'-'||E_SESION EVN_INS_CNT  , REVN||'-'||E_SESION EVN_RTN_CNT ,
+					        AOUT,IOUT,ROUT,
+					        AOUT||'-'||E_SESION  OTH_AS_CNT   , IEVN||'-'||E_SESION OTH_INS_CNT  , REVN||'-'||E_SESION  OTH_RTN_CNT 
+					FROM (    
+					SELECT 
+					     MEM_ID, 
+					     AMOR,AAFT,AEVN, AOUT,
+					     (AMOR+AAFT+AEVN + AOUT)SUM_AS_RE ,
+					     IMOR,IAFT,IEVN, IOUT,
+					     (IMOR+IAFT+IEVN+IOUT) SUM_INS_RE,
+					     RMOR, RAFT,REVN,ROUT,
+					     (RMOR+ RAFT+REVN+ROUT)SUM_RNS_RE,
+					     NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0)  SESION_CNT,
+					     NVL(MORNG_SESION_INS,0)  M_SESION,
+					     NVL(AFTNON_SESION_INS,0) A_SESION,
+					     NVL(EVNG_SESION_INS,0)   E_SESION
+					FROM (
+					        SELECT 
+					            MAX(AS_MEM_ID) MEM_ID, 
+					            MAX(A01)  AMOR, MAX(A02)  AAFT, MAX(A03)  AEVN, MAX(A04)  AOUT,
+					            MAX(I01)  IMOR, MAX(I02)  IAFT, MAX(I03)  IEVN, MAX(I04)  IOUT,
+					            MAX(R01)  RMOR, MAX(R02)  RAFT, MAX(R03)  REVN, MAX(R04)  ROUT
+					        FROM( 
+					        select 
+					             B.AS_MEM_ID ,
+					             SUM(DECODE(B.AS_SESION_CODE,'A',1,0))   A01 ,
+					             SUM(DECODE(B.AS_SESION_CODE,'M',1,0))   A02 ,
+					             SUM(DECODE(B.AS_SESION_CODE,'F',1,0))   A03 ,
+					             SUM(DECODE(B.AS_SESION_CODE,'O',1,0))   A04 ,
+					             0  I01 , 0  I02 ,0  I03 , 0  I04 ,
+					             0  R01 , 0  R02 ,0  R03 , 0  R04 
+					        FROM
+					            ORG0005D A  ,SVC0001D  B ,  ORG0015M P
+					        WHERE A.MEM_ID  = B.AS_MEM_ID
+					        AND A.MEM_ID = P.CT_ID
+					        /*AND B.AS_STUS_ID =4 */
+					        AND AS_APPNT_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'yyyy-mm-dd')
+					        AND  A.MEM_ID = #{CT_ID}
+					        GROUP BY B.AS_MEM_ID, B.AS_SESION_CODE 
+					        UNION 
+					        select 
+					             B.CT_ID ,
+					             0  A01 ,  0  A02 , 0   A03 , 0   A04 ,
+					             SUM(DECODE(B.SESION_CODE,'A',1,0))   I01 ,
+					             SUM(DECODE(B.SESION_CODE,'M',1,0))   I02 ,
+					             SUM(DECODE(B.SESION_CODE,'F',1,0))   I03 ,
+					             SUM(DECODE(B.SESION_CODE,'O',1,0))   I04 ,
+					             0  R01 ,
+					             0  R02 ,
+					             0  R03 ,
+					             0  R04 
+					        FROM
+					            ORG0005D A  ,SAL0046D  B ,  ORG0015M P
+					        WHERE A.MEM_ID  = B.CT_ID
+					        AND A.MEM_ID = P.CT_ID
+					          AND  A.MEM_ID = #{CT_ID}
+					        /*AND B.STUS_CODE_ID =4 */
+					        AND INSTALL_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'yyyy-mm-dd')
+					        GROUP BY B.CT_ID, B.SESION_CODE 
+					        UNION 
+					        select 
+					             B.CT_ID ,
+					             0  A01 , 0  A02 , 0  A03 , 0  A04 ,
+					             0  I01 , 0  I02 , 0  I03 , 0  I04,
+					             0  R01 , 0  R02 , 0  R03 , 0  R04 
+					        FROM
+					            ORG0005D A  ,SAL0046D  B ,  ORG0015M P
+					        WHERE A.MEM_ID  = B.CT_ID
+					        AND A.MEM_ID = P.CT_ID
+					          AND  A.MEM_ID = #{CT_ID}
+					        /* AND B.STUS_CODE_ID =4  */
+					        AND INSTALL_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'yyyy-mm-dd')
+					        GROUP BY B.CT_ID, B.SESION_CODE 
+					    )
+					) S  , ORG0015M P 
+					WHERE 1=1 
+					AND S.MEM_ID = P.CT_ID(+)
+					)
+										
+
+    </select>
+    
+    
+	
+</mapper>
