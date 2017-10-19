@@ -30,17 +30,21 @@
 	
 	    var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
 
-	    var str = "";
+	    var str = [];
 	    var rowItem = checkedItems[0].item;
 	    
-	   str = rowItem.memId;
+/* 	    str = rowItem.memId; */
+	    
+ 	   str[0] = rowItem.memId;
+	   str[1] = rowItem.codyId;
+
 	   return str;
 	}
                 
     
     
     
-		// 체크된 아이템 얻기
+/* 		// 체크된 아이템 얻기
 	function fn_getCheckedCdRowItems() {
 		    var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
 		    var str = "";
@@ -56,10 +60,14 @@
 		        rowItem = checkedItems[i];
 		        str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name  + "\n";
 		    }
-/* 		    alert(str); */
-		}
+ 		    alert(str); 
+		} */
     
                 
+                
+ 
+    
+                    
     
     function createAUIGridCust(){
         
@@ -75,7 +83,8 @@
             unCheckValue : "0",
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
-                var assiinCd = fn_getCheckedRowItems();
+                var assiinCd = fn_getCheckedRowItems(); //저장id
+                
                 var aa = new Date();
 /*                 var year = aa.getFullYear(); 
                 var month = aa.getMonth()+1; */
@@ -83,11 +92,13 @@
                 if(item.c1 == 1){
                     AUIGrid.updateRow(myCustGridID, { 
                           "codyId" : "",
+                          "codyCd" : "",
                           "c1" : "0" 
                         }, rowIndex); 
                 }else{
                     AUIGrid.updateRow(myCustGridID, { 
-                        "codyId" : assiinCd,
+                         "codyId" : assiinCd[0],      //저장용
+                        "codyCd" : assiinCd[1],      //화면용
                         "c1" : "1" ,
                           "year" : "${ManuaMyBSMonth}",
 /*                          "month" : month, */
@@ -239,8 +250,55 @@
             };
                     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
                 myCdGridID = AUIGrid.create("#grid_wrapCd", columnLayout, gridPros);
+                
+                
+                    // 체크박스 클린 이벤트 바인딩
+			    AUIGrid.bind(myCdGridID, "rowCheckClick", function( event ) {
+	/* 		        alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked); */
+			        getEditedRowItems();
+			    });
+			    
     }
 
+
+/*                          "codyId" : assiinCd[0],      //저장용
+                        "codyCd" : assiinCd[1],      //화면용
+ */                        
+
+		// 수정된 행들 얻기
+		function getEditedRowItems() {
+		    // 수정된 행 아이템들(배열)
+		    var editedRowItems = AUIGrid.getEditedRowItems(myCustGridID);
+		    var str ="";
+		    
+		    
+		    for(var i=0, len=editedRowItems.length; i<len; i++) {
+		          editedRowItems[i]["codyCd"] = "";
+                str += editedRowItems[i]["codyCd"] +"\n";
+		    }
+//		      alert(str);
+		}
+
+
+
+        // 체크된 아이템 얻기
+    function fn_getCheckedCdRowItems() {
+            var checkedItems = AUIGrid.getCheckedRowItems(myCustGridID);
+            var str = "";
+            var rowItem;
+            var len = checkedItems.length;
+            
+            if(len <= 0) {
+/*                 alert("체크된 행 없음!!"+len); */
+                return;
+            }
+            
+            for(var i=0; i<len; i++) {
+                rowItem = checkedItems[i];
+                str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name  + "\n";
+            }
+/*           alert(str); */ 
+        }
     
 
     function fn_getselectPopUpListAjax(){
