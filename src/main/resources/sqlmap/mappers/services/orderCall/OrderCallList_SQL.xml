@@ -386,7 +386,7 @@
 		  , CRT_DT
 		  , ALLOW_COMM
 		  , IS_TRADE_IN
-		  , CT_GRP
+		  , CT_SUB_GRP
 		  , UPD_DT
 		  , UPD_USER_ID
 		  , REV_ID
