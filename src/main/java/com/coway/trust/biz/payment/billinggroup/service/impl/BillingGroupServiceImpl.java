@@ -1,16 +1,16 @@
 package com.coway.trust.biz.payment.billinggroup.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -34,10 +34,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("billingGroupService")
 public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements BillingGroupService {
 
-	private static final Logger logger = LoggerFactory.getLogger(BillingGroupServiceImpl.class);
-
 	@Resource(name = "billingGroupMapper")
 	private BillingGroupMapper billingGroupMapper;
+	
+	@Autowired
+	private AdaptorService adaptorService;
+	
+	@Value("${autodebit.email.receiver}")
+	private String emailReceiver;
 
 	
 	/**
@@ -964,6 +968,31 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			estmMap.put("emailAdd", "");
 			//estmReq 인서트
 			billingGroupMapper.insEstmReq(estmMap);
+			String reqId = String.valueOf(estmMap.get("reqIdSeq"));
+			
+			// E-mail 전송하기
+			EmailVO email = new EmailVO();
+			List<String> toList = new ArrayList<String>();
+			toList.add(String.valueOf(params.get("reqEmail")));
+			
+			email.setTo(toList);
+			email.setHtml(true);
+			email.setSubject("Coway E-Invoice Subscription Confirmation");
+			email.setText("Dear Sir/Madam, <br /><br />" +
+               "Thank you for registering for e-Invoice and go green together with Coway. <br /><br />" +
+               "To complete registration, please verify the email address you have registered in our system by clicking the link shown below.<br /><br />" +
+               "<a href='http://web.coway.com.my/Payment/Billing/BillingGroupManagement_EStatementConfirm.aspx?ReqID=" + reqId + "' target='_blank' style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
+               "This link will be expired in 24 hours.<br /><br />" +
+               "This is an automatically generated email, please do not reply.<br /><br />" +
+               "Shall you encounter any query, kindly contact us for more information.<br />" +
+               "Customer Hotline : 1800-888-111<br />" +
+               "Coway Website : " + "<a href='http://www.coway.com.my' target='_blank'>www.coway.com.my</a>" +
+               "<br /><br /><br />" +
+               "Yours faithfully,<br />" +
+               "<b>Coway Malaysia</b>");
+			
+			adaptorService.sendEmail(email, false);
+			
 			
 			return true;
 			
