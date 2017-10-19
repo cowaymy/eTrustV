@@ -103,6 +103,7 @@ $(document).ready(function() {
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
+    doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
     
 	createAUIGridDoc();
 	fn_docSubmission();
@@ -689,7 +690,7 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">Training Course</th>
     <td colspan="2">
-    <select class="w100p">
+    <select class="w100p" id="course" name="course">
     </select>
     </td>
     <th scope="row">Total Vacation</th>
