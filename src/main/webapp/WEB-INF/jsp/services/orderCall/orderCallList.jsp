@@ -101,11 +101,6 @@ $(document).ready(function() {
             headerText : "Customer",
             editable : false,
             width : 180
-            
-        }, {
-            dataField : "",
-            headerText : "Area",
-            width : 180
         }, {
             dataField : "isWaitCancl",
             headerText : "Wait Cancel ?",
