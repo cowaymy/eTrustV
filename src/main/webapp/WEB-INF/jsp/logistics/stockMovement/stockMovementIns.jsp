@@ -170,6 +170,7 @@ $(function(){
             Common.ajax("POST", "/logistics/stockMovement/StockMovementAdd.do", dat, function(result) {
             	Common.alert(result.message , locationList);
                 AUIGrid.resetUpdatedItems(reqGrid, "all");
+                location.href = '/logistics/stockMovement/StockMovementList.do'; 
             },  function(jqXHR, textStatus, errorThrown) {
                 try {
                 } catch (e) {
@@ -445,28 +446,28 @@ function f_multiCombo() {
     <th scope="row">Remark</th>
     <td colspan="3"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
-<tr id="cancelTr">
-    <th scope="row">Defect Reason</th>
-    <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </td>
-<!--     <th scope="row">CT/Cody</th>
-    <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </td> -->
-    <td>
-    </td>
-    <td>
-    </td>
-</tr>
+<!-- <tr id="cancelTr"> -->
+<!--     <th scope="row">Defect Reason</th> -->
+<!--     <td> -->
+<!--     <select class="w100p"> -->
+<!--         <option value="">11</option> -->
+<!--         <option value="">22</option> -->
+<!--         <option value="">33</option> -->
+<!--     </select> -->
+<!--     </td> -->
+<!-- <!--     <th scope="row">CT/Cody</th> -->
+<!--     <td> -->
+<!--     <select class="w100p"> -->
+<!--         <option value="">11</option> -->
+<!--         <option value="">22</option> -->
+<!--         <option value="">33</option> -->
+<!--     </select> -->
+<!--     </td> --> -->
+<!--     <td> -->
+<!--     </td> -->
+<!--     <td> -->
+<!--     </td> -->
+<!-- </tr> -->
 </tbody>
 </table><!-- table end -->
 

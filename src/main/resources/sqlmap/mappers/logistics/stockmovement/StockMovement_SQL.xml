@@ -95,7 +95,7 @@
            <if test="sstatus !=null and sstatus !=''">
               and l47.reqst_stus = #{sstatus}
            </if>
-           ORDER by l47.reqst_no desc
+           ORDER by l47.CRT_DT desc
     </select> 
   
     <insert id="insStockMovement" parameterType="Map">
