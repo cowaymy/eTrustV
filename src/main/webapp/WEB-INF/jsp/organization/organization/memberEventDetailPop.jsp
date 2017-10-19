@@ -333,7 +333,7 @@
     </td> --%>
     <input type="hidden" id="promoId" name="promoId" value="${promoInfo.promoId}">
      <input type="hidden" id="memCode" name="memCode" value="${promoInfo.memCode}">
-     <input type="text" id="memId" name="memId" value="${promoInfo.memId}">
+     <input type="hidden" id="memId" name="memId" value="${promoInfo.memId}">
      <input type="hidden" id="branchId" name="branchId" value="${promoInfo.c7} ">
 <aside class="title_line"><!-- title_line start -->
 <h2>Request Information</h2>
