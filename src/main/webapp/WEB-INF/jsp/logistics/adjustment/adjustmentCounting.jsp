@@ -579,7 +579,6 @@ function fn_serialChck(rowindex , rowitem , str){
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" ,data[0].l63cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt74" ,data[0].l74cnt );
              
-             // seial 입력시 stock counting 안하는 걸로 함 부족 하거나 추가 될 수도 있는 경우가 있다고 하였음 
              if (data[0].l74cnt == 0 && data[0].l63cnt > 0){ // 최종 위치  포함하여 serial 체크 할 경우
              //if (data[0].l74cnt == 0 ){  // 최종 위치 상관 없이 seial 체크 할 경우 
                  schk = true;
