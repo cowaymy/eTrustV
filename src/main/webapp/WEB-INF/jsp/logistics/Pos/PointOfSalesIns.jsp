@@ -36,6 +36,7 @@
 var resGrid;
 var reqGrid;
 var userCode;
+var UserBranchId;
 var checkedItems;
 var itm_qty  = 0;
 
@@ -118,6 +119,7 @@ SearchSessionAjax();
 
 var paramdata = { groupCode : '308' , orderValue : 'CODE' , likeValue:'OH'};
 var LocData = {sLoc : UserCode};
+var LocData2 = {brnch : UserBranchId};
      doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
      doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , 'f_LocMultiCombo');
       doGetCombo('/common/selectCodeList.do', '15', '', 'PosItemType', 'M','f_multiCombo');
@@ -129,7 +131,7 @@ var LocData = {sLoc : UserCode};
 //      ***********************************/
     
     reqcolumnLayout=[{dataField:"itmrnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
-                      {dataField:"itmcode"     ,headerText:"Code"        ,width:120    ,height:30 , visible:true},
+                      {dataField:"itmcode"     ,headerText:"Code"        ,width:120    ,height:30 , editable:false},
                       {dataField:"itmdesc"     ,headerText:"Text"        ,width:120    ,height:30 , editable:false},
                       {dataField:"itemqty"   ,headerText:"Available Qty"      ,width:120    ,height:30 , editable:false},
                       /* {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30 }, */
@@ -140,8 +142,8 @@ var LocData = {sLoc : UserCode};
                               allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                         }
                       },
-                      {dataField:"itemserialChk"       ,headerText:"Serial"            ,width:120    ,height:30},
-                      {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30
+                      {dataField:"itemserialChk"       ,headerText:"Serial"            ,width:120    ,height:30,editable:false},
+                      {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30,editable:false
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
                               
@@ -551,6 +553,8 @@ function SearchSessionAjax() {
     Common.ajaxSync("GET" , url , '' , function(result){
 
     	UserCode=result.UserCode;
+    	UserBranchId=result.UserBranchId;
+    	alert("UserBranchId :   "+UserBranchId);
     	$("#insRequestor").val(result.UserName);
     });
 }
