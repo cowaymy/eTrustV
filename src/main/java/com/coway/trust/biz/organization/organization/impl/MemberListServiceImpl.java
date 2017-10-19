@@ -1087,4 +1087,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memberListMapper.selectDeptCode(params);
 	}
 	
+	@Override
+	public List<EgovMap>  selectCourse() {
+		return memberListMapper.selectCourse();
+	}
 }

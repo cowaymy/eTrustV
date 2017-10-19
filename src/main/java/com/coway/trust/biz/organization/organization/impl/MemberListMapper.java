@@ -103,4 +103,6 @@ public interface MemberListMapper {
 	List<EgovMap> selectSuperiorTeam(Map<String, Object> params);
 	
 	List<EgovMap> selectDeptCode(Map<String, Object> params); 
+	
+	List<EgovMap> selectCourse();
 }
