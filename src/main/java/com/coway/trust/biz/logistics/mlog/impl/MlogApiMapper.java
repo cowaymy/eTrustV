@@ -65,8 +65,8 @@ public interface MlogApiMapper {
 
 	List<EgovMap> getStockPriceList(Map<String, Object> params);
 
-	List<StrockMovementVoForMobile> getStockRequestStatusHeader(Map<String, Object> params);
-
-	List<StrockMovementVoForMobile> getRequestStatusParts(Map<String, Object> setMap);
+//	List<StrockMovementVoForMobile> getStockRequestStatusHeader(Map<String, Object> params);
+//
+//	List<StrockMovementVoForMobile> getRequestStatusParts(Map<String, Object> setMap);
 
 }

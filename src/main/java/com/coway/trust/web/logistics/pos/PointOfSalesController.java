@@ -131,6 +131,7 @@ public class PointOfSalesController {
 		Map<String, Object> map = new HashMap();
 		map.put("UserName", UserName);
 		map.put("UserCode", UserCode);
+		map.put("UserBranchId", UserBranchId);
 
 		return ResponseEntity.ok(map);
 	}

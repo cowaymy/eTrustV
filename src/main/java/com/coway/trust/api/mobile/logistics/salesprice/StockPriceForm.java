@@ -11,9 +11,9 @@ public class StockPriceForm {
 	private String productCode;
 	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) 312", example = "312")
 	private int productId;
-	@ApiModelProperty(value = "검색 type (all / partCode / partName)", example = "all / partCode / partName")
-	private String searchType;
-	@ApiModelProperty(value = "검색어 AC", example = "AC")
+	@ApiModelProperty(value = "검색 type (PartsCode=1,PartsName=2,All=3)", example = "1,2,3")
+	private int searchType;
+	@ApiModelProperty(value = "검색어 AC,3300414,3300409", example = "AC,3300414,3300409")
 	private String searchKeyword;
 	@ApiModelProperty(value = "Filter=62 / Part=63 구분", example = "62,63")
 	private int searchKinds;
@@ -39,11 +39,11 @@ public class StockPriceForm {
 		this.productId = productId;
 	}
 
-	public String getSearchType() {
+	public int getSearchType() {
 		return searchType;
 	}
 
-	public void setSearchType(String searchType) {
+	public void setSearchType(int searchType) {
 		this.searchType = searchType;
 	}
 

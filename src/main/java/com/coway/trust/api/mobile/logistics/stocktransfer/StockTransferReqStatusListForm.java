@@ -18,8 +18,8 @@ public class StockTransferReqStatusListForm {
 	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD) 예) 20170922", example = "29092017")
 	private String searchToDate;
 
-	@ApiModelProperty(value = "searchStatus 상태(requested / done) 예) requested/done", example = "A,B,C")
-	private String searchStatus;
+	@ApiModelProperty(value = "searchStatus 상태(requested=1 / done=2) 예) 1,2", example = "")
+	private int searchStatus;
 
 	@ApiModelProperty(value = "예) MRSL 고정값", example = "A,B,C")
 	private String reqStatus;
@@ -58,11 +58,11 @@ public class StockTransferReqStatusListForm {
 		this.searchToDate = searchToDate;
 	}
 
-	public String getSearchStatus() {
+	public int getSearchStatus() {
 		return searchStatus;
 	}
 
-	public void setSearchStatus(String searchStatus) {
+	public void setSearchStatus(int searchStatus) {
 		this.searchStatus = searchStatus;
 	}
 

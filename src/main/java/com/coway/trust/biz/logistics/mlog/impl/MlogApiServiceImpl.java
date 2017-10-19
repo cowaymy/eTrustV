@@ -60,6 +60,10 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 	@Override
 	public List<EgovMap> getInventoryStockByHolder(Map<String, Object> params) {
+		
+		System.out.println("userId :::   "+params.get("userId"));
+		System.out.println("searchType  ::  "+params.get("searchType"));
+		System.out.println("searchKeyword ::"+params.get("searchKeyword"));
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getInventoryStockByHolder(params);
 	}
@@ -197,16 +201,16 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		return MlogApiMapper.getStockPriceList(params);
 	}
 
-	@Override
-	public List<StrockMovementVoForMobile> getStockRequestStatusHeader(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return MlogApiMapper.getStockRequestStatusHeader(params);
-	}
-
-	@Override
-	public List<StrockMovementVoForMobile> getRequestStatusParts(Map<String, Object> setMap) {
-		// TODO Auto-generated method stub
-		return MlogApiMapper.getRequestStatusParts(setMap);
-	}
+//	@Override
+//	public List<StrockMovementVoForMobile> getStockRequestStatusHeader(Map<String, Object> params) {
+//		// TODO Auto-generated method stub
+//		return MlogApiMapper.getStockRequestStatusHeader(params);
+//	}
+//
+//	@Override
+//	public List<StrockMovementVoForMobile> getRequestStatusParts(Map<String, Object> setMap) {
+//		// TODO Auto-generated method stub
+//		return MlogApiMapper.getRequestStatusParts(setMap);
+//	}
 
 }
