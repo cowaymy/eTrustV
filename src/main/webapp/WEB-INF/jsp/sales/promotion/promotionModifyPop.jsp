@@ -164,13 +164,13 @@
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
             
             orgPrcVal = AUIGrid.getCellValue(stckGridID, i, "amt");
-            dscPrcVal = FormUtil.isEmpty($('#promoDiscValue').val())  ? 0 : $('#promoDiscValue').val().trim()
             
             if($('#promoDiscType').val() == '0') {//%
-                dscPrcVal = orgPrcVal * (dscPrcVal / 100);
+                newPrcVal = orgPrcVal - (orgPrcVal * (dscPrcVal / 100)) - addPrcVal;
             }
-            
-            newPrcVal = orgPrcVal - dscPrcVal - addPrcVal;
+            else {
+                newPrcVal = orgPrcVal - dscPrcVal - addPrcVal;
+            }
             
             newPrcVal = Math.floor(newPrcVal);
             
@@ -188,7 +188,12 @@
             
             orgRpfVal = AUIGrid.getCellValue(stckGridID, i, "prcRpf");
             
-            newRpfVal = orgRpfVal - dscRpfVal;
+            if($('#promoAppTypeId').val() != 2284 || $('#exTrade').val() == '1') {
+                newRpfVal = 0;
+            }
+            else {
+                newRpfVal = orgRpfVal - dscRpfVal;
+            }
             
             AUIGrid.setCellValue(stckGridID, i, "promoPrcRpf", newRpfVal);
         }
