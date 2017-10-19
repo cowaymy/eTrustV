@@ -60,7 +60,7 @@ function fnSelectInterFaceTypeComboList(codeId)
 	CommonCombo.initById("intfTypeCbBox");  // reset...
 
 	 // Call Back
-    var fnSelectintfTypeCallback = function () 
+    var fnSelectIntfTypeCallback = function () 
         {
     	   $("#intfTypeCbBox>option:eq(1)").prop("selected",true);
         }
@@ -74,7 +74,7 @@ function fnSelectInterFaceTypeComboList(codeId)
                 name: "codeName",  //view
                 chooseMessage: "Select Interface Type"
                }
-            , fnSelectintfTypeCallback);     
+            , fnSelectIntfTypeCallback);     
 }
 
 // excel export
