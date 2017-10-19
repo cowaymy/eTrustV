@@ -18,11 +18,11 @@ public class ReturnOnHandStockListForm {
 	@ApiModelProperty(value = "GR Date 조회종료날짜 (YYYYMMDD) 예) 20170921", example = "29092017")
 	private String searchToDate;
 
-	@ApiModelProperty(value = "searchStatus 상태(requested / done) 예) requested/done", example = "A,B,C")
-	private String searchStatus;
+	@ApiModelProperty(value = "searchStatus 상태(requested / done) 예) requested=1,done=2", example = "A,B,C")
+	private int searchStatus;
 
-	@ApiModelProperty(value = "searchType [default : '' 전체] 예) A=Auto,M=Manual,default=All", example = "A,B,C")
-	private String searchType;
+	@ApiModelProperty(value = "searchType [default : '' 전체] 예) Auto=1,Manual=2,All=3", example = "1,2,3")
+	private int searchType;
 
 	@ApiModelProperty(value = "예) MROL 고정값", example = "A,B,C")
 	private String reqStatus;
@@ -33,7 +33,7 @@ public class ReturnOnHandStockListForm {
 		params.put("searchFromDate", ReturnOnHandStockListForm.getSearchFromDate());
 		params.put("searchToDate", ReturnOnHandStockListForm.getSearchToDate());
 		params.put("searchStatus", ReturnOnHandStockListForm.getSearchStatus());
-		params.put("searchType", ReturnOnHandStockListForm.getSearchType());	
+		params.put("searchType", ReturnOnHandStockListForm.getSearchType());
 		params.put("reqStatus", ReturnOnHandStockListForm.getReqStatus());
 		return params;
 	}
@@ -62,19 +62,19 @@ public class ReturnOnHandStockListForm {
 		this.searchToDate = searchToDate;
 	}
 
-	public String getSearchStatus() {
+	public int getSearchStatus() {
 		return searchStatus;
 	}
 
-	public void setSearchStatus(String searchStatus) {
+	public void setSearchStatus(int searchStatus) {
 		this.searchStatus = searchStatus;
 	}
 
-	public String getSearchType() {
+	public int getSearchType() {
 		return searchType;
 	}
 
-	public void setSearchType(String searchType) {
+	public void setSearchType(int searchType) {
 		this.searchType = searchType;
 	}
 

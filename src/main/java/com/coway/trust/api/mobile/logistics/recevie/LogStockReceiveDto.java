@@ -26,6 +26,9 @@ public class LogStockReceiveDto {
 	@ApiModelProperty(value = "gi locationCode")
 	private String giLocationCode;
 
+	@ApiModelProperty(value = "gi locationName")
+	private String giLocationName;
+
 	@ApiModelProperty(value = "gi 날짜")
 	private String giDate;
 
@@ -92,6 +95,14 @@ public class LogStockReceiveDto {
 
 	public void setGrDate(String grDate) {
 		this.grDate = grDate;
+	}
+
+	public String getGiLocationName() {
+		return giLocationName;
+	}
+
+	public void setGiLocationName(String giLocationName) {
+		this.giLocationName = giLocationName;
 	}
 
 	public List<LogStockPartsReceiveDto> getPartsList() {

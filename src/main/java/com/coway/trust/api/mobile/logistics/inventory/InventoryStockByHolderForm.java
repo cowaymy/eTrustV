@@ -11,10 +11,10 @@ public class InventoryStockByHolderForm {
 
 	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100069", example = "1, 2, 3")
 	private String userId;
-	
-	@ApiModelProperty(value = "검색 type (all / partCode / partName) [default : '' 전체] 예) 1=Parts Code ,2=Parts Name, 3= ALL ", example = "1, 2, 3")
-	private String searchType;
-									
+
+	@ApiModelProperty(value = "검색 type (all / partCode / partName) [default : '' 전체] 예)PartsCode=1,PartsName=2,All=3  ", example = "1, 2, 3")
+	private int searchType;
+
 	@ApiModelProperty(value = "검색어 (all 일 경우에만 빈값으로 처리 예정) [default : '' 전체] 예) 3300513,3001499 ,3105547,AN,DO,AP", example = "1, 2, 3")
 	private String searchKeyword;
 
@@ -26,11 +26,11 @@ public class InventoryStockByHolderForm {
 		return params;
 	}
 
-	public String getSearchType() {
+	public int getSearchType() {
 		return searchType;
 	}
 
-	public void setSearchType(String searchType) {
+	public void setSearchType(int searchType) {
 		this.searchType = searchType;
 	}
 
@@ -47,7 +47,7 @@ public class InventoryStockByHolderForm {
 	}
 
 	public void setSearchKeyword(String searchKeyword) {
-		this.searchKeyword = searchKeyword;
+		this.searchKeyword = searchKeyword.trim();
 	}
 
 }

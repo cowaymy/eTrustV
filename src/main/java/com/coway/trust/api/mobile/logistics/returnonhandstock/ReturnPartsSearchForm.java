@@ -12,8 +12,8 @@ public class ReturnPartsSearchForm {
 	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) T010,CT100374", example = "1, 2")
 	private String userId;
 
-	@ApiModelProperty(value = " 검색 type (all / partCode / partName) [default : '' 전체] 예) PartsCode ,PartsName, ALL ", example = "1, 2")
-	private String searchType;
+	@ApiModelProperty(value = " 검색 type (all / partCode / partName) [default : '' 전체] 예) PartsCode=1,PartsName=2,All=3 ", example = "1, 2,3")
+	private int searchType;
 
 	@ApiModelProperty(value = "검색어 (all 일 경우에만 빈값으로 처리 예정) [default '' 전체] 예) partCode=620002,111765,111358B partName=AP", example = "1, 2")
 	private String searchKeyword;
@@ -34,11 +34,11 @@ public class ReturnPartsSearchForm {
 		this.userId = userId;
 	}
 
-	public String getSearchType() {
+	public int getSearchType() {
 		return searchType;
 	}
 
-	public void setSearchType(String searchType) {
+	public void setSearchType(int searchType) {
 		this.searchType = searchType;
 	}
 

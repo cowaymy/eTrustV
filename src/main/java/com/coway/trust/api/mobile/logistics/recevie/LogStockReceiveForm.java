@@ -18,11 +18,11 @@ public class LogStockReceiveForm {
 	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD [default : '' 전체] 예) 20170827", example = "29092017")
 	private String searchToDate;
 
-	@ApiModelProperty(value = "searchType [default : '' 전체] 예) auto,manual,all", example = "auto/manual")
-	private String searchType;
-	
-	@ApiModelProperty(value = "searchStatus 상태상태    (In-Transit / done) 예) transit/done", example = "A,B,C")
-	private String searchStatus;
+	@ApiModelProperty(value = "searchType [default : '' 전체] 예) auto=1,manual=2,all=3", example = "auto/manual")
+	private int searchType;
+
+	@ApiModelProperty(value = "searchStatus 상태 예) In-Transit=1 / done=2", example = "A,B,C")
+	private int searchStatus;
 
 	public static Map<String, Object> createMap(LogStockReceiveForm StockReceiveListForm) {
 		Map<String, Object> params = new HashMap<>();
@@ -32,14 +32,6 @@ public class LogStockReceiveForm {
 		params.put("searchType", StockReceiveListForm.getSearchType());
 		params.put("searchStatus", StockReceiveListForm.getSearchStatus());
 		return params;
-	}
-
-	public String getSearchStatus() {
-		return searchStatus;
-	}
-
-	public void setSearchStatus(String searchStatus) {
-		this.searchStatus = searchStatus;
 	}
 
 	public String getUserId() {
@@ -66,12 +58,20 @@ public class LogStockReceiveForm {
 		this.searchToDate = searchToDate;
 	}
 
-	public String getSearchType() {
+	public int getSearchType() {
 		return searchType;
 	}
 
-	public void setSearchType(String searchType) {
+	public void setSearchType(int searchType) {
 		this.searchType = searchType;
+	}
+
+	public int getSearchStatus() {
+		return searchStatus;
+	}
+
+	public void setSearchStatus(int searchStatus) {
+		this.searchStatus = searchStatus;
 	}
 
 }

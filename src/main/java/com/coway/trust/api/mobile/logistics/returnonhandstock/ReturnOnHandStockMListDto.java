@@ -26,11 +26,14 @@ public class ReturnOnHandStockMListDto {
 	@ApiModelProperty(value = "gi locationCode")
 	private String giLocationCode;
 
+	@ApiModelProperty(value = "gi locationName")
+	private String giLocationName;
+
 	@ApiModelProperty(value = "gi 날짜")
 	private String giDate;
 
 	@ApiModelProperty(value = "gr 날짜")
-	private int grDate;
+	private String grDate;
 
 	private List<ReturnOnHandStockDListDto> partsList = null;
 
@@ -86,12 +89,20 @@ public class ReturnOnHandStockMListDto {
 		this.giDate = giDate;
 	}
 
-	public int getGrDate() {
+	public String getGrDate() {
 		return grDate;
 	}
 
-	public void setGrDate(int grDate) {
+	public void setGrDate(String grDate) {
 		this.grDate = grDate;
+	}
+
+	public String getGiLocationName() {
+		return giLocationName;
+	}
+
+	public void setGiLocationName(String giLocationName) {
+		this.giLocationName = giLocationName;
 	}
 
 	public List<ReturnOnHandStockDListDto> getPartsList() {

@@ -18,13 +18,13 @@ public class RequestResultListForm {
 	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD) 예) 20170827", example = "29092017")
 	private String searchToDate;
 
-	@ApiModelProperty(value = "searchStatus 상태(requested / done) 예) requested/done", example = "A,B,C")
-	private String searchStatus;
+	@ApiModelProperty(value = "searchStatus 상태(requested / done) 예) requested=1,done=2", example = "A,B,C")
+	private int searchStatus;
 
-	@ApiModelProperty(value = "searchType [default : '' 전체] 예) Auto,Manual,All", example = "Auto,Manual,All")
-	private String searchType;
+	@ApiModelProperty(value = "searchType [default : '' 전체] 예) Auto=1,Manual=2,All=3", example = "1,2,3")
+	private int searchType;
 
-	@ApiModelProperty(value = "예) MRRL 고정값", example = "A,B,C")
+	@ApiModelProperty(value = "예) MRRL 고정값", example = "MRRL")
 	private String reqStatus;
 
 	public static Map<String, Object> createMap(RequestResultListForm RequestResultListForm) {
@@ -33,7 +33,7 @@ public class RequestResultListForm {
 		params.put("searchFromDate", RequestResultListForm.getSearchFromDate());
 		params.put("searchToDate", RequestResultListForm.getSearchToDate());
 		params.put("searchStatus", RequestResultListForm.getSearchStatus());
-		params.put("searchType", RequestResultListForm.getSearchType());	
+		params.put("searchType", RequestResultListForm.getSearchType());
 		params.put("reqStatus", RequestResultListForm.getReqStatus());
 		return params;
 	}
@@ -62,19 +62,19 @@ public class RequestResultListForm {
 		this.searchToDate = searchToDate;
 	}
 
-	public String getSearchStatus() {
+	public int getSearchStatus() {
 		return searchStatus;
 	}
 
-	public void setSearchStatus(String searchStatus) {
+	public void setSearchStatus(int searchStatus) {
 		this.searchStatus = searchStatus;
 	}
 
-	public String getSearchType() {
+	public int getSearchType() {
 		return searchType;
 	}
 
-	public void setSearchType(String searchType) {
+	public void setSearchType(int searchType) {
 		this.searchType = searchType;
 	}
 
