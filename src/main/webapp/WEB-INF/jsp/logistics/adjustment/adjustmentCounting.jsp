@@ -161,12 +161,12 @@ var columnLayout2=[
                     ];
 var serialcolumn  =[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30,visible:false },
                          {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30,visible:false },
-                         {dataField:"serial"       ,headerText:"Serial"                      ,width:"100%"    ,height:30,editable:true },
-                         {dataField:"cnt61"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false },
+                         {dataField:"serial"       ,headerText:"Serial"                      ,width:"85%"    ,height:30,editable:true },
+                         /* {dataField:"cnt61"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false }, */
                          {dataField:"cnt62"        ,headerText:"Serial"                      ,width:120     ,height:30 ,visible:false},
                          {dataField:"cnt63"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false },
                          {dataField:"cnt74"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false},
-                         {dataField:"statustype"   ,headerText:"status"                     ,width:120     ,height:30 ,visible:false}
+                         {dataField:"statustype"   ,headerText:"Validate"                     ,width:"15%"    ,height:30}
                         ];                              
 var resop = {rowIdField : "rnum"
 		, showStateColumn : false 
@@ -563,26 +563,28 @@ function fn_serialChck(rowindex , rowitem , str){
     	if (data[0] == null){
             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
-            AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
+            //AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt74" , 0 );
             
             schk = false;
-            ichk = false;
+           // ichk = false;
             
         }else{
              AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" ,data[0].stkcode );
              AUIGrid.setCellValue(serialGrid , rowindex , "itmname" ,data[0].stkdesc );
-             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" ,data[0].l61cnt );
+             //AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" ,data[0].l61cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" ,data[0].l62cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" ,data[0].l63cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt74" ,data[0].l74cnt );
-        
-             if (data[0].l74cnt > 0){
-                 schk = false;
-             }else{
+             
+             // seial 입력시 stock counting 안하는 걸로 함 부족 하거나 추가 될 수도 있는 경우가 있다고 하였음 
+             if (data[0].l74cnt == 0 && data[0].l63cnt > 0){ // 최종 위치  포함하여 serial 체크 할 경우
+             //if (data[0].l74cnt == 0 ){  // 최종 위치 상관 없이 seial 체크 할 경우 
                  schk = true;
+             }else{
+                 schk = false;
              }  
         } 
          
