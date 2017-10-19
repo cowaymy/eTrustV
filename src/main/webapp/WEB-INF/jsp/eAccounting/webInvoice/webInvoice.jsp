@@ -160,14 +160,41 @@ function fn_setSupplier() {
 
 function fn_checkEmpty() {
 	var checkResult = true;
+	if(FormUtil.isEmpty($("#invcDt").val())) {
+        Common.alert("Please enter the Invoice Date.");
+        checkResult = false;
+        return checkResult;
+    }
 	if($("#invcType").val() == "F") {
+	    if(FormUtil.isEmpty($("#newMemAccName").val())) {
+	        Common.alert("Please enter the Supplier.");
+	        checkResult = false;
+	        return checkResult;
+	    }
 	    if(FormUtil.isEmpty($("#invcNo").val())) {
 	        Common.alert("Please enter the invoice no.");
 	        checkResult = false;
+	        return checkResult;
 	    }
-	    if(FormUtil.isEmpty($("#memAccName").val())) {
-	        Common.alert("Please enter the Supplier.");
-	        checkResult = false;
+	    var length = AUIGrid.getGridData(newGridID).length;
+	    if(length > 0) {
+	    	for(var i = 0; i < length; i++) {
+	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "expTypeName"))) {
+	                Common.alert("Please enter the Expense Type of Line " + (i +1) + ".");
+	                checkResult = false;
+	                return checkResult;
+	            }
+	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "taxCode"))) {
+	                Common.alert("Please enter the Tax Code of Line " + (i +1) + ".");
+	                checkResult = false;
+	                return checkResult;
+	            }
+	            if(AUIGrid.getCellValue(newGridID, i, "netAmt") <= 0) {
+                    Common.alert("Please enter the Net Amount of Line " + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
+	        }
 	    }
 	}
 	return checkResult;

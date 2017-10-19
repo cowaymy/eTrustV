@@ -37,7 +37,6 @@ function fn_approveLineSubmit() {
             for(var i = 0; i < result.length; i++) {
                 console.log(result[i]);
                 var rowIndex = AUIGrid.rowIdToIndex(newGridID, result[i])
-                // 0번째 행의 name 칼럼의 값을 "이름 고침" 으로 변경
                 AUIGrid.setCellValue(newGridID, rowIndex, "yN", "N");
                 $("#registMsgPop").remove();
                 $("#approveLineSearchPop").remove();

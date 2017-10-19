@@ -109,20 +109,22 @@ SELECT   T.CLM_NO
 <select id="selectWebInvoiceItems" parameterType="String" resultType="egovMap">
 /* webInvoiceMapper.selectWebInvoiceItems */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-            SELECT CLM_SEQ
-                   ,EXP_TYPE
-                   ,EXP_TYPE_NAME
-                   ,GL_ACC_CODE
-                   ,GL_ACC_CODE_NAME
-                   ,BUDGET_CODE
-                   ,BUDGET_CODE_NAME
-                   ,TAX_CODE
+            SELECT T.CLM_SEQ
+                   ,T.EXP_TYPE
+                   ,T.EXP_TYPE_NAME
+                   ,T.GL_ACC_CODE
+                   ,T.GL_ACC_CODE_NAME
+                   ,T.BUDGET_CODE
+                   ,T.BUDGET_CODE_NAME
+                   ,T.TAX_CODE
+                   ,TT.TAX_CODE||' '||'('||TT.TAX_NAME||')' AS TAX_NAME
                    ,'MYR' AS CVRR
-                   ,NET_AMT
-                   ,TAX_AMT
-                   ,TOT_AMT
-                   ,EXP_DESC
-          FROM FCM0003D
+                   ,T.NET_AMT
+                   ,T.TAX_AMT
+                   ,T.TOT_AMT
+                   ,T.EXP_DESC
+          FROM FCM0003D T LEFT JOIN FCM0007C TT
+          ON T.TAX_CODE = TT.TAX_CODE
           WHERE CLM_NO = #{clmNo}
           ORDER BY CLM_SEQ
 </select>

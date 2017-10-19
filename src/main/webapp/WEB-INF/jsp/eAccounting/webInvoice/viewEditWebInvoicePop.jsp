@@ -38,6 +38,7 @@ var obj = {
         ,budgetCode : "${data.budgetCode}"
         ,budgetCodeName : "${data.budgetCodeName}"
         ,taxCode : "${data.taxCode}"
+        ,taxName : "${data.taxName}"
         ,cvrr : "${data.cvrr}"
         ,netAmt : Number("${data.netAmt}")
         ,taxAmt : Number("${data.taxAmt}")
@@ -163,6 +164,67 @@ var myColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 ];
+var approvalColumnLayout = [ {
+    dataField : "expTypeName",
+    headerText : '<spring:message code="expense.ExpenseType" />',
+    style : "aui-grid-user-custom-left",
+    editable : false,
+}, {
+    dataField : "glAccCode",
+    headerText : '<spring:message code="expense.GLAccount" />',
+    editable : false
+
+}, {
+    dataField : "glAccCodeName",
+    headerText : '<spring:message code="newWebInvoice.glAccountName" />',
+    style : "aui-grid-user-custom-left",
+    editable : false
+}, {
+    dataField : "budgetCode",
+    headerText : '<spring:message code="expense.Activity" />',
+    editable : false
+}, {
+    dataField : "budgetCodeName",
+    headerText : '<spring:message code="newWebInvoice.activityName" />',
+    style : "aui-grid-user-custom-left",
+    editable : false
+}, {
+    dataField : "taxName",
+    headerText : '<spring:message code="newWebInvoice.taxCode" />',
+    editable : false
+}, {
+    dataField : "cvrr",
+    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+    editable : false
+}, {
+    dataField : "netAmt",
+    headerText : '<spring:message code="newWebInvoice.netAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false
+}, {
+    dataField : "taxAmt",
+    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false
+}, {
+    dataField : "totAmt",
+    headerText : '<spring:message code="newWebInvoice.totalAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false
+}, {
+    dataField : "expDesc",
+    headerText : '<spring:message code="newWebInvoice.description" />',
+    style : "aui-grid-user-custom-left",
+    width : 200,
+    editable : false
+}
+];
 
 //그리드 속성 설정
 var myGridPros = {
@@ -181,7 +243,12 @@ var myGridPros = {
 };
 
 $(document).ready(function () {
-    newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
+	var appvPrccNo = "${webInvoiceInfo.appvPrcssNo}";
+	if(appvPrccNo == null || appvPrccNo == '') {
+		newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
+	} else {
+		newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", approvalColumnLayout, myGridPros);
+	}
     
     $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_approveLinePop);
@@ -448,22 +515,22 @@ function fn_setSupplier() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" value="${webInvoiceInfo.invcDt}"/></td>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" value="${webInvoiceInfo.invcDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
 	<th scope="row"><spring:message code="newWebInvoice.keyInDate" /></th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="keyDate" name="keyDate" value="${webInvoiceInfo.crtDt}"/></td>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="keyDate" name="keyDate" value="${webInvoiceInfo.crtDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" value="${webInvoiceInfo.costCentrName}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" value="${webInvoiceInfo.costCentrName}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="crtUserId" name="crtUserId" value="${webInvoiceInfo.crtUserId}"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="crtUserId" name="crtUserId" value="${webInvoiceInfo.crtUserId}" /></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
-	<select class="w100p" id="invcType" name="invcType">
+	<select class="w100p" id="invcType" name="invcType" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>>
 		<option value="F" <c:if test="${webInvoiceInfo.invcType eq 'F'}">selected</c:if>><spring:message code="newWebInvoice.select.fullTax" /></option>
 		<option value="S" <c:if test="${webInvoiceInfo.invcType eq 'S'}">selected</c:if>><spring:message code="newWebInvoice.select.simpleTax" /></option>
 	</select>
@@ -471,19 +538,19 @@ function fn_setSupplier() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceNo" /></th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off value="${webInvoiceInfo.invcNo}"/></td>
+	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off value="${webInvoiceInfo.invcNo}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
 	<th scope="row"><spring:message code="newWebInvoice.gstRegistNo" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstRgistNo" name="gstRgistNo" value="${webInvoiceInfo.gstRgistNo}"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstRgistNo" name="gstRgistNo" value="${webInvoiceInfo.gstRgistNo}" /></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" value="${webInvoiceInfo.bankName}"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" value="${webInvoiceInfo.bankName}" /></td>
 	<th scope="row"><spring:message code="newWebInvoice.payDueDate" /></th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="payDueDt" name="payDueDt" value="${webInvoiceInfo.payDueDt}"/></td>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="payDueDt" name="payDueDt" value="${webInvoiceInfo.payDueDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bankAccount" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo" value="${webInvoiceInfo.bankAccNo}"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo" value="${webInvoiceInfo.bankAccNo}" /></td>
 	<th scope="row"></th>
 	<td></td>
 </tr>
@@ -492,13 +559,19 @@ function fn_setSupplier() {
 	<td colspan="3">
 	<c:forEach var="files" items="${attachmentList}" varStatus="st">
 	<div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
+	<c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
 	<input type="file" title="file add" style="width:300px" />
     <label>
+    </c:if>
     <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
+    <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
     <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
+    </c:if>
+    <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
     </label>
     <span class='label_text'><a href='#' id="add_btn"><spring:message code="viewEditWebInvoice.add" /></a></span>
     <span class='label_text'><a href='#' id="remove_btn"><spring:message code="viewEditWebInvoice.delete" /></a></span>
+    </c:if>
     </div><!-- auto_file end -->
 	</c:forEach>
 	<c:if test="${fn:length(attachmentList) <= 0}">
@@ -510,7 +583,7 @@ function fn_setSupplier() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-	<td colspan="3"><textarea cols="20" rows="5" id="invcRem" name="invcRem">${webInvoiceInfo.invcRem}</textarea></td>
+	<td colspan="3"><textarea cols="20" rows="5" id="invcRem" name="invcRem" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>>${webInvoiceInfo.invcRem}</textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -522,10 +595,12 @@ function fn_setSupplier() {
 
 <aside class="title_line"><!-- title_line start -->
 <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="totalAmount"><fmt:formatNumber value="${webInvoiceInfo.totAmt}" type="number" pattern="#,##0.00"/></span></h2>
+<c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#" id="add_row"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" id="delete_row"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
 </ul>
+</c:if>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap" id="viewEditWebInvoice_grid_wrap"><!-- grid_wrap start -->
