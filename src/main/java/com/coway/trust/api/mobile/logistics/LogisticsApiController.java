@@ -568,20 +568,20 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Stock Request 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/movement/requeststatus", method = RequestMethod.GET)
-	public ResponseEntity<List<StrockMovementVoForMobile>> getStockRequestStatusList(
-			@ModelAttribute StockRequestStatusForm stockRequestStatusForm) throws Exception {
-
-		Map<String, Object> params = StockRequestStatusForm.createMap(stockRequestStatusForm);
-
-		List<StrockMovementVoForMobile> headerList = MlogApiService.getStockRequestStatusHeader(params);
-		for (int i = 0; i < headerList.size(); i++) {
-			Map<String, Object> setMap = new HashMap<String, Object>();
-			setMap.put("reqstNo", headerList.get(i).getSmoNo());
-			List<StrockMovementVoForMobile> partsList = MlogApiService.getRequestStatusParts(setMap);
-			headerList.get(i).setPartsList(partsList);
-		}
-		return ResponseEntity.ok(headerList);
-	}
+//	@ApiOperation(value = "Stock Request 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/movement/requeststatus", method = RequestMethod.GET)
+//	public ResponseEntity<List<StrockMovementVoForMobile>> getStockRequestStatusList(
+//			@ModelAttribute StockRequestStatusForm stockRequestStatusForm) throws Exception {
+//
+//		Map<String, Object> params = StockRequestStatusForm.createMap(stockRequestStatusForm);
+//
+//		List<StrockMovementVoForMobile> headerList = MlogApiService.getStockRequestStatusHeader(params);
+//		for (int i = 0; i < headerList.size(); i++) {
+//			Map<String, Object> setMap = new HashMap<String, Object>();
+//			setMap.put("reqstNo", headerList.get(i).getSmoNo());
+//			List<StrockMovementVoForMobile> partsList = MlogApiService.getRequestStatusParts(setMap);
+//			headerList.get(i).setPartsList(partsList);
+//		}
+//		return ResponseEntity.ok(headerList);
+//	}
 }
