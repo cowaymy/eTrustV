@@ -59,16 +59,15 @@
 
     //AUIGrid 칼럼 설정
 	var uploadGridLayout = [
-		{dataField : "0", headerText : "Date/<br>Time", editable : true},
-		{dataField : "1", headerText : "Ref/<br>Cheq No", editable : true},
-		{dataField : "2", headerText : "Description1", editable : true},
-		{dataField : "3", headerText : "Description2", editable : true},
-		{dataField : "4", headerText : "ref5", editable : true},
-		{dataField : "5", headerText : "ref6", editable : true},
-		{dataField : "6", headerText : "ref7", editable : true},
-		{dataField : "7", headerText : "TYPE", editable : true},
-		{dataField : "8", headerText : "Debit", editable : true},
-		{dataField : "9", headerText : "Credit", editable : true}
+		{dataField : "0", headerText : "Ref/<br>Cheq No", editable : true},
+		{dataField : "1", headerText : "Description1", editable : true},
+		{dataField : "2", headerText : "Description2", editable : true},
+		{dataField : "3", headerText : "ref5", editable : true},
+		{dataField : "4", headerText : "ref6", editable : true},
+		{dataField : "5", headerText : "ref7", editable : true},
+		{dataField : "6", headerText : "TYPE", editable : true},
+		{dataField : "7", headerText : "Debit", editable : true},
+		{dataField : "8", headerText : "Credit", editable : true}
 		];
     
     
@@ -218,6 +217,11 @@ function upload(){
     //param data array
     var data = GridCommon.getGridData(myUploadGridID);
     data.form = $("#uploadForm").serializeJSON();
+    
+    if(FormUtil.checkReqValue($("#uploadTranDt")) ){
+        Common.alert('* Please select the Transaction Date.<br />');
+        return;
+    }
 
     if(FormUtil.checkReqValue($("#uploadIssueBank option:selected")) ){
         Common.alert('* Please select the Bank Code.<br />');
@@ -484,8 +488,12 @@ POP-UP (UPLOAD)
                 <tbody>
                     <tr>
                         <th scope="row">B/S No.</th>
-                        <td colspan="3">
+                        <td>
                             <input type="text"  id="uploadBsNo" name="uploadBsNo" title="" placeholder="" class="readonly" readonly="readonly" />
+                        </td>
+                        <th scope="row">Transaction Date</th>
+                        <td>
+                            <input type="text" id="uploadTranDt" name="uploadTranDt" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date" />
                         </td>
                     </tr>
                     <tr>

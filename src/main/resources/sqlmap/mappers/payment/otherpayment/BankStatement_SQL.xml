@@ -87,7 +87,7 @@
             SYSDATE,
             #{userId},
             0,
-            TO_DATE(#{trnscDt},'DD/MM/YYYY'),
+            TO_DATE(#{uploadTranDt},'DD/MM/YYYY'),
             #{uploadIssueBank},
             1
         )
@@ -157,8 +157,7 @@
             INREF6,
             BNTYPE,
             BNDEBIT,
-            BNCRDIT,
-            PROCAN_YN
+            BNCRDIT
         ) VALUES (
             FN_CRT_IFKEY('900'),
             1,
@@ -180,12 +179,7 @@
             #{fTrnscRef6},
             #{fTrnscRem},
             #{fTrnscDebtAmt},
-            #{fTrnscCrditAmt},
-            'Y'
+            #{fTrnscCrditAmt}
         )            
     </insert>
-    
-   
-
-
 </mapper>
