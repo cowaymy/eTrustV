@@ -428,7 +428,8 @@
 			             AND L62.SERIAL_NO = #{serial}
 			             AND L62.MATNR = #{mtrCdPop} 
 			        GROUP BY SERIAL_NO, MATNR, STK_DESC
-			        UNION
+<!-- 이동중 인 serial check 제외  	
+		        UNION
 			        SELECT   L61.SERIAL_NO
 			                ,'' MATNR
 			                ,'' STKDESC
@@ -440,7 +441,7 @@
 			           WHERE 1=1
 			            AND  L61.DELVRY_NO IN (SELECT DELVRY_NO FROM LOG0054M WHERE NVL(DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y')
                         AND  L61.SERIAL_NO = #{serial}
-			        GROUP BY L61.SERIAL_NO
+			        GROUP BY L61.SERIAL_NO -->
 			        UNION
 			        SELECT   L63.SERIAL_NO
 			                ,'' MATNR
