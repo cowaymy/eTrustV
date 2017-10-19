@@ -94,7 +94,28 @@ $(document).ready(function () {
 		    });
 	
 	$("#appvPrcssStus").multipleSelect("checkAll");
+	
+	fn_setToDay();
 });
+
+function fn_setToDay() {
+    var today = new Date();
+    
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+    
+    if(dd < 10) {
+        dd = "0" + dd;
+    }
+    if(mm < 10){
+        mm = "0" + mm
+    }
+    
+    today = dd + "/" + mm + "/" + yyyy;
+    $("#startDt").val(today)
+    $("#endDt").val(today)
+}
 
 function fn_supplierSearchPop() {
     var object = {
