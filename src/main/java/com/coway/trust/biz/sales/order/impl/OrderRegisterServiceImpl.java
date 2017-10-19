@@ -1227,6 +1227,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		regOrderVO.setsInstallDate(sInstallDate);
 		regOrderVO.setdInstallDate(dInstallDate);
 		
+		this.preprocSalesOrderMaster(salesOrderMVO, sessionVO);
 		this.preprocSalesOrderDetails(salesOrderDVO, sessionVO);
 		this.preprocInstallationMaster(installationVO, sessionVO);
 		
