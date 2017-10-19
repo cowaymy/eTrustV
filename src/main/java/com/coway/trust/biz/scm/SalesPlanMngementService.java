@@ -9,7 +9,11 @@ public interface SalesPlanMngementService
 {
 	//Supply-CDC
 	List<EgovMap> selectSupplyCDC(Map<String, Object> params);
+	List<EgovMap> selectSupplyPlanMaster(Map<String, Object> params);
+	List<EgovMap> selectSalesPlanMaster(Map<String, Object> params);
+	List<EgovMap> selectComboSupplyCDC(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);
+	List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params);
 	
 	
 	//Supply-Corp
