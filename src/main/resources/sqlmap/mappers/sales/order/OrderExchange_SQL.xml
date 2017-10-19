@@ -530,10 +530,10 @@
                        END CODE_NAME  ,
                     CASE 
                        <![CDATA[
-                         WHEN 964 <> Extent1.TYPE_ID THEN TO_DATE('1900-01-01 00:00:00')
+                         WHEN 964 <> Extent1.TYPE_ID THEN TO_DATE('1900-01-01', 'YYYY-MM-DD')
                        ]]>
                          WHEN Extent1.DOB IS NOT NULL THEN Extent1.DOB
-                    ELSE TO_DATE('1900-01-01 00:00:00')
+                    ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')
                        END DOB  ,
                     CASE 
                          WHEN Extent1.EMAIL IS NOT NULL THEN Extent1.EMAIL
