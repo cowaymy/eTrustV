@@ -206,7 +206,7 @@
 		WHERE 1 = 1
 		AND log0056m.stk_code = log0063d.MATNR(+)
 		AND log0056m.loc_id = (select wh_loc_id from sys0028m where wh_loc_code =
-		'T010')) l56,
+		#{userId})) l56,
 		sys0026m s26,
 		sys0028m s28
 		WHERE 1 = 1
@@ -218,11 +218,11 @@
 		<if test="productCode != null and productCode !=''">
 			AND l43.matrl_no = #{productCode}
 		</if>
-		<if test="searchType eq 'partsCode'.toString() ">
+	   <if test="searchType == 1 ">
+            AND l44.BOM_COMPNT=#{searchKeyword}
+        </if>
+		<if test="searchType == 2 ">
 			AND UPPER(s26.stk_desc) LIKE UPPER(#{searchKeyword}) || '%'
-		</if>
-		<if test="searchType eq 'partsName'.toString() ">
-			AND UPPER(l43.matrl_no) LIKE '%' || UPPER(#{searchKeyword}) || '%'
 		</if>
 		<if test="productId != null and productId !=''">
 		AND s26.STK_ID=#{productId}
@@ -264,10 +264,10 @@
 		AND O01.BRNCH =(select USER_BRNCH_ID from sys0047m where
 		USER_NAME=#{userId})
 		AND S28.WH_LOC_ID=T1.LOC_ID
-		<if test="searchType eq 'partsCode'.toString() ">
+		<if test="searchType == 1 ">
             AND T1.BOM_COMPNT= #{searchKeyword}
         </if>
-        <if test="searchType eq 'partsName'.toString() ">
+        <if test="searchType == 2 ">
             AND UPPER(T1.stk_desc) LIKE UPPER(#{searchKeyword}) || '%'
         </if>
 	</select>
@@ -277,20 +277,22 @@
 		L54.DELVRY_GI_DT GI_DATE,
 		L54.DELVRY_GR_DT GR_DATE,
 		L55.DELVRY_NO DELYNO,
-		DBMS_LOB.SUBSTR (S28C.WH_LOC_DESC, 4000) RCVLOCDESC,
-		DBMS_LOB.SUBSTR (S28Q.WH_LOC_DESC, 4000) GI_LOCATION_CODE,
+		DBMS_LOB.SUBSTR (S28C.WH_LOC_DESC, 4000) GI_LOCATION_NAME,
+		DBMS_LOB.SUBSTR (S28Q.WH_LOC_CODE, 4000) LOCATION_CODE,
+		S28C.WH_LOC_CODE GI_LOCATION_CODE,
 		DECODE (l47.PRIDIC_FRQNCY,
 		'A', 'Auto',
 		'M', 'Manual',
 		l47.PRIDIC_FRQNCY)
 		REQ_TYPE,
 		S28Q.WH_LOC_DESC,
-		S28C.WH_LOC_DESC GI_CUST_NAME,
+		 nvl(l47.USER_FULL_NAME,L54.CRT_USER_ID)  GI_CUST_NAME,
 		L47.REQST_STUS req_Status
 		FROM LOG0047M L47,
 		LOG0048D L48,
 		LOG0054M L54,
 		LOG0055D L55,
+		sys0047m l47,
 		(SELECT *
 		FROM SYS0013M
 		WHERE CODE_MASTER_ID = 306) TRAN,
@@ -309,6 +311,7 @@
 		AND L47.TRNSC_TYPE_DTL = TRAND.CODE
 		AND L47.RCIV_CDC_RDC = S28C.WH_LOC_ID(+)
 		AND L47.REQST_CDC_RDC = S28Q.WH_LOC_ID(+)
+		AND L54.CRT_USER_ID=l47.user_id(+)
 		AND L48.UOM = UOMT.CODE_ID
 		AND L48.ITM_CODE = L55.ITM_CODE
 		AND L54.DELVRY_NO = L55.DELVRY_NO
@@ -326,20 +329,19 @@
 		</if> 
 <!-- 		  AND TO_CHAR(L47.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[>=]]> TO_CHAR (TO_DATE ('20170820',   'YYYY/MM/DD'),'YYYYMMDD') -->
 <!--           AND TO_CHAR(L47.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[ <= ]]>TO_CHAR (TO_DATE ('20170827',   'YYYY/MM/DD'),'YYYYMMDD') -->
-		<if test="searchType eq 'manual'.toString() ">
-			and l47.pridic_frqncy = 'M'
+		<if test="searchType == 1 ">
+			and l47.pridic_frqncy = 'A'
 		</if>
-		<if test="searchType eq 'auto'.toString() ">
-            and l47.pridic_frqncy = 'A'
+		<if test="searchType == 2 ">
+            and l47.pridic_frqncy = 'M'
         </if>
-		<if test="searchStatus eq 'transit'.toString() ">
+        <if test="searchStatus == 1 ">
           AND L47.REQST_STUS IN ('P')
         </if>
-        <if test="searchStatus eq 'done'.toString() ">
+        <if test="searchStatus == 2 ">
            AND L47.REQST_STUS='C'
         </if>   
-		GROUP BY
-		L47.REQST_NO,L54.DELVRY_GI_DT,L54.DELVRY_GR_DT,S28C.WH_LOC_DESC,S28Q.WH_LOC_DESC,L55.DELVRY_NO,l47.PRIDIC_FRQNCY,L47.REQST_STUS
+		GROUP BY  L47.REQST_NO,L54.DELVRY_GI_DT,L54.DELVRY_GR_DT,S28C.WH_LOC_DESC,L55.DELVRY_NO,l47.PRIDIC_FRQNCY,L47.REQST_STUS,S28Q.WH_LOC_CODE,S28C.WH_LOC_CODE,S28Q.WH_LOC_DESC,l47.USER_FULL_NAME,L54.CRT_USER_ID
 	</select>
 
 
@@ -424,10 +426,10 @@
 		AND L56.STK_TYPE_ID = 61
 		AND L56.QTY > 0
 		AND L56.LOC_ID=s28m.WH_LOC_ID
-		<if test="searchType eq 'PartsCode'.toString() ">
+		 <if test="searchType == 1 ">
 			AND l56.STK_CODE=#{searchKeyword}
 		</if> 
-		<if test="searchType eq 'PartsName'.toString() ">
+		<if test="searchType == 2 ">
 			AND UPPER(l56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
 		</if>
 		AND s28m.WH_LOC_CODE= #{userId}
@@ -541,17 +543,17 @@
 		<if test="reqStatus eq 'MROL'.toString() ">
 	    AND LG47M.RCIV_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
 	    </if>
-        <if test="searchStatus eq 'requested'.toString() ">
+        <if test="searchStatus == 1 ">
 		  AND LG47M.REQST_STUS IN ('O')
 		</if>
-        <if test="searchStatus eq 'done'.toString() ">
+        <if test="searchStatus == 2 ">
            AND LG47M.REQST_STUS='C'
         </if>	
-        <if test="searchType eq 'manual'.toString() ">
-            and LG47M.PRIDIC_FRQNCY = 'M'
-        </if>
-        <if test="searchType eq 'auto'.toString() ">
+         <if test="searchType == 1 ">
             and LG47M.PRIDIC_FRQNCY = 'A'
+        </if>
+        <if test="searchType == 2 ">
+            and LG47M.PRIDIC_FRQNCY = 'M'
         </if>
          <if test="searchFromDate !=null and searchFromDate !=''">
             AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[>=]]>
@@ -643,10 +645,10 @@
         AND LG47M.TRNSC_TYPE = 'UM'
         AND LG47M.RCIV_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE
         WH_LOC_CODE =#{userId})
-        <if test="searchStatus eq 'requested'.toString() ">
+        <if test="searchStatus == 1 ">
             AND LG47M.REQST_STUS IN ('O')
         </if>
-        <if test="searchStatus eq 'done'.toString() ">
+        <if test="searchStatus == 2 ">
             AND LG47M.REQST_STUS='C'
         </if>
         <if test="searchFromDate !=null and searchFromDate !=''">
@@ -777,71 +779,71 @@ SELECT
 	AND l44.BOM_COMPNT = S26T.stk_code(+)
 	AND l43.bom=l44.bom
 	AND l43.MATRL_NO=#{productCode}
-	<if test=" searchType eq 'partCode'.toString() ">
+	 <if test="searchType == 1 ">
             AND S26T.STK_CODE=#{searchKeyword}
      </if>
-     <if test="searchType  eq 'partName'.toString() ">
+     <if test="searchType == 2 ">
            <!--  AND s26.STK_DESC LIKE #{searchKeyword}||'%' -->
           AND (LTRIM(RTRIM(S26T.STK_DESC))) LIKE #{searchKeyword}||'%'
       </if>
 	group by S26T.STK_ID,l44.BOM_COMPNT,S26T.STK_DESC,S26T.STK_CTGRY_ID,S26T.STK_TYPE_ID,1,s16.AMT
 	</select>
 
-	<resultMap id="movement"
-		type="com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile" />
-	<select id="getStockRequestStatusHeader" parameterType="Map"
-		resultMap="movement">
-		SELECT
-		LG47M.REQST_NO smoNo,
-		LG47M. PRIDIC_FRQNCY reqType,
-		LG47M.REQST_STUS reqStatus,
-		LG47M.RCIV_CDC_RDC requestorId,<!-- 추후에 구분자로 분리예정 -->
-		SY28M.WH_LOC_DESC requestorName, <!-- 추후에 구분자로 분리예정 -->
-		TO_CHAR(LG47M.REQST_REQUIRE_DT, 'YYYYMMDD') reqDate
-		FROM SYS0028M SY28M ,LOG0047M LG47M
-		WHERE 1=1
-		AND SY28M.WH_LOC_ID = LG47M.RCIV_CDC_RDC   <!-- 추후에 구분자로 분리예정 -->
-		AND LG47M.TRNSC_TYPE = 'UM'
-		AND LG47M.RCIV_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE
-		WH_LOC_CODE =#{userId})
-<!--          <choose> <when test=""> AND LG47M.RCIV_CDC_RDC = (SELECT 
-			WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId}) </when> <otherwise> 
-			AND LG47M.REQST_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE 
-			=#{userId}) </otherwise> </choose>  -->
-	    AND TO_CHAR( LG47M.REQST_REQUIRE_DT,'YYYYMMDD') 
-		BETWEEN TO_CHAR(TO_DATE(#{searchFromDate},'DD/MM/YYYY'), 'YYYYMMDD') 
- 		AND TO_CHAR(TO_DATE(#{searchToDate},'DD/MM/YYYY'), 'YYYYMMDD') 
-		<if test="searchStatus eq 'requested'.toString() ">
-			AND LG47M.REQST_STUS IN ('O','P')
-		</if>
-		<if test="searchStatus eq 'done'.toString() ">
-			AND LG47M.REQST_STUS='C'
-		</if>
-		<if test="searchStatus eq 'rejected'.toString() ">
-			AND LG47M.REQST_DEL IS NOT NULL
-		</if>
-	</select>
+<!-- 	<resultMap id="movement" -->
+<!-- 		type="com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile" /> -->
+<!-- 	<select id="getStockRequestStatusHeader" parameterType="Map" -->
+<!-- 		resultMap="movement"> -->
+<!-- 		SELECT -->
+<!-- 		LG47M.REQST_NO smoNo, -->
+<!-- 		LG47M. PRIDIC_FRQNCY reqType, -->
+<!-- 		LG47M.REQST_STUS reqStatus, -->
+<!-- 		LG47M.RCIV_CDC_RDC requestorId,추후에 구분자로 분리예정 -->
+<!-- 		SY28M.WH_LOC_DESC requestorName, 추후에 구분자로 분리예정 -->
+<!-- 		TO_CHAR(LG47M.REQST_REQUIRE_DT, 'YYYYMMDD') reqDate -->
+<!-- 		FROM SYS0028M SY28M ,LOG0047M LG47M -->
+<!-- 		WHERE 1=1 -->
+<!-- 		AND SY28M.WH_LOC_ID = LG47M.RCIV_CDC_RDC   추후에 구분자로 분리예정 -->
+<!-- 		AND LG47M.TRNSC_TYPE = 'UM' -->
+<!-- 		AND LG47M.RCIV_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE -->
+<!-- 		WH_LOC_CODE =#{userId}) -->
+<!--           <choose> <when test=""> AND LG47M.RCIV_CDC_RDC = (SELECT  -->
+<!-- 			WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId}) </when> <otherwise>  -->
+<!-- 			AND LG47M.REQST_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE  -->
+<!-- 			=#{userId}) </otherwise> </choose>  --> 
+<!-- 	    AND TO_CHAR( LG47M.REQST_REQUIRE_DT,'YYYYMMDD')  -->
+<!-- 		BETWEEN TO_CHAR(TO_DATE(#{searchFromDate},'DD/MM/YYYY'), 'YYYYMMDD')  -->
+<!--  		AND TO_CHAR(TO_DATE(#{searchToDate},'DD/MM/YYYY'), 'YYYYMMDD')  -->
+<!-- 		<if test="searchStatus eq 'requested'.toString() "> -->
+<!-- 			AND LG47M.REQST_STUS IN ('O','P') -->
+<!-- 		</if> -->
+<!-- 		<if test="searchStatus eq 'done'.toString() "> -->
+<!-- 			AND LG47M.REQST_STUS='C' -->
+<!-- 		</if> -->
+<!-- 		<if test="searchStatus eq 'rejected'.toString() "> -->
+<!-- 			AND LG47M.REQST_DEL IS NOT NULL -->
+<!-- 		</if> -->
+<!-- 	</select> -->
 	
-	<select id="getRequestStatusParts" parameterType="Map"
-		resultMap="movement">
-		SELECT
-		LG48D.REQST_NO smoNoD,
-		LG48D.REQST_NO_ITM smoNoItem,
-		SY26M.STK_ID partsId,
-		LG48D.ITM_CODE partsCode,
-		LG48D.ITM_NAME partsName,
-		LG48D.REQST_QTY requestQty,
-		SY26M.SERIAL_CHK serialNo,
-		LG55D.DELVRY_QTY selectQty,
-		SY26M.STK_TYPE_ID partsType
-		FROM
-		LOG0048D LG48D, LOG0055D LG55D, SYS0026M SY26M
-		WHERE 1=1
-		AND LG48D.REQST_NO = LG55D.REQST_NO (+)
-		AND NVL(LG48D.REQST_DEL , 'N') = 'N'
-		AND LG48D.ITM_CODE=SY26M.STK_CODE
-		AND LG48D.REQST_NO =#{reqstNo}
-		ORDER BY LG48D.REQST_NO_ITM
-	</select>
+<!-- 	<select id="getRequestStatusParts" parameterType="Map" -->
+<!-- 		resultMap="movement"> -->
+<!-- 		SELECT -->
+<!-- 		LG48D.REQST_NO smoNoD, -->
+<!-- 		LG48D.REQST_NO_ITM smoNoItem, -->
+<!-- 		SY26M.STK_ID partsId, -->
+<!-- 		LG48D.ITM_CODE partsCode, -->
+<!-- 		LG48D.ITM_NAME partsName, -->
+<!-- 		LG48D.REQST_QTY requestQty, -->
+<!-- 		SY26M.SERIAL_CHK serialNo, -->
+<!-- 		LG55D.DELVRY_QTY selectQty, -->
+<!-- 		SY26M.STK_TYPE_ID partsType -->
+<!-- 		FROM -->
+<!-- 		LOG0048D LG48D, LOG0055D LG55D, SYS0026M SY26M -->
+<!-- 		WHERE 1=1 -->
+<!-- 		AND LG48D.REQST_NO = LG55D.REQST_NO (+) -->
+<!-- 		AND NVL(LG48D.REQST_DEL , 'N') = 'N' -->
+<!-- 		AND LG48D.ITM_CODE=SY26M.STK_CODE -->
+<!-- 		AND LG48D.REQST_NO =#{reqstNo} -->
+<!-- 		ORDER BY LG48D.REQST_NO_ITM -->
+<!-- 	</select> -->
 	
 </mapper>
