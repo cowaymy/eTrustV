@@ -77,9 +77,9 @@ function fn_selectGlListAjax() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="expense.GLAccount" /></th>
-	<td><input type="text" title='<spring:message code="expense.GLAccount" />' placeholder="" class="w100p" /></td>
+	<td><input id="glAccCode" name="glAccCode" type="text" title='<spring:message code="expense.GLAccount" />' placeholder="" class="w100p" /></td>
 	<th scope="row"><spring:message code="expense.GLAccountName" /></th>
-	<td><input type="text" title='<spring:message code="expense.GLAccountName" />' placeholder="" class="w100p" /></td>
+	<td><input  id="glAccCodeDesc" name="glAccCodeDesc" type="text" title='<spring:message code="expense.GLAccountName" />' placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
