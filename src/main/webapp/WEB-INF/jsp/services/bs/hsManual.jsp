@@ -126,7 +126,7 @@
                             visible:false                   
                         }, {
                             dataField : "codyBrnchCode",
-                            headerText : "BrnchCode",
+                            headerText : "BranchCode",
                             width : 120
                     }];
                             
@@ -180,7 +180,7 @@
                         width : 120           
                      }, {
                         dataField : "codyMangrUserId",
-                        headerText : "CodyMangr",
+                        headerText : "Cody Manager",
                         width : 120           
                     }, {
                         dataField : "stusCodeId",

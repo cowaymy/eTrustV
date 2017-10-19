@@ -123,9 +123,15 @@
             width : 130
         }, {
             dataField : "codyId",
-            headerText : "Cody",
+            headerText : "Cody id",
             editable : false,
-            width : 140
+            width : 140,
+            visible:false
+        }, {
+            dataField : "codyCd",
+            headerText : "Cody Code",
+            editable : false,
+            width : 140            
         }, {
             dataField : "year",
             headerText : "year",
@@ -180,11 +186,11 @@
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
                     dataField : "codyId",
-                    headerText : "Cody Id",
+                    headerText : "Cody Code",
                     width : 120
            }, {     
 		            dataField : "codyName",
-		            headerText : "cody Name",
+		            headerText : "Cody Name",
 		            width : 220
            }, {     
                     dataField : "stus",
