@@ -80,6 +80,9 @@
             #{item}
             </foreach>
        </if>
+       <if test="stateid != null and stateid !=''">
+            and stateid =  #{stateid}
+       </if>
        <if test="statlist != null and statlist != ''">
             AND stateid in 
             <foreach item="item" collection="statlist" index="index" open="(" separator="," close=")">

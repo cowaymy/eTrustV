@@ -94,6 +94,7 @@
 </ul>
 <form id="popSearchForm" name="popSearchForm" action="#" method="post">
     <input id="gubun" name="gubun" value="${gubun}" type="hidden" />
+    <input id="stateid" name="stateid" value="1" type="hidden" />
     
 <table class="type1 mt10"><!-- table start -->
 <caption>table</caption>
