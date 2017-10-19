@@ -504,6 +504,7 @@ function fn_AllocationConfirm(){
     $("#CTID").val(selectedItems[0].item.ct);  
     $("#CTgroup").val(selectedItems[0].item.ctSubGrp); 
     
+    $("#_doAllactionDiv").remove();
     
 }
 
