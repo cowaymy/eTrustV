@@ -72,6 +72,9 @@
              , V1.CUST_TYPE_ID
              , V1.CUST_BILL_ID
              , V1.OBLIGT_YEAR
+             , V1.EMP_CHK
+             , V1.EX_TRADE
+             , V1.GST_CHK
           FROM SAL1006V V1
          WHERE V1.ORD_ID = #{salesOrderId}
     </select>

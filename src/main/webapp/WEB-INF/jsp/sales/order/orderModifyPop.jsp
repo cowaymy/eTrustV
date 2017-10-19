@@ -735,6 +735,10 @@
                 var promoId = basicInfo.ordPromoId;
                 var stkId = basicInfo.stockId;
 
+                var custTypeVal= basicInfo.custTypeId;
+                var empChk     = basicInfo.empChk;
+                var exTrade    = basicInfo.exTrade;
+            
                 $('#prdName').text('('+basicInfo.stockCode+') '+basicInfo.stockDesc);
                 $('#ordPrice').val(basicInfo.ordAmt);
                 $('#ordRentalFees').val(basicInfo.ordMthRental);
@@ -748,7 +752,7 @@
                 $('#promoId').val(promoId);
                 $('#stkId').val(stkId);
                 
-                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:APP_TYPE_ID,stkId:stkId}, promoId, 'ordPromo', 'S', ''); //Common Code
+                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:APP_TYPE_ID,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade}, promoId, 'ordPromo', 'S', ''); //Common Code
             }
         });
     }
