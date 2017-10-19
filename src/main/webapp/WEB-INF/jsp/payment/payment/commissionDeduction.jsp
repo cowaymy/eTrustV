@@ -172,7 +172,7 @@ function fn_clickArea1(){
 	<ul class="left_btns mt20">
 	    <li>
 		    <div class="auto_file"><!-- auto_file start -->
-		      <input type="file" title="file add" id="uploadfile" name="uploadfile" />
+		      <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv"/>
 		    </div><!-- auto_file end -->
 	    </li>
 	    <li><p class="btn_sky"><a href="javascript:fn_uploadFile();">Upload</a></p></li>
