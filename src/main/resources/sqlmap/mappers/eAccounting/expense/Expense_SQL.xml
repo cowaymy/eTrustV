@@ -110,7 +110,7 @@
 	    FROM FCM0009M
 		 WHERE 1=1
         <if test="glAccCode != null and glAccCode != ''">
-	       AND GL_ACC_COD LIKE '%'|| #{glAccCode} || '%'
+	       AND GL_ACC_CODE LIKE '%'|| #{glAccCode} || '%'
         </if>  
         <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
            AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
