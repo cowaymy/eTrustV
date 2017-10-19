@@ -84,7 +84,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	public void insertWebInvoiceInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		
-		LOGGER.debug("params =====================================>>  " + params);
+		LOGGER.debug("insertWebInvoiceInfo =====================================>>  " + params);
 		
 		webInvoiceMapper.insertWebInvoiceInfo(params);
 		
@@ -101,6 +101,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				int clmSeq = webInvoiceMapper.selectNextClmSeq((String) params.get("clmNo"));
 				hm.put("clmSeq", clmSeq);
 				hm.put("userId", params.get("userId"));
+				LOGGER.debug("insertWebInvoiceDetail =====================================>>  " + params);
 				webInvoiceMapper.insertWebInvoiceDetail(hm);
 			}
 		}
