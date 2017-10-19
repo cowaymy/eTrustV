@@ -377,7 +377,7 @@ $(document).ready(function(){
             fn_newSerialCopy();
       });
 	    $('#excelUp').click(function() {
-	        $('input[type=file]').val('');
+	        $('.auto_file input[type=text]').val('');
 	        AUIGrid.clearGridData(myGridIDExcel);
 	        $("#popup_wrap_excel_up").show();
 	    });
@@ -609,12 +609,24 @@ function fn_itempopList(data){
    
    
 function fn_excelSave(){
+	console.log(AUIGrid.getAddedRowItems(myGridIDExcel));
     var param  =  {};
     for (var i = 0 ; i < AUIGrid.getRowCount(myGridIDExcel) ; i++){
         if (AUIGrid.getCellValue(myGridIDExcel , i , "exist") == 'Y'){
             Common.alert("Please check the serial.")
             return false;
         }
+	    var cnt =0;
+	    for (var j = 0 ; j < AUIGrid.getRowCount(myGridIDExcel) ; j++){
+	        if(AUIGrid.getCellValue(myGridIDExcel , i , "serialNo") ==  AUIGrid.getCellValue(myGridIDExcel , j , "serialNo"))
+	        	   cnt++;
+	       }
+	    
+	    if(cnt>1){
+	    	  Common.alert("Same Serial Number exist :"+AUIGrid.getCellValue(myGridIDExcel , i , "serialNo"));
+	    	  return false;
+	    }
+	    
     }
     param.add = AUIGrid.exportToObject("#popup_wrap_excel");
     
