@@ -326,6 +326,7 @@
     
     function fn_success(){
 //    	fn_cancelReload();
+        fn_orderCancelListAjax();
     	$("#_close").click();
     }
 </script>

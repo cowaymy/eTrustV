@@ -5,11 +5,12 @@
 
 	function fn_orderNoExist(){
 		$("#searchOrdDt").show();
-		$("#searchOrd").val('');
+		
 	}
 	
 	function fn_orderNoExist2(){
 	    $("#searchOrdDt").hide();
+	    $("#searchOrd").val('');
 	}
 	
     $(document).ready(function(){
