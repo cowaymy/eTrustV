@@ -6,6 +6,7 @@
 
 			 SELECT MEM_ID ct ,
 				       TO_CHAR(C_DATE,'YYYY-MM-DD') C_DATE ,
+				       TO_CHAR(C_DATE,'DD-MM-YYYY') D_DATE ,
 				       ASCNT||'-'||SUMSESION_CNT ascnt,
 				       INCNT||'-'||SUMSESION_CNT inscnt,
 				       0||'-'||SUMSESION_CNT rtncnt
@@ -24,7 +25,8 @@
 				        WHERE  1=1
 				        AND RA.MEM_ID = RB.AS_MEM_ID  
                         /* AND RB.AS_STUS_ID =4  */  
-			        AND RB.AS_APPNT_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'YYYY-MM-DD')
+			          /* AND RB.AS_APPNT_DT =TO_DATE(SYSDATE ,'YYYY-MM-DD')*/  
+			          AND  to_char(RB.AS_APPNT_DT,'YYYYMMDD')  BETWEEN  TO_CHAR(sysdate,'YYYYMMDD') AND  TO_CHAR(sysdate+10,'YYYYMMDD')
 				        AND RA. CT_SUB_GRP IN (
 				            SELECT
 				                 F.CT_SUB_GRP
@@ -48,7 +50,8 @@
 				            AND RA.MEM_ID = RB.CT_ID
 				            AND RA.MEM_ID=P.CT_ID
                              /*AND RB.STUS_CODE_ID =4*/	           
-                             AND RB.INSTALL_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'YYYY-MM-DD')
+                             /* AND RB.INSTALL_DT =TO_DATE(SYSDATE ,'YYYY-MM-DD') */
+                             AND  to_char(RB.INSTALL_DT,'YYYYMMDD')  BETWEEN  TO_CHAR(sysdate,'YYYYMMDD') AND  TO_CHAR(sysdate+10,'YYYYMMDD')
 				            AND RA. CT_SUB_GRP IN (
 				                SELECT
 				                     F.CT_SUB_GRP
@@ -74,24 +77,56 @@
 	
     <select id="selectDetailList" parameterType="Map" resultType="egovMap">
    
-										
+			SELECT  CT ,
+        (SELECT OD.MEM_CODE  FROM ORG0001D OD  WHERE  CT =OD.MEM_ID  AND ROWNUM =1) MEM_CODE,
+        (SELECT OD.CT_SUB_GRP  FROM ORG0005D OD  WHERE CT =OD.MEM_ID  AND ROWNUM =1) CT_SUB_GRP,
+         SUM_INS_RE,
+         SUM_RNS_RE,
+         SUM_AS_CNT,
+         SUM_INS_CNT,
+         SUM_RTN_CNT,    /*Morning */
+         AMOR,
+         IMOR,
+         RMOR,
+         MOR_AS_CNT,
+         MOR_INS_CNT,
+         MOR_RTN_CNT,              /* After*/
+         AAFT,
+         IAFT,
+         RAFT,
+         AFT_AS_CNT,
+         AFT_INS_CNT,
+         AFT_RTN_CNT,           /* Evening */
+         AEVN,
+         IEVN,
+         REVN,
+         EVN_AS_CNT,
+         EVN_INS_CNT,
+         EVN_RTN_CNT,
+         AOUT,
+         IOUT,
+         ROUT,
+         OTH_AS_CNT,
+         OTH_INS_CNT,
+         OTH_RTN_CNT
+FROM (							
 										
 					SELECT 
 					        MEM_ID CT,
-					       /*Summary*/
+						     /*Summary*/
 					        SUM_AS_RE, SUM_INS_RE,SUM_RNS_RE,
-					        SUM_AS_RE||'-'||SESION_CNT  SUM_AS_CNT, SUM_INS_RE||'-'||SESION_CNT  SUM_INS_CNT ,SUM_RNS_RE||'-'||SESION_CNT SUM_RTN_CNT,
+					        nvl(SUM_AS_RE,0)||'-'||SESION_CNT  SUM_AS_CNT, nvl(SUM_INS_RE,0)||'-'||SESION_CNT  SUM_INS_CNT ,nvl(SUM_RNS_RE,0)||'-'||SESION_CNT SUM_RTN_CNT,
 					        /*Morning */
 					        AMOR, IMOR , RMOR,
-					        AMOR||'-'||M_SESION MOR_AS_CNT   , IMOR||'-'||M_SESION MOR_INS_CNT  ,  RMOR||'-'||M_SESION MOR_RTN_CNT,
+					        nvl(AMOR,0)||'-'||M_SESION MOR_AS_CNT   , nvl(IMOR,0)||'-'||M_SESION MOR_INS_CNT  ,  nvl(RMOR,0)||'-'||M_SESION MOR_RTN_CNT,
 					        /* After*/
 					       AAFT,IAFT ,RAFT,
-					        AAFT||'-'||A_SESION AFT_AS_CNT   , IAFT||'-'||A_SESION AFT_INS_CNT  , RAFT||'-'||A_SESION AFT_RTN_CNT,
+					        nvl(AAFT,0)||'-'||A_SESION AFT_AS_CNT   , nvl(IAFT,0)||'-'||A_SESION AFT_INS_CNT  , nvl(RAFT,0)||'-'||A_SESION AFT_RTN_CNT,
 					       /* Evening */
 					        AEVN,IEVN,REVN,
-					        AEVN||'-'||E_SESION  EVN_AS_CNT   , IEVN||'-'||E_SESION EVN_INS_CNT  , REVN||'-'||E_SESION EVN_RTN_CNT ,
+					        nvl(AEVN,0)||'-'||E_SESION  EVN_AS_CNT   , nvl(IEVN,0)||'-'||E_SESION EVN_INS_CNT  , nvl(REVN,0)||'-'||E_SESION EVN_RTN_CNT ,
 					        AOUT,IOUT,ROUT,
-					        AOUT||'-'||E_SESION  OTH_AS_CNT   , IEVN||'-'||E_SESION OTH_INS_CNT  , REVN||'-'||E_SESION  OTH_RTN_CNT 
+					        nvl(AOUT,0)||'-'||E_SESION  OTH_AS_CNT   , nvl(IEVN,0)||'-'||E_SESION OTH_INS_CNT  , nvl(REVN,0)||'-'||E_SESION  OTH_RTN_CNT 
 					FROM (    
 					SELECT 
 					     MEM_ID, 
@@ -116,7 +151,7 @@
 					             B.AS_MEM_ID ,
 					             SUM(DECODE(B.AS_SESION_CODE,'A',1,0))   A01 ,
 					             SUM(DECODE(B.AS_SESION_CODE,'M',1,0))   A02 ,
-					             SUM(DECODE(B.AS_SESION_CODE,'F',1,0))   A03 ,
+					             SUM(DECODE(B.AS_SESION_CODE,'E',1,0))   A03 ,
 					             SUM(DECODE(B.AS_SESION_CODE,'O',1,0))   A04 ,
 					             0  I01 , 0  I02 ,0  I03 , 0  I04 ,
 					             0  R01 , 0  R02 ,0  R03 , 0  R04 
@@ -125,16 +160,17 @@
 					        WHERE A.MEM_ID  = B.AS_MEM_ID
 					        AND A.MEM_ID = P.CT_ID
 					        /*AND B.AS_STUS_ID =4 */
-					        AND AS_APPNT_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'yyyy-mm-dd')
+					       /* AND AS_APPNT_DT =TO_DATE(SYSDATE ,'yyyy-mm-dd')*/
+					        AND  to_char(AS_APPNT_DT,'YYYYMMDD')  BETWEEN  TO_CHAR(sysdate,'YYYYMMDD') AND  TO_CHAR(sysdate+10,'YYYYMMDD')
 					        AND  A.MEM_ID = #{CT_ID}
 					        GROUP BY B.AS_MEM_ID, B.AS_SESION_CODE 
 					        UNION 
-					        select 
+					        select     
 					             B.CT_ID ,
 					             0  A01 ,  0  A02 , 0   A03 , 0   A04 ,
 					             SUM(DECODE(B.SESION_CODE,'A',1,0))   I01 ,
 					             SUM(DECODE(B.SESION_CODE,'M',1,0))   I02 ,
-					             SUM(DECODE(B.SESION_CODE,'F',1,0))   I03 ,
+					             SUM(DECODE(B.SESION_CODE,'E',1,0))   I03 ,
 					             SUM(DECODE(B.SESION_CODE,'O',1,0))   I04 ,
 					             0  R01 ,
 					             0  R02 ,
@@ -146,7 +182,8 @@
 					        AND A.MEM_ID = P.CT_ID
 					          AND  A.MEM_ID = #{CT_ID}
 					        /*AND B.STUS_CODE_ID =4 */
-					        AND INSTALL_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'yyyy-mm-dd')
+					        /* AND INSTALL_DT =TO_DATE(SYSDATE ,'yyyy-mm-dd') */
+					        AND  to_char(INSTALL_DT,'YYYYMMDD')  BETWEEN  TO_CHAR(sysdate,'YYYYMMDD') AND  TO_CHAR(sysdate+10,'YYYYMMDD')
 					        GROUP BY B.CT_ID, B.SESION_CODE 
 					        UNION 
 					        select 
@@ -160,15 +197,15 @@
 					        AND A.MEM_ID = P.CT_ID
 					          AND  A.MEM_ID = #{CT_ID}
 					        /* AND B.STUS_CODE_ID =4  */
-					        AND INSTALL_DT =TO_DATE(NVL(#{S_DATE},SYSDATE),'yyyy-mm-dd')
+					        /*AND INSTALL_DT =TO_DATE(SYSDATE,'yyyy-mm-dd') */
+					        AND  to_char(INSTALL_DT,'YYYYMMDD')  BETWEEN  TO_CHAR(sysdate,'YYYYMMDD') AND  TO_CHAR(sysdate+10,'YYYYMMDD')
 					        GROUP BY B.CT_ID, B.SESION_CODE 
 					    )
 					) S  , ORG0015M P 
 					WHERE 1=1 
 					AND S.MEM_ID = P.CT_ID(+)
-					)
-										
-
+					)		
+)
     </select>
     
     
