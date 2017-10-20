@@ -64,7 +64,7 @@ function fn_selectCostCenter() {
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-	<li><p class="btn_blue2"><a href="#" onclick="fn_selectCostCenter()"><spring:message code="webInvoice.btn.search" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_selectCostCenter()"><spring:message code="webInvoice.btn.search" /></a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
