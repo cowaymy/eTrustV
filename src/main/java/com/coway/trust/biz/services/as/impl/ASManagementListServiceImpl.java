@@ -27,6 +27,16 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	@Override
+	public List<EgovMap> getASHistoryList(Map<String, Object> params) {
+		return ASManagementListMapper.getASHistoryList(params);
+	}
+	
+	@Override 
+	public List<EgovMap> getBSHistoryList(Map<String, Object> params) {
+		return ASManagementListMapper.getBSHistoryList(params);
+	}
+	
+	@Override
 	public EgovMap selectOrderBasicInfo(Map<String, Object> params) {
 		return ASManagementListMapper.selectOrderBasicInfo(params);
 	}

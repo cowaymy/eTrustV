@@ -17,14 +17,29 @@ function fn_searchASManagement(){
 function fn_newASPop(){
 	//Common.popupDiv("/services/as/initASReceiveEntryPop.do?isPop=true", "searchForm");
 	//Common.popupWin("saveASForm", "/services/as/ASReceiveEntryPop.do", option);
-	Common.popupDiv("/services/as/ASReceiveEntryPop.do?isPop=true",'');
+	//Common.popupDiv("/services/as/ASReceiveEntryPop.do?isPop=true",'');
+	
+    Common.popupDiv("/services/as/ASReceiveEntryPop.do" ,null, null , true , '_NewEntryPopDiv1');
+    
 }
+
+
+function fn_resultASPop(ordId,ordNo){
+	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId="+ordId+"&ordNo="+ordNo ,null, null , true , '_resultNewEntryPopDiv1');
+
+    
+}
+
+
+
+
 
 function fn_newASResultPop(){
     //Common.popupDiv("/services/as/initASReceiveEntryPop.do?isPop=true", "searchForm");
     //Common.popupWin("saveASForm", "/services/as/ASReceiveEntryPop.do", option);
     Common.popupDiv("/services/as/ASNewResultPop.do?isPop=true",'');
 }
+
 $(document).ready(function() {
 
     // AUIGrid 그리드를 생성합니다.

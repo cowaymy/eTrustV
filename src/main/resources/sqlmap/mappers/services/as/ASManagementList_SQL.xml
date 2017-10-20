@@ -202,4 +202,180 @@
              ]]>
     </select>
     
+    
+       <select id="getASHistoryList" parameterType="Map" resultType="egovMap">    
+	                SELECT S.C1   ,
+						       S.AS_NO   ,
+						       S.AS_REQST_DT   ,
+						       S.CODE   ,
+						       S.C2   ,
+						       S.AS_SETL_DT   ,
+						       S.C3   ,
+						       S.C4   ,
+						       S.C5   ,
+						       S.C6   ,
+						       S.C7   
+						  FROM ( SELECT DISTINCT Extent1.AS_NO AS_NO  ,
+						                         Extent1.AS_REQST_DT AS_REQST_DT  ,
+						                         Extent2.CODE CODE  ,
+						                         1 C1  ,
+						                         CASE 
+						                              WHEN ( Extent3.AS_RESULT_ID IS NOT NULL ) THEN Extent3.AS_RESULT_NO
+						                         ELSE '-'
+						                            END C2  ,
+						                         CASE 
+						                              WHEN ( Extent4.RESN_ID IS NOT NULL ) THEN Extent4.RESN_DESC
+						                         ELSE '-'
+						                            END C3  ,
+						                         CASE 
+						                              WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.RESN_DESC
+						                         ELSE '-'
+						                            END C4  ,
+						                         CASE 
+						                              WHEN ( Extent6.MEM_ID IS NOT NULL ) THEN Extent6.MEM_CODE
+						                         ELSE '-'
+						                            END C5  ,
+						                         CASE 
+						                              WHEN ( Extent7.RESN_ID IS NOT NULL ) THEN Extent7.RESN_DESC
+						                         ELSE '-'
+						                            END C6  ,
+						                         CASE 
+						                              WHEN ( Extent3.AS_RESULT_ID IS NOT NULL ) THEN Extent3.AS_TOT_AMT
+						                         ELSE UTILS.CONVERT_TO_FLOAT(0,53)
+						                            END C7  ,
+						                         Extent3.AS_SETL_DT AS_SETL_DT  
+						         FROM SVC0001D Extent1
+						                JOIN SYS0038M Extent2   ON Extent1.AS_STUS_ID = Extent2.STUS_CODE_ID
+						                LEFT JOIN SVC0004D Extent3   ON ( Extent1.AS_ID = Extent3.AS_ENTRY_ID )
+						                AND ( 1 = Extent3.AS_RESULT_IS_CURR )
+						                AND ( 457 = Extent3.AS_RESULT_TYPE_ID )
+						                LEFT JOIN SYS0032M Extent4   ON Extent1.AS_MALFUNC_ID = Extent4.RESN_ID
+						                LEFT JOIN SYS0032M Extent5   ON Extent1.AS_MALFUNC_RESN_ID = Extent5.RESN_ID
+						                LEFT JOIN ORG0001D Extent6   ON Extent3.AS_CT_ID = Extent6.MEM_ID
+						                LEFT JOIN SYS0032M Extent7   ON Extent3.AS_SLUTN_RESN_ID = Extent7.RESN_ID
+						          WHERE  Extent1.AS_SO_ID = #{SALES_ORD_ID} ) S
+	                
+    </select>
+    
+    
+       <select id="getBSHistoryList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        
+                SELECT S.E_MONTH   ,
+					       S.E_NO   ,
+					       S.E_YEAR   ,
+					       S.CODE   ,
+					       S.CODE1   ,
+					       S.NO1   ,
+					       S.C1   ,
+					       S.CODE2   ,
+					       S.CODE3   ,
+					       S.MEM_CODE  ,
+					       S.E_MONTH||'-'|| S.E_YEAR  EDATE
+					  FROM ( SELECT E.NO E_NO  ,
+					                E.MONTH E_MONTH  ,
+					                E.YEAR E_YEAR  ,
+					                E2.CODE CODE  ,
+					                E3.CODE CODE1  ,
+					                E4.MEM_CODE MEM_CODE  ,
+					                E5.SETL_DT C1  ,
+					                E5.NO NO1  ,
+					                E6.CODE CODE2  ,
+					                E7.CODE CODE3  
+					         FROM SVC0008D E
+					                JOIN SYS0013M E2   ON E.TYPE_ID = E2.CODE_ID
+					                JOIN SYS0038M E3   ON E.STUS_CODE_ID = E3.STUS_CODE_ID
+					                JOIN ORG0001D E4   ON E.CODY_ID = E4.MEM_ID
+					                LEFT JOIN SVC0006D E5   ON ( E.SCHDUL_ID = E5.SCHDUL_ID )
+					                AND ( 1 = E5.RESULT_IS_CURR )
+					                LEFT JOIN SYS0032M E6   ON E5.REN_COLCT_ID = E6.RESN_ID
+					                LEFT JOIN SYS0032M E7   ON E5.FAIL_RESN_ID = E7.RESN_ID
+					          WHERE  E.SALES_ORD_ID = #{SALES_ORD_ID} ) S
+					  ORDER BY  S.E_NO DESC              
+           ]]>
+    </select>
+    
+    
+    
+     <select id="getBrnchId" parameterType="Map" resultType="egovMap">
+                                
+                    select codeId ,codeName
+                    from(
+                            SELECT  
+                                SYS0005M.BRNCH_ID  code_Id,
+                                CODE ||'-'||SYS0005M.NAME  code_Name
+                            FROM SYS0005M 
+                            where SYS0005M.STUS_ID =1
+                            AND SYS0005M.TYPE_ID   IN (40,43)
+                             ORDER BY  SYS0005M.BRNCH_ID  ASC
+                     )ORDER BY  codeName  ASC
+     
+     </select>
+     
+     
+     
+     
+     
+     <select id="getResnCode" parameterType="Map" resultType="egovMap">
+                     SELECT S.C1   ,
+                                   S.RESN_ID   ,
+                                   S.CODE    code_Id ,
+                                   S.RESN_DESC code_Name   
+                              FROM ( SELECT DISTINCT E5.RESN_ID   ,
+                                                     E5.CODE   ,
+                                                     E5.RESN_DESC   ,
+                                                     1 C1  
+                                     FROM SYS0032M Extent1
+                                            JOIN SYS0033M Extent2   ON Extent1.RESN_ID = Extent2.RESN_ID
+                                            JOIN SYS0033M Extent3   ON ( Extent2.RESN_GRP_ID = Extent3.RESN_PARENT_GRP_ID )
+                                            AND ( ( 1 = Extent3.RESN_STUS_ID )
+                                            OR ( ( 1 IS NULL )
+                                            AND ( Extent3.RESN_STUS_ID IS NULL ) ) )
+                                            JOIN SYS0033M Extent4   ON ( Extent3.RESN_GRP_ID = Extent4.RESN_PARENT_GRP_ID )
+                                            AND ( ( 1 = Extent4.RESN_STUS_ID )
+                                            OR ( ( 1 IS NULL )
+                                            AND ( Extent4.RESN_STUS_ID IS NULL ) ) )
+                                            JOIN SYS0032M E5   ON Extent4.RESN_ID = E5.RESN_ID
+                                      WHERE  ( 340 = Extent1.RESN_TYPE_ID )
+                                               AND ( 1 = Extent1.STUS_CODE_ID )
+                                               AND ( 0 = (CASE 
+                                                               WHEN ( Extent2.RESN_PARENT_GRP_ID IS NOT NULL ) THEN Extent2.RESN_PARENT_GRP_ID
+                                             ELSE 0
+                                                END) )
+                                               AND ( Extent3.RESN_ID = #{RESN_ID} ) ) S
+
+     
+     </select>
+     
+     
+     <select id="getResnDetail" parameterType="Map" resultType="egovMap">
+	                 SELECT S.C1   ,
+							       S.RESN_ID   ,
+							       S.CODE    code_Id ,
+							       S.RESN_DESC code_Name   
+							  FROM ( SELECT DISTINCT E5.RESN_ID   ,
+							                         E5.CODE   ,
+							                         E5.RESN_DESC   ,
+							                         1 C1  
+							         FROM SYS0032M Extent1
+							                JOIN SYS0033M Extent2   ON Extent1.RESN_ID = Extent2.RESN_ID
+							                JOIN SYS0033M Extent3   ON ( Extent2.RESN_GRP_ID = Extent3.RESN_PARENT_GRP_ID )
+							                AND ( ( 1 = Extent3.RESN_STUS_ID )
+							                OR ( ( 1 IS NULL )
+							                AND ( Extent3.RESN_STUS_ID IS NULL ) ) )
+							                JOIN SYS0033M Extent4   ON ( Extent3.RESN_GRP_ID = Extent4.RESN_PARENT_GRP_ID )
+							                AND ( ( 1 = Extent4.RESN_STUS_ID )
+							                OR ( ( 1 IS NULL )
+							                AND ( Extent4.RESN_STUS_ID IS NULL ) ) )
+							                JOIN SYS0032M E5   ON Extent4.RESN_ID = E5.RESN_ID
+							          WHERE  ( 340 = Extent1.RESN_TYPE_ID )
+							                   AND ( 1 = Extent1.STUS_CODE_ID )
+							                   AND ( 0 = (CASE 
+							                                   WHEN ( Extent2.RESN_PARENT_GRP_ID IS NOT NULL ) THEN Extent2.RESN_PARENT_GRP_ID
+							                 ELSE 0
+							                    END) )
+							                   AND ( Extent3.RESN_ID = #{RESN_ID} ) ) S
+
+     
+     </select>
 </mapper>

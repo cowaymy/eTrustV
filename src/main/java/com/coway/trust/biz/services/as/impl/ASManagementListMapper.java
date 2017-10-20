@@ -11,5 +11,11 @@ public interface ASManagementListMapper {
 	
 	 List<EgovMap> selectASManagementList(Map<String, Object> params);
 	 
+	 List<EgovMap> getASHistoryList(Map<String, Object> params);
+
+	 
+	 List<EgovMap> getBSHistoryList(Map<String, Object> params);
+
+	 
 	 EgovMap selectOrderBasicInfo(Map<String, Object> params);
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.TerritoryManagementMapper">
+
+	<select id="cody42Vaild" parameterType="Map" resultType="egovMap">
+	  <![CDATA[
+	      SELECT 
+				     (SELECT
+				         COUNT(AREA_ID) AS   ACNT
+				        FROM SYS0064M  WHERE AREA_ID =#{areaId}
+				     ) ACNT ,
+				     (SELECT
+				         COUNT(AREA_ID) AS   BCNT
+				        FROM SYS0064M  WHERE AREA_ID =#{areaId}
+				     ) BCNT ,
+				     (SELECT
+				         COUNT(AREA_ID) AS   UCNT
+				        FROM SYS0064M  WHERE AREA_ID =#{areaId}
+				     ) UCNT 
+		   FROM DUAL
+		  ]]>
+	</select>
+	
+	
+    <select id="dream43Vaild" parameterType="Map" resultType="egovMap">
+   <![CDATA[
+	          SELECT 
+	                     (SELECT
+	                         COUNT(AREA_ID) AS   ACNT
+	                        FROM SYS0064M  WHERE AREA_ID =#{areaId}
+	                     ) ACNT ,
+	                     (SELECT
+	                         COUNT(AREA_ID) AS   BCNT
+	                        FROM SYS0064M  WHERE AREA_ID =#{areaId}
+	                     ) BCNT ,
+	                     (SELECT
+	                         COUNT(AREA_ID) AS   UCNT
+	                        FROM SYS0064M  WHERE AREA_ID =#{areaId}
+	                     ) UCNT 
+	           FROM DUAL
+          ]]>
+    </select>
+	
+</mapper>

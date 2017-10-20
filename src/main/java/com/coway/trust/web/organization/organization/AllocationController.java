@@ -1,6 +1,7 @@
 package com.coway.trust.web.organization.organization;
 
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +27,8 @@ import com.coway.trust.biz.organization.organization.AllocationService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.config.excel.ExcelReadComponent;
 import com.coway.trust.web.organization.organization.excel.TerritoryRawDataVO;
-
-import egovframework.rte.psl.dataaccess.util.EgovMap;
+   
+import egovframework.rte.psl.dataaccess.util.EgovMap; 
 
 @Controller
 @RequestMapping(value = "/organization/allocation")
@@ -46,7 +47,7 @@ public class AllocationController {
 	 * organization territoryList page  
 	 *
 	 * @param request
-	 * @param model
+	 * @param model 
 	 * @return
 	 * @throws Exception
 	 */
@@ -55,9 +56,7 @@ public class AllocationController {
 		
 		model.addAttribute("ORD_ID",params.get("ORD_ID"));
 		model.addAttribute("S_DATE",params.get("S_DATE"));
-		
-		
-
+		    
 		// 호출될 화면
 		return "organization/organization/allocationListPop";
 	}
