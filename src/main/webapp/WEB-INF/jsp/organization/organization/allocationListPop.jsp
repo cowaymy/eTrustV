@@ -37,9 +37,9 @@ $(document).ready(function(){
     
    // doGetCombo('/common/selectCodeList.do', '45', '','comBranchType', 'S' , ''); 
     
-    AUIGrid.bind(mAgrid, "cellDoubleClick", function(event) {
-        console.log(event.rowIndex);
-        fn_selectAllactionDetailListAjax()
+    AUIGrid.bind(mAgrid, "cellDoubleClick", function(event ) {
+        console.log(event.item);
+        fn_selectAllactionDetailListAjax();
     });
     
     AUIGrid.bind(dAgrid, "cellDoubleClick", function(event) {
@@ -110,19 +110,27 @@ function  fn_selectAllactionDetailListAjax () {
 	
 	if(selectedItems.length <= 0 ){
 	      Common.alert("There Are No selected Items.");
-	      return ;
+	      return ; 
 	}
 	
 	console.log(selectedItems[0]);
 	
 	var v_ctId    =selectedItems[0].item.ct;
-	var v_sDate =selectedItems[0].item.cDate
+	var v_sDate =selectedItems[0].item.cDate;
 	
-	Common.ajax("GET", "/organization/allocation/selectDetailList", { CT_ID: v_ctId , S_DATE:v_sDate }, function(result) {
+	Common.ajax("GET", "/organization/allocation/selectDetailList", { CT_ID: v_ctId , S_DATE:v_sDate  ,P_DATE :v_sDate }, function(result) {
 	         
 	  console.log(result);
 	  AUIGrid.setGridData(dAgrid, result);
+	  
+      item = {};
+      item.memCode =selectedItems[0].item.memCode;
+      item.ct=selectedItems[0].item.ct;
+      AUIGrid.updateRow(dAgrid, item,0);
+         
 	});
+	
+	
 }
 
 
@@ -168,18 +176,23 @@ function createDetailAllactionAUIGrid() {
         
         var columnLayout = [
                            
-                            { dataField : "ct", headerText  : "CT",    width : 100,  editable : false  ,cellMerge : true},
+                            { dataField : "memCode", headerText  : "CT",    width : 100,  editable : false  ,cellMerge : true},
+                            { dataField : "ct", headerText  : "",    width : 100 ,visible :false},
                             {
                                 headerText : "Summary",
                                 children : [  {
-                                                     dataField : "sumAsCnt",
+                                                     dataField : "sumascnt",
                                                      headerText : "AS",
                                                      width : 80,
                                                      styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                    	 if(valArray[0] ==valArray[1]) {
+                                                         
+                                                    
+                                                         
+                                                    	 if(valArray[0] == valArray[1]  && valArray[1] >0 ) {
+                                                    		 
                                                              return "my-cell-style";
                                                          }
                                                     	 if(valArray[0] > valArray[1]) {
@@ -190,14 +203,14 @@ function createDetailAllactionAUIGrid() {
                                                      }
                                                   }, 
                                                   {
-                                                    dataField : "sumInsCnt",
+                                                    dataField : "suminscnt",
                                                     headerText : "INS",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -207,14 +220,14 @@ function createDetailAllactionAUIGrid() {
                                                     }
                                                    }, 
                                                   {
-                                                    dataField : "sumRtnCnt",
+                                                    dataField : "sumrtncnt",
                                                     headerText : "RTN",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -229,14 +242,14 @@ function createDetailAllactionAUIGrid() {
                             {
                                 headerText : "Morning",
                                 children : [  {
-                                                     dataField : "morAsCnt",
+                                                     dataField : "morascnt",
                                                      headerText : "AS",
                                                      width : 80,
                                                      styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         if(valArray[0] ==valArray[1]) {
+                                                         if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                              return "my-cell-style";
                                                          }
                                                          if(valArray[0] > valArray[1]) {
@@ -246,14 +259,14 @@ function createDetailAllactionAUIGrid() {
                                                      }
                                                   }, 
                                                   {
-                                                    dataField : "morInsCnt",
+                                                    dataField : "morinscnt",
                                                     headerText : "INS",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -263,14 +276,14 @@ function createDetailAllactionAUIGrid() {
                                                     }
                                                    }, 
                                                   {
-                                                    dataField : "morRtnCnt",
+                                                    dataField : "morrtncnt",
                                                     headerText : "RTN",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -285,14 +298,14 @@ function createDetailAllactionAUIGrid() {
                             {
                                 headerText : "After",
                                 children : [  {
-                                                     dataField : "aftAsCnt",
+                                                     dataField : "aftascnt",
                                                      headerText : "AS",
                                                      width : 80,
                                                      styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         if(valArray[0] ==valArray[1]) {
+                                                         if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                              return "my-cell-style";
                                                          }
                                                          if(valArray[0] > valArray[1]) {
@@ -302,14 +315,14 @@ function createDetailAllactionAUIGrid() {
                                                      }
                                                   }, 
                                                   {
-                                                    dataField : "aftInsCnt",
+                                                    dataField : "aftinscnt",
                                                     headerText : "INS",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -319,14 +332,14 @@ function createDetailAllactionAUIGrid() {
                                                     }
                                                    }, 
                                                   {
-                                                    dataField : "aftRtnCnt",
+                                                    dataField : "aftrtncnt",
                                                     headerText : "RTN",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -341,14 +354,14 @@ function createDetailAllactionAUIGrid() {
                             {
                                 headerText : "Evening",
                                 children : [  {
-                                                     dataField : "evnAsCnt",
+                                                     dataField : "evnascnt",
                                                      headerText : "AS",
                                                      width : 80,
                                                      styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         if(valArray[0] ==valArray[1]) {
+                                                         if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                              return "my-cell-style";
                                                          }
                                                          if(valArray[0] > valArray[1]) {
@@ -358,14 +371,14 @@ function createDetailAllactionAUIGrid() {
                                                      }
                                                   }, 
                                                   {
-                                                    dataField : "evnInsCnt",
+                                                    dataField : "evninscnt",
                                                     headerText : "INS",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -375,14 +388,14 @@ function createDetailAllactionAUIGrid() {
                                                     }
                                                    }, 
                                                   {
-                                                    dataField : "evnRtnCnt",
+                                                    dataField : "evnrtncnt",
                                                     headerText : "RTN",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -397,14 +410,14 @@ function createDetailAllactionAUIGrid() {
                             {
                                 headerText : "Other Session",
                                 children : [  {
-                                                     dataField : "othAsCnt",
+                                                     dataField : "othascnt",
                                                      headerText : "AS",
                                                      width : 80,
                                                      styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         if(valArray[0] ==valArray[1]) {
+                                                         if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                              return "my-cell-style";
                                                          }
                                                          if(valArray[0] > valArray[1]) {
@@ -414,14 +427,14 @@ function createDetailAllactionAUIGrid() {
                                                      }
                                                   }, 
                                                   {
-                                                    dataField : "othInsCnt",
+                                                    dataField : "othinscnt",
                                                     headerText : "INS",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -431,14 +444,14 @@ function createDetailAllactionAUIGrid() {
                                                     }
                                                    }, 
                                                   {
-                                                    dataField : "othRtnCnt",
+                                                    dataField : "othrtncnt",
                                                     headerText : "RTN",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1]) {
+                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
@@ -476,11 +489,20 @@ function fn_AllocationConfirm(){
     
     for(i=0; i<selectedItems.length; i++) {
         rowInfoObj = selectedItems[i];
-        console.log(rowInfoObj.value );
+        
+        console.log("====>" );
+        console.log(rowInfoObj );
         
         var valArray  =new Array();
         valArray = rowInfoObj.value.split("-");
         console.log(valArray);
+        
+    
+        if(rowInfoObj.dataField =="sumascnt" ||  rowInfoObj.dataField =="suminscnt" ||  rowInfoObj.dataField =="sumrtncnt"   ){
+        	Common.alert("Summary 는 선택할 수 없습니다.");
+        	
+            return ;
+        }
         
         
         if(valArray[1] == "0" ){
@@ -501,6 +523,27 @@ function fn_AllocationConfirm(){
         }
     }
     
+    
+    var sessionText;
+    if(rowInfoObj.dataField =="morascnt" ||  rowInfoObj.dataField =="morinscnt" ||  rowInfoObj.dataField =="morrtncnt"     ){
+    	sessionCode ="M";
+    }
+    
+    if(rowInfoObj.dataField =="othascnt" ||  rowInfoObj.dataField =="othinscnt" ||  rowInfoObj.dataField =="othrtncnt"  ){
+        sessionCode ="O";
+    }
+    
+    if(rowInfoObj.dataField =="evnascnt" ||  rowInfoObj.dataField =="evninscnt" ||  rowInfoObj.dataField =="evnrtncnt"     ){
+        sessionCode ="E";
+    }
+    
+    if(rowInfoObj.dataField =="aftascnt" ||  rowInfoObj.dataField =="aftinscnt" ||  rowInfoObj.dataField =="aftrtncnt"   ){
+        sessionCode ="A";
+    }
+    
+    console.log("sessionCode===> "+sessionCode);
+    
+    $("#CTSSessionCode").val(sessionCode);
     $("#CTCode").val(selectedItems[0].item.memCode);    
     $("#CTID").val(selectedItems[0].item.ct);  
     $("#CTgroup").val(selectedItems[0].item.ctSubGrp); 
