@@ -25,15 +25,13 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	@Override
 	public List<EgovMap> getHeartServiceJobList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		
-		String str1 = params.get("requestDate").toString();
- 
-		params.put("myBSYear", str1.substring(0, 4));
-//		params.put("myBSMonth", str1.substring(3, 2));
-		params.put("myBSMonth", str1.substring(str1.length()-2, str1.length()));
-
-		
 		return MSvcLogApiMapper.getHeartServiceJobList(params);
+	}
+
+	@Override
+	public List<EgovMap> getAfterServiceJobList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getAfterServiceJobList(params);
 	}
 	
 	
