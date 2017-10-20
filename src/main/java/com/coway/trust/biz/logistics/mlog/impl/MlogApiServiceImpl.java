@@ -60,14 +60,11 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 	@Override
 	public List<EgovMap> getInventoryStockByHolder(Map<String, Object> params) {
-		
-		System.out.println("userId :::   "+params.get("userId"));
-		System.out.println("searchType  ::  "+params.get("searchType"));
-		System.out.println("searchKeyword ::"+params.get("searchKeyword"));
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getInventoryStockByHolder(params);
 	}
 
+	
 	@Override
 	public List<EgovMap> StockReceiveList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -145,6 +142,34 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getStockTransferReqStatusDList(params);
 	}
+	
+	
+	@Override
+	public EgovMap getNonBarcodeM(Map<String, Object> params) {
+		// TODO Auto-generated method stub	
+		return MlogApiMapper.getNonBarcodeM(params);
+	}
+	
+	
+	@Override
+	public List<EgovMap> getNonBarcodeDList(String invenAdjustLocId) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getNonBarcodeDList(invenAdjustLocId);
+	}
+	
+	
+	@Override
+	public List<EgovMap> getBarcodeDList(String invenAdjustLocId) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getBarcodeDList(invenAdjustLocId);
+	}
+	
+	@Override
+	public List<EgovMap> getBarcodeCList(String invenAdjustLocId) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getBarcodeCList(invenAdjustLocId);
+	}
+	
 
 	// @Override
 	// public List<EgovMap> StockReceiveList(Map<String, Object> params) {
@@ -177,17 +202,17 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	/**
 	 * 현창배 추가
 	 */
-	@Override
-	public List<EgovMap> getBarcodeList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return MlogApiMapper.getBarcodeList(params);
-	}
+//	@Override
+//	public List<EgovMap> getBarcodeList(Map<String, Object> params) {
+//		// TODO Auto-generated method stub
+//		return MlogApiMapper.getBarcodeList(params);
+//	}
 
-	@Override
-	public List<EgovMap> getNonBarcodeList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return MlogApiMapper.getNonBarcodeList(params);
-	}
+//	@Override
+//	public List<EgovMap> getNonBarcodeList(Map<String, Object> params) {
+//		// TODO Auto-generated method stub
+//		return MlogApiMapper.getNonBarcodeList(params);
+//	}
 
 	@Override
 	public List<EgovMap> getStockAuditResult(Map<String, Object> params) {

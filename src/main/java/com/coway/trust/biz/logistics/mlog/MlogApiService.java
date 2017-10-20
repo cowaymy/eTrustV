@@ -48,6 +48,14 @@ public interface MlogApiService {
 	List<EgovMap> getStockTransferReqStatusMList(Map<String, Object> params);
 	
 	List<EgovMap> getStockTransferReqStatusDList(Map<String, Object> params);
+	
+	EgovMap getNonBarcodeM(Map<String, Object> params);
+	
+	List<EgovMap> getNonBarcodeDList(String invenAdjustLocId);
+	
+	List<EgovMap> getBarcodeDList(String invenAdjustLocId);
+	
+	List<EgovMap> getBarcodeCList(String invenAdjustLocId);
 
 	/**
 	 * 현창배 추가
@@ -55,9 +63,9 @@ public interface MlogApiService {
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> getBarcodeList(Map<String, Object> params);
+	//List<EgovMap> getBarcodeList(Map<String, Object> params);
 
-	List<EgovMap> getNonBarcodeList(Map<String, Object> params);
+	//List<EgovMap> getNonBarcodeList(Map<String, Object> params);
 
 	List<EgovMap> getStockAuditResult(Map<String, Object> params);
 

@@ -17,13 +17,13 @@ public class StockTransferReqStatusDListDto {
 
 	@ApiModelProperty(value = "부품명")
 	private String partsName;
-	
+
 	@ApiModelProperty(value = "부품 id")
 	private int partsId;
 
 	@ApiModelProperty(value = "부품 타입(필터(62) / 부품(63) / MISC(64))")
 	private int partsType;
-	
+
 	@ApiModelProperty(value = "요청수량")
 	private int requestQty;
 
@@ -82,4 +82,11 @@ public class StockTransferReqStatusDListDto {
 		this.partsId = partsId;
 	}
 
+	public int getPartsType() {
+		return partsType;
+	}
+
+	public void setPartsType(int partsType) {
+		this.partsType = partsType;
+	}
 }

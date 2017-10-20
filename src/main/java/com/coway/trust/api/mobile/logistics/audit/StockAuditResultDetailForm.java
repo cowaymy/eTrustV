@@ -9,10 +9,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "StockAuditResultDetailForm", description = "StockAuditResultDetailForm")
 public class StockAuditResultDetailForm {
 
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100337", example = "CT100337")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) T010", example = "CT100337")
 	private String userId;
 
-	@ApiModelProperty(value = "실사 기준월(YYYYMM) 예) 12102017", example = "28092017")
+	@ApiModelProperty(value = "실사 기준월(YYYYMM) 예) 201709", example = "201709")
 	private String adjustBaseMonth;
 
 	@ApiModelProperty(value = "invenAdjustNo 예) AD0000000001,AD0000000002", example = "AD0000000001")

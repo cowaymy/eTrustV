@@ -16,7 +16,7 @@ public class StockByHolderListForm {
 	private String partsCode;
 
 	@ApiModelProperty(value = "partsId [default : '' 전체] 예) 125", example = "1, 2, 3")
-	private String partsId;
+	private int partsId;
 
 	public static Map<String, Object> createMap(StockByHolderListForm StockByHolderListForm) {
 		Map<String, Object> params = new HashMap<>();
@@ -42,11 +42,11 @@ public class StockByHolderListForm {
 		this.partsCode = partsCode;
 	}
 
-	public String getPartsId() {
+	public int getPartsId() {
 		return partsId;
 	}
 
-	public void setPartsId(String partsId) {
+	public void setPartsId(int partsId) {
 		this.partsId = partsId;
 	}
 
