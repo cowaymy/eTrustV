@@ -26,7 +26,7 @@ var  mAgrid;
 var  dAgrid;
 
 function fn_doBack(){
-    $("#_doAllactionDiv").remove();
+	$("#_doAllactionDiv").remove();
 }
 
 $(document).ready(function(){
@@ -72,11 +72,11 @@ function changeRowStyleFunction() {
        
        console.log( item.dDate +"=="+ '${S_DATE}');
        console.log( isrow);
-        if(isrow ){
+    	if(isrow ){
             return "my-row-style";
-        }else{
-            return "";
-        }
+    	}else{
+    		return "";
+    	}
         
     });
     
@@ -87,7 +87,7 @@ function changeRowStyleFunction() {
 
 //리스트 조회.
 function fn_selectAllactionSelectListAjax () {        
-    
+	
 if( '${ORD_ID}' ==""){
     Common.alert("There Are No selected ORDER.");
     return ;
@@ -105,24 +105,24 @@ Common.ajax("GET", "/organization/allocation/selectList",{ORD_ID : '${ORD_ID}' ,
 
 //리스트 조회.
 function  fn_selectAllactionDetailListAjax () {        
-      
-    var selectedItems = AUIGrid.getSelectedItems(mAgrid);
-    
-    if(selectedItems.length <= 0 ){
-          Common.alert("There Are No selected Items.");
-          return ;
-    }
-    
-    console.log(selectedItems[0]);
-    
-    var v_ctId    =selectedItems[0].item.ct;
-    var v_sDate =selectedItems[0].item.cDate
-    
-    Common.ajax("GET", "/organization/allocation/selectDetailList", { CT_ID: v_ctId , S_DATE:v_sDate }, function(result) {
-             
-      console.log(result);
-      AUIGrid.setGridData(dAgrid, result);
-    });
+	  
+	var selectedItems = AUIGrid.getSelectedItems(mAgrid);
+	
+	if(selectedItems.length <= 0 ){
+	      Common.alert("There Are No selected Items.");
+	      return ;
+	}
+	
+	console.log(selectedItems[0]);
+	
+	var v_ctId    =selectedItems[0].item.ct;
+	var v_sDate =selectedItems[0].item.cDate
+	
+	Common.ajax("GET", "/organization/allocation/selectDetailList", { CT_ID: v_ctId , S_DATE:v_sDate }, function(result) {
+	         
+	  console.log(result);
+	  AUIGrid.setGridData(dAgrid, result);
+	});
 }
 
 
@@ -138,21 +138,21 @@ function createAllactionAUIGrid() {
                           {
                               headerText : "Summary",
                               children : [  {
-                                                   dataField : "ascnt",
-                                                   headerText : "AS",
-                                                   width : 200 ,editable : false 
-                                                }, 
-                                                {
-                                                  dataField : "inscnt",
-                                                  headerText : "INS",
-                                                  width : 200 ,editable : false 
-                                                 }, 
+				                            	   dataField : "ascnt",
+							                       headerText : "AS",
+							                       width : 200 ,editable : false 
+							                    }, 
+							                    {
+				                                  dataField : "inscnt",
+				                                  headerText : "INS",
+				                                  width : 200 ,editable : false 
+				                                 }, 
                                                 {
                                                   dataField : "rtncnt",
                                                   headerText : "RTN",
                                                   width : 200 ,editable : false 
                                                  }
-                              ]
+							  ]
                           }
        ];
 
@@ -179,13 +179,13 @@ function createDetailAllactionAUIGrid() {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         if(valArray[0] ==valArray[1]) {
+                                                    	 if(valArray[0] ==valArray[1]) {
                                                              return "my-cell-style";
                                                          }
-                                                         if(valArray[0] > valArray[1]) {
+                                                    	 if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
-                                                         
+                                                    	 
                                                          return null;
                                                      }
                                                   }, 
@@ -461,7 +461,7 @@ function createDetailAllactionAUIGrid() {
 
 
 function fn_AllocationConfirm(){
-    
+	
     var selectedItems = AUIGrid.getSelectedItems(dAgrid);
     
     console.log("===> "+selectedItems);
@@ -511,9 +511,9 @@ function fn_AllocationConfirm(){
 
 
 function fn_doAllocationResult(){
-    
-    
-    
+	
+	
+	
 }
 
 </script>
@@ -535,22 +535,22 @@ function fn_doAllocationResult(){
 <section class="search_result mt30"><!-- search_result start -->
 
 
-    
-    <aside class="title_line"><!-- title_line start -->
-       <h4>Information Display</h4>
-    </aside><!-- title_line end -->
-    
-    <article class="grid_wrap"><!-- grid_wrap start -->
-          <div id="mAgrid_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
-    </article><!-- grid_wrap end -->
-    
-    <aside class="title_line"><!-- title_line start -->
+	
+	<aside class="title_line"><!-- title_line start -->
+	   <h4>Information Display</h4>
+	</aside><!-- title_line end -->
+	
+	<article class="grid_wrap"><!-- grid_wrap start -->
+	      <div id="mAgrid_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
+	</article><!-- grid_wrap end -->
+	
+	<aside class="title_line"><!-- title_line start -->
       <h4>Detail Information</h4>
-    </aside><!-- title_line end -->
-    
-    <article class="grid_wrap"><!-- grid_wrap start -->
-          <div id="dAgrid_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
-    </article><!-- grid_wrap end -->
+	</aside><!-- title_line end -->
+	
+	<article class="grid_wrap"><!-- grid_wrap start -->
+	      <div id="dAgrid_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
+	</article><!-- grid_wrap end -->
 </section><!-- search_result end -->
 
 
@@ -567,8 +567,8 @@ function fn_doAllocationResult(){
 
 
 <script> 
-    
-    
+	
+	
 </script>
 
 
