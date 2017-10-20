@@ -1,9 +1,9 @@
 package com.coway.trust.api.mobile.Service.heartService;
 
-import java.util.HashMap;
+import java.util.HashMap;	
 import java.util.Map;
 
-import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyForm;
+
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class HeartServiceJobForm {
 	
 	
-	@ApiModelProperty(value = "userId [default : '' 전체] 예) 535736 ", example = "1, 2, 3")
+	@ApiModelProperty(value = "userId [default : '' 전체] 예) 32858 ", example = "1, 2, 3")
 	private String userId;
 
 	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 201706", example = "1, 2, 3")
