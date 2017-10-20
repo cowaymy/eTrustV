@@ -105,6 +105,9 @@ $(document).ready(function() {
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
     doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
     
+    $("#deptCd").change(function (){
+    	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
+    });
 	createAUIGridDoc();
 	fn_docSubmission();
 	fn_departmentCode();

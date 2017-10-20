@@ -166,13 +166,13 @@
 </tr>
 <tr>
     <th scope="row">Level</th>
-    <td colspan="3"><span> ( ${promoInfo.memLvlFrom}    -  ${promoInfo.memOrgDesc}) To ( ${promoInfo.memLvlTo}    - ${promoInfo.memorgdescription1} ) </span></td>
+    <td colspan="3"><span><c:out value=" ( ${promoInfo.memLvlFrom}    -  ${promoInfo.memOrgDesc}) To ( ${promoInfo.memLvlTo}    - ${promoInfo.memorgdescription1} ) "/></span></td>
     <th scope="row">Update At</th>
     <td><c:out value="${promoInfo.c5}"/></td>
 </tr>
 <tr>
     <th scope="row">Superior</th>
-    <td colspan="3"><span> ( ${promoInfo.parentDeptCodeFrom}    - ${promoInfo.c3} ) To ( ${ promoInfo.parentDeptCodeTo}   - ${promoInfo.c4} )</span></td>
+    <td colspan="3"><span> <c:out value="( ${promoInfo.parentDeptCodeFrom}    - ${promoInfo.c3} ) To ( ${ promoInfo.parentDeptCodeTo}   - ${promoInfo.c4} )"/></span></td>
     <th scope="row">Update By</th>
     <td><span><c:out value="${promoInfo.c6}"/></span></td>
 </tr>
