@@ -213,7 +213,7 @@ function fn_save(){
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Valid Date To' htmlEscape='false'/>");
         return;
     }
-    debugger;
+
     if($("#saveForm #roleId1").val() == "" || typeof($("#saveForm #roleId1").val()) == "undefined"){
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Role Id 1' htmlEscape='false'/>");
         return;
