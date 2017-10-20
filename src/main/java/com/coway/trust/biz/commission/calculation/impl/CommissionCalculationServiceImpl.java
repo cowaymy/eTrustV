@@ -661,4 +661,105 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		
 	}
 	
+	@Override
+	public List<EgovMap> incentiveStatus(Map<String, Object> params) {
+		return commissionCalculationMapper.incentiveStatus(params);
+	}
+	
+	@Override
+	public List<EgovMap> incentiveType(Map<String, Object> params) {
+		return commissionCalculationMapper.incentiveType(params);
+	}
+	
+	@Override
+	public List<EgovMap> incentiveTargetList(Map<String, Object> params) {
+		return commissionCalculationMapper.incentiveTargetList(params);
+	}
+	
+	@Override
+	public List<EgovMap> incentiveSample(Map<String, Object> params) {
+		return commissionCalculationMapper.incentiveSample(params);
+	}
+	@Override
+	public int cntUploadBatch(Map<String, Object> params) {
+		return commissionCalculationMapper.cntUploadBatch(params);
+	}
+	@Override
+	public void insertIncentiveMaster(Map<String, Object> params) {
+		commissionCalculationMapper.insertIncentiveMaster(params);
+	}
+	@Override
+	public String selectUploadId(Map<String, Object> params) {
+		return commissionCalculationMapper.selectUploadId(params);
+	}
+	@Override
+	public void insertIncentiveDetail(Map<String, Object> params) {
+		commissionCalculationMapper.insertIncentiveDetail(params);
+	}
+	@Override
+	public void callIncentiveDetail(int uploadId) {
+		commissionCalculationMapper.callIncentiveDetail(uploadId);
+	}
+	
+	@Override
+	 public Map<String, Object> incentiveMasterDetail(int uploadId){
+		return commissionCalculationMapper.incentiveMasterDetail(uploadId);
+	}
+	
+	@Override
+	 public int incentiveItemCnt(Map<String, Object> params){
+		return commissionCalculationMapper.incentiveItemCnt(params);
+	}
+	
+	@Override
+	public List<EgovMap> incentiveItemList(Map<String, Object> params) {
+		return commissionCalculationMapper.incentiveItemList(params);
+	}
+
+	@Override
+	public void removeIncentiveItem(Map<String, Object> params) {
+		commissionCalculationMapper.removeIncentiveItem(params);
+	}
+	
+	@Override
+	 public Map<String, Object> incentiveItemAddMem(Map<String, Object> params){
+		return commissionCalculationMapper.incentiveItemAddMem(params);
+	}
+	@Override
+	 public int cntIncentiveMem(Map<String, Object> params){
+		return commissionCalculationMapper.cntIncentiveMem(params);
+	}
+	
+	@Override
+	 public int cntUploadMemberCheck(Map<String, Object> params){
+		return commissionCalculationMapper.cntUploadMemberCheck(params);
+	}
+	@Override
+	public Map<String, Object> incentiveUploadMember(Map<String, Object> params){
+		return commissionCalculationMapper.incentiveUploadMember(params);
+	}
+	
+	@Override
+	public void incentiveItemInsert(Map<String, Object> params){
+		commissionCalculationMapper.incentiveItemInsert(params);
+	}
+	@Override
+	public void incentiveItemUpdate(Map<String, Object> params){
+		commissionCalculationMapper.incentiveItemUpdate(params);
+	}
+	@Override
+	public int deactivateCheck(String uploadId){
+		return commissionCalculationMapper.deactivateCheck(uploadId);
+	}
+	
+	@Override
+	public void incentiveDeactivate(Map<String, Object> params){
+		commissionCalculationMapper.incentiveDeactivate(params);
+	}
+	
+	@Override
+	public void callIncentiveConfirm(Map<String, Object> params){
+		commissionCalculationMapper.callIncentiveConfirm(params);
+	}
+	
 }

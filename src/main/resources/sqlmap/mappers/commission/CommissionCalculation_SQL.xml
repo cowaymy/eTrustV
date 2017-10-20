@@ -51,7 +51,7 @@
                     WHEN '9' THEN 'FAIL'
                     WHEN '8' THEN 'STOP'
             END) stateNm,
-		    TO_CHAR(T4.CAL_START_TIME,'yyyy-mm-dd hh24:mi:ss') CAL_START_TIME,
+		    TO_CHAR(T4.CAL_START_TIME,'dd-mm-yyyy hh24:mi:ss') CAL_START_TIME,
 		    SUBSTR(T2.CODE,0,2)  CD, SUBSTR(T2.CODE,9,9) NM
 		FROM SYS0012M T1 JOIN SYS0013M T2 
 		        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID 
@@ -95,7 +95,7 @@
     </select>
     <select id="selectBasicStatus" parameterType="Map" resultType="Map">
         SELECT 
-			TO_CHAR(T1.CAL_START_TIME,'yyyy-mm-dd hh24:mi:ss') CAL_START_TIME,
+			TO_CHAR(T1.CAL_START_TIME,'dd-mm-yyyy hh24:mi:ss') CAL_START_TIME,
 			(CASE T1.CAL_STATE WHEN '0' THEN 'SUCCESS'
                     WHEN '1' THEN 'RODING'
                     WHEN '9' THEN 'FAIL'
@@ -168,8 +168,8 @@
 		  SUBSTR(T2.CODE,1,3) CODE, 
 		  T2.CODE_NAME, 
 		  T2.CODE_DESC , 
-		  to_char(T1.CAL_START_TIME, 'yyyy-mm-dd hh24:mi:ss') CAL_START_TIME, 
-		  to_char(T1.CAL_END_TIME, 'yyyy-mm-dd hh24:mi:ss') CAL_END_TIME,
+		  to_char(T1.CAL_START_TIME, 'dd-mm-yyyy hh24:mi:ss') CAL_START_TIME, 
+		  to_char(T1.CAL_END_TIME, 'dd-mm-yyyy hh24:mi:ss') CAL_END_TIME,
 		  T1.CAL_STATE,
 		  (CASE T1.CAL_STATE WHEN '0' THEN 'SUCCESS'
                     WHEN '1' THEN 'RODING'
@@ -439,7 +439,7 @@
 			NVL(IS_EXCLUDE  ,0) IS_EXCLUDE
          FROM(
 	        SELECT 
-	          T1.DEPT_CODE, T1.MANGR_ID, T2.MEM_ID,T1.EMPLY_TYPE_CODE,TO_CHAR(T1.JOIN_DT,'yyyy-mm-dd') joinDt,
+	          T1.DEPT_CODE, T1.MANGR_ID, T2.MEM_ID,T1.EMPLY_TYPE_CODE,TO_CHAR(T1.JOIN_DT,'dd-mm-yyyy') joinDt,
 	          T1.EMPLY_LEV,T1.EMPLY_LEV_AGE,T1.WORKING_MONTH,T1.SPONS_CODE,T1.EMPLY_STUS_ID,
 	          T1.EMPLY_STUS_CODE,T1.EMPLY_LEV_RANK,T1.EMPLY_VEH,T1.EMPLY_BIZ_TYPE_ID, 
 	          T1.MANGR_CODE, T1.EMPLY_CODE, T1.PAY_STUS, T1.IS_HSPTLZ,
@@ -498,11 +498,12 @@
 			nvl(PV_VALU,'0') PV_VALU,
 			nvl(RUN_ID,'0') RUN_ID,
 			nvl(TASK_ID,'0') TASK_ID,
-			nvl(IS_EXCLUDE,'0') IS_EXCLUDE
+			nvl(IS_EXCLUDE,'0') IS_EXCLUDE,
+			nvl(MEM_CODE,'0') MEM_CODE
          FROM(
             SELECT 
 	            T1.ORD_ID, T2.MEM_ID,T3.CODE,  T1.ORD_TYPE_ID, T1.PRODUCT_ID, T1.UNIT_VALU,
-	            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, T1.IS_EXCLUDE
+	            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, T1.IS_EXCLUDE, T2.MEM_CODE
 			FROM CMM0007T T1 JOIN ORG0001D T2 
 			        ON T1.SALES_EMPLY_ID = T2.MEM_ID
 			    JOIN SYS0013M T3
@@ -1748,4 +1749,381 @@
        INSERT INTO CMM0002D(ID, F_BATCH_ID, F_CT_CODE, F_CT_RANK, F_CT_PER_FAC, F_CFF_CMPLMT, F_CFF_CMPLNT, F3C, F_ATT_LAT, F_ATT_EL, F_ATT_MC, F_DT_ALLOW, F_ADJ, F_CFF_REWRD, F_YEAR, F_MONTH) 
            VALUES(CMM0002D_ID_SEQ.nextval, #{fBatchId}, #{fCtCode}, #{fCtRank}, #{fCtPerFac}, #{fCffCmplmt}, #{fCffCmplnt}, #{f3c}, #{fAttLat}, #{fAttEl}, #{fAttMc}, #{fDtAllow}, #{fAdj}, #{fCffRewrd}, #{fYear}, #{fMonth})
    </insert>
+   
+   <select id="incentiveStatus" parameterType="Map" resultType="EgovMap">
+        SELECT B.STUS_CODE_ID ,C.CODE ,C.NAME CODE_NAME ,B.SEQ_NO ,DECODE(B.DISAB, 0,'N',1,'Y','N') CODE_DISAB 
+        FROM SYS0036M A ,SYS0037M B ,SYS0038M C 
+        WHERE 
+            A.STUS_CTGRY_ID = B.STUS_CTGRY_ID 
+	        AND B.STUS_CODE_ID = C.STUS_CODE_ID 
+	        AND A.STUS_CTGRY_ID = #{statusId}
+        ORDER BY B.SEQ_NO 
+   </select>
+   
+   <select id="incentiveType" resultType="EgovMap">
+        SELECT
+            T2.CODE_ID AS cdId,
+            T2.CODE AS cd,
+            T2.CODE_NAME AS cdNm
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE T2.CODE_ID IN (1,2)
+        ORDER BY T2.CODE
+   </select>
+   
+   <select id="incentiveTargetList" parameterType="Map" resultType="EgovMap">
+   
+    SELECT 
+	    sub.UPLOAD_ID AS UPLOAD_ID, 
+	    to_char(sub.ACTN_DT, 'mm-yyyy') AS ACTN_DT, 
+	    to_char(sub.CRT_DT, 'dd-mm-yyyy') AS CRT_DT, 
+	    sub.CRT_USER_ID AS CRT_USER_ID, 
+	    sub.C1 AS C1, 
+	    sub.STUS_ID AS STUS_ID, 
+	    sub.CODE AS CODE, 
+	    sub.NAME AS NAME, 
+	    sub.UPD_DT AS UPD_DT, 
+	    sub.UPD_USER_ID AS UPD_USER_ID, 
+	    sub.C2 AS C2, 
+	    sub.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID, 
+	    sub.CODE_NAME AS CODE_NAME, 
+	    sub.MEM_TYPE_ID AS MEM_TYPE_ID, 
+	    sub.CODENAME1 AS CODENAME1
+	FROM ( 
+	    SELECT 
+	        t1.UPLOAD_ID AS UPLOAD_ID, 
+	        t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID, 
+	        t1.STUS_ID AS STUS_ID, 
+	        t1.ACTN_DT AS ACTN_DT, 
+	        t1.CRT_DT AS CRT_DT, 
+	        t1.CRT_USER_ID AS CRT_USER_ID, 
+	        t1.UPD_DT AS UPD_DT, 
+	        t1.UPD_USER_ID AS UPD_USER_ID, 
+	        t1.MEM_TYPE_ID AS MEM_TYPE_ID, 
+	        t2.CODE AS CODE, 
+	        t2.NAME AS NAME, 
+	        t3.CODE_NAME AS CODE_NAME, 
+	        t4.CODE_NAME AS CODENAME1, 
+	        CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1, 
+	        CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
+	    FROM      CMM0003D  t1
+	        JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+	        JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+	        JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+	        LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+	        LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+	    WHERE 1=1
+	    
+	    <if test="uploadId != null and uploadId != ''">
+	       AND t1.UPLOAD_ID= #{uploadId}
+	    </if>
+	    <if test="statusList != null and statusList != ''">
+	       AND t1.STUS_ID IN (${statusList})
+	    </if>
+	    <if test="typeList != null and typeList != ''">
+           AND t1.UPLOAD_TYPE_ID IN (${typeList})
+        </if>
+        <if test="actionDate != null and actionDate != ''">
+            AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+        </if>
+        <if test="uploadDateFr != null and uploadDateFr != ''">
+            <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>  
+        </if>
+        <if test="uploadDateTo != null and uploadDateTo != ''">
+           <![CDATA[ AND t1.CRT_DT <= to_date(#{uploadDateTo},'dd-mm-yyyy')]]>  
+        </if>
+        <if test="creator != null and creator != ''">
+            AND t6.USER_NAME = #{creator}
+        </if>
+        <if test="memberTypeList != null and memberTypeList != ''">
+           AND t1.MEM_TYPE_ID IN (${memberTypeList})
+        </if>
+        
+	)   sub
+	ORDER BY sub.UPLOAD_ID ASC
+   
+   </select>
+   
+   <select id="incentiveSample" parameterType="Map" resultType="EgovMap">
+	   SELECT 
+		    t1.CODE_ID AS CODE_ID, 
+		    t1.CODE_MASTER_ID AS CODE_MASTER_ID, 
+		    t1.CODE AS CODE, 
+		    t1.CODE_NAME AS CODE_NAME, 
+		    t1.CODE_DESC AS TYPE_DESC, 
+		    t1.CRT_USER_ID, 
+		    t1.DISAB, 
+		    t1.UPD_USER_ID
+	    FROM SYS0013M  t1
+	    WHERE t1.CODE_MASTER_ID = #{mstId} 
+	      AND ((CASE WHEN (t1.DISAB IS NOT NULL) THEN t1.DISAB ELSE (0) END) = 0)
+	ORDER BY t1.CODE ASC
+   </select>
+   
+   <select id="cntUploadBatch" parameterType="Map" resultType="integer">
+		SELECT 
+		   COUNT(*)
+		FROM ( 
+			SELECT * 
+			FROM      CMM0003D  t1
+				INNER JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+				INNER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+				INNER JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+				LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+				LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+			WHERE 1=1
+			    <if test="statusId != null and statusId != ''">
+	            AND t1.STUS_ID = #{statusId}
+	            </if>
+	            <if test="cmbType != null and cmbType != ''">
+				AND t1.UPLOAD_TYPE_ID = #{cmbType} 
+				</if>
+				<if test="cmbMemberType != null and cmbMemberType != ''">
+				AND t1.MEM_TYPE_ID = #{cmbMemberType}
+				</if>
+		)   sub
+   </select>
+   
+   <insert id="insertIncentiveMaster" parameterType="Map" >
+    INSERT INTO CMM0003D (UPLOAD_ID, UPLOAD_TYPE_ID, STUS_ID, ACTN_DT, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID, MEM_TYPE_ID) 
+    VALUES (CMM0003D_UPLOAD_ID_SEQ.nextval, ${uploadID}, ${statusID}, <if test="actionDate != null and actionDate != ''">to_date(#{actionDate},'yyyymm')</if>  <if test="actionDate == null or actionDate == ''">sysdate</if> , sysdate, ${creator}, sysdate, ${updator}, ${memberTypeID})
+   </insert>
+   
+   <select id="selectUploadId" parameterType="Map" resultType="String">
+        SELECT MAX(UPLOAD_ID) FROM CMM0003D WHERE ROWNUM > 0
+   </select>
+   
+   <insert id="insertIncentiveDetail" parameterType="Map" >
+	    INSERT INTO CMM0004D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+			, USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+			, SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+			, SYS_MEM_TYPE_ID) 
+		VALUES(CMM0004D_UPLOAD_DET_ID_SEQ.nextval,#{uploadID},#{statusID},#{validStatusID},''
+		  ,#{userMemberCode}, #{userRefCode}, #{userTargetAmt},#{userRefLvl},#{sysMemberID}
+		  ,'',#{sysTargetAmt},#{sysRefLvl},sysdate,#{updated}
+		  ,#{sysMemberTypeID})
+   </insert>
+   
+   <select id="callIncentiveDetail" parameterType="integer">
+        {
+        call  SP_INCNTIV_TRGET_UP_DET_VERIFY(#{uploadId})
+        }
+    </select>
+    
+    <select id="incentiveMasterDetail" parameterType="integer" resultType="Map">
+	    SELECT
+		    t1.UPLOAD_ID AS UPLOAD_ID, 
+		    t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID, 
+		    t1.STUS_ID AS STUS_ID, 
+		    to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,  
+		    t1.CRT_DT AS CRT_DT, 
+		    t1.CRT_USER_ID AS CRT_USER_ID, 
+		    t1.UPD_DT AS UPD_DT, 
+		    t1.UPD_USER_ID AS UPD_USER_ID, 
+		    t1.MEM_TYPE_ID AS MEM_TYPE_ID, 
+		    t2.CODE AS CODE, 
+		    t2.NAME AS NAME, 
+		    t3.CODE_NAME AS CODE_NAME, 
+		    t4.CODE_NAME AS CODENAME1, 
+		    CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS CRT_USER_NAME, 
+		    CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS UPD_USER_NAME
+	    FROM CMM0003D  t1
+		    JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+		    JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+		    JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+		    LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+		    LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+	    WHERE t1.UPLOAD_ID = #{uploadId}
+    </select>
+    
+    <select id="incentiveItemCnt" parameterType="Map" resultType="integer">
+        SELECT 
+		  COUNT(*) cnt
+		FROM ( SELECT *
+		    FROM    CMM0004D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+		    LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+		    LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+		    WHERE t1.STUS_ID=1 
+		      AND t1.UPLOAD_ID = #{uploadId}
+		      <if test="vStusId != null and vStusId != ''">
+		      AND t1.VALID_STUS_ID = #{vStusId}
+		      </if>
+		      <if test="memId != null and memId != ''">
+              AND t4.MEM_ID = #{memId}
+              </if>
+		)   sub
+    </select>
+    
+    <select id="incentiveItemList" parameterType="Map" resultType="EgovMap">
+	
+	  SELECT 
+		    t1.UPLOAD_DET_ID AS UPLOAD_DET_ID, 
+		    t1.UPLOAD_ID AS UPLOAD_ID, 
+		    t1.VALID_STUS_ID AS VALID_STUS_ID, 
+		    t1.VALID_REM AS VALID_REM, 
+		    t1.USER_MEM_CODE AS USER_MEM_CODE, 
+		    t1.USER_REF_CODE AS USER_REF_CODE, 
+		    t1.USER_TRGET_AMT AS USER_TRGET_AMT, 
+		    t1.USER_REF_LVL AS USER_REF_LVL, 
+		    t1.SYS_MEM_ID AS SYS_MEM_ID, 
+		    t1.SYS_REF_CODE AS SYS_REF_CODE, 
+		    t1.SYS_TRGET_AMT AS SYS_TRGET_AMT, 
+		    t1.SYS_REF_LVL AS SYS_REF_LVL, 
+		    t1.UPD_DT AS UPD_DT, 
+		    t1.UPD_USER_ID AS UPD_USER_ID, 
+		    t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID, 
+		    t2.CODE AS CODE, 
+		    CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM, 
+		    CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
+	    FROM    CMM0004D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+	    LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+	    LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+	    WHERE  t1.STUS_ID=1
+	        AND t1.UPLOAD_ID = #{uploadId}
+	       <if test="vStusId != null and vStusId != ''">
+           AND t1.VALID_STUS_ID = #{vStusId}
+           </if>
+           <if test="memId != null and memId != ''">
+             AND t4.MEM_ID = #{memId}
+             </if>
+		ORDER BY t1.UPLOAD_DET_ID ASC
+    </select>
+    
+    <update id="removeIncentiveItem"  parameterType="Map">
+	    UPDATE CMM0004D
+	    SET
+	        STUS_ID = #{statusId},
+	        UPD_DT  = sysdate,
+	        UPD_USER_ID = #{loginId}
+	    WHERE UPLOAD_DET_ID = #{uploadDetId}
+    </update>
+    
+    <select id="incentiveItemAddMem" parameterType="Map" resultType="Map">
+	    SELECT
+			t1.MEM_ID,
+			t1.MEM_CODE,
+			t1.MEM_TYPE,
+			t1.NAME,
+			t1.FULL_NAME,
+			t1.JOIN_DT,
+			t1.RESIGN_DT,
+			t1.TRM_DT,
+			t1.RENEW_DT,
+			t1.AGRMNT_NO,
+			t1.BRNCH,
+			t1.STUS,
+			t1.SYNC_CHK,
+			t1.RANK,
+			t1.TRNSPRT,
+			t1.PROMO_DT,
+			t1.TR_NO,
+			t1.CRT_DT,
+			t1.CRT_USER_ID,
+			t1.UPD_DT,
+			t1.UPD_USER_ID,
+			t1.MEM_IS_OUT_SRC,
+			t1.APLICNT_ID,
+			t1.BIZ_TYPE,
+			t1.HSPTLZ,
+			t1.AREA_ID,
+			t1.ADDR_DTL,
+			t1.STREET
+		FROM ORG0001D t1
+		WHERE t1.MEM_CODE = #{itemMemCd}
+    </select>
+    
+    <select id="cntIncentiveMem" parameterType="Map" resultType="integer">
+	    SELECT 
+	       COUNT(*) cnt
+	    FROM    CMM0004D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+	        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+	        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+	    WHERE t1.STUS_ID = #{statusId}
+	        AND t1.UPLOAD_ID = #{uploadId} 
+	        AND t1.VALID_STUS_ID = #{vStusId}
+	        AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+    
+    <select id="cntUploadMemberCheck" parameterType="Map" resultType="integer">
+	    SELECT 
+		COUNT(*) cnt
+		FROM CMM0004D t1
+		WHERE t1.UPLOAD_ID = #{uploadId} 
+		  AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+    
+    <select id="incentiveUploadMember" parameterType="Map" resultType="Map">
+        SELECT 
+			t1.UPLOAD_DET_ID AS UPLOAD_DET_ID, 
+			t1.UPLOAD_ID AS UPLOAD_ID, 
+			t1.STUS_ID AS STUS_ID, 
+			t1.VALID_STUS_ID AS VALID_STUS_ID, 
+			t1.VALID_REM AS VALID_REM, 
+			t1.USER_MEM_CODE AS USER_MEM_CODE, 
+			t1.USER_REF_CODE AS USER_REF_CODE, 
+			t1.USER_TRGET_AMT AS USER_TRGET_AMT, 
+			t1.USER_REF_LVL AS USER_REF_LVL, 
+			t1.SYS_MEM_ID AS SYS_MEM_ID, 
+			t1.SYS_REF_CODE AS SYS_REF_CODE, 
+			t1.SYS_TRGET_AMT AS SYS_TRGET_AMT, 
+			t1.SYS_REF_LVL AS SYS_REF_LVL, 
+			t1.UPD_DT AS UPD_DT, 
+			t1.UPD_USER_ID AS UPD_USER_ID, 
+			t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID
+		FROM CMM0004D t1
+		WHERE t1.UPLOAD_ID = #{uploadId} 
+          AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+    
+    <insert  id="incentiveItemInsert" parameterType="Map">
+	    INSERT INTO CMM0004D
+			(UPLOAD_DET_ID,UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+			, USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+			, SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+			, SYS_MEM_TYPE_ID)
+		VALUES 
+		   (CMM0004D_UPLOAD_DET_ID_SEQ.nextval,#{uploadId},#{statusId} , #{vStatusId}, ''
+		   , #{itemMemCd}, #{itemRCd}, #{itemTAmt}, #{itemRCd}, #{hiddenMemberID}
+		   , #{itemRCd}, #{itemTAmt}, #{itemLvl}, sysdate, #{loginId}
+		   , #{hiddenMemberTypeID})
+    </insert>
+    
+    <update id="incentiveItemUpdate" parameterType="Map">
+	    UPDATE CMM0004D
+		SET 
+		   VALID_STUS_ID = #{vStatusId}, 
+		   VALID_REM = '', 
+		   USER_REF_CODE = #{itemRCd}, 
+		   USER_TRGET_AMT = #{itemTAmt}, 
+		   USER_REF_LVL = #{itemRCd}, 
+		   SYS_REF_CODE = #{itemRCd}, 
+		   SYS_TRGET_AMT = #{itemTAmt}, 
+		   SYS_REF_LVL = #{itemRCd}, 
+		   UPD_DT = sysdate,
+		   UPD_USER_ID = #{loginId}
+		WHERE UPLOAD_DET_ID = #{updateDetId}
+    </update>
+    
+    <select id="deactivateCheck" parameterType="String" resultType="integer">
+	    SELECT 
+		   COUNT(*)
+		FROM CMM0003D  
+		WHERE UPLOAD_ID = #{uploadId}
+    </select>
+    
+    <update id="incentiveDeactivate" parameterType="Map">
+	    UPDATE CMM0003D
+		SET 
+	        STUS_ID = #{statusId}, 
+	        UPD_DT = sysdate,
+	        UPD_USER_ID = #{loginId}
+		WHERE UPLOAD_ID = #{uploadId}
+    </update>
+    
+    <select id="callIncentiveConfirm" parameterType="Map">
+        {
+        call  SP_INCNTIV_TRGET_UP_CNFM(#{uploadId},#{loginId})
+        }
+    </select>
 </mapper>

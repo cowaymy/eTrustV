@@ -297,4 +297,27 @@ public interface CommissionCalculationMapper {
      */
 	void ctUploadInsert(Map<String, Object> params);
 	
+	List<EgovMap> incentiveStatus(Map<String, Object> params);
+	List<EgovMap> incentiveType(Map<String, Object> params);
+	List<EgovMap> incentiveTargetList(Map<String, Object> params);
+	List<EgovMap> incentiveSample(Map<String, Object> params);
+	int cntUploadBatch(Map<String, Object>  param);
+	void insertIncentiveMaster(Map<String, Object> params);
+	String selectUploadId(Map<String, Object> params);
+	void insertIncentiveDetail(Map<String, Object> params);
+	void callIncentiveDetail(int uploadId);
+	Map<String, Object> incentiveMasterDetail(int uploadId);
+	int incentiveItemCnt(Map<String, Object> params);
+	List<EgovMap> incentiveItemList(Map<String, Object> params);
+	void removeIncentiveItem(Map<String, Object> params);
+	Map<String, Object> incentiveItemAddMem(Map<String, Object> params);
+	int cntIncentiveMem(Map<String, Object> params);
+	int cntUploadMemberCheck(Map<String, Object> params);
+	Map<String, Object> incentiveUploadMember(Map<String, Object> params);
+	void incentiveItemInsert(Map<String, Object> params);
+	void incentiveItemUpdate(Map<String, Object> params);
+	int deactivateCheck(String uploadId);
+	void incentiveDeactivate(Map<String, Object> params);
+	void callIncentiveConfirm(Map<String, Object> params);
+	
 }

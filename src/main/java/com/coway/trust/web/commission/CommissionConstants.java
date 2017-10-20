@@ -92,4 +92,15 @@ public class CommissionConstants {
 	public static final String COMIS_BSG_P01 = "BSG-P01";					//
 	
 	public static final String COMIS_NEO_TYPE = "NEOPRO";					//
+	
+	public static final String COMIS_SAMPLE_HP = "67";					//
+	public static final String COMIS_SAMPLE_CD = "66";					//
+	public static final String COMIS_INCENTIVE = "1062";					//
+	public static final String COMIS_INCENTIVE_ACTIVE = "1";					//
+	public static final String COMIS_INCENTIVE_REMOVE = "8";					//
+	public static final String COMIS_INCENTIVE_VALID = "4";					//
+	public static final String COMIS_INCENTIVE_INVALID = "21";					//
+	
+	
+	
 }
