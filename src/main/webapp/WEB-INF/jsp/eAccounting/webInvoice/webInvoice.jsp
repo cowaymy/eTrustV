@@ -29,8 +29,7 @@ var webInvoiceColumnLayout = [ {
     dataField : "invcDt",
     headerText : '<spring:message code="webInvoice.postingDate" />',
     dataType : "date",
-    formatString : "dd/mm/yyyy",
-
+    formatString : "dd/mm/yyyy"
 }, {
     dataField : "costCentr",
     headerText : '<spring:message code="webInvoice.cc" />'
@@ -57,14 +56,18 @@ var webInvoiceColumnLayout = [ {
     style : "aui-grid-user-custom-right"
 }, {
     dataField : "reqstDt",
-    headerText : '<spring:message code="webInvoice.requestDate" />'
+    headerText : '<spring:message code="webInvoice.requestDate" />',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
 }, {
     dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvPrcssDt",
-    headerText : '<spring:message code="webInvoice.approvedDate" />'
+    headerText : '<spring:message code="webInvoice.approvedDate" />',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
 }
 ];
 
