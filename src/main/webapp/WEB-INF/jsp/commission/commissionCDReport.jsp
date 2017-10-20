@@ -183,7 +183,7 @@
 				$($reportForm).append('<input type="text" id="CommDate" name="CommDate" value="" /> ');
 				$($reportForm).append('<input type="text" id="TaskID" name="TaskID" value="" /> ');
 
-				$("#reportForm #CommDate").val(cmmDt.substring(3)+cmmDt.substring(0, 2)+"01");
+				$("#reportForm #CommDate").val(cmmDt.substring(3)+"-"+cmmDt.substring(0, 2)+"-"+"01");
 				$("#reportForm #TaskID").val(taskID);
 
 			} else if (type == "9") {
