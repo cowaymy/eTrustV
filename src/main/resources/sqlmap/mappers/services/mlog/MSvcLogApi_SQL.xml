@@ -10,194 +10,59 @@
 
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
     
-                        SELECT DISTINCT
-                                 Extent1.SCHDUL_ID SCHDUL_ID,
-                                 Extent1.NO service_No,
-                                 Extent1.MONTH || '/' || Extent1.YEAR HS_DATE,
-                                 Extent1.CODY_ID CODY_ID,
-                                 Extent1.STUS_CODE_ID STUS_CODE_ID,
-                                 Extent2.CODE job_Status,
-                                 Extent3.SALES_ORD_ID SALES_ORD_ID,
-                                 Extent3.SALES_ORD_NO SALES_ORDer_NO,
-                                 Extent4.NAME NAME,
-                                 Extent4.NRIC NRIC,
-                                 Extent5.CODE CODE1,
-                                 Extent6.INST_STATE INST_STATE,
-                                 (SELECT code
-                                    FROM SYS0038M
-                                   WHERE 1 = 1
-                                         AND stus_code_id =
-                                                Extent4.STUS_CODE_ID)
-                                    AS cody_status_nm,
-                                 Extent6.INST_AREA INST_AREA,
-                                 1 C1,
-                                 CASE
-                                    WHEN (Extent7.RESULT_ID IS NOT NULL)
-                                    THEN
-                                       Extent7.RESULT_ID
-                                    ELSE
-                                       0
-                                 END
-                                    C2,
-                                 CASE
-                                    WHEN (Extent7.RESULT_ID IS NOT NULL)
-                                    THEN
-                                       Extent7.NO
-                                    ELSE
-                                       ''
-                                 END
-                                    C3,
-                                 CASE
-                                    WHEN (Extent8.MEM_ID IS NOT NULL)
-                                    THEN
-                                       Extent8.MEM_TYPE
-                                    ELSE
-                                       0
-                                 END
-                                    C4,
-                                 CASE
-                                    WHEN (Extent8.MEM_ID IS NOT NULL)
-                                    THEN
-                                       Extent8.MEM_CODE
-                                    ELSE
-                                       ''
-                                 END
-                                    C5,
-                                 CASE
-                                    WHEN (Extent8.MEM_ID IS NOT NULL)
-                                    THEN
-                                       Extent8.STUS
-                                    ELSE
-                                       0
-                                 END
-                                    C6,
-                                 CASE
-                                    WHEN (Extent6.FIRST_INSTALL_DT IS NOT NULL)
-                                    THEN
-                                       (Extent6.FIRST_INSTALL_DT)
-                                    ELSE
-                                       ('1900-01-01 00:00:00')
-                                 END
-                                    C7,
-                                 CASE
-                                    WHEN (Extent9.MEM_ID IS NOT NULL)
-                                    THEN
-                                       Extent9.MEM_CODE
-                                    ELSE
-                                       ''
-                                 END
-                                    C8,
-                                 Extent4.STUS_CODE_ID AS CODY_STATUS,
-                                 Extent3.BRNCH_ID AS BRNCH_ID,
-                                 Extent3.cust_id cust_id,
-                                 (select name
-                                    from SAL0029D   
-                                    where  cust_id  = Extent3.cust_id ) as cust_Name,
-                                 Extent6.FIRST_INSTALL_DT,
-                                 'HS' as job_Type
-                            FROM SVC0008D Extent1,
-                                 SYS0038M Extent2,
-                                 SAL0001D Extent3,
-                                 SAL0029D Extent4,
-                                 SYS0013M Extent5,
-                                 (SELECT vOrderInstallationInfo.ORD_ID ORD_ID,
-                                         vOrderInstallationInfo.INST_STATE
-                                            INST_STATE,
-                                         vOrderInstallationInfo.INST_AREA
-                                            INST_AREA,
-                                         vOrderInstallationInfo.INST_CNT_NAME
-                                            INST_CNT_NAME,
-                                         vOrderInstallationInfo.INST_CNT_NRIC
-                                            INST_CNT_NRIC,
-                                         vOrderInstallationInfo.INST_CNT_EMAIL
-                                            INST_CNT_EMAIL,
-                                         vOrderInstallationInfo.INST_CNT_TEL_M
-                                            INST_CNT_TEL_M,
-                                         vOrderInstallationInfo.INST_CNT_TEL_O
-                                            INST_CNT_TEL_O,
-                                         vOrderInstallationInfo.INST_CNT_TEL_R
-                                            INST_CNT_TEL_R,
-                                         vOrderInstallationInfo.INST_CNT_TEL_F
-                                            INST_CNT_TEL_F,
-                                         vOrderInstallationInfo.INST_CNT_GENDER
-                                            INST_CNT_GENDER,
-                                         vOrderInstallationInfo.
-                                          FIRST_INSTALL_NO
-                                            FIRST_INSTALL_NO,
-                                         vOrderInstallationInfo.
-                                          FIRST_INSTALL_CT_CODE
-                                            FIRST_INSTALL_CT_CODE,
-                                         vOrderInstallationInfo.
-                                          FIRST_INSTALL_CT_NAME
-                                            FIRST_INSTALL_CT_NAME,
-                                         vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT,
-                                         vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM,
-                                         vOrderInstallationInfo.
-                                          FIRST_INSTALL_SIRIM_NO
-                                            FIRST_INSTALL_SIRIM_NO,
-                                         vOrderInstallationInfo.
-                                          FIRST_INSTALL_SERIAL_NO
-                                            FIRST_INSTALL_SERIAL_NO,
-                                         vOrderInstallationInfo.LAST_INSTALL_NO
-                                            LAST_INSTALL_NO,
-                                         vOrderInstallationInfo.
-                                          LAST_INSTALL_CT_CODE
-                                            LAST_INSTALL_CT_CODE,
-                                         vOrderInstallationInfo.
-                                          LAST_INSTALL_CT_NAME
-                                            LAST_INSTALL_CT_NAME,
-                                         vOrderInstallationInfo.LAST_INSTALL_DT
-                                            LAST_INSTALL_DT,
-                                         vOrderInstallationInfo.
-                                          LAST_INSTALL_REM
-                                            LAST_INSTALL_REM,
-                                         vOrderInstallationInfo.
-                                          LAST_INSTALL_SIRIM_NO
-                                            LAST_INSTALL_SIRIM_NO,
-                                         vOrderInstallationInfo.
-                                          LAST_INSTALL_SERIAL_NO
-                                            LAST_INSTALL_SERIAL_NO,
-                                         vOrderInstallationInfo.DSC_ID DSC_ID,
-                                         vOrderInstallationInfo.DSC_CODE
-                                            DSC_CODE,
-                                         vOrderInstallationInfo.DSC_NAME
-                                            DSC_NAME,
-                                         vOrderInstallationInfo.INSTCT INSTCT,
-                                         vOrderInstallationInfo.PREFER_INST_DT
-                                            PREFER_INST_DT,
-                                         vOrderInstallationInfo.PREFER_INST_TM
-                                            PREFER_INST_TM,
-                                         vOrderInstallationInfo.INSTALL_ADDR_ID
-                                            INSTALL_ADDR_ID,
-                                         vOrderInstallationInfo.INSTALL_CNTC_ID
-                                            INSTALL_CNTC_ID,
-                                         vOrderInstallationInfo.INST_CNT_DEPT
-                                            INST_CNT_DEPT,
-                                         vOrderInstallationInfo.INST_CNT_POST
-                                            INST_CNT_POST,
-                                         vOrderInstallationInfo.VRIFY_REM
-                                            VRIFY_REM
-                                    FROM SAL1010V vOrderInstallationInfo) Extent6,
-                                 SVC0006D Extent7,
-                                 ORG0001D Extent8,
-                                 ORG0001D Extent9,
-                                 ORG0005D Extent10
-                           WHERE Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
-                                 AND Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
-                                 AND Extent4.CUST_ID = Extent3.CUST_ID
-                                 AND Extent5.CODE_ID = Extent3.APP_TYPE_ID
-                                 AND Extent6.ORD_ID = Extent1.SALES_ORD_ID
-                                 AND Extent7.SCHDUL_ID(+) = Extent1.SCHDUL_ID
-                                 AND Extent8.MEM_ID(+) = Extent1.CODY_ID
-                                 AND Extent9.MEM_ID(+) = Extent7.CODY_ID
-                                 AND Extent8.MEM_ID = Extent10.MEM_ID
-                                 AND 306 = Extent7.TYPE_ID(+)
-                                 AND 1 = Extent7.RESULT_IS_CURR(+)
-                                 AND  Extent1.YEAR = #{myBSYear} 
-                                 AND  Extent1.MONTH = #{myBSMonth} 
-                                 AND Extent3.cust_id = #{userId}
-                   
-                   
+						SELECT OR1.MEM_CODE AS settled_By,
+						       S01.SALES_ORD_NO AS sales_OrderNo,
+						       S01.APP_TYPE_ID AS app_Type,
+						       S17.PROMO_ID AS sales_Promotion,
+						       S22.CUST_ACC_BANK_ID AS bank_Code,
+						       S22.CUST_ACC_NO AS cardAccount_No,
+						       S27.TEL_M1 AS handphone_Tel,
+						       S27.TEL_O AS home_Tel,
+						       S27.TEL_R AS office_Tel,
+						       S27.EMAIL AS mail_Address,
+						       S27.NRIC AS resultIc_MobileNo,
+						       S29.NAME AS cust_Name,
+						       S29.corp_type_id AS customer_Type,
+						       S29.cust_id AS customer_Id,
+						       S45.BRNCH_ID AS dsc_Code,
+						       S47.SIRIM_NO AS sirim_No,
+						       S47.SERIAL_NO AS serial_No,
+						       SV6.REN_COLCT_ID AS rc_Code,
+						       SV6.FAIL_RESN_ID AS fail_ReasonCode,
+						       SV8.NO AS service_No,
+						       SV8.STUS_CODE_ID AS job_Status,
+						       SV8.YEAR AS plan_Year,
+						       SV8.MONTH AS plan_Month,
+						       SYS.STK_DESC AS product_Name,
+						       SYS.STK_CODE AS product_Code
+						  FROM SVC0008D SV8
+						       INNER JOIN SAL0001D S01
+						          ON S01.SALES_ORD_ID = SV8.SALES_ORD_ID
+						       INNER JOIN SAL0002D S02
+						          ON S02.SALES_ORD_ID = S01.SALES_ORD_ID
+						       INNER JOIN SAL0017D S17
+						          ON S17.PROMO_ID = S01.PROMO_ID
+						       INNER JOIN SAL0022D S22
+						          ON S22.CUST_ID = S01.CUST_ID
+						       INNER JOIN SAL0027D S27
+						          ON S27.CUST_ID = S01.CUST_ID
+						       INNER JOIN SAL0029D S29
+						          ON S29.CUST_ID = S01.CUST_ID
+						       INNER JOIN SAL0045D S45
+						          ON S45.SALES_ORD_ID = S01.SALES_ORD_ID
+						       INNER JOIN SAL0046D S46
+						          ON S46.SALES_ORD_ID = S01.SALES_ORD_ID
+						       INNER JOIN SAL0047D S47
+						          ON S47.ENTRY_ID = S46.INSTALL_ENTRY_ID
+						       INNER JOIN SVC0006D SV6
+						          ON SV6.SCHDUL_ID = SV8.SCHDUL_ID
+						       INNER JOIN ORG0001D OR1
+						          ON OR1.MEM_ID = S46.CT_ID
+						       INNER JOIN SYS0026M SYS
+						          ON SYS.STK_ID = S02.ITM_STK_ID
+                                 AND SV8.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
+                                 AND SV8.MONTH = TO_CHAR(to_date(#{requestDate} ,'YYYY/MM'),'MM')     
+                                 AND SV8.CODY_ID = #{userId}
                    
      </select> 
 
@@ -206,7 +71,50 @@
 
 
 
+    <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
+    
+			SELECT B.SALES_ORD_NO AS salesOrderNo,
+			       F.AS_RESULT_NO AS serviceNo,
+			       A.NAME,
+			       'AS' AS jobType,
+			       G.AS_RESULT_STUS_ID AS jobStatus,
+			       F.AS_SETL_DT AS appointmentDate,
+			       F.AS_SETL_TM AS appointmentTime,
+			       D.CODE,
+			       C.AS_NO,
+			       C.AS_REQST_DT,
+			       J.CODE,
+			       F.AS_RESULT_NO,
+			       H.NAME,
+			       B.SALES_ORD_NO,
+			       I.CODE APP_TYPE,
+			       A.NAME,
+			       A.NRIC SVC0004D
+			  FROM SAL0029D A
+			       INNER JOIN SAL0001D B
+			          ON B.CUST_ID = A.CUST_ID
+			       INNER JOIN SVC0001D C
+			          ON C.AS_SO_ID = B.SALES_ORD_ID
+			       INNER JOIN SVC0004D F
+			          ON F.AS_ENTRY_ID = C.AS_ID
+			       INNER JOIN SVC0004D G
+			          ON G.AS_RESULT_ID = F.AS_RESULT_ID
+			       INNER JOIN SYS0038M C
+			          ON C.STUS_CODE_ID = F.AS_RESULT_STUS_ID
+			       INNER JOIN SYS0038M J
+			          ON J.STUS_CODE_ID = C.AS_STUS_ID
+			       INNER JOIN SYS0013M D
+			          ON D.CODE_ID = C.AS_TYPE_ID
+			       INNER JOIN ORG0001D H
+			          ON H.MEM_ID = G.AS_CT_ID
+			       INNER JOIN SYS0013M I
+			          ON I.CODE_ID = B.APP_TYPE_ID
+			 WHERE     1 = 1
+			     AND C.AS_REQST_DT = TO_DATE (to_date(#{requestDate}, 'YYYYMMDD')
+			     AND A.CODY_ID = #{userId}  
 
+                   
+     </select> 
 
 
 
