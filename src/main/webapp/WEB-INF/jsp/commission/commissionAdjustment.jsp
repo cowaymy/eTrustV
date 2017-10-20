@@ -14,7 +14,7 @@
 						   Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveAdjustment);
 					}
 				}else{
-				    Common.alert("non member");
+				    Common.alert("<spring:message code='commission.alert.nonMember' htmlEscape='false'/>");
 				} 
 			});
 		});
