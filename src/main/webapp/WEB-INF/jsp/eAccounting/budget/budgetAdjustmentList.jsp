@@ -143,7 +143,7 @@ $(document).ready(function(){
         formatString : "#,##0",
         style : "my-right-style",
         width : 100,
-        visible :true
+        visible :false
     }];
          
     var adjOptions = {

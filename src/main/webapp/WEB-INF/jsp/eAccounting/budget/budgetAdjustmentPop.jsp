@@ -228,7 +228,7 @@ $(document).ready(function(){
         formatString : "#,##0.00",
         style : "my-right-style",
         width : 100,
-        visible :true
+        visible :false
     }];
          
     var adjPOptions = {
