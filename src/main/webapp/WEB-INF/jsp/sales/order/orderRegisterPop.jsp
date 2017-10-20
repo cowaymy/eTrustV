@@ -26,6 +26,9 @@
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
         fn_tabOnOffSet('BIL_DTL', 'HIDE');
         fn_tabOnOffSet('REL_CER', 'HIDE');
+        
+        //Attach File
+        $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
     });
 
     function createAUIGrid() {
@@ -515,9 +518,6 @@
     }
 
     $(function(){
-//        $('#saveBtn').click(function() {
-//            //$('#tabPC').addClass("blind");
-//        });
         $('#custBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_CUST_CUST"}, null, true);
@@ -971,26 +971,7 @@
                 Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + msg, fn_hiddenSave);
             }
             else {
-//             if (this.cmbOrderPromo.SelectedIndex > -1)
-//             {
-//                 if (cmbOrderPromo.SelectedItem.Text.Contains("EX-TRADE"))
-//                 {
-//                     this.txtOldOrderID.Text = "";
-//                     this.lblOldOrderNo.Text = "";
-//                     this.RW_OldOrder.VisibleOnPageLoad = true;
-//                     this.RadWindow_Approval.VisibleOnPageLoad = false;
-//                 }
-//                 else
-//                 {
-//                     this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
-//                     this.LoadRadWindowOrderInfo();
-//                 }
-//             }
-//             else
-//             {
-//                 this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
-//                 this.LoadRadWindowOrderInfo();
-//             }
+
                 if($("#ordPromo option:selected").index() > 0) {
                     console.log('!@#### ordSaveBtn click START 00000');
                     if($("#exTrade").val() == 1) {
@@ -1014,14 +995,6 @@
 
 	
 	function fn_popOrderDetail() {	    
-//      Sales.Orders so = new Sales.Orders();
-//      this.RadWindow_Approval.VisibleOnPageLoad = false;
-//      int getOldOrderID = so.Get_oldOrderID(ntxtRW_oldorder.Text);
-//      this.txtOldOrderID.Text = getOldOrderID.ToString();
-//      this.txtInstSpecialInstruction.Text = "(Old order No.)" + ntxtRW_oldorder.Text.Trim() + " , " + get_PromoDesc() + " , SVM expired : " + get_Services_expired();
-//      this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
-//      this.LoadRadWindowOrderInfo();
-        
 	    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
 	}
 	
@@ -1029,9 +1002,6 @@
         var strCustId = $('#custId').val();
 
         //CLEAR CUSTOMER
-//          this.ClearControl_Customer();
-//          this.ClearControl_MailAddress();
-//          this.ClearControl_ContactPerson();
         fn_clearCustomer();
         fn_clearMailAddress();
         fn_clearContactPerson();
@@ -1635,7 +1605,7 @@
 
         console.log('certRefFile'+ $('#certRefFile').val())
 
-        if(!FormUtil.isEmpty($('#certRefFile').val().trim())) {
+        if(!FormUtil.checkReqValue($('#certRefFile'))) {
 
             if(FormUtil.checkReqValue($('#certRefNo'))) {
                 isValid = false;
@@ -3113,12 +3083,19 @@
 <tr>
     <th scope="row">Upload Relief Cert(.zip)</th>
     <td colspan="3">
-    <div class="auto_file"><!-- auto_file start -->
-    <input id="certRefFile" name="certRefFile" type="file" title="file add" />
+        <!-- auto_file start -->
+        <div class="auto_file">
+            <input id="certRefFile" name="certRefFile" type="file" title="file add" />
+        </div>
+        <!-- auto_file end -->
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
+<ul class="left_opt">
+    <li><span class="red_text">**</span> <span class="brown_text">This section is ONLY applicable to Federal Government, State Government, Palace of Ruler and other organisations which were given GST relief for purchase of goods at GST rate of 0%.</span></li>
+</ul>
+
 <ul class="center_btns">
     <li><p class="btn_blue"><a name="ordSaveBtn" href="#">OK</a></p></li>
 </ul>
