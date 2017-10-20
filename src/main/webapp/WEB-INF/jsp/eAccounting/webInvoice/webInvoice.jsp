@@ -118,11 +118,7 @@ function fn_setToDay() {
 }
 
 function fn_supplierSearchPop() {
-    var object = {
-            accGrp : "VM01",
-            accGrpName : "Coway_Suppliers_Local"
-    };
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", object, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {

@@ -11,13 +11,15 @@ public interface WebInvoiceMapper {
 	
 	List<EgovMap> selectWebInvoiceList(Map<String, Object> params);
 	
-	List<EgovMap> selectApproveList(Map<String, Object> params);
-	
 	EgovMap selectWebInvoiceInfo(String clmNo);
 	
-	List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo);
-	
 	List<EgovMap> selectWebInvoiceItems(String clmNo);
+	
+	List<EgovMap> selectApproveList(Map<String, Object> params);
+	
+	List<EgovMap> selectAppvLineInfo(String appvPrcssNo);
+	
+	List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo);
 	
 	List<EgovMap> selectAttachList(String atchFileGrpId);
 	

@@ -1,19 +1,31 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+</style>
 <script type="text/javascript">
 var supplierColumnLayout = [ {
 	dataField : "accGrp",
     visible : false
 },{
 	dataField : "accGrpName",
-    headerText : '<spring:message code="memAcc.group" />'
+    headerText : '<spring:message code="memAcc.group" />',
+    style : "aui-grid-user-custom-left"
 },{
     dataField : "memAccId",
     headerText : '<spring:message code="memAcc.memAccCode" />'
 }, {
     dataField : "memAccName",
-    headerText : '<spring:message code="memAcc.memAccName" />'
+    headerText : '<spring:message code="memAcc.memAccName" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "gstRgistNo",
     headerText : '<spring:message code="newWebInvoice.gstRegistNo" />'
@@ -22,7 +34,8 @@ var supplierColumnLayout = [ {
     visible : false
 },{
     dataField : "bankName",
-    headerText : '<spring:message code="newWebInvoice.bank" />'
+    headerText : '<spring:message code="newWebInvoice.bank" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "bankAccNo",
     headerText : '<spring:message code="newWebInvoice.bankAccount" />'
@@ -55,6 +68,8 @@ $(document).ready(function () {
         
         $("#supplierSearchPop").remove();
   });
+	
+	//$("#accGrp").multipleSelect("checkAll");
 });
 
 function fn_selectMember() {
@@ -87,7 +102,6 @@ function fn_selectMember() {
 <input type="hidden" id="search_bankCode">
 <input type="hidden" id="search_bankName">
 <input type="hidden" id="search_bankAccNo">
-<input type="hidden" id="accGrp" name="accGrp" value="${params.accGrp}">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -102,7 +116,14 @@ function fn_selectMember() {
 	<th scope="row"><spring:message code="memAcc.memAccCode" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" name="memAccId"/></td>
 	<th scope="row"><spring:message code="memAcc.group" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="accGrpName" value="${params.accGrpName}"/></td>
+	<td>
+	<select class="w100p" id="accGrp" name="accGrp">
+        <option value="VM01"><spring:message code="memAcc.local" /></option>
+        <option value="VM07"><spring:message code="memAcc.cody" /></option>
+        <option value="VM08"><spring:message code="memAcc.ct" /></option>
+        <option value="VM09"><spring:message code="memAcc.staff" /></option>
+    </select>
+	</td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="memAcc.memAccName" /></th>

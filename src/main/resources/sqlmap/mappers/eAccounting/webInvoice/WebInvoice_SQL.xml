@@ -174,24 +174,22 @@ SELECT T.APPV_PRCSS_NO
                 ,T3.MEM_ACC_ID
                 ,T5.MEM_ACC_NAME
                 ,SUM (T3.APPV_AMT) APPV_AMT
-                , (CASE T1.APPV_PRCSS_STUS
+                , (CASE T2.APPV_STUS
                       WHEN 'R'
                          THEN 'Request'
-                      WHEN 'P'
-                         THEN 'Approve In-Progress'
                       WHEN 'A'
                          THEN 'Approved'
                       WHEN 'J'
                          THEN 'Reject'
                    END
                   ) APPV_PRCSS_STUS
-                ,T1.APPV_PRCSS_STUS AS APPV_PRCSS_STUS_CODE
+                ,T2.APPV_STUS AS APPV_PRCSS_STUS_CODE
                 ,T3.ATCH_FILE_GRP_ID
                 ,T6.ATCH_FILE_ID
                 ,T6.ATCH_FILE_NAME
                 ,T6.FILE_EXTSN
                 ,T6.FILE_CNT
-                ,TO_CHAR (T1.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT
+                ,TO_CHAR (T2.APPV_DT, 'DD/MM/YYYY') APPV_PRCSS_DT
             FROM FCM0004M T1 LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO
                  LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
                  LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
@@ -210,7 +208,7 @@ SELECT T.APPV_PRCSS_NO
                                                                                      F2.ATCH_FILE_ID
                                  ) F
                    WHERE F.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
-           WHERE     T2.APPV_LINE_USER_ID = 'IVYLIM'
+           WHERE     T2.APPV_LINE_USER_ID = #{userName}
                  AND T1.APPV_PRCSS_STUS = 'R'
               OR     T1.APPV_PRCSS_STUS = 'P'
                  AND T2.APPV_STUS = 'R'
@@ -229,22 +227,22 @@ SELECT T.APPV_PRCSS_NO
                 ,T3.INVC_DT
                 ,T3.MEM_ACC_ID
                 ,T5.MEM_ACC_NAME
-                ,T1.APPV_PRCSS_STUS
+                ,T2.APPV_STUS
                 ,T3.ATCH_FILE_GRP_ID
                 ,T6.ATCH_FILE_ID
                 ,T6.ATCH_FILE_NAME
                 ,T6.FILE_EXTSN
                 ,T6.FILE_CNT
-                ,T1.APPV_PRCSS_DT) T
+                ,T2.APPV_DT) T
   WHERE 1 = 1   
         <if test="startDt != null and startDt != ''">
         <![CDATA[ 
-             AND T.INVC_DT >= TO_DATE(#{startDt}, 'DD/MM/YY')
+             AND T.INVC_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
         ]]>
         </if>          
         <if test="endDt != null and endDt != ''">
         <![CDATA[ 
-             AND T.INVC_DT <= TO_DATE(#{endDt} || ' 23:59:59', 'DD/MM/YY HH24:MI:SS')
+             AND T.INVC_DT <= TO_DATE(#{endDt}, 'DD/MM/YYYY')
         ]]>
         </if>          
         <if test="memAccID != null and memAccID != ''">
@@ -271,6 +269,17 @@ SELECT T.APPV_PRCSS_NO
         ORDER BY T.APPV_PRCSS_NO, T.REQST_DT           
 </select>
 
+<select id="selectAppvLineInfo" parameterType="String" resultType="egovMap">
+/* webInvoiceMapper.selectAppvLineInfo */
+          SELECT APPV_LINE_SEQ
+                    ,APPV_LINE_USER_ID
+                    ,TO_CHAR(APPV_DT, 'DD/MM/YYYY') AS APPV_DT
+                    ,APPV_STUS
+          FROM FCM0005D
+          WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+          ORDER BY APPV_LINE_SEQ  
+</select>
+
 <select id="selectAppvInfoAndItems" parameterType="String" resultType="egovMap">
 /* webInvoiceMapper.selectAppvInfoAndItems */
             SELECT T1.APPV_PRCSS_NO
@@ -281,13 +290,14 @@ SELECT T.APPV_PRCSS_NO
                       ,T1.REQST_USER_ID
                       ,T1.APPV_LINE_CNT
                       ,T1.APPV_LINE_PRCSS_CNT
-                      ,T2.APPV_LINE_USER_ID
+                      /*,T2.APPV_LINE_USER_ID
                       ,TO_CHAR(T2.APPV_DT, 'DD/MM/YYYY') AS APPV_DT
-                      ,T2.APPV_STUS
+                      ,T2.APPV_STUS*/
                       ,T3.APPV_ITM_SEQ
                       ,T3.INVC_NO
                       ,TO_CHAR(T3.INVC_DT, 'DD/MM/YYYY') AS INVC_DT
                       ,T3.MEM_ACC_ID
+                      ,T6.MEM_ACC_NAME
                       ,TO_CHAR(T3.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT
                       ,T3.EXP_TYPE
                       ,T3.EXP_TYPE_NAME
@@ -298,13 +308,16 @@ SELECT T.APPV_PRCSS_NO
                       ,T3.BUDGET_CODE
                       ,T3.BUDGET_CODE_NAME
                       ,T3.TAX_CODE
+                      ,T3.TAX_CODE||' '||'('||T5.TAX_NAME||')' AS TAX_NAME 
                       ,T3.NET_AMT
                       ,T3.TAX_AMT
                       ,T3.APPV_AMT
                       ,T3.EXP_DESC
-          FROM FCM0004M T1 LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO
+          FROM FCM0004M T1 /*LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO*/
           LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
           LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
+          LEFT JOIN FCM0007C T5 ON T3.TAX_CODE = T5.TAX_CODE
+          LEFT JOIN FCM0006M T6 ON T3.MEM_ACC_ID = T6.MEM_ACC_ID
           WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
           ORDER BY T3.APPV_ITM_SEQ         
 </select>
@@ -493,7 +506,7 @@ SELECT T.APPV_PRCSS_NO
        ,#{memCode}
        ,#{appvDt}
        <choose>
-       <when test="#{approveNo eq 1}">
+       <when test="approveNo == 1">
        ,'R'
        </when>
        <otherwise>
@@ -639,7 +652,7 @@ SELECT T.APPV_PRCSS_NO
    UPDATE FCM0005D
    SET APPV_STUS = #{appvStus}
        ,APPV_DT = SYSDATE
-       ,REJCT_RESN = #{rejectResn}
+       ,REJCT_RESN = #{rejctResn}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE APPV_PRCSS_NO = #{appvPrcssNo}

@@ -135,7 +135,22 @@ function fn_loadOrderSalesman(memId, memCode) {
 }
 
 function fn_newRegistMsgPop() {
-	Common.popupDiv("/eAccounting/webInvoice/newRegistMsgPop.do", null, null, true, "registMsgPop");
+	var length = AUIGrid.getGridData(approveLineGridID).length;
+	var checkMemCode = true;
+	console.log(length);
+	// 1개의 default Line 존재
+    if(length > 1) {
+        for(var i = 0; i < length; i++) {
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
+                Common.alert("Please enter the User ID of Line " + (i +1) + ".");
+                checkMemCode = false;
+            }
+        }
+    }
+	console.log(checkMemCode);
+	if(checkMemCode) {
+		Common.popupDiv("/eAccounting/webInvoice/newRegistMsgPop.do", null, null, true, "registMsgPop");
+	}
 }
 </script>
 

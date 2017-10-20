@@ -10,9 +10,7 @@ $(document).ready(function () {
 function fn_closePop() {
     $("#rejectComplePop").remove();
     
-    //Common.showLoader();
-    
-    window.location = "/eAccounting/webInvoice/webInvoiceApprove.do";
+    fn_selectApproveList();
 }
 </script>
 

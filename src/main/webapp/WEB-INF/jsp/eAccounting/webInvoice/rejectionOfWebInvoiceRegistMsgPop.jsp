@@ -6,6 +6,7 @@ $(document).ready(function(){
     $("#cancel_btn").click(fn_closePop);
     $("#rejct_btn").click(function() {
     	var rejctResn = $("#rejctResn").val();
+    	console.log(rejctResn);
         fn_appvRejctSubmit("rejct", rejctResn);
     });
 });

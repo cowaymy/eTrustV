@@ -43,12 +43,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectWebInvoiceList(params);
 	}
-	
-	@Override
-	public List<EgovMap> selectApproveList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectApproveList(params);
-	}
 
 	@Override
 	public EgovMap selectWebInvoiceInfo(String clmNo) {
@@ -57,15 +51,27 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 	
 	@Override
-	public List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo) {
-		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
-	}
-
-	@Override
 	public List<EgovMap> selectWebInvoiceItems(String clmNo) {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectWebInvoiceItems(clmNo);
+	}
+	
+	@Override
+	public List<EgovMap> selectApproveList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectApproveList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectAppvLineInfo(String appvPrcssNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectAppvLineInfo(appvPrcssNo);
+	}
+
+	@Override
+	public List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
 	}
 	
 	@Override
@@ -113,6 +119,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	@Override
 	public void updateWebInvoiceInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
 		webInvoiceMapper.updateWebInvoiceInfo(params);
 		
 		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
@@ -130,6 +137,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				int clmSeq = webInvoiceMapper.selectNextClmSeq((String) params.get("clmNo"));
 				hm.put("clmSeq", clmSeq);
 				hm.put("userId", params.get("userId"));
+				LOGGER.debug("insertWebInvoiceDetail =====================================>>  " + hm);
 				webInvoiceMapper.insertWebInvoiceDetail(hm);
 			}
 		}
@@ -140,6 +148,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm = (HashMap<String, Object>) map;
 				hm.put("clmNo", params.get("clmNo"));
 				hm.put("userId", params.get("userId"));
+				LOGGER.debug("updateWebInvoiceDetail =====================================>>  " + hm);
 				// TODO biz처리 (clmNo, clmSeq 값으로 update 처리)
 				webInvoiceMapper.updateWebInvoiceDetail(hm);
 			}
@@ -152,6 +161,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm.put("clmNo", params.get("clmNo"));
 				hm.put("userId", params.get("userId"));
 				// TODO biz처리 (clmNo, clmSeq 값으로 delete 처리)
+				LOGGER.debug("deleteWebInvoiceDetail =====================================>>  " + hm);
 				webInvoiceMapper.deleteWebInvoiceDetail(hm);
 			}
 		}
@@ -171,6 +181,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		
 		params.put("appvLineCnt", apprGridList.size());
 		
+		LOGGER.debug("insertApproveManagement =====================================>>  " + params);
 		webInvoiceMapper.insertApproveManagement(params);
 		
 		if (apprGridList.size() > 0) {
@@ -180,7 +191,8 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm = (HashMap<String, Object>) map;
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
 				hm.put("userId", params.get("userId"));
-				params.put("userName", params.get("userName"));
+				hm.put("userName", params.get("userName"));
+				LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
 				// TODO appvLineDetailTable Insert
 				webInvoiceMapper.insertApproveLineDetail(hm);
 			}
@@ -204,56 +216,57 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm.put("costCentrName", params.get("costCentrName"));
 				hm.put("atchFileGrpId", params.get("atchFileGrpId"));
 				hm.put("userName", params.get("userName"));
+				LOGGER.debug("insertApproveItems =====================================>>  " + hm);
 				// TODO appvLineItemsTable Insert
 				webInvoiceMapper.insertApproveItems(hm);
 			}
 		}
 		
+		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
 		webInvoiceMapper.updateAppvPrcssNo(params);
 	}
 
 	@Override
 	public void updateApprovalInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
 		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
 		for (int i = 0; i < invoAppvGridList.size(); i++) {
 			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
-			if("R".equals(invoAppvInfo.get("appvPrcssStusCode"))) {
-				String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
-				int appvLineSeq = (int) invoAppvInfo.get("appvLineSeq");
-				int appvLineCnt = webInvoiceMapper.selectAppvLineCnt(appvPrcssNo);
-				int appvLinePrcssCnt = webInvoiceMapper.selectAppvLinePrcssCnt(appvPrcssNo);
-				invoAppvInfo.put("appvLinePrcssCnt", appvLinePrcssCnt + 1);
-				invoAppvInfo.put("appvPrcssStus", "P");
-				invoAppvInfo.put("appvStus", "A");
-				invoAppvInfo.put("userId", params.get("userId"));
-				webInvoiceMapper.updateAppvInfo(invoAppvInfo);
+			String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
+			int appvLineSeq = (int) invoAppvInfo.get("appvLineSeq");
+			int appvLineCnt = webInvoiceMapper.selectAppvLineCnt(appvPrcssNo);
+			int appvLinePrcssCnt = webInvoiceMapper.selectAppvLinePrcssCnt(appvPrcssNo);
+			invoAppvInfo.put("appvLinePrcssCnt", appvLinePrcssCnt + 1);
+			invoAppvInfo.put("appvPrcssStus", "P");
+			invoAppvInfo.put("appvStus", "A");
+			invoAppvInfo.put("userId", params.get("userId"));
+			LOGGER.debug("now invoAppvInfo =====================================>>  " + invoAppvInfo);
+			webInvoiceMapper.updateAppvInfo(invoAppvInfo);
+			webInvoiceMapper.updateAppvLine(invoAppvInfo);
+			// TODO 다음 승인자 R처리
+			if(appvLineCnt > appvLineSeq) {
+				invoAppvInfo.put("appvStus", "R");
+				invoAppvInfo.put("appvLineSeq", appvLineSeq + 1);
+				LOGGER.debug("next invoAppvInfo =====================================>>  " + invoAppvInfo);
 				webInvoiceMapper.updateAppvLine(invoAppvInfo);
-				LOGGER.debug("now invoAppvInfo =====================================>>  " + invoAppvInfo);
-				// TODO 다음 승인자 R처리
-				if(appvLineCnt > appvLineSeq) {
-					invoAppvInfo.put("appvStus", "R");
-					invoAppvInfo.put("appvLineSeq", appvLineSeq + 1);
-					webInvoiceMapper.updateAppvLine(invoAppvInfo);
-					LOGGER.debug("next invoAppvInfo =====================================>>  " + invoAppvInfo);
-				}
-				if(appvLineCnt == appvLinePrcssCnt + 1) {
-					// 마지막 승인인 경우 재업데이트
-					webInvoiceMapper.updateLastAppvLine(invoAppvInfo);
-					LOGGER.debug("last invoAppvInfo =====================================>>  " + invoAppvInfo);
-					// TODO 인터페이스 생성
-					String ifKey = webInvoiceMapper.selectNextIfKey();
-					// appvPrcssNo의 items get
-					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
-					for(int j = 0; j < appvInfoAndItems.size(); j++) {
-						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
-						int seq = webInvoiceMapper.selectNextSeq(ifKey);
-						invoAppvItems.put("ifKey", ifKey);
-						invoAppvItems.put("seq", seq);
-						invoAppvItems.put("userId", params.get("userId"));
-						webInvoiceMapper.insertEccInterface(invoAppvItems);
-						LOGGER.debug("invoAppvItems =====================================>>  " + invoAppvItems);
-					}
+			}
+			if(appvLineCnt == appvLinePrcssCnt + 1) {
+				LOGGER.debug("last invoAppvInfo =====================================>>  " + invoAppvInfo);
+				// 마지막 승인인 경우 재업데이트
+				webInvoiceMapper.updateLastAppvLine(invoAppvInfo);
+				// TODO 인터페이스 생성
+				String ifKey = webInvoiceMapper.selectNextIfKey();
+				// appvPrcssNo의 items get
+				List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
+				for(int j = 0; j < appvInfoAndItems.size(); j++) {
+					Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
+					int seq = webInvoiceMapper.selectNextSeq(ifKey);
+					invoAppvItems.put("ifKey", ifKey);
+					invoAppvItems.put("seq", seq);
+					invoAppvItems.put("userId", params.get("userId"));
+					LOGGER.debug("insertEccInterface =====================================>>  " + invoAppvItems);
+					webInvoiceMapper.insertEccInterface(invoAppvItems);
 				}
 			}
 		}
@@ -262,23 +275,22 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	@Override
 	public void updateRejectionInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
 		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
 		String rejctResn = (String) params.get("rejctResn");
 		for (int i = 0; i < invoAppvGridList.size(); i++) {
 			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
-			if("R".equals(invoAppvInfo.get("appvPrcssStusCode"))) {
-				String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
-				int appvLineCnt = webInvoiceMapper.selectAppvLineCnt(appvPrcssNo);
-				int appvLinePrcssCnt = webInvoiceMapper.selectAppvLinePrcssCnt(appvPrcssNo);
-				invoAppvInfo.put("appvLinePrcssCnt", appvLinePrcssCnt + 1);
-				invoAppvInfo.put("appvPrcssStus", "J");
-				invoAppvInfo.put("appvStus", "J");
-				invoAppvInfo.put("rejctResn", rejctResn);
-				invoAppvInfo.put("userId", params.get("userId"));
-				webInvoiceMapper.updateAppvInfo(invoAppvInfo);
-				webInvoiceMapper.updateAppvLine(invoAppvInfo);
-				LOGGER.debug("rejct invoAppvInfo =====================================>>  " + invoAppvInfo);
-			}
+			String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
+			int appvLineCnt = webInvoiceMapper.selectAppvLineCnt(appvPrcssNo);
+			int appvLinePrcssCnt = webInvoiceMapper.selectAppvLinePrcssCnt(appvPrcssNo);
+			invoAppvInfo.put("appvLinePrcssCnt", appvLinePrcssCnt + 1);
+			invoAppvInfo.put("appvPrcssStus", "J");
+			invoAppvInfo.put("appvStus", "J");
+			invoAppvInfo.put("rejctResn", rejctResn);
+			invoAppvInfo.put("userId", params.get("userId"));
+			LOGGER.debug("rejection invoAppvInfo =====================================>>  " + invoAppvInfo);
+			webInvoiceMapper.updateAppvInfo(invoAppvInfo);
+			webInvoiceMapper.updateAppvLine(invoAppvInfo);
 		}
 	}
 
@@ -343,24 +355,28 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 
 	@Override
-	public String getAppvPrcssStus(List<EgovMap> appvInfoAndItems) {
+	public String getAppvPrcssStus(List<EgovMap> appvLineInfo, List<EgovMap> appvInfoAndItems) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("appvInfoAndItems =====================================>>  " + appvInfoAndItems);
 		
+		// appvInfo get
 		EgovMap appvInfo = appvInfoAndItems.get(0);
 		String reqstUserId = (String) appvInfo.get("reqstUserId");
 		String reqstDt = (String) appvInfo.get("reqstDt");
 		int appvLinePrcssCnt = Integer.parseInt(String.valueOf(appvInfo.get("appvLinePrcssCnt")));
 		String appvPrcssStus = "- Request By " + reqstUserId + " [" + reqstDt + "]";
+		// 아무도 승인 하지 않았을때
 		if(appvLinePrcssCnt == 0) {
-			String appvLineUserId = (String) appvInfo.get("appvLineUserId");
+			// order by appvLineSeq
+			EgovMap lineInfo = appvLineInfo.get(0);
+			String appvLineUserId = (String) lineInfo.get("appvLineUserId");
 			appvPrcssStus += "<br> - Pending By " + appvLineUserId;
 		} else {
-			for(int i = 0; i < appvInfoAndItems.size(); i++) {
-				EgovMap appvLine = appvInfoAndItems.get(i);
+			for(int i = 0; i < appvLineInfo.size(); i++) {
+				EgovMap appvLine = appvLineInfo.get(i);
 				String appvStus = (String) appvLine.get("appvStus");
-				String appvLineUserId = (String) appvInfo.get("appvLineUserId");
-				String appvDt = (String) appvInfo.get("appvDt");
+				String appvLineUserId = (String) appvLine.get("appvLineUserId");
+				String appvDt = (String) appvLine.get("appvDt");
 				if("R".equals(appvStus)) {
 					appvPrcssStus += "<br> - Pending By " + appvLineUserId;
 				} else if ("A".equals(appvStus)) {
@@ -370,6 +386,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				}
 			}
 		}
+		LOGGER.debug("appvPrcssStus =====================================>>  " + appvPrcssStus);
 		return appvPrcssStus;
 	}
 	

@@ -69,11 +69,7 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/supplierSearchPop.do")
-	public String supplierSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		LOGGER.debug("params =====================================>>  " + params);
-		
-		model.addAttribute("params", params);
+	public String supplierSearchPop(ModelMap model) {
 		return "eAccounting/webInvoice/memberAccountSearchPop";
 	}
 	
@@ -130,10 +126,11 @@ public class WebInvoiceController {
 		
 		String appvPrcssNo = (String)params.get("appvPrcssNo");
 		
+		List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(appvPrcssNo);
 		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(appvPrcssNo);
 		
 		// TODO appvPrcssStus 생성
-		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvInfoAndItems);
+		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 		
 		model.addAttribute("appvPrcssStus", appvPrcssStus);
 		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
@@ -355,12 +352,6 @@ public class WebInvoiceController {
 		
 		String appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
 		params.put("appvPrcssNo", appvPrcssNo);
-		String clmNo = (String) params.get("clmNo");
-		// 신규 상태에서 submit이면 clmNo = null or ""
-		if(StringUtils.isEmpty(clmNo)) {
-			clmNo = webInvoiceService.selectNextClmNo();
-			params.put("clmNo", clmNo);
-		}
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 		

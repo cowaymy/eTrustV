@@ -1,15 +1,44 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+</style>
 <script type="text/javascript">
 var appvPrcssNo;
 var atchFileGrpId;
+//그리드에 삽입된 데이터의 전체 길이 보관
+var gridDataLength = 0;
 var invoAprveGridColLayout = [ {
     dataField : "appvPrcssNo",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 },{
     dataField : "appvLineSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+},{
+    dataField : "isActive",
+    headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+    width: 30,
+    renderer : {
+        type : "CheckBoxEditRenderer",
+        showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+        editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+        checkValue : "Active", // true, false 인 경우가 기본
+        unCheckValue : "Inactive",
+        // 체크박스 disabled 함수
+        disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
+            if(item.appvPrcssStusCode == "A" || item.appvPrcssStusCode == "J")
+                return true; // true 반환하면 disabled 시킴
+            return false;
+        }
+    }
 },{
     dataField : "clmNo",
     headerText : '<spring:message code="invoiceApprove.clmNo" />',
@@ -22,25 +51,30 @@ var invoAprveGridColLayout = [ {
 
 }, {
     dataField : "codeName",
-    headerText : '<spring:message code="invoiceApprove.clmType" />'
+    headerText : '<spring:message code="invoiceApprove.clmType" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "costCentr",
     headerText : '<spring:message code="webInvoice.cc" />'
 }, {
     dataField : "costCentrName",
-    headerText : '<spring:message code="webInvoice.ccName" />'
+    headerText : '<spring:message code="webInvoice.ccName" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "invcType",
-    headerText : '<spring:message code="invoiceApprove.type" />'
+    headerText : '<spring:message code="invoiceApprove.type" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
     headerText : '<spring:message code="invoiceApprove.supBrEnp" />'
 }, {
     dataField : "memAccName",
-    headerText : '<spring:message code="invoiceApprove.supBrEnpName" />'
+    headerText : '<spring:message code="invoiceApprove.supBrEnpName" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvAmt",
     headerText : '<spring:message code="webInvoice.amount" />',
+    style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0"
 }, {
@@ -48,7 +82,8 @@ var invoAprveGridColLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "appvPrcssStus",
-    headerText : '<spring:message code="webInvoice.status" />'
+    headerText : '<spring:message code="webInvoice.status" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -114,10 +149,11 @@ var invoAprveGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     // 체크박스 표시 설정
-    showRowCheckColumn : true,
+    showRowCheckColumn : false,
     showRowNumColumn : false,
     // 헤더 높이 지정
-    headerHeight : 40
+    headerHeight : 40,
+    showEditedCellMarker : false
 };
 
 var invoAprveGridID;
@@ -143,6 +179,32 @@ $(document).ready(function () {
                 fn_webInvoiceAppvViewPop();
             });
     
+    // ready 이벤트 바인딩
+    AUIGrid.bind(invoAprveGridID, "ready", function(event) {
+        gridDataLength = AUIGrid.getGridData(invoAprveGridID).length; // 그리드 전체 행수 보관
+    });
+    
+    // 헤더 클릭 핸들러 바인딩
+    AUIGrid.bind(invoAprveGridID, "headerClick", headerClickHandler);
+    
+    // 셀 수정 완료 이벤트 바인딩
+    AUIGrid.bind(invoAprveGridID, "cellEditEnd", function(event) {
+        
+        // isActive 칼럼 수정 완료 한 경우
+        if(event.dataField == "isActive") {
+            
+            // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+            var activeItems = AUIGrid.getItemsByValue(invoAprveGridID, "isActive", "Active");
+            
+            // 헤더 체크 박스 전체 체크 일치시킴.
+            if(activeItems.length != gridDataLength) {
+                document.getElementById("allCheckbox").checked = false;
+            } else if(activeItems.length == gridDataLength) {
+                 document.getElementById("allCheckbox").checked = true;
+            }
+        }
+    });
+    
     CommonCombo.make("clmType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
         id: "code",
         name: "codeName",
@@ -150,19 +212,68 @@ $(document).ready(function () {
     });
     
     $("#appvPrcssStus").multipleSelect("checkAll");
+    
+    fn_setToDay()
 });
 
+//그리드 헤더 클릭 핸들러
+function headerClickHandler(event) {
+	
+    // isActive 칼럼 클릭 한 경우
+    if(event.dataField == "isActive") {
+        if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
+            var  isChecked = document.getElementById("allCheckbox").checked;
+            checkAll(isChecked);
+        }
+        return false;
+    }
+}
+
+// 전체 체크 설정, 전체 체크 해제 하기
+function checkAll(isChecked) {
+	
+	 var idx = AUIGrid.getRowCount(invoAprveGridID); 
+    
+    // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
+    if(isChecked) {
+    	for(var i = 0; i < idx; i++){
+    		if(AUIGrid.getCellValue(invoAprveGridID, i, "appvPrcssStusCode") == "R"){
+                //AUIGrid.updateAllToValue(invoAprveGridID, "isActive", "Active");
+                AUIGrid.setCellValue(invoAprveGridID, i, "isActive", "Active")
+            }
+        }
+    } else {
+        AUIGrid.updateAllToValue(invoAprveGridID, "isActive", "Inactive");
+    }
+    
+    // 헤더 체크 박스 일치시킴.
+    document.getElementById("allCheckbox").checked = isChecked;
+}
+
+function fn_setToDay() {
+    var today = new Date();
+    
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+    
+    if(dd < 10) {
+        dd = "0" + dd;
+    }
+    if(mm < 10){
+        mm = "0" + mm
+    }
+    
+    today = dd + "/" + mm + "/" + yyyy;
+    $("#startDt").val(today)
+    $("#endDt").val(today)
+}
+
 function fn_supplierSearchPop() {
-	var object = {
-            accGrp : "VM01",
-            accGrpName : "Coway_Suppliers_Local"
-    };
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", object, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
-    var value = $("#costCenter").val();
-    var object = {value:value};
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
@@ -237,9 +348,11 @@ function fn_setGridData(gridId, data) {
 }
 
 function fn_appvRejctSubmit(type, rejctResn) {
-    var invoAppvGridList = AUIGrid.getCheckedRowItemsAll(invoAprveGridID);
+ // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+    var invoAppvGridList = AUIGrid.getItemsByValue(invoAprveGridID, "isActive", "Active");
     var url = "";
     console.log(invoAppvGridList);
+    console.log(invoAppvGridList.length);
     if(invoAppvGridList.length == 0) {
         Common.alert("No data selected.");
     } else {

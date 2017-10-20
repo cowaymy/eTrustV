@@ -1,13 +1,24 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+</style>
 <script type="text/javascript">
 var costCenterColumnLayout = [ {
     dataField : "costCenter",
     headerText : '<spring:message code="webInvoice.costCenter" />'
 }, {
     dataField : "costCenterText",
-    headerText : '<spring:message code="costCentr.costCenterText" />'
+    headerText : '<spring:message code="costCentr.costCenterText" />',
+    style : "aui-grid-user-custom-left"
 }
 ];
 

@@ -1,6 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+</style>
 <script type="text/javascript">
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
@@ -9,29 +19,38 @@ var myColumnLayout = [ {
     headerText : '<spring:message code="expense.GLAccount" />'
 }, {
     dataField : "glAccCodeName",
-    headerText : '<spring:message code="newWebInvoice.glAccountName" />'
+    headerText : '<spring:message code="newWebInvoice.glAccountName" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "budgetCode",
     headerText : '<spring:message code="approveView.budget" />'
 }, {
     dataField : "budgetCodeName",
-    headerText : '<spring:message code="approveView.budgetName" />'
+    headerText : '<spring:message code="approveView.budgetName" />',
+    style : "aui-grid-user-custom-left"
 },{
     dataField : "taxCode",
-    headerText : '<spring:message code="newWebInvoice.taxCode" />'
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "taxName",
+    headerText : '<spring:message code="newWebInvoice.taxCode" />',
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
+    style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0"
 }, {
     dataField : "taxAmt",
     headerText : '<spring:message code="newWebInvoice.taxAmount" />',
+    style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0"
 }, {
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
+    style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0",
     editable : false,
@@ -42,6 +61,7 @@ var myColumnLayout = [ {
 }, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
+    style : "aui-grid-user-custom-left",
     width : 200
 }
 ];
@@ -66,6 +86,7 @@ $(document).ready(function () {
     $("#viewReqstDt").text(myGridData[0].reqstDt);
     $("#viewReqstUserId").text(myGridData[0].reqstUserId);
     $("#viewMemAccId").text(myGridData[0].memAccId);
+    $("#viewMemAccName").text(myGridData[0].memAccName);
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
     $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0"));
     
@@ -86,6 +107,7 @@ $(document).ready(function () {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_approveView">
+<input type="hidden" id="viewMemAccId">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -116,7 +138,7 @@ $(document).ready(function () {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="invoiceApprove.supBrEnp" /></th>
-	<td id="viewMemAccId"></td>
+	<td id="viewMemAccName"></td>
 	<th scope="row"><spring:message code="newWebInvoice.payDueDate" /></th>
 	<td id="viewPayDueDt"></td>
 </tr>
