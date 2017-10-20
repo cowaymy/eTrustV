@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.Service.as.AfterServiceJobDto;
+import com.coway.trust.api.mobile.Service.as.AfterServiceJobForm;
+import com.coway.trust.api.mobile.Service.heartService.HeartServiceJobDto;
+import com.coway.trust.api.mobile.Service.heartService.HeartServiceJobForm;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -57,9 +61,32 @@ public class ServiceApiController {
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(list);
-
-	
 	}
+	
+	
+	
+	
+	
+	@ApiOperation(value = "AfterServiceJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/AfterServiceJobList", method = RequestMethod.GET)
+	public ResponseEntity<List<AfterServiceJobDto>> getHeartServiceJob(
+			@ModelAttribute AfterServiceJobForm AfterServiceJobForm) throws Exception {
+
+		Map<String, Object> params = AfterServiceJobForm.createMap(AfterServiceJobForm);
+
+		List<EgovMap> AfterServiceJobList = MSvcLogApiService.getAfterServiceJobList(params);
+
+		for (int i = 0; i < AfterServiceJobList.size(); i++) {
+			LOGGER.debug("AfterServiceJobList    값 : {}", AfterServiceJobList.get(i));
+
+		}
+		
+		List<AfterServiceJobDto> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
 	
 	
 
