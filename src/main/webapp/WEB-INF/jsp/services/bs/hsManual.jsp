@@ -464,10 +464,10 @@
         //Start AUIGrid
         $(document).ready(function() {
                  
-                 doDefCombo(StatusTypeData, '' ,'cmbStatusType', 'S', '');
-                   
-                 $('#myBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
-                 $('#ManuaMyBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
+	          doDefCombo(StatusTypeData, '' ,'cmbStatusType', 'S', '');
+	            
+	          $('#myBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
+	          $('#ManuaMyBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
                  
                 // AUIGrid 그리드를 생성합니다.
 //                createAUIGrid();
@@ -540,13 +540,21 @@
         function fn_checkRadioButton(objName){
     
             if( document.searchForm.elements['searchDivCd'][0].checked == true ) {
-                          
+                       
+                        alert(document.searchForm.elements['searchDivCd'][0].checked);
+                        
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="none";
     
                         var divhsManagementObj = document.querySelector("#hsManagement");
                         divhsManagementObj.style.display="block";
-                        
+                                             
+
+
+						$('#hSConfiguration').attr('disabled',true); 
+//						$('#hSConfiguration').attr('disabled',false);  //SMS버튼 활성화 
+//                        $("select[name=hSConfiguration]").attr('disabled', 'disabled');
+
                         //2번영역 데이터 클리어
                         //fn_checkboxChangeHandler();
                         fn_destroyGridA();
@@ -561,6 +569,8 @@
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="block";
                         
+                        $("#addResult").attr("disabled",true);
+                         
                         //1번영역 데이터 클리어
                         $("#ManuaSalesOrder").val('');
 //                        $("#ManuaMyBSMonth").val('');
