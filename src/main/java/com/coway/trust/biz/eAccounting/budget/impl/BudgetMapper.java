@@ -36,4 +36,8 @@ public interface BudgetMapper {
 	String selectBudgetDocNo(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectFileList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectAvailableAmtList(Map<String, Object> params) throws Exception;
+
+	EgovMap getBudgetAmt( Map<String, Object> params) throws Exception;
 }

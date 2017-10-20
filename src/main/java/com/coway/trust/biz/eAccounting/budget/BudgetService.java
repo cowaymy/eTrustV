@@ -17,9 +17,11 @@ public interface BudgetService {
 	
 	List<EgovMap> selectAdjustmentList(Map<String, Object> params) throws Exception;
 
-	int saveAdjustmentInfo (Map<String, Object> params) throws Exception;
+	EgovMap saveAdjustmentInfo (Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectFileList(Map<String, Object> params) throws Exception;
+	
+	EgovMap getBudgetAmt(Map<String, Object> params) throws Exception;
 	
 	/*int insertAdjustmentInfo(List<Object> addList, Integer crtUserId) throws Exception;
 

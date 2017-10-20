@@ -228,10 +228,6 @@ public class BudgetController {
 		Map param = new HashMap();
 		
 		if(!CommonUtils.isEmpty(params.get("gridBudgetDocNo"))){
-			/*String[] budgetAdjType = request.getParameterValues("budgetAdjType");
-			
-			params.put("budgetAdjType", budgetAdjType);*/
-			
 						
 			List<EgovMap> adjustmentList = null; 
 			List<EgovMap> fileList = null; 
@@ -242,21 +238,14 @@ public class BudgetController {
 			
 			if(!CommonUtils.isEmpty(params.get("atchFileGrpId"))){
 				fileList= budgetService.selectFileList(params);	
-
-				//model.addAttribute("fileList", fileList);
-
-				model.addAttribute("fileList", fileList);
 			}
+			model.addAttribute("fileList", fileList);
 			model.addAttribute("adjustmentList", new Gson().toJson(adjustmentList));
 			
 			LOGGER.debug(" fileList =======>>>" +  fileList);
 			LOGGER.debug(" new Gson().toJson(adjustmentList)=======>>>" +  new Gson().toJson(adjustmentList));
-			//model.addAttribute("adjustmentList", adjustmentList);
 		}
 		
-		//return ResponseEntity.ok(result);
-		
-		/*model.put("atchFileGrpId", params.get("atchFileGrpId"));*/
 		model.addAttribute("budgetDocNo", params.get("gridBudgetDocNo"));
 
 		LOGGER.debug("gridBudgetDocNo =======>>>" +  params.get("gridBudgetDocNo"));
@@ -269,7 +258,8 @@ public class BudgetController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		LOGGER.debug("request =====================================>>  " + request);
-		
+
+		LOGGER.debug("request =====================================>>  " + request.getParameter("gridData"));
 		params.put("userId", sessionVO.getUserId());
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
@@ -297,42 +287,75 @@ public class BudgetController {
 	public ResponseEntity<ReturnMessage> saveAdjustmentList (HttpServletRequest request, @RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
 		
 		LOGGER.debug("params =====================================>>  " + params);
-		LOGGER.debug("request :: atchFileGrpId ==============>> " + request.getParameter("atchFileGrpId"));
+		LOGGER.debug("request :: atchFileGrpId ==============>> " + params.get("pAtchFileGrpId"));
 		
-		if(!CommonUtils.isEmpty(request.getParameter("atchFileGrpId").toString())){
+		if(!CommonUtils.isEmpty(params.get("pAtchFileGrpId").toString())){
 
-			int atchFileGrpId =  Integer.parseInt(request.getParameter("atchFileGrpId").toString());
+			int atchFileGrpId =  Integer.parseInt(params.get("pAtchFileGrpId").toString());
 			params.put("atchFileGrpId", atchFileGrpId);
 		}
-		String type =  request.getParameter("type").toString();
+		String type =  params.get("type").toString();
 		params.put("type", type);
 		
 		LOGGER.debug("params :: atchFileGrpId ==============>> " + params.get("atchFileGrpId"));
-		
-		ArrayList<Object> addList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		ArrayList<Object> updList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_UPDATE); // Get grid addList
-	/*	ArrayList<Object> delList =  (ArrayList<Object>) params.get(AppConstants.AUIGRID_REMOVE); // Get grid addList*/		
-		
-		int tmpCnt = 0;
+			
 		int totCnt = 0;
 		
-		params.put("addList", addList);
-		params.put("updList", updList);
-		/*params.put("delList", delList);*/
 		params.put("userId", sessionVO.getUserId());
+
+		Map result = new HashMap<String, Object>();
 		
-		tmpCnt = budgetService.saveAdjustmentInfo(params);
-		totCnt = totCnt + tmpCnt;
+		result = budgetService.saveAdjustmentInfo(params);
+		
 		
 		// 결과 만들기 예.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
-    	message.setData(totCnt);
+    	message.setData(result);
     	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     
     	return ResponseEntity.ok(message);
 		
-	}	
+	}
+	
+	@RequestMapping(value = "/budgetCheck", method = RequestMethod.POST)
+	public ResponseEntity <EgovMap> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) throws Exception{		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put("month", params.get("sendYearMonth").toString().substring(0, 2));
+		params.put("year", params.get("sendYearMonth").toString().substring(3));
+		params.put("budgetPlanMonth", params.get("sendYearMonth").toString().substring(0, 2));
+		params.put("budgetPlanYear", params.get("sendYearMonth").toString().substring(3));
+		params.put("costCentr", params.get("sendCostCenter"));
+		params.put("budgetCode", params.get("sendBudgetCode"));
+		params.put("glAccCode", params.get("sendGlAccCode"));
+		//params.put("netAmt", Float.parseFloat(params.get("requestAmt").toString()));
+		
+		EgovMap result = new EgovMap();
+		
+		result = budgetService.getBudgetAmt(params);		
+
+		/*Map resultAmt = budgetService.selectAvailableBudgetAmt(params);
+		
+		resultAmt.get("availableAmt");
+		
+		EgovMap result = new EgovMap();
+		result.put("budgetYn", budgetYn);
+		result.put("availableAmt", resultAmt.get("availableAmt"));
+		result.put("requestAmt", params.get("requestAmt"));
+
+		LOGGER.debug("result =====================================>>  " + result);*/
+		
+		// 결과 만들기 예.
+    	/*ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(result);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));*/
+
+		
+    	return ResponseEntity.ok(result);
+	}
 	
 }
 

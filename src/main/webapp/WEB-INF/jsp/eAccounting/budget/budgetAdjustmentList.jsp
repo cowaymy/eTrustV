@@ -136,6 +136,14 @@ $(document).ready(function(){
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
         visible :false
+    },{
+        dataField : "availableAmt",
+        headerText : '',
+        dataType : "numeric",
+        formatString : "#,##0",
+        style : "my-right-style",
+        width : 100,
+        visible :true
     }];
          
     var adjOptions = {

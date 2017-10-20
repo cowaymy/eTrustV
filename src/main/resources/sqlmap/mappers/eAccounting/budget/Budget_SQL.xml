@@ -164,17 +164,11 @@
                        WHERE FM.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
                            AND rownum=1) AS FILE_PATH  
                  ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
-		         ,'N' AS CHECK_ID                 
+		         ,'N' AS CHECK_ID 
+		         ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT                     
 		FROM FCM0102M A
 	   INNER JOIN FCM0103D B 
 	       ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-	/*     LEFT OUTER JOIN  
-	     ( SELECT ATCH_FILE_GRP_ID, FILE_SUB_PATH, PHYSICL_FILE_NAME 
-	          FROM SYS0070M FM
-             INNER JOIN SYS0071D FD
-                 ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
-            WHERE ROWNUM = 1
-            ) F  ON A.ATCH_FILE_GRP_ID = F. ATCH_FILE_GRP_ID*/
 	  WHERE  1=1
       ]]>     
         <if test="stYearMonth != null and stYearMonth != ''">
@@ -201,7 +195,7 @@
         <if test="appvStus != null and appvStus != ''">
            AND A.APPV_STUS = #{appvStus}
            </if>
-           ORDER BY A.BUDGET_DOC_NO, BUDGET_ADJ_TYPE
+           ORDER BY A.BUDGET_DOC_NO, BUDGET_DOC_SEQ
   </select>
   
      <select id="selectFileList" parameterType="Map"  resultType="egovMap">
@@ -243,12 +237,7 @@
 		    (
 		        #{budgetDocNo}
 		       ,#{atchFileGrpId}
-		        <if test='type == "temp"'>
 		       ,'O'
-		       </if>
-		        <if test='type == "approval"'>
-               ,'C'
-               </if>
 		       ,SYSDATE
 		       ,#{userId}
 		       ,SYSDATE
@@ -301,8 +290,10 @@
 
   <update id="updateAdjustmentM" parameterType="Map">
    UPDATE FCM0102M
-      SET ATCH_FILE_GRP_ID = #{atchFileGrpId}
-            ,APPV_STUS = #{appvStus}
+      SET APPV_STUS = #{appvStus}
+         <if test='atchFileGrpId != "" and atchFileGrpId !=null'>
+             ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
+         </if>
             ,UPD_USER_ID   = #{userId}
             ,UPD_DT        = SYSDATE
     WHERE  BUDGET_DOC_NO     = #{budgetDocNo}
@@ -329,18 +320,31 @@
         AND BUDGET_DOC_SEQ = #{budgetDocSeq}
 </update>
 
-   <insert id="insertApprove" parameterType="Map">
-        INSERT INTO FCM0105M
+ <update id="insertApprove" parameterType="Map">
+        
+   MERGE INTO FCM0105M A
+            USING (SELECT #{budgetDocNo} AS BUDGET_DOC_NO ,
+                                  #{userId} AS USER_ID 
+                         FROM dual)b
+            ON (      A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
+                  AND A.APPV_PRCSS_STUS = 'R' )
+       WHEN MATCHED THEN
+    UPDATE  SET A.REQST_DT = SYSDATE ,
+               A.REQST_USER_ID = b.USER_ID ,
+               A.UPD_DT = SYSDATE,
+               A.UPD_USER_ID = b.USER_ID
+    WHEN NOT MATCHED THEN
+           INSERT 
            (
                 BUDGET_DOC_NO
-			   ,REQST_DT
-			   ,REQST_USER_ID
-			   ,APPV_PRCSS_STUS
-			   ,APPV_PRCSS_DT
-			   ,CRT_DT
-			   ,CRT_USER_ID
-			   ,UPD_DT
-			   ,UPD_USER_ID
+               ,REQST_DT
+               ,REQST_USER_ID
+               ,APPV_PRCSS_STUS
+               ,APPV_PRCSS_DT
+               ,CRT_DT
+               ,CRT_USER_ID
+               ,UPD_DT
+               ,UPD_USER_ID
            )
          VALUES
            (
@@ -354,6 +358,33 @@
                ,SYSDATE
                ,#{userId}
            )
-    </insert>
+    </update>    
+    
+<select id="getBudgetAmt" parameterType="Map" resultType="egovMap">
+/* webInvoiceMapper.budgetCheck */
+    SELECT FN_GET_AVAILABLE_AMT(#{year}, #{month}, #{costCentr}, #{budgetCode}, #{glAccCode}) AVAILABLE_AMT FROM DUAL
+</select>
 
+
+<select id="selectAvailableAmtList" parameterType="Map" resultType="egovMap">
+       <![CDATA[ 
+       SELECT  B.COST_CENTR               
+                 ,B.BUDGET_CODE
+                 ,B.GL_ACC_CODE
+                 ,BUDGET_ADJ_YEAR
+                 ,BUDGET_ADJ_MONTH
+                 ,SUM(CASE  WHEN B.SIGNAL = '+' THEN B.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN B.SIGNAL = '-' THEN B.ADJ_AMT ELSE 0 END) TOTAL 
+                 ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT                     
+        FROM FCM0102M A
+       INNER JOIN FCM0103D B 
+           ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
+           where A.BUDGET_DOC_NO = #{budgetDocNo}
+           group by B.COST_CENTR ,B.BUDGET_CODE
+                 ,B.GL_ACC_CODE,BUDGET_ADJ_YEAR
+                 ,BUDGET_ADJ_MONTH
+                 ]]>
+  </select>
+
+
+    
 </mapper>

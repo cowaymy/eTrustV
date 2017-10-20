@@ -1,5 +1,6 @@
 package com.coway.trust.biz.eAccounting.budget.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.eAccounting.budget.BudgetService;
+import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementServieImpl;
 import com.coway.trust.util.CommonUtils;
 
@@ -24,6 +27,9 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	
 	@Resource(name = "budgetMapper")
 	private BudgetMapper budgetMapper;
+	
+	@Resource(name = "webInvoiceMapper")
+	private WebInvoiceMapper webInvoiceMapper;
 
 	@Override
 	public List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception {
@@ -51,30 +57,36 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	}
 
 	@Override
-	public int saveAdjustmentInfo(Map<String, Object> params) throws Exception {
+	public EgovMap saveAdjustmentInfo(Map<String, Object> params) throws Exception {
 		
-		List<Object> addList = (List<Object>) params.get("addList");
-		List<Object> updList = (List<Object>) params.get("updList");
-		List<Object> delList = (List<Object>) params.get("delList");
+		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
+
+		EgovMap result = new EgovMap();
+		
+		List<Object> addList = (List<Object>) gridData.get(AppConstants.AUIGRID_ADD);
+		List<Object> updList = (List<Object>) gridData.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> delList = (List<Object>) gridData.get(AppConstants.AUIGRID_REMOVE);
 		
 		//String atchFileGrpId = params.get("atchFileGrpId").toString();
 		
 		int addCnt=0;
 		int updCnt=0;
 		int delCnt=0;
+
+		Object  budgetDocNo = params.get("pBudgetDocNo");
+		Map approvalMap = new HashMap<String, Object>();
 		
 		if(addList.size() > 0){
 			
 			Logger.debug(" >>>>> insertAdjustmentInfo ");
-			int i = 0;
-			String  budgetDocNo = null;
+			
 			for (Object obj : addList) 
 			{				
 				((Map<String, Object>) obj).put("userId", params.get("userId"));
 				
 				addCnt++;
 
-				if(addCnt == 1 && CommonUtils.isEmpty(((Map<String, Object>) obj).get("budgetDocNo"))){
+				if(addCnt == 1 && CommonUtils.isEmpty(budgetDocNo)){
 					
 					((Map<String, Object>) obj).put("atchFileGrpId", params.get("atchFileGrpId"));
 					
@@ -83,10 +95,6 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
 					budgetDocNo= (String) ((Map<String, Object>) obj).get("budgetDocNo");
 					
-					//approval table insert
-					if(params.get("type").toString().equals("approval")){
-						budgetMapper.insertApprove((Map<String, Object>) obj); 
-					}
 				}
 				
 				//detail table insert
@@ -105,6 +113,34 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 				updCnt++;
 
 				budgetMapper.updateAdjustmentD((Map<String, Object>) obj);
+				
+				//TODO 파일 수정시 M table 수정 로직 필요
+			}
+		}
+		
+		//approval table insert
+		if(params.get("type").toString().equals("approval")){
+			
+			approvalMap.put("budgetDocNo", budgetDocNo);
+			approvalMap.put("userId", params.get("userId"));
+			
+			
+			List<EgovMap> amtList = budgetMapper.selectAvailableAmtList(approvalMap);
+			
+			String overbudget="N"; //예산 사용 가능
+			
+			for(int i=0; i < amtList.size(); i++){
+				EgovMap amtMap = amtList.get(i);
+				
+				if(  Float.parseFloat(amtMap.get("total").toString()) > Float.parseFloat(amtMap.get("availableAmt").toString())){
+					overbudget = "Y";  //예산 초과
+					amtMap.put("overbudget", overbudget);
+					result.put("amtMap", amtMap);
+					break;
+				}				
+			}
+			if(overbudget.equals("N")){
+				budgetMapper.insertApprove(approvalMap); 
 			}
 		}
 		
@@ -131,13 +167,20 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 			}
 		}*/
 		
+		result.put("totCnt", addCnt+updCnt+delCnt);
+		result.put("budgetDocNo", budgetDocNo.toString());
 		
-		return addCnt+updCnt+delCnt;
+		return result ;
 	}
 
 	@Override
 	public List<EgovMap> selectFileList(Map<String, Object> params) throws Exception {
 		return budgetMapper.selectFileList(params);
+	}
+
+	@Override
+	public EgovMap getBudgetAmt(Map<String, Object> params) throws Exception {		
+		return budgetMapper.getBudgetAmt(params);
 	}
 	
 }

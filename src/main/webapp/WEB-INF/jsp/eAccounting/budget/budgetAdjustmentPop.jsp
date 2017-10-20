@@ -12,6 +12,7 @@
 <script  type="text/javascript">
 
 var adjPGridID;
+var test;
 
 var fileList = new Array();
 <c:forEach var="file" items="${fileList}">
@@ -27,19 +28,22 @@ fileList.push(obj);
 
 $(document).ready(function(){
 		
-	if("${fn:length(fileList)}" <= 0) {
+	console.log("${fileList}");
+	if("${fileList.size()}" <= 0) {
         setInputFile2();
+    }else{
+	      /* for(var i = 0; i < fileList.length; i++) {
+	        
+	        setHaveInputFile();
+	    }  */
     }
 	
-	var adjustmentList = JSON.parse('${adjustmentList}');
+	var adjustmentList;
 	
-   /*  for(var i = 0; i < fileList.length; i++) {
-		
-		console.log(fileList[i]);
-		var a ="#file"+i ;
-		
-		$(a).val(fileList[i].atchFileName);
-	} */
+	 if('${adjustmentList}'=='' || '${adjustmentList}' == null){
+	}else{
+		adjustmentList = JSON.parse('${adjustmentList}');
+	} 	
 
 //console.log(fileList);
 		
@@ -66,29 +70,57 @@ $(document).ready(function(){
         }
     });
     
-    $("#sendAmount").keydown(function (event) {
-    	 if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) { 
-         }else if(event.keyCode == 8){
-         }else{
-        	return false;         
-         }
+    $("#sendAmount").keydown(function (event) { 
+    	
+    	 var code = window.event.keyCode;
+    	 
+    	 if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+    	 {
+    	  window.event.returnValue = true;
+    	  return;
+    	 }
+    	 window.event.returnValue = false;
+    	 
     });
     
-    $("#sendAmount").change(function(){
-        var str = $("#sendAmount").val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+    $("#sendAmount").click(function () { 
+    	var str = $("#sendAmount").val().replace(/,/gi, "");
+        $("#sendAmount").val(str);    	
+   });
+    $("#sendAmount").blur(function () { 
+    	var str = $("#sendAmount").val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+        $("#sendAmount").val(str);    	
+   });
+    
+     $("#sendAmount").change(function(){
+        var str =""+ Math.floor($("#sendAmount").val() * 100)/100;
+        
+        var str2 = str.split(".");
+       
+        if(str2.length == 1){
+        	str2[1] = "00";
+        }
+        
+        if(str2[0].length > 11){
+        	alert("<spring:message code="budget.msg.inputAmount" />");
+        	str = "";
+        }else{
+        	str = str2[0].substr(0, 11)+"."+str2[1];
+        }
+        str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+        
         
     	if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
             $("#recvAmount").val(str);
     	}
     	$("#sendAmount").val(str);
-    });
+    }); 
     
     //기본 콤보 셋팅
     fn_chnCombo('01');
   
     //파일 다운
     $(".input_text").dblclick(function() {
-    	var fileList = "${fileList}";
     	
         var oriFileName = $(this).val();
         var atchFileName;
@@ -101,7 +133,8 @@ $(document).ready(function(){
                 physiclFileName = fileList[i].physiclFileName;
             }
         }
-        
+        alert(oriFileName);
+        alert(atchFileName +", "+ fileSubPath +", "+physiclFileName);
         fn_atchViewDown(atchFileName, fileSubPath, physiclFileName);
     });
     
@@ -170,10 +203,15 @@ $(document).ready(function(){
         dataField : "adjAmt",
         headerText : '<spring:message code="budget.Amount" />',
         dataType : "numeric",
-        formatString : "#,##0",
+        formatString : "#,##0.00",
         editable : true,
         style : "my-right-style",
-        width : 100
+        width : 100,
+        editRenderer : {
+            type : "InputEditRenderer",
+            onlyNumeric : true,
+            autoThousandSeparator : true // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        }
     },{
         dataField : "adjRem",
         headerText : '<spring:message code="budget.Remark" />',
@@ -183,6 +221,14 @@ $(document).ready(function(){
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict", 
         width : 200
+    },{
+        dataField : "availableAmt",
+        headerText : '',
+        dataType : "numeric",
+        formatString : "#,##0.00",
+        style : "my-right-style",
+        width : 100,
+        visible :true
     }];
          
     var adjPOptions = {
@@ -196,7 +242,9 @@ $(document).ready(function(){
     
     adjPGridID = GridCommon.createAUIGrid("#adjPGridID", adjPLayout, "rowId", adjPOptions);
 
-    AUIGrid.setGridData(adjPGridID, adjustmentList);
+    if(adjustmentList != '' ){
+        AUIGrid.setGridData(adjPGridID, adjustmentList);
+    } 
        
     $("#pBudgetDocNo").val("${budgetDocNo}");
     
@@ -361,7 +409,7 @@ function fn_setCostCenter (str){
 }
 
 function fn_chnCombo(str){
-	$("#btnClear").click();
+	//$("#btnClear").click();
 	
 	if( str =="01" || str =="02"){
         
@@ -456,9 +504,7 @@ function fn_AddRow()
         });
         return false;
     }
-    
-    alert($("#pBudgetDocNo").val());
-    
+        
     item.budgetDocNo = $("#pBudgetDocNo").val();
     item.costCentr = $("#sendCostCenter").val();
     item.adjYearMonth = $("#sendYearMonth").val();
@@ -466,7 +512,7 @@ function fn_AddRow()
     item.glAccCode  = $("#sendGlAccCode").val();
     item.budgetAdjType  =$("#pAdjustmentType").val();
     item.budgetAdjTypeName  =$("#pAdjustmentType option:selected").text();
-    item.adjAmt  = $("#sendAmount").val().replace(",", "");
+    item.adjAmt  = $("#sendAmount").val().replace(/,/gi, "");
     item.adjRem  = $("#remark").val();
     
     if($("#pAdjustmentType").val() == '01' ){
@@ -474,7 +520,6 @@ function fn_AddRow()
     }else{
     	item.signal  = '-';
     }
-    
     
     if($("#pAdjustmentType").val() != '01' && $("#pAdjustmentType").val() !=''){
     	var item2 = new Object();
@@ -525,75 +570,169 @@ function fn_AddRow()
         item2.glAccCode  = $("#recvGlAccCode").val();
         item2.budgetAdjType  =$("#pAdjustmentType").val();
         item2.budgetAdjTypeName  =$("#pAdjustmentType option:selected").text();
-        item2.adjAmt  = $("#recvAmount").val().replace(",", "");
+        item2.adjAmt  = $("#recvAmount").val().replace(/,/gi, "");
         item2.adjRem  = $("#remark").val();
         item2.signal  = '+';
     }
     
-    // parameter
-    // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-    AUIGrid.addRow(adjPGridID, item, 'last');                    
-    AUIGrid.addRow(adjPGridID, item2, 'last');                    
-}  
+    
+    Common.ajax("POST", "/eAccounting/budget/budgetCheck", $("#pAdjForm").serializeJSON(), function(result) {
+        
+        console.log("성공.");
+        console.log( result);
+        
+        
+        if(item.signal == '+'){
+        	
+        	if(item.adjAmt > result.availableAmt){
+                alert("<spring:message code="budget.exceeded" />");
+        	}else{
+                item.availableAmt = result.availableAmt - item.adjAmt ;
+                // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+                // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+                AUIGrid.addRow(adjPGridID, item, 'last');                    
+                AUIGrid.addRow(adjPGridID, item2, 'last'); 
+        	}
+        }     
 
-var atchFileGrpId;
-var type;
+   });
+       
+                
+}  
 
 function fn_uploadFile(str) {
    
     var formData = Common.getFormData("pAdjForm");
 
-    type = str;
+    $("#type").val(str);
+    
+    var idx = AUIGrid.getRowCount(adjPGridID);
+    
+    if(idx == 0){
+    	alert(<spring:message code="budget.msg.noData" />);
+    	return;
+    }
     
     if(AUIGrid.getCellValue(adjPGridID, 1, "budgetDocNo") != ""){
-    	
-    	atchFileGrpId="";
-        fn_saveAdjustement();
-        
-    }else{
-        Common.ajaxFile("/eAccounting/budget/uploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+    	$("#pAtchFileGrpId").val("");
 
-            console.log(result);
-          
-            atchFileGrpId = result.data;
-            
-            fn_saveAdjustement();
-            
-        }); 
+   	    if(Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveAdjustement));
+    	
+    }else{
+        
+        if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+        	
+ /*            var obj = $("#pAdjForm").serializeJSON();        	 
+        	    var gridData = GridCommon.getEditData(adjPGridID);        	    
+        	    formData.append("obj", obj);
+        	    formData.append("gridData",gridData); */        	    
+        	
+	        Common.ajaxFile("/eAccounting/budget/uploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+	
+	            console.log(result);
+	          
+	            $("#pAtchFileGrpId").val(result.data);
+	            
+	            fn_saveAdjustement();
+	            
+	        }); 
+	  }));
     }
 }
 
-function fn_saveAdjustement(){
-		    
-    Common.ajax("POST", "/eAccounting/budget/saveAdjustmentList?atchFileGrpId="+atchFileGrpId+"&type="+type, GridCommon.getEditData(adjPGridID), function(result)    {
-        Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+/* function budgetCheck(){
+	 // parameter
+    var idx =  AUIGrid.getRowCount(adjPGridID);
+    var requestAmt = 0;
+    var budgetYn ;
+    
+    for(var i = 0; i < idx; i++){
+        if(AUIGrid.getCellValue(adjPGridID, i, "signal")== "+"){
+        	var amt = AUIGrid.getCellValue(adjPGridID, i, "adjAmt");
+        	
+        	//amt = amt.replace(/,/gi, "");
+            requestAmt +=amt;
+        }
+    }
+    
+    $("#requestAmt").val(requestAmt);
+    
+    var obj = $("#pAdjForm").serializeJSON();    
+    var gridData = GridCommon.getEditData(adjPGridID);
+    obj.gridData = gridData;
+
+     //예산 조회
+   Common.ajax("POST", "/eAccounting/budget/budgetCheck", obj, function(result) {
+       
+        console.log("성공.");
+        console.log( result);
         
-        console.log("성공." + JSON.stringify(result));
-        console.log("data : " + result.data);
-        fn_selectListAjax();
-     }
-     , function(jqXHR, textStatus, errorThrown){
-            try {
-                console.log("Fail Status : " + jqXHR.status);
-                console.log("code : "        + jqXHR.responseJSON.code);
-                console.log("message : "     + jqXHR.responseJSON.message);
-                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-          }
-          catch (e)
-          {
-            console.log(e);
-          }
-          alert("Fail : " + jqXHR.responseJSON.message);
-    });
+        budgetYn = result.budgetYn;
+        if(result.budgetYn == 'N'){
+        	alert("<spring:message code="budget.Overbudget" /> (<spring:message code="budget.requestedAmount " />: " + result.requestAmt +", <spring:message code="budget.AvailableAmount" /> : " + result.availableAmt +")");
+        }        
+   });
+     
+     return budgetYn;
+} */
+
+function fn_saveAdjustement(){
+    var obj = $("#pAdjForm").serializeJSON();    
+    var gridData = GridCommon.getEditData(adjPGridID);
+    obj.gridData = gridData;
+    
+    /*   var yn = budgetCheck();
+    
+     if( budgetCheck()=="N"){
+        return;
+    }else{ */
+    	
+    	Common.ajax("POST", "/eAccounting/budget/saveAdjustmentList", obj , function(result)    {
+            
+            console.log("성공." + JSON.stringify(result));
+            console.log("data : " + result.data);
+            
+            $("#pBudgetDocNo").val(result.data.budgetDocNo);
+          
+            if($("#type").val() == "approval"){
+            	 if(result.data.amtMap.overbudget == "Y"){
+            		 
+                     alert("승인요청 불가 : Cost Center :" + result.data.amtMap.costCentr +", Budget Code : " 
+                             + result.data.amtMap.budgetCode +", Gl Account code : " + result.data.amtMap.glAccCode );
+                 }else{
+                	 Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
+                 }
+            }else{
+            	Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
+                
+            }
+            
+            fn_selectListAjax();
+         }
+         , function(jqXHR, textStatus, errorThrown){
+                try {
+                    console.log("Fail Status : " + jqXHR.status);
+                    console.log("code : "        + jqXHR.responseJSON.code);
+                    console.log("message : "     + jqXHR.responseJSON.message);
+                    console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+              }
+              catch (e)
+              {
+                console.log(e);
+              }
+              alert("Fail : " + jqXHR.responseJSON.message);
+        });
+  /*   } */
 }
 
 function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
-    
-	alert(atchFileName);
 	
+	alert(atchFileName +", "+ fileSubPath +", "+physiclFileName);
+    	
 	var file = atchFileName.split(".");
 		
+	
+	
 	   if(file[1] == "jpg") {
            // TODO View
            var fileSubPath = fileSubPath;
@@ -609,6 +748,19 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
                + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
        }
 }
+
+ /* function setHaveInputFile(){//인풋파일 있을경우
+    var autoFl = $(".auto_file label .input_text");
+    for(var i=0; i<autoFl.length; i++){
+        var  flVal = $(".auto_file input[type=file]:eq("+i+")").attr("value");
+        var  flUpd = $(".auto_file label .input_text:eq("+i+")");
+        if( flVal ){
+            flUpd.val(flVal);
+        } else {
+            flUpd.val("");
+        };
+    }
+}  */
 
 </script>
 
@@ -635,7 +787,9 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
     <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />
     
     <input type="hidden" id = "pBudgetDocNo" name="pBudgetDocNo" />
-    <input type="hidden" id = "atchFileGrpId" name="atchFileGrpId" value="${atchFileGrpId}"/>
+    <input type="hidden" id = "pAtchFileGrpId" name="pAtchFileGrpId" />
+    <input type="hidden" id = "type" name="type" />
+    <input type="hidden" id = "requestAmt" name="requestAmt" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -689,7 +843,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <tr>
 	<th scope="row"><spring:message code="budget.BudgetCode" /></th>
 	<td>
-		<input type="hidden" id="sendBudgetCode" name="sendCostCenter" title="" placeholder="" class="" />
+		<input type="hidden" id="sendBudgetCode" name="sendBudgetCode" title="" placeholder="" class="" />
 		<input type="text" id="sendBudgetCodeName" name="sendBudgetCodeName" title="" placeholder="" class="" />
 		<a href="#" id="sendBudget" class="search_btn" onclick="javascript:fn_budgetCodePop('send')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
