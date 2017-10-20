@@ -30,7 +30,6 @@ function checkAll(isChecked) {
 
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
     if(isChecked) {
-//         AUIGrid.updateAllToValue(grdMenuMapping, "funcYn", "Y");
         var item = { funcYn : "Y" };
         for(idx = 0 ; idx < gridDetailDataLength ; idx++){
         	if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
@@ -44,7 +43,6 @@ function checkAll(isChecked) {
     			AUIGrid.updateRow(grdMenuMapping, item, idx);
     		}
         }
-//         AUIGrid.updateAllToValue(grdMenuMapping, "funcYn", "N");
     }
 
     // 헤더 체크 박스 일치시킴.
