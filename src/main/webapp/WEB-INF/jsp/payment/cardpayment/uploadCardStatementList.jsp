@@ -31,9 +31,9 @@
     var columnLayout = [ 
         {dataField : "crcStateId",headerText : "CRC No.",width : 100 , editable : false},
         {dataField : "bankAccName",headerText : "Bank Account",width : 300 , editable : false},
-        {dataField : "crcStateRefDt",headerText : "Transaction<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd-mm-yyyy"},
+        {dataField : "crcStateRefDt",headerText : "Transaction<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
         {dataField : "crcTotGrossAmt",headerText : "Gross(RM)",width : 100 , editable : false, dataType:"numeric", formatString:"#,##0.00"},               
-        {dataField : "crcStateUploadDt",headerText : "Upload<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd-mm-yyyy"},        
+        {dataField : "crcStateUploadDt",headerText : "Upload<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},        
         {dataField : "crcStateUploadUserNm",headerText : "Upload By",width : 240 , editable : false},
         {dataField : "crcBcStusName",headerText : "Cleared<br>Status",width : 240 , editable : false},
         {dataField : "crcStateRem",headerText : "Remark",editable : false}
@@ -42,7 +42,7 @@
     var detailColumnLayout = [
         {dataField : "crcTrnscId",headerText : "CRC Transaction ID",editable : false, visible : false},
         {dataField : "crcTrnscMid",headerText : "MID", editable : false},                    
-        {dataField : "crcTrnscDt",headerText : "TR Date",editable : false, dataType:"date",formatString:"dd-mm-yyyy"},                    
+        {dataField : "crcTrnscDt",headerText : "TR Date",editable : false, dataType:"date",formatString:"dd/mm/yyyy"},                    
         {dataField : "crcTrnscNo",headerText : "Card<br>No", editable : false},
         {dataField : "crcTrnscAppv",headerText : "Approval<br>No", editable : false},                    
         {dataField : "crcGrosAmt",headerText : "Gross<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},

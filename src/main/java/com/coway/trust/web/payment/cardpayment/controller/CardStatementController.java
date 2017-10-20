@@ -111,7 +111,7 @@ public class CardStatementController {
 				itemMap = new HashMap<String, Object>();
 				itemMap.put("crcTrnscDt", formData.get("uploadTranDt"));			
 				itemMap.put("crcTrnscMid", String.valueOf(gridMap.get("0")));	// MID
-				//itemMap.put("crcTrnscMid", String.valueOf(gridMap.get("1")));	// Credit Card
+				itemMap.put("crditCard", String.valueOf(gridMap.get("1")));	// Credit Card
 				itemMap.put("crcTrnscNo", String.valueOf(gridMap.get("2")));		//Card Number
 				itemMap.put("crcTrnscAppv", String.valueOf(gridMap.get("3")));		//Approval No
 				itemMap.put("crcGrosAmt", String.valueOf(gridMap.get("4")));		//Gross

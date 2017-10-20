@@ -32,8 +32,8 @@
 	    {dataField : "bsNo",headerText : "BS No.",width : 100 , editable : false},
 	    {dataField : "bankName",headerText : "Bank",width : 160 , editable : false},
 	    {dataField : "bankAccName",headerText : "Bank Account",width : 240 , editable : false},
-	    {dataField : "trnscDt",headerText : "Transaction<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd-mm-yyyy"},
-	    {dataField : "updDt",headerText : "Upload<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd-mm-yyyy"},
+	    {dataField : "trnscDt",headerText : "Transaction<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+	    {dataField : "updDt",headerText : "Upload<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 	    {dataField : "count",headerText : "Count",width : 80 , editable : false, dataType:"numeric", formatString:"#,##0"},
 	    {dataField : "remark",headerText : "Remark",editable : false}
 	    ];
@@ -44,7 +44,7 @@
 	    
 	    {dataField : "bankName",headerText : "Bank", editable : false},                    
 	    {dataField : "bankAccName",headerText : "Bank Account.",editable : false},                    
-	    {dataField : "fTrnscDt",headerText : "Date/<br>Time", editable : false, dataType:"date",formatString:"dd-mm-yyyy"},
+	    {dataField : "fTrnscDt",headerText : "Date/<br>Time", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 	    {dataField : "refNo",headerText : "Ref/<br>Cheq No", editable : false},                    
 	    {dataField : "fTrnscRef3",headerText : "Description1",editable : false},
 	    {dataField : "fTrnscRef1",headerText : "Description2", editable : false},
@@ -150,7 +150,7 @@
         		FormUtil.checkReqValue($("#tranDateTo")) &&
         		FormUtil.checkReqValue($("#uploadDateFr")) &&
         		FormUtil.checkReqValue($("#uploadDateTo")) &&
-        		FormUtil.checkReqValue($("#uploadId")) ){
+        		FormUtil.checkReqValue($("#uploadUserNm")) ){
             Common.alert('* Please input search condition <br />');
             return;
         }

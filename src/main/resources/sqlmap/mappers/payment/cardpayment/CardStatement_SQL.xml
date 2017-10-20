@@ -137,7 +137,8 @@
             CRC_TOT_GST_AMT,
             CRC_TOT_NET_AMT,
             BANK_MAPPING_STUS_ID,
-            KEYIN_STUS_ID
+            KEYIN_STUS_ID,
+            CRDIT_CARD
         ) VALUES (
             #{crcTrnscId},
             #{crcStateId},
@@ -159,7 +160,8 @@
             #{crcTotGstAmt},
             #{crcTotNetAmt},     
             1,
-            1
+            1,
+            #{crditCard}
         )
     </insert>
     
