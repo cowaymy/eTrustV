@@ -17,6 +17,7 @@
             PAY0079D A
             LEFT JOIN SYS0004M B ON A.BANK_ID = B.BANK_ID
             LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID AND C.IS_PAY_CASH = 1
+            LEFT JOIN SYS0047M D ON A.F_BANK_JRNL_CRT_USER_ID = D.USER_ID            
         WHERE
             1=1
             <if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
@@ -29,8 +30,8 @@
             AND A.F_BANK_JRNL_CRT_DT <![CDATA[  >= ]]> TO_DATE(#{uploadDateFr} ,'DD/MM/YYYY') 
             AND A.F_BANK_JRNL_CRT_DT <![CDATA[  < ]]> TO_DATE(#{uploadDateTo} ,'DD/MM/YYYY') + 1
             </if>
-            <if test="uploadId != null and uploadId != '' ">
-            AND A.F_BANK_JRNL_CRT_USER_ID = #{uploadId}
+            <if test="uploadUserNm != null and uploadUserNm != '' ">
+            AND D.NAME LIKE  #{uploadUserNm} || '%'            
             </if>
         ORDER BY A.F_BANK_JRNL_ID DESC           
         

@@ -9,96 +9,93 @@
 }
 </style>
 <script type="text/javaScript">
-	//AUIGrid 그리드 객체
-	var myGridID;
-	var myDetailGridID;
-	var myUploadGridID;
+    //AUIGrid 그리드 객체
+    var myGridID;
+    var myDetailGridID;
+    var myUploadGridID;
 
-	//Grid Properties 설정
-	var gridPros = {
-	        // 편집 가능 여부 (기본값 : false)
-	        editable : false,        
-	        // 상태 칼럼 사용
-	        showStateColumn : false,
-	        // 기본 헤더 높이 지정
-	        headerHeight : 35,
-	        
-	        softRemoveRowMode:false
-	
-	};
+    //Grid Properties 설정
+    var gridPros = {
+            // 편집 가능 여부 (기본값 : false)
+            editable : false,        
+            // 상태 칼럼 사용
+            showStateColumn : false,
+            // 기본 헤더 높이 지정
+            headerHeight : 35,
+            
+            softRemoveRowMode:false
+    
+    };
 
-	// AUIGrid 칼럼 설정
-	var columnLayout = [ 
-	    {dataField : "bsNo",headerText : "BS No.",width : 100 , editable : false},
-	    {dataField : "bankName",headerText : "Bank",width : 160 , editable : false},
-	    {dataField : "bankAccName",headerText : "Bank Account",width : 240 , editable : false},
-	    {dataField : "trnscDt",headerText : "Transaction<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd-mm-yyyy"},
-	    {dataField : "updDt",headerText : "Upload<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd-mm-yyyy"},
-	    {dataField : "count",headerText : "Count",width : 80 , editable : false, dataType:"numeric", formatString:"#,##0"},
-	    {dataField : "remark",headerText : "Remark",editable : false}
-	    ];
-	    
-	var detailColumnLayout = [
-	    {dataField : "bankId",headerText : "Bank ID",editable : false, visible : false},
-	    {dataField : "bankAcc",headerText : "Bank Account Code", editable : false, visible : false},
-	    
-	    {dataField : "bankName",headerText : "Bank", editable : false},                    
-	    {dataField : "bankAccName",headerText : "Bank Account.",editable : false},                    
-	    {dataField : "fTrnscDt",headerText : "Date/<br>Time", editable : false, dataType:"date",formatString:"dd-mm-yyyy"},
-	    {dataField : "refNo",headerText : "Ref/<br>Cheq No", editable : false},                    
-	    {dataField : "fTrnscRef3",headerText : "Description1",editable : false},
-	    {dataField : "fTrnscRef1",headerText : "Description2", editable : false},
-	    {dataField : "fTrnscRef4",headerText : "ref5", editable : false},
-	    {dataField : "fTrnscRef2",headerText : "ref6", editable : false},
-	    {dataField : "fTrnscRef6",headerText : "ref7", editable : false},                    
-	    {dataField : "fTrnscRem",headerText : "Type", editable : false},
-	    {dataField : "fTrnscDebtAmt",headerText : "Debit", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-	    {dataField : "fTrnscCrditAmt",headerText : "Credit", editable : false, dataType:"numeric", formatString:"#,##0.00"}
-	    ];    
+    // AUIGrid 칼럼 설정
+    var columnLayout = [ 
+        {dataField : "crcStateId",headerText : "CRC No.",width : 100 , editable : false},
+        {dataField : "bankAccName",headerText : "Bank Account",width : 300 , editable : false},
+        {dataField : "crcStateRefDt",headerText : "Transaction<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd-mm-yyyy"},
+        {dataField : "crcTotGrossAmt",headerText : "Gross(RM)",width : 100 , editable : false, dataType:"numeric", formatString:"#,##0.00"},               
+        {dataField : "crcStateUploadDt",headerText : "Upload<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd-mm-yyyy"},        
+        {dataField : "crcStateUploadUserNm",headerText : "Upload By",width : 240 , editable : false},
+        {dataField : "crcBcStusName",headerText : "Cleared<br>Status",width : 240 , editable : false},
+        {dataField : "crcStateRem",headerText : "Remark",editable : false}
+        ];
+        
+    var detailColumnLayout = [
+        {dataField : "crcTrnscId",headerText : "CRC Transaction ID",editable : false, visible : false},
+        {dataField : "crcTrnscMid",headerText : "MID", editable : false},                    
+        {dataField : "crcTrnscDt",headerText : "TR Date",editable : false, dataType:"date",formatString:"dd-mm-yyyy"},                    
+        {dataField : "crcTrnscNo",headerText : "Card<br>No", editable : false},
+        {dataField : "crcTrnscAppv",headerText : "Approval<br>No", editable : false},                    
+        {dataField : "crcGrosAmt",headerText : "Gross<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcBcAmt",headerText : "B/C<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcGstAmt",headerText : "GST<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcNetAmt",headerText : "Net<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcTotBcAmt",headerText : "Total<br>B/C", editable : false, dataType:"numeric", formatString:"#,##0.00"},                    
+        {dataField : "crcTotGstAmt",headerText : "Total<br>GST", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcTotNetAmt",headerText : "Total<br>Net", editable : false, dataType:"numeric", formatString:"#,##0.00"}
+        ];    
 
 
     //AUIGrid 칼럼 설정
-	var uploadGridLayout = [
-		{dataField : "0", headerText : "Ref/<br>Cheq No", editable : true},
-		{dataField : "1", headerText : "Description1", editable : true},
-		{dataField : "2", headerText : "Description2", editable : true},
-		{dataField : "3", headerText : "ref5", editable : true},
-		{dataField : "4", headerText : "ref6", editable : true},
-		{dataField : "5", headerText : "ref7", editable : true},
-		{dataField : "6", headerText : "TYPE", editable : true},
-		{dataField : "7", headerText : "Debit", editable : true},
-		{dataField : "8", headerText : "Credit", editable : true}
-		];
+    var uploadGridLayout = [
+        {dataField : "0",headerText : "MID", editable : true},                    
+        {dataField : "1",headerText : "Credit<br>Card",editable : true},                    
+        {dataField : "2",headerText : "Card<br>Number", editable : true},
+        {dataField : "3",headerText : "Approval<br>No", editable : true},                    
+        {dataField : "4",headerText : "Gross<br>(RM)", editable : true},
+        {dataField : "5",headerText : "B/C<br>(RM)", editable : true},
+        {dataField : "6",headerText : "GST<br>(RM)", editable : true},
+        {dataField : "7",headerText : "Net<br>(RM)", editable : true},
+        {dataField : "8",headerText : "Total<br>B/C", editable : true},                    
+        {dataField : "9",headerText : "Total<br>GST", editable : true},
+        {dataField : "10",headerText : "Total<br>Net", editable : true}
+        ];
     
     
-	$(document).ready(function(){
-		
-		//Issue Bank 조회
-	    doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'bankAccount' , 'S', '');
-		
-		//Upload Pop Up화면 : Bank 조회    
-	    doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'uploadIssueBank' , 'S', '');
-		
-		//Upload Pop Up화면 : Bank Account 조회
-	    doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'uploadBankAccount' , 'S', '');
-		
-		//그리드 생성
-	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	    myDetailGridID = GridCommon.createAUIGrid("detail_grid_wrap", detailColumnLayout,null,gridPros);
-	    myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros);
-	    
-	    // 셀 더블클릭 이벤트 바인딩 : 상세 팝업 
+    $(document).ready(function(){
+        
+        //Credit Card Bank Account 조회
+        doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'bankAccount' , 'S', '');
+        
+        //Upload Pop Up화면 : Credit Card Bank Account 조회
+        doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'uploadBankAccount' , 'S', '');
+        
+        //그리드 생성
+        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+        myDetailGridID = GridCommon.createAUIGrid("detail_grid_wrap", detailColumnLayout,null,gridPros);
+        myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros);
+        
+        // 셀 더블클릭 이벤트 바인딩 : 상세 팝업 
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-        	
-        	var bsNo = AUIGrid.getCellValue(myGridID , event.rowIndex , "bsNo");	
-            Common.ajax("GET","/payment/selectBankStatementDetailList.do", {"bsNo" : bsNo}, function(result){
-            	$("#detail_wrap").show();
-            	$("#pop_bsNo").text(bsNo);
+            
+            var crcStateId = AUIGrid.getCellValue(myGridID , event.rowIndex , "crcStateId");    
+            Common.ajax("GET","/payment/selectCardStatementDetailList.do", {"crcStateId" : crcStateId}, function(result){
+                $("#detail_wrap").show();
+                
                 AUIGrid.setGridData(myDetailGridID, result);
                 AUIGrid.resize(myDetailGridID);
             });
         });
-	    
+        
 
       //**************************************************
       //** 업로드 파일 내용을 Grid에 적용하기
@@ -123,7 +120,7 @@
               reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
               reader.onload = function(event) {
                   if (typeof event.target.result != "undefined") {
-                	  // 그리드 CSV 데이터 적용시킴
+                      // 그리드 CSV 데이터 적용시킴
                       AUIGrid.setCsvGridData(myUploadGridID, event.target.result, false);
                       
                       //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
@@ -139,18 +136,18 @@
           }
 
       });  
-	    
-	});
+        
+    });
 
     // ajax list 조회.
     function searchList(){
-    	
-    	if(FormUtil.checkReqValue($("#bankAccount option:selected")) &&
-        		FormUtil.checkReqValue($("#tranDateFr")) &&
-        		FormUtil.checkReqValue($("#tranDateTo")) &&
-        		FormUtil.checkReqValue($("#uploadDateFr")) &&
-        		FormUtil.checkReqValue($("#uploadDateTo")) &&
-        		FormUtil.checkReqValue($("#uploadId")) ){
+       
+        if(FormUtil.checkReqValue($("#bankAccount option:selected")) &&
+                FormUtil.checkReqValue($("#tranDateFr")) &&
+                FormUtil.checkReqValue($("#tranDateTo")) &&
+                FormUtil.checkReqValue($("#uploadDateFr")) &&
+                FormUtil.checkReqValue($("#uploadDateTo")) &&
+                FormUtil.checkReqValue($("#uploadUserNm")) ){
             Common.alert('* Please input search condition <br />');
             return;
         }
@@ -166,25 +163,22 @@
             Common.alert('* Please input Upload Date <br />');
             return;
         }
-    	
-    	Common.ajax("POST","/payment/selectBankStatementMasterList.do",$("#searchForm").serializeJSON(), function(result){    		
-    		AUIGrid.setGridData(myGridID, result);
-    	});
+        
+        Common.ajax("POST","/payment/selectCardStatementMasterList.do",$("#searchForm").serializeJSON(), function(result){          
+            AUIGrid.setGridData(myGridID, result);
+        });
     }
     
     // 화면 초기화
     function clear(){
-    	//화면내 모든 form 객체 초기화
-    	$("#searchForm")[0].reset();
-    	$("#uploadForm")[0].reset();
-    	
-    	//그리드 초기화
-    	AUIGrid.clearGridData(myGridID);
-    	AUIGrid.clearGridData(myDetailGridID);
-    	AUIGrid.clearGridData(myUploadGridID);
-    	
-    	//팝업내 컬럼 초기화
-    	$("#pop_bsNo").text("");        
+        //화면내 모든 form 객체 초기화
+        $("#searchForm")[0].reset();
+        $("#uploadForm")[0].reset();
+        
+        //그리드 초기화
+        AUIGrid.clearGridData(myGridID);
+        AUIGrid.clearGridData(myDetailGridID);
+        AUIGrid.clearGridData(myUploadGridID);       
     }
     
     // upload 화면 초기화
@@ -201,15 +195,15 @@
       $(val).hide();
       
       //업로드창이 닫히면 upload 화면도 reset한다. 
-      if(val == '#upload_wrap'){    	  
-    	  uploadClear();
+      if(val == '#upload_wrap'){          
+          uploadClear();
       }
   }
   
   // Upload 버튼 클릭시 업로드 팝업
   function showUploadPop(){
-	  $("#upload_wrap").show();
-	  AUIGrid.resize(myUploadGridID);	  	  
+      $("#upload_wrap").show();
+      AUIGrid.resize(myUploadGridID);         
   }
     
 //Upload 버튼 클릭시 업로드 팝업
@@ -220,11 +214,6 @@ function upload(){
     
     if(FormUtil.checkReqValue($("#uploadTranDt")) ){
         Common.alert('* Please select the Transaction Date.<br />');
-        return;
-    }
-
-    if(FormUtil.checkReqValue($("#uploadIssueBank option:selected")) ){
-        Common.alert('* Please select the Bank Code.<br />');
         return;
     }
 
@@ -244,10 +233,10 @@ function upload(){
     }
 
     //Ajax 호출
-    Common.confirm('<b>Are you sure want to upload this Bank Statement items?</b>',function (){
-    	Common.ajax("POST", "/payment/uploadBankStatement.do", data, 
+    Common.confirm('<b>Are you sure want to save this Credit Card Statement form?</b>',function (){
+        Common.ajax("POST", "/payment/uploadCardStatement.do", data, 
                 function(result) {
-                    var returnMsg = "This Bank Statement form has successfully been uploaded.";
+                    var returnMsg = "This Credit Card Statement form has successfully been saved.";
         
                     Common.alert(returnMsg, function (){
                         hideViewPopup('#upload_wrap');
@@ -267,7 +256,7 @@ function upload(){
                     alert("Fail : " + jqXHR.responseJSON.message);        
                 });
     });    
-	   
+       
 }
 
 //**************************************************
@@ -328,14 +317,14 @@ function commitFormSubmit() {
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
-        <li>Other Payment</li>        
-        <li>Upload Bank Statement</li>
+        <li>Credit Card Payment</li>
+        <li>Upload Credit Card Statement</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Upload Bank Statement</h2>
+        <h2>Upload Credit Card Statement</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:showUploadPop();">New Upload</a></p></li>            
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span>Clear</a></p></li>
@@ -369,7 +358,7 @@ function commitFormSubmit() {
                             <!-- date_set end -->
                         </td>
                         <th scope="row">Upload By</th>
-                        <td><input type="text" id="uploadUserNm" name="uploadUserNm" title="" placeholder="Upload User Name" class="w100p" /></td>
+                        <td><input type="text" id="uploadUserNm" name="uploadUserNm" title="" placeholder="Upload User Name" class="w100p"  /></td>
                     </tr>
                     <tr>
                         <th scope="row">Bank Account</th>
@@ -416,7 +405,7 @@ POP-UP (DETAIL)
 <div class="popup_wrap" id="detail_wrap" style="display:none;">
     <!-- pop_header start -->
     <header class="pop_header" id="detail_pop_header">
-        <h1>Bank Statement Item</h1>
+        <h1>Credit Card Statement Item</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#detail_wrap')">CLOSE</a></p></li>
         </ul>
@@ -425,24 +414,6 @@ POP-UP (DETAIL)
 
     <!-- pop_body start -->
     <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />                
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">BS No</th>
-                        <td id="pop_bsNo"></td>
-                    </tr>
-                </tbody>  
-            </table>
-        </section>
-
         <section class="search_result">
             <article class="grid_wrap"  id="detail_grid_wrap"></article>  
         </section>
@@ -460,7 +431,7 @@ POP-UP (UPLOAD)
 <div id="upload_wrap" class="popup_wrap" style="display:none;">
     <!-- pop_header start -->
     <header class="pop_header">
-        <h1>Upload Bank Statement</h1>
+        <h1>Upload Credit Card Statement</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#upload_wrap')">CLOSE</a></p></li>
         </ul>
@@ -470,13 +441,13 @@ POP-UP (UPLOAD)
     <!-- getParams  -->
     <section class="pop_body">
         <ul class="right_btns mb10">
-            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/BankStatement_Format.csv">Download Template</a></p></li>            
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/CreditCardStatement_Format.csv">Download Template</a></p></li>            
             <li><p class="btn_blue2"><a href="javascript:uploadClear();">Clear</a></p></li>
             <li><p class="btn_blue2"><a href="javascript:upload();">Upload</a></p></li>
         </ul>
 
         <!-- pop_body start -->
-        <form id="uploadForm"> 
+        <form id="uploadForm">
             <!-- table start -->
             <table class="type1">
                 <caption>table</caption>
@@ -488,21 +459,11 @@ POP-UP (UPLOAD)
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">B/S No.</th>
-                        <td>
-                            <input type="text"  id="uploadBsNo" name="uploadBsNo" title="" placeholder="" class="readonly" readonly="readonly" />
-                        </td>
                         <th scope="row">Transaction Date</th>
                         <td>
                             <input type="text" id="uploadTranDt" name="uploadTranDt" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date" />
                         </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Bank Code</th>
-                        <td>
-                            <select id="uploadIssueBank" name="uploadIssueBank" class="w100p"></select>
-                        </td>
-                        <th scope="row">Bank Account</th>
+                         <th scope="row">Bank Account</th>
                         <td>  
                             <select id="uploadBankAccount" name="uploadBankAccount" class="w100p"></select>
                         </td>
