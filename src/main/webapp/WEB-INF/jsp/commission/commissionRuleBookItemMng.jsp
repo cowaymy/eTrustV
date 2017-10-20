@@ -1224,10 +1224,7 @@
 </tr>
 <tr>
   <th scope="row">Range Value Type<span class="must">*</span></th>
-  <td><select id="valueType" name="valueType">
-    <c:forEach var="list" items="${ruleValueList }">
-                  <option value="${list.codeDesc}">${code.Name}</option>
-                </c:forEach>
+  <td><select id="valueType" name="valueType">   
   </select></td>
   <th scope="row">Range Value Type Name<span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Range Value Type Name" class="w100p" id="valueTypeNm" name="valueTypeNm" readonly="readonly" /></td>
