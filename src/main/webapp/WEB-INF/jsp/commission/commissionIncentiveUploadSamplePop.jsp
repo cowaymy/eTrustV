@@ -1,6 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<style type="text/css">
+
+/* 커스텀 칼럼 스타일 정의 */
+.my-left-column {
+    text-align:left;
+}
+</style>
 <script type="text/javaScript">
 var hpGridID;
 var cdGridID;
@@ -12,7 +19,6 @@ var cdGridID;
     	Common.ajax("GET","/commission/calculation/incntivSampleHpList","", function(result) {
             console.log("성공.");
             console.log("data : " + result);
-            alert("성공!");
             AUIGrid.setGridData(hpGridID, result);
         });
     	
@@ -29,11 +35,12 @@ var cdGridID;
             dataField : "code",
             headerText : "Code",
             style : "my-column",
+            width : 60,
             editable : false
         },{
             dataField : "codeName",
             headerText : "Name",
-            style : "my-column",
+            style : "my-left-column",
             editable : false
         }];
         // 그리드 속성 설정
@@ -48,7 +55,7 @@ var cdGridID;
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true
+            showRowNumColumn : false
             
         };
         
@@ -60,11 +67,12 @@ var cdGridID;
             dataField : "code",
             headerText : "Code",
             style : "my-column",
+            width : 60,
             editable : false
         },{
             dataField : "codeName",
             headerText : "Name",
-            style : "my-column",
+            style : "my-left-column",
             editable : false
         }];
         // 그리드 속성 설정
@@ -79,7 +87,7 @@ var cdGridID;
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true
+            showRowNumColumn : false
             
         };
         
