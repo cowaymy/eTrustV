@@ -1,6 +1,5 @@
 package com.coway.trust.web.common;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.coway.trust.AppConstants;
-import com.coway.trust.biz.common.GSTZeroRateLocationService;
-import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.biz.common.RoleManagementService;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.util.Precondition;
-import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -34,80 +29,64 @@ public class RoleManagementController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RoleManagementController.class);
 
 	@Autowired
-	private GSTZeroRateLocationService gstZeroRateLocationService;
+	private RoleManagementService roleManagementService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@RequestMapping(value = "/roleManagement.do")
 	public String roleManagement(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
-		params.put("stusCodeId", 1);
-		List<EgovMap> stateCodeList = gstZeroRateLocationService.getStateCodeList(params);
-		model.addAttribute("stateCodeList", new Gson().toJson(stateCodeList));
 		return "/common/roleManagement";
 	}
 
-	@RequestMapping(value = "/getRoleList.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRootRoleList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getStateCodeList(@RequestParam Map<String, Object> params) {
-		Precondition.checkNotNull(params.get("stusCodeId"),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "stusCodeId" }));
-
-		LOGGER.debug("stusCodeId : {}", params.get("stusCodeId"));
-
-		List<EgovMap> stateCodeList = gstZeroRateLocationService.getStateCodeList(params);
-		return ResponseEntity.ok(stateCodeList);
+		List<EgovMap> rootRoles = roleManagementService.getRootRoles();
+		return ResponseEntity.ok(rootRoles);
 	}
 
-	@RequestMapping(value = "/getRole2List.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRolesByParentRole.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getSubAreaList(@RequestParam Map<String, Object> params) {
-		Precondition.checkNotNull(params.get("areaStusId"),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "areaStusId" }));
-		Precondition.checkNotNull(params.get("areaStateId"),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "areaStateId" }));
-
-		LOGGER.debug("areaStusId : {}", params.get("areaStusId"));
-		LOGGER.debug("areaStateId : {}", params.get("areaStateId"));
-
-		List<EgovMap> subAreaList = gstZeroRateLocationService.getSubAreaList(params);
-		return ResponseEntity.ok(subAreaList);
+		int parentRoleId = Integer.parseInt((String) params.get("parentRole"));
+		List<EgovMap> rootRoles = roleManagementService.getRolesByParentRole(parentRoleId);
+		return ResponseEntity.ok(rootRoles);
 	}
 
-	@RequestMapping(value = "/getRole3List.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRoleManagementList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getPostCodeList(@RequestParam Map<String, Object> params) {
-		Precondition.checkNotNull(params.get("areaId"),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "areaId" }));
-
-		LOGGER.debug("areaId : {}", params.get("areaId"));
-
-		List<EgovMap> subAreaList = gstZeroRateLocationService.getPostCodeList(params);
-		return ResponseEntity.ok(subAreaList);
+		List<EgovMap> roleManagementList = roleManagementService.getRoleManagementList(params);
+		return ResponseEntity.ok(roleManagementList);
 	}
 
-	@RequestMapping(value = "/getRole4List.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getZRLocationList(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "zrLocStusId", required = false) Integer[] zrLocStusIds) {
-
-		LOGGER.debug("zrLocId : {}", params.get("zrLocId"));
-		LOGGER.debug("zrLocStateId : {}", params.get("zrLocStateId"));
-		LOGGER.debug("areaId : {}", params.get("areaId"));
-		LOGGER.debug("postCode : {}", params.get("postCode"));
-
-		if (zrLocStusIds != null) {
-			for (Integer id : zrLocStusIds) {
-				LOGGER.debug("zrLocStusId : {}", id);
-			}
-
-			params.put("zrLocStusIds", zrLocStusIds);
-		}
-
-		List<EgovMap> zrLocationList = gstZeroRateLocationService.getZRLocationList(params);
-		return ResponseEntity.ok(zrLocationList);
+	@RequestMapping(value = "/getUsersByRoleId.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getUsersByRoleId(@RequestParam Map<String, Object> params) {
+		List<EgovMap> roleManagementList = roleManagementService.getUsersByRoleId(params);
+		return ResponseEntity.ok(roleManagementList);
 	}
 
 	@RequestMapping(value = "/saveRole.do", method = RequestMethod.POST)
-	public ResponseEntity saveZRLocation(@RequestBody Map<String, ArrayList<Object>> params, Model model,
+	public ResponseEntity saveRole(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		roleManagementService.saveRole(params, sessionVO.getUserId());
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/updateActivateRole.do", method = RequestMethod.POST)
+	public ResponseEntity updateActivateRole(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) {
-		gstZeroRateLocationService.saveZRLocation(params, sessionVO.getUserId());
+		roleManagementService.updateActivateRole(Integer.valueOf((String) params.get("roleId")), sessionVO.getUserId());
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/updateDeactivateRole.do", method = RequestMethod.POST)
+	public ResponseEntity updateDeactivateRole(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVO) {
+		roleManagementService.updateDeactivateRole(Integer.valueOf((String) params.get("roleId")), sessionVO.getUserId());
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/updateRole.do", method = RequestMethod.POST)
+	public ResponseEntity updateRole(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		roleManagementService.updateRole(params, sessionVO.getUserId());
 		return ResponseEntity.ok(HttpStatus.OK);
 	}
 

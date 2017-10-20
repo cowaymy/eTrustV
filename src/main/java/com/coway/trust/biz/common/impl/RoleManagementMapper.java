@@ -12,4 +12,14 @@ public interface RoleManagementMapper {
 	List<EgovMap> selectRolesByParentRole(int parentRole);
 
 	List<EgovMap> selectRoleManagementList(Map<String, Object> params);
+
+	List<EgovMap> selectUsersByRoleId(Map<String, Object> params);
+
+	void insertRole(Map<String, Object> params);
+
+	void updateActivateRole(Map<String, Object> params);
+
+	void updateDeactivateRole(Map<String, Object> params);
+
+	void updateRole(Map<String, Object> params);
 }
