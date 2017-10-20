@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.payment.document.service.FinanceMgmtService;
 import com.coway.trust.biz.payment.payment.service.CommDeductionService;
 import com.coway.trust.biz.payment.payment.service.CommDeductionVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -39,18 +40,15 @@ public class FinanceMgmtController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FinanceMgmtController.class);
 	
-	@Resource(name = "commDeductionService")
-	private CommDeductionService commDeductionService;
-	
-	@Autowired
-	private CsvReadComponent csvReadComponent;
-	
+	@Resource(name = "financeMgmtService")
+	private FinanceMgmtService financeMgmtService;
+
 	
 	/******************************************************
-	 * Commission Deduction  
+	 * FinanceManagement
 	 *****************************************************/	
 	/**
-	 * Commission Deduction초기화 화면 
+	 * Finance Management초기화 화면 
 	 * @param params
 	 * @param model
 	 * @return
@@ -58,6 +56,41 @@ public class FinanceMgmtController {
 	@RequestMapping(value = "/initFinanceMgmt.do")
 	public String CommissionDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/document/financeMgmt";
+	}
+	
+	/**
+	 * Finance Management Receive List 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectReceiveList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectReceiveList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+        LOGGER.debug("params : {}", params);
+        
+        List<EgovMap> list = financeMgmtService.selectReceiveList(params);
+        	System.out.println("####Receive list : " + list.get(0));
+
+        return ResponseEntity.ok(list);
+	}
+	
+	/**
+	 * Finance Management Credit Card 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectCreditCardList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCreditCardList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+        LOGGER.debug("params : {}", params);
+        
+        List<EgovMap> list = financeMgmtService.selectCreditCardList(params);
+        for(int i=0; i<list.size(); i++)
+        	System.out.println("####Card list : " + list.get(i));
+
+        return ResponseEntity.ok(list);
 	}
 	
 //	/**

@@ -2,11 +2,119 @@
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 
 <script type="text/javaScript">
+var receiveListGrid;
+var creditCardGrid;
 
+var gridPros = {
+        editable: false,
+        showStateColumn: false,
+        pageRowCount : 5,
+        height:200
+};
 
+var receiveColumnLayout=[
+                 {
+                	colSpan : 2,
+			        dataField : "undefined",
+			        headerText : " ",
+			        width: 70,
+			        renderer : {
+			            type : "ButtonRenderer",
+			            labelText : ">",
+			            onclick : function(rowIndex, columnIndex, value, item) {
+			                alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
+			            }
+			        }
+			       },
+			       {
+			    	    colSpan : -1,
+	                    dataField : "undefined",
+	                    headerText : " ",
+	                    width: 70,
+	                    renderer : {
+	                        type : "ButtonRenderer",
+	                        labelText : "...",
+	                        onclick : function(rowIndex, columnIndex, value, item) {
+	                            alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
+	                        }
+	                    }
+	                   },
+                  {dataField:"name", headerText:"Status"},
+                  {dataField:"batchNo", headerText:" "},
+                  {dataField:"payDt", headerText:"pay Date"},
+                  {dataField:"isOnline", headerText:"is Online",
+			        renderer:{
+			            type : "CheckBoxEditRenderer",
+			            showLabel : false,
+			            editable : false,
+			            checkValue : "1",
+			            unCheckValue : "0"
+			        }   
+                  },
+                  {dataField:"oriCcNo", headerText:"Crc No"},
+                  {dataField:"amt", headerText:"Amount"},
+                  {dataField:"mid", headerText:"MID"},
+                  {dataField:"codeName1", headerText:"Crc Type"},
+                  {dataField:"ccHolderName", headerText:"Crc Holder"},
+                  {dataField:"ccExpr", headerText:"Crc Expiry"},
+                  {dataField:"appvNo", headerText:"Appv No",dataType:"date",formatString:"dd-mm-yyyy"},
+                  {dataField:"code2", headerText:"Bank"},
+                  {dataField:"accCode", headerText:"Settlement Acc"},
+                  {dataField:"refDt", headerText:"Ref Date"},
+                  {dataField:"", headerText:"Ref No"}
+           ];
+ var creditCardColumnLayout=[
+                            {
+                                dataField : "undefined",
+                                headerText : " ",
+                                width: 70,
+                                renderer : {
+                                    type : "ButtonRenderer",
+                                    labelText : ">",
+                                    onclick : function(rowIndex, columnIndex, value, item) {
+                                        alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
+                                    }
+                                }
+                               },
+                               {dataField:"payDt", headerText:"Pay Date"},
+                               {dataField:"isOnline", headerText:"is Online",
+                                   renderer:{
+                                       type : "CheckBoxEditRenderer",
+                                       showLabel : false,
+                                       editable : false,
+                                       checkValue : "1",
+                                       unCheckValue : "0"
+                                   }   
+                                 },
+                               {dataField:"oriCcNo", headerText:"Crc No"},
+                               {dataField:"amt", headerText:"Amount"},
+                               {dataField:"mid", headerText:"MID"},
+                               {dataField:"codeName", headerText:"Crc Type"},
+                               {dataField:"ccHolderName", headerText:"Crc Holder",dataType:"date",formatString:"dd-mm-yyyy"},
+                               {dataField:"ccExpr", headerText:"Crc Expiry"},
+                               {dataField:"appvNo", headerText:"Appv No"},
+                               {dataField:"code2", headerText:"Bank"},
+                               {dataField:"accCode", headerText:"Settlement Acc"},
+                               {dataField:"refDt", headerText:"Ref Date"},
+                               {dataField:"refNo", headerText:"Ref No"}
+                            ];
+           
 $(document).ready(function(){
-
+	
+	receiveListGrid =  GridCommon.createAUIGrid("#grid_wrap_receive_list", receiveColumnLayout, null, gridPros);
+	creditCardGrid = GridCommon.createAUIGrid("#grid_wrap_credit_card_list", creditCardColumnLayout, null, gridPros);
+	//Issue Bank 조회
+	doGetCombo('/sales/customer/selectAccBank.do', '', '', 'rIssueBank', 'S', '')//selCodeAccBankId(Issue Bank)
+    doGetCombo('/sales/customer/selectAccBank.do', '', '', 'cIssueBank', 'S', '')//selCodeAccBankId(Issue Bank)
+    
+    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'' , 'rBranch' , 'S', ''); //key-in Branch 생성
+    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'137' , 'cBranch' , 'S', ''); //key-in Branch 생성
+    
+    doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'rSetAccount' , 'S', '');
+    doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'cSetAccount' , 'S', '');
+	 
 });
+
 
 //크리스탈 레포트
 function fn_generateStatement(){
@@ -17,30 +125,25 @@ function fn_generateStatement(){
     }
 	
 	Common.ajax("POST", "/payment/selectPenaltyBillDate.do", $("#searchForm").serializeJSON(), function(result) {
-		if(result != null && result.length > 0) {
-			var year = result[0].billDtYear;
-			var month = result[0].billDtMonth;
-			
-			if(year < 2017 || (year == 2015 && month < 4)){
-				//report form에 parameter 세팅
-			    $("#reportPDFForm #v_orderNo").val($('#orderNo').val());
-			    $("#reportPDFForm #v_billNo").val($('#billNo').val());
-			    
-			    //report 호출
-			    var option = {
-			           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-			    };
-			    
-			    Common.report("reportPDFForm", option);
-			
-			}else{
-				location.href = "/payment/initTaxInvoiceMiscellaneous.do";				
-			}
-        }else{
-        	location.href = "/payment/initTaxInvoiceMiscellaneous.do";
-        }			    
-	    
+		
     });
+}
+
+function fn_rSearch(){
+	$('#rPaymode').removeAttr('disabled');
+    Common.ajax("GET", "/payment/selectReceiveList.do", $("#rSearchForm").serializeJSON(), function(result) {
+    	AUIGrid.setGridData(receiveListGrid, result);
+    });
+    $('#rPaymode').attr('disabled', 'true');
+    
+}
+
+function fn_cSearch(){
+	$('#cPaymode').removeAttr('disabled');
+    Common.ajax("GET", "/payment/selectCreditCardList.do", $("#cSearchForm").serializeJSON(), function(result) {
+        AUIGrid.setGridData(creditCardGrid, result);
+    });
+    $('#cPaymode').attr('disabled', 'true');
 }
 </script>
 <section id="content"><!-- content start -->
@@ -61,10 +164,10 @@ function fn_generateStatement(){
     <dt class="click_add_on on"><a href="#">Receive List Management</a></dt>
     <dd>
     <ul class="right_btns">
-        <li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_rSearch()"><span class="search"></span>Search</a></p></li>
         <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
     </ul>
-
+    <form id="rSearchForm" name="rSearchForm">
     <table class="type1 mt10"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -79,18 +182,15 @@ function fn_generateStatement(){
     <tr>
         <th scope="row">Paymode</th>
         <td>
-        <select class="w100p disabled" disabled="disabled">
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="rPaymode" name="rPaymode" class="w100p disabled" disabled="disabled">
+            <option selected value="107">Credit Card</option>
         </select>
         </td>
         <th scope="row">Is Online</th>
         <td>
-        <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
+        <select id="rOnline" name="rOnline" class="multy_select w100p" multiple="multiple">
+            <option value="1">Online</option>
+            <option value="0">Offline</option>
         </select>
         </td>
         <th scope="row">Merchant ID</th>
@@ -119,18 +219,14 @@ function fn_generateStatement(){
         </td>
         <th scope="row">Credit Card Type</th>
         <td>
-        <select class="w100p">
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="rCreditCardType" name="rCreditCardType" class="w100p">
+            <option value="111">MASTER</option>
+            <option value="112">VISA</option>
         </select>
         </td>
         <th scope="row">Issue Bank</th>
         <td>
-        <select class="w100p">
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="rIssueBank" name="rIssueBank" class="w100p">
         </select>
         </td>
     </tr>
@@ -147,10 +243,7 @@ function fn_generateStatement(){
         </td>
         <th scope="row">Key-In Branch</th>
         <td>
-        <select class="w100p">
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="rBranch" name="rBranch" class="w100p">
         </select>
         </td>
     </tr>
@@ -161,18 +254,19 @@ function fn_generateStatement(){
         </td>
         <th scope="row">Batch Status</th>
         <td>
-        <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
+        <select id="rBatchNo" name="rBatchNo" class="multy_select w100p" multiple="multiple">
+            <option value="1">Active</option>
+            <option value="36">Closed</option>
         </select>
         </td>
         <th scope="row">Item Status</th>
         <td>
-        <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
+        <select id="rItemStatus" name="rItemStatus" class="multy_select w100p" multiple="multiple">
+            <option value="33">New</option>
+            <option value="79">Resend</option>
+            <option value="53">Review</option>
+            <option value="4">Complete</option>
+            <option value="50">Incomplete</option>
         </select>
         </td>
     </tr>
@@ -195,24 +289,22 @@ function fn_generateStatement(){
     <tr>
         <th scope="row">Settlement Account</th>
         <td colspan="5">
-        <select>
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="rSetAccount" name="rSetAccount" class="w100p">
         </select>
         </td>
     </tr>
     </tbody>
     </table><!-- table end -->
-
+</form>
     </dd>
     <dt class="click_add_on"><a href="#">Pending List Management</a></dt>
     <dd>
     <ul class="right_btns">
-        <li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_cSearch();"><span class="search"></span>Search</a></p></li>
         <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
     </ul>
-
+<!-- ####################################################################################3 -->
+    <form id="cSearchForm" name="cSearchForm">
     <table class="type1 mt10"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -227,18 +319,15 @@ function fn_generateStatement(){
     <tr>
         <th scope="row">Paymode</th>
         <td>
-        <select class="w100p disabled" disabled="disabled">
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="cPaymode" name="cPaymode" class="w100p disabled"  disabled="disabled">
+            <option value="107">Credit Card</option>
         </select>
         </td>
         <th scope="row">Is Online</th>
         <td>
         <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
+            <option value="1">Online</option>
+            <option value="0">Offline</option>
         </select>
         </td>
         <th scope="row">Merchant ID</th>
@@ -268,17 +357,13 @@ function fn_generateStatement(){
         <th scope="row">Credit Card Type</th>
         <td>
         <select class="w100p">
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+            <option value="111">MASTER</option>
+            <option value="112">VISA</option>
         </select>
         </td>
         <th scope="row">Issue Bank</th>
         <td>
-        <select class="w100p">
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="cIssueBank" name="cIssueBank" class="w100p">
         </select>
         </td>
     </tr>
@@ -295,26 +380,20 @@ function fn_generateStatement(){
         </td>
         <th scope="row">Key-In Branch</th>
         <td>
-        <select class="w100p">
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="cBranch" name="cBranch" class="w100p">
         </select>
         </td>
     </tr>
     <tr>
         <th scope="row">Settlement Account</th>
         <td colspan="5">
-        <select>
-            <option value="">11</option>
-            <option value="">22</option>
-            <option value="">33</option>
+        <select id="cSetAccount" name="cSetAccount">
         </select>
         </td>
     </tr>
     </tbody>
     </table><!-- table end -->
-
+</form>
     </dd>
 </dl>
 </article><!-- acodi_wrap end -->
@@ -329,8 +408,7 @@ function fn_generateStatement(){
 <h3 class="pt0">WReceive List - Credit Card (Offline) </h3>
 </aside><!-- title_line end -->
 
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<article id="grid_wrap_receive_list" class="grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
 
 <div class="side_btns"><!-- side_btns start -->
@@ -358,8 +436,7 @@ function fn_generateStatement(){
 <h3 class="pt0">Credit Card (Online/Offline)</h3>
 </aside><!-- title_line end -->
 
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<article id="grid_wrap_credit_card_list" class="grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
 
 <ul class="right_btns">
@@ -412,7 +489,4 @@ function fn_generateStatement(){
 
 </section><!-- content end -->
 
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
 
