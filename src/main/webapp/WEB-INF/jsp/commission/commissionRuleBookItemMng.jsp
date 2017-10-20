@@ -229,6 +229,12 @@
                 }
                 
             });
+            
+            //valueType setting
+            $("#insertFormRule #valueType").change(function() {
+            	$("#insertFormRule #valueTypeNm").val($(this).val());
+            });
+            
         });
       
      //rule 등록 및 수정 팝업
@@ -249,20 +255,19 @@
                console.log("성공.");
                console.log("data : " + result.typeList);
                
-               var typeTemp1="";
-               typeTemp1 = "<option value='' onClick='fn_typeDesc()'></option>";
-               for(var i=0;i<result.typeList.length; i++){
-            	   typeTemp1 = typeTemp1 + "<option value='"+result.typeList[i].codeName+"' onClick='fn_typeDesc(\""+result.typeList[i].codeDesc+"\")'>"+result.typeList[i].codeName+"</option>";
-               }
-               $("#insertFormRule [name=valueType]").html(typeTemp1);
-               
-               var typeTemp2="";
-               typeTemp2 = "<option value='' onClick='fn_typeDesc()'></option>";
-               for(var i=0;i<result.typeList.length; i++){
-                   typeTemp2 = typeTemp2 + "<option value='"+result.typeList[i].codeName+"' >"+result.typeList[i].codeName+"</option>";
-               }
-               $("#insertFormRule [name=resultValueNm]").html(typeTemp2);
-               
+               //value type setting
+               if(result.typeList){
+            	   var typeList = result.typeList;
+            	   $("#insertFormRule #valueType").empty();
+            	   $("#insertFormRule #resultValueNm").empty();
+            	   $("#insertFormRule #valueType").append("<option value=''></option>");
+            	   $("#insertFormRule #resultValueNm").append("<option value=''></option>");
+            	   for(var i=0;i<typeList.length; i++){
+            		    $("#insertFormRule #valueType").append("<option value='"+typeList[i].codeDesc + "' > " + typeList[i].codeName + "</option>");
+            		    $("#insertFormRule #resultValueNm").append("<option value='"+typeList[i].codeDesc + "' > " + typeList[i].codeName + "</option>");
+            	   }
+               }          
+           
                //to-do list 1.div show(),신규인지 하위등록 인지 체크 , 조회값 셋팅
                $("#popup_wrap2").show();
 
@@ -314,20 +319,18 @@
                 console.log("성공.");
                 console.log("data : " + result.ruleList);
                 
-                var typeTemp1="";
-                typeTemp1 = "<option value='' onClick='fn_typeDesc()'></option>";
-                for(var i=0;i<result.typeList.length; i++){
-                    typeTemp1 = typeTemp1 + "<option value='"+result.typeList[i].codeName+"' onClick='fn_typeDesc(\""+result.typeList[i].codeDesc+"\")'>"+result.typeList[i].codeName+"</option>";
-                }
-                $("#insertFormRule [name=valueType]").html(typeTemp1);
-                
-                var typeTemp2="";
-                typeTemp2 = "<option value='' onClick='fn_typeDesc()'></option>";
-                for(var i=0;i<result.typeList.length; i++){
-                    typeTemp2 = typeTemp2 + "<option value='"+result.typeList[i].codeName+"' >"+result.typeList[i].codeName+"</option>";
-                }
-                $("#insertFormRule [name=resultValueNm]").html(typeTemp2);
-                
+                //value name setting
+                if(result.typeList){
+                    var typeList = result.typeList;
+                    $("#insertFormRule #valueType").empty();
+                    $("#insertFormRule #resultValueNm").empty();
+                    $("#insertFormRule #valueType").append("<option value=''></option>");
+                    $("#insertFormRule #resultValueNm").append("<option value=''></option>");
+                    for(var i=0;i<typeList.length; i++){
+                       $("#insertFormRule #valueType").append("<option value='"+typeList[i].codeDesc + "' > " + typeList[i].codeName + "</option>");
+                       $("#insertFormRule #resultValueNm").append("<option value='"+typeList[i].codeDesc + "' > " + typeList[i].codeName + "</option>");
+                    }
+                  } 
                 
                 $("#insertFormRule [name=orgDs]").val(result.ruleList[0].orgds);
                 //to-do list 1.div show(),신규인지 하위등록 인지 체크 , 조회값 셋팅
@@ -1221,7 +1224,11 @@
 </tr>
 <tr>
   <th scope="row">Range Value Type<span class="must">*</span></th>
-  <td><select id="valueType" name="valueType"></select></td>
+  <td><select id="valueType" name="valueType">
+    <c:forEach var="list" items="${ruleValueList }">
+                  <option value="${list.codeDesc}">${code.Name}</option>
+                </c:forEach>
+  </select></td>
   <th scope="row">Range Value Type Name<span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Range Value Type Name" class="w100p" id="valueTypeNm" name="valueTypeNm" readonly="readonly" /></td>
 </tr>
