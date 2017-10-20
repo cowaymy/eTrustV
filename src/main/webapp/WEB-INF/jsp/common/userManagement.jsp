@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
-
 <script type="text/javaScript">
 /********************************Global Variable Start***********************************/
 // 행 추가, 삽입
