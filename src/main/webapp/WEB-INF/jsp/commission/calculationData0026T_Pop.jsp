@@ -102,69 +102,80 @@
             unCheckValue : "0"
         }
     }, {
+        dataField : "emplyTypeCode",
+        headerText : "GROUP</BR> CODE",
+        style : "my-column",
+        width: 65,
+        editable : false
+    }, {
+        dataField : "grpName",
+        headerText : "ORG NAME",
+        style : "my-column",
+        width: 170,
+        editable : false
+    }, {
         dataField : "emplyId",
         headerText : "EMPLY ID",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : "EMPLY CODE",
+        headerText : "EMPLY</BR>CODE",
         style : "my-column",
         editable : false
     },{
         dataField : "week1",
-        headerText : "WEEK1",
-        style : "my-column",
+        headerText : "WEEK1",       
+        width: 60,
         editable : false
     },{
         dataField : "week2",
-        headerText : "WEEK2",
-        style : "my-column",
+        headerText : "WEEK2",      
+        width: 60,
         editable : false
     },{
         dataField : "week3",
-        headerText : "WEEK3",
-        style : "my-column",
+        headerText : "WEEK3",      
+        width: 60,
         editable : false
     },{
         dataField : "week4",
-        headerText : "WEEK4",
-        style : "my-column",
+        headerText : "WEEK4",       
+        width: 60,
         editable : false
     },{
-        dataField : "week5",
-        headerText : "WEEK5",
-        style : "my-column",
+        dataField : "tot",
+        headerText : "TOTAL",      
+        width: 60,
         editable : false
     },{
         dataField : "totLv",
-        headerText : "TOT LV",
-        style : "my-column",
+        headerText : "TOTAL</BR> COMPLETE",    
+        width: 80,
         editable : false
     },{
-        dataField : "weeklyLv",
-        headerText : "WEEKLY LV",
+        dataField : "cAward",
+        headerText : "AWARD",
         style : "my-column",
+        width: 100,
         editable : false
     },{
-        dataField : "monthLv",
-        headerText : "MONTH LV",
+        dataField : "lAward",
+        headerText : "AWARD</BR>(Last Month)",
         style : "my-column",
+        width: 100,
         editable : false
     },{
-        dataField : "emplyCode",
-        headerText : "EMPLY CODE",
+        dataField : "cCriteria",
+        headerText : "CRITERIA",
         style : "my-column",
+        width: 100,
         editable : false
     },{
-        dataField : "weeklylvr",
-        headerText : "WEEKLY LV R",
+        dataField : "lCriteria",
+        headerText : "CRITERIA</BR>(Last Month)",
         style : "my-column",
-        editable : false
-    },{
-        dataField : "monthLvR",
-        headerText : "MONTH LV R",
-        style : "my-column",
+        width: 100,
         editable : false
     },{
         dataField : "runId",
@@ -321,7 +332,7 @@
                         </select></td>
                         <th scope="row">Employed Code<span class="must">*</span></th>
                         <td>
-                              <input type="text" id="emplyCd_26T" name="emplyCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="emplyCd_26T" name="emplyCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                      </tr>
