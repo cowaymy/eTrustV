@@ -1534,7 +1534,7 @@
            FROM CMM0056M  s1 JOIN CMM0006T s2 
                   ON s1.EMPLY_ID=s2.EMPLY_ID 
                       AND s2.IS_EXCLUDE=0 
-                      AND s2.COMM_TASK_ID=#{taskId}
+                      AND s1.task_id = s2.COMM_TASK_ID
             WHERE s1.TASK_ID= #{taskId}
             <if test="emplyCd != null and emplyCd != ''">
                 AND s1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
@@ -1543,44 +1543,53 @@
                AND s2.EMPLY_TYPE_ID = #{codeId}
              </if>
             )T2 ON T1.EMPLY_ID=T2.EMPLY_ID 
-        WHERE T1.TASK_ID=#{taskId}
+        WHERE T1.TASK_ID=#{taskId} AND T1.GRP_NAME IS NOT NULL
         <if test="useYnCombo != null and useYnCombo != ''">
            AND T2.IS_EXCLUDE = #{useYnCombo}
        </if> 
     </select>
     <select id="selectCMM0026T" parameterType="Map" resultType="EgovMap">
        SELECT
-		    NVL(T1.EMPLY_ID, '0') EMPLY_ID,
-		    NVL(T1.EMPLY_CODE, '0') EMPLY_CODE,
-		    NVL(T1.WEEK_1, '0') WEEK_1,
-		    NVL(T1.WEEK_2,'0') WEEK_2,
-		    NVL(T1.WEEK_3, '0') WEEK_3,
-		    NVL(T1.WEEK_4, '0') WEEK_4,
-		    NVL(T1.WEEK_5, '0') WEEK_5,
-		    NVL(T1.TOT_LV, '0') TOT_LV,
-		    NVL(T1.WEEKLY_LV, '0') WEEKLY_LV,
-		    NVL(T1.MONTH_LV, '0') MONTH_LV,
-		    NVL(T1.WEEKLY_LV_R,'0') weekLylvR, 
-		    NVL(T1.MONTH_LV_R, '0') MONTH_LV_R,
-		    NVL(T1.RUN_ID, '0') RUN_ID,
-		    NVL(T1.TASK_ID, '0') TASK_ID,
-		    NVL(T2.IS_EXCLUDE,'0') IS_EXCLUDE
-		FROM CMM0056M T1 JOIN (
-	        SELECT s1.EMPLY_ID, s1.IS_EXCLUDE
-	        FROM CMM0056M  s1 JOIN CMM0006T s2 
-                  ON s1.EMPLY_ID=s2.EMPLY_ID 
-                      AND s2.IS_EXCLUDE=0 
-                      AND s2.COMM_TASK_ID=#{taskId}
-	        WHERE s1.TASK_ID= #{taskId}
-		        <if test="emplyCd != null and emplyCd != ''">
-	                AND s1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
-	            </if>
-	            <if test="codeId != null and codeId != ''">
-	               AND s2.EMPLY_TYPE_ID = #{codeId}
+        NVL(T1.EMPLY_ID, '0') EMPLY_ID,
+        NVL(T1.EMPLY_CODE, '0') EMPLY_CODE,
+        NVL(T1.WEEK_1, '0') WEEK_1,
+        NVL(T1.WEEK_2,'0') WEEK_2,
+        NVL(T1.WEEK_3, '0') WEEK_3,
+        NVL(T1.WEEK_4, '0') WEEK_4,
+        NVL(T1.WEEK_5, '0') WEEK_5,
+        NVL(T1.TOT_LV, '0') TOT_LV,
+        NVL(T1.WEEKLY_LV, '0') WEEKLY_LV,
+        NVL(T1.MONTH_LV, '0') MONTH_LV,
+        NVL(T1.WEEKLY_LV_R,'0') weekLylvR, 
+        NVL(T1.MONTH_LV_R, '0') MONTH_LV_R,
+        NVL(T1.RUN_ID, '0') RUN_ID,
+        NVL(T1.TASK_ID, '0') TASK_ID,
+        NVL(T2.IS_EXCLUDE,'0') IS_EXCLUDE ,
+        T1.GRP_NAME ,
+        NVL(T2.EMPLY_TYPE_CODE, '0') EMPLY_TYPE_CODE,
+        T1.AWARD AS C_AWARD,          
+        T3.AWARD AS L_AWARD,
+        T1.MONTH_LV_R||' MONTH' AS C_CRITERIA,
+        T3.MONTH_LV_R||' MONTH' AS L_CRITERIA,
+        NVL(T1.WEEK_1, '0')+NVL(T1.WEEK_2, '0')+NVL(T1.WEEK_3, '0')+NVL(T1.WEEK_4, '0') TOT
+    FROM CMM0056M T1 JOIN (
+          SELECT s1.EMPLY_ID, s1.IS_EXCLUDE  ,s2.EMPLY_TYPE_CODE
+          FROM CMM0056M  s1 JOIN CMM0006T s2
+                  ON s1.EMPLY_ID=s2.EMPLY_ID
+                      AND s1.TASK_ID=s2.COMM_TASK_ID 
+                      AND s2.IS_EXCLUDE=0
+          WHERE s1.TASK_ID= #{taskId}
+            <if test="emplyCd != null and emplyCd != ''">
+                  AND s1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+              </if>
+              <if test="codeId != null and codeId != ''">
+                 AND s2.EMPLY_TYPE_ID = #{codeId}
                 </if>
-		    )T2 ON T1.EMPLY_ID=T2.EMPLY_ID 
-		WHERE T1.TASK_ID=#{taskId}
-		<if test="useYnCombo != null and useYnCombo != ''">
+        )T2 ON T1.EMPLY_ID=T2.EMPLY_ID 
+        LEFT OUTER JOIN CMM0056M T3 
+        ON T1.TASK_ID-1=T3.TASK_ID AND T1.EMPLY_ID=T3.EMPLY_ID
+    WHERE T1.TASK_ID=#{taskId} AND T1.GRP_NAME IS NOT NULL
+    <if test="useYnCombo != null and useYnCombo != ''">
             AND T2.IS_EXCLUDE = #{useYnCombo}
         </if> 
         ORDER BY T1.RUN_ID
