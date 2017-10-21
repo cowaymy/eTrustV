@@ -1782,32 +1782,14 @@
    </select>
    
    <select id="incentiveTargetList" parameterType="Map" resultType="EgovMap">
-   
-    SELECT 
-	    sub.UPLOAD_ID AS UPLOAD_ID, 
-	    to_char(sub.ACTN_DT, 'mm-yyyy') AS ACTN_DT, 
-	    to_char(sub.CRT_DT, 'dd-mm-yyyy') AS CRT_DT, 
-	    sub.CRT_USER_ID AS CRT_USER_ID, 
-	    sub.C1 AS C1, 
-	    sub.STUS_ID AS STUS_ID, 
-	    sub.CODE AS CODE, 
-	    sub.NAME AS NAME, 
-	    sub.UPD_DT AS UPD_DT, 
-	    sub.UPD_USER_ID AS UPD_USER_ID, 
-	    sub.C2 AS C2, 
-	    sub.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID, 
-	    sub.CODE_NAME AS CODE_NAME, 
-	    sub.MEM_TYPE_ID AS MEM_TYPE_ID, 
-	    sub.CODENAME1 AS CODENAME1
-	FROM ( 
 	    SELECT 
 	        t1.UPLOAD_ID AS UPLOAD_ID, 
 	        t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID, 
 	        t1.STUS_ID AS STUS_ID, 
-	        t1.ACTN_DT AS ACTN_DT, 
-	        t1.CRT_DT AS CRT_DT, 
+	        to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT, 
+	        to_char(t1.CRT_DT,'DD-MM-YYYY HH24:MI:SS') AS CRT_DT, 
 	        t1.CRT_USER_ID AS CRT_USER_ID, 
-	        t1.UPD_DT AS UPD_DT, 
+	        to_char(t1.UPD_DT,'DD-MM-YYYY HH24:MI:SS') AS UPD_DT, 
 	        t1.UPD_USER_ID AS UPD_USER_ID, 
 	        t1.MEM_TYPE_ID AS MEM_TYPE_ID, 
 	        t2.CODE AS CODE, 
@@ -1816,14 +1798,13 @@
 	        t4.CODE_NAME AS CODENAME1, 
 	        CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1, 
 	        CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
-	    FROM      CMM0003D  t1
+	    FROM  CMM0003D  t1
 	        JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
 	        JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
 	        JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
 	        LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
 	        LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
 	    WHERE 1=1
-	    
 	    <if test="uploadId != null and uploadId != ''">
 	       AND t1.UPLOAD_ID= #{uploadId}
 	    </if>
@@ -1831,27 +1812,25 @@
 	       AND t1.STUS_ID IN (${statusList})
 	    </if>
 	    <if test="typeList != null and typeList != ''">
-           AND t1.UPLOAD_TYPE_ID IN (${typeList})
-        </if>
-        <if test="actionDate != null and actionDate != ''">
-            AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
-        </if>
-        <if test="uploadDateFr != null and uploadDateFr != ''">
-            <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>  
-        </if>
-        <if test="uploadDateTo != null and uploadDateTo != ''">
-           <![CDATA[ AND t1.CRT_DT <= to_date(#{uploadDateTo},'dd-mm-yyyy')]]>  
-        </if>
-        <if test="creator != null and creator != ''">
-            AND t6.USER_NAME = #{creator}
-        </if>
-        <if test="memberTypeList != null and memberTypeList != ''">
-           AND t1.MEM_TYPE_ID IN (${memberTypeList})
-        </if>
-        
-	)   sub
-	ORDER BY sub.UPLOAD_ID ASC
-   
+	          AND t1.UPLOAD_TYPE_ID IN (${typeList})
+	       </if>
+	       <if test="actionDate != null and actionDate != ''">
+	           AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+	       </if>
+	       <if test="uploadDateFr != null and uploadDateFr != ''">
+	           <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>  
+	       </if>
+	       <if test="uploadDateTo != null and uploadDateTo != ''">
+	      
+	          <![CDATA[ AND t1.CRT_DT <=  TO_DATE(TO_CHAR((TO_DATE(#{uploadDateTo},'dd-mm-yyyy')+1) - 1/24/60/60,'DDMMYYYY HH24:MI:SS'),'DDMMYYYY HH24:MI:SS')]]>  
+	       </if>
+	       <if test="creator != null and creator != ''">
+	           AND t6.USER_NAME = #{creator}
+	       </if>
+	       <if test="memberTypeList != null and memberTypeList != ''">
+	          AND t1.MEM_TYPE_ID IN (${memberTypeList})
+	       </if>
+		ORDER BY t1.UPLOAD_ID ASC
    </select>
    
    <select id="incentiveSample" parameterType="Map" resultType="EgovMap">
@@ -2049,9 +2028,9 @@
 	        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
 	        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
 	    WHERE t1.STUS_ID = #{statusId}
-	        AND t1.UPLOAD_ID = #{uploadId} 
+	        AND t1.UPLOAD_ID = #{uploadUserId} 
 	        AND t1.VALID_STUS_ID = #{vStusId}
-	        AND t1.USER_MEM_CODE = #{itemMemCd}
+	        AND t1.SYS_MEM_ID = #{memId}
     </select>
     
     <select id="cntUploadMemberCheck" parameterType="Map" resultType="integer">

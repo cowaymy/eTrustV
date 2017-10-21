@@ -1893,6 +1893,55 @@ public class CommissionCalculationController {
 		return "commission/commissionIncentiveAddItemPop";
 	}
 	
+	
+	@RequestMapping(value = "/incentiveItemValid", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> incentiveItemValid(@RequestParam Map<String, Object> params, Model model) {
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.FAIL);
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if (sessionVO == null) {
+			loginId = "1000000000";
+		} else {
+			loginId = String.valueOf(sessionVO.getUserId());
+		}
+
+		String msg = "";
+		
+		Map memMap = commissionCalculationService.incentiveItemAddMem(params);
+		System.out.println("************* memMap : " + memMap);
+		if(memMap.get("MEM_CODE") == null || "".equals(memMap.get("MEM_CODE"))){
+			msg = "Invalid member.";
+		}else{
+            if( ("1".equals(memMap.get("MEM_TYPE"))) &&  ("2".equals(memMap.get("MEM_TYPE"))) ){
+            	msg="Invalid member type.";
+            }else{
+                if( !("1".equals(memMap.get("STUS"))) ){
+                	msg = "This member is not active.";
+                }
+                params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
+                params.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
+                params.put("memId", memMap.get("MEM_ID"));
+                int cnt = commissionCalculationService.cntIncentiveMem(params);
+                if(cnt > 0){
+                	msg = "This member is existing in the upload batch";
+                }else{
+                	message.setCode(AppConstants.SUCCESS);
+                	message.setData(memMap);
+                }
+            }
+		}
+		
+		
+		
+		message.setMessage(msg);
+
+		return ResponseEntity.ok(message);
+	}
+	
+	
 	/**
 	 * incentive member info search
 	 * @param params
@@ -1900,24 +1949,24 @@ public class CommissionCalculationController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/incntivMemCheck", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/incntivMemCheck", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> incntivMemCheck(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		Map map = commissionCalculationService.incentiveItemAddMem(params);
 		// 데이터 리턴.
 		return ResponseEntity.ok(map);
-	}
+	}*/
 	/**
 	 * incentive member check count search
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/cntIncntivMemCheck")
+	/*@RequestMapping(value = "/cntIncntivMemCheck")
 	public ResponseEntity<Integer> cntIncntivMemCheck(@RequestParam Map<String, Object> params, ModelMap model) {
 		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
 		int totalValid = commissionCalculationService.cntIncentiveMem(params);
 		return ResponseEntity.ok(totalValid);
-	}	
+	}	*/
 	
 	/**
 	 * incentive item insert

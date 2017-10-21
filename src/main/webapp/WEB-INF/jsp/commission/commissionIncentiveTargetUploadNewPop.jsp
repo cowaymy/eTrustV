@@ -32,7 +32,7 @@
 			        Common.ajaxFile("/commission/csv/upload", formData, function (result) {
 			        	$("#search").click();
 			        	document.newForm.reset();
-			            Common.alert("success");
+			            Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result.data);
 			        });
 				}
 			});

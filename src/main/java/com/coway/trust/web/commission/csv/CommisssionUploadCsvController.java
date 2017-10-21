@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.biz.commission.calculation.CommissionCalculationService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
@@ -43,8 +44,9 @@ public class CommisssionUploadCsvController {
 	
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public ResponseEntity readExcel(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
-
+	public ResponseEntity<ReturnMessage> readExcel(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
+		ReturnMessage message = new ReturnMessage();
+		
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("csvFile");
 
@@ -89,7 +91,8 @@ public class CommisssionUploadCsvController {
 			commissionCalculationService.insertIncentiveDetail(map);
 		}
 		commissionCalculationService.callIncentiveDetail(Integer.parseInt(uploadId));
-
-		return ResponseEntity.ok(HttpStatus.OK);
+		
+		message.setData(uploadId);
+		return ResponseEntity.ok(message);
 	}
 }

@@ -35,6 +35,7 @@
                 
         createAUIGrid();
         
+		AUIGrid.setSelectionMode(myGridID, "singleRow");
         // cellClick event.
         AUIGrid.bind(myGridID, "cellClick", function(event) {
               console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");       
@@ -104,9 +105,7 @@
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
-            
-            selectionMode : "multipleCells"
+            showRowNumColumn : true
             
         };
         

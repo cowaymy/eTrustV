@@ -140,8 +140,8 @@ var itemGridID;
 			Common.alert("No valid item in this batch.");
 		}else{
 			Common.ajax("GET", "/commission/calculation/incentiveConfirm", $("#conForm").serializeJSON() , function(result) {
-				Common.alert("성공");
-				$("#search").click();
+				Common.alert("This upload batch has been confirmed and saved.");
+				$("#search").click(); //TODO close 시점으로 바꿔야함
 				$("#popup_wrap").remove();
 			});
 		}

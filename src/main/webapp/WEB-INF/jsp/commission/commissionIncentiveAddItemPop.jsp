@@ -7,26 +7,42 @@
 		if($("#uploadTypeId").val() == "1062"){
 			document.addForm.itemLvl.readOnly  = false;
 		}
+		
+		$('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#addForm").serializeJSON(), null, true);
+        });
 	});
+	
+	function fn_loadOrderSalesman(memId, memCode) {
+        $("#itemMemCd").val(memCode);
+        console.log(' memId:'+memId);
+        console.log(' memCd:'+memCode);
+    }
 	
 	//incentive Item Save button
 	function fn_incenItemSavs(){
 		if(fn_ValidIncenItem()){
-			 Common.ajaxSync("GET", "/commission/calculation/incentiveItemInsert", $("#addForm").serializeJSON(), function(result) {
-				fn_itemDetailSearch('0');
-				$("#totalCntTxt").text(result.data.totalCnt);
-				$("#totalValidTxt").text(result.data.totalValid);
-				$("#totalInvalidTxt").text(result.data.totalInvalid);
-				$("#cntValid").val(result.data.totalValid);
-				document.addForm.reset();
-				Common.alert("success");
-			}); 
+			Common.ajax("GET", "/commission/calculation/incentiveItemValid", $("#addForm").serializeJSON(), function(result) {
+				if(result.code != "00"){
+					Common.alert(result.message);
+				}else{
+			 		Common.ajaxSync("GET", "/commission/calculation/incentiveItemInsert", $("#addForm").serializeJSON(), function(result) {
+						fn_itemDetailSearch('0');
+						$("#totalCntTxt").text(result.data.totalCnt);
+						$("#totalValidTxt").text(result.data.totalValid);
+						$("#totalInvalidTxt").text(result.data.totalInvalid);
+						$("#cntValid").val(result.data.totalValid);
+						document.addForm.reset();
+						Common.alert("New item added.");
+					});   
+				}
+            });
 		}
 	}
 	
 	//validation
 	function fn_ValidIncenItem(){
-		var val= true;
 		 $("#itemRCd").val($("#itemRCd").val().replace(/[^0-9]/g,""));
 		$("#itemLvl").val($("#itemLvl").val().replace(/[^0-9]/g,""));
 		$("#itemTAmt").val($("#itemTAmt").val().replace(/[^-\.0-9]/g,'')  );  //소수점입력가능 
@@ -35,8 +51,9 @@
 			Common.alert("Invalid member");
 			$("#itemMemCd").focus();
 			return false;
-		}else{
-			Common.ajaxSync("GET", "/commission/calculation/incntivMemCheck", $("#addForm").serializeJSON(), function(result) {
+		}
+		/*else{
+			 Common.ajaxSync("GET", "/commission/calculation/incntivMemCheck", $("#addForm").serializeJSON(), function(result) {
 				alert("1. incentiveItemAddMem");
 	            if(result == null){
 	                Common.alert("Invalid member.");
@@ -59,6 +76,7 @@
 	                    var valTemp = {"uploadId" : $("#uploadUserId").val(), "vStusId": 4 , "memId" : result.MEM_ID};
 	                    Common.ajaxSync("GET", "/commission/calculation/cntIncntivMemCheck", valTemp, function(count) {
 	                    	var cnt = count;
+	                    	alert(cnt);
 	                    	if(Number(cnt) > 0){
 	                            Common.alert("This member is existing in the upload batch");
 	                            $("#itemMemCd").val("");
@@ -73,7 +91,7 @@
 	                }
 	            }
 	        });
-		} 
+		}  */
 		if($("#itemTAmt").val() == null || $("#itemTAmt").val() == ""){
 			Common.alert("lease key in the target amount.");
 			$("#itemTAmt").focus();
@@ -99,7 +117,7 @@
 	            return false;
 	        }
 		}
-		return val;  
+		return true;  
 	}
 	
 	function floatCh(obj){
@@ -134,7 +152,8 @@
 			<tbody>
 				<tr>
 					<th scope="row">Member Code</th>
-					<td><input type="text" id="itemMemCd" name="itemMemCd" maxlength="20"></td>
+					<td><input type="text" id="itemMemCd" name="itemMemCd" maxlength="20">
+					<a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 				</tr>
 				<tr>
 					<th scope="row">Target Amount</th>
