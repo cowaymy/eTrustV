@@ -2,6 +2,8 @@ package com.coway.trust.web.sales;
 
 public class SalesConstants {
 	
+	public static final String SALES_GSTEURCERET_SUBPATH = "GSTEURCertificate";
+	
 	public static final int IS_FALSE = 0;
 	public static final int IS_TRUE  = 1;
 	
