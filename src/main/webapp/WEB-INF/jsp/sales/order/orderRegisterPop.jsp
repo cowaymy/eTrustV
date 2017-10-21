@@ -944,8 +944,8 @@
 
             var isValid = true, msg = "", docSelCnt = 0;
 
-            //TO-DO
-            if(FormUtil.isNotEmpty($('#certRefFile').val().trim())) {
+            //첨부파일이 존재하면
+            if(!FormUtil.checkReqValue($('#certRefFile'))) {
                 isValid = false;
 
                 msg += "Under rare circumstances, Federal Government, State Government, Palace of Ruler and certain organizations ";
@@ -1086,8 +1086,9 @@
         //----------------------------------------------------------------------
         // salesOrderMVO
         //----------------------------------------------------------------------
-        var vDefRentAmt = $('#appType').val() == '66' ? $('#ordRentalFees').val().trim() : 0;
-        var vCustBillId = $('#appType').val() == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
+        var vAppType    = $('#appType').val();
+        var vDefRentAmt = vAppType == '66' ? $('#ordRentalFees').val().trim() : 0;
+        var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
         var vBindingNo  = FormUtil.isNotEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
         var vCnvrSchemeId;
 
@@ -1128,7 +1129,7 @@
         else if($('#rentPayMode').val() == '134') {
             vAdtPayMode = "FPX";
         }
-    
+        
         var orderVO = {
             
             custTypeId  : $('#typeId').val().trim(),
@@ -1242,43 +1243,21 @@
                 prgrsId                 : ,
                 refId                   : ,
                 salesOrdId              :
-            },
-            gSTEURCertificateVO : {
-                eurcId                  : ,
-                eurcCrtDt               : ,
-                eurcCrtUserId           : ,
-                eurcCustId              : ,
-                eurcCustRgsNo           : ,
-                eurcFilePathName        : ,
-                eurcRefDt               : ,
-                eurcRefNo               : ,
-                eurcRem                 : ,
-                eurcRliefAppTypeId      : ,
-                eurcRliefTypeId         : ,
-                eurcSalesOrdId          : ,
-                eurcStusCodeId          : ,
-                eurcUpdDt               : ,
-                eurcUpdUserId           :
             },*/
+            gSTEURCertificateVO : {
+                eurcRefNo               : $('#certRefNo').val().trim(),
+                eurcRefDt               : $('#certRefDt').val().trim(),
+                eurcCustId              : $('#hiddenCustId').val(),
+                eurcCustRgsNo           : $('#txtCertCustRgsNo').val().trim(),
+                eurcRem                 : $('#txtCertRemark').val().trim(),
+                atchFileGrpId           : $('#atchFileGrpId').val()
+            },
             docSubmissionVOList         : GridCommon.getEditData(docGridID)
         };
 
         Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
+//      Common.ajaxFile("/sales/order/registerOrder.do", orderVO, function(result) {
 
-          //alert("Order info successfully updated");
-
-          //fn_getPstStockListAjax();
-          //resetUpdatedItems(); // 초기화
-
-            console.log("Order info successfully saved.");
-            console.log("data : " + result);
-
-//            var msg = "";
-//            msg += "Order successfully saved.<br />";
-//            msg += "Order Number : " + resultView.SalesOrderMaster.SalesOrderNo + "<br />";
-//            msg += "Application Type : " + cmbOrderAppType.SelectedItem.Text.ToString() + "<br />";
-            
-            //Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
             Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
             
         },  function(jqXHR, textStatus, errorThrown) {
@@ -1605,7 +1584,7 @@
 
         console.log('certRefFile'+ $('#certRefFile').val())
 
-        if(!FormUtil.checkReqValue($('#certRefFile'))) {
+        if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
 
             if(FormUtil.checkReqValue($('#certRefNo'))) {
                 isValid = false;
@@ -2033,7 +2012,7 @@
 <article class="tap_area"><!-- tap_area start -->
 <section class="search_table"><!-- search_table start -->
 
-<form id="searchForm" name="mainForm" action="#" method="post">
+<form id="searchForm" name="searchForm" action="#" method="post">
     <input id="searchCustId" name="custId" type="hidden"/>
     <input id="hiddenCustId" name="custId"   type="hidden"/>
     <input id="hiddenOldOrderId" name="hiddenOldOrderId" type="hidden"/>
@@ -2134,7 +2113,7 @@
 ------------------------------------------------------------------------------->
 <section class="search_table"><!-- search_table start -->
 
-<form id=ownerPurchsForm name="ownerPurchsForm" action="#" method="post">
+<form id="ownerPurchsForm" name="ownerPurchsForm" action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -2191,7 +2170,7 @@
 
 <section class="search_table"><!-- search_table start -->
 
-<form id=addSvcCntcForm name="custCntcForm" action="#" method="post">
+<form id="addSvcCntcForm" name="custCntcForm" action="#" method="post">
     <input id="srvCntcId" name="srvCntcId" type="hidden"/>
     <input id="srvInitial" name="srvInitial" type="hidden"/>
 <table class="type1"><!-- table start -->
@@ -2423,7 +2402,7 @@
 ------------------------------------------------------------------------------->
 <section id="sctRentPayMode">
 
-<form id="rentPayModeForm" id="rentPayModeForm">
+<form id="rentPayModeForm" name="rentPayModeForm">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -2722,7 +2701,7 @@
     Billing Preference - Form ID(billPreferForm)
 ------------------------------------------------------------------------------->
 <section class="search_table"><!-- search_table start -->
-<form id=billPreferForm name="billPreferForm" action="#" method="post">
+<form id="billPreferForm" name="billPreferForm" action="#" method="post">
     <input id="hiddenBPCareId" name="hiddenBPCareId" type="hidden" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -3055,8 +3034,9 @@
 <article id="atcRC" class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="certRefForm" name="certRefForm" enctype="multipart/form-data" action="#" method="post">
-
+<form id="fileUploadForm" name="fileUploadForm" enctype="multipart/form-data" action="#" method="post">
+    <input id="atchFileGrpId" name="atchFileGrpId" type="hidden" />
+    
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -3074,11 +3054,11 @@
 </tr>
 <tr>
     <th scope="row">GST Registration No</th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><textarea cols="20" rows="5"></textarea></td>
+    <td colspan="3"><textarea id="txtCertRemark" name="txtCertRemark" cols="20" rows="5"></textarea></td>
 </tr>
 <tr>
     <th scope="row">Upload Relief Cert(.zip)</th>

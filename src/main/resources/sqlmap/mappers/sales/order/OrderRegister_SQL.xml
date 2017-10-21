@@ -1701,11 +1701,12 @@
 		     , EURC_CRT_DT
 		     , EURC_UPD_USER_ID
 		     , EURC_UPD_DT
+		     , ATCH_FILE_GRP_ID
 		     )
 		VALUES
 		     ( #{eurcId}
 		     , #{eurcRefNo}
-		     , #{eurcRefDt}
+		     , TO_DATE(#{eurcRefDt}, 'DD/MM/YYYY')
 		     , #{eurcRliefTypeId}
 		     , #{eurcRliefAppTypeId}
 		     , #{eurcSalesOrdId}
@@ -1715,9 +1716,10 @@
 		     , #{eurcFilePathName}
 		     , #{eurcStusCodeId}
 		     , #{eurcCrtUserId}
-		     , #{eurcCrtDt}
+		     , SYSDATE
 		     , #{eurcUpdUserId}
-		     , #{eurcUpdDt}
+             , SYSDATE
+             , #{atchFileGrpId}
 		     )
     </insert>
     

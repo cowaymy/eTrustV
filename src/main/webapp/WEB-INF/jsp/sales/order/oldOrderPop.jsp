@@ -3,67 +3,6 @@
 <head>
 <script type="text/javaScript" language="javascript">
 
-	//AUIGrid ���� �� ��ȯ ID
-//	var addrGridID;
-//
-//	$(document).ready(function(){
-//	    //AUIGrid �׸��带 �����մϴ�.
-//        createAUIGrid();
-//        fn_getCustomerAddressAjax();
-//
-//        // �� ����Ŭ�� �̺�Ʈ ���ε�
-//        AUIGrid.bind(addrGridID, "cellDoubleClick", function(event) {
-//            fn_setData(AUIGrid.getCellValue(addrGridID , event.rowIndex , "custAddId"))
-//            $('#custPopCloseBtn').click();
-//        });
-//	    
-//	});
-//	
-//	function fn_setData(custAddId) {
-//	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_MTH') {
-//	        fn_loadMailAddr(custAddId);
-//	    }
-//	    else if($('#callPrgm').val() == 'ORD_REGISTER_INST_ADD') {
-//	        fn_loadInstallAddr(custAddId);
-//	    }
-//	}
-//	
-//    function createAUIGrid() {
-//        
-//        //AUIGrid Į�� ����
-//        var columnLayout = [{
-//	            dataField : "name",
-//	            headerText : "Status",
-//	            width : 80
-//	        }, {
-//	            dataField : "addr",
-//	            headerText : "Address"
-//	        },{
-//	            dataField : "custAddId",
-//	            visible : false
-//            }];
-//
-//        //�׸��� �Ӽ� ����
-//        var gridPros = {
-//            usePaging           : true,         //����¡ ���
-//            pageRowCount        : 10,           //�� ȭ�鿡 ��µǴ� �� ���� 20(�⺻��:20)            
-//            editable            : false,            
-//            fixedColumnCount    : 0,            
-//            showStateColumn     : false,             
-//            displayTreeOpen     : false,            
-//            selectionMode       : "singleRow",  //"multipleCells",            
-//            headerHeight        : 30,       
-//            useGroupingPanel    : false,        //�׷��� �г� ���
-//            skipReadonlyColumns : true,         //�б� ���� ���� ���� Ű���� ������ �ǳ� ���� ����
-//            wrapSelectionMove   : true,         //Į�� ������ ������ �̵� �� ���� ��, ó�� Į������ �̵����� ����
-//            showRowNumColumn    : true,         //�ٹ�ȣ Į�� ������ ���    
-//            noDataMessage       : "No order found.",
-//            groupingMessage     : "Here groupping"
-//        };
-//        
-//        addrGridID = GridCommon.createAUIGrid("grid_addr_wrap", columnLayout, "", gridPros);
-//    }
-
 	$(function(){
 	    $('#btnRWok').click(function() {
 	        
@@ -134,25 +73,14 @@
 	    console.log('btnHidden_Valid_Click CALL START');
 	    console.log('isInValid :'+isInValid);
 	    
-//	    if(isInValid == 'InValid') {
-//          this.txtApprovalCode.Text = "";
-//          this.txtApprovalBy.Text = "";
-//          this.lblErrorMsg_Approval.Text = "";
-//          this.RadWindow_Approval.VisibleOnPageLoad = true;
+	    if(isInValid == 'InValid') {
             Common.popupDiv("/sales/order/orderApprovalPop.do");
-//	    }
-//	    else {
+	    }
+	    else {
             fn_popOrderDetail();
-//	    }
+	    }
 	}
-	
-//    //Get Contact by Ajax
-//    function fn_getCustomerAddressAjax(){
-//        Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList", $("#addrSearchForm").serializeJSON(), function(result) {
-//            AUIGrid.setGridData(addrGridID, result);
-//        });
-//    }
-  
+
 </script>
 </head>
 <body>

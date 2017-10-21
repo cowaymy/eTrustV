@@ -284,20 +284,22 @@
     </select>
         
     <select id="selectGSTZRLocationCount" parameterType="Map" resultType="egovMap">
-        SELECT COUNT(1) AS CNT
-          FROM SAL0044D T1
-         WHERE T1.ZR_LOC_STUS_ID != 8
+		SELECT COUNT(1) AS CNT
+		  FROM SYS0064M T1
+		 WHERE T1.STATUS_ID = 1
+		   AND T1.GST_CHK = 1
          <if test='zrLocAreaId != null and zrLocAreaId !=0 and zrLocAreaId !=""'>
-           AND T1.ZR_LOC_AREA_ID = #{areaId}
+		   AND T1.AREA_ID = #{areaId}
          </if>
     </select>
         
     <select id="selectGSTZRLocationByAddrIdCount" parameterType="Map" resultType="egovMap">
         SELECT COUNT(1) AS CNT
           FROM SAL0023D T1
-          JOIN SAL0044D T2
-            ON T2.ZR_LOC_AREA_ID = T1.AREA_ID
-           AND T2.ZR_LOC_STUS_ID != 8
+          JOIN SYS0064M T2
+            ON T2.AREA_ID = T1.AREA_ID
+           AND T2.STATUS_ID = 1
+           AND T2.GST_CHK = 1
          WHERE T1.STUS_CODE_ID != 8
            And T1.CUST_ADD_ID = #{custAddId}
     </select>

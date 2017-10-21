@@ -4,19 +4,7 @@
 <script type="text/javaScript" language="javascript">
 
 	$(document).ready(function(){
-/*
-        this.txtCustName_RW.Text = this.txtCustName.Text.ToString();
-        this.txtCustNRIC_RW.Text = this.txtCustIC.Text.ToString();
-        this.txtProduct_RW.Text = this.cmbOrderProduct.Text.ToString();
-        this.txtPromotion_RW.Text = this.cmbOrderPromo.Text.ToString();
-        this.txtMemberName_RW.Text = this.txtOrderSalesmanName.Text.ToString();
-        this.txtMemberCode_RW.Text = this.txtOrderSalesmanCode.Text.ToString();
-        if (this.btnAdvPayYes.Checked)
-        {
-            this.tr1.Visible = true;
-            this.txtAdvPayment_RW.Text = "YES";
-        }
-*/	    
+
         $('#txtCustName_RW').text($('#name').val());
         $('#txtCustNRIC_RW').text($('#nric').val());
         $('#txtProduct_RW').text($("#ordProudct option:selected").text());
@@ -32,16 +20,27 @@
 	
 	$(function(){
 	    $('#btnConfirm_RW').click(function() {
-console.log('!@# fn_doSaveOrder before call');
+            console.log('!@# fn_doSaveOrder before call');
+            
+            if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
 
-//          Data.LoginInfo li = Session["login"] as Data.LoginInfo;
-//          if (li != null) {
+                console.log("attach file start");
+
+        		var formData = Common.getFormData("fileUploadForm");
+                
+                Common.ajaxFile("/sales/order/gstEurCertUpload.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+        
+        			//console.log("총 갯수 : " + result.length);
+        			console.log(result.atchFileGrpId);
+        			
+        			$('#atchFileGrpId').val(result.atchFileGrpId);
+        			
+        			fn_doSaveOrder();
+        		});
+            }
+            else {
                 fn_doSaveOrder();
-//          }
-//          else {
-//              Common.confirm("Session Expired" + DEFAULT_DELIMITER + "<b>Your login session was expired. Please relogin to system.</b>");
-//          }        
-
+            }
 	    });
 	});
 

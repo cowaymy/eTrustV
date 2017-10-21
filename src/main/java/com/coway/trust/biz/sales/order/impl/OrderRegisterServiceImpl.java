@@ -16,14 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
-
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
@@ -51,7 +48,6 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import com.coway.trust.cmmn.model.GridDataSet;
-import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
@@ -1187,7 +1183,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			reliefTypeId = 1373; //Government Sector
 		}
 		
-		gSTEURCertificateVO.setEurcId(0);
+		gSTEURCertificateVO.setEurcRliefTypeId(reliefTypeId);
+		gSTEURCertificateVO.setEurcRliefAppTypeId(orderAppType);
+		gSTEURCertificateVO.setEurcStusCodeId(SalesConstants.STATUS_ACTIVE);
+		gSTEURCertificateVO.setEurcCrtUserId(sessionVO.getUserId());
+		gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
+//		gSTEURCertificateVO.setAtchFileGrpId(fileDto.getAtchFileGrpId());
 	}
 	
 	@Override
@@ -1207,6 +1208,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		
 		EStatementReqVO      eStatementReqVO      = orderVO.geteStatementReqVO(); 		//CCP DETAILS
 
+		GSTEURCertificateVO  gSTEURCertificateVO   = orderVO.getgSTEURCertificateVO();
+		
 		GridDataSet<DocSubmissionVO>    documentList     = orderVO.getDocSubmissionVOList();
 
 		List<DocSubmissionVO> docSubVOList = documentList.getUpdate(); // 수정 리스트 얻기
@@ -1323,39 +1326,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		regOrderVO.setSalesOrderLogVOList(salesOrderLogVOList);
 		
 		//GST CERTIFICATE
-		GSTEURCertificateVO gSTEURCertificateVO = new GSTEURCertificateVO();
-//      Data.GST_EURCertificate GSTCert = new Data.GST_EURCertificate();
-//      fileuploadCert = (RadAsyncUpload)Session["FileUpload"];
-//      if (fileuploadCert != null)
-//      {                
-//          if (this.fileuploadCert.UploadedFiles.Count > 0)
-//          {
-                if(false) this.preprocGSTCertificate(gSTEURCertificateVO, orderAppType, sessionVO);
-//          }
-//      }
-		
-		//List<PSTSalesDVO> pstSalesDVOList = new ArrayList<>();
-		//PSTSalesDVO pstSalesDVO = null;
-		/*
-		updateDocList.forEach(form -> {
+		if(gSTEURCertificateVO != null && gSTEURCertificateVO.getAtchFileGrpId() > 0) { 
+			this.preprocGSTCertificate(gSTEURCertificateVO, orderAppType, sessionVO);
+			regOrderVO.setgSTEURCertificateVO(gSTEURCertificateVO);
+		}
 
-			PSTSalesDVO pstSalesDVO = new PSTSalesDVO();
-			
-			pstSalesDVO.setPstItmId(form.getPstItmId());
-			pstSalesDVO.setPstSalesOrdId(form.getPstSalesOrdId());
-			pstSalesDVO.setPstItmStkId(form.getPstItmStkId());
-			pstSalesDVO.setPstItmPrc(form.getPstItmPrc());
-			pstSalesDVO.setPstItmReqQty(form.getPstItmReqQty());
-			pstSalesDVO.setPstItmTotPrc(form.getPstItmTotPrc());
-			pstSalesDVO.setPstItmDoQty(form.getPstItmDoQty());
-			pstSalesDVO.setPstItmCanQty(form.getPstItmCanQty());
-			pstSalesDVO.setPstItmCanQty2(form.getPstItmCanQty2());
-			pstSalesDVO.setPstItmBalQty(form.getPstItmBalQty());
-			
-			pstSalesDVOList.add(pstSalesDVO);
-		});
-		*/
-                
         this.doSaveOrder(regOrderVO);
 
 		logger.info("수정 : {}");
@@ -1571,8 +1546,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         }
         
         //INSERT GST CERTIFICATE
-        if(gSTEURCertificateVO != null && gSTEURCertificateVO.getEurcStusCodeId() > 0) {
+        if(gSTEURCertificateVO != null) {
         	gSTEURCertificateVO.setEurcSalesOrdId(salesOrdId);
+        	orderRegisterMapper.insertGSTEURCertificate(gSTEURCertificateVO);
         }
 	}
 

@@ -1,7 +1,5 @@
 package com.coway.trust.web.sales.order;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,24 +19,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.callcenter.common.FileDto;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
-import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
-import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
-import com.coway.trust.biz.sales.pst.PSTSalesDVO;
-import com.coway.trust.biz.sales.pst.PSTSalesMVO;
-import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
-import com.coway.trust.web.sales.pst.PSTRequestDOForm;
-import com.coway.trust.web.sales.pst.PSTStockListGridForm;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -57,6 +56,12 @@ public class OrderRegisterController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private FileApplication fileApplication;
+
+	@Value("${com.file.upload.path}")
+	private String uploadDir;
 	
 	@RequestMapping(value = "/orderRegisterPop.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -231,9 +236,52 @@ public class OrderRegisterController {
     	return ResponseEntity.ok(codeList);
     }
     
-	@RequestMapping(value = "/registerOrder.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> registerOrder(@RequestBody OrderVO orderVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws ParseException {
+	/**
+	 * 공통 파일 테이블 사용 Upload를 처리한다.
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/gstEurCertUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<FileDto> sampleUploadCommon(MultipartHttpServletRequest request,
+			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, SalesConstants.SALES_GSTEURCERET_SUBPATH, AppConstants.UPLOAD_MAX_FILE_SIZE);
 
+		String param01 = (String) params.get("param01");
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		//serivce 에서 파일정보를 가지고, DB 처리.
+		int fileGroupKey = fileApplication.commonAttach(FileType.WEB, FileVO.createList(list), params);
+		FileDto fileDto = FileDto.create(list, fileGroupKey);
+		
+		return ResponseEntity.ok(fileDto);
+	}
+	
+	@RequestMapping(value = "/registerOrder.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> registerOrder(@RequestBody OrderVO orderVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		//MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+		/*
+		String sEurcRefNo = orderVO.getgSTEURCertificateVO().getEurcRefNo();		
+		FileDto fileDto = null;
+		
+		if(CommonUtils.isNotEmpty(sEurcRefNo)) {
+    		//if(request.get)
+    		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, SalesConstants.SALES_GSTEURCERET_SUBPATH, AppConstants.UPLOAD_MAX_FILE_SIZE);
+    		
+    		Map<String, Object> params = new HashMap<String, Object>();
+    
+    		int fileGroupKey = fileApplication.commonAttach(FileType.WEB, FileVO.createList(list), params);
+    		
+    		logger.info("fileGroupKey :"+fileGroupKey);
+    		
+    		fileDto = FileDto.create(list, fileGroupKey);
+		}
+		orderRegisterService.registerOrder(orderVO, sessionVO, fileDto);
+		*/
 		orderRegisterService.registerOrder(orderVO, sessionVO);
 
 		String msg = "", appTypeName = "";
