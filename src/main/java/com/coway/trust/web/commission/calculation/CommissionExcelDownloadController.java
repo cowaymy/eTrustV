@@ -568,8 +568,8 @@ public class CommissionExcelDownloadController {
 
 				columns = new String[] { "ordId", "srvCntrctId", "srvCntrctNo", "salesPersonId", "emplyCode", "instlmt",
 						"pv", "prc", "ordTypeId", "runid", "taskId", "isExclude" };
-				titles = new String[] { "CLCTR ID", "ORD ID", "STRTG OS", "CLOS OS", "IS DROP", "IS EXCLUDE", "RUN ID",
-						"TASK ID" };
+				titles = new String[] { "ORD ID", "SRV CNTRCT ID", "SRV CNTRCT NO", "SALES PERSON ID", "SALES PERSON CODE", "INSTALLMENT", 
+						"PV","PRC","ORD TYPE ID","RUN ID","TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad22T(map, downloadHandler);
 			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P013)) {
