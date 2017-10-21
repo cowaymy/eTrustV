@@ -600,12 +600,12 @@ public class CommissionExcelDownloadController {
 				map.put("emplyCd", request.getParameter("emplyCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "emplyId", "emplyCode", "week1", "week2", "week3", "week4", "week5", "totLv",
-						"weeklyLv", "monthLv", "weeklylvr", "monthLvR", "runId", "taskId", "isExclude" };
-				titles = new String[] { "EMPLY ID", "EMPLY CODE", "WEEK1", "WEEK2", "WEEK3", "WEEK4", "WEEK5", "TOT LV",
-						"WEEKLY LV", "MONTH LV", "WEEKLY LV R", "MONTH LV R", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				columns = new String[] { "emplyTypeCode","grpName","emplyId", "emplyCode", "week1", "week2", "week3", "week4", "tot", "totLv",
+						"cAward", "lAward", "cCriteria", "lCriteria", "runId", "taskId", "isExclude" };
+				titles = new String[] { "GROUP CODE", "ORG NAME",  "EMPLY ID", "EMPLY CODE", "WEEK1", "WEEK2", "WEEK3", "WEEK4", "TOTAL", "TOTAL COMPLETE",
+						"AWARD(THIS MONTH)", "AWARD(LAST MONTH)", "CRITERIA(THIS MONTH)", "CRITERIA(LAST MONTH)", "RUN ID", "TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
-				largeExcelService.downLoad11T(map, downloadHandler);
+				largeExcelService.downLoad26T(map, downloadHandler);
 			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P01)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("instPersonCd", request.getParameter("instPersonCd"));
