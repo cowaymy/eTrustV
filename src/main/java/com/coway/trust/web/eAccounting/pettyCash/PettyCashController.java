@@ -70,9 +70,9 @@ public class PettyCashController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		List<EgovMap> pettyCashList = pettyCashService.selectPettyCashList(params);
+		List<EgovMap> custodianList = pettyCashService.selectCustodianList(params);
 		
-		return ResponseEntity.ok(pettyCashList);
+		return ResponseEntity.ok(custodianList);
 	}
 	
 	@RequestMapping(value = "/newCustodianPop.do")
@@ -121,5 +121,13 @@ public class PettyCashController {
 	@RequestMapping(value = "/newCompletedMsgPop.do")
 	public String newCompletedMsgPop(ModelMap model, SessionVO session) {
 		return "eAccounting/pettyCash/newCustodianCompletedMsgPop";
+	}
+	
+	@RequestMapping(value = "/viewCustodianPop.do")
+	public String viewCustodianPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		return "eAccounting/pettyCash/pettyCashViewEditCustodianPop";
 	}
 }

@@ -68,7 +68,7 @@ function fn_clearData() {
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="form_newCustdn">
+<form action="#" method="post" enctype="multipart/form-data" id="form_newCustdn">
 <input type="hidden" id="newCostCenter" name="costCentr">
 <input type="hidden" id="newMemAccId" name="memAccId">
 <input type="hidden" id="bankCode" name="bankCode">

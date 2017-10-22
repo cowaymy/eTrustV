@@ -32,9 +32,9 @@ public class PettyCashServiceImpl implements PettyCashService {
 	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
-	public List<EgovMap> selectPettyCashList(Map<String, Object> params) {
+	public List<EgovMap> selectCustodianList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return pettyCashMapper.selectPettyCashList(params);
+		return pettyCashMapper.selectCustodianList(params);
 	}
 
 	@Override

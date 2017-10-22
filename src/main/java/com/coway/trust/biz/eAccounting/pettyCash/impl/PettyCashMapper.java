@@ -9,7 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("pettyCashMapper")
 public interface PettyCashMapper {
 	
-	List<EgovMap> selectPettyCashList(Map<String, Object> params);
+	List<EgovMap> selectCustodianList(Map<String, Object> params);
 	
 	String selectUserNric(int userId);
 	

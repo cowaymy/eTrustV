@@ -18,6 +18,8 @@
 }
 </style>
 <script type="text/javascript">
+var costCentr;
+var memAccId;
 var pettyCashCustdnColumnLayout = [ {
     dataField : "costCentr",
     headerText : '<spring:message code="webInvoice.costCenter" />'
@@ -116,7 +118,7 @@ var pettyCashCustdnColumnLayout = [ {
     dataField : "crtUserId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
-    dataField : "crtUserName",
+    dataField : "userName",
     headerText : 'Creator',
     style : "aui-grid-user-custom-left"
 }
@@ -139,13 +141,14 @@ $(document).ready(function () {
     $("#search_costCenter_btn").click(fn_costCenterSearchPop);
     $("#search_createUser_btn").click(fn_searchUserIdPop);
     $("#registration_btn").click(fn_newCustodianPop);
+    $("#edit_btn").click(fn_viewCustodianPop);
     
     AUIGrid.bind(pettyCashCustdnGridID, "cellClick", function( event ) 
             {
-                console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                console.log("CellDoubleClick clmNo : " + event.item.clmNo);
-                // TODO detail popup open
-                //fn_viewEditWebInvoicePop(event.item.clmNo);
+                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                console.log("CellClick costCentr : " + event.item.costCentr + " CellClick custdn(memAccId) : " + event.item.memAccId);
+                costCentr = event.item.costCentr;
+                memAccId = event.item.memAccId;
             });
     
     fn_setToDay();
@@ -218,6 +221,14 @@ function fn_selectPettyCashList() {
 function fn_newCustodianPop() {
     Common.popupDiv("/eAccounting/pettyCash/newCustodianPop.do", null, null, true, "newCustodianPop");
 }
+
+function fn_viewCustodianPop() {
+	var data = {
+			costCentr : costCentr,
+			memAccId : memAccId
+	}
+    Common.popupDiv("/eAccounting/pettyCash/viewCustodianPop.do", data, null, true, "viewCustodianPop");
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -278,7 +289,7 @@ function fn_newCustodianPop() {
 
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#">Remove</a></p></li>
-	<li><p class="btn_grid"><a href="#">Edit</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="edit_btn">Edit</a></p></li>
 	<li><p class="btn_grid"><a href="#" id="registration_btn">New Custodian</a></p></li>
 </ul>
 
