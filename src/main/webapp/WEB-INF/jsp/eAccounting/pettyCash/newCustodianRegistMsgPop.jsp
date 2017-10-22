@@ -18,7 +18,12 @@ function fn_insertCustodian() {
 	var formData = Common.getFormData("form_newCustdn");
 	var obj = $("#form_newCustdn").serializeJSON();
 	$.each(obj, function(key, value) {
-		formData.append(key, value);
+		if(key == "userNric") {
+			formData.append(key, value.replace(/\-/g, ''));
+			console.log(value.replace(/\-/g, ''));
+		} else {
+			formData.append(key, value);
+		}
 	});
     Common.ajaxFile("/eAccounting/pettyCash/insertCustodian.do", formData, function(result) {
         console.log(result);

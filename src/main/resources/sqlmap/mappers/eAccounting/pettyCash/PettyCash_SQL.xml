@@ -88,9 +88,9 @@ SELECT USER_NRIC FROM SYS0047M WHERE USER_ID = #{userId}
        ,#{headDeptFlag}
        ,#{bankCode}
        ,#{bankAccNo}
-       ,#{custdnNric}
+       ,#{userNric}
        ,#{appvCashAmt}
-       ,#{atchFileGrpId}
+       ,#{fileGroupKey}
        ,#{custdnRem}
        ,SYSDATE
        ,#{userId}

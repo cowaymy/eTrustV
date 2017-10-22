@@ -60,7 +60,7 @@ SELECT   T.CLM_NO
         </if>          
         <if test="endDt != null and endDt != ''">
         <![CDATA[ 
-             AND T.INVC_DT <= TO_DATE(#{endDt}, 'DD/MM/YYYY')
+             AND T.INVC_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
         </if>          
         <if test="memAccID != null and memAccID != ''">
@@ -242,7 +242,7 @@ SELECT T.APPV_PRCSS_NO
         </if>          
         <if test="endDt != null and endDt != ''">
         <![CDATA[ 
-             AND T.INVC_DT <= TO_DATE(#{endDt}, 'DD/MM/YYYY')
+             AND T.INVC_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
         </if>          
         <if test="memAccID != null and memAccID != ''">
