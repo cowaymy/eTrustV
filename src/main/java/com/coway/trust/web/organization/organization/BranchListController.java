@@ -45,6 +45,17 @@ public class BranchListController {
 		return "organization/organization/branchList";
 	}
 	
+	@RequestMapping(value = "/branchNewPop.do")
+	public String branchNewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> nationality = memberListService.nationality();
+		model.addAttribute("nationality", nationality);
+		
+		List<EgovMap> branchType = branchListService.getBranchType(params);
+		model.addAttribute("branchType", branchType);
+		
+		return "organization/organization/branchListPop";
+	}
+	
 	
 	
 	@RequestMapping(value = "/selectBranchList.do", method = RequestMethod.GET)
@@ -80,9 +91,13 @@ public class BranchListController {
 		model.addAttribute("branchType", branchType);
 		
 		EgovMap branchDetail = branchListService.getBranchDetailPop(params);
+		EgovMap branchAddr = branchListService.getBranchAddrDetail(branchDetail);
+		logger.debug("branchDetail : {} " + branchDetail);
+		logger.debug("branchAddr : {} " + branchAddr);
 		model.addAttribute("branchDetail", branchDetail);
+		model.addAttribute("branchAddr", branchAddr);
 		
-		return "organization/organization/branchListPop";
+		return "organization/organization/branchListEditPop";
 	}
 	
 	
@@ -154,5 +169,28 @@ public class BranchListController {
 
 		return ResponseEntity.ok(resultList);
 	}
+	
+	
+	@RequestMapping(value = "/getBranchViewPop.do")
+	public String getBranchViewPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		
+//		logger.debug("requestStatus : {}", params.get("promoId"));
+		
+		List<EgovMap> nationality = memberListService.nationality();
+		model.addAttribute("nationality", nationality);
+		
+		List<EgovMap> branchType = branchListService.getBranchType(params);
+		model.addAttribute("branchType", branchType);
+		
+		EgovMap branchDetail = branchListService.getBranchDetailPop(params);
+		EgovMap branchAddr = branchListService.getBranchAddrDetail(branchDetail);
+		logger.debug("branchDetail : {} " + branchDetail);
+		logger.debug("branchAddr : {} " + branchAddr);
+		model.addAttribute("branchDetail", branchDetail);
+		model.addAttribute("branchAddr", branchAddr);
+		
+		return "organization/organization/branchListDetailPop";
+	}
+	
 	
 }
