@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.ScmMasterMngMentMapper"> 
+
+  <!-- SCM MASTER MANAGEMENT -->
+  <select id="selectMasterMngment" parameterType="Map" resultType="egovMap">
+		SELECT DISTINCT 
+		      PLAN_ID CODE_VALUE 
+		    , CDC     CODE_VIEW
+	  FROM SCM0005M 
+	 WHERE PLAN_YEAR  = #{planYear}  
+	 <if test="planMonth != null and planMonth !=''">
+	   AND PLAN_MONTH = #{planMonth}  
+	 </if>
+	   AND PLAN_WEEK  = #{planWeek}  
+	   AND PLAN_STUS  = 4
+	 ORDER BY PLAN_ID
+  </select> 
+
+  <!-- WARE HOUSE MAPPING -->
+  <select id="selectCdcWareMapping" parameterType="Map" resultType="egovMap">
+		SELECT DISTINCT 
+		      PLAN_ID CODE_VALUE 
+		    , CDC     CODE_VIEW
+	  FROM SCM0005M 
+	 WHERE PLAN_YEAR  = #{planYear}  
+	 <if test="planMonth != null and planMonth !=''">
+	   AND PLAN_MONTH = #{planMonth}  
+	 </if>
+	   AND PLAN_WEEK  = #{planWeek}  
+	   AND PLAN_STUS  = 4
+	 ORDER BY PLAN_ID
+  </select> 
+
+  <!-- Business Plan Manager -->
+  <select id="selectBizPlanManager" parameterType="Map" resultType="egovMap">
+		SELECT DISTINCT 
+		      PLAN_ID CODE_VALUE 
+		    , CDC     CODE_VIEW
+	  FROM SCM0005M 
+	 WHERE PLAN_YEAR  = #{planYear}  
+	 <if test="planMonth != null and planMonth !=''">
+	   AND PLAN_MONTH = #{planMonth}  
+	 </if>
+	   AND PLAN_WEEK  = #{planWeek}  
+	   AND PLAN_STUS  = 4
+	 ORDER BY PLAN_ID
+  </select> 
+    
+</mapper>
