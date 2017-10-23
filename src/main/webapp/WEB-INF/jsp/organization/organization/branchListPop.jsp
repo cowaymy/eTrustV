@@ -59,150 +59,60 @@
             if (validRequiredField()){
                 Common.ajax("GET","/organization/branchListUpdate.do", $("#branchForm").serialize(), function(result){
                     console.log(result);
-                    Common.alert("Branch successfully updated.");
+                    Common.alert("Branch successfully updated.",fn_close);
                 });
             
-            }else {
-                Common.alert("<b>Failed to update. Please try again later.</b>");
             }
 
         }
         
         
-
+        function fn_close(){
+            $("#popup_wrap").remove();
+            fn_getBranchListAjax();
+        }
 
 
 
     function  validRequiredField() {
-        var  valid = "true";
-        //var  valid = false;
-        var  message = "";
-        
-        var  newBranchName = $("#branchName").val();
-        var txtAddress1 = $("#txtAddress1").val();
-        var txtAddress2 = $("#txtAddress2").val();
-        var txtAddress3 = $("#txtAddress3").val();
-        var nation = $("#nation").val();
-        var state = $("#state").val();
-        var area = $("#area").val();
-        var postcode = $("#postcode").val();
-        var contact   = $("#contact").val();    
-        var txtFax      = $("#txtFax").val();    
-        var txtTel1      = $("#txtTel1").val();    
-        var txtTel2      = $("#txtTel2").val();    
-        
-        
-        
-        if($("#branchType").val() <= -1){
-            valid = false;
-            message += "* Please select the branch type.<br />";
+    	/* if($("#branchCd").val() == ''){
+            Common.alert("Please key  in Branch Code");
+            return false;
+        } */
+    	if($("#branchName").val() == ''){
+            Common.alert("Please key  in Branch Name");
+            return false;
         }
-                
-
-         if(newBranchName ==  ""){
-            valid = false;
-            message += "* Please key in the branch name.<br />";
+    	if($("#cmRegion").val() == ''){
+            Common.alert("Please key  in Region");
+            return false;
         }
-        else{
-            if (newBranchName.length > 50) {
-                valid = false;
-                message += "* Branch name cannot exceed 50 characters.<br />";
-            }
+    	
+    	if($("#addrDtl").val() == ''){
+            Common.alert("Please key in the address.");
+            return false;
         }
         
-        if ($.trim(txtAddress1) != "") {
-            if (txtAddress1.length > 50) {
-                valid = false;
-                message += "* Address (1) cannot exceed 50 characters.<br />";
-            }
+        if($("#mArea").val() == ''){
+                Common.alert("Please key in the area.");
+                return false;
         }
         
-        if ($.trim(txtAddress2) != "") {
-            if (txtAddress2.length > 50) {
-                valid = false;
-                message += "* Address (2) cannot exceed 50 characters.<br />";
-            }
-        }    
-       
-        if ($.trim(txtAddress3) != "") {
-            if (txtAddress3.length > 50) {
-                valid = false;
-                message += "* Address (2) cannot exceed 50 characters.<br />";
-            }
-        }        
+        if($("#mCity").val() == ''){
+            Common.alert("Please key in the city.");
+            return false;
+        }
         
+        if($("#mPostCd").val() == ''){
+            Common.alert("Please key in the postcode.");
+            return false;
+        }
         
-         if (nation == "1") {
-            if (state <= -1) {
-                valid = false;
-                message += "* Please select the state.<br />";
-            }
-            if (area <= -1) {
-                valid = false;
-                message += "* Please select the area.<br />";
-            }
-
-            if (postcode <= -1) {
-                valid = false;
-                message += "* Please select the postcode.<br />";
-            }
+        if($("#mState").val() == ''){
+            Common.alert("Please key in the state.");
+            return false;
         }
-         
-         if($("#addrDtl").val() == ''){
-             Common.alert("Please key in the address.");
-             return false;
-         }
-         
-         if($("#mArea").val() == ''){
-                 Common.alert("Please key in the area.");
-                 return false;
-         }
-         
-         if($("#mCity").val() == ''){
-             Common.alert("Please key in the city.");
-             return false;
-         }
-         
-         if($("#mPostCd").val() == ''){
-             Common.alert("Please key in the postcode.");
-             return false;
-         }
-         
-         if($("#mState").val() == ''){
-             Common.alert("Please key in the state.");
-             return false;
-         }
-        
-        if ($.trim(contact) != "") {
-            if (contact.length > 50) {
-                valid = false;
-                message += "* Contact person cannot exceed 50 characters.<br />";
-            }
-        }
-
-        if ($.trim(txtFax) != "") {
-            if (txtFax.length > 15) {
-                valid = false;
-                message += "* Tel (F) cannot exceed 15 characters.<br />";
-            }
-        }
-
-        if ($.trim(txtTel1) != "") {
-            if (txtTel1.length > 15) {
-                valid = false;
-                message += "* Tel (1) cannot exceed 15 characters.<br />";
-            }
-        }
-
-        if ($.trim(txtTel2) != "") {
-            if (txtTel2.length > 15) {
-                valid = false;
-                message += "* Tel (2) cannot exceed 15 characters.<br />";
-            }
-        }
-
-        if (!valid) alert(message + "</b> Add Branch Summary"); 
-        return valid;
+        return true;
     }
 
     
@@ -394,7 +304,7 @@
     <td>
     <input type="text" title="" placeholder="Branch Name" class="w100p" id="branchName" name="branchName" value= "${branchDetail.name}" />
     </td>
-    <th scope="row">Region</th>
+    <th scope="row">Region<span class="must">*</span></th>
     <td>
     <select id="cmRegion" name="cmRegion" class="w100p" >
     </select>

@@ -93,15 +93,17 @@
             if (validRequiredField()){
                 Common.ajax("GET","/organization/branchListUpdate.do", $("#branchForm").serialize(), function(result){
                     console.log(result);
-                    Common.alert("Branch successfully updated.");
+                    Common.alert("Branch successfully updated.",fn_close);
                 });
             
-            }else {
-                Common.alert("<b>Failed to update. Please try again later.</b>");
             }
 
         }
 
+     function fn_close(){
+         $("#popup_wrap").remove();
+         fn_getBranchListAjax();
+     }
     function  validRequiredField() {
         var  valid = "true";
         //var  valid = false;
