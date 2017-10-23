@@ -74,7 +74,7 @@
 	                 '02', 'RDC',
 	                 '03', 'CT',
 	                 '04', 'CODY',
-	                 '05', 'CDC/RDC',
+	              <!--    '05', 'CDC/RDC', -->
 	                 S28.WH_LOC_GB) LOCATION_TYPE,
 			       WH_LOC_DESC,
 			       WH_LOC_ID,
@@ -97,6 +97,7 @@
 			       AND S28.WH_LOC_ID = L56.LOC_ID(+)
 			       AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE)
 			       AND #{partsCode} = L56.STK_CODE(+)
+			       AND S28.WH_LOC_GB <![CDATA[<>]]> '05'
      </select> 
 	
 	
