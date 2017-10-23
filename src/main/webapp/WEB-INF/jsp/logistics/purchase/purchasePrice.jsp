@@ -426,7 +426,14 @@
 				</tr>
 				<tr>
 				    <th scope="row">Net Price</th>
-				    <td><input type="text" title="" placeholder=""   id="viewpurchsprc" name="viewpurchsprc" readonly="readonly" size="5"/><input type="text" title="" placeholder=""  id="viewcurname" name="viewcurname" readonly="readonly" size="5px;"/>/<input type="text" title="" placeholder=""  id="viewcondiprcunit" name="viewcondiprcunit" readonly="readonly" size="5px;"/><input type="text" title="" placeholder=""  id="viewcondiunitname" name="viewcondiunitname" readonly="readonly" size="5px;"/>
+				    <td>
+				    <div class="itemPriceDate w100p">
+			            <p><input type="text" title="" placeholder="" class="w100p"  id="viewpurchsprc" name="viewpurchsprc" readonly="readonly"/></p>
+			            <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcurname" name="viewcurname" readonly="readonly"  /></p>
+			            <span>/</span>
+			            <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcondiprcunit" name="viewcondiprcunit" readonly="readonly"/></p>
+			            <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcondiunitname" name="viewcondiunitname" readonly="readonly" /></p>
+			        </div>
 				    </td>
 				    <th scope="row">Validity end date</th>
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewvalidenddt" name="viewvalidenddt" readonly="readonly"/></td>
