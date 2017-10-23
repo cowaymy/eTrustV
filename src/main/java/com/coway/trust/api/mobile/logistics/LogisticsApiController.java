@@ -178,10 +178,9 @@ public class LogisticsApiController {
 		for (int i = 0; i < inventoryOverallStock.size(); i++) {
 			LOGGER.debug("inventoryOverallStock    값 : {}", inventoryOverallStock.get(i));
 		}
-		
-		List<InventoryOverallStockDto> list = inventoryOverallStock.stream().map(r -> InventoryOverallStockDto.create(r))
-				.collect(Collectors.toList());
-	
+
+		List<InventoryOverallStockDto> list = inventoryOverallStock.stream()
+				.map(r -> InventoryOverallStockDto.create(r)).collect(Collectors.toList());
 
 		return ResponseEntity.ok(list);
 	}
@@ -500,34 +499,43 @@ public class LogisticsApiController {
 			@ModelAttribute NonBarcodeListForm nonbarcodeListForm) throws Exception {
 
 		Map<String, Object> params = NonBarcodeListForm.createMap(nonbarcodeListForm);
+		String invenAdjustLocId = "";
 
-		EgovMap header = MlogApiService.getNonBarcodeM(params);
+		AdjustmentStockNoneBarcodeListVo dto = null;
 
-		AdjustmentStockNoneBarcodeListVo dto = new AdjustmentStockNoneBarcodeListVo();
+		List<EgovMap> header = MlogApiService.getNonBarcodeM(params);
 
-		dto.setInvenAdjustNo((String) header.get("invenAdjustNo"));
-		dto.setAdjustStatus((String) header.get("adjustStatus"));
-		dto.setAdjustCreateDate((String) header.get("adjustCreateDate"));
-		dto.setAdjustBaseDate((String) header.get("adjustBaseDate"));
-		dto.setAdjustLocation((String) header.get("adjustLocation"));
-		dto.setAdjustNormalQty(CommonUtils.getInt(header.get("adjustNormalQty")));
-		dto.setAdjustNotQty(CommonUtils.getInt(header.get("diffQty")));
-		dto.setAdjustQty(CommonUtils.getInt(header.get("adjustQty")));
+		if (header.size() > 0) {
+			dto = new AdjustmentStockNoneBarcodeListVo();
 
-		String invenAdjustLocId = (String) header.get("invenAdjustLocId");
+			for (int i = 0; i < header.size(); i++) {
+				Map<String, Object> headerMap = (Map<String, Object>) header.get(i);
+				dto.setInvenAdjustNo((String) headerMap.get("invenAdjustNo"));
+				dto.setAdjustStatus((String) headerMap.get("adjustStatus"));
+				dto.setAdjustCreateDate((String) headerMap.get("adjustCreateDate"));
+				dto.setAdjustBaseDate((String) headerMap.get("adjustBaseDate"));
+				dto.setAdjustLocation((String) headerMap.get("adjustLocation"));
+				dto.setAdjustNormalQty(CommonUtils.getInt(headerMap.get("adjustNormalQty")));
+				dto.setAdjustNotQty(CommonUtils.getInt(headerMap.get("diffQty")));
+				dto.setAdjustQty(CommonUtils.getInt(headerMap.get("adjustQty")));
 
-		LOGGER.debug("invenAdjustLocId 값 : {}", invenAdjustLocId);
+				invenAdjustLocId = (String) headerMap.get("invenAdjustLocId");
 
-		List<EgovMap> nonBarcodeDList = MlogApiService.getNonBarcodeDList(invenAdjustLocId);
+			}
 
-		List<NonBarcodeDListDto> adjustList = nonBarcodeDList.stream().map(r -> NonBarcodeDListDto.create(r))
-				.collect(Collectors.toList());
-		dto.setAdjustList(adjustList);
+			LOGGER.debug("invenAdjustLocId 값 : {}", invenAdjustLocId);
 
-		for (int i = 0; i < adjustList.size(); i++) {
-			LOGGER.debug("adjustList 값 : {}", adjustList.get(i));
+			List<EgovMap> nonBarcodeDList = MlogApiService.getNonBarcodeDList(invenAdjustLocId);
+
+			List<NonBarcodeDListDto> adjustList = nonBarcodeDList.stream().map(r -> NonBarcodeDListDto.create(r))
+					.collect(Collectors.toList());
+			dto.setAdjustList(adjustList);
+
+			for (int i = 0; i < adjustList.size(); i++) {
+				LOGGER.debug("adjustList 값 : {}", adjustList.get(i));
+			}
+
 		}
-
 		return ResponseEntity.ok(dto);
 
 	}
@@ -538,39 +546,47 @@ public class LogisticsApiController {
 			throws Exception {
 
 		Map<String, Object> params = BarcodeListForm.createMap(barcodeListForm);
+		String invenAdjustLocId = "";
 
-		EgovMap header = MlogApiService.getNonBarcodeM(params);
+		AdjustmentStockBarcodeListVo dto = null;
 
-		AdjustmentStockBarcodeListVo dto = new AdjustmentStockBarcodeListVo();
+		List<EgovMap> header = MlogApiService.getNonBarcodeM(params);
+		if (header.size() > 0) {
+			dto = new AdjustmentStockBarcodeListVo();
 
-		dto.setInvenAdjustNo((String) header.get("invenAdjustNo"));
-		dto.setAdjustStatus((String) header.get("adjustStatus"));
-		dto.setAdjustCreateDate((String) header.get("adjustCreateDate"));
-		dto.setAdjustBaseDate((String) header.get("adjustBaseDate"));
-		dto.setAdjustLocation((String) header.get("adjustLocation"));
-		dto.setAdjustNormalQty(CommonUtils.getInt(header.get("adjustNormalQty")));
-		dto.setAdjustNotQty(CommonUtils.getInt(header.get("diffQty")));
-		dto.setAdjustQty(CommonUtils.getInt(header.get("adjustQty")));
+			for (int i = 0; i < header.size(); i++) {
+				Map<String, Object> headerMap = (Map<String, Object>) header.get(i);
+				dto.setInvenAdjustNo((String) headerMap.get("invenAdjustNo"));
+				dto.setAdjustStatus((String) headerMap.get("adjustStatus"));
+				dto.setAdjustCreateDate((String) headerMap.get("adjustCreateDate"));
+				dto.setAdjustBaseDate((String) headerMap.get("adjustBaseDate"));
+				dto.setAdjustLocation((String) headerMap.get("adjustLocation"));
+				dto.setAdjustNormalQty(CommonUtils.getInt(headerMap.get("adjustNormalQty")));
+				dto.setAdjustNotQty(CommonUtils.getInt(headerMap.get("diffQty")));
+				dto.setAdjustQty(CommonUtils.getInt(headerMap.get("adjustQty")));
 
-		String invenAdjustLocId = (String) header.get("invenAdjustLocId");
+				invenAdjustLocId = (String) headerMap.get("invenAdjustLocId");
+			}
 
-		LOGGER.debug("invenAdjustLocId 값 : {}", invenAdjustLocId);
+			LOGGER.debug("invenAdjustLocId 값 : {}", invenAdjustLocId);
 
-		List<EgovMap> barcodeDList = MlogApiService.getBarcodeDList(invenAdjustLocId);
+			List<EgovMap> barcodeDList = MlogApiService.getBarcodeDList(invenAdjustLocId);
 
-		List<EgovMap> barcodeCList = MlogApiService.getBarcodeCList(invenAdjustLocId);
+			List<EgovMap> barcodeCList = MlogApiService.getBarcodeCList(invenAdjustLocId);
 
-		List<BarcodeDListDto> adjustList = barcodeDList.stream().map(r -> BarcodeDListDto.create(r))
-				.collect(Collectors.toList());
+			List<BarcodeDListDto> adjustList = barcodeDList.stream().map(r -> BarcodeDListDto.create(r))
+					.collect(Collectors.toList());
 
-		List<BarcodeCListDto> completeList = barcodeCList.stream().map(r -> BarcodeCListDto.create(r))
-				.collect(Collectors.toList());
+			List<BarcodeCListDto> completeList = barcodeCList.stream().map(r -> BarcodeCListDto.create(r))
+					.collect(Collectors.toList());
 
-		dto.setAdjustList(adjustList);
-		dto.setCompleteList(completeList);
+			dto.setAdjustList(adjustList);
+			dto.setCompleteList(completeList);
 
-		for (int i = 0; i < adjustList.size(); i++) {
-			LOGGER.debug("adjustList 값 : {}", adjustList.get(i));
+			for (int i = 0; i < adjustList.size(); i++) {
+				LOGGER.debug("adjustList 값 : {}", adjustList.get(i));
+			}
+
 		}
 
 		return ResponseEntity.ok(dto);
