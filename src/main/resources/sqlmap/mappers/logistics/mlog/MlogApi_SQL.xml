@@ -151,39 +151,19 @@
 	<!-- </select> -->
 
     <select id="getInventoryOverallStock" parameterType="Map" resultType="egovMap">
-		SELECT
-		<!-- O01.NAME CT_CODY_NAME,O01.MEM_CODE CT_CODY_ID, -->
-		T1.BOM_COMPNT PARTS_CODE,T1.stk_desc PARTS_NAME ,T1.QTY STOCK_QTY ,T1.serial_no
-		SERIAL_NO ,T1.STK_ID PARTS_ID
-		FROM ORG0001D O01, SYS0028M S28,
-		(SELECT l43.bom,
-		l43.matrl_no,
-		l44.BOM_COMPNT,
-		NVL (l56.qty, 0) qty,
-		l56.serial_no,
-		l56.STK_CTGRY_ID,l56.STK_TYPE_ID,
-		l56.LOC_ID,
-		s26.stk_desc,
-		s26.STK_ID
-		FROM log0043m l43,
-		log0044d l44,
-		(SELECT log0056m.*, log0063d.serial_no
-		FROM log0056m, log0063d
-		WHERE 1 = 1
-		AND log0056m.stk_code = log0063d.MATNR(+))l56,
-		sys0026m s26
-		WHERE 1 = 1
-		AND l44.BOM_COMPNT = l56.stk_code(+)
-		AND l44.BOM_COMPNT = s26.stk_code
-		AND l43.bom = l44.bom
-		AND l56.STK_CTGRY_ID=#{productCategoryId}
-		AND l56.STK_TYPE_ID in(62,63))T1
-		WHERE 1 = 1
-		AND O01.MEM_CODE=S28.WH_LOC_CODE(+)
-		AND S28.WH_LOC_ID=T1.LOC_ID(+)
-		AND O01.MEM_CODE=#{targetUserId}
-		GROUP BY
-		O01.NAME,O01.MEM_CODE,T1.BOM_COMPNT,T1.stk_desc,T1.QTY,T1.serial_no,T1.STK_ID
+     SELECT L56.STK_CODE parts_Code, S26.STK_ID parts_Id, S26.STK_DESC parts_Name, L56.QTY stock_Qty, L63.SERIAL_NO serial_No
+	  FROM LOG0056M L56 , 
+	       LOG0063D L63 , 
+	       SYS0026M S26
+	 WHERE 1 = 1
+	   AND L56.STK_CODE = S26.STK_CODE
+	   AND L56.STK_CODE = L63.MATNR(+)
+	   AND L56.LOC_ID   = L63.LOC_ID(+)
+	   AND L56.STK_TYPE_ID=S26.STK_TYPE_ID
+	   AND L56.STK_CTGRY_ID=S26.STK_CTGRY_ID
+	   AND S26.STK_TYPE_ID in (62 , 63)
+	   AND s26.STK_CTGRY_ID =#{productCategoryId}
+	   AND L56.LOC_ID = (select wh_loc_id from sys0028m where WH_LOC_CODE =#{targetUserId})
     </select>
 
 	<select id="getAllStockList" parameterType="Map" resultType="egovMap">
