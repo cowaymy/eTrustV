@@ -34,7 +34,7 @@
 </ul>
 
 
-<!-- oder info tab  start...-->
+<%-- <!-- oder info tab  start...-->
     <jsp:include page ='/sales/membership/inc_quotInfo.do'/> 
 <!-- oder info tab  end...--> 
 
@@ -49,7 +49,7 @@
 
 <!-- person info tab  start...-->
     <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/> 
-<!-- oder info tab  end...-->
+<!-- oder info tab  end...--> --%>
 
 
 </section><!-- tap_wrap end -->

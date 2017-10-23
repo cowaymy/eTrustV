@@ -522,12 +522,12 @@ function fn_doSalesResult(item){
 
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/> 
+    <%-- <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/> --%> 
 <!-- oder info tab  end...-->
 
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/> 
+  <%--  <%--  <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/> --%> --%> 
 <!-- oder info tab  end...-->
 
 

@@ -841,12 +841,12 @@ function  fn_DisableControl(){
 
 
 <!-- inc_membershipInfo  tab  start...-->
-    <jsp:include page ='/sales/membershipRental/inc_mRMerInfo.do'/> 
+    <%-- <jsp:include page ='/sales/membershipRental/inc_mRMerInfo.do'/> --%> 
 <!--  inc_membershipInfotab  end...-->
 
 
 <!-- inc_orderInfo  tab  start...-->
-    <jsp:include page ='/sales/membershipRental/inc_mROrderInfo.do'/> 
+<%--     <jsp:include page ='/sales/membershipRental/inc_mROrderInfo.do'/>  --%>
 <!--  inc_orderInfo  end...-->
 
 

@@ -38,7 +38,7 @@ function fn_doback(){
 
 
 
-<!-- inc_membershipInfo  tab  start...-->
+<%-- <!-- inc_membershipInfo  tab  start...-->
     <jsp:include page ='/sales/membershipRental/inc_mRMerInfo.do'/> 
 <!--  inc_membershipInfotab  end...-->
 
@@ -57,13 +57,13 @@ function fn_doback(){
 
 <!-- inc_paymemtListInfo  tab  start...-->
     <jsp:include page ='/sales/membershipRental/inc_mRPayListInfo.do'/> 
-<!--  inc_paymemtInfo  end...-->
+<!--  inc_paymemtInfo  end...--> --%>
 
 
 
-<!-- inc_callLogListInfo  tab  start...-->
+<%-- <!-- inc_callLogListInfo  tab  start...-->
     <jsp:include page ='/sales/membershipRental/inc_mRCallLogInfo.do'/> 
-<!--  inc_callLogListInfo  end...-->
+<!--  inc_callLogListInfo  end...--> --%>
 
 </section><!-- tap_wrap end -->
 
