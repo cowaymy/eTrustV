@@ -51,7 +51,7 @@ public interface MlogApiMapper {
 
 	List<EgovMap> getStockTransferReqStatusDList(Map<String, Object> params);
 	
-	EgovMap getNonBarcodeM(Map<String, Object> params);
+	List<EgovMap> getNonBarcodeM(Map<String, Object> params);
 	
 	List<EgovMap> getNonBarcodeDList(String invenAdjustLocId);
 	
