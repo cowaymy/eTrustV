@@ -36,6 +36,7 @@ public class MimeTypeUtil {
 		ALLOW_MIME_TYPE.put("application/vnd.ms-excel", "application/vnd.ms-excel");
 		ALLOW_MIME_TYPE.put("application/x-tika-ooxml", "application/x-tika-ooxml");
 		ALLOW_MIME_TYPE.put("text/plain", "text/plain");
+		ALLOW_MIME_TYPE.put("application/zip", "application/zip");
 	}
 
 	public static boolean isAllowFile(InputStream inputStream) throws IOException {

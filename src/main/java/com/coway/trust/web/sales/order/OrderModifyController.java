@@ -20,16 +20,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.callcenter.common.FileDto;
+import com.coway.trust.biz.common.FileService;
+import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderModifyService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO;
 import com.coway.trust.biz.sales.order.vo.OrderModifyVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
@@ -40,6 +45,7 @@ import com.coway.trust.web.sales.SalesConstants;
 import java.math.BigDecimal;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import io.swagger.annotations.ApiParam;
 
 /**
  * @author Yunseok_Jang
@@ -62,6 +68,9 @@ public class OrderModifyController {
 	
 	@Resource(name = "customerService")
 	private CustomerService customerService;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -428,5 +437,34 @@ public class OrderModifyController {
 		message.setMessage("Order Number : " + salesOrderMVO.getSalesOrdNo() + "<br />Information successfully updated.");
 
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateGstCertInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateGstCertInfo(@RequestBody GSTEURCertificateVO gSTEURCertificateVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+		
+		orderModifyService.updateGSTEURCertificate(gSTEURCertificateVO, sessionVO);
+		
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("GST certificate saved.");
+
+		return ResponseEntity.ok(message);
+	}
+	
+    @RequestMapping(value = "/selectGSTCertInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectGSTCertInfo(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderDetailService.selectGSTCertInfo(params);
+    	return ResponseEntity.ok(rslt);
+    }
+    
+    @RequestMapping(value = "/gstCertFileDown.do", method = RequestMethod.GET)
+	public ResponseEntity<FileDto> getFilesByGroupId(@RequestParam Map<String, Object> params) throws Exception {
+    	int fileGroupId = Integer.parseInt((String)params.get("atchFileGrpId"));
+    	
+		List<FileVO> list = fileService.getFiles(fileGroupId);
+		FileDto fileDto = FileDto.createByFileVO(list, fileGroupId);
+		return ResponseEntity.ok(fileDto);
 	}
 }

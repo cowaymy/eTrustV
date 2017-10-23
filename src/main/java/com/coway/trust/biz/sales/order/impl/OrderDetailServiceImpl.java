@@ -114,7 +114,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		if(installationInfo != null) this.loadInstallationInfo(installationInfo);
 		if(mailingInfo != null) this.loadMailingInfo(mailingInfo, basicInfo);
 		if(orderCfgInfo != null) this.loadConfigInfo(orderCfgInfo);
-		if(gstCertInfo != null) this.loadGstCertInfo(gstCertInfo);
+//		if(gstCertInfo != null) this.loadGstCertInfo(gstCertInfo);
 				
 		orderDetail.put("basicInfo",     	basicInfo);
 		orderDetail.put("logView",       	logView);
@@ -456,4 +456,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		return orderDetailMapper.selectLast6MonthTransList(params);
 	}
 	
+	@Override
+	public EgovMap selectGSTCertInfo(Map<String, Object> params) {
+		return orderDetailMapper.selectGSTCertInfo(params);
+	}
 }

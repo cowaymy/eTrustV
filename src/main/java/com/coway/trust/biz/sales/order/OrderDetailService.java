@@ -33,4 +33,6 @@ public interface OrderDetailService {
 	List<EgovMap> selectLast6MonthTransList(Map<String, Object> params);
 
 	EgovMap selectBasicInfo(Map<String, Object> params) throws Exception;
+
+	EgovMap selectGSTCertInfo(Map<String, Object> params);
 }

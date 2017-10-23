@@ -1040,14 +1040,16 @@
     
     <select id="selectGSTCertInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
-		SELECT T1.EURC_RLIEF_TYPE_ID
-		     , T1.EURC_SALES_ORD_ID
+		SELECT T1.EURC_ID
+             , T1.EURC_RLIEF_TYPE_ID
+             , T1.EURC_SALES_ORD_ID
 		     , T1.EURC_REF_NO
-		     , T1.EURC_REF_DT
+		     , TO_CHAR(T1.EURC_REF_DT, 'DD/MM/YYYY') EURC_REF_DT
 		     , T1.EURC_CUST_RGS_NO
 		     , T1.EURC_REM
 		     , T1.EURC_FILE_PATH_NAME
 		     , T1.EURC_RLIEF_APP_TYPE_ID
+		     , T1.ATCH_FILE_GRP_ID
 		  FROM SAL0042D T1
 		 WHERE T1.EURC_SALES_ORD_ID = #{salesOrderId}
 		   AND ROWNUM <= 1

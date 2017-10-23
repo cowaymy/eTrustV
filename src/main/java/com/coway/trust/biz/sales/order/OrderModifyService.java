@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO;
 import com.coway.trust.biz.sales.order.vo.OrderModifyVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
@@ -58,5 +59,7 @@ public interface OrderModifyService {
 	void saveReferral(OrderModifyVO orderModifyVO, SessionVO sessionVO) throws Exception;
 
 	void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO, SessionVO sessionVO) throws Exception;
+
+	void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO);
 
 }

@@ -1188,7 +1188,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		gSTEURCertificateVO.setEurcStusCodeId(SalesConstants.STATUS_ACTIVE);
 		gSTEURCertificateVO.setEurcCrtUserId(sessionVO.getUserId());
 		gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
-//		gSTEURCertificateVO.setAtchFileGrpId(fileDto.getAtchFileGrpId());
 	}
 	
 	@Override

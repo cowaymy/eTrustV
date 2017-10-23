@@ -535,4 +535,39 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
 		orderModifyMapper.updatePromoPriceInfo(salesOrderMVO);
 	}
+
+	@Override
+	public void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO) {
+
+		logger.info("!@###### OrderModifyServiceImpl.updateGSTEURCertificate");
+
+		this.preprocGSTCertificate(gSTEURCertificateVO, sessionVO);
+
+		if("Y".equals(gSTEURCertificateVO.getExistData())) {
+			orderModifyMapper.updateGSTEURCertificate(gSTEURCertificateVO); //UPDATE GST CERTIFICATE
+		}
+		else {
+            orderRegisterMapper.insertGSTEURCertificate(gSTEURCertificateVO); //INSERT GST CERTIFICATE
+		}
+	}
+	
+	private void preprocGSTCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO) {
+
+		logger.info("!@###### preprocGSTCertificate START ");
+		
+		int reliefTypeId = 0;
+		
+		if(gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+			reliefTypeId = 1374; //Foreign Mission And International Organization
+		}
+		else if(gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT || gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
+			reliefTypeId = 1373; //Government Sector
+		}
+		
+		gSTEURCertificateVO.setEurcRliefTypeId(reliefTypeId);
+		gSTEURCertificateVO.setEurcStusCodeId(SalesConstants.STATUS_ACTIVE);
+		gSTEURCertificateVO.setEurcCrtUserId(sessionVO.getUserId());
+		gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
+	}
+	
 }

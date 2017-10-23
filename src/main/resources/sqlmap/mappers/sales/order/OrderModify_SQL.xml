@@ -529,5 +529,17 @@
              , DISC_RNT_FEE         = #{discRntFee}
          WHERE SALES_ORD_ID         = #{salesOrdId}
     </update>
+
+    <update id="updateGSTEURCertificate" parameterType="gSTEURCertificateVO">
+		UPDATE SAL0042D
+		   SET EURC_REF_NO            = #{eurcRefNo}
+		     , EURC_REF_DT            = TO_DATE(#{eurcRefDt}, 'DD/MM/YYYY')
+		     , EURC_CUST_RGS_NO       = #{eurcCustRgsNo}
+		     , EURC_REM               = #{eurcRem}
+		     , EURC_UPD_USER_ID       = #{eurcUpdUserId}
+		     , EURC_UPD_DT            = SYSDATE
+		     , ATCH_FILE_GRP_ID       = #{atchFileGrpId}
+		 WHERE EURC_ID                = #{eurcId}
+    </update>
     
 </mapper>

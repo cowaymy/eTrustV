@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO;
 import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
+import com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO;
 import com.coway.trust.biz.sales.order.vo.ReferralVO;
 import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
@@ -69,4 +70,6 @@ public interface OrderModifyMapper {
 	void updateReferral(ReferralVO referralVO);
 	
 	void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO);
+	
+	void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO);
 }

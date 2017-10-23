@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 /**
  * The persistent class for the SAL0042D database table.
  * 
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GSTEURCertificateVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +46,8 @@ public class GSTEURCertificateVO implements Serializable {
 	private int eurcUpdUserId;
 	
 	private int atchFileGrpId;
+	
+	private String existData;
 
 	public GSTEURCertificateVO() {
 	}
@@ -173,6 +178,14 @@ public class GSTEURCertificateVO implements Serializable {
 
 	public void setAtchFileGrpId(int atchFileGrpId) {
 		this.atchFileGrpId = atchFileGrpId;
+	}
+
+	public String getExistData() {
+		return existData;
+	}
+
+	public void setExistData(String existData) {
+		this.existData = existData;
 	}
 
 }
