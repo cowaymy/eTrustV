@@ -328,7 +328,7 @@
                ORDER BY ROW_NO DESC             
         </select>
         
-        <select id="selectFilterInfo" parameterType="Map" resultType="egovMap">
+<!--         <select id="selectFilterInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[
             SELECT BOM.BOM_PART_ID STOCKID
 			     , STK.STK_CODE ||' - '||STK.STK_DESC STOCKNAME
@@ -350,6 +350,31 @@
 			   AND BOM.BOM_PART_ID = STK.STK_ID
 			   AND BOM.BOM_PART_TYPE_ID = CD.CODE_ID
 			 order by STOCKNAME 
+        </select> -->
+        <select id="selectFilterInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+           SELECT 
+		            SY26M.STK_ID STOCKID,
+					LG44D.BOM_COMPNT ||' - '|| SY26M.STK_DESC STOCKNAME,
+					SY26M.STK_TYPE_ID TYPEID,
+					SY13M.CODE_NAME TYPENM,
+					LG44D.VALID_FROM_DT,
+					LG44D.VALID_TO_DT,
+					LG44D.COMPNT_QTY QTY
+			FROM LOG0043M LG43M, LOG0044D LG44D ,SYS0026M SY26M, SYS0013M SY13M 
+				WHERE 1=1
+					AND LG43M.BOM = LG44D.BOM
+					AND LG44D.BOM_COMPNT = SY26M.STK_CODE
+					AND SY26M.STK_TYPE_ID=SY13M .CODE_ID
+			 ]]> 
+			   <if test="grid !=null and grid == 'spare'">
+			   AND SY26M.STK_TYPE_ID=63
+			   </if>
+			   <if test="grid !=null and grid == 'filter'">
+               AND SY26M.STK_TYPE_ID=62
+               </if>
+                AND LG43M.MATRL_NO =#{stockId}
+                ORDER BY SY26M.STK_ID
         </select>
         
         <select id="selectServiceInfo" parameterType="Map" resultType="egovMap">

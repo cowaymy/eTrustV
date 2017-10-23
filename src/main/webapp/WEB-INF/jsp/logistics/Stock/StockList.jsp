@@ -327,7 +327,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             $("#filter_info_div").show();
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
-                f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=filter", "F");
+               //f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=filter", "F");
+               f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkcode+"&grid=filter", "F");
             }
             $(this).find("a").attr("class","on");
         });
@@ -337,7 +338,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             $("#spare_info_div").show();
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
-                f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=spare", "R");
+                //f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=spare", "R");
+                f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkcode+"&grid=spare", "R");
             }                
             $(this).find("a").attr("class","on");
         });
@@ -452,7 +454,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         });
         
         //
-        $("#filter_info_edit").click(function(){
+/*         $("#filter_info_edit").click(function(){
             if($("#filter_info_edit").text() == "EDIT"){    
                 colShowHide(filterGrid,"",true);
                 $("#filter_info_edit").text("Add Filter");
@@ -468,10 +470,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(filterGrid),"filter_info");  
             }
 
-        });
+        }); */
 
 
-        $("#spare_info_edit").click(function() {
+/*         $("#spare_info_edit").click(function() {
             if($("#spare_info_edit").text() == "EDIT"){
                 colShowHide(spareGrid,"",true);
                 $("#spare_info_edit").text("Add Spare Part");
@@ -489,7 +491,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 "spare_info");
             }
 
-        });
+        }); */
 
         $("#stock_comm_edit").click(function(){
             var selectedItems = AUIGrid.getSelectedIndex(myGridID);
@@ -1378,9 +1380,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             <article class="tap_area" id="filter_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
                     <h3 id="filterTab">Stock's Filter List</h3>
-                    <ul class="left_opt">
+                    <!-- <ul class="left_opt">
                     <li><p class="btn_blue"><a id="filter_info_edit">EDIT</a></p></li>
-                    </ul>
+                    </ul> -->
                 </aside>
                 <div id="filter_grid" style="width:100%;">
                 </div>                
@@ -1388,9 +1390,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             <article class="tap_area" id="spare_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
                     <h3>Stock's Spare Part List</h3>
-                    <ul class="left_opt">
+                   <!--  <ul class="left_opt">
                     <li><p class="btn_blue"><a id="spare_info_edit">EDIT</a></p></li>
-                    </ul>
+                    </ul> -->
                 </aside>
                 <div id="spare_grid" style="width:100%;"></div>
             </article>
