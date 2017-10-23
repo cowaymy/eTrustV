@@ -17,7 +17,7 @@
             height : "600px" // 창 세로 크기
         };
     
-
+   
         function f_multiCombo(){
            $(function() {
                   $('#branchType').change(function() {
@@ -51,14 +51,22 @@
             createAUIGrid();
             AUIGrid.setSelectionMode(myGridID, "singleRow");
             
+            AUIGrid.bind(myGridID, "cellClick", function(event) {
+                brnchId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId");
+            }); 
+            
             
            // 셀 더블클릭 이벤트 바인딩
-	        AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-	            Common.popupWin("searchForm", "/organization/getBranchDetailPop.do?isPop=true&brnchId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"), option);
-	        });
+            AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+                Common.popupDiv("/organization/getBranchViewPop.do?isPop=true&brnchId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"), "");
+            });
             
         });
     
+        
+        function fn_branchEditPop(){
+            Common.popupDiv("/organization/getBranchDetailPop.do?isPop=true&brnchId=" + brnchId, "");
+        }
     
         function createAUIGrid(){
             // AUIGrid 칼럼 설정
@@ -83,10 +91,10 @@
                         dataField : "name1",
                         headerText : "Status",
                         width : 120,
-                 }, {
+                 /* }, {
                         dataField : "brnchId",
                         headerText : "brnch_Id",
-                        width : 120,                        
+                        width : 120,         */                
                  }];
             
             // 그리드 속성 설정
@@ -98,12 +106,11 @@
                 // 한 화면에 출력되는 행 개수 20(기본값:20)
                 pageRowCount : 20,
                 
-                editable : true,
+                editable : false,
                 
-                showStateColumn : true, 
+                showStateColumn : false, 
                 
                 displayTreeOpen : true,
-                
                 
                 headerHeight : 30,
                 
@@ -138,7 +145,12 @@
         
         //insert
         function fn_newBranch() {
-            Common.popupWin("searchForm", "/organization/getBranchDetailPop.do?isPop=true&brnchId=" +"0", option);
+            Common.popupDiv("/organization/branchNewPop.do?isPop=true", "");
+        }
+        
+        function fn_excelDown(){
+            // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+            GridCommon.exportTo("grid_wrap", "xlsx", "Branch List");
         }
         
     </script>
@@ -147,7 +159,7 @@
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order list</li>
 </ul>
@@ -156,6 +168,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Branch Management</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newBranch();"><span class="search"></span>New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_branchEditPop();"><span class="search"></span>Edit</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBranchListAjax();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -227,8 +241,8 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
+<%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
@@ -252,10 +266,10 @@
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
     </ul>
-    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end -->
+</aside><!-- link_btns_wrap end --> --%>
 
 </form>
 </section><!-- search_table end -->
@@ -263,17 +277,17 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_excelDown()">EXCEL DW</a></p></li>
+   <!--  <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-    <li><p class="btn_grid"><a href=" javascript:fn_newBranch();">NEW</a></p></li>
+    <li><p class="btn_grid"><a href=" javascript:fn_newBranch();">NEW</a></p></li> -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
-그리드 영역
+      <div id="grid_wrap" style="width: 100%; height: 530px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
