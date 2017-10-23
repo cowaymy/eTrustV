@@ -12,7 +12,7 @@ public class InventoryOverallStockForm {
 	@ApiModelProperty(value = "제품 대그룹(정수기/청정기 등) [default : '' 전체] 예) 54=Water Purifier,55=Air Purifier ", example = "55,54")
 	private int productCategoryId;
 
-	@ApiModelProperty(value = "조회할 CT/CODY ID [default : '' 전체] 예) CD100205,CT100070, ", example = "CD100205,CT100070")
+	@ApiModelProperty(value = "조회할 CT/CODY ID [default : '' 전체] 예) T010,CT100070, ", example = "CD100205,CT100070")
 	private String targetUserId;
 
 	public static Map<String, Object> createMap(InventoryOverallStockForm InventoryOverallStockForm) {
