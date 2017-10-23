@@ -494,42 +494,97 @@
 	        AND CODE_MASTER_ID = '63'
 	</select>
 
+<!-- 	<select id="getCommonReqHeader" parameterType="Map" resultType="egovMap"> -->
+<!-- 		SELECT -->
+<!-- 		LG47M.REQST_NO smo_No, -->
+<!-- 		DECODE (LG47M.PRIDIC_FRQNCY, -->
+<!--         'A', 'Auto', -->
+<!--         'M', 'Manual', -->
+<!--         LG47M.PRIDIC_FRQNCY) -->
+<!--         REQ_TYPE, -->
+<!--         LG47M.REQST_STUS REQ_STATUS, -->
+<!-- 		LG47M.REQST_CDC_RDC GI_LOCATION_CODE, -->
+<!-- 		SY28M.WH_LOC_DESC gi_Cust_Name, -->
+<!-- 		LG54M.DELVRY_GI_DT GI_DATE, -->
+<!-- 		LG54M.DELVRY_GR_DT GR_DATE -->
+<!-- 		FROM SYS0028M SY28M ,LOG0047M LG47M ,LOG0054M LG54M -->
+<!-- 		WHERE 1=1 -->
+<!-- 		AND LG47M.REQST_NO = LG54M.REQST_NO(+) -->
+<!--         AND LG47M.TRNSC_TYPE=LG54M.TRNSC_TYPE(+) -->
+<!--         AND LG47M.TRNSC_TYPE = 'UM' -->
+<!-- 		<if test="reqStatus eq 'MRRL'.toString() "> -->
+<!--         AND SY28M.WH_LOC_ID = LG47M.REQST_CDC_RDC -->
+<!--         </if> -->
+<!-- 		<if test="reqStatus eq 'MROL'.toString() "> -->
+<!-- 		AND SY28M.WH_LOC_ID = LG47M.RCIV_CDC_RDC -->
+<!-- 		</if> -->
+<!-- 		<if test="reqStatus eq 'MRRL'.toString() "> -->
+<!-- 		AND LG47M.REQST_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId}) -->
+<!-- 		</if> -->
+<!-- 		<if test="reqStatus eq 'MROL'.toString() "> -->
+<!-- 	    AND LG47M.RCIV_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId}) -->
+<!-- 	    </if> -->
+<!--         <if test="searchStatus == 1 "> -->
+<!-- 		  AND LG47M.REQST_STUS IN ('O') -->
+<!-- 		</if> -->
+<!--         <if test="searchStatus == 2 "> -->
+<!--            AND LG47M.REQST_STUS='C' -->
+<!--         </if>	 -->
+<!--          <if test="searchType == 1 "> -->
+<!--             and LG47M.PRIDIC_FRQNCY = 'A' -->
+<!--         </if> -->
+<!--         <if test="searchType == 2 "> -->
+<!--             and LG47M.PRIDIC_FRQNCY = 'M' -->
+<!--         </if> -->
+<!--          <if test="searchFromDate !=null and searchFromDate !=''"> -->
+<!--             AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[>=]]> -->
+<!--             TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'YYYYMMDD') -->
+<!--         </if> -->
+<!--         <if test="searchToDate !=null and searchToDate !=''"> -->
+<!--             AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[<=]]> -->
+<!--             TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'YYYYMMDD') -->
+<!--         </if>  -->
+<!-- 	</select> -->
+	
+	
 	<select id="getCommonReqHeader" parameterType="Map" resultType="egovMap">
-		SELECT
-		LG47M.REQST_NO smo_No,
-		DECODE (LG47M.PRIDIC_FRQNCY,
+       SELECT
+        LG47M.REQST_NO smo_No,
+        DECODE (LG47M.PRIDIC_FRQNCY,
         'A', 'Auto',
         'M', 'Manual',
         LG47M.PRIDIC_FRQNCY)
         REQ_TYPE,
         LG47M.REQST_STUS REQ_STATUS,
-		LG47M.REQST_CDC_RDC GI_LOCATION_CODE,
-		SY28M.WH_LOC_DESC gi_Cust_Name,
-		LG54M.DELVRY_GI_DT GI_DATE,
-		LG54M.DELVRY_GR_DT GR_DATE
-		FROM SYS0028M SY28M ,LOG0047M LG47M ,LOG0054M LG54M
-		WHERE 1=1
-		AND LG47M.REQST_NO = LG54M.REQST_NO(+)
+        LG47M.REQST_CDC_RDC GI_LOCATION_CODE,
+        SY28M.WH_LOC_DESC gi_Location_Name,
+        LG54M.DELVRY_GI_DT GI_DATE,
+        LG54M.DELVRY_GR_DT GR_DATE,
+        s47m.USER_FULL_NAME gi_Cust_Name,
+        LG47M.REQST_CRT_DT
+        FROM LOG0047M LG47M,SYS0028M SY28M ,LOG0054M LG54M,sys0047m s47m
+        WHERE 1=1
+        AND LG47M.REQST_NO = LG54M.REQST_NO(+)
         AND LG47M.TRNSC_TYPE=LG54M.TRNSC_TYPE(+)
         AND LG47M.TRNSC_TYPE = 'UM'
-		<if test="reqStatus eq 'MRRL'.toString() ">
-        AND SY28M.WH_LOC_ID = LG47M.REQST_CDC_RDC
+        <if test="reqStatus eq 'MRRL'.toString() ">
+        AND LG47M.REQST_CDC_RDC =SY28M.WH_LOC_ID
         </if>
-		<if test="reqStatus eq 'MROL'.toString() ">
-		AND SY28M.WH_LOC_ID = LG47M.RCIV_CDC_RDC
-		</if>
-		<if test="reqStatus eq 'MRRL'.toString() ">
-		AND LG47M.REQST_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
-		</if>
-		<if test="reqStatus eq 'MROL'.toString() ">
-	    AND LG47M.RCIV_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
-	    </if>
+        <if test="reqStatus eq 'MROL'.toString() ">
+        AND LG47M.RCIV_CDC_RDC = SY28M.WH_LOC_ID
+        </if>
+        <if test="reqStatus eq 'MRRL'.toString() ">
+         AND s47m.USER_NAME=(SELECT WH_LOC_CODE FROM SYS0028M WHERE WH_LOC_CODE ='CD102101')
+        </if>
+        <if test="reqStatus eq 'MROL'.toString() ">
+         AND s47m.USER_NAME=(SELECT WH_LOC_CODE FROM SYS0028M WHERE WH_LOC_CODE ='CD102101')
+        </if>
         <if test="searchStatus == 1 ">
-		  AND LG47M.REQST_STUS IN ('O')
-		</if>
+          AND LG47M.REQST_STUS IN ('O')
+        </if>
         <if test="searchStatus == 2 ">
            AND LG47M.REQST_STUS='C'
-        </if>	
+        </if>   
          <if test="searchType == 1 ">
             and LG47M.PRIDIC_FRQNCY = 'A'
         </if>
@@ -544,7 +599,9 @@
             AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[<=]]>
             TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'YYYYMMDD')
         </if> 
-	</select>
+    </select>
+	
+	
 
     <select id="getCommonReqParts" parameterType="Map" resultType="egovMap">
 	SELECT
