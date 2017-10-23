@@ -250,6 +250,20 @@ function setReInputFile(){//인풋파일 재세팅
 	}
 }
 
+function setHaveInputFile(){//인풋파일 있을경우
+	var autoFl = $(".auto_file label .input_text");
+	for(var i=0; i<autoFl.length; i++){
+		var flVal = $(".auto_file input[type=file]:eq("+i+")").attr("value"),
+			flUpd = $(".auto_file label .input_text:eq("+i+")");
+		if( flVal ){
+			flUpd.val(flVal);
+		} else {
+			flUpd.val("");
+		};
+	}
+}
+setHaveInputFile();
+
 $(document).on(//인풋파일 실행
 	"click", ".label_text a", function(){
 	var thisFileInput=$(this).parent().parent().prev(":file");

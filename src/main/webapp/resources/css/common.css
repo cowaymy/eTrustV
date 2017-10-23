@@ -271,6 +271,9 @@ table+.center_btns{padding-top:5px;}
 .search_result_set > p{display: inline-block!important;}
 .search_result_set > p input[type=text]{width:140px!important;}
 .search_result_set > p a{display: inline-block!important;vertical-align: middle;margin-left: 4px}
+.itemPriceDate > p{display: inline-block!important;width:30%;}
+.itemPriceDate > p.short{width:15%!important}
+.itemPriceDate > span{width:calc(100%-6px)!important}
 
 /* 테이블 */
 table.type1{margin-bottom:5px; border-top:1px solid #d3d9dd;}
