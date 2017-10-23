@@ -581,36 +581,6 @@ public class LogisticsApiController {
 	 * 아래부분 현창배 추가
 	 */
 
-	// @ApiOperation(value = "Stock Audit Barcode 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces =
-	// MediaType.APPLICATION_JSON_VALUE)
-	// @RequestMapping(value = "/barcode/list", method = RequestMethod.GET)
-	// public ResponseEntity<List<BarcodeDListDto>> getBarcodeList(@ModelAttribute BarcodeListForm barcodeListForm)
-	// throws Exception {
-	//
-	// Map<String, Object> params = BarcodeListForm.createMap(barcodeListForm);
-	//
-	// List<EgovMap> barcodeList = MlogApiService.getBarcodeList(params);
-	// List<BarcodeDListDto> list = barcodeList.stream().map(r -> BarcodeDListDto.create(r))
-	// .collect(Collectors.toList());
-	//
-	// return ResponseEntity.ok(list);
-	// }
-
-	// @ApiOperation(value = "Stock Audit NonBarcode 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces =
-	// MediaType.APPLICATION_JSON_VALUE)
-	// @RequestMapping(value = "/nonbarcode/list", method = RequestMethod.GET)
-	// public ResponseEntity<List<NonBarcodeMListDto>> getNonBarcodeList(
-	// @ModelAttribute NonBarcodeListForm nonbarcodeListForm) throws Exception {
-	//
-	// Map<String, Object> params = NonBarcodeListForm.createMap(nonbarcodeListForm);
-	//
-	// List<EgovMap> nonbarcodeList = MlogApiService.getNonBarcodeList(params);
-	// List<NonBarcodeMListDto> list = nonbarcodeList.stream().map(r -> NonBarcodeMListDto.create(r))
-	// .collect(Collectors.toList());
-	//
-	// return ResponseEntity.ok(list);
-	// }
-
 	@ApiOperation(value = "Stock Audit Result 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stockaudit/result", method = RequestMethod.GET)
 	public ResponseEntity<List<StockAuditResultDto>> getStockAuditResult(
@@ -639,21 +609,4 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	// @ApiOperation(value = "Stock Request 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces =
-	// MediaType.APPLICATION_JSON_VALUE)
-	// @RequestMapping(value = "/movement/requeststatus", method = RequestMethod.GET)
-	// public ResponseEntity<List<StrockMovementVoForMobile>> getStockRequestStatusList(
-	// @ModelAttribute StockRequestStatusForm stockRequestStatusForm) throws Exception {
-	//
-	// Map<String, Object> params = StockRequestStatusForm.createMap(stockRequestStatusForm);
-	//
-	// List<StrockMovementVoForMobile> headerList = MlogApiService.getStockRequestStatusHeader(params);
-	// for (int i = 0; i < headerList.size(); i++) {
-	// Map<String, Object> setMap = new HashMap<String, Object>();
-	// setMap.put("reqstNo", headerList.get(i).getSmoNo());
-	// List<StrockMovementVoForMobile> partsList = MlogApiService.getRequestStatusParts(setMap);
-	// headerList.get(i).setPartsList(partsList);
-	// }
-	// return ResponseEntity.ok(headerList);
-	// }
 }
