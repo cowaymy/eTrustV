@@ -218,7 +218,7 @@
 		            $("#tempAreaId").val(data.areaId);
 		    },
 		    error: function(){
-	            Common.alert("Get Address Id was Failed!");
+	            //Common.alert("Get Address Id was Failed!");
 	        },
 	        complete: function(){
 	        }
