@@ -38,6 +38,20 @@ public class PoMngementServiceImpl implements PoMngementService {
 	@Autowired
 	private PoMngementMapper poMngementMapper;
 	
+	/* OTD Status View */
+	@Override
+	public List<EgovMap> selectOtdStatusView(Map<String, Object> params) {
+		return poMngementMapper.selectOtdStatusView(params);
+	}
+	@Override
+	public List<EgovMap> selectOtdSOGIDetailPop(Map<String, Object> params) {
+		return poMngementMapper.selectOtdSOGIDetailPop(params);
+	}
+	@Override
+	public List<EgovMap> selectOtdSOPPDetailPop(Map<String, Object> params) {
+		return poMngementMapper.selectOtdSOPPDetailPop(params);
+	}
+	
 	/* Interface */
 	@Override
 	public List<EgovMap> selectInterfaceList(Map<String, Object> params) {

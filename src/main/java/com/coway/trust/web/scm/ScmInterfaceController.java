@@ -26,9 +26,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/scm")
 public class ScmInterfaceController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ScmInterfaceController.class);
-	//private static final Logger LOGGER  = LoggerFactory.getLogger(this.getClass());
-
+private static final Logger LOGGER = LoggerFactory.getLogger(ScmMasterMngmentController.class);
 	
 	@Autowired
 	private PoMngementService poMngementService;
@@ -41,7 +39,7 @@ public class ScmInterfaceController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-
+	
 	// view
 	@RequestMapping(value = "/interface.do")
 	public String poManager(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 

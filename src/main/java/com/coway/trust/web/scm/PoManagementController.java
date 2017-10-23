@@ -40,8 +40,12 @@ public class PoManagementController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-
-	// PO Management - PO Issue
+	
+	
+   /**********************************************/
+   /*********** PO Management && PO Issue ********/
+   /**********************************************/	
+	// 
 	@RequestMapping(value = "/poManager.do")
 	public String poManager(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
 	{
@@ -84,6 +88,70 @@ public class PoManagementController {
 		
 		//main Data
 		map.put("selectScmPoViewList", selectScmPoViewList);
+		
+		return ResponseEntity.ok(map);
+		
+	}	
+	
+	
+   /**************************************/
+   /*********** OTD Status Viewer ********/
+   /**************************************/
+	
+	/* view */
+	@RequestMapping(value = "/OTDStatusViewer.do")
+	public String OtdStatusViewMain(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
+	{
+		//model.addAttribute("languages", loginService.getLanguages());
+		return "/scm/otdStatusViewer";  	
+	}
+	
+	// search btn
+	@RequestMapping(value = "/selectOtdStatusViewSearch.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectOtdStatusView(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectOtdStatusView_Input : {}", params.toString());
+		
+		List<EgovMap> selectOtdStatusViewList = poMngementService.selectOtdStatusView(params);
+		//List<EgovMap> selectInterfaceLastState = poMngementService.selectInterfaceLastState(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectOtdStatusViewList", selectOtdStatusViewList);
+		//map.put("selectInterfaceLastState", selectInterfaceLastState);
+
+		return ResponseEntity.ok(map);
+		
+	}
+	
+	// otdDetailPopUp
+	@RequestMapping(value = "/otdDetailPop.do")
+	public String otdDetailPopUp(@RequestParam Map<String, Object> params, ModelMap model) {
+		// model.addAttribute("url", params);
+		// 호출될 화면
+		return "/scm/otdDetailPop";
+	}
+	
+	@RequestMapping(value = "/selectOtdSODetailPop.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectOtdSODetailPop(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectOtdSODetailPop_Input : {}", params.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		if ("GI".equals(String.valueOf(params.get("detailGbn"))) )
+		{
+			List<EgovMap> selectOtdSOGIDetailPopList = poMngementService.selectOtdSOGIDetailPop(params);
+			map.put("selectOtdSOGIDetailPopList", selectOtdSOGIDetailPopList);
+		}
+		else 
+		{
+			List<EgovMap> selectOtdSOPPDetailPopList = poMngementService.selectOtdSOPPDetailPop(params);
+			map.put("selectOtdSOPPDetailPopList", selectOtdSOPPDetailPopList);
+		}
 		
 		return ResponseEntity.ok(map);
 		

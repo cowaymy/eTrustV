@@ -7,6 +7,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface PoMngementService 
 {
+	// OTD Status Viewer
+	List<EgovMap> selectOtdStatusView(Map<String, Object> params); 
+	List<EgovMap> selectOtdSOGIDetailPop(Map<String, Object> params); 
+	List<EgovMap> selectOtdSOPPDetailPop(Map<String, Object> params); 
+	
+	
 	//Interface
 	List<EgovMap> selectInterfaceList(Map<String, Object> params);
 	List<EgovMap> selectInterfaceLastState(Map<String, Object> params);
