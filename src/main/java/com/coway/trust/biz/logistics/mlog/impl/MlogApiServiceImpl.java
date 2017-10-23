@@ -145,7 +145,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	
 	
 	@Override
-	public EgovMap getNonBarcodeM(Map<String, Object> params) {
+	public List<EgovMap> getNonBarcodeM(Map<String, Object> params) {
 		// TODO Auto-generated method stub	
 		return MlogApiMapper.getNonBarcodeM(params);
 	}
