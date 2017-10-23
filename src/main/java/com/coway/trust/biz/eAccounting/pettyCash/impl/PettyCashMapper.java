@@ -11,8 +11,22 @@ public interface PettyCashMapper {
 	
 	List<EgovMap> selectCustodianList(Map<String, Object> params);
 	
-	String selectUserNric(int userId);
+	String selectUserNric(String memAccId);
 	
 	void insertCustodian(Map<String, Object> params);
+	
+	EgovMap selectCustodianInfo(Map<String, Object> params);
+	
+	void updateCustodian(Map<String, Object> params);
+	
+	void deleteCustodian(Map<String, Object> params);
+	
+	List<EgovMap> selectRequestList(Map<String, Object> params);
+	
+	double selectAppvCashAmt(Map<String, Object> params);
+	
+	String selectNextClmNo();
+	
+	void insertPettyCashReqst(Map<String, Object> params);
 
 }

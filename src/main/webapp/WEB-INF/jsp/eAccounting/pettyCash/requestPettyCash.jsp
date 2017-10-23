@@ -20,7 +20,7 @@
 <script type="text/javascript">
 var costCentr;
 var memAccId;
-var pettyCashCustdnColumnLayout = [ {
+var pettyCashReqstColumnLayout = [ {
     dataField : "costCentr",
     headerText : '<spring:message code="webInvoice.cc" />'
 }, {
@@ -34,6 +34,38 @@ var pettyCashCustdnColumnLayout = [ {
     dataField : "memAccName",
     headerText : '<spring:message code="approveLine.name" />',
     style : "aui-grid-user-custom-left"
+}, {
+    dataField : "appvCashAmt",
+    headerText : 'Approved<br>Petty Cash',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editRenderer : {
+        type : "InputEditRenderer",
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
+    }
+}, {
+    dataField : "reqstAmt",
+    headerText : 'Request<br>Petty Cash',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editRenderer : {
+        type : "InputEditRenderer",
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
+    }
+}, {
+    dataField : "clmNo",
+    headerText : 'Request No'
+}, {
+    dataField : "reqstDt",
+    headerText : '<spring:message code="webInvoice.requestDate" />',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
 }, {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -87,52 +119,48 @@ var pettyCashCustdnColumnLayout = [ {
     dataField : "fileCnt",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
-    dataField : "crtDt",
-    headerText : 'Create Date',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
-}, {
-    dataField : "updDt",
-    headerText : 'Update Date',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
-}, {
-    dataField : "crtUserId",
+    dataField : "appvPrcssStusCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
-    dataField : "userName",
-    headerText : 'Creator',
+    dataField : "appvPrcssStus",
+    headerText : '<spring:message code="webInvoice.status" />',
     style : "aui-grid-user-custom-left"
+}, {
+    dataField : "appvPrcssDt",
+    headerText : 'Approved<br>Date',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
 }
 ];
 
 //그리드 속성 설정
-var pettyCashCustdnGridPros = {
+var pettyCashReqstGridPros = {
     // 페이징 사용       
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20
+    pageRowCount : 20,
+ // 헤더 높이 지정
+    headerHeight : 40
 };
 
-var pettyCashCustdnGridID;
+var pettyCashReqstGridID;
 
 $(document).ready(function () {
-	pettyCashCustdnGridID = AUIGrid.create("#pettyCashCustdn_grid_wrap", pettyCashCustdnColumnLayout, pettyCashCustdnGridPros);
+    pettyCashReqstGridID = AUIGrid.create("#pettyCashReqst_grid_wrap", pettyCashReqstColumnLayout, pettyCashReqstGridPros);
     
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#search_costCenter_btn").click(fn_costCenterSearchPop);
-    $("#search_createUser_btn").click(fn_searchUserIdPop);
-    $("#registration_btn").click(fn_newCustodianPop);
-    $("#edit_btn").click(fn_viewCustodianPop);
-    $("#delete_btn").click(fn_deleteCustodianPop);
+    $("#registration_btn").click(fn_newRequestPop);
     
-    AUIGrid.bind(pettyCashCustdnGridID, "cellClick", function( event ) 
+    AUIGrid.bind(pettyCashReqstGridID, "cellDoubleClick", function( event ) 
             {
-                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                console.log("CellClick costCentr : " + event.item.costCentr + " CellClick custdn(memAccId) : " + event.item.memAccId);
+                console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                console.log("CellDoubleClick costCentr : " + event.item.costCentr + " CellDoubleClick custdn(memAccId) : " + event.item.memAccId);
                 costCentr = event.item.costCentr;
                 memAccId = event.item.memAccId;
             });
+    
+    $("#appvPrcssStus").multipleSelect("checkAll");
     
     fn_setToDay();
 });
@@ -174,35 +202,15 @@ function fn_setCostCenter() {
     $("#costCenterText").val($("#search_costCentrName").val());
 }
 
-function fn_searchUserIdPop() {
-    Common.popupDiv("/common/memberPop.do", null, null, true);
-}
-
-//set 하는 function
-function fn_loadOrderSalesman(memId, memCode) {
-
-    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
-
-        if(memInfo == null) {
-            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
-        }
-        else {
-            console.log(memInfo);
-            // TODO createUser set
-            $("#createUser").val(memInfo.memCode);
-        }
-    });
-}
-
-function fn_selectCustodianList() {
-    Common.ajax("GET", "/eAccounting/pettyCash/selectCustodianList.do", $("#form_pettyCashCustdn").serialize(), function(result) {
+function fn_selectRequestList() {
+    Common.ajax("GET", "/eAccounting/pettyCash/selectRequestList.do", $("#form_pettyCashReqst").serialize(), function(result) {
         console.log(result);
-        AUIGrid.setGridData(pettyCashCustdnGridID, result);
+        AUIGrid.setGridData(pettyCashReqstGridID, result);
     });
 }
 
-function fn_newCustodianPop() {
-    Common.popupDiv("/eAccounting/pettyCash/newCustodianPop.do", null, null, true, "newCustodianPop");
+function fn_newRequestPop() {
+    Common.popupDiv("/eAccounting/pettyCash/newRequestPop.do", {callType:"new"}, null, true, "newRequestPop");
 }
 
 function fn_checkEmpty() {
@@ -219,18 +227,6 @@ function fn_checkEmpty() {
     }
     return checkResult;
 }
-
-function fn_viewCustodianPop() {
-	var data = {
-			costCentr : costCentr,
-			memAccId : memAccId
-	}
-    Common.popupDiv("/eAccounting/pettyCash/viewCustodianPop.do", data, null, true, "viewCustodianPop");
-}
-
-function fn_deleteCustodianPop() {
-    Common.popupDiv("/eAccounting/pettyCash/deleteRegistMsgPop.do", null, null, true, "registMsgPop");
-}
 </script>
 
 <section id="content"><!-- content start -->
@@ -242,17 +238,17 @@ function fn_deleteCustodianPop() {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Petty Cash Custodian Management</h2>
+<h2>Request Petty Cash</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectCustodianList()"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectRequestList()"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="form_pettyCashCustdn">
-<input type="hidden" id="costCenter" name="costCentr">
+<form action="#" method="post" id="form_pettyCashReqst">
 <input type="hidden" id="memAccId" name="memAccId">
+<input type="hidden" id="costCenter" name="costCentr">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -266,19 +262,27 @@ function fn_deleteCustodianPop() {
 <tr>
 	<th scope="row">Cost Center</th>
 	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Creator</th>
-	<td><input type="text" title="" placeholder="" class="" id="createUser" name="crtUserId"/><a href="#" class="search_btn" id="search_createUser_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-</tr>
-<tr>
 	<th scope="row">Custodian</th>
 	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Last Update</th>
+</tr>
+<tr>
+	<th scope="row">Reques Date</th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt" /></p>
 	<span>To</span>
 	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt" /></p>
 	</div><!-- date_set end -->
+	</td>
+	<th scope="row">Status</th>
+	<td>
+	<select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
+		<option value="T"><spring:message code="webInvoice.select.save" /></option>
+        <option value="R"><spring:message code="webInvoice.select.request" /></option>
+        <option value="P"><spring:message code="webInvoice.select.progress" /></option>
+        <option value="A"><spring:message code="webInvoice.select.approved" /></option>
+        <option value="J"><spring:message code="webInvoice.select.reject" /></option>
+	</select>
 	</td>
 </tr>
 </tbody>
@@ -290,12 +294,10 @@ function fn_deleteCustodianPop() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" id="delete_btn">Remove</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="edit_btn">Edit</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="registration_btn">New Custodian</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="registration_btn">New Request</a></p></li>
 </ul>
 
-<article class="grid_wrap" id="pettyCashCustdn_grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap" id="pettyCashReqst_grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

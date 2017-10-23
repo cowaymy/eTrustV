@@ -9,7 +9,7 @@ $(document).ready(function () {
 
 function fn_closePop() {
     $("#completedMsgPop").remove();
-    $("#newCustodianPop").remove();
+    $("#deleteCustodianPop").remove();
     
     fn_selectCustodianList();
 }
@@ -18,12 +18,12 @@ function fn_closePop() {
 <div id="popup_wrap" class="popup_wrap msg_box"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New petty cash custodian  registration</h1>
+<h1>Delete existing custodian information</h1>
 <p class="pop_close"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<p class="msg_txt">Registration of new petty cash custodian has been completed.</p>
+<p class="msg_txt">The existing custodian information has been successfully deleted.</p>
 <ul class="center_btns">
     <li><p class="btn_blue2" id="ok"><a href="#"><spring:message code="newWebInvoRegistMsg.ok" /></a></p></li>
 </ul>

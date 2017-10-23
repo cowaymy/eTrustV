@@ -1,22 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-<style type="text/css">
-/* 커스텀 행 스타일 */
-.my-row-style {
-    background:#9FC93C;
-    font-weight:bold;
-    color:#22741C;
-}
-/* 커스텀 칼럼 스타일 정의 */
-.aui-grid-user-custom-left {
-    text-align:left;
-}
-/* 커스텀 칼럼 스타일 정의 */
-.aui-grid-user-custom-right {
-    text-align:right;
-}
-</style>
 <script type="text/javascript">
 $(document).ready(function () {
 	setInputFile2();
@@ -25,6 +9,49 @@ $(document).ready(function () {
     $("#costCenter_search_btn").click(fn_costCenterSearchPop);
 	$("#save_btn").click(fn_saveNewCustodian);
     $("#clear_btn").click(fn_clearData);
+    
+    $("#appvCashAmt").keydown(function (event) { 
+        
+        var code = window.event.keyCode;
+        
+        if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+        {
+         window.event.returnValue = true;
+         return;
+        }
+        window.event.returnValue = false;
+        
+   });
+   
+   $("#appvCashAmt").click(function () { 
+       var str = $("#appvCashAmt").val().replace(/,/gi, "");
+       $("#appvCashAmt").val(str);      
+  });
+   $("#appvCashAmt").blur(function () { 
+       var str = $("#appvCashAmt").val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+       $("#appvCashAmt").val(str);      
+  });
+   
+    $("#appvCashAmt").change(function(){
+       var str =""+ Math.floor($("#appvCashAmt").val() * 100)/100;
+       
+       var str2 = str.split(".");
+      
+       if(str2.length == 1){
+           str2[1] = "00";
+       }
+       
+       if(str2[0].length > 20){
+    	   Common.alert("The amount can only be 20 digits, including 2 decimal point.");
+           str = "";
+       }else{
+           str = str2[0].substr(0, 11)+"."+str2[1];
+       }
+       str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+       
+       
+       $("#appvCashAmt").val(str);
+   }); 
 });
 
 /* 인풋 파일(멀티) */
@@ -43,14 +70,22 @@ function fn_setSupplier() {
     $("#bankCode").val($("#search_bankCode").val());
     $("#bankName").val($("#search_bankName").val());
     $("#bankAccNo").val($("#search_bankAccNo").val());
+    
+    // USER_NRIC GET
+    Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
+        console.log(result);
+        $("#custdnNric").val(result.data.userNric);
+    });
 }
 
 function fn_saveNewCustodian() {
-	Common.popupDiv("/eAccounting/pettyCash/newRegistMsgPop.do", null, null, true, "registMsgPop");
+	if(fn_checkEmpty()){
+		Common.popupDiv("/eAccounting/pettyCash/newRegistMsgPop.do", null, null, true, "registMsgPop");
+	}
 }
 
 function fn_clearData() {
-	$("#newCustdn_form").each(function() {
+	$("#form_newCustdn").each(function() {
 		this.reset();
 	});
 }
@@ -92,7 +127,7 @@ function fn_clearData() {
 	<th scope="row">Custodian</th>
 	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" /><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row">IC No / Passport No</th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="userNric" name="userNric" value="${userNric}"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric"/></td>
 </tr>
 <tr>
 	<th scope="row">Bank</th>
@@ -102,7 +137,7 @@ function fn_clearData() {
 </tr>
 <tr>
 	<th scope="row">Approved cash amount (RM)</th>
-	<td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="appvCashAmt" name="appvCashAmt"/></td>
+	<td colspan="3"><input type="text" title="" placeholder="" class="" id="appvCashAmt" name="appvCashAmt"/></td>
 </tr>
 <tr>
 	<th scope="row">Attachment</th>
