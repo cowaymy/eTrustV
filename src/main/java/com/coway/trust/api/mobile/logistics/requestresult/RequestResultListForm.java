@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RequestResultListForm", description = "RequestResultListForm")
 public class RequestResultListForm {
 
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) T010", example = "CT100337")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CD102101", example = "CD102101")
 	private String userId;
 
 	@ApiModelProperty(value = "조회시작날짜 (YYYYMMDD) 예) 20170820", example = "28092017")
