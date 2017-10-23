@@ -24,5 +24,7 @@ public interface BranchListMapper {
 	List<EgovMap> getAreaList(Map<String, Object> params);
 
 	List<EgovMap> getPostcodeList(Map<String, Object> params);
+	
+	EgovMap getBranchAddrDetail(Map<String, Object> params);
 
 }
