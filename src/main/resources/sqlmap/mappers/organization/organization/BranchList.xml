@@ -412,20 +412,17 @@
             UPDATE SYS0005M
                SET CODE = #{branchCd} 
 					,NAME = #{branchName}
-					,ADDR1 = #{txtAddress1}
-					,ADDR2 = #{txtAddress2}
-					,ADDR3 = #{txtAddress3}
-					,AREA_ID = #{area}
-					,POST_CODE_ID = #{postcode}
-					,STATE_CODE_ID = #{state}
-					,CNTY_ID = #{nation}
+					,ADDR1 = #{areaId}
+					,ADDR2 = #{addrDtl}
+					,ADDR3 = #{streetDtl}
 					,TEL1 = #{txtTel1}
 					,TEL2 = #{txtTel2}
 					,FAX = #{txtFax}
+					,CNTC = #{contact}
 					,TYPE_ID = #{branchType}
 					,UPD_USER_ID = #{user_id}
 					,UPD_DT = sysdate
-					,REGN_ID = #{region}
+					,REGN_ID = #{cmRegion}
              WHERE BRNCH_ID = #{branchNo}  
                 
    </insert>
@@ -434,16 +431,9 @@
    
    
    <insert id="branchListInsert" parameterType="Map" >
-       
             INSERT INTO SYS0005M (BRNCH_ID
 												,CODE
 												,NAME
-												,ADDR1
-												,ADDR2
-												,ADDR3
-												,AREA_ID
-												,POST_CODE_ID
-												,STATE_CODE_ID
 												,TEL1
 												,TEL2
 												,FAX
@@ -454,29 +444,31 @@
 												,REGN_ID
 												,IS_SYNC
 												,STUS_ID
-                ) VALUES ( SYS0005M_SEQ.NEXTVAL 
+												,ADDR1 /* AREA */
+												,ADDR2 /* ADDDTL  */
+												,ADDR3 /*  STREE DTL */
+                ) VALUES ( SYS0005M_BRNCH_ID_SEQ.NEXTVAL
                                          ,    #{branchCd}
                                          ,    #{branchName}
-                                         ,    #{txtAddress1} 
-                                         ,    #{txtAddress2}
-                                         ,    #{txtAddress3} 
-                                         ,    #{area} 
-                                         ,    #{postcode}
-                                         ,    #{state} 
                                          ,    #{txtTel1}   
                                          ,    #{txtTel2}
                                          ,    #{txtFax}
-                                         ,    #{nation}
+                                         ,    #{contact}
                                          ,    #{branchType} 
                                          ,    #{user_id}
                                          ,    sysdate
-                                         ,    #{region}
+                                         ,    #{cmRegion}
                                          , 1
                                          , 1
+                                         , #{areaId}
+                                         , #{addrDtl}
+                                         , #{streetDtl}
                   ) 
                                          
 
                                                       
    </insert>   
-    
+   <select id="getBranchAddrDetail" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS0064M WHERE AREA_ID = #{c1}
+    </select>
 </mapper>        
