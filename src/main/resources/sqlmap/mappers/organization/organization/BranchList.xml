@@ -13,133 +13,116 @@
     
     
         <select id="selectBranchList" parameterType="Map" resultType="egovMap">
-        
-        
-
-            
 		    SELECT Project1.BRNCH_ID BRNCH_ID  ,
-				       Project1.C1 C1  ,
-				       Project1.C2 C2  ,
-				       Project1.C3 C3  ,
-				       Project1.C4 C4  ,
-				       Project1.C5 C5  ,
-				       Project1.CODE CODE  ,
-				       Project1.C6 C6  ,
-				       Project1.C7 C7  ,
-				       Project1.C8 C8  ,
-				       Project1.NAME NAME  ,
-				       Project1.C9 C9  ,
-				       Project1.C10 C10  ,
-				       Project1.REGN_ID REGN_ID  ,
-				       Project1.C11 C11  ,
-				       Project1.C12 C12  ,
-				       Project1.C13 C13  ,
-				       Project1.STUS_ID STUS_ID  ,
-				       Project1.CODE1 CODE1  ,
-				       Project1.NAME1 NAME1  ,
-				       Project1.C14 C14  ,
-				       Project1.C15 C15  ,
-				       Project1.C16 C16  ,
-				       Project1.TYPE_ID TYPE_ID  ,
-				       Project1.CODE_NAME CODE_NAME  ,
-				       Project1.C17 C17  ,
-				       Project1.C18 C18  ,
-				       Project1.C19 C19  
-				  FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
-				                Extent1.CODE CODE  ,
-				                Extent1.NAME NAME  ,
-				                Extent1.TYPE_ID TYPE_ID  ,
-				                Extent1.STUS_ID STUS_ID  ,
-				                Extent1.REGN_ID REGN_ID  ,
-				                Extent2.CODE CODE1  ,
-				                Extent2.NAME NAME1  ,
-				                Extent3.CODE_NAME CODE_NAME  ,
-				                CASE 
-				                     WHEN ( Extent1.ADDR1 IS NOT NULL ) THEN Extent1.ADDR1
-				                ELSE ''
-				                   END C1  ,
-				                CASE 
-				                     WHEN ( Extent1.ADDR2 IS NOT NULL ) THEN Extent1.ADDR2
-				                ELSE ''
-				                   END C2  ,
-				                CASE 
-				                     WHEN ( Extent1.ADDR3 IS NOT NULL ) THEN Extent1.ADDR3
-				                ELSE ''
-				                   END C3  ,
-				                CASE 
-				                     WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
-				                ELSE 0
-				                   END C4  ,
-				                CASE 
-				                     WHEN ( Extent6.AREA_ID IS NOT NULL ) THEN Extent6.AREA_NAME
-				                ELSE ''
-				                   END C5  ,
-				                CASE 
-				                     WHEN ( Extent1.CNTC IS NOT NULL ) THEN Extent1.CNTC
-				                ELSE ''
-				                   END C6  ,
-				                CASE 
-				                     WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
-				                ELSE 0
-				                   END C7  ,
-				                CASE 
-				                     WHEN ( Extent4.CNTY_ID IS NOT NULL ) THEN Extent4.NAME
-				                ELSE ''
-				                   END C8  ,
-				                CASE 
-				                     WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
-				                ELSE 0
-				                   END C9  ,
-				                CASE 
-				                     WHEN ( Extent7.POST_CODE_ID IS NOT NULL ) THEN Extent7.POST_CODE
-				                ELSE ''
-				                   END C10  ,
-				                CASE 
-				                     WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME
-				                ELSE ''
-				                   END C11  ,
-				                CASE 
-				                     WHEN ( Extent1.STATE_CODE_ID IS NOT NULL ) THEN Extent1.STATE_CODE_ID
-				                ELSE 0
-				                   END C12  ,
-				                CASE 
-				                     WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME
-				                ELSE ''
-				                   END C13  ,
-				                CASE 
-				                     WHEN ( Extent1.TEL1 IS NOT NULL ) THEN Extent1.TEL1
-				                ELSE''
-				                   END C14  ,
-				                CASE 
-				                     WHEN ( Extent1.TEL2 IS NOT NULL ) THEN Extent1.TEL2
-				                ELSE ''
-				                   END C15  ,
-				                CASE 
-				                     WHEN ( Extent1.FAX IS NOT NULL ) THEN Extent1.FAX
-				                ELSE ''
-				                   END C16  ,
-				                CASE 
-				                     WHEN ( Extent1.UPD_DT IS NOT NULL ) THEN (Extent1.UPD_DT)
-				                ELSE  to_date('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
-				                   END C17  ,
-				                CASE 
-				                     WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID
-				                ELSE 0
-				                   END C18  ,
-				                CASE 
-				                     WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
-				                ELSE ''
-				                   END C19  
-				         FROM SYS0005M Extent1
-				                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
-				                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.TYPE_ID
-				                LEFT JOIN SYS0015M Extent4   ON Extent4.CNTY_ID = Extent1.CNTY_ID
-				                LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_CODE_ID
-				                LEFT JOIN SYS0039M Extent6   ON Extent6.AREA_ID = Extent1.AREA_ID
-				                LEFT JOIN SYS0030C Extent7   ON Extent7.POST_CODE_ID = Extent1.POST_CODE_ID
-				                LEFT JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent1.REGN_ID
-				                LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.UPD_USER_ID
-				          WHERE  1=1
+                       Project1.C1 C1  ,
+                       Project1.C2 C2  ,
+                       Project1.C3 C3  ,
+                       Project1.C4 C4  ,
+                       Project1.CODE CODE  ,
+                       Project1.C6 C6  ,
+                       Project1.C7 C7  ,
+                       Project1.NAME NAME  ,
+                       Project1.C9 C9  ,
+                       Project1.REGN_ID REGN_ID  ,
+                       Project1.C11 C11  ,
+                       Project1.C12 C12  ,
+                       Project1.STUS_ID STUS_ID  ,
+                       Project1.CODE1 CODE1  ,
+                       Project1.NAME1 NAME1  ,
+                       Project1.C14 C14  ,
+                       Project1.C15 C15  ,
+                       Project1.C16 C16  ,
+                       Project1.TYPE_ID TYPE_ID  ,
+                       Project1.CODE_NAME CODE_NAME  ,
+                       Project1.C17 C17  ,
+                       Project1.C18 C18  ,
+                       Project1.C19 C19  ,
+                       Project1.STATE STATE,
+                       Project1.POST_CODE POST_CODE,
+                       Project1.COUNTRY
+                  FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+                                Extent1.CODE CODE  ,
+                                Extent1.NAME NAME  ,
+                                Extent1.TYPE_ID TYPE_ID  ,
+                                Extent1.STUS_ID STUS_ID  ,
+                                Extent1.REGN_ID REGN_ID  ,
+                                Extent2.CODE CODE1  ,
+                                Extent2.NAME NAME1  ,
+                                Extent3.CODE_NAME CODE_NAME  ,
+                                CASE 
+                                     WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
+                                ELSE ''
+                                   END C1  ,
+                                CASE 
+                                     WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN Extent1.ADDR_DTL
+                                ELSE ''
+                                   END C2  ,
+                                CASE 
+                                     WHEN ( Extent1.STREET IS NOT NULL ) THEN Extent1.STREET
+                                ELSE ''
+                                   END C3  ,
+                                CASE 
+                                     WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
+                                ELSE ''
+                                   END C4  ,
+                                CASE 
+                                     WHEN ( Extent1.CNTC IS NOT NULL ) THEN Extent1.CNTC
+                                ELSE ''
+                                   END C6  ,
+                                CASE 
+                                     WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
+                                ELSE 0
+                                   END C7  ,
+                                CASE 
+                                     WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
+                                ELSE 0
+                                   END C9  ,
+                                CASE 
+                                     WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME
+                                ELSE ''
+                                   END C11  ,
+                                CASE 
+                                     WHEN ( Extent1.STATE_CODE_ID IS NOT NULL ) THEN Extent1.STATE_CODE_ID
+                                ELSE 0
+                                   END C12  ,
+                                CASE 
+                                     WHEN ( Extent1.TEL1 IS NOT NULL ) THEN Extent1.TEL1
+                                ELSE''
+                                   END C14  ,
+                                CASE 
+                                     WHEN ( Extent1.TEL2 IS NOT NULL ) THEN Extent1.TEL2
+                                ELSE ''
+                                   END C15  ,
+                                CASE 
+                                     WHEN ( Extent1.FAX IS NOT NULL ) THEN Extent1.FAX
+                                ELSE ''
+                                   END C16  ,
+                                CASE 
+                                     WHEN ( Extent1.UPD_DT IS NOT NULL ) THEN (Extent1.UPD_DT)
+                                ELSE  to_date('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
+                                   END C17  ,
+                                CASE 
+                                     WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID
+                                ELSE 0
+                                   END C18  ,
+                                CASE 
+                                     WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
+                                ELSE ''
+                                   END C19 ,
+                                    Extent10.POSTCODE POST_CODE,
+                                   Extent10.STATE STATE,
+                                   Extent10.COUNTRY COUNTRY
+                         FROM SYS0005M Extent1
+                                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+                                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.TYPE_ID
+                               /* LEFT JOIN SYS0015M Extent4   ON Extent4.CNTY_ID = Extent1.CNTY_ID
+                                LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_CODE_ID
+                                LEFT JOIN SYS0039M Extent6   ON Extent6.AREA_ID = Extent1.AREA_ID
+                                LEFT JOIN SYS0030C Extent7   ON Extent7.POST_CODE_ID = Extent1.POST_CODE_ID */
+                                LEFT JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent1.REGN_ID
+                                LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.UPD_USER_ID
+                                INNER JOIN SYS0064M Extent10   ON Extent10.AREA_ID = Extent1.AREA_ID
+                          WHERE  1=1
       	                             <if test="branchTypeList != null and branchTypeList != ''">
 						                 AND Extent1.TYPE_ID IN
 						                 <foreach item="item" collection="branchTypeList" index="index" open="(" separator="," close=")">
@@ -159,11 +142,20 @@
 						                 AND EXTENT1.NAME LIKE '%'|| #{branchNm} || '%'
 						             </if>
                                      <if test="cmbStatusType != null and cmbStatusType != ''">
-						                 AND EXTENT1.CNTY_ID = #{cmbStatusType}
+						                 AND EXTENT1.STUS_ID = #{cmbStatusType}
 						             </if>
                                      <if test="countryCd != null and countryCd != ''">
-						                 AND EXTENT1.STUS_ID =  #{countryCd}
+						                 AND EXTENT10.COUNTRY=  #{countryCd}
 						             </if>
+						              <if test="area != null and area != ''">
+                                         AND EXTENT1.AREA_ID =  #{area}
+                                     </if>
+                                     <if test="postCode != null and postCode != ''">
+                                         AND EXTENT10.POSTCODE =  #{postCode}
+                                     </if>
+                                     <if test="state != null and state != ''">
+                                         AND EXTENT10.STATE =  #{state}
+                                     </if>
 				                   ) Project1
 				  ORDER BY Project1.CODE ASC
 
@@ -182,19 +174,14 @@
 						       Limit1.C1 C1  ,
 						       Limit1.C2 C2  ,
 						       Limit1.C3 C3  ,
-						       Limit1.C4 C4  ,
-						       Limit1.C5 C5  ,
 						       Limit1.CODE CODE  ,
 						       Limit1.C6 C6  ,
 						       Limit1.C7 C7  ,
-						       Limit1.C8 C8  ,
 						       Limit1.NAME NAME  ,
 						       Limit1.C9 C9  ,
-						       Limit1.C10 C10  ,
 						       Limit1.REGN_ID REGN_ID  ,
 						       Limit1.C11 C11  ,
 						       Limit1.C12 C12  ,
-						       Limit1.C13 C13  ,
 						       Limit1.STUS_ID STUS_ID  ,
 						       Limit1.CODE1 CODE1  ,
 						       Limit1.NAME1 NAME1  ,
@@ -207,94 +194,78 @@
 						       Limit1.C18 C18  ,
 						       Limit1.C19 C19  
 						  FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
-						                Extent1.CODE CODE  ,
-						                Extent1.NAME NAME  ,
-						                Extent1.TYPE_ID TYPE_ID  ,
-						                Extent1.STUS_ID STUS_ID  ,
-						                Extent1.REGN_ID REGN_ID  ,
-						                Extent2.CODE CODE1  ,
-						                Extent2.NAME NAME1  ,
-						                Extent3.CODE_NAME CODE_NAME  ,
-						                CASE 
-						                     WHEN ( Extent1.ADDR1 IS NOT NULL ) THEN Extent1.ADDR1
-						                ELSE ''
-						                   END C1  ,
-						                CASE 
-						                     WHEN ( Extent1.ADDR2 IS NOT NULL ) THEN Extent1.ADDR2
-						                ELSE ''
-						                   END C2  ,
-						                CASE 
-						                     WHEN ( Extent1.ADDR3 IS NOT NULL ) THEN Extent1.ADDR3
-						                ELSE ''
-						                   END C3  ,
-						                CASE 
-						                     WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
-						                ELSE 0
-						                   END C4  ,
-						                CASE 
-						                     WHEN ( Extent6.AREA_ID IS NOT NULL ) THEN Extent6.AREA_NAME
-						                ELSE ''
-						                   END C5  ,
-						                CASE 
-						                     WHEN ( Extent1.CNTC IS NOT NULL ) THEN Extent1.CNTC
-						                ELSE ''
-						                   END C6  ,
-						                CASE 
-						                     WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
-						                ELSE 0
-						                   END C7  ,
-						                CASE 
-						                     WHEN ( Extent4.CNTY_ID IS NOT NULL ) THEN Extent4.NAME
-						                ELSE ''
-						                   END C8  ,
-						                CASE 
-						                     WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
-						                ELSE 0
-						                   END C9  ,
-						                CASE 
-						                     WHEN ( Extent7.POST_CODE_ID IS NOT NULL ) THEN Extent7.POST_CODE
-						                ELSE ''
-						                   END C10  ,
-						                CASE 
-						                     WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME
-						                ELSE ''
-						                   END C11  ,
-						                CASE 
-						                     WHEN ( Extent1.STATE_CODE_ID IS NOT NULL ) THEN Extent1.STATE_CODE_ID
-						                ELSE 0
-						                   END C12  ,
-						                CASE 
-						                     WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME
-						                ELSE ''
-						                   END C13  ,
-						                CASE 
-						                     WHEN ( Extent1.TEL1 IS NOT NULL ) THEN Extent1.TEL1
-						                ELSE ''
-						                   END C14  ,
-						                CASE 
-						                     WHEN ( Extent1.TEL2 IS NOT NULL ) THEN Extent1.TEL2
-						                ELSE ''
-						                   END C15  ,
-						                CASE 
-						                     WHEN ( Extent1.FAX IS NOT NULL ) THEN Extent1.FAX
-						                ELSE ''
-						                   END C16  ,
-						                CASE 
-						                     WHEN ( Extent1.UPD_DT IS NOT NULL ) THEN (Extent1.UPD_DT)
-						                ELSE  to_date('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
-						                   END C17  ,
-						                CASE 
-						                     WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID
-						                ELSE 0
-						                   END C18  ,
-						                CASE 
-						                     WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
-						                ELSE ''
-						                   END C19  
+                                Extent1.CODE CODE  ,
+                                Extent1.NAME NAME  ,
+                                Extent1.TYPE_ID TYPE_ID  ,
+                                Extent1.STUS_ID STUS_ID  ,
+                                Extent1.REGN_ID REGN_ID  ,
+                                Extent2.CODE CODE1  ,
+                                Extent2.NAME NAME1  ,
+                                Extent3.CODE_NAME CODE_NAME  ,
+                                CASE 
+                                     WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
+                                ELSE ''
+                                   END C1  ,
+                                CASE 
+                                     WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN Extent1.ADDR_DTL
+                                ELSE ''
+                                   END C2  ,
+                                CASE 
+                                     WHEN ( Extent1.STREET IS NOT NULL ) THEN Extent1.STREET
+                                ELSE ''
+                                   END C3  ,
+                                CASE 
+                                     WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
+                                ELSE ''
+                                   END C4  ,
+                                CASE 
+                                     WHEN ( Extent1.CNTC IS NOT NULL ) THEN Extent1.CNTC
+                                ELSE ''
+                                   END C6  ,
+                                CASE 
+                                     WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
+                                ELSE 0
+                                   END C7  ,
+                                CASE 
+                                     WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
+                                ELSE 0
+                                   END C9  ,
+                                CASE 
+                                     WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME
+                                ELSE ''
+                                   END C11  ,
+                                CASE 
+                                     WHEN ( Extent1.STATE_CODE_ID IS NOT NULL ) THEN Extent1.STATE_CODE_ID
+                                ELSE 0
+                                   END C12  ,
+                                CASE 
+                                     WHEN ( Extent1.TEL1 IS NOT NULL ) THEN Extent1.TEL1
+                                ELSE''
+                                   END C14  ,
+                                CASE 
+                                     WHEN ( Extent1.TEL2 IS NOT NULL ) THEN Extent1.TEL2
+                                ELSE ''
+                                   END C15  ,
+                                CASE 
+                                     WHEN ( Extent1.FAX IS NOT NULL ) THEN Extent1.FAX
+                                ELSE ''
+                                   END C16  ,
+                                CASE 
+                                     WHEN ( Extent1.UPD_DT IS NOT NULL ) THEN (Extent1.UPD_DT)
+                                ELSE  to_date('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
+                                   END C17  ,
+                                CASE 
+                                     WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID
+                                ELSE 0
+                                   END C18  ,
+                                CASE 
+                                     WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
+                                ELSE ''
+                                   END C19  
 						         FROM SYS0005M Extent1
 						                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
 						                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.TYPE_ID
-						                LEFT JOIN SYS0015M Extent4   ON Extent4.CNTY_ID = Extent1.CNTY_ID
+						               -- LEFT JOIN SYS0015M Extent4   ON Extent4.CNTY_ID = Extent1.CNTY_ID
 						                LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_CODE_ID
 						                LEFT JOIN SYS0039M Extent6   ON Extent6.AREA_ID = Extent1.AREA_ID
 						                LEFT JOIN SYS0030C Extent7   ON Extent7.POST_CODE_ID = Extent1.POST_CODE_ID
@@ -412,9 +383,9 @@
             UPDATE SYS0005M
                SET CODE = #{branchCd} 
 					,NAME = #{branchName}
-					,ADDR1 = #{areaId}
-					,ADDR2 = #{addrDtl}
-					,ADDR3 = #{streetDtl}
+					,AREA_ID = #{areaId}
+					,ADDR_DTL = #{addrDtl}
+					,STREET = #{streetDtl}
 					,TEL1 = #{txtTel1}
 					,TEL2 = #{txtTel2}
 					,FAX = #{txtFax}
@@ -444,9 +415,9 @@
 												,REGN_ID
 												,IS_SYNC
 												,STUS_ID
-												,ADDR1 /* AREA */
-												,ADDR2 /* ADDDTL  */
-												,ADDR3 /*  STREE DTL */
+												,AREA_ID 
+												,ADDR_DTL 
+												,STREET 
                 ) VALUES ( SYS0005M_BRNCH_ID_SEQ.NEXTVAL
                                          ,    #{branchCd}
                                          ,    #{branchName}
