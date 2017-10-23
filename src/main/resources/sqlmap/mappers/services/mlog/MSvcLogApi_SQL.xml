@@ -62,7 +62,7 @@
 						          ON SYS.STK_ID = S02.ITM_STK_ID
                                  AND SV8.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
                                  AND SV8.MONTH = TO_CHAR(to_date(#{requestDate} ,'YYYY/MM'),'MM')     
-                                 AND SV8.CODY_ID = #{userId}
+                                 AND OR1.MEM_CODE = #{userId}
                    
      </select> 
 
