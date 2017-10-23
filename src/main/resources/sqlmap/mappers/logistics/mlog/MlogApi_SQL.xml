@@ -735,7 +735,7 @@ SELECT
 	 AND TO_DATE(l71.BASE_DT, 'YYYYMMDD')   BETWEEN ADD_MONTHS( TRUNC(sysdate,'MM'), -1 )  AND LAST_DAY(sysdate)
 <!-- 	 AND TO_DATE(l71.BASE_DT, 'YYYYMMDD')   BETWEEN  -->
 <!-- 	 LAST_DAY(ADD_MONTHS( TRUNC(sysdate,'MM'),  -2)) and  ADD_MONTHS( TRUNC(sysdate,'MM'),+1 )  -->
-	 AND  l72.loc_id = 73055
+	 AND  l72.loc_id = (select WH_LOC_ID from sys0028m where WH_LOC_CODE=#{userId})
 </select>
 
 <select id="getNonBarcodeDList" parameterType="String" resultType="EgovMap">
