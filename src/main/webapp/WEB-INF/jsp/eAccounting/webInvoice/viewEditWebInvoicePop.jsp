@@ -125,7 +125,9 @@ var myColumnLayout = [ {
     formatString : "#,##0.00",
     editRenderer : {
         type : "InputEditRenderer",
-        autoThousandSeparator : true // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
     }
 }, {
     dataField : "taxAmt",
@@ -135,7 +137,9 @@ var myColumnLayout = [ {
     formatString : "#,##0.00",
     editRenderer : {
         type : "InputEditRenderer",
-        autoThousandSeparator : true // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
     }
 }, {
     dataField : "totAmt",
