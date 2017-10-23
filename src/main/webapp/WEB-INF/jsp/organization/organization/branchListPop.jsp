@@ -59,7 +59,7 @@
             if (validRequiredField()){
                 Common.ajax("GET","/organization/branchListUpdate.do", $("#branchForm").serialize(), function(result){
                     console.log(result);
-                    Common.alert("Branch successfully updated.",fn_close);
+                    Common.alert("Branch Save successfully .",fn_close);
                 });
             
             }
