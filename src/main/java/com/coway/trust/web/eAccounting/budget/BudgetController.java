@@ -241,9 +241,12 @@ public class BudgetController {
 			}
 			model.addAttribute("fileList", fileList);
 			model.addAttribute("adjustmentList", new Gson().toJson(adjustmentList));
-			
+
+			model.addAttribute("status", "Close");
 			LOGGER.debug(" fileList =======>>>" +  fileList);
 			LOGGER.debug(" new Gson().toJson(adjustmentList)=======>>>" +  new Gson().toJson(adjustmentList));
+		}else{
+			model.addAttribute("status", "Open");
 		}
 		
 		model.addAttribute("budgetDocNo", params.get("gridBudgetDocNo"));

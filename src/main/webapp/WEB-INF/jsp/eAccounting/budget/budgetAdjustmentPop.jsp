@@ -8,11 +8,18 @@
 .aui-grid-user-custom-left {
     text-align:left;
 }
+
+/* 커스텀 행 스타일 */
+.my-row-style {
+    background:#9FC93C;
+    font-weight:bold;
+    color:#22741C;
+}
 </style>
 <script  type="text/javascript">
 
 var adjPGridID;
-var test;
+var rowid;
 
 var fileList = new Array();
 <c:forEach var="file" items="${fileList}">
@@ -28,22 +35,19 @@ fileList.push(obj);
 
 $(document).ready(function(){
 		
-	console.log("${fileList}");
-	if("${fileList.size()}" <= 0) {
-        setInputFile2();
-    }else{
-	      /* for(var i = 0; i < fileList.length; i++) {
-	        
-	        setHaveInputFile();
-	    }  */
-    }
-	
 	var adjustmentList;
-	
+		
 	 if('${adjustmentList}'=='' || '${adjustmentList}' == null){
 	}else{
 		adjustmentList = JSON.parse('${adjustmentList}');
 	} 	
+	 
+	 console.log("${fileList}");
+    if("${fileList.size()}" <= 0) {
+        if("${status == 'Open'}" ){
+            setInputFile2();
+        }
+    }
 
 //console.log(fileList);
 		
@@ -55,6 +59,7 @@ $(document).ready(function(){
     });
 	
 	$("#btnAdd").click(fn_AddRow);
+	$("#btnDel").click(fn_RemoveRow);
     
     $("#btnClear").click(function(){
     	$("input").each(function(){
@@ -138,7 +143,11 @@ $(document).ready(function(){
         fn_atchViewDown(atchFileName, fileSubPath, physiclFileName);
     });
     
-    var adjPLayout = [   {
+    var adjPLayout = [{
+        dataField : "overBudgetFlag",
+        headerText : '',
+        visible : false,
+    },{
         dataField : "budgetDocNo",
         headerText : '',
         editable : false,
@@ -210,7 +219,8 @@ $(document).ready(function(){
         editRenderer : {
             type : "InputEditRenderer",
             onlyNumeric : true,
-            autoThousandSeparator : true // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+            autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+            allowPoint : true // 소수점(.) 입력 가능 설정
         }
     },{
         dataField : "adjRem",
@@ -221,7 +231,8 @@ $(document).ready(function(){
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict", 
         width : 200
-    },{
+    }
+    /* ,{
         dataField : "availableAmt",
         headerText : '',
         dataType : "numeric",
@@ -229,18 +240,20 @@ $(document).ready(function(){
         style : "my-right-style",
         width : 100,
         visible :false
-    }];
+    } */
+    ];
          
     var adjPOptions = {
             enableCellMerge : true,
             showStateColumn:true,
             showRowNumColumn : true,
+            selectionMode       : "singleRow", 
             usePaging : false,
             editable :true,
             softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
       }; 
     
-    adjPGridID = GridCommon.createAUIGrid("#adjPGridID", adjPLayout, "rowId", adjPOptions);
+    adjPGridID = GridCommon.createAUIGrid("#adjPGridID", adjPLayout, "budgetDocSeq", adjPOptions);
 
     if(adjustmentList != '' ){
         AUIGrid.setGridData(adjPGridID, adjustmentList);
@@ -248,7 +261,18 @@ $(document).ready(function(){
        
     $("#pBudgetDocNo").val("${budgetDocNo}");
     
+    // cellClick event.
+    AUIGrid.bind(adjPGridID, "cellClick", function( event )
+    {
+        rowid = event.rowIndex;
+
+    });
+    
 });
+
+function fn_RemoveRow(){
+	 AUIGrid.removeRow(adjPGridID, rowid);
+}
 
 //리스트 조회.
 function fn_selectListAjax() {        
@@ -521,7 +545,7 @@ function fn_AddRow()
     	item.signal  = '-';
     }
     
-    if($("#pAdjustmentType").val() != '01' && $("#pAdjustmentType").val() !=''){
+    if($("#pAdjustmentType").val() != '01' && $("#pAdjustmentType").val() != '02' && $("#pAdjustmentType").val() !=''){
     	var item2 = new Object();
     	
         if ( $("#recvYearMonth").val() == "") {
@@ -576,7 +600,7 @@ function fn_AddRow()
     }
     
     
-    Common.ajax("POST", "/eAccounting/budget/budgetCheck", $("#pAdjForm").serializeJSON(), function(result) {
+    /* Common.ajax("POST", "/eAccounting/budget/budgetCheck", $("#pAdjForm").serializeJSON(), function(result) {
         
         console.log("성공.");
         console.log( result);
@@ -587,15 +611,15 @@ function fn_AddRow()
         	if(item.adjAmt > result.availableAmt){
                 alert("<spring:message code="budget.exceeded" />");
         	}else{
-                item.availableAmt = result.availableAmt - item.adjAmt ;
+                item.availableAmt = result.availableAmt - item.adjAmt ; */
                 // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
                 // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
                 AUIGrid.addRow(adjPGridID, item, 'last');                    
                 AUIGrid.addRow(adjPGridID, item2, 'last'); 
-        	}
+     /*    	}
         }     
 
-   });
+   }); */
        
                 
 }  
@@ -640,89 +664,87 @@ function fn_uploadFile(str) {
     }
 }
 
-/* function budgetCheck(){
-	 // parameter
-    var idx =  AUIGrid.getRowCount(adjPGridID);
-    var requestAmt = 0;
-    var budgetYn ;
-    
-    for(var i = 0; i < idx; i++){
-        if(AUIGrid.getCellValue(adjPGridID, i, "signal")== "+"){
-        	var amt = AUIGrid.getCellValue(adjPGridID, i, "adjAmt");
-        	
-        	//amt = amt.replace(/,/gi, "");
-            requestAmt +=amt;
-        }
-    }
-    
-    $("#requestAmt").val(requestAmt);
-    
-    var obj = $("#pAdjForm").serializeJSON();    
-    var gridData = GridCommon.getEditData(adjPGridID);
-    obj.gridData = gridData;
-
-     //예산 조회
-   Common.ajax("POST", "/eAccounting/budget/budgetCheck", obj, function(result) {
-       
-        console.log("성공.");
-        console.log( result);
-        
-        budgetYn = result.budgetYn;
-        if(result.budgetYn == 'N'){
-        	alert("<spring:message code="budget.Overbudget" /> (<spring:message code="budget.requestedAmount " />: " + result.requestAmt +", <spring:message code="budget.AvailableAmount" /> : " + result.availableAmt +")");
-        }        
-   });
-     
-     return budgetYn;
-} */
-
 function fn_saveAdjustement(){
     var obj = $("#pAdjForm").serializeJSON();    
     var gridData = GridCommon.getEditData(adjPGridID);
     obj.gridData = gridData;
-    
-    /*   var yn = budgetCheck();
-    
-     if( budgetCheck()=="N"){
-        return;
-    }else{ */
-    	
-    	Common.ajax("POST", "/eAccounting/budget/saveAdjustmentList", obj , function(result)    {
-            
-            console.log("성공." + JSON.stringify(result));
-            console.log("data : " + result.data);
-            
-            $("#pBudgetDocNo").val(result.data.budgetDocNo);
-          
-            if($("#type").val() == "approval"){
-            	 if(result.data.amtMap.overbudget == "Y"){
-            		 
-                     alert("승인요청 불가 : Cost Center :" + result.data.amtMap.costCentr +", Budget Code : " 
-                             + result.data.amtMap.budgetCode +", Gl Account code : " + result.data.amtMap.glAccCode );
-                 }else{
-                	 Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
-                 }
-            }else{
-            	Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
-                
-            }
-            
-            fn_selectListAjax();
-         }
-         , function(jqXHR, textStatus, errorThrown){
-                try {
-                    console.log("Fail Status : " + jqXHR.status);
-                    console.log("code : "        + jqXHR.responseJSON.code);
-                    console.log("message : "     + jqXHR.responseJSON.message);
-                    console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-              }
-              catch (e)
-              {
-                console.log(e);
-              }
-              alert("Fail : " + jqXHR.responseJSON.message);
-        });
-  /*   } */
+        	
+   	Common.ajax("POST", "/eAccounting/budget/saveAdjustmentList", obj , function(result)    {
+           
+           console.log("성공." + JSON.stringify(result));
+           console.log("data : " + result.data);
+           
+           $("#pBudgetDocNo").val(result.data.budgetDocNo);
+         
+           if($("#type").val() == "approval"){
+           	 if(result.data.overbudget == "Y"){
+           		 
+           		 var arryList = result.data.resultAmtList;
+           		             		 
+                    var idx = arryList.length;
+                    
+                    for(var i = 0; i < idx; i++){
+                   	 var costCentr = arryList[i].costCentr;
+                        var budgetCode = arryList[i].budgetCode;
+                        var glAccCode = arryList[i].glAccCode;
+                        var adjYearMonth = arryList[i].budgetAdjMonth + "/"+ arryList[i].budgetAdjYear;
+                        
+                        for(var j=0; j < AUIGrid.getRowCount(adjPGridID); j++){
+                       	 
+                       	var gridCostCentr = AUIGrid.getCellValue(adjPGridID, j, "costCentr"); 
+                       	var gridBudgetCode = AUIGrid.getCellValue(adjPGridID, j, "budgetCode"); 
+                       	var gridGlAccCode = AUIGrid.getCellValue(adjPGridID, j, "glAccCode"); 
+                       	var gridAdjYearMonth = AUIGrid.getCellValue(adjPGridID, j, "adjYearMonth"); 
+                       	var gridBudgetAdjType = AUIGrid.getCellValue(adjPGridID, j, "budgetAdjType"); 
+                       	
+                       	 if(gridCostCentr == costCentr && gridBudgetCode == budgetCode 
+                                    && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
+                       		 AUIGrid.setCellValue(adjPGridID, j, "overBudgetFlag","Y"); 
+                       	 }
+                       	 
+                        }
+                   	 
+                    }
+                    
+                    AUIGrid.setProp(adjPGridID, "rowStyleFunction", function(rowIndex, item) {
+                   	 if(item.overBudgetFlag == "Y") {
+                            return "my-row-style";
+                        }
+                        return "";
+
+                    }); 
+
+                    // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+                    AUIGrid.update(adjPGridID);
+           		 
+                     alert("승인요청 불가 "); 
+           		 
+                }else{                	 
+               	// Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
+
+                    fn_selectListAjax();
+                }
+           }else{
+           	Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
+
+               fn_selectListAjax();
+               
+           }
+           
+        }
+        , function(jqXHR, textStatus, errorThrown){
+               try {
+                   console.log("Fail Status : " + jqXHR.status);
+                   console.log("code : "        + jqXHR.responseJSON.code);
+                   console.log("message : "     + jqXHR.responseJSON.message);
+                   console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+             }
+             catch (e)
+             {
+               console.log(e);
+             }
+             alert("Fail : " + jqXHR.responseJSON.message);
+       });
 }
 
 function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
@@ -943,8 +965,11 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#" id="btnAdd"><spring:message code="expense.Add" /></a></p></li>
-	<li><p class="btn_blue2"><a href="#" id="btnClear"><spring:message code="budget.Clear" /></a></p></li>
+    <c:if test="${status eq 'Open'}">
+		<li><p class="btn_blue2"><a href="#" id="btnAdd"><spring:message code="expense.Add" /></a></p></li>
+		<li><p class="btn_blue2"><a href="#" id="btnDel"><spring:message code="expense.Del" /></a></p></li>
+		<li><p class="btn_blue2"><a href="#" id="btnClear"><spring:message code="budget.Clear" /></a></p></li>
+	</c:if>
 </ul>
 
 <article class="grid_wrap mt10" style="height:170px"><!-- grid_wrap start -->
@@ -964,18 +989,25 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	      <c:forEach var="files" items="${fileList}" varStatus="st">
 		    <div class="auto_file2"><!-- auto_file start -->
 		    <input type="file" title="file add" style="width:300px" />
+		    <c:if test="${status eq 'Open'}">
 		    <label>
 			    <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
 			    <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
 		    </label>
 		    <span class='label_text'><a href='#' id="add_btn"><spring:message code="viewEditWebInvoice.add" /></a></span>
 		    <span class='label_text'><a href='#' id="remove_btn"><spring:message code="viewEditWebInvoice.delete" /></a></span>
+		    </c:if>		    
+            <c:if test="${status eq 'Close'}">
+                <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
+            </c:if>
 		    </div><!-- auto_file end -->
 	    </c:forEach> 
-	    <c:if test="${fn:length(fileList) <= 0}">
+	    <c:if test="${fn:length(fileList) <= 0}">	    
+            <c:if test="${status eq 'Open' }">
 		    <div class="auto_file2"><!-- auto_file start -->
 		      <input type="file" title="file add" style="width:300px" />
 		    </div><!-- auto_file end -->
+		    </c:if>
 	    </c:if>
     </td>
 </tr>
@@ -983,8 +1015,10 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 </table><!-- table end -->
 
 <ul class="center_btns mt10">
-	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('temp');"><spring:message code="budget.Temp" /> <spring:message code="budget.Save" /></a></p></li>
-	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('approval');"><spring:message code="budget.Submit" /></a></p></li>
+	<c:if test="${status eq 'Open' }">
+		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('temp');"><spring:message code="budget.Temp" /> <spring:message code="budget.Save" /></a></p></li>
+		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('approval');"><spring:message code="budget.Submit" /></a></p></li>
+	</c:if>	
 </ul>
 
 </form>

@@ -30,13 +30,13 @@ var budgetMGrid;
 
 $(document).ready(function(){
     
-	//엑셀 다운
-	$('#excelDown').click(function() {        
+    //엑셀 다운
+    $('#excelDown').click(function() {        
        GridCommon.exportTo("budgetMGrid", 'xlsx', "<spring:message code='budget.MonthlyBudgetInterchange' />");
     });
-	
-	//그리드 생성
-	fn_makeGrid();
+    
+    //그리드 생성
+    fn_makeGrid();
      
 });
 
@@ -60,13 +60,13 @@ function fn_selectListAjax() {
          var msg = '<spring:message code="budget.CostCenter" />';
              if($("#stCostCentr").val() == "" ){
                  Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
-                	     $("#stCostCentr").focus();
+                         $("#stCostCentr").focus();
                  });
                  return;
              }else if($("#edCostCentr").val() == "" ){
 
                  Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
-                	     $("#edCostCentr").focus();
+                         $("#edCostCentr").focus();
                  });
                  return;
              }
@@ -90,12 +90,12 @@ function fn_selectListAjax() {
                  
                  if($("#stGlAccCode").val() == "" ){
                      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
-                    	   $("#stGlAccCode").focus();
+                           $("#stGlAccCode").focus();
                      });
                      return;
                  }else if($("#edGlAccCode").val() == "" ){
                      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
-                    	   $("#edGlAccCode").focus()
+                           $("#edGlAccCode").focus()
                      });
                      return;
                  }      
@@ -115,13 +115,13 @@ function fn_selectListAjax() {
            
            if($("#stBudgetCode").val() == "" ){
                Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
-            	    $("#stBudgetCode").focus();
+                    $("#stBudgetCode").focus();
                });
                return;
            }else if($("#edBudgetCode").val() == "" ){
 
                Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
-            	    $("#edBudgetCode").focus();
+                    $("#edBudgetCode").focus();
                });
                return;
            }  
@@ -189,11 +189,11 @@ function fn_makeGrid(){
     }
     
     monPop.push({
-			        dataField : "budgetPlanYear",
-			        headerText : '',
-			        width : 100,
-			        visible : false
-			    },{
+                    dataField : "budgetPlanYear",
+                    headerText : '',
+                    width : 100,
+                    visible : false
+                },{
                     dataField : "costCenterText",
                     headerText : '<spring:message code="budget.Description" />',
                     width : 100,
@@ -224,9 +224,9 @@ function fn_makeGrid(){
                
         for(var i= mon ; i <= mon+index; i++) { //
                 var msg ;               
-        	if(i == 1){
-        		msg = "<spring:message code='budget.1' />";
-        	}else if(i == 2){
+            if(i == 1){
+                msg = "<spring:message code='budget.1' />";
+            }else if(i == 2){
                 msg = "<spring:message code='budget.2' />";
             }else if(i == 3){
                 msg = "<spring:message code='budget.3' />";
@@ -249,9 +249,9 @@ function fn_makeGrid(){
             }else if(i == 12){
                 msg = "<spring:message code='budget.12' />";
             }
-        	
-        	
-        	monPop.push( {
+            
+            
+            monPop.push( {
                  dataField : "m"+i,
                  headerText :msg,
                  width : 80,
@@ -357,14 +357,14 @@ function fn_setCostCenter (str){
 
 function fn_excelDown(){
 
-	AUIGrid.exportToXlsx(budgetMGrid);
+    AUIGrid.exportToXlsx(budgetMGrid);
 }
 
 </script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order list</li>
 </ul>
@@ -415,11 +415,11 @@ function fn_excelDown(){
     <div class="date_set w100p"><!-- date_set start -->
     <p class="search_type"><input type="hidden" id="stCostCentrName" name="stCostCentrName" title="" placeholder="" class="fl_left" />
     <input type="text" id="stCostCentr" name="stCostCentr" title="" placeholder="" class="fl_left" />
-    <a href="#" class="search_btn"  onclick="javascript:fn_costCenterSearchPop('st')"><img src="/resources/images/common/normal_search.gif" alt="search" /></a></p>
+    <a href="#" class="search_btn"  onclick="javascript:fn_costCenterSearchPop('st')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
     <span>~</span>
     <p class="search_type"><input type="hidden" id="edCostCentrName" name="edCostCentrName" title="" placeholder="" class="fl_left" />
     <input type="text" id="edCostCentr" name="edCostCentr" title="" placeholder="" class="fl_left" />
-    <a href="#" class="search_btn" onclick="javascript:fn_costCenterSearchPop('ed')"><img src="/resources/images/common/normal_search.gif" alt="search" /></a></p>
+    <a href="#" class="search_btn" onclick="javascript:fn_costCenterSearchPop('ed')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -429,11 +429,11 @@ function fn_excelDown(){
     <div class="date_set w100p"><!-- date_set start -->
     <p class="search_type"><input type="hidden" id= "stGlAccCodeName" name="stGlAccCodeName" title="" placeholder="" class="fl_left" />
     <input type="text" id= "stGlAccCode" name="stGlAccCode" title="" placeholder="" class="fl_left" />
-    <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop('st')"><img src="/resources/images/common/normal_search.gif" alt="search" /></a></p>
+    <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop('st')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
     <span>~</span>
     <p class="search_type"><input type="hidden" id= "edGlAccCodeName" name= "edGlAccCodeName" title="" placeholder="" class="fl_left" />
     <input type="text" id= "edGlAccCode" name= "edGlAccCode" title="" placeholder="" class="fl_left" />
-    <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop('ed')"><img src="/resources/images/common/normal_search.gif" alt="search" /></a></p>
+    <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop('ed')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row"><spring:message code="budget.BudgetCode" /></th>
@@ -443,13 +443,13 @@ function fn_excelDown(){
     <input type="hidden"title=""  id= "stBudgetCodeName" name= "stBudgetCodeName" placeholder="" class="fl_left" />
     <input type="text"  id= "stBudgetCode" name= "stBudgetCode" placeholder="" class="fl_left" />
     <a href="#" class="search_btn" onclick="javascript:fn_budgetCodePop('st')">
-    <img src="/resources/images/common/normal_search.gif" alt="search" /></a></p>
+    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
     <span>~</span>
     <p class="search_type">
     <input type="hidden" id= "edBudgetCodeName" name= "edBudgetCodeName" title="" placeholder="" class="fl_left" />
     <input type="text" id= "edBudgetCode" name= "edBudgetCode"  placeholder="" class="fl_left" />
     <a href="#" class="search_btn" onclick="javascript:fn_budgetCodePop('ed')">
-    <img src="/resources/images/common/normal_search.gif" alt="search" /></a></p>
+    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -466,7 +466,7 @@ function fn_excelDown(){
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt><spring:message code="budget.Link" /></dt>
     <dd>
@@ -474,7 +474,7 @@ function fn_excelDown(){
         <li><p class="link_btn"><a href="#"><spring:message code="budget.Adjustment" /></a></p></li>
         <li><p class="link_btn"><a href="#"><spring:message code="budget.Approval" /></a></p></li>
     </ul>
-    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->

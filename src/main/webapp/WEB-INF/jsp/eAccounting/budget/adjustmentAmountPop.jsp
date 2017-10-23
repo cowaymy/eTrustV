@@ -5,14 +5,17 @@
 .my-right-style {
     text-align:right;
 }
+.aui-grid-user-custom-left {
+    text-align:left;
+}
 </style>
 <script  type="text/javascript">
 
 var adjGridID;
 
 $(document).ready(function(){
-	
-	 var adjPopColumnLayout = [ {
+    
+     var adjPopColumnLayout = [ {
          dataField : "confirmDate",
          headerText : '<spring:message code="budget.ConfirmDate" />',
          width : 150
@@ -52,7 +55,7 @@ $(document).ready(function(){
          style : "aui-grid-user-custom-left",
          width : 150
      },{
-    	 dataField : "adjAmt",
+         dataField : "adjAmt",
          headerText : '<spring:message code="budget.Change" /> <spring:message code="budget.Amount" />',
          width : 150,
          dataType : "numeric",
@@ -64,38 +67,40 @@ $(document).ready(function(){
          style : "aui-grid-user-custom-left",
          width : 150
      }];
-	 
-	 
-	// 푸터 설정
-	 var footerObject = [ {
-	     labelText : "<spring:message code="budget.Total" />",
-	     positionField : "confirmDate"
-	 },  {
+     
+     
+    // 푸터 설정
+     var footerObject = [ {
+         labelText : "<spring:message code="budget.Total" />",
+         positionField : "confirmDate"
+     },  {
          labelText : "<spring:message code="budget.Increase" />",
          positionField : "signalText"
      },{
-	     positionField : "budgetAdjMonth",
-	     dataField : "adjAmt",
-	     formatString : "#,##0",
-	     expFunction : function(columnValues) {
-	    	 
-	    	 var idx = AUIGrid.getRowCount(adjGridID); 
-	    	 var amt = 0;
-	    	 for(var i = 0; i < idx; i++){
-	    		 if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '01'){
-	                 amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");
-	    		 }
-	    	 }
-	    	 
+         positionField : "budgetAdjMonth",
+         dataField : "adjAmt",
+         formatString : "#,##0",
+         style : "my-right-style",
+         expFunction : function(columnValues) {
+             
+             var idx = AUIGrid.getRowCount(adjGridID); 
+             var amt = 0;
+             for(var i = 0; i < idx; i++){
+                 if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '01'){
+                     amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");
+                 }
+             }
+                         
              return amt; 
          }
-	 },{
-		 labelText:"<spring:message code="budget.decrement" />",
-		 positionField : "costCenterText"
-	 },{
+     },{
+         labelText:"<spring:message code="budget.decrement" />",
+         positionField : "costCenterText"
+     },{
          positionField : "glAccDesc",
          dataField : "adjAmt",
          formatString : "#,##0",
+         style : "my-right-style",
          expFunction : function(columnValues) {
              
              var idx = AUIGrid.getRowCount(adjGridID); 
@@ -115,6 +120,7 @@ $(document).ready(function(){
          positionField : "adjRem",
          dataField : "adjAmt",
          formatString : "#,##0",
+         style : "my-right-style",
          expFunction : function(columnValues) {
              
              var idx = AUIGrid.getRowCount(adjGridID); 
@@ -127,27 +133,27 @@ $(document).ready(function(){
              return amt; 
          }
      }];
-	 
-	 var adjOptions = {
-	            showStateColumn:false,
-	            showRowNumColumn    : true,
-	            usePaging : true,
-	            showFooter : true
-	      }; 
-	 
-	    adjGridID = GridCommon.createAUIGrid("#adjGridID", adjPopColumnLayout, "", adjOptions);
-	    
-	    fn_selectListAjax();
-	    
+     
+     var adjOptions = {
+                showStateColumn:false,
+                showRowNumColumn    : true,
+                usePaging : true,
+                showFooter : true
+          }; 
+     
+        adjGridID = GridCommon.createAUIGrid("#adjGridID", adjPopColumnLayout, "", adjOptions);
+        
+        fn_selectListAjax();
+        
 
-	    // 푸터 객체 세팅
-	    AUIGrid.setFooter(adjGridID, footerObject);
+        // 푸터 객체 세팅
+        AUIGrid.setFooter(adjGridID, footerObject);
 });
 
 //리스트 조회.
 function fn_selectListAjax() {  
      
-    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentAmountList", $("#pForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentAmountList", $("#adjPForm").serialize(), function(result) {
             
         console.log("성공.");
         console.log( result);
@@ -167,18 +173,18 @@ function comma(str) {
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="budget.Adjustment" /> <spring:message code="budget.Amount" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
-<form action="#" method="post" id="pForm" name="pForm">
-	<input type="hidden" id="budgetPlanYear" name="budgetPlanYear"  value="${item.budgetPlanYear }"/>
-	<input type="hidden" id="budgetPlanMonth" name="budgetPlanMonth"  value="${item.budgetPlanMonth }"/>
-	<input type="hidden" id="costCentr" name ="costCentr" value="${item.costCentr }"/>
-	<input type="hidden" id="glAccCode" name ="glAccCode"  value="${item.glAccCode }" />
-	<input type="hidden"  id="budgetCode" name ="budgetCode" value="${item.budgetCode }"/>
+<form action="#" method="post" id="adjPForm" name="adjPForm">
+    <input type="hidden" id="budgetPlanYear" name="budgetPlanYear"  value="${item.budgetPlanYear }"/>
+    <input type="hidden" id="budgetPlanMonth" name="budgetPlanMonth"  value="${item.budgetPlanMonth }"/>
+    <input type="hidden" id="costCentr" name ="costCentr" value="${item.costCentr }"/>
+    <input type="hidden" id="glAccCode" name ="glAccCode"  value="${item.glAccCode }" />
+    <input type="hidden"  id="budgetCode" name ="budgetCode" value="${item.budgetCode }"/>
 </form>
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="adjGridID" style="width:100%; height:480px; margin:0 auto;"></div>
@@ -187,6 +193,3 @@ function comma(str) {
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
-</body>
-</html>

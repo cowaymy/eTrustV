@@ -58,7 +58,7 @@
                               ,A.BUDGET_ADJ_MONTH
                        FROM FCM0103D A, FCM0102M B
                       WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-                        AND B.APPV_STUS = 'C' 
+                        AND B.APPV_STUS IN ('R', 'C') 
                         GROUP BY  A.BUDGET_ADJ_YEAR, A.BUDGET_ADJ_MONTH ,A.COST_CENTR ,A.BUDGET_CODE, A.GL_ACC_CODE 
                   ) B  ON  A.BUDGET_PLAN_YEAR = B.BUDGET_ADJ_YEAR 
                         AND A.BUDGET_PLAN_MONTH  = B.BUDGET_ADJ_MONTH 
@@ -106,7 +106,7 @@
 		          ,B.ADJ_REM    
 		 FROM FCM0102M  A,  FCM0103D B
 		WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-		    AND A.APPV_STUS = 'C' 
+		    AND A.APPV_STUS IN ('R', 'C') 
                         ]]>
             AND B.BUDGET_ADJ_YEAR   = #{budgetPlanYear}
             AND B.BUDGET_ADJ_MONTH  = #{budgetPlanMonth}            
@@ -144,7 +144,8 @@
   
   <select id="selectAdjustmentList" parameterType="Map" resultType="egovMap">
        <![CDATA[ 
-       SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' ELSE 'Open' END STATUS
+       SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' 
+                           WHEN A.APPV_STUS = 'R' THEN 'Request' ELSE 'Open' END STATUS
 		         ,A.BUDGET_DOC_NO
 		         ,B.COST_CENTR
 		         ,BUDGET_DOC_SEQ		         
@@ -165,7 +166,8 @@
                            AND rownum=1) AS FILE_PATH  
                  ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
 		         ,'N' AS CHECK_ID 
-		         ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT                     
+		         ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT
+		         ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ		                               
 		FROM FCM0102M A
 	   INNER JOIN FCM0103D B 
 	       ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
@@ -368,7 +370,8 @@
 
 <select id="selectAvailableAmtList" parameterType="Map" resultType="egovMap">
        <![CDATA[ 
-       SELECT  B.COST_CENTR               
+       SELECT A.BUDGET_DOC_NO
+                 ,B.COST_CENTR               
                  ,B.BUDGET_CODE
                  ,B.GL_ACC_CODE
                  ,BUDGET_ADJ_YEAR
@@ -379,7 +382,7 @@
        INNER JOIN FCM0103D B 
            ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
            where A.BUDGET_DOC_NO = #{budgetDocNo}
-           group by B.COST_CENTR ,B.BUDGET_CODE
+           group by A.BUDGET_DOC_NO, B.COST_CENTR ,B.BUDGET_CODE
                  ,B.GL_ACC_CODE,BUDGET_ADJ_YEAR
                  ,BUDGET_ADJ_MONTH
                  ]]>

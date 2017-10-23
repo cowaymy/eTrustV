@@ -14,6 +14,7 @@
 </style>
 <script  type="text/javascript">
 var adjMGridID;
+var rowIndex = 0;
 
 $(document).ready(function(){
 	
@@ -43,7 +44,7 @@ $(document).ready(function(){
             checkValue : "Y", // true, false 인 경우가 기본
             unCheckValue : "N",
             disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
-                if(item.status == "Close")
+                if(item.status == "Close" || item.status == "Request")
                     return true; // true 반환하면 disabled 시킴
                 return false;                    
             }
@@ -144,17 +145,22 @@ $(document).ready(function(){
         style : "my-right-style",
         width : 100,
         visible :false
+    },{
+        dataField : "seq",
+        headerText : '',
+        visible : true
     }];
          
     var adjOptions = {
             enableCellMerge : true,
             showStateColumn:false,
+            selectionMode       : "singleRow", 
             showRowNumColumn    : false,
             usePaging : false,
             editable :false
       }; 
     
-    adjMGridID = GridCommon.createAUIGrid("#adjMGridID", adjLayout, "", adjOptions);
+    adjMGridID = GridCommon.createAUIGrid("#adjMGridID", adjLayout, "seq", adjOptions);
     
     // 헤더 클릭 핸들러 바인딩
     AUIGrid.bind(adjMGridID, "headerClick", headerClickHandler);
@@ -200,6 +206,7 @@ function fn_selectListAjax() {
          console.log( result);
          
         AUIGrid.setGridData(adjMGridID, result);
+
     });
 }
 
@@ -238,7 +245,7 @@ function fn_setCostCenter (){
 function fn_budgetAdjustmentPop(value) {
 	
     $("#gridBudgetDocNo").val(value);	
-    Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", $("#listSForm").serializeJSON(), null, true, "budgetAdjustmentPop");
+    Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", $("#listSForm").serializeJSON(), fn_selectListAjax, true, "budgetAdjustmentPop");
 }
 
 //그리드 헤더 클릭 핸들러
@@ -358,6 +365,7 @@ function checkAll(isChecked) {
 	<select id="appvStus" name="appvStus" class="">
 		<option value=""><spring:message code="budget.All" /></option>
 		<option value="O"><spring:message code="budget.Open" /></option>
+		<option value="R"><spring:message code="budget.Request" /></option>
 		<option value="C"><spring:message code="budget.Close" /></option>
 	</select>
 	</td>
