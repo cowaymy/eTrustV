@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class NonBarcodeListForm {
 	
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) 73055", example = "73055")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) C450", example = "C450")
 	private String userId;
 	
 	@ApiModelProperty(value = "실사 기준일자(YYYYMMDD) 예) 20170610", example = "20170610")

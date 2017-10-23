@@ -12,7 +12,7 @@ public class BarcodeListForm {
 
 	// private int userId = 1404;
 	// private String adjustBaseDate = "09/09/2017";
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) 73055", example = "73055")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) C450", example = "C450")
 	private String userId;
 	
 	@ApiModelProperty(value = "실사 기준일자(YYYYMMDD) 예) 20170610", example = "20170610")
