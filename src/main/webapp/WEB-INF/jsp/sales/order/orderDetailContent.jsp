@@ -76,7 +76,7 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
-	<li><a href="#" class="on">Basic Info</a></li>
+	<li><a id="aTabBI" href="#" class="on">Basic Info</a></li>
 	<li><a href="#">HP / Cody</a></li>
 	<li><a id="aTabCI" href="#" onClick="javascript:chgTab('custInfo');">Customer Info</a></li>
 	<li><a href="#">Installation Info</a></li>
@@ -94,7 +94,7 @@
 	<li><a href="#" onClick="javascript:chgTab('transInfo');">Last 6 Months Transaction</a></li>
 	<li><a href="#">Order Configuration</a></li>
 	<li><a href="#" onClick="javascript:chgTab('autoDebitInfo');">Auto Debit Result</a></li>
-	<li><a href="#">Relief Certificate</a></li>
+	<li><a id="aTabGC"href="#">Relief Certificate</a></li>
 	<li><a href="#" onClick="javascript:chgTab('discountInfo');">Discount</a></li>
 </ul>
 <!------------------------------------------------------------------------------

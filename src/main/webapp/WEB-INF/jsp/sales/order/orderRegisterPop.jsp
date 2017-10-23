@@ -1256,7 +1256,6 @@
         };
 
         Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
-//      Common.ajaxFile("/sales/order/registerOrder.do", orderVO, function(result) {
 
             Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
             
@@ -1510,23 +1509,10 @@
                                     msg += "* Invalid email address.<br>";
                                 }
                             }
-                            if(FormUtil.checkReqValue($('#billMthdEmailTxt2'))) {
+                            if(FormUtil.checkReqValue($('#billMthdEmailTxt2')) && !FormUtil.checkEmail($('#billMthdEmailTxt2').val()))
                                 isValid = false;
-                                msg += "* Please key in the email address.<br>";
+                                msg += "* Invalid email address.<br>";
                             }
-                            else {
-                                if(FormUtil.checkEmail($('#billMthdEmailTxt2').val()))
-                                {
-                                    isValid = false;
-                                    msg += "* Invalid email address.<br>";
-                                }
-                            }
-/*
-                            if(FormUtil.checkReqValue($('#billMthdEmailTxt1')) && !FormUtil.checkReqValue($('#billMthdEmailTxt2'))) {
-                                isValid = false;
-                                msg += "* Please key in the email address(1).<br>";
-                            }
-*/
                         }
                     }
                 }

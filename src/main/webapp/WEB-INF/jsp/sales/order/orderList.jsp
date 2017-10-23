@@ -182,7 +182,7 @@
             selectAll: true, // 전체선택 
             width: '100%'
         });
-        $('#listRentStus').multipleSelect("checkAll");
+//      $('#listRentStus').multipleSelect("checkAll");
     }
 
     $.fn.clearForm = function() {

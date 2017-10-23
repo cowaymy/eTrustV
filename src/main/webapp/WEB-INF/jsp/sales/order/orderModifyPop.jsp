@@ -31,8 +31,10 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'335'}, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
         doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
         doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'dscBrnchId',     'S'); //Branch Code
-        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
-        
+        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode',        'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '10',  'CODE_ID',  '', 'eurcRliefAppTypeId', 'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '145', 'CODE_ID',  '', 'eurcRliefTypeId',    'S', ''); //Common Code
+       
         fn_statusCodeSearch();
 
         if(FormUtil.isNotEmpty(TAB_NM)) {
@@ -48,6 +50,8 @@
             }
         });
         
+        //Attach File
+        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='btnDownGstCert' href='#' class='blind'>Download GST Cert</a></span>");
     });
 
     function fn_statusCodeSearch(){
@@ -454,6 +458,29 @@
             if(!fn_validPromoPriceInfo()) return false;
             fn_doSavePromoPriceInfo();
         });
+        $('#btnSaveGstCert').click(function() {
+            if(!fn_validCert()) return false;
+            
+    		var formData = Common.getFormData("fileUploadForm");
+            
+            Common.ajaxFile("/sales/order/gstEurCertUpload.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+
+    			//console.log("총 갯수 : " + result.length);
+    			console.log(result.atchFileGrpId);
+    			
+    			$('#atchFileGrpId').val(result.atchFileGrpId);
+    			
+    			fn_doSaveGstCertInfo();
+    		});
+        });
+        $('#btnDownGstCert').click(function() {
+            var fileSubPath = $('#subPath').val();
+            var fileName = $('#fileName').val();
+            var orignlFileNm = $('#orignlFileNm').val();
+            
+		    window.open("<c:url value='/file/fileDown.do?subPath=" + fileSubPath
+				+ "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm + "'/>");
+        });
     });
     
     function fn_clearOrderSalesman() {
@@ -693,17 +720,70 @@
         if(tabNm == 'RFR') {
             $('#scRI').removeClass("blind");
             $('#aTabDS').click();
-          fn_selectReferralList(ORD_NO);
+            fn_selectReferralList(ORD_NO);
         } else {
             $('#scRI').addClass("blind");
         }
         if(tabNm == 'PRM') {
             $('#scPR').removeClass("blind");
             $('#aTabMI').click();
-          fn_loadPromotionInfo(ORD_ID);
+            fn_loadPromotionInfo(ORD_ID);
         } else {
             $('#scPR').addClass("blind");
         }
+        if(tabNm == 'GST') {
+            $('#scGC').removeClass("blind");
+            $('#aTabGC').click();
+            fn_loadGstCert(ORD_ID);
+        } else {
+            $('#scGC').addClass("blind");
+        }
+    }
+    
+    function fn_loadGstCert(ordId) {
+        Common.ajax("GET", "/sales/order/selectGSTCertInfo.do", {salesOrderId : ordId}, function(result) {
+
+            if(result != null) {
+                $('#existData').val("Y");
+
+                $('#eurcId').val(result.eurcId);
+                $('#eurcRliefAppTypeId').val(result.eurcRliefAppTypeId);
+                $('#eurcRliefTypeId').val(result.eurcRliefTypeId);
+                
+                $('#certRefNo').val(result.eurcRefNo);
+                $('#certRefDt').val(result.eurcRefDt);
+                $('#txtCertCustRgsNo').val(result.eurcCustRgsNo);
+                $('#txtCertRemark').val(result.eurcRem);
+                
+                if(FormUtil.isNotEmpty(result.atchFileGrpId) && result.atchFileGrpId != '0') { 
+                    $('#btnDownGstCert').removeClass("blind");
+                    
+                    fn_getGstCertFileDown(result.atchFileGrpId);
+                }                
+            }
+            else {
+                if(APP_TYPE_ID == '66') {
+                    $('#eurcRliefAppTypeId').val('1374');
+                }
+                else if(APP_TYPE_ID == '67' || APP_TYPE_ID == '68') {
+                    $('#eurcRliefAppTypeId').val('1373');
+                }
+            }
+        });
+    }
+    
+    function fn_getGstCertFileDown(atchFileGrpId) {
+        Common.ajax("GET", "/sales/order/gstCertFileDown.do", {atchFileGrpId : atchFileGrpId}, function(result) {
+
+            if(result != null && result.files.length == 1) {
+                
+                var fileInfo = result.files[0];
+                
+                $('#subPath').val(fileInfo.fileSubPath);
+                $('#fileName').val(fileInfo.physiclFileName);
+                $('#orignlFileNm').val(fileInfo.atchFileName);
+            }
+        });
     }
 
     function fn_loadPromotionPrice(promoId, stkId) {
@@ -1282,6 +1362,27 @@
        return exCustId;
     }
     
+    function fn_validCert() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.checkReqValue($('#certRefNo'))) {
+            isValid = false;
+            msg += "* Please key in the cert reference no.<br>";
+        }
+        if(FormUtil.isEmpty($('#certRefDt').val().trim())) {
+            isValid = false;
+            msg += "* Please select the cert reference date.<br>";
+        }
+        if(FormUtil.checkReqValue($('#certRefFile'))) {
+            isValid = false;
+            msg += "* No cert uploaded.<br>";
+        }
+
+        if(!isValid) Common.alert("Save Certificate Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
+    }
+    
     function fn_validInstallInfo() {
         var isValid = true, msg = "";
 
@@ -1729,6 +1830,39 @@
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
                 Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+            }
+            catch (e) {
+                console.log(e);
+            }
+        });
+    }
+    
+    function fn_doSaveGstCertInfo() {
+        console.log('!@# fn_doSaveGstCertInfo START');
+        
+        var gSTEURCertificateVO = {
+            eurcId              : $('#eurcId').val().trim(),
+            eurcRefNo           : $('#certRefNo').val().trim(),
+            eurcRefDt           : $('#certRefDt').val().trim(),
+            eurcCustRgsNo       : $('#txtCertCustRgsNo').val().trim(),
+            eurcRem             : $('#txtCertRemark').val().trim(),
+            eurcRliefAppTypeId  : APP_TYPE_ID,
+            atchFileGrpId       : $('#atchFileGrpId').val(),
+            existData           : $('#existData').val()
+        };
+
+        Common.ajax("POST", "/sales/order/updateGstCertInfo.do", gSTEURCertificateVO, function(result) {
+            
+            Common.alert("GST Certificate Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
             }
             catch (e) {
                 console.log(e);
@@ -2648,6 +2782,79 @@
 </section>
 <!------------------------------------------------------------------------------
     Promotion Info Edit END
+------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    GST Certification Edit START
+------------------------------------------------------------------------------->
+<section id="scGC" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h3>GST Certification</h3>
+</aside><!-- title_line end -->
+
+<section class="search_table"><!-- search_table start -->
+
+<form id="fileUploadForm" name="fileUploadForm" enctype="multipart/form-data" action="#" method="post">
+    <input id="atchFileGrpId" name="atchFileGrpId" type="hidden" />
+    <input id="subPath" name="subPath" type="hidden" />
+    <input id="fileName" name="fileName" type="hidden" />
+    <input id="orignlFileNm" name="orignlFileNm" type="hidden" />
+    <input id="existData" name="existData" type="hidden" value="N"/>
+    <input id="eurcId" name="eurcId" type="hidden" />
+    
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:160px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Reference No<span class="must">*</span></th>
+    <td><input id="certRefNo" name="certRefNo" type="text" title="" placeholder="Cert Reference No" class="w100p" /></td>
+    <th scope="row">Certificate Date<span class="must">*</span></th>
+    <td><input id="certRefDt" name="certRefDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">GST Registration No</th>
+    <td colspan="3"><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">App Type</th>
+	<td>
+	<select id="eurcRliefAppTypeId" class="w100p" disabled></select>
+	</td>
+	<th scope="row">Certificate Type</th>
+	<td>
+	<select id="eurcRliefTypeId" class="w100p" disabled></select>
+	</td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3"><textarea id="txtCertRemark" name="txtCertRemark" cols="20" rows="5"></textarea></td>
+</tr>
+<tr>
+    <th scope="row">Upload Relief Cert(.zip)</th>
+    <td colspan="3">
+        <!-- auto_file start -->
+        <div class="auto_file2">
+            <input id="certRefFile" name="certRefFile" type="file" title="file add" />
+        </div>
+        <!-- auto_file end -->
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</form>
+</section><!-- search_table end -->
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a id="btnSaveGstCert" name="btnSaveGstCert" href="#">SAVE</a></p></li>
+</ul>
+</section>
+<!------------------------------------------------------------------------------
+    GST Certification Edit END
 ------------------------------------------------------------------------------->
 </section><!-- pop_body end -->
 
