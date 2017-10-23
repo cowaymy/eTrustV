@@ -2,8 +2,6 @@ package com.coway.trust.biz.payment.payment.service;
 
 import org.apache.commons.csv.CSVRecord;
 
-import com.coway.trust.web.commission.csv.CsvDataVO;
-
 public class CommDeductionVO {
 	private int orderNo;
 	private int mCode;
