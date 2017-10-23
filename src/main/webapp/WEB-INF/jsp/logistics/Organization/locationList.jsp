@@ -93,7 +93,8 @@
                         {dataField:"user_name"   ,headerText:"nser_name"      ,width:100   ,height:30 , visible:false},
                         {dataField:"cdccode"     ,headerText:"CDC_CODE"       ,width:100   ,height:30 , visible:false},
                         {dataField:"rdccode"     ,headerText:"RDC_CODE"       ,width:100   ,height:30 , visible:false},
-                        {dataField:"plant"       ,headerText:"PLANT"          ,width:100   ,height:30 , visible:false}
+                        {dataField:"plant"       ,headerText:"PLANT"          ,width:100   ,height:30 , visible:false},
+                        {dataField:"slplant"     ,headerText:"S/L"          ,width:100   ,height:30 , visible:false}
                        ];
     
     var detailLayout = [{dataField:"stkid"      ,headerText:"stkid"          ,width:"12%" ,height:30 , visible:false},
@@ -264,6 +265,8 @@
     	$("#mcontact2").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel2'));
     	$("#streetDtl").val(AUIGrid.getCellValue(myGridID ,rowid,'street'));
     	$("#mareaId").val(AUIGrid.getCellValue(myGridID ,rowid,'areaid'));
+    	$("#plant").val(AUIGrid.getCellValue(myGridID ,rowid,'plant'));
+    	$("#slplant").val(AUIGrid.getCellValue(myGridID ,rowid,'slplant'));
     	
     	doDefCombo(stockgradecomboData, AUIGrid.getCellValue(myGridID ,rowid,'locgrad') ,'mstockgrade', 'S', '');
     	
@@ -301,19 +304,25 @@
         	$("#ptchk").prop("checked" , false);
         }
     	
-    	doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '01'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
-        doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
+    	doGetComboData('/common/selectStockLocationList.do', { locgb : '01'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
+    	doGetComboData('/common/selectStockLocationList.do', { locgb : '02'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
         
         
-        if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '01'){
+        if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '01'  || AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '05'){
         	$("#mcdccode").prop("disabled" , true);
         	$("#mrdccode").prop("disabled" , true);
-        }else if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '02' || AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '02'){
+        	$("#plant").prop("disabled" , false);
+        	$("#slplant").prop("disabled" , false);
+        }else if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '02'){
             $("#mcdccode").prop("disabled" , false);
             $("#mrdccode").prop("disabled" , true);
+            $("#plant").prop("disabled" , false);
+            $("#slplant").prop("disabled" , true);
         }else{
             $("#mcdccode").prop("disabled" , false);
             $("#mrdccode").prop("disabled" , false);
+            $("#plant").prop("disabled" , true);
+            $("#slplant").prop("disabled" , true);
         }
     	
         $( "#editWindow" ).show();
@@ -321,11 +330,12 @@
     
     
   function fn_insertWare(){
+	  
+	    $("#iplant").val('');
+        $("#islplant").val('');
 
 	    doDefCombo(stockgradecomboData, '' ,'instockgrade', 'S', '');
-	    //$("#instockgrade option:eq(1)").prop("selected", true);
- 	    //$("#instockgrade").attr("disabled",true);	
- 	    
+	    
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch1', 'S' , ''); //브런치 등록
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch2', 'S' , ''); //브런치 등록
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch3', 'S' , ''); //브런치 등록
@@ -337,8 +347,8 @@
         doGetComboData('/common/selectCodeList.do', paramdata, '','ilocationtype', 'S' , '');
         
         paramdata = { locgb:'01'}; // session 정보 등록 
-        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','icdccode', 'S' , '');
-        doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02'}, '','irdccode', 'S' , '');
+        doGetComboData('/common/selectStockLocationList.do', paramdata, '','icdccode', 'S' , '');
+        doGetComboData('/common/selectStockLocationList.do', { locgb : '02'}, '','irdccode', 'S' , '');
     }
   function rdccodeFunc(){
 	    doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#icdccode").val()}, '','irdccode', 'S' , '');
@@ -359,19 +369,17 @@
               alert("실패하였습니다.");
           }
       });  
-      
-
   }
   
   
   function inValidation(){
    
-	   var inwarecd = $("#inwarecd").val().trim();
-	   var inwarenm = $("#inwarenm").val().trim();
+	   var inwarecd     = $("#inwarecd").val().trim();
+	   var inwarenm     = $("#inwarenm").val().trim();
 	   var instockgrade = $("#instockgrade").val().trim();
 	   var inwarebranch = $("#inwarebranch1").val().trim();
-	   var incontact1 = $("#incontact1").val().trim();  
-	   var incontact2 = $("#incontact2").val().trim();   
+	   var incontact1   = $("#incontact1").val().trim();  
+	   var incontact2   = $("#incontact2").val().trim();   
 	   
 	   if(inwarecd == null || inwarecd == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
@@ -435,6 +443,7 @@
         item.rdccode = $("#mrdccode").val();
         
         item.plant   = $("#plant").val();
+        item.slplant = $("#slplant").val();
         
         AUIGrid.updateRow(myGridID, item, selectedItem[0]);
     }
@@ -528,12 +537,21 @@
      
      function fn_plantchk(id , take){
     	 
-    	 if($("#"+take+id).val() == '02'){
-    		 $("#"+take+"plant").val('5000');
-    	 }else if($("#"+take+id).val() == '03'){
+    	 if($("#"+id).val() == '03'){
     		 $("#"+take+"plant").val('6000');
-         }else if($("#"+take+id).val() == '04'){
+    		 $("#"+take+"plant").attr("disabled"   , true);
+    		 $("#"+take+"slplant").attr("disabled" , true);
+         }else if($("#"+id).val() == '04'){
              $("#"+take+"plant").val('5000');
+             $("#"+take+"plant").attr("disabled"   , true);
+             $("#"+take+"slplant").attr("disabled" , true);
+         }else{
+        	 $("#"+take+"plant").attr("disabled"   , false);
+        	 if ($("#"+id).val() == '02'){
+        		 $("#"+take+"slplant").attr("disabled" , true);
+        	 }else{
+        		 $("#"+take+"slplant").attr("disabled" , false);
+        	 }        	 
          }
      }
      
@@ -718,14 +736,20 @@
     <td><input type="text" name="mcontact2" id="mcontact2"/></td>
 </tr>
 <tr>
-    <th scope="row">Street search<span class="must">*</span></th>
-    <td >
-        <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="w100p" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-    </td>
-    <th scope="row">Plant</th>
+    <th scope="row">Plant in ECC</th>
     <td >
         <input type="text" title="" id="plant" name="plant" placeholder="" class="w100p" />
     </td>
+    <th scope="row">S/L in ECC</th>
+    <td >
+        <input type="text" title="" id="slplant" name="slplant" placeholder="" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Street search<span class="must">*</span></th>
+    <td colspan='3'>
+        <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="w100p" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>    
 </tr>
 <tr>
     <th scope="row">Address Detail</th>
@@ -814,6 +838,16 @@
     <th scope="row">Location Grade</th>
     <td><select id="instockgrade" name="instockgrade" ></select></td>
 </tr>
+<tr>
+    <th scope="row">Plant in ECC</th>
+    <td >
+        <input type="text" title="" id="iplant" name="iplant" placeholder="" class="w100p" />
+    </td>
+    <th scope="row">S/L in ECC</th>
+    <td >
+        <input type="text" title="" id="islplant" name="islplant" placeholder="" class="w100p" />
+    </td>
+</tr>
 <tr> 
     <th scope="row">Branch</th>
     <td colspan="3">
@@ -830,13 +864,9 @@
 </tr>
 <tr>
     <th scope="row">Street search<span class="must">*</span></th>
-    <td>
+    <td colspan='3'>
         <input type="text" title="" id="isearchSt" name="isearchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch1()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-    </td>
-    <th scope="row">Plant</th>
-    <td >
-        <input type="text" title="" id="iplant" name="iplant" placeholder="" class="w100p" />
-    </td>
+    </td>    
 </tr>
 <tr>
     <th scope="row">Address Detail</th>

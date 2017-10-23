@@ -185,6 +185,7 @@ public class LocationController {
 		String rdccode       = (String) params.get("irdccode");
 		
 		String plant         = (String) params.get("iplant");
+		String slplant         = (String) params.get("islplant");
 		
 		if (ipdchk != null && "on".equals(ipdchk)){
 				ipdchk = "Y";
@@ -229,6 +230,7 @@ public class LocationController {
 		insmap.put("inmobile"    , inmobile);
 		
 		insmap.put("plant"       , plant);
+		insmap.put("slplant"     , slplant);
 
 		loc.insertLocationInfo(insmap);
 
