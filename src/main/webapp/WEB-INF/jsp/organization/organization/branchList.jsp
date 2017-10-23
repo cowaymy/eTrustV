@@ -39,6 +39,7 @@
         var statusTypeData = [{"codeId": "1","codeName": "Active"},{"codeId": "2","codeName": "Inactive"}];
         //doGetCombo('/common/selectCodeList.do', '45', '','branchType', 'M' , 'f_multiCombo'); //branchType
         doGetCombo('/common/selectCodeList.do', '49', '','region', 'M' , 'f_multiCombo'); //region
+        doGetCombo('/common/selectCodeList.do', '45', '','branchType', 'M' , 'f_multiCombo'); //region
         
         
         // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
@@ -193,11 +194,11 @@
 <tr>
     <th scope="row">Branch Code</th>
     <td>
-    <input type="text" title="" placeholder="Branch Code" class="w100p" />
+    <input type="text" title="" placeholder="Branch Code" class="w100p" id="branchCd" name="branchCd"/>
     </td>
     <th scope="row">Branch Name</th>
     <td>
-    <input type="text" title="" placeholder="Branch Name" class="w100p" />
+    <input type="text" title="" placeholder="Branch Name" class="w100p" id="branchNm" name="branchNm"/>
     </td>
     <th scope="row">Status</th>
     <td>
@@ -221,21 +222,21 @@
     </td>
     <th scope="row">Country</th>
     <td>
-    <input type="text" title="" placeholder="Country" class="w100p" />
+    <input type="text" title="" placeholder="Country" class="w100p" id="countryCd" name="countryCd"/>
     </td>
 </tr>
 <tr>
     <th scope="row">State</th>
     <td>
-    <input type="text" title="" placeholder="State" class="w100p" />
+    <input type="text" title="" placeholder="State" class="w100p" id="state" name="state"/>
     </td>
     <th scope="row">Area</th>
     <td>
-    <input type="text" title="" placeholder="Area" class="w100p" />
+    <input type="text" title="" placeholder="Area" class="w100p" id="area" name="area"/>
     </td>
     <th scope="row">Postcode</th>
     <td>
-    <input type="text" title="" placeholder="Postcode" class="w100p" />
+    <input type="text" title="" placeholder="Postcode" class="w100p" id="postCode" name="postCode"/>
     </td>
 </tr>
 </tbody>
