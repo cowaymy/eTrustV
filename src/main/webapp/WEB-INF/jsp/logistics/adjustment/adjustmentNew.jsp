@@ -172,7 +172,12 @@ $(function(){
         doSysdate(0 , 'bsadjdate');
     });
     $("#close").click(function(){
-    	   fn_close();
+    	  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             if(selectedItem[0] < 0 ){
+                 Common.alert('Please select Stock Audit Number.');
+             }else{
+	    	   fn_close();
+             } 
     });
     
     $('#search').click(function() {
@@ -529,12 +534,14 @@ function fn_subGrid(invntryNo){
 <section class="search_table"><!-- search_table start -->
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
+    <!--
     <li><p class="btn_blue"><a id="create">Create</a></p></li>
     <li><p class="btn_blue"><a id="close">Close</a></p></li>
     <li><p class="btn_blue"><a id="detail">Detail</a></p></li> 
     <li><p class="btn_blue"><a id="approval">Approval</a></p></li> 
     <li><p class="btn_blue"><a id="list">List</a></p></li> 
-    <!-- <li><p class="btn_blue"><a id="view">View</a></p></li>  -->
+    <li><p class="btn_blue"><a id="view">View</a></p></li>  
+    -->
     <li><p class="btn_blue"><a id="search">Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -583,6 +590,29 @@ function fn_subGrid(invntryNo){
 </tr>
 </tbody>
 </table><!-- table end -->
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn"><a id="close">Close</a></p></li>
+        <li><p class="link_btn"><a id="detail">Detail</a></p></li>
+        <li><p class="link_btn"><a id="approval">Approval</a></p></li>
+    </ul>
+    <ul class="btns">
+        <li><p class="link_btn type2"><a id="create">Create</a></p></li>
+        <!-- 
+        <li><p class="link_btn type2"><a id="view">View</a></p></li>
+        -->
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
+
 
 </form>
 </section><!-- search_table end -->
