@@ -49,6 +49,7 @@ public class ExcelCommonUtil {
 	}
 
 	private void setFileName(HttpServletResponse response, String fileName) {
+		response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + setFileExtension(fileName) + "\"");
 	}
 

@@ -9,6 +9,26 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
 
 <script type="text/javaScript" language="javascript">
 
+    $(document).ready(function () {
+        $("#btnTest").on("click", function () {
+
+            Common.showLoader();
+
+            var fileName = $("#fileName").val();
+            $.fileDownload('/sample/down/excel-xlsx-streaming.do?fileName="' + fileName)
+                .done(function () {
+                    alert('File download a success!');
+                    Common.removeLoader();
+                })
+                .fail(function () {
+                    alert('File download failed!');
+                    Common.removeLoader();
+                });
+
+            return false; //this is critical to stop the click event which will trigger a normal file download
+        });
+    });
+
     function fn_uploadFile() {
 
         var formData = new FormData();
@@ -42,6 +62,7 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
         //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
         window.open("<c:url value='/sample/down/excel-xlsx-streaming.do?fileName=" + fileName + "'/>");
     }
+
 </script>
 
 <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
@@ -51,8 +72,9 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
     <a class="" href="javascript:fn_uploadCsvFile();">[CSV 전송]</a>
 </form>
 
-<form id="fileDownForm">
+<input id="fileDownForm">
     <input type="text" id="fileName" name="fileName" value="excelDownName"/>
 
     <a href="javascript:fn_downFile()">엑셀  다운로드</a>
-</form>
+
+    <input type="button" id="btnTest" name="btnTest" value="다운로드 with loading bar......"/>

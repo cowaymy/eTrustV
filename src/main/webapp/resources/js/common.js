@@ -258,7 +258,8 @@ var Common = {
         _jsonObj = $.extend(_jsonObj, {
             isShowLoader : true,
             isPop: true,
-            isDiv: true // div  팝업인 경우 본문만 삽입. : /etrust/src/main/webapp/WEB-INF/tiles/layout/emptyScript.jsp
+            isDiv: true, // div  팝업인 경우 본문만 삽입. : /etrust/src/main/webapp/WEB-INF/tiles/layout/emptyScript.jsp
+            isAttachFile : false    // 첨부파일 스크립트 로딩 여부.
         });
 
         divId = generateDivId(divId);
@@ -300,6 +301,10 @@ var Common = {
 
                 if(_initFunc){
                     _initFunc();
+                }
+
+                if(_jsonObj.isAttachFile){
+
                 }
 
                 $obj.show();
@@ -495,10 +500,24 @@ var Common = {
             });
         } else {
 
-            $("#" + _formId).attr({
-                action: getContextPath() + submitReportViewUrl,
-                method: "POST"
-            }).submit();
+            Common.showLoader();
+            $.fileDownload(getContextPath() + submitReportViewUrl,{
+                httpMethod : "POST",
+                data: $("#" + _formId).serialize(),
+            })
+                .done(function () {
+                    Common.removeLoader();
+                    console.log('File download a success!');
+                })
+                .fail(function () {
+                    Common.removeLoader();
+                    Common.alert('File download failed!');
+                });
+
+            // $("#" + _formId).attr({
+            //     action: getContextPath() + submitReportViewUrl,
+            //     method: "POST"
+            // }).submit();
         }
     },
 

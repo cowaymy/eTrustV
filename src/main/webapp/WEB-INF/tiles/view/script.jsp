@@ -38,5 +38,8 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/multiple-select.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/combodraw.js"></script>
 
+    <!-- Display the loading bar when downloading -->
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.fileDownload.js"></script>
+
     
     
