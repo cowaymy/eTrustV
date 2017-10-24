@@ -1809,6 +1809,7 @@ public class CommissionCalculationController {
 		model.addAttribute("totalInvalid", totalInvalid);
 		
 		model.addAttribute("uploadId", params.get("uploadId"));
+		model.addAttribute("typeId", params.get("typeId"));
 		
 		// 호출될 화면
 		return "commission/commissionIncentiveConfirmPop";
@@ -1889,6 +1890,7 @@ public class CommissionCalculationController {
 	public String commInctivItemAddPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("uploadId", params.get("uploadId"));
 		model.addAttribute("uploadTypeId", params.get("uploadTypeId"));
+		model.addAttribute("typeCd", params.get("typeCd"));
 		// 호출될 화면
 		return "commission/commissionIncentiveAddItemPop";
 	}
@@ -1903,12 +1905,15 @@ public class CommissionCalculationController {
 		String msg = "";
 		
 		Map memMap = commissionCalculationService.incentiveItemAddMem(params);
-		
+		System.out.println("params : " + params);
+		System.out.println("memMap : " + memMap);
 		if(memMap.get("MEM_CODE") == null || "".equals(memMap.get("MEM_CODE"))){
 			msg = "Invalid member.";
 		}else{
             if( ("1".equals(memMap.get("MEM_TYPE").toString())) ||  ("2".equals(memMap.get("MEM_TYPE").toString())) ){
-            	if( !("1".equals(memMap.get("STUS").toString())) ){
+            	if(!(params.get("uploadTypeCd").toString()).equals(memMap.get("MEM_TYPE").toString())){
+            		msg="Invalid member type.";
+            	}else if( !("1".equals(memMap.get("STUS").toString())) ){
             		msg = "This member is not active.";
             	}else{
             		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);

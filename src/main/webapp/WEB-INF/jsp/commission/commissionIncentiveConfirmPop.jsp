@@ -214,6 +214,7 @@ var itemGridID;
 <form id="conForm" name="conForm">
 	<input type="hidden" name="uploadId" id="uploadUserId" value="${uploadId }">
 	<input type="hidden" name="uploadTypeId" id="uploadTypeId" value="${detail.UPLOAD_TYPE_ID }">
+	<input type="hidden" name="typeCd" id="uploadTypeCd" value="${typeId }">
 	<input type="hidden" name="vStusId" id="vStusId">
 </form>
 

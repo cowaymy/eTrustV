@@ -5,6 +5,7 @@
 	var incenGridID;
 	var uploadId;
 	var stusId;
+	var typeId;
 	
  	
 	$(document).ready(function() {
@@ -41,6 +42,7 @@
               console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");       
               uploadId = AUIGrid.getCellValue(incenGridID, event.rowIndex, "uploadId");
               stusId = AUIGrid.getCellValue(incenGridID, event.rowIndex, "stusId");
+              typeId = AUIGrid.getCellValue(incenGridID, event.rowIndex, "memTypeId");
         });  
         
       //incentive List search
@@ -98,12 +100,17 @@
             style : "my-column",
             editable : false
         },{
-        	 dataField : "stusId",
-             style : "my-column",
-             editable : false,
-             visible : false
-        	
-        }];
+            dataField : "stusId",
+            style : "my-column",
+            editable : false,
+            visible : false
+           
+       },{
+           dataField : "memTypeId;",
+           style : "my-column",
+           editable : false,
+           visible : false
+      }];
         // 그리드 속성 설정
         var gridPros = {
             
@@ -167,7 +174,7 @@
 				//Common.alert('<spring:message code="commission.alert.incentive.noActive"/>');
 				Common.alert("This upload batch "+uploadId+" is no longer active.<br />Confirm batch is disallowed.</b>");
 	        }else{
-	            var valTemp = {"uploadId" : uploadId};
+	            var valTemp = {"uploadId" : uploadId, "typeId" : typeId};
 	            Common.popupDiv("/commission/calculation/commIncntiveConfirmPop.do",valTemp);
 	        }
 		}

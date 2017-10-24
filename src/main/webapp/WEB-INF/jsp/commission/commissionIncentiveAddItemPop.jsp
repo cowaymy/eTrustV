@@ -27,16 +27,19 @@
 				if(result.code != "00"){
 					Common.alert(result.message);
 				}else{
-			 		Common.ajaxSync("GET", "/commission/calculation/incentiveItemInsert", $("#addForm").serializeJSON(), function(result) {
+					$("#hiddenMemberID").val(result.data.MEM_ID);
+					$("#hiddenMemberTypeID").val(result.data.MEM_TYPE);
+					
+			 		 Common.ajaxSync("GET", "/commission/calculation/incentiveItemInsert", $("#addForm").serializeJSON(), function(result2) {
 						fn_itemDetailSearch('0');
-						$("#totalCntTxt").text(result.data.totalCnt);
-						$("#totalValidTxt").text(result.data.totalValid);
-						$("#totalInvalidTxt").text(result.data.totalInvalid);
-						$("#cntValid").val(result.data.totalValid);
+						$("#totalCntTxt").text(result2.data.totalCnt);
+						$("#totalValidTxt").text(result2.data.totalValid);
+						$("#totalInvalidTxt").text(result2.data.totalInvalid);
+						$("#cntValid").val(result2.data.totalValid);
 						document.addForm.reset();
 						Common.alert('<spring:message code="commission.alert.incentive.add.success"/>');
 						//Common.alert("New item added.");
-					});   
+					});    
 				}
             });
 		}
@@ -179,6 +182,7 @@
 		
 		<input type="hidden" name="uploadId" id="uploadUserId" value="${uploadId }">
 		<input type="hidden" name="uploadTypeId" id="uploadTypeId" value="${uploadTypeId }">
+		<input type="hidden" name="uploadTypeCd" id="uploadTypeCd" value="${typeCd }">
 		<input type="hidden" name="hiddenMemberID" id="hiddenMemberID" >
 		<input type="hidden" name="hiddenMemberTypeID" id="hiddenMemberTypeID" >
 	</form>
