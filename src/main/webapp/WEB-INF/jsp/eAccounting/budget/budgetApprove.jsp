@@ -276,39 +276,50 @@ function checkAll(isChecked) {
 
 function fn_budgetApproval(value){
     
+    // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+    var activeItems = AUIGrid.getItemsByValue(appMGridID, "checkId", "Y");
+    
+    if(activeItems.length == 0){
+        alert("<spring:message code="budget.msg.noData" />");
+        return;
+    }   
+	
     if(value == "approval"){ //approval 처리
 
         $("#appvStus").val("C"); // adjustment Close
         $("#appvPrcssStus").val("A"); //Approval 
         $("#rejectMsg").val("");
-        
+        fn_saveApprove();
     }else{  //reject 처리
-    	
-    	var rtnVal = prompt("Are you sure you want to reject the adjustment :", "");
-        alert("msg : " + rtnVal );
+    	        
+        var option = {
+                title : "Reject the adjustment" ,
+                textId : "promptText",
+                textName : "promptText"
+            }; 
         
+        
+         Common.prompt("Are you sure you want to reject the adjustment :", "", function(){
+            
+             $("#rejectMsg").val($("#promptText").val());
+             fn_saveApprove();
+         }, null, option);
+            
         $("#appvStus").val("O"); // adjustment Close
         $("#appvPrcssStus").val("J"); //Approval 
-        $("#rejectMsg").val(rtnVal);
     }
+
+}
+
+function fn_saveApprove(){
     
-    
-     // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
-     var activeItems = AUIGrid.getItemsByValue(appMGridID, "checkId", "Y");
-     
-     if(activeItems.length == 0){
-         alert("<spring:message code="budget.msg.noData" />");
-         return;
-     }
-    
-            
     if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
 
         var obj = $("#listSForm").serializeJSON();   
         var gridData = GridCommon.getEditData(appMGridID);
         obj.gridData = gridData;
-    	
-    	Common.ajax("POST", "/eAccounting/budget/saveBudgetApproval", obj , function(result){
+        
+        Common.ajax("POST", "/eAccounting/budget/saveBudgetApproval", obj , function(result){
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
             
@@ -331,7 +342,6 @@ function fn_budgetApproval(value){
            alert("Fail : " + jqXHR.responseJSON.message);
      });
     }));
-    
 }
 
 

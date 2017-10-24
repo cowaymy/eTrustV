@@ -496,7 +496,7 @@ function fn_budgetApproval(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="adjMGridID" style="width:100%; height:370px; margin:0 auto;"></div>
+    <div id="adjMGridID" style="width:100%; height:360px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

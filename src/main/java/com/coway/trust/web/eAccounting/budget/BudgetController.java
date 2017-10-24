@@ -443,8 +443,8 @@ public class BudgetController {
 		LOGGER.debug("params =====================================>>  " + params);
 	
 		params.put("userId", sessionVO.getUserId());
-		params.put("appvStus", params.get("appvStus"));	
-		params.put("appvPrcssStus", params.get("appvPrcssStus"));
+		//params.put("appvStus", params.get("appvStus"));	
+		//params.put("appvPrcssStus", params.get("appvPrcssStus"));
 		
 		Map result = new HashMap<String, Object>();
 		

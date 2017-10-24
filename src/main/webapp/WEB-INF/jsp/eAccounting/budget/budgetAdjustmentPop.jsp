@@ -46,8 +46,10 @@ $(document).ready(function(){
 
      // TODO View
 	console.log("${fileList}");
-    if("${fileList.size()}" <= 0) {
-            setInputFile2();
+     alert(fileList.length );
+     alert("${budgetStatus}" );
+    if(fileList.length == 0 && "${budgetStatus}" ==  'Y') {
+         setInputFile2();
     }
     
 //console.log(fileList);
@@ -789,16 +791,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <section class="pop_body" style="min-height:540px;"><!-- pop_body start -->
 
 <form action="#" method="post" id="pAdjForm" name="pAdjForm" enctype="multipart/form-data">
-<section class="search_table"><!-- search_table start -->
-
-    <!-- <input type="hidden" id = "pBudgetCode" name="pBudgetCode" />
-    <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
-    <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
-    <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
-    
-    <input type="hidden" id = "search_costCentr" name="search_costCentr" />
-    <input type="hidden" id = "search_costCentrName" name="search_costCentrName" /> -->
-    
+<section class="search_table"><!-- search_table start -->    
     <input type="hidden" id = "pBudgetDocNo" name="pBudgetDocNo" />
     <input type="hidden" id = "pAtchFileGrpId" name="pAtchFileGrpId" />
     <input type="hidden" id = "type" name="type" />
@@ -978,21 +971,21 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
     <td colspan="3">    
 	      <c:forEach var="files" items="${fileList}" varStatus="st">
 		    <div class="auto_file2"><!-- auto_file start -->
-		    <c:if test="${budgetStatus == 'Y'}">
-		    <input type="file" title="file add" style="width:300px" />
-		    <label>
-			    <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
-			    <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
-		    </label>
-		    <span class='label_text'><a href='#' id="add_btn"><spring:message code="viewEditWebInvoice.add" /></a></span>
-		    <span class='label_text'><a href='#' id="remove_btn"><spring:message code="viewEditWebInvoice.delete" /></a></span>
-		    </c:if>		    
+            <c:if test="${budgetStatus == 'Y'}">
+			    <input type="file" title="file add" style="width:300px" />
+			    <label>
+				    <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
+				    <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
+			    </label>
+			    <span class='label_text'><a href='#' id="add_btn"><spring:message code="viewEditWebInvoice.add" /></a></span>
+			    <span class='label_text'><a href='#' id="remove_btn"><spring:message code="viewEditWebInvoice.delete" /></a></span>
+		    </c:if>               
             <c:if test="${budgetStatus == 'N'}">
                 <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
             </c:if>
-		    </div><!-- auto_file end -->
+          </div><!-- auto_file end -->	
 	    </c:forEach>
-	    <c:if test="${fn:length(fileList) <= 0}">	    
+	    <c:if test="${fn:length(fileList) <= 0 and budgetStatus ==  'Y'}">	    
 		    <div class="auto_file2"><!-- auto_file start -->
 		      <input type="file" title="file add" style="width:300px" />
 		    </div><!-- auto_file end -->

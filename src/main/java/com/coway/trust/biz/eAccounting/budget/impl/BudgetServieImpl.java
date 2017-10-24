@@ -257,6 +257,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 					approvalMap.put("userId", params.get("userId"));			
 					approvalMap.put("appvStus",  params.get("appvStus"));						
 					approvalMap.put("appvPrcssStus",  params.get("appvPrcssStus"));						
+					approvalMap.put("rejectMsg",  params.get("rejectMsg"));						
 					
 					Logger.debug("approvalMap ==================> " + approvalMap);
 
