@@ -7,6 +7,10 @@ var itemGridID;
 	$(document).ready(function() {
 		createAUIGrid();
 		fn_itemDetailSearch('0');
+		
+		$("#clearComfirm").click(function(){
+			$("#search").click();
+		});
 	});
 	
 	function createAUIGrid() {
@@ -126,8 +130,9 @@ var itemGridID;
 				Common.ajax("GET", "/commission/calculation/incentiveDeactivate", $("#conForm").serializeJSON() , function(result) {
 					//Common.alert('<spring:message code="commission.alert.incentive.confirm.deactivate.success"/>');
 					Common.alert("This upload batch has been deactivated.");
-					$("#search").click();
-	                $("#popup_wrap").remove();
+					$("#clearComfirm").click();
+					//$("#search").click();
+	                //$("#popup_wrap").remove();
 				});
 			}else{
 				//Common.alert('<spring:message code="commission.alert.incentive.confirm.deactivate.fail"/>');
@@ -145,8 +150,9 @@ var itemGridID;
 			Common.ajax("GET", "/commission/calculation/incentiveConfirm", $("#conForm").serializeJSON() , function(result) {
 				//Common.alert('<spring:message code="commission.alert.incentive.confirm.success"/>');
 				Common.alert("This upload batch has been confirmed and saved.");
-				$("#search").click(); //TODO close 시점으로 바꿔야함
-				$("#popup_wrap").remove();
+				$("#clearComfirm").click();
+				//$("#search").click(); //TODO close 시점으로 바꿔야함
+				//$("#popup_wrap").remove();
 			});
 		}
 	}
@@ -158,7 +164,7 @@ var itemGridID;
 <header class="pop_header"><!-- pop_header start -->
 <h1>INCENTIVE/TARGET UPLOAD - CONFIRM UPLOAD BATCH</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="clearComfirm">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
