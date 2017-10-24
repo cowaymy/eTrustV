@@ -25,4 +25,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 			registrationMapper.insertHeatLog(log);
 		}
 	}
+
+	@Override
+	public void updateSuccessStatus(String transactionId) {
+		registrationMapper.updateSuccessStatus(transactionId);
+	}
 }

@@ -25,6 +25,7 @@
            ,CRT_USER_ID
            , CRT_DT
            , TRNSC_ID
+           , TRAN_STUS_CD
         ) VALUES (
            SVC0023T_RESULT_SEQ.NEXTVAL
            , #{userId}
@@ -44,10 +45,15 @@
            , #{filterCode}
            , #{exchangeId}
            , #{filterChangeQty}
-           , #{createUserId}
-           , #{createDate}
+           , #{userId}
+           , SYSDATE
            , #{transactionId}
+           , 'N'
         )
     </insert>
+
+   <update id="updateSuccessStatus" parameterType="string">
+      UPDATE SVC0023T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+   </update>
 
 </mapper>

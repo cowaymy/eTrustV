@@ -7,4 +7,5 @@ public interface RegistrationService {
 
 	void saveHearLogs(List<Map<String, Object>> logs);
 
+	void updateSuccessStatus(String transactionId);
 }

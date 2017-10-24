@@ -8,4 +8,6 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface RegistrationMapper {
 
 	void insertHeatLog(Map<String, Object> params);
+
+	void updateSuccessStatus(String transactionId);
 }

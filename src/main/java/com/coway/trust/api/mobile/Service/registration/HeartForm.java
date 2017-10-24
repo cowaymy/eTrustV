@@ -1,12 +1,10 @@
 package com.coway.trust.api.mobile.Service.registration;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.coway.trust.util.BeanConverter;
 
@@ -44,13 +42,6 @@ public class HeartForm {
 	private int rcCode;
 	@ApiModelProperty(value = "signData")
 	private String signData;
-	@ApiModelProperty(value = "createUserId")
-	private String createUserId;
-	// @ApiModelProperty(dataType = "java.sql.Date", value = "YYYY-MM-DD , e.g. 2015-01-16")
-	// @JsonFormat(pattern = AppConstants.DEFAULT_TIMESTAMP_FORMAT, timezone = AppConstants.LOCAL_TIMEZONE)
-	@ApiModelProperty(value = "createDate")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-	private Date createDate;
 	@ApiModelProperty(value = "transactionId")
 	private String transactionId;
 
@@ -196,22 +187,6 @@ public class HeartForm {
 
 	public void setHeartDtails(List<HeartDtailForm> heartDtails) {
 		this.heartDtails = heartDtails;
-	}
-
-	public String getCreateUserId() {
-		return createUserId;
-	}
-
-	public void setCreateUserId(String createUserId) {
-		this.createUserId = createUserId;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
 	}
 
 	public String getTransactionId() {

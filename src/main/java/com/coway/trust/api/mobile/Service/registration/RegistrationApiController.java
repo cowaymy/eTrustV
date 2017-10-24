@@ -33,8 +33,10 @@ public class RegistrationApiController {
 	@RequestMapping(value = "/hearts", method = RequestMethod.POST)
 	public ResponseEntity<HeartDto> heart(@RequestBody List<HeartForm> heartForms) throws Exception {
 
+		String transactionId = "";
 		// mobile 에서 받은 데이터를 로그 테이블에 insert......
 		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
+		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
 		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
 
 			List<Map<String, Object>> heartLogs = new ArrayList<>();
@@ -45,6 +47,8 @@ public class RegistrationApiController {
 			// List<Map<String, Object>> heartLogs = heartForms.stream().flatMap(r -> r.createMaps(r))
 			// .collect(Collectors.toList());
 			registrationService.saveHearLogs(heartLogs);
+
+			transactionId = heartForms.get(0).getTransactionId();
 		}
 
 		// business service....
@@ -52,6 +56,10 @@ public class RegistrationApiController {
 
 		// TODO : 리턴할 dto 구현.
 
-		return ResponseEntity.ok(HeartDto.create(heartForms.get(0).getTransactionId()));
+		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+			registrationService.updateSuccessStatus(transactionId);
+		}
+
+		return ResponseEntity.ok(HeartDto.create(transactionId));
 	}
 }
