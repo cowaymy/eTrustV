@@ -388,6 +388,7 @@ function fn_updateWebInvoiceInfo(st) {
             Common.alert("Temporary save succeeded.");
             $("#viewEditWebInvoicePop").remove();
         }
+        fn_selectWebInvoiceList();
     });
     
 }

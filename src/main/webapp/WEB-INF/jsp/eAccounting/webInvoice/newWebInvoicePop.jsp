@@ -235,6 +235,7 @@ function fn_insertWebInvoiceInfo(st) {
             Common.alert("Temporary save succeeded.");
             $("#newWebInvoicePop").remove();
         }
+        fn_selectWebInvoiceList();
     });
 }
 
@@ -250,6 +251,7 @@ function fn_updateWebInvoiceInfo(st) {
             Common.alert("Temporary save succeeded.");
             $("#viewEditWebInvoicePop").remove();
         }
+        fn_selectWebInvoiceList();
     });
     
 }
