@@ -289,7 +289,7 @@ function fn_budgetApproval(value){
         
         $("#appvStus").val("O"); // adjustment Close
         $("#appvPrcssStus").val("J"); //Approval 
-        $("#rejectMsg").val(rejectMsg);
+        $("#rejectMsg").val(rtnVal);
     }
     
     
