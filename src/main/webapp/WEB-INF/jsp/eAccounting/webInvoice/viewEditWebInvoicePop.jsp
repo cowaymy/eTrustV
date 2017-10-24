@@ -258,8 +258,8 @@ $(document).ready(function () {
     $("#submitPop").click(fn_approveLinePop);
     $("#add_row").click(fn_addRow);
     $("#delete_row").click(fn_removeRow);
-    $("#supplier_search_btn").click(fn_supplierSearchPop);
-    $("#costCenter_search_btn").click(fn_costCenterSearchPop);
+    $("#supplier_search_btn").click(fn_popSupplierSearchPop);
+    $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     
     AUIGrid.bind(newGridID, "cellClick", function( event ) 
     {
@@ -271,6 +271,7 @@ $(document).ready(function () {
         if(event.dataField == "netAmt" || event.dataField == "taxAmt") {
             var totAmt = fn_getTotalAmount();
             $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+            console.log(totAmt);
             $("#totAmt").val(totAmt);
         }
   });
@@ -306,58 +307,6 @@ function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
 }
 
-function fn_setKeyInDate() {
-    var today = new Date();
-    
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1;
-    var yyyy = today.getFullYear();
-    
-    if(dd < 10) {
-        dd = "0" + dd;
-    }
-    if(mm < 10){
-        mm = "0" + mm
-    }
-    
-    today = dd + "/" + mm + "/" + yyyy;
-    $("#keyDate").val(today)
-}
-
-function fn_getValue(index) {
-    return AUIGrid.getCellFormatValue(newGridID, index, "totAmt");
-}
-
-function fn_getTotalAmount() {
-    // 수정할 때 netAmount와 taxAmount의 values를 각각 더하고 합하기
-    sum = 0;
-    var netAmtList = AUIGrid.getColumnValues(newGridID, "netAmt");
-    var taxAmtList = AUIGrid.getColumnValues(newGridID, "taxAmt");
-    if(netAmtList.length > 0) {
-        for(var i in netAmtList) {
-            sum += netAmtList[i];
-        }
-    }
-    if(taxAmtList.length > 0) {
-        for(var i in taxAmtList) {
-            sum += taxAmtList[i];
-        }
-    }
-    return sum;
-}
-
-function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
-}
-
-function fn_costCenterSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
-}
-
-function fn_expenseTypeSearchPop() {
-    Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J1'}, null, true, "expenseTypeSearchPop");
-}
-
 function fn_approveLinePop() {
 	var checkResult = fn_checkEmpty();
     
@@ -371,20 +320,6 @@ function fn_approveLinePop() {
     fn_updateWebInvoiceInfo("");
 	
     Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
-}
-
-function fn_addRow() {
-	AUIGrid.addRow(newGridID, {cvrr:"MYR",netAmt:0,taxAmt:0,totAmt:0}, "last");
-}
-
-function fn_removeRow() {
-    var total = Number($("#totalAmount").text().replace(',', ''));
-    var value = fn_getValue(selectRowIdx);
-    value = Number(value.replace(',', ''));
-    total -= value;
-    $("#totalAmount").text(AUIGrid.formatNumber(total, "#,##0.00"));
-    $("#totAmt").val(total);
-    AUIGrid.removeRow(newGridID, selectRowIdx);
 }
 
 function fn_atchViewDown(fileGrpId, fileId) {

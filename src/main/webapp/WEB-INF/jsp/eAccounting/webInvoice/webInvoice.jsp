@@ -128,8 +128,8 @@ function fn_costCenterSearchPop() {
 	Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
-function fn_newWebInvoicePop() {
-	Common.popupDiv("/eAccounting/webInvoice/newWebInvoicePop.do", {callType:'new'}, null, true, "newWebInvoicePop");
+function fn_popSupplierSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
 }
 
 function fn_viewEditWebInvoicePop(clmNo) {
@@ -138,6 +138,18 @@ function fn_viewEditWebInvoicePop(clmNo) {
             callType : 'view'
     };
 	Common.popupDiv("/eAccounting/webInvoice/viewEditWebInvoicePop.do", data, null, true, "viewEditWebInvoicePop");
+}
+
+function fn_popCostCenterSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
+}
+
+function fn_newWebInvoicePop() {
+    Common.popupDiv("/eAccounting/webInvoice/newWebInvoicePop.do", {callType:'new'}, null, true, "newWebInvoicePop");
+}
+
+function fn_expenseTypeSearchPop() {
+    Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J1'}, null, true, "expenseTypeSearchPop");
 }
 
 function fn_selectWebInvoiceList() {
@@ -169,6 +181,62 @@ function fn_setPopSupplier() {
     $("#bankCode").val($("#search_bankCode").val());
     $("#bankName").val($("#search_bankName").val());
     $("#bankAccNo").val($("#search_bankAccNo").val());
+}
+
+
+
+function fn_setKeyInDate() {
+    var today = new Date();
+    
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+    
+    if(dd < 10) {
+        dd = "0" + dd;
+    }
+    if(mm < 10){
+        mm = "0" + mm
+    }
+    
+    today = dd + "/" + mm + "/" + yyyy;
+    $("#keyDate").val(today)
+}
+
+function fn_getValue(index) {
+    return AUIGrid.getCellFormatValue(newGridID, index, "totAmt");
+}
+
+function fn_getTotalAmount() {
+    // 수정할 때 netAmount와 taxAmount의 values를 각각 더하고 합하기
+    sum = 0;
+    var netAmtList = AUIGrid.getColumnValues(newGridID, "netAmt");
+    var taxAmtList = AUIGrid.getColumnValues(newGridID, "taxAmt");
+    if(netAmtList.length > 0) {
+        for(var i in netAmtList) {
+            sum += netAmtList[i];
+        }
+    }
+    if(taxAmtList.length > 0) {
+        for(var i in taxAmtList) {
+            sum += taxAmtList[i];
+        }
+    }
+    return sum;
+}
+
+function fn_addRow() {
+    AUIGrid.addRow(newGridID, {cvrr:"MYR",netAmt:0,taxAmt:0,totAmt:0}, "last");
+}
+
+function fn_removeRow() {
+    var total = Number($("#totalAmount").text().replace(',', ''));
+    var value = fn_getValue(selectRowIdx);
+    value = Number(value.replace(',', ''));
+    total -= value;
+    $("#totalAmount").text(AUIGrid.formatNumber(total, "#,##0.00"));
+    $("#totAmt").val(total);
+    AUIGrid.removeRow(newGridID, selectRowIdx);
 }
 
 function fn_checkEmpty() {
