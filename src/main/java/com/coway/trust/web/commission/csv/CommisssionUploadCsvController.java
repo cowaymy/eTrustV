@@ -44,8 +44,8 @@ public class CommisssionUploadCsvController {
 	
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> readExcel(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
-		ReturnMessage message = new ReturnMessage();
+	public ResponseEntity<String> readExcel(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
+		//ReturnMessage message = new ReturnMessage();
 		
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("csvFile");
@@ -92,7 +92,6 @@ public class CommisssionUploadCsvController {
 		}
 		commissionCalculationService.callIncentiveDetail(Integer.parseInt(uploadId));
 		
-		message.setData(uploadId);
-		return ResponseEntity.ok(message);
+		return ResponseEntity.ok(uploadId);
 	}
 }

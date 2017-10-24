@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
-	var myGridID;
+	var incenGridID;
 	var uploadId;
 	var stusId;
 	
@@ -35,12 +35,12 @@
                 
         createAUIGrid();
         
-		AUIGrid.setSelectionMode(myGridID, "singleRow");
+		AUIGrid.setSelectionMode(incenGridID, "singleRow");
         // cellClick event.
-        AUIGrid.bind(myGridID, "cellClick", function(event) {
+        AUIGrid.bind(incenGridID, "cellClick", function(event) {
               console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");       
-              uploadId = AUIGrid.getCellValue(myGridID, event.rowIndex, "uploadId");
-              stusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusId");
+              uploadId = AUIGrid.getCellValue(incenGridID, event.rowIndex, "uploadId");
+              stusId = AUIGrid.getCellValue(incenGridID, event.rowIndex, "stusId");
         });  
         
       //incentive List search
@@ -50,9 +50,20 @@
                 console.log("data : " + result);
                 uploadId = "";
                 stusId = "";
-                AUIGrid.setGridData(myGridID, result);
+                AUIGrid.setGridData(incenGridID, result);
             });
         });
+      
+        $('#actionDate').on('click', function () {
+        	$("#actionDate").val("");
+        });
+        $('#uploadDateFr').on('click', function () {
+            $("#uploadDateFr").val("");
+        });
+        $('#uploadDateTo').on('click', function () {
+            $("#uploadDateTo").val("");
+        });
+        
 	});
 	
 	function createAUIGrid() {
@@ -109,7 +120,7 @@
             
         };
         
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout,gridPros);
+        incenGridID = AUIGrid.create("#grid_wrap", columnLayout,gridPros);
    }
 	
 	//multiselect setting function
@@ -149,10 +160,12 @@
 	//incentive confirm pop
 	function confirmUploadPop(){
 		if(uploadId == null || uploadId == ""){
+			//Common.alert('<spring:message code="commission.alert.incentive.noSelect"/>');
 			Common.alert("No upload batch selected.");
 		}else{
 			if(stusId != "1"){
-	            Common.alert("This upload batch is no longer active");
+				//Common.alert('<spring:message code="commission.alert.incentive.noActive"/>');
+				Common.alert("This upload batch "+uploadId+" is no longer active.<br />Confirm batch is disallowed.</b>");
 	        }else{
 	            var valTemp = {"uploadId" : uploadId};
 	            Common.popupDiv("/commission/calculation/commIncntiveConfirmPop.do",valTemp);
@@ -163,7 +176,8 @@
 	//incentive confirm view
 	function uploadViewPop(){
         if(uploadId == null || uploadId == ""){
-            Common.alert("No upload batch selected.");
+        	//Common.alert('<spring:message code="commission.alert.incentive.noSelect"/>');
+        	Common.alert("No upload batch selected.");
         }else{
             var valTemp = {"uploadId" : uploadId};
             Common.popupDiv("/commission/calculation/commIncntivViewPop.do",valTemp);

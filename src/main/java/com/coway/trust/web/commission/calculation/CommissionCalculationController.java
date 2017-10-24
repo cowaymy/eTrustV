@@ -1900,37 +1900,30 @@ public class CommissionCalculationController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.FAIL);
 		
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if (sessionVO == null) {
-			loginId = "1000000000";
-		} else {
-			loginId = String.valueOf(sessionVO.getUserId());
-		}
-
 		String msg = "";
 		
 		Map memMap = commissionCalculationService.incentiveItemAddMem(params);
-		System.out.println("************* memMap : " + memMap);
+		
 		if(memMap.get("MEM_CODE") == null || "".equals(memMap.get("MEM_CODE"))){
 			msg = "Invalid member.";
 		}else{
-            if( ("1".equals(memMap.get("MEM_TYPE"))) &&  ("2".equals(memMap.get("MEM_TYPE"))) ){
-            	msg="Invalid member type.";
+            if( ("1".equals(memMap.get("MEM_TYPE").toString())) ||  ("2".equals(memMap.get("MEM_TYPE").toString())) ){
+            	if( !("1".equals(memMap.get("STUS").toString())) ){
+            		msg = "This member is not active.";
+            	}else{
+            		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
+            		params.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
+            		params.put("memId", memMap.get("MEM_ID"));
+            		int cnt = commissionCalculationService.cntIncentiveMem(params);
+            		if(cnt > 0){
+            			msg = "This member is existing in the upload batch";
+            		}else{
+            			message.setCode(AppConstants.SUCCESS);
+            			message.setData(memMap);
+            		}
+            	}
             }else{
-                if( !("1".equals(memMap.get("STUS"))) ){
-                	msg = "This member is not active.";
-                }
-                params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
-                params.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
-                params.put("memId", memMap.get("MEM_ID"));
-                int cnt = commissionCalculationService.cntIncentiveMem(params);
-                if(cnt > 0){
-                	msg = "This member is existing in the upload batch";
-                }else{
-                	message.setCode(AppConstants.SUCCESS);
-                	message.setData(memMap);
-                }
+            	msg="Invalid member type.";
             }
 		}
 		

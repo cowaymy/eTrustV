@@ -2028,7 +2028,7 @@
 	        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
 	        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
 	    WHERE t1.STUS_ID = #{statusId}
-	        AND t1.UPLOAD_ID = #{uploadUserId} 
+	        AND t1.UPLOAD_ID = #{uploadId} 
 	        AND t1.VALID_STUS_ID = #{vStusId}
 	        AND t1.SYS_MEM_ID = #{memId}
     </select>

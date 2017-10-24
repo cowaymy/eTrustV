@@ -10,7 +10,7 @@
 		
 		$('#memBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
-            Common.popupDiv("/common/memberPop.do", $("#addForm").serializeJSON(), null, true);
+            Common.popupDiv("/common/memberPop.do", $("#addForm").serializeJSON(), null, true, "test001");
         });
 	});
 	
@@ -34,7 +34,8 @@
 						$("#totalInvalidTxt").text(result.data.totalInvalid);
 						$("#cntValid").val(result.data.totalValid);
 						document.addForm.reset();
-						Common.alert("New item added.");
+						Common.alert('<spring:message code="commission.alert.incentive.add.success"/>');
+						//Common.alert("New item added.");
 					});   
 				}
             });
@@ -48,7 +49,9 @@
 		$("#itemTAmt").val($("#itemTAmt").val().replace(/[^-\.0-9]/g,'')  );  //소수점입력가능 
 		
 		if($("#itemMemCd").val() == null || $("#itemMemCd").val() ==""){
-			Common.alert("Invalid member");
+			Common.alert('<spring:message code="commission.alert.incentive.add.invalidMem"/>');
+			//Common.alert("Invalid member");
+			//
 			$("#itemMemCd").focus();
 			return false;
 		}
@@ -93,26 +96,30 @@
 	        });
 		}  */
 		if($("#itemTAmt").val() == null || $("#itemTAmt").val() == ""){
-			Common.alert("lease key in the target amount.");
+			Common.alert('<spring:message code="commission.alert.incentive.add.null" arguments="target amount" htmlEscape="false"/>');
+			//Common.alert("lease key in the target amount.");
 			$("#itemTAmt").focus();
 			return false;
 		}else{
 			var amt = $("#itemTAmt").val();
 			if(Number(amt) <= 0){
-				Common.alert("Target amount must greater than 0.");
+				Common.alert('<spring:message code="commission.alert.incentive.add.amount0"/>');
+				//Common.alert("Target amount must greater than 0.");
 				$("#itemTAmt").focus();
 				return false;
 			}
 		}
 		
 		if($("#itemRCd").val() == null || $("#itemRCd").val() == ""){
-			Common.alert("Please key in the ref code.");
+			Common.alert('<spring:message code="commission.alert.incentive.add.null" arguments="ref code" htmlEscape="false"/>');
+			//Common.alert("Please key in the ref code.");
 			$("#itemRCd").focus();
 			return false;
 		}
 		if($("#uploadTypeId").val() == "1062"){
 			if($("#itemLvl").val() == null || $("#itemLvl").val() == ""){
-	            Common.alert("Please key in the level.");
+				Common.alert('<spring:message code="commission.alert.incentive.add.null" arguments="level" htmlEscape="false"/>');
+				//Common.alert("Please key in the level.");
 	            $("#itemLvl").focus();
 	            return false;
 	        }

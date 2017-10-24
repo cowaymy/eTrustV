@@ -3,15 +3,43 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script type="text/javaScript">
-	
+
+/* 인풋 파일(멀티) start */
+function setInputFile2(){//인풋파일 세팅하기
+    $(".auto_file").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label>");
+}
+setInputFile2();
+
+/* $(document).on(//인풋파일 추가
+    "click", ".auto_file2 a:contains('Add')", function(){
+    
+    $(".auto_file2:last-child").clone().insertAfter(".auto_file2:last-child");
+    $(".auto_file2:last-child :file, .auto_file2:last-child :text").val("");
+    return false;
+}); */
+
+$(document).on(//인풋파일 삭제
+    "click", ".auto_file a:contains('Delete')", function(){
+    var fileNum=$(".auto_file").length;
+
+    if(fileNum <= 1){
+
+    }else{
+        $(this).parents(".auto_file1").remove();
+    }
+    return false;
+});
+/* 인풋 파일(멀티) end */
 	//sampleformet pop button
 	function fn_sampleFormat(val){
 		if(val == null || val ==""){
+			//Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
 			Common.alert('No Sample to show for this upload type.');
 		}else{
 			if (val == "1062"){
 				Common.popupDiv("/commission/calculation/incntivUploadSamplePop.do");
 	        }else{
+	        	//Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
 	        	Common.alert('No Sample to show for this upload type.');
 	        }
 		};
@@ -22,6 +50,7 @@
 		if(fn_uploadValid()){
 			Common.ajax("GET", "/commission/calculation/csvFileOverlapCnt", $("#newForm").serialize(), function(result) {
 				if(result>0){
+					//Common.alert('<spring:message code="commission.alert.incentive.new.nonUpload"/>');
 					Common.alert('One active upload batch exist. New upload is disallowed.');
 				}else{
 					var formData = new FormData();
@@ -32,7 +61,9 @@
 			        Common.ajaxFile("/commission/csv/upload", formData, function (result) {
 			        	$("#search").click();
 			        	document.newForm.reset();
-			            Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result.data);
+			        	//Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result.data+'" htmlEscape="false"/>');
+			        	//var cntId=result.data.uploadId;
+			           Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
 			        });
 				}
 			});
@@ -41,15 +72,18 @@
 	
 	function fn_uploadValid(){
 		if( $("#cmbType").val() == null || $("#cmbType").val() == ""){
+			//Common.alert('<spring:message code="sys.msg.first.Select" arguments="upload type" htmlEscape="false"/>');
 			Common.alert("Please select the upload type first.");
 			return false;
 		}
 		if( $("#cmbMemberType").val() == null || $("#cmbMemberType").val() == ""){
-            Common.alert(" No Sample to show for this upload type");
+			//Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
+			Common.alert(" No Sample to show for this upload type");
             return false;
         }
 		if( $("#uploadfile").val() == null || $("#uploadfile").val() == ""){
-            Common.alert("Please select your csv file.");
+			//Common.alert('<spring:message code="sys.alert.upload.csv"/>');
+			Common.alert("Please select your csv file.");
             return false;
         }
 		return true;
@@ -91,16 +125,17 @@
 						   <option value=""></option>
 							<c:forEach var="list" items="${memType }">
 	                            <option value="${list.cdid}">${list.cdnm}(${list.cd})</option>
-	                        </c:forEach>
+	                        </c:forEach> 
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">File</th>
 					<td>
-	   					<!-- <div class="auto_file"> --><!-- auto_file start -->
+	   					 <div class="auto_file attachment_file "><!-- auto_file start -->
+	   					 <!-- <div class="auto_file"> --><!-- auto_file start -->
 	       					<input type="file" title="file add"  id="uploadfile" name="uploadfile"/>
-	   					<!-- </div> -->
+	   					 </div> 
 					</td>
 				</tr>
 			</tbody>

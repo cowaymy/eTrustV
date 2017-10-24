@@ -124,11 +124,13 @@ var itemGridID;
 		Common.ajax("GET", "/commission/calculation/deactivateCheck", $("#conForm").serializeJSON() , function(result) {
 			if(result > 0){
 				Common.ajax("GET", "/commission/calculation/incentiveDeactivate", $("#conForm").serializeJSON() , function(result) {
+					//Common.alert('<spring:message code="commission.alert.incentive.confirm.deactivate.success"/>');
 					Common.alert("This upload batch has been deactivated.");
 					$("#search").click();
 	                $("#popup_wrap").remove();
 				});
 			}else{
+				//Common.alert('<spring:message code="commission.alert.incentive.confirm.deactivate.fail"/>');
 				Common.alert("Failed to deactivate upload batch. Please try again later.");
 			}
 		});
@@ -137,9 +139,11 @@ var itemGridID;
 	//master confirm button
 	function fn_confirm(){
 		if(Number($("#cntValid").val()) < 1){
+			//Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
 			Common.alert("No valid item in this batch.");
 		}else{
 			Common.ajax("GET", "/commission/calculation/incentiveConfirm", $("#conForm").serializeJSON() , function(result) {
+				//Common.alert('<spring:message code="commission.alert.incentive.confirm.success"/>');
 				Common.alert("This upload batch has been confirmed and saved.");
 				$("#search").click(); //TODO close 시점으로 바꿔야함
 				$("#popup_wrap").remove();
