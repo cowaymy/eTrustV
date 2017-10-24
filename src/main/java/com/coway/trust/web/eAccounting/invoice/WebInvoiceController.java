@@ -74,7 +74,8 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/costCenterSearchPop.do")
-	public String costCenterSearchPop(ModelMap model) {
+	public String costCenterSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("pop", params.get("pop"));
 		return "eAccounting/webInvoice/costCenterSearchPop";
 	}
 	
