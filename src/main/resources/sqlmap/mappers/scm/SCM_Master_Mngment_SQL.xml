@@ -3,18 +3,44 @@
 <mapper namespace="com.coway.trust.biz.scm.impl.ScmMasterMngMentMapper"> 
 
   <!-- SCM MASTER MANAGEMENT -->
-  <select id="selectMasterMngment" parameterType="Map" resultType="egovMap">
-		SELECT DISTINCT 
-		      PLAN_ID CODE_VALUE 
-		    , CDC     CODE_VIEW
-	  FROM SCM0005M 
-	 WHERE PLAN_YEAR  = #{planYear}  
-	 <if test="planMonth != null and planMonth !=''">
-	   AND PLAN_MONTH = #{planMonth}  
-	 </if>
-	   AND PLAN_WEEK  = #{planWeek}  
-	   AND PLAN_STUS  = 4
-	 ORDER BY PLAN_ID
+  <select id="selectMasterMngmentSearch" parameterType="Map" resultType="egovMap">
+			  SELECT 
+			        STK_CTGRY_CODE
+			      , STOCK_CODE
+			      , STOCK_DESC  
+			      , DEFAULTSTOCKNAME DEFAUT_STOCK_NAME  
+			      , IS_TRGET   
+			      , MEMO   
+			      , TO_CHAR(START_DT,'DD-MM-YYYY') START_DT
+			      , TO_CHAR(END_DT,'DD-MM-YYYY') END_DT
+			      , KL_TARGET   
+			      , JB_TARGET   
+			      , KK_TARGET   
+			      , PN_TARGET   
+			      , KC_TARGET        
+			      , TO_CHAR(KL_MOQ, 'fm999,999') KL_MOQ      
+			      , TO_CHAR(JB_MOQ, 'fm999,999') JB_MOQ   
+			      , TO_CHAR(KK_MOQ, 'fm999,999') KK_MOQ   
+			      , TO_CHAR(PN_MOQ, 'fm999,999') PN_MOQ   
+			      , TO_CHAR(KC_MOQ, 'fm999,999') KC_MOQ    
+			      , SAFETY_STOCK   
+			      , LEAD_TM   
+			      , LOADING_QTY
+			         
+			      , MIN_ORD_QTY       
+			      , STK_CTGRY_ID  
+			      , STK_CTGRY_NAME   
+			      , STK_TYPE_ID   
+			      , STK_TYPE_NAME  
+			      , STOCK_ID   
+			      , DFLT_STOCK   
+			 FROM SCM0046V  
+			 WHERE STOCK_ID > 0 
+		<if test="stockCodeCbBox != null and stockCodeCbBox !=''">
+			   AND STOCK_ID = #{stockCodeCbBox}
+		</if>
+			 ORDER BY STK_CTGRY_CODE
+			         ,STOCK_DESC	 
   </select> 
 
   <!-- WARE HOUSE MAPPING -->
