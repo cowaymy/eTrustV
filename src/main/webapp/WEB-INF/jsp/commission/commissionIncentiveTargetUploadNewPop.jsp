@@ -89,7 +89,7 @@ $(document).on(//인풋파일 삭제
 		return true;
 	}
 </script>
-<div id="popup_wrap" class="popup_wrap">
+<div id="popup_wrap" class="popup_wrap size_mid">
 	
 	<header class="pop_header">
 		<h1>INCENTIVE/TARGET UPLOAD - NEW UPLOAD</h1>
@@ -111,7 +111,7 @@ $(document).on(//인풋파일 삭제
 				<tr>
 					<th scope="row">Type</th>
 					<td>
-						<select class="w100p" name="cmbType" id="cmbType">
+						<select class="" name="cmbType" id="cmbType">
 						   <option value=""></option>
 							<option value="1062">Cody/HP Incentive</option>
 							<option value="1063">Cody/HP Target</option>
@@ -121,7 +121,7 @@ $(document).on(//인풋파일 삭제
 				<tr>
 					<th scope="row">Member Type</th>
 					<td>
-						<select class="w100p" name="cmbMemberType" id="cmbMemberType">
+						<select class="" name="cmbMemberType" id="cmbMemberType">
 						   <option value=""></option>
 							<c:forEach var="list" items="${memType }">
 	                            <option value="${list.cdid}">${list.cdnm}(${list.cd})</option>
