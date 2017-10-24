@@ -6,10 +6,10 @@ var callType = "${callType}";
 $(document).ready(function () {
     setInputFile2();
     
-    $("#supplier_search_btn").click(fn_supplierSearchPop);
-    $("#costCenter_search_btn").click(fn_costCenterSearchPop);
+    $("#supplier_search_btn").click(fn_popSupplierSearchPop);
+    $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#tempSave_btn").click(fn_tempSave);
-    $("#request_btn").click();
+    $("#request_btn").click(fn_approveLinePop);
     
     $("#reqstAmt").keydown(function (event) { 
         
@@ -42,8 +42,8 @@ $(document).ready(function () {
            str2[1] = "00";
        }
        
-       if(str2[0].length > 20){
-           Common.alert("The amount can only be 20 digits, including 2 decimal point.");
+       if(str2[0].length > 11){
+           Common.alert("The amount can only be 13 digits, including 2 decimal point.");
            str = "";
        }else{
            str = str2[0].substr(0, 11)+"."+str2[1];
@@ -60,53 +60,10 @@ function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
 }
 
-function fn_setCostCenter() {
-    $("#newCostCenter").val($("#search_costCentr").val());
-    $("#newCostCenterText").val($("#search_costCentrName").val());
-    
-    if(fn_checkEmpty()){
-        // Approved Cash Amount GET
-        var data = {
-                memAccId : $("#search_memAccId").val(),
-                costCentr : $("#newCostCenter").val()
-        };
-        Common.ajax("POST", "/eAccounting/pettyCash/selectAppvCashAmt.do", data, function(result) {
-            console.log(result);
-            var appvCashAmt = "" + result.data.appvCashAmt;
-            $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-        });
-    }
-}
-
-function fn_setSupplier() {
-    $("#newMemAccId").val($("#search_memAccId").val());
-    $("#newMemAccName").val($("#search_memAccName").val());
-    $("#bankCode").val($("#search_bankCode").val());
-    $("#bankName").val($("#search_bankName").val());
-    $("#bankAccNo").val($("#search_bankAccNo").val());
-    
-    // USER_NRIC GET
-    Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
-        console.log(result);
-        $("#custdnNric").val(result.data.userNric);
-    });
-    
-    if(fn_checkEmpty()){
-    	// Approved Cash Amount GET
-    	var data = {
-    			memAccId : $("#search_memAccId").val(),
-    			costCentr : $("#newCostCenter").val()
-    	};
-    	Common.ajax("POST", "/eAccounting/pettyCash/selectAppvCashAmt.do", data, function(result) {
-            console.log(result);
-            var appvCashAmt = "" + result.data.appvCashAmt;
-            $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-        });
-    }
-}
-
 function fn_tempSave() {
-	fn_saveNewRequest(callType);
+	if(fn_checkEmpty()) {
+		fn_saveNewRequest(callType);
+	}
 }
 
 function fn_saveNewRequest(st) {
@@ -129,12 +86,32 @@ function fn_saveNewRequest(st) {
         });
         Common.ajaxFile("/eAccounting/pettyCash/insertPettyCashReqst.do", formData, function(result) {
             console.log(result);
+            $("#clmNo").val(result.data.clmNo);
             if(st == "new") {
             	Common.alert("Temporary save succeeded.");
+            	$("#newRequestPop").remove();
             }
-            $("#clmNo").val(result.data.clmNo);
+            fn_selectRequestList();
         });
     }
+}
+
+function fn_approveLinePop() {
+    var checkResult = fn_checkEmpty();
+    
+    if(!checkResult){
+        return false;
+    }
+    
+    // tempSave를 하지 않고 바로 submit인 경우
+    /* if(FormUtil.isEmpty($("#clmNo").val())) {
+        // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
+        fn_attachmentUpload("");
+    } else {
+        fn_updateWebInvoiceInfo("");
+    } */
+    
+    Common.popupDiv("/eAccounting/pettyCash/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 </script>
 
@@ -209,7 +186,6 @@ function fn_saveNewRequest(st) {
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#" id="appvLine_btn">Approve Line</a></p></li>
 	<li><p class="btn_blue2"><a href="#" id="tempSave_btn">Temp. save</a></p></li>
 	<li><p class="btn_blue2"><a href="#" id="request_btn">Request</a></p></li>
 </ul>

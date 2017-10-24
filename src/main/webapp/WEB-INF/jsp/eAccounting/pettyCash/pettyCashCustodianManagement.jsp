@@ -50,7 +50,7 @@ var pettyCashCustdnColumnLayout = [ {
             console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
             if(item.fileCnt > 1) {
                 atchFileGrpId = item.atchFileGrpId;
-                fn_fileListPop();
+                fn_fileListPop(item.atchFileGrpId);
             } else {
                 var data = {
                         atchFileGrpId : item.atchFileGrpId,
@@ -156,12 +156,32 @@ function fn_setToDay() {
     $("#endDt").val(today)
 }
 
+function fn_fileListPop(atchFileGrpId) {
+    var data = {
+            atchFileGrpId : atchFileGrpId
+    };
+    Common.popupDiv("/eAccounting/webInvoice/fileListPop.do", data, null, true, "fileListPop");
+}
+
+function fn_setGridData(gridId, data) {
+    console.log(data);
+    AUIGrid.setGridData(gridId, data);
+}
+
 function fn_supplierSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+}
+
+function fn_popSupplierSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
+}
+
+function fn_popCostCenterSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
 }
 
 function fn_setSupplier() {
@@ -172,6 +192,25 @@ function fn_setSupplier() {
 function fn_setCostCenter() {
     $("#costCenter").val($("#search_costCentr").val());
     $("#costCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_setPopCostCenter() {
+    $("#newCostCenter").val($("#search_costCentr").val());
+    $("#newCostCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_setPopSupplier() {
+    $("#newMemAccId").val($("#search_memAccId").val());
+    $("#newMemAccName").val($("#search_memAccName").val());
+    $("#bankCode").val($("#search_bankCode").val());
+    $("#bankName").val($("#search_bankName").val());
+    $("#bankAccNo").val($("#search_bankAccNo").val());
+    
+    // USER_NRIC GET
+    Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
+        console.log(result);
+        $("#custdnNric").val(result.data.userNric);
+    });
 }
 
 function fn_searchUserIdPop() {

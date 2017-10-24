@@ -218,18 +218,16 @@ public class PettyCashController {
 		return "eAccounting/pettyCash/newRequestPettyCashPop";
 	}
 	
-	@RequestMapping(value = "/selectAppvCashAmt.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> selectAppvCashAmt(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+	@RequestMapping(value = "/selectCustodianInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> selectCustodianInfo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		double appvCashAmt = pettyCashService.selectAppvCashAmt(params);
-		
-		params.put("appvCashAmt", appvCashAmt);
+		EgovMap custodianInfo = pettyCashService.selectCustodianInfo(params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
+		message.setData(custodianInfo);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
@@ -252,6 +250,58 @@ public class PettyCashController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/approveLinePop.do")
+	public String approveLinePop(ModelMap model) {
+		return "eAccounting/pettyCash/approveLinePop";
+	}
+	
+	@RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
+		params.put("appvPrcssNo", appvPrcssNo);
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		
+		// TODO
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/reqstCompletedMsgPop.do")
+	public String reqstCompletedMsgPop(ModelMap model) {
+		return "eAccounting/pettyCash/reqstCompletedMsgPop";
+	}
+	
+	@RequestMapping(value = "/viewRequestPop.do")
+	public String viewRequestPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		EgovMap requestInfo = pettyCashService.selectRequestInfo(params);
+		
+		String atchFileGrpId = String.valueOf(requestInfo.get("atchFileGrpId"));
+		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
+		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+		if(atchFileGrpId != "null") {
+			List<EgovMap> requestAttachList = webInvoiceService.selectAttachList(atchFileGrpId);
+			model.addAttribute("attachmentList", requestAttachList);
+		}
+		model.addAttribute("requestInfo", requestInfo);
+		model.addAttribute("callType", params.get("callType"));
+		return "eAccounting/pettyCash/viewRequestPettyCashPop";
+	}
+	
+	
 	
 	
 }

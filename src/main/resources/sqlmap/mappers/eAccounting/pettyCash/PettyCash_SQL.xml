@@ -138,13 +138,15 @@ SELECT T1.COST_CENTR
 <select id="selectRequestList" parameterType="Map" resultType="egovMap">
 /* pettyCashMapper.selectRequestList */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T.COST_CENTR, 
+SELECT T.CLM_NO,
+       T.COST_CENTR, 
        T.COST_CENTR_NAME, 
        T.MEM_ACC_ID, 
        T.MEM_ACC_NAME, 
        T.APPV_CASH_AMT, 
        T.REQST_AMT, 
-       T.CLM_NO, 
+       T.REQST_NO,
+       T.CRT_DT, 
        T.REQST_DT, 
        T.ATCH_FILE_GRP_ID, 
        T.ATCH_FILE_ID, 
@@ -153,20 +155,22 @@ SELECT T.COST_CENTR,
        T.FILE_CNT, 
        T.APPV_PRCSS_STUS_CODE, 
        T.APPV_PRCSS_STUS, 
-       T.APPV_PRCSS_DT 
-FROM   (SELECT T1.COST_CENTR, 
+       T.APPV_PRCSS_DT
+FROM   (SELECT T1.CLM_NO,
+               T1.COST_CENTR, 
                T1.COST_CENTR_NAME, 
                T1.MEM_ACC_ID, 
                T2.MEM_ACC_NAME, 
                T1.APPV_CASH_AMT, 
                T1.REQST_AMT, 
-               T1.CLM_NO, 
+               T1.CLM_NO AS REQST_NO,
+               T1.CRT_DT, 
                T4.REQST_DT, 
                T1.ATCH_FILE_GRP_ID, 
                T3.ATCH_FILE_ID, 
                T3.ATCH_FILE_NAME, 
                T3.FILE_EXTSN, 
-               T3.FILE_CNT, 
+               T3.FILE_CNT,
                Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
                Nvl (( CASE T4.APPV_PRCSS_STUS 
                         WHEN 'R' THEN 'Request' 
@@ -205,12 +209,12 @@ FROM   (SELECT T1.COST_CENTR,
 WHERE  1 = 1 
 <if test="startDt != null and startDt != ''">
 <![CDATA[ 
-AND T.REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+AND T.CRT_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
 ]]>
 </if>          
 <if test="endDt != null and endDt != ''">
 <![CDATA[ 
-AND T.REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+AND T.CRT_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
 ]]>
 </if>          
 <if test="memAccID != null and memAccID != ''">
@@ -226,12 +230,6 @@ AND T.APPV_PRCSS_STUS_CODE IN
 </foreach>
 </if>  
 ORDER BY T.CLM_NO, T.REQST_DT         
-</select>
-
-<select id="selectAppvCashAmt" parameterType="Map" resultType="Double">
-/* pettyCashMapper.selectAppvCashAmt */
-<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT APPV_CASH_AMT FROM FCM0011M WHERE COST_CENTR = #{costCentr} AND CUSTDN = #{memAccId}
 </select>
 
 <select id="selectNextClmNo" resultType="String">
@@ -288,5 +286,103 @@ SELECT APPV_CASH_AMT FROM FCM0011M WHERE COST_CENTR = #{costCentr} AND CUSTDN = 
        ,#{userId}
     )
 </insert>
+
+<insert id="insertApproveItems" parameterType="Map">
+/* webInvoiceMapper.insertApproveItems */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0015D
+   (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{appvItmSeq}
+       ,#{invcNo}
+       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,#{invcType}
+       ,#{memAccId}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{taxCode}
+       ,#{reqstAmt}
+       ,0
+       ,#{appvCashAmt}
+       ,#{expDesc}
+       ,#{atchFileGrpId}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<update id="updateAppvPrcssNo" parameterType="Map">
+/* pettyCashMapper.updateAppvPrcssNo */
+   UPDATE FCM0012D
+   SET APPV_PRCSS_NO = #{appvPrcssNo}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
+</update>
+
+<select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectRequestInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT    T1.CLM_NO, 
+          T1.COST_CENTR, 
+          T1.COST_CENTR_NAME, 
+          T1.MEM_ACC_ID, 
+          T2.MEM_ACC_NAME, 
+          T1.BANK_CODE, 
+          T2.BANK_NAME, 
+          T1.BANK_ACC_NO, 
+          T1.CUSTDN_NRIC, 
+          T1.APPV_CASH_AMT, 
+          T1.REQST_AMT, 
+          TO_CHAR(T1.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT, 
+          T1.ATCH_FILE_GRP_ID, 
+          T1.REQST_REM, 
+          T1.APPV_PRCSS_NO, 
+          T1.CRT_USER_ID, 
+          T3.USER_NAME 
+FROM      FCM0012D T1 
+LEFT JOIN FCM0006M T2 
+ON        T1.MEM_ACC_ID = T2.MEM_ACC_ID 
+LEFT JOIN SYS0047M T3 
+ON        T1.CRT_USER_ID = T3.USER_ID 
+WHERE T1.CLM_NO = #{clmNo}       
+</select>
 
 </mapper>

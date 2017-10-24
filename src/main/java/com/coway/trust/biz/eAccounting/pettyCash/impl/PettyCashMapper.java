@@ -23,10 +23,14 @@ public interface PettyCashMapper {
 	
 	List<EgovMap> selectRequestList(Map<String, Object> params);
 	
-	double selectAppvCashAmt(Map<String, Object> params);
-	
 	String selectNextClmNo();
 	
 	void insertPettyCashReqst(Map<String, Object> params);
+	
+	void updateAppvPrcssNo(Map<String, Object> params);
+	
+	void insertApproveItems(Map<String, Object> params);
+	
+	EgovMap selectRequestInfo(Map<String, Object> params);
 
 }

@@ -5,8 +5,8 @@
 $(document).ready(function () {
 	setInputFile2();
 	
-	$("#supplier_search_btn").click(fn_supplierSearchPop);
-    $("#costCenter_search_btn").click(fn_costCenterSearchPop);
+	$("#supplier_search_btn").click(fn_popSupplierSearchPop);
+    $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
 	$("#save_btn").click(fn_saveNewCustodian);
     $("#clear_btn").click(fn_clearData);
     
@@ -41,8 +41,8 @@ $(document).ready(function () {
            str2[1] = "00";
        }
        
-       if(str2[0].length > 20){
-    	   Common.alert("The amount can only be 20 digits, including 2 decimal point.");
+       if(str2[0].length > 11){
+    	   Common.alert("The amount can only be 13 digits, including 2 decimal point.");
            str = "";
        }else{
            str = str2[0].substr(0, 11)+"."+str2[1];
@@ -57,25 +57,6 @@ $(document).ready(function () {
 /* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
-}
-
-function fn_setCostCenter() {
-    $("#newCostCenter").val($("#search_costCentr").val());
-    $("#newCostCenterText").val($("#search_costCentrName").val());
-}
-
-function fn_setSupplier() {
-    $("#newMemAccId").val($("#search_memAccId").val());
-    $("#newMemAccName").val($("#search_memAccName").val());
-    $("#bankCode").val($("#search_bankCode").val());
-    $("#bankName").val($("#search_bankName").val());
-    $("#bankAccNo").val($("#search_bankAccNo").val());
-    
-    // USER_NRIC GET
-    Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
-        console.log(result);
-        $("#custdnNric").val(result.data.userNric);
-    });
 }
 
 function fn_saveNewCustodian() {

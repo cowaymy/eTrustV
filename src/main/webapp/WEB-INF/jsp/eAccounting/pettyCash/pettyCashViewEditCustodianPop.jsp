@@ -68,8 +68,8 @@ $(document).ready(function () {
            str2[1] = "00";
        }
        
-       if(str2[0].length > 20){
-           Common.alert("The amount can only be 20 digits, including 2 decimal point.");
+       if(str2[0].length > 11){
+           Common.alert("The amount can only be 13 digits, including 2 decimal point.");
            str = "";
        }else{
            str = str2[0].substr(0, 11)+"."+str2[1];
@@ -87,6 +87,30 @@ $(document).ready(function () {
 /* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
+}
+
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        console.log(result);
+        if(result.fileExtsn == "jpg") {
+            // TODO View
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDown.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDown.do?subPath=" + fileSubPath
+                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
 }
 
 function fn_setAppvCashAmt() {

@@ -1,6 +1,7 @@
 package com.coway.trust.biz.eAccounting.pettyCash.impl;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.pettyCash.PettyCashService;
+import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.util.EgovFormBasedFileVo;
@@ -38,6 +40,9 @@ public class PettyCashServiceImpl implements PettyCashService {
 	
 	@Autowired
 	private FileApplication fileApplication;
+	
+	@Autowired
+	private WebInvoiceMapper webInvoiceMapper;
 	
 	@Resource(name = "pettyCashMapper")
 	private PettyCashMapper pettyCashMapper;
@@ -140,12 +145,6 @@ public class PettyCashServiceImpl implements PettyCashService {
 	}
 
 	@Override
-	public double selectAppvCashAmt(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return pettyCashMapper.selectAppvCashAmt(params);
-	}
-
-	@Override
 	public Map<String, Object> insertPettyCashReqst(MultipartHttpServletRequest request, Map<String, Object> params)
 			throws Exception {
 		// TODO Auto-generated method stub
@@ -169,6 +168,49 @@ public class PettyCashServiceImpl implements PettyCashService {
 		pettyCashMapper.insertPettyCashReqst(params);
 		
 		return params;
+	}
+
+	@Override
+	public void insertApproveManagement(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+LOGGER.debug("params =====================================>>  " + params);
+		
+		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+		
+		params.put("appvLineCnt", apprGridList.size());
+		
+		LOGGER.debug("insertApproveManagement =====================================>>  " + params);
+		webInvoiceMapper.insertApproveManagement(params);
+		
+		if (apprGridList.size() > 0) {
+			Map hm = null;
+			
+			for (Object map : apprGridList) {
+				hm = (HashMap<String, Object>) map;
+				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
+				hm.put("userId", params.get("userId"));
+				hm.put("userName", params.get("userName"));
+				LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
+				// TODO appvLineDetailTable Insert
+				webInvoiceMapper.insertApproveLineDetail(hm);
+			}
+		}
+		
+		int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
+		params.put("appvItmSeq", appvItmSeq);
+		LOGGER.debug("insertApproveItems =====================================>>  " + params);
+		// TODO appvLineItemsTable Insert
+		pettyCashMapper.insertApproveItems(params);
+		
+		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
+		// TODO pettyCashReqst table update
+		pettyCashMapper.updateAppvPrcssNo(params);
+	}
+
+	@Override
+	public EgovMap selectRequestInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectRequestInfo(params);
 	}
 	
 	

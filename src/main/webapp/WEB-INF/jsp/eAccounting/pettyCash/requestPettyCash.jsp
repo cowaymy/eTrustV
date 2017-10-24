@@ -18,9 +18,10 @@
 }
 </style>
 <script type="text/javascript">
-var costCentr;
-var memAccId;
 var pettyCashReqstColumnLayout = [ {
+    dataField : "clmNo",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "costCentr",
     headerText : '<spring:message code="webInvoice.cc" />'
 }, {
@@ -59,8 +60,13 @@ var pettyCashReqstColumnLayout = [ {
         allowPoint : true // 소수점(.) 입력 가능 설정
     }
 }, {
-    dataField : "clmNo",
+    dataField : "reqstNo",
     headerText : 'Request No'
+}, {
+    dataField : "crtDt",
+    headerText : 'Create Date',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
 }, {
     dataField : "reqstDt",
     headerText : '<spring:message code="webInvoice.requestDate" />',
@@ -82,7 +88,7 @@ var pettyCashReqstColumnLayout = [ {
             console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
             if(item.fileCnt > 1) {
                 atchFileGrpId = item.atchFileGrpId;
-                fn_fileListPop();
+                fn_fileListPop(item.atchFileGrpId);
             } else {
                 var data = {
                         atchFileGrpId : item.atchFileGrpId,
@@ -155,9 +161,9 @@ $(document).ready(function () {
     AUIGrid.bind(pettyCashReqstGridID, "cellDoubleClick", function( event ) 
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                console.log("CellDoubleClick costCentr : " + event.item.costCentr + " CellDoubleClick custdn(memAccId) : " + event.item.memAccId);
-                costCentr = event.item.costCentr;
-                memAccId = event.item.memAccId;
+                console.log("CellDoubleClick clmNo : " + event.item.clmNo);
+                
+                fn_viewRequestPop(event.item.clmNo);
             });
     
     $("#appvPrcssStus").multipleSelect("checkAll");
@@ -184,12 +190,32 @@ function fn_setToDay() {
     $("#endDt").val(today)
 }
 
+function fn_fileListPop(atchFileGrpId) {
+    var data = {
+            atchFileGrpId : atchFileGrpId
+    };
+    Common.popupDiv("/eAccounting/webInvoice/fileListPop.do", data, null, true, "fileListPop");
+}
+
+function fn_setGridData(gridId, data) {
+    console.log(data);
+    AUIGrid.setGridData(gridId, data);
+}
+
 function fn_supplierSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+}
+
+function fn_popSupplierSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
+}
+
+function fn_popCostCenterSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
 }
 
 function fn_setSupplier() {
@@ -200,6 +226,49 @@ function fn_setSupplier() {
 function fn_setCostCenter() {
     $("#costCenter").val($("#search_costCentr").val());
     $("#costCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_setPopCostCenter() {
+    $("#newCostCenter").val($("#search_costCentr").val());
+    $("#newCostCenterText").val($("#search_costCentrName").val());
+    
+    if(fn_checkEmpty()){
+        // Approved Cash Amount GET and CUSTDN_NRIC GET
+        var data = {
+                memAccId : $("#search_memAccId").val(),
+                costCentr : $("#newCostCenter").val()
+        };
+        Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+            console.log(result);
+            var appvCashAmt = "" + result.data.appvCashAmt;
+            $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+            var custdnNric = result.data.custdnNric;
+            $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+        });
+    }
+}
+
+function fn_setPopSupplier() {
+    $("#newMemAccId").val($("#search_memAccId").val());
+    $("#newMemAccName").val($("#search_memAccName").val());
+    $("#bankCode").val($("#search_bankCode").val());
+    $("#bankName").val($("#search_bankName").val());
+    $("#bankAccNo").val($("#search_bankAccNo").val());
+    
+    if(fn_checkEmpty()){
+        // Approved Cash Amount GET and CUSTDN_NRIC GET
+        var data = {
+                memAccId : $("#search_memAccId").val(),
+                costCentr : $("#newCostCenter").val()
+        };
+        Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+            console.log(result);
+            var appvCashAmt = "" + result.data.appvCashAmt;
+            $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+            var custdnNric = result.data.custdnNric;
+            $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+        });
+    }
 }
 
 function fn_selectRequestList() {
@@ -226,6 +295,14 @@ function fn_checkEmpty() {
         return checkResult;
     }
     return checkResult;
+}
+
+function fn_viewRequestPop(clmNo) {
+	var data = {
+            clmNo : clmNo,
+            callType : 'view'
+    };
+	Common.popupDiv("/eAccounting/pettyCash/viewRequestPop.do", data, null, true, "viewRequestPop");
 }
 </script>
 
@@ -266,7 +343,7 @@ function fn_checkEmpty() {
 	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-	<th scope="row">Reques Date</th>
+	<th scope="row">Create Date</th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
 	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt" /></p>

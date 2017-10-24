@@ -23,8 +23,10 @@ public interface PettyCashService {
 	
 	List<EgovMap> selectRequestList(Map<String, Object> params);
 	
-	double selectAppvCashAmt(Map<String, Object> params);
-	
 	Map<String, Object> insertPettyCashReqst(MultipartHttpServletRequest request, Map<String, Object> params)  throws Exception;
+	
+	void insertApproveManagement(Map<String, Object> params);
+	
+	EgovMap selectRequestInfo(Map<String, Object> params);
 	
 }
