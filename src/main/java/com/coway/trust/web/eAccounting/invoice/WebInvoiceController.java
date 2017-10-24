@@ -69,12 +69,19 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/supplierSearchPop.do")
-	public String supplierSearchPop(ModelMap model) {
+	public String supplierSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		model.addAttribute("pop", params.get("pop"));
 		return "eAccounting/webInvoice/memberAccountSearchPop";
 	}
 	
 	@RequestMapping(value = "/costCenterSearchPop.do")
 	public String costCenterSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
 		model.addAttribute("pop", params.get("pop"));
 		return "eAccounting/webInvoice/costCenterSearchPop";
 	}

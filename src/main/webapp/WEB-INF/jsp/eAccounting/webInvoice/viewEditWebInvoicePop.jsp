@@ -347,11 +347,11 @@ function fn_getTotalAmount() {
 }
 
 function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
 }
 
 function fn_expenseTypeSearchPop() {
@@ -460,20 +460,6 @@ function fn_updateWebInvoiceInfo(st) {
 function fn_setGridData(data) {
 	console.log(data);
 	AUIGrid.setGridData(newGridID, data);
-}
-
-function fn_setCostCenter() {
-    $("#newCostCenter").val($("#search_costCentr").val());
-    $("#newCostCenterText").val($("#search_costCentrName").val());
-}
-
-function fn_setSupplier() {
-    $("#newMemAccId").val($("#search_memAccId").val());
-    $("#newMemAccName").val($("#search_memAccName").val());
-    $("#gstRgistNo").val($("#search_gstRgistNo").val());
-    $("#bankCode").val($("#search_bankCode").val());
-    $("#bankName").val($("#search_bankName").val());
-    $("#bankAccNo").val($("#search_bankAccNo").val());
 }
 </script>
 

@@ -157,6 +157,20 @@ function fn_setSupplier() {
     $("#memAccName").val($("#search_memAccName").val());
 }
 
+function fn_setPopCostCenter() {
+    $("#newCostCenter").val($("#search_costCentr").val());
+    $("#newCostCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_setPopSupplier() {
+    $("#newMemAccId").val($("#search_memAccId").val());
+    $("#newMemAccName").val($("#search_memAccName").val());
+    $("#gstRgistNo").val($("#search_gstRgistNo").val());
+    $("#bankCode").val($("#search_bankCode").val());
+    $("#bankName").val($("#search_bankName").val());
+    $("#bankAccNo").val($("#search_bankAccNo").val());
+}
+
 function fn_checkEmpty() {
 	var checkResult = true;
 	if(FormUtil.isEmpty($("#invcDt").val())) {
