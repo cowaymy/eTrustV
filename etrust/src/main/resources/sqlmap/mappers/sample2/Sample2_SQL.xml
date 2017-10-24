@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sample2.impl.Sample2Mapper">
+
+    <insert id="insertSampleByMap" parameterType="Map">
+        INSERT INTO SYS0052M
+            (id, 
+            language, 
+            country, 
+            message)
+        VALUES
+            (#{id}, 
+            #{language}, 
+            #{country}, 
+            #{message})
+    </insert>
+
+</mapper>

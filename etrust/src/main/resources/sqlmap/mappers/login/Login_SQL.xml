@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.login.impl.LoginMapper">
+
+    <select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
+	<![CDATA[
+
+        SELECT
+            USR.USER_ID AS userId
+	       ,USR.USER_NAME AS userName
+	       ,USR.USER_FULL_NAME AS userFullName
+	       ,USR.USER_EMAIL AS userEmail
+	       ,USR.USER_STUS_ID AS userStatusId
+	       ,USR.USER_TYPE_ID AS userTypeId
+	       ,CASE
+	          WHEN (USR.USER_BRNCH_ID IS NOT NULL)
+	             THEN USR.USER_BRNCH_ID
+	          ELSE 0
+	       END AS userBranchId
+	       ,CASE
+	          WHEN (USR.USER_DEPT_ID IS NOT NULL)
+	             THEN USR.USER_DEPT_ID
+	          ELSE 0
+	       END AS userDeptId
+	       ,USR.USER_UPD_DT AS userUpdateAt
+	       ,USR.USER_PASSWD AS userPassWord
+	       ,USR.USER_PASSWD_LAST_UPD_DT AS userPasswdLastUpdateAt
+	       ,USR.USER_MOBILE_NO AS userMobileNo
+	       ,USR.USER_EXT_NO AS userExtNo
+	       ,USR.USER_IS_PART_TM AS userIsPartTime
+	       ,USR.USER_IS_EXTRNL AS userIsExternal
+	       ,STATUS.NAME AS statusName
+	       ,BRANCH.CODE
+	       ,BRANCH.NAME AS branchName
+	       ,BRANCH.ADDR1 ||' '|| BRANCH.ADDR2 ||' '|| BRANCH.ADDR3 ||' '|| BRANCH.ADDR4 AS branchAddr
+	       ,BRANCH.TEL1 AS branchTel1
+	       ,BRANCH.TEL2 AS branchTel2
+	       ,SUPDEPT.DEPT_NAME AS deptName
+	       ,(TRUNC(SYSDATE,'dd') - TRUNC(USR.USER_PASSWD_LAST_UPD_DT,'dd')) diffDay
+	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
+	       LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = USR.USER_BRNCH_ID
+	       LEFT OUTER JOIN SYS0040M SUPDEPT ON SUPDEPT.DEPT_ID = USR.USER_DEPT_ID
+	 WHERE 1 = 1
+	   AND USR.USER_NAME = #{userId}
+	   AND USR.USER_PASSWD = #{password}
+	   AND USR.USER_STUS_ID = 1
+	   AND 'T' = CASE WHEN #{userMobileNo} IS NULL OR USR.USER_MOBILE_NO = #{userMobileNo} THEN 'T'
+	   							ELSE 'F'
+	   					END
+       AND TO_CHAR(USR.USER_VAL_ID_TO,'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+	   AND ROWNUM = 1
+
+        ]]>
+	</select>
+
+    <select id="selectSubAuthInfo" parameterType="Map" resultType="loginSubAuthVO">
+        <![CDATA[
+        SELECT a.user_id
+                , a.auth_div_code
+                , (SELECT a.code_name
+                     FROM SYS0013M a
+                    WHERE a.code_master_id = 316
+                      AND a.code = a.auth_div_code) AS auth_div_name
+                , auth_code
+             FROM SYS0058M a
+            WHERE a.user_id = #{userId}
+              AND TO_CHAR(SYSDATE,'YYYYMMDDHH24') BETWEEN a.valid_dt_from|| '00' AND a.valid_dt_to || '23'
+        ]]>
+    </select>
+
+    <select id="selectLanguages" resultType="egovMap">
+    <![CDATA[
+
+        SELECT   LANGUAGE
+		    FROM SYS0052M
+		GROUP BY LANGUAGE
+
+        ]]>
+    </select>
+
+    <update id="updatePassWord" parameterType="Map">
+        UPDATE SYS0047M
+        SET USER_PASSWD = #{newPasswordConfirmTxt}
+        ,USER_PASSWD_LAST_UPD_DT = SYSDATE
+        <choose>
+            <when test=' newUserIdTxt != null and newUserIdTxt != "" '>
+                WHERE USER_ID = #{newUserIdTxt}
+            </when>
+            <otherwise>
+                WHERE USER_ID = #{searchLoginId}
+            </otherwise>
+        </choose>
+    </update>
+
+    <select id="selectFindUserIdPop" parameterType="Map" resultType="loginVO">
+   SELECT 
+          SYS47M.USER_NAME    userName
+         ,SYS47M.USER_ID      userId
+         ,SYS47M.USER_PASSWD  userPassWord
+         ,SYS47M.USER_SEC_QUES_ID  userSecQuesId
+         ,SYS47M.USER_SEC_QUES_ANS userSecQuesAns
+         ,SYS32M.RESN_DESC         securityQuestion
+    FROM  SYS0047M SYS47M
+        , SYS0032M SYS32M
+    WHERE SYS47M.USER_NAME = #{userIdFindPopTxt}
+      AND (SYS32M.RESN_ID = SYS47M.USER_SEC_QUES_ID  OR SYS47M.USER_SEC_QUES_ID = 0  )
+      AND ROWNUM = 1
+  </select>
+
+    <insert id="insertLoginHistory" parameterType="loginHistory">
+        INSERT INTO SYS0077M
+        (
+            system_id
+           ,login_dtm
+           ,user_id
+           ,user_nm
+           ,login_type
+           ,ip_addr
+           ,os
+           ,browser
+        )
+        VALUES
+        (
+            #{systemId}
+            ,SYSDATE
+            ,#{userId}
+            ,#{userNm}
+            ,#{loginType}
+            ,#{ipAddr}
+            ,#{os}
+            ,#{browser}
+        )
+    </insert>
+    
+    <update id="updateUserSetting" parameterType="loginVO">
+	    UPDATE SYS0047M
+	       SET USER_EMAIL  =  #{eMail}  
+	          ,USER_UPD_DT =  SYSDATE
+	          ,USER_NRIC    = #{nricNo} 
+	          ,USER_WORK_NO = #{userWorkNo}
+	          ,USER_MOBILE_NO = #{mobileNo}
+	          ,USER_EXT_NO =  #{exNo}
+	     WHERE USER_ID = #{updUserId}
+    </update>
+    
+    <select id="selectSecureResnList" parameterType="Map" resultType="egovMap">
+	    SELECT RESN_ID
+	         , Code ||' - '||RESN_DESC SECURE_RESN
+	      FROM SYS0032M 
+	     WHERE RESN_TYPE_ID = #{resnTypeId}
+	     ORDER BY Code 
+    </select>
+</mapper>

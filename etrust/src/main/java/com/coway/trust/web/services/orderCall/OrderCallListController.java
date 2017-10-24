@@ -1,0 +1,148 @@
+package com.coway.trust.web.services.orderCall;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.services.orderCall.OrderCallListService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+
+@Controller
+@RequestMapping(value = "/callCenter")
+public class OrderCallListController {
+	private static final Logger logger = LoggerFactory.getLogger(OrderCallListController.class);
+	
+	@Resource(name = "orderCallListService")
+	private OrderCallListService orderCallListService;
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
+	
+	/**
+	 * Call Center - Order Call 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/orderCallList.do")
+	public String orderCallList(@RequestParam Map<String, Object> params, ModelMap model) {
+		//FeedBack Code
+		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
+		model.addAttribute("callStatus", callStatus);
+		// 호출될 화면
+		return "services/orderCall/orderCallList";
+	}
+	    
+	/**
+	 * Call Center - order Call List SEARCH
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/searchOrderCallList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrderCallListSearch(@RequestParam Map<String, Object> params, HttpServletRequest request,ModelMap model) {
+		logger.debug("params : {}", params);
+		
+		String[] appTypeList =  request.getParameterValues("appType");
+		String[] callLogTypeList =  request.getParameterValues("callLogType");
+		String[] callLogStatusList =  request.getParameterValues("callLogStatus");
+		String[] DSCCodeList =  request.getParameterValues("DSCCode");
+		
+		params.put("appTypeList", appTypeList);
+		params.put("callLogTypeList", callLogTypeList);
+		params.put("callLogStatusList", callLogStatusList);
+		params.put("DSCCodeList", DSCCodeList);
+		List<EgovMap> orderCallList = orderCallListService.selectOrderCall(params);
+		
+		logger.debug("orderCallList : {}", orderCallList);
+		return ResponseEntity.ok(orderCallList);
+	}
+	
+	/**
+	 * Call Center - order Call List - Add Call Log Result 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/addCallResultPop.do")
+	public String insertCallResultPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		EgovMap orderCall = orderCallListService.getOrderCall(params);
+		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
+		
+		//Order Detail Tab
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+		logger.debug("orderCall : {}", orderCall);
+		model.addAttribute("callStusCode", params.get("callStusCode"));
+		model.addAttribute("callStusId", params.get("callStusId"));
+		model.addAttribute("salesOrdId", params.get("salesOrdId"));
+		model.addAttribute("callEntryId", params.get("callEntryId"));
+		model.addAttribute("salesOrdNo", params.get("salesOrdNo"));
+		model.addAttribute("orderCall", orderCall);
+		model.addAttribute("callStatus", callStatus);
+		model.addAttribute("orderDetail", orderDetail);
+		return "services/orderCall/addCallLogResultPop";
+	}
+	
+	/**
+	 * Call Center - order Call List - Save Call Log Result 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/addCallLogResult.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage>  insertCallResult(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		boolean success = false;
+		logger.debug("params : {}", params);
+		String installationNo = "";
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		resultValue = orderCallListService.insertCallResult(params,sessionVO);
+		message.setMessage("success Installation No : " + resultValue.get("installationNo") +"</br>SELES ORDER NO : " +  resultValue.get("salesOrdNo"));
+		message.setCode("1");
+		return ResponseEntity.ok(message);
+	}
+	
+	/**
+	 * Call Center - order Call List - Save Call Log Result 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getCallLogTransaction.do", method = RequestMethod.GET)
+	public  ResponseEntity<List<EgovMap>>  selectCallLogTransaction(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		logger.debug("params : {}", params);
+		//Call Log Transation
+		List<EgovMap> callLogTran = orderCallListService.selectCallLogTransaction(params);
+		
+		logger.debug("callLogTran : {}", callLogTran);
+		return ResponseEntity.ok(callLogTran);
+	}
+	
+}

@@ -1,0 +1,356 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript">
+
+	//AUIGrid 생성 후 반환 ID
+	var cancelLogGridID;       // Cancellation Log Transaction list
+	var prodReturnGridID;      // Product Return Transaction list
+	
+	 $(document).ready(function(){
+		 
+		//AUIGrid 그리드를 생성합니다. 
+        cancelLogGrid();  
+        prodReturnGrid();
+        
+        /*  AUIGrid.setSelectionMode(addrGridID, "singleRow"); */
+        //Call Ajax
+        fn_cancelLogTransList(); 
+        fn_productReturnTransList();
+        
+	 });
+	
+	 function cancelLogGrid(){
+	        // Cancellation Log Transaction Column
+	        var cancelLogColumnLayout = [ 
+	             {dataField : "code1", headerText : "Type", width : '10%'}, 
+	             {dataField : "code", headerText : "Status", width : '10%'},
+	             {dataField : "crtDt", headerText : "Create Date", width : '20%'}, 
+	             {dataField : "callentryUserName", headerText : "Creator", width : '20%'},
+	             {dataField : "updDt", headerText : "Update Date", width : '20%'}, 
+	             {dataField : "userName", headerText : "Updator", width : '20%'}
+	         ];
+	        
+	        //그리드 속성 설정
+	        var gridPros = {
+	            // 페이징 사용       
+	            usePaging : true,
+	            // 한 화면에 출력되는 행 개수 10(기본값:10)
+	            pageRowCount : 10,
+	            editable : true,
+	            fixedColumnCount : 1,
+	            showStateColumn : false, //true 
+	            displayTreeOpen : false, //true
+	            selectionMode : "multipleCells",
+	            headerHeight : 30,
+	            // 그룹핑 패널 사용
+	            useGroupingPanel : false, //true
+	            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	            skipReadonlyColumns : true,
+	            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	            wrapSelectionMove : false, //false
+	            // 줄번호 칼럼 렌더러 출력
+	            showRowNumColumn : true,
+	            groupingMessage : "Here groupping"
+	        };
+	        
+	        cancelLogGridID = GridCommon.createAUIGrid("#cancelLog", cancelLogColumnLayout,'', gridPros);
+	    }
+	    
+	    function prodReturnGrid(){
+	        // Product Return Transaction Column
+	        var prodReturnColumnLayout = [ 
+	             {dataField : "retnNo", headerText : "Return No", width : '15%'}, 
+	             {dataField : "code", headerText : "Status", width : '10%'},
+	             {dataField : "created1", headerText : "Create Date", width : '11%'}, 
+	             {dataField : "username1", headerText : "Creator", width : '11%'},
+	             {dataField : "memCodeName2", headerText : "Assign CT"}, 
+	             {dataField : "ctGrp", headerText : "Group", width : '8%'},
+	             {dataField : "whLocCodeDesc", headerText : "Return Warehouse", width : '25%'}
+	         ];
+	        
+	        //그리드 속성 설정
+	        var gridPros = {
+	            // 페이징 사용       
+	            usePaging : true,
+	            // 한 화면에 출력되는 행 개수 10(기본값:10)
+	            pageRowCount : 10,
+	            editable : true,
+	            fixedColumnCount : 1,
+	            showStateColumn : false, //true 
+	            displayTreeOpen : false, //true
+	            selectionMode : "multipleCells",
+	            headerHeight : 30,
+	            // 그룹핑 패널 사용
+	            useGroupingPanel : false, //true
+	            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	            skipReadonlyColumns : true,
+	            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	            wrapSelectionMove : false, //false
+	            // 줄번호 칼럼 렌더러 출력
+	            showRowNumColumn : true,
+	            groupingMessage : "Here groupping"
+	        };
+	        
+	        prodReturnGridID = GridCommon.createAUIGrid("#productReturn", prodReturnColumnLayout,'',gridPros);
+	    }
+	    
+	    // 리스트 조회. (Cancellation Log Transaction list)
+	    function fn_cancelLogTransList() {
+	        Common.ajax("GET", "/sales/order/cancelLogTransList.do", $("#tabForm").serialize(), function(result) {
+	            AUIGrid.setGridData(cancelLogGridID, result);
+	        });
+	    }
+	    
+	    // 리스트 조회. (Product Return Transaction list)
+	    function fn_productReturnTransList() { 
+	        Common.ajax("GET", "/sales/order/productReturnTransList.do", $("#tabForm").serialize(), function(result) {
+	            AUIGrid.setGridData(prodReturnGridID, result);
+	        });
+	    }
+	    
+	    //resize func (tab click)
+	    function fn_resizefunc(gridName){ // 
+	        AUIGrid.resize(gridName, 950, 300);
+	   }
+	    
+	    //Member Search Popup
+	    $('#memBtn').click(function() {
+	        Common.popupDiv("/sales/order/ctSearchPop.do", $("#tabForm").serializeJSON(), null, true);
+	    });
+
+	    $('#salesmanCd').change(function(event) {
+
+	        var memCd = $('#salesmanCd').val().trim();
+
+	        if(FormUtil.isNotEmpty(memCd)) {
+	            fn_loadOrderSalesman(0, memCd);
+	        }
+	    });
+	    
+	    function fn_loadOrderSalesman(memId, memCode) {
+
+	        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+
+	            if(memInfo == null) {
+	                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+	            }
+	            else {
+	                $('#hiddenSalesmanId').val(memInfo.memId);
+	                $('#salesmanCd').val(memInfo.memCode);
+	               
+	                $('#salesmanCd').removeClass("readonly");
+	              
+	            }
+	        });
+	    }
+	    
+	    function fn_saveCT(){
+	    	if(ctForm.salesmanCd.value == ""){
+	            Common.alert("Please select the Assign CT");
+	            return false;
+	        }
+	    	
+	    	Common.ajax("GET", "/sales/order/saveCtAssignment.do", $("#ctForm").serializeJSON(), function(result) {
+	            Common.alert(result.msg, fn_success);
+	            
+	        }, function(jqXHR, textStatus, errorThrown) {
+	                try {
+	                    console.log("status : " + jqXHR.status);
+	                    console.log("code : " + jqXHR.responseJSON.code);
+	                    console.log("message : " + jqXHR.responseJSON.message);
+	                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+	                    Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+	                    }
+	                catch (e) {
+	                    console.log(e);
+	                    alert("Saving data prepration failed.");
+	                }
+	                alert("Fail : " + jqXHR.responseJSON.message);
+	        });
+	    }
+	    
+	    function fn_success(){
+	        fn_orderCancelListAjax();
+	        
+	        $("#_close").click();
+	        Common.popupDiv("/sales/order/ctAssignmentInfoPop.do", $("#detailForm").serializeJSON(), null , true, '_CTDiv');
+	    }
+
+</script>
+
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>CT ASSIGNMENT</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<form id="tabForm" name="tabForm" action="#" method="post">
+    <input id="docId" name="docId" type="hidden" value="${paramDocId}">
+    <input id="typeId" name="typeId" type="hidden" value="${paramTypeId}">
+    <input id="refId" name="refId" type="hidden" value="${paramRefId}">
+</form>
+<section class="pop_body"><!-- pop_body start -->
+
+<article class="acodi_wrap"><!-- acodi_wrap start -->
+<dl>
+    <dt class="click_add_on on"><a href="#">Cancellation Request Information</a></dt>
+    <dd>
+
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:180px" />
+        <col style="width:*" />
+        <col style="width:180px" />
+        <col style="width:*" />
+        <col style="width:200px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Request No</th>
+        <td><span>${cancelReqInfo.reqNo}</span></td>
+        <th scope="row">Creator</th>
+        <td><span>${cancelReqInfo.crtUserId}</span></td>
+        <th scope="row">Request Date</th>
+        <td><span>${cancelReqInfo.callRecallDt}</span></td>
+    </tr>
+    <tr>
+        <th scope="row">Request Status</th>
+        <td><span>${cancelReqInfo.reqStusName}</span></td>
+        <th scope="row">Request Stage</th>
+        <td><span>${cancelReqInfo.reqStage}</span></td>
+        <th scope="row">Request Reason</th>
+        <td>${cancelReqInfo.reqResnCode} - ${cancelReqInfo.reqResnDesc}</td>
+    </tr>
+    <tr>
+        <th scope="row">Call Status</th>
+        <td><span>${cancelReqInfo.callStusName}</span></td>
+        <th scope="row">Recall Date</th>
+        <td><span>${cancelReqInfo.callRecallDt}</span></td>
+        <th scope="row">Requestor</th>
+        <td><span>${cancelReqInfo.reqster}</span></td>
+    </tr>
+    <tr>
+        <th scope="row">App Type (On Request)</th>
+        <td><span>${cancelReqInfo.appTypeName}</span></td>
+        <th scope="row">Stock (On Request)</th>
+        <td colspan="3">${cancelReqInfo.stockCode} - ${cancelReqInfo.stockName}</td>
+    </tr>
+    <tr>
+        <th scope="row">Outstanding (On Request)</th>
+        <td><span>${cancelReqInfo.ordOtstnd}</span></td>
+        <th scope="row">Penalty Amt (On Request)</th>
+        <td><span>${cancelReqInfo.pnaltyAmt}</span></td>
+        <th scope="row">Adjustment Amt (On Request)</th>
+        <td><span>${cancelReqInfo.adjAmt}</span></td>
+    </tr>
+    <tr>
+        <th scope="row">Grand Total (On Request)</th>
+        <td><span>${cancelReqInfo.grandTot}</span></td>
+        <th scope="row">Using Months (On Request)</th>
+        <td><span>${cancelReqInfo.usedMth}</span></td>
+        <th scope="row">Obligation Months (On Request)</th>
+        <td><span>${cancelReqInfo.obligtMth}</span></td>
+    </tr>
+    <tr>
+        <th scope="row">Under Cooling Off Period ?</th>
+        <td><span>${cancelReqInfo.isUnderCoolPriod}</span></td>
+        <th scope="row">Appointment Date</th>
+        <td><span>${cancelReqInfo.appRetnDg}</span></td>
+        <th scope="row">Actual Cancel Date</th>
+        <td><span>${cancelReqInfo.actualCanclDt}</span></td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
+
+    </dd>
+    <dt class="click_add_on"><a href="#">Order Full Details</a></dt>
+    <dd>
+
+    <article class="grid_wrap"><!-- grid_wrap start -->
+    그리드 영역
+    </article><!-- grid_wrap end -->
+
+    </dd>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(cancelLogGridID)">Cancellation Log Transaction</a></dt>
+    <dd>
+
+    <article class="grid_wrap"><!-- grid_wrap start -->
+        <div id="cancelLog" style="width:100%; height:280px; margin:0 auto;"></div>
+    </article><!-- grid_wrap end -->
+
+    </dd>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(prodReturnGridID)">Product Return Transaction</a></dt>
+    <dd>
+
+    <article class="grid_wrap"><!-- grid_wrap start -->
+        <div id="productReturn" style="width:100%; height:280px; margin:0 auto;"></div>
+    </article><!-- grid_wrap end -->
+
+    </dd>
+</dl>
+</article><!-- acodi_wrap end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Coway Technician (CT)Assignment</h2>
+</aside><!-- title_line end -->
+
+<form id="ctForm" name="ctForm" method="post">
+<input type="hidden" id="stkRetnId" name="stkRetnId" value="${ctAssignmentInfo.stkRetnId}">
+<input type="hidden" id="stkRetnCtFrom" name="stkRetnCtFrom" value="${ctAssignmentInfo.memId}">
+<input type="hidden" id="stkRetnCtGrpFrom" name="stkRetnCtGrpFrom" value="${ctAssignmentInfo.ctGrp}">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Returm No</th>
+    <td><span>${ctAssignmentInfo.retnNo}</span></td>
+    <th scope="row">CT Group(Current)</th>
+    <td><span>${ctAssignmentInfo.ctGrp}</span></td>
+</tr>
+<tr>
+    <th scope="row">CT Code(Current)</th>
+    <td><span>${ctAssignmentInfo.memCode}</span></td>
+    <th scope="row">CT Name(Current)</th>
+    <td><span>${ctAssignmentInfo.memName} (${ctAssignmentInfo.nric})</span></td>
+</tr>
+<tr>
+    <th scope="row">Assign CT<span class="must">*</span></th>
+    <td><input type="text" title="" id="salesmanCd" name="salesmanCd" value="${ctAssignmentInfo.memCode}" placeholder="" class="" />
+          <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
+          <a href="#" id="memBtn" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row">CT Name</th>
+    <td><span></span>${ctAssignmentInfo.memName} (${ctAssignmentInfo.nric})</td>
+</tr>
+<tr>
+    <th scope="row">CT Group<span class="must">*</span></th>
+    <td>
+    <select class="w100p" id="saveCtGroup" name="saveCtGroup">
+        <option value="A">Group A</option>
+        <option value="B">Group B</option>
+        <option value="C">Group C</option>
+    </select>
+    </td>
+    <th scope="row"></th>
+    <td><span></span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+<ul class="center_btns mt20">
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveCT()">Save CT Assignment</a></p></li>
+</ul>
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->

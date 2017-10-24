@@ -1,0 +1,463 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+
+<style type="text/css">
+.my-custom-up{
+    text-align: left;
+}
+</style>
+<script type="text/javaScript">
+var orderListGridId;
+var billingscheduleGridId;
+var billingTargetGridId;
+var selectedGridValue;
+var sortingInfo = [];
+// 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
+sortingInfo[0] = { dataField : "installment", sortType : 1 }; // 오름차순 1
+
+var gridPros = {
+        // 편집 가능 여부 (기본값 : false)
+        editable : false,
+        
+        // 상태 칼럼 사용
+        showStateColumn : false
+};
+var gridPros2 = {
+        // 편집 가능 여부 (기본값 : false)
+        editable : false,
+        
+        // 상태 칼럼 사용
+        showStateColumn : false,
+        pageRowCount : 61,
+        // 체크박스 표시 설정
+        showRowCheckColumn : true,
+        // 전체 체크박스 표시 설정
+        showRowAllCheckBox : true,
+        softRemoveRowMode:false
+       
+};
+
+var gridPros3 = {
+        // 편집 가능 여부 (기본값 : false)
+        editable : false,
+        
+        // 상태 칼럼 사용
+        showStateColumn : false,
+        pageRowCount : 61,
+        // 체크박스 표시 설정
+        showRowCheckColumn : true,
+        // 전체 체크박스 표시 설정
+        showRowAllCheckBox : true,
+        softRemoveRowMode:false
+       
+};
+
+
+$(document).ready(function(){
+	
+	
+});
+
+
+var orderListLayout = [ 
+                       {
+                           dataField : "salesOrdNo",
+                           headerText : "Order No",
+                           editable : false
+                       }, {
+                           dataField : "refNo",
+                           headerText : "Ref No",
+                           editable : false,
+                           width: 100,
+                       }, {
+                           dataField : "salesDt",
+                           headerText : "Order Date",
+                           editable : false,
+                           width: 200
+                       }, {
+                           dataField : "name",
+                           headerText : "Status",
+                           editable : false,
+                           width: 200
+                       }, {
+                           dataField : "codeDesc",
+                           headerText : "App Type",
+                           editable : false
+                       }, {
+                           dataField : "stkDesc",
+                           headerText : "Product",
+                           editable : false
+                       }, {
+                           dataField : "name1",
+                           headerText : "Customer",
+                           editable : false,
+                           width: 200 ,
+                           style : "my-custom-up"
+                       }, {
+                           dataField : "custBillId",
+                           headerText : "Bill ID",
+                           editable : false
+                       }, {
+                           dataField : "salesOrdId",//hidden field
+                           headerText : "salesOrdId",
+                           visible : false
+                       },{
+                           dataField : "",
+                           headerText : "",
+                           editable : false,
+                           renderer : {
+                               type : "ButtonRenderer",
+                               labelText : "Select",
+                               onclick : function(rowIndex, columnIndex, value, item) {
+                            	   fn_billingschedule(item.salesOrdId);
+                               }
+                           }
+                       }];
+
+var billingscheduleLayout = [ 
+                       {
+                           dataField : "salesOrdNo",
+                           headerText : "Order No",
+                           editable : false
+                       }, {
+                           dataField : "installment",
+                           headerText : "Installment",
+                           editable : false,
+                       }, {
+                           dataField : "schdulDt",
+                           headerText : "Schedule Date",
+                           editable : false,
+                           width: 100
+                       }, {
+                           dataField : "billType",
+                           headerText : "Type",
+                           editable : false,
+                           width: 100
+                       }, {
+                           dataField : "billAmt",
+                           headerText : "Amount",
+                           editable : false
+                       }, {
+                           dataField : "billingStus",
+                           headerText : "Billing Status",
+                           editable : false
+                       }, {
+                           dataField : "rentInstId",
+                           headerText : "rentInstId",
+                           editable : false,
+                           visible : false
+                       },{
+                           dataField : "salesOrdId",
+                           headerText : "Order Id",
+                           editable : false,
+                           visible : false
+                       }];
+
+var billingTargetLayout = [ 
+                             {
+                                 dataField : "salesOrdNo",
+                                 headerText : "Order No",
+                                 editable : false
+                             }, {
+                                 dataField : "installment",
+                                 headerText : "Installment",
+                                 editable : false,
+                             }, {
+                                 dataField : "schdulDt",
+                                 headerText : "Schedule Date",
+                                 editable : false,
+                                 width: 100
+                             }, {
+                                 dataField : "billType",
+                                 headerText : "Type",
+                                 editable : false,
+                                 width: 100
+                             }, {
+                                 dataField : "billAmt",
+                                 headerText : "Amount",
+                                 editable : false
+                             }, {
+                                 dataField : "billingStus",
+                                 headerText : "Billing Status",
+                                 editable : false
+                             }, {
+                                 dataField : "rentInstId",
+                                 headerText : "rentInstId",
+                                 editable : false,
+                                 visible : false
+                             },{
+                                 dataField : "salesOrdId",
+                                 headerText : "Order Id",
+                                 editable : false,
+                                 visible : false
+                             }]; 
+
+	function fn_orderSearch(){
+		Common.popupDiv('/payment/common/initCommonServiceContractSearchPop.do', null, null , true ,'_serviceContractForm');
+	}
+	
+    function fn_createBillsPopClose(){
+        $('#createBillsPop').hide();
+        $('#invoiceRemark').val("");
+        $('#remark').val("");
+    }
+    
+    function fn_callOrderData(srvCntrctId, salesOrdId){
+        
+    	Common.ajax("GET","/payment/selectCustBillOrderNoList_M.do", {"srvCntrctId" : srvCntrctId}, function(result){
+            console.log(result);
+            
+            $('#orderId').val(salesOrdId);
+            $('#srvCntrctId').val(srvCntrctId);
+            AUIGrid.destroy(orderListGridId);
+            orderListGridId = GridCommon.createAUIGrid("grid_wrap", orderListLayout,"",gridPros);
+            AUIGrid.setGridData(orderListGridId, result.data.orderList);
+            
+            AUIGrid.destroy(billingscheduleGridId);
+            AUIGrid.destroy(billingTargetGridId);
+            
+        });
+    }
+    
+    function fn_billingschedule(ordId){
+        Common.ajax("GET","/payment/selectRentalMembershipBillingSchedule.do", {"salesOrdId" : ordId}, function(result){
+            console.log(result);
+            
+            AUIGrid.destroy(billingscheduleGridId);
+            AUIGrid.destroy(billingTargetGridId);
+            billingscheduleGridId = GridCommon.createAUIGrid("grid_wrap2", billingscheduleLayout,"",gridPros2);
+            billingTargetGridId = GridCommon.createAUIGrid("grid_wrap3", billingTargetLayout,"",gridPros3);
+            AUIGrid.setGridData(billingscheduleGridId, result.data.rentalMembershipScheduleList);
+            
+        });
+    }
+    
+    function fn_createEvent(objId, eventType){
+        var e = jQuery.Event(eventType);
+        $('#'+objId).trigger(e);
+    }
+    
+	// //btn clickevent
+	$(function(){
+		
+		$("#btnAddToBillTarget").click(function(){
+			
+			var now = new Date();
+            var year= now.getFullYear();
+            var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
+            var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
+            
+            if(currentDay >= 26 || currentDay == 1){
+                Common.alert("Unable to perform this between 26 and 1 next month");
+                return;
+            }
+			
+	        var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
+	        var allItems = AUIGrid.getGridData(billingscheduleGridId);
+	        var valid = true;
+	        if (checkedItems.length > 0){
+                var item = new Object();
+                var rowList = [];
+                var j=0;
+                
+                for (var i = 0 ; i < checkedItems.length ; i++){
+                	
+                    if(Number(allItems[0].installment + j) <  Number(checkedItems[i].installment)){
+                        valid = false;
+                    }else{
+                        rowList[i] = {
+                                salesOrdNo : checkedItems[i].salesOrdNo,
+                                installment : checkedItems[i].installment,
+                                schdulDt : checkedItems[i].schdulDt,
+                                billType : checkedItems[i].billType,
+                                billAmt : checkedItems[i].billAmt,
+                                billingStus : checkedItems[i].billingStus,
+                                salesOrdId : checkedItems[i].salesOrdId
+                                }
+                    }
+                    j= j + 1;
+                }
+                
+                if(valid){
+                    AUIGrid.addRow(billingTargetGridId, rowList, "first");
+                    AUIGrid.removeCheckedRows(billingscheduleGridId);
+                    AUIGrid.setSorting(billingTargetGridId, sortingInfo);   
+                }else{
+                    Common.alert("Can not skip the previous unbilled schedules.");
+                }
+            }
+	    });
+		
+		$("#btnRemoveBillTarget").click(function(){
+			var checkedItems = AUIGrid.getCheckedRowItemsAll(billingTargetGridId);
+            var allItems = AUIGrid.getGridData(billingTargetGridId);
+            var valid = true;
+            
+            if (checkedItems.length > 0){
+                
+                var item = new Object();
+                var rowList = [];
+                var j = 0;
+                for (var i = checkedItems.length-1 ; i >= 0; i--){
+                    
+                    if(Number(allItems[allItems.length-1].installment - j) >  Number(checkedItems[i].installment)){
+                        valid = false;
+                    }else{
+                        rowList[i] = {
+                                salesOrdNo : checkedItems[i].salesOrdNo,
+                                installment : checkedItems[i].installment,
+                                schdulDt : checkedItems[i].schdulDt,
+                                billType : checkedItems[i].billType,
+                                billAmt : checkedItems[i].billAmt,
+                                billingStus : checkedItems[i].billingStus,
+                                salesOrdId : checkedItems[i].salesOrdId
+                                }
+                    }
+                    j = j + 1;
+                }
+                
+                if(valid){
+                    AUIGrid.addRow(billingscheduleGridId, rowList, "first");
+                    AUIGrid.removeCheckedRows(billingTargetGridId);
+                    AUIGrid.setSorting(billingscheduleGridId, sortingInfo);
+                }else{
+                    Common.alert("Remove latest one.");
+                }
+            }
+        });
+		
+		$("#createBills").click(function(){
+			$('#createBillsPop').show();
+        });
+		
+		$("#btnSave").click(function(){
+			
+			var orderId = $("#orderId").val();
+	        var orderNo = $("#orderNo").val();
+	        var remark = $("#remark").val();
+	        var invoiceRemark = $("#invoiceRemark").val();
+	        var srvCntrctId = $("#srvCntrctId").val();
+	        
+	        var data = {};
+	        var billList = AUIGrid.getGridData(billingTargetGridId);
+	        
+	        if(billList.length > 0) {
+	            data.all = billList;
+	        }else {
+	            return;
+	        }
+	        
+	        data.form = [{"orderId":orderId,"orderNo":orderNo,"remark":remark, "invoiceRemark":invoiceRemark, "srvCntrctId" : srvCntrctId}];
+	        
+	        Common.ajax("POST","/payment/saveCreateTaxesManualBillRentalMbrsh.do", data, function(result){
+	            console.log(result);
+	            fn_createBillsPopClose();
+	            AUIGrid.clearGridData(billingscheduleGridId);
+	            AUIGrid.clearGridData(billingTargetGridId);
+	            Common.alert(result.message);
+	        });
+	    });
+	});
+</script>
+<body>
+	<form action="" id="billingForm" name="billingForm">
+	    <input type="hidden" id="orderId" name="orderId">
+	    <input type="hidden" id="srvCntrctId" name="srvCntrctId">
+		<div id="wrap"><!-- wrap start -->
+			<section id="content"><!-- content start -->
+				<ul class="path">
+				    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+				    <li>Manual Billing </li>
+		            <li>Rental Membership Unbill</li>
+				</ul>
+				<aside class="title_line"><!-- title_line start -->
+					<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+					<h2>Rental Membership Unbill</h2>
+				</aside><!-- title_line end -->
+				<section class="search_table"><!-- search_table start -->
+					<table class="type1"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:190px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+					<tr>
+					    <th scope="row">Selected Order No.</th>
+					    <td>
+						    <input type="text"  id="orderNo" name="orderNo" title="" placeholder="" class="readonly" />
+						    <p class="btn_sky">
+						         <a href="javascript:fn_orderSearch();" id="search">Search</a>
+						    </p>
+					    </td>
+					</tr>
+					</tbody>
+					</table><!-- table end -->
+					<article id="grid_wrap" class="grid_wrap"></article>
+				</section><!-- search_table end -->
+				<div class="divine_auto"><!-- divine_auto start -->
+					<div style="width:50%;">
+						<aside class="title_line"><!-- title_line start -->
+						<h3>Billing Schedule</h3>
+						</aside><!-- title_line end -->
+						<div class="border_box" style="height:350px;"><!-- border_box start -->
+							<article id="grid_wrap2" class="grid_wrap"></article>
+							<ul class="left_btns">
+							    <li><p class="btn_blue2"><a href="#" id="btnAddToBillTarget">Add to Billing Target</a></p></li>
+							</ul>
+						</div><!-- border_box end -->
+					</div>
+					<div style="width:50%;">
+						<aside class="title_line"><!-- title_line start -->
+						<h3>Billing Target</h3>
+						</aside><!-- title_line end -->
+						<div class="border_box" style="height:350px;"><!-- border_box start -->
+							<article id="grid_wrap3" class="grid_wrap"></article>
+							<ul class="left_btns">
+							    <li><p class="btn_blue2"><a href="#" id="btnRemoveBillTarget">Remove From Billing Target</a></p></li>
+							    <li><p class="btn_blue2"><a href="#" id="createBills">Create Bills</a></p></li>
+							</ul>
+						</div><!-- border_box end -->
+					</div>
+				</div><!-- divine_auto end -->
+			</section><!-- content end -->
+			<hr />
+		</div><!-- wrap end -->
+	<div id="createBillsPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>Advance Bill Remark</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="" onclick="fn_createBillsPopClose();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		<section class="pop_body"><!-- pop_body start -->
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:140px" />
+				    <col style="width:*" />
+				    <col style="width:180px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Remark</th>
+					    <td colspan="3">
+					        <textarea cols="20" rows="5" placeholder="" id="remark"></textarea>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Invoice Remark</th>
+					    <td colspan="3">
+					        <textarea cols="20" rows="5" placeholder="" id="invoiceRemark"></textarea>
+					    </td>
+					</tr>
+				</tbody>
+				</table><!-- table end -->
+				<ul class="center_btns">
+				    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave">SAVE</a></p></li>
+				</ul>
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	</form>
+</body>

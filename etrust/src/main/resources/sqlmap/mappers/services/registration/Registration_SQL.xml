@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.coway.trust.biz.services.registration.impl.RegistrationMapper">
+
+    <insert id="insertHeatLog" parameterType="Map">
+        INSERT INTO SVC0023T (
+           RESULT_SEQ
+           , RESULT_CRT_USER_ID
+           , SALES_ORD_ID
+           , SVC_NO
+           , TEMPER_SETTING
+           , NORESULT_REM
+           , NEXT_APPT_DATE
+           , NEXT_APPT_TIME
+           , OWNER_CODE
+           , RESULT_CUST_NAME
+           , RESULT_IC_MOBILE_NO
+           , RESULT_EMAIL_NO
+           , ACCEPTANCE_NAME
+           , REN_COLCT_ID
+           , SIGN_DATA
+           , BS_RESULT_PART_ID
+           , EXCH_REASON_ID
+           , BS_RESULT_PART_QTY
+           ,CRT_USER_ID
+           , CRT_DT
+           , TRNSC_ID
+           , TRAN_STUS_CD
+        ) VALUES (
+           SVC0023T_RESULT_SEQ.NEXTVAL
+           , #{userId}
+           , #{salesOrderNo}
+           , #{serviceNo}
+           , #{temperatureSetting}
+           , #{resultRemark}
+           , #{nextAppointmentDate}
+           , #{nextAppointmentTime}
+           , #{ownerCode}
+           , #{resultCustName}
+           , #{resultIcMobileNo}
+           , #{resultReportEmailNo}
+           , #{resultAcceptanceName}
+           , #{rcCode}
+           , #{signData}
+           , #{filterCode}
+           , #{exchangeId}
+           , #{filterChangeQty}
+           , #{userId}
+           , SYSDATE
+           , #{transactionId}
+           , 'N'
+        )
+    </insert>
+
+   <update id="updateSuccessStatus" parameterType="string">
+      UPDATE SVC0023T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+   </update>
+
+</mapper>

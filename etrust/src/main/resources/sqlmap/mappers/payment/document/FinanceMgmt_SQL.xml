@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.document.service.impl.FinanceMgmtMapper">
+    
+    <!--Search Payment Order List(Master Grid) 리스트 조회  -->
+    <select id="selectReceiveList" parameterType="Map" resultType="egovMap">
+        SELECT Project1.ITM_ID ITM_ID  ,
+			       Project1.BATCH_ID BATCH_ID  ,
+			       Project1.ITM_STUS_ID ITM_STUS_ID  ,
+			       Project1.TRX_ID TRX_ID  ,
+			       Project1.AMT AMT  ,
+			       Project1.PAY_MODE_ID PAY_MODE_ID  ,
+			       Project1.IS_ONLINE IS_ONLINE  ,
+			       Project1.ORI_CC_NO ORI_CC_NO  ,
+			       Project1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+			       Project1.CC_EXPR CC_EXPR  ,
+			       Project1.BANK_ID BANK_ID  ,
+			       Project1.APPV_NO APPV_NO  ,
+			       Project1.REF_NO REF_NO  ,
+			       Project1.UPD_DT UPD_DT  ,
+			       Project1.UPD_USER_ID UPD_USER_ID  ,
+			       Project1.MID MID  ,
+			       Project1.BRNCH_ID BRNCH_ID  ,
+			       Project1.PAY_DT PAY_DT  ,
+			       Project1.ACC_ID ACC_ID  ,
+			       Project1.BATCH_NO BATCH_NO  ,
+			       Project1.BATCH_STUS_ID BATCH_STUS_ID  ,
+			       Project1.CRT_DT CRT_DT  ,
+			       Project1.CRT_USER_ID CRT_USER_ID  ,
+			       Project1.NAME NAME  ,
+			       Project1.CODE CODE  ,
+			       Project1.ACC_CODE ACC_CODE  ,
+			       Project1.CODE2 CODE2  ,
+			       Project1.NAME2 NAME2  ,
+			       Project1.CC_TYPE_ID CC_TYPE_ID  ,
+			       Project1.CODE_NAME1 CODE_NAME1  ,
+			       Project1.USER_NAME1 USER_NAME1  ,
+			       Project1.USER_NAME2 USER_NAME2  ,
+			       Project1.REF_DT REF_DT  
+		  FROM ( SELECT Filter1.ITM_ID ITM_ID  ,
+				                Filter1.BATCHID1 BATCH_ID  ,
+				                Filter1.ITM_STUS_ID ITM_STUS_ID  ,
+				                Filter1.TRX_ID TRX_ID  ,
+				                Filter1.AMT AMT  ,
+				                Filter1.PAY_MODE_ID PAY_MODE_ID  ,
+				                Filter1.IS_ONLINE IS_ONLINE  ,
+				                Filter1.ORI_CC_NO ORI_CC_NO  ,
+				                Filter1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+				                Filter1.CC_EXPR CC_EXPR  ,
+				                Filter1.BANKID1 BANK_ID  ,
+				                Filter1.APPV_NO APPV_NO  ,
+				                Filter1.REF_NO REF_NO  ,
+				                Filter1.UPDATED1 UPD_DT  ,
+				                Filter1.UPDATOR1 UPD_USER_ID  ,
+				                Filter1.MID MID  ,
+				                Filter1.BRANCHID1 BRNCH_ID  ,
+				                Filter1.PAY_DT PAY_DT  ,
+				                Filter1.ACC_ID ACC_ID  ,
+				                Filter1.BATCH_NO BATCH_NO  ,
+				                Filter1.BATCH_STUS_ID BATCH_STUS_ID  ,
+				                Filter1.CREATED1 CRT_DT  ,
+				                Filter1.CREATOR1 CRT_USER_ID  ,
+				                Filter1.NAME1 NAME  ,
+				                Filter1.CODE1 CODE  ,
+				                CASE WHEN ( Extent10.ACC_ID IS NOT NULL ) THEN Extent10.ACC_CODE ELSE ' ' END ACC_CODE  ,
+				                CASE WHEN ( Filter1.BANKID2 IS NOT NULL ) THEN Filter1.CODE2 ELSE ' ' END CODE2  ,
+				                Filter1.CODE3 || ' - ' || Filter1.NAME2 NAME2  ,
+				                CASE WHEN ( Filter1.CC_TYPE_ID IS NOT NULL ) THEN Filter1.CC_TYPE_ID ELSE 0 END CC_TYPE_ID  ,
+				                CASE WHEN ( Filter1.CODEID1 IS NOT NULL ) THEN Filter1.CODENAME1 ELSE ' ' END CODE_NAME1  ,
+				                CASE WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1 ELSE ' ' END USER_NAME1  ,
+				                CASE WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2 ELSE ' ' END USER_NAME2  ,
+				                CASE WHEN ( TO_CHAR(Filter1.REF_DT, 'YYYY-MM-DD HH:MI:SS') IS NOT NULL ) THEN TO_CHAR(Filter1.REF_DT, 'YYYY-MM-DD HH:MI:SS')ELSE '1900-01-01 00:00:00' END REF_DT  ,
+			                    ROW_NUMBER() OVER ( ORDER BY Filter1.ITM_ID ASC  ) ROW_NUMBER  
+			           FROM ( SELECT Extent1.ITM_ID ITM_ID  ,
+					                       Extent1.BATCH_ID BATCHID1  ,
+					                       Extent1.ITM_STUS_ID ITM_STUS_ID  ,
+					                       Extent1.TRX_ID TRX_ID  ,
+					                       Extent1.AMT AMT  ,
+					                       Extent1.PAY_MODE_ID PAY_MODE_ID  ,
+					                       Extent1.IS_ONLINE IS_ONLINE  ,
+					                       Extent1.ORI_CC_NO ORI_CC_NO  ,
+					                       Extent1.CC_TYPE_ID CC_TYPE_ID  ,
+					                       Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+					                       Extent1.CC_EXPR CC_EXPR  ,
+					                       Extent1.BANK_ID BANKID1  ,
+					                       Extent1.REF_DT REF_DT  ,
+					                       Extent1.APPV_NO APPV_NO  ,
+					                       Extent1.REF_NO REF_NO  ,
+					                       Extent1.UPD_DT UPDATED1  ,
+					                       Extent1.UPD_USER_ID UPDATOR1  ,
+					                       Extent1.MID MID  ,
+					                       Extent1.BRNCH_ID BRANCHID1  ,
+					                       Extent1.PAY_DT PAY_DT  ,
+					                       Extent1.ACC_ID ACC_ID  ,
+					                       Extent2.BATCH_NO BATCH_NO  ,
+					                       Extent2.BATCH_STUS_ID BATCH_STUS_ID  ,
+					                       Extent2.CRT_DT CREATED1  ,
+					                       Extent2.CRT_USER_ID CREATOR1  ,
+					                       Extent3.NAME NAME1  ,
+					                       Extent4.CODE CODE1  ,
+					                       Extent5.CODE CODE3  ,
+					                       Extent5.NAME NAME2  ,
+					                       Extent6.BANK_ID BANKID2  ,
+					                       Extent6.CODE CODE2  ,
+					                       Extent7.CODE_ID CODEID1  ,
+					                       Extent7.CODE_NAME CODENAME1  ,
+					                       Extent8.USER_ID USERID1  ,
+					                       Extent8.USER_NAME USERNAME1  ,
+					                       Extent9.USER_ID USERID2  ,
+					                       Extent9.USER_NAME USERNAME2  
+			                         FROM PAY0097D Extent1
+					                       JOIN PAY0170M Extent2   ON Extent2.BATCH_ID = Extent1.BATCH_ID
+					                       JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.ITM_STUS_ID
+					                       JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.PAY_MODE_ID
+					                       JOIN SYS0005M Extent5   ON Extent5.BRNCH_ID = Extent1.BRNCH_ID
+					                       LEFT JOIN SYS0004M Extent6   ON Extent6.BANK_ID = Extent1.BANK_ID
+					                       LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.CC_TYPE_ID
+					                       LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent2.CRT_USER_ID
+					                       LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.UPD_USER_ID
+			                     WHERE  ( 0 = Extent1.IS_ONLINE )
+			                          AND ( 1 = Extent2.BATCH_STUS_ID )
+			                          AND ( Extent1.ITM_STUS_ID IN ( 33,79 )
+			                         ) ) Filter1
+			                LEFT JOIN SYS0001M Extent10   ON Extent10.ACC_ID = Filter1.ACC_ID
+			          WHERE  Filter1.PAY_MODE_ID = #{rPaymode}) Project1
+			 WHERE  Project1.ROW_NUMBER > 0
+			 ORDER BY Project1.ITM_ID ASC
+    </select>
+    
+    <select id="selectCreditCardList" parameterType="Map" resultType="egovMap">
+            SELECT GroupBy1.K1 TRX_ID  ,
+		       GroupBy1.K2 PAY_MODE_ID  ,
+		       GroupBy1.K3 IS_ONLINE  ,
+		       GroupBy1.K4 ORI_CC_NO  ,
+		       GroupBy1.K5 CC_TYPE_ID  ,
+		       GroupBy1.K6 CC_HOLDER_NAME  ,
+		       GroupBy1.K7 CC_EXPR  ,
+		       GroupBy1.K8 BANK_ID  ,
+		       GroupBy1.K9 APPV_NO  ,
+		       GroupBy1.K10 REF_NO  ,
+		       GroupBy1.K11 BRNCH_ID  ,
+		       GroupBy1.K12 MID  ,
+		       GroupBy1.K13 ACC_ID  ,
+		       GroupBy1.K14 ACC_CODE  ,
+		       GroupBy1.K16 PAY_DT  ,
+		       Extent2.CODE CODE  ,
+		       0 C2  ,
+		       0 C3  ,
+		       1 C4  ,
+		       '' C5  ,
+		       CASE WHEN ( GroupBy1.A1 IS NOT NULL ) THEN TO_NUMBER(GroupBy1.A1) ELSE TO_NUMBER(0) END AMT  ,
+		       CASE WHEN ( Extent3.CODE_ID IS NOT NULL ) THEN Extent3.CODE_NAME ELSE '' END CODE_NAME  ,
+		       CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE ELSE '' END CODE2,  
+		       CASE WHEN ( GroupBy1.K15 IS NOT NULL ) THEN GroupBy1.K15 ELSE '1900-01-01 00:00:00'END REF_DT  
+		  FROM ( SELECT Project1.TRX_ID K1  ,
+		                Project1.PAY_MODE_ID K2  ,
+		                Project1.IS_ONLINE K3  ,
+		                Project1.ORI_CC_NO K4  ,
+		                Project1.CC_TYPE_ID K5  ,
+		                Project1.CC_HOLDER_NAME K6  ,
+		                Project1.CC_EXPR K7  ,
+		                Project1.BANK_ID K8  ,
+		                Project1.APPV_NO K9  ,
+		                Project1.REF_NO K10  ,
+		                Project1.BRNCH_ID K11  ,
+		                Project1.MID K12  ,
+		                Project1.ACC_ID K13  ,
+		                Project1.ACC_CODE K14  ,
+		                Project1.C1 K15  ,
+		                Project1.C2 K16  ,
+		                SUM(Project1.AMT)  A1  
+		         FROM ( SELECT Extent1.TRX_ID TRX_ID  ,
+		                       Extent1.PAY_MODE_ID PAY_MODE_ID  ,
+		                       Extent1.IS_ONLINE IS_ONLINE  ,
+		                       Extent1.ORI_CC_NO ORI_CC_NO  ,
+		                       Extent1.CC_TYPE_ID CC_TYPE_ID  ,
+		                       Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                       Extent1.CC_EXPR CC_EXPR  ,
+		                       Extent1.BANK_ID BANK_ID  ,
+		                       Extent1.APPV_NO APPV_NO  ,
+		                       Extent1.REF_NO REF_NO  ,
+		                       Extent1.BRNCH_ID BRNCH_ID  ,
+		                       Extent1.MID MID  ,
+		                       Extent1.AMT AMT  ,
+		                       Extent1.ACC_ID ACC_ID  ,
+		                       Extent1.ACC_CODE ACC_CODE  ,
+		                       CASE WHEN ( Extent1.REF_DT IS NOT NULL ) THEN TO_CHAR(Extent1.REF_DT, 'YYYY-MM-DD HH:MI:SS') ELSE '1900-01-01 00:00:00' END C1  ,
+		                       CASE WHEN ( Extent1.PAY_DT IS NOT NULL ) THEN TO_CHAR(Extent1.PAY_DT, 'YYYY-MM-DD HH:MI:SS') ELSE '1900-01-01 00:00:00' END C2  
+		                FROM ( SELECT vPayDocumentControlWaitingItem.TRX_ID TRX_ID  ,
+		                              vPayDocumentControlWaitingItem.PAY_MODE_ID PAY_MODE_ID  ,
+		                              vPayDocumentControlWaitingItem.IS_ONLINE IS_ONLINE  ,
+		                              vPayDocumentControlWaitingItem.ORI_CC_NO ORI_CC_NO  ,
+		                              vPayDocumentControlWaitingItem.CC_TYPE_ID CC_TYPE_ID  ,
+		                              vPayDocumentControlWaitingItem.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                              vPayDocumentControlWaitingItem.CC_EXPR CC_EXPR  ,
+		                              vPayDocumentControlWaitingItem.BANK_ID BANK_ID  ,
+		                              vPayDocumentControlWaitingItem.REF_DT REF_DT  ,
+		                              vPayDocumentControlWaitingItem.APPV_NO APPV_NO  ,
+		                              vPayDocumentControlWaitingItem.REF_NO REF_NO  ,
+		                              vPayDocumentControlWaitingItem.BRNCH_ID BRNCH_ID  ,
+		                              vPayDocumentControlWaitingItem.MID MID  ,
+		                              vPayDocumentControlWaitingItem.AMT AMT  ,
+		                              vPayDocumentControlWaitingItem.PAY_DT PAY_DT  ,
+		                              vPayDocumentControlWaitingItem.ACC_ID ACC_ID  ,
+		                              vPayDocumentControlWaitingItem.ACC_CODE ACC_CODE  
+		                       FROM PAY1010V vPayDocumentControlWaitingItem ) Extent1
+		                 WHERE  ( Extent1.PAY_MODE_ID = #{cPaymode} )
+		                          AND ( 0 = Extent1.IS_ONLINE )
+		                          AND ( Extent1.BRNCH_ID = #{cBranch} ) 
+		                         ) Project1
+		           GROUP BY Project1.TRX_ID,
+		           Project1.PAY_MODE_ID,Project1.IS_ONLINE,Project1.ORI_CC_NO,Project1.CC_TYPE_ID,Project1.CC_HOLDER_NAME,Project1.CC_EXPR,Project1.BANK_ID,Project1.APPV_NO,Project1.REF_NO,
+		           Project1.BRNCH_ID,
+		           Project1.MID,
+		           Project1.ACC_ID,
+		           Project1.ACC_CODE,
+		           Project1.C1,
+		           Project1.C2
+		            ) GroupBy1
+		         JOIN SYS0013M Extent2   ON Extent2.CODE_ID = GroupBy1.K2
+		         LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = GroupBy1.K5
+		         LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = GroupBy1.K8
+		  ORDER BY GroupBy1.K1 ASC
+            
+    </select>
+   <!-- <select id="selectExistLogMList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.FILE_ID FILE_ID  ,
+			       Extent1.FILE_NAME FILE_NAME  ,
+			       Extent1.FILE_DT FILE_DT  ,
+			       Extent1.FILE_REF_NO FILE_REF_NO  ,
+			       Extent1.TOT_RCORD TOT_RCORD  ,
+			       Extent1.TOT_AMT TOT_AMT  ,
+			       Extent1.FILE_STUS FILE_STUS
+		  FROM CMM0052M Extent1
+	   WHERE  Extent1.FILE_REF_NO LIKE '%' || #{fileRefNo} || '%'
+    </select>
+    
+    <insert id="insertMaster" parameterType="Map">
+        <selectKey keyProperty="fileId" resultType="int" order="BEFORE">
+            SELECT CMM0052M_FILE_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO CMM0052M
+		( 
+		  FILE_ID, 
+		  FILE_NAME, 
+		  FILE_DT, 
+		  FILE_REF_NO, 
+		  TOT_RCORD, 
+		  TOT_AMT, 
+		  FILE_STUS
+		)
+		VALUES 
+		( 
+		  #{fileId}, 
+		  #{fileName}, 
+		  TO_DATE(#{fileDate}, 'YYYY-MM-DD HH:MI:SS'), 
+		  #{fileRefNo},
+		  #{totalRecords}, 
+		  #{totalAmount}, 
+		  #{fileStatus} 
+		)
+    </insert>
+    
+    <insert id="insertDetail" parameterType="Map">
+        INSERT INTO CMM0051D
+		(
+		   ITM_ID, 
+		   FILE_ID, 
+		   ORD_NO, 
+		   MEM_CODE, 
+		   AMT, 
+		   SYNC_CMPLT, 
+		   PAID_MONTH 
+		)
+		VALUES
+	   ( 
+	       CMM0051D_ITM_ID_SEQ.NEXTVAL, 
+	       #{fileId}, 
+	       #{orderNo}, 
+	       #{memberCode}, 
+	       #{amount}, 
+	       #{syncCompleted}, 
+	       #{paidMonth} 
+	   )
+    </insert>
+    
+    <select id="selectMasterView" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.TRX_ID TRX_ID  ,
+			       Extent1.TRX_DT TRX_DT  ,
+			       Extent1.TRX_AMT TRX_AMT  ,
+			       Extent1.PAY_ID PAY_ID  ,
+			       Extent1.OR_NO OR_NO  ,
+			       Extent1.TR_NO TR_NO  ,
+			       Extent1.PAY_DT PAY_DT  ,
+			       Extent1.LAST_UPD_DT LAST_UPD_DT  ,
+			       Extent1.PAY_TYPE_ID PAY_TYPE_ID  ,
+			       Extent1.PAY_TYPE_NAME PAY_TYPE_NAME  ,
+			       Extent1.LAST_UPD_USER_ID LAST_UPD_USER_ID  ,
+			       Extent1.LAST_UPD_USER_NAME LAST_UPD_USER_NAME  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+			       Extent1.OR_AMT OR_AMT  ,
+			       Extent1.PO_NO PO_NO  ,
+			       Extent1.CLCTR_BRNCH_ID CLCTR_BRNCH_ID  ,
+			       Extent1.CLCTR_BRNCH_CODE CLCTR_BRNCH_CODE  ,
+			       Extent1.CLCTR_BRNCH_NAME CLCTR_BRNCH_NAME  ,
+			       Extent1.CUST_ID CUST_ID  ,
+			       Extent1.CUST_NAME CUST_NAME  ,
+			       Extent1.CUST_IC CUST_IC  ,
+			       Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
+			       Extent1.CUST_TYPE_NAME CUST_TYPE_NAME  ,
+			       Extent1.PRODUCT_CTGRY_ID PRODUCT_CTGRY_ID  ,
+			       Extent1.PRODUCT_CTGRY_NAME PRODUCT_CTGRY_NAME  ,
+			       Extent1.PRODUCT_ID PRODUCT_ID  ,
+			       Extent1.PRODUCT_CODE PRODUCT_CODE  ,
+			       Extent1.PRODUCT_DESC PRODUCT_DESC  ,
+			       Extent1.KEYIN_USER_ID KEYIN_USER_ID  ,
+			       Extent1.KEYIN_USER_NAME KEYIN_USER_NAME  ,
+			       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+			       Extent1.APP_TYPE_NAME APP_TYPE_NAME  ,
+			       Extent1.CLCTR_NAME CLCTR_NAME  ,
+			       Extent1.CLCTR_CODE CLCTR_CODE  ,
+			       Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+			       Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+			       Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+			       Extent1.DEBTOR_ACC_ID DEBTOR_ACC_ID  ,
+			       Extent1.DEBTOR_ACC_CODE DEBTOR_ACC_CODE  ,
+			       Extent1.DEBTOR_ACC_DESC DEBTOR_ACC_DESC  ,
+			       Extent1.SALES_MEM_ID SALES_MEM_ID  ,
+			       Extent1.SALES_MEM_CODE SALES_MEM_CODE  ,
+			       Extent1.SALES_MEM_NAME SALES_MEM_NAME  ,
+			       Extent1.VIRTL_ACC_NO VIRTL_ACC_NO  ,
+			       Extent1.HP_CODE HP_CODE  ,
+			       Extent1.HP_NAME HP_NAME  ,
+			       Extent1.HP_ID HP_ID  ,
+			       Extent1.CLCTR_ID CLCTR_ID  ,
+			       Extent1.ALLOW_COMM ALLOW_COMM  ,
+			       Extent1.ADV_MONTH ADV_MONTH  ,
+			       Extent1.TR_ISSU_DT TR_ISSU_DT  ,
+			       Extent1.BATCH_PAY_ID BATCH_PAY_ID  
+		  FROM PAY1001V Extent1
+		WHERE Extent1.TR_NO = #{fileRefNo}
+        
+    </select>
+    
+    <select id="selectLogDetail" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.ITM_ID ITM_ID  ,
+			       Extent1.FILE_ID FILE_ID  ,
+			       Extent1.ORD_NO ORD_NO  ,
+			       Extent1.MEM_CODE MEM_CODE  ,
+			       Extent1.AMT AMT  ,
+			       CASE WHEN(Extent1.SYNC_CMPLT = 1) THEN 'true' ELSE 'false' END SYNC_CMPLT  ,
+			       Extent1.PAID_MONTH PAID_MONTH  
+		  FROM CMM0051D Extent1
+	   WHERE  Extent1.FILE_ID = #{fileId}
+    </select>
+    
+    <select id="selectDetailForPaymentResult" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+			       Extent1.PAY_ID PAY_ID  ,
+			       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
+			       Extent2.CODE_NAME CODE_NAME  ,
+			       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+			       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+			       CASE WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO ELSE ' ' END PAY_ITM_ORI_CC_NO  ,
+			       Extent1.PAY_ITM_ENCRYPT_CC_NO PAY_ITM_ENCRYPT_CC_NO  ,
+			       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
+			       Extent3.CODE_NAME CODENAME1  ,
+			       Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
+			       Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
+			       Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
+			       Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
+			       CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE ELSE ' ' END BANK  ,
+			       Extent4.NAME NAME  ,
+			       Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
+			       CASE WHEN (Extent1.PAY_ITM_IS_ONLINE = 1) THEN 'true' ELSE 'false' END PAY_ITM_IS_ONLINE  ,
+			       Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
+			       CASE WHEN ( Extent5.ACC_ID IS NOT NULL ) THEN Extent5.ACC_CODE ELSE ' ' END ACC  ,
+			       Extent5.ACC_DESC ACC_DESC  ,
+			       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
+			       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+			       Extent1.PAY_ITM_REM PAY_ITM_REM  ,
+			       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
+			       Extent6.NAME NAME1  ,
+			       CASE WHEN(Extent1.PAY_ITM_IS_LOK = 1) THEN 'true' ELSE 'false' END PAY_ITM_IS_LOK  ,
+			       Extent1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
+			       Extent1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
+			       Extent1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
+			       Extent1.PAY_ITM_MID PAY_ITM_MID  ,
+			       Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
+			       Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
+			       Extent1.ETC3 ETC3  ,
+			       CASE WHEN ( Extent1.PAY_ITM_EFT_NO IS NOT NULL ) THEN Extent1.PAY_ITM_EFT_NO ELSE ' ' END PAY_ITM_EFT_NO  ,
+			       CASE WHEN ( Extent1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN Extent1.PAY_ITM_RUNNG_NO ELSE ' ' END PAY_ITM_RUNNG_NO  ,
+			       CASE WHEN ( Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN Extent1.PAY_ITM_CARD_TYPE_ID ELSE 0 END PAY_ITM_CARD_TYPE_ID  ,
+			       CASE WHEN ( Extent7.CODE_ID IS NOT NULL ) THEN Extent7.CODE_NAME ELSE ' ' END CODE  ,
+			       CASE WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN CASE 
+			            WHEN ( 1298 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'On'
+			            WHEN ( 1299 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'Off'
+			            WHEN ( 1300 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'PNP' 
+			            ELSE '-' END 
+			            WHEN ( 1 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'On'
+			            WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off' ELSE '-' END PAYITEMONLINE  
+			  FROM PAY0065D Extent1
+			         LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_ITM_MODE_ID
+			         LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PAY_ITM_CC_TYPE_ID
+			         LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = Extent1.PAY_ITM_ISSU_BANK_ID
+			         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent1.PAY_ITM_BANK_ACC_ID
+			         LEFT JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
+			         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
+			 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
+			          AND ( Extent1.PAY_ID = #{payId} )
+        
+    </select>
+    <resultMap id="createPayment" type="egovMap"></resultMap>
+    <select id="createPaymentProcedure" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_PAY_CMMS_DEDUCT(#{fileId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillMap})}
+    </select>-->
+</mapper>

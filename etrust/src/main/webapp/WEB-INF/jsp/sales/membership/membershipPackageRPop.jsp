@@ -1,0 +1,265 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<script type="text/javaScript" language="javascript">
+
+
+var packageInfo={};
+
+$(document).ready(function(){
+    fn_selectCodel();
+});
+
+
+
+
+//PackID=" + packID + "&PackItemID=" + packItemID;
+//리스트 조회.
+function fn_selectListAjax() {       
+	
+	var packItemID = '${packItemID}';
+	var packID = '${packID}';
+	
+	Common.ajax("GET", "/sales/mPackages/selectPopUpList", {SRV_PAC_ITM_ID:packItemID }, function(result) {
+	  
+		
+	     console.log(result);
+	      
+	      
+	      if (result[0] != null) {
+	    	  
+	    	  packageInfo = result[0];
+	    	    
+              
+	    	  $('#packcode option[value="' + packageInfo.srvPacItmProductId +'"]').prop('selected', true);
+	    	
+	    	  $("#srvPacItmRental").val(packageInfo.srvPacItmRental);  
+	    	  $("#srvPacItmSvcFreq").val(packageInfo.srvPacItmSvcFreq);  
+	    	  $("#remark").val(packageInfo.srvPacItemRemark);
+	    	  
+	        }
+	});
+}
+
+
+
+
+
+function fn_IsExistSVMContractPackCode() {       
+   //this.txtCode.Text.Trim(), excludePackID)
+	Common.ajaxSync("GET", "/sales/mPackages/isExistSVMPackCode", {SRV_PAC_ITM_ID: '${packID}'  }, function(result) {
+    
+		console.log(result);
+		
+		if(result !=""  && null !=result ){
+			
+			return true;
+		}else{
+			return false;
+		}
+		
+		
+    });
+}
+
+
+
+function fn_save(){
+	
+	
+	if( ! fn_ValidRequiredField_Master()) return ;
+	
+	var  packItemID = '${packItemID}';
+	var  modType  = '${modType}';
+
+	var saveForm ={
+              mod :modType,
+    		 srvPacItemID : packItemID,
+    	     srvContractPacID : '${packID}'  ,  
+    	     srvPacItemProductID :   $('select[name="packcode"]').val(),
+    	     srvPacItemServiceFreq : $("#srvPacItmSvcFreq").val(),
+    	     srvPacItemRental :  $("#srvPacItmRental").val(),
+    	     srvPacItemPV :  0,
+    	     srvPacItemRemark :  $("#remark").val().trim(),
+    	     srvPacItemStatusID : 1
+
+    };
+
+    Common.ajax("POST", "/sales/mPackages/insertPackage.do", saveForm, function(result) {
+        
+           Common.alert("Product Item Saved "+DEFAULT_DELIMITER + "<b>Product item successfully saved.</b>");
+           fn_DisableField();
+
+       }, function(jqXHR, textStatus, errorThrown) {
+           Common.alert("실패하였습니다.");
+           console.log("실패하였습니다.");
+           console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+           
+           Common.alert("Failed To Save "+DEFAULT_DELIMITER + "<b>Failed to save.Please try again later.</b>");
+
+           console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+           
+       }); 
+	
+}
+
+
+
+
+function fn_ValidRequiredField_Master(){
+	
+	var valid =true;
+	var message ="";
+	
+	
+	if($('select[name="packcode"]').val()  ==""){
+	
+		  valid = false;
+	      message += "* Please key select a product item. <br />";
+	}
+	
+	if($("#srvPacItmRental").val() ==""){
+		 valid = false;
+	        message += "* Please key in the monthly rental fee. <br />";
+	}  
+	
+    if($("#srvPacItmSvcFreq").val() ==""){
+    	  valid = false;
+          message += "* Please key in the service frequency <br />";
+    }  
+    
+    
+    if (!valid)
+        Common.alert("Add Package  "+DEFAULT_DELIMITER + message);
+
+    
+    return valid;
+}
+
+
+//리스트 조회.
+function fn_selectCodel() {        
+Common.ajax("GET", "/sales/mPackages/selectCodel", $("#sForm").serialize(), function(result) {
+      console.log(result);
+      
+      
+      if(null !=result ){
+    	
+    	  var  gList = Array();
+    	  
+    	  var  cList =Array();
+    	  
+    	  if (typeof(result.groupCodeList) != 'undefined' && result.groupCodeList !== null) {
+              for (var k in result.groupCodeList) {
+            	  gList[k] = result.groupCodeList[k].codeName;
+              }
+          }
+    	    
+   	     $.each(gList, function(index, value){
+   	         $("#packcode").append('<optgroup label="'+value+'"  id="optgroup_'+index+'" >');
+   		     
+	   		      for(var k in result.codeList ){
+	   		    	  if( typeof(result.codeList[k]) != 'undefined' && result.codeList[k].groupcd !== null  ){
+	   		    		  
+	   		    		  if(result.codeList[k].groupcd  == value ){
+	   		    		    // console.log(result.codeList[k]);
+	   		    	         $('<option />', {
+	   		    	              value : result.codeList[k].codeid ,
+	   		    	              text: result.codeList[k].codename 
+	   		    	         }).appendTo($("#optgroup_"+index)); 
+
+	                       }
+	   		    	  }
+	   		      }
+	   		      
+   		      $("#packcode").append('</optgroup>');
+   	    });
+   	     
+   	    $("optgroup").attr("class" , "optgroup_text");
+   	    
+   	     fn_selectListAjax();
+      }
+   });
+   
+  
+}
+
+
+
+function fn_DisableField(){
+	
+    $("#packcode").attr("disabled" ,"disabled");
+    $("#srvPacItmRental").attr("disabled" ,"disabled");
+    $("#srvPacItmSvcFreq").attr("disabled" ,"disabled");
+    $("#remark").attr("disabled" ,"disabled");
+    $("#savebt").attr("style" ,"display:none");
+}
+
+
+</script>
+
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>EDIT  PRODUCT ITEM </h1>
+<ul class="right_opt">
+	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<section class="tap_wrap"><!-- tap_wrap start -->
+<ul class="tap_type1">
+	
+	<li><a href="#">Product Infomation</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:190px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Product Item<span class="must">*</span></th>
+	<td> 
+	<select class="w100p"  id='packcode' name='packcode'  > </select>
+    <td>
+	<th scope="row">Monthly Rental <span class="must">*</span></th>
+	<td><input type="text" title="" placeholder="Monthly Rental" class="w100p" id="srvPacItmRental"  name="srvPacItmRental"/></td>
+</tr>
+<tr>
+	<th scope="row">Package Description<span class="must">*</span></th>
+	<td colspan="3"><input type="text" title="" placeholder="Service Frequency" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
+</tr>
+<tr>
+    <th scope="row">Remark </th>
+    <td colspan="3"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" name='remark'></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</form>
+</section><!-- search_table end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#" id='savebt'   onclick="javascript:fn_save()">Save</a></p></li>
+</ul>
+
+</article><!-- tap_area end -->
+
+
+</section><!-- tap_wrap end -->
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->
