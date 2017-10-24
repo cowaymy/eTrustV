@@ -1064,6 +1064,9 @@
     </select>
 
     <select id="selectLast6MonthTransListNew" parameterType="Map" resultType="egovMap">
+		WITH DUMMY_TITLE AS (
+		    SELECT '1' AS TYPE FROM DUAL
+		)
 		SELECT 'Type'                                       AS TYPE
 		     , 'Current Month'                              AS CUR_MONTH
 		     , TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'MM/YYYY') AS PREV_1_MONTH
@@ -1105,8 +1108,10 @@
 		                     THEN RENT_AMT
 		                   ELSE 0
 		              END AS PREV_5_MONTH
-		         FROM PAY0022D
-		        WHERE TO_CHAR(RENT_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+		         FROM DUMMY_TITLE T1
+		         LEFT OUTER
+		         JOIN PAY0022D
+		           ON TO_CHAR(RENT_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
 		          AND ( RENT_DOC_NO LIKE '%OR%'
 		             OR RENT_DOC_TYPE_ID = 155
 		             OR RENT_DOC_TYPE_ID = 157 )
@@ -1147,8 +1152,10 @@
 		                     THEN TRADE_AMT
 		                   ELSE 0
 		              END AS PREV_5_MONTH
-		         FROM PAY0035D
-		        WHERE TO_CHAR(TRADE_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+		         FROM DUMMY_TITLE T1
+		         LEFT OUTER
+		         JOIN PAY0035D
+		           ON TO_CHAR(TRADE_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
 		          AND ( TRADE_DOC_NO LIKE '%OR%'
 		             OR TRADE_DOC_TYPE_ID = 155
 		             OR TRADE_DOC_TYPE_ID = 157 )
