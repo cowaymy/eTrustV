@@ -70,13 +70,13 @@ function fnSetStockDropDownList(callBack)
                     for (var i = 0; i < result.length; i++)
                     {
                       var list = new Object();
-                          list.id = result[i].stkDesc;  // view
-                          list.value = result[i].stkCode ;  //value
+                          list.id = result[i].stkDesc ;  // display 
+                          list.value = result[i].stkDesc;  // true value
                           keyValueList.push(list);
                     }
 
                     console.log("keyValueList_length: " + keyValueList.length);
-                    console.log("keyValueList_sktCode: " + keyValueList[0]["id"] );
+                    console.log("keyValueList_sktCode: " + keyValueList[0]["id"] );  // view
                     
                     //if you need callBack Function , you can use that function
                     /* if (callBack) {
@@ -238,7 +238,7 @@ var masterManagerLayout =
     [         
       {  //Stock
         headerText : "<spring:message code='sys.scm.mastermanager.Stock'/>",
-        width : "35%",
+        width : "45%",
         children   : [ 
                          {
                             dataField : "stkCtgryCode",
@@ -264,24 +264,39 @@ var masterManagerLayout =
 		                            {
 		                              return keyValueList;
 		                            },
-		                            keyField : "id",
-		                            valueField : "value",
+		                            keyField : "id",       
+	                              valueField : "value",  
+
+		                            //keyField : "id",       // sktDesc == display
+	                              //valueField : "value",  // stkCode == true value
+
+		                            
+		                            //list.id = result[i].stkDesc ;  // display 
+		                            //list.value = result[i].stkCode;  // true value
 		                        },
-	                          labelFunction : function(  rowIndex, columnIndex, value, headerText, item )
-                            {
-	                             var retStr = value;
-	                             var iCnt = keyValueList.length;
-	
-	                             for(var iLoop = 0; iLoop < iCnt; iLoop++)
-	                             {
-	                               if(keyValueList[iLoop]["id"] == value)
+		                        labelFunction : function(  rowIndex, columnIndex, value, headerText, item )
+	                            {  // as click excute.
+	                               var retStr = value;
+	                               var iCnt = keyValueList.length;
+	                               console.log("label_func: " + value)  // view == value(display).
+	                               console.log("ID[0] : " + keyValueList[0]["id"])  // id == value(display) == view.
+	                               console.log("value[0] : " + keyValueList[0]["value"])  // 실질적인 값
+	                               
+	                               for(var iLoop = 0; iLoop < iCnt; iLoop++)
 	                               {
-	                                 retStr = keyValueList[iLoop]["value"];
-	                                 break;
+	                                 if(keyValueList[iLoop]["id"] == value)
+	                                 {
+	                                   console.log("Loop_ID[0] : " + keyValueList[iLoop]["id"])  // id == value(display) == view.
+	                                   console.log("Loop_value[0] : " + keyValueList[iLoop]["value"])  // 실질적인 값
+	                                     
+	                                   retStr = keyValueList[iLoop]["value"]; // 실질적인값.
+	                                   console.log("Break__: " + retStr);
+	                                   break;
+	                                 }
 	                               }
-	                             }
-	                             return retStr;
-	                          }
+	                               console.log("retStrL " + retStr);
+	                               return retStr;
+	                            } 
                          }
                      ]
       } 
@@ -343,7 +358,7 @@ var masterManagerLayout =
       }       
      ,{  //Supply Plan
           headerText : "<spring:message code='sys.scm.mastermanager.SupplyPlan'/>",
-          width : "45%",
+          //width : "45%",
           children   : [ 
                            {    //Supply Plan Target    
                               headerText : "<spring:message code='sys.scm.mastermanager.SupplyPlanTarget'/>",
@@ -511,9 +526,11 @@ $(document).ready(function()
             usePaging : true,
             useGroupingPanel : false,
             showRowNumColumn : false,  // 그리드 넘버링
-            showStateColumn : false, // 행 상태 칼럼 보이기
+            showStateColumn : true, // 행 상태 칼럼 보이기
             enableRestore : true,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+            // 한 화면에 출력되는 행 개수 30개로 지정
+            pageRowCount : 20,
             fixedColumnCount    : 4, 
           };
 
@@ -641,12 +658,12 @@ $(document).ready(function()
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="javascript:void(0);">Add New</a></p></li>
+	<li><p class="btn_grid btn_disabled"><a href="javascript:void(0);">Add New</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="masterManagerDiv"></div>
+ <div id="masterManagerDiv" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
