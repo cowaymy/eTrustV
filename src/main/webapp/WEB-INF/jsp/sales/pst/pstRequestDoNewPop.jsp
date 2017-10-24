@@ -2,33 +2,95 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 
-	$(document).ready(function(){
-	    
-	    //Call Ajax
-//	    fn_getDealerListAjax();
-	  
-    doGetCombo('/sales/pst/getInchargeList', '', '','cmbPstIncharge', 'S' , ''); //Incharge Person
+    //AUIGrid 생성 후 반환 ID
+    var myStkGridID;
+    var totUnitVal = 0;
+    var totAmountVal = 0;
+    
+    $(document).ready(function(){
+        
+        //Call Ajax
+//      fn_getDealerListAjax();
+        
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        doGetCombo('/sales/pst/getInchargeList', '', '','cmbPstIncharge', 'S' , ''); //Incharge Person
 
-	});
+    });
 
-	function fn_dealerInfo(){
+    function createAUIGrid() {
+        // AUIGrid 칼럼 설정
+        
+        // 데이터 형태는 다음과 같은 형태임,
+        //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
+        var columnLayout = [{
+                dataField : "pstItmStkDesc",
+                headerText : "Stock Description",
+                editable : false
+            }, {
+                dataField : "pstItmPrc",
+                headerText : "Item Price",
+                width : 110,
+                editable : false
+            }, {
+                dataField : "pstItmReqQty",
+                headerText : "Quantity",
+                width : 110,
+                editable : false
+            }, {
+                dataField : "pstItmTotPrc",
+                headerText : "Item Total Price",
+                width : 170,
+                editable : false
+            }, {
+                dataField : "pstItmStkId",
+                visible : false
+            }];
+       
+        // 그리드 속성 설정
+        var gridPros = {
+            // 페이징 사용       
+            usePaging : true,
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            fixedColumnCount    : 1,            
+            showStateColumn     : false,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            softRemoveRowMode : false,
+            showRowCheckColumn : true, //checkBox
+            noDataMessage       : "No Item found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        myStkGridID = GridCommon.createAUIGrid("#addStock_grid_wrap", columnLayout, '', gridPros);
+    }
+    
+    function fn_dealerInfo(){
 
-		insertForm.dealerId.value = insertForm.cmbDealer.value;
-		
-	    Common.ajax("GET", "/sales/pst/dealerInfo.do", $("#insertForm").serializeJSON(), function(result) {
-	    	$("#dealerEmail").val(result.dealerEmail);
-	    	$("#dealerNric").val(result.dealerNric);
-	    	$("#dealerBrnchId").val(result.dealerBrnchId);
-	    	$("#brnchId").val(result.brnchId);
-	    	
-	    	$("#newMailaddrDtl").val(result.addrDtl);
-	    	$("#newMailstreet").val(result.street);
-	    	$("#newMailarea").val(result.area);
-	    	$("#newMailcity").val(result.city);
-	    	$("#newMailpostcode").val(result.postcode);
+        insertForm.dealerId.value = insertForm.cmbDealer.value;
+        
+        Common.ajax("GET", "/sales/pst/dealerInfo.do", $("#insertForm").serializeJSON(), function(result) {
+            $("#dealerEmail").val(result.dealerEmail);
+            $("#dealerNric").val(result.dealerNric);
+            $("#dealerBrnchId").val(result.dealerBrnchId);
+            $("#brnchId").val(result.brnchId);
+            $("#mailDealerAddId").val(result.dealerAddId);
+            $("#mailAddrAreaId").val(result.areaId);
+            $("#newMailaddrDtl").val(result.addrDtl);
+            $("#newMailstreet").val(result.street);
+            $("#newMailarea").val(result.area);
+            $("#newMailcity").val(result.city);
+            $("#newMailpostcode").val(result.postcode);
             $("#newMailstate").val(result.state);
             $("#newMailcountry").val(result.country);
             
+            $("#delvryDealerAddId").val(result.dealerAddId);
+            $("#delvryAddrAreaId").val(result.areaId);
             $("#newDelvryaddrDtl").val(result.addrDtl);
             $("#newDelvrystreet").val(result.street);
             $("#newDelvryarea").val(result.area);
@@ -37,6 +99,7 @@
             $("#newDelvrystate").val(result.state);
             $("#newDelvrycountry").val(result.country);
             
+            $("#mailDealerCntId").val(result.dealerCntId);
             $("#newMailContCntName").val(result.cntName);
             $("#newMailContDealerIniCd").val(result.dealerIniCd);
             $("#newMailContGender").val(result.gender);
@@ -47,6 +110,7 @@
             $("#newMailContTelR").val(result.telR);
             $("#newMailContTelO").val(result.telO);
             
+            $("#delvryDealerCntId").val(result.dealerCntId);
             $("#newDelvryContCntName").val(result.cntName);
             $("#newDelvryContDealerIniCd").val(result.dealerIniCd);
             $("#newDelvryContGender").val(result.gender);
@@ -56,9 +120,9 @@
             $("#newDelvryContTelM1").val(result.telM1);
             $("#newDelvryContTelR").val(result.telR);
             $("#newDelvryContTelO").val(result.telO);
-	    	
-	    	doGetCombo('/sales/pst/pstNewCmbDealerBrnchList', result.dealerBrnchId, result.brnchId,'cmbPstBranch', 'S' , ''); //Incharge Person
-	    	
+            
+            doGetCombo('/sales/pst/pstNewCmbDealerBrnchList', result.dealerBrnchId, result.brnchId,'cmbPstBranch', 'S' , ''); //Incharge Person
+            
             console.log("data : " + result);
             
         },  function(jqXHR, textStatus, errorThrown) {
@@ -75,7 +139,112 @@
 
           alert("Fail : " + jqXHR.responseJSON.message);          
       });
-	}
+    }
+    
+    function fn_addStockItemPop(){
+        Common.popupDiv("/sales/pst/addStockItempPop.do", $("#insertForm").serialize(), null , true, '_stockItemDiv');
+    }
+    
+    function fn_addStockItemInfo(type, category, stkItem, qty, price, totPrice, stkId){
+        
+        var item = new Object();
+            item.pstItmStkId = stkId;
+            item.pstItmStkDesc = stkItem;
+//            item.bank = category;
+            item.pstItmPrc = price;
+            item.pstItmReqQty = qty;
+            item.pstItmTotPrc = totPrice;
+            
+            totUnitVal = totUnitVal + Number(qty);
+            totAmountVal = totAmountVal + Number(totPrice);
+            
+            $("#totUnit").val(totUnitVal);
+            $("#totAmount").val(totAmountVal);
+            
+            AUIGrid.addRow(myStkGridID, item, "last"); 
+    }
+    
+    // save
+    function fn_saveNewPstRequest(){
+    	if(insertForm.cmbDealer.value == ""){
+            Common.alert("* Please select a dealer.");
+            return false;
+        }
+    	if(insertForm.pstNewCustPo.value == ""){
+            Common.alert("* Please key the customer PO.");
+            return false;
+        }
+    	if(insertForm.cmbPstIncharge.value == ""){
+            Common.alert("* Please select person in charge.");
+            return false;
+        }
+    	if(insertForm.totUnit.value == ""){
+            Common.alert("* Please select Delivery Stock.");
+            return false;
+        }
+    	
+            var pstRequestDOForm = {
+                dataSet     : GridCommon.getGridData(myStkGridID),
+                pstSalesMVO : {
+                    // info
+                    pstDealerId : insertForm.cmbDealer.value,
+//                  dealerEmail : insertForm.dealerEmail.value,  //안씀
+//                  cmbPstBranch : insertForm.cmbPstBranch.value,
+//                  dealerNric : insertForm.dealerNric.value,
+                    pic : insertForm.cmbPstIncharge.value,
+                    pstCustPo : insertForm.pstNewCustPo.value,
+                    pstRem : insertForm.pstNewRem.value,
+                    pstCurRate : $("#curRate").val(),
+                    pstCurTypeId : $("#curTypeCd").val(),
+                    pstTotAmt : $("#totAmount").val(),
+                    // Mailing Address
+                    pstDealerMailAddId :$("#mailDealerAddId").val(),
+//보류                    newMailaddrDtl : insertForm.newMailaddrDtl.value,
+//보류                    newMailstreet : insertForm.newMailstreet.value,
+//보류                    mailAddrAreaId : insertForm.mailAddrAreaId.value,
+                    // Delivery Address
+                    pstDealerDelvryAddId : $("#delvryDealerAddId").val(),
+//보류                    newDelvryaddrDtl : insertForm.newDelvryaddrDtl.value,
+//보류                    newDelvrystreet : insertForm.newDelvrystreet.value,
+//보류                    delvryAddrAreaId : insertForm.delvryAddrAreaId.value,
+                    // Mailing Contact Person
+                    pstDealerMailCntId : $("#mailDealerCntId").val(),
+//                    ext : insertForm.newMailContCntName.value,
+//                    rem : insertForm.newMailContDealerIniCd.value,
+//                    ext : insertForm.newMailContGender.value,
+//                    rem : insertForm.newMailContNric.value,
+//                    rem : insertForm.newMailContRaceName.value,
+//                    telM : insertForm.newMailContTelM1.value,
+//                    telR : insertForm.newMailContTelR.value,
+//                    telF : insertForm.newMailContTelO.value,
+//                    telO : insertForm.newMailContTelF.value
+                    // Delivery Contact Person 해야함.
+                    pstDealerDelvryCntId : $("#delvryDealerCntId").val()
+                }
+            };
+            
+            Common.ajax("POST", "/sales/pst/insertNewRequestDO.do", pstRequestDOForm, function(result) {
+                Common.alert("Save PST Request Do", fn_success);
+
+            }, function(jqXHR, textStatus, errorThrown) {
+                Common.alert("실패하였습니다.");
+                console.log("실패하였습니다.");
+                console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+                
+                alert(jqXHR.responseJSON.message);
+                console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+                
+            });
+        
+    }
+    
+    function fn_itemDel(){
+    	AUIGrid.removeCheckedRows(myStkGridID);
+    }
+    
+    function fn_success(){
+    	$("#newPopClose").click();
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -83,7 +252,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>New PST Request</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="newPopClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -94,8 +263,8 @@
     <li><a href="#" class="on">Particular Information</a></li>
     <li><a href="#">Mailing Address</a></li>
     <li><a href="#">Delivery Address</a></li>
-    <li><a href="#">Delivery Contact Person</a></li>
     <li><a href="#">Mailing Contact Person</a></li>
+    <li><a href="#">Delivery Contact Person</a></li>
     <li><a href="#">Delivery Stock</a></li>
 </ul>
 
@@ -119,12 +288,12 @@
 <tr>
     <th scope="row">Dealer<span class="must">*</span></th>
     <td>
-	    <select class="w100p" id="cmbDealer" name="cmbDealer" onchange="fn_dealerInfo()">
-	       <option value="">Dealer</option>
+        <select class="w100p" id="cmbDealer" name="cmbDealer" onchange="fn_dealerInfo()">
+           <option value="">Dealer</option>
            <c:forEach var="list" items="${cmbDealerList }">
                <option value="${list.dealerId}">${list.dealerName}</option>
            </c:forEach>
-	    </select>
+        </select>
     </td>
     <th scope="row">Email</th>
     <td><input type="text" id="dealerEmail" name="dealerEmail" title="" placeholder="Email Address" class="w100p" readonly/></td>
@@ -132,8 +301,8 @@
 <tr>
     <th scope="row">Branch</th>
     <td>
-	    <select class="w100p" id="cmbPstBranch" name="cmbPstBranch" disabled="disabled">
-	    </select>
+        <select class="w100p" id="cmbPstBranch" name="cmbPstBranch" disabled="disabled">
+        </select>
     </td>
     <th scope="row">NRIC/Company No</th>
     <td><input type="text" id="dealerNric" name="dealerNric" title="" placeholder="NRIC/Company Number" class="w100p" readonly/></td>
@@ -141,8 +310,8 @@
 <tr>
     <th scope="row">Person In Charge<span class="must">*</span></th>
     <td>
-	    <select class="w100p" id="cmbPstIncharge" name="cmbPstIncharge">
-	    </select>
+        <select class="w100p" id="cmbPstIncharge" name="cmbPstIncharge">
+        </select>
     </td>
     <th scope="row">Customer PO</th>
     <td><input type="text" id="pstNewCustPo" name="pstNewCustPo" title="" placeholder="Customer PO" class="w100p" /></td>
@@ -154,7 +323,6 @@
 </tbody>
 </table><!-- table end -->
 
-</form>
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->
@@ -162,9 +330,10 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
+<input type="hidden" id="mailAddrAreaId" name="mailAddrAreaId">
+<input type="hidden" id="mailDealerAddId" name="mailDealerAddId">
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -199,7 +368,6 @@
 </tbody>
 </table><!-- table end -->
 
-</form>
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->
@@ -207,9 +375,10 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
+<input type="hidden" id="delvryAddrAreaId" name="delvryAddrAreaId">
+<input type="hidden" id="delvryDealerAddId" name="delvryDealerAddId">
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -244,7 +413,6 @@
 </tbody>
 </table><!-- table end -->
 
-</form>
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->
@@ -252,9 +420,9 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
+<input type="hidden" id="mailDealerCntId" name="mailDealerCntId">
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -300,7 +468,6 @@
 </tbody>
 </table><!-- table end -->
 
-</form>
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->
@@ -308,9 +475,9 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
+<input type="hidden" id="delvryDealerCntId" name="delvryDealerCntId">
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -356,7 +523,6 @@
 </tbody>
 </table><!-- table end -->
 
-</form>
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->
@@ -368,7 +534,6 @@
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -380,24 +545,24 @@
 <tr>
     <th scope="row">Currency</th>
     <td>
-    <select id="curCd" name="curCd">
-        <option value="">MYR</option>
-        <option value="">SGD</option>
-        <option value="">USD</option>
+    <select id="curTypeCd" name="curTypeCd">
+        <option value="1150">MYR</option>
+        <option value="1149">SGD</option>
+        <option value="1148">USD</option>
     </select>
     </td>
 </tr>
 <tr>
     <th scope="row">Currency Rate</th>
-    <td><input type="text" title="" placeholder="" class="" /></td>
+    <td><input type="text" id="curRate" name="curRate" value="1.00" title="" placeholder="" class="" /></td>
 </tr>
 <tr>
     <th scope="row">Total Unit</th>
-    <td><input type="text" title="" placeholder="" class="" /></td>
+    <td><input type="text" id="totUnit" name="totUnit"  title="" placeholder="" class="" readOnly/></td>
 </tr>
 <tr>
     <th scope="row">Total Amount</th>
-    <td><input type="text" title="" placeholder="" class="" /></td>
+    <td><input type="text" id="totAmount" name="totAmount" title="" placeholder="" class="" readOnly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -406,7 +571,8 @@
 </section><!-- search_table end -->
 
 <ul class="left_btns">
-    <li><p class="btn_blue2"><a href="#">Add Stock Item</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_addStockItemPop()">Add Stock Item</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_itemDel()">Delete Stock Item</a></p></li>
 </ul>
 
 <section class="search_result"><!-- search_result start 
@@ -422,7 +588,7 @@
 </ul>
 -->
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+    <div id="addStock_grid_wrap" style="width:100%; height:280px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
@@ -432,7 +598,7 @@
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2"><a href="#">Save PST Request</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_saveNewPstRequest()">Save PST Request</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

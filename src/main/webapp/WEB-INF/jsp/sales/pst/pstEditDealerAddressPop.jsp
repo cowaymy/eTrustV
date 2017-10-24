@@ -11,7 +11,13 @@
 	
 	    //Call Ajax
 	    fn_getAddrListAjax();
-	  
+	    
+	    // 셀 더블클릭 이벤트 바인딩 - 주소수정
+	    AUIGrid.bind(addrGridID, "cellDoubleClick", function(event){
+	        $("#_editDealerId").val(event.item.dealerId);
+	        $("#_editDealerAddId").val(event.item.dealerAddId);
+//	        Common.popupDiv('/sales/pst/pstAnotherAddrPop.do', $("#editForm").serializeJSON(), null , true ,'_editDiv2Pop');
+	    });
 //	    doGetCombo('/sales/pst/getInchargeList', '', $("#editInchargeSelect").val(),'editIncharge', 'S' , ''); //Incharge Person
 	});
 	
@@ -41,7 +47,7 @@
 	            labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성 
 	                var html = '';
 	            
-	                html += '<label><input type="radio" name="setmain"  onclick="javascript: fn_setMain(' + item.custAddId + ','+item.custId+')"';
+	                html += '<label><input type="radio" name="setmain"  onclick="javascript: fn_setMain(' + item.dealerAddId + ','+item.dealerId+')"';
 	                
 	                if(item.stusCodeId == 9){
 	                    html+= ' checked = "checked"';
@@ -89,10 +95,49 @@
 	// set Main Func (Confirm)
     function fn_setMain(dealerAddId, dealerId){ 
         $("#tempDealerId").val(dealerId);
-        $("#tempDealerAddr").val(dealerAddId);  
-        Common.confirm("Are you sure want to set this address as main address ?", fn_changeMainAddr, fn_reloadPage);
+        $("#tempDealerAddrId").val(dealerAddId);  
+        Common.confirm("Are you sure want to set this address as main address ?", fn_changeMainAddr, fn_noConfirm);
         
     }
+	
+  //call Ajax(Set Main Address)
+    function fn_changeMainAddr(){
+        $("#_dealerId").val($("#tempDealerId").val());
+        $("#_dealerAddId").val($("#tempDealerAddrId").val()); 
+
+        Common.ajax("GET", "/sales/pst/updateDealerAddressSetMain.do", $("#popForm").serialize(), function(result){
+            //result alert and reload
+            //Common.alert(result.message, fn_reloadPage); //차후변경가능
+            Common.alert(result.message);
+            $("#_close").click();
+            $("#autoClose").click();
+            fn_selectPstRequestDOListAjax();
+        });
+    }
+    
+    function fn_reloadPage(){
+        //Parent Window Method Call
+        fn_selectPstRequestDOListAjax();
+//        $("#_selectParam").val('2');
+//        Common.popupDiv('/sales/pst/getPstRequestDODetailPop.do', $('#searchForm').serializeJSON(), null , true, '_editDiv2');
+        Common.popupDiv('/sales/pst/getPstRequestDOEditPop.do', $('#getParamForm').serializeJSON(), null , true, '_editDiv2');
+        $("#_close").click();
+        $("#autoClose").click();
+    }
+    
+    // main confirm => No
+    function fn_noConfirm(){
+        //Parent Window Method Call
+        fn_selectPstRequestDOListAjax();
+
+        $("#_close").click();
+        $("#autoClose").click();
+    }
+	
+    $("#_newAddr").click(function() {
+        Common.popupDiv('/sales/pst/updateDealerNewAddressPop.do', $("#paramForm").serializeJSON(), null , true ,'_editDiv2New');
+    });
+    
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -100,7 +145,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>EDIT PST DEALER ADDRESS</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -112,8 +157,14 @@
 
 <form id="paramForm" name="paramForm" method="GET">
     <input type="hidden" id="dealerId" name="dealerId" value="${dealerId}">
+    <input type="hidden" id="tempDealerId" name="tempDealerId">
+    <input type="hidden" id="tempDealerAddrId" name="tempDealerAddrId">
 </form>
-
+<form id="editForm" method="post">
+    <input type="hidden" name="dealerId"  id="_editDealerId"/>  <!-- Cust Id  -->
+    <input type="hidden" name="editDealerAddId"   id="_editDealerAddId"/><!-- Address Id  -->
+    <input type="hidden" name="custCntcId"   id="_custCntcId"> <!--Contact Id  -->
+</form>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -123,11 +174,11 @@
 <tbody>
 <tr>
     <th scope="row">Full Address</th>
-    <td><span>${pstMailAddrMain.fullAddr }</span></td>
+    <td><span>${pstMailAddr.fullAddr }</span></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td><span>${pstMailAddrMain.rem }</span></td>
+    <td><span>${pstMailAddr.rem }</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -137,7 +188,7 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">Add New Address</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="_newAddr">Add New Address</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

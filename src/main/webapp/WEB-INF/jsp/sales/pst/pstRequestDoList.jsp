@@ -88,7 +88,7 @@
             pageRowCount : 20,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : true, 
+            showStateColumn : false, 
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -124,6 +124,10 @@
     function fn_insertPstRequestDO(){
     	Common.popupDiv("/sales/pst/insertPstRequestDOPop.do", $("#searchForm").serialize(), null , true, '_newDiv');
     }
+    
+    function fn_pstReport(){
+        Common.alert('The program is under development.');
+    }
 </script>
 
 <section id="content"><!-- content start -->
@@ -139,12 +143,17 @@
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDO()">NEW</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
+<form id="popForm" name="popForm" method="post">
+    <input type="hidden" name="dealerId"  id="_dealerId"/>  <!-- Cust Id  -->
+    <input type="hidden" name="dealerAddId"   id="_dealerAddId"/><!-- Address Id  -->
+    <input type="hidden" name="dealerCntId"   id="_dealerCntId"> <!--Contact Id  -->
+</form>
 <form id="searchForm" name="searchForm" action="#" method="post">
     <input type="hidden" id="pstSalesOrdIdParam" name="pstSalesOrdIdParam" >
     <input type="hidden" id="pstDealerDelvryCntId" name="pstDealerDelvryCntId" >
@@ -177,9 +186,9 @@
     <th scope="row">Create Date</th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" id="createStDate" name="createStDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" id="createStDate" name="createStDate" title="Create start Date" value="${toDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
     <span>To</span>
-    <p><input type="text" id="createEnDate" name="createEnDate" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" id="createEnDate" name="createEnDate" title="Create end Date" value="${toDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -209,30 +218,12 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-    </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="#" onClick="fn_pstReport()">PST Report</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
-
 
 </section><!-- search_table end -->
 

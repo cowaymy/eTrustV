@@ -67,7 +67,7 @@
 	        pageRowCount : 10,
 	        editable : true,
 	        fixedColumnCount : 1,
-	        showStateColumn : true, 
+	        showStateColumn : false, 
 	        displayTreeOpen : true,
 	        selectionMode : "multipleCells",
 	        headerHeight : 30,
@@ -98,7 +98,7 @@
 	
 	function fn_updateStockList() {
 		
-		
+//		alert(GridCommon.getEditData(editGridID));
         var pstRequestDOForm = {
             dataSet     : GridCommon.getEditData(editGridID),
             pstSalesMVO : {
@@ -133,9 +133,25 @@
       });
     }
 	
+	// Add/Edit Address
 	function fn_editAddrDtPop(){
 		Common.popupDiv('/sales/pst/editAddrDtPop.do', $('#getParamForm').serializeJSON(), null , true, 'addrDtDiv');
 	}
+	
+	// Select Another Address
+	function fn_editAnotherAddrPop(){  
+        Common.popupDiv('/sales/pst/pstAnotherAddrPop.do', $('#getParamForm').serializeJSON(), null , true, 'addrAnthDiv');
+    }
+	
+	// Add/Edit Contact
+    function fn_editContDtPop(){
+        Common.popupDiv('/sales/pst/editContDtPop.do', $('#getParamForm').serializeJSON(), null , true, 'addrDtDiv');
+    }
+    
+    // Select Another Contact
+    function fn_editAnotherContPop(){  
+        Common.popupDiv('/sales/pst/pstAnotherContPop.do', $('#getParamForm').serializeJSON(), null , true, 'addrAnthDiv');
+    }
 
 </script>
 
@@ -230,7 +246,7 @@
 
 <ul class="right_btns mb10">
     <li><p class="btn_blue2"><a href="#" onclick="fn_editAddrDtPop()">Add/Edit Address</a></p></li>
-    <li><p class="btn_blue2"><a href="#">Select Another Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherAddrPop()">Select Another Address</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -273,8 +289,8 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#">Add/Edit Address</a></p></li>
-    <li><p class="btn_blue2"><a href="#">Select Another Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAddrDtPop()">Add/Edit Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherAddrPop()">Select Another Address</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -317,8 +333,8 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#">Add/Edit Address</a></p></li>
-    <li><p class="btn_blue2"><a href="#">Select Another Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editContDtPop()">Add/Edit Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherContPop()">Select Another Address</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -364,8 +380,8 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#">Add/Edit Address</a></p></li>
-    <li><p class="btn_blue2"><a href="#">Select Another Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editContDtPop()">Add/Edit Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherContPop()">Select Another Address</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
