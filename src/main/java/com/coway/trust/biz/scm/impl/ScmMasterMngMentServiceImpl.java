@@ -38,8 +38,8 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 	
 	// Master Management
 	@Override
-	public List<EgovMap> selectMasterMngment(Map<String, Object> params) {
-		return scmMasterMngMentMapper.selectMasterMngment(params);
+	public List<EgovMap> selectMasterMngmentSearch(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectMasterMngmentSearch(params);
 	}
 	
 	// CDC WareHouse Mapping

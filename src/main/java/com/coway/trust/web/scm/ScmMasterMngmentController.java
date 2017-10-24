@@ -20,6 +20,7 @@ import com.coway.trust.biz.scm.PoMngementService;
 import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.biz.scm.ScmMasterMngMentService;
 import com.coway.trust.config.handler.SessionHandler;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -31,6 +32,8 @@ public class ScmMasterMngmentController {
 	
 	@Autowired
 	private ScmMasterMngMentService scmMasterMngMentService;
+	@Autowired
+	private SalesPlanMngementService salesPlanMngementService;
 
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -47,20 +50,18 @@ public class ScmMasterMngmentController {
 	}  
 
 	// search btn
-	@RequestMapping(value = "/scmMasterManagement.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectMasterMngment(@RequestParam Map<String, Object> params,
+	@RequestMapping(value = "/selectMasterMngmentSerch.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectMasterMngmentSerch(@RequestParam Map<String, Object> params,
 			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
 	{
-		LOGGER.debug("scmMasterMngMentList_Input : {}", params.toString());
+		LOGGER.debug("selectMasterMngmentSerch_Input : {}", params.toString());
 		
-		//List<EgovMap> scmMasterMngMentServiceList = scmMasterMngMentService.selectMasterMngment(params);
-		//List<EgovMap> selectInterfaceLastState = scmMasterMngMentService.selectInterfaceLastState(params);
+		List<EgovMap> scmMasterMngMentServiceList = scmMasterMngMentService.selectMasterMngmentSearch(params);
 		
 		Map<String, Object> map = new HashMap<>();
 		
 		//main Data
-		//map.put("scmMasterMngMentServiceList", scmMasterMngMentServiceList);
-		//map.put("selectInterfaceLastState", selectInterfaceLastState);
+		map.put("scmMasterMngMentServiceList", scmMasterMngMentServiceList);
 
 		return ResponseEntity.ok(map);
 		

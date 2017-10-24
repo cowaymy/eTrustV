@@ -10,7 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface ScmMasterMngMentMapper 
 {
 	/* SCM MASTER MANAGEMENT */
-	List<EgovMap> selectMasterMngment(Map<String, Object> params);
+	List<EgovMap> selectMasterMngmentSearch(Map<String, Object> params);
 	
 	/* CDC WARE MAPPING */
 	List<EgovMap> selectCdcWareMapping(Map<String, Object> params);
