@@ -39,7 +39,11 @@ $(document).ready(function () {
 		$("#search_costCentr").val(event.item.costCenter);
 		$("#search_costCentrName").val(event.item.costCenterText);
 		
-        fn_setCostCenter();
+		if("${pop}" == "pop") {
+			fn_setPopCostCenter();
+		} else {
+			fn_setCostCenter();
+		}
         
          $("#costCenterSearchPop").remove();
 	});
