@@ -457,6 +457,11 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	}
 	
 	@Override
+	public List<EgovMap> selectLast6MonthTransListNew(Map<String, Object> params) {
+		return orderDetailMapper.selectLast6MonthTransListNew(params);
+	}
+	
+	@Override
 	public EgovMap selectGSTCertInfo(Map<String, Object> params) {
 		return orderDetailMapper.selectGSTCertInfo(params);
 	}

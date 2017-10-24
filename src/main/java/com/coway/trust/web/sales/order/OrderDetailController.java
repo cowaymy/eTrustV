@@ -165,13 +165,9 @@ public class OrderDetailController {
 	@RequestMapping(value = "/selectLast6MonthTransJsonList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectLast6MonthTransJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
 
-		logger.debug("!@##############################################################################");
-		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
-		logger.debug("!@##############################################################################");
-		
-		List<EgovMap> memInfoList = null;//orderDetailService.selectLast6MonthTransList(params);
+		List<EgovMap> resultList = orderDetailService.selectLast6MonthTransListNew(params);
 
 		// 데이터 리턴.
-		return ResponseEntity.ok(memInfoList);
+		return ResponseEntity.ok(resultList);
 	}
 }

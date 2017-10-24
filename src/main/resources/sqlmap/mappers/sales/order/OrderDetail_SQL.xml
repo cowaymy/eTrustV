@@ -1062,5 +1062,280 @@
             call  SP_GET_ORD_LAST_6_MTH_TRNSC(#{salesOrderId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=transMap})
         }
     </select>
+
+    <select id="selectLast6MonthTransListNew" parameterType="Map" resultType="egovMap">
+		SELECT 'Type'                                       AS TYPE
+		     , 'Current Month'                              AS CUR_MONTH
+		     , TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'MM/YYYY') AS PREV_1_MONTH
+		     , TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'MM/YYYY') AS PREV_2_MONTH
+		     , TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'MM/YYYY') AS PREV_3_MONTH
+		     , TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'MM/YYYY') AS PREV_4_MONTH
+		     , TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'MM/YYYY') AS PREV_5_MONTH
+		 FROM DUAL
+		UNION ALL
+		SELECT TYPE
+		     , TO_CHAR(NVL(SUM(CUR_MONTH),    0)) AS CUR_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_1_MONTH), 0)) AS PREV_1_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_2_MONTH), 0)) AS PREV_2_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_3_MONTH), 0)) AS PREV_3_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_4_MONTH), 0)) AS PREV_4_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_5_MONTH), 0)) AS PREV_5_MONTH
+		  FROM
+		     ( SELECT 'Payment (Rental/Outright)' AS TYPE
+		            , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+		                     THEN RENT_AMT
+		                   ELSE 0
+		              END AS CUR_MONTH
+		            , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+		                     THEN RENT_AMT
+		                   ELSE 0
+		              END AS PREV_1_MONTH
+		            , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+		                     THEN RENT_AMT
+		                   ELSE 0
+		              END AS PREV_2_MONTH
+		            , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+		                     THEN RENT_AMT
+		                   ELSE 0
+		              END AS PREV_3_MONTH
+		            , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+		                     THEN RENT_AMT                  ELSE 0
+		              END AS PREV_4_MONTH
+		            , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+		                     THEN RENT_AMT
+		                   ELSE 0
+		              END AS PREV_5_MONTH
+		         FROM PAY0022D
+		        WHERE TO_CHAR(RENT_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+		          AND ( RENT_DOC_NO LIKE '%OR%'
+		             OR RENT_DOC_TYPE_ID = 155
+		             OR RENT_DOC_TYPE_ID = 157 )
+		          AND RENT_SO_ID = #{salesOrdId}
+		     )
+		 WHERE 66 = #{appTypeId}
+		 GROUP BY TYPE
+		UNION ALL
+		SELECT TYPE
+		     , TO_CHAR(NVL(SUM(CUR_MONTH),    0)) AS CUR_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_1_MONTH), 0)) AS PREV_1_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_2_MONTH), 0)) AS PREV_2_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_3_MONTH), 0)) AS PREV_3_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_4_MONTH), 0)) AS PREV_4_MONTH
+		     , TO_CHAR(NVL(SUM(PREV_5_MONTH), 0)) AS PREV_5_MONTH
+		  FROM
+		     ( SELECT 'Payment (Rental/Outright)' AS TYPE
+		            , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+		                     THEN TRADE_AMT
+		                   ELSE 0
+		              END AS CUR_MONTH
+		            , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+		                     THEN TRADE_AMT
+		                   ELSE 0
+		              END AS PREV_1_MONTH
+		            , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+		                     THEN TRADE_AMT
+		                   ELSE 0
+		              END AS PREV_2_MONTH
+		            , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+		                     THEN TRADE_AMT
+		                   ELSE 0
+		              END AS PREV_3_MONTH
+		            , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+		                     THEN TRADE_AMT                  ELSE 0
+		              END AS PREV_4_MONTH
+		            , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+		                     THEN TRADE_AMT
+		                   ELSE 0
+		              END AS PREV_5_MONTH
+		         FROM PAY0035D
+		        WHERE TO_CHAR(TRADE_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+		          AND ( TRADE_DOC_NO LIKE '%OR%'
+		             OR TRADE_DOC_TYPE_ID = 155
+		             OR TRADE_DOC_TYPE_ID = 157 )
+		          AND TRADE_SO_ID = #{salesOrdId}
+		     )
+		 WHERE 66 != #{appTypeId}
+		 GROUP BY TYPE
+		UNION ALL
+		SELECT TYPE
+		     , NVL(MAX(CUR_MONTH),    '-') AS CUR_MONTH
+		     , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+		     , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+		     , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+		     , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+		     , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+		  FROM
+		     ( SELECT 'AS' AS TYPE
+		            , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+		                     THEN (E.AS_NO || ' - ' || S.CODE)
+		                   ELSE ''
+		              END AS CUR_MONTH
+		            , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+		                     THEN (E.AS_NO || ' - ' || S.CODE)
+		                   ELSE ''
+		              END AS PREV_1_MONTH
+		            , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+		                     THEN (E.AS_NO || ' - ' || S.CODE)
+		                   ELSE ''
+		              END AS PREV_2_MONTH
+		            , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+		                     THEN (E.AS_NO || ' - ' || S.CODE)
+		                   ELSE ''
+		              END AS PREV_3_MONTH
+		            , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+		                     THEN (E.AS_NO || ' - ' || S.CODE)
+		                   ELSE ''
+		              END AS PREV_4_MONTH
+		            , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+		                     THEN (E.AS_NO || ' - ' || S.CODE)
+		                   ELSE ''
+		              END AS PREV_5_MONTH
+		         FROM SVC0001D E
+		         JOIN SYS0038M S ON S.STUS_CODE_ID = E.AS_STUS_ID
+		        WHERE E.AS_SO_ID = #{salesOrdId}
+		          AND TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+		     )
+		 GROUP BY TYPE
+		UNION ALL
+		SELECT TYPE
+		     , NVL(MAX(CUR_MONTH),    '-') AS CUR_MONTH
+		     , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+		     , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+		     , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+		     , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+		     , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+		  FROM
+		     ( SELECT 'BS' AS TYPE
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(SYSDATE, 'YYYY-MM')
+		                 THEN (M.NO || ' - ' || S.CODE)
+		               ELSE ''
+		          END AS CUR_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+		                 THEN (M.NO || ' - ' || S.CODE)
+		               ELSE ''
+		          END AS PREV_1_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+		                 THEN (M.NO || ' - ' || S.CODE)
+		               ELSE ''
+		          END AS PREV_2_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+		                 THEN (M.NO || ' - ' || S.CODE)
+		               ELSE ''
+		          END AS PREV_3_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+		                 THEN (M.NO || ' - ' || S.CODE)
+		               ELSE ''
+		          END AS PREV_4_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+		                 THEN (M.NO || ' - ' || S.CODE)
+		               ELSE ''
+		          END AS PREV_5_MONTH
+		     FROM SVC0008D M
+		     JOIN SYS0038M S ON S.STUS_CODE_ID = M.STUS_CODE_ID
+		     LEFT
+		     JOIN SVC0006D RM ON RM.SCHDUL_ID = M.SCHDUL_ID
+		      AND RM.TYPE_ID = 306
+		      AND RM.RESULT_IS_CURR = 1
+		     LEFT
+		     JOIN SYS0032M RC ON RC.RESN_ID = RM.REN_COLCT_ID
+		    WHERE M.SALES_ORD_ID = #{salesOrdId}
+		      AND TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+		     )
+		GROUP BY TYPE
+		UNION ALL
+		SELECT TYPE
+		     , NVL(MAX(CUR_MONTH),    '-') AS CUR_MONTH
+		     , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+		     , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+		     , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+		     , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+		     , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+		  FROM
+		     ( SELECT 'RC Code' AS TYPE
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(SYSDATE, 'YYYY-MM')
+		                 THEN NVL(RC.CODE, '-')
+		               ELSE ''
+		          END AS CUR_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+		                 THEN NVL(RC.CODE, '-')
+		               ELSE ''
+		          END AS PREV_1_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+		                 THEN NVL(RC.CODE, '-')
+		               ELSE ''
+		          END AS PREV_2_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+		                 THEN NVL(RC.CODE, '-')
+		               ELSE ''
+		          END AS PREV_3_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+		                 THEN NVL(RC.CODE, '-')
+		               ELSE ''
+		          END AS PREV_4_MONTH
+		        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+		                 THEN NVL(RC.CODE, '-')
+		               ELSE ''
+		          END AS PREV_5_MONTH
+		     FROM SVC0008D M
+		     JOIN SYS0038M S ON S.STUS_CODE_ID = M.STUS_CODE_ID
+		     LEFT
+		     JOIN SVC0006D RM ON RM.SCHDUL_ID = M.SCHDUL_ID
+		      AND RM.TYPE_ID = 306
+		      AND RM.RESULT_IS_CURR = 1
+		     LEFT
+		     JOIN SYS0032M RC ON RC.RESN_ID = RM.REN_COLCT_ID
+		    WHERE M.SALES_ORD_ID = #{salesOrdId}
+		      AND TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+		     )
+		 GROUP BY TYPE
+	 	 UNION ALL
+		SELECT TYPE
+		     , NVL(MAX(CUR_MONTH),    '-') AS CUR_MONTH
+		     , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+		     , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+		     , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+		     , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+		     , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+		  FROM
+		     ( SELECT 'Opening Rental Status' AS TYPE
+		            , NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '') AS CUR_MONTH
+		            , '' AS PREV_1_MONTH
+		            , '' AS PREV_2_MONTH
+		            , '' AS PREV_3_MONTH
+		            , '' AS PREV_4_MONTH
+		            , '' AS PREV_5_MONTH
+		         FROM PAY0052S M
+		        WHERE M.ACC_DEBT_SRV_CNTRCT_ID = 0
+		          AND M.ACC_DEBT_ORD_ID = #{salesOrdId}
+		        UNION ALL
+		       SELECT 'Opening Rental Status' AS TYPE
+		            , ''
+		            , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYYMM')
+		                     THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '')
+		                   ELSE ''
+		              END AS PREV_1_MONTH
+		            , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYYMM')
+		                     THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS,'')
+		                   ELSE ''
+		              END AS PREV_2_MONTH
+		            , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYYMM')
+		                     THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '')
+		                   ELSE ''
+		              END AS PREV_3_MONTH
+		            , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYYMM')
+		                     THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '')
+		                   ELSE ''
+		              END AS PREV_4_MONTH
+		            , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYYMM')
+		                     THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '')
+		                   ELSE ''
+		              END AS PREV_5_MONTH
+		        FROM PAY0150D M
+		       WHERE M.ACC_DEBT_SRV_CNTRCT_ID = 0
+		         AND M.ACC_DEBT_ORD_ID = #{salesOrdId}
+		         AND M.ACC_YM BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYYMM') AND TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYYMM')
+		     )
+		 GROUP BY TYPE
+    </select>
     
 </mapper>
