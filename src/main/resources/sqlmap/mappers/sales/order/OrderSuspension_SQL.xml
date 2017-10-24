@@ -94,10 +94,10 @@
              AND Filter1.INV_NO = #{invNo}
          </if>
          <if test="startCrtDt != null and startCrtDt != '' ">
-              AND Filter1.SUS_CRT_DT <![CDATA[  >= ]]>  TO_CHAR(TO_DATE( #{startCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+              AND Filter1.SUS_CRT_DT <![CDATA[  >= ]]>  TO_DATE( #{startCrtDt} , 'DD/MM/YYYY')
          </if>
          <if test="endCrtDt != null and endCrtDt != ''">                              
-              AND Filter1.SUS_CRT_DT <![CDATA[  <= ]]>  TO_CHAR(TO_DATE( #{endCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+              AND Filter1.SUS_CRT_DT <![CDATA[  <= ]]>  TO_DATE( #{endCrtDt} , 'DD/MM/YYYY')
          </if>
     </select>
     
