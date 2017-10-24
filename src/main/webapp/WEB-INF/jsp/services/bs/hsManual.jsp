@@ -190,7 +190,8 @@
                     }, {
                         dataField : "brnchId",
                         headerText : "Branch",
-                        width : 120,                             
+                        width : 120
+                        ,                             
                         visible:false        
                     }, {
                         dataField : "schdulId",
@@ -320,14 +321,17 @@
                     Common.alert("already has result. Result entry is disallowed.");
                     return;
                  } */
-                 
-	           Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId);
+
+	           Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_editDiv');  
+                //Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '_editDiv');
 			}
 
 
 
         $(function(){
            $("#codyChange").click(function(){
+           $("#_openGb").val("codyChange");
+           
             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
             
             if(checkedItems.length <= 0) {
@@ -340,6 +344,8 @@
                 var brnchId = "";
                 var saleOrdList = "";
                 var list = "";
+                var brnchCnt = 0;
+                var ctBrnchCodeOld = "";
                 
                 //var saleOrdList = [];
                 var saleOrd = {
@@ -347,6 +353,7 @@
                 };
                 
 
+                
                 
                 for(var i=0, len = checkedItems.length; i<len; i++) {
                     rowItem = checkedItems[i];
@@ -356,9 +363,16 @@
                         saleOrdList += ",";
                     }
 
+
+                    if(i !=0 ){
+                        if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
+                            brnchCnt += 1 ;
+                        }
+                    }
+                    ctBrnchCodeOld = rowItem.codyBrnchCode;
                     
                     if(i==0){
-                         brnchId = rowItem.brnchId;
+                         brnchId = rowItem.branchCd;
                     }
                     
                 }
@@ -383,6 +397,8 @@
     
         $(function(){
            $("#hSConfiguration").click(function(){
+           $("#_openGb").val("hsConfig");
+           
             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
             
             if(checkedItems.length <= 0) {
@@ -540,9 +556,6 @@
         function fn_checkRadioButton(objName){
     
             if( document.searchForm.elements['searchDivCd'][0].checked == true ) {
-                       
-                        alert(document.searchForm.elements['searchDivCd'][0].checked);
-                        
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="none";
     
@@ -551,7 +564,7 @@
                                              
 
 
-						$('#hSConfiguration').attr('disabled',true); 
+						//$('#hSConfiguration').attr('disabled',true); //hash
 //						$('#hSConfiguration').attr('disabled',false);  //SMS버튼 활성화 
 //                        $("select[name=hSConfiguration]").attr('disabled', 'disabled');
 
@@ -704,7 +717,7 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <ul class="right_btns">
-<!--     <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li> -->
+     <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
     <li><p class="btn_blue"><a id="hSConfiguration">Create HS Order</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBSListAjax();">Search</a></p></li>

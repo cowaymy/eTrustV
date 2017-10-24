@@ -207,7 +207,12 @@
                     dataField : "stus",
                     headerText : "stus",
                     width : 120,
-                     visible:false
+                     visible:false                     
+           }, {     
+                    dataField : "rnum",
+                    headerText : "stus111",
+                    width : 120,
+                     visible:false               
             }];
         
             // 그리드 속성 설정
@@ -250,15 +255,30 @@
             };
                     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
                 myCdGridID = AUIGrid.create("#grid_wrapCd", columnLayout, gridPros);
-                
-                
+
                     // 체크박스 클린 이벤트 바인딩
 			    AUIGrid.bind(myCdGridID, "rowCheckClick", function( event ) {
-	/* 		        alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked); */
-			        getEditedRowItems();
-			    });
+			 		        //alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked);
+					        getEditedRowItems();
+					    });
 			    
     }
+
+
+
+
+			function setCheckedRowsByIds(){
+			    
+			    var columnCount =  AUIGrid.getRowCount(myCdGridID);                
+
+                if(columnCount > 0 ){
+                      var items = ['0'];
+                        AUIGrid.setCheckedRowsByValue(myCdGridID, "rnum" ,  ["1"]);
+//                        AUIGrid.setCheckedRowsByValue(myGridID.pid,"CHK", ["A"]);
+                 } 
+			
+			} // 시작 시 체크된 상태로 표시
+
 
 
 /*                          "codyId" : assiinCd[0],      //저장용
@@ -308,8 +328,8 @@
             
             AUIGrid.setGridData(myCdGridID, result);
             
+            setCheckedRowsByIds();
 	    });
-	    
 	    
 	      Common.ajax("GET", "/bs/selectPopUpCustList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}', ManuaMyBSMonth:'${ManuaMyBSMonth}'}, function(result) {
 	         console.log("성공.");
@@ -317,11 +337,22 @@
 	         
 	         AUIGrid.setGridData(myCustGridID, result);    
 	     });
+	     
+
     }
         
         
 
+     function fn_codyChange(){
 
+            if($("#_openGb").val() == "codyChange"){
+
+                $('#grid_wrapCust') .attr("editable", true);
+                //$("#grid_wrapCust").removeAttr("disabled"); 
+            }
+                             
+    }
+    
 
 
      function fn_codyAssignSave(){
@@ -344,14 +375,23 @@
         
     $(document).ready(function() {
     
-    
-        console.log("성공 data : " + $("#searchFormPop"));
+        if($("#_openGb").val() != "codyChange"){           
+           $("#btnCodyCh").hide();
+
+           $('#grid_wrapCust') .attr("disabled", true);
+           
+        }else{
+            $('#grid_wrapCust') .attr("disabled", true);
+        }
         
+        console.log("성공 data : " + $("#searchFormPop"));
+
         createAUIGridCd();
         createAUIGridCust();
         
+
         fn_getselectPopUpListAjax();
-        
+//        setCheckedRowsByIds();
 
 /*          var checkedItems = AUIGrid.getCheckedRowItemsAll(myCustGridID);
          if(checkedItems.length >= 0) {
@@ -377,6 +417,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>HS Order Create</h1>
 <ul class="right_opt">
+    <li><p class="btn_blue2"><a href="javascript:fn_codyChange();" id="btnCodyCh" name="btnCodyCh">Assign Cody Change</a></p></li>
     <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();">Create</a></p></li>
     <li><p class="btn_blue2"><a href="#" id="_close1">Close</a></p></li>
 </ul>
