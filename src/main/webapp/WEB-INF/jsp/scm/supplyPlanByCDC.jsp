@@ -909,7 +909,7 @@ $(document).ready(function()
 		</td>
 		<th scope="row">CDC</th>
 		<td>
-	    <select class="w100p" id="cdcCbBox" name="cdcCbBox">
+	    <select id="cdcCbBox" name="cdcCbBox">
 	    </select>
 		</td>
 	</tr>
