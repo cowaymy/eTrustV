@@ -1,4 +1,4 @@
-package com.coway.trust.api.mobile.Service.heartService;
+package com.coway.trust.api.mobile.services.heartService;
 
 import com.coway.trust.util.BeanConverter;
 

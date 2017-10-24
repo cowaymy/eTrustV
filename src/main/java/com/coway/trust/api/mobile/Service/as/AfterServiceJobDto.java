@@ -1,6 +1,6 @@
 package com.coway.trust.api.mobile.Service.as;
 
-import com.coway.trust.api.mobile.Service.heartService.HeartServiceJobDto;
+import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;

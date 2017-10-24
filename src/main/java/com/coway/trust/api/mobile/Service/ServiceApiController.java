@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.Service.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.Service.as.AfterServiceJobForm;
-import com.coway.trust.api.mobile.Service.heartService.HeartServiceJobDto;
 import com.coway.trust.api.mobile.Service.heartService.HeartServiceJobForm;
+import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
