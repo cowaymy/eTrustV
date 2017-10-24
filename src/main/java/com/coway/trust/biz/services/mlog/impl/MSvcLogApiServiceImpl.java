@@ -35,7 +35,22 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 	
 	
-	
+	@Override
+	public void saveHearLogs(List<Map<String, Object>> logs) {
+		// TODO Auto-generated method stub
+		for (Map<String, Object> log : logs) {
+			MSvcLogApiMapper.insertHeatLog(log);
+		}
+		
+	}
+
+	@Override
+	public void updateSuccessStatus(String transactionId) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.updateSuccessStatus(transactionId);
+		
+	}
+
 	
 	
 	

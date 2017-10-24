@@ -12,10 +12,11 @@ public interface MSvcLogApiMapper {
 
 	List<EgovMap> getHeartServiceJobList(Map<String, Object> params);
 	
-	
 	List<EgovMap> getAfterServiceJobList(Map<String, Object> params);
 	
-	
+	void insertHeatLog(Map<String, Object> log);
+
+	void updateSuccessStatus(String transactionId);
 	
 	
 	

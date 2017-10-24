@@ -11,7 +11,9 @@ public interface MSvcLogApiService {
 
 	List<EgovMap> getAfterServiceJobList(Map<String, Object> params); 
 	
-	
+	void saveHearLogs(List<Map<String, Object>> heartLogs);
+
+	void updateSuccessStatus(String transactionId); 
 	
 	
 	
