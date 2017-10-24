@@ -19,7 +19,7 @@ public class HeartServiceJobDto {
 	private String custName;
 	
 	@ApiModelProperty(value = "AS / HS / INST / PR 구분값") 
-	private String jobType;
+	private String jobType; 
 	
 	@ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
 	private int jobStatus;
