@@ -45,18 +45,49 @@
 
   <!-- WARE HOUSE MAPPING -->
   <select id="selectCdcWareMapping" parameterType="Map" resultType="egovMap">
-		SELECT DISTINCT 
-		      PLAN_ID CODE_VALUE 
-		    , CDC     CODE_VIEW
-	  FROM SCM0005M 
-	 WHERE PLAN_YEAR  = #{planYear}  
-	 <if test="planMonth != null and planMonth !=''">
-	   AND PLAN_MONTH = #{planMonth}  
+		SELECT 'delete' FLAG
+		      ,t0.WH_ID
+		      ,t0.CDC 
+		      ,t1.WH_LOC_CODE WH_CODE
+		      ,t1.WH_LOC_DESC WH_NAME  
+		  FROM SCM0022M  t0
+		         LEFT JOIN SYS0028M t1   ON t1.WH_LOC_ID = t0.WH_ID
+		 WHERE  t1.WH_LOC_CODE NOT LIKE 'CT%' 
+	 <if test="cdcCbBox != null and cdcCbBox !=''">
+		   AND t0.CDC= #{cdcCbBox} 
 	 </if>
-	   AND PLAN_WEEK  = #{planWeek}  
-	   AND PLAN_STUS  = 4
-	 ORDER BY PLAN_ID
+	 
   </select> 
+  
+  <select id="selectWhLocationMapping" parameterType="Map" resultType="egovMap">
+		SELECT WH_LOC_ID WH_ID 
+		      , ' ' CDC  
+		      , WH_LOC_CODE WH_CODE 
+		      , WH_LOC_DESC WH_NAME  
+		  FROM SYS0028M 
+		 WHERE WH_LOC_CODE LIKE 'DSC%'
+		   AND WH_LOC_ID NOT IN ( SELECT WH_ID 
+		                            FROM SCM0022M  
+		                        )
+   
+  </select> 
+  
+  <insert id="insetCdcWhMapping" parameterType="Map">
+     INSERT INTO SCM0022M
+       (
+         WH_ID
+        ,CDC
+       )
+     VALUES
+       (
+         #{whId}
+        ,#{cdc}
+       )
+  </insert>  
+  
+  <insert id="deleteCdcWhMapping" parameterType="Map">
+     DELETE FROM SCM0022M WHERE  WH_ID = #{whId} AND CDC = #{cdc}
+  </insert>  
 
   <!-- Business Plan Manager -->
   <select id="selectBizPlanManager" parameterType="Map" resultType="egovMap">
@@ -72,5 +103,8 @@
 	   AND PLAN_STUS  = 4
 	 ORDER BY PLAN_ID
   </select> 
+  
+  
+  
     
 </mapper>
