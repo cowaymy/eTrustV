@@ -76,22 +76,23 @@
                                               
                                               
                                               
-                                              
-	                select DISTINCT  b.mem_id 
-	                        ,d.mem_code AS CODY_ID
-	                        ,d.name AS CODY_NAME
-	                        ,d.STUS
-					from SYS0005M a
-					        ,org0005d b
-					        ,SYS0064M c
-					        ,ORG0001D D
-					        ,SYS0038M EXTENT2
-					where a.BRNCH_ID = b.BRNCH_ID
-					and c.CODY_MANGR_USER_ID = b.dept_code
-					and b.mem_id = d.MEM_ID
-					AND d.STUS = EXTENT2.STUS_CODE_ID 
-					AND d.MEM_TYPE = 2
-					and  a.code = #{BrnchCdList}                
+                 select rownum as rnum , a.*
+                  from (                                   
+			                select DISTINCT  b.mem_id 
+			                        ,d.mem_code AS CODY_ID
+			                        ,d.name AS CODY_NAME
+			                        ,d.STUS
+							from SYS0005M a
+							        ,org0005d b
+							        ,SYS0064M c
+							        ,ORG0001D D
+							        ,SYS0038M EXTENT2
+							where a.BRNCH_ID = b.BRNCH_ID
+							and c.CODY_MANGR_USER_ID = b.dept_code
+							and b.mem_id = d.MEM_ID
+							AND d.STUS = EXTENT2.STUS_CODE_ID 
+							AND d.MEM_TYPE = 2
+							and  a.code = #{BrnchCdList}       ) a         
           </select>
        
   
