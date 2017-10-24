@@ -35,9 +35,8 @@ function fn_confirmOrder(){
             return ;
         
         }else{
-        	   fn_resultASPop(result.ordId , result.ordNo);
+        	fn_resultASPop(result.ordId , result.ordNo);
         	$("#_NewEntryPopDiv1").remove();
-        	
         }
     });
     

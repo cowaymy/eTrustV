@@ -6,6 +6,9 @@ var option = {
         height : "500px"    // 창 세로 크기
 };
 
+
+var myGridID;
+
 function fn_searchASManagement(){
         Common.ajax("GET", "/services/as/searchASManagementList.do", $("#ASForm").serialize(), function(result) {
             console.log("성공.");
@@ -24,6 +27,26 @@ function fn_newASPop(){
 }
 
 
+function fn_viewASResultPop(){
+	
+    
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+	
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+    var AS_ID =    selectedItems[0].item.asId;
+    var AS_NO =    selectedItems[0].item.asNo;
+    var asStusId =    selectedItems[0].item.code1;
+    var ordno  =selectedItems[0].item.salesOrdNo;
+    var ordId  =selectedItems[0].item.asSoId;
+    
+	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId="+ordId+"&ordNo="+ordno+"&AS_NO="+AS_NO  ,null, null , true , '_viewEntryPopDiv1');
+    
+}
+
 function fn_resultASPop(ordId,ordNo){
 	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId="+ordId+"&ordNo="+ordNo ,null, null , true , '_resultNewEntryPopDiv1');
 
@@ -35,10 +58,39 @@ function fn_resultASPop(ordId,ordNo){
 
 
 function fn_newASResultPop(){
-    //Common.popupDiv("/services/as/initASReceiveEntryPop.do?isPop=true", "searchForm");
-    //Common.popupWin("saveASForm", "/services/as/ASReceiveEntryPop.do", option);
-    Common.popupDiv("/services/as/ASNewResultPop.do?isPop=true",'');
+	
+	/*
+    var ord_Id='411346';
+    var ord_No ="0811459";   
+    var as_No ='AA008127';
+    var as_Id ='607821';
+    */
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+
+    
+    console.log(selectedItems);
+    
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+    var asid =    selectedItems[0].item.asId;
+    var asNo =    selectedItems[0].item.asNo;
+    var asStusId     = selectedItems[0].item.code1;
+    var salesOrdNo  = selectedItems[0].item.salesOrdNo;
+    var salesOrdId  =selectedItems[0].item.asSoId;
+    
+    
+    if(asStusId  !="ACT"){
+    	  Common.alert("<b>[" + asNo + "] already has [" + code + "] result. Result entry is disallowed.</b>");
+          return ;
+    }
+    
+    var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
+    Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
 }
+
 
 $(document).ready(function() {
 
@@ -64,7 +116,6 @@ $(document).ready(function() {
     });   */
      
 });
-var myGridID;
 function asManagementGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -81,41 +132,41 @@ function asManagementGrid() {
         dataField : "asReqstDt",
         headerText : "Reques Date",
         editable : false,
-        width : 130
+        width : 110 , dataType : "date", formatString : "dd/mm/yyyy"
     }, {
-        dataField : "code",
+        dataField : "code1",
         headerText : "Status",
         editable : false,
-        width : 150
+        width : 80
     }, {
-        dataField : "asResultNo",
+        dataField : "c3",
         headerText : "Result No",
         editable : false,
         style : "my-column",
         width : 100
     }, {
-        dataField : "salesOrdNo",
+        dataField : "c4",
         headerText : "Key By",
         editable : false,
-        width : 180
+        width : 100
     }, {
         dataField : "salesOrdNo",
         headerText : "Order No",
         editable : false,
-        width : 180
+        width : 100
         
     }, {
-        dataField : "appType",
+        dataField : "code2",
         headerText : "App Type",
-        width : 180
+        width : 100
     }, {
         dataField : "name",
         headerText : "Cust Name",
-        width : 180
+        width : 200
     }, {
         dataField : "nric",
         headerText : "NRIC/Comp No",
-        width : 180
+        width : 100
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -231,7 +282,7 @@ function fn_excelDown(){
     <th scope="row">AS Status</th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="asStatus" name="asStatus">
-    <option value="1">Active</option>
+    <option value="1"  selected>Active</option>
     <option value="4">Completed</option>
     <option value="21">Fail</option>
     <option value="10">Cancelled</option>
@@ -270,6 +321,7 @@ function fn_excelDown(){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()">AS Application Edit</a></p></li>
        <!--  <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>

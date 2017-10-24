@@ -43,7 +43,7 @@ public class AllocationController {
 	private CommonService commonService;
 	
 	
-	/**
+	/** 
 	 * organization territoryList page  
 	 *
 	 * @param request
@@ -54,10 +54,12 @@ public class AllocationController {
 	@RequestMapping(value = "/allocation.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		
+		logger.debug("===================>");
+		logger.debug(params.toString());
 		model.addAttribute("ORD_ID",params.get("ORD_ID"));
-		model.addAttribute("S_DATE",params.get("S_DATE"));
+		model.addAttribute("S_DATE",params.get("S_DATE"));    
 		    
-		// 호출될 화면
+		// 호출될 화면  
 		return "organization/organization/allocationListPop";
 	}
 	

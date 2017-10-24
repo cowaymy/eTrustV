@@ -14,10 +14,7 @@ console.log("in load....");
 //console.log(roderInfo);
 
 function fn_ASSave(){
-       Common.ajax("GET", "/services/as/addASNo.do", {}, function(result) {
-            console.log("성공.");
-            console.log("data : " + result);
-        });
+       
 }
 
 
@@ -38,12 +35,83 @@ $(document).ready(function(){
     fn_getASHistoryInfo();
     fn_getBSHistoryInfo();
     
+    fn_setComboBox();
+    
+    
+
+    console.log( "=================>수정 일경우 ");
+    console.log( '${AS_NO}');
+    console.log( "=================>수정 일경우");
+    
+    if( '${AS_NO}' !=""){
+    	fn_setEditValue();
+    }
+    
+    
+    
 });
 
 
 function fn_setComboBox(){
-    doGetCombo('/common/selectCodeList.do', '23', '','Requestor', 'S' , 'fn_multiCombo'); 
+    doGetCombo('/common/selectCodeList.do', '24', '','requestor', 'S' , ''); 
+    doGetCombo('/services/as/getBrnchId', '', '','branchDSC', 'S' , '');            // Customer Type Combo Box
+    
 }
+
+
+
+
+function fn_setEditValue(){
+        Common.ajax("GET", "/services/as/selASEntryView.do", {AS_NO:'${AS_NO}'   }, function(result) {
+            console.log("fn_setEditValue.");
+            
+            var eOjb = result.asentryInfo;
+            console.log( eOjb);
+            
+            
+
+            $("#AS_PIC_ID").val(eOjb.asPicId) ;
+            $("#AS_ID").val(eOjb.asId) ;
+            $("#CTID").val(eOjb.asMemId) ;
+            $("#CTGroup").val(eOjb.asMemGrp);
+            $("#CTCode").val(eOjb.memCode);
+            
+            $("#requestDate").val(eOjb.asReqstDt);
+            $("#requestTime").val(eOjb.asReqstTm);
+            $("#appDate").val(eOjb.asAppntDt);
+            $("#appTime").val(eOjb.asAppntTm);
+            $("#branchDSC").val(eOjb.asBrnchId);
+            $("#errorCode").val(eOjb.asMalfuncId);
+            $("#errorDesc").val(eOjb.asMalfuncResnId);
+            $("#requestor").val(eOjb.asRemReqster);
+            $("#requestorCont").val(eOjb.asRemReqsterCntc);
+            $("#txtRequestor").val(eOjb.asReqsterTypeId);
+            $("#additionalCont").val(eOjb.asRemAddCntc);
+            $("#CTSSessionCode").val(eOjb.asSesionCode);
+            $("#perIncharge").val(eOjb.picName);
+            $("#perContact").val(eOjb.picCntc);
+            
+            $('#perIncharge').removeAttr("readonly").removeClass("readonly");
+            $('#perContact').removeAttr("readonly").removeClass("readonly");      
+            
+          
+            if(eOjb.asIsBsWithin30days == "1")  $("#checkBS").attr("checked",true);
+            else    $("#checkBS").attr("checked",false);
+            
+            if(eOjb.asAllowComm == "1") $("#checkComm").attr("checked",true);
+            else     $("#checkComm").attr("checked",false);  
+            
+               
+            if(eOjb.asRemReqsterCntcSms == "1")  $("#checkSms1").attr("checked",true);
+            else   $("#checkSms1").attr("checked",false);
+            
+            if(eOjb.asRemAddCntcSms == "1")   $("#checkSms2").attr("checked",true);
+            else   $("#checkSms2").attr("checked",false);
+            
+            
+        });
+}
+
 
 
 
@@ -134,8 +202,8 @@ function createBSHistoryGrid(){
 
 function fn_doAllaction(){
 	
-    var ord_id = '143486';
-    var  vdte =$("#appDate").val();
+    var ord_id ='${as_ord_basicInfo.ordNo}'   ;// '143486';
+    var  vdte   =$("#appDate").val();
     
     
     var options ={
@@ -146,8 +214,6 @@ function fn_doAllaction(){
     	    CTgroupObj:'CTgroupObj'
     }
     Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options }, null , true , '_doAllactionDiv');
-    
-
 }
 
 
@@ -158,6 +224,20 @@ function fn_getBSHistoryInfo(){
             AUIGrid.setGridData(bsHistoryGrid, result);
         });
 }
+
+
+
+
+
+function fn_getMemberBymemberID(){
+        Common.ajax("GET", "/services/as/getMemberBymemberID.do", {MEM_ID: $("#CTID").val() }, function(result) {
+            console.log("fn_getMemberBymemberID.");
+            console.log( result);
+            $("#mobileNo").val(result.telMobile);
+        });
+}
+
+
 
 function fn_loadPageControl(){
     
@@ -201,7 +281,556 @@ function fn_loadPageControl(){
 }
 
 
+function fn_doSave(){
+	  if( '${AS_NO}' !=""){
+		  fn_doUpDate();
+	  }else{
+		  fn_doNewSave();
+	  }
+}
 
+
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
+
+
+
+function fn_doUpDate(){
+
+    if( fn_validRequiredField_Save()){
+        var updateForm ={
+                 "AS_SO_ID"                  : '${as_ord_basicInfo.ordId}' ,
+                 "AS_MEM_ID"                : $("#CTID").val() ,
+                 "AS_MEM_GRP"               : $("#CTGroup").val(),
+                 "AS_REQST_DT"              : $("#requestDate").val(),
+                 "AS_REQST_TM"              : $("#requestTime").val(),
+                 "AS_APPNT_DT"              : $("#appDate").val(), 
+                 "AS_APPNT_TM"              : $("#appTime").val(),      
+                 "AS_BRNCH_ID"              : $("#branchDSC").val(),
+                 "AS_MALFUNC_ID"            : $("#errorCode").val(),
+                 "AS_MALFUNC_RESN_ID"       : $("#errorDesc").val(),
+                 "AS_REM_REQSTER"           : $("#requestor").val(),
+                 "AS_REM_REQSTER_CNTC"      : $("#requestorCont").val(),
+                 "AS_CALLLOG_ID"            : '0',
+                 "AS_STUS_ID"               : '1',
+                 "AS_SMS"                  : '0',
+                 "AS_ENTRY_IS_SYNCH"        : '0',   
+                 "AS_ENTRY_IS_EDIT"         : '0',
+                 "AS_TYPE_ID"               : '674',
+                 "AS_REQSTER_TYPE_ID"       : $("#txtRequestor").val(),
+                 "AS_IS_BS_WITHIN_30DAYS"   : $("#checkBS").prop("checked")   ? '1': '0',
+                 "AS_ALLOW_COMM"            : $("#checkComm").prop("checked") ? '1': '0',
+                 "AS_PREV_MEM_ID"           : 0,
+                 "AS_REM_ADD_CNTC"          : $("#additionalCont").val(),
+                 "AS_REM_REQSTER_CNTC_SMS"  : $("#checkSms1").prop("checked") ? '1': '0',
+                 "AS_REM_ADD_CNTC_SMS"      : $("#checkSms2").prop("checked") ? '1': '0',
+                 "AS_SESION_CODE"           : $("#CTSSessionCode").val(),
+                 "CALL_MEMBER"              : '0',
+                 "REF_REQUEST"              : '0' ,
+
+                 "PIC_NAME" :$("#perIncharge").val(),
+                 "PIC_CNTC" :$("#perContact").val(),
+                 "AS_ID": $("#AS_ID").val(),
+                 "AS_PIC_ID": $("#AS_PIC_ID").val()
+        }
+        
+        console.log(updateForm);
+            
+        Common.ajax("POST", "/services/as/updateASEntry.do",updateForm , function(result) {
+                    console.log("asupdate.");
+                    console.log( result);
+                    
+                    $("#sFm").find("input, textarea, button, select").attr("disabled",true);
+                    $("#save_bt_div").hide(); 
+        });
+    }
+}
+
+function  fn_doNewSave(){
+	
+	
+	if( fn_validRequiredField_Save()){
+		var saveForm ={
+				 "AS_SO_ID"                  : '${as_ord_basicInfo.ordId}' ,
+                 "AS_MEM_ID"                : $("#CTID").val() ,
+                 "AS_MEM_GRP"               : $("#CTGroup").val(),
+                 "AS_REQST_DT"              : $("#requestDate").val(),
+                 "AS_REQST_TM"              : $("#requestTime").val(),
+                 "AS_APPNT_DT"              : $("#appDate").val(), 
+                 "AS_APPNT_TM"              : $("#appTime").val(),      
+                 "AS_BRNCH_ID"              : $("#branchDSC").val(),
+                 "AS_MALFUNC_ID"            : $("#errorCode").val(),
+                 "AS_MALFUNC_RESN_ID"       : $("#errorDesc").val(),
+                 "AS_REM_REQSTER"           : $("#requestor").val(),
+                 "AS_REM_REQSTER_CNTC"      : $("#requestorCont").val(),
+                 "AS_CALLLOG_ID"            : '0',
+                 "AS_STUS_ID"               : '1',
+                 "AS_SMS"                  : '0',
+                 "AS_ENTRY_IS_SYNCH"        : '0',   
+                 "AS_ENTRY_IS_EDIT"         : '0',
+                 "AS_TYPE_ID"               : '674',
+                 "AS_REQSTER_TYPE_ID"       : $("#txtRequestor").val(),
+                 "AS_IS_BS_WITHIN_30DAYS"   : $("#checkBS").prop("checked")   ? '1': '0',
+                 "AS_ALLOW_COMM"            : $("#checkComm").prop("checked") ? '1': '0',
+                 "AS_PREV_MEM_ID"           : 0,
+                 "AS_REM_ADD_CNTC"          : $("#additionalCont").val(),
+                 "AS_REM_REQSTER_CNTC_SMS"  : $("#checkSms1").prop("checked") ? '1': '0',
+                 "AS_REM_ADD_CNTC_SMS"      : $("#checkSms2").prop("checked") ? '1': '0',
+                 "AS_SESION_CODE"           : $("#CTSSessionCode").val(),
+                 "CALL_MEMBER"              : '0',
+                 "REF_REQUEST"              : '0' ,
+
+                 "PIC_NAME" :$("#perIncharge").val(),
+                 "PIC_CNTC" :$("#perContact").val()
+		}
+		
+	    console.log(saveForm);
+	        
+	    Common.ajax("POST", "/services/as/saveASEntry.do",saveForm , function(result) {
+	                console.log("asSave.");
+	                console.log( result);
+	                
+	                if(result.asNo !="" ){
+	                	Common.alert("Save Quotation Summary" +DEFAULT_DELIMITER +"<b>New AS successfully saved.<br />AS number : [" + result.asNo  + "]</b>" );
+	                	   
+	                	if($("#checkSms").prop("checked")){
+	                        Common.alert("SMS" +DEFAULT_DELIMITER +"SMS 발송 팝업 화면 호출 차후 개발 " );
+	                		/*
+	                		     string ASID = asEntryData.ASID.ToString();
+	                            string ASNo = asEntryData.ASNo.ToString();
+	                            string CTMemID = ddlCTCode.SelectedValue.ToString();
+	                            string Message = this.GetSMSMessage(asEntryData,li);
+
+	                            Message = Message.Replace("&", "$%$");
+	                            Window_PopUp.NavigateUrl = "~/Services/AS/ASEntrySMS.aspx?ASID=" + ASID + "&ASNo=" + ASNo + "&CTMemID=" + CTMemID + "&Message=" + Message;
+	                            Window_PopUp.VisibleOnPageLoad = true;    
+	                          */
+	                	}
+	                	
+	                	if($("#checkSms1").prop("checked")){
+	                		  /*
+	                		    string SMSMessage = "";
+	                            DateTime dt = Convert.ToDateTime(dpAppDate.SelectedDate);
+	                            string strDate = dt.ToShortDateString();
+	                            SMSMessage="Order<"+txtOrderNo.Text+"> AS<"+asEntryData.ASNo+"> Appt Date<"+strDate+"> DSC<"+ddlDSC.SelectedItem.Text.Substring(0,6)+"> TQ"; 
+	                            SendRequestorSMS(li,SMSMessage);
+	                         */
+	                    }
+	                	
+
+                        if($("#checkSms2").prop("checked")){
+                        	  /*
+	                            string SMSMessage = "";
+	                            DateTime dt = Convert.ToDateTime(dpAppDate.SelectedDate);
+	                            string strDate = dt.ToShortDateString();
+	                            SMSMessage="Order<"+txtOrderNo.Text+"> AS<"+asEntryData.ASNo+"> Appt Date<"+strDate+"> DSC<"+ddlDSC.SelectedItem.Text.Substring(0,6)+"> TQ"; 
+	                            SendRequestorSMS(li,SMSMessage);
+	                         */
+                        }
+                        
+                        
+                        $("#sFm").find("input, textarea, button, select").attr("disabled",true);
+                        $("#save_bt_div").hide(); 
+	               }	
+	    });
+	}
+	 
+	
+	
+	
+	/*
+	 protected void btnSave_Click(object sender, EventArgs e)
+	    {
+	        Data.LoginInfo li = Session["login"] as Data.LoginInfo;
+	        if (li != null)
+	        {
+	            if (this.validRequiredField_Save())
+	            {
+	                Data.ASEntry asEntryData = new Data.ASEntry();
+	                asEntryData = this.GetSaveData_ASEntry(asEntryData, li);
+	                string Remark = txtRemark.Text.Trim();
+	                List<Data.ASPIC> asPICList = new List<Data.ASPIC>();
+	                if (btnSMS.Checked &&
+	                    ((!string.IsNullOrEmpty(txtPIC.Text.Trim())) ||
+	                    (!string.IsNullOrEmpty(txtPICContact.Text.Trim()))))
+	                    asPICList = this.GetSaveData_ASPICList(asPICList, li);
+	                ASManager am = new ASManager();
+	                asEntryData = am.DoSave_AS(asEntryData, asPICList, Remark);
+	                if (asEntryData != null)
+	                {
+	                    RadWindowManager1.RadAlert("<b>New AS successfully saved.<br />AS number : [" + asEntryData.ASNo + "]</b>", 450, 160, "AS Successfully Saved", "callBackFn", null);
+	                    if (btnSMS.Checked)
+	                    {
+	                        string ASID = asEntryData.ASID.ToString();
+	                        string ASNo = asEntryData.ASNo.ToString();
+	                        string CTMemID = ddlCTCode.SelectedValue.ToString();
+	                        string Message = this.GetSMSMessage(asEntryData,li);
+
+	                        Message = Message.Replace("&", "$%$");
+	                        Window_PopUp.NavigateUrl = "~/Services/AS/ASEntrySMS.aspx?ASID=" + ASID + "&ASNo=" + ASNo + "&CTMemID=" + CTMemID + "&Message=" + Message;
+	                        Window_PopUp.VisibleOnPageLoad = true;                       
+	                    }
+	                    
+	                    if (btnRequestorSMS.Checked == true)
+	                    {
+	                        string SMSMessage = "";
+	                        DateTime dt = Convert.ToDateTime(dpAppDate.SelectedDate);
+	                        string strDate = dt.ToShortDateString();
+	                        SMSMessage="Order<"+txtOrderNo.Text+"> AS<"+asEntryData.ASNo+"> Appt Date<"+strDate+"> DSC<"+ddlDSC.SelectedItem.Text.Substring(0,6)+"> TQ"; 
+	                        SendRequestorSMS(li,SMSMessage);
+	                    }
+
+	                    if (btnAdditionalSMS.Checked == true)
+	                    {
+	                        string SMSMessage = "";
+	                        SMSMessage = "COWAY RM0.00: Your order <" + txtOrderNo.Text + "> product issue had been successfully registered. Thank you!";
+	                        SendAdditionalSMS(li, SMSMessage);
+	                    }
+
+
+	                    this.disabledPageControl();
+	                }
+	                else
+	                {
+	                    RadWindowManager1.RadAlert("<b>Failed to save new AS. Please try again later.</b>", 450, 160, "Failed To Save", "callBackFn", null);
+	                }
+	            }
+	        }
+	        else
+	        {
+	            RadWindowManager1.RadAlert("<b>Your login session has expired. Please relogin to our system.</b>", 450, 160, "Session Expired", "callBackFn", null);
+	        }
+	    }
+	*/
+}
+
+
+function fn_validRequiredField_Save(){
+	
+	var rtnValue = true;
+	var  rtnMsg="";
+
+    if(FormUtil.checkReqValue($("#requestDate"))){
+           rtnMsg  +="Please select the request date.<br>" ;
+           rtnValue =false; 
+    }else {
+    	
+    	 var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
+         var  nowdateArry  =nowdate.split("-");
+                nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
+         var  rdateArray   =$("#appDate").val().split("/");
+         var requestDate  =rdateArray[2]+""+rdateArray[1]+""+rdateArray[0];
+     
+         if((parseInt(requestDate,10)  - parseInt(nowdateArry,10) ) > 14 || (parseInt(nowdateArry,10)  - parseInt(requestDate,10) )   >14){
+            rtnMsg  +="* Request date should not be longer than 14 days from current date.<br />" ;
+            rtnValue =false; 
+        }
+    }
+    
+    
+    if(FormUtil.checkReqValue($("#requestTime"))){
+        rtnMsg  +="Please select the request time.<br/>" ;
+        rtnValue =false; 
+    }
+    
+    
+    if(FormUtil.checkReqValue($("#appDate"))){
+	        rtnMsg  +="Please select the appDate date.<br>" ;
+	        rtnValue =false; 
+	 }else {
+	     
+	     var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
+	     var  nowdateArry  =nowdate.split("-");
+	            nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
+	     var  rdateArray   =$("#appDate").val().split("/");
+	     var requestDate  =rdateArray[2]+""+rdateArray[1]+""+rdateArray[0];
+	     
+	     if((parseInt(requestDate,10)  - parseInt(nowdateArry,10) ) > 14 || (parseInt(nowdateArry,10)  - parseInt(requestDate,10) )   >14){
+	         rtnMsg  +="* appDate date should not be longer than 14 days from current date.<br />" ;
+	         rtnValue =false; 
+	     }
+	 }
+
+    if(FormUtil.checkReqValue($("#appTime"))){
+        rtnMsg  +="Please select the appTime <br/>" ;
+        rtnValue =false; 
+    }
+    
+    if($("#errorCode").val() == ""){
+        rtnMsg += "* Please select the error code.<br />";
+        rtnValue =false; 
+    }
+    
+    if($("#errorDesc").val() == ""){
+        rtnMsg += "* Please select the errorDesc.<br />";
+        rtnValue =false; 
+    }
+    
+    if($("#errorCode").val() == ""){
+        rtnMsg += "* Please select the error code.<br />";
+        rtnValue =false; 
+    }
+    
+    if($("#errorCode").val() == ""){
+        rtnMsg += "* Please select the error code.<br />";
+        rtnValue =false; 
+    }
+    
+    
+    if($("#branchDSC").val() == ""){
+        rtnMsg += "* Please select the DSC branch. <br />";
+        rtnValue =false; 
+    }
+    
+
+    if($("#CTGroup").val() == ""){
+        rtnMsg += "* Please select the CTGroup. <br />";
+        rtnValue =false; 
+    }
+    
+    if($("#CTCode").val() == ""){
+        rtnMsg += "* Please select the CTCode. <br />";
+        rtnValue =false; 
+    }
+    
+
+    if($("#CTID").val() == ""){
+        rtnMsg += "* Please select the CTID. <br />";
+        rtnValue =false; 
+    }
+    
+    if($("#requestor").val() == ""){
+        rtnMsg += "* Please select the requestor. <br />";
+        rtnValue =false; 
+    }
+    
+    if($("#checkSms").prop("checked")){
+        if($("#CTCode").val() != ""){
+        	
+        	 if($("#mobileNo").val() != ""){
+                 //모바일 번호 vaild 체크 
+             }else{
+            	 rtnMsg += "* The CT does not has mobile number. SMS is disallowed.<br/>";
+                 rtnValue =false; 
+             }
+        }
+    }
+    
+    
+
+    if( rtnValue ==false ){
+        Common.alert("Save Quotation Summary" +DEFAULT_DELIMITER +rtnMsg );
+    }
+    
+    return  rtnValue;
+    
+    
+	/*
+	
+	 Boolean valid = true;
+     string Mesage = "";
+     if (string.IsNullOrEmpty(dpRequestDate.SelectedDate.ToString()))
+     {
+         Mesage += "* Please select the request date.<br />";
+         valid = false;
+     }
+     else
+     {
+         DateTime selecteddate = Convert.ToDateTime(dpRequestDate.SelectedDate);
+         DateTime currentdate = DateTime.Now;
+
+         if ((selecteddate - currentdate).Days > 14 || (currentdate - selecteddate).Days > 14)
+         {
+             valid = false;
+             Mesage += "* Request date should not be longer than 14 days from current date.<br />";
+         }
+     }
+     if (string.IsNullOrEmpty(tpReqTime.SelectedTime.ToString()))
+     {
+         Mesage += "* Please select the request time.<br />";
+         valid = false;
+     }
+     if (string.IsNullOrEmpty(dpAppDate.SelectedDate.ToString()))
+     {
+         Mesage += "* Please select the appointment date.<br />";
+         valid = false;
+     }
+     else
+     {
+         DateTime selecteddate = Convert.ToDateTime(dpAppDate.SelectedDate);
+         DateTime currentdate = DateTime.Now;
+
+         if ((selecteddate - currentdate).Days > 14 || (currentdate - selecteddate).Days > 14)
+         {
+             valid = false;
+             Mesage += "* Appointment date should not be longer than 14 days from current date.<br />";
+         }
+     }
+     if (string.IsNullOrEmpty(tpAppTime.SelectedTime.ToString()))
+     {
+         Mesage += "* Please select the appointment time.<br />";
+         valid = false;
+     }
+     if (ddlErrorCode.SelectedIndex <= -1)
+     {
+         Mesage += "* Please select the error code.<br />";
+         valid = false;
+     }
+     if (ddlErrorDesc.SelectedIndex <= -1)
+     {
+         Mesage += "* Please select the error description.<br />";
+         valid = false;
+     }
+
+     if (ddlDSC.SelectedIndex <= -1)
+     {
+         Mesage += "* Please select the DSC branch.<br />";
+         valid = false;
+     }
+     if (ddlCTGroup.SelectedIndex <= -1)
+     {
+         Mesage += "* Please select the CT group.<br />";
+         valid = false;
+     }
+     if (ddlCTCode.SelectedIndex <= -1)
+     {
+         Mesage += "* Please select the assign CT.<br />";
+         valid = false;
+
+     }
+     if (ddlRequestor.SelectedIndex <= -1)
+     {
+         Mesage += "* Please select the requestor.<br />";
+         valid = false;
+     }
+
+     if (btnSMS.Checked && ddlCTCode.SelectedIndex > -1)
+     {
+         if (!string.IsNullOrEmpty(txtCTMobile.Text.Trim()))
+         {
+             if (!CommonFunction.IsValidMobileNo(txtCTMobile.Text.Trim()))
+             {
+                 Mesage += "* Invalid CT mobile number. SMS is disallowed.<br />";
+                 valid = false;
+             }
+         }
+         else
+         {
+             Mesage += "* The CT does not has mobile number. SMS is disallowed.<br />";
+             valid = false;
+         }
+     }
+
+     if(!valid)
+         RadWindowManager1.RadAlert("<b>" + Mesage + "</b>", 450, 160, "Save Summary", "callBackFn", null);
+     return valid;
+     */
+	
+	return rtnValue; 
+}
+
+
+
+function   fn_mobilesmschange(_obj){
+	
+	if(_obj.checked){
+		$("#perContact").attr("disabled", false); 
+        $("#perIncharge").attr("disabled", false);        
+        $('#perIncharge').val('').removeAttr("readonly").removeClass("readonly");
+        $('#perContact').val('').removeAttr("readonly").removeClass("readonly");        
+        
+    }else{
+	    $("#perContact").attr("disabled", true); 
+	    $("#perIncharge").attr("disabled", true); 
+	}
+}
+
+
+
+
+
+
+function fn_changetxtRequestor (_obj){
+    
+    if(_obj.value !=""){
+         if(! FormUtil.checkNum($("#txtRequestor"))){
+          }else{
+              Common.alert("Warning" +DEFAULT_DELIMITER +"<b>Only Digit available for txtRequestor  number</b>" );
+              $("#txtRequestor").val(""); 
+          }
+    }
+}
+
+
+function fn_changeRequestorCont (_obj){
+	
+	if(_obj.value !=""){
+		 if(! FormUtil.checkNum($("#requestorCont"))){
+			 $("#checkSms1").attr("disabled", false); 
+			 
+	      }else{
+	    	  Common.alert("Warning" +DEFAULT_DELIMITER +"<b>Only Digit available for Requestor SMS number</b>" );
+	    	  $("#checkSms1").attr("disabled", true); 
+	    	  $("#checkSms1").attr("checked",false);
+	      }
+    }else{
+    	  $("#checkSms1").attr("disabled", true); 
+          $("#checkSms1").attr("checked",false);
+    }
+}
+
+
+
+function fn_changeAdditionalCont (_obj){
+	
+    if(_obj.value !=""){
+         if(! FormUtil.checkNum($("#additionalCont"))){
+             $("#checkSms2").attr("disabled", false); 
+             
+          }else{
+              Common.alert("Warning" +DEFAULT_DELIMITER +"<b>Only Digit available for AdditionalCont SMS number</b>" );
+              $("#checkSms2").attr("disabled", true); 
+              $("#checkSms2").attr("checked",false);
+          }
+    }else{
+    	   $("#checkSms2").attr("disabled", true); 
+           $("#checkSms2").attr("checked",false);
+  }
+}
+
+
+
+function fn_changeCTCode(_obj){
+	if(_obj.value !=""){
+		fn_getMemberBymemberID();
+	}
+	/*
+	txtCTMobile.Text = "";
+    if (ddlCTCode.SelectedIndex > -1)
+    {
+        Organization.Organization oo = new Organization.Organization();
+        memberModel mm = new memberModel();
+        mm = oo.GetMemberBymemberID(int.Parse(ddlCTCode.SelectedValue));
+        if (mm != null)
+        {
+            txtCTMobile.Text = mm.member.TelMobile;
+        }
+    }
+	*/
+}
 
 </script>
 <div id="popup_wrap"><!-- popup_wrap start -->
@@ -280,9 +909,14 @@ function fn_loadPageControl(){
 
 </section><!-- tap_wrap end -->
 
+
+
 <aside class="title_line"><!-- title_line start -->
 <h3>AS Application Information</h3>
 </aside><!-- title_line end -->
+
+
+<form action="#" method="post" id="sFm" name='sFm'>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -380,12 +1014,14 @@ function fn_loadPageControl(){
 <tr>
     <th scope="row">Error Code<span class="must">*</span></th>
     <td colspan="3">
-    <select class="w100p" id="errorCode" name="errorCode">
+    <select class="w100p" id="errorCode" name="errorCode"> 
+            <option value="1">err code 정의 </option>
     </select>
     </td>
     <th scope="row">Error Description<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="errorDesc" name="errorDesc">
+             <option value="1">err code desc </option>
     </select>
     </td>
 </tr>
@@ -406,26 +1042,26 @@ function fn_loadPageControl(){
 <tr>
     <th scope="row">Assign CT<span class="must">*</span></th>
     <td colspan="3">  
-           <input type="text" title="" placeholder="" id="CTCode" name="CTCode"/>
-               <input type="text" title="" placeholder=""  id="CTID" name="CTID"/>
+           <input type="text" title="" placeholder="" id="CTCode" name="CTCode"  onchange="fn_changeCTCode(this)"/>
+           <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode"/>
     </td>
     <th scope="row">Mobile No</th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p" id="mobileNo" name="mobileNo"/>
+           <input type="text" title="" placeholder="" class="w100p" id="mobileNo" name="mobileNo"/>
     </td>
     <th scope="row">SMS</th>
     <td>
-    <label><input type="checkbox" id="checkSms" name="checkSms"/></label>
+    <label><input type="checkbox" id="checkSms" name="checkSms"  onclick="fn_mobilesmschange(this)"/></label>
     </td>
 </tr>
 <tr>
     <th scope="row">Person Incharge</th>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="perIncharge"  name="perIncharge"/>
+    <input type="text" title="" placeholder="" class="readonly w100p"  id="perIncharge"  name="perIncharge"/>
     </td>
     <th scope="row">Person Incharge Contact</th>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="perContact" name="perContact"/>
+    <input type="text" title="" placeholder="" class="readonly w100p"  id="perContact" name="perContact"/>
     </td>
 </tr>
 <tr>
@@ -436,7 +1072,7 @@ function fn_loadPageControl(){
     </td>
     <th scope="row">Requestor Contact</th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p" id="requestorCont" name="requestorCont"/>
+    <input type="text" title="" placeholder="" class="w100p" id="requestorCont" name="requestorCont" onchange="fn_changeRequestorCont(this)"/>
     </td>
     <th scope="row">SMS</th>
     <td>
@@ -445,11 +1081,12 @@ function fn_loadPageControl(){
 </tr>
 <tr>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="w100p" />
+    <input type="text" title="" placeholder="" id='txtRequestor' name='txtRequestor' class="w100p"  onchage="fn_changetxtRequestor(this)"/>
     </td>
     <th scope="row">Additional Contact</th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p" id="additionalCont" name="additionalCont"/>
+    <input type="text" title="" placeholder="" class="w100p" id="additionalCont" name="additionalCont"  onchange="fn_changeAdditionalCont(this)"/>
+    
     </td>
     <th scope="row">SMS</th>
     <td>
@@ -458,7 +1095,6 @@ function fn_loadPageControl(){
 </tr>
 <tr>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="w100p" />
     </td>
     <th scope="row"> Allow Commission</th>
     <td colspan="3">
@@ -473,11 +1109,18 @@ function fn_loadPageControl(){
 </tr>
 </tbody>
 </table><!-- table end -->
+</form>
 
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="fn_ASSave()">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
+<div style="display:inline">
+           <input type="text" title="" placeholder=""  id="AS_ID" name="AS_ID"/>
+           <input type="text" title="" placeholder=""  id="AS_PIC_ID" name="AS_PIC_ID"/>
+           <input type="text" title="" placeholder=""  id="CTID" name="CTID"/>
+</div>
+
+<ul class="center_btns" id='save_bt_div'>
+    <li><p class="btn_blue2 big"><a href="#" onClick="fn_doSave()" >Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:$('#sFm').clearForm();" >Clear</a></p></li>
 </ul>
 
 </section><!-- search_result end -->
