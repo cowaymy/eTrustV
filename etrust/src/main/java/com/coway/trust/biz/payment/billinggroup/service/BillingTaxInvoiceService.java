@@ -1,0 +1,54 @@
+package com.coway.trust.biz.payment.billinggroup.service;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+public interface BillingTaxInvoiceService{
+	
+	/**
+	 * Billing Group - Tax Invoice Rental 그리드 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectTaxInvoiceRentalList(Map<String, Object> params);
+    
+    /**
+	 * Billing Group - Tax Invoice Outright 그리드 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectTaxInvoiceOutrightList(Map<String, Object> params);
+    
+    /**
+	 * Billing Group - Tax Invoice Membership 그리드 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectTaxInvoiceMembershipList(Map<String, Object> params);
+    
+    /**
+	 * Billing Group - Tax Invoice Rental Membership 그리드 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectTaxInvoiceRenMembershipList(Map<String, Object> params);
+    
+    /**
+   	 * Billing Group - Tax Invoice Miscellaneous 그리드 조회
+   	 * @param params
+   	 * @return
+   	 */
+    List<EgovMap> selectTaxInvoiceMiscellaneousList(Map<String, Object> params);
+    
+    /**
+   	 * Billing Group - Statement Company Rental 그리드 조회 
+   	 * @param params
+   	 * @return
+   	 */
+    List<EgovMap> selectStatementCompanyRental(Map<String, Object> params);
+    
+  
+
+}

@@ -1,0 +1,155 @@
+package com.coway.trust.biz.common.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.coway.trust.biz.common.LargeExcelQuery;
+import com.coway.trust.biz.common.LargeExcelService;
+import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
+
+@Service
+public class LargeExcelServiceImpl implements LargeExcelService {
+
+	@Autowired
+	private ExcelDownloadMapper excelDownloadMapper;
+
+	@Override
+	public void downLoad06T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0006T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad07T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0007T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad08T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0008T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad09T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0013T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad10T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0010T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad11T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0011T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad12T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0012T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad13T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0013T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad14T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0014T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad15T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0015T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad16T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0016T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad17T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0017T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad18T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0018T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad19T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0019T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad20T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0020T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad21T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0021T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad22T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0022T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad23T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0023T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad24T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0024T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad25T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0025T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad26T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0026T.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad28CD(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0028CD.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad28CT(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0028CT.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad28HP(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0028HP.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad29CD(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0029CD.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad29CT(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0029CT.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad29HP(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0029HP.getQueryId(), parameter, excelDownloadHandler);
+	}
+
+	@Override
+	public void downLoad(String id, Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		excelDownloadMapper.getSqlSession().select(id, parameter, excelDownloadHandler);
+	}
+}
