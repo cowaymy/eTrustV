@@ -33,7 +33,7 @@ var obj = {
 fileList.push(obj);
 </c:forEach>
 
-$(document).ready(function(){
+$(document).ready(function(){  
 		
 	var adjustmentList;
 		
@@ -63,9 +63,8 @@ $(document).ready(function(){
 	$("#btnDel").click(fn_RemoveRow);
     
     $("#btnClear").click(function(){
-    	$("input").each(function(){
-	        $(this).val("");
-	    });
+    	
+    	$("#pAdjForm")[0].reset();
     });    
     
     $("#sendYearMonth").change(function(){
@@ -120,6 +119,9 @@ $(document).ready(function(){
             $("#recvAmount").val(str);
     	}
     	$("#sendAmount").val(str);
+    	
+    	
+    	
     }); 
     
     //기본 콤보 셋팅
@@ -235,17 +237,7 @@ $(document).ready(function(){
         dataField : "atchFileGrpId",
         headerText : '',
         visible : false,
-    }
-    /* ,{
-        dataField : "availableAmt",
-        headerText : '',
-        dataType : "numeric",
-        formatString : "#,##0.00",
-        style : "my-right-style",
-        width : 100,
-        visible :false
-    } */
-    ];
+    }];
          
     var adjPOptions = {
             enableCellMerge : true,
@@ -271,22 +263,8 @@ $(document).ready(function(){
         rowid = event.rowIndex;
 
     });
-
+    
 });
-
-/* function setHaveInputFile(){//인풋파일 있을경우
-    var autoFl = $(".auto_file2 label .input_text");
-    for(var i=0; i<autoFl.length; i++){
-        var flVal = $(".auto_file2 input[type=file]:eq("+i+")").attr("value"),
-            flUpd = $(".auto_file2 label .input_text:eq("+i+")");
-        if( flVal ){
-        	alert(flVal);
-            flUpd.val(flVal);
-        } else {
-            flUpd.val("");
-        };
-    }
-} */
 
 
 function fn_RemoveRow(){
