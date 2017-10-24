@@ -88,7 +88,7 @@ $(document).ready(function () {
     $("#viewMemAccId").text(myGridData[0].memAccId);
     $("#viewMemAccName").text(myGridData[0].memAccName);
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
-    $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0"));
+    $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
     
     fn_setGridData(myGridID, myGridData);
 })

@@ -42,7 +42,7 @@ var obj = {
         ,cvrr : "${data.cvrr}"
         ,netAmt : Number("${data.netAmt}")
         ,taxAmt : Number("${data.taxAmt}")
-        ,totAmt : Number("${data.taxAmt}")
+        ,totAmt : Number("${data.totAmt}")
         ,expDesc : "${data.expDesc}"
 };
 gridDataList.push(obj);

@@ -75,7 +75,7 @@ var invoAprveGridColLayout = [ {
     headerText : '<spring:message code="webInvoice.amount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
-    formatString : "#,##0"
+    formatString : "#,##0.00"
 }, {
     dataField : "appvPrcssStusCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
