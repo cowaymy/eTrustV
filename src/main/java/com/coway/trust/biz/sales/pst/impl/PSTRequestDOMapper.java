@@ -214,6 +214,17 @@ public interface PSTRequestDOMapper {
 	
 	
 	/**
+	 * 글을 조회한다. (상세조회) - (new popup - Contact)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	List<EgovMap> pstNewContactListPop(Map<String, Object> params);
+	
+	
+	/**
 	 * 글을 조회한다. (상세조회) - (add / edit address popup)
 	 * 
 	 * @param vo
@@ -235,5 +246,91 @@ public interface PSTRequestDOMapper {
 	List<EgovMap> pstEditAddrDetailListPop(Map<String, Object> params);
 	
 	
+	/**
+	 * 글을 조회한다. (상세조회) - (add / edit address popup)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	EgovMap pstEditContDetailTopPop(Map<String, Object> params);
 	
+	
+	/**
+	 * item을 조회한다. (New popup - ADD STOCK ITEM : Stock Item combo box)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	List<EgovMap> cmbChgStockItemList(Map<String, Object> params);
+	
+	
+	/**
+	 * item을 조회한다. (New popup - ADD STOCK ITEM : Stock Item combo box)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	void insertPstSAL0062D(PSTSalesMVO pstSalesMVO);
+	
+	
+	/**
+	 * item을 조회한다. (New popup - ADD STOCK ITEM : Stock Item combo box)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	void updatePstSAL0062D(PSTSalesMVO pstSalesMVO);
+	
+
+	/**
+	 * item을 조회한다. (New popup - ADD STOCK ITEM : Stock Item combo box)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	void insertPstSAL0063D(PSTSalesDVO pstSalesDVO);
+	
+	
+	/**
+	 * item을 조회한다. (New popup - ADD STOCK ITEM : Stock Item combo box)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	void insertPstSAL0061D(PSTLogVO pstLogVO);
+	
+	int crtSeqSAL0062D();
+	String crtSeqSAL0063D();
+	String crtSeqSAL0061D();
+	
+	/**
+	 * edit - add address
+	 */
+	int crtSeqSAL0031D();
+	void insertPstSAL0031D(Map<String, Object> params);
+	void updatePstSAL0031D(Map<String, Object> params);
+	void updateMainPstSAL0031D(Map<String, Object> params);
+	void updateSubPstSAL0031D(Map<String, Object> params);
+	
+	
+	/**
+	 * edit - add contact
+	 */
+	int crtSeqSAL0032D();
+	void insertPstSAL0032D(Map<String, Object> params);
+//	void updatePstSAL0032D(Map<String, Object> params);
+	void updateMainPstSAL0032D(Map<String, Object> params);
+	void updateSubPstSAL0032D(Map<String, Object> params);
 }

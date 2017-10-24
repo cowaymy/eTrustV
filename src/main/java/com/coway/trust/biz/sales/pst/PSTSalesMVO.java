@@ -20,12 +20,20 @@ public class PSTSalesMVO implements Serializable{
 	private static final long serialVersionUID = -2594924121072384758L;
 	
 	private int pstSalesOrdId;
+	private String pstItmId;
+	private String pstTrnsitId;
 	private String pstRefNo;
 	private int pstDealerId;
 	private int pstDealerMailCntId;
 	private int pstDealerDelvryCntId;
 	private int pstDealerMailAddId;
 	private int pstDealerDelvryAddId;
+	private String newMailaddrDtl;
+	private String newMailstreet;
+	private String mailAddrAreaId;
+	private String newDelvryaddrDtl;
+	private String newDelvrystreet;
+	private String delvryAddrAreaId;
 	private BigDecimal pstCurRate;
 	private int pstCurTypeId;
 	private BigDecimal pstTotAmt;
@@ -139,4 +147,54 @@ public class PSTSalesMVO implements Serializable{
 	public void setPstCustPo(String pstCustPo) {
 		this.pstCustPo = pstCustPo;
 	}
+	public String getNewMailaddrDtl() {
+		return newMailaddrDtl;
+	}
+	public void setNewMailaddrDtl(String newMailaddrDtl) {
+		this.newMailaddrDtl = newMailaddrDtl;
+	}
+	public String getNewMailstreet() {
+		return newMailstreet;
+	}
+	public void setNewMailstreet(String newMailstreet) {
+		this.newMailstreet = newMailstreet;
+	}
+	public String getMailAddrAreaId() {
+		return mailAddrAreaId;
+	}
+	public void setMailAddrAreaId(String mailAddrAreaId) {
+		this.mailAddrAreaId = mailAddrAreaId;
+	}
+	public String getNewDelvryaddrDtl() {
+		return newDelvryaddrDtl;
+	}
+	public void setNewDelvryaddrDtl(String newDelvryaddrDtl) {
+		this.newDelvryaddrDtl = newDelvryaddrDtl;
+	}
+	public String getNewDelvrystreet() {
+		return newDelvrystreet;
+	}
+	public void setNewDelvrystreet(String newDelvrystreet) {
+		this.newDelvrystreet = newDelvrystreet;
+	}
+	public String getDelvryAddrAreaId() {
+		return delvryAddrAreaId;
+	}
+	public void setDelvryAddrAreaId(String delvryAddrAreaId) {
+		this.delvryAddrAreaId = delvryAddrAreaId;
+	}
+	public String getPstItmId() {
+		return pstItmId;
+	}
+	public void setPstItmId(String pstItmId) {
+		this.pstItmId = pstItmId;
+	}
+	public String getPstTrnsitId() {
+		return pstTrnsitId;
+	}
+	public void setPstTrnsitId(String pstTrnsitId) {
+		this.pstTrnsitId = pstTrnsitId;
+	}
+	
+	
 }

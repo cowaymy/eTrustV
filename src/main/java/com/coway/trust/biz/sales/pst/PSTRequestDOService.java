@@ -163,6 +163,17 @@ public interface PSTRequestDOService {
 	
 	
 	/**
+	 * 글 상세조회를 한다.  (new popup - Contact)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	List<EgovMap> pstNewContactListPop(Map<String, Object> params);
+	
+	
+	/**
 	 * 글 상세조회를 한다.  - (add / edit address popup)
 	 * 
 	 * @param pstRequestVO
@@ -174,6 +185,17 @@ public interface PSTRequestDOService {
 	
 	
 	/**
+	 * 글 상세조회를 한다.  - (add / edit address popup) x
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	EgovMap pstEditContDetailTopPop(Map<String, Object> params);
+	
+	
+	/**
 	 * 글 목록을 조회한다.		- (add / edit address popup)
 	 * 
 	 * @param pstRequestVO
@@ -182,4 +204,40 @@ public interface PSTRequestDOService {
 	 * @exception Exception
 	 */
 	List<EgovMap> pstEditAddrDetailListPop(Map<String, Object> params);
+	
+	
+	/**
+	 * item을 조회한다. (New popup - ADD STOCK ITEM : Stock Item combo box)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	List<EgovMap> cmbChgStockItemList(Map<String, Object> params);
+	
+	int crtSeqSAL0062D();
+	String crtSeqSAL0063D();
+	String crtSeqSAL0061D();
+	
+	public void insertNewReqOk(List<PSTSalesDVO> pstSalesDVOList, PSTSalesMVO pstSalesMVO);
+	
+	
+	/**
+	 * edit - add address
+	 */
+	int crtSeqSAL0031D();
+	void insertPstSAL0031D(Map<String, Object> params);
+	void updatePstSAL0031D(Map<String, Object> params);
+	void updateMainPstSAL0031D(Map<String, Object> params);
+	
+	
+	/**
+	 * edit - add contact
+	 */
+	int crtSeqSAL0032D();
+	void insertPstSAL0032D(Map<String, Object> params);
+//	void updatePstSAL0032D(Map<String, Object> params);
+	void updateMainPstSAL0032D(Map<String, Object> params);
+	
 }

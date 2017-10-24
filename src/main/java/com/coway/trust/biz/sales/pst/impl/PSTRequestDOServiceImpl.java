@@ -356,5 +356,191 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		return pstRequestDOMapper.pstEditAddrDetailListPop(params);
 	}
+	
+	
+	/**
+	 * 글 목록을 조회한다. (add / edit address popup)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> pstNewContactListPop(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstNewContactListPop(params);
+	}
+	
+	
+	/**
+	 * 글 목록을 조회한다. (add / edit address popup)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	
+	public EgovMap pstEditContDetailTopPop(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstEditContDetailTopPop(params);
+	}
+	
+	
+	/**
+	 * item을 조회한다. (New popup - ADD STOCK ITEM : Stock Item combo box)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> cmbChgStockItemList(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.cmbChgStockItemList(params);
+	}
+	
+	
+	/**
+	 * SEQ가져오기
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	public int crtSeqSAL0062D() {
+		
+		return pstRequestDOMapper.crtSeqSAL0062D();
+	}
+	
+	public String crtSeqSAL0063D() {
+		
+		return pstRequestDOMapper.crtSeqSAL0063D();
+	}
+
+    public String crtSeqSAL0061D() {
+    	
+    	return pstRequestDOMapper.crtSeqSAL0061D();
+    }
+    
+    
+    /**
+	 * 글을 등록한다.
+	 * 
+	 * @param vo
+	 *            - 수정할 정보가 담긴 SampleVO
+	 * @return void형
+	 * @exception Exception
+	 */
+	@Override
+	public void insertNewReqOk(List<PSTSalesDVO> pstSalesDVOList, PSTSalesMVO pstSalesMVO) {
+		
+		PSTLogVO pstLogVO = null;
+		
+		pstRequestDOMapper.insertPstSAL0062D(pstSalesMVO);		// PST Sales Master
+		
+		for(PSTSalesDVO pstSalesDVO : pstSalesDVOList) {
+			
+			pstRequestDOMapper.insertPstSAL0063D(pstSalesDVO);	// PST Sales Detail
+
+			pstLogVO = new PSTLogVO();
+			
+			pstLogVO.setPstTrnsitId(Integer.parseInt(pstSalesMVO.getPstTrnsitId()));
+			pstLogVO.setPstSalesOrdId(pstSalesMVO.getPstSalesOrdId());
+			pstLogVO.setPstStockId(pstSalesDVO.getPstItmStkId());
+			pstLogVO.setPstStockRem(pstSalesDVO.getPstStockRem());
+			pstLogVO.setPstQty(pstSalesDVO.getPstItmReqQty()); //입력받은 취소수량
+			pstLogVO.setPstTypeId(pstSalesMVO.getPstCurTypeId());
+			pstLogVO.setPstRefNo(pstSalesMVO.getPstRefNo());
+			pstLogVO.setCrtUserId(pstSalesDVO.getCrtUserId());
+			
+			pstRequestDOMapper.insertPstSAL0061D(pstLogVO);		// PST Sales Log
+		}
+		
+	}
+	
+	
+	public int crtSeqSAL0031D() {
+    	
+    	return pstRequestDOMapper.crtSeqSAL0031D();
+    }
+	
+	
+	/**
+	 * edit - add address
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
+	public void insertPstSAL0031D(Map<String, Object> params) {
+		pstRequestDOMapper.insertPstSAL0031D(params);
+	}
+	
+	
+	/**
+	 * edit - add address
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
+	public void updatePstSAL0031D(Map<String, Object> params) {
+		pstRequestDOMapper.updatePstSAL0031D(params);
+	}
+	
+	
+	/**
+	 * edit - add address
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
+	public void updateMainPstSAL0031D(Map<String, Object> params) {
+		pstRequestDOMapper.updateSubPstSAL0031D(params);
+		pstRequestDOMapper.updateMainPstSAL0031D(params);
+		
+	}
+	
+	
+	public int crtSeqSAL0032D() {
+    	
+    	return pstRequestDOMapper.crtSeqSAL0032D();
+    }
+	
+	
+	/**
+	 * edit - add contact
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
+	public void insertPstSAL0032D(Map<String, Object> params) {
+		pstRequestDOMapper.insertPstSAL0032D(params);
+	}
+	
+	
+	/**
+	 * edit - add address
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception contact
+	 */
+	@Override
+	public void updateMainPstSAL0032D(Map<String, Object> params) {
+		pstRequestDOMapper.updateSubPstSAL0032D(params);
+		pstRequestDOMapper.updateMainPstSAL0032D(params);
+		
+	}
     
 }

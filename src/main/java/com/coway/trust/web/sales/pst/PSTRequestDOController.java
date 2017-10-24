@@ -280,6 +280,8 @@ public class PSTRequestDOController {
 		map.put("brnchId", cmbDealerBrnchList.get(0).get("codeId"));
 		map.put("brnchCodeName", cmbDealerBrnchList.get(0).get("codeName"));
 		
+		map.put("dealerAddId", pstMailAddrMain.get("dealerAddId"));
+		map.put("areaId", pstMailAddrMain.get("areaId"));
 		map.put("addrDtl", pstMailAddrMain.get("addrDtl"));
 		map.put("street", pstMailAddrMain.get("street"));
 		map.put("area", pstMailAddrMain.get("area"));
@@ -288,6 +290,7 @@ public class PSTRequestDOController {
 		map.put("state", pstMailAddrMain.get("state"));
 		map.put("country", pstMailAddrMain.get("country"));
 		
+		map.put("dealerCntId", pstNewContactPop.get("dealerCntId"));
 		map.put("cntName", pstNewContactPop.get("cntName"));
 		map.put("dealerIniCd", pstNewContactPop.get("dealerInitialCode"));
 		map.put("gender", pstNewContactPop.get("gender"));
@@ -419,9 +422,340 @@ public class PSTRequestDOController {
 	@RequestMapping(value = "/getAddrJsonListPop", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getAddrJsonListPop(@RequestParam Map<String, Object>params, ModelMap model) {
 
+		logger.debug("params.toString() :::::::::::::::::::::::::::::::::::::::::::::::: "+params.toString());
+//		params.put("dealerId", params.get("editDealerId"));
 		List<EgovMap> pstMailAddrList = pstRequestDOService.pstEditAddrDetailListPop(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(pstMailAddrList);
+	}
+	
+	
+	/**
+	 * 화면 호출. -Add/Edit Address (팝업화면)
+	 */
+	@RequestMapping(value = "/pstAnotherAddrJsonListPop", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> pstAnotherAddrJsonListPop(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("params.toString() :::::::::::::::::::::::::::::::::::::::::::::::: "+params.toString());
+//		params.put("dealerId", params.get("editDealerId"));
+		List<EgovMap> pstMailAddrList = pstRequestDOService.pstEditAddrDetailListPop(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(pstMailAddrList);
+	}
+	
+	
+	/**
+	 * Add new Address(Edit)
+	 * @param model
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/updateDealerNewAddressPop.do")
+	public String updateDealerNewAddressPop(@RequestParam Map<String, Object> params , ModelMap model) throws Exception{
+		
+		model.addAttribute("insDealerId", params.get("dealerId"));
+		
+		return "sales/pst/pstAddDealerAddressPop";
+	}
+	
+	
+	/**
+	 * Add new Contact(Edit)
+	 * @param model
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/updateDealerNewContactPop.do")
+	public String updateDealerNewContactPop(@RequestParam Map<String, Object> params , ModelMap model) throws Exception{
+		
+		model.addAttribute("insDealerId", params.get("dealerId"));
+		
+		return "sales/pst/pstAddDealerContactPop";
+	}
+	
+	
+	/**
+	 * 화면 호출. -New pst (팝업화면)
+	 */
+	@RequestMapping(value = "/addStockItempPop.do")
+	public String addStockItempPop(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		// Dealer combo box
+//		List<EgovMap> cmbDealerList = pstRequestDOService.pstNewCmbDealerList();
+		
+//		model.addAttribute("cmbDealerList", cmbDealerList);
+		
+//		EgovMap pstMailAddrMain = pstRequestDOService.pstEditAddrDetailTopPop(params);
+
+		
+		return "sales/pst/pstNewAddStockItemPop";
+	}
+	
+	
+	/**
+	 * 화면 호출. -Add/Edit Address (팝업화면)
+	 */
+	@RequestMapping(value = "/getStockItemJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getStockItemJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		List<EgovMap> getStockItmList = pstRequestDOService.cmbChgStockItemList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(getStockItmList);
+	}
+	
+	
+	/**
+	 * New save
+	 */
+	@RequestMapping(value = "/insertNewRequestDO.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertNewRequestDO(@RequestBody PSTRequestDOForm pstRequestDOForm,
+			Model model) {
+		
+		GridDataSet<PSTStockListGridForm> dataSet = pstRequestDOForm.getDataSet();
+		List<PSTStockListGridForm> addList    = dataSet.getAll();    // 추가 리스트 얻기
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		
+		int crtSeqSAL0062D = pstRequestDOService.crtSeqSAL0062D();			// PST_SALES_ORD_ID    SEQ
+		String crtSeqSAL0063D = pstRequestDOService.crtSeqSAL0063D();		// PST_ITM_ID				  SEQ
+		String crtSeqSAL0061D = pstRequestDOService.crtSeqSAL0061D();		// PST_TRNSIT_ID		  SEQ
+		String newPstRefNo = "";
+		int newPstRefNoRLength = (int)(Math.log10(crtSeqSAL0062D));			// 생성된 PST_SALES_ORD_ID length
+		logger.debug("newPstRefNoRLength :::::::::::::::::::::::::::::::::: "+newPstRefNoRLength);
+		if(newPstRefNoRLength == 1){
+			newPstRefNo = "PSO" + "00000" + Integer.toString(crtSeqSAL0062D);
+		}else if(newPstRefNoRLength == 2){
+			newPstRefNo = "PSO" + "0000" + Integer.toString(crtSeqSAL0062D);
+		}else if(newPstRefNoRLength == 3){
+			newPstRefNo = "PSO" + "000" + Integer.toString(crtSeqSAL0062D);
+		}else if(newPstRefNoRLength == 4){
+			newPstRefNo = "PSO" + "00" + Integer.toString(crtSeqSAL0062D);
+		}else if(newPstRefNoRLength == 5){
+			newPstRefNo = "PSO" + "0" + Integer.toString(crtSeqSAL0062D);
+		}else if(newPstRefNoRLength == 6){
+			newPstRefNo = "PSO" + Integer.toString(crtSeqSAL0062D);
+		}else{
+			newPstRefNo = "PSO" + "000000" + Integer.toString(crtSeqSAL0062D);
+		}
+		
+		PSTSalesMVO pstSalesMVO = pstRequestDOForm.getPstSalesMVO();		// Master
+		pstSalesMVO.setPstSalesOrdId(crtSeqSAL0062D);
+		pstSalesMVO.setPstItmId(crtSeqSAL0063D);
+		pstSalesMVO.setPstTrnsitId(crtSeqSAL0061D);
+		pstSalesMVO.setPstRefNo(newPstRefNo);
+		pstSalesMVO.setPstStusId(1);
+		pstSalesMVO.setCrtUserId(sessionVO.getUserId());
+		
+		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+pstSalesMVO.getPic());
+		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+pstSalesMVO.getPstCustPo());
+		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+pstSalesMVO.getPstRem());
+		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+pstSalesMVO.getPstDealerDelvryAddId());
+		
+		List<PSTSalesDVO> pstSalesDVOList = new ArrayList<>();					// Detail
+		
+		addList.forEach(form -> {
+			
+			PSTSalesDVO pstSalesDVO = new PSTSalesDVO();
+			
+			logger.debug("id   : "+form.getPstItmStkId());
+			logger.debug("prc : "+form.getPstItmPrc());
+			logger.debug("qty : "+form.getPstItmReqQty());
+			logger.debug("tot : "+form.getPstItmTotPrc());
+			
+			
+			pstSalesDVO.setPstItmStkId(form.getPstItmStkId());
+			pstSalesDVO.setPstItmPrc(form.getPstItmPrc());
+			pstSalesDVO.setPstItmReqQty(form.getPstItmReqQty());
+			pstSalesDVO.setPstItmTotPrc(form.getPstItmTotPrc());
+			pstSalesDVO.setPstItmDoQty(0);
+			pstSalesDVO.setPstItmCanQty(0);
+			pstSalesDVO.setPstItmBalQty(form.getPstItmReqQty());
+			pstSalesDVO.setCrtUserId(sessionVO.getUserId());
+			
+			
+			pstSalesDVOList.add(pstSalesDVO);
+		});
+		
+		pstRequestDOService.insertNewReqOk(pstSalesDVOList, pstSalesMVO);
+		
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+				
+	}
+	
+	
+	/**
+	 * Add new Address(Edit) After
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/insertDealerAddressInfo.do")
+	public ResponseEntity<ReturnMessage> insertDealerAddressInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		int getDealerAddId = pstRequestDOService.crtSeqSAL0031D();
+		params.put("getDealerAddId", getDealerAddId);
+		params.put("stusCodeId", 1);
+		pstRequestDOService.insertPstSAL0031D(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	/**
+	 * Address Info Edit Set Main 주소 정보 메인 설정 
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/updateDealerAddressSetMain.do")
+	public ResponseEntity<ReturnMessage> updateDealerAddressSetMain(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + params.get("dealerAddId"));
+		pstRequestDOService.updateMainPstSAL0031D(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	/**
+	 * Add new Contact(Edit) After
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/insertDealerContactInfo.do")
+	public ResponseEntity<ReturnMessage> insertDealerContactInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		int getDealerCntId = pstRequestDOService.crtSeqSAL0032D();
+		params.put("getDealerCntId", getDealerCntId);
+		params.put("stusCodeId", 1);
+		pstRequestDOService.insertPstSAL0032D(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	/**
+	 * 화면 호출. -New pst (팝업화면)
+	 */
+	@RequestMapping(value = "/pstAnotherAddrPop.do")
+	public String pstAnotherAddrPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		
+		logger.info("@@@@@@@@@@@@@@@ " + params.toString());
+		model.addAttribute("dealerId", params.get("dealerId"));
+		return "sales/pst/pstAnotherAddressPop";
+	}
+	
+	
+	/**
+	 * 화면 호출. -Add/Edit Contact (팝업화면)
+	 */
+	@RequestMapping(value = "/editContDtPop.do")
+	public String editContDtPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		
+		logger.debug((String)params.get("pstSalesOrdId"));
+		logger.debug((String)params.get("pstRefNo"));
+		logger.debug("dealerId Edit :: "+params.get("dealerId"));
+
+		// MAIN만 가져오기.
+		params.put("stusCode", 9);
+		
+		EgovMap pstMailContMain = pstRequestDOService.pstNewContactPop(params);
+//		List<EgovMap> pstMailAddrList = pstRequestDOService.pstEditAddrDetailListPop(params);
+		
+		model.addAttribute("pstMailContMain", pstMailContMain);
+		model.addAttribute("dealerId", params.get("dealerId"));
+		model.addAttribute("pstSalesOrdId", params.get("pstSalesOrdId"));
+		model.addAttribute("pstRefNo", params.get("pstRefNo"));
+		
+		return "sales/pst/pstEditDealerContactPop";
+	}
+	
+	
+	/**
+	 * 화면 호출. -Add/Edit Contact (팝업화면)
+	 */
+	@RequestMapping(value = "/getContJsonListPop", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getContJsonListPop(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("params.toString() :::::::::::::::::::::::::::::::::::::::::::::::: "+params.toString());
+//		params.put("dealerId", params.get("editDealerId"));
+		List<EgovMap> pstMailContList = pstRequestDOService.pstNewContactListPop(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(pstMailContList);
+	}
+	
+	
+	/**
+	 * 화면 호출. -Add/Edit Address (팝업화면)
+	 */
+	@RequestMapping(value = "/pstAnotherContJsonListPop", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> pstAnotherContJsonListPop(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("params.toString() :::::::::::::::::::::::::::::::::::::::::::::::: "+params.toString());
+//		params.put("dealerId", params.get("editDealerId"));
+		List<EgovMap> pstMailAddrList = pstRequestDOService.pstNewContactListPop(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(pstMailAddrList);
+	}
+	
+	
+	/**
+	 * 화면 호출. -New pst (팝업화면)
+	 */
+	@RequestMapping(value = "/pstAnotherContPop.do")
+	public String pstAnotherContPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		
+		logger.info("@@@@@@@@@@@@@@@ " + params.toString());
+		model.addAttribute("dealerId", params.get("dealerId"));
+		return "sales/pst/pstAnotherContactPop";
+	}
+	
+	
+	/**
+	 * Address Info Edit Set Main 주소 정보 메인 설정 
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/updateDealerContactSetMain.do")
+	public ResponseEntity<ReturnMessage> updateDealerContactSetMain(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + params.toString());
+		pstRequestDOService.updateMainPstSAL0032D(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 }

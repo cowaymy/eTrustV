@@ -31,6 +31,9 @@ public class PSTSalesDVO implements Serializable{
 	private Date crtDt;
 	private int crtUserId;
 	private String pstStockRem;
+	private int pstCurRate;
+	private int pstCurTypeId;
+	private int pstTotAmt;
 
 	public int getPstItmId() {
 		return pstItmId;
@@ -110,4 +113,23 @@ public class PSTSalesDVO implements Serializable{
 	public void setPstStockRem(String pstStockRem) {
 		this.pstStockRem = pstStockRem;
 	}
+	public int getPstCurRate() {
+		return pstCurRate;
+	}
+	public void setPstCurRate(int pstCurRate) {
+		this.pstCurRate = pstCurRate;
+	}
+	public int getPstCurTypeId() {
+		return pstCurTypeId;
+	}
+	public void setPstCurTypeId(int pstCurTypeId) {
+		this.pstCurTypeId = pstCurTypeId;
+	}
+	public int getPstTotAmt() {
+		return pstTotAmt;
+	}
+	public void setPstTotAmt(int pstTotAmt) {
+		this.pstTotAmt = pstTotAmt;
+	}
+	
 }
