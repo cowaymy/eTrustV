@@ -292,8 +292,12 @@ function auiCellClikcHandler(event){
     
     var month = event.dataField.replace("m", "");   
     
+     
+    
     if(event.columnIndex > 6){
-        Common.popupDiv("/eAccounting/budget/availableBudgetDisplayPop.do",{item : event.item, month:month}, null, true, "availableBudgetDisplayPop");
+    	if(event.headerText !="Total"){
+    		Common.popupDiv("/eAccounting/budget/availableBudgetDisplayPop.do",{item : event.item, month:month}, null, true, "availableBudgetDisplayPop");	
+    	}
     }    
     
 }      

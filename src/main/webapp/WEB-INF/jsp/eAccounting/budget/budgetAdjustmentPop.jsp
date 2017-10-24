@@ -40,15 +40,16 @@ $(document).ready(function(){
 	 if('${adjustmentList}'=='' || '${adjustmentList}' == null){
 	}else{
 		adjustmentList = JSON.parse('${adjustmentList}');
+		
+		
 	} 	
-	 
-	 console.log("${fileList}");
-    if("${fileList.size()}" <= 0) {
-        if("${status == 'Open'}" ){
-            setInputFile2();
-        }
-    }
 
+     // TODO View
+	console.log("${fileList}");
+    if("${fileList.size()}" <= 0) {
+            setInputFile2();
+    }
+    
 //console.log(fileList);
 		
     CommonCombo.make("pAdjustmentType", "/common/selectCodeList.do", {groupCode:'347', orderValue:'CODE'}, "", {
@@ -138,16 +139,11 @@ $(document).ready(function(){
                 physiclFileName = fileList[i].physiclFileName;
             }
         }
-        alert(oriFileName);
-        alert(atchFileName +", "+ fileSubPath +", "+physiclFileName);
+        
         fn_atchViewDown(atchFileName, fileSubPath, physiclFileName);
     });
     
     var adjPLayout = [{
-        dataField : "overBudgetFlag",
-        headerText : '',
-        visible : false,
-    },{
         dataField : "budgetDocNo",
         headerText : '',
         editable : false,
@@ -231,6 +227,14 @@ $(document).ready(function(){
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict", 
         width : 200
+    },{
+        dataField : "overBudgetFlag",
+        headerText : '',
+        visible : false,
+    },{
+        dataField : "atchFileGrpId",
+        headerText : '',
+        visible : false,
     }
     /* ,{
         dataField : "availableAmt",
@@ -267,15 +271,30 @@ $(document).ready(function(){
         rowid = event.rowIndex;
 
     });
-    
+
 });
+
+/* function setHaveInputFile(){//인풋파일 있을경우
+    var autoFl = $(".auto_file2 label .input_text");
+    for(var i=0; i<autoFl.length; i++){
+        var flVal = $(".auto_file2 input[type=file]:eq("+i+")").attr("value"),
+            flUpd = $(".auto_file2 label .input_text:eq("+i+")");
+        if( flVal ){
+        	alert(flVal);
+            flUpd.val(flVal);
+        } else {
+            flUpd.val("");
+        };
+    }
+} */
+
 
 function fn_RemoveRow(){
 	 AUIGrid.removeRow(adjPGridID, rowid);
 }
 
 //리스트 조회.
-function fn_selectListAjax() {        
+function fn_selectPopListAjax() {        
     Common.ajax("GET", "/eAccounting/budget/selectAdjustmentPopList", $("#pAdjForm").serialize(), function(result) {
         
          console.log("성공.");
@@ -347,15 +366,16 @@ function fn_glAcc(str){
 }
 
 
-var budgetStr ;
+ var budgetStr ;
 //Budget Code Pop 호출
-function fn_budgetCodePop(str){
+function fn_pGlAccountSearchPop(str){
   budgetStr = str;
-  Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",null, null, true, "budgetCodeSearchPop");
+  Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do", {pop:'pop'}, null, true, "budgetCodeSearchPop");
 }  
 
 
-function  fn_setBudgetData(){
+function  fn_setPopBudgetData(){
+	alert("pop1");
   if(budgetStr == "send"){
 	  
 	  $("#sendBudgetCode").val($("#pBudgetCode").val());
@@ -374,16 +394,16 @@ function  fn_setBudgetData(){
       $("#recvBudgetCodeName").val( $("#pBudgetCodeName").val());
   }
   
-}
+} 
 
-//Gl Account Pop 호출
+ //Gl Account Pop 호출
 var glStr ;
-function fn_glAccountSearchPop(str){
+function fn_pGlAccountSearchPop(str){
   glStr = str;
-  Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", null, null, true, "glAccountSearchPop");
+  Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", {pop:'pop'}, null, true, "glAccountSearchPop");
 }
 
-function fn_setGlData (str){
+function fn_setPopGlData(){
   
   if(glStr =="send"){
       $("#sendGlAccCode").val($("#pGlAccCode").val());
@@ -402,16 +422,16 @@ function fn_setGlData (str){
       $("#recvGlAccCodeName").val( $("#pGlAccCodeName").val());
   }
       
-}
+} 
 
 //Cost Center
 var costStr ;
-function fn_costCenterSearchPop(str) {
+function fn_pCostCenterSearchPop(str) {
   costStr = str;
-  Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+  Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:'pop'}, null, true, "costCenterSearchPop");
 }
 
-function fn_setCostCenter (str){
+function fn_setPopCostCenter (){
 
   if(costStr =="send"){
 	  
@@ -430,10 +450,10 @@ function fn_setCostCenter (str){
       $("#recvCostCenterName").val( $("#search_costCentrName").val());
   }
       
-}
+} 
 
 function fn_chnCombo(str){
-	//$("#btnClear").click();
+	$("#btnClear").click();
 	
 	if( str =="01" || str =="02"){
         
@@ -598,28 +618,9 @@ function fn_AddRow()
         item2.adjRem  = $("#remark").val();
         item2.signal  = '+';
     }
-    
-    
-    /* Common.ajax("POST", "/eAccounting/budget/budgetCheck", $("#pAdjForm").serializeJSON(), function(result) {
-        
-        console.log("성공.");
-        console.log( result);
-        
-        
-        if(item.signal == '+'){
-        	
-        	if(item.adjAmt > result.availableAmt){
-                alert("<spring:message code="budget.exceeded" />");
-        	}else{
-                item.availableAmt = result.availableAmt - item.adjAmt ; */
-                // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-                // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-                AUIGrid.addRow(adjPGridID, item, 'last');                    
-                AUIGrid.addRow(adjPGridID, item2, 'last'); 
-     /*    	}
-        }     
-
-   }); */
+   
+      AUIGrid.addRow(adjPGridID, item, 'last');                    
+      AUIGrid.addRow(adjPGridID, item2, 'last'); 
        
                 
 }  
@@ -633,23 +634,28 @@ function fn_uploadFile(str) {
     var idx = AUIGrid.getRowCount(adjPGridID);
     
     if(idx == 0){
-    	alert(<spring:message code="budget.msg.noData" />);
+    	alert("<spring:message code="budget.msg.noData" />");
     	return;
     }
     
-    if(AUIGrid.getCellValue(adjPGridID, 1, "budgetDocNo") != ""){
+  /*   if(AUIGrid.getCellValue(adjPGridID, 0, "budgetDocNo") != ""){
     	$("#pAtchFileGrpId").val("");
 
    	    if(Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveAdjustement));
     	
-    }else{
+    }else{ */
         
         if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
         	
- /*            var obj = $("#pAdjForm").serializeJSON();        	 
-        	    var gridData = GridCommon.getEditData(adjPGridID);        	    
-        	    formData.append("obj", obj);
-        	    formData.append("gridData",gridData); */        	    
+          /*   var obj = $("#pAdjForm").serializeJSON();        	 
+            var gridData = GridCommon.getEditData(adjPGridID);    */     	    
+        	/* formData.append("obj", obj);
+        	formData.append("gridData",gridData);    */
+        	
+        	if(AUIGrid.getCellValue(adjPGridID, 1, "budgetDocNo") != ""){
+        		alert(AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") );
+        	    formData.append("pAtchFileGrpId", AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") );
+        	}
         	
 	        Common.ajaxFile("/eAccounting/budget/uploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
 	
@@ -662,7 +668,7 @@ function fn_uploadFile(str) {
 	        }); 
 	  }));
     }
-}
+/* } */
 
 function fn_saveAdjustement(){
     var obj = $("#pAdjForm").serializeJSON();    
@@ -691,16 +697,16 @@ function fn_saveAdjustement(){
                         
                         for(var j=0; j < AUIGrid.getRowCount(adjPGridID); j++){
                        	 
-                       	var gridCostCentr = AUIGrid.getCellValue(adjPGridID, j, "costCentr"); 
-                       	var gridBudgetCode = AUIGrid.getCellValue(adjPGridID, j, "budgetCode"); 
-                       	var gridGlAccCode = AUIGrid.getCellValue(adjPGridID, j, "glAccCode"); 
-                       	var gridAdjYearMonth = AUIGrid.getCellValue(adjPGridID, j, "adjYearMonth"); 
-                       	var gridBudgetAdjType = AUIGrid.getCellValue(adjPGridID, j, "budgetAdjType"); 
-                       	
-                       	 if(gridCostCentr == costCentr && gridBudgetCode == budgetCode 
-                                    && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
-                       		 AUIGrid.setCellValue(adjPGridID, j, "overBudgetFlag","Y"); 
-                       	 }
+	                       	var gridCostCentr = AUIGrid.getCellValue(adjPGridID, j, "costCentr"); 
+	                       	var gridBudgetCode = AUIGrid.getCellValue(adjPGridID, j, "budgetCode"); 
+	                       	var gridGlAccCode = AUIGrid.getCellValue(adjPGridID, j, "glAccCode"); 
+	                       	var gridAdjYearMonth = AUIGrid.getCellValue(adjPGridID, j, "adjYearMonth"); 
+	                       	var gridBudgetAdjType = AUIGrid.getCellValue(adjPGridID, j, "budgetAdjType"); 
+	                       	
+	                       	 if(gridCostCentr == costCentr && gridBudgetCode == budgetCode 
+	                                    && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
+	                       		 AUIGrid.setCellValue(adjPGridID, j, "overBudgetFlag","Y"); 
+	                       	 }
                        	 
                         }
                    	 
@@ -717,17 +723,17 @@ function fn_saveAdjustement(){
                     // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
                     AUIGrid.update(adjPGridID);
            		 
-                     alert("승인요청 불가 "); 
+                     alert("<spring:message code="budget.exceeded" />"); 
            		 
                 }else{                	 
                	// Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
 
-                    fn_selectListAjax();
+                    fn_selectPopListAjax();
                 }
            }else{
            	Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
 
-               fn_selectListAjax();
+               fn_selectPopListAjax();
                
            }
            
@@ -749,13 +755,11 @@ function fn_saveAdjustement(){
 
 function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	
-	alert(atchFileName +", "+ fileSubPath +", "+physiclFileName);
+//	alert(atchFileName +", "+ fileSubPath +", "+physiclFileName);
     	
 	var file = atchFileName.split(".");
-		
 	
-	
-	   if(file[1] == "jpg") {
+	   if(file[1] == "jpg" || file[1] == "PNG") {
            // TODO View
            var fileSubPath = fileSubPath;
            fileSubPath = fileSubPath.replace('\', '/'');
@@ -770,19 +774,6 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
                + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
        }
 }
-
- /* function setHaveInputFile(){//인풋파일 있을경우
-    var autoFl = $(".auto_file label .input_text");
-    for(var i=0; i<autoFl.length; i++){
-        var  flVal = $(".auto_file input[type=file]:eq("+i+")").attr("value");
-        var  flUpd = $(".auto_file label .input_text:eq("+i+")");
-        if( flVal ){
-            flUpd.val(flVal);
-        } else {
-            flUpd.val("");
-        };
-    }
-}  */
 
 </script>
 
@@ -800,13 +791,13 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <form action="#" method="post" id="pAdjForm" name="pAdjForm" enctype="multipart/form-data">
 <section class="search_table"><!-- search_table start -->
 
-    <input type="hidden" id = "pBudgetCode" name="pBudgetCode" />
+    <!-- <input type="hidden" id = "pBudgetCode" name="pBudgetCode" />
     <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
     <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
     <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
     
     <input type="hidden" id = "search_costCentr" name="search_costCentr" />
-    <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />
+    <input type="hidden" id = "search_costCentrName" name="search_costCentrName" /> -->
     
     <input type="hidden" id = "pBudgetDocNo" name="pBudgetDocNo" />
     <input type="hidden" id = "pAtchFileGrpId" name="pAtchFileGrpId" />
@@ -856,8 +847,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>
 	<td>
 		<input type="hidden" id="sendCostCenter" name="sendCostCenter" title="" placeholder="" class="" />
-	    <input type="text" id="sendCostCenterName" name="sendCostCenterName" title="" placeholder="" class="" />
-	    <a href="#" class="search_btn"  onclick="javascript:fn_costCenterSearchPop('send')">
+	    <input type="text" id="sendCostCenterName" name="sendCostCenterName" title="" placeholder="" class="" readonly="readonly"/>
+	    <a href="#" class="search_btn"  onclick="javascript:fn_pCostCenterSearchPop('send')">
 	        <img  id="sendCost"   src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 	    </a>
     </td>
@@ -866,8 +857,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	<th scope="row"><spring:message code="budget.BudgetCode" /></th>
 	<td>
 		<input type="hidden" id="sendBudgetCode" name="sendBudgetCode" title="" placeholder="" class="" />
-		<input type="text" id="sendBudgetCodeName" name="sendBudgetCodeName" title="" placeholder="" class="" />
-		<a href="#" id="sendBudget" class="search_btn" onclick="javascript:fn_budgetCodePop('send')">
+		<input type="text" id="sendBudgetCodeName" name="sendBudgetCodeName" title="" placeholder="" class="" readonly="readonly"/>
+		<a href="#" id="sendBudget" class="search_btn" onclick="javascript:fn_pBudgetCodePop('send')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 		</a>
 	</td>
@@ -876,8 +867,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	<th scope="row"><spring:message code="expense.GLAccount" /></th>
 	<td>
 		<input type="hidden" id="sendGlAccCode" name="sendGlAccCode" title="" placeholder="" class="" />
-		<input type="text" id="sendGlAccCodeName" name="sendGlAccCodeName" title="" placeholder="" class="" />
-		<a href="#" id="sendGlAcc" class="search_btn" onclick="javascript:fn_glAccountSearchPop('send')">
+		<input type="text" id="sendGlAccCodeName" name="sendGlAccCodeName" title="" placeholder="" class="" readonly="readonly"/>
+		<a href="#" id="sendGlAcc" class="search_btn" onclick="javascript:fn_pGlAccountSearchPop('send')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 		</a>
 	</td>
@@ -913,8 +904,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>
 	<td>
         <input type="hidden" id="recvCostCenter" name="recvCostCenter" title="" placeholder="" class="" />
-		<input type="text" id="recvCostCenterName" name="recvCostCenterName" title="" placeholder="" class="" />
-		<a href="#" id="recvCost" class="search_btn" onclick="javascript:fn_costCenterSearchPop('recv')">
+		<input type="text" id="recvCostCenterName" name="recvCostCenterName" title="" placeholder="" class="" readonly="readonly"/>
+		<a href="#" id="recvCost" class="search_btn" onclick="javascript:fn_pCostCenterSearchPop('recv')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 		</a>
 	</td>
@@ -923,8 +914,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	<th scope="row"><spring:message code="budget.BudgetCode" /></th>
 	<td>
 		<input type="hidden" id="recvBudgetCode" name="recvBudgetCode" title="" placeholder="" class="" />
-		<input type="text" id="recvBudgetCodeName" name="recvBudgetCodeName" title="" placeholder="" class="" />
-		<a href="#" id="recvBudget" class="search_btn" onclick="javascript:fn_budgetCodePop('recv')">
+		<input type="text" id="recvBudgetCodeName" name="recvBudgetCodeName" title="" placeholder="" class="" readonly="readonly"/>
+		<a href="#" id="recvBudget" class="search_btn" onclick="javascript:fn_pBudgetCodePop('recv')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 	   </a>
    </td>
@@ -933,8 +924,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	<th scope="row"><spring:message code="expense.GLAccount" /></th>
 	<td>
         <input type="hidden" id="recvGlAccCode" name="recvGlAccCode" title="" placeholder="" class="" />
-		<input type="text"  id="recvGlAccCodeName" name="recvGlAccCodeName" title="" placeholder="" class="" />
-		<a href="#" id="recvGlAcc" class="search_btn" onclick="javascript:fn_glAccountSearchPop('recv')">
+		<input type="text"  id="recvGlAccCodeName" name="recvGlAccCodeName" title="" placeholder="" class="" readonly="readonly"/>
+		<a href="#" id="recvGlAcc" class="search_btn" onclick="javascript:fn_pGlAccountSearchPop('recv')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 		</a>
 	</td>
@@ -964,14 +955,13 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 </tbody>
 </table><!-- table end -->
 
+    <c:if test="${budgetStatus ==  'Y'}">
 <ul class="center_btns">
-    <c:if test="${status eq 'Open'}">
 		<li><p class="btn_blue2"><a href="#" id="btnAdd"><spring:message code="expense.Add" /></a></p></li>
 		<li><p class="btn_blue2"><a href="#" id="btnDel"><spring:message code="expense.Del" /></a></p></li>
 		<li><p class="btn_blue2"><a href="#" id="btnClear"><spring:message code="budget.Clear" /></a></p></li>
-	</c:if>
 </ul>
-
+    </c:if>
 <article class="grid_wrap mt10" style="height:170px"><!-- grid_wrap start -->
     <div id="adjPGridID" style="width:100%; height:150px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
@@ -985,11 +975,11 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-    <td colspan="3">
+    <td colspan="3">    
 	      <c:forEach var="files" items="${fileList}" varStatus="st">
 		    <div class="auto_file2"><!-- auto_file start -->
+		    <c:if test="${budgetStatus == 'Y'}">
 		    <input type="file" title="file add" style="width:300px" />
-		    <c:if test="${status eq 'Open'}">
 		    <label>
 			    <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
 			    <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
@@ -997,29 +987,27 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 		    <span class='label_text'><a href='#' id="add_btn"><spring:message code="viewEditWebInvoice.add" /></a></span>
 		    <span class='label_text'><a href='#' id="remove_btn"><spring:message code="viewEditWebInvoice.delete" /></a></span>
 		    </c:if>		    
-            <c:if test="${status eq 'Close'}">
+            <c:if test="${budgetStatus == 'N'}">
                 <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
             </c:if>
 		    </div><!-- auto_file end -->
-	    </c:forEach> 
+	    </c:forEach>
 	    <c:if test="${fn:length(fileList) <= 0}">	    
-            <c:if test="${status eq 'Open' }">
 		    <div class="auto_file2"><!-- auto_file start -->
 		      <input type="file" title="file add" style="width:300px" />
 		    </div><!-- auto_file end -->
-		    </c:if>
 	    </c:if>
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
+    <c:if test="${budgetStatus ==  'Y' }">
 <ul class="center_btns mt10">
-	<c:if test="${status eq 'Open' }">
 		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('temp');"><spring:message code="budget.Temp" /> <spring:message code="budget.Save" /></a></p></li>
 		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('approval');"><spring:message code="budget.Submit" /></a></p></li>
-	</c:if>	
 </ul>
+    </c:if> 
 
 </form>
 </section><!-- pop_body end -->

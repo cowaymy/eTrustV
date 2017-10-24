@@ -31,7 +31,11 @@ $(document).ready(function() {
          $("#pGlAccCode").val(AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccCode"));
          $("#pGlAccCodeName").val( AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccDesc"));
          
-         fn_setGlData();
+         if("${pop}" == "pop"){
+             fn_setPopGlData();
+         }else{
+             fn_setGlData();
+         }
          $("#glAccountSearchPop").remove();
     }); 
     

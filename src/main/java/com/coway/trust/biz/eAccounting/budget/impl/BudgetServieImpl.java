@@ -76,7 +76,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
 		Object  budgetDocNo = params.get("pBudgetDocNo");
 		Object  atchFileGrpId = params.get("atchFileGrpId");
-		Map approvalMap = new HashMap<String, Object>();
+		Map approvalMap = new HashMap<String, Object>();		
 		
 		if(addList.size() > 0){
 			
@@ -132,7 +132,6 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 					budgetMapper.deleteAdjustmentM((Map<String, Object>) obj);
 				}
 				
-				//TODO 파일 수정시 M table 수정 로직 필요
 			}
 		}
 		
@@ -165,7 +164,8 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 			
 			approvalMap.put("budgetDocNo", budgetDocNo);
 			approvalMap.put("userId", params.get("userId"));			
-			approvalMap.put("appvStus", "R");			
+			approvalMap.put("appvStus", "R");							
+			approvalMap.put("appvPrcssStus",  "R");	
 			approvalMap.put("atchFileGrpId", atchFileGrpId);			
 			
 			List<EgovMap> amtList = budgetMapper.selectAvailableAmtList(approvalMap);		
@@ -191,30 +191,14 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 				budgetMapper.insertApprove(approvalMap); 
 				budgetMapper.updateAdjustmentM(approvalMap); 
 			}	
+		}else{			
+			approvalMap.put("appvStus", "O");							
+			approvalMap.put("budgetDocNo", budgetDocNo);
+			approvalMap.put("userId", params.get("userId"));
+			approvalMap.put("atchFileGrpId", atchFileGrpId);
+			
+			budgetMapper.updateAdjustmentM(approvalMap); 
 		}
-		
-		/*if(delList.size() > 0){
-			for (Object obj : delList) 
-			{
-				((Map<String, Object>) obj).put("userId", params.get("userId"));
-				
-				Logger.debug(" >>>>> deleteAdjustmentInfo ");
-				Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("userId"));
-							
-				delCnt++;
-
-				budgetMapper.deleteAdjustmentD((Map<String, Object>) obj);
-				
-				Map param = new HashMap();
-				
-				param.put("budgetDocNo", ((Map<String, Object>) obj).get("budgetDocNo"));
-				
-				if(budgetMapper.selectAdjustmentList(param) == null){
-
-					budgetMapper.deleteAdjustmentM((Map<String, Object>) obj);
-				}
-			}
-		}*/
 		
 		result.put("totCnt", addCnt+updCnt+delCnt);
 		result.put("budgetDocNo", budgetDocNo.toString());
@@ -233,5 +217,91 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	public EgovMap getBudgetAmt(Map<String, Object> params) throws Exception {		
 		return budgetMapper.getBudgetAmt(params);
 	}
+
+	@Override
+	public EgovMap saveApprovalList(Map<String, Object> params) throws Exception {
+		
+		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
+
+		EgovMap result = new EgovMap();
+		Map approvalMap = new HashMap<String, Object>();
+
+		Object  budgetDocNo = null;
+		
+		List<Object> updList = (List<Object>) gridData.get(AppConstants.AUIGRID_UPDATE);
+		
+		List resultAmtList = new ArrayList();
+		
+		int i = 0;
+		
+		if(updList.size() > 0){
+			
+			Logger.debug(" >>>>> updateAdjustmentInfo ");
+			
+			for (Object obj : updList) 
+			{
+				if("Y".equals(((Map<String, Object>) obj).get("checkId").toString())){
+					
+					if(i == 0){
+						budgetDocNo = ((Map<String, Object>) obj).get("budgetDocNo");
+						i++;
+					}else {				
+	    				if(budgetDocNo.equals(((Map<String, Object>) obj).get("budgetDocNo"))){
+	    					continue;
+	    				}else{
+	    					budgetDocNo = ((Map<String, Object>) obj).get("budgetDocNo");
+	    				}
+					}
+					
+					approvalMap.put("budgetDocNo", budgetDocNo);
+					approvalMap.put("userId", params.get("userId"));			
+					approvalMap.put("appvStus",  params.get("appvStus"));						
+					approvalMap.put("appvPrcssStus",  params.get("appvPrcssStus"));						
+					
+					Logger.debug("approvalMap ==================> " + approvalMap);
+
+					String overbudget="N"; //예산 사용 가능 
+					if("R".equals(params.get("appvStus").toString())){
+						
+						List<EgovMap> amtList = budgetMapper.selectAvailableAmtList(approvalMap);		
+
+						for(int j =0; j < amtList.size(); j++){
+							EgovMap amtMap = amtList.get(j);
+							
+							if(  Float.parseFloat(amtMap.get("total").toString()) < 0 && Float.parseFloat(amtMap.get("total").toString())*-1 > Float.parseFloat(amtMap.get("availableAmt").toString())){
+							
+								Logger.debug(" total : " + amtMap.get("total").toString()  );
+								Logger.debug(" availableAmt: " + amtMap.get("availableAmt").toString()  );
+								
+								overbudget = "Y";  //예산 초과
+								amtMap.put("overbudget", overbudget);
+								
+								resultAmtList.add(amtMap);
+								
+								continue;
+							}			
+						}
+					}else{					
+						if(overbudget.equals("N")){
+							budgetMapper.insertApprove(approvalMap); 
+							budgetMapper.updateAdjustmentM(approvalMap); 
+						}	
+					}
+				}
+				
+				
+			}
+		}
+		
+		result.put("budgetDocNo", budgetDocNo.toString());
+		result.put("resultAmtList", resultAmtList);
+		//result.put("overbudget", overbudget);
+
+		return result ;
+	}
 	
+	@Override
+	public List<EgovMap> selectApprovalList( Map<String, Object> params) throws Exception {
+		return budgetMapper.selectApprovalList(params);
+	}
 }

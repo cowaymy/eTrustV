@@ -166,7 +166,7 @@
                            AND rownum=1) AS FILE_PATH  
                  ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
 		         ,'N' AS CHECK_ID 
-		         ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT
+		        /* ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT*/
 		         ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ		                               
 		FROM FCM0102M A
 	   INNER JOIN FCM0103D B 
@@ -328,13 +328,19 @@
             USING (SELECT #{budgetDocNo} AS BUDGET_DOC_NO ,
                                   #{userId} AS USER_ID 
                          FROM dual)b
-            ON (      A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
-                  AND A.APPV_PRCSS_STUS = 'R' )
+            ON (      A.BUDGET_DOC_NO = B.BUDGET_DOC_NO)
        WHEN MATCHED THEN
-    UPDATE  SET A.REQST_DT = SYSDATE ,
-               A.REQST_USER_ID = b.USER_ID ,
+    UPDATE  SET 
+       <if test='appvPrcssStus == "R" '>
+               A.REQST_DT = SYSDATE ,
+               A.REQST_USER_ID = #{userId} ,
+       </if>
+       <if test='appvPrcssStus == "J" '>
+               A.REJCT_RESN = #{rejectMsg},
+       </if>          
+               A.APPV_PRCSS_STUS = #{appvPrcssStus} ,
                A.UPD_DT = SYSDATE,
-               A.UPD_USER_ID = b.USER_ID
+               A.UPD_USER_ID = #{userId}
     WHEN NOT MATCHED THEN
            INSERT 
            (
@@ -353,7 +359,7 @@
                 #{budgetDocNo}
                ,SYSDATE
                ,#{userId}
-               ,'R'
+               ,#{appvPrcssStus}
                ,SYSDATE
                ,SYSDATE
                ,#{userId}
@@ -388,6 +394,59 @@
                  ]]>
   </select>
 
-
+  <select id="selectApprovalList" parameterType="Map" resultType="egovMap">
+       <![CDATA[ 
+              SELECT A.BUDGET_DOC_NO
+                 ,B.COST_CENTR
+                 ,BUDGET_DOC_SEQ                 
+                 ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
+                 ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
+                 ,B.BUDGET_CODE
+                 ,B.GL_ACC_CODE
+                 ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
+                 ,B.BUDGET_ADJ_TYPE
+                 ,B.ADJ_AMT
+                 ,B.ADJ_REM
+                 ,A.ATCH_FILE_GRP_ID
+                 ,( SELECT CASE WHEN FD.FILE_SUB_PATH IS NOT NULL THEN REPLACE (FD.FILE_SUB_PATH,'\','/') ||'/'||PHYSICL_FILE_NAME  ELSE ' ' END
+                       FROM SYS0070M FM
+                      INNER JOIN SYS0071D FD
+                          ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID 
+                       WHERE FM.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
+                           AND rownum=1) AS FILE_PATH  
+                 ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
+                 ,'N' AS CHECK_ID 
+                 ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ                                       
+        FROM FCM0105M C
+        INNER JOIN FCM0102M A
+            ON C.BUDGET_DOC_NO = A.BUDGET_DOC_NO
+          AND C.APPV_PRCSS_STUS = 'R'
+       INNER JOIN FCM0103D B 
+           ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
+      WHERE  1=1
+      ]]>     
+        <if test="stYearMonth != null and stYearMonth != ''">
+        AND TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}
+         </if>
+        <if test="costCentr != null and costCentr != ''">
+          AND B.COST_CENTR    = #{costCentr}
+          </if>
+        <if test="budgetCode != null and budgetCode != ''">
+          AND B.BUDGET_CODE  = #{budgetCode}
+          </if>
+        <if test="glAccCode != null and glAccCode != ''">
+          AND B.GL_ACC_CODE  = #{glAccCode}
+          </if>
+           <if test="budgetAdjType != null and budgetAdjType != ''">
+           AND B.BUDGET_ADJ_TYPE IN
+         <foreach item="item" collection="budgetAdjType" index="index" open="(" separator="," close=")">
+           #{item}
+         </foreach>
+         </if>         
+        <if test="budgetDocNo != null and budgetDocNo != ''">
+          AND A.BUDGET_DOC_NO LIKE '%' || #{budgetDocNo} || '%'
+          </if> 
+           ORDER BY A.BUDGET_DOC_NO, BUDGET_DOC_SEQ
+  </select>
     
 </mapper>

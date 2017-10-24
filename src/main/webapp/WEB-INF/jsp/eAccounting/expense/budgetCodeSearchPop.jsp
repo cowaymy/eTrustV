@@ -58,7 +58,12 @@ $(document).ready(function() {
     	 $("#pBudgetCode").val(AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode"));
          $("#pBudgetCodeName").val( AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText"));
          
-         fn_setBudgetData();
+         if("${pop}" == "pop"){
+        	 fn_setPopBudgetData();
+         }else{
+        	 fn_setBudgetData();
+         }
+         
     	 
     	 $("#budgetCodeSearchPop").remove();
     });

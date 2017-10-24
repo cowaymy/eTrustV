@@ -17,6 +17,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.budget.BudgetService;
@@ -54,6 +56,10 @@ public class BudgetController {
 	
 	@Resource(name = "budgetService")
 	private BudgetService budgetService;
+	
+	@Autowired
+	private FileService fileService;
+
 	
 	@RequestMapping(value = "/monthlyBudgetList.do")
 	public String selectExpenseList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
@@ -221,48 +227,52 @@ public class BudgetController {
 	}
 		
 	@RequestMapping(value = "/budgetAdjustmentPop.do")
-	public String budgetAdjustment (@RequestParam Map<String, Object> params,  HttpServletRequest request, ModelMap model) throws Exception{
+	public String budgetAdjustment (@RequestParam Map<String, Object> params,   ModelMap model) throws Exception{
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		Map param = new HashMap();
+		model.addAttribute("budgetStatus", "Y");
 		
-		if(!CommonUtils.isEmpty(params.get("gridBudgetDocNo"))){
+		if(!StringUtils.isEmpty(params.get("gridBudgetDocNo"))){
 						
 			List<EgovMap> adjustmentList = null; 
 			List<EgovMap> fileList = null; 
-			
+
+			Map param = new HashMap();
 			param.put("budgetDocNo", params.get("gridBudgetDocNo"));
 			adjustmentList= budgetService.selectAdjustmentList(param);
 			
 			
-			if(!CommonUtils.isEmpty(params.get("atchFileGrpId"))){
+			if(!StringUtils.isEmpty(params.get("atchFileGrpId"))){
 				fileList= budgetService.selectFileList(params);	
 			}
+			
 			model.addAttribute("fileList", fileList);
 			model.addAttribute("adjustmentList", new Gson().toJson(adjustmentList));
 
-			model.addAttribute("status", "Close");
+			model.addAttribute("budgetStatus", adjustmentList.get(0).get("status"));	
+			if(!adjustmentList.get(0).get("status").toString().equals("Open")){
+				model.addAttribute("budgetStatus","N");
+			}else{
+				model.addAttribute("budgetStatus","Y");
+			}
+
+			model.addAttribute("budgetDocNo", params.get("gridBudgetDocNo"));
+
+			LOGGER.debug("gridBudgetDocNo =======>>>" +  params.get("gridBudgetDocNo"));			
 			LOGGER.debug(" fileList =======>>>" +  fileList);
 			LOGGER.debug(" new Gson().toJson(adjustmentList)=======>>>" +  new Gson().toJson(adjustmentList));
-		}else{
-			model.addAttribute("status", "Open");
 		}
 		
-		model.addAttribute("budgetDocNo", params.get("gridBudgetDocNo"));
-
-		LOGGER.debug("gridBudgetDocNo =======>>>" +  params.get("gridBudgetDocNo"));
 		
 		return "eAccounting/budget/budgetAdjustmentPop";
 	}
 	
-	@RequestMapping(value = "/uploadFile.do", method = RequestMethod.POST) 
+/*	@RequestMapping(value = "/uploadFile.do", method = RequestMethod.POST) 
 	public ResponseEntity<ReturnMessage> uploadFile (MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
 		
 		LOGGER.debug("params =====================================>>  " + params);
-		LOGGER.debug("request =====================================>>  " + request);
-
-		LOGGER.debug("request =====================================>>  " + request.getParameter("gridData"));
+		
 		params.put("userId", sessionVO.getUserId());
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
@@ -272,8 +282,10 @@ public class BudgetController {
 		
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
+			
 			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
 		}
+		
 		
 		// 결과 만들기 예.
     	ReturnMessage message = new ReturnMessage();
@@ -283,8 +295,40 @@ public class BudgetController {
     
     	return ResponseEntity.ok(message);
 		
-	}		
+	}*/		
 	
+	
+	@RequestMapping(value = "/uploadFile.do", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> uploadFile (MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put("userId", sessionVO.getUserId());
+		int pAtchFileGrpId = Integer.parseInt(params.get("pAtchFileGrpId").toString());
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "eAccounting" + File.separator + "budget", AppConstants.UPLOAD_MAX_FILE_SIZE);
+		
+		LOGGER.debug("list.size : {}", list.size());
+		
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		if (list.size() > 0) {
+
+			fileService.removeFilesByFileGroupId(FileType.WEB, pAtchFileGrpId);
+			
+			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+		}
+		
+		
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(params.get("fileGroupKey"));
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    	return ResponseEntity.ok(message);
+		
+	}
 	
 	@RequestMapping(value = "/saveAdjustmentList", method = RequestMethod.POST) 
 	public ResponseEntity<ReturnMessage> saveAdjustmentList (HttpServletRequest request, @RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
@@ -321,7 +365,7 @@ public class BudgetController {
 		
 	}
 	
-	@RequestMapping(value = "/budgetCheck", method = RequestMethod.POST)
+/*	@RequestMapping(value = "/budgetCheck", method = RequestMethod.POST)
 	public ResponseEntity <EgovMap> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) throws Exception{		
 		
 		LOGGER.debug("params =====================================>>  " + params);
@@ -333,31 +377,88 @@ public class BudgetController {
 		params.put("costCentr", params.get("sendCostCenter"));
 		params.put("budgetCode", params.get("sendBudgetCode"));
 		params.put("glAccCode", params.get("sendGlAccCode"));
-		//params.put("netAmt", Float.parseFloat(params.get("requestAmt").toString()));
 		
 		EgovMap result = new EgovMap();
 		
 		result = budgetService.getBudgetAmt(params);		
-
-		/*Map resultAmt = budgetService.selectAvailableBudgetAmt(params);
-		
-		resultAmt.get("availableAmt");
-		
-		EgovMap result = new EgovMap();
-		result.put("budgetYn", budgetYn);
-		result.put("availableAmt", resultAmt.get("availableAmt"));
-		result.put("requestAmt", params.get("requestAmt"));
-
-		LOGGER.debug("result =====================================>>  " + result);*/
-		
-		// 결과 만들기 예.
-    	/*ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
-    	message.setData(result);
-    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));*/
-
 		
     	return ResponseEntity.ok(result);
+	}
+	*/
+	
+	@RequestMapping(value = "/saveBudgetApprovalReq", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> saveBudgetApprovalReq (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+			
+		LOGGER.debug("params =====================================>>  " + params);
+	
+		params.put("userId", sessionVO.getUserId());
+		params.put("appvStus", "R");
+		params.put("appvPrcssStus",  "R");	
+
+		Map result = new HashMap<String, Object>();
+		
+		result = budgetService.saveApprovalList(params);
+			
+			
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(result);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+    	return ResponseEntity.ok(message);
+		
+	}		
+	
+	@RequestMapping(value = "/budgetApprove.do")
+	public String budgetApprove (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{	
+		
+		String yearMonth =  CommonUtils.getNowDate().substring(4,6) +"/" +CommonUtils.getNowDate().substring(0,4);
+		
+		model.addAttribute("stYearMonth",  yearMonth );	
+		model.addAttribute("edYearMonth",  yearMonth );	
+		
+		return "eAccounting/budget/budgetApprove";
+	}
+		
+	@RequestMapping(value = "/selectApprovalList")
+	public ResponseEntity <List<EgovMap>>  selectApprovalList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String[] budgetAdjType = request.getParameterValues("budgetAdjType");
+		
+		params.put("budgetAdjType", budgetAdjType);
+		
+		List<EgovMap> apporvalList = null; 
+		
+		apporvalList= budgetService.selectApprovalList(params);
+		
+		return ResponseEntity.ok(apporvalList);
+	}
+	
+	@RequestMapping(value = "/saveBudgetApproval", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> saveBudgetApproval (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+			
+		LOGGER.debug("params =====================================>>  " + params);
+	
+		params.put("userId", sessionVO.getUserId());
+		params.put("appvStus", params.get("appvStus"));	
+		params.put("appvPrcssStus", params.get("appvPrcssStus"));
+		
+		Map result = new HashMap<String, Object>();
+		
+		result = budgetService.saveApprovalList(params);
+			
+			
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(result);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+    	return ResponseEntity.ok(message);
+		
 	}
 	
 }

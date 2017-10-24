@@ -19,7 +19,7 @@
 }
 </style>
 <script  type="text/javascript">
-var adjMGridID;
+var appMGridID;
 var rowIndex = 0;
 
 $(document).ready(function(){
@@ -34,7 +34,6 @@ $(document).ready(function(){
     $("#edYearMonth").val("${edYearMonth}");
     
     $("#btnSearch").click(fn_selectListAjax);
-    
     
     var adjLayout = [ {
         dataField : "checkId",
@@ -55,13 +54,6 @@ $(document).ready(function(){
                 return false;                    
             }
       }
-    },{
-        dataField : "status",
-        headerText : '<spring:message code="budget.Status" />',
-        cellMerge : true ,
-        mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
-        mergePolicy : "restrict",
-        width : 70
     },{
         dataField : "budgetDocNo",
         headerText : '<spring:message code="budget.BudgetDoc" />',
@@ -144,21 +136,9 @@ $(document).ready(function(){
         mergePolicy : "restrict",
         visible :false
     },{
-        dataField : "availableAmt",
-        headerText : '',
-        dataType : "numeric",
-        formatString : "#,##0",
-        style : "my-right-style",
-        width : 100,
-        visible :false
-    },{
         dataField : "seq",
         headerText : '',
         visible : false
-    },{
-        dataField : "overBudgetFlag",
-        headerText : '',
-        visible : false,
     }];
          
     var adjOptions = {
@@ -170,37 +150,40 @@ $(document).ready(function(){
             editable :false
       }; 
     
-    adjMGridID = GridCommon.createAUIGrid("#adjMGridID", adjLayout, "seq", adjOptions);
+    appMGridID = GridCommon.createAUIGrid("#appMGridID", adjLayout, "seq", adjOptions);
     
     // 헤더 클릭 핸들러 바인딩
-    AUIGrid.bind(adjMGridID, "headerClick", headerClickHandler);
+    AUIGrid.bind(appMGridID, "headerClick", headerClickHandler);
     
     //셀 클릭 핸들러 바인딩
-    AUIGrid.bind(adjMGridID, "cellClick", auiCellClikcHandler);
+    AUIGrid.bind(appMGridID, "cellClick", auiCellClikcHandler);
        
 });
 
 function auiCellClikcHandler(event){
     console.log("dataField : " +event.dataField + " rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked"); 
     
-    var str = AUIGrid.getCellValue(adjMGridID, event.rowIndex, "budgetDocNo");
-    var check = AUIGrid.getCellValue(adjMGridID, event.rowIndex, "checkId");
+    var str = AUIGrid.getCellValue(appMGridID, event.rowIndex, "budgetDocNo");
+    var check = AUIGrid.getCellValue(appMGridID, event.rowIndex, "checkId");
     
-    var idx = AUIGrid.getRowCount(adjMGridID); 
+    var idx = AUIGrid.getRowCount(appMGridID); 
         
     if(event.columnIndex == 0){    	
         for(var i = 0; i < idx; i++){
-            if(AUIGrid.getCellValue(adjMGridID, i, "budgetDocNo") == str){
-                AUIGrid.setCellValue(adjMGridID, i, "checkId", check);
+            if(AUIGrid.getCellValue(appMGridID, i, "budgetDocNo") == str){
+                AUIGrid.setCellValue(appMGridID, i, "checkId", check);
             }
         }  
-    }else if(event.columnIndex == 2){  
-    	$("#atchFileGrpId").val(AUIGrid.getCellValue(adjMGridID, event.rowIndex, "atchFileGrpId"));
-    	$("#gridBudgetDocNo").val(AUIGrid.getCellValue(adjMGridID, event.rowIndex, "budgetDocNo"));
+    }else if(event.columnIndex == 1){  
+    	
+    	$("#atchFileGrpId").val(AUIGrid.getCellValue(appMGridID, event.rowIndex, "atchFileGrpId"));
+    	$("#gridBudgetDocNo").val(AUIGrid.getCellValue(appMGridID, event.rowIndex, "budgetDocNo"));
     	fn_budgetAdjustmentPop('grid') ;
-    }else if(event.columnIndex == 11){
-    	if(AUIGrid.getCellValue(adjMGridID, event.rowIndex, "fileSubPath")== "view"){
-            window.open(DEFAULT_RESOURCE_FILE + AUIGrid.getCellValue(adjMGridID, event.rowIndex, "filePath"));
+    	
+    }else if(event.columnIndex == 10){
+    	
+    	if(AUIGrid.getCellValue(appMGridID, event.rowIndex, "fileSubPath")== "view"){
+            window.open(DEFAULT_RESOURCE_FILE + AUIGrid.getCellValue(appMGridID, event.rowIndex, "filePath"));
     	}
     }
     
@@ -209,12 +192,12 @@ function auiCellClikcHandler(event){
 
 //리스트 조회.
 function fn_selectListAjax() {        
-    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentList", $("#listSForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/budget/selectApprovalList", $("#listSForm").serialize(), function(result) {
         
          console.log("성공.");
          console.log( result);
          
-        AUIGrid.setGridData(adjMGridID, result);
+        AUIGrid.setGridData(appMGridID, result);
 
     });
 }
@@ -253,11 +236,6 @@ function fn_setCostCenter (){
 
 //adjustment Pop
 function fn_budgetAdjustmentPop(value) {
-	
-	if(value == 'pop'){
-        $("#gridBudgetDocNo").val("");   
-        $("#atchFileGrpId").val("");   
-	}
     Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", $("#listSForm").serializeJSON(), fn_selectListAjax, true, "budgetAdjustmentPop");
 }
 
@@ -279,106 +257,84 @@ function headerClickHandler(event) {
 function checkAll(isChecked) {
     
 	
-	 var idx = AUIGrid.getRowCount(adjMGridID); 
+	 var idx = AUIGrid.getRowCount(appMGridID); 
 	
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
     if(isChecked) {    	
     	for(var i = 0; i < idx; i++){
-            if(AUIGrid.getCellValue(adjMGridID, i, "status") != 'Close' && AUIGrid.getCellValue(adjMGridID, i, "status") != 'Request'){
-                AUIGrid.setCellValue(adjMGridID, i, "checkId", "Y")
+            if(AUIGrid.getCellValue(appMGridID, i, "status") != 'Close' && AUIGrid.getCellValue(appMGridID, i, "status") != 'Request'){
+                AUIGrid.setCellValue(appMGridID, i, "checkId", "Y")
             }
         }        
     } else {
-        AUIGrid.updateAllToValue(adjMGridID, "checkId", "N");
+        AUIGrid.updateAllToValue(appMGridID, "checkId", "N");
     }
     
     // 헤더 체크 박스 일치시킴.
     document.getElementById("allCheckbox").checked = isChecked;
 }
 
-function fn_budgetApproval(){   
+function fn_budgetApproval(value){
     
-    // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
-    var activeItems = AUIGrid.getItemsByValue(adjMGridID, "checkId", "Y");
-    
-    if(activeItems.length == 0){
-        alert("<spring:message code="budget.msg.noData" />");
-        return;
-    }
-    
-    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
-    	 
-    	$("#appvStus").val("R"); // adjustment Close
-        $("#appvPrcssStus").val("R"); //Approval 
+    if(value == "approval"){ //approval 처리
+
+        $("#appvStus").val("C"); // adjustment Close
+        $("#appvPrcssStus").val("A"); //Approval 
+        $("#rejectMsg").val("");
+        
+    }else{  //reject 처리
     	
-    	 var obj = $("#listSForm").serializeJSON();   
-    	 var gridData = GridCommon.getEditData(adjMGridID);
-    	 obj.gridData = gridData;
-            
-    Common.ajax("POST", "/eAccounting/budget/saveBudgetApprovalReq", obj , function(result)    {
-    	  console.log("성공." + JSON.stringify(result));
-          console.log("data : " + result.data);
-          
-          var arryList = result.data.resultAmtList;
-          var idx = arryList.length;
-          
-          if(idx > 0){
-        	  
-        	  for(var i = 0; i < idx; i++){
-        		  
-                  var budgetDocNo = arryList[i].budgetDocNo;
-                  var costCentr = arryList[i].costCentr;
-                  var budgetCode = arryList[i].budgetCode;
-                  var glAccCode = arryList[i].glAccCode;
-                  var adjYearMonth = arryList[i].budgetAdjMonth + "/"+ arryList[i].budgetAdjYear;
-                     
-                  for(var j=0; j < AUIGrid.getRowCount(adjMGridID); j++){
-                      
-                     var gridBudgetDoc = AUIGrid.getCellValue(adjMGridID, j, "budgetDocNo"); 
-                     var gridCostCentr = AUIGrid.getCellValue(adjMGridID, j, "costCentr"); 
-                     var gridBudgetCode = AUIGrid.getCellValue(adjMGridID, j, "budgetCode"); 
-                     var gridGlAccCode = AUIGrid.getCellValue(adjMGridID, j, "glAccCode"); 
-                     var gridAdjYearMonth = AUIGrid.getCellValue(adjMGridID, j, "adjYearMonth"); 
-                     var gridBudgetAdjType = AUIGrid.getCellValue(adjMGridID, j, "budgetAdjType"); 
-                     
-                      if(budgetDocNo == gridBudgetDoc && gridCostCentr == costCentr && gridBudgetCode == budgetCode 
-                                 && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
-                          AUIGrid.setCellValue(adjMGridID, j, "overBudgetFlag","Y"); 
-                      }                      
-                  }
-              }
-          }else{
-        	  fn_selectListAjax();
-          }
-          
-          AUIGrid.setProp(adjMGridID, "rowStyleFunction", function(rowIndex, item) {
-              if(item.overBudgetFlag == "Y") {
-                     return "my-row-style";
-                 }
-                 return "";
-
-             }); 
-
-             // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
-             AUIGrid.update(adjMGridID);
+    	var rtnVal = prompt("Are you sure you want to reject the adjustment :", "");
+        alert("msg : " + rtnVal );
+        
+        $("#appvStus").val("O"); // adjustment Close
+        $("#appvPrcssStus").val("J"); //Approval 
+        $("#rejectMsg").val(rejectMsg);
     }
-    , function(jqXHR, textStatus, errorThrown){
-           try {
-               console.log("Fail Status : " + jqXHR.status);
-               console.log("code : "        + jqXHR.responseJSON.code);
-               console.log("message : "     + jqXHR.responseJSON.message);
-               console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-         }
-         catch (e)
-         {
-           console.log(e);
-         }
-         alert("Fail : " + jqXHR.responseJSON.message);
-          });
     
+    
+     // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+     var activeItems = AUIGrid.getItemsByValue(appMGridID, "checkId", "Y");
+     
+     if(activeItems.length == 0){
+         alert("<spring:message code="budget.msg.noData" />");
+         return;
+     }
+    
+            
+    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+
+        var obj = $("#listSForm").serializeJSON();   
+        var gridData = GridCommon.getEditData(appMGridID);
+        obj.gridData = gridData;
+    	
+    	Common.ajax("POST", "/eAccounting/budget/saveBudgetApproval", obj , function(result){
+            console.log("성공." + JSON.stringify(result));
+            console.log("data : " + result.data);
+            
+            var arryList = result.data.resultAmtList;
+            var idx = arryList.length;
+            
+            fn_selectListAjax();
+      }
+      , function(jqXHR, textStatus, errorThrown){
+             try {
+                 console.log("Fail Status : " + jqXHR.status);
+                 console.log("code : "        + jqXHR.responseJSON.code);
+                 console.log("message : "     + jqXHR.responseJSON.message);
+                 console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+           }
+           catch (e)
+           {
+             console.log(e);
+           }
+           alert("Fail : " + jqXHR.responseJSON.message);
+     });
     }));
     
 }
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -390,7 +346,7 @@ function fn_budgetApproval(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2><spring:message code="budget.BudgetAdjustmentList" /></h2>
+<h2><spring:message code="budget.BudgetApprove" /></h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a href="#" id="btnSearch" ><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
 </ul>
@@ -410,6 +366,10 @@ function fn_budgetApproval(){
     <input type="hidden" id = "gridBudgetDocNo" name="gridBudgetDocNo" />
     <input type="hidden" id = "atchFileGrpId" name="atchFileGrpId" />
     <input type="hidden" id = "budgetStatus" name="budgetStatus" />
+    
+    <input type="hidden" id = "rejectMsg" name="rejectMsg" />
+    <input type="hidden" id = "appvStus" name="appvStus" />
+    <input type="hidden" id = "appvPrcssStus" name="appvPrcssStus" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -456,34 +416,8 @@ function fn_budgetApproval(){
 	<th scope="row"><spring:message code="budget.BudgetDocumentNo" /></th>
 	<td><input type="text" id="budgetDocNo" name ="budgetDocNo" title="" placeholder="" class="" /></td>
 </tr>
-<tr>
-	<th scope="row"><spring:message code="budget.Status" /></th>
-	<td>
-	<select id="appvStus" name="appvStus" class="">
-		<option value=""><spring:message code="budget.All" /></option>
-		<option value="O"><spring:message code="budget.Open" /></option>
-		<option value="R"><spring:message code="budget.Request" /></option>
-		<option value="C"><spring:message code="budget.Close" /></option>
-	</select>
-	</td>
-	<th scope="row"></th>
-	<td></td>
-</tr>
 </tbody>
 </table><!-- table end -->
-
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-	<dt><spring:message code="budget.Link" /></dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="#"><spring:message code="budget.BudgetPlan" /></a></p></li>
-	</ul>
-	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	</dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
@@ -491,12 +425,12 @@ function fn_budgetApproval(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentPop('pop');"><spring:message code="budget.Adjustment" /></a></p></li>
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval();"><spring:message code="budget.Approval" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval('reject');"><spring:message code="budget.Reject" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval('approval');"><spring:message code="budget.Approval" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="adjMGridID" style="width:100%; height:370px; margin:0 auto;"></div>
+    <div id="appMGridID" style="width:100%; height:370px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
