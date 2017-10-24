@@ -15,35 +15,21 @@
     margin-top:-20px;
 }
 
-.my-backColumn0 {
-  background:#73EAA8; 
-  color:#000;
-}
-
-/* HTML 템플릿에서 사용할 스타일 정의*/
-.closeDiv span{
-  color: red; 
-  vertical-align:middle;
-  font-size: 12pt;
-}
-.openDiv span{
-  color: blue; 
-  vertical-align:middle;
-  font-size: 12pt;
-}
-
 </style>
 
 <script type="text/javaScript">
 
+var keyValueList = new Array();
+
 $(function() 
 {
-  //fnSelectTargetDateComboList('351');
-  //fnSelectInterFaceTypeComboList('352');
 	//setting StockCategoryCode ComboBox 
 	 fnSetStockCategoryComboBox(); 
 	//setting StockCode ComboBox 
-	 fnSetStockComboBox();   
+	 fnSetStockComboBox();  
+	//setting DropDownList  
+	//keyValueList = $.parseJSON('${selectStockCodeList}');   
+	fnSetStockDropDownList();  
 });
 
 function fnClick()
@@ -57,41 +43,91 @@ function fnCallInterface()
   $("#intfTypeCbBox option:eq(1)").prop("selected",true);
 }
 
-function fnSelectTargetDateComboList(codeId)
+function fnSetStockComboBox()
 {
-  CommonCombo.initById("targetDateCbBox");  // reset...
-  CommonCombo.make("targetDateCbBox"
-            , "/scm/selectComboInterfaceDate.do"  
-            , { codeMasterId: codeId }       
-            , ""                         
-            , {  
-                id  : "code",      //value    
-                name: "codeName",  //view
-                chooseMessage: "Select Target Date"
-               }
-            , "");     
+  CommonCombo.make("stockCodeCbBox"
+                , "/scm/selectStockCode.do"  
+                , ""                         
+                , ""                         
+                , {  
+                    id  : "stkId",   //value        
+                    name: "stkDesc", //view
+                    type: "S"
+                  }
+                , "");
 }
 
-function fnSelectInterFaceTypeComboList(codeId)
+function fnSetStockDropDownList(callBack)
 {
-  CommonCombo.initById("intfTypeCbBox");  // reset...
+    Common.ajaxSync("GET","/scm/selectStockCode.do"  
+                 , $("#MainForm").serialize()
+                 , function(result)
+                 {
 
-   // Call Back
-    var fnSelectIntfTypeCallback = function () 
+                   
+        
+                   //keyValueList.push({id:"" ,value:""});
+                    for (var i = 0; i < result.length; i++)
+                    {
+                      var list = new Object();
+                          list.id = result[i].stkDesc;  // view
+                          list.value = result[i].stkCode ;  //value
+                          keyValueList.push(list);
+                    }
+
+                    console.log("keyValueList_length: " + keyValueList.length);
+                    console.log("keyValueList_sktCode: " + keyValueList[0]["id"] );
+                    
+                    //if you need callBack Function , you can use that function
+                    /* if (callBack) {
+                      callBack(keyValueList);
+                    } */
+
+                  });
+    return keyValueList;
+  }
+
+function fnSetStockCategoryComboBox()
+{
+    // Call Back
+  var stockCodeCallBack = function () 
+      {
+        $('#stockCategoryCbBox').on("change", function () 
         {
-         $("#intfTypeCbBox>option:eq(1)").prop("selected",true);
-        }
-  
-  CommonCombo.make("intfTypeCbBox"
-            , "/scm/selectComboInterfaceDate.do"  
-            , { codeMasterId: codeId }       
-            , ""                         
-            , {  
-                id  : "code",      //value    
-                name: "codeName",  //view
-                chooseMessage: "Select Interface Type"
-               }
-            , fnSelectIntfTypeCallback);     
+          var $this = $(this);
+
+          console.log("values: " + $this.val());
+              
+          CommonCombo.initById("stockCodeCbBox");
+
+          if (FormUtil.isNotEmpty($this.val())) 
+          {
+              CommonCombo.make("stockCodeCbBox"
+                              , "/scm/selectStockCode.do"  
+                              , { codeId: $this.val() }       
+                              , ""                         
+                              , {  
+                                  id  : "stkId",    //value         
+                                  name: "stkDesc",  //view
+                                  type: "S"
+                                }
+                              , "");
+          }
+          else
+          { // ALL
+            fnSetStockComboBox();
+          }
+          
+        });
+      };
+      
+  CommonCombo.make("stockCategoryCbBox"
+                 , "/scm/selectStockCategoryCode.do"
+                 , "" 
+                 , "" 
+                 , { chooseMessage: "ALL" }  
+                 , stockCodeCallBack  
+                  );  
 }
 
 // excel export
@@ -99,26 +135,25 @@ function fnExcelExport()
 {   // 1. grid ID 
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     // 3. exprot ExcelFileName
-    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", "SupplyPlanSummary_W" +$('#scmPeriodCbBox').val() );
+    GridCommon.exportTo("#masterManagerDiv", "xlsx", "SupplyPlanSummary_W" +$('#scmPeriodCbBox').val() );
 }
 
 // search
 function fnSearchBtnList()
 {
-
-   console.log( "selectBox: " + $("#statusSelBox").val() 
-       + " // Index: " + $("#statusSelBox option").index($("#statusSelBox option:selected")));
+   console.log( "selectBox: " + $("#stockCategoryCbBox").val() 
+       + " // Index: " + $("#stockCategoryCbBox option").index($("#stockCategoryCbBox option:selected")));
 
    Common.ajax("GET"
-             , "/scm/selectOtdStatusViewSearch.do"
+             , "/scm/selectMasterMngmentSerch.do"
              , $("#MainForm").serialize()
              , function(result) 
                {
-                  console.log("성공 fnSearchBtnList: " + result.selectOtdStatusViewList.length);
-                  AUIGrid.setGridData(myGridID, result.selectOtdStatusViewList);
-                  if(result != null && result.selectOtdStatusViewList.length > 0)
+                  console.log("성공 fnSearchBtnList: " + result.scmMasterMngMentServiceList.length);
+                  AUIGrid.setGridData(myGridID, result.scmMasterMngMentServiceList);
+                  if(result != null && result.scmMasterMngMentServiceList.length > 0)
                   {
-                      console.log("success: " + result.selectOtdStatusViewList[0].poNo); 
+                	  console.log("success_stkCtgryCode: " + result.scmMasterMngMentServiceList[0].stkCtgryCode); 
                   }
                }
              , function(jqXHR, textStatus, errorThrown)
@@ -194,178 +229,275 @@ function auiRemoveRowHandler(event)
     console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
-function fnOTDDetailPopUP(poNo)
-{
-   if (poNo.length < 1)
-   {
-     Common.alert("<spring:message code='sys.msg.first.Select' arguments='PO NO' htmlEscape='false'/>");
-     return false;
-   } 
-
-   $("#poNo").val(poNo);
-
-   var popUpObj = Common.popupDiv("/scm/otdDetailPop.do"
-         , $("#MainForm").serializeJSON()
-         , null
-         , false // when doble click , Not close
-         , "otdDetailPop"  
-         );  
-
-}
 
 /*************************************
  **********  Grid-LayOut  ************
  *************************************/
 
-var OTDViewerLayout = 
+var masterManagerLayout = 
     [         
-      {  //PO
-        headerText : "<spring:message code='sys.scm.otdview.PO'/>",
+      {  //Stock
+        headerText : "<spring:message code='sys.scm.mastermanager.Stock'/>",
+        width : "35%",
         children   : [ 
                          {
-                            dataField : "poNo",
-                            headerText : "<spring:message code='sys.scm.pomngment.rowNo'/>",
-                            cellMerge: true,
+                            dataField : "stkCtgryCode",
+                            headerText : "<spring:message code='sys.scm.salesplan.Category'/>",
                          }
                         ,{
-                            dataField : "issueDate",
-                            headerText : "<spring:message code='sys.scm.otdview.IssueDate'/>",
-                            cellMerge: true,
+                            dataField : "stockCode",
+                            headerText : "<spring:message code='sys.scm.salesplan.Code'/>",
                          }
                         ,{
-                            dataField : "stkCode",
-                            headerText : "<spring:message code='sys.scm.otdview.StkCode'/>",
-                            cellMerge: true,
+                            dataField : "stockDesc",
+                            headerText : "<spring:message code='sys.progmanagement.grid1.Description'/>",
                          }
                         ,{
-                            dataField : "stkDesc",
-                            headerText : "<spring:message code='sys.scm.otdview.StkDesc'/>",
-                            cellMerge: true,
+                            dataField : "defautStockName",
+                            headerText : "<spring:message code='sys.scm.mastermanager.DefaultStock'/>",
+                            renderer :
+		                        {
+		                            type : "DropDownListRenderer",
+		                            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+		                            
+		                            listFunction : function(rowIndex, columnIndex, item, dataField)
+		                            {
+		                              return keyValueList;
+		                            },
+		                            keyField : "id",
+		                            valueField : "value",
+		                        },
+	                          labelFunction : function(  rowIndex, columnIndex, value, headerText, item )
+                            {
+	                             var retStr = value;
+	                             var iCnt = keyValueList.length;
+	
+	                             for(var iLoop = 0; iLoop < iCnt; iLoop++)
+	                             {
+	                               if(keyValueList[iLoop]["id"] == value)
+	                               {
+	                                 retStr = keyValueList[iLoop]["value"];
+	                                 break;
+	                               }
+	                             }
+	                             return retStr;
+	                          }
                          }
-                        ,{
-                            dataField : "grDt",
-                            headerText : "<spring:message code='sys.scm.otdview.GRDate'/>",
-                            cellMerge: true,
-                         }
-                        ,{
-                            dataField : "poQty",
-                            headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
-                            cellMerge: true,
-                         }
-                        ,{
-                            dataField : "poStus",
-                            headerText : "<spring:message code='sys.menumanagement.grid1.Status'/>",
-                            cellMerge: true,
-                            renderer : { // HTML 템플릿 렌더러 사용
-                                type : "TemplateRenderer"
-                              },
-                              // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-                              labelFunction : function (rowIndex, columnIndex, value, headerText, item ) 
-                              { // HTML 템플릿 작성
-                                //console.log("Renderer: ( " + rowIndex + ", " + columnIndex + " ) " + "item.poStus: " + item.poStus + " /value: " + value);
-                                if (item.poStus == "Approved" )
-                                {
-                                  var template = "<div class='closeDiv'>";
-                                  template += "<span id='closeSpan'>";
-                                  template += "●";
-                                  template += "</span>";
-                                  return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-                                }
-                                else if (item.poStus == "Active" )
-                                {
-                                  var template = "<div class='openDiv'>";
-                                      template += "<span id='openDiv'>";
-                                      template += "●";
-                                      template += "</span>";
-                                      return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-                                }
-                                else
-                                    return null;
-                             }
-                        
-                         }
-                        
                      ]
       } 
-     ,{  //SO
-          headerText : "<spring:message code='sys.scm.otdview.SO'/>",
+     ,{  //Sales Plan
+          headerText : "<spring:message code='sys.scm.mastermanager.SalesPlan'/>",
+          width : "20%",
           children   : [ 
                            {
-                              dataField : "soQty",
-                              headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
-                              cellMerge: true,
+                              dataField : "isTrget",
+                              headerText : "<spring:message code='sys.scm.mastermanager.Target'/>",
+                              renderer : 
+                              {
+                                type : "CheckBoxEditRenderer"
+                                ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                ,checkValue : true // true, false 인 경우가 기본
+                                ,unCheckValue : false
+                                    
+                                   // 체크박스 Visible 함수
+                                ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                 {
+                                   if(item.isTarget == true)  // if 1 then
+                                     return true; // CheckBox is Checked
+                                                                            
+                                   return true;  // just CheckBox Visible But Not Checked.
+                                 }
+                              } // renderer
                            }
                           ,{
-                              dataField : "soDt",
-                              headerText : "<spring:message code='sys.scm.otdview.DATE'/>",
-                              cellMerge: true,
+                              dataField : "memo",
+                              headerText : "<spring:message code='sys.scm.mastermanager.Memo'/>",
+                           }
+                          ,{
+                              dataField : "startDt",
+                              headerText : "<spring:message code='sys.scm.mastermanager.Start'/>",
+                              dataType : "date",
+                              formatString : "dd-mm-yyyy",
+                              editRenderer : {
+                                  type : "CalendarRenderer",
+                                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+                                  onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+                                  showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+                                  }   
+                           }
+                          ,{
+                              dataField : "endDt",
+                              headerText : "<spring:message code='sys.scm.mastermanager.End'/>",
+                              dataType : "date",
+                              formatString : "dd-mm-yyyy",
+                              editRenderer : {
+                                type : "CalendarRenderer",
+                                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+                                onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+                                showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+                                }                             
                            }
                           
                        ]
       }       
-     ,{  //PP
-          headerText : "<spring:message code='sys.scm.otdview.PP'/>",
+     ,{  //Supply Plan
+          headerText : "<spring:message code='sys.scm.mastermanager.SupplyPlan'/>",
+          width : "45%",
           children   : [ 
-                           {
-                              dataField : "ppQtyPlan",
-                              headerText : "<spring:message code='sys.scm.otdview.planQty'/>",
-                              cellMerge: true,
+                           {    //Supply Plan Target    
+                              headerText : "<spring:message code='sys.scm.mastermanager.SupplyPlanTarget'/>",
+                              
+                              children : [
+	                                          {
+	                                            dataField : "klTarget",
+	                                            headerText : "<spring:message code='sys.scm.mastermanager.KL'/>",
+	                                            renderer : 
+	                                            {
+	                                              type : "CheckBoxEditRenderer"
+	                                              ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
+	                                              ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+	                                              ,checkValue : true // true, false 인 경우가 기본
+	                                              ,unCheckValue : false
+	                                                  
+	                                                 // 체크박스 Visible 함수
+	                                              ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+	                                               {
+	                                                 if(item.klTarget == true)  // if 1 then
+	                                                   return true; // CheckBox is Checked
+	                                                                                          
+	                                                 return true;  // just CheckBox Visible But Not Checked.
+	                                               }
+	                                            } // renderer                                              
+	                                          }
+	                                         ,{
+	                                            dataField : "kkTarget",
+	                                            headerText : "<spring:message code='sys.scm.mastermanager.KK'/>",
+                                              renderer : 
+                                              {
+                                                type : "CheckBoxEditRenderer"
+                                                ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                                ,checkValue : true // true, false 인 경우가 기본
+                                                ,unCheckValue : false
+                                                    
+                                                   // 체크박스 Visible 함수
+                                                ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                                 {
+                                                   if(item.kkTarget == true)  // if 1 then
+                                                     return true; // CheckBox is Checked
+                                                                                            
+                                                   return true;  // just CheckBox Visible But Not Checked.
+                                                 }
+                                              } // renderer     	                                                                                          
+	                                          }
+                                           ,{
+                                              dataField : "jbTarget",
+                                              headerText : "<spring:message code='sys.scm.mastermanager.JB'/>",   
+                                              renderer : 
+                                              {
+                                                type : "CheckBoxEditRenderer"
+                                                ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                                ,checkValue : true // true, false 인 경우가 기본
+                                                ,unCheckValue : false
+                                                    
+                                                   // 체크박스 Visible 함수
+                                                ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                                 {
+                                                   if(item.jbTarget == true)  // if 1 then
+                                                     return true; // CheckBox is Checked
+                                                                                            
+                                                   return true;  // just CheckBox Visible But Not Checked.
+                                                 }
+                                              } // renderer                                                                                             
+                                            }
+                                           ,{
+                                              dataField : "pnTarget",
+                                              headerText : "<spring:message code='sys.scm.mastermanager.PN'/>",    
+                                              renderer : 
+                                              {
+                                                type : "CheckBoxEditRenderer"
+                                                ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                                ,checkValue : true // true, false 인 경우가 기본
+                                                ,unCheckValue : false
+                                                    
+                                                   // 체크박스 Visible 함수
+                                                ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                                 {
+                                                   if(item.pnTarget == true)  // if 1 then
+                                                     return true; // CheckBox is Checked
+                                                                                            
+                                                   return true;  // just CheckBox Visible But Not Checked.
+                                                 }
+                                              } // renderer                                                                                            
+                                            }
+                                           ,{
+                                              dataField : "kcTarget",
+                                              headerText : "<spring:message code='sys.scm.mastermanager.KC'/>",    
+                                              renderer : 
+                                              {
+                                                type : "CheckBoxEditRenderer"
+                                                ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                                ,checkValue : true // true, false 인 경우가 기본
+                                                ,unCheckValue : false
+                                                    
+                                                   // 체크박스 Visible 함수
+                                                ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                                 {
+                                                   if(item.kcTarget == true)  // if 1 then
+                                                     return true; // CheckBox is Checked
+                                                                                            
+                                                   return true;  // just CheckBox Visible But Not Checked.
+                                                 }
+                                              } // renderer    
+                                                                                        
+                                            }
+                                         ]
+                           }
+                         , {    //MOQ
+                              headerText : "<spring:message code='sys.scm.mastermanager.MOQ'/>",
+                              
+                              children : [
+                                            {
+                                              dataField : "klMoq",
+                                              headerText : "<spring:message code='sys.scm.mastermanager.KL'/>",                                              
+                                            }
+                                           ,{
+                                              dataField : "kkMoq",
+                                              headerText : "<spring:message code='sys.scm.mastermanager.KK'/>",                                              
+                                            }
+                                           ,{
+                                              dataField : "jbMoq",
+                                              headerText : "<spring:message code='sys.scm.mastermanager.JB'/>",                                              
+                                            }
+                                           ,{
+                                              dataField : "pnMoq",
+                                              headerText : "<spring:message code='sys.scm.mastermanager.PN'/>",                                              
+                                            }
+                                           ,{
+                                              dataField : "kcMoq",
+                                              headerText : "<spring:message code='sys.scm.mastermanager.KC'/>",                                              
+                                            }
+                                         ]
+                           }
+                          ,{  //S.Stk      
+                              dataField : "safetyStock",
+                              headerText : "<spring:message code='sys.scm.mastermanager.SStk'/>",
                            }
                           ,{
-                              dataField : "ppQtyResult",
-                              headerText : "<spring:message code='sys.scm.otdview.prodQty'/>",
-                              cellMerge: true,
+                              dataField : "leadTm",
+                              headerText : "<spring:message code='sys.scm.mastermanager.LTime'/>",
                            }
                           ,{
-                              dataField : "ppDtProductStart",
-                              headerText : "<spring:message code='sys.scm.otdview.prodStart'/>",
-                              cellMerge: true,
-                           }
-                          ,{
-                              dataField : "ppDtProductEnd",
-                              headerText : "<spring:message code='sys.scm.otdview.prodEnd'/>",
-                              cellMerge: true,
+                              dataField : "loadingQty",
+                              headerText : "<spring:message code='sys.scm.mastermanager.LQty'/>",
                            }
                           
                        ]
-      }       
-     ,{  //GI
-          headerText : "<spring:message code='sys.scm.otdview.GI'/>",
-          children   : [ 
-                           {
-                              dataField : "giQty",
-                              headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
-                              cellMerge: true,
-                           }
-                          ,{
-                               dataField : "giDt",
-                               headerText : "<spring:message code='sys.scm.otdview.DATE'/>",
-                               cellMerge: true,
-                           }
-                          
-                       ]
-      }       
-     ,{  //SBO
-          headerText : "<spring:message code='sys.scm.otdview.SBO'/>",
-          children   : [ 
-                           {
-                              dataField : "sboPoQty",
-                              headerText : "<spring:message code='sys.scm.otdview.poQty'/>",
-                              cellMerge: true,
-                           }
-                          ,{
-                              dataField : "apQty",
-                              headerText : "<spring:message code='sys.scm.otdview.apQty'/>",
-                              cellMerge: true,
-                           }
-                          ,{
-                              dataField : "grQty",
-                              headerText : "<spring:message code='sys.scm.otdview.gr'/>",
-                              cellMerge: true,
-                           }
-                          
-                       ]
-      }       
+      } //Supply Plan      
     ];
 
 /****************************  Form Ready ******************************************/
@@ -375,18 +507,18 @@ var myGridID
 $(document).ready(function()
 {
 
-  var otdViewerLayoutOptions = {
+   var masterManagerOptions = {
             usePaging : true,
             useGroupingPanel : false,
             showRowNumColumn : false,  // 그리드 넘버링
             showStateColumn : false, // 행 상태 칼럼 보이기
             enableRestore : true,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-            fixedColumnCount    : 7, 
+            fixedColumnCount    : 4, 
           };
 
   // masterGrid 그리드를 생성합니다.
-  myGridID = GridCommon.createAUIGrid("OTDStatusViewDiv", OTDViewerLayout,"", otdViewerLayoutOptions);
+  myGridID = GridCommon.createAUIGrid("#masterManagerDiv", masterManagerLayout,"", masterManagerOptions);
   // AUIGrid 그리드를 생성합니다.
   
   // 푸터 객체 세팅
@@ -421,11 +553,9 @@ $(document).ready(function()
   {
     console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
-    gPoNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "poNo");
-
-    fnOTDDetailPopUP(gPoNo);    
+    //gPoNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "poNo");
     
-  });  
+  });   
 
 });   //$(document).ready
 
@@ -442,7 +572,7 @@ $(document).ready(function()
 <p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 <h2>SCM Master Management</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="javascript:void(0);"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a onclick="fnSearchBtnList();"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -463,19 +593,13 @@ $(document).ready(function()
 <tr>
 	<th scope="row">Stock Category</th>
 	<td>
-	<select>
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+  <select id="stockCategoryCbBox" name="stockCategoryCbBox">
+  </select>
 	</td>
 	<th scope="row">Stock</th>
 	<td>
-	<select>
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+  <select id="stockCodeCbBox" name="stockCodeCbBox">
+  </select>
 	</td>
 </tr>
 </tbody>
@@ -521,7 +645,8 @@ $(document).ready(function()
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<!-- 그리드 영역 1-->
+ <div id="masterManagerDiv"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
