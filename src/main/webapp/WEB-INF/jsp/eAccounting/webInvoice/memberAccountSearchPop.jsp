@@ -64,7 +64,11 @@ $(document).ready(function () {
         $("#search_bankName").val(event.item.bankName)
         $("#search_bankAccNo").val(event.item.bankAccNo)
         
-        fn_setSupplier();
+        if("${pop}" == "pop") {
+        	fn_setPopSupplier();
+        } else {
+        	fn_setSupplier();
+        }
         
         $("#supplierSearchPop").remove();
   });
