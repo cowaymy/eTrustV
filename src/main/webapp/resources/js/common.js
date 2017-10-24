@@ -712,7 +712,7 @@ var Common = {
         var msgHtml = '<div id="_popup_wrap_confirm"  confirm="Y" class="popup_wrap msg_box ' + bigClass + '">'
             + '	<header class="pop_header">'
             + '<h1>' + option.title + '</h1>'
-            + '<p class="pop_close" id="_popClose"><a href="#">close</a></p>'
+            + '<p class="pop_close" id="_popClose"><a href="javascript:void(0);">close</a></p>'
             + '</header>'
             + '<section class="pop_body">'
             + '<p class="msg_txt">' + option.content + '</p>'
@@ -753,6 +753,74 @@ var Common = {
             title: "Modal",
             height: 250,
             width: 400
+        });
+    },
+
+    prompt : function(_desc, _defaultText, okCallback, cancelCallback, _options){
+
+        var option = {
+            defaultText : _defaultText
+        };
+
+        option = $.extend(option, _options);
+
+        Common.promptBase(option, _desc, okCallback, cancelCallback);
+    },
+
+    promptBase : function(_options, _desc, okCallback, cancelCallback){
+        var option = {
+            title : "Prompt",
+            defaultText : "",
+            isBig : false,
+            textId : "promptText",
+            textName : "promptText"
+        };
+
+        option = $.extend(option, _options);
+
+        var bigClass = "";
+
+        if(option.isBig){
+            bigClass = "msg_big";
+        }
+
+        var msgHtml = '<div id="popup_wrap" class="popup_wrap msg_box ' + bigClass + '">'
+        + '<header class="pop_header"><!-- pop_header start -->'
+        + '<h1>' + option.title + '</h1>'
+        + '<p class="pop_close"  id="_promptClose"><a href="javascript:void(0);">close</a></p>'
+        + '</header><!-- pop_header end -->'
+        + '<section class="pop_body"><!-- pop_body start -->'
+        + '<p class="msg_txt">' + _desc
+        + '<textarea id="' + option.textId + '" name="' + option.textName + '">' + option.defaultText + '</textarea>'
+        + '</p>'
+        + '<ul class="center_btns">'
+        + '     <li><p class="btn_blue2" id="_promptOk"><a href="javascript:void(0);">OK</a></p></li>'
+        + '     <li><p class="btn_blue2" id="_promptCancel"><a href="javascript:void(0);">Cancel</a></p></li>'
+        + '</ul>'
+        + '</section><!-- pop_body end -->'
+        + '</div><!-- popup_wrap end -->'
+
+        var $obj = $(msgHtml);
+
+        $("body").append($obj);
+
+        $obj.find('#_promptClose').on('click', function () {
+            $obj.remove();
+        });
+
+        $obj.find('#_promptOk').on('click', function () {
+            if (okCallback) {
+                okCallback();
+            }
+
+            $obj.remove();
+        });
+
+        $obj.find('#_promptCancel').on('click', function () {
+            if (cancelCallback) {
+                cancelCallback();
+            }
+            $obj.remove();
         });
     },
 
