@@ -241,9 +241,9 @@ var Common = {
      * @param _callback
      * @param _isManualClose : 개발자가 수동으로 div 팝업창을 닫으려면 true
      * @param _divId : 팝업 아이디 생성.
-     * @returns divObj
+     * @returns _initFunc : jsp loading 완료 후 처리 함수.
      */
-    popupDiv: function (_url, _jsonObj, _callback, _isManualClose, _divId) {
+    popupDiv: function (_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc) {
 
         var divId = "_popupDiv";
 
@@ -297,6 +297,10 @@ var Common = {
             success: function (result, textStatus, XMLHttpRequest) {
 
                 $obj.html(result);
+
+                if(_initFunc){
+                    _initFunc();
+                }
 
                 $obj.show();
 
