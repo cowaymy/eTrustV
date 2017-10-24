@@ -418,46 +418,46 @@
 	</select> 
 
 
-<!-- <select id="getAlternativeFilterList" parameterType="Map" resultType="egovMap"> -->
-<!-- 	SELECT -->
-<!-- 	MATRL_NO PRODUCT_CODE,S26.STK_ID PRODUCT_ID,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT, -->
-<!-- 	case when l44.use_probabiltiy = 100 and alter_itm_rank_ord = 1 then  -->
-<!-- 	'Main' -->
-<!-- 	else 'Alternative' -->
-<!-- 	end title -->
-<!-- 	FROM LOG0043M L43,LOG0044D L44,SYS0026M S26 -->
-<!-- 	WHERE 1=1 -->
-<!-- 	AND L43.BOM=L44.BOM -->
-<!-- 	AND L44.BOM_COMPNT = S26.STK_CODE -->
-<!-- 	AND S26.STK_TYPE_ID in(62,63) -->
-<!-- 	AND L44.ALTER_ITM_GRP IS NOT NULL -->
-<!-- </select>  -->
-
-
+<!-- 	<select id="getAlternativeFilterMList" parameterType="Map" resultType="egovMap"> -->
+<!-- 	  SELECT -->
+<!-- 	    MATRL_NO PRODUCT_CODE,S26.STK_ID PRODUCT_ID,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP FILTER_GROUP_CODE,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT,'Main' AS DIVISION_CODE -->
+<!-- 	    FROM LOG0043M L43,LOG0044D L44,SYS0026M S26 -->
+<!-- 	    WHERE 1=1 -->
+<!-- 	    AND L43.BOM=L44.BOM -->
+<!-- 	    AND L44.BOM_COMPNT = S26.STK_CODE -->
+<!-- 	    AND S26.STK_TYPE_ID in(62,63) -->
+<!-- 	    AND L44.ALTER_ITM_GRP IS NOT NULL -->
+<!-- 	    AND  l44.use_probabiltiy = 100 and alter_itm_rank_ord = 1 -->
+<!-- 	</select>  -->
+	
 	<select id="getAlternativeFilterMList" parameterType="Map" resultType="egovMap">
-	  SELECT
-	    MATRL_NO PRODUCT_CODE,S26.STK_ID PRODUCT_ID,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP FILTER_GROUP_CODE,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT,'Main' AS DIVISION_CODE
-	    FROM LOG0043M L43,LOG0044D L44,SYS0026M S26
-	    WHERE 1=1
-	    AND L43.BOM=L44.BOM
-	    AND L44.BOM_COMPNT = S26.STK_CODE
-	    AND S26.STK_TYPE_ID in(62,63)
-	    AND L44.ALTER_ITM_GRP IS NOT NULL
-	    AND  l44.use_probabiltiy = 100 and alter_itm_rank_ord = 1
-	</select> 
+      with prdt as (select * from sys0026m where stk_type_id = '61')
+      SELECT
+        MATRL_NO PRODUCT_CODE,S26.STK_ID filter_Parts_Id,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP FILTER_GROUP_CODE,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT,'Main' AS DIVISION_CODE
+        ,prdt.stk_id product_Id, prdt.stk_desc--(select STK_ID from sys0026m  where  stk_code = l43.MATRL_NO)
+        FROM LOG0043M L43,LOG0044D L44,SYS0026M S26 , prdt
+        WHERE 1=1
+        and l43.MATRL_NO = prdt.stk_code(+)
+        AND L43.BOM=L44.BOM
+        AND L44.BOM_COMPNT = S26.STK_CODE
+        AND S26.STK_TYPE_ID in(62,63)
+        AND L44.ALTER_ITM_GRP IS NOT NULL
+        AND  l44.use_probabiltiy = 100 and alter_itm_rank_ord = 1
+    </select> 
+	
 
 	<select id="getAlternativeFilterDList" parameterType="Map" resultType="egovMap">
 	    SELECT
-	    MATRL_NO PRODUCT_CODE,S26.STK_ID PRODUCT_ID,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP FILTER_GROUP_CODE,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT,'Alternative' AS DIVISION_CODE
-	    FROM LOG0043M L43,LOG0044D L44,SYS0026M S26
-	    WHERE 1=1
-	    AND L43.BOM=L44.BOM
-	    AND L44.BOM_COMPNT = S26.STK_CODE
-	    AND S26.STK_TYPE_ID in(62,63)
-	    AND L44.ALTER_ITM_GRP IS NOT NULL
-	    AND l44.use_probabiltiy != 100 and alter_itm_rank_ord != 1
-	    AND  L44.VALID_FROM_DT <![CDATA[<= ]]>  sysdate 
-        AND  L44.VALID_TO_DT <![CDATA[<= ]]> sysdate
+        MATRL_NO PRODUCT_CODE,(select STK_ID from sys0026m  where  stk_code = l43.MATRL_NO) product_Id,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,S26.STK_ID filter_Parts_Id,L44.ALTER_ITM_GRP FILTER_GROUP_CODE,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT,'Alternative' AS DIVISION_CODE
+         FROM LOG0043M L43,LOG0044D L44,SYS0026M S26
+        WHERE 1=1
+        AND L43.BOM=L44.BOM
+        AND L44.BOM_COMPNT = S26.STK_CODE
+        AND S26.STK_TYPE_ID in(62,63)
+        AND L44.ALTER_ITM_GRP IS NOT NULL
+        AND l44.use_probabiltiy != 100 and alter_itm_rank_ord != 1
+        AND  L44.VALID_FROM_DT <![CDATA[<=]]>   sysdate 
+        AND  L44.VALID_TO_DT <![CDATA[<=]]>  sysdate
 	</select> 
 	
 
