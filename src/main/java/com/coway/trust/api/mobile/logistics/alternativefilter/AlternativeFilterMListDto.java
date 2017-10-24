@@ -17,6 +17,9 @@ public class AlternativeFilterMListDto {
 	@ApiModelProperty(value = "제품 id")
 	private int productId;
 
+	@ApiModelProperty(value = "필터 id")
+	private int filterPartsId;
+
 	@ApiModelProperty(value = "필터 코드")
 	private String filterCode;
 
@@ -31,6 +34,14 @@ public class AlternativeFilterMListDto {
 
 	public static AlternativeFilterMListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, AlternativeFilterMListDto.class);
+	}
+
+	public int getFilterPartsId() {
+		return filterPartsId;
+	}
+
+	public void setFilterPartsId(int filterPartsId) {
+		this.filterPartsId = filterPartsId;
 	}
 
 	public String getProductCode() {
