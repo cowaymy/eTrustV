@@ -646,7 +646,7 @@
 
         <ul class="right_btns">
             <li><p class="btn_grid"><a href="javascript:void(0);" id="btnViewPop"><spring:message code='sys.btn.view'/></a></p></li>
-            <li><p class="btn_grid"><a href="javascript:void(0);" id="btnUpdatePop"><spring:message code='sys.btn.update'/></a></p></li>
+            <li><p class="btn_grid"><a href="javascript:void(0);" id="btnUpdatePop"><spring:message code='sys.btn.edit'/></a></p></li>
             <li><p class="btn_grid"><a href="javascript:void(0);" id="btnAddPop"><spring:message code='sys.btn.add'/></a></p></li>
         </ul>
 
