@@ -12,6 +12,10 @@ public interface ScmMasterMngMentService
 	
 	// CDC WareHouse Mapping
 	List<EgovMap> selectCdcWareMapping(Map<String, Object> params);
+	List<EgovMap> selectWhLocationMapping(Map<String, Object> params);
+	int insetCdcWhMapping(List<Object> addList, Integer crtUserId); 
+	int deleteCdcWhMapping(List<Object> addList, Integer crtUserId); 
+	
 	
 	// Business Plan Manager
 	List<EgovMap> selectBizPlanManager(Map<String, Object> params);

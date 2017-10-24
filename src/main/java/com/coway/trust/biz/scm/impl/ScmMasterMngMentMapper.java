@@ -14,6 +14,10 @@ public interface ScmMasterMngMentMapper
 	
 	/* CDC WARE MAPPING */
 	List<EgovMap> selectCdcWareMapping(Map<String, Object> params);
+	List<EgovMap> selectWhLocationMapping(Map<String, Object> params);
+	
+	int insetCdcWhMapping(Map<String, Object> params); 
+	int deleteCdcWhMapping(Map<String, Object> params); 
 	
 	/* Business Plan Manager */
 	List<EgovMap> selectBizPlanManager(Map<String, Object> params);

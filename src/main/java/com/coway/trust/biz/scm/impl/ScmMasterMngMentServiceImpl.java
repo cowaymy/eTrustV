@@ -47,6 +47,56 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 	public List<EgovMap> selectCdcWareMapping(Map<String, Object> params) {
 		return scmMasterMngMentMapper.selectCdcWareMapping(params);
 	}
+	@Override
+	public List<EgovMap> selectWhLocationMapping(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectWhLocationMapping(params);
+	}
+	
+	@Override
+	public int insetCdcWhMapping(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug(" >>>>> insetCdcWhMapping ");
+			LOGGER.debug(" hidden_Whid : {}", ((Map<String, Object>) obj).get("whId"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("whId");
+
+			saveCnt++;
+
+			scmMasterMngMentMapper.insetCdcWhMapping((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+	
+	@Override
+	public int deleteCdcWhMapping(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug(" >>>>> deleteCdcWhMapping ");
+			LOGGER.debug(" hidden_Whid : {}", ((Map<String, Object>) obj).get("whId"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("whId");
+			
+			saveCnt++;
+			
+			scmMasterMngMentMapper.deleteCdcWhMapping((Map<String, Object>) obj);
+		}
+		
+		return saveCnt;
+	}
 	
 	// Business Plan Manager
 	@Override
