@@ -46,8 +46,6 @@ $(document).ready(function(){
 
      // TODO View
 	console.log("${fileList}");
-     alert(fileList.length );
-     alert("${budgetStatus}" );
     if(fileList.length == 0 && "${budgetStatus}" ==  'Y') {
          setInputFile2();
     }
