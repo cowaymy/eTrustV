@@ -1,5 +1,6 @@
 package com.coway.trust.biz.services.registration.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,8 +19,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 	private RegistrationMapper registrationMapper;
 
 	@Override
-	public void saveHearLog(Map<String, Object> params) {
+	public void saveHearLogs(List<Map<String, Object>> logs) {
 		LOGGER.debug("saveHearLog....");
-		registrationMapper.insertHeatLog(params);
+		for (Map<String, Object> log : logs) {
+			registrationMapper.insertHeatLog(log);
+		}
 	}
 }

@@ -1,7 +1,5 @@
 package com.coway.trust.api.mobile.Service.registration;
 
-import java.util.Map;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -11,9 +9,9 @@ public class HeartDto {
 	@ApiModelProperty(value = "transactionId")
 	private String transactionId;
 
-	public static HeartDto create(Map<String, Object> map) {
+	public static HeartDto create(String transactionId) {
 		HeartDto dto = new HeartDto();
-		dto.setTransactionId((String) map.get("transactionId"));
+		dto.setTransactionId(transactionId);
 		return dto;
 	}
 

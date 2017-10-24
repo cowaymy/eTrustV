@@ -1,6 +1,7 @@
 package com.coway.trust.api.mobile.Service.registration;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -29,22 +30,28 @@ public class RegistrationApiController {
 	private RegistrationService registrationService;
 
 	@ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/heart", method = RequestMethod.POST)
-	public ResponseEntity<HeartDto> heart(@RequestBody HeartForm heartForm) throws Exception {
+	@RequestMapping(value = "/hearts", method = RequestMethod.POST)
+	public ResponseEntity<HeartDto> heart(@RequestBody List<HeartForm> heartForms) throws Exception {
 
 		// mobile 에서 받은 데이터를 로그 테이블에 insert......
-		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.INSERT_HEART_LOG);
-		if (RegistrationConstants.INSERT_HEART_LOG) {
-			registrationService.saveHearLog(heartForm.createMap(heartForm));
+		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
+		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+
+			List<Map<String, Object>> heartLogs = new ArrayList<>();
+			for (HeartForm heart : heartForms) {
+				heartLogs.addAll(heart.createMaps(heart));
+			}
+
+			// List<Map<String, Object>> heartLogs = heartForms.stream().flatMap(r -> r.createMaps(r))
+			// .collect(Collectors.toList());
+			registrationService.saveHearLogs(heartLogs);
 		}
 
 		// business service....
 		// TODO : heartService.xxxx 구현 필요.....
 
-		// TODO : 리턴할 dto 구현. 현재는 임시로 transactionId만 리턴함.
-		Map<String, Object> sampleData = new HashMap<>();
-		sampleData.put("transactionId", heartForm.getTransactionId());
+		// TODO : 리턴할 dto 구현.
 
-		return ResponseEntity.ok(HeartDto.create(sampleData));
+		return ResponseEntity.ok(HeartDto.create(heartForms.get(0).getTransactionId()));
 	}
 }

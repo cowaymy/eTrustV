@@ -1,9 +1,10 @@
 package com.coway.trust.biz.services.registration;
 
+import java.util.List;
 import java.util.Map;
 
 public interface RegistrationService {
 
-	void saveHearLog(Map<String, Object> params);
+	void saveHearLogs(List<Map<String, Object>> logs);
 
 }

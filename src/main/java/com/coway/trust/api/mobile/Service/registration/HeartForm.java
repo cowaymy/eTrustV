@@ -1,6 +1,8 @@
 package com.coway.trust.api.mobile.Service.registration;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
@@ -42,12 +44,6 @@ public class HeartForm {
 	private int rcCode;
 	@ApiModelProperty(value = "signData")
 	private String signData;
-	@ApiModelProperty(value = "filterCode")
-	private String filterCode;
-	@ApiModelProperty(value = "exchangeId")
-	private int exchangeId;
-	@ApiModelProperty(value = "filterChangeQty")
-	private int filterChangeQty;
 	@ApiModelProperty(value = "createUserId")
 	private String createUserId;
 	// @ApiModelProperty(dataType = "java.sql.Date", value = "YYYY-MM-DD , e.g. 2015-01-16")
@@ -58,10 +54,28 @@ public class HeartForm {
 	@ApiModelProperty(value = "transactionId")
 	private String transactionId;
 
-	public static Map<String, Object> createMap(HeartForm heartForm) {
-		Map<String, Object> map = BeanConverter.toMap(heartForm, "signData");
-		map.put("signData", Base64.decodeBase64(heartForm.getSignData()));
-		return map;
+	@ApiModelProperty(value = "heartDtails")
+	private List<HeartDtailForm> heartDtails;
+
+	public List<Map<String, Object>> createMaps(HeartForm heartForm) {
+
+		List<Map<String, Object>> list = new ArrayList<>();
+
+		if (heartDtails != null && heartDtails.size() > 0) {
+			Map<String, Object> map;
+			for (HeartDtailForm dtl : heartDtails) {
+				map = BeanConverter.toMap(heartForm, "signData", "heartDtails");
+				map.put("signData", Base64.decodeBase64(heartForm.getSignData()));
+
+				// heartDtails
+				map.put("filterCode", dtl.getFilterCode());
+				map.put("exchangeId", dtl.getExchangeId());
+				map.put("filterChangeQty", dtl.getFilterChangeQty());
+
+				list.add(map);
+			}
+		}
+		return list;
 	}
 
 	public String getUserId() {
@@ -176,28 +190,12 @@ public class HeartForm {
 		this.signData = signData;
 	}
 
-	public String getFilterCode() {
-		return filterCode;
+	public List<HeartDtailForm> getHeartDtails() {
+		return heartDtails;
 	}
 
-	public void setFilterCode(String filterCode) {
-		this.filterCode = filterCode;
-	}
-
-	public int getExchangeId() {
-		return exchangeId;
-	}
-
-	public void setExchangeId(int exchangeId) {
-		this.exchangeId = exchangeId;
-	}
-
-	public int getFilterChangeQty() {
-		return filterChangeQty;
-	}
-
-	public void setFilterChangeQty(int filterChangeQty) {
-		this.filterChangeQty = filterChangeQty;
+	public void setHeartDtails(List<HeartDtailForm> heartDtails) {
+		this.heartDtails = heartDtails;
 	}
 
 	public String getCreateUserId() {
