@@ -62,6 +62,154 @@ public class HeartServiceJobDto {
 
 	@ApiModelProperty(value = "설치주소(Magic Address 체계?)")
 	private String installAddress;
+	
+	@ApiModelProperty(value = "우편번호")
+	private String postcode;
+	
+	@ApiModelProperty(value = "핸드폰 번호")
+	private String handphoneTel;
+	
+	@ApiModelProperty(value = "집전화 번호")
+	private String homeTel;
+	
+	@ApiModelProperty(value = "회사 번호")
+	private String officeTel;
+	
+	@ApiModelProperty(value = "메일 주소")
+	private String mailAddress;
+	
+	@ApiModelProperty(value = "고객 VA 번호_170914 추가")
+	private String customerVaNo;
+	
+	@ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
+	private String customerJomPayRefNo;
+	
+	@ApiModelProperty(value = "제품 사진 url")
+	private String imageUrl;
+	
+	@ApiModelProperty(value = "제품명")
+	private String productName;
+
+	@ApiModelProperty(value = "제품코드")
+	private String productCode;
+
+	@ApiModelProperty(value = "application Type (Rental…)")
+	private String appType;
+	
+	@ApiModelProperty(value = "")
+	private String instruction;
+
+	@ApiModelProperty(value = "")
+	private String salesPromotion;
+	
+	@ApiModelProperty(value = "")
+	private String contractDuration;
+	
+	@ApiModelProperty(value = "")
+	private String monthlyRentalFees;
+	
+	@ApiModelProperty(value = "")
+	private String registrationFees;
+	
+	@ApiModelProperty(value = "결제 방식 - Code")
+	private String paymentMode;
+	
+	@ApiModelProperty(value = "결제 방식 - Name")
+	private String paymentModeName;
+	
+	@ApiModelProperty(value = "결제 은행")
+	private String bankCode;
+	
+	@ApiModelProperty(value = "결제 은행명")
+	private String bankName;
+	
+	@ApiModelProperty(value = "결제 정보")
+	private String cardAccountNo;
+	
+	@ApiModelProperty(value = "outstanding 정보(OutstandingV.total)")
+	private String outstanding;
+	
+	@ApiModelProperty(value = "sirim 코드")
+	private String sirimNo;
+	
+	@ApiModelProperty(value = "serial 코드")
+	private String serialNo;
+	
+	@ApiModelProperty(value = "WARRANTY (YYYYMMDD)")
+	private String warranty;
+	
+	@ApiModelProperty(value = "멤버십 만료 기간(YYYYMMDD)")
+	private String MembershipContractExpiry;
+	
+	@ApiModelProperty(value = "렌탈 현황")
+	private String rentalStatus;
+	
+	@ApiModelProperty(value = "")
+	private String dscCode;
+	
+	@ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
+	private String lastPaymentDate;
+	
+	@ApiModelProperty(value = "하트 결과등록시 체크")
+	private String temperatureSetting;
+	
+	@ApiModelProperty(value = "remark")
+	private String resultRemark;
+	
+	@ApiModelProperty(value = "서명한사람 코드(owner / father…)")
+	private String ownerCode;
+	
+	@ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
+	private String ownerCodeNm;
+	
+	@ApiModelProperty(value = "고객명")
+	private String resultCustName;
+	
+	@ApiModelProperty(value = "nric 번호")
+	private String resultIcMobileNo;
+	
+	@ApiModelProperty(value = "고객메일주소")
+	private String resultReportEmailNo;
+	
+	@ApiModelProperty(value = "신규 요건(default : 고객명)")
+	private String resultAcceptanceName;
+	
+	@ApiModelProperty(value = "")
+	private String rcCode;
+	
+	@ApiModelProperty(value = "실패 사유 코드")
+	private String failReasonCode;
+	
+	@ApiModelProperty(value = "실패 사유명")
+	private String failReasonName;
+	
+	@ApiModelProperty(value = "설치자")
+	private String settledBy;
+	
+	@ApiModelProperty(value = "설치날짜(YYYYMMDD)")
+	private String settledDate;
+	
+	@ApiModelProperty(value = "설치시간(HHMMSS)")
+	private String settledTime;
+	
+	@ApiModelProperty(value = "")
+	private String renCollectionId;
+	
+	@ApiModelProperty(value = "bsr no")
+	private String bsrNo;
+	
+	@ApiModelProperty(value = "다음 작업시간(HHMM)")
+	private String needFilter;
+	
+	@ApiModelProperty(value = "다음 작업일자(YYYYMMDD)")
+	private String nextAppointmentDate;
+
+	@ApiModelProperty(value = "필터교체대상 여부")
+	private String nextAppointmentTime;
+
+	
+	
+	
 
 	public void setSalesOrderNo(int salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
@@ -87,163 +235,34 @@ public class HeartServiceJobDto {
 		this.planMonth = planMonth;
 	}
 
-	public void setAppType(int appType) {
-		this.appType = appType;
-	}
-
-	public void setSalesPromotion(int salesPromotion) {
-		this.salesPromotion = salesPromotion;
-	}
-
-	public void setBankCode(int bankCode) {
-		this.bankCode = bankCode;
-	}
-
-	public void setDscCode(int dscCode) {
-		this.dscCode = dscCode;
-	}
-
-	public void setRcCode(int rcCode) {
-		this.rcCode = rcCode;
-	}
-
-	public void setFailReasonCode(int failReasonCode) {
+	public void setFailReasonCode(String failReasonCode) {
 		this.failReasonCode = failReasonCode;
 	}
-	@ApiModelProperty(value = "우편번호")
-	private String postcode;
 
-	@ApiModelProperty(value = "핸드폰 번호")
-	private String handphoneTel;
+	public int getSalesOrderNo() {
+		return salesOrderNo;
+	}
 
-	@ApiModelProperty(value = "집전화 번호")
-	private String homeTel;
+	public int getJobStatus() {
+		return jobStatus;
+	}
 
-	@ApiModelProperty(value = "회사 번호")
-	private String officeTel;
+	public int getCustomerType() {
+		return customerType;
+	}
 
-	@ApiModelProperty(value = "메일 주소")
-	private String mailAddress;
+	public int getCustomerId() {
+		return customerId;
+	}
 
-	@ApiModelProperty(value = "고객 VA 번호_170914 추가")
-	private String customerVaNo;
+	public int getPlanYear() {
+		return planYear;
+	}
 
-	@ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
-	private String customerJomPayRefNo;
+	public int getPlanMonth() {
+		return planMonth;
+	}
 
-	@ApiModelProperty(value = "제품 사진 url")
-	private String imageUrl;
-
-	@ApiModelProperty(value = "제품명")
-	private String productName;
-
-	@ApiModelProperty(value = "제품코드")
-	private String productCode;
-
-	@ApiModelProperty(value = "application Type (Rental…)")
-	private int appType;
-
-	private String instruction;
-
-	private int salesPromotion;
-
-	private String contractDuration;
-
-	private String monthlyRentalFees;
-
-	private String registrationFees;
-
-	@ApiModelProperty(value = "결제 방식 - Code")
-	private String paymentMode;
-
-	@ApiModelProperty(value = "결제 방식 - Name")
-	private String paymentModeName;
-
-	@ApiModelProperty(value = "결제 은행")
-	private int bankCode;
-
-	@ApiModelProperty(value = "결제 은행명")
-	private String bankName;
-
-	@ApiModelProperty(value = "결제 정보")
-	private String cardAccountNo;
-
-	@ApiModelProperty(value = "outstanding 정보(OutstandingV.total)")
-	private String outstanding;
-
-	@ApiModelProperty(value = "sirim 코드")
-	private String sirimNo;
-
-	@ApiModelProperty(value = "serial 코드")
-	private String serialNo;
-
-	@ApiModelProperty(value = "WARRANTY ")
-	private String warranty;
-
-	@ApiModelProperty(value = "멤버십 만료 기간")
-	private String MembershipContractExpiry;
-
-	@ApiModelProperty(value = "렌탈 현황")
-	private String rentalStatus;
-
-	private int dscCode;
-
-	@ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
-	private String lastPaymentDate;
-
-	@ApiModelProperty(value = "하트 결과등록시 체크")
-	private String temperatureSetting;
-
-	@ApiModelProperty(value = "remark")
-	private String resultRemark;
-
-	@ApiModelProperty(value = "서명한사람 코드(owner / father…)")
-	private String ownerCode;
-
-	@ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
-	private String ownerCodeNm;
-
-	@ApiModelProperty(value = "고객명")
-	private String resultCustName;
-
-	@ApiModelProperty(value = "nric 번호")
-	private String resultIcMobileNo;
-
-	@ApiModelProperty(value = "고객메일주소")
-	private String resultReportEmailNo;
-
-	@ApiModelProperty(value = "신규 요건(default : 고객명)")
-	private String resultAcceptanceName;
-
-	private int rcCode;
-
-	@ApiModelProperty(value = "실패 사유 코드")
-	private int failReasonCode;
-
-	@ApiModelProperty(value = "실패 사유명")
-	private String failReasonName;
-
-	@ApiModelProperty(value = "설치자")
-	private String settledBy;
-
-	@ApiModelProperty(value = "설치날짜")
-	private String settledDate;
-
-	@ApiModelProperty(value = "설치시간")
-	private String settledTime;
-
-	private String renCollectionId;
-
-	@ApiModelProperty(value = "bsr no")
-	private String bsrNo;
-
-	@ApiModelProperty(value = "필터교체대상 여부")
-	private String needFilter;
-
-	private String nextAppointmentDate;
-
-	private String nextAppointmentTime;
-	
 	public String getAppointmentDate() {
 		return appointmentDate;
 	}
