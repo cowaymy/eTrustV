@@ -127,8 +127,6 @@ public class EgovFileDownloadController {
 	public void fileDownload(@RequestParam Map<String, Object> params, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		// TODO : Database 설계에 따른 수정 필요.
-		// 현재는 단순 다운로드 테스트를 위한 구현임.
 		String subPath = (String) params.get("subPath");
 		String fileName = (String) params.get("fileName");
 		String orignlFileNm = (String) params.get("orignlFileNm");
