@@ -78,5 +78,24 @@ public interface MlogApiMapper {
 //	List<StrockMovementVoForMobile> getStockRequestStatusHeader(Map<String, Object> params);
 //
 //	List<StrockMovementVoForMobile> getRequestStatusParts(Map<String, Object> setMap);
-
+	
+	/**
+	 * 인서트 추가
+	 * 
+	 * @param params
+	 * @return
+	 */
+	
+	String selectStockMovementSeq();
+	
+	String selectDeliveryStockMovementSeq();
+	
+	void insStockMovementHead(Map<String, Object> fMap);
+	
+	void insStockMovementDetail(Map<String, Object> fMap);
+	
+	void insertStockBooking(Map<String, Object> fMap);
+	
+	void insertDeliveryStockMovementDetail(Map<String, Object> tmpMap);
+	
 }
