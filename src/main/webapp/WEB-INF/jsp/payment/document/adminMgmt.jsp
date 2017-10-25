@@ -498,7 +498,7 @@ var watingPopColumnLayout = [
                 }else{
                     msg += ""+"<br>" ;
                 }
-            } 
+            }
             
             $("#logMsgBox").html(msg);
             
