@@ -18,6 +18,9 @@ public class StockByHolderListDto {
 	@ApiModelProperty(value = "CT/CODY 별 예정 수량")
 	private int stockQty;
 
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
+
 	public static StockByHolderListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, StockByHolderListDto.class);
 	}
@@ -44,6 +47,14 @@ public class StockByHolderListDto {
 
 	public void setStockQty(int stockQty) {
 		this.stockQty = stockQty;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
