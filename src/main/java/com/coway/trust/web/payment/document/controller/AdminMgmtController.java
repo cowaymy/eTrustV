@@ -160,8 +160,8 @@ public class AdminMgmtController {
 	@RequestMapping(value = "/selectLoadItemLog", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectLoadItemLog(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		List<EgovMap> watingPopDetList = adminMgmtService.selectLoadItemLog(params);
-		Map<String, Object> logMap = watingPopDetList.get(0);
+		List<EgovMap> logList = adminMgmtService.selectLoadItemLog(params);
+		Map<String, Object> logMap = logList.get(0);
 		
         // 조회 결과 리턴.
         return ResponseEntity.ok(logMap);
