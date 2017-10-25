@@ -289,7 +289,7 @@ public class HeartServiceJobDto {
 
 	public String getCheckInDate() {
 		return checkInDate;
-	}
+	} 
 
 	public void setCheckInDate(String checkInDate) {
 		this.checkInDate = checkInDate;
