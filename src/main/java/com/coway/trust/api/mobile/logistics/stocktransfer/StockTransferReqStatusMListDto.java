@@ -26,6 +26,9 @@ public class StockTransferReqStatusMListDto {
 	@ApiModelProperty(value = "요청일 (YYYYMMDD)")
 	private String reqDate;
 
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
+
 	public List<StockTransferReqStatusDListDto> getPartsList() {
 		return partsList;
 	}
@@ -78,6 +81,14 @@ public class StockTransferReqStatusMListDto {
 
 	public void setReqDate(String reqDate) {
 		this.reqDate = reqDate;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
