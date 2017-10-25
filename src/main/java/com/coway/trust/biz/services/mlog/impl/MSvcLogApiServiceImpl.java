@@ -51,6 +51,18 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		
 	}
 
+	@Override
+	public List<EgovMap> heartServiceParts(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.heartServiceParts(params);
+	}
+
+	@Override
+	public List<EgovMap> afterServiceParts(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.afterServiceParts(params);
+	}
+
 	
 	
 	

@@ -151,8 +151,8 @@
 			       INNER JOIN SYS0013M I
 			          ON I.CODE_ID = B.APP_TYPE_ID
 			 WHERE     1 = 1
-			     AND C.AS_REQST_DT = TO_DATE (to_date(#{requestDate}, 'YYYYMMDD')
-			     AND A.CODY_ID = #{userId}  
+			     AND C.AS_REQST_DT = TO_DATE ('20170611',    'YYYYMMDD')      
+<!-- 			     AND A.CODY_ID = #{userId} -->  
 
                    
      </select> 
@@ -160,25 +160,26 @@
 
 
 
-<!-- 	    <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
+ 	    <select id="heartServiceParts" parameterType="Map" resultType="egovMap">
 	    
-	            SELECT B.SALES_ORD_NO AS salesOrderNo,
-	                   F.AS_RESULT_NO AS serviceNo,
-	                   A.NAME,
-	                   'AS' AS jobType,
-	                   G.AS_RESULT_STUS_ID AS jobStatus,
-	                   F.AS_SETL_DT AS appointmentDate,
-	                   F.AS_SETL_TM AS appointmentTime,
-	                   D.CODE,
-	                   C.AS_NO,
-	                   C.AS_REQST_DT,
-	                   J.CODE,
-	                   F.AS_RESULT_NO,
-	                   H.NAME,
-	                   B.SALES_ORD_NO,
-	                   I.CODE APP_TYPE,
-	                   A.NAME,
-	                   A.NRIC SVC0004D
+	            SELECT null as sales_Order_No
+							,null as ser_vice_No
+							,null as product_Code
+							,null as part_Code
+							,null as part_Id
+							,null as part_Name
+							,null as quanity
+							,null as ex_Chgid
+							,null as chg_Qty
+							,null as chg_YN
+							,null as last_Chg_Date
+							,null as last_Chg_Time
+							,null as parts_Period
+							,null as alternative_YN
+							,null as alternative_Used_YN
+							,null as alternative_Filter_Code
+							,null as alternative_Filter_Id
+							,null as alternative_Filter_Name
 	              FROM SAL0029D A
 	                   INNER JOIN SAL0001D B
 	                      ON B.CUST_ID = A.CUST_ID
@@ -199,10 +200,59 @@
 	                   INNER JOIN SYS0013M I
 	                      ON I.CODE_ID = B.APP_TYPE_ID
 	             WHERE     1 = 1
-	                 AND C.AS_REQST_DT = TO_DATE (to_date(#{requestDate}, 'YYYYMMDD')
-	                 AND A.CODY_ID = #{userId}  
-	     </select>  -->
+	                AND C.AS_REQST_DT = TO_DATE ('20170611',    'YYYYMMDD')      
+	              <!--    AND A.CODY_ID = #{userId}   -->
+	     </select>
 	
+	
+	
+	
+
+        <select id="afterServiceParts" parameterType="Map" resultType="egovMap">
+        
+                SELECT null as sales_Order_No
+                            ,null as ser_vice_No
+                            ,null as product_Code
+                            ,null as part_Code
+                            ,null as part_Id
+                            ,null as part_Name
+                            ,null as quanity
+                            ,null as ex_Chgid
+                            ,null as chg_Qty
+                            ,null as chg_YN
+                            ,null as last_Chg_Date
+                            ,null as last_Chg_Time
+                            ,null as parts_Period
+                            ,null as alternative_YN
+                            ,null as alternative_Used_YN
+                            ,null as alternative_Filter_Code
+                            ,null as alternative_Filter_Id
+                            ,null as alternative_Filter_Name
+                  FROM SAL0029D A
+                       INNER JOIN SAL0001D B
+                          ON B.CUST_ID = A.CUST_ID
+                       INNER JOIN SVC0001D C
+                          ON C.AS_SO_ID = B.SALES_ORD_ID
+                       INNER JOIN SVC0004D F
+                          ON F.AS_ENTRY_ID = C.AS_ID
+                       INNER JOIN SVC0004D G
+                          ON G.AS_RESULT_ID = F.AS_RESULT_ID
+                       INNER JOIN SYS0038M C
+                          ON C.STUS_CODE_ID = F.AS_RESULT_STUS_ID
+                       INNER JOIN SYS0038M J
+                          ON J.STUS_CODE_ID = C.AS_STUS_ID
+                       INNER JOIN SYS0013M D
+                          ON D.CODE_ID = C.AS_TYPE_ID
+                       INNER JOIN ORG0001D H
+                          ON H.MEM_ID = G.AS_CT_ID
+                       INNER JOIN SYS0013M I
+                          ON I.CODE_ID = B.APP_TYPE_ID
+                 WHERE     1 = 1
+                     AND C.AS_REQST_DT = TO_DATE ('20170611',    'YYYYMMDD')      
+                  <!--    AND A.CODY_ID = #{userId}   -->
+         </select>
+         
+         	
 	
 	    <insert id="insertHeatLog" parameterType="Map">
 	        INSERT INTO SVC0023T (

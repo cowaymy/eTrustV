@@ -17,6 +17,10 @@ public interface MSvcLogApiMapper {
 	void insertHeatLog(Map<String, Object> log);
 
 	void updateSuccessStatus(String transactionId);
+
+	List<EgovMap> heartServiceParts(Map<String, Object> params);
+
+	List<EgovMap> afterServiceParts(Map<String, Object> params);
 	
 	
 	

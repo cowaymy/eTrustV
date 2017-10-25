@@ -13,7 +13,11 @@ public interface MSvcLogApiService {
 	
 	void saveHearLogs(List<Map<String, Object>> heartLogs);
 
-	void updateSuccessStatus(String transactionId); 
+	void updateSuccessStatus(String transactionId);
+
+	List<EgovMap> heartServiceParts(Map<String, Object> params);
+
+	List<EgovMap> afterServiceParts(Map<String, Object> params); 
 	
 	
 	
