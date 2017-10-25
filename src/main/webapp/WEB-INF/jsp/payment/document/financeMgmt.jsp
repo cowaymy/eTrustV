@@ -258,7 +258,7 @@ function fn_cSearch(){
 function fn_save(){
 	var selectedItems = AUIGrid.getSelectedItems(receiveListGrid);
 	console.log(selectedItems);
-	Common.ajax("GET", "/payment/saveReceiveList.do", {"selectedItems":selectedItems}.serialize(), function(result) {
+	Common.ajax("GET", "/payment/saveReceiveList.do", {"selectedItems":selectedItems}, function(result) {
         //AUIGrid.setGridData(creditCardGrid, result);
     });
 }
