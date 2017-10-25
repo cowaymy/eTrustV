@@ -10,49 +10,17 @@ $(document).ready(function(){
     //AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
     createAddrGrid();
     fn_getCustomerAddressAjax(); // address list
+
     
-    /* Move Page */
-    $("#_editCustomerInfo").change(function(){
-          
-        var stateVal = $(this).val();
-        $("#_selectParam").val(stateVal);
-        
-    });
     
-    $("#_confirm").click(function (currPage) {
-        var status = $("#_selectParam").val();
-        if(status == '1'){
-            Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
-            $("#_close").click();
-        }
-        if(status == '2'){
-            Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
-            $("#_close").click();
-        }
-        if(status == '3'){
-            Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
-            $("#_close").click();
-        }
-        if(status == '4'){
-            Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
-            $("#_close").click();
-        }
-        if(status == '5'){
-            Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
-            $("#_close").click();
-        }
-        if(status == '6'){ //추후 정책 
-           /*  Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#editForm").serializeJSON(), null , true , '_editDiv');
-            $("#_editDiv"+currPage).remove(); */
-        }
         
     });
     
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(addrGridID, "cellDoubleClick", function(event){
-        $("#_editCustId").val(event.item.custId);
-        $("#_editCustAddId").val(event.item.custAddId);
-        Common.popupDiv('/sales/customer/updateCustomerAddressInfoPop.do', $("#editForm").serializeJSON(), null , true ,'_editDiv2Pop');
+        $("#_editCustId").val(event.item.dealerId);
+        $("#_editCustAddId").val(event.item.dealerAddId);
+        Common.popupDiv('/sales/pst/pstUpdAddrPop.do', $("#editForm").serializeJSON(), null , true ,'_editDiv2Pop');
     }); 
     
     $("#_newAddr").click(function() {

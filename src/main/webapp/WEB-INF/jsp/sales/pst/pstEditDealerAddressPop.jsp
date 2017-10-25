@@ -16,7 +16,7 @@
 	    AUIGrid.bind(addrGridID, "cellDoubleClick", function(event){
 	        $("#_editDealerId").val(event.item.dealerId);
 	        $("#_editDealerAddId").val(event.item.dealerAddId);
-//	        Common.popupDiv('/sales/pst/pstAnotherAddrPop.do', $("#editForm").serializeJSON(), null , true ,'_editDiv2Pop');
+	        Common.popupDiv('/sales/pst/pstUpdAddrPop.do', $("#editForm").serializeJSON(), null , true ,'_editDiv2Pop');
 	    });
 //	    doGetCombo('/sales/pst/getInchargeList', '', $("#editInchargeSelect").val(),'editIncharge', 'S' , ''); //Incharge Person
 	});

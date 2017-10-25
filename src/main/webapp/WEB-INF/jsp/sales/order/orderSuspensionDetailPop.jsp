@@ -149,7 +149,7 @@
             }, {
                 dataField : "callRosAmt",
                 headerText : "Amount",
-                width : 100,
+                width : 80,
                 editable : false
             },{
                 dataField : "callRem",
@@ -182,8 +182,8 @@
             pageRowCount : 10,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : true, 
-            displayTreeOpen : true,
+            showStateColumn : false, 
+            displayTreeOpen : false,
             selectionMode : "multipleCells",
             headerHeight : 30,
             // 그룹핑 패널 사용
@@ -1012,14 +1012,6 @@
 
 <article class="tap_area"><!-- tap_area start -->
 
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
 <article class="grid_wrap"><!-- grid_wrap start -->
 그리드 영역
 </article><!-- grid_wrap end -->
@@ -1145,16 +1137,6 @@
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-    <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="callLog_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

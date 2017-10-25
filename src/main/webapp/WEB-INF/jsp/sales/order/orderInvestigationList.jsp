@@ -117,7 +117,9 @@
     	$("#searchForm").attr({"target": "_self" , "action" : getContextPath()+"/sales/order/orderNewRequestSingleList.do" }).submit();
     }
     
-    
+    function fn_goBatch(){
+        Common.alert('The program is under development.');
+    }
 </script>
 <form id="popForm" method="post">
     <input type="hidden" name="invReqId"  id="invReqId"/> 
@@ -134,7 +136,7 @@
 <h2>Order Investigation Request Search - Officer</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onClick="fn_goSingle()">New Request(Single)</a></p></li>
-    <!-- <li><p class="btn_blue"><a href="#">New Request(Batch)</a></p></li> -->
+    <li><p class="btn_blue"><a href="#" onClick="fn_goBatch()">New Request(Batch)</a></p></li> 
     <li><p class="btn_blue"><a href="#" onClick="fn_orderInvestigationListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="fn_clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>

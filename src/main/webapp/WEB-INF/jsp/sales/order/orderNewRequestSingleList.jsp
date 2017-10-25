@@ -5,7 +5,6 @@
 
 	function fn_orderNoExist(){
 		$("#searchOrdDt").show();
-		
 	}
 	
 	function fn_orderNoExist2(){

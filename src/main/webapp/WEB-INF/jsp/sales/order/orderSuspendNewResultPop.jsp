@@ -1161,7 +1161,8 @@
 </aside><!-- title_line end -->
 
 <form id="statusForm" name="statusForm" method="GET">
-    <input type="hidden" id="susId" name="susId" value="${suspensionInfo.susId }">
+    <input type="text" id="susId" name="susId" value="${suspensionInfo.susId }">
+    <input type="hidden" id="ordId" name="ordId" value="${salesOrdId }">
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
