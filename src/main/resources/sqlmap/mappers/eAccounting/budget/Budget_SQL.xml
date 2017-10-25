@@ -59,6 +59,8 @@
                        FROM FCM0103D A, FCM0102M B
                       WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
                         AND B.APPV_STUS = 'C' 
+                        AND A.BUDGET_ADJ_YEAR = #{budgetPlanYear}
+                        AND A.BUDGET_ADJ_MONTH = #{budgetPlanMonth}
                         GROUP BY  A.BUDGET_ADJ_YEAR, A.BUDGET_ADJ_MONTH ,A.COST_CENTR ,A.BUDGET_CODE, A.GL_ACC_CODE 
                   ) B  ON  A.BUDGET_PLAN_YEAR = B.BUDGET_ADJ_YEAR 
                         AND A.BUDGET_PLAN_MONTH  = B.BUDGET_ADJ_MONTH 
@@ -71,11 +73,12 @@
                                ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT 
                                ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT  
                                ,SUM(A.NET_AMT ) APP_AMT_TOTAL
-                               ,A.INVC_DT
+                               ,MAX(A.INVC_DT) AS INVC_DT
                        FROM FCM0015D A, FCM0004M B
                      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
-                         AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A') 
-                     GROUP BY A.INVC_DT, A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
+                         AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
+                         AND TO_CHAR(A.INVC_DT, 'YYYYMM') =  #{budgetPlanYear}||#{budgetPlanMonth}
+                     GROUP BY A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
                  )   C          
                         ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY') 
                         AND A.BUDGET_PLAN_MONTH = TO_CHAR(C.INVC_DT, 'MM') 
