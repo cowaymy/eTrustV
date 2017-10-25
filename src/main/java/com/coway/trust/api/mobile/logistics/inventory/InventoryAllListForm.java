@@ -21,7 +21,7 @@ public class InventoryAllListForm {
 	@ApiModelProperty(value = "Input Keyword [default : '' 전체] 예) AP,DO,AN/3300513,3300514,3302950", example = "AP")
 	private String searchKeyword;
 
-	@ApiModelProperty(value = "제품 id  [default : '' 전체] 323,450,360,248,532,890 예) AP", example = "AP")
+	@ApiModelProperty(value = "제품 id  [default : '' 전체] 329,323,450,360,248,532,890 예) AP", example = "AP")
 	private int productId;
 
 	public static Map<String, Object> createMap(InventoryAllListForm InventoryAllListForm) {
