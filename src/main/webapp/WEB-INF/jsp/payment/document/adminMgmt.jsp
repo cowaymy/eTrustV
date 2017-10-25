@@ -364,6 +364,7 @@ var watingPopColumnLayout = [
             	$('#reviewListTitle').text("Review List - "+title);
             }
             
+            $("#logMsgBox").text("No log to display");
         });
         $('#payModeReview').attr('disabled', 'true');
         $('#keyBranchReview').attr('disabled', 'true');
@@ -446,10 +447,10 @@ var watingPopColumnLayout = [
     	console.log(data);
     	Common.ajax("POST","/payment/saveConfirmSendWating.do", data, function(result){
             console.log(result);
-            Common.alert(result.message);
-
+            
+            $("#sendWatingPop_wrap").hide();
             $("#remarkWating").val("");
-            $("#btnConfirmSend").hide();
+            Common.alert(result.message);
         });
     }
     
@@ -475,10 +476,10 @@ var watingPopColumnLayout = [
         console.log(data);
         Common.ajax("POST","/payment/saveConfirmResendReview.do", data, function(result){
             console.log(result);
-            Common.alert(result.message);
-
+            
+            $("#sendReviewPop_wrap").hide();
             $("#remarkReview").val("");
-            $("#btnConfirmResend").hide();
+            Common.alert(result.message);
         });
     }
     
