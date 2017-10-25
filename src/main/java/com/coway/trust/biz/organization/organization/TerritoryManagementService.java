@@ -10,5 +10,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface TerritoryManagementService {	
 	List<EgovMap> selectList(Map<String, Object> params);
 	
-	EgovMap  uploadVaild(Map<String, Object> params);
+	EgovMap  uploadVaild(Map<String, Object> params,SessionVO sessionVO);
+	
+	List<EgovMap> selectTerritory(Map<String, Object> params);
+	
+	List<EgovMap> selectMagicAddress(Map<String, Object> params); 
+	
+	boolean updateMagicAddressCode(Map<String, Object> params);
 }
