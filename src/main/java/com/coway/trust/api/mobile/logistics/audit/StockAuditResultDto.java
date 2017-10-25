@@ -25,6 +25,9 @@ public class StockAuditResultDto {
 	@ApiModelProperty(value = "실사 위치 ")
 	private String adjustLocation;
 
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
+
 	public static StockAuditResultDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, StockAuditResultDto.class);
 	}
@@ -67,6 +70,14 @@ public class StockAuditResultDto {
 
 	public void setAdjustLocation(String adjustLocation) {
 		this.adjustLocation = adjustLocation;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
