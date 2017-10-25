@@ -26,7 +26,7 @@ public class HeartServiceJobForm {
 		params.put("userId", HeartServiceJobForm.getUserId());
 		params.put("requestDate", HeartServiceJobForm.getRequestDate());
 		return params;
-	}
+	} 
 	
 	
 
