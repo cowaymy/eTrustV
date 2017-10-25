@@ -171,11 +171,6 @@ public class FinanceMgmtController {
 	public ResponseEntity<List<EgovMap>> saveReceiveList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
         LOGGER.debug("##params : {}", params);
         
-        //List<EgovMap> list = financeMgmtService.selectDocItemPaymentItem2(params);
-        String[] selectedItem = request.getParameterValues("selectedItems");
-
-        for(int i=0; i<selectedItem.length; i++)
-        	System.out.println(i + " : " + selectedItem[i]);
         return ResponseEntity.ok(null);
 	}
 }
