@@ -350,13 +350,14 @@ function fn_glAcc(str){
 //Budget Code Pop 호출
 function fn_pBudgetCodePop(str){
   budgetStr = str;
+
+  $("#pBudgetCode").val("");
+  $("#pBudgetCodeName").val("");
   
   if(budgetStr == "send"){
       
       $("#sendBudgetCode").val("");
-      $("#pBudgetCode").val("");
       $("#sendBudgetCodeName").val("");
-      $("#pBudgetCodeName").val("");
       
       if($("#pAdjustmentType").val() != "04"){
           if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
@@ -367,9 +368,7 @@ function fn_pBudgetCodePop(str){
       }
   }else{
       $("#recvBudgetCode").val("");
-      $("#pBudgetCode").val("");
       $("#recvBudgetCodeName").val("");
-      $("#pBudgetCodeName").val("");
   }
   
   Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do", {pop:'pop'}, null, true, "budgetCodeSearchPop");
@@ -401,27 +400,24 @@ function  fn_setPopBudgetData(){
 var glStr ;
 function fn_pGlAccountSearchPop(str){
   glStr = str;
+
+  $("#pGlAccCode").val("");
+  $("#pGlAccCodeName").val("");
   
   if(glStr =="send"){
       $("#sendGlAccCode").val("");
-      $("#pGlAccCode").val("");
       $("#sendGlAccCodeName").val("");
-      $("#pGlAccCodeName").val("");
       
       if($("#pAdjustmentType").val() != "05"){
           if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
 
               $("#recvGlAccCode").val("");
-              $("#pGlAccCode").val("");
               $("#recvGlAccCodeName").val("");
-              $("#pGlAccCodeName").val("");
           }         
       }
   }else{
       $("#recvGlAccCode").val("");
-      $("#pGlAccCode").val("");
       $("#recvGlAccCodeName").val("");
-      $("#pGlAccCodeName").val("");
   }
   
   Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", {pop:'pop'}, null, true, "glAccountSearchPop");
@@ -452,28 +448,24 @@ function fn_setPopGlData(){
 var costStr ;
 function fn_pCostCenterSearchPop(str) {
   costStr = str;
-  
+
+  $("#search_costCentr").val("");
+  $("#search_costCentrName").val("");
  if(costStr =="send"){
       
       $("#sendCostCenter").val("");
-      $("#search_costCentr").val("");
       $("#sendCostCenterName").val("");
-      $("#search_costCentrName").val("");
       
       if($("#pAdjustmentType").val() != "03"){
           if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
 
               $("#recvCostCenter").val("");
-              $("#search_costCentr").val("");
               $("#recvCostCenterName").val("");
-              $("#search_costCentrName").val("");
           }
       } 
   }else{
       $("#recvCostCenter").val("");
-      $("#search_costCentr").val("");
       $("#recvCostCenterName").val("");
-      $("#search_costCentrName").val("");
   }
   Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:'pop'}, null, true, "costCenterSearchPop");
 }
