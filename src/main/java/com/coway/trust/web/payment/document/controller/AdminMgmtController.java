@@ -23,7 +23,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/payment")
 public class AdminMgmtController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AdminMgmtController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AdminMgmtController.class);
 	
 	@Resource(name = "adminMgmtService")
 	private AdminMgmtService adminMgmtService;
@@ -52,16 +52,13 @@ public class AdminMgmtController {
 	 */
 	@RequestMapping(value = "/selectWatingLoadInfo", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectWatingLoadInfo(@RequestParam Map<String, Object> params, ModelMap model, 
-			HttpServletRequest request, SessionVO sessionVO) {
+			HttpServletRequest request) {
 		
-		logger.debug("params===========111111"+params);
+		LOGGER.debug("params : {}", params);
 		
 		String[] isOnlineWaiting = request.getParameterValues("isOnlineWaiting");
 		
 		params.put("isOnlineWaiting", isOnlineWaiting);
-
-		
-		logger.debug("params===========22222222222"+params);
 		
 		//WATING LIST
 		List<EgovMap> watingList = adminMgmtService.selectWaitingItemList(params);
@@ -79,14 +76,11 @@ public class AdminMgmtController {
 	 */
 	@RequestMapping(value = "/selectReviewLoadInfo", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectReviewLoadInfo(@RequestParam Map<String, Object> params, ModelMap model, 
-			HttpServletRequest request, SessionVO sessionVO) {
+			HttpServletRequest request) {
 		
+		LOGGER.debug("params : {}", params);
 		String[] isOnlineReview = request.getParameterValues("isOnlineReview");
-		
 		params.put("isOnlineReview", isOnlineReview);
-		
-		logger.debug("params==========="+params);
-		
 		//REVIEW LIST
 		List<EgovMap> reviewList = adminMgmtService.selectReviewItemList(params);
 		
@@ -103,8 +97,6 @@ public class AdminMgmtController {
 	 */
 	@RequestMapping(value = "/selectDocItemPayDetailList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDocItemPayDetailList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("params==========="+params);
 		
 		List<EgovMap> watingPopDetList = adminMgmtService.selectDocItemPayDetailList(params);
 		
@@ -151,8 +143,6 @@ public class AdminMgmtController {
 	@RequestMapping(value = "/selectDocItemPayReviewDetailList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDocItemPayReviewDetailList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		logger.debug("params==========="+params);
-		
 		List<EgovMap> watingPopDetList = adminMgmtService.selectDocItemPayReviewDetailList(params);
 		
         // 조회 결과 리턴.
@@ -170,41 +160,29 @@ public class AdminMgmtController {
 	@RequestMapping(value = "/selectLoadItemLog", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectLoadItemLog(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		logger.debug("params==========="+params);
-		
 		List<EgovMap> watingPopDetList = adminMgmtService.selectLoadItemLog(params);
-		Map<String, Object> logMap = (Map<String, Object>) watingPopDetList.get(0);
+		Map<String, Object> logMap = watingPopDetList.get(0);
 		
         // 조회 결과 리턴.
         return ResponseEntity.ok(logMap);
 	}
 	
+	
 	/**
-	 * saveConfirmResendReview
+	 * selectPaymentDocMs 조회
 	 * @param 
 	 * @param params
 	 * @param model
+	 * @return 
 	 * @return
 	 */
-	@RequestMapping(value = "/saveConfirmResendReview", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveConfirmResendReview(@RequestBody Map<String, Object> params, ModelMap model, 
-			HttpServletRequest request, SessionVO sessionVO) {
-		ReturnMessage message = new ReturnMessage();
+	@RequestMapping(value = "/selectPaymentDocMs", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectPaymentDocMs(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK); // 그리드 데이터 가져오기
-		List<Object> formList = (List<Object>) params.get(AppConstants.AUIGRID_FORM);
+		EgovMap paymentDocMs = adminMgmtService.selectPaymentDocMs(params);
 		
-		String saveResult = adminMgmtService.saveConfirmResendReview(checkList, sessionVO, formList);
-		
-		if(!saveResult.equals("")){
-			message.setCode(AppConstants.SUCCESS);
-			message.setMessage("Document(s) have been resent.");
-		}else{
-			
-			message.setMessage("Failed to save. Please try again later.");
-		}
-		
-    	return ResponseEntity.ok(message);
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(paymentDocMs);
 	}
 	
 }

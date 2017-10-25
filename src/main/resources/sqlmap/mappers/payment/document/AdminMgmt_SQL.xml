@@ -1202,41 +1202,69 @@
 		  ORDER BY Project1.LOG_ID ASC
     </select>
     
-    <select id="selectPaymentDocDs" parameterType="String" resultType="egovMap">
+    <select id="selectPaymentDocMs" parameterType="String" resultType="egovMap">
         SELECT 
-		       Extent1.ITM_ID ITM_ID  ,
-		       Extent1.BATCH_ID BATCH_ID  ,
-		       Extent1.ITM_STUS_ID ITM_STUS_ID  ,
-		       Extent1.TRX_ID TRX_ID  ,
-		       Extent1.AMT AMT  ,
-		       Extent1.PAY_MODE_ID PAY_MODE_ID  ,
-		       Extent1.IS_ONLINE IS_ONLINE  ,
-		       Extent1.ORI_CC_NO ORI_CC_NO  ,
-		       Extent1.CC_TYPE_ID CC_TYPE_ID  ,
-		       Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
-		       Extent1.CC_EXPR CC_EXPR  ,
-		       Extent1.BANK_ID BANK_ID  ,
-		       Extent1.REF_DT REF_DT  ,
-		       Extent1.APPV_NO APPV_NO  ,
-		       Extent1.REF_NO REF_NO  ,
-		       Extent1.CRT_DT CRT_DT  ,
-		       Extent1.CRT_USER_ID CRT_USER_ID  ,
-		       Extent1.UPD_DT UPD_DT  ,
-		       Extent1.UPD_USER_ID UPD_USER_ID  ,
-		       Extent1.MID MID  ,
-		       Extent1.BRNCH_ID BRNCH_ID  ,
-		       Extent1.PAY_DT PAY_DT  ,
-		       Extent1.ACC_ID ACC_ID  
-		  FROM PAY0097D Extent1
-		 WHERE  Extent1.ITM_ID = #{value} 
-		 AND ROWNUM <![CDATA[<= ]]> 1
+		       Limit1.BATCH_ID BATCH_ID  ,
+		       Limit1.BATCH_NO BATCH_NO  ,
+		       Limit1.BATCH_STUS_ID BATCH_STUS_ID  ,
+		       Limit1.NAME NAME  ,
+		       Limit1.BATCH_RESULT_STUS_ID BATCH_RESULT_STUS_ID  ,
+		       Limit1.C1 C1  ,
+		       TO_CHAR(Limit1.CRT_DT , 'DD-MM-YYYY') AS CRT_DT,
+		       Limit1.CRT_USER_ID CRT_USER_ID  ,
+		       Limit1.C2 C2  ,
+		       TO_CHAR(Limit1.UPD_DT , 'DD-MM-YYYY') AS UPD_DT,
+		       Limit1.UPD_USER_ID UPD_USER_ID  ,
+		       Limit1.C3 C3  ,
+		       Limit1.BATCH_PAY_IS_ONLINE BATCH_PAY_IS_ONLINE  ,
+		       Limit1.BATCH_PAY_MODE_ID BATCH_PAY_MODE_ID  ,
+		       Limit1.CODE_NAME CODE_NAME  ,
+		       Limit1.BATCH_TOT_ITM BATCH_TOT_ITM  ,
+		       Limit1.BATCH_TOT_CMPLT BATCH_TOT_CMPLT  ,
+		       Limit1.BATCH_TOT_INCMPT BATCH_TOT_INCMPT  ,
+		       Limit1.BATCH_TOT_PENDING BATCH_TOT_PENDING  ,
+		       Limit1.BATCH_TOT_NW BATCH_TOT_NW  ,
+		       Limit1.BATCH_TOT_REVIW BATCH_TOT_REVIW  ,
+		       Limit1.BATCH_TOT_RESEND BATCH_TOT_RESEND  
+		  FROM ( SELECT Extent1.BATCH_ID BATCH_ID  ,
+		                Extent1.BATCH_NO BATCH_NO  ,
+		                Extent1.BATCH_STUS_ID BATCH_STUS_ID  ,
+		                Extent1.BATCH_RESULT_STUS_ID BATCH_RESULT_STUS_ID  ,
+		                Extent1.BATCH_PAY_MODE_ID BATCH_PAY_MODE_ID  ,
+		                Extent1.BATCH_PAY_IS_ONLINE BATCH_PAY_IS_ONLINE  ,
+		                Extent1.BATCH_TOT_ITM BATCH_TOT_ITM  ,
+		                Extent1.BATCH_TOT_CMPLT BATCH_TOT_CMPLT  ,
+		                Extent1.BATCH_TOT_INCMPT BATCH_TOT_INCMPT  ,
+		                Extent1.BATCH_TOT_PENDING BATCH_TOT_PENDING  ,
+		                Extent1.CRT_DT CRT_DT  ,
+		                Extent1.CRT_USER_ID CRT_USER_ID  ,
+		                Extent1.UPD_DT UPD_DT  ,
+		                Extent1.UPD_USER_ID UPD_USER_ID  ,
+		                Extent1.BATCH_TOT_REVIW BATCH_TOT_REVIW  ,
+		                Extent1.BATCH_TOT_NW BATCH_TOT_NW  ,
+		                Extent1.BATCH_TOT_RESEND BATCH_TOT_RESEND  ,
+		                Extent2.NAME NAME  ,
+		                Extent3.CODE_NAME CODE_NAME  ,
+		                CASE 
+		                     WHEN ( Extent4.STUS_CODE_ID IS NOT NULL ) THEN Extent4.NAME
+		                ELSE ' '
+		                   END C1  ,
+		                CASE 
+		                     WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
+		                ELSE ' '
+		                   END C2  ,
+		                CASE 
+		                     WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
+		                ELSE ' '
+		                   END C3  
+		         FROM PAY0170M Extent1
+		                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.BATCH_STUS_ID
+		                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.BATCH_PAY_MODE_ID
+		                LEFT JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.BATCH_RESULT_STUS_ID
+		                LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+		                LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.UPD_USER_ID
+		          WHERE  Extent1.BATCH_ID = #{batchId} 
+		          AND ROWNUM <![CDATA[<= ]]> 1 ) Limit1
     </select>
-    
-    <update id="updPayDocDetail" parameterType="Map">
-        UPDATE PAY0097D
-        SET ITM_STUS_ID = #{itmStusId},
-        UPD_DT = TO_DATE(#{updDt},'YYYY/MM/DD')
-        WHERE  ITM_ID = #{itmId}
-    </update>
 
 </mapper>

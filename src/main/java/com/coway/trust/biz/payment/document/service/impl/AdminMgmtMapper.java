@@ -143,4 +143,18 @@ public interface AdminMgmtMapper {
 	 * @return
 	 */
 	void updPayDocDetail(Map<String, Object> params);
+	
+	/**
+	 * selectPaymentDocMs 조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectPaymentDocMs(Map<String, Object> params);
+	
+	/**
+	 * selectPaymentDocDsTotalCount 조회
+	 * @param params
+	 * @return
+	 */
+	String selectPaymentDocDsTotalCount(Map<String, Object> params);
 }

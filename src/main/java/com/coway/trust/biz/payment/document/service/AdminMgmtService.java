@@ -51,10 +51,10 @@ public interface AdminMgmtService
 	List<EgovMap> selectLoadItemLog(Map<String, Object> params);
 	
 	/**
-  	 * saveConfirmResendReview
+  	 * selectPaymentDocMs 조회
   	 * @param params
   	 * @return
   	 */
-	String saveConfirmResendReview(List<Object> params, SessionVO sessionVO, List<Object> formList);
+	EgovMap selectPaymentDocMs(Map<String, Object> params);
 	
 }

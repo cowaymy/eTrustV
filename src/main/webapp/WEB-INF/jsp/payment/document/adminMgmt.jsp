@@ -32,26 +32,20 @@ var gridPros = {
 
 $(document).ready(function(){
 	
+	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'42' , 'keyBranchWaiting' , 'S', ''); //key-in Branch 생성
+    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'42' , 'keyBranchReview' , 'S', ''); //key-in Branch 생성
+	
 	$("#isOnlineWaiting").multipleSelect("setSelects", [0]);
 	$("#isOnlineReview").multipleSelect("checkAll");
 	
 	doGetCombo('/sales/customer/selectAccBank.do', '', '', 'bankWaiting', 'S', '')//selCodeAccBankId(Issue Bank)
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'bankReview', 'S', '')//selCodeAccBankId(Issue Bank)
     
-    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'42' , 'keyBranchWaiting' , 'S', ''); //key-in Branch 생성
-    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'42' , 'keyBranchReview' , 'S', ''); //key-in Branch 생성
-    
     doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'settleAccWaiting' , 'S', '');
     doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'settleAccReview' , 'S', '');
     
     watingGridID = GridCommon.createAUIGrid("wating_grid_wrap", watingColumnLayout,null,gridPros);
     reviewGridID = GridCommon.createAUIGrid("review_grid_wrap", reviewColumnLayout,null,gridPros);
-    
-    // 셀 클릭시 이벤트
-    AUIGrid.bind(watingGridID, "cellClick", function( event ){ 
-        selectedGridValue = event.rowIndex;
-
-    });  
     
     fn_watingLoadInfo();
     fn_reviewLoadInfo();
@@ -69,7 +63,7 @@ var watingColumnLayout = [
 		   {
 			   type : "IconRenderer",
 			   iconTableRef :  {
-			       "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right2.gif"// default
+			       "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right.gif"// default
 			   },         
 			   iconWidth : 20,
 			   iconHeight : 16,
@@ -177,7 +171,7 @@ var reviewColumnLayout = [
 	           {
 	          type : "IconRenderer",
 	          iconTableRef :  {
-	              "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right2.gif"// default
+	              "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right.gif"// default
 	          },         
 	          iconWidth : 16,
 	          iconHeight : 16,
@@ -191,14 +185,12 @@ var reviewColumnLayout = [
 	    headerText:" ", 
 	    colSpan : -1,        
 	    renderer : 
-	           /* {
+	           {
 	          type : "IconRenderer",
 	          iconTableRef :  
 	          {
-	              "default" : "..."// default
-	          }, */
-	          {type : "ButtonRenderer",
-              labelText : "...",
+	        	  "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right2.gif"// default
+	          },
 	          iconWidth : 16, 
 	          iconHeight : 16,              
 	          onclick : function(rowIndex, columnIndex, value, item) {
@@ -215,7 +207,15 @@ var reviewColumnLayout = [
     {
         dataField : "batchNo",
         headerText : "",
-        editable : false
+        renderer : {
+            type : "LinkRenderer",
+            baseUrl : "javascript", 
+            jsCallback : function(rowIndex, columnIndex, value, item) {
+                console.log("value : " + value + ", item : " + item.itmId);
+                
+                fn_batchViewlPop(item.batchId);
+            }
+        }
     }, 
     {
         dataField : "payDt",
@@ -308,27 +308,26 @@ var watingPopColumnLayout = [
     //wating list 조회.
     function fn_watingLoadInfo(){
     	
-    	$("#payModeWaiting").prop("disabled", false);
-        $("#keyBranchWaiting").prop("disabled", false);
+    	$('#payModeWaiting').removeAttr('disabled');
+        $('#keyBranchWaiting').removeAttr('disabled');
     	Common.ajax("GET","/payment/selectWatingLoadInfo.do",$("#waitingForm").serialize(), function(result){
     		console.log(result);
     		AUIGrid.setGridData(watingGridID, result);
     	});
-    	$("#payModeWaiting").prop("disabled", true);
-        $("#keyBranchWaiting").prop("disabled", true);
+        $('#payModeWaiting').attr('disabled', 'true');
+        $('#keyBranchWaiting').attr('disabled', 'true');
     }
     
     //review list 조회
     function fn_reviewLoadInfo(){
-    	
-    	$("#payModeReview").prop("disabled", false);
-        $("#keyBranchReview").prop("disabled", false);
+    	$('#payModeReview').removeAttr('disabled');
+    	$('#keyBranchReview').removeAttr('disabled');
         Common.ajax("GET","/payment/selectReviewLoadInfo.do",$("#reviewForm").serialize(), function(result){
             console.log(result);
             AUIGrid.setGridData(reviewGridID, result);
         });
-        $("#payModeReview").prop("disabled", true);
-        $("#keyBranchReview").prop("disabled", true);
+        $('#payModeReview').attr('disabled', 'true');
+        $('#keyBranchReview').attr('disabled', 'true');
     }
     
     function fn_openDivWatingPop(trxId, amount, payModeId, isOnline, oriCcNo, ccTypeId, ccHolderName, ccExpr, bankId, refDate, appvNo, mid, refNo, brnchId, accCode, payDate){
@@ -461,6 +460,31 @@ var watingPopColumnLayout = [
             
         });
     }
+    
+    function fn_batchViewlPop(batchId){
+    	
+    	$("#batch_view_popup_wrap").show();
+    
+    	Common.ajax("GET","/payment/selectPaymentDocMs.do",  {"batchId":batchId}, function(result){
+    		console.log(result);
+    		
+    		$("#tdBatchNo").text(result.batchNo);
+    		$("#tdBatchStatus").text(result.name);
+    		$("#tdCreateDate").text(result.crtDt);
+    		$("#tdPaymentMode").text(result.codeName);
+    		$("#tdManageStatus").text(result.batchNo);
+    		$("#tdCreator").text(result.c2);
+    		$("#tdIsOnline").text(result.batchPayIsOnline ? "Online" : "Offline");
+    		$("#tdTotalItem").text(result.batchTotItm);
+    		$("#tdUpdateDate").text(result.updDt);
+    		$("#tdTotalNew").text(result.batchTotNw);
+    		$("#tdTotalResend").text(result.batchTotResend);
+    		$("#tdUpdator").text(result.c3);
+    		$("#tdTotalReview").text(result.batchTotReviw);
+    		$("#tdTotalComplete").text(result.batchTotCmplt);
+    		$("#tdTotalIncomplete").text(result.batchTotIncmpt);
+    	});
+    }
    
 </script>
 <!-- content start -->
@@ -498,7 +522,7 @@ var watingPopColumnLayout = [
 					    <tr>
 					        <th scope="row">Paymode</th>
 					        <td>
-					        <select class="w100p" id="payModeWaiting" name="payModeWaiting">
+					        <select class="w100p disabled" id="payModeWaiting" name="payModeWaiting" disabled="disabled">
 					            <option value="107">Credit Card</option>
 					        </select>
 					        </td>
@@ -560,7 +584,7 @@ var watingPopColumnLayout = [
 					        </td>
 					        <th scope="row">Key-In Branch</th>
 					        <td>
-					           <select class="w100p"  id="keyBranchWaiting" name="keyBranchWaiting"></select>
+					           <select class="w100p disabled"  id="keyBranchWaiting" name="keyBranchWaiting" disabled="disabled"></select>
 					        </td>
 					    </tr>
 					    <tr>
@@ -594,7 +618,7 @@ var watingPopColumnLayout = [
 					    <tr>
 					        <th scope="row">Paymode</th>
 					        <td>
-						        <select class="w100p" id="payModeReview"  name="payModeReview" >
+						        <select class="w100p disabled" id="payModeReview"  name="payModeReview" disabled="disabled">
 						            <option value="107">Credit Card</option>
 						        </select>
 					        </td>
@@ -637,7 +661,7 @@ var watingPopColumnLayout = [
 					            <option value="112">VISA</option>
 					        </select>
 					        </td>
-					        <th scope="row">  Issue Bank</th>
+					        <th scope="row">Issue Bank</th>
 					        <td>
 					            <select class="w100p" id="bankReview" name="bankReview"></select>
 					        </td>
@@ -653,7 +677,7 @@ var watingPopColumnLayout = [
 					        </td>
 					        <th scope="row">Key-In Branch</th>
 					        <td>
-					            <select class="w100p"  id="keyBranchReview" name="keyBranchReview"></select>
+					            <select class="w100p disabled"  id="keyBranchReview" name="keyBranchReview" disabled="disabled"></select>
 					        </td>
 					    </tr>
 					    <tr>
@@ -836,3 +860,63 @@ var watingPopColumnLayout = [
                 </ul>
             </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
+<div id="batch_view_popup_wrap" class="popup_wrap" style="display:none;">
+    <header class="pop_header">
+        <h1>Payment Document Management Batch View</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_body start -->
+    <section class="pop_body">
+	    <table class="type1">
+	        <colgroup>
+	            <col style="width:165px" />
+	            <col style="width:*" />
+	        </colgroup>
+	        <tbody>
+		        <tr>
+		            <th>Batch No</th>
+		            <td id="tdBatchNo"></td>
+		            <th>Batch Status</th>
+		            <td id="tdBatchStatus"></td>
+		            <th>Create Date</th>
+		            <td id="tdCreateDate"></td>
+		        </tr>
+		        <tr>
+		            <th>Payment Mode</th>
+		            <td id="tdPaymentMode"></td>
+		            <th>Manage Status</th>
+		            <td id="tdManageStatus"></td>
+		            <th>Creator</th>
+		            <td id="tdCreator"></td>
+		        </tr>
+		        <tr>
+		            <th>Is Online</th>
+		            <td id="tdIsOnline"></td>
+		            <th>Total Item</th>
+		            <td id="tdTotalItem"></td>
+		            <th>Update Date</th>
+		            <td id="tdUpdateDate"></td>
+		        </tr>
+		        <tr>
+		            <th>Total New</th>
+		            <td id="tdTotalNew"></td>
+		            <th>Total Resend</th>
+		            <td id="tdTotalResend"></td>
+		            <th>Updator</th>
+		            <td id="tdUpdator"></td>
+		        </tr>
+		        <tr>
+		            <th>Total Review</th>
+		            <td id="tdTotalReview"></td>
+		            <th>Total Complete</th>
+		            <td id="tdTotalComplete"></td>
+		            <th>Total Incomplete</th>
+		            <td id="tdTotalIncomplete"></td>
+		        </tr>
+	        </tbody>
+	    </table>
+    </section>
+    <!-- pop_body end -->
+</div>

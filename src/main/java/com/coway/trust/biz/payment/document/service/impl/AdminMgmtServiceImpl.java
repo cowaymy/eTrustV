@@ -58,7 +58,12 @@ public class AdminMgmtServiceImpl extends EgovAbstractServiceImpl implements Adm
 	public List<EgovMap> selectLoadItemLog(Map<String, Object> params) {
 		return adminMgmtMapper.selectLoadItemLog(params);
 	}
-
+	
+	@Override
+	public EgovMap selectPaymentDocMs(Map<String, Object> params) {
+		return adminMgmtMapper.selectPaymentDocMs(params);
+	}
+	
 	@Override
 	public String saveConfirmSendWating(List<Object> checkList, SessionVO sessionVO, List<Object> formList) {
 		
@@ -144,45 +149,6 @@ public class AdminMgmtServiceImpl extends EgovAbstractServiceImpl implements Adm
 		}
 		
 		return docNo;
-	}
-
-	@Override
-	public String saveConfirmResendReview(List<Object> checkList, SessionVO sessionVO, List<Object> formList) {
-		
-		if (checkList.size() > 0) {
-			
-			for (int i = 0; i < checkList.size(); i++) {
-				
-				Map<String, Object> checkMap = (Map<String, Object>) checkList.get(i);
-				Map<String, Object> payDocDetailMap = null;
-				payDocDetailMap = (Map<String, Object>) checkMap.get("item");
-				
-				EgovMap paymentDocDs = adminMgmtMapper.selectPaymentDocDs(String.valueOf(payDocDetailMap.get("itmId")));
-				
-				if(paymentDocDs != null){
-					
-					adminMgmtMapper.updPayDocDetail(payDocDetailMap);
-					
-					Map<String, Object> logMap = new HashMap<String, Object>();
-					Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
-					logMap.put("itemId", String.valueOf(payDocDetailMap.get("itmId")));
-					logMap.put("remark", String.valueOf(formMap.get("remark")).trim());
-					logMap.put("created", String.valueOf(payDocDetailMap.get("updDt")));
-					logMap.put("creator", String.valueOf(payDocDetailMap.get("updUserId")));
-					//logMap.put("sendDate", String.valueOf(payDocDetailMap.get("itmStusId")).equals("79") ? "SYSDATE" : "1900/01/01");
-					//logMap.put("reviewDate", String.valueOf(payDocDetailMap.get("itmStusId")).equals("53") ? "SYSDATE" : "1900/01/01");
-					//logMap.put("inCompleDate", String.valueOf(payDocDetailMap.get("itmStusId")).equals("50") ? "SYSDATE" : "1900/01/01");
-					//logMap.put("compleDate", String.valueOf(payDocDetailMap.get("itmStusId")).equals("4") ? "SYSDATE" : "1900/01/01");
-					logMap.put("itemStatusId", String.valueOf(payDocDetailMap.get("itmStusId")));
-					
-					//PAYMENTDOC LOG INSERT
-					adminMgmtMapper.insertPayDocLogs(logMap);
-					
-				}
-			}
-			
-		}
-		return "123";
 	}
 
 }
