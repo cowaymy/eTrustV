@@ -14,6 +14,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +39,7 @@ import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOverallStockDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOverallStockForm;
+import com.coway.trust.api.mobile.logistics.inventory.InventoryReqTransferMForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryStockByHolderDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryStockByHolderForm;
 import com.coway.trust.api.mobile.logistics.itembank.ItemBankItemListDto;
@@ -65,6 +67,7 @@ import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderListDto;
 import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderListForm;
 import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyDto;
 import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyForm;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusDListDto;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusListForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusMListDto;
@@ -624,5 +627,53 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(list);
 	}
+	
+	/**
+	 * 인서트 부분 추가
+	 */
+	
+	
+	@ApiOperation(value = "Inventory Status Display - Request Transfer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/inventoryReqTransfer", method = RequestMethod.POST)
+	public void inventoryReqTransfer(@RequestBody List<InventoryReqTransferMForm> inventoryReqTransferMForms)
+			throws Exception {
+
+		List<Map<String, Object>> reqTransferMList = new ArrayList<>();
+		for (InventoryReqTransferMForm reqTransferM : inventoryReqTransferMForms) {
+			reqTransferMList.addAll(reqTransferM.createMaps(reqTransferM));
+		}
+
+		for (int i = 0; i < reqTransferMList.size(); i++) {
+			LOGGER.debug("reqTransferMList    값 : {}", reqTransferMList.get(i));
+
+		}
+
+		MlogApiService.saveInvenReqTransfer(reqTransferMList);
+
+		// return ResponseEntity.ok(HeartDto.create(transactionId));
+	}
+	
+	@ApiOperation(value = "Stock Transfer - Confirm GI Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/stockTransferConfirmGI", method = RequestMethod.POST)
+	public void stockTransferConfirmGIReq(@RequestBody List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm)
+			throws Exception {
+
+		List<Map<String, Object>> stockTransferGIMList = new ArrayList<>();
+		for (StockTransferConfirmGiMForm stockTransferGIM : stockTransferConfirmGiMForm) {
+			stockTransferGIMList.addAll(stockTransferGIM.createMaps(stockTransferGIM));
+		}
+
+		for (int i = 0; i < stockTransferGIMList.size(); i++) {
+			LOGGER.debug("stockTransferGIMList    값 : {}", stockTransferGIMList.get(i));
+		}
+
+		MlogApiService.stockMovementReqDelivery(stockTransferGIMList);
+
+		// return ResponseEntity.ok(HeartDto.create(transactionId));
+	}
+	
+	
+
+	
 
 }
