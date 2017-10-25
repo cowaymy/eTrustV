@@ -60,12 +60,7 @@ $(document).ready(function(){
     });
 	
 	$("#btnAdd").click(fn_AddRow);
-	$("#btnDel").click(fn_RemoveRow);
-    
-    $("#btnClear").click(function(){
-    	
-    	$("#pAdjForm")[0].reset();
-    });    
+	$("#btnDel").click(fn_RemoveRow); 
     
     $("#sendYearMonth").change(function(){
     	if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02" 
@@ -266,6 +261,12 @@ $(document).ready(function(){
     
 });
 
+function  fn_clearData(){    
+    $("#pAdjForm")[0].reset();
+
+    //기본 콤보 셋팅
+    fn_chnCombo('01');
+}   
 
 function fn_RemoveRow(){
 	 AUIGrid.removeRow(adjPGridID, rowid);
@@ -431,7 +432,7 @@ function fn_setPopCostCenter (){
 
 function fn_chnCombo(str){
 	
-    $("#btnClear").click();
+    $("#pAdjForm")[0].reset();
     $("#pAdjustmentType").val(str);
     
 	if( str =="01" || str =="02"){
@@ -928,7 +929,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <ul class="center_btns">
 		<li><p class="btn_blue2"><a href="#" id="btnAdd"><spring:message code="expense.Add" /></a></p></li>
 		<li><p class="btn_blue2"><a href="#" id="btnDel"><spring:message code="expense.Del" /></a></p></li>
-		<li><p class="btn_blue2"><a href="#" id="btnClear"><spring:message code="budget.Clear" /></a></p></li>
+		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_clearData();" id="btnClear"><spring:message code="budget.Clear" /></a></p></li>
 </ul>
     </c:if>
 <article class="grid_wrap mt10" style="height:170px"><!-- grid_wrap start -->
