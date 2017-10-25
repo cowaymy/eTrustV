@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "ReturnPartsSearchForm", description = "공통코드 Form")
 public class ReturnPartsSearchForm {
 
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) T010,CT100374", example = "1, 2")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100554,CT100555,CT100591", example = "1, 2")
 	private String userId;
 
 	@ApiModelProperty(value = " 검색 type (all / partCode / partName) [default : '' 전체] 예) PartsCode=1,PartsName=2,All=3 ", example = "1, 2,3")

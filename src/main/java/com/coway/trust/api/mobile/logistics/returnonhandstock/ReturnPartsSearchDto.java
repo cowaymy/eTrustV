@@ -27,6 +27,9 @@ public class ReturnPartsSearchDto {
 	@ApiModelProperty(value = "제품 등급")
 	private String stockGrade;
 
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
+
 	public static ReturnPartsSearchDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, ReturnPartsSearchDto.class);
 	}
@@ -77,6 +80,14 @@ public class ReturnPartsSearchDto {
 
 	public void setStockGrade(String stockGrade) {
 		this.stockGrade = stockGrade;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
