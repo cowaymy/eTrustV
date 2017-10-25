@@ -94,5 +94,11 @@
             WHERE ATCH_FILE_GRP_ID = #{fileGroupId}
         )
     </delete>
+    
+    <delete id="deleteFileByFileId" parameterType="int">
+        DELETE
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{fileId}
+    </delete>
 
 </mapper>
