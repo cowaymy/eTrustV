@@ -19,7 +19,7 @@ public class HeartServiceResultForm {
 	private String userId;
 	
 	@ApiModelProperty(value = "주문번호")
-	private String salesOrderNo;
+	private int salesOrderNo;
 	
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
@@ -104,11 +104,11 @@ public class HeartServiceResultForm {
 		this.userId = userId;
 	}
 
-	public String getSalesOrderNo() {
+	public int getSalesOrderNo() {
 		return salesOrderNo;
 	}
 
-	public void setSalesOrderNo(String salesOrderNo) {
+	public void setSalesOrderNo(int salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
 
