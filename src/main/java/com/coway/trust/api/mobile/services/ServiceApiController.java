@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.coway.trust.AppConstants;
+import com.coway.trust.AppConstants; 
 import com.coway.trust.api.mobile.Service.registration.RegistrationConstants;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
@@ -147,7 +147,7 @@ public class ServiceApiController {
 	
 	
 	@ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/hearts", method = RequestMethod.POST)
+	@RequestMapping(value = "/heartServiceResult", method = RequestMethod.POST)
 	public ResponseEntity<HeartServiceResultDto> hsRegistration (@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
 
 		String transactionId = "";
