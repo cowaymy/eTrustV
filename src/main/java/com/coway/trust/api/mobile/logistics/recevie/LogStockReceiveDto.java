@@ -35,6 +35,9 @@ public class LogStockReceiveDto {
 	@ApiModelProperty(value = "gr 날짜")
 	private String grDate;
 
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
+
 	private List<LogStockPartsReceiveDto> partsList = null;
 
 	public static LogStockReceiveDto create(EgovMap egvoMap) {
@@ -111,6 +114,14 @@ public class LogStockReceiveDto {
 
 	public void setPartsList(List<LogStockPartsReceiveDto> partsList) {
 		this.partsList = partsList;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
