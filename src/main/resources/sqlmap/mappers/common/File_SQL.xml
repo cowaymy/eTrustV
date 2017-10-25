@@ -95,6 +95,12 @@
         )
     </delete>
     
+    <delete id="deleteFileGroupByFileId" parameterType="int">
+        DELETE
+        FROM SYS0070M
+        WHERE ATCH_FILE_ID = #{fileId}
+    </delete>
+    
     <delete id="deleteFileByFileId" parameterType="int">
         DELETE
         FROM SYS0071D
