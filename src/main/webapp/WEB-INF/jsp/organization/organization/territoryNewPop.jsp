@@ -19,7 +19,9 @@ function fn_uploadFile() {
     	
     	if(result.code == "99"){
             Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
-	}
+         }else{
+        	 Common.alert(result.message);
+         }
     });
 }
 
@@ -97,7 +99,7 @@ $(document).ready(function(){
 					    <div class="auto_file"><!-- auto_file start -->
 					       <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
 					    
-							    <input title="file add" type="file">
+							    <input title="file add" type="file" id="uploadfile" name="uploadfile">
 							    <label><span class="label_text"><a href="#">File</a></span><input class="input_text" type="text" readonly="readonly"></label>
 						   </form>
 						</div><!-- auto_file end -->

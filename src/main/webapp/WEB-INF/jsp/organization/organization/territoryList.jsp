@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 
-<script type="text/javaScript" language="javascript">
+<script type="text/javaScript">
 
 var  gridID;
 var  detailGridID;
@@ -20,9 +20,15 @@ $(document).ready(function(){
     
     AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
         console.log(event.rowIndex);
-        fn_selectDetailListAjax()
+        fn_selectDetailListAjax(AUIGrid.getCellValue(gridID, event.rowIndex, "reqstNo"))
     });
    
+    AUIGrid.bind(gridID, "cellClick", function(event) {
+        console.log(event.rowIndex);
+        reqstNo = AUIGrid.getCellValue(gridID, event.rowIndex, "reqstNo");
+        brnchType = AUIGrid.getCellValue(gridID, event.rowIndex, "brnchType");
+    });
+    
     fn_keyEvent();
     
 });
@@ -46,14 +52,18 @@ function createAUIGrid() {
    
 	var columnLayout = [
                           { dataField : "reqstNo", headerText  : "TCR No",    width : 100 ,editable : false},
-                          { dataField : "branchType", headerText  : "Branch Type",width : 200 ,editable       : false},
+                          { dataField : "brnchName", headerText  : "Branch Type",width : 200 ,editable       : false},
                           { dataField : "reqstDt", headerText  : "Request Date",  width  : 100, dataType : "date", formatString : "dd/mm/yyyy" },
                           { dataField : "reqstUserId",       headerText  : "Requester",  width  : 100},
-                          { dataField : "status",     headerText  : "Status",  width  :100}
+                          { dataField : "cnfmStusName",     headerText  : "Status",  width  :100},
+                        /*   { dataField : "areaId",     headerText  : "areaId",  width  :100},
+                          { dataField : "codyBrnchCode",     headerText  : "",  width  :100},
+                          { dataField : "codyMangrUserId",     headerText  : "",  width  :100},
+                          { dataField : "brnchType",     headerText  : "",  width  :100} */
                            
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
         
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
     }
@@ -65,17 +75,17 @@ function createDetailAUIGrid() {
         
         var columnLayout = [
                            
-                            { dataField : "areaID", headerText  : "Area ID",    width : 100,  editable : false},
+                            { dataField : "areaId", headerText  : "Area ID",    width : 100,  editable : false},
                             { dataField : "area", headerText  : "Area",width : 150,  editable: false },
                             { dataField : "city",   headerText  : "City",  width          : 100,   editable       : false},
-                            { dataField : "Postal Code ", headerText  : "Postal Code ",  width   : 100, editable       : false},
-                            { dataField : "State",headerText  : "State",  width          : 100,   editable       : false },
-                            { dataField : "branchType",         headerText  : "CDB / DSC",   width          : 100,     editable       : false  },
-                            { dataField : "vMS",         headerText  : "Cody Manager / CT Sub Grp",   width          : 200,     editable       : false  }
+                            { dataField : "postcode", headerText  : "Postal Code ",  width   : 100, editable       : false},
+                            { dataField : "state",headerText  : "State",  width          : 100,   editable       : false },
+                            { dataField : "branchCode",         headerText  : "CDB / DSC",   width          : 120,     editable       : false  },
+                            { dataField : "manager",  headerText  : "Cody Manager / CT Sub Grp",   width          : 200,     editable       : false  }
 
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
         
         detailGridID = GridCommon.createAUIGrid("detail_list_grid_wrap", columnLayout  ,"" ,gridPros);
     }
@@ -86,7 +96,6 @@ function createDetailAUIGrid() {
 //리스트 조회.
 function fn_mainSelectListAjax() {        
 Common.ajax("GET", "/organization/territory/selectList", $("#sForm").serialize(), function(result) {
-         
       console.log(result);
       AUIGrid.setGridData(gridID, result);
    });
@@ -95,7 +104,7 @@ Common.ajax("GET", "/organization/territory/selectList", $("#sForm").serialize()
 
 
 //리스트 조회.
-function fn_selectDetailListAjax() {        
+function fn_selectDetailListAjax(reqstNo) {        
 	
   var selectedItems = AUIGrid.getSelectedItems(gridID);
   
@@ -106,14 +115,14 @@ function fn_selectDetailListAjax() {
   
   console.log(selectedItems[0]);
   
-  Common.ajax("GET", "/organization/territory/selectDetailList", { REQST_NO: selectedItems[0].item.reqstNo}, function(result) {
+  Common.ajax("GET", "/organization/territory/selectDetailList", { reqstNo: reqstNo}, function(result) {
            
     console.log(result);
     AUIGrid.setGridData(detailGridID, result);
  });
    
 }
-
+ 
 
 function fn_Clear(){
 	
@@ -129,26 +138,16 @@ function fn_New(){
     Common.popupDiv("/organization/territory/territoryNew.do" ,null, null , true , '_NewAddDiv1');
 }
 
-function fn_Comfirm(){
-    alert('fn_Comfirm');
+function fn_Comfirm() {
+    Common.ajax("GET", "/organization/territory/comfirmTerritory.do", { reqstNo: reqstNo, brnchType : brnchType }, function(result) {
+    	Common.alert(result.message);
+    });
 }
 
 
 function fn_Cancel(){
     alert('fn_Cancel');
 }
-
-
-
-function fn_doAllaction(){
-	var ord_id = '143486';
-	var  vdte ='2016-08-03';
-    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte}, null , true , '_doAllactionDiv');
-    
-
-}
-
-
 
 </script>
 
@@ -175,12 +174,6 @@ function fn_doAllaction(){
 <h4>Assign Info</h4>
 </aside><!-- title_line end -->
 
-
-<ul class="right_btns">
-
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_gSave()">Save</a></p></li>
-</ul>
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -195,7 +188,7 @@ function fn_doAllaction(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Branch Type</th>
+	<th scope="row">Branch Type<span class="must">*</span></th>
 	<td>
 		<select class="multy_select w100p" multiple="multiple" id="comBranchType" name="comBranchType">
 		   <option value="42">Cody Branch</option>
@@ -203,14 +196,14 @@ function fn_doAllaction(){
 		</select>
 	</td>
 	<th scope="row">Assign Request Code</th>
-	<td><input type="text" title="" placeholder="Assign Request Code" class="w100p" id='REQST_NO' name='REQST_NO' /></td>
+	<td><input type="text" title="" placeholder="Assign Request Code" class="w100p" id="requestNo" name="requestNo" /></td>
 	<th scope="row">Requester</th>
 	<td>
-		 <input type="text" title="" placeholder="Requester" class="w100p" id='REQST_USER_ID' name='REQST_USER_ID'  />
+		 <input type="text" title="" placeholder="Requester" class="w100p" id="requestUserId" name="requestUserId"  />
 	</td>
 	<th scope="row">Request Date</th>
 	<td>
-		<input type="text" title="기준년월" class="j_date w100p" id='REQST_DT' name='REQST_DT'  placeholder="DD/MM/YYYY" />
+		<input type="text" title="기준년월" class="j_date w100p" id="requestDt" name="requestDt"  placeholder="DD/MM/YYYY" />
 	</td>
 </tr>
 </tbody>
@@ -224,7 +217,7 @@ function fn_doAllaction(){
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
+<%-- <dl class="link_list">
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
@@ -232,7 +225,7 @@ function fn_doAllaction(){
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
-</dl>
+</dl> --%>
 </aside><!-- link_btns_wrap end -->
 
 </form>
@@ -244,10 +237,6 @@ function fn_doAllaction(){
 	<li><p class="btn_grid"><a href="#" onclick="javasclipt:fn_Comfirm()">Comfirm</a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javasclipt:fn_Cancel()">Cancel</a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javasclipt:fn_New()">New</a></p></li>
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_doAllaction()">Allaction</a></p></li>
-	
-	
-	
 	
 </ul>
 
