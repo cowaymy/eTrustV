@@ -306,12 +306,12 @@ function fn_Cost(str){
 	if( str=="hide" ){
 		$("#recvCost").hide();
 	    
-	    $("#recvCostCenterName").prop("readonly", true);
+	    //$("#recvCostCenterName").prop("readonly", true);
 	    $("#recvCostCenterName").attr("class", "readonly");
 	}else if ( str=="show" ){
 		$("#recvCost").show();
 	    
-	    $("#recvCostCenterName").prop("readonly", false);
+	    //$("#recvCostCenterName").prop("readonly", false);
 	    $("#recvCostCenterName").attr("class", "");
 	}
 }
@@ -319,12 +319,12 @@ function fn_budget(str){
 	if( str=="hide" ){
 		$("#recvBudget").hide();
         
-        $("#recvBudgetCodeName").prop("readonly", true);
+       // $("#recvBudgetCodeName").prop("readonly", true);
         $("#recvBudgetCodeName").attr("class", "readonly");
 	}else if ( str=="show" ){
 		$("#recvBudget").show();
 	    
-	    $("#recvBudgetCodeName").prop("readonly", false);
+	   // $("#recvBudgetCodeName").prop("readonly", false);
 	    $("#recvBudgetCodeName").attr("class", "");
 	}
 }
@@ -333,12 +333,12 @@ function fn_glAcc(str){
 	if( str=="hide" ){
         $("#recvGlAcc").hide();
         
-        $("#recvGlAccCodeName").prop("readonly", true);
+        //$("#recvGlAccCodeName").prop("readonly", true);
         $("#recvGlAccCodeName").attr("class", "readonly");
 	}else if ( str=="show" ){
 		$("#recvGlAcc").show();
 	    
-	    $("#recvGlAccCodeName").prop("readonly", false);
+	   // $("#recvGlAccCodeName").prop("readonly", false);
 	    $("#recvGlAccCodeName").attr("class", "");
 	}
 }
@@ -346,14 +346,13 @@ function fn_glAcc(str){
 
  var budgetStr ;
 //Budget Code Pop 호출
-function fn_pGlAccountSearchPop(str){
+function fn_pBudgetCodePop(str){
   budgetStr = str;
   Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do", {pop:'pop'}, null, true, "budgetCodeSearchPop");
 }  
 
 
 function  fn_setPopBudgetData(){
-	alert("pop1");
   if(budgetStr == "send"){
 	  
 	  $("#sendBudgetCode").val($("#pBudgetCode").val());
@@ -431,8 +430,10 @@ function fn_setPopCostCenter (){
 } 
 
 function fn_chnCombo(str){
-	$("#btnClear").click();
 	
+    $("#btnClear").click();
+    $("#pAdjustmentType").val(str);
+    
 	if( str =="01" || str =="02"){
         
         fn_mon("hide");
@@ -475,7 +476,7 @@ function fn_chnCombo(str){
         fn_budget("show");
         fn_glAcc("show");   
     }
-    
+
     console.log("period_values: " + str);
 }
 
@@ -630,8 +631,9 @@ function fn_uploadFile(str) {
         	/* formData.append("obj", obj);
         	formData.append("gridData",gridData);    */
         	
-        	if(AUIGrid.getCellValue(adjPGridID, 1, "budgetDocNo") != ""){
-        		alert(AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") );
+        	alert(AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId"));
+        	if(AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") != "" &&AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") != null ){
+        		alert("if ::: " + AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId"));
         	    formData.append("pAtchFileGrpId", AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") );
         	}
         	

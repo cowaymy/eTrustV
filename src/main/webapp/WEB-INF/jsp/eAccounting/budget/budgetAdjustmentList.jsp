@@ -222,17 +222,24 @@ function fn_selectListAjax() {
 
 //Budget Code Pop 호출
 function fn_budgetCodePop(){
+    $("#budgetCode").val("");
+    $("#budgetCodeName").val("");  
+    $("#pBudgetCode").val("");
+    $("#pBudgetCodeName").val(""); 
     Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",null, null, true, "budgetCodeSearchPop");
 }  
 
 function  fn_setBudgetData(){
-	alert("1");
 	$("#budgetCode").val($("#pBudgetCode").val());
 	$("#budgetCodeName").val( $("#pBudgetCodeName").val());    
 }
 
 //Gl Account Pop 호출
 function fn_glAccountSearchPop(){
+    $("#glAccCode").val("");
+    $("#glAccCodeName").val("");     
+    $("#pGlAccCode").val("");
+    $("#pGlAccCodeName").val("");
     Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", null, null, true, "glAccountSearchPop");
 }
 
@@ -243,6 +250,10 @@ function fn_setGlData (){
 
 //Cost Center
 function fn_costCenterSearchPop() {
+    $("#costCentr").val("");
+    $("#search_costCentr").val("");
+    $("#costCentrName").val("");
+    $("#search_costCentrName").val("");
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
@@ -298,17 +309,17 @@ function checkAll(isChecked) {
 
 function fn_budgetApproval(){   
     
-    // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+    // 그리드 데이터에서 checkId 필드의 값이 Y 인 행 아이템 모두 반환
     var activeItems = AUIGrid.getItemsByValue(adjMGridID, "checkId", "Y");
     
     if(activeItems.length == 0){
-        alert("<spring:message code="budget.msg.noData" />");
+        alert("<spring:message code="budget.msg.select" />");
         return;
     }
     
     if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
     	 
-    	$("#appvStus").val("R"); // adjustment Close
+    	$("#appvStus").val("O"); // adjustment 
         $("#appvPrcssStus").val("R"); //Approval 
     	
     	 var obj = $("#listSForm").serializeJSON();   
@@ -462,7 +473,6 @@ function fn_budgetApproval(){
 	<select id="appvStus" name="appvStus" class="">
 		<option value=""><spring:message code="budget.All" /></option>
 		<option value="O"><spring:message code="budget.Open" /></option>
-		<option value="R"><spring:message code="budget.Request" /></option>
 		<option value="C"><spring:message code="budget.Close" /></option>
 	</select>
 	</td>

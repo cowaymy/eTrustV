@@ -202,40 +202,51 @@ function fn_selectListAjax() {
     });
 }
 
-
 //Budget Code Pop 호출
 function fn_budgetCodePop(){
+    $("#budgetCode").val("");
+    $("#budgetCodeName").val("");  
+    $("#pBudgetCode").val("");
+    $("#pBudgetCodeName").val(""); 
     Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",null, null, true, "budgetCodeSearchPop");
 }  
 
 function  fn_setBudgetData(){
-	alert("1");
-	$("#budgetCode").val($("#pBudgetCode").val());
-	$("#budgetCodeName").val( $("#pBudgetCodeName").val());    
+    $("#budgetCode").val($("#pBudgetCode").val());
+    $("#budgetCodeName").val( $("#pBudgetCodeName").val());    
 }
 
 //Gl Account Pop 호출
 function fn_glAccountSearchPop(){
+    $("#glAccCode").val("");
+    $("#glAccCodeName").val("");     
+    $("#pGlAccCode").val("");
+    $("#pGlAccCodeName").val("");
     Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", null, null, true, "glAccountSearchPop");
 }
 
 function fn_setGlData (){    
-	$("#glAccCode").val($("#pGlAccCode").val());
-	$("#glAccCodeName").val( $("#pGlAccCodeName").val());        
+    $("#glAccCode").val($("#pGlAccCode").val());
+    $("#glAccCodeName").val( $("#pGlAccCodeName").val());        
 }
 
 //Cost Center
 function fn_costCenterSearchPop() {
+    $("#costCentr").val("");
+    $("#search_costCentr").val("");
+    $("#costCentrName").val("");
+    $("#search_costCentrName").val("");
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
 function fn_setCostCenter (){
-	$("#costCentr").val($("#search_costCentr").val());
-	$("#costCentrName").val( $("#search_costCentrName").val());
+    $("#costCentr").val($("#search_costCentr").val());
+    $("#costCentrName").val( $("#search_costCentrName").val());
 }
 
 //adjustment Pop
 function fn_budgetAdjustmentPop(value) {
+	$("#appvFlag").val("Y");
     Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", $("#listSForm").serializeJSON(), fn_selectListAjax, true, "budgetAdjustmentPop");
 }
 
@@ -276,11 +287,11 @@ function checkAll(isChecked) {
 
 function fn_budgetApproval(value){
     
-    // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+	// 그리드 데이터에서 checkId 필드의 값이 Y 인 행 아이템 모두 반환
     var activeItems = AUIGrid.getItemsByValue(appMGridID, "checkId", "Y");
     
     if(activeItems.length == 0){
-        alert("<spring:message code="budget.msg.noData" />");
+        alert("<spring:message code="budget.msg.select" />");
         return;
     }   
 	
@@ -293,13 +304,13 @@ function fn_budgetApproval(value){
     }else{  //reject 처리
     	        
         var option = {
-                title : "Reject the adjustment" ,
+                title : "<spring:message code="budget.RejectTitle" />" ,
                 textId : "promptText",
                 textName : "promptText"
             }; 
         
         
-         Common.prompt("Are you sure you want to reject the adjustment :", "", function(){
+         Common.prompt("<spring:message code="budget.msg.reject" /> ", "", function(){
             
              $("#rejectMsg").val($("#promptText").val());
              fn_saveApprove();
@@ -380,6 +391,7 @@ function fn_saveApprove(){
     <input type="hidden" id = "rejectMsg" name="rejectMsg" />
     <input type="hidden" id = "appvStus" name="appvStus" />
     <input type="hidden" id = "appvPrcssStus" name="appvPrcssStus" />
+    <input type="hidden" id = "appvFlag" name="appvFlag" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

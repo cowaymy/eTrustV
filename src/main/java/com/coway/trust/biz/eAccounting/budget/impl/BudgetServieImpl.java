@@ -159,14 +159,15 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
 		List resultAmtList = new ArrayList();
 		String overbudget="N"; //예산 사용 가능 
+		
 		//approval table insert
+		approvalMap.put("budgetDocNo", budgetDocNo);
+		approvalMap.put("userId", params.get("userId"));			
+		approvalMap.put("appvStus", "O");							
+		approvalMap.put("appvPrcssStus",  "R");	
+		approvalMap.put("atchFileGrpId", atchFileGrpId);	
+		
 		if(params.get("type").toString().equals("approval")){
-			
-			approvalMap.put("budgetDocNo", budgetDocNo);
-			approvalMap.put("userId", params.get("userId"));			
-			approvalMap.put("appvStus", "R");							
-			approvalMap.put("appvPrcssStus",  "R");	
-			approvalMap.put("atchFileGrpId", atchFileGrpId);			
 			
 			List<EgovMap> amtList = budgetMapper.selectAvailableAmtList(approvalMap);		
 			
@@ -192,10 +193,10 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 				budgetMapper.updateAdjustmentM(approvalMap); 
 			}	
 		}else{			
-			approvalMap.put("appvStus", "O");							
+			/*approvalMap.put("appvStus", "O");							
 			approvalMap.put("budgetDocNo", budgetDocNo);
 			approvalMap.put("userId", params.get("userId"));
-			approvalMap.put("atchFileGrpId", atchFileGrpId);
+			approvalMap.put("atchFileGrpId", atchFileGrpId);*/
 			
 			budgetMapper.updateAdjustmentM(approvalMap); 
 		}
@@ -262,7 +263,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 					Logger.debug("approvalMap ==================> " + approvalMap);
 
 					String overbudget="N"; //예산 사용 가능 
-					if("R".equals(params.get("appvStus").toString())){
+					if("O".equals(params.get("appvStus").toString())){
 						
 						List<EgovMap> amtList = budgetMapper.selectAvailableAmtList(approvalMap);		
 
@@ -282,12 +283,13 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 								continue;
 							}			
 						}
-					}else{					
-						if(overbudget.equals("N")){
-							budgetMapper.insertApprove(approvalMap); 
-							budgetMapper.updateAdjustmentM(approvalMap); 
-						}	
-					}
+					}	
+					
+					if(overbudget.equals("N")){
+						budgetMapper.insertApprove(approvalMap); 
+						budgetMapper.updateAdjustmentM(approvalMap); 
+					}	
+					
 				}
 				
 				

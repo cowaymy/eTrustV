@@ -58,7 +58,7 @@
                               ,A.BUDGET_ADJ_MONTH
                        FROM FCM0103D A, FCM0102M B
                       WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-                        AND B.APPV_STUS IN ('R', 'C') 
+                        AND B.APPV_STUS = 'C' 
                         GROUP BY  A.BUDGET_ADJ_YEAR, A.BUDGET_ADJ_MONTH ,A.COST_CENTR ,A.BUDGET_CODE, A.GL_ACC_CODE 
                   ) B  ON  A.BUDGET_PLAN_YEAR = B.BUDGET_ADJ_YEAR 
                         AND A.BUDGET_PLAN_MONTH  = B.BUDGET_ADJ_MONTH 
@@ -106,7 +106,7 @@
 		          ,B.ADJ_REM    
 		 FROM FCM0102M  A,  FCM0103D B
 		WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-		    AND A.APPV_STUS IN ('R', 'C') 
+		    AND A.APPV_STUS = 'C' 
                         ]]>
             AND B.BUDGET_ADJ_YEAR   = #{budgetPlanYear}
             AND B.BUDGET_ADJ_MONTH  = #{budgetPlanMonth}            
@@ -144,8 +144,7 @@
   
   <select id="selectAdjustmentList" parameterType="Map" resultType="egovMap">
        <![CDATA[ 
-       SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' 
-                           WHEN A.APPV_STUS = 'R' THEN 'Request' ELSE 'Open' END STATUS
+       SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' ELSE 'Open' END STATUS
 		         ,A.BUDGET_DOC_NO
 		         ,B.COST_CENTR
 		         ,BUDGET_DOC_SEQ		         

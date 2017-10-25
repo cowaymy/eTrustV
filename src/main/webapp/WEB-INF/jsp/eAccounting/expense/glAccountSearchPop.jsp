@@ -30,7 +30,7 @@ $(document).ready(function() {
          
          $("#pGlAccCode").val(AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccCode"));
          $("#pGlAccCodeName").val( AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccDesc"));
-         
+                  
          if("${pop}" == "pop"){
              fn_setPopGlData();
          }else{

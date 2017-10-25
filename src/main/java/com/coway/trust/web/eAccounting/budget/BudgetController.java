@@ -254,7 +254,11 @@ public class BudgetController {
 			if(!adjustmentList.get(0).get("status").toString().equals("Open")){
 				model.addAttribute("budgetStatus","N");
 			}else{
-				model.addAttribute("budgetStatus","Y");
+				if(!CommonUtils.isEmpty(params.get("appvFlag")) && "Y".equals(params.get("appvFlag").toString())){					
+					model.addAttribute("budgetStatus", "N");					
+				}else{
+					model.addAttribute("budgetStatus","Y");
+				}
 			}
 
 			model.addAttribute("budgetDocNo", params.get("gridBudgetDocNo"));
@@ -304,7 +308,7 @@ public class BudgetController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		params.put("userId", sessionVO.getUserId());
-		int pAtchFileGrpId = Integer.parseInt(params.get("pAtchFileGrpId").toString());
+
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
 				File.separator + "eAccounting" + File.separator + "budget", AppConstants.UPLOAD_MAX_FILE_SIZE);
@@ -313,8 +317,13 @@ public class BudgetController {
 		
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
+			
+			if(!CommonUtils.isEmpty(params.get("pAtchFileGrpId"))){
 
-			fileService.removeFilesByFileGroupId(FileType.WEB, pAtchFileGrpId);
+				int pAtchFileGrpId = Integer.parseInt(params.get("pAtchFileGrpId").toString());
+
+				fileService.removeFilesByFileGroupId(FileType.WEB, pAtchFileGrpId);
+			}
 			
 			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
 		}
@@ -392,7 +401,7 @@ public class BudgetController {
 		LOGGER.debug("params =====================================>>  " + params);
 	
 		params.put("userId", sessionVO.getUserId());
-		params.put("appvStus", "R");
+		params.put("appvStus", "O");
 		params.put("appvPrcssStus",  "R");	
 
 		Map result = new HashMap<String, Object>();
