@@ -7,7 +7,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "BarcodeListDto", description = "BarcodeListDto")
+@ApiModel(value = "BarcodeCListDto", description = "BarcodeCListDto")
 public class BarcodeCListDto {
 
 	@ApiModelProperty(value = "부품코드")
