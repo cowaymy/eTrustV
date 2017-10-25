@@ -1,421 +1,1097 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.pos.impl.PosMapper">
-    <select id="selectWhList" resultType="egovMap">
-				SELECT Project4.C1 C1  ,
-                       Project4.CODE_DESC CODE_DESC  ,
-                       Project4.C2 C2  ,
-                       Project4.WH_LOC_ID WH_LOC_ID  ,
-                       Project4.DESCRIPTION1 DESCRIPTION1  ,
-                       Project4.DESC_ID,
-                       Project4.WH_LOC_CODE CODE_ID  ,
-                       Project4.WH_LOC_DESC CODE_NAME  ,            
-                       Project4.STATE   ,
-                       Project4.CITY   ,
-                       Project4.POSTCODE   ,
-                       Project4.AREA   ,            
-                       Project4.WH_LOC_TEL1 WH_LOC_TEL1  ,
-                       Project4.WH_LOC_TEL2 WH_LOC_TEL2  ,
-                       Project4.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
-                       Project4.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
-                       Project4.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
-                       Project4.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
-                       Project4.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
-                       Project4.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
-                       Project4.CODE2 CODE2  ,
-                       Project4.DESC2 DESC2  ,
-                       Project4.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
-                       Project4.WH_LOC_MOBILE WH_LOC_MOBILE  
-                FROM ( SELECT 1 C1  ,
-                                Distinct2.CODE_DESC CODE_DESC  ,
-                                Distinct3.WH_LOC_ID WH_LOC_ID  ,
-                                Distinct3.WH_LOC_CODE WH_LOC_CODE  ,
-                                Distinct3.WH_LOC_DESC WH_LOC_DESC  ,              
-                                Distinct3.STATE   ,
-                                Distinct3.CITY   ,
-                                Distinct3.POSTCODE   ,
-                                Distinct3.AREA   ,                       
-                                Distinct3.WH_LOC_TEL1 WH_LOC_TEL1  ,
-                                Distinct3.WH_LOC_TEL2 WH_LOC_TEL2  ,
-                                Distinct3.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
-                                Distinct3.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
-                                Distinct3.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
-                                Distinct3.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
-                                Distinct3.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
-                                Distinct3.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
-                                Distinct3.CODE2 CODE2  ,
-                                Distinct3.DESC2 DESC2  ,
-                                Distinct3.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
-                                Distinct3.WH_LOC_MOBILE WH_LOC_MOBILE  ,
-                                Distinct3.CODE_DESC DESCRIPTION1  ,
-                                Distinct3.DESC_ID,
-                                CASE WHEN ( Distinct3.WH_LOC_ID IS NULL ) THEN UTILS.CONVERT_TO_NUMBER('',10,0) ELSE 1 END C2  
-                         FROM ( SELECT DISTINCT Distinct1.CODE_DESC CODE_DESC  
-                                FROM ( SELECT DISTINCT Extent1.WH_LOC_ID WH_LOC_ID  ,
-                                                       Extent1.WH_LOC_CODE WH_LOC_CODE  ,
-                                                       Extent1.WH_LOC_DESC WH_LOC_DESC  ,                                                 
-                                                       Extent7.STATE,
-                                                       Extent7.CITY,
-                                                       Extent7.POSTCODE,
-                                                       Extent7.AREA,                                                      
-                                                       Extent1.WH_LOC_TEL1 WH_LOC_TEL1  ,
-                                                       Extent1.WH_LOC_TEL2 WH_LOC_TEL2  ,
-                                                       Extent1.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
-                                                       Extent1.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
-                                                       Extent1.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
-                                                       Extent1.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
-                                                       Extent1.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
-                                                       Extent1.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
-                                                       Extent1.CODE2 CODE2  ,
-                                                       Extent1.DESC2 DESC2  ,
-                                                       Extent1.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
-                                                       Extent1.WH_LOC_MOBILE WH_LOC_MOBILE  ,
-                                                       DBMS_LOB.SUBSTR(Extent3.CODE_DESC, 4000)  CODE_DESC  
-                                       FROM SYS0028M Extent1
-                                              LEFT JOIN SYS0005M Extent2   ON Extent1.WH_LOC_BRNCH_ID = Extent2.BRNCH_ID
-                                              LEFT JOIN SYS0013M Extent3   ON Extent2.TYPE_ID = Extent3.CODE_ID
-                                              LEFT JOIN SYS0064M Extent7   ON Extent7.AREA_ID = Extent1.AREA_ID
-                                        WHERE  ( 1 = Extent1.WH_LOC_STUS_ID )
-                                                 AND ( 277 = Extent1.WH_LOC_TYPE_ID )
-                                                 AND ( 'A' = Extent1.WH_LOC_STK_GRAD ) ) Distinct1 ) Distinct2
-                                LEFT JOIN ( SELECT DISTINCT Extent4.WH_LOC_ID WH_LOC_ID  ,
-                                                            Extent4.WH_LOC_CODE WH_LOC_CODE  ,
-                                                            DBMS_LOB.SUBSTR(Extent4.WH_LOC_DESC, 4000) WH_LOC_DESC  ,
-                                                            Extent4.AREA_ID AREA_ID  ,
-                                                            Extent4.ADDR_DTL  ADDR_DTL ,
-                                                            Extent4.STREET STREET ,
-                                                            Extent7.STATE,
-                                                            Extent7.CITY,
-                                                            Extent7.POSTCODE,
-                                                            Extent7.AREA,
-                                                            Extent4.WH_LOC_TEL1 WH_LOC_TEL1  ,
-                                                            Extent4.WH_LOC_TEL2 WH_LOC_TEL2  ,
-                                                            Extent4.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
-                                                            Extent4.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
-                                                            Extent4.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
-                                                            Extent4.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
-                                                            Extent4.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
-                                                            Extent4.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
-                                                            Extent4.CODE2 CODE2  ,
-                                                            Extent4.DESC2 DESC2  ,
-                                                            Extent4.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
-                                                            Extent4.WH_LOC_MOBILE WH_LOC_MOBILE  ,
-                                                            DBMS_LOB.SUBSTR(Extent6.CODE_DESC, 4000) CODE_DESC,
-                                                            Extent6.CODE_ID DESC_ID
-                                            FROM SYS0028M Extent4
-                                                   LEFT JOIN SYS0005M Extent5   ON Extent4.WH_LOC_BRNCH_ID = Extent5.BRNCH_ID
-                                                   LEFT JOIN SYS0013M Extent6   ON Extent5.TYPE_ID = Extent6.CODE_ID
-                                                   LEFT JOIN SYS0064M Extent7   ON Extent7.AREA_ID = Extent4.AREA_ID
-                                             WHERE  ( 1 = Extent4.WH_LOC_STUS_ID )
-                                                      AND ( 277 = Extent4.WH_LOC_TYPE_ID )
-                                                      AND ( 'A' = Extent4.WH_LOC_STK_GRAD ) ) Distinct3    ON ( Distinct2.CODE_DESC = Distinct3.CODE_DESC )                                                        
-                                            OR ( ( Distinct2.CODE_DESC IS NULL )
-                                            AND ( Distinct3.CODE_DESC IS NULL ) ) ) Project4
-                ORDER BY Project4.DESCRIPTION1 ASC, Project4.C2 ASC
-    </select>
-    
-  <!--   <resultMap type="egovMap" id="posListClobMap">
-        <result  property="whLocDesc" column="WH_LOC_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap> -->
-    
+   
+   <select id="selectPosModuleCodeList" parameterType="Map" resultType="egovMap">
+        SELECT 
+            CODE_ID, 
+            CODE_NAME 
+        FROM 
+            SYS0013M 
+        WHERE 
+            CODE_MASTER_ID = #{groupCode}
+            
+            <if test=" null != codeArray and codeArray.size > 0">
+                AND CODE_ID IN
+                <foreach collection="codeArray" item="item" open="(" separator="," close=")">
+                    #{item}                
+                </foreach>
+            </if>
+   </select>
+   
+   <select id="selectStatusCodeList"  parameterType="Map" resultType="egovMap">
+        SELECT 
+            T1.STUS_CODE_ID CODE_ID,
+            T2.NAME CODE_NAME
+        FROM 
+            SYS0037M T1 
+            INNER JOIN SYS0038M T2
+        ON 
+            T1.STUS_CODE_ID = T2.STUS_CODE_ID
+        WHERE 
+            T1.STUS_CTGRY_ID = #{groupCode}
+   </select>
+   
+<select id="selectWhBrnchList" resultType="egovMap">
+		   SELECT 
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE ,
+                S28.WH_LOC_ID , 
+                S28.WH_LOC_CODE ,
+                S28.WH_LOC_DESC ,
+                S28.WH_LOC_GB , 
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+            FROM 
+                SYS0005M S5 ,SYS0028M S28
+            WHERE  
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('02' , '05')
+   </select>
+   
+   <select id="selectWarehouse"  parameterType="Map" resultType="egovMap">
+          SELECT 
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE ,
+                S28.WH_LOC_ID , 
+                S28.WH_LOC_CODE ,
+                S28.WH_LOC_DESC ,
+                S28.WH_LOC_GB , 
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+            FROM 
+                SYS0005M S5 ,SYS0028M S28
+            WHERE  
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('02' , '05')
+            AND S5.BRNCH_ID = #{brnchId}
+            <![CDATA[
+            AND ROWNUM <= 1
+            ]]>
+   </select>
+
     <select id="selectPosJsonList" parameterType="Map" resultType="egovMap">
-				SELECT  Extent1.POS_ID , 
-				        Extent1.POS_NO ,  
-				        Extent1.POS_CUST_NAME ,
-				        TO_CHAR(TO_DATE(Extent1.POS_DT , 'YYYY-MM-DD'), 'DD-MM-YYYY') POS_DT  , 
-				        Extent1.POS_TYPE_ID   ,
-				        Extent1.POS_MODULE_TYPE_ID  ,
-				        TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  , 
-				        Extent1.POS_WH_ID  ,
-				        Extent1.POS_MEM_ID  ,
-				        Extent1.POS_CRT_USER_ID  ,
-				        Extent2.CODE_NAME  ,
-				        Extent3.CODE_NAME CODE_NAME1 ,
-				        Extent6.USER_NAME  ,
-				        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
-				        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
-				        CASE WHEN  (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME ELSE 'CASH' END NAME ,
-				        CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO  
-				FROM SAL0057D Extent1
-				        JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
-				        JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
-				        LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
-				        LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
-				        JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
-				        LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
-				WHERE  1=1
-				  
-				<if test="posModuleTypeId != null and posModuleTypeId != '' ">
-				    AND  Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
-				</if>
-				<if test="posTypeId != null and posTypeId != '' ">
-				    AND Extent1.POS_TYPE_ID = #{posTypeId} 
-				</if>
-				<if test="userName != null and userName != '' ">
-				    AND Extent6.USER_NAME = #{userName}
-				</if>  
-				<if test="posNo != nul and posNo != '' ">
-				    AND  Extent1.POS_NO = #{posNo}
-				</if>
-				<if test="sDate != null and sDate != '' "> <!-- to_date  --> 
-				    <![CDATA[
-				    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}, 'DD-MM-YYYY')
-				     ]]>
-				</if>
-				<if test="eDate != null and eDate != '' "> <!-- to_date  -->
-				   <![CDATA[				    
-				    AND  Extent1.POS_DT <= TO_DATE(#{eDate}, 'DD-MM-YYYY')  
-				    ]]>
-				</if> 
-				<if test="memId != null and memId != '' ">  
-				    AND Extent4.MEM_ID = #{memId}   
-				</if>
-				<if test="posCustName != null and posCustName != '' ">
-				    AND Extent1.POS_CUST_NAME LIKE  '%'|| #{posCustName} || '%'  ESCAPE '~'  
-				</if>
-				<if test="posWhId != null and posWhId != '' "> 
-				    AND  Extent1.POS_WH_ID = #{posWhId}
-			    </if>
-				ORDER BY Extent1.POS_ID DESC
+        SELECT  Extent1.POS_ID , 
+                        Extent1.POS_NO ,  
+                        Extent1.POS_CUST_NAME ,
+                        TO_CHAR(Extent1.POS_DT, 'DD-MM-YYYY') POS_DT, 
+                        Extent1.POS_TYPE_ID   ,
+                        Extent1.POS_MODULE_TYPE_ID  ,
+                        TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
+                        Extent1.STUS_ID, 
+                        Extent1.POS_WH_ID  ,
+                        Extent1.POS_MEM_ID  ,
+                        Extent1.POS_CRT_USER_ID  ,
+                        Extent2.CODE_NAME  ,
+                        Extent3.CODE_NAME CODE_NAME1 ,
+                        Extent6.USER_NAME  ,
+                        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
+                        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
+                        CASE WHEN  (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME ELSE 'CASH' END NAME ,
+                        CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO,
+                        Extent1.BRNCH_ID
+                FROM SAL0057D Extent1
+                        JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+                        JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+                        LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+                        LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+                        JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+                        LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
+                WHERE  1=1
+               <if test=" null != posModuleTypeId and '' != posModuleTypeId">
+                   AND  Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
+                </if> 
+              
+                <if test=" null != systemArray and systemArray.length > 0">
+                   AND Extent1.POS_TYPE_ID IN
+                    <foreach collection="systemArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                 
+                <if test=" null != statusArray and statusArray.length > 0">
+                    AND Extent1.STUS_ID IN
+                    <foreach collection="statusArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+              
+                <if test="posNo != nul and posNo != '' ">
+                    AND  Extent1.POS_NO = #{posNo}
+                </if>
+                
+                <if test="sDate != null and sDate != '' ">   
+                    <![CDATA[
+                    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}, 'DD-MM-YYYY')
+                     ]]>
+                </if>
+                
+                <if test="eDate != null and eDate != '' "> 
+                   <![CDATA[                    
+                    AND  Extent1.POS_DT <= TO_DATE(#{eDate}, 'DD-MM-YYYY')  
+                    ]]>
+                </if> 
+                
+                <if test=" null != salesmanId and '' != salesmanId">
+                    AND Extent1.POS_MEM_ID = #{salesmanId}
+                </if>
+                
+                <if test=" null != posCustName and '' != posCustName">
+                    AND  Extent1.POS_CUST_NAME  = #{posCustName}
+                </if>  
     </select>
     
-    <select id="selectPosViewPurchaseInfo" parameterType="Map" resultType="egovMap">
-				<![CDATA[
-				SELECT Limit1.POS_ID ,
-                       Limit1.POS_NO ,
-                       CASE WHEN ( Limit1.POSID1 IS NOT NULL ) THEN Limit1.POSNO1 ELSE '' END POS_NO1,
-                       Limit1.POS_MODULE_TYPE_ID ,
-                       Limit1.CODE_NAME ,
-                       Limit1.POS_TYPE_ID ,
-                       Limit1.CODENAME1 CODE_NAME1  ,
-                       Limit1.POS_WH_ID ,
-                       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
-                       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_DESC ELSE NULL END WH_LOC_DESC,
-                       TO_CHAR(TO_DATE(Limit1.POS_DT, 'YYYY-MM-DD') , 'DD-MM-YYYY') POS_DT , 
-                       Limit1.POS_CUST_NAME ,
-                       Limit1.POS_MEM_ID ,
-                       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEM_CODE ELSE '' END MEM_CODE,
-                       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME ELSE '' END NAME,
-                       Limit1.AREA_ID,
-                       Limit1.ADDR_DTL,
-                       Limit1.STREET,
-                       Limit1.AREA,
-                       Limit1.POSTCODE,
-                       Limit1.CITY,
-                       Limit1.STATE,
-                       Limit1.COUNTRY,
-                       Limit1.FULL_ADDRESS,
-                       Limit1.POS_REM ,
-                       Limit1.POS_CRT_USER_ID ,
-                       Limit1.USER_NAME ,
-                       Limit1.USER_FULL_NAME ,
-                       Limit1.CR_ACC_ID ,
-                       Limit1.DR_ACC_ID ,
-                       Limit1.POS_BILL_ID ,
-                      TO_CHAR(Limit1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT, 
-                       TO_CHAR(Limit1.POS_TOT_CHRG , 'FM9999999999990.00') AS POS_TOT_CHRG ,
-                       TO_CHAR(Limit1.POS_TOT_TXS , 'FM9999999999990.00') AS POS_TOT_TXS ,
-                       TO_CHAR(Limit1.POS_TOT_DSCNT , 'FM9999999999990.00') AS POS_TOT_DSCNT ,
-                       Limit1.POS_RESN_ID ,
-                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.PAY_ID ELSE 0 END PAY_ID , 
-                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.OR_NO ELSE '' END OR_NO ,
-                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BRNCH_ID ELSE 0 END BRNCH_ID ,
-                       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.CODE ELSE '' END BRANCH_CODE,
-                       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.NAME1 ELSE '' END BRANCH_NAME,
-                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.TR_NO ELSE '' END TR_NO,
-                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN TO_CHAR(Limit1.TR_ISSU_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END TR_ISSU_DT,
-                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BANK_ACC_ID ELSE 0 END BANK_ACC_ID,
-                       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_CODE ELSE '' END ACC_CODE,
-                       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_DESC ELSE '' END ACC_DESC,
-                       CASE WHEN ( Limit1.RESN_ID IS NOT NULL ) THEN Limit1.CODE1 || ' - ' || Limit1.RESN_DESC ELSE NULL END RESN_DESC  
-                  FROM ( SELECT Extent1.POS_ID POS_ID  ,
-                                Extent1.POS_NO POS_NO  ,
-                                Extent1.POS_BILL_ID POS_BILL_ID  ,
-                                Extent1.POS_CUST_NAME POS_CUST_NAME  ,
-                                Extent1.POS_DT POS_DT  ,
-                                Extent1.POS_TYPE_ID POS_TYPE_ID  ,
-                                Extent1.POS_MODULE_TYPE_ID POS_MODULE_TYPE_ID  ,
-                                Extent1.POS_TOT_AMT POS_TOT_AMT  ,
-                                Extent1.POS_TOT_CHRG POS_TOT_CHRG  ,
-                                Extent1.POS_TOT_TXS POS_TOT_TXS  ,
-                                Extent1.POS_TOT_DSCNT POS_TOT_DSCNT  ,
-                                Extent1.POS_WH_ID POS_WH_ID  ,
-                                Extent1.POS_REM POS_REM  ,
-                                Extent1.POS_MEM_ID POS_MEM_ID  ,
-                                Extent1.POS_CRT_USER_ID POS_CRT_USER_ID  ,
-                                Extent1.AREA_ID,                          
-                                Extent1.ADDR_DTL,
-                                NVL(Extent1.STREET, '') STREET,
-                                NVL(Extent12.AREA, '') AREA,
-                                NVL(Extent12.POSTCODE, '') POSTCODE,
-                                NVL(Extent12.CITY, '') CITY,
-                                NVL(Extent12.STATE, '') STATE,
-                                NVL(Extent12.COUNTRY, '') COUNTRY,
-                                CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
-                                NVL(Extent1.STREET, '') ||' '|| Extent12.AREA ||' '|| Extent12.POSTCODE ||' '|| Extent12.CITY ||' '|| Extent12.STATE ||' '|| Extent12.COUNTRY AS FULL_ADDRESS, 
-                                Extent1.CR_ACC_ID CR_ACC_ID  ,
-                                Extent1.DR_ACC_ID DR_ACC_ID  ,
-                                Extent1.POS_RESN_ID POS_RESN_ID  ,
-                                Extent2.CODE_NAME CODE_NAME  ,
-                                Extent3.CODE_NAME CODENAME1  ,
-                                Extent4.MEM_ID MEM_ID  ,
-                                Extent4.MEM_CODE MEM_CODE  ,
-                                Extent4.NAME NAME  ,
-                                Extent5.WH_LOC_ID WH_LOC_ID  ,
-                                Extent5.WH_LOC_CODE WH_LOC_CODE  ,
-                                Extent5.WH_LOC_DESC WH_LOC_DESC  ,
-                                Extent6.USER_NAME USER_NAME  ,
-                                Extent6.USER_FULL_NAME USER_FULL_NAME  ,
-                                Extent7.PAY_ID PAY_ID  ,
-                                Extent7.OR_NO OR_NO  ,
-                                Extent7.TR_NO TR_NO  ,
-                                Extent7.BRNCH_ID BRNCH_ID  ,
-                                Extent7.BANK_ACC_ID BANK_ACC_ID  ,
-                                Extent7.TR_ISSU_DT TR_ISSU_DT  ,
-                                Extent8.BRNCH_ID BRANCHID1  ,
-                                Extent8.CODE CODE  ,
-                                Extent8.NAME NAME1  ,
-                                Extent9.ACC_ID ACC_ID  ,
-                                Extent9.ACC_CODE ACC_CODE  ,
-                                Extent9.ACC_DESC ACC_DESC  ,
-                                Extent10.POS_ID POSID1  ,
-                                Extent10.POS_NO POSNO1  ,
-                                Extent11.RESN_ID RESN_ID  ,
-                                Extent11.CODE CODE1  ,
-                                Extent11.RESN_DESC RESN_DESC  
-                         FROM SAL0057D Extent1
-                                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
-                                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
-                                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
-                                LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
-                                JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
-                                LEFT JOIN PAY0064D Extent7   ON Extent7.BILL_ID = Extent1.POS_BILL_ID
-                                LEFT JOIN SYS0005M Extent8   ON Extent8.BRNCH_ID = Extent7.BRNCH_ID
-                                LEFT JOIN SYS0001M Extent9   ON Extent9.ACC_ID = Extent7.BANK_ACC_ID
-                                LEFT JOIN SAL0057D Extent10   ON Extent10.POS_ID = Extent1.POS_MTCH_ID
-                                LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent1.POS_RESN_ID
-                                LEFT JOIN SYS0064M Extent12 ON  Extent12.AREA_ID = Extent1.AREA_ID
-                          WHERE  Extent1.POS_NO = #{posNo} AND ROWNUM <= 1 ) Limit1
-				           ]]>
+    <select id="selectPSMItmTypeList" resultType="egovMap"> 
+<![CDATA[
+SELECT DISTINCT 
+       Project4.CODE_DESC CODE_NAME,
+       Project4.STK_TYPE_ID CODE_ID
+  FROM ( SELECT 1 C1  ,
+                Distinct2.CODE_DESC   ,
+                Distinct3.STK_ID   ,
+                Distinct3.STK_CODE   ,
+                Distinct3.STK_DESC   ,
+                Distinct3.STK_CTGRY_ID   ,
+                Distinct3.STK_TYPE_ID   ,
+                Distinct3.STUS_CODE_ID   ,
+                Distinct3.IS_SIRIM   ,
+                Distinct3.IS_NCV  ,
+                Distinct3.QTY_PER_CARTON   ,
+                Distinct3.UPD_USER_ID   ,
+                Distinct3.UPD_DT   ,
+                Distinct3.IS_SYNCH   ,
+                Distinct3.NET_WT   ,
+                Distinct3.GROS_WT   ,
+                Distinct3.MEASURE_CBM   ,
+                Distinct3.MASTER_STK_ID   ,
+                Distinct3.STK_GRAD   ,
+                Distinct3.STK_IMG   ,
+                Distinct3.BS_POINT   ,
+                Distinct3.UNIT_VALU   ,
+                Distinct3.STK_COMM_OS_AS   ,
+                Distinct3.STK_COMM_AS   ,
+                Distinct3.STK_COMM_OS_BS   ,
+                Distinct3.STK_COMM_BS   ,
+                Distinct3.STK_COMM_OS_INS   ,
+                Distinct3.STK_COMM_INS   ,
+                Distinct3.STK_ALLOW_SALES   ,
+                Distinct3.IS_SVC_STK   ,
+                Distinct3.CODE_DESC DESCRIPTION1  ,
+                CASE 
+                     WHEN ( Distinct3.STK_ID IS NULL ) THEN UTILS.CONVERT_TO_NUMBER('',10,0)
+                ELSE 1
+                   END C2  
+         FROM ( SELECT DISTINCT Distinct1.CODE_DESC   
+                FROM ( SELECT DISTINCT Extent1.STK_ID   ,
+                                       Extent1.STK_CODE   ,
+                                       Extent1.STK_DESC   ,
+                                       Extent1.STK_CTGRY_ID   ,
+                                       Extent1.STK_TYPE_ID   ,
+                                       Extent1.STUS_CODE_ID   ,
+                                       Extent1.IS_SIRIM   ,
+                                       Extent1.IS_NCV   ,
+                                       Extent1.QTY_PER_CARTON   ,
+                                       Extent1.UPD_USER_ID   ,
+                                       Extent1.UPD_DT   ,
+                                       Extent1.IS_SYNCH   ,
+                                       Extent1.NET_WT   ,
+                                       Extent1.GROS_WT   ,
+                                       Extent1.MEASURE_CBM   ,
+                                       Extent1.MASTER_STK_ID   ,
+                                       Extent1.STK_GRAD   ,
+                                       Extent1.STK_IMG   ,
+                                       Extent1.BS_POINT   ,
+                                       Extent1.UNIT_VALU   ,
+                                       Extent1.STK_COMM_OS_AS   ,
+                                       Extent1.STK_COMM_AS   ,
+                                       Extent1.STK_COMM_OS_BS   ,
+                                       Extent1.STK_COMM_BS   ,
+                                       Extent1.STK_COMM_OS_INS   ,
+                                       Extent1.STK_COMM_INS   ,
+                                       Extent1.STK_ALLOW_SALES   ,
+                                       Extent1.IS_SVC_STK   ,
+                                       Extent2.CODE_DESC   
+                       FROM SYS0026M Extent1
+                              LEFT JOIN SYS0013M Extent2   ON Extent1.STK_TYPE_ID = Extent2.CODE_ID
+                        WHERE  ( 1 = Extent1.STUS_CODE_ID )
+                                 AND ( ( 61 <> Extent1.STK_TYPE_ID )
+                                 OR ( ( 61 = Extent1.STK_TYPE_ID )
+                                 AND ( 965 = Extent1.STK_ID ) ) ) ) Distinct1 ) Distinct2
+                LEFT JOIN ( SELECT DISTINCT Extent3.STK_ID   ,
+                                            Extent3.STK_CODE   ,
+                                            Extent3.STK_DESC   ,
+                                            Extent3.STK_CTGRY_ID   ,
+                                            Extent3.STK_TYPE_ID   ,
+                                            Extent3.STUS_CODE_ID   ,
+                                            Extent3.IS_SIRIM   ,
+                                            Extent3.IS_NCV   ,
+                                            Extent3.QTY_PER_CARTON   ,
+                                            Extent3.UPD_USER_ID   ,
+                                            Extent3.UPD_DT   ,
+                                            Extent3.IS_SYNCH   ,
+                                            Extent3.NET_WT   ,
+                                            Extent3.GROS_WT   ,
+                                            Extent3.MEASURE_CBM   ,
+                                            Extent3.MASTER_STK_ID   ,
+                                            Extent3.STK_GRAD   ,
+                                            Extent3.STK_IMG   ,
+                                            Extent3.BS_POINT   ,
+                                            Extent3.UNIT_VALU   ,
+                                            Extent3.STK_COMM_OS_AS   ,
+                                            Extent3.STK_COMM_AS   ,
+                                            Extent3.STK_COMM_OS_BS   ,
+                                            Extent3.STK_COMM_BS   ,
+                                            Extent3.STK_COMM_OS_INS   ,
+                                            Extent3.STK_COMM_INS   ,
+                                            Extent3.STK_ALLOW_SALES   ,
+                                            Extent3.IS_SVC_STK   ,
+                                            Extent4.CODE_DESC   
+                            FROM SYS0026M Extent3
+                                   LEFT JOIN SYS0013M Extent4   ON Extent3.STK_TYPE_ID = Extent4.CODE_ID
+                             WHERE  ( 1 = Extent3.STUS_CODE_ID )
+                                      AND ( ( 61 <> Extent3.STK_TYPE_ID )
+                                      OR ( ( 61 = Extent3.STK_TYPE_ID )
+                                      AND ( 965 = Extent3.STK_ID ) ) ) ) Distinct3   ON ( Distinct2.CODE_DESC = Distinct3.CODE_DESC )
+                OR ( ( Distinct2.CODE_DESC IS NULL )
+                AND ( Distinct3.CODE_DESC IS NULL ) ) ) Project4
+                ]]>
+			    
+<!-- SELECT 
+        CODE_ID,
+        CODE_NAME
+    FROM 
+        SYS0013M 
+    WHERE 
+        CODE_MASTER_ID  = 141 -->
     </select>
     
-    <select id="selectPosDetailJsonList" parameterType="Map" resultType="egovMap">
-				  SELECT Project1.POS_ITM_STOCK_ID,
-                       Project1.STK_CODE ,
-                       Project1.STK_DESC ,
-                       Project1.POS_ITM_QTY ,
-                       TO_CHAR(Project1.POS_ITM_UNIT_PRC , 'FM9999999999990.00') AS POS_ITM_UNIT_PRC  , 
-                       TO_CHAR(Project1.POS_ITM_TOT , 'FM9999999999990.00') AS POS_ITM_TOT  , 
-                       TO_CHAR(Project1.POS_ITM_CHRG , 'FM9999999999990.00') AS POS_ITM_CHRG  ,
-                       TO_CHAR(Project1.POS_ITM_TXS , 'FM9999999999990.00') AS POS_ITM_TXS
-                  FROM ( SELECT Extent1.POS_ITM_STOCK_ID POS_ITM_STOCK_ID  ,
-                                Extent1.POS_ITM_UNIT_PRC POS_ITM_UNIT_PRC  ,
-                                Extent1.POS_ITM_TOT POS_ITM_TOT  ,
-                                Extent1.POS_ITM_CHRG POS_ITM_CHRG  ,
-                                Extent1.POS_ITM_TXS POS_ITM_TXS  ,
-                                Extent2.STK_CODE STK_CODE  ,
-                                Extent2.STK_DESC STK_DESC  ,
-                                UTILS.CONVERT_TO_NUMBER(Extent1.POS_ITM_QTY,19,0) POS_ITM_QTY  
-                         FROM SAL0058D Extent1
-                                JOIN SYS0026M Extent2   ON Extent2.STK_ID = Extent1.POS_ITM_STOCK_ID
-                          WHERE  Extent1.POS_ID = #{posId} ) Project1
-                  ORDER BY Project1.STK_CODE ASC
-    </select>
     
-    <select id="selectPosPaymentJsonList" parameterType="Map" resultType="egovMap">
-				 SELECT Extent2.PAY_ITM_ID ,
-				       Extent2.PAY_ID ,
-				       Extent2.PAY_ITM_MODE_ID ,
-				       Extent3.CODE_DESC ,
-				       Extent2.PAY_ITM_REF_NO ,
-				       TO_CHAR(Extent2.PAY_ITM_AMT , 'FM9999999999990.00') AS PAY_ITM_AMT, 
-				       Extent2.PAY_ITM_ORI_CC_NO ,
-				       Extent2.PAY_ITM_APPV_NO ,
-				       Extent2.PAY_ITM_CC_TYPE_ID ,
-				       Extent6.CODE_NAME ,
-				       CASE WHEN ( 107 = Extent2.PAY_ITM_MODE_ID ) THEN Extent2.PAY_ITM_CARD_MODE_ID ELSE 0 END PAY_ITM_CARD_MODE_ID,
-				       CASE WHEN ( 107 = Extent2.PAY_ITM_MODE_ID ) THEN Extent7.CODE_NAME ELSE ' ' END PAY_ITM_CARD_MODE_NAME,
-				       Extent2.PAY_ITM_ISSU_BANK_ID ,
-				       Extent4.NAME ,
-				       Extent2.PAY_ITM_BANK_ACC_ID ,
-				       Extent5.ACC_DESC ,
-				      TO_CHAR(Extent2.PAY_ITM_REF_DT , 'DD-MM-YYYY') PAY_ITM_REF_DT,
-				       Extent2.PAY_ITM_REM  
-				  FROM PAY0064D Extent1
-				         JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
-				         JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent2.PAY_ITM_MODE_ID
-				         LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = Extent2.PAY_ITM_ISSU_BANK_ID
-				         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent2.PAY_ITM_BANK_ACC_ID
-				         LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent2.PAY_ITM_CC_TYPE_ID
-				         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent2.PAY_ITM_CARD_MODE_ID
-				WHERE  Extent1.PAY_ID = #{payId}
+        <select id="selectPIItmTypeList" resultType="egovMap">
+            SELECT 
+                DISTINCT Extent2.CODE_ID,
+                              Extent2.CODE_NAME   
+             FROM 
+                LOG0026D Extent1
+             JOIN SYS0013M Extent2   ON ( Extent2.CODE_ID = Extent1.ITM_TYPE_ID )
+              AND 
+                0 = Extent2.DISAB 
+            WHERE 
+                1 = Extent1.ALLOW_SALES 
+           
+    <!-- SELECT 
+        CODE_ID,
+        CODE_NAME
+    FROM 
+        SYS0013M 
+    WHERE 
+        CODE_MASTER_ID  = 15 -->
     </select>
-    
-    <select id="selectPosUserInfo" parameterType="Map" resultType="egovMap">
-					SELECT Extent2.AC_LID AC_LID  ,
-					       Extent2.BIZ_ROLE_ID BIZ_ROLE_ID  ,
-					       Extent2.MODULE_UNIT_ID MODULE_UNIT_ID  ,
-					       Extent2.CAN_EXECUTE CAN_EXECUTE  ,
-					       Extent2.CAN_CRT CAN_CRT  ,
-					       Extent2.CAN_READ CAN_READ  ,
-					       Extent2.CAN_UPD CAN_UPD  ,
-					       Extent2.CAN_DEL CAN_DEL  ,
-					       Extent2.STUS_ID STUS_ID  
-					  FROM SYS0045M Extent1
-					         JOIN SYS0003M Extent2   ON ( Extent2.BIZ_ROLE_ID = Extent1.ROLE_ID )
-					         AND ( 1 = Extent2.STUS_ID )
-					 WHERE  ( Extent1.USER_ID = #{userId} )
-					          AND ( 1 = Extent1.STUS_ID )
-					 ORDER BY  Extent2.MODULE_UNIT_ID         
-    </select>
-    
-    <select id="selectPosUserWarehoseIdJson" parameterType="Map" resultType="egovMap">
-					SELECT Extent3.WH_LOC_ID WH_LOC_ID  ,
-					       Extent3.WH_LOC_CODE WH_LOC_CODE  ,
-					       Extent3.WH_LOC_DESC WH_LOC_DESC  ,
-					       Extent3.WH_LOC_ADD1 WH_LOC_ADD1  ,
-					       Extent3.WH_LOC_ADD2 WH_LOC_ADD2  ,
-					       Extent3.WH_LOC_ADD3 WH_LOC_ADD3  ,
-					       Extent3.WH_LOC_AREA_ID WH_LOC_AREA_ID  ,
-					       Extent3.WH_LOC_POST_CODE_ID WH_LOC_POST_CODE_ID  ,
-					       Extent3.WH_LOC_STATE_ID WH_LOC_STATE_ID  ,
-					       Extent3.WH_LOC_CNTY_ID WH_LOC_CNTY_ID  ,
-					       Extent3.WH_LOC_TEL1 WH_LOC_TEL1  ,
-					       Extent3.WH_LOC_TEL2 WH_LOC_TEL2  ,
-					       Extent3.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
-					       Extent3.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
-					       Extent3.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
-					       Extent3.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
-					       Extent3.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
-					       Extent3.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
-					       Extent3.CODE2 CODE2  ,
-					       Extent3.DESC2 DESC2  ,
-					       Extent3.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
-					       Extent3.WH_LOC_MOBILE WH_LOC_MOBILE  
-					  FROM SYS0047M Extent1
-					         LEFT JOIN SYS0005M Extent2   ON Extent1.USER_BRNCH_ID = Extent2.BRNCH_ID
-					         JOIN SYS0028M Extent3   ON ( Extent1.USER_BRNCH_ID = Extent3.WH_LOC_BRNCH_ID )
-					         OR ( Extent1.USER_BRNCH_ID IS NULL )
-					         AND ( Extent3.WH_LOC_BRNCH_ID IS NULL )
-					 WHERE  ( Extent1.USER_ID = #{userId} )
-					          AND ( 277 = Extent3.WH_LOC_TYPE_ID )
-					          AND ( 1 = Extent3.WH_LOC_STUS_ID )
-					          AND ( 'A' = Extent3.WH_LOC_STK_GRAD )
-    </select>
-    
-    <select id="selectPosReasonJsonList" resultType="egovMap">
+     
+     <select id="selectPSMItmList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+			SELECT 
+			       Project4.CODE_DESC || ' - ' || Project4.STK_DESC CODE_NAME,
+                   Project4.C1 C1  ,
+                   Project4.CODE_DESC  ,
+                   Project4.CODE_ID CODE_RE_ID,
+                   Project4.C2 C2  ,
+                   Project4.STK_ID STK_ID  ,
+                   Project4.DESCRIPTION1 DESCRIPTION1  ,
+                   Project4.STK_CODE CODE_ID  ,
+                   Project4.STK_DESC STK_DESC  ,
+                   Project4.STK_CTGRY_ID STK_CTGRY_ID  ,
+                   Project4.STK_TYPE_ID STK_TYPE_ID  ,
+                   Project4.STUS_CODE_ID STUS_CODE_ID  ,
+                   Project4.IS_SIRIM IS_SIRIM  ,
+                   Project4.IS_NCV IS_NCV  ,
+                   Project4.QTY_PER_CARTON QTY_PER_CARTON  ,
+                   Project4.UPD_USER_ID UPD_USER_ID  ,
+                   Project4.UPD_DT UPD_DT  ,
+                   Project4.IS_SYNCH IS_SYNCH  ,
+                   Project4.NET_WT NET_WT  ,
+                   Project4.GROS_WT GROS_WT  ,
+                   Project4.MEASURE_CBM MEASURE_CBM  ,
+                   Project4.MASTER_STK_ID MASTER_STK_ID  ,
+                   Project4.STK_GRAD STK_GRAD  ,
+                   Project4.STK_IMG STK_IMG  ,
+                   Project4.BS_POINT BS_POINT  ,
+                   Project4.UNIT_VALU UNIT_VALU  ,
+                   Project4.STK_COMM_OS_AS STK_COMM_OS_AS  ,
+                   Project4.STK_COMM_AS STK_COMM_AS  ,
+                   Project4.STK_COMM_OS_BS STK_COMM_OS_BS  ,
+                   Project4.STK_COMM_BS STK_COMM_BS  ,
+                   Project4.STK_COMM_OS_INS STK_COMM_OS_INS  ,
+                   Project4.STK_COMM_INS STK_COMM_INS  ,
+                   Project4.STK_ALLOW_SALES STK_ALLOW_SALES  ,
+                   Project4.IS_SVC_STK IS_SVC_STK    
+			  FROM ( SELECT 1 C1  ,
+			                Distinct2.CODE_DESC CODE_DESC  ,
+			                Distinct2.CODE_ID,
+			                Distinct3.STK_ID STK_ID  ,
+			                Distinct3.STK_CODE STK_CODE  ,
+			                Distinct3.STK_DESC STK_DESC  ,
+			                Distinct3.STK_CTGRY_ID STK_CTGRY_ID  ,
+			                Distinct3.STK_TYPE_ID STK_TYPE_ID  ,
+			                Distinct3.STUS_CODE_ID STUS_CODE_ID  ,
+			                Distinct3.IS_SIRIM IS_SIRIM  ,
+			                Distinct3.IS_NCV IS_NCV  ,
+			                Distinct3.QTY_PER_CARTON QTY_PER_CARTON  ,
+			                Distinct3.UPD_USER_ID UPD_USER_ID  ,
+			                Distinct3.UPD_DT UPD_DT  ,
+			                Distinct3.IS_SYNCH IS_SYNCH  ,
+			                Distinct3.NET_WT NET_WT  ,
+			                Distinct3.GROS_WT GROS_WT  ,
+			                Distinct3.MEASURE_CBM MEASURE_CBM  ,
+			                Distinct3.MASTER_STK_ID MASTER_STK_ID  ,
+			                Distinct3.STK_GRAD STK_GRAD  ,
+			                Distinct3.STK_IMG STK_IMG  ,
+			                Distinct3.BS_POINT BS_POINT  ,
+			                Distinct3.UNIT_VALU UNIT_VALU  ,
+			                Distinct3.STK_COMM_OS_AS STK_COMM_OS_AS  ,
+			                Distinct3.STK_COMM_AS STK_COMM_AS  ,
+			                Distinct3.STK_COMM_OS_BS STK_COMM_OS_BS  ,
+			                Distinct3.STK_COMM_BS STK_COMM_BS  ,
+			                Distinct3.STK_COMM_OS_INS STK_COMM_OS_INS  ,
+			                Distinct3.STK_COMM_INS STK_COMM_INS  ,
+			                Distinct3.STK_ALLOW_SALES STK_ALLOW_SALES  ,
+			                Distinct3.IS_SVC_STK IS_SVC_STK  ,
+			                Distinct3.CODE_DESC DESCRIPTION1  ,
+			                CASE 
+			                     WHEN ( Distinct3.STK_ID IS NULL ) THEN UTILS.CONVERT_TO_NUMBER('',10,0)
+			                ELSE 1
+			                   END C2  
+			         FROM ( SELECT DISTINCT Distinct1.CODE_DESC CODE_DESC,
+			                                Distinct1.CODE_ID  
+			                FROM ( SELECT DISTINCT Extent1.STK_ID STK_ID  ,
+			                                       Extent1.STK_CODE STK_CODE  ,
+			                                       Extent1.STK_DESC STK_DESC  ,
+			                                       Extent1.STK_CTGRY_ID STK_CTGRY_ID  ,
+			                                       Extent1.STK_TYPE_ID STK_TYPE_ID  ,
+			                                       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+			                                       Extent1.IS_SIRIM IS_SIRIM  ,
+			                                       Extent1.IS_NCV IS_NCV  ,
+			                                       Extent1.QTY_PER_CARTON QTY_PER_CARTON  ,
+			                                       Extent1.UPD_USER_ID UPD_USER_ID  ,
+			                                       Extent1.UPD_DT UPD_DT  ,
+			                                       Extent1.IS_SYNCH IS_SYNCH  ,
+			                                       Extent1.NET_WT NET_WT  ,
+			                                       Extent1.GROS_WT GROS_WT  ,
+			                                       Extent1.MEASURE_CBM MEASURE_CBM  ,
+			                                       Extent1.MASTER_STK_ID MASTER_STK_ID  ,
+			                                       Extent1.STK_GRAD STK_GRAD  ,
+			                                       Extent1.STK_IMG STK_IMG  ,
+			                                       Extent1.BS_POINT BS_POINT  ,
+			                                       Extent1.UNIT_VALU UNIT_VALU  ,
+			                                       Extent1.STK_COMM_OS_AS STK_COMM_OS_AS  ,
+			                                       Extent1.STK_COMM_AS STK_COMM_AS  ,
+			                                       Extent1.STK_COMM_OS_BS STK_COMM_OS_BS  ,
+			                                       Extent1.STK_COMM_BS STK_COMM_BS  ,
+			                                       Extent1.STK_COMM_OS_INS STK_COMM_OS_INS  ,
+			                                       Extent1.STK_COMM_INS STK_COMM_INS  ,
+			                                       Extent1.STK_ALLOW_SALES STK_ALLOW_SALES  ,
+			                                       Extent1.IS_SVC_STK IS_SVC_STK  ,
+			                                       Extent2.CODE_DESC CODE_DESC,
+			                                       Extent2.CODE_ID
+			                       FROM SYS0026M Extent1
+			                              LEFT JOIN SYS0013M Extent2   ON Extent1.STK_TYPE_ID = Extent2.CODE_ID
+			                        WHERE  ( 1 = Extent1.STUS_CODE_ID )
+			                                 AND ( ( 61 <> Extent1.STK_TYPE_ID )
+			                                 OR ( ( 61 = Extent1.STK_TYPE_ID )
+			                                 AND ( 965 = Extent1.STK_ID ) ) ) ) Distinct1 ) Distinct2
+			                LEFT JOIN ( SELECT DISTINCT Extent3.STK_ID STK_ID  ,
+			                                            Extent3.STK_CODE STK_CODE  ,
+			                                            Extent3.STK_DESC STK_DESC  ,
+			                                            Extent3.STK_CTGRY_ID STK_CTGRY_ID  ,
+			                                            Extent3.STK_TYPE_ID STK_TYPE_ID  ,
+			                                            Extent3.STUS_CODE_ID STUS_CODE_ID  ,
+			                                            Extent3.IS_SIRIM IS_SIRIM  ,
+			                                            Extent3.IS_NCV IS_NCV  ,
+			                                            Extent3.QTY_PER_CARTON QTY_PER_CARTON  ,
+			                                            Extent3.UPD_USER_ID UPD_USER_ID  ,
+			                                            Extent3.UPD_DT UPD_DT  ,
+			                                            Extent3.IS_SYNCH IS_SYNCH  ,
+			                                            Extent3.NET_WT NET_WT  ,
+			                                            Extent3.GROS_WT GROS_WT  ,
+			                                            Extent3.MEASURE_CBM MEASURE_CBM  ,
+			                                            Extent3.MASTER_STK_ID MASTER_STK_ID  ,
+			                                            Extent3.STK_GRAD STK_GRAD  ,
+			                                            Extent3.STK_IMG STK_IMG  ,
+			                                            Extent3.BS_POINT BS_POINT  ,
+			                                            Extent3.UNIT_VALU UNIT_VALU  ,
+			                                            Extent3.STK_COMM_OS_AS STK_COMM_OS_AS  ,
+			                                            Extent3.STK_COMM_AS STK_COMM_AS  ,
+			                                            Extent3.STK_COMM_OS_BS STK_COMM_OS_BS  ,
+			                                            Extent3.STK_COMM_BS STK_COMM_BS  ,
+			                                            Extent3.STK_COMM_OS_INS STK_COMM_OS_INS  ,
+			                                            Extent3.STK_COMM_INS STK_COMM_INS  ,
+			                                            Extent3.STK_ALLOW_SALES STK_ALLOW_SALES  ,
+			                                            Extent3.IS_SVC_STK IS_SVC_STK  ,
+			                                            Extent4.CODE_DESC CODE_DESC,
+			                                            Extent4.CODE_ID
+			                            FROM SYS0026M Extent3
+			                                   LEFT JOIN SYS0013M Extent4   ON Extent3.STK_TYPE_ID = Extent4.CODE_ID
+			                             WHERE  ( 1 = Extent3.STUS_CODE_ID )
+			                                      AND ( ( 61 <> Extent3.STK_TYPE_ID )
+			                                      OR ( ( 61 = Extent3.STK_TYPE_ID )
+			                                      AND ( 965 = Extent3.STK_ID ) ) ) ) Distinct3   ON ( Distinct2.CODE_DESC = Distinct3.CODE_DESC )
+			                OR ( ( Distinct2.CODE_DESC IS NULL )
+			                AND ( Distinct3.CODE_DESC IS NULL ) ) ) Project4
+			                WHERE Project4.CODE_ID = #{itemType}
+			  ORDER BY Project4.CODE_DESC ASC,
+			           Project4.C2 ASC
+           ]]>
+     </select>
+     
+     <select id="selectPIItmList" parameterType="Map" resultType="egovMap">
+            SELECT Project1.ITM_ID CODE_ID  ,
+                   Project1.ITM_CODE STK_CODE ,
+                   Project1.ITM_CODE || ' - ' || Project1.ITM_DESC CODE_NAME,
+                   Project1.ITM_DESC  STK_DESC ,
+                   NVL(Project1.ITM_PRC , 0)  AMT,
+                   Project1.ALLOW_SALES,
+                   100 QTY   
+            FROM ( SELECT Extent1.ITM_ID   ,
+                            Extent1.ITM_CODE   ,
+                            Extent1.ITM_DESC   ,
+                            Extent1.ALLOW_SALES   ,
+                            Extent2.ITM_PRC   
+                     FROM LOG0026D Extent1
+                            JOIN LOG0027D Extent2   ON Extent2.ITM_ID = Extent1.ITM_ID
+                     WHERE   1 = Extent1.STUS_CODE_ID 
+                               <if test=" null != itemType and '' != itemType">
+                               AND  Extent1.ITM_TYPE_ID = #{itemType} 
+                               </if>
+                               AND  Extent1.ALLOW_SALES = 1 
+                                <if test=" null != itmIdArray    and    itmIdArray.length > 0">
+                                    AND Extent1.ITM_ID IN
+                                    <foreach collection="itmIdArray" item = "item" open = "(" separator="," close=")">
+                                        #{item}
+                                    </foreach>
+                               </if>
+                                ) Project1
+              ORDER BY Project1.ITM_CODE ASC
+     </select>
+     
+     
+     <select id="chkStockList" parameterType="Map" resultType="egovMap">
+                    SELECT 
+                        Project1.LOC_ID,
+                        Project1.STK_CODE,
+                        Project1.STK_DESC,
+                        Project1.STK_TYPE_ID,
+                        Project1.STK_CTGRY_ID,
+                        Project1.QTY,
+                        Project1.MOV_QTY,
+                        NVL(Project1.AMT , 0) AMT,                     
+                        (AMT * 100) / 106 SUB_CHANGES,
+                        AMT - ((AMT * 100) / 106) TAXES
+                    FROM ( 
+                            SELECT 
+                                NVL(Extent2.LOC_ID, 0) LOC_ID,
+                                Extent1.STK_CODE,
+                                Extent1.STK_DESC,
+                                Extent1.STK_TYPE_ID,
+                                Extent1.STK_CTGRY_ID,
+                                NVL(Extent2.QTY , 0) QTY,
+                                Extent2.MOV_QTY,
+                                Extent3.AMT
+                            FROM                     
+                                SYS0026M Extent1 
+                            LEFT JOIN 
+                                LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
+                            LEFT JOIN
+                                <![CDATA[
+                               (SELECT 
+                                    T1.STK_ID, T1.AMT, T1.UPD_DT
+                                FROM 
+                                (SELECT STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT FROM SAL0016M WHERE MEM_PAC_ID = 0) T1
+                                WHERE T1.CNT <= 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID) Project1
+                    WHERE   1 = 1
+					]]>
+					   <if test=" null != stkId and stkId.length > 0">
+					          AND Project1.STK_CODE IN
+					          <foreach collection="stkId" item="item" open="(" separator="," close=")">
+					              #{item}
+					          </foreach>
+					    </if> 
+     </select>
+     
+     <select id="getMemCode" parameterType="Map" resultType="egovMap">
 				SELECT 
-				       RESN_ID CODE_ID ,
-				       CODE || ' - ' || RESN_DESC AS CODE_NAME  
-				FROM 
-				       SYS0032M 
-				WHERE
-				       1 = STUS_CODE_ID 
-				       
-				<if test="groupCode != null and groupCode !=''">
-		           AND RESN_TYPE_ID = #{groupCode}
-		            
-		        </if>
-        
+                    T1.MEM_CODE,
+                    T1.MEM_ID,
+                    T1.BRNCH 
+                FROM 
+                    ORG0001D T1 INNER JOIN SYS0047M T2
+                ON 
+                    T1.MEM_CODE = T2.USER_NAME
+                WHERE 
+                    T2.USER_ID = #{userId}
+     </select>
+     
+     <select id="getReasonCodeList" parameterType="Map" resultType="egovMap">
+                SELECT 
+                    RESN_ID CODE_ID,
+                    CODE , 
+                    RESN_DESC CODE_NAME
+                FROM 
+                    SYS0032M 
+                WHERE 
+                    RESN_TYPE_ID = #{masterCode} 
+                ORDER BY RESN_ID
+     </select>
+     
+     <select id="getFilterSerialNum" parameterType="Map" resultType="egovMap">
+                    SELECT 
+                        T1.MATNR,
+                        T1.SERIAL_NO,
+                        T3.STK_DESC,
+                        T2.USER_ID,
+                        T2.USER_NAME,
+                        T2.WH_LOC_CODE,
+                        T2.WH_LOC_ID
+                    FROM 
+                        LOG0063D T1 
+                        INNER JOIN (                    
+                                    SELECT 
+                                        Extent1.USER_ID,
+                                        Extent1.USER_NAME,
+                                        Extent2.WH_LOC_CODE,
+                                        Extent2.WH_LOC_ID                                        
+                                    FROM 
+                                        SYS0047M Extent1 
+                                        LEFT JOIN SYS0028M Extent2 ON Extent2.WH_LOC_CODE = Extent1.USER_NAME 
+                                   ) T2 ON T2.WH_LOC_ID = T1.LOC_ID
+                         INNER JOIN SYS0026M T3  ON  T3.STK_CODE = T1.MATNR       
+                      WHERE 
+                       T2.USER_ID = #{userId}
+                       <if test=" null != basketStkCode and '' != basketStkCode">
+                            AND T1.MATNR = #{basketStkCode}
+                       </if> 
+                        
+                        <if test="null != filterArr and filterArr.length > 0">
+                            AND T1.SERIAL_NO IN
+                            <foreach collection="filterArr" item="item" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                        </if>
+                         
+                        <if test="null != serialArr and serialArr.length > 0">
+                            AND T1.SERIAL_NO NOT IN
+                            <foreach collection="serialArr" item="idx" open="(" separator="," close=")">
+                                #{idx}
+                            </foreach>
+                        </if> 
+     </select>
+     
+     <select id="getItemBankAccCodeByItemTypeID" parameterType="Map" resultType="egovMap">
+					SELECT Extent1.ITM_BANK_TYPE_ID   ,
+					       Extent1.CR_ACC_ID   , 
+					       Extent1.DR_ACC_ID   ,
+					       Extent1.STUS_ID   ,
+					       Extent1.UPD_USER_ID   ,
+					       Extent1.UPD_DT   
+					FROM LOG0025M Extent1
+					WHERE   Extent1.ITM_BANK_TYPE_ID = #{insPosSystemType} 
+					AND 1 = Extent1.STUS_ID
+					<![CDATA[ 
+					AND ROWNUM <= 1
+					]]>
+     </select>
+     
+     <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+        SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
     </select>
+    
+    <select id="getSeqSal0057D" resultType="java.lang.Integer">
+         SELECT SAL0057D_POS_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqSal0058D" resultType="java.lang.Integer">
+        SELECT SAL0058D_POS_ITM_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqPay0007D" resultType="java.lang.Integer">
+        SELECT PAY0007D_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqPay0016D" resultType="java.lang.Integer">
+        SELECT PAY0016D_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqPay0031D" resultType="java.lang.Integer">
+        SELECT PAY0031D_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqPay0032D" resultType="java.lang.Integer">
+        SELECT PAY0032D_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqLog0014D" resultType="java.lang.Integer">
+        SELECT LOG0014D_SR_CARD_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqPay0069D" resultType="java.lang.Integer">
+          SELECT PAY0069D_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqSal0147M" resultType="java.lang.Integer">
+        SELECT SAL0147M_POS_SERIAL_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getUserFullName" parameterType="Map" resultType="egovMap">
+		 SELECT
+		    USER_NAME || ' - ' || USER_FULL_NAME NAME 
+		 FROM 
+		    SYS0047M 
+		 WHERE
+		    USER_NAME = #{salesmanPopCd}
+    </select>
+    
+    <insert id="insertPosMaster" parameterType="Map" >
+        INSERT INTO SAL0057D
+				  ( POS_ID, 
+				    POS_NO, 
+				    POS_BILL_ID, 
+				    POS_CUST_NAME,
+				    POS_DT,
+				    POS_TYPE_ID, 
+				    POS_MODULE_TYPE_ID, 
+				    POS_TOT_AMT,
+				    POS_TOT_CHRG,
+				    POS_TOT_TXS,
+				    POS_TOT_DSCNT, 
+				    POS_WH_ID, 
+				    POS_REM,
+				    POS_MTCH_ID, 
+				    POS_MEM_ID,
+				    POS_CUST_ID,
+				    POS_CRT_USER_ID,
+				    POS_CRT_DT,
+				    POS_CRT_DEPT_ID, 
+				    CR_ACC_ID, 
+				    DR_ACC_ID,
+				    POS_RESN_ID,
+				    BRNCH_ID,
+				    POS_RCV_DT,
+				    STUS_ID,
+				    CRT_USER_ID, 
+				    CRT_DT,
+				    UPD_USER_ID,
+				    UPD_DT )
+  VALUES ( #{posMasterSeq},
+           #{docNoPsn},
+           #{posBillId},
+           #{posCustName},
+           SYSDATE,
+           #{insPosSystemType}, 
+           #{insPosModuleType},
+           #{posTotalAmt},
+           #{posCharge},
+           #{posTaxes},
+           #{posDiscount}, 
+           #{hidLocId},
+           #{posRemark},
+           #{posMtchId},
+           #{salesmanPopId},
+           #{posCustomerId},
+           #{userId},
+           SYSDATE, 
+           #{userDeptId}, 
+           #{crAccId},
+           #{drAccId},
+           #{posReason},
+           #{cmbWhBrnchIdPop},
+           TO_DATE(#{recvDate}, 'DD/MM/YYYY'),
+           #{posStusId},
+           #{userId},
+           SYSDATE,
+           #{userId},
+           SYSDATE)
+    </insert>
+    
+    <insert id="insertPosDetail" parameterType="Map">
+			INSERT INTO SAL0058D
+			  ( POS_ITM_ID,
+			    POS_ID,
+			    POS_ITM_STOCK_ID, 
+			    POS_ITM_QTY, 
+			    POS_ITM_UNIT_PRC,
+			    POS_ITM_TOT, 
+			    POS_ITM_CHRG,
+			    POS_ITM_TXS,
+			    POS_ITM_TAX_CODE_ID,
+			    MEM_ID,
+			    RCV_STUS_ID,
+			    CRT_USER_ID, 
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT )
+			  VALUES ( #{posDetailSeq},
+			           #{posMasterSeq},
+			           #{stkCode},
+			           #{inputQty}, 
+			           #{amt},
+			           #{totalAmt},
+			           #{subTotal}, 
+			           #{subChng},
+			           #{posItemTaxCodeId},
+			           #{posMemId},
+			           #{posRcvStusId},
+			           #{userId},
+			           SYSDATE,
+			           #{userId},
+			           SYSDATE)
+    </insert>
+    
+    <insert id="insertDeductionPosDetail" parameterType="Map">
+            INSERT INTO SAL0058D
+              ( POS_ITM_ID,
+                POS_ID,
+                POS_ITM_STOCK_ID, 
+                POS_ITM_QTY, 
+                POS_ITM_UNIT_PRC,
+                POS_ITM_TOT, 
+                POS_ITM_CHRG,
+                POS_ITM_TXS,
+                POS_ITM_TAX_CODE_ID,
+                MEM_ID,
+                MEM_CODE,
+                MEM_TYPE,
+                NAME,
+                FULL_NAME,
+                NRIC,
+                MEM_STUS_ID,
+                RCV_STUS_ID,
+                CRT_USER_ID, 
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT )
+              VALUES ( #{posDetailDuducSeq},
+                       #{posMasterSeq},
+                       #{posDetailStkId},
+                       #{posDetailQty}, 
+                       #{posDetailUnitPrc},
+                       #{posDetailTotal},
+                       #{posDetailCharge}, 
+                       #{posDetailTaxs},
+                       #{posItemTaxCodeId},
+                       #{posMemId},
+                       #{posMemCode},
+                       #{posMemType},
+                       #{posMemName},
+                       #{posMemFullName},
+                       #{posMemNric},
+                       #{posMemStusId},
+                       #{posRcvStusId},
+                       #{userId},
+                       SYSDATE,
+                       #{userId},
+                       SYSDATE)
+    </insert>
+    
+    <insert id="insertPosBilling" parameterType="Map">
+				INSERT INTO PAY0007D
+				  ( BILL_ID,
+				    BILL_TYPE_ID, 
+				    BILL_SO_ID, 
+				    BILL_MEM_ID, 
+				    BILL_AS_ID,
+				    BILL_PAY_TYPE_ID,
+				    BILL_NO,
+				    BILL_MEM_SHIP_NO,
+				    BILL_DT,
+				    BILL_AMT, 
+				    BILL_REM, 
+				    BILL_IS_PAID, 
+				    BILL_IS_COMM,
+				    UPD_USER_ID,
+				    UPD_DT, 
+				    SYNC_CHK,
+				    COURS_ID, 
+				    STUS_ID )
+				  VALUES ( #{posBillSeq},
+				           #{posBillTypeId},
+				           #{posBillSoId},
+				           #{posBillMemId}, 
+				           #{posBillAsId}, 
+				           #{posBillPayTypeId}, 
+				           #{docNoPsn}, 
+				           #{posMemberShipNo}, 
+				           SYSDATE, 
+				           #{posBillAmt}, 
+				           #{posBillRem}, 
+				           #{posBillIsPaid},
+				           #{posBillIsComm},
+				           #{userId},
+				           SYSDATE,
+				           #{posSyncChk},
+				           #{posCourseId},
+				           #{posStatusId})
+    </insert>
+    
+    <update id="updatePosMasterPosBillId" parameterType="Map">
+				UPDATE 
+				    SAL0057D
+				SET 
+				    POS_BILL_ID = #{posBillSeq}
+				WHERE 
+				    POS_ID = #{posMasterSeq}
+    </update>
+    
+    <insert id="insertPosOrderBilling" parameterType="Map">
+        INSERT INTO PAY0016D
+				  ( ACC_BILL_ID,
+				    ACC_BILL_TASK_ID,
+				    ACC_BILL_REF_DT,
+				    ACC_BILL_REF_NO,
+				    ACC_BILL_ORD_ID,
+				    ACC_BILL_ORD_NO,
+				    ACC_BILL_TYPE_ID,
+				    ACC_BILL_MODE_ID,
+				    ACC_BILL_SCHDUL_ID,
+				    ACC_BILL_SCHDUL_PRIOD,
+				    ACC_BILL_ADJ_ID, 
+				    ACC_BILL_SCHDUL_AMT,
+				    ACC_BILL_ADJ_AMT,
+				    ACC_BILL_TXS_AMT, 
+				    ACC_BILL_NET_AMT,
+				    ACC_BILL_STUS,
+				    ACC_BILL_REM, 
+				    ACC_BILL_CRT_DT,
+				    ACC_BILL_CRT_USER_ID,
+				    ACC_BILL_GRP_ID,
+				    ACC_BILL_TAX_CODE_ID,
+				    ACC_BILL_TAX_RATE,
+				    ACC_BILL_ACCT_CNVR,
+				    ACC_BILL_CNTRCT_ID )
+		  VALUES (     #{posOrderBillSeq}, 
+				            #{posOrdBillTaskId},
+				            SYSDATE,
+				            #{posOrdBillRefNo},
+				            #{posOrdBillOrdId},
+				            #{posOrdBillOrdNo},
+				            #{posOrdBillTypeId},
+				            #{posOrdBillModeId}, 
+				            #{posOrdBillScheduleId}, 
+				            #{posOrdBillSchedulePeriod}, 
+				            #{posOrdBillAdjustmentId}, 
+				            #{posOrdBillScheduleAmt},
+				            #{posOrdBillAdjustmentAmt},
+				            #{posOrdBillTaxesAmt}, 
+				            #{posOrdBillNetAmount},
+				            #{posOrdBillStatus}, 
+				            #{posOrdBillRem},
+				            SYSDATE,
+				            #{userId},
+				            #{posOrdBillGroupId},
+				            #{posOrdBillTaxCodeId}, 
+				            #{posOrdBillTaxRate}, 
+				            #{posOrdBillAcctCnvr}, 
+				            #{posOrdBillCntrctId})
+    </insert>
+    
+    <insert id="insertPosTaxInvcMisc" parameterType="Map"> 
+        INSERT INTO PAY0031D
+							  ( TAX_INVC_ID,
+							    TAX_INVC_REF_NO,
+							    TAX_INVC_REF_DT,
+							    TAX_INVC_SVC_NO, 
+							    TAX_INVC_TYPE, 
+							    TAX_INVC_CUST_NAME,
+							    TAX_INVC_CNTC_PERSON,
+							    <!-- 추후 삭제 -->
+							    TAX_INVC_ADDR1,
+							    TAX_INVC_ADDR2, 
+							    TAX_INVC_ADDR3, 
+							    TAX_INVC_ADDR4,
+							    TAX_INVC_POST_CODE,
+							    TAX_INVC_STATE_NAME,
+							    TAX_INVC_CNTY,  
+							    
+							    TAX_INVC_TASK_ID, 
+							    TAX_INVC_REM, 
+							    TAX_INVC_CHRG, 
+							    TAX_INVC_TXS, 
+							    TAX_INVC_AMT_DUE,
+							    TAX_INVC_CRT_DT,
+							    TAX_INVC_CRT_USER_ID )
+						  VALUES ( #{accTaxInvMiscSeq},
+								           #{posTaxInvRefNo}, 
+								           SYSDATE,
+								           #{posTaxInvSvcNo},
+								           #{posTaxInvType},
+								           #{posTaxInvCustName},
+								           #{posTaxInvCntcPerson},
+								            <!-- 추후 삭제 -->
+								           #{addr1},
+								           #{addr2},
+								           #{addr3},
+								           #{addr4},
+								           #{postCode},
+								           #{stateName},
+								           #{cnty},
+								           
+								           #{posTaxInvTaskId},
+								           #{posTaxInvUserName},
+								           #{posTaxInvCharges},
+								           #{posTaxInvTaxes},
+								           #{posTaxInvTotalCharges},
+								           SYSDATE,
+								           #{userId}
+								           )
+    </insert>
+    
+    <insert id="insertPosTaxInvcMiscSub" parameterType="Map">
+        INSERT INTO PAY0032D
+					  ( INVC_ITM_ID,
+					    TAX_INVC_ID,
+					    INVC_ITM_TYPE,
+					    INVC_ITM_ORD_NO,
+					    INVC_ITM_PO_NO,
+					    INVC_ITM_CODE,
+					    INVC_ITM_DESC1,
+					    INVC_ITM_DESC2,
+					    INVC_ITM_SERIAL_NO,
+					    INVC_ITM_QTY, 
+					    INVC_ITM_UNIT_PRC, 
+					    INVC_ITM_GST_RATE,
+					    INVC_ITM_GST_TXS, 
+					    INVC_ITM_CHRG, 
+					    INVC_ITM_AMT_DUE,
+					    <!-- 추후 삭제  Magic Address -->
+					    INVC_ITM_ADD1, 
+					    INVC_ITM_ADD2, 
+					    INVC_ITM_ADD3, 
+					    INVC_ITM_ADD4, 
+					    INVC_ITM_POST_CODE,
+					    INVC_ITM_AREA_NAME, 
+					    INVC_ITM_STATE_NAME,
+					    INVC_ITM_CNTY,
+					    
+					    INVC_ITM_INSTALL_DT, 
+					    INVC_ITM_RETN_DT, 
+					    INVC_ITM_BILL_REF_NO )
+					  VALUES ( #{invDetailSeq},
+					           #{accTaxInvMiscSeq},
+					           #{invItemTypeID}, 
+					           #{posTaxInvSubOrdNo},
+					           #{posTaxInvSubItmPoNo},
+					           #{stkCode},
+					           #{stkDesc},
+					           #{posTaxInvSubDescSub},
+					           #{posTaxInvSubSerialNo}, 
+					           #{inputQty},
+					           #{amt},
+					           #{posTaxInvSubGSTRate},
+					           #{subChng},
+					           #{subTotal},
+					           #{totalAmt},
+					           <!-- 추후 삭제 Magic Address -->
+					           #{posTaxInvSubAddr1},
+					           #{posTaxInvSubAddr2},
+					           #{posTaxInvSubAddr3},
+					           #{posTaxInvSubAddr4},
+					           #{posTaxInvSubPostCode},
+					           #{posTaxInvSubAreaName},
+					           #{posTaxInvSubStateName}, 
+					           #{posTaxInvSubCntry},					           
+					           
+					           NULL,
+					           NULL, 
+					           NULL )
+    </insert>
+    
+    <insert id="insertStkRecord" parameterType="Map">
+		        INSERT INTO LOG0014D
+		                ( SR_CARD_ID,
+		                  LOC_ID, 
+		                  STOCK_ID, 
+		                  ENTRY_DT,
+		                  TYPE_ID, 
+		                  REF_NO,
+		                  SALES_ORD_ID,
+		                  ITM_NO, 
+		                  SRC_ID,
+		                  PRJCT_ID, 
+		                  BATCH_NO,
+		                  QTY,
+		                  CURR_ID, 
+		                  CURR_RATE, 
+		                  COST,
+		                  PRC, 
+		                  REM,
+		                  SERIAL_NO,
+		                  INSTALL_NO,
+		                  COST_DT, 
+		                  APP_TYPE_ID,
+		                  STK_GRAD, 
+		                  INSTALL_FAIL,
+		                  IS_SYNCH,
+		                  ENTRY_MTH_ID,
+		                  ORGN,
+		                  TRANS_TYPE, 
+		                  DOC_LNE_NO, 
+		                  PO_NO,
+		                  INSERT_DT,
+		                  IS_GR,
+		                  PO_STUS )
+					  VALUES ( #{stkRecordSeq},
+					           #{locId}, 
+					           #{stkCode},
+					           SYSDATE,
+					           #{invStkRecordTypeId},
+					           #{invStkRecordRefNo},
+					           #{invStkRecordOrdId},
+					           #{invStkRecordItmNo},
+					           #{invStkRecordSourceId},
+					           #{invStkRecordProjectId},
+					           #{invStkRecordBatchNo},
+					           #{inputQty},
+					           #{invStkRecordCurrId}, 
+					           #{invStkRecordCurrRate},
+					           #{invStkRecordCost},
+					           #{invStkRecordPrice},
+					           #{invStkRecordRem},
+					           #{invStkRecordSerialNo},
+					           #{invStkRecordInstallNo},
+					           SYSDATE, 
+					           #{invStkRecordAppTypeId},
+					           #{invStkRecordStkGrade},
+					           #{invStkRecordInstallFail},
+					           #{invStkRecordIsSynch},
+					           #{invStkRecordEntryMthId},
+					           NULL,
+					           NULL,
+					           NULL,
+					           NULL,
+					           NULL,
+					           NULL,
+					           NULL )
+    </insert>
+    
+    <insert id="insertSerialNo" parameterType="Map">
+			        INSERT INTO SAL0147M( POS_SERIAL_ID, 
+			                                  POS_ID, 
+			                                  POS_ITM_STOCK_ID, 
+			                                  POS_SERIAL_NO,
+			                                  POS_ITM_STUS_ID, 
+			                                  CRT_DT, 
+			                                  CRT_USER_ID,
+			                                  UPD_DT, 
+			                                  UPD_USER_ID)
+                            VALUES (  #{serialSeq},
+                                           #{posMasterSeq}, 
+                                           #{matnr},
+                                           #{serialNo},
+                                           #{posItmStusId}, 
+                                           SYSDATE,
+                                           #{userId},
+                                           SYSDATE,
+                                           #{userId})
+    </insert>
 </mapper>

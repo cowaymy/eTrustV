@@ -7,21 +7,33 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface PosService {
 
-	List<EgovMap> selectWhList() throws Exception;
+	List<EgovMap> selectPosModuleCodeList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectStatusCodeList(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> selectPosJsonList(Map<String, Object> params) throws Exception;
 	
-	EgovMap selectPosViewPurchaseInfo(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectWhBrnchList() throws Exception;
 	
-	List<EgovMap> selectPosDetailJsonList(Map<String, Object> params) throws Exception;
+	EgovMap selectWarehouse(Map<String, Object> params) throws Exception;
 	
-	EgovMap selectPosViewPayInfo(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectPSMItmTypeList()throws Exception;
 	
-	List<EgovMap> selectPosPaymentJsonList(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectPIItmTypeList()throws Exception;
 	
-	List<EgovMap> selectPosUserInfo(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectPIItmList(Map<String, Object> params)throws Exception;
 	
-	EgovMap selectPosUserWarehoseIdJson(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectPSMItmList(Map<String, Object> params) throws Exception;
 	
-	List<EgovMap> selectPosReasonJsonList() throws Exception;
+	List<EgovMap> chkStockList(Map<String, Object> params) throws Exception;
+	
+	EgovMap getMemCode(Map<String, Object> params)throws Exception;
+	
+	List<EgovMap> getReasonCodeList(Map<String, Object> params)throws Exception;
+	
+	List<EgovMap> getFilterSerialNum(Map<String, Object> params)throws Exception;
+	
+	List<EgovMap> getConfirmFilterListAjax(Map<String, Object> params) throws Exception;
+	
+	Map<String, Object> insertPos(Map<String, Object> params) throws Exception;
 }

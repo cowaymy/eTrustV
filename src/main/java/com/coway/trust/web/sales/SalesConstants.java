@@ -182,4 +182,44 @@ public class SalesConstants {
 	public static final String ORDER_EDIT_TYPE_CD_DOC = "DOC"; //Documents Submission
 	public static final String ORDER_EDIT_TYPE_CD_GST = "GST"; //GST Certification
 	public static final String ORDER_EDIT_TYPE_CD_RFR = "RFR"; //Referrals Info
+	
+	//POS
+	public static final int POS_DETAIL_NON_RECEIVE = 96;   //96 == nonReceive
+	
+	public static final String POS_SALES_TYPE_FILTER = "1352"; //Filter Type
+	public static final String POS_SALES_TYPE_ITMBANK = "1353"; //Filter Type
+	public static final String POS_SALES_TYPE_OTHER_INCOME = "1357"; //Filter Type
+	public static final String POS_SALES_TYPE_ITMBANK_HQ = "1358"; //Filter Type
+	public static final String POS_SALES_MODULE_TYPE_POS_SALES = "2390"; //POS Sales
+	public static final String POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION = "2391"; //Deduction Commission
+	
+	public static final int POS_DRACC_ID_FILTER = 540;  //Filter - DR
+	public static final int POS_CRACC_ID_FILTER = 541;  //Filter - CR
+	public static final int POS_DRACC_ID_ITEMBANK = 540;  //Filter - CR
+	public static final int POS_CRACC_ID_ITEMBANK = 549;  //Filter - CR
+	public static final int POS_DRACC_ID_OTH_HQ_BANK = 548;
+	public static final int POS_CRACC_ID_OTH_HQ_BANK = 549;  
+	
+	public static final int POS_ITM_TAX_CODE_ID = 32;
+	public static final int POS_DOC_NO_PSN_NO = 144;   // PSN No.
+	public static final int POS_DOC_NO_INVOICE_NO = 143; // Invoice No. BR68
+	public static final String POS_CUST_ID = "107205"; // ASIS  //posM.POSCustomerID
+	
+	public static final int POS_BILL_ID = 0;  //pos Bill Id
+	public static final int POS_BILL_TYPE_ID =  569;
+	public static final String POS_ORD_BILL_TYPE_ID = "1159";  // posOrdBillTypeId
+	public static final String POS_ORD_BILL_MODE_ID = "1351";  // posOrdBillModeId
+	public static final int POS_ORD_BILL_TAX_CODE_ID = 32;    //posOrdBillTaxCodeId
+	public static final int POS_ORD_BILL_TAX_RATE = 6;  //6  posOrdBillTaxRate
+	
+	public static final String POS_TAX_INVOICE_TYPE = "142";  //142 posTaxInvType
+	public static final int POS_INV_ITM_GST_RATE = 6; //InvoiceItemGSTRate // 6
+	
+	public static final String POS_STOCK_TYPE_FILTER = "62";
+	public static final String POS_STOCK_TYPE_PARTS = "63";
+	public static final int POS_INV_STK_TYPE_ID = 571; //invStkCard.TypeID = 571;
+	
+	public static final int POS_INV_SOURCE_ID = 147;   //invStkCard.SourceID = 477;
+	public static final int POS_INV_CURR_ID = 479;  //invStkCard.CurrID = 479;
+	public static final int POS_INV_CURR_RATE = 1;   //invStkRecordCurrRate
 }
