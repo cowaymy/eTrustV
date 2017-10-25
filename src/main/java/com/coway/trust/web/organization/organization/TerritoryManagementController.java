@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +26,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.organization.organization.TerritoryManagementService;
+import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.excel.ExcelReadComponent;
 import com.coway.trust.web.organization.organization.excel.TerritoryRawDataVO;
 
@@ -84,7 +88,7 @@ public class TerritoryManagementController {
 	 
 	
 	@RequestMapping(value = "/excelUpload", method = RequestMethod.POST)
-	public ResponseEntity readExcel(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
+	public ResponseEntity readExcel(MultipartHttpServletRequest request,SessionVO sessionVO) throws IOException, InvalidFormatException {
 
 		
 		ReturnMessage message = new ReturnMessage();
@@ -105,7 +109,7 @@ public class TerritoryManagementController {
 		param.put("comBranchTypep", request.getParameter("comBranchTypep"));
 		param.put("voList", vos);
 		
-		EgovMap  vailMap = territoryManagementService.uploadVaild(param);
+		EgovMap  vailMap = territoryManagementService.uploadVaild(param,sessionVO);
 		
 		
 		logger.debug("vailMap {}", vailMap.toString());
@@ -114,10 +118,70 @@ public class TerritoryManagementController {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage((String)vailMap.get("errMsg"));
 		}else{
-			
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage("Excel Upload Success");
 		}
 		
 		//결과 
 		return ResponseEntity.ok(message);
 	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTerritoryList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		String[] branchTypeList = request.getParameterValues("comBranchType");
+		params.put("branchTypeList", branchTypeList);
+		List<EgovMap> territoryList = territoryManagementService.selectTerritory(params);
+		logger.debug("territoryList {}", territoryList);
+		return ResponseEntity.ok(territoryList);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectDetailList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTerritoryDetailList( @RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap> territoryDetailList = territoryManagementService.selectMagicAddress(params);
+		logger.debug("territoryDetailList {}", territoryDetailList);
+		return ResponseEntity.ok(territoryDetailList);
+	}
+	
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/comfirmTerritory.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage>selectComfirmTerritory(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		EgovMap rtm = new EgovMap();
+		
+		boolean success = territoryManagementService.updateMagicAddressCode(params);
+		if(success){
+			message.setMessage("Confirm Success");
+		}else{
+			message.setMessage("Confirm Fail");
+		}
+		return ResponseEntity.ok(message);
+	}
+	
+	
 }
