@@ -33,12 +33,23 @@ public class RdcStockListDto {
 	@ApiModelProperty(value = "부품 id")
 	private int partsId;
 
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
+
 	public static RdcStockListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, RdcStockListDto.class);
 	}
 
 	public String getPartsCode() {
 		return partsCode;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 	public void setPartsCode(String partsCode) {
