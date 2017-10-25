@@ -320,6 +320,7 @@ var watingPopColumnLayout = [
     
     //review list 조회
     function fn_reviewLoadInfo(){
+    	
     	$('#payModeReview').removeAttr('disabled');
     	$('#keyBranchReview').removeAttr('disabled');
         Common.ajax("GET","/payment/selectReviewLoadInfo.do",$("#reviewForm").serialize(), function(result){
@@ -341,7 +342,7 @@ var watingPopColumnLayout = [
             			
             	}); title += modeText + ")";
             	
-            	$('#reviewListTitle').text("Review List -"+title);
+            	$('#reviewListTitle').text("Review List - "+title);
             }
             
         });
