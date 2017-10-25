@@ -28,12 +28,15 @@ public class RequestResultMListDto {
 
 	@ApiModelProperty(value = "gi locationName")
 	private String giLocationName;
-	
+
 	@ApiModelProperty(value = "gi 날짜")
 	private String giDate;
 
 	@ApiModelProperty(value = "gr 날짜")
 	private String grDate;
+
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
 
 	private List<RequestResultDListDto> partsList = null;
 
@@ -104,13 +107,21 @@ public class RequestResultMListDto {
 	public void setPartsList(List<RequestResultDListDto> partsList) {
 		this.partsList = partsList;
 	}
-	
+
 	public String getGiLocationName() {
 		return giLocationName;
 	}
 
 	public void setGiLocationName(String giLocationName) {
 		this.giLocationName = giLocationName;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
