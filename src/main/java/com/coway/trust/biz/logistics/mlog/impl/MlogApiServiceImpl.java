@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
 import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
 
@@ -237,5 +238,88 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 //		// TODO Auto-generated method stub
 //		return MlogApiMapper.getRequestStatusParts(setMap);
 //	}
+	
+	/**
+	 * 인서트 추가
+	 */
+	
+	@Override
+	public void saveInvenReqTransfer(List<Map<String, Object>> reqTransferMList) {
 
+		String seq = MlogApiMapper.selectStockMovementSeq();
+		String headtitle = "SMO";
+		Map<String, Object> insMap = null;
+		if (reqTransferMList.size() > 0) {
+			for (int i = 0; i <= 1; i++) {
+				insMap = (Map<String, Object>) reqTransferMList.get(i);
+				insMap.put("reqno", headtitle + seq);
+			}
+
+			MlogApiMapper.insStockMovementHead(insMap);
+
+			if (reqTransferMList.size() > 0) {
+				for (int i = 0; i < reqTransferMList.size(); i++) {
+					Map<String, Object> detailMap = (Map<String, Object>) reqTransferMList.get(i);
+					detailMap.put("reqno", headtitle + seq);
+					MlogApiMapper.insStockMovementDetail(detailMap);
+				}
+			}
+
+			MlogApiMapper.insertStockBooking(insMap);
+		}
+	}
+	
+	@Override
+	public void stockMovementReqDelivery(List<Map<String, Object>> reqTransferMList) {
+
+		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
+
+		
+		if (reqTransferMList.size() > 0) {
+
+			Map<String, Object> insMap = null;
+
+			for (int i = 0; i < reqTransferMList.size(); i++) {
+
+				Map<String, Object> tmpMap = (Map<String, Object>) reqTransferMList.get(i);
+
+				logger.info(" reqstno : {}", tmpMap.get("smoNo"));
+				tmpMap.put("delno", deliSeq);
+
+				MlogApiMapper.insertDeliveryStockMovementDetail(tmpMap);
+			}
+
+//			if (serialList.size() > 0) {
+//
+//				for (int j = 0; j < reqTransferMList.size(); j++) {
+//
+//					Map<String, Object> insSerial = null;
+//
+//					insSerial = (Map<String, Object>) serialList.get(j);
+//
+//					insSerial.put("delno", deliSeq);
+//					insSerial.put("reqstno", formMap.get("reqstno"));
+//					insSerial.put("userId", params.get("userId"));
+//					stockMoveMapper.insertMovementSerial(insSerial);
+//				}
+//			}
+
+//			stockMoveMapper.insertDeliveryStockMovement(insMap);
+//			stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
+//		}
+//		String[] delvcd = { deliSeq };
+//
+//		formMap.put("parray", delvcd);
+//		formMap.put("userId", params.get("userId"));
+//		// formMap.put("prgnm", params.get("prgnm"));
+//		formMap.put("refdocno", "");
+//		formMap.put("salesorder", "");
+//
+//		stockMoveMapper.StockMovementIssue(formMap);
+		}
+	}
+	
+	
+	
+	
 }
