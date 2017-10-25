@@ -35,6 +35,9 @@ public class ReturnOnHandStockMListDto {
 	@ApiModelProperty(value = "gr 날짜")
 	private String grDate;
 
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
+
 	private List<ReturnOnHandStockDListDto> partsList = null;
 
 	public static ReturnOnHandStockMListDto create(EgovMap egvoMap) {
@@ -111,6 +114,14 @@ public class ReturnOnHandStockMListDto {
 
 	public void setPartsList(List<ReturnOnHandStockDListDto> partsList) {
 		this.partsList = partsList;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
