@@ -160,7 +160,7 @@
 
 
 
-	    <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
+<!-- 	    <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
 	    
 	            SELECT B.SALES_ORD_NO AS salesOrderNo,
 	                   F.AS_RESULT_NO AS serviceNo,
@@ -201,7 +201,7 @@
 	             WHERE     1 = 1
 	                 AND C.AS_REQST_DT = TO_DATE (to_date(#{requestDate}, 'YYYYMMDD')
 	                 AND A.CODY_ID = #{userId}  
-	     </select> 
+	     </select>  -->
 	
 	
 	    <insert id="insertHeatLog" parameterType="Map">
