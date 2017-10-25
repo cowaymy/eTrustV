@@ -23,8 +23,12 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.Service.registration.RegistrationConstants;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
+import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
+import com.coway.trust.api.mobile.services.as.AfterServicePartsForm;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobForm;
+import com.coway.trust.api.mobile.services.heartService.HeartServicePartsDto;
+import com.coway.trust.api.mobile.services.heartService.HeartServicePartsForm;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
@@ -87,6 +91,52 @@ public class ServiceApiController {
 		}
 		
 		List<AfterServiceJobDto> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
+	@ApiOperation(value = "Heart Service Parts List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/heartServiceParts", method = RequestMethod.GET)
+	public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts(
+			@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
+
+		Map<String, Object> params = HeartServicePartsForm.createMap(heartServicePartsForm);
+
+		List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts(params);
+
+		for (int i = 0; i < HeartServiceParts.size(); i++) {
+			LOGGER.debug("HeartServiceParts    값 : {}", HeartServiceParts.get(i));
+
+		}
+		
+		List<HeartServicePartsDto> list = HeartServiceParts.stream().map(r -> HeartServicePartsDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
+	@ApiOperation(value = "After Service Parts List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/afterServiceParts", method = RequestMethod.GET)
+	public ResponseEntity<List<AfterServicePartsDto>> afterServiceParts(
+			@ModelAttribute AfterServicePartsForm afterServicePartsForm) throws Exception {
+
+		Map<String, Object> params = AfterServicePartsForm.createMap(afterServicePartsForm);
+
+		List<EgovMap> AfterServiceParts = MSvcLogApiService.afterServiceParts(params);
+
+		for (int i = 0; i < AfterServiceParts.size(); i++) {
+			LOGGER.debug("AfterServiceParts    값 : {}", AfterServiceParts.get(i));
+
+		}
+		
+		List<AfterServicePartsDto> list = AfterServiceParts.stream().map(r -> AfterServicePartsDto.create(r))
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(list);
