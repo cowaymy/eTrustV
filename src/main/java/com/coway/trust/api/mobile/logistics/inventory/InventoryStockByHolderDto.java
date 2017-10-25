@@ -30,6 +30,9 @@ public class InventoryStockByHolderDto {
 	@ApiModelProperty(value = "제품 s/n")
 	private String serialNo;
 
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
+
 	public static InventoryStockByHolderDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, InventoryStockByHolderDto.class);
 	}
@@ -88,6 +91,14 @@ public class InventoryStockByHolderDto {
 
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
