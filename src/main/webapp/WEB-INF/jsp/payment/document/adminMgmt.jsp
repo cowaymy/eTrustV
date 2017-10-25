@@ -325,6 +325,25 @@ var watingPopColumnLayout = [
         Common.ajax("GET","/payment/selectReviewLoadInfo.do",$("#reviewForm").serialize(), function(result){
             console.log(result);
             AUIGrid.setGridData(reviewGridID, result);
+            
+            var title = "";
+            title += $("#payModeReview option:checked").text(); + " ";
+            var modeText = "";
+            
+            if($('#payModeReview').val() == "107"){
+                
+            	title += "(";
+            	$("#isOnlineReview option:selected").each(function () { 
+            			
+            		if(modeText != "")
+            			modeText += "/";
+            		modeText += $(this).text();
+            			
+            	}); title += modeText + ")";
+            	
+            	$('#reviewListTitle').text("Review List -"+title);
+            }
+            
         });
         $('#payModeReview').attr('disabled', 'true');
         $('#keyBranchReview').attr('disabled', 'true');
@@ -729,7 +748,7 @@ var watingPopColumnLayout = [
 		<div style="width:50%;">
 			<div class="border_box"><!-- border_box start -->
 				<aside class="title_line"><!-- title_line start -->
-				    <h3 class="pt0">Review List - Credit Card (Online/Offline)</h3>
+				    <h3 class="pt0" id="reviewListTitle"><!-- Review List - Credit Card (Online/Offline) --></h3>
 				</aside><!-- title_line end -->
 				<ul class="right_btns">
 				    <li>Ctrl + Click : for multiple selection</li>
