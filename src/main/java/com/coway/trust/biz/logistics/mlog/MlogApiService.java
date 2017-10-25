@@ -74,5 +74,18 @@ public interface MlogApiService {
 	//List<StrockMovementVoForMobile> getStockRequestStatusHeader(Map<String, Object> params);
 
 	//List<StrockMovementVoForMobile> getRequestStatusParts(Map<String, Object> setMap);
+	
+	/**
+	 * 인서트 추가 
+	 * 
+	 * @param reqTransferMList
+	 * @return
+	 */
+	
+	void saveInvenReqTransfer(List<Map<String, Object>> reqTransferMList);
+	
+	void stockMovementReqDelivery(List<Map<String, Object>> stockTransferGIMList);
+	
+	
 
 }
