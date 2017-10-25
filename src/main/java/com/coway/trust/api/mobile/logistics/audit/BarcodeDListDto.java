@@ -7,7 +7,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "BarcodeListDto", description = "BarcodeListDto")
+@ApiModel(value = "BarcodeDListDto", description = "BarcodeDListDto")
 public class BarcodeDListDto {
 
 	@ApiModelProperty(value = "실사 item 번호")
@@ -22,6 +22,8 @@ public class BarcodeDListDto {
 	private String serialNo;
 	@ApiModelProperty(value = "시스템 재고")
 	private int sysQty;
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
 
 	public static BarcodeDListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, BarcodeDListDto.class);
@@ -73,6 +75,14 @@ public class BarcodeDListDto {
 
 	public void setSysQty(int sysQty) {
 		this.sysQty = sysQty;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
