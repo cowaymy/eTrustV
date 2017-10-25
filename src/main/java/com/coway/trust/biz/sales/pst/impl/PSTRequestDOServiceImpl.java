@@ -503,6 +503,19 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 	 * @exception Exception
 	 */
 	@Override
+	public void delPstSAL0031D(Map<String, Object> params) {
+		pstRequestDOMapper.delPstSAL0031D(params);
+	}
+	
+	
+	/**
+	 * edit - add address
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
 	public void updateMainPstSAL0031D(Map<String, Object> params) {
 		pstRequestDOMapper.updateSubPstSAL0031D(params);
 		pstRequestDOMapper.updateMainPstSAL0031D(params);

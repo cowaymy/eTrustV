@@ -170,7 +170,7 @@
 			       Extent2.USER_GSEC_SYN_CHK   ,
 			       Extent2.USER_PASSWD_LAST_UPD_DT   ,
 			       Extent2.USER_TYPE_ID   ,
-			       Extent2.USER_DFLT_PAS_SWD   ,
+			       Extent2.USER_DFLT_PASSWD   ,
 			       Extent2.USER_VAL_ID_FROM   ,
 			       Extent2.USER_VAL_ID_TO   ,
 			       Extent2.USER_SEC_QUES_ID   ,
@@ -456,4 +456,24 @@
 		 WHERE SUS_ID =  #{susId}
     </update>
     
+    <select id="spInsertOrderReactiveFees"  statementType="CALLABLE"   parameterType="Map">
+       <![CDATA[  
+            {
+                  call SP_INSERT_ORD_REACT_FEES ( #{ORD_ID}, #{userId})
+            }
+         ]]>
+      </select>
+      
+    <update id="updateAmtSAL0096D" parameterType="Map">
+        UPDATE SAL0096D
+			 SET SUS_STUS_ID = #{stusCodeId},
+			       RAF_AMT = #{rafAmt},
+			       SUS_UPD_DT = SYSDATE,
+			       SUS_LAST_BILL_MONTH = #{billMonth},
+			       SUS_LAST_BILL_YEAR = #{billYear},
+			       SUS_LAST_BILL_INST_NO = #{lastBillInstNo},
+			       SUS_CURR_BILL_INST_NO = #{currBillInstNo}
+		 WHERE SUS_ID = #{susId} 
+    </update>  
+      
 </mapper>

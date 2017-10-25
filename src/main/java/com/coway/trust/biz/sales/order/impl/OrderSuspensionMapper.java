@@ -25,4 +25,6 @@ public interface OrderSuspensionMapper {
 	EgovMap newSuspendSearch2(Map<String, Object> params);
 	int updateCCR0006DSuspend(Map<String, Object> params);
 	int updateSAL0096DSuspend(Map<String, Object> params);
+	void spInsertOrderReactiveFees(Map<String, Object> params);
+	int updateAmtSAL0096D(Map<String, Object> params);
 }

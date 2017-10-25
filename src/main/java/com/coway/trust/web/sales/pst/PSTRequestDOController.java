@@ -674,6 +674,67 @@ public class PSTRequestDOController {
 	
 	
 	/**
+	 * 화면 호출. -New pst (팝업화면)
+	 */
+	@RequestMapping(value = "/pstUpdAddrPop.do")
+	public String pstUpdAddrPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		
+		logger.info("###################3 :  " + params.toString());
+		model.addAttribute("dealerId", params.get("dealerId"));
+		params.put("pstDealerMailAddId", params.get("editDealerAddId"));
+		EgovMap updAddrInfo = pstRequestDOService.pstRequestDOMailAddress(params);
+		logger.info("########################### :  " + updAddrInfo.get("areaId"));
+		model.addAttribute("updAddrInfo", updAddrInfo);
+		
+		return "sales/pst/pstUpdDealerAddressPop";
+	}
+	
+	
+	/**
+	 * Add Update Address(Edit) After
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/updateDealerAddressInfo.do")
+	public ResponseEntity<ReturnMessage> updateDealerAddressInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		pstRequestDOService.updatePstSAL0031D(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	/**
+	 * Add Delete Address(Edit) After
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/delDealerAddress.do")
+	public ResponseEntity<ReturnMessage> delDealerAddress(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		pstRequestDOService.delPstSAL0031D(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	/**
 	 * 화면 호출. -Add/Edit Contact (팝업화면)
 	 */
 	@RequestMapping(value = "/editContDtPop.do")

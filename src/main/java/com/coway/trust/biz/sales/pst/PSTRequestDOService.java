@@ -230,6 +230,7 @@ public interface PSTRequestDOService {
 	void insertPstSAL0031D(Map<String, Object> params);
 	void updatePstSAL0031D(Map<String, Object> params);
 	void updateMainPstSAL0031D(Map<String, Object> params);
+	void delPstSAL0031D(Map<String, Object> params);
 	
 	
 	/**

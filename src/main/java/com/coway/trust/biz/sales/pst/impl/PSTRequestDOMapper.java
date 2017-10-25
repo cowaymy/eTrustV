@@ -323,7 +323,7 @@ public interface PSTRequestDOMapper {
 	void updatePstSAL0031D(Map<String, Object> params);
 	void updateMainPstSAL0031D(Map<String, Object> params);
 	void updateSubPstSAL0031D(Map<String, Object> params);
-	
+	void delPstSAL0031D(Map<String, Object> params);
 	
 	/**
 	 * edit - add contact

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.sales.mambership.impl.MembershipQuotationMapper;
 import com.coway.trust.biz.sales.order.OrderSuspensionService;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -25,6 +26,15 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Resource(name = "orderSuspensionMapper")
 	private OrderSuspensionMapper orderSuspensionMapper;
+	
+	@Resource(name = "orderInvestMapper")
+	private OrderInvestMapper orderInvestMapper;
+	
+	@Resource(name = "membershipQuotationMapper")
+	private MembershipQuotationMapper membershipQuotationMapper;
+	
+	@Resource(name = "orderExchangeMapper")
+	private OrderExchangeMapper orderExchangeMapper;
 	
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -99,40 +109,91 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 	
 	@Override
 	public void newSuspendResult(Map<String, Object> params) {
-		String defaultDate = "1900-01-01 00:00:00";
 		
-		EgovMap newSuspendSearch1 = orderSuspensionMapper.newSuspendSearch1(params);
+		int saveStatus = Integer.parseInt((String)params.get("newSuspResultStus"));	// Suspend , Regular
 		
 		Map<String, Object> saveParam = new HashMap<String, Object>();
+		Map<String, Object> saveRagularParam = new HashMap<String, Object>();	
 		
-		saveParam.put("callEntryId", newSuspendSearch1.get("callEntryId"));
-		saveParam.put("callStusId", params.get("newSuspResultStus"));
-		saveParam.put("callDt", SalesConstants.DEFAULT_DATE);
-		saveParam.put("callActnDt", SalesConstants.DEFAULT_DATE);
-		saveParam.put("callFdbckId", 0);
-		saveParam.put("callCtId", 0);
-		saveParam.put("callRem", params.get("newSuspResultRem"));
-		//saveParam.put("callCrtUserId", params.get("userId"));
-		saveParam.put("callCrtUserId", 999999);
-		saveParam.put("callCrtUserIdDept", 0);
-		saveParam.put("callHcId", 0);
-		saveParam.put("callRosAmt", 0);
-		saveParam.put("callSms", 0);
-		saveParam.put("callSmsRem", " ");
-		logger.info("##### Impl.getUserId() #####" +params.get("userId"));
-		orderSuspensionMapper.insertCCR0007DSuspend(saveParam);
+		if(saveStatus == 2){
+			EgovMap newSuspendSearch1 = orderSuspensionMapper.newSuspendSearch1(params);
+			int getCallResultIdMaxSeq = orderExchangeMapper.getCallResultIdMaxSeq();
+			saveParam.put("getCallResultIdMaxSeq", getCallResultIdMaxSeq);
+			saveParam.put("callEntryId", newSuspendSearch1.get("callEntryId"));
+			saveParam.put("callStusId", params.get("newSuspResultStus"));
+			saveParam.put("callDt", SalesConstants.DEFAULT_DATE);
+			saveParam.put("callActnDt", SalesConstants.DEFAULT_DATE);
+			saveParam.put("callFdbckId", 0);
+			saveParam.put("callCtId", 0);
+			saveParam.put("callRem", params.get("newSuspResultRem"));
+			saveParam.put("callCrtUserId", params.get("userId"));
+			saveParam.put("callCrtUserIdDept", 0);
+			saveParam.put("callHcId", 0);
+			saveParam.put("callRosAmt", 0);
+			saveParam.put("callSms", 0);
+			saveParam.put("callSmsRem", " ");
+			orderSuspensionMapper.insertCCR0007DSuspend(saveParam);
+			
+			EgovMap newSuspendSearch2 = orderSuspensionMapper.newSuspendSearch2(saveParam);
+			saveParam.put("stusCodeId", params.get("newSuspResultStus"));
+			saveParam.put("resultId", getCallResultIdMaxSeq);
+			saveParam.put("updUserId", params.get("userId"));
+			orderSuspensionMapper.updateCCR0006DSuspend(saveParam);
+			saveParam.put("susId", params.get("susId"));
+			orderSuspensionMapper.updateSAL0096DSuspend(saveParam);
+			
+		}if(saveStatus == 30){	// 28번은 Regular. 프로시저 오류로 일단 막아둠.
+			// getOderOutsInfo 프로시저 현재 오류.. 수정되면 적용해야함.
+			saveRagularParam.put("ORD_ID", params.get("ordId"));
+			EgovMap getOderOutsInfo = membershipQuotationMapper.getOderOutsInfo(saveRagularParam);
+			
+			EgovMap newSuspendSearch1 = orderSuspensionMapper.newSuspendSearch1(params);
+			int getCallResultIdMaxSeq = orderExchangeMapper.getCallResultIdMaxSeq();
+			saveRagularParam.put("getCallResultIdMaxSeq", getCallResultIdMaxSeq);
+			saveRagularParam.put("callEntryId", newSuspendSearch1.get("callEntryId"));
+			saveRagularParam.put("callStusId", params.get("newSuspResultStus"));
+			saveRagularParam.put("callDt", SalesConstants.DEFAULT_DATE);
+			saveRagularParam.put("callActnDt", SalesConstants.DEFAULT_DATE);
+			saveRagularParam.put("callFdbckId", 0);
+			saveRagularParam.put("callCtId", 0);
+			saveRagularParam.put("callRem", params.get("newSuspResultRem"));
+			saveRagularParam.put("callCrtUserId", params.get("userId"));
+			saveRagularParam.put("callCrtUserIdDept", 0);
+			saveRagularParam.put("callHcId", 0);
+			saveRagularParam.put("callRosAmt", 0);
+			saveRagularParam.put("callSms", 0);
+			saveRagularParam.put("callSmsRem", " ");
+			orderSuspensionMapper.insertCCR0007DSuspend(saveRagularParam);
+			
+			saveRagularParam.put("stusCodeId", params.get("newSuspResultStus"));
+			saveRagularParam.put("resultId", getCallResultIdMaxSeq);
+			saveRagularParam.put("updUserId", params.get("userId"));
+			orderSuspensionMapper.updateCCR0006DSuspend(saveRagularParam);
+			
+			EgovMap rentalSchemeInfo = orderInvestMapper.saveCallResultSearchFourth(saveRagularParam);
+			
+			saveRagularParam.put("userId", params.get("userId"));
+			orderSuspensionMapper.spInsertOrderReactiveFees(saveRagularParam);
+			
+			saveRagularParam.put("rentalSchemeStusId", "REG");
+			saveRagularParam.put("renSchId", rentalSchemeInfo.get("renSchID"));
+			orderInvestMapper.updateSAL0071D(saveRagularParam);
+			
+			saveRagularParam.put("susId", params.get("susId"));
+			saveRagularParam.put("rafAmt", getOderOutsInfo.get("ordUnbillAmt"));
+			saveRagularParam.put("billMonth", params.get("susId"));
+			saveRagularParam.put("billYear", params.get("susId"));
+			saveRagularParam.put("lastBillInstNo", getOderOutsInfo.get("lastBillMth"));
+			saveRagularParam.put("currBillInstNo", getOderOutsInfo.get("currBillMth"));
+			orderSuspensionMapper.updateAmtSAL0096D(saveRagularParam);
+			
+			saveRagularParam.put("salesOrdId", params.get("ordId"));
+			saveRagularParam.put("prgrsId", 5);
+			saveRagularParam.put("refId", 0);
+			saveRagularParam.put("isLok", 0);
+			orderInvestMapper.insertSalesOrdLog(saveRagularParam);
+		}
 		
-		EgovMap newSuspendSearch2 = orderSuspensionMapper.newSuspendSearch2(saveParam);
-		saveParam.put("stusCodeId", newSuspendSearch2.get("stusCodeId"));
-		saveParam.put("resultId", newSuspendSearch2.get("resultId"));
-		//saveParam.put("updUserId", params.get("userId"));
-		saveParam.put("updUserId", 999999);
-		
-		orderSuspensionMapper.updateCCR0006DSuspend(saveParam);
-		
-		saveParam.put("susId", params.get("susId"));
-		
-		orderSuspensionMapper.updateSAL0096DSuspend(saveParam);
 	}
 	
 }

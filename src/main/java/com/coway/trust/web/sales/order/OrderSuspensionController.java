@@ -131,14 +131,10 @@ public class OrderSuspensionController {
 		
 		Map<String, Object> map = new HashMap();
 		
-		try{
-			orderSuspensionService.newSuspendResult(params);
-		}catch(Exception ex){
-			//retMsg = AppConstants.MSG_FAIL;
-			retMsg = "FAIL";
-		}finally{
-			map.put("msg", retMsg);
-		}
+		orderSuspensionService.newSuspendResult(params);
+
+		map.put("msg", retMsg);
+
 		return ResponseEntity.ok(map);
 	}
 	

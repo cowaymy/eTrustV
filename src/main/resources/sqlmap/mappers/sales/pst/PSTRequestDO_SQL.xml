@@ -292,6 +292,7 @@
                    Extent1.CRT_USER_ID   ,
                    Extent1.CRT_DT   ,
                    Extent6.CODE STUS_CODE  ,
+                   Extent1.AREA_ID  ,
                    Extent1.ADDR_DTL  ,
                    Extent1.STREET  ,
                    Extent1.REM ,
@@ -862,7 +863,7 @@
 			       AREA_ID = #{areaId},
 			       REM = #{addrRem},
 			       UPD_DT = SYSDATE
-		 WHERE DEALER_ADD_ID = #{dealerAddId}
+		 WHERE DEALER_ADD_ID = #{addrDealerAddId}
     </update>
     
     <update id="updateMainPstSAL0031D">
@@ -904,6 +905,13 @@
              SET STUS_CODE_ID = 1,
                    UPD_DT = SYSDATE
          WHERE DEALER_ID = #{dealerId}
+    </update>
+    
+    <update id="delPstSAL0031D">
+        UPDATE SAL0031D
+             SET STUS_CODE_ID = 8,
+                   UPD_DT = SYSDATE
+         WHERE DEALER_ADD_ID = #{addrDealerAddId}
     </update>
      
 </mapper>
