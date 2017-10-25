@@ -22,6 +22,8 @@ public class NonBarcodeDListDto {
 	private int sysQty;
 	@ApiModelProperty(value = "실사 수량")
 	private int countedQty;
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
 
 	public static NonBarcodeDListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, NonBarcodeDListDto.class);
@@ -73,6 +75,14 @@ public class NonBarcodeDListDto {
 
 	public void setCountedQty(int countedQty) {
 		this.countedQty = countedQty;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
