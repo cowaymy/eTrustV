@@ -104,7 +104,7 @@ public class ServiceApiController {
 	public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts(
 			@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
 
-		Map<String, Object> params = HeartServicePartsForm.createMap(heartServicePartsForm);
+		Map<String, Object> params = HeartServicePartsForm.createMap(heartServicePartsForm); 
 
 		List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts(params);
 
