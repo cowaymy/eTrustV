@@ -119,6 +119,7 @@ public class FileServiceImpl implements FileService {
 			throw new ApplicationException(e);
 		}
 
+		fileMapper.deleteFileGroupByFileId(fileId);
 		fileMapper.deleteFileByFileId(fileId);
 	}
 
