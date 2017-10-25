@@ -488,13 +488,17 @@ var watingPopColumnLayout = [
     	Common.ajax("GET","/payment/selectLoadItemLog.do",  {"itemId":itmId}, function(result){
             console.log(result);
             
-            var msg = result.c1 + " ( " +result.crtDt + " ) says :"+"<br>";
-            
-            if(result.rem != null){
-            	msg += result.rem;
-            }else{
-            	msg += "";
-            }
+            var msg = "";
+            for (var key in result) {
+                
+                msg = result[key].c1 + " ( " +result[key].crtDt + " ) says :"+"<br>";
+                
+                if(result[key].rem != null){
+                    msg += result[key].rem +"<br>";
+                }else{
+                    msg += ""+"<br>" ;
+                }
+            } 
             
             $("#logMsgBox").html(msg);
             
