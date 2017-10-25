@@ -491,8 +491,9 @@ var watingPopColumnLayout = [
 <section id="content"><!-- content start -->
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	    <li>Sales</li>
-	    <li>Order list</li>
+	    <li>Payment</li>
+	    <li>Document Control</li>
+	    <li>Admin Management</li>
 	</ul>
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
