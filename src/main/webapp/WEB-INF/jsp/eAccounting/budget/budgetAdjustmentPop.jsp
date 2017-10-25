@@ -631,10 +631,8 @@ function fn_uploadFile(str) {
         	/* formData.append("obj", obj);
         	formData.append("gridData",gridData);    */
         	
-        	alert(AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId"));
         	if(AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") != "" &&AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") != null ){
-        		alert("if ::: " + AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId"));
-        	    formData.append("pAtchFileGrpId", AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") );
+        		formData.append("pAtchFileGrpId", AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") );
         	}
         	
 	        Common.ajaxFile("/eAccounting/budget/uploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
