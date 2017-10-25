@@ -39,5 +39,33 @@ public interface FinanceMgmtMapper {
 	 * @return
 	 */
 	List<EgovMap> selectCreditCardList(Map<String, Object> params);
+	
+	/**
+	 * paymentItemList 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectDocItemPaymentItem(Map<String, Object> params);
+	
+	/**
+	 * PaymentItem에 대한 Log 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectLogItemPaymentItem(Map<String, Object> params);
+	
+	/**
+	 * BatchId에 의한 PayDoc조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectPayDocBatchById(Map<String, Object> params);
+	
+	/**
+	 * paymentItem2List 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectDocItemPaymentItem2(Map<String, Object> params);
 
 }

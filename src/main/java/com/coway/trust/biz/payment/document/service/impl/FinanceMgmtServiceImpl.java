@@ -65,4 +65,28 @@ public class FinanceMgmtServiceImpl extends EgovAbstractServiceImpl implements F
 		return financeMgmtMapper.selectCreditCardList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectDocItemPaymentItem(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return financeMgmtMapper.selectDocItemPaymentItem(params);
+	}
+
+	@Override
+	public List<EgovMap> selectLogItemPaymentItem(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return financeMgmtMapper.selectLogItemPaymentItem(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPayDocBatchById(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return financeMgmtMapper.selectPayDocBatchById(params);
+	}
+
+	@Override
+	public List<EgovMap> selectDocItemPaymentItem2(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return financeMgmtMapper.selectDocItemPaymentItem2(params);
+	}
+
 }
