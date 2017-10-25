@@ -13,6 +13,8 @@ public class DisplayCt_CodyListDto {
 	private String ctCodyName;
 	@ApiModelProperty(value = "브랜치에 속한 CT/CODY ID ")
 	private String ctCodyId;
+	@ApiModelProperty(value = "Location ID")
+	private int rdcCode;
 
 	public static DisplayCt_CodyListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, DisplayCt_CodyListDto.class);
@@ -32,6 +34,14 @@ public class DisplayCt_CodyListDto {
 
 	public void setCtCodyId(String ctCodyId) {
 		this.ctCodyId = ctCodyId;
+	}
+
+	public int getRdcCode() {
+		return rdcCode;
+	}
+
+	public void setRdcCode(int rdcCode) {
+		this.rdcCode = rdcCode;
 	}
 
 }
