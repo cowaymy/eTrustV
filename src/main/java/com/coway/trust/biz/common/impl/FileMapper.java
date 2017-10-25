@@ -24,5 +24,7 @@ public interface FileMapper {
 
 	void deleteFileByGroupId(int fileGroupId);
 
+	void deleteFileGroupByFileId(int fileId);
+	
 	void deleteFileByFileId(int fileId);
 }
