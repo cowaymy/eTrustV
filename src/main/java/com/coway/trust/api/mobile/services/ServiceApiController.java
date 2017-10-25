@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.mobile.Service.registration.HeartDto;
-import com.coway.trust.api.mobile.Service.registration.HeartForm;
 import com.coway.trust.api.mobile.Service.registration.RegistrationConstants;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
