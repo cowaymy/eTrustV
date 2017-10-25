@@ -144,7 +144,8 @@ $(document).ready(function(){
     var adjOptions = {
             enableCellMerge : true,
             showStateColumn:false,
-            selectionMode       : "singleRow", 
+            //selectionMode       : "singleRow", 
+            selectionMode       : "singleCell", 
             showRowNumColumn    : false,
             usePaging : false,
             editable :false

@@ -138,7 +138,8 @@ $(document).ready(function(){
                 showStateColumn:false,
                 showRowNumColumn    : true,
                 usePaging : true,
-                showFooter : true
+                showFooter : true,
+                editable : false
           }; 
      
         adjGridID = GridCommon.createAUIGrid("#adjGridID", adjPopColumnLayout, "", adjOptions);

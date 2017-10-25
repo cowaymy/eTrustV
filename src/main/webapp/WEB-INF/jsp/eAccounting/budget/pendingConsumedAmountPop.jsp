@@ -56,14 +56,15 @@ $(document).ready(function(){
      },{
          dataField : "expDesc",
          headerText : '<spring:message code="budget.Remark" />',
-         style : "my-right-style",
+         style : "aui-grid-user-custom-left",
          width : 150
      }];
           
      var penOptions = {
                 showStateColumn:false,
                 showRowNumColumn    : true,
-                usePaging : true
+                usePaging : true,
+                editable : false
           }; 
      
         penGridID = GridCommon.createAUIGrid("#penGridID", penPopColumnLayout, "", penOptions);
