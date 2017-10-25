@@ -452,7 +452,7 @@ function fn_saveApprove(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="appMGridID" style="width:100%; height:370px; margin:0 auto;"></div>
+    <div id="appMGridID" style="width:100%; height:410px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
