@@ -408,7 +408,7 @@ var watingPopColumnLayout = [
         
         Common.ajax("GET","/payment/selectDocItemPayReviewDetailList.do",$("#reviewDetailForm").serialize(), function(result){
             
-            AUIGrid.destroy(reviewPopGridID);
+        	AUIGrid.destroy(reviewPopGridID);
             AUIGrid.destroy(watingPopGridID);
             reviewPopGridID = GridCommon.createAUIGrid("detail_pop_grid_wrap", watingPopColumnLayout,null,gridPros);
             AUIGrid.setGridData(reviewPopGridID, result);
@@ -563,8 +563,8 @@ var watingPopColumnLayout = [
     
     function fn_viewPayPopClose(val){
         $(val).hide();
-        AUIGrid.destroy(reviewPopGridID);// 그리드 삭제
-        AUIGrid.destroy(watingPopGridID);// 그리드 삭제
+        AUIGrid.clearGridData(reviewPopGridID);  //grid data clear
+        AUIGrid.clearGridData(watingPopGridID);  //grid data clear
     }
    
 </script>
