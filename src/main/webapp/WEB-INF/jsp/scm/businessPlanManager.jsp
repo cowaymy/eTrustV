@@ -225,7 +225,7 @@ function fn_uploadFile() {
     formData.append("paramTeam", $("scmTeamCbBox").val() );
     formData.append("paramVer",  $("scmPeriodCbBox").val() );
 
-    alert('read');
+    //alert('read');
 
     Common.ajaxFile("/scm/excel/upload", formData, function (result) {
         Common.alert("완료~")
