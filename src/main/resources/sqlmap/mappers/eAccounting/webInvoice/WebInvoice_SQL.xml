@@ -13,6 +13,7 @@ SELECT   T.CLM_NO
         ,T.INVC_TYPE
         ,T.MEM_ACC_ID
         ,T.MEM_ACC_NAME
+        ,'MYR' AS CVRR
         ,T.TOT_AMT
         ,T.REQST_DT
         ,T.APPV_PRCSS_STUS_CODE
@@ -308,7 +309,7 @@ SELECT T.APPV_PRCSS_NO
                       ,T3.BUDGET_CODE
                       ,T3.BUDGET_CODE_NAME
                       ,T3.TAX_CODE
-                      ,T3.TAX_CODE||' '||'('||T5.TAX_NAME||')' AS TAX_NAME 
+                      ,NVL2(T3.TAX_CODE, T3.TAX_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '') AS TAX_NAME
                       ,T3.NET_AMT
                       ,T3.TAX_AMT
                       ,T3.APPV_AMT

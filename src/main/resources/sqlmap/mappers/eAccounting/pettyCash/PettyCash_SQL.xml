@@ -123,7 +123,7 @@ SELECT T1.COST_CENTR
 </select>
 
 <update id="updateCustodian" parameterType="Map">
-/* webInvoiceMapper.updateCustodian */
+/* pettyCashMapper.updateCustodian */
    UPDATE FCM0011M
    SET APPV_CASH_AMT = #{appvCashAmt}
        ,CUSTDN_REM = #{custdnRem}
@@ -131,7 +131,7 @@ SELECT T1.COST_CENTR
 </update>
 
 <delete id="deleteCustodian" parameterType="Map">
-/* webInvoiceMapper.deleteCustodian */
+/* pettyCashMapper.deleteCustodian */
    DELETE FROM FCM0011M WHERE COST_CENTR = #{costCentr} AND CUSTDN = #{memAccId}        
 </delete>
 
@@ -143,6 +143,7 @@ SELECT T.CLM_NO,
        T.COST_CENTR_NAME, 
        T.MEM_ACC_ID, 
        T.MEM_ACC_NAME, 
+       'MYR' AS CVRR,
        T.APPV_CASH_AMT, 
        T.REQST_AMT, 
        T.REQST_NO,
@@ -287,8 +288,54 @@ ORDER BY T.CLM_NO, T.REQST_DT
     )
 </insert>
 
+<select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectRequestInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT    T1.CLM_NO, 
+          T1.COST_CENTR, 
+          T1.COST_CENTR_NAME, 
+          T1.MEM_ACC_ID, 
+          T2.MEM_ACC_NAME, 
+          T1.BANK_CODE, 
+          T2.BANK_NAME, 
+          T1.BANK_ACC_NO, 
+          T1.CUSTDN_NRIC, 
+          T1.APPV_CASH_AMT, 
+          T1.REQST_AMT, 
+          TO_CHAR(T1.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT, 
+          T1.ATCH_FILE_GRP_ID, 
+          T1.REQST_REM, 
+          T1.APPV_PRCSS_NO, 
+          T1.CRT_USER_ID, 
+          T3.USER_NAME 
+FROM      FCM0012D T1 
+LEFT JOIN FCM0006M T2 
+ON        T1.MEM_ACC_ID = T2.MEM_ACC_ID 
+LEFT JOIN SYS0047M T3 
+ON        T1.CRT_USER_ID = T3.USER_ID 
+WHERE T1.CLM_NO = #{clmNo}       
+</select>
+
+<update id="updatePettyCashReqst" parameterType="Map">
+/* pettyCashMapper.updatePettyCashReqst */
+   UPDATE FCM0012D
+   SET COST_CENTR = #{costCentr}
+       ,COST_CENTR_NAME = #{costCentrName}
+       ,MEM_ACC_ID = #{memAccId}
+       ,BANK_CODE = #{bankCode}
+       ,BANK_ACC_NO = #{bankAccNo}
+       ,CUSTDN_NRIC = #{custdnNric}
+       ,APPV_CASH_AMT = #{appvCashAmt}
+       ,REQST_AMT = #{reqstAmt}
+       ,PAY_DUE_DT = TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,REQST_REM = #{reqstRem}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
+</update>
+
 <insert id="insertApproveItems" parameterType="Map">
-/* webInvoiceMapper.insertApproveItems */
+/* pettyCashMapper.insertApproveItems */
 <!-- CMM0042C_ITEM_SEQ.nextval -->
    INSERT INTO FCM0015D
    (
@@ -323,7 +370,7 @@ ORDER BY T.CLM_NO, T.REQST_DT
         #{appvPrcssNo}
        ,#{appvItmSeq}
        ,#{invcNo}
-       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,SYSDATE
        ,#{invcType}
        ,#{memAccId}
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
@@ -357,32 +404,60 @@ ORDER BY T.CLM_NO, T.REQST_DT
     WHERE CLM_NO = #{clmNo}       
 </update>
 
-<select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
-/* pettyCashMapper.selectRequestInfo */
-<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT    T1.CLM_NO, 
-          T1.COST_CENTR, 
-          T1.COST_CENTR_NAME, 
-          T1.MEM_ACC_ID, 
-          T2.MEM_ACC_NAME, 
-          T1.BANK_CODE, 
-          T2.BANK_NAME, 
-          T1.BANK_ACC_NO, 
-          T1.CUSTDN_NRIC, 
-          T1.APPV_CASH_AMT, 
-          T1.REQST_AMT, 
-          TO_CHAR(T1.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT, 
-          T1.ATCH_FILE_GRP_ID, 
-          T1.REQST_REM, 
-          T1.APPV_PRCSS_NO, 
-          T1.CRT_USER_ID, 
-          T3.USER_NAME 
-FROM      FCM0012D T1 
-LEFT JOIN FCM0006M T2 
-ON        T1.MEM_ACC_ID = T2.MEM_ACC_ID 
-LEFT JOIN SYS0047M T3 
-ON        T1.CRT_USER_ID = T3.USER_ID 
-WHERE T1.CLM_NO = #{clmNo}       
+<select id="selectExpenseList" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseList */
+SELECT T.CLM_NO, 
+       T.COST_CENTR, 
+       T.COST_CENTR_NAME, 
+       T.MEM_ACC_ID, 
+       T.MEM_ACC_NAME, 
+       T.CLM_MONTH,
+       T.REQST_DT,  
+       'MYR' AS CVRR,
+       T.TOT_AMT,
+       T.APPV_PRCSS_STUS_CODE, 
+       T.APPV_PRCSS_STUS, 
+       T.APPV_PRCSS_DT 
+FROM   (SELECT T1.CLM_NO, 
+               T1.COST_CENTR, 
+               T1.COST_CENTR_NAME, 
+               T1.MEM_ACC_ID, 
+               T2.MEM_ACC_NAME,
+               TO_DATE(T1.CLM_MONTH, 'MMYYYY') AS CLM_MONTH, 
+               T3.REQST_DT,
+               T1.TOT_AMT,
+               Nvl (T3.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
+               Nvl (( CASE T3.APPV_PRCSS_STUS 
+                        WHEN 'R' THEN 'Request' 
+                        WHEN 'P' THEN 'Approve In-Progress' 
+                        WHEN 'A' THEN 'Approved' 
+                        WHEN 'J' THEN 'Reject' 
+                      END ), 'Temporary Save') AS APPV_PRCSS_STUS, 
+               T3.APPV_PRCSS_DT 
+        FROM   FCM0013M T1 
+               LEFT JOIN FCM0006M T2 
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID 
+               LEFT JOIN FCM0004M T3 
+                      ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO) T 
+WHERE  1 = 1
+<if test="clmMonth != null and clmMonth != ''">
+<![CDATA[ 
+AND T.CLM_MONTH = REPLACE(#{clmMonth}, '/', '')
+]]>
+</if>       
+<if test="memAccID != null and memAccID != ''">
+AND T.MEM_ACC_ID LIKE '%' || #{memAccID} || '%'
+</if>          
+<if test="costCenter != null and costCenter != ''">
+AND T.COST_CENTR LIKE '%' || #{costCenter} || '%'
+</if>
+<if test="appvPrcssStus != null and appvPrcssStus != ''">
+AND T.APPV_PRCSS_STUS_CODE IN
+<foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+#{item}
+</foreach>
+</if>  
+ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT 
 </select>
 
 </mapper>

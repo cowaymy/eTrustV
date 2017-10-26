@@ -49,6 +49,9 @@ var webInvoiceColumnLayout = [ {
     headerText : '<spring:message code="webInvoice.name" />',
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "cvrr",
+    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+}, {
     dataField : "totAmt",
     headerText : '<spring:message code="webInvoice.amount" />',
     dataType: "numeric",

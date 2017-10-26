@@ -86,10 +86,45 @@ function fn_saveNewRequest(st) {
         });
         Common.ajaxFile("/eAccounting/pettyCash/insertPettyCashReqst.do", formData, function(result) {
             console.log(result);
+            // tempSave가 아닌 바로 submit인 경우 대비
             $("#clmNo").val(result.data.clmNo);
+            $("#atchFileGrpId").val(result.data.atchFileGrpId);
             if(st == "new") {
             	Common.alert("Temporary save succeeded.");
             	$("#newRequestPop").remove();
+            }
+            fn_selectRequestList();
+        });
+    }
+}
+
+function fn_saveUpdateRequest(st) {
+    if(fn_checkEmpty()){
+        var formData = Common.getFormData("form_newReqst");
+        var obj = $("#form_newReqst").serializeJSON();
+        $.each(obj, function(key, value) {
+            if(key == "custdnNric") {
+                formData.append(key, value.replace(/\-/gi, ''));
+                console.log(value.replace(/\-/gi, ''));
+            } else if(key == "appvCashAmt") {
+                formData.append(key, value.replace(/,/gi, ''));
+                console.log(value.replace(/,/gi, ''));
+            } else if(key == "reqstAmt"){
+                formData.append(key, value.replace(/,/gi, ''));
+                console.log(value.replace(/,/gi, ''));
+            } else {
+                formData.append(key, value);
+            }
+        });
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        Common.ajaxFile("/eAccounting/pettyCash/updatePettyCashReqst.do", formData, function(result) {
+            console.log(result);
+            if(st == "view") {
+                Common.alert("Temporary save succeeded.");
+                $("#viewRequestPop").remove();
             }
             fn_selectRequestList();
         });
@@ -104,12 +139,12 @@ function fn_approveLinePop() {
     }
     
     // tempSave를 하지 않고 바로 submit인 경우
-    /* if(FormUtil.isEmpty($("#clmNo").val())) {
-        // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
-        fn_attachmentUpload("");
+    if(FormUtil.isEmpty($("#clmNo").val())) {
+        fn_saveNewRequest("");
     } else {
-        fn_updateWebInvoiceInfo("");
-    } */
+    	// 바로 submit 후에 appvLinePop을 닫고 재수정 대비
+        fn_saveUpdateRequest("");
+    }
     
     Common.popupDiv("/eAccounting/pettyCash/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
@@ -129,6 +164,7 @@ function fn_approveLinePop() {
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" enctype="multipart/form-data" id="form_newReqst">
 <input type="hidden" id="clmNo" name="clmNo">
+<input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
 <input type="hidden" id="newCostCenter" name="costCentr">
 <input type="hidden" id="newMemAccId" name="memAccId">
 <input type="hidden" id="bankCode" name="bankCode">

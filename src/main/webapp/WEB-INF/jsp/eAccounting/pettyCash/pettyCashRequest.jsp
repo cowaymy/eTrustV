@@ -36,6 +36,9 @@ var pettyCashReqstColumnLayout = [ {
     headerText : '<spring:message code="approveLine.name" />',
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "cvrr",
+    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+}, {
     dataField : "appvCashAmt",
     headerText : 'Approved<br>Petty Cash',
     style : "aui-grid-user-custom-right",
@@ -69,7 +72,7 @@ var pettyCashReqstColumnLayout = [ {
     formatString : "dd/mm/yyyy"
 }, {
     dataField : "reqstDt",
-    headerText : '<spring:message code="webInvoice.requestDate" />',
+    headerText : 'Request<br>Date',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
@@ -235,15 +238,20 @@ function fn_setPopCostCenter() {
     if(fn_checkEmpty()){
         // Approved Cash Amount GET and CUSTDN_NRIC GET
         var data = {
-                memAccId : $("#search_memAccId").val(),
+                memAccId : $("#newMemAccId").val(),
                 costCentr : $("#newCostCenter").val()
         };
         Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
             console.log(result);
-            var appvCashAmt = "" + result.data.appvCashAmt;
-            $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-            var custdnNric = result.data.custdnNric;
-            $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            console.log(FormUtil.isEmpty(result.data));
+            if(FormUtil.isEmpty(result.data)) {
+                Common.alert("There is no data for cost centers and custodians.");
+            } else {
+                var appvCashAmt = "" + result.data.appvCashAmt;
+                $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+                var custdnNric = result.data.custdnNric;
+                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            }
         });
     }
 }
@@ -258,15 +266,20 @@ function fn_setPopSupplier() {
     if(fn_checkEmpty()){
         // Approved Cash Amount GET and CUSTDN_NRIC GET
         var data = {
-                memAccId : $("#search_memAccId").val(),
+                memAccId : $("#newMemAccId").val(),
                 costCentr : $("#newCostCenter").val()
         };
         Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
             console.log(result);
-            var appvCashAmt = "" + result.data.appvCashAmt;
-            $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-            var custdnNric = result.data.custdnNric;
-            $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            console.log(FormUtil.isEmpty(result.data));
+            if(FormUtil.isEmpty(result.data)) {
+            	Common.alert("There is no data for cost centers and custodians.");
+            } else {
+            	var appvCashAmt = "" + result.data.appvCashAmt;
+                $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+                var custdnNric = result.data.custdnNric;
+                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            }
         });
     }
 }

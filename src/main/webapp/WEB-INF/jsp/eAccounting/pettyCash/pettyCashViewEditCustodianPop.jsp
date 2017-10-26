@@ -2,6 +2,9 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+//file action list
+var update = new Array();
+var remove = new Array();
 var attachmentList = new Array();
 <c:forEach var="file" items="${attachmentList}">
 var obj = {
@@ -30,6 +33,30 @@ $(document).ready(function () {
             }
         }
         fn_atchViewDown(fileGrpId, fileId);
+    });
+    // 파일 삭제
+    $("#remove_btn").click(function() {
+        var div = $(this).parents(".auto_file2");
+        var oriFileName = div.find(":text").val();
+        console.log(oriFileName);
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+            	remove.push(attachmentList[i].atchFileId);
+                console.log(JSON.stringify(remove));
+            }
+        }
+    });
+    // 파일 수정
+    $("#form_newCustdn :file").change(function() {
+        var div = $(this).parents(".auto_file2");
+        var oriFileName = div.find(":text").val();
+        console.log(oriFileName);
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                update.push(attachmentList[i].atchFileId);
+                console.log(JSON.stringify(update));
+            }
+        }
     });
 	
     $("#viewEdit_btn").click(fn_saveViewCustodian);
@@ -149,7 +176,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 
 function fn_saveViewCustodian() {
 	console.log("Action");
-	Common.popupDiv("/eAccounting/pettyCash/viewRegistMsgPop.do", null, null, true, "registMsgPop");
+	Common.popupDiv("/eAccounting/pettyCash/editRegistMsgPop.do", null, null, true, "registMsgPop");
 }
 </script>
 

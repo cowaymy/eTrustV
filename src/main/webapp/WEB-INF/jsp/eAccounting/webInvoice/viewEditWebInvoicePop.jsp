@@ -497,9 +497,11 @@ function fn_setGridData(data) {
     </div><!-- auto_file end -->
 	</c:forEach>
 	<c:if test="${fn:length(attachmentList) <= 0}">
+	<c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
     <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
     <input type="file" title="file add" style="width:300px" />
     </div><!-- auto_file end -->
+    </c:if>
     </c:if>
 	</td>
 </tr>

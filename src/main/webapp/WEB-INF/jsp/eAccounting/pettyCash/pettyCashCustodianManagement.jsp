@@ -268,7 +268,7 @@ function fn_viewCustodianPop() {
 }
 
 function fn_deleteCustodianPop() {
-    Common.popupDiv("/eAccounting/pettyCash/deleteRegistMsgPop.do", null, null, true, "registMsgPop");
+    Common.popupDiv("/eAccounting/pettyCash/removeRegistMsgPop.do", null, null, true, "registMsgPop");
 }
 </script>
 

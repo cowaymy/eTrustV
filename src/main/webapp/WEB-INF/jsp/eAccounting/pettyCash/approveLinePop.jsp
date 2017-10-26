@@ -149,15 +149,7 @@ function fn_reqstSubmit() {
     }
 	console.log(checkMemCode);
 	if(checkMemCode) {
-		var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
-        var obj = $("#form_newReqst").serializeJSON();
-        obj.apprGridList = apprGridList;
-        
-        Common.ajax("POST", "/eAccounting/pettyCash/approveLineSubmit.do", obj, function(result) {
-            console.log(result);
-            Common.popupDiv("/eAccounting/pettyCash/reqstCompletedMsgPop.do", null, null, true, "reqstCompletedMsgPop");
-            //Common.alert("Your authorization request was successful.");
-        });
+		Common.popupDiv("/eAccounting/pettyCash/reqstRegistrationMsgPop.do", null, null, true, "reqstRegistrationMsgPop");
 	}
 }
 </script>

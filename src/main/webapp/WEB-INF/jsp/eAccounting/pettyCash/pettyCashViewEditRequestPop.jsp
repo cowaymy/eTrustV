@@ -3,6 +3,9 @@
 
 <script type="text/javascript">
 var callType = "${callType}";
+//file action list
+var update = new Array();
+var remove = new Array();
 var attachmentList = new Array();
 <c:forEach var="file" items="${attachmentList}">
 var obj = {
@@ -19,7 +22,7 @@ $(document).ready(function () {
         setInputFile2();
     }
     
- // 파일 다운
+    // 파일 다운
     $(".input_text").dblclick(function() {
         var oriFileName = $(this).val();
         var fileGrpId;
@@ -32,9 +35,33 @@ $(document).ready(function () {
         }
         fn_atchViewDown(fileGrpId, fileId);
     });
+    // 파일 삭제
+    $("#remove_btn").click(function() {
+        var div = $(this).parents(".auto_file2");
+        var oriFileName = div.find(":text").val();
+        console.log(oriFileName);
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                remove.push(attachmentList[i].atchFileId);
+                console.log(JSON.stringify(remove));
+            }
+        }
+    });
+    // 파일 수정
+    $("#form_newReqst :file").change(function() {
+        var div = $(this).parents(".auto_file2");
+        var oriFileName = div.find(":text").val();
+        console.log(oriFileName);
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                update.push(attachmentList[i].atchFileId);
+                console.log(JSON.stringify(update));
+            }
+        }
+    });
     
-    $("#supplier_search_btn").click(fn_supplierSearchPop);
-    $("#costCenter_search_btn").click(fn_costCenterSearchPop);
+    $("#supplier_search_btn").click(fn_popSupplierSearchPop);
+    $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#tempSave_btn").click(fn_tempSave);
     $("#request_btn").click(fn_approveLinePop);
     
@@ -132,11 +159,11 @@ function fn_setCustdnNric() {
 
 function fn_tempSave() {
 	if(fn_checkEmpty()) {
-		fn_saveNewRequest(callType);
+		fn_saveUpdateRequest(callType);
 	}
 }
 
-function fn_saveNewRequest(st) {
+function fn_saveUpdateRequest(st) {
     if(fn_checkEmpty()){
         var formData = Common.getFormData("form_newReqst");
         var obj = $("#form_newReqst").serializeJSON();
@@ -154,12 +181,15 @@ function fn_saveNewRequest(st) {
             	formData.append(key, value);
             }
         });
-        Common.ajaxFile("/eAccounting/pettyCash/insertPettyCashReqst.do", formData, function(result) {
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        Common.ajaxFile("/eAccounting/pettyCash/updatePettyCashReqst.do", formData, function(result) {
             console.log(result);
-            $("#clmNo").val(result.data.clmNo);
-            if(st == "new") {
+            if(st == "view") {
             	Common.alert("Temporary save succeeded.");
-            	$("#newRequestPop").remove();
+            	$("#viewRequestPop").remove();
             }
             fn_selectRequestList();
         });
@@ -174,12 +204,7 @@ function fn_approveLinePop() {
     }
     
     // tempSave를 하지 않고 바로 submit인 경우
-    /* if(FormUtil.isEmpty($("#clmNo").val())) {
-        // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
-        fn_attachmentUpload("");
-    } else {
-        fn_updateWebInvoiceInfo("");
-    } */
+    fn_saveUpdateRequest("");
     
     Common.popupDiv("/eAccounting/pettyCash/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
@@ -199,6 +224,7 @@ function fn_approveLinePop() {
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" enctype="multipart/form-data" id="form_newReqst">
 <input type="hidden" id="clmNo" name="clmNo" value="${requestInfo.clmNo}">
+<input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${requestInfo.atchFileGrpId}">
 <input type="hidden" id="newCostCenter" name="costCentr" value="${requestInfo.costCentr}">
 <input type="hidden" id="newMemAccId" name="memAccId" value="${requestInfo.memAccId}">
 <input type="hidden" id="bankCode" name="bankCode" value="${requestInfo.bankCode}">
@@ -214,13 +240,13 @@ function fn_approveLinePop() {
 <tbody>
 <tr>
 	<th scope="row">Cost Center</th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" value="${requestInfo.costCentrName}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" value="${requestInfo.costCentrName}" <c:if test="${requestInfo.appvPrcssNo ne null and requestInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row">Creator</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${requestInfo.crtUserId}"/></td>
 </tr>
 <tr>
 	<th scope="row">Custodian</th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" value="${requestInfo.memAccName}"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" value="${requestInfo.memAccName}" <c:if test="${requestInfo.appvPrcssNo ne null and requestInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row">IC No / Passport No</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric" value="${requestInfo.custdnNric}"/></td>
 </tr>
@@ -236,9 +262,9 @@ function fn_approveLinePop() {
 </tr>
 <tr>
 	<th scope="row">Request Amount</th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="reqstAmt" name="reqstAmt"/></td>
+	<td><input type="text" title="" placeholder="" class="w100p" id="reqstAmt" name="reqstAmt" <c:if test="${requestInfo.appvPrcssNo ne null and requestInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
 	<th scope="row">Payment Date</th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="payDueDt" name="payDueDt" value="${requestInfo.payDueDt}"/></td>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="payDueDt" name="payDueDt" value="${requestInfo.payDueDt}" <c:if test="${requestInfo.appvPrcssNo ne null and requestInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
 </tr>
 <tr>
 	<th scope="row">Attachment</th>
@@ -252,8 +278,6 @@ function fn_approveLinePop() {
     <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
     <c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}">
     <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
-    </c:if>
-    <c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}">
     </label>
     <span class='label_text'><a href='#' id="add_btn"><spring:message code="viewEditWebInvoice.add" /></a></span>
     <span class='label_text'><a href='#' id="remove_btn"><spring:message code="viewEditWebInvoice.delete" /></a></span>
@@ -261,23 +285,27 @@ function fn_approveLinePop() {
     </div><!-- auto_file end -->
     </c:forEach>
     <c:if test="${fn:length(attachmentList) <= 0}">
+    <c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}">
     <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
     <input type="file" title="file add" style="width:300px" />
     </div><!-- auto_file end -->
+    </c:if>
     </c:if>
 	</td>
 </tr>
 <tr>
 	<th scope="row">Remark</th>
-	<td colspan="3"><textarea cols="20" rows="5" id="reqstRem" name="reqstRem">${requestInfo.reqstRem}</textarea></td>
+	<td colspan="3"><textarea cols="20" rows="5" id="reqstRem" name="reqstRem" <c:if test="${requestInfo.appvPrcssNo ne null and requestInfo.appvPrcssNo ne ''}">readonly</c:if>>${requestInfo.reqstRem}</textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
+<c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}">
 <ul class="center_btns">
 	<li><p class="btn_blue2"><a href="#" id="tempSave_btn">Temp. save</a></p></li>
 	<li><p class="btn_blue2"><a href="#" id="request_btn">Request</a></p></li>
 </ul>
+</c:if>
 
 </form>
 </section><!-- search_table end -->

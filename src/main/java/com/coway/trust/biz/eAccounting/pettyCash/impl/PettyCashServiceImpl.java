@@ -1,6 +1,5 @@
 package com.coway.trust.biz.eAccounting.pettyCash.impl;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,17 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.coway.trust.AppConstants;
-import com.coway.trust.biz.application.FileApplication;
-import com.coway.trust.biz.common.FileVO;
-import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.pettyCash.PettyCashService;
 import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
-import com.coway.trust.cmmn.file.EgovFileUploadUtil;
-import com.coway.trust.util.EgovFormBasedFileVo;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -31,15 +23,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class PettyCashServiceImpl implements PettyCashService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServiceImpl.class);
-
+	
 	@Value("${app.name}")
 	private String appName;
-	
-	@Value("${web.resource.upload.file}")
-	private String uploadDir;
-	
-	@Autowired
-	private FileApplication fileApplication;
 	
 	@Autowired
 	private WebInvoiceMapper webInvoiceMapper;
@@ -63,26 +49,11 @@ public class PettyCashServiceImpl implements PettyCashService {
 	}
 
 	@Override
-	public Map<String, Object> insertCustodian(MultipartHttpServletRequest request, Map<String, Object> params)
-			throws Exception {
+	public void insertCustodian(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
-		
-		LOGGER.debug("list.size : {}", list.size());
-		
-		// serivce 에서 파일정보를 가지고, DB 처리.
-		if (list.size() > 0) {
-			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
-		}
-
-		params.put("attachmentList", list);
-		
 		pettyCashMapper.insertCustodian(params);
-		
-		return params;
 	}
 
 	@Override
@@ -91,49 +62,16 @@ public class PettyCashServiceImpl implements PettyCashService {
 		return pettyCashMapper.selectCustodianInfo(params);
 	}
 
-	
-
 	@Override
-	public Map<String, Object> updateCustodian(MultipartHttpServletRequest request, Map<String, Object> params)
-			throws Exception {
+	public void updateCustodian(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		LOGGER.debug("params =====================================>>  " + params);
-		
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
-		
-		LOGGER.debug("list.size : {}", list.size());
-		
-		// serivce 에서 파일정보를 가지고, DB 처리.
-		if (list.size() > 0) {
-			// file update 미구현
-			//fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
-		}
-
-		params.put("attachmentList", list);
-		
 		pettyCashMapper.updateCustodian(params);
-		
-		return params;
 	}
 
 	@Override
 	public void deleteCustodian(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
-		// custodianInfo get
-		// atchFileGrpId get
-		// file data delete
-		EgovMap custodianInfo = pettyCashMapper.selectCustodianInfo(params);
-		String atchFileGrpId = String.valueOf(custodianInfo.get("atchFileGrpId"));
-		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
-		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
-		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
-		if (atchFileGrpId != "null") {
-			// TODO file delete
-		}
-		
 		
 		pettyCashMapper.deleteCustodian(params);
 	}
@@ -143,37 +81,35 @@ public class PettyCashServiceImpl implements PettyCashService {
 		// TODO Auto-generated method stub
 		return pettyCashMapper.selectRequestList(params);
 	}
+	
+	@Override
+	public String selectNextClmNo() {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectNextClmNo();
+	}
 
 	@Override
-	public Map<String, Object> insertPettyCashReqst(MultipartHttpServletRequest request, Map<String, Object> params)
-			throws Exception {
+	public void insertPettyCashReqst(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		LOGGER.debug("params =====================================>>  " + params);
-		
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
-		
-		LOGGER.debug("list.size : {}", list.size());
-		
-		// serivce 에서 파일정보를 가지고, DB 처리.
-		if (list.size() > 0) {
-			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
-		}
-
-		params.put("attachmentList", list);
-		
-		String clmNo = pettyCashMapper.selectNextClmNo();
-		params.put("clmNo", clmNo);
-		
 		pettyCashMapper.insertPettyCashReqst(params);
-		
-		return params;
+	}
+	
+	@Override
+	public EgovMap selectRequestInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectRequestInfo(params);
+	}
+	
+	@Override
+	public void updatePettyCashReqst(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		pettyCashMapper.updatePettyCashReqst(params);
 	}
 
 	@Override
 	public void insertApproveManagement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-LOGGER.debug("params =====================================>>  " + params);
+		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
 		
@@ -208,11 +144,11 @@ LOGGER.debug("params =====================================>>  " + params);
 	}
 
 	@Override
-	public EgovMap selectRequestInfo(Map<String, Object> params) {
+	public List<EgovMap> selectExpenseList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return pettyCashMapper.selectRequestInfo(params);
+		return pettyCashMapper.selectExpenseList(params);
 	}
-	
+
 	
 
 }
