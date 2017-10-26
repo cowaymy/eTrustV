@@ -17,7 +17,7 @@ public interface PosService {
 	
 	EgovMap selectWarehouse(Map<String, Object> params) throws Exception;
 	
-	List<EgovMap> selectPSMItmTypeList()throws Exception;
+	List<EgovMap> selectPSMItmTypeList(Map<String, Object> params)throws Exception;
 	
 	List<EgovMap> selectPIItmTypeList()throws Exception;
 	
@@ -36,4 +36,6 @@ public interface PosService {
 	List<EgovMap> getConfirmFilterListAjax(Map<String, Object> params) throws Exception;
 	
 	Map<String, Object> insertPos(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getUploadMemList (Map<String, Object> params) throws Exception;
 }

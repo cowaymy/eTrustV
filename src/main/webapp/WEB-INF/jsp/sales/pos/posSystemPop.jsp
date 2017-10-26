@@ -4,11 +4,13 @@
 //생성 후 반환 ID
 var purchaseGridID;
 var serialTempGridID;
+var memGridID;
 
 $(document).ready(function() {
 	
 	createPurchaseGridID();
 	createSerialTempGridID();
+	creatememGridID;
 	
 	//PosModuleTypeComboBox
 	var modulePopParam = {groupCode : 143, codeIn : [2390, 2391]};
@@ -33,22 +35,29 @@ $(document).ready(function() {
         
         var tempVal = $(this).val();
         
-        if(tempVal == 2390){
+        if(tempVal == 2390){ //POS Sales
             var optionSystem = {
                     type: "M",                  
                     isShowChoose: false  
             };
             var systemPopParam = {groupCode : 140 , codeIn : [1352, 1353]};
             CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
+            //MEM GRID DISPLAY
+            $("#_purchMemBtn").css("display" , "none");
         }
         
-        if(tempVal == 2391){
+        if(tempVal == 2391){ //Deduction
         	 var optionSystem = {
                      type: "M",                  
                      isShowChoose: false  
              };
+        
+             
              var systemPopParam = {groupCode : 140 , codeIn : [1352, 1353]};
              CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
+             //MEM GRID DISPLAY
+             $("#_purchMemBtn").css("display" , "");
+             $("#memTemp_grid_wrap").css("display" , "none");
         }
         
     });
@@ -164,6 +173,11 @@ $(document).ready(function() {
 		
 	});
     
+    //Member List
+    $("#_purchMemBtn").click(function() {
+    	Common.popupDiv("/sales/pos/posMemUploadPop.do", '', null , true , '_memDiv');
+	});
+    
 });//Document Ready Func End
 
 function fn_savePosRequest(){
@@ -232,7 +246,7 @@ function createPurchaseGridID(){
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                             	return Number(calObj.subTotal);
                             }},
-                            {dataField : "stkTypeId" , visible :true}
+                            {dataField : "stkTypeId" , visible :false}
                            ];
     
     //그리드 속성 설정
@@ -309,13 +323,46 @@ var serialGridPros = {
             groupingMessage     : "Here groupping"
     };
     
-  var seriaConfirmlColumnLayout =  [ 
+  var serialConfirmlColumnLayout =  [ 
                              {dataField : "matnr", headerText : "Filter Code", width : '33%' , editable : false  } ,
                              {dataField : "stkDesc", headerText : "Filter Name", width : '33%' , editable : false },
                              {dataField : "serialNo", headerText : "Serial", width : '33%' , editable : false } 
                             ];
     
-    serialTempGridID = GridCommon.createAUIGrid("#serialTemp_grid_wrap", seriaConfirmlColumnLayout,'', serialGridPros);  
+    serialTempGridID = GridCommon.createAUIGrid("#serialTemp_grid_wrap", serialConfirmlColumnLayout,'', serialGridPros);
+    AUIGrid.resize(serialTempGridID , 960, 300);
+}
+
+
+function creatememGridID(){
+
+	var memGridPros = {
+            
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            fixedColumnCount    : 1,            
+            showStateColumn     : false,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            softRemoveRowMode : false,
+            showRowCheckColumn : false, //checkBox
+            noDataMessage       : "No Item found.",
+            groupingMessage     : "Here groupping"
+    };
+	
+	var memConfirmlColumnLayout =  [ 
+	                                  {dataField : "", headerText : "Member ID", width : '25%' , editable : false  } ,
+	                                  {dataField : "", headerText : "Member Name", width : '25%' , editable : false },
+	                                  {dataField : "", headerText : "Member NRIC", width : '25%' , editable : false },
+	                                  {dataField : "", headerText : "Branch", width : '25%' , editable : false }
+	                                 ];
+	
+	memGridID = GridCommon.createAUIGrid("#memTemp_grid_wrap", memConfirmlColumnLayout,'', memGridPros);
 }
 
 //posItmSrchPop -> posSystemPop
@@ -437,13 +484,14 @@ function fn_calculateAmt(amt, qty) {
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a id="_purchBtn">Purchase Items</a></p></li>
-    <li><p class="btn_grid"><a href="#">Member List</a></p></li>
+    <li><p class="btn_grid" ><a id="_purchMemBtn" style="display: none;">Member List</a></p></li>
     <li><p class="btn_grid"><a id="_purcDelBtn">DEL</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="item_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
-<div id="serialTemp_grid_wrap" style="width:100%; height:480px; margin:0 auto; "></div>
+<div id="serialTemp_grid_wrap" style="width:100%; height:480px; margin:0 auto; display: none;"></div>
+<div id="memTemp_grid_wrap" style="width:100%; height:480px; margin:0 auto; display: none;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- pop_body end -->

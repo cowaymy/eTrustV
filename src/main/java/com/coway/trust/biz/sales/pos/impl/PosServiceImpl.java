@@ -55,9 +55,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 	}
 
 	@Override
-	public List<EgovMap> selectPSMItmTypeList() throws Exception {
+	public List<EgovMap> selectPSMItmTypeList(Map<String, Object> params) throws Exception {
 		
-		return posMapper.selectPSMItmTypeList();
+		return posMapper.selectPSMItmTypeList(params);
 	}
 
 	@Override
@@ -237,7 +237,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
                 				serialMap.put("posMasterSeq", posMasterSeq);
                 				serialMap.put("userId", params.get("userId"));
                 				//TODO ITEM Status ID? 
-                				serialMap.put("posItmStusId", 1);  
+                				//serialMap.put("posItmStusId", 1);  
                 				
                 				LOGGER.info("############### 2 - Serial - " + i + "  POS SERIAL INSERT START  ################");
                 				LOGGER.info("############### 2 - Serial - " + i + "  POS SERIAL INSERT param : " + serialMap.toString());
@@ -493,5 +493,11 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             Map<String, Object> rtnMap = new HashMap<String, Object>();
             rtnMap.put("reqDocNo", docNoPsn);
 		return rtnMap;
+	}
+
+	@Override
+	public List<EgovMap> getUploadMemList(Map<String, Object> params) throws Exception {
+		
+		return posMapper.getUploadMemList(params);
 	}
 }

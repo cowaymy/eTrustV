@@ -145,7 +145,7 @@
                 </if>  
     </select>
     
-    <select id="selectPSMItmTypeList" resultType="egovMap"> 
+    <select id="selectPSMItmTypeList" parameterType="Map" resultType="egovMap"> 
 <![CDATA[
 SELECT DISTINCT 
        Project4.CODE_DESC CODE_NAME,
@@ -259,7 +259,13 @@ SELECT DISTINCT
                 OR ( ( Distinct2.CODE_DESC IS NULL )
                 AND ( Distinct3.CODE_DESC IS NULL ) ) ) Project4
                 ]]>
-			    
+                <if test=" null != exArr and exArr.length > 0">
+                WHERE Project4.STK_TYPE_ID NOT IN 
+                    <foreach collection="exArr" item="item" open="(" separator=","  close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                ORDER BY Project4.STK_TYPE_ID
 <!-- SELECT 
         CODE_ID,
         CODE_NAME
@@ -1088,10 +1094,28 @@ SELECT DISTINCT
                                            #{posMasterSeq}, 
                                            #{matnr},
                                            #{serialNo},
-                                           #{posItmStusId}, 
+                                           NULL, 
                                            SYSDATE,
                                            #{userId},
                                            SYSDATE,
                                            #{userId})
     </insert>
+    
+    <select id="getUploadMemList" parameterType="Map" resultType="egovMap">
+				SELECT 
+				    T1.MEM_ID,
+                    T1.MEM_CODE,
+                    T1.NAME,
+                    T1.NRIC,
+                    T2.CODE,
+                    T1.BRNCH
+				 FROM
+				     ORG0001D T1 LEFT JOIN SYS0005M T2 ON T2.BRNCH_ID = T1.BRNCH
+				  <if test=" null != memberIdArr and memberIdArr.length > 0">
+				    WHERE T1.MEM_CODE IN 
+				    <foreach collection="memberIdArr" item="item" open="(" separator="," close=")">
+				        #{item}
+				    </foreach>
+				  </if>    
+    </select>
 </mapper>

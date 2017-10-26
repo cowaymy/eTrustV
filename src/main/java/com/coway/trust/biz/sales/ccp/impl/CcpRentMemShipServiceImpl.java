@@ -20,7 +20,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("ccpRentMemShipService")
-public class CcpRentMemShipServiceImpl  extends EgovAbstractServiceImpl implements CcpRentMemShipService {
+public class CcpRentMemShipServiceImpl extends EgovAbstractServiceImpl implements CcpRentMemShipService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CcpRentMemShipServiceImpl.class);
 	

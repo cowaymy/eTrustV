@@ -446,22 +446,49 @@ function fn_createBasketGrid(){
 
 function fn_initField(){
 	//ComboBox Options
-	//Init -- Item Type ComboBox 
-    if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
-        //ComboBox 호출 (Type)
-        CommonCombo.make('_purcItemType', "/sales/pos/selectPSMItmTypeList", '' , '', ComboOption);
-         // 추후 변경
-        var itmType = {itemType : 64};
-        CommonCombo.make('_purcItems', "/sales/pos/selectPSMItmList", itmType , '', ItmOption);
-    }
-    
-    if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
-        //ComboBox 호출 (Type)
-        CommonCombo.make('_purcItemType', "/sales/pos/selectPIItmTypeList", '' , '', ComboOption);
-        // Select Value 추후 변경 
-        var itmType = {itemType : 1345};
-        CommonCombo.make('_purcItems', "/sales/pos/selectPIItmList", itmType , '', ItmOption);
-    }
+	//Init -- Item Type ComboBox
+	
+	if($("#_posModuleType").val() == 2390){ //2390 == POS Sales
+	
+	    if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
+	        //ComboBox 호출 (Type)
+	        CommonCombo.make('_purcItemType', "/sales/pos/selectPSMItmTypeList", '' , '', ComboOption);
+	         // 추후 변경
+	        var itmType = {itemType : 61};
+	        CommonCombo.make('_purcItems', "/sales/pos/selectPSMItmList", itmType , '', ItmOption);
+	    }
+	    
+	    if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
+	        //ComboBox 호출 (Type)
+	        CommonCombo.make('_purcItemType', "/sales/pos/selectPIItmTypeList", '' , '', ComboOption);
+	        // Select Value 추후 변경 
+	        var itmType = {itemType : 1345};
+	        CommonCombo.make('_purcItems', "/sales/pos/selectPIItmList", itmType , '', ItmOption);
+	    }
+	}
+	
+	if($("#_posModuleType").val() == 2391){ //2391 == Deduction Commission
+		
+		if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
+            //ComboBox 호출 (Type)
+			var exceptCodes = [62,63];   //filter , parts
+			var excepMap = { exceptCodes : exceptCodes};
+			$("#_gridArea").css("display" , "none");  //Serial Grid Display None
+            CommonCombo.make('_purcItemType', "/sales/pos/selectPSMItmTypeDeductionList", excepMap , '', ComboOption);
+             // 추후 변경
+            var itmType = {itemType : 61};
+            CommonCombo.make('_purcItems', "/sales/pos/selectPSMItmList", itmType , '', ItmOption);
+        }
+		
+		if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
+            //ComboBox 호출 (Type)
+            CommonCombo.make('_purcItemType', "/sales/pos/selectPIItmTypeList", '' , '', ComboOption);
+            // Select Value 추후 변경 
+            $("#_gridArea").css("display" , "none"); //Serial Grid Display None
+            var itmType = {itemType : 1345};
+            CommonCombo.make('_purcItems', "/sales/pos/selectPIItmList", itmType , '', ItmOption);
+        }
+	}
 }
 
 
@@ -481,6 +508,7 @@ function f_multiCombo(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <!-- get Values from Controller -->
+<input type="hidden" id="_posModuleType" name="posModuleType" value="${posSystemModuleType}">
 <input type="hidden" id="_posSystemType" value="${posSystemType}" >
 <input type="hidden" id="_whBrnchId" value="${whBrnchId}">
 
@@ -550,6 +578,8 @@ function f_multiCombo(){
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">SERIAL</a></p></li>
 </ul> -->
+<div id="_gridArea">
+
 <aside class="title_line"><!-- title_line start -->
 <h2>Filter Serial Information</h2>
 </aside><!-- title_line end -->
@@ -558,6 +588,7 @@ function f_multiCombo(){
 <div id="serial_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
+</div>
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a id="_itemSrchSaveBtn">Save</a></p></li>
 </ul>

@@ -1,9 +1,7 @@
 package com.coway.trust.web.sales.pos;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -17,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.pos.PosService;
-import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
@@ -156,6 +152,7 @@ public class PosController {
 	public String posItmSrchPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		//Params translate
+		model.addAttribute("posSystemModuleType", params.get("insPosModuleType"));
 		model.addAttribute("posSystemType", params.get("insPosSystemType"));
 		model.addAttribute("whBrnchId", params.get("hidLocId"));
 		model.addAttribute("", params.get("hidLocDesc"));
@@ -166,10 +163,24 @@ public class PosController {
 	
 	
 	@RequestMapping(value = "/selectPSMItmTypeList")
-	public ResponseEntity<List<EgovMap>> selectPSMItmTypeList() throws Exception{
+	public ResponseEntity<List<EgovMap>> selectPSMItmTypeList(@RequestParam Map<String, Object> params) throws Exception{
 		
 		List<EgovMap> codeList = null;
-		codeList = posService.selectPSMItmTypeList();
+		codeList = posService.selectPSMItmTypeList(params);
+		
+		return ResponseEntity.ok(codeList);
+	}
+	
+	@RequestMapping(value = "/selectPSMItmTypeDeductionList")
+	public ResponseEntity<List<EgovMap>> selectPSMItmTypeDeductionList(@RequestParam Map<String, Object> params, @RequestParam(value = "exceptCodes[]")  String[] exceptArr) throws Exception{
+		
+		List<EgovMap> codeList = null;
+		
+		params.put("exArr", exceptArr);
+		
+		LOGGER.info("############# selectPSMItmTypeList params : " + params.toString() );
+		
+		codeList = posService.selectPSMItmTypeList(params);
 		
 		return ResponseEntity.ok(codeList);
 	}
@@ -304,5 +315,24 @@ public class PosController {
 		
 		return ResponseEntity.ok(retunMap);
 		
+	}
+	
+	@RequestMapping(value = "/posMemUploadPop.do")
+	public String posMemUploadPop (@RequestParam Map<String, Object> params) throws Exception{
+		
+		return "sales/pos/posMemUploadPop";
+	}
+	
+	
+	@RequestMapping(value = "/getUploadMemList")   
+	public ResponseEntity<List<EgovMap>> getUploadMemList (@RequestParam Map<String, Object> params, @RequestParam(value = "memIdArray[]") String[] memIdArray) throws Exception{
+		List<EgovMap> memList = null;
+		
+		//Params
+		params.put("memberIdArr", memIdArray);
+		
+		memList = posService.getUploadMemList(params);
+		
+		return ResponseEntity.ok(memList);
 	}
 }

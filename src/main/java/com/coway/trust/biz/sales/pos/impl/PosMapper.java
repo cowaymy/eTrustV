@@ -18,7 +18,7 @@ public interface PosMapper {
 	
 	EgovMap selectWarehouse(Map<String, Object> params);
 	
-	List<EgovMap> selectPSMItmTypeList();
+	List<EgovMap> selectPSMItmTypeList(Map<String, Object> params);
 	
 	List<EgovMap> selectPIItmTypeList();
 	
@@ -78,4 +78,6 @@ public interface PosMapper {
 	void insertStkRecord(Map<String, Object> params);
 	
 	void insertSerialNo(Map<String, Object> params);
+	
+	List<EgovMap> getUploadMemList(Map<String, Object> params);
 }
