@@ -41,7 +41,7 @@ var userCode;
                          {
                              type : "CheckBoxEditRenderer",
                              showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                             //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                              //checkValue : "1426", // true, false 인 경우가 기본
                              unCheckValue : ""
                          }  
@@ -51,7 +51,7 @@ var userCode;
                           {
                               type : "CheckBoxEditRenderer",
                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                              editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                              //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                               //checkValue : "1426", // true, false 인 경우가 기본
                               unCheckValue : ""
                           }  
@@ -61,7 +61,7 @@ var userCode;
                           {
                               type : "CheckBoxEditRenderer",
                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                              editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                              //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                               //checkValue : "1426", // true, false 인 경우가 기본
                               unCheckValue : ""
                           }                
@@ -69,7 +69,22 @@ var userCode;
                       {dataField:"c1"        ,headerText:"Creator"               ,width:110    ,height:30 },
                       {dataField:"crtDt"       ,headerText:"Create Date"               ,width:110    ,height:30},
                       {dataField:""      ,headerText:"ddd"       ,width:120    ,height:30                },
-                      {dataField:"fileUrl"        ,headerText:"FILE_URL"         ,width:120    ,height:30,visible:false                }];                     
+                      {dataField:"fileUrl"        ,headerText:"FILE_URL"         ,width:120    ,height:30               },
+                      {
+                          dataField : "",
+                          headerText : "",
+                          renderer : {
+                              type : "ButtonRenderer",
+                              labelText : "Download",
+                              onclick : function(rowIndex, columnIndex, value, item) {
+                                  //gridNm = filterGrid;
+                                 // chkNum =1;
+                                // removeRow(rowIndex, gridNm,chkNum);
+                              }
+                          }
+                      , editable : false
+                      }
+                      ];                     
                                     
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
 var gridoptions = {
@@ -165,14 +180,20 @@ $(function(){
     
     $("input:radio[name=insTypeLabel]").click(function(){
         var radioValue =    $("input:radio[name=insTypeLabel]:checked").val();
-           alert("radioValue :  "+radioValue);
        
            if(radioValue == "E" ){
+        	   var val = $("#insType").val();
+	       	   $("#insNewLabel").val(""); 
+        	   $("#insExistingLabel").attr("disabled", false);
         	   $("#ExistingLabel").show(); 
         	   $("#NewLabel").hide(); 
+        	   $("#thLabel").text("Existing Label"); 
+        	   doGetComboSelBox('/logistics/file/selectLabelList.do', '' , val , '','insExistingLabel', 'S', ''); //Label 리스트 조회                
             }else{
+        	    $("#insExistingLabel").val(""); 
             	$("#NewLabel").show();
             	$("#ExistingLabel").hide(); 
+        	   $("#thLabel").text("New Label"); 
             }       
     }) 
     
@@ -251,11 +272,16 @@ function f_multiCombo() {
 
 
 function getComboRelayss(obj, value, tag, selvalue) {
-	alert("value :  "+value);
     var robj = '#' + obj;
-    $(robj).attr("disabled", false);    
+    $(robj).attr("disabled", false);
+    $("input[name='insTypeLabel']").prop('checked', false);
     $("#insTypeLabel1").attr("disabled", false); 
     $("#insTypeLabel2").attr("disabled", false); 
+    $("#insNewLabel").val(""); 
+    $("#insExistingLabel").val(""); 
+    $("#ExistingLabel").show(); 
+    $("#NewLabel").hide(); 
+    $("#thLabel").text("Existing Label"); 
     doGetComboSelBox('/logistics/file/selectLabelList.do', tag , value , selvalue,obj, 'S', ''); //Label 리스트 조회                
 }
 
@@ -376,6 +402,23 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
                          
             </tbody>
         </table><!-- table end -->
+     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+		<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+		<dl class="link_list">
+		    <dt>Link</dt>
+		    <dd>
+		    <ul class="btns">
+		        <li><p class="link_btn"><a id="editFile">Edit File Space</a></p></li>
+		        <li><p class="link_btn"><a id="reUpFile">Re-Upload File</a></p></li>
+		    </ul>
+		    <ul class="btns">
+		        <li><p class="link_btn type2"><a id="newUpFile">Upload New File</a></p></li>
+		    </ul>
+		    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+		    </dd>
+		</dl>
+		</aside><!-- link_btns_wrap end -->
+		        
     </form>
 
     </section><!-- search_table end -->
@@ -383,11 +426,11 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
     
-        <ul class="right_btns">
+      <!--   <ul class="right_btns">
          <li><p class="btn_grid"><a id="newUpFile"><span class="search"></span>Upload New File</a></p></li>    
          <li><p class="btn_grid"><a id="editFile"><span class="search"></span>Edit File Space</a></p></li>
          <li><p class="btn_grid"><a id="reUpFile"><span class="search"></span>Re-Upload File</a></p></li>        
-        </ul>
+        </ul> -->
 
         <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
        
@@ -420,7 +463,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 <tr>
     <th scope="row">Type</th>
     <td colspan="2" >
-    <select class="w100p" id="insType" name="insType" onchange="getComboRelayss('insExistingLabel' , this.value , '', '1')" ><option value=''>Choose One</option></select>
+    <select class="w100p" id="insType" name="insType" onchange="getComboRelayss('' , this.value , '', '1')" ><option value=''>Choose One</option></select>
     </td>
     <th scope="row"></th>
     <td colspan="2" ></td>
@@ -431,7 +474,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
     <label><input type="radio" id="insTypeLabel1" name="insTypeLabel" value="E"  disabled="disabled"  /><span>Existing Label</span></label>
     <label><input type="radio" id="insTypeLabel2" name="insTypeLabel" value="N"  disabled="disabled" /><span>New Label</span></label>
     </td>
-    <th scope="row">New Label</th>
+    <th scope="row" id="thLabel">Existing Label</th>
     <td colspan="2" id="NewLabel" style="display: none;"><input type="text" title="" placeholder=""  class="w100p" id="insNewLabel" name="insNewLabel"/></td>
     <td colspan="2" id="ExistingLabel"  ><select class="w100p" id="insExistingLabel" name="insExistingLabel" disabled="disabled"><option value=''>Choose One</option></select></td>
 </tr>
@@ -442,9 +485,9 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
     </td>
     <th scope="row">Allow Member</th>
     <td colspan="2" >
-        <label><input type="checkbox"  id="insStaff" name="insStaff"   /><span>Staff</span></label>
-        <label><input type="checkbox"  id="insCody" name="insCody"  /><span>Cody</span></label>
-        <label><input type="checkbox"  id="insHP" name="insHP"  /><span>HP</span></label>  
+        <label><input type="checkbox"  id="insStaff" name="insStaff"  checked="checked" /><span>Staff</span></label>
+        <label><input type="checkbox"  id="insCody" name="insCody"   checked="checked" /><span>Cody</span></label>
+        <label><input type="checkbox"  id="insHP" name="insHP"   checked="checked" /><span>HP</span></label>  
     </td>
 </tr>
 <tr>
@@ -493,7 +536,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
     <th scope="row">Select File</th>
     <td colspan="5" >
     <div class="auto_file"><!-- auto_file start -->
-            <input type="file" id="" title="file add" accept=".csv"/>
+            <input type="file" id="" title="file add" accept=".zip"/>
     </div><!-- auto_file end -->
     </td>
 </tr>
