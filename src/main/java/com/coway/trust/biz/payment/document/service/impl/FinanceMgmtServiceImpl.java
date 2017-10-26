@@ -192,7 +192,7 @@ public class FinanceMgmtServiceImpl extends EgovAbstractServiceImpl implements F
 
 	@Override
 	public void insertPaymentDocLog(Map<String, Object> params) {
-		financeMgmtMapper.updatePayDocDetail(params);
+		financeMgmtMapper.insertPaymentDocLog(params);
 	}
 
 	@Override
