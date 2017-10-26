@@ -397,7 +397,7 @@
                                                     </foreach>
                                         </if>
 		                                 AND 1 = Extent2.BATCH_STUS_ID 
-		                                 <!-- AND 53 = Extent1.ITM_STUS_ID   -->
+		                                 AND 53 = Extent1.ITM_STUS_ID
 		                                 ) Filter1
 		                       LEFT JOIN SYS0001M Extent10   ON Extent10.ACC_ID = Filter1.ACC_ID
 		                 WHERE 1=1
@@ -854,7 +854,7 @@
 		                                Extent2.PAY_ID PAY_ID  ,
 		                                CASE 
 		                                     WHEN ( Extent2.PAY_ITM_IS_ONLINE IS NOT NULL ) THEN Extent2.PAY_ITM_IS_ONLINE
-		                                ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+		                                ELSE 0
 		                                   END C1  ,
 		                                CASE 
 		                                     WHEN ( Extent2.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent2.PAY_ITM_ORI_CC_NO
@@ -949,57 +949,56 @@
 		                       AND ( Extent1.BILL_ID > 0 )
 		                       LEFT JOIN SAL0001D Extent6   ON ( Extent5.BILL_SO_ID = Extent6.SALES_ORD_ID )
 		                       LEFT JOIN ORG0001D Extent7   ON ( Extent5.BILL_MEM_ID = Extent7.MEM_ID )
-		                       
 		                       AND ( Extent5.BILL_MEM_ID > 0 )
-		                 WHERE  ( Extent1.TRX_ID = '13175751' )
+		                 WHERE  ( Extent1.TRX_ID = #{trxId} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_MODE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_MODE_ID
 		                        ELSE 0
-		                           END) = '107' )
+		                           END) = #{payModeId} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_IS_ONLINE IS NOT NULL ) THEN Extent2.PAY_ITM_IS_ONLINE
 		                        ELSE 0
-		                           END) = '0' )
+		                           END) = #{isOnline} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent2.PAY_ITM_ORI_CC_NO
 		                        ELSE ' '
-		                           END) = '5400419007457721' )
+		                           END) = #{oriCcNo} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_CC_TYPE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_CC_TYPE_ID
 		                        ELSE 0
-		                           END) = '111' )
+		                           END) = #{ccTypeId} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_CC_HOLDER_NAME IS NOT NULL ) THEN Extent2.PAY_ITM_CC_HOLDER_NAME
 		                        ELSE ' '
-		                           END) = 'NOR AZIDAH ABD AZIZ' )
+		                           END) = #{ccHolderName} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_CC_EXPR_DT IS NOT NULL ) THEN Extent2.PAY_ITM_CC_EXPR_DT
 		                        ELSE ' '
-		                           END) = '12/20' )
+		                           END) = #{ccExpr} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_ISSU_BANK_ID IS NOT NULL ) THEN Extent2.PAY_ITM_ISSU_BANK_ID
 		                        ELSE 0
-		                           END) = '17' )
+		                           END) = #{bankId} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_REF_DT IS NOT NULL ) THEN TO_DATE(Extent2.PAY_ITM_REF_DT)
 		                        ELSE TO_DATE('1900/01/01')
-		                           END) = '2017/06/08' )
+		                           END) = TO_CHAR(TO_DATE(#{refDate},'DD/MM/YY'),'YYYY/MM/DD') )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_APPV_NO IS NOT NULL ) THEN Extent2.PAY_ITM_APPV_NO
 		                        ELSE ' '
-		                           END) = 'R81438' )
+		                           END) = #{appvNo} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_MID IS NOT NULL ) THEN Extent2.PAY_ITM_MID
 		                        ELSE ' '
-		                           END) = ' ' )
+		                           END) = #{mid} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent1.BRNCH_ID IS NOT NULL ) THEN Extent1.BRNCH_ID
 		                        ELSE 0
-		                           END) = '42' )
+		                           END) = #{brnchId} )
 		                          AND ( (CASE 
 		                                      WHEN ( Extent2.PAY_ITM_REF_NO IS NOT NULL ) THEN Extent2.PAY_ITM_REF_NO
 		                        ELSE ' '
-		                           END) = ' ' ) 
+		                           END) = #{refNo} ) 
 		                       ) Distinct1 ) Project2
 		  ORDER BY Project2.PAY_ITM_ID ASC
     </select>
