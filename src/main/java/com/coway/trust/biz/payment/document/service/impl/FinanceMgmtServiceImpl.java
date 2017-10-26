@@ -93,7 +93,7 @@ public class FinanceMgmtServiceImpl extends EgovAbstractServiceImpl implements F
 
 	@Override
 	@Transactional
-	public List savePayDoc(List<Map<String, Object>> list, String remark, int userId) {
+	public List savePayDoc(List<Map<String, Object>> list, String remark) {
 		Date curdate = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String today = sdf.format(curdate);
@@ -164,7 +164,7 @@ public class FinanceMgmtServiceImpl extends EgovAbstractServiceImpl implements F
 				batchInfo.put("batchTotReview", totalReview);
 				batchInfo.put("batchTotResend", totalResend);
 				batchInfo.put("updDt", today);
-				batchInfo.put("userId", userId);
+				batchInfo.put("userId", list.get(0).get("updator"));
 				
 				if(totalNew == 0 && totalReview == 0 && totalPending ==0 && totalResend == 0){
 					batchInfo.put("statusId", 36);

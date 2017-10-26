@@ -175,6 +175,7 @@ public class FinanceMgmtController {
         ReturnMessage mes = new ReturnMessage();
         
         int userId = sessionVO.getUserId();
+        System.out.println("userId : " + userId);
         String message = "";
         if(userId > 0){
             List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
@@ -188,7 +189,7 @@ public class FinanceMgmtController {
             
             if(payDocList.size() > 0){
             	Map tmp = (Map)formList.get(0);
-            	List reValue = financeMgmtService.savePayDoc(payDocList, String.valueOf(tmp.get("remark")), userId);
+            	List reValue = financeMgmtService.savePayDoc(payDocList, String.valueOf(tmp.get("remark")));
             	
             	if(reValue.size() > 0){
             		message = "Document(s) status have been updated.<br />" + "Batch closed : " +reValue.size() ;
