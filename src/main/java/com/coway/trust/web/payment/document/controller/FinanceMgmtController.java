@@ -174,7 +174,7 @@ public class FinanceMgmtController {
         LOGGER.debug("##params : {}", params);
         ReturnMessage mes = new ReturnMessage();
         
-        int userId = sessionVO.getUserBranchId();
+        int userId = sessionVO.getUserId();
         String message = "";
         if(userId > 0){
             List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
