@@ -74,6 +74,7 @@ import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatus
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockBarcodeListVo;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockNoneBarcodeListVo;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -105,6 +106,10 @@ public class LogisticsApiController {
 			LOGGER.debug("RDCStockList    값 : {}", RDCStockList.get(i));
 
 		}
+		
+		/*if (RDCStockList.isEmpty()){
+			throw new ApplicationException("999", "Not Found Data");
+		}*/
 
 		List<RdcStockListDto> list = RDCStockList.stream().map(r -> RdcStockListDto.create(r))
 				.collect(Collectors.toList());
