@@ -32,20 +32,20 @@ var gridPros = {
 
 $(document).ready(function(){
 	
-	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'42' , 'keyBranchWaiting' , 'S', ''); //key-in Branch 생성
-    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'42' , 'keyBranchReview' , 'S', ''); //key-in Branch 생성
+	watingGridID = GridCommon.createAUIGrid("wating_grid_wrap", watingColumnLayout,null,gridPros);
+    reviewGridID = GridCommon.createAUIGrid("review_grid_wrap", reviewColumnLayout,null,gridPros);
 	
-	$("#isOnlineWaiting").multipleSelect("setSelects", [0]);
-	$("#isOnlineReview").multipleSelect("checkAll");
-	
-	doGetCombo('/sales/customer/selectAccBank.do', '', '', 'bankWaiting', 'S', '')//selCodeAccBankId(Issue Bank)
+	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  , '${branchId}' , 'keyBranchWaiting' , 'S', ''); //key-in Branch 생성
+    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  , '${branchId}' , 'keyBranchReview' , 'S', ''); //key-in Branch 생성
+    
+    doGetCombo('/sales/customer/selectAccBank.do', '', '', 'bankWaiting', 'S', '')//selCodeAccBankId(Issue Bank)
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'bankReview', 'S', '')//selCodeAccBankId(Issue Bank)
     
     doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'settleAccWaiting' , 'S', '');
     doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'settleAccReview' , 'S', '');
-    
-    watingGridID = GridCommon.createAUIGrid("wating_grid_wrap", watingColumnLayout,null,gridPros);
-    reviewGridID = GridCommon.createAUIGrid("review_grid_wrap", reviewColumnLayout,null,gridPros);
+	
+	$("#isOnlineWaiting").multipleSelect("setSelects", [0]);
+	$("#isOnlineReview").multipleSelect("checkAll");
     
     fn_watingLoadInfo();
     fn_reviewLoadInfo();

@@ -47,7 +47,10 @@ public class AdminMgmtController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initAdminMgmt.do")
-	public String initDailyCollection(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initDailyCollection(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		model.addAttribute("branchId", sessionVO.getUserBranchId());
+		LOGGER.debug("sessionVO : {}", sessionVO.getUserBranchId());
 		return "payment/document/adminMgmt";
 	}
 	
