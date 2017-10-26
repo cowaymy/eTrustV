@@ -68,4 +68,38 @@ public interface FinanceMgmtMapper {
 	 */
 	List<EgovMap> selectDocItemPaymentItem2(Map<String, Object> params);
 
+	/**
+	 * PayDocList 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectPayDocumentDetail(Map<String, Object> params);
+	
+	/**
+	 * PayDocDetail 업데이트
+	 * @param params
+	 * @return
+	 */
+	void updatePayDocDetail(Map<String, Object> params);
+	
+	/**
+	 * Log에 저장
+	 * @param params
+	 * @return
+	 */
+	void insertPaymentDocLog(Map<String, Object> params);
+	
+	/**
+	 * PayDoc 타입별 누적 갯수 조회
+	 * @param params
+	 * @return
+	 */
+	int countPayDocDetail(Map<String, Object> params);
+	
+	/**
+	 *  PayDocMaster 업데이트
+	 * @param params
+	 * @return
+	 */
+	void updatePayDocMaster(Map<String, Object> params);
 }

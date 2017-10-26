@@ -560,4 +560,87 @@
       ) Distinct1
   ORDER BY Distinct1.PAY_ITM_ID ASC
     </select>
+    
+    <select id="selectPayDocumentDetail"  parameterType="Map" resultType="egovMap">
+        SELECT Extent1.ITM_ID ITM_ID  ,
+			       Extent1.BATCH_ID BATCH_ID  ,
+			       Extent1.ITM_STUS_ID ITM_STUS_ID  ,
+			       Extent1.TRX_ID TRX_ID  ,
+			       Extent1.AMT AMT  ,
+			       Extent1.PAY_MODE_ID PAY_MODE_ID  ,
+			       Extent1.IS_ONLINE IS_ONLINE  ,
+			       Extent1.ORI_CC_NO ORI_CC_NO  ,
+			       Extent1.CC_TYPE_ID CC_TYPE_ID  ,
+			       Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+			       Extent1.CC_EXPR CC_EXPR  ,
+			       Extent1.BANK_ID BANK_ID  ,
+			       Extent1.REF_DT REF_DT  ,
+			       Extent1.APPV_NO APPV_NO  ,
+			       Extent1.REF_NO REF_NO  ,
+			       Extent1.CRT_DT CRT_DT  ,
+			       Extent1.CRT_USER_ID CRT_USER_ID  ,
+			       Extent1.UPD_DT UPD_DT  ,
+			       Extent1.UPD_USER_ID UPD_USER_ID  ,
+			       Extent1.MID MID  ,
+			       Extent1.BRNCH_ID BRNCH_ID  ,
+			       Extent1.PAY_DT PAY_DT  ,
+			       Extent1.ACC_ID ACC_ID  
+		  FROM PAY0097D Extent1
+	   WHERE  Extent1.ITM_ID = #{itemId} AND ROWNUM <![CDATA[<=]]> 1     
+    </select>
+    
+    <update id="updatePayDocDetail" parameterType="Map">
+        UPDATE PAY0097D
+	          SET ITM_STUS_ID = #{itemStatusId},
+	                UPD_DT = TO_DATE(#{updated}, 'YYYY-MM-DD HH24:MI:SS'),
+	                UPD_USER_ID = #{updator}
+	    WHERE  ( ITM_ID = #{itemId} )
+    </update>
+    
+    <insert id="insertPaymentDocLog" parameterType="Map">
+        INSERT INTO PAY0171D
+		( 
+		    LOG_ID,
+		    ITM_ID, 
+		    REM, 
+		    CRT_DT, 
+		    CRT_USER_ID, 
+		    SEND_DT, 
+		    CMPLT_DT, 
+		    REVIW_DT, 
+		    STUS_CODE_ID, 
+		    INCMPT_DT 
+		)
+		  VALUES
+		 ( 
+		  PAY0171D_SEQ.NEXTVAL,
+		  #{itemId}, 
+		  #{remark}, 
+		  TO_DATE(#{updated}, 'YYYY-MM-DD HH24:MI:SS'), 
+		  #{updator}, 
+		  TO_DATE(#{sendDate}, 'YYYY-MM-DD HH24:MI:SS'), 
+		  TO_DATE(#{completeDate}, 'YYYY-MM-DD HH24:MI:SS'), 
+		  TO_DATE(#{reviewDate}, 'YYYY-MM-DD HH24:MI:SS'),
+		  #{statusCodeId}, 
+		  TO_DATE(#{incompleteDate}, 'YYYY-MM-DD HH24:MI:SS') 
+		)
+    </insert>
+    
+    <select id="countPayDocDetail" parameterType="Map" resultType="java.lang.Integer">
+        SELECT COUNT(1)  A1  
+	      FROM PAY0097D Extent1
+	    WHERE  ( Extent1.BATCH_ID = #{batchId} )
+	        AND ( #{statusId} = Extent1.ITM_STUS_ID )
+    </select>
+    
+    <update id="updatePayDocMaster" parameterType="Map">
+        UPDATE PAY0170M
+			 SET BATCH_STUS_ID = #{statusId},
+			       BATCH_RESULT_STUS_ID = #{batchResultStatusId},
+			       BATCH_TOT_CMPLT = #{batchTotComplete},
+			       UPD_DT = TO_DATE(#{updDt}, 'YYYY-MM-DD HH24:MI:SS'),
+			       UPD_USER_ID = #{userId},
+			       BATCH_TOT_NW = #{batchTotNew}
+	   WHERE  ( BATCH_ID = #{batchId} )
+    </update>
 </mapper>

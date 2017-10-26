@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,7 +95,7 @@ public class FinanceMgmtController {
 	public ResponseEntity<List<EgovMap>> selectCreditCardList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		 String[] online = request.getParameterValues("cOnline");
 		 params.put("cOnline", online);
-        LOGGER.debug("params : {}", params);
+        LOGGER.debug("---------params : {}", params);
         
         List<EgovMap> list = financeMgmtService.selectCreditCardList(params);
 
@@ -167,10 +168,84 @@ public class FinanceMgmtController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/saveReceiveList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> saveReceiveList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+	@RequestMapping(value = "/saveReceiveList.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveReceiveList(@RequestBody Map<String, Object> params, ModelMap model, 
+			HttpServletRequest request, SessionVO sessionVO) {
         LOGGER.debug("##params : {}", params);
+        ReturnMessage mes = new ReturnMessage();
         
-        return ResponseEntity.ok(null);
+        int userId = sessionVO.getUserBranchId();
+        String message = "";
+        if(userId > 0){
+            List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+            List<Object> formList = (List<Object>) params.get(AppConstants.AUIGRID_FORM);
+            
+            List<Map<String, Object>> payDocList = new ArrayList<Map<String, Object>>();
+            if(checkList.size() > 0){
+            	Map<String, Object> formMap = (Map<String, Object>)formList.get(0); 
+            	payDocList = this.setPayDocList(checkList, userId, String.valueOf(formMap.get("statusId")));
+            }
+            
+            if(payDocList.size() > 0){
+            	Map tmp = (Map)formList.get(0);
+            	List reValue = financeMgmtService.savePayDoc(payDocList, String.valueOf(tmp.get("remark")), userId);
+            	
+            	if(reValue.size() > 0){
+            		message = "Document(s) status have been updated.<br />" + "Batch closed : " +reValue.size() ;
+            	}else{
+            		message = "Failed to save. Please try again later.";
+            	}
+            }
+        }else{
+        	message = "Your login session was expired. Please relogin to our system.";
+        }
+
+        mes.setCode(AppConstants.SUCCESS);
+    	mes.setMessage(message);
+
+        return ResponseEntity.ok(mes);
+	}
+	
+	private List<Map<String,Object>> setPayDocList(List checkList, int userId, String statusId){
+		List<Map<String, Object>> payDocList = new ArrayList<Map<String, Object>>();
+		
+		Date curdate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String today = sdf.format(curdate);
+		
+		for(Object param : checkList){
+			Map <String, Object> payDocDetail = new HashMap<String, Object>();
+			Map<String, Object> checkMap = (Map<String, Object>) param;
+			Map<String, Object> item = (Map<String,Object>)checkMap.get("item");
+			System.out.println("####item : " + item);
+			
+			payDocDetail.put("itemId", item.get("itmId"));
+			payDocDetail.put("batchId", item.get("batchId"));
+			payDocDetail.put("itemStatusId", statusId);
+			payDocDetail.put("trxId", 0);
+			payDocDetail.put("amount", 0);
+			payDocDetail.put("paymodeId", 0);
+			payDocDetail.put("isOnline", false);
+			payDocDetail.put("oriCcNo", "");
+			payDocDetail.put("ccTypeId", 0);
+			payDocDetail.put("ccHolderName", "");
+			payDocDetail.put("ccExpiry", "");
+			payDocDetail.put("bankId", 0);
+			payDocDetail.put("refDate", "1900-01-01 00:00:00");
+			payDocDetail.put("AppvNo", "");
+			payDocDetail.put("refNo", "");
+			payDocDetail.put("created", today);
+			payDocDetail.put("creator", userId);
+			payDocDetail.put("updated", today);
+			payDocDetail.put("updator", userId);
+			payDocDetail.put("mid", "");
+			payDocDetail.put("branchId", 0);
+			payDocDetail.put("payDate", "1900-01-01 00:00:00");
+			payDocDetail.put("accId", 0);
+			
+			payDocList.add(payDocDetail);
+		}
+		
+		return payDocList;
 	}
 }

@@ -235,7 +235,9 @@ $(document).ready(function(){
     
     doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'rSetAccount' , 'S', '');
     doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'cSetAccount' , 'S', '');
-	 
+    
+    fn_rSearch();
+    fn_cSearch();
 });
 
 function fn_rSearch(){
@@ -257,9 +259,17 @@ function fn_cSearch(){
 
 function fn_save(){
 	var selectedItems = AUIGrid.getSelectedItems(receiveListGrid);
-	console.log(selectedItems);
-	Common.ajax("GET", "/payment/saveReceiveList.do", {"selectedItems":selectedItems}, function(result) {
-        //AUIGrid.setGridData(creditCardGrid, result);
+	$("#savePop").show();
+	$("#totalSelectedItem").text(selectedItems.length);
+}
+
+function fn_confirmSave(){
+	var data = {};
+    var selectedItems = AUIGrid.getSelectedItems(receiveListGrid);
+    data.checked = selectedItems;
+    data.form = [{"remark":$("#pRemark").val(),"statusId":$("#pStatus").val()}];
+    Common.ajax("POST", "/payment/saveReceiveList.do", data, function(result) {
+        Common.alert(result.message);
     });
 }
 </script>
@@ -663,3 +673,49 @@ function fn_save(){
     </section>
     <!-- pop_body end -->
 </div>
+
+<div id="savePop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+            <header class="pop_header"><!-- pop_header start -->
+                <h1>RECEIVE LIST-SAVE</h1>
+                <ul class="right_opt">
+                    <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+                </ul>
+            </header><!-- pop_header end -->
+            <section class="pop_body"><!-- pop_body start -->
+                <table class="type1"><!-- table start -->
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:140px" />
+                        <col style="width:*" />
+                        <col style="width:180px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Total Selected</th>
+                            <td id="totalSelectedItem">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Status</th>
+                            <td>
+                                <select id="pStatus" name="pStatus">
+                                    <option value="4">Complete</option>
+                                    <option value="50">Incomplete</option>
+                                    <option value="53">Review</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Remark</th>
+                            <td colspan="3">
+                                <textarea cols="20" rows="5" placeholder=""  id="pRemark"></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table><!-- table end -->
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmSave();" id="btnConfirmResend">Confirm Send</a></p></li>
+                </ul>
+            </section><!-- pop_body end -->
+</div><!-- popup_wrap end -->
