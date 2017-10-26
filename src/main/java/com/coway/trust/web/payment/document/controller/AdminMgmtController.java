@@ -1,5 +1,8 @@
 package com.coway.trust.web.payment.document.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -15,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.document.service.AdminMgmtService;
+import com.coway.trust.biz.payment.document.service.FinanceMgmtService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -27,6 +32,9 @@ public class AdminMgmtController {
 	
 	@Resource(name = "adminMgmtService")
 	private AdminMgmtService adminMgmtService;
+	
+	@Resource(name = "financeMgmtService")
+	private FinanceMgmtService financeMgmtService;
 	
 	
 	/******************************************************
@@ -158,13 +166,13 @@ public class AdminMgmtController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectLoadItemLog", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectLoadItemLog(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectLoadItemLog(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		List<EgovMap> logList = adminMgmtService.selectLoadItemLog(params);
-		Map<String, Object> logMap = logList.get(0);
+		//Map<String, Object> logMap = logList.get(0);
 		
         // 조회 결과 리턴.
-        return ResponseEntity.ok(logMap);
+        return ResponseEntity.ok(logList);
 	}
 	
 	
@@ -183,6 +191,80 @@ public class AdminMgmtController {
 		
         // 조회 결과 리턴.
         return ResponseEntity.ok(paymentDocMs);
+	}
+	
+	@RequestMapping(value = "/saveConfirmResendReview", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveConfirmResendReview(@RequestBody Map<String, Object> params, ModelMap model, 
+			HttpServletRequest request, SessionVO sessionVO) {
+		
+        ReturnMessage mes = new ReturnMessage();
+        String message = "";
+        
+        Date curdate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String today = sdf.format(curdate);
+        int userId = sessionVO.getUserId();
+        
+        
+        List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+        List<Object> formList = (List<Object>) params.get(AppConstants.AUIGRID_FORM);
+        List<Map<String, Object>> payDocList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
+        Map <String, Object> payDocDetail = null;
+        
+        if(checkList.size() > 0){
+        	
+        	for(Object param : checkList){
+        		payDocDetail = new HashMap<String, Object>();
+    			
+    			Map<String, Object> checkMap = (Map<String, Object>) param;
+    			Map<String, Object> item = (Map<String,Object>)checkMap.get("item");
+    			
+    			payDocDetail.put("itemId", item.get("itmId"));
+    			payDocDetail.put("batchId", item.get("batchId"));
+    			payDocDetail.put("itemStatusId", 79);
+    			payDocDetail.put("trxId", 0);
+    			payDocDetail.put("amount", 0);
+    			payDocDetail.put("paymodeId", 0);
+    			payDocDetail.put("isOnline", false);
+    			payDocDetail.put("oriCcNo", "");
+    			payDocDetail.put("ccTypeId", 0);
+    			payDocDetail.put("ccHolderName", "");
+    			payDocDetail.put("ccExpiry", "");
+    			payDocDetail.put("bankId", 0);
+    			payDocDetail.put("refDate", "1900-01-01 00:00:00");
+    			payDocDetail.put("AppvNo", "");
+    			payDocDetail.put("refNo", "");
+    			payDocDetail.put("created", today);
+    			payDocDetail.put("creator", userId);
+    			payDocDetail.put("updated", today);
+    			payDocDetail.put("updator", userId);
+    			payDocDetail.put("mid", "");
+    			payDocDetail.put("branchId", 0);
+    			payDocDetail.put("payDate", "1900-01-01 00:00:00");
+    			payDocDetail.put("accId", 0);
+    			
+    			payDocList.add(payDocDetail);
+    		}
+        }
+        
+        if(payDocList.size() > 0){
+        	
+        	Map<String, Object> reValue = financeMgmtService.savePayDoc(payDocList, String.valueOf(formMap.get("remark")));
+        	boolean isSuccess = (boolean) reValue.get("success");
+        	
+        	if(isSuccess){
+        		message = "Document(s) have been resent.";
+        	}else{
+        		message = "Failed to resend document. Please try again later.";
+        	}
+        }
+        
+        mes.setCode(AppConstants.SUCCESS);
+    	mes.setMessage(message);
+
+        return ResponseEntity.ok(mes);
+        
 	}
 	
 }

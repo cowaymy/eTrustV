@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.coway.trust.biz.payment.document.service.AdminMgmtService;
 import com.coway.trust.cmmn.model.SessionVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -65,6 +67,7 @@ public class AdminMgmtServiceImpl extends EgovAbstractServiceImpl implements Adm
 	}
 	
 	@Override
+	@Transactional
 	public String saveConfirmSendWating(List<Object> checkList, SessionVO sessionVO, List<Object> formList) {
 		
 		String docNo = adminMgmtMapper.selectDocNo("38");
