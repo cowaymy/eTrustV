@@ -20,15 +20,25 @@ import com.coway.trust.AppConstants;
 @Component
 public class ExcelReadComponent {
 
-	public <T> List<T> readExcelToList(final MultipartFile multipartFile, final Function<Row, T> rowFunc)
+	public <T> List<T> readExcelToList(final MultipartFile multipartFile, boolean isIncludeHeader, final Function<Row, T> rowFunc)
 			throws IOException, InvalidFormatException {
+		
+		int startRow = 0;
+		if(isIncludeHeader){
+			startRow = 1;
+		}
 
 		final Workbook workbook = readWorkbook(multipartFile);
 		final Sheet sheet = workbook.getSheetAt(0);
 		final int rowCount = sheet.getPhysicalNumberOfRows();
 
-		return IntStream.range(0, rowCount).mapToObj(rowIndex -> rowFunc.apply(sheet.getRow(rowIndex)))
+		return IntStream.range(startRow, rowCount).mapToObj(rowIndex -> rowFunc.apply(sheet.getRow(rowIndex)))
 				.collect(Collectors.toList());
+	}
+	
+	public <T> List<T> readExcelToList(final MultipartFile multipartFile, final Function<Row, T> rowFunc)
+			throws IOException, InvalidFormatException {
+		return this.readExcelToList(multipartFile, false, rowFunc);
 	}
 
 	private Workbook readWorkbook(MultipartFile multipartFile) throws IOException, InvalidFormatException {

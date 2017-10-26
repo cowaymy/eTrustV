@@ -1,5 +1,6 @@
 package com.coway.trust.web.scm;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -139,7 +141,7 @@ public class ScmMasterMngmentController {
 	
 	
 	/*****************************************
-	 *   Business Plan Manager
+	 *   Business Plan Manager   
 	 *****************************************/
 	// view
 	@RequestMapping(value = "/businessPlanManager.do")
@@ -148,6 +150,97 @@ public class ScmMasterMngmentController {
 		//model.addAttribute("languages", loginService.getLanguages());
 		return "/scm/businessPlanManager";  	
 	}  	
+	
+	// comboBox List setting
+	@RequestMapping(value = "/selectVersionCbList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectVersionCbList(@RequestParam Map<String, Object> params) 
+	{
+		LOGGER.debug("selectVersionCbList_Input : {}", params.toString());
 
+		List<EgovMap> selectVersionCbListList = scmMasterMngMentService.selectVersionCbList(params);
+		return ResponseEntity.ok(selectVersionCbListList);
+	}
+	
+	// search Btn
+	@RequestMapping(value = "/selectBizPlanMngerSearch.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectBizPlanManager(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectBizPlanManager_Input : {}", params.toString());
+		
+		List<EgovMap> selectBizPlanManagerList = scmMasterMngMentService.selectBizPlanManager(params);
+		List<EgovMap> selectBizPlanStockList = scmMasterMngMentService.selectBizPlanStock(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectBizPlanMngerList", selectBizPlanManagerList);
+		map.put("selectBizPlanStockList", selectBizPlanStockList);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	// save plan stock
+	@RequestMapping(value = "/saveBizPlanStockGrid.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveBizPlanStockGrid(@RequestBody Map<String, ArrayList<Object>> params,
+			SessionVO sessionVO) {
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get gride delList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		List<Object> updList = params.get(AppConstants.AUIGRID_UPDATE); // Get grid updList
+
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		if (updList.size() > 0) {
+			tmpCnt = scmMasterMngMentService.updatePlanStock(updList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+/*
+		if (delList.size() > 0) {
+			tmpCnt = scmMasterMngMentService.deleteCdcWhMapping(delList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}*/
+
+		// 콘솔로 찍어보기
+		LOGGER.info("CdcWareHouse_수정 : {}", delList.toString());
+		LOGGER.info("CdcWareHouse_추가 : {}", addList.toString());
+		LOGGER.info("CdcWareHouse_카운트 : {}", totCnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}	
+	
+
+	@RequestMapping(value = "/insertBizPlanMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertBizPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("insertBizPlanMaster_params : {}", params);
+		
+		
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		
+	    tmpCnt = scmMasterMngMentService.insertBizPlanMaster(params, sessionVO);
+		totCnt = totCnt + tmpCnt;
+		
+		// 콘솔로 찍어보기
+		//LOGGER.info("insertBizPlanMaster_수정 : {}", addList.toString());
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}	
 
 }

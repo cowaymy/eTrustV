@@ -20,6 +20,14 @@ public interface ScmMasterMngMentMapper
 	int deleteCdcWhMapping(Map<String, Object> params); 
 	
 	/* Business Plan Manager */
+	List<EgovMap> selectVersionCbList(Map<String, Object> params);
 	List<EgovMap> selectBizPlanManager(Map<String, Object> params);
-
+	List<EgovMap> selectBizPlanStock(Map<String, Object> params);  
+	int updatePlanStock(Map<String, Object> params);
+	int insertBizPlanMaster(Map<String, Object> params);
+	
+	// 
+	int getSeqNowSCM0003M(); 
+	int insertDetailExcel(Map<String, Object> master);
+	int insertMasterExcel(Map<String, Object> master);
 }

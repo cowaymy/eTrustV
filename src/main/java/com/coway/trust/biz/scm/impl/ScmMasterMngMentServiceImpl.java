@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.scm.ScmMasterMngMentService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -100,8 +101,87 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 	
 	// Business Plan Manager
 	@Override
+	public List<EgovMap> selectVersionCbList(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectVersionCbList(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectBizPlanManager(Map<String, Object> params) {
 		return scmMasterMngMentMapper.selectBizPlanManager(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectBizPlanStock(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectBizPlanStock(params);  
+	}
+	
+	@Override
+	public int updatePlanStock(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug(" >>>>> updatePlanStock ");
+			LOGGER.debug(" updatePlanStock_PlanId : {}", ((Map<String, Object>) obj).get("planId"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("whId");
+			
+			saveCnt++;
+			
+			scmMasterMngMentMapper.updatePlanStock((Map<String, Object>) obj);
+		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int insertBizPlanMaster(Map<String, Object> params, SessionVO sessionVO)
+	{
+		int saveCnt = 0;
+		
+		LOGGER.debug(" insertBizPlanMaster_USER_ID : {}", sessionVO.getUserId());
+		
+		params.put("crtUserId", sessionVO.getUserId());
+		params.put("updUserId", sessionVO.getUserId());
+		
+		saveCnt = scmMasterMngMentMapper.insertBizPlanMaster(params);
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int saveLoadExcel(Map<String, Object> masterMap, List<Map<String, Object>> detailList)
+	{
+		//int mastetSeq = batchPaymentMapper.getPAY0044DSEQ();
+		//master.put("batchId", mastetSeq);  int insertDetailExcel(Map<String, Object> master);
+		// insertBizPlanMaster
+		
+		int mResult = scmMasterMngMentMapper.insertMasterExcel(masterMap);  // excel_Insert
+		
+		if(mResult > 0 && detailList.size() > 0)
+		{
+			// 시퀀스 조회 및 세팅
+			int bizPlanMasterSeq = (int)masterMap.get("bizPlanMasterSeq");
+			int detailSeqGet = scmMasterMngMentMapper.getSeqNowSCM0003M();
+			
+			LOGGER.debug("bizPlanMasterSeq: " + bizPlanMasterSeq + "detailSeqGet: " + detailSeqGet);
+			
+			for(int i=0 ; i < detailList.size() ; i++){
+				
+				detailList.get(i).put("bizPlanMasterDetailSeq", detailSeqGet);
+				//detailList.get(i).put("batchId", mastetSeq);
+				
+			//	scmMasterMngMentMapper.insertDetailExcel(detailList.get(i))   ;
+				LOGGER.debug("detailList=== "+ (i+1) +"번째 === "+detailList.get(i));
+			}
+			//CALL PROCEDURE
+		}
+		
+		return 1;
 	}
 	
 

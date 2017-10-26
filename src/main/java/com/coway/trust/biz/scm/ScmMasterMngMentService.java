@@ -3,6 +3,8 @@ package com.coway.trust.biz.scm;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface ScmMasterMngMentService 
@@ -18,6 +20,13 @@ public interface ScmMasterMngMentService
 	
 	
 	// Business Plan Manager
+	List<EgovMap> selectVersionCbList(Map<String, Object> params);
 	List<EgovMap> selectBizPlanManager(Map<String, Object> params);
+	List<EgovMap> selectBizPlanStock(Map<String, Object> params);
+	int updatePlanStock(List<Object> addList, Integer crtUserId); 
+	int insertBizPlanMaster(Map<String, Object> params, SessionVO sessionVO);
+	
+	//Excel Load
+	int saveLoadExcel(Map<String, Object> masterMap, List<Map<String, Object>> detailList);
 	
 }
