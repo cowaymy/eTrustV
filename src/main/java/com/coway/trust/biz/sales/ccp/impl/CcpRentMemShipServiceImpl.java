@@ -16,10 +16,11 @@ import com.coway.trust.biz.sales.ccp.CcpRentMemShipService;
 import com.coway.trust.biz.sales.order.impl.OrderDetailMapper;
 import com.coway.trust.web.sales.SalesConstants;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("ccpRentMemShipService")
-public class CcpRentMemShipServiceImpl implements CcpRentMemShipService {
+public class CcpRentMemShipServiceImpl  extends EgovAbstractServiceImpl implements CcpRentMemShipService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CcpRentMemShipServiceImpl.class);
 	

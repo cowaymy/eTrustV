@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.web.sales.SalesConstants;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("ccpCalculateService")
-public class CcpCalculateServiceImpl implements CcpCalculateService {
+public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements CcpCalculateService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CcpCalculateServiceImpl.class);
 	
