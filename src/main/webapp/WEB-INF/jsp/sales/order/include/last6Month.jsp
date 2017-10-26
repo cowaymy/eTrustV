@@ -39,6 +39,7 @@
           ];
 
         transGridID = GridCommon.createAUIGrid("grid_trans_wrap", columnLayout, "", gridPros6);
+
     }
 
     // 리스트 조회.
