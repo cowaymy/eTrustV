@@ -677,4 +677,51 @@ public class ASManagementListController {
 	}
 	
 	
+
+	@RequestMapping(value = "/addASRemark.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> addASRemark(@RequestParam Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  addASRemark ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("USER_ID", sessionVO.getUserId());   
+		   
+	    //CCR0007d
+		params.put("AS_ID", params.get("asId"));
+		params.put("CALL_STUS_ID",  "40");
+		params.put("CALL_FDBCK_ID", "0");
+		params.put("CALL_REM",  params.get("callRem"));
+		params.put("CALL_HC_ID",  "0");
+		params.put("CALL_ROS_AMT",  "0");
+		params.put("CALL_SMS", "0");
+		params.put("CALL_SMS_REM" ,"");
+		
+		
+		int  rtnValue = ASManagementListService.addASRemark(params);  
+		
+		ReturnMessage message = new ReturnMessage();
+		if(rtnValue >0 ){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		return ResponseEntity.ok(message);  
+		
+	}
+	
+	
+	@RequestMapping(value = "/addASRemarkPop.do")
+	public String addASRemarkPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("AS_ID", (String)params.get("asId"));   
+		
+		// 호출될 화면
+		return "services/as/addASRemarkPop";
+	}
+	
+	
+	
 }

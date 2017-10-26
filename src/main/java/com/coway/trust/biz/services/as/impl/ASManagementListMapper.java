@@ -54,6 +54,12 @@ public interface ASManagementListMapper {
 	 
 	 int   insertSVC0005D(Map<String, Object> params);
 	 
+	 //콜로그 
+	 int   insertCCR0006D(Map<String, Object> params);
+	 int   insertCCR0007D(Map<String, Object> params);
+	 int   insertAddCCR0007D(Map<String, Object> params);
+	 int   updateCCR0006D(Map<String, Object> params);
+	 
 	 
 	 //물류 처리 프로시져 
 	 Map<String, Object> callSP_LOGISTIC_REQUEST(Map<String, Object> param);

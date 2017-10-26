@@ -938,7 +938,7 @@ function fn_doClear(){
 
 
 <form id="resultASForm" method="post">
-    <div  style="display:inline">
+    <div  style="display:none">
         <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
         <input type="text" name="ORD_NO"   id="AS_NO"  value="${ORD_NO}"/>
         <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
@@ -1313,7 +1313,7 @@ function fn_doClear(){
         <th scope="row">Defect Type</th>
         <td>
            <input type="text" title=""  id='def_type' disabled="disabled" name ='def_type' placeholder="ex) DT3" class=""  onChange="fn_getASReasonCode2(this, 'def_type' ,'387')" />
-          <input type="text" title=""  id='def_type_id'    name ='def_type_id' placeholder="" class="" />
+          <input type="hidden" title=""  id='def_type_id'    name ='def_type_id' placeholder="" class="" />
                      <input type="text" title="" placeholder=""id='def_type_text' name ='def_type_text'   class="" />
           
           
@@ -1323,7 +1323,7 @@ function fn_doClear(){
         <th scope="row">Defect Code</th>
         <td>
 	        <input type="text" title="" placeholder="ex) FF"  disabled="disabled"  id='def_code' name ='def_code' class=""  onChange="fn_getASReasonCode2(this, 'def_code', '303')"  />
-	        <input type="text" title="" placeholder=""   id='def_code_id' name ='def_code_id' class="" />
+	        <input type="hidden" title="" placeholder=""   id='def_code_id' name ='def_code_id' class="" />
 	         <input type="text" title="" placeholder=""id='def_code_text' name ='def_code_text'   class="" />
         </td>
     </tr>
@@ -1331,7 +1331,7 @@ function fn_doClear(){
         <th scope="row">Defect Part</th>
         <td>
         <input type="text" title="" placeholder="ex) FE12"  disabled="disabled" id='def_part' name ='def_part'   class=""  onChange="fn_getASReasonCode2(this, 'def_part' ,'305')" /> 
-          <input type="text" title="" placeholder=""id='def_part_id' name ='def_part_id'   class="" />
+          <input type="hidden" title="" placeholder=""id='def_part_id' name ='def_part_id'   class="" />
           <input type="text" title="" placeholder=""id='def_part_text' name ='def_part_text'   class="" />
         </td>
     </tr>
@@ -1339,7 +1339,7 @@ function fn_doClear(){
         <th scope="row">Detail of Defect</th>
         <td>
           <input type="text" title="" placeholder="ex) 18 "  disabled="disabled"  id='def_def' name ='def_def'  class="" onChange="fn_getASReasonCode2(this, 'def_def'  ,'304')"  />
-          <input type="text" title="" placeholder="" id='def_def_id' name ='def_def_id'  class="" />
+          <input type="hidden" title="" placeholder="" id='def_def_id' name ='def_def_id'  class="" />
           <input type="text" title="" placeholder="" id='def_def_text' name ='def_def_text'  class="" />
         </td>
     </tr>
@@ -1347,7 +1347,7 @@ function fn_doClear(){
         <th scope="row">Solution Code</th>
         <td>
 	        <input type="text" title="" placeholder="ex) A9" class=""  disabled="disabled"  id='solut_code' name ='solut_code'  onChange="fn_getASReasonCode2(this, 'solut_code'  ,'337')"   />
-	        <input type="text" title="" placeholder="" class=""   id='solut_code_id' name ='solut_code_id'  />
+	        <input type="hidden" title="" placeholder="" class=""   id='solut_code_id' name ='solut_code_id'  />
 	        <input type="text" title="" placeholder="" class=""   id='solut_code_text' name ='solut_code_text'  />
           
         </td>

@@ -214,36 +214,36 @@ function fn_getCallLog(){
 <tr>
     <th scope="row">Product Code</th>
     <td>
-         <span id="txtProductCode">text</span> 
+         <span id="txtProductCode"></span> 
     </td>
     <th scope="row">Product Name</th>
-    <td colspan="3">   <span id="txtProductName">text</span>   </td>
+    <td colspan="3">   <span id="txtProductName"></span>   </td>
 </tr>
 <tr>
     <th scope="row">Sirim No</th>
-    <td>   <span id="txtSirimNo">text</span> </td>
+    <td>   <span id="txtSirimNo"></span> </td>
     <th scope="row">Serial No</th>
-    <td>   <span id="txtSerialNo">text</span>    </td>
+    <td>   <span id="txtSerialNo"></span>    </td>
     <th scope="row">Category</th>
-    <td>   <span id="txtCategory">text</span> </td>
+    <td>   <span id="txtCategory"></span> </td>
 </tr>
 <tr>
     <th scope="row">Install No</th>
-    <td> <span id="txtInstallNo">text</span>   </td>
+    <td> <span id="txtInstallNo"></span>   </td>
     <th scope="row">Install Date</th>
-    <td><span id="txtInstallDate">text</span>  </td>
+    <td><span id="txtInstallDate"></span>  </td>
     <th scope="row">Install By</th>
-    <td><span id="txtInstallBy">text</span>  </td>
+    <td><span id="txtInstallBy"></span>  </td>
 </tr>
 <tr>
     <th scope="row">Instruction</th>
-    <td colspan="5"><span id="txtInstruction">text</span>  </td>
+    <td colspan="5"><span id="txtInstruction"></span>  </td>
 </tr>
 <tr>
     <th scope="row">Membership</th>
-    <td colspan="3"><span id="txtMembership">text</span>  </td>
+    <td colspan="3"><span id="txtMembership"></span>  </td>
     <th scope="row">Expired Date</th>
-    <td><span id="txtExpiredDate">text</span> </td>
+    <td><span id="txtExpiredDate"></span> </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -305,6 +305,7 @@ function fn_getCallLog(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="reg_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div></article><!-- grid_wrap end -->
+      <div id="reg_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+      </article><!-- grid_wrap end -->
 
 </section><!-- pop_body end -->

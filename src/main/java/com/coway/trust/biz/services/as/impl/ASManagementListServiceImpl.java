@@ -8,9 +8,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.customer.impl.CustomerServiceImpl;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -21,6 +23,9 @@ import oracle.sql.DATE;
 
 @Service("ASManagementListService")
 public class ASManagementListServiceImpl extends EgovAbstractServiceImpl implements ASManagementListService{
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EgovAbstractServiceImpl.class);
+	
 	@Resource(name = "ASManagementListMapper")
 	private ASManagementListMapper ASManagementListMapper;
 	
@@ -119,8 +124,18 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	
-	 
-	
+	@Override
+	public int  addASRemark(Map<String, Object> params) {
+
+		int result  =-1;
+		result =ASManagementListMapper.insertAddCCR0007D(params);
+		
+		if(result  > 0){
+			ASManagementListMapper.updateCCR0006D(params);
+		}
+		
+		return result;
+	}
 	  
 	@Override
 	public EgovMap  saveASEntry(Map<String, Object> params) {
@@ -131,13 +146,20 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		EgovMap  eMap = ASManagementListMapper.getASEntryDocNo(params); 
 		
 		EgovMap  seqMap = ASManagementListMapper.getASEntryId(params); 
+		EgovMap	 ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params);  
 		
 		params.put("AS_ID",   String.valueOf( seqMap.get("seq")).trim() );
 		params.put("AS_NO",  String.valueOf( eMap.get("asno")).trim());
-	
+		params.put("AS_CALLLOG_ID",  String.valueOf( ccrSeqMap.get("seq")).trim());
+		
+		//서비스 마스터 
 		int  a = ASManagementListMapper.insertSVC0001D(params);
 		int  b =0;
 
+		//콜로그생성 
+		int  c6d  =ASManagementListMapper.insertCCR0006D(setCCR000Data(params));
+		int  c7d  =ASManagementListMapper.insertCCR0007D(setCCR000Data(params));
+		
 		
 		String PIC_NAME =String.valueOf(  params.get("PIC_NAME")) ;
 		String PIC_CNTC  =String.valueOf( params.get("PIC_CNTC")) ;
@@ -155,6 +177,37 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		return em;
 	} 
 	
+	public Map<String, Object>  setCCR000Data(Map<String, Object> params){
+		
+		   Map em = new HashMap();
+    		  
+			//CCR0006d
+			em.put("CALL_ENTRY_ID", params.get("AS_CALLLOG_ID"));
+    		em.put("SALES_ORD_ID", params.get("AS_SO_ID"));
+    		em.put("TYPE_ID",  "339");
+    		em.put("STUS_CODE_ID",  "40");
+    		em.put("RESULT_ID",  "0");
+    		em.put("DOC_ID",  params.get("AS_ID"));
+    		em.put("USER_ID",  params.get("updator"));
+    		em.put("IS_WAIT_FOR_CANCL",  "0");  
+    		em.put("HAPY_CALLER_ID",  "0");
+    				  
+    		   
+		    //CCR0007d
+		    em.put("CALL_ENTRY_ID",  params.get("AS_CALLLOG_ID"));
+    		em.put("CALL_STUS_ID",  "40");
+    		em.put("CALL_FDBCK_ID", "0");
+    		em.put("CALL_REM",  params.get("CALL_REM"));
+    		em.put("CALL_HC_ID",  "0");
+    		em.put("CALL_ROS_AMT",  "0");   
+    		em.put("CALL_SMS", "0");
+    		em.put("CALL_SMS_REM" ,"");
+    		  
+    		LOGGER.debug("============>");
+    		LOGGER.debug("========================>"+ em.toString());
+    		LOGGER.debug("============>");
+		return 	em;
+	}   
 	
 	
 

@@ -1244,17 +1244,15 @@
   </select>
  
  
- 
- 
     
     
     <select id="getASFilterInfo" parameterType="Map" resultType="egovMap">
           SELECT      S.C1 C1  ,
-					       S.C2 C2  ,
+					       S.C2 code_Id  ,
 					       S.C3 C3  ,
 					       S.C4 C4  ,
 					       S.C5 C5  ,
-					       C3 code_Id, 
+					       S.C3 , 
 					       C3||'-'||C4 code_Name
 					  FROM ( SELECT D.C1 C1  ,
 					                D.C2 C2  ,
@@ -1816,7 +1814,7 @@
                     UPDATE SVC0001D 
                          SET       AS_STUS_ID                =#{AS_RESULT_STUS_ID}, 
                                      AS_UPD_USER_ID          =#{USER_ID}, 
-                                     AS_UPD_DT                  =SYSDATE,
+                                     AS_UPD_DT                  =SYSDATE
                       WHERE AS_ID                              =#{AS_ENTRY_ID}
       </insert>
       
@@ -1827,8 +1825,103 @@
         ]]> 
      </select>
       
+
+     <insert id="insertCCR0006D" parameterType="Map" >
+     
+				    INSERT INTO  CCR0006D (
+							                       CALL_ENTRY_ID, 
+							                       SALES_ORD_ID, 
+							                       TYPE_ID, 
+							                       STUS_CODE_ID, 
+							                       RESULT_ID, 
+							                       DOC_ID, 
+							                       CRT_USER_ID, 
+							                       CRT_DT, 
+							                       IS_WAIT_FOR_CANCL, 
+							                       HAPY_CALLER_ID
+				                       ) 
+				VALUES ( 
+						           #{CALL_ENTRY_ID}, 
+						           #{SALES_ORD_ID}, 
+						           #{TYPE_ID}, 
+						           #{STUS_CODE_ID}, 
+						           #{RESULT_ID}, 
+						           #{DOC_ID}, 
+						           #{USER_ID}, 
+						            SYSDATE, 
+						           #{IS_WAIT_FOR_CANCL}, 
+						           #{HAPY_CALLER_ID}
+				)
+     </insert>
       
-        
+     <insert id="insertCCR0007D" parameterType="Map" >
+						    
+						INSERT INTO CCR0007D (
+						                           CALL_RESULT_ID, 
+						                           CALL_ENTRY_ID, 
+						                           CALL_STUS_ID, 
+						                           CALL_FDBCK_ID, 
+						                           CALL_REM, 
+						                           CALL_CRT_USER_ID, 
+						                           CALL_CRT_DT,  
+						                           CALL_HC_ID, 
+						                           CALL_ROS_AMT, 
+						                           CALL_SMS, 
+						                           CALL_SMS_REM) 
+						VALUES ( 
+						                           CCR0007D_CALL_RESULT_ID_SEQ.nextval, 
+						                           #{CALL_ENTRY_ID}, 
+						                           #{CALL_STUS_ID}, 
+						                           #{CALL_FDBCK_ID}, 
+						                           #{CALL_REM}, 
+						                           #{USER_ID}, 
+						                            SYSDATE, 
+						                           #{CALL_HC_ID}, 
+						                           #{CALL_ROS_AMT}, 
+						                           #{CALL_SMS}, 
+						                           #{CALL_SMS_REM}
+						)
+     </insert>
+     
+      <insert id="insertAddCCR0007D" parameterType="Map" >
+                            
+                        INSERT INTO CCR0007D (
+                                                   CALL_RESULT_ID, 
+                                                   CALL_ENTRY_ID, 
+                                                   CALL_STUS_ID, 
+                                                   CALL_FDBCK_ID, 
+                                                   CALL_REM, 
+                                                   CALL_CRT_USER_ID, 
+                                                   CALL_CRT_DT,  
+                                                   CALL_HC_ID, 
+                                                   CALL_ROS_AMT, 
+                                                   CALL_SMS, 
+                                                   CALL_SMS_REM) 
+                        VALUES ( 
+                                                   CCR0007D_CALL_RESULT_ID_SEQ.nextval, 
+                                                    (SELECT  MAX(CALL_ENTRY_ID)  FROM CCR0006D WHERE DOC_ID =#{AS_ID} AND TYPE_ID ='339'), 
+                                                   #{CALL_STUS_ID}, 
+                                                   #{CALL_FDBCK_ID}, 
+                                                   #{CALL_REM}, 
+                                                   #{USER_ID}, 
+                                                    SYSDATE, 
+                                                   #{CALL_HC_ID}, 
+                                                   #{CALL_ROS_AMT}, 
+                                                   #{CALL_SMS}, 
+                                                   #{CALL_SMS_REM}
+                        )
+     </insert>
+     
       
       
+     <insert id="updateCCR0006D" parameterType="Map" >
+                        UPDATE CCR0006D
+                        SET RESULT_ID = #{CALL_RESULT_ID},
+                               UPD_DT =SYSDATE ,
+                               UPD_USER_ID =#{USER_ID}
+                        WHERE DOC_ID =#{AS_ID}
+                                AND TYPE_ID ='339'
+     </insert>
+     
+     
 </mapper>

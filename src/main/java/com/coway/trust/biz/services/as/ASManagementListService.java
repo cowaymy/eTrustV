@@ -63,6 +63,7 @@ public interface ASManagementListService {
 	EgovMap asResult_insert (Map<String, Object> params);
 	EgovMap asResult_update (Map<String, Object> params);
 	int asResultBasic_update (Map<String, Object> params);
+	int addASRemark (Map<String, Object> params);
 	
 	
 }

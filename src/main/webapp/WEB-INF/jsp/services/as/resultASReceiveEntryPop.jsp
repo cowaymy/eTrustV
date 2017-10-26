@@ -8,7 +8,7 @@
 
 var asHistoryGrid; 
 var bsHistoryGrid; 
-
+var ascallLogGridID;
 
 $(document).ready(function(){
     fn_keyEvent();
@@ -16,13 +16,18 @@ $(document).ready(function(){
 
     AUIGrid.resize(asHistoryGrid,1000,300); 
     AUIGrid.resize(bsHistoryGrid,1000,300); 
+    AUIGrid.resize(ascallLogGridID,1000,200); 
     
     createASHistoryGrid();
     createBSHistoryGrid();
+    createASCallLogAUIGrid();
+    
     
     fn_getASHistoryInfo();
     fn_getBSHistoryInfo();
     fn_setComboBox();
+
+    
     
     
     if( '${AS_NO}' !=""){
@@ -90,6 +95,8 @@ function fn_setEditValue(){
             else   $("#checkSms2").attr("checked",false);
             
             
+            
+            fn_getCallLog();
         });
 }
 
@@ -202,12 +209,43 @@ function fn_getMemberBymemberID(){
         Common.ajax("GET", "/services/as/getMemberBymemberID.do", {MEM_ID: $("#CTID").val() }, function(result) {
             console.log("fn_getMemberBymemberID.");
             console.log( result);
-            $("#mobileNo").val(result.telMobile);
+            
+            if(result !=null) {
+                $("#mobileNo").val(result.mInfo.telMobile);
+            }
         });
 }
 
 
 
+
+
+
+
+function createASCallLogAUIGrid() {
+    
+    var columnLayout = [
+                        {dataField : "callRem",     headerText  : "Remark" ,editable       : false  } ,
+                        { dataField : "c2", headerText  : "KeyBy",  width  : 80 , editable       : false},
+                        { dataField : "callCrtDt", headerText  : "KeyAt ",  width  : 120  ,dataType : "date", formatString : "dd/mm/yyyy" }
+                     
+   ];   
+   
+    
+    var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
+    ascallLogGridID= GridCommon.createAUIGrid("ascallLog_grid_wrap", columnLayout  ,"" ,gridPros);
+}
+   
+   
+
+function fn_getCallLog(){
+	Common.ajax("GET", "/services/as/getCallLog", {AS_ID: $("#AS_ID").val()}, function(result) {
+        console.log("fn_getCallLog.");
+        console.log( result);
+        AUIGrid.setGridData(ascallLogGridID, result);
+    });
+}
+   
 function fn_loadPageControl(){
     
     
@@ -361,7 +399,7 @@ function  fn_doNewSave(){
                  "AS_SESION_CODE"           : $("#CTSSessionCode").val(),
                  "CALL_MEMBER"              : '0',
                  "REF_REQUEST"              : '0' ,
-
+                 "CALL_REM"                     :$("#callRem").val(),   
                  "PIC_NAME" :$("#perIncharge").val(),
                  "PIC_CNTC" :$("#perContact").val()
 		}
@@ -801,12 +839,17 @@ function fn_changeCTCode(_obj){
 	*/
 }
 
+
+function fn_addRemark(){
+    Common.popupDiv("/services/as/addASRemarkPop.do" ,{asId: $("#AS_ID").val()}, null , true , '_addASRemarkPopDiv');
+}
+
 </script>
 <div id="popup_wrap"  class="popup_wrap "><!-- popup_wrap start -->
 <section id="content"><!-- content start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>AS ReceiveEntry</h1>
+<h1>AS ReceiveEntry </h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -1071,20 +1114,41 @@ function fn_changeCTCode(_obj){
     </td>
 </tr>
 <tr>
+    <th scope="row"></th>
+    <td colspan="7"><p class="btn_sky"><a href="#" onclick="fn_addRemark()">add Remark</a></p></td>
+</tr>
+
+
+<tr>
     <th scope="row">Remark</th>
     <td colspan="7">
-    <textarea cols="20" rows="5" placeholder="" id="remark"  name="remark"></textarea>
+            <textarea  id='callRem' name='callRem'   rows='5' placeholder=""  class="w100p" ></textarea>
     </td>
 </tr>
+
+
 </tbody>
 </table><!-- table end -->
 </form>
 
 
-<div style="display:inline">
-           <input type="text" title="" placeholder=""  id="AS_ID" name="AS_ID"/>
-           <input type="text" title="" placeholder=""  id="AS_PIC_ID" name="AS_PIC_ID"/>
-           <input type="text" title="" placeholder=""  id="CTID" name="CTID"/>
+<aside class="title_line"><!-- title_line start -->
+<h2>AS Call-Log Transaction</h2>
+</aside><!-- title_line end -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+      <div id="ascallLog_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
+      </article><!-- grid_wrap end -->
+
+
+
+
+
+
+<div style="display:none">
+           <input type="text" title="" placeholder="AS_ID"  id="AS_ID" name="AS_ID"/>
+           <input type="text" title="" placeholder="AS_PIC_ID"  id="AS_PIC_ID" name="AS_PIC_ID"/>
+           <input type="text" title="" placeholder="CTID"  id="CTID" name="CTID"/>
 </div>
 
 <ul class="center_btns" id='save_bt_div'>
