@@ -35,15 +35,16 @@
 </style>
 
 <script type="text/javaScript">
+var gWeekThValue = "";
 
 $(function() 
 {
-  //fnSelectTargetDateComboList('351');
-  //fnSelectInterFaceTypeComboList('352');
-  //setting StockCategoryCode ComboBox 
-   fnSetStockCategoryComboBox(); 
-  //setting StockCode ComboBox 
-   fnSetStockComboBox();   
+	 // set Year
+	  fnSelectExcuteYear();
+	 // set PeriodByYear
+	  fnSelectPeriodReset();
+	  //setting scm teamCode ComboBox
+	  fnSetSCMTeamComboBox(); 
 });
 
 function fnClick()
@@ -57,68 +58,215 @@ function fnCallInterface()
   $("#intfTypeCbBox option:eq(1)").prop("selected",true);
 }
 
-function fnSelectTargetDateComboList(codeId)
+function fnSelectExcuteYear()
 {
-  CommonCombo.initById("targetDateCbBox");  // reset...
-  CommonCombo.make("targetDateCbBox"
-            , "/scm/selectComboInterfaceDate.do"  
-            , { codeMasterId: codeId }       
-            , ""                         
-            , {  
-                id  : "code",      //value    
-                name: "codeName",  //view
-                chooseMessage: "Select Target Date"
-               }
-            , "");     
+  CommonCombo.make("scmYearCbBox"
+                   , "/scm/selectExcuteYear.do" // url
+                   , ""                         // input Param
+                   , ""                         // selectData
+                   , {  
+                       id  : "year",
+                       name: "year",            // option
+                       chooseMessage: "Year" 
+                     }
+                   , ""); // callback
 }
 
-function fnSelectInterFaceTypeComboList(codeId)
+function fnSelectPeriodReset()
 {
-  CommonCombo.initById("intfTypeCbBox");  // reset...
+   CommonCombo.initById("scmPeriodCbBox");  // reset...
+   var periodCheckBox = document.getElementById("scmPeriodCbBox");
+       periodCheckBox.options[0] = new Option("Select Year And Team","");  
+}
 
-   // Call Back
-    var fnSelectIntfTypeCallback = function () 
-        {
-         $("#intfTypeCbBox>option:eq(1)").prop("selected",true);
-        }
+function fnChangeEventPeriod(object)
+{
+  console.log("version: " + object.value);
+	gWeekThValue = object.value;
+}
+
+function fnChangeEventTeam(object)
+{
+  console.log("team: "+  object.value);  //object.length
+
+  CommonCombo.initById("scmPeriodCbBox");  // reset... 
   
-  CommonCombo.make("intfTypeCbBox"
-            , "/scm/selectComboInterfaceDate.do"  
-            , { codeMasterId: codeId }       
-            , ""                         
-            , {  
-                id  : "code",      //value    
-                name: "codeName",  //view
-                chooseMessage: "Select Interface Type"
-               }
-            , fnSelectIntfTypeCallback);     
+  CommonCombo.make("scmPeriodCbBox"
+          , "/scm/selectVersionCbList.do"  // return value should be list..
+          , $("#MainForm").serialize()  // input parameter
+          , ""                         
+          , {  
+              id  : "ver",          
+              name: "excuteDate",
+              type: "S",
+              chooseMessage: "Select a Version"
+             }
+          , "");// callBack
 }
+
+function fnSetSCMTeamComboBox()
+{
+	 CommonCombo.initById("scmTeamCbBox");  // reset... 
+	
+   CommonCombo.make("scmTeamCbBox"
+                  , "/scm/selectScmTeamCode.do"
+                  , {codeMasterId: 337}
+                  , "" 
+                  , {  
+                      id  : "code",
+                      name: "codeName",
+                      chooseMessage: "ALL"  
+                    }
+                  , "");  
+}
+
+function fnValidationCheck(flag) 
+{
+	if (flag == "INS")
+	{   //scmYearCbBox=2016, scmTeamCbBox=DST, scmPeriodCbBox=11
+
+		 if ($("#scmYearCbBox").val().length < 1)
+		 {
+		   Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
+		   return false;
+		 }
+
+		 if ($("#scmTeamCbBox").val().length < 1)
+		 {
+		   Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
+		   return false;
+		 }
+
+	   if ($("#scmPeriodCbBox").val().length < 1) 
+	   {
+	     Common.alert("<spring:message code='sys.msg.necessary' arguments='VERSION' htmlEscape='false'/>");
+	     return false;
+	   }		 
+
+	}
+	
+}
+
+function fnSaveUpd()
+{
+	  Common.ajax("POST", "/scm/saveBizPlanStockGrid.do"
+	        , GridCommon.getEditData(stockGridID)
+	        , function(result) 
+	         {
+	            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	            fnSearchBtnList() ;
+	            
+	            console.log("성공." + JSON.stringify(result));
+	            console.log("data : " + result.data);
+	         } 
+	       , function(jqXHR, textStatus, errorThrown) 
+	        {
+	          try 
+	          {
+	            console.log("Fail Status : " + jqXHR.status);
+	            console.log("code : "        + jqXHR.responseJSON.code);
+	            console.log("message : "     + jqXHR.responseJSON.message);
+	            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	          } 
+	          catch (e) 
+	          {
+	            console.log(e);
+	          }
+	          Common.alert("Fail : " + jqXHR.responseJSON.message);
+	        }); 
+}
+
+function fnSaveAsIns()
+{
+    if (fnValidationCheck("INS") == false)
+	  {
+	    return false;
+	  } 
+
+	  Common.ajax("POST", "/scm/insertBizPlanMaster.do"
+	        , $("#MainForm").serializeJSON()    
+	        , function(result) 
+	         {
+	            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	            fnSearchBtnList() ;
+	            
+	            console.log("성공." + JSON.stringify(result));
+	            console.log("data : " + result.data);
+	         } 
+	       , function(jqXHR, textStatus, errorThrown) 
+	        {
+	          try 
+	          {
+	            console.log("Fail Status : " + jqXHR.status);
+	            console.log("code : "        + jqXHR.responseJSON.code);
+	            console.log("message : "     + jqXHR.responseJSON.message);
+	            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	          } 
+	          catch (e) 
+	          {
+	            console.log(e);
+	          }
+	          Common.alert("Fail : " + jqXHR.responseJSON.message);
+	        }); 
+}
+
+function fnChangeEventYear()
+{
+	fnSelectPeriodReset();
+	fnSetSCMTeamComboBox();
+}
+
+function fn_uploadFile() {
+    var formData = new FormData();
+    //console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
+    
+    formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+    formData.append("paramYear", $("scmYearCbBox").val() );
+    formData.append("paramTeam", $("scmTeamCbBox").val() );
+    formData.append("paramVer",  $("scmPeriodCbBox").val() );
+
+    alert('read');
+
+    Common.ajaxFile("/scm/excel/upload", formData, function (result) {
+        Common.alert("완료~")
+    });
+
+}
+
 
 // excel export
 function fnExcelExport()
 {   // 1. grid ID 
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     // 3. exprot ExcelFileName
-    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", "SupplyPlanSummary_W" +$('#scmPeriodCbBox').val() );
+    GridCommon.exportTo("#StockPlanGridDiv", "xlsx", "BizPlanManagement" );
 }
 
 // search
 function fnSearchBtnList()
 {
 
-   console.log( "selectBox: " + $("#statusSelBox").val() 
-       + " // Index: " + $("#statusSelBox option").index($("#statusSelBox option:selected")));
+   console.log( "Year: " + $("#scmYearCbBox").val() +" /Team: " + $("#scmTeamCbBox").val() +" /Version: " + $("#scmPeriodCbBox").val()
+       + " // Index: " + $("#scmPeriodCbBox option").index($("#scmPeriodCbBox option:selected")));
+
+   if (fnValidationCheck("INS") == false)
+   {
+     return false;
+   } 
 
    Common.ajax("GET"
-             , "/scm/selectOtdStatusViewSearch.do"
+             , "/scm/selectBizPlanMngerSearch.do"
              , $("#MainForm").serialize()
              , function(result) 
                {
-                  console.log("성공 fnSearchBtnList: " + result.selectOtdStatusViewList.length);
-                  AUIGrid.setGridData(myGridID, result.selectOtdStatusViewList);
-                  if(result != null && result.selectOtdStatusViewList.length > 0)
+                  console.log("성공 fnSearchBtnList: " + result.selectBizPlanMngerList.length);
+                  
+                  AUIGrid.setGridData(myGridID, result.selectBizPlanMngerList);    //bizPlanManager
+                  AUIGrid.setGridData(stockGridID, result.selectBizPlanStockList); //bizPlanstock
+                  
+                  if(result != null && result.selectBizPlanMngerList.length > 0)
                   {
-                      console.log("success: " + result.selectOtdStatusViewList[0].poNo); 
+                      console.log("success: " + result.selectBizPlanMngerList[0].stockCtgry); 
                   }
                }
              , function(jqXHR, textStatus, errorThrown)
@@ -194,203 +342,423 @@ function auiRemoveRowHandler(event)
     console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
-function fnOTDDetailPopUP(poNo)
-{
-   if (poNo.length < 1)
-   {
-     Common.alert("<spring:message code='sys.msg.first.Select' arguments='PO NO' htmlEscape='false'/>");
-     return false;
-   } 
+/******************************************
+ **********  bizPlanGridLayout ************
+ ******************************************/
 
-   $("#poNo").val(poNo);
+var bizPlanGridLayout = 
+										    [         
+										      {
+										         dataField : "stockCtgry",
+										         headerText : "<spring:message code='sys.scm.salesplan.Category'/>",
+										         cellMerge: true,
+										      }
+										     ,{
+										         dataField : "jan",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.jan'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "feb",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.feb'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "mar",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.mar'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "apr",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.apr'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "may",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.may'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     
+										     ,{
+										         dataField : "jun",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.jun'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "jul",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.jul'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "agu",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.agu'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "sep",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.sep'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "oct",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.oct'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "nov",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.nov'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "dec",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.dec'/>",
+					                   dataType : "numeric",
+					                   formatString : "#,##0" 
+										      }
+										     ,{
+										         dataField : "total",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.SUM'/>",
+										         dataType : "numeric",
+										         formatString : "#,##0" 
+										      }
+										    
+										    ];
 
-   var popUpObj = Common.popupDiv("/scm/otdDetailPop.do"
-         , $("#MainForm").serializeJSON()
-         , null
-         , false // when doble click , Not close
-         , "otdDetailPop"  
-         );  
+// footer
+var bizPlanGridFooterLayout = 
+				                      [ {
+			                                labelText : "∑",
+			                                positionField : "stockCtgry" 
+			                           }
+			                         , {  
+			                              dataField : "jan",
+			                              positionField : "jan",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "feb",
+			                              positionField : "feb",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "mar",
+			                              positionField : "mar",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "apr",
+			                              positionField : "apr",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "may",
+			                              positionField : "may",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         
+			                         , {  
+			                              dataField : "jun",
+			                              positionField : "jun",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "jul",
+			                              positionField : "jul",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "agu",
+			                              positionField : "agu",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "sep",
+			                              positionField : "sep",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         
+			                         , {  
+			                              dataField : "oct",
+			                              positionField : "oct",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "nov",
+			                              positionField : "nov",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "dec",
+			                              positionField : "dec",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                         , {  
+			                              dataField : "total",
+			                              positionField : "total",
+			                              operation : "SUM",
+			                              formatString : "#,##0"
+			                           }
+			                              
+			                         ]  
 
-}
 
-/*************************************
- **********  Grid-LayOut  ************
- *************************************/
+/******************************************
+ **********  bizPlanStockGridLayout ************
+ ******************************************/
 
-var OTDViewerLayout = 
-    [         
-      {  //PO
-        headerText : "<spring:message code='sys.scm.otdview.PO'/>",
-        children   : [ 
-                         {
-                            dataField : "poNo",
-                            headerText : "<spring:message code='sys.scm.pomngment.rowNo'/>",
-                            cellMerge: true,
-                         }
-                        ,{
-                            dataField : "issueDate",
-                            headerText : "<spring:message code='sys.scm.otdview.IssueDate'/>",
-                            cellMerge: true,
-                         }
-                        ,{
-                            dataField : "stkCode",
-                            headerText : "<spring:message code='sys.scm.otdview.StkCode'/>",
-                            cellMerge: true,
-                         }
-                        ,{
-                            dataField : "stkDesc",
-                            headerText : "<spring:message code='sys.scm.otdview.StkDesc'/>",
-                            cellMerge: true,
-                         }
-                        ,{
-                            dataField : "grDt",
-                            headerText : "<spring:message code='sys.scm.otdview.GRDate'/>",
-                            cellMerge: true,
-                         }
-                        ,{
-                            dataField : "poQty",
-                            headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
-                            cellMerge: true,
-                         }
-                        ,{
-                            dataField : "poStus",
-                            headerText : "<spring:message code='sys.menumanagement.grid1.Status'/>",
-                            cellMerge: true,
-                            renderer : { // HTML 템플릿 렌더러 사용
-                                type : "TemplateRenderer"
-                              },
-                              // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-                              labelFunction : function (rowIndex, columnIndex, value, headerText, item ) 
-                              { // HTML 템플릿 작성
-                                //console.log("Renderer: ( " + rowIndex + ", " + columnIndex + " ) " + "item.poStus: " + item.poStus + " /value: " + value);
-                                if (item.poStus == "Approved" )
-                                {
-                                  var template = "<div class='closeDiv'>";
-                                  template += "<span id='closeSpan'>";
-                                  template += "●";
-                                  template += "</span>";
-                                  return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-                                }
-                                else if (item.poStus == "Active" )
-                                {
-                                  var template = "<div class='openDiv'>";
-                                      template += "<span id='openDiv'>";
-                                      template += "●";
-                                      template += "</span>";
-                                      return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-                                }
-                                else
-                                    return null;
-                             }
-                        
-                         }
-                        
-                     ]
-      } 
-     ,{  //SO
-          headerText : "<spring:message code='sys.scm.otdview.SO'/>",
-          children   : [ 
-                           {
-                              dataField : "soQty",
-                              headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
-                              cellMerge: true,
+var bizPlanStockGridLayout = 
+										    [         
+										      {
+										         dataField : "planId",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.PlanID'/>",
+										         editable : false,
+										      }
+										     ,{
+										         dataField : "team",
+										         headerText : "<spring:message code='sys.scm.salesplan.Team'/>",
+						                 editable : false,
+										      }
+										     ,{
+										         dataField : "stockCtgry",
+										         headerText : "<spring:message code='sys.scm.salesplan.Category'/>",
+										         editable : false,
+										      }
+										     ,{
+										         dataField : "stockCode",
+										         headerText : "<spring:message code='sys.scm.salesplan.Code'/>",
+										         editable : false,
+										      }
+										     ,{
+										         dataField : "stockName",
+										         headerText : "<spring:message code='sys.scm.salesplan.Name'/>",
+										         style : "aui-grid-left-column",
+										         editable : false,
+										      }
+										     ,{
+										         dataField : "jan",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.jan'/>",
+					                   dataType : "numeric",
+					                   formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "feb",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.feb'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "mar",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.mar'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "apr",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.apr'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "may",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.may'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     
+										     ,{
+										         dataField : "jun",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.jun'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "jul",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.jul'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "agu",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.agu'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "sep",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.sep'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "oct",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.oct'/>",
+	                           dataType : "numeric",
+	                           formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "nov",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.nov'/>",
+	                           dataType : "numeric",
+	                           formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "dec",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.dec'/>",
+                             dataType : "numeric",
+                             formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "total",
+										         headerText : "<spring:message code='sys.scm.bizplanmanager.SUM'/>",
+										         editable : false,
+										         dataType : "numeric",
+										         formatString : "#,##0"
+										      }
+										     ,{
+										         dataField : "yyyy",
+										         headerText : "<spring:message code='sys.info.grid.calendar.formatYearString'/>",
+										         width      : 0
+										      }
+										    
+										    ];
+
+// footer
+var bizPlanStockGridFooterLayout = 
+	                      [ {
+                                labelText : "∑",
+                                positionField : "stockName" 
                            }
-                          ,{
-                              dataField : "soDt",
-                              headerText : "<spring:message code='sys.scm.otdview.DATE'/>",
-                              cellMerge: true,
+                         , {  
+                              dataField : "jan",
+                              positionField : "jan",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          
-                       ]
-      }       
-     ,{  //PP
-          headerText : "<spring:message code='sys.scm.otdview.PP'/>",
-          children   : [ 
-                           {
-                              dataField : "ppQtyPlan",
-                              headerText : "<spring:message code='sys.scm.otdview.planQty'/>",
-                              cellMerge: true,
+                         , {  
+                              dataField : "feb",
+                              positionField : "feb",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          ,{
-                              dataField : "ppQtyResult",
-                              headerText : "<spring:message code='sys.scm.otdview.prodQty'/>",
-                              cellMerge: true,
+                         , {  
+                              dataField : "mar",
+                              positionField : "mar",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          ,{
-                              dataField : "ppDtProductStart",
-                              headerText : "<spring:message code='sys.scm.otdview.prodStart'/>",
-                              cellMerge: true,
+                         , {  
+                              dataField : "apr",
+                              positionField : "apr",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          ,{
-                              dataField : "ppDtProductEnd",
-                              headerText : "<spring:message code='sys.scm.otdview.prodEnd'/>",
-                              cellMerge: true,
+                         , {  
+                              dataField : "may",
+                              positionField : "may",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          
-                       ]
-      }       
-     ,{  //GI
-          headerText : "<spring:message code='sys.scm.otdview.GI'/>",
-          children   : [ 
-                           {
-                              dataField : "giQty",
-                              headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
-                              cellMerge: true,
+                         
+                         , {  
+                              dataField : "jun",
+                              positionField : "jun",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          ,{
-                               dataField : "giDt",
-                               headerText : "<spring:message code='sys.scm.otdview.DATE'/>",
-                               cellMerge: true,
+                         , {  
+                              dataField : "jul",
+                              positionField : "jul",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          
-                       ]
-      }       
-     ,{  //SBO
-          headerText : "<spring:message code='sys.scm.otdview.SBO'/>",
-          children   : [ 
-                           {
-                              dataField : "sboPoQty",
-                              headerText : "<spring:message code='sys.scm.otdview.poQty'/>",
-                              cellMerge: true,
+                         , {  
+                              dataField : "agu",
+                              positionField : "agu",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          ,{
-                              dataField : "apQty",
-                              headerText : "<spring:message code='sys.scm.otdview.apQty'/>",
-                              cellMerge: true,
+                         , {  
+                              dataField : "sep",
+                              positionField : "sep",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          ,{
-                              dataField : "grQty",
-                              headerText : "<spring:message code='sys.scm.otdview.gr'/>",
-                              cellMerge: true,
+                         
+                         , {  
+                              dataField : "oct",
+                              positionField : "oct",
+                              operation : "SUM",
+                              formatString : "#,##0"
                            }
-                          
-                       ]
-      }       
-    ];
+                         , {  
+                              dataField : "nov",
+                              positionField : "nov",
+                              operation : "SUM",
+                              formatString : "#,##0"
+                           }
+                         , {  
+                              dataField : "dec",
+                              positionField : "dec",
+                              operation : "SUM",
+                              formatString : "#,##0"
+                           }
+                         , {  
+                              dataField : "total",
+                              positionField : "total",
+                              operation : "SUM",
+                              formatString : "#,##0"
+                           }
+                              
+                         ]  
 
 /****************************  Form Ready ******************************************/
 
-var myGridID
+var myGridID, stockGridID;
 
 $(document).ready(function()
 {
+  /**********************************
+   ******** Biz Plan Manager ********
+  ***********************************/
+  
+  var bizPlanGridLayoutOptions = {
+											             showFooter : true, 
+											             usePaging : false,
+											             showRowNumColumn : false,  // 그리드 넘버링
+											             showStateColumn : false, // 행 상태 칼럼 보이기
+											             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+											             editable : false
+											           };
 
-  var otdViewerLayoutOptions = {
-            usePaging : true,
-            useGroupingPanel : false,
-            showRowNumColumn : false,  // 그리드 넘버링
-            showStateColumn : false, // 행 상태 칼럼 보이기
-            enableRestore : true,
-            softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-            fixedColumnCount    : 7, 
-          };
-
-  // masterGrid 그리드를 생성합니다.
-  myGridID = GridCommon.createAUIGrid("OTDStatusViewDiv", OTDViewerLayout,"", otdViewerLayoutOptions);
+											 
   // AUIGrid 그리드를 생성합니다.
+   myGridID = GridCommon.createAUIGrid("bizPlanGridDiv", bizPlanGridLayout,"", bizPlanGridLayoutOptions);
   
   // 푸터 객체 세팅
-  //AUIGrid.setFooter(myGridID, footerObject);
+   AUIGrid.setFooter(myGridID, bizPlanGridFooterLayout); 
   
   // 에디팅 시작 이벤트 바인딩
   AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
@@ -420,11 +788,56 @@ $(document).ready(function()
   AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
   {
     console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
+  }); 
 
-    gPoNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "poNo");
+   
+  /**********************************
+   ********* Biz Plan Stock *********
+  ***********************************/
+  
+  var bizPlanStockGridLayoutOptions = {
+														             showFooter : true, 
+														             usePaging : false,
+														             showRowNumColumn : false,  // 그리드 넘버링
+														             showStateColumn : true, // 행 상태 칼럼 보이기
+														             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+														          };
 
-    fnOTDDetailPopUP(gPoNo);    
-    
+											 
+  // AUIGrid 그리드를 생성합니다.
+   stockGridID = GridCommon.createAUIGrid("StockPlanGridDiv", bizPlanStockGridLayout,"", bizPlanStockGridLayoutOptions);
+  
+  // 푸터 객체 세팅
+   AUIGrid.setFooter(stockGridID, bizPlanStockGridFooterLayout); 
+  
+  // 에디팅 시작 이벤트 바인딩
+  AUIGrid.bind(stockGridID, "cellEditBegin", auiCellEditignHandler);
+  
+  // 에디팅 정상 종료 이벤트 바인딩
+  AUIGrid.bind(stockGridID, "cellEditEnd", auiCellEditignHandler);
+  
+  // 에디팅 취소 이벤트 바인딩
+  AUIGrid.bind(stockGridID, "cellEditCancel", auiCellEditignHandler);
+  
+  // 행 추가 이벤트 바인딩 
+  AUIGrid.bind(stockGridID, "addRow", auiAddRowHandler);
+  
+  // 행 삭제 이벤트 바인딩 
+  AUIGrid.bind(stockGridID, "removeRow", auiRemoveRowHandler);
+
+  // cellClick event.
+  AUIGrid.bind(stockGridID, "cellClick", function( event ) 
+  {
+    gSelRowIdx = event.rowIndex;
+  
+    console.log("cellClick_Status: " + AUIGrid.isAddedById(stockGridID,AUIGrid.getCellValue(stockGridID, event.rowIndex, 0)) );
+    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
+  });
+  
+  // 셀 더블클릭 이벤트 바인딩
+  AUIGrid.bind(stockGridID, "cellDoubleClick", function(event) 
+  {
+    console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
   });  
 
 });   //$(document).ready
@@ -442,7 +855,7 @@ $(document).ready(function()
 <p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 <h2>Business Plan Manager</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="javascript:void(0);"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a onclick="fnSearchBtnList();"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -465,26 +878,17 @@ $(document).ready(function()
 <tr>
 	<th scope="row">Year</th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
+	<select class="w100p" id="scmYearCbBox" name="scmYearCbBox" onchange="fnChangeEventYear(this);">
 	</select>
 	</td>
 	<th scope="row">Team</th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+  <select class="w100p" id="scmTeamCbBox" name="scmTeamCbBox" onchange="fnChangeEventTeam(this);">
+  </select>
 	</td>
 	<th scope="row">Version</th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
+	<select class="w100p" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
 	</select>
 	</td>
 </tr>
@@ -527,27 +931,29 @@ $(document).ready(function()
 <section class="search_result"><!-- search_result start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<!-- 그리드 영역 1-->
+ <div id="bizPlanGridDiv"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="javascript:void(0);">Create New Plan</a></p></li>
-	<li><p class="btn_blue"><a href="javascript:void(0);">Save</a></p></li>
-	<li><p class="btn_blue"><a href="javascript:void(0);">Save As New Plan</a></p></li>
-	<li><p class="btn_blue"><a href="javascript:void(0);">Download Form</a></p></li>
+<!-- 	<li><p class="btn_blue"><a href="javascript:void(0);">Create New Plan</a></p></li> -->
+	<li><p class="btn_blue"><a onclick="fnSaveUpd();">Save</a></p></li>
+	<li><p class="btn_blue"><a onclick="fnSaveAsIns();">Save As New Plan</a></p></li>
+	<li><p class="btn_blue"><a onclick="fnExcelExport();">Download Form</a></p></li>  
 </ul>
 <ul class="right_btns mt10">
 	<li>
 	<div class="auto_file"><!-- auto_file start -->
-	<input type="file" title="file add" />
+	<input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
 	</div><!-- auto_file end -->
 	</li>
 </ul>
 <ul class="right_btns mt10">
-	<li><p class="btn_blue"><a href="javascript:void(0);">Upload</a></p></li>
+	<li><p class="btn_blue"><a onclick="fn_uploadFile();">ExcelUpload</a></p></li>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<!-- 그리드 영역 2-->
+ <div id="StockPlanGridDiv"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
