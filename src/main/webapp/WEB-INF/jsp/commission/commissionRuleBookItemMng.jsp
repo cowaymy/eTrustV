@@ -592,6 +592,7 @@
 		dataField : "typeCd",
 		headerText : "Level",
 		width : 120,
+		visible : false,
 		editRenderer : {
 			type : "InputEditRenderer",
 			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
