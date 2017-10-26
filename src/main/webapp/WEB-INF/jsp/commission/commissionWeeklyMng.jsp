@@ -51,10 +51,11 @@
 	   });
 		
 	    //아이템 grid 행 추가
-	    $("#addRow").click(function() {	   
+	    $("#addRow").click(function() {	
+	   	  var searchDt = $("#searchDt").val();
 	      var item = new Object();
-	      item.year = "${year}";
-	      item.month = "${month}";
+	      item.year = searchDt.substring(3);
+	      item.month = searchDt.substring(0,2);
 	      item.weeks = "";
 	      item.startDt = "";
 	      item.endDt = "";
