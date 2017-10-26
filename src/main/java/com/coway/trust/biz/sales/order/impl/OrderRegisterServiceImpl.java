@@ -793,7 +793,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	callDate = CommonUtils.getAddDay(callDate, -1, SalesConstants.DEFAULT_DATE_FORMAT1);
         }
         
-        callDate = CommonUtils.changeFormat(callDate, SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2);
+//      callDate = CommonUtils.changeFormat(callDate, SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2);
         
         callEntryVO.setCallEntryId(0);
         callEntryVO.setSalesOrdId(0);
@@ -826,7 +826,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 */
 	}
 	
-	private void preprocCallResultDetails(CallResultVO callResultVO, Date dInstallDate, SessionVO sessionVO) throws ParseException {
+	private void preprocCallResultDetails(CallResultVO callResultVO, String dInstallDate, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocCallResultDetails START ");
 		
@@ -862,7 +862,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 */
 	}
 	
-	private void preprocInstallEntryMaster(InstallEntryVO installEntryVO, Date dInstallDate, int itmStkId, SessionVO sessionVO) throws ParseException {
+	private void preprocInstallEntryMaster(InstallEntryVO installEntryVO, String dInstallDate, int itmStkId, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocInstallEntryMaster START ");
 
@@ -900,7 +900,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 */
 	}
 	
-	private void preprocInstallResultDetails(InstallResultVO installResultVO, Date dInstallDate, SessionVO sessionVO) throws ParseException {
+	private void preprocInstallResultDetails(InstallResultVO installResultVO, String dInstallDate, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocInstallResultDetails START ");
 
@@ -1013,7 +1013,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
  */
 	}
 	
-	private void preprocConfigMaster(SrvConfigurationVO srvConfigurationVO, Date dInstallDate, SessionVO sessionVO) throws ParseException {
+	private void preprocConfigMaster(SrvConfigurationVO srvConfigurationVO, String dInstallDate, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocConfigMaster START ");
 		
@@ -1093,7 +1093,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
  */
 	}
 	
-	private List<SrvConfigFilterVO> preprocConfigFilterList(Date dInstallDate, int itmStkId, SessionVO sessionVO) throws ParseException {
+	private List<SrvConfigFilterVO> preprocConfigFilterList(String dInstallDate, int itmStkId, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocConfigFilterList START ");
 		
@@ -1221,7 +1221,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		int itmStkId   = salesOrderDVO.getItmStkId();
 		
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");		
-		Date dInstallDate = (Date)formatter.parse(sInstallDate);
+//		Date dInstallDate = (Date)formatter.parse(sInstallDate);
+		String dInstallDate = sInstallDate;
 		
 		regOrderVO.setOrderAppType(orderAppType);
 		regOrderVO.setCustTypeId(custTypeId);

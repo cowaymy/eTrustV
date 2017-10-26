@@ -188,6 +188,12 @@
              , T1.EX_TRADE
              , T1.ECASH
          <!--, T1.STK_LOC-->
+             , T1.PROMO_DISC_PERIOD_TP
+             , T1.PROMO_DISC_PERIOD
+             , T1.NOR_AMT
+             , T1.NOR_RNT_FEE
+             , T1.DISC_RNT_FEE
+             , T1.GST_CHK
           FROM SAL0001D T1
          WHERE T1.SALES_ORD_ID = #{salesOrdId}
          <if test='appTypeId != null and appTypeId !=0'>
@@ -1364,7 +1370,7 @@
 		     ( #{srvConfigId}
 		     , #{srvSoId}
 		     , #{srvCodyId}
-		     , #{srvPrevDt}
+		     , TO_DATE(#{srvPrevDt}, 'DD/MM/YYYY')
 		     , #{srvRem}
 		     , #{srvBsGen}
 		     , SYSDATE
@@ -1462,7 +1468,7 @@
 		     , #{srvConfigId}
 		     , #{srvFilterStkId}
 		     , #{srvFilterPriod}
-		     , #{srvFilterPrvChgDt}
+		     , TO_DATE(#{srvFilterPrvChgDt}, 'DD/MM/YYYY')
 		     , #{srvFilterStusId}
 		     , #{srvFilterRem}
 		     , SYSDATE
@@ -1503,15 +1509,15 @@
 		     , #{docId}
 		     , #{crtUserId}
 		     , SYSDATE
-		     , TO_DATE(#{callDt}, 'YYYY-MM-DD')
+		     , TO_DATE(#{callDt}, 'DD/MM/YYYY')
 		     , #{isWaitForCancl}
 		     , #{hapyCallerId}
 		     , SYSDATE
 		     , #{updUserId}
-		     , TO_DATE(#{callDt}, 'YYYY-MM-DD')
+		     , TO_DATE(#{callDt}, 'DD/MM/YYYY')
 		     )
     </insert>
-    
+
     <insert id="insertCallResult" parameterType="callResultVO">
       <selectKey keyProperty="callResultId" resultType="Integer" order="BEFORE">
         SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
@@ -1538,8 +1544,8 @@
 		     ( #{callResultId}
 		     , #{callEntryId}
 		     , #{callStusId}
-		     , #{callDt}
-		     , #{callActnDt}
+		     , TO_DATE(#{callDt}, 'DD/MM/YYYY')
+		     , TO_DATE(#{callActnDt}, 'DD/MM/YYYY')
 		     , #{callFdbckId}
 		     , #{callCtId}
 		     , #{callRem}
@@ -1583,7 +1589,7 @@
 		     , #{salesOrdId}
 		     , #{stusCodeId}
 		     , #{ctId}
-		     , #{installDt}
+		     , TO_DATE(#{installDt}, 'DD/MM/YYYY')
 		     , #{callEntryId}
 		     , #{installStkId}
 		     , #{installResultId}
@@ -1632,7 +1638,7 @@
 		     , #{entryId}
 		     , #{stusCodeId}
 		     , #{ctId}
-		     , #{installDt}
+		     , TO_DATE(#{installDt}, 'DD/MM/YYYY')
 		     , #{rem}
 		     , #{glPost}
 		     , #{crtUserId}

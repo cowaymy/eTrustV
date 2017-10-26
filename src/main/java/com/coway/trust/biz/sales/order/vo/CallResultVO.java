@@ -14,7 +14,7 @@ public class CallResultVO implements Serializable {
 
 	private int callResultId;
 
-	private Date callActnDt;
+	private String callActnDt;
 
 	private Date callCrtDt;
 
@@ -24,7 +24,7 @@ public class CallResultVO implements Serializable {
 
 	private int callCtId;
 
-	private Date callDt;
+	private String callDt;
 
 	private int callEntryId;
 
@@ -53,11 +53,11 @@ public class CallResultVO implements Serializable {
 		this.callResultId = callResultId;
 	}
 
-	public Date getCallActnDt() {
+	public String getCallActnDt() {
 		return callActnDt;
 	}
 
-	public void setCallActnDt(Date callActnDt) {
+	public void setCallActnDt(String callActnDt) {
 		this.callActnDt = callActnDt;
 	}
 
@@ -93,11 +93,11 @@ public class CallResultVO implements Serializable {
 		this.callCtId = callCtId;
 	}
 
-	public Date getCallDt() {
+	public String getCallDt() {
 		return callDt;
 	}
 
-	public void setCallDt(Date callDt) {
+	public void setCallDt(String callDt) {
 		this.callDt = callDt;
 	}
 

@@ -34,7 +34,7 @@ public class InstallResultVO implements Serializable {
 
 	private int glPost;
 
-	private Date installDt;
+	private String installDt;
 
 	private int isTradeIn;
 
@@ -147,11 +147,11 @@ public class InstallResultVO implements Serializable {
 		this.glPost = glPost;
 	}
 
-	public Date getInstallDt() {
+	public String getInstallDt() {
 		return installDt;
 	}
 
-	public void setInstallDt(Date installDt) {
+	public void setInstallDt(String installDt) {
 		this.installDt = installDt;
 	}
 

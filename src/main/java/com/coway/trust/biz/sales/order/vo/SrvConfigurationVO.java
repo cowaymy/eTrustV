@@ -24,7 +24,7 @@ public class SrvConfigurationVO implements Serializable {
 
 	private int srvCrtUserId;
 
-	private Date srvPrevDt;
+	private String srvPrevDt;
 
 	private String srvRem;
 
@@ -87,11 +87,11 @@ public class SrvConfigurationVO implements Serializable {
 		this.srvCrtUserId = srvCrtUserId;
 	}
 
-	public Date getSrvPrevDt() {
+	public String getSrvPrevDt() {
 		return srvPrevDt;
 	}
 
-	public void setSrvPrevDt(Date srvPrevDt) {
+	public void setSrvPrevDt(String srvPrevDt) {
 		this.srvPrevDt = srvPrevDt;
 	}
 

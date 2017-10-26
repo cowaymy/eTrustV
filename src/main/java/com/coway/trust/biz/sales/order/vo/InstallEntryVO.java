@@ -26,7 +26,7 @@ public class InstallEntryVO implements Serializable {
 
 	private int ctId;
 
-	private Date installDt;
+	private String installDt;
 
 	private String installEntryNo;
 
@@ -105,11 +105,11 @@ public class InstallEntryVO implements Serializable {
 		this.ctId = ctId;
 	}
 
-	public Date getInstallDt() {
+	public String getInstallDt() {
 		return installDt;
 	}
 
-	public void setInstallDt(Date installDt) {
+	public void setInstallDt(String installDt) {
 		this.installDt = installDt;
 	}
 

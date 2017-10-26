@@ -24,7 +24,7 @@ public class SrvConfigFilterVO implements Serializable {
 
 	private int srvFilterPriod;
 
-	private Date srvFilterPrvChgDt;
+	private String srvFilterPrvChgDt;
 
 	private String srvFilterRem;
 
@@ -87,11 +87,11 @@ public class SrvConfigFilterVO implements Serializable {
 		this.srvFilterPriod = srvFilterPriod;
 	}
 
-	public Date getSrvFilterPrvChgDt() {
+	public String getSrvFilterPrvChgDt() {
 		return srvFilterPrvChgDt;
 	}
 
-	public void setSrvFilterPrvChgDt(Date srvFilterPrvChgDt) {
+	public void setSrvFilterPrvChgDt(String srvFilterPrvChgDt) {
 		this.srvFilterPrvChgDt = srvFilterPrvChgDt;
 	}
 

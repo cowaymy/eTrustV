@@ -76,7 +76,7 @@ public class OrderVO implements Serializable {
 	
 	private int itmStkId;
 	
-	private Date dInstallDate;
+	private String dInstallDate;
 	
 	private int salesOrdId;
 	
@@ -312,11 +312,11 @@ public class OrderVO implements Serializable {
 		this.itmStkId = itmStkId;
 	}
 
-	public Date getdInstallDate() {
+	public String getdInstallDate() {
 		return dInstallDate;
 	}
 
-	public void setdInstallDate(Date dInstallDate) {
+	public void setdInstallDate(String dInstallDate) {
 		this.dInstallDate = dInstallDate;
 	}
 
