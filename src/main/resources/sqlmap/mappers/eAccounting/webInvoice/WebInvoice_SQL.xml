@@ -828,10 +828,10 @@ SELECT T.APPV_PRCSS_NO
 <select id="selectNextIfKey" resultType="String">
 /* webInvoiceMapper.selectNextIfKey */
     SELECT    700
-       || TO_CHAR (SYSDATE, 'yyyymmdd')
-       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 11, 6) + 1), 'FM000000'), '000001') AS IF_KEY
+       || TO_CHAR (SYSDATE, 'yymmdd')
+       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 10, 8) + 1), 'FM00000000'), '00000001') AS IF_KEY
   FROM ITF0700M
- WHERE SUBSTR (IF_KEY, 4, 8) = TO_CHAR (SYSDATE, 'yyyymmdd')
+ WHERE SUBSTR (IF_KEY, 4, 6) = TO_CHAR (SYSDATE, 'yymmdd')
 </select>
 
 <select id="selectNextSeq" parameterType="String" resultType="int">
