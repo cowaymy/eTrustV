@@ -1503,13 +1503,12 @@
                                 msg += "* Please key in the email address.<br>";
                             }
                             else {
-                                if(FormUtil.checkEmail($('#billMthdEmailTxt1').val()))
-                                {
+                                if(FormUtil.checkEmail($('#billMthdEmailTxt1').val())) {
                                     isValid = false;
                                     msg += "* Invalid email address.<br>";
                                 }
                             }
-                            if(FormUtil.checkReqValue($('#billMthdEmailTxt2')) && !FormUtil.checkEmail($('#billMthdEmailTxt2').val()))
+                            if(FormUtil.checkReqValue($('#billMthdEmailTxt2')) && !FormUtil.checkEmail($('#billMthdEmailTxt2').val())) {
                                 isValid = false;
                                 msg += "* Invalid email address.<br>";
                             }
@@ -2586,7 +2585,7 @@
 </tr>
 <tr>
     <td></td>
-    <th scope="row">Email(2)<span id="spEmail2" class="must">*</span></th>
+    <th scope="row">Email(2)</th>
     <td><input id="billMthdEmailTxt2" name="billMthdEmailTxt2" type="text" title="" placeholder="Email Address" class="w100p" disabled/></td>
 </tr>
 <tr>
