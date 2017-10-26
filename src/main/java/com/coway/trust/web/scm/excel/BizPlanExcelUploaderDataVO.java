@@ -1,5 +1,7 @@
 package com.coway.trust.web.scm.excel;
 
+import static com.coway.trust.config.excel.ExcelReadComponent.getValue;
+
 import org.apache.poi.ss.usermodel.Row;
 
 public class BizPlanExcelUploaderDataVO {
@@ -7,48 +9,45 @@ public class BizPlanExcelUploaderDataVO {
 	// 각 변수는 타입에 맞게 선언해 주세요~~~ ^^
 
 	private String TEAM;
-	private double  YYYY;
-	private String  Version;
-	private double  M01;
-	private double  M02;
-	private double  M03;
-	private double  M04;
-	private double  M05;
-	private double  M06;
-	private double  M07;
-	private double  M08;
-	private double  M09;
-	private double  M10;
-	private double  M11;
-	private double  M12;
-	private double  YearTotal;
-	private double  PlanID;
+	private String YYYY;
+	private String Version;
+	private String M01;
+	private String M02;
+	private String M03;
+	private String M04;
+	private String M05;
+	private String M06;
+	private String M07;
+	private String M08;
+	private String M09;
+	private String M10;
+	private String M11;
+	private String M12;
+	private String YearTotal;
+	private String PlanID;
 	private String STOCK_CODE;
 
-	public static BizPlanExcelUploaderDataVO create(Row row) 
-	{
+	public static BizPlanExcelUploaderDataVO create(Row row) {
 		BizPlanExcelUploaderDataVO vo = new BizPlanExcelUploaderDataVO();
-		
-		vo.setTEAM(row.getCell(0).getStringCellValue());
-		vo.setYYYY(row.getCell(1).getNumericCellValue());
-		vo.setVersion(row.getCell(2).getStringCellValue());
-		vo.setM01(row.getCell(3).getNumericCellValue());
-		vo.setM02(row.getCell(4).getNumericCellValue());
-		vo.setM03(row.getCell(5).getNumericCellValue());
-		vo.setM04(row.getCell(6).getNumericCellValue());
-		vo.setM05(row.getCell(7).getNumericCellValue());
-		vo.setM06(row.getCell(8).getNumericCellValue());
-		vo.setM07(row.getCell(9).getNumericCellValue());
-		vo.setM08(row.getCell(10).getNumericCellValue());
-		vo.setM09(row.getCell(11).getNumericCellValue());
-		vo.setM10(row.getCell(12).getNumericCellValue());
-		vo.setM11(row.getCell(13).getNumericCellValue());
-		vo.setM12(row.getCell(14).getNumericCellValue());
-		vo.setYearTotal(row.getCell(15).getNumericCellValue());
-		vo.setPlanID(row.getCell(16).getNumericCellValue());
-		vo.setSTOCK_CODE(row.getCell(17).getStringCellValue());
 
-		//  나머지 컬럼들을 세팅해 줘야 합니다~~  ^^....
+		vo.setTEAM(getValue(row.getCell(0)));
+		vo.setYYYY(getValue(row.getCell(1)));
+		vo.setVersion(getValue(row.getCell(2)));
+		vo.setM01(getValue(row.getCell(3)));
+		vo.setM02(getValue(row.getCell(4)));
+		vo.setM03(getValue(row.getCell(5)));
+		vo.setM04(getValue(row.getCell(6)));
+		vo.setM05(getValue(row.getCell(7)));
+		vo.setM06(getValue(row.getCell(8)));
+		vo.setM07(getValue(row.getCell(9)));
+		vo.setM08(getValue(row.getCell(10)));
+		vo.setM09(getValue(row.getCell(11)));
+		vo.setM10(getValue(row.getCell(12)));
+		vo.setM11(getValue(row.getCell(13)));
+		vo.setM12(getValue(row.getCell(14)));
+		vo.setYearTotal(getValue(row.getCell(15)));
+		vo.setPlanID(getValue(row.getCell(16)));
+		vo.setSTOCK_CODE(getValue(row.getCell(17)));
 
 		return vo;
 	}
@@ -61,11 +60,11 @@ public class BizPlanExcelUploaderDataVO {
 		TEAM = tEAM;
 	}
 
-	public double getYYYY() {
+	public String getYYYY() {
 		return YYYY;
 	}
 
-	public void setYYYY(double yYYY) {
+	public void setYYYY(String yYYY) {
 		YYYY = yYYY;
 	}
 
@@ -77,118 +76,117 @@ public class BizPlanExcelUploaderDataVO {
 		Version = version;
 	}
 
-	public double getM01() {
+	public String getM01() {
 		return M01;
 	}
 
-	public void setM01(double m01) {
+	public void setM01(String m01) {
 		M01 = m01;
 	}
 
-	public double getM02() {
+	public String getM02() {
 		return M02;
 	}
 
-	public void setM02(double m02) {
+	public void setM02(String m02) {
 		M02 = m02;
 	}
 
-	public double getM03() {
+	public String getM03() {
 		return M03;
 	}
 
-	public void setM03(double m03) {
+	public void setM03(String m03) {
 		M03 = m03;
 	}
 
-	public double getM04() {
+	public String getM04() {
 		return M04;
 	}
 
-	public void setM04(double m04) {
+	public void setM04(String m04) {
 		M04 = m04;
 	}
 
-	public double getM05() {
+	public String getM05() {
 		return M05;
 	}
 
-	public void setM05(double m05) {
+	public void setM05(String m05) {
 		M05 = m05;
 	}
 
-	public double getM06() {
+	public String getM06() {
 		return M06;
 	}
 
-	public void setM06(double m06) {
+	public void setM06(String m06) {
 		M06 = m06;
 	}
 
-	public double getM07() {
+	public String getM07() {
 		return M07;
 	}
 
-	public void setM07(double m07) {
+	public void setM07(String m07) {
 		M07 = m07;
 	}
 
-	public double getM08() {
+	public String getM08() {
 		return M08;
 	}
 
-	public void setM08(double m08) {
+	public void setM08(String m08) {
 		M08 = m08;
 	}
 
-	public double getM09() {
+	public String getM09() {
 		return M09;
 	}
 
-	public void setM09(double m09) {
+	public void setM09(String m09) {
 		M09 = m09;
 	}
 
-	public double getM10() {
+	public String getM10() {
 		return M10;
 	}
 
-	public void setM10(double m10) {
+	public void setM10(String m10) {
 		M10 = m10;
 	}
 
-	public double getM11() {
+	public String getM11() {
 		return M11;
 	}
 
-	public void setM11(double m11) {
+	public void setM11(String m11) {
 		M11 = m11;
 	}
 
-	public double getM12() {
+	public String getM12() {
 		return M12;
 	}
 
-	public void setM12(double m12) {
+	public void setM12(String m12) {
 		M12 = m12;
 	}
 
-	public double getYearTotal() {
+	public String getYearTotal() {
 		return YearTotal;
 	}
 
-	public void setYearTotal(double yearTotal) {
+	public void setYearTotal(String yearTotal) {
 		YearTotal = yearTotal;
 	}
 
-	public double getPlanID() {
+	public String getPlanID() {
 		return PlanID;
 	}
 
-	public void setPlanID(double planID) {
+	public void setPlanID(String planID) {
 		PlanID = planID;
 	}
-
 
 	public String getSTOCK_CODE() {
 		return STOCK_CODE;
@@ -196,6 +194,6 @@ public class BizPlanExcelUploaderDataVO {
 
 	public void setSTOCK_CODE(String sTOCK_CODE) {
 		STOCK_CODE = sTOCK_CODE;
-	}	
-	
+	}
+
 }

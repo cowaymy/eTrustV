@@ -8,23 +8,45 @@ import java.util.stream.IntStream;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.cmmn.exception.ApplicationException;
 
 @Component
 public class ExcelReadComponent {
 
-	public <T> List<T> readExcelToList(final MultipartFile multipartFile, boolean isIncludeHeader, final Function<Row, T> rowFunc)
-			throws IOException, InvalidFormatException {
-		
+	public static String getValue(Cell cell) {
+		String value;
+		CellType type = cell.getCellTypeEnum();
+		switch (type) {
+		case NUMERIC:
+			value = String.valueOf(cell.getNumericCellValue());
+			break;
+		case STRING:
+			value = cell.getStringCellValue();
+			break;
+		case BOOLEAN:
+			value = String.valueOf(cell.getBooleanCellValue());
+			break;
+		case BLANK:
+			value = "";
+			break;
+		default:
+			throw new ApplicationException(AppConstants.FAIL, "invalid CellType...");
+		}
+
+		return value;
+	}
+
+	public <T> List<T> readExcelToList(final MultipartFile multipartFile, boolean isIncludeHeader,
+			final Function<Row, T> rowFunc) throws IOException, InvalidFormatException {
+
 		int startRow = 0;
-		if(isIncludeHeader){
+		if (isIncludeHeader) {
 			startRow = 1;
 		}
 
@@ -35,7 +57,7 @@ public class ExcelReadComponent {
 		return IntStream.range(startRow, rowCount).mapToObj(rowIndex -> rowFunc.apply(sheet.getRow(rowIndex)))
 				.collect(Collectors.toList());
 	}
-	
+
 	public <T> List<T> readExcelToList(final MultipartFile multipartFile, final Function<Row, T> rowFunc)
 			throws IOException, InvalidFormatException {
 		return this.readExcelToList(multipartFile, false, rowFunc);
