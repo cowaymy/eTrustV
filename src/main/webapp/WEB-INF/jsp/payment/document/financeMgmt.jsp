@@ -43,7 +43,7 @@ var gridProsForMultiRows ={
 };
 
 var receiveColumnLayout=[
-                {dataField:"itmId", headerText:" ", visible:false},
+                {dataField:"itmId", headerText:" ", visible:true},
                 {dataField:"batchId", headerText:" ", visible:false},
                  {
                 	colSpan : 2,
@@ -75,10 +75,12 @@ var receiveColumnLayout=[
 	                            //alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
 	                            alert(item.itmId);
 	                            Common.ajax("GET", "/payment/selectLogItemPaymentItem.do", {"payItemId" : item.itmId}, function(result) {
-	                               console.log(result);
+	                               console.log(result.length);
 	                               var message = "";
-	                               message += result[0].userName + "(" +result[0].crtDt+")Says : ";
-	                               message += result[0].rem;
+	                               for(var i=0; i<result.length; i++){
+		                               message += "<p><b>"+result[i].userName + "(" +result[i].crtDt+")</b>Says : </p><br>";
+		                               message += result[i].rem;
+	                               }
 	                            	$("#listBox_Log").html(message);
 	                            });
 	                        }
@@ -270,6 +272,7 @@ function fn_confirmSave(){
     data.form = [{"remark":$("#pRemark").val(),"statusId":$("#pStatus").val()}];
     Common.ajax("POST", "/payment/saveReceiveList.do", data, function(result) {
         Common.alert(result.message);
+        $("#listBox_Log").empty();
     });
 }
 </script>
@@ -586,7 +589,7 @@ function fn_confirmSave(){
 <aside class="title_line mt30"><!-- title_line start -->
 <h3 class="pt0">Document Control Log</h3>
 </aside><!-- title_line end -->
-<div id="listBox_Log">
+<div id="listBox_Log" class="border_box">
 </div>
 </section><!-- content end -->
 

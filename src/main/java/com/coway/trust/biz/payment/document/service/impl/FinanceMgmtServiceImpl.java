@@ -93,12 +93,13 @@ public class FinanceMgmtServiceImpl extends EgovAbstractServiceImpl implements F
 
 	@Override
 	@Transactional
-	public List savePayDoc(List<Map<String, Object>> list, String remark) {
+	public Map<String, Object> savePayDoc(List<Map<String, Object>> list, String remark) {
 		Date curdate = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String today = sdf.format(curdate);
 		String defaultDate = "1900-01-01 00:00:00";
-		List reValue = new ArrayList();
+		Map<String, Object> reValue = new HashMap<String, Object>();
+		int cnt = 0;
 		
 		if(list.size() > 0){
 			for(Map<String, Object> det : list){
@@ -138,6 +139,7 @@ public class FinanceMgmtServiceImpl extends EgovAbstractServiceImpl implements F
 			List<String> batchList = new ArrayList<String>();
 			batchList = tmp.parallelStream().distinct().collect(Collectors.toList());
 			
+			
 			for(String batchId : batchList){
 				Map<String, Object> batchType = new HashMap<String, Object>();
 				batchType.put("batchId", batchId);
@@ -173,7 +175,7 @@ public class FinanceMgmtServiceImpl extends EgovAbstractServiceImpl implements F
 					else
 						batchInfo.put("batchResultStatusId", 4);	
 					
-					reValue.add(batchId);
+					cnt++;
 				}else{
 					batchInfo.put("statusId", 1);
 					batchInfo.put("batchResultStatusId", 0);	
@@ -182,6 +184,10 @@ public class FinanceMgmtServiceImpl extends EgovAbstractServiceImpl implements F
 				this.updatePayDocMaster(batchInfo);
 			}
 		}
+		
+		reValue.put("count", cnt);
+		reValue.put("success", true);
+		
 		return reValue;
 	}
 

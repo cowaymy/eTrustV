@@ -61,7 +61,7 @@ public interface FinanceMgmtService
 	 * @param params
 	 * @return
 	 */
-	List savePayDoc(List<Map<String, Object>> list, String remark);
+	Map<String, Object> savePayDoc(List<Map<String, Object>> list, String remark);
 	
 	/**
 	 * PayDocDetail 업데이트

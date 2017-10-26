@@ -189,10 +189,10 @@ public class FinanceMgmtController {
             
             if(payDocList.size() > 0){
             	Map tmp = (Map)formList.get(0);
-            	List reValue = financeMgmtService.savePayDoc(payDocList, String.valueOf(tmp.get("remark")));
+            	Map<String, Object> reValue = financeMgmtService.savePayDoc(payDocList, String.valueOf(tmp.get("remark")));
             	
-            	if(reValue.size() > 0){
-            		message = "Document(s) status have been updated.<br />" + "Batch closed : " +reValue.size() ;
+            	if(String.valueOf(reValue.get("success")).equals("true")){
+            		message = "Document(s) status have been updated.<br />" + "Batch closed : " +reValue.get("count") ;
             	}else{
             		message = "Failed to save. Please try again later.";
             	}
