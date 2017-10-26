@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.roommanage.impl.RoomManagementMapper">
+    
+    <select id="roomManagementList"  parameterType="Map" resultType="EgovMap">
+    <!-- RoomMaster 생성 요청함 2017-10-26 -->
+    
+    </select>
+</mapper>
