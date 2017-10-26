@@ -11,24 +11,16 @@ var  myFltGrd10;
 $(document).ready(function(){
 	
     createAUIGrid();
-    createCFilterAUIGrid() ;
-
-    
-    //add_CreateAUIGrid();
+  
     // 행 추가 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
     
-    doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
-    doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
+    //doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , '');  // Customer Type Combo Box
+    //doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
-
-    
-    
-    
-    
-    doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');    
+    doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
     doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
     
     
@@ -36,13 +28,86 @@ $(document).ready(function(){
 	fn_getASEvntsInfo();
 	fn_getASHistoryInfo();
 	
-	fn_DisablePageControl();
-    $("#ddlStatus").attr("disabled", false); 
-
+    fn_getASRulstSVC0004DInfo();
+    //fn_getASRulstEditFilterInfo();
 	
+        	
 });
 
 
+function fn_setCTcodeValue(){
+	 $("#ddlCTCode").val(  $("#CTID").val()); 
+}
+
+function fn_getASRulstEditFilterInfo(){
+    
+    Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", $("#resultASForm").serialize(), function(result) {
+        console.log("fn_getASRulstEditFilterInfo.");
+        console.log( result);
+        AUIGrid.setGridData(myFltGrd10, result);        
+    });  
+    
+}
+
+
+function fn_getASRulstSVC0004DInfo(){
+    
+    Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", $("#resultASForm").serialize(), function(result) {
+        console.log("fn_getASRulstSVC0004DInfo.");
+        console.log( result);
+        
+        if(result !=""){
+        	   fn_setSVC0004dInfo(result);
+        }
+        
+    });
+    
+}
+
+function  fn_setSVC0004dInfo(result){
+	
+	$("#creator").val( result[0].c28); 
+    $("#creatorat").val( result[0].asResultCrtDt); 
+    $("#txtResultNo").val( result[0].asResultNo); 
+    $("#ddlStatus").val( result[0].asResultStusId); 
+    $("#dpSettleDate").val( result[0].asSetlDt); 
+    $("#ddlFailReason").val( result[0].c2); 
+    $("#tpSettleTime").val( result[0].asSetlTm); 
+    $("#ddlDSCCode").val( result[0].asBrnchId); 
+    $("#ddlErrorCode").val( result[0].asMalfuncId); 
+    $("#ddlErrorDesc").val( result[0].asMalfuncResnId); 
+    
+    $("#ddlCTCode").val( result[0].c12); 
+    $("#CTID").val( result[0].c11); 
+    
+    $("#ddlWarehouse").val( result[0].asWhId); 
+    $("#txtRemark").val( result[0].asResultRem); 
+    
+    if(result[0].c27 =="1"){
+    	    $("#iscommission").attr("checked",true);
+    }
+    
+    $('#def_type') .val( result[0].c16);
+    $('#def_type_text') .val( result[0].c17);
+    $('#def_type_id') .val( result[0].asDefectTypeId);  
+     
+    $('#def_code') .val( result[0].c18);
+    $('#def_code_text') .val( result[0].c19);
+    $('#def_code_id') .val( result[0].asDefectId);
+    
+    $('#def_def').val( result[0].c22); 
+    $('#def_def_text').val( result[0].c23);
+    $('#def_def_id').val( result[0].asDefectDtlResnId);     
+    
+    $('#def_part') .val( result[0].c20);
+    $('#def_part_text') .val( result[0].c21);
+    $('#def_part_id') .val( result[0].asDefectPartId);
+    
+    
+    $('#solut_code').val( result[0].c25); 
+    $('#solut_code_text').val( result[0].c26); 
+    $('#solut_code_id').val( result[0].c24); 
+}
 
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event) {
@@ -79,13 +144,13 @@ function createAUIGrid() {
 function createCFilterAUIGrid() {
     
         var  clayout = [
-                            {dataField : "filterType",     headerText  : "AS NO" ,editable       : false  } ,
-                            { dataField : "filterDesc",      headerText  : "Description",  width  : 80 },
+                            {dataField : "filterType",     headerText  : "Type" ,editable       : false  } ,
+                            { dataField : "filterDesc",      headerText  : "Description",  width  :200 },
                             { dataField : "filterExCode", headerText  : "Exchange Code ",  width  : 80 },
-                            { dataField : "filterQty",       headerText  : "Qty",  width  : 100 },
-                            { dataField : "filterPrice",       headerText  : "Price",  width  : 100 },
-                            { dataField : "filterTotal",     headerText  : "Total",  width          :150},
-                            { dataField : "filterRemark",     headerText  : "Remark",  width          :150,    editable       : false },
+                            { dataField : "filterQty",       headerText  : "Qty",  width  : 80 },
+                            { dataField : "filterPrice",       headerText  : "Price",  width  : 80 ,dataType : "number", formatString : "#,000.00"  ,editable : false },
+                            { dataField : "filterTotal",     headerText  : "Total",  width          :80 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
+                            { dataField : "filterRemark",     headerText  : "Remark",  width          :200,    editable       : false },
                             {
                                 dataField : "undefined",
                                 headerText : " ",
@@ -98,14 +163,13 @@ function createCFilterAUIGrid() {
                                     }
                                 }
                             },
-                            { dataField : "filterID",     headerText  : "filterID",  width          :150,   visible:false}
+                            { dataField : "filterID",     headerText  : "filterID",  width          :150,    editable       : false ,   visible:false }
 
                             
                             
      ];   
 
     var gridPros2 = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
-    
      myFltGrd10 = GridCommon.createAUIGrid("asfilter_grid_wrap", clayout  ,"" ,gridPros2);
      
      AUIGrid.resize(myFltGrd10, 950,200);  
@@ -186,7 +250,6 @@ function fn_getASHistoryInfo(){
 function fn_getASReasonCode2(_obj , _tobj, _v){
 	
 	
-	//txtDefectType.Text.Trim(), 387
 	
 	var   reasonCode =$(_obj).val();
 	var   reasonTypeId =_v;
@@ -230,273 +293,29 @@ function getASStockPrice(_PRC_ID){
 
 
 
-function fn_filterAddVaild(){
-	
-     if(FormUtil.checkReqValue($("#ddlFilterCode option:selected")) ){    
-        return false;
-     }
-	
-     if(FormUtil.checkReqValue($("#ddlFilterQty option:selected")) ){    
-         return false;
-     }
-     
-     if(FormUtil.checkReqValue($("#ddlFilterPayType option:selected")) ){    
-         return false;
-      } 
-     
-     if(FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected")) ){    
-         return false;
-      }
-}
 
-
-function fn_filterAdd(){
-	
-	if(fn_filterAddVaild() ==false){
-        Common.alert('*<b>Please fill up the compulsory fields to add the filter.</b>');
-        return  false;
-    }
-	
-    
-	 var  fitem = new Object();
-		 
-	    fitem.filterType =$("#ddlFilterPayType").val();
-	    fitem.filterDesc =$("#ddlFilterCode option:selected").text();
-	    fitem.filterExCode =$("#ddlFilterExchangeCode").val();
-	    fitem.filterQty =$("#ddlFilterQty").val();  
-	    fitem.filterRemark =$("#txtFilterRemark").val();    
-	    fitem.filterID =$("#ddlFilterCode").val(); 
-	    //fitem.filterCODE =$("#ddlFilterCode").va();
-	    
-	    var chargePrice =0;
-	    if (fitem.filterType  == "CHG") {
-	    	chargePrice  = getASStockPrice(fitem.filterID);        
-	    }
-	    
-	    fitem.filterPrice = parseInt(chargePrice,10);
-        
-	    var  chargeTotalPrice = 0;
-	    
-	    chargeTotalPrice =  parseInt($("#ddlFilterQty").val(),10)  *  parseInt( chargePrice,10);
-	    fitem.filterTotal =   parseInt(chargeTotalPrice,10);
-	    
-	    
-	    var v =  parseInt(  $("#txtFilterCharge").val() ,10) + chargeTotalPrice;
-	    $("#txtFilterCharge").val( v);
-	    
-	    
-    if( AUIGrid.isUniqueValue (myFltGrd10,"filterID" ,fitem.filterID )){
-         fn_addRow(fitem);
-    }else{
-        Common.alert("<b>This filter/spart part is existing. </br>");
+function fn_doSave(){
+	 
+    if($("#ddlErrorCode").val()==""){
+        Common.alert("Please select the ErrorCode.<br/>");
         return ;
     }
     
-    fn_calculateTotalCharges();
-}
-
-
-//행 추가, 삽입
-function  fn_addRow(gItem) {      
-  AUIGrid.addRow(myFltGrd10, gItem, "first");
-}
-
-
-function fn_LabourCharge_CheckedChanged(_obj){
-	
-	  if(_obj.checked){
-	      $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");     
-		  $("#cmbLabourChargeAmt").val("50");
-		  $("#txtLabourCharge").val("50.00");
-	  }else{
-	      $("#cmbLabourChargeAmt").val("");
-		  $("#cmbLabourChargeAmt").attr("disabled", true); 
-	  }
-	  
-	  fn_calculateTotalCharges();
-}
-
-
-
-function fn_calculateTotalCharges(){
-	
-	var  labourCharges =0;
-	var filterCharges =0; 
-	var totalCharges =0;
-	
-    labourCharges =   $("#txtLabourCharge").val();
-    filterCharges   =   $("#txtFilterCharge").val();  
-    totalCharges = parseInt( labourCharges ,10)+ parseInt( filterCharges,10);
-    
-    $("#txtTotalCharge").val(totalCharges);  
-    
-}
-
-
-function fn_cmbLabourChargeAmt_SelectedIndexChanged(){
-	
-	var  v =$("#cmbLabourChargeAmt").val();
-	$("#txtLabourCharge").val(v);
-	fn_calculateTotalCharges();
-}
-
-
-
-
-function fn_ddlStatus_SelectedIndexChanged(){
-	
-	fn_clearPageField();
-	
-    switch ($("#ddlStatus").val()) {
-        case "4":
-            //COMPLETE
-            fn_openField_Complete();
-            break;
-        case "10":
-            //CANCEL
-            fn_openField_Cancel();
-            break;
-        case "21":
-            //FAILED
-            fn_openField_Fail();
-            break;
-        default:
-            break;
+    if($("#ddlErrorDesc").val()=="" ){
+        Common.alert("Please select the ErrorDesc.<br/>");
+        return ;
     }
-}
-
-
-
-function fn_openField_Complete(){
-	
-	$("#btnSaveDiv").attr("style","display:inline");
-    $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");     
-    $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");    
-    $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");    
-    $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
-    $('#iscommission').removeAttr("disabled").removeClass("readonly");  
-    $('#def_type').removeAttr("disabled").removeClass("readonly");  
-    $('#def_code').removeAttr("disabled").removeClass("readonly");  
-    $('#def_part').removeAttr("disabled").removeClass("readonly");  
-    $('#solut_code').removeAttr("disabled").removeClass("readonly");  
-    $('#def_def').removeAttr("disabled").removeClass("readonly");  
     
     
-    $('#def_type_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_code_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_part_text').removeAttr("disabled").removeClass("readonly");  
-    $('#solut_code_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_def_text').removeAttr("disabled").removeClass("readonly");  
-    
-     
-    
-    $("#txtFilterCharge").attr("disabled", false); 
-     $("#txtLabourCharge").attr("disabled", false); 
-     $("#cmbLabourChargeAmt").attr("disabled", false); 
-    $("#ddlFilterCode").attr("disabled", false); 
-    $("#ddlFilterQty").attr("disabled", false); 
-    $("#ddlFilterPayType").attr("disabled", false); 
-    $("#ddlFilterExchangeCode").attr("disabled", false); 
-    $("#txtFilterRemark").attr("disabled", false); 
-    fn_clearPanelField_ASChargesFees();
-    
-    
-    
-    
-    
-}
-
-function fn_openField_Cancel(){
-	
-	$("#btnSaveDiv").attr("style","display:inline");
-    $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");  
-    $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
-}
-
-
-function fn_openField_Fail(){
-	
-	   $("#btnSaveDiv").attr("style","display:inline");
-	   $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");  
-	   $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
-}
-
-
-
-
-
-
-function fn_clearPageMessage(){
-	
-}
-
-
-function fn_clearPageField(){
-
-    $("#btnSaveDiv").attr("style","display:none");
-    $('#dpSettleDate').val("").attr("disabled", true); 
-    $('#ddlFailReason').val("").attr("disabled", true); 
-    $('#tpSettleTime').val("").attr("disabled", true); 
-    $('#ddlDSCCode').val("").attr("disabled", true); 
-    $('#ddlErrorCode').val("").attr("disabled", true); 
-    $('#ddlCTCode').val("").attr("disabled", true); 
-    $('#ddlErrorDesc').val("").attr("disabled", true);
-    $('#ddlWarehouse').val("").attr("disabled", true); 
-    $('#txtRemark').val("").attr("disabled", true); 
-    $("#iscommission").attr("disabled", true); 
-    
-    
-    fn_clearPanelField_ASChargesFees();
-    $("#ddlFilterCode").val("").attr("disabled", true); 
-    $("#ddlFilterQty").val("").attr("disabled", true); 
-    $("#ddlFilterPayType").val("").attr("disabled", true); 
-    $("#ddlFilterExchangeCode").val("").attr("disabled", true); 
-    $("#txtFilterRemark").val("").attr("disabled", true); 
-    
-    $("#txtLabourCharge").val("0.00").attr("disabled", true); 
-    $("#txtFilterCharge").val("0.00").attr("disabled", true); 
-    
-}
-
-
-function fn_doSave(){
-	
-	if ( ! fn_validRequiredField_Save_ResultInfo()) {
-       return ;
-    }
-	
    if($("#ddlStatus").val()==4){
-	     
 	     //COMPLETE STATUS
           if (! fn_validRequiredField_Save_DefectiveInfo()) {
                  return ;
           }
-	   
    }
    
    fn_setSaveFormData();
 }
-
-
-$.fn.clearForm = function() {
-    return this.each(function() {
-        var type = this.type, tag = this.tagName.toLowerCase();
-        if (tag === 'form'){
-            return $(':input',this).clearForm();
-        }
-        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-            this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
-        }else if (tag === 'select'){
-            this.selectedIndex = -1;
-        }
-    });
-};
-
 
 
 function  fn_setSaveFormData(){
@@ -512,82 +331,88 @@ function  fn_setSaveFormData(){
     
 	
 	var asResultM ={
-			       AS_ENTRY_ID:              $("#AS_ID").val(),
-				   AS_SO_ID:                   $("#ORD_ID").val(),
-				   AS_CT_ID:                   $('#ddlCTCode').val(),
-				   AS_SETL_DT:               $('#dpSettleDate').val() , 
-				   AS_SETL_TM:               $('#tpSettleTime').val(),   
-				   AS_RESULT_STUS_ID:    $('#ddlStatus').val(),  
-				   AS_FAIL_RESN_ID:         $('#ddlFailReason').val(),  
-				   AS_REN_COLCT_ID:        0,
-				   AS_CMMS:                   $("#iscommission").prop("checked") ? '1': '0' ,    
-				   AS_BRNCH_ID:              $('#ddlDSCCode').val() , 
-				   AS_WH_ID:                  $('#ddlWarehouse').val() ,
-				   AS_RESULT_REM:          $('#txtRemark').val() ,
-				   AS_MALFUNC_ID:          $('#ddlErrorCode').val() ,
-				   AS_MALFUNC_RESN_ID:  $('#ddlErrorDesc').val() , 
-				   AS_DEFECT_TYPE_ID:    $('#ddlStatus').val()== 4 ? $('#def_type_id').val() : '0' , 
-				   AS_DEFECT_GRP_ID:             0,  
+			       AS_CMMS:                          $("#iscommission").prop("checked") ? '1': '0' ,    
+				   AS_RESULT_REM:                 $('#txtRemark').val() ,
+				   AS_MALFUNC_ID:                 $('#ddlErrorCode').val() ,
+				   AS_MALFUNC_RESN_ID:         $('#ddlErrorDesc').val() , 
+				   AS_DEFECT_TYPE_ID:           $('#ddlStatus').val()== 4 ? $('#def_type_id').val() : '0' , 
 				   AS_DEFECT_ID:                   $('#ddlStatus').val()== 4 ? $('#def_code_id').val() : '0' , 
-				   AS_DEFECT_PART_GRP_ID:    0 , 
-				   AS_DEFECT_PART_ID:          $('#ddlStatus').val()== 4 ? $('#def_part_id').val() : '0' , 
-				   AS_DEFECT_DTL_RESN_ID:    $('#ddlStatus').val()== 4 ? $('#def_def_id').val() : '0' , 
-				   AS_SLUTN_RESN_ID:            $('#ddlStatus').val()== 4 ? $('#solut_code_id').val() : '0' , 
-				   AS_WORKMNSH:                  $('#txtLabourCharge').val()  ,
-				   AS_FILTER_AMT:                  $('#txtFilterCharge').val()  , 
-				   AS_ACSRS_AMT:                 0,
-				   AS_TOT_AMT:                    $('#txtTotalCharge').val()  ,   
-				   AS_RESULT_IS_SYNCH:        0,
-				   AS_RCALL:                         0,
-				   AS_RESULT_STOCK_USE:   addedRowItems.length  >0 ? 1:0,//detail 리스트 카운트  
-				   AS_RESULT_TYPE_ID:   457,
-				   AS_RESULT_IS_CURR: 1,
-				   AS_RESULT_MTCH_ID:  0,
-				   AS_RESULT_NO_ERR: '',
-				   AS_ENTRY_POINT:  0,
-				   AS_WORKMNSH_TAX_CODE_ID: 0,
-				   AS_WORKMNSH_TXS: 0,
-				   AS_RESULT_MOBILE_ID: 0
+				   AS_DEFECT_PART_ID:           $('#ddlStatus').val()== 4 ? $('#def_part_id').val() : '0' , 
+				   AS_DEFECT_DTL_RESN_ID:     $('#ddlStatus').val()== 4 ? $('#def_def_id').val() : '0' , 
+				   AS_SLUTN_RESN_ID:             $('#ddlStatus').val()== 4 ? $('#solut_code_id').val() : '0' , 
+				   AS_RESULT_ID :                   $('#AS_RESULT_ID').val() 
 	}
 	
 	var  saveForm ={
-			"asResultM": asResultM ,
-		    "add" : addedRowItems,
-	        "update" : editedRowItems,
-	        "remove" : removedRowItems
+			"asResultM": asResultM 
 	}
-	
-	
 
-    Common.ajax("POST", "/services/as/newResultAdd.do", saveForm, function(result) {
+	
+    Common.ajax("POST", "/services/as/newResultBasicUpdate.do", saveForm, function(result) {
         console.log("newResultAdd.");
         console.log( result);       
         
         if(result.asNo !=""){
             Common.alert("<b>AS result successfully saved.</b>");
-            fn_DisablePageControl();
+            //fn_DisablePageControl();
         }
-        
     });
 }
 
 
 
-function   fn_clearPanelField_ASChargesFees(){
-	
-	  $('#ddlFilterCode').val("") ;
-	  $('#ddlFilterQty').val(""); 
-	  $('#ddlFilterPayType').val("") ;
-	  $('#ddlFilterExchangeCode').val("") ;
-	  $('#txtFilterRemark').val("") ;
-	      
-}
 
+
+function fn_editBasicPageContral(){
+	
+    $("#resultEditCreator").attr("style","display:inline");
+	$("#btnSaveDiv").attr("style","display:inline");
+	
+      
+    $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");     
+    $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");     
+    $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");     
+    $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");    
+    $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");     
+    $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");    
+    $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
+    $('#iscommission').removeAttr("disabled").removeClass("readonly");  
+    $('#def_type').removeAttr("disabled").removeClass("readonly");  
+    $('#def_code').removeAttr("disabled").removeClass("readonly");  
+    $('#def_part').removeAttr("disabled").removeClass("readonly");  
+    $('#solut_code').removeAttr("disabled").removeClass("readonly");  
+    $('#def_def').removeAttr("disabled").removeClass("readonly");  
+    $('#def_type_id').removeAttr("disabled").removeClass("readonly");  
+    $('#def_code_id').removeAttr("disabled").removeClass("readonly");  
+    $('#def_part_id').removeAttr("disabled").removeClass("readonly");  
+    $('#solut_code_id').removeAttr("disabled").removeClass("readonly");  
+    $('#def_def_id').removeAttr("disabled").removeClass("readonly");
+    
+    
+    $('#def_type_text').removeAttr("disabled").removeClass("readonly");  
+    $('#def_code_text').removeAttr("disabled").removeClass("readonly");  
+    $('#def_part_text').removeAttr("disabled").removeClass("readonly");  
+    $('#solut_code_text').removeAttr("disabled").removeClass("readonly");  
+    $('#def_def_text').removeAttr("disabled").removeClass("readonly");  
+    
+    $('#txtLabourch').removeAttr("disabled").removeClass("readonly");  
+    $('#txtTotalCharge').removeAttr("disabled").removeClass("readonly");  
+    $('#txtFilterCharge').removeAttr("disabled").removeClass("readonly");  
+    $('#txtLabourCharge').removeAttr("disabled").removeClass("readonly");  
+    $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");  
+    $('#ddlFilterCode').removeAttr("disabled").removeClass("readonly");  
+    $('#ddlFilterQty').removeAttr("disabled").removeClass("readonly");  
+    $('#ddlFilterPayType').removeAttr("disabled").removeClass("readonly");  
+    $('#ddlFilterExchangeCode').removeAttr("disabled").removeClass("readonly");  
+    $('#txtFilterRemark').removeAttr("disabled").removeClass("readonly");  
+    
+    fn_clearPanelField_ASChargesFees();
+	
+}
 
 
 function fn_DisablePageControl(){
 	
-    $("#ddlStatus").attr("disabled", true); 
     $("#dpSettleDate").attr("disabled", true); 
     $("#ddlFailReason").attr("disabled", true); 
     $("#ddlStatus").attr("disabled", true); 
@@ -598,7 +423,7 @@ function fn_DisablePageControl(){
     $("#ddlCTCode").attr("disabled", true); 
     $("#ddlWarehouse").attr("disabled", true); 
     $("#txtRemark").attr("disabled", true); 
-    $("#iscommission").attr("disabled", true); 
+    $("#iscommission").attr("disabled", true);   
     
     $("#def_type").attr("disabled", true); 
     $("#def_code").attr("disabled", true); 
@@ -629,6 +454,19 @@ function fn_DisablePageControl(){
     $("#ddlFilterPayType").attr("disabled", true); 
     $("#ddlFilterExchangeCode").attr("disabled", true); 
     $("#txtFilterRemark").attr("disabled", true); 
+    
+    
+    
+    $("#txtLabourch").attr("disabled", true); 
+    $("#txtLabourCharge").attr("disabled", true); 
+    $("#cmbLabourChargeAmt").attr("disabled", true); 
+    $("#txtFilterCharge").attr("disabled", true); 
+    $("#txtTotalCharge").attr("disabled", true); 
+    
+    $("#btnSaveDiv").attr("style","display:none");
+    $("#addDiv").attr("style","display:none");
+    
+    
     fn_clearPanelField_ASChargesFees();
     
 }
@@ -646,8 +484,6 @@ function fn_validRequiredField_Save_DefectiveInfo(){
         rtnMsg  +="Please select the def_type.<br/>" ;
         rtnValue =false; 
     }
-    
-    
     
     if(FormUtil.checkReqValue($("#def_code_id"))){
         rtnMsg  +="Please select the def_code.<br/>" ;
@@ -753,7 +589,6 @@ function fn_doClear(){
     $("#ddlStatus").val(""); 
     $("#dpSettleDate").val(""); 
     $("#ddlFailReason").val(""); 
-    $("#ddlStatus").val(""); 
     $("#tpSettleTime").val(""); 
     $("#ddlDSCCode").val(""); 
     $("#ddlErrorCode").val(""); 
@@ -778,6 +613,7 @@ function fn_doClear(){
     
     $("#ddlFilterCode").val(""); 
     $("#ddlFilterQty").val(""); 
+    
     $("#ddlFilterPayType").val("");
     $("#ddlFilterExchangeCode").val(""); 
     $("#txtFilterRemark").val(""); 
@@ -798,16 +634,20 @@ function fn_doClear(){
 
 
 <form id="resultASForm" method="post">
-    <div  style="display:inline">
+    <div  style="display:none">
         <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
         <input type="text" name="ORD_NO"   id="AS_NO"  value="${ORD_NO}"/>
         <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
         <input type="text" name="AS_ID"   id="AS_ID"  value="${AS_ID}"/>
+        <input type="text" name="MOD"   id="MOD"  value="${MOD}"/>
+        <input type="text" name="AS_RESULT_NO"   id="AS_RESULT_NO"  value="${AS_RESULT_NO}"/>  
+        <input type="text" name="AS_RESULT_ID"   id="AS_RESULT_ID"  value="${AS_RESULT_ID}"/>  
+           
     </div>
 </form>
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New AS Result Entry</h1>
+<h1> Edit Basic  AS Result Entry</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -837,7 +677,7 @@ function fn_doClear(){
 <tr>
     <th scope="row">AS No</th>
     <td>
-    <span id="txtASNo">AS No</span>
+    <span id="txtASNo"></span>
     </td>
     <th scope="row">Order No</th>
     <td>
@@ -1013,19 +853,21 @@ function fn_doClear(){
     <colgroup>
         <col style="width:150px" />
         <col style="width:*" />
-        <col style="width:110px" />
+        <col style="width:150px" />
         <col style="width:*" />
     </colgroup>
     <tbody>
+    
+    
     <tr>
         <th scope="row">Result No</th>
         <td>
-        <input type="text" title="" placeholder="" class=""  id='txtResultNo' name='txtResultNo'/>
+        <input type="text" title="" placeholder="" class="readonly"   id='txtResultNo' name='txtResultNo'/>
         </td>
         <th scope="row">Status</th>
         <td>
         
-		    <select class="w100p"  id="ddlStatus" name="ddlStatus"  onChange="fn_ddlStatus_SelectedIndexChanged()">
+		    <select class="w100p"  id="ddlStatus" name="ddlStatus"  class="readonly"  disabled="disabled"  onChange="fn_ddlStatus_SelectedIndexChanged()">
 		         <option value=""></option>
 		        <option value="4">Complete</option>
 		        <option value="10">Cancel</option>
@@ -1037,11 +879,11 @@ function fn_doClear(){
     <tr>
         <th scope="row">Settle Date</th>
         <td>
-        <input type="text" title="Create start Date"   id='dpSettleDate'  name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" />
+        <input type="text" title="Create start Date"   class="readonly"   id='dpSettleDate'  name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" />
         </td>
         <th scope="row">Fail Reason</th>
         <td>
-          <select  id='ddlFailReason' name='ddlFailReason' disabled="disabled" ></select>
+          <select  id='ddlFailReason' name='ddlFailReason' class="readonly" disabled="disabled" ></select>
         </td>
     </tr>
     <tr>
@@ -1049,7 +891,7 @@ function fn_doClear(){
         <td>
 
         <div class="time_picker"><!-- time_picker start -->
-        <input type="text" title="" placeholder=""  id='tpSettleTime' name='tpSettleTime' class="readonly time_date" disabled="disabled" />
+        <input type="text" title="" placeholder=""  id='tpSettleTime'  class="readonly"  name='tpSettleTime' class="readonly time_date" disabled="disabled" />
         <ul>
             <li>Time Picker</li>
             <li><a href="#">12:00 AM</a></li>
@@ -1090,14 +932,14 @@ function fn_doClear(){
     <tr>
         <th scope="row">Error Code</th>
         <td>
-        <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode'>
+        <select  id='ddlErrorCode' name='ddlErrorCode'>
                      <option value="9999">에러코드</option>
          </select>
         </td>
         <th scope="row">CT Code</th>
         <td>
-        <select  disabled="disabled" id='ddlCTCode' name='ddlCTCode'>
-        <input type="text" title="" placeholder="" class=""  id='HiddenCTID' name='HiddenCTID'/>
+        <select   id='ddlCTCode' name='ddlCTCode' class="readonly"  disabled="disabled" >
+        <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
         
         
     </select> 
@@ -1112,7 +954,7 @@ function fn_doClear(){
         </td>
         <th scope="row">Warehouse</th>
         <td>
-        <select class="disabled" disabled="disabled"  id='ddlWarehouse' name='ddlWarehouse'>
+        <select class="readonly"  id='ddlWarehouse' name='ddlWarehouse'>
         
     </select>
         </td>
@@ -1126,8 +968,20 @@ function fn_doClear(){
     <tr>
         <th scope="row">Commission</th>
         <td colspan="3">
-        <label><input type="checkbox" disabled="disabled"  id= 'iscommission' name='iscommission'/><span>Has commission ? </span></label>
+        <label><input type="checkbox"   id= 'iscommission' name='iscommission'/><span>Has commission ? </span></label>
         </td>
+    </tr>
+   
+    
+    <tr>
+        <th scope="row">Result Creator</th>
+        <td>
+                <input type="text" title="" placeholder="" class="disabled"   disabled="disabled" id='creator' name='creator'/>
+        </td>
+        <th scope="row">Result Create Date </th>
+            <td>
+                 <input type="text" title="" placeholder="" class="disabled"   disabled="disabled"id='creatorat' name='creatorat'/>
+            </td>
     </tr>
     </tbody>
     </table><!-- table end -->
@@ -1146,9 +1000,9 @@ function fn_doClear(){
     <tr>
         <th scope="row">Defect Type</th>
         <td>
-           <input type="text" title=""  id='def_type' disabled="disabled" name ='def_type' placeholder="ex) DT3" class=""  onChange="fn_getASReasonCode2(this, 'def_type' ,'387')" />
-          <input type="hidden" title=""  id='def_type_id'    name ='def_type_id' placeholder="" class="" />
-                     <input type="text" title="" placeholder=""id='def_type_text' name ='def_type_text'   class="" />
+           <input type="text" title=""  id='def_type'  name ='def_type' placeholder="ex) DT3" class=""  onChange="fn_getASReasonCode2(this, 'def_type' ,'387')" />
+           <input type="hidden" title=""  id='def_type_id'    name ='def_type_id' placeholder="" class="" />
+           <input type="text" title="" placeholder=""id='def_type_text' name ='def_type_text'   class="" />
           
           
         </td>
@@ -1156,7 +1010,7 @@ function fn_doClear(){
     <tr>
         <th scope="row">Defect Code</th>
         <td>
-	        <input type="text" title="" placeholder="ex) FF"  disabled="disabled"  id='def_code' name ='def_code' class=""  onChange="fn_getASReasonCode2(this, 'def_code', '303')"  />
+	        <input type="text" title="" placeholder="ex) FF"   id='def_code' name ='def_code' class=""  onChange="fn_getASReasonCode2(this, 'def_code', '303')"  />
 	        <input type="hidden" title="" placeholder=""   id='def_code_id' name ='def_code_id' class="" />
 	         <input type="text" title="" placeholder=""id='def_code_text' name ='def_code_text'   class="" />
         </td>
@@ -1164,7 +1018,7 @@ function fn_doClear(){
     <tr>
         <th scope="row">Defect Part</th>
         <td>
-        <input type="text" title="" placeholder="ex) FE12"  disabled="disabled" id='def_part' name ='def_part'   class=""  onChange="fn_getASReasonCode2(this, 'def_part' ,'305')" /> 
+        <input type="text" title="" placeholder="ex) FE12"   id='def_part' name ='def_part'   class=""  onChange="fn_getASReasonCode2(this, 'def_part' ,'305')" /> 
           <input type="hidden" title="" placeholder=""id='def_part_id' name ='def_part_id'   class="" />
           <input type="text" title="" placeholder=""id='def_part_text' name ='def_part_text'   class="" />
         </td>
@@ -1172,7 +1026,7 @@ function fn_doClear(){
     <tr>
         <th scope="row">Detail of Defect</th>
         <td>
-          <input type="text" title="" placeholder="ex) 18 "  disabled="disabled"  id='def_def' name ='def_def'  class="" onChange="fn_getASReasonCode2(this, 'def_def'  ,'304')"  />
+          <input type="text" title="" placeholder="ex) 18 "   id='def_def' name ='def_def'  class="" onChange="fn_getASReasonCode2(this, 'def_def'  ,'304')"  />
           <input type="hidden" title="" placeholder="" id='def_def_id' name ='def_def_id'  class="" />
           <input type="text" title="" placeholder="" id='def_def_text' name ='def_def_text'  class="" />
         </td>
@@ -1180,7 +1034,7 @@ function fn_doClear(){
     <tr>
         <th scope="row">Solution Code</th>
         <td>
-	        <input type="text" title="" placeholder="ex) A9" class=""  disabled="disabled"  id='solut_code' name ='solut_code'  onChange="fn_getASReasonCode2(this, 'solut_code'  ,'337')"   />
+	        <input type="text" title="" placeholder="ex) A9" class=""   id='solut_code' name ='solut_code'  onChange="fn_getASReasonCode2(this, 'solut_code'  ,'337')"   />
 	        <input type="hidden" title="" placeholder="" class=""   id='solut_code_id' name ='solut_code_id'  />
 	        <input type="text" title="" placeholder="" class=""   id='solut_code_text' name ='solut_code_text'  />
           
@@ -1190,112 +1044,13 @@ function fn_doClear(){
     </table><!-- table end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#">AS Charges Fees</a></dt>
-    <dd>
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:170px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row">Labour Charge</th>
-        <td>
-        <label><input type="checkbox"   id='txtLabourch' name='txtLabourch''  onChange="fn_LabourCharge_CheckedChanged(this)"/></label>
-        
-        </td>
-        <th scope="row">Labour Charge</th>
-        <td><input type="text"  id='txtLabourCharge' name='txtLabourCharge'  value='0.00' />
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Labour Charge Amt</th>
-        <td>
-        <select  id='cmbLabourChargeAmt' name='cmbLabourChargeAmt'  onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()">
-             <option value="50">RM 50.00</option>
-             <option value="60">RM 60.00</option>
-             <option value="100">RM 100.00</option>
-             <option value="120">RM 120.00</option>
-        </select>
-        </td>
-        <th scope="row">Filter Charge</th>
-        <td> <input type="text"  id='txtFilterCharge' name='txtFilterCharge'  value='0.00'/>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row"></th>
-        <td></td>
-        <th scope="row">Total Charge</th>
-        <td><input type="text"  id='txtTotalCharge' name='txtTotalCharge' value='0.00'/>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Filter Code</th>
-        <td>
-        <select  id='ddlFilterCode' name='ddlFilterCode'>
-        </select>
-        </td>
-        <th scope="row">Quantity</th>
-        <td>
-        <select  id='ddlFilterQty' name='ddlFilterQty'>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            
-        </select>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Payment Type</th>
-        <td>
-        <select  id='ddlFilterPayType' name='ddlFilterPayType'>
-              <option value="FOC">Free of Charge</option>
-              <option value="CHG">Charge</option>
-        </select>
-        </td>
-        <th scope="row">Exchange Code</th>
-        <td>
-        <select   id='ddlFilterExchangeCode' name='ddlFilterExchangeCode'>
-        </select>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Remark</th>
-        <td colspan="3">
-        <textarea cols="20" rows="5" placeholder=""  id='txtFilterRemark' name='txtFilterRemark'></textarea>
-        </td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    <ul class="center_btns">
-        <li><p class="btn_blue2"><a href="#" onclick="fn_filterAdd()">Add Filter</a></p></li>
-        
-        <li><p class="btn_blue2"><a href="#">Clear</a></p></li>
-    </ul>
-    
-    <article class="grid_wrap"><!-- grid_wrap start -->
-          <div id="asfilter_grid_wrap" style="width:100%; height:250px; margin:0 auto;"></div>
-    </article><!-- grid_wrap end -->
-
-    </dd>
 </dl>
+
 </article><!-- acodi_wrap end -->
-<ul class="center_btns mt20" id='btnSaveDiv'>
+
+
+<ul class="center_btns mt20" >
     <li><p class="btn_blue2 big"><a href="#"   onclick="fn_doSave()">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#"    onClick="fn_doClear()" >Clear</a></p></li>
 </ul>
 
 </section><!-- content end -->

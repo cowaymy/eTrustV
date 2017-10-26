@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +40,10 @@ public class ASManagementListController {
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 	
 	 
 	
@@ -94,6 +100,22 @@ public class ASManagementListController {
 		return "services/as/ASReceiveEntryPop";
 	}
 	
+	@RequestMapping(value = "/asResultViewPop.do")
+	public String asResultViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		
+		
+		model.put("ORD_ID",(String) params.get("ord_Id"));   
+		model.put("ORD_NO",(String) params.get("ord_No"));
+		model.put("AS_ID", (String)params.get("as_Id"));   
+		model.put("AS_NO", (String)params.get("as_No")); 
+		
+		// 호출될 화면
+		return "services/as/asResultViewPop";
+	}
+	
+	
+	
 	/**
 	 * Services - AS  - ASReceiveEntry Order No search
 	 *
@@ -139,7 +161,7 @@ public class ASManagementListController {
 		logger.debug("in as_ord_basicInfo :==>" +as_ord_basicInfo.toString());
 		
 		return "services/as/resultASReceiveEntryPop";
-	} 
+	}  
 	
 	
 	
@@ -229,6 +251,43 @@ public class ASManagementListController {
 		return "services/as/newASResultPop";
 	}
 	
+	
+
+	@RequestMapping(value = "/asResultEditViewPop.do")
+	public String asResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		
+		model.put("ORD_ID",(String) params.get("ord_Id"));   
+		model.put("ORD_NO",(String) params.get("ord_No"));
+		model.put("AS_NO", (String)params.get("as_No"));    
+		model.put("AS_ID", (String)params.get("as_Id"));     
+		model.put("AS_RESULT_NO", (String)params.get("as_Result_No"));
+		model.put("AS_RESULT_ID", (String)params.get("as_Result_Id"));     
+		model.put("MOD", (String)params.get("mod")); 
+		
+		
+		
+		return "services/as/asResultEditViewPop";
+	}
+	
+	@RequestMapping(value = "/asResultEditBasicPop.do")
+	public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		
+		model.put("ORD_ID",(String) params.get("ord_Id"));   
+		model.put("ORD_NO",(String) params.get("ord_No"));
+		model.put("AS_NO", (String)params.get("as_No"));    
+		model.put("AS_ID", (String)params.get("as_Id"));     
+		model.put("AS_RESULT_NO", (String)params.get("as_Result_No"));
+		model.put("AS_RESULT_ID", (String)params.get("as_Result_Id"));     
+		model.put("MOD", (String)params.get("mod")); 
+		
+		
+		
+		return "services/as/asResultEditBasicPop";
+	}
+	 
+	 
 	
 	
 	/**
@@ -485,6 +544,42 @@ public class ASManagementListController {
 		return ResponseEntity.ok(list);  
 	}
 	
+	@RequestMapping(value = "/getCallLog", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getCallLog(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  getCallLog.....");		
+		logger.debug("params : {}", params.toString());
+		
+		List<EgovMap>  list = ASManagementListService.getCallLog(params);
+		
+		return ResponseEntity.ok(list);  
+	}
+	
+	
+	@RequestMapping(value = "/getASRulstSVC0004DInfo", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getASRulstSVC0004DInfo(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  getASRulstSVC0004DInfo.....");		
+		logger.debug("params : {}", params.toString());
+		
+		List<EgovMap>  list = ASManagementListService.getASRulstSVC0004DInfo(params);
+		
+		return ResponseEntity.ok(list);  
+	}
+	
+	@RequestMapping(value = "/getASRulstEditFilterInfo", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getASRulstEditFilterInfo(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  getASRulstEditFilterInfo.....");		
+		logger.debug("params : {}", params.toString());
+		
+		List<EgovMap>  list = ASManagementListService.getASRulstEditFilterInfo(params);
+		
+		return ResponseEntity.ok(list);  
+	}
+	
+	
+	
 	
 
 	@RequestMapping(value = "/newResultAdd.do", method = RequestMethod.POST)
@@ -517,6 +612,68 @@ public class ASManagementListController {
 				
 		return ResponseEntity.ok(message);  
 		
+	}
+	
+	
+	@RequestMapping(value = "/newResultUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> newResultUpdate(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  newResultUpdate ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("updator", sessionVO.getUserId());   
+		
+		LinkedHashMap  asResultM = (LinkedHashMap)  params.get("asResultM");
+		List<EgovMap>  add			= (List<EgovMap>)  params.get("add");
+		List<EgovMap>  remove	= (List<EgovMap>)  params.get("remove");
+		List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
+		   
+		logger.debug("asResultM ===>"+asResultM.toString());  
+		logger.debug("add ===>"+add.toString());
+		logger.debug("remove ===>"+remove.toString());
+		logger.debug("update ===>"+update.toString());
+		
+		//EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(99);
+		message.setMessage("");
+
+				
+		return ResponseEntity.ok(message);  
+		
+	}
+	
+	
+	@RequestMapping(value = "/newResultBasicUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> newResultBasicUpdate(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  newResultBasicUpdate ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("updator", sessionVO.getUserId());   
+		
+		LinkedHashMap  asResultM = (LinkedHashMap)  params.get("asResultM");
+		   
+		logger.debug("asResultM ===>"+asResultM.toString());  
+		
+		int  rtnValue = ASManagementListService.asResultBasic_update(params);  
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		if(rtnValue >0 ){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		return ResponseEntity.ok(message);  
 	}
 	
 	

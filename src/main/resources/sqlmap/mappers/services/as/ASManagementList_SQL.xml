@@ -22,7 +22,8 @@
 							       S.C2   ,
 							       S.C3   ,
 							       S.C4   ,
-							       S.C5   
+							       S.C5   ,
+							       S.AS_RESULT_ID
 						  FROM ( SELECT DISTINCT E.AS_ID AS_ID  ,
 						                         E.AS_NO AS_NO  ,
 						                         E.ASSOID1 AS_SO_ID  ,
@@ -51,7 +52,8 @@
 						                         CASE 
 						                              WHEN ( E.AS_RESULT_ID IS NOT NULL ) THEN E.AS_TOT_AMT
 						                         ELSE UTILS.CONVERT_TO_FLOAT(0,53)
-						                            END C5  
+						                            END C5  ,
+						                         E.AS_RESULT_ID 
 						         FROM ( SELECT Extent1.AS_ID AS_ID  ,
 						                       Extent1.AS_NO AS_NO  ,
 						                       Extent1.AS_SO_ID ASSOID1  ,
@@ -79,13 +81,20 @@
 						                       AND ( 1 = Extent7.AS_RESULT_IS_CURR )
 						              ]]>
 						                 WHERE  ( 8    <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
+						                 
+						                   <if test="asStatusList != null and asStatusList != '' ">
+								                    AND Extent1.AS_STUS_ID  IN
+									                  <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
+									                       #{item}
+									                 </foreach>
+								              </if>
+						                 
 						                     <if test="asTypeList != null and asTypeList != '' ">
 								                     AND Extent1.AS_TYPE_ID  IN
 									                  <foreach item="item" collection="asTypeList" index="index" open="(" separator="," close=")">
 									                            #{item}
 									                  </foreach>
 								              </if>
-						                          AND ( 1 = Extent1.AS_STUS_ID ) 
 						               ) E
 						                LEFT JOIN SYS0047M Extent8   ON E.AS_CRT_USER_ID = Extent8.USER_ID
 						          WHERE  1=1
@@ -184,7 +193,7 @@
 		       Extent1.ORD_STUS_ID ORD_STUS_ID  ,
 		       Extent1.ORD_STUS_CODE ORD_STUS_CODE  ,
 		       Extent1.ORD_STUS_NAME ORD_STUS_NAME  ,
-		       Extent1.ORD_DT ORD_DT  ,
+		       to_char(Extent1.ORD_DT,'dd/mm/yyyy') ORD_DT  ,
 		       Extent1.INSTLMT_PRIOD INSTLMT_PRIOD  ,
 		       Extent1.ORD_AMT ORD_AMT  ,
 		       Extent1.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
@@ -197,7 +206,7 @@
 		       Extent1.ORD_GRP_CODE ORD_GRP_CODE  ,
 		       Extent1.ORD_ORG_CODE ORD_ORG_CODE  ,
 		       Extent1.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
-		       Extent1.ORD_CRT_DT ORD_CRT_DT  ,
+		       to_char(Extent1.ORD_CRT_DT,'dd/mm/yyyy') ORD_CRT_DT  ,
 		       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
 		       Extent1.APP_TYPE_CODE APP_TYPE_CODE  ,
 		       Extent1.APP_TYPE_DESC APP_TYPE_DESC  ,
@@ -953,10 +962,10 @@
      <select id="getASEvntsInfo" parameterType="Map" resultType="egovMap">
 				     SELECT S.AS_ID AS_ID  ,
 							       S.AS_ALLOW_COMM AS_ALLOW_COMM  ,
-							       S.AS_CRT_DT AS_CRT_DT  ,
+							       to_char(S.AS_CRT_DT,'dd/mm/yyyy') AS_CRT_DT  ,
 							       CASE 
 							            WHEN ( S.USER_ID IS NOT NULL ) THEN S.USER_NAME
-							       ELSE '-'
+							       ELSE '-' 
 							          END C1  ,
 							       S.AS_NO AS_NO  ,
 							       S.AS_STUS_ID AS_STUS_ID  ,
@@ -1181,16 +1190,16 @@
        
     <select id="getASReasonCode" parameterType="Map" resultType="egovMap">
 		       
-		select Distinct RESN_DESC ,RESN_TYPE_ID ,code_Id , code_Name 
+		select Distinct RESN_DESC ,RESN_TYPE_ID ,code_Id , code_Name  ,RESN_ID
 		from(
 		 select RESN_TYPE_ID , 
 		                CODE   code_Id,  
 		                RESN_DESC ,
-		                CODE||'-'||RESN_DESC  code_Name
+		                CODE||'-'||RESN_DESC  code_Name,RESN_ID
 		       from SYS0032M  where RESN_TYPE_ID = #{RESN_TYPE_ID}   and  STUS_CODE_ID =1
 		        order by RESN_DESC desc
 		        )
- </select>
+ </select> 
  
  
   <select id="getASReasonCode2" parameterType="Map" resultType="egovMap">
@@ -1204,6 +1213,18 @@
                 order by RESN_DESC desc
                 )
  </select>
+ 
+ 
+    <resultMap id="asLogisticRequestMap" type="egovMap" > 
+    </resultMap>
+    
+    <select id="callSP_LOGISTIC_REQUEST " parameterType="Map"  statementType="CALLABLE" >
+       <![CDATA[  
+            {
+                  call SP_LOGISTIC_REQUEST ( #{P_ARR}, #{RETYPE} ,#{P_TYPE} , #{USERID}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=asLogisticRequestMap})
+            }
+         ]]>
+      </select>     
  
  
  
@@ -1424,4 +1445,390 @@
 							   #{ASR_ITM_TXS_AMT}
 							)
          </insert>
+         
+         
+      
+         <resultMap id="callasLogClobMap" type="egovMap">
+                <result property="callRem" column="CALL_REM" jdbcType="CLOB" javaType="string"/>
+         </resultMap>
+            
+            
+         <select id="getCallLog" parameterType="Map" resultMap="callasLogClobMap">
+         
+						   SELECT 
+							       S.CALL_RESULT_ID   ,
+							       S.CALL_REM   ,
+							       S.CALL_CRT_DT   ,
+							       S.C2   
+							  FROM ( SELECT          E.CALL_RESULT_ID   ,
+							                         E.CALL_REM   ,
+							                         E.CALL_CRT_DT   ,
+							                        CASE   WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME   ELSE '-'  END C2  
+							         FROM SVC0001D D
+							                JOIN CCR0006D C   ON ( D.AS_CALLLOG_ID = C.CALL_ENTRY_ID )
+							                AND ( 339 = C.TYPE_ID )
+							                AND ( D.AS_ID = C.DOC_ID )
+							                JOIN CCR0007D E   ON C.CALL_ENTRY_ID = E.CALL_ENTRY_ID
+							                LEFT JOIN SYS0047M Extent4   ON E.CALL_CRT_USER_ID = Extent4.USER_ID
+							          WHERE  D.AS_ID = #{AS_ID}
+							) S
+            </select>
+            
+            
+            
+            <select id="getASRulstEditFilterInfo" parameterType="Map" resultType="egovMap">
+            	                       SELECT         S.ASR_ITM_ID   filter_ID,
+													       S.STK_ID   ,
+													       S.C1  filter_Desc ,
+													       S.C2  filter_Type ,
+													       S.C3  filter_Ex_Code ,
+													       S.C4   ,
+													       S.ASR_ITM_PART_QTY  filter_Qty ,
+													       S.ASR_ITM_PART_PRC  filter_Price ,
+													       S.ASR_ITM_CHRG_AMT   ,
+													       S.ASR_ITM_REM    filter_Remark
+										  FROM ( SELECT E1.ASR_ITM_ID   ,
+										                E1.ASR_ITM_PART_QTY   ,
+										                E1.ASR_ITM_PART_PRC   ,
+										                E1.ASR_ITM_CHRG_AMT   ,
+										                E1.ASR_ITM_REM   ,
+										                E2.STK_ID   ,
+										                E2.STK_CODE || ' - ' || E2.STK_DESC C1  ,
+										                CASE  WHEN ( 1 = E1.ASR_ITM_CHRG_FOC ) THEN 'FOC'   ELSE 'CHG' END C2  ,
+										                CASE  WHEN ( E3.RESN_ID IS NOT NULL ) THEN E3.CODE  ELSE '-'    END C3  ,
+										                CASE  WHEN ( E3.RESN_ID IS NOT NULL ) THEN E3.RESN_ID   ELSE 0    END C4  
+										         FROM SVC0005D E1
+										                JOIN SYS0026M E2   ON E1.ASR_ITM_PART_ID = E2.STK_ID
+										                LEFT JOIN SYS0032M E3   ON E1.ASR_ITM_EXCHG_ID = E3.RESN_ID
+										          WHERE  ( 0 <![CDATA[<> ]]>  E1.ASR_ITM_PART_ID )
+										                   AND ( E1.ASR_ITM_PART_QTY   <![CDATA[ > ]]> 0 )
+										                   AND ( E1.AS_RESULT_ID = (select AS_RESULT_ID  from svc0004d where AS_RESULT_NO =#{AS_RESULT_NO})) 
+										             ) S
+										  ORDER BY  S.ASR_ITM_ID  ASC
+            
+    </select>
+    
+    
+  
+       <resultMap id="callasResultClobMap" type="egovMap">
+              <result property="asResultRem" column="AS_RESULT_REM" jdbcType="CLOB" javaType="string"/>
+       </resultMap>
+          
+          
+    
+    <select id="getASRulstSVC0004DInfo" parameterType="Map" resultMap="callasResultClobMap">
+                        SELECT S.AS_RESULT_ID   ,
+							       S.AS_RESULT_NO   ,
+							       S.AS_RESULT_STUS_ID   ,
+							       S.CODE   ,
+							       to_char(AS_SETL_DT,'dd/mm/yyyy' ) AS_SETL_DT ,
+							       S.AS_SETL_TM   ,
+							       CASE 
+							            WHEN ( S.AS_FAIL_RESN_ID IS NOT NULL ) THEN S.AS_FAIL_RESN_ID
+							       ELSE 0
+							          END C2  ,
+							       CASE 
+							            WHEN ( S.RESN_ID IS NOT NULL ) THEN S.CODE1
+							       ELSE ' '
+							          END C3  ,
+							       CASE 
+							            WHEN ( S.RESN_ID IS NOT NULL ) THEN S.RESN_DESC
+							       ELSE ' '
+							          END C4  ,
+							       S.AS_BRNCH_ID AS_BRNCH_ID  ,
+							       CASE 
+							            WHEN ( S.BRNCH_ID IS NOT NULL ) THEN S.CODE2
+							       ELSE ' '
+							          END C5  ,
+							       CASE 
+							            WHEN ( S.BRNCH_ID IS NOT NULL ) THEN S.NAME
+							       ELSE ' '
+							          END C6  ,
+							       S.AS_MALFUNC_ID AS_MALFUNC_ID  ,
+							       CASE 
+							            WHEN ( S.REASONID1 IS NOT NULL ) THEN S.CODE3
+							       ELSE ' '
+							          END C7  ,
+							       CASE 
+							            WHEN ( S.REASONID1 IS NOT NULL ) THEN S.REASONDESC1
+							       ELSE ' '
+							          END C8  ,
+							       S.AS_MALFUNC_RESN_ID AS_MALFUNC_RESN_ID  ,
+							       CASE 
+							            WHEN ( S.REASONID2 IS NOT NULL ) THEN S.CODE4
+							       ELSE ' '
+							          END C9  ,
+							       CASE 
+							            WHEN ( S.REASONID2 IS NOT NULL ) THEN S.REASONDESC2
+							       ELSE ' '
+							          END C10  ,
+							       CASE 
+							            WHEN ( S.AS_CT_ID IS NOT NULL ) THEN S.AS_CT_ID
+							       ELSE 0
+							          END C11  ,
+							       CASE 
+							            WHEN ( S.MEM_ID IS NOT NULL ) THEN S.MEM_CODE
+							       ELSE ' '
+							          END C12  ,
+							       CASE 
+							            WHEN ( S.MEM_ID IS NOT NULL ) THEN S.NAME1
+							       ELSE ' '
+							          END C13  ,
+							       S.AS_WH_ID AS_WH_ID  ,
+							       CASE 
+							            WHEN ( S.WH_LOC_ID IS NOT NULL ) THEN S.WH_LOC_CODE
+							       ELSE ' '
+							          END C14  ,
+							       CASE 
+							            WHEN ( S.WH_LOC_ID IS NOT NULL ) THEN S.WH_LOC_DESC
+							       ELSE ' '
+							          END C15  ,
+							       S.AS_RESULT_REM AS_RESULT_REM  ,
+							       S.AS_DEFECT_TYPE_ID AS_DEFECT_TYPE_ID  ,
+							       CASE 
+							            WHEN ( S.REASONID3 IS NOT NULL ) THEN S.CODE5
+							       ELSE ' '
+							          END C16  ,
+							       CASE 
+							            WHEN ( S.REASONID3 IS NOT NULL ) THEN S.REASONDESC3
+							       ELSE ' '
+							          END C17  ,
+							       S.AS_DEFECT_ID AS_DEFECT_ID  ,
+							       CASE 
+							            WHEN ( S.REASONID4 IS NOT NULL ) THEN S.CODE6
+							       ELSE ' '
+							          END C18  ,
+							       CASE 
+							            WHEN ( S.REASONID4 IS NOT NULL ) THEN S.REASONDESC4
+							       ELSE ' '
+							          END C19  ,
+							       S.AS_DEFECT_PART_ID AS_DEFECT_PART_ID  ,
+							       CASE 
+							            WHEN ( S.REASONID5 IS NOT NULL ) THEN S.CODE7
+							       ELSE ' '
+							          END C20  ,
+							       CASE 
+							            WHEN ( S.REASONID5 IS NOT NULL ) THEN S.REASONDESC5
+							       ELSE ' '
+							          END C21  ,
+							       S.AS_DEFECT_DTL_RESN_ID AS_DEFECT_DTL_RESN_ID  ,
+							       CASE 
+							            WHEN ( S.REASONID6 IS NOT NULL ) THEN S.CODE8
+							       ELSE ' '
+							          END C22  ,
+							       CASE 
+							            WHEN ( S.REASONID6 IS NOT NULL ) THEN S.REASONDESC6
+							       ELSE ' '
+							          END C23  ,
+							       CASE 
+							            WHEN ( S.AS_SLUTN_RESN_ID IS NOT NULL ) THEN S.AS_SLUTN_RESN_ID
+							       ELSE 0
+							          END C24  ,
+							       CASE 
+							            WHEN ( S.REASONID7 IS NOT NULL ) THEN S.CODE9
+							       ELSE ' '
+							          END C25  ,
+							       CASE 
+							            WHEN ( S.REASONID7 IS NOT NULL ) THEN S.REASONDESC7
+							       ELSE ' '
+							          END C26  ,
+							       S.AS_TOT_AMT   ,
+							       CASE 
+							            WHEN ( S.AS_CMMS IS NOT NULL ) THEN S.AS_CMMS
+							       ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+							          END C27  ,
+							       S.AS_WORKMNSH AS_WORKMNSH  ,
+							       S.AS_FILTER_AMT AS_FILTER_AMT  ,
+							       S.AS_RESULT_CRT_USER_ID AS_RESULT_CRT_USER_ID  ,
+							       CASE 
+							            WHEN ( S.USER_ID IS NOT NULL ) THEN S.USER_NAME
+							       ELSE ' '
+							          END C28  ,
+							       to_char(S.AS_RESULT_CRT_DT,'dd/mm/yyyy') AS_RESULT_CRT_DT   
+							  FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID  ,
+							                E.AS_RESULT_NO AS_RESULT_NO  ,
+							                E.AS_CT_ID AS_CT_ID  ,
+							                E.AS_SETL_DT AS_SETL_DT  ,
+							                E.AS_SETL_TM AS_SETL_TM  ,
+							                E.AS_RESULT_STUS_ID AS_RESULT_STUS_ID  ,
+							                E.AS_FAIL_RESN_ID AS_FAIL_RESN_ID  ,
+							                E.AS_CMMS AS_CMMS  ,
+							                E.AS_BRNCH_ID AS_BRNCH_ID  ,
+							                E.AS_WH_ID AS_WH_ID  ,
+							                E.AS_RESULT_REM AS_RESULT_REM  ,
+							                E.AS_RESULT_CRT_DT AS_RESULT_CRT_DT  ,
+							                E.AS_RESULT_CRT_USER_ID AS_RESULT_CRT_USER_ID  ,
+							                E.AS_MALFUNC_ID AS_MALFUNC_ID  ,
+							                E.AS_MALFUNC_RESN_ID AS_MALFUNC_RESN_ID  ,
+							                E.AS_DEFECT_TYPE_ID AS_DEFECT_TYPE_ID  ,
+							                E.AS_DEFECT_ID AS_DEFECT_ID  ,
+							                E.AS_DEFECT_PART_ID AS_DEFECT_PART_ID  ,
+							                E.AS_DEFECT_DTL_RESN_ID AS_DEFECT_DTL_RESN_ID  ,
+							                E.AS_SLUTN_RESN_ID AS_SLUTN_RESN_ID  ,
+							                E.AS_WORKMNSH AS_WORKMNSH  ,
+							                E.AS_FILTER_AMT AS_FILTER_AMT  ,
+							                E.AS_TOT_AMT AS_TOT_AMT  ,
+							                Extent2.CODE CODE  ,
+							                Extent3.RESN_ID RESN_ID  ,
+							                Extent3.CODE CODE1  ,
+							                Extent3.RESN_DESC RESN_DESC  ,
+							                Extent4.BRNCH_ID BRNCH_ID  ,
+							                Extent4.CODE CODE2  ,
+							                Extent4.NAME NAME  ,
+							                Extent5.RESN_ID REASONID1  ,
+							                Extent5.CODE CODE3  ,
+							                Extent5.RESN_DESC REASONDESC1  ,
+							                Extent6.RESN_ID REASONID2  ,
+							                Extent6.CODE CODE4  ,
+							                Extent6.RESN_DESC REASONDESC2  ,
+							                Extent7.MEM_ID MEM_ID  ,
+							                Extent7.MEM_CODE MEM_CODE  ,
+							                Extent7.NAME NAME1  ,
+							                Extent8.WH_LOC_ID WH_LOC_ID  ,
+							                Extent8.WH_LOC_CODE WH_LOC_CODE  ,
+							                Extent8.WH_LOC_DESC WH_LOC_DESC  ,
+							                Extent9.RESN_ID REASONID3  ,
+							                Extent9.CODE CODE5  ,
+							                Extent9.RESN_DESC REASONDESC3  ,
+							                E0.RESN_ID REASONID4  ,
+							                E0.CODE CODE6  ,
+							                E0.RESN_DESC REASONDESC4  ,
+							                E1.RESN_ID REASONID5  ,
+							                E1.CODE CODE7  ,
+							                E1.RESN_DESC REASONDESC5  ,
+							                E2.RESN_ID REASONID6  ,
+							                E2.CODE CODE8  ,
+							                E2.RESN_DESC REASONDESC6  ,
+							                E3.RESN_ID REASONID7  ,
+							                E3.CODE CODE9  ,
+							                E3.RESN_DESC REASONDESC7  ,
+							                E4.USER_ID USER_ID  ,
+							                E4.USER_NAME USER_NAME  
+							         FROM SVC0004D E
+							                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
+							                LEFT JOIN SYS0032M Extent3   ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID
+							                LEFT JOIN SYS0005M Extent4   ON Extent4.BRNCH_ID = E.AS_BRNCH_ID
+							                LEFT JOIN SYS0032M Extent5   ON Extent5.RESN_ID = E.AS_MALFUNC_ID
+							                LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = E.AS_MALFUNC_RESN_ID
+							                LEFT JOIN ORG0001D Extent7   ON Extent7.MEM_ID = E.AS_CT_ID
+							                LEFT JOIN SYS0028M Extent8   ON Extent8.WH_LOC_ID = E.AS_WH_ID
+							                LEFT JOIN SYS0032M Extent9   ON Extent9.RESN_ID = E.AS_DEFECT_TYPE_ID
+							                LEFT JOIN SYS0032M E0   ON E0.RESN_ID = E.AS_DEFECT_ID
+							                LEFT JOIN SYS0032M E1   ON E1.RESN_ID = E.AS_DEFECT_PART_ID
+							                LEFT JOIN SYS0032M E2   ON E2.RESN_ID = E.AS_DEFECT_DTL_RESN_ID
+							                LEFT JOIN SYS0032M E3   ON E3.RESN_ID = E.AS_SLUTN_RESN_ID
+							                LEFT JOIN SYS0047M E4   ON E4.USER_ID = E.AS_RESULT_CRT_USER_ID
+							          WHERE  E.AS_RESULT_ID =   (SELECT   AS_RESULT_ID  FROM  SVC0004D   WHERE  AS_RESULT_NO  =#{AS_RESULT_NO})  
+							          AND ROWNUM   <![CDATA[<= ]]> 1 
+							     ) S 
+							           
+    </select>
+    
+    <insert id="updateSVC0004D" parameterType="Map" >
+			    
+			    UPDATE  SVC0004D 
+						    SET
+						           AS_CT_ID                       =NVL(#{AS_CT_ID},0), 
+						           AS_SETL_DT                   =to_DATE(#{AS_SETL_DT},'dd/mm/yyyy'), 
+						           AS_SETL_TM                   =#{AS_SETL_TM}, 
+						           AS_RESULT_STUS_ID        =NVL(#{AS_RESULT_STUS_ID},0), 
+						           AS_FAIL_RESN_ID             =NVL(#{AS_FAIL_RESN_ID},0), 
+						           AS_REN_COLCT_ID           =NVL(#{AS_REN_COLCT_ID},0), 
+						           AS_CMMS                       =NVL(#{AS_CMMS},0), 
+						           AS_BRNCH_ID                  =NVL(#{AS_BRNCH_ID},0), 
+						           AS_WH_ID                      =NVL(#{AS_WH_ID},0), 
+						           AS_RESULT_REM              =#{AS_RESULT_REM}, 
+						           AS_MALFUNC_ID              =NVL(#{AS_MALFUNC_ID},0)    , 
+						           AS_MALFUNC_RESN_ID      =NVL(#{AS_MALFUNC_RESN_ID},0), 
+						           AS_DEFECT_TYPE_ID        =NVL(#{AS_DEFECT_TYPE_ID},0), 
+						           AS_DEFECT_GRP_ID          =NVL(#{AS_DEFECT_GRP_ID},0), 
+						           AS_DEFECT_ID                 =NVL(#{AS_DEFECT_ID},0), 
+						           AS_DEFECT_PART_GRP_ID  =NVL(#{AS_DEFECT_PART_GRP_ID},0), 
+						           AS_DEFECT_PART_ID         =NVL(#{AS_DEFECT_PART_ID},0), 
+						           AS_DEFECT_DTL_RESN_ID  =NVL(#{AS_DEFECT_DTL_RESN_ID},0), 
+						           AS_SLUTN_RESN_ID          =NVL(#{AS_SLUTN_RESN_ID},0), 
+						           AS_WORKMNSH                =NVL(#{AS_WORKMNSH},0), 
+						           AS_FILTER_AMT               =NVL(#{AS_FILTER_AMT},0), 
+						           AS_ACSRS_AMT               =NVL(#{AS_ACSRS_AMT},0), 
+						           AS_TOT_AMT                  =NVL(#{AS_TOT_AMT},0), 
+						           AS_RESULT_IS_SYNCH      =NVL(#{AS_RESULT_IS_SYNCH},0), 
+						           AS_RCALL                       =NVL(#{AS_RCALL},0), 
+						           AS_RESULT_STOCK_USE    =NVL(#{AS_RESULT_STOCK_USE},0), 
+						           AS_RESULT_TYPE_ID        =NVL(#{AS_RESULT_TYPE_ID},0), 
+						           AS_RESULT_IS_CURR        =NVL(#{AS_RESULT_IS_CURR},0), 
+						           AS_RESULT_MTCH_ID       =NVL(#{AS_RESULT_MTCH_ID},0), 
+						           AS_RESULT_NO_ERR         =NVL(#{AS_RESULT_NO_ERR},0), 
+						           AS_RESULT_UPD_DT         =SYSDATE, 
+						           AS_RESULT_UPD_USER_ID = #{updator}, 
+						           AS_ENTRY_POINT            =NVL(#{AS_ENTRY_POINT},0), 
+						           AS_WORKMNSH_TAX_CODE_ID  =NVL(#{AS_WORKMNSH_TAX_CODE_ID},0), 
+						           AS_WORKMNSH_TXS          =NVL(#{AS_WORKMNSH_TXS},0), 
+						           AS_RESULT_MOBILE_ID      =NVL(#{AS_RESULT_MOBILE_ID},0)
+		      WHERE   AS_RESULT_NO = #{AS_RESULT_NO}  
+    </insert>
+    
+    
+    
+    <insert id="updateBasicSVC0004D" parameterType="Map" >
+                
+                UPDATE  SVC0004D 
+                            SET
+                                   AS_CMMS                       =NVL(#{AS_CMMS},0), 
+                                   AS_RESULT_REM              =#{AS_RESULT_REM}, 
+                                   AS_MALFUNC_ID              =NVL(#{AS_MALFUNC_ID},0)    , 
+                                   AS_MALFUNC_RESN_ID      =NVL(#{AS_MALFUNC_RESN_ID},0), 
+                                   AS_DEFECT_TYPE_ID        =NVL(#{AS_DEFECT_TYPE_ID},0), 
+                                   AS_DEFECT_ID                 =NVL(#{AS_DEFECT_ID},0), 
+                                   AS_DEFECT_PART_ID         =NVL(#{AS_DEFECT_PART_ID},0), 
+                                   AS_DEFECT_DTL_RESN_ID  =NVL(#{AS_DEFECT_DTL_RESN_ID},0), 
+                                   AS_SLUTN_RESN_ID          =NVL(#{AS_SLUTN_RESN_ID},0)
+              WHERE   AS_RESULT_ID = #{AS_RESULT_ID}  
+    </insert>
+    
+    
+    <insert id="updateSVC0005D" parameterType="Map" >  
+			        UPDATE SVC0005D 
+						    SET    ASR_ITM_PART_ID      =#{ASR_ITM_PART_ID}, 
+						               ASR_ITM_PART_DESC    =#{ASR_ITM_PART_DESC}, 
+							           ASR_ITM_PART_QTY     =#{ASR_ITM_PART_QTY}, 
+							           ASR_ITM_PART_PRC     =#{ASR_ITM_PART_PRC}, 
+							           ASR_ITM_CHRG_AMT     =#{ASR_ITM_CHRG_AMT}, 
+							           ASR_ITM_REM          =#{ASR_ITM_REM}, 
+							           ASR_ITM_CRT_USER_ID  =#{ASR_ITM_CRT_USER_ID}, 
+							           ASR_ITM_CRT_DT       =SYSDATE,
+							           ASR_ITM_CHRG_FOC     =#{ASR_ITM_CHRG_FOC}, 
+							           ASR_ITM_EXCHG_ID     =#{ASR_ITM_EXCHG_ID}, 
+							           ASR_ITM_CLM          =#{ASR_ITM_CLM}, 
+							           ASR_ITM_TAX_CODE_ID  =#{ASR_ITM_TAX_CODE_ID}, 
+							           ASR_ITM_TXS_AMT      =#{ASR_ITM_TXS_AMT}
+						 WHERE ASR_ITM_ID =#{ASR_ITM_ID}
+      </insert>
+      
+      <insert id="deleteSVC0005D" parameterType="Map" >  
+            DELETE      SVC0005D  WHERE  ASR_ITM_ID  =    #{ASR_ITM_ID}
+      </insert>
+      
+      
+                            
+      
+          
+    <insert id="updateStateSVC0001D" parameterType="Map" >  
+                    UPDATE SVC0001D 
+                         SET       AS_STUS_ID                =#{AS_RESULT_STUS_ID}, 
+                                     AS_UPD_USER_ID          =#{USER_ID}, 
+                                     AS_UPD_DT                  =SYSDATE,
+                      WHERE AS_ID                              =#{AS_ENTRY_ID}
+      </insert>
+      
+      
+     <select id="getCCR0006D_CALL_ENTRY_ID_SEQ" parameterType="Map" resultType="egovMap">
+       <![CDATA[ 
+                SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL seq FROM DUAL
+        ]]> 
+     </select>
+      
+      
+        
+      
+      
 </mapper>

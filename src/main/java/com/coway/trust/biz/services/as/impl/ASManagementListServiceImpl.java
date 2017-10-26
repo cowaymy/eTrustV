@@ -73,6 +73,26 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	@Override 
+	public List<EgovMap> getCallLog(Map<String, Object> params) {
+		return ASManagementListMapper.getCallLog(params);
+	}
+	
+	
+	@Override 
+	public List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params) {
+		return ASManagementListMapper.getASRulstEditFilterInfo(params);
+	}
+	
+	
+	
+	@Override 
+	public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) {
+		return ASManagementListMapper.getASRulstSVC0004DInfo(params);
+	}
+	
+	
+	
+	@Override 
 	public  EgovMap  getMemberBymemberID(Map<String, Object> params) {
 		return ASManagementListMapper.getMemberBymemberID(params);
 	}
@@ -209,6 +229,121 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		EgovMap  eMap = ASManagementListMapper.getASEntryDocNo(params); 		
 		EgovMap  seqMap = ASManagementListMapper.getResultASEntryId(params); 
 		
+		//EgovMap	 ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params);  
+		
+		//String CALL_ENTRY_ID  = String.valueOf(ccrSeqMap.get("seq"));
+		String AS_RESULT_ID    = String.valueOf(seqMap.get("seq"));
+		  
+		
+		LinkedHashMap  svc0004dmap = (LinkedHashMap)  params.get("asResultM");
+		svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
+		svc0004dmap.put("AS_RESULT_NO", String.valueOf(eMap.get("asno")));
+		//svc0004dmap.put("CALL_ENTRY_ID " ,CALL_ENTRY_ID);
+		
+		svc0004dmap.put("updator",params.get("updator"));
+		
+		
+		List <EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+		  
+		
+		int c=  ASManagementListMapper.insertSVC0004D(svc0004dmap);  
+		
+		//svc0001d 상태 업데이트 
+		int b=  ASManagementListMapper.updateStateSVC0001D(svc0004dmap);
+		
+		   
+		if(c >0){  
+
+				int r=0;
+		    	if (addItemList.size() > 0) {  
+					for (int i = 0; i < addItemList.size(); i++) {
+						
+						Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
+						Map<String, Object> iMap = new HashMap();
+					    
+						if(! "".equals(updateMap.get("filterDesc") )){
+						
+							String temp =(String)updateMap.get("filterDesc");
+							String[] animals = temp.split("-"); 
+							
+							if(animals.length>0){
+								iMap.put("ASR_ITM_PART_DESC",   animals[1] );
+							}else{
+								iMap.put("ASR_ITM_PART_DESC",   "");
+							}
+						}
+						
+						iMap.put("AS_RESULT_ID",			 AS_RESULT_ID);
+						iMap.put("ASR_ITM_PART_ID",  	 updateMap.get("filterID") ); 
+						iMap.put("ASR_ITM_PART_QTY",  updateMap.get("filterQty") ); 
+						iMap.put("ASR_ITM_PART_PRC",   updateMap.get("filterPrice") ); 
+						iMap.put("ASR_ITM_CHRG_AMT",  updateMap.get("filterTotal") ); 
+						iMap.put("ASR_ITM_REM",   		 updateMap.get("filterRemark") ); 
+						iMap.put("ASR_ITM_CRT_USER_ID", params.get("updator") );
+						iMap.put("ASR_ITM_CHRG_FOC",   (String)updateMap.get("filterType")=="FOC" ? "1": "0"); 
+						iMap.put("ASR_ITM_EXCHG_ID",    updateMap.get("filterExCode") ); 
+						iMap.put("ASR_ITM_CLM",   		  		"0"); 
+						iMap.put("ASR_ITM_TAX_CODE_ID",    "0" ); 
+						iMap.put("ASR_ITM_TXS_AMT" , 			"0" ); 
+						
+						r = ASManagementListMapper.insertSVC0005D(iMap) ;
+					}
+				}
+		} 
+
+		
+		
+		/*
+         * as result 
+             1. select ==> ASStatusID 1 인것만 허용 
+             2. GetDocNo(DocTypes.AS_RESULT) 채번 
+             3. 데이터 생성 
+               3.1 ASResultM 
+               3.2 HappyCallM
+               3.3 ASResultD 없는경우 기본 row만 생성 
+                 3.3.1  ASResultD   loop  
+            	    3.3.1.1    ASResultD  
+            		3.3.1.2    InvStkRecordCard
+               3.4 Billing (   asResultMas.ASTotalAmount > 0 )
+            	 3.4.1 빌랭 GetDocNo 채번 
+               3.5 CallEntries	 
+		 * */
+		
+		//물류 호출
+		/*
+		Map procMap = new HashMap();
+		procMap.put("P_ARR", value);
+		procMap.put("RETYPE", value);
+		procMap.put("P_TYPE", value);
+		procMap.put("USERID", params.get("updator"));
+		
+		Map  reProcess =ASManagementListMapper.callSP_LOGISTIC_REQUEST(procMap);
+	   	*/
+		
+		
+		if(c>0 ) m = String.valueOf(eMap.get("asno"));
+	
+		EgovMap em = new EgovMap();
+		em.put("AS_NO", m);
+		//em.put("CALLSP_CODE" ,reProcess);
+		
+		
+		
+		return em;
+	}
+	
+	
+
+	@Override
+	public EgovMap  asResult_update(Map<String, Object> params) {
+	
+		String m ="";
+		int a =-1;
+		
+		params.put("DOCNO", "21");
+		EgovMap  eMap = ASManagementListMapper.getASEntryDocNo(params); 		
+		EgovMap  seqMap = ASManagementListMapper.getResultASEntryId(params); 
+		
 		String AS_RESULT_ID   = String.valueOf(seqMap.get("seq"));
 		  
 		
@@ -283,14 +418,39 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                3.5 CallEntries	 
 		 * */
 		
-		//물류 호출     
+		//물류 호출
+		/*
+		Map procMap = new HashMap();
+		procMap.put("P_ARR", value);
+		procMap.put("RETYPE", value);
+		procMap.put("P_TYPE", value);
+		procMap.put("USERID", params.get("updator"));
+		
+		Map  reProcess =ASManagementListMapper.callSP_LOGISTIC_REQUEST(procMap);
+	   	*/
+		
+		
 		if(c>0 ) m = String.valueOf(eMap.get("asno"));
 	
 		EgovMap em = new EgovMap();
 		em.put("AS_NO", m);
+		//em.put("CALLSP_CODE" ,reProcess);
+		
+		
 		
 		return em;
 	}
+	
+	
+	
+	@Override
+	public int  asResultBasic_update(Map<String, Object> params) {
+	
+		LinkedHashMap  svc0004dmap = (LinkedHashMap)  params.get("asResultM");
+		int c=  ASManagementListMapper.updateBasicSVC0004D(svc0004dmap);  
+		return c;    
+	}
+	
 	
 	private Map<String, Object> getSaveASEntry(Map<String, Object> params,SessionVO sessionVO){
 		Map<String, Object> asEntry = new HashMap<String, Object>(); 

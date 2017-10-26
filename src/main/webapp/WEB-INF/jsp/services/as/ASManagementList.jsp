@@ -18,9 +18,6 @@ function fn_searchASManagement(){
 }
 
 function fn_newASPop(){
-	//Common.popupDiv("/services/as/initASReceiveEntryPop.do?isPop=true", "searchForm");
-	//Common.popupWin("saveASForm", "/services/as/ASReceiveEntryPop.do", option);
-	//Common.popupDiv("/services/as/ASReceiveEntryPop.do?isPop=true",'');
 	
     Common.popupDiv("/services/as/ASReceiveEntryPop.do" ,null, null , true , '_NewEntryPopDiv1');
     
@@ -37,15 +34,25 @@ function fn_viewASResultPop(){
         return ;
     }
     
+    
     var AS_ID =    selectedItems[0].item.asId;
     var AS_NO =    selectedItems[0].item.asNo;
     var asStusId =    selectedItems[0].item.code1;
     var ordno  =selectedItems[0].item.salesOrdNo;
     var ordId  =selectedItems[0].item.asSoId;
     
+    if(asStusId  !="ACT"){
+          Common.alert( "AS Info Edit Restrict</br>" +DEFAULT_DELIMITER+"<b>[" + AS_NO + "]  is not in active status.</br> AS information edit is disallowed.</b>" );
+          return ;
+    }
+    
 	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId="+ordId+"&ordNo="+ordno+"&AS_NO="+AS_NO  ,null, null , true , '_viewEntryPopDiv1');
     
 }
+
+
+
+
 
 function fn_resultASPop(ordId,ordNo){
 	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId="+ordId+"&ordNo="+ordNo ,null, null , true , '_resultNewEntryPopDiv1');
@@ -59,16 +66,7 @@ function fn_resultASPop(ordId,ordNo){
 
 function fn_newASResultPop(){
 	
-	/*
-    var ord_Id='411346';
-    var ord_No ="0811459";   
-    var as_No ='AA008127';
-    var as_Id ='607821';
-    */
     var selectedItems = AUIGrid.getSelectedItems(myGridID);
-
-    
-    console.log(selectedItems);
     
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No AS selected.</b>");
@@ -83,13 +81,158 @@ function fn_newASResultPop(){
     
     
     if(asStusId  !="ACT"){
-    	  Common.alert("<b>[" + asNo + "] already has [" + code + "] result. Result entry is disallowed.</b>");
+    	  Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
           return ;
     }
     
     var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
     Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
 }
+
+
+
+
+function fn_asAppViewPop(){
+    
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+
+    var asid =    selectedItems[0].item.asId;
+    var asNo =    selectedItems[0].item.asNo;
+    var asStusId     = selectedItems[0].item.code1;
+    var salesOrdNo  = selectedItems[0].item.salesOrdNo;
+    var salesOrdId  =selectedItems[0].item.asSoId;
+    
+    var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
+    Common.popupDiv("/services/as/asResultViewPop.do"+param ,null, null , true , '_newASResultDiv1');
+}
+
+
+
+
+function fn_asResultViewPop(){
+	
+	
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+    
+    
+    console.log(selectedItems);
+    var asid =    selectedItems[0].item.asId;
+    var asNo =    selectedItems[0].item.asNo;
+    var asStusId     = selectedItems[0].item.code1;
+    var salesOrdNo  = selectedItems[0].item.salesOrdNo;
+    var salesOrdId  =selectedItems[0].item.asSoId;
+    var asResultNo  =selectedItems[0].item.c3;
+	   
+    if(asStusId  =="ACT"){
+        Common.alert("<b>[" + asNo + "] do no has any result yet..</br> Result view is disallowed.");
+        return ;
+   }
+    console.log(selectedItems[0].item);
+    
+    
+  if(asResultNo  ==""){
+        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
+        return ;
+  }
+  
+  var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=view&as_Result_No="+asResultNo;
+ 
+  Common.popupDiv("/services/as/asResultEditViewPop.do"+param ,null, null , true , '_newASResultDiv1');
+  
+	
+}
+
+
+
+
+function fn_asResultEditPop(){
+
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+    
+    
+    console.log(selectedItems);
+    var asid =    selectedItems[0].item.asId;
+    var asNo =    selectedItems[0].item.asNo;
+    var asStusId     = selectedItems[0].item.code1;
+    var salesOrdNo  = selectedItems[0].item.salesOrdNo;
+    var salesOrdId  =selectedItems[0].item.asSoId;
+    var asResultNo  =selectedItems[0].item.c3;
+    var asResultId  =selectedItems[0].item.asResultId;
+    
+    if(asStusId  =="ACT"){
+        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
+        return ;
+   }
+    console.log(selectedItems[0].item);
+    
+    
+  if(asResultNo  ==""){
+        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
+        return ;
+  }
+  
+  var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=edit&as_Result_No="+asResultNo+"&as_Result_Id="+asResultId;
+  Common.popupDiv("/services/as/asResultEditViewPop.do"+param ,null, null , true , '_newASResultDiv1');
+    
+}
+
+
+
+function fn_asResultEditBasicPop(){
+
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+    
+    
+    console.log(selectedItems);
+    var asid =    selectedItems[0].item.asId;
+    var asNo =    selectedItems[0].item.asNo;
+    var asStusId     = selectedItems[0].item.code1;
+    var salesOrdNo  = selectedItems[0].item.salesOrdNo;
+    var salesOrdId  =selectedItems[0].item.asSoId;
+    var asResultNo  =selectedItems[0].item.c3;
+    var asResultId  =selectedItems[0].item.asResultId;
+    
+    if(asStusId  =="ACT"){
+        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
+        return ;
+   }
+    console.log(selectedItems[0].item);
+    
+    
+  if(asResultNo  ==""){
+        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
+        return ;
+  }
+  
+  var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=edit&as_Result_No="+asResultNo+"&as_Result_Id="+asResultId;
+  Common.popupDiv("/services/as/asResultEditBasicPop.do"+param ,null, null , true , '_newASResultBasicDiv1');
+    
+}
+
 
 
 $(document).ready(function() {
@@ -277,6 +420,7 @@ function fn_excelDown(){
     <select class="multy_select w100p" multiple="multiple" id="asType" name="asType">
     <option value="675">Auto AS</option>
     <option value="674">Normal AS</option>
+    <option value="">Request AS</option>
     </select>
     </td>
     <th scope="row">AS Status</th>
@@ -320,8 +464,16 @@ function fn_excelDown(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li>
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()">AS Application Edit</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultViewPop()"> AS Result  View</a></p></li>
+         <!--<li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditPop()"> AS Result  Edit</a></p></li>-->
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditBasicPop()"> AS Result  Edit(Basic)</a></p></li>
+        
+        
+        
+        
        <!--  <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>

@@ -8,18 +8,6 @@
 
 var asHistoryGrid; 
 var bsHistoryGrid; 
-//var roderInfo  ='${as_ord_basicInfo}';
-
-console.log("in load....");
-//console.log(roderInfo);
-
-function fn_ASSave(){
-       
-}
-
-
-
-
 
 
 $(document).ready(function(){
@@ -34,19 +22,12 @@ $(document).ready(function(){
     
     fn_getASHistoryInfo();
     fn_getBSHistoryInfo();
-    
     fn_setComboBox();
     
-    
-
-    console.log( "=================>수정 일경우 ");
-    console.log( '${AS_NO}');
-    console.log( "=================>수정 일경우");
     
     if( '${AS_NO}' !=""){
     	fn_setEditValue();
     }
-    
     
     
 });
@@ -123,18 +104,6 @@ function fn_gird_resize(){
 }
 
 
-
-
-function  fn_loadASOrderInfo(){
-	//this.clearASPanel();
-	
-	//getASHistoryInfo
-	//getBSHistoryInfo
-	
-    //this.LoadASPanel_AS(OrderID);
-    //this.LoadASPanel_BS(OrderID);
-    //this.SetDefaultValue();
-}
 
 
 function fn_keyEvent(){
@@ -833,7 +802,7 @@ function fn_changeCTCode(_obj){
 }
 
 </script>
-<div id="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap"  class="popup_wrap "><!-- popup_wrap start -->
 <section id="content"><!-- content start -->
 
 <header class="pop_header"><!-- pop_header start -->
