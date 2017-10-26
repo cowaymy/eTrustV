@@ -392,7 +392,6 @@ var watingPopColumnLayout = [
             $("#payDate").val(payDate);
             
             Common.ajax("GET","/payment/selectDocItemPayDetailList.do",$("#watingDetailForm").serialize(), function(result){
-                console.log(result);
                 
                 AUIGrid.destroy(reviewPopGridID);// 그리드 삭제
                 AUIGrid.destroy(watingPopGridID);// 그리드 삭제
@@ -408,7 +407,6 @@ var watingPopColumnLayout = [
         $("#itemId").val(itemId);
         
         Common.ajax("GET","/payment/selectDocItemPayReviewDetailList.do",$("#reviewDetailForm").serialize(), function(result){
-            console.log(result);
             
             AUIGrid.destroy(reviewPopGridID);
             AUIGrid.destroy(watingPopGridID);
@@ -449,7 +447,9 @@ var watingPopColumnLayout = [
             console.log(result);
             
             $("#sendWatingPop_wrap").hide();
-            $("#remarkWating").val("");
+            $("#remarkWaiting").val("");
+            $("#totalSelectedWating").text('');
+            $("#totalAmountWating").text('');
             Common.alert(result.message);
         });
     }
@@ -473,12 +473,11 @@ var watingPopColumnLayout = [
         var selectedItem = AUIGrid.getSelectedItems(reviewGridID);
         data.checked = selectedItem;
         data.form = [{"remark":$("#remarkReview").val()}];
-        console.log(data);
         Common.ajax("POST","/payment/saveConfirmResendReview.do", data, function(result){
-            console.log(result);
             
             $("#sendReviewPop_wrap").hide();
             $("#remarkReview").val("");
+            $("#totalSelectedReview").text('');
             Common.alert(result.message);
         });
     }
@@ -486,7 +485,6 @@ var watingPopColumnLayout = [
     function fn_showLogMsg(itmId){
     	
     	Common.ajax("GET","/payment/selectLoadItemLog.do",  {"itemId":itmId}, function(result){
-            console.log(result);
             
             var msg = "";
             for (var key in result) {
@@ -501,7 +499,6 @@ var watingPopColumnLayout = [
             }
             
             $("#logMsgBox").html(msg);
-            
         });
     }
     
@@ -528,6 +525,46 @@ var watingPopColumnLayout = [
     		$("#tdTotalComplete").text(result.batchTotCmplt);
     		$("#tdTotalIncomplete").text(result.batchTotIncmpt);
     	});
+    }
+    
+    function fn_hideViewPop(val){
+        $(val).hide();
+        
+        $("#tdBatchNo").text('');
+        $("#tdBatchStatus").text('');
+        $("#tdCreateDate").text('');
+        $("#tdPaymentMode").text('');
+        $("#tdManageStatus").text('');
+        $("#tdCreator").text('');
+        $("#tdIsOnline").text('');
+        $("#tdTotalItem").text('');
+        $("#tdUpdateDate").text('');
+        $("#tdTotalNew").text('');
+        $("#tdTotalResend").text('');
+        $("#tdUpdator").text('');
+        $("#tdTotalReview").text('');
+        $("#tdTotalComplete").text('');
+        $("#tdTotalIncomplete").text('');
+        
+    }
+    
+    function fn_waitingSendPopClose(val){
+        $(val).hide();
+        $("#totalSelectedWating").text('');
+        $("#totalAmountWating").text('');
+        $("#remarkWaiting").val('');
+    }
+    
+    function fn_reviewSendPopClose(val){
+        $(val).hide();
+        $("#totalSelectedReview").text('');
+        $("#remarkReview").val('');
+    }
+    
+    function fn_viewPayPopClose(val){
+        $(val).hide();
+        AUIGrid.destroy(reviewPopGridID);// 그리드 삭제
+        AUIGrid.destroy(watingPopGridID);// 그리드 삭제
     }
    
 </script>
@@ -796,7 +833,7 @@ var watingPopColumnLayout = [
             <!-- pop_header start -->
             <h1>View Payment Item</h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a href="#" onclick="fn_viewPayPopClose('#detail_popup_wrap');">CLOSE</a></p></li>
             </ul>
         </header>
         <!-- pop_header end -->
@@ -836,7 +873,7 @@ var watingPopColumnLayout = [
             <header class="pop_header"><!-- pop_header start -->
                 <h1>Wating List - Send</h1>
                 <ul class="right_opt">
-                    <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+                    <li><p class="btn_blue2"><a href="#" onclick="fn_waitingSendPopClose('#sendWatingPop_wrap');">CLOSE</a></p></li>
                 </ul>
             </header><!-- pop_header end -->
             <section class="pop_body"><!-- pop_body start -->
@@ -874,7 +911,7 @@ var watingPopColumnLayout = [
             <header class="pop_header"><!-- pop_header start -->
                 <h1>Review List - Resend</h1>
                 <ul class="right_opt">
-                    <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+                    <li><p class="btn_blue2"><a href="#" onclick="fn_reviewSendPopClose('#sendReviewPop_wrap');">CLOSE</a></p></li>
                 </ul>
             </header><!-- pop_header end -->
             <section class="pop_body"><!-- pop_body start -->
@@ -889,7 +926,7 @@ var watingPopColumnLayout = [
                     <tbody>
                         <tr>
                             <th scope="row">Total Selected</th>
-                            <td id="totalSelectedReview">
+                            <td id="totalSelectedReview" colspan="3">
                             </td>
                         </tr>
                         <tr>
@@ -909,7 +946,7 @@ var watingPopColumnLayout = [
     <header class="pop_header">
         <h1>Payment Document Management Batch View</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#batch_view_popup_wrap');">CLOSE</a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
