@@ -787,8 +787,10 @@ function fn_confirm(){
 	    $("#excelUp").hide();
 	    $("#excelDown").hide();
 	    $("#save").hide();
+	    $("#confirm").hide();
 	   set_subGrid(adjNo,adjLocation);
 	
+	   1
 	},  function(jqXHR, textStatus, errorThrown) {
 	    try {
 	    } catch (e) {
