@@ -75,7 +75,9 @@ import com.coway.trust.biz.logistics.mlog.MlogApiService;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockBarcodeListVo;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockNoneBarcodeListVo;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -107,9 +109,9 @@ public class LogisticsApiController {
 
 		}
 		
-		/*if (RDCStockList.isEmpty()){
-			throw new ApplicationException("999", "Not Found Data");
-		}*/
+		if (RDCStockList.isEmpty()){
+			throw new PreconditionException(AppConstants.FAIL, "Not Found Data");
+		}
 
 		List<RdcStockListDto> list = RDCStockList.stream().map(r -> RdcStockListDto.create(r))
 				.collect(Collectors.toList());
