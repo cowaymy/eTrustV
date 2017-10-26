@@ -85,26 +85,226 @@
        )
   </insert>  
   
-  <insert id="deleteCdcWhMapping" parameterType="Map">
+  <delete id="deleteCdcWhMapping" parameterType="Map">
      DELETE FROM SCM0022M WHERE  WH_ID = #{whId} AND CDC = #{cdc}
-  </insert>  
+  </delete> 
+  
+   
 
   <!-- Business Plan Manager -->
-  <select id="selectBizPlanManager" parameterType="Map" resultType="egovMap">
-		SELECT DISTINCT 
-		      PLAN_ID CODE_VALUE 
-		    , CDC     CODE_VIEW
-	  FROM SCM0005M 
-	 WHERE PLAN_YEAR  = #{planYear}  
-	 <if test="planMonth != null and planMonth !=''">
-	   AND PLAN_MONTH = #{planMonth}  
-	 </if>
-	   AND PLAN_WEEK  = #{planWeek}  
-	   AND PLAN_STUS  = 4
-	 ORDER BY PLAN_ID
+  <select id="selectVersionCbList" parameterType="Map" resultType="egovMap">
+		SELECT VER 
+		      , EXTRACT(YEAR FROM CRT_DT) YEAR
+		      , EXTRACT(MONTH FROM CRT_DT) MONTH
+		      , EXTRACT(DAY FROM CRT_DT) DAY
+		      , '[ ' || LPAD(VER,2,'0') || ' ]' || ' - ' ||  EXTRACT(YEAR FROM CRT_DT) || '.' || LPAD(EXTRACT(MONTH FROM CRT_DT),2,'0') || '.' ||  LPAD(EXTRACT(DAY FROM CRT_DT),2,'0') EXCUTE_DATE
+		  FROM SCM0003M 
+		 WHERE TEAM = #{scmTeamCbBox}  
+		   AND YYYY = #{scmYearCbBox}  
+		 ORDER BY VER DESC
   </select> 
   
+  <select id="selectBizPlanManager" parameterType="Map" resultType="egovMap">
+			SELECT  STOCK_CTGRY   
+			      , M01 JAN
+			      , M02 FEB  
+			      , M03 MAR  
+			      , M04 APR  
+			      , M05 MAY  
+			      , M06 JUN  
+			      , M07 JUL  
+			      , M08 AGU  
+			      , M09 SEP  
+			      , M10 OCT  
+			      , M11 NOV  
+			      , M12 DEC  
+			      , YEARTOTAL TOTAL
+			      , PLAN_ID   
+			      , YYYY   
+			      , VER     
+			   FROM SCM0049V 
+			  WHERE YYYY = #{scmYearCbBox}            
+			    AND VER  = #{scmPeriodCbBox} 
+			  ORDER BY  STOCK_CTGRY
+  </select> 
+
+  <select id="selectBizPlanStock" parameterType="Map" resultType="egovMap">
+			 SELECT  PLAN_ID
+			       , TEAM    
+			       , STOCK_CTGRY 
+			       , STOCK_CODE  
+			       , STOCK_NAME  
+			       , M01 JAN
+			       , M02 FEB  
+			       , M03 MAR  
+			       , M04 APR  
+			       , M05 MAY  
+			       , M06 JUN  
+			       , M07 JUL  
+			       , M08 AGU  
+			       , M09 SEP  
+			       , M10 OCT  
+			       , M11 NOV  
+			       , M12 DEC  
+			       , YEAR_TOT TOTAL
+			       , YYYY  
+			       , VER  
+			       , PLAN_DESC  
+			       , CRT_USER_ID  
+			       , CRT_DT  
+			       , UPD_USER_ID  
+			       , UPD_DT 
+			   FROM SCM0050V  
+			  WHERE TEAM = #{scmTeamCbBox} 
+			    AND YYYY = #{scmYearCbBox}
+			    AND VER  = #{scmPeriodCbBox}
+			  ORDER BY STOCK_NAME  
+  </select> 
   
+  <update id="updatePlanStock" parameterType="Map">
+		  UPDATE SCM0004D
+		     SET PLAN_ID = #{planId}   
+      <if test='jan != null and jan !="" '>
+            , M01 = #{jan} 
+      </if>
+      <if test='feb != null and feb !="" '>
+            , M02 = #{feb} 
+      </if>
+      <if test='mar != null and mar !="" '>
+            , M03 = #{mar} 
+      </if>
+      <if test='apr != null and apr !="" '>
+            , M04 = #{apr} 
+      </if>
+      <if test='may != null and may !="" '>
+            , M05 = #{may} 
+      </if>
+      <if test='jun != null and jun !="" '>
+            , M06 = #{jun} 
+      </if>
+      <if test='jul != null and jul !="" '>
+            , M07 = #{jul} 
+      </if>
+      <if test='agu != null and agu !="" '>
+            , M08 = #{agu} 
+      </if>
+      <if test='sep != null and sep !="" '>
+            , M09 = #{sep} 
+      </if>
+      <if test='oct != null and oct !="" '>
+            , M10 = #{oct} 
+      </if>
+      <if test='nov != null and nov !="" '>
+            , M11 = #{nov} 
+      </if>
+      <if test='dec != null and dec !="" '>
+            , M12 = #{dec} 
+      </if>
+		 WHERE PLAN_ID    = #{planId}  
+		   AND STOCK_CODE = #{stockCode}  
+  </update>  
   
+    <insert id="insertBizPlanMaster" parameterType="Map">
+        <selectKey keyProperty="bizPlanMasterSeq" resultType="int" order="BEFORE">
+            SELECT SCM0003M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
     
+			INSERT INTO SCM0003M
+			  (   
+			      PLAN_ID
+			    , TEAM
+			    , YYYY
+			    , VER
+			    , PLAN_DESC
+			    , CRT_USER_ID
+			    , CRT_DT
+			    , UPD_USER_ID
+			    , UPD_DT 
+			  )
+			  VALUES
+			  ( 
+			      #{bizPlanMasterSeq}
+			    , #{scmTeamCbBox}
+			    , #{scmYearCbBox}
+			    , (SELECT MAX(VER)+1 FROM SCM0003M WHERE TEAM= #{scmTeamCbBox} AND YYYY= #{scmYearCbBox} GROUP BY TEAM, YYYY )
+			    , ''
+			    , #{crtUserId} 
+			    , SYSDATE
+			    , #{updUserId}
+			    , SYSDATE
+			  )
+  </insert>  
+  
+  <insert id="insertDetailExcel" parameterType="Map">
+      INSERT INTO SCM0004D
+        (   PLAN_ID
+           ,STOCK_CODE
+           ,M01
+           ,M02
+           ,M03
+           ,M04
+           ,M05
+           ,M06
+           ,M07
+           ,M08
+           ,M09
+           ,M10
+           ,M11
+           ,M12
+        )
+        VALUES
+        ( 
+            SCM0003M_PLAN_ID_SEQ.CURRVAL
+          , #{StockCode}
+          , #{m01}
+          , #{m02}
+          , #{m03}
+          , #{m04}
+          , #{m05}
+          , #{m06}
+          , #{m07}
+          , #{m08}
+          , #{m09}
+          , #{m10}
+          , #{m11}
+          , #{m12}
+        )
+  </insert>  
+
+    <select id="getSeqNowSCM0003M" resultType="int">
+        SELECT PSCM0003M_PLAN_ID_SEQ.CURRVAL FROM DUAL
+    </select>
+    
+    <insert id="insertMasterExcel" parameterType="Map">
+        <selectKey keyProperty="bizPlanMasterSeq" resultType="int" order="BEFORE">
+            SELECT SCM0003M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+    
+      INSERT INTO SCM0003M
+        (   
+            PLAN_ID
+          , TEAM
+          , YYYY
+          , VER
+          , PLAN_DESC
+          , CRT_USER_ID
+          , CRT_DT
+          , UPD_USER_ID
+          , UPD_DT 
+        )
+        VALUES
+        ( 
+            #{bizPlanMasterSeq}
+          , #{team}
+          , #{yyyy}
+          , #{ver}
+          , ''
+          , #{crtUserId} 
+          , SYSDATE
+          , #{updUserId}
+          , SYSDATE
+        )
+  </insert>      
+    
+  
 </mapper>
