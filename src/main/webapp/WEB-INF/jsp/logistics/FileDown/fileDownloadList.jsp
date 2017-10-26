@@ -36,39 +36,38 @@ var userCode;
                       {dataField:"codeName"       ,headerText:"Type"                      ,width:120    ,height:30 },
                       {dataField:"fileTypeLbl"      ,headerText:"Label"      ,width:200    ,height:30                },
                       {dataField:"fileName"        ,headerText:"Filename"               ,width:285    ,height:30  },
-                      {dataField:""      ,headerText:"Cody"                      ,width:60    ,height:30                
+                      {dataField:"isCody"      ,headerText:"Cody"                      ,width:60    ,height:30                
                    	   , renderer : 
                          {
                              type : "CheckBoxEditRenderer",
                              showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
                              //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-                             //checkValue : "1426", // true, false 인 경우가 기본
-                             unCheckValue : ""
+                             checkValue : 1, // true, false 인 경우가 기본
+                             unCheckValue :0
                          }  
                       },
-                      {dataField:""     ,headerText:"HP" ,width:60    ,height:30 
+                      {dataField:"isHp"     ,headerText:"HP" ,width:60    ,height:30 
                     	  , renderer : 
                           {
                               type : "CheckBoxEditRenderer",
                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
                               //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-                              //checkValue : "1426", // true, false 인 경우가 기본
-                              unCheckValue : ""
+                              checkValue :1, // true, false 인 경우가 기본
+                              unCheckValue :0
                           }  
                       },
-                      {dataField:""        ,headerText:"Staff"            ,width:60    ,height:30 
+                      {dataField:"isStaff"        ,headerText:"Staff"            ,width:60    ,height:30 
                     	  , renderer : 
                           {
                               type : "CheckBoxEditRenderer",
                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
                               //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-                              //checkValue : "1426", // true, false 인 경우가 기본
-                              unCheckValue : ""
+                              checkValue :1, // true, false 인 경우가 기본
+                              unCheckValue : 0
                           }                
                       },
                       {dataField:"c1"        ,headerText:"Creator"               ,width:110    ,height:30 },
                       {dataField:"crtDt"       ,headerText:"Create Date"               ,width:110    ,height:30},
-                      {dataField:""      ,headerText:"ddd"       ,width:120    ,height:30                },
                       {dataField:"fileUrl"        ,headerText:"FILE_URL"         ,width:120    ,height:30               },
                       {
                           dataField : "",
@@ -215,6 +214,7 @@ function SearchListAjax() {
     var url = "/logistics/file/fileDownloadList.do";
     var param = $('#searchForm').serialize();
     Common.ajax("GET" , url , param , function(data){
+    	console.log(data);
         AUIGrid.setGridData(listGrid, data.data);
         
     });
