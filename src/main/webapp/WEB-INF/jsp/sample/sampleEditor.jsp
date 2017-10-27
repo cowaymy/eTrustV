@@ -58,14 +58,17 @@ http://www.egovframe.go.kr/wiki/doku.php?id=egovframework:%EC%9B%B9%EC%97%90%EB%
 
     </form>
 
-
+    <table>
     <tr>
         <th>에디터 샘플......</th>
-    <textarea id="editorArea" name="editorArea" cols="75" rows="14" style="width:550px; height:400px">
-    </textarea>
+    </tr>
+    <tr>
+        <td>
+            <!--  Min Width : 615px -->
+            <textarea id="editorArea" name="editorArea" cols="75" rows="14" style="width:615px; height:400px"></textarea>
         </td>
     </tr>
-
+    </table>
     <div id="main">
 
         <div class="desc_bottom">

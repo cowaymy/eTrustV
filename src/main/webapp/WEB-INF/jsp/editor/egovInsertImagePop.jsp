@@ -262,106 +262,100 @@
 </script>
 
 <style type="text/css">
-html,body {
-	background: ButtonFace;
-	color: ButtonText;
-	font: 11px Tahoma, Verdana, sans-serif;
-	margin: 0px;
-	padding: 0px;
-}
-
 body {
-	padding: 5px;
-}
-
-table {
-	font: 11px Tahoma, Verdana, sans-serif;
-}
-
-form p {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-.fl {
-	width: 9em;
-	float: left;
-	padding: 2px 5px;
-	text-align: right;
-}
-
-.fr {
-	width: 6em;
-	float: left;
-	padding: 2px 5px;
-	text-align: right;
-}
-
-fieldset {
-	padding: 0px 10px 5px 5px;
-}
-
-select,input,button {
-	font: 11px Tahoma, Verdana, sans-serif;
-}
-
-button {
-	width: 70px;
-}
-
-.space {
-	padding: 2px;
-}
-
-.title {
-	background: #ddf;
-	color: #000;
-	font-weight: bold;
-	font-size: 120%;
-	padding: 3px 10px;
-	margin-bottom: 10px;
-	border-bottom: 1px solid black;
-	letter-spacing: 2px;
-}
-
-form {
-	padding: 0px;
-	margin: 0px;
+	padding:10px
 }
 </style>
 </head>
 <body onload="Init()">
-	<div class="title">이미지 추가</div>
+	<aside class="title_line"><!-- title_line start -->
+	<h3>이미지 추가</h3>
+	</aside><!-- title_line end -->
+	
 	<form action="" method="post" enctype="multipart/form-data">
-		<table border="0" width="100%" style="padding: 0px; margin: 0px">
+		<table class="type1">
+		<caption>File upload</caption>
+		<colgroup>
+		    <col style="width:130px" />
+		    <col style="width:*" />
+		</colgroup>
 			<tbody>
 				<tr>
-					<td style="width: 7em; text-align: right"><label
-						for="f_upload">Image Upload:</label></td>
-					<td><input type="file" name="file" id="f_upload"
-						style="width: 100%" title="Select upload image here" />
-						<button name="upload" onclick="return onUpload();"
-							title="Upload image file">Upload</button></td>
+					<th scope="row"><label for="f_upload">Image Upload:</label></th>
+					<td>
+					    <div class="auto_file"><!-- auto_file start -->
+					    <input type="file" name="file" id="f_upload" title="Select upload image here" />
+					    </div><!-- auto_file end -->
+					    <p class="btn_sky" name="upload" onclick="return onUpload();" title="Upload image file"><a href="#">Upload</a></p>
+					   </td>
 				</tr>
 				<tr>
-					<td style="width: 7em; text-align: right"><label
-						for="f_url">Image URL:</label></td>
-					<td><input type="text" name="url" id="f_url"
-						style="width: 75%" title="Enter the image URL here" value="${url}" />
-						<button name="preview" onclick="return onPreview();"
-							title="Preview the image in a new window">Preview</button></td>
+					<th scope="row"><label for="f_url">Image URL:</label></th>
+					<td>
+					   <input type="text" name="url" id="f_url" title="Enter the image URL here" value="${url}" />
+				       <p class="btn_sky" name="preview" onclick="return onPreview();" title="Preview the image in a new window"><a href="#">Preview</a></p>
+					</td>
 				</tr>
 				<tr>
-					<td style="width: 7em; text-align: right"><label
-						for="f_alt">Alternate text:</label></td>
+					<th scope="row"><label for="f_alt">Alternate text:</label></th>
 					<td><input type="text" name="alt" id="f_alt" value="${alt}"
 						style="width: 100%" title="For browsers that don't support images" /></td>
 				</tr>
 			</tbody>
 		</table>
-
-		<p />
-
+		
+        <table class="type1">
+        <caption>File upload</caption>
+        <colgroup>
+            <col style="width:130px" />
+            <col style="width:*" />
+            <col style="width:130px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th>Alignment</th>
+            <td>
+	            <select size="1" name="align" id="f_align"
+	                title="Positioning of this image" class="w100p">
+	                <option value="">Not set</option>
+	                <option value="left">Left</option>
+	                <option value="right">Right</option>
+	                <option value="texttop">Texttop</option>
+	                <option value="absmiddle">Absmiddle</option>
+	                <option value="baseline" selected="selected">Baseline</option>
+	                <option value="absbottom">Absbottom</option>
+	                <option value="bottom">Bottom</option>
+	                <option value="middle">Middle</option>
+	                <option value="top">Top</option>
+	            </select>
+            </td>
+            <th>Horizontal</th>
+            <td><input type="text" name="horiz" id="f_horiz" size="5" title="Horizontal padding" class="w100p" /></td>
+        </tr>
+        <tr>
+            <th>Border thickness</th>
+            <td><input type="text" name="border" id="f_border" size="5" title="Leave empty for no border" class="w100p" /></td>
+            <th>Vertical</th>
+            <td><input type="text" name="vert" id="f_vert" size="5" title="Vertical padding" class="w100p" /></td>
+        </tr>
+        </tbody>
+        </table>
+        
+        <aside class="title_line"><!-- title_line start -->
+        <h3>Image Preview</h3>
+        </aside><!-- title_line end -->
+        
+        <article class="grid_wrap"><!-- grid_wrap start -->
+        <iframe name="ipreview" id="ipreview" frameborder="0" style="border: 1px solid gray;" height="200" width="480" src="" title="이미지 미리보기"></iframe>
+        </article><!-- grid_wrap end -->
+        
+        <ul class="center_btns">
+            <li><p class="btn_blue2" name="ok" onclick="return onOK();"><a href="#">OK</a></p></li>
+            <li><p class="btn_blue2" name="cancel" onclick="return onCancel();"><a href="#">Cancel</a></p></li>
+        </ul>
+        <!-- 
+    <div class="title">이미지 추가</div>
 		<fieldset style="float: left; margin-left: 5px;">
 
 			<legend>Layout</legend>
@@ -421,13 +415,11 @@ form {
 		</fieldset>
 
 		<br clear="all" />
-
+         -->
+		 <!-- 
 		<table width="100%" style="margin-bottom: 0.2em">
 			<tr>
-				<td valign="bottom"><label for="ipreview">Image Preview:</label><br /> <iframe
-						name="ipreview" id="ipreview" frameborder="0"
-						style="border: 1px solid gray;" height="200" width="300" src=""
-						title="이미지 미리보기"></iframe>
+				<td valign="bottom"><label for="ipreview">Image Preview:</label><br /> 
 				</td>
 				<td valign="bottom" style="text-align: right">
 					<button type="button" name="ok" onclick="return onOK();">OK</button>
@@ -435,7 +427,7 @@ form {
 					<button type="button" name="cancel" onclick="return onCancel();">Cancel</button>
 				</td>
 			</tr>
-		</table>
+		</table> -->
 	</form>
 </body>
 </html>

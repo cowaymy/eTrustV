@@ -1,4 +1,4 @@
-.htmlarea { background: #fff; }
+.htmlarea { background: #fff; display: inline-block; border: 1px solid #999;}
 
 .htmlarea .toolbar {
   cursor: default;
@@ -7,7 +7,7 @@
   border: 1px solid;
   border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
 }
-.htmlarea .toolbar table { font-family: tahoma,verdana,sans-serif; font-size: 11px; }
+.htmlarea .toolbar table { font-family: tahoma,verdana,sans-serif; font-size: 11px; width:auto;}
 .htmlarea .toolbar img { border: none; }
 .htmlarea .toolbar .label { padding: 0px 3px; }
 
