@@ -1,5 +1,6 @@
 package com.coway.trust.biz.logistics.mlog.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
 import com.coway.trust.cmmn.exception.PreconditionException;
 
@@ -276,94 +279,157 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		}
 	}
 	
-	@Override
-	public void stockMovementReqDelivery(List<Map<String, Object>> reqTransferMList) {
-
-		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
-		
-		if (reqTransferMList.size() > 0) {
-
-			Map<String, Object> insMap = null;
-
-			for (int i = 0; i < reqTransferMList.size(); i++) {
-
-				 insMap = (Map<String, Object>) reqTransferMList.get(i);
-
-				logger.info(" reqstno : {}", insMap.get("smoNo"));
-				insMap.put("reqstno", insMap.get("smoNo"));
-				insMap.put("delno", deliSeq);
-				insMap.put("itmcd", insMap.get("partsCode"));
-				insMap.put("itmname", insMap.get("partsName"));
-				insMap.put("serial", insMap.get("serialNo"));
-
-				//MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
-			}
-	
-				Map<String, Object> insSerial = null;
-				for (int j = 0; j < reqTransferMList.size(); j++) {
-					logger.info(" seria 통과11111111111");
-					List<EgovMap> serialchek =MlogApiMapper.selectStockMovementSerial(insMap);
-					
-					//if(){
-						
-						MlogApiMapper.insertMovementSerial(insMap);	
-						
-						
-//					}else{
-//						throw new PreconditionException(AppConstants.FAIL, "Not Found Data");		
-//					}
-					
-					
-//					for (int i = 0; i < serialchek.size(); i++) {
-//						logger.debug("serialchek 값 : {}", serialchek.get(i));
-//					}
-					
-					
-					
-//					if(String.valueOf(reqTransferMList.get(j).get("serialNo")) !=null  && String.valueOf(reqTransferMList.get(j).get("serialNo")) !=""){
-//					if(("Y").equals(String.valueOf(reqTransferMList.get(j).get("serialChek")))){
-						logger.info(" seria 통과222222222");
-						
-//						MlogApiMapper.insertMovementSerial(insMap);	
-//						insSerial=reqTransferMList.get(j);
-//						insSerial.put("serial",insSerial.get("serialNo"));
-//						insSerial.put("delno", deliSeq);
-//						insSerial.put("reqstno", insSerial.get("smoNo"));
-//						insSerial.put("itmcd", insSerial.get("partsCode"));
+//	@Override
+//	public void stockMovementReqDelivery(List<Map<String, Object>> reqTransferMList) {
+//
+//		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
+//		
+//		if (reqTransferMList.size() > 0) {
+//
+//			Map<String, Object> insMap = null;
+//
+//			for (int i = 0; i < reqTransferMList.size(); i++) {
+//
+//				 insMap = (Map<String, Object>) reqTransferMList.get(i);
+//
+//				logger.info(" reqstno : {}", insMap.get("smoNo"));
+//				insMap.put("reqstno", insMap.get("smoNo"));
+//				insMap.put("delno", deliSeq);
+//				insMap.put("itmcd", insMap.get("partsCode"));
+//				insMap.put("itmname", insMap.get("partsName"));
+//				insMap.put("serial", insMap.get("serialNo"));
+//
+//				//MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
+//			}
+//	
+//				Map<String, Object> insSerial = null;
+//				for (int j = 0; j < reqTransferMList.size(); j++) {
+//					logger.info(" seria 통과11111111111");
+//					List<EgovMap> serialchek =MlogApiMapper.selectStockMovementSerial(insMap);
+//					
+//					//if(){
 //						
-//						logger.info(" serial : {}", insSerial.get("serial"));
-//						logger.info(" delno : {}", insSerial.get("delno"));
-//						logger.info(" reqstno : {}", insSerial.get("reqstno"));
-//						logger.info(" itmcd : {}", insSerial.get("itmcd"));						
-						
-//						logger.info(" serialChek : {}", insSerial.get("serialChek"));
-//						logger.info(" serialNo : {}", insSerial.get("serialNo"));
-//						logger.info(" partsCode : {}", insSerial.get("partsCode"));
-
-//					}			
-				}			
-		
-			
-			
-			//MlogApiMapper.insertDeliveryStockMovement(insMap);
-			//MlogApiMapper.updateRequestMovement(insMap);
-
-//			stockMoveMapper.insertDeliveryStockMovement(insMap);
-//			stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
+//						MlogApiMapper.insertMovementSerial(insMap);	
+//						
+//						
+////					}else{
+////						throw new PreconditionException(AppConstants.FAIL, "Not Found Data");		
+////					}
+//					
+//					
+////					for (int i = 0; i < serialchek.size(); i++) {
+////						logger.debug("serialchek 값 : {}", serialchek.get(i));
+////					}
+//					
+//					
+//					
+////					if(String.valueOf(reqTransferMList.get(j).get("serialNo")) !=null  && String.valueOf(reqTransferMList.get(j).get("serialNo")) !=""){
+////					if(("Y").equals(String.valueOf(reqTransferMList.get(j).get("serialChek")))){
+//						logger.info(" seria 통과222222222");
+//						
+////						MlogApiMapper.insertMovementSerial(insMap);	
+////						insSerial=reqTransferMList.get(j);
+////						insSerial.put("serial",insSerial.get("serialNo"));
+////						insSerial.put("delno", deliSeq);
+////						insSerial.put("reqstno", insSerial.get("smoNo"));
+////						insSerial.put("itmcd", insSerial.get("partsCode"));
+////						
+////						logger.info(" serial : {}", insSerial.get("serial"));
+////						logger.info(" delno : {}", insSerial.get("delno"));
+////						logger.info(" reqstno : {}", insSerial.get("reqstno"));
+////						logger.info(" itmcd : {}", insSerial.get("itmcd"));						
+//						
+////						logger.info(" serialChek : {}", insSerial.get("serialChek"));
+////						logger.info(" serialNo : {}", insSerial.get("serialNo"));
+////						logger.info(" partsCode : {}", insSerial.get("partsCode"));
+//
+////					}			
+//				}			
+//		
+//			
+//			
+//			//MlogApiMapper.insertDeliveryStockMovement(insMap);
+//			//MlogApiMapper.updateRequestMovement(insMap);
+//
+////			stockMoveMapper.insertDeliveryStockMovement(insMap);
+////			stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
+////		}
+////		String[] delvcd = { deliSeq };
+////
+////		formMap.put("parray", delvcd);
+////		formMap.put("userId", params.get("userId"));
+////		// formMap.put("prgnm", params.get("prgnm"));
+////		formMap.put("refdocno", "");
+////		formMap.put("salesorder", "");
+////
+////		stockMoveMapper.StockMovementIssue(formMap);
 //		}
-//		String[] delvcd = { deliSeq };
-//
-//		formMap.put("parray", delvcd);
-//		formMap.put("userId", params.get("userId"));
-//		// formMap.put("prgnm", params.get("prgnm"));
-//		formMap.put("refdocno", "");
-//		formMap.put("salesorder", "");
-//
-//		stockMoveMapper.StockMovementIssue(formMap);
-		}
+//	}
+	
+	@Override
+	public Map<String, Object> selectStockMovementSerial(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.selectStockMovementSerial(params);
 	}
 	
 	
 	
-	
+	public void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm) {
+
+		System.out.println("인서트 시작!!!");
+
+		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
+		Map<String, Object> insMap = new HashMap();
+		// 2. insert ,54 , 55 , 61 ,56update start
+		for (int i = 0; i < stockTransferConfirmGiMForm.size(); i++) {
+			StockTransferConfirmGiMForm scgmf = stockTransferConfirmGiMForm.get(i);
+				insMap.put("delno", deliSeq);
+				insMap.put("itmcd", scgmf.getPartsCode());
+				insMap.put("itmname", scgmf.getPartsName());
+				insMap.put("reqstno", scgmf.getSmoNo());
+				insMap.put("requestQty", scgmf.getRequestQty());
+				insMap.put("userId", scgmf.getUserId());
+				insMap.put("gtype", scgmf.getReqStatus());
+				insMap.put("giptdate", scgmf.getRequestDate());
+				
+				// 55 insert
+				MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
+
+			List<StockTransferConfirmGiDForm> list = scgmf.getStockTransferConfirmGiDetail();
+			// System.out.println("689Line ::: " + list.size());
+			for (int j = 0; j < list.size(); j++) {
+
+				StockTransferConfirmGiDForm scgdf = list.get(j);
+				// 61insert
+				System.out.println("692Line :::: " + scgdf.getSerialNo());
+				insMap.put("serial", scgdf.getSerialNo());
+				
+				MlogApiMapper.insertMovementSerial(insMap);	
+				
+			}
+
+			if (i == 0) {
+				MlogApiMapper.insertDeliveryStockMovement(insMap);
+				MlogApiMapper.updateRequestMovement(insMap);
+			}
+		}
+		
+	String[] delvcd = { deliSeq };
+	insMap.put("parray", delvcd);
+	insMap.put("userId",999999);
+	//insMap.put("userId", params.get("userId"));
+	// formMap.put("prgnm", params.get("prgnm"));
+	insMap.put("refdocno", "");
+	insMap.put("salesorder", "");
+
+	MlogApiMapper.StockMovementIssue(insMap);
+		
+		
+		// 2 end
+		// }catch(Exception ex){
+		//
+		// }
+
+	}
+		
 }
