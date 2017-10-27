@@ -203,7 +203,7 @@
 				                                      ELSE TO_DATE('1900/01/01')
 				                                         END) <![CDATA[>= ]]> TO_DATE(#{payDateFrWaiting},'DD/MM/YYYY') )
 				                                    AND ( (CASE 
-				                                                    WHEN ( Extent1.PAY_DT IS NOT NULL ) THEN TO_DATE(Extent1.PAY_DT)
+				                                                    WHEN ( Extent1.PAY_DT IS NOT NULL ) THEN TO_DATE(Extent1.PAY_DT)+1
 				                                      ELSE TO_DATE('1900/01/01')
 				                                         END) <![CDATA[<= ]]> TO_DATE(#{payDateToWaiting},'DD/MM/YYYY') )
 		                                        </if>
@@ -436,14 +436,14 @@
                                   </if>
                                   <if test="payDateFrReview != null and payDateToReview != null and payDateFrReview != '' and payDateToReview != ''" > 
 			                             AND Filter1.PAY_DT <![CDATA[>= ]]> TO_DATE(#{payDateFrReview}, 'DD/MM/YYYY')
-			                             AND Filter1.PAY_DT <![CDATA[<= ]]> TO_DATE(#{payDateToReview}, 'DD/MM/YYYY') 
+			                             AND Filter1.PAY_DT <![CDATA[<= ]]> TO_DATE(#{payDateToReview}, 'DD/MM/YYYY') +1
 		                          </if>
 		                          <if test="batchNoReview != ''"> 
                                         AND Filter1.BATCH_NO = #{batchNoReview}
                                   </if>
 		                          <if test="batchCreDateFrReview != null and batchCreDateToReview != null and batchCreDateFrReview != '' and batchCreDateToReview != ''" > 
                                         AND Filter1.CREATED1 <![CDATA[>= ]]> TO_DATE(#{batchCreDateFrReview}, 'DD/MM/YYYY')
-                                        AND Filter1.CREATED1 <![CDATA[<= ]]> TO_DATE(#{batchCreDateToReview}, 'DD/MM/YYYY') 
+                                        AND Filter1.CREATED1 <![CDATA[<= ]]> TO_DATE(#{batchCreDateToReview}, 'DD/MM/YYYY') +1
                                   </if>
                                   <if test="batchCreatorReview != ''"> 
                                         AND (CASE 
