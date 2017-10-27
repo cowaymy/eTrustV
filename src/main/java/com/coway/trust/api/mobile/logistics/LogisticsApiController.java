@@ -1,6 +1,7 @@
 package com.coway.trust.api.mobile.logistics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,6 +68,7 @@ import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderListDto;
 import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderListForm;
 import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyDto;
 import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyForm;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusDListDto;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusListForm;
@@ -665,8 +667,9 @@ public class LogisticsApiController {
 	@RequestMapping(value = "/stockTransferConfirmGI", method = RequestMethod.POST)
 	public void stockTransferConfirmGIReq(@RequestBody List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm)
 			throws Exception {
-
-		List<Map<String, Object>> stockTransferGIMList = new ArrayList<>();
+		
+		
+		/*List<Map<String, Object>> stockTransferGIMList = new ArrayList<>();
 		for (StockTransferConfirmGiMForm stockTransferGIM : stockTransferConfirmGiMForm) {
 			stockTransferGIMList.addAll(stockTransferGIM.createMaps(stockTransferGIM));
 		}
@@ -679,7 +682,60 @@ public class LogisticsApiController {
 
 		MlogApiService.stockMovementReqDelivery(stockTransferGIMList);
 
-		// return ResponseEntity.ok(HeartDto.create(transactionId));
+		// return ResponseEntity.ok(HeartDto.create(transactionId));*/
+		if (!stockTransferConfirmGiMForm.isEmpty() && stockTransferConfirmGiMForm.size() > 0){
+			// 1. serialcheck 61,62,63 table search
+			try {
+        		for (int i = 0 ; i < stockTransferConfirmGiMForm.size() ; i++){
+        			List<StockTransferConfirmGiDForm> list = ((StockTransferConfirmGiMForm)stockTransferConfirmGiMForm.get(i)).getStockTransferConfirmGiDetail();
+        			for (int j = 0 ; j < list.size() ; j++){
+        				//serial checkLogic add
+        				StockTransferConfirmGiDForm scdf = list.get(j);
+        				System.out.println("692Line :::: " + scdf.getSerialNo());
+        				
+        				if (j == 2 && 1 != 2){
+        					throw new PreconditionException(AppConstants.FAIL, "Serial check!!!");
+        				}
+        			}
+        		}
+        		// 1 end
+        		
+        		System.out.println("703Line :::: ");
+        		// Delivery no create;
+        		
+        		String delno = "del1234567890";
+        		// 2. insert ,54 , 55 , 61 ,56update start
+        		for (int i = 0 ; i < stockTransferConfirmGiMForm.size() ; i++){
+        			StockTransferConfirmGiMForm scgmf = stockTransferConfirmGiMForm.get(i);
+        			Map<String , Object> dmap = new HashMap();
+        			
+        			// 55 insert
+        			
+        			//System.out.println("687Line ::: " + scmf.getPartsId());
+        			List<StockTransferConfirmGiDForm> list = scgmf.getStockTransferConfirmGiDetail();
+        			//System.out.println("689Line ::: " + list.size());
+        			
+        			for (int j = 0 ; j < list.size() ; j++){
+        				//serial checkLogic add
+        				StockTransferConfirmGiDForm scgdf = list.get(j);
+        				//61insert
+        				
+        				System.out.println("692Line :::: " + scgdf.getSerialNo());
+        			}
+        			
+        			if (i == 0){
+        				// 54insert;
+        			}
+        		}
+        		// 2 end
+			}catch(Exception ex){
+				
+			}
+    		
+		}else{
+			throw new PreconditionException(AppConstants.FAIL, "No Data");
+		}
+		
 	}
 	
 	
