@@ -13,5 +13,9 @@ public interface CTSubGroupListMapper {
 	
 	void insertCTSubGroup(Map<String, Object> params);
 	
+	List<EgovMap> selectCTAreaSubGroupList(Map<String, Object> params);
+	
+	void insertCTSubAreaGroup(Map<String, Object> params);
+	
 
 }

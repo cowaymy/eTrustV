@@ -29,6 +29,12 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
+	public List<EgovMap> selectCTAreaSubGroupList(Map<String, Object> params) {
+		return CTSubGroupListMapper.selectCTAreaSubGroupList(params);
+	}
+	
+	
+	@Override
 	public void insertCTSubGroup(List<Object> params) {
 		for(int i=0; i< params.size(); i++){
 			Map<String, Object>  insertValue = (Map<String, Object>) params.get(i);
@@ -36,4 +42,20 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 			CTSubGroupListMapper.insertCTSubGroup(insertValue);
 		}
 	}
+	
+	@Override
+	public void insertCTSubAreaGroup(List<Object> params) {
+		for(int i=0; i< params.size(); i++){
+			Map<String, Object>  insertValue = (Map<String, Object>) params.get(i);
+			if(insertValue.get("locType").toString().equals("Local")){
+				insertValue.put("locType", "L");
+			}else{
+				insertValue.put("locType", "O");
+			}
+			insertValue.put("serviceWeek", Integer.parseInt(insertValue.get("svcWeek").toString()));
+			logger.debug("insertValue {}", insertValue);
+			CTSubGroupListMapper.insertCTSubAreaGroup(insertValue);
+		}
+	}
+	
 }
