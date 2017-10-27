@@ -413,7 +413,7 @@ public class CommissionExcelDownloadController {
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P01)) {
 				map.put("codeId", request.getParameter("codeId"));
-				map.put("memberId", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
 				columns = new String[] { "deptCode", "mangrid", "memId", "emplyTypeCode", "joindt", "emplyLev",
@@ -430,7 +430,7 @@ public class CommissionExcelDownloadController {
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P02)) {
 				map.put("codeId", request.getParameter("codeId"));
-				map.put("memberId", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberId"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
@@ -518,7 +518,7 @@ public class CommissionExcelDownloadController {
 				largeExcelService.downLoad13T(map, downloadHandler);
 			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P09)) {
 				map.put("codeId", request.getParameter("codeId"));
-				map.put("coemplyCddeId", request.getParameter("emplyCd"));
+				map.put("emplyCd", request.getParameter("emplyCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
 				columns = new String[] { "emplyId", "emplyCode", "sponsId", "instlmt", "runId", "runId", "taskId",
