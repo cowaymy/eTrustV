@@ -664,6 +664,7 @@
         $('#custId').keydown(function (event) {  
             if (event.which === 13) {    //enter  
                 fn_selectCustInfo();
+                return false;
             }  
         });
         $('#salesmanCd').change(function(event) {
@@ -688,6 +689,7 @@
                 if(FormUtil.isNotEmpty(memCd)) {
                     fn_loadOrderSalesman(0, memCd);
                 }
+                return false;
             }
         });
         $('#thrdPartyId').change(function(event) {

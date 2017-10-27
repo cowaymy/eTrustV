@@ -238,6 +238,7 @@
         $('#modSalesmanCd').keydown(function (event) {  
             if (event.which === 13) {    //enter
                 fn_loadOrderSalesman(null, $('#modSalesmanCd').val());
+                return false;
             }  
         });
         $('#btnBillNewAddr').click(function() {
@@ -375,6 +376,7 @@
                 else {
                     Common.alert("Third Party Restriction" + DEFAULT_DELIMITER + "<b>Third party and customer cannot be same person/company.<br />Your input third party ID : "+InputCustID+"</b>");
                 }
+                return false;
             }
         });
         $('#rentPayMode').change(function(event) {
