@@ -701,24 +701,25 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             		
             		Map<String, Object> sal0089 = configSettingMap.get(i);
             		
-            			if(hsBasicmap.get("settIns").equals(1)){
-            				sal0089.put("srvSettStusId", 1);
-            			}else {
-            				sal0089.put("srvSettStusId", 8);
+            			if(configSettingMap.get(i).get("srvSettTypeId").toString().equals("281")){
+        					if("1".equals(hsBasicmap.get("settIns").toString())){
+                					sal0089.put("srvSettStusId", 1);
+                				}else {
+                    				sal0089.put("srvSettStusId", 8);
+                    			}
+            			}else if (configSettingMap.get(i).get("srvSettTypeId").toString().equals("280")){
+        					if("1".equals(hsBasicmap.get("settHs").toString())){
+            					sal0089.put("srvSettStusId", 1);
+            				}else {
+                				sal0089.put("srvSettStusId", 8);
+                			}
+            			}else if (configSettingMap.get(i).get("srvSettTypeId").toString().equals("279")){
+            				if("1".equals(hsBasicmap.get("settAs").toString())){
+            					sal0089.put("srvSettStusId", 1);
+            				}else {
+                				sal0089.put("srvSettStusId", 8);
+                			}
             			}
-            		
-            			if(hsBasicmap.get("settHs").equals(1)){
-            				sal0089.put("srvSettStusId", 1);
-            			}else {
-            				sal0089.put("srvSettStusId", 8);
-            			}
-            			
-            			if(hsBasicmap.get("settAs").equals(1)){
-            				sal0089.put("srvSettStusId", 1);
-            			}else {
-            				sal0089.put("srvSettStusId", 8);
-            			}
-
 
             			sal0089.put("srvSettRem", "");
             			sal0089.put("srvSettCrtUserId", sessionVO.getUserId());
