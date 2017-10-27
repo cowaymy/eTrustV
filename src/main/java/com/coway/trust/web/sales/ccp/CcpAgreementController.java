@@ -98,13 +98,13 @@ public class CcpAgreementController {
 	
 	
 	@RequestMapping(value = "/getOrderDetailInfo.do", method = RequestMethod.POST)
-	public String getOrderDetailInfo (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	public String getOrderDetailInfo (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
 		int prgrsId = 0;
 		EgovMap orderDetail = null;
 		params.put("prgrsId", prgrsId);
 	
-        orderDetail = orderDetailService.selectOrderBasicInfo(params);
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
 		
 		model.put("orderDetail", orderDetail);
 		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));

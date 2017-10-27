@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -29,6 +30,7 @@ import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.sales.order.OrderVO;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOMapper;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -50,8 +52,11 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
 	
+	@Resource(name = "orderRegisterMapper")
+	private OrderRegisterMapper orderRegisterMapper;
+
 //	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
+//	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
 	public EgovMap selectBasicInfo(Map<String, Object> params) throws Exception {
@@ -63,7 +68,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	}
 	
 	@Override
-	public EgovMap selectOrderBasicInfo(Map<String, Object> params) throws Exception {
+	public EgovMap selectOrderBasicInfo(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 		
 		EgovMap orderDetail = new EgovMap();
 		
@@ -89,7 +94,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 
 			if(rentPaySetInf != null) {
     			
-    			this.loadRentPaySetInf(rentPaySetInf);
+    			this.loadRentPaySetInf(rentPaySetInf, sessionVO);
     
     			if(((BigDecimal)rentPaySetInf.get("is3party")).compareTo(BigDecimal.ONE) == 0) {
     				rentPaySetInf.put("is3party", "Yes");
@@ -199,7 +204,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 	}
 	
-	private void loadRentPaySetInf(EgovMap rentPaySetInf) {
+	private void loadRentPaySetInf(EgovMap rentPaySetInf, SessionVO sessionVO) {
 		
 		if(!"DD".equals((String)rentPaySetInf.get("rentPayModeCode"))) {
 			rentPaySetInf.put("clmDdMode", "-");
@@ -220,7 +225,16 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 		
 		if(CommonUtils.isNotEmpty(rentPaySetInf.get("rentPayCrcNo"))) {
-			rentPaySetInf.put("rentPayCrcNo", CommonUtils.getMaskCreditCardNo(StringUtils.trim((String)rentPaySetInf.get("rentPayCrcNo")), "*", 6));
+			Map<String, Object> pMap = new HashMap<String, Object>();
+			
+			pMap.put("userId", sessionVO.getUserId());
+			pMap.put("moduleUnitId", "252");
+			
+			EgovMap rsltMap = orderRegisterMapper.selectCheckAccessRight(pMap);
+			
+			if(rsltMap == null) {
+				rentPaySetInf.put("rentPayCrcNo", CommonUtils.getMaskCreditCardNo(StringUtils.trim((String)rentPaySetInf.get("rentPayCrcNo")), "*", 6));
+			}
 		}
 		else {
 			rentPaySetInf.put("rentPayCrcNo", "-");

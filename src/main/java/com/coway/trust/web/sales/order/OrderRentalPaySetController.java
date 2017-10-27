@@ -44,14 +44,14 @@ public class OrderRentalPaySetController {
 	
 	
 	@RequestMapping(value = "/orderRentPaySetLimitPop.do")
-	public String selectCalPaymentChannel(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	public String selectCalPaymentChannel(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 		
 		logger.info("#####################################################");
 		logger.info("######  params.ToString : " + params.toString());
 		logger.info("#####################################################");
 		
 		params.put("salesOrderId", params.get("salesOrdId"));
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
 		
 		EgovMap payMap = null;
 		payMap = orderRentalService.getPayTerm(params);

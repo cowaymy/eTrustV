@@ -674,7 +674,7 @@
              , V1.RENT_PAY_ACC_NO
              , V1.RENT_PAY_ACC_OWNER
              <!--, pkg_crypto.DECRYPT(V1.RENT_PAY_CRC_NO) RENT_PAY_CRC_NO-->
-             , V1.RENT_PAY_CRC_NO
+             , V1.RENT_PAY_ORI_CRC_NO AS RENT_PAY_CRC_NO
              , V1.RENT_PAY_CR_OWNER
              , V1.RENT_PAY_CRC_EXPR
              , V1.ISSU_NRIC

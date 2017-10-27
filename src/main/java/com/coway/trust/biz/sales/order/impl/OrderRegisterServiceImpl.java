@@ -357,9 +357,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	
 	@Override
 	public EgovMap selectCheckAccessRight(Map<String, Object> params, SessionVO sessionVO) {
-		
-		params.put("moduleUnitId", 321);
-		
 		return orderRegisterMapper.selectCheckAccessRight(params);
 	}
 	

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -38,7 +39,7 @@ public class OrderDetailController {
 	private OrderDetailService orderDetailService;
 	
 	@RequestMapping(value = "/orderDetailPop.do")
-	public String getOrderDetailPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+	public String getOrderDetailPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		
 		//params.put("salesOrderId", 256488);
 		
@@ -51,7 +52,7 @@ public class OrderDetailController {
 		logger.debug("!@##############################################################################");
 		
 		//[Tap]Basic Info
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
 		
 		model.put("orderDetail", orderDetail);
 		

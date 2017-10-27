@@ -58,7 +58,7 @@
     function fn_getCheckAccessRight(userId){
         var result = false;
 
-        Common.ajax("GET", "/sales/order/selectCheckAccessRight.do", {userId : userId}, function(rsltInfo) {
+        Common.ajax("GET", "/sales/order/selectCheckAccessRight.do", {userId : userId, moduleUnitId : '321'}, function(rsltInfo) {
             if(rsltInfo != null) {
                 result = true;
             }

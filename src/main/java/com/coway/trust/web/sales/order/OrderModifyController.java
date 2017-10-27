@@ -76,10 +76,10 @@ public class OrderModifyController {
 	private MessageSourceAccessor messageAccessor;
 	
 	@RequestMapping(value = "/orderModifyPop.do")
-	public String orderModifyPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+	public String orderModifyPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		
 		//[Tap]Basic Info
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//APP_TYPE_ID CUST_ID
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//APP_TYPE_ID CUST_ID
 		EgovMap basicInfo = (EgovMap) orderDetail.get("basicInfo");
 
 		model.put("orderDetail",  orderDetail);

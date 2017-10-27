@@ -103,7 +103,7 @@ public class CcpCalculateController {
 	
 	
 	@RequestMapping(value = "/selectCalCcpViewEditPop.do")
-	public String selectCalCcpViewEditPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	public String selectCalCcpViewEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 		
 		LOGGER.info("############################################################");
 		LOGGER.info("############ CalCcpViewEditPop Params Confirm : " + params.toString());
@@ -121,7 +121,7 @@ public class CcpCalculateController {
     	params.put("prgrsId", resultVal); 
     	params.put("salesOrderId", params.get("salesOrdId"));
     	//service1
-    	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+    	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     	EgovMap salesMan = ccpCalculateService.selectSalesManViewByOrdId(params);
     	
     	
@@ -173,7 +173,7 @@ public class CcpCalculateController {
 	
 	
 	@RequestMapping(value = "/ccpCalCCpViewPop.do")
-	public String ccpCalCCpViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	public String ccpCalCCpViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 		
 		LOGGER.info("############################################################");
 		LOGGER.info("############ CalCcpViewPop Params Confirm : " + params.toString());
@@ -191,7 +191,7 @@ public class CcpCalculateController {
     	params.put("prgrsId", resultVal); 
     	params.put("salesOrderId", params.get("salesOrdId"));
     	//service1
-    	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+    	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     	EgovMap salesMan = ccpCalculateService.selectSalesManViewByOrdId(params);
     	
     	
