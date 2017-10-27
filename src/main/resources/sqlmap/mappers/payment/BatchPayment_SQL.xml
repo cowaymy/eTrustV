@@ -517,9 +517,11 @@
 		)
     </insert>
     
+    <resultMap id="confMap" type="egovMap"></resultMap>
     <update id="callCnvrBatchPay" statementType="CALLABLE" parameterType="Map">
         {call SP_UPD_CNVR_BATCH_PAY(#{batchId},
-                                                        #{userId} )}
+                                                        #{userId},
+                                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap} )}
     </update>
     
     <update id="callBatchPayVerifyDet" statementType="CALLABLE" parameterType="Map">
