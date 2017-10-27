@@ -8,15 +8,18 @@
 	    
 //	        console.log("basicinfo : {}" + ${basicinfo.c1});
 	            
-	/*            var codyIdCd = ${basicinfo.c1}
-	           alert(${basicinfo.c1});
+            var codyIdCd = ${#basicinfo.c1}
+//	           alert(${#basicinfo.c1});
 	
-	           $("#entry_cmbServiceMem option[value="+codyIdCd +"]").attr("selected", true);   
-	 */
+//	           $("#entry_cmbServiceMem option[value="+codyIdCd +"]").attr("selected", true);   
+
 	
 	/*          var configBsGen = ${basicinfo.configBsGen}
 	           $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
 	 */
+	 
+	//           alert(codyIdCd);
+	        $("#entry_cmbServiceMem option[value="+codyIdCd +"]").attr('selected', 'selected');
 	    
 	    
 	    
@@ -141,7 +144,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
  <form id="frmBasicInfo" method="post">
-<input id="salesOrderId" name="salesOrderId" type="text" value="${basicInfo.ordId}"/>
+<input id="salesOrderId" name="salesOrderId" type="hidden" value="${basicInfo.ordId}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -210,7 +213,7 @@
 <tr>
     <th scope="row">Remark</th>
     <td colspan="3">
-    <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" value="${BasicInfo.configBsRem}"></textarea>
+    <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" value="${basicInfo.configBsRem}"></textarea>
     </td>
 </tr>
 <tr>
