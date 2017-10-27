@@ -179,6 +179,7 @@ $(document).ready(function () {
   });
     
     fn_setKeyInDate();
+    fn_setPayDueDtEvent();
 });
 
 /* 인풋 파일(멀티) */

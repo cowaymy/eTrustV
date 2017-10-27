@@ -277,6 +277,7 @@ $(document).ready(function () {
   });
     
     fn_setKeyInDate();
+    fn_setPayDueDtEvent();
     
     if(gridDataList.length > 0) {
         fn_setGridData(gridDataList);

@@ -123,6 +123,38 @@ function fn_setToDay() {
     $("#endDt").val(today)
 }
 
+function fn_setPayDueDtEvent() {
+	$("#payDueDt").change(function(){
+		var payDueDt = $(this).val();
+        console.log(payDueDt);
+        var day = payDueDt.substring(0, 2);
+        var month = payDueDt.substring(3, 5);
+        var year = payDueDt.substring(6);
+        console.log("year : " + year + " month : " + month + " day : " + day);
+        payDueDt = year + month;
+        
+        var now = new Date;
+        var dd = now.getDate();
+        var mm = now.getMonth() + 1;
+        var yyyy = now.getFullYear();
+        if(dd < 10) {
+            dd = "0" + dd;
+        }
+        if(mm < 10){
+            mm = "0" + mm
+        }
+        now = yyyy + "" + mm + "" + dd;
+        console.log("yyyy : " + yyyy + " mm : " + mm + " dd : " + dd);
+        
+        console.log(payDueDt);
+        console.log(now);
+        if(Number(payDueDt) < Number(now)) {
+            Common.alert("Past dates can not be selected.");
+            $("#payDueDt").val(dd + "/" + mm + "/" + yyyy);
+        }
+   }); 
+}
+
 function fn_supplierSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
 }
