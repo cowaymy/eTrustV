@@ -796,7 +796,7 @@
                 
             $('#ordCampgn option').remove();
             $('#ordCampgn').prop("readonly", true);
-            $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+//          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
             $('#trialNoChk').prop("checked", false).prop("disabled", true);
             $('#trialNo').val('').addClass("readonly");
             $('#ordPrice').val('').addClass("readonly");
@@ -868,7 +868,7 @@
         });
         $('#ordPromo').change(function() {
 
-            $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+//          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
             $('#trialNoChk').prop("checked", false).prop("disabled", true);
             $('#trialNo').val('').addClass("readonly");
 
@@ -880,11 +880,11 @@
             var promoIdVal = $("#ordPromo").val();
 
             if(promoIdIdx > 0 && promoIdVal != '0') {
-                
+/*
                 if($("#exTrade").val() == '1') {
                     $('#relatedNo').removeAttr("readonly").removeClass("readonly");
                 }
-                
+*/
                 if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
                     $('#trialNoChk').removeAttr("disabled");
                 }
