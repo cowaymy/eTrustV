@@ -714,7 +714,7 @@ function fn_uploadFile(str) {
     	alert("<spring:message code="budget.msg.noData" />");
     	return;
     }
-    
+
   /*   if(AUIGrid.getCellValue(adjPGridID, 0, "budgetDocNo") != ""){
     	$("#pAtchFileGrpId").val("");
 
@@ -738,6 +738,11 @@ function fn_uploadFile(str) {
 	            console.log(result);
 	          
 	            $("#pAtchFileGrpId").val(result.data);
+	            
+	            if($("#pAtchFileGrpId").val() == ""){
+	            	 Common.alert("<spring:message code="budget.msg.fileRequir" />");
+	            	 return;
+	            }
 	            
 	            fn_saveAdjustement();
 	            
