@@ -58,6 +58,9 @@ public interface SampleMapper {
 
 	List<EgovMap> selectClobData(Map<String, Object> params);
 
+	List<EgovMap> selectEditor(Map<String, Object> params);
+	void insertEditor(Map<String, Object> params);
+
 	List<EgovMap> selectClobOtherData(Map<String, Object> params);
 
 	void selectChartDataProcedure(Map<String, Object> params);

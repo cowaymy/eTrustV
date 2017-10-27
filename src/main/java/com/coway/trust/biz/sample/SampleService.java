@@ -41,6 +41,10 @@ public interface SampleService {
 	 */
 	List<EgovMap> selectClobData(Map<String, Object> params);
 
+	List<EgovMap> getEditor(Map<String, Object> params);
+
+	void saveEditor(Map<String, Object> params);
+
 	List<EgovMap> selectClobOtherData(Map<String, Object> params);
 
 	void insertClobData(Map<String, Object> params);

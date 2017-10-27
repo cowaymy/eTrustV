@@ -17,6 +17,65 @@
         <result property="otherXml" column="other_xml" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
 
+    <resultMap id="sampleClobMap3" type="EgovMap">
+        <result property="memoCntnt" column="MEMO_CNTNT" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="selectEditor" parameterType="Map"  resultMap="sampleClobMap3">
+        <![CDATA[
+        SELECT M.MEMO_ID
+              ,M.STUS_CODE_ID
+              ,M.MEMO_TITLE
+              ,M.MEMO_CNTNT
+              ,M.IS_STAFF_MEMO
+              ,M.IS_CODY_MEMO
+              ,M.IS_HP_MEMO
+              ,M.CRT_USER_ID
+              ,M.CRT_DT
+              ,M.UPD_USER_ID
+              ,M.UPD_DT
+          FROM MSC0010D M
+          where rownum < 100
+          AND 'T' = CASE WHEN #{memoId} IS NULL OR M.MEMO_ID = #{memoId}
+                                    THEN 'T'
+                                    ELSE 'F'
+                          END
+	]]>
+    </select>
+
+    <insert id="insertEditor" parameterType="Map">
+
+        <selectKey keyProperty="memoId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(MEMO_ID),0) + 1 from MSC0010D
+        </selectKey>
+
+        INSERT INTO MSC0010D(
+               MEMO_ID
+              ,STUS_CODE_ID
+              ,MEMO_TITLE
+              ,MEMO_CNTNT
+              ,IS_STAFF_MEMO
+              ,IS_CODY_MEMO
+              ,IS_HP_MEMO
+              ,CRT_USER_ID
+              ,CRT_DT
+              ,UPD_USER_ID
+              ,UPD_DT)
+        VALUES(
+              #{memoId}
+              ,1
+              , 'test'
+              ,#{memoCntnt}
+              ,1
+              ,1
+              ,1
+              ,9999
+              ,SYSDATE
+              ,9999
+              ,SYSDATE
+        )
+    </insert>
+
 	<insert id="insertSample" parameterType="SampleVO">
         INSERT INTO SYS0052M
             (id, 

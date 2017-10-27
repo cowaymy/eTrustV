@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.coway.trust.biz.common.type.FileType;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +32,9 @@ import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.application.SampleApplication;
 import com.coway.trust.biz.common.AdaptorService;
-import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.EmailTemplateType;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
@@ -149,9 +150,25 @@ public class SampleController {
 		return "sample/sampleEditor";
 	}
 
-	@RequestMapping(value = "/sendEmail.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> sendEmail(@RequestParam Map<String, Object> params, Model model)
+	@RequestMapping(value = "/getEditor.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getEditor(@RequestParam Map<String, Object> params, Model model)
 			throws Exception {
+
+		List<EgovMap> list = sampleService.getEditor(params);
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/saveEditor.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveEditor(@RequestBody Map<String, Object> params, Model model)
+			throws Exception {
+		ReturnMessage msg = new ReturnMessage();
+		sampleService.saveEditor(params);
+		msg.setData(params.get("memoId"));
+		return ResponseEntity.ok(msg);
+	}
+
+	@RequestMapping(value = "/sendEmail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> sendEmail(@RequestParam Map<String, Object> params, Model model) {
 		ReturnMessage retMsg = new ReturnMessage();
 
 		EmailVO email = new EmailVO();

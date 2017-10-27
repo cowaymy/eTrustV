@@ -18,22 +18,7 @@ import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-
-/**
- * @Class Name : EgovSampleServiceImpl.java
- * @Description : Sample Business Implement Class
- * @Modification Information
- * @ @ 수정일 수정자 수정내용 @ --------- --------- ------------------------------- @ 2009.03.16 최초생성
- *
- * @author 개발프레임웍크 실행환경 개발팀
- * @since 2009. 03.16
- * @version 1.0
- * @see
- *
- * 	 Copyright (C) by MOPAS All right reserved.
- */
 
 @Service("sampleService")
 public class SampleServiceImpl implements SampleService {
@@ -70,6 +55,16 @@ public class SampleServiceImpl implements SampleService {
 
 		// 아래의 exception으로 인해 위의 insert 가 rollback 됩니다.
 		throw new ApplicationException(AppConstants.FAIL, "transaction fail Test...");
+	}
+
+	@Override
+	public List<EgovMap> getEditor(Map<String, Object> params) {
+		return sampleMapper.selectEditor(params);
+	}
+
+	@Override
+	public void saveEditor(Map<String, Object> params) {
+		sampleMapper.insertEditor(params);
 	}
 
 	@Override

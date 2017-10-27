@@ -39,7 +39,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>이미지 추가</title>
+<title>Add Image</title>
 <script type="text/javascript">
 	function getAbsolutePos(el) {
 		var r = {
@@ -95,15 +95,15 @@
 					/ 2;
 			window.moveTo(x, y);
 			if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) { // chrome 경우는 alert()을 추가해 주어야만 사이징이 됨... 허허
-				alert('삽입할 그림에 대한 정보를 설정해 주십시오.');
-				self.resizeTo(body.offsetWidth + 50, body_height + 90);
+				//alert('삽입할 그림에 대한 정보를 설정해 주십시오.');
+				self.resizeTo(body.offsetWidth + 100, body_height + 90);
 			} else {
-				self.resizeTo(body.offsetWidth + 50, body_height + 90);
+				self.resizeTo(body.offsetWidth + 100, body_height + 90);
 			}
 		} else { // IE
 			// window.dialogHeight = body.offsetHeight + 50 + "px";
 			// window.dialogWidth = body.offsetWidth + "px";
-			window.resizeTo(body.offsetWidth + 30, body_height + 90);
+			window.resizeTo(body.offsetWidth + 80, body_height + 90);
 			var ch = body.clientHeight;
 			var cw = body.clientWidth;
 			window.resizeBy(body.offsetWidth - cw, body_height - ch);
@@ -156,7 +156,8 @@
 	};
 </script>
 <script type="text/javascript">
-	window.resizeTo(420, 120);
+	//window.resizeTo(420, 120);
+    window.resizeTo(535, 460);
 	function Init() {
 		__dlg_init();
 
@@ -269,7 +270,7 @@ body {
 </head>
 <body onload="Init()">
 	<aside class="title_line"><!-- title_line start -->
-	<h3>이미지 추가</h3>
+	<h3>Add Image</h3>
 	</aside><!-- title_line end -->
 	
 	<form action="" method="post" enctype="multipart/form-data">
@@ -286,14 +287,14 @@ body {
 					    <div class="auto_file"><!-- auto_file start -->
 					    <input type="file" name="file" id="f_upload" title="Select upload image here" />
 					    </div><!-- auto_file end -->
-					    <p class="btn_sky" name="upload" onclick="return onUpload();" title="Upload image file"><a href="#">Upload</a></p>
+					    <p class="btn_sky" name="upload" onclick="return onUpload();" title="Upload image file"><a href="javascript:void(0);">Upload</a></p>
 					   </td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="f_url">Image URL:</label></th>
 					<td>
 					   <input type="text" name="url" id="f_url" title="Enter the image URL here" value="${url}" />
-				       <p class="btn_sky" name="preview" onclick="return onPreview();" title="Preview the image in a new window"><a href="#">Preview</a></p>
+				       <p class="btn_sky" name="preview" onclick="return onPreview();" title="Preview the image in a new window"><a href="javascript:void(0);">Preview</a></p>
 					</td>
 				</tr>
 				<tr>
@@ -347,12 +348,12 @@ body {
         </aside><!-- title_line end -->
         
         <article class="grid_wrap"><!-- grid_wrap start -->
-        <iframe name="ipreview" id="ipreview" frameborder="0" style="border: 1px solid gray;" height="200" width="480" src="" title="이미지 미리보기"></iframe>
+        <iframe name="ipreview" id="ipreview" frameborder="0" style="border: 1px solid gray;" height="200" width="480" src="" title="Preview Image"></iframe>
         </article><!-- grid_wrap end -->
         
         <ul class="center_btns">
-            <li><p class="btn_blue2" name="ok" onclick="return onOK();"><a href="#">OK</a></p></li>
-            <li><p class="btn_blue2" name="cancel" onclick="return onCancel();"><a href="#">Cancel</a></p></li>
+            <li><p class="btn_blue2" name="ok" onclick="return onOK();"><a href="javascript:void(0);">OK</a></p></li>
+            <li><p class="btn_blue2" name="cancel" onclick="return onCancel();"><a href="javascript:void(0);">Cancel</a></p></li>
         </ul>
         <!-- 
     <div class="title">이미지 추가</div>
