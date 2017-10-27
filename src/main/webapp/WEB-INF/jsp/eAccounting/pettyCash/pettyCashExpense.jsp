@@ -46,8 +46,8 @@ var pettyCashExpColumnLayout = [ {
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
-    dataField : "cvrr",
-    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
 }, {
     dataField : "totAmt",
     headerText : 'Amount',
@@ -115,12 +115,83 @@ function fn_setToMonth() {
     $("#clmMonth").val(month)
 }
 
+function fn_setAmtEvent() {
+$("#amt :text").keydown(function (event) { 
+        
+        var code = window.event.keyCode;
+        
+        if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+        {
+         window.event.returnValue = true;
+         return;
+        }
+        window.event.returnValue = false;
+        
+   });
+   
+   $("#amt :text").click(function () { 
+       var str = $(this).val().replace(/,/gi, "");
+       $(this).val(str);      
+  });
+   $("#amt :text").blur(function () { 
+       var str = $(this).val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+       $(this).val(str);      
+  });
+   
+    $("#amt :text").change(function(){
+       var str =""+ Math.floor($(this).val() * 100)/100;
+       
+       var str2 = str.split(".");
+      
+       if(str2.length == 1){
+           str2[1] = "00";
+       }
+       
+       if(str2[0].length > 11){
+           Common.alert("The amount can only be 13 digits, including 2 decimal point.");
+           str = "";
+       }else{
+           str = str2[0].substr(0, 11)+"."+str2[1];
+       }
+       str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+       
+       
+       $(this).val(str);
+       
+       var totAmt = 0;
+       $.each($("#amt :text"), function(i, obj) {
+    	   if(obj.value != null && obj.value != ""){
+    		   console.log(i);
+    		   console.log(obj.value);
+               totAmt += Number(obj.value.replace(/,/gi, ""));
+               console.log(obj.value.replace(/,/gi, ""));
+    	   }
+       });
+       console.log(totAmt);
+       totAmt = "" + totAmt;
+       $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+       console.log(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+   }); 
+}
+
 function fn_supplierSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+}
+
+function fn_popSupplierSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
+}
+
+function fn_popCostCenterSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
+}
+
+function fn_PopExpenseTypeSearchPop() {
+    Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J2'}, null, true, "expenseTypeSearchPop");
 }
 
 function fn_setSupplier() {
@@ -131,6 +202,55 @@ function fn_setSupplier() {
 function fn_setCostCenter() {
     $("#costCenter").val($("#search_costCentr").val());
     $("#costCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_setPopCostCenter() {
+    $("#newCostCenter").val($("#search_costCentr").val());
+    $("#newCostCenterText").val($("#search_costCentrName").val());
+    
+    if(fn_checkEmpty()){
+        // Approved Cash Amount GET and CUSTDN_NRIC GET
+        var data = {
+                memAccId : $("#newMemAccId").val(),
+                costCentr : $("#newCostCenter").val()
+        };
+        Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+            console.log(result);
+            console.log(FormUtil.isEmpty(result.data));
+            if(FormUtil.isEmpty(result.data)) {
+                Common.alert("There is no data for cost centers and custodians.");
+            } else {
+                var custdnNric = result.data.custdnNric;
+                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            }
+        });
+    }
+}
+
+function fn_setPopSupplier() {
+    $("#newMemAccId").val($("#search_memAccId").val());
+    $("#newMemAccName").val($("#search_memAccName").val());
+    $("#bankCode").val($("#search_bankCode").val());
+    $("#bankName").val($("#search_bankName").val());
+    $("#bankAccNo").val($("#search_bankAccNo").val());
+    
+    if(fn_checkEmpty()){
+        // Approved Cash Amount GET and CUSTDN_NRIC GET
+        var data = {
+                memAccId : $("#newMemAccId").val(),
+                costCentr : $("#newCostCenter").val()
+        };
+        Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+            console.log(result);
+            console.log(FormUtil.isEmpty(result.data));
+            if(FormUtil.isEmpty(result.data)) {
+                Common.alert("There is no data for cost centers and custodians.");
+            } else {
+                var custdnNric = result.data.custdnNric;
+                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            }
+        });
+    }
 }
 
 function fn_selectExpenseList() {

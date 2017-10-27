@@ -143,7 +143,7 @@ SELECT T.CLM_NO,
        T.COST_CENTR_NAME, 
        T.MEM_ACC_ID, 
        T.MEM_ACC_NAME, 
-       'MYR' AS CVRR,
+       'MYR' AS CUR,
        T.APPV_CASH_AMT, 
        T.REQST_AMT, 
        T.REQST_NO,
@@ -413,7 +413,7 @@ SELECT T.CLM_NO,
        T.MEM_ACC_NAME, 
        T.CLM_MONTH,
        T.REQST_DT,  
-       'MYR' AS CVRR,
+       'MYR' AS CUR,
        T.TOT_AMT,
        T.APPV_PRCSS_STUS_CODE, 
        T.APPV_PRCSS_STUS, 
@@ -458,6 +458,14 @@ AND T.APPV_PRCSS_STUS_CODE IN
 </foreach>
 </if>  
 ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT 
+</select>
+
+<select id="selectTaxCodePettyCashFlag" resultType="egovMap">
+/* pettyCashMapper.selectTaxCodePettyCashFlag */
+    SELECT TAX_CODE ,
+                TAX_NAME 
+    FROM FCM0007C
+    WHERE PETTY_CASH_FLAG = 'X'
 </select>
 
 </mapper>

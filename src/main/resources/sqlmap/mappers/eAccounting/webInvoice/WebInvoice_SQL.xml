@@ -13,7 +13,7 @@ SELECT   T.CLM_NO
         ,T.INVC_TYPE
         ,T.MEM_ACC_ID
         ,T.MEM_ACC_NAME
-        ,'MYR' AS CVRR
+        ,'MYR' AS CUR
         ,T.TOT_AMT
         ,T.REQST_DT
         ,T.APPV_PRCSS_STUS_CODE
@@ -119,7 +119,7 @@ SELECT   T.CLM_NO
                    ,T.BUDGET_CODE_NAME
                    ,T.TAX_CODE
                    ,TT.TAX_CODE||' '||'('||TT.TAX_NAME||')' AS TAX_NAME
-                   ,'MYR' AS CVRR
+                   ,'MYR' AS CUR
                    ,T.NET_AMT
                    ,T.TAX_AMT
                    ,T.TOT_AMT
@@ -829,7 +829,8 @@ SELECT T.APPV_PRCSS_NO
 /* webInvoiceMapper.selectNextIfKey */
     SELECT    700
        || TO_CHAR (SYSDATE, 'yymmdd')
-       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 10, 8) + 1), 'FM00000000'), '00000001') AS IF_KEY
+       || '_'
+       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 11, 7) + 1), 'FM0000000'), '0000001') AS IF_KEY
   FROM ITF0700M
  WHERE SUBSTR (IF_KEY, 4, 6) = TO_CHAR (SYSDATE, 'yymmdd')
 </select>

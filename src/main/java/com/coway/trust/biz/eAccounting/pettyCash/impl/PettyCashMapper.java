@@ -36,5 +36,7 @@ public interface PettyCashMapper {
 	void updateAppvPrcssNo(Map<String, Object> params);
 	
 	List<EgovMap> selectExpenseList(Map<String, Object> params);
+	
+	List<EgovMap> selectTaxCodePettyCashFlag();
 
 }

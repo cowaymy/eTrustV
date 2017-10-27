@@ -36,8 +36,8 @@ var pettyCashReqstColumnLayout = [ {
     headerText : '<spring:message code="approveLine.name" />',
     style : "aui-grid-user-custom-left"
 }, {
-    dataField : "cvrr",
-    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
 }, {
     dataField : "appvCashAmt",
     headerText : 'Approved<br>Petty Cash',

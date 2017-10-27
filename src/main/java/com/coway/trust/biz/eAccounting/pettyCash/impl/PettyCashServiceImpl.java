@@ -149,6 +149,14 @@ public class PettyCashServiceImpl implements PettyCashService {
 		return pettyCashMapper.selectExpenseList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectTaxCodePettyCashFlag() {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectTaxCodePettyCashFlag();
+	}
+	
+	
+
 	
 
 }

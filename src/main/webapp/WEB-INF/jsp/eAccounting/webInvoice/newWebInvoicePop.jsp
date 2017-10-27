@@ -84,8 +84,8 @@ var myColumnLayout = [ {
         valueField : "taxName" // value 에 해당되는 필드명
     }
 }, {
-    dataField : "cvrr",
-    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
 }, {
     dataField : "netAmt",

@@ -39,7 +39,7 @@ var obj = {
         ,budgetCodeName : "${data.budgetCodeName}"
         ,taxCode : "${data.taxCode}"
         ,taxName : "${data.taxName}"
-        ,cvrr : "${data.cvrr}"
+        ,cur : "${data.cur}"
         ,netAmt : Number("${data.netAmt}")
         ,taxAmt : Number("${data.taxAmt}")
         ,totAmt : Number("${data.totAmt}")
@@ -114,8 +114,8 @@ var myColumnLayout = [ {
         valueField : "taxName" // value 에 해당되는 필드명
     }
 }, {
-    dataField : "cvrr",
-    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
 }, {
     dataField : "netAmt",
@@ -197,8 +197,8 @@ var approvalColumnLayout = [ {
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
     editable : false
 }, {
-    dataField : "cvrr",
-    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
 }, {
     dataField : "netAmt",

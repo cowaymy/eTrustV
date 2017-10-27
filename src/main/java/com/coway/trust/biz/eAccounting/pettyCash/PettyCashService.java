@@ -33,5 +33,7 @@ public interface PettyCashService {
 	
 	List<EgovMap> selectExpenseList(Map<String, Object> params);
 	
+	List<EgovMap> selectTaxCodePettyCashFlag();
+	
 	
 }

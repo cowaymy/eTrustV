@@ -76,8 +76,9 @@ public class PettyCashController {
 	}
 	
 	@RequestMapping(value = "/newCustodianPop.do")
-	public String newCustodianPop(ModelMap model, SessionVO session) {
-		model.addAttribute("userId", session.getUserId());
+	public String newCustodianPop(ModelMap model, SessionVO sessionVO) {
+		model.addAttribute("userId", sessionVO.getUserId());
+		model.addAttribute("userName", sessionVO.getUserName());
 		return "eAccounting/pettyCash/pettyCashNewCustodianPop";
 	}
 	
@@ -117,6 +118,7 @@ public class PettyCashController {
 		
 		params.put("attachmentList", list);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
 		
 		// TODO insert
 		pettyCashApplication.insertCustodianBiz(FileVO.createList(list), FileType.WEB, params);
@@ -168,6 +170,7 @@ public class PettyCashController {
 		
 		params.put("attachmentList", list);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
 		
 		// TODO update
 		pettyCashApplication.updateCustodianBiz(FileVO.createList(list), FileType.WEB, params);
@@ -196,6 +199,7 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
 		
 		// TODO delete
 		pettyCashApplication.deleteCustodianBiz(params);
@@ -238,7 +242,8 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		model.addAttribute("callType", params.get("callType"));
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
+		model.addAttribute("userName", sessionVO.getUserName());
 		return "eAccounting/pettyCash/pettyCashNewRequestPop";
 	}
 	
@@ -267,6 +272,7 @@ public class PettyCashController {
 		
 		params.put("attachmentList", list);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
 		
 		// TODO insert
 		pettyCashApplication.insertPettyCashReqstBiz(FileVO.createList(list), FileType.WEB, params);
@@ -309,6 +315,7 @@ public class PettyCashController {
 		
 		params.put("attachmentList", list);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
 		
 		// TODO update
 		pettyCashApplication.updatePettyCashReqstBiz(FileVO.createList(list), FileType.WEB, params);
@@ -382,11 +389,18 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		model.addAttribute("callType", params.get("callType"));
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
+		model.addAttribute("userName", sessionVO.getUserName());
 		return "eAccounting/pettyCash/pettyCashNewExpensePop";
 	}
 	
-	
+	@RequestMapping(value = "/selectTaxCodePettyCashFlag.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTaxCodePettyCashFlag(Model model) {
+		
+		List<EgovMap> taxCodeFlagList = pettyCashService.selectTaxCodePettyCashFlag();
+		
+		return ResponseEntity.ok(taxCodeFlagList);
+	}
 	
 	
 }

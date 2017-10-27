@@ -1,21 +1,8 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
-<title>eTrust system</title>
-<link rel="stylesheet" type="text/css" href="../css/master.css" />
-<link rel="stylesheet" type="text/css" href="../css/common.css" />
-<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
-<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
-<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
-<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="../js/common_pub.js"></script>
-<script type="text/javascript" src="../js/multiple-select.js"></script>
-<script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
-</head>
-<body>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<script type="text/javascript">
+</script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -148,7 +135,6 @@
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
@@ -156,6 +142,3 @@
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
-</body>
-</html>

@@ -49,8 +49,8 @@ var webInvoiceColumnLayout = [ {
     headerText : '<spring:message code="webInvoice.name" />',
     style : "aui-grid-user-custom-left"
 }, {
-    dataField : "cvrr",
-    headerText : '<spring:message code="newWebInvoice.cvrr" />',
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
 }, {
     dataField : "totAmt",
     headerText : '<spring:message code="webInvoice.amount" />',
@@ -229,7 +229,7 @@ function fn_getTotalAmount() {
 }
 
 function fn_addRow() {
-    AUIGrid.addRow(newGridID, {cvrr:"MYR",netAmt:0,taxAmt:0,totAmt:0}, "last");
+    AUIGrid.addRow(newGridID, {cur:"MYR",netAmt:0,taxAmt:0,totAmt:0}, "last");
 }
 
 function fn_removeRow() {
