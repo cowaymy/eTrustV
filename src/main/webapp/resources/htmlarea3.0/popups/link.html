@@ -1,4 +1,4 @@
-<html lang="ko">
+<html lang="en">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/resources/css/common.css" />
   <script type="text/javascript" src="popup.js"></script>
   <script type="text/javascript">
-    window.resizeTo(400, 200);
+    window.resizeTo(387, 184);
 
 I18N = window.opener.HTMLArea.I18N.dialogs;
 
@@ -63,9 +63,12 @@ function Init() {
 
 function onOK() {
   var required = {
-    // f_href shouldn't be required or otherwise removing the link by entering an empty
-    // url isn't possible anymore.
-    // "f_href": i18n("You must enter the URL where this link points to")
+    // f_href shouldn't be required or otherwise removing the link by entering an empty
+
+    // url isn't possible anymore.
+
+    // "f_href": i18n("You must enter the URL where this link points to")
+
   };
   for (var i in required) {
     var el = document.getElementById(i);
@@ -105,7 +108,7 @@ body { padding: 10px; }
 <body onload="Init()">
 
 <aside class="title_line"><!-- title_line start -->
-<h3>웹 링크 삽입</h3>
+<h3>Insert web link</h3>
 </aside><!-- title_line end -->
 
 <form>
@@ -120,11 +123,11 @@ body { padding: 10px; }
     <td><input type="text" id="f_href" /></td>
   </tr>
   <tr>
-    <th>타이틀 (tooltip)</th>
+    <th>Tilte (tooltip)</th>
     <td><input type="text" id="f_title"/></td>
   </tr>
   <tr>
-    <th><span id="f_target_label">타겟</span></th>
+    <th><span id="f_target_label">Target</span></th>
     <td><select id="f_target" >
       <option value="">None (use implicit)</option>
       <option value="_blank">New window (_blank)</option>
@@ -138,8 +141,8 @@ body { padding: 10px; }
 </table>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2" name="ok" onclick="return onOK();"><a href="#">OK</a></p></li>
-    <li><p class="btn_blue2" name="cancel" onclick="return onCancel();"><a href="#">Cancel</a></p></li>
+    <li><p class="btn_blue2" name="ok" onclick="return onOK();"><a href="javascript:void(0);">OK</a></p></li>
+    <li><p class="btn_blue2" name="cancel" onclick="return onCancel();"><a href="javascript:void(0);">Cancel</a></p></li>
 </ul>
 </form>
 </body>

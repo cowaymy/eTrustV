@@ -1,8 +1,8 @@
-<html lang="ko">
+<html lang="en">
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>표 삽입</title>
+	<title>Add Table</title>
     <link rel="stylesheet" type="text/css" href="/resources/css/master.css" />
     <link rel="stylesheet" type="text/css" href="/resources/css/common.css" />
        
@@ -70,7 +70,8 @@ function __dlg_init(bottom) {
 		var y = opener.screenY + (opener.outerHeight - window.outerHeight) / 2;
 		window.moveTo(x, y);
 		if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {	// chrome 경우는 alert()을 추가해 주어야만 사이징이 됨... 허허
-			alert('삽입할 테이블에 대한 정보를 설정해 주십시오.');
+//			alert('삽입할 테이블에 대한 정보를 설정해 주십시오.');
+			//alert('Please set the information about the table to be inserted..');
 			self.resizeTo(body.offsetWidth + 35, body_height + 60);
 		} else {
 			self.resizeTo(body.offsetWidth + 35, body_height + 60);
@@ -184,7 +185,7 @@ body { padding: 10px; }
 <body onload="Init()">
 
 <aside class="title_line"><!-- title_line start -->
-<h3>표 삽입</h3>
+<h3>Add Table</h3>
 </aside><!-- title_line end -->
 
 <form action="" method="get">
@@ -197,9 +198,9 @@ body { padding: 10px; }
   </colgroup>
   <tbody>
   <tr>
-    <th>행</th>
-    <td><input type="text" name="rows" id="f_rows" size="5" title="Number of rows" value="2" class="wAuto" /> <label for="f_thead"><input type="checkbox" name="thead" id="f_thead" /><span>thead 지정</span></label></td>
-    <th>너비</th>
+    <th>Col</th>
+    <td><input type="text" name="rows" id="f_rows" size="5" title="Number of rows" value="2" class="wAuto" /> <label for="f_thead"><input type="checkbox" name="thead" id="f_thead" /><span>thead appoint</span></label></td>
+    <th>Width</th>
     <td>
         <input type="text" name="width" id="f_width" size="5" title="Width of the table" value="100" class="wAuto" />
         <select size="1" name="unit" id="f_unit" title="Width unit" class="wAuto">
@@ -210,12 +211,12 @@ body { padding: 10px; }
     </td>
   </tr>
   <tr>
-    <th>열</th>
-    <td colspan="3"><input type="text" name="cols" id="f_cols" size="5" title="Number of columns" value="4" class="wAuto" /><label for="f_th"><input type="checkbox" name="th" id="f_th" /><span>th 지정</span></label><label for="f_fixed"><input type="checkbox" checked="checked" name="fixed" id="f_fixed" /><span>컬럼 너비 고정</span></label></td>
+    <th>Row</th>
+    <td colspan="3"><input type="text" name="cols" id="f_cols" size="5" title="Number of columns" value="4" class="wAuto" /><label for="f_th"><input type="checkbox" name="th" id="f_th" /><span>th appoint</span></label><label for="f_fixed"><input type="checkbox" checked="checked" name="fixed" id="f_fixed" /><span>Fix column width</span></label></td>
   </tr>
   <tr>
     <th><label for="f_caption">caption</label></th>
-    <td colspan="3"><input type="text" name="caption" id="f_caption" size="20" maxlength="20" title="table caption" value="" class="wAuto" /><label for="f_hided"><input type="checkbox" checked="checked" name="hided" id="f_hided" />감추기</label></td>
+    <td colspan="3"><input type="text" name="caption" id="f_caption" size="20" maxlength="20" title="table caption" value="" class="wAuto" /><label for="f_hided"><input type="checkbox" checked="checked" name="hided" id="f_hided" />Hide</label></td>
   </tr>
   <tr>
     <th><label for="f_summary">summary</label></th>
