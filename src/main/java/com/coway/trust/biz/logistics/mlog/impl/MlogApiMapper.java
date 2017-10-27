@@ -98,4 +98,12 @@ public interface MlogApiMapper {
 	
 	void insertDeliveryStockMovementDetail(Map<String, Object> tmpMap);
 	
+	void insertMovementSerial(Map<String, Object> tmpMap);
+	
+	void insertDeliveryStockMovement(Map<String, Object> tmpMap);
+	
+	void updateRequestMovement(Map<String, Object> tmpMap);
+	
+	List<EgovMap> selectStockMovementSerial(Map<String, Object> params);
+	
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
-import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
+import com.coway.trust.cmmn.exception.PreconditionException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -245,25 +245,32 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	
 	@Override
 	public void saveInvenReqTransfer(List<Map<String, Object>> reqTransferMList) {
-
+		
 		String seq = MlogApiMapper.selectStockMovementSeq();
 		String headtitle = "SMO";
 		Map<String, Object> insMap = null;
 		if (reqTransferMList.size() > 0) {
-			for (int i = 0; i <= 1; i++) {
+			for (int i = 0; i < reqTransferMList.size(); i++) {
+			
 				insMap = (Map<String, Object>) reqTransferMList.get(i);
 				insMap.put("reqno", headtitle + seq);
+				MlogApiMapper.insStockMovementDetail(insMap);
+				logger.info(" reqstno : {}", insMap);
+				
+				//insMap = (Map<String, Object>) reqTransferMList.get(i);
+				
 			}
+			//insMap.put("reqno", headtitle + seq);
 
 			MlogApiMapper.insStockMovementHead(insMap);
 
-			if (reqTransferMList.size() > 0) {
-				for (int i = 0; i < reqTransferMList.size(); i++) {
-					Map<String, Object> detailMap = (Map<String, Object>) reqTransferMList.get(i);
-					detailMap.put("reqno", headtitle + seq);
-					MlogApiMapper.insStockMovementDetail(detailMap);
-				}
-			}
+//			if (reqTransferMList.size() > 0) {
+//				for (int i = 0; i < reqTransferMList.size(); i++) {
+//					Map<String, Object> detailMap = (Map<String, Object>) reqTransferMList.get(i);
+//					detailMap.put("reqno", headtitle + seq);
+//					MlogApiMapper.insStockMovementDetail(detailMap);
+//				}
+//			}
 
 			MlogApiMapper.insertStockBooking(insMap);
 		}
@@ -273,7 +280,6 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	public void stockMovementReqDelivery(List<Map<String, Object>> reqTransferMList) {
 
 		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
-
 		
 		if (reqTransferMList.size() > 0) {
 
@@ -281,28 +287,66 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 			for (int i = 0; i < reqTransferMList.size(); i++) {
 
-				Map<String, Object> tmpMap = (Map<String, Object>) reqTransferMList.get(i);
+				 insMap = (Map<String, Object>) reqTransferMList.get(i);
 
-				logger.info(" reqstno : {}", tmpMap.get("smoNo"));
-				tmpMap.put("delno", deliSeq);
+				logger.info(" reqstno : {}", insMap.get("smoNo"));
+				insMap.put("reqstno", insMap.get("smoNo"));
+				insMap.put("delno", deliSeq);
+				insMap.put("itmcd", insMap.get("partsCode"));
+				insMap.put("itmname", insMap.get("partsName"));
+				insMap.put("serial", insMap.get("serialNo"));
 
-				MlogApiMapper.insertDeliveryStockMovementDetail(tmpMap);
+				//MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
 			}
+	
+				Map<String, Object> insSerial = null;
+				for (int j = 0; j < reqTransferMList.size(); j++) {
+					logger.info(" seria 통과11111111111");
+					List<EgovMap> serialchek =MlogApiMapper.selectStockMovementSerial(insMap);
+					
+					//if(){
+						
+						MlogApiMapper.insertMovementSerial(insMap);	
+						
+						
+//					}else{
+//						throw new PreconditionException(AppConstants.FAIL, "Not Found Data");		
+//					}
+					
+					
+//					for (int i = 0; i < serialchek.size(); i++) {
+//						logger.debug("serialchek 값 : {}", serialchek.get(i));
+//					}
+					
+					
+					
+//					if(String.valueOf(reqTransferMList.get(j).get("serialNo")) !=null  && String.valueOf(reqTransferMList.get(j).get("serialNo")) !=""){
+//					if(("Y").equals(String.valueOf(reqTransferMList.get(j).get("serialChek")))){
+						logger.info(" seria 통과222222222");
+						
+//						MlogApiMapper.insertMovementSerial(insMap);	
+//						insSerial=reqTransferMList.get(j);
+//						insSerial.put("serial",insSerial.get("serialNo"));
+//						insSerial.put("delno", deliSeq);
+//						insSerial.put("reqstno", insSerial.get("smoNo"));
+//						insSerial.put("itmcd", insSerial.get("partsCode"));
+//						
+//						logger.info(" serial : {}", insSerial.get("serial"));
+//						logger.info(" delno : {}", insSerial.get("delno"));
+//						logger.info(" reqstno : {}", insSerial.get("reqstno"));
+//						logger.info(" itmcd : {}", insSerial.get("itmcd"));						
+						
+//						logger.info(" serialChek : {}", insSerial.get("serialChek"));
+//						logger.info(" serialNo : {}", insSerial.get("serialNo"));
+//						logger.info(" partsCode : {}", insSerial.get("partsCode"));
 
-//			if (serialList.size() > 0) {
-//
-//				for (int j = 0; j < reqTransferMList.size(); j++) {
-//
-//					Map<String, Object> insSerial = null;
-//
-//					insSerial = (Map<String, Object>) serialList.get(j);
-//
-//					insSerial.put("delno", deliSeq);
-//					insSerial.put("reqstno", formMap.get("reqstno"));
-//					insSerial.put("userId", params.get("userId"));
-//					stockMoveMapper.insertMovementSerial(insSerial);
-//				}
-//			}
+//					}			
+				}			
+		
+			
+			
+			//MlogApiMapper.insertDeliveryStockMovement(insMap);
+			//MlogApiMapper.updateRequestMovement(insMap);
 
 //			stockMoveMapper.insertDeliveryStockMovement(insMap);
 //			stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
