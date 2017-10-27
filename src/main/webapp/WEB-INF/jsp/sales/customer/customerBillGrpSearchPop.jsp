@@ -23,7 +23,7 @@
         });
 	    
 	});
-	
+    
 	function fn_setData(custBillId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
 	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_GRP') {
 	        fn_loadBillingGroup(custBillId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId);
@@ -80,6 +80,11 @@
 	    $('#cntcSearchBtn').click(function() {
 	        fn_getCustomerBillGrpAjax();
 	    });
+        $('#searchWord').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                fn_getCustomerBillGrpAjax();
+            }  
+        });
 	});
 	
     //Get Contact by Ajax

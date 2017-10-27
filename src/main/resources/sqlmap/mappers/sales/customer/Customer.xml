@@ -577,14 +577,13 @@
 		   AND T1.CUST_BILL_CUST_ID = #{custId}
          <if test='searchWord != null and searchWord !=""'>
            AND (UPPER(T1.CUST_BILL_GRP_NO)  LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T2.ADD1)     LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T2.ADD2)     LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T3.POSTCODE) LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T3.STREET)   LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T3.LOCALITY) LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T3.REGION2)  LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T3.REGION1)  LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T3.COUNTRY)  LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T2.ADDR_DTL)          LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T2.STREET)            LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.AREA)              LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.POSTCODE)          LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.CITY)              LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.STATE)             LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.COUNTRY)           LIKE '%' || UPPER(#{searchWord}) || '%'
              OR UPPER(DECODE(T1.CUST_BILL_IS_POST, 1, 'Post', '')||' '||DECODE(T1.CUST_BILL_IS_SMS, 1, 'SMS', '')||' '||DECODE(T1.CUST_BILL_IS_ESTM, 1, 'EStatement', ''))  LIKE '%' || UPPER(#{searchWord}) || '%')
           </if>
 		 ORDER BY T1.CUST_BILL_GRP_NO ASC
