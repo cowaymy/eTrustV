@@ -158,7 +158,7 @@ public class HsManualController {
 	/**
 	 * Services - HS  - HSConfigSettingt List 메인 화면
 	 *
-	 * @param request
+	 * @param params
 	 * @param model
 	 * @return
 	 * @throws Exception
@@ -377,8 +377,8 @@ public class HsManualController {
 	/**
 	 * Search rule book management list
 	 *
+	 * @param params
 	 * @param request
-	 * @param model
 	 * @return
 	 * @throws ParseException 
 	 * @throws Exception
@@ -409,8 +409,8 @@ public class HsManualController {
 	/**
 	 * Search rule book management list
 	 *
+	 * @param params
 	 * @param request
-	 * @param model
 	 * @return
 	 * @throws ParseException 
 	 * @throws Exception
@@ -468,8 +468,8 @@ public class HsManualController {
 	/**
 	 * Search rule book management list
 	 *
+	 * @param params
 	 * @param request
-	 * @param model
 	 * @return
 	 * @throws ParseException 
 	 * @throws Exception
