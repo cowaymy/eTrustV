@@ -46,22 +46,31 @@ $(document).ready(function() {
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(expensSearchGridID, "cellDoubleClick", function(event){
                                    
-         var selectedItems = AUIGrid.getSelectedItems(newGridID);
+         //var selectedItems = AUIGrid.getSelectedItems(newGridID);
                   
-         if(selectedItems.length <= 0) return;
+         //if(selectedItems.length <= 0) return;
          // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
-         var first = selectedItems[0];
+         //var first = selectedItems[0];
          
-         AUIGrid.setCellValue(newGridID , first.rowIndex , "budgetCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCode"));
-         AUIGrid.setCellValue(newGridID , first.rowIndex , "budgetCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCodeName"));
+         //AUIGrid.setCellValue(newGridID , first.rowIndex , "budgetCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCode"));
+         //AUIGrid.setCellValue(newGridID , first.rowIndex , "budgetCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCodeName"));
          
-         AUIGrid.setCellValue(newGridID , first.rowIndex , "expType", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expType"));
-         AUIGrid.setCellValue(newGridID , first.rowIndex , "expTypeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expTypeName"));
+         //AUIGrid.setCellValue(newGridID , first.rowIndex , "expType", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expType"));
+         //AUIGrid.setCellValue(newGridID , first.rowIndex , "expTypeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expTypeName"));
          
-         AUIGrid.setCellValue(newGridID , first.rowIndex , "glAccCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCode"));
-         AUIGrid.setCellValue(newGridID , first.rowIndex , "glAccCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCodeName"));
+         //AUIGrid.setCellValue(newGridID , first.rowIndex , "glAccCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCode"));
+         //AUIGrid.setCellValue(newGridID , first.rowIndex , "glAccCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCodeName"));
          
-         fn_setPopExpType(AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expType"), AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expTypeName"));
+        $("#search_budgetCode").val(event.item.budgetCode);
+        $("#search_budgetCodeName").val(event.item.budgetCodeName);
+        
+        $("#search_expType").val(event.item.expType);
+        $("#search_expTypeName").val(event.item.expTypeName);
+        
+        $("#search_glAccCode").val(event.item.glAccCode);
+        $("#search_glAccCodeName").val(event.item.glAccCodeName);
+        
+         fn_setPopExpType();
          
          $("#expenseTypeSearchPop").remove();
     });
@@ -108,6 +117,12 @@ function fn_selectExpensePopListAjax() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="expPopSForm" name="expPopSForm">
+<input type="hidden" id="search_budgetCode">
+<input type="hidden" id="search_budgetCodeName">
+<input type="hidden" id="search_expType">
+<input type="hidden" id="search_expTypeName">
+<input type="hidden" id="search_glAccCode">
+<input type="hidden" id="search_glAccCodeName">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
