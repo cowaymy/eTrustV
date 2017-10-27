@@ -483,7 +483,7 @@ public class LogisticsApiController {
 
 		List<StockTransferReqStatusMListDto> hList = new ArrayList<>();
 		for (int i = 0; i < headerList.size(); i++) {
-			LOGGER.debug("headerList 값 : {}", headerList.get(i));
+			LOGGER.debug("Request Status headerList1111 값 : {}", headerList.get(i));
 		}
 
 		for (int i = 0; i < headerList.size(); i++) {
@@ -492,6 +492,7 @@ public class LogisticsApiController {
 
 			for (int j = 0; j < hList.size(); j++) {
 				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				tmpMap.put("searchStatus", params.get("searchStatus"));
 				List<EgovMap> reqParts = MlogApiService.getStockTransferReqStatusDList(tmpMap);
 
 				List<StockTransferReqStatusDListDto> partsList = reqParts.stream()
@@ -672,6 +673,15 @@ public class LogisticsApiController {
 
 		for (int i = 0; i < stockTransferGIMList.size(); i++) {
 			LOGGER.debug("stockTransferGIMList    값 : {}", stockTransferGIMList.get(i));
+			List<Map<String, Object>>map = new ArrayList<>();
+			
+			for (StockTransferConfirmGiMForm stockTransferGIM : stockTransferConfirmGiMForm) {
+				
+			}
+			
+//			for (int j = 0; j < List<Map<String, Object>> stockTransferGIMList.get(i).get(i).size(); j++) {
+//				
+//			}
 		}
 
 		MlogApiService.stockMovementReqDelivery(stockTransferGIMList);
