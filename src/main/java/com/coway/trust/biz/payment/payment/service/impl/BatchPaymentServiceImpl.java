@@ -65,20 +65,30 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public int saveConfirmBatch(Map<String, Object> params) {
 		EgovMap  paymentMs = batchPaymentMapper.selectBatchPaymentMs(params);
-		int result = 0;
+		int insResult = 0;
+		int callResult = -1;
+		int returnResult = 0;
 		
 		if(paymentMs != null){
 			if(String.valueOf(paymentMs.get("batchStusId")).equals("1") && String.valueOf(paymentMs.get("cnfmStusId")).equals("44")){
 				
-				result = batchPaymentMapper.saveConfirmBatch(params);
+				insResult = batchPaymentMapper.saveConfirmBatch(params);
 				
 				if(String.valueOf(paymentMs.get("batchPayType")).equals("96") || String.valueOf(paymentMs.get("batchPayType")).equals("97")){
 					//CALL PROCEDURE
 					batchPaymentMapper.callCnvrBatchPay(params);
+					callResult=Integer.parseInt(String.valueOf(params.get("p1")));
 				}
 			}
 		}
-		return result;
+		
+		if(insResult > 0 && callResult > -1){
+			returnResult = 1;
+		}else{
+			returnResult = 0;
+		}
+		
+		return returnResult;
 	}
 
 	@Override
