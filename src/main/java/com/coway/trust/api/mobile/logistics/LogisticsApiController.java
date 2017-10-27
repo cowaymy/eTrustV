@@ -76,10 +76,8 @@ import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatus
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockBarcodeListVo;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockNoneBarcodeListVo;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.util.Precondition;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -110,8 +108,8 @@ public class LogisticsApiController {
 			LOGGER.debug("RDCStockList    값 : {}", RDCStockList.get(i));
 
 		}
-		
-		if (RDCStockList.isEmpty()){
+
+		if (RDCStockList.isEmpty()) {
 			throw new PreconditionException(AppConstants.FAIL, "Not Found Data");
 		}
 
@@ -637,12 +635,11 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(list);
 	}
-	
+
 	/**
 	 * 인서트 부분 추가
 	 */
-	
-	
+
 	@ApiOperation(value = "Inventory Status Display - Request Transfer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryReqTransfer", method = RequestMethod.POST)
 	public void inventoryReqTransfer(@RequestBody List<InventoryReqTransferMForm> inventoryReqTransferMForms)
@@ -662,84 +659,55 @@ public class LogisticsApiController {
 
 		// return ResponseEntity.ok(HeartDto.create(transactionId));
 	}
-	
+
 	@ApiOperation(value = "Stock Transfer - Confirm GI Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stockTransferConfirmGI", method = RequestMethod.POST)
 	public void stockTransferConfirmGIReq(@RequestBody List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm)
 			throws Exception {
-		
-		
-		/*List<Map<String, Object>> stockTransferGIMList = new ArrayList<>();
-		for (StockTransferConfirmGiMForm stockTransferGIM : stockTransferConfirmGiMForm) {
-			stockTransferGIMList.addAll(stockTransferGIM.createMaps(stockTransferGIM));
-		}
 
-		for (int i = 0; i < stockTransferGIMList.size(); i++) {
-			LOGGER.debug("stockTransferGIMList    값 : {}", stockTransferGIMList.get(i));
-			List<Map<String, Object>>map = new ArrayList<>();
-			
-		}
+		Boolean bool = false;
 
-		MlogApiService.stockMovementReqDelivery(stockTransferGIMList);
-
-		// return ResponseEntity.ok(HeartDto.create(transactionId));*/
-		if (!stockTransferConfirmGiMForm.isEmpty() && stockTransferConfirmGiMForm.size() > 0){
+		if (!stockTransferConfirmGiMForm.isEmpty() && stockTransferConfirmGiMForm.size() > 0) {
 			// 1. serialcheck 61,62,63 table search
-			try {
-        		for (int i = 0 ; i < stockTransferConfirmGiMForm.size() ; i++){
-        			List<StockTransferConfirmGiDForm> list = ((StockTransferConfirmGiMForm)stockTransferConfirmGiMForm.get(i)).getStockTransferConfirmGiDetail();
-        			for (int j = 0 ; j < list.size() ; j++){
-        				//serial checkLogic add
-        				StockTransferConfirmGiDForm scdf = list.get(j);
-        				System.out.println("692Line :::: " + scdf.getSerialNo());
-        				
-        				if (j == 2 && 1 != 2){
-        					throw new PreconditionException(AppConstants.FAIL, "Serial check!!!");
-        				}
-        			}
-        		}
-        		// 1 end
-        		
-        		System.out.println("703Line :::: ");
-        		// Delivery no create;
-        		
-        		String delno = "del1234567890";
-        		// 2. insert ,54 , 55 , 61 ,56update start
-        		for (int i = 0 ; i < stockTransferConfirmGiMForm.size() ; i++){
-        			StockTransferConfirmGiMForm scgmf = stockTransferConfirmGiMForm.get(i);
-        			Map<String , Object> dmap = new HashMap();
-        			
-        			// 55 insert
-        			
-        			//System.out.println("687Line ::: " + scmf.getPartsId());
-        			List<StockTransferConfirmGiDForm> list = scgmf.getStockTransferConfirmGiDetail();
-        			//System.out.println("689Line ::: " + list.size());
-        			
-        			for (int j = 0 ; j < list.size() ; j++){
-        				//serial checkLogic add
-        				StockTransferConfirmGiDForm scgdf = list.get(j);
-        				//61insert
-        				
-        				System.out.println("692Line :::: " + scgdf.getSerialNo());
-        			}
-        			
-        			if (i == 0){
-        				// 54insert;
-        			}
-        		}
-        		// 2 end
-			}catch(Exception ex){
-				
+			// try {
+			Map<String, Object> chekMap = new HashMap();
+			for (int i = 0; i < stockTransferConfirmGiMForm.size(); i++) {
+				chekMap.put("userId", ((StockTransferConfirmGiMForm) stockTransferConfirmGiMForm.get(i)).getUserId());
+				chekMap.put("partsCode",
+						((StockTransferConfirmGiMForm) stockTransferConfirmGiMForm.get(i)).getPartsCode());
+				List<StockTransferConfirmGiDForm> list = ((StockTransferConfirmGiMForm) stockTransferConfirmGiMForm
+						.get(i)).getStockTransferConfirmGiDetail();
+				for (int j = 0; j < list.size(); j++) {
+					// serial checkLogic add
+					// StockTransferConfirmGiDForm scdf = list.get(j);
+					// System.out.println("692Line :::: " + scdf.getSerialNo());
+					StockTransferConfirmGiDForm form = list.get(j);
+
+					chekMap.put("serialNo", form.getSerialNo());
+
+					Map<String, Object> serialChek = MlogApiService.selectStockMovementSerial(chekMap);
+
+					LOGGER.debug("CHECK62    값 : {}", serialChek.get("CHECK62"));
+					LOGGER.debug("CHECK63    값 : {}", serialChek.get("CHECK63"));
+
+					if ("Y".equals(serialChek.get("CHECK62")) && "Y".equals(serialChek.get("CHECK63"))) {
+						// bool=true;
+						LOGGER.debug("제대로된 시리얼입니다!!! ");
+					} else {
+						LOGGER.debug("제대로된 시리얼이 아닙니다!!!  ");
+						// bool=false;
+						throw new PreconditionException(AppConstants.FAIL, "Please check the serial.");
+					}
+
+				}
 			}
-    		
-		}else{
+
+			MlogApiService.stockMovementReqDelivery(stockTransferConfirmGiMForm);
+
+		} else {
 			throw new PreconditionException(AppConstants.FAIL, "No Data");
 		}
-		
-	}
-	
-	
 
-	
+	}
 
 }
