@@ -61,6 +61,8 @@ $(document).ready(function() {
          AUIGrid.setCellValue(newGridID , first.rowIndex , "glAccCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCode"));
          AUIGrid.setCellValue(newGridID , first.rowIndex , "glAccCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCodeName"));
          
+         fn_setPopExpType(AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expType"), AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expTypeName"));
+         
          $("#expenseTypeSearchPop").remove();
     });
     
