@@ -137,7 +137,8 @@
 									       HSM.STUS_CODE_ID STUS_CODE_ID,
 									       EXTENT2.code,
                                             sys064.CT_BRNCH_CODE,
-                                          SOM.SALES_ORD_ID AS SALES_ORD_ID
+                                          SOM.SALES_ORD_ID AS SALES_ORD_ID,
+                                            sys064.CODY_MANGR_USER_ID
                                 FROM SAL0001D SOM
                                         ,SAL0029D C
                                         ,SYS0013M CORPTYPE 
@@ -164,8 +165,11 @@
                                <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
                                       AND SOM.SALES_ORD_NO = #{ManuaSalesOrder}
                                </if>
-                               <if test="ManualCustomer != null and ManualCustomer != ''">
+                               <if test="ManualCustomer != null and manualCustomer != ''">
                                       AND c.CUST_ID = #{ManualCustomer}
+                               </if>
+                               <if test="manualCustomer != null and manualCustomer != ''">
+                                      AND c.CUST_ID = #{manualCustomer}
                                </if>
 		                        <if test="saleOrdListSp != null and saleOrdListSp != '' ">
 		                            AND SOM.SALES_ORD_NO IN
@@ -1761,7 +1765,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 							                     WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.NAME
 							                ELSE ''
 							                   END C3  ,
-							                (Extent4.SETL_DT) C4  ,
+							                trunc(Extent4.SETL_DT) C4,
 							                Extent2.CONFIG_SETT_INS CONFIG_SETT_INS  ,
 							                Extent2.CONFIG_SETT_BS CONFIG_SETT_BS  ,
 							                Extent2.CONFIG_SETT_AS CONFIG_SETT_AS  ,
