@@ -186,7 +186,16 @@ function fn_setPopSupplier() {
     $("#bankAccNo").val($("#search_bankAccNo").val());
 }
 
-
+function fn_setPopExpType() {
+	AUIGrid.setCellValue(newGridID , selectRowIdx , "budgetCode", $("#search_budgetCode").val());
+    AUIGrid.setCellValue(newGridID , selectRowIdx , "budgetCodeName", $("#search_budgetCodeName").val());
+    
+    AUIGrid.setCellValue(newGridID , selectRowIdx , "expType", $("#search_expType").val());
+    AUIGrid.setCellValue(newGridID , selectRowIdx , "expTypeName", $("#search_expTypeName").val());
+    
+    AUIGrid.setCellValue(newGridID , selectRowIdx , "glAccCode", $("#search_glAccCode").val());
+    AUIGrid.setCellValue(newGridID , selectRowIdx , "glAccCodeName", $("#search_glAccCodeName").val());
+}
 
 function fn_setKeyInDate() {
     var today = new Date();

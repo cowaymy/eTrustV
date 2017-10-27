@@ -51,6 +51,7 @@ var myColumnLayout = [ {
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
+        	selectRowIdx = rowIndex;
             fn_expenseTypeSearchPop();
             }
         },
