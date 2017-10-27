@@ -43,5 +43,35 @@
     WHERE MEM_ID = #{memId}
 </update>
 
-
+<select id="selectCTAreaSubGroupList" parameterType="Map" resultType="egovMap">
+     SELECT A.AREA_ID,
+         B.AREA,
+         B.CITY,
+         B.POSTCODE,
+         B.STATE,
+         A.REQST_NO,
+         A.PRIOD_FROM,
+         A.PRIOD_TO,
+         CASE WHEN (A.LOC_TYPE='L') THEN 'Local' 
+         WHEN (A.LOC_TYPE='O') THEN 'OutStation'
+         ELSE ''
+         END LOC_TYPE,
+         A.SVC_WEEK,
+         A.CT_SUB_GRP
+    FROM ORG0019M A INNER JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
+   WHERE A.BRNCH_TYPE = 43
+     AND A.AVAIL_FLAG = 'Y'
+   AND B.CT_BRNCH_CODE=#{dscCode} 
+ORDER BY CT_SUB_GRP
+</select>
+<update id="insertCTSubAreaGroup" parameterType="Map">
+    UPDATE ORG0019M SET
+		PRIOD_FROM =TO_DATE(#{priodFrom},'YYYY/MM/DD'),
+		PRIOD_TO = TO_DATE(#{priodTo},'YYYY/MM/DD'),
+		LOC_TYPE = #{locType},
+		SVC_WEEK = #{serviceWeek}
+	WHERE AREA_ID = #{areaId} 
+	AND BRNCH_TYPE = 43
+	AND AVAIL_FLAG = 'Y'
+</update> 
 </mapper>
