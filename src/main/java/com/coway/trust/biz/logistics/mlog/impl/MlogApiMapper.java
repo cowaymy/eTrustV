@@ -104,6 +104,8 @@ public interface MlogApiMapper {
 	
 	void updateRequestMovement(Map<String, Object> tmpMap);
 	
-	List<EgovMap> selectStockMovementSerial(Map<String, Object> params);
+	Map<String, Object> selectStockMovementSerial(Map<String, Object> params);
+	
+	void StockMovementIssue(Map<String, Object> formMap);
 	
 }
