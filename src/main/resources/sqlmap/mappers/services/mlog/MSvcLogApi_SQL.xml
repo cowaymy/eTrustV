@@ -76,6 +76,12 @@
                                 ,null as need_Filter
                                 ,null as nextAppointment_Date
                                 ,null as nextAppointment_Time
+                                ,null as appType
+                                ,null as salesPromotion
+                                ,null as bankCode
+                                ,null as dscCode
+                                ,null as rcCode
+                                ,null as failReasonCode
 						  FROM SVC0008D SV8
 						       INNER JOIN SAL0001D S01
 						          ON S01.SALES_ORD_ID = SV8.SALES_ORD_ID
