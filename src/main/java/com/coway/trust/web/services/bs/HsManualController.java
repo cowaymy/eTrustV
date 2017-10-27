@@ -259,7 +259,7 @@ public class HsManualController {
 		EgovMap  hsDefaultInfo = hsManualService.selectHsInitDetailPop(params);
 		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
 //		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params,sessionVO);//
 		List<EgovMap>  failReasonList = hsManualService.failReasonList(params);
 //		List<EgovMap>  serMemList = hsManualService.serMemList(params);
 
@@ -295,7 +295,7 @@ public class HsManualController {
 		params.put("salesOrderId", params.get("salesOrdId"));
 		
 		basicinfo = hsManualService.selectHsViewBasicInfo(params);
-		orderDetail = orderDetailService.selectOrderBasicInfo(params);
+		orderDetail = orderDetailService.selectOrderBasicInfo(params,sessionVO);
 
 		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
 		List<EgovMap>  failReasonList = hsManualService.failReasonList(params);
