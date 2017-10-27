@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.servicePlanning.impl.CTSubGroupListMapper">
+
+<select id="selectCTSubGroupList" parameterType="Map" resultType="egovMap">
+	SELECT B.CODE,B.NAME,C.MEM_CODE, C.MEM_ID,C.CT_SUB_GRP
+	FROM SYS0005M A 
+	        , (SELECT B.MEM_ID, B.BRNCH, A.CODE, B.NAME
+	                FROM SYS0005M A 
+	                         ,ORG0001D B 
+	                         ,ORG0005D C
+	                where 1=1
+	                    and  A.BRNCH_ID = B.BRNCH 
+	                    and  C.MEM_ID = B.MEM_ID
+	                    AND B.MEM_TYPE=3 AND C.MEM_LVL=2  
+	                    and  A.CODE =#{dscCode} AND ROWNUM=1 ) B  
+	          ,(SELECT B.MEM_ID,B.MEM_CODE,C.CT_SUB_GRP--A.DSC_CODE, B.CTM_NAME, B.CT_CODE, C.SUB_GROUP 
+	                FROM SYS0005M A 
+	                        ,ORG0001D B 
+	                        , ORG0005D C 
+	                where 1=1  
+	                and  A.BRNCH_ID = B.BRNCH
+	                and  C.MEM_ID = B.MEM_ID
+	                AND B.MEM_TYPE=3 
+	                AND C.MEM_LVL=4 
+	                AND B.STUS=1 
+	                AND C.LAST_GRP_CODE =((SELECT C.LAST_GRP_CODE
+                    FROM SYS0005M A 
+                             ,ORG0001D B 
+                             ,ORG0005D C
+                    where 1=1
+                        and  A.BRNCH_ID = B.BRNCH 
+                        and  C.MEM_ID = B.MEM_ID
+                        AND B.MEM_TYPE=3 AND C.MEM_LVL=2  
+                        and  A.CODE =#{dscCode} AND ROWNUM=1))) C
+	where  1=1
+	and A.BRNCH_ID = B.BRNCH  
+</select>
+
+<update id="insertCTSubGroup" parameterType="Map">
+    UPDATE ORG0005D SET 
+    CT_SUB_GRP = #{ctSubGrp}
+    WHERE MEM_ID = #{memId}
+</update>
+
+
+</mapper>
