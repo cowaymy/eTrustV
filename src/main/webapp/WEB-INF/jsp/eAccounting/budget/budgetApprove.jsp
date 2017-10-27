@@ -77,7 +77,7 @@ $(document).ready(function(){
         width : 100
     },{
         dataField : "budgetCode",
-        headerText : '<spring:message code="budget.BudgetCode" />',
+        headerText : '<spring:message code="expense.Activity" />',
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
@@ -426,7 +426,7 @@ function fn_saveApprove(){
 	      <input type="text" id="glAccCodeName" name="glAccCodeName" title="" placeholder="" class=""  readonly="readonly" />
 	      <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop();"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 	</td>
-	<th scope="row"><spring:message code="budget.BudgetCode" /></th>
+	<th scope="row"><spring:message code="expense.Activity" /></th>
 	<td>
 		<input type="hidden" id="budgetCode" name="budgetCode" title="" placeholder="" class="" />
 		<input type="text" id="budgetCodeName" name="budgetCodeName" title="" placeholder="" class=""  readonly="readonly" />

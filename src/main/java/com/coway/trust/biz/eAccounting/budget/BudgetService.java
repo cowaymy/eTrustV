@@ -26,5 +26,7 @@ public interface BudgetService {
 	List<EgovMap> selectFileList(Map<String, Object> params) throws Exception;
 	
 	EgovMap getBudgetAmt(Map<String, Object> params) throws Exception;
+	
+	int selectPlanMaster(Map<String, Object> params) throws Exception;
 
 }

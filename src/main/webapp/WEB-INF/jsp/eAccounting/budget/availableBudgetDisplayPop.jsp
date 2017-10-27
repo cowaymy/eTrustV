@@ -87,9 +87,9 @@ function comma(str) {
     <td><input type="text"  id="costCenterText" name ="costCenterText" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.costCenterText }"/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="budget.BudgetCode" /></th>
+    <th scope="row"><spring:message code="expense.Activity" /></th>
     <td><input type="text"  id="glAccCode" name ="glAccCode" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.glAccCode }" /></td>
-    <th scope="row"><spring:message code="budget.BudgetCode" /> <spring:message code="budget.Description" /></th>
+    <th scope="row"><spring:message code="expense.Activity" /> <spring:message code="budget.Description" /></th>
     <td><input type="text"  id="glAccDesc" name ="glAccDesc" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.glAccDesc }"/></td>
 </tr>
 <tr>

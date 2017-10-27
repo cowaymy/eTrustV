@@ -65,7 +65,7 @@ function f_multiCombo(){
     });
 }
 
-function fn_test(){
+function fn_reload(){
 	 location.reload();
 }
 
@@ -84,7 +84,7 @@ function fn_selectListAjax() {
 //Expense Type Pop 호출
 function fn_expenseTypePop(){
 	
-   Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, fn_test, true, "addExpenseTypePop");
+   Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, null, true, "addExpenseTypePop");
 }
 
 //Expense Edit Pop 호출

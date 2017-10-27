@@ -470,5 +470,23 @@ public class BudgetController {
 		
 	}
 	
+	@RequestMapping(value = "/selectPlanMaster", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> selectPlanMaster (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		int result = budgetService.selectPlanMaster(params);
+		
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(result);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
+	}
+	
 }
 

@@ -307,4 +307,9 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	public List<EgovMap> selectApprovalList( Map<String, Object> params) throws Exception {
 		return budgetMapper.selectApprovalList(params);
 	}
+	
+	@Override
+	public int selectPlanMaster( Map<String, Object> params) throws Exception {
+		return budgetMapper.selectPlanMaster(params);
+	}
 }

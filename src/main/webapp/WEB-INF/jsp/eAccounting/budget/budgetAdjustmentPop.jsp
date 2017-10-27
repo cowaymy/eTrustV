@@ -182,7 +182,15 @@ $(document).ready(function(){
         width : 100
     },{
         dataField : "budgetCode",
-        headerText : '<spring:message code="budget.BudgetCode" />',
+        headerText : '<spring:message code="expense.Activity" />',
+        editable : false,
+        cellMerge : true ,
+        mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+        mergePolicy : "restrict", 
+        width : 130
+    },{
+        dataField : "budgetCodeText",
+        headerText : '<spring:message code="expense.ActivityName" />',
         editable : false,
         cellMerge : true ,
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
@@ -191,6 +199,14 @@ $(document).ready(function(){
     },{
         dataField : "glAccCode",
         headerText : '<spring:message code="expense.GLAccount" />',
+        editable : false,
+        cellMerge : true ,
+        mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+        mergePolicy : "restrict", 
+        width : 130
+    },{
+        dataField : "glAccDesc",
+        headerText : '<spring:message code="expense.GLAccountName" />',
         editable : false,
         cellMerge : true ,
         mergeRef : "budgetAdjType", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
@@ -566,7 +582,7 @@ function fn_AddRow()
     }
     
     if ( $("#sendBudgetCode").val() == "") {
-        var msg = '<spring:message code="budget.BudgetCode" />';
+        var msg = '<spring:message code="expense.Activity" />';
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>", function(){
         	
 	        $("#sendBudgetCodeName").focus();
@@ -626,7 +642,7 @@ function fn_AddRow()
         }
         
         if ( $("#recvBudgetCode").val() == "") {
-            var msg = '<spring:message code="budget.BudgetCode" />';
+            var msg = '<spring:message code="expense.Activity" />';
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>",  function(){
 
                 $("#recvBudgetCodeName").focus();
@@ -659,9 +675,29 @@ function fn_AddRow()
         item2.adjRem  = $("#remark").val();
         item2.signal  = '+';
     }
+    
+    if($("#pAdjustmentType").val() == '01' ){
+	    Common.ajax("POST", "/eAccounting/budget/selectPlanMaster",  $("#pAdjForm").serializeJSON() , function(result)    {
+	    	console.log("성공." + JSON.stringify(result));
+	        console.log("data : " + result.data);
+	    	
+	    	if(result.data < 1 ){
+	    		
+	    		Common.alert("<spring:message code="budget.msg.noBudget" />");
+	    		
+	    	}else{
+	            AUIGrid.addRow(adjPGridID, item, 'last');                    
+	            AUIGrid.addRow(adjPGridID, item2, 'last'); 
+	    	}
+	    	
+	    });
+    }else{
+
+        AUIGrid.addRow(adjPGridID, item, 'last');                    
+        AUIGrid.addRow(adjPGridID, item2, 'last'); 
+    }
+    
    
-      AUIGrid.addRow(adjPGridID, item, 'last');                    
-      AUIGrid.addRow(adjPGridID, item2, 'last'); 
        
                 
 }  
@@ -885,7 +921,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
     </td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="budget.BudgetCode" /></th>
+	<th scope="row"><spring:message code="expense.Activity" /></th>
 	<td>
 		<input type="hidden" id="sendBudgetCode" name="sendBudgetCode" title="" placeholder="" class="" />
 		<input type="text" id="sendBudgetCodeName" name="sendBudgetCodeName" title="" placeholder="" class="" readonly="readonly"/>
@@ -942,7 +978,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	</td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="budget.BudgetCode" /></th>
+	<th scope="row"><spring:message code="expense.Activity" /></th>
 	<td>
 		<input type="hidden" id="recvBudgetCode" name="recvBudgetCode" title="" placeholder="" class="" />
 		<input type="text" id="recvBudgetCodeName" name="recvBudgetCodeName" title="" placeholder="" class="" readonly="readonly"/>

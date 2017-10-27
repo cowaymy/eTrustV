@@ -283,6 +283,10 @@ function fn_saveExpenseType(){
 
         console.log("성공." + JSON.stringify(result));
         console.log("data : " + result.data);
+        
+        fn_reload();
+        
+        $("#addExpenseTypePop").remove();
      }
      , function(jqXHR, textStatus, errorThrown){
     	    try {

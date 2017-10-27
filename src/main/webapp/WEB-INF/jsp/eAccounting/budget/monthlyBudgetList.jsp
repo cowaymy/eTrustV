@@ -63,13 +63,14 @@ function fn_selectListAjax() {
                          $("#stCostCentr").focus();
                  });
                  return;
-             }else if($("#edCostCentr").val() == "" ){
+             }
+             /* else if($("#edCostCentr").val() == "" ){
 
                  Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
                          $("#edCostCentr").focus();
                  });
                  return;
-             }
+             } */
 
              if ($("#stCostCentr").val() != "" && $("#edCostCentr").val() != "")
              {       
@@ -93,12 +94,13 @@ function fn_selectListAjax() {
                            $("#stGlAccCode").focus();
                      });
                      return;
-                 }else if($("#edGlAccCode").val() == "" ){
+                 }
+                 /* else if($("#edGlAccCode").val() == "" ){
                      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
                            $("#edGlAccCode").focus()
                      });
                      return;
-                 }      
+                 }   */    
                  
                  if ($("#stGlAccCode").val() != "" && $("#edGlAccCode").val() != ""){
                      
@@ -111,20 +113,21 @@ function fn_selectListAjax() {
 
        if ($("#stBudgetCode").val() != "" || $("#edBudgetCode").val() != "")
        {
-           var msg = '<spring:message code="budget.BudgetCode" />';
+           var msg = '<spring:message code="expense.Activity" />';
            
            if($("#stBudgetCode").val() == "" ){
                Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
                     $("#stBudgetCode").focus();
                });
                return;
-           }else if($("#edBudgetCode").val() == "" ){
+           }
+           /* else if($("#edBudgetCode").val() == "" ){
 
                Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
                     $("#edBudgetCode").focus();
                });
                return;
-           }  
+           } */  
            
            if ($("#stBudgetCode").val() != "" && $("#edBudgetCode").val() != ""){
                
@@ -200,7 +203,7 @@ function fn_makeGrid(){
                     cellMerge : true 
                 },{
                     dataField : "budgetCode",
-                    headerText : '<spring:message code="budget.BudgetCode" />',
+                    headerText : '<spring:message code="expense.Activity" />',
                     width : 100
                 },{
                     dataField : "budgetCodeText",
@@ -440,7 +443,7 @@ function fn_excelDown(){
     <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop('ed')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row"><spring:message code="budget.BudgetCode" /></th>
+    <th scope="row"><spring:message code="expense.Activity" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p class="search_type">
