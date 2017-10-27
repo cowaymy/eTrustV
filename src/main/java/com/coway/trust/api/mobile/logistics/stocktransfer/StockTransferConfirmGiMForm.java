@@ -14,6 +14,7 @@ public class StockTransferConfirmGiMForm {
 
 	@ApiModelProperty(value = "userId")
 	private String userId;
+
 	@ApiModelProperty(value = "요청일(YYYYMMDD)")
 	private String requestDate;
 
@@ -22,6 +23,24 @@ public class StockTransferConfirmGiMForm {
 
 	@ApiModelProperty(value = "''GI' 고정값")
 	private String reqStatus;
+
+	@ApiModelProperty(value = "SMO item no")
+	private int smoNoItem;
+
+	@ApiModelProperty(value = "부품코드")
+	private String partsCode;
+
+	@ApiModelProperty(value = "부품 id")
+	private int partsId;
+
+	@ApiModelProperty(value = "부품 sn")
+	private String serialNo;
+
+	@ApiModelProperty(value = "요청수량")
+	private int requestQty;
+
+	@ApiModelProperty(value = "부품 이름")
+	private String partsName;
 
 	@ApiModelProperty(value = "InventoryReqTransferDetail")
 	private List<StockTransferConfirmGiDForm> stockTransferConfirmGiDetail;
@@ -35,12 +54,7 @@ public class StockTransferConfirmGiMForm {
 			for (StockTransferConfirmGiDForm dtl : stockTransferConfirmGiDetail) {
 				map = BeanConverter.toMap(stockTransferConfirmGiMForm, "stockTransferConfirmGiDetail");
 				// heartDtails
-				map.put("smoNoItem", dtl.getSmoNoItem());
-				map.put("partsCode", dtl.getPartsCode());
-				map.put("partsId", dtl.getPartsId());
-				map.put("serialNo", dtl.getSerialNo());
-				map.put("requestQty", dtl.getRequestQty());
-				map.put("partsName", dtl.getPartsName());
+				map.put("SerialNo", dtl.getSerialNo());
 
 				list.add(map);
 			}
@@ -78,6 +92,54 @@ public class StockTransferConfirmGiMForm {
 
 	public void setReqStatus(String reqStatus) {
 		this.reqStatus = reqStatus;
+	}
+
+	public int getSmoNoItem() {
+		return smoNoItem;
+	}
+
+	public void setSmoNoItem(int smoNoItem) {
+		this.smoNoItem = smoNoItem;
+	}
+
+	public String getPartsCode() {
+		return partsCode;
+	}
+
+	public void setPartsCode(String partsCode) {
+		this.partsCode = partsCode;
+	}
+
+	public int getPartsId() {
+		return partsId;
+	}
+
+	public void setPartsId(int partsId) {
+		this.partsId = partsId;
+	}
+
+	public String getSerialNo() {
+		return serialNo;
+	}
+
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
+	}
+
+	public int getRequestQty() {
+		return requestQty;
+	}
+
+	public void setRequestQty(int requestQty) {
+		this.requestQty = requestQty;
+	}
+
+	public String getPartsName() {
+		return partsName;
+	}
+
+	public void setPartsName(String partsName) {
+		this.partsName = partsName;
 	}
 
 	public List<StockTransferConfirmGiDForm> getStockTransferConfirmGiDetail() {

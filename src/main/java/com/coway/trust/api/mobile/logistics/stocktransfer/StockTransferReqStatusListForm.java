@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "StockTransferReqStatusListForm", description = "ReturnOnHandStockListForm")
 public class StockTransferReqStatusListForm {
 
-	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100337", example = "T010")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100337,T010", example = "T010")
 	private String userId;
 
 	@ApiModelProperty(value = "조회시작날짜 (YYYYMMDD) 예) 20170916", example = "28092017")

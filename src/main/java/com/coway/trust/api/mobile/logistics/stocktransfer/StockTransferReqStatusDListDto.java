@@ -30,6 +30,17 @@ public class StockTransferReqStatusDListDto {
 	@ApiModelProperty(value = "부품 sn")
 	private String serialNo;
 
+	@ApiModelProperty(value = "바코드 대상 여부(Y 또는 공백)")
+	private String barcodeChkYN;
+
+	public String getBarcodeChkYN() {
+		return barcodeChkYN;
+	}
+
+	public void setBarcodeChkYN(String barcodeChkYN) {
+		this.barcodeChkYN = barcodeChkYN;
+	}
+
 	public static StockTransferReqStatusDListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, StockTransferReqStatusDListDto.class);
 	}

@@ -27,7 +27,7 @@ public class StockTransferReqStatusMListDto {
 	private String reqDate;
 
 	@ApiModelProperty(value = "Location ID")
-	private int rdcCode;
+	private String rdcCode;
 
 	public List<StockTransferReqStatusDListDto> getPartsList() {
 		return partsList;
@@ -83,11 +83,11 @@ public class StockTransferReqStatusMListDto {
 		this.reqDate = reqDate;
 	}
 
-	public int getRdcCode() {
+	public String getRdcCode() {
 		return rdcCode;
 	}
 
-	public void setRdcCode(int rdcCode) {
+	public void setRdcCode(String rdcCode) {
 		this.rdcCode = rdcCode;
 	}
 
