@@ -3,6 +3,7 @@ package com.coway.trust.biz.services.bs.impl;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,17 +48,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	@Override
 	public List<EgovMap> selectHsManualList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-//		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
 		
 		if(params.get("ManuaMyBSMonth") != null) {
 				StringTokenizer str1 = new StringTokenizer(params.get("ManuaMyBSMonth").toString());
-        //		while (str1.hasMoreElements()) { 
-        ////	         String result = str1.nextElement().toString();  //공백으로 자를시 사용
-        //	         String result = str1.nextToken("/");            //특정문자로 자를시 사용
-        //	         System.out.println("결과 : " + result +", 사이즈 :"+result.length()); 
-        //		}
-        
-        		
         		
         		for(int i =0; i <= 1 ; i++) {
         			str1.hasMoreElements();
@@ -90,32 +83,6 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		// TODO Auto-generated method stub
 		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
 		StringTokenizer str1 = new StringTokenizer(params.get("myBSMonth").toString());
-		
-//		while (str1.hasMoreElements()) { 
-////	         String result = str1.nextElement().toString();  //공백으로 자를시 사용
-//	         String result = str1.nextToken("/");            //특정문자로 자를시 사용
-//	         System.out.println("결과 : " + result +", 사이즈 :"+result.length()); 
-//		}
-
-		
-		
-//		for(int i =0; i <= 1 ; i++) {
-//			str1.hasMoreElements();
-//			String result = str1.nextToken("/");            //특정문자로 자를시 사용
-//			
-//			logger.debug("iiiii: {}", i);
-//			
-//			if(i==0){
-//				params.put("myBSMonth", result);
-//				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
-//			}else{
-//				params.put("myBSYear", result);
-//				logger.debug("myBSYear : {}", params.get("myBSYear"));
-//			}
-//			
-//			
-//		}
-		
 		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
 		
 		return hsManualMapper.selectHsAssiinlList(params);
@@ -685,6 +652,86 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	public List<EgovMap> selectHistoryHSResult(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return hsManualMapper.selectHistoryHSResult(params);
+	}
+
+
+
+	@Override
+	public EgovMap selectConfigBasicInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectConfigBasicInfo(params);
+	}
+
+
+
+	@Override
+	public int updateHsConfigBasic(Map<String, Object> params, SessionVO sessionVO) {
+		// TODO Auto-generated method stub
+		
+		int cnt =0;
+		
+		LinkedHashMap  hsBasicmap = (LinkedHashMap)  params.get("hsResultM");
+		
+		logger.debug("hsResultM services ===>"+params);  
+		EgovMap selectConfigBasicInfoYn = hsManualMapper.selectConfigBasicInfoYn(hsBasicmap);
+		
+		
+		if(selectConfigBasicInfoYn.size() > 0) {
+			Map<String, Object> sal0090 = new HashMap<String, Object>(); 
+
+			
+//			sal0090.put("BSGen", hsBasicmap.get("BSGen"));
+			sal0090.put("srvConfigId", selectConfigBasicInfoYn.get("srvConfigId"));
+			sal0090.put("cmbServiceMem", hsBasicmap.get("cmbServiceMem"));
+			sal0090.put("lstHSDate", hsBasicmap.get("lstHSDate"));
+			sal0090.put("remark", hsBasicmap.get("remark"));
+			sal0090.put("srvBsWeek", hsBasicmap.get("srvBsWeek"));
+			sal0090.put("SrvUpdateAt", sessionVO.getUserId());
+//			sal0090.put("SrvUpdateAt", SYSDATE);
+			
+			cnt = hsManualMapper.updateHsConfigBasic(sal0090);
+            
+            
+            
+	          //SrvConfigSetting --> Installation : 281            
+            List<EgovMap> configSettingMap = hsManualMapper.selectConfigSettingYn(hsBasicmap);
+
+            if(configSettingMap.size()>0){
+            	for(int i=0; i< configSettingMap.size(); i++){
+            		
+            		Map<String, Object> sal0089 = configSettingMap.get(i);
+            		
+            			if(hsBasicmap.get("settIns").equals(1)){
+            				sal0089.put("srvSettStusId", 1);
+            			}else {
+            				sal0089.put("srvSettStusId", 8);
+            			}
+            		
+            			if(hsBasicmap.get("settHs").equals(1)){
+            				sal0089.put("srvSettStusId", 1);
+            			}else {
+            				sal0089.put("srvSettStusId", 8);
+            			}
+            			
+            			if(hsBasicmap.get("settAs").equals(1)){
+            				sal0089.put("srvSettStusId", 1);
+            			}else {
+            				sal0089.put("srvSettStusId", 8);
+            			}
+
+
+            			sal0089.put("srvSettRem", "");
+            			sal0089.put("srvSettCrtUserId", sessionVO.getUserId());
+
+            		
+            			hsManualMapper.updateHsconfigSetting(sal0089);
+
+            	}
+            }
+		}
+		
+		 
+		 return cnt;
 	}
 	
 	

@@ -2,6 +2,7 @@ package com.coway.trust.web.services.bs;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,8 +27,6 @@ import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.organization.organization.MemberListController;
-import com.google.gson.Gson;
-import com.ibm.icu.util.StringTokenizer;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -33,11 +34,17 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/bs")
 public class HsManualController {
 	private static final Logger logger = LoggerFactory.getLogger(MemberListController.class);
+
 	@Resource(name = "hsManualService")
 	private HsManualService hsManualService;
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
+	
 	
     	@RequestMapping(value = "/initHsManualList.do")
     	public String initBsManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -142,6 +149,42 @@ public class HsManualController {
 
 		
 		return ResponseEntity.ok(bsManagementList);
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Services - HS  - HSConfigSettingt List 메인 화면
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/initHSConfigSettingList.do")
+	public String initHSConfigSettingList(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/bs/hsConfigSetting";
+	}
+	
+	
+	
+	@RequestMapping(value = "/selectHsBasicList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHsBasicList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+		
+		params.put("user_id", sessionVO.getUserId());
+		
+        // 조회.
+		List<EgovMap> hsBasicList = hsManualService.selectHsManualList(params);        
+		
+		//brnch 임시 셋팅
+		for (int i=0 ; i < hsBasicList.size() ; i++){
+			EgovMap record = (EgovMap) hsBasicList.get(i);//EgovMap으로 형변환하여 담는다.
+		}
+
+		return ResponseEntity.ok(hsBasicList);
 	}
 	
 	
@@ -392,6 +435,70 @@ public class HsManualController {
 		return ResponseEntity.ok(message);
 	}	
 	
+	
+
+	
+	
+	@RequestMapping(value = "/hsConfigBasicPop.do	" )
+	public String hsConfigBasicPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+		
+		logger.debug("params : {}", params.toString());
+		params.put("orderNo", params.get("salesOrdId"));
+		
+		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
+		EgovMap configBasicInfo = hsManualService.selectConfigBasicInfo(params);
+		//EgovMap configBasicInfo = hsManualService.selectConfigBasicInfo(params);
+		
+//		EgovMap as_ord_basicInfo = hsManualService.selectOrderBasicInfo(params);
+//		EgovMap asentryInfo =null;
+		
+		model.put("cmbServiceMemList", cmbServiceMemList);
+		model.put("basicInfo", configBasicInfo);   
+
+//		model.put("as_ord_basicInfo", as_ord_basicInfo); 
+//		model.put("AS_NO", (String)params.get("AS_NO"));   
+		
+		return "services/bs/hsConfigBasicPop";
+	} 
+
+	
+	
+	
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws ParseException 
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/saveHsConfigBasic.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveHsConfigBasic(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+		
+		logger.debug("params : {}", params);
+		
+		
+//		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+		LinkedHashMap  hsResultM = (LinkedHashMap)params.get("hsResultM");
+		logger.debug("hsResultM ===>"+hsResultM.toString());  
+		
+		int resultValue = hsManualService.updateHsConfigBasic(params, sessionVO);
+
+		
+		if(resultValue >0 ){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		return ResponseEntity.ok(message);  
+		
+	}	
 	
 	
 }

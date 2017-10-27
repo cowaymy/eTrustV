@@ -52,7 +52,11 @@ public interface HsManualService {
 
 	List<EgovMap> selectFilterTransaction(Map<String, Object> params);
 
-	List<EgovMap> selectHistoryHSResult(Map<String, Object> params);;
+	List<EgovMap> selectHistoryHSResult(Map<String, Object> params);
+
+	EgovMap selectConfigBasicInfo(Map<String, Object> params);
+
+	int updateHsConfigBasic(Map<String, Object> params, SessionVO sessionVO);
 	
 	
 	

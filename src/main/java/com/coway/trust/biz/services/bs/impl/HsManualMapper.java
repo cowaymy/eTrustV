@@ -1,5 +1,6 @@
 package com.coway.trust.biz.services.bs.impl;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,6 +85,18 @@ public interface HsManualMapper {
 	List<EgovMap> selectFilterTransaction(Map<String, Object> params);
 
 	List<EgovMap> selectHistoryHSResult(Map<String, Object> params);
+
+	EgovMap selectConfigBasicInfo(Map<String, Object> params);
+
+	int  updateHsConfigBasic(Map<String, Object> params);
+
+	void insertHsConfigSetting(LinkedHashMap hsBasicmap);
+
+	EgovMap selectConfigBasicInfoYn(Map<String, Object> params);
+
+	List<EgovMap> selectConfigSettingYn(Map<String, Object> params);
+
+	void updateHsconfigSetting(Map<String, Object> sal0089);
 
 
 
