@@ -2,19 +2,19 @@
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 <style type="text/css">
 .my-color-red div{
-    color:#ff0000;
+    color:#ff4800;
 }
 
 .my-color-green div{
-    color:#0000ff;
+    color:#00bd31;
 }
 
 .my-color-pink div{
-    color:#ff087f;
+    color:#f0008d;
 }
 
 .my-color-yellow div{
-    color:#ffff00;
+    color:#e6d406;
 }
 
 .myLinkStyle{
@@ -30,29 +30,34 @@ var payItemGrid;
 var gridPros = {
         editable: false,
         showStateColumn: false,
-        pageRowCount : 5,
+        pageRowCount : 100,
         height:200
 };
 
 var gridProsForMultiRows ={
 		editable : false,
 		showStateColumn:false,
-		pageRowCount:5,
+		pageRowCount:100,
 		height:200,
 		selectionMode : "multipleRows"
 };
 
 var receiveColumnLayout=[
-                {dataField:"itmId", headerText:" ", visible:true},
+                {dataField:"itmId", headerText:" ", visible:false},
                 {dataField:"batchId", headerText:" ", visible:false},
                  {
                 	colSpan : 2,
 			        dataField : "undefined",
 			        headerText : " ",
-			        width: 70,
-			        renderer : {
-			            type : "ButtonRenderer",
-			            labelText : ">",
+			        width: 40,
+			        renderer : 
+                    {
+                        type : "IconRenderer",
+                        iconTableRef :  {
+                            "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right2.gif"// default
+                        },         
+                        iconWidth : 20,
+                        iconHeight : 16,
 			            onclick : function(rowIndex, columnIndex, value, item) {
 			            	//alert(item.itmId);
 			            	Common.ajax("GET", "/payment/selectDocItemPaymentItem.do", {"payItemId" : item.itmId}, function(result) {
@@ -67,13 +72,18 @@ var receiveColumnLayout=[
 			    	    colSpan : -1,
 	                    dataField : "undefined",
 	                    headerText : " ",
-	                    width: 70,
-	                    renderer : {
-	                        type : "ButtonRenderer",
-	                        labelText : "...",
+	                    width: 40,
+	                    renderer : 
+                        {
+                            type : "IconRenderer",
+                            iconTableRef :  {
+                                "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right2.gif"// default
+                            },         
+                            iconWidth : 20,
+                            iconHeight : 16,
 	                        onclick : function(rowIndex, columnIndex, value, item) {
 	                            //alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
-	                            alert(item.itmId);
+	                            
 	                            Common.ajax("GET", "/payment/selectLogItemPaymentItem.do", {"payItemId" : item.itmId}, function(result) {
 	                               console.log(result.length);
 	                               var message = "";
@@ -90,7 +100,7 @@ var receiveColumnLayout=[
 	                	   styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 	                		   if(value == "Incomplete"){
 	                               return "my-color-red";
-	                		   }else if(value == "Complete"){
+	                		   }else if(value == "Completed"){
 	                			   return "my-color-green";
 	                		   }else if(value == "Review"){
 	                			   return "my-color-pink";
@@ -159,10 +169,15 @@ var receiveColumnLayout=[
                             {
                                 dataField : "undefined",
                                 headerText : " ",
-                                width: 70,
-                                renderer : {
-                                    type : "ButtonRenderer",
-                                    labelText : ">",
+                                width : 40,
+                                renderer : 
+                                {
+                                    type : "IconRenderer",
+                                    iconTableRef :  {
+                                        "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right2.gif"// default
+                                    },         
+                                    iconWidth : 20,
+                                    iconHeight : 16,
                                     onclick : function(rowIndex, columnIndex, value, item) {
                                     	var param = {
                                     			"trxId":item.trxId,
@@ -229,14 +244,14 @@ $(document).ready(function(){
 	payItemGrid =GridCommon.createAUIGrid("#pay_item_grid", payItemColumnLayout, null, gridPros);
 	
 	//Issue Bank 조회
-	doGetCombo('/sales/customer/selectAccBank.do', '', '', 'rIssueBank', 'S', '')//selCodeAccBankId(Issue Bank)
-    doGetCombo('/sales/customer/selectAccBank.do', '', '', 'cIssueBank', 'S', '')//selCodeAccBankId(Issue Bank)
+	//doGetCombo('/sales/customer/selectAccBank.do', '', '', 'rIssueBank', 'S', '')//selCodeAccBankId(Issue Bank)
+    //doGetCombo('/sales/customer/selectAccBank.do', '', '', 'cIssueBank', 'S', '')//selCodeAccBankId(Issue Bank)
     
-    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'' , 'rBranch' , 'S', ''); //key-in Branch 생성
-    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'137' , 'cBranch' , 'S', ''); //key-in Branch 생성
+    //doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'' , 'rBranch' , 'S', ''); //key-in Branch 생성
+    //doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'137' , 'cBranch' , 'S', ''); //key-in Branch 생성
     
-    doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'rSetAccount' , 'S', '');
-    doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'cSetAccount' , 'S', '');
+    //doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'rSetAccount' , 'S', '');
+   // doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'cSetAccount' , 'S', '');
     
     fn_rSearch();
     fn_cSearch();
@@ -248,6 +263,15 @@ function fn_rSearch(){
     	AUIGrid.setGridData(receiveListGrid, result);
     });
     $('#rPaymode').attr('disabled', 'true');
+   
+    var str = "";
+    
+    $("#rOnline option:selected").each(function () {   
+        str += $(this).text() + "/";   
+     });
+    
+    var message = $("#rPaymode option:selected").text() + ' ( '+ str.substr(0, str.lastIndexOf("/")) +' )';
+    $("#rTitle").text(message);
     
 }
 
@@ -257,12 +281,25 @@ function fn_cSearch(){
         AUIGrid.setGridData(creditCardGrid, result);
     });
     $('#cPaymode').attr('disabled', 'true');
+    
+    var str = "";
+    
+    $("#cOnline option:selected").each(function () {   
+        str += $(this).text() + "/";   
+     });
+    
+    var message = $("#cPaymode option:selected").text() + ' ( '+ str.substr(0, str.lastIndexOf("/")) +' )';
+    $("#cTitle").text(message);
 }
 
 function fn_save(){
 	var selectedItems = AUIGrid.getSelectedItems(receiveListGrid);
-	$("#savePop").show();
-	$("#totalSelectedItem").text(selectedItems.length);
+	if(selectedItems.length > 0){
+		$("#savePop").show();
+		$("#totalSelectedItem").text(selectedItems.length);
+	}else{
+		Common.alert("No item selected.");
+	}
 }
 
 function fn_confirmSave(){
@@ -271,25 +308,40 @@ function fn_confirmSave(){
     data.checked = selectedItems;
     data.form = [{"remark":$("#pRemark").val(),"statusId":$("#pStatus").val()}];
     Common.ajax("POST", "/payment/saveReceiveList.do", data, function(result) {
-        Common.alert(result.message);
+    	$("#savePop").hide();
+        $("#pRemark").val();
+    	Common.alert(result.message);
         $("#listBox_Log").empty();
     });
 }
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Payment</li>
+    <li>Document Control</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Finance Management</h2>
 </aside><!-- title_line end -->
-
-
-<article class="acodi_wrap"><!-- acodi_wrap start -->
+<ul class="right_btns">
+        <li><p class="btn_blue"><a href="#">Receive List</a></p></li>
+</ul>
+<aside class="link_btns_wrap mt20"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn type2"><a href="/payment/initSubmissionList.do">Submission List</a></p></li>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+<article class="acodi_wrap mt20"><!-- acodi_wrap start -->
 <dl>
     <dt class="click_add_on on"><a href="#">Receive List Management</a></dt>
     <dd>
@@ -358,6 +410,10 @@ function fn_confirmSave(){
         <th scope="row">Issue Bank</th>
         <td>
         <select id="rIssueBank" name="rIssueBank" class="w100p">
+            <option value="" selected>Choose One</option>
+             <c:forEach var="issueList" items="${issueBank }" varStatus="status">
+                <option value="${issueList.codeId }">${issueList.codeName }</option>
+             </c:forEach>
         </select>
         </td>
     </tr>
@@ -375,6 +431,10 @@ function fn_confirmSave(){
         <th scope="row">Key-In Branch</th>
         <td>
         <select id="rBranch" name="rBranch" class="w100p">
+            <option value="" selected>Choose One</option>
+            <c:forEach var="branch" items="${branchList }" varStatus="status">
+                <option value="${branch.codeId }">${branch.codeName }</option>
+             </c:forEach>
         </select>
         </td>
     </tr>
@@ -422,6 +482,10 @@ function fn_confirmSave(){
         <th scope="row">Settlement Account</th>
         <td colspan="5">
         <select id="rSetAccount" name="rSetAccount" class="w100p">
+            <option value="" selected>Choose One</option>
+            <c:forEach var="crcList" items="${cardComboList }" varStatus="status">
+                <option value="${crcList.accID }">${crcList.codeName }</option>
+            </c:forEach>
         </select>
         </td>
     </tr>
@@ -498,6 +562,10 @@ function fn_confirmSave(){
         <th scope="row">Issue Bank</th>
         <td>
         <select id="cIssueBank" name="cIssueBank" class="w100p">
+            <option value="" selected>Choose One</option>
+             <c:forEach var="issueList" items="${issueBank }" varStatus="status">
+                <option value="${issueList.codeId }">${issueList.codeName }</option>
+             </c:forEach>
         </select>
         </td>
     </tr>
@@ -515,6 +583,12 @@ function fn_confirmSave(){
         <th scope="row">Key-In Branch</th>
         <td>
         <select id="cBranch" name="cBranch" class="w100p">
+            <option value="" selected>Choose One</option>
+            <c:forEach var="branch" items="${branchList }" varStatus="status">
+                <option value="${branch.codeId }" <c:if test="${branch.codeId eq '137' }">selected</c:if>>
+                    ${branch.codeName }
+                </option>
+             </c:forEach>
         </select>
         </td>
     </tr>
@@ -522,6 +596,10 @@ function fn_confirmSave(){
         <th scope="row">Settlement Account</th>
         <td colspan="5">
         <select id="cSetAccount" name="cSetAccount">
+            <option value="" selected>Choose One</option>
+            <c:forEach var="crcList" items="${cardComboList }" varStatus="status">
+                <option value="${crcList.accID }">${crcList.codeName }</option>
+            </c:forEach>
         </select>
         </td>
     </tr>
@@ -539,7 +617,7 @@ function fn_confirmSave(){
 <div class="border_box"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3 class="pt0">WReceive List - Credit Card (Offline) </h3>
+<h3 class="pt0">Receive List - <label id="rTitle" class="pt0"></label> </h3>
 </aside><!-- title_line end -->
 
 <article id="grid_wrap_receive_list" class="grid_wrap"><!-- grid_wrap start -->
@@ -570,7 +648,7 @@ function fn_confirmSave(){
 <div class="border_box"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3 class="pt0">Credit Card (Online/Offline)</h3>
+<h3 class="pt0">Admin Pending List - <label id="cTitle" class="pt0"></label> </h3>
 </aside><!-- title_line end -->
 
 <article id="grid_wrap_credit_card_list" class="grid_wrap"><!-- grid_wrap start -->

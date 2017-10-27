@@ -27,9 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.document.service.FinanceMgmtService;
 import com.coway.trust.biz.payment.payment.service.CommDeductionService;
 import com.coway.trust.biz.payment.payment.service.CommDeductionVO;
+import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
@@ -45,6 +47,12 @@ public class FinanceMgmtController {
 	
 	@Resource(name = "financeMgmtService")
 	private FinanceMgmtService financeMgmtService;
+	
+	@Resource(name = "commonService")
+	private CommonService commonService;
+	
+	@Resource(name = "customerService")
+	private CustomerService customerService;
 
 	
 	/******************************************************
@@ -57,7 +65,21 @@ public class FinanceMgmtController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initFinanceMgmt.do")
-	public String CommissionDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initFinanceMgmt(@RequestParam Map<String, Object> params, ModelMap model) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("groupCode", "CRC");
+		List<EgovMap> cardComboList = commonService.getAccountList(param);
+
+		List<EgovMap> issueBankList = customerService.selectAccBank(params);
+		
+		param.put("groupCode", "1");
+		param.put("separator", "-");
+		List<EgovMap> branchList = commonService.selectBranchList(param);
+				
+		model.addAttribute("cardComboList", cardComboList);	
+		model.addAttribute("issueBank", issueBankList);
+		model.addAttribute("branchList", branchList);
 		return "payment/document/financeMgmt";
 	}
 	
@@ -248,5 +270,16 @@ public class FinanceMgmtController {
 		}
 		
 		return payDocList;
+	}
+	
+	/**
+	 * Submission List초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initSubmissionList.do")
+	public String initSubmissionList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/document/submissionList";
 	}
 }
