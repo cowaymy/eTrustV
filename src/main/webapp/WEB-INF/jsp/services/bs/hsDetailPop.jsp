@@ -20,6 +20,11 @@
         height : "600px" // 창 세로 크기
     };
     
+    
+         function fn_close(){
+         $("#popup_wrap").remove();
+     }
+     
     function createAUIGrid(){
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
@@ -222,9 +227,9 @@
 <header class="pop_header"><!-- pop_header start -->
 
 <h1>HS - New HS Result</h1>
-<<ul class="right_opt">
+<ul class="right_opt">
     <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">Close</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_close()">Close</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
