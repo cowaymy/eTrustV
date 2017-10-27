@@ -20,7 +20,7 @@ public class InventoryReqTransferMForm {
 	@ApiModelProperty(value = "요청 RDC or CD/CT")
 	private String targetLocation;
 
-	@ApiModelProperty(value = "이동유형")
+	@ApiModelProperty(value = "이동유형(UM03)")
 	private String smType;
 
 	@ApiModelProperty(value = "InventoryReqTransferDetail")
