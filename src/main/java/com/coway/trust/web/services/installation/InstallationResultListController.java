@@ -256,13 +256,13 @@ public class InstallationResultListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/addinstallationResultProductDetailPop.do")
-	public String installationResultProductExchangeDetail(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	public String installationResultProductExchangeDetail(@RequestParam Map<String, Object> params, ModelMap mode ,SessionVO sessionVOl) throws Exception {
 		logger.debug("params : {}",params);
 		EgovMap viewDetail = installationResultListService.selectViewDetail(params);
 		//Order Detail Tab
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
-		model.addAttribute("viewDetail", viewDetail);
-		model.addAttribute("orderDetail", orderDetail);
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVOl);
+		mode.addAttribute("viewDetail", viewDetail);
+		mode.addAttribute("orderDetail", orderDetail);
 		
 		// 호출될 화면
 		return "services/installation/addInstallationResultProductDetailPop";

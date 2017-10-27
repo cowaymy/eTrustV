@@ -88,12 +88,12 @@ public class OrderCallListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/addCallResultPop.do")
-	public String insertCallResultPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	public String insertCallResultPop(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) throws Exception {
 		EgovMap orderCall = orderCallListService.getOrderCall(params);
 		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
 		
 		//Order Detail Tab
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVO);
 		logger.debug("orderCall : {}", orderCall);
 		model.addAttribute("callStusCode", params.get("callStusCode"));
 		model.addAttribute("callStusId", params.get("callStusId"));
