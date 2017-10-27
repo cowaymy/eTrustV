@@ -306,25 +306,16 @@ function fn_radioButton(val){
     <th scope="row">Region</th>
     <td>
         <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
         </select>
     </td>
     <th scope="row">City</th>
     <td>
         <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
         </select>
     </td>
     <th scope="row">Town</th>
     <td>
         <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
         </select>
     </td>
 </tr>
@@ -332,9 +323,6 @@ function fn_radioButton(val){
     <th scope="row">Postal Code</th>
     <td>
         <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
         </select>
     </td>
     <th scope="row">Street</th>
@@ -374,9 +362,6 @@ function fn_radioButton(val){
     <th scope="row">Local/Out Station</th>
     <td>
         <select class="multy_select w100p" multiple="multiple">
-            <option value="1">11</option>
-            <option value="2">22</option>
-            <option value="3">33</option>
         </select>
     </td>
     <th scope="row">Status</th>
