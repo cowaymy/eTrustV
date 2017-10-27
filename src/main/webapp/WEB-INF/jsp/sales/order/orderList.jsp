@@ -64,7 +64,7 @@
             fn_orderRequestPop();
         });
         $('#btnSrch').click(function() {
-        	fn_selectListAjax();
+        	if(fn_validSearchList()) fn_selectListAjax();
         });
         $('#btnClear').click(function() {
         	$('#listSearchForm').clearForm();
@@ -94,6 +94,26 @@
         	Common.alert('<b>The program is under development.</b>');
         });
     });
+    
+    function fn_validSearchList() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.isEmpty($('#listOrdNo').val())
+        && FormUtil.isEmpty($('#listCustId').val())
+        && FormUtil.isEmpty($('#listCustName').val())
+        && FormUtil.isEmpty($('#listCustIc').val())) {
+            
+            if(FormUtil.isEmpty($('#listOrdStartDt').val()) || FormUtil.isEmpty($('#listOrdEndDt').val())) {
+                isValid = false;
+                msg += "* Please select order date<br/>";
+            }
+        }
+
+
+        if(!isValid) Common.alert("Order Search" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
+    }
     
     function fn_orderModifyPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
@@ -221,7 +241,7 @@
     <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
     <li><p class="btn_blue"><a id="btnReq" href="#">Request</a></p></li>
     <li><p class="btn_blue"><a id="btnSim" href="#">Simulator</a></p></li>
-	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
