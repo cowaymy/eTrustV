@@ -144,6 +144,11 @@ public class SampleController {
 		return "sample/sampleEmailSMS";
 	}
 
+	@RequestMapping(value = "/sampleEditor.do")
+	public String sampleEditor(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		return "sample/sampleEditor";
+	}
+
 	@RequestMapping(value = "/sendEmail.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> sendEmail(@RequestParam Map<String, Object> params, Model model)
 			throws Exception {
