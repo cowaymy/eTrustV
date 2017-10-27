@@ -76,6 +76,7 @@ public class ExcelDownloadHandler implements ResultHandler<Map<String, Object>> 
 		}
 
 		response.setContentType("application/octet-stream");
+		response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
 		response.setHeader("Content-Disposition", "attachment;filename=" + excelVo.getExcelFilename());
 
 		makeHeaders(values);
