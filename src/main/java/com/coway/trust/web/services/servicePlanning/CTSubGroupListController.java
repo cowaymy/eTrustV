@@ -60,13 +60,30 @@ public class CTSubGroupListController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/selectCTSubGroup", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectTerritoryList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+	@RequestMapping(value = "/selectCTSubGroup.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTSubGroup( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
 		List<EgovMap> ctSubGroupList = CTSubGroupListService.selectCTSubGroupList(params);
 		logger.debug("ctSubGroupList {}", ctSubGroupList);
 		return ResponseEntity.ok(ctSubGroupList);
 	}
+	
+	/**
+	 * Services - Service Planning - Service Group Search
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCTSubAreaGroup.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTSubAreaGroup( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> ctSubAreaGroupList = CTSubGroupListService.selectCTAreaSubGroupList(params);
+		logger.debug("ctSubAreaGroupList {}", ctSubAreaGroupList);
+		return ResponseEntity.ok(ctSubAreaGroupList);
+	}
+	
 	
 	/**
 	 * Services - Service Planning - Service Group - CT SUB GROUP SAVE
@@ -88,6 +105,28 @@ public class CTSubGroupListController {
 		CTSubGroupListService.insertCTSubGroup(udtList);
 		return ResponseEntity.ok(message);
 	}
+	
+	/**
+	 * Services - Service Planning - Service Group - CT SUB GROUP SAVE
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/saveCTSubAreaGroup.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveCTSubAreaGroup(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		ReturnMessage message = new ReturnMessage();
+		
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
+		
+		logger.debug("udtList {}", udtList);
+		CTSubGroupListService.insertCTSubAreaGroup(udtList);
+		return ResponseEntity.ok(message);
+	}
+	
 	
 	/**
 	 * Services - Service Planning - open CT Sub Group - Area ID Maintenance
