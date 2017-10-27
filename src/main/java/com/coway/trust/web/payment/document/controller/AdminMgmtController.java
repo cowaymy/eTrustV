@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.document.service.AdminMgmtService;
 import com.coway.trust.biz.payment.document.service.FinanceMgmtService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -36,6 +37,9 @@ public class AdminMgmtController {
 	@Resource(name = "financeMgmtService")
 	private FinanceMgmtService financeMgmtService;
 	
+	@Resource(name = "commonService")
+	private CommonService commonService;
+	
 	
 	/******************************************************
 	 *  Admin Management
@@ -49,8 +53,12 @@ public class AdminMgmtController {
 	@RequestMapping(value = "/initAdminMgmt.do")
 	public String initDailyCollection(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
-		model.addAttribute("branchId", sessionVO.getUserBranchId());
-		LOGGER.debug("sessionVO : {}", sessionVO.getUserBranchId());
+		params.put("separator", "-");
+		params.put("groupCode", 1);
+		List<EgovMap> codeList = commonService.selectBranchList(params);
+		
+		model.addAttribute("codeList", codeList);
+		model.addAttribute("userBranchId", sessionVO.getUserBranchId());
 		return "payment/document/adminMgmt";
 	}
 	

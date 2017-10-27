@@ -35,9 +35,6 @@ $(document).ready(function(){
 	watingGridID = GridCommon.createAUIGrid("wating_grid_wrap", watingColumnLayout,null,gridPros);
     reviewGridID = GridCommon.createAUIGrid("review_grid_wrap", reviewColumnLayout,null,gridPros);
 	
-	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  , '${branchId}' , 'keyBranchWaiting' , 'S', ''); //key-in Branch 생성
-    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  , '${branchId}' , 'keyBranchReview' , 'S', ''); //key-in Branch 생성
-    
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'bankWaiting', 'S', '')//selCodeAccBankId(Issue Bank)
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'bankReview', 'S', '')//selCodeAccBankId(Issue Bank)
     
@@ -489,7 +486,7 @@ var watingPopColumnLayout = [
             var msg = "";
             for (var key in result) {
                 
-                msg = result[key].c1 + " ( " +result[key].crtDt + " ) says :"+"<br>";
+                msg = "<b>"+result[key].c1 + " ( " +result[key].crtDt + " )</b> says :"+"<br>";
                 
                 if(result[key].rem != null){
                     msg += result[key].rem +"<br>";
@@ -666,7 +663,13 @@ var watingPopColumnLayout = [
 					        </td>
 					        <th scope="row">Key-In Branch</th>
 					        <td>
-					           <select class="w100p disabled"  id="keyBranchWaiting" name="keyBranchWaiting" disabled="disabled"></select>
+					           <select class="w100p disabled"  id="keyBranchWaiting" name="keyBranchWaiting">
+					               <c:forEach var="list" items="${codeList }">
+						               <c:if test="${list.codeId eq userBranchId}">
+	                                    <option value="${list.codeId}" >${list.codeName}</option>
+	                                   </c:if>
+                                   </c:forEach>
+					           </select>
 					        </td>
 					    </tr>
 					    <tr>
@@ -759,7 +762,13 @@ var watingPopColumnLayout = [
 					        </td>
 					        <th scope="row">Key-In Branch</th>
 					        <td>
-					            <select class="w100p disabled"  id="keyBranchReview" name="keyBranchReview" disabled="disabled"></select>
+					            <select class="w100p disabled"  id="keyBranchReview" name="keyBranchReview">
+					               <c:forEach var="list" items="${codeList }">
+                                       <c:if test="${list.codeId eq userBranchId}">
+                                        <option value="${list.codeId}" >${list.codeName}</option>
+                                       </c:if>
+                                   </c:forEach>
+					            </select>
 					        </td>
 					    </tr>
 					    <tr>
