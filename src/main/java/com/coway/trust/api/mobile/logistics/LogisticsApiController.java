@@ -675,13 +675,6 @@ public class LogisticsApiController {
 			LOGGER.debug("stockTransferGIMList    값 : {}", stockTransferGIMList.get(i));
 			List<Map<String, Object>>map = new ArrayList<>();
 			
-			for (StockTransferConfirmGiMForm stockTransferGIM : stockTransferConfirmGiMForm) {
-				
-			}
-			
-//			for (int j = 0; j < List<Map<String, Object>> stockTransferGIMList.get(i).get(i).size(); j++) {
-//				
-//			}
 		}
 
 		MlogApiService.stockMovementReqDelivery(stockTransferGIMList);
