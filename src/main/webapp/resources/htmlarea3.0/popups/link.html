@@ -3,6 +3,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Insert/Modify Link</title>
+    <link rel="stylesheet" type="text/css" href="/resources/css/master.css" />
+    <link rel="stylesheet" type="text/css" href="/resources/css/common.css" />
   <script type="text/javascript" src="popup.js"></script>
   <script type="text/javascript">
     window.resizeTo(400, 200);
@@ -95,48 +97,35 @@ function onCancel() {
 </script>
 
 <style type="text/css">
-html, body {
-  background: ButtonFace;
-  color: ButtonText;
-  font: 11px Tahoma,Verdana,sans-serif;
-  margin: 0px;
-  padding: 0px;
-}
-body { padding: 5px; }
-table {
-  font: 11px Tahoma,Verdana,sans-serif;
-}
-select, input, button { font: 11px Tahoma,Verdana,sans-serif; }
-button { width: 70px; }
-table .label { text-align: right; width: 8em; }
-
-.title { background: #ddf; color: #000; font-weight: bold; font-size: 120%; padding: 3px 10px; margin-bottom: 10px;
-border-bottom: 1px solid black; letter-spacing: 2px;
-}
-
-#buttons {
-      margin-top: 1em; border-top: 1px solid #999;
-      padding: 2px; text-align: right;
-}
+body { padding: 10px; }
 </style>
 
 </head>
 
 <body onload="Init()">
-<div class="title">웹링크 삽입</div>
+
+<aside class="title_line"><!-- title_line start -->
+<h3>웹 링크 삽입</h3>
+</aside><!-- title_line end -->
+
 <form>
-<table border="0" style="width: 100%;">
+<table class="type1">
+  <colgroup>
+      <col style="width:120px" />
+      <col style="width:*" />
+  </colgroup>
+  <tbody>
   <tr>
-    <td class="label">URL:</td>
-    <td><input type="text" id="f_href" style="width: 100%" /></td>
+    <th>URL</th>
+    <td><input type="text" id="f_href" /></td>
   </tr>
   <tr>
-    <td class="label">타이틀 (tooltip):</td>
-    <td><input type="text" id="f_title" style="width: 100%" /></td>
+    <th>타이틀 (tooltip)</th>
+    <td><input type="text" id="f_title"/></td>
   </tr>
   <tr>
-    <td class="label"><span id="f_target_label">타겟:</span></td>
-    <td><select id="f_target">
+    <th><span id="f_target_label">타겟</span></th>
+    <td><select id="f_target" >
       <option value="">None (use implicit)</option>
       <option value="_blank">New window (_blank)</option>
       <option value="_self">Same frame (_self)</option>
@@ -145,12 +134,13 @@ border-bottom: 1px solid black; letter-spacing: 2px;
     <input type="text" name="f_other_target" id="f_other_target" size="10" style="visibility: hidden" />
     </td>
   </tr>
+  </tbody>
 </table>
 
-<div id="buttons">
-  <button type="submit" name="ok" onclick="return onOK();">OK</button>
-  <button type="button" name="cancel" onclick="return onCancel();">Cancel</button>
-</div>
+<ul class="center_btns">
+    <li><p class="btn_blue2" name="ok" onclick="return onOK();"><a href="#">OK</a></p></li>
+    <li><p class="btn_blue2" name="cancel" onclick="return onCancel();"><a href="#">Cancel</a></p></li>
+</ul>
 </form>
 </body>
 </html>

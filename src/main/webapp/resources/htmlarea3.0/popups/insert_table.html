@@ -3,7 +3,9 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>표 삽입</title>
-
+    <link rel="stylesheet" type="text/css" href="/resources/css/master.css" />
+    <link rel="stylesheet" type="text/css" href="/resources/css/common.css" />
+       
 <!-- script type="text/javascript" src="popup.js"></script-->
 <script type="text/javascript">
 //htmlArea v3.0 - Copyright (c) 2002, 2003 interactivetools.com, inc.
@@ -174,139 +176,121 @@ function onCancel() {
 </script>
 
 <style type="text/css">
-html, body {
-  background: ButtonFace;
-  color: ButtonText;
-  font: 11px Tahoma,Verdana,sans-serif;
-  margin: 0px;
-  padding: 0px;
-}
-body { padding: 5px; }
-table {
-  font: 11px Tahoma,Verdana,sans-serif;
-}
-form p {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-.fl { width: 9em; float: left; padding: 2px 5px; text-align: right; }
-.fr { width: 7em; float: left; padding: 2px 5px; text-align: right; }
-fieldset { padding: 0px 10px 5px 5px; }
-select, input, button { font: 11px Tahoma,Verdana,sans-serif; }
-button { width: 70px; }
-.space { padding: 2px; }
-
-.title { background: #ddf; color: #000; font-weight: bold; font-size: 120%; padding: 3px 10px; margin-bottom: 10px;
-border-bottom: 1px solid black; letter-spacing: 2px;
-}
-form { padding: 0px; margin: 0px; }
+body { padding: 10px; }
 </style>
 
 </head>
 
 <body onload="Init()">
 
-<div class="title">표 삽입</div>
+<aside class="title_line"><!-- title_line start -->
+<h3>표 삽입</h3>
+</aside><!-- title_line end -->
 
 <form action="" method="get">
-<table border="0" style="padding: 0px; margin: 0px">
+<table class="type1">
+  <colgroup>
+      <col style="width:85px" />
+      <col style="width:*" />
+      <col style="width:85px" />
+      <col style="width:*" />
+  </colgroup>
   <tbody>
-
   <tr>
-    <td style="width: 4em; text-align: right">행:</td>
-    <td><input type="text" name="rows" id="f_rows" size="5" title="Number of rows" value="2" /></td>
-    <td style="width: 2em; text-align: right"><input type="checkbox" name="thead" id="f_thead" /></td>
-    <td><label for="f_thead">thead 지정</label></td>
-    <td style="width: 3em; text-align: right">너비:</td>
-    <td><input type="text" name="width" id="f_width" size="5" title="Width of the table" value="100" /></td>
-    <td><select size="1" name="unit" id="f_unit" title="Width unit">
-      <option value="%" selected="selected"  >Percent</option>
-      <option value="px"              >Pixels</option>
-      <option value="em"              >Em</option>
-    </select></td>
+    <th>행</th>
+    <td><input type="text" name="rows" id="f_rows" size="5" title="Number of rows" value="2" class="wAuto" /> <label for="f_thead"><input type="checkbox" name="thead" id="f_thead" /><span>thead 지정</span></label></td>
+    <th>너비</th>
+    <td>
+        <input type="text" name="width" id="f_width" size="5" title="Width of the table" value="100" class="wAuto" />
+        <select size="1" name="unit" id="f_unit" title="Width unit" class="wAuto">
+	      <option value="%" selected="selected"  >Percent</option>
+	      <option value="px">Pixels</option>
+	      <option value="em">Em</option>
+	    </select>
+    </td>
   </tr>
   <tr>
-    <td style="width: 4em; text-align: right">열:</td>
-    <td><input type="text" name="cols" id="f_cols" size="5" title="Number of columns" value="4" /></td>
-    <td style="width: 2em; text-align: right"><input type="checkbox" name="th" id="f_th" /></td>
-    <td><label for="f_th">th 지정</label></td>
-    <td style="text-align: right"><input type="checkbox" checked="checked" name="fixed" id="f_fixed" /></td>
-    <td colspan="2"><label for="f_fixed">컬럼 너비 고정</label></td>
+    <th>열</th>
+    <td colspan="3"><input type="text" name="cols" id="f_cols" size="5" title="Number of columns" value="4" class="wAuto" /><label for="f_th"><input type="checkbox" name="th" id="f_th" /><span>th 지정</span></label><label for="f_fixed"><input type="checkbox" checked="checked" name="fixed" id="f_fixed" /><span>컬럼 너비 고정</span></label></td>
   </tr>
   <tr>
-    <td style="width: 4em; text-align: right"><label for="f_caption">caption:</label></td>
-    <td colspan="3"><input type="text" name="caption" id="f_caption" size="20" maxlength="20" title="table caption" value="" /></td>
-    <td style="text-align: right"><input type="checkbox" checked="checked" name="hided" id="f_hided" /></td>
-    <td colspan="2"><label for="f_hided">감추기</label></td>
+    <th><label for="f_caption">caption</label></th>
+    <td colspan="3"><input type="text" name="caption" id="f_caption" size="20" maxlength="20" title="table caption" value="" class="wAuto" /><label for="f_hided"><input type="checkbox" checked="checked" name="hided" id="f_hided" />감추기</label></td>
   </tr>
   <tr>
-    <td style="width: 4em; text-align: right"><label for="f_summary">summary:</label></td>
-    <td colspan="6"><input type="text" name="summary" id="f_summary" size="55" maxlength="55" title="table summary" value="" /></td>
+    <th><label for="f_summary">summary</label></th>
+    <td colspan="3"><input type="text" name="summary" id="f_summary" size="55" maxlength="55" title="table summary" value="" class="wAuto" /></td>
   </tr>
   </tbody>
 </table>
 
-<p />
+<aside class="title_line"><!-- title_line start -->
+<h3>Layout</h3>
+</aside><!-- title_line end -->
 
-<fieldset style="float: left; margin-left: 5px;">
-<legend>Layout</legend>
+<table class="type1">
+  <colgroup>
+      <col style="width:130px" />
+      <col style="width:*" />
+      <col style="width:130px" />
+      <col style="width:*" />
+  </colgroup>
+  <tbody>
+  <tr>
+    <th>Alignment</th>
+    <td>
+		<select size="1" name="align" id="f_align" title="Positioning of this table" class="w100p">
+		  <option value="" selected="selected">Not set</option>
+		  <option value="left">Left</option>
+		  <option value="right">Right</option>
+		  <!-- option value="texttop">Texttop</option>
+		  <option value="absmiddle">Absmiddle</option>
+		  <option value="baseline">Baseline</option>
+		  <option value="absbottom">Absbottom</option>
+		  <option value="bottom">Bottom</option>
+		  <option value="middle">Middle</option>
+		  <option value="top">Top</option-->
+		  <option value="center">Center</option>
+		</select>
+	</td>
+    <th>Border thickness</th>
+    <td><input type="text" name="border" id="f_border" size="5" value="1" title="Leave empty for no border" class="w100p" /></td>
+  </tr>
+  </tbody>
+</table>
 
-<div class="space"></div>
+<aside class="title_line"><!-- title_line start -->
+<h3>Spacing</h3>
+</aside><!-- title_line end -->
 
-<div class="fl">Alignment:</div>
-<select size="1" name="align" id="f_align"
-  title="Positioning of this table">
-  <option value="" selected="selected"                >Not set</option>
-  <option value="left"                         >Left</option>
-  <option value="right"                        >Right</option>
-  <!-- option value="texttop"                      >Texttop</option>
-  <option value="absmiddle"                    >Absmiddle</option>
-  <option value="baseline"                     >Baseline</option>
-  <option value="absbottom"                    >Absbottom</option>
-  <option value="bottom"                       >Bottom</option>
-  <option value="middle"                       >Middle</option>
-  <option value="top"                          >Top</option-->
-  <option value="center"                       >Center</option>
-</select>
+<table class="type1">
+  <colgroup>
+      <col style="width:130px" />
+      <col style="width:*" />
+      <col style="width:130px" />
+      <col style="width:*" />
+  </colgroup>
+  <tbody>
+  <tr>
+    <th>Cell spacing</th>
+    <td><input type="text" name="spacing" id="f_spacing" size="5" value="1" title="Space between adjacent cells" class="w100p" /></td>
+    <th>Cell padding</th>
+    <td><input type="text" name="padding" id="f_padding" size="5" value="1" title="Space between content and border in cell" class="w100p" /></td>
+  </tr>
+  </tbody>
+</table>
 
-<p />
+<ul class="center_btns">
+    <li><p class="btn_blue2" name="ok" onclick="return onOK();"><a href="#">OK</a></p></li>
+    <li><p class="btn_blue2" name="cancel" onclick="return onCancel();"><a href="#">Cancel</a></p></li>
+</ul>
 
-<div class="fl">Border thickness:</div>
-<input type="text" name="border" id="f_border" size="5" value="1"
-title="Leave empty for no border" />
 <!--
 <p />
 
 <div class="fl">Collapse borders:</div>
 <input type="checkbox" name="collapse" id="f_collapse" />
 -->
-<div class="space"></div>
-
-</fieldset>
-
-<fieldset style="float:right; margin-right: 5px;">
-<legend>Spacing</legend>
-
-<div class="space"></div>
-
-<div class="fr">Cell spacing:</div>
-<input type="text" name="spacing" id="f_spacing" size="5" value="1"
-title="Space between adjacent cells" />
-
-<p />
-
-<div class="fr">Cell padding:</div>
-<input type="text" name="padding" id="f_padding" size="5" value="1"
-title="Space between content and border in cell" />
-
-<div class="space"></div>
-
-</fieldset>
-
-<div style="margin-top: 85px; border-top: 1px solid #999; padding: 2px; text-align: right;">
-<button type="button" name="ok" onclick="return onOK();">OK</button>
-<button type="button" name="cancel" onclick="return onCancel();">Cancel</button>
-</div>
 
 </form>
 
