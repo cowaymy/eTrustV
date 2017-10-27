@@ -23,7 +23,7 @@ public interface PettyCashMapper {
 	
 	List<EgovMap> selectRequestList(Map<String, Object> params);
 	
-	String selectNextClmNo();
+	String selectNextRqstClmNo();
 	
 	void insertPettyCashReqst(Map<String, Object> params);
 	
@@ -38,5 +38,15 @@ public interface PettyCashMapper {
 	List<EgovMap> selectExpenseList(Map<String, Object> params);
 	
 	List<EgovMap> selectTaxCodePettyCashFlag();
+	
+	String selectNextExpClmNo();
+	
+	void insertPettyCashExp(Map<String, Object> params);
+	
+	int selectNextExpClmSeq(String clmNo);
+	
+	void insertPettyCashExpItem(Map<String, Object> params);
+	
+	void updateExpTotAmt(Map<String, Object> params);
 
 }

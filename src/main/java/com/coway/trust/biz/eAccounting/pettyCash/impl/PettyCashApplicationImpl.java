@@ -150,7 +150,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 			params.put("fileGroupKey", fileGroupKey);
 		}
 
-		String clmNo = pettyCashService.selectNextClmNo();
+		String clmNo = pettyCashService.selectNextRqstClmNo();
 		params.put("clmNo", clmNo);
 		
 		pettyCashService.insertPettyCashReqst(params);
@@ -213,6 +213,23 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 		}
 		
 		pettyCashService.updatePettyCashReqst(params);
+	}
+
+	@Override
+	public void insertPettyCashExpBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		LOGGER.debug("list.size : {}", list.size());
+		
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		if (list.size() > 0) {
+//			int fileGroupKey = fileService.insertFiles(list, type, Integer.parseInt(params.get("userId").toString()));
+//			params.put("fileGroupKey", fileGroupKey);
+		}
+		
+		// TODO
+		
 	}
 	
 	

@@ -83,9 +83,9 @@ public class PettyCashServiceImpl implements PettyCashService {
 	}
 	
 	@Override
-	public String selectNextClmNo() {
+	public String selectNextRqstClmNo() {
 		// TODO Auto-generated method stub
-		return pettyCashMapper.selectNextClmNo();
+		return pettyCashMapper.selectNextRqstClmNo();
 	}
 
 	@Override
@@ -153,6 +153,36 @@ public class PettyCashServiceImpl implements PettyCashService {
 	public List<EgovMap> selectTaxCodePettyCashFlag() {
 		// TODO Auto-generated method stub
 		return pettyCashMapper.selectTaxCodePettyCashFlag();
+	}
+
+	@Override
+	public String selectNextExpClmNo() {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectNextExpClmNo();
+	}
+
+	@Override
+	public void insertPettyCashExp(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		pettyCashMapper.insertPettyCashExp(params);
+	}
+	
+	@Override
+	public int selectNextExpClmSeq(String clmNo) {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectNextExpClmSeq(clmNo);
+	}
+
+	@Override
+	public void insertPettyCashExpItem(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		pettyCashMapper.insertPettyCashExpItem(params);
+	}
+
+	@Override
+	public void updateExpTotAmt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		pettyCashMapper.updateExpTotAmt(params);
 	}
 	
 	

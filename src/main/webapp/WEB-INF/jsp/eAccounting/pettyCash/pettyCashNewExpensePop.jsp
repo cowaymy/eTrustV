@@ -21,14 +21,6 @@
 var clmNo = "";
 var callType = "${callType}";
 var newGridColumnLayout = [ {
-    dataField : "clmSeq",
-    visible : false, // Color 칼럼은 숨긴채 출력시킴
-    dataType: "numeric",
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return rowIndex + 1;
-    }
-}, {
     dataField : "invcDt",
     headerText : 'Date',
     dataType : "date",
@@ -39,6 +31,22 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "expTypeName",
     headerText : 'Expense<br>Type',
+    style : "aui-grid-user-custom-left",
+    editable : false,
+}, {
+    dataField : "glAccCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "glAccCodeName",
+    headerText : 'GL<br>Account',
+    style : "aui-grid-user-custom-left",
+    editable : false,
+}, {
+    dataField : "budgetCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCodeName",
+    headerText : 'Activity',
     style : "aui-grid-user-custom-left",
     editable : false,
 }, {
@@ -122,7 +130,9 @@ var newGridPros = {
     softRemoveRowMode : false,
     rowIdField : "rowSeq",
     // 헤더 높이 지정
-    headerHeight : 40
+    headerHeight : 40,
+    // 그리드가 height 지정( 지정하지 않으면 부모 height 의 100% 할당받음 )
+    height : 175
 };
 
 var newGridID;
@@ -135,8 +145,10 @@ $(document).ready(function () {
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#expenseType_search_btn").click(fn_PopExpenseTypeSearchPop);
-    $("#tempSave_btn").click();
-    $("#request_btn").click();
+    $("#sSupplier_search_btn").click();
+    $("#clear_btn").click(fn_clearData);
+    $("#add_btn").click(fn_addRow);
+    $("#request_btn").click(fn_approveLinePop);
     
     CommonCombo.make("taxCode", "/eAccounting/pettyCash/selectTaxCodePettyCashFlag.do", null, "", {
         id: "taxCode",
@@ -144,7 +156,7 @@ $(document).ready(function () {
         type:"S"
     });
     
-    fn_setAmtEvent();
+    fn_setEvent();
     
 });
 
@@ -166,17 +178,17 @@ function setInputFile2(){//인풋파일 세팅하기
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="form_newExpense">
+<form action="#" method="post" enctype="multipart/form-data" id="form_newExpense">
 <input type="hidden" id="newCostCenter" name="costCentr">
 <input type="hidden" id="newMemAccId" name="memAccId">
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="expType" name="expType">
-<input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
-<input type="hidden" id="allTotAmt" name="allTotAmt">
+<input type="hidden" id="budgetCode" name="budgetCode">
+<input type="hidden" id="glAccCode" name="glAccCode">
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#">Approval Line</a></p></li>
-    <li><p class="btn_blue2"><a href="#">Request</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="tempSave_btn">Temp. Save</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="request_btn">Request</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -231,17 +243,23 @@ function setInputFile2(){//인풋파일 세팅하기
     <td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" /><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">Invoice Type</th>
     <td>
-    <select class="w100p" id="invcType" name="invcType">
+    <select class="w100p" id="invcType" name="invcType" onchange="javascript:fn_ActionInvcTypeS()">
         <option value="F">Full Tax invoice</option>
         <option value="S">Simplified Tax invoice</option>
     </select>
     </td>
 </tr>
 <tr>
+    <th scope="row">GL Account</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="glAccCodeName" name="glAccCodeName" /></td>
+    <th scope="row">Activity</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="budgetCodeName" name="budgetCodeName" /></td>
+</tr>
+<tr>
     <th scope="row">Supplier</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="supplier" name="supplier"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="supplier" name="supplier"/><a href="#" class="search_btn" id="sSupplier_search_btn" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">GST Registration No</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo" /></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo"/></td>
 </tr>
 <tr>
     <th scope="row">Tax Code</th>

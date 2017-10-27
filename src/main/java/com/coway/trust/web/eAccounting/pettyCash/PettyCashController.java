@@ -402,5 +402,30 @@ public class PettyCashController {
 		return ResponseEntity.ok(taxCodeFlagList);
 	}
 	
+	@RequestMapping(value = "/insertPettyCashExp.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertPettyCashExp(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
+		
+		LOGGER.debug("list.size : {}", list.size());
+		
+		params.put("attachmentList", list);
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		
+		// TODO insert
+		pettyCashApplication.insertPettyCashExpBiz(FileVO.createList(list), FileType.WEB, params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
 	
 }

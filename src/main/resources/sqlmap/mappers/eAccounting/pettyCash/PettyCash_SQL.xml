@@ -127,6 +127,8 @@ SELECT T1.COST_CENTR
    UPDATE FCM0011M
    SET APPV_CASH_AMT = #{appvCashAmt}
        ,CUSTDN_REM = #{custdnRem}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
     WHERE COST_CENTR = #{costCentr} AND CUSTDN = #{memAccId}        
 </update>
 
@@ -233,7 +235,7 @@ AND T.APPV_PRCSS_STUS_CODE IN
 ORDER BY T.CLM_NO, T.REQST_DT         
 </select>
 
-<select id="selectNextClmNo" resultType="String">
+<select id="selectNextRqstClmNo" resultType="String">
 /* pettyCashMapper.selectNextClmNo */
     SELECT    'R1'
        || TO_CHAR (SYSDATE, 'yymm')
@@ -467,5 +469,126 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
     FROM FCM0007C
     WHERE PETTY_CASH_FLAG = 'X'
 </select>
+
+<select id="selectNextExpClmNo" resultType="String">
+/* pettyCashMapper.selectNextClmNo */
+    SELECT    'J2'
+       || TO_CHAR (SYSDATE, 'yymm')
+       || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+    FROM FCM0013M
+    WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+</select>
+
+<insert id="insertPettyCashExp" parameterType="Map">
+/* pettyCashMapper.insertPettyCashExp */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0013M
+   (
+        CLM_NO
+        ,CLM_TYPE
+        ,COST_CENTR
+        ,COST_CENTR_NAME
+        ,MEM_ACC_ID
+        ,CUSTDN_NRIC
+        ,BANK_CODE
+        ,BANK_ACC_NO
+        ,CLM_MONTH
+        ,TOT_AMT
+        ,APPV_PRCSS_NO
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,'J2'
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{memAccId}
+       ,#{custdnNric}
+       ,#{bankCode}
+       ,#{bankAccNo}
+       ,#{clmMonth}
+       ,#{allTotAmt}
+       ,#{appvPrcssNo}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectNextExpClmSeq" parameterType="String" resultType="int">
+/* pettyCashMapper.selectNextExpClmSeq */
+    SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS CLM_SEQ FROM FCM0014D WHERE CLM_NO = #{clmNo}
+</select>
+
+<insert id="insertPettyCashExpItem" parameterType="Map">
+/* pettyCashMapper.insertPettyCashExpItem */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0014D
+   (
+        CLM_NO
+        ,CLM_SEQ
+        ,EXP_TYPE
+        ,EXP_TYPE_NAME
+        ,GL_ACC_CODE
+        ,GL_ACC_CODE_NAME
+        ,BUDGET_CODE
+        ,BUDGET_CODE_NAME
+        ,SUPPLIER
+        ,INVC_TYPE
+        ,INVC_NO
+        ,INVC_DT
+        ,GST_RGIST_NO
+        ,TAX_CODE
+        ,GST_BEFOR_AMT
+        ,GST_AMT
+        ,TOT_AMT
+        ,ATCH_FILE_GRP_ID
+        ,EXP_DESC
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,#{clmSeq}
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{supplier}
+       ,#{invcType}
+       ,#{invcNo}
+       ,#{invcDt}
+       ,#{gstRgistNo}
+       ,#{taxCode}
+       ,#{gstBeforAmt}
+       ,#{gstAmt}
+       ,#{totAmt}
+       ,#{fileGroupKey}
+       ,#{expDesc}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<update id="updateExpTotAmt" parameterType="Map">
+/* pettyCashMapper.updateExpTotAmt */
+    UPDATE FCM0013M 
+    SET TOT_AMT = #{allTotAmt},
+          UPD_DT = SYSDATE,
+          UPD_USER_ID = #{userId} 
+    WHERE CLM_NO = #{clmNo}
+</update>
 
 </mapper>
