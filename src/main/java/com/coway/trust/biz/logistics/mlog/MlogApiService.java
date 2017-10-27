@@ -3,6 +3,7 @@ package com.coway.trust.biz.logistics.mlog;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
 import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -84,7 +85,11 @@ public interface MlogApiService {
 	
 	void saveInvenReqTransfer(List<Map<String, Object>> reqTransferMList);
 	
-	void stockMovementReqDelivery(List<Map<String, Object>> stockTransferGIMList);
+	void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm);
+
+	Map<String, Object> selectStockMovementSerial(Map<String, Object> params);
+	
+	
 	
 	
 
