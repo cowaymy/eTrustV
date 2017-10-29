@@ -277,16 +277,20 @@
 		AND L47.REQST_NO = L48.REQST_NO
 		AND L48.REQST_NO_ITM= L55.DELVRY_NO_ITM
 		AND L54.DELVRY_GI_CMPLT = 'Y'
-    	<if test="searchFromDate !=null and searchFromDate !=''">
-			and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[>=]]>
-			TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'yyyymmdd')
+		<if test="searchFromDate !=null and searchFromDate !=''">
+		AND L54.DELVRY_DT <![CDATA[>=]]>  TO_CHAR (TO_DATE (#{searchFromDate},    'YYYY/MM/DD'),'yyyymmdd') 
 		</if>
 		<if test="searchToDate !=null and searchToDate !=''">
-			and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]>
-			TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'yyyymmdd')
-		</if> 
-<!-- 		  AND TO_CHAR(L47.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[>=]]> TO_CHAR (TO_DATE ('20170820',   'YYYY/MM/DD'),'YYYYMMDD') -->
-<!--           AND TO_CHAR(L47.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[ <= ]]>TO_CHAR (TO_DATE ('20170827',   'YYYY/MM/DD'),'YYYYMMDD') -->
+		AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYY/MM/DD'),'yyyymmdd') 
+		</if>
+<!--     	<if test="searchFromDate !=null and searchFromDate !=''"> -->
+<!-- 			and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[>=]]> -->
+<!-- 			TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'yyyymmdd') -->
+<!-- 		</if> -->
+<!-- 		<if test="searchToDate !=null and searchToDate !=''"> -->
+<!-- 			and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]> -->
+<!-- 			TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'yyyymmdd') -->
+<!-- 		</if>  -->
 		<if test="searchType == 1 ">
 			and l47.pridic_frqncy = 'A'
 		</if>
@@ -319,8 +323,8 @@
 		WHERE l55d.DELVRY_NO = l61d.DELVRY_NO
 		AND l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM
 		AND l55d.ITM_CODE=s26m.STK_CODE
-		<!-- AND l61d.DELVRY_NO =  #{delyno} -->
-		AND l61d.DELVRY_NO in ('DVR20170925151548077305','DVR20170928143958079780','DVR20170928163735999750')
+		AND l61d.DELVRY_NO =  #{delyno} 
+		<!-- AND l61d.DELVRY_NO in ('DVR20170925151548077305','DVR20170928143958079780','DVR20170928163735999750') -->
 		ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
 	</select>
 
