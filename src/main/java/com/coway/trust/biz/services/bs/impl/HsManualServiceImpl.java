@@ -734,6 +734,30 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		 
 		 return cnt;
 	}
+
+
+
+	@Override
+	public EgovMap selectHSOrderView(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectHSOrderView(params);
+	}
+
+
+
+	@Override
+	public List<EgovMap> selectOrderInactiveFilter(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectOrderInactiveFilter(params);
+	}
+
+
+
+	@Override
+	public List<EgovMap> selectOrderActiveFilter(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectOrderActiveFilter(params);
+	}
 	
 	
 	

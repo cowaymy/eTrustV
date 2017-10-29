@@ -98,6 +98,12 @@ public interface HsManualMapper {
 
 	void updateHsconfigSetting(Map<String, Object> sal0089);
 
+	EgovMap selectHSOrderView(Map<String, Object> params);
+
+	List<EgovMap> selectOrderInactiveFilter(Map<String, Object> params);
+
+	List<EgovMap> selectOrderActiveFilter(Map<String, Object> params);
+
 
 
 	

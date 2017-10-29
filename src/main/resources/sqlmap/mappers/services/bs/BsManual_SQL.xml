@@ -1961,5 +1961,167 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                     
                      </select>
                     
-             
+                    
+                    
+                    <select id="selectHSOrderView" parameterType="Map" resultType="egovMap">
+                    SELECT Extent1.ORD_ID ORD_ID  ,
+						       Extent1.ORD_NO ORD_NO  ,
+						       Extent1.ORD_STUS_CODE ORD_STUS_CODE  ,
+						       Extent1.APP_TYPE_CODE APP_TYPE_CODE  ,
+						       Extent1.STOCK_CODE STOCK_CODE  ,
+						       Extent1.STOCK_DESC STOCK_DESC  ,
+						       Extent1.CUST_NAME CUST_NAME  ,
+						       Extent1.CUST_NRIC CUST_NRIC  ,
+<!-- 						       Extent2.INST_ADDR1 INST_ADDR1  ,
+						       Extent2.INST_ADDR2 INST_ADDR2  ,
+						       Extent2.INST_ADDR3 INST_ADDR3  ,
+						       Extent2.INST_CNTY INST_CNTY  , -->
+						       Extent2.INST_STATE INST_STATE  ,
+						       Extent2.INST_AREA INST_AREA  ,
+						<!--        Extent2.INST_POST_CODE INST_POST_CODE  , -->
+						       Extent2.INST_CNT_NAME INST_CNT_NAME  ,
+						       Extent2.INST_CNT_TEL_M INST_CNT_TEL_M  ,
+						       Extent2.INST_CNT_TEL_O INST_CNT_TEL_O  ,
+						       Extent2.INST_CNT_TEL_R INST_CNT_TEL_R  ,
+						       Extent2.LAST_INSTALL_NO LAST_INSTALL_NO  ,
+						       Extent2.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE  ,
+						       Extent2.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME  ,
+						       Extent2.LAST_INSTALL_DT LAST_INSTALL_DT  ,
+						       Extent2.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO  ,
+						       Extent2.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO  ,
+						       Extent2.INSTCT INSTCT  ,
+						       Extent4.STK_ID STK_ID  ,
+						       Extent5.CODE_NAME CODE_NAME  ,
+						       (Extent1.ORD_DT) C1  ,
+						       Extent2.LAST_INSTALL_DT C2  ,
+						       CASE 
+						            WHEN ( NOT ( ( Extent3.ORD_ID IS NULL )
+						              AND ( Extent3.CONFIG_SETT_INS IS NULL )
+						              AND ( Extent3.CONFIG_SETT_BS IS NULL )
+						              AND ( Extent3.CONFIG_SETT_AS IS NULL )
+						              AND ( Extent3.CONFIG_BS_GEN IS NULL )
+						              AND ( Extent3.CONFIG_BS_MEM_ID IS NULL )
+						              AND ( Extent3.CONFIG_BS_WEEK IS NULL )
+						              AND ( Extent3.CONFIG_BS_REM IS NULL )
+						              AND ( Extent3.SRV_MEM_ID IS NULL )
+						              AND ( Extent3.SRV_MEM_NO IS NULL )
+						              AND ( Extent3.SRV_MEM_BILL_NO IS NULL )
+						              AND ( Extent3.SRV_MEM_PAC_ID IS NULL )
+						              AND ( Extent3.SRV_MEM_PAC_CODE IS NULL )
+						              AND ( Extent3.SRV_MEM_PAC_NAME IS NULL )
+						              AND ( Extent3.SRV_MEM_FREQ IS NULL )
+						              AND ( Extent3.SRV_MEM_DUR IS NULL )
+						              AND ( Extent3.SRV_MEM_SALESMAN_CODE IS NULL )
+						              AND ( Extent3.SRV_MEM_SALESMAN_NAME IS NULL ) ) ) THEN Extent3.CONFIG_ID
+						       ELSE 0
+						          END C3  ,
+						       Extent3.SRV_MEM_PAC_NAME SRV_MEM_PAC_NAME  ,
+						       Extent3.SRV_MEM_EXPR_DT SRV_MEM_EXPR_DT  
+						  FROM ( SELECT * 
+						         FROM SAL1006V vOrderBasicInfo ) Extent1
+						         JOIN ( SELECT * 
+						                FROM SAL1010V vOrderInstallationInfo ) Extent2   ON Extent1.ORD_ID = Extent2.ORD_ID
+						         LEFT JOIN ( SELECT * 
+						                     FROM SAL1014V vOrderSrvMemConfigInfo ) Extent3   ON Extent1.ORD_ID = Extent3.ORD_ID
+						         JOIN SYS0026M Extent4   ON ( Extent1.STOCK_CODE = Extent4.STK_CODE )
+						         OR ( ( Extent1.STOCK_CODE IS NULL )
+						         AND ( Extent4.STK_CODE IS NULL ) )
+						         JOIN SYS0013M Extent5   ON Extent4.STK_CTGRY_ID = Extent5.CODE_ID
+					 <![CDATA[ 	 WHERE  Extent1.ORD_ID = #{salesOrdId} AND ROWNUM <= 1 ]]>
+					 
+                    </select>
+                    
+                    
+                    
+
+
+                    <select id="selectOrderInactiveFilter" parameterType="Map" resultType="egovMap">
+
+							SELECT Distinct1.C1 C1  ,
+							       Distinct1.SRV_FILTER_ID SRV_FILTER_ID  ,
+							       Distinct1.SRV_FILTER_STK_ID SRV_FILTER_STK_ID  ,
+							       Distinct1.STK_CODE STK_CODE  ,
+							       Distinct1.STK_DESC STK_DESC  ,
+							       Distinct1.C2 C2  ,
+							       Distinct1.C3 C3  ,
+							       Distinct1.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
+							       Distinct1.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  
+							  FROM ( SELECT DISTINCT 1 C1  ,
+							                         CASE 
+							                              WHEN ( Extent2.SRV_FILTER_UPD_DT IS NOT NULL ) THEN Extent2.SRV_FILTER_UPD_DT   END C2  ,
+							                         CASE 
+							                              WHEN ( Extent4.USER_NAME IS NOT NULL ) THEN Extent4.USER_NAME
+							                         ELSE ' '
+							                            END C3  ,
+							                         Extent2.SRV_FILTER_ID SRV_FILTER_ID  ,
+							                         Extent2.SRV_FILTER_STK_ID SRV_FILTER_STK_ID  ,
+							                         Extent2.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
+							                         Extent2.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
+							                         Extent3.STK_CODE STK_CODE  ,
+							                         Extent3.STK_DESC STK_DESC  
+							         FROM SAL0090D Extent1
+							                JOIN SAL0087D Extent2   ON Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID
+							                LEFT JOIN SYS0026M Extent3   ON Extent2.SRV_FILTER_STK_ID = Extent3.STK_ID
+							                LEFT JOIN SYS0047M Extent4   ON Extent2.SRV_FILTER_UPD_USER_ID = Extent4.USER_ID
+							          WHERE  ( 1 = Extent1.SRV_STUS_ID )
+							                   AND ( 8 = Extent2.SRV_FILTER_STUS_ID )
+							                   AND ( Extent1.SRV_SO_ID = #{salesOrdId}  ) ) Distinct1
+                    
+                     </select>
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                      <select id="selectOrderActiveFilter" parameterType="Map" resultType="egovMap">
+								SELECT Distinct1.C1 C1  ,
+								       Distinct1.SRV_FILTER_ID SRV_FILTER_ID  ,
+								       Distinct1.SRV_FILTER_STK_ID SRV_FILTER_STK_ID  ,
+								       Distinct1.STK_CODE STK_CODE  ,
+								       Distinct1.STK_DESC STK_DESC  ,
+								       Distinct1.C2 C2  ,
+								       Distinct1.C3 C3  ,
+								       Distinct1.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
+								       Distinct1.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
+								       Distinct1.SRV_FILTER_PRIOD SRV_FILTER_PRIOD  ,
+								       Distinct1.C4 C4  ,
+								       Distinct1.C5 C5  ,
+								       Distinct1.C6 C6  
+								  FROM ( SELECT DISTINCT Extent3.SRV_FILTER_ID SRV_FILTER_ID  ,
+								                         Extent3.SRV_FILTER_STK_ID SRV_FILTER_STK_ID  ,
+								                         Extent3.SRV_FILTER_PRIOD SRV_FILTER_PRIOD  ,
+								                         Extent3.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
+								                         Extent3.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
+								                         Extent4.STK_CODE STK_CODE  ,
+								                         Extent4.STK_DESC STK_DESC  ,
+								                         1 C1  ,
+								                         CASE 
+								                              WHEN ( Extent3.SRV_FILTER_UPD_DT IS NOT NULL ) THEN Extent3.SRV_FILTER_UPD_DT   END C2  ,
+								                         CASE 
+								                              WHEN ( Extent5.USER_NAME IS NOT NULL ) THEN Extent5.USER_NAME
+								                         ELSE  ' '
+								                            END C3  ,
+								                         CASE 
+								                              WHEN ( Extent7.CODE IS NOT NULL ) THEN Extent7.CODE
+								                         ELSE  ' '
+								                            END C4  ,
+								                         UTILS.CONVERT_TO_NUMBER(0,1,0) C5  ,
+								                         0 C6  
+								         FROM SAL0090D Extent1
+								                JOIN SAL0002D Extent2   ON Extent1.SRV_SO_ID = Extent2.SALES_ORD_ID
+								                JOIN SAL0087D Extent3   ON Extent1.SRV_CONFIG_ID = Extent3.SRV_CONFIG_ID
+								                JOIN SYS0026M Extent4   ON Extent3.SRV_FILTER_STK_ID = Extent4.STK_ID
+								                LEFT JOIN SYS0047M Extent5   ON Extent3.SRV_FILTER_UPD_USER_ID = Extent5.USER_ID
+								                LEFT JOIN LOG0001M Extent6   ON ( Extent3.SRV_FILTER_STK_ID = Extent6.BOM_PART_ID )
+								                AND ( ( Extent2.ITM_STK_ID = Extent6.BOM_STK_ID )
+								                OR ( ( Extent2.ITM_STK_ID IS NULL )
+								                AND ( Extent6.BOM_STK_ID IS NULL ) ) )
+								                LEFT JOIN SYS0013M Extent7   ON Extent6.BOM_PART_TYPE_ID = Extent7.CODE_ID
+								          WHERE  ( 1 = Extent1.SRV_STUS_ID )
+								                   AND ( 1 = Extent3.SRV_FILTER_STUS_ID )
+								                   AND ( Extent1.SRV_SO_ID = #{salesOrdId} ) ) Distinct1
+                   </select>
+                                  
 </mapper>      		  

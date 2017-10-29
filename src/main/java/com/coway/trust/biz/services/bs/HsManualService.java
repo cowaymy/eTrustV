@@ -57,6 +57,13 @@ public interface HsManualService {
 	EgovMap selectConfigBasicInfo(Map<String, Object> params);
 
 	int updateHsConfigBasic(Map<String, Object> params, SessionVO sessionVO);
+
+	EgovMap selectHSOrderView(Map<String, Object> params);
+
+	List<EgovMap> selectOrderInactiveFilter(Map<String, Object> params);
+
+	List<EgovMap> selectOrderActiveFilter(Map<String, Object> params);
+
 	
 	
 	

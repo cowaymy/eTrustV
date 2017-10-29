@@ -43,24 +43,28 @@
 		                        }, {
 		                            dataField : "hsDate",
 		                            headerText : "HS Date",
-		                            width : 120                             ,                             
+		                            width : 120 ,                             
 		                            visible:false   
 		                        }, {                        
 		                            dataField : "no",
 		                            headerText : "HS Order",
-		                            width : 120
+		                            width : 120,                             
+                                    visible:false  
 		                        }, {
 		                            dataField : "c5",
 		                            headerText : "Assign Cody",
-		                            width : 120              
+		                            width : 120,                             
+                                    visible:false                
 		                        }, {
 		                            dataField : "code",
 		                            headerText : "Cody Status",
-		                            width : 120
+		                            width : 120,                             
+                                    visible:false  
 		                        }, {
 		                            dataField : "code1",
 		                            headerText : "HS Status",
-		                            width : 120             
+		                            width : 120,                             
+                                    visible:false               
 		                        }, {
 		                            dataField : "month",
 		                            headerText : "Complete Cody",
@@ -82,10 +86,13 @@
 		                        }, {
 		                            dataField : "salesOrdId",
 		                            headerText : "salesOrdId",
-		                            width : 120
-/* 		                            ,                             
-		                            visible:false            */        
-		                        }, {
+		                            width : 120,                             
+                                    visible:false    
+                                        }, {
+                                    dataField : "codyMangrUserId",
+                                    headerText : "Cody Manager",
+                                    width : 120  
+		                              }, {
 		                            dataField : "codyBrnchCode",
 		                            headerText : "Branch Code",
 		                            width : 120
@@ -163,6 +170,15 @@
                Common.popupDiv("/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
         }
     
+        function fn_filterSetInfo() {
+        
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            if(selectedItems.length  <= 0) {
+                Common.alert("<b>No HS selected.</b>");
+                return ;
+            }
+               Common.popupDiv("/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId, null, null , true , '_FilterSetPop');
+        }
 
     
     </script>
@@ -215,10 +231,10 @@
                 <td>
                     <input id="ManuaSalesOrder" name="ManuaSalesOrder"  type="text" title="" placeholder="Sales Order" class="w100p" />
                 </td>
-                <th scope="row">HS Period</th>
+<!--                 <th scope="row">HS Period</th>
                 <td>
                     <input id="ManuaMyBSMonth" name="ManuaMyBSMonth" type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" readonly />
-                </td>
+                </td> -->
                 <th scope="row">Customer</th>
                 <td>
                     <input id="manualCustomer" name="manualCustomer"  type="text" title="" placeholder="Customer" class="w100p" />
@@ -236,7 +252,11 @@
                 <dt>Link</dt>
                 <dd>
                 <ul class="btns">
-                    <li><p class="link_btn"><a href="javascript:fn_basicInfo()" id="basicInfo">Configuretion Basic Info</a></p></li>
+                    <li><p class="link_btn">
+										<a href="javascript:fn_basicInfo()" id="basicInfo">HS
+											Basic Info</a>
+									</p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet">HS Filter Maintenance</a></p></li>
                 </ul>
                 <ul class="btns">
                 </ul>
