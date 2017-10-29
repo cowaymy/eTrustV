@@ -60,6 +60,8 @@ public interface ASManagementListMapper {
 	 int   insertAddCCR0007D(Map<String, Object> params);
 	 int   updateCCR0006D(Map<String, Object> params);
 	 
+	 int   updateAssignCT(Map<String, Object> params);
+	 
 	 
 	 //물류 처리 프로시져 
 	 Map<String, Object> callSP_LOGISTIC_REQUEST(Map<String, Object> param);
@@ -71,6 +73,9 @@ public interface ASManagementListMapper {
 	 EgovMap   getASEntryId(Map<String, Object> params);   										//SVC0001D_AS_ID_SEQ
 	 EgovMap   getResultASEntryId(Map<String, Object> params);								//SVC0004D_AS_RESULT_ID_SEQ
 
+	 
+	 List<EgovMap> assignCtList(Map<String, Object> params);
+	 List<EgovMap> assignCtOrderList(Map<String, Object> params);
 	 
 	 
 }

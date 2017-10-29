@@ -4,8 +4,6 @@
 
 
     <select id="selectASManagementList" parameterType="Map" resultType="egovMap">
-                   <![CDATA[
-                   
                      SELECT    S.AS_ID   ,
 							       S.AS_NO   ,
 							       S.AS_SO_ID   ,
@@ -23,7 +21,9 @@
 							       S.C3   ,
 							       S.C4   ,
 							       S.C5   ,
-							       S.AS_RESULT_ID
+							       S.AS_RESULT_ID ,
+							       S.AS_BRNCH_ID ,
+							       (SELECT  CODE  FROM  SYS0005M  H WHERE   H.BRNCH_ID =AS_BRNCH_ID) BRNCH_CODE
 						  FROM ( SELECT DISTINCT E.AS_ID AS_ID  ,
 						                         E.AS_NO AS_NO  ,
 						                         E.ASSOID1 AS_SO_ID  ,
@@ -53,7 +53,8 @@
 						                              WHEN ( E.AS_RESULT_ID IS NOT NULL ) THEN E.AS_TOT_AMT
 						                         ELSE UTILS.CONVERT_TO_FLOAT(0,53)
 						                            END C5  ,
-						                         E.AS_RESULT_ID 
+						                         E.AS_RESULT_ID ,
+						                         E.AS_BRNCH_ID
 						         FROM ( SELECT Extent1.AS_ID AS_ID  ,
 						                       Extent1.AS_NO AS_NO  ,
 						                       Extent1.AS_SO_ID ASSOID1  ,
@@ -69,7 +70,8 @@
 						                       Extent6.NRIC NRIC  ,
 						                       Extent7.AS_RESULT_ID AS_RESULT_ID  ,
 						                       Extent7.AS_RESULT_NO AS_RESULT_NO  ,
-						                       Extent7.AS_TOT_AMT AS_TOT_AMT  
+						                       Extent7.AS_TOT_AMT AS_TOT_AMT ,
+						                       Extent1.AS_BRNCH_ID
 						                FROM SVC0001D Extent1
 						                       JOIN SYS0013M Extent2   ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
 						                       JOIN SYS0038M Extent3   ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
@@ -79,16 +81,13 @@
 						                       LEFT JOIN SVC0004D Extent7   ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
 						                       AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
 						                       AND ( 1 = Extent7.AS_RESULT_IS_CURR )
-						              ]]>
 						                 WHERE  ( 8    <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
-						                 
 						                   <if test="asStatusList != null and asStatusList != '' ">
 								                    AND Extent1.AS_STUS_ID  IN
 									                  <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
 									                       #{item}
 									                 </foreach>
 								              </if>
-						                 
 						                     <if test="asTypeList != null and asTypeList != '' ">
 								                     AND Extent1.AS_TYPE_ID  IN
 									                  <foreach item="item" collection="asTypeList" index="index" open="(" separator="," close=")">
@@ -98,20 +97,15 @@
 						               ) E
 						                LEFT JOIN SYS0047M Extent8   ON E.AS_CRT_USER_ID = Extent8.USER_ID
 						          WHERE  1=1
-						                   
-						                   <if test="createStrDate != '' and createStrDate == '' ">
-						                       AND ( E.AS_REQST_DT  <![CDATA[>= ]]> to_date(#{createStrDate} ,'dd/mm/yyyy'))
+						                   <if test="createStrDate  != ''   and createStrDate == '' ">
+						                         <![CDATA[ AND ( E.AS_REQST_DT >= to_date(#{createStrDate} ,'dd/mm/yyyy'))  ]]>
 						                    </if>
-						                   
-						                   
-                                           <if test="createEndDate != '' and createEndDate == '' ">
-						                          AND ( E.AS_REQST_DT <![CDATA[<= ]]>  to_date( #{createEndDate},'dd/mm/yyyy') )
+						                   <if test="createEndDate != ''  and createEndDate == '' ">
+						                        <![CDATA[  AND ( E.AS_REQST_DT  <=  to_date( #{createEndDate},'dd/mm/yyyy') )]]>
 						                   </if>
-						                    
 						                    <if test="asNum != null and asNum != '' ">
 						                          AND ( E.AS_NO = #{asNum} )
 						                    </if>
-						                    
 						                     <if test="resultNum != null and resultNum != '' ">
 						                           AND ( (CASE  WHEN ( E.AS_RESULT_ID IS NOT NULL ) THEN E.AS_RESULT_NO  ELSE '-'   END) = #{resultNum})
 						                     </if>
@@ -1922,6 +1916,64 @@
                         WHERE DOC_ID =#{AS_ID}
                                 AND TYPE_ID ='339'
      </insert>
+
+
+    <select id="assignCtList" parameterType="Map" resultType="egovMap">
+
+            SELECT DISTINCT   C.MEM_ID        CT_ID,
+		                               C.MEM_CODE   CT_CODE,
+		                               B.BRNCH_ID     BRNCH_ID,
+		                               B.CODE           BRANCH_CODE , 
+		                               B.NAME           BRANCH_NAME,
+		                               C.STUS           CT_STUS,
+		                               C.NAME           CT_NAME,
+                               D.CT_SUB_GRP CT_SUB_GRP
+                    FROM ORG0005D  A , SYS0005M B  , ORG0001D  C  ,SYS0064M D
+               WHERE  A.BRNCH_ID = #{BRNCH_ID}
+                   AND A.BRNCH_ID = B.BRNCH_ID
+                   AND A.MEM_ID =C.MEM_ID
+                   AND C.MEM_TYPE = 2
+                   AND A.MEM_LVL  = 3
+                   AND B.CODE =D.CT_BRNCH_CODE 
+                   AND C.STUS =1
+     </select>
      
+     
+     
+    <select id="assignCtOrderList" parameterType="Map" resultType="egovMap">
+                 SELECT B.SALES_ORD_NO     SALES_ORD_NO, A.AS_ID,
+			                C.NAME                  CUST_NAME, 
+			                C.CUST_ID              CUST_ID ,
+			                A.AS_MEM_ID          AS_MEM_ID,
+			                F.CT_SUB_GRP         CUST_SUB_GRP,
+			                 (SELECT MEM_CODE   FROM ORG0001D S WHERE S.MEM_ID = A.AS_MEM_ID ) MEM_CODE
+                     FROM SVC0001D A ,         
+                          SAL0001D B ,         --ORDER INFO 
+                          SAL0029D C ,         --CUST INFO 
+                          SAL0045D D ,         --INST ADDRESS  
+                          SAL0023D E ,          --HISTORY   OF ADDR
+                          SYS0064M F           --MAGIC ADDR 
+                   WHERE 1=1
+                        <if test="asNo != null and asNo != '' ">
+                              AND AS_NO   IN
+                              <foreach item="item" collection="asNo" index="index" open="(" separator="," close=")">
+                                        #{item}
+                              </foreach>
+                        </if>
+                       AND A.AS_SO_ID      = B.SALES_ORD_ID 
+                       AND B.CUST_ID       = C.CUST_ID
+                       AND B.SALES_ORD_ID  = D.SALES_ORD_ID 
+                       AND D.ADD_ID        = E.CUST_ADD_ID
+                       AND E.AREA_ID       = F.AREA_ID(+)
+     </select>
+     
+     
+     <insert id="updateAssignCT" parameterType="Map" >
+                       UPDATE SVC0001D
+                           SET AS_MEM_ID =#{asMemId},
+                               AS_UPD_USER_ID =#{updator} ,
+                               AS_UPD_DT =SYSDATE
+                           WHERE AS_ID =#{asId}
+     </insert>
      
 </mapper>

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -742,11 +743,10 @@ public class ASManagementListController {
 
 	@RequestMapping(value = "/assignCtList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> assignCtList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		
 		logger.debug("in  assignCtList.....");		
 		logger.debug("params : {}", params.toString());
-		
-		List<EgovMap>  list = ASManagementListService.getCallLog(params);
+		//BRNCH_ID
+		List<EgovMap>  list = ASManagementListService.assignCtList(params);
 		
 		return ResponseEntity.ok(list);  
 	}
@@ -758,7 +758,15 @@ public class ASManagementListController {
 		logger.debug("in  assignCtOrderList.....");		
 		logger.debug("params : {}", params.toString());
 		
-		List<EgovMap>  list = ASManagementListService.getCallLog(params);
+		String vAsNo =  (String)params.get("asNo");
+		String[] asNo =  null;
+		
+		if(! StringUtils.isEmpty(vAsNo)){ 
+			asNo =  ((String)params.get("asNo")).split(",");
+			params.put("asNo" ,asNo);
+		}
+		
+		List<EgovMap>  list =  ASManagementListService.assignCtOrderList(params);
 		
 		return ResponseEntity.ok(list);  
 	}
@@ -775,18 +783,10 @@ public class ASManagementListController {
 		logger.debug("			pram set end  ");  
 		
 		params.put("updator", sessionVO.getUserId());   
-		
-		LinkedHashMap  asResultM = (LinkedHashMap)  params.get("asResultM");
-		List<EgovMap>  add			= (List<EgovMap>)  params.get("add");
-		List<EgovMap>  remove	= (List<EgovMap>)  params.get("remove");
 		List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
-		   
-		logger.debug("asResultM ===>"+asResultM.toString());  
-		logger.debug("add ===>"+add.toString());
-		logger.debug("remove ===>"+remove.toString());
-		logger.debug("update ===>"+update.toString());
+		logger.debug("asResultM ===>"+update.toString());  
 		
-	//	EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
+		int   rtnValue = ASManagementListService.updateAssignCT(params);  
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

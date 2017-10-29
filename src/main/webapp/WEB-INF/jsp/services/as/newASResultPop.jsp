@@ -798,7 +798,7 @@ function fn_doClear(){
 
 
 <form id="resultASForm" method="post">
-    <div  style="display:inline">
+    <div  style="display:none">
         <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
         <input type="text" name="ORD_NO"   id="AS_NO"  value="${ORD_NO}"/>
         <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
@@ -1097,7 +1097,7 @@ function fn_doClear(){
         <th scope="row">CT Code</th>
         <td>
         <select  disabled="disabled" id='ddlCTCode' name='ddlCTCode'>
-        <input type="text" title="" placeholder="" class=""  id='HiddenCTID' name='HiddenCTID'/>
+        <input type="hidden" title="" placeholder="" class=""  id='HiddenCTID' name='HiddenCTID'/>
         
         
     </select> 

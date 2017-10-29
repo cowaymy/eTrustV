@@ -274,26 +274,24 @@
     
     
          <select id="mPackageInfo" parameterType="Map" resultType="egovMap">
-                   <![CDATA[
-						SELECT   S.SRV_MEM_PAC_ID,
-							         S.SRV_MEM_ITM_STK_ID,
-							         S.SRV_MEM_ITM_PRIOD,
-							         CASE WHEN (S.SRV_MEM_DUR IS NOT NULL) THEN S.SRV_MEM_DUR ELSE 0 END
-						             C1,
-							         S.SRV_MEM_ITM_PRC,
-							         S.SRV_MEM_ITM_PV
-						  FROM   (SELECT   V.SRV_MEM_PAC_ID,
-								                   V.SRV_MEM_DUR,
-								                   M.SRV_MEM_ITM_STK_ID,
-								                   M.SRV_MEM_ITM_PRC,
-								                   M.SRV_MEM_ITM_PV,
-								                   M.SRV_MEM_ITM_PRIOD
-						            FROM      SAL0091M V
-						                   JOIN     SAL0092M M    ON     (V.SRV_MEM_PAC_ID = M.SRV_MEM_PAC_ID)
-						                   AND (1 = M.SRV_MEM_ITM_STUS_ID)
-						                   AND ( #{STOCK_ID} = M.SRV_MEM_ITM_STK_ID)
-						           WHERE   V.SRV_MEM_PAC_ID = #{SELPACKAGE_ID}  AND ROWNUM <= 1) S
-		              ]]>
+                   SELECT S.SRV_CNTRCT_PAC_ID   ,
+					       S.SRV_PAC_ITM_PRODUCT_ID   ,
+					       UTILS.CONVERT_TO_NUMBER(S.SRV_PAC_ITM_SVC_FREQ,10,0) C1  ,
+					       S.SRV_CNTRCT_PAC_DUR   ,
+					       S.SRV_PAC_ITM_RENTAL   ,
+					       S.SRV_PAC_ITM_PV   
+					  FROM ( SELECT Extent1.SRV_CNTRCT_PAC_ID SRV_CNTRCT_PAC_ID  ,
+					                Extent1.SRV_CNTRCT_PAC_DUR SRV_CNTRCT_PAC_DUR  ,
+					                Extent2.SRV_PAC_ITM_PRODUCT_ID SRV_PAC_ITM_PRODUCT_ID  ,
+					                Extent2.SRV_PAC_ITM_SVC_FREQ SRV_PAC_ITM_SVC_FREQ  ,
+					                Extent2.SRV_PAC_ITM_RENTAL SRV_PAC_ITM_RENTAL  ,
+					                Extent2.SRV_PAC_ITM_PV SRV_PAC_ITM_PV  
+					         FROM SAL0081D Extent1
+					                JOIN SAL0082D Extent2   ON ( Extent2.SRV_CNTRCT_PAC_ID = Extent1.SRV_CNTRCT_PAC_ID )
+					                AND ( Extent2.SRV_PAC_ITM_PRODUCT_ID = #{stockId} )
+					          WHERE  Extent1.SRV_CNTRCT_PAC_ID =#{packId}  
+					       <![CDATA[    AND ROWNUM <= 1     ]]>
+					) S
          </select>
          
          
@@ -322,7 +320,7 @@
                                                     E.PROMO_CODE   ,
                                                     E.PROMO_DESC   
                                              FROM SAL0017D E
-                                              WHERE  ( 1035 = E.PROMO_TYPE_ID )
+                                              WHERE  ( 0 = E.PROMO_TYPE_ID )
                                                        AND ( 1 = E.PROMO_STUS_ID )
                                                        AND ( E.PROMO_DT_FROM <= sysdate )
                                                        AND ( E.PROMO_DT_END >= sysdate ) ) V

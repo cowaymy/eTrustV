@@ -20,7 +20,7 @@ $(document).ready(function(){
     
     createASHistoryGrid();
     createBSHistoryGrid();
-    createASCallLogAUIGrid();
+    
     
     
     fn_getASHistoryInfo();
@@ -30,9 +30,11 @@ $(document).ready(function(){
     
     
     
-    if( '${AS_NO}' !=""){
-    	fn_setEditValue();
-    }
+    <c:if test="${MOD eq 'VIEW'}">
+    fn_setEditValue();
+    createASCallLogAUIGrid();
+    </c:if>
+    
     
     
 });
@@ -849,7 +851,7 @@ function fn_addRemark(){
 <section id="content"><!-- content start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>AS ReceiveEntry </h1>
+<h1>AS ReceiveEntry  <c:if test="${MOD eq 'VIEW'}">  EDIT  </c:if> </h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -1113,33 +1115,37 @@ function fn_addRemark(){
     <label><input type="checkbox" id="checkComm" name="checkComm"/></label>
     </td>
 </tr>
+
+
+<c:if test="${MOD eq 'VIEW'}">
 <tr>
     <th scope="row"></th>
     <td colspan="7"><p class="btn_sky"><a href="#" onclick="fn_addRemark()">add Remark</a></p></td>
 </tr>
-
-
-<tr>
-    <th scope="row">Remark</th>
-    <td colspan="7">
-            <textarea  id='callRem' name='callRem'   rows='5' placeholder=""  class="w100p" ></textarea>
-    </td>
-</tr>
-
-
+</c:if>
+<c:if test="${MOD eq ''}">
+    <tr>
+        <th scope="row">Remark</th>
+        <td colspan="7">
+                <textarea  id='callRem' name='callRem'   rows='5' placeholder=""  class="w100p" ></textarea>
+        </td>
+    </tr>
+ </c:if>   
+    
 </tbody>
 </table><!-- table end -->
 </form>
 
 
-<aside class="title_line"><!-- title_line start -->
-<h2>AS Call-Log Transaction</h2>
-</aside><!-- title_line end -->
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="ascallLog_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
-      </article><!-- grid_wrap end -->
-
+<c:if test="${MOD eq 'VIEW'}">
+		<aside class="title_line"><!-- title_line start -->
+		<h2>AS Call-Log Transaction</h2>
+		</aside><!-- title_line end -->
+		
+		<article class="grid_wrap"><!-- grid_wrap start -->
+		      <div id="ascallLog_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
+		</article><!-- grid_wrap end -->
+</c:if>
 
 
 

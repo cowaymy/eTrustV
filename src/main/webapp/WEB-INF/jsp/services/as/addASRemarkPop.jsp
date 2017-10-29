@@ -5,6 +5,17 @@
 
 
 function fn_asAddRemark(){
+	
+
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+    var ordList ={
+             "ordList":selectedItems,
+             "BRID" : "CSD001"
+    }
+    
+    
+    
     Common.ajax("GET", "/services/as/addASRemark.do", $("#addRemarkForm").serialize(), function(result) {
         console.log("fn_asAddRemark.");
         console.log(result);
@@ -52,7 +63,7 @@ function fn_asAddRemark(){
 	<td>
 	   <textarea  id='callRem' name='callRem'   rows='5' placeholder=""  class="w100p" ></textarea>
 	   
-	    <input  type='text' id='asId' name='asId'  value='${AS_ID}'></textarea>
+	    <input  type='hidden' id='asId' name='asId'  value='${AS_ID}'></textarea>
 	</td>
 </tr>
 </tbody>

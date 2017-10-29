@@ -191,9 +191,97 @@ public class  MembershipRentalQuotationController {
 		return ResponseEntity.ok(list);
 	}
 	
+	@RequestMapping(value = "/mRPackageInfo" ,method = RequestMethod.GET)
+	public ResponseEntity<Map> mRPackageInfo(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
+
+		logger.debug("in  mRPackageInfo ");
+
+		EgovMap packageInfo = null;
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());  
+		logger.debug("			pram set end  ");
+
+		packageInfo = membershipRentalQuotationService.mPackageInfo(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("packageInfo", packageInfo);
+  
+		return ResponseEntity.ok(map);
+	}
 	
 	
 	
+
+	@RequestMapping(value = "/mRFilterChargePop.do")
+	public String mRFilterChargePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("in  mRFilterChargePop.do ");  
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		return "sales/membership/mFilterChargePop";
+	}
+	
+	
+	@RequestMapping(value = "/getFilterPromotionCode" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  getFilterPromotionCode(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+
+		logger.debug("in  PaymentConfig ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipRentalQuotationService.getFilterPromotionCode(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+
+	@RequestMapping(value = "/mNewQuotationSavePop.do")
+	public String mNewQuotationSavePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("in  mNewQuotationSavePop.do ");  
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		model.addAttribute("selValue",params.get("selValue")); 
+		return "sales/membership/mNewQuotationSavePop";
+	}
+	
+
+	@RequestMapping(value = "/mNewQuotationSave.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> mNewQuotationSave(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  mNewQuotationSave ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("USER_ID", sessionVO.getUserId());   
+		
+		//LinkedHashMap  updateList = (LinkedHashMap)  params.get("update");
+		   
+		
+		int  rtnValue =  1;
+		//inHouseRepairService.asResultBasic_update(params);  
+		
+		ReturnMessage message = new ReturnMessage();
+		  
+		if(rtnValue >0 ){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		return ResponseEntity.ok(message);  
+	}
 	
 	/*
 	
@@ -302,34 +390,8 @@ public class  MembershipRentalQuotationController {
 	
 	
 
-	@RequestMapping(value = "/mFilterChargePop.do")
-	public String mFilterChargePop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("in  mNewQuotation.do ");  
-
-		logger.debug("			pram set  log");
-		logger.debug("					" + params.toString());
-		logger.debug("			pram set end  ");
-		
-		return "sales/membership/mFilterChargePop";
-	}
 	
 	
-
-	@RequestMapping(value = "/getFilterPromotionCode" ,method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>>  getFilterPromotionCode(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
-
-		
-		
-		logger.debug("in  PaymentConfig ");
-		logger.debug("			pram set  log");
-		logger.debug("					" + params.toString());
-		logger.debug("			pram set end  ");
-		
-		List<EgovMap>  list = membershipRentalQuotationService.getFilterPromotionCode(params);
-		
-		return ResponseEntity.ok(list);
-	}
 	
 
 	@RequestMapping(value = "/getPromoPricePercent" ,method = RequestMethod.GET)

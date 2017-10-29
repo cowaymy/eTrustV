@@ -27,12 +27,18 @@ function fn_newASPop(){
 function fn_viewASResultPop(){
 	
     
-    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 	
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No AS selected.</b>");
         return ;
     }
+    
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
+    
     
     
     var AS_ID =    selectedItems[0].item.asId;
@@ -52,12 +58,8 @@ function fn_viewASResultPop(){
 
 
 
-
-
 function fn_resultASPop(ordId,ordNo){
 	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId="+ordId+"&ordNo="+ordNo ,null, null , true , '_resultNewEntryPopDiv1');
-
-    
 }
 
 
@@ -66,12 +68,18 @@ function fn_resultASPop(ordId,ordNo){
 
 function fn_newASResultPop(){
 	
-    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No AS selected.</b>");
         return ;
     }
+    
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
+    
     
     var asid =    selectedItems[0].item.asId;
     var asNo =    selectedItems[0].item.asNo;
@@ -102,6 +110,12 @@ function fn_asAppViewPop(){
     }
     
 
+    
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
+        
     var asid =    selectedItems[0].item.asId;
     var asNo =    selectedItems[0].item.asNo;
     var asStusId     = selectedItems[0].item.code1;
@@ -118,14 +132,19 @@ function fn_asAppViewPop(){
 function fn_asResultViewPop(){
 	
 	
-    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No AS selected.</b>");
         return ;
     }
     
+
     
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
     
     console.log(selectedItems);
     var asid =    selectedItems[0].item.asId;
@@ -159,14 +178,18 @@ function fn_asResultViewPop(){
 
 function fn_asResultEditPop(){
 
-    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No AS selected.</b>");
         return ;
     }
     
-    
+
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
     
     console.log(selectedItems);
     var asid =    selectedItems[0].item.asId;
@@ -198,14 +221,18 @@ function fn_asResultEditPop(){
 
 function fn_asResultEditBasicPop(){
 
-    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No AS selected.</b>");
         return ;
     }
     
-    
+
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
     
     console.log(selectedItems);
     var asid =    selectedItems[0].item.asId;
@@ -231,6 +258,38 @@ function fn_asResultEditBasicPop(){
   var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=edit&as_Result_No="+asResultNo+"&as_Result_Id="+asResultId;
   Common.popupDiv("/services/as/asResultEditBasicPop.do"+param ,null, null , true , '_newASResultBasicDiv1');
     
+}
+
+
+
+function fn_assginCTTransfer(){
+	
+    var selectedItems = AUIGrid.getCheckedRowItems (myGridID);
+    
+
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+   
+    
+    var asBrnchId = selectedItems[0].item.asBrnchId;
+    
+    for( var  i in selectedItems){
+    	 console.log("===>"+ selectedItems[i].item.asBrnchId);
+    	 
+    	 if("ACT" != selectedItems[i].item.code1 ){
+             Common.alert("<b>[" + selectedItems[i].item.asNo + "] do no has any result yet. .</br> Result view is disallowed.");
+             return ;
+         }
+    	 
+    	 if(asBrnchId != selectedItems[i].item.asBrnchId ){
+    		 Common.alert("<b>동일한 브랜치 코드만 선택 가능합니다.</b>");
+    		 return ;
+    	 }
+    }
+    
+	 Common.popupDiv("/services/as/assignCTTransferPop.do"  , null, null , true , '_assginCTTransferDiv');
 }
 
 
@@ -310,34 +369,27 @@ function asManagementGrid() {
         dataField : "nric",
         headerText : "NRIC/Comp No",
         width : 100
-    }];
+    },{
+        dataField : "brnchCode",
+        headerText : "AS BRNCH",
+        width : 100 
+    }, {
+        dataField : "asBrnchId",
+        headerText : "as asBrnc",
+        width : 100,  visible : false
+    }
+    
+    ];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
-        usePaging : true,
-        
-        // 한 화면에 출력되는 행 개수 20(기본값:20)
-        pageRowCount : 20,
-        
-        editable : true,
-        
-        showStateColumn : true, 
-        
-        displayTreeOpen : true,
-        
-        
-        headerHeight : 30,
-        
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : true,
-        
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : false,
-
+    	       showRowCheckColumn : true,
+               // 페이징 사용       
+               usePaging : true,
+               // 한 화면에 출력되는 행 개수 20(기본값:20)
+               pageRowCount : 20,
+               // 전체 체크박스 표시 설정
+               showRowAllCheckBox : true,
+               editable :  false
     };
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
@@ -469,6 +521,9 @@ function fn_excelDown(){
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultViewPop()"> AS Result  View</a></p></li>
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditBasicPop()"> AS Result  Edit(Basic)</a></p></li>
+         <li><p class="link_btn"><a href="#" onclick="javascript:fn_assginCTTransfer()"> AssginCTTransfer</a></p></li>
+        
+        
         
         
         

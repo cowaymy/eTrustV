@@ -392,6 +392,9 @@
 			      WHERE ROWNUM <![CDATA[<]]>= 1
       </select>
       
+      
+      
+      
          
     <select id="getSAL0093D_SEQ" parameterType="Map" resultType="egovMap">
                  <![CDATA[     

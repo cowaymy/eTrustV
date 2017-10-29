@@ -96,6 +96,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	
+	@Override 
+	public List<EgovMap> assignCtList(Map<String, Object> params) {
+		return ASManagementListMapper.assignCtList(params);
+	}
+	
+	@Override 
+	public List<EgovMap> assignCtOrderList(Map<String, Object> params) {
+		return ASManagementListMapper.assignCtOrderList(params);
+	}
+	
+	
 	
 	@Override 
 	public  EgovMap  getMemberBymemberID(Map<String, Object> params) {
@@ -136,6 +147,22 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		return result;
 	}
+	
+	@Override
+	public int  updateAssignCT(Map<String, Object> params) {
+		List <EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+		int rtnValue  =-1;
+		
+		if (updateItemList.size() > 0) {  
+			
+			for (int i = 0; i < updateItemList.size(); i++) {
+				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+				rtnValue= ASManagementListMapper.updateAssignCT(updateMap) ;
+			}
+		}
+		return rtnValue;
+	} 
+	
 	  
 	@Override
 	public EgovMap  saveASEntry(Map<String, Object> params) {

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.InHouseRepairMapper">
+
+    <select id="selInhouseList" parameterType="Map" resultType="egovMap">
+                   		SELECT 
+							    'DSC-01'         AS  c1,
+							    'CT239482'      AS  c2,
+							    '112098'          AS  c3,
+							    'TBD'              AS  c4,
+							    '20/11/2017'    AS  c5,
+							    '20/11/2017'    AS  c6,
+							    '20/11/2017'    AS  c7
+							FROM DUAL
+						WHERE  1=1  
+				   <if test="asTicketNum != null and asTicketNum != '' ">
+				           AND 1= ${asTicketNum}
+				   </if>
+    </select>
+
+
+
+    <select id="selInhouseDetailList" parameterType="Map" resultType="egovMap">
+                       SELECT 
+						    't1'  t1 ,
+						    't2'  t2 ,
+						    't3'  t3 ,
+						    't4'  t4 ,
+						    't5'  t5 ,
+						    't6'  t6 ,
+						    't7'  t7 ,
+						    't8'  t8 ,
+						    't9'  t9 ,
+						    't10'  t10 ,
+						    't11'  t11 ,
+						    't12'  t12 ,
+						    't13'  t13 ,
+						    't14'  t14 ,
+						    't15'  t15 ,
+						    't16'  t16 ,
+						    't17'  t17 ,
+						    't18'  t18 
+						FROM DUAL
+						 WHERE 1=1 
+                   <if test="asTicketNum != null and asTicketNum != '' ">
+                           AND 1= ${asTicketNum}
+                   </if>
+    </select>
+     
+</mapper>

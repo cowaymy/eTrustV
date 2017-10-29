@@ -64,6 +64,12 @@ public interface ASManagementListService {
 	EgovMap asResult_update (Map<String, Object> params);
 	int asResultBasic_update (Map<String, Object> params);
 	int addASRemark (Map<String, Object> params);
+	int updateAssignCT (Map<String, Object> params);
+	
+	
+
+	List<EgovMap> assignCtOrderList(Map<String, Object> params);
+	List<EgovMap> assignCtList(Map<String, Object> params);
 	
 	
 }
