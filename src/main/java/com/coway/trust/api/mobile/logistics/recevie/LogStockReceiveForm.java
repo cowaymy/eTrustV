@@ -12,10 +12,10 @@ public class LogStockReceiveForm {
 	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100337,T010", example = "CT100337")
 	private String userId;
 
-	@ApiModelProperty(value = "조회시작날짜 (YYYYMMDD) [default : '' 전체] 예) 20170820", example = "28092017")
+	@ApiModelProperty(value = "조회시작날짜 (YYYYMMDD) [default : '' 전체] 예) 20170920", example = "28092017")
 	private String searchFromDate;
 
-	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD [default : '' 전체] 예) 20170827", example = "29092017")
+	@ApiModelProperty(value = "조회종료날짜 (YYYYMMDD [default : '' 전체] 예) 20170927", example = "29092017")
 	private String searchToDate;
 
 	@ApiModelProperty(value = "searchType [default : '' 전체] 예) auto=1,manual=2,all=3", example = "auto/manual")
