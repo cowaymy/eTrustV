@@ -3,6 +3,7 @@ package com.coway.trust.biz.logistics.mlog;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
 import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
 
@@ -88,6 +89,8 @@ public interface MlogApiService {
 	void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm);
 
 	Map<String, Object> selectStockMovementSerial(Map<String, Object> params);
+	
+	void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm);
 	
 	
 	
