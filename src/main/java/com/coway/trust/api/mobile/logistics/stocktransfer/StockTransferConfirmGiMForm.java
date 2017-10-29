@@ -39,7 +39,7 @@ public class StockTransferConfirmGiMForm {
 	@ApiModelProperty(value = "부품 이름")
 	private String partsName;
 
-	@ApiModelProperty(value = "InventoryReqTransferDetail")
+	@ApiModelProperty(value = "stockTransferConfirmGiDetail")
 	private List<StockTransferConfirmGiDForm> stockTransferConfirmGiDetail;
 
 	public List<Map<String, Object>> createMaps(StockTransferConfirmGiMForm stockTransferConfirmGiMForm) {
