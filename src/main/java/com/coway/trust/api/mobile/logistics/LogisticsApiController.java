@@ -51,6 +51,8 @@ import com.coway.trust.api.mobile.logistics.mystock.MyStockListDto;
 import com.coway.trust.api.mobile.logistics.mystock.MyStockListForm;
 import com.coway.trust.api.mobile.logistics.rdcstock.RdcStockListDto;
 import com.coway.trust.api.mobile.logistics.rdcstock.RdcStockListForm;
+import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveDForm;
+import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
 import com.coway.trust.api.mobile.logistics.recevie.LogStockPartsReceiveDto;
 import com.coway.trust.api.mobile.logistics.recevie.LogStockReceiveDto;
 import com.coway.trust.api.mobile.logistics.recevie.LogStockReceiveForm;
@@ -709,5 +711,17 @@ public class LogisticsApiController {
 		}
 
 	}
+	
+	
+	@ApiOperation(value = "Receive Display - Confirm Receive", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/displayConfirmReceive", method = RequestMethod.POST)
+	public void confirmReceive(@RequestBody ConfirmReceiveMForm confirmReceiveMForm)
+			throws Exception {		
+		
+		MlogApiService.stockMovementConfirmReceive(confirmReceiveMForm);
+					
+		
+	}
+	
 
 }
