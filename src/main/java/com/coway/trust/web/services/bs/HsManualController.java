@@ -462,11 +462,49 @@ public class HsManualController {
 	} 
 
 	
+	@RequestMapping(value = "/hSFilterSettingPop.do" )
+	public String hSFilterSettingPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+		
+		logger.debug("params : {}", params.toString());
+		params.put("orderNo", params.get("salesOrdId"));
+		
+		EgovMap hSOrderView = hsManualService.selectHSOrderView(params);
+		model.put("hSOrderView", hSOrderView);   
+		
+		return "services/bs/hSFilterSettingPop";
+	} 
 	
+	
+		@RequestMapping(value = "/getActivefilterInfo.do" )
+		public ResponseEntity<List<EgovMap>> getActivefilterInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+			
+			logger.debug("params : {}", params.toString());
+			params.put("orderNo", params.get("salesOrdId"));
+			
+			List<EgovMap>  orderActiveFilter = hsManualService.selectOrderActiveFilter(params);
+			
+			model.put("orderActiveFilter", orderActiveFilter);   
+			
+			return ResponseEntity.ok(orderActiveFilter);
+		} 
+	
+
+		@RequestMapping(value = "/getInActivefilterInfo.do" )
+		public ResponseEntity<List<EgovMap>> getInActivefilterInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+			
+			logger.debug("params : {}", params.toString());
+			params.put("orderNo", params.get("salesOrdId"));
+			
+			List<EgovMap>  orderInactiveFilter = hsManualService.selectOrderInactiveFilter(params);
+			
+			model.put("orderActiveFilter", orderInactiveFilter);   
+			
+			return ResponseEntity.ok(orderInactiveFilter);
+		} 
 	
 	
 	/**
-	 * Search rule book management list
+	 * 
 	 *
 	 * @param params
 	 * @param request
