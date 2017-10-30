@@ -25,7 +25,6 @@ $(document).ready(function() {
      
     //PosModuleTypeComboBox
     var moduleParam = {groupCode : 143, codeIn : [2390, 2391, 2392]};
-
     CommonCombo.make('cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
     
     //PosSystemTypeComboBox
@@ -114,13 +113,51 @@ $(document).ready(function() {
         
     });
     
+    //Pos System
     $("#_systemBtn").click(function() {
     	Common.popupDiv("/sales/pos/posSystemPop.do", '', null , true , '_insDiv');
     });
     
+    //Pos Reversal
+    $("#_reversalBtn").click(function() {
+    	
+    	var clickChk = AUIGrid.getSelectedItems(posGridID);
+    	//Validation
+    	if(clickChk == null || clickChk.length <= 0 ){
+    		Common.alert("* No Order Selected. ");
+    		return;
+    	}
+    	
+    	if(clickChk[0].item.codeName1 == 1361){  //reversal
+    		Common.alert("* Reversal POS are prohibited!");
+    		return;
+    	}
+    	
+    	// Invoice Chk
+    	var reRefNo = clickChk[0].item.taxInvcRefNo;
+    	var reObject = { reRefNo : reRefNo};
+    	Common.ajax("GET", "/sales/pos/chkReveralBeforeReversal", reObject, function(result) {
+    	    if(result != null){
+    	    	Common.alert("* Reversal POS are prohibited!(invoice)");
+                return;
+    	    }			
+		});
+    	
+    	//TODO payment 완료 후 추가 Validation 
+    	// IsPaymentKnowOffByPOSNo
+    	
+    	
+    	//TODO Check Auth
+    	
+    	//Call controller
+    	var reversalForm = { posId : clickChk[0].item.posId };
+    	Common.popupDiv("/sales/pos/posReversalPop.do", reversalForm , null , true , "_revDiv");
+		
+	});
+    
 });//Doc ready Func End
 
-//TODO 미개발
+//TODO 미개발 message
 function fn_underDevelop(){
     Common.alert('The program is under development.');
 }
@@ -324,7 +361,7 @@ function fn_getPosListAjax(){
 <tr>
     <th scope="row">POS Ref No.</th>
     <td>
-    <input type="text" title="" placeholder="POS No." class="w100p"  name="posNo"/>
+    <input type="text" title="" placeholder="POS No." class="w100p"  name="posNo" />
     </td>
     <th scope="row">Sales Date</th>
     <td>
@@ -388,8 +425,8 @@ function fn_getPosListAjax(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="_systemBtn">POS System</a></p></li>
-    <li><p class="btn_grid"><a href="#">POS Reversal</a></p></li>
+    <li><p class="btn_grid"><a  id="_systemBtn">POS System</a></p></li>
+    <li><p class="btn_grid"><a  id="_reversalBtn">POS Reversal</a></p></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->

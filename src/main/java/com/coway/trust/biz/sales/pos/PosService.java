@@ -38,4 +38,12 @@ public interface PosService {
 	Map<String, Object> insertPos(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> getUploadMemList (Map<String, Object> params) throws Exception;
+	
+	EgovMap chkReveralBeforeReversal (Map<String, Object> params) throws Exception;
+	
+	EgovMap posReversalDetail(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getPosDetailList(Map<String, Object> params)throws Exception;
+	
+	EgovMap insertPosReversal(Map<String, Object> params) throws Exception;
 }

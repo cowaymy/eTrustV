@@ -1,5 +1,15 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<style type="text/css" >
+
+/* 커스텀 행 스타일 */
+.aui-grid-body-panel .aui-grid-table tr .brnch-not-mach div{
+    
+    font-weight:bold;
+    color:#ff0000;
+}
+    
+</style>
 <script type="text/javascript">
 
 var myGridID;
@@ -54,7 +64,7 @@ $(document).ready(function() {
 
              var jsonObj = process_wb(workbook);
 
-             createAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
+             setAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
          };
 
          if(rABS) reader.readAsBinaryString(file);
@@ -63,7 +73,60 @@ $(document).ready(function() {
      }
  });
 
-});
+ //Member Delete
+ $("#_memDelBtn").click(function() {
+	 AUIGrid.removeCheckedRows(myGridID);
+	 
+	 var rowCnt = AUIGrid.getRowCount(myGridID);
+	 //console.log("rowCnt : " + rowCnt);
+	 if(rowCnt <= 0){
+		 $("#fileSelector").val("");
+	 }
+ });
+ 
+ //Member Save
+ $("#_memSaveBtn").click(function() {
+	
+	//Validation
+	//1. Grid Null Check
+	 var gridCnt = AUIGrid.getRowCount(myGridID);
+     //console.log("rowCnt : " + rowCnt);
+     if(gridCnt <= 0){
+         Common.alert("* No Member Selected. ");
+         return;
+     }
+	
+	//2. Brnch Check
+	 var branchArr  = AUIGrid.getColumnValues(myGridID, 'brnch');
+	 var mainBrnch = $("#_mainBrnch").val();
+	 var chkBrnch = true;
+	 var idxNo = 0;
+	 var itemObj;
+	 var validMemCodeArr = [];
+	 var validMemList = "";
+	$.each(branchArr ,function(index, el) {
+		if(el != mainBrnch){
+			
+			itemObj =AUIGrid.getItemByRowIndex(myGridID, idxNo);
+			validMemCodeArr.push(itemObj.memCode);
+		}
+	});
+	if( null != validMemCodeArr && validMemCodeArr.length > 0){
+		validMemList = validMemCodeArr.toString();
+		Common.alert("* The Branch of Member ID<br/> ["+validMemList+"]<br/> is not valid .<br/>");
+		return;
+	}
+	 
+	//Validation Success
+	var moveObj = AUIGrid.getGridData(myGridID);
+	fn_setMemberGirdData(moveObj);
+	$("#_memUpPopClose").click();
+	
+	//Insert Grid
+	 
+ });
+});//Doc Ready Func End
+
 
 // IE10, 11는 바이너리스트링 못읽기 때문에 ArrayBuffer 처리 하기 위함.
 function fixdata(data) {
@@ -95,112 +158,110 @@ function to_json(workbook) {
  return result;
 }
 
-// 엑셀 파일 시트에서 파싱한 JSON 데이터 기반으로 그리드 동적 생성
-function createAUIGrid(jsonData) {
- if(AUIGrid.isCreated(myGridID)) {
-     AUIGrid.destroy(myGridID);
-     myGridID = null;
- }
+function setAUIGrid(jsonData) {
  
  var firstRow = jsonData;
  
  if(typeof firstRow == "undefined") {
      Common.alert("* Can Convert File. Please Try Again.");
+     $("#fileSelector").val("");
      return;
  }
  
-  var memIdArray = [];
-  $.each(jsonData, function(key , value) {
-	$.each(value, function(k, v) {
-		console.log("key : " + k)
-		if(k.trim() == "MEMBERID"){  //Template
-			memIdArray.push(v);
-		}
-	})
-	
-});
+	var memIdArray = [];
+	$.each(jsonData, function(key , value) {
+	  $.each(value, function(k, v) {
+			//console.log("key : " + k)
+			if(k.trim() == "MEMBERID"){  //Template
+				memIdArray.push(v);
+			}
+	  });
+	});
 
-//template Chk
-if(memIdArray == null || memIdArray.length <= 0){
-	Common.alert("* Template was Chaged. Please Try Again. ");
-	return;
-}
-  // 코드 리스트들
-console.log("memIdArray : " + memIdArray);
+	//template Chk
+	if(memIdArray == null || memIdArray.length <= 0){
+		Common.alert("* Template was Chaged. Please Try Again. ");
+		$("#fileSelector").val("");
+		return;
+	}
+     // 코드 리스트들
+    //console.log("memIdArray : " + memIdArray);
   
- //Ajax 로 데이터 가져오기
- var jsonParam = { memIdArray : memIdArray};
- Common.ajax("GET", "/sales/pos/getUploadMemList", jsonParam , function(result) {
-	 
-	 if(result == null){
-		 Common.alert('<b>Member not found.</br>');
-	 }else{
-		 console.log("Ajax 는 성공");
-		 console.log("내용 : " + JSON.stringify(result));
-		 var columnLayout = [
-		                                  {dataField : "memId" , headerText : "Member ID", width : "20%",  editable : false },
-		                                  {dataField : "memCode" , headerText : "Member Code", width : "20%",  editable : false },
-		                                  {dataField : "name" , headerText : "Member NAme", width : "20%",  editable : false },
-		                                  {dataField : "nric" , headerText : "Member NRIC", width : "20%",  editable : false },
-		                                  {dataField : "code" , headerText : "Branch", width : "20%",  editable : false },
-		                                  {dataField : "brnch" , visible : true}
-		                             ]
+	 //Ajax 로 데이터 가져오기
+	 var jsonParam = { memIdArray : memIdArray};
+	 Common.ajax("GET", "/sales/pos/getUploadMemList", jsonParam , function(result) {
 		 
-		 myGridID = AUIGrid.create("#grid_wrap", columnLayout);
-		 AUIGrid.setGridData(myGridID, result);
-		 
-		//그릴때 혹은 그리고 나서 혹은 세이브시 브랜치 비교해서 컬럼 색 바꾸기
-		
-		//UPLOAD 파일의 길이와 그리드에 그려진 리스트 길이 비교하기
-		 
-	 }
-	 
- });
- //가져온 데이터로 그리드 그리기
- 
- 
-
-/*  $.each(firstRow, function(n,v) {
-     console.log(" n : " + n + " , v : " + v);
-	 columnLayout.push({
-         dataField : n,
-         headerText : n,
-         width : 100
-     });
- }); */
- 
- // 그리드 생성
- //myGridID = AUIGrid.create("#grid_wrap", columnLayout);
- 
- // 그리드에 데이터 삽입
-// AUIGrid.setGridData(myGridID, jsonData);
-
-};
+		 if(result == null){
+			 Common.alert('<b>Member not found.</br>');
+			 $("#fileSelector").val("");
+			 return;
+		 }else{
+			 
+		//	 console.log("result.length : " + result.length);  // from DB
+		//	 console.log("jsonData.length : " + jsonData.length); //from EXEL
+			  if(result.length != jsonData.length){
+				
+				  if(result.length >  jsonData.length){
+					  Common.alert("* Confilct Member ID. Please Try Again.");
+					  return;
+				  }
+				  
+				  //Params Setting
+				  var strArr = [];
+				  var rtnMemArr = [];
+				  var rtnMemList = "";
+				  
+                  for (var idx = 0; idx < result.length; idx++) {
+                     strArr.push(result[idx].memCode);   
+                  }
+                  
+				  console.log("memIdArray : "+ memIdArray);  //jsonData  from EXEL
+				  console.log("strArr : " + strArr);  //result from DB
+				  
+				  $.each(memIdArray, function(idx, el) {
+					
+					  if(strArr.indexOf(el) == -1){
+						  //console.log("el : " + el);
+						  rtnMemArr.push(el);
+					  }
+				  });
+				  rtnMemList = rtnMemArr.toString();
+				  Common.alert("Member ID ["+ rtnMemList +"] is not valid");
+				  $("#fileSelector").val("");
+				  return;
+			 }
+			 AUIGrid.setGridData(myGridID, result);
+		 }
+	 });
+}; //Create Grid End
 
 
 //최초 그리드 생성..
 function createInitGrid() {
  
- var columnLayout = [];
- 
- for(var i=0; i<10; i++) {
-     columnLayout.push({
-         dataField : "f" + i,
-         headerText : String.fromCharCode(65 + i),
-         width : 80
-     });
- }
- 
- // 그리드 속성 설정
- var gridPros = {
-     noDataMessage : "로컬 PC의 엑셀 파일을 선택하십시오."
- };
-
- // 실제로 #grid_wrap 에 그리드 생성
+   var columnLayout = [
+			                     {dataField : "memId" , headerText : "Member ID", width : "20%",  editable : false },
+			                     {dataField : "memCode" , headerText : "Member Code", width : "20%",  editable : false },
+			                     {dataField : "name" , headerText : "Member NAme", width : "20%",  editable : false },
+			                     {dataField : "nric" , headerText : "Member NRIC", width : "20%",  editable : false },
+			                     {dataField : "code" , headerText : "Branch", width : "20%",  editable : false },
+			                     {dataField : "brnch" , visible : false},
+			                     {dataField : "memType" , visible : false},
+			                     {dataField : "fullName" , visible : false},
+			                     {dataField : "stus" , visible : false}
+                               ];
+	var gridPros = {
+		showRowCheckColumn : true, //checkBox
+		softRemoveRowMode : false, 
+		rowStyleFunction : function(rowIndex, item){
+		  //console.log("memCode : " + item.memCode + " , brnch : " + item.brnch + " Main Brnch : " + $("#_mainBrnch").val());
+		  if(item.brnch != $("#_mainBrnch").val()){
+		      return "brnch-not-mach";
+		  }
+		  return "";
+		}
+	};
  myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
- 
- // 그리드 최초에 빈 데이터 넣음.
- AUIGrid.setGridData(myGridID, []);
 }
 
 //아이템들 확인하기
@@ -237,10 +298,11 @@ function setInputFile2(){//인풋파일 세팅하기
 }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<input type="hidden" id="_mainBrnch"  value="${mainBrnch}">
 <header class="pop_header"><!-- pop_header start -->
 <h1>Member Upload</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_memUpPopClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -273,7 +335,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
+    <li><p class="btn_grid"><a id="_memDelBtn">DEL</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -281,7 +343,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_memSaveBtn">Save</a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

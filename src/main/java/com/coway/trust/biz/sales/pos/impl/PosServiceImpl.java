@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.pos.PosService;
 import com.coway.trust.web.sales.SalesConstants;
+import com.ibm.icu.math.BigDecimal;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -126,6 +127,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		List<Object> basketGrid = (List<Object>)params.get("prch");
 		//Grid2
 		List<Object> serialGrid = (List<Object>)params.get("serial");
+		//Grid3
+		List<Object> memGird = (List<Object>)params.get("mem");
 		
 		LOGGER.info("############### get DOC Number & Sequence & full Name & Amounts  ################");
 		/*############## get DOC Number & Sequence & full Name & Amounts ###########*/
@@ -140,18 +143,50 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		EgovMap nameMAp = null;
 		nameMAp = posMapper.getUserFullName(posMap);
 		
-		//Total Amt, Charges , Taxes
-		double tempAmt = 0;
-		double tempTaxes = 0;
-		double tempCharges = 0;
+		
+		
+		;
+		
+		BigDecimal tempTotalAmt = new BigDecimal("0");
+		BigDecimal tempTotalTax = new BigDecimal("0");;
+		BigDecimal tempTotalCharge = new BigDecimal("0");;
+		
+		BigDecimal calHundred = new BigDecimal("100");
+		BigDecimal calGst = new BigDecimal(SalesConstants.POS_INV_ITM_GST_RATE);
+		BigDecimal tempCal = calHundred.add(calGst);
+		LOGGER.info("########################## tempCal : " + tempCal);
 		for (int i = 0; i < basketGrid.size(); i++) {
 			Map<String, Object> amtMap  = null;
-			amtMap = (Map<String, Object>)basketGrid.get(i);
 			
-			tempAmt += Double.parseDouble(String.valueOf(amtMap.get("totalAmt")));
-			tempTaxes += Double.parseDouble(String.valueOf(amtMap.get("subChng"))); 
-			tempCharges += Double.parseDouble(String.valueOf(amtMap.get("subTotal"))); 
+			amtMap = (Map<String, Object>)basketGrid.get(i);
+			BigDecimal tempQty = new BigDecimal(String.valueOf(amtMap.get("inputQty")));
+			BigDecimal tempUnitPrc = new BigDecimal(String.valueOf(amtMap.get("amt")));
+		
+			BigDecimal tempCurAmt = tempUnitPrc.multiply(tempQty); // Prc * Qty
+			BigDecimal tempCurCharge = tempCurAmt.multiply(calHundred).divide(tempCal, 2, BigDecimal.ROUND_HALF_UP); //Charges
+			BigDecimal tempCurTax =  tempCurAmt.subtract(tempCurCharge); // Tax
+					
+			
+			LOGGER.info("__________________________________________________________________________________________");
+			LOGGER.info("_____________NO.["+ i +"] =  prc : " + tempUnitPrc + ",  qty : " + tempQty + " , total Amt : " + tempCurAmt + " , total Tax : " + tempCurTax + " , total Charges : " + tempCurCharge);
+			LOGGER.info("__________________________________________________________________________________________");
+			
+			tempTotalAmt = tempTotalAmt.add(tempCurAmt);
+			tempTotalTax = tempTotalTax.add(tempCurTax);
+			tempTotalCharge = tempTotalCharge.add(tempCurCharge);
+			
 		}
+		
+
+		double rtnAmt = tempTotalAmt.doubleValue();
+		double rtnTax = tempTotalTax.doubleValue();
+		double rtnCharge = tempTotalCharge.doubleValue();
+		
+		
+		LOGGER.info("_____________________________________________________________________________________");
+		LOGGER.info("_______________________ TOTAL PRICE : " + rtnAmt + " , TOTAL TAX : " + rtnTax + " , TOTAL CHARGES : " + rtnCharge);
+		LOGGER.info("_____________________________________________________________________________________");
+		
 		LOGGER.info("############### Parameter Setting , Insert and Update  ################");
 		/* #### Parameter Setting , Insert and Update ######*/
 		
@@ -184,16 +219,34 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		posMap.put("docNoPsn", docNoPsn); //posNo = 0  --문서채번
 		posMap.put("posBillId", SalesConstants.POS_BILL_ID); //pos Bill Id // 0
 		posMap.put("posCustName", nameMAp.get("name")); //posCustName = other Income만 사용함 .. 그러면 나머지는??
-		posMap.put("posTotalAmt", tempAmt);
-		posMap.put("posCharge", tempCharges); 
-		posMap.put("posTaxes", tempTaxes);
+		posMap.put("posTotalAmt", rtnAmt);
+		posMap.put("posCharge", rtnCharge); 
+		posMap.put("posTaxes", rtnTax);
 		posMap.put("posDiscount", 0);    //TODO 확인 필요
 		//hidLocId  와 branch ID
 		posMap.put("posMtchId", 0);
-		posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);
+		posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);  //107205
 		posMap.put("userId", params.get("userId"));
 		posMap.put("userDeptId", params.get("userDeptId"));
-		posMap.put("posStusId", 1); //STUS_ID  ==Active
+		//POS TYPE :   POS SALES  - 2390
+		// 1. WITH PAYMENT
+		/*if("페이먼트 완료 파라미터"){
+			posMap.put("posStusId", SalesConstants.POS_SALES_STATUS_NON_RECEIVE); //STUS_ID  == Non Receive
+		}*/
+		// 2. WITHOUT PAYMENT
+		if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){   //2390   
+			posMap.put("posStusId", SalesConstants.POS_SALES_STATUS_ACTIVE); //STUS_ID  == Active
+		}
+		
+		//POS TYPE :   DEDUCTION COMMISSION   - NO PAYMENT
+		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
+			posMap.put("posStusId", SalesConstants.POS_SALES_STATUS_NON_RECEIVE); //STUS_ID  == Non Receive
+		}
+		//POS TYPE :   OTHER INCOME - NO PAYMENT
+		/*if("OHTER INCOME 일때"){
+			posMap.put("posStusId", SalesConstants.POS_SALES_STATUS_NON_RECEIVE); //STUS_ID  == Non Receive
+		}*/
+		
 		posMap.put("userId", params.get("userId"));
 		
 		if(posMap.get("posReason") == null || String.valueOf(posMap.get("posReason")).equals("")){
@@ -209,6 +262,11 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
         
         // Grid to Map Params
 		// 1). POST TYPE : POS_SALES  
+		LOGGER.info("************************************* POSMAP`s Params : " + posMap.toString());
+		LOGGER.info("************************************* POSMAP - type  : " + String.valueOf(posMap.get("insPosModuleType")));
+		LOGGER.info("************************************* POSMAP - constans(pos_sales)  : " + SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES);
+		LOGGER.info("************************************* POSMAP - constans(deduction_commission)  : " + SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION);
+		
 		if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2390
                 for (int idx = 0; idx < basketGrid.size(); idx++) {  //basket Grid
                 	Map<String, Object> itemMap = 	(Map<String, Object>)basketGrid.get(idx);
@@ -218,7 +276,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
                 	itemMap.put("posMasterSeq", posMasterSeq);
                 	itemMap.put("posItemTaxCodeId", SalesConstants.POS_ITM_TAX_CODE_ID); //32
                 	itemMap.put("posMemId", posMap.get("salesmanPopId")); //MEM_ID
-                	itemMap.put("posRcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE); //RCV_STUS_ID  96 == nonReceive
+                	itemMap.put("posRcvStusId", SalesConstants.POS_SALES_STATUS_NON_RECEIVE); //RCV_STUS_ID  96 == nonReceive
                 	itemMap.put("userId", params.get("userId"));
                 	LOGGER.info("############### 2 - " + idx + "  POS DETAIL INSERT START  ################");
             		LOGGER.info("############### 2 - " + idx + "  POS DETAIL INSERT param : " + itemMap.toString());
@@ -250,37 +308,34 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
         		}//Detail Insert End
 		}
         // 2). POST TYPE : DEDUCTION COMMISSION  //2391
-		/*if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
+		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
 			for (int idx = 0; idx < basketGrid.size(); idx++) {  //basket Grid
 				
-				Map<String, Object> deducItemMap = 	(Map<String, Object>)basketGrid.get(idx); //item List
-				
-				for (int i = 0; i < memberGrid.size(); i++) {
-					Map<String, Object> memMap = 	(Map<String, Object>)memberGrid.get(idx); //item List
+				Map<String, Object> deducItemMap = 	(Map<String, Object>)basketGrid.get(idx); //item Map
+				LOGGER.info("############### 2 - Member(Item) - [" + idx + "]  POS DETAIL(Member) MAP SETTING  ################");
+				for (int i = 0; i < memGird.size(); i++) { 
+					Map<String, Object> memMap = 	(Map<String, Object>)memGird.get(i); //item List
 					int posDetailDuducSeq = posMapper.getSeqSal0058D(); //detail Sequence
 					memMap.put("posDetailDuducSeq", posDetailDuducSeq);
 					memMap.put("posMasterSeq", posMasterSeq);
-					memMap.put("posDetailStkId", deducItemMap.get("stkCode"));  //POS_ITM_STOCK_ID
+					memMap.put("posDetailStkId", deducItemMap.get("stkId"));  //POS_ITM_STOCK_ID
 					memMap.put("posDetailQty", deducItemMap.get("qty"));  //POS_ITM_QTY
 					memMap.put("posDetailUnitPrc", deducItemMap.get("amt")); //Price
 					memMap.put("posDetailTotal", deducItemMap.get("totalAmt")); //ToTal
 					memMap.put("posDetailCharge", deducItemMap.get("subTotal")); //Charge 
 					memMap.put("posDetailTaxs", deducItemMap.get("subChng")); //Tax 
-					
 					memMap.put("posItemTaxCodeId", SalesConstants.POS_ITM_TAX_CODE_ID); //32
-					memMap.put("posMemId", "그리드에서 가져오기"); //MEM_ID
-					memMap.put("posMemCode", "그리드에서 가져오기"); //MEM_CODE
-					memMap.put("posMemType", "그리드에서 가져오기"); //MEM_TYPE 
-					memMap.put("posMemName", "그리드에서 가져오기");//NAME
-					memMap.put("posMemFullName", "그리드에서 가져오기");//FULL_NAME
-					memMap.put("posMemNric", "그리드에서 가져오기");//NRIC
-					memMap.put("posMemStusId", "그리드에서 가져오기");//MEM_STUS_ID
-					memMap.put("posRcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE); //RCV_STUS_ID  96 == nonReceive
+					memMap.put("posRcvStusId", SalesConstants.POS_SALES_STATUS_NON_RECEIVE); //RCV_STUS_ID  96 == nonReceive
 					memMap.put("userId", params.get("userId"));
+					
+					LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT START  ################");
+    				LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT param : " + memMap.toString());
+					posMapper.insertDeductionPosDetail(memMap);
+					LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT END  ################");
 				}
 				
 			}
-		}*/
+		}
         
         //3.  ********************************************************************************************************* ACC BILLING
       		Map<String, Object> accBillingMap = new HashMap<String, Object>();
@@ -293,7 +348,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       		accBillingMap.put("posBillPayTypeId", 0);  //accbilling.BillPayTypeID = 0;
       		accBillingMap.put("docNoPsn", docNoPsn); // accbilling.BillNo = ""; //update later //POS RefNo.
       		accBillingMap.put("posMemberShipNo", ""); //accbilling.BillMemberShipNo = "";
-      		accBillingMap.put("posBillAmt", tempAmt); // accbilling.BillAmt = Convert.ToDouble(totalcharges);
+      		accBillingMap.put("posBillAmt", rtnAmt); // accbilling.BillAmt = Convert.ToDouble(totalcharges);
       		accBillingMap.put("posBillRem", posMap.get("posRemark")); //accbilling.BillRemark = this.txtRemark.Text.Trim();
       		accBillingMap.put("posBillIsPaid", 1); //accbilling.BillIsPaid = true;
       		accBillingMap.put("posBillIsComm", 0); // accbilling.BillIsComm = false;
@@ -331,10 +386,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		accOrdBillingMap.put("posOrdBillScheduleId", 0); // accorderbill.AccBillScheduleID = 0;
     		accOrdBillingMap.put("posOrdBillSchedulePeriod", 0); //accorderbill.AccBillSchedulePeriod = 0;
     		accOrdBillingMap.put("posOrdBillAdjustmentId", 0); //accorderbill.AccBillAdjustmentID = 0;
-    		accOrdBillingMap.put("posOrdBillScheduleAmt", tempAmt); //accorderbill.AccBillScheduleAmount = decimal.Parse(totalcharges);
+    		accOrdBillingMap.put("posOrdBillScheduleAmt", rtnAmt); //accorderbill.AccBillScheduleAmount = decimal.Parse(totalcharges);
     		accOrdBillingMap.put("posOrdBillAdjustmentAmt", 0); //accorderbill.AccBillAdjustmentAmount = 0;
-    		accOrdBillingMap.put("posOrdBillTaxesAmt", tempTaxes); //accorderbill.AccBillTaxesAmount = Convert.ToDecimal(string.Format("{0:0.00}", decimal.Parse(totalcharges) - (System.Convert.ToDecimal(totalcharges) * 100 / 106)));
-    		accOrdBillingMap.put("posOrdBillNetAmount", tempAmt); // accorderbill.AccBillNetAmount = decimal.Parse(totalcharges);
+    		accOrdBillingMap.put("posOrdBillTaxesAmt", rtnTax); //accorderbill.AccBillTaxesAmount = Convert.ToDecimal(string.Format("{0:0.00}", decimal.Parse(totalcharges) - (System.Convert.ToDecimal(totalcharges) * 100 / 106)));
+    		accOrdBillingMap.put("posOrdBillNetAmount", rtnAmt); // accorderbill.AccBillNetAmount = decimal.Parse(totalcharges);
     		accOrdBillingMap.put("posOrdBillStatus", 1); //accorderbill.AccBillStatus = 1;
     		accOrdBillingMap.put("posOrdBillRem", docNoInvoice); //accorderbill.AccBillRemark = ""; //Invoice No.
     		accOrdBillingMap.put("userId", params.get("userId"));
@@ -362,20 +417,20 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvCntcPerson", nameMAp.get("name")); // InvMiscMaster.TaxInvoiceContactPerson = this.txtCustName.Text.Trim();
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvTaskId", 0); //InvMiscMaster.TaxInvoiceTaskID = 0;
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvUserName", params.get("userName")); // InvMiscMaster.TaxInvoiceRemark = li.LoginID;
-    		accTaxInvoiceMiscellaneouMap.put("posTaxInvCharges", tempCharges); //  InvMiscMaster.TaxInvoiceCharges = Convert.ToDecimal(string.Format("{0:0.00}", (decimal.Parse(totalcharges) * 100 / 106)));
-    		accTaxInvoiceMiscellaneouMap.put("posTaxInvTaxes", tempTaxes); //InvMiscMaster.TaxInvoiceTaxes = Convert.ToDecimal(string.Format("{0:0.00}", decimal.Parse(totalcharges) - (decimal.Parse(totalcharges) * 100 / 106)));
-    		accTaxInvoiceMiscellaneouMap.put("posTaxInvTotalCharges", tempAmt); //InvMiscMaster.TaxInvoiceAmountDue = decimal.Parse(totalcharges);
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvCharges", rtnCharge); //  InvMiscMaster.TaxInvoiceCharges = Convert.ToDecimal(string.Format("{0:0.00}", (decimal.Parse(totalcharges) * 100 / 106)));
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvTaxes", rtnTax); //InvMiscMaster.TaxInvoiceTaxes = Convert.ToDecimal(string.Format("{0:0.00}", decimal.Parse(totalcharges) - (decimal.Parse(totalcharges) * 100 / 106)));
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvTotalCharges", rtnAmt); //InvMiscMaster.TaxInvoiceAmountDue = decimal.Parse(totalcharges);
     		accTaxInvoiceMiscellaneouMap.put("userId", params.get("userId"));
     		
     		//TODO 추후 삭제
     		/* Magic Address 미구현 추후 삭제*/
-    		accTaxInvoiceMiscellaneouMap.put("addr1", "");
+    		/*accTaxInvoiceMiscellaneouMap.put("addr1", "");
     		accTaxInvoiceMiscellaneouMap.put("addr2", "");
     		accTaxInvoiceMiscellaneouMap.put("addr3", "");
     		accTaxInvoiceMiscellaneouMap.put("addr4", "");
     		accTaxInvoiceMiscellaneouMap.put("postCode", "");
     		accTaxInvoiceMiscellaneouMap.put("stateName", "");
-    		accTaxInvoiceMiscellaneouMap.put("cnty", "");
+    		accTaxInvoiceMiscellaneouMap.put("cnty", "");*/
     		
     		LOGGER.info("############### 6. POS ACC TAX INVOICE MISCELLANEOUS INSERT START  ################");
     		LOGGER.info("############### 6. POS ACC TAX INVOICE MISCELLANEOUS INSERT param : " + accTaxInvoiceMiscellaneouMap.toString());
@@ -418,7 +473,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             	
             	//TODO 추후 삭제
             	/*### Masic Address 미반영  ###*/
-            	invDetailMap.put("posTaxInvSubAddr1", ""); //InvMiscD.InvoiceItemAdd1 = "";
+            	/*invDetailMap.put("posTaxInvSubAddr1", ""); //InvMiscD.InvoiceItemAdd1 = "";
             	invDetailMap.put("posTaxInvSubAddr2", ""); //InvMiscD.InvoiceItemAdd2 = "";
             	invDetailMap.put("posTaxInvSubAddr3", ""); //InvMiscD.InvoiceItemAdd3 = "";
             	invDetailMap.put("posTaxInvSubAddr4", ""); ////InvMiscD.InvoiceItemAdd3 = null;
@@ -426,7 +481,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             	invDetailMap.put("posTaxInvSubAreaName", ""); // areaName
             	invDetailMap.put("posTaxInvSubStateName", ""); //InvMiscD.InvoiceItemStateName = "";
             	invDetailMap.put("posTaxInvSubCntry", ""); //InvMiscD.InvoiceItemCountry = "";
-            	
+*/            	
             	LOGGER.info("############### 7 - "+idx+" POS ACC TAX INVOICE MISCELLANEOUS_SUB  INSERT START  ################");
         		LOGGER.info("############### 7 - "+idx+" POS ACC TAX INVOICE MISCELLANEOUS_SUB  INSERT param : " + invDetailMap.toString());
             	posMapper.insertPosTaxInvcMiscSub(invDetailMap);
@@ -500,4 +555,61 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		
 		return posMapper.getUploadMemList(params);
 	}
+
+	@Override
+	public EgovMap posReversalDetail(Map<String, Object> params) throws Exception {
+		
+		return posMapper.posReversalDetail(params);
+	}
+
+	@Override
+	public List<EgovMap> getPosDetailList(Map<String, Object> params) throws Exception {
+		
+		return posMapper.getPosDetailList(params);
+	}
+
+	@Override
+	public EgovMap chkReveralBeforeReversal(Map<String, Object> params) throws Exception {
+		
+		return posMapper.chkReveralBeforeReversal(params);
+	}
+
+	@Override
+	@Transactional
+	public EgovMap insertPosReversal(Map<String, Object> params) throws Exception {
+
+	       /*  int Old_POSID = int.Parse(this.hidden_POSID.Value);
+	        string Old_POSNo = this.txtReferenceNo.Text.Trim();
+	        int Old_POSPayID = int.Parse(this.hidden_PayID.Value);
+	        int Old_POSBillID = int.Parse(this.hidden_BillID.Value);
+	        int ModuleTypeID = int.Parse(this.hidden_POSModuleTypeID.Value); */
+		
+			/*########### get Params ###############*/
+			LOGGER.info("################################  reversal Impl PARAM.posID  : " + params.get("rePosId"));
+			
+			
+			/*################################### Get Doc No #############################*/
+			
+			String posRefNo = "";   // SOI no. (144)
+			String voidNo = "";    // Void no.  (112)
+			String rptNo = "";   // RD no. (18) 
+			String cnno = "";   //CN-New (134)
+					
+			params.put("docNoId", SalesConstants.POS_DOC_NO_PSN_NO); //(144)
+			posRefNo = posMapper.getDocNo(params);
+			
+			params.put("docNoId", SalesConstants.POS_DOC_NO_VOID_NO); //(112)
+			voidNo = posMapper.getDocNo(params);
+			
+			params.put("docNoId", SalesConstants.POS_DOC_NO_RD_NO); //(18)
+			rptNo = posMapper.getDocNo(params);
+			
+			params.put("docNoId", SalesConstants.POS_DOC_NO_CN_NEW_NO); //(134)
+			cnno = posMapper.getDocNo(params);
+			
+			
+		
+		return null;
+	}
+	
 }

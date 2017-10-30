@@ -39,7 +39,6 @@ public class PosController {
 	@RequestMapping(value = "/selectPosList.do")
 	public String selectPosList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
-		LOGGER.info("###### Post List Start ###########");
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 		//TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
@@ -50,8 +49,6 @@ public class PosController {
 	
 	@RequestMapping(value = "/selectPosModuleCodeList")
 	public ResponseEntity<List<EgovMap>> selectPosModuleCodeList(@RequestParam Map<String, Object> params , @RequestParam(value = "codeIn[]") List<String> arr) throws Exception{
-		
-		LOGGER.info("###### selectPosModuleCodeList Start ###########");
 		
 		List<EgovMap> codeList = null;
 		params.put("codeArray", arr);
@@ -65,8 +62,6 @@ public class PosController {
 	
 	@RequestMapping(value = "/selectStatusCodeList")
 	public ResponseEntity<List<EgovMap>> selectStatusCodeList(@RequestParam Map<String, Object> params) throws Exception{
-		
-		LOGGER.info("###### selectStatusCodeList Start ###########");
 		
 		List<EgovMap> codeList = null;
 		
@@ -128,13 +123,11 @@ public class PosController {
 		
 		EgovMap memCodeMap = null;
 		EgovMap locMap = null;
-		LOGGER.info("############################# /posSystemPop.do Start! #############");
 		memCodeMap = posService.getMemCode(params); //get Brncn ID
 		
 		if(memCodeMap != null){
 			
 			if(memCodeMap.get("brnch") != null){ //BRNCH
-				LOGGER.info("################ brnchId : " + memCodeMap.get("brnch"));
 				params.put("brnchId", memCodeMap.get("brnch"));
 				locMap = posService.selectWarehouse(params);
 			}
@@ -177,8 +170,6 @@ public class PosController {
 		List<EgovMap> codeList = null;
 		
 		params.put("exArr", exceptArr);
-		
-		LOGGER.info("############# selectPSMItmTypeList params : " + params.toString() );
 		
 		codeList = posService.selectPSMItmTypeList(params);
 		
@@ -299,13 +290,6 @@ public class PosController {
 	
 	@RequestMapping(value = "/insertPos.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertPos(@RequestBody Map<String, Object> params) throws Exception{
-		LOGGER.info("###############################################################################");
-		LOGGER.info("###############################################################################");
-		LOGGER.info("###############################################################################");
-		LOGGER.info("##########  ----- params.toString : " + params.toString());
-		LOGGER.info("###############################################################################");
-		LOGGER.info("###############################################################################");
-		LOGGER.info("###############################################################################");
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 		params.put("userDeptId", sessionVO.getUserDeptId());
@@ -318,7 +302,9 @@ public class PosController {
 	}
 	
 	@RequestMapping(value = "/posMemUploadPop.do")
-	public String posMemUploadPop (@RequestParam Map<String, Object> params) throws Exception{
+	public String posMemUploadPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		model.addAttribute("mainBrnch", params.get("cmbWhBrnchIdPop"));
 		
 		return "sales/pos/posMemUploadPop";
 	}
@@ -328,11 +314,60 @@ public class PosController {
 	public ResponseEntity<List<EgovMap>> getUploadMemList (@RequestParam Map<String, Object> params, @RequestParam(value = "memIdArray[]") String[] memIdArray) throws Exception{
 		List<EgovMap> memList = null;
 		
-		//Params
 		params.put("memberIdArr", memIdArray);
 		
 		memList = posService.getUploadMemList(params);
 		
 		return ResponseEntity.ok(memList);
+	}
+	
+	
+	@RequestMapping(value = "/chkReveralBeforeReversal")
+	public  ResponseEntity<EgovMap> chkReveralBeforeReversal(@RequestParam Map<String, Object> params) throws Exception{
+		
+		EgovMap chkMap = null;
+		
+		chkMap = posService.chkReveralBeforeReversal(params);
+		
+		return ResponseEntity.ok(chkMap);
+	}
+	
+	
+	
+	@RequestMapping(value = "/posReversalPop.do")
+	public String posReversalPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		//posId
+		LOGGER.info("######################################### posID : " + params.get("posId"));
+		EgovMap revDetailMap = null;
+		revDetailMap = posService.posReversalDetail(params);
+		
+		model.addAttribute("revDetailMap", revDetailMap);
+		return "sales/pos/posReversalPop";
+		
+	}
+	
+	
+	@RequestMapping(value = "/getPosDetailList")
+	public ResponseEntity<List<EgovMap>> getPosDetailList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> detailList = null;
+		
+		LOGGER.info("################################## detail Grid PARAM : " + params.toString());
+		
+		detailList = posService.getPosDetailList(params);
+		
+		return ResponseEntity.ok(detailList);
+	}
+	
+	
+	@RequestMapping(value = "/insertPosReversal.do" , method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> insertPosReversal(@RequestBody Map<String, Object> params) throws Exception{
+		
+		EgovMap revMap = null; 
+		revMap = posService.insertPosReversal(params);
+		
+		return ResponseEntity.ok(revMap);
+		
 	}
 }

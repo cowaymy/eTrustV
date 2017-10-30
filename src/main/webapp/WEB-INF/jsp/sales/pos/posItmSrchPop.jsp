@@ -268,7 +268,8 @@ $(document).ready(function() {
 						return;
 					}
 				}
-				
+				//Exsit Filter
+				$("#serialTemp_grid_wrap").css("display" , "");
 			}//loop end
 		}
 		
@@ -411,12 +412,11 @@ function fn_createBasketGrid(){
 	                                        	 console.log("tempString : " + tempString); */
 	                                        	 var arrParam  = {basketStkCode : item.stkCode , tempString : tempString};
                                                  Common.popupDiv("/sales/pos/posFilterSrchPop.do", arrParam , null, true);
-	                                        	 
-	                                        	 
-	                                       }
+	                                         }
 	                                }
 	                            },
-	                            {dataField : "stkTypeId" , visible :false}
+	                            {dataField : "stkTypeId" , visible :false},
+	                            {dataField : "stkId" , visible :false}//STK_ID
 	                           ];
 	    
 	    //그리드 속성 설정
@@ -451,7 +451,8 @@ function fn_initField(){
 	if($("#_posModuleType").val() == 2390){ //2390 == POS Sales
 	
 	    if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
-	        //ComboBox 호출 (Type)
+	    	$("#_gridArea").css("display" , "");  //Serial Grid Display None
+	    	//ComboBox 호출 (Type)
 	        CommonCombo.make('_purcItemType', "/sales/pos/selectPSMItmTypeList", '' , '', ComboOption);
 	         // 추후 변경
 	        var itmType = {itemType : 61};
@@ -459,7 +460,9 @@ function fn_initField(){
 	    }
 	    
 	    if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
-	        //ComboBox 호출 (Type)
+	    	
+	    	$("#_gridArea").css("display" , "none");  //Serial Grid Display None
+	    	//ComboBox 호출 (Type)
 	        CommonCombo.make('_purcItemType', "/sales/pos/selectPIItmTypeList", '' , '', ComboOption);
 	        // Select Value 추후 변경 
 	        var itmType = {itemType : 1345};

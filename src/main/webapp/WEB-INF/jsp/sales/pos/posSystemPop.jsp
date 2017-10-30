@@ -10,7 +10,7 @@ $(document).ready(function() {
 	
 	createPurchaseGridID();
 	createSerialTempGridID();
-	creatememGridID;
+	creatememGridID();
 	
 	//PosModuleTypeComboBox
 	var modulePopParam = {groupCode : 143, codeIn : [2390, 2391]};
@@ -44,6 +44,8 @@ $(document).ready(function() {
             CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
             //MEM GRID DISPLAY
             $("#_purchMemBtn").css("display" , "none");
+            $("#memTemp_grid_wrap").css("display" , "");
+            AUIGrid.clearGridData(memGridID);
         }
         
         if(tempVal == 2391){ //Deduction
@@ -57,7 +59,8 @@ $(document).ready(function() {
              CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
              //MEM GRID DISPLAY
              $("#_purchMemBtn").css("display" , "");
-             $("#memTemp_grid_wrap").css("display" , "none");
+             $("#memTemp_grid_wrap").css("display" , "");
+             AUIGrid.resize(memGridID , 960, 300);
         }
         
     });
@@ -95,6 +98,11 @@ $(document).ready(function() {
         //4. Delete Serial Number
         if(delArr != null && delArr.length > 0){
             AUIGrid.removeRow(serialTempGridID, delArr); 
+        }
+        
+        var serialRowCnt = AUIGrid.getRowCount(serialTempGridID);
+        if(serialRowCnt <= 0){
+        	$("#serialTemp_grid_wrap").css("display" , "none");
         }
         //5. Remove Check Low 
         AUIGrid.removeCheckedRows(purchaseGridID);
@@ -138,7 +146,21 @@ $(document).ready(function() {
     //Save Request
     $("#_posReqSaveBtn").click(function() {
     	
-    	//Validation
+    	/****Validation ***/
+    	//Purchase Grid Null Check
+    	if(AUIGrid.getGridData(purchaseGridID) <= 0){
+    		Common.alert("* Please select the Item(s). ");
+    		return;
+    	}
+    	
+    	//Member Grid Null Check
+    	if($("#_insPosModuleType").val() == 2391){
+    		if(AUIGrid.getGridData(memGridID) <= 0){
+                Common.alert("* Please select the Member(s). ");
+                return;
+            }	
+    	}
+    	
     	//Member Code and Id Null Check
     	if(null == $("#salesmanPopCd").val() || '' == $("#salesmanPopCd").val()){
     		Common.alert("* Please select the member code.");
@@ -168,6 +190,18 @@ $(document).ready(function() {
     		Common.alert(" * Please key in Remark. ");
     		return;
     	}
+    	
+    	//TODO payment not Enter
+    	/*###############  Payment Validation Part #################################*/
+    	
+    	
+    	
+    	
+    	
+    	
+    	/*###############  Payment Validation Part #################################*/
+    	
+    	
     	//Save
     	fn_savePosRequest();
 		
@@ -175,19 +209,28 @@ $(document).ready(function() {
     
     //Member List
     $("#_purchMemBtn").click(function() {
-    	Common.popupDiv("/sales/pos/posMemUploadPop.do", '', null , true , '_memDiv');
+    	Common.popupDiv("/sales/pos/posMemUploadPop.do", $("#_sysForm").serializeJSON(), null , true , '_memDiv');
 	});
     
 });//Document Ready Func End
+
+function fn_setMemberGirdData(paramObj){
+	
+	AUIGrid.setGridData(memGridID, paramObj);
+	
+}
+
 
 function fn_savePosRequest(){
 	
       var data = {};
       var prchParam = AUIGrid.getGridData(purchaseGridID);
       var serialParam = AUIGrid.getGridData(serialTempGridID);
+      var memParam = AUIGrid.getGridData(memGridID);
       
       data.prch = prchParam;
       data.serial = serialParam;
+      data.mem = memParam;
       data.form = $("#_sysForm").serializeJSON();
       
       //Save
@@ -246,7 +289,8 @@ function createPurchaseGridID(){
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                             	return Number(calObj.subTotal);
                             }},
-                            {dataField : "stkTypeId" , visible :false}
+                            {dataField : "stkTypeId" , visible :false},
+                            {dataField : "stkId" , visible :false}//STK_ID
                            ];
     
     //그리드 속성 설정
@@ -356,10 +400,15 @@ function creatememGridID(){
     };
 	
 	var memConfirmlColumnLayout =  [ 
-	                                  {dataField : "", headerText : "Member ID", width : '25%' , editable : false  } ,
-	                                  {dataField : "", headerText : "Member Name", width : '25%' , editable : false },
-	                                  {dataField : "", headerText : "Member NRIC", width : '25%' , editable : false },
-	                                  {dataField : "", headerText : "Branch", width : '25%' , editable : false }
+	                                     {dataField : "memId" , headerText : "Member ID", width : "20%",  editable : false },
+		                                 {dataField : "memCode" , headerText : "Member Code", width : "20%",  editable : false },
+		                                 {dataField : "name" , headerText : "Member NAme", width : "20%",  editable : false },
+		                                 {dataField : "nric" , headerText : "Member NRIC", width : "20%",  editable : false },
+		                                 {dataField : "code" , headerText : "Branch", width : "20%",  editable : false },
+		                                 {dataField : "brnch" , visible : false},
+		                                 {dataField : "memType" , visible : false},
+		                                 {dataField : "fullName" , visible : false},
+		                                 {dataField : "stus" , visible : false}
 	                                 ];
 	
 	memGridID = GridCommon.createAUIGrid("#memTemp_grid_wrap", memConfirmlColumnLayout,'', memGridPros);

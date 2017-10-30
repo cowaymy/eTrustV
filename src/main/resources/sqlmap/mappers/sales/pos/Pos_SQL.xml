@@ -454,6 +454,7 @@ SELECT DISTINCT
      
      <select id="selectPIItmList" parameterType="Map" resultType="egovMap">
             SELECT Project1.ITM_ID CODE_ID  ,
+                   Project1.ITM_ID STK_ID  ,
                    Project1.ITM_CODE STK_CODE ,
                    Project1.ITM_CODE || ' - ' || Project1.ITM_DESC CODE_NAME,
                    Project1.ITM_DESC  STK_DESC ,
@@ -486,6 +487,7 @@ SELECT DISTINCT
      <select id="chkStockList" parameterType="Map" resultType="egovMap">
                     SELECT 
                         Project1.LOC_ID,
+                        Project1.STK_ID,
                         Project1.STK_CODE,
                         Project1.STK_DESC,
                         Project1.STK_TYPE_ID,
@@ -498,6 +500,7 @@ SELECT DISTINCT
                     FROM ( 
                             SELECT 
                                 NVL(Extent2.LOC_ID, 0) LOC_ID,
+                                Extent1.STK_ID,
                                 Extent1.STK_CODE,
                                 Extent1.STK_DESC,
                                 Extent1.STK_TYPE_ID,
@@ -739,7 +742,7 @@ SELECT DISTINCT
                 UPD_DT )
 			  VALUES ( #{posDetailSeq},
 			           #{posMasterSeq},
-			           #{stkCode},
+			           #{stkId},
 			           #{inputQty}, 
 			           #{amt},
 			           #{totalAmt},
@@ -786,13 +789,13 @@ SELECT DISTINCT
                        #{posDetailCharge}, 
                        #{posDetailTaxs},
                        #{posItemTaxCodeId},
-                       #{posMemId},
-                       #{posMemCode},
-                       #{posMemType},
-                       #{posMemName},
-                       #{posMemFullName},
-                       #{posMemNric},
-                       #{posMemStusId},
+                       #{memId},
+                       #{memCode},
+                       #{memType},
+                       #{name},
+                       #{fullName},
+                       #{nric},
+                       #{stus},
                        #{posRcvStusId},
                        #{userId},
                        SYSDATE,
@@ -911,13 +914,13 @@ SELECT DISTINCT
 							    TAX_INVC_CUST_NAME,
 							    TAX_INVC_CNTC_PERSON,
 							    <!-- 추후 삭제 -->
-							    TAX_INVC_ADDR1,
+							   <!--  TAX_INVC_ADDR1,
 							    TAX_INVC_ADDR2, 
 							    TAX_INVC_ADDR3, 
 							    TAX_INVC_ADDR4,
 							    TAX_INVC_POST_CODE,
 							    TAX_INVC_STATE_NAME,
-							    TAX_INVC_CNTY,  
+							    TAX_INVC_CNTY,   -->
 							    
 							    TAX_INVC_TASK_ID, 
 							    TAX_INVC_REM, 
@@ -934,13 +937,13 @@ SELECT DISTINCT
 								           #{posTaxInvCustName},
 								           #{posTaxInvCntcPerson},
 								            <!-- 추후 삭제 -->
-								           #{addr1},
+								          <!--  #{addr1},
 								           #{addr2},
 								           #{addr3},
 								           #{addr4},
 								           #{postCode},
 								           #{stateName},
-								           #{cnty},
+								           #{cnty}, -->
 								           
 								           #{posTaxInvTaskId},
 								           #{posTaxInvUserName},
@@ -970,14 +973,14 @@ SELECT DISTINCT
 					    INVC_ITM_CHRG, 
 					    INVC_ITM_AMT_DUE,
 					    <!-- 추후 삭제  Magic Address -->
-					    INVC_ITM_ADD1, 
+					  <!--   INVC_ITM_ADD1, 
 					    INVC_ITM_ADD2, 
 					    INVC_ITM_ADD3, 
 					    INVC_ITM_ADD4, 
 					    INVC_ITM_POST_CODE,
 					    INVC_ITM_AREA_NAME, 
 					    INVC_ITM_STATE_NAME,
-					    INVC_ITM_CNTY,
+					    INVC_ITM_CNTY, -->
 					    
 					    INVC_ITM_INSTALL_DT, 
 					    INVC_ITM_RETN_DT, 
@@ -998,14 +1001,14 @@ SELECT DISTINCT
 					           #{subTotal},
 					           #{totalAmt},
 					           <!-- 추후 삭제 Magic Address -->
-					           #{posTaxInvSubAddr1},
+					          <!--  #{posTaxInvSubAddr1},
 					           #{posTaxInvSubAddr2},
 					           #{posTaxInvSubAddr3},
 					           #{posTaxInvSubAddr4},
 					           #{posTaxInvSubPostCode},
 					           #{posTaxInvSubAreaName},
 					           #{posTaxInvSubStateName}, 
-					           #{posTaxInvSubCntry},					           
+					           #{posTaxInvSubCntry},			 -->		           
 					           
 					           NULL,
 					           NULL, 
@@ -1108,7 +1111,10 @@ SELECT DISTINCT
                     T1.NAME,
                     T1.NRIC,
                     T2.CODE,
-                    T1.BRNCH
+                    T1.BRNCH,
+                    T1.MEM_TYPE,
+                    T1.FULL_NAME,
+                    T1.STUS
 				 FROM
 				     ORG0001D T1 LEFT JOIN SYS0005M T2 ON T2.BRNCH_ID = T1.BRNCH
 				  <if test=" null != memberIdArr and memberIdArr.length > 0">
@@ -1117,5 +1123,78 @@ SELECT DISTINCT
 				        #{item}
 				    </foreach>
 				  </if>    
+    </select>
+    
+    <select id="chkReveralBeforeReversal" parameterType="Map" resultType="egovMap">
+			SELECT 
+			    Extent1.POS_ID POS_ID  
+			FROM 
+			     SAL0057D Extent1
+			     JOIN SAL0057D Extent2   ON Extent2.POS_MTCH_ID = Extent1.POS_ID
+			WHERE 
+			     Extent1.POS_NO = #{reRefNo}
+			<![CDATA[      
+			AND ROWNUM <= 1
+			]]>
+    </select>
+    
+    <select id="posReversalDetail" parameterType="Map" resultType="egovMap">
+		        SELECT 
+                        T1.POS_ID,
+                        T1.POS_NO,
+                        T1.POS_BILL_ID,
+                        T1.POS_CUST_NAME,
+                        TO_CHAR(T1.POS_DT, 'DD/MM/YYYY'),
+                        T1.POS_TYPE_ID,
+                        T1.POS_MODULE_TYPE_ID,
+                        T1.POS_TOT_AMT,
+                        T1.POS_TOT_CHRG,
+                        T1.POS_TOT_TXS,
+                        T1.POS_TOT_DSCNT,
+                        T1.POS_WH_ID,
+                        T1.POS_REM,
+                        T1.POS_MEM_ID,
+                        T2.MEM_CODE, 
+                        T1.POS_RESN_ID,
+                        T1.BRNCH_ID                        
+                    FROM
+                        SAL0057D T1 
+                    INNER JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
+                    WHERE
+                        POS_ID = #{posId}
+                    AND
+                    <![CDATA[
+                        ROWNUM <= 1
+                     ]]>        
+    </select>
+    
+    <select id="getPosDetailList"  parameterType="Map" resultType="egovMap">
+            SELECT 
+                T1.POS_ITM_ID,
+                T1.POS_ID,
+                T1.POS_ITM_STOCK_ID,
+                <if test=" null != filterType and '' != filterType">
+                    T2.STK_DESC,
+                    T2.STK_CODE,
+                </if>
+                <if test=" null != itembankType and '' != itembankType">
+                    T2.ITM_DESC STK_DESC,
+                    T2.ITM_CODE STK_CODE,
+                </if>
+                T1.POS_ITM_QTY QTY,
+                T1.POS_ITM_UNIT_PRC AMT,
+                T1.POS_ITM_TOT TOT,
+                T1.POS_ITM_CHRG CHRG,
+                T1.POS_ITM_TXS TXS
+            FROM 
+                SAL0058D T1 
+                <if test=" null != filterType and '' != filterType">
+                   LEFT JOIN SYS0026M T2 ON T2.STK_ID = T1.POS_ITM_STOCK_ID
+                </if>
+                <if test=" null != itembankType and '' != itembankType">
+                    LEFT JOIN LOG0026D T2 ON T2.ITM_ID = T1.POS_ITM_STOCK_ID
+                </if>
+            WHERE 
+               T1.POS_ID = #{rePosId}
     </select>
 </mapper>

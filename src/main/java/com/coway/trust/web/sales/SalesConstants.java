@@ -186,6 +186,8 @@ public class SalesConstants {
 	
 	//POS
 	public static final int POS_DETAIL_NON_RECEIVE = 96;   //96 == nonReceive
+	public static final int POS_SALES_STATUS_ACTIVE = 1;    //1  == Active
+	public static final int POS_SALES_STATUS_NON_RECEIVE = 96;    //96  == Non Receive
 	
 	public static final String POS_SALES_TYPE_FILTER = "1352"; //Filter Type
 	public static final String POS_SALES_TYPE_ITMBANK = "1353"; //Filter Type
@@ -204,6 +206,9 @@ public class SalesConstants {
 	public static final int POS_ITM_TAX_CODE_ID = 32;
 	public static final int POS_DOC_NO_PSN_NO = 144;   // PSN No.
 	public static final int POS_DOC_NO_INVOICE_NO = 143; // Invoice No. BR68
+	public static final int POS_DOC_NO_VOID_NO = 112;  //Void No.
+	public static final int POS_DOC_NO_RD_NO = 18;   //RD no.
+	public static final int POS_DOC_NO_CN_NEW_NO = 134; //CN-NEW no.
 	public static final String POS_CUST_ID = "107205"; // ASIS  //posM.POSCustomerID
 	
 	public static final int POS_BILL_ID = 0;  //pos Bill Id

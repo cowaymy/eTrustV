@@ -80,4 +80,10 @@ public interface PosMapper {
 	void insertSerialNo(Map<String, Object> params);
 	
 	List<EgovMap> getUploadMemList(Map<String, Object> params);
+	
+	EgovMap posReversalDetail(Map<String, Object> params);
+	
+	List<EgovMap> getPosDetailList(Map<String, Object> params);
+	
+	EgovMap chkReveralBeforeReversal(Map<String, Object> params);
 }
