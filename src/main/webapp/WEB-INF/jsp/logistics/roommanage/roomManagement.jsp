@@ -46,7 +46,17 @@
     var columnLayout = [{dataField:"rumId"      ,headerText:"Room Id"      ,width:"15%"  ,height:30 , visible:true},
                         {dataField:"rumCode"    ,headerText:"Room Code"    ,width:"20%" ,height:30 , visible:true},
                         {dataField:"rumName"    ,headerText:"Room Name"    ,width:"35%" ,height:30 , visible:true},
-                        {dataField:"stusId"     ,headerText:"Status"       ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"stusId"     ,headerText:"Status"       ,width:"15%" ,height:30 , visible:true
+                        	,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
+                                var retStr = value;
+                                for(var i=0,len=comboData.length; i<len; i++) {
+                                    if(comboData[i]["codeId"] == value) {
+                                        retStr = comboData[i]["codeName"];
+                                        break;
+                                    }
+                                }
+                                return retStr;
+                            }},
                         {dataField:"cpcty"      ,headerText:"Capacity"     ,width:"15%" ,height:30 , visible:true},
                         {dataField:"advTmInMin" ,headerText:"advTmInMin"   ,width:90 ,height:30 , visible:false},
                         {dataField:"brnchId"    ,headerText:"brnchId"      ,width:120 ,height:30 , visible:false},
@@ -116,6 +126,11 @@
             });
             $("#closebtn").click(function(){
             	$("#openwindow").hide();
+            });
+            $("#add").click(function(){
+            	 doGetComboSepa('/common/selectCodeList.do', '89' , '' , '','newOption', 'S' , ''); 
+            	 doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','newbranchid', 'S' , ''); 
+            	$("#popup_wrap_new").show();
             });
             $("#bfmonth").click(function(){
             	var selectedItems = AUIGrid.getSelectedItems(myGridID);
@@ -337,21 +352,17 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a id="edit">Edit Conference Room</a></p></li>
+        <li><p class="link_btn"><a id="picture">Upload New Conference Room Picture</a></p></li>
+        <li><p class="link_btn"><a id="view">View Conference Room</a></p></li>
+        <li><p class="link_btn"><a id="viewschedule">View Booking Schedule</a></p></li>
+        <li><p class="link_btn"><a id="book">Book Conference Room</a></p></li>
+        <li><p class="link_btn"><a id="viewbook">View Room Booking</a></p></li>
+        <li><p class="link_btn"><a id="editbook">Edit Room Booking</a></p></li>
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-<!--         <li><p class="link_btn type2"><a id="copyAssetOpen">Copy Asset</a></p></li>
-        <li><p class="link_btn type2"><a id="transAssetOpen">Transfer Asset (Single)</a></p></li>
-        <li><p class="link_btn type2"><a id="transBulkAssetOpen">Transfer Asset (Bulk)</a></p></li>
-        <li><p class="link_btn type2"><a id="returnAssetOpen">Return Asset</a></p></li>
-        <li><p class="link_btn type2"><a id="statusAssetOpen">Lost / Obsolete / Deactivate</a></p></li> -->
+        <li><p class="link_btn type2"><a  id="add">Add New Conference Room</a></p></li>
+        <li><p class="link_btn type2"><a  id="gobook">Go To Booking Management</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -384,6 +395,61 @@
 </section>
 </div>
 
+<div id="popup_wrap_new" class="size_big popup_wrap" style="display:none"><!-- popup_wrap start -->
 
+<header class="pop_header"><!-- pop_header start -->
+<h1 id="popup_title">Conference Room Management - New Conference Room</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->
+<form id="popform">
+  <table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Room Code</th>
+    <td><input id="newRoomCd" name="newRoomCd" type="text" title="" placeholder="" class="w100p" /></td>
+     <th scope="row">Room Name</th>
+    <td><input id="newRoomNm" name="newRoomNm" type="text" title="" placeholder="" class="w100p" /></td>
+
+</tr>
+<tr>
+    <th scope="row">Advance Booking Option</th>
+    <td>
+     <select id="newOption" name="newOption" class="w100p" >
+     </select>
+    </td>
+    <th scope="row">Advance Booking Time</th>
+    <td><input id="newBookingTm" name="newBookingTm" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Capacity</th>
+    <td><input id="newCapacity" name="newCapacity" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Branch</th>
+      <td>
+    <select id="newbranchid" name="newbranchid" class="w100p" >
+    </select>
+    </td>
+    </tr>
+    <tr>    
+         <th scope="row">Description</th>
+         <td colspan='3'><input type="text" name="description" id="description" class="w100p"/></td>
+     </tr>
+</tbody>
+</table>
+</form>
+            <ul class="center_btns">
+               <li><p class="btn_blue2 big"><a id="saveNew">SAVE</a></p></li> 
+            </ul>
+</section><!-- pop_body end -->
+</div>
 
 
