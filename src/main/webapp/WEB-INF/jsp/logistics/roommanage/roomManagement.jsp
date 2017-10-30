@@ -205,12 +205,12 @@
     function schedulerfunc(data){
     	//$("#dp").empty();
     	dp.cellMarginBottom = 20;
-        dp.bubble = new DayPilot.Bubble({
-            onLoad: function(args) {
-                var ev = args.source;
-                args.html = "testing bubble for: " + ev.text();
-            }
-        });
+//        dp.bubble = new DayPilot.Bubble({
+//            onLoad: function(args) {
+//                var ev = args.source;
+//                args.html = "testing bubble for: " + ev.text();
+//            }
+//        });
 
         // view
         dp.startDate = data[0].nowdate;
@@ -232,13 +232,13 @@
 
         // event moving
         dp.onEventMoved = function (args) {
-            dp.message("Moved: " + args.e.text());
+            console.log("Moved: " + args.e.text());
         };
 
         // event resizing
         dp.onEventResized = function (args) {
             console.log(args);
-            dp.message("Resized: " + args.e.text());
+            console.log("Resized: " + args.e.text());
         };
 
         dp.onBeforeHeaderRender = function(args) {
@@ -261,7 +261,7 @@
                 text: name
             });
             dp.events.add(e);
-            dp.message("Created");
+            console.log("Created");
         };
         
         dp.onEventClicked = function(args) {

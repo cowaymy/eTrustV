@@ -150,6 +150,11 @@ public class SampleController {
 		return "sample/sampleEditor";
 	}
 
+	@RequestMapping(value = "/sampleSchedule.do")
+	public String sampleSchedule(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		return "sample/sampleSchedule";
+	}
+
 	@RequestMapping(value = "/getEditor.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getEditor(@RequestParam Map<String, Object> params, Model model)
 			throws Exception {
