@@ -12,6 +12,7 @@
 //AUIGrid 그리드 객체
 var masterListGridID;
 var statementdetailPopGridID;
+var journalEntryPopGridID;
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
@@ -157,7 +158,7 @@ var statementdetailPopLayout = [
             Common.ajax("GET","/payment/selectJournalBasicInfo.do",{"journalId" : journalId}, function(result){
             	console.log(result);
             	
-	            $('#statement_detail_popup_wrap').show();
+	            $('#statement_popup_wrap').show();
 	            
 	            $('#statementRefNo').text(result.data.masterView.fBankJrnlRefNo);
 	            $('#statementStatus').text(result.data.masterView.name);
@@ -170,12 +171,45 @@ var statementdetailPopLayout = [
                 $('#netTotal').text(result.data.grossTotal - result.data.masterView.fBankJrnlAdj);
 	            
                 AUIGrid.destroy(statementdetailPopGridID);
-	    		statementdetailPopGridID = GridCommon.createAUIGrid("detail_pop_grid_wrap", statementdetailPopLayout,null,gridPros);
+	    		statementdetailPopGridID = GridCommon.createAUIGrid("statement_pop_grid_wrap", statementdetailPopLayout,null,gridPros);
 	            AUIGrid.setGridData(statementdetailPopGridID, result.data.detailList);
             
             });
         }else{
         	Common.alert('No Statement selected.');
+        }
+    }
+    
+    function fn_journalEntryPop(){
+        
+        var selectedItem = AUIGrid.getSelectedIndex(masterListGridID);
+        
+        if (selectedItem[0] > -1){
+            
+            var journalId = AUIGrid.getCellValue(masterListGridID, selectedGridValue, "fBankJrnlId");
+        
+            Common.ajax("GET","/payment/selectJournalBasicInfo.do",{"journalId" : journalId}, function(result){
+                console.log(result);
+                
+                $('#journal_popup_wrap').show();
+                
+                $('#statementRefNo').text(result.data.masterView.fBankJrnlRefNo);
+                $('#statementStatus').text(result.data.masterView.name);
+                $('#statementAccount').text(result.data.masterView.accDesc);
+                $('#statementRemark').text(result.data.masterView.fBankJrnlRem);
+                $('#statementCreateBy').text(result.data.masterView.userName);
+                $('#statementCreateAt').text(result.data.masterView.fBankJrnlCrtDt);
+                $('#adjsutment').val(result.data.masterView.fBankJrnlAdj);
+                $('#grossTotal').text(result.data.grossTotal);
+                $('#netTotal').text(result.data.grossTotal - result.data.masterView.fBankJrnlAdj);
+                
+                AUIGrid.destroy(journalEntryPopGridID);
+                journalEntryPopGridID = GridCommon.createAUIGrid("statement_pop_grid_wrap", statementdetailPopLayout,null,gridPros);
+                AUIGrid.setGridData(journalEntryPopGridID, result.data.detailList);
+            
+            });
+        }else{
+            Common.alert('No Statement selected.');
         }
     }
     
@@ -262,6 +296,7 @@ var statementdetailPopLayout = [
 				    </ul>
 				    <ul class="btns">
 				        <li><p class="link_btn type2"><a href="javascript:fn_statementViewPop();">Statement View</a></p></li>
+				        <li><p class="link_btn type2"><a href="javascript:fn_journalEntryPop();">Journal Entry</a></p></li>
 				    </ul>
 				    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
@@ -276,7 +311,7 @@ var statementdetailPopLayout = [
 	</section><!-- search_result end -->
 </section><!-- content end -->
 
-<div id="statement_detail_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+<div id="statement_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Reconciliation Task</h1>
 		<ul class="right_opt">
@@ -354,8 +389,92 @@ var statementdetailPopLayout = [
 			<aside class="title_line"><!-- title_line start -->
 			     <h3>Transaction In Statement</h3>
 			</aside><!-- title_line end -->
-			<article class="grid_wrap" id="detail_pop_grid_wrap"><!-- grid_wrap start -->
+			<article class="grid_wrap" id="statement_pop_grid_wrap"><!-- grid_wrap start -->
 			</article><!-- grid_wrap end -->
 	</form>
 	</section><!-- search_table end -->
+</div><!-- content end -->
+
+<div id="journal_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Journal Entry</h1>
+        <ul class="right_opt">
+          <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#view_popup_wrap');">CLOSE</a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
+    <section class="pop_body"><!-- pop_body start -->
+        <form action="#" method="post">
+            <aside class="title_line"><!-- title_line start -->
+             <h3>Bank Statement Information</h3>
+            </aside><!-- title_line end -->
+            <table class="type1"><!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:130px" />
+                    <col style="width:*" />
+                    <col style="width:110px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Reference No</th>
+                        <td id="statementRefNo">
+                        </td>
+                        <th scope="row">Status</th>
+                        <td id="statementStatus">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Account</th>
+                        <td id="statementAccount">
+                        </td>
+                        <th scope="row">Remark</th>
+                        <td id="statementRemark">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Create By</th>
+                        <td id="statementCreateBy">
+                        </td>
+                        <th scope="row">Create At</th>
+                        <td id="statementCreateAt">
+                        </td>
+                    </tr>
+                </tbody>
+            </table><!-- table end -->
+            <aside class="title_line"><!-- title_line start -->
+             <h3>Bank Statement Adjustment</h3>
+            </aside><!-- title_line end -->
+            <table class="type1"><!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Gross Total(RM)</th>
+                        <td id="grossTotal">
+                        </td>
+                        <th scope="row">Adjustment(RM)</th>
+                        <td>
+                        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="adjsutment" />
+                        </td>
+                        <th scope="row">Net Total(RM)</th>
+                        <td id="netTotal">
+                        </td>
+                    </tr>
+                </tbody>
+            </table><!-- table end -->
+            <aside class="title_line"><!-- title_line start -->
+                 <h3>Transaction In Statement</h3>
+            </aside><!-- title_line end -->
+            <article class="grid_wrap" id="journal_pop_grid_wrap"><!-- grid_wrap start -->
+            </article><!-- grid_wrap end -->
+    </form>
+    </section><!-- search_table end -->
 </div><!-- content end -->
