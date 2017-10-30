@@ -279,7 +279,6 @@
 	        FROM LOG0074D
 			  WHERE 1=1
 			  AND INVNTRY_LOC_ID=#{invntryLocId}
-			  AND SEQ=#{seq}
       </select>
      <select id="selectAdjustmentCountingDetail" parameterType="Map" resultType="EgovMap">
         SELECT
