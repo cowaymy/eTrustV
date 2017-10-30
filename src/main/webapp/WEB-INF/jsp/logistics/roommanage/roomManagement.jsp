@@ -27,6 +27,10 @@
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
+
+
+<script src="${pageContext.request.contextPath}/resources/js/daypilot-all.min.js" type="text/javascript"></script>
+
 <script type="text/javaScript" language="javascript">
 
 
@@ -36,42 +40,18 @@
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "8","codeName": "Inactive"}];
     
     var url;
+    var addmonth = 0;
+    var dp = new DayPilot.Month("dp");
     // AUIGrid 칼럼 설정                                                                            visible : false
-    var columnLayout = [{dataField:"assetid"      ,headerText:"Asset ID"           ,width:"5%"  ,height:30 , visible:true},
-                        {dataField:"name2"      ,headerText:"Status"           ,width:"8%" ,height:30 , visible:true},
-                        {dataField:"codename2"    ,headerText:"Type"    ,width:"12%" ,height:30 , visible:true},
-                        {dataField:"name"   ,headerText:"Brand"       ,width:120 ,height:30 , visible:true},
-                        {dataField:"name1"   ,headerText:"Model Name"       ,width:140 ,height:30 , visible:true},
-                        {dataField:"codename1"   ,headerText:"Color"       ,width:90 ,height:30 , visible:true},
-                        {dataField:"branch"    ,headerText:"Branch"        ,width:120 ,height:30 , visible:true},
-                        {dataField:"department"    ,headerText:"Department"        ,width:140 ,height:30 , visible:true},
-                        {dataField:"purchsdt"    ,headerText:"Purchase Date"        ,width:120 ,height:30 , visible:true},
-                        {dataField:"username2"    ,headerText:"Current User"        ,width:120  ,height:30 , visible:true},
-                        {dataField:"refno"    ,headerText:"Ref No"        ,width:120  ,height:30 , visible:true},
-                        {dataField:"dealername"    ,headerText:"Dealer"        ,width:120  ,height:30 , visible:true},
-                        {dataField:"invcno"    ,headerText:"Inv No"        ,width:120 ,height:30 , visible:true},                     
-                        {dataField:"brandid"  ,headerText:"brandId"     ,width:100 ,height:30 , visible:false},
-                        {dataField:"ctgryid"    ,headerText:"ctgryId"        ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"codename"    ,headerText:"codeName"        ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"colorId"  ,headerText:"codeName1"      ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"crtdt"   ,headerText:"crtDt"       ,width:100 ,height:30 , visible:false},                       
-                        {dataField:"crtuserid"      ,headerText:"crtUserId"          ,width:100 ,height:30 , visible:false},
-                        {dataField:"currbrnchid"      ,headerText:"currBrnchId"          ,width:100 ,height:30 , visible:false},                        
-                        {dataField:"currdeptid"     ,headerText:"currDeptId"         ,width:100 ,height:30 , visible:false},                    
-                        {dataField:"curruserid"     ,headerText:"currUserId"         ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"username"       ,headerText:"userName2"           ,width:100 ,height:30 , visible:false},                       
-                        {dataField:"imeino"       ,headerText:"imeiNo"           ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"macaddr"  ,headerText:"macAddr"      ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"purchsamt"   ,headerText:"purchsAmt"       ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"assetrem"   ,headerText:"assetRem"         ,width:"15%" ,height:30 , visible:false},                       
-                        {dataField:"serialno"      ,headerText:"serialNo"          ,width:100 ,height:30 , visible:false},                        
-                         {dataField:"stusid"      ,headerText:"stusId"          ,width:100 ,height:30 , visible:false},                 
-                        {dataField:"typeid"     ,headerText:"typeId"           ,width:"15%" ,height:30 , visible:false},                   
-                        {dataField:"upddt"     ,headerText:"updDt"         ,width:"10%" ,height:30 , visible:false},                      
-                        {dataField:"upduserid"    ,headerText:"upd_user_Id"        ,width:100 ,height:30 , visible:false},
-                        {dataField:"username1"  ,headerText:"userName1"      ,width:100 ,height:30 , visible:false},                       
-                        {dataField:"wrantyno"  ,headerText:"wrantyNo"      ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"dealerid"  ,headerText:"dealerId"      ,width:100 ,height:30 , visible:false},
+    var columnLayout = [{dataField:"rumId"      ,headerText:"Room Id"      ,width:"15%"  ,height:30 , visible:true},
+                        {dataField:"rumCode"    ,headerText:"Room Code"    ,width:"20%" ,height:30 , visible:true},
+                        {dataField:"rumName"    ,headerText:"Room Name"    ,width:"35%" ,height:30 , visible:true},
+                        {dataField:"stusId"     ,headerText:"Status"       ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"cpcty"      ,headerText:"Capacity"     ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"advTmInMin" ,headerText:"advTmInMin"   ,width:90 ,height:30 , visible:false},
+                        {dataField:"brnchId"    ,headerText:"brnchId"      ,width:120 ,height:30 , visible:false},
+                        {dataField:"advOptnId"  ,headerText:"advOptnId"    ,width:140 ,height:30 , visible:false},
+                        {dataField:"hasImg"     ,headerText:"hasImg"       ,width:120 ,height:30 , visible:false}
                        ];
     
     
@@ -116,12 +96,14 @@
         AUIGrid.bind(myGridID, "cellClick", function( event )  
         {
             
-            
         });
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
         {
+        	var param = {roomid    : event.item.rumId , addmonth:addmonth};
+        	searchRoomBooking(param);
+        	$("#openwindow").show();
         });
        
         $(function(){
@@ -131,6 +113,52 @@
             	getListAjax();    
             });
             $("#clear").click(function(){
+            });
+            $("#closebtn").click(function(){
+            	$("#openwindow").hide();
+            });
+            $("#bfmonth").click(function(){
+            	var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            	console.log(selectedItems);
+            	addmonth = addmonth-1;
+            	var param = {roomid    : selectedItems[0].item.rumId , addmonth:addmonth};
+            	var url = "/misc/room/roomBookingList.do";
+            	
+                Common.ajax("GET" , url , param , function(data){
+                    var list= data.dataList
+                    
+                    dp.startDate = list[0].nowdate;
+                    dp.update();
+                });
+            	
+                
+            });
+            $("#atmonth").click(function(){
+            	var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                console.log(selectedItems);
+            	addmonth = addmonth+1;
+                var param = {roomid    : selectedItems[0].item.rumId , addmonth:addmonth};
+                
+                var url = "/misc/room/roomBookingList.do";
+                Common.ajax("GET" , url , param , function(data){
+                    var list= data.dataList
+                    
+                    dp.startDate = list[0].nowdate;
+                    dp.update();
+                });
+            });
+            $("#now").click(function(){
+            	var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                console.log(selectedItems);
+                addmonth = 0;
+                var param = {roomid    : selectedItems[0].item.rumId , addmonth:addmonth};
+                var url = "/misc/room/roomBookingList.do";
+                Common.ajax("GET" , url , param , function(data){
+                    var list= data.dataList
+                    
+                    dp.startDate = list[0].nowdate;
+                    dp.update();
+                });
             });
                
     });
@@ -148,7 +176,90 @@
         });
     }
     
+    function searchRoomBooking(param){
+    	var url = "/misc/room/roomBookingList.do";
+    	
+    	Common.ajax("GET" , url , param , function(data){
+            var list= data.dataList
+            console.log(list);
+            schedulerfunc(list);
+        });
+    	
+    }
+    
+    function schedulerfunc(data){
+    	//$("#dp").empty();
+    	dp.cellMarginBottom = 20;
+        dp.bubble = new DayPilot.Bubble({
+            onLoad: function(args) {
+                var ev = args.source;
+                args.html = "testing bubble for: " + ev.text();
+            }
+        });
 
+        // view
+        dp.startDate = data[0].nowdate;
+        $("#now").html(data[0].nowdate);
+
+        // generate and load events
+        for (var i = 0; i < data.length; i++) {
+            var e = new DayPilot.Event({
+                start: new DayPilot.Date(data[i].bookfrom),
+                end: new DayPilot.Date(data[i].bookto),
+                id: DayPilot.guid(),
+                text: data[i].bookTitle,
+                tags: {
+                    url: "myurl"
+                }
+            });
+            dp.events.add(e);
+        }
+
+        // event moving
+        dp.onEventMoved = function (args) {
+            dp.message("Moved: " + args.e.text());
+        };
+
+        // event resizing
+        dp.onEventResized = function (args) {
+            console.log(args);
+            dp.message("Resized: " + args.e.text());
+        };
+
+        dp.onBeforeHeaderRender = function(args) {
+
+        };
+
+        dp.onBeforeEventRender = function(args) {
+            //args.data.fontColor = "red";
+        };
+
+        // event creating
+        dp.onTimeRangeSelected = function (args) {
+            var name = prompt("New event name:", "Event");
+            dp.clearSelection();
+            if (!name) return;
+            var e = new DayPilot.Event({
+                start: args.start,
+                end: args.end,
+                id: DayPilot.guid(),
+                text: name
+            });
+            dp.events.add(e);
+            dp.message("Created");
+        };
+        
+        dp.onEventClicked = function(args) {
+            alert("clicked: " + args.e.tag("url"));
+        };
+        
+        dp.onHeaderClicked = function(args) {
+            alert("day: " + args.header.dayOfWeek);
+        };
+
+        dp.init();
+    }
+    
        
 </script>
 </head>
@@ -256,6 +367,20 @@
 </article><!-- grid_wrap end -->
 
 </section><!-- content end -->
+
+<div class="popup_wrap" id="openwindow" style="display:none;height:300px"><!-- popup_wrap start -->
+        <header class="pop_header"><!-- pop_header start -->
+            <h1 id="dataTitle">Room Booking List</h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a id="closebtn">CLOSE</a></p></li>
+            </ul>
+        </header><!-- pop_header end -->
+        
+        <section class="pop_body"><!-- pop_body start -->
+            <div class="note"> <p id="bfmonth"><<</p> <p id="now"></p> <p id="atmonth">>></p> </div>
+            <div id="dp"></div>        
+        </section>
+    </div>
 </section>
 </div>
 

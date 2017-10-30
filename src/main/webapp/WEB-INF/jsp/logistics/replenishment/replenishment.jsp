@@ -469,7 +469,7 @@ function SearchListAjax() {
             <li><p class="btn_grid"><a id="upload"><span class="search"></span>ExcelUpload</a></p></li>
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
         
         <div id="grid_wrap" class="mt10" style="display:none;"></div>
     </section><!-- search_result end -->
