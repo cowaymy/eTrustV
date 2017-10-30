@@ -1,78 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
-<title>eTrust system</title>
-<link rel="stylesheet" type="text/css" href="../css/master.css" />
-<link rel="stylesheet" type="text/css" href="../css/common.css" />
-<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
-<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
-<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
-<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="../js/common_pub.js"></script>
-<script type="text/javascript" src="../js/multiple-select.js"></script>
-<script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
-</head>
-<body>
+
+
     <script type="text/javaScript" language="javascript">
 
-     var myCdGridID;
-    var myCustGridID;
+	     var myCdGridID;
+	    var myCustGridID;
 
-
-
-      // 체크된 아이템 얻기
-	function fn_getCheckedRowItems() {
-	
-	    var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
-
-	    var str = [];
-	    var rowItem = checkedItems[0].item;
-	    
-/* 	    str = rowItem.memId; */
-	    
- 	   str[0] = rowItem.memId;
-	   str[1] = rowItem.codyId;
-
-	   return str;
-	}
-                
-    
-    
-    
-/* 		// 체크된 아이템 얻기
-	function fn_getCheckedCdRowItems() {
-		    var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
-		    var str = "";
-		    var rowItem;
-		    var len = checkedItems.length;
-		    
-		    if(len <= 0) {
-		        alert("체크된 행 없음!!");
-		        return;
-		    }
-		    
-		    for(var i=0; i<len; i++) {
-		        rowItem = checkedItems[i];
-		        str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name  + "\n";
-		    }
- 		    alert(str); 
-		} */
-    
-                
-                
- 
-    
-                    
-    
     function createAUIGridCust(){
-        
-
-        
         var columnLayout = [ {
             renderer : {
             type : "CheckBoxEditRenderer",
@@ -136,13 +71,19 @@
             dataField : "codyId",
             headerText : "Cody id",
             editable : false,
-            width : 140,
-            visible:false
+            width : 140 ,
+            visible:false 
         }, {
             dataField : "codyCd",
             headerText : "Cody Code",
             editable : false,
             width : 140            
+        }, {
+            dataField : "oldCodyCd",
+            headerText : "Old Cody Code",
+            editable : false,
+            width : 140,
+            visible:false                   
         }, {
             dataField : "year",
             headerText : "year",
@@ -200,9 +141,9 @@
                     headerText : "Cody Code",
                     width : 120
            }, {     
-		            dataField : "codyName",
-		            headerText : "Cody Name",
-		            width : 220
+                    dataField : "codyName",
+                    headerText : "Cody Name",
+                    width : 220
            }, {     
                     dataField : "stus",
                     headerText : "stus",
@@ -242,9 +183,9 @@
                 // 체크박스 대신 라디오버튼 출력함
                 showRowCheckColumn : true,       
                 
-			    //showStateColumn : true,
-			    
-			    rowCheckToRadio : true
+                //showStateColumn : true,
+                
+                rowCheckToRadio : true
     
              
 /*                 // 체크박스 표시 설정
@@ -257,173 +198,121 @@
                 myCdGridID = AUIGrid.create("#grid_wrapCd", columnLayout, gridPros);
 
                     // 체크박스 클린 이벤트 바인딩
-			    AUIGrid.bind(myCdGridID, "rowCheckClick", function( event ) {
-			 		        //alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked);
-					        getEditedRowItems();
-					    });
-			    
+                AUIGrid.bind(myCdGridID, "rowCheckClick", function( event ) {
+                            //alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked);
+                            getEditedRowItems();
+                        });
+                
     }
 
 
-
-
-			function setCheckedRowsByIds(){
-			    
-			    var columnCount =  AUIGrid.getRowCount(myCdGridID);                
-
-                if(columnCount > 0 ){
-                      var items = ['0'];
-                        AUIGrid.setCheckedRowsByValue(myCdGridID, "rnum" ,  ["1"]);
-//                        AUIGrid.setCheckedRowsByValue(myGridID.pid,"CHK", ["A"]);
-                 } 
-			
-			} // 시작 시 체크된 상태로 표시
-
-
-
-/*                          "codyId" : assiinCd[0],      //저장용
-                        "codyCd" : assiinCd[1],      //화면용
- */                        
-
-		// 수정된 행들 얻기
-		function getEditedRowItems() {
-		    // 수정된 행 아이템들(배열)
-		    var editedRowItems = AUIGrid.getEditedRowItems(myCustGridID);
-		    var str ="";
-		    
-		    
-		    for(var i=0, len=editedRowItems.length; i<len; i++) {
-		          editedRowItems[i]["codyCd"] = "";
-                str += editedRowItems[i]["codyCd"] +"\n";
-		    }
-//		      alert(str);
-		}
-
-
-
-        // 체크된 아이템 얻기
-    function fn_getCheckedCdRowItems() {
-            var checkedItems = AUIGrid.getCheckedRowItems(myCustGridID);
-            var str = "";
-            var rowItem;
-            var len = checkedItems.length;
-            
-            if(len <= 0) {
-/*                 alert("체크된 행 없음!!"+len); */
-                return;
-            }
-            
-            for(var i=0; i<len; i++) {
-                rowItem = checkedItems[i];
-                str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name  + "\n";
-            }
-/*           alert(str); */ 
-        }
+      // 체크된 아이템 얻기
+    function fn_getCheckedRowItems() {
     
+        var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
+
+        var str = [];
+        var rowItem = checkedItems[0].item;
+        
+/*      str = rowItem.memId; */
+        
+       str[0] = rowItem.memId;
+       str[1] = rowItem.codyId;
+
+       return str;
+    }
+    
+    
+	$(document).ready(function() {
+	    
+	        createAUIGridCd();
+	        createAUIGridCust();
+	        
+	
+	        fn_getselectPopUpListAjax();
+	        
+	        
+	});
+
+    
+      function setCheckedRowsByIds(){
+          
+          var columnCount =  AUIGrid.getRowCount(myCdGridID);                
+
+          if(columnCount > 0 ){
+                var items = ['0'];
+                  AUIGrid.setCheckedRowsByValue(myCdGridID, "rnum" ,  ["1"]);
+           } 
+      
+      } // 시작 시 체크된 상태로 표시
+
+
+
 
     function fn_getselectPopUpListAjax(){
         Common.ajax("GET", "/bs/selectPopUpCdList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}'}, function(result) {
-	        console.log("성공.");
-	        console.log("data : " + result);
+            console.log("성공.");
+            console.log("data : " + result);
             
             AUIGrid.setGridData(myCdGridID, result);
             
             setCheckedRowsByIds();
+        });
+        
+          Common.ajax("GET", "/bs/selectPopUpCustList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}', ManuaMyBSMonth:'${ManuaMyBSMonth}'}, function(result) {
+             console.log("성공.");
+             console.log("data : " + result);
+             
+             AUIGrid.setGridData(myCustGridID, result);    
+         });
+         
+
+    }
+
+	function fn_codyAssignSave(){
+	    
+	    //수정된 행 아이템들(배열)
+	    var editedRowItems = AUIGrid.getEditedRowItems(myCustGridID); 
+	    
+	    
+	    if(editedRowItems.length  == 0  ||  editedRowItems == null) {
+	        Common.alert("<b>No CODY List  selected.</b>");
+	        return  false ;
+	    }
+	
+	    var  updateForm ={
+	            "update" : editedRowItems
+	    }
+	    
+	    Common.ajax("POST", "/bs/assignCDChangeListSave.do", updateForm, function(result) {
+	        console.log("updateAssignCODY.");
+	        console.log( result);         
+	        
+	        if(result  !=""){
+	            //Common.alert("<b>HS result successfully saved.</b>");
+	             Common.alert(result.message, fn_parentReload);
+	        }
 	    });
 	    
-	      Common.ajax("GET", "/bs/selectPopUpCustList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}', ManuaMyBSMonth:'${ManuaMyBSMonth}'}, function(result) {
-	         console.log("성공.");
-	         console.log("data : " + result);
-	         
-	         AUIGrid.setGridData(myCustGridID, result);    
-	     });
-	     
-
-    }
-        
-        
-
-     function fn_codyChange(){
-
-            if($("#_openGb").val() == "codyChange"){
-
-                //$('#grid_wrapCust') .attr("editable", true);
-                //$("#grid_wrapCust").removeAttr("disabled"); 
-            }
-                             
-    }
-    
-
-
-
-
-
-
-
-     function fn_codyAssignSave(){
-            var jsonObj =  GridCommon.getEditData(myCustGridID);
-                 jsonObj.form = $("#searchFormPop").serializeJSON();
-                 
-                Common.ajax("POST", "/bs/hsOrderSave.do",  jsonObj , function(result) {
-                
-                Common.alert(result.message, fn_parentReload);
-        });
-    }
-
+	    
+	}
 
 
     function fn_parentReload() {
         fn_getBSListAjax(); //parent Method (Reload)
     }
-    
-    
-        
-    $(document).ready(function() {
-    
-       if($("#_openGb").val() != "codyChange"){           
-           $("#btnCreate").hide();
-           //$('#grid_wrapCust') .attr("disabled", true);
-           
-        }else{
-            $("#btnSave").hide();
-            //$('#grid_wrapCust') .attr("disabled", true);
-        }
-        
-        console.log("성공 data : " + $("#searchFormPop"));
 
-        createAUIGridCd();
-        createAUIGridCust();
-        
-
-        fn_getselectPopUpListAjax();
-//        setCheckedRowsByIds();
-
-/*          var checkedItems = AUIGrid.getCheckedRowItemsAll(myCustGridID);
-         if(checkedItems.length >= 0) {
-             alert("aaaa");
-         } */
-        
-
-        
-    });
-    
-    
 
     </script>
 
 
-<form action="#" method="post" id="searchFormPop">
-    
-    <!-- <input type="hidden" name="manuaMyBSMonth"  id="_manuaMyBSMonth"/>  --> <!-- schdulId  -->
-  <!-- schdulId  -->
-    
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<form action="#" method="post" id="searchFormPop">
 <header class="pop_header"><!-- pop_header start -->
 <h1>HS Order Create</h1>
 <ul class="right_opt">
-    <!-- <li><p class="btn_blue2"><a href="javascript:fn_codyChange();" id="btnCodyCh" name="btnCodyCh">Assign Cody Change</a></p></li> -->    
-    <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();" id="btnCreate" id="btnCreate" >Create</a></p></li>
+    <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();" id="btnSave" id="btnSave" >Save</a></p></li>
     <li><p class="btn_blue2"><a href="#" id="_close1">Close</a></p></li>
 </ul>
 
@@ -485,32 +374,9 @@
 
 <div style="width:30%;">
 
-<!-- <aside class="title_line">title_line start
-<h2>Cody – HS Order</h2>
-</aside>title_line end
-
-<div class="border_box" style="height:400px">border_box start
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-    <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-</ul>
-
-<article class="grid_wrapCd-1">grid_wrap start
-<div id="grid_wrapCd-1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
-</article>grid_wrap end -->
-
-
 
 </div><!-- border_box end -->
 
 </div>
-
-</div><!-- divine_auto end -->
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
 </form>
-</body>
-</html>
+</div><!-- divine_auto end -->

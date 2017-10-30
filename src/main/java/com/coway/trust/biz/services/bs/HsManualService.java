@@ -64,6 +64,8 @@ public interface HsManualService {
 
 	List<EgovMap> selectOrderActiveFilter(Map<String, Object> params);
 
+	String updateAssignCody(Map<String, Object> params);
+
 	
 	
 	

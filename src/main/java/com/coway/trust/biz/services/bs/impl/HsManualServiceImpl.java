@@ -17,6 +17,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper;
 import com.coway.trust.biz.services.bs.HsManualService;
@@ -757,6 +758,28 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	public List<EgovMap> selectOrderActiveFilter(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return hsManualMapper.selectOrderActiveFilter(params);
+	}
+
+
+
+	@Override
+	public String updateAssignCody(Map<String, Object> params) {
+		List <EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+		String rtnValue  ="";
+		String line = System.getProperty("line.separator");
+		  
+
+		if (updateItemList.size() > 0) {  
+			
+			for (int i = 0; i < updateItemList.size(); i++) {
+				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+				hsManualMapper.updateAssignCody(updateMap) ;
+				
+				rtnValue += "Cody Transfer for HS Order ‘" + updateMap.get("no") +"'" + " from " + "'" + updateMap.get("oldCodyCd") +"'"+ " to " + "'" +updateMap.get("codyCd")  + "'"  + "\r\n";
+				rtnValue = rtnValue.replace("\n", line);
+			}
+		}
+		return rtnValue;
 	}
 	
 	

@@ -363,7 +363,7 @@
                         saleOrdList += ",";
                     }
 
-
+                    //동일 brnch 만 수정하도록
                     if(i !=0 ){
                         if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
                             brnchCnt += 1 ;
@@ -374,6 +374,16 @@
                     if(i==0){
                          brnchId = rowItem.branchCd;
                     }
+                                        
+                    //상태 com은 수정 못하도록
+                     if(rowItem.stusCodeId == "4"){
+                        Common.alert('Not Allow to Cody Transfer for Complete HS Order');
+                        return ;
+                     }
+                    
+                    
+                    
+
                     
                 }
                 
@@ -385,7 +395,7 @@
                 };
 
                 
-                  Common.popupDiv("/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
+                  Common.popupDiv("/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
 
             }
             

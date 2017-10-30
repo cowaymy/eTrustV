@@ -104,6 +104,8 @@ public interface HsManualMapper {
 
 	List<EgovMap> selectOrderActiveFilter(Map<String, Object> params);
 
+	void updateAssignCody(Map<String, Object> updateMap);
+
 
 
 	

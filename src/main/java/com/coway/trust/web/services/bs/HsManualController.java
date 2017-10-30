@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,6 +73,45 @@ public class HsManualController {
 		
 		
 
+		@RequestMapping(value = "/selecthSCodyChangePop.do")
+		public String selecthSCodyChangePop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+
+			model.addAttribute("brnchCdList",  params.get("BrnchId"));	
+			model.addAttribute("ordCdList",  params.get("CheckedItems"));
+			model.addAttribute("ManuaMyBSMonth",  params.get("ManuaMyBSMonth"));
+			
+			return "services/bs/hSCodyChangePop";
+		}
+		
+
+		
+		@RequestMapping(value = "/assignCDChangeListSave.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> assignCDChangeListSave(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+			
+			logger.debug("in  assignCDChangeListSave ");
+			logger.debug("			pram set  log");
+			logger.debug("					" + params.toString());
+			logger.debug("			pram set end  ");  
+			
+			params.put("updator", sessionVO.getUserId());   
+			List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
+			logger.debug("HSResultM ===>"+update.toString());  
+			
+			String   rtnValue = hsManualService.updateAssignCody(params);  
+			
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(99);
+			message.setMessage(rtnValue);
+
+					
+			return ResponseEntity.ok(message);  
+			
+		}
+		
+		
+		
+		
 		@RequestMapping(value = "/selectPopUpCdList.do")
 		public ResponseEntity<List<EgovMap>> selectPopUpCdList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
 
@@ -497,7 +537,7 @@ public class HsManualController {
 			
 			List<EgovMap>  orderInactiveFilter = hsManualService.selectOrderInactiveFilter(params);
 			
-			model.put("orderActiveFilter", orderInactiveFilter);   
+			model.put("orderInactiveFilter", orderInactiveFilter);   
 			
 			return ResponseEntity.ok(orderInactiveFilter);
 		} 
