@@ -31,15 +31,19 @@
                }, {                        
                     dataField : "srvFilterPrvChgDt",
                     headerText : "Last Change",
-                    width : 240       
-              }, {                        
-                    dataField : "srvFilterUpdDt",
-                    headerText : "Update By",
-                    width : 240  
+                    width : 240 ,
+                    dataType : "date",
+                    formatString : "dd/mm/yyyy"       
               }, {                        
                     dataField : "userName",
+                    headerText : "Update By",
+                    width : 240         
+              }, {                        
+                    dataField : "srvFilterUpdDt",
                     headerText : "Update At",
-                    width : 240  
+                    width : 240,
+                    dataType : "date",
+                    formatString : "dd/mm/yyyy"  
             }];
             // 그리드 속성 설정
             var gridPros = {
@@ -93,23 +97,27 @@
                 }, {                        
                     dataField : "c4",
                     headerText : "Type",
-                    width : 140
+                    width : 100
                 }, {                        
                     dataField : "srvFilterPriod",
                     headerText : "Change Period",
-                    width : 140                    
+                    width : 120                    
                 }, {                        
                     dataField : "srvFilterPrvChgDt",
                     headerText : "Last Change",
-                    width : 240         
+                    width : 180,
+                    dataType : "date",
+                    formatString : "dd/mm/yyyy"               
                 }, {                        
                     dataField : "c2",
                     headerText : "CreateAt",
-                    width : 240              
+                    width : 180,
+                    dataType : "date",
+                    formatString : "dd/mm/yyyy"                     
                 }, {                        
                     dataField : "c3",
                     headerText : "CreateBy",
-                    width : 240                                                                                
+                    width : 180                                                                                
             }];
             // 그리드 속성 설정
             var gridPros = {
