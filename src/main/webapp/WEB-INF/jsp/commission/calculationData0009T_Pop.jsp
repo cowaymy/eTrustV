@@ -244,7 +244,18 @@
 			       var useYnCombo = $("#useYnCombo_09T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&svcPersonCd="+svcPersonCd+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"&codeId="+codeId+"'/>";
+			       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&svcPersonCd="+svcPersonCd+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"&codeId="+codeId+"'/>";
+			       
+			       Common.showLoader();
+	              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&svcPersonCd="+svcPersonCd+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"&codeId="+codeId)
+	              .done(function () {
+	                  Common.alert('File download a success!');                
+	                  Common.removeLoader();            
+	              })
+	              .fail(function () {
+	                  Common.alert('File download failed!');                
+	                  Common.removeLoader();            
+	               });
 		       //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
@@ -263,7 +274,18 @@
 		      var month = searchDt.substr(0,searchDt.indexOf("/"));
 		      var code = $("#code_09T").val();
 		      var codeId = $("#orgGroup_09").val();
-		      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+		      //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+		      
+		      Common.showLoader();
+              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId)
+              .done(function () {
+                  Common.alert('File download a success!');                
+                  Common.removeLoader();            
+              })
+              .fail(function () {
+                  Common.alert('File download failed!');                
+                  Common.removeLoader();            
+               });
            }else{
                Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
            }
