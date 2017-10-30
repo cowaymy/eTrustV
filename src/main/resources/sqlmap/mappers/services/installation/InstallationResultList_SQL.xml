@@ -79,6 +79,7 @@
                         INNER JOIN SYS0013M Extent9 ON Extent9.CODE_ID = Extent2.APP_TYPE_ID
                         INNER JOIN SYS0038M Extent8 ON Extent8.STUS_CODE_ID = Extent1.STUS_CODE_ID
                         INNER JOIN SYS0013M Extent11  ON Extent11.CODE_ID = Extent10.TYPE_ID
+                        INNER JOIN SAL0045D Extent13  ON Extent13.SALES_ORD_ID =  Extent2.SALES_ORD_ID 
                         WHERE 1=1
 		                 ]]>
 		                 <if test="installStatusList != null and installStatusList != '' ">
@@ -115,7 +116,7 @@
                          AND ((CASE WHEN (Extent12.MEM_ID IS NOT NULL) THEN Extent12.MEM_CODE ELSE '' END) = #{ctCode})
                          </if>
                          <if test="dscCode != null and dscCode != ''">
-                        AND Extent7.BRNCH_ID = #{dscCode}
+                        AND Extent13.BRNCH_ID = #{dscCode}
                          </if>
                          <if test="customerId != null and customerId != ''">
                          AND Extent6.CUST_ID = #{customerId}
