@@ -103,7 +103,10 @@
             dataSet     : GridCommon.getEditData(editGridID),
             pstSalesMVO : {
                 pstSalesOrdId : getParamForm.pstSalesOrdId.value,
-                pstRefNo      : getParamForm.pstRefNo.value
+                pstRefNo        : getParamForm.pstRefNo.value,
+                curType         : pstInfoForm.curType.value,
+                editCurRate    : pstInfoForm.editCurRate.value,
+                editIncharge   : pstInfoForm.editIncharge.value
             }
         };
       
@@ -152,6 +155,16 @@
     function fn_editAnotherContPop(){  
         Common.popupDiv('/sales/pst/pstAnotherContPop.do', $('#getParamForm').serializeJSON(), null , true, 'addrAnthDiv');
     }
+    
+    function fn_getRate() {
+    	if($("#curType").val() == 1148){
+            $("#editCurRate").val($("#getRate").val());
+        }else if($("#curType").val() == 1150){
+            $("#editCurRate").val('1.00');
+        }else if($("#curType").val() == 1149){
+            $("#editCurRate").val('');
+        }
+    }
 
 </script>
 
@@ -187,8 +200,9 @@
     <input type="hidden" id="editInchargeSelect" name="editInchargeSelect" value="${pstInfo.pic}">
     <input type="hidden" id="pstRefNo" name="pstRefNo" value="${pstInfo.pstRefNo}">
     <input type="hidden" id="dealerId" name="dealerId" value="${pstInfo.pstDealerId}">
+    <input type="hidden" id="getRate" name="getRate" value="${getRate.rate}">
 </form>
-
+<form id="pstInfoForm" name="pstInfoForm" method="GET">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -202,16 +216,16 @@
 <tbody>
 <tr>
     <th scope="row">PSO ID</th>
-    <td><span>${pstInfo.pstSalesOrdId}</span></td>
+    <td readOnly><span>${pstInfo.pstSalesOrdId}</span></td>
     <th scope="row">PSO RefNo</th>
-    <td><span>${pstInfo.pstRefNo}</span></td>
+    <td readOnly><span>${pstInfo.pstRefNo}</span></td>
     <th scope="row">Customer PO</th>
-    <td><span>${pstInfo.pstCustPo}</span></td>
+    <td readOnly><span>${pstInfo.pstCustPo}</span></td>
 </tr>
 <tr>
     <th scope="row">Currency Type</th>
     <td>
-    <select id="curType" name="curType" class="w100p">
+    <select id="curType" name="curType" class="w100p" onchange="fn_getRate()">
         <option value="1150">MYR</option>
         <option value="1149">SGD</option>
         <option value="1148">USD</option>
@@ -227,19 +241,19 @@
 </tr>
 <tr>
     <th scope="row">PSO Status</th>
-    <td><span>${pstInfo.pstStusCode}</span></td>
+    <td readOnly><span>${pstInfo.pstStusCode}</span></td>
     <th scope="row">Create By</th>
-    <td><span>${pstInfo.crtUserName}</span></td>
+    <td readOnly><span>${pstInfo.crtUserName}</span></td>
     <th scope="row">Create At</th>
-    <td><span>${pstInfo.crtDt}</span></td>
+    <td readOnly><span>${pstInfo.crtDt}</span></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="5"><textarea id="editInfoRem" name="editInfoRem" cols="20" rows="5">${pstInfo.pstRem}</textarea></td>
+    <td colspan="5"><textarea id="editInfoRem" name="editInfoRem" cols="20" rows="5" readonly>${pstInfo.pstRem}</textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
-
+</form>
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->

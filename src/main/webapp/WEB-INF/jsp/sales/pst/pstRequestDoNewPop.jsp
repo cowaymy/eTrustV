@@ -245,6 +245,16 @@
     function fn_success(){
     	$("#newPopClose").click();
     }
+    
+    function fn_getRate() {
+        if($("#curTypeCd").val() == 1148){
+        	$("#curRate").val($("#insRate").val());
+        }else if($("#curTypeCd").val() == 1150){
+        	$("#curRate").val('1.00');
+        }else if($("#curTypeCd").val() == 1149){
+        	$("#curRate").val('');
+        }
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -275,6 +285,7 @@
     <input type="hidden" id="dealerId" name="dealerId">
     <input type="hidden" id="dealerBrnchId" name="dealerBrnchId">
     <input type="hidden" id="brnchId" name="brnchId">
+    <input type="hidden" id="insRate" name="insRate" value="${getRate.rate}">
     
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -545,7 +556,7 @@
 <tr>
     <th scope="row">Currency</th>
     <td>
-    <select id="curTypeCd" name="curTypeCd">
+    <select id="curTypeCd" name="curTypeCd" onchange="fn_getRate()">
         <option value="1150">MYR</option>
         <option value="1149">SGD</option>
         <option value="1148">USD</option>
