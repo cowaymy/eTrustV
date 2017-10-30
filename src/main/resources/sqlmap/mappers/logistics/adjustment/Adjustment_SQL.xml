@@ -275,10 +275,13 @@
 							AND SEQ = #{adjItemPop}
       </insert>
       <select id="selectInsertSerialCount" parameterType="Map" resultType="int">
-	  SELECT COUNT(1) 
-	        FROM LOG0074D
-			  WHERE 1=1
-			  AND INVNTRY_LOC_ID=#{invntryLocId}
+      SELECT 
+                COUNT(L74D.INVNTRY_LOC_ID) 
+            FROM LOG0074D L74D, LOG0073D L73D
+              WHERE 1=1
+              AND L74D.INVNTRY_LOC_ID=L73D.INVNTRY_LOC_ID
+			  AND L73D.INVNTRY_LOC_ID=#{invntryLocId}
+			  AND L73D.SEQ=#{seq}
       </select>
      <select id="selectAdjustmentCountingDetail" parameterType="Map" resultType="EgovMap">
         SELECT
