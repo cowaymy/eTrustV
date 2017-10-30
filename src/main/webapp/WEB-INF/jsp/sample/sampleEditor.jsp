@@ -60,6 +60,9 @@
             console.log("data : " + result);
 
             if (result.length > 0) {
+
+//                $("#editorArea").val("");
+                editor.setHTML(""); // 에디터 내용 초기화.
                 editor.insertHTML(result[0].memoCntnt);
             }
 
