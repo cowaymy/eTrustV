@@ -914,4 +914,13 @@
          WHERE DEALER_ADD_ID = #{addrDealerAddId}
     </update>
      
+     <select id="getRate" resultType="egovMap">
+		SELECT   RATE_DT,
+			         CUR_FROM,
+			         CUR_TO,
+			         RATE
+		   FROM   PAY0197M
+		 WHERE   RATE_DT = TO_CHAR (SYSDATE, 'YYYY-MM-DD')   
+    </select>
+    
 </mapper>
