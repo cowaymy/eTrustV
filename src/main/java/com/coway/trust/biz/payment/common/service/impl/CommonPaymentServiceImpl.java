@@ -1,0 +1,683 @@
+package com.coway.trust.biz.payment.common.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
+import com.coway.trust.biz.payment.common.service.CommonPaymentService;
+import com.coway.trust.biz.payment.common.service.CommonPopupPaymentService;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+
+@Service("commonPaymentService")
+public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements CommonPaymentService {
+
+	@Resource(name = "commonPaymentMapper")
+	private CommonPaymentMapper commonPaymentMapper;	
+	
+	/*****************************************************************************
+	 *  Rental 
+	 * 
+	 ******************************************************************************/
+	/**
+	 * Payment - Order Info Rental 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * PaymentManager.cs : public List<RentalOrderView> GetRentalOrders(int orderId, bool getBillingGroup)
+	 */
+	@Override
+	public List<EgovMap>  selectOrderInfoRental(Map<String, Object> params) {
+		
+		int rpfCnt = 0;
+		int rpfCharge = 0;
+		
+		int rpfCn = 0;
+		int rpfDn = 0;
+		
+		List<EgovMap> rcList = commonPaymentMapper.selectOrderInfoRental(params);
+		
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) 
+			{
+				
+				Map<String , Object > newParams = new HashMap<String,Object>();
+				newParams.put("orderId", obj.get("salesOrdId"));
+				
+				rpfCnt = Integer.parseInt(String.valueOf(obj.get("rpfCnt")));
+				rpfCharge = Integer.parseInt(String.valueOf(obj.get("rpfCharge")));
+				
+				//rpfCnt 가 0보다 크면 CN/DN 값을 조회한다. 
+				if(rpfCnt > 0){
+					EgovMap rpfCnMap = commonPaymentMapper.selectRPFCN(newParams);
+					EgovMap rpfDnMap = commonPaymentMapper.selectRPFDN(newParams);
+					
+					if(rpfCnMap != null && rpfCnMap.get("cnAmt") != null){
+						rpfCn = Integer.parseInt(String.valueOf(rpfCnMap.get("cnAmt")));
+					}
+					
+					if(rpfDnMap.get("dnAmt") != null){
+						rpfDn = Integer.parseInt(String.valueOf(rpfDnMap.get("dnAmt")));
+					}
+					
+					rpfCharge = rpfCharge + rpfCn + rpfDn;
+					
+					obj.put("totAmt", rpfCharge);
+				}
+				
+				Map<String, Object> billInfo = this.getRentalPayInfoV2(newParams);
+				
+				obj.put("rpf", billInfo.get("rpf"));
+				obj.put("lastPayment", billInfo.get("lastPayment"));
+				obj.put("balance", billInfo.get("balance"));
+				obj.put("rpfPaid", billInfo.get("rpfPaid"));
+				obj.put("unBilledAmount", billInfo.get("unBilledAmount"));
+				obj.put("unBilledCount", billInfo.get("unBilledCount"));
+			}	
+		}
+		
+		return rcList;
+	}
+	
+	/**
+	 * Payment - Order Info Rental Billing 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * PaymentManager.cs : public RentalPaymentInfo GetRentalPayInfoV2(int orderId)
+	 */
+	public Map<String, Object> getRentalPayInfoV2(Map<String, Object> params) {
+		
+		double rpfCNAmount = 0.0D;
+		double rpfNewCNAmount = 0.0D;
+		double rpfDnAmount = 0.0D;
+		double payTotal = 0.0D;
+		double rpfTotalBill = 0.0D;
+		double rpfReversed = 0.0D;
+		double revPaymentAmt = 0.0D;
+		
+		double rpf = 0.0D;
+		double rf = 0.0D;
+		double rpfPaid = 0.0D;
+		String lastPayDt = "1900-01-01";
+		int currentInstallment = 0;
+		int unbillCount = 0;
+		int lastBilledInstallment = 0;
+		double unbillAmount = 0.0D;
+		double billTotal = 0.0D;
+		double totalAmt = 0.0D;
+		
+		/*********************************************************
+		 * rpfTotal Bill Amount값 계산 
+		 *********************************************************/	
+		EgovMap rpfTotBillMap = commonPaymentMapper.selectRpfTotBillAmount(params);
+		
+		if(rpfTotBillMap != null && rpfTotBillMap.get("rpfTotBill") != null){
+			rpfTotalBill = Double.parseDouble(String.valueOf(rpfTotBillMap.get("rpfTotBill")));
+		}
+		
+		/*********************************************************
+		 * CN값 계산 
+		 *********************************************************/		
+		EgovMap rpfCnMap = commonPaymentMapper.selectRpfCnAmount(params);
+		EgovMap rpfNewCnMap = commonPaymentMapper.selectRpfCnAmount(params);		
+		
+		if(rpfCnMap != null && rpfCnMap.get("cnAmt") != null){
+			rpfCNAmount = Double.parseDouble(String.valueOf(rpfCnMap.get("cnAmt")));
+		}
+		
+		if(rpfNewCnMap != null && rpfNewCnMap.get("cnNewAmt") != null){
+			rpfNewCNAmount = Double.parseDouble(String.valueOf(rpfNewCnMap.get("cnNewAmt")));
+		}
+		
+		//CN 값 계산
+		rpfCNAmount = rpfCNAmount + rpfNewCNAmount;
+		
+		/*********************************************************
+		 * DN값 계산 
+		 *********************************************************/
+		EgovMap rpfDnMap = commonPaymentMapper.selectRPFDN(params);
+		
+		if(rpfDnMap != null && rpfDnMap.get("dnAmt") != null){
+			rpfDnAmount = Double.parseDouble(String.valueOf(rpfDnMap.get("dnAmt")));
+		}
+		
+		/*********************************************************
+		 * Pay Total 값 계산 
+		 *********************************************************/
+		EgovMap payTotalMap = commonPaymentMapper.selectPayTotalAmount(params);
+		
+		if(payTotalMap != null && payTotalMap.get("payTotal") != null){
+			payTotal = Double.parseDouble(String.valueOf(payTotalMap.get("payTotal")));
+		}
+		
+		/*********************************************************
+		 * rpf Reversed 값 계산 
+		 *********************************************************/
+		EgovMap reversedMap = commonPaymentMapper.selectReversedAmount(params);
+		
+		if(reversedMap != null && reversedMap.get("revAmt") != null){
+			rpfReversed = Double.parseDouble(String.valueOf(reversedMap.get("revAmt")));
+		}
+		
+		/*********************************************************
+		 * Reverse Payment Amount 값 계산 
+		 *********************************************************/
+		EgovMap revPaymentMap = commonPaymentMapper.selectRevPaymentAmount(params);
+		
+		if(revPaymentMap != null && revPaymentMap.get("revPaymentAmt") != null){
+			revPaymentAmt  = Double.parseDouble(String.valueOf(revPaymentMap.get("revPaymentAmt")));
+		}
+		
+		payTotal = payTotal + revPaymentAmt;
+		
+		double validPayTotal = payTotal;
+		
+		/*********************************************************
+		 * Bill List 조회 
+		 *********************************************************/
+		List<EgovMap> billList = commonPaymentMapper.selectBills(params);
+		
+		if(billList != null && billList.size() > 0){
+			for (EgovMap obj : billList) 
+			{
+				payTotal = payTotal + Double.parseDouble(String.valueOf(obj.get("rentAmt")));
+				
+			}	
+		}
+		
+        double balance = payTotal;
+        
+        /*********************************************************
+		 * Order Status 정보 조회 : Status 값에 따라 rpf 값을 설정한다.
+		 *   
+		 *********************************************************/
+        EgovMap order = commonPaymentMapper.selectOrderInfoForBills(params);
+        
+        if(order.get("stusCodeId").equals("1")){
+        	totalAmt = Double.parseDouble(String.valueOf(order.get("totAmt")));
+        	rpf = Double.parseDouble(String.valueOf(order.get("totAmt")));
+        }else{
+        	rpf = rpfTotalBill - rpfCNAmount + rpfDnAmount;
+        }
+        
+        rf = Double.parseDouble(String.valueOf(order.get("mthRentAmt")));
+        
+        /*********************************************************
+		 * RPF Paid Amount 값 계산 
+		 *********************************************************/
+		EgovMap rpfPaidMap = commonPaymentMapper.selectRpfPaidAmount(params);
+		
+		if(rpfPaidMap != null && rpfPaidMap.get("rpfPaid") != null){
+			rpfPaid  = Double.parseDouble(String.valueOf(rpfPaidMap.get("rpfPaid")));
+		}
+		
+		/*********************************************************
+		 * Last Payment Date 조회 
+		 *********************************************************/
+		EgovMap lastPayDtMap = commonPaymentMapper.selectLastPaymentDt(params);
+		
+		if(lastPayDtMap != null && lastPayDtMap.get("rentDtTm") != null){
+			lastPayDt  = String.valueOf(lastPayDtMap.get("rentDtTm"));
+		}
+		
+		/*********************************************************
+		 * Current Installment  값 조회
+		 *********************************************************/
+		EgovMap currInstNoMap = commonPaymentMapper.selectRentInstNo(params);
+		
+		if(currInstNoMap != null && currInstNoMap.get("rentInstNo") != null){
+			currentInstallment  = Integer.parseInt(String.valueOf(currInstNoMap.get("rentInstNo")));
+		}
+		
+		/*********************************************************
+		 * Last Installment and Totabl Bill Amount 값 조회
+		 *********************************************************/
+		EgovMap lastInstNoMap = commonPaymentMapper.selectLastBilledInstNo(params);
+		
+		if(lastInstNoMap != null && lastInstNoMap.get("lastRentInstNo") != null){
+			lastBilledInstallment  = Integer.parseInt(String.valueOf(lastInstNoMap.get("lastRentInstNo")));
+		}
+		
+		if(lastInstNoMap != null && lastInstNoMap.get("totBillAmt") != null){
+			billTotal  = Double.parseDouble(String.valueOf(lastInstNoMap.get("totBillAmt")));
+		}
+		
+		 if (currentInstallment > 0)
+         {
+             unbillCount = currentInstallment - lastBilledInstallment;
+             if (unbillCount > 0)
+                 unbillAmount = unbillCount * rf;
+         }	
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("billTotal", billTotal);		
+		resultMap.put("lastPayment", lastPayDt);
+		resultMap.put("orderId", params.get("orderId"));
+		resultMap.put("paidTotal", validPayTotal);
+		resultMap.put("productPrice", totalAmt);
+		resultMap.put("reverseAmount", revPaymentAmt);
+		resultMap.put("rpf", rpf);
+		resultMap.put("rpfPaid", (rpfPaid * -1) + rpfReversed);
+		resultMap.put("unBilledCount", unbillCount);
+		resultMap.put("unBilledAmount", unbillAmount);
+		resultMap.put("balance", billTotal - (validPayTotal < 0 ? (validPayTotal * -1) : validPayTotal));
+		
+		if (rpfTotBillMap != null){
+			resultMap.put("rpfBillIsExisting", true);	
+		}else{
+			resultMap.put("rpfBillIsExisting", false);
+		}
+		
+		return resultMap;
+		
+	}
+	
+	/**
+	 * Payment - Bill Info Rental 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * BillingManager.cs : public List<BillView> GetRentalBillsByOrder(int orderId, bool excludeRPFBill)
+	 */
+	@Override
+	public List<EgovMap>  selectBillInfoRental(Map<String, Object> params) {
+		
+		double balRPF = 0.0D;
+		double rpfPaid = 0.0D;
+		double rpfRev = 0.0D;
+		double rpfCN = 0.0D;
+		double rpfDN = 0.0D;
+		
+		double balRental = 0.0D;
+		double rentalPaid = 0.0D;
+		double rentalRev = 0.0D;
+		
+		double balPenalty = 0.0D;
+		double penaltyPaid = 0.0D;
+		double penaltyRev = 0.0D;
+		
+		double rhfPaid = 0.0D;
+		double rhfRev2 = 0.0D;
+		double rhfCN1 = 0.0D;
+		double rhfCNOld = 0.0D;
+		
+		double rhfRev = 0.0D;
+		double balRHF = 0.0D;
+		
+		List<EgovMap> rcList = commonPaymentMapper.selectBillInfoRental(params);
+		
+		if("N".equals(String.valueOf(params.get("excludeRPF")))){
+			
+			/*********************************************************
+			 * RPF Paid Amount 값 조회 
+			 *********************************************************/
+			EgovMap rpfPaidMap = commonPaymentMapper.selectBillRpfPaid(params);
+			
+			if(rpfPaidMap != null && rpfPaidMap.get("rpfPaid") != null){
+				rpfPaid  = Double.parseDouble(String.valueOf(rpfPaidMap.get("rpfPaid")));
+			}
+			
+			/*********************************************************
+			 * RPF Rev Amount 값 조회 
+			 *********************************************************/
+			EgovMap rpfRevMap = commonPaymentMapper.selectBillRpfRev(params);
+			
+			if(rpfRevMap != null && rpfRevMap.get("rpfRev") != null){
+				rpfRev  = Double.parseDouble(String.valueOf(rpfRevMap.get("rpfRev")));
+			}
+			
+			/*********************************************************
+			 * Adjustment CN / DN 값 조회 
+			 *********************************************************/
+			params.put("adjType", "CN");
+			EgovMap adjCnMap = commonPaymentMapper.selectBillAdjAmount(params);
+			
+			if(adjCnMap != null && adjCnMap.get("memoAdjTotAmt") != null){
+				rpfCN  = Double.parseDouble(String.valueOf(adjCnMap.get("memoAdjTotAmt")));
+			}
+			
+			params.put("adjType", "DN");
+			EgovMap adjDnMap = commonPaymentMapper.selectBillAdjAmount(params);
+			
+			if(adjDnMap != null && adjDnMap.get("memoAdjTotAmt") != null){
+				rpfDN  = Double.parseDouble(String.valueOf(adjDnMap.get("memoAdjTotAmt")));
+			}
+			
+			//balRPF 계산
+			balRPF = rpfPaid - rpfRev + rpfCN - rpfDN;
+		}
+		
+		/*********************************************************
+		 * Rental Paid Amount 값 조회 
+		 *********************************************************/
+		EgovMap rentalPaidMap = commonPaymentMapper.selectBillRentalPaidAmount(params);
+		
+		if(rentalPaidMap != null && rentalPaidMap.get("rentPaid") != null){
+			rentalPaid  = Double.parseDouble(String.valueOf(rentalPaidMap.get("rentPaid")));
+		}
+		
+		/*********************************************************
+		 * Rental Reversed Amount 값 조회 
+		 *********************************************************/
+		EgovMap rentalRevMap = commonPaymentMapper.selectBillRentalRevAmount(params);
+		
+		if(rentalRevMap != null && rentalRevMap.get("rentalRev") != null){
+			rentalRev  = Double.parseDouble(String.valueOf(rentalRevMap.get("rentalRev")));
+		}
+		
+		//balRental 계산
+		balRental = rentalPaid - rentalRev;
+		
+		/*********************************************************
+		 * Penalty Paid Amount 값 조회 
+		 *********************************************************/
+		EgovMap penaltyPaidMap = commonPaymentMapper.selectBillPenaltyPaidAmount(params);
+		
+		if(penaltyPaidMap != null && penaltyPaidMap.get("penaltyPaid") != null){
+			penaltyPaid  = Double.parseDouble(String.valueOf(penaltyPaidMap.get("penaltyPaid")));
+		}
+		
+		/*********************************************************
+		 * Rental Reversed Amount 값 조회 
+		 *********************************************************/
+		EgovMap penaltyRevMap = commonPaymentMapper.selectBillPenaltyRevAmount(params);
+		
+		if(penaltyRevMap != null && penaltyRevMap.get("penaltyRev") != null){
+			penaltyRev  = Double.parseDouble(String.valueOf(penaltyRevMap.get("penaltyRev")));
+		}
+		
+		//balPenalty 계산
+		balPenalty = penaltyPaid - penaltyRev;
+		
+		/*********************************************************
+		 * Handling Fees Paid Amount 값 조회 
+		 *********************************************************/
+		EgovMap rhfPaidMap = commonPaymentMapper.selectBillRhfPaidAmount(params);
+		
+		if(rhfPaidMap != null && rhfPaidMap.get("rhfPaid") != null){
+			rhfPaid  = Double.parseDouble(String.valueOf(rhfPaidMap.get("rhfPaid")));
+		}
+		
+		/*********************************************************
+		 * Handling Fees Reversed Amount 값 조회 
+		 *********************************************************/
+		EgovMap rhfRevMap = commonPaymentMapper.selectBillRfhRevAmount(params);
+		
+		if(rhfRevMap != null && rhfRevMap.get("rhfRev") != null){
+			rhfRev2  = Double.parseDouble(String.valueOf(rhfRevMap.get("rhfRev")));
+		}
+		
+		/*********************************************************
+		 * Handling Fees Adjustment CN Amount 값 조회 
+		 *********************************************************/
+		EgovMap rhfAdjCnMap = commonPaymentMapper.selectBillRhfCNAmount(params);
+		
+		if(rhfAdjCnMap != null && rhfAdjCnMap.get("memoAdjTotAmt") != null){
+			rhfCN1  = Double.parseDouble(String.valueOf(rhfAdjCnMap.get("memoAdjTotAmt")));
+		}
+		
+		/*********************************************************
+		 * Handling Fees Adjustment Old CN Amount 값 조회 
+		 *********************************************************/
+		EgovMap rhfOldAdjCnMap = commonPaymentMapper.selectBillRhfCNOldAmount(params);
+		
+		if(rhfOldAdjCnMap != null && rhfOldAdjCnMap.get("adjOldCnAmt") != null){
+			rhfCNOld  = Double.parseDouble(String.valueOf(rhfOldAdjCnMap.get("adjOldCnAmt")));
+		}
+		
+		// Handling Fee 계산
+		rhfCN1 = rhfCN1 - rhfCNOld;
+		
+		rhfRev = rhfRev2;
+		balRHF = rhfPaid - rhfRev + rhfCN1;
+		
+		// Billing 정보 재정의
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) 
+			{
+				
+				double setAmount = 0.0D;
+				
+				if(Integer.parseInt(String.valueOf(obj.get("billTypeId"))) == 162){			//penalty
+					if(balPenalty > 0){
+						
+						setAmount = balPenalty > Double.parseDouble(String.valueOf(obj.get("billAmt"))) ? Double.parseDouble(String.valueOf(obj.get("billAmt"))) : balPenalty;
+						obj.put("paidAmt",setAmount);
+						balPenalty = balPenalty - setAmount;
+					}else{
+						obj.put("paidAmt",0);
+					}
+				} else if(Integer.parseInt(String.valueOf(obj.get("billTypeId"))) == 1059){ // handling fees
+                
+                    if (balRHF > 0)
+                    {
+                        setAmount = balRHF > Double.parseDouble(String.valueOf(obj.get("billAmt"))) ? Double.parseDouble(String.valueOf(obj.get("billAmt"))) : balRHF;
+                        obj.put("paidAmt",setAmount);
+                        balRHF = balRHF - setAmount;
+                    }else{
+						obj.put("paidAmt",0);
+					}
+                } else if(Integer.parseInt(String.valueOf(obj.get("billTypeId"))) == 161){ // rpf
+                
+                    if (balRPF > 0)
+                    {
+                        setAmount = balRPF > Double.parseDouble(String.valueOf(obj.get("billAmt"))) ? Double.parseDouble(String.valueOf(obj.get("billAmt"))) : balRPF;
+                        obj.put("paidAmt",setAmount);
+                        balRPF = balRPF - setAmount;
+                    }else{
+						obj.put("paidAmt",0);
+					}
+                } else {
+                
+                    if (balRental > 0) 
+                    {
+                    	setAmount = balRental > Double.parseDouble(String.valueOf(obj.get("billAmt"))) ? Double.parseDouble(String.valueOf(obj.get("billAmt"))) : balRental;
+                    	obj.put("paidAmt",setAmount);
+                        
+                        balRental = balRental - setAmount;
+                    }else{
+						obj.put("paidAmt",0);
+					}
+                }
+				
+				obj.put("targetAmt",Double.parseDouble(String.valueOf(obj.get("billAmt"))) - Double.parseDouble(String.valueOf(obj.get("paidAmt"))));
+				
+			}
+		}
+		
+		// 반환할 Billing 정보 정의
+		List<EgovMap> returnList = new ArrayList<EgovMap>();
+		
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) {
+				//
+				if(Double.parseDouble(String.valueOf(obj.get("paidAmt"))) != Double.parseDouble(String.valueOf(obj.get("billAmt")))){
+					returnList.add(obj);
+				}
+			}
+		}		
+		
+		return returnList;
+	}
+	
+	/*****************************************************************************
+	 * Non - Rental 
+	 * 
+	 ******************************************************************************/
+	/**
+	 * Payment - Order Info Non - Rental 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * PaymentManager.cs : public List<RentalOrderView> GetOutInstOrders(int orderId)
+	 */
+	@Override
+	public List<EgovMap>  selectOrderInfoNonRental(Map<String, Object> params) {
+		
+		List<EgovMap> rcList = commonPaymentMapper.selectOrderInfoNonRental(params);
+		
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) 
+			{
+				Map<String , Object > newParams = new HashMap<String,Object>();
+				newParams.put("orderId", obj.get("salesOrdId"));
+				
+				Map<String, Object> billInfo = this.getOutrightPayInfo(newParams);
+				
+				Double totalPaid = Double.parseDouble(String.valueOf(billInfo.get("paidTotal"))) -  Double.parseDouble(String.valueOf(billInfo.get("reverseAmount")));
+				
+				obj.put("lastPayment", billInfo.get("lastPayment"));
+				obj.put("balance", Double.parseDouble(String.valueOf(billInfo.get("billTotal")))  - totalPaid);
+				obj.put("productPrice", billInfo.get("productPrice"));
+				obj.put("reverseAmount", billInfo.get("reverseAmount"));
+				obj.put("totalPaid", totalPaid);
+				obj.put("rpfPaid", billInfo.get("firstRf"));
+			}	
+		}
+		
+		return rcList;
+	}
+	
+	/**
+	 * Payment - Order Info Non-Rental Billing 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * PaymentManager.cs : public RentalPaymentInfo GetOutrightPayInfo(int orderId)
+	 */
+	public Map<String, Object> getOutrightPayInfo(Map<String, Object> params) {
+		
+		int ledgerCnt = 0;
+		int lastInstallment = 0;		
+		double paidTotal = 0.0D;	
+		double billTotal = 0.0D;	
+		double totalCN = 0.0D;	
+		double reverseAmount = 0.0D;	
+		
+		String lastPayDt = "1900-01-01";
+		String lastBillDt =  "1900-01-01";
+		
+		/*********************************************************
+		 * Ledger count 조회 
+		 *********************************************************/	
+		EgovMap ledgerCntMap = commonPaymentMapper.selectBillInfoLedgerCnt(params);
+		
+		/*********************************************************
+		 * Order 정보 조회 
+		 *********************************************************/
+		EgovMap order = commonPaymentMapper.selectOrderInfoForBills(params);
+		
+		if(ledgerCntMap != null && ledgerCntMap.get("cnt") != null){
+			ledgerCnt = Integer.parseInt(String.valueOf(ledgerCntMap.get("cnt")));
+		}	
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		if(ledgerCnt > 0){
+			
+			/*********************************************************
+			 * Ledger Info 조회
+			 *********************************************************/
+			EgovMap ledgerMap = commonPaymentMapper.selectLedgerInfo(params);
+			
+			if(ledgerMap != null){
+				
+				if(ledgerMap.get("lastPayDt") != null){
+					lastPayDt  = String.valueOf(ledgerMap.get("lastPayDt"));
+				}
+				
+				if(ledgerMap.get("tradeInstNo") != null){
+					lastInstallment  = Integer.parseInt(String.valueOf(ledgerMap.get("tradeInstNo")));
+				}
+				
+				if(ledgerMap.get("lastBillDt") != null){
+					lastBillDt  = String.valueOf(ledgerMap.get("lastBillDt"));
+				}
+				
+				if(ledgerMap.get("paidTotal") != null){
+					paidTotal = Double.parseDouble(String.valueOf(ledgerMap.get("paidTotal")));
+				}
+				
+				if(ledgerMap.get("billTotal") != null){
+					billTotal = Double.parseDouble(String.valueOf(ledgerMap.get("billTotal")));
+				}
+				
+				if(ledgerMap.get("cnTotal") != null){
+					totalCN = Double.parseDouble(String.valueOf(ledgerMap.get("cnTotal")));
+				}
+				
+				if(ledgerMap.get("revTotal") != null){
+					reverseAmount = Double.parseDouble(String.valueOf(ledgerMap.get("revTotal")));
+				}
+			}
+			  
+			if(billTotal < Double.parseDouble(String.valueOf(order.get("totAmt")))){
+				billTotal = Double.parseDouble(String.valueOf(order.get("totAmt")));
+			}
+			
+			billTotal = billTotal + totalCN;
+			
+			resultMap.put("orderId", params.get("orderId"));
+			resultMap.put("lastPayment", lastPayDt);
+			resultMap.put("lastInstallment", lastInstallment);
+			resultMap.put("lastBillDt", lastBillDt);
+			resultMap.put("paidTotal", paidTotal);			
+			resultMap.put("billTotal", billTotal);
+			resultMap.put("rpf", order.get("totAmt"));
+			resultMap.put("productPrice", order.get("totAmt"));
+			resultMap.put("reverseAmount", reverseAmount);
+			resultMap.put("rpfPaid", paidTotal);
+			resultMap.put("firstRf", paidTotal - billTotal);
+			resultMap.put("firstRfPaid", 0);
+			resultMap.put("unBilledCount", 0);
+			resultMap.put("unBilledAmount", 0);
+			resultMap.put("balance", billTotal - (paidTotal < 0 ? (paidTotal * -1 ) : paidTotal));		
+			
+		}else{			
+			resultMap.put("orderId", params.get("orderId"));
+			resultMap.put("lastPayment", lastPayDt);
+			resultMap.put("lastInstallment", 0);
+			resultMap.put("lastBillDt", lastPayDt);
+			resultMap.put("paidTotal", 0);			
+			resultMap.put("billTotal", order.get("totAmt"));
+			resultMap.put("rpf", 0);
+			resultMap.put("productPrice", order.get("totAmt"));
+			resultMap.put("reverseAmount", 0);
+			resultMap.put("rpfPaid", 0);
+			resultMap.put("firstRf", 0);
+			resultMap.put("firstRfPaid", 0);
+			resultMap.put("unBilledCount", 0);
+			resultMap.put("unBilledAmount", 0);
+			resultMap.put("balance", order.get("totAmt"));
+		}
+		
+		return resultMap;		
+	}
+	
+	/*****************************************************************************
+	 * Membership Service 
+	 * 
+	 ******************************************************************************/
+	/**
+	 * Payment - Order Info Membership Service  조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	@Override
+	public Map<String, Object>  selectOrderInfoSVM(Map<String, Object> params) {
+		return commonPaymentMapper.selectOrderInfoSVM(params);
+	}
+}

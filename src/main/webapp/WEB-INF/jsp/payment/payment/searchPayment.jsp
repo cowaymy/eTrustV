@@ -86,7 +86,10 @@ $(document).ready(function(){
 });
 
 // AUIGrid 칼럼 설정
-var columnLayout = [ 
+var columnLayout = [
+    { dataField:"payDt" ,headerText:"TrxNo",editable : false  , visible:false, dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"payTypeId" ,headerText:"TrxNo",editable : false ,visible:false},
+
     {dataField:"rnum", headerText:"No.", width : 80,editable : false },
     { dataField:"trxId" ,headerText:"TrxNo",editable : false },
 	{ dataField:"trxDt" ,headerText:"TrxDate",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
@@ -450,6 +453,71 @@ function fn_openDivPop(val){
        }
     }
 	
+}
+
+//popup 크기
+var winPopOption = {
+        width : "1200px",   // 창 가로 크기
+        height : "850px"    // 창 세로 크기
+};
+
+// Fund Transfer / Refund 팝업
+function fn_openWinPop(val){
+	if(val == "FUNDTRANS"){
+		if(selectedGridValue !=  undefined){
+			
+			var payId = AUIGrid.getCellValue(myGridID, selectedGridValue, "payId");
+			var payTypeId = AUIGrid.getCellValue(myGridID, selectedGridValue, "payTypeId");
+			var payTypeName = AUIGrid.getCellValue(myGridID, selectedGridValue, "payTypeName");
+			var payDt = AUIGrid.getCellValue(myGridID, selectedGridValue, "payDt");
+			
+			//allow Fund Transfer
+			// CC Easy Payment : 95
+			// Deposit Payment : 100
+			// Reverse & Refund & Fund Transfer : 101
+			// Elite HP Tranining Fees : 102
+			// Advanced AS : 103
+			// Trial Order Registration Fees : 104
+			// HP Business Starter Kit : 224
+			// Reverse HP Business Starter Kit : 225
+			// HP Business Renewal Kit :226
+			// 1 Year Premium SVM : 228
+			// 2 Years Regular SVM : 229
+			// 2 Years Premium SVM : 230
+			// 1 Year Regular SVM : 231
+			// Reverse 1 Year Premium SVM : 232
+			// Reverse 2 Years Regular SVM : 233
+			// Reverse 2 Years Premium SVM : 234
+			// Revrse 1 Year Regular SVM : 235
+			// POS : 577
+			// Fund Transfer : 1141
+			var payTypeIdArray = [95,100,101,102,103,104,224,225,226,228,229,230,231,232,233,234,235,577,1141];
+			
+			if(payTypeIdArray.indexOf(payTypeId) > -1){
+                Common.alert("<b>Payment Type : " + payTypeName + "<br />Fund transfer is disallowed for this payment.</b>");
+                return;
+            }else{
+            	var cutOffDate = new Date("01/01/2016");
+            	var paymentDate = new Date(payDt);
+            	
+                if((cutOffDate.getTime() > paymentDate.getTime())){
+            		Common.alert("<b>Payment date : " + payDt + "<br />" +
+                            "Cut off date : 01/01/2014<br />" +
+                            "Fund transfer is disallowed for this payment.</b>");
+                    return;
+            	}else{            		
+            		$("#popPayId").val(payId);
+                    Common.popupWin("trnsferForm", "/payment/initFundTransferPop.do", winPopOption);
+                    
+
+            	}
+            }
+		}else{
+			Common.alert("No payment selected.");
+			return;
+		}        
+    }
+    
 }
 
 function fn_close() {
@@ -920,7 +988,8 @@ function fn_goSalesConfirm(){
                     <dd>
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Details</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>                                                                      
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openWinPop('FUNDTRANS');">Fund Transfer</a></p></li>                                                                      
                     </ul>
                     <!-- 
                     <ul class="btns">
@@ -1606,5 +1675,9 @@ function fn_goSalesConfirm(){
     <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/PaymentReceipt_New.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="v_ORNo" name="v_ORNo" />
+</form>
+
+<form name="trnsferForm" id="trnsferForm"  method="post">    
+    <input type="hidden" id="popPayId" name="popPayId" />
 </form>
 

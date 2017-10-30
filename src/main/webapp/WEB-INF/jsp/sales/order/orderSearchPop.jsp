@@ -31,7 +31,8 @@
 	    if($('#callPrgm').val() == 'ORD_REGISTER_SALE_ORD') {
 	        fn_loadTrialNo(ordNo);
 	    }
-	    else if($('#callPrgm').val() == 'BILLING_ADD_NEW_GROUP') {
+	    else if($('#callPrgm').val() == 'BILLING_ADD_NEW_GROUP' ||
+	    	         $('#callPrgm').val() == 'FUND_TRANSFER') {
 	        fn_orderInfo(ordNo, ordId);
 	    }
 	    else if($('#callPrgm').val() == 'BILLING_DISCOUNT_MGMT') {
@@ -49,6 +50,7 @@
         }else if($('#callPrgm').val() == 'BILLING_STATEMENT_PO') {
             fn_callbackOrder(ordId);
         }
+        
 	}
 	
     function createAUIGrid() {
