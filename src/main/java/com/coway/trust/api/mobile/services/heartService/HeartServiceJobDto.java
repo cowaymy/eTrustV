@@ -177,6 +177,7 @@ public class HeartServiceJobDto {
 	@ApiModelProperty(value = "")
 	private String rcCode;
 	
+
 	@ApiModelProperty(value = "실패 사유 코드")
 	private String failReasonCode;
 	
@@ -206,10 +207,6 @@ public class HeartServiceJobDto {
 
 	@ApiModelProperty(value = "필터교체대상 여부")
 	private String nextAppointmentTime;
-
-	
-	
-	
 
 	public void setSalesOrderNo(int salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
@@ -698,7 +695,49 @@ public class HeartServiceJobDto {
 	}
 	
 	
-	
+	public String getAppType() {
+		return appType;
+	}
+
+	public void setAppType(String appType) {
+		this.appType = appType;
+	}
+
+	public String getSalesPromotion() {
+		return salesPromotion;
+	}
+
+	public void setSalesPromotion(String salesPromotion) {
+		this.salesPromotion = salesPromotion;
+	}
+
+	public String getBankCode() {
+		return bankCode;
+	}
+
+	public void setBankCode(String bankCode) {
+		this.bankCode = bankCode;
+	}
+
+	public String getDscCode() {
+		return dscCode;
+	}
+
+	public void setDscCode(String dscCode) {
+		this.dscCode = dscCode;
+	}
+
+	public String getRcCode() {
+		return rcCode;
+	}
+
+	public void setRcCode(String rcCode) {
+		this.rcCode = rcCode;
+	}
+
+	public String getFailReasonCode() {
+		return failReasonCode;
+	}
 	
 	
 	

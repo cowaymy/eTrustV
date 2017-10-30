@@ -1,6 +1,9 @@
 package com.coway.trust.api.mobile.services.heartService;
 
-import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
+
+
+import java.sql.Timestamp;
+
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -10,8 +13,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "HeartServicePartsDto", description = "공통코드 Dto")
 public class HeartServicePartsDto {
 
+
 	@ApiModelProperty(value = "주문번호")
-	private String salesOrderNo;
+	private int salesOrderNo;
 	
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
@@ -23,13 +27,13 @@ public class HeartServicePartsDto {
 	private String partCode;
 	
 	@ApiModelProperty(value = "part id 값")
-	private String partId;
+	private int partId;
 	
 	@ApiModelProperty(value = "필터명")
 	private String partName;
 	
 	@ApiModelProperty(value = "필요수량")
-	private String quanity;
+	private int quanity;
 	
 	@ApiModelProperty(value = "chgid??")
 	private String exChgid;
@@ -41,13 +45,13 @@ public class HeartServicePartsDto {
 	private String chgYN;
 	
 	@ApiModelProperty(value = "마지막교체일_날짜(YYYYMMDD)")
-	private String lastChgDate;
+	private Timestamp lastChgDate;
 	
 	@ApiModelProperty(value = "마지막교체일_시간(HHMMSS)")
 	private String lastChgTime;
 	
 	@ApiModelProperty(value = "필터교체 주기")
-	private String partsPeriod;
+	private int partsPeriod;
 	
 	@ApiModelProperty(value = "대체필터 존재 유무")
 	private String alternativeYN;
@@ -63,152 +67,335 @@ public class HeartServicePartsDto {
 	
 	@ApiModelProperty(value = "대체필터명")
 	private String alternativeFilterName;
+	
+	@ApiModelProperty(value = "필터 바코드대상 여부(Y/N)")
+	private String filterBarcdChkYN;
+	
+	@ApiModelProperty(value = "필터 바코드 Serial No")
+	private String filterBarcdSerialNo;
+
+
 
 	
 	
-	public String getSalesOrderNo() {
+	public int getSalesOrderNo() {
 		return salesOrderNo;
 	}
 
-	public void setSalesOrderNo(String salesOrderNo) {
+
+
+
+
+	public void setSalesOrderNo(int salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
+
+
+
+
 
 	public String getServiceNo() {
 		return serviceNo;
 	}
 
+
+
+
+
 	public void setServiceNo(String serviceNo) {
 		this.serviceNo = serviceNo;
 	}
+
+
+
+
 
 	public String getProductCode() {
 		return productCode;
 	}
 
+
+
+
+
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
+
+
+
+
 
 	public String getPartCode() {
 		return partCode;
 	}
 
+
+
+
+
 	public void setPartCode(String partCode) {
 		this.partCode = partCode;
 	}
 
-	public String getPartId() {
+
+
+
+
+	public int getPartId() {
 		return partId;
 	}
 
-	public void setPartId(String partId) {
+
+
+
+
+	public void setPartId(int partId) {
 		this.partId = partId;
 	}
+
+
+
+
 
 	public String getPartName() {
 		return partName;
 	}
 
+
+
+
+
 	public void setPartName(String partName) {
 		this.partName = partName;
 	}
 
-	public String getQuanity() {
+
+
+
+
+	public int getQuanity() {
 		return quanity;
 	}
 
-	public void setQuanity(String quanity) {
+
+
+
+
+	public void setQuanity(int quanity) {
 		this.quanity = quanity;
 	}
+
+
+
+
 
 	public String getExChgid() {
 		return exChgid;
 	}
 
+
+
+
+
 	public void setExChgid(String exChgid) {
 		this.exChgid = exChgid;
 	}
+
+
+
+
 
 	public String getChgQty() {
 		return chgQty;
 	}
 
+
+
+
+
 	public void setChgQty(String chgQty) {
 		this.chgQty = chgQty;
 	}
+
+
+
+
 
 	public String getChgYN() {
 		return chgYN;
 	}
 
+
+
+
+
 	public void setChgYN(String chgYN) {
 		this.chgYN = chgYN;
 	}
 
-	public String getLastChgDate() {
+
+
+
+
+	public Timestamp getLastChgDate() {
 		return lastChgDate;
 	}
 
-	public void setLastChgDate(String lastChgDate) {
+
+
+
+
+	public void setLastChgDate(Timestamp lastChgDate) {
 		this.lastChgDate = lastChgDate;
 	}
+
+
+
+
 
 	public String getLastChgTime() {
 		return lastChgTime;
 	}
 
+
+
+
+
 	public void setLastChgTime(String lastChgTime) {
 		this.lastChgTime = lastChgTime;
 	}
 
-	public String getPartsPeriod() {
+
+
+
+
+	public int getPartsPeriod() {
 		return partsPeriod;
 	}
 
-	public void setPartsPeriod(String partsPeriod) {
+
+
+
+
+	public void setPartsPeriod(int partsPeriod) {
 		this.partsPeriod = partsPeriod;
 	}
+
+
+
+
 
 	public String getAlternativeYN() {
 		return alternativeYN;
 	}
 
+
+
+
+
 	public void setAlternativeYN(String alternativeYN) {
 		this.alternativeYN = alternativeYN;
 	}
+
+
+
+
 
 	public String getAlternativeUsedYN() {
 		return alternativeUsedYN;
 	}
 
+
+
+
+
 	public void setAlternativeUsedYN(String alternativeUsedYN) {
 		this.alternativeUsedYN = alternativeUsedYN;
 	}
+
+
+
+
 
 	public String getAlternativeFilterCode() {
 		return alternativeFilterCode;
 	}
 
+
+
+
+
 	public void setAlternativeFilterCode(String alternativeFilterCode) {
 		this.alternativeFilterCode = alternativeFilterCode;
 	}
+
+
+
+
 
 	public String getAlternativeFilterId() {
 		return alternativeFilterId;
 	}
 
+
+
+
+
 	public void setAlternativeFilterId(String alternativeFilterId) {
 		this.alternativeFilterId = alternativeFilterId;
 	}
+
+
+
+
 
 	public String getAlternativeFilterName() {
 		return alternativeFilterName;
 	}
 
+
+
+
+
 	public void setAlternativeFilterName(String alternativeFilterName) {
 		this.alternativeFilterName = alternativeFilterName;
 	}
+
+
+
+
+
+	public String getFilterBarcdChkYN() {
+		return filterBarcdChkYN;
+	}
+
+
+
+
+
+	public void setFilterBarcdChkYN(String filterBarcdChkYN) {
+		this.filterBarcdChkYN = filterBarcdChkYN;
+	}
+
+
+
+
+
+	public String getFilterBarcdSerialNo() {
+		return filterBarcdSerialNo;
+	}
+
+
+
+
+
+	public void setFilterBarcdSerialNo(String filterBarcdSerialNo) {
+		this.filterBarcdSerialNo = filterBarcdSerialNo;
+	}
+
+
+
 
 
 	public static HeartServicePartsDto create(EgovMap egvoMap) {

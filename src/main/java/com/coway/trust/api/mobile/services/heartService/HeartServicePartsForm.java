@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class HeartServicePartsForm {
 
 	
-	@ApiModelProperty(value = "userId [default : '' 전체] 예) 32858 ", example = "1, 2, 3")
+	@ApiModelProperty(value = "userId [default : '' 전체] 예) CD100975 ", example = "1, 2, 3")
 	private String userId;
 
 	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 201706", example = "1, 2, 3")
