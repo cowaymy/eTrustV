@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.memorandum.impl.MemorandumMapper">
+    <resultMap id="clobMap" type="EgovMap">
+        <result property="MEMOCNTNT" column="MEMOCNTNT" jdbcType="CLOB"  javaType="java.lang.String" />
+    </resultMap>
+    
+    <select id="selectMemoRandumList" parameterType="Map" resultMap="clobMap">
+        <![CDATA[
+            SELECT M10.MEMO_ID MEMOID
+			     , M10.STUS_CODE_ID STUSID
+			     , S38.CODE STUSCODE
+			     , S38.NAME STUSNAME
+			     , M10.MEMO_TITLE MEMOTITLE
+			     , M10.MEMO_CNTNT MEMOCNTNT
+			     , M10.CRT_USER_ID CRTUSERID
+			     , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM 
+			     , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY') CRTDT
+			     , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY HH24MISS') FCRTDT
+			     , M10.UPD_USER_ID UPDUSERID
+			     , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM 
+			     , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY') UPDDT
+                 , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY HH24MISS') FUPDDT
+                 , M10.IS_STAFF_MEMO STAFFMEMO
+			     , M10.IS_CODY_MEMO CODYMEMO
+			     , M10.IS_HP_MEMO HPMEMO
+			  FROM MSC0010D M10 , SYS0038M S38
+			 WHERE 1 = 1
+			   AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
+        ]]>
+            <if test="stitle != null and stitle != ''">
+            AND M10.MEMO_TITLE like '%'||#{stitle}||'%'
+            </if>
+            <if test="screator !=null and screator != ''">
+            AND M10.CRT_USER_ID like '%'|| #{screator} || '%'
+            </if>
+            <if test="crtsdt !=null and crtsdt != ''">
+            AND M10.CRT_DT BETWEEN TO_DATE(#{crtsdt}||'000000' , 'DD/MM/YYYYHH24MISS') AND TO_DATE(#{crtedt}||'235959' , 'DD/MM/YYYYHH24MISS')
+            </if>
+        ORDER BY MEMO_ID DESC                
+    </select>
+</mapper>

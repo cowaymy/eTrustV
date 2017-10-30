@@ -10,5 +10,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface RoomManagementMapper {
 
 	List<EgovMap> roomManagementList(Map<String, Object> params);
+	
+	
+	List<EgovMap> roomBookingList(Map<String, Object> params);
 
 }

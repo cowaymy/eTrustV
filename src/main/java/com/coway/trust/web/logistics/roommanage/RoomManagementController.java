@@ -71,4 +71,16 @@ public class RoomManagementController {
 		message.setDataList(list);
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/roomBookingList.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> roomBookingList(@RequestParam Map<String, Object> params, Model model,
+			SessionVO sessionVO) throws Exception {
+		
+		List<EgovMap> list = roomManagementService.roomBookingList(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
 }

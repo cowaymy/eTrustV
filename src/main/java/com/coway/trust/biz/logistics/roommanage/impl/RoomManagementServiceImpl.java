@@ -26,4 +26,10 @@ public class RoomManagementServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return roomManagementMapper.roomManagementList(params);
 	}
+	
+	@Override
+	public List<EgovMap> roomBookingList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return roomManagementMapper.roomBookingList(params);
+	}
 }

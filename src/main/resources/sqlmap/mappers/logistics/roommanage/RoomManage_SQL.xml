@@ -4,6 +4,17 @@
     
     <select id="roomManagementList"  parameterType="Map" resultType="EgovMap">
     <!-- RoomMaster 생성 요청함 2017-10-26 -->
-    
+    SELECT RUM_ID, RUM_CODE, RUM_NAME, STUS_ID, BRNCH_ID, 
+           ADV_OPTN_ID, ADV_TM_IN_MIN, CRT_USER_ID, CRT_DT, 
+           UPD_USER_ID, UPD_DT, HAS_IMG, IMG_URL, CPCTY, RUM_DESC
+      FROM LOG0079M
+    </select>
+    <select id="roomBookingList"  parameterType="Map" resultType="EgovMap">
+    <!-- RoomMaster 생성 요청함 2017-10-26 -->
+    SELECT RUM_BOOK_ID, RUM_ID, STUS_ID, 
+           TO_CHAR(BOOK_DT_FROM , 'YYYY-MM-DD') BOOKFROM , TO_CHAR(BOOK_DT_TO , 'YYYY-MM-DD') BOOKTO , REM, 
+           CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT, BOOK_TITLE , TO_CHAR(ADD_MONTHS(SYSDATE , ${addmonth}) , 'YYYY-MM-DD') NOWDATE
+      FROM LOG0080D
+     WHERE RUM_ID = #{roomid}
     </select>
 </mapper>
