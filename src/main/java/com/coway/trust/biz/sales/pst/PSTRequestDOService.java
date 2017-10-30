@@ -241,4 +241,13 @@ public interface PSTRequestDOService {
 //	void updatePstSAL0032D(Map<String, Object> params);
 	void updateMainPstSAL0032D(Map<String, Object> params);
 	
+	
+	/**
+	 * RATE 구하기
+	 * 
+	 * @param 
+	 * @return RATE
+	 * @exception Exception
+	 */
+	EgovMap getRate();
 }

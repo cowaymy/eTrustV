@@ -183,6 +183,7 @@ public class PSTRequestDOController {
 		EgovMap pstDeliveryContact = pstRequestDOService.pstRequestDODelvryContact(params);
 		EgovMap pstMailAddr = pstRequestDOService.pstRequestDOMailAddress(params);
 		EgovMap pstDeliveryAddr = pstRequestDOService.pstRequestDODelvryAddress(params);
+		EgovMap getRate = pstRequestDOService.getRate();
 		logger.info("##### pstMailContact #####" +pstMailContact.toString());
 		logger.info("##### pstDeliveryContact #####" +pstDeliveryContact.toString());
 		model.addAttribute("pstInfo", pstInfo);
@@ -190,6 +191,7 @@ public class PSTRequestDOController {
 		model.addAttribute("pstDeliveryAddr", pstDeliveryAddr);
 		model.addAttribute("pstMailContact", pstMailContact);
 		model.addAttribute("pstDeliveryContact", pstDeliveryContact);
+		model.addAttribute("getRate", getRate);
 		
 		// Edit Popup parameter
 		//model.addAttribute("pstSalesOrdIdParam", params.get("pstSalesOrdIdParam"));
@@ -229,11 +231,10 @@ public class PSTRequestDOController {
 
 		// Dealer combo box
 		List<EgovMap> cmbDealerList = pstRequestDOService.pstNewCmbDealerList();
+		EgovMap getRate = pstRequestDOService.getRate();
 		
 		model.addAttribute("cmbDealerList", cmbDealerList);
-		
-//		EgovMap pstMailAddrMain = pstRequestDOService.pstEditAddrDetailTopPop(params);
-
+		model.addAttribute("getRate", getRate);
 		
 		return "sales/pst/pstRequestDoNewPop";
 	}
@@ -819,4 +820,5 @@ public class PSTRequestDOController {
 		
 		return ResponseEntity.ok(message);
 	}
+
 }

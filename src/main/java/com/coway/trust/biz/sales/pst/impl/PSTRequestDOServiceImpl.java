@@ -555,5 +555,18 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 		pstRequestDOMapper.updateMainPstSAL0032D(params);
 		
 	}
+	
+	
+	/**
+	 * RATE 구하기
+	 * 
+	 * @param 
+	 * @return RATE
+	 * @exception Exception
+	 */
+	public EgovMap getRate() {
+		
+		return pstRequestDOMapper.getRate();
+	}
     
 }
