@@ -399,6 +399,8 @@
 		if($("#nric").val() == ''){
 			Common.alert("Please key in NRIC/Company number");
             return false;
+        }else if($("#nric").length > 12){
+        	Common.alert("IC length More than 12 digit. </br> Are you sure you want to Save?");
         }else{
         	if(FormUtil.checkNum($("#nric"))){
                 Common.alert("* Invalid nric number.");
@@ -753,7 +755,7 @@
 		<tr>
 		    <th scope="row">NRIC/Company No<span class="must">*</span></th>
 		    <td>
-		        <input type="text" title="" id="nric" name="nric" maxlength="12"  placeholder="NRIC/Company No" class="w100p" />
+		        <input type="text" title="" id="nric" name="nric" maxlength="18"  placeholder="NRIC/Company No" class="w100p" />
 		    </td>
 		    <th scope="row">GST Registration No</th>
 		    <td>
