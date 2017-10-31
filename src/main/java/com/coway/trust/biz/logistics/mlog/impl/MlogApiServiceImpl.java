@@ -14,7 +14,6 @@ import com.coway.trust.api.mobile.logistics.audit.InputBarcodeListForm;
 import com.coway.trust.api.mobile.logistics.audit.InputBarcodePartsForm;
 import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodeForm;
 import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodePartsForm;
-import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveDForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockReqMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
@@ -204,7 +203,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		if (reqTransferMList.size() > 0) {
 			for (int i = 0; i < reqTransferMList.size(); i++) {
 
-				insMap = (Map<String, Object>) reqTransferMList.get(i);
+				insMap = reqTransferMList.get(i);
 				insMap.put("reqno", headtitle + seq);
 
 				MlogApiMapper.insStockMovementDetail(insMap);
@@ -296,7 +295,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		if (delvryNo == null || "".equals(delvryNo)) { // 일반 요청 상태
 			MlogApiMapper.StockMovementReqstCancel(cancleMap);
 		}
-		
+
 		return delvryNo;
 
 	}
@@ -306,8 +305,9 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		Map<String, Object> receiveMap = new HashMap();
 		receiveMap.put("userId", confirmReceiveMForm.getUserId());
-		receiveMap.put("gipfdate", confirmReceiveMForm.getRequestDate());
-		receiveMap.put("giptdate", confirmReceiveMForm.getRequestDate());
+
+		// receiveMap.put("gipfdate", confirmReceiveMForm.getRequestDate());
+		// receiveMap.put("giptdate", confirmReceiveMForm.getRequestDate());
 		receiveMap.put("gtype", confirmReceiveMForm.getReqStatus());
 
 		String[] delvcd = new String[1];
@@ -372,32 +372,28 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		}
 	}
 
-	
 	@Override
 	public void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReq) {
-		
-//		String seq = MlogApiMapper.selectStockMovementSeq();
-//		String headtitle = "SMO";
-//		Map<String, Object> insMap = null;
-//		if (reqTransferMList.size() > 0) {
-//			for (int i = 0; i < reqTransferMList.size(); i++) {
-//			
-//				insMap = (Map<String, Object>) reqTransferMList.get(i);
-//				insMap.put("reqno", headtitle + seq);
-//
-//				MlogApiMapper.insStockMovementDetail(insMap);
-//				logger.info(" reqstno : {}", insMap);
-//								
-//			}	
-//
-//			MlogApiMapper.insStockMovementHead(insMap);
-//
-//
-//			MlogApiMapper.insertStockBooking(insMap);
-//		}
+
+		// String seq = MlogApiMapper.selectStockMovementSeq();
+		// String headtitle = "SMO";
+		// Map<String, Object> insMap = null;
+		// if (reqTransferMList.size() > 0) {
+		// for (int i = 0; i < reqTransferMList.size(); i++) {
+		//
+		// insMap = (Map<String, Object>) reqTransferMList.get(i);
+		// insMap.put("reqno", headtitle + seq);
+		//
+		// MlogApiMapper.insStockMovementDetail(insMap);
+		// logger.info(" reqstno : {}", insMap);
+		//
+		// }
+		//
+		// MlogApiMapper.insStockMovementHead(insMap);
+		//
+		//
+		// MlogApiMapper.insertStockBooking(insMap);
+		// }
 	}
-	
-	
-	
-	
+
 }
