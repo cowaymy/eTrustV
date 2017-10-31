@@ -494,6 +494,7 @@ public class PettyCashController {
 		model.addAttribute("userName", sessionVO.getUserName());
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
+		model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
 		return "eAccounting/pettyCash/pettyCashViewEditExpensePop";
 	}
 	

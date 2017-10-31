@@ -161,7 +161,6 @@ $(document).ready(function () {
 	
 	AUIGrid.setGridData(newGridID, $.parseJSON('${itemList}'));
 	console.log($.parseJSON('${itemList}'))
-	console.log('${itemList}')
 	
 	var result = $.parseJSON('${itemList}');
 	var allTotAmt = "" + result[0].allTotAmt;
@@ -233,10 +232,12 @@ function fn_tempSave() {
 <input type="hidden" id="budgetCode" name="budgetCode">
 <input type="hidden" id="glAccCode" name="glAccCode">
 
+<c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="right_btns mb10">
     <li><p class="btn_blue2"><a href="#" id="tempSave_btn">Temp. Save</a></p></li>
     <li><p class="btn_blue2"><a href="#" id="request_btn">Request</a></p></li>
 </ul>
+</c:if>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -249,13 +250,13 @@ function fn_tempSave() {
 <tbody>
 <tr>
     <th scope="row">Cost Center</th>
-    <td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" /><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
     <th scope="row">Creator</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${userId}"/></td>
 </tr>
 <tr>
     <th scope="row">Custodian</th>
-    <td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" /><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
     <th scope="row">IC No / Passport No</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric"/></td>
 </tr>
@@ -267,7 +268,7 @@ function fn_tempSave() {
 </tr>
 <tr>
     <th scope="row">Claim Month</th>
-    <td colspan="3"><input type="text" title="Reference Month" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth"/></td>
+    <td colspan="3"><input type="text" title="Reference Month" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -283,14 +284,14 @@ function fn_tempSave() {
 <tbody>
 <tr>
     <th scope="row">Invoice Date</th>
-    <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" /></td>
+    <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
 </tr>
 <tr>
     <th scope="row">Expense Type</th>
-    <td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" /><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
     <th scope="row">Invoice Type</th>
     <td>
-    <select class="w100p" id="invcType" name="invcType" onchange="javascript:fn_ActionInvcTypeS()">
+    <select class="w100p" id="invcType" name="invcType" onchange="javascript:fn_ActionInvcTypeS()" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>>
         <option value="F">Full Tax invoice</option>
         <option value="S">Simplified Tax invoice</option>
     </select>
@@ -304,22 +305,22 @@ function fn_tempSave() {
 </tr>
 <tr>
     <th scope="row">Supplier</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="sMemAccId" name="sMemAccId"/><a href="#" class="search_btn" id="sSupplier_search_btn" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="sMemAccId" name="sMemAccId" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="sSupplier_search_btn" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
     <th scope="row">GST Registration No</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
     <th scope="row">Tax Code</th>
     <%-- <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn" id="taxCode"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
-    <td><select class="" id="taxCode" name="taxCode"></select></td>
+    <td><select class="" id="taxCode" name="taxCode" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>></select></td>
     <th scope="row">Invoice No</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr id="amt">
     <th scope="row">Amount before GST (RM)</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstBeforAmt" name="gstBeforAmt" /></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="gstBeforAmt" name="gstBeforAmt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
     <th scope="row">GST (RM)</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstAmt" name="gstAmt" /></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="gstAmt" name="gstAmt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
     <th scope="row">Total Amount</th>
@@ -337,12 +338,12 @@ function fn_tempSave() {
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="expDesc" name="expDesc" /></td>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="expDesc" name="expDesc" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
-<c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}">
+<c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" id="add_btn">Add</a></p></li>
     <li><p class="btn_blue2"><a href="#" id="clear_btn">Clear</a></p></li>
