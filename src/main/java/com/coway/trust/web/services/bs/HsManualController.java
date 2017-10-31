@@ -32,7 +32,7 @@ import com.coway.trust.web.organization.organization.MemberListController;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller 
-@RequestMapping(value = "/bs")
+@RequestMapping(value = "/services/bs")
 public class HsManualController {
 	private static final Logger logger = LoggerFactory.getLogger(MemberListController.class);
 
@@ -485,15 +485,16 @@ public class HsManualController {
 		logger.debug("params : {}", params.toString());
 		params.put("orderNo", params.get("salesOrdId"));
 		
-		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
+		//List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
 		EgovMap configBasicInfo = hsManualService.selectConfigBasicInfo(params);
 		//EgovMap configBasicInfo = hsManualService.selectConfigBasicInfo(params);
 		
 //		EgovMap as_ord_basicInfo = hsManualService.selectOrderBasicInfo(params);
 //		EgovMap asentryInfo =null;
 		
-		model.put("cmbServiceMemList", cmbServiceMemList);
+//		model.put("cmbServiceMemList", cmbServiceMemList);
 		model.put("basicInfo", configBasicInfo);   
+		model.put("SALEORD_ID",(String) params.get("salesOrdId"));   
 
 //		model.put("as_ord_basicInfo", as_ord_basicInfo); 
 //		model.put("AS_NO", (String)params.get("AS_NO"));   
@@ -501,6 +502,28 @@ public class HsManualController {
 		return "services/bs/hsConfigBasicPop";
 	} 
 
+	
+	/**
+	 * Services - 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getHSConfigBasicInfo.do")
+	public String getHSConfigBasicInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+		
+		logger.debug("params : {}", params.toString());
+		params.put("orderNo", params.get("salesOrdId"));
+		
+		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
+		model.put("cmbServiceMemList", cmbServiceMemList);
+		
+		return "services/bs/hsConfigBasicPop";
+	} 
+	
+	
 	
 	@RequestMapping(value = "/hSFilterSettingPop.do" )
 	public String hSFilterSettingPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
