@@ -292,24 +292,16 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		
 		logger.debug("receiveMap    값 : {}", receiveMap);
 		
-			List<ConfirmReceiveDForm> list = (List<ConfirmReceiveDForm>) confirmReceiveMForm.getConfirmReceiveDetail();			
-
-			
-			for (int j = 0; j < list.size(); j++) {
-				ConfirmReceiveDForm form = list.get(j);
-				
-				logger.debug("partsCode    값 : {}",form.getPartsCode() );
-				logger.debug("partsId    값 : {}", form.getPartsId());
-				logger.debug("serialNo    값 : {}", form.getSerialNo());
-				logger.debug("smoNoItem    값 : {}", form.getSmoNoItem());
-				
-			}
+		String delvryNo = MlogApiMapper.StockMovementDelvryNo(receiveMap); // in : smo / out : delvry_no 
 		
+		if (delvryNo == null ){ // 일반 요청 상태
+			MlogApiMapper.StockMovementReqstCancel(receiveMap);
+		}else{ // 이동 상태
+			String[] delvcd = new String[1];
+			delvcd[0] = delvryNo;
+			receiveMap.put("parray", delvcd);
+			MlogApiMapper.StockMovementIssueCancel(receiveMap);
+		}
 		
-		
-	}
-		
-		
-	
-		
+	}	
 }

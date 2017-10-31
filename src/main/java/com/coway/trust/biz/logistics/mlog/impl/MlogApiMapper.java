@@ -108,4 +108,10 @@ public interface MlogApiMapper {
 	
 	void StockMovementIssue(Map<String, Object> formMap);
 	
+	String StockMovementDelvryNo(Map<String, Object> receiveMap);
+	
+	void StockMovementIssueCancel(Map<String, Object> receiveMap);
+	
+	void StockMovementReqstCancel(Map<String, Object> receiveMap);
+	
 }
