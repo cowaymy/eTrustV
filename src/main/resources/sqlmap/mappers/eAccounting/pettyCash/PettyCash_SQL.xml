@@ -792,4 +792,5 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
     WHERE CLM_NO = #{clmNo}       
 </update>
 
+
 </mapper>
