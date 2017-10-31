@@ -15,7 +15,7 @@
 						       S01.APP_TYPE_ID AS app_Type,
 						       S17.PROMO_ID AS sales_Promotion,
 						       S22.CUST_ACC_BANK_ID AS bank_Code,
-						       S22.CUST_ACC_NO AS cardAccount_No,
+						       S22.CUST_ACC_NO AS card_Account_No,
 						       S27.TEL_M1 AS handphone_Tel,
 						       S27.TEL_O AS home_Tel,
 						       S27.TEL_R AS office_Tel,
@@ -34,54 +34,55 @@
 						       SV8.YEAR AS plan_Year,
 						       SV8.MONTH AS plan_Month,
 						       SYS.STK_DESC AS product_Name,
-						       SYS.STK_CODE AS product_Code,
-                              null as job_Type
-                                ,null as appointment_Date
-                                ,null as appointment_Time
-                                ,null as job_Session
-                                ,null as checkIn_Date
-                                ,null as checkIn_Time
-                                ,null as checkIn_Gps
-                                ,null as service_State
-                                ,null as customer_Gps
-                                ,null as install_Address
-                                ,null as postcode
-                                ,null as customer_Va_No
-                                ,null as customer_Jom_Pay_Ref_No
-                                ,null as image_Url
-                                ,null as instruction
-                                ,null as contract_Duration
-                                ,null as monthly_RentalFees
-                                ,null as registrationFees
-                                ,null as payment_Mode
-                                ,null as payment_ModeName
-                                ,null as bank_Name
-                                ,null as outstanding
-                                ,null as warranty
-                                ,null as Membership_Contract_Expiry
-                                ,null as rental_Status
-                                ,null as last_Payment_Date
-                                ,null as temperature_Setting
-                                ,null as result_Remark
-                                ,null as owner_Code
-                                ,null as owner_Code_Nm
-                                ,null as result_Cust_Name
-                                ,null as result_Report_Email_No
-                                ,null as result_Acceptance_Name
-                                ,null as fail_Reason_Name
-                                ,null as settled_Date
-                                ,null as settled_Time
-                                ,null as ren_Collection_Id
-                                ,null as bsr_No
-                                ,null as need_Filter
-                                ,null as nextAppointment_Date
-                                ,null as nextAppointment_Time
-                                ,null as appType
-                                ,null as salesPromotion
-                                ,null as bankCode
-                                ,null as dscCode
-                                ,null as rcCode
-                                ,null as failReasonCode
+						       SYS.STK_CODE AS product_Code
+<!-- 						       ,
+                                 '1' as job_Type
+                                , '1'  as appointment_Date
+                                , '1' as appointment_Time
+                                , '1' as job_Session
+                                , '1' as checkIn_Date
+                                , '1' as checkIn_Time
+                                , '1' as checkIn_Gps
+                                , '1' as service_State
+                                , '1' as customer_Gps
+                                , '1' as install_Address
+                                , '1' as postcode
+                                , '1' as customer_Va_No
+                                , '1' as customer_Jom_Pay_Ref_No
+                                , '1' as image_Url
+                                , '1' as instruction
+                                , '1' as contract_Duration
+                                , '1' as monthly_RentalFees
+                                , '1' as registrationFees
+                                , '1' as payment_Mode
+                                , '1' as payment_ModeName
+                                , '1' as bank_Name
+                                , '1' as outstanding
+                                , '1' as warranty
+                                , '1' as Membership_Contract_Expiry
+                                , '1' as rental_Status
+                                , '1' as last_Payment_Date
+                                , '1' as temperature_Setting
+                                , '1' as result_Remark
+                                , '1' as owner_Code
+                                , '1' as owner_Code_Nm
+                                , '1' as result_Cust_Name
+                                , '1' as result_Report_Email_No
+                                , '1' as result_Acceptance_Name
+                                , '1' as fail_Reason_Name
+                                , '1' as settled_Date
+                                , '1' as settled_Time
+                                , '1' as ren_Collection_Id
+                                , '1' as bsr_No
+                                , '1' as need_Filter
+                                , '1' as nextAppointment_Date
+                                , '1' as nextAppointment_Time
+                                , '1' as appType
+                                , '1' as salesPromotion
+                                , '1' as bankCode
+                                , '1' as dscCode
+                                , '1' as rcCode
+                                , '1' as failReasonCode -->
 						  FROM SVC0008D SV8
 						       INNER JOIN SAL0001D S01
 						          ON S01.SALES_ORD_ID = SV8.SALES_ORD_ID
