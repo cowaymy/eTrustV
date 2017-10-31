@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.api.mobile.logistics.audit.InputBarcodeListForm;
+import com.coway.trust.api.mobile.logistics.audit.InputBarcodePartsForm;
+import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodeForm;
+import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodePartsForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveDForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
@@ -55,7 +59,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getInventoryOverallStock(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getAllStockList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -68,7 +72,6 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		return MlogApiMapper.getInventoryStockByHolder(params);
 	}
 
-	
 	@Override
 	public List<EgovMap> StockReceiveList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -122,58 +125,54 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getCommonReqHeader(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getCommonReqParts(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getCommonReqParts(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getAuditStockResultDetail(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getAuditStockResultDetail(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getStockTransferReqStatusMList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getStockTransferReqStatusMList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getStockTransferReqStatusDList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getStockTransferReqStatusDList(params);
 	}
-	
-	
+
 	@Override
 	public List<EgovMap> getNonBarcodeM(Map<String, Object> params) {
-		// TODO Auto-generated method stub	
+		// TODO Auto-generated method stub
 		return MlogApiMapper.getNonBarcodeM(params);
 	}
-	
-	
+
 	@Override
 	public List<EgovMap> getNonBarcodeDList(String invenAdjustLocId) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getNonBarcodeDList(invenAdjustLocId);
 	}
-	
-	
+
 	@Override
 	public List<EgovMap> getBarcodeDList(String invenAdjustLocId) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getBarcodeDList(invenAdjustLocId);
 	}
-	
+
 	@Override
 	public List<EgovMap> getBarcodeCList(String invenAdjustLocId) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getBarcodeCList(invenAdjustLocId);
 	}
-	
 
 	/**
 	 * 현창배 추가
@@ -194,40 +193,37 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	/**
 	 * 인서트 추가
 	 */
-	
+
 	@Override
 	public void saveInvenReqTransfer(List<Map<String, Object>> reqTransferMList) {
-		
+
 		String seq = MlogApiMapper.selectStockMovementSeq();
 		String headtitle = "SMO";
 		Map<String, Object> insMap = null;
 		if (reqTransferMList.size() > 0) {
 			for (int i = 0; i < reqTransferMList.size(); i++) {
-			
+
 				insMap = (Map<String, Object>) reqTransferMList.get(i);
 				insMap.put("reqno", headtitle + seq);
 
 				MlogApiMapper.insStockMovementDetail(insMap);
 				logger.info(" reqstno : {}", insMap);
-								
-			}	
+
+			}
 
 			MlogApiMapper.insStockMovementHead(insMap);
-
 
 			MlogApiMapper.insertStockBooking(insMap);
 		}
 	}
-	
-	
+
 	@Override
 	public Map<String, Object> selectStockMovementSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.selectStockMovementSerial(params);
 	}
-	
-	
-	
+
+	@Override
 	public void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm) {
 
 		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
@@ -235,17 +231,17 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// 2. insert ,54 , 55 , 61 ,56update start
 		for (int i = 0; i < stockTransferConfirmGiMForm.size(); i++) {
 			StockTransferConfirmGiMForm scgmf = stockTransferConfirmGiMForm.get(i);
-				insMap.put("delno", deliSeq);
-				insMap.put("itmcd", scgmf.getPartsCode());
-				insMap.put("itmname", scgmf.getPartsName());
-				insMap.put("reqstno", scgmf.getSmoNo());
-				insMap.put("requestQty", scgmf.getRequestQty());
-				insMap.put("userId", scgmf.getUserId());
-				insMap.put("gtype", scgmf.getReqStatus());
-				insMap.put("giptdate", scgmf.getRequestDate());
-				
-				// 55 insert
-				MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
+			insMap.put("delno", deliSeq);
+			insMap.put("itmcd", scgmf.getPartsCode());
+			insMap.put("itmname", scgmf.getPartsName());
+			insMap.put("reqstno", scgmf.getSmoNo());
+			insMap.put("requestQty", scgmf.getRequestQty());
+			insMap.put("userId", scgmf.getUserId());
+			insMap.put("gtype", scgmf.getReqStatus());
+			insMap.put("giptdate", scgmf.getRequestDate());
+
+			// 55 insert
+			MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
 
 			List<StockTransferConfirmGiDForm> list = scgmf.getStockTransferConfirmGiDetail();
 
@@ -254,9 +250,9 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 				StockTransferConfirmGiDForm scgdf = list.get(j);
 				// 61insert
 				insMap.put("serial", scgdf.getSerialNo());
-				
-				MlogApiMapper.insertMovementSerial(insMap);	
-				
+
+				MlogApiMapper.insertMovementSerial(insMap);
+
 			}
 
 			if (i == 0) {
@@ -264,127 +260,162 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 				MlogApiMapper.updateRequestMovement(insMap);
 			}
 		}
-		
-	String[] delvcd = { deliSeq };
-	insMap.put("parray", delvcd);
-	insMap.put("userId",999999);
-	//insMap.put("userId", params.get("userId"));
-	// formMap.put("prgnm", params.get("prgnm"));
-	insMap.put("refdocno", "");
-	insMap.put("salesorder", "");
 
-	MlogApiMapper.StockMovementIssue(insMap);
-		
+		String[] delvcd = { deliSeq };
+		insMap.put("parray", delvcd);
+		insMap.put("userId", 999999);
+		// insMap.put("userId", params.get("userId"));
+		// formMap.put("prgnm", params.get("prgnm"));
+		insMap.put("refdocno", "");
+		insMap.put("salesorder", "");
+
+		MlogApiMapper.StockMovementIssue(insMap);
 
 	}
-	
-	//Receive 미완성 
+
+	// Receive 미완성
 	@Override
 	public void stockMovementCommonCancle(Map<String, Object> params) {
-		
+
 		Map<String, Object> cancleMap = new HashMap();
 		cancleMap.put("userId", params.get("userId"));
 		cancleMap.put("giptdate", params.get("requestDate"));
 		cancleMap.put("smoNo", params.get("smoNo"));
 		cancleMap.put("gtype", params.get("reqStatus"));
-		
+
 		logger.debug("userId    값 : {}", cancleMap.get("userId"));
 		logger.debug("giptdate    값 : {}", cancleMap.get("giptdate"));
 		logger.debug("smoNo    값 : {}", cancleMap.get("smoNo"));
 		logger.debug("gtype    값 : {}", cancleMap.get("gtype"));
-		
+
 		logger.debug("cancleMap    값 : {}", cancleMap);
-		
-		String delvryNo = MlogApiMapper.StockMovementDelvryNo(cancleMap); // in : smo / out : delvry_no 
-		
-		if (delvryNo == null ){ // 일반 요청 상태
+
+		String delvryNo = MlogApiMapper.StockMovementDelvryNo(cancleMap); // in : smo / out : delvry_no
+
+		if (delvryNo == null) { // 일반 요청 상태
 			MlogApiMapper.StockMovementReqstCancel(cancleMap);
-		}else{ // 이동 상태
+		} else { // 이동 상태
 			String[] delvcd = new String[1];
 			delvcd[0] = delvryNo;
 			cancleMap.put("parray", delvcd);
-			cancleMap.put("userId",999999);
+			cancleMap.put("userId", 999999);
 			MlogApiMapper.StockMovementIssueCancel(cancleMap);
 		}
-		
-	}	
-	
-		@Override
-		public void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm) {
-			
-			Map<String, Object> receiveMap = new HashMap();
-			receiveMap.put("userId", confirmReceiveMForm.getUserId());
-			receiveMap.put("giptdate", confirmReceiveMForm.getRequestDate());
-			receiveMap.put("smoNo", confirmReceiveMForm.getSmoNo());
-			receiveMap.put("gtype", confirmReceiveMForm.getReqStatus());
-			
-			logger.debug("receiveMap    값 : {}", receiveMap);
-			
-				List<ConfirmReceiveDForm> list = (List<ConfirmReceiveDForm>) confirmReceiveMForm.getConfirmReceiveDetail();			
 
-				
-				for (int j = 0; j < list.size(); j++) {
-					ConfirmReceiveDForm form = list.get(j);
-					
-					logger.debug("partsCode    값 : {}",form.getPartsCode() );
-					logger.debug("partsId    값 : {}", form.getPartsId());
-					logger.debug("serialNo    값 : {}", form.getSerialNo());
-					logger.debug("smoNoItem    값 : {}", form.getSmoNoItem());
-					
-				}
-			
-				List<EgovMap> delNo =MlogApiMapper.getDeliveryNo(receiveMap);
-				
-				for (int i = 0; i < delNo.size(); i++) {
-					logger.debug("delNo    값 : {}", delNo.get(i));
-				}
-				
-			
-				int iCnt = 0;
-				String tmpdelCd = "";
-				String delyCd = "";
-				if (delNo.size() > 0) {
-					for (int i = 0; i < delNo.size(); i++) {
-						Map<String, Object> map = (Map<String, Object>) delNo.get(i);
+	}
 
-						//Map<String, Object> imap = new HashMap();
+	@Override
+	public void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm) {
 
-						String delCd = (String) map.get("delyno");
-						if (delCd != null && !(tmpdelCd.equals(delCd))) {
-							tmpdelCd = delCd;
-							if (iCnt == 0) {
-								delyCd = delCd;
-							} else {
-								delyCd += "∈" + delCd;
-							}
-							iCnt++;
-						}
-					}
-				}
-				
-				String[] delvcd = delyCd.split("∈");
-				
-				for (int i = 0; i < delvcd.length; i++) {
-				logger.debug("delvcd : {}", delvcd[i]);
-				}
-				
-				receiveMap.put("parray", delvcd);
-				receiveMap.put("userId",999999);
-				// formMap.put("prgnm", params.get("prgnm"));
-				receiveMap.put("refdocno", "");
-				receiveMap.put("salesorder", "");
-				logger.debug("receiveMap : {}", receiveMap);
-				
-				MlogApiMapper.StockMovementIssue(receiveMap);
-						
-				
+		Map<String, Object> receiveMap = new HashMap();
+		receiveMap.put("userId", confirmReceiveMForm.getUserId());
+		receiveMap.put("giptdate", confirmReceiveMForm.getRequestDate());
+		receiveMap.put("smoNo", confirmReceiveMForm.getSmoNo());
+		receiveMap.put("gtype", confirmReceiveMForm.getReqStatus());
+
+		logger.debug("receiveMap    값 : {}", receiveMap);
+
+		List<ConfirmReceiveDForm> list = confirmReceiveMForm.getConfirmReceiveDetail();
+
+		for (int j = 0; j < list.size(); j++) {
+			ConfirmReceiveDForm form = list.get(j);
+
+			logger.debug("partsCode    값 : {}", form.getPartsCode());
+			logger.debug("partsId    값 : {}", form.getPartsId());
+			logger.debug("serialNo    값 : {}", form.getSerialNo());
+			logger.debug("smoNoItem    값 : {}", form.getSmoNoItem());
+
 		}
-	
-	
-	
-	
-	
-	
-	
-	
+
+		List<EgovMap> delNo = MlogApiMapper.getDeliveryNo(receiveMap);
+
+		for (int i = 0; i < delNo.size(); i++) {
+			logger.debug("delNo    값 : {}", delNo.get(i));
+		}
+
+		int iCnt = 0;
+		String tmpdelCd = "";
+		String delyCd = "";
+		if (delNo.size() > 0) {
+			for (int i = 0; i < delNo.size(); i++) {
+				Map<String, Object> map = delNo.get(i);
+
+				// Map<String, Object> imap = new HashMap();
+
+				String delCd = (String) map.get("delyno");
+				if (delCd != null && !(tmpdelCd.equals(delCd))) {
+					tmpdelCd = delCd;
+					if (iCnt == 0) {
+						delyCd = delCd;
+					} else {
+						delyCd += "∈" + delCd;
+					}
+					iCnt++;
+				}
+			}
+		}
+
+		String[] delvcd = delyCd.split("∈");
+
+		for (int i = 0; i < delvcd.length; i++) {
+			logger.debug("delvcd : {}", delvcd[i]);
+		}
+
+		receiveMap.put("parray", delvcd);
+		receiveMap.put("userId", 999999);
+		// formMap.put("prgnm", params.get("prgnm"));
+		receiveMap.put("refdocno", "");
+		receiveMap.put("salesorder", "");
+		logger.debug("receiveMap : {}", receiveMap);
+
+		MlogApiMapper.StockMovementIssue(receiveMap);
+
+	}
+
+	@Override
+	public void inputNonBarcode(InputNonBarcodeForm inputNonBarcodeForm) {
+		// TODO Auto-generated method stub
+		List<InputNonBarcodePartsForm> list = inputNonBarcodeForm.getInputNonBarcodePartsForm();
+		for (int i = 0; i < list.size(); i++) {
+			InputNonBarcodePartsForm form = list.get(i);
+			Map<String, Object> setmap = new HashMap();
+			setmap.put("userId", inputNonBarcodeForm.getUserId());
+			setmap.put("invenAdjustNo", form.getInvenAdjustNo());
+			setmap.put("partsCode", form.getPartsCode());
+			setmap.put("partsId", form.getPartsId());
+			setmap.put("invenAdjustNoItem", form.getInvenAdjustNoItem());
+			setmap.put("countedQty", form.getCountedQty());
+
+			MlogApiMapper.updateNonBarcodeQty(setmap);
+		}
+	}
+
+	@Override
+	public void inputBarcode(List<InputBarcodePartsForm> inputBarcodePartsForm) {
+
+		for (int i = 0; i < inputBarcodePartsForm.size(); i++) {
+			InputBarcodePartsForm form = inputBarcodePartsForm.get(i);
+			Map<String, Object> setmap = new HashMap();
+			setmap.put("userId", form.getUserId());
+			setmap.put("invenAdjustNo", form.getInvenAdjustNo());
+			setmap.put("partsCode", form.getPartsCode());
+			setmap.put("partsId", form.getPartsId());
+			setmap.put("invenAdjustNoItem", form.getInvenAdjustNoItem());
+			setmap.put("countedQty", form.getCountedQty());
+
+			MlogApiMapper.updateBarcodeQty(setmap);
+
+			List<InputBarcodeListForm> serialList = form.getInputBarcodeListForm();
+			for (int j = 0; j < serialList.size(); j++) {
+				InputBarcodeListForm sForm = serialList.get(j);
+				Map<String, Object> setmapS = new HashMap();
+				setmapS.put("userId", form.getUserId());
+				setmapS.put("serialNo", sForm.getSerialNo());
+				setmapS.put("invenAdjustNoItem", sForm.getInvenAdjustNoItem());
+				MlogApiMapper.insertBarcode(setmap);
+			}
+
+		}
+	}
+
 }

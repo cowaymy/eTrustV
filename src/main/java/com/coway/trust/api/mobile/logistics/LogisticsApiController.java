@@ -28,6 +28,8 @@ import com.coway.trust.api.mobile.logistics.alternativefilter.AlternativeFilterM
 import com.coway.trust.api.mobile.logistics.audit.BarcodeCListDto;
 import com.coway.trust.api.mobile.logistics.audit.BarcodeDListDto;
 import com.coway.trust.api.mobile.logistics.audit.BarcodeListForm;
+import com.coway.trust.api.mobile.logistics.audit.InputBarcodePartsForm;
+import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodeForm;
 import com.coway.trust.api.mobile.logistics.audit.NonBarcodeDListDto;
 import com.coway.trust.api.mobile.logistics.audit.NonBarcodeListForm;
 import com.coway.trust.api.mobile.logistics.audit.StockAuditResultDetailDto;
@@ -58,7 +60,6 @@ import com.coway.trust.api.mobile.logistics.recevie.LogStockReceiveForm;
 import com.coway.trust.api.mobile.logistics.requestresult.RequestResultDListDto;
 import com.coway.trust.api.mobile.logistics.requestresult.RequestResultListForm;
 import com.coway.trust.api.mobile.logistics.requestresult.RequestResultMListDto;
-import com.coway.trust.api.mobile.logistics.requestresult.RequestResultRejectForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockDListDto;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockListForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockMListDto;
@@ -72,7 +73,6 @@ import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyDto;
 import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
-import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferRejectSMOReqForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusDListDto;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusListForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusMListDto;
@@ -257,7 +257,7 @@ public class LogisticsApiController {
 			hList = headerList.stream().map(r -> LogStockReceiveDto.create(r)).collect(Collectors.toList());
 
 			for (int j = 0; j < hList.size(); j++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				Map<String, Object> tmpMap = headerList.get(j);
 				List<EgovMap> serialList = MlogApiService.selectStockReceiveSerial(tmpMap);
 
 				List<LogStockPartsReceiveDto> partsList = serialList.stream()
@@ -410,7 +410,7 @@ public class LogisticsApiController {
 			hList = headerList.stream().map(r -> RequestResultMListDto.create(r)).collect(Collectors.toList());
 
 			for (int j = 0; j < hList.size(); j++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				Map<String, Object> tmpMap = headerList.get(j);
 				List<EgovMap> reqParts = MlogApiService.getCommonReqParts(tmpMap);
 
 				List<RequestResultDListDto> partsList = reqParts.stream().map(r -> RequestResultDListDto.create(r))
@@ -443,7 +443,7 @@ public class LogisticsApiController {
 			hList = headerList.stream().map(r -> ReturnOnHandStockMListDto.create(r)).collect(Collectors.toList());
 
 			for (int j = 0; j < hList.size(); j++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				Map<String, Object> tmpMap = headerList.get(j);
 				List<EgovMap> reqParts = MlogApiService.getCommonReqParts(tmpMap);
 
 				List<ReturnOnHandStockDListDto> partsList = reqParts.stream()
@@ -494,7 +494,7 @@ public class LogisticsApiController {
 			hList = headerList.stream().map(r -> StockTransferReqStatusMListDto.create(r)).collect(Collectors.toList());
 
 			for (int j = 0; j < hList.size(); j++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				Map<String, Object> tmpMap = headerList.get(j);
 				tmpMap.put("searchStatus", params.get("searchStatus"));
 				List<EgovMap> reqParts = MlogApiService.getStockTransferReqStatusDList(tmpMap);
 
@@ -523,7 +523,7 @@ public class LogisticsApiController {
 			dto = new AdjustmentStockNoneBarcodeListVo();
 
 			for (int i = 0; i < header.size(); i++) {
-				Map<String, Object> headerMap = (Map<String, Object>) header.get(i);
+				Map<String, Object> headerMap = header.get(i);
 				dto.setInvenAdjustNo((String) headerMap.get("invenAdjustNo"));
 				dto.setAdjustStatus((String) headerMap.get("adjustStatus"));
 				dto.setAdjustCreateDate((String) headerMap.get("adjustCreateDate"));
@@ -569,7 +569,7 @@ public class LogisticsApiController {
 			dto = new AdjustmentStockBarcodeListVo();
 
 			for (int i = 0; i < header.size(); i++) {
-				Map<String, Object> headerMap = (Map<String, Object>) header.get(i);
+				Map<String, Object> headerMap = header.get(i);
 				dto.setInvenAdjustNo((String) headerMap.get("invenAdjustNo"));
 				dto.setAdjustStatus((String) headerMap.get("adjustStatus"));
 				dto.setAdjustCreateDate((String) headerMap.get("adjustCreateDate"));
@@ -675,11 +675,10 @@ public class LogisticsApiController {
 			// try {
 			Map<String, Object> chekMap = new HashMap();
 			for (int i = 0; i < stockTransferConfirmGiMForm.size(); i++) {
-				chekMap.put("userId", ((StockTransferConfirmGiMForm) stockTransferConfirmGiMForm.get(i)).getUserId());
-				chekMap.put("partsCode",
-						((StockTransferConfirmGiMForm) stockTransferConfirmGiMForm.get(i)).getPartsCode());
-				List<StockTransferConfirmGiDForm> list = ((StockTransferConfirmGiMForm) stockTransferConfirmGiMForm
-						.get(i)).getStockTransferConfirmGiDetail();
+				chekMap.put("userId", stockTransferConfirmGiMForm.get(i).getUserId());
+				chekMap.put("partsCode", stockTransferConfirmGiMForm.get(i).getPartsCode());
+				List<StockTransferConfirmGiDForm> list = stockTransferConfirmGiMForm.get(i)
+						.getStockTransferConfirmGiDetail();
 				for (int j = 0; j < list.size(); j++) {
 					// serial checkLogic add
 					// StockTransferConfirmGiDForm scdf = list.get(j);
@@ -712,54 +711,24 @@ public class LogisticsApiController {
 		}
 
 	}
-	
-	
+
 	@ApiOperation(value = "Receive Display - Confirm Receive", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/displayConfirmReceive", method = RequestMethod.POST)
-	public void confirmReceive(@RequestBody ConfirmReceiveMForm confirmReceiveMForm)
-			throws Exception {		
-		
+	public void confirmReceive(@RequestBody ConfirmReceiveMForm confirmReceiveMForm) throws Exception {
 		MlogApiService.stockMovementConfirmReceive(confirmReceiveMForm);
-					
-		
 	}
-	
-	@ApiOperation(value = "Stock Transfer - Reject SMO Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/rejectSMORequest", method = RequestMethod.POST)
-	public void rejectSMORequest(@RequestBody StockTransferRejectSMOReqForm stockTransferRejectSMOReqForm)
-			throws Exception {		
-		
-		Map<String, Object> params = StockTransferRejectSMOReqForm.createMap(stockTransferRejectSMOReqForm);
-			
-		MlogApiService.stockMovementCommonCancle(params);
-							
+
+	@ApiOperation(value = "Input result of Adjustment Stock Barcode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/inputAdjustmentStockBarcode", method = RequestMethod.POST)
+	public void inputBarcode(@RequestBody List<InputBarcodePartsForm> inputBarcodePartsForm) throws Exception {
+
+		MlogApiService.inputBarcode(inputBarcodePartsForm);
 	}
-	
-	
-	@ApiOperation(value = "Request Result - Request Reject", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/requestResultReject", method = RequestMethod.POST)
-	public void reqResultReject(@RequestBody RequestResultRejectForm requestResultRejectForm)
-			throws Exception {		
-		
-		Map<String, Object> params = RequestResultRejectForm.createMap(requestResultRejectForm);
-		
-		MlogApiService.stockMovementCommonCancle(params);
-							
+
+	@ApiOperation(value = "Input count qty of Adjustment Stock in Non-Barcode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/inputAdjustmentStockNonBarcode", method = RequestMethod.POST)
+	public void inputAdjustmentStockNonBarcode(@RequestBody InputNonBarcodeForm inputNonBarcodeForm) throws Exception {
+		MlogApiService.inputNonBarcode(inputNonBarcodeForm);
 	}
-	
-	@ApiOperation(value = "Return On-Hand Stock - Delete Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/returnOnHandStockDelReq", method = RequestMethod.POST)
-	public void returnOnHandStockDelReq(@RequestBody RequestResultRejectForm requestResultRejectForm)
-			throws Exception {		
-		
-		Map<String, Object> params = RequestResultRejectForm.createMap(requestResultRejectForm);
-		
-		MlogApiService.stockMovementCommonCancle(params);
-							
-	}
-	
-	
-	
-	
 
 }
