@@ -138,7 +138,7 @@
 		       Project1.F_TRNSC_INSTCT F_TRNSC_INSTCT  ,
 		       Project1.F_TRNSC_DEBT_AMT F_TRNSC_DEBT_AMT  ,
 		       Project1.F_TRNSC_CRDIT_AMT F_TRNSC_CRDIT_AMT  ,
-		       Project1.C2 C2  ,
+		       Project1.IS_MATCH IS_MATCH  ,
 		       Project1.USER_NAME USER_NAME  ,
 		       Project1.F_TRNSC_UPD_DT F_TRNSC_UPD_DT  
 		  FROM ( SELECT Project1.F_TRNSC_ID F_TRNSC_ID  ,
@@ -159,7 +159,7 @@
 		                Project1.F_TRNSC_REF_CHQ_NO F_TRNSC_REF_CHQ_NO  ,
 		                Project1.F_TRNSC_REF_VA_NO F_TRNSC_REF_VA_NO  ,
 		                Project1.F_TRNSC_DT F_TRNSC_DT  ,
-		                Project1.C2 C2  ,
+		                Project1.IS_MATCH IS_MATCH  ,
 		                Project1.USER_NAME USER_NAME  ,
 		                ROW_NUMBER() OVER ( ORDER BY Project1.F_TRNSC_ID ASC  ) ROW_NUMBER  
 		         FROM ( SELECT Extent1.F_TRNSC_ID F_TRNSC_ID  ,
@@ -183,7 +183,7 @@
 		                       CASE 
 		                            WHEN ( 1 = Extent1.F_TRNSC_IS_MTCH ) THEN 'O'
 		                       ELSE 'X'
-		                          END C2  ,
+		                          END IS_MATCH  ,
 		                       Extent2.USER_NAME USER_NAME  
 		                FROM PAY0081D Extent1
 		                       LEFT JOIN SYS0047M Extent2   ON Extent1.F_TRNSC_UPD_USER_ID = Extent2.USER_ID
@@ -204,5 +204,88 @@
 		 )GroupBy1
     </select>
     
+    <insert id="insAccGLRoutes" parameterType="Map">
+        INSERT INTO PAY0009D
+		(
+		ID, 
+		GL_POSTNG_DT, 
+		GL_FISCAL_DT, 
+		GL_BATCH_NO, 
+		GL_BATCH_TYPE_DESC, 
+		GL_BATCH_TOT, 
+		GL_RECIPT_NO, 
+		GL_RECIPT_TYPE_ID, 
+		GL_RECIPT_BRNCH_ID, 
+		GL_RECIPT_SETL_ACC_ID, 
+		GL_RECIPT_ACC_ID, 
+		GL_RECIPT_ITM_ID, 
+		GL_RECIPT_ITM_MODE_ID, 
+		GL_REVRS_RECIPT_ITM_ID, 
+		GL_RECIPT_ITM_AMT, 
+		GL_RECIPT_ITM_CHRG, 
+		GL_RECIPT_ITM_RCL_STUS, 
+		GL_JRNL_NO, 
+		GL_AUDIT_REF, 
+		GL_CNVR_STUS, 
+		GL_CNVR_DT 
+		) VALUES ( 
+		PAY0009D_SEQ.NEXTVAL, 
+		SYSDATE, 
+		SYSDATE, 
+		#{glBatchNo}, 
+		#{glBatchTypeDesc}, 
+		#{glBatchTotal}, 
+		#{glReceiptNo},  
+		#{glReceiptTypeId}, 
+		#{glReceiptBranchId}, 
+		#{glReceiptSettleAccId}, 
+		#{glReceiptAccountId}, 
+		#{glReceiptItemId},  
+		#{glReceiptItemModeId}, 
+		#{glReverseReceiptItemId}, 
+		#{glReceiptItemAmount}, 
+		#{glReceiptItemCharges},  
+		#{glReceiptItemRCLStatus},  
+		#{glJournalNo}, 
+		#{glAuditReference}, 
+		#{glConversionStatus}, 
+		'' 
+		)
+    </insert>
+    
+    <select id="selectReconJournalTransactions" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Extent1.F_TRNSC_ID F_TRNSC_ID  ,
+		       Extent1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		       Extent1.F_TRNSC_DT F_TRNSC_DT  ,
+		       Extent1.F_TRNSC_REF1 F_TRNSC_REF1  ,
+		       Extent1.F_TRNSC_REF2 F_TRNSC_REF2  ,
+		       Extent1.F_TRNSC_REF3 F_TRNSC_REF3  ,
+		       Extent1.F_TRNSC_REF4 F_TRNSC_REF4  ,
+		       Extent1.F_TRNSC_REF5 F_TRNSC_REF5  ,
+		       Extent1.F_TRNSC_REF6 F_TRNSC_REF6  ,
+		       Extent1.F_TRNSC_DEBT_AMT F_TRNSC_DEBT_AMT  ,
+		       Extent1.F_TRNSC_CRDIT_AMT F_TRNSC_CRDIT_AMT  ,
+		       Extent1.F_TRNSC_IS_MTCH F_TRNSC_IS_MTCH  ,
+		       Extent1.F_TRNSC_REM F_TRNSC_REM  ,
+		       Extent1.F_TRNSC_INSTCT F_TRNSC_INSTCT  ,
+		       Extent1.F_TRNSC_UPD_USER_ID F_TRNSC_UPD_USER_ID  ,
+		       Extent1.F_TRNSC_UPD_DT F_TRNSC_UPD_DT  ,
+		       Extent1.F_TRNSC_REF_RUNNG_NO F_TRNSC_REF_RUNNG_NO  ,
+		       Extent1.F_TRNSC_REF_EFT F_TRNSC_REF_EFT  ,
+		       Extent1.F_TRNSC_REF_CHQ_NO F_TRNSC_REF_CHQ_NO  ,
+		       Extent1.F_TRNSC_REF_VA_NO F_TRNSC_REF_VA_NO  
+		  FROM PAY0081D Extent1
+		 WHERE  Extent1.F_TRNSC_ID = #{fTrnscId}
+    </select>
+    
+    <update id="updJournalTrans" parameterType="Map">
+        UPDATE PAY0081D
+		   SET F_TRNSC_IS_MTCH = #{fTransactionIsMatch},
+		       F_TRNSC_INSTCT = #{fTransactionInstruction},
+		       F_TRNSC_UPD_USER_ID = #{fTransactionUpdateBy},
+		       F_TRNSC_UPD_DT = SYSDATE
+		WHERE  F_TRNSC_ID = #{fTransactionId}
+    </update>
 
 </mapper>

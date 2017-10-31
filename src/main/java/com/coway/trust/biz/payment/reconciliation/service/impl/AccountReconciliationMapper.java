@@ -51,4 +51,25 @@ public interface AccountReconciliationMapper {
 	 * @return
 	 */
 	String selectGrossTotal(Map<String, Object> params);
+	
+	/**
+	 * insAccGLRoutes
+	 * @param params
+	 * @return
+	 */
+	int insAccGLRoutes(Map<String, Object> params);
+	
+	/**
+	 * updJournalTrans
+	 * @param params
+	 * @return
+	 */
+	int updJournalTrans(Map<String, Object> params);
+	
+	/**
+	 * selectReconJournalTransactions 조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectReconJournalTransactions(Map<String, Object> params);
 }

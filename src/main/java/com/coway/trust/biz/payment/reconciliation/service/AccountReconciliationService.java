@@ -2,7 +2,6 @@ package com.coway.trust.biz.payment.reconciliation.service;
 
 import java.util.List;
 import java.util.Map;
-import com.coway.trust.cmmn.model.SessionVO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface AccountReconciliationService
@@ -35,5 +34,19 @@ public interface AccountReconciliationService
   	 * @return
   	 */
 	String selectGrossTotal(Map<String, Object> params);
+	
+	/**
+  	 * updJournalPassEntry
+  	 * @param params
+  	 * @return
+  	 */
+	boolean updJournalPassEntry(Map<String, Object> params);
+	
+	/**
+  	 * updJournalExclude
+  	 * @param params
+  	 * @return
+  	 */
+	boolean updJournalExclude(Map<String, Object> params);
 	
 }

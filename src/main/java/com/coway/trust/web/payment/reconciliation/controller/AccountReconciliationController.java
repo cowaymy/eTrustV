@@ -34,7 +34,7 @@ public class AccountReconciliationController {
 	
 	
 	/******************************************************
-	 *  Admin Management
+	 *  Bank Account Reconciliation
 	 *****************************************************/	
 	/**
 	 *   Bank Account Reconciliation 초기화 화면 
@@ -43,8 +43,51 @@ public class AccountReconciliationController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initAccountReconciliation.do")
-	public String initDailyCollection(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initAccountReconciliation(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/reconciliation/accountReconciliation";
+	}
+	
+	/******************************************************
+	 *  Bank Account Reconciliation Report
+	 *****************************************************/	
+	/**
+	 *   Bank Account Reconciliation Report
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initBankAccountReconciliation.do")
+	public String initBankAccountReconciliation(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/reconciliation/bankAccountReconciliation_R";
+	}
+	
+	
+	/******************************************************
+	 *  Branches Collection Report
+	 *****************************************************/	
+	/**
+	 *   Branches Collection Report
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initBranchesCollectionSummary.do")
+	public String initBranchesCollectionSummary(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/reconciliation/branchesCollectionSummary_R";
+	}
+	
+	/******************************************************
+	 *  Reconciliation Statistic Report
+	 *****************************************************/	
+	/**
+	 *   Reconciliation Statistic Report
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initReconciliationStatistic.do")
+	public String initReconciliationStatistic(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/reconciliation/reconciliationStatistic_R";
 	}
 	
 	/**
@@ -99,5 +142,58 @@ public class AccountReconciliationController {
 		return ResponseEntity.ok(message);
 	}
 	
+	/**
+	 * updJournalPassEntry
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/updJournalPassEntry.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> updJournalPassEntry(@RequestParam Map<String, Object> params, ModelMap model, 
+			HttpServletRequest request) {
+		
+		ReturnMessage message = new ReturnMessage();
+		LOGGER.debug("params : {}", params);
+		
+		boolean isSuccess = accountReconciliationService.updJournalPassEntry(params);
+		
+		if(isSuccess){
+			message.setMessage("* Update Success");
+		}else{
+			message.setMessage("* Failed to update. Please try again later.");
+		}
+		
+        // 조회 결과 리턴.
+    	message.setCode(AppConstants.SUCCESS);
+		return ResponseEntity.ok(message);
+	}
+	
+	/**
+	 * updJournalExclude
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/updJournalExclude.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> updJournalExclude(@RequestParam Map<String, Object> params, ModelMap model, 
+			HttpServletRequest request) {
+		
+		ReturnMessage message = new ReturnMessage();
+		LOGGER.debug("params : {}", params);
+		
+		boolean isSuccess = accountReconciliationService.updJournalExclude(params);
+		
+		if(isSuccess){
+			message.setMessage("* Update Success");
+		}else{
+			message.setMessage("* Failed to update. Please try again later.");
+		}
+		
+        // 조회 결과 리턴.
+    	message.setCode(AppConstants.SUCCESS);
+		return ResponseEntity.ok(message);
+	}
 	
 }

@@ -55,4 +55,99 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 		return accountReconciliationMapper.selectGrossTotal(params);
 	}
 
+	@Override
+	public boolean updJournalPassEntry(Map<String, Object> params) {
+		logger.debug("★☆★☆★☆★☆AccountReconciliationServiceImpl.updJournalPassEntry★☆★☆★☆★☆");
+		SessionVO sessionVO =  new SessionVO();
+		Map<String, Object> route = new HashMap<String, Object>();
+		int routeResult = 0;
+		int route2Result = 0;
+		int transResult = 0;
+		
+		int fTrnscCrditAmt =  (int)Double.parseDouble((String)params.get("fTrnscCrditAmt"));
+		int fTrnscDebtAmt =  (int)Double.parseDouble((String)params.get("fTrnscDebtAmt"));
+		
+		route.put("glBatchNo", 0);
+		route.put("glBatchTypeDesc", "");
+		route.put("glBatchTotal", fTrnscCrditAmt  == 0 ? -1 * fTrnscDebtAmt : fTrnscCrditAmt);
+		route.put("glReceiptNo", String.valueOf(params.get("lblRefNo")));
+		route.put("glReceiptTypeId", 1033);
+		route.put("glReceiptBranchId", 42);
+		route.put("glReceiptSettleAccId", String.valueOf(params.get("fBankJrnlAccId")));
+		route.put("glReceiptAccountId", String.valueOf(params.get("fBankJrnlAccId")));
+		route.put("glReceiptItemId", 0);
+		route.put("glReceiptItemModeId", 0);
+		route.put("glReverseReceiptItemId", 0);
+		
+		if(String.valueOf(params.get("journalEntryAccount")).equals("203")){
+			
+			route.put("glReceiptItemAmount", fTrnscCrditAmt  == 0 ? fTrnscDebtAmt : fTrnscCrditAmt);
+			
+		}else{
+			
+			route.put("glReceiptItemAmount", fTrnscCrditAmt  == 0 ? -1 * fTrnscDebtAmt : -1 * fTrnscCrditAmt);
+		}
+		
+		route.put("glReceiptItemCharges", 0);
+		route.put("glReceiptItemRCLStatus", "Y");
+		route.put("glJournalNo", String.valueOf(params.get("lblRefNo")));
+		route.put("glAuditReference", String.valueOf(params.get("fTrnscId")));
+		route.put("glConversionStatus", "N");
+		routeResult = accountReconciliationMapper.insAccGLRoutes(route);
+		
+		Map<String, Object> route2 = new HashMap<String, Object>();
+		route2.put("glBatchNo", 0);
+		route2.put("glBatchTypeDesc", "");
+		route2.put("glBatchTotal", fTrnscCrditAmt  == 0 ? fTrnscDebtAmt : fTrnscCrditAmt);
+		route2.put("glReceiptNo", String.valueOf(params.get("lblRefNo")));
+		route2.put("glReceiptTypeId", 1033);
+		route2.put("glReceiptBranchId", 42);
+		route2.put("glReceiptSettleAccId", String.valueOf(params.get("journalEntryAccount")));
+		route2.put("glReceiptAccountId", String.valueOf(params.get("journalEntryAccount")));
+		route2.put("glReceiptItemId", 0);
+		route2.put("glReceiptItemModeId", 0);
+		route2.put("glReverseReceiptItemId", 0);
+		route2.put("glReceiptItemAmount", fTrnscCrditAmt  == 0 ?  fTrnscDebtAmt : fTrnscCrditAmt);
+		route2.put("glReceiptItemCharges", 0);
+		route2.put("glReceiptItemRCLStatus", "Y");
+		route2.put("glJournalNo", String.valueOf(params.get("lblRefNo")));
+		route2.put("glAuditReference", String.valueOf(params.get("fTrnscId")));
+		route2.put("glConversionStatus", "N");
+		route2Result = accountReconciliationMapper.insAccGLRoutes(route2);
+		
+		//EgovMap journalTrans = accountReconciliationMapper.selectReconJournalTransactions(params);
+		
+		Map<String, Object> transMap = new HashMap<String, Object>();
+		transMap.put("fTransactionId", String.valueOf(params.get("fTrnscId")));
+		transMap.put("fTransactionInstruction", String.valueOf(params.get("remark")).trim());
+		transMap.put("fTransactionIsMatch", true);
+		transMap.put("fTransactionUpdateBy", sessionVO.getUserId());
+		transResult = accountReconciliationMapper.updJournalTrans(transMap);
+		
+		if(routeResult > 0&& route2Result > 0 &&transResult > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	@Override
+	public boolean updJournalExclude(Map<String, Object> params) {
+		
+		logger.debug("★☆★☆★☆★☆AccountReconciliationServiceImp.updJournalExclude★☆★☆★☆★☆");
+		SessionVO sessionVO =  new SessionVO();
+		int transResult = 0;
+		
+		Map<String, Object> transMap = new HashMap<String, Object>();
+		transMap.put("fTransactionId", String.valueOf(params.get("fTrnscId")));
+		transMap.put("fTransactionInstruction", String.valueOf(params.get("remark")).trim());
+		transMap.put("fTransactionIsMatch", true);
+		transMap.put("fTransactionUpdateBy", sessionVO.getUserId());
+		transResult = accountReconciliationMapper.updJournalTrans(transMap);
+		
+		if(transResult > 0)
+			return true;
+		else
+			return false;
+	}
 }
