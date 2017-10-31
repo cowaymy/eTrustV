@@ -162,8 +162,12 @@ function fn_Cancel(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Territory Management</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_New()"><span class="Update Request"></span>Update Request</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Comfirm()"><span class="Comfirm"></span>Comfirm</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Cancel()"><span class="Cancel"></span>Cancel</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_mainSelectListAjax()"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
+	
 </ul>
 </aside><!-- title_line end -->
 
@@ -215,9 +219,9 @@ function fn_Cancel(){
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post">
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<%-- <dl class="link_list">
+<dl class="link_list">
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
@@ -225,8 +229,8 @@ function fn_Cancel(){
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
-</dl> --%>
-</aside><!-- link_btns_wrap end -->
+</dl>
+</aside><!-- link_btns_wrap end --> --%>
 
 </form>
 </section><!-- search_table end -->
@@ -234,9 +238,7 @@ function fn_Cancel(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" onclick="javasclipt:fn_Comfirm()">Comfirm</a></p></li>
-	<li><p class="btn_grid"><a href="#" onclick="javasclipt:fn_Cancel()">Cancel</a></p></li>
-	<li><p class="btn_grid"><a href="#" onclick="javasclipt:fn_New()">New</a></p></li>
+
 	
 </ul>
 
