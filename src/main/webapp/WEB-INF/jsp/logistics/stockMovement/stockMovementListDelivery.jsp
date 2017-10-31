@@ -39,7 +39,7 @@
 var listGrid;
 var reqGrid;
 var serialGrid;
-
+var serialchk = false;
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30                },
@@ -72,6 +72,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                        }
                      },
                      {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30                },
+                     {dataField:"serialchk"    ,headerText:"SERIAL CHECK"                ,width:120    ,height:30 , visible:false},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
 var reqcolumnLayout;
@@ -333,6 +334,7 @@ $(function(){
     $('#delivery').click(function(){
     	var checkDelqty= false; 
     	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+    	
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
@@ -343,8 +345,11 @@ $(function(){
             for(var i=0, len = checkedItems.length; i<len; i++) {
                 rowItem = checkedItems[i];
                 if(rowItem.item.indelyqty==0){
-                str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
-                checkDelqty= true;
+	                str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
+	                checkDelqty= true;
+                }
+                if (rowItem.item.serialchk =='Y'){
+                	serialchk = true;
                 }
             }
             if(checkDelqty){
@@ -361,9 +366,14 @@ $(function(){
 	            doSysdate(0 , 'giptdate');
 	            doSysdate(0 , 'gipfdate');
 	            AUIGrid.clearGridData(serialGrid);
-	            AUIGrid.resize(serialGrid); 
-	            //fn_itempopList(checkedItems);
-	            fn_itempopList_T(checkedItems);
+	            AUIGrid.resize(serialGrid);
+	            if (serialchk){
+	            	//fn_itempopList(checkedItems);
+	                fn_itempopList_T(checkedItems);
+	            }else{
+	            	$("#serial_grid_wrap").hide();
+	            }
+	            
             }
         }
     	
@@ -465,25 +475,26 @@ function giFunc(){
     var data = {};
     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
     var check     = AUIGrid.getCheckedRowItems(listGrid);
-    var serials     = AUIGrid.getAddedRowItems(serialGrid);
+    var serials   = AUIGrid.getAddedRowItems(serialGrid);
     
-    for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-    	if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
-    		Common.alert("Please check the serial.")
-    		return false;
-    	}
-    	
-    	if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
-    		Common.alert("Please check the serial.")
-            return false;
-    	}
+    if (serialchk){
+	    for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+	    	if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+	    		Common.alert("Please check the serial.")
+	    		return false;
+	    	}
+	    	
+	    	if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+	    		Common.alert("Please check the serial.")
+	            return false;
+	    	}
+	    }
+	    
+	    if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+	    	Common.alert("Please check the serial.")
+	        return false;
+	    }
     }
-    
-    if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
-    	Common.alert("Please check the serial.")
-        return false;
-    }
-    
     data.check   = check;
     data.checked = check;
     data.add = serials;

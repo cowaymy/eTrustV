@@ -32,6 +32,13 @@
 #editWindow fieldset { padding:0; border:0; margin-top:10px; }
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+<!-- EDITOR -->
+<script type="text/javaScript" language="javascript">
+    _editor_area = "editorArea";        //  -> 페이지에 웹에디터가 들어갈 위치에 넣은 textarea ID
+    _editor_url = "<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/'/>";
+</script>
+<script type="text/javascript" src="<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/htmlarea.js'/>"></script>
+<!-- EDITOR -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 
@@ -99,6 +106,11 @@
     
 
     $(document).ready(function(){
+    	HTMLArea.init();
+        HTMLArea.onload = initEditor;
+        
+     	$("#editwindow").hide();
+        
         // masterGrid 그리드를 생성합니다.
         listGrid = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
@@ -121,25 +133,7 @@
         });
         
         AUIGrid.bind(listGrid, "ready", function(event) {
-            /*var rowCount = AUIGrid.getRowCount(listGrid);  
             
-            for (var i = 0 ; i < rowCount ; i++){
-                var itemtype = AUIGrid.getCellValue(listGrid, i, "itemType");
-                
-                if (itemtype != null && itemtype != "" && itemtype != undefined){
-                    
-                    var typeArr = itemtype.split(",");
-                    for (var j = 0 ; j < typeArr.length ; j++){
-                        
-                        $.each(itemdata, function(index,value) {
-                            if(typeArr[j] == itemdata[index].codeId ){
-                                AUIGrid.setCellValue(listGrid, i, itemdata[index].code , typeArr[j]);
-                            }
-                        });
-                        
-                    }
-                }
-            }*/
         });
         
         //SearchListAjax();
@@ -152,8 +146,72 @@
     	$("#vclose").click(function(){
     		$("#viewwindow").hide();
         });
+    	$("#eclose").click(function(){
+            $("#editwindow").hide();
+        });
+    	$("#vsave").click(function(){
+            //$("#viewwindow").hide();
+            $("#hedtor").val(editor.getHTML());
+            var param = $("#edForm").serializeJSON();
+
+            var selectedItem = AUIGrid.getSelectedIndex(listGrid);
+
+            Common.ajax("POST", "/logistics/memorandum/memoSave.do", param, function (result) {
+            	
+            	if (result.data != null){
+            		AUIGrid.updateRow(listGrid, result.data, selectedItem[0]);
+            		AUIGrid.resetUpdatedItems(listGrid, "all");
+            	}
+            	
+            	$("#editwindow").hide();
+            	
+            });
+        });
     	$("#update").click(function(){
-            $("#editwindow").show();
+    		
+    		$("#editwindow").show();
+    		
+    		var selectedItems = AUIGrid.getSelectedItems(listGrid);
+            var itm = selectedItems[0].item;
+            
+            $("#vmode").val("upd");
+            $("#etitle").val(itm.memotitle);
+            $("#hedtor").val(itm.memocntnt);
+            $("#memoid").val(itm.memoid);
+            
+            if (itm.staffmemo == 1){
+            	$("#staffmemo").attr("checked" , true);
+            }else{
+            	$("#staffmemo").attr("checked" , false);
+            }
+            if (itm.codymemo == 1){
+                $("#codymemo").attr("checked" , true);
+            }else{
+                $("#codymemo").attr("checked" , false);
+            }
+            if (itm.hpmemo == 1){
+                $("#hpmemo").attr("checked" , true);
+            }else{
+                $("#hpmemo").attr("checked" , false);
+            }
+
+            $(".htmlarea > iframe").attr("style","border-width: 1px; width:615px; height: 400px;")
+			editor.setHTML("");
+			editor.insertHTML(itm.memocntnt);
+            
+        });
+    	$("#insert").click(function(){
+    		$("#hedtor").val('');
+    		$("#memoid").val('');
+    		$("#staffmemo").attr("checked" , false);
+    		$("#codymemo").attr("checked" , false);
+    		$("#hpmemo").attr("checked" , false);
+    		editor.setHTML("");
+    		$("#editwindow").show();
+    		$(".htmlarea > iframe").attr("style","border-width: 1px; width:615px; height: 400px;")
+    		
+    		$("#vmode").val("ins");
+    		
         });
     });
     
@@ -167,6 +225,7 @@
         });
     }
 </script>
+
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -269,16 +328,16 @@
                     <th scope="row">Creator</th>
                     <td id="vcrtnm"></td>
                     <th scope="row">Create Date</th>
-                    <td id="vcrtdt" colpan="2"></td>
+                    <td id="vcrtdt" colspan="2"></td>
                 </tr>
                 <tr>    
                     <th scope="row">Updator</th>
                     <td id="vupdnm"></td>
                     <th scope="row">Update Date</th>
-                    <td id="vupddt" colpan="2"></td>
+                    <td id="vupddt" colspan="2"></td>
                 </tr>
                 <tr>    
-                    <td id="vmemo" colpan="5"></td>
+                    <td id="vmemo" colspan="5"></td>
                 </tr>
             </tbody>
             </table>
@@ -290,16 +349,19 @@
         
         </section>
     </div>
-    <div class="popup_wrap" id="editwindow" style="display:none"><!-- popup_wrap start -->
+    <div class="popup_wrap" id="editwindow"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
             <h1 id="dataTitle">MEMO RANDUM EDIT</h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a id="eclose">CLOSE</a></p></li>
             </ul>
         </header><!-- pop_header end -->
         
         <section class="pop_body"><!-- pop_body start -->
             <form id="edForm" name="edForm" method="POST">
+            <input type="hidden" name="vmode"  id="vmode" />
+            <input type="hidden" name="hedtor" id="hedtor" />
+            <input type="hidden" name="memoid" id="memoid" />
             <table class="type1">
             <caption>search table</caption>
             <colgroup>
@@ -311,7 +373,7 @@
             <tbody>
                 <tr>
                     <th scope="row">Title</th>
-                    <td id="vtitle" colspan="3"></td>    
+                    <td colspan="3"><input type="text" id="etitle" name="etitle" value=""></td>    
                 </tr>
                 <tr>    
                     <th scope="row">Memo Viewer</th>
@@ -322,13 +384,13 @@
                     </td>
                 </tr>
                 <tr>    
-                    <td id="vmemo" colpan="4"></td>
+                    <td id="ememo" colspan="4"><textarea id="editorArea" name="editorArea" cols="75" rows="14" style="width:100%; height:400px"></textarea></td>
                 </tr>
             </tbody>
             </table>
         
             <ul class="center_btns">
-                <li><p class="btn_blue2 big"><a id="vclose">CLOSE</a></p></li> 
+                <li><p class="btn_blue2 big"><a id="vsave">SAVE</a></p></li> 
             </ul>
             </form>
         

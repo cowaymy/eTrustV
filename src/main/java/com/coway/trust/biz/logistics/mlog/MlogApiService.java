@@ -94,7 +94,7 @@ public interface MlogApiService {
 	
 	void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm);
 	
-	void stockMovementCommonCancle(Map<String, Object> params);
+	String stockMovementCommonCancle(Map<String, Object> params);
 	
 	void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReq);
 	

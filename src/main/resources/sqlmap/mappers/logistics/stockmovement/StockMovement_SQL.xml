@@ -27,6 +27,7 @@
              , s28q.wh_loc_code  reqlocnm
              , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
              , l48.itm_code      itmcd
+             , (select SERIAL_CHK from sys0026m where stk_code = l48.itm_code) serialchk
              , l48.itm_name      itmname
              , l48.reqst_qty     reqstqty
              , NVL (l55.DELVRY_QTY, 0) AS delyqty

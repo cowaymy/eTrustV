@@ -26,5 +26,19 @@ public class MemorandumServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memo.selectMemoRandumList(params);
 	}
 
+	@Override
+	public Map<String, Object> memoSave(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		Map<String, Object> data = new HashMap();
+		if ("upd".equals((String)params.get("vmode"))){
+			memo.memoUpdate(params);
+			data = memo.selectMemoRandumData(params);
+		}else{
+			memo.memoSave(params);
+		}
+		return data;
+		
+	}
+
 	
 }

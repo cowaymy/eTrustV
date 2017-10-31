@@ -276,7 +276,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 	// Receive 미완성
 	@Override
-	public void stockMovementCommonCancle(Map<String, Object> params) {
+	public String stockMovementCommonCancle(Map<String, Object> params) {
 
 		Map<String, Object> cancleMap = new HashMap();
 		cancleMap.put("userId", params.get("userId"));
@@ -293,15 +293,11 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		String delvryNo = MlogApiMapper.StockMovementDelvryNo(cancleMap); // in : smo / out : delvry_no
 
-		if (delvryNo == null) { // 일반 요청 상태
+		if (delvryNo == null || "".equals(delvryNo)) { // 일반 요청 상태
 			MlogApiMapper.StockMovementReqstCancel(cancleMap);
-		} else { // 이동 상태
-			String[] delvcd = new String[1];
-			delvcd[0] = delvryNo;
-			cancleMap.put("parray", delvcd);
-			cancleMap.put("userId", 999999);
-			MlogApiMapper.StockMovementIssueCancel(cancleMap);
 		}
+		
+		return delvryNo;
 
 	}
 

@@ -741,8 +741,12 @@ public class LogisticsApiController {
 			throws Exception {		
 		
 		Map<String, Object> params = StockTransferRejectSMOReqForm.createMap(stockTransferRejectSMOReqForm);
-			
-		MlogApiService.stockMovementCommonCancle(params);
+		
+		String str = MlogApiService.stockMovementCommonCancle(params);
+		
+		if (str != null && !"".equals(str)){
+			throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+		}
 							
 	}
 	
@@ -754,7 +758,11 @@ public class LogisticsApiController {
 		
 		Map<String, Object> params = RequestResultRejectForm.createMap(requestResultRejectForm);
 		
-		MlogApiService.stockMovementCommonCancle(params);
+		String str = MlogApiService.stockMovementCommonCancle(params);
+		
+		if (str != null && !"".equals(str)){
+			throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+		}
 							
 	}
 	
@@ -765,7 +773,11 @@ public class LogisticsApiController {
 		
 		Map<String, Object> params = RequestResultRejectForm.createMap(requestResultRejectForm);
 		
-		MlogApiService.stockMovementCommonCancle(params);
+		String str = MlogApiService.stockMovementCommonCancle(params);
+		
+		if (str != null && !"".equals(str)){
+			throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+		}
 							
 	}
 	

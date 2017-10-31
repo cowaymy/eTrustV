@@ -72,6 +72,29 @@ public class MemorandumController {
 
 		return ResponseEntity.ok(map);
 	}
+	
+	
+	@RequestMapping(value = "/memoSave.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertMemoSave(@RequestBody Map<String, Object> params, Model model)
+			throws Exception {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+		
+		params.put("userid", loginId);
+
+		ReturnMessage msg = new ReturnMessage();
+		
+		Map<String , Object> data = memo.memoSave(params);
+		msg.setData(data);
+		
+		return ResponseEntity.ok(msg);
+	}
 
 	
 }
