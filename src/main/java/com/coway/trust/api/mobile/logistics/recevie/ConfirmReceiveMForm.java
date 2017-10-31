@@ -27,14 +27,14 @@ public class ConfirmReceiveMForm {
 	@ApiModelProperty(value = "confirmReceiveDetail")
 	private List<ConfirmReceiveDForm> confirmReceiveDetail;
 
-	public List<Map<String, Object>> createMaps(ConfirmReceiveMForm stockTransferConfirmGiMForm) {
+	public List<Map<String, Object>> createMaps(ConfirmReceiveMForm confirmReceiveMForm) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 
 		if (confirmReceiveDetail != null && confirmReceiveDetail.size() > 0) {
 			Map<String, Object> map;
 			for (ConfirmReceiveDForm dtl : confirmReceiveDetail) {
-				map = BeanConverter.toMap(stockTransferConfirmGiMForm, "stockTransferConfirmGiDetail");
+				map = BeanConverter.toMap(confirmReceiveMForm, "confirmReceiveDetail");
 				// heartDtails
 				map.put("smoNoItem", dtl.getSmoNoItem());
 				map.put("partsCode", dtl.getPartsCode());

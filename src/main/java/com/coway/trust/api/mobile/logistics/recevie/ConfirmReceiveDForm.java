@@ -3,7 +3,7 @@ package com.coway.trust.api.mobile.logistics.recevie;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "StockTransferConfirmGiDForm", description = "StockTransferConfirmGiDForm")
+@ApiModel(value = "ConfirmReceiveDForm", description = "ConfirmReceiveDForm")
 public class ConfirmReceiveDForm {
 
 	@ApiModelProperty(value = "SMO item no")
