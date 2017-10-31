@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
-import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -91,6 +90,8 @@ public interface MlogApiService {
 	Map<String, Object> selectStockMovementSerial(Map<String, Object> params);
 	
 	void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm);
+	
+	void stockMovementCommonCancle(Map<String, Object> params);
 	
 	
 	
