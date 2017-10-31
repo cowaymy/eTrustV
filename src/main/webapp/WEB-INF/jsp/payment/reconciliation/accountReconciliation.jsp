@@ -108,19 +108,19 @@ var statementdetailPopLayout = [
 	    headerText : "Mode",
 	    editable : false
 	}, {
-	    dataField : "",
+	    dataField : "fTrnscRefRunngNo",
 	    headerText : "Running",
 	    editable : false
 	},{
-	    dataField : "c2",
+	    dataField : "fTrnscRefEft",
 	    headerText : "EFT",
 	    editable : false
 	},{
 	    dataField : "Chq No",
-	    headerText : "",
+	    headerText : "fTrnscRefChqNo",
 	    editable : false
 	},{
-	    dataField : "",
+	    dataField : "fTrnscRefVaNo",
 	    headerText : "VA No",
 	    editable : false
 	},{
@@ -132,7 +132,7 @@ var statementdetailPopLayout = [
         headerText : "Credit",
         editable : false
     },{
-        dataField : "c2",
+        dataField : "isMatch",
         headerText : "Match",
         editable : false
     }];
