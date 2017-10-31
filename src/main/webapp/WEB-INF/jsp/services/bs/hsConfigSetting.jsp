@@ -152,7 +152,7 @@
 
          // 리스트 조회.
         function fn_getBasicListAjax() {        
-	            Common.ajax("GET", "/bs/selectHsBasicList.do", $("#searchForm").serialize(), function(result) {
+	            Common.ajax("GET", "/services/bs/selectHsBasicList.do", $("#searchForm").serialize(), function(result) {
 	                console.log("성공.");
 	                console.log("data : " + result);
 	                AUIGrid.setGridData(myGridID, result);
@@ -167,9 +167,8 @@
 		        Common.alert("<b>No HS selected.</b>");
 		        return ;
 		    }
-		       
-		       alert(salesOrdId);
-               Common.popupDiv("/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
+
+               Common.popupDiv("/services/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
         }
     
         function fn_filterSetInfo() {
@@ -179,7 +178,7 @@
                 Common.alert("<b>No HS selected.</b>");
                 return ;
             }
-               Common.popupDiv("/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId, null, null , true , '_FilterSetPop');
+               Common.popupDiv("/services/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId, null, null , true , '_FilterSetPop');
         }
 
     

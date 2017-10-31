@@ -6,25 +6,27 @@
 
 	    $(document).ready(function() {
 	    
-//	        console.log("basicinfo : {}" + ${basicinfo.c1});
-	            
-            var codyIdCd = ${#basicinfo.c1}
-//	           alert(${#basicinfo.c1});
-	
-//	           $("#entry_cmbServiceMem option[value="+codyIdCd +"]").attr("selected", true);   
 
+	           var configBsGen = ${configBasicInfo.configBsGen}
+               $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
 	
-	/*          var configBsGen = ${basicinfo.configBsGen}
-	           $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
-	 */
-	 
-	//           alert(codyIdCd);
-	        $("#entry_cmbServiceMem option[value="+codyIdCd +"]").attr('selected', 'selected');
+	
+	       fn_getHSConfigBasicInfo();
 	    
 	    
 	    
 	    });
     
+    
+     function fn_getHSConfigBasicInfo(){
+            Common.ajax("GET", "/services/bs/getHSConfigBasicInfo.do", $("#frmBasicInfo").serialize(), function(result) {
+            console.log("fn_getHSConfigBasicInfo.");
+            
+            console.log("cmbServiceMemList {}" + result);
+             });
+     }
+     
+     
     
      function fn_doSave(){
      
@@ -88,19 +90,23 @@
         }
     
     
-            Common.ajax("POST", "/bs/saveHsConfigBasic.do", saveForm, function(result) {
+            Common.ajax("POST", "/services/bs/saveHsConfigBasic.do", saveForm, function(result) {
             console.log("saved.");
             console.log( result);       
             
             if(result.asNo !=""){
-                Common.alert("<b>HS result successfully saved.</b>");
+                Common.alert("<b>HS result successfully saved.</b>", fn_parentReload);
+                //Common.alert(result.message, fn_parentReload);
                 //fn_DisablePageControl();
             }
         });
     
-    
     }
     
+    
+    function fn_parentReload() {
+        fn_getBasicListAjax(); //parent Method (Reload)
+    }    
     
     
  /*     $('#btnSaveBasicInfo').click(function() {  
@@ -144,7 +150,8 @@
 <section class="pop_body"><!-- pop_body start -->
 
  <form id="frmBasicInfo" method="post">
-<input id="salesOrderId" name="salesOrderId" type="hidden" value="${basicInfo.ordId}"/>
+<%-- <input id="salesOrderId" name="salesOrderId" type="hidden" value="${basicInfo.ordId}"/> --%>
+<input type="hidden" name="salesOrderId"  id="salesOrderId" value="${SALEORD_ID}"/>  
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -157,34 +164,35 @@
 <tbody>
 <tr>
     <th scope="row" >Order No</th>
+   <%--  <td><span><c:out value="${basicInfo.ordNo}"/></span> --%>
     <td>
-    <input type="text" title="" id="entry_orderNo" name="entry_orderNo"  value="${basicInfo.ordNo}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; " />
+    <input type="text" title="" id="entry_orderNo" name="entry_orderNo"  value="${configBasicInfo.ordNo}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; " />
     </td>
     <th scope="row">Application Type</th>
     <td>
-    <input type="text" title="" id="entry_appType" name="entry_appType"  value="${basicInfo.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="entry_appType" name="entry_appType"  value="${configBasicInfo.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
     </td>
 </tr>
 <tr>
     <th scope="row">Installation Address</th>
     <td colspan="3">
-    <input type="text" title="" id="entry_address" name="entry_address"  value="${basicInfo.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="entry_address" name="entry_address"  value="${configBasicInfo.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
     </td>
 </tr>
 <tr>
     <th scope="row">Product</th>
     <td>
-    <input type="text" title="" id="entry_product" name="entry_product"  value="${basicInfo.stock}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="entry_product" name="entry_product"  value="${configBasicInfo.stock}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
     </td>
     <th scope="row">Customer Name</th>
     <td>
-    <input type="text" title="" id="entry_custName" name="entry_custName"  value="${basicInfo.custName}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>    
+    <input type="text" title="" id="entry_custName" name="entry_custName"  value="${configBasicInfo.custName}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>    
     </td>
 </tr>
 <tr>
     <th scope="row">NRIC/Company No</th>
     <td>
-    <input type="text" title="" id="entry_nric" name="entry_nric"  value="${basicInfo.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="entry_nric" name="entry_nric"  value="${configBasicInfo.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
     </td>
     <th scope="row">HS Availability</th>
     <td>
@@ -200,38 +208,38 @@
     <th scope="row">HS Cody Code</th>
     <td>
     <select class="w100p"  id="entry_cmbServiceMem" name="entry_cmbServiceMem" >
-       <c:forEach var="list" items="${ cmbServiceMemList}" varStatus="status">
-            <option value="${list.codeId}">${list.codeName } </option>
+       <c:forEach var="list" items="${cmbServiceMemList}" varStatus="status">
+            <option value="${list.codeId}"> ${list.codeName } </option>
        </c:forEach>
     </select>
     </td>
     <th scope="row">Last HS Date</th>
     <td>
-    <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${basicInfo.c4}" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicInfo.c4}" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
     <td colspan="3">
-    <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" value="${basicInfo.configBsRem}"></textarea>
+    <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" value="${configBasicInfo.configBsRem}"></textarea>
     </td>
 </tr>
 <tr>
     <th scope="row">Happy Call Service</th>
     <td colspan="3">
-    <label><input type="checkbox" id="entry_settIns" name="entry_settIns" <c:if test="${basicInfo.configSettIns == 1}">checked</c:if> /><span>Installation Type</span></label>
-    <label><input type="checkbox" id="entry_settHs" name="entry_settHs" <c:if test="${basicInfo.configSettBs == 1}">checked</c:if>/><span>BS Type</span></label>
-    <label><input type="checkbox" id="entry_settAs" name="entry_settAs" <c:if test="${basicInfo.configSettAs == 1}">checked</c:if>/><span>AS Type</span></label>
+    <label><input type="checkbox" id="entry_settIns" name="entry_settIns" <c:if test="${configBasicInfo.configSettIns == 1}">checked</c:if> /><span>Installation Type</span></label>
+    <label><input type="checkbox" id="entry_settHs" name="entry_settHs" <c:if test="${configBasicInfo.configSettBs == 1}">checked</c:if>/><span>BS Type</span></label>
+    <label><input type="checkbox" id="entry_settAs" name="entry_settAs" <c:if test="${configBasicInfo.configSettAs == 1}">checked</c:if>/><span>AS Type</span></label>
     </td>
 </tr>
 <tr>
     <th scope="row">Prefer HS Week</th>
     <td colspan="3">
-    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="0" <c:if test="${basicInfo.configBsWeek == 0}">checked</c:if> disabled/><span>None</span></label>
-    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="1" <c:if test="${basicInfo.configBsWeek == 1}">checked</c:if>/><span>Week 1</span></label>
-    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="2" <c:if test="${basicInfo.configBsWeek == 2}">checked</c:if>/><span>Week 2</span></label>
-    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="3" <c:if test="${basicInfo.configBsWeek == 3}">checked</c:if>/><span>Week 3</span></label>
-    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="4" <c:if test="${basicInfo.configBsWeek == 4}">checked</c:if>/><span>Week 4</span></label>
+    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="0" <c:if test="${configBasicInfo.configBsWeek == 0}">checked</c:if> disabled/><span>None</span></label>
+    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="1" <c:if test="${configBasicInfo.configBsWeek == 1}">checked</c:if>/><span>Week 1</span></label>
+    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="2" <c:if test="${configBasicInfo.configBsWeek == 2}">checked</c:if>/><span>Week 2</span></label>
+    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="3" <c:if test="${configBasicInfo.configBsWeek == 3}">checked</c:if>/><span>Week 3</span></label>
+    <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="4" <c:if test="${configBasicInfo.configBsWeek == 4}">checked</c:if>/><span>Week 4</span></label>
     </td>
 </tr>
 </tbody>

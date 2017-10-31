@@ -493,7 +493,7 @@ public class HsManualController {
 //		EgovMap asentryInfo =null;
 		
 //		model.put("cmbServiceMemList", cmbServiceMemList);
-		model.put("basicInfo", configBasicInfo);   
+		model.put("configBasicInfo", configBasicInfo);   
 		model.put("SALEORD_ID",(String) params.get("salesOrdId"));   
 
 //		model.put("as_ord_basicInfo", as_ord_basicInfo); 

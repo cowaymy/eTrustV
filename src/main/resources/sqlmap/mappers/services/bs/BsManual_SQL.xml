@@ -115,7 +115,7 @@
 		  
           <select id="selectHsManualList" parameterType="Map" resultType="egovMap">
               
-                            SELECT   rownum as rnum,C.CUST_ID CUST_ID
+                            SELECT   distinct C.CUST_ID CUST_ID
                                         , C.NAME Name
                                          ,SOM.SALES_ORD_NO SALES_ORD_NO
                                          ,HSM.MONTH
@@ -1780,7 +1780,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 							                     WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.NAME
 							                ELSE ''
 							                   END C3  ,
-							                trunc(Extent4.SETL_DT) C4,
+							                to_char (Extent4.SETL_DT,'DD/MM/YYYY') C4,
 							                Extent2.CONFIG_SETT_INS CONFIG_SETT_INS  ,
 							                Extent2.CONFIG_SETT_BS CONFIG_SETT_BS  ,
 							                Extent2.CONFIG_SETT_AS CONFIG_SETT_AS  ,

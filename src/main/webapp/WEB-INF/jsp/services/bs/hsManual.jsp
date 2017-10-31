@@ -219,7 +219,6 @@
                                   $("#_openGb").val("edit");
                                   $("#_brnchId").val(item.brnchId);
                                   
-//                                  Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
                                   Common.popupDiv("/services/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
                   }
            }                            
