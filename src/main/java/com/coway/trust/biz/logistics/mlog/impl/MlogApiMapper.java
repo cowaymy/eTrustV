@@ -119,6 +119,8 @@ public interface MlogApiMapper {
 
 	List<EgovMap> getDeliveryNo(Map<String, Object> receiveMap);
 
+	void insStockMovementHeads(Map<String, Object> fMap);
+	
 	int getUserLocId(Map<String, Object> receiveMap);
 
 }
