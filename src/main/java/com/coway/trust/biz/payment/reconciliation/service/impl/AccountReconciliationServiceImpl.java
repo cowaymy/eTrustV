@@ -55,7 +55,7 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 		return accountReconciliationMapper.selectGrossTotal(params);
 	}
 
-	@Override
+	@Transactional
 	public boolean updJournalPassEntry(Map<String, Object> params) {
 		logger.debug("★☆★☆★☆★☆AccountReconciliationServiceImpl.updJournalPassEntry★☆★☆★☆★☆");
 		SessionVO sessionVO =  new SessionVO();
