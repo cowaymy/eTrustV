@@ -13,9 +13,6 @@
 </style>
 <script type="text/javascript">
 var pettyCashExpColumnLayout = [ {
-    dataField : "clmNo",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
     dataField : "costCentr",
     headerText : 'Cost Center'
 }, {
