@@ -306,60 +306,17 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		Map<String, Object> receiveMap = new HashMap();
 		receiveMap.put("userId", confirmReceiveMForm.getUserId());
+		receiveMap.put("gipfdate", confirmReceiveMForm.getRequestDate());
 		receiveMap.put("giptdate", confirmReceiveMForm.getRequestDate());
-		receiveMap.put("smoNo", confirmReceiveMForm.getSmoNo());
 		receiveMap.put("gtype", confirmReceiveMForm.getReqStatus());
 
-		logger.debug("receiveMap    값 : {}", receiveMap);
+		String[] delvcd = new String[1];
+		delvcd[0] = confirmReceiveMForm.getSmoNo();
 
-		List<ConfirmReceiveDForm> list = confirmReceiveMForm.getConfirmReceiveDetail();
-
-		for (int j = 0; j < list.size(); j++) {
-			ConfirmReceiveDForm form = list.get(j);
-
-			logger.debug("partsCode    값 : {}", form.getPartsCode());
-			logger.debug("partsId    값 : {}", form.getPartsId());
-			logger.debug("serialNo    값 : {}", form.getSerialNo());
-			logger.debug("smoNoItem    값 : {}", form.getSmoNoItem());
-
-		}
-
-		List<EgovMap> delNo = MlogApiMapper.getDeliveryNo(receiveMap);
-
-		for (int i = 0; i < delNo.size(); i++) {
-			logger.debug("delNo    값 : {}", delNo.get(i));
-		}
-
-		int iCnt = 0;
-		String tmpdelCd = "";
-		String delyCd = "";
-		if (delNo.size() > 0) {
-			for (int i = 0; i < delNo.size(); i++) {
-				Map<String, Object> map = delNo.get(i);
-
-				// Map<String, Object> imap = new HashMap();
-
-				String delCd = (String) map.get("delyno");
-				if (delCd != null && !(tmpdelCd.equals(delCd))) {
-					tmpdelCd = delCd;
-					if (iCnt == 0) {
-						delyCd = delCd;
-					} else {
-						delyCd += "∈" + delCd;
-					}
-					iCnt++;
-				}
-			}
-		}
-
-		String[] delvcd = delyCd.split("∈");
-
-		for (int i = 0; i < delvcd.length; i++) {
-			logger.debug("delvcd : {}", delvcd[i]);
-		}
+		int userLoc = MlogApiMapper.getUserLocId(receiveMap);
 
 		receiveMap.put("parray", delvcd);
-		receiveMap.put("userId", 999999);
+		receiveMap.put("userId", userLoc);
 		// formMap.put("prgnm", params.get("prgnm"));
 		receiveMap.put("refdocno", "");
 		receiveMap.put("salesorder", "");
