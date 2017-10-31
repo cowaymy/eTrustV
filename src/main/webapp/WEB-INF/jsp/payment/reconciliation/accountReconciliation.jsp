@@ -116,8 +116,8 @@ var statementdetailPopLayout = [
 	    headerText : "EFT",
 	    editable : false
 	},{
-	    dataField : "Chq No",
-	    headerText : "fTrnscRefChqNo",
+	    dataField : "fTrnscRefChqNo",
+	    headerText : "Chq No",
 	    editable : false
 	},{
 	    dataField : "fTrnscRefVaNo",
