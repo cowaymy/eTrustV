@@ -261,10 +261,10 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 				MlogApiMapper.updateRequestMovement(insMap);
 			}
 		}
-
+		int userLoc = MlogApiMapper.getUserLocId(insMap);
 		String[] delvcd = { deliSeq };
 		insMap.put("parray", delvcd);
-		insMap.put("userId", 999999);
+		insMap.put("userId", userLoc);
 		// insMap.put("userId", params.get("userId"));
 		// formMap.put("prgnm", params.get("prgnm"));
 		insMap.put("refdocno", "");
@@ -274,7 +274,6 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 	}
 
-	// Receive 미완성
 	@Override
 	public String stockMovementCommonCancle(Map<String, Object> params) {
 
@@ -380,13 +379,13 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
 		String headtitle = "SMO";
 		String gtype = "GI";
-
-		Map<String, Object> returnMap = new HashMap();
+		Map<String, Object> returnMap = new HashMap();		
 		returnMap.put("reqno", headtitle + seq);
 		returnMap.put("userId", returnOnHandStockReqMForm.getUserId());
 		returnMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
 		returnMap.put("smType", returnOnHandStockReqMForm.getSmType());
 		returnMap.put("targetLocation", returnOnHandStockReqMForm.getTargetLocation());
+		int userLoc = MlogApiMapper.getUserLocId(returnMap);
 
 		logger.debug("receiveMap    값 : {}", returnMap);
 
@@ -451,11 +450,14 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		
 		MlogApiMapper.insertDeliveryStockMovement(insMap);
 		MlogApiMapper.updateRequestMovement(insMap);
-	
-		String[] delvcd = { deliSeq };
-		logger.debug("delvcd    값 : {}", delvcd);
+		
+		String[] delvcd = new String[1];
+		delvcd[0] = deliSeq;
+			
+		//String[] delvcd = { deliSeq };
+		//logger.debug("delvcd    값 : {}", delvcd);
 		insMap.put("parray", delvcd);
-		insMap.put("userId", 777777);
+		insMap.put("userId", userLoc);
 		// insMap.put("userId", params.get("userId"));
 		// formMap.put("prgnm", params.get("prgnm"));
 		insMap.put("refdocno", "");
@@ -464,7 +466,8 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		insMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
 				
 		MlogApiMapper.StockMovementIssue(insMap);
-				
+		
+		logger.debug("insMap    값 : {}", insMap);
 		
 	}
 
