@@ -162,7 +162,7 @@
             
              var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
-              Common.ajax("POST", "/bs/addIHsResult.do", jsonObj, function(result) {
+              Common.ajax("POST", "/services/bs/addIHsResult.do", jsonObj, function(result) {
               //Common.alert(result.message.message);
                 console.log("message : " + result.message );
                 

@@ -250,7 +250,7 @@
 
 
     function fn_getselectPopUpListAjax(){
-        Common.ajax("GET", "/bs/selectPopUpCdList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}'}, function(result) {
+        Common.ajax("GET", "/services/bs/selectPopUpCdList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}'}, function(result) {
             console.log("성공.");
             console.log("data : " + result);
             
@@ -259,7 +259,7 @@
             setCheckedRowsByIds();
         });
         
-          Common.ajax("GET", "/bs/selectPopUpCustList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}', ManuaMyBSMonth:'${ManuaMyBSMonth}'}, function(result) {
+          Common.ajax("GET", "/services/bs/selectPopUpCustList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}', ManuaMyBSMonth:'${ManuaMyBSMonth}'}, function(result) {
              console.log("성공.");
              console.log("data : " + result);
              
@@ -284,7 +284,7 @@
 	            "update" : editedRowItems
 	    }
 	    
-	    Common.ajax("POST", "/bs/assignCDChangeListSave.do", updateForm, function(result) {
+	    Common.ajax("POST", "/services/bs/assignCDChangeListSave.do", updateForm, function(result) {
 	        console.log("updateAssignCODY.");
 	        console.log( result);         
 	        

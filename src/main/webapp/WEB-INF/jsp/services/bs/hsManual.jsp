@@ -219,7 +219,8 @@
                                   $("#_openGb").val("edit");
                                   $("#_brnchId").val(item.brnchId);
                                   
-                                  Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
+//                                  Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
+                                  Common.popupDiv("/services/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
                   }
            }                            
                 }];
@@ -251,7 +252,7 @@
                 var radioVal = $("input:radio[name='searchDivCd']:checked").val();                           
             
                 if (radioVal == 1 ){ //hs_no  Create before
-                        Common.ajax("GET", "/bs/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
+                        Common.ajax("GET", "/services/bs/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
                             
                             console.log("성공.");
                             console.log("data : " + result);
@@ -259,7 +260,7 @@
                          });
                 }else {//hs_no  Create after
                 
-                        Common.ajax("GET", "/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val()}, function(result) {
+                        Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val()}, function(result) {
                             
                             console.log("성공.");
                             console.log("data : " + result);
@@ -322,7 +323,7 @@
                     return;
                  } */
 
-	           Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_hsDetailPopDiv');  
+	           Common.popupDiv("/services/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_hsDetailPopDiv');  
                 //Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '_editDiv');
 			}
 
@@ -395,7 +396,7 @@
                 };
 
                 
-                  Common.popupDiv("/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
+                  Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
 
             }
             
@@ -473,7 +474,7 @@
 
 
                 
-                  Common.popupDiv("/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
+                  Common.popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
 
             }
             
@@ -510,7 +511,7 @@
             if ($(this).val().trim() == "") {
                 return;
             }       
-            doGetCombo('/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager' , 'S', '');
+            doGetCombo('/services/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager' , 'S', '');
         });    
 
                             
@@ -522,7 +523,7 @@
                 if ($(this).val().trim() == "") {
                     return;
                 }       
-               doGetCombo('/bs/getCdList.do', $(this).val() , ''   , 'cmdcodyCode' , 'S', '');
+               doGetCombo('/services/bs/getCdList.do', $(this).val() , ''   , 'cmdcodyCode' , 'S', '');
             });   
         
                 
@@ -557,7 +558,7 @@
                          
 /*                          alert("_schdulId::"+  $("#_schdulId").val() +  $("#_salesOrdId").val()+  $("#_brnchId").val()); */
 
-                         Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
+                         Common.popupDiv("/services/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
                     }                   
                 });
         

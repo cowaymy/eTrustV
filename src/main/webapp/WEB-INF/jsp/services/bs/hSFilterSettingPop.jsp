@@ -151,7 +151,7 @@
     
 		function fn_getActivefilterInfo(){
 		    
-		    Common.ajax("GET", "/bs/getActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
+		    Common.ajax("GET", "/services/bs/getActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
 		        console.log("getActivefilterInfo.");
 		        console.log( result);
 		        AUIGrid.setGridData(myDetailGridIDActive, result);        
@@ -162,7 +162,7 @@
 		
 		function fn_getInActivefilterInfo(){
 		    
-		    Common.ajax("GET", "/bs/getInActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
+		    Common.ajax("GET", "/services/bs/getInActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
 		        console.log("getInActivefilterInfo.");
 		        console.log( result);
 		        AUIGrid.setGridData(myDetailGridIDInActive, result);        

@@ -270,7 +270,7 @@
 
 
     function fn_getHsViewfilterInfoAjax(){
-         Common.ajax("GET", "/bs/selectHsViewfilterPop.do",{salesOrdId : selSalesOrdId}, function(result) {
+         Common.ajax("GET", "/services/bs/selectHsViewfilterPop.do",{salesOrdId : selSalesOrdId}, function(result) {
             console.log("성공 fn_getHsViewfilterInfoAjax.");
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID, result);            
@@ -278,14 +278,14 @@
         
 
 
-          Common.ajax("GET", "/bs/selectHistoryHSResult.do",{salesOrdId : selSalesOrdId}, function(result) {
+          Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{salesOrdId : selSalesOrdId}, function(result) {
             console.log("성공 selectHistoryHSResult.");
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID2, result);            
         }); 
 
 
-         Common.ajax("GET", "/bs/selectFilterTransaction.do",{salesOrdId : selSalesOrdId}, function(result) {
+         Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{salesOrdId : selSalesOrdId}, function(result) {
             console.log("성공 selectFilterTransaction.");
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID3, result);            
@@ -313,7 +313,7 @@
 
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
-              Common.ajax("POST", "/bs/UpdateHsResult.do", jsonObj, function(result) {
+              Common.ajax("POST", "/services/bs/UpdateHsResult.do", jsonObj, function(result) {
               Common.alert(result.message, fn_parentReload);
 
             });

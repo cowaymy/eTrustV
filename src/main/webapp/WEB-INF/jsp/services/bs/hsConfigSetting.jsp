@@ -167,6 +167,8 @@
 		        Common.alert("<b>No HS selected.</b>");
 		        return ;
 		    }
+		       
+		       alert(salesOrdId);
                Common.popupDiv("/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
         }
     
@@ -252,10 +254,7 @@
                 <dt>Link</dt>
                 <dd>
                 <ul class="btns">
-                    <li><p class="link_btn">
-										<a href="javascript:fn_basicInfo()" id="basicInfo">HS
-											Basic Info</a>
-									</p></li>
+                    <li><p class="link_btn"> <a href="javascript:fn_basicInfo()" id="basicInfo">HS Basic Info</a> </p></li>
                     <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet">HS Filter Maintenance</a></p></li>
                 </ul>
                 <ul class="btns">
