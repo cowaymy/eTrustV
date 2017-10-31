@@ -9,19 +9,20 @@ import com.coway.trust.util.BeanConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "InventoryReqTransferMForm", description = "InventoryReqTransferMForm")
+@ApiModel(value = "ReturnOnHandStockReqMForm", description = "ReturnOnHandStockReqMForm")
 public class ReturnOnHandStockReqMForm {
 
 	@ApiModelProperty(value = "userId")
 	private String userId;
+
 	@ApiModelProperty(value = "요청일(YYYYMMDD)")
 	private String requestDate;
 
-	@ApiModelProperty(value = "요청 RDC or CD/CT")
-	private String targetLocation;
-
 	@ApiModelProperty(value = "이동유형(UM93)")
 	private String smType;
+
+	@ApiModelProperty(value = "요청 RDC or CD/CT")
+	private String targetLocation;
 
 	@ApiModelProperty(value = "InventoryReqTransferDetail")
 	private List<ReturnOnHandStockReqDForm> inventoryReqTransferDetail;
@@ -37,6 +38,7 @@ public class ReturnOnHandStockReqMForm {
 				// heartDtails
 				map.put("partsCode", dtl.getPartsCode());
 				map.put("partsId", dtl.getPartsId());
+				map.put("serialNo", dtl.getSerialNo());
 				map.put("requestQty", dtl.getRequestQty());
 				map.put("partsName", dtl.getPartsName());
 

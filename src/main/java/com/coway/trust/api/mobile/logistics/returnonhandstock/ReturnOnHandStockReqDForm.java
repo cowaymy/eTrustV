@@ -12,8 +12,18 @@ public class ReturnOnHandStockReqDForm {
 	private int partsId;
 	@ApiModelProperty(value = "요청수량")
 	private int requestQty;
-	@ApiModelProperty(value = "부품 이름")
+	@ApiModelProperty(value = "부품 sn")
+	private String serialNo;
+	@ApiModelProperty(value = "부품명")
 	private String partsName;
+
+	public String getSerialNo() {
+		return serialNo;
+	}
+
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
+	}
 
 	public String getPartsCode() {
 		return partsCode;
