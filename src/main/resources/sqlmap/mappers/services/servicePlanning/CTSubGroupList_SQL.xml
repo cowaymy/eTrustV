@@ -50,8 +50,8 @@
          B.POSTCODE,
          B.STATE,
          A.REQST_NO,
-         A.PRIOD_FROM,
-         A.PRIOD_TO,
+         TO_CHAR(A.PRIOD_FROM,'YYYY-MM-DD') PRIOD_FROM,
+         TO_CHAR(A.PRIOD_TO,'YYYY-MM-DD') PRIOD_TO,
          CASE WHEN (A.LOC_TYPE='L') THEN 'Local' 
          WHEN (A.LOC_TYPE='O') THEN 'OutStation'
          ELSE ''
