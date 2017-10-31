@@ -25,7 +25,7 @@ var gridPros = {
         
 };
 
-var keyValueList = [{"code":"", "value":"Account"},{"code":"59", "value":"Other Debtor"}, {"code":"203", "value":"Other Income"}, {"code":"342", "value":"Bank Charges"}];
+var keyValueList = [{"code":"59", "value":"Other Debtor"}, {"code":"203", "value":"Other Income"}, {"code":"342", "value":"Bank Charges"}];
 
 $(document).ready(function(){
 	
