@@ -1098,4 +1098,40 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 		  WHERE WH_LOC_CODE=#{userId}
 	</select>
 	
+	<insert id="insStockMovementHeads" parameterType="Map">
+        INSERT INTO LOG0047M
+           (REQST_NO,
+           TRNSC_TYPE,
+           TRNSC_TYPE_DTL,
+           PRIDIC_FRQNCY,
+           REQST_CRT_DT,
+           REQST_REQUIRE_DT,
+           DOC_HDER_TXT,
+           RCIV_CDC_RDC,
+           REQST_CDC_RDC,
+           REQST_STUS,
+           CRT_USER_ID,
+           CRT_DT,
+           REQST_TYPE,
+           REQST_TYPE_DTL
+           )
+         VALUES (  #{reqno}
+                 , 'UM'
+                 , #{smType}
+                 , 'M'
+                 , SYSDATE
+                 , SYSDATE
+                 , ' '
+                 ,  (select WH_LOC_ID from sys0028m where WH_LOC_CODE=#{userId}) 
+                 ,  #{targetLocation}
+                 , 'O'
+                 , (select NVL(MAX(USER_ID),99999999) from sys0047m where user_name=#{userId})
+                 , SYSDATE
+                 , 'UM'
+                 , #{smType}
+                 )
+    </insert>
+	
+	
+	
 </mapper>
