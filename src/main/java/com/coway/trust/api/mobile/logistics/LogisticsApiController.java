@@ -64,6 +64,7 @@ import com.coway.trust.api.mobile.logistics.requestresult.RequestResultRejectFor
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockDListDto;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockListForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockMListDto;
+import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockReqMForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnPartsSearchDto;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnPartsSearchForm;
 import com.coway.trust.api.mobile.logistics.salesprice.StockPriceDto;
@@ -769,4 +770,13 @@ public class LogisticsApiController {
 	}
 	
 
+	
+	@ApiOperation(value = "Return On-Hand Stock - Return Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/returnOnHandStockReq", method = RequestMethod.POST)
+	public void returnOnHandStockReq(@RequestBody ReturnOnHandStockReqMForm returnOnHandStockReqMForm) throws Exception {
+		MlogApiService.returnOnHandStockReq(returnOnHandStockReqMForm);
+	}
+	
+
+	
 }
