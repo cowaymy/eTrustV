@@ -436,6 +436,14 @@
                     saleOrdList += rowItem.salesOrdNo;
                     
                     
+                    var hsStutus = rowItem.code;
+		            if( hsStutus == "COM") {
+		                Common.alert("<b>  do no has result COM..");
+		                return ;
+		            }
+                    
+                    
+                    
                     if(i  != len -1){
                         saleOrdList += ",";
                     }
