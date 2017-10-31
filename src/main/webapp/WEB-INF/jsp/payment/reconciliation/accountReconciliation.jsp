@@ -17,9 +17,6 @@ var journalEntryPopGridID;
 var selectedGridValue;
 
 var gridPros = {
-        // 편집 가능 여부 (기본값 : false)
-        editable : false,
-        
         // 상태 칼럼 사용
         showStateColumn : false
         
@@ -43,9 +40,9 @@ $(document).ready(function(){
 // AUIGrid 칼럼 설정
 var masterColumnLayout = [ 
 	{
-		   dataField : "fBankJrnlRefNo",
-		   headerText : "Reference No",
-		   editable : false
+		dataField : "fBankJrnlRefNo",
+		headerText : "Reference No",
+		editable : false
 	},
     {
         dataField : "accDesc",
@@ -140,37 +137,48 @@ var statementdetailPopLayout = [
 var journalPopLayout = [ 
 	{
 	    dataField : "fTrnscDt",
-	    headerText : "Date"
+	    headerText : "Date",
+	    editable : false
 	}, {
 	    dataField : "fTrnscRef1",
-	    headerText : "Ref 1"
+	    headerText : "Ref 1",
+	    editable : false
 	}, {
 	    dataField : "fTrnscRef2",
-	    headerText : "Ref 2"
+	    headerText : "Ref 2",
+	    editable : false
 	}, {
 	    dataField : "fTrnscRef3",
-	    headerText : "Ref 3"
+	    headerText : "Ref 3",
+	    editable : false
 	}, {
 	    dataField : "fTrnscRef4",
-	    headerText : "Ref 4"
+	    headerText : "Ref 4",
+	    editable : false
 	}, {
 	    dataField : "fTrnscRef5",
-	    headerText : "Ref 5"
+	    headerText : "Ref 5",
+	    editable : false
 	}, {
 	    dataField : "fTrnscRef6",
-	    headerText : "Ref 6"
+	    headerText : "Ref 6",
+	    editable : false
 	}, {
 	    dataField : "fTrnscRem",
-	    headerText : "Mode"
+	    headerText : "Mode",
+	    editable : false
 	}, {
 	    dataField : "fTrnscDebtAmt",
-	    headerText : "Debit"
+	    headerText : "Debit",
+	    editable : false
 	},{
 	    dataField : "fTrnscCrditAmt",
-	    headerText : "Credit"
+	    headerText : "Credit",
+	    editable : false
 	},{
 	    dataField : "isMatch",
-	    headerText : "Match"
+	    headerText : "Match",
+	    editable : false
 	},{
 	    dataField : "remark",
 	    headerText : "Remark",
@@ -309,12 +317,12 @@ var journalPopLayout = [
     
     function fn_updateJournalPassEntry(journalAccount, remark,  fTrnscCrditAmt, fTrnscDebtAmt, fTrnscId){
     	
-    	//if(remark != ""){
+    	if(remark != undefined){
     		
     		if(journalAccount != undefined){
     			
     			$('#journalEntryAccount').val(journalAccount);
-                $('#remark').val(remark);
+                $('#fRemark').val(remark);
                 $('#fTrnscCrditAmt').val(fTrnscCrditAmt);
                 $('#fTrnscDebtAmt').val(fTrnscDebtAmt);
                 $('#fTrnscId').val(fTrnscId);
@@ -328,9 +336,9 @@ var journalPopLayout = [
     			Common.alert('* Debtor Account are composulary field .');
     		}
     		
-    	//}else{
-    		//Common.alert('* Remark are composulary field .');
-    	//}
+    	}else{
+    		Common.alert('* Remark are composulary field .');
+    	}
     	
     }
     
@@ -616,8 +624,8 @@ var journalPopLayout = [
     </form>
     </section><!-- search_table end -->
     <form action="#" method="post" id="journalPassForm" name="journalPassForm">
-        <input type="hidden" name="journalEntryAccount" id="journalAccount">
-        <input type="hidden" name="remark" id="remark">
+        <input type="hidden" name="journalEntryAccount" id="journalEntryAccount">
+        <input type="hidden" name="fRemark" id="fRemark">
         <input type="hidden" name="fTrnscCrditAmt" id="fTrnscCrditAmt">
         <input type="hidden" name="fTrnscDebtAmt" id="fTrnscDebtAmt">
         <input type="hidden" name="fTrnscId" id="fTrnscId">

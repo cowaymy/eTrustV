@@ -119,7 +119,7 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 		
 		Map<String, Object> transMap = new HashMap<String, Object>();
 		transMap.put("fTransactionId", String.valueOf(params.get("fTrnscId")));
-		transMap.put("fTransactionInstruction", String.valueOf(params.get("remark")).trim());
+		transMap.put("fTransactionInstruction", String.valueOf(params.get("fRemark")).trim());
 		transMap.put("fTransactionIsMatch", true);
 		transMap.put("fTransactionUpdateBy", sessionVO.getUserId());
 		transResult = accountReconciliationMapper.updJournalTrans(transMap);
