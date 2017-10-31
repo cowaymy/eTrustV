@@ -163,10 +163,10 @@ var journalPopLayout = [
 	    dataField : "fTrnscRem",
 	    headerText : "Mode"
 	}, {
-	    dataField : "",
+	    dataField : "fTrnscDebtAmt",
 	    headerText : "Debit"
 	},{
-	    dataField : "",
+	    dataField : "fTrnscCrditAmt",
 	    headerText : "Credit"
 	},{
 	    dataField : "isMatch",
