@@ -339,7 +339,6 @@ var journalPopLayout = [
     	}else{
     		Common.alert('* Remark are composulary field .');
     	}
-    	
     }
     
     
