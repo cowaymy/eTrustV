@@ -439,15 +439,16 @@ $(document).ready(function(){
     fn_searchUser(selectedRow[0].item.userId);
     fn_userRoleList(selectedRow[0].item.userId);
 
-     fn_roleCodesearchByEdit("1","");
-    $("#roleEditForm #roleId1").val(userRoleData[0].roleId);
+    fn_roleCodesearchByEdit("1","");
+    if(userRoleData.length > 0){
+    	$("#roleEditForm #roleId1").val(userRoleData[0].roleId);
 
-    fn_roleCodesearchByEdit("2",userRoleData[0].roleId);
-    $("#roleEditForm #roleId2").val(userRoleData[1].roleId);
+        fn_roleCodesearchByEdit("2",userRoleData[0].roleId);
+        $("#roleEditForm #roleId2").val(userRoleData[1].roleId);
 
-    fn_roleCodesearchByEdit("3",userRoleData[1].roleId);
-    $("#roleEditForm #roleId3").val(userRoleData[2].roleId);
-
+        fn_roleCodesearchByEdit("3",userRoleData[1].roleId);
+        $("#roleEditForm #roleId3").val(userRoleData[2].roleId);
+    }
     //end progress icon
     Common.removeLoader();
 
