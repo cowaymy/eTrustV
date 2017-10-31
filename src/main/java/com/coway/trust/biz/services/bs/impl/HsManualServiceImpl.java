@@ -168,6 +168,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		Boolean success = false;
 		
 		String appId="";
+		String saveDocNo = "";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
@@ -226,7 +227,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		hsManualMapper.insertHsResult(docSub);
 //    		hsManualMapper.insertHsResult((Map<String, Object>)obj);
     		
-    		resultValue.put("docNo", docNo);
+    		saveDocNo += docNo;
+    				
+    		if(docType.size()>1 && docType.size() > i){
+    			saveDocNo += "," ;	
+    		}
+    		
+    		
+    		resultValue.put("docNo", saveDocNo);
 		}
 		
 		
