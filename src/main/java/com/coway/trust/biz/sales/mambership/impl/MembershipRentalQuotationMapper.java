@@ -66,10 +66,12 @@ public interface MembershipRentalQuotationMapper {
 	 
 	EgovMap  getMembershipFilterChargeList(Map<String, Object> params);
 	
-	void  insertSrvMembershipQuot_Filter(Map<String, Object> params);
+	void  insertSrvMembershipQuot_Filter(Map<String, Object> params); 
 
-	EgovMap   getSAL0093D_SEQ(Map<String, Object> params);
-
+	EgovMap   getSAL0083D_SEQ(Map<String, Object> params);
+	EgovMap   getSAL0083D_DocNo(Map<String, Object> params);
+	
+	
 	List<EgovMap>   mActiveQuoOrder(Map<String, Object> params);
 	
 	List<EgovMap>   selectSrchMembershipQuotationPop(Map<String, Object> params);

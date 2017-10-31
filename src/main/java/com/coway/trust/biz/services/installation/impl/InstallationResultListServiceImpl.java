@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -1423,5 +1424,35 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		}
 		return true;
 	}
+	
+	
+	
+
+	@Override 
+	public List<EgovMap> assignCtList(Map<String, Object> params) {
+		return installationResultListMapper.assignCtList(params);
+	}
+	
+	@Override 
+	public List<EgovMap> assignCtOrderList(Map<String, Object> params) {
+		return installationResultListMapper.assignCtOrderList(params);
+	}
+	
+
+	@Override
+	public int  updateAssignCT(Map<String, Object> params) {
+		List <EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+		int rtnValue  =-1;
+		
+		if (updateItemList.size() > 0) {  
+			
+			for (int i = 0; i < updateItemList.size(); i++) {
+				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+				rtnValue= installationResultListMapper.updateAssignCT(updateMap) ;
+			}
+		}
+		return rtnValue;
+	} 
+	
 	
 }

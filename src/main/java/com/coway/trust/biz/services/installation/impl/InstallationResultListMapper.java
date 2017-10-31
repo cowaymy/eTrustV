@@ -142,4 +142,9 @@ public interface InstallationResultListMapper {
 	void insertMovement(Map<String, Object> params);
 	
 	void updateSalesOrderExchange(Map<String, Object> params);
+	
+	
+	int updateAssignCT (Map<String, Object> params);
+	List<EgovMap> assignCtOrderList(Map<String, Object> params);
+	List<EgovMap> assignCtList(Map<String, Object> params);
 }

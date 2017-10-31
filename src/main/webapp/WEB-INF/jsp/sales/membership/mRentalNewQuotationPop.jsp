@@ -559,7 +559,6 @@ function fn_goSalesConfirm(){
 } 
 
 function  fn_goSalesPerson(){
-    
       Common.popupDiv("/sales/membership/paymentCollecter.do?resultFun=S");
 } 
 
@@ -597,73 +596,12 @@ function fn_doSalesResult(item){
 }
 
 
-function    fn_SubscriptionYear_initEvt(){
-        
-      console.log( "-----fn_SubscriptionYear_initEvt ---- ");
 
-     $("#cPromotionpac").val();
-     $("#cPromoe").val();
-     $("#cPromotionpac").attr("disabled" ,"disabled");
-     $("#cPromoe").attr("disabled" ,"disabled");
-     $("#packpro").attr("checked",false);
-     $("#cPromoCombox").attr("checked",false);
-     $("#packpro").attr("disabled" ,"disabled");
-     $("#cPromoCombox").attr("disabled" ,"disabled");
-     $("#txtBSFreq").html("");
-     $("#txtPackagePrice").html("-");
-     $("#hiddenPacOriPrice").val("");
-     $("#txtFilterCharge").val("");
-     $("#btnViewFilterCharge").attr("style" ,"display:none");
-    
-}
-
-
-
-function getOrderCurrentBillMonth (){   
-   var billMonth =0;
-   
-   Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth", { ORD_ID: $("#ORD_ID").val() } , function(result) {
-        console.log( result);
-        
-        if(result.length > 0 ){
-              if(   parseInt( result[0].nowDate ,10) > parseInt( result[0].rentInstDt ,10)   ){
-                  
-                  billMonth =61;
-                  console.log( "==========billMonth============"+billMonth);
-                  
-                  return billMonth ;
-                  
-              }else{
-                  Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth",{ ORD_ID: $("#ORD_ID").val() , RENT_INST_DT : 'SYSDATE'  }  , function(_result) {
-                      
-                      console.log( "==========2============");
-                      console.log( _result);
-                      
-                      if(_result.length > 0 ){
-                          billMonth = _result[0].rentInstNo;
-                      }
-                     
-                      console.log( "==========2 end ============["+billMonth+"]");
-                      
-                  });
-              }
-        }
-   });
-   
-   return billMonth;
- }
- 
- 
  
 function fn_save(){
-
-    
+	
     if(fn_validRequiredField_Save() ==false ) return ;
     fn_unconfirmSalesPerson();
-    
-    
-    
-    
     
 }
 
@@ -832,7 +770,8 @@ function  fn_DoSaveProcess(_saveOption){
                 qotatCntrctDur   : "24",   
                 qotatCntrctFreq : $("#hiddentxtBSFreq").val() =="" ? "0" :$("#hiddentxtBSFreq").val() ,   
                 qotatSalesmanId : $("#hiddenSalesPersonID").val(),   
-                qotatGstRate   :"6"
+                qotatGstRate   :"6",
+                empChk : $("#cEmplo").val() =="" ? "0" :$("#cEmplo").val() 
     }
     
     var saveForm ={
@@ -846,10 +785,10 @@ function  fn_DoSaveProcess(_saveOption){
          
          if(result.code =="00"){
              if(_saveOption == "1"){
-                  Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.data + "<br/> System will auto redirect to payment process after 3 seconds. ");
-                  //setTimeout(function(){ fn_saveResultTrans(result.data) ;}, 3000); 
+                  Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.data.qotatRefNo + "<br/> System will auto redirect to payment process after 3 seconds. ");
+                  setTimeout(function(){ fn_saveResultTrans(result.data.qotatId) ;}, 3000); 
              }else{
-                  Common.alert("Quotation Saved" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br /> Quotation number : " + result.data + "<br /> ");
+                  Common.alert("Quotation Saved" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br /> Quotation number : " + result.data.qotatRefNo + "<br /> ");
              }
          }else{
               Common.alert("Failed To Save" +DEFAULT_DELIMITER+" b>Failed to save. Please try again later.</b> ");
@@ -863,7 +802,9 @@ function  fn_DoSaveProcess(_saveOption){
 function fn_saveResultTrans(quot_id){
     $("#_alertOk").click();
     $("#_NewQuotDiv1").remove();
-    Common.popupDiv("/sales/membership/mAutoConvSale.do" ,{QUOT_ID : quot_id}, null , true , '_transDiv1');
+    
+    alert('goto ServiceContract_Quot_Convert');
+    //Common.popupDiv("/sales/membership/mAutoConvSale.do" ,{QUOT_ID : quot_id}, null , true , '_transDiv1');
 }
 
 

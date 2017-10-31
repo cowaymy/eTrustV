@@ -8,16 +8,19 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
@@ -312,4 +315,80 @@ public class InstallationResultListController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	
+	
+
+	@RequestMapping(value = "/assignCTTransferPop.do")
+	public String assignCTTransferPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("in  assignCTTransferPop ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		// 호출될 화면
+		return "services/installation/assignCTTransferPop"; 
+	}
+	
+	
+
+	@RequestMapping(value = "/assignCtList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> assignCtList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("in  assignCtList.....");		
+		logger.debug("params : {}", params.toString());
+		//BRNCH_ID
+		List<EgovMap>  list = installationResultListService.assignCtList(params);
+		
+		return ResponseEntity.ok(list);  
+	}
+	
+	
+	@RequestMapping(value = "/assignCtOrderList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> assignCtOrderList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  assignCtOrderList.....");		
+		logger.debug("params : {}", params.toString());
+		
+		String vAsNo =  (String)params.get("installNo");
+		String[] asNo =  null;
+		
+		if(! StringUtils.isEmpty(vAsNo)){ 
+			asNo =  ((String)params.get("installNo")).split(",");
+			params.put("installNo" ,asNo);
+		}
+		
+		List<EgovMap>  list =  installationResultListService.assignCtOrderList(params);
+		
+		return ResponseEntity.ok(list);  
+	}
+	
+	
+
+
+	@RequestMapping(value = "/assignCtOrderListSave.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> assignCtOrderListSave(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  assignCtOrderListSave ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("updator", sessionVO.getUserId());   
+		List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
+		logger.debug("asResultM ===>"+update.toString());  
+		
+		int   rtnValue = installationResultListService.updateAssignCT(params);  
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(99);
+		message.setMessage("");
+
+				
+		return ResponseEntity.ok(message);  
+		
+	}
+	
+	
 }

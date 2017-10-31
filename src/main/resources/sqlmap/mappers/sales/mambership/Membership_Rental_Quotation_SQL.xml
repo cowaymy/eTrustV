@@ -382,101 +382,69 @@
       </select>
       
          
-    <select id="getSAL0093D_SEQ" parameterType="Map" resultType="egovMap">
+    <select id="getSAL0083D_SEQ" parameterType="Map" resultType="egovMap">
                  <![CDATA[     
-                          SELECT SAL0095D_SRV_MEM_ID_SEQ.NEXTVAL  SEQ  FROM DUAL 
+                          SELECT SAL0083D_QOTAT_ID_SEQ.NEXTVAL  SEQ  FROM DUAL 
                  ]]>
+    </select>
+    
+       
+    <select id="getSAL0083D_DocNo" parameterType="Map" resultType="egovMap">
+                 <![CDATA[     
+                    SELECT FN_GET_DOCNO('139')  docNo FROM DUAL 
+                  ]]>
     </select>
     
         
     <insert id="insertQuotationInfo" parameterType="Map"   >
-			    
-			    INSERT INTO SAL0093D (SRV_MEM_QUOT_ID ,
-			                                      SRV_SALES_ORD_ID,             
-							                      SRV_MEM_QUOT_NO,              
-							                      SRV_MEM_PAC_ID,               
-							                      SRV_MEM_PAC_NET_AMT,          
-							                      SRV_MEM_PAC_TXS,              
-							                      SRV_MEM_PAC_AMT,              
-							                      SRV_MEM_BS_NET_AMT,           
-							                      SRV_MEM_BS_TXS,               
-							                      SRV_MEM_BS_AMT,               
-							                      SRV_MEM_PV,                   
-							                      SRV_DUR,                      
-							                      SRV_REM,                      
-							                      SRV_QUOT_VAL_ID,                  
-							                      SRV_CRT_DT,                       
-							                      SRV_CRT_USER_ID,              
-							                      SRV_QUOT_STUS_ID,             
-							                      SRV_UPD_USER_ID,              
-							                      SRV_UPD_DT,                   
-							                      SRV_MEM_BS12_AMT,                 
-							                      SRV_QUOT_CUST_CNT_ID,         
-							                      SRV_MEM_QTY,                  
-							                      SRV_PROMO_ID,                 
-							                      SRV_SALES_MEM_ID,             
-							                      SRV_MEM_ID,                   
-							                      SRV_ORD_STK_ID,               
-							                      SRV_FREQ,                     
-							                      SRV_PAC_PROMO_ID,
-							                      EMP_CHK)             
-			  VALUES   (             #{SAL0093D_SEQ},
-			                               #{srvSalesOrderId},
-								            FN_GET_DOCNO(20) ,
-								            #{srvMemPacId},
-								            #{srvMemPacNetAmt},
-								            #{srvMemPacTaxes},
-								            #{srvMemPacAmt},
-								            #{srvMemBSNetAmt},
-								            #{srvMemBSTaxes},
-								            #{srvMemBSAmt},
-								            #{srvMemPv},
-								            #{srvDuration},
-								            #{srvRemark},
-								            LAST_DAY(sysdate),
-								            sysdate,
-								            #{srvCreateBy},
-								            #{srvQuotStatusId},
-								            #{srvCreateBy},
-								            sysdate,
-								            #{srvMemBS12Amt},
-								            #{srvQuotCustCntId},
-								            #{srvMemQty},
-								            #{srvPromoId},
-								            #{srvSalesMemId},
-								            #{srvMemId},
-								            #{srvOrderStkId},
-								            #{srvFreq},
-								            #{srvPacPromoId} ,
-								            #{empChk}
-			            )
-            
+					INSERT INTO  SAL0083D (
+					   QOTAT_ID, QOTAT_REF_NO, QOTAT_ORD_ID, 
+					   QOTAT_REM, QOTAT_STUS_ID, QOTAT_PAC_PROMO_ID, 
+					   QOTAT_FIL_PROMO_ID, QOTAT_PCKG_ID, QOTAT_PRODUCT_ID, 
+					   QOTAT_RENTAL_AMT, QOTAT_EXP_FILTER_AMT, QOTAT_CNTRCT_DUR, 
+					   QOTAT_CNTRCT_FREQ, QOTAT_VAL_ID_DT, QOTAT_SALESMAN_ID, 
+					   QOTAT_CRT_DT, QOTAT_CRT_USER_ID, QOTAT_GST_RATE, 
+					   QOTAT_GST_TAX_CODE_ID, EMP_CHK) 
+					VALUES ( #{qotatId}, 
+						         #{qotatRefNo}, 
+						         #{qotatOrdId},
+						         #{qotatRem}, 
+						         #{qotatStusId}, 
+						         nvl(#{qotatPacPromoId},0),
+						         nvl(#{qotatFilPromoId},0), 
+						         #{qotatPckgId}, 
+						         #{qotatProductId} ,
+						         #{qotatRentalAmt}, 
+						         #{qotatExpFilterAmt}, 
+						         #{qotatCntrctDur},
+						         #{qotatCntrctFreq},
+						         sysdate , 
+						         #{qotatSalesmanId},
+						         sysdate,
+						         #{qotatCrtUserId}, 
+						         #{qotatGstRate},
+						         '32', 
+						         #{empChk}
+					)
          </insert>   
          
          
      <insert id="insertSrvMembershipQuot_Filter" parameterType="Map"  >    
-         
-			INSERT INTO SAL0094D (SRV_MEM_QUOT_FILTER_ID,
-						                      SRV_MEM_QUOT_ID,
-						                      STK_ID,
-						                      STK_PRIOD,
-						                      STK_LAST_CHNG_DT,
-						                      STK_FILTER_PRC,
-						                      STK_NET_AMT,
-						                      STK_TXS,
-						                      STK_CHRG_PRC)
-			  VALUES   (SAL0094D_SRV_MEM_QUOT_FILTER.NEXTVAL,
-				            #{srvmemquotfilterid} ,
-                            #{stkid},
-                            #{stkperiod},
-                            #{stklastchangedate},
-                            #{stkfilterprice},
-                            #{stknetamt},
-                            #{stktaxes},
-                            #{stkchargeprice}
-			           )
-			            
-							            
+				INSERT INTO  SAL0084D (
+				   QOTAT_ITM_ID, QOTAT_ID, QOTAT_ITM_EXP_DT, 
+				   QOTAT_ITM_STK_ID, QOTAT_ITM_CHRG, QOTAT_ITM_TXS, 
+				   QOTAT_ITM_AMT, QOTAT_ITM_GST_RATE, QOTAT_ITM_GST_TAX_CODE_ID) 
+				VALUES ( 
+				         SAL0084D_QOTAT_ITM_ID_SEQ.NEXTVAL, 
+				         #{qotatId}, 
+				         #{qotatItmExpDt}, 
+				         #{qotatItmStkId}, 
+				         #{qotatItmChrg}, 
+				         #{qotatItmTxs}, 
+				         #{qotatItmAmt}, 
+				         #{qotatItmGstRate}, 
+				         #{qotatItmGstTaxCodeId}
+				     )	            
      </insert>   
          
    <resultMap id="mOTSTND_INFO" type="egovMap" ></resultMap>

@@ -42,13 +42,13 @@ public interface MembershipRentalQuotationService {
 	
 	EgovMap	    	getOderOutsInfo(Map<String, Object> params);
 	
-	void 	insertQuotationInfo(Map<String, Object> params) ;
+	EgovMap 	insertQuotationInfo(Map<String, Object> params) ;
 	
 	EgovMap	   getMembershipFilterChargeList(Map<String, Object> params);
 	
 	void 	insertSrvMembershipQuot_Filter(Map<String, Object> params) ;
 	
-	EgovMap   getSAL0093D_SEQ(Map<String, Object> params);
+	EgovMap   getSAL0083D_SEQ(Map<String, Object> params);
 	
 	
 	List<EgovMap>   mActiveQuoOrder(Map<String, Object> params);

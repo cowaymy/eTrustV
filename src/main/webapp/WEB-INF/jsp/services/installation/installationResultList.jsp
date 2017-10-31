@@ -47,6 +47,30 @@ function fn_installationListSearch(){
 }
 
 function fn_addInstallation(codeid1){//active 일때만 열림
+	
+	
+	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
+    
+      
+	var   installEntryId =   selectedItems[0].item.installEntryId;
+	var   codeid1 =  selectedItems[0].item.codeid1;   
+	var  orderId =   selectedItems[0].item.salesOrdId;    
+	var docId =  selectedItems[0].item.c1;   
+	var  statusCode =  selectedItems[0].item.code1; 
+	var  salesOrderId =  selectedItems[0].item.salesOrdId; 
+	
+    
 	if(statusCode == "ACT"){
 		if(codeid1 == 257){
 	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
@@ -57,6 +81,9 @@ function fn_addInstallation(codeid1){//active 일때만 열림
 		Common.alert("Installation is no longer active. Add new installatio result is disallowed.");
 	}
 }
+
+
+
 var myGridID;
 function createInstallationListAUIGrid() {
     //AUIGrid 칼럼 설정
@@ -79,7 +106,7 @@ function createInstallationListAUIGrid() {
         dataField : "c3",
         headerText : "App Date",
         editable : false,
-        width : 250
+        width : 100
     }, {
         dataField : "stkDesc",
         headerText : "Product",
@@ -97,6 +124,11 @@ function createInstallationListAUIGrid() {
         editable : false,
         width : 150
         
+    }, {
+        dataField : "brnchId",
+        headerText : "App brnchId",
+        editable : false,
+        width : 100
     }, {
         dataField : "code1",
         headerText : "Status",
@@ -118,77 +150,75 @@ function createInstallationListAUIGrid() {
         headerText : "",
         width : 0
     }];
-     // 그리드 속성 설정
-    var gridPros = {
-        
-        // 페이징 사용       
-        usePaging : true,
-        
-        // 한 화면에 출력되는 행 개수 20(기본값:20)
-        pageRowCount : 20,
-        
-        editable : true,
-        
-        showStateColumn : false, 
-        
-        displayTreeOpen : true,
-        
-        
-        headerHeight : 30,
-        
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : true,
-        
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true
+  
+    
 
-    };
+    // 그리드 속성 설정
+   var gridPros = {
+              showRowCheckColumn : true,
+              // 페이징 사용       
+              usePaging : true,
+              // 한 화면에 출력되는 행 개수 20(기본값:20)
+              pageRowCount : 20,
+              // 전체 체크박스 표시 설정
+              showRowAllCheckBox : true,
+              editable :  false
+   };
+    
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 }
 
-var gridPros = {
-    
-    // 페이징 사용       
-    usePaging : true,
-    
-    // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20,
-    
-    editable : true,
-    
-    fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
-    displayTreeOpen : true,
-    
-    selectionMode : "singleRow",
-    
-    headerHeight : 30,
-    
-    // 그룹핑 패널 사용
-    useGroupingPanel : true,
-    
-    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-    skipReadonlyColumns : true,
-    
-    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-    wrapSelectionMove : true,
-    
-    // 줄번호 칼럼 렌더러 출력
-    showRowNumColumn : false,
-    
-};
-
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrap", "xlsx", "Installation Result Log Search");
 }
+
+
+
+
+function fn_assginCTTransfer(){
+    
+    var selectedItems = AUIGrid.getCheckedRowItems (myGridID);
+    
+
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+    
+    var brnchId = selectedItems[0].item.brnchId;
+    
+    if( brnchId =="") {
+    	 Common.alert("<b>[" + selectedItems[i].item.installEntryNo + "] do no has any result[brnch] yet. .</br> ");
+    	return ;
+    }
+    
+    
+    for( var  i in selectedItems){
+         console.log("===>"+ selectedItems[i].item.brnchId);
+         
+         if("ACT" != selectedItems[i].item.code1 ){
+             Common.alert("<b>[" + selectedItems[i].item.installEntryNo + "] do no has any result yet. .</br> Result view is disallowed.");
+             return ;
+         }
+         
+         if(brnchId != selectedItems[i].item.brnchId ){
+             Common.alert("<b>동일한 브랜치 코드만 선택 가능합니다.</b>");
+             return ;
+         }
+    }
+    
+    
+    Common.popupDiv("/services/assignCTTransferPop.do"  , null, null , true , '_assginCTTransferDiv');
+}
+
+
+
+
+
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -201,6 +231,7 @@ function fn_excelDown(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Installation Result List</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onClick="javascript:fn_assginCTTransfer()"><span class="search"></span>AssginCTTransfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -311,7 +342,7 @@ function fn_excelDown(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="javascript:fn_addInstallation(codeid1)" id="addInstallation">Add Installation Result</a></p></li>
+        <li><p class="link_btn"><a href="javascript:fn_addInstallation()" id="addInstallation">Add Installation Result</a></p></li>
        <!--  <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>

@@ -121,65 +121,37 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 	
 
 	@Override
-	public void    insertQuotationInfo(Map<String, Object> params) {
-		 
-		boolean isVerifyGSTEURCertificate = true;
-		boolean verifyGSTZeroRateLocation = true;
+	public EgovMap    insertQuotationInfo(Map<String, Object> params) {
 		
 		
-		if(verifyGSTZeroRateLocation){
+		EgovMap  trnMap = new  EgovMap();
 		
-    		 	params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
-    		    params.put("srvMemPacTaxes", "0");
-    		    params.put("srvMemBSAmt", params.get("srvMemBSAmt"));
-    		    params.put("srvMemBSNetAmt", params.get("srvMemBSAmt"));
-    		    params.put("srvMemBSTaxes", "0");
-			 
-		 }else if(verifyGSTZeroRateLocation){
-			 
-			 	params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
-			    params.put("srvMemPacTaxes", "0");
-			    params.put("srvMemBSAmt", params.get("srvMemBSAmt"));
-			    params.put("srvMemBSNetAmt", params.get("srvMemBSAmt"));
-			    params.put("srvMemBSTaxes", "0");
-			    
-		 }else {
-			 
-			 double   srvMemPacAmt =  0;  
-			 double   srvMemPacNetAmt  =  0;
-			 double   srvMemBSNetAmt =0;
-			 double	  srvMemBSAmt=0;
-			 
-			 
-			 srvMemPacAmt 	  	= CommonUtils.intNvl((String)params.get("srvMemPacAmt"));
-			 srvMemPacNetAmt 	= CommonUtils.intNvl((String)params.get("srvMemPacNetAmt"));
-			 srvMemBSNetAmt  	= CommonUtils.intNvl((String)params.get("srvMemBSNetAmt"));
-			 srvMemBSAmt			= CommonUtils.intNvl((String)params.get("srvMemBSAmt"));
-			 
-			 srvMemPacNetAmt  = Math.round((double)(srvMemPacAmt  * 100 / 106 ));
-			 params.put("srvMemPacNetAmt", srvMemPacNetAmt);
-			 params.put("srvMemPacTaxes", srvMemPacNetAmt - srvMemPacNetAmt);
-			 
-			 srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 ));
-			 params.put("srvMemBSNetAmt",srvMemBSNetAmt );
-			 params.put("srvMemBSTaxes",srvMemBSAmt - srvMemBSNetAmt );
-		 }
+		String taxCode ="";
 		
-		
-		EgovMap   seqMap = membershipRentalQuotationMapper.getSAL0093D_SEQ (params);
+		EgovMap   docMap = membershipRentalQuotationMapper.getSAL0083D_DocNo (params);
+		EgovMap   seqMap = membershipRentalQuotationMapper.getSAL0083D_SEQ (params);
 		
 		logger.debug("seqMap =============>" +seqMap.toString());
+		logger.debug("docMap =============>" +docMap.toString());
+		
 		
 		String  SAL0093D_SEQ = String.valueOf(seqMap.get("seq"));
-		
+		String docNo = String.valueOf(docMap.get("docno"));
+		   
 		if("".equals(SAL0093D_SEQ)){
-			throw new ApplicationException(AppConstants.FAIL, "can't  get SAL0095d_SEQ !!");
+			throw new ApplicationException(AppConstants.FAIL, "can't  get SAL0093D_SEQ !!");
 		}
 		
+		logger.debug("params : {}", params.toString());
 		logger.debug("SAL0093D_SEQ =============>");
 		logger.debug("SAL0093D_SEQ : {}", SAL0093D_SEQ);
+		logger.debug("docNo : {}", docNo);
+
 		
-		params.put("SAL0093D_SEQ" , SAL0093D_SEQ);
+		params.put("qotatId" , SAL0093D_SEQ);
+		params.put("qotatRefNo" , docNo);
+		
+		   
 		
 		//1. insert 
 		membershipRentalQuotationMapper.insertQuotationInfo(params);
@@ -187,12 +159,13 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		String isFilter =(String) params.get("isFilterCharge");
 		 
 		 
-		 if("TRUE".equals(isFilter)){
+		 if("true".equals(isFilter)){
+			 
 			 //2. get getMembershipFilterChargeList 프로시져 호출 
 			 //3. 프로시져 result foreach 
 			 
-			 params.put("ORD_ID" , params.get("srvSalesOrderId"));
-			 params.put("PROMO_ID" , params.get("srvPromoId"));
+			 params.put("ORD_ID" , params.get("qotatOrdId"));
+			 params.put("PROMO_ID" , params.get("qotatProductId"));
 			 
 			 membershipRentalQuotationMapper.getFilterCharge(params) ;
 			
@@ -208,39 +181,44 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					 Map rMap  = (Map) list.get(a);
 					 
 					 
-					 eFilterMap.put("SrvMemQuotFilterID", SAL0093D_SEQ);
-					 eFilterMap.put("StkID", rMap.get("filterId"));
+					 eFilterMap.put("qotatId", SAL0093D_SEQ);
+					 eFilterMap.put("qotatItmStkId", rMap.get("filterId"));
+					 eFilterMap.put("qotatItmExpDt", rMap.get("lastChngDt")); 
+					 eFilterMap.put("qotatItmChrg", rMap.get("prc"));
 					 
-					 eFilterMap.put("StkPeriod", rMap.get("lifePriod") );
-					 eFilterMap.put("StkLastChangeDate", rMap.get("lastChngDt")); 
-					 
-					 eFilterMap.put("StkFilterPrice", rMap.get("oriPrc"));
-					 eFilterMap.put("StkChargePrice", rMap.get("prc"));
-					 
-					 if(verifyGSTZeroRateLocation){
-						 
-						 eFilterMap.put("StkNetAmt", rMap.get("prc"));
-						 eFilterMap.put("StkTaxes", rMap.get("0"));
-						 
-					 }else if(verifyGSTZeroRateLocation){
-						 eFilterMap.put("StkNetAmt", rMap.get("prc"));
-						 eFilterMap.put("StkTaxes", rMap.get("0"));
-					 }else {
-						 
-						 double   chargePrice =  CommonUtils.intNvl((String)rMap.get("prc"));
-						 double   stkNetAmt  =  0;
-						 
-						 stkNetAmt = Math.round((float)(chargePrice  * 100 / 106 ));
-						 
-						 eFilterMap.put("StkNetAmt", stkNetAmt);
-						 eFilterMap.put("StkTaxes", chargePrice -stkNetAmt  );
-					 }
+					 if("39".equals(taxCode)){
+    				
+						 		eFilterMap.put("qotatItmAmt", "0");
+						 		eFilterMap.put("qotatItmGstRate", "0");
+						 		eFilterMap.put("ItmGstTaxCodeId", "39");
+						 		
+					}else if ("28".equals(taxCode)){
+						
+								eFilterMap.put("qotatItmAmt", "0");
+								eFilterMap.put("qotatItmGstRate", "0");
+								eFilterMap.put("ItmGstTaxCodeId", "29");
+					}else{
+
+    						 	double   chargePrice =  CommonUtils.intNvl((String)rMap.get("prc"));
+    						 	double   itemAmount  =  CommonUtils.intNvl((String)rMap.get("oriPrc"));
+    						 	double   amt  =Math.round((float)(chargePrice  * 100 / 106 ));
+    						
+    						 	eFilterMap.put("qotatItmChrg", amt);
+    						 	eFilterMap.put("qotatItmTxs", (itemAmount  -amt ));
+    						 	eFilterMap.put("qotatItmGstRate", "6");
+    						 	eFilterMap.put("ItmGstTaxCodeId", "32");
+					}
 					 
 					 membershipRentalQuotationMapper.insertSrvMembershipQuot_Filter(eFilterMap);
 				 }
 			 }
 		 }
 		 
+
+		trnMap.put("qotatId", SAL0093D_SEQ);
+		trnMap.put("qotatRefNo", docNo);
+			
+		 return trnMap ;
 	}
 	
 	
@@ -258,8 +236,8 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 	
 
 	@Override
-	public EgovMap    getSAL0093D_SEQ(Map<String, Object> params) {
-		return  membershipRentalQuotationMapper.getSAL0093D_SEQ(params);
+	public EgovMap    getSAL0083D_SEQ(Map<String, Object> params) {
+		return  membershipRentalQuotationMapper.getSAL0083D_SEQ(params);
 	}
 	
 	

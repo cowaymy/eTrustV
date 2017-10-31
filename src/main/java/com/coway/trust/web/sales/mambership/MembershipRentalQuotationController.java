@@ -261,19 +261,22 @@ public class  MembershipRentalQuotationController {
 		logger.debug("in  mNewQuotationSave ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
+		logger.debug("			saveData		" + (Map)params.get("saveData"));
 		logger.debug("			pram set end  ");  
 		
-		params.put("USER_ID", sessionVO.getUserId());   
+		params.put("qotatCrtUserId", sessionVO.getUserId());   
 		
-		//LinkedHashMap  updateList = (LinkedHashMap)  params.get("update");
-		   
+		Map  pmap = (Map)params.get("saveData");
+		pmap.put("qotatCrtUserId",  sessionVO.getUserId() );
 		
+		     
 		int  rtnValue =  1;
-		//inHouseRepairService.asResultBasic_update(params);  
+		EgovMap   trnMmap =membershipRentalQuotationService.insertQuotationInfo(pmap);  
 		
 		ReturnMessage message = new ReturnMessage();
-		  
-		if(rtnValue >0 ){
+		
+		if(! trnMmap.get("qotatId").equals(""))  {
+			message.setData(trnMmap);
 			message.setCode(AppConstants.SUCCESS);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		}else{
