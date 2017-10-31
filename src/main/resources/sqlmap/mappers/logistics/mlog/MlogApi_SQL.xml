@@ -230,10 +230,11 @@
 	</select>
 
 	<select id="StockReceiveList" parameterType="Map" resultType="egovMap">
-		SELECT L47.REQST_NO SMO_NO,
+		SELECT 
+		L47.REQST_NO,
 		L54.DELVRY_GI_DT GI_DATE,
 		L54.DELVRY_GR_DT GR_DATE,
-		L55.DELVRY_NO DELYNO,
+		L55.DELVRY_NO SMO_NO,
 		DBMS_LOB.SUBSTR (S28C.WH_LOC_DESC, 4000) GI_LOCATION_NAME,
 		DBMS_LOB.SUBSTR (S28Q.WH_LOC_CODE, 4000) LOCATION_CODE,
 		S28C.WH_LOC_CODE GI_LOCATION_CODE,
@@ -1081,6 +1082,11 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
       GROUP BY L54.DELVRY_NO 
     </select>
 	
-	
+	<select id="getUserLocId" parameterType="Map" resultType="int">
+	SELECT 
+	           WH_LOC_ID 
+	    FROM SYS0028M
+		  WHERE WH_LOC_CODE=#{userId}
+	</select>
 	
 </mapper>
