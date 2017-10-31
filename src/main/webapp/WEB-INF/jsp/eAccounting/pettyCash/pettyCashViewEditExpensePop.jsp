@@ -289,13 +289,9 @@ function fn_tempSave() {
 <tr>
     <th scope="row">Expense Type</th>
     <td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-    <th scope="row">Invoice Type</th>
-    <td>
-    <select class="w100p" id="invcType" name="invcType" onchange="javascript:fn_ActionInvcTypeS()" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>>
-        <option value="F">Full Tax invoice</option>
-        <option value="S">Simplified Tax invoice</option>
-    </select>
-    </td>
+    <th scope="row">Tax Code</th>
+    <%-- <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn" id="taxCode"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
+    <td><select class="" id="taxCode" name="taxCode" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>></select></td>
 </tr>
 <tr>
     <th scope="row">GL Account</th>
@@ -304,15 +300,19 @@ function fn_tempSave() {
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="budgetCodeName" name="budgetCodeName" /></td>
 </tr>
 <tr>
-    <th scope="row">Supplier</th>
+    <th scope="row">Supplier Name</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="sMemAccId" name="sMemAccId" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="sSupplier_search_btn" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
     <th scope="row">GST Registration No</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
-    <th scope="row">Tax Code</th>
-    <%-- <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn" id="taxCode"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
-    <td><select class="" id="taxCode" name="taxCode" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>></select></td>
+    <th scope="row">Invoice Type</th>
+    <td>
+    <select class="w100p" id="invcType" name="invcType" onchange="javascript:fn_ActionInvcTypeS()" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>>
+        <option value="F">Full Tax invoice</option>
+        <option value="S">Simplified Tax invoice</option>
+    </select>
+    </td>
     <th scope="row">Invoice No</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>

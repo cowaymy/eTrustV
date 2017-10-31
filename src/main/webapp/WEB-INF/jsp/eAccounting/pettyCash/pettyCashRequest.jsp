@@ -23,17 +23,17 @@ var pettyCashReqstColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "costCentr",
-    headerText : '<spring:message code="webInvoice.cc" />'
+    headerText : 'Cost Center'
 }, {
     dataField : "costCentrName",
-    headerText : '<spring:message code="webInvoice.ccName" />',
+    headerText : 'Cost Center<br>Name',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
     headerText : 'Custodian'
 }, {
     dataField : "memAccName",
-    headerText : '<spring:message code="approveLine.name" />',
+    headerText : 'Custodian<br>Name',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "cur",
@@ -52,7 +52,7 @@ var pettyCashReqstColumnLayout = [ {
     }
 }, {
     dataField : "reqstAmt",
-    headerText : 'Request<br>Petty Cash',
+    headerText : 'Petty Cash<br>Requested',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
@@ -136,7 +136,7 @@ var pettyCashReqstColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvPrcssDt",
-    headerText : 'Approved<br>Date',
+    headerText : 'Approval<br>Date',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }
@@ -371,7 +371,7 @@ function fn_viewRequestPop(clmNo) {
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>
         <option value="A"><spring:message code="webInvoice.select.approved" /></option>
-        <option value="J"><spring:message code="webInvoice.select.reject" /></option>
+        <option value="J">Rejected</option>
 	</select>
 	</td>
 </tr>

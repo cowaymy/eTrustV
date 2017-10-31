@@ -209,7 +209,7 @@ function fn_saveViewCustodian() {
 <tbody>
 <tr>
 	<th scope="row">Cost Center</th>
-	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" style="width:150px;" id="newCostCenterText" name="costCentrName" value="${custodianInfo.costCentrName}" /><label><input type="checkbox" id="headDeptFlag" name="headDeptFlag" value="Y" disabled="disabled" <c:if test="${custodianInfo.headDeptFlag eq 'Y'}">checked</c:if>/><span>HQ Depart.</span></label></td>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" style="width:150px;" id="newCostCenterText" name="costCentrName" value="${custodianInfo.costCentrName}" /><label><input type="checkbox" id="headDeptFlag" name="headDeptFlag" value="Y" disabled="disabled" <c:if test="${custodianInfo.headDeptFlag eq 'Y'}">checked</c:if>/><span>HQ Petty Cash</span></label></td>
 	<th scope="row">Creator</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${custodianInfo.crtUserId}" /></td>
 </tr>
@@ -222,7 +222,7 @@ function fn_saveViewCustodian() {
 <tr>
 	<th scope="row">Bank</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" name="bankName" value="${custodianInfo.bankName}"/></td>
-	<th scope="row">Bank Account</th>
+	<th scope="row">Bank Account No</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo" value="${custodianInfo.bankAccNo}"/></td>
 </tr>
 <tr>

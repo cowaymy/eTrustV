@@ -102,6 +102,11 @@ $(document).ready(function () {
        }else{
            str = str2[0].substr(0, 11)+"."+str2[1];
        }
+       
+       if(Number(str) > Number($("#appvCashAmt").val().replace(/,/gi, ""))) {
+           Common.alert("Requested amount must be less than approved amount");
+           str = "";
+       }
        str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
        
        

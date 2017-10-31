@@ -61,14 +61,14 @@ var invoAprveGridColLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "invcType",
-    headerText : '<spring:message code="invoiceApprove.type" />',
+    headerText : 'Invoice Type',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
-    headerText : '<spring:message code="invoiceApprove.supBrEnp" />'
+    headerText : 'Member'
 }, {
     dataField : "memAccName",
-    headerText : '<spring:message code="invoiceApprove.supBrEnpName" />',
+    headerText : 'Member<br>Name',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvAmt",
@@ -421,7 +421,7 @@ function fn_appvRejctSubmit(type, rejctResn) {
 	<td><input type="text" title="" placeholder="" class="" id="createUser" name="createUser" /><a href="#" class="search_btn" id="search_createUser_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="invoiceApprove.suppliEmploy" /></th>
+	<th scope="row">Member</th>
 	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCenterText" /><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>

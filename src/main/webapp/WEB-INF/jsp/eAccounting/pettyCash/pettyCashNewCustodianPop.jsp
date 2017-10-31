@@ -100,7 +100,7 @@ function fn_clearData() {
 <tbody>
 <tr>
 	<th scope="row">Cost Center</th>
-	<td><input type="text" title="" placeholder="" class="" style="width:150px" id="newCostCenterText" name="costCentrName"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a><label><input type="checkbox" id="headDeptFlag" name="headDeptFlag" value="Y"/><span>HQ Depart.</span></label></td>
+	<td><input type="text" title="" placeholder="" class="" style="width:150px" id="newCostCenterText" name="costCentrName"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a><label><input type="checkbox" id="headDeptFlag" name="headDeptFlag" value="Y"/><span>HQ Petty Cash</span></label></td>
 	<th scope="row">Creator</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${userId}"/></td>
 </tr>
@@ -113,7 +113,7 @@ function fn_clearData() {
 <tr>
 	<th scope="row">Bank</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" name="bankName"/></td>
-	<th scope="row">Bank Account</th>
+	<th scope="row">Bank Account No</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo"/></td>
 </tr>
 <tr>

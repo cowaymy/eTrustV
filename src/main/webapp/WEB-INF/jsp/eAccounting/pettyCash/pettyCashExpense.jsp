@@ -2,12 +2,6 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <style type="text/css">
-/* 커스텀 행 스타일 */
-.my-row-style {
-    background:#9FC93C;
-    font-weight:bold;
-    color:#22741C;
-}
 /* 커스텀 칼럼 스타일 정의 */
 .aui-grid-user-custom-left {
     text-align:left;
@@ -23,17 +17,17 @@ var pettyCashExpColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "costCentr",
-    headerText : '<spring:message code="webInvoice.cc" />'
+    headerText : 'Cost Center'
 }, {
     dataField : "costCentrName",
-    headerText : '<spring:message code="webInvoice.ccName" />',
+    headerText : 'Cost Center<br>Name',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
     headerText : 'Custodian'
 }, {
     dataField : "memAccName",
-    headerText : '<spring:message code="approveLine.name" />',
+    headerText : 'Custodian<br>Name',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "clmMonth",
@@ -66,7 +60,7 @@ var pettyCashExpColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvPrcssDt",
-    headerText : 'Approved<br>Date',
+    headerText : 'Approval<br>Date',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }
@@ -784,7 +778,7 @@ function fn_expApproveLinePop() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="registration_btn">New Expenses</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="registration_btn">New Expense Claim</a></p></li>
 </ul>
 
 <article class="grid_wrap" id="expenseMgmt_grid_wrap"><!-- grid_wrap start -->

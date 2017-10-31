@@ -22,17 +22,17 @@ var costCentr;
 var memAccId;
 var pettyCashCustdnColumnLayout = [ {
     dataField : "costCentr",
-    headerText : '<spring:message code="webInvoice.cc" />'
+    headerText : 'Cost Center'
 }, {
     dataField : "costCentrName",
-    headerText : '<spring:message code="webInvoice.ccName" />',
+    headerText : 'Cost Center<br>Name',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
     headerText : 'Custodian'
 }, {
     dataField : "memAccName",
-    headerText : '<spring:message code="approveLine.name" />',
+    headerText : 'Custodian<br>Name',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "atchFileGrpId",
@@ -93,7 +93,7 @@ var pettyCashCustdnColumnLayout = [ {
     formatString : "dd/mm/yyyy"
 }, {
     dataField : "updDt",
-    headerText : 'Update Date',
+    headerText : 'Last Update<br>Date',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
@@ -111,7 +111,9 @@ var pettyCashCustdnGridPros = {
     // 페이징 사용       
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20
+    pageRowCount : 20,
+    // 헤더 높이 지정
+    headerHeight : 40
 };
 
 var pettyCashCustdnGridID;
