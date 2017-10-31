@@ -25,6 +25,7 @@ var gridPros = {
         
 };
 
+var keyValueList = [{"code":"", "value":"Account"},{"code":"59", "value":"Other Debtor"}, {"code":"203", "value":"Other Income"}, {"code":"342", "value":"Bank Charges"}];
 
 $(document).ready(function(){
 	
@@ -36,8 +37,6 @@ $(document).ready(function(){
     AUIGrid.bind(masterListGridID, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
     });
-    
-    
 	
 });
 
@@ -138,9 +137,103 @@ var statementdetailPopLayout = [
         editable : false
     }];
 
+var journalPopLayout = [ 
+	{
+	    dataField : "fTrnscDt",
+	    headerText : "Date"
+	}, {
+	    dataField : "fTrnscRef1",
+	    headerText : "Ref 1"
+	}, {
+	    dataField : "fTrnscRef2",
+	    headerText : "Ref 2"
+	}, {
+	    dataField : "fTrnscRef3",
+	    headerText : "Ref 3"
+	}, {
+	    dataField : "fTrnscRef4",
+	    headerText : "Ref 4"
+	}, {
+	    dataField : "fTrnscRef5",
+	    headerText : "Ref 5"
+	}, {
+	    dataField : "fTrnscRef6",
+	    headerText : "Ref 6"
+	}, {
+	    dataField : "fTrnscRem",
+	    headerText : "Mode"
+	}, {
+	    dataField : "",
+	    headerText : "Debit"
+	},{
+	    dataField : "",
+	    headerText : "Credit"
+	},{
+	    dataField : "isMatch",
+	    headerText : "Match"
+	},{
+	    dataField : "remark",
+	    headerText : "Remark",
+	    editable : true
+	},{
+	    dataField : "journalAccount",
+	    headerText : "Account",
+	    labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
+            var retStr = "";
+            for(var i=0,len=keyValueList.length; i<len; i++) {
+                if(keyValueList[i]["code"] == value) {
+                    retStr = keyValueList[i]["value"];
+                    break;
+                }
+            }
+            return retStr;
+        },
+        renderer : {
+            type : "DropDownListRenderer",
+            list : keyValueList, //key-value Object 로 구성된 리스트
+            keyField : "code", // key 에 해당되는 필드명
+            valueField : "value" // value 에 해당되는 필드명
+        }
+	},{
+	    dataField : "fTrnscCrditAmt",
+	    headerText : "Journal Entry",
+	    renderer : {
+            type : "ButtonRenderer",
+            labelText : "Pass",
+            onclick : function(rowIndex, columnIndex, value, item) {
+                //if(item.isMatch == "X"){
+                    fn_updateJournalPassEntry(item.journalAccount, item.remark, item.fTrnscCrditAmt, item.fTrnscDebtAmt, item.fTrnscId);
+                //}else{
+                	
+                //}
+            }
+        }
+	},{
+	    dataField : "",
+	    headerText : "Exclude",
+	    renderer : {
+            type : "ButtonRenderer",
+            labelText : "Exclude",
+            onclick : function(rowIndex, columnIndex, value, item) {
+            	//if(item.isMatch == "X"){
+                	fn_updateJournalExclude(item.remark, item.fTrnscId);
+                //}else{
+                //}
+            }
+        }
+	},{
+        dataField : "fBankJrnlId",
+        headerText : "",
+        visible : false
+    },{
+        dataField : "fTrnscId",
+        headerText : "",
+        visible : false
+    }];
+
     function searchList(){
     	
-    	Common.ajax("GET","/payment/selectJournalMasterList.do",$("#searchForm").serialize(), function(result){
+    	Common.ajax("GET","/payment/selectJournalMasterList.do", $("#searchForm").serialize(), function(result){
     		console.log(result);
     		AUIGrid.setGridData(masterListGridID, result);
     		
@@ -193,24 +286,67 @@ var statementdetailPopLayout = [
                 
                 $('#journal_popup_wrap').show();
                 
-                $('#statementRefNo').text(result.data.masterView.fBankJrnlRefNo);
-                $('#statementStatus').text(result.data.masterView.name);
-                $('#statementAccount').text(result.data.masterView.accDesc);
-                $('#statementRemark').text(result.data.masterView.fBankJrnlRem);
-                $('#statementCreateBy').text(result.data.masterView.userName);
-                $('#statementCreateAt').text(result.data.masterView.fBankJrnlCrtDt);
-                $('#adjsutment').val(result.data.masterView.fBankJrnlAdj);
-                $('#grossTotal').text(result.data.grossTotal);
-                $('#netTotal').text(result.data.grossTotal - result.data.masterView.fBankJrnlAdj);
+                $('#journalRefNo').text(result.data.masterView.fBankJrnlRefNo);
+                $('#journalStatus').text(result.data.masterView.name);
+                $('#journalAccount').text(result.data.masterView.accDesc);
+                $('#journalRemark').text(result.data.masterView.fBankJrnlRem);
+                $('#journalCreateBy').text(result.data.masterView.userName);
+                $('#journalCreateAt').text(result.data.masterView.fBankJrnlCrtDt);
+                $('#journalAdjsutment').val(result.data.masterView.fBankJrnlAdj);
+                $('#journalGrossTotal').text(result.data.grossTotal);
+                $('#journalNetTotal').text(result.data.grossTotal - result.data.masterView.fBankJrnlAdj);
+                $('#fBankJrnlAccId').val(result.data.masterView.fBankJrnlAccId);
                 
                 AUIGrid.destroy(journalEntryPopGridID);
-                journalEntryPopGridID = GridCommon.createAUIGrid("statement_pop_grid_wrap", statementdetailPopLayout,null,gridPros);
+                journalEntryPopGridID = GridCommon.createAUIGrid("journal_pop_grid_wrap", journalPopLayout,null,gridPros);
                 AUIGrid.setGridData(journalEntryPopGridID, result.data.detailList);
             
             });
         }else{
             Common.alert('No Statement selected.');
         }
+    }
+    
+    function fn_updateJournalPassEntry(journalAccount, remark,  fTrnscCrditAmt, fTrnscDebtAmt, fTrnscId){
+    	
+    	//if(remark != ""){
+    		
+    		if(journalAccount != undefined){
+    			
+    			$('#journalEntryAccount').val(journalAccount);
+                $('#remark').val(remark);
+                $('#fTrnscCrditAmt').val(fTrnscCrditAmt);
+                $('#fTrnscDebtAmt').val(fTrnscDebtAmt);
+                $('#fTrnscId').val(fTrnscId);
+                $('#lblRefNo').val($('#journalRefNo').text());
+                
+                Common.ajax("GET","/payment/updJournalPassEntry.do", $("#journalPassForm").serialize(), function(result){
+                    Common.alert(result.message);
+                });
+    			
+    		}else{
+    			Common.alert('* Debtor Account are composulary field .');
+    		}
+    		
+    	//}else{
+    		//Common.alert('* Remark are composulary field .');
+    	//}
+    	
+    }
+    
+    
+    function fn_updateJournalExclude(remark, fTrnscId){
+        
+        //if(remark != ""){
+        	
+        	Common.ajax("GET","/payment/updJournalExclude.do", {"remark" : remark, "fTrnscId" : fTrnscId }, function(result){
+                    Common.alert(result.message);
+            });
+            
+        //}else{
+            //Common.alert('* Remark are composulary field .');
+        //}
+        
     }
     
     function fn_viewPayPopClose(val){
@@ -292,7 +428,9 @@ var statementdetailPopLayout = [
 				    <dt>Link</dt>
 				    <dd>
 				    <ul class="btns">
-				        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+				        <li><p class="link_btn"><a href="/payment/initBankAccountReconciliation.do">Bank Account Reconciliation Report</a></p></li>
+				        <li><p class="link_btn"><a href="/payment/initBranchesCollectionSummary.do">Branches Collection Summary Report</a></p></li>
+				        <li><p class="link_btn"><a href="/payment/initReconciliationStatistic.do">Reconciliation Statistic Report</a></p></li>
 				    </ul>
 				    <ul class="btns">
 				        <li><p class="link_btn type2"><a href="javascript:fn_statementViewPop();">Statement View</a></p></li>
@@ -418,26 +556,26 @@ var statementdetailPopLayout = [
                 <tbody>
                     <tr>
                         <th scope="row">Reference No</th>
-                        <td id="statementRefNo">
+                        <td id="journalRefNo">
                         </td>
                         <th scope="row">Status</th>
-                        <td id="statementStatus">
+                        <td id="journalStatus">
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Account</th>
-                        <td id="statementAccount">
+                        <td id="journalAccount">
                         </td>
                         <th scope="row">Remark</th>
-                        <td id="statementRemark">
+                        <td id="journalRemark">
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Create By</th>
-                        <td id="statementCreateBy">
+                        <td id="journalCreateBy">
                         </td>
                         <th scope="row">Create At</th>
-                        <td id="statementCreateAt">
+                        <td id="journalCreateAt">
                         </td>
                     </tr>
                 </tbody>
@@ -458,14 +596,14 @@ var statementdetailPopLayout = [
                 <tbody>
                     <tr>
                         <th scope="row">Gross Total(RM)</th>
-                        <td id="grossTotal">
+                        <td id="journalGrossTotal">
                         </td>
                         <th scope="row">Adjustment(RM)</th>
                         <td>
-                        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="adjsutment" />
+                        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="journalAdjsutment" />
                         </td>
                         <th scope="row">Net Total(RM)</th>
-                        <td id="netTotal">
+                        <td id="journalNetTotal">
                         </td>
                     </tr>
                 </tbody>
@@ -477,4 +615,13 @@ var statementdetailPopLayout = [
             </article><!-- grid_wrap end -->
     </form>
     </section><!-- search_table end -->
+    <form action="#" method="post" id="journalPassForm" name="journalPassForm">
+        <input type="hidden" name="journalEntryAccount" id="journalAccount">
+        <input type="hidden" name="remark" id="remark">
+        <input type="hidden" name="fTrnscCrditAmt" id="fTrnscCrditAmt">
+        <input type="hidden" name="fTrnscDebtAmt" id="fTrnscDebtAmt">
+        <input type="hidden" name="fTrnscId" id="fTrnscId">
+        <input type="hidden" name="fBankJrnlAccId" id="fBankJrnlAccId">
+        <input type="hidden" name="lblRefNo" id="lblRefNo">
+    </form>
 </div><!-- content end -->
