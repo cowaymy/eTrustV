@@ -73,9 +73,9 @@
 			var reportViewType = ""; //viewType
 
 			//default input setting
-			$($reportForm).append('<input type="text" id="reportFileName" name="reportFileName"  /> ');//report file name		  
-			$($reportForm).append('<input type="text" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
-			$($reportForm).append('<input type="text" id="viewType" name="viewType" /> '); // download report  type
+			$($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name		  
+			$($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
+			$($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
 			var month = Number(cmmDt.substring(0, 2));
 			var year = Number(cmmDt.substring(3));
 			var taskID = month + (year * 12) - 24157; //taskId
@@ -99,10 +99,10 @@
 				reportViewType = "PDF"; //viewType
 
 				//set parameters
-				$($reportForm).append('<input type="text" id="Memcode" name="Memcode" value="" /> ');
-				$($reportForm).append('<input type="text" id="Month" name="Month" value="" /> ');
-				$($reportForm).append('<input type="text" id="TaskID" name="TaskID" value="" /> ');
-				$($reportForm).append('<input type="text" id="Year" name="Year" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="Memcode" name="Memcode" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="Month" name="Month" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="Year" name="Year" value="" /> ');
 
 				$("#reportForm #Memcode").val(salesPersonCd);
 				$("#reportForm #Month").val(month);
@@ -115,7 +115,7 @@
 				reportViewType = "EXCEL"; //viewType
 
 				//set parameters		
-				$($reportForm).append('<input type="text" id="TaskID" name="TaskID" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 				$("#reportForm #TaskID").val(taskID);
 
 			} else if (type == "3") {
@@ -125,8 +125,8 @@
 				reportViewType = "EXCEL"; //viewType
 
 				//set parameters
-				$($reportForm).append('<input type="text" id="CommDate" name="CommDate" value="" /> ');
-		    $($reportForm).append('<input type="text" id="TaskID" name="TaskID" value="" /> ');		
+				$($reportForm).append('<input type="hidden" id="CommDate" name="CommDate" value="" /> ');
+		    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');		
 		   
 		    $("#reportForm #CommDate").val(cmmDt.substring(3)+"-"+cmmDt.substring(0, 2)+"-"+"01");
 	      $("#reportForm #TaskID").val(taskID);
@@ -138,7 +138,7 @@
 				reportViewType = "EXCEL"; //viewType
 
 				//set parameters			
-				$($reportForm).append('<input type="text" id="TaskID" name="TaskID" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 			
 				$("#reportForm #TaskID").val(taskID);
 				
@@ -149,8 +149,8 @@
 				reportViewType = "EXCEL"; //viewType
 
 				//set parameters
-				$($reportForm).append('<input type="text" id="CommDate" name="CommDate" value="" /> ');
-				$($reportForm).append('<input type="text" id="TaskID" name="TaskID" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="CommDate" name="CommDate" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 
 				$("#reportForm #CommDate").val(cmmDt.substring(3)+"-"+cmmDt.substring(0, 2)+"-"+"01");
 				$("#reportForm #TaskID").val(taskID);
@@ -207,7 +207,7 @@
 	<section class="search_table">
 		<!-- search_table start -->
 		<form name="searchForm" id="searchForm" method="post">
-			<input type="text" id="confirmChk" name="confirmChk" value="N" />
+			<input type="hidden" id="confirmChk" name="confirmChk" value="N" />
 			<input type="hidden" id="memType" name="memType" value="1" />
 			<table class="type1">
 				<!-- table start -->
