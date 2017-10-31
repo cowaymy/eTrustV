@@ -78,6 +78,52 @@ public class CommissionReportController {
 	}
 	
 	/**
+	 * Call HP commission report 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/commissionHPReport.do")
+	public String commissionHPReport(@RequestParam Map<String, Object> params, ModelMap model) {
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		
+		model.addAttribute("memberType", CommissionConstants.COMIS_HP_GRCD);
+		model.addAttribute("today", today);
+		model.addAttribute("cmmDt", dt);
+		// 호출될 화면
+		return "commission/commissionHPReport";
+	}
+	
+	/**
+	 * Call CT commission report 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/commissionCTReport.do")
+	public String commissionCTReport(@RequestParam Map<String, Object> params, ModelMap model) {
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		
+		model.addAttribute("memberType", CommissionConstants.COMIS_CT_GRCD);
+		model.addAttribute("today", today);
+		model.addAttribute("cmmDt", dt);
+		// 호출될 화면
+		return "commission/commissionCTReport";
+	}
+	
+	/**
 	 * select member count
 	 *
 	 * @param request
@@ -87,8 +133,7 @@ public class CommissionReportController {
 	 */
 	@RequestMapping(value = "/selectMemberCount", method = RequestMethod.GET)
 	public ResponseEntity<Integer> selectCalculationList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		params.put("memType", CommissionConstants.COMIS_CD_GRCD);
-		
+				
 		// 조회.		
 		int cnt = commissionReportService.selectMemberCount(params);
 
