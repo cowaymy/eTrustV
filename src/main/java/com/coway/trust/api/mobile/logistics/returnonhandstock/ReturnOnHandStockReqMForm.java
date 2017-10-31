@@ -24,17 +24,17 @@ public class ReturnOnHandStockReqMForm {
 	@ApiModelProperty(value = "요청 RDC or CD/CT")
 	private String targetLocation;
 
-	@ApiModelProperty(value = "InventoryReqTransferDetail")
-	private List<ReturnOnHandStockReqDForm> inventoryReqTransferDetail;
+	@ApiModelProperty(value = "returnOnHandStockReqDetail")
+	private List<ReturnOnHandStockReqDForm> returnOnHandStockReqDetail;
 
-	public List<Map<String, Object>> createMaps(ReturnOnHandStockReqMForm inventoryReqTransferMForm) {
+	public List<Map<String, Object>> createMaps(ReturnOnHandStockReqMForm returnOnHandStockReqMForm) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 
-		if (inventoryReqTransferDetail != null && inventoryReqTransferDetail.size() > 0) {
+		if (returnOnHandStockReqDetail != null && returnOnHandStockReqDetail.size() > 0) {
 			Map<String, Object> map;
-			for (ReturnOnHandStockReqDForm dtl : inventoryReqTransferDetail) {
-				map = BeanConverter.toMap(inventoryReqTransferMForm, "inventoryReqTransferDetail");
+			for (ReturnOnHandStockReqDForm dtl : returnOnHandStockReqDetail) {
+				map = BeanConverter.toMap(returnOnHandStockReqMForm, "returnOnHandStockReqDetail");
 				// heartDtails
 				map.put("partsCode", dtl.getPartsCode());
 				map.put("partsId", dtl.getPartsId());
@@ -64,12 +64,12 @@ public class ReturnOnHandStockReqMForm {
 		this.requestDate = requestDate;
 	}
 
-	public List<ReturnOnHandStockReqDForm> getInventoryReqTransferDetail() {
-		return inventoryReqTransferDetail;
+	public List<ReturnOnHandStockReqDForm> getReturnOnHandStockReqDetail() {
+		return returnOnHandStockReqDetail;
 	}
 
-	public void setInventoryReqTransferDetail(List<ReturnOnHandStockReqDForm> inventoryReqTransferDetail) {
-		this.inventoryReqTransferDetail = inventoryReqTransferDetail;
+	public void setReturnOnHandStockReqDetail(List<ReturnOnHandStockReqDForm> returnOnHandStockReqDetail) {
+		this.returnOnHandStockReqDetail = returnOnHandStockReqDetail;
 	}
 
 	public String getTargetLocation() {

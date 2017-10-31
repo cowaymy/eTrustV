@@ -8,7 +8,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "RequestResultMListDto", description = "공통코드 Dto")
+@ApiModel(value = "ReturnOnHandStockMListDto", description = "공통코드 Dto")
 public class ReturnOnHandStockMListDto {
 
 	@ApiModelProperty(value = "SMO no")

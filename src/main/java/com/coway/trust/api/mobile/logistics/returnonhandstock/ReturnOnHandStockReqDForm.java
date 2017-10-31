@@ -3,7 +3,7 @@ package com.coway.trust.api.mobile.logistics.returnonhandstock;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "InventoryReqTransferDForm", description = "InventoryReqTransferDForm")
+@ApiModel(value = "ReturnOnHandStockReqDForm", description = "ReturnOnHandStockReqDForm")
 public class ReturnOnHandStockReqDForm {
 
 	@ApiModelProperty(value = "부품코드")
