@@ -66,6 +66,8 @@ $(document).ready(function () {
         
         if("${pop}" == "pop") {
         	fn_setPopSupplier();
+        } else if("${pop}" == "sPop") {
+        	fn_setPopSubSupplier();
         } else {
         	fn_setSupplier();
         }

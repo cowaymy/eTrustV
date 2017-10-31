@@ -35,15 +35,15 @@ public interface PettyCashService {
 	
 	List<EgovMap> selectTaxCodePettyCashFlag();
 	
-	String selectNextExpClmNo();
-	
 	void insertPettyCashExp(Map<String, Object> params);
 	
-	int selectNextExpClmSeq(String clmNo);
+	List<EgovMap> selectExpenseItems(String clmNo);
 	
-	void insertPettyCashExpItem(Map<String, Object> params);
+	EgovMap selectExpenseInfo(Map<String, Object> params);
 	
-	void updateExpTotAmt(Map<String, Object> params);
+	List<EgovMap> selectAttachList(String atchFileGrpId);
 	
+	void updatePettyCashExp(Map<String, Object> params);
 	
+	List<Object> budgetCheck(Map<String, Object> params);
 }

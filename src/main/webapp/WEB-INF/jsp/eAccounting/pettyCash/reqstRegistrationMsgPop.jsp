@@ -22,7 +22,7 @@ function fn_approveLineSubmit() {
     obj.apprGridList = apprGridList;
     console.log(obj);
     
-    Common.ajax("POST", "/eAccounting/pettyCash/approveLineSubmit.do", obj, function(result) {
+    Common.ajax("POST", "/eAccounting/pettyCash/reqstApproveLineSubmit.do", obj, function(result) {
         console.log(result);
         Common.popupDiv("/eAccounting/pettyCash/reqstCompletedMsgPop.do", null, null, true, "reqstCompletedMsgPop");
         //Common.alert("Your authorization request was successful.");

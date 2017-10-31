@@ -336,7 +336,7 @@ WHERE T1.CLM_NO = #{clmNo}
     WHERE CLM_NO = #{clmNo}       
 </update>
 
-<insert id="insertApproveItems" parameterType="Map">
+<insert id="insertRqstApproveItems" parameterType="Map">
 /* pettyCashMapper.insertApproveItems */
 <!-- CMM0042C_ITEM_SEQ.nextval -->
    INSERT INTO FCM0015D
@@ -397,7 +397,7 @@ WHERE T1.CLM_NO = #{clmNo}
     )
 </insert>
 
-<update id="updateAppvPrcssNo" parameterType="Map">
+<update id="updateRqstAppvPrcssNo" parameterType="Map">
 /* pettyCashMapper.updateAppvPrcssNo */
    UPDATE FCM0012D
    SET APPV_PRCSS_NO = #{appvPrcssNo}
@@ -425,7 +425,7 @@ FROM   (SELECT T1.CLM_NO,
                T1.COST_CENTR_NAME, 
                T1.MEM_ACC_ID, 
                T2.MEM_ACC_NAME,
-               TO_DATE(T1.CLM_MONTH, 'MMYYYY') AS CLM_MONTH, 
+               TO_CHAR(TO_DATE(T1.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
                T3.REQST_DT,
                T1.TOT_AMT,
                Nvl (T3.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
@@ -444,7 +444,7 @@ FROM   (SELECT T1.CLM_NO,
 WHERE  1 = 1
 <if test="clmMonth != null and clmMonth != ''">
 <![CDATA[ 
-AND T.CLM_MONTH = REPLACE(#{clmMonth}, '/', '')
+AND T.CLM_MONTH = #{clmMonth}
 ]]>
 </if>       
 <if test="memAccID != null and memAccID != ''">
@@ -510,7 +510,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{custdnNric}
        ,#{bankCode}
        ,#{bankAccNo}
-       ,#{clmMonth}
+       ,TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
        ,#{allTotAmt}
        ,#{appvPrcssNo}
        ,SYSDATE
@@ -564,16 +564,16 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{supplier}
+       ,#{sMemAccId}
        ,#{invcType}
        ,#{invcNo}
-       ,#{invcDt}
+       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{gstRgistNo}
        ,#{taxCode}
        ,#{gstBeforAmt}
        ,#{gstAmt}
        ,#{totAmt}
-       ,#{fileGroupKey}
+       ,#{atchFileGrpId}
        ,#{expDesc}
        ,SYSDATE
        ,#{userId}
@@ -582,13 +582,210 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
     )
 </insert>
 
-<update id="updateExpTotAmt" parameterType="Map">
-/* pettyCashMapper.updateExpTotAmt */
-    UPDATE FCM0013M 
-    SET TOT_AMT = #{allTotAmt},
-          UPD_DT = SYSDATE,
-          UPD_USER_ID = #{userId} 
-    WHERE CLM_NO = #{clmNo}
+<select id="selectExpenseItems" parameterType="String" resultType="egovMap">
+/* pettyCashMapper.selectExpenseItems */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T3.COST_CENTR,
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T1.SUPPLIER AS S_MEM_ACC_ID, 
+       T1.INVC_TYPE, 
+       ( CASE T1.INVC_TYPE 
+           WHEN 'F' THEN 'Full Tax invoice' 
+           WHEN 'S' THEN 'Simplified Tax invoice' 
+         END )     AS INVC_TYPE_NAME, 
+       T1.INVC_NO, 
+       T1.INVC_DT, 
+       T1.GST_RGIST_NO, 
+       T1.TAX_CODE, 
+       T2.TAX_NAME, 
+       'MYR'       AS CUR, 
+       T1.GST_BEFOR_AMT, 
+       T1.GST_AMT, 
+       T1.TOT_AMT, 
+       T1.ATCH_FILE_GRP_ID, 
+       T1.EXP_DESC, 
+       T3.TOT_AMT  AS ALL_TOT_AMT 
+FROM   FCM0014D T1 
+       LEFT JOIN FCM0007C T2 
+              ON T1.TAX_CODE = T2.TAX_CODE 
+       LEFT JOIN FCM0013M T3 
+              ON T1.CLM_NO = T3.CLM_NO 
+WHERE  T1.CLM_NO = #{clmNo} 
+ORDER  BY T1.CLM_SEQ 
+</select>
+
+<select id="selectExpenseInfo" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T2.COST_CENTR, 
+       T2.COST_CENTR_NAME, 
+       T2.MEM_ACC_ID, 
+       T3.MEM_ACC_NAME,
+       T2.CUSTDN_NRIC, 
+       T2.BANK_CODE, 
+       T3.BANK_NAME, 
+       T2.BANK_ACC_NO, 
+       TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
+       T2.TOT_AMT  AS ALL_TOT_AMT,
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T1.SUPPLIER AS S_MEM_ACC_ID, 
+       T1.INVC_TYPE,
+       T1.INVC_NO, 
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT, 
+       T1.GST_RGIST_NO, 
+       T1.TAX_CODE,
+       'MYR'       AS CUR, 
+       T1.GST_BEFOR_AMT, 
+       T1.GST_AMT, 
+       T1.TOT_AMT, 
+       T1.ATCH_FILE_GRP_ID, 
+       T1.EXP_DESC 
+FROM   FCM0014D T1
+       LEFT JOIN FCM0013M T2 
+              ON T1.CLM_NO = T2.CLM_NO 
+       LEFT JOIN FCM0006M T3 
+              ON T2.MEM_ACC_ID = T3.MEM_ACC_ID 
+WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+</select>
+
+<select id="selectAttachList" parameterType="String" resultType="egovMap">
+/* pettyCashMapper.selectAttachList */
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T1.ATCH_FILE_ID         
+</select>
+
+<update id="updatePettyCashExp" parameterType="Map">
+/* pettyCashMapper.updatePettyCashExp */
+   UPDATE FCM0013M
+   SET COST_CENTR = #{costCentr}
+       ,COST_CENTR_NAME = #{costCentrName}
+       ,MEM_ACC_ID = #{memAccId}
+       ,CUSTDN_NRIC = #{custdnNric}
+       ,BANK_CODE = #{bankCode}
+       ,BANK_ACC_NO = #{bankAccNo}
+       ,CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,TOT_AMT = #{allTotAmt}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
+</update>
+
+<update id="updatePettyCashExpItem" parameterType="Map">
+/* pettyCashMapper.updatePettyCashExpItem */
+   UPDATE FCM0014D
+   SET EXP_TYPE = #{expType}
+       ,EXP_TYPE_NAME = #{expTypeName}
+       ,GL_ACC_CODE = #{glAccCode}
+       ,GL_ACC_CODE_NAME = #{glAccCodeName}
+       ,BUDGET_CODE = #{budgetCode}
+       ,BUDGET_CODE_NAME = #{budgetCodeName}
+       ,SUPPLIER = #{sMemAccId}
+       ,INVC_TYPE = #{invcType}
+       ,INVC_NO = #{invcNo}
+       ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,GST_RGIST_NO = #{gstRgistNo}
+       ,TAX_CODE = #{taxCode}
+       ,GST_BEFOR_AMT = #{gstBeforAmt}
+       ,GST_AMT = #{gstAmt}
+       ,TOT_AMT = #{totAmt}
+       ,EXP_DESC = #{expDesc}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}     
+    AND CLM_SEQ = #{clmSeq}  
+</update>
+
+<select id="budgetCheck" parameterType="Map" resultType="String">
+/* pettyCashMapper.budgetCheck */
+    SELECT FN_GET_BUDGET_AMT(#{year}, #{month}, #{costCentr}, #{budgetCode}, #{glAccCode}, #{gstBeforAmt}) FROM DUAL
+</select>
+
+<insert id="insertExpApproveItems" parameterType="Map">
+/* pettyCashMapper.insertApproveItems */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0015D
+   (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{appvItmSeq}
+       ,#{invcNo}
+       ,SYSDATE
+       ,#{invcType}
+       ,#{memAccId}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{taxCode}
+       ,#{reqstAmt}
+       ,0
+       ,#{appvCashAmt}
+       ,#{expDesc}
+       ,#{atchFileGrpId}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<update id="updateExpAppvPrcssNo" parameterType="Map">
+/* pettyCashMapper.updateAppvPrcssNo */
+   UPDATE FCM0012D
+   SET APPV_PRCSS_NO = #{appvPrcssNo}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
 </update>
 
 </mapper>

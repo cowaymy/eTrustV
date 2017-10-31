@@ -1,5 +1,6 @@
 package com.coway.trust.biz.eAccounting.pettyCash.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,11 +137,11 @@ public class PettyCashServiceImpl implements PettyCashService {
 		params.put("appvItmSeq", appvItmSeq);
 		LOGGER.debug("insertApproveItems =====================================>>  " + params);
 		// TODO appvLineItemsTable Insert
-		pettyCashMapper.insertApproveItems(params);
+		pettyCashMapper.insertRqstApproveItems(params);
 		
 		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
 		// TODO pettyCashReqst table update
-		pettyCashMapper.updateAppvPrcssNo(params);
+		pettyCashMapper.updateRqstAppvPrcssNo(params);
 	}
 
 	@Override
@@ -156,33 +157,125 @@ public class PettyCashServiceImpl implements PettyCashService {
 	}
 
 	@Override
-	public String selectNextExpClmNo() {
-		// TODO Auto-generated method stub
-		return pettyCashMapper.selectNextExpClmNo();
-	}
-
-	@Override
 	public void insertPettyCashExp(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		pettyCashMapper.insertPettyCashExp(params);
-	}
-	
-	@Override
-	public int selectNextExpClmSeq(String clmNo) {
-		// TODO Auto-generated method stub
-		return pettyCashMapper.selectNextExpClmSeq(clmNo);
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<Object> gridDataList = (List<Object>) params.get("gridDataList");
+		
+		Map<String, Object> masterData = (Map<String, Object>) gridDataList.get(0);
+		
+		String clmNo = pettyCashMapper.selectNextExpClmNo();
+		params.put("clmNo", clmNo);
+		
+		masterData.put("clmNo", clmNo);
+		masterData.put("allTotAmt", params.get("allTotAmt"));
+		masterData.put("userId", params.get("userId"));
+		masterData.put("userName", params.get("userName"));
+		
+		LOGGER.debug("masterData =====================================>>  " + masterData);
+		pettyCashMapper.insertPettyCashExp(masterData);
+		
+		for(int i = 0; i < gridDataList.size(); i++) {
+			Map<String, Object> item = (Map<String, Object>) gridDataList.get(i);
+			int clmSeq = pettyCashMapper.selectNextExpClmSeq(clmNo);
+			item.put("clmNo", clmNo);
+			item.put("clmSeq", clmSeq);
+			item.put("userId", params.get("userId"));
+			item.put("userName", params.get("userName"));
+			LOGGER.debug("item =====================================>>  " + item);
+			pettyCashMapper.insertPettyCashExpItem(item);
+		}
 	}
 
 	@Override
-	public void insertPettyCashExpItem(Map<String, Object> params) {
+	public List<EgovMap> selectExpenseItems(String clmNo) {
 		// TODO Auto-generated method stub
-		pettyCashMapper.insertPettyCashExpItem(params);
+		return pettyCashMapper.selectExpenseItems(clmNo);
 	}
 
 	@Override
-	public void updateExpTotAmt(Map<String, Object> params) {
+	public EgovMap selectExpenseInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		pettyCashMapper.updateExpTotAmt(params);
+		return pettyCashMapper.selectExpenseInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectAttachList(String atchFileGrpId) {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectAttachList(atchFileGrpId);
+	}
+
+	@Override
+	public void updatePettyCashExp(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		// TODO editGridDataList GET
+		List<Object> addList = (List<Object>) params.get("add"); // 추가 리스트 얻기
+		List<Object> updateList = (List<Object>) params.get("update"); // 수정 리스트 얻기
+		
+		if (addList.size() > 0) {
+			Map hm = null;
+			// biz처리
+			for (Object map : addList) {
+				hm = (HashMap<String, Object>) map;
+				hm.put("clmNo", params.get("clmNo"));
+				int clmSeq = pettyCashMapper.selectNextExpClmSeq((String) params.get("clmNo"));
+				hm.put("clmSeq", clmSeq);
+				hm.put("userId", params.get("userId"));
+				hm.put("userName", params.get("userName"));
+				LOGGER.debug("insertPettyCashExpItem =====================================>>  " + hm);
+				pettyCashMapper.insertPettyCashExpItem(hm);
+			}
+		}
+		if (updateList.size() > 0) {
+			Map hm = null;
+			hm = (Map<String, Object>) updateList.get(0);
+			hm.put("clmNo", params.get("clmNo"));
+			hm.put("allTotAmt", params.get("allTotAmt"));
+			hm.put("userId", params.get("userId"));
+			hm.put("userName", params.get("userName"));
+			LOGGER.debug("updatePettyCashExp =====================================>>  " + hm);
+			pettyCashMapper.updatePettyCashExp(hm);
+			for (Object map : updateList) {
+				hm = (HashMap<String, Object>) map;
+				hm.put("clmNo", params.get("clmNo"));
+				hm.put("userId", params.get("userId"));
+				hm.put("userName", params.get("userName"));
+				LOGGER.debug("updatePettyCashExpItem =====================================>>  " + hm);
+				// TODO biz처리 (clmNo, clmSeq 값으로 update 처리)
+				pettyCashMapper.updatePettyCashExpItem(hm);
+			}
+		}
+
+		
+		LOGGER.info("추가 : {}", addList.toString());
+		LOGGER.info("수정 : {}", updateList.toString());
+	}
+
+	@Override
+	public List<Object> budgetCheck(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		List<Object> list = new ArrayList<Object>();
+		List<Object> newGridList = (List<Object>) params.get("newGridList");
+		for(int i = 0; i < newGridList.size(); i++) {
+			Map<String, Object> data = (Map<String, Object>) newGridList.get(i);
+			data.put("year", params.get("year"));
+			data.put("month", params.get("month"));
+			data.put("costCentr", params.get("costCentr"));
+			LOGGER.debug("data =====================================>>  " + data);
+			String yN = pettyCashMapper.budgetCheck(data);
+			LOGGER.debug("yN =====================================>>  " + yN);
+			if("N".equals(yN)) {
+				list.add(data.get("clmSeq"));
+			}
+		}
+		
+		LOGGER.debug("list =====================================>>  " + list);
+		LOGGER.debug("list.size() =====================================>>  " + list.size());
+		
+		return list;
 	}
 	
 	

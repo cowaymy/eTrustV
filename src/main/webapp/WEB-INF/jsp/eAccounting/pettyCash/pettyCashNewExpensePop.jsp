@@ -3,10 +3,10 @@
 
 <style type="text/css">
 /* 커스텀 행 스타일 */
-.my-row-style {
-    background:#9FC93C;
+.my-cell-style {
+    background:#FF0000;
+    color:#005500;
     font-weight:bold;
-    color:#22741C;
 }
 /* 커스텀 칼럼 스타일 정의 */
 .aui-grid-user-custom-left {
@@ -19,8 +19,39 @@
 </style>
 <script type="text/javascript">
 var clmNo = "";
+var clmSeq = 0;
+var atchFileGrpId;
+var attachList;
 var callType = "${callType}";
+var selectRowIdx;
+//file action list
+var update = new Array();
+var remove = new Array();
 var newGridColumnLayout = [ {
+    dataField : "clmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "costCentr",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "costCentrName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "memAccId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "custdnNric",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "bankCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "bankAccNo",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "clmMonth",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "invcDt",
     headerText : 'Date',
     dataType : "date",
@@ -31,43 +62,34 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "expTypeName",
     headerText : 'Expense<br>Type',
-    style : "aui-grid-user-custom-left",
-    editable : false,
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "glAccCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "glAccCodeName",
     headerText : 'GL<br>Account',
-    style : "aui-grid-user-custom-left",
-    editable : false,
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "budgetCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "budgetCodeName",
     headerText : 'Activity',
-    style : "aui-grid-user-custom-left",
-    editable : false,
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "invcType",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "invcTypeName",
     headerText : 'Invoice<br>Type',
-    style : "aui-grid-user-custom-left",
-    editable : false,
-}, {
-    dataField : "memAccId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "memAccName",
-    headerText : 'Supplier',
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "sMemAccId",
+    headerText : 'Supplier',
+}, {
     dataField : "gstRgistNo",
-    headerText : 'GST<br>Registration',
-    editable : false
+    headerText : 'GST<br>Registration'
 }, {
     dataField : "taxCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -76,29 +98,25 @@ var newGridColumnLayout = [ {
     headerText : '<spring:message code="newWebInvoice.taxCode" />'
 }, {
     dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />',
-    editable : false
+    headerText : '<spring:message code="newWebInvoice.cur" />'
 }, {
     dataField : "gstBeforAmt",
     headerText : 'Amount<br>before GST',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
-    formatString : "#,##0.00",
-    editable : false
+    formatString : "#,##0.00"
 }, {
     dataField : "gstAmt",
     headerText : 'GST',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
-    formatString : "#,##0.00",
-    editable : false
+    formatString : "#,##0.00"
 }, {
     dataField : "totAmt",
     headerText : 'Total<br>Amount',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false,
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.gstBeforAmt + item.gstAmt);
@@ -109,6 +127,9 @@ var newGridColumnLayout = [ {
         }
         return null;
     }
+}, {
+    dataField : "atchFileGrpId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "expDesc",
     headerText : 'Remark',
@@ -126,13 +147,11 @@ var newGridPros = {
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    editable : true,
-    softRemoveRowMode : false,
-    rowIdField : "rowSeq",
     // 헤더 높이 지정
     headerHeight : 40,
     // 그리드가 height 지정( 지정하지 않으면 부모 height 의 100% 할당받음 )
-    height : 175
+    height : 175,
+    rowIdField : "clmSeq"
 };
 
 var newGridID;
@@ -145,10 +164,26 @@ $(document).ready(function () {
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#expenseType_search_btn").click(fn_PopExpenseTypeSearchPop);
-    $("#sSupplier_search_btn").click();
+    $("#sSupplier_search_btn").click(fn_popSubSupplierSearchPop);
     $("#clear_btn").click(fn_clearData);
     $("#add_btn").click(fn_addRow);
-    $("#request_btn").click(fn_approveLinePop);
+    $("#tempSave_btn").click(fn_tempSave);
+    $("#request_btn").click(fn_expApproveLinePop);
+    
+    AUIGrid.bind(newGridID, "cellDoubleClick", function( event ) 
+            {
+                console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                console.log("CellDoubleClick clmNo : " + event.item.clmNo + " CellDoubleClick clmSeq : " + event.item.clmSeq);
+                // TODO pettyCash Expense Info GET
+                if(clmNo != null && clmNo != "") {
+                	selectRowIdx = event.rowIndex;
+                	clmSeq = event.item.clmSeq;
+                	atchFileGrpId = event.item.atchFileGrpId;
+                	fn_selectExpenseInfo();
+                } else {
+                	Common.alert("You must save it before you can edit it.");
+                }
+            });
     
     CommonCombo.make("taxCode", "/eAccounting/pettyCash/selectTaxCodePettyCashFlag.do", null, "", {
         id: "taxCode",
@@ -163,6 +198,10 @@ $(document).ready(function () {
 /* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
+}
+
+function fn_tempSave() {
+	fn_insertPettyCashExp(callType);
 }
 </script>
 
@@ -220,7 +259,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </tr>
 <tr>
     <th scope="row">Claim Month</th>
-    <td colspan="3"><input type="text" title="Reference Month" placeholder="MM/YYYY" class="j_date2 w100p" id="clmMonth" name="clmMonth"/></td>
+    <td colspan="3"><input type="text" title="Reference Month" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -257,7 +296,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </tr>
 <tr>
     <th scope="row">Supplier</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="supplier" name="supplier"/><a href="#" class="search_btn" id="sSupplier_search_btn" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="sMemAccId" name="sMemAccId"/><a href="#" class="search_btn" id="sSupplier_search_btn" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">GST Registration No</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo"/></td>
 </tr>
@@ -282,7 +321,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </tr>
 <tr>
     <th scope="row">Attachment</th>
-    <td colspan="3">
+    <td colspan="3" id="attachTd">
     <div class="auto_file2 auto_file3"><!-- auto_file start -->
     <input type="file" title="file add" />
     </div><!-- auto_file end -->

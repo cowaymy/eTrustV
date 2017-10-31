@@ -19,6 +19,9 @@
 </style>
 <script type="text/javascript">
 var pettyCashExpColumnLayout = [ {
+    dataField : "clmNo",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "costCentr",
     headerText : '<spring:message code="webInvoice.cc" />'
 }, {
@@ -39,7 +42,7 @@ var pettyCashExpColumnLayout = [ {
     formatString : "mm/yyyy"
 }, {
     dataField : "clmNo",
-    headerText : 'Claim No',
+    headerText : 'Claim No'
 }, {
     dataField : "reqstDt",
     headerText : 'Request<br>Date',
@@ -47,7 +50,7 @@ var pettyCashExpColumnLayout = [ {
     formatString : "dd/mm/yyyy"
 }, {
     dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />',
+    headerText : '<spring:message code="newWebInvoice.cur" />'
 }, {
     dataField : "totAmt",
     headerText : 'Amount',
@@ -93,7 +96,7 @@ $(document).ready(function () {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + event.item.clmNo);
                 
-                fn_viewRequestPop(event.item.clmNo);
+                fn_viewExpensePop(event.item.clmNo);
             });
     
     $("#appvPrcssStus").multipleSelect("checkAll");
@@ -146,82 +149,82 @@ $("#amt :text").keydown(function (event) {
   });
    
     $("#form_newExpense :text").change(function(){
-    	var id = $(this).attr("id");
-    	console.log(id);
-    	if(id == "gstBeforAmt" || id == "gstAmt") {
-    		var str =""+ Math.floor($(this).val() * 100)/100;
-    	       
-    	       var str2 = str.split(".");
-    	      
-    	       if(str2.length == 1){
-    	           str2[1] = "00";
-    	       }
-    	       
-    	       if(str2[0].length > 11){
-    	           Common.alert("The amount can only be 13 digits, including 2 decimal point.");
-    	           str = "";
-    	       }else{
-    	           str = str2[0].substr(0, 11)+"."+str2[1];
-    	       }
-    	       str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-    	       
-    	       
-    	       $(this).val(str);
-    	       
-    	       var totAmt = 0;
-    	       $.each($("#amt :text"), function(i, obj) {
-    	           if(obj.value != null && obj.value != ""){
-    	               console.log(i);
-    	               console.log(obj.value);
-    	               totAmt += Number(obj.value.replace(/,/gi, ""));
-    	               console.log(obj.value.replace(/,/gi, ""));
-    	           }
-    	       });
-    	       console.log(totAmt);
-    	       totAmt = "" + totAmt;
-    	       $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-    	       console.log(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-    	} else if(id == "clmMonth") {
-    		var clmMonth = $(this).val();
-    		console.log(clmMonth);
-    		var month = clmMonth.substring(0, 2);
-    		var year = clmMonth.substring(3);
-    		console.log("year : " + year + " month : " + month);
-    		clmMonth = year + month;
-    		
-    		var now = new Date;
-    		var mm = now.getMonth() + 1;
-    	    var yyyy = now.getFullYear();
-    	    if(mm < 10){
-    	        mm = "0" + mm
-    	    }
-    	    now = yyyy + "" + mm;
-    		console.log("yyyy : " + yyyy + " mm : " + mm);
-    	    
-    		console.log(clmMonth);
-    		console.log(now);
-    	    if(Number(clmMonth) > Number(now)) {
-    	    	Common.alert("Only past dates can be selected.");
-    	    	$(this).val(mm + "/" + yyyy);
-    	    }
-    	}
+        var id = $(this).attr("id");
+        console.log(id);
+        if(id == "gstBeforAmt" || id == "gstAmt") {
+            var str =""+ Math.floor($(this).val() * 100)/100;
+               
+               var str2 = str.split(".");
+              
+               if(str2.length == 1){
+                   str2[1] = "00";
+               }
+               
+               if(str2[0].length > 11){
+                   Common.alert("The amount can only be 13 digits, including 2 decimal point.");
+                   str = "";
+               }else{
+                   str = str2[0].substr(0, 11)+"."+str2[1];
+               }
+               str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+               
+               
+               $(this).val(str);
+               
+               var totAmt = 0;
+               $.each($("#amt :text"), function(i, obj) {
+                   if(obj.value != null && obj.value != ""){
+                       console.log(i);
+                       console.log(obj.value);
+                       totAmt += Number(obj.value.replace(/,/gi, ""));
+                       console.log(obj.value.replace(/,/gi, ""));
+                   }
+               });
+               console.log(totAmt);
+               totAmt = "" + totAmt;
+               $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+               console.log(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+        } else if(id == "newClmMonth") {
+            var clmMonth = $(this).val();
+            console.log(clmMonth);
+            var month = clmMonth.substring(0, 2);
+            var year = clmMonth.substring(3);
+            console.log("year : " + year + " month : " + month);
+            clmMonth = year + month;
+            
+            var now = new Date;
+            var mm = now.getMonth() + 1;
+            var yyyy = now.getFullYear();
+            if(mm < 10){
+                mm = "0" + mm
+            }
+            now = yyyy + "" + mm;
+            console.log("yyyy : " + yyyy + " mm : " + mm);
+            
+            console.log(clmMonth);
+            console.log(now);
+            if(Number(clmMonth) > Number(now)) {
+                Common.alert("Only past dates can be selected.");
+                $(this).val(mm + "/" + yyyy);
+            }
+        }
    }); 
 }
 
 function fn_ActionInvcTypeS() {
-	var invcType = $("#invcType").val();
-	console.log(invcType);
-	if(invcType == "S") {
-		$("#supplier").removeAttr("class");
-		$("#sSupplier_search_btn").show();
-		$("#gstRgistNo").attr("class", "readonly w100p");
-		$("#gstRgistNo").attr("readonly", "readonly");
-	} else {
-		$("#supplier").attr("class", "w100p");
+    var invcType = $("#invcType").val();
+    console.log(invcType);
+    if(invcType == "S") {
+        $("#sMemAccId").removeAttr("class");
+        $("#sSupplier_search_btn").show();
+        $("#gstRgistNo").attr("class", "readonly w100p");
+        $("#gstRgistNo").attr("readonly", "readonly");
+    } else {
+        $("#sMemAccId").attr("class", "w100p");
         $("#sSupplier_search_btn").hide();
         $("#gstRgistNo").attr("class", "w100p");
         $("#gstRgistNo").removeAttr("readonly");
-	}
+    }
 }
 
 function fn_supplierSearchPop() {
@@ -234,6 +237,10 @@ function fn_costCenterSearchPop() {
 
 function fn_popSupplierSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
+}
+
+function fn_popSubSupplierSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"sPop"}, null, true, "supplierSearchPop");
 }
 
 function fn_popCostCenterSearchPop() {
@@ -266,7 +273,7 @@ function fn_setPopCostCenter() {
         };
         console.log(data);
         Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
-        	console.log("fn_setPopCostCenter Action");
+            console.log("fn_setPopCostCenter Action");
             console.log(result);
             console.log(FormUtil.isEmpty(result.data));
             if(FormUtil.isEmpty(result.data)) {
@@ -294,7 +301,7 @@ function fn_setPopSupplier() {
         };
         console.log(data);
         Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
-        	console.log("fn_setPopSupplier Action");
+            console.log("fn_setPopSupplier Action");
             console.log(result);
             console.log(FormUtil.isEmpty(result.data));
             if(FormUtil.isEmpty(result.data)) {
@@ -307,20 +314,25 @@ function fn_setPopSupplier() {
     }
 }
 
+function fn_setPopSubSupplier() {
+    $("#sMemAccId").val($("#search_memAccId").val());
+    $("#gstRgistNo").val($("#search_gstRgistNo").val());
+}
+
 function fn_setPopExpType() {
-	console.log("Action");
-    $("#budgetCode").val($("#search_budgetCode").val())
-    $("#budgetCodeName").val($("#search_budgetCodeName").val())
+    console.log("Action");
+    $("#budgetCode").val($("#search_budgetCode").val());
+    $("#budgetCodeName").val($("#search_budgetCodeName").val());
     
-    $("#expType").val($("#search_expType").val())
-    $("#expTypeName").val($("#search_expTypeName").val())
+    $("#expType").val($("#search_expType").val());
+    $("#expTypeName").val($("#search_expTypeName").val());
     
-    $("#glAccCode").val($("#search_glAccCode").val())
-    $("#glAccCodeName").val($("#search_glAccCodeName").val())
+    $("#glAccCode").val($("#search_glAccCode").val());
+    $("#glAccCodeName").val($("#search_glAccCodeName").val());
 }
 
 function fn_checkForCustdnNric() {
-	var checkResult = true;
+    var checkResult = true;
     if(FormUtil.isEmpty($("#newCostCenterText").val())) {
         Common.alert("Please enter the Cost Center.");
         checkResult = false;
@@ -334,10 +346,6 @@ function fn_checkForCustdnNric() {
     return checkResult;
 }
 
-function fn_checkClmMonth() {
-	
-}
-
 function fn_checkEmpty() {
     var checkResult = true;
     if(FormUtil.isEmpty($("#newCostCenterText").val())) {
@@ -347,6 +355,16 @@ function fn_checkEmpty() {
     }
     if(FormUtil.isEmpty($("#newMemAccName").val())) {
         Common.alert("Please enter the Custodian.");
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#newClmMonth").val())) {
+        Common.alert("Please enter the Claim Month.");
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#invcDt").val())) {
+        Common.alert("Please enter the Invoice Date.");
         checkResult = false;
         return checkResult;
     }
@@ -397,77 +415,302 @@ function fn_newExpensePop() {
 }
 
 function fn_addRow() {
-	var data = {
-			expType : $("#expType").val()
-			,expTypeName : $("#expTypeName").val()
-			,glAccCode : $("#glAccCode").val()
-			,glAccCodeName : $("#glAccCodeName").val()
-			,budgetCode : $("#budgetCode").val()
-			,budgetCodeName : $("#budgetCodeName").val()
-			,supplier : $("#supplier").val()
-			,invcType : $("#invcType").val()
-			,invcNo : $("#invcNo").val()
-			,invcDt : $("#invcDt").val()
-			,gstRgistNo : $("#gstRgistNo").val()
-			,taxCode : $("#taxCode").val()
-			,gstBeforAmt : $("#gstBeforAmt").val()
-			,gstAmt : $("#gstAmt").val()
-			,totAmt : $("#totAMt").val()
-			,expDesc : $("#expDesc").val()
-	};
-    AUIGrid.addRow(newGridID, data, "last");
+    // 파일 업로드 전에 필수 값 체크
+    // 파일 업로드 후 그룹 아이디 값을 받아서 Add
+    if(fn_checkEmpty()) {
+        var formData = Common.getFormData("form_newExpense");
+        if(clmSeq == 0) {
+        	var data = {
+                    costCentr : $("#newCostCenter").val()
+                    ,costCentrName : $("#newCostCenterText").val()
+                    ,memAccId : $("#newMemAccId").val()
+                    ,custdnNric : $("#custdnNric").val()
+                    ,bankCode : $("#bankCode").val()
+                    ,bankAccNo : $("#bankAccNo").val()
+                    ,clmMonth : $("#newClmMonth").val()
+                    ,expType : $("#expType").val()
+                    ,expTypeName : $("#expTypeName").val()
+                    ,glAccCode : $("#glAccCode").val()
+                    ,glAccCodeName : $("#glAccCodeName").val()
+                    ,budgetCode : $("#budgetCode").val()
+                    ,budgetCodeName : $("#budgetCodeName").val()
+                    ,sMemAccId : $("#sMemAccId").val()
+                    ,invcType : $("#invcType").val()
+                    ,invcTypeName : $("#invcType option:selected").text()
+                    ,invcNo : $("#invcNo").val()
+                    ,invcDt : $("#invcDt").val()
+                    ,gstRgistNo : $("#gstRgistNo").val()
+                    ,taxCode : $("#taxCode").val()
+                    ,taxName : $("#taxCode option:selected").text()
+                    ,cur : "MYR"
+                    ,gstBeforAmt : Number($("#gstBeforAmt").val().replace(/,/gi, ""))
+                    ,gstAmt : Number($("#gstAmt").val().replace(/,/gi, ""))
+                    ,expDesc : $("#expDesc").val()
+            };
+            
+        	Common.ajaxFile("/eAccounting/pettyCash/attachFileUpload.do", formData, function(result) {
+                console.log(result);
+                
+                data.atchFileGrpId = result.data.fileGroupKey
+                console.log(data);
+                AUIGrid.addRow(newGridID, data, "last");
+                
+                fn_getAllTotAmt();
+            });
+        } else {
+        	var data = {
+                    costCentr : $("#newCostCenter").val()
+                    ,costCentrName : $("#newCostCenterText").val()
+                    ,memAccId : $("#newMemAccId").val()
+                    ,custdnNric : $("#custdnNric").val()
+                    ,bankCode : $("#bankCode").val()
+                    ,bankAccNo : $("#bankAccNo").val()
+                    ,clmMonth : $("#newClmMonth").val()
+                    ,expType : $("#expType").val()
+                    ,expTypeName : $("#expTypeName").val()
+                    ,glAccCode : $("#glAccCode").val()
+                    ,glAccCodeName : $("#glAccCodeName").val()
+                    ,budgetCode : $("#budgetCode").val()
+                    ,budgetCodeName : $("#budgetCodeName").val()
+                    ,sMemAccId : $("#sMemAccId").val()
+                    ,invcType : $("#invcType").val()
+                    ,invcTypeName : $("#invcType option:selected").text()
+                    ,invcNo : $("#invcNo").val()
+                    ,invcDt : $("#invcDt").val()
+                    ,gstRgistNo : $("#gstRgistNo").val()
+                    ,taxCode : $("#taxCode").val()
+                    ,taxName : $("#taxCode option:selected").text()
+                    ,cur : "MYR"
+                    ,gstBeforAmt : Number($("#gstBeforAmt").val().replace(/,/gi, ""))
+                    ,gstAmt : Number($("#gstAmt").val().replace(/,/gi, ""))
+                    ,expDesc : $("#expDesc").val()
+            };
+            
+            $("#attachTd").html("");
+            $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
+            
+        	formData.append("atchFileGrpId", atchFileGrpId);
+        	formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+            console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        	Common.ajaxFile("/eAccounting/pettyCash/attachFileUpdate.do", formData, function(result) {
+                console.log(result);
+                
+                console.log(data);
+                AUIGrid.updateRow(newGridID, data, selectRowIdx);
+                
+                fn_getAllTotAmt();
+                
+                clmSeq = 0;
+            });
+        }
+        
+        fn_clearData();
+        fn_ActionInvcTypeS();
+    }
 }
 
-function fn_insertPettyCashExp() {
-	if(fn_checkEmpty()){
-        var formData = Common.getFormData("form_newExpense");
-        var obj = $("#form_newExpense").serializeJSON();
-        $.each(obj, function(key, value) {
-            if(key == "custdnNric") {
-                formData.append(key, value.replace(/\-/gi, ''));
-                console.log(value.replace(/\-/gi, ''));
-            } else if(key == "gstBeforAmt") {
-                formData.append(key, value.replace(/,/gi, ''));
-                console.log(value.replace(/,/gi, ''));
-            } else if(key == "gstAmt"){
-                formData.append(key, value.replace(/,/gi, ''));
-                console.log(value.replace(/,/gi, ''));
-            } else if(key == "totAmt") {
-            	formData.append(key, value.replace(/,/gi, ''));
-                console.log(value.replace(/,/gi, ''));
-            } else {
-            	formData.append(key, value);
-            }
-        });
-        // TODO allTotAmt GET
-        
-        Common.ajaxFile("/eAccounting/pettyCash/insertPettyCashExp.do", formData, function(result) {
+function fn_getAllTotAmt() {
+	// allTotAmt GET, SET
+    var allTotAmt = 0.00;
+    var totAmtList = AUIGrid.getColumnValues (newGridID, "totAmt", true);
+    console.log(totAmtList.length);
+    for(var i = 0; i < totAmtList.length; i++) {
+        allTotAmt += totAmtList[i];
+    }
+    allTotAmt += "";
+    console.log(allTotAmt);
+    $("#allTotAmt_text").text(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+}
+
+function fn_insertPettyCashExp(st) {
+    // row의 수가 0개 이상일때만 insert
+    var gridDataList = AUIGrid.getOrgGridData(newGridID);
+    if(gridDataList.length > 0){
+        var data = {
+                gridDataList : gridDataList
+                ,allTotAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
+        }
+        console.log(data);
+        Common.ajax("POST", "/eAccounting/pettyCash/insertPettyCashExp.do", data, function(result) {
             console.log(result);
-            // tempSave가 아닌 바로 submit인 경우 대비
             clmNo = result.data.clmNo;
-            var allTotAmt = "" + result.data.allTotAmt;
-            $("#allTotAmt_text").text(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+            fn_selectExpenseItemList();
+            if(st == "new"){
+                Common.alert("Temporary save succeeded.");
+                $("#newExpensePop").remove();
+            }
             fn_selectExpenseList();
         });
+    } else {
+        Common.alert("There is no data to save. Please add.");
     }
 }
 
-function fn_approveLinePop() {
-    var checkResult = fn_checkEmpty();
-    
-    if(!checkResult){
-        return false;
+function fn_selectExpenseItemList() {
+    var obj = {
+            clmNo : clmNo
+    };
+    Common.ajax("GET", "/eAccounting/pettyCash/selectExpenseItemList.do", obj, function(result) {
+        console.log(result);
+        AUIGrid.setGridData(newGridID, result);
+    });
+}
+
+function fn_selectExpenseInfo() {
+    var obj = {
+            clmNo : clmNo
+            ,clmSeq : clmSeq
+    };
+    Common.ajax("GET", "/eAccounting/pettyCash/selectExpenseInfo.do", obj, function(result) {
+        console.log(result);
+        $("#newCostCenter").val(result.costCentr);
+        $("#newCostCenterText").val(result.costCentrName);
+        $("#newMemAccId").val(result.memAccId);
+        $("#newMemAccName").val(result.memAccName);
+        $("#custdnNric").val(result.custdnNric);
+        $("#bankCode").val(result.bankCode);
+        $("#bankName").val(result.bankName);
+        $("#bankAccNo").val(result.bankAccNo);
+        $("#newClmMonth").val(result.clmMonth);
+        $("#expType").val(result.expType);
+        $("#expTypeName").val(result.expTypeName);
+        $("#glAccCode").val(result.glAccCode);
+        $("#glAccCodeName").val(result.glAccCodeName);
+        $("#budgetCode").val(result.budgetCode);
+        $("#budgetCodeName").val(result.budgetCodeName);
+        $("#sMemAccId").val(result.sMemAccId);
+        $("#invcType").val(result.invcType);
+        fn_ActionInvcTypeS();
+        $("#invcNo").val(result.invcNo);
+        $("#invcDt").val(result.invcDt);
+        $("#gstRgistNo").val(result.gstRgistNo);
+        $("#taxCode").val(result.taxCode);
+        var gstBeforAmt = "" + result.gstBeforAmt;
+        $("#gstBeforAmt").val(gstBeforAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+        var gstAmt = "" + result.gstAmt;
+        $("#gstAmt").val(gstAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+        var totAmt = "" + result.totAmt;
+        $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+        $("#expDesc").val(result.expDesc);
+        
+        // TODO attachFile
+        attachList = result.attachList;
+        console.log(attachList);
+        console.log(attachList.length);
+        if(attachList.length > 0) {
+        	$("#attachTd").html("");
+        	for(var i = 0; i < attachList.length; i++) {
+        		$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span></div>");
+            }
+        	
+        	// 파일 다운
+            $(".input_text").dblclick(function() {
+                var oriFileName = $(this).val();
+                var fileGrpId;
+                var fileId;
+                for(var i = 0; i < attachList.length; i++) {
+                    if(attachList[i].atchFileName == oriFileName) {
+                        fileGrpId = attachList[i].atchFileGrpId;
+                        fileId = attachList[i].atchFileId;
+                    }
+                }
+                fn_atchViewDown(fileGrpId, fileId);
+            });
+            // 파일 수정
+            $("#form_newExpense :file").change(function() {
+                var div = $(this).parents(".auto_file2");
+                var oriFileName = div.find(":text").val();
+                console.log(oriFileName);
+                for(var i = 0; i < attachList.length; i++) {
+                    if(attachList[i].atchFileName == oriFileName) {
+                        update.push(attachList[i].atchFileId);
+                        console.log(JSON.stringify(update));
+                    }
+                }
+            });
+            // 파일 삭제
+            $(".auto_file2 a:contains('Delete')").click(function() {
+            	var div = $(this).parents(".auto_file2");
+                var oriFileName = div.find(":text").val();
+                console.log(oriFileName);   
+                for(var i = 0; i < attachList.length; i++) {
+                    if(attachList[i].atchFileName == oriFileName) {
+                        remove.push(attachList[i].atchFileId);
+                        console.log(JSON.stringify(remove));
+                    }
+                }
+            });
+        }
+    });
+}
+
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        console.log(result);
+        if(result.fileExtsn == "jpg") {
+            // TODO View
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDown.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDown.do?subPath=" + fileSubPath
+                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
+
+function fn_viewExpensePop(clmNo) {
+    var data = {
+            clmNo : clmNo,
+            callType : "view"
+    };
+    Common.popupDiv("/eAccounting/pettyCash/viewExpensePop.do", data, null, true, "viewExpensePop");
+}
+
+function fn_updatePettyCashExp(st) {
+    // row의 수가 0개 이상일때만 insert
+    var gridDataList = AUIGrid.getOrgGridData(newGridID);
+    if(gridDataList.length > 0){
+    	var gridDataObj = GridCommon.getEditData(newGridID);
+    	gridDataObj.clmNo = clmNo;
+        gridDataObj.allTotAmt = Number($("#allTotAmt_text").text().replace(/,/gi, ""));
+        console.log(gridDataObj);
+        Common.ajax("POST", "/eAccounting/pettyCash/updatePettyCashExp.do", gridDataObj, function(result) {
+            console.log(result);
+            clmNo = result.data.clmNo;
+            fn_selectExpenseItemList();
+            if(st == "view"){
+                Common.alert("Temporary save succeeded.");
+                $("#viewExpensePop").remove();
+            }
+            fn_selectExpenseList();
+        });
+    } else {
+        Common.alert("There is no data to save. Please add.");
     }
-    
+}
+
+function fn_expApproveLinePop() {
     // tempSave를 하지 않고 바로 submit인 경우
-    if(FormUtil.isEmpty($("#clmNo").val())) {
-        fn_saveNewRequest("");
+    if(FormUtil.isEmpty(clmNo)) {
+        fn_insertPettyCashExp("");
     } else {
         // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
-        fn_saveUpdateRequest("");
+    	fn_updatePettyCashExp("");
     }
     
-    Common.popupDiv("/eAccounting/pettyCash/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    Common.popupDiv("/eAccounting/pettyCash/expApproveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 </script>
 

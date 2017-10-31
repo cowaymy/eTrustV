@@ -216,20 +216,60 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	}
 
 	@Override
-	public void insertPettyCashExpBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+	public void updatePettyCashAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		LOGGER.debug("list.size : {}", list.size());
 		
+		// 243,258
+		String update = (String) params.get("update");
+		String[] updateList = null;
+		if(!StringUtils.isEmpty(update)) {
+			updateList = params.get("update").toString().split(",");
+			LOGGER.debug("updateList.length : {}", updateList.length);
+		}
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
-//			int fileGroupKey = fileService.insertFiles(list, type, Integer.parseInt(params.get("userId").toString()));
-//			params.put("fileGroupKey", fileGroupKey);
+			for(int i = 0; i < list.size(); i++) {
+				if(updateList != null && i < updateList.length) {
+					String atchFileId = updateList[i];
+					LOGGER.debug("params.get('atchFileGrpId') =====================================>>  " + params.get("atchFileGrpId"));
+					LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
+					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
+					LOGGER.debug("params.get('userId') =====================================>>  " + params.get("userId"));
+					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), FileType.WEB, Integer.parseInt(String.valueOf(params.get("userId"))));
+				} else {
+					FileGroupVO fileGroupVO = new FileGroupVO();
+
+					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
+					fileMapper.insertFileDetail(list.get(i));
+
+					fileGroupVO.setAtchFileGrpId(Integer.parseInt(params.get("atchFileGrpId").toString()));
+					fileGroupVO.setAtchFileId(list.get(i).getAtchFileId());
+					fileGroupVO.setChenalType(FileType.WEB.getCode());
+					fileGroupVO.setCrtUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
+					fileGroupVO.setUpdUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
+
+					LOGGER.debug("fileGroupVO =====================================>>  " + fileGroupVO);
+					fileMapper.insertFileGroup(fileGroupVO);
+				}
+			}
 		}
 		
-		// TODO
-		
+		String remove = (String) params.get("remove");
+		String[] removeList = null;
+		if(!StringUtils.isEmpty(remove)) {
+			removeList = params.get("remove").toString().split(",");
+			LOGGER.debug("removeList.size : {}", removeList.length);
+		}
+		if(removeList != null && removeList.length > 0) {
+			for(int i = 0; i < removeList.length; i++) {
+				String atchFileId = removeList[i];
+				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
+				fileService.removeFileByFileId(FileType.WEB, Integer.parseInt(atchFileId));
+			}
+		}
 	}
 	
 	

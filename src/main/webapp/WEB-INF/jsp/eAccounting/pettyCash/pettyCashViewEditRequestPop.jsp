@@ -63,7 +63,7 @@ $(document).ready(function () {
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#tempSave_btn").click(fn_tempSave);
-    $("#request_btn").click(fn_approveLinePop);
+    $("#request_btn").click(fn_reqstApproveLinePop);
     
     $("#reqstAmt").keydown(function (event) { 
         
@@ -196,7 +196,7 @@ function fn_saveUpdateRequest(st) {
     }
 }
 
-function fn_approveLinePop() {
+function fn_reqstApproveLinePop() {
     var checkResult = fn_checkEmpty();
     
     if(!checkResult){
@@ -206,7 +206,7 @@ function fn_approveLinePop() {
     // tempSave를 하지 않고 바로 submit인 경우
     fn_saveUpdateRequest("");
     
-    Common.popupDiv("/eAccounting/pettyCash/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    Common.popupDiv("/eAccounting/pettyCash/reqstApproveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 </script>
 
