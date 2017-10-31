@@ -94,13 +94,13 @@ public class HeartServiceJobDto {
 	private String productCode;
 
 	@ApiModelProperty(value = "application Type (Rental…)")
-	private String appType;
+	private int appType;
 	
 	@ApiModelProperty(value = "")
 	private String instruction;
 
 	@ApiModelProperty(value = "")
-	private String salesPromotion;
+	private int salesPromotion;
 	
 	@ApiModelProperty(value = "")
 	private String contractDuration;
@@ -118,7 +118,7 @@ public class HeartServiceJobDto {
 	private String paymentModeName;
 	
 	@ApiModelProperty(value = "결제 은행")
-	private String bankCode;
+	private int bankCode;
 	
 	@ApiModelProperty(value = "결제 은행명")
 	private String bankName;
@@ -145,7 +145,7 @@ public class HeartServiceJobDto {
 	private String rentalStatus;
 	
 	@ApiModelProperty(value = "")
-	private String dscCode;
+	private int dscCode;
 	
 	@ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
 	private String lastPaymentDate;
@@ -175,11 +175,11 @@ public class HeartServiceJobDto {
 	private String resultAcceptanceName;
 	
 	@ApiModelProperty(value = "")
-	private String rcCode;
+	private int rcCode;
 	
 
 	@ApiModelProperty(value = "실패 사유 코드")
-	private String failReasonCode;
+	private int failReasonCode;
 	
 	@ApiModelProperty(value = "실패 사유명")
 	private String failReasonName;
@@ -232,7 +232,7 @@ public class HeartServiceJobDto {
 		this.planMonth = planMonth;
 	}
 
-	public void setFailReasonCode(String failReasonCode) {
+	public void setFailReasonCode(int failReasonCode) {
 		this.failReasonCode = failReasonCode;
 	}
 
@@ -695,47 +695,47 @@ public class HeartServiceJobDto {
 	}
 	
 	
-	public String getAppType() {
+	public int getAppType() {
 		return appType;
 	}
 
-	public void setAppType(String appType) {
+	public void setAppType(int appType) {
 		this.appType = appType;
 	}
 
-	public String getSalesPromotion() {
+	public int getSalesPromotion() {
 		return salesPromotion;
 	}
 
-	public void setSalesPromotion(String salesPromotion) {
+	public void setSalesPromotion(int salesPromotion) {
 		this.salesPromotion = salesPromotion;
 	}
 
-	public String getBankCode() {
+	public int getBankCode() {
 		return bankCode;
 	}
 
-	public void setBankCode(String bankCode) {
+	public void setBankCode(int bankCode) {
 		this.bankCode = bankCode;
 	}
 
-	public String getDscCode() {
+	public int getDscCode() {
 		return dscCode;
 	}
 
-	public void setDscCode(String dscCode) {
+	public void setDscCode(int dscCode) {
 		this.dscCode = dscCode;
 	}
 
-	public String getRcCode() {
+	public int getRcCode() {
 		return rcCode;
 	}
 
-	public void setRcCode(String rcCode) {
+	public void setRcCode(int rcCode) {
 		this.rcCode = rcCode;
 	}
 
-	public String getFailReasonCode() {
+	public int getFailReasonCode() {
 		return failReasonCode;
 	}
 	
