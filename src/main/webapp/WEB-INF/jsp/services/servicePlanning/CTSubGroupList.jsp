@@ -167,7 +167,6 @@ function CTSubAreaGroupGrid() {
         dataField : "priodFrom",
         headerText : "Priod From",
         dataType : "date",
-        formatString : "yyyy/mm/dd",
         editRenderer : {
             type : "CalendarRenderer",
             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
@@ -179,7 +178,6 @@ function CTSubAreaGroupGrid() {
         dataField : "priodTo",
         headerText : "Priod To",
         dataType : "date",
-        formatString : "yyyy/mm/dd",
         editRenderer : {
             type : "CalendarRenderer",
             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
