@@ -45,6 +45,7 @@ function fn_approveLineSubmit() {
             var obj = {
             		newGridList : newGridList,
                     apprGridList : apprGridList,
+                    clmNo : clmNo,
                     allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, ''))
             };
             console.log(obj);

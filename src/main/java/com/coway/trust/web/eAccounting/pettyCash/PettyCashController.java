@@ -350,7 +350,7 @@ public class PettyCashController {
 		params.put("userName", sessionVO.getUserName());
 		
 		// TODO
-		pettyCashService.insertApproveManagement(params);
+		pettyCashService.insertRqstApproveManagement(params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -574,7 +574,7 @@ public class PettyCashController {
 		params.put("userName", sessionVO.getUserName());
 		
 		// TODO
-		pettyCashService.insertApproveManagement(params);
+		pettyCashService.insertExpApproveManagement(params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -582,6 +582,11 @@ public class PettyCashController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/expCompletedMsgPop.do")
+	public String expCompletedMsgPop(ModelMap model) {
+		return "eAccounting/pettyCash/expCompletedMsgPop";
 	}
 	
 	

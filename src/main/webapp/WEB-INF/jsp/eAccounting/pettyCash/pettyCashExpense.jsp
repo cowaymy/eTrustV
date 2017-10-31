@@ -123,6 +123,13 @@ function fn_clearData() {
     $("#form_newExpense").each(function() {
         this.reset();
     });
+    
+    fn_ActionInvcTypeS();
+    
+    $("#attachTd").html("");
+    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
+    
+    clmSeq = 0;
 }
 
 function fn_setEvent() {

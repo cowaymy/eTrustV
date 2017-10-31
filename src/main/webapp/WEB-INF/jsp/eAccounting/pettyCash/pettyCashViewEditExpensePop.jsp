@@ -161,6 +161,7 @@ $(document).ready(function () {
 	
 	AUIGrid.setGridData(newGridID, $.parseJSON('${itemList}'));
 	console.log($.parseJSON('${itemList}'))
+	console.log('${itemList}')
 	
 	var result = $.parseJSON('${itemList}');
 	var allTotAmt = "" + result[0].allTotAmt;
@@ -215,7 +216,7 @@ function fn_tempSave() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>View / Edit Petty Cash Expense</h1>
+<h1>View/Edit Petty Cash Expense</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -341,10 +342,12 @@ function fn_tempSave() {
 </tbody>
 </table><!-- table end -->
 
+<c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}">
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" id="add_btn">Add</a></p></li>
     <li><p class="btn_blue2"><a href="#" id="clear_btn">Clear</a></p></li>
 </ul>
+</c:if>
 
 </form>
 </section><!-- search_table end -->

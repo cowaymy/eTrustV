@@ -587,6 +587,8 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 SELECT T1.CLM_SEQ, 
        T3.COST_CENTR,
+       T3.COST_CENTR_NAME,
+       T3.MEM_ACC_ID,
        T1.EXP_TYPE, 
        T1.EXP_TYPE_NAME, 
        T1.GL_ACC_CODE, 
@@ -610,7 +612,8 @@ SELECT T1.CLM_SEQ,
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC, 
-       T3.TOT_AMT  AS ALL_TOT_AMT 
+       T3.TOT_AMT  AS ALL_TOT_AMT,
+       T3.APPV_PRCSS_NO 
 FROM   FCM0014D T1 
        LEFT JOIN FCM0007C T2 
               ON T1.TAX_CODE = T2.TAX_CODE 
@@ -767,9 +770,9 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,#{budgetCode}
        ,#{budgetCodeName}
        ,#{taxCode}
-       ,#{reqstAmt}
-       ,0
-       ,#{appvCashAmt}
+       ,#{gstBeforAmt}
+       ,#{gstAmt}
+       ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}
        ,SYSDATE
@@ -781,7 +784,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 
 <update id="updateExpAppvPrcssNo" parameterType="Map">
 /* pettyCashMapper.updateAppvPrcssNo */
-   UPDATE FCM0012D
+   UPDATE FCM0013M
    SET APPV_PRCSS_NO = #{appvPrcssNo}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}

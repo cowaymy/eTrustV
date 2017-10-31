@@ -108,7 +108,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 	}
 
 	@Override
-	public void insertApproveManagement(Map<String, Object> params) {
+	public void insertRqstApproveManagement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
 		
@@ -276,6 +276,62 @@ public class PettyCashServiceImpl implements PettyCashService {
 		LOGGER.debug("list.size() =====================================>>  " + list.size());
 		
 		return list;
+	}
+
+	@Override
+	public void insertExpApproveManagement(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+		List<Object> newGridList = (List<Object>) params.get("newGridList");
+
+		params.put("appvLineCnt", apprGridList.size());
+		
+		LOGGER.debug("insertApproveManagement =====================================>>  " + params);
+		webInvoiceMapper.insertApproveManagement(params);
+		
+		if (apprGridList.size() > 0) {
+			Map hm = null;
+			
+			for (Object map : apprGridList) {
+				hm = (HashMap<String, Object>) map;
+				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
+				hm.put("userId", params.get("userId"));
+				hm.put("userName", params.get("userName"));
+				LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
+				// TODO appvLineDetailTable Insert
+				webInvoiceMapper.insertApproveLineDetail(hm);
+			}
+		}
+		
+		if (newGridList.size() > 0) {
+			Map hm = null;
+			
+			// biz처리
+			for (Object map : newGridList) {
+				hm = (HashMap<String, Object>) map;
+				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
+				int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
+				hm.put("appvItmSeq", appvItmSeq);
+				hm.put("invcNo", params.get("invcNo"));
+				hm.put("invcDt", params.get("invcDt"));
+				hm.put("invcType", params.get("invcType"));
+				hm.put("memAccId", params.get("memAccId"));
+				hm.put("payDueDt", params.get("payDueDt"));
+				hm.put("costCentr", params.get("costCentr"));
+				hm.put("costCentrName", params.get("costCentrName"));
+				hm.put("atchFileGrpId", params.get("atchFileGrpId"));
+				hm.put("userName", params.get("userName"));
+				LOGGER.debug("insertApproveItems =====================================>>  " + hm);
+				// TODO appvLineItemsTable Insert
+				pettyCashMapper.insertExpApproveItems(hm);
+			}
+		}
+		
+		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
+		// TODO pettyCashReqst table update
+		pettyCashMapper.updateExpAppvPrcssNo(params);
 	}
 	
 	

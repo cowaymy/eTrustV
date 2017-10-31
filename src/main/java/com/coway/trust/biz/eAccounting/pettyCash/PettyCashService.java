@@ -29,7 +29,7 @@ public interface PettyCashService {
 	
 	void updatePettyCashReqst(Map<String, Object> params);
 	
-	void insertApproveManagement(Map<String, Object> params);
+	void insertRqstApproveManagement(Map<String, Object> params);
 	
 	List<EgovMap> selectExpenseList(Map<String, Object> params);
 	
@@ -46,4 +46,6 @@ public interface PettyCashService {
 	void updatePettyCashExp(Map<String, Object> params);
 	
 	List<Object> budgetCheck(Map<String, Object> params);
+	
+	void insertExpApproveManagement(Map<String, Object> params);
 }
