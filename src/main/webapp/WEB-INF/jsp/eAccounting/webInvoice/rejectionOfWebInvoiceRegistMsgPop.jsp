@@ -19,7 +19,7 @@ function fn_closePop() {
 <div id="popup_wrap" class="popup_wrap msg_box"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="rejectionWebInvoiceMsg.title" /></h1>
+<h1>Rejection of Web Expense Claim</h1>
 <p class="pop_close"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p>
 </header><!-- pop_header end -->
 
