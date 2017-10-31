@@ -664,3 +664,9 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .status_result .circle_grey{background:#c5c0d1;}
 
 .conf_img{display: block;width: 100%}
+
+/* 에러 페이지 */
+.error_contents{position: relative;margin-top: 250px;text-align: center;}
+.error h2{font-size:60px;font-weight: bold;color:#25527c;font-family: 'Verdana'}
+.error .comment01{font-size:24px;color:#25527c;font-family: 'Verdana';margin-top: 40px}
+.error .comment02{font-size:18px;color:#ced5dd;font-family: 'Verdana';margin: 20px 0 30px}
