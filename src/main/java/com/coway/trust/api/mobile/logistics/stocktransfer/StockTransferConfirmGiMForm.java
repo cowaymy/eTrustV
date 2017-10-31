@@ -9,7 +9,7 @@ import com.coway.trust.util.BeanConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "StockTransferConfirmGIForm", description = "StockTransferConfirmGIForm")
+@ApiModel(value = "StockTransferConfirmGiMForm", description = "StockTransferConfirmGiMForm")
 public class StockTransferConfirmGiMForm {
 
 	@ApiModelProperty(value = "userId")
@@ -41,7 +41,7 @@ public class StockTransferConfirmGiMForm {
 
 	@ApiModelProperty(value = "stockTransferConfirmGiDetail")
 	private List<StockTransferConfirmGiDForm> stockTransferConfirmGiDetail;
-
+					
 	public List<Map<String, Object>> createMaps(StockTransferConfirmGiMForm stockTransferConfirmGiMForm) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
