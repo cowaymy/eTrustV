@@ -163,12 +163,19 @@
              var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
               Common.ajax("POST", "/bs/addIHsResult.do", jsonObj, function(result) {
-              Common.alert(result.message.message);
-              
-              Common.alert(result.message, fn_parentReload);
+              //Common.alert(result.message.message);
+                console.log("message : " + result.message );
+                
+                Common.alert(result.message,fn_close);
+
             });
         }
-    
+        
+        
+    function fn_close(){
+        $("#popup_wrap").remove();
+         fn_parentReload();
+    }
     
     function fn_parentReload() {
         fn_getBSListAjax(); //parent Method (Reload)
