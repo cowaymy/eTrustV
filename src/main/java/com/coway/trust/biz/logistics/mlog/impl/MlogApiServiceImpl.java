@@ -10,13 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveDForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
-import com.coway.trust.cmmn.exception.PreconditionException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -282,26 +280,111 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	
 	//Receive 미완성 
 	@Override
-	public void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm) {
+	public void stockMovementCommonCancle(Map<String, Object> params) {
 		
-		Map<String, Object> receiveMap = new HashMap();
-		receiveMap.put("userId", confirmReceiveMForm.getUserId());
-		receiveMap.put("requestDate", confirmReceiveMForm.getRequestDate());
-		receiveMap.put("smoNo", confirmReceiveMForm.getSmoNo());
-		receiveMap.put("reqStatus", confirmReceiveMForm.getReqStatus());
+		Map<String, Object> cancleMap = new HashMap();
+		cancleMap.put("userId", params.get("userId"));
+		cancleMap.put("giptdate", params.get("requestDate"));
+		cancleMap.put("smoNo", params.get("smoNo"));
+		cancleMap.put("gtype", params.get("reqStatus"));
 		
-		logger.debug("receiveMap    값 : {}", receiveMap);
+		logger.debug("userId    값 : {}", cancleMap.get("userId"));
+		logger.debug("giptdate    값 : {}", cancleMap.get("giptdate"));
+		logger.debug("smoNo    값 : {}", cancleMap.get("smoNo"));
+		logger.debug("gtype    값 : {}", cancleMap.get("gtype"));
 		
-		String delvryNo = MlogApiMapper.StockMovementDelvryNo(receiveMap); // in : smo / out : delvry_no 
+		logger.debug("cancleMap    값 : {}", cancleMap);
+		
+		String delvryNo = MlogApiMapper.StockMovementDelvryNo(cancleMap); // in : smo / out : delvry_no 
 		
 		if (delvryNo == null ){ // 일반 요청 상태
-			MlogApiMapper.StockMovementReqstCancel(receiveMap);
+			MlogApiMapper.StockMovementReqstCancel(cancleMap);
 		}else{ // 이동 상태
 			String[] delvcd = new String[1];
 			delvcd[0] = delvryNo;
-			receiveMap.put("parray", delvcd);
-			MlogApiMapper.StockMovementIssueCancel(receiveMap);
+			cancleMap.put("parray", delvcd);
+			cancleMap.put("userId",999999);
+			MlogApiMapper.StockMovementIssueCancel(cancleMap);
 		}
 		
 	}	
+	
+		@Override
+		public void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm) {
+			
+			Map<String, Object> receiveMap = new HashMap();
+			receiveMap.put("userId", confirmReceiveMForm.getUserId());
+			receiveMap.put("giptdate", confirmReceiveMForm.getRequestDate());
+			receiveMap.put("smoNo", confirmReceiveMForm.getSmoNo());
+			receiveMap.put("gtype", confirmReceiveMForm.getReqStatus());
+			
+			logger.debug("receiveMap    값 : {}", receiveMap);
+			
+				List<ConfirmReceiveDForm> list = (List<ConfirmReceiveDForm>) confirmReceiveMForm.getConfirmReceiveDetail();			
+
+				
+				for (int j = 0; j < list.size(); j++) {
+					ConfirmReceiveDForm form = list.get(j);
+					
+					logger.debug("partsCode    값 : {}",form.getPartsCode() );
+					logger.debug("partsId    값 : {}", form.getPartsId());
+					logger.debug("serialNo    값 : {}", form.getSerialNo());
+					logger.debug("smoNoItem    값 : {}", form.getSmoNoItem());
+					
+				}
+			
+				List<EgovMap> delNo =MlogApiMapper.getDeliveryNo(receiveMap);
+				
+				for (int i = 0; i < delNo.size(); i++) {
+					logger.debug("delNo    값 : {}", delNo.get(i));
+				}
+				
+			
+				int iCnt = 0;
+				String tmpdelCd = "";
+				String delyCd = "";
+				if (delNo.size() > 0) {
+					for (int i = 0; i < delNo.size(); i++) {
+						Map<String, Object> map = (Map<String, Object>) delNo.get(i);
+
+						//Map<String, Object> imap = new HashMap();
+
+						String delCd = (String) map.get("delyno");
+						if (delCd != null && !(tmpdelCd.equals(delCd))) {
+							tmpdelCd = delCd;
+							if (iCnt == 0) {
+								delyCd = delCd;
+							} else {
+								delyCd += "∈" + delCd;
+							}
+							iCnt++;
+						}
+					}
+				}
+				
+				String[] delvcd = delyCd.split("∈");
+				
+				for (int i = 0; i < delvcd.length; i++) {
+				logger.debug("delvcd : {}", delvcd[i]);
+				}
+				
+				receiveMap.put("parray", delvcd);
+				receiveMap.put("userId",999999);
+				// formMap.put("prgnm", params.get("prgnm"));
+				receiveMap.put("refdocno", "");
+				receiveMap.put("salesorder", "");
+				logger.debug("receiveMap : {}", receiveMap);
+				
+				MlogApiMapper.StockMovementIssue(receiveMap);
+						
+				
+		}
+	
+	
+	
+	
+	
+	
+	
+	
 }

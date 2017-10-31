@@ -114,4 +114,7 @@ public interface MlogApiMapper {
 	
 	void StockMovementReqstCancel(Map<String, Object> receiveMap);
 	
+	List<EgovMap> getDeliveryNo(Map<String, Object> receiveMap);
+	
+	
 }
