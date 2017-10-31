@@ -322,7 +322,7 @@
                     return;
                  } */
 
-	           Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_editDiv');  
+	           Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_hsDetailPopDiv');  
                 //Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '_editDiv');
 			}
 
