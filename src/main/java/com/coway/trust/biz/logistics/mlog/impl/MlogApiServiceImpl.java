@@ -16,6 +16,7 @@ import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodeForm;
 import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodePartsForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveDForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
+import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockReqMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
@@ -418,4 +419,32 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		}
 	}
 
+	
+	@Override
+	public void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReq) {
+		
+//		String seq = MlogApiMapper.selectStockMovementSeq();
+//		String headtitle = "SMO";
+//		Map<String, Object> insMap = null;
+//		if (reqTransferMList.size() > 0) {
+//			for (int i = 0; i < reqTransferMList.size(); i++) {
+//			
+//				insMap = (Map<String, Object>) reqTransferMList.get(i);
+//				insMap.put("reqno", headtitle + seq);
+//
+//				MlogApiMapper.insStockMovementDetail(insMap);
+//				logger.info(" reqstno : {}", insMap);
+//								
+//			}	
+//
+//			MlogApiMapper.insStockMovementHead(insMap);
+//
+//
+//			MlogApiMapper.insertStockBooking(insMap);
+//		}
+	}
+	
+	
+	
+	
 }
