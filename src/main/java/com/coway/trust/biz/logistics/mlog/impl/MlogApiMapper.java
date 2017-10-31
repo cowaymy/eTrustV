@@ -112,12 +112,13 @@ public interface MlogApiMapper {
 	void insertBarcode(Map<String, Object> setmap);
 
 	String StockMovementDelvryNo(Map<String, Object> receiveMap);
-	
+
 	void StockMovementIssueCancel(Map<String, Object> receiveMap);
-	
+
 	void StockMovementReqstCancel(Map<String, Object> receiveMap);
-	
+
 	List<EgovMap> getDeliveryNo(Map<String, Object> receiveMap);
-	
-	
+
+	int getUserLocId(Map<String, Object> receiveMap);
+
 }
