@@ -6,6 +6,7 @@ $(document).ready(function(){
 
     creatGrid();
     fn_selectDetailListAjax();
+    
 });
 
 function creatGrid(){
@@ -58,7 +59,7 @@ function creatGrid(){
 function fn_selectDetailListAjax() {        
 	
 	
-Common.ajax("GET", "/sales/membership/selectCnvrDetailList", {"sRsStusId":$("#sRsStusId").val(), "sRsCnvrId" :$("#sRsCnvrId").val()}, function(result) {
+Common.ajax("GET", "/sales/membership/selectCnvrDetailList",$("#listSForm").serialize(), function(result) {
     
      console.log("성공.");
      console.log( result);
@@ -79,13 +80,52 @@ Common.ajax("GET", "/sales/membership/selectCnvrDetailList", {"sRsStusId":$("#sR
     $("#pUserName").html(result.cnvrDetail.userName);  
     $("#pRsCnvrRem").html(result.cnvrDetail.rsCnvrRem);  
     
-    if(result.cnvrDetail.rsStusName != "Active"){
-    	$("#btns").hide();
+    if(result.cnvrDetail.rsStusName != "Active" ){
+    	$("#btnConfirm").hide();
+        $("#btnDeactivate").hide();
+    	
+    	if(result.cnvrDetail.rsStusName == "Completed"){
+
+            $("#btnDeactivate").show();
+    	}
     }
 
 });
 }
 
+function fn_updateRsStatus(str){
+	$("#sRsStusId").val(str);
+	
+	var confirmTitle;
+	var confirmMsg;
+	var alertTltle;
+	var alertMsg;
+	
+	if(str == "4"){
+	    confirmTitle = "<spring:message code="sales.title.confirm" />";  // CONFIRM TO CONVERT
+	    confirmMsg = "<spring:message code="sales.msg.confirm" />";  // Are you sure to confirm this batch conversion.
+	    alertTltle = "<spring:message code="sales.title.confirmed" />";  // CONVERSION BATCH CONFIRMED
+	    alertMsg =  "<spring:message code="sales.msg.confirmed" />";  // This conversion batch has benn confirmed.		 
+	}else{
+		confirmTitle = "<spring:message code="sales.title.deactivate" />"; //CONFIRM TO DEACTIVATE
+        confirmMsg = "<spring:message code="sales.msg.deactivate" />";  //Are you sure to deactivate this batch conversion.
+        alertTltle = "<spring:message code="sales.title.deactivated" />";  //CONVERSION BATCH DEACTIVATED
+        alertMsg =  "<spring:message code="sales.msg.deactivated" />";  //This conversion batch has been deactivated.      
+	}
+	if(Common.confirm(confirmTitle+ DEFAULT_DELIMITER + confirmMsg , function(){
+	
+		Common.ajax("POST", "/sales/membership/updateRsStatus",$("#listSForm").serializeJSON(), function(result) {
+		          
+			Common.alert(alertTltle + DEFAULT_DELIMITER + alertMsg);
+			
+		     console.log("성공.");
+		     console.log( result);
+		     
+		    fn_selectDetailListAjax();
+		});
+	}));
+	
+}
 
 </script>
 
@@ -159,9 +199,9 @@ Common.ajax("GET", "/sales/membership/selectCnvrDetailList", {"sRsStusId":$("#sR
 </article><!-- grid_wrap end -->
 
 </section>
-<ul class="center_btns" id="btns">
-    <li><p class="btn_blue2"><a href="#"><spring:message code="sales.Confirm" /></a></p></li>
-    <li><p class="btn_blue2"><a href="#"><spring:message code="sales.Deactivate" /></a></p></li>
+<ul class="center_btns">
+    <li><p class="btn_blue2" id="btnConfirm"><a href="#" onclick="javascript:fn_updateRsStatus('4');"><spring:message code="sales.Confirm" /></a></p></li>
+    <li><p class="btn_blue2" id="btnDeactivate" ><a href="#" onclick="javascript:fn_updateRsStatus('8');"><spring:message code="sales.Deactivate" /></a></p></li>
 </ul>
 
 </div><!-- popup_wrap end -->

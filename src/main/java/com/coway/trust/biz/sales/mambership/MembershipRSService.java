@@ -12,7 +12,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @author kmo
  *
  */
-public interface MembershipRentalStatusService {
+public interface MembershipRSService {
 	
 	/**
 	 * 
@@ -26,6 +26,10 @@ public interface MembershipRentalStatusService {
 	EgovMap selectCnvrDetail(Map<String, Object> params);
 	
 	int selectCnvrDetailCount(Map<String, Object> params);
+
+	int updateRsStatus(Map<String, Object> params);
+	
+	List<EgovMap> saveNewCnvrList(Map<String, Object> params);
 	
 	
 	

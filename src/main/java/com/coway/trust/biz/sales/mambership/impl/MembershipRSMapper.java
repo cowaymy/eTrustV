@@ -40,8 +40,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *
  *      </pre>
  */
-@Mapper("membershipRentalStatusMapper")
-public interface MembershipRentalStatusMapper {
+@Mapper("membershipRSMapper")
+public interface MembershipRSMapper {
 
 	List<EgovMap> selectCnvrList(Map<String, Object> params);
 
@@ -50,6 +50,23 @@ public interface MembershipRentalStatusMapper {
 	EgovMap selectCnvrDetail(Map<String, Object> params);
 	
 	int selectCnvrDetailCount(Map<String, Object> params);
+
+	int updateRsStatus(Map<String, Object> params);
 	
+	int selectSRVCntrctCnt(Map<String, Object> params);
+	
+	String selectOrederId(Map<String, Object> params);
+	
+	int selectSrvContract(Map<String, Object> params);
+	
+	int selectRentalStatus(Map<String, Object> params);
+
+	String getDocNo(Map<String, Object> params);
+
+	void insertRentalStatusM(Map<String, Object> params);
+	
+	void insertRentalStatusD(Map<String, Object> params);	
+
+	EgovMap selectRSDtailData(Map<String, Object> params);
 
 }

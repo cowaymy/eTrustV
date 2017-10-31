@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipRentalStatusMapper">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipRSMapper">
 
     <select id="selectCnvrList" parameterType="Map" resultType="egovMap">
 		SELECT A.RS_CNVR_ID ,
@@ -139,131 +139,82 @@
     </select>
     
     <select id="selectCnvrDetailList" parameterType="Map" resultType="egovMap">
-		SELECT TT.RS_ITM_ID   ,
-			       TT.RS_SYS_APP_TYPE_ID   ,
-			       TT.APP_TYPE  ,
-			       TT.RS_ITM_CNVR_USER_ID   ,
-			       TT.CNVR_USER_NAME   ,
-			       TT.RS_ITM_CNVR_DT   ,
-			       TT.RS_CNVR_ID   ,
-			       TT.RS_ITM_CNVR_STUS_ID   ,
-			       TT.CNVR_STUS   ,
-			       TO_CHAR(TT.RS_ITM_CRT_DT , 'DD/MM/YYYY')    RS_ITM_CRT_DT ,
-			       TT.RS_ITM_CRT_USER_ID   ,
-			       TT.CRT_USER_NAME   ,
-			       TT.RS_ITM_STUS_ID   ,
-			       TT.RS_SYS_SO_ID   ,
-			       TT.RS_ITM_ORD_NO   ,
-			       TT.RS_SYS_RENTAL_STUS   ,
-			       TO_CHAR(TT.RS_ITM_UPD_DT  , 'DD/MM/YYYY')   RS_ITM_UPD_DT,
-			       TT.RS_ITM_UPD_USER_ID   ,
-			       TT.UPD_USER_NAME   ,
-			       TT.RS_ITM_VALID_REM   ,
-			       TT.RS_ITM_VALID_STUS   ,
-			       TT.VALID_STUS  ,
-			       TT.VALID_STUS_NAME   ,
-			       TT.RS_ITM_CNTRCT_ID   ,
-			       TT.RS_ITM_CNTRCT_NO   
-		  FROM ( SELECT A.RS_ITM_ID   ,
-				                A.RS_CNVR_ID   ,
-				                A.RS_ITM_STUS_ID   ,
-				                A.RS_ITM_ORD_NO   ,
-				                A.RS_SYS_SO_ID   ,
-				                A.RS_SYS_APP_TYPE_ID   ,
-				                A.RS_SYS_RENTAL_STUS   ,
-				                A.RS_ITM_VALID_STUS   ,
-				                A.RS_ITM_VALID_REM   ,
-				                A.RS_ITM_CNVR_STUS_ID   ,
-				                A.RS_ITM_CNVR_USER_ID   ,
-				                A.RS_ITM_CNVR_DT   ,
-				                A.RS_ITM_CRT_USER_ID   ,
-				                A.RS_ITM_CRT_DT   ,
-				                A.RS_ITM_UPD_USER_ID   ,
-				                A.RS_ITM_UPD_DT   ,
-				                A.RS_ITM_CNTRCT_ID   ,
-				                A.RS_ITM_CNTRCT_NO   ,
-				                C.CODE CNVR_STUS  ,
-				                D.CODE VALID_STUS  ,
-				                D.NAME VALID_STUS_NAME  ,
-				                CASE WHEN  E.CODE_ID IS NOT NULL THEN E.CODE ELSE ' ' END APP_TYPE  ,
-				                CASE WHEN  F.USER_ID IS NOT NULL THEN F.USER_NAME ELSE ' ' END CNVR_USER_NAME  ,
-				                CASE WHEN  G.USER_ID IS NOT NULL THEN G.USER_NAME ELSE ' ' END CRT_USER_NAME  ,
-				                CASE WHEN  H.USER_ID IS NOT NULL THEN H.USER_NAME ELSE ' ' END UPD_USER_NAME  
-				         FROM SAL0073D A
-				                JOIN SAL0072D B   ON ( B.RS_CNVR_ID = A.RS_CNVR_ID )
-				                AND  B.RS_CNVR_TYPE_ID = 1320
-				                JOIN SYS0038M C   ON C.STUS_CODE_ID = A.RS_ITM_CNVR_STUS_ID
-				                JOIN SYS0038M D   ON D.STUS_CODE_ID = A.RS_ITM_VALID_STUS
-				                LEFT JOIN SYS0013M E   ON E.CODE_ID = A.RS_SYS_APP_TYPE_ID
-				                LEFT JOIN SYS0047M F   ON F.USER_ID = A.RS_ITM_CNVR_USER_ID
-				                LEFT JOIN SYS0047M G   ON G.USER_ID = A.RS_ITM_CRT_USER_ID
-				                LEFT JOIN SYS0047M H   ON H.USER_ID = A.RS_ITM_UPD_USER_ID
-				          WHERE A.RS_ITM_STUS_ID = #{rsStusId}
-		                      AND A.RS_CNVR_ID = #{rsCnvrId} ) TT
-			  ORDER BY TT.RS_ITM_ID ASC
+		SELECT A.RS_ITM_ID   ,
+                A.RS_CNVR_ID   ,
+                A.RS_ITM_STUS_ID   ,
+                A.RS_ITM_ORD_NO   ,
+                A.RS_SYS_SO_ID   ,
+                A.RS_SYS_APP_TYPE_ID   ,
+                A.RS_SYS_RENTAL_STUS   ,
+                A.RS_ITM_VALID_STUS   ,
+                A.RS_ITM_VALID_REM   ,
+                A.RS_ITM_CNVR_STUS_ID   ,
+                A.RS_ITM_CNVR_USER_ID   ,
+                TO_CHAR(A.RS_ITM_CNVR_DT , 'DD/MM/YYYY') RS_ITM_CNVR_DT,
+                A.RS_ITM_CRT_USER_ID   ,
+                TO_CHAR(A.RS_ITM_CRT_DT , 'DD/MM/YYYY') RS_ITM_CRT_DT,
+                A.RS_ITM_UPD_USER_ID   ,
+                TO_CHAR(A.RS_ITM_UPD_DT , 'DD/MM/YYYY') RS_ITM_UPD_DT,
+                A.RS_ITM_CNTRCT_ID   ,
+                A.RS_ITM_CNTRCT_NO   ,
+                C.CODE CNVR_STUS  ,
+                D.CODE VALID_STUS  ,
+                D.NAME VALID_STUS_NAME  ,
+                CASE WHEN  E.CODE_ID IS NOT NULL THEN E.CODE ELSE ' ' END APP_TYPE  ,
+                CASE WHEN  F.USER_ID IS NOT NULL THEN F.USER_NAME ELSE ' ' END CNVR_USER_NAME  ,
+                CASE WHEN  G.USER_ID IS NOT NULL THEN G.USER_NAME ELSE ' ' END CRT_USER_NAME  ,
+                CASE WHEN  H.USER_ID IS NOT NULL THEN H.USER_NAME ELSE ' ' END UPD_USER_NAME  
+         FROM SAL0073D A
+                JOIN SAL0072D B   ON ( B.RS_CNVR_ID = A.RS_CNVR_ID )
+                AND  B.RS_CNVR_TYPE_ID = 1320
+                JOIN SYS0038M C   ON C.STUS_CODE_ID = A.RS_ITM_CNVR_STUS_ID
+                JOIN SYS0038M D   ON D.STUS_CODE_ID = A.RS_ITM_VALID_STUS
+                LEFT JOIN SYS0013M E   ON E.CODE_ID = A.RS_SYS_APP_TYPE_ID
+                LEFT JOIN SYS0047M F   ON F.USER_ID = A.RS_ITM_CNVR_USER_ID
+                LEFT JOIN SYS0047M G   ON G.USER_ID = A.RS_ITM_CRT_USER_ID
+                LEFT JOIN SYS0047M H   ON H.USER_ID = A.RS_ITM_UPD_USER_ID
+          WHERE A.RS_ITM_STUS_ID = 1
+                    AND A.RS_CNVR_ID = #{rsCnvrId} 
+              ORDER BY RS_ITM_ID ASC
     </select>
     
     <select id="selectCnvrDetail" parameterType="Map" resultType="egovMap">
-	    SELECT TT.RS_CNVR_ID   ,
-			       TT.RS_STUS_CODE  ,
-			       TT.RS_STUS_ID   ,
-			       TT.RS_STUS_NAME   ,
-			       TT.RS_CNVR_CNFM_USER_ID   ,
-			       TT.CNFM_USER_NAME   ,
-			       TO_CHAR(TT.RS_CNVR_CNFM_DT  , 'DD-MM-YYYY hh24:mi AM') RS_CNVR_CNFM_DT ,
-			       TT.RS_CNVR_USER_ID   ,
-			       TT.USER_NAME  ,
-			       TO_CHAR(TT.RS_CNVR_DT , 'DD-MM-YYYY hh24:mi AM')  RS_CNVR_DT ,
-			       TT.RS_CNVR_NO   ,
-			       TT.RS_CNVR_STUS_ID   ,
-			       TT.CNVR_STUS_CODE ,
-			       TT.CNVR_STUS_CODE_NAME ,
-			       TO_CHAR(TT.RS_CNVR_CRT_DT , 'DD-MM-YYYY hh24:mi AM')  RS_CNVR_CRT_DT,
-			       TT.RS_CNVR_CRT_USER_ID   ,
-			       TT.CRT_USER_NAME   ,
-			       TT.RS_CNVR_REACT_FEES_APPLY   ,
-			       TT.RS_CNVR_REM   ,
-			       TT.RS_CNVR_STUS_FROM   ,
-			       TT.RS_CNVR_STUS_TO   ,
-			       TO_CHAR(TT.RS_CNVR_UPD_DT , 'DD-MM-YYYY hh24:mi AM')  RS_CNVR_UPD_DT ,
-			       TT.RS_CNVR_UPD_USER_ID   ,
-			       TT.UPD_USER_NAME 
-		  FROM ( SELECT A.RS_CNVR_ID   ,
-				                A.RS_STUS_ID   ,
-				                A.RS_CNVR_STUS_ID   ,
-				                A.RS_CNVR_STUS_FROM   ,
-				                A.RS_CNVR_STUS_TO   ,
-				                A.RS_CNVR_CRT_USER_ID   ,
-				                A.RS_CNVR_CRT_DT   ,
-				                A.RS_CNVR_UPD_USER_ID   ,
-				                A.RS_CNVR_UPD_DT   ,
-				                A.RS_CNVR_CNFM_USER_ID   ,
-				                A.RS_CNVR_CNFM_DT   ,
-				                A.RS_CNVR_USER_ID   ,
-				                A.RS_CNVR_DT   ,
-				                A.RS_CNVR_NO   ,
-				                A.RS_CNVR_REACT_FEES_APPLY   ,
-				                A.RS_CNVR_REM   ,
-				                B.CODE RS_STUS_CODE  ,
-				                B.NAME RS_STUS_NAME  ,
-				                C.CODE CNVR_STUS_CODE  ,
-				                C.NAME CNVR_STUS_CODE_NAME ,
-				                CASE WHEN  D.USER_ID IS NOT NULL THEN D.USER_NAME ELSE ' ' END CNFM_USER_NAME  ,
-				                CASE WHEN  E.USER_ID IS NOT NULL THEN E.USER_NAME ELSE ' ' END USER_NAME  ,
-				                CASE WHEN  F.USER_ID IS NOT NULL THEN F.USER_NAME ELSE ' ' END CRT_USER_NAME  ,
-				                CASE WHEN  G.USER_ID IS NOT NULL THEN G.USER_NAME ELSE ' ' END UPD_USER_NAME  
-				         FROM SAL0072D A
-				                JOIN SYS0038M B   ON B.STUS_CODE_ID = A.RS_STUS_ID
-				                JOIN SYS0038M C   ON C.STUS_CODE_ID = A.RS_CNVR_STUS_ID
-				                LEFT JOIN SYS0047M D   ON D.USER_ID = A.RS_CNVR_CNFM_USER_ID
-				                LEFT JOIN SYS0047M E   ON E.USER_ID = A.RS_CNVR_USER_ID
-				                LEFT JOIN SYS0047M F   ON F.USER_ID = A.RS_CNVR_CRT_USER_ID
-				                LEFT JOIN SYS0047M G   ON G.USER_ID = A.RS_CNVR_UPD_USER_ID
-				          WHERE  A.RS_CNVR_TYPE_ID = 1320 
-		                      AND  A.RS_CNVR_ID = #{rsCnvrId}
-		                      <![CDATA[
-		                      AND ROWNUM <= 1 ) TT
-		                      ]]>
+	     SELECT A.RS_CNVR_ID   ,
+	                A.RS_STUS_ID   ,
+	                A.RS_CNVR_STUS_ID   ,
+	                A.RS_CNVR_STUS_FROM   ,
+	                A.RS_CNVR_STUS_TO   ,
+	                A.RS_CNVR_CRT_USER_ID   ,
+	                TO_CHAR(A.RS_CNVR_CRT_DT , 'DD/MM/YYYY') RS_CNVR_CRT_DT,
+	                A.RS_CNVR_UPD_USER_ID   ,
+                    TO_CHAR(A.RS_CNVR_UPD_DT , 'DD/MM/YYYY') RS_CNVR_UPD_DT,
+	                A.RS_CNVR_CNFM_USER_ID   ,
+                    TO_CHAR(A.RS_CNVR_CNFM_DT , 'DD/MM/YYYY') RS_CNVR_CNFM_DT,
+	                A.RS_CNVR_USER_ID   ,
+                    TO_CHAR(A.RS_CNVR_DT , 'DD/MM/YYYY') RS_CNVR_DT,
+	                A.RS_CNVR_NO   ,
+	                A.RS_CNVR_REACT_FEES_APPLY   ,
+	                A.RS_CNVR_REM   ,
+	                B.CODE RS_STUS_CODE  ,
+	                B.NAME RS_STUS_NAME  ,
+	                C.CODE CNVR_STUS_CODE  ,
+	                C.NAME CNVR_STUS_CODE_NAME ,
+	                CASE WHEN  D.USER_ID IS NOT NULL THEN D.USER_NAME ELSE ' ' END CNFM_USER_NAME  ,
+	                CASE WHEN  E.USER_ID IS NOT NULL THEN E.USER_NAME ELSE ' ' END USER_NAME  ,
+	                CASE WHEN  F.USER_ID IS NOT NULL THEN F.USER_NAME ELSE ' ' END CRT_USER_NAME  ,
+	                CASE WHEN  G.USER_ID IS NOT NULL THEN G.USER_NAME ELSE ' ' END UPD_USER_NAME  
+	         FROM SAL0072D A
+	                JOIN SYS0038M B   ON B.STUS_CODE_ID = A.RS_STUS_ID
+	                JOIN SYS0038M C   ON C.STUS_CODE_ID = A.RS_CNVR_STUS_ID
+	                LEFT JOIN SYS0047M D   ON D.USER_ID = A.RS_CNVR_CNFM_USER_ID
+	                LEFT JOIN SYS0047M E   ON E.USER_ID = A.RS_CNVR_USER_ID
+	                LEFT JOIN SYS0047M F   ON F.USER_ID = A.RS_CNVR_CRT_USER_ID
+	                LEFT JOIN SYS0047M G   ON G.USER_ID = A.RS_CNVR_UPD_USER_ID
+	          WHERE  A.RS_CNVR_TYPE_ID = 1320 
+                     AND  A.RS_CNVR_ID = #{rsCnvrId}
+                     <![CDATA[
+                     AND ROWNUM <= 1
+                     ]]>
     </select>
     
     <select id="selectCnvrDetailCount" parameterType="Map" resultType="int">
@@ -275,4 +226,168 @@
              AND A.RS_CNVR_ID = #{rsCnvrId}
     </select>
     
+    <update id="updateRsStatus" parameterType="Map">
+		UPDATE SAL0072D
+		   SET RS_STUS_ID = #{rsStusId}
+		       ,RS_CNVR_UPD_USER_ID = #{userId} 
+		       ,RS_CNVR_UPD_DT = SYSDATE
+		       <if test='rsStusId == 4' >
+			       ,RS_CNVR_CNFM_USER_ID = #{userId} 
+			       ,RS_CNVR_CNFM_DT =SYSDATE
+		       </if>
+		 WHERE  RS_CNVR_ID = #{rsCnvrId} 
+	</update>
+	
+	<select id="selectSRVCntrctCnt" parameterType="Map" resultType="int">
+	<![CDATA[
+	SELECT COUNT(-1)  CNT   
+		  FROM SAL0077D 
+		 WHERE  SRV_CNTRCT_REF_NO =#{membershipNo} 
+		     AND ROWNUM <= 1
+    ]]>
+	</select>
+	
+	<select id="selectOrederId" parameterType="Map" resultType="String">
+    <![CDATA[
+		SELECT SALES_ORD_ID 
+		  FROM SAL0001D 
+		 WHERE  SALES_ORD_NO = to_char(#{orderNo}, 'FM0000000')
+		     AND ROWNUM <= 1
+	]]>	     
+	</select>
+	
+	<select id="selectSrvContract" parameterType="Map" resultType="int">
+	   <![CDATA[
+		SELECT COUNT(-1) CNT 
+		  FROM SAL0077D 
+		 WHERE  SRV_CNTRCT_REF_NO = #{membershipNo} 
+		     AND  SRV_CNTRCT_ORD_ID = #{orderId}
+		     AND ROWNUM <= 1
+	   ]]>
+	</select>
+	
+	<select id="selectRentalStatus" parameterType="Map" resultType="int">
+	   <![CDATA[
+		 SELECT COUNT(-1) CNT
+         FROM SAL0077D A
+                JOIN SAL0078D B   ON  B.CNTRCT_ID = A.SRV_CNTRCT_ID 
+                AND  B.CNTRCT_RENTAL_STUS = #{stusFrom}
+          WHERE  A.SRV_CNTRCT_REF_NO = #{membershipNo}
+               AND ROWNUM <= 1 
+	   ]]>
+	</select>
+	
+	<select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+        SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
+    </select>
+	    
+	<insert id="insertRentalStatusM" parameterType="Map">
+        <selectKey keyProperty="rsCnvrId" resultType="int" order="BEFORE">
+            SELECT SAL0072D_RS_CNVR_ID_SEQ.NEXTVAL FROM DUAL 
+        </selectKey>        
+	
+		INSERT INTO SAL0072D 
+		(     
+		      RS_CNVR_ID,
+			  RS_STUS_ID,
+		      RS_CNVR_STUS_ID,
+		      RS_CNVR_STUS_FROM,
+		      RS_CNVR_STUS_TO,
+		      RS_CNVR_CRT_USER_ID,
+		      RS_CNVR_CRT_DT,
+		      RS_CNVR_UPD_USER_ID,
+		      RS_CNVR_UPD_DT,
+		      RS_CNVR_CNFM_USER_ID,
+		      RS_CNVR_CNFM_DT,
+		      RS_CNVR_USER_ID,
+		      RS_CNVR_DT, 
+		      RS_CNVR_NO,
+		      RS_CNVR_ATTACH_URL,
+		      RS_CNVR_REACT_FEES_APPLY,
+		      RS_CNVR_REM,
+		      RS_CNVR_TYPE_ID
+	      )
+	     VALUES 
+	     (
+	           #{rsCnvrId},
+	           1,
+	           44,
+	           #{stusFrom},
+	           #{stusTo},
+	           #{userId},
+	           SYSDATE,
+               #{userId},
+               SYSDATE,
+               0,
+               to_date(#{defaultDate},'dd/mm/yyyy'),
+               0,
+               to_date(#{defaultDate},'dd/mm/yyyy'),
+               #{convertNo},
+               '',
+               0,
+               #{rsCnvrRem},
+               1320
+	       )
+  
+	</insert>    
+	
+	   <select id="selectRSDtailData" parameterType="Map" resultType="egovMap">
+       <![CDATA[
+          SELECT A.SRV_CNTRCT_ID   ,
+	                 B.SALES_ORD_ID   ,
+	                 B.APP_TYPE_ID   
+	         FROM SAL0077D A
+	                JOIN SAL0001D B   ON B.SALES_ORD_ID = A.SRV_CNTRCT_ORD_ID
+	          WHERE  A.SRV_CNTRCT_REF_NO = #{membershipNo}
+	               AND ROWNUM <= 1 
+       ]]>
+    </select>
+	
+	
+	<insert id="insertRentalStatusD" parameterType="Map">
+        INSERT INTO SAL0073D 
+            (
+                RS_ITM_ID,
+                RS_CNVR_ID,
+                RS_ITM_STUS_ID,
+                RS_ITM_ORD_NO,
+                RS_SYS_SO_ID,
+                RS_SYS_APP_TYPE_ID,
+                RS_SYS_RENTAL_STUS,
+                RS_ITM_VALID_STUS,
+                RS_ITM_VALID_REM,
+                RS_ITM_CNVR_STUS_ID,
+                RS_ITM_CNVR_USER_ID,
+                RS_ITM_CNVR_DT,
+                RS_ITM_CRT_USER_ID,
+                RS_ITM_CRT_DT,
+                RS_ITM_UPD_USER_ID,
+                RS_ITM_UPD_DT,
+                RS_ITM_CNTRCT_ID,
+                RS_ITM_CNTRCT_NO
+             )
+		     VALUES 
+		     (
+			     SAL0073D_RS_ITM_ID_SEQ.NEXTVAL ,
+			     #{rsCnvrId},
+			     1,  /* RS_ITM_STUS_ID*/
+			     #{orderNo},
+			     #{salesOrdId}, /* RS_SYS_SO_ID */
+			     #{appTypeId}, /* RS_SYS_APP_TYPE_ID*/
+			     #{stusFrom}, /* RS_SYS_RENTAL_STUS */
+			     4, /* RS_ITM_VALID_STUS */
+			     '', /* RS_ITM_VALID_REM */
+			     44, /* RS_ITM_CNVR_STUS_ID */
+			     0, /* RS_ITM_CNVR_USER_ID */
+                 to_date(#{defaultDate},'dd/mm/yyyy'),/* RS_ITM_CNVR_DT */
+			     #{userId},/* RS_ITM_CRT_USER_ID */
+			     SYSDATE,/* RS_ITM_CRT_DT */
+			     #{userId},/* RS_ITM_UPD_USER_ID */
+			     SYSDATE,/* RS_ITM_UPD_DT */
+			     #{srvCntrctId}, /* RS_ITM_CNTRCT_ID */
+			     #{membershipNo}
+             )
+	</insert>    
+	    
+	    
 </mapper>

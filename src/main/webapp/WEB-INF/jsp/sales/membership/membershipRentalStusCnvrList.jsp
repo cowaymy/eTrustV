@@ -28,18 +28,20 @@ function fn_selectListAjax() {
 
 function fn_Clear(){
 	$("#listSForm")[0].reset();
-	AUIGrid.destroy(stusGridID);
-	creatGrid();
+
+    AUIGrid.clearGridData(stusGridID);   
+	/* AUIGrid.destroy(stusGridID);
+	creatGrid(); */
 }
 
 //NEW Conversion 화면 호출.
 function fn_newCnvr() {  
-	Common.popupDiv("/sales/membership/membershipRentalStusCnvrNewPop.do",null, null, true, "membershipRentalStusCnvrNewPop");
+	Common.popupDiv("/sales/membership/membershipRentalStusCnvrNewPop.do",null, fn_selectListAjax, true, "membershipRentalStusCnvrNewPop");
 }
 
 //Conversion view 화면 호출.
 function fn_CnvrView() {  
-	Common.popupDiv("/sales/membership/membershipRentalStusCnvrViewPop.do", null, null, true, "membershipRentalStusCnvrViewPop");
+	Common.popupDiv("/sales/membership/membershipRentalStusCnvrViewPop.do", null, fn_selectListAjax, true, "membershipRentalStusCnvrViewPop");
 }
 
 function creatGrid(){

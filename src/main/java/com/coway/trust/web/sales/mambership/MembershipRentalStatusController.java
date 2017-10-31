@@ -3,6 +3,7 @@
  */
 package com.coway.trust.web.sales.mambership;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +17,15 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.coway.trust.biz.sales.mambership.MembershipRentalStatusService;
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.mambership.MembershipRSService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -34,8 +39,8 @@ public class MembershipRentalStatusController {
 
 	private static Logger logger = LoggerFactory.getLogger(MembershipRentalStatusController.class);
 
-	@Resource(name = "membershipRentalStatusService")
-	private MembershipRentalStatusService membershipRentalStatusService;
+	@Resource(name = "membershipRSService")
+	private MembershipRSService membershipRSService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -66,7 +71,7 @@ public class MembershipRentalStatusController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 
-		List<EgovMap> list = membershipRentalStatusService.selectCnvrList(params);
+		List<EgovMap> list = membershipRSService.selectCnvrList(params);
 
 	
 		return ResponseEntity.ok(list);
@@ -101,15 +106,62 @@ public class MembershipRentalStatusController {
 		
 		EgovMap result = new EgovMap();
 
-		List<EgovMap> cnvrDetailList = membershipRentalStatusService.selectCnvrDetailList(params);
-		EgovMap cnvrDetail = membershipRentalStatusService.selectCnvrDetail(params);
-		int totalCnt = membershipRentalStatusService.selectCnvrDetailCount(params);
+		List<EgovMap> cnvrDetailList = membershipRSService.selectCnvrDetailList(params);
+		EgovMap cnvrDetail = membershipRSService.selectCnvrDetail(params);
+		int totalCnt = membershipRSService.selectCnvrDetailCount(params);
 		
 		result.put("cnvrDetailList", cnvrDetailList);
 		result.put("cnvrDetail", cnvrDetail);
 		result.put("totalCnt", totalCnt);
 	
 		return ResponseEntity.ok(result);
+	}
+
+	
+	@RequestMapping(value = "/updateRsStatus", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> updateRsStatus (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+
+		logger.debug("in  updateRsStatus ");
+
+		logger.debug("params =====================================>>  " + params);
+		
+		//int result= 0;
+		params.put("userId", sessionVO.getUserId());
+		params.put("rsCnvrId", params.get("sRsCnvrId"));
+		params.put("rsStusId", params.get("sRsStusId"));
+		
+		
+		int result = membershipRSService.updateRsStatus(params);
+		
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(result);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
+	}
+	
+	@RequestMapping(value = "/saveNewCnvrList", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> saveNewCnvrList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+	
+		logger.debug("in  saveNewCnvrList ");
+
+		logger.debug("params =====================================>>  " + params);
+		params.put("userId", sessionVO.getUserId());
+		
+		List<EgovMap> chkList = membershipRSService.saveNewCnvrList(params);
+		
+
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(chkList);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    	return ResponseEntity.ok(message);
 	}
 	
 }
