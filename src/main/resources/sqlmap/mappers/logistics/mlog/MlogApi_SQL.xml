@@ -1003,10 +1003,19 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 		   AND L63.SERIAL_NO =  #{serialNo}
 		)
      </select>
-    <resultMap id="MOVEDATA0" type="egovMap" />
+    <resultMap id="APIMOVEDATA" type="egovMap" />
     <select id="StockMovementIssue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY
-                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=MOVEDATA0} )
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, 
+                     #{gtype}, 
+                     #{doctext}, 
+                     #{gipfdate}, 
+                     #{giptdate}, 
+                     #{prgnm}, 
+                     #{refdocno}, 
+                     #{salesorder}, 
+                     #{userId} , 
+                     #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APIMOVEDATA} )
              } 
      </select>
     
