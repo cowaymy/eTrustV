@@ -61,7 +61,9 @@
                         Extent3.CODE_NAME,
                         Extent2.SALES_ORD_ID SALES_ORD_ID,
                         TO_CHAR (Extent1.INSTALL_DT, 'DD-MM-YYYY') C3,
-                        Extent10.DOC_ID C1
+                        Extent10.DOC_ID C1 ,
+                        Extent13.BRNCH_ID ,
+                         (SELECT  CODE  FROM  SYS0005M  H WHERE   H.BRNCH_ID =Extent13.BRNCH_ID) BRNCH_CODE
                         FROM SAL0029D Extent6
                         INNER JOIN SAL0001D Extent2 ON Extent2.CUST_ID = Extent6.CUST_ID
                         INNER JOIN SAL0046D Extent1 ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
@@ -183,6 +185,7 @@
 			                Project1.STUS_CODE_ID STUS_CODE_ID  ,
 			                Project1.CODE CODE1  ,
 			                Project1.BRNCH_ID BRNCH_ID  ,
+			                (SELECT  CODE  FROM  SYS0005M  H WHERE   H.BRNCH_ID =Project1.BRNCH_ID) BRNCH_CODE,
 			                Project1.CUST_ID CUST_ID  ,
 			                Project1.NAME NAME  ,
 			                Project1.NRIC NRIC  ,
@@ -3468,4 +3471,71 @@
 			       SO_EXCHG_NW_CALL_ENTRY_ID = #{soExchgNwCallEntryId}
 			 WHERE  ( SO_EXCHG_ID = #{soExchgId} )
 		  </update>
+		  
+		  
+		  
+		  
+		  
+
+    <select id="assignCtList" parameterType="Map" resultType="egovMap">
+
+            SELECT DISTINCT   C.MEM_ID        CT_ID,
+                                       C.MEM_CODE   CT_CODE,
+                                       B.BRNCH_ID     BRNCH_ID,
+                                       B.CODE           BRANCH_CODE , 
+                                       B.NAME           BRANCH_NAME,
+                                       C.STUS           CT_STUS,
+                                       C.NAME           CT_NAME,
+                               D.CT_SUB_GRP CT_SUB_GRP
+                    FROM ORG0005D  A , SYS0005M B  , ORG0001D  C  ,SYS0064M D
+               WHERE  A.BRNCH_ID = #{BRNCH_ID}
+		                   AND A.BRNCH_ID = B.BRNCH_ID
+		                   AND A.MEM_ID =C.MEM_ID
+		                   AND C.MEM_TYPE = 2
+		                   AND A.MEM_LVL  = 3
+		                   AND B.CODE =D.CT_BRNCH_CODE 
+		                   AND C.STUS =1
+     </select>
+     
+     
+     
+    <select id="assignCtOrderList" parameterType="Map" resultType="egovMap">
+                  SELECT B.SALES_ORD_NO     SALES_ORD_NO, 
+                            A.INSTALL_ENTRY_NO INSTALL_ENTRY_NO ,
+                            C.NAME             CUST_NAME, 
+                            C.CUST_ID          CUST_ID ,
+                                    A.CT_ID    CT_ID,
+                            F.CT_SUB_GRP       CUST_SUB_GRP,
+                             (SELECT MEM_CODE   FROM ORG0001D S WHERE S.MEM_ID = A.CT_ID ) MEM_CODE
+                     FROM SAL0046D A ,         
+                          SAL0001D B ,        
+                          SAL0029D C ,         
+                          SAL0045D D ,          
+                          SAL0023D E ,          
+                          SYS0064M F           
+                   WHERE 1=1
+                        <if test="installNo != null and installNo != '' ">
+                             AND INSTALL_ENTRY_NO   IN 
+                              <foreach item="item" collection="installNo" index="index" open="(" separator="," close=")">
+                                        #{item}
+                              </foreach>
+                        </if>
+                         AND A.SALES_ORD_ID      = B.SALES_ORD_ID 
+                         AND B.CUST_ID       = C.CUST_ID
+                         AND B.SALES_ORD_ID  = D.SALES_ORD_ID 
+                         AND D.ADD_ID        = E.CUST_ADD_ID
+                         AND E.AREA_ID       = F.AREA_ID(+)
+     </select>
+     
+     
+     <insert id="updateAssignCT" parameterType="Map" >
+                         UPDATE  SAL0046D
+						  SET CT_ID =   #{ctId} ,
+						      UPD_DT =SYSDATE   ,
+						      UPD_USER_ID = #{updator}
+						  WHERE RESULT_ID = #{resultId}
+     </insert>
+		  
+		  
+		  
     </mapper>
