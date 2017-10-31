@@ -1030,4 +1030,14 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 	       SET REQST_DEL = 'Y'
 	     WHERE REQST_NO = #{smoNo}
 	</update>
+	
+	    <select id="getDeliveryNo" parameterType="Map" resultType="String">
+        SELECT L54.DELVRY_NO DNO
+          FROM LOG0054M L54, LOG0055D L55
+         WHERE L54.DELVRY_NO = L55.DELVRY_NO
+           AND L55.REQST_NO = #{smoNo}
+      GROUP BY L54.DELVRY_NO 
+    </select>
+	
+	
 </mapper>
