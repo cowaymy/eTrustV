@@ -380,14 +380,14 @@
         
     $(document).ready(function() {
     
-       if($("#_openGb").val() != "codyChange"){           
+/*        if($("#_openGb").val() != "codyChange"){           
            $("#btnCreate").hide();
            //$('#grid_wrapCust') .attr("disabled", true);
            
         }else{
             $("#btnSave").hide();
             //$('#grid_wrapCust') .attr("disabled", true);
-        }
+        } */
         
         console.log("성공 data : " + $("#searchFormPop"));
 
