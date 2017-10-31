@@ -49,10 +49,11 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 			Map<String, Object>  insertValue = (Map<String, Object>) params.get(i);
 			if(insertValue.get("locType").toString().equals("Local")){
 				insertValue.put("locType", "L");
+				insertValue.put("serviceWeek", 0);
 			}else{
 				insertValue.put("locType", "O");
+				insertValue.put("serviceWeek", Integer.parseInt(insertValue.get("svcWeek").toString()));
 			}
-			insertValue.put("serviceWeek", Integer.parseInt(insertValue.get("svcWeek").toString()));
 			logger.debug("insertValue {}", insertValue);
 			CTSubGroupListMapper.insertCTSubAreaGroup(insertValue);
 		}
