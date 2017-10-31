@@ -86,10 +86,8 @@
     </typeAliases>
 
 
-    <!--
     <plugins>
         <plugin interceptor="com.coway.trust.config.mybatis.ExcecutorInterceptor"></plugin>
         <plugin interceptor="com.coway.trust.config.mybatis.ResultsetInterceptor"></plugin>
     </plugins>
-    -->
 </configuration>
