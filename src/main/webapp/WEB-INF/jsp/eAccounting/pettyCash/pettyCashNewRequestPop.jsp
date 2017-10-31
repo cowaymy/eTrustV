@@ -61,9 +61,6 @@ $(document).ready(function () {
        
        $("#reqstAmt").val(str);
    }); 
-    
-    
-    // Requested amount must be less than approved amount
 });
 
 /* 인풋 파일(멀티) */
