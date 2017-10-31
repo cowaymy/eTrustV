@@ -60,6 +60,7 @@ import com.coway.trust.api.mobile.logistics.recevie.LogStockReceiveForm;
 import com.coway.trust.api.mobile.logistics.requestresult.RequestResultDListDto;
 import com.coway.trust.api.mobile.logistics.requestresult.RequestResultListForm;
 import com.coway.trust.api.mobile.logistics.requestresult.RequestResultMListDto;
+import com.coway.trust.api.mobile.logistics.requestresult.RequestResultRejectForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockDListDto;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockListForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockMListDto;
@@ -73,6 +74,7 @@ import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyDto;
 import com.coway.trust.api.mobile.logistics.stockbyholder.StockByHolderQtyForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferRejectSMOReqForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusDListDto;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusListForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusMListDto;
@@ -730,5 +732,41 @@ public class LogisticsApiController {
 	public void inputAdjustmentStockNonBarcode(@RequestBody InputNonBarcodeForm inputNonBarcodeForm) throws Exception {
 		MlogApiService.inputNonBarcode(inputNonBarcodeForm);
 	}
+	
+	
+	@ApiOperation(value = "Stock Transfer - Reject SMO Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/rejectSMORequest", method = RequestMethod.POST)
+	public void rejectSMORequest(@RequestBody StockTransferRejectSMOReqForm stockTransferRejectSMOReqForm)
+			throws Exception {		
+		
+		Map<String, Object> params = StockTransferRejectSMOReqForm.createMap(stockTransferRejectSMOReqForm);
+			
+		MlogApiService.stockMovementCommonCancle(params);
+							
+	}
+	
+	
+	@ApiOperation(value = "Request Result - Request Reject", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/requestResultReject", method = RequestMethod.POST)
+	public void reqResultReject(@RequestBody RequestResultRejectForm requestResultRejectForm)
+			throws Exception {		
+		
+		Map<String, Object> params = RequestResultRejectForm.createMap(requestResultRejectForm);
+		
+		MlogApiService.stockMovementCommonCancle(params);
+							
+	}
+	
+	@ApiOperation(value = "Return On-Hand Stock - Delete Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/returnOnHandStockDelReq", method = RequestMethod.POST)
+	public void returnOnHandStockDelReq(@RequestBody RequestResultRejectForm requestResultRejectForm)
+			throws Exception {		
+		
+		Map<String, Object> params = RequestResultRejectForm.createMap(requestResultRejectForm);
+		
+		MlogApiService.stockMovementCommonCancle(params);
+							
+	}
+	
 
 }
