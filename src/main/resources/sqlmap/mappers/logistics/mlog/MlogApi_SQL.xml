@@ -1016,7 +1016,49 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
              } 
      </select>
     
+       <update id="updateNonBarcodeQty" parameterType="Map">
+        UPDATE LOG0073D
+                   SET CNT_QTY=#{countedQty}
+        WHERE  1=1
+                AND SERIAL_CHK<![CDATA[<> ]]> 'Y'
+                AND INVNTRY_LOC_ID =(SELECT INVNTRY_LOC_ID 
+													        FROM LOG0072M
+													        WHERE LOC_ID= (SELECT WH_LOC_BRNCH_ID
+													                            FROM SYS0028M
+													                            WHERE WH_LOC_CODE = #{userId})
+													          AND INVNTRY_NO = #{invenAdjustNo})
+                AND SEQ             =#{invenAdjustNoItem}
+      </update> 
+       <update id="updateBarcodeQty" parameterType="Map">
+        UPDATE LOG0073D
+                   SET CNT_QTY=#{countedQty}
+        WHERE  1=1
+                AND SERIAL_CHK = 'Y'
+                AND INVNTRY_LOC_ID =(SELECT INVNTRY_LOC_ID 
+													        FROM LOG0072M
+													        WHERE LOC_ID= (SELECT WH_LOC_BRNCH_ID
+													                            FROM SYS0028M
+													                            WHERE WH_LOC_CODE = #{userId})
+													          AND INVNTRY_NO = #{invenAdjustNo})
+                AND SEQ             =#{invenAdjustNoItem}
+      </update> 
 
+
+          <insert id="insertBarcode" parameterType="Map">
+	      INSERT INTO LOG0074D
+	                  SELECT
+	                            L73.INVNTRY_LOC_ID,
+	                            L73.SEQ,
+	                            #{serialNo},
+	                            #{userId},
+	                            SYSDATE
+					FROM LOG0072M L72, LOG0073D L73
+								WHERE 1=1
+								AND L72.INVNTRY_LOC_ID=L73.INVNTRY_LOC_ID
+	                            AND L72.INVNTRY_NO = #{invenAdjustNo}
+	                            AND L73.SEQ = #{invenAdjustNoItem}
+	      </insert>
+	
     <select id="StockMovementDelvryNo" parameterType="Map" resultType="String">
         SELECT L54.DELVRY_NO DNO
 	      FROM LOG0054M L54, LOG0055D L55
@@ -1030,14 +1072,15 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 	       SET REQST_DEL = 'Y'
 	     WHERE REQST_NO = #{smoNo}
 	</update>
-	
-	    <select id="getDeliveryNo" parameterType="Map" resultType="String">
+	   
+        <select id="getDeliveryNo" parameterType="Map" resultType="String">
         SELECT L54.DELVRY_NO DNO
           FROM LOG0054M L54, LOG0055D L55
          WHERE L54.DELVRY_NO = L55.DELVRY_NO
            AND L55.REQST_NO = #{smoNo}
       GROUP BY L54.DELVRY_NO 
     </select>
+	
 	
 	
 </mapper>
