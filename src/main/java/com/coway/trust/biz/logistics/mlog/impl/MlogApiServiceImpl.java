@@ -15,6 +15,7 @@ import com.coway.trust.api.mobile.logistics.audit.InputBarcodePartsForm;
 import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodeForm;
 import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodePartsForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
+import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockReqDForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockReqMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
@@ -373,27 +374,98 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	}
 
 	@Override
-	public void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReq) {
+	public void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReqMForm) {
 
-		// String seq = MlogApiMapper.selectStockMovementSeq();
-		// String headtitle = "SMO";
-		// Map<String, Object> insMap = null;
-		// if (reqTransferMList.size() > 0) {
-		// for (int i = 0; i < reqTransferMList.size(); i++) {
-		//
-		// insMap = (Map<String, Object>) reqTransferMList.get(i);
-		// insMap.put("reqno", headtitle + seq);
-		//
-		// MlogApiMapper.insStockMovementDetail(insMap);
-		// logger.info(" reqstno : {}", insMap);
-		//
-		// }
-		//
-		// MlogApiMapper.insStockMovementHead(insMap);
-		//
-		//
-		// MlogApiMapper.insertStockBooking(insMap);
-		// }
+		String seq = MlogApiMapper.selectStockMovementSeq();
+		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
+		String headtitle = "SMO";
+		String gtype = "GI";
+
+		Map<String, Object> returnMap = new HashMap();
+		returnMap.put("reqno", headtitle + seq);
+		returnMap.put("userId", returnOnHandStockReqMForm.getUserId());
+		returnMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
+		returnMap.put("smType", returnOnHandStockReqMForm.getSmType());
+		returnMap.put("targetLocation", returnOnHandStockReqMForm.getTargetLocation());
+
+		logger.debug("receiveMap    값 : {}", returnMap);
+
+		MlogApiMapper.insStockMovementHeads(returnMap);
+
+		List<ReturnOnHandStockReqDForm> list = returnOnHandStockReqMForm.getReturnOnHandStockReqDetail();
+
+		ReturnOnHandStockReqDForm form = null;
+		Map<String, Object> insMap = new HashMap();
+
+		for (int i = 0; i < list.size(); i++) {
+
+			form = list.get(i);
+
+			insMap.put("reqno", headtitle + seq);
+			insMap.put("partsCode", form.getPartsCode());
+			insMap.put("partsId", form.getPartsId());
+			insMap.put("requestQty", form.getRequestQty());
+			insMap.put("serialNo", form.getSerialNo());
+			insMap.put("partsName", form.getPartsName());
+			insMap.put("userId", returnOnHandStockReqMForm.getUserId());
+
+//			logger.debug("reqno    값 : {}", headtitle + seq);
+//			logger.debug("partsCode    값 : {}", insMap.get("partsCode"));
+//			logger.debug("partsId    값 : {}", insMap.get("partsId"));
+//			logger.debug("requestQty    값 : {}", insMap.get("requestQty"));
+//			logger.debug("serialNo    값 : {}", insMap.get("serialNo"));
+//			logger.debug("partsName    값 : {}", insMap.get("partsName"));
+
+			MlogApiMapper.insStockMovementDetail(insMap);
+	
+		// 2. insert ,54 , 55 , 61 ,56update start
+
+			insMap.put("delno", deliSeq);
+			insMap.put("itmcd", insMap.get("partsCode"));
+			insMap.put("itmname", insMap.get("partsName"));
+			insMap.put("reqstno", insMap.get("reqno"));
+			
+			logger.debug("insMap    값 : {}", insMap);
+//			logger.debug("partsCode    값 : {}", insMap.get("partsCode"));
+//			logger.debug("partsId    값 : {}", insMap.get("partsId"));
+//			logger.debug("requestQty    값 : {}", insMap.get("requestQty"));
+//			logger.debug("serialNo    값 : {}", insMap.get("serialNo"));
+//			logger.debug("partsName    값 : {}", insMap.get("partsName"));
+			
+			
+			
+			// 55 insert
+			MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
+
+			if (form.getSerialNo() != null || form.getSerialNo() != "") {
+				// 61insert
+				insMap.put("serial", insMap.get("serialNo"));
+				MlogApiMapper.insertMovementSerial(insMap);
+			}
+
+//			if (i == 0) {
+//				MlogApiMapper.insertDeliveryStockMovement(insMap);
+//				MlogApiMapper.updateRequestMovement(insMap);
+//			}
+		}
+		
+		MlogApiMapper.insertDeliveryStockMovement(insMap);
+		MlogApiMapper.updateRequestMovement(insMap);
+	
+		String[] delvcd = { deliSeq };
+		logger.debug("delvcd    값 : {}", delvcd);
+		insMap.put("parray", delvcd);
+		insMap.put("userId", 777777);
+		// insMap.put("userId", params.get("userId"));
+		// formMap.put("prgnm", params.get("prgnm"));
+		insMap.put("refdocno", "");
+		insMap.put("salesorder", "");
+		insMap.put("gtype", gtype);
+		insMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
+				
+		MlogApiMapper.StockMovementIssue(insMap);
+				
+		
 	}
 
 }
