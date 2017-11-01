@@ -388,12 +388,12 @@ var journalPopLayout = [
 	    <li>Bank Account Reconciliation</li>
 	</ul>
 	<aside class="title_line"><!-- title_line start -->
-	<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-	<h2>Bank Account Reconciliation</h2>
-	<ul class="right_btns">
-	    <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>
-	    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
-	</ul>
+		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<h2>Bank Account Reconciliation</h2>
+		<ul class="right_btns">
+		    <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>
+		    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+		</ul>
 	</aside><!-- title_line end -->
 	<section class="search_table"><!-- search_table start -->
 		<form action="#" method="post" id="searchForm" name="searchForm">
