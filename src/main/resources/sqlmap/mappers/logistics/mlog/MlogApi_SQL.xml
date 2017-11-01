@@ -1132,6 +1132,9 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
                  )
     </insert>
 	
+	<select id="dateParsing" parameterType="String" resultType="String">
+	   SELECT TO_CHAR(TO_DATE(#{param} , 'YYYYMMDD') , 'DD/MM/YYYY')  FROM DUAL
+	</select>
 	
 	
 </mapper>
