@@ -4,8 +4,8 @@
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
-.my-custom-up div{
-    color:#FF0000;
+.my-custom-up {
+    text-align:left;
 }
 </style>
 <script type="text/javaScript">
@@ -56,7 +56,8 @@ var masterColumnLayout = [
     }, {
         dataField : "fBankJrnlRem",
         headerText : "Remark",
-        editable : false
+        editable : false,
+        style : "my-custom-up",
     }, {
         dataField : "crtDt",
         headerText : "Created",
