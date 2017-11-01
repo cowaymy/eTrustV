@@ -397,42 +397,42 @@ var journalPopLayout = [
 					<tr>
 					    <th scope="row">Reference No</th>
 					    <td>
-					    <input type="text" title="" placeholder="Reference No" class="" name="refNo"/>
+					       <input type="text" title="" placeholder="Reference No" class="" name="refNo"/>
 					    </td>
 					    <th scope="row">Status</th>
 					    <td>
-					    <select class="multy_select" multiple="multiple" id="statusId" name="statusId">
-					       <option value="1">Active</option>
-					       <option value="36">Closed</option>
-					    </select>
+						    <select class="multy_select" multiple="multiple" id="statusId" name="statusId">
+						       <option value="1">Active</option>
+						       <option value="36">Closed</option>
+						    </select>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Bank Account</th>
 					    <td>
-					    <select id="accountId" name="accountId">
-					    </select>
+						    <select id="accountId" name="accountId">
+						    </select>
 					    </td>
 					    <th scope="row">Remark</th>
 					    <td>
-					    <input type="text" title="" placeholder="Remark" class="" id="remark" name="remark"/>
+					       <input type="text" title="" placeholder="Remark" class="" id="remark" name="remark"/>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Uploaded By</th>
 					    <td>
-					    <input type="text" title="" placeholder="Uploaded By" class="" id="uploadBy" name="uploadBy"/>
+					       <input type="text" title="" placeholder="Uploaded By" class="" id="uploadBy" name="uploadBy"/>
 					    </td>
 					    <th scope="row">Uploaded Date</th>
 					    <td>
-					    <div class="date_set"><!-- date_set start -->
-					    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="fromUploadDate"/></p>
-					    <span>To</span>
-					    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="toUploadDate"/></p>
-					    </div><!-- date_set end -->
+						    <div class="date_set"><!-- date_set start -->
+						    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="fromUploadDate"/></p>
+						    <span>To</span>
+						    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="toUploadDate"/></p>
+						    </div><!-- date_set end -->
 					    </td>
 					</tr>
-			</tbody>
+			     </tbody>
 			</table><!-- table end -->
 			<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 				<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
@@ -541,7 +541,7 @@ var journalPopLayout = [
 			</aside><!-- title_line end -->
 			<article class="grid_wrap" id="statement_pop_grid_wrap"><!-- grid_wrap start -->
 			</article><!-- grid_wrap end -->
-	</form>
+	   </form>
 	</section><!-- search_table end -->
 </div><!-- content end -->
 
