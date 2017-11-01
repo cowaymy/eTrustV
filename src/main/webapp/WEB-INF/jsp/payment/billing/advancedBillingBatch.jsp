@@ -149,6 +149,12 @@ function fn_clickDeactivate(){
 	     });
 	});
 }
+
+function fn_Clear(){
+	$("#searchForm")[0].reset();
+	AUIGrid.clearGridData(myGridID);
+}
+
 </script>
 <section id="content"><!-- content start -->
 	<ul class="path">
@@ -161,10 +167,8 @@ function fn_clickDeactivate(){
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2>Advanced Billing Batch</h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a href="javascript:fn_newBillingBatch();">New Billing Batch</a></p></li>
-			<li><p class="btn_blue"><a href="javascript:fn_viewBillingBatch()">View Billing Batch</a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_searchBillingBatch();"><span class="search"></span>Search</a></p></li>
-			<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_Clear();"><span class="clear"></span>Clear</a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
 
@@ -202,7 +206,23 @@ function fn_clickDeactivate(){
 			</table><!-- table end -->
 		</form>
 	</section><!-- search_table end -->
-	
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn"><a href="javascript:fn_viewBillingBatch();">View Billing Batch</a></p></li>
+    </ul>
+    <ul class="btns">
+        <li><p class="link_btn type2"><a href="javascript:fn_newBillingBatch();">New Billing Batch</a></p></li>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->	
+
 	<section class="search_result"><!-- search_result start -->
 		<article id="billing_batch_grid" class="grid_wrap"><!-- grid_wrap start -->
 		</article><!-- grid_wrap end -->
