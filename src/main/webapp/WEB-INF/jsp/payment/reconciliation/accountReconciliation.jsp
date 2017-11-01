@@ -186,24 +186,31 @@ var journalPopLayout = [
 	    editRenderer : {
 	        type : "InputEditRenderer",
 	        showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-	        textAlign : "left"
+	        textAlign : "left",
+	        // 에디팅 유효성 검사
+            validator : function(oldValue, newValue, item, dataField) {
+                var isValid = false;
+
+                if(item.isMatch == "X") {
+                    isValid = true;
+                }
+
+                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                return { "validate" : isValid, "message"  : ""};
+            }
 	    }
 	},{
 	    dataField : "journalAccount",
 	    headerText : "Account",
-	    labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
-            var retStr = "";
-            for(var i=0,len=keyValueList.length; i<len; i++) {
-                if(keyValueList[i]["code"] == value) {
-                    retStr = keyValueList[i]["value"];
-                    break;
-                }
-            }
-            return retStr;
-        },
         renderer : {
             type : "DropDownListRenderer",
-            list : keyValueList, //key-value Object 로 구성된 리스트
+            listFunction : function(rowIndex, columnIndex, item, dataField) {
+            	if(item.isMatch == "X"){
+            	    return keyValueList;
+            	}else{
+            		return [];
+            	}
+            },
             keyField : "code", // key 에 해당되는 필드명
             valueField : "value" // value 에 해당되는 필드명
         }
