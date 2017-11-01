@@ -182,7 +182,12 @@ var journalPopLayout = [
 	},{
 	    dataField : "remark",
 	    headerText : "Remark",
-	    editable : true
+	    editable : true,
+	    editRenderer : {
+	        type : "InputEditRenderer",
+	        showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+	        textAlign : "left"
+	    }
 	},{
 	    dataField : "journalAccount",
 	    headerText : "Account",
