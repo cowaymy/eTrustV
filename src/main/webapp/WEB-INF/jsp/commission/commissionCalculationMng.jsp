@@ -97,6 +97,13 @@
 			}
 		});
 		
+		$("#actionTypeS").click(function(){
+			$("#search").trigger("click");
+		});
+	    $("#actionTypeA").click(function(){
+	    	$("#search").trigger("click");
+        });
+		
 	});//Ready
 	
 
@@ -149,10 +156,10 @@
 	            type : "ButtonRenderer",
 	            labelText : "SEARCH",
 	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 8));
-	            	$("#code").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 9));
-	            	$("#prdNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 0));
-	                $("#prdDec").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 1));
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
+	            	$("#code").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "code"));
+	            	$("#prdNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName"));
+	                $("#prdDec").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cdds"));
 	                Common.popupDiv("/commission/calculation/calCommDataPop.do", $("#searchForm").serializeJSON());
 	            }
 	        },
@@ -166,7 +173,7 @@
 	            type : "ButtonRenderer",
 	            labelText : "SEARCH",
 	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 8));
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
 	            	Common.popupDiv("/commission/calculation/calCommLogPop.do", $("#searchForm").serializeJSON());
 	            }
 	        },
@@ -180,8 +187,8 @@
 	            type : "ButtonRenderer",
 	            labelText : "EXECUTE",
 	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#procedureNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 0));
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 8));
+	            	$("#procedureNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName"));
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
 	            	$("#batchYn").val("N");
 	            	var  myGridID_CALLength = AUIGrid.getGridData(myGridID_CAL).length;
 	            	var failCnt = "0";
@@ -206,10 +213,10 @@
                     }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
                     	Common.alert("<spring:message code='commission.alert.currentDate'/>");
                         return false;
-                    }else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, 2))=="1"){
+                    }else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState"))=="1"){
                     	Common.alert("<spring:message code='commission.alert.calRunning'/>");
 	            		return false;
-	            	}else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, 2))=="8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, 2))=="9" ){
+	            	}else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState"))=="8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, "calState"))=="9" ){
 	            		Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
 	            		return false;
 	            	}else {
@@ -285,6 +292,7 @@
 	      <input type="hidden" id="dataDt" name="dataDt" value="${searchDt }"/>
 	      <input type="hidden" name="prdNm" id="prdNm"/>
           <input type="hidden" name="prdDec" id="prdDec"/>
+		  <input type="hidden" id="orgGrCd" name="orgGrCd" value=""/>
           
 			<table class="type1">
 				<!-- table start -->
@@ -305,9 +313,8 @@
 									<option value="${list.code}">${list.code}</option>
 								</c:forEach>
 						</select>
-						<label><input type="radio" name="use_yn" checked/><span>Actual</span></label>
-                        <label><input type="radio" name="use_yn" /><span>Simulation</span></label></td>
-						<input type="hidden" id="orgGrCd" name="orgGrCd" value="">
+						<label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span>Actual</span></label>
+                        <label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span>Simulation</span></label></td>
 					</tr>
 				</tbody>
 			</table>

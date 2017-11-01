@@ -113,13 +113,16 @@
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code").val();
+		       
 		       var memberCd = $("#memberCd_7001HP").val();
+		       
+		       var actionType = $("#actionType_7001").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
 		       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd+"'/>";
 		       
 		       Common.showLoader();
-               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd)
+               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd+"&actionType="+actionType)
                .done(function () {
                    Common.alert('File download a success!');                
                    Common.removeLoader();            
@@ -144,10 +147,12 @@
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code").val();
+		       
+		       var actionType = $("#actionType_7001").val();
 		       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
 		       
 		       Common.showLoader();
-               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code)
+               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&actionType="+actionType)
                .done(function () {
                    Common.alert('File download a success!');                
                    Common.removeLoader();            
@@ -177,9 +182,10 @@
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
 		<form id="form7001HP">
+           <input type="hidden" name="actionType" id="actionType_7001" value="${actionType }"/>
 		   <input type="hidden" name="codeId" id="codeId" value="${codeId}"/>
 		   <input type="hidden" name="code" id="code" value="${code}"/>
-		   <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
+		   <input type="hidden" id="fileName" name="fileName" value="hp_time_basic.xlsx"/>
 		   <ul class="right_btns">
 			  <li><p class="btn_blue"><a href="#" id="search_7001HP"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 			</ul>

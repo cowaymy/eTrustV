@@ -16,16 +16,6 @@
 </style>
 
 <script type="text/javaScript">
-
-	//Defalut MultiCombo
-	function fn_multiCombo() {
-		$('#cmbCategory').change(function() {
-		}).multipleSelect({
-			selectAll : true, // 전체선택 
-			width : '100%'
-		});
-	}
-	
 	
 	// Make AUIGrid 
 	var myGridID;
@@ -38,7 +28,7 @@
 	$(document).ready(function() {
 		  
 		//change orgCombo List
-		$("#orgRgCombo").change(function() {
+		$("#orgGrCombo").change(function() {
 			$("#orgCombo").find('option').each(function() {
 				$(this).remove();
 			});
@@ -237,6 +227,22 @@
             
         });
       
+      $("#versionTypeS").click(function(){
+    	  Common.ajax("GET", "/commission/system/varsionVaildSearch", $("#searchFormRule").serialize(), function(result) {
+    		  if(result == null){
+    			  Common.alert("등록된 시뮬레이션이 없습니다.");
+    			  $("#versionTypeA").prop("checked", true);
+    		  }else{
+    			  $("#searchFormRule [name=simulItemSeq]").val(result);
+    			  
+    			  $("#searchRule").trigger("click");
+    		  }
+    	  });
+      });
+      $("#versionTypeA").click(function(){
+    	  $("#searchRule").trigger("click");
+      });
+      
      //rule 등록 및 수정 팝업
        $("#addRule").click(function() {
            $("#insertFormRule")[0].reset();
@@ -296,7 +302,13 @@
                $("#insertFormRule [name=codeName]").val($("#searchFormRule [name=itemNm]").val());
                $("#insertFormRule [name=ruleNm]").val($("#searchFormRule [name=itemNm]").val());
                $("#insertFormRule [name=itemCd]").val($("#searchFormRule [name=itemCd]").val());
-               $("#insertFormRule [name=itemSeq]").val($("#searchFormRule [name=itemSeq]").val());
+               $("#insertFormRule [name=versionType]").val($("#searchFormRule [name=versionType]:checked").val());
+               
+               if($("#searchFormRule [name=versionType]:checked").val() == "A"){
+	               $("#insertFormRule [name=itemSeq]").val($("#searchFormRule [name=itemSeq]").val());
+               }else{
+            	   $("#insertFormRule [name=itemSeq]").val($("#searchFormRule [name=simulItemSeq]").val());
+               }
            });
        }); // addrule     
 
@@ -345,6 +357,7 @@
                 $("#insertFormRule [name=saveType]").val("U");
                 $("#printOrder").val(result.ruleList[0].prtOrder);
                 $("#insertFormRule [name=rulePid]").val(result.ruleList[0].rulePid);
+                $("#insertFormRule [name=versionType]").val($("#searchFormRule [name=versionType]:checked").val());
             });
 
         }); //editRule
@@ -753,7 +766,7 @@
     function fn_saveGridCall(){
         Common.ajax("POST", "/commission/system/saveCommissionItemGrid.do", GridCommon.getEditData(myGridID), function(result) {
             // 공통 메세지 영역에 메세지 표시.
-            Common.setMsg("<spring:message code='sys.msg.success'/>");
+            Common.setMsg(result.message);
             $("#search").trigger("click");
         }, function(jqXHR, textStatus, errorThrown) {
             try {
@@ -987,7 +1000,7 @@
 						<th scope="row">Month/Year</th>
 						<td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
 						<th scope="row">ORG Group</th>
-						<td><select id="orgRgCombo" name="orgRgCombo" style="width: 100px;">
+						<td><select id="orgGrCombo" name="orgGrCombo" style="width: 100px;">
 								<option value=""></option>
 								<c:forEach var="list" items="${orgGrList }">
 									<option value="${list.orgGrCd}">${list.orgGrNm}</option>
@@ -1057,6 +1070,7 @@
 <section class="pop_body"  style="max-height:680px;"><!-- pop_body start -->
 <form id="searchFormRule" action="" method="post">
 <input type="hidden" name="itemCd" id="itemCd"/>
+<input type="hidden" name="simulItemSeq" id="simulItemSeq"/>
 <input type="hidden" name="itemSeq" id="itemSeq"/>
 <input type="hidden" name="orgSeq" id="orgSeq"/>
 <input type="hidden" name="ruleSeq" id="ruleSeq"/>
@@ -1065,33 +1079,33 @@
   <li><p class="btn_blue"><a href="#" id="searchRule"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 </ul>
 
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-  <col style="width:130px" />
-  <col style="width:200px" />
-  <col style="width:130px" />
-  <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-  <th scope="row">Month/Year</th>
-  <td>
-  <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" class="j_date2" value="${searchDt }" />
-  </td>
-  <th scope="row">USE YN</th>
-  <td>
-  <select name="useYnCombo" style="width: 100px;">
-    <option value=""></option>
-    <option value="Y">Y</option>
-    <option value="N">N</option>
-  </select>
-  <label><input type="radio" name="use_yn" checked/><span>Actual</span></label>
-  <label><input type="radio" name="use_yn" /><span>Simulation</span></label>
-  </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+	<table class="type1 mt10"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+			<col style="width:130px" />
+			<col style="width:200px" />
+			<col style="width:130px" />
+			<col style="width:*" />
+		</colgroup>
+		<tbody>
+			<tr>
+				<th scope="row">Month/Year</th>
+				<td>
+				    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" class="j_date2" value="${searchDt }" />
+				</td>
+				<th scope="row">USE YN</th>
+				<td>
+					<select name="useYnCombo" style="width: 100px;">
+						<option value=""></option>
+						<option value="Y">Y</option>
+						<option value="N">N</option>
+					</select>
+					<label><input type="radio" name="versionType" id="versionTypeA" value="A" checked/><span>Actual</span></label>
+					<label><input type="radio" name="versionType" id="versionTypeS" value="S" /><span>Simulation</span></label>
+				</td>
+			</tr>
+		</tbody>
+	</table><!-- table end -->
 
 	<section class="search_result"><!-- search_result start -->
 	
@@ -1184,6 +1198,7 @@
 <input type="hidden" name="ruleLevel" />
 <input type="hidden" name="rulePid" />
 <input type="hidden" name="saveType" />
+<input type="text" name="versionType"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
