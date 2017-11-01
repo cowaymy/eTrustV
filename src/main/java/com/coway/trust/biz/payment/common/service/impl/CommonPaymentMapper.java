@@ -8,6 +8,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("commonPaymentMapper")
 public interface CommonPaymentMapper {	
 	
+	/**
+	 * Payment - Order Info 조회 : order No로 Order ID 조회하기 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	EgovMap selectOrdIdByNo(Map<String, Object> params);
+	
 	/****************************************************************************
 	 * Payment : Rental Order Info 
 	 ****************************************************************************/

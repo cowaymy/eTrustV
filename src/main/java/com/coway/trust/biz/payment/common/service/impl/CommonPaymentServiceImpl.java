@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.payment.common.service.CommonPopupPaymentService;
+import com.coway.trust.config.datasource.DataSource;
+import com.coway.trust.config.datasource.DataSourceType;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -24,6 +26,18 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Resource(name = "commonPaymentMapper")
 	private CommonPaymentMapper commonPaymentMapper;	
+	
+	/**
+	 * Payment - Order Info 조회 : order No로 Order ID 조회하기 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	@Override
+	public EgovMap selectOrdIdByNo(Map<String, Object> params) {
+		return commonPaymentMapper.selectOrdIdByNo(params);
+	}
 	
 	/*****************************************************************************
 	 *  Rental 
@@ -291,6 +305,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	 * BillingManager.cs : public List<BillView> GetRentalBillsByOrder(int orderId, bool excludeRPFBill)
 	 */
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	public List<EgovMap>  selectBillInfoRental(Map<String, Object> params) {
 		
 		double balRPF = 0.0D;

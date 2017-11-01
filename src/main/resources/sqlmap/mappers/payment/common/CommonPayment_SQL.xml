@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper">
 
+    <select id="selectOrdIdByNo" parameterType="Map" resultType="egovMap">
+        SELECT 
+            SALES_ORD_ID, 
+            SALES_ORD_NO,
+            CUST_BILL_ID
+        FROM SAL0001D 
+        WHERE SALES_ORD_NO=#{ordNo}
+        AND ROWNUM=1
+   </select>
+
     <select id="selectOrderInfoRental" parameterType="Map" resultType="egovMap">
         SELECT 
             Extent1.SALES_ORD_ID,
@@ -39,7 +49,13 @@
                             GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID   
         WHERE
             Extent1.APP_TYPE_ID = 66
+            <if test="orderId != null and orderId != ''">
             AND Extent1.SALES_ORD_ID = #{orderId}
+            </if>            
+            <if test="billGrpId != null and billGrpId != ''">
+            AND Extent1.CUST_BILL_ID = #{billGrpId}
+            </if>
+        ORDER BY Extent1.SALES_ORD_NO      
 	</select>
 	
 	<select id="selectRPFCN" parameterType="Map" resultType="egovMap">
@@ -227,7 +243,10 @@
             BILL_TYPE_ID,
             BILL_TYPE_NM  ,
             0 AS REV_AMT,
-            0 AS BTN_CHECK
+            0 AS BTN_CHECK,
+            STUS_CODE,
+            STUS_CODE_NAME  ,
+            NRIC          
         FROM
             (
             SELECT
@@ -253,7 +272,10 @@
                                 (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
                         END )       
                     ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
-                Extent2.CODE_NAME BILL_TYPE_NM  
+                Extent2.CODE_NAME BILL_TYPE_NM,
+                STUS.CODE AS STUS_CODE,
+                STUS.NAME AS STUS_CODE_NAME,
+                Extent4.NRIC
             FROM 
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
@@ -262,6 +284,7 @@
                 LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
                 LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
                 LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                LEFT JOIN SYS0038M STUS ON Extent3.STUS_CODE_ID = STUS.STUS_CODE_ID
             WHERE 
                 Extent1.RENT_SO_ID = #{orderId} 
             )
@@ -271,6 +294,7 @@
             <if test='excludeRPF != null and excludeRPF == "ADD" '>
             AND BILL_TYPE_ID <![CDATA[ <> ]]> 161
             </if>
+        ORDER BY BILL_DT         
     </select>
     <select id="selectBillRpfPaid" parameterType="Map" resultType="egovMap">
         SELECT

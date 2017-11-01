@@ -32,6 +32,7 @@
 	        fn_loadTrialNo(ordNo);
 	    }
 	    else if($('#callPrgm').val() == 'BILLING_ADD_NEW_GROUP' ||
+	    		     $('#callPrgm').val() == 'PAYMENT' ||
 	    	         $('#callPrgm').val() == 'FUND_TRANSFER') {
 	        fn_orderInfo(ordNo, ordId);
 	    }

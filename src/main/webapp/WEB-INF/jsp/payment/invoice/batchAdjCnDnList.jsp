@@ -14,7 +14,8 @@ var adjTypeData = [{"codeId": "1293","codeName": "Credit Note"},{"codeId": "1294
 //Grid Properties 설정 
 var gridPros = {            
         editable : false,                 // 편집 가능 여부 (기본값 : false)
-        showStateColumn : false     // 상태 칼럼 사용
+        showStateColumn : false,     // 상태 칼럼 사용
+        softRemoveRowMode:false
 };
 
 var columnLayout=[    
@@ -84,6 +85,9 @@ $(document).ready(function(){
                 if (typeof event.target.result != "undefined") {
                     // 그리드 CSV 데이터 적용시킴
                     AUIGrid.setCsvGridData(newBatchAdjGridID, event.target.result, false);
+                    
+                  //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                    AUIGrid.removeRow(newBatchAdjGridID,0);
                 } else {
                     alert('No data to import!');
                 }
@@ -132,6 +136,9 @@ function commitFormSubmit() {
                 // 그리드 CSV 데이터 적용시킴
                 AUIGrid.setCsvGridData(newBatchAdjGridID, csvText);
                 AUIGrid.removeAjaxLoader(newBatchAdjGridID);
+                
+              //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                AUIGrid.removeRow(newBatchAdjGridID,0);
             }
     		   },
     		   error : function(e) {
@@ -281,9 +288,7 @@ function fn_batchAdjFileUp(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop();">New Batch</a></p></li>                                                                                              
-                    </ul>
-                    <ul class="btns">                                 
+                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop();">New Batch</a></p></li>                                                                                              
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
@@ -372,7 +377,7 @@ function fn_batchAdjFileUp(){
         
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_batchAdjFileUp();">Upload File</a></p></li>
-            <li><p class="btn_blue2"><a href="#">Download CSV Format</a></p></li>
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/InvoiceAdjustmentBatch_Format.csv">Download Template</a></p></li>          
         </ul>
     </section>
     </form>       

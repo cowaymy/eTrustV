@@ -69,11 +69,36 @@ function fn_cmmSearchInvoicePop(){
     Common.popupDiv('/payment/common/initCommonSearchInvoicePop.do', null, null , true ,'_searchInvoice');
 }
 
+
+//popup 크기
+var winPopOption = {
+        width : "1300px",   // 창 가로 크기
+        height : "850px"    // 창 세로 크기
+};
+
 function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value, item){
-    location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");    
-    $('#_searchInvoice').hide();
+    //location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");
     
+    $('#_searchInvoice').hide();
+    Common.popupWin("searchForm", "/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo"), winPopOption);
 }
+
+function fn_openWinPop(val){
+	var url = "";
+	
+	if(val == 'BATCH_REQ'){
+		url = "/payment/initBatchAdjCnDnList.do";
+	}else if(val == 'SUMMARY'){
+		url = "/payment/initInvAdjCnDn.do";
+	}else if(val == 'APPROVAL'){
+		url = "/payment/initApprovalAdjCnDnList.do";
+	}
+	
+	if(url != ''){
+		Common.popupWin("searchForm", url, winPopOption);	
+	}
+}
+
 </script>
 
 <!-- content start -->
@@ -147,12 +172,10 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_cmmSearchInvoicePop();">New CN/DN request</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initBatchAdjCnDnList.do">New Batch request</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initInvAdjCnDn.do">Generate Summary List</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initApprovalAdjCnDnList.do">Approval</a></p></li>                                                                      
-                    </ul>
-                    <ul class="btns">                                 
+                        <li><p class="link_btn type2"><a href="javascript:fn_cmmSearchInvoicePop();">New CN/DN request</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('BATCH_REQ');">New Batch request</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('SUMMARY');">Generate Summary List</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('APPROVAL');">Approval</a></p></li>                                                                      
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>

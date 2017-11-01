@@ -24,6 +24,14 @@ import org.springframework.stereotype.Component;
 public class ChangeDataSourceAspect implements InitializingBean {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeDataSourceAspect.class);
 	
+
+	/**
+	 * Payment - Select Retal Billing Info
+	 */
+	@Pointcut("execution(* com.coway.trust.biz.*..impl.CommonPaymentServiceImpl.*(..))")
+	public void paymentRentalBillingInfoServiceMethod() {
+	}
+
 	/**
 	 * Payment - Create Bill 
 	 */
@@ -51,7 +59,7 @@ public class ChangeDataSourceAspect implements InitializingBean {
 	public void xxxxServiceMethod() {
 	}
 
-	@Before("paymentBillingServiceMethod() || paymentInvoiceServiceMethod() || paymentSrvMemBillingServiceMethod() || commissionCalculationServiceMethod() || xxxxServiceMethod()")
+	@Before("paymentRentalBillingInfoServiceMethod() || paymentBillingServiceMethod() || paymentInvoiceServiceMethod() || paymentSrvMemBillingServiceMethod() || commissionCalculationServiceMethod() || xxxxServiceMethod()")
 	public void before(JoinPoint joinPoint) throws Exception {
 		final String methodName = joinPoint.getSignature().getName();
 		final MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
@@ -70,7 +78,7 @@ public class ChangeDataSourceAspect implements InitializingBean {
 		LOGGER.debug("DataSource ===> " + ContextHolder.getDataSourceType());
 	}
 
-	@After("paymentBillingServiceMethod() || paymentInvoiceServiceMethod() || paymentSrvMemBillingServiceMethod() || commissionCalculationServiceMethod() || xxxxServiceMethod()")
+	@After("paymentRentalBillingInfoServiceMethod() || paymentBillingServiceMethod() || paymentInvoiceServiceMethod() || paymentSrvMemBillingServiceMethod() || commissionCalculationServiceMethod() || xxxxServiceMethod()")
 	public void after(JoinPoint joinPoint) throws Exception {
 		ContextHolder.clearDataSourceType();
 	}

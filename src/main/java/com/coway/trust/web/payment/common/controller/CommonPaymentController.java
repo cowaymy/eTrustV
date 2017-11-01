@@ -35,6 +35,25 @@ public class CommonPaymentController {
 
 	@Resource(name = "commonPaymentService")
 	private CommonPaymentService commonPaymentService;
+	
+	
+	/**
+	 * Payment - Order Info 조회 : order No로 Order ID 조회하기 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	@RequestMapping(value = "/selectOrdIdByNo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectOrdIdByNo(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		EgovMap resultMap = commonPaymentService.selectOrdIdByNo(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
 
 	
 	/******************************************************
