@@ -90,7 +90,6 @@ var pettyCashReqstColumnLayout = [ {
         onclick : function(rowIndex, columnIndex, value, item) {
             console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
             if(item.fileCnt > 1) {
-                atchFileGrpId = item.atchFileGrpId;
                 fn_fileListPop(item.atchFileGrpId);
             } else {
                 var data = {
