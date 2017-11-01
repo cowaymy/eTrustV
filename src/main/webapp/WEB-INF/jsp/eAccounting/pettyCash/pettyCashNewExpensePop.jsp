@@ -305,7 +305,7 @@ function fn_tempSave() {
     </select>
     </td>
     <th scope="row">Invoice No</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off/></td>
 </tr>
 <tr id="amt">
     <th scope="row">Amount before GST (RM)</th>

@@ -314,7 +314,7 @@ function fn_tempSave() {
     </select>
     </td>
     <th scope="row">Invoice No</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr id="amt">
     <th scope="row">Amount before GST (RM)</th>
