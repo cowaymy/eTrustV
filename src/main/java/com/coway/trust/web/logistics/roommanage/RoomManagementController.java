@@ -71,16 +71,58 @@ public class RoomManagementController {
 		message.setDataList(list);
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/roomBookingList.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> roomBookingList(@RequestParam Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
-		
+
 		List<EgovMap> list = roomManagementService.roomBookingList(params);
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/getEditData.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> roomEditData(@RequestParam Map<String, Object> params, Model model,
+			SessionVO sessionVO) throws Exception {
+
+		List<EgovMap> list = roomManagementService.selectEditData(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/saveNewEditData.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveNewEditData(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVO) throws Exception {
+		logger.debug("adjNo : {} ", params);
+		logger.debug("roomId : {} ", params.get("roomId"));
+		params.put("userId", sessionVO.getUserId());
+		String roomId = String.valueOf(params.get("roomId"));
+		if ("NEW".equals(roomId)) {
+			params.put("roomId", 0);
+		}
+		int data = roomManagementService.saveNewEditData(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(data);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/updateDeActive.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateDeActive(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVO) throws Exception {
+		logger.debug("adjNo : {} ", params);
+		params.put("userId", sessionVO.getUserId());
+		roomManagementService.updateDeActive(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
 	}
 }

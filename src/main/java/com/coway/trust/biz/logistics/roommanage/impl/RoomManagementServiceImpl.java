@@ -26,10 +26,31 @@ public class RoomManagementServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return roomManagementMapper.roomManagementList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> roomBookingList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return roomManagementMapper.roomBookingList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectEditData(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return roomManagementMapper.selectEditData(params);
+	}
+
+	@Override
+	public int saveNewEditData(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		int maxRoomId = roomManagementMapper.maxRoomId();
+		params.put("maxRoomId", maxRoomId);
+		roomManagementMapper.saveNewEditData(params);
+		return maxRoomId;
+	}
+
+	@Override
+	public void updateDeActive(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		roomManagementMapper.updateDeActive(params);
 	}
 }
