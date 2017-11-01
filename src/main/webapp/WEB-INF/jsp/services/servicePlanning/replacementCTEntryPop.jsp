@@ -83,7 +83,6 @@ function CTListGrid2() {
     	 AUIGrid.setGridData(CTListGrid2,activeItems);
     }
     function fn_Del(){
-    	alert(11);
     	var activeItems = AUIGrid.getItemsByValue(CTListGrid2, "checkFlag1", "1");
         for(var i=0; i<activeItems.length; i++){
         	AUIGrid.removeRow(CTListGrid2, i);
