@@ -265,8 +265,8 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					invoAppvItems.put("ifKey", ifKey);
 					invoAppvItems.put("seq", seq);
 					invoAppvItems.put("userId", params.get("userId"));
-					LOGGER.debug("insertEccInterface =====================================>>  " + invoAppvItems);
-					webInvoiceMapper.insertEccInterface(invoAppvItems);
+					LOGGER.debug("insertAppvInterface =====================================>>  " + invoAppvItems);
+					webInvoiceMapper.insertAppvInterface(invoAppvItems);
 				}
 			}
 		}

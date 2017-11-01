@@ -49,7 +49,7 @@ public interface WebInvoiceMapper {
 	
 	void updateLastAppvLine(Map<String, Object> params);
 	
-	void insertEccInterface(Map<String, Object> params);
+	void insertAppvInterface(Map<String, Object> params);
 	
 	List<EgovMap> selectSupplier(Map<String, Object> params);
 	
