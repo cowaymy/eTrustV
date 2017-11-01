@@ -123,19 +123,19 @@
 
 
                 <c:choose>
-                <c:when test="${preMenuLvl == list.menuLvl}">
-                    </li>
-                </c:when>
-                <c:when test="${preMenuLvl != '' && preMenuLvl > list.menuLvl}">
-                <c:forEach var="i" begin="1" end="${preMenuLvl - list.menuLvl}" step="1">
-                </li>
-            </ul>
-            </c:forEach>
-            </c:when>
-            <c:otherwise>
+                    <c:when test="${preMenuLvl == list.menuLvl}">
+                        </li>
+                    </c:when>
+                    <c:when test="${preMenuLvl != '' && preMenuLvl > list.menuLvl}">
+                        <c:forEach var="i" begin="1" end="${preMenuLvl - list.menuLvl}" step="1">
+                            </li>
+                        </ul>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
 
-            </c:otherwise>
-            </c:choose>
+                    </c:otherwise>
+                </c:choose>
 
             <c:choose>
             <c:when test="${ list.menuLvl == 1}">
@@ -166,17 +166,17 @@
                         <c:set var="cnt" value="${cnt + 1}" />
 
                         <c:if test="${status.last}">
-                        <c:if test="${list.menuLvl == 1}">
-                    </li>
-                    </c:if>
+                            <c:if test="${list.menuLvl == 1}">
+                            </li>
+                            </c:if>
 
-                    <c:if test="${list.menuLvl > 1}">
-                    <c:forEach var="i" begin="1" end="${list.menuLvl}" step="1">
-                    </li>
-                </ul>
-                </c:forEach>
-                </c:if>
-                </c:if>
+                            <c:if test="${list.menuLvl > 1}">
+                                <c:forEach var="i" begin="1" end="${list.menuLvl}" step="1">
+                                    </li>
+                                </ul>
+                                </c:forEach>
+                            </c:if>
+                        </c:if>
 
                 </c:forEach>
 
