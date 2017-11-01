@@ -17,6 +17,8 @@ public interface LoginService {
 
 	LoginVO loginByMobile(Map<String, Object> params);
 
+	LoginVO loginByCallcenter(Map<String, Object> params);
+
 	void logoutByMobile(Map<String, Object> params);
 
 	List<EgovMap> getLanguages();

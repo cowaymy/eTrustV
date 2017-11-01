@@ -43,10 +43,8 @@ public class LoginServiceImpl implements LoginService {
 		LOGGER.debug("loginInfo");
 		LoginVO loginVO = loginMapper.selectLoginInfo(params);
 
-		if(loginVO != null){
-			params.put("userId", loginVO.getUserId());
-			List<LoginSubAuthVO> loginSubAuthVOList = loginMapper.selectSubAuthInfo(params);
-			loginVO.setLoginSubAuthVOList(loginSubAuthVOList);
+		if (loginVO != null) {
+			addSubAuthToLoginVO(params, loginVO);
 		}
 
 		return loginVO;
@@ -62,9 +60,26 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public LoginVO loginByMobile(Map<String, Object> params) {
 		LOGGER.debug("loginByMobile");
-		// TODO : deviceImei, deviceNumber 체크 필요.
+		// TODO : deviceImei 체크 필요.
 		LoginVO loginVO = getLoginInfo(params);
 		return loginVO;
+	}
+
+	@Override
+	public LoginVO loginByCallcenter(Map<String, Object> params) {
+		LOGGER.debug("loginByCallcenter");
+		LoginVO loginVO = loginMapper.selectLoginInfoById(params);
+
+		if (loginVO != null) {
+			addSubAuthToLoginVO(params, loginVO);
+		}
+		return loginVO;
+	}
+
+	private void addSubAuthToLoginVO(Map<String, Object> params, LoginVO loginVO) {
+		params.put("userId", loginVO.getUserId());
+		List<LoginSubAuthVO> loginSubAuthVOList = loginMapper.selectSubAuthInfo(params);
+		loginVO.setLoginSubAuthVOList(loginSubAuthVOList);
 	}
 
 	@Override
@@ -106,24 +121,22 @@ public class LoginServiceImpl implements LoginService {
 
 		return saveCnt;
 	}
-	
+
 	@Override
-	public int updateUserSetting(Map<String, Object> params, Integer crtUserId) 
-	{
+	public int updateUserSetting(Map<String, Object> params, Integer crtUserId) {
 		int saveCnt = 0;
 
 		((Map<String, Object>) params).put("crtUserId", crtUserId);
 		((Map<String, Object>) params).put("updUserId", crtUserId);
-		
+
 		LOGGER.debug(" >>>>> updateUserSetting ");
 		LOGGER.debug(" Login_UserId : {}", ((Map<String, Object>) params).get("newUserIdTxt"));
-		
-		
+
 		saveCnt = loginMapper.updateUserSetting((Map<String, Object>) params);
-		
+
 		return saveCnt;
 	}
-	
+
 	@Override
 	public List<EgovMap> selectSecureResnList(Map<String, Object> params) {
 		return loginMapper.selectSecureResnList(params);

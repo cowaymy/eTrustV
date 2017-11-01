@@ -1,5 +1,7 @@
 package com.coway.trust.cmmn.exception;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class PreconditionException extends RuntimeException {
 	private static final long serialVersionUID = -6295850039169503104L;
 
@@ -31,6 +33,9 @@ public class PreconditionException extends RuntimeException {
 		super();
 		this.exception = e;
 		this.code = code;
+		if (StringUtils.isEmpty(message) && e != null) {
+			message = e.getMessage();
+		}
 		this.message = message;
 		this.detailMessage = detailMessage;
 	}

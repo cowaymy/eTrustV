@@ -1,5 +1,6 @@
 package com.coway.trust.cmmn.exception;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -43,6 +44,9 @@ public class AuthException extends RuntimeException {
 		super();
 		this.exception = e;
 		this.httpStatus = httpStatus;
+		if (StringUtils.isEmpty(message) && e != null) {
+			message = e.getMessage();
+		}
 		this.message = message;
 		this.detailMessage = detailMessage;
 	}

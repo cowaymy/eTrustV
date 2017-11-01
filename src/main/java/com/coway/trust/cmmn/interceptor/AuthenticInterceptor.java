@@ -41,6 +41,12 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws ServletException {
 
+		// check request to Callcenter
+		if (VerifyRequest.isCallCenterRequest(request)) {
+			LOGGER.info("[preHandle] this url is call by Callcenter.......");
+			return true;
+		}
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
 		if (sessionVO != null && sessionVO.getUserId() > 0) {
@@ -69,7 +75,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
 		}
 
-        // 메뉴에 등록된 uri 에 대한 menuCode....  등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음.
+		// 메뉴에 등록된 uri 에 대한 menuCode.... 등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음.
 		if (pgmPahMenuAuth != null && CommonUtils.isNotEmpty(pgmPahMenuAuth.get("menuCode"))) {
 			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 			sessionVO.setMenuCode((String) pgmPahMenuAuth.get("menuCode"));
@@ -80,32 +86,38 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		// check request to Callcenter
+		if (VerifyRequest.isNotCallCenterRequest(request)) {
 
-		if (sessionVO == null || sessionVO.getUserId() == 0) {
-			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-		}
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
-		if (modelAndView != null) {
-			Map<String, Object> params = new HashMap<>();
-
-			if (request.getRequestURI().endsWith(".do")) {
-				params.put("userId", sessionVO.getUserId());
-				params.put("pgmPath", request.getRequestURI());
-				params.put("userName", sessionVO.getUserName());
-				params.put("systemId", AppConstants.LOGIN_WEB);
-				params.put("pgmCode", "-");
-				params.put("ipAddr", CommonUtils.getClientIp(request));
-
-				accessMonitoringService.insertAccessMonitoring(params);
+			if (sessionVO == null || sessionVO.getUserId() == 0) {
+				throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
 			}
 
-			//url 로 직접 접근시 menuCode 처리.
-			modelAndView.getModelMap().put(AppConstants.CURRENT_MENU_CODE, sessionVO.getMenuCode());
+			if (modelAndView != null) {
+				Map<String, Object> params = new HashMap<>();
 
-			modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
-			modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
-			modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
+				if (request.getRequestURI().endsWith(".do")) {
+					params.put("userId", sessionVO.getUserId());
+					params.put("pgmPath", request.getRequestURI());
+					params.put("userName", sessionVO.getUserName());
+					params.put("systemId", AppConstants.LOGIN_WEB);
+					params.put("pgmCode", "-");
+					params.put("ipAddr", CommonUtils.getClientIp(request));
+
+					accessMonitoringService.insertAccessMonitoring(params);
+				}
+
+				// url 로 직접 접근시 menuCode 처리.
+				modelAndView.getModelMap().put(AppConstants.CURRENT_MENU_CODE, sessionVO.getMenuCode());
+
+				modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
+				modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
+				modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
+			}
+		}else{
+			LOGGER.info("[postHandle] this url is call by Callcenter.......");
 		}
 	}
 

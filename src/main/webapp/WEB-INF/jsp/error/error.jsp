@@ -11,12 +11,11 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/common.css" />
 
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>        <!-- 일반 공통 js -->
 
     <script type="text/javaScript">
         $(function () {
-            Common.alert("${exception}");
-            Common.setMsg("${exception}");
         });
     </script>
 </head>

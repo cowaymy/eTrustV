@@ -20,6 +20,11 @@ public class AppConstants {
 
 	public static final int RECORD_MAX_SIZE = 100000;
 
+
+	public static final String CALLCENTER_TOKEN_KEY = "_TOKEN";
+	public static final String CALLCENTER_USER_KEY = "_USER_ID";
+
+
 	// API BASE UR
 	public static final String API_BASE_URI = AppConstants.PATH_API + AppConstants.TAG;
 	public static final String CALL_CENTER_API_BASE_URI = AppConstants.SLASH + AppConstants.CALLCENTER
@@ -143,11 +148,12 @@ public class AppConstants {
 	 * 공통 메세지 KEY
 	 */
 	public static final String MSG_SUCCESS = "sys.msg.success";
-	public static final String MSG_FAIL = "sys.msg.success";
+	public static final String MSG_FAIL = "sys.msg.fail";
 	public static final String MSG_NOT_EXIST = "sys.msg.notexist";
 	public static final String MSG_INVALID = "sys.msg.invalid";
 	public static final String MSG_NECESSARY = "sys.msg.necessary";
 	public static final String MSG_FILE_MAX_LIMT = "sys.msg.file.limit";
+	public static final String MSG_INVALID_TOKEN = "sys.msg.invalid.token";
 	/**
 	 * 공통 코드 KEY
 	 */

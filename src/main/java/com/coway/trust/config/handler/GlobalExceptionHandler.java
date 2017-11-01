@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMeth
 import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.AuthException;
+import com.coway.trust.cmmn.exception.CallcenterException;
 import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 
@@ -130,6 +131,28 @@ public class GlobalExceptionHandler {
 			return new ResponseEntity<Object>(message, headers, HttpStatus.BAD_REQUEST);
 		} else {
 			return getErrorPageModelAndView(ex);
+		}
+	}
+
+	@ExceptionHandler(CallcenterException.class)
+	public Object callcenterException(HttpServletRequest request, HttpServletResponse response,
+			CallcenterException ex) {
+		LOGGER.error("[CallcenterException]code : {}", ex.getHttpStatus().value());
+		LOGGER.error("[CallcenterException]message : {}", ex.getMessage());
+		LOGGER.error("[CallcenterException]ex : {}", ex);
+		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
+		if (isRest(request.getRequestURI(), contentType)) {
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(String.valueOf(ex.getHttpStatus().value()));
+			message.setMessage(ex.getMessage());
+			message.setDetailMessage(ex.getDetailMessage());
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			return new ResponseEntity<Object>(message, headers, HttpStatus.NOT_ACCEPTABLE);
+		} else {
+			ModelAndView mav = new ModelAndView("error/nomenu/callcenterError");
+			mav.addObject("errorMessage", ex.getMessage());
+			return mav;
 		}
 	}
 
