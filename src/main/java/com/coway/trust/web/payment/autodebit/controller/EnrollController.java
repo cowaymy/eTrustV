@@ -33,6 +33,7 @@ import com.coway.trust.biz.payment.autodebit.service.EnrollService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -121,7 +122,7 @@ public class EnrollController {
 	 * Save Enroll
 	 */
 	@RequestMapping(value = "/saveEnroll", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveEnroll(@RequestBody Map<String, Object> params, Model model) throws Exception{
+	public ResponseEntity<ReturnMessage> saveEnroll(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception{
 
 		String frDate = CommonUtils.nvl(params.get("rdpCreateDateFr2")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("rdpCreateDateFr2"));
 		String toDate = CommonUtils.nvl(params.get("rdpCreateDateTo2")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("rdpCreateDateTo2"));
@@ -132,6 +133,7 @@ public class EnrollController {
 		param.put("cmbIssueBank2", params.get("cmbIssueBank2"));
 		param.put("rdpCreateDateFr2", frDate);
 		param.put("rdpCreateDateTo2", toDate);
+		param.put("userId", sessionVO.getUserId());
     	//프로시저 함수 호출
 		enrollService.saveEnroll(param);
     	

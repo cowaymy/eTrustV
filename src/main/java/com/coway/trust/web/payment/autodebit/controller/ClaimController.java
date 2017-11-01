@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -37,6 +40,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class ClaimController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClaimController.class);
+	
+	@Value("${autodebit.file.upload.path}")
+	private String filePath;
+	
+	@Value("${autodebit.email.receiver}")
+	private String emailReceiver;
+	
+	@Autowired
+	private AdaptorService adaptorService;
 
 	@Resource(name = "claimService")
 	private ClaimService claimService;
@@ -109,7 +121,9 @@ public class ClaimController {
 	 */
 	@RequestMapping(value = "/updateDeactivate.do", method = RequestMethod.GET)
     public ResponseEntity<ReturnMessage> updateDeactivate(@RequestParam Map<String, Object> params,
-    		Model model) {
+    		Model model, SessionVO sessionVO) {
+		
+		params.put("userId", sessionVO.getUserId());
     	// 처리.
 		claimService.updateDeactivate(params);
 		
@@ -130,7 +144,9 @@ public class ClaimController {
 	 */
 	@RequestMapping(value = "/sendFaileDeduction.do", method = RequestMethod.GET)
     public ResponseEntity<ReturnMessage> sendFaileDeduction(@RequestParam Map<String, Object> params,
-    		Model model) {
+    		Model model, SessionVO sessionVO) {
+		
+		params.put("userId", sessionVO.getUserId());
     	// 처리.
 		claimService.sendFaileDeduction(params);
 		
@@ -295,7 +311,7 @@ public class ClaimController {
 	 */
 	@RequestMapping(value = "/generateNewClaim.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> generateNewClaim(@RequestBody Map<String, ArrayList<Object>> params,
-    		Model model) {
+    		Model model, SessionVO sessionVO) {
 		
 		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 		
@@ -343,6 +359,7 @@ public class ClaimController {
         	claim.put("new_debitDate", inputDate);
         	claim.put("new_claimDay", claimDay);
         	claim.put("new_issueBank", bankId);
+        	claim.put("userId", sessionVO.getUserId());
         	
         	claimService.createClaim(claim);		        	//프로시저 함수 호출
         	List<EgovMap> resultMapList = (List<EgovMap>)claim.get("p1");         	//결과 뿌려보기 : 프로시저에서 p1이란 key값으로 객체를 반환한다.
@@ -493,7 +510,7 @@ public class ClaimController {
 		String sFile = "ALB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "yyyyMMdd") + "B01.txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/ALB/ClaimBankALB/" + sFile);
+		File file = new File(filePath + "/ALB/ClaimBankALB/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -550,9 +567,16 @@ public class ClaimController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		//String emailTitle = "CIMB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("ALB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 	
 	/**
@@ -568,7 +592,7 @@ public class ClaimController {
 		String sFile = "AD_Billing_" + todayDate + ".txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/ALB/ClaimBankALB/" + sFile);
+		File file = new File(filePath + "/ALB/ClaimBankALB/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -673,9 +697,16 @@ public class ClaimController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		//String emailTitle = "CIMB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("New ALB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	
 	}
 	 
@@ -692,7 +723,7 @@ public class ClaimController {
 		String sFile = "CIMB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "yyyyMMdd") + "B01.dat";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/CIMB/ClaimBank/" + sFile);
+		File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -785,9 +816,16 @@ public class ClaimController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		//String emailTitle = "CIMB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("CIMB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 	
 	/**
@@ -802,7 +840,7 @@ public class ClaimController {
 		String sFile = "EPY1000991_" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyyyy") + ".csv";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/HLBB/ClaimBank/" + sFile);
+		File file = new File(filePath + "/HLBB/ClaimBank/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -869,9 +907,16 @@ public class ClaimController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		//String emailTitle = "HLBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("HLBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 	 
 	/**
@@ -886,7 +931,7 @@ public class ClaimController {
 		String sFile = "ADSACC.txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/MBB/ClaimBank/" + sFile);
+		File file = new File(filePath + "/MMB/ClaimBank/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -980,9 +1025,16 @@ public class ClaimController {
 		out.close();
 		fileWriter.close();
 		
-		// 메일 보내기는 나중에
-		//String emailTitle = "MBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("MBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
 	}
 	 
 	/**
@@ -997,7 +1049,7 @@ public class ClaimController {
 		String sFile = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyyyy") + "01.DIF";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/PBB/ClaimBank/" + sFile);
+		File file = new File(filePath + "/PBB/ClaimBank/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -1091,9 +1143,16 @@ public class ClaimController {
 		out.close();
 		fileWriter.close();
 
-		//메일 보내기는 나중에
-		//String emailTitle = "PBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
-		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+		// E-mail 전송하기
+		EmailVO email = new EmailVO();
+		
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("PBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+		
+		adaptorService.sendEmail(email, false);
          
 		/*********************************************
 		 * Second file
@@ -1138,9 +1197,16 @@ public class ClaimController {
  		out2nd.close();
  		fileWriter2nd.close();
  		
- 		// 메일 보내기는 나중에
- 		//emailTitle = "PBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
- 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
+ 		// E-mail 전송하기
+		EmailVO email2 = new EmailVO();
+		
+		email2.setTo(emailReceiver);
+		email2.setHtml(false);
+		email2.setSubject("PBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email2.setText("Please find attached the claim file for your kind perusal.");
+		email2.addFile(file);
+		
+		adaptorService.sendEmail(email2, false);
 	}
 	
 	

@@ -109,7 +109,8 @@ $(document).ready(function(){
     //Grid Properties 설정 
     var gridPros = {            
             editable : false,                 // 편집 가능 여부 (기본값 : false)
-            showStateColumn : false     // 상태 칼럼 사용
+            showStateColumn : false,     // 상태 칼럼 사용
+            softRemoveRowMode:false
     };
     
     // Order 정보 (Master Grid) 그리드 생성
@@ -152,6 +153,9 @@ $(document).ready(function(){
                 if (typeof event.target.result != "undefined") {
                     // 그리드 CSV 데이터 적용시킴
                     AUIGrid.setCsvGridData(updResultGridID, event.target.result, false);
+                    
+                    //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                    AUIGrid.removeRow(updResultGridID,0);
                 } else {
                     alert('No data to import!');
                 }
@@ -192,6 +196,9 @@ $(document).ready(function(){
                AUIGrid.setCsvGridData(updResultGridID, csvText);
                
                AUIGrid.removeAjaxLoader(updResultGridID);
+               
+             //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+               AUIGrid.removeRow(updResultGridID,0);
            }
        },
        error : function(e) {
@@ -480,7 +487,7 @@ function fn_resultFileUp(){
         	         
         	         //param data array
         	         var data = {};
-        	         data.form = [{"ctrlId":ctrlId}];
+        	         data.form = [{"ctrlId":ctrlId, "ctrlIsCrc" : ctrlIsCrc , "bankId" : bankId}];
         	         
         	         //CALIM RESULT UPDATE
         	         if(updateResultItemKind == 'LIVE'){
@@ -731,8 +738,7 @@ function fn_createFile(){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
                         <li><p class="link_btn"><a href="#">Schedule Setting</a></p></li>
                         <li><p class="link_btn"><a href="#">Schedule Claim Batch</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');">Fail Deduction SMS</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initEnrollmentList.do">Enrollment List</a></p></li>                                               
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');">Fail Deduction SMS</a></p></li>                                                                       
                     </ul>
                     <ul class="btns">                       
                     </ul>
@@ -978,6 +984,7 @@ function fn_createFile(){
         
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();">Upload</a></p></li>
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/ClaimResultUpdate_Format.csv">Download CSV Format</a></p></li>
         </ul>
     </section>
     </form>       

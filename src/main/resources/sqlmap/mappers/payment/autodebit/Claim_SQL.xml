@@ -8,7 +8,7 @@
             Extent1.CTRL_ID,
             Extent1.CTRL_BATCH_NO,
             Extent1.CTRL_BANK_ID,
-            NVL(Extent1.CTRL_BATCH_DT,'1900-01-01') AS CTRL_BATCH_DT,
+            NVL(TO_CHAR(Extent1.CTRL_BATCH_DT,'DD-MM-YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS CTRL_BATCH_DT,
             NVL(Extent1.CTRL_BILL_AMT,0) AS CTRL_BILL_AMT,
             NVL(Extent1.CTRL_BILL_PAY_AMT,0) AS CTRL_BILL_PAY_AMT,
             NVL(Extent1.CTRL_IS_CLOS,0) AS CTRL_IS_CLOS,
@@ -93,7 +93,7 @@
         UPDATE PAY0041D SET 
             CTRL_STUS_ID = 8
             , UPD_DT = SYSDATE
-            , UPD_USER_ID = 4238
+            , UPD_USER_ID = #{userId}
         WHERE
             CTRL_ID = #{ctrlId}     
     </update>
@@ -107,7 +107,7 @@
 
     <update id="updateClaimResultLive" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_TEST(0,2,'20170803',#{userId},5)            
+            call SP_AUTO_DEBT_UPD_RESULT(#{ctrlId},#{ctrlIsCrc},#{bankId},#{userId})        
         }
     </update>
     
@@ -172,7 +172,7 @@
             Extent1.SVC_CNTRCT_ID ,
             Extent1.BANK_DTL_BANK_ID ,
             (CASE WHEN Extent1.BANK_APPV IS NOT NULL THEN Extent1.BANK_APPV ELSE 0 END) AS BANK_APPV,
-            (CASE WHEN Extent1.BANK_DTL_APPR_DT IS NOT NULL THEN Extent1.BANK_DTL_APPR_DT ELSE '1900-01-01' END) AS BANK_DTL_APPR_DT ,
+            (CASE WHEN Extent1.BANK_DTL_APPR_DT IS NOT NULL THEN Extent1.BANK_DTL_APPR_DT ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END) AS BANK_DTL_APPR_DT ,
             (CASE WHEN Extent2.BIC IS NOT NULL THEN Extent2.BIC ELSE ' ' END) AS BIC  ,
             (CASE WHEN Extent1.BANK_DTL_FPX_ID IS NOT NULL THEN Extent1.BANK_DTL_FPX_ID ELSE 0 END) AS BANK_DTL_FPX_ID,
             CASE WHEN Extent5.F_PX_ID IS NOT NULL THEN Extent5.CODE ELSE ' ' END AS FPX_CODE  ,
@@ -215,7 +215,7 @@
     <resultMap id="resultClaimMap" type="egovMap" />
     <select id="createClaim" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank},#{new_debitDate},4238,#{new_claimDay},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})            
+            call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank},#{new_debitDate},#{userId},#{new_claimDay},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})            
         }
     </select>
     
@@ -268,7 +268,7 @@
     <resultMap id="resultSMS" type="egovMap" />
     <select id="sendFaileDeduction" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_AUTO_DEBT_FAIL_DEDUCT_SMS(#{ctrlId} , 4238,#{returnData, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=resultSMS})            
+            call SP_AUTO_DEBT_FAIL_DEDUCT_SMS(#{ctrlId} , #{userId},#{returnData, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=resultSMS})            
         }
     </select>
 </mapper>

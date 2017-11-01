@@ -326,13 +326,13 @@ function checkBillGroup(){
     
     <!-- grid_wrap start -->
     <article class="grid_wrap">
-        <div id="target_rental_grid_wrap" style="width: 100%; height: 150px; margin: 0 auto;"></div>
+        <div id="target_rental_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
     </article>
     <!-- grid_wrap end -->
 
     <!-- grid_wrap start -->
     <article class="grid_wrap mt10">
-        <div id="target_rentalD_grid_wrap" style="width: 100%; height: 250px; margin: 0 auto;"></div>
+        <div id="target_rentalD_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
     </article>
     <!-- grid_wrap end -->
     
