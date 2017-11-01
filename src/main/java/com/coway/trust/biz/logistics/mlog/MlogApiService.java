@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.coway.trust.api.mobile.logistics.audit.InputBarcodePartsForm;
 import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodeForm;
+import com.coway.trust.api.mobile.logistics.inventory.InventoryReqTransferMForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockReqMForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiMForm;
@@ -86,7 +87,7 @@ public interface MlogApiService {
 	 * @return
 	 */
 	
-	void saveInvenReqTransfer(List<Map<String, Object>> reqTransferMList);
+	void saveInvenReqTransfer(InventoryReqTransferMForm inventoryReqTransferMForm);
 	
 	void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm);
 
