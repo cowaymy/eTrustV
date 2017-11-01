@@ -214,11 +214,12 @@ var journalPopLayout = [
             type : "ButtonRenderer",
             labelText : "Pass",
             onclick : function(rowIndex, columnIndex, value, item) {
-                //if(item.isMatch == "X"){
-                    fn_updateJournalPassEntry(item.journalAccount, item.remark, item.fTrnscCrditAmt, item.fTrnscDebtAmt, item.fTrnscId);
-                //}else{
+                if(item.isMatch == "X"){
                 	
-                //}
+                    fn_updateJournalPassEntry(item.journalAccount, item.remark, item.fTrnscCrditAmt, item.fTrnscDebtAmt, item.fTrnscId);
+                }else{
+                	
+                }
             }
         }
 	},{
@@ -228,10 +229,12 @@ var journalPopLayout = [
             type : "ButtonRenderer",
             labelText : "Exclude",
             onclick : function(rowIndex, columnIndex, value, item) {
-            	//if(item.isMatch == "X"){
+            	
+            	if(item.isMatch == "X"){
                 	fn_updateJournalExclude(item.remark, item.fTrnscId);
-                //}else{
-                //}
+                }else{
+                	
+                }
             }
         }
 	},{
