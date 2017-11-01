@@ -436,6 +436,14 @@ public class CommissionSystemController {
 		return ResponseEntity.ok(ruleBookMngList);
 	}
 	
+	/**
+	 * Search rule book Item info
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/selectRuleBookInfo", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectRuleBookInfo(@RequestParam Map<String, Object> params, ModelMap model) {
 		
@@ -552,6 +560,12 @@ public class CommissionSystemController {
 		return ResponseEntity.ok(message);
 	}
 	
+	/**
+	 * rule book actual / simulation version management pop
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/commissionRuleVersionMng.do")
 	public String commissionRuleVersionMng(@RequestParam Map<String, Object> params, ModelMap model) {
 		
@@ -570,6 +584,12 @@ public class CommissionSystemController {
 		return "commission/commissionRuleVersionManagement";
 	}
 	
+	/**
+	 * select actual / simulation version list
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/selectVersionList", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectVersionList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
@@ -595,6 +615,12 @@ public class CommissionSystemController {
 		return ResponseEntity.ok(map);
 	}
 	
+	/**
+	 * version simulation rule book / item insert
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/saveCommVersionInsert.do", method = RequestMethod.POST)
 	//public  ResponseEntity<ReturnMessage>  saveCommVersionInsert(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 	public  ResponseEntity<ReturnMessage>  saveCommVersionInsert(@RequestBody Map<String, Object> params, Model model) {
@@ -612,85 +638,9 @@ public class CommissionSystemController {
 		
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> simulList = (List<Object>)params.get(AppConstants.AUIGRID_ALL); 	// Get grid addList
+		formMap.put("loginId", loginId);
 		
-		System.out.println(formMap);
-		System.out.println(simulList);
-		
-		Map map = new HashMap();
-		map.put("loginId",loginId);
-		map.put("endDt",CommissionConstants.COMIS_END_DT);
-		formMap.put("endDt",CommissionConstants.COMIS_END_DT);
-		formMap.put("loginId",loginId);
-		commissionSystemService.udtVersionItemEndDt(formMap);
-		commissionSystemService.udtCommVersionRuleEndDt(map);
-		
-		
-		if(simulList.size() > 0){
-			for (Object obj : simulList) {
-				Map sMap = (HashMap<String, Object>) obj;
-				if( !("N".equals(sMap.get("newYn"))) ){
-    				sMap.put("loginId", loginId);
-    				sMap.put("endDt", CommissionConstants.COMIS_END_DT);
-    				//new item Data All insert
-					commissionSystemService.versionItemInsert(sMap);
-				}
-			}
-			
-			//select valid simulation all list 
-			List<EgovMap> itemList = commissionSystemService.selectSimulationMngList(map);
-			
-			String searchDt = formMap.get("searchDt").toString();
-			searchDt =  searchDt.substring(searchDt.indexOf("/")+1,searchDt.length())+searchDt.substring(0,searchDt.indexOf("/"));
-			System.out.println(" %% searchDt : "+searchDt);
-			//simulation item rule book save
-			if(itemList.size() > 0){
-				Map rMap = null; 
-				for(int i=0 ; i< itemList.size() ; i++){
-					rMap =  new HashMap();
-					
-					rMap.put("itemCd", itemList.get(i).get("itemCd"));
-					rMap.put("endDt", CommissionConstants.COMIS_END_DT);
-					rMap.put("searchDt", searchDt);
-					
-					List<EgovMap> ruleList = commissionSystemService.selectVersionRuleBookList(rMap);
-					/*System.out.println("##############################");
-					System.out.println(ruleList);
-					System.out.println("##############################");*/
-					
-					if( ruleList.size() > 0 ){
-						Map ruleMap = null;
-						for(int j =0 ; j < ruleList.size() ; j ++){
-							ruleMap = new HashMap();
-							
-							//String rulePid= sertchRulePid(ruleList,ruleList.get(i).get("ruleSeq").toString());
-    						ruleMap.put("itemSeq", itemList.get(i).get("itemSeq"));
-    						ruleMap.put("itemCd", ruleList.get(j).get("itemCd"));
-    						ruleMap.put("ruleLevel", ruleList.get(j).get("ruleLevel"));
-    						ruleMap.put("ruleSeq", ruleList.get(j).get("newSeq"));
-    						//ruleMap.put("rulePid", ruleList.get(j).get("rulePid"));
-    						ruleMap.put("rulePid", sertchRulePid(ruleList,ruleList.get(j).get("rulePid").toString()));
-    						ruleMap.put("ruleNm", ruleList.get(j).get("ruleNm"));
-    						ruleMap.put("ruleCategory", ruleList.get(j).get("ruleCategory"));
-    						ruleMap.put("ruleOpt1", ruleList.get(j).get("ruleOpt1"));
-    						ruleMap.put("ruleOpt2", ruleList.get(j).get("ruleOpt2"));
-    						ruleMap.put("valueType", ruleList.get(j).get("valueType"));
-    						ruleMap.put("valueTypeNm", ruleList.get(j).get("valueTypeNm"));
-    						ruleMap.put("resultValue", ruleList.get(j).get("resultValue"));
-    						ruleMap.put("resultValueNm", ruleList.get(j).get("resultValueNm"));
-    						ruleMap.put("ruleDesc", ruleList.get(j).get("ruleDesc"));
-    						ruleMap.put("startYearmonth", ruleList.get(j).get("startYearmonth"));
-    						ruleMap.put("endYearmonth", ruleList.get(j).get("endYearmonth"));
-    						ruleMap.put("useYn", ruleList.get(j).get("useYn"));
-    						ruleMap.put("crtUserId", loginId);
-    						ruleMap.put("updUserId", loginId);
-    						ruleMap.put("prtOrder", ruleList.get(j).get("prtOrder"));
-    						
-    						commissionSystemService.addCommVersionRuleData(ruleMap);
-						}
-					}
-				}
-			}
-		}
+		commissionSystemService.versionItemInsert(formMap,simulList);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -699,6 +649,13 @@ public class CommissionSystemController {
 		return ResponseEntity.ok(message);
 	}
 	
+	
+	/**
+	 * simulation valid search
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/varsionVaildSearch", method = RequestMethod.GET)
 	public ResponseEntity<String> varsionVaildSearch(@RequestParam Map<String, Object> params, ModelMap model) {
 		String itemSeq = itemSeq=  commissionSystemService.varsionVaildSearch(params.get("itemCd").toString());
@@ -706,19 +663,5 @@ public class CommissionSystemController {
 		return ResponseEntity.ok(itemSeq);
 	}
 	
-	public String sertchRulePid(List<EgovMap> list, String pid){
-		String rulePid="0";
-		System.out.println("***************pid : " +  pid);
-		for(int i = 0; i < list.size() ; i++){
-			if( !( "0".equals(pid) ) ){
-				if( pid.equals(list.get(i).get("ruleSeq").toString()) ){
-					rulePid = list.get(i).get("newSeq").toString();
-					break;
-				}
-			}
-		}
-		
-		return rulePid; 
-	}
 
 }

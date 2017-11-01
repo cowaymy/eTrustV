@@ -719,7 +719,6 @@ public class CommDownloadExcelController {
 	private ArrayList<ArrayList<String>> getDataList06T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0006T(params);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
-		System.out.println(dataList);
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
 			lst.add(dataList.get(i).get("deptCode").toString());
@@ -798,7 +797,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList08T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0008T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -832,7 +830,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList09T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0009T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -866,7 +863,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList10T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0010T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -899,7 +895,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList11T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0011T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -935,7 +930,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList12T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0012T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -969,7 +963,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList13T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0013T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -999,7 +992,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList14T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0014T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -1028,7 +1020,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList15T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0015T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -1062,7 +1053,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList16T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0016T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();
@@ -1389,7 +1379,6 @@ public class CommDownloadExcelController {
 	}
 	private ArrayList<ArrayList<String>> getDataList21T(Map<String, Object> params){
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0021T(params);
-		System.out.println(dataList);
 		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
 		for(int i =0 ; i< dataList.size() ; i++){
 			ArrayList<String> lst = new ArrayList<String>();

@@ -1197,7 +1197,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0006T(cMap);
 		}
 		
@@ -1216,7 +1215,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0007T(cMap);
 		}
 		
@@ -1235,7 +1233,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0008T(cMap);
 		}
 		
@@ -1254,7 +1251,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0009T(cMap);
 		}
 
@@ -1273,7 +1269,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0010T(cMap);
 		}
 
@@ -1292,7 +1287,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0011T(cMap);
 		}
 
@@ -1310,7 +1304,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0012T(cMap);
 		}
 
@@ -1328,7 +1321,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0013T(cMap);
 		}
 
@@ -1346,7 +1338,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0014T(cMap);
 		}
 
@@ -1364,7 +1355,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0015T(cMap);
 		}
 
@@ -1382,7 +1372,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0017T(cMap);
 		}
 
@@ -1401,7 +1390,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0018T(cMap);
 		}
 
@@ -1420,7 +1408,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0019T(cMap);
 		}
 
@@ -1439,7 +1426,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0020T(cMap);
 		}
 
@@ -1457,7 +1443,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0021T(cMap);
 		}
 
@@ -1475,7 +1460,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0022T(cMap);
 		}
 		
@@ -1493,7 +1477,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0023T(cMap);
 		}
 		
@@ -1511,7 +1494,6 @@ public class CommissionCalculationController {
 		
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
-			System.out.println(" isExclude : "+cMap.get("isExclude"));
 			commissionCalculationService.udtDataCMM0026T(cMap);
 		}
 		
@@ -1915,8 +1897,6 @@ public class CommissionCalculationController {
 		String msg = "";
 		
 		Map memMap = commissionCalculationService.incentiveItemAddMem(params);
-		System.out.println("params : " + params);
-		System.out.println("memMap : " + memMap);
 		if(memMap.get("MEM_CODE") == null || "".equals(memMap.get("MEM_CODE"))){
 			msg = "Invalid member.";
 		}else{

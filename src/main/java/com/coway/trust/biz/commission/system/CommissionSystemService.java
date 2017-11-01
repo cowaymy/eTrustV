@@ -170,14 +170,24 @@ public interface CommissionSystemService
      */
     int udtWeeklyCommissionGrid(List<Object> addList, String loginId);
     
+    /**
+     * simulation management list
+     * @param params
+     * @return
+     */
     List<EgovMap> selectSimulationMngList(Map<String, Object> params);
     
-    void udtVersionItemEndDt(Map<String, Object> params);
-    
+    /**
+     * simulation valid itemSeq search
+     * @param itemCd
+     * @return
+     */
     String varsionVaildSearch(String itemCd);
-    void versionItemInsert(Map<String, Object> params);
     
-    List<EgovMap> selectVersionRuleBookList(Map<String, Object> params);
-	void addCommVersionRuleData(Map<String, Object> params);
-	void udtCommVersionRuleEndDt(Map<String, Object> params);
+    /**
+     * version insert
+     * @param map
+     * @param list
+     */
+    void versionItemInsert(Map<String, Object> map,List<Object>list);
 }

@@ -895,16 +895,18 @@
             var id=$(this).attr("id");
             var val = $(this).val();
             
-            if (val == null || val == "") {
-                if ($(this).attr("placeholder")) {
-                    name = $(this).attr("placeholder");
-                }
-                Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+name+"' htmlEscape='false'/>");
-                //Common.alert(name + ":EMPTY DATA");
-                $(this).focus();
-                retVal=false;
-                return false;
-            }
+           	if(name != "ruleSeq"){
+	            if (val == null || val == "") {
+	                if ($(this).attr("placeholder")) {
+	                    name = $(this).attr("placeholder");
+	                }
+	                Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+name+"' htmlEscape='false'/>");
+	                //Common.alert(name + ":EMPTY DATA");
+	                $(this).focus();
+	                retVal=false;
+	                return false;
+	            }
+           	}
             
             if(name == "ruleOpt1" || name == "ruleOpt2" || name == "resultValue" ||name=="printOrder"){
                 $(this).val($(this).val().replace(/[^-\.0-9]/g,'')  ); 
@@ -1198,7 +1200,7 @@
 <input type="hidden" name="ruleLevel" />
 <input type="hidden" name="rulePid" />
 <input type="hidden" name="saveType" />
-<input type="text" name="versionType"/>
+<input type="hidden" name="versionType"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

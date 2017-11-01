@@ -77,21 +77,29 @@
 	     });
 	     
 	     $("#save").click(function(){
-	    	 var gridList = AUIGrid.getGridData(siGridID);       //그리드 데이터
-	    	 var formList = $("#searchForm").serializeJSON();
-	    	 var data = {};
-	    	 data.all = gridList;
-	    	 data.form = formList;
-	    	 Common.ajax("POST", "/commission/system/saveCommVersionInsert.do", data, function(result) {
-                 console.log("성공.");
-                 $("#search").click();
-             });
+	    	 if(AUIGrid.getGridData(siGridID).length <=0 ){
+	    		 Common.alert("Don't save to no Data");
+	    	 }else{
+	    		 Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridCall);
+	    	 }
+	    		 
 	     });
 	     
 		$("#clear").click(function(){
 			AUIGrid.clearGridData(siGridID);
 		});
 	});
+	function fn_saveGridCall(){
+		var gridList = AUIGrid.getGridData(siGridID);       //그리드 데이터
+        var formList = $("#searchForm").serializeJSON();
+        var data = {};
+        data.all = gridList;
+        data.form = formList;
+        Common.ajax("POST", "/commission/system/saveCommVersionInsert.do", data, function(result) {
+            console.log("성공.");
+            $("#search").click();
+        });
+	}
 	
     // 전체 체크 설정, 전체 체크 해제 하기
     function checkAll(isChecked) {
@@ -135,7 +143,7 @@
           },{
               dataField : "itemCd",
               style : "my-column",
-              visible : false,
+              //visible : false,
               editable : false
           },{
               dataField : "orgSeq",
@@ -216,7 +224,7 @@
         },{
             dataField : "itemCd",
             style : "my-column",
-            visible : false,
+            //visible : false,
             editable : false
         },{
             dataField : "newYn",
@@ -289,7 +297,7 @@
 
 		//그리드 데이터에서 checkFlag 필드의 값이 Active 인 행 아이템 모두 반환
 	    var activeItems = AUIGrid.getItemsByValue(acGridID, "checkFlag", 1);
-	
+	    console.log(activeItems);
 		 if (activeItems.length < 1){
 			Common.alert("<spring:message code='sys.msg.first.Select' arguments='[Actual]' htmlEscape='false'/>");
 			return false;
@@ -302,12 +310,13 @@
 			
 			var grdCnt = AUIGrid.getGridData(siGridID).length;
 			var addYn = true;
-			
-			for(var i=0 ; i<grdCnt ; i++){
-				for(var j=0 ; j <activeItems.length ; j++){
+			console.log("activeItems : "+ activeItems.length);
+            console.log("grdCnt : "+grdCnt);
+			for(var j=0 ; j <activeItems.length ; j++){
+			    for(var i=0 ; i<grdCnt ; i++){
+			//alert(activeItems[j].itemCd);
 					if(activeItems[j].itemCd == AUIGrid.getCellValue(siGridID, i, 'itemCd') ){
 						    AUIGrid.removeRow(siGridID, i);
-                            AUIGrid.removeSoftRows(siGridID);
 						/* if( 'Y' == AUIGrid.getCellValue(siGridID, i, 'newYn') ){
 						    Common.alert(activeItems[i].codeName + "는 이미 추가된 아이템입니다."); 
 						}else{
@@ -316,6 +325,8 @@
 					}
 				}
 			}
+            AUIGrid.removeSoftRows(siGridID);
+            
 			if(addYn){
 				for (var i = 0 ; i < activeItems.length ; i++){
 					rowList[i] = {
@@ -373,7 +384,7 @@
 		<p class="fav">
 		  <a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission RULE VERSION MANAGEMENT</h2>
+		<h2>Commission Rule Version Management</h2>
 		<ul class="right_opt">
 			<li><p class="btn_blue">
 			<a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a>
@@ -449,7 +460,7 @@
 				
 				<div style="width:45%"><!-- 50% start -->
 					<aside class="title_line"><!-- title_line start -->
-					   <h3> - ACTUAL</h3>
+					   <h3>ACTUAL</h3>
 					</aside><!-- title_line end -->
 					<div class="border_box" style="height:330px;"><!-- border_box start -->
 						<article class="grid_wrap"><!-- grid_wrap start -->
@@ -467,11 +478,11 @@
 				
 				<div style="width:55%"><!-- 50% start -->
 					<aside class="title_line"><!-- title_line start -->
-					   <h3> - SIMULATION </h3>
+					   <h3>SIMULATION </h3>
 					   <ul class="right_btns">
 				            <li>
 				                <p class="btn_grid">
-				                    <a href="#" id="clear"><span class="clear"></span>clear</a>
+				                    <a href="#" id="clear"><span class="clear"></span>Clear</a>
 				                </p>
 				            </li>
 				            <li>

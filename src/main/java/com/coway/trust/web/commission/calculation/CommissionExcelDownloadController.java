@@ -39,7 +39,6 @@ public class CommissionExcelDownloadController {
 			String codeNm = request.getParameter("code");
 			String actionType = request.getParameter("actionType");
 			
-			System.out.println(" ** Excel Code Name : " + codeNm);
 			String[] columns;
 			String[] titles;
 

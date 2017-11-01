@@ -670,6 +670,9 @@
         <if test="orgGrCombo != null and orgGrCombo != ''">
             AND T1.ORG_GR_CD = #{orgGrCombo}
         </if>
+        <if test="itemSeq != null and itemSeq != ''">
+            AND T1.ITEM_SEQ = #{itemSeq}
+        </if>
         <if test="orgCombo != null and orgCombo != ''">
             AND T1.ORG_CD = #{orgCombo}
         </if>
@@ -734,7 +737,7 @@
 	        #{typeCd},
 	        #{useYn},
 	        #{cdDs},
-	        #{startYearmonth},
+	        (SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
 	        #{endDt},
 	        #{loginId},
 	        SYSDATE,
@@ -744,40 +747,113 @@
     </insert>
     
     <select id="selectVersionRuleBookList" parameterType="Map" resultType="EgovMap">
-        SELECT 
-			ITEM_CD,
-			RULE_LEVEL,
-			RULE_SEQ,
-			RULE_PID,
-			RULE_NM,
-			RULE_CATEGORY,
-			RULE_OPT1,
-			RULE_OPT2,
-			VALUE_TYPE,
-			VALUE_TYPE_NM,
-			RESULT_VALUE,
-			RESULT_VALUE_NM,
-			RULE_DESC,
-			START_YEARMONTH,
-			END_YEARMONTH,
-			USE_YN,
-			CRT_USER_ID,
-			CRT_DT,
-			UPD_USER_ID,
-			UPD_DT,
-			PRT_ORDER,
-			RULE_TYPE,
-			CMM0043T_RULE_SEQ.nextval NEW_SEQ
-		FROM CMM0043M 
-		start with RULE_PID=0 AND #{searchDt} BETWEEN START_YEARMONTH AND END_YEARMONTH and item_cd =#{itemCd}
-        connect by prior RULE_SEQ=RULE_PID 
+         <![CDATA[   
+         SELECT 
+			CMM0043T_RULE_SEQ.nextval NEW_SEQ, 
+			sub.ITEM_SEQ, 
+			sub.ITEM_CD,
+			sub.ORG_SEQ, 
+			sub.ORG_GR_CD,
+			sub.ORG_CD, 
+			sub.orgDs, 
+			sub.TYPE_CD,
+			sub.ITEM_DESC,
+			sub.CODE ,
+			sub.CODE_NAME  ,
+			sub.cdDs ,       
+			sub.RULE_SEQ ,
+			sub.RULE_LEVEL ,
+			sub.RULE_PID , 
+			sub.RULE_NM ,
+			sub.RULE_CATEGORY ,
+			sub.RULE_OPT1 ,
+			sub.RULE_OPT2 ,
+			sub.VALUE_TYPE ,
+			sub.VALUE_TYPE_NM ,
+			sub.RESULT_VALUE ,
+			sub.RESULT_VALUE_NM ,
+			sub.RULE_DESC ,
+			sub.START_YEARMONTH ,
+			sub.END_YEARMONTH ,
+			sub.USE_YN ,       
+			sub.START_DT ,
+			sub.END_DT ,
+			sub.PRT_ORDER
+         FROM (
+		     SELECT
+		        T1.ITEM_SEQ, 
+		        T1.ITEM_CD,
+		        T1.ORG_SEQ, 
+		        T1.ORG_GR_CD,
+		        T1.ORG_CD, 
+		        (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID= T1.ORG_CD ) AS orgDs, 
+		        T1.TYPE_CD,
+		        T1.ITEM_DESC,
+		        T2.CODE ,
+		        T2.CODE_NAME  ,
+		        T2.CODE_DESC AS cdDs ,       
+		        T3.RULE_SEQ ,
+		        T3.RULE_LEVEL ,
+		        CASE WHEN T3.RULE_PID IS NULL THEN NULL
+		        WHEN T3.RULE_PID='0' THEN '' 
+		        ELSE T3.RULE_PID END RULE_PID , 
+		        T3.RULE_NM ,
+		        T3.RULE_CATEGORY ,
+		        T3.RULE_OPT1 ,
+		        T3.RULE_OPT2 ,
+		        T3.VALUE_TYPE ,
+		        T3.VALUE_TYPE_NM ,
+		        T3.RESULT_VALUE ,
+		        T3.RESULT_VALUE_NM ,
+		        T3.RULE_DESC ,
+		        T3.START_YEARMONTH ,
+		        T3.END_YEARMONTH ,
+		        T3.USE_YN ,       
+		        CASE WHEN T3.START_YEARMONTH IS NOT NULL AND LENGTH(T3.START_YEARMONTH)=6 
+		        THEN SUBSTR(T3.START_YEARMONTH,5) || '/' || SUBSTR(T3.START_YEARMONTH,0,4) 
+		        ELSE T3.START_YEARMONTH END START_DT ,
+		        CASE WHEN T3.END_YEARMONTH IS NOT NULL AND LENGTH(T3.END_YEARMONTH)=6 
+		        THEN SUBSTR(T3.END_YEARMONTH,5) || '/' || SUBSTR(T3.END_YEARMONTH,0,4) 
+		        ELSE T3.END_YEARMONTH END END_DT ,
+		        T3.PRT_ORDER
+		    FROM CMM0042C T1 JOIN SYS0013M T2
+		        ON T1.ITEM_CD = to_char(T2.CODE_ID)
+		     JOIN CMM0043M T3
+		        ON T1.ITEM_SEQ = T3.ITEM_SEQ  
+		      WHERE 1=1  
+		        ]]>
+		    <if test="orgSeq != null and orgSeq != ''">
+		      AND T1.ORG_SEQ = #{orgSeq}
+		    </if>
+		    <if test="itemSeq != null and itemSeq != ''">
+		      AND T1.ITEM_SEQ = #{itemSeq}
+		    </if>
+		    <if test="itemCd != null and itemCd != ''">
+		      AND T1.ITEM_CD = #{itemCd}
+		    </if>
+		     <if test="ruleSeq != null and ruleSeq != ''">
+		      AND T3.RULE_SEQ = #{ruleSeq}
+		    </if>
+		    START WITH RULE_PID=0
+		    <if test="useYnCombo != null and useYnCombo != ''">
+		      AND T3.USE_YN = #{useYnCombo}
+		    </if>
+		     <if test="searchDt != null and searchDt != ''">
+		      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+		    </if>
+		    CONNECT BY PRIOR RULE_SEQ =RULE_PID
+		    <if test="useYnCombo != null and useYnCombo != ''">
+		      AND T3.USE_YN = #{useYnCombo}
+		    </if>
+		      <if test="searchDt != null and searchDt != ''">
+		      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+		    </if>
+		        ORDER BY T3.RULE_LEVEL , T3.PRT_ORDER    
+        )sub
   </select>
   
   
   <insert id="addCommVersionRuleData" parameterType="Map">
-    <selectKey keyProperty="simulRulSeq" resultType="String" order="BEFORE">
-        SELECT CMM0043T_RULE_SEQ.nextval FROM dual
-    </selectKey>
         INSERT INTO CMM0043T (
         RULE_SEQ,
         ITEM_SEQ,
@@ -802,7 +878,12 @@
         UPD_DT,
         PRT_ORDER
         ) VALUES (
-        #{ruleSeq},
+        <if test="ruleSeq != null and ruleSeq != ''">
+	        #{ruleSeq},
+        </if>
+        <if test="ruleSeq == null or ruleSeq == ''">
+            CMM0043T_RULE_SEQ.nextval,
+        </if>
         #{itemSeq},
         #{itemCd},
         #{ruleLevel},
@@ -816,12 +897,7 @@
         #{resultValue},
         #{resultValueNm},
         #{ruleDesc},
-        <if test="startYearmonth != null and startYearmonth != ''">
-        #{startYearmonth},
-        </if>
-        <if test="startYearmonth == null or startYearmonth == ''">
         (SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
-        </if>
         #{endYearmonth},
         #{useYn},
         #{crtUserId},
@@ -898,22 +974,27 @@
     <if test="orgSeq != null and orgSeq != ''">
       AND T1.ORG_SEQ = #{orgSeq}
     </if>
-    <if test="simulItemSeq != null and simulItemSeq != ''">
-      AND T1.ITEM_SEQ = #{simulItemSeq}
-    </if>
     <if test="itemCd != null and itemCd != ''">
       AND T1.ITEM_CD = #{itemCd}
     </if>
      <if test="ruleSeq != null and ruleSeq != ''">
       AND T3.RULE_SEQ = #{ruleSeq}
     </if>
+    START WITH RULE_PID=0
+    <if test="useYnCombo != null and useYnCombo != ''">
+      AND T3.USE_YN = #{useYnCombo}
+    </if>
+     <if test="searchDt != null and searchDt != ''">
+      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+    </if>
+    CONNECT BY PRIOR RULE_SEQ =RULE_PID
     <if test="useYnCombo != null and useYnCombo != ''">
       AND T3.USE_YN = #{useYnCombo}
     </if>
       <if test="searchDt != null and searchDt != ''">
       AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
     </if>
-        ORDER BY T3.PRT_ORDER    
+        ORDER BY T3.RULE_LEVEL , T3.PRT_ORDER     
   </select>
   
   <select id="cntSimulUpdateData" parameterType="Map" resultType="int">

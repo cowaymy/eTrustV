@@ -417,6 +417,7 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			}else{
 				params.put("endYearmonth", CommissionConstants.COMIS_END_DT);
 				params.put("prtOrder", params.get("printOrder"));
+				params.put("ruleSeq", null);
 				commissionSystemMapper.addCommVersionRuleData(params); //void type
 				cnt=cnt+1;
 			}
@@ -477,6 +478,7 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
     			}
     			params.put("endYearmonth", CommissionConstants.COMIS_END_DT);
     			params.put("prtOrder", params.get("printOrder"));
+    			params.put("ruleSeq", null);
     			commissionSystemMapper.addCommVersionRuleData(params);
     			cnt=cnt+1;
 			}
@@ -576,39 +578,122 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 		return cnt;
 	}
 	
+	/**
+	 * simulation management list
+	 */
 	@Override
 	public List<EgovMap> selectSimulationMngList(Map<String, Object> params) {
 		return commissionSystemMapper.selectSimulationMngList(params);
 	}
 	
-	@Override
-	public void udtVersionItemEndDt (Map<String, Object> params){
-		commissionSystemMapper.udtVersionItemEndDt(params);
-	}
-	
+	/**
+	 * simulation valid itemSeq search
+	 */
 	@Override
 	public String varsionVaildSearch (String itemCd){
 		return commissionSystemMapper.varsionVaildSearch(itemCd);
 	}
 	
+	/**
+	 * version rule / item insert
+	 */
 	@Override
-	public void versionItemInsert(Map<String, Object> params){
-		commissionSystemMapper.versionItemInsert(params);
+	public void versionItemInsert(Map<String, Object> formMap, List<Object> simulList){
+		
+		String loginId = formMap.get("loginId").toString();
+		
+		Map map = new HashMap();
+		map.put("loginId",loginId);
+		map.put("endDt",CommissionConstants.COMIS_END_DT);
+		formMap.put("endDt",CommissionConstants.COMIS_END_DT);
+		formMap.put("loginId",loginId);
+		
+		commissionSystemMapper.udtVersionItemEndDt(formMap);
+		commissionSystemMapper.udtCommVersionRuleEndDt(map);
+		
+		
+		if(simulList.size() > 0){
+			for (Object obj : simulList) {
+				Map sMap = (HashMap<String, Object>) obj;
+				sMap.put("loginId", loginId);
+				sMap.put("endDt", CommissionConstants.COMIS_END_DT);
+				sMap.put("useYn", "Y");
+				//new item Data All insert
+				commissionSystemMapper.versionItemInsert(sMap);
+			}
+			
+			//select valid simulation all list 
+			List<EgovMap> itemList = commissionSystemMapper.selectSimulationMngList(map);
+			
+			String searchDt = formMap.get("searchDt").toString();
+			searchDt =  searchDt.substring(searchDt.indexOf("/")+1,searchDt.length())+searchDt.substring(0,searchDt.indexOf("/"));
+			System.out.println(" %% searchDt : "+searchDt);
+			//simulation item rule book save
+			if(itemList.size() > 0){
+				Map rMap = null; 
+				for(int i=0 ; i< itemList.size() ; i++){
+					rMap =  new HashMap();
+					
+					rMap.put("itemCd", itemList.get(i).get("itemCd"));
+					rMap.put("orgSeq", itemList.get(i).get("orgSeq"));
+					rMap.put("endDt", CommissionConstants.COMIS_END_DT);
+					rMap.put("searchDt", searchDt);
+					
+					List<EgovMap> ruleList = commissionSystemMapper.selectVersionRuleBookList(rMap);
+					
+					if( ruleList.size() > 0 ){
+						Map ruleMap = null;
+						for(int j =0 ; j < ruleList.size() ; j ++){
+							ruleMap = new HashMap();
+    						ruleMap.put("itemSeq", itemList.get(i).get("itemSeq"));
+    						ruleMap.put("itemCd", ruleList.get(j).get("itemCd"));
+    						ruleMap.put("ruleLevel", ruleList.get(j).get("ruleLevel"));
+    						ruleMap.put("ruleSeq", ruleList.get(j).get("newSeq"));
+    						//ruleMap.put("rulePid", ruleList.get(j).get("rulePid"));
+    						ruleMap.put("rulePid", searchRulePid(ruleList,ruleList.get(j).get("rulePid") == null ? "0" : ruleList.get(j).get("rulePid").toString()));
+    						ruleMap.put("ruleNm", ruleList.get(j).get("ruleNm"));
+    						ruleMap.put("ruleCategory", ruleList.get(j).get("ruleCategory"));
+    						ruleMap.put("ruleOpt1", ruleList.get(j).get("ruleOpt1"));
+    						ruleMap.put("ruleOpt2", ruleList.get(j).get("ruleOpt2"));
+    						ruleMap.put("valueType", ruleList.get(j).get("valueType"));
+    						ruleMap.put("valueTypeNm", ruleList.get(j).get("valueTypeNm"));
+    						ruleMap.put("resultValue", ruleList.get(j).get("resultValue"));
+    						ruleMap.put("resultValueNm", ruleList.get(j).get("resultValueNm"));
+    						ruleMap.put("ruleDesc", ruleList.get(j).get("ruleDesc"));
+    						//ruleMap.put("startYearmonth", ruleList.get(j).get("startYearmonth"));
+    						ruleMap.put("endYearmonth", CommissionConstants.COMIS_END_DT);
+    						ruleMap.put("useYn", ruleList.get(j).get("useYn"));
+    						ruleMap.put("crtUserId", loginId);
+    						ruleMap.put("updUserId", loginId);
+    						ruleMap.put("prtOrder", ruleList.get(j).get("prtOrder"));
+    						
+    						commissionSystemMapper.addCommVersionRuleData(ruleMap);
+						}
+					}
+				}
+			}
+		}
+		
+		//commissionSystemMapper.versionItemInsert(params);
 	}
 	
-	@Override
-	public List<EgovMap> selectVersionRuleBookList(Map<String, Object> params){
-		return commissionSystemMapper.selectVersionRuleBookList(params);
-	}
-	
-	@Override
-	public void addCommVersionRuleData(Map<String, Object> params){
-		commissionSystemMapper.addCommVersionRuleData(params);
-	}
-	
-	@Override
-	public void udtCommVersionRuleEndDt(Map<String, Object> params){
-		commissionSystemMapper.udtCommVersionRuleEndDt(params);
+	/**
+	 * pid change
+	 * @param list
+	 * @param pid
+	 * @return
+	 */
+	public String searchRulePid(List<EgovMap> list, String pid){
+		String rulePid="0";
+		for(int i = 0; i < list.size() ; i++){
+			if( !( "0".equals(pid) ) ){
+				if( pid.equals(list.get(i).get("ruleSeq").toString()) ){
+					rulePid = list.get(i).get("newSeq").toString();
+					break;
+				}
+			}
+		}
+		return rulePid; 
 	}
 
 }
