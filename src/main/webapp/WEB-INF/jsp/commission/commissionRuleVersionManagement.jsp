@@ -93,14 +93,6 @@
 		});
 	});
 	
-	/* // get Ajax Data and set grid data
-    function fn_getRuleBookMngListAjax() {
-        Common.ajax("GET", "/commission/system/selectRuleBookOrgMngList", $("#searchForm").serialize(), function(result) {
-            console.log("성공.");
-            console.log("data : " + result);
-            AUIGrid.setGridData(myGridID, result);
-        });
-    } */
     // 전체 체크 설정, 전체 체크 해제 하기
     function checkAll(isChecked) {
         var rowCount = AUIGrid.getRowCount(acGridID);
@@ -314,17 +306,14 @@
 			for(var i=0 ; i<grdCnt ; i++){
 				for(var j=0 ; j <activeItems.length ; j++){
 					if(activeItems[j].itemCd == AUIGrid.getCellValue(siGridID, i, 'itemCd') ){
-						
-						if( 'Y' == AUIGrid.getCellValue(siGridID, i, 'newYn') ){
-						    Common.alert(activeItems[i].codeName + "는 이미 추가된 아이템입니다."); addYn = false;
-						    break;
+						    AUIGrid.removeRow(siGridID, i);
+                            AUIGrid.removeSoftRows(siGridID);
+						/* if( 'Y' == AUIGrid.getCellValue(siGridID, i, 'newYn') ){
+						    Common.alert(activeItems[i].codeName + "는 이미 추가된 아이템입니다."); 
 						}else{
 							AUIGrid.setCellValue(siGridID, i, "newYn", "N");
-						}
+						} */
 					}
-				}
-				if(addYn == false){
-					break;
 				}
 			}
 			if(addYn){
