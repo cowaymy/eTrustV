@@ -3,7 +3,7 @@ package com.coway.trust.api.mobile.logistics.audit;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "InputBarcodePartsForm", description = "InputBarcodePartsForm")
+@ApiModel(value = "InputNonBarcodePartsForm", description = "InputNonBarcodePartsForm")
 public class InputNonBarcodePartsForm {
 
 	@ApiModelProperty(value = "부품코드")
