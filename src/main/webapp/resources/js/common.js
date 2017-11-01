@@ -723,6 +723,7 @@ var Common = {
             + '</section>'
             + '</div>';
 
+
         var $obj = $(msgHtml);
 
         $("body").append($obj);
@@ -746,14 +747,14 @@ var Common = {
             $obj.remove();
         });
 
-        // Define the Dialog and its properties.
-        $("#_popup_wrap_confirm").dialog({
-            resizable: false,
-            modal: true,
-            title: "Modal",
-            height: 250,
-            width: 400
-        });
+        // // Define the Dialog and its properties.
+        // $("#_popup_wrap_confirm").dialog({
+        //     resizable: false,
+        //     modal: true,
+        //     title: "Modal",
+        //     height: 250,
+        //     width: 400
+        // });
     },
 
     prompt : function(_desc, _defaultText, okCallback, cancelCallback, _options){
