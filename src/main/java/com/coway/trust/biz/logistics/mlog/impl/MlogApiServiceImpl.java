@@ -365,7 +365,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 				Map<String, Object> setmapS = new HashMap();
 				setmapS.put("userId", form.getUserId());
 				setmapS.put("serialNo", sForm.getSerialNo());
-				setmapS.put("invenAdjustNoItem", sForm.getInvenAdjustNoItem());
+				setmapS.put("invenAdjustNoItem", form.getInvenAdjustNoItem());
 				MlogApiMapper.insertBarcode(setmap);
 			}
 
@@ -379,7 +379,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
 		String headtitle = "SMO";
 		String gtype = "GI";
-		Map<String, Object> returnMap = new HashMap();		
+		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("reqno", headtitle + seq);
 		returnMap.put("userId", returnOnHandStockReqMForm.getUserId());
 		returnMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
@@ -408,31 +408,29 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			insMap.put("partsName", form.getPartsName());
 			insMap.put("userId", returnOnHandStockReqMForm.getUserId());
 
-//			logger.debug("reqno    값 : {}", headtitle + seq);
-//			logger.debug("partsCode    값 : {}", insMap.get("partsCode"));
-//			logger.debug("partsId    값 : {}", insMap.get("partsId"));
-//			logger.debug("requestQty    값 : {}", insMap.get("requestQty"));
-//			logger.debug("serialNo    값 : {}", insMap.get("serialNo"));
-//			logger.debug("partsName    값 : {}", insMap.get("partsName"));
+			// logger.debug("reqno 값 : {}", headtitle + seq);
+			// logger.debug("partsCode 값 : {}", insMap.get("partsCode"));
+			// logger.debug("partsId 값 : {}", insMap.get("partsId"));
+			// logger.debug("requestQty 값 : {}", insMap.get("requestQty"));
+			// logger.debug("serialNo 값 : {}", insMap.get("serialNo"));
+			// logger.debug("partsName 값 : {}", insMap.get("partsName"));
 
 			MlogApiMapper.insStockMovementDetail(insMap);
-	
-		// 2. insert ,54 , 55 , 61 ,56update start
+
+			// 2. insert ,54 , 55 , 61 ,56update start
 
 			insMap.put("delno", deliSeq);
 			insMap.put("itmcd", insMap.get("partsCode"));
 			insMap.put("itmname", insMap.get("partsName"));
 			insMap.put("reqstno", insMap.get("reqno"));
-			
+
 			logger.debug("insMap    값 : {}", insMap);
-//			logger.debug("partsCode    값 : {}", insMap.get("partsCode"));
-//			logger.debug("partsId    값 : {}", insMap.get("partsId"));
-//			logger.debug("requestQty    값 : {}", insMap.get("requestQty"));
-//			logger.debug("serialNo    값 : {}", insMap.get("serialNo"));
-//			logger.debug("partsName    값 : {}", insMap.get("partsName"));
-			
-			
-			
+			// logger.debug("partsCode 값 : {}", insMap.get("partsCode"));
+			// logger.debug("partsId 값 : {}", insMap.get("partsId"));
+			// logger.debug("requestQty 값 : {}", insMap.get("requestQty"));
+			// logger.debug("serialNo 값 : {}", insMap.get("serialNo"));
+			// logger.debug("partsName 값 : {}", insMap.get("partsName"));
+
 			// 55 insert
 			MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
 
@@ -442,18 +440,18 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 				MlogApiMapper.insertMovementSerial(insMap);
 			}
 
-//			if (i == 0) {
-//				MlogApiMapper.insertDeliveryStockMovement(insMap);
-//				MlogApiMapper.updateRequestMovement(insMap);
-//			}
+			// if (i == 0) {
+			// MlogApiMapper.insertDeliveryStockMovement(insMap);
+			// MlogApiMapper.updateRequestMovement(insMap);
+			// }
 		}
-		
+
 		MlogApiMapper.insertDeliveryStockMovement(insMap);
 		MlogApiMapper.updateRequestMovement(insMap);
-		
+
 		String[] delvcd = new String[1];
 		delvcd[0] = deliSeq;
-		
+
 		logger.debug("delvcd    값 : {}", delvcd);
 		insMap.put("parray", delvcd);
 		insMap.put("userId", userLoc);
@@ -462,14 +460,13 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		insMap.put("refdocno", "");
 		insMap.put("salesorder", "");
 		insMap.put("gtype", gtype);
-		//insMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
+		// insMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
 		insMap.put("giptdate", MlogApiMapper.dateParsing(returnOnHandStockReqMForm.getRequestDate()));
-				
+
 		MlogApiMapper.StockMovementIssue(insMap);
-		
+
 		logger.debug("insMap    값 : {}", insMap);
-		
+
 	}
-		
 
 }

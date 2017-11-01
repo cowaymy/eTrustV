@@ -46,7 +46,7 @@ public class InputBarcodePartsForm {
 				map = BeanConverter.toMap(InputBarcodePartsForm, "InputBarcodePartsForm");
 				// heartDtails
 				map.put("serialNo", obj.getSerialNo());
-				map.put("invenAdjustNoItem", obj.getInvenAdjustNoItem());
+				// map.put("invenAdjustNoItem", obj.getInvenAdjustNoItem());
 				list.add(map);
 			}
 		}
