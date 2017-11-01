@@ -26,7 +26,7 @@
                 return;
 	        }
 	        
-            var accessRight = fn_getCheckAccessRight(userid);
+            var accessRight = fn_getCheckAccessRight(userid, '321');
 	        
 	        console.log('accessRight:'+accessRight);
 	        
@@ -55,10 +55,10 @@
         return result;
     }
     
-    function fn_getCheckAccessRight(userId){
+    function fn_getCheckAccessRight(userId, moduleUnitId){
         var result = false;
 
-        Common.ajax("GET", "/sales/order/selectCheckAccessRight.do", {userId : userId, moduleUnitId : '321'}, function(rsltInfo) {
+        Common.ajax("GET", "/sales/order/selectCheckAccessRight.do", {userId : userId, moduleUnitId : moduleUnitId}, function(rsltInfo) {
             if(rsltInfo != null) {
                 result = true;
             }
