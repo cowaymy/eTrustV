@@ -136,7 +136,7 @@ $(document).ready(function () {
     	fn_searchUserIdPop();
     });
     $("#search_depart_btn").click(fn_costCenterSearchPop);
-    $("#registration_btn").click();
+    $("#registration_btn").click(fn_newMgmtPop);
     $("#edit_btn").click();
     $("#delete_btn").click();
     
@@ -194,34 +194,23 @@ function fn_loadOrderSalesman(memId, memCode) {
             } else if(clickType == "charge") {
             	$("#chrgUserId").val(memInfo.memCode);
                 $("#chrgUserName").val(memInfo.name);
+            } else if(clickType == "newHolder") {
+                $("#newCrditCardUserId").val(memInfo.memCode);
+                $("#newCrditCardUserName").val(memInfo.name);
+            } else if(clickType == "newCharge") {
+                $("#newChrgUserId").val(memInfo.memCode);
+                $("#newChrgUserName").val(memInfo.name);
             }
         }
     });
-}
-
-function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
-function fn_popSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
-}
-
-function fn_popSubSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"sPop"}, null, true, "supplierSearchPop");
-}
-
 function fn_popCostCenterSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
-}
-
-function fn_setSupplier() {
-    $("#memAccId").val($("#search_memAccId").val());
-    $("#memAccName").val($("#search_memAccName").val());
 }
 
 function fn_setCostCenter() {
@@ -234,24 +223,15 @@ function fn_setPopCostCenter() {
     $("#newCostCenterText").val($("#search_costCentrName").val());
 }
 
-function fn_setPopSupplier() {
-    $("#newMemAccId").val($("#search_memAccId").val());
-    $("#newMemAccName").val($("#search_memAccName").val());
-    $("#bankCode").val($("#search_bankCode").val());
-    $("#bankName").val($("#search_bankName").val());
-    $("#bankAccNo").val($("#search_bankAccNo").val());
-}
-
-function fn_setPopSubSupplier() {
-    $("#sMemAccId").val($("#search_memAccId").val());
-    $("#gstRgistNo").val($("#search_gstRgistNo").val());
-}
-
 function fn_selectCrditCardMgmtList() {
     Common.ajax("GET", "/eAccounting/creditCard/selectCrditCardMgmtList.do", $("#form_mgmt").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(mgmtGridID, result);
     });
+}
+
+function fn_newMgmtPop() {
+    Common.popupDiv("/eAccounting/creditCard/newMgmtPop.do", {callType:"new"}, null, true, "newMgmtPop");
 }
 </script>
 
@@ -326,9 +306,9 @@ function fn_selectCrditCardMgmtList() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">Remove</a></p></li>
-	<li><p class="btn_grid"><a href="#">Edit</a></p></li>
-	<li><p class="btn_grid"><a href="#">New Registration</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="delete_btn">Remove</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="edit_btn">Edit</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="registration_btn">New Registration</a></p></li>
 </ul>
 
 <article class="grid_wrap" id="mgmt_grid_wrap"><!-- grid_wrap start -->

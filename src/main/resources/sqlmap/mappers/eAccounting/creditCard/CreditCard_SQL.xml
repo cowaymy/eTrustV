@@ -38,7 +38,7 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
                T1.CRDIT_CARD_STUS AS CRDIT_CARD_STUS_CODE, 
                ( CASE T1.CRDIT_CARD_STUS 
                    WHEN 'A' THEN 'Active' 
-                   WHEN 'R' THEN 'Remove' 
+                   WHEN 'R' THEN 'Removed' 
                  END )            AS CRDIT_CARD_STUS, 
                T1.CRT_DT, 
                T1.UPD_DT 
@@ -96,6 +96,11 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
          </foreach>
         </if>   
         ORDER BY T.CRT_DT, T.UPD_DT         
+</select>
+
+<select id="selectBankCode" resultType="egovMap">
+/* creditCardMapper.selectBankCode */
+    SELECT CODE , NAME FROM SYS0004M
 </select>
 
 </mapper>

@@ -8,5 +8,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface CreditCardService {
 	
 	List<EgovMap> selectCrditCardMgmtList(Map<String, Object> params);
+	
+	List<EgovMap> selectBankCode();
 
 }

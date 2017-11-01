@@ -37,4 +37,12 @@ public class CreditCardServiceImpl implements CreditCardService {
 		return creditCardMapper.selectCrditCardMgmtList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectBankCode() {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectBankCode();
+	}
+	
+	
+
 }
