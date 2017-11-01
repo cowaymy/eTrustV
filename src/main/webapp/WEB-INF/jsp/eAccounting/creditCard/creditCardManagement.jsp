@@ -13,6 +13,8 @@
 </style>
 <script type="text/javascript">
 var clickType = "";
+var crditCardSeq = 0;
+var checkRemoved = false;
 var mgmtColumnLayout = [ {
     dataField : "crditCardSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -65,8 +67,7 @@ var mgmtColumnLayout = [ {
         onclick : function(rowIndex, columnIndex, value, item) {
             console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
             if(item.fileCnt > 1) {
-                atchFileGrpId = item.atchFileGrpId;
-                fn_fileListPop();
+                fn_fileListPop(item.atchFileGrpId);
             } else {
                 var data = {
                         atchFileGrpId : item.atchFileGrpId,
@@ -137,14 +138,19 @@ $(document).ready(function () {
     });
     $("#search_depart_btn").click(fn_costCenterSearchPop);
     $("#registration_btn").click(fn_newMgmtPop);
-    $("#edit_btn").click();
-    $("#delete_btn").click();
+    $("#edit_btn").click(fn_viewMgmtPop);
+    $("#delete_btn").click(fn_removeRegistMsgPop);
     
     AUIGrid.bind(mgmtGridID, "cellClick", function( event ) 
             {
                 console.log("cellClick rowIndex : " + event.rowIndex + ", cellClick : " + event.columnIndex + " clicked");
                 console.log("cellClick crditCardSeq : " + event.item.crditCardSeq);
-                
+                crditCardSeq = event.item.crditCardSeq;
+                if(event.item.crditCardStusCode == "R") {
+                	checkRemoved = true;
+                } else {
+                	checkRemoved = false;
+                }
             });
     
     $("#crditCardStus").multipleSelect("checkAll");
@@ -230,8 +236,69 @@ function fn_selectCrditCardMgmtList() {
     });
 }
 
+function fn_fileListPop(atchFileGrpId) {
+    var data = {
+            atchFileGrpId : atchFileGrpId
+    };
+    Common.popupDiv("/eAccounting/webInvoice/fileListPop.do", data, null, true, "fileListPop");
+}
+
+function fn_setGridData(gridId, data) {
+    console.log(data);
+    AUIGrid.setGridData(gridId, data);
+}
+
 function fn_newMgmtPop() {
     Common.popupDiv("/eAccounting/creditCard/newMgmtPop.do", {callType:"new"}, null, true, "newMgmtPop");
+}
+
+function fn_checkEmpty() {
+    var checkResult = true;
+    if(FormUtil.isEmpty($("#newCrditCardUserName").val())) {
+        Common.alert("Please enter the Credit cardholder name.");
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#newChrgUserName").val())) {
+        Common.alert("Please enter the Person-in-charge name.");
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#newCostCenterText").val())) {
+        Common.alert("Please enter the Person-in-charge department.");
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#crditCardNo1").val()) || FormUtil.isEmpty($("#crditCardNo2").val()) || FormUtil.isEmpty($("#crditCardNo3").val()) || FormUtil.isEmpty($("#crditCardNo4").val())) {
+        Common.alert("Please enter the Credit card no.");
+        checkResult = false;
+        return checkResult;
+    }
+    return checkResult;
+}
+
+function fn_viewMgmtPop() {
+	if(crditCardSeq == 0) {
+		Common.alert("Please select the data.");
+	} else {
+		var data = {
+	            crditCardSeq : crditCardSeq,
+	            callType : "view"
+	    };
+	    Common.popupDiv("/eAccounting/creditCard/viewMgmtPop.do", data, null, true, "viewMgmtPop");
+	}
+}
+
+function fn_removeRegistMsgPop() {
+    if(crditCardSeq == 0) {
+        Common.alert("Please select the data.");
+    } else {
+    	if(checkRemoved) {
+    		Common.alert("The data you have selected is already deleted.");
+    	} else {
+    		Common.popupDiv("/eAccounting/creditCard/removeRegistMsgPop.do", null, null, true, "registMsgPop");
+    	}
+    }
 }
 </script>
 
@@ -271,7 +338,7 @@ function fn_newMgmtPop() {
 	<th scope="row">Credit cardholder name</th>
 	<td><input type="text" title="" placeholder="" class="" id="crditCardUserName" name="crditCardUserName"/><a href="#" class="search_btn" id="search_holder_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row">Credit card no.</th>
-	<td><input type="text" title="" placeholder="Credit card No" class="" id="crditCardNo" name="crditCardNo"/></td>
+	<td><input type="text" title="" placeholder="Credit card No" class="" id="crditCardNo" name="crditCardNo" autocomplete=off/></td>
 </tr>
 <tr>
 	<th scope="row">Person-in-charge name</th>

@@ -16,6 +16,19 @@ $(document).ready(function () {
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#save_btn").click(fn_saveNewMgmt);
     
+    $("#crditCardNoTd").keydown(function (event) { 
+        
+        var code = window.event.keyCode;
+        
+        if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+        {
+         window.event.returnValue = true;
+         return;
+        }
+        window.event.returnValue = false;
+        
+   });
+    
     $("#appvCrditLimit").keydown(function (event) { 
         
         var code = window.event.keyCode;
@@ -30,7 +43,7 @@ $(document).ready(function () {
    });
    
    $("#appvCrditLimit").click(function () { 
-       var str = $("#reqstAmt").val().replace(/,/gi, "");
+       var str = $("#appvCrditLimit").val().replace(/,/gi, "");
        $("#appvCrditLimit").val(str);      
   });
    $("#appvCrditLimit").blur(function () { 
@@ -72,8 +85,8 @@ function setInputFile2(){//인풋파일 세팅하기
 }
 
 function fn_saveNewMgmt() {
-	console.log("Action");
     if(fn_checkEmpty()){
+	console.log("Action");
         Common.popupDiv("/eAccounting/creditCard/newRegistMsgPop.do", null, null, true, "registMsgPop");
     }
 }
@@ -109,7 +122,7 @@ function fn_saveNewMgmt() {
 	<th scope="row">Credit cardholder name</th>
 	<td><input type="text" title="" placeholder="" class="" id="newCrditCardUserName" name="crditCardUserName"/><a href="#" class="search_btn" id="holder_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row">Credit card no.</th>
-	<td><input type="text" title="" placeholder="" class="w23_5p" /> <input type="password" title="" placeholder="" class="w23_5p" /> <input type="password" title="" placeholder="" class="w23_5p" /> <input type="text" title="" placeholder="" class="w23_5p" /></td>
+	<td id="crditCardNoTd"><input type="text" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo1" name="crditCardNo1"/> <input type="password" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo2" name="crditCardNo2"/> <input type="password" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo3" name="crditCardNo3"/> <input type="text" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo4" name="crditCardNo4"/></td>
 </tr>
 <tr>
 	<th scope="row">Person-in-charge name</th>
@@ -124,9 +137,9 @@ function fn_saveNewMgmt() {
 	</td>
 	<th scope="row">Card Type</th>
 	<td>
-		<select class="multy_select" multiple="multiple">
-			<option value="1"> Type01</option>
-			<option value="2"> Type02</option>
+		<select class="multy_select" id="crditCardType" name="crditCardType">
+		<option value="CC">Credit Card</option>
+		<option value="DC">Debit Card</option>
 		</select>
 	</td>
 </tr>

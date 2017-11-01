@@ -1,0 +1,34 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#ok_btn").click(fn_closePop);
+    
+});
+
+function fn_closePop() {
+    $("#completedMsgPop").remove();
+    $("#viewMgmtPop").remove();
+    
+    crditCardSeq = 0;
+    
+    fn_selectCrditCardMgmtList();
+}
+</script>
+
+<div id="popup_wrap" class="popup_wrap msg_box"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Edit existing Credit Card Master Info.</h1>
+<p class="pop_close"><a href="#">close</a></p>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+<p class="msg_txt">The existing Credit Card Master information has been successfully updated.</p>
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a href="#" id="ok_btn">Ok</a></p></li>
+</ul>
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->

@@ -25,9 +25,11 @@ SELECT T.CRDIT_CARD_SEQ,
 FROM   (SELECT T1.CRDIT_CARD_SEQ, 
                T1.CRDIT_CARD_USER_ID, 
                T1.CRDIT_CARD_USER_NAME, 
-               T1.CRDIT_CARD_NO, 
+               ( SUBSTR(T1.CRDIT_CARD_NO, 1, 4) 
+                 || '********' 
+                 || SUBSTR(T1.CRDIT_CARD_NO, -4) ) AS CRDIT_CARD_NO, 
                T1.CHRG_USER_ID, 
-               T2.NAME            AS CHRG_USER_NAME, 
+               T2.NAME                             AS CHRG_USER_NAME, 
                T1.COST_CENTR, 
                T1.COST_CENTR_NAME, 
                T1.ATCH_FILE_GRP_ID, 
@@ -35,11 +37,11 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
                T3.ATCH_FILE_NAME, 
                T3.FILE_EXTSN, 
                T3.FILE_CNT, 
-               T1.CRDIT_CARD_STUS AS CRDIT_CARD_STUS_CODE, 
+               T1.CRDIT_CARD_STUS                  AS CRDIT_CARD_STUS_CODE, 
                ( CASE T1.CRDIT_CARD_STUS 
                    WHEN 'A' THEN 'Active' 
                    WHEN 'R' THEN 'Removed' 
-                 END )            AS CRDIT_CARD_STUS, 
+                 END )                             AS CRDIT_CARD_STUS, 
                T1.CRT_DT, 
                T1.UPD_DT 
         FROM   FCM0016M T1 
@@ -102,5 +104,166 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
 /* creditCardMapper.selectBankCode */
     SELECT CODE , NAME FROM SYS0004M
 </select>
+
+<select id="selectNextCrditCardSeq" resultType="int">
+/* creditCardMapper.selectNextCrditCardSeq */
+    SELECT NVL(MAX(CRDIT_CARD_SEQ) + 1, 1) AS CRDIT_CARD_SEQ FROM FCM0016M
+</select>
+
+<insert id="insertCreditCard" parameterType="Map">
+/* creditCardMapper.insertCreditCard */
+   INSERT INTO FCM0016M
+   (
+        CRDIT_CARD_SEQ
+        ,CRDIT_CARD_USER_ID
+        ,CRDIT_CARD_USER_NAME
+        ,CRDIT_CARD_NO
+        ,CHRG_USER_ID
+        ,COST_CENTR
+        ,COST_CENTR_NAME
+        ,BANK_CODE
+        ,BANK_NAME
+        ,CRDIT_CARD_TYPE
+        ,APPV_CRDIT_LIMIT
+        ,CRDIT_CARD_EXPR_DT
+        ,ATCH_FILE_GRP_ID
+        ,CRDIT_CARD_REM
+        ,CRDIT_CARD_STUS
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{crditCardSeq}
+       ,#{crditCardUserId}
+       ,#{crditCardUserName}
+       ,#{crditCardNo}
+       ,#{chrgUserId}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{bankCode}
+       ,#{bankName}
+       ,#{crditCardType}
+       ,#{appvCrditLimit}
+       ,TO_DATE(#{crditCardExprDt}, 'MM/YYYY')
+       ,#{fileGroupKey}
+       ,#{crditCardRem}
+       ,'A'
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectNextIfKey" resultType="String">
+/* creditCardMapper.selectNextIfKey */
+    SELECT    120
+       || TO_CHAR (SYSDATE, 'yymmdd')
+       || '_'
+       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 11, 7) + 1), 'FM0000000'), '0000001') AS IF_KEY
+  FROM ITF0120M
+ WHERE SUBSTR (IF_KEY, 4, 6) = TO_CHAR (SYSDATE, 'yymmdd')
+</select>
+
+<select id="selectNextSeq" parameterType="String" resultType="int">
+/* creditCardMapper.selectNextSeq */
+    SELECT NVL(MAX(SEQ) + 1, 1) AS SEQ FROM ITF0120M WHERE IF_KEY = #{ifKey}
+</select>
+
+<insert id="insertCrditCardInterface" parameterType="Map">
+/* creditCardMapper.insertCrditCardInterface */
+   INSERT INTO ITF0120M
+   (
+        IF_KEY
+        ,SEQ
+        ,IF_TYPE
+        ,TRAN_STATUS_CD
+        ,RGST_DT
+        ,RGST_TM
+        ,RGST_ID
+        ,AGENT_NO
+        ,AGENT_NM
+        ,BANK_CD
+        ,ACCT_ST
+        ,COSTCENTER
+        ,SUPP_GROUP
+    )
+    values
+    (
+        #{ifKey}
+       ,#{seq}
+       ,'120'
+       ,'10'
+       ,TO_CHAR(SYSDATE, 'YYYYDDMM')
+       ,TO_CHAR(SYSDATE, 'HH24MISS')
+       ,#{userId}
+       ,#{agentNo}
+       ,#{agentNm}
+       ,#{bankCode}
+       ,#{acctSt}
+       ,#{costCentr}
+       ,'VM05'
+    )
+</insert>
+
+<select id="selectCrditCardInfo" parameterType="Map" resultType="egovMap">
+/* creditCardMapper.selectCrditCardInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CRDIT_CARD_SEQ
+        ,T1.CRDIT_CARD_USER_ID
+        ,T1.CRDIT_CARD_USER_NAME
+        ,T1.CRDIT_CARD_NO
+        ,T1.CHRG_USER_ID
+        ,T2.NAME    AS CHRG_USER_NAME
+        ,T1.COST_CENTR
+        ,T1.COST_CENTR_NAME
+        ,T1.BANK_CODE
+        ,T1.BANK_NAME
+        ,T1.CRDIT_CARD_TYPE
+        ,T1.APPV_CRDIT_LIMIT
+        ,TO_CHAR(T1.CRDIT_CARD_EXPR_DT, 'MM/YYYY') AS CRDIT_CARD_EXPR_DT
+        ,T1.ATCH_FILE_GRP_ID
+        ,T1.CRDIT_CARD_REM
+        ,T1.CRDIT_CARD_STUS
+        ,T1.CRT_DT
+        ,T1.CRT_USER_ID
+        ,T1.UPD_DT
+        ,T1.UPD_USER_ID 
+FROM   FCM0016M T1 LEFT JOIN ORG0001D T2 
+                      ON T1.CHRG_USER_ID = T2.MEM_CODE
+WHERE T1.CRDIT_CARD_SEQ = #{crditCardSeq}
+</select>
+
+<update id="updateCreditCard" parameterType="Map">
+/* creditCardMapper.updateCreditCard */
+   UPDATE FCM0016M
+   SET CRDIT_CARD_USER_ID = #{crditCardUserId}
+       ,CRDIT_CARD_USER_NAME = #{crditCardUserName}
+       ,CRDIT_CARD_NO = #{crditCardNo}
+       ,CHRG_USER_ID = #{chrgUserId}
+       ,COST_CENTR = #{costCentr}
+       ,COST_CENTR_NAME = #{costCentrName}
+       ,BANK_CODE = #{bankCode}
+       ,BANK_NAME = #{bankName}
+       ,CRDIT_CARD_TYPE = #{crditCardType}
+       ,APPV_CRDIT_LIMIT = #{appvCrditLimit}
+       ,CRDIT_CARD_EXPR_DT = TO_DATE(#{crditCardExprDt}, 'MM/YYYY')
+       ,CRDIT_CARD_REM = #{crditCardRem}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CRDIT_CARD_SEQ = #{crditCardSeq}  
+</update>
+
+<update id="removeCreditCard" parameterType="Map">
+/* creditCardMapper.removeCreditCard */
+   UPDATE FCM0016M
+   SET CRDIT_CARD_STUS = 'R'
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CRDIT_CARD_SEQ = #{crditCardSeq}  
+</update>
 
 </mapper>

@@ -43,6 +43,54 @@ public class CreditCardServiceImpl implements CreditCardService {
 		return creditCardMapper.selectBankCode();
 	}
 	
+	@Override
+	public int selectNextCrditCardSeq() {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectNextCrditCardSeq();
+	}
+
+	@Override
+	public void insertCreditCard(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		creditCardMapper.insertCreditCard(params);
+	}
+
+	@Override
+	public String selectNextIfKey() {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectNextIfKey();
+	}
+
+	@Override
+	public int selectNextSeq(String ifKey) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectNextSeq(ifKey);
+	}
+
+	@Override
+	public void insertCrditCardInterface(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		creditCardMapper.insertCrditCardInterface(params);
+	}
+
+	@Override
+	public EgovMap selectCrditCardInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectCrditCardInfo(params);
+	}
+
+	@Override
+	public void updateCreditCard(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		creditCardMapper.updateCreditCard(params);
+	}
+
+	@Override
+	public void removeCreditCard(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		creditCardMapper.removeCreditCard(params);
+	}
+	
 	
 
 }
