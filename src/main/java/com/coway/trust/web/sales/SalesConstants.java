@@ -193,6 +193,7 @@ public class SalesConstants {
 	public static final String POS_SALES_TYPE_ITMBANK = "1353"; //Filter Type
 	public static final String POS_SALES_TYPE_OTHER_INCOME = "1357"; //Filter Type
 	public static final String POS_SALES_TYPE_ITMBANK_HQ = "1358"; //Filter Type
+	public static final String POS_SALES_TYPE_REVERSAL = "1361";
 	public static final String POS_SALES_MODULE_TYPE_POS_SALES = "2390"; //POS Sales
 	public static final String POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION = "2391"; //Deduction Commission
 	
@@ -228,4 +229,25 @@ public class SalesConstants {
 	public static final int POS_INV_SOURCE_ID = 147;   //invStkCard.SourceID = 477;
 	public static final int POS_INV_CURR_ID = 479;  //invStkCard.CurrID = 479;
 	public static final int POS_INV_CURR_RATE = 1;   //invStkRecordCurrRate
+	
+	public static final int POS_ACC_BILL_STATUS = 74; //accorderbill.AccBillStatus = 74;
+	public static final int POS_ACC_BILL_TASK_ID = 0 ; //    ACC_BILL_TASK_ID = 0
+	
+	public static final int POS_INV_ADJM_MEMO_TYPE_ID = 1293;//InvAdjM.MemoAdjustTypeID = 1293; //Type - CN
+	public static final int POS_INV_ADJM_MEMO_INVOICE_TYPE_ID = 128;//InvAdjM.MemoAdjustInvoiceTypeID = 128; // Invoice-Miscellaneous
+	public static final int POS_INV_ADJM_MEMO_STATUS_ID = 4; //InvAdjM.MemoAdjustStatusID = 4;
+	public static final int POS_INV_ADJM_MEMO_RESN_ID = 2038;   //InvAdjM.MemoAdjustReasonID = 2038; // Invoice Reversal
+	
+	public static final int POS_NOTE_TYPE_ID = 1293; ////dcnM.NoteTypeID = 1293; //CN
+	public static final int POS_NOTE_INVOICE_TYPE_ID = 128;   //dcnM.NoteInvoiceTypeID = 128; //MISC
+	
+	public static final String POS_REM_SOI_COMMENT = "SOI Reversal -";
+	public static final String POS_REM_SOI_COMMENT_INV_VOID = "SOI Reversal_"; //InvVoidM.AccInvVoidRemark = "SOI Reversal_" + this.txtReferenceNo.Text.Trim();
+	public static final int POS_NOTE_STATUS_ID = 4;
+	
+	public static final int POS_MEMO_ITM_STATUS_ID = 1; // ias.MemoItemStatusID = 1;
+	
+	public static final int  POS_ACC_INV_VOID_STATUS = 1; //InvVoidM.AccInvVoidStatusID = 1;
+	public static final int  POS_ACC_INV_VOID_ORD_ID = 0; //InvVoidS.AccInvVoidSubOrderID = 0;
+
 }
