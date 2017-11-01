@@ -91,8 +91,8 @@ function fn_viewBillingBatch(){
 		        $("#popCreator").text(result.master.userName);
 		        
 		        $("#popStatus").text(result.master.advBillBatchStusId);
-		        $("#popAmount").text(result.master.advBillBatchTot);
-		        $("#popDiscount").text(result.master.advBillBatchTotDscnt);
+		        $("#popAmount").text(result.master.advBillBatchTot.toFixed(2));
+		        $("#popDiscount").text(result.master.advBillBatchTotDscnt.toFixed(2));
 		        
 		        if(result.master.advBillBatchStusId == 1){
 		        	$("#popDeactive").show();
@@ -137,8 +137,8 @@ function fn_clickDeactivate(){
                 $("#popCreator").text(re.master.userName);
                 
                 $("#popStatus").text(re.master.advBillBatchStusId);
-                $("#popAmount").text(re.master.advBillBatchTot);
-                $("#popDiscount").text(re.master.advBillBatchTotDscnt);
+                $("#popAmount").text(re.master.advBillBatchTot.toFixed(2));
+                $("#popDiscount").text(re.master.advBillBatchTotDscnt.toFixed(2));
                 
                 if(re.master.advBillBatchStusId == 1){
                     $("#popDeactive").show();
