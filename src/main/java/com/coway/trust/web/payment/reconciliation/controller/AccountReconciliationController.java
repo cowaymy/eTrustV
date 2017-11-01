@@ -130,10 +130,13 @@ public class AccountReconciliationController {
 		
 		String grossTotal = accountReconciliationService.selectGrossTotal(params);
 		
+		String crcGrossTotal = accountReconciliationService.selectCRCStatementGrossTotal(params);
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("masterView", masterView.get(0));
 		resultMap.put("detailList", detailList);
 		resultMap.put("grossTotal", grossTotal);
+		resultMap.put("crcGrossTotal", crcGrossTotal);
 		
         // 조회 결과 리턴.
 		ReturnMessage message = new ReturnMessage();

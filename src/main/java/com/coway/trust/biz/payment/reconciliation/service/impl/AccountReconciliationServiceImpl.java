@@ -54,6 +54,11 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 	public String selectGrossTotal(Map<String, Object> params) {
 		return accountReconciliationMapper.selectGrossTotal(params);
 	}
+	
+	@Override
+	public String selectCRCStatementGrossTotal(Map<String, Object> params) {
+		return accountReconciliationMapper.selectCRCStatementGrossTotal(params);
+	}
 
 	@Transactional
 	public boolean updJournalPassEntry(Map<String, Object> params) {

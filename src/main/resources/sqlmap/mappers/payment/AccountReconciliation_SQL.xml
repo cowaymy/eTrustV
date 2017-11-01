@@ -83,7 +83,7 @@
 		       TO_CHAR(Project1.F_BANK_JRNL_CRT_DT , 'DD-MM-YYYY') AS F_BANK_JRNL_CRT_DT,
 		       Project1.F_BANK_JRNL_CRT_USER_ID F_BANK_JRNL_CRT_USER_ID  ,
 		       Project1.USER_NAME USER_NAME  ,
-		       Project1.F_BANK_JRNL_ADJ F_BANK_JRNL_ADJ  
+		       TO_CHAR(Project1.F_BANK_JRNL_ADJ , 'FM9999,999,999,990.00') F_BANK_JRNL_ADJ
 		  FROM ( SELECT Project1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
 		                Project1.F_BANK_JRNL_REF_NO F_BANK_JRNL_REF_NO  ,
 		                Project1.F_BANK_JRNL_ACC_ID F_BANK_JRNL_ACC_ID  ,
@@ -195,13 +195,24 @@
     
     <select id="selectGrossTotal" parameterType="Map" resultType="String">
         SELECT 
-		    TO_CHAR(GroupBy1.F_TRNSC_CRDIT_AMT , 'FM9999999999990.00') GROSS_TOTAL
+		    TO_CHAR(GroupBy1.F_TRNSC_CRDIT_AMT , 'FM9999,999,999,990.00') GROSS_TOTAL
 		  FROM (
 		  SELECT
 		    SUM(NVL(Extent1.F_TRNSC_CRDIT_AMT,0)) AS F_TRNSC_CRDIT_AMT  
 		    FROM PAY0081D Extent1
 		    WHERE  Extent1.F_BANK_JRNL_ID = #{journalId} 
 		 )GroupBy1
+    </select>
+    
+    <select id="selectCRCStatementGrossTotal" parameterType="Map" resultType="String">
+        SELECT 
+		       TO_CHAR(GroupBy1.CRC_TRNSC_AMT_TOTAL , 'FM9999,999,999,990.00')CRC_TRNSC_AMT_TOTAL
+		  FROM (
+		          SELECT
+		            SUM(NVL(Extent1.CRC_TRNSC_AMT,0.00)) AS CRC_TRNSC_AMT_TOTAL  
+		            FROM PAY0076D Extent1
+		            WHERE  Extent1.CRC_STATE_ID = #{journalId}
+		        )GroupBy1
     </select>
     
     <insert id="insAccGLRoutes" parameterType="Map">

@@ -267,9 +267,9 @@ var journalPopLayout = [
 	            $('#statementRemark').text(result.data.masterView.fBankJrnlRem);
 	            $('#statementCreateBy').text(result.data.masterView.userName);
 	            $('#statementCreateAt').text(result.data.masterView.fBankJrnlCrtDt);
-	            $('#adjsutment').val(result.data.masterView.fBankJrnlAdj);
-	            $('#grossTotal').text(result.data.grossTotal);
-                $('#netTotal').text(result.data.grossTotal - result.data.masterView.fBankJrnlAdj);
+	            $('#adjsutment').val(result.data.masterView.fBankJrnlAdj ?  result.data.masterView.fBankJrnlAdj : "0.00");
+	            $('#grossTotal').text("₩"+result.data.grossTotal);
+                $('#netTotal').text("₩"+result.data.crcGrossTotal);
 	            
                 AUIGrid.destroy(statementdetailPopGridID);
 	    		statementdetailPopGridID = GridCommon.createAUIGrid("statement_pop_grid_wrap", statementdetailPopLayout,null,gridPros);
@@ -300,9 +300,9 @@ var journalPopLayout = [
                 $('#journalRemark').text(result.data.masterView.fBankJrnlRem);
                 $('#journalCreateBy').text(result.data.masterView.userName);
                 $('#journalCreateAt').text(result.data.masterView.fBankJrnlCrtDt);
-                $('#journalAdjsutment').val(result.data.masterView.fBankJrnlAdj);
-                $('#journalGrossTotal').text(result.data.grossTotal);
-                $('#journalNetTotal').text(result.data.grossTotal - result.data.masterView.fBankJrnlAdj);
+                $('#journalAdjsutment').val(result.data.masterView.fBankJrnlAdj ?  result.data.masterView.fBankJrnlAdj : "0.00");
+                $('#journalGrossTotal').text("₩"+result.data.grossTotal);
+                $('#journalNetTotal').text("₩"+result.data.crcGrossTotal);
                 $('#fBankJrnlAccId').val(result.data.masterView.fBankJrnlAccId);
                 
                 AUIGrid.destroy(journalEntryPopGridID);
@@ -344,23 +344,23 @@ var journalPopLayout = [
     
     function fn_updateJournalExclude(remark, fTrnscId){
         
-        //if(remark != ""){
+    	if(remark != undefined){
         	
         	Common.ajax("GET","/payment/updJournalExclude.do", {"remark" : remark, "fTrnscId" : fTrnscId }, function(result){
-                    Common.alert(result.message);
+        		Common.alert(result.message);
             });
             
-        //}else{
-            //Common.alert('* Remark are composulary field .');
-        //}
+        }else{
+            Common.alert('* Remark are composulary field .');
+        }
         
     }
     
-    function fn_viewPayPopClose(val){
-        //$(val).hide();
-        //AUIGrid.clearGridData(reviewPopGridID);  //grid data clear
-        //AUIGrid.clearGridData(watingPopGridID);  //grid data clear
-    }
+    /* function fn_viewPayPopClose(val){
+        $(val).hide();
+        AUIGrid.clearGridData(reviewPopGridID);  //grid data clear
+        AUIGrid.clearGridData(watingPopGridID);  //grid data clear
+    } */
    
 </script>
 <!-- content start -->

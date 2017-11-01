@@ -52,6 +52,14 @@ public interface AccountReconciliationMapper {
 	 */
 	String selectGrossTotal(Map<String, Object> params);
 	
+	
+	/**
+	 * selectCRCStatementGrossTotal 조회
+	 * @param params
+	 * @return
+	 */
+	String selectCRCStatementGrossTotal(Map<String, Object> params);
+	
 	/**
 	 * insAccGLRoutes
 	 * @param params
