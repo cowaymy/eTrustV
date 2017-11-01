@@ -80,18 +80,26 @@ $(document).ready(function() {
 			return;
 		}
     	
+    	//Param Setting
+    	 $("#_rePosRcvDt").val($("#_recevDateOri").val());
     	 Common.ajax("POST", "/sales/pos/insertPosReversal.do", $("#_revForm").serializeJSON(), function(result){
-    	        
-    		 Common.alert("Reversal Success!");
     		 
+    		 if(result == null){
+    			 Common.alert("<b>Failed to reverse. Please try again later.</b>");
+    		 }else{
+    			 //console.log("result : "+result);
+                 //console.log("result.posRefNo : " + result.posRefNo); 
+                 Common.alert("POS Reverse successfully. <br />  POS Ref No. : " + result.posRefNo + " <br />" , fn_popClose());
+    		 }
     	 });
-        
-    	
-    	
 	});
     
 })//Doc Ready Func End
 
+
+function fn_popClose(){
+    $("#_reversalClose").click();
+}
 
 function createPurchaseGridID(){
     
@@ -161,26 +169,37 @@ function createPurchaseGridID(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <form id="_revForm">
 <!--Hidden Value  -->
-<input type="hidden" id="_rePosId" name="rePosId" value="${revDetailMap.posId}">
-<input type="hidden" id="_rePosSysTypeId" name="rePosSysTypeId" value="${revDetailMap.posTypeId}">
+<input type="hidden" id="_rePosCustName" name="rePosCustName" value="${revDetailMap.posCustName}">
 <input type="hidden" id="_rePosModuleTypeId" name="rePosModuleTypeId" value="${revDetailMap.posModuleTypeId}">
-<input type="hidden" id="_rePosWhBrnchId" name="rePosWhBrnchId" value="${revDetailMap.brnchId}">
+<input type="hidden" id="_rePosWhId" name="rePosWhId" value="${revDetailMap.posWhId}">
+<input type="hidden" id="_rePosId" name="rePosId" value="${revDetailMap.posId}">
+<input type="hidden" id="_rePosMemId" name="rePosMemId" value="${revDetailMap.posMemId}">
+<input type="hidden" id="_rePosCrAccId" name="rePosCrAccId" value="${revDetailMap.crAccId}"> 
+<input type="hidden" id="_rePosDrAccId" name="rePosDrAccId" value="${revDetailMap.drAccId}">
+<input type="hidden" id="_rePosStusId" name="rePosStusId" value="${revDetailMap.stusId}">  
+<input type="hidden" id="_rePosResnId" name="rePosResnId" value="${revDetailMap.posResnId}">
+<input type="hidden" id="_rePosBrnchId" name="rePosBrnchId" value="${revDetailMap.brnchId}">
+
+
+
+<input type="hidden" id="_rePosRcvDt" name="rePosRcvDt" > <!-- from Display  --> 
+
+<!-- Price and Tax  -->
+<input type="hidden" id="_rePosTotAmt" name="rePosTotAmt" value="${revDetailMap.posTotAmt}">
+<input type="hidden" id="_rePosTotChrg" name="rePosTotChrg" value="${revDetailMap.posTotChrg}">
+<input type="hidden" id="_rePosTotTxs" name="rePosTotTxs" value="${revDetailMap.posTotTxs}">
+<input type="hidden" id="_rePosTotDscnt" name="rePosTotDscnt" value="${revDetailMap.posTotDscnt}">
+
+<input type="hidden" id="_rePosSysTypeId" name="rePosSysTypeId" value="${revDetailMap.posTypeId}">
 <input type="hidden" id="_rePosBillId" name="rePosBillId" value="${revDetailMap.posBillId}">
-<%-- 
-<input type="hidden" id="" name="" value="${revDetailMap.posDt}">
-<input type="hidden" id="" name="" value="${revDetailMap.posTotAmt}">
-<input type="hidden" id="" name="" value="${revDetailMap.posTotChrg}">
-<input type="hidden" id="" name="" value="${revDetailMap.posTotTxs}"> 
-<input type="hidden" id="" name="" value="${revDetailMap.posWhId}">
-<input type="hidden" id="" name="" value="${revDetailMap.posRem}">
-<input type="hidden" id="" name="" value="${revDetailMap.posMemId}">  
-<input type="hidden" id="" name="" value="${revDetailMap.memCode}">  
-<input type="hidden" id="" name="" value="${revDetailMap.posResnId}">  --%>
+<input type="hidden" id="_rePosNo" name="rePosNo" value="${revDetailMap.posNo}">  <!-- PNS00.... -->
+<%-- <input type="hidden" id="_salesmanPopCd" name="salesmanPopCd" value="${revDetailMap.memCode}"> --%>
+
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>POS Reversal</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="__reversalClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -230,7 +249,7 @@ function createPurchaseGridID(){
 <tr>
     <th scope="row">Member Code<span class="must">*</span></th>
     <td>
-        <input type="text" title="" placeholder="" class="w100p disabled"  value="${revDetailMap.memCode}" disabled="disabled"/><!-- <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
+        <input type="text" title="" placeholder="" class="w100p disabled"  value="${revDetailMap.memCode}" disabled="disabled" /><!-- <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
     </td>
 </tr>
 <tr>
@@ -243,7 +262,7 @@ function createPurchaseGridID(){
 <tr>
     <th scope="row">Receive Date<span class="must">*</span></th>
     <td>
-        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" value="${revDetailMap.posDt}" disabled="disabled" />
+        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" value="${revDetailMap.posDt}" disabled="disabled"  id="_recevDateOri"/>
     </td>
 </tr>
 <tr>

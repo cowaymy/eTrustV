@@ -4,6 +4,7 @@
 
 //AUIGrid 생성 후 반환 ID
 var posGridID;
+var deductionCmGridID;
 var optionModule = {
         type: "S",                  
         isShowChoose: false  
@@ -20,6 +21,7 @@ $(document).ready(function() {
 
     
     fn_getStatusCode();
+    createDeductionGrid();
     
      /*######################## Init Combo Box ########################*/
      
@@ -157,6 +159,67 @@ $(document).ready(function() {
     
 });//Doc ready Func End
 
+function createDeductionGrid () {
+	 
+	var posColumnLayout =  [ 
+	                            {dataField : "posNo", headerText : "POS No.", width : '8%'}, 
+	                            {dataField : "posDt", headerText : "Sales Date", width : '8%'},
+	                            {dataField : "posDt", headerText : "Member ID", width : '8%'},
+	                            {dataField : "codeName", headerText : "POS Type", width : '8%'},
+	                            {dataField : "codeName1", headerText : "Sales Type", width : '8%'},
+	                            {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '8%'}, 
+	                            {dataField : "name", headerText : "Customer Name", width : '18%'},
+	                            {dataField : "whLocCode", headerText : "Branch", width : '8%'},
+	                            {dataField : "whLocCode", headerText : "Warehouse", width : '8%'},
+	                            {dataField : "posTotAmt", headerText : "Total Amount", width : '8%'},
+	                            {
+	                                dataField : "stusId",
+	                                headerText : "Status",
+	                                width : '10%',
+	                                labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+	                                    var retStr = "";
+	                                    for(var i=0,len=arrStusCode.length; i<len; i++) {
+	                                        if(arrStusCode[i]["codeId"] == value) {
+	                                            retStr = arrStusCode[i]["codeName"];
+	                                            break;
+	                                        }
+	                                    }
+	                                                return retStr == "" ? value : retStr;
+	                            },
+	                                renderer : { // 셀 자체에 드랍다운리스트 출력하고자 할 때
+	                                       type : "DropDownListRenderer",
+	                                       list : arrStusCode,
+	                                       keyField   : "codeId", // key 에 해당되는 필드명
+	                                       valueField : "codeName" // value 에 해당되는 필드명
+	                                 }
+	                           },
+	                            {dataField : "posId", visible : false}
+	                           ];
+	    
+	    //그리드 속성 설정
+	    var gridPros = {
+	            
+	            usePaging           : true,         //페이징 사용
+	            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+	            editable            : false,            
+	            fixedColumnCount    : 1,            
+	            showStateColumn     : true,             
+	            displayTreeOpen     : false,            
+	            selectionMode       : "singleRow",  //"multipleCells",            
+	            headerHeight        : 30,       
+	            useGroupingPanel    : false,        //그룹핑 패널 사용
+	            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+	            noDataMessage       : "No order found.",
+	            groupingMessage     : "Here groupping"
+	    };
+	    
+	    deductionCmGridID = GridCommon.createAUIGrid("#deduc_grid_wrap", posColumnLayout,'', gridPros);  // address list
+	    AUIGrid.resize(deductionCmGridID , 1660, 300);
+}
+
+
 //TODO 미개발 message
 function fn_underDevelop(){
     Common.alert('The program is under development.');
@@ -250,7 +313,7 @@ function createAUIGrid(){
                             {dataField : "codeName1", headerText : "Sales Type", width : '8%'},
                             {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '8%'}, 
                             {dataField : "name", headerText : "Customer Name", width : '18%'},
-                            {dataField : "whLocCode", headerText : "Branch", width : '8%'},
+                            {dataField : "whLocCode", headerText : "Branch", width : '8%' , style : 'left_style'},
                             {dataField : "whLocCode", headerText : "Warehouse", width : '8%'},
                             {dataField : "posTotAmt", headerText : "Total Amount", width : '8%'},
                             {
@@ -434,11 +497,11 @@ function fn_getPosListAjax(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="pos_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="pos_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big mt20"><a href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -446,11 +509,11 @@ function fn_getPosListAjax(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="deduc_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big mt20"><a href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -462,7 +525,7 @@ function fn_getPosListAjax(){
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big mt20"><a href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
 </ul>
 </section><!-- search_result end -->
 </section><!-- content end -->

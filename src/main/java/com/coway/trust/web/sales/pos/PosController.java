@@ -364,6 +364,11 @@ public class PosController {
 	@RequestMapping(value = "/insertPosReversal.do" , method = RequestMethod.POST)
 	public ResponseEntity<EgovMap> insertPosReversal(@RequestBody Map<String, Object> params) throws Exception{
 		
+		//Session
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		params.put("userDeptId", sessionVO.getUserDeptId());
+		
 		EgovMap revMap = null; 
 		revMap = posService.insertPosReversal(params);
 		

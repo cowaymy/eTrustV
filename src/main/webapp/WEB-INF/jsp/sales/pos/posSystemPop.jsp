@@ -167,12 +167,16 @@ $(document).ready(function() {
     		return;
     	}
     	//Member Check
+    	var ajaxOption = {
+            async: false,
+            isShowLoader : true
+        };
     	Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : $("#hiddenSalesmanPopId").val(), memCode : $("#salesmanPopCd").val()}, function(memInfo) {
             if(memInfo == null) {
                 Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
                 return;
             }
-        });
+        },null,ajaxOption);
     	//Branch WareHouse Null Check
     	if( null == $("#_cmbWhBrnchIdPop").val() || '' == $("#_cmbWhBrnchIdPop").val()){
     		Common.alert("* Please select the warehouse. ");
@@ -203,8 +207,8 @@ $(document).ready(function() {
     	
     	
     	//Save
-    	fn_savePosRequest();
-		
+    	Common.confirm("Will you proceed with payment?", fn_payProceed, fn_payPass);
+		//, (), ()
 	});
     
     //Member List
@@ -221,30 +225,51 @@ function fn_setMemberGirdData(paramObj){
 }
 
 
-function fn_savePosRequest(){
+function fn_payPass(){
 	
-      var data = {};
-      var prchParam = AUIGrid.getGridData(purchaseGridID);
-      var serialParam = AUIGrid.getGridData(serialTempGridID);
-      var memParam = AUIGrid.getGridData(memGridID);
-      
-      data.prch = prchParam;
-      data.serial = serialParam;
-      data.mem = memParam;
-      data.form = $("#_sysForm").serializeJSON();
-      
-      //Save
-      Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
-    	  
-    	  console.log("result : " + result);
-    	  console.log("result  type : " + $.type(result));
-    	  Common.alert("POS saved. <br /> POS Ref No. :  [" + result.reqDocNo + "]" , fn_popClose()); 
-      });
- }
+	 var data = {};
+     var prchParam = AUIGrid.getGridData(purchaseGridID);
+     var serialParam = AUIGrid.getGridData(serialTempGridID);
+     var memParam = AUIGrid.getGridData(memGridID);
+     
+     data.prch = prchParam;
+     data.serial = serialParam;
+     data.mem = memParam;
+	 $("#_payResult").val('-1'); //payment
+     data.form = $("#_sysForm").serializeJSON();
+	 
+     Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
+         Common.alert("POS saved. <br /> POS Ref No. :  [" + result.reqDocNo + "]" , fn_popClose()); 
+     });
+	
+}
+
+function fn_payProceed(){
+	var data = {};
+    var prchParam = AUIGrid.getGridData(purchaseGridID);
+    var serialParam = AUIGrid.getGridData(serialTempGridID);
+    var memParam = AUIGrid.getGridData(memGridID);
+    
+    data.prch = prchParam;
+    data.serial = serialParam;
+    data.mem = memParam;
+    $("#_payResult").val('1');  //payment 
+    data.form = $("#_sysForm").serializeJSON();
+    
+    Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
+    	
+    	Common.alert("POS saved. <br /> POS Ref No. :  [" + result.reqDocNo + "]" , fn_bookingAndpopClose()); 
+    });
+}
 
 //Close
 function fn_popClose(){
 	$("#_systemClose").click();
+}
+
+function fn_bookingAndpopClose(){
+    //프로시저 호출
+	// 콜백  >> $("#_systemClose").click();
 }
 
 
@@ -463,6 +488,7 @@ function fn_calculateAmt(amt, qty) {
 <!-- HIDDEN VALUES -->
 <input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId }">
 <input type="hidden" name="posReason" id="_posReason">  
+<input type="hidden" name="payResult" id="_payResult">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

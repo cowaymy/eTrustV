@@ -86,4 +86,50 @@ public interface PosMapper {
 	List<EgovMap> getPosDetailList(Map<String, Object> params);
 	
 	EgovMap chkReveralBeforeReversal(Map<String, Object> params);
+	
+	void insertPosReversalMaster (Map<String, Object> params);
+	
+	List<EgovMap> getOldDetailList(Map<String, Object> params);
+	
+	void insertPosReversalDetail(EgovMap params);
+	
+	EgovMap getBillInfo(Map<String, Object> params);
+	
+	void insertPosReversalBilling(EgovMap params);
+	
+	EgovMap getTaxInvoiceMisc(Map<String, Object> params);
+	
+	EgovMap getAccOrderBill(Map<String, Object> params);
+	
+	void updateAccOrderBillingWithPosReversal(Map<String, Object> params);
+	
+	int getSeqPay0011D();
+	
+	void insertInvAdjMemo(Map<String, Object> params);
+	
+	int getSeqPay0027D();
+	
+	void insertTaxDebitCreditNote(Map<String, Object> params);
+	
+	List<EgovMap> getMiscSubList(Map<String, Object> params);
+	
+	int getSeqPay0012D();
+	
+	void insertInvAdjMemoSub(Map<String, Object> params);
+	
+	int getSeqPay0028D();
+	
+	void insertTaxDebitCreditNoteSub(Map<String, Object> params);
+	
+	int getSeqPay0017D();
+	
+	void insertAccOrderVoidInv(Map<String, Object> parmas);
+	
+	int getSeqPay0018D();
+	
+	void insertAccOrderVoidInvSub(Map<String, Object> params);
+	
+	List<EgovMap> selectStkCardRecordList(Map<String, Object> params);
+	
+	void insertStkCardRecordReversal(EgovMap params);
 }

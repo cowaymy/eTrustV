@@ -244,30 +244,48 @@ $(document).ready(function() {
 			var itemCodeArr = AUIGrid.getColumnValues(basketGridID, 'stkCode'); //Stock Code List
 			var idxObj;
 			var serialCodeArr = AUIGrid.getColumnValues(serialConfirmGridID, 'matnr');
-			var serialCnt = 0;
+			
 			
 			for (var idx = 0; idx < nullChkNo; idx++) {
 				idxObj = AUIGrid.getItemByRowIndex(basketGridID, idx); //해당 index행  가져오기 // item // basket
 				/* console.log("idxObj : " + idxObj);
+				console.log("idxObj.JSONstringify : " + JSON.stringify(idxObj));
 				console.log("idxObj.stkTypeId : " + idxObj.stkTypeId);
 				console.log("idxObj.stkCode : " + idxObj.stkCode);
 				console.log("idxObj.inputQty : " + idxObj.inputQty); */
 				if(idxObj.stkTypeId == 62){// filter
-					//idxObj.stkCode(String) 를 가지고 있는 serialGrid 와 매칭  serialCodeArr(Array)
-					
+					//idxObj.stkCode(String) 를  가지고 있는 serialGrid 와 매칭  serialCodeArr(Array)
+					var serialCnt = 0;
 					for (var i = 0; i < serialCodeArr.length; i++) {
 						if(idxObj.stkCode == serialCodeArr[i]){
 							serialCnt++;
 						}
 					}//loop end
-					
 					// cnt 와 qty 매칭  // serialCnt == idxObj.inputQty
-					
-					if(serialCnt != idxObj.inputQty){
+////////////////////////////////////////  Serial Number Check ///////////////////////////////////////////////////  추후 시리얼 번호 관리시 주석 해제					
+				  /*  if(serialCnt != idxObj.inputQty){
 						Common.alert(" * The quantity of the filter and the serial quantity does not match.");
 						return;
-					}
-				}
+					}  */
+////////////////////////////////////////Serial Number Check ///////////////////////////////////////////////////
+
+				    //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
+				    if(serialCnt < idxObj.inputQty){
+				    	var tempLength = 0;
+				    	tempLength = idxObj.inputQty - serialCnt;
+				    	for (var j = 0; j < tempLength; j++) {
+                            
+                            var addObj = {matnr : idxObj.stkCode , stkDesc : idxObj.stkDesc , serialNo : '999999999999999'};
+				    		
+				    		AUIGrid.addRow(serialConfirmGridID, addObj, 'first');
+						}
+				    }else if(serialCnt > idxObj.inputQty){
+				    	Common.alert("Serial number quantities can not be more than the quantity entered.");
+				    	return;
+				    }
+				}else{
+					console.log("이놈은 필터가 아님");
+				}// Temp Logic
 				//Exsit Filter
 				$("#serialTemp_grid_wrap").css("display" , "");
 			}//loop end
@@ -571,7 +589,7 @@ function f_multiCombo(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="basket_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="basket_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <!-- <aside class="title_line">title_line start
 <h2>Purchase Items</h2>
@@ -588,7 +606,7 @@ function f_multiCombo(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="serial_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="serial_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </div>
