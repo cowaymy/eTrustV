@@ -122,5 +122,7 @@ public interface MlogApiMapper {
 	void insStockMovementHeads(Map<String, Object> fMap);
 	
 	int getUserLocId(Map<String, Object> receiveMap);
+	
+	String dateParsing(String param);
 
 }
