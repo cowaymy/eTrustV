@@ -453,9 +453,8 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		
 		String[] delvcd = new String[1];
 		delvcd[0] = deliSeq;
-			
-		//String[] delvcd = { deliSeq };
-		//logger.debug("delvcd    값 : {}", delvcd);
+		
+		logger.debug("delvcd    값 : {}", delvcd);
 		insMap.put("parray", delvcd);
 		insMap.put("userId", userLoc);
 		// insMap.put("userId", params.get("userId"));
@@ -463,12 +462,14 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		insMap.put("refdocno", "");
 		insMap.put("salesorder", "");
 		insMap.put("gtype", gtype);
-		insMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
+		//insMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
+		insMap.put("giptdate", MlogApiMapper.dateParsing(returnOnHandStockReqMForm.getRequestDate()));
 				
 		MlogApiMapper.StockMovementIssue(insMap);
 		
 		logger.debug("insMap    값 : {}", insMap);
 		
 	}
+		
 
 }
