@@ -14,6 +14,8 @@ import com.coway.trust.api.mobile.logistics.audit.InputBarcodeListForm;
 import com.coway.trust.api.mobile.logistics.audit.InputBarcodePartsForm;
 import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodeForm;
 import com.coway.trust.api.mobile.logistics.audit.InputNonBarcodePartsForm;
+import com.coway.trust.api.mobile.logistics.inventory.InventoryReqTransferDForm;
+import com.coway.trust.api.mobile.logistics.inventory.InventoryReqTransferMForm;
 import com.coway.trust.api.mobile.logistics.recevie.ConfirmReceiveMForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockReqDForm;
 import com.coway.trust.api.mobile.logistics.returnonhandstock.ReturnOnHandStockReqMForm;
@@ -196,28 +198,40 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	 */
 
 	@Override
-	public void saveInvenReqTransfer(List<Map<String, Object>> reqTransferMList) {
+	public void saveInvenReqTransfer(InventoryReqTransferMForm inventoryReqTransferMForm) {
 
-		String seq = MlogApiMapper.selectStockMovementSeq();
+		String seq1 = MlogApiMapper.selectStockMovementSeq();
 		String headtitle = "SMO";
-		Map<String, Object> insMap = null;
-		if (reqTransferMList.size() > 0) {
-			for (int i = 0; i < reqTransferMList.size(); i++) {
+		logger.debug("seq1    값 : {}", seq1);
+		Map<String, Object> insMap = new HashMap();	
+		insMap.put("userId", inventoryReqTransferMForm.getUserId());
+		insMap.put("requestDate", inventoryReqTransferMForm.getRequestDate());
+		insMap.put("smType", inventoryReqTransferMForm.getSmType());
+		insMap.put("targetLocation", inventoryReqTransferMForm.getTargetLocation());
+		insMap.put("reqno", headtitle + seq1);
+		
+		logger.debug("insMap ?    값 : {}", insMap);
 
-				insMap = reqTransferMList.get(i);
-				insMap.put("reqno", headtitle + seq);
-
-				MlogApiMapper.insStockMovementDetail(insMap);
-				logger.info(" reqstno : {}", insMap);
-
-			}
-
-			MlogApiMapper.insStockMovementHead(insMap);
-
-			MlogApiMapper.insertStockBooking(insMap);
+		MlogApiMapper.insStockMovementHead(insMap);
+		
+		List<InventoryReqTransferDForm> list =inventoryReqTransferMForm.getInventoryReqTransferDetail();
+		InventoryReqTransferDForm form =null;
+		
+		for (int i = 0; i < list.size(); i++) {
+			form=list.get(i);
+			insMap.put("partsCode", form.getPartsCode());
+			insMap.put("partsId", form.getPartsId());
+			insMap.put("requestQty", form.getRequestQty());
+			insMap.put("partsName", form.getPartsName());	
+			
+		    MlogApiMapper.insStockMovementDetail(insMap);
+			
 		}
-	}
+		
+		MlogApiMapper.insertStockBooking(insMap);
 
+	}
+	
 	@Override
 	public Map<String, Object> selectStockMovementSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
