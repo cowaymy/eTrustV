@@ -208,8 +208,9 @@ var journalPopLayout = [
             valueField : "value" // value 에 해당되는 필드명
         }
 	},{
-	    dataField : "fTrnscCrditAmt",
+	    dataField : "",
 	    headerText : "Journal Entry",
+	    editable : false,
 	    renderer : {
             type : "ButtonRenderer",
             labelText : "Pass",
@@ -225,6 +226,7 @@ var journalPopLayout = [
 	},{
 	    dataField : "",
 	    headerText : "Exclude",
+	    editable : false,
 	    renderer : {
             type : "ButtonRenderer",
             labelText : "Exclude",
