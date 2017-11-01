@@ -2,13 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.order.impl.OrderRequestMapper">
     
-    <select id="selectResnCodeList" resultType="egovMap">
+    <select id="selectResnCodeList" parameterType="Map" resultType="egovMap">
 		SELECT T1.RESN_ID CODE
 		     , T1.CODE || ' - ' || T1.RESN_DESC CODE_NAME
 		  FROM SYS0032M T1
-		 WHERE T1.RESN_TYPE_ID = 536
-		   AND T1.RESN_ID NOT IN (1638,1979,1980,1994)
-		   AND T1.STUS_CODE_ID = 1
+		 WHERE T1.RESN_TYPE_ID = #{resnTypeId}
+		   AND T1.STUS_CODE_ID = #{stusCodeId}
 		 ORDER BY T1.RESN_ID
     </select>
     
@@ -235,14 +234,24 @@
                     , T1.ORI_CALL_DT
                  FROM CCR0006D T1
                 WHERE T1.SALES_ORD_ID = #{salesOrdId}
+                <if test='opt != null and opt =="1"'>
                   AND T1.TYPE_ID IN (257, 258)
                   AND T1.STUS_CODE_ID IN (1, 19, 30)
+                </if>
+                <if test='opt != null and opt =="2"'>
+                  AND T1.TYPE_ID IN (257)
+                  AND T1.STUS_CODE_ID IN (1, 19, 30)
+                </if>
+                <if test='opt != null and opt =="3"'>
+                  AND T1.TYPE_ID IN (257, 258)
+                  AND T1.STUS_CODE_ID IN (20)
+                </if>
                 ORDER
                    BY T1.CALL_ENTRY_ID DESC
              ) T
          WHERE ROWNUM = 1
     </select>
-    
+
     <select id="selectCallEntryByEntryId" parameterType="Map" resultType="egovMap">
         SELECT T1.CALL_ENTRY_ID
              , T1.SALES_ORD_ID
@@ -280,12 +289,364 @@
     </update>
 
     <update id="updateRentalScheme" parameterType="Map">
-		UPDATE SAL0071D
-		   SET STUS_CODE_ID = #{stusCodeId}
-		     , REN_SCH_DT   = SYSDATE
-		     , IS_SYNC      = #{isSync}
-		 WHERE IS_SYNC      = #{renSchId}
+        UPDATE SAL0071D
+           SET STUS_CODE_ID = #{stusCodeId}
+             , REN_SCH_DT   = SYSDATE
+             , IS_SYNC      = #{isSync}
+         WHERE IS_SYNC      = #{renSchId}
     </update>
 
+    <update id="updateSalesOrderM" parameterType="salesOrderMVO">
+        UPDATE SAL0001D
+           SET TOT_AMT              = #{totAmt}
+             , PROMO_ID             = #{promoId}
+             , TOT_PV               = #{totPv}
+             , UPD_DT               = SYSDATE
+             , UPD_USER_ID          = #{updUserId}
+             , MTH_RENT_AMT         = #{mthRentAmt}
+             , DEF_RENT_AMT         = #{defRentAmt}
+             , PROMO_DISC_PERIOD_TP = #{promoDiscPeriodTp}
+             , PROMO_DISC_PERIOD    = #{promoDiscPeriod}
+             , NOR_AMT              = #{norAmt}
+             , NOR_RNT_FEE          = #{norRntFee}
+             , DISC_RNT_FEE         = #{discRntFee}
+         WHERE SALES_ORD_ID         = #{salesOrdId}
+    </update>
+
+    <update id="updateSalesOrderD" parameterType="salesOrderDVO">
+		UPDATE SAL0002D
+		   SET ITM_STK_ID   = #{itmStkId}
+		     , ITM_PRC_ID   = #{itmPrcId}
+		     , ITM_PRC      = #{itmPrc}
+		     , ITM_PV       = #{itmPv}
+		     , UPD_DT       = SYSDATE
+		     , UPD_USER_ID  = #{updUserId}
+		 WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
+    <select id="selectCompleteASIDByOrderIDSolutionReason" parameterType="Map" resultType="egovMap">
+		SELECT T1.AS_ID
+		     , T1.AS_NO
+		     , T1.AS_SO_ID
+		     , T1.AS_MEM_ID
+		     , T1.AS_MEM_GRP
+		     , T1.AS_REQST_DT
+		     , T1.AS_REQST_TM
+		     , T1.AS_APPNT_DT
+		     , T1.AS_APPNT_TM
+		     , T1.AS_BRNCH_ID
+		     , T1.AS_MALFUNC_ID
+		     , T1.AS_MALFUNC_RESN_ID
+		     , T1.AS_REM_REQSTER
+		     , T1.AS_REM_REQSTER_CNTC
+		     , T1.AS_CALLLOG_ID
+		     , T1.AS_STUS_ID
+		     , T1.AS_SMS
+		     , T1.AS_CRT_USER_ID
+		     , T1.AS_CRT_DT
+		     , T1.AS_UPD_USER_ID
+		     , T1.AS_UPD_DT
+		     , T1.AS_ENTRY_IS_SYNCH
+		     , T1.AS_ENTRY_IS_EDIT
+		     , T1.AS_TYPE_ID
+		     , T1.AS_REQSTER_TYPE_ID
+		     , T1.AS_IS_BS_WITHIN_30DAYS
+		     , T1.AS_ALLOW_COMM
+		     , T1.AS_PREV_MEM_ID
+		     , T1.AS_REM_ADD_CNTC
+		     , T1.AS_REM_REQSTER_CNTC_SMS
+		     , T1.AS_REM_ADD_CNTC_SMS
+		  FROM SVC0001D T1
+		  JOIN SVC0004D T2 ON T2.AS_ENTRY_ID = T1.AS_ID
+		   AND T2.AS_RESULT_STUS_ID = 4
+		   AND T2.AS_SLUTN_RESN_ID = '#{asSlutnResnId}
+		 WHERE T1.AS_SO_ID = #{salesOrdId}
+		   AND TO_CHAR(T1.AS_APPNT_DT, 'YYYYMM') = TO_CHAR(SYADATE, 'YYYYMM')
+		   AND ROWNUM = 1
+    </select>
+    
+    <insert id="insertSalesOrderExchange" parameterType="salesOrderExchangeVO">
+      <selectKey keyProperty="soExchgId" resultType="Integer" order="BEFORE">
+        SELECT SAL0004D_SO_EXCHG_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+		INSERT
+		  INTO SAL0004D
+		     ( SO_EXCHG_ID
+		     , SO_ID
+		     , SO_EXCHG_TYPE_ID
+		     , SO_EXCHG_STUS_ID
+		     , SO_EXCHG_RESN_ID
+		     , SO_CUR_STUS_ID
+		     , INSTALL_ENTRY_ID
+		     , SO_EXCHG_OLD_APP_TYPE_ID
+		     , SO_EXCHG_NW_APP_TYPE_ID
+		     , SO_EXCHG_OLD_STK_ID
+		     , SO_EXCHG_NW_STK_ID
+		     , SO_EXCHG_OLD_PRC_ID
+		     , SO_EXCHG_NW_PRC_ID
+		     , SO_EXCHG_OLD_PRC
+		     , SO_EXCHG_NW_PRC
+		     , SO_EXCHG_OLD_PV
+		     , SO_EXCHG_NW_PV
+		     , SO_EXCHG_OLD_RENT_AMT
+		     , SO_EXCHG_NW_RENT_AMT
+		     , SO_EXCHG_OLD_PROMO_ID
+		     , SO_EXCHG_NW_PROMO_ID
+		     , SO_EXCHG_CRT_DT
+		     , SO_EXCHG_CRT_USER_ID
+		     , SO_EXCHG_UPD_DT
+		     , SO_EXCHG_UPD_USER_ID
+		     , SO_EXCHG_OLD_SRV_CONFIG_ID
+		     , SO_EXCHG_NW_SRV_CONFIG_ID
+		     , SO_EXCHG_SYNC_CHK
+		     , SO_EXCHG_OLD_CALL_ENTRY_ID
+		     , SO_EXCHG_NW_CALL_ENTRY_ID
+		     , SO_EXCHG_STK_RET_MOV_ID
+		     , SO_EXCHG_REM
+		     , SO_EXCHG_OLD_DEF_RENT_AMT
+		     , SO_EXCHG_NW_DEF_RENT_AMT
+		     , SO_EXCHG_UNDER_FREE_AS_ID
+		     , SO_EXCHG_OLD_CUST_ID
+		     , SO_EXCHG_NW_CUST_ID
+		     , SO_EXCHG_FORM_NO
+		     ) 
+		VALUES
+		     ( #{soExchgId}
+		     , #{soId}
+		     , #{soExchgTypeId}
+		     , #{soExchgStusId}
+		     , #{soExchgResnId}
+		     , #{soCurStusId}
+		     , #{installEntryId}
+		     , #{soExchgOldAppTypeId}
+		     , #{soExchgNwAppTypeId}
+		     , #{soExchgOldStkId}
+		     , #{soExchgNwStkId}
+		     , #{soExchgOldPrcId}
+		     , #{soExchgNwPrcId}
+		     , #{soExchgOldPrc}
+		     , #{soExchgNwPrc}
+		     , #{soExchgOldPv}
+		     , #{soExchgNwPv}
+		     , #{soExchgOldRentAmt}
+		     , #{soExchgNwRentAmt}
+		     , #{soExchgOldPromoId}
+		     , #{soExchgNwPromoId}
+		     , #{soExchgCrtDt}
+		     , #{soExchgCrtUserId}
+		     , #{soExchgUpdDt}
+		     , #{soExchgUpdUserId}
+		     , #{soExchgOldSrvConfigId}
+		     , #{soExchgNwSrvConfigId}
+		     , #{soExchgSyncChk}
+		     , #{soExchgOldCallEntryId}
+		     , #{soExchgNwCallEntryId}
+		     , #{soExchgStkRetMovId}
+		     , #{soExchgRem}
+		     , #{soExchgOldDefRentAmt}
+		     , #{soExchgNwDefRentAmt}
+		     , #{soExchgUnderFreeAsId}
+		     , #{soExchgOldCustId}
+		     , #{soExchgNwCustId}
+		     , #{soExchgFormNo}
+		     )
+    </insert>
+    
+    <select id="selecLastInstall" parameterType="Map" resultType="egovMap">
+        SELECT T.INSTALL_ENTRY_ID
+             , T.INSTALL_DT
+          FROM
+             ( SELECT T1.INSTALL_ENTRY_ID
+                    , T2.INSTALL_DT
+                 FROM SAL0046D T1
+                    , SAL0047D T2
+                WHERE T1.SALES_ORD_ID = #{salesOrdId}
+                  AND T1.STUS_CODE_ID = 4
+                  AND T1.INSTALL_ENTRY_ID = T2.ENTRY_ID
+                  AND T2.STUS_CODE_ID = 4
+                ORDER
+                   BY T2.INSTALL_DT DESC
+             ) T
+         WHERE ROWNUM &lt;= 1
+    </select>
+    
+    <select id="selectSrvConfiguration" parameterType="Map" resultType="egovMap">
+        SELECT T1.SRV_CONFIG_ID
+          FROM SAL0090D T1
+         WHERE T1.SRV_SO_ID = #{salesOrdId}
+           AND T1.SRV_STUS_ID = 1
+           AND ROWNUM = 1
+    </select>
+    
+    <select id="selectSrvConfigPeriod" parameterType="Map" resultType="egovMap">
+        SELECT T1.SRV_PRD_ID
+          FROM SAL0088D T1
+         WHERE T1.SRV_CONFIG_ID = #{srvConfigId}
+           AND T1.SRV_PRD_STUS_ID = 1
+    </select>
+    
+    <select id="selectSrvConfigSetting" parameterType="Map" resultType="egovMap">
+        SELECT T1.SRV_SETT_ID
+          FROM SAL0089D T1
+         WHERE T1.SRV_CONFIG_ID = #{srvConfigId}
+           AND T1.SRV_SETT_STUS_ID = 1
+    </select>
+    
+    <select id="selectSrvConfigFilter" parameterType="Map" resultType="egovMap">
+        SELECT T1.SRV_FILTER_ID
+          FROM SAL0087D T1
+         WHERE T1.SRV_CONFIG_ID = #{srvConfigId}
+           AND T1.SRV_FILTER_STUS_ID = 1
+    </select>
+
+    <insert id="insertSalesOrderExchangeBUSrvConfig" parameterType="salesOrderExchangeBUSrvConfigVO">
+        INSERT
+          INTO SAL0005D
+             ( BU_SRV_CONFIG_ID
+             , SO_EXCHG_ID
+             , SRV_CONFIG_ID
+             ) 
+        VALUES
+             ( SAL0005D_BU_SRV_CONFIG_ID_SEQ.NEXTVAL
+             , #{soExchgId}
+             , #{srvConfigId}
+             )
+    </insert>
+    
+	<insert id="insertSalesOrderExchangeBUSrvPeriod" parameterType="salesOrderExchangeBUSrvPeriodVO">
+		INSERT
+		  INTO SAL0007D 
+		     ( BU_SRV_PRIOD_ID
+		     , SO_EXCHG_ID
+		     , SRV_PRD_ID
+		     ) 
+		VALUES
+		     ( SAL0007D_BU_SRV_PRIOD_ID_SEQ.NEXTVAL
+		     , #{soExchgId}
+		     , #{srvPrdId}
+		     ) 
+    </insert>
+
+    <insert id="insertSalesOrderExchangeBUSrvSetting" parameterType="salesOrderExchangeBUSrvSettingVO">
+		INSERT
+		  INTO SAL0008D
+		     ( BU_SRV_SETNG_ID
+		     , SO_EXCHG_ID
+		     , SRV_SETT_ID
+		     ) 
+		VALUES
+		     ( SAL0008D_BU_SRV_SETNG_ID_SEQ.NEXTVAL
+		     , #{soExchgId}
+		     , #{srvSettId}
+		     ) 
+    </insert>
+    
+    <insert id="insertSalesOrderExchangeBUSrvFilter" parameterType="salesOrderExchangeBUSrvFilterVO">
+		INSERT
+		  INTO SAL0006D
+		     ( BU_SRV_FILTER_ID
+		     , SO_EXCHG_ID
+		     , SRV_FILTER_ID
+		     ) 
+		VALUES
+		     ( SAL0006D_BU_SRV_FILTER_ID_SEQ.NEXTVAL
+		     , #{soExchgId}
+		     , #{srvFilterId}
+		     )
+    </insert>
+    
+    <insert id="insertInvStkMovement" parameterType="invStkMovementVO">
+      <selectKey keyProperty="movId" resultType="Integer" order="BEFORE">
+        SELECT LOG0013D_MOV_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+		INSERT
+		  INTO LOG0013D
+		     ( MOV_ID
+		     , INSTALL_ENTRY_ID
+		     , MOV_FROM_LOC_ID
+		     , MOV_TO_LOC_ID
+		     , MOV_TYPE_ID
+		     , MOV_STUS_ID
+		     , MOV_CNFM
+		     , MOV_CRT_DT
+		     , MOV_UPD_DT
+		     , MOV_CRT_USER_ID
+		     , MOV_UPD_USER_ID
+		     , STK_CRD_POST
+		     , STK_CRD_POST_DT
+		     , STK_CRD_POST_TO_WEB_ON_TM
+		     ) 
+		VALUES
+		     ( #{movId}
+		     , #{installEntryId}
+		     , #{movFromLocId}
+		     , #{movToLocId}
+		     , #{movTypeId}
+		     , #{movStusId}
+		     , #{movCnfm}
+		     , SYSDATE
+		     , SYSDATE
+		     , #{movCrtUserId}
+		     , #{movUpdUserId}
+		     , #{stkCrdPost}
+		     , TO_DATE(#{stkCrdPostDt}, 'DD/MM/YYYY')
+		     , #{stkCrdPostToWebOnTm}
+		     )
+    </insert>
+    
+    <update id="updateSoExchgStkRetMovId" parameterType="salesOrderExchangeVO">
+		UPDATE SAL0004D
+		   SET SO_EXCHG_STK_RET_MOV_ID = #{soExchgStkRetMovId}
+		 WHERE SO_EXCHG_ID             = #{soExchgId}
+    </update>
+    
+    <insert id="insertStkReturnEntry" parameterType="stkReturnEntryVO">
+      <selectKey keyProperty="stkRetnId" resultType="Integer" order="BEFORE">
+        SELECT LOG0038D_STK_RETN_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO LOG0038D
+             ( STK_RETN_ID
+             , STUS_CODE_ID
+             , TYPE_ID
+             , SALES_ORD_ID
+             , MOV_ID
+             , REQST_DT
+             , CRT_DT
+             , CRT_USER_ID
+             , UPD_DT
+             , UPD_USER_ID
+             , REF_ID
+             , STOCK_ID
+             , IS_SYNCH
+             , RETN_NO
+             , APP_DT
+             , CT_ID
+             , CT_GRP
+             , CALL_ENTRY_ID
+             , RT_SESION_CODE
+             ) 
+        VALUES
+             ( #{stkRetnId}
+             , #{stusCodeId}
+             , #{typeId}
+             , #{salesOrdId}
+             , #{movId}
+             , #{reqstDt}
+             , SYSDATE
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , #{refId}
+             , #{stockId}
+             , #{isSynch}
+             , #{retnNo}
+             , TO_DATE(#{appDt}, 'DD/MM/YYYY')
+             , #{ctId}
+             , #{ctGrp}
+             , #{callEntryId}
+             , #{rtSesionCode}
+             )
+    </insert>
 
 </mapper>

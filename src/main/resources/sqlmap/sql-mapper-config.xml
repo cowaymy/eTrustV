@@ -76,6 +76,13 @@
         <typeAlias alias="referralVO" type="com.coway.trust.biz.sales.order.vo.ReferralVO"/>
         <!-- Order Request Cancellation -->
         <typeAlias alias="salesReqCancelVO" type="com.coway.trust.biz.sales.order.vo.SalesReqCancelVO"/>
+        <typeAlias alias="salesOrderExchangeVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeVO"/>
+        <typeAlias alias="invStkMovementVO" type="com.coway.trust.biz.sales.order.vo.InvStkMovementVO"/>
+        <typeAlias alias="stkReturnEntryVO" type="com.coway.trust.biz.sales.order.vo.StkReturnEntryVO"/>
+        <typeAlias alias="salesOrderExchangeBUSrvConfigVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvConfigVO"/>
+        <typeAlias alias="salesOrderExchangeBUSrvFilterVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvFilterVO"/>
+        <typeAlias alias="salesOrderExchangeBUSrvPeriodVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvPeriodVO"/>
+        <typeAlias alias="salesOrderExchangeBUSrvSettingVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvSettingVO"/>
         
         <!-- Enrollment Result Update -->
         <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />

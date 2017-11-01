@@ -8,6 +8,7 @@ public class SalesConstants {
 	public static final int IS_TRUE  = 1;
 	
 	public static final int STATUS_ACTIVE = 1;
+	public static final int STATUS_COMPLETED = 4;
 	public static final int STATUS_INACTIVE  = 8;
 	public static final int STATUS_CANCELLED = 10;
 		
@@ -183,6 +184,11 @@ public class SalesConstants {
 	public static final String ORDER_EDIT_TYPE_CD_DOC = "DOC"; //Documents Submission
 	public static final String ORDER_EDIT_TYPE_CD_GST = "GST"; //GST Certification
 	public static final String ORDER_EDIT_TYPE_CD_RFR = "RFR"; //Referrals Info
+
+	//Order Edit Type
+	public static final String ORDER_REQ_TYPE_CD_CANC = "CANC"; //Cancellation
+	public static final String ORDER_REQ_TYPE_CD_PEXC = "PEXC"; //Product Exchange
+	
 	
 	//POS
 	public static final int POS_DETAIL_NON_RECEIVE = 96;   //96 == nonReceive

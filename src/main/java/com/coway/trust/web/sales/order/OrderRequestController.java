@@ -4,6 +4,7 @@
 package com.coway.trust.web.sales.order;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -43,16 +44,7 @@ public class OrderRequestController {
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
-	
-	//@Resource(name = "orderModifyService")
-	//private OrderModifyService orderModifyService;
-	
-	//@Resource(name = "orderRegisterService")
-	//private OrderRegisterService orderRegisterService;
-	
-	//@Resource(name = "customerService")
-	//private CustomerService customerService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
@@ -60,11 +52,10 @@ public class OrderRequestController {
 	public String orderRequestPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//APP_TYPE_ID CUST_ID
-		EgovMap basicInfo = (EgovMap) orderDetail.get("basicInfo");
 
-		model.put("orderDetail",  orderDetail);
-		model.put("ordReqType",   params.get("ordReqType"));
-		model.put("toDay", 		  CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		model.put("orderDetail", orderDetail);
+		model.put("ordReqType",  params.get("ordReqType"));
+		model.put("toDay", 		 CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 		
@@ -75,7 +66,7 @@ public class OrderRequestController {
 
     @RequestMapping(value = "/selectResnCodeList.do", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> selectResnCodeList(@RequestParam Map<String, Object> params)    {
-    	List<EgovMap> rsltList = orderRequestService.selectResnCodeList();
+    	List<EgovMap> rsltList = orderRequestService.selectResnCodeList(params);
     	return ResponseEntity.ok(rsltList);
     }
 
@@ -91,5 +82,29 @@ public class OrderRequestController {
 		ReturnMessage message = orderRequestService.requestCancelOrder(params, sessionVO);
 
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/requestProdExch.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> requestProdExch(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		ReturnMessage message = orderRequestService.requestProductExchange(params, sessionVO);
+
+		return ResponseEntity.ok(message);
+	}
+	
+    @RequestMapping(value = "/selectCompleteASIDByOrderIDSolutionReason.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectCompleteASIDByOrderIDSolutionReason(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.selectCompleteASIDByOrderIDSolutionReason(params);
+    	return ResponseEntity.ok(rslt);
+    }
+    
+	@RequestMapping(value = "/loginUserId.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> loginUserId(SessionVO sessionVO) throws Exception {
+
+		EgovMap map = new EgovMap();
+		
+		map.put("userId", sessionVO.getUserId());
+		
+		return ResponseEntity.ok(map);
 	}
 }

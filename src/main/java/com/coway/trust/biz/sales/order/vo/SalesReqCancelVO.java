@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 /**
- * The persistent class for the SAL0095D database table.
+ * The persistent class for the SAL0020D database table.
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -40,11 +40,11 @@ public class SalesReqCancelVO implements Serializable {
 
 	private int soReqCurAppTypeId;
 
-	private int soReqCurAmt;
+	private BigDecimal soReqCurAmt;
 
-	private int soReqCurPv;
+	private BigDecimal soReqCurPv;
 
-	private int soReqCurrAmt;
+	private BigDecimal soReqCurrAmt;
 
 	private String soReqActualCanclDt;
 
@@ -182,27 +182,27 @@ public class SalesReqCancelVO implements Serializable {
 		this.soReqCurAppTypeId = soReqCurAppTypeId;
 	}
 
-	public int getSoReqCurAmt() {
+	public BigDecimal getSoReqCurAmt() {
 		return soReqCurAmt;
 	}
 
-	public void setSoReqCurAmt(int soReqCurAmt) {
+	public void setSoReqCurAmt(BigDecimal soReqCurAmt) {
 		this.soReqCurAmt = soReqCurAmt;
 	}
 
-	public int getSoReqCurPv() {
+	public BigDecimal getSoReqCurPv() {
 		return soReqCurPv;
 	}
 
-	public void setSoReqCurPv(int soReqCurPv) {
+	public void setSoReqCurPv(BigDecimal soReqCurPv) {
 		this.soReqCurPv = soReqCurPv;
 	}
 
-	public int getSoReqCurrAmt() {
+	public BigDecimal getSoReqCurrAmt() {
 		return soReqCurrAmt;
 	}
 
-	public void setSoReqCurrAmt(int soReqCurrAmt) {
+	public void setSoReqCurrAmt(BigDecimal soReqCurrAmt) {
 		this.soReqCurrAmt = soReqCurrAmt;
 	}
 

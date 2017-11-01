@@ -30,6 +30,7 @@
              , V1.STOCK_ID
              , V1.STOCK_CODE
              , V1.STOCK_DESC
+             , V1.MASTER_STK_ID
              , V1.CUST_ID
              , V1.CUST_TYPE
              , V1.CUST_NAME
@@ -74,7 +75,6 @@
              , V1.OBLIGT_YEAR
              , V1.EMP_CHK
              , V1.EX_TRADE
-             , V1.GST_CHK
              , V1.GST_CHK
              , V1.CNVR_SCHEME_ID
           FROM SAL1006V V1

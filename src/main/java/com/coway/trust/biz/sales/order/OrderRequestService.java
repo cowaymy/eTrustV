@@ -17,10 +17,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 public interface OrderRequestService {
 
-	List<EgovMap> selectResnCodeList();
+	List<EgovMap> selectResnCodeList(Map<String, Object> params);
 
 	EgovMap selectOrderLastRentalBillLedger1(Map<String, Object> params);
 
 	ReturnMessage requestCancelOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception ;
+
+	EgovMap selectCompleteASIDByOrderIDSolutionReason(Map<String, Object> params);
+
+	ReturnMessage requestProductExchange(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
 }

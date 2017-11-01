@@ -152,22 +152,30 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
     				orderRentalFeesPromo = BigDecimal.ZERO;
     			}
+    			
+    			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
+    			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
+    			priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
+    			priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
+    			priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
 			}
 		}
 		else {
 			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params); //AS-IS Data(~2017.12.31)
 			
-			orderPricePromo      = (BigDecimal)priceInfo.get("amt");
-			orderPVPromo         = (BigDecimal)priceInfo.get("prcPv");
-			orderRentalFeesPromo = ((BigDecimal)priceInfo.get("prcRpf")).compareTo(BigDecimal.ZERO) > 0 ? (BigDecimal)priceInfo.get("promoItmRental") : BigDecimal.ZERO;
+			if(priceInfo != null) {
+    			orderPricePromo      = (BigDecimal)priceInfo.get("promoItmPrc");
+    			orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+    			orderRentalFeesPromo = ((BigDecimal)priceInfo.get("promoItmRental")).compareTo(BigDecimal.ZERO) > 0 ? (BigDecimal)priceInfo.get("promoItmRental") : BigDecimal.ZERO;
+    			
+    			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
+    			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
+    			priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
+    			priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
+    			priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
+			}
 		}
-		
-		priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
-		priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
-		priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
-		priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
-		priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
-		
+
 		return priceInfo;
 	}
 	
