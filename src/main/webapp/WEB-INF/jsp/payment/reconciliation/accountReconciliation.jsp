@@ -356,11 +356,11 @@ var journalPopLayout = [
         
     }
     
-    /* function fn_viewPayPopClose(val){
+    function fn_hideViewPop(val){
         $(val).hide();
-        AUIGrid.clearGridData(reviewPopGridID);  //grid data clear
-        AUIGrid.clearGridData(watingPopGridID);  //grid data clear
-    } */
+        AUIGrid.clearGridData(statementdetailPopGridID);
+        AUIGrid.clearGridData(journalEntryPopGridID);
+    }
    
 </script>
 <!-- content start -->
@@ -460,7 +460,7 @@ var journalPopLayout = [
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Reconciliation Task</h1>
 		<ul class="right_opt">
-		  <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#view_popup_wrap');">CLOSE</a></p></li>
+		  <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#statement_popup_wrap');">CLOSE</a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
@@ -544,7 +544,7 @@ var journalPopLayout = [
     <header class="pop_header"><!-- pop_header start -->
         <h1>Journal Entry</h1>
         <ul class="right_opt">
-          <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#view_popup_wrap');">CLOSE</a></p></li>
+          <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#journal_popup_wrap');">CLOSE</a></p></li>
         </ul>
     </header><!-- pop_header end -->
     <section class="pop_body"><!-- pop_body start -->
