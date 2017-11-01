@@ -43,6 +43,7 @@
     var addmonth = 0;
     var dp = new DayPilot.Month("dp");
     var addOrEditChck;
+    var newRoomId;
     // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [
                         {dataField:"rumId"      ,headerText:"Room Id"      ,width:"15%"  ,height:30 , visible:true},
@@ -83,17 +84,15 @@
   enableSorting : true,
   showRowCheckColumn : true,
   */
-    var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false };
+    var gridoptions = {showStateColumn : false , 
+		                     editable : false,
+		                     noDataMessage : "<spring:message code='sys.info.grid.noDataMessage'/>", 
+		                     pageRowCount : 20, 
+		                     usePaging : true, 
+		                     useGroupingPanel : false,
+		                     enableSorting : true,
+		                     softRemoveRowMode:false};
     
-    var subgridpros = {
-            // 페이지 설정
-            usePaging : true,                
-            pageRowCount : 10,                
-            editable : true,                
-            noDataMessage : "<spring:message code='sys.info.grid.noDataMessage'/>",
-            enableSorting : true,
-            softRemoveRowMode:false
-            };
     
 
     $(document).ready(function(){
@@ -281,7 +280,7 @@
         		    return false;        		   
         	   }
         	   
-        	   // fn_saveNewEdit();
+        	   fn_saveNewEdit();
            });    
            $("#deActive").click(function(){
         	    fn_deActive();
@@ -482,16 +481,20 @@
         console.log(param);
         Common.ajax("POST" , url , param , function(data){
 	        console.log(data);
+	        newRoomId=data.data;
         	 $("#popup_wrap_new").hide();
         	if("add"==addOrEditChck){
-	        	 Common.confirm("New conference room successfully saved.Are you want to upload room picture ?");
-	        	 //Common.alert("New conference room successfully saved.<br>Are you want to upload room picture ?",$("#popup_wrap_picture").show(),getListAjax());
+	        	 Common.confirm("New conference room successfully saved.<br>Are you want to upload room picture ?",goPic,getListAjax);
         	}else{
 	        	 Common.alert("Conference room successfully updated.");
-	        	 //getListAjax();
+	        	 getListAjax();
         	}
         });
         
+    }
+    function goPic(){
+    	 fn_getRoomData(newRoomId,"P");
+    	 $("#popup_wrap_picture").show();
     }
     function fn_deActive(){
        var status = $("#RoomStatus").val()
@@ -685,8 +688,8 @@
 </table>
 </form>
             <ul class="center_btns">
-                <li><p class="btn_blue2 big" id="saveNew"><a  href="javascript:void(0);">SAVE</a></p></li> 
-               <li><p class="btn_blue2 big" id="deActive"><a  href="javascript:void(0);">Deactivate</a></p></li>  
+                <li><p class="btn_blue2 big"><a  id="saveNew">SAVE</a></p></li> 
+               <li><p class="btn_blue2 big" ><a  id="deActive">Deactivate</a></p></li>  
             </ul>
 </section><!-- pop_body end -->
 </div>

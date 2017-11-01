@@ -27,6 +27,7 @@
       <if test="searchmin !=null and searchmin !='' and searchmax !=null and searchmax !=''">
       AND CPCTY BETWEEN #{searchmin} AND #{searchmax}
       </if>
+      ORDER BY RUM_ID
     </select>
     <select id="roomBookingList"  parameterType="Map" resultType="EgovMap">
     <!-- RoomMaster 생성 요청함 2017-10-26 -->
