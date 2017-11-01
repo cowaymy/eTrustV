@@ -11,7 +11,7 @@
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
     
 						SELECT OR1.MEM_CODE AS settled_By,
-						       S01.SALES_ORD_NO AS sales_OrderNo,
+						       S01.SALES_ORD_NO AS sales_Order_No,
 						       S01.APP_TYPE_ID AS app_Type,
 						       S17.PROMO_ID AS sales_Promotion,
 						       S22.CUST_ACC_BANK_ID AS bank_Code,
@@ -20,7 +20,7 @@
 						       S27.TEL_O AS home_Tel,
 						       S27.TEL_R AS office_Tel,
 						       S27.EMAIL AS mail_Address,
-						       S27.NRIC AS resultIc_MobileNo,
+						       S27.NRIC AS resultIc_Mobile_No,
 						       S29.NAME AS cust_Name,
 						       S29.corp_type_id AS customer_Type,
 						       S29.cust_id AS customer_Id,
@@ -28,14 +28,14 @@
 						       S47.SIRIM_NO AS sirim_No,
 						       S47.SERIAL_NO AS serial_No,
 						       SV6.REN_COLCT_ID AS rc_Code,
-						       SV6.FAIL_RESN_ID AS fail_ReasonCode,
+						       SV6.FAIL_RESN_ID AS fail_Reason_Code,
 						       SV8.NO AS service_No,
 						       SV8.STUS_CODE_ID AS job_Status,
 						       SV8.YEAR AS plan_Year,
 						       SV8.MONTH AS plan_Month,
 						       SYS.STK_DESC AS product_Name,
 						       SYS.STK_CODE AS product_Code
-<!-- 						       ,
+ 						       ,
                                  '1' as job_Type
                                 , '1'  as appointment_Date
                                 , '1' as appointment_Time
@@ -79,10 +79,10 @@
                                 , '1' as nextAppointment_Time
                                 , '1' as appType
                                 , '1' as salesPromotion
-                                , '1' as bankCode
-                                , '1' as dscCode
-                                , '1' as rcCode
-                                , '1' as failReasonCode -->
+                                , '1' as bank_Code
+                                , '1' as dsc_Code
+                                , '1' as rc_Code
+                                , '1' as failReason_Code 
 						  FROM SVC0008D SV8
 						       INNER JOIN SAL0001D S01
 						          ON S01.SALES_ORD_ID = SV8.SALES_ORD_ID
