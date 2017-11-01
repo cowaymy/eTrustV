@@ -75,7 +75,7 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/runCommissionMng.do")
 	public String runCommissionMng(@RequestParam Map<String, Object> params, ModelMap model) {
-		params.put("mstId",CommissionConstants.COMIS_PRO_CD);
+		params.put("mstId",CommissionConstants.COMIS_PRO_CD_A);
 		List<EgovMap> orgGrList = commissionCalculationService.selectCommPrdGroupListl(params);
 		model.addAttribute("orgGrList", orgGrList);
 
@@ -119,10 +119,19 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectCalculationList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCalculationList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		params.put("mstId", CommissionConstants.COMIS_PRO_CD);
-		// 조회.
-		params.put("searchDt", (params.get("searchDt").toString()).replace("/", ""));
-		List<EgovMap> itemList = commissionCalculationService.selectCalculationList(params);
+		List<EgovMap> itemList = null;
+		
+		if( "A".equals(params.get("actionType").toString()) ){
+			params.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
+			// 조회.
+			params.put("searchDt", (params.get("searchDt").toString()).replace("/", ""));
+			itemList = commissionCalculationService.selectCalculationList(params);
+		}else{
+			params.put("mstId", CommissionConstants.COMIS_PRO_CD_S);
+			// 조회.
+			params.put("searchDt", (params.get("searchDt").toString()).replace("/", ""));
+			itemList = commissionCalculationService.selectCalculationList(params);
+		}
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(itemList);
@@ -138,7 +147,7 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectBasicCalculationList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectBasicCalculationList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		params.put("mstId", CommissionConstants.COMIS_PRO_CD);
+		params.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
 		// 조회.
 		params.put("searchDt", (params.get("searchDt").toString()).replace("/", ""));
 		List<EgovMap> itemList = commissionCalculationService.selectBasicList(params);
@@ -156,7 +165,7 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectBasicStatus", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectBasicStatus(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		params.put("mstId", CommissionConstants.COMIS_PRO_CD);
+		params.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
 		// 조회.
 		params.put("searchDt", (params.get("searchDt").toString()).replace("/", ""));
 		Map map = commissionCalculationService.selectBasicStatus(params);
@@ -252,7 +261,7 @@ public class CommissionCalculationController {
 				prdBatchMap.put("calStartTime",lMap.get("calStartTime")); 
 				prdBatchMap.put("codeId", lMap.get("codeId").toString()); 
 				prdBatchMap.put("code",lMap.get("code")); 
-				prdBatchMap.put("mstId", CommissionConstants.COMIS_PRO_CD);
+				prdBatchMap.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
 				prdBatchMap.put("searchDt",lMap.get("searchDt"));
 				prdBatchMap.put("taskId", String.valueOf(sTaskID));
 				prdBatchMap.put("loginId", lMap.get("loginId"));
@@ -328,7 +337,7 @@ public class CommissionCalculationController {
 		} else {
 			loginId = String.valueOf(sessionVO.getUserId());
 		}
-		params.put("mstId", CommissionConstants.COMIS_PRO_CD);
+		params.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
 		
 		/*
 		 * Date and taskId
@@ -447,6 +456,7 @@ public class CommissionCalculationController {
 		model.addAttribute("prdDec", params.get("prdDec"));
 		model.addAttribute("code", params.get("code"));
 		model.addAttribute("searchDt_pop", params.get("searchDt"));
+		model.addAttribute("actionType", params.get("actionType"));
 		
 		String popName= "";
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01)){

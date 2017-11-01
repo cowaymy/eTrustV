@@ -107,14 +107,14 @@ public interface CommissionSystemService
      * @param updateList
      * @return
      */
-    int addCommissionItemGrid(List<Object> updateList , String loginId);
+    String addCommissionItemGrid(List<Object> updateList , String loginId);
     
     /**
      * update coommission rule book management Data
      * @param addList
      * @return
      */
-    int udtCommissionItemGrid(List<Object> addList, String loginId);
+    String udtCommissionItemGrid(List<Object> addList, String loginId);
     
     /**
      * delete coommission rule book management Data
@@ -169,5 +169,15 @@ public interface CommissionSystemService
      * @return
      */
     int udtWeeklyCommissionGrid(List<Object> addList, String loginId);
-	
+    
+    List<EgovMap> selectSimulationMngList(Map<String, Object> params);
+    
+    void udtVersionItemEndDt(Map<String, Object> params);
+    
+    String varsionVaildSearch(String itemCd);
+    void versionItemInsert(Map<String, Object> params);
+    
+    List<EgovMap> selectVersionRuleBookList(Map<String, Object> params);
+	void addCommVersionRuleData(Map<String, Object> params);
+	void udtCommVersionRuleEndDt(Map<String, Object> params);
 }

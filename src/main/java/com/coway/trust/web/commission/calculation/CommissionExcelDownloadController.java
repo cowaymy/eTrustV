@@ -37,6 +37,8 @@ public class CommissionExcelDownloadController {
 		try {
 			String fileName = request.getParameter("fileName");
 			String codeNm = request.getParameter("code");
+			String actionType = request.getParameter("actionType");
+			
 			System.out.println(" ** Excel Code Name : " + codeNm);
 			String[] columns;
 			String[] titles;
@@ -83,9 +85,13 @@ public class CommissionExcelDownloadController {
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				}
-				map.put("memberId", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberCd"));
 
-				largeExcelService.downLoad28CT(map, downloadHandler);
+				if("A".equals(actionType)){
+					largeExcelService.downLoad28CT(map, downloadHandler);
+				}else{
+					largeExcelService.downLoad28TCT(map, downloadHandler);
+				}
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)
 					|| codeNm.equals(CommissionConstants.COMIS_CDG_P01)
@@ -151,9 +157,13 @@ public class CommissionExcelDownloadController {
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				}
-				map.put("memberId", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberCd"));
 
-				largeExcelService.downLoad28CD(map, downloadHandler);
+				if("A".equals(actionType)){
+					largeExcelService.downLoad28CD(map, downloadHandler);
+				}else{
+					largeExcelService.downLoad28TCD(map, downloadHandler);
+				}
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_HPF_P01)
 					|| codeNm.equals(CommissionConstants.COMIS_HPG_P01)
@@ -220,9 +230,14 @@ public class CommissionExcelDownloadController {
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				}
-				map.put("memberId", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberCd"));
 
-				largeExcelService.downLoad28HP(map, downloadHandler);
+				
+				if("A".equals(actionType)){
+					largeExcelService.downLoad28HP(map, downloadHandler);
+				}else{
+					largeExcelService.downLoad28THP(map, downloadHandler);
+				}
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_CTL_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_CTM_P02)
@@ -261,9 +276,13 @@ public class CommissionExcelDownloadController {
 
 				}
 
-				map.put("memberId", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberCd"));
 
-				largeExcelService.downLoad29CT(map, downloadHandler);
+				if("A".equals(actionType)){
+					largeExcelService.downLoad29CT(map, downloadHandler);
+				}else{
+					largeExcelService.downLoad29TCT(map, downloadHandler);
+				}
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_CDG_P02)
@@ -325,9 +344,13 @@ public class CommissionExcelDownloadController {
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				}
-				map.put("memberId", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberCd"));
 
-				largeExcelService.downLoad29CD(map, downloadHandler);
+				if("A".equals(actionType)){
+					largeExcelService.downLoad29CD(map, downloadHandler);
+				}else{
+					largeExcelService.downLoad29TCD(map, downloadHandler);
+				}
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_HPF_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_HPG_P02)
@@ -407,9 +430,13 @@ public class CommissionExcelDownloadController {
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				}
-				map.put("memberId", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberCd"));
 
-				largeExcelService.downLoad29HP(map, downloadHandler);
+				if("A".equals(actionType)){
+					largeExcelService.downLoad29HP(map, downloadHandler);
+				}else{
+					largeExcelService.downLoad29THP(map, downloadHandler);
+				}
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P01)) {
 				map.put("codeId", request.getParameter("codeId"));

@@ -214,7 +214,7 @@ public interface CommissionSystemMapper {
 	 */
 	List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
 	
-	int cntUpdateDate(Map<String, Object> params);
+	int cntUpdateData(Map<String, Object> params);
 	
 	void udtRuleDescData(Map<String, Object> params);
 	
@@ -246,4 +246,24 @@ public interface CommissionSystemMapper {
 	 * @exception Exception
 	 */
 	int udtWeeklyCommissionGrid(Map<String, Object> params);
+	
+	List<EgovMap> selectSimulationMngList(Map<String, Object> params);
+	
+	void udtVersionItemEndDt (Map<String, Object> params);
+	
+	String varsionVaildSearch (String itemCd);
+	
+	void versionItemInsert(Map<String, Object> params);
+	
+	List<EgovMap> selectVersionRuleBookList(Map<String, Object> params);
+	void addCommVersionRuleData(Map<String, Object> params);
+	void udtCommVersionRuleEndDt(Map<String, Object> params);
+	
+	List<EgovMap> selectVersionRuleBookMngList(Map<String, Object> params);
+	
+	int cntSimulUpdateData(Map<String, Object> params);
+	void udtSimulRuleDescData(Map<String, Object> params);
+	
+	List<EgovMap>selectSimulRuleMngChk(Map<String, Object> params);
+	
 }

@@ -216,18 +216,33 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 */
 	@Override
 	public int cntCMM0028D(Map<String, Object> params) {
-		return commissionCalculationMapper.cntCMM0028D(params);
+		int cnt = 0;
+		if( "A".equals(params.get("actionType")) ){
+			cnt = commissionCalculationMapper.cntCMM0028D(params);
+		}else{
+			cnt = commissionCalculationMapper.cntCMM0028T(params);
+		}
+		return cnt;
 	}
 	@Override
 	public List<EgovMap> selectData7001(Map<String, Object> params) {
-		if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
-			return commissionCalculationMapper.selectCMM0028DCT(params);
-		}else if(CommissionConstants.COMIS_CD.equals(params.get("codeGruop"))){
-			System.out.println("%%%CD");
-			return commissionCalculationMapper.selectCMM0028DCD(params);
-		}else if(CommissionConstants.COMIS_HP.equals(params.get("codeGruop"))){
-			return commissionCalculationMapper.selectCMM0028DHP(params);
-		}else return null;
+		if( "A".equals(params.get("actionType")) ){
+			if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0028DCT(params);
+			}else if(CommissionConstants.COMIS_CD.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0028DCD(params);
+			}else if(CommissionConstants.COMIS_HP.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0028DHP(params);
+			}else return null;
+		}else{
+			if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0028TCT(params);
+			}else if(CommissionConstants.COMIS_CD.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0028TCD(params);
+			}else if(CommissionConstants.COMIS_HP.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0028THP(params);
+			}else return null;
+		}
 	}
 	/**
 	 * calculation Data 7002 List Select (CD,CT,HP)
@@ -238,17 +253,33 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 */
 	@Override
 	public int cntCMM0029D(Map<String, Object> params) {
-		return commissionCalculationMapper.cntCMM0029D(params);
+		int cnt= 0;
+		if( "A".equals(params.get("actionType")) ){
+			cnt = commissionCalculationMapper.cntCMM0029D(params);
+		}else{
+			cnt = commissionCalculationMapper.cntCMM0029T(params);
+		}
+		return cnt;
 	}
 	@Override
 	public List<EgovMap> selectData7002(Map<String, Object> params) {
-		if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
-			return commissionCalculationMapper.selectCMM0029DCT(params);
-		}else if(CommissionConstants.COMIS_CD.equals(params.get("codeGruop"))){
-			return commissionCalculationMapper.selectCMM0029DCD(params);
-		}else if(CommissionConstants.COMIS_HP.equals(params.get("codeGruop"))){
-			return commissionCalculationMapper.selectCMM0029DHP(params);
-		}else return null;
+		if( "A".equals(params.get("actionType")) ){
+			if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0029DCT(params);
+			}else if(CommissionConstants.COMIS_CD.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0029DCD(params);
+			}else if(CommissionConstants.COMIS_HP.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0029DHP(params);
+			}else return null;
+		}else{
+			if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0029TCT(params);
+			}else if(CommissionConstants.COMIS_CD.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0029TCD(params);
+			}else if(CommissionConstants.COMIS_HP.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0029THP(params);
+			}else return null;
+		}
 	}
 	
 	/**

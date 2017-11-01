@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -272,10 +273,10 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public int addCommissionItemGrid(List<Object> addList,String loginId) {	
+	public String addCommissionItemGrid(List<Object> addList,String loginId) {	
 		
 		int cnt=0;
-		
+		String msg= "";
 		for (Object obj : addList) {
 
 			((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);
@@ -303,11 +304,33 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 				params.put("endDt", CommissionConstants.COMIS_END_DT);
 				params.put("updUserId", ((Map<String, Object>) obj).get("updUserId"));
 				
-				commissionSystemMapper.udtCommissionItemGridEndDt(params);
+				if(StringUtil.isNumeric(list.get(0).get("orgSeq").toString())){
+					msg = "pelese only number";
+					break;
+				}else if(StringUtil.isNumeric(list.get(0).get("itemCd").toString())){
+					msg = "pelese only number";
+					break;
+				}else{
+					msg = "success";
+					commissionSystemMapper.udtCommissionItemGridEndDt(params);
+				}
 			}
-			cnt=cnt+commissionSystemMapper.addCommissionItemGrid((Map<String, Object>) obj);
+			if(msg.equals("")){
+				break;
+			}else{
+				if(StringUtil.isNumeric(((Map<String, Object>) obj).get("itemCd").toString() ) ){
+					msg = "pelese only number";
+					break;
+				}else if(StringUtil.isNumeric(((Map<String, Object>) obj).get("orgSeq").toString() ) ){
+					msg = "pelese only number";
+					break;
+				}else{
+					msg = "success";
+					commissionSystemMapper.addCommissionItemGrid((Map<String, Object>) obj);
+				}
+			}
 		}
-		return cnt;
+		return msg;
 	}
 
 	/**
@@ -318,9 +341,10 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	 * @exception Exception
 	 */
 	@Override
-	public int udtCommissionItemGrid(List<Object> udtList,String loginId) {
+	public String udtCommissionItemGrid(List<Object> udtList,String loginId) {
 		
 		int cnt=0;
+		String msg = "success";
 		for (Object obj : udtList) {
 			((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);
 			((Map<String, Object>) obj).put("crtUserId", loginId);
@@ -338,9 +362,17 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			logger.debug("add CRT_USER_ID : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			logger.debug("add UPD_USER_ID : {}", ((Map<String, Object>) obj).get("updUserId"));
 
-			cnt=cnt+commissionSystemMapper.udtCommissionItemGridUseYn((Map<String, Object>) obj);
+			if( StringUtil.isNumeric( (((Map<String, Object>) obj).get("itemCd")).toString() )){
+				msg = "pelese only number";
+				break;
+			}else if( StringUtil.isNumeric( (((Map<String, Object>) obj).get("orgSeq")).toString() )){
+				msg = "pelese only number";
+				break;
+			}else{
+				commissionSystemMapper.udtCommissionItemGridUseYn((Map<String, Object>) obj);
+			}
 		}
-		return cnt;
+		return msg;
 	}
 
 	@Override
@@ -367,6 +399,8 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			logger.debug("add useYn : {}", params.get("useYn"));
 			logger.debug("add crtUserId : {}", params.get("crtUserId"));
 			logger.debug("add updUserId : {}", params.get("updUserId"));
+			logger.debug("add versionType : {}", params.get("versionType").toString());
+			
 
 		/*	List<EgovMap> list = commissionSystemMapper.selectRuleMngChk(params);
 			if (list.size() > 0) {
@@ -378,7 +412,14 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 				
 				commissionSystemMapper.udtCommissionRuleEndDt(params);
 			}*/
-			cnt=cnt+commissionSystemMapper.addCommissionRuleData(params);
+			if("A".equals(params.get("versionType").toString())){
+				cnt=cnt+commissionSystemMapper.addCommissionRuleData(params); //int type
+			}else{
+				params.put("endYearmonth", CommissionConstants.COMIS_END_DT);
+				params.put("prtOrder", params.get("printOrder"));
+				commissionSystemMapper.addCommVersionRuleData(params); //void type
+				cnt=cnt+1;
+			}
 		
 		return cnt;
 	}
@@ -411,36 +452,68 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			if( params.get("rulePid")==null ||  params.get("rulePid").equals("")){
 				params.put("rulePid", "0");
 			}
-			List<EgovMap> list = commissionSystemMapper.selectRuleMngChk(params);
-			if (list.size() > 0) {
-				Map<String, Object> updParams = new HashMap<String, Object>();
-				updParams.put("ruleSeq", list.get(0).get("ruleSeq"));
-				updParams.put("itemSeq", list.get(0).get("itemSeq"));
-				updParams.put("itemCd", list.get(0).get("itemCd"));
-				updParams.put("updUserId", loginId);
-				params.put("ruleLevel", list.get(0).get("ruleLevel"));
-				
-				commissionSystemMapper.udtCommissionRuleEndDt(params);
+			
+			System.out.println(" ** 2. type : " + params.get("versionType"));
+			if("A".equals(params.get("versionType").toString())){
+    			List<EgovMap> list = commissionSystemMapper.selectRuleMngChk(params);
+    			if (list.size() > 0) {
+    				Map<String, Object> updParams = new HashMap<String, Object>();
+    				updParams.put("ruleSeq", list.get(0).get("ruleSeq"));
+    				updParams.put("itemSeq", list.get(0).get("itemSeq"));
+    				updParams.put("itemCd", list.get(0).get("itemCd"));
+    				updParams.put("updUserId", loginId);
+    				params.put("ruleLevel", list.get(0).get("ruleLevel"));
+    				
+    				commissionSystemMapper.udtCommissionRuleEndDt(params);
+    			}
+    			cnt=cnt+commissionSystemMapper.addCommissionRuleData(params);
+			}else{
+				List<EgovMap> list = commissionSystemMapper.selectSimulRuleMngChk(params);
+    			if (list.size() > 0) {
+    				params.put("ruleLevel", list.get(0).get("ruleLevel"));
+    				params.put("loginId", loginId);
+    				
+    				commissionSystemMapper.udtCommVersionRuleEndDt(params);
+    			}
+    			params.put("endYearmonth", CommissionConstants.COMIS_END_DT);
+    			params.put("prtOrder", params.get("printOrder"));
+    			commissionSystemMapper.addCommVersionRuleData(params);
+    			cnt=cnt+1;
 			}
-			cnt=cnt+commissionSystemMapper.addCommissionRuleData(params);
 		
 		return cnt;
 	}
 
 	@Override
 	public List<EgovMap> selectRuleBookMngList(Map<java.lang.String, Object> params) {		
-		return commissionSystemMapper.selectRuleBookMngList(params);
+		List<EgovMap> ruleList = null;
+		System.out.println("Rule Version Type : " + params.get("versionType"));
+		if("A".equals(params.get("versionType")) ){
+			ruleList =commissionSystemMapper.selectRuleBookMngList(params);
+		}else{
+			ruleList =commissionSystemMapper.selectVersionRuleBookMngList(params);
+		}
+		return ruleList;
+		//return commissionSystemMapper.selectRuleBookMngList(params);
 	}
 	
 	@Override
 	public int cntUpdateDate(Map<String, Object> params) {
 		int cnt=0;
-		cnt=commissionSystemMapper.cntUpdateDate(params);
+		if("A".equals(params.get("versionType")) ){
+			cnt=commissionSystemMapper.cntUpdateData(params);
+		}else{
+			cnt=commissionSystemMapper.cntSimulUpdateData(params);
+		}
 		return cnt;
 	}
 	@Override
 	public void udtCommissionRuleData(Map<String, Object> params) {
-		commissionSystemMapper.udtRuleDescData(params);
+		if("A".equals(params.get("versionType")) ){
+			commissionSystemMapper.udtRuleDescData(params);
+		}else{
+			commissionSystemMapper.udtSimulRuleDescData(params);
+		}
 	}
 	
 	/**
@@ -501,6 +574,41 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			cnt=cnt+commissionSystemMapper.udtWeeklyCommissionGrid((Map<String, Object>) obj);
 		}
 		return cnt;
+	}
+	
+	@Override
+	public List<EgovMap> selectSimulationMngList(Map<String, Object> params) {
+		return commissionSystemMapper.selectSimulationMngList(params);
+	}
+	
+	@Override
+	public void udtVersionItemEndDt (Map<String, Object> params){
+		commissionSystemMapper.udtVersionItemEndDt(params);
+	}
+	
+	@Override
+	public String varsionVaildSearch (String itemCd){
+		return commissionSystemMapper.varsionVaildSearch(itemCd);
+	}
+	
+	@Override
+	public void versionItemInsert(Map<String, Object> params){
+		commissionSystemMapper.versionItemInsert(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectVersionRuleBookList(Map<String, Object> params){
+		return commissionSystemMapper.selectVersionRuleBookList(params);
+	}
+	
+	@Override
+	public void addCommVersionRuleData(Map<String, Object> params){
+		commissionSystemMapper.addCommVersionRuleData(params);
+	}
+	
+	@Override
+	public void udtCommVersionRuleEndDt(Map<String, Object> params){
+		commissionSystemMapper.udtCommVersionRuleEndDt(params);
 	}
 
 }

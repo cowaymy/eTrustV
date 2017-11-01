@@ -329,6 +329,9 @@ public class CommissionSystemController {
 	@RequestMapping(value = "/saveCommissionItemGrid.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveCommissionItemGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		String loginId = "";
 		if(sessionVO==null){
@@ -342,12 +345,12 @@ public class CommissionSystemController {
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
 		
 		int cnt = 0;
-		
+		String msg= "";
 		if (addList.size() > 0) {			
-			cnt = commissionSystemService.addCommissionItemGrid(addList,loginId);
+			msg = commissionSystemService.addCommissionItemGrid(addList,loginId);
 		}
 		if (udtList.size() > 0) {
-			cnt = commissionSystemService.udtCommissionItemGrid(udtList,loginId);
+			msg = commissionSystemService.udtCommissionItemGrid(udtList,loginId);
 		}
 		/*if (delList.size() > 0) {
 			cnt = commissionSystemService.delCommissionGrid(delList,loginId);
@@ -358,10 +361,7 @@ public class CommissionSystemController {
 		//logger.info("삭제 : {}", delList.toString());
 		logger.info("카운트 : {}", cnt);
 
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage(msg);
 
 		return ResponseEntity.ok(message);
 	}
@@ -386,8 +386,7 @@ public class CommissionSystemController {
 		}
 		
 		String saveType = params.get("saveType")==null?"I":String.valueOf(params.get("saveType"));
-		
-		
+				
 		int cnt = 0;
 		int uCnt=0;
 		if (saveType.equals("U")) {
@@ -551,6 +550,175 @@ public class CommissionSystemController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/commissionRuleVersionMng.do")
+	public String commissionRuleVersionMng(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
+		List<EgovMap> orgGrList = commissionSystemService.selectOrgGrList(params);
+		model.addAttribute("orgGrList", orgGrList);
+		params.put("mstId", CommissionConstants.COMIS_CD_CD);
+		List<EgovMap> orgList = commissionSystemService.selectOrgList(params);
+		String dt = CommonUtils.getNowDate().substring(0, 6);
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("orgGrList", orgGrList);
+		model.addAttribute("orgList", orgList);
+		// 호출될 화면
+		return "commission/commissionRuleVersionManagement";
+	}
+	
+	@RequestMapping(value = "/selectVersionList", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectVersionList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		String dt = String.valueOf(params.get("searchDt"));
+		if (dt.trim().equals("")) {
+			dt = CommonUtils.getNowDate().substring(0, 6);
+			params.put("searchDt", dt);
+		} else if (dt.contains("/")) {
+			dt = dt.replaceAll("/", "");
+			dt = dt.substring(2) + dt.substring(0, 2);
+			params.put("searchDt", dt);
+		}
+		
+		List<EgovMap> actualList = commissionSystemService.selectRuleBookItemMngList(params);
+		List<EgovMap> simulList = commissionSystemService.selectSimulationMngList(params);
+		
+		
+		Map<String, Object> map= new HashMap<String, Object>();
+		map.put("actualList", actualList);
+		map.put("simulList", simulList);
+		
+		// return data
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/saveCommVersionInsert.do", method = RequestMethod.POST)
+	//public  ResponseEntity<ReturnMessage>  saveCommVersionInsert(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+	public  ResponseEntity<ReturnMessage>  saveCommVersionInsert(@RequestBody Map<String, Object> params, Model model) {
+
+		String dt = CommonUtils.getNowDate().substring(0, 6);	
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="1000000000";
+		}else{
+			loginId=String.valueOf(sessionVO.getUserId());
+		}
+		
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> simulList = (List<Object>)params.get(AppConstants.AUIGRID_ALL); 	// Get grid addList
+		
+		System.out.println(formMap);
+		System.out.println(simulList);
+		
+		Map map = new HashMap();
+		map.put("loginId",loginId);
+		map.put("endDt",CommissionConstants.COMIS_END_DT);
+		formMap.put("endDt",CommissionConstants.COMIS_END_DT);
+		formMap.put("loginId",loginId);
+		commissionSystemService.udtVersionItemEndDt(formMap);
+		commissionSystemService.udtCommVersionRuleEndDt(map);
+		
+		
+		if(simulList.size() > 0){
+			for (Object obj : simulList) {
+				Map sMap = (HashMap<String, Object>) obj;
+				if( !("N".equals(sMap.get("newYn"))) ){
+    				sMap.put("loginId", loginId);
+    				sMap.put("endDt", CommissionConstants.COMIS_END_DT);
+    				//new item Data All insert
+					commissionSystemService.versionItemInsert(sMap);
+				}
+			}
+			
+			//select valid simulation all list 
+			List<EgovMap> itemList = commissionSystemService.selectSimulationMngList(map);
+			
+			String searchDt = formMap.get("searchDt").toString();
+			searchDt =  searchDt.substring(searchDt.indexOf("/")+1,searchDt.length())+searchDt.substring(0,searchDt.indexOf("/"));
+			System.out.println(" %% searchDt : "+searchDt);
+			//simulation item rule book save
+			if(itemList.size() > 0){
+				Map rMap = null; 
+				for(int i=0 ; i< itemList.size() ; i++){
+					rMap =  new HashMap();
+					
+					rMap.put("itemCd", itemList.get(i).get("itemCd"));
+					rMap.put("endDt", CommissionConstants.COMIS_END_DT);
+					rMap.put("searchDt", searchDt);
+					
+					List<EgovMap> ruleList = commissionSystemService.selectVersionRuleBookList(rMap);
+					/*System.out.println("##############################");
+					System.out.println(ruleList);
+					System.out.println("##############################");*/
+					
+					if( ruleList.size() > 0 ){
+						Map ruleMap = null;
+						for(int j =0 ; j < ruleList.size() ; j ++){
+							ruleMap = new HashMap();
+							
+							//String rulePid= sertchRulePid(ruleList,ruleList.get(i).get("ruleSeq").toString());
+    						ruleMap.put("itemSeq", itemList.get(i).get("itemSeq"));
+    						ruleMap.put("itemCd", ruleList.get(j).get("itemCd"));
+    						ruleMap.put("ruleLevel", ruleList.get(j).get("ruleLevel"));
+    						ruleMap.put("ruleSeq", ruleList.get(j).get("newSeq"));
+    						//ruleMap.put("rulePid", ruleList.get(j).get("rulePid"));
+    						ruleMap.put("rulePid", sertchRulePid(ruleList,ruleList.get(j).get("rulePid").toString()));
+    						ruleMap.put("ruleNm", ruleList.get(j).get("ruleNm"));
+    						ruleMap.put("ruleCategory", ruleList.get(j).get("ruleCategory"));
+    						ruleMap.put("ruleOpt1", ruleList.get(j).get("ruleOpt1"));
+    						ruleMap.put("ruleOpt2", ruleList.get(j).get("ruleOpt2"));
+    						ruleMap.put("valueType", ruleList.get(j).get("valueType"));
+    						ruleMap.put("valueTypeNm", ruleList.get(j).get("valueTypeNm"));
+    						ruleMap.put("resultValue", ruleList.get(j).get("resultValue"));
+    						ruleMap.put("resultValueNm", ruleList.get(j).get("resultValueNm"));
+    						ruleMap.put("ruleDesc", ruleList.get(j).get("ruleDesc"));
+    						ruleMap.put("startYearmonth", ruleList.get(j).get("startYearmonth"));
+    						ruleMap.put("endYearmonth", ruleList.get(j).get("endYearmonth"));
+    						ruleMap.put("useYn", ruleList.get(j).get("useYn"));
+    						ruleMap.put("crtUserId", loginId);
+    						ruleMap.put("updUserId", loginId);
+    						ruleMap.put("prtOrder", ruleList.get(j).get("prtOrder"));
+    						
+    						commissionSystemService.addCommVersionRuleData(ruleMap);
+						}
+					}
+				}
+			}
+		}
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/varsionVaildSearch", method = RequestMethod.GET)
+	public ResponseEntity<String> varsionVaildSearch(@RequestParam Map<String, Object> params, ModelMap model) {
+		String itemSeq = itemSeq=  commissionSystemService.varsionVaildSearch(params.get("itemCd").toString());
+		
+		return ResponseEntity.ok(itemSeq);
+	}
+	
+	public String sertchRulePid(List<EgovMap> list, String pid){
+		String rulePid="0";
+		System.out.println("***************pid : " +  pid);
+		for(int i = 0; i < list.size() ; i++){
+			if( !( "0".equals(pid) ) ){
+				if( pid.equals(list.get(i).get("ruleSeq").toString()) ){
+					rulePid = list.get(i).get("newSeq").toString();
+					break;
+				}
+			}
+		}
+		
+		return rulePid; 
 	}
 
 }

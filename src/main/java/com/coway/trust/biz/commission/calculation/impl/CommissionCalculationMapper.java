@@ -320,4 +320,12 @@ public interface CommissionCalculationMapper {
 	void incentiveDeactivate(Map<String, Object> params);
 	void callIncentiveConfirm(Map<String, Object> params);
 	
+	int cntCMM0028T(Map<String, Object>  param);
+	int cntCMM0029T(Map<String, Object>  param);
+	List<EgovMap> selectCMM0028TCT(Map<String, Object> params);
+	List<EgovMap> selectCMM0028TCD(Map<String, Object> params);
+	List<EgovMap> selectCMM0028THP(Map<String, Object> params);
+	List<EgovMap> selectCMM0029TCT(Map<String, Object> params);
+	List<EgovMap> selectCMM0029TCD(Map<String, Object> params);
+	List<EgovMap> selectCMM0029THP(Map<String, Object> params);
 }

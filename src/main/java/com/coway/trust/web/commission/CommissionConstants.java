@@ -15,7 +15,8 @@ public class CommissionConstants {
 	public static final String COMIS_CT_CD = "302";				//Commission CT main code
 	public static final String COMIS_HP_CD = "303";				//Commission HP main code
 	public static final String COMIS_ITEM_CD = "304";			//Commission Item code
-	public static final String COMIS_PRO_CD = "311";			//Commission Procedure code
+	public static final String COMIS_PRO_CD_A = "311";			//Commission Procedure code actual
+	public static final String COMIS_PRO_CD_S = "354";			//Commission Procedure code simulation
 	public static final String COMIS_ADJUST_CD = "77";		//Commission Adjustment Code
 	public static final String COMIS_TYPE_CD = "346";			//Commission Value Type Code
 	public static final String COMIS_HP = "HP";					//Health Planner
