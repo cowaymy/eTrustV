@@ -424,7 +424,7 @@
 
             $('#sctBillMthd').removeClass("blind");
             $('#sctBillAddr').removeClass("blind");
-            $('#sctBillPrefer').removeClass("blind");
+//          $('#sctBillPrefer').removeClass("blind");
 
             $('#liBillNewAddr').removeClass("blind");
             $('#liBillSelAddr').removeClass("blind");
@@ -794,8 +794,8 @@
                 return;
             }
                 
-            $('#ordCampgn option').remove();
-            $('#ordCampgn').prop("readonly", true);
+//          $('#ordCampgn option').remove();
+//          $('#ordCampgn').prop("readonly", true);
 //          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
             $('#trialNoChk').prop("checked", false).prop("disabled", true);
             $('#trialNo').val('').addClass("readonly");
@@ -2265,12 +2265,12 @@
 </tr>
 <tr>
     <th scope="row">Price/RPF (RM)</th>
-    <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
-        <input id="ordPriceId"        name="ordPriceId"        type="hidden" />
-        <input id="orgOrdPrice"       name="orgOrdPrice"       type="hidden" />
-        <input id="orgOrdPv"          name="orgOrdPv"          type="hidden" /></td>
+    <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+        <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
+        <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" />
+        <input id="orgOrdPv"    name="orgOrdPv"    type="hidden" /></td>
     <th scope="row">Department Code</th>
-    <td><input id="departCd" name="departCd" type="text" title="" placeholder="Department Code" class="w100p readonly" readonly />
+    <td><input id="departCd"    name="departCd"    type="text" title="" placeholder="Department Code" class="w100p readonly" readonly />
         <input id="departMemId" name="departMemId" type="hidden" /></td>
 </tr>
 <tr>
