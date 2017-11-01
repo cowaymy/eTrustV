@@ -646,25 +646,16 @@ public class LogisticsApiController {
 	 * 인서트 부분 추가
 	 */
 
+
 	@ApiOperation(value = "Inventory Status Display - Request Transfer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryReqTransfer", method = RequestMethod.POST)
-	public void inventoryReqTransfer(@RequestBody List<InventoryReqTransferMForm> inventoryReqTransferMForms)
+	public void inventoryReqTransfer(@RequestBody InventoryReqTransferMForm  inventoryReqTransferMForms)
 			throws Exception {
-
-		List<Map<String, Object>> reqTransferMList = new ArrayList<>();
-		for (InventoryReqTransferMForm reqTransferM : inventoryReqTransferMForms) {
-			reqTransferMList.addAll(reqTransferM.createMaps(reqTransferM));
-		}
-
-		for (int i = 0; i < reqTransferMList.size(); i++) {
-			LOGGER.debug("reqTransferMList    값 : {}", reqTransferMList.get(i));
-
-		}
-
-		MlogApiService.saveInvenReqTransfer(reqTransferMList);
-
-		// return ResponseEntity.ok(HeartDto.create(transactionId));
+		MlogApiService.saveInvenReqTransfer(inventoryReqTransferMForms);
+		
 	}
+	
+	
 
 	@ApiOperation(value = "Stock Transfer - Confirm GI Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stockTransferConfirmGI", method = RequestMethod.POST)
