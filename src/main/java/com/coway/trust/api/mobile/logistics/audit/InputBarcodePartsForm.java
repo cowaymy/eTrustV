@@ -27,9 +27,6 @@ public class InputBarcodePartsForm {
 	@ApiModelProperty(value = "부품 id")
 	private int partsId;
 
-	@ApiModelProperty(value = "부품 sn")
-	private String serialNo;
-
 	@ApiModelProperty(value = "실사 item 번호")
 	private int invenAdjustNoItem;
 
@@ -94,14 +91,6 @@ public class InputBarcodePartsForm {
 
 	public void setPartsId(int partsId) {
 		this.partsId = partsId;
-	}
-
-	public String getSerialNo() {
-		return serialNo;
-	}
-
-	public void setSerialNo(String serialNo) {
-		this.serialNo = serialNo;
 	}
 
 	public int getInvenAdjustNoItem() {
