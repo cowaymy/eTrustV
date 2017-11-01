@@ -1,0 +1,97 @@
+package com.coway.trust.biz.services.servicePlanning.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.coway.trust.biz.organization.organization.impl.TerritoryManagementMapper;
+import com.coway.trust.biz.services.servicePlanning.CTSubGroupListService;
+import com.coway.trust.biz.services.servicePlanning.HolidayService;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.crystaldecisions.reports.exporters.excel.libs.biff.records.FORMAT;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Service("holidayService")
+public class HolidayServiceImpl extends EgovAbstractServiceImpl implements HolidayService{
+	private static final Logger logger = LoggerFactory.getLogger(HolidayService.class);
+
+	@Resource(name = "holidayMapper")
+	private HolidayMapper holidayMapper;
+	
+	@Override
+	public boolean insertHoliday(List<Object> params, SessionVO sessionVO) {
+		boolean addSuccess = false;
+		if(params.size() > 0){
+    		for(int i=0; i< params.size(); i++){
+    			Map<String, Object>  insertValue = (Map<String, Object>) params.get(i);
+    			insertValue.put("userId", sessionVO.getUserId());
+    			logger.debug("insertValue {}", insertValue);
+    			holidayMapper.insertHoliday(insertValue);
+    		}
+    		addSuccess = true;
+		}else{
+			addSuccess = false;
+		}
+		return addSuccess;
+	}
+	
+	@Override
+	public boolean updateHoliday(List<Object> params, SessionVO sessionVO) {
+		boolean addSuccess = false;
+		if(params.size() > 0){
+    		for(int i=0; i< params.size(); i++){
+    			Map<String, Object>  updateValue = (Map<String, Object>) params.get(i);
+    			updateValue.put("userId", sessionVO.getUserId());
+    			logger.debug("updateValue {}", updateValue);
+    			holidayMapper.updateHoliday(updateValue);
+    		}
+    		addSuccess = true;
+		}else{
+			addSuccess = false;
+		}
+		return addSuccess;
+	}
+	
+	
+	@Override
+	public List<EgovMap> selectHolidayList(Map<String, Object> params) {
+		return holidayMapper.selectHolidayList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectCTList(Map<String, Object> params) {
+		return holidayMapper.selectCTList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectCTAssignList(Map<String, Object> params) {
+		return holidayMapper.selectCTAssignList(params);
+	}
+	
+	@Override
+	public boolean  insertCTAssign(List<Object> updList,Map<String , Object> formMap) {
+		Map<String, Object>  insertValue = null;
+		for(int i=0; i< updList.size(); i++){
+			insertValue = (Map<String, Object>) updList.get(i);
+			insertValue.put("holidayType", formMap.get("holidayType"));
+			insertValue.put("holiday", formMap.get("holiday"));
+			insertValue.put("branchId", Integer.parseInt(formMap.get("branchId").toString()));
+			insertValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );
+			insertValue.put("holidaySeq", Integer.parseInt(formMap.get("holidaySeq").toString()));
+			logger.debug("insertValue {}", insertValue);
+			holidayMapper.insertCTAssign(insertValue);
+		}
+		
+		return true;
+	}
+	
+	
+	
+}
