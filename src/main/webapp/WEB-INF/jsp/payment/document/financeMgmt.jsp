@@ -85,7 +85,6 @@ var receiveColumnLayout=[
 	                            //alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
 	                            
 	                            Common.ajax("GET", "/payment/selectLogItemPaymentItem.do", {"payItemId" : item.itmId}, function(result) {
-	                               console.log(result.length);
 	                               var message = "";
 	                               for(var i=0; i<result.length; i++){
 		                               message += "<p><b>"+result[i].userName + "(" +result[i].crtDt+")</b>Says : </p><br>";
@@ -115,9 +114,7 @@ var receiveColumnLayout=[
 	                      type : "LinkRenderer",
 	                      baseUrl : "javascript", 
 	                      jsCallback : function(rowIndex, columnIndex, value, item) {
-	                          console.log("value : " + value + ", item : " + item.itmId);
 	                          Common.ajax("GET", "/payment/selectPayDocBatchById.do", {"batchId" : item.batchId}, function(result) {
-	                        	  console.log(result);
 	                        	  $("#r_batch_view_pop").show();
 	                        	  
 	                        	  $("#pBatchNo").text(result[0].batchNo);
@@ -194,9 +191,7 @@ var receiveColumnLayout=[
                                     			"brnchId":item.brnchId,
                                     			"refNo":item.refNo
                                     	}
-                                    	console.log(param);
                                     	Common.ajax("GET", "/payment/selectDocItemPaymentItem2.do", param, function(result) {
-                                    		   console.log(result);
                                     		   $("#pay_item_pop").show();
                                                AUIGrid.setGridData(payItemGrid, result);
                                                AUIGrid.resize(payItemGrid, 643, 280);
@@ -242,16 +237,6 @@ $(document).ready(function(){
 	receiveListGrid =  GridCommon.createAUIGrid("#grid_wrap_receive_list", receiveColumnLayout, null, gridProsForMultiRows);
 	creditCardGrid = GridCommon.createAUIGrid("#grid_wrap_credit_card_list", creditCardColumnLayout, null, gridPros);
 	payItemGrid =GridCommon.createAUIGrid("#pay_item_grid", payItemColumnLayout, null, gridPros);
-	
-	//Issue Bank 조회
-	//doGetCombo('/sales/customer/selectAccBank.do', '', '', 'rIssueBank', 'S', '')//selCodeAccBankId(Issue Bank)
-    //doGetCombo('/sales/customer/selectAccBank.do', '', '', 'cIssueBank', 'S', '')//selCodeAccBankId(Issue Bank)
-    
-    //doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'' , 'rBranch' , 'S', ''); //key-in Branch 생성
-    //doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'137' , 'cBranch' , 'S', ''); //key-in Branch 생성
-    
-    //doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'rSetAccount' , 'S', '');
-   // doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'cSetAccount' , 'S', '');
     
     fn_rSearch();
     fn_cSearch();
