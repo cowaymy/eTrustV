@@ -395,6 +395,15 @@ function fn_excelDown(){
     AUIGrid.exportToXlsx(budgetMGrid);
 }
 
+
+function fn_goAdjustMent(){
+    location.replace("/eAccounting/budget/budgetAdjustmentList.do");
+}
+
+function fn_goApproval(){
+    location.replace("/eAccounting/budget/budgetApprove.do");
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -506,8 +515,8 @@ function fn_excelDown(){
     <dt><spring:message code="budget.Link" /></dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#"><spring:message code="budget.Adjustment" /></a></p></li>
-        <li><p class="link_btn"><a href="#"><spring:message code="budget.Approval" /></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_goAdjustMent();"><spring:message code="budget.Adjustment" /></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_goApproval();"><spring:message code="budget.Approval" /></a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

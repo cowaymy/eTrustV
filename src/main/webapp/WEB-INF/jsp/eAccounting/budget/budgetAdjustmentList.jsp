@@ -405,6 +405,10 @@ function fn_budgetApproval(){
     }));
     
 }
+
+function fn_goBudgetPlan(){
+	location.replace("/eAccounting/budget/monthlyBudgetList.do");
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -503,7 +507,7 @@ function fn_budgetApproval(){
 	<dt><spring:message code="budget.Link" /></dt>
 	<dd>
 	<ul class="btns">
-		<li><p class="link_btn"><a href="#"><spring:message code="budget.BudgetPlan" /></a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript:fn_goBudgetPlan();"><spring:message code="budget.BudgetPlan" /></a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
