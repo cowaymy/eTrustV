@@ -45,7 +45,7 @@
          FROM SYS0005M A 
          INNER JOIN ORG0001D B ON A.BRNCH_ID = B.BRNCH
          LEFT OUTER  JOIN ORG0020D C ON B.MEM_ID = C.CT_MEM_ID
-        WHERE A.CODE = #{brnchCode} AND MEM_TYPE = 3
+        WHERE A.CODE = #{branchName} AND MEM_TYPE = 3
         group by b.mem_code, b.name,B.MEM_ID
     </select>
     <select id="selectCTAssignList"  parameterType="Map" resultType="egovMap">
@@ -92,4 +92,17 @@
           , TO_NUMBER(#{memId})
           )
     </insert>
+    <select id="selectAssignCTList"  parameterType="Map" resultType="egovMap">
+        SELECT B.MEM_CODE, B.NAME, B.MEM_ID,A.HOLIDAY_SEQ HOLIDAY_SEQ1, A.ASIGN_SEQ
+        FROM ORG0020D A INNER JOIN ORG0001D B ON A.CT_MEM_ID = B.MEM_ID
+        WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND B.BRNCH = #{branchId}
+        GROUP BY B.MEM_CODE, B.NAME, B.MEM_ID,A.HOLIDAY_SEQ, A.ASIGN_SEQ
+    </select>
+    <delete id="deleteCTAssign" parameterType="Map">
+        DELETE FROM ORG0020D
+        WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_ID = #{branchId} AND CT_MEM_ID=#{memId}
+    </delete>
+    <select id="selectCTInfo"  parameterType="Map" resultType="egovMap">
+        SELECT * FROM ORG0020D WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_ID = #{branchId} AND CT_MEM_ID=#{memId}
+    </select>
 </mapper>
