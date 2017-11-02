@@ -216,20 +216,24 @@ function fnChangeEventYear()
 	fnSetSCMTeamComboBox();
 }
 
-function fn_uploadFile() {
-    var formData = new FormData();
-    //console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
-    
-    formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
-    formData.append("paramYear", $("scmYearCbBox").val() );
-    formData.append("paramTeam", $("scmTeamCbBox").val() );
-    formData.append("paramVer",  $("scmPeriodCbBox").val() );
+function fn_uploadFile() 
+{
+   var formData = new FormData();
+   //console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
+   
+   formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+   formData.append("paramYear", $("#scmYearCbBox").val() );
+   formData.append("paramTeam", $("#scmTeamCbBox").val() );
+   formData.append("paramVer",  $("#scmPeriodCbBox").val() );
 
-    //alert('read');
+   //alert('read');
 
-    Common.ajaxFile("/scm/excel/upload", formData, function (result) {
-        Common.alert("완료~")
-    });
+   Common.ajaxFile("/scm/excel/upload"
+		             , formData
+		             , function (result) 
+		              {
+		            	   Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                  });
 
 }
 
