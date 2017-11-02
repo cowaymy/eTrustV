@@ -475,7 +475,39 @@ public class BudgetController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		int result = budgetService.selectPlanMaster(params);
+		Map<String, Object> sendParam = new HashMap<String, Object>();
+		Map<String, Object> recvParam = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		int send = 0;
+		int recv = 0;
+		
+		sendParam.put("costCenter", params.get("sendCostCenter"));
+		sendParam.put("glAccCode", params.get("sendGlAccCode"));
+		sendParam.put("budgetCode", params.get("sendBudgetCode"));
+		
+		send = budgetService.selectPlanMaster(sendParam);
+		
+		
+		if(!StringUtils.isEmpty(params.get("recvCostCenter"))){
+
+			recvParam.put("costCenter", params.get("recvCostCenter"));
+			recvParam.put("glAccCode", params.get("recvGlAccCode"));
+			recvParam.put("budgetCode", params.get("recvBudgetCode"));			
+
+			recv = budgetService.selectPlanMaster(recvParam);
+		}
+
+		result.put("send", "N");
+		result.put("recv", "N");
+		
+		if(send > 0){
+			result.put("send", "Y");
+		}else{
+			if(recv > 0){
+				result.put("recv", "Y");
+			}
+		}
 		
 		
 		// 결과 만들기 예.

@@ -87,6 +87,7 @@ $(document).ready(function(){
     	var str = $("#sendAmount").val().replace(/,/gi, "");
         $("#sendAmount").val(str);    	
    });
+    
     $("#sendAmount").blur(function () { 
     	var str = $("#sendAmount").val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
         $("#sendAmount").val(str);    	
@@ -114,8 +115,6 @@ $(document).ready(function(){
             $("#recvAmount").val(str);
     	}
     	$("#sendAmount").val(str);
-    	
-    	
     	
     }); 
     
@@ -685,16 +684,31 @@ function fn_AddRow()
 	    	console.log("성공." + JSON.stringify(result));
 	        console.log("data : " + result.data);
 	    	
-	    	if(result.data < 1 ){
-	    		
-	    		Common.alert("<spring:message code="budget.msg.addMaster" />");
-	    		
-	    	}else{
-	            AUIGrid.addRow(adjPGridID, item, 'last');                    
-	            AUIGrid.addRow(adjPGridID, item2, 'last'); 
-	    	}
+	        alert(result.data.send );
+	        alert(result.data.recv );
+	        
+	        if($("#pAdjustmentType").val() != '01' && $("#pAdjustmentType").val() != '02' && $("#pAdjustmentType").val() !=''){
+	        	
+	        	if(result.data.send == "N" && result.data.recv == "N"){ 
+	                Common.alert("<spring:message code="budget.msg.addMaster" />" +" : "+ "<spring:message code="budget.Sender" />"+ ", " + "<spring:message code="budget.Receiver" />");
+	            }else if(result.data.send == "N" && result.data.recv == "Y"){	                 
+	                Common.alert("<spring:message code="budget.msg.addMaster" />" +" : "+ "<spring:message code="budget.Sender" />");
+	            }else if(result.data.send == "Y" && result.data.recv == "N"){
+	            	Common.alert("<spring:message code="budget.msg.addMaster" />" +" : "+ "<spring:message code="budget.Receiver" />");
+	            }else{
+	                AUIGrid.addRow(adjPGridID, item, 'last');                    
+	                AUIGrid.addRow(adjPGridID, item2, 'last'); 
+	            }
+	        }else{
+	        	if(result.data.send == "N"){
+	        		Common.alert("<spring:message code="budget.msg.addMaster" />" );
+	        	}else{
+	                AUIGrid.addRow(adjPGridID, item, 'last');          
+	            }
+	        }
 	    	
-	    });/* 
+	    });
+ /* 
     }else{
 
         AUIGrid.addRow(adjPGridID, item, 'last');                    

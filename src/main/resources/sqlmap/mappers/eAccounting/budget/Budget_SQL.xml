@@ -508,9 +508,9 @@ SELECT  BUDGET_PLAN_YEAR
   <select id="selectPlanMaster" parameterType="Map" resultType="int">
 	  SELECT COUNT(-1) CNT  
 	    FROM FCM0101M 
-	  WHERE COST_CENTR = #{sendCostCenter} 
-		  AND GL_ACC_CODE = #{sendGlAccCode}
-		  AND BUDGET_CODE= #{sendBudgetCode}
+	  WHERE COST_CENTR = #{costCenter} 
+		  AND GL_ACC_CODE = #{glAccCode}
+		  AND BUDGET_CODE= #{budgetCode}
   </select>
 
 </mapper>
