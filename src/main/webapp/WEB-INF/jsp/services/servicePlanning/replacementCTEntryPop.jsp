@@ -96,7 +96,7 @@ function CTListGrid2() {
                           { dataField : "totalAssignDate", headerText  : "Total Assigned Date Count",  width  : 150},
                           { dataField : "memId", headerText  : "",  width  : 100},
                           { dataField : "holidaySeq1", headerText  : "",  width  : 100},
-                          { dataField : "asignSeq", headerText  : "",  width  : 100}
+                          { dataField : "asignSeq", headerText  : "",  width  : 0}
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
