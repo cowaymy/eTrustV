@@ -276,16 +276,44 @@ function fn_makeGrid(){
         formatString : "#,##0",
         width:120
     });
-
+    
+    
+	 var monFooter = [];
+	    
+	 monFooter[0] = {
+		        labelText : "<spring:message code='budget.Total' />",
+		        positionField : "#base"
+		    }
+ 
+ 
+	for(var i= mon ; i <= mon+index; i++) {
+		 monFooter.push( {
+	         dataField : "m"+i,
+	         positionField : "m"+i,
+	         operation : "SUM",
+	         formatString : "#,##0"
+	    });
+	 }
+	 
+	 monFooter.push( {
+	        dataField : "total", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
+            positionField : "total",
+            operation : "SUM",
+            formatString : "#,##0"
+	    });
+	    
      var monOptions = {
             enableCellMerge : true,
             showStateColumn:false,
             fixedColumnCount    : 7,
             showRowNumColumn    : false,
-            usePaging : false
+            usePaging : false,
+            showFooter : true
       }; 
     
     budgetMGrid = GridCommon.createAUIGrid("#budgetMGrid", monPop, "", monOptions);
+    // 푸터 객체 세팅
+    AUIGrid.setFooter(budgetMGrid, monFooter);
     
     AUIGrid.bind(budgetMGrid, "cellClick", auiCellClikcHandler);
 }

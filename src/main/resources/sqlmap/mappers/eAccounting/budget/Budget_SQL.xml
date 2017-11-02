@@ -413,7 +413,14 @@ SELECT  BUDGET_PLAN_YEAR
                ,SYSDATE
                ,#{userId}
            )
-    </update>    
+    </update>   
+    
+        
+  <update id="deleteApprove" parameterType="Map">
+    DELETE FROM FCM0105M      
+     WHERE BUDGET_DOC_NO     = #{budgetDocNo}
+   </update>
+     
     
 <select id="getBudgetAmt" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.budgetCheck */
@@ -449,7 +456,9 @@ SELECT  BUDGET_PLAN_YEAR
                  ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
                  ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
                  ,B.BUDGET_CODE
+                 ,(SELECT A.BUDGET_CODE_TEXT FROM FCM0010M A WHERE A.BUDGET_CODE = B.BUDGET_CODE) BUDGET_CODE_TEXT
                  ,B.GL_ACC_CODE
+                 ,(SELECT A.GL_ACC_DESC FROM FCM0009M A WHERE A.GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
                  ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
                  ,B.BUDGET_ADJ_TYPE
                  ,B.ADJ_AMT
@@ -503,5 +512,5 @@ SELECT  BUDGET_PLAN_YEAR
 		  AND GL_ACC_CODE = #{sendGlAccCode}
 		  AND BUDGET_CODE= #{sendBudgetCode}
   </select>
-    
+
 </mapper>

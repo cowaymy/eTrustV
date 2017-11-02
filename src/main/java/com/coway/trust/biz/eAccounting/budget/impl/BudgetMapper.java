@@ -32,6 +32,8 @@ public interface BudgetMapper {
 	void deleteAdjustmentD(Map<String, Object> params) throws Exception;
 	
 	void insertApprove(Map<String, Object> params) throws Exception;
+	
+	void deleteApprove(Map<String, Object> params) throws Exception;
 
 	String selectBudgetDocNo(Map<String, Object> params) throws Exception;
 

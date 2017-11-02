@@ -83,8 +83,22 @@ $(document).ready(function(){
         mergePolicy : "restrict",
         width : 100
     },{
+        dataField : "budgetCodeText",
+        headerText : '<spring:message code="expense.ActivityName" />',
+        cellMerge : true ,
+        mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+        mergePolicy : "restrict",
+        width : 100
+    },{
         dataField : "glAccCode",
         headerText : '<spring:message code="expense.GLAccount" />',
+        cellMerge : true ,
+        mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+        mergePolicy : "restrict",
+        width : 100
+    },{
+        dataField : "glAccDesc",
+        headerText : '<spring:message code="expense.GLAccountName" />',
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
@@ -339,6 +353,7 @@ function fn_saveApprove(){
             var idx = arryList.length;
             
             fn_selectListAjax();
+            alert("<spring:message code="sales.msg.ApprovedComplete" />");          
       }
       , function(jqXHR, textStatus, errorThrown){
              try {

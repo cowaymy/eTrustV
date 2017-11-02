@@ -610,7 +610,9 @@ function fn_AddRow()
     item.costCentr = $("#sendCostCenter").val();
     item.adjYearMonth = $("#sendYearMonth").val();
     item.budgetCode  = $("#sendBudgetCode").val();
+    item.budgetCodeText  = $("#sendBudgetCodeName").val();
     item.glAccCode  = $("#sendGlAccCode").val();
+    item.glAccDesc  = $("#sendGlAccCodeName").val();
     item.budgetAdjType  =$("#pAdjustmentType").val();
     item.budgetAdjTypeName  =$("#pAdjustmentType option:selected").text();
     item.adjAmt  = $("#sendAmount").val().replace(/,/gi, "");
@@ -668,7 +670,9 @@ function fn_AddRow()
         item2.costCentr = $("#recvCostCenter").val();
         item2.adjYearMonth   =$("#recvYearMonth").val();
         item2.budgetCode  = $("#recvBudgetCode").val();
+        item2.budgetCodeText  = $("#recvBudgetCodeName").val();
         item2.glAccCode  = $("#recvGlAccCode").val();
+        item2.glAccDesc  = $("#recvGlAccCodeName").val();
         item2.budgetAdjType  =$("#pAdjustmentType").val();
         item2.budgetAdjTypeName  =$("#pAdjustmentType option:selected").text();
         item2.adjAmt  = $("#recvAmount").val().replace(/,/gi, "");

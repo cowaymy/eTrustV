@@ -322,10 +322,10 @@ public class BudgetController {
 
 				int pAtchFileGrpId = Integer.parseInt(params.get("pAtchFileGrpId").toString());
 
-				fileService.removeFilesByFileGroupId(FileType.WEB, pAtchFileGrpId);
+				fileService.removeFilesByFileGroupId(FileType.WEB_DIRECT_RESOURCE, pAtchFileGrpId);
 			}
 			
-			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+			fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
 		}
 		
 		

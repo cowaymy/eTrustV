@@ -153,6 +153,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 				if(budgetMapper.selectAdjustmentList(param) == null){
 
 					budgetMapper.deleteAdjustmentM((Map<String, Object>) obj);
+					budgetMapper.deleteApprove(params);
 				}
     		}
 		}
