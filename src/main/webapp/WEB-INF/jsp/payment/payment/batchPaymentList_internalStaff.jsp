@@ -223,11 +223,11 @@ var batchInfoLayout = [
         var selectedItem = AUIGrid.getSelectedIndex(myGridID);
         
         if (selectedItem[0] > -1){
-            $('#view_popup_wrap').show();
+            
             var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
             
             Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
-                console.log(result);
+            	$('#view_popup_wrap').show();
                 
                 var confAt = result.batchPaymentView.cnfmDt;
                 var confAtArray = confAt.split('-');
@@ -322,7 +322,6 @@ var batchInfoLayout = [
             var batchStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchStusId");
             
             if(batchStusId == "1"){
-                $('#conf_popup_wrap').show();
                 
                 if(cnfmStusId == "77"){
                     $('#btnConf').hide();
@@ -331,7 +330,7 @@ var batchInfoLayout = [
                 }
                 
                 Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
-                    console.log(result);
+                	$('#conf_popup_wrap').show();
                     
                     var confAt = result.batchPaymentView.cnfmDt;
                     var confAtArray = confAt.split('-');
