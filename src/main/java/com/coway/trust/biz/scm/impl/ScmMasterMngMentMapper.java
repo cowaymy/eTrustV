@@ -24,10 +24,16 @@ public interface ScmMasterMngMentMapper
 	List<EgovMap> selectBizPlanManager(Map<String, Object> params);
 	List<EgovMap> selectBizPlanStock(Map<String, Object> params);  
 	int updatePlanStock(Map<String, Object> params);
-	int insertBizPlanMaster(Map<String, Object> params);
+	int insertBizPlanMaster(Map<String, Object> params);   
 	
 	// 
 	int getSeqNowSCM0003M(); 
 	int insertDetailExcel(Map<String, Object> master);
 	int insertMasterExcel(Map<String, Object> master);
+
+	/* Plan and Sales DashBoard */
+	List<EgovMap> selectChartDataList(Map<String, Object> params);	
+	List<EgovMap> selectQuarterRate(Map<String, Object> params);	
+	List<EgovMap> selectPSDashList(Map<String, Object> params);	
+	
 }

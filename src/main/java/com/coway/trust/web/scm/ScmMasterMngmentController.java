@@ -243,4 +243,75 @@ public class ScmMasterMngmentController {
 		return ResponseEntity.ok(message);
 	}	
 
+	
+	/*****************************************
+	 *   Plan Service DashBoard
+	 *****************************************/		
+	// view
+	@RequestMapping(value = "/PSIDashboard.do")
+	public String planServiceDashBoardView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
+	{
+		//model.addAttribute("languages", loginService.getLanguages());
+		return "/scm/planSalesDashboard";  	
+	}  		
+		
+	// search btn
+	@RequestMapping(value = "/selectChartDataList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectChartDataList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectChartDataList_Input : {}", params.toString());
+		
+		List<EgovMap> selectChartDataList = scmMasterMngMentService.selectChartDataList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectChartDataList", selectChartDataList);
+
+		return ResponseEntity.ok(map);
+		
+	}	
+	
+	// Quarter Rate
+	@RequestMapping(value = "/selectQuarterRate.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectQuarterRate(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectQuarterRate_Input : {}", params.toString());
+		
+		List<EgovMap> selectQuarterRateList = scmMasterMngMentService.selectQuarterRate(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectQuarterRateList", selectQuarterRateList);
+		
+		return ResponseEntity.ok(map);
+		
+	}		
+	
+	// Quarter Rate
+	@RequestMapping(value = "/selectPSDashSearchBtnList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectPSDashSearchBtnList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectPSDashSearchBtnList_Input : {}", params.toString());
+		
+		List<EgovMap> selectChartDataList = scmMasterMngMentService.selectChartDataList(params);
+		List<EgovMap> selectQuarterRateList = scmMasterMngMentService.selectQuarterRate(params);
+		List<EgovMap> selectPSDashList = scmMasterMngMentService.selectPSDashList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//ChartList
+		map.put("selectChartDataList", selectChartDataList);
+		//Rate
+		map.put("selectQuarterRateList", selectQuarterRateList);
+		//Quarter or Monthly
+		map.put("selectPSDashList", selectPSDashList);
+		
+		return ResponseEntity.ok(map);
+		
+	}		
 }

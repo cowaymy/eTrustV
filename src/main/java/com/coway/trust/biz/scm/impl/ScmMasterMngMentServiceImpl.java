@@ -156,33 +156,45 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 	@Override
 	public int saveLoadExcel(Map<String, Object> masterMap, List<Map<String, Object>> detailList)
 	{
-		//int mastetSeq = batchPaymentMapper.getPAY0044DSEQ();
-		//master.put("batchId", mastetSeq);  int insertDetailExcel(Map<String, Object> master);
-		// insertBizPlanMaster
-		
+		int iLoopCnt = 0;
 		int mResult = scmMasterMngMentMapper.insertMasterExcel(masterMap);  // excel_Insert
 		
 		if(mResult > 0 && detailList.size() > 0)
 		{
 			// 시퀀스 조회 및 세팅
 			int bizPlanMasterSeq = (int)masterMap.get("bizPlanMasterSeq");
-			int detailSeqGet = scmMasterMngMentMapper.getSeqNowSCM0003M();
+			int detailSeqGet = scmMasterMngMentMapper.getSeqNowSCM0003M(); 
 			
-			LOGGER.debug("bizPlanMasterSeq: " + bizPlanMasterSeq + "detailSeqGet: " + detailSeqGet);
+			LOGGER.debug("bizPlanMasterSeq: " + bizPlanMasterSeq + " /detailSeqGet: " + detailSeqGet);
 			
-			for(int i=0 ; i < detailList.size() ; i++){
-				
-				detailList.get(i).put("bizPlanMasterDetailSeq", detailSeqGet);
-				//detailList.get(i).put("batchId", mastetSeq);
-				
-			//	scmMasterMngMentMapper.insertDetailExcel(detailList.get(i))   ;
-				LOGGER.debug("detailList=== "+ (i+1) +"번째 === "+detailList.get(i));
+			for(int i=0 ; i < detailList.size() ; i++)
+			{
+   			  detailList.get(i).put("planDetailIdSeq", detailSeqGet);
+    			
+    		  iLoopCnt = iLoopCnt +1;
+    		  LOGGER.debug("detailList=== "+ iLoopCnt +"번째 === "+detailList.get(i));
+    		  scmMasterMngMentMapper.insertDetailExcel(detailList.get(i));
 			}
-			//CALL PROCEDURE
 		}
 		
-		return 1;
+		return iLoopCnt;
 	}
 	
+	
+	/* Plan and Sales DashBoard */
+	@Override
+	public List<EgovMap> selectChartDataList(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectChartDataList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectQuarterRate(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectQuarterRate(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectPSDashList(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectPSDashList(params);
+	}
 
 }

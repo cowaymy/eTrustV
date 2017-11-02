@@ -14,4 +14,5 @@ public interface InterfaceManagementMapper {
 	void updateInterfaceManagementList(Map<String, Object> params);
 
 	void deleteInterfaceManagementList(Map<String, Object> params);
+
 }

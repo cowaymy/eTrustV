@@ -6,13 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.ScmMasterMngMentService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.excel.ExcelReadComponent;
 
@@ -35,8 +35,8 @@ public class BIzPlanExcelUploaderController {
 	@Autowired
 	private ScmMasterMngMentService scmMastMngService;;   
 	
-/*	@Resource(name = "scmMasterMngMentService")
-	private ScmMasterMngMentService scmMasterMngMentService;*/
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity readExcel(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException
@@ -50,12 +50,11 @@ public class BIzPlanExcelUploaderController {
 		MultipartFile multipartFile = fileMap.get("excelFile");
 
 		List<BizPlanExcelUploaderDataVO> vos = excelReadComponent.readExcelToList(multipartFile, true, BizPlanExcelUploaderDataVO::create);
-		LOGGER.debug("reading..." + vos.get(1));
 		List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
 
 		for (BizPlanExcelUploaderDataVO vo : vos) 
 		{
-			LOGGER.debug("DETAIL >>>> PlanId : {}, Month1 : {}", vo.getPlanID(), vo.getM01());
+			LOGGER.debug("DETAIL >>>> PlanId : {}, stockCode : {}", vo.getPlanID(), vo.getSTOCK_CODE());
 			
 			HashMap<String, Object> detailMap = new HashMap<String, Object>();
 			
@@ -91,8 +90,15 @@ public class BIzPlanExcelUploaderController {
 		masterMap.put("updUserId", sessionVO.getUserId());
 		
 		//insertBizPlanMaster
-		scmMastMngService.saveLoadExcel(masterMap, detailList);
+		int totCnt = scmMastMngService.saveLoadExcel(masterMap, detailList);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 
-		return ResponseEntity.ok(HttpStatus.OK);
 	}
 }

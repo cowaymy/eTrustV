@@ -27,7 +27,8 @@ public class BizPlanExcelUploaderDataVO {
 	private String PlanID;
 	private String STOCK_CODE;
 
-	public static BizPlanExcelUploaderDataVO create(Row row) {
+	public static BizPlanExcelUploaderDataVO create(Row row) 
+	{
 		BizPlanExcelUploaderDataVO vo = new BizPlanExcelUploaderDataVO();
 
 		vo.setTEAM(getValue(row.getCell(0)));
@@ -51,6 +52,8 @@ public class BizPlanExcelUploaderDataVO {
 
 		return vo;
 	}
+	
+	
 
 	public String getTEAM() {
 		return TEAM;

@@ -29,4 +29,10 @@ public interface ScmMasterMngMentService
 	//Excel Load
 	int saveLoadExcel(Map<String, Object> masterMap, List<Map<String, Object>> detailList);
 	
+	
+	/* Plan and Sales DashBoard */	
+	List<EgovMap> selectChartDataList(Map<String, Object> params);
+	List<EgovMap> selectQuarterRate(Map<String, Object> params);
+	List<EgovMap> selectPSDashList(Map<String, Object> params);
+	
 }
