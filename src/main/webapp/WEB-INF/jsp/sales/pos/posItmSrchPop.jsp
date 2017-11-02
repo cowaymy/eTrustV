@@ -88,7 +88,6 @@ $(document).ready(function() {
     	// 1 . filter
     	if($("#_posSystemType").val() == 1352){
     		
-    		
             Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
                 
                 for (var i = 0; i < result.length; i++) {
@@ -287,7 +286,7 @@ $(document).ready(function() {
 					console.log("이놈은 필터가 아님");
 				}// Temp Logic
 				//Exsit Filter
-				$("#serialTemp_grid_wrap").css("display" , "");
+				$("#_mainSerialGrid").css("display" , "");
 			}//loop end
 		}
 		

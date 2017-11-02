@@ -5,6 +5,8 @@
 //AUIGrid 생성 후 반환 ID
 var posGridID;
 var deductionCmGridID;
+var posItmDetailGridID;
+
 var optionModule = {
         type: "S",                  
         isShowChoose: false  
@@ -21,7 +23,10 @@ $(document).ready(function() {
 
     
     fn_getStatusCode();
+    createAUIGrid();
     createDeductionGrid();
+    createPosItmDetailGrid();
+    girdHide();
     
      /*######################## Init Combo Box ########################*/
      
@@ -105,16 +110,6 @@ $(document).ready(function() {
         fn_getPosListAjax();
     });
     
-    
-    // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(posGridID, "cellDoubleClick", function(event){
-        
-        alert("개발중...");
-       /*  $("#_posNo").val(event.item.posNo);
-        Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '123123'); */
-        
-    });
-    
     //Pos System
     $("#_systemBtn").click(function() {
     	Common.popupDiv("/sales/pos/posSystemPop.do", '', null , true , '_insDiv');
@@ -157,7 +152,80 @@ $(document).ready(function() {
 		
 	});
     
+    
+    // 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(posGridID, "cellDoubleClick", function(event){
+        alert("개발중...");
+    });
+    //Cell Click Event
+    AUIGrid.bind(posGridID, "cellClick", function(event){
+        alert("클릭!");
+    });
 });//Doc ready Func End
+
+function girdHide(){
+    //Grid Hide
+    $("#_deducGridDiv").css("display" , "none");
+    $("#_itmDetailGridDiv").css("display" , "none");
+}
+
+function createPosItmDetailGrid(){
+	var posColumnLayout =  [ 
+                            {dataField : "posNo", headerText : "POS No.", width : '8%'}, 
+                            {dataField : "posDt", headerText : "Sales Date", width : '8%'},
+                            {dataField : "posDt", headerText : "Member ID", width : '8%'},
+                            {dataField : "codeName", headerText : "POS Type", width : '8%'},
+                            {dataField : "codeName1", headerText : "Sales Type", width : '8%'},
+                            {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '8%'}, 
+                            {dataField : "name", headerText : "Customer Name", width : '18%'},
+                            {dataField : "whLocCode", headerText : "Branch", width : '8%'},
+                            {dataField : "whLocCode", headerText : "Warehouse", width : '8%'},
+                            {dataField : "posTotAmt", headerText : "Total Amount", width : '8%'},
+                            {
+                                dataField : "stusId",
+                                headerText : "Status",
+                                width : '10%',
+                                labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                                    var retStr = "";
+                                    for(var i=0,len=arrStusCode.length; i<len; i++) {
+                                        if(arrStusCode[i]["codeId"] == value) {
+                                            retStr = arrStusCode[i]["codeName"];
+                                            break;
+                                        }
+                                    }
+                                                return retStr == "" ? value : retStr;
+                            },
+                                renderer : { // 셀 자체에 드랍다운리스트 출력하고자 할 때
+                                       type : "DropDownListRenderer",
+                                       list : arrStusCode,
+                                       keyField   : "codeId", // key 에 해당되는 필드명
+                                       valueField : "codeName" // value 에 해당되는 필드명
+                                 }
+                           },
+                            {dataField : "posId", visible : false}
+                           ];
+	 //그리드 속성 설정
+    var gridPros = {
+            
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 1,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+    };
+    
+    posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap", posColumnLayout,'', gridPros);  // address list
+    AUIGrid.resize(posItmDetailGridID , 1660, 300);
+}
 
 function createDeductionGrid () {
 	 
@@ -248,13 +316,13 @@ function fn_getStatusCode(){
         url : getContextPath() + '/sales/pos/selectStatusCodeList',
         data : {groupCode : '9'},
         dataType : 'json',
+        async : false,
         beforeSend: function (request) {
              // loading start....
              Common.showLoader();
          },
          complete: function (data) {
              // loading end....
-             createAUIGrid();
              Common.removeLoader();
          },
          success: function(result) {
@@ -264,7 +332,6 @@ function fn_getStatusCode(){
              for (var idx = 0; idx < result.length; idx++) {
                  tempArr.push(result[idx]); 
              }
-             
              arrStusCode = tempArr;
              
         },error: function () {
@@ -503,30 +570,31 @@ function fn_getPosListAjax(){
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
 </ul>
-
+<!-- deduction Grid -->
+<div id="_deducGridDiv"> 
 <aside class="title_line"><!-- title_line start -->
 <h3>Deduction Member List</h3>
 </aside><!-- title_line end -->
-
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="deduc_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
-
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
 </ul>
-
+</div>
+<!--item Grid  -->
+<div id="_itmDetailGridDiv">
 <aside class="title_line"><!-- title_line start -->
 <h3>Item List</h3>
 </aside><!-- title_line end -->
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<article class="grid_wrap"><!-- grid_wrap start --> 
+<div id="itm_detail_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
 </ul>
+</div>
 </section><!-- search_result end -->
 </section><!-- content end -->
 <hr />

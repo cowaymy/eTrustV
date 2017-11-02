@@ -44,8 +44,12 @@ $(document).ready(function() {
             CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
             //MEM GRID DISPLAY
             $("#_purchMemBtn").css("display" , "none");
-            $("#memTemp_grid_wrap").css("display" , "");
-            AUIGrid.clearGridData(memGridID);
+            $("#_mainMemberGrid").css("display" , "none");
+            
+            //SERIAL GRID DISPLAY
+            $("#_mainSerialGrid").css("display" , "none");
+            
+            fn_clearAllGrid();
         }
         
         if(tempVal == 2391){ //Deduction
@@ -53,14 +57,16 @@ $(document).ready(function() {
                      type: "M",                  
                      isShowChoose: false  
              };
-        
-             
              var systemPopParam = {groupCode : 140 , codeIn : [1352, 1353]};
              CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
              //MEM GRID DISPLAY
              $("#_purchMemBtn").css("display" , "");
-             $("#memTemp_grid_wrap").css("display" , "");
-             AUIGrid.resize(memGridID , 960, 300);
+             $("#_mainMemberGrid").css("display" , "");
+             
+             //SERIAL GRID DISPLAY
+             $("#_mainSerialGrid").css("display" , "none");
+             
+             fn_clearAllGrid();
         }
         
     });
@@ -102,7 +108,7 @@ $(document).ready(function() {
         
         var serialRowCnt = AUIGrid.getRowCount(serialTempGridID);
         if(serialRowCnt <= 0){
-        	$("#serialTemp_grid_wrap").css("display" , "none");
+        	$("#_mainSerialGrid").css("display" , "none");
         }
         //5. Remove Check Low 
         AUIGrid.removeCheckedRows(purchaseGridID);
@@ -217,6 +223,19 @@ $(document).ready(function() {
 	});
     
 });//Document Ready Func End
+
+function fn_clearAllGrid(){
+    
+    AUIGrid.clearGridData(purchaseGridID);  //purchase TempGridID
+    AUIGrid.resize(purchaseGridID , 960, 300);
+    
+    AUIGrid.clearGridData(memGridID);  //member TempGridID
+    AUIGrid.resize(memGridID , 960, 300);
+     
+    AUIGrid.clearGridData(serialTempGridID);  //serial TempGridID
+    AUIGrid.resize(serialTempGridID , 960, 300);
+    
+}
 
 function fn_setMemberGirdData(paramObj){
 	
@@ -564,10 +583,26 @@ function fn_calculateAmt(amt, qty) {
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="item_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
-<div id="serialTemp_grid_wrap" style="width:100%; height:480px; margin:0 auto; display: none;"></div>
-<div id="memTemp_grid_wrap" style="width:100%; height:480px; margin:0 auto; display: none;"></div>
+<div id="item_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
+
+<div id="_mainSerialGrid" style="display: none;"> 
+<aside class="title_line"><!-- title_line start -->
+<h2>Serial List</h2>
+</aside><!-- title_line end -->
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="serialTemp_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div> 
+</article>
+</div>
+
+<div id="_mainMemberGrid" style="display: none;">
+<aside class="title_line"><!-- title_line start -->
+<h2>Member List</h2>
+</aside><!-- title_line end -->
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="memTemp_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+</article>
+</div>
 
 </section><!-- pop_body end -->
 
