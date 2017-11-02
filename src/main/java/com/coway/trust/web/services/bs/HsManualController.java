@@ -517,8 +517,10 @@ public class HsManualController {
 		logger.debug("params : {}", params.toString());
 		params.put("orderNo", params.get("salesOrdId"));
 		
-		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
-		model.put("cmbServiceMemList", cmbServiceMemList);
+//		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
+//		model.put("cmbServiceMemList", cmbServiceMemList);
+		List<EgovMap>  serMemList = hsManualService.serMemList(params);
+		model.addAttribute("serMemList", serMemList);
 		
 		return "services/bs/hsConfigBasicPop";
 	} 
