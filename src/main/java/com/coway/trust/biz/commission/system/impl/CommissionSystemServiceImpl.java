@@ -317,7 +317,7 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			}
 			commissionSystemMapper.addCommissionItemGrid((Map<String, Object>) obj);
-			
+			msg = "success";
 		}
 		return msg;
 	}
