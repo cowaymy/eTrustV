@@ -106,6 +106,8 @@ public interface HsManualMapper {
 
 	void updateAssignCody(Map<String, Object> updateMap);
 
+	void updateHsSVC0006D(Map<String, Object> sal0090);
+
 
 
 	
