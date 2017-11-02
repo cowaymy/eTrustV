@@ -20,4 +20,10 @@ public interface HolidayMapper {
 	List<EgovMap> selectCTAssignList(Map<String, Object> params);
 	
 	void insertCTAssign(Map<String, Object> params);
+	
+	List<EgovMap> selectAssignCTList(Map<String, Object> params);
+	
+	void deleteCTAssign(Map<String, Object> params);
+	
+	List<EgovMap> selectCTInfo(Map<String, Object> params);
 }

@@ -21,5 +21,9 @@ public interface HolidayService {
 	List<EgovMap> selectCTAssignList(Map<String, Object> params);
 	
 	boolean insertCTAssign(List<Object> updList,Map<String , Object> formMap);
+	
+	List<EgovMap> selectAssignCTList(Map<String, Object> params);
+	
+	boolean deleteCTAssign(List<Object> updList,Map<String , Object> formMap);
 
 }

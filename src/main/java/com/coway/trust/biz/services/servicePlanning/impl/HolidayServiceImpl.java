@@ -85,12 +85,40 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 			insertValue.put("branchId", Integer.parseInt(formMap.get("branchId").toString()));
 			insertValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );
 			insertValue.put("holidaySeq", Integer.parseInt(formMap.get("holidaySeq").toString()));
-			logger.debug("insertValue {}", insertValue);
-			holidayMapper.insertCTAssign(insertValue);
+			//holidaySeq1과 asignSeq 둘다 값이 있으면 inset 되어있다. 
+			List<EgovMap> CTInfo = holidayMapper.selectCTInfo(insertValue);
+			if(CTInfo.size() >  0){
+				logger.debug("NO NO");
+			}else{
+				logger.debug("insertValue {}", insertValue);
+				holidayMapper.insertCTAssign(insertValue);
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public List<EgovMap> selectAssignCTList(Map<String, Object> params) {
+		return holidayMapper.selectAssignCTList(params);
+	}
+	
+	public boolean  deleteCTAssign(List<Object> delList,Map<String , Object> formMap) {
+		Map<String, Object>  delValue = null;
+		for(int i=0; i< delList.size(); i++){
+			delValue = (Map<String, Object>) delList.get(i);
+			delValue.put("holidayType", formMap.get("holidayType"));
+			delValue.put("holiday", formMap.get("holiday"));
+			delValue.put("branchId", Integer.parseInt(formMap.get("branchId").toString()));
+			delValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );
+			delValue.put("holidaySeq", Integer.parseInt(formMap.get("holidaySeq").toString()));
+			logger.debug("delValue {}", delValue);
+			holidayMapper.deleteCTAssign(delValue);
 		}
 		
 		return true;
 	}
+	
+	
 	
 	
 	
