@@ -607,9 +607,12 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("endDt",CommissionConstants.COMIS_END_DT);
 		formMap.put("endDt",CommissionConstants.COMIS_END_DT);
 		formMap.put("loginId",loginId);
+		map.put("orgGrCombo", formMap.get("orgGrCombo"));
+		map.put("orgCombo", formMap.get("orgCombo"));
+		map.put("useYnCombo", formMap.get("useYnCombo"));
 		
 		commissionSystemMapper.udtVersionItemEndDt(formMap);
-		commissionSystemMapper.udtCommVersionRuleEndDt(map);
+		
 		
 		
 		if(simulList.size() > 0){
@@ -619,6 +622,8 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 				sMap.put("endDt", CommissionConstants.COMIS_END_DT);
 				sMap.put("useYn", "Y");
 				//new item Data All insert
+				map.put("itemCd", sMap.get("itemCd"));
+				commissionSystemMapper.udtCommVersionRuleEndDt(map);
 				commissionSystemMapper.versionItemInsert(sMap);
 			}
 			
@@ -627,7 +632,7 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			String searchDt = formMap.get("searchDt").toString();
 			searchDt =  searchDt.substring(searchDt.indexOf("/")+1,searchDt.length())+searchDt.substring(0,searchDt.indexOf("/"));
-			System.out.println(" %% searchDt : "+searchDt);
+			
 			//simulation item rule book save
 			if(itemList.size() > 0){
 				Map rMap = null; 
