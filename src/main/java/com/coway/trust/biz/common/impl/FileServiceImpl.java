@@ -25,6 +25,9 @@ public class FileServiceImpl implements FileService {
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
 
+	@Value("${web.resource.upload.file}")
+	private String uploadResourceDir;
+
 	@Value("${com.file.mobile.upload.path}")
 	private String mobileUploadDir;
 
@@ -98,6 +101,9 @@ public class FileServiceImpl implements FileService {
 			break;
 		case CALL_CENTER:
 			baseDir = callcenterUploadDir;
+			break;
+		case WEB_DIRECT_RESOURCE:
+			baseDir = uploadResourceDir;
 			break;
 		default:
 			throw new ApplicationException(AppConstants.FAIL, "Invalid FileType ....");
