@@ -6,18 +6,50 @@
 <script type="text/javaScript">
 var CTListGrid;
 var CTListGrid2;
+var CTListGridCount;
 $(document).ready(function(){
 	CTListGrid();
-	fn_CTCode();
 	CTListGrid2();
+	fn_CTCode();
+	//fn_AssignCTList();
 });
 function fn_CTCode(){
-	Common.ajax("GET", "/services/holiday/selectCTList.do", {brnchCode :'${params.branchName}' }, function(result) {
+	Common.ajax("GET", "/services/holiday/selectCTList.do", $("#assignSaveForm").serialize(), function(result) {
 	      console.log(result);
-	      AUIGrid.setGridData(CTListGrid, result);
-	   });
+	      AUIGrid.setGridData(CTListGrid, result.CTList);
+	      AUIGrid.setGridData(CTListGrid2, result.CTAssignList);
+	     // CTListGridCount = AUIGrid.getGridData(CTListGrid).length;
+	     for(var j=0; j<AUIGrid.getGridData(CTListGrid2).length; j++){
+		      for(var i=0; i< AUIGrid.getGridData(CTListGrid).length; i++){
+	              if(AUIGrid.getCellValue(CTListGrid, i, "memCode") == AUIGrid.getCellValue(CTListGrid2, j, "memCode")){
+	            	  AUIGrid.updateRow(CTListGrid, { "checkFlag" : 1 }, i);
+	              }
+	              //if(AUIGrid.getCellValue(CTListGrid, i, "memCode"));
+	              /* if(result[i].CTAssignList.memCode == AUIGrid.getCellValue(CTListGrid, i, "memCode")){
+	                  alert(AUIGrid.getCellValue(CTListGrid, i, "memCode"));
+	                  checkFlag.checked;
+	              } */
+	          }       
+	     }
+	});
 }
 
+function fn_AssignCTList(){
+    Common.ajax("GET", "/services/holiday/selectAssignCTList.do", {holiday :'${params.holiday}' , holidayType : '${params.holidayType}' }, function(result) {
+          console.log(result);
+          AUIGrid.setGridData(CTListGrid2, result);
+          var grdCnt = AUIGrid.getGridData(CTListGrid).length;
+          alert(grdCnt);
+          for(var i=0; i< AUIGrid.getGridData(CTListGrid).length; i++){
+        	  alert(result.memCode);
+              if(result[i].memCode == AUIGrid.getCellValue(CTListGrid, i, "memCode")){
+                  alert(AUIGrid.getCellValue(CTListGrid, i, "memCode"));
+                  checkFlag.checked;
+              }
+          }       
+       });
+       
+}
 function CTListGrid() {
     
     var columnLayout = [
@@ -62,7 +94,9 @@ function CTListGrid2() {
                           { dataField : "memCode", headerText  : "CT Code",    width : 100 },
                           { dataField : "name", headerText  : "Name",width : 200 },
                           { dataField : "totalAssignDate", headerText  : "Total Assigned Date Count",  width  : 150},
-                          { dataField : "memId", headerText  : "",  width  : 0}
+                          { dataField : "memId", headerText  : "",  width  : 100},
+                          { dataField : "holidaySeq1", headerText  : "",  width  : 100},
+                          { dataField : "asignSeq", headerText  : "",  width  : 100}
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
@@ -80,23 +114,55 @@ function CTListGrid2() {
     
     function fn_Assign(){
     	var activeItems = AUIGrid.getItemsByValue(CTListGrid, "checkFlag", "1");
+    	for(var i=0; i<activeItems.length; i++){
+    		activeItems[i].totalAssignDate = activeItems[i].totalAssignDate + 1
+    	}
     	 AUIGrid.setGridData(CTListGrid2,activeItems);
     }
     function fn_Del(){
     	var activeItems = AUIGrid.getItemsByValue(CTListGrid2, "checkFlag1", "1");
         for(var i=0; i<activeItems.length; i++){
-        	AUIGrid.removeRow(CTListGrid2, i);
+        	AUIGrid.removeRow(CTListGrid2, "selectedIndex");
         	AUIGrid.removeSoftRows(CTListGrid2);
         }
     }
     $(document).ready(function(){  
         AUIGrid.bind(CTListGrid2, "removeRow", auiRemoveRowHandler);
-    	
+        
+        AUIGrid.bind(CTListGrid2, "headerClick", function(event) {
+            // isExclude 칼럼 클릭 한 경우
+            if(event.dataField == "checkFlag1") {
+                if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
+                    var  isChecked = document.getElementById("allCheckbox").checked;
+                    checkAll(isChecked);
+                }
+                return false;
+            }
+        });
+        
+        
     });
     
     function auiRemoveRowHandler(){
     	
     }
+   
+    function checkAll(isChecked) {
+        var rowCount = AUIGrid.getRowCount(CTListGrid2);
+        
+        if(isChecked){   // checked == true == 1
+          for(var i=0; i<rowCount; i++){
+             AUIGrid.updateRow(CTListGrid2, { "checkFlag1" : 1 }, i);
+          }
+        }else{   // unchecked == false == 0
+          for(var i=0; i<rowCount; i++){
+             AUIGrid.updateRow(CTListGrid2, { "checkFlag1" : 0 }, i);
+          }
+        }
+        
+        // 헤더 체크 박스 일치시킴.
+        document.getElementById("allCheckbox").checked = isChecked;
+    };
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 

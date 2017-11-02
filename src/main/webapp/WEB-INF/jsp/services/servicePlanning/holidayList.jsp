@@ -107,6 +107,7 @@ $(document).ready(function(){
 	 
 	 $("#holiday_CTassign_grid_wap").hide();
 	 $("#hiddenBtn").hide();
+	 $("#hiddenBtn4").hide();
 	 AUIGrid.bind(gridID, "addRow", auiAddRowHandler);
 	 
 	 AUIGrid.bind(gridID1, "cellClick", function(event) {
@@ -235,6 +236,7 @@ $(document).ready(function(){
             $("#holiday_grid_wap").show();
             $("#holiday_CTassign_grid_wap").hide();
             $("#hiddenBtn").hide();
+            $("#hiddenBtn4").hide();
             $("#hiddenBtn1").show();
             $("#hiddenBtn2").show();
             $("#hiddenBtn3").show();
@@ -246,6 +248,7 @@ $(document).ready(function(){
               $("#hiddenBtn1").hide();
               $("#hiddenBtn2").hide();
               $("#hiddenBtn3").hide();
+              $("#hiddenBtn4").show();
               AUIGrid.resize(holiday_CTassign_grid_wap,1000,400);
          }
    }
@@ -253,9 +256,9 @@ $(document).ready(function(){
     	 Common.popupDiv("/services/holiday/holidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
     }
     
-    /* function fn_CTEntryEdit(){
-    	Common.popupDiv("/services/holiday/holidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
-    } */
+    function fn_CTEntryEdit(){
+    	Common.popupDiv("/services/holiday/updatHolidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
+    } 
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -365,7 +368,6 @@ $(document).ready(function(){
     <li><p class="btn_grid" id="hiddenBtn2"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn3"><a href="#" onclick="javascript:fn_holidaySave()">SAVE</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn"><a href="#" onclick="javascript:fn_CTEntry()">Replacement CT Entry</a></p></li>
-    <!-- <li><p class="btn_grid" id="hiddenBtn"><a href="#" onclick="javascript:fn_CTEntryEdit()">Edit Replacement CT Entry</a></p></li> -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
