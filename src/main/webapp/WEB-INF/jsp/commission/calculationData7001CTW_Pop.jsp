@@ -235,7 +235,7 @@
            <input type="hidden" name="actionType" id="actionType_7001" value="${actionType }"/>
 		   <input type="hidden" name="codeId" id="codeId" value="${codeId}"/>
 		   <input type="hidden" name="code" id="code" value="${code}"/>
-		   <input type="hidden" id="fileName" name="fileName" value="ct_basic.xlsx"/>
+		   <input type="hidden" id="fileName" name="fileName" value="ct_CTW_basic.xlsx"/>
 		   <ul class="right_btns">
 			  <li><p class="btn_blue"><a href="#" id="search_7001CT"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 			</ul>

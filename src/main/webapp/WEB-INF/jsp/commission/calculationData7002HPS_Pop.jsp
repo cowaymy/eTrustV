@@ -177,7 +177,7 @@
             <input type="hidden" name="actionType" id="actionType_7002" value="${actionType }"/>
 		   <input type="hidden" name="codeId" id="codeId" value="${codeId}"/>
 		   <input type="hidden" name="code" id="code" value="${code}"/>
-		   <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
+		   <input type="hidden" id="fileName" name="fileName" value="hp_salse_basic.xlsx"/>
 		   <ul class="right_btns">
 			  <li><p class="btn_blue"><a href="#" id="search_7002HP"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 			</ul>
