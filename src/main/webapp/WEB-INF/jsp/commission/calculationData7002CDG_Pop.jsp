@@ -222,7 +222,7 @@
    
    function fn_AlldownFile() {
 	   var data = { "searchDt" : $("#7002CD_Dt").val() , "code": $("#code").val() };
-       Common.ajax("GET", "/commission/calculation/cntData7002CD", searchDt, function(result) {
+       Common.ajax("GET", "/commission/calculation/cntData7002CD", data, function(result) {
            var cnt = result;
            if(cnt > 0){
 		       var fileName = $("#fileName").val();
