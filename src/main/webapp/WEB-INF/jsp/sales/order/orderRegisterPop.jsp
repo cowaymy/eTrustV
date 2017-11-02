@@ -165,6 +165,12 @@
                 else {
                     $("#corpTypeNm").val(""); //Industry Code
                 }
+                
+                if($('#typeId').val() == '965') { //Company
+                    $('#sctBillPrefer').removeClass("blind");
+                } else {
+                    $('#sctBillPrefer').addClass("blind");
+                }
 
                 if(custInfo.custAddId > 0) {
 
@@ -1036,7 +1042,6 @@
         fn_clearSearchForm();
 
         if(FormUtil.isNotEmpty(strCustId) && strCustId > 0) {
-
             fn_loadCustomer(strCustId);
         }
         else {
