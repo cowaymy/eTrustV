@@ -131,7 +131,7 @@ function fn_setPayDueDtEvent() {
         var month = payDueDt.substring(3, 5);
         var year = payDueDt.substring(6);
         console.log("year : " + year + " month : " + month + " day : " + day);
-        payDueDt = year + month;
+        payDueDt = year + month + day;
         
         var now = new Date;
         var dd = now.getDate();
