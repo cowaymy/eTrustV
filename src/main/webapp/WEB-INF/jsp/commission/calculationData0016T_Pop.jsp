@@ -137,12 +137,13 @@
                
                var codeId= $("#orgGroup_16").val();
                var pMemCd = $("#pMemCd_16T").val();
+               var actionType = $("#actionType16T").val();
                //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
                //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
                //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&pMemCd="+pMemCd+"&codeId="+codeId+"'/>";
                
                Common.showLoader();
-               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&pMemCd="+pMemCd+"&codeId="+codeId)
+               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&pMemCd="+pMemCd+"&codeId="+codeId +"&actionType="+actionType)
                .done(function () {
                    Common.alert('File download a success!');                
                    Common.removeLoader();            
@@ -168,10 +169,11 @@
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code_16T").val();
 		       var codeId= $("#orgGroup_16").val();
+		       var actionType = $("#actionType16T").val();
 		       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
 		       
 		       Common.showLoader();
-               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId)
+               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId +"&actionType="+actionType)
                .done(function () {
                    Common.alert('File download a success!');                
                    Common.removeLoader();            
@@ -207,6 +209,7 @@
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
         <form id="form_16T">
+            <input type="hidden" name="actionType" id="actionType16T" value="${actionType }"/>
            <input type="hidden" name="code" id="code_16T" value="${code}"/>
            <input type="hidden" id="fileName" name="fileName" value="TBBcommission.xlsx"/>
            <ul class="right_btns">

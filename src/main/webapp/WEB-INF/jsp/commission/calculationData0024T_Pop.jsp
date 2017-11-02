@@ -125,12 +125,13 @@
 		       
 		       var ordId = $("#ordId_24T").val();
 		       var emplyCd = $("#emplyCd_24T").val();
+		       var actionType = $("#actionType24T").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
 		       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd+"'/>";
 		       
 		       Common.showLoader();
-              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd)
+              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd +"&actionType="+actionType)
               .done(function () {
                   Common.alert('File download a success!');                
                   Common.removeLoader();            
@@ -155,10 +156,11 @@
 		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		      var month = searchDt.substr(0,searchDt.indexOf("/"));
 		      var code = $("#code_24T").val();
+		      var actionType = $("#actionType24T").val();
 		      //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
 		      
 		      Common.showLoader();
-              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code)
+              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code +"&actionType="+actionType)
               .done(function () {
                   Common.alert('File download a success!');                
                   Common.removeLoader();            
@@ -195,6 +197,8 @@
         </aside><!-- title_line end -->
         
         <form id="form_24">
+            <input type="hidden" name="actionType" id="actionType24T" value="${actionType }"/>  
+            <input type="hidden" name="actionType" id="actionType" value="${actionType }"/>
            <input type="hidden" name="code" id="code_24T" value="${code}"/>
            <input type="hidden" id="fileName" name="fileName" value="CTMIncentivePerformance.xlsx"/>
            <ul class="right_btns">
