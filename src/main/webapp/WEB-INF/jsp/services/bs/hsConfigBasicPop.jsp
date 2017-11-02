@@ -7,12 +7,11 @@
 	    $(document).ready(function() {
 	    
 
-	           var configBsGen = ${configBasicInfo.configBsGen}
-               $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
-	
-	
 	       fn_getHSConfigBasicInfo();
 	    
+	    
+               var configBsGen = ${configBasicInfo.configBsGen}
+               $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);	    
 	    
 	    
 	    });
@@ -80,7 +79,8 @@
                    settHs:                              $('#entry_settHs').prop("checked") ? '1': '0', 
                    settAs:                              $('#entry_settAs').prop("checked") ? '1': '0' , 
                    srvBsWeek:                          $(':input[name=entry_srvBsWeek]:radio:checked').val(),
-                   salesOrderId:                        $('#salesOrderId').val()
+                   salesOrderId:                        $('#salesOrderId').val(),
+                   configId:                             $('#configId').val()
         }
     
     
@@ -94,13 +94,16 @@
             console.log("saved.");
             console.log( result);       
             
-            if(result.asNo !=""){
-                Common.alert("<b>HS result successfully saved.</b>", fn_parentReload);
+            Common.alert("<b>HS result successfully saved.</b>", fn_close);
                 //Common.alert(result.message, fn_parentReload);
                 //fn_DisablePageControl();
-            }
         });
     
+    }
+    
+    function fn_close(){
+        $("#popup_wrap").remove();
+         fn_parentReload();
     }
     
     
@@ -152,6 +155,7 @@
  <form id="frmBasicInfo" method="post">
 <%-- <input id="salesOrderId" name="salesOrderId" type="hidden" value="${basicInfo.ordId}"/> --%>
 <input type="hidden" name="salesOrderId"  id="salesOrderId" value="${SALEORD_ID}"/>  
+<input type="hidden" name="configId"  id="configId" value="${configBasicInfo.configId}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -208,9 +212,9 @@
     <th scope="row">HS Cody Code</th>
     <td>
     <select class="w100p"  id="entry_cmbServiceMem" name="entry_cmbServiceMem" >
-       <c:forEach var="list" items="${cmbServiceMemList}" varStatus="status">
+       <c:forEach var="list" items="${serMemList}" varStatus="status">
             <option value="${list.codeId}"> ${list.codeName } </option>
-       </c:forEach>
+       </c:forEach> 
     </select>
     </td>
     <th scope="row">Last HS Date</th>

@@ -144,6 +144,7 @@
 	        
  	            AUIGrid.bind(myGridID, "cellClick", function(event) {
 			      salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+			      brnchId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId");
 			  }); 
   
 	
@@ -168,7 +169,10 @@
 		        return ;
 		    }
 
-               Common.popupDiv("/services/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
+                alert(brnchId);
+                
+               Common.popupDiv("/services/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
+               
         }
     
         function fn_filterSetInfo() {
