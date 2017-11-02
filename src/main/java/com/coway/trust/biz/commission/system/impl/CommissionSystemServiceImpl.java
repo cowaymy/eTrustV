@@ -304,10 +304,10 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 				params.put("endDt", CommissionConstants.COMIS_END_DT);
 				params.put("updUserId", ((Map<String, Object>) obj).get("updUserId"));
 				
-				if(StringUtil.isNumeric(list.get(0).get("orgSeq").toString())){
+				if( !(StringUtil.isNumeric(list.get(0).get("orgSeq").toString())) ){
 					msg = "pelese only number";
 					break;
-				}else if(StringUtil.isNumeric(list.get(0).get("itemCd").toString())){
+				}else if( !(StringUtil.isNumeric(list.get(0).get("itemCd").toString())) ){
 					msg = "pelese only number";
 					break;
 				}else{
@@ -315,19 +315,16 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 					commissionSystemMapper.udtCommissionItemGridEndDt(params);
 				}
 			}
-			if(msg.equals("")){
+			
+			if( !(StringUtil.isNumeric(((Map<String, Object>) obj).get("itemCd").toString() )) ){
+				msg = "pelese only number";
+				break;
+			}else if( !(StringUtil.isNumeric(((Map<String, Object>) obj).get("orgSeq").toString() )) ){
+				msg = "pelese only number";
 				break;
 			}else{
-				if(StringUtil.isNumeric(((Map<String, Object>) obj).get("itemCd").toString() ) ){
-					msg = "pelese only number";
-					break;
-				}else if(StringUtil.isNumeric(((Map<String, Object>) obj).get("orgSeq").toString() ) ){
-					msg = "pelese only number";
-					break;
-				}else{
-					msg = "success";
-					commissionSystemMapper.addCommissionItemGrid((Map<String, Object>) obj);
-				}
+				msg = "success";
+				commissionSystemMapper.addCommissionItemGrid((Map<String, Object>) obj);
 			}
 		}
 		return msg;
@@ -362,14 +359,15 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			logger.debug("add CRT_USER_ID : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			logger.debug("add UPD_USER_ID : {}", ((Map<String, Object>) obj).get("updUserId"));
 
-			if( StringUtil.isNumeric( (((Map<String, Object>) obj).get("itemCd")).toString() )){
+			if( !(StringUtil.isNumeric((((Map<String, Object>) obj).get("itemCd")).toString() )) ){
 				msg = "pelese only number";
 				break;
-			}else if( StringUtil.isNumeric( (((Map<String, Object>) obj).get("orgSeq")).toString() )){
+			}else if( !(StringUtil.isNumeric((((Map<String, Object>) obj).get("orgSeq")).toString() )) ){
 				msg = "pelese only number";
 				break;
 			}else{
 				commissionSystemMapper.udtCommissionItemGridUseYn((Map<String, Object>) obj);
+				msg = "success";
 			}
 		}
 		return msg;
@@ -454,7 +452,6 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 				params.put("rulePid", "0");
 			}
 			
-			System.out.println(" ** 2. type : " + params.get("versionType"));
 			if("A".equals(params.get("versionType").toString())){
     			List<EgovMap> list = commissionSystemMapper.selectRuleMngChk(params);
     			if (list.size() > 0) {
@@ -489,7 +486,6 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public List<EgovMap> selectRuleBookMngList(Map<java.lang.String, Object> params) {		
 		List<EgovMap> ruleList = null;
-		System.out.println("Rule Version Type : " + params.get("versionType"));
 		if("A".equals(params.get("versionType")) ){
 			ruleList =commissionSystemMapper.selectRuleBookMngList(params);
 		}else{
