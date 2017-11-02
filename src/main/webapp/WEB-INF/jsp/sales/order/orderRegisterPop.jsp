@@ -157,7 +157,7 @@
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#empChk").val('0'); //Employee
-                $("#gstChk").val('0').prop("disabled", true);
+//              $("#gstChk").val('0').prop("disabled", true);
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -281,7 +281,7 @@
                 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
                 
-                if(!$("#gstChk").is('[disabled]')) {
+//              if(!$("#gstChk").is('[disabled]')) {
 
                     if(custInfo.gstChk == '1') {
                         $("#gstChk").val('1').prop("disabled", true);
@@ -291,7 +291,7 @@
                         $("#gstChk").val('0').removeAttr("disabled");
                         fn_tabOnOffSet('REL_CER', 'HIDE');
                     }
-                }
+//              }
             }
         });
     }
@@ -743,19 +743,19 @@
                             //?FD문서에서 아래 항목 빠짐
                             $('[name="advPay"]').removeAttr("disabled");
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
-                            $("#gstChk").val('0').prop("disabled", true);
+                            $("#gstChk").val('0');
                             fn_tabOnOffSet('REL_CER', 'HIDE');
                             
                             break;
 
                         case '67' : //OUTRIGHT
-                            $("#gstChk").removeAttr("disabled");
+//                          $("#gstChk").removeAttr("disabled");
 
                             break;
 
                         case '68' : //INSTALLMENT
                             $('#installDur').removeAttr("readonly").removeClass("readonly");
-                            $("#gstChk").removeAttr("disabled");
+//                          $("#gstChk").removeAttr("disabled");
                             
                             break;
 
@@ -763,7 +763,7 @@
                             $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
 
                             $('[name="advPay"]').removeAttr("disabled");
-                            $("#gstChk").removeAttr("disabled");
+//                          $("#gstChk").removeAttr("disabled");
                             
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
                           //fn_tabOnOffSet('REL_CER', 'HIDE');
@@ -774,7 +774,7 @@
 
                         default :
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
-                            $("#gstChk").val('0').prop("disabled", true);
+                            $("#gstChk").val('0');
                             fn_tabOnOffSet('REL_CER', 'HIDE');
                             
                             break;
@@ -1087,7 +1087,7 @@
     function fn_doSaveOrder() {
         console.log('!@# fn_doSaveOrder START');
         
-        $("#gstChk").removeAttr("disabled");
+//      $("#gstChk").removeAttr("disabled");
         $("#promoDiscPeriodTp").removeAttr("disabled");
         
         //----------------------------------------------------------------------
@@ -2945,7 +2945,7 @@
 <tr>
     <th scope="row">Zero GST<span class="must">*</span></th>
     <td>
-    <select id="gstChk" name="gstChk" class="w100p" disabled></select>
+    <select id="gstChk" name="gstChk" class="w100p"></select>
     </td>
     <th scope="row">DSC Branch<span class="must">*</span></th>
     <td>
