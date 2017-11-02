@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.AccInvenOntimeMapper"> 
+
+  <!-- ON Time Delivery -->
+  <select id="selectOnTimeMonthly" parameterType="Map" resultType="egovMap">
+			SELECT * 
+				FROM ( 
+							WITH MONTHLY
+							  AS 
+							    ( SELECT 
+							             SCM_MONTH 
+							           , TRIM(DT_TYPE) DT_TYPE 
+							           , ROUND(DT_VALU) DT_VALU   
+							        FROM SCM0057V 
+							       <choose>
+							         <when test='scmYearCbBox != null and scmYearCbBox != ""'>
+							                WHERE SCM_YEAR = #{scmYearCbBox}
+							         </when>
+							         <otherwise>
+							                WHERE SCM_YEAR = ( SELECT EXTRACT(YEAR FROM SYSDATE) SCM_YEAR FROM DUAL)
+							         </otherwise>
+							       </choose>
+							    )
+							    SELECT * 
+							      FROM MONTHLY 
+							    PIVOT ( MAX(DT_VALU) FOR SCM_MONTH IN (1 AS M1,2 AS M2,3 AS M3,4 AS M4,5 AS M5,6 AS M6,7 AS M7,8 AS M8,9 AS M9,10 AS M10,11 AS M11,12 AS M12)) 
+				     )  ORDER BY DT_TYPE 
+  </select> 
+  
+  <select id="selectOnTimeWeeklyStartPoint" parameterType="Map" resultType="egovMap">
+     SELECT DISTINCT
+            COUNT(*) OVER(PARTITION BY DELVRY_YEAR,DELVRY_MONTH ) HEAD_CNT
+           ,FIRST_VALUE(DELVRY_WEEK) OVER(PARTITION BY DELVRY_YEAR,DELVRY_MONTH ORDER BY DELVRY_WEEK ASC) FIRST_VAL
+
+      FROM SCM0060V  
+     WHERE DELVRY_YEAR  = #{scmYearCbBox}
+       AND DELVRY_MONTH = #{scmMonthCbBox}
+     GROUP BY DELVRY_YEAR,DELVRY_MONTH,DELVRY_WEEK
+  </select> 
+  
+  <select id="selectOnTimeWeeklyList" parameterType="Map" resultType="egovMap">
+		  SELECT * 
+		    FROM ( 
+								WITH WEEKLY
+								 AS 
+								   (
+								    SELECT   
+								           DELVRY_YEAR   
+								         , DELVRY_MONTH   
+								         , DELVRY_WEEK   
+								         , TRIM(DT_TYPE) DT_TYPE 
+								         , ROUND(DT_VALU) DT_VALU   
+								     FROM SCM0060V  
+								    WHERE DELVRY_YEAR  = #{scmYearCbBox}
+								      AND DELVRY_MONTH = #{scmMonthCbBox}
+								)
+								SELECT * 
+								  FROM WEEKLY
+								  
+								  PIVOT ( MAX(DT_VALU)  FOR DELVRY_WEEK IN ( 1 w1 ,2 w2,3 w3,4 w4,5 w5,6 w6,7 w7,8 w8,9 w9,10 w10,11 w11,12 w12,13 w13,14 w14,15 w15,16 w16
+								                                            ,17 w17 ,18 w18 ,19 w19 ,20 w20 ,21 w21 ,22 w22 ,23 w23 ,24 w24 ,25 w25 ,26 w26 ,27 w27 ,28 w28 
+								                                            ,29 w29 ,30 w30 ,31 w31 ,32 w32 ,33 w33 ,34 w34 ,35 w35 ,36 w36 ,37 w37 ,38 w38 ,39 w39 ,40 w40
+								                                            ,41 w41 ,42 w42 ,43 w43 ,44 w44 ,45 w45 ,46 w46 ,47 w47 ,48 w48 ,49 w49 ,50 w50 ,51 w51 ,52 w52
+								                                           )
+								       )
+			       )  ORDER BY DT_TYPE 
+  </select> 
+  
+  <select id="selectOnTimeCalculStatus" parameterType="Map" resultType="egovMap">
+		WITH CALCUL_STATUS
+		     AS 
+		     (
+		       SELECT 
+		             (SELECT COUNT(SN)  FROM SCM0059V WHERE DELVRY_YEAR  = #{scmYearCbBox}  AND DELVRY_MONTH = #{scmMonthCbBox} AND IS_CMPLT_ON_TM = '1' ) COMPLETE_CNT
+		            ,(SELECT COUNT(SN)  FROM SCM0059V WHERE DELVRY_YEAR  = #{scmYearCbBox}  AND DELVRY_MONTH = #{scmMonthCbBox} ) TOTAL_CNT
+		         FROM DUAL
+		     )
+		  , RATES
+		    AS
+		    (
+		      SELECT  ROUND((COMPLETE_CNT /  TOTAL_CNT)*100,1) RATING FROM CALCUL_STATUS
+		    )
+		SELECT COMPLETE_CNT
+		      ,TOTAL_CNT 
+		      ,(SELECT RATING FROM RATES ) RATING 
+		  FROM CALCUL_STATUS 
+  </select> 
+  
+  <select id="selectOnTimeDeliverySearch" parameterType="Map" resultType="egovMap">
+			SELECT
+			       SN   
+			      ,PO_NO   
+			      ,PO_ITM_NO   
+			      ,STOCK_ID   
+			      ,STOCK_CODE   
+			      ,STOCK_NAME   
+			      ,PO_ISSU_DT   
+			      ,DELVRY_YEAR   
+			      ,DELVRY_MONTH   
+			      ,DELVRY_WEEK   
+			      ,DELVRY_DT   
+			      ,PO_QTY   
+			      ,FIRST_GR_DT   
+			      ,LAST_GR_DT   
+			      ,GR_QTY   
+			      ,ON_TM_DELVRY_QTY   
+			      ,IS_CMPLT_ON_TM   
+			      ,ETC   
+			 FROM SCM0059V 
+			WHERE DELVRY_YEAR    = #{scmYearCbBox}
+			  AND DELVRY_MONTH   = #{scmMonthCbBox}
+		 <if test='viewCbBox != null and viewCbBox !=""'>
+			  AND IS_CMPLT_ON_TM = #{viewCbBox} 
+		 </if>
+		  ORDER BY PO_NO 
+			        ,PO_ITM_NO 
+ 
+  </select> 
+
+ 
+    
+  
+</mapper>
