@@ -199,7 +199,7 @@
 	   });
    }
    
-   function fn_downFile() {
+   function fn_AlldownFile() {
 	   var data = { "searchDt" : $("#CMM0014T_Dt").val() , "code": $("#code_14T").val(), "codeId": $("#orgGroup_14").val() };
 	   Common.ajax("GET", "/commission/calculation/cntCMM0014T", data, function(result) {
            var cnt = result;

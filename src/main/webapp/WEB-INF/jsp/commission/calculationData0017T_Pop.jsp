@@ -226,7 +226,7 @@
    
    function fn_AlldownFile() {
 	   var data = { "searchDt" : $("#CMM0017T_Dt").val() , "code": $("#code_17T").val()};
-	   Common.ajax("GET", "/commission/calculation/cntCMM0017T", $("#form_17T").serialize(), function(result) {
+	   Common.ajax("GET", "/commission/calculation/cntCMM0017T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
 		      var fileName = $("#fileName").val();
