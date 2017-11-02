@@ -15,7 +15,7 @@ public interface PettyCashApplication {
 	
 	void updateCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 	
-	void deleteCustodianBiz(Map<String, Object> params);
+	void deleteCustodianBiz(FileType type, Map<String, Object> params);
 	
 	void insertPettyCashReqstBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 	

@@ -127,7 +127,7 @@ public class PettyCashController {
 		params.put("userName", sessionVO.getUserName());
 		
 		// TODO insert
-		pettyCashApplication.insertCustodianBiz(FileVO.createList(list), FileType.WEB, params);
+		pettyCashApplication.insertCustodianBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -179,7 +179,7 @@ public class PettyCashController {
 		params.put("userName", sessionVO.getUserName());
 		
 		// TODO update
-		pettyCashApplication.updateCustodianBiz(FileVO.createList(list), FileType.WEB, params);
+		pettyCashApplication.updateCustodianBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -208,7 +208,7 @@ public class PettyCashController {
 		params.put("userName", sessionVO.getUserName());
 		
 		// TODO delete
-		pettyCashApplication.deleteCustodianBiz(params);
+		pettyCashApplication.deleteCustodianBiz(FileType.WEB_DIRECT_RESOURCE, params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -281,7 +281,7 @@ public class PettyCashController {
 		params.put("userName", sessionVO.getUserName());
 		
 		// TODO insert
-		pettyCashApplication.insertPettyCashReqstBiz(FileVO.createList(list), FileType.WEB, params);
+		pettyCashApplication.insertPettyCashReqstBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -324,7 +324,7 @@ public class PettyCashController {
 		params.put("userName", sessionVO.getUserName());
 		
 		// TODO update
-		pettyCashApplication.updatePettyCashReqstBiz(FileVO.createList(list), FileType.WEB, params);
+		pettyCashApplication.updatePettyCashReqstBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -421,7 +421,7 @@ public class PettyCashController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		// serivce 에서 파일정보를 가지고, DB 처리.
-		fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+		fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
 		
 		params.put("attachFiles", list);
 		
@@ -511,7 +511,7 @@ public class PettyCashController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		// serivce 에서 파일정보를 가지고, DB 처리.
-		pettyCashApplication.updatePettyCashAttachBiz(FileVO.createList(list), FileType.WEB, params);
+		pettyCashApplication.updatePettyCashAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 		
 		params.put("attachFiles", list);
 		

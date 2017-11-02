@@ -80,7 +80,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 					LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
 					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
 					LOGGER.debug("params.get('userId') =====================================>>  " + params.get("userId"));
-					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), FileType.WEB, Integer.parseInt(String.valueOf(params.get("userId"))));
+					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
 				} else {
 					FileGroupVO fileGroupVO = new FileGroupVO();
 
@@ -89,7 +89,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 
 					fileGroupVO.setAtchFileGrpId(Integer.parseInt(params.get("atchFileGrpId").toString()));
 					fileGroupVO.setAtchFileId(list.get(i).getAtchFileId());
-					fileGroupVO.setChenalType(FileType.WEB.getCode());
+					fileGroupVO.setChenalType(type.getCode());
 					fileGroupVO.setCrtUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 					fileGroupVO.setUpdUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 
@@ -109,7 +109,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 			for(int i = 0; i < removeList.length; i++) {
 				String atchFileId = removeList[i];
 				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
-				fileService.removeFileByFileId(FileType.WEB, Integer.parseInt(atchFileId));
+				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
 		
@@ -117,7 +117,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	}
 	
 	@Override
-	public void deleteCustodianBiz(Map<String, Object> params) {
+	public void deleteCustodianBiz(FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
 		
@@ -131,7 +131,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
 		if (atchFileGrpId != "null") {
 			// TODO file delete
-			fileService.removeFilesByFileGroupId(FileType.WEB, Integer.parseInt(atchFileGrpId));
+			fileService.removeFilesByFileGroupId(type, Integer.parseInt(atchFileGrpId));
 		}
 		
 		pettyCashService.deleteCustodian(params);
@@ -179,7 +179,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 					LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
 					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
 					LOGGER.debug("params.get('userId') =====================================>>  " + params.get("userId"));
-					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), FileType.WEB, Integer.parseInt(String.valueOf(params.get("userId"))));
+					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
 				} else {
 					FileGroupVO fileGroupVO = new FileGroupVO();
 
@@ -188,7 +188,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 
 					fileGroupVO.setAtchFileGrpId(Integer.parseInt(params.get("atchFileGrpId").toString()));
 					fileGroupVO.setAtchFileId(list.get(i).getAtchFileId());
-					fileGroupVO.setChenalType(FileType.WEB.getCode());
+					fileGroupVO.setChenalType(type.getCode());
 					fileGroupVO.setCrtUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 					fileGroupVO.setUpdUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 
@@ -208,7 +208,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 			for(int i = 0; i < removeList.length; i++) {
 				String atchFileId = removeList[i];
 				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
-				fileService.removeFileByFileId(FileType.WEB, Integer.parseInt(atchFileId));
+				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
 		
@@ -238,7 +238,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 					LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
 					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
 					LOGGER.debug("params.get('userId') =====================================>>  " + params.get("userId"));
-					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), FileType.WEB, Integer.parseInt(String.valueOf(params.get("userId"))));
+					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
 				} else {
 					FileGroupVO fileGroupVO = new FileGroupVO();
 
@@ -247,7 +247,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 
 					fileGroupVO.setAtchFileGrpId(Integer.parseInt(params.get("atchFileGrpId").toString()));
 					fileGroupVO.setAtchFileId(list.get(i).getAtchFileId());
-					fileGroupVO.setChenalType(FileType.WEB.getCode());
+					fileGroupVO.setChenalType(type.getCode());
 					fileGroupVO.setCrtUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 					fileGroupVO.setUpdUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 
@@ -267,7 +267,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 			for(int i = 0; i < removeList.length; i++) {
 				String atchFileId = removeList[i];
 				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
-				fileService.removeFileByFileId(FileType.WEB, Integer.parseInt(atchFileId));
+				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
 	}

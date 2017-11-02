@@ -267,7 +267,7 @@ public class WebInvoiceController {
 		
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
-			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+			fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
 		}
 
 		params.put("attachmentList", list);
