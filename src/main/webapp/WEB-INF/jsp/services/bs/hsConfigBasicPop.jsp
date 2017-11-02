@@ -230,8 +230,7 @@
 <tr>
     <th scope="row">Remark</th>
     <td colspan="3">
-     <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" >${configBasicInfo.configBsRem} </textarea> 
-    </td>
+     <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" > ${configBasicInfo.configBsRem} </textarea> 
 </tr>
 <tr>
     <th scope="row">Happy Call Service</th>
