@@ -230,7 +230,7 @@
       $("#versionTypeS").click(function(){
     	  Common.ajax("GET", "/commission/system/varsionVaildSearch", $("#searchFormRule").serialize(), function(result) {
     		  if(result == null){
-    			  Common.alert("등록된 시뮬레이션이 없습니다.");
+    			  Common.alert("There are no registered simulations.");
     			  $("#versionTypeA").prop("checked", true);
     		  }else{
     			  $("#searchFormRule [name=simulItemSeq]").val(result);
@@ -861,7 +861,6 @@
             rowItem = checkedItems[i];
             str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name + "\n";
         }
-        //alert(str);
     }
     
     // Rule Book Mgmt pop Save

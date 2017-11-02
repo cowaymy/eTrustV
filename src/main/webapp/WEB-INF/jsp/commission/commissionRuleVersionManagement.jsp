@@ -143,7 +143,7 @@
           },{
               dataField : "itemCd",
               style : "my-column",
-              //visible : false,
+              visible : false,
               editable : false
           },{
               dataField : "orgSeq",
@@ -224,7 +224,7 @@
         },{
             dataField : "itemCd",
             style : "my-column",
-            //visible : false,
+            visible : false,
             editable : false
         },{
             dataField : "newYn",
