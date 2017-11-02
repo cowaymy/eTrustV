@@ -19,6 +19,22 @@
         });
 	});
 	
+    $(function(){
+        $('#_custId').keydown(function (event) {  
+            if (event.which === 13) {    //enter
+                console.log('xxx');
+                fn_selectPstRequestDOListAjax();
+                return false;
+            }  
+        });
+        $('#_nric').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                fn_selectPstRequestDOListAjax();
+                return false;
+            }  
+        });
+    });
+	
 	function fn_setData(custId , item) { //edit by hgham 2017-09-21    event.item 추가 
 	    if($('#callPrgm').val() == 'ORD_REGISTER_CUST_CUST') {
 	        fn_loadCustomer(custId);
@@ -120,7 +136,7 @@
 	<select id="cmbTypeId" name="cmbTypeId" class="w100p"></select>
 	</td>
 	<th scope="row">Customer ID</th>
-	<td><input id="custId" name="custId" type="text" title="" placeholder="Customer ID (Numerci)" class="w100p" /></td>
+	<td><input id="_custId" name="custId" type="text" title="" placeholder="Customer ID (Numerci)" class="w100p" /></td>
 </tr>
 <tr>
 	<th scope="row">Race</th>
@@ -128,7 +144,7 @@
 	<select id="cmbRaceId" name="raceId" class="w100p"></select>
 	</td>
 	<th scope="row">NRIC/Company Number</th>
-	<td><input id="nric" name="nric" type="text" title="" placeholder="NRIC/Company No." class="w100p" /></td>
+	<td><input id="_nric" name="nric" type="text" title="" placeholder="NRIC/Company No." class="w100p" /></td>
 </tr>
 <tr>
 	<th scope="row">Customer Name</th>
