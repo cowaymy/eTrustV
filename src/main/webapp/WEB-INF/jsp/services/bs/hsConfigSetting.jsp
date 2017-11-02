@@ -169,7 +169,7 @@
 		        return ;
 		    }
 
-                alert(brnchId);
+
                 
                Common.popupDiv("/services/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
                

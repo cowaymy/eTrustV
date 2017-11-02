@@ -125,7 +125,7 @@
                                          ,HSM.CODY_ID
                                          ,HSM.STUS_CODE_ID STUS_CODE_ID
                                          ,EXTENT2.CODE CODE
-                                         ,sys064.CODY_BRNCH_CODE AS BRNCH_ID
+<!--                                          ,sys064.CODY_BRNCH_CODE AS BRNCH_ID -->
                                          ,SAL023.area_id,
                                            sys064.area_id,
                                            sys064.CODY_BRNCH_CODE,
@@ -138,7 +138,8 @@
 									       EXTENT2.code,
                                             sys064.CT_BRNCH_CODE,
                                           SOM.SALES_ORD_ID AS SALES_ORD_ID,
-                                            sys064.CODY_MANGR_USER_ID
+                                            sys064.CODY_MANGR_USER_ID,
+                                            som.BRNCH_ID as brnch_id                                            
                                 FROM SAL0001D SOM
                                         ,SAL0029D C
                                         ,SYS0013M CORPTYPE 
@@ -1761,7 +1762,8 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 							                Project1.CONFIG_BS_WEEK CONFIG_BS_WEEK  ,
 							                Project1.CUST_NAME CUST_NAME  ,
 							                Project1.CUST_NRIC CUST_NRIC  ,
-							                Project1.CONFIG_ID
+							                Project1.CONFIG_ID,
+							                Project1.CONFIG_BS_MEM_ID
 							  FROM ( SELECT Extent1.ORD_ID ORD_ID  ,
 							                Extent1.ORD_NO ORD_NO  ,
 							                Extent1.APP_TYPE_CODE APP_TYPE_CODE  ,
@@ -1789,7 +1791,8 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 							                Extent2.CONFIG_BS_WEEK CONFIG_BS_WEEK  ,
 							                Extent2.CONFIG_BS_REM CONFIG_BS_REM  ,
 							                Extent2.SRV_MEM_FREQ SRV_MEM_FREQ  ,
-							                Extent2.CONFIG_ID
+							                Extent2.CONFIG_ID,
+                                            Extent2.CONFIG_BS_MEM_ID
 							         FROM ( SELECT vOrderBasicInfo.ORD_ID ORD_ID  ,
 							                       vOrderBasicInfo.ORD_NO ORD_NO  ,
 							                       vOrderBasicInfo.RENTAL_STUS RENTAL_STUS  ,
@@ -1908,7 +1911,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                    <update id="updateHsConfigBasic" parameterType="Map">
                    
 		               UPDATE SAL0090D
-						   SET SRV_CODY_ID = #{cmbServiceMem},
+						   SET SRV_CODY_ID = #{hscodyId},
 						       SRV_REM = #{remark},
 						       SRV_BS_WEEK = #{srvBsWeek},
 						       SRV_BS_GEN = #{availability}

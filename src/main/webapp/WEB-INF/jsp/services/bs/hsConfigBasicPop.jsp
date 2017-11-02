@@ -4,16 +4,20 @@
 <script type="text/javaScript" language="javascript">
 
 
+    
 	    $(document).ready(function() {
 	    
-
+           doGetCombo('/services/bs/getHSCody.do?&brnchId='+brnchId, '', '','entry_cmbServiceMem', 'S' , '');    
 	       fn_getHSConfigBasicInfo();
 	    
 	    
                var configBsGen = ${configBasicInfo.configBsGen}
                $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);	    
 	    
-	    
+	           var srvMemId =  ${configBasicInfo.configBsMemId}
+	           $("#entry_cmbServiceMem option[value="+ srvMemId +"]").attr("selected", true);     
+	          
+	           
 	    });
     
     
@@ -80,7 +84,8 @@
                    settAs:                              $('#entry_settAs').prop("checked") ? '1': '0' , 
                    srvBsWeek:                          $(':input[name=entry_srvBsWeek]:radio:checked').val(),
                    salesOrderId:                        $('#salesOrderId').val(),
-                   configId:                             $('#configId').val()
+                   configId:                             $('#configId').val(),
+                   hscodyId:                             $('#entry_cmbServiceMem').val()
         }
     
     
@@ -156,6 +161,9 @@
 <%-- <input id="salesOrderId" name="salesOrderId" type="hidden" value="${basicInfo.ordId}"/> --%>
 <input type="hidden" name="salesOrderId"  id="salesOrderId" value="${SALEORD_ID}"/>  
 <input type="hidden" name="configId"  id="configId" value="${configBasicInfo.configId}"/>
+<input type="text" name="brnchId"  id="brnchId" value="${BRNCH_ID}"/>
+<input type="text" name="hscodyId"  id="hscodyId" value="${configBasicInfo.configBsMemId}"/>
+<input type="text" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -212,9 +220,6 @@
     <th scope="row">HS Cody Code</th>
     <td>
     <select class="w100p"  id="entry_cmbServiceMem" name="entry_cmbServiceMem" >
-       <c:forEach var="list" items="${serMemList}" varStatus="status">
-            <option value="${list.codeId}"> ${list.codeName } </option>
-       </c:forEach> 
     </select>
     </td>
     <th scope="row">Last HS Date</th>
@@ -225,7 +230,7 @@
 <tr>
     <th scope="row">Remark</th>
     <td colspan="3">
-    <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" value="${configBasicInfo.configBsRem}"></textarea>
+     <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" >${configBasicInfo.configBsRem} </textarea> 
     </td>
 </tr>
 <tr>

@@ -495,7 +495,8 @@ public class HsManualController {
 //		model.put("cmbServiceMemList", cmbServiceMemList);
 		model.put("configBasicInfo", configBasicInfo);   
 		model.put("SALEORD_ID",(String) params.get("salesOrdId"));   
-
+		model.put("BRNCH_ID",(String) params.get("brnchId"));   
+		
 //		model.put("as_ord_basicInfo", as_ord_basicInfo); 
 //		model.put("AS_NO", (String)params.get("AS_NO"));   
 		
@@ -519,11 +520,25 @@ public class HsManualController {
 		
 //		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
 //		model.put("cmbServiceMemList", cmbServiceMemList);
-		List<EgovMap>  serMemList = hsManualService.serMemList(params);
-		model.addAttribute("serMemList", serMemList);
+//		List<EgovMap>  serMemList = hsManualService.serMemList(params);
+//		model.addAttribute("serMemList", serMemList);
 		
 		return "services/bs/hsConfigBasicPop";
 	} 
+	
+	
+	
+
+	@RequestMapping(value = "/getHSCody.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getHSCody(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		logger.debug("params : {}", params.toString());
+		
+		List<EgovMap>  serMemList = hsManualService.serMemList(params);
+		
+		return ResponseEntity.ok(serMemList);  
+	}
+	
 	
 	
 	
