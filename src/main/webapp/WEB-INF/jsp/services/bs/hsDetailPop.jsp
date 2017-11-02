@@ -102,7 +102,7 @@
 
 
     function fn_getHsFilterListAjax(){
-         Common.ajax("GET", "/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
+         Common.ajax("GET", "/services/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
             console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID, result);            
