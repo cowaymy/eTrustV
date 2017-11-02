@@ -26,5 +26,7 @@ public interface CreditCardService {
 	void updateCreditCard(Map<String, Object> params);
 	
 	void removeCreditCard(Map<String, Object> params);
+	
+	List<EgovMap> selectReimbursementList(Map<String, Object> params);
 
 }

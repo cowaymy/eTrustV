@@ -90,6 +90,12 @@ public class CreditCardServiceImpl implements CreditCardService {
 		// TODO Auto-generated method stub
 		creditCardMapper.removeCreditCard(params);
 	}
+
+	@Override
+	public List<EgovMap> selectReimbursementList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectReimbursementList(params);
+	}
 	
 	
 

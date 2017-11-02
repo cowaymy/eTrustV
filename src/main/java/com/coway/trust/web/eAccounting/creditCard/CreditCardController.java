@@ -226,5 +226,24 @@ public class CreditCardController {
 	public String removeCompletedMsgPop(ModelMap model) {
 		return "eAccounting/creditCard/creditCardManagementRemoveCompltedPop";
 	}
+	
+	@RequestMapping(value = "/creditCardReimbursement.do")
+	public String creditCardReimbursement(ModelMap model) {
+		return "eAccounting/creditCard/creditCardReimbursement";
+	}
+	
+	@RequestMapping(value = "/selectReimbursementList.do")
+	public ResponseEntity<List<EgovMap>> selectReimbursementList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+		
+		params.put("appvPrcssStus", appvPrcssStus);
+		
+		List<EgovMap> reimbursementList = creditCardService.selectReimbursementList(params);
+		
+		return ResponseEntity.ok(reimbursementList);
+	}
 
 }
