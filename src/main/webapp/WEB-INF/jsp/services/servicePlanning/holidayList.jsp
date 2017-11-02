@@ -35,7 +35,7 @@ function holidayCTassignGrid() {
                            
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
         
         gridID1 = GridCommon.createAUIGrid("holiday_CTassign_grid_wap", columnLayout  ,"" ,gridPros);
     }
@@ -49,12 +49,14 @@ function holidayGrid() {
                                   showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                   listFunction : function(rowIndex, columnIndex, item, dataField) {
                                       var list = getTypeComboList();
+                                      alert(list.length);
                                       return list;
                                   },
-                                  keyField : "id"
+                                  keyField : "id1"
                               }
                           },
-                          { dataField : "state", headerText  : "State",width : 200 ,editRenderer : {
+                          { dataField : "state", headerText  : "State",     width : 200 ,
+                        	  editRenderer : {
                               type : "ComboBoxRenderer",
                               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                               listFunction : function(rowIndex, columnIndex, item, dataField) {
@@ -76,7 +78,7 @@ function holidayGrid() {
                            
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
         
         gridID = GridCommon.createAUIGrid("holiday_grid_wap", columnLayout  ,"" ,gridPros);
     }
@@ -85,7 +87,8 @@ function getStateComboList() {
     return list;
 }
 function getTypeComboList() {
-    var list = [ "P", "S" ];
+    var list = [ {"P" : "Public"}, {"S" : "State"}];
+    alert(111);
     return list;
 }
 
@@ -101,6 +104,7 @@ function getTypeComboList() {
 	    AUIGrid.addRow(gridID, item, "first");
 	}
 	
+	 
 $(document).ready(function(){
 	 holidayGrid();
 	 holidayCTassignGrid();
@@ -109,6 +113,7 @@ $(document).ready(function(){
 	 $("#hiddenBtn").hide();
 	 $("#hiddenBtn4").hide();
 	 AUIGrid.bind(gridID, "addRow", auiAddRowHandler);
+	 AUIGrid.bind(gridID, "removeRow", auiRemoveRowHandler);
 	 
 	 AUIGrid.bind(gridID1, "cellClick", function(event) {
 	        console.log(event.rowIndex);
@@ -123,7 +128,7 @@ $(document).ready(function(){
 	        console.log(type + "      "+branchName + "     " + holidayDesc + "    " + holiday + "   " + branchId + "    " + holidaySeq);
 	        
 	    });
-	
+	 doGetCombo('/services/holiday/selectState.do', '' , '', 'cmbState' , 'S', '');
 });
 
     function fn_holidaySave(){
@@ -150,7 +155,7 @@ $(document).ready(function(){
         for (var i = 0; i < addList.length; i++) 
         {
         	var holidayType  = addList[i].holidayType;
-            var holiday  = addList[i].holiday; 
+            var holiday  = addList[i].holiday;
               if (holidayType == "" || holidayType.length == 0) 
               {
                 result = false;
@@ -259,6 +264,13 @@ $(document).ready(function(){
     function fn_CTEntryEdit(){
     	Common.popupDiv("/services/holiday/updatHolidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
     } 
+    
+    function removeRow(){
+    	AUIGrid.removeRow(gridID, "selectedIndex");
+        AUIGrid.removeSoftRows(gridID);
+    }
+    
+    function auiRemoveRowHandler(){}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -293,29 +305,32 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Holiday Type</th>
     <td>
-        <select class="w100p">
-            <option value="1">Public</option>
-            <option value="2">State</option>
+        <select class="w100p" id="type" name="type">
+            <option value="">All</option>
+            <option value="P">Public</option>
+            <option value="S">State</option>
         </select>
     </td>
     <th scope="row">State</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple">
+        <select class="multy_select w100p" multiple="multiple" id="cmbState" name="cmbState">
         </select>
     </td>
     <th scope="row">Holiday</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="holidayDt" name="holidayDt"/></td>
 </tr>
 <tr>
     <th scope="row">Assign Status</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple">
+        <select class="multy_select w100p" multiple="multiple" id="assignState" name="assignState">
+            <option value="Active">Active</option>
+            <option value="Complete">Complete</option>
         </select>
     </td>
     <th scope="row" id="">Branch</th>
     <td>
         <div class="search_100p">
-            <input type="text" title="" placeholder="" class="w100p" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+            <input type="text" title="" placeholder="" class="w100p" id="branchId" name="branchId"/><a href="#" class="search_btn"><%-- <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /> --%></a>
         </div>
     </td>
     <th></th>
@@ -365,7 +380,7 @@ $(document).ready(function(){
 
 <ul class="right_btns">
     <li><p class="btn_grid" id="hiddenBtn1"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
-    <li><p class="btn_grid" id="hiddenBtn2"><a href="#">DEL</a></p></li>
+    <li><p class="btn_grid" id="hiddenBtn2"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn3"><a href="#" onclick="javascript:fn_holidaySave()">SAVE</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn"><a href="#" onclick="javascript:fn_CTEntry()">Replacement CT Entry</a></p></li>
 </ul>

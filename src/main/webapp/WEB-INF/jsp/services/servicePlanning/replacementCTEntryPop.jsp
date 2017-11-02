@@ -28,7 +28,7 @@ function fn_CTCode(){
 	              /* if(result[i].CTAssignList.memCode == AUIGrid.getCellValue(CTListGrid, i, "memCode")){
 	                  alert(AUIGrid.getCellValue(CTListGrid, i, "memCode"));
 	                  checkFlag.checked;
-	              } */
+	              } */ 
 	          }       
 	     }
 	});
@@ -114,9 +114,6 @@ function CTListGrid2() {
     
     function fn_Assign(){
     	var activeItems = AUIGrid.getItemsByValue(CTListGrid, "checkFlag", "1");
-    	for(var i=0; i<activeItems.length; i++){
-    		activeItems[i].totalAssignDate = activeItems[i].totalAssignDate + 1
-    	}
     	 AUIGrid.setGridData(CTListGrid2,activeItems);
     }
     function fn_Del(){
@@ -131,7 +128,7 @@ function CTListGrid2() {
         
         AUIGrid.bind(CTListGrid2, "headerClick", function(event) {
             // isExclude 칼럼 클릭 한 경우
-            if(event.dataField == "checkFlag1") {
+            if(event.dataField == "checkFlag1") {//remove checkrow
                 if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
                     var  isChecked = document.getElementById("allCheckbox").checked;
                     checkAll(isChecked);
