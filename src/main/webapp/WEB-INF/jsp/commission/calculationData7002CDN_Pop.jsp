@@ -153,6 +153,11 @@
         headerText : "Adjustment",
         style : "my-column",
         editable : false
+    },{
+        dataField : "r50",
+        headerText : "W/S",
+        style : "my-column",
+        editable : false
     }];
 	// 그리드 속성 설정
     var gridPros = {

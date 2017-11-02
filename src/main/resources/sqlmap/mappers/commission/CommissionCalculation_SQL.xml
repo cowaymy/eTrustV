@@ -352,7 +352,8 @@
             nvl(T1.R22,'0') r22,nvl(T1.R23,'0') r23,nvl(T1.R24,'0') r24,nvl(T1.R26,'0') r26,nvl(T1.R27,'0') r27,
             nvl(T1.R28,'0') r28,nvl(T1.R29,'0') r29,nvl(T1.R30,'0') r30,nvl(T1.R31,'0') r31,nvl(T1.R32,'0') r32,
             nvl(T1.R33,'0') r33,nvl(T1.R34,'0') r34,nvl(T1.R35,'0') r35,nvl(T1.R36,'0') r36,nvl(T1.R38,'0') r38,
-            nvl(T1.R39,'0') r39,nvl(T1.R40,'0') r40,nvl(T1.R41,'0') r41,nvl(T1.R42,'0') r42,nvl(T1.R99,'0') r99
+            nvl(T1.R39,'0') r39,nvl(T1.R40,'0') r40,nvl(T1.R41,'0') r41,nvl(T1.R42,'0') r42,nvl(T1.R99,'0') r99,
+            nvl(T1.R50,'0') r50
         FROM CMM0029D T1 JOIN ORG0001D T2 
                 ON T1.EMPLY_ID = T2.MEM_ID
             JOIN SYS0013M T3
@@ -374,7 +375,7 @@
             nvl(T1.R22,'0') r22,nvl(T1.R25,'0') r25,nvl(T1.R28,'0') r28,nvl(T1.R29,'0') r29,nvl(T1.R30,'0') r30,
             nvl(T1.R31,'0') r31,nvl(T1.R32,'0') r32,nvl(T1.R33,'0') r33,nvl(T1.R34,'0') r34,nvl(T1.R35,'0') r35,
             nvl(T1.R36,'0') r36,nvl(T1.R39,'0') r39,nvl(T1.R40,'0') r40,nvl(T1.R41,'0') r41,nvl(T1.R42,'0') r42,
-            nvl(T1.R99,'0') r99
+            nvl(T1.R99,'0') r99,nvl(T1.R50,'0') r50
         FROM CMM0029D T1 JOIN ORG0001D T2 
                 ON T1.EMPLY_ID = T2.MEM_ID
             JOIN SYS0013M T3
