@@ -36,7 +36,7 @@ function CTListGrid() {
                           { dataField : "memCode", headerText  : "CT Code",    width : 100 },
                           { dataField : "name", headerText  : "Name",width : 200 },
                           { dataField : "totalAssignDate", headerText  : "Total Assigned Date Count",  width  : 150},
-                          { dataField : "memId", headerText  : "",  width  : 150}
+                          { dataField : "memId", headerText  : "",  width  : 0}
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
@@ -62,7 +62,7 @@ function CTListGrid2() {
                           { dataField : "memCode", headerText  : "CT Code",    width : 100 },
                           { dataField : "name", headerText  : "Name",width : 200 },
                           { dataField : "totalAssignDate", headerText  : "Total Assigned Date Count",  width  : 150},
-                          { dataField : "memId", headerText  : "",  width  : 150}
+                          { dataField : "memId", headerText  : "",  width  : 0}
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
