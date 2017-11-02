@@ -23,12 +23,9 @@ var gridPros = {
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-    // AUIGrid 그리드를 생성합니다.
-    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
 
      // 그리드 생성
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	//myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,gridPros);
 	
 	// Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){ 
@@ -86,7 +83,7 @@ var columnLayout2 = [
         width : 200
     }];
     
-// ajax list 조회.
+    // ajax list 조회.
     function searchList()
     {      selectedGridValue = undefined;//그리드 value값 초기화
     	   Common.ajax("GET","/payment/selectEnrollmentList.do",$("#searchForm").serialize(), function(result){
@@ -99,10 +96,29 @@ var columnLayout2 = [
         var creator;
         var values = []; //ArrayList 값을 받을 변수를 선언
         if(selectedGridValue !=  undefined){
-        	 $("#popup_wrap").show();
         	 
-        	 myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,gridPros);
         	 enrollId=AUIGrid.getCellValue(myGridID, selectedGridValue, "enrlid");
+        	 
+        	 Common.ajax("GET", "/payment/selectViewEnrollment.do",{"enrollId":enrollId}, function(result) {
+        		 $("#popup_wrap").show();
+                 $('#enrlId').text(result.enrollInfo.enrlId);
+                 $('#crtDt').text(result.enrollInfo.crtDt);
+                 $('#issueBank').text(result.enrollInfo.code+" - "+result.enrollInfo.name);
+                 $('#c1').text(result.enrollInfo.c1);
+                 $('#debtDtFrom').text(result.enrollInfo.debtDtFrom);
+                 $('#debtDtTo').text(result.enrollInfo.debtDtTo);
+                 
+                 values = result.resultList ;
+
+             },function(jqXHR, textStatus, errorThrown) {
+                 Common.alert("실패하였습니다.");
+
+             });
+             
+             Common.ajax("GET","/payment/selectViewEnrollmentList.do",{"enrollId":enrollId}, function(result){
+            	 myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,gridPros);
+                 AUIGrid.setGridData(myGridID2, result);
+             });
         	 
         }else{
         	$("#popup_wrap").hide();
@@ -110,25 +126,7 @@ var columnLayout2 = [
             return;
         }
 
-        Common.ajax("GET", "/payment/selectViewEnrollment.do",{"enrollId":enrollId}, function(result) {
-
-        	$('#enrlId').text(result.enrollInfo.enrlId);
-            $('#crtDt').text(result.enrollInfo.crtDt);
-            $('#issueBank').text(result.enrollInfo.code+" - "+result.enrollInfo.name);
-            $('#c1').text(result.enrollInfo.c1);
-            $('#debtDtFrom').text(result.enrollInfo.debtDtFrom);
-            $('#debtDtTo').text(result.enrollInfo.debtDtTo);
-            
-            values = result.resultList ;
-
-        },function(jqXHR, textStatus, errorThrown) {
-            Common.alert("실패하였습니다.");
-
-        });
         
-        Common.ajax("GET","/payment/selectViewEnrollmentList.do",{"enrollId":enrollId}, function(result){
-            AUIGrid.setGridData(myGridID2, result);
-        });
     }
     
     new_Enrollment = function() {
