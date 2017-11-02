@@ -78,8 +78,18 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
             console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(myGridID, result);
+
+            console.log(myGridID.rowHeight);
+
+            var recordCount = result.length;
+
+            // 데이터 건수에 따른 그리드 사이즈 동적 조절....
+            GridCommon.resizeHeight(myGridID, recordCount, 150, 460);
+
         });
     }
+
+
     
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){      
@@ -106,7 +116,7 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
             <form id="searchForm" method="get" action="">
                  id : <input type="text" id="sId" name="sId"/><br/>
                  name : <input type="text" id="sName" name="sName"/><br/>
-                 
+                rowNum : <input type="text" id="rowNum" name="rowNum" value="50"/><br/>
                  <input type="button" class="btn" onclick="javascript:fn_getSampleListAjax();" value="조회"/>
              </form>
             

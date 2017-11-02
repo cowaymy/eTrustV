@@ -208,15 +208,18 @@
 	
 	<select id="selectSampleByParamsList" parameterType="Map" resultType="egovMap">
 
-            SELECT
-                'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
-            FROM DUAL
-            WHERE 1=1
-            <if test="sId != null and sId != ''">
-			    AND #{sId} = #{sId}
-			</if>
+        select * from (
 
-            <if test="sName != null and sName != ''">
+        SELECT
+        'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
+        FROM DUAL
+        WHERE 1=1
+        <if test="sId != null and sId != ''">AND #{sId} = #{sId}
+        </if>
+
+            <if test="
+
+        sName != null and sName != ''">
                 AND #{sName} = #{sName}
             </if>
 
@@ -326,6 +329,8 @@
              SELECT
                 'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
             FROM DUAL
+        ) tbl
+        WHERE rownum <![CDATA[ <= ]]> #{rowNum}
             
     </select>
 

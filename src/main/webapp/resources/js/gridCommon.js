@@ -203,6 +203,46 @@ var GridCommon = {
 	    		return "#" + gridID;
 	    	}
 	    },
+
+    /**
+	 * 데이터 건수에 따른 그리드 사이즈 동적 조절....
+     * @param _gridId : gridId
+     * @param recordCount : recordCount per page
+     * @param minHeightSize : min height
+     * @param maxHeightSize : max height
+     * @param _options : option
+     */
+		resizeHeight: function (_gridId, recordCount, minHeightSize, maxHeightSize, _options) {
+
+	    	var $grid = $(GridCommon.makeGridId(_gridId));
+
+	    	var option = {
+				headerHeight : 26,
+                rowHeight : 26,
+                emptyHeight : 10, // 데이터와 footer 사이의 높이 지정.
+                hScrollHeight : 12,
+                footerHeight : 35
+			};
+
+            option = $.extend(option, _options);
+
+			var gridHeight = (option.rowHeight * recordCount) + option.headerHeight + option.footerHeight + option.emptyHeight;
+
+            // 좌우 스크롤 여부
+            if($grid.find(".aui-hscrollbar").is(':visible')){
+                gridHeight += option.hScrollHeight;
+            }
+
+			if (minHeightSize > gridHeight) {
+				console.log("minHeightsize : " + minHeightSize);
+				gridHeight = minHeightSize;
+			} else if (maxHeightSize < gridHeight) {
+				console.log("maxHeightSize : " + maxHeightSize);
+				gridHeight = maxHeightSize;
+			}
+
+            AUIGrid.resize(_gridId,  $grid.width() , gridHeight);
+		},
 	    
 		// 페이징 네비게이터를 동적 생성합니다.
 	    createPagingNavigator : function(goPage,totalRowCount,_options){
