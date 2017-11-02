@@ -375,4 +375,14 @@ public class PosController {
 		return ResponseEntity.ok(revMap);
 		
 	}
+	
+	@RequestMapping(value = "/getPurchMemList")
+	public ResponseEntity<List<EgovMap>> getPurchMemList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> memList = null;
+		LOGGER.info("################################################ 멤버 params : " + params.toString());
+		memList = posService.getPurchMemList(params);
+		
+		return ResponseEntity.ok(memList);
+	}
 }

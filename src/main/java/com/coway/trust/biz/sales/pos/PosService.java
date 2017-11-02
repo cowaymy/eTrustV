@@ -46,4 +46,6 @@ public interface PosService {
 	List<EgovMap> getPosDetailList(Map<String, Object> params)throws Exception;
 	
 	EgovMap insertPosReversal(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getPurchMemList(Map<String, Object> params)throws Exception;
 }

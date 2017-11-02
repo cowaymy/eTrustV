@@ -107,7 +107,7 @@ function createPurchaseGridID(){
     var posColumnLayout =  [ 
                             {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
                             {dataField : "stkDesc", headerText : "Item Description", width : '30%'},
-                            {dataField : "qty", headerText : "Inv.Stock", width : '12%'},
+                            {dataField : "qty", headerText : "Qty", width : '12%'},
                             {dataField : "amt", headerText : "Unit Price", width : '12%' , dataType : "numeric", formatString : "#,##0.00"}, 
                             {dataField : "chrg", headerText : "Sub Total(Exclude GST)", width : '12%', dataType : "numeric", formatString : "#,##0.00"},
                             {dataField : "txs", headerText : "GST(6%)", width : '12%', dataType : "numeric", formatString : "#,##0.00"},

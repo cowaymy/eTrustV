@@ -1208,10 +1208,12 @@ SELECT DISTINCT
                         T1.CR_ACC_ID, 
                         T1.DR_ACC_ID,
                         T1.STUS_ID,
-                        T1.POS_RCV_DT                        
+                        T1.POS_RCV_DT,
+                        T3.CODE                       
                     FROM
                         SAL0057D T1 
                     INNER JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
+                    INNER JOIN SYS0005M T3 ON T3.BRNCH_ID = T2.BRNCH
                     WHERE
                         POS_ID = #{posId}
                     AND
@@ -1237,7 +1239,9 @@ SELECT DISTINCT
                 T1.POS_ITM_UNIT_PRC AMT,
                 T1.POS_ITM_TOT TOT,
                 T1.POS_ITM_CHRG CHRG,
-                T1.POS_ITM_TXS TXS
+                T1.POS_ITM_TXS TXS,
+                T1.MEM_ID,
+                T1.RCV_STUS_ID
             FROM 
                 SAL0058D T1 
                 <if test=" null != filterType and '' != filterType">
@@ -1248,6 +1252,9 @@ SELECT DISTINCT
                 </if>
             WHERE 
                T1.POS_ID = #{rePosId}
+               <if test=" null != memId and '' != memId">
+                    AND T1.MEM_ID = #{memId}
+               </if>
     </select>
     
     <insert id="insertPosReversalMaster" parameterType="Map" >
@@ -1936,5 +1943,36 @@ SELECT DISTINCT
 						                        NULL,
 						                        NULL,
 						                        NULL)
-	</insert>	    
+	</insert>
+	
+	<select id="getPurchMemList"  parameterType="Map" resultType="egovMap">
+				SELECT
+				    Project1.MEM_ID,
+				    Project1.RCV_STUS_ID,
+				    Project1.MEM_CODE,
+				    Project1.NAME,
+				    Project1.NRIC,
+				    Project1.MEM_STUS_ID,
+				    Project1.BRNCH_ID,
+				    Project1.CODE,
+				    Project1.POS_ID,
+				    Project1.POS_TYPE_ID    
+				  FROM ( SELECT T1.MEM_ID,
+				                T1.RCV_STUS_ID,
+				                ROW_NUMBER() OVER(PARTITION BY MEM_ID ORDER BY RCV_STUS_ID DESC) AS ROW_NUM,
+				                MAX(T1.MEM_CODE) AS MEM_CODE,
+				                MAX(T1.NAME) AS NAME,
+				                MAX(T1.NRIC) AS NRIC,
+				                MAX(T1.MEM_STUS_ID) AS MEM_STUS_ID,
+				                MAX(T2.BRNCH_ID) AS BRNCH_ID,
+				                MAX(T3.CODE) AS CODE ,
+				                MAX(T1.POS_ID) AS POS_ID,
+				                MAX(T2.POS_TYPE_ID) AS POS_TYPE_ID
+				           FROM SAL0058D T1
+				                JOIN SAL0057D T2 ON T2.POS_ID = T1.POS_ID
+				                JOIN SYS0005M T3 ON T2.BRNCH_ID = T3.BRNCH_ID
+				          WHERE T1.POS_ID = #{rePosId}
+				          GROUP BY MEM_ID, RCV_STUS_ID ) Project1
+				 WHERE Project1.ROW_NUM = 1		    
+	</select>	    
 </mapper>

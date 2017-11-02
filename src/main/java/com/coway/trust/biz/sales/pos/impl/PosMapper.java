@@ -132,4 +132,6 @@ public interface PosMapper {
 	List<EgovMap> selectStkCardRecordList(Map<String, Object> params);
 	
 	void insertStkCardRecordReversal(EgovMap params);
+	
+	List<EgovMap> getPurchMemList(Map<String, Object> params);
 }

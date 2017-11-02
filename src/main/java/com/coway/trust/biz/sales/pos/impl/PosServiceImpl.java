@@ -979,5 +979,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       	
 		return rtnMap;
 	}
-	
+
+	@Override
+	public List<EgovMap> getPurchMemList(Map<String, Object> params) throws Exception {
+		
+		return posMapper.getPurchMemList(params);
+	}
 }
