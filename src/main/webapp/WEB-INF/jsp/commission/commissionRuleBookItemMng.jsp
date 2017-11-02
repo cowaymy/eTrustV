@@ -766,7 +766,7 @@
     function fn_saveGridCall(){
         Common.ajax("POST", "/commission/system/saveCommissionItemGrid.do", GridCommon.getEditData(myGridID), function(result) {
             // 공통 메세지 영역에 메세지 표시.
-            Common.setMsg(result.message);
+            Common.alert(result.message);
             $("#search").trigger("click");
         }, function(jqXHR, textStatus, errorThrown) {
             try {
