@@ -15,7 +15,43 @@ $(document).ready(function(){
 
 
 //리스트 조회.
-function fn_selectListAjax() {        
+function fn_selectListAjax() {
+	
+	if($("#stRsCnvrCrtDt").val() !=""){
+        if($("#edRsCnvrCrtDt").val()==""){
+             var msg = '<spring:message code="sales.CreateDate" />';
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>", function(){
+                    $("#edRsCnvrCrtDt").focus();
+                });
+                return;
+        }else{
+        	if($("#stRsCnvrCrtDt").val() >   $("#edRsCnvrCrtDt").val() ){
+            	 Common.alert("<spring:message code='commission.alert.dateGreaterCheck'/>", function(){
+                     $("#edRsCnvrCrtDt").focus();
+                 });
+                 return;
+            }        	
+        }
+    }
+	
+	if($("#stRsCnvrCnfmDt").val() !=""){
+        if($("#edRsCnvrCnfmDt").val()==""){
+             var msg = '<spring:message code="sales.ConfirmDate" />';
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>", function(){
+                    $("#edRsCnvrCnfmDt").focus();
+                });
+
+                return;
+        }else{
+        	if($("#stRsCnvrCnfmDt").val() >   $("#edRsCnvrCnfmDt").val() ){
+            	 Common.alert("<spring:message code='commission.alert.dateGreaterCheck'/>", function(){
+                     $("#edRsCnvrCnfmDt").focus();
+                 });
+                 return;
+            }        	
+        }
+    }
+	
   Common.ajax("GET", "/sales/membership/selectCnvrList", $("#listSForm").serialize(), function(result) {
       
        console.log("성공.");
@@ -220,36 +256,6 @@ function creatGrid(){
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-	<dt><spring:message code="sales.Link" /></dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn"><a href="#">menu2</a></p></li>
-		<li><p class="link_btn"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn"><a href="#">menu8</a></p></li>
-	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-	</ul>
-	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	</dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
-
 </form>
 </section><!-- search_table end -->
 
@@ -264,7 +270,7 @@ function creatGrid(){
 </ul> -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="stusGridID" style="width:100%; height:380px; margin:0 auto;"></div>
+    <div id="stusGridID" style="width:100%; height:420px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
