@@ -680,26 +680,26 @@ function fn_AddRow()
         item2.signal  = '+';
     }
     
-    if($("#pAdjustmentType").val() == '01' ){
+ /*    if($("#pAdjustmentType").val() == '01' ){ */
 	    Common.ajax("POST", "/eAccounting/budget/selectPlanMaster",  $("#pAdjForm").serializeJSON() , function(result)    {
 	    	console.log("성공." + JSON.stringify(result));
 	        console.log("data : " + result.data);
 	    	
 	    	if(result.data < 1 ){
 	    		
-	    		Common.alert("<spring:message code="budget.msg.noBudget" />");
+	    		Common.alert("<spring:message code="budget.msg.addMaster" />");
 	    		
 	    	}else{
 	            AUIGrid.addRow(adjPGridID, item, 'last');                    
 	            AUIGrid.addRow(adjPGridID, item2, 'last'); 
 	    	}
 	    	
-	    });
+	    });/* 
     }else{
 
         AUIGrid.addRow(adjPGridID, item, 'last');                    
         AUIGrid.addRow(adjPGridID, item2, 'last'); 
-    }
+    } */
     
    
        
