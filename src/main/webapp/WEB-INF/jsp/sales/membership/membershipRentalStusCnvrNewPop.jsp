@@ -140,59 +140,39 @@ function fn_checkNewCnvr(){
     var data = GridCommon.getGridData(uploadGrid);
     data.form = $("#newCnvrForm").serializeJSON();
 
-    /*    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
-    	
-     	if($("#fileSelector").val() ==""){
-    		Common.alert("<spring:message code="sales.csvSelect" />");
-    		return;
-    	}else{ */
-    		Common.ajax("POST", "/sales/membership/checkNewCnvrList", data, function(result)    {
+    Common.ajax("POST", "/sales/membership/checkNewCnvrList", data, function(result)    {
 
 
-                console.log("성공." + JSON.stringify(result));
-                console.log("data : " + result.data);
-                
-                
-               /*  for(var i = 0; i < result.data.length; i++){
-                    if(result.data[i].chkYn == "Y"){
-                        var msg1 = result.data[i].convertNo;
-                        var msg2 = result.data[i].stusFrom;
-                        var msg3 = result.data[i].stusTo;
-
-                        Common.alert("<spring:message code="sales.title.successfully" />" + DEFAULT_DELIMITER + "<spring:message code='sales.msg.successfully' arguments='"+msg1+" ; "+msg2+" ; " +msg3+" ' htmlEscape='false' argumentSeparator=';' />");
-                    }
-                } */
+        console.log("성공." + JSON.stringify(result));
+        console.log("data : " + result.data);              
                                 
-                AUIGrid.setGridData(cnvrListGrid, result.data);
+        AUIGrid.setGridData(cnvrListGrid, result.data);
                 
-                AUIGrid.setProp(cnvrListGrid, "rowStyleFunction", function(rowIndex, item) {
-                    if(item.chkYn == "N") {
-                           return "my-row-style";
-                       }
-                       return "";
+        AUIGrid.setProp(cnvrListGrid, "rowStyleFunction", function(rowIndex, item) {
+            if(item.chkYn == "N") {
+                return "my-row-style";
+            }
+            return "";
 
-                   }); 
+        }); 
 
-                   // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
-                   AUIGrid.update(cnvrListGrid);
+        // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+        AUIGrid.update(cnvrListGrid);
                 
-             }
-             , function(jqXHR, textStatus, errorThrown){
-                    try {
-                        console.log("Fail Status : " + jqXHR.status);
-                        console.log("code : "        + jqXHR.responseJSON.code);
-                        console.log("message : "     + jqXHR.responseJSON.message);
-                        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-                  }
-                  catch (e)
-                  {
-                    console.log(e);
-                  }
+        }
+    , function(jqXHR, textStatus, errorThrown){
+         try {
+        	    console.log("Fail Status : " + jqXHR.status);
+        	    console.log("code : "        + jqXHR.responseJSON.code);
+                console.log("message : "     + jqXHR.responseJSON.message);
+                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+          }
+          catch (e)
+          {
+        	  console.log(e);
+          }
                   alert("Fail : " + jqXHR.responseJSON.message);
-            });
-    	  /*    	}
-    	
-   })); */
+     });
 
 }
 
