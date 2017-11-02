@@ -142,6 +142,7 @@ $(document).ready(function(){
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
+        style :"aui-grid-pointer",
         width : 150
     },{
         dataField : "filePath",
