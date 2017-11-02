@@ -49,7 +49,6 @@ function holidayGrid() {
                                   showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                   listFunction : function(rowIndex, columnIndex, item, dataField) {
                                       var list = getTypeComboList();
-                                      alert(list.length);
                                       return list;
                                   },
                                   keyField : "id1"
@@ -87,8 +86,8 @@ function getStateComboList() {
     return list;
 }
 function getTypeComboList() {
-    var list = [ {"P" : "Public"}, {"S" : "State"}];
-    alert(111);
+    //var list = [ {"codeId": "P","codeName": "PUBLIC"}, {"codeId": "S","codeName": "STATE"}];
+   var list = [ "P","S"];
     return list;
 }
 
