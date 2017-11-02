@@ -91,6 +91,9 @@ $(document).ready(function(){
     $("#sendAmount").blur(function () { 
     	var str = $("#sendAmount").val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
         $("#sendAmount").val(str);    	
+        if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
+            $("#recvAmount").val(str);
+        }
    });
     
      $("#sendAmount").change(function(){
