@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipRCMapper">
+   
+    <select id="selectBranchList" parameterType="Map" resultType="egovMap">
+		 SELECT BRNCH_ID   ,
+		            CODE ||'-'||NAME BRNCH_NAME  
+		 FROM SYS0005M 
+		  WHERE STUS_ID = 1
+		ORDER BY BRNCH_NAME   
+    </select>
+    
+    <select id="selectReasonList" parameterType="Map" resultType="egovMap">
+		SELECT RESN_ID RESN_ID  ,
+		       CODE CODE  ,
+		       CODE || ' - ' || RESN_DESC RESN_NAME  
+		  FROM SYS0032M 
+		 WHERE  RESN_TYPE_ID = 1371 
+		      AND  STUS_CODE_ID = 1
+    </select>
+    
+    <select id="selectCancellationList" parameterType="Map" resultType="egovMap">
+		 SELECT A.TRMNAT_ID   ,
+                A.TRMNAT_REF_NO   ,
+                A.TRMNAT_CNTRCT_ID   ,
+                A.TRMNAT_RESN_ID   ,
+                A.TRMNAT_REM   ,
+                A.TRMNAT_OBLIGT_PRIOD   ,
+                A.TRMNAT_CNTRCT_SUB_PRIOD   ,
+                A.TRMNAT_PNALTY   ,
+                TO_CHAR(A.TRMNAT_CRT_DT , 'DD-MM-YYYY')  TRMNAT_CRT_DT ,
+                B.SRV_CNTRCT_REF_NO   ,
+                C.SALES_ORD_NO   ,
+                D.RESN_DESC   ,
+                E.CODE_NAME   ,
+                F.USER_NAME   ,
+                G.BRNCH_ID   ,
+                G.CODE   ,
+                H.TAX_INVC_REF_NO   
+         FROM SAL0086D A
+                JOIN SAL0077D B   ON B.SRV_CNTRCT_ID = A.TRMNAT_CNTRCT_ID
+                JOIN SAL0001D C   ON C.SALES_ORD_ID = B.SRV_CNTRCT_ORD_ID
+                JOIN SYS0032M D   ON D.RESN_ID = A.TRMNAT_RESN_ID
+                JOIN SYS0013M E   ON E.CODE_ID = A.TRMNAT_REQSTER
+                JOIN SYS0047M F   ON F.USER_ID = A.TRMNAT_CRT_USER_ID
+                JOIN SYS0005M G   ON G.BRNCH_ID = F.USER_BRNCH_ID
+                JOIN PAY0031D H   ON H.TAX_INVC_SVC_NO = A.TRMNAT_REF_NO
+          WHERE 1=1
+          <if test="trmnatRefNo != null and trmnatRefNo != '' ">
+               AND A.TRMNAT_REF_NO = #{trmnatRefNo}
+          </if> 
+          <if test="srvCntrctRefNo != null and srvCntrctRefNo != '' ">
+               AND B.SRV_CNTRCT_REF_NO = #{srvCntrctRefNo}
+          </if>  
+          <if test="salesOrdNo != null and salesOrdNo != '' ">
+               AND C.SALES_ORD_NO = #{salesOrdNo}
+          </if>  
+          <if test="stTrmnatCrtDt != null and stTrmnatCrtDt != '' ">
+          AND TO_CHAR(A.TRMNAT_CRT_DT , 'DD/MM/YYYY') BETWEEN #{stTrmnatCrtDt} AND #{edTrmnatCrtDt}                          
+          </if>  
+          <if test="userName != null and userName != '' ">
+               AND F.USER_NAME = #{userName}
+          </if>  
+          <if test="reason != null and reason != '' ">
+               AND A.TRMNAT_RESN_ID = #{reason}
+          </if>  
+          <if test="branch != null and branch != '' ">
+               AND G.BRNCH_ID = #{branch}  
+          </if> 
+            ORDER BY TRMNAT_ID DESC
+  
+    </select>
+    
+    
+	    
+</mapper>

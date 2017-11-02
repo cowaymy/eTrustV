@@ -167,7 +167,7 @@ function creatGrid(){
 <ul class="right_btns">
 	<li><p class="btn_blue"><a href="#" id="btnSearch"><span class="search"></span><spring:message code="sales.Search" /></a></p></li>
 	<li><p class="btn_blue"><a href="#" id="btnClear"><span class="clear"></span><spring:message code="sales.Clear" /></a></p></li>
-	<li><p class="btn_blue"><a href="#" id="btnNew"></span><spring:message code="sales.new" /></a></p></li>
+	<li><p class="btn_blue"><a href="#" id="btnNew"><spring:message code="sales.new" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
