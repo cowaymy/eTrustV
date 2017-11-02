@@ -30,7 +30,7 @@ function holidayCTassignGrid() {
                           { dataField : "code",       headerText  : "Branch",  width  : 100},
                           { dataField : "replacementCtPax",       headerText  : "Replacement CT Pax",  width  : 100},
                           { dataField : "assignStatus",       headerText  : "Assign Status",  width  : 100},
-                          { dataField : "brnchId",       headerText  : "",  width  : 100}
+                          { dataField : "brnchId",       headerText  : "",  width  : 0}
                           
                            
        ];
@@ -71,7 +71,7 @@ function holidayGrid() {
                                   showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
                                 }},
                           { dataField : "holidayDesc",       headerText  : "Description",  width  : 200},
-                          { dataField : "holidaySeq",       headerText  : "",  width  : 200}
+                          { dataField : "holidaySeq",       headerText  : "",  width  : 0}
                           
                            
        ];
