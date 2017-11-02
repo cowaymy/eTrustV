@@ -192,30 +192,35 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:190px" />
+	<col style="width:95px" />
+	<col style="width:170px" />
+	<col style="width:150px" />
 	<col style="width:*" />
-	<col style="width:90px" />
+	<col style="width:75px" />
 	<col style="width:*" />
-	<col style="width:190px" />
+	<col style="width:160px" />
 	<col style="width:*" />
+	<col style="width:60px" />
+	<col style="width:180px" />
 </colgroup>
 <tbody>
 <tr>
 	<th scope="row">Year/Month</th>
-	<td colspan="5">
-	<select>
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	<select class="ml10">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+	<td>
+		<div class="w100p">
+			<select class="wAuto">
+				<option value="">year</option>
+				<option value="">22</option>
+				<option value="">33</option>
+			</select>
+			<select class="ml5 wAuto">
+				<option value="">month</option>
+				<option value="">2</option>
+				<option value="">3</option>
+			</select>
+			<a href="#" class="search_btn inline"><img src="../images/common/normal_search.gif" alt="search" /></a>
+		</div>
 	</td>
-</tr>
-<tr>
 	<th scope="row"> Issued PO(Line item)</th>
 	<td>
 	<span>00</span>
@@ -228,16 +233,16 @@
 	<td>
 	<span>00</span>
 	</td>
-</tr>
-<tr>
 	<th scope="row">View</th>
-	<td colspan="5">
-	<select>
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	<p class="btn_sky ml10"><a href="#">Download</a></p>
+	<td>
+		<div class="w100p">
+			<select class="wAuto fl_left">
+				<option value="">All</option>
+				<option value="">On-time</option>
+				<option value="">Delayed</option>
+			</select>
+			<p class="btn_sky ml10 fl_left"><a href="#">Download</a></p>
+		</div>
 	</td>
 </tr>
 </tbody>
