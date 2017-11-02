@@ -93,10 +93,10 @@
           )
     </insert>
     <select id="selectAssignCTList"  parameterType="Map" resultType="egovMap">
-        SELECT B.MEM_CODE, B.NAME, B.MEM_ID,A.HOLIDAY_SEQ HOLIDAY_SEQ1, A.ASIGN_SEQ
+        SELECT B.MEM_CODE, B.NAME, B.MEM_ID,COUNT(A.CT_MEM_ID) AS total_assign_date
         FROM ORG0020D A INNER JOIN ORG0001D B ON A.CT_MEM_ID = B.MEM_ID
         WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND B.BRNCH = #{branchId}
-        GROUP BY B.MEM_CODE, B.NAME, B.MEM_ID,A.HOLIDAY_SEQ, A.ASIGN_SEQ
+        GROUP BY B.MEM_CODE, B.NAME, B.MEM_ID
     </select>
     <delete id="deleteCTAssign" parameterType="Map">
         DELETE FROM ORG0020D
