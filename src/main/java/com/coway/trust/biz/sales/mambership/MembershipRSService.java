@@ -29,6 +29,8 @@ public interface MembershipRSService {
 
 	int updateRsStatus(Map<String, Object> params);
 	
+	List<EgovMap> checkNewCnvrList(Map<String, Object> params);
+	
 	List<EgovMap> saveNewCnvrList(Map<String, Object> params);
 	
 	

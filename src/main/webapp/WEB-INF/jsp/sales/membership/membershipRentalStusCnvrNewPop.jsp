@@ -1,5 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<style type="text/css">
+/* 커스텀 행 스타일 */
+.my-row-style {
+    background:#9FC93C;
+    font-weight:bold;
+    color:#22741C;
+}
+</style>
 <script  type="text/javascript">
 var uploadGrid;
 var cnvrListGrid;
@@ -34,6 +42,8 @@ $(document).ready(function(){
 	                
 	                //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
 	                AUIGrid.removeRow(uploadGrid,0);
+	                
+	                fn_checkNewCnvr();
                     
 	            } else {
 	                alert('No data to import!');
@@ -85,17 +95,6 @@ function creatGrid(){
         dataField : "0",
         headerText : '<spring:message code="sales.OrderNo" />',
         width : 100
-    },{
-        dataField : "",
-        headerText : '<spring:message code="sales.StatusFrom" />',
-        width : 150
-    },{
-        dataField : "",
-        headerText : '<spring:message code="sales.StatusTo" />',
-        width : 100
-    }, {
-        dataField : "",
-        headerText : '<spring:message code="sales.ErrorMessage" />'
     }];
     
     var cnvrColLayout = [ {
@@ -117,13 +116,17 @@ function creatGrid(){
     }, {
         dataField : "msg",
         headerText : '<spring:message code="sales.ErrorMessage" />'
+    }, {
+        dataField : "chkYn",
+        headerText : '',
+        visible : false
     }];
     
 
     var upOptions = {
                showStateColumn:false,
                showRowNumColumn    : false,
-               usePaging : true,
+               usePaging : false,
                editable : false,
                softRemoveRowMode:false
          }; 
@@ -133,24 +136,24 @@ function creatGrid(){
 }
 
 
-function fn_saveNewCnvr(){
+function fn_checkNewCnvr(){
     var data = GridCommon.getGridData(uploadGrid);
     data.form = $("#newCnvrForm").serializeJSON();
 
-    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+    /*    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
     	
-    	if($("#fileSelector").val() ==""){
+     	if($("#fileSelector").val() ==""){
     		Common.alert("<spring:message code="sales.csvSelect" />");
     		return;
-    	}else{
-    		Common.ajax("POST", "/sales/membership/saveNewCnvrList", data, function(result)    {
+    	}else{ */
+    		Common.ajax("POST", "/sales/membership/checkNewCnvrList", data, function(result)    {
 
 
                 console.log("성공." + JSON.stringify(result));
                 console.log("data : " + result.data);
                 
                 
-                for(var i = 0; i < result.data.length; i++){
+               /*  for(var i = 0; i < result.data.length; i++){
                     if(result.data[i].chkYn == "Y"){
                         var msg1 = result.data[i].convertNo;
                         var msg2 = result.data[i].stusFrom;
@@ -158,9 +161,20 @@ function fn_saveNewCnvr(){
 
                         Common.alert("<spring:message code="sales.title.successfully" />" + DEFAULT_DELIMITER + "<spring:message code='sales.msg.successfully' arguments='"+msg1+" ; "+msg2+" ; " +msg3+" ' htmlEscape='false' argumentSeparator=';' />");
                     }
-                }
-                
+                } */
+                                
                 AUIGrid.setGridData(cnvrListGrid, result.data);
+                
+                AUIGrid.setProp(cnvrListGrid, "rowStyleFunction", function(rowIndex, item) {
+                    if(item.chkYn == "N") {
+                           return "my-row-style";
+                       }
+                       return "";
+
+                   }); 
+
+                   // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+                   AUIGrid.update(cnvrListGrid);
                 
              }
              , function(jqXHR, textStatus, errorThrown){
@@ -176,10 +190,58 @@ function fn_saveNewCnvr(){
                   }
                   alert("Fail : " + jqXHR.responseJSON.message);
             });
-    	}
+    	  /*    	}
     	
-    }));
+   })); */
 
+}
+
+function fn_saveNewCnvr(){
+    var data = GridCommon.getGridData(cnvrListGrid);
+    data.form = $("#newCnvrForm").serializeJSON();
+
+    var idx = AUIGrid.getRowCount(cnvrListGrid);
+    
+    for(var i=0; i < idx; i++){    	
+    	if(AUIGrid.getCellValue(cnvrListGrid, i, "chkYn") == "N"){
+    		alert("<spring:message code="sales.msg.error" />");
+    		return;
+    	}    		
+    }
+    
+    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){        	
+        	
+        Common.ajax("POST", "/sales/membership/saveNewCnvrList", data, function(result){
+
+            console.log("성공." + JSON.stringify(result));
+            console.log("data : " + result.data);
+                      
+            for(var i = 0; i < result.data.length; i++){
+                if(result.data[i].chkYn == "Y"){
+                    var msg1 = result.data[i].convertNo;
+                    var msg2 = result.data[i].stusFrom;
+                    var msg3 = result.data[i].stusTo;
+
+                    Common.alert("<spring:message code="sales.title.successfully" />" + DEFAULT_DELIMITER + "<spring:message code='sales.msg.successfully' arguments='"+msg1+" ; "+msg2+" ; " +msg3+" ' htmlEscape='false' argumentSeparator=';' />");
+                }
+            } 
+          
+        }
+        , function(jqXHR, textStatus, errorThrown){
+            try {
+                console.log("Fail Status : " + jqXHR.status);
+                console.log("code : "        + jqXHR.responseJSON.code);
+                console.log("message : "     + jqXHR.responseJSON.message);
+                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                }
+            catch (e)
+            {
+              console.log(e);
+            }
+            alert("Fail : " + jqXHR.responseJSON.message);
+        });
+
+    }));
 }
 
 </script>

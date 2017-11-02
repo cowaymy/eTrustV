@@ -144,6 +144,27 @@ public class MembershipRentalStatusController {
 		
 	}
 	
+	@RequestMapping(value = "/checkNewCnvrList", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> checkNewCnvrList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+	
+		logger.debug("in  saveNewCnvrList ");
+
+		logger.debug("params =====================================>>  " + params);
+		params.put("userId", sessionVO.getUserId());
+		
+		List<EgovMap> chkList = membershipRSService.checkNewCnvrList(params);
+		
+
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(chkList);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    	return ResponseEntity.ok(message);
+	}
+	
+	
 	@RequestMapping(value = "/saveNewCnvrList", method = RequestMethod.POST) 
 	public ResponseEntity<ReturnMessage> saveNewCnvrList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
 	

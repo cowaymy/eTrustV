@@ -255,5 +255,14 @@ public class SalesConstants {
 	
 	public static final int  POS_ACC_INV_VOID_STATUS = 1; //InvVoidM.AccInvVoidStatusID = 1;
 	public static final int  POS_ACC_INV_VOID_ORD_ID = 0; //InvVoidS.AccInvVoidSubOrderID = 0;
+	
+	/**
+	 * 메세지 KEY
+	 */
+	public static final String MEM_NO = "sales.MembershipNo";
+	public static final String MSG_NO_MEMNO = "sales.msg.noMemNo";
+	public static final String ORD_NO = "sales.OrderNo";
+	public static final String MSG_NO_ORDNO = "sales.msg.noOrdNo";
+	public static final String MSG_STUS_MISMATCH = "sales.msg.stusMismatch";
 
 }

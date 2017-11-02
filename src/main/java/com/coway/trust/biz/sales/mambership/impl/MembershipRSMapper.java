@@ -59,7 +59,7 @@ public interface MembershipRSMapper {
 	
 	int selectSrvContract(Map<String, Object> params);
 	
-	int selectRentalStatus(Map<String, Object> params);
+	String selectRentalStatus(Map<String, Object> params);
 
 	String getDocNo(Map<String, Object> params);
 
