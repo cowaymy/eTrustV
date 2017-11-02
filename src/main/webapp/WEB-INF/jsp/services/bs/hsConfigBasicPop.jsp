@@ -161,9 +161,9 @@
 <%-- <input id="salesOrderId" name="salesOrderId" type="hidden" value="${basicInfo.ordId}"/> --%>
 <input type="hidden" name="salesOrderId"  id="salesOrderId" value="${SALEORD_ID}"/>  
 <input type="hidden" name="configId"  id="configId" value="${configBasicInfo.configId}"/>
-<input type="text" name="brnchId"  id="brnchId" value="${BRNCH_ID}"/>
-<input type="text" name="hscodyId"  id="hscodyId" value="${configBasicInfo.configBsMemId}"/>
-<input type="text" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
+<input type="hidden" name="brnchId"  id="brnchId" value="${BRNCH_ID}"/>
+<input type="hidden" name="hscodyId"  id="hscodyId" value="${configBasicInfo.configBsMemId}"/>
+<input type="hidden" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
