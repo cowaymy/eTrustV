@@ -39,8 +39,7 @@ public class AppConstants {
 	 */
 	public static final String LOGIN_WEB = "01";
 	public static final String LOGIN_MOBILE = "02";
-	public static final String LOGIN_CALL_CENTER = "3";
-	public static final String LOGIN_TYPE_NORMAL = "01";
+	public static final String LOGIN_CALL_CENTER = "03";
 
 
 	/**

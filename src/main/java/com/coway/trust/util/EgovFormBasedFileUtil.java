@@ -90,9 +90,21 @@ public class EgovFormBasedFileUtil {
 	 * @throws IOException
 	 */
 	public static long saveFile(InputStream is, File file) throws IOException {
+
+
+		file.setReadable(true, false);
+		file.setExecutable(true, false);
+		file.setWritable(true, false);
+
 		// 디렉토리 생성
-		if (!file.getParentFile().exists()) {
-			file.getParentFile().mkdirs();
+		File parentFile = file.getParentFile();
+
+		parentFile.setReadable(true, false);
+		parentFile.setExecutable(true, false);
+		parentFile.setWritable(true, false);
+
+		if (!parentFile.exists()) {
+			parentFile.mkdirs();
 		}
 
 		OutputStream os = null;

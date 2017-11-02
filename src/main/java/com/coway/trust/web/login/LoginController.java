@@ -83,7 +83,7 @@ public class LoginController {
 			loginHistory.setOs((String) params.get("os"));
 			loginHistory.setBrowser((String) params.get("browser"));
 
-			loginHistory.setLoginType(AppConstants.LOGIN_TYPE_NORMAL);
+			loginHistory.setLoginType(AppConstants.LOGIN_WEB);
 
 			loginService.saveLoginHistory(loginHistory);
 

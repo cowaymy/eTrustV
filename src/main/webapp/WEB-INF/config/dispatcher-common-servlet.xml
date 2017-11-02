@@ -59,6 +59,7 @@
             -->
             <mvc:mapping path="/**"/>
 
+            <!-- WEB -->
             <mvc:exclude-mapping path="/login/*.do"/>
             <mvc:exclude-mapping path="/resources/**"/>
             <mvc:exclude-mapping path="/**/*Pop.do"/>
@@ -69,6 +70,9 @@
             <mvc:exclude-mapping path="/v2/**"/>
             <mvc:exclude-mapping path="/configuration/**"/>
             <mvc:exclude-mapping path="/sample/**"/>
+
+            <!-- MOBILE WEB -->
+            <mvc:exclude-mapping path="/m/login/*.do"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
