@@ -744,7 +744,7 @@
         SELECT SAL0062D_PST_SALES_ORD_ID_SEQ.NEXTVAL FROM DUAL    
     </select>
     
-    <select id="crtSeqSAL0063D" resultType="java.lang.String">
+    <select id="crtSeqSAL0063D" resultType="Integer">
         SELECT SAL0063D_PST_ITM_ID_SEQ.NEXTVAL FROM DUAL    
     </select>
     

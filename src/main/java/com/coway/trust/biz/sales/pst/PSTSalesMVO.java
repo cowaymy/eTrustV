@@ -44,6 +44,7 @@ public class PSTSalesMVO implements Serializable{
 	private int pic;
 	private String pstCustPo;
 	private String ssID;
+	private int curType;
 	
 	public String getSsID() {
 		return ssID;
@@ -194,6 +195,12 @@ public class PSTSalesMVO implements Serializable{
 	}
 	public void setPstTrnsitId(String pstTrnsitId) {
 		this.pstTrnsitId = pstTrnsitId;
+	}
+	public int getCurType() {
+		return curType;
+	}
+	public void setCurType(int curType) {
+		this.curType = curType;
 	}
 	
 	

@@ -416,7 +416,7 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 		return pstRequestDOMapper.crtSeqSAL0062D();
 	}
 	
-	public String crtSeqSAL0063D() {
+	public int crtSeqSAL0063D() {
 		
 		return pstRequestDOMapper.crtSeqSAL0063D();
 	}
@@ -448,7 +448,7 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 
 			pstLogVO = new PSTLogVO();
 			
-			pstLogVO.setPstTrnsitId(Integer.parseInt(pstSalesMVO.getPstTrnsitId()));
+			pstLogVO.setPstTrnsitId(pstRequestDOMapper.crtSeqSAL0061D());
 			pstLogVO.setPstSalesOrdId(pstSalesMVO.getPstSalesOrdId());
 			pstLogVO.setPstStockId(pstSalesDVO.getPstItmStkId());
 			pstLogVO.setPstStockRem(pstSalesDVO.getPstStockRem());

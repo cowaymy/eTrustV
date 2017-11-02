@@ -18,7 +18,7 @@ public class PSTLogVO implements Serializable{
 	 */
 	private static final long serialVersionUID = 6442289869821780061L;
 	
-	private int pstTrnsitId;
+	private String pstTrnsitId;
 	private int pstSalesOrdId;
 	private int pstStockId;
 	private String pstStockRem;
@@ -28,10 +28,10 @@ public class PSTLogVO implements Serializable{
 	private Date crtDt;
 	private int crtUserId;
 	
-	public int getPstTrnsitId() {
+	public String getPstTrnsitId() {
 		return pstTrnsitId;
 	}
-	public void setPstTrnsitId(int pstTrnsitId) {
+	public void setPstTrnsitId(String pstTrnsitId) {
 		this.pstTrnsitId = pstTrnsitId;
 	}
 	public int getPstSalesOrdId() {

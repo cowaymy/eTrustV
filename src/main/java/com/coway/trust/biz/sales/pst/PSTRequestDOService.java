@@ -217,7 +217,7 @@ public interface PSTRequestDOService {
 	List<EgovMap> cmbChgStockItemList(Map<String, Object> params);
 	
 	int crtSeqSAL0062D();
-	String crtSeqSAL0063D();
+	int crtSeqSAL0063D();
 	String crtSeqSAL0061D();
 	
 	public void insertNewReqOk(List<PSTSalesDVO> pstSalesDVOList, PSTSalesMVO pstSalesMVO);

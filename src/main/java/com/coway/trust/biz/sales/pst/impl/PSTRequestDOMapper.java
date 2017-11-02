@@ -312,7 +312,7 @@ public interface PSTRequestDOMapper {
 	void insertPstSAL0061D(PSTLogVO pstLogVO);
 	
 	int crtSeqSAL0062D();
-	String crtSeqSAL0063D();
+	int crtSeqSAL0063D();
 	String crtSeqSAL0061D();
 	
 	/**

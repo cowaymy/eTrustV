@@ -178,10 +178,10 @@
             Common.alert("* Please select person in charge.");
             return false;
         }
-    	if(insertForm.totUnit.value == ""){
-            Common.alert("* Please select Delivery Stock.");
-            return false;
-        }
+//    	if(insertForm.totUnit.value == ""){
+//            Common.alert("* Please select Delivery Stock.");
+//            return false;
+//        }
     	
             var pstRequestDOForm = {
                 dataSet     : GridCommon.getGridData(myStkGridID),
@@ -569,11 +569,11 @@
 </tr>
 <tr>
     <th scope="row">Total Unit</th>
-    <td><input type="text" id="totUnit" name="totUnit"  title="" placeholder="" class="" readOnly/></td>
+    <td><input type="text" id="totUnit" name="totUnit"  title="" placeholder="" class="" /></td>
 </tr>
 <tr>
     <th scope="row">Total Amount</th>
-    <td><input type="text" id="totAmount" name="totAmount" title="" placeholder="" class="" readOnly/></td>
+    <td><input type="text" id="totAmount" name="totAmount" title="" placeholder="" class="" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->

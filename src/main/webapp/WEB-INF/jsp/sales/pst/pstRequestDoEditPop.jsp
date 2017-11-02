@@ -104,16 +104,16 @@
             pstSalesMVO : {
                 pstSalesOrdId : getParamForm.pstSalesOrdId.value,
                 pstRefNo        : getParamForm.pstRefNo.value,
-                curType         : pstInfoForm.curType.value,
-                editCurRate    : pstInfoForm.editCurRate.value,
-                editIncharge   : pstInfoForm.editIncharge.value
+//                curType         : pstInfoForm.curType.value,
+//                editCurRate    : pstInfoForm.editCurRate.value,
+//                editIncharge   : pstInfoForm.editIncharge.value
             }
         };
       
         Common.ajax("POST", "/sales/pst/updateStockList.do", pstRequestDOForm, function(result) {
             
             Common.alert("PST info successfully updated");
-            
+            $("#editClose").click();
             fn_getStockEditListAjax();
           //resetUpdatedItems(); // 초기화
             
@@ -173,7 +173,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>PSO Info Edit</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="editClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

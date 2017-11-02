@@ -521,21 +521,21 @@ public class PSTRequestDOController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		
 		int crtSeqSAL0062D = pstRequestDOService.crtSeqSAL0062D();			// PST_SALES_ORD_ID    SEQ
-		String crtSeqSAL0063D = pstRequestDOService.crtSeqSAL0063D();		// PST_ITM_ID				  SEQ
-		String crtSeqSAL0061D = pstRequestDOService.crtSeqSAL0061D();		// PST_TRNSIT_ID		  SEQ
+		
+//		String crtSeqSAL0061D = pstRequestDOService.crtSeqSAL0061D();		// PST_TRNSIT_ID		  SEQ
 		String newPstRefNo = "";
-		int newPstRefNoRLength = (int)(Math.log10(crtSeqSAL0062D));			// 생성된 PST_SALES_ORD_ID length
+		int newPstRefNoRLength = Integer.toString(crtSeqSAL0062D).length() ;			// 생성된 PST_SALES_ORD_ID length
 		logger.debug("newPstRefNoRLength :::::::::::::::::::::::::::::::::: "+newPstRefNoRLength);
 		if(newPstRefNoRLength == 1){
-			newPstRefNo = "PSO" + "00000" + Integer.toString(crtSeqSAL0062D);
+			newPstRefNo = "PSO" + "000000" + Integer.toString(crtSeqSAL0062D);
 		}else if(newPstRefNoRLength == 2){
-			newPstRefNo = "PSO" + "0000" + Integer.toString(crtSeqSAL0062D);
+			newPstRefNo = "PSO" + "00000" + Integer.toString(crtSeqSAL0062D);
 		}else if(newPstRefNoRLength == 3){
-			newPstRefNo = "PSO" + "000" + Integer.toString(crtSeqSAL0062D);
+			newPstRefNo = "PSO" + "0000" + Integer.toString(crtSeqSAL0062D);
 		}else if(newPstRefNoRLength == 4){
-			newPstRefNo = "PSO" + "00" + Integer.toString(crtSeqSAL0062D);
+			newPstRefNo = "PSO" + "000" + Integer.toString(crtSeqSAL0062D);
 		}else if(newPstRefNoRLength == 5){
-			newPstRefNo = "PSO" + "0" + Integer.toString(crtSeqSAL0062D);
+			newPstRefNo = "PSO" + "00" + Integer.toString(crtSeqSAL0062D);
 		}else if(newPstRefNoRLength == 6){
 			newPstRefNo = "PSO" + Integer.toString(crtSeqSAL0062D);
 		}else{
@@ -544,12 +544,15 @@ public class PSTRequestDOController {
 		
 		PSTSalesMVO pstSalesMVO = pstRequestDOForm.getPstSalesMVO();		// Master
 		pstSalesMVO.setPstSalesOrdId(crtSeqSAL0062D);
-		pstSalesMVO.setPstItmId(crtSeqSAL0063D);
-		pstSalesMVO.setPstTrnsitId(crtSeqSAL0061D);
+//		pstSalesMVO.setPstItmId(crtSeqSAL0063D);
+//		pstSalesMVO.setPstTrnsitId(crtSeqSAL0061D);
 		pstSalesMVO.setPstRefNo(newPstRefNo);
 		pstSalesMVO.setPstStusId(1);
 		pstSalesMVO.setCrtUserId(sessionVO.getUserId());
 		
+		int crtSeqSAL0063D = 0;
+		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+crtSeqSAL0062D);
+//		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+crtSeqSAL0063D);
 		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+pstSalesMVO.getPic());
 		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+pstSalesMVO.getPstCustPo());
 		logger.debug("pstSalesMVO :::::::::::::::::::::::::::::::::: "+pstSalesMVO.getPstRem());
@@ -564,9 +567,13 @@ public class PSTRequestDOController {
 			logger.debug("id   : "+form.getPstItmStkId());
 			logger.debug("prc : "+form.getPstItmPrc());
 			logger.debug("qty : "+form.getPstItmReqQty());
+			logger.debug("tot : "+form.getPstItmId());
+			logger.debug("tot : "+form.getPstItmTotPrc());
 			logger.debug("tot : "+form.getPstItmTotPrc());
 			
-			
+//			pstRequestDOService.crtSeqSAL0063D();		// PST_ITM_ID				  SEQ
+			pstSalesDVO.setPstItmId(pstRequestDOService.crtSeqSAL0063D());
+			pstSalesDVO.setPstSalesOrdId(crtSeqSAL0062D);
 			pstSalesDVO.setPstItmStkId(form.getPstItmStkId());
 			pstSalesDVO.setPstItmPrc(form.getPstItmPrc());
 			pstSalesDVO.setPstItmReqQty(form.getPstItmReqQty());
