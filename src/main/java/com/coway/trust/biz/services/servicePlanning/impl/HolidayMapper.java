@@ -26,4 +26,8 @@ public interface HolidayMapper {
 	void deleteCTAssign(Map<String, Object> params);
 	
 	List<EgovMap> selectCTInfo(Map<String, Object> params);
+	
+	List<EgovMap> selectState();
+	
+	void deleteHoliday(Map<String, Object> params);
 }

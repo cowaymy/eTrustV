@@ -25,5 +25,9 @@ public interface HolidayService {
 	List<EgovMap> selectAssignCTList(Map<String, Object> params);
 	
 	boolean deleteCTAssign(List<Object> updList,Map<String , Object> formMap);
+	
+	List<EgovMap> selectState();
+	
+	boolean deleteHoliday(List<Object> params,SessionVO sessionVO);
 
 }

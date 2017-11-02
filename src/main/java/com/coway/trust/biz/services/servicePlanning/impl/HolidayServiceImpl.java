@@ -76,6 +76,24 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 	}
 	
 	@Override
+	public boolean deleteHoliday(List<Object> params, SessionVO sessionVO) {
+		boolean delSuccess = false;
+		if(params.size() > 0){
+    		for(int i=0; i< params.size(); i++){
+    			Map<String, Object>  delValue = (Map<String, Object>) params.get(i);
+    			delValue.put("userId", sessionVO.getUserId());
+    			logger.debug("updateValue {}", delValue);
+    			holidayMapper.deleteHoliday(delValue);
+    		}
+    		delSuccess = true;
+		}else{
+			delSuccess = false;
+		}
+		return delSuccess;
+	}
+	
+	
+	@Override
 	public boolean  insertCTAssign(List<Object> updList,Map<String , Object> formMap) {
 		Map<String, Object>  insertValue = null;
 		for(int i=0; i< updList.size(); i++){
@@ -118,6 +136,10 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		return true;
 	}
 	
+	@Override
+	public List<EgovMap> selectState() {
+		return holidayMapper.selectState();
+	}
 	
 	
 	
