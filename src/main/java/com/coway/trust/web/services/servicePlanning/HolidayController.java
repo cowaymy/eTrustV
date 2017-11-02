@@ -71,16 +71,16 @@ public class HolidayController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
 		
-		
+		logger.debug("delList {}", delList);
 		if(addList != null){
 			addSuccess = holidayService.insertHoliday(addList,sessionVO);
 		}
 		if(addList != null){
 			updateSuccess = holidayService.updateHoliday(udtList,sessionVO);
 		}
-		/*if(addList != null){
-			addSuccess = holidayService.insertHoliday(addList);
-		}*/
+		if(delList != null){
+			delSuccess = holidayService.deleteHoliday(delList,sessionVO);
+		}
 		
 		if(addSuccess){
 			message.setMessage("Save Success Holiday");
@@ -91,6 +91,11 @@ public class HolidayController {
 			message.setMessage("Update Success Holiday");
 		}else{
 			message.setMessage("Update Fail Holiday");
+		}
+		if(delSuccess){
+			message.setMessage("Delete Success Holiday");
+		}else{
+			message.setMessage("Delete Fail Holiday");
 		}
 		return ResponseEntity.ok(message);
 	}
@@ -160,7 +165,9 @@ public class HolidayController {
 	 */
 	@RequestMapping(value = "/searchCTAssignList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> searchCTAssignList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-
+		logger.debug("params {}", params);
+		String[] stateTypeList = request.getParameterValues("assignState");
+		params.put("stateTypeList", stateTypeList);
 		List<EgovMap> assignList = holidayService.selectCTAssignList(params);
 		logger.debug("assignList {}", assignList);
 		return ResponseEntity.ok(assignList);
@@ -231,5 +238,19 @@ public class HolidayController {
 		return ResponseEntity.ok(assignCTList);
 	}*/
 	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectState.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectState( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> selectState = holidayService.selectState();
+		logger.debug("selectState {}", selectState);
+		return ResponseEntity.ok(selectState);
+	}
 	
 }
