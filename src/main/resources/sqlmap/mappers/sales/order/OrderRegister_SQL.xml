@@ -1475,7 +1475,7 @@
 		     , #{srvFilterCrtUserId}
 		     , SYSDATE
 		     , #{srvFilterUpdUserId}
-		     , #{srvFilterExprDt}
+		     , TO_DATE(#{srvFilterExprDt}, 'DD/MM/YYYY')
 		     )
     </insert>
     
@@ -1646,7 +1646,7 @@
 		     , #{sirimNo}
 		     , #{serialNo}
 		     , #{failId}
-		     , TO_DATE(#{callDt}, 'YYYY-MM-DD')
+		     , TO_DATE(#{nextCallDt}, 'DD/MM/YYYY')
 		     , #{allowComm}
 		     , #{isTradeIn}
 		     , #{requireSms}
@@ -1825,5 +1825,6 @@
 		   AND T1.USER_ID = #{userId}
 		   AND T2.MODULE_UNIT_ID = #{moduleUnitId}
     </select>
+    
     
 </mapper>

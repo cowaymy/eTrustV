@@ -1119,8 +1119,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			
 				srvConfigFilterVO.setSrvFilterId(0);
 				srvConfigFilterVO.setSrvConfigId(0);
-				srvConfigFilterVO.setSrvFilterStkId((int)bomInfo.get("bomPartId"));
-				srvConfigFilterVO.setSrvFilterPriod((int)bomInfo.get("bomPartPriod"));
+				srvConfigFilterVO.setSrvFilterStkId(Integer.parseInt(String.valueOf((BigDecimal)bomInfo.get("bomPartId"))));
+				srvConfigFilterVO.setSrvFilterPriod(Integer.parseInt(String.valueOf((BigDecimal)bomInfo.get("bomPartPriod"))));
 				srvConfigFilterVO.setSrvFilterPrvChgDt(dInstallDate);
 				srvConfigFilterVO.setSrvFilterStusId(1);
 				srvConfigFilterVO.setSrvFilterRem("");
