@@ -1,6 +1,7 @@
 package com.coway.trust.web.services.servicePlanning;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -135,11 +136,17 @@ public class HolidayController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectCTList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCTList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-
+	public ResponseEntity<Map> selectCTList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
 		List<EgovMap> CTList = holidayService.selectCTList(params);
+		List<EgovMap> CTAssignList = holidayService.selectAssignCTList(params);
 		logger.debug("CTList {}", CTList);
-		return ResponseEntity.ok(CTList);
+		logger.debug("CTAssignList {}", CTAssignList);
+		Map<String, Object> map= new HashMap<String, Object>();
+		map.put("CTList", CTList);
+		map.put("CTAssignList", CTAssignList);
+		return ResponseEntity.ok(map);
 	}
 	
 	
@@ -180,6 +187,8 @@ public class HolidayController {
 		logger.debug("updList {}", updList);
 		
 		boolean success = holidayService.insertCTAssign(updList,formMap);
+		boolean delSuccess = holidayService.deleteCTAssign(remList,formMap);
+		
 		/*boolean success = territoryManagementService.updateMagicAddressCode(params);
 		if(success){
 			message.setMessage("Confirm Success");
@@ -202,8 +211,25 @@ public class HolidayController {
 	public String updateHolidayReplacementCtEntry(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("params", params);
 		// 호출될 화면
-		return "services/servicePlanning/replacementCTEntryPop";
+		return "services/servicePlanning/replacementCTEntryEditPop";
 	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 *//*
+	@RequestMapping(value = "/selectAssignCTList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAssignCTList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> assignCTList = holidayService.selectAssignCTList(params);
+		assignCTList.add
+		logger.debug("assignCTList {}", assignCTList);
+		return ResponseEntity.ok(assignCTList);
+	}*/
 	
 	
 }
