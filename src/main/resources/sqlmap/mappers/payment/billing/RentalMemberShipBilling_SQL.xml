@@ -91,7 +91,8 @@
 		         FROM PAY1003V RentalMembershipBillingSchedul ) Extent1
 		 WHERE  Extent1.SALES_ORD_ID = #{salesOrdId}
          AND Extent1.BILLING_STUS = 'Active'
-         AND Extent1.SCHDUL_DT  BETWEEN Extent1.SCHDUL_DT AND TO_CHAR(SYSDATE,'YYYYMM')||'01'
+         AND Extent1.SCHDUL_DT  BETWEEN Extent1.SCHDUL_DT 
+         AND TO_DATE(TO_CHAR(SYSDATE,'YYYYMM')||'01', 'YYYY/MM/DD')
          ORDER BY Extent1.INSTALLMENT
     </select>
     
