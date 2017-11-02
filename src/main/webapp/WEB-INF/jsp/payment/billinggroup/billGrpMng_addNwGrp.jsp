@@ -18,14 +18,6 @@ var gridPros = {
         // 상태 칼럼 사용
         showStateColumn : false
 };
-var gridPros2 = {
-        // 편집 가능 여부 (기본값 : false)
-        editable : false,
-        
-        // 상태 칼럼 사용
-        showStateColumn : false,
-        selectionMode : "multipleRows"
-};
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
