@@ -213,7 +213,7 @@ function auiCellClikcHandler(event){
     	$("#atchFileGrpId").val(AUIGrid.getCellValue(adjMGridID, event.rowIndex, "atchFileGrpId"));
     	$("#gridBudgetDocNo").val(AUIGrid.getCellValue(adjMGridID, event.rowIndex, "budgetDocNo"));
     	fn_budgetAdjustmentPop('grid') ;
-    }else if(event.columnIndex == 11){
+    }else if(event.columnIndex == 13){
     	if(AUIGrid.getCellValue(adjMGridID, event.rowIndex, "fileSubPath")== "view"){
             window.open(DEFAULT_RESOURCE_FILE + AUIGrid.getCellValue(adjMGridID, event.rowIndex, "filePath"));
     	}
