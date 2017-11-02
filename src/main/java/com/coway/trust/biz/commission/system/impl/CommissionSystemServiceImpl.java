@@ -271,7 +271,7 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	 * @return
 	 * @exception Exception
 	 */
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	public String addCommissionItemGrid(List<Object> addList,String loginId) {	
 		
@@ -295,6 +295,16 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			logger.debug("add CRT_USER_ID : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			logger.debug("add UPD_USER_ID : {}", ((Map<String, Object>) obj).get("updUserId"));
 			
+			if( !(StringUtil.isNumeric(((Map<String, Object>) obj).get("itemCd").toString() )) ){
+				msg = "please only number";
+				break;
+			}else if( !(StringUtil.isNumeric(((Map<String, Object>) obj).get("orgSeq").toString() )) ){
+				msg = "please only number";
+				break;
+			}else{
+				msg = "";
+			}
+			
 			List<EgovMap> list = commissionSystemMapper.selectRuleBookItemMngChk((Map<String, Object>) obj);
 			if (list.size() > 0) {
 				Map<String, Object> params = new HashMap<String, Object>();
@@ -302,30 +312,12 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 				params.put("itemSeq", list.get(0).get("itemSeq"));
 				params.put("itemCd", list.get(0).get("itemCd"));
 				params.put("endDt", CommissionConstants.COMIS_END_DT);
-				params.put("updUserId", ((Map<String, Object>) obj).get("updUserId"));
-				
-				if( !(StringUtil.isNumeric(list.get(0).get("orgSeq").toString())) ){
-					msg = "pelese only number";
-					break;
-				}else if( !(StringUtil.isNumeric(list.get(0).get("itemCd").toString())) ){
-					msg = "pelese only number";
-					break;
-				}else{
-					msg = "success";
-					commissionSystemMapper.udtCommissionItemGridEndDt(params);
-				}
-			}
+				params.put("updUserId", ((Map<String, Object>) obj).get("updUserId"));	
+				commissionSystemMapper.udtCommissionItemGridEndDt(params);
 			
-			if( !(StringUtil.isNumeric(((Map<String, Object>) obj).get("itemCd").toString() )) ){
-				msg = "pelese only number";
-				break;
-			}else if( !(StringUtil.isNumeric(((Map<String, Object>) obj).get("orgSeq").toString() )) ){
-				msg = "pelese only number";
-				break;
-			}else{
-				msg = "success";
-				commissionSystemMapper.addCommissionItemGrid((Map<String, Object>) obj);
 			}
+			commissionSystemMapper.addCommissionItemGrid((Map<String, Object>) obj);
+			
 		}
 		return msg;
 	}
@@ -360,10 +352,10 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			logger.debug("add UPD_USER_ID : {}", ((Map<String, Object>) obj).get("updUserId"));
 
 			if( !(StringUtil.isNumeric((((Map<String, Object>) obj).get("itemCd")).toString() )) ){
-				msg = "pelese only number";
+				msg = "please only number";
 				break;
 			}else if( !(StringUtil.isNumeric((((Map<String, Object>) obj).get("orgSeq")).toString() )) ){
-				msg = "pelese only number";
+				msg = "please only number";
 				break;
 			}else{
 				commissionSystemMapper.udtCommissionItemGridUseYn((Map<String, Object>) obj);
