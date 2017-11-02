@@ -54,7 +54,7 @@ var GridCommon = {
 
 	        // 실제로 #_sGridId 에 그리드 생성
 	        var _gridID = AUIGrid.create(GridCommon.makeGridId(_sGridId), _columnLayout, gridPros);
-	        
+
 	        $(window).resize(function(){
                 if (typeof _gridID !== "undefined") {
                 	try{
@@ -212,9 +212,12 @@ var GridCommon = {
      * @param maxHeightSize : max height
      * @param _options : option
      */
-		resizeHeight: function (_gridId, recordCount, minHeightSize, maxHeightSize, _options) {
+		resizeHeight: function (_gridId, minHeightSize, maxHeightSize, _options) {
 
-	    	var $grid = $(GridCommon.makeGridId(_gridId));
+			_gridId = GridCommon.makeGridId(_gridId);
+	    	var $grid = $(_gridId);
+
+	    	var recordCount =  AUIGrid.getRowCount(_gridId);
 
 	    	var option = {
 				headerHeight : 26,

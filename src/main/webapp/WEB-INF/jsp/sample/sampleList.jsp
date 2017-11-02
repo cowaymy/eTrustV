@@ -81,10 +81,8 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
 
             console.log(myGridID.rowHeight);
 
-            var recordCount = result.length;
-
             // 데이터 건수에 따른 그리드 사이즈 동적 조절....
-            GridCommon.resizeHeight(myGridID, recordCount, 150, 460);
+            GridCommon.resizeHeight(myGridID, 150, 460);
 
         });
     }
