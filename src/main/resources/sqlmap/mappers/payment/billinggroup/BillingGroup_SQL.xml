@@ -221,7 +221,7 @@
 	                Extent2.NAME NAME  ,
 	                CASE 
 	                     WHEN ( ( Extent1.CRT_DT IS NOT NULL )
-	                       AND ( Extent1.CRT_DT > #{defaultDate} ) ) THEN TO_DATE(Extent1.CRT_DT)
+	                       AND ( Extent1.CRT_DT > TO_DATE(#{defaultDate}, 'YYYY-MM-DD') ) ) THEN TO_DATE(Extent1.CRT_DT)
 	                ELSE TO_DATE(#{defaultDate}, 'YYYY-MM-DD')
 	                   END CRT_DT  ,
 	                CASE 
@@ -234,7 +234,7 @@
 	                   END DEPT  ,
 	                CASE 
 	                     WHEN ( ( Extent1.DOB IS NOT NULL )
-	                       AND ( Extent1.DOB > #{defaultDate} ) ) THEN TO_DATE(Extent1.DOB)
+	                       AND ( Extent1.DOB > TO_DATE(#{defaultDate}, 'YYYY-MM-DD') ) ) THEN TO_DATE(Extent1.DOB)
 	                ELSE TO_DATE(#{defaultDate}, 'YYYY-MM-DD')
 	                   END DOB  ,
 	                CASE 
@@ -307,7 +307,7 @@
 	                   END USER_NAME2  ,
 	                CASE 
 	                     WHEN ( ( Extent1.UPD_DT IS NOT NULL )
-	                       AND ( Extent1.UPD_DT > #{defaultDate} ) ) THEN TO_DATE(Extent1.UPD_DT)
+	                       AND ( Extent1.UPD_DT > TO_DATE(#{defaultDate}, 'YYYY-MM-DD') ) ) THEN TO_DATE(Extent1.UPD_DT)
 	                ELSE TO_DATE(#{defaultDate}, 'YYYY-MM-DD')
 	                   END UPD_DT  
 	         FROM SAL0027D Extent1
@@ -324,7 +324,7 @@
        SELECT 
 		    IS_MAIN, 
 		    SALES_ORD_ID, 
-		    TO_CHAR(TO_DATE(SALES_DT, 'YYYY-MM-DD'), 'DD/MM/YY') SALES_DT,
+		    TO_CHAR(SALES_DT, 'DD/MM/YY') SALES_DT,
 		    SALES_ORD_NO, 
 		    PRODUCT, 
 		    STUS_CODE_ID, 
@@ -1192,7 +1192,7 @@
 		#{cnfmCode}, 
 		SYSDATE, 
 		#{userId}, 
-		#{defaultDate}, 
+		TO_DATE(#{defaultDate}, 'YYYY-MM-DD'),
 		SYSDATE, 
 		#{userId}, 
 		#{emailFailInd}, 
@@ -1552,7 +1552,7 @@
        SELECT 
 			IS_MAIN, 
 			CUST_BILL_GRP_NO, 
-			TO_CHAR(TO_DATE(SALES_DT, 'YYYY-MM-DD'), 'DD/MM/YY') SALES_DT,
+			TO_CHAR(SALES_DT, 'DD/MM/YY') SALES_DT,
 			SALES_DT, 
 			SALES_ORD_ID, 
 			SALES_ORD_NO, 

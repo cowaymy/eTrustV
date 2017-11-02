@@ -24,7 +24,9 @@ var gridPros = {
         editable : false,
         
         // 상태 칼럼 사용
-        showStateColumn : false
+        showStateColumn : false,
+        selectionMode : "singleRow"
+        
 };
 var gridPros2 = {
         // 편집 가능 여부 (기본값 : false)
@@ -496,13 +498,12 @@ var addOrderLayout = [
     function fn_billGrpHistory(){
         
         AUIGrid.destroy(billGrpHisGridID); 
-        $("#viewHistorytPopup").show();
         
-        billGrpHisGridID = GridCommon.createAUIGrid("history_wrap", billGrpHistoryLayout,null,gridPros);
+        
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectBillGrpHistory.do", {"custBillId":custBillId}, function(result){
-            console.log(result);
-            
+            $("#viewHistorytPopup").show();
+            billGrpHisGridID = GridCommon.createAUIGrid("history_wrap", billGrpHistoryLayout,null,gridPros);
             AUIGrid.setGridData(billGrpHisGridID, result);
         });
     }
@@ -516,15 +517,15 @@ var addOrderLayout = [
     function fn_changeMainOrder(){
         
         AUIGrid.destroy(changeOrderGridID); 
-        $("#changeMainOrderPop").show();
         
-        changeOrderGridID = GridCommon.createAUIGrid("changeOrderGrid", changeOrderLayout,null,gridPros);
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectChangeOrder.do", {"custBillId":custBillId}, function(result){
-            console.log(result);
+        	 $("#changeMainOrderPop").show();
             $('#custBillSoId').val(result.data.basicInfo.custBillSoId);
             $('#changePop_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#changePop_ordGrp').text(result.data.grpOrder.orderGrp);$('#changePop_ordGrp').css("color","red");
+            
+            changeOrderGridID = GridCommon.createAUIGrid("changeOrderGrid", changeOrderLayout,null,gridPros);
             AUIGrid.setGridData(changeOrderGridID, result.data.billGroupOrderView);
             
             //Grid 셀 클릭시 이벤트
@@ -550,11 +551,11 @@ var addOrderLayout = [
     
     function fn_updRemark(){
         
-        $("#updRemPop").show();
+        
         var custBillId = $("#custBillId").val();
         
         Common.ajax("GET","/payment/selectUpdRemark.do", {"custBillId":custBillId}, function(result){
-            console.log(result);
+        	$("#updRemPop").show();
             $('#updRem_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#updRem_ordGrp').text(result.data.grpOrder.orderGrp);$('#updRem_ordGrp').css("color","red");
             $('#updRem_remark').text(result.data.basicInfo.custBillRem);
@@ -610,12 +611,10 @@ var addOrderLayout = [
         
         $("#tab_billType").trigger("click");
         AUIGrid.destroy(estmHisPopGridID); 
-        $("#changeBillTypePop").show();
-        
-        estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
         var custBillId = $("#custBillId").val();
+        
         Common.ajax("GET","/payment/selectChangeBillType.do", {"custBillId":custBillId}, function(result){
-            console.log(result);
+        	$("#changeBillTypePop").show();
             $('#custTypeId').val(result.data.basicInfo.typeId);//히든값
             
             $('#changeBill_grpNo').text(result.data.basicInfo.custBillGrpNo);
@@ -643,7 +642,7 @@ var addOrderLayout = [
                 $("#changePop_estm").prop('disabled', true);
                 $('#changePop_estmVal').val("");
             }
-            
+            estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
             AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
             AUIGrid.resize(estmHisPopGridID,930,300); 
             
@@ -652,11 +651,9 @@ var addOrderLayout = [
     
     function fn_changeMaillAddr(){
         
-        $("#chgMailAddrPop").show();
-        
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectChgMailAddr.do", {"custBillId":custBillId}, function(result){
-            console.log(result);
+        	$("#chgMailAddrPop").show();
             
             $('#changeMail_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#changeMail_ordGrp').text(result.data.grpOrder.orderGrp);$('#changeMail_ordGrp').css("color","red");
@@ -670,12 +667,10 @@ var addOrderLayout = [
     }
     
     function fn_chgContPerson(){
-        
-        $("#chgContPerPop").show();
 
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectChgContPerson.do", {"custBillId":custBillId}, function(result){
-            console.log(result);
+        	$("#chgContPerPop").show();
             
             //BASIC INFO
             //$('#custBillCustId').val(result.data.basicInfo.custBillCustId);
@@ -701,10 +696,11 @@ var addOrderLayout = [
     
     function showDetailHistory(historyId){
         
-        $("#detailhistoryViewPop").show();
+        
         
         Common.ajax("GET", "/payment/selectDetailHistoryView", {"historyId" : historyId} , function(result) {
-           console.log(result);
+        	$("#detailhistoryViewPop").show();
+        	
            var typeId = result.data.detailHistoryView.typeId;
            
            $('#det_typeName').text(result.data.detailHistoryView.codeName);
@@ -925,11 +921,12 @@ var addOrderLayout = [
         AUIGrid.destroy(emailAddrPopGridID); 
         var custBillCustId = $("#custBillCustId").val();
         var custAddr = $("#custAddr").val();
-        $("#selectMaillAddrPop").show();
-        emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
+        
+        
         
         Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custBillCustId, "custAddr" : custAddr}, function(result){
-            console.log(result);
+        	$("#selectMaillAddrPop").show();
+        	emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
             AUIGrid.setGridData(emailAddrPopGridID, result);
             
             //Grid 셀 클릭시 이벤트
@@ -997,11 +994,11 @@ var addOrderLayout = [
         AUIGrid.destroy(contPersonPopGridID); 
         var custBillCustId = $("#custBillCustId").val();
         var personKeyword = $("#personKeyword").val();
-        $("#selectContPersonPop").show();
-        contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
         
         Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custBillCustId, "personKeyword" : personKeyword}, function(result){
-            console.log(result);
+        	$("#selectContPersonPop").show();
+        	
+        	contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
             AUIGrid.setGridData(contPersonPopGridID, result);
             
             //Grid 셀 클릭시 이벤트
@@ -1218,10 +1215,10 @@ var addOrderLayout = [
             $("#reqId").val(val);
             $("#btnApprReq").show();
             $("#btnCancelReq").hide();
-            $("#estmDetailHisPop").show();
+            
             
             Common.ajax("GET","/payment/selectEstmReqHisView.do", {"reqId":val}, function(result){
-                console.log(result);
+            	$("#estmDetailHisPop").show();
                 
                 $("#apprReq_refNo").text(result.data.estmReqHisView.refNo);
                 $("#apprReq_crtDt").text(result.data.estmReqHisView.crtDt);
@@ -1235,10 +1232,10 @@ var addOrderLayout = [
             $("#reqId").val(val);
             $("#btnApprReq").hide();
             $("#btnCancelReq").show();
-            $("#estmDetailHisPop").show();
+            
             
             Common.ajax("GET","/payment/selectEstmReqHisView.do", {"reqId":val}, function(result){
-                console.log(result);
+            	$("#estmDetailHisPop").show();
                 
                 $("#apprReq_refNo").text(result.data.estmReqHisView.refNo);
                 $("#apprReq_crtDt").text(result.data.estmReqHisView.crtDt);
@@ -1339,11 +1336,10 @@ var addOrderLayout = [
         var valid = true;
         var message = "";
         
-        $("#removeOrderPop").show();
         $("#btnSave").show();
         
         Common.ajax("GET","/payment/selectDetailOrdGrp.do", {"custBillId":custBillId, "salesOrdId" : salesOrdId}, function(result){
-            console.log(result);
+        	$("#removeOrderPop").show();
             if(result.code =="00"){
                 $("#remove_billGroup").text(result.data.basicInfo.custBillGrpNo);
                 $("#remove_ordGroup").text(result.data.grpOrder.orderGrp);$('#remove_ordGroup').css("color","red");
@@ -1415,15 +1411,16 @@ var addOrderLayout = [
     function fn_addOrder() {
         
         AUIGrid.destroy(addOrdPopGridID); 
-        $("#addOrderPop").show();
+        
         var custBillId = $("#custBillId").val();
-        addOrdPopGridID = GridCommon.createAUIGrid("addOrdGrid", addOrderLayout,null,gridPros2);
+        
         
         Common.ajax("GET","/payment/selectAddOrder.do", {"custBillId":custBillId}, function(result){
-            console.log(result);
+        	$("#addOrderPop").show();
             $("#addOrd_grpNo").text(result.data.basicInfo.custBillGrpNo);
             $("#addOrd_ordGrp").text(result.data.grpOrder.orderGrp);$('#addOrd_ordGrp').css("color","red");
             
+            addOrdPopGridID = GridCommon.createAUIGrid("addOrdGrid", addOrderLayout,null,gridPros2);
             AUIGrid.setGridData(addOrdPopGridID, result.data.orderGrpList);
             
             //Grid 셀 클릭시 이벤트
