@@ -688,8 +688,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		if(selectConfigBasicInfoYn.size() > 0) {
 			Map<String, Object> sal0090 = new HashMap<String, Object>(); 
 
-			
-//			sal0090.put("BSGen", hsBasicmap.get("BSGen"));
+			sal0090.put("salesOrderId", hsBasicmap.get("salesOrderId"));
+			sal0090.put("availability", hsBasicmap.get("availability"));
 			sal0090.put("srvConfigId", selectConfigBasicInfoYn.get("srvConfigId"));
 			sal0090.put("cmbServiceMem", hsBasicmap.get("cmbServiceMem"));
 			sal0090.put("lstHSDate", hsBasicmap.get("lstHSDate"));
@@ -698,6 +698,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			sal0090.put("SrvUpdateAt", sessionVO.getUserId());
 //			sal0090.put("SrvUpdateAt", SYSDATE);
 			
+			hsManualMapper.updateHsSVC0006D(sal0090);
 			cnt = hsManualMapper.updateHsConfigBasic(sal0090);
             
             
@@ -730,6 +731,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                 			}
             			}
 
+            			sal0089.put("salesOrderId",hsBasicmap.get("salesOrderId"));
+            			sal0089.put("configId",hsBasicmap.get("configId"));
             			sal0089.put("srvSettRem", "");
             			sal0089.put("srvSettCrtUserId", sessionVO.getUserId());
 
