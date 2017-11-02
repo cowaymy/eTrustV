@@ -512,5 +512,17 @@ SELECT  BUDGET_PLAN_YEAR
 		  AND GL_ACC_CODE = #{glAccCode}
 		  AND BUDGET_CODE= #{budgetCode}
   </select>
+  
+  <select id="selectCostCenterName" parameterType="Map" resultType="String">
+	  SELECT COST_CENTER_TEXT FROM FCM0008M  WHERE COST_CENTER = #{code}
+  </select>
+  
+  <select id="selectBudgetCodeName" parameterType="Map" resultType="String">
+	  SELECT BUDGET_CODE_TEXT FROM FCM0010M  WHERE BUDGET_CODE = #{code}
+  </select>
+  
+  <select id="selectGlAccCodeName" parameterType="Map" resultType="String">
+	  SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{code}
+  </select>
 
 </mapper>

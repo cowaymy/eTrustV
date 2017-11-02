@@ -313,4 +313,19 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	public int selectPlanMaster( Map<String, Object> params) throws Exception {
 		return budgetMapper.selectPlanMaster(params);
 	}
+
+	@Override
+	public String selectCostCenterName(Map<String, Object> params) {
+		return budgetMapper.selectCostCenterName(params);
+	}
+
+	@Override
+	public String selectBudgetCodeName(Map<String, Object> params) {
+		return budgetMapper.selectBudgetCodeName(params);
+	}
+
+	@Override
+	public String selectGlAccCodeName(Map<String, Object> params) {
+		return budgetMapper.selectGlAccCodeName(params);
+	}
 }

@@ -90,10 +90,7 @@ $(document).ready(function(){
     
     $("#sendAmount").blur(function () { 
     	var str = $("#sendAmount").val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-        $("#sendAmount").val(str);    	
-        if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
-            $("#recvAmount").val(str);
-        }
+        $("#sendAmount").val(str);  
    });
     
      $("#sendAmount").change(function(){
@@ -327,12 +324,16 @@ function fn_Cost(str){
 		$("#recvCost").hide();
 	    
 	    //$("#recvCostCenterName").prop("readonly", true);
-	    $("#recvCostCenterName").attr("class", "readonly");
+	    //$("#recvCostCenterName").attr("class", "readonly");
+        $("#recvCostCenter").prop("readonly", true);
+	    $("#recvCostCenter").attr("class", "readonly");
 	}else if ( str=="show" ){
 		$("#recvCost").show();
 	    
 	    //$("#recvCostCenterName").prop("readonly", false);
-	    $("#recvCostCenterName").attr("class", "");
+	    //$("#recvCostCenterName").attr("class", "");
+        $("#recvCostCenter").prop("readonly", false);
+	    $("#recvCostCenter").attr("class", "");
 	}
 }
 function fn_budget(str){
@@ -340,12 +341,16 @@ function fn_budget(str){
 		$("#recvBudget").hide();
         
        // $("#recvBudgetCodeName").prop("readonly", true);
-        $("#recvBudgetCodeName").attr("class", "readonly");
+       //$("#recvBudgetCodeName").attr("class", "readonly");
+        $("#recvBudgetCode").prop("readonly", true);
+        $("#recvBudgetCode").attr("class", "readonly");
 	}else if ( str=="show" ){
 		$("#recvBudget").show();
 	    
 	   // $("#recvBudgetCodeName").prop("readonly", false);
-	    $("#recvBudgetCodeName").attr("class", "");
+	   // $("#recvBudgetCodeName").attr("class", "");
+        $("#recvBudgetCode").prop("readonly", false);
+	    $("#recvBudgetCode").attr("class", "");
 	}
 }
 function fn_glAcc(str){
@@ -354,12 +359,16 @@ function fn_glAcc(str){
         $("#recvGlAcc").hide();
         
         //$("#recvGlAccCodeName").prop("readonly", true);
-        $("#recvGlAccCodeName").attr("class", "readonly");
+        //$("#recvGlAccCodeName").attr("class", "readonly");
+        $("#recvGlAccCode").prop("readonly", true);
+        $("#recvGlAccCode").attr("class", "readonly");
 	}else if ( str=="show" ){
 		$("#recvGlAcc").show();
 	    
 	   // $("#recvGlAccCodeName").prop("readonly", false);
-	    $("#recvGlAccCodeName").attr("class", "");
+	   // $("#recvGlAccCodeName").attr("class", "");
+	    $("#recvGlAccCode").prop("readonly", false);
+	    $("#recvGlAccCode").attr("class", "");
 	}
 }
 
@@ -686,10 +695,7 @@ function fn_AddRow()
 	    Common.ajax("POST", "/eAccounting/budget/selectPlanMaster",  $("#pAdjForm").serializeJSON() , function(result)    {
 	    	console.log("성공." + JSON.stringify(result));
 	        console.log("data : " + result.data);
-	    	
-	        alert(result.data.send );
-	        alert(result.data.recv );
-	        
+	    		        
 	        if($("#pAdjustmentType").val() != '01' && $("#pAdjustmentType").val() != '02' && $("#pAdjustmentType").val() !=''){
 	        	
 	        	if(result.data.send == "N" && result.data.recv == "N"){ 
@@ -735,21 +741,9 @@ function fn_uploadFile(str) {
     	alert("<spring:message code="budget.msg.noData" />");
     	return;
     }
-
-  /*   if(AUIGrid.getCellValue(adjPGridID, 0, "budgetDocNo") != ""){
-    	$("#pAtchFileGrpId").val("");
-
-   	    if(Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveAdjustement));
-    	
-    }else{ */
         
-        if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
-        	
-          /*   var obj = $("#pAdjForm").serializeJSON();        	 
-            var gridData = GridCommon.getEditData(adjPGridID);    */     	    
-        	/* formData.append("obj", obj);
-        	formData.append("gridData",gridData);    */
-        	
+    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+
         	if(AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") != "" &&AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") != null ){
         		formData.append("pAtchFileGrpId", AUIGrid.getCellValue(adjPGridID, 1, "atchFileGrpId") );
         	}
@@ -769,8 +763,8 @@ function fn_uploadFile(str) {
 	            
 	        }); 
 	  }));
-    }
-/* } */
+}
+
 
 function fn_saveAdjustement(){
     var obj = $("#pAdjForm").serializeJSON();    
@@ -857,7 +851,6 @@ function fn_saveAdjustement(){
 
 function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	
-//	alert(atchFileName +", "+ fileSubPath +", "+physiclFileName);
     	
 	var file = atchFileName.split(".");
 	
@@ -875,6 +868,30 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
            window.open("/file/fileDown.do?subPath=" + fileSubPath
                + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
        }
+}
+
+function fn_getCodeName(str, value){
+	
+	Common.ajax("POST", "/eAccounting/budget/selectCodeName", {"codeType":str, "code" : value} , function(result)    {
+		console.log("성공." + JSON.stringify(result));
+        console.log("data : " + result.data);
+		
+        if(str == "SC"){
+        	$("#sendCostCenterName").val(result.data);        	
+        }else if(str == "SB"){
+            $("#sendBudgetCodeName").val(result.data);            
+        }else if(str == "SG"){
+            $("#sendGlAccCodeName").val(result.data);        	
+        }else if(str == "RC"){
+            $("#recvCostCenterName").val(result.data);            
+        }else if(str == "RB"){
+            $("#recvBudgetCodeName").val(result.data);            
+        }else if(str == "RG"){
+            $("#recvGlAccCodeName").val(result.data);            
+        }
+		
+	});
+	     
 }
 
 </script>
@@ -939,8 +956,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <tr>
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>
 	<td>
-		<input type="hidden" id="sendCostCenter" name="sendCostCenter" title="" placeholder="" class="" />
-	    <input type="text" id="sendCostCenterName" name="sendCostCenterName" title="" placeholder="" class="" readonly="readonly"/>
+		<input type="text" id="sendCostCenter" name="sendCostCenter" onchange="javascript:fn_getCodeName('SC', this.value);" title="" placeholder="" class="" />
+	    <input type="hidden" id="sendCostCenterName" name="sendCostCenterName" title="" placeholder="" class="" readonly="readonly"/>
 	    <a href="#" class="search_btn"  onclick="javascript:fn_pCostCenterSearchPop('send')">
 	        <img  id="sendCost"   src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 	    </a>
@@ -949,8 +966,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <tr>
 	<th scope="row"><spring:message code="expense.Activity" /></th>
 	<td>
-		<input type="hidden" id="sendBudgetCode" name="sendBudgetCode" title="" placeholder="" class="" />
-		<input type="text" id="sendBudgetCodeName" name="sendBudgetCodeName" title="" placeholder="" class="" readonly="readonly"/>
+		<input type="text" id="sendBudgetCode" name="sendBudgetCode" onchange="javascript:fn_getCodeName('SB', this.value);" title="" placeholder="" class="" />
+		<input type="hidden" id="sendBudgetCodeName" name="sendBudgetCodeName" title="" placeholder="" class="" readonly="readonly"/>
 		<a href="#" id="sendBudget" class="search_btn" onclick="javascript:fn_pBudgetCodePop('send')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 		</a>
@@ -959,8 +976,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <tr>
 	<th scope="row"><spring:message code="expense.GLAccount" /></th>
 	<td>
-		<input type="hidden" id="sendGlAccCode" name="sendGlAccCode" title="" placeholder="" class="" />
-		<input type="text" id="sendGlAccCodeName" name="sendGlAccCodeName" title="" placeholder="" class="" readonly="readonly"/>
+		<input type="text" id="sendGlAccCode" name="sendGlAccCode" onchange="javascript:fn_getCodeName('SG', this.value);" title="" placeholder="" class="" />
+		<input type="hidden" id="sendGlAccCodeName" name="sendGlAccCodeName"  title="" placeholder="" class="" readonly="readonly"/>
 		<a href="#" id="sendGlAcc" class="search_btn" onclick="javascript:fn_pGlAccountSearchPop('send')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 		</a>
@@ -996,8 +1013,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <tr>
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>
 	<td>
-        <input type="hidden" id="recvCostCenter" name="recvCostCenter" title="" placeholder="" class="" />
-		<input type="text" id="recvCostCenterName" name="recvCostCenterName" title="" placeholder="" class="" readonly="readonly"/>
+        <input type="text" id="recvCostCenter" name="recvCostCenter" onchange="javascript:fn_getCodeName('RC', this.value);" title="" placeholder="" class="" />
+		<input type="hidden" id="recvCostCenterName" name="recvCostCenterName" title="" placeholder="" class="" readonly="readonly"/>
 		<a href="#" id="recvCost" class="search_btn" onclick="javascript:fn_pCostCenterSearchPop('recv')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 		</a>
@@ -1006,8 +1023,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <tr>
 	<th scope="row"><spring:message code="expense.Activity" /></th>
 	<td>
-		<input type="hidden" id="recvBudgetCode" name="recvBudgetCode" title="" placeholder="" class="" />
-		<input type="text" id="recvBudgetCodeName" name="recvBudgetCodeName" title="" placeholder="" class="" readonly="readonly"/>
+		<input type="text" id="recvBudgetCode" name="recvBudgetCode" onchange="javascript:fn_getCodeName('RB', this.value);" title="" placeholder="" class="" />
+		<input type="hidden" id="recvBudgetCodeName" name="recvBudgetCodeName" title="" placeholder="" class="" readonly="readonly"/>
 		<a href="#" id="recvBudget" class="search_btn" onclick="javascript:fn_pBudgetCodePop('recv')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 	   </a>
@@ -1016,8 +1033,8 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 <tr>
 	<th scope="row"><spring:message code="expense.GLAccount" /></th>
 	<td>
-        <input type="hidden" id="recvGlAccCode" name="recvGlAccCode" title="" placeholder="" class="" />
-		<input type="text"  id="recvGlAccCodeName" name="recvGlAccCodeName" title="" placeholder="" class="" readonly="readonly"/>
+        <input type="text" id="recvGlAccCode" name="recvGlAccCode"  onchange="javascript:fn_getCodeName('RG', this.value);" title="" placeholder="" class="" />
+		<input type="hidden"  id="recvGlAccCodeName" name="recvGlAccCodeName" title="" placeholder="" class="" readonly="readonly"/>
 		<a href="#" id="recvGlAcc" class="search_btn" onclick="javascript:fn_pGlAccountSearchPop('recv')">
 		   <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 		</a>

@@ -46,4 +46,10 @@ public interface BudgetMapper {
 	List<EgovMap> selectApprovalList(Map<String, Object> params) throws Exception;
 	
 	int selectPlanMaster(Map<String, Object> params) throws Exception;
+
+	String selectCostCenterName(Map<String, Object> params);
+
+	String selectBudgetCodeName(Map<String, Object> params);
+
+	String selectGlAccCodeName(Map<String, Object> params);
 }

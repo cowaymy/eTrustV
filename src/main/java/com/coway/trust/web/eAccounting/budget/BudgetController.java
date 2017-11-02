@@ -520,5 +520,35 @@ public class BudgetController {
 		
 	}
 	
+	
+	@RequestMapping(value = "/selectCodeName", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> selectCostCenterName (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+			
+		LOGGER.debug("params =====================================>>  " + params);
+	
+		String result ;
+		
+		if("SC".equals(params.get("codeType").toString()) || "RC".equals(params.get("codeType").toString())){
+
+			result = budgetService.selectCostCenterName(params);
+		}else if("SB".equals(params.get("codeType").toString()) || "RB".equals(params.get("codeType").toString())){
+
+			result = budgetService.selectBudgetCodeName(params);
+		}else{
+
+			result = budgetService.selectGlAccCodeName(params);
+		}
+			
+			
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(result);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+    	return ResponseEntity.ok(message);
+		
+	}
+	
 }
 
