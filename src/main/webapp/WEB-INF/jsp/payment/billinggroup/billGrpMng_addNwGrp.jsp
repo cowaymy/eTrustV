@@ -111,10 +111,10 @@ var contPersonLayout = [
 	    if(custTypeId == ""){
 	    	Common.alert("Please select the order first.<br />");
 	    }else{
-	    	$("#selectMaillAddrPop").show();
-	        emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
+	        
 	        Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custTypeId, "custAddr" : custAddr}, function(result){
-	            console.log(result);
+	        	$("#selectMaillAddrPop").show();
+	        	emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
 	            AUIGrid.setGridData(emailAddrPopGridID, result);
 	            
 	            //Grid 셀 클릭시 이벤트
@@ -163,10 +163,9 @@ var contPersonLayout = [
 	    	Common.alert("Please select the order first.<br />");
 	    }else{
 	    	
-	    	$("#selectContPersonPop").show();
-	        contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
 	        Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custTypeId , "personKeyword" : personKeyword}, function(result){
-	            console.log(result);
+	        	$("#selectContPersonPop").show();
+	            contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
 	            AUIGrid.setGridData(contPersonPopGridID, result);
 	            
 	            //Grid 셀 클릭시 이벤트
@@ -249,7 +248,6 @@ var contPersonLayout = [
                     	//$('#custAddId').val("");//히든값
                         $('#maillingAddr').text("");
                     }
-                    
                     
                     //CONTACT INFO
                     $('#contactPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
