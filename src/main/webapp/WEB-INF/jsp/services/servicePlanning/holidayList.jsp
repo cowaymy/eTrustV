@@ -4,30 +4,17 @@
 <script type="text/javaScript">
 var gridID;
 var gridID1;
-
+var grpOrgList= new Array();
+var rData = new Array();
 function holidayCTassignGrid() {
     
     var columnLayout = [
                           { dataField : "holidayType", headerText  : "Holiday Type",    width : 100 },
-                          { dataField : "state", headerText  : "State",width : 100 ,editRenderer : {
-                              type : "ComboBoxRenderer",
-                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                              listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                  var list = getStateComboList();
-                                  return list;
-                              },
-                              keyField : "id"
-                          }},
-                          { dataField : "holiday", headerText  : "Date",  width  : 100, dataType : "date" ,
-                              editRenderer : {
-                                  type : "CalendarRenderer",
-                                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-                                  onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-                                  showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
-                                }},
+                          { dataField : "state", headerText  : "State",width : 100 },
+                          { dataField : "holiday", headerText  : "Date",  width  : 100, dataType : "date"},
                           { dataField : "holidayDesc",       headerText  : "Description",  width  : 200},
-                          { dataField : "holidaySeq",       headerText  : "",  width  : 50},
-                          { dataField : "code",       headerText  : "Branch",  width  : 100},
+                          { dataField : "holidaySeq",       headerText  : "",  width  : 0},
+                          { dataField : "ctBrnchCode",       headerText  : "Branch",  width  : 100},
                           { dataField : "replacementCtPax",       headerText  : "Replacement CT Pax",  width  : 100},
                           { dataField : "assignStatus",       headerText  : "Assign Status",  width  : 100},
                           { dataField : "brnchId",       headerText  : "",  width  : 0}
@@ -59,10 +46,11 @@ function holidayGrid() {
                               type : "ComboBoxRenderer",
                               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                               listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                  var list = getStateComboList();
+                                  var list = rData;
                                   return list;
                               },
-                              keyField : "id"
+                              keyField : "state",
+                              valueField : "codeName",
                           }},
                           { dataField : "holiday", headerText  : "Date",  width  : 100, dataType : "date" ,
                         	  editRenderer : {
@@ -87,10 +75,25 @@ function getStateComboList() {
 }
 function getTypeComboList() {
     //var list = [ {"codeId": "P","codeName": "PUBLIC"}, {"codeId": "S","codeName": "STATE"}];
-   var list = [ "P","S"];
+   var list = [ "Public Holiday","State Holiday"];
     return list;
 }
 
+function fn_selectState(){
+	 Common.ajax("GET", "/services/holiday/selectState.do",$("#holidayForm").serialize(), function(result) {
+         console.log("성공.");
+         console.log("data : " + result);
+         
+         for (var i = 0; i < result.length; i++) {
+             var list = new Object();
+             list.codeId = result[i].codeId;
+             list.state = result[i].codeId;
+             list.codeName = result[i].codeName;
+             rData.push(list);
+              }
+        });
+	 return rData;
+}
 	function addRow() {
 	    var item = new Object();
 	    item.holidayType = "";
@@ -107,7 +110,7 @@ function getTypeComboList() {
 $(document).ready(function(){
 	 holidayGrid();
 	 holidayCTassignGrid();
-	 
+	 fn_selectState();
 	 $("#holiday_CTassign_grid_wap").hide();
 	 $("#hiddenBtn").hide();
 	 $("#hiddenBtn4").hide();
@@ -117,14 +120,14 @@ $(document).ready(function(){
 	 AUIGrid.bind(gridID1, "cellClick", function(event) {
 	        console.log(event.rowIndex);
 	        type= AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayType");
-	        branchName = AUIGrid.getCellValue(gridID1, event.rowIndex, "code");
+	        branchName = AUIGrid.getCellValue(gridID1, event.rowIndex, "ctBrnchCode");
 	        holidayDesc = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayDesc");
 	        holiday = AUIGrid.getCellValue(gridID1, event.rowIndex, "holiday");
 	        branchId = AUIGrid.getCellValue(gridID1, event.rowIndex, "brnchId");
 	        state = AUIGrid.getCellValue(gridID1, event.rowIndex, "state");
 	        holidaySeq = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidaySeq");
 	        
-	        console.log(type + "      "+branchName + "     " + holidayDesc + "    " + holiday + "   " + branchId + "    " + holidaySeq);
+	        console.log(type + "      "+branchName + "     " + holidayDesc + "    " + holiday + "   " + branchId + "    " + holidaySeq + state);
 	        
 	    });
 	 doGetCombo('/services/holiday/selectState.do', '' , '', 'cmbState' , 'S', '');
@@ -313,6 +316,9 @@ $(document).ready(function(){
     <th scope="row">State</th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cmbState" name="cmbState">
+         <c:forEach var="list" items="${selectState}">
+             <option value="${list.codeId}">${list.codeName}</option>
+         </c:forEach>
         </select>
     </td>
     <th scope="row">Holiday</th>
@@ -329,7 +335,11 @@ $(document).ready(function(){
     <th scope="row" id="">Branch</th>
     <td>
         <div class="search_100p">
-            <input type="text" title="" placeholder="" class="w100p" id="branchId" name="branchId"/><a href="#" class="search_btn"><%-- <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /> --%></a>
+        <select class="multy_select w100p" multiple="multiple" id="branchId" name="branchId">
+        <c:forEach var="list" items="${branchList}">
+             <option value="${list.codeId}">${list.codeName}</option>
+         </c:forEach>
+        </select>
         </div>
     </td>
     <th></th>

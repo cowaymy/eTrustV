@@ -122,6 +122,20 @@ function CTListGrid2() {
         	AUIGrid.removeRow(CTListGrid2, "selectedIndex");
         	AUIGrid.removeSoftRows(CTListGrid2);
         }
+        
+        for(var j=0; j<activeItems.length; j++){//위에있는 그리드
+            for(var i=0; i< AUIGrid.getGridData(CTListGrid).length; i++){//아래그리드
+                if(AUIGrid.getCellValue(CTListGrid, i, "memCode") == activeItems[j].memCode){
+                    AUIGrid.updateRow(CTListGrid, { "checkFlag" : 0 }, i);
+                }
+                //if(AUIGrid.getCellValue(CTListGrid, i, "memCode"));
+                /* if(result[i].CTAssignList.memCode == AUIGrid.getCellValue(CTListGrid, i, "memCode")){
+                    alert(AUIGrid.getCellValue(CTListGrid, i, "memCode"));
+                    checkFlag.checked;
+                } */ 
+            }       
+       }
+        
     }
     $(document).ready(function(){  
         AUIGrid.bind(CTListGrid2, "removeRow", auiRemoveRowHandler);

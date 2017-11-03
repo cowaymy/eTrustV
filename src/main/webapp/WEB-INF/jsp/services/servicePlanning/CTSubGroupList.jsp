@@ -303,30 +303,26 @@ function fn_radioButton(val){
 <tr>
     <th scope="row">Region</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple">
-        </select>
+        <input type="text" title="" placeholder="" class="w100p"  id="region" name="region">
     </td>
     <th scope="row">City</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple">
-        </select>
+        <input type="text" title="" placeholder="" class="w100p"  id="city" name="city">
     </td>
-    <th scope="row">Town</th>
+    <th scope="row">Area</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple">
-        </select>
+        <input type="text" title="" placeholder="" class="w100p"  id="area" name="area" >
     </td>
 </tr>
 <tr>
     <th scope="row">Postal Code</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple">
-        </select>
+        <input type="text" title="" placeholder="" class="w100p"  id="postCode" name="postCode">
     </td>
-    <th scope="row">Street</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">State</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="state" name="state"/></td>
     <th scope="row">Area ID</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="areaId" name="areaId"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -350,16 +346,16 @@ function fn_radioButton(val){
     <th scope="row">DSC Branch</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="dscCode" name="dscCode"/></td>
     <th scope="row">CTM</th>
-    <td><input type="text" title="" placeholder="Martin" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="Martin" class="w100p" id="memCode" name="memCode"/></td>
     <th scope="row">CT Sub Group</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="ctSubGrp" name="ctSubGrp"/></td>
 </tr>
 <tr>
     <th scope="row">CT</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="CTMemId"/></td>
     <th scope="row">Local/Out Station</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple">
+        <select class="multy_select w100p" multiple="multiple" id="station" name="station">
         </select>
     </td>
     <th scope="row">Status</th>
