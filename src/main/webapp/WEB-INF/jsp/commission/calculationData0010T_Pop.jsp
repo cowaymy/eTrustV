@@ -324,7 +324,7 @@
                         </select></td>
                         <th scope="row">SALES PERSON CODE</th>
                         <td>
-                              <input type="text" id="salesPersonCd_10T" name="salesPersonCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="salesPersonCd_10T" name="salesPersonCd" style="width: 100px;" maxlength="10">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>

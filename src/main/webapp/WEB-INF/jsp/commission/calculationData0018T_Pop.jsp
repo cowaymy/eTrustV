@@ -295,7 +295,7 @@
 						</td>
 						<th scope="row">INST PERSON CODE</th>
                         <td>
-                              <input type="text" id="instPersonCd_18T" name="instPersonCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="instPersonCd_18T" name="instPersonCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>

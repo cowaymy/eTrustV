@@ -199,6 +199,7 @@
 			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 			       var month = searchDt.substr(0,searchDt.indexOf("/"));
 			       var code = $("#code_17T").val();
+			       var codeId = $("#orgGroup_17").val();
 			       
 			       var ordId = $("#ordId_17T").val();
 			       var memCd = $("#memCd_17T").val();
@@ -208,7 +209,7 @@
 			       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"&memCd="+memCd+"'/>";
 			       
 			       Common.showLoader();
-	               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"&memCd="+memCd)
+	               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"&memCd="+memCd+"&codeId="+codeId)
 	               .done(function () {
 	                   Common.alert('File download a success!');                
 	                   Common.removeLoader();            
@@ -234,10 +235,11 @@
 		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		      var month = searchDt.substr(0,searchDt.indexOf("/"));
 		      var code = $("#code_17T").val();
+		      var codeId = $("#orgGroup_17").val();
 		      //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
 		      
 		      Common.showLoader();
-              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code)
+              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId)
               .done(function () {
                   Common.alert('File download a success!');                
                   Common.removeLoader();            
@@ -295,19 +297,25 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0017T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
+                        <th scope="row">ORG Group<span class="must">*</span></th>
+                        <td><select id="orgGroup_17" name="codeId" style="width: 100px;">
+                                <c:forEach var="list" items="${orgGrList }">
+                                    <option value="${list.cdid}">${list.cd}</option>
+                                </c:forEach>
+                        </select></td>
                         <th scope="row">Member Code</th>
                         <td>
-                              <input type="text" id="memCd_17T" name="memCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="memCd_17T" name="memCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
+                    </tr>
+                    <tr>
                         <th scope="row">Order ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="ordId_17T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
-                    </tr>
-                    <tr>
                         <th scope="row">is Exclude</th>
-                        <td colspan=5>
+                        <td colspan=3>
                           <select id="useYnCombo_17T" name="useYnCombo" style="width:100px;">
                             <option value=""selected></option>
                             <option value="1">Y</option>

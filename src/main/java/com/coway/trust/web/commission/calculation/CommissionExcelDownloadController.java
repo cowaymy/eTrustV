@@ -456,7 +456,7 @@ public class CommissionExcelDownloadController {
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P02)) {
 				map.put("codeId", request.getParameter("codeId"));
-				map.put("memberCd", request.getParameter("memberId"));
+				map.put("memberCd", request.getParameter("memberCd"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
@@ -576,13 +576,14 @@ public class CommissionExcelDownloadController {
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad16T(map, downloadHandler);
 			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P011)) {
+				map.put("codeId", request.getParameter("codeId"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("memCd", request.getParameter("memCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "ordId", "trgetAmt", "colctAmt", "memCode", "hmCode", "smCode", "gmCode",
+				columns = new String[] { "ordId", "trgetAmt", "colctAmt","memId", "memCode", "hmCode", "smCode", "gmCode",
 						"rcmYear", "rcmMonth", "runId", "taskId", "isExclude" };
-				titles = new String[] { "ORD ID", "TRGET AMT", "COLCT AMT", "MEM CODE", "HM CODE", "SM CODE", "GM CODE",
+				titles = new String[] { "ORD ID", "TRGET AMT", "COLCT AMT","MEM ID", "MEM CODE", "HM CODE", "SM CODE", "GM CODE",
 						"RCM YEAR", "RCM MONTH", "RUN ID", "TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad17T(map, downloadHandler);

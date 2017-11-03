@@ -350,7 +350,7 @@
                     <tr>
                         <th scope="row">Order ID<span class="must">*</span></th>
                         <td>
-                              <input type="text" id="ordId_09T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="ordId_09T" name="ordId" style="width: 100px;" maxlength="10">
                         </td>
                         <th scope="row">is Exclude</th>
                         <td colspan="3">
