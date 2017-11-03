@@ -1,16 +1,11 @@
 package com.coway.trust.biz.payment.reconciliation.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.coway.trust.biz.payment.reconciliation.service.AccountReconciliationService;
 import com.coway.trust.biz.payment.reconciliation.service.PaymentReconciliationService;
-import com.coway.trust.cmmn.model.SessionVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -33,8 +28,6 @@ public class PaymentReconciliationServiceImpl extends EgovAbstractServiceImpl im
 
 	@Resource(name = "paymentReconciliationMapper")
 	private PaymentReconciliationMapper paymentReconciliationMapper;
-	
-	private static final Logger logger = LoggerFactory.getLogger(PaymentReconciliationServiceImpl.class);
 
 	@Override
 	public List<EgovMap> selectReconciliationMasterList(Map<String, Object> params) {
@@ -63,7 +56,7 @@ public class PaymentReconciliationServiceImpl extends EgovAbstractServiceImpl im
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveExcludeDepositItem(Map<String, Object> params) {
 		int depositDsResult = paymentReconciliationMapper.updReconDepositDs(params);
 		int depositMsResult = paymentReconciliationMapper.updReconDepositMs(params);
@@ -73,8 +66,6 @@ public class PaymentReconciliationServiceImpl extends EgovAbstractServiceImpl im
 		}else{
 			return false;
 		}
-		
-		
 	}
 
 }
