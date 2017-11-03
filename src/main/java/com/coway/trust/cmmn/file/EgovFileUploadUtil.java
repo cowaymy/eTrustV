@@ -32,10 +32,9 @@ import com.coway.trust.util.*;
 public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 	/**
 	 * 파일을 Upload 처리한다.
-	 *
+	 * 
 	 * @param request
 	 * @param uploadPath
-	 *            TODO
 	 * @param subPath
 	 * @param maxFileSize
 	 * @return
@@ -43,6 +42,21 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 	 */
 	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String uploadPath, String subPath,
 			final long maxFileSize) throws Exception {
+		return uploadFiles(request, uploadPath, subPath, maxFileSize, false);
+	}
+
+	/**
+	 * 파일을 Upload 처리한다.
+	 * @param request
+	 * @param uploadPath
+	 * @param subPath
+	 * @param maxFileSize
+	 * @param addExtension : application-xxx.properties 의 web.resource.upload.file(resource 접근 가능 파일 경로) 를 참조한 경우 확장자가 있어야지만 바로 열 수 있다.
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String uploadPath, String subPath,
+			final long maxFileSize, boolean addExtension) throws Exception {
 		List<EgovFormBasedFileVo> list = new ArrayList<EgovFormBasedFileVo>();
 
 		MultipartHttpServletRequest mptRequest = (MultipartHttpServletRequest) request;
@@ -73,13 +87,16 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 			vo.setContentType(mFile.getContentType());
 			vo.setServerPath(uploadPath);
 			vo.setServerSubPath(subPath);
-			vo.setPhysicalName(getPhysicalFileName());
+
+			String physicalName = getPhysicalFileName();
+
+			if(addExtension){
+				physicalName = physicalName + "." + FilenameUtils.getExtension(tmp);
+			}
+
+			vo.setPhysicalName(physicalName);
 			vo.setSize(mFile.getSize());
 			vo.setExtension(FilenameUtils.getExtension(tmp));
-
-			if (tmp.lastIndexOf(".") >= 0) {
-				vo.setPhysicalName(vo.getPhysicalName()); // 2012.11 KISA 보안조치
-			}
 
 			if (mFile.getSize() > 0) {
 				InputStream is = null;

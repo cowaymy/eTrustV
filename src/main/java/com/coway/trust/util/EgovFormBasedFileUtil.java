@@ -136,68 +136,68 @@ public class EgovFormBasedFileUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, final String uploadPath,
-			final String subPath, long maxFileSize) throws Exception {
-		List<EgovFormBasedFileVo> list = new ArrayList<EgovFormBasedFileVo>();
-
-		// Check that we have a file upload request
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-
-		if (isMultipart) {
-			// Create a new file upload handler
-			ServletFileUpload upload = new ServletFileUpload();
-			upload.setFileSizeMax(maxFileSize); // SizeLimitExceededException
-
-			// Parse the request
-			FileItemIterator iter = upload.getItemIterator(request);
-			while (iter.hasNext()) {
-				FileItemStream item = iter.next();
-				String name = item.getFieldName();
-				InputStream stream = item.openStream();
-				if (item.isFormField()) {
-					LOGGER.info("Form field '{}' with value '{}' detected.", name, Streams.asString(stream));
-				} else {
-					LOGGER.info("File field '{}' with file name '{}' detected.", name, item.getName());
-
-					if ("".equals(item.getName())) {
-						continue;
-					}
-
-					// Process the input stream
-					EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
-
-					String tmp = item.getName();
-
-					if (tmp.lastIndexOf("\\") >= 0) {
-						tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
-					}
-
-					vo.setFileName(tmp);
-					vo.setContentType(item.getContentType());
-					vo.setServerPath(uploadPath);
-					vo.setServerSubPath(subPath);
-					vo.setPhysicalName(getPhysicalFileName());
-
-					if (tmp.lastIndexOf(".") >= 0) {
-						vo.setPhysicalName(vo.getPhysicalName() + tmp.substring(tmp.lastIndexOf(".")));
-					}
-
-					long size = saveFile(stream,
-							new File(EgovWebUtil.filePathBlackList(uploadPath) + SEPERATOR
-									+ EgovWebUtil.filePathBlackList(vo.getServerSubPath()) + SEPERATOR
-									+ vo.getPhysicalName()));
-
-					vo.setSize(size);
-
-					list.add(vo);
-				}
-			}
-		} else {
-			throw new IOException("form's 'enctype' attribute have to be 'multipart/form-data'");
-		}
-
-		return list;
-	}
+//	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, final String uploadPath,
+//			final String subPath, long maxFileSize) throws Exception {
+//		List<EgovFormBasedFileVo> list = new ArrayList<EgovFormBasedFileVo>();
+//
+//		// Check that we have a file upload request
+//		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+//
+//		if (isMultipart) {
+//			// Create a new file upload handler
+//			ServletFileUpload upload = new ServletFileUpload();
+//			upload.setFileSizeMax(maxFileSize); // SizeLimitExceededException
+//
+//			// Parse the request
+//			FileItemIterator iter = upload.getItemIterator(request);
+//			while (iter.hasNext()) {
+//				FileItemStream item = iter.next();
+//				String name = item.getFieldName();
+//				InputStream stream = item.openStream();
+//				if (item.isFormField()) {
+//					LOGGER.info("Form field '{}' with value '{}' detected.", name, Streams.asString(stream));
+//				} else {
+//					LOGGER.info("File field '{}' with file name '{}' detected.", name, item.getName());
+//
+//					if ("".equals(item.getName())) {
+//						continue;
+//					}
+//
+//					// Process the input stream
+//					EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
+//
+//					String tmp = item.getName();
+//
+//					if (tmp.lastIndexOf("\\") >= 0) {
+//						tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
+//					}
+//
+//					vo.setFileName(tmp);
+//					vo.setContentType(item.getContentType());
+//					vo.setServerPath(uploadPath);
+//					vo.setServerSubPath(subPath);
+//					vo.setPhysicalName(getPhysicalFileName());
+//
+//					if (tmp.lastIndexOf(".") >= 0) {
+//						vo.setPhysicalName(vo.getPhysicalName() + tmp.substring(tmp.lastIndexOf(".")));
+//					}
+//
+//					long size = saveFile(stream,
+//							new File(EgovWebUtil.filePathBlackList(uploadPath) + SEPERATOR
+//									+ EgovWebUtil.filePathBlackList(vo.getServerSubPath()) + SEPERATOR
+//									+ vo.getPhysicalName()));
+//
+//					vo.setSize(size);
+//
+//					list.add(vo);
+//				}
+//			}
+//		} else {
+//			throw new IOException("form's 'enctype' attribute have to be 'multipart/form-data'");
+//		}
+//
+//		return list;
+//	}
 
 	/**
 	 * 파일을 Download 처리한다.
