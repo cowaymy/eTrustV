@@ -72,8 +72,10 @@ public class MaterialdocumentController {
 	public ResponseEntity<Map> MaterialDocSearchList(@RequestBody Map<String, Object> params, Model model)
 			throws Exception {
 		
-		logger.debug("searchFromLoc       : {}",params.get("searchFromLoc"));
-		logger.debug("searchToLoc       : {}",params.get("searchToLoc"));
+//		logger.debug("searchFromLoc       : {}",params.get("searchFromLoc"));
+//		logger.debug("searchToLoc       : {}",params.get("searchToLoc"));
+		logger.debug("tlocation       : {}",params.get("tlocation"));
+		logger.debug("flocation       : {}",params.get("flocation"));
 		logger.debug("searchMaterialCode       : {}",params.get("searchMaterialCode"));
 		logger.debug("searchTrcType       : {}",params.get("searchTrcType"));
 		logger.debug("searchMoveType       : {}",params.get("searchMoveType"));
