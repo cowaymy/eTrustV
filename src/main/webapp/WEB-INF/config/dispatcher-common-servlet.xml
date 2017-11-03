@@ -82,6 +82,7 @@
             <mvc:mapping path="/mobile/**"/>
 
             <mvc:exclude-mapping path="/mobile/login.do"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.MobileWebAuthenticInterceptor" />
         </mvc:interceptor>
@@ -93,6 +94,7 @@
 
             <!-- MOBILE WEB -->
             <mvc:exclude-mapping path="/mobile/**"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.CallCenterAuthenticInterceptor" />
         </mvc:interceptor>
