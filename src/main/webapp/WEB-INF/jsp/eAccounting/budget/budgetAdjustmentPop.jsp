@@ -854,7 +854,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
     	
 	var file = atchFileName.split(".");
 	
-	   if(file[1] == "jpg" || file[1] == "PNG") {
+	   if(file[1] == "jpg" || file[1] == "png") {
            // TODO View
            var fileSubPath = fileSubPath;
            fileSubPath = fileSubPath.replace('\', '/'');
