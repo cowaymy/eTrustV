@@ -51,7 +51,7 @@ $(document).ready(function () {
                             atchFileGrpId : event.item.atchFileGrpId,
                             atchFileId : event.item.atchFileId
                     };
-                if(event.item.fileExtsn == "jpg") {
+                if(event.item.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
                     // TODO View
                 	Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
                         console.log(result);

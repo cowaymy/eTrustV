@@ -123,7 +123,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     };
     Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
         console.log(result);
-        if(result.fileExtsn == "jpg") {
+        if(result.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
             // TODO View
             var fileSubPath = result.fileSubPath;
             fileSubPath = fileSubPath.replace('\', '/'');
@@ -157,7 +157,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     };
     Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
         console.log(result);
-        if(result.fileExtsn == "jpg") {
+        if(result.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
             // TODO View
             var fileSubPath = result.fileSubPath;
             fileSubPath = fileSubPath.replace('\', '/'');
