@@ -15,9 +15,9 @@ import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
-public class MobileAuthenticInterceptor extends WebContentInterceptor {
+public class MobileWebAuthenticInterceptor extends WebContentInterceptor {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MobileAuthenticInterceptor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MobileWebAuthenticInterceptor.class);
 
 	@Autowired
 	private SessionHandler sessionHandler;
