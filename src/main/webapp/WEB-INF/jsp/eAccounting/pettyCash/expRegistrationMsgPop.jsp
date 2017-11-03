@@ -37,7 +37,7 @@ function fn_approveLineSubmit() {
                 console.log(result[i]);
                 var rowIndex = AUIGrid.rowIdToIndex(newGridID, result[i])
                 AUIGrid.setCellValue(newGridID, rowIndex, "yN", "N");
-                $("#registMsgPop").remove();
+                $("#expRegistrationMsgPop").remove();
                 $("#approveLineSearchPop").remove();
             }
         } else {
