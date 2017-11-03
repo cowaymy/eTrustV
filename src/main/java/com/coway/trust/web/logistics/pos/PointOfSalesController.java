@@ -142,7 +142,8 @@ public class PointOfSalesController {
 		logger.debug("searchOthersReq1    값 : {}", params.get("searchOthersReq1"));
 		logger.debug("searchOthersReq2    값 : {}", params.get("searchOthersReq2"));
 		logger.debug("searchReqType    값 : {}", params.get("searchReqType"));
-		logger.debug("searchLoc    값 : {}", params.get("searchLoc"));
+		/*logger.debug("searchLoc    값 : {}", params.get("searchLoc"));*/
+		logger.debug("tlocation    값 : {}", params.get("tlocation"));
 		logger.debug("searchStatus    값 : {}", params.get("searchStatus"));
 		logger.debug("crtsdt    값 : {}", params.get("crtsdt"));
 		logger.debug("crtedt    값 : {}", params.get("crtedt"));
