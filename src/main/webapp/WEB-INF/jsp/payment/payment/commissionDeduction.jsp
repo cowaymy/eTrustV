@@ -57,7 +57,7 @@ var columnLayout=[
        {dataField:"fileDt", headerText:"Upload date",dataType:"date",formatString:"dd-mm-yyyy"},
        {dataField:"fileRefNo", headerText:"File Type"},
        {dataField:"totRcord", headerText:"Total Records"},
-       {dataField:"totAmt", headerText:"Total Amount"},
+       {dataField:"totAmt", headerText:"Total Amount", dataType:"numeric", formatString:"#,##0.00"},
        {dataField:"fileStus", headerText:"File Status"}
 ];
 

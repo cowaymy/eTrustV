@@ -29,7 +29,7 @@ var columnLayout=[
     {dataField:"salesOrdNo", headerText:"Order No"},
     {dataField:"codeName", headerText:"App Type"},
     {dataField:"salesDt", headerText:"Order Date"},
-    {dataField:"name", headerText:"customerName"}
+    {dataField:"name", headerText:"CustomerName"}
 ];
 
 function fn_getOutrightInvoiceListAjax() {     
