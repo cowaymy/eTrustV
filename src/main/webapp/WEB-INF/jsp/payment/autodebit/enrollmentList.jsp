@@ -93,8 +93,7 @@ var columnLayout2 = [
     
     view_Enrollment = function() {
         var enrollId;
-        var creator;
-        var values = []; //ArrayList 값을 받을 변수를 선언
+        
         if(selectedGridValue !=  undefined){
         	 
         	 enrollId=AUIGrid.getCellValue(myGridID, selectedGridValue, "enrlid");
@@ -108,16 +107,11 @@ var columnLayout2 = [
                  $('#debtDtFrom').text(result.enrollInfo.debtDtFrom);
                  $('#debtDtTo').text(result.enrollInfo.debtDtTo);
                  
-                 values = result.resultList ;
+                 myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,gridPros);
+                 AUIGrid.setGridData(myGridID2, result.resultList);
 
              },function(jqXHR, textStatus, errorThrown) {
                  Common.alert("실패하였습니다.");
-
-             });
-             
-             Common.ajax("GET","/payment/selectViewEnrollmentList.do",{"enrollId":enrollId}, function(result){
-            	 myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,gridPros);
-                 AUIGrid.setGridData(myGridID2, result);
              });
         	 
         }else{
@@ -125,8 +119,6 @@ var columnLayout2 = [
         	Common.alert("No enrollment record selected.");
             return;
         }
-
-        
     }
     
     new_Enrollment = function() {
@@ -135,32 +127,19 @@ var columnLayout2 = [
         $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
     }
     
-  //Save Data
+    //Save Data
     function fn_saveEnroll() {
-    	var data = {};
-        var cmbIssueBank2 = $("#cmbIssueBank2 option:selected").val();
-        var rdpCreateDateFr2 = $("#rdpCreateDateFr2").val();
-        var rdpCreateDateTo2 = $("#rdpCreateDateTo2").val();
-        
-        if(cmbIssueBank2 !="7"){
-        	if(rdpCreateDateFr2 == ""){
-        		//rdpCreateDateFr2 = "01/01/1900";
-        	}else if(rdpCreateDateTo2 == "") {
-        		//rdpCreateDateTo2 = "01/01/1900";
-        	}
-        }
     	
-    	if (validation()) {  
+    	if (validation()) {
+    		
     	    Common.ajax("POST", "/payment/saveEnroll.do",  $('#searchForm').serializeJSON(), function(result) {
-    		var msg = result.message;
-    		var enrlId = result.data.enrlId;
-    		Common.alert(msg+enrlId);
-    		// 공통 메세지 영역에 메세지 표시.
-            Common.setMsg("<spring:message code='sys.msg.success'/>");
-            //searchList();
+	    		var msg = result.message;
+	    		var enrlId = result.data.enrlId;
+	    		Common.alert(msg+enrlId);
             }, function(jqXHR, textStatus, errorThrown) {
-            	Common.alert("실패하였습니다.");
+            	Common.alert("Fail.");
             });
+    	    
         }
     }
         
@@ -169,16 +148,36 @@ var columnLayout2 = [
         var message = "";
         
         if($("#cmbIssueBank2 option:selected").val() ==""){
+        	
         	Common.alert("* Please select the issue bank.");
         	return;
+        	
         }else if($("#rdpCreateDateFr2").val() ==""){
+        	
         	Common.alert("* Please insert the debit date.");
         	return;
+        	
         }else if($("#cmbIssueBank2 option:selected").val() =="7"){
         	
         	if($("#rdpCreateDateTo2").val() ==""){
         		Common.alert("* Please insert the debit date (To).");
-                return;	
+                return;
+                
+        	}else{
+        		
+        		var startDate = $('#rdpCreateDateFr2').val();
+                var startDateArr = startDate.split('/');
+                var endDate = $('#rdpCreateDateTo2').val();
+                var endDateArr = endDate.split('/');
+                var startDateCompare = new Date(startDateArr[2], parseInt(startDateArr[1])-1, startDateArr[0]);
+                var endDateCompare = new Date(endDateArr[2], parseInt(endDateArr[1])-1, endDateArr[0]);
+        		
+        		if($("#rdpCreateDateFr2").val() != ""){
+        			if(startDateCompare.getTime() > endDateCompare.getTime()) {
+        				 Common.alert("* Debit date (To) must later or same to debit date (From).");
+        				 return;
+        			}
+        		}
         	}
         }
         
