@@ -29,6 +29,16 @@
             fn_getOrgCdListAllAjax(); //call orgList
         }); 
 		
+        $("#searchDt").change(function() {
+            $("#orgCombo").find('option').each(function() {
+                $(this).remove();
+            });
+            if ($(this).val().trim() == "") {
+                return;
+            }       
+            fn_getOrgCdListAllAjax(); //call orgList
+        }); 
+		
 		 createActualAUIGrid();
 	     createSimulAUIGrid();
 	     AUIGrid.setSelectionMode(acGridID, "singleRow");
