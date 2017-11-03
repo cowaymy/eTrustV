@@ -2,6 +2,7 @@
 
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/master.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquery-ui-custom.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/multiple-select.css" />
     <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
     <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->

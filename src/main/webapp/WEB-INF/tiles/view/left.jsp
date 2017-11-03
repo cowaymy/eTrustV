@@ -11,6 +11,37 @@
         }else{
             fn_addClassMyMenu($("#CURRENT_MENU_CODE").val(), $("#CURRENT_GROUP_MY_MENU_CODE").val());
         }
+
+
+        var availableTags = [
+            "ActionScript",
+            "AppleScript",
+            "Asp",
+            "BASIC",
+            "C",
+            "C++",
+            "Clojure",
+            "COBOL",
+            "ColdFusion",
+            "Erlang",
+            "Fortran",
+            "Groovy",
+            "Haskell",
+            "Java",
+            "JavaScript",
+            "Lisp",
+            "Perl",
+            "PHP",
+            "Python",
+            "Ruby",
+            "Scala",
+            "Scheme"
+        ];
+
+        $( "#_leftSearch" ).autocomplete({
+            source: availableTags
+        });
+
     });
 
     // 현재 메뉴 표시.
@@ -84,7 +115,7 @@
                     <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
                 </h1>
                 <p class="search">
-                    <input type="text" title="검색어 입력" />
+                    <input type="text" id="_leftSearch" title="검색어 입력" />
                     <input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
                 </p>
 
