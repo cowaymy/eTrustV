@@ -71,16 +71,16 @@ function fn_changeCombo(value){
     }
 	
 	if(value=="REG"){
-		$('<option />', { value: "INV", text: "Investigate"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
+		$('<option />', { value: "INV", text: "<spring:message code="sales.Investigate" />"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
 	}else if(value=="INV"){
-		$('<option />', { value: "REG", text: "Regular" }).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
-		$('<option />', {value: "SUS", text: "Suspend" }).appendTo($("#pRsCnvrStusTo"));
+		$('<option />', { value: "REG", text: "<spring:message code="sales.Regular" />" }).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
+		$('<option />', {value: "SUS", text: "<spring:message code="sales.Suspend" />" }).appendTo($("#pRsCnvrStusTo"));
 	}else if(value=="SUS"){
-		$('<option />', { value: "REG", text: "Regular"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
-        $('<option />', { value: "INV", text: "Investigate"}).appendTo($("#pRsCnvrStusTo"));
+        $('<option />', { value: "INV", text: "<spring:message code="sales.Investigate" />"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
+		$('<option />', { value: "RET", text: "<spring:message code="sales.Return" />"}).appendTo($("#pRsCnvrStusTo"));
 	}else if(value=="RET"){
-        $('<option />', { value: "SUS", text: "Suspend"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
-        $('<option />', { value: "TER", text: "Terminate"}).appendTo($("#pRsCnvrStusTo"));
+        $('<option />', { value: "SUS", text: "<spring:message code="sales.Suspend" />"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
+        $('<option />', { value: "TER", text: "<spring:message code="sales.Terminate" />"}).appendTo($("#pRsCnvrStusTo"));
     }
 }
 
