@@ -282,7 +282,7 @@ function fn_makeGrid(){
 	    
 	 monFooter[0] = {
 		        labelText : "<spring:message code='budget.Total' />",
-		        positionField : "#base"
+		        positionField : "glAccDesc"
 		    }
  
  
