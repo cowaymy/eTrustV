@@ -296,7 +296,7 @@ T1.CHRG_USER_ID,
 T2.NAME AS CHRG_USER_NAME,
 T1.COST_CENTR,
 T1.COST_CENTR_NAME,
-T1.CLM_MONTH,
+TO_DATE(T1.CLM_MONTH, 'YYYYMM') AS CLM_MONTH,
 T1.TOT_AMT AS ALL_TOT_AMT,
 T3.REQST_DT,
 NVL (T3.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
@@ -491,7 +491,8 @@ SELECT T1.CLM_SEQ,
        T1.GL_ACC_CODE_NAME, 
        T1.BUDGET_CODE, 
        T1.BUDGET_CODE_NAME, 
-       T1.SUPPLY_NAME AS SUPPLY, 
+       T1.SUPPLY_NAME AS SUPPLY,
+       T4.MEM_ACC_NAME AS SUPPLY_NAME, 
        T1.INVC_TYPE, 
        ( CASE T1.INVC_TYPE 
            WHEN 'F' THEN 'Full Tax invoice' 
@@ -520,8 +521,8 @@ WHERE  T1.CLM_NO = #{clmNo}
 ORDER  BY T1.CLM_SEQ 
 </select>
 
-<select id="selectReimbursementInfo" parameterType="Map" resultType="egovMap">
-/* creditCardMapper.selectExpenseInfo */
+<select id="selectReimburesementInfo" parameterType="Map" resultType="egovMap">
+/* creditCardMapper.selectReimburesementInfo */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 SELECT T1.CLM_SEQ, 
        T2.CRDIT_CARD_NO,
@@ -533,7 +534,8 @@ SELECT T1.CLM_SEQ,
        T2.COST_CENTR_NAME, 
        T2.BANK_CODE, 
        T2.BANK_NAME, 
-       TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
+       TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
+       T2.APPV_PRCSS_NO,
        T1.INVC_TYPE,
        T1.INVC_NO, 
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT, 
@@ -573,5 +575,122 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
           ORDER BY T1.ATCH_FILE_ID         
 </select>
+
+<update id="updateReimbursement" parameterType="Map">
+/* creditCardMapper.updateReimbursement */
+   UPDATE FCM0017M
+   SET CRDIT_CARD_USER_ID = #{crditCardUserId}
+       ,CRDIT_CARD_USER_NAME = #{crditCardUserName}
+       ,CRDIT_CARD_NO = #{crditCardNo}
+       ,CHRG_USER_ID = #{chrgUserId}
+       ,COST_CENTR = #{costCentr}
+       ,COST_CENTR_NAME = #{costCentrName}
+       ,BANK_CODE = #{bankCode}
+       ,BANK_NAME = #{bankName}
+       ,CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,TOT_AMT = #{allTotAmt}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
+</update>
+
+<update id="updateReimbursementItem" parameterType="Map">
+/* creditCardMapper.updateReimbursementItem */
+   UPDATE FCM0018D
+   SET EXP_TYPE = #{expType}
+       ,EXP_TYPE_NAME = #{expTypeName}
+       ,GL_ACC_CODE = #{glAccCode}
+       ,GL_ACC_CODE_NAME = #{glAccCodeName}
+       ,BUDGET_CODE = #{budgetCode}
+       ,BUDGET_CODE_NAME = #{budgetCodeName}
+       ,SUPPLY_NAME = #{supply}
+       ,INVC_TYPE = #{invcType}
+       ,INVC_NO = #{invcNo}
+       ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,TAX_CODE = #{taxCode}
+       ,NET_AMT = #{netAmt}
+       ,TAX_AMT = #{taxAmt}
+       ,TOT_AMT = #{totAmt}
+       ,EXP_DESC = #{expDesc}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}     
+    AND CLM_SEQ = #{clmSeq}  
+</update>
+
+<select id="budgetCheck" parameterType="Map" resultType="String">
+/* creditCardMapper.budgetCheck */
+    SELECT FN_GET_BUDGET_AMT(#{year}, #{month}, #{costCentr}, #{budgetCode}, #{glAccCode}, #{netAmt}) FROM DUAL
+</select>
+
+<insert id="insertApproveItems" parameterType="Map">
+/* creditCardMapper.insertApproveItems */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0015D
+   (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{appvItmSeq}
+       ,#{invcNo}
+       ,#{invcDt}
+       ,#{invcType}
+       ,#{supply}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{taxCode}
+       ,#{netAmt}
+       ,#{taxAmt}
+       ,#{totAmt}
+       ,#{expDesc}
+       ,#{atchFileGrpId}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<update id="updateAppvPrcssNo" parameterType="Map">
+/* creditCardMapper.updateAppvPrcssNo */
+   UPDATE FCM0017M
+   SET APPV_PRCSS_NO = #{appvPrcssNo}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
+</update>
 
 </mapper>

@@ -760,7 +760,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,#{invcNo}
        ,SYSDATE
        ,#{invcType}
-       ,#{memAccId}
+       ,#{sMemAccId}
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
        ,#{expType}
        ,#{expTypeName}

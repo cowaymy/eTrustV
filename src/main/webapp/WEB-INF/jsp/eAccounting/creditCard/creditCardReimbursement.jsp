@@ -300,6 +300,18 @@ function fn_setEvent() {
 		$("#maskingNo").val(crditCardNo);
 	});
 	
+	$("#maskingNo").blur(function () {
+		console.log($("#maskingNo").val());
+        var crditCardNo = $("#maskingNo").val();
+        if(crditCardNo.length > 0) {
+        	var crditCardNo1 = crditCardNo.substr(0, 4);
+            var crditCardNo4 = crditCardNo.substr(12);
+            crditCardNo = crditCardNo1 + "********" + crditCardNo4;
+            console.log(crditCardNo);
+            $("#maskingNo").val(crditCardNo);
+        }
+	  });
+	
 	$("#amt :text").keydown(function (event) { 
         var code = window.event.keyCode;
         if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
@@ -439,39 +451,38 @@ function fn_addRow() {
     // 파일 업로드 후 그룹 아이디 값을 받아서 Add
     if(fn_checkEmpty()) {
         var formData = Common.getFormData("form_newReimbursement");
+        var data = {
+                bankCode : $("#bankCode").val()
+                ,bankName : $("#bankName").val()
+                ,crditCardUserId : $("#newCrditCardUserId").val()
+                ,crditCardUserName : $("#newCrditCardUserName").val()
+                ,crditCardNo : $("#newCrditCardNo").val()
+                ,chrgUserId : $("#newChrgUserId").val()
+                ,chrgUserName : $("#newChrgUserName").val()
+                ,costCentr : $("#newCostCenter").val()
+                ,clmMonth : $("#clmMonth").val()
+                ,invcDt : $("#invcDt").val()
+                ,costCentrName : $("#newCostCenterText").val()
+                ,expType : $("#expType").val()
+                ,expTypeName : $("#expTypeName").val()
+                ,glAccCode : $("#glAccCode").val()
+                ,glAccCodeName : $("#glAccCodeName").val()
+                ,budgetCode : $("#budgetCode").val()
+                ,budgetCodeName : $("#budgetCodeName").val()
+                ,supply : $("#newSupply").val()
+                ,supplyName : $("#newSupplyName").val()
+                ,taxCode : $("#taxCode").val()
+                ,taxName : $("#taxCode option:selected").text()
+                ,gstRgistNo : $("#gstRgistNo").val()
+                ,invcNo : $("#invcNo").val()
+                ,invcType : $("#invcType").val()
+                ,invcTypeName : $("#invcType option:selected").text()
+                ,cur : "MYR"
+                ,netAmt : Number($("#netAmt").val().replace(/,/gi, ""))
+                ,taxAmt : Number($("#taxAmt").val().replace(/,/gi, ""))
+                ,expDesc : $("#expDesc").val()
+        };
         if(clmSeq == 0) {
-            var data = {
-                    bankCode : $("#bankCode").val()
-                    ,bankName : $("#bankName").val()
-            		,crditCardUserId : $("#newCrditCardUserId").val()
-                    ,crditCardUserName : $("#newCrditCardUserName").val()
-                    ,crditCardNo : $("#newCrditCardNo").val()
-                    ,chrgUserId : $("#newChrgUserId").val()
-                    ,chrgUserName : $("#newChrgUserName").val()
-                    ,costCentr : $("#newCostCenter").val()
-                    ,clmMonth : $("#clmMonth").val()
-                    ,invcDt : $("#invcDt").val()
-                    ,costCentrName : $("#newCostCenterText").val()
-                    ,expType : $("#expType").val()
-                    ,expTypeName : $("#expTypeName").val()
-                    ,glAccCode : $("#glAccCode").val()
-                    ,glAccCodeName : $("#glAccCodeName").val()
-                    ,budgetCode : $("#budgetCode").val()
-                    ,budgetCodeName : $("#budgetCodeName").val()
-                    ,supply : $("#newSupply").val()
-                    ,supplyName : $("#newSupplyName").val()
-                    ,taxCode : $("#taxCode").val()
-                    ,taxName : $("#taxCode option:selected").text()
-                    ,gstRgistNo : $("#gstRgistNo").val()
-                    ,invcNo : $("#invcNo").val()
-                    ,invcType : $("#invcType").val()
-                    ,invcTypeName : $("#invcType option:selected").text()
-                    ,cur : "MYR"
-                    ,netAmt : Number($("#netAmt").val().replace(/,/gi, ""))
-                    ,taxAmt : Number($("#taxAmt").val().replace(/,/gi, ""))
-                    ,expDesc : $("#expDesc").val()
-            };
-            
             Common.ajaxFile("/eAccounting/creditCard/attachFileUpload.do", formData, function(result) {
                 console.log(result);
                 
@@ -482,38 +493,6 @@ function fn_addRow() {
                 fn_getAllTotAmt();
             });
         } else {
-            var data = {
-            		bankCode : $("#bankCode").val()
-                    ,bankName : $("#bankName").val()
-                    ,crditCardUserId : $("#newCrditCardUserId").val()
-                    ,crditCardUserName : $("#newCrditCardUserName").val()
-                    ,crditCardNo : $("#newCrditCardNo").val()
-                    ,chrgUserId : $("#newChrgUserId").val()
-                    ,chrgUserName : $("#newChrgUserName").val()
-                    ,costCentr : $("#newCostCenter").val()
-                    ,clmMonth : $("#clmMonth").val()
-                    ,invcDt : $("#invcDt").val()
-                    ,costCentrName : $("#newCostCenterText").val()
-                    ,expType : $("#expType").val()
-                    ,expTypeName : $("#expTypeName").val()
-                    ,glAccCode : $("#glAccCode").val()
-                    ,glAccCodeName : $("#glAccCodeName").val()
-                    ,budgetCode : $("#budgetCode").val()
-                    ,budgetCodeName : $("#budgetCodeName").val()
-                    ,supply : $("#newSupply").val()
-                    ,supplyName : $("#newSupplyName").val()
-                    ,taxCode : $("#taxCode").val()
-                    ,taxName : $("#taxCode option:selected").text()
-                    ,gstRgistNo : $("#gstRgistNo").val()
-                    ,invcNo : $("#invcNo").val()
-                    ,invcType : $("#invcType").val()
-                    ,invcTypeName : $("#invcType option:selected").text()
-                    ,cur : "MYR"
-                    ,netAmt : Number($("#netAmt").val().replace(/,/gi, ""))
-                    ,taxAmt : Number($("#taxAmt").val().replace(/,/gi, ""))
-                    ,expDesc : $("#expDesc").val()
-            };
-            
             $("#attachTd").html("");
             $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
             
@@ -591,7 +570,7 @@ function fn_viewReimbursementPop() {
             clmNo : clmNo,
             callType : "view"
     };
-    Common.popupDiv("/eAccounting/creditCard/viewReimbursementPop.do", data, null, true, "viewExpensePop");
+    Common.popupDiv("/eAccounting/creditCard/viewReimbursementPop.do", data, null, true, "viewReimbursementPop");
 }
 
 function fn_selectReimbursementInfo() {
@@ -599,7 +578,7 @@ function fn_selectReimbursementInfo() {
             clmNo : clmNo
             ,clmSeq : clmSeq
     };
-    Common.ajax("GET", "/eAccounting/creditCard/selectReimburesementInfo.do", obj, function(result) {
+    Common.ajax("GET", "/eAccounting/creditCard/selectReimbursementInfo.do", obj, function(result) {
         console.log(result);
         var crditCardNo = result.crditCardNo;
         $("#newCrditCardNo").val(crditCardNo);
@@ -614,17 +593,16 @@ function fn_selectReimbursementInfo() {
         $("#newChrgUserName").val(result.chrgUserName);
         $("#newCostCenter").val(result.costCentr);
         $("#newCostCenterText").val(result.costCentrName);
+        $("#sCostCenterText").val(result.costCentrName);
         $("#bankCode").val(result.bankCode);
         $("#bankName").val(result.bankName);
         $("#clmMonth").val(result.clmMonth);
-        var allTotAmt = "" + result.allTotAmt;
-        $("#allTotAmt_text").val(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
         $("#invcType").val(result.invcType);
         fn_ActionInvcTypeS();
         $("#invcNo").val(result.invcNo);
         $("#invcDt").val(result.invcDt);
-        $("#supply").val(result.supply);
-        $("#supplyName").val(result.supplyName);
+        $("#newSupply").val(result.supply);
+        $("#newSupplyName").val(result.supplyName);
         $("#expType").val(result.expType);
         $("#expTypeName").val(result.expTypeName);
         $("#glAccCode").val(result.glAccCode);
@@ -703,7 +681,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     };
     Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
         console.log(result);
-        if(result.fileExtsn == "jpg") {
+        if(result.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
             // TODO View
             var fileSubPath = result.fileSubPath;
             fileSubPath = fileSubPath.replace('\', '/'');
@@ -718,6 +696,41 @@ function fn_atchViewDown(fileGrpId, fileId) {
                 + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
         }
     });
+}
+
+function fn_updateReimbursement(st) {
+    // row의 수가 0개 이상일때만 insert
+    var gridDataList = AUIGrid.getOrgGridData(newGridID);
+    if(gridDataList.length > 0){
+        var gridDataObj = GridCommon.getEditData(newGridID);
+        gridDataObj.clmNo = clmNo;
+        gridDataObj.allTotAmt = Number($("#allTotAmt_text").text().replace(/,/gi, ""));
+        console.log(gridDataObj);
+        Common.ajax("POST", "/eAccounting/creditCard/updateReimbursement.do", gridDataObj, function(result) {
+            console.log(result);
+            clmNo = result.data.clmNo;
+            fn_selectReimbursementItemList();
+            if(st == "view"){
+                Common.alert("Temporary save succeeded.");
+                $("#viewReimbursementPop").remove();
+            }
+            fn_selectReimbursementList();
+        });
+    } else {
+        Common.alert("There is no data to save. Please add.");
+    }
+}
+
+function fn_approveLinePop() {
+    // tempSave를 하지 않고 바로 submit인 경우
+    if(FormUtil.isEmpty(clmNo)) {
+    	fn_insertReimbursement("");
+    } else {
+        // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
+        fn_updateReimbursement("");
+    }
+    
+    Common.popupDiv("/eAccounting/creditCard/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 </script>
 

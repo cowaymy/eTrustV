@@ -182,7 +182,7 @@ $(document).ready(function () {
     $("#clear_btn").click(fn_clearData);
     $("#add_btn").click(fn_addRow);
     $("#tempSave_btn").click(fn_tempSave);
-    $("#request_btn").click();
+    $("#request_btn").click(fn_approveLinePop);
     
     AUIGrid.bind(newGridID, "cellDoubleClick", function( event ) 
             {
@@ -259,23 +259,21 @@ function fn_tempSave() {
 <tbody>
 <tr>
 	<th scope="row">Credit Card No</th>
-	<td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="maskingNo" maxlength="16"/></td>
+	<td><input type="text" title="" placeholder="" class="w100p" id="maskingNo" maxlength="16"/></td>
+	<th scope="row">Credit cardholder name</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrditCardUserName" name="crditCardUserName"/></td>
 </tr>
 <tr>
 	<th scope="row">Issue bank</th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" name="bankName"/></td>
-	<th scope="row">Credit cardholder name</th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrditCardUserName" name="crditCardUserName"/></td>
-</tr>
-<tr>
 	<th scope="row">Person-in-charge name</th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newChrgUserName" name="chrgUserName"/></td>
-	<th scope="row">Person-in-charge department</th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCostCenterText" name="costCentrName"/></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newChrgUserName" name="chrgUserName"/></td>
 </tr>
 <tr>
 	<th scope="row">Claim Month</th>
-	<td colspan="3"><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="clmMonth" name="clmMonth"/></td>
+    <td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="clmMonth" name="clmMonth"/></td>
+	<th scope="row">Person-in-charge department</th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCostCenterText" name="costCentrName"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

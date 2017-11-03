@@ -357,8 +357,8 @@ public class CreditCardController {
 		return "eAccounting/creditCard/creditCardViewReimbursementPop";
 	}
 	
-	@RequestMapping(value = "/selectReimburesementInfo.do", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> selectReimburesementInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+	@RequestMapping(value = "/selectReimbursementInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectReimbursementInfo(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
@@ -374,6 +374,98 @@ public class CreditCardController {
 		}
 		
 		return ResponseEntity.ok(info);
+	}
+	
+	@RequestMapping(value = "/attachFileUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "eAccounting" + File.separator + "creditCard", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+		
+		LOGGER.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		creditCardApplication.updateReimbursementAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+		
+		params.put("attachFiles", list);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateReimbursement.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateReimbursement(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		
+		// TODO insert
+		creditCardService.updateReimbursement(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/approveLinePop.do")
+	public String approveLinePop(ModelMap model) {
+		return "eAccounting/creditCard/approveLinePop";
+	}
+	
+	@RequestMapping(value = "/appvRegistrationMsgPop.do")
+	public String appvRegistrationMsgPop(ModelMap model) {
+		return "eAccounting/creditCard/appvRegistrationMsgPop";
+	}
+	
+	@RequestMapping(value = "/budgetCheck.do", method = RequestMethod.POST)
+	public ResponseEntity<List<Object>> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<Object> result = creditCardService.budgetCheck(params);
+		
+		LOGGER.debug("result =====================================>>  " + result);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
+		params.put("appvPrcssNo", appvPrcssNo);
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		
+		// TODO
+		creditCardService.insertApproveManagement(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/appvCompletedMsgPop.do")
+	public String expCompletedMsgPop(ModelMap model) {
+		return "eAccounting/creditCard/appvCompletedMsgPop";
 	}
 
 }

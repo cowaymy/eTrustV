@@ -73,7 +73,7 @@ var mgmtColumnLayout = [ {
                         atchFileGrpId : item.atchFileGrpId,
                         atchFileId : item.atchFileId
                 };
-                if(item.fileExtsn == "jpg") {
+                if(item.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
                     // TODO View
                     console.log(data);
                     Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {

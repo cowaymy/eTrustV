@@ -314,14 +314,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
 				int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
 				hm.put("appvItmSeq", appvItmSeq);
-				hm.put("invcNo", params.get("invcNo"));
-				hm.put("invcDt", params.get("invcDt"));
-				hm.put("invcType", params.get("invcType"));
-				hm.put("memAccId", params.get("memAccId"));
-				hm.put("payDueDt", params.get("payDueDt"));
-				hm.put("costCentr", params.get("costCentr"));
-				hm.put("costCentrName", params.get("costCentrName"));
-				hm.put("atchFileGrpId", params.get("atchFileGrpId"));
+				hm.put("userId", params.get("userId"));
 				hm.put("userName", params.get("userName"));
 				LOGGER.debug("insertApproveItems =====================================>>  " + hm);
 				// TODO appvLineItemsTable Insert

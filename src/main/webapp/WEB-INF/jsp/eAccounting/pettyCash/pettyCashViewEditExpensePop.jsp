@@ -85,6 +85,9 @@ var newGridColumnLayout = [ {
     headerText : 'Invoice<br>Type',
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "invcNo",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "sMemAccId",
     headerText : 'Supplier',
 }, {

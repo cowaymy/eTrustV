@@ -48,5 +48,15 @@ public interface CreditCardMapper {
 	EgovMap selectReimburesementInfo(Map<String, Object> params);
 	
 	List<EgovMap> selectAttachList(String atchFileGrpId);
+	
+	void updateReimbursement(Map<String, Object> params);
+	
+	void updateReimbursementItem(Map<String, Object> params);
+	
+	String budgetCheck(Map<String, Object> params);
+	
+	void insertApproveItems(Map<String, Object> params);
+	
+	void updateAppvPrcssNo(Map<String, Object> params);
 
 }
