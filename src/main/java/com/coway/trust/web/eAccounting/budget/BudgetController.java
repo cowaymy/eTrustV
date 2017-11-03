@@ -325,10 +325,10 @@ public class BudgetController {
 				fileService.removeFilesByFileGroupId(FileType.WEB_DIRECT_RESOURCE, pAtchFileGrpId);
 			}
 			
-			int fileGroupKey = fileService.insertFiles(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, (Integer) params.get("userId"));
-			params.put("fileGroupKey", fileGroupKey);
+			/*int fileGroupKey = fileService.insertFiles(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, (Integer) params.get("userId"));
+			params.put("fileGroupKey", fileGroupKey);*/
 			
-			//fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
+			fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
 		}
 		
 		
