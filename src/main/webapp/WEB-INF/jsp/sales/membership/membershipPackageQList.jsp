@@ -42,10 +42,11 @@ function fn_keyEvent(){
 function createAUIGrid() {
 	
        var keyValueList = [{"code":"1", "value":"ACT"}, {"code":"8", "value":"IACT"}];
+       var typeKeyValueList = [{"code":"0", "value":"Starter Package"}, {"code":"1", "value":"Membership Package"}];
         
         var columnLayout = [
                             {dataField : "srvMemPacId",     headerText  : "" ,editable       : false ,visible : false } ,
-                            { dataField : "srvMemCode", headerText  : "Package Code",    width : 200 ,editable : true,
+                            { dataField : "srvMemCode", headerText  : "Package Code",    width : 150 ,editable : true,
 								
                                 editRenderer : { 
 								      type : "InputEditRenderer", 
@@ -61,7 +62,7 @@ function createAUIGrid() {
 								} 
                              },
                             { dataField : "srvMemDesc", headerText  : "Package Description",width : 200 ,editable       : true},
-                            { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
+                            { dataField : "code",   headerText  : "Status",  width          : 80,   editable       : true
                                             , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
 		                                     var retStr = "";
 		                                     for(var i=0,len=keyValueList.length; i<len; i++) {
@@ -80,9 +81,27 @@ function createAUIGrid() {
 					                 }
                             },
                             
-                            { dataField : "srvMemDur", headerText  : "Package Duration ",  width  : 80 , dataType:"numeric", formatString : "#,##0.00"},
+                            { dataField : "srvMemDur", headerText  : "Package Duration ",  width  : 120 , dataType:"numeric", formatString : "#,##0.00"},
                             { dataField : "srvMemLabChrg", headerText  : "Lab chrg ",  width  : 80 , dataType:"numeric", formatString : "#,##0.00" ,editable       : false },
-                            { dataField : "srvMemCrtUserId",       headerText  : "Creator",  width  : 100 ,editable       : false },
+                            { dataField : "pacType", headerText  : "Package Type ",  width  : 150 , editable       : true
+                            	 , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                                     var retStr = "";
+                                     for(var i=0,len=typeKeyValueList.length; i<len; i++) {
+                                         if(typeKeyValueList[i]["code"] == value) {
+                                             retStr = typeKeyValueList[i]["value"];
+                                             break;
+                                         }
+                                     }
+                                                 return retStr == "" ? value : retStr;
+                             }
+                           , editRenderer : {
+                                 type       : "ComboBoxRenderer",
+                                 list       : typeKeyValueList, //key-value Object 로 구성된 리스트
+                                 keyField   : "code", // key 에 해당되는 필드명
+                                 valueField : "value" // value 에 해당되는 필드명
+                             }
+                           },
+                            { dataField : "srvMemCrtUserId",       headerText  : "Creator",  width  : 80 ,editable       : false },
                             { dataField : "srvMemCrtDt",     headerText  : "Created",  width          :150,    editable       : false ,dataType : "date", formatString : "dd/mm/yyyy"}
                           
        ];
@@ -178,6 +197,7 @@ function fn_Clear(){
     $("#SRV_CNTRCT_PAC_DUR").val("");
     $("#MBRSH_CRT_USER_ID").val("");
     $("#SRV_CNTRCT_PAC_STUS_ID").val("");
+    $("#PAC_TYPE").val("");
 }
 
 
@@ -311,7 +331,7 @@ function fn_delete(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Rental Membership Package List</h2>
+<h2>Package Maintenance – Outright / Edit package</h2>
 <ul class="right_btns">
 
 
@@ -352,10 +372,11 @@ function fn_delete(){
           <option value="8">InActive</option>
 	</select>
 	</td>
-	<th scope="row"></th>
-	<td></td>
-	<th scope="row"></th>
-	<td></td>
+	<th scope="row">Package Type</th>
+	<td colspan="3"><select class="multy_select w40p"   multiple="multiple"  id='PAC_TYPE' name ='PAC_TYPE' >
+     <option value="0">Starter Package</option>
+     <option value="1">Membership  Package</option>
+    </select></td>
 </tr>
 </tbody>
 </table><!-- table end -->

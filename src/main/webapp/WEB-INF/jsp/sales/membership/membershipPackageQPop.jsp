@@ -36,6 +36,12 @@ function fn_selectListAjax() {
 	    	  $("#srvPacItmRental").val(packageInfo.c1);  
 	    	  $("#srvPacItmSvcFreq").val(packageInfo.srvMemItmPriod);  
 	    	  $("#remark").val(packageInfo.srvMemItmRem);
+	    	  $("#pacType").val(packageInfo.pacType);
+	    	  
+	    	  if($("#pacType").val() == "Starter Package"){
+	    	        $("#srvPacItmSvcFreq").prop("readonly", true);
+	    	        $("#srvPacItmSvcFreq").attr("class", "readonly");
+	    	  }
 	    	  
 	    	  
 	        }
@@ -90,6 +96,8 @@ function fn_save(){
         
            Common.alert("Product Item Saved "+DEFAULT_DELIMITER + "<b>Product item successfully saved.</b>");
            fn_DisableField();
+
+           fn_selectDetailListAjax( '1');
 
        }, function(jqXHR, textStatus, errorThrown) {
            Common.alert("실패하였습니다.");
@@ -242,7 +250,6 @@ function fn_DisableField(){
 <tr>
 	<th scope="row">Product Item<span class="must">*</span></th>
 	<td> 
-	
 	 <c:if test="${modType eq 'EDIT' }">
 	   <select class="w100p disabled"   disabled ="disabled"  id='packcode' name='packcode'    > </select>
 	 </c:if>
@@ -255,11 +262,13 @@ function fn_DisableField(){
 </tr>
 <tr>
 	<th scope="row">Item Price <span class="must">*</span></th>
-	<td colspan="3"><input type="text" title="" placeholder="Item Price" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
+	<td colspan="2"><input type="text" title="" placeholder="Item Price" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
+	<th scope="row">Package Type <span class="must">*</span></th>
+    <td><input type="text" title=""  class="w100p readonly" placeholder="Package Type" class=""  id="pacType"  name="pacType" readonly="readonly"/></td> 
 </tr>
 <tr>
     <th scope="row">Remark </th>
-    <td colspan="3"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" name='remark'></textarea></td>
+    <td colspan="4"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" name='remark'></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->

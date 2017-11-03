@@ -38,6 +38,19 @@ $(document).ready(function(){
     
     fn_keyEvent();
     
+    $("#txtDuration").keydown(function (event) { 
+        
+        var code = window.event.keyCode;
+        
+        if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+        {
+         window.event.returnValue = true;
+         return;
+        }
+        window.event.returnValue = false;
+        
+   });
+        
 });
 
 
@@ -93,12 +106,36 @@ Common.ajax("GET", "/sales/mPackages/selectCodel", $("#sForm").serialize(), func
             $("#packcode").append('</optgroup>');
       });
        
-      $("optgroup").attr("class" , "optgroup_text");
-      
-       fn_selectListAjax();
+      $("optgroup").attr("class" , "optgroup_text");      
     }
  });
 }
+
+//AUIGrid 메소드
+function auiCellEditignHandler(event)
+{
+  if(event.type == "cellEditBegin")
+  {
+      console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+      //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
+
+      if(event.dataField == "srvItemPrice")
+      {
+
+          console.log("be ============> " + newGridID +" : "+event.item.rowId);
+          console.log("be ============> " +  $("#pacType").val());
+          // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
+        if(AUIGrid.isAddedById(newGridID, event.item.rowId) && $("#pacType").val()=='1'){  //추가된 Row
+        	console.log("af ==============> " + newGridID +" : "+event.item.rowId);
+        	console.log("" + $("#pacType").val());
+              return true; 
+          } else {
+              return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
+          }
+      }
+  }
+}
+
 
 
 
@@ -107,7 +144,7 @@ function auiAddRowHandler(event) {}
 
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) {}
-function auiCellEditignHandler (event) {}
+//function auiCellEditignHandler (event) {}
 
 function fn_addRow() {
 	 
@@ -121,6 +158,9 @@ function fn_addRow() {
 	 item.stkId =$('select[name="packcode"]').val() ;
 	 item.stkDesc =$('select[name="packcode"] :selected').text();
 	 item.code =1;
+	 item.srvItemPrice =0;
+	 item.srvItemPeriod =0;
+	 item.rowId ="new";
 	 
      if( AUIGrid.isUniqueValue (newGridID,"stkId" ,$('select[name="packcode"]').val())){
           AUIGrid.addRow(newGridID, item, "first");
@@ -142,7 +182,8 @@ function createAUIGrid() {
     
        var keyValueList = [{"code":"1", "value":"ACT"}, {"code":"8", "value":"IACT"}];
         
-        var columnLayout = [
+        var columnLayout = [ 
+                            {dataField : "rowId", dataType : "string", visible : false},     /* PK , rowid 용 칼럼*/
                             {dataField : "stkId",     headerText  : "ID" ,editable       : false ,visible : true, editable : false } ,
                             { dataField : "stkDesc", headerText  : "Product Name",    width : 200 ,editable : false},
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
@@ -164,14 +205,28 @@ function createAUIGrid() {
 			                         }
 			                },
                             
-                            { dataField : "srvItemPrice", headerText  : "Item Price",width : 100 ,editable       : true ,dataType:"numeric", formatString : "#,##0.00"},
-                            { dataField : "srvItemPeriod",       headerText  : "Service Frequency",  width  : 150  ,editable       : true ,dataType:"numeric", formatString : "#,##0.00"},
+                            { dataField : "srvItemPrice", headerText  : "Item Price",width : 100 ,editable       : true , dataType:"numeric", formatString : "#,##0.00",
+                            	editRenderer : {
+                                    type : "InputEditRenderer",
+                                    onlyNumeric : true,
+                                    autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+                                    allowPoint : true // 소수점(.) 입력 가능 설정
+                                }	
+                            },
+                            { dataField : "srvItemPeriod",       headerText  : "Service Frequency",  width  : 150  ,editable       : true ,dataType:"numeric", formatString : "#,##0.00",
+                            	editRenderer : {
+                                    type : "InputEditRenderer",
+                                    onlyNumeric : true,
+                                    autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+                                    allowPoint : true // 소수점(.) 입력 가능 설정
+                                }
+                            },
                             { dataField : "srvRemark",     headerText  : "Remark",  width          :300,    editable       : true}
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, softRemovePolicy : "exceptNew" };  
         
-        newGridID = GridCommon.createAUIGrid("new_list_grid_wrap", columnLayout  ,"" ,gridPros);
+        newGridID = GridCommon.createAUIGrid("new_list_grid_wrap", columnLayout  ,"rowId" ,gridPros);
 }
     
     
@@ -199,7 +254,8 @@ function fn_Save(){
        "remove" : removedRowItems,
        "txtServCode" : $("#txtServCode").val()  ,
        "txtServDesc" : $("#txtServDesc").val() ,
-       "txtDuration" :  $("#txtDuration").val() 
+       "txtDuration" :  $("#txtDuration").val() ,
+       "pacType" :  $("#pacType").val() 
     };
     
     Common.ajaxSync("POST", "/sales/mQPackages/newQPackageAdd.do", saveForm , function(result) {
@@ -209,6 +265,7 @@ function fn_Save(){
         if(result !=""  && null !=result ){
             Common.alert( "New General Code Saved" +DEFAULT_DELIMITER+"<b>New general code successfully saved.</b>"); 
 
+            fn_selectListAjax();
             $("#_NewAddDiv1").remove();
             return true;
         }else{
@@ -324,7 +381,14 @@ function fn_IsExistSVMContractPackCode(){
 </tr>
 <tr>
 	<th scope="row">Package Description<span class="must">*</span></th>
-	<td colspan="3"><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc'  class="" /></td>
+	<td><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc'  class="" /></td>
+	<th scope="row">Package Type<span class="must">*</span></th>
+    <td>
+    <select class=""  id='pacType' name ='pacType' >
+     <option value="0">Starter Package</option>
+     <option value="1">Membership  Package</option>
+    </select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

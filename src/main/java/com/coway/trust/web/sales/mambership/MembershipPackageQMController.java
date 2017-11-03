@@ -107,7 +107,9 @@ public class  MembershipPackageQMController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		String[] SRV_MEM_STUS_ID = request.getParameterValues("SRV_CNTRCT_PAC_STUS_ID");
+		String[] PAC_TYPE = request.getParameterValues("PAC_TYPE");
 
+		params.put("PAC_TYPE", PAC_TYPE);
 		params.put("SRV_MEM_STUS_ID", SRV_MEM_STUS_ID);
 		List<EgovMap>  list = membershipPackageQMService.selectList(params);
 		

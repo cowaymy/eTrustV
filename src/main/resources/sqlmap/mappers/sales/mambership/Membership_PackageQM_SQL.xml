@@ -13,7 +13,10 @@
                    S.SRV_MEM_LAB_CHRG,
                    S.SRV_MEM_PART_CHRG_TYPE_ID,
                    S.SRV_MEM_CRT_DT,
-                   S.SRV_MEM_CRT_USER_ID
+                   S.SRV_MEM_CRT_USER_ID,
+                   CASE WHEN S.PAC_TYPE = 1 THEN 'Membership  Package' 
+                           WHEN S.PAC_TYPE = 0 THEN 'Starter Package' 
+                           ELSE '' END PAC_TYPE
               FROM ( SELECT X.SRV_MEM_PAC_ID   ,
                             X.SRV_MEM_CODE   ,
                             X.SRV_MEM_DESC   ,
@@ -23,9 +26,8 @@
                             X.SRV_MEM_CRT_DT,
                             X.SRV_MEM_CRT_USER_ID,
                             E.CODE   ,
-                            CASE 
-                                 WHEN ( X.SRV_MEM_DUR IS NOT NULL ) THEN X.SRV_MEM_DUR
-                            ELSE 0
+                            X.PAC_TYPE,
+                            CASE WHEN ( X.SRV_MEM_DUR IS NOT NULL ) THEN X.SRV_MEM_DUR                           ELSE 0
                                END SRV_MEM_DUR  
                      FROM SAL0091M X
                             JOIN SYS0038M E   ON E.STUS_CODE_ID = X.SRV_MEM_STUS_ID
@@ -36,7 +38,13 @@
                          <if test="SRV_CNTRCT_PAC_DESC != null and SRV_CNTRCT_PAC_DESC != ''">
                                AND ( X.SRV_MEM_DESC   LIKE '%'|| #{SRV_CNTRCT_PAC_DESC} ||'%'  )
                          </if>
-                         
+                     
+                         <if test="PAC_TYPE != null and PAC_TYPE != ''">
+                               AND X.PAC_TYPE  IN
+                                <foreach item="item" collection="PAC_TYPE" index="index" open="(" separator="," close=")">
+                                   #{item}
+                              </foreach>
+                          </if>
                          <if test="SRV_MEM_STUS_ID != null and SRV_MEM_STUS_ID != ''">
                                AND X.SRV_MEM_STUS_ID  IN
                                 <foreach item="item" collection="SRV_MEM_STUS_ID" index="index" open="(" separator="," close=")">
@@ -78,6 +86,9 @@
  <select id="selectPopDetail" parameterType="Map" resultType="egovMap">
  
                     SELECT S.SRV_MEM_PAC_ID   ,
+                               CASE WHEN S.PAC_TYPE = 1 THEN 'Membership  Package' 
+			                           WHEN S.PAC_TYPE = 0 THEN 'Starter Package' 
+			                           ELSE '' END PAC_TYPE,
                                S.STK_ID   ,
                                S.STK_CODE   ,
                                S.STK_DESC   ,
@@ -89,6 +100,7 @@
                                S.SRV_MEM_ITM_STUS_ID   ,
                                S.CODE CODE  
                           FROM ( SELECT Extent1.SRV_MEM_PAC_ID   ,
+                                        Extent1.PAC_TYPE   ,
                                         Extent2.SRV_MEM_ITM_PRIOD   ,
                                         Extent2.SRV_MEM_ITM_STUS_ID   ,
                                         Extent2.SRV_MEM_ITM_REM   ,
@@ -118,35 +130,39 @@
       
  <select id="selectPopUpList" parameterType="Map" resultType="egovMap">
              SELECT S.SRV_MEM_PAC_ID   ,
-                                   S.STK_ID   ,
-                                   S.STK_CODE   ,
-                                   S.STK_DESC   ,
-                                   S.CODE_NAME   ,
-                                   S.CODENAME1   ,
-                                   S.C1   ,
-                                   S.SRV_MEM_ITM_PRIOD   ,
-                                   S.SRV_MEM_ITM_REM   ,
-                                   S.SRV_MEM_ITM_STUS_ID   ,
-                                   S.CODE CODE  
-                              FROM ( SELECT Extent1.SRV_MEM_PAC_ID   ,
-                                            Extent2.SRV_MEM_ITM_PRIOD   ,
-                                            Extent2.SRV_MEM_ITM_STUS_ID   ,
-                                            Extent2.SRV_MEM_ITM_REM   ,
-                                            Extent3.STK_ID   ,
-                                            Extent3.STK_CODE   ,
-                                            Extent3.STK_DESC   ,
-                                            Extent4.CODE_NAME   ,
-                                            Extent5.CODE_NAME CODENAME1  ,
-                                            Extent6.CODE   ,
-                                            UTILS.CONVERT_TO_FLOAT(Extent2.SRV_MEM_ITM_PRC,24) C1  
-                                     FROM SAL0091M Extent1
-                                            JOIN SAL0092M Extent2   ON Extent2.SRV_MEM_PAC_ID = Extent1.SRV_MEM_PAC_ID
-                                            JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent2.SRV_MEM_ITM_STK_ID
-                                            JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent3.STK_CTGRY_ID
-                                            JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent3.STK_TYPE_ID
-                                            JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent2.SRV_MEM_ITM_STUS_ID
-                                      WHERE  ( Extent3.STK_ID = #{STK_ID} )
-                                               AND ( Extent1.SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID} ) AND ROWNUM <![CDATA[<  ]]> = 1  ) S
+                        CASE WHEN S.PAC_TYPE = 1 THEN 'Membership  Package' 
+		                        WHEN S.PAC_TYPE = 0 THEN 'Starter Package' 
+		                        ELSE '' END PAC_TYPE,
+                        S.STK_ID   ,
+                        S.STK_CODE   ,
+                        S.STK_DESC   ,
+                        S.CODE_NAME   ,
+                        S.CODENAME1   ,
+                        S.C1   ,
+                        S.SRV_MEM_ITM_PRIOD   ,
+                        S.SRV_MEM_ITM_REM   ,
+                        S.SRV_MEM_ITM_STUS_ID   ,
+                        S.CODE CODE  
+                   FROM ( SELECT Extent1.SRV_MEM_PAC_ID   ,
+                                 Extent1.PAC_TYPE   ,
+                                 Extent2.SRV_MEM_ITM_PRIOD   ,
+                                 Extent2.SRV_MEM_ITM_STUS_ID   ,
+                                 Extent2.SRV_MEM_ITM_REM   ,
+                                 Extent3.STK_ID   ,
+                                 Extent3.STK_CODE   ,
+                                 Extent3.STK_DESC   ,
+                                 Extent4.CODE_NAME   ,
+                                 Extent5.CODE_NAME CODENAME1  ,
+                                 Extent6.CODE   ,
+                                 UTILS.CONVERT_TO_FLOAT(Extent2.SRV_MEM_ITM_PRC,24) C1  
+                          FROM SAL0091M Extent1
+                                 JOIN SAL0092M Extent2   ON Extent2.SRV_MEM_PAC_ID = Extent1.SRV_MEM_PAC_ID
+                                 JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent2.SRV_MEM_ITM_STK_ID
+                                 JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent3.STK_CTGRY_ID
+                                 JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent3.STK_TYPE_ID
+                                 JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent2.SRV_MEM_ITM_STUS_ID
+                           WHERE  ( Extent3.STK_ID = #{STK_ID} )
+                                    AND ( Extent1.SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID} ) AND ROWNUM <![CDATA[<  ]]> = 1  ) S
   </select>
       
       
@@ -160,7 +176,8 @@
                    SRV_MEM_DESC               = #{srvMemDesc},
                    SRV_MEM_DUR                 = #{srvMemDur},
                    SRV_MEM_LAB_CHRG         = #{srvMemLabChrg},
-                   SRV_MEM_STUS_ID           = decode(#{code} ,'ACT' ,'1' ,'8')
+                   SRV_MEM_STUS_ID           = decode(#{code} ,'ACT' ,'1' ,'8'),
+                   PAC_TYPE                        = #{pacType} 
             WHERE  SRV_MEM_PAC_ID         = #{srvMemPacId}
    
    </insert>
@@ -262,11 +279,13 @@
               INSERT INTO SAL0091M
 					  ( SRV_MEM_PAC_ID , SRV_MEM_CODE, SRV_MEM_DESC, SRV_MEM_DUR, 
 					    SRV_MEM_PART_CHRG_TYPE_ID, SRV_MEM_LAB_CHRG, 
-					    SRV_MEM_STUS_ID, SRV_MEM_CRT_DT, SRV_MEM_CRT_USER_ID
+					    SRV_MEM_STUS_ID, SRV_MEM_CRT_DT, SRV_MEM_CRT_USER_ID,
+					    PAC_TYPE
 					  )
 		      VALUES ( #{SRV_MEM_PAC_ID} ,#{txtServCode}, #{txtServDesc}, #{txtDuration},
-					   1, 0, 1, 
-					   sysdate, #{updator}
+					   1, CASE WHEN #{txtDuration} = 0 THEN 50 ELSE #{txtDuration} END, 
+					   1, sysdate, #{updator}
+					   ,#{pacType}
 			   )
      </insert>
      
