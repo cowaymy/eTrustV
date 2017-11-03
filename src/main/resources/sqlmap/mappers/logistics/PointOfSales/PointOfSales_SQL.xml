@@ -65,14 +65,17 @@ select ROWNUM rnum , l47.REQST_STUS     status
            <if test="searchOthersReq1 != null and searchOthersReq2 != null and searchOthersReq1 != '' and searchOthersReq2 != ''" >
              AND l47.reqst_no BETWEEN #{searchOthersReq1} AND #{searchOthersReq2}
            </if>
-<!--           <if test="searchReqType != null and searchReqType !=''">
+<!--     <if test="searchReqType != null and searchReqType !=''">
             AND l47.trnsc_type_dtl = #{searchReqType}
            </if> -->
           <if test="searchReqType != null and searchReqType !=''">
             AND l47.REQST_TYPE_DTL = #{searchReqType}
-           </if>
-           <if test="searchLoc != null and searchLoc !=''">
-            AND l47.reqst_cdc_rdc = #{searchLoc}
+          </if>
+<!--            <if test="searchLoc != null and searchLoc !=''"> -->
+<!--             AND l47.reqst_cdc_rdc = #{searchLoc} -->
+<!--            </if>  -->
+            <if test="tlocation != null and tlocation !=''">
+            AND l47.reqst_cdc_rdc = #{tlocation}
            </if>
             <if test="searchStatus != null and searchStatus !=''">
             AND l47.REQST_STUS = #{searchStatus}
