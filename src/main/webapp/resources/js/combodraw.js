@@ -279,9 +279,9 @@ function doDefComboAndGroup(data, selCode, obj , type, callbackFn){
         }
 
         if(selCode==value.c1){
-            $('<option />', {value : value.c1, text:value.c1}).appendTo(obj).attr("selected", "true");
+            $('<option />', {value : value.stkId, text:value.c1}).appendTo(obj).attr("selected", "true");
         }else{
-            $('<option />', {value : value.c1, text:value.c1}).appendTo(obj);
+            $('<option />', {value : value.stkId, text:value.c1}).appendTo(obj);
         }
 
         preGroup = value.codeName;
@@ -295,6 +295,7 @@ function doDefComboAndGroup(data, selCode, obj , type, callbackFn){
         eval(strCallback);
     }
 };
+
 
 function doDefComboCode(data, selCode, obj , type, callbackFn){
     var targetObj = document.getElementById(obj);
