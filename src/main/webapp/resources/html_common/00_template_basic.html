@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="../css/master.css" />
 <link rel="stylesheet" type="text/css" href="../css/common.css" />
 <link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
+<link rel="stylesheet" type="text/css" href="../css/jquery-ui-custom.css" />
 <script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="../js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
@@ -45,7 +46,7 @@
 <form action="#" method="post">
 <h1 class="logo_type"><a href="#"><img src="../images/common/CowayLeftLogo.png" alt="COWAY" /></a><a href="#"><img src="../images/common/logo.gif" alt="eTrust system" /></a></h1>
 <p class="search">
-<input type="text" title="검색어 입력" />
+<input type="text" title="검색어 입력" id="tags" />
 <input type="image" src="../images/common/icon_lnb_search.gif" alt="검색" />
 </p>
 
@@ -954,7 +955,37 @@ tap2
 <span><img src="../images/common/proge.gif" alt="loding...." /></span>
 </p>
 </div><!-- prog end -->
-
 </div><!-- wrap end -->
+<script>
+  $( function() {
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+    $( "#tags" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script>
 </body>
 </html>
