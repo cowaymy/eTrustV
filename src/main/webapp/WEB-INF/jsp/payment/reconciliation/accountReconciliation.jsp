@@ -206,11 +206,7 @@ var journalPopLayout = [
         renderer : {
             type : "DropDownListRenderer",
             listFunction : function(rowIndex, columnIndex, item, dataField) {
-            	if(item.isMatch == "X"){
-            	    return keyValueList;
-            	}else{
-            		return [];
-            	}
+            	return keyValueList;
             },
             keyField : "code", // key 에 해당되는 필드명
             valueField : "value" // value 에 해당되는 필드명
