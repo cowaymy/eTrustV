@@ -31,6 +31,7 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		if(params.size() > 0){
     		for(int i=0; i< params.size(); i++){
     			Map<String, Object>  insertValue = (Map<String, Object>) params.get(i);
+    			insertValue.put("holidayType", (insertValue.get("holidayType").toString()).substring(0, 1) );
     			insertValue.put("userId", sessionVO.getUserId());
     			logger.debug("insertValue {}", insertValue);
     			holidayMapper.insertHoliday(insertValue);
@@ -48,6 +49,7 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		if(params.size() > 0){
     		for(int i=0; i< params.size(); i++){
     			Map<String, Object>  updateValue = (Map<String, Object>) params.get(i);
+    			updateValue.put("holidayType", (updateValue.get("holidayType").toString()).substring(0, 1) );
     			updateValue.put("userId", sessionVO.getUserId());
     			logger.debug("updateValue {}", updateValue);
     			holidayMapper.updateHoliday(updateValue);
@@ -81,6 +83,7 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		if(params.size() > 0){
     		for(int i=0; i< params.size(); i++){
     			Map<String, Object>  delValue = (Map<String, Object>) params.get(i);
+    			delValue.put("holidayType", (delValue.get("holidayType").toString()).substring(0, 1) );
     			delValue.put("userId", sessionVO.getUserId());
     			logger.debug("updateValue {}", delValue);
     			holidayMapper.deleteHoliday(delValue);
@@ -100,9 +103,10 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 			insertValue = (Map<String, Object>) updList.get(i);
 			insertValue.put("holidayType", formMap.get("holidayType"));
 			insertValue.put("holiday", formMap.get("holiday"));
-			insertValue.put("branchId", Integer.parseInt(formMap.get("branchId").toString()));
+			insertValue.put("branchName", formMap.get("branchName"));
 			insertValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );
 			insertValue.put("holidaySeq", Integer.parseInt(formMap.get("holidaySeq").toString()));
+			insertValue.put("state", formMap.get("state"));
 			//holidaySeq1과 asignSeq 둘다 값이 있으면 inset 되어있다. 
 			List<EgovMap> CTInfo = holidayMapper.selectCTInfo(insertValue);
 			if(CTInfo.size() >  0){
@@ -126,7 +130,7 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 			delValue = (Map<String, Object>) delList.get(i);
 			delValue.put("holidayType", formMap.get("holidayType"));
 			delValue.put("holiday", formMap.get("holiday"));
-			delValue.put("branchId", Integer.parseInt(formMap.get("branchId").toString()));
+			delValue.put("branchName", formMap.get("branchName"));
 			delValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );
 			delValue.put("holidaySeq", Integer.parseInt(formMap.get("holidaySeq").toString()));
 			logger.debug("delValue {}", delValue);
@@ -141,6 +145,10 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		return holidayMapper.selectState();
 	}
 	
+	@Override
+	public List<EgovMap> selectBranch() {
+		return holidayMapper.selectBranch();
+	}
 	
 	
 	
