@@ -40,6 +40,9 @@
 
     <!-- Display the loading bar when downloading -->
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.fileDownload.js"></script>
+    
+    <!-- jQuery Number plugin : https://github.com/customd/jquery-number 참고해보세요  -->
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.number.min.js"></script>
 
     
     
