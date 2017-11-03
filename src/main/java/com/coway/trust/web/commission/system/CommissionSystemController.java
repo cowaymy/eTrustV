@@ -224,9 +224,10 @@ public class CommissionSystemController {
 		List<EgovMap> orgGrList = commissionSystemService.selectOrgGrCdListAll(params);
 		model.addAttribute("orgGrList", orgGrList);		
 		
+		String dt = CommonUtils.getNowDate().substring(0, 6);
+		params.put("searchDt", dt);
 		List<EgovMap> orgList = commissionSystemService.selectOrgCdListAll(params);
 		
-		String dt = CommonUtils.getNowDate().substring(0, 6);
 		dt = dt.substring(4) + "/" + dt.substring(0, 4);
 
 		model.addAttribute("searchDt", dt);
@@ -248,6 +249,10 @@ public class CommissionSystemController {
 	public ResponseEntity<List<EgovMap>> selectOrgCdListAll(@RequestParam Map<String, Object> params, ModelMap model) {		
 		
 		// 조회.
+		String dt = String.valueOf(params.get("searchDt"));
+		dt = dt.substring(dt.indexOf("/")+1,dt.length())+dt.substring(0,dt.indexOf("/"));
+		
+		params.put("searchDt", dt);
 		List<EgovMap> orgList = commissionSystemService.selectOrgCdListAll(params);
 
 		// 데이터 리턴.

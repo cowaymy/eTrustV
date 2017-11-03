@@ -38,6 +38,16 @@
 			fn_getOrgCdListAllAjax(); //call orgList
 		});		
 		
+		$("#searchDt").change(function() {    
+			$("#orgCombo").find('option').each(function() {
+                $(this).remove();
+            });
+            if ($(this).val().trim() == "") {
+                return;
+            }   
+            fn_getOrgCdListAllAjax(); //call orgList
+        }); 
+		
 		//drag div
 		$("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 		$("#popup_wrap2, .popup_wrap2").draggable({handle: '.pop_header'});
@@ -389,7 +399,7 @@
             if (result) {
                 $("#orgCombo").append("<option value='' ></option>");
                 for (var i = 0; i < result.length; i++) {
-                    $("#orgCombo").append("<option value='"+result[i].orgCd + "' > " + result[i].orgNm + "</option>");
+                    $("#orgCombo").append("<option value='"+result[i].orgSeq + "' > " + result[i].orgNm + "</option>");
                 }
             }
             //if you need callBack Function , you can use that function
@@ -1008,7 +1018,7 @@
 								</c:forEach>
 						</select></td>
 						<th scope="row">ORG Code</th>
-						<td><select id="orgCombo" name="orgCombo" style="width: 100px;">
+						<td><select id="orgCombo" name="orgSeqCombo" style="width: 100px;">
 								<option value=""></option>
 								<c:forEach var="list" items="${orgList }">
 									<option value="${list.orgCd}">${list.orgNm}</option>

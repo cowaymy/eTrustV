@@ -185,17 +185,20 @@
 	<select id="selectOrgCdListAll" parameterType="Map" resultType="EgovMap">
   <![CDATA[
     SELECT
+    ORG_SEQ,
     ORG_CD ,
     ORG_NM 
     FROM CMM0041C
     WHERE 1=1
-      AND START_YEARMONTH < END_YEARMONTH
      ]]>
 		<if test="orgGrCombo != null and orgGrCombo != ''">
 			AND ORG_GR_CD = #{orgGrCombo}
 		</if>    
+		<if test="searchDt != null and searchDt != ''">
+            AND #{searchDt} between START_YEARMONTH and END_YEARMONTH
+        </if>    
     <![CDATA[
-    GROUP BY ORG_CD, ORG_NM
+    GROUP BY ORG_SEQ,ORG_CD, ORG_NM
     ORDER BY ORG_NM 
      ]]>
 	</select>
@@ -289,7 +292,10 @@
 			AND T1.ORG_GR_CD = #{orgGrCombo}
 		</if>
 		<if test="orgCombo != null and orgCombo != ''">
-			AND T1.ORG_CD = #{orgCombo}
+            AND T1.ORG_CD = #{orgCombo}
+        </if>
+		<if test="orgSeqCombo != null and orgSeqCombo != ''">
+			AND T1.ORG_SEQ = #{orgSeqCombo}
 		</if>
 		<if test="useYnCombo != null and useYnCombo != ''">
 			AND T1.USE_YN = #{useYnCombo}
