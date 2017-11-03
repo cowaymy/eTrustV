@@ -118,7 +118,7 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		LOGGER.debug("list.size : {}", list.size());
 		
@@ -172,7 +172,7 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		params.put("attachmentList", list);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
@@ -274,7 +274,7 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		params.put("attachmentList", list);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
@@ -317,7 +317,7 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		params.put("attachmentList", list);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
@@ -414,7 +414,7 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		LOGGER.debug("list.size : {}", list.size());
 
@@ -504,7 +504,7 @@ public class PettyCashController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		LOGGER.debug("list.size : {}", list.size());
 

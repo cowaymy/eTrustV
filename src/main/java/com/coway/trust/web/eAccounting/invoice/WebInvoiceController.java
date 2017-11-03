@@ -259,7 +259,7 @@ public class WebInvoiceController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "webInvoice", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "webInvoice", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		LOGGER.debug("list.size : {}", list.size());
 		
@@ -323,7 +323,7 @@ public class WebInvoiceController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "webInvoice", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "webInvoice", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		LOGGER.debug("list.size : {}", list.size());
 		

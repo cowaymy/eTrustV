@@ -30,5 +30,23 @@ public interface CreditCardMapper {
 	void removeCreditCard(Map<String, Object> params);
 	
 	List<EgovMap> selectReimbursementList(Map<String, Object> params);
+	
+	List<EgovMap> selectTaxCodeCreditCardFlag();
+	
+	EgovMap selectCrditCardInfoByNo(Map<String, Object> params);
+	
+	String selectNextClmNo();
+	
+	void insertReimbursement(Map<String, Object> params);
+	
+	int selectNextClmSeq(String clmNo);
+	
+	void insertReimbursementItem(Map<String, Object> params);
+	
+	List<EgovMap> selectReimbursementItems(String clmNo);
+	
+	EgovMap selectReimburesementInfo(Map<String, Object> params);
+	
+	List<EgovMap> selectAttachList(String atchFileGrpId);
 
 }

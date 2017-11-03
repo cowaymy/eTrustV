@@ -96,7 +96,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 					LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
 					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
 					LOGGER.debug("params.get('userId') =====================================>>  " + params.get("userId"));
-					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), FileType.WEB, Integer.parseInt(String.valueOf(params.get("userId"))));
+					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
 				} else {
 					FileGroupVO fileGroupVO = new FileGroupVO();
 
@@ -105,7 +105,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 
 					fileGroupVO.setAtchFileGrpId(Integer.parseInt(params.get("atchFileGrpId").toString()));
 					fileGroupVO.setAtchFileId(list.get(i).getAtchFileId());
-					fileGroupVO.setChenalType(FileType.WEB.getCode());
+					fileGroupVO.setChenalType(type.getCode());
 					fileGroupVO.setCrtUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 					fileGroupVO.setUpdUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 
@@ -125,7 +125,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 			for(int i = 0; i < removeList.length; i++) {
 				String atchFileId = removeList[i];
 				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
-				fileService.removeFileByFileId(FileType.WEB, Integer.parseInt(atchFileId));
+				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
 		

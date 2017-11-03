@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.creditCard.CreditCardApplication;
@@ -32,6 +34,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.eAccounting.pettyCash.PettyCashController;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -59,6 +62,9 @@ public class CreditCardController {
 	
 	@Autowired
 	private WebInvoiceService webInvoiceService;
+	
+	@Autowired
+	private FileApplication fileApplication;
 	
 	@RequestMapping(value = "/creditCardMgmt.do")
 	public String creditCardMgmt(ModelMap model) {
@@ -109,7 +115,7 @@ public class CreditCardController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "creditCard", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "creditCard", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		LOGGER.debug("list.size : {}", list.size());
 		
@@ -121,7 +127,7 @@ public class CreditCardController {
 		params.put("crditCardSeq", crditCardSeq);
 		
 		// TODO insert
-		creditCardApplication.insertCreditCardBiz(FileVO.createList(list), FileType.WEB, params);
+		creditCardApplication.insertCreditCardBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -170,14 +176,14 @@ public class CreditCardController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "creditCard", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "creditCard", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		params.put("attachmentList", list);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 		
 		// TODO update
-		creditCardApplication.updateCreditCardBiz(FileVO.createList(list), FileType.WEB, params);
+		creditCardApplication.updateCreditCardBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -244,6 +250,130 @@ public class CreditCardController {
 		List<EgovMap> reimbursementList = creditCardService.selectReimbursementList(params);
 		
 		return ResponseEntity.ok(reimbursementList);
+	}
+	
+	@RequestMapping(value = "/newReimbursementPop.do")
+	public String newReimbursementPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		model.addAttribute("callType", params.get("callType"));
+		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
+		model.addAttribute("userName", sessionVO.getUserName());
+		return "eAccounting/creditCard/creditCardNewReimbursementPop";
+	}
+	
+	@RequestMapping(value = "/selectTaxCodeCreditCardFlag.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTaxCodeCreditCardFlag(Model model) {
+		
+		List<EgovMap> taxCodeFlagList = creditCardService.selectTaxCodeCreditCardFlag();
+		
+		return ResponseEntity.ok(taxCodeFlagList);
+	}
+	
+	@RequestMapping(value = "/selectCrditCardInfoByNo.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectCrditCardInfoByNo(@RequestParam Map<String, Object> params, Model model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		EgovMap creditCardInfo = creditCardService.selectCrditCardInfoByNo(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(creditCardInfo);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/attachFileUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "eAccounting" + File.separator + "creditCard", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+		
+		LOGGER.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
+		
+		params.put("attachFiles", list);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/insertReimbursement.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertReimbursement(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		
+		// TODO insert
+		creditCardService.insertReimbursement(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectReimbursementItemList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectReimbursementItemList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovMap> itemList = creditCardService.selectReimbursementItems((String) params.get("clmNo"));
+		
+		return ResponseEntity.ok(itemList);
+	}
+	
+	@RequestMapping(value = "/viewReimbursementPop.do")
+	public String viewReimbursementPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		// TODO selectExpenseItems
+		List<EgovMap> itemList = creditCardService.selectReimbursementItems((String) params.get("clmNo"));
+		
+		model.addAttribute("callType", params.get("callType"));
+		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
+		model.addAttribute("userName", sessionVO.getUserName());
+		model.addAttribute("itemList", new Gson().toJson(itemList));
+		model.addAttribute("clmNo", (String) params.get("clmNo"));
+		model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
+		return "eAccounting/creditCard/creditCardViewReimbursementPop";
+	}
+	
+	@RequestMapping(value = "/selectReimburesementInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectReimburesementInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		EgovMap info = creditCardService.selectReimburesementInfo(params);
+		
+		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
+		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
+		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+		if(atchFileGrpId != "null") {
+			List<EgovMap> attachList = creditCardService.selectAttachList(atchFileGrpId);
+			info.put("attachList", attachList);
+		}
+		
+		return ResponseEntity.ok(info);
 	}
 
 }

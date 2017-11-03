@@ -28,5 +28,17 @@ public interface CreditCardService {
 	void removeCreditCard(Map<String, Object> params);
 	
 	List<EgovMap> selectReimbursementList(Map<String, Object> params);
+	
+	List<EgovMap> selectTaxCodeCreditCardFlag();
+	
+	EgovMap selectCrditCardInfoByNo(Map<String, Object> params);
+	
+	void insertReimbursement(Map<String, Object> params);
+	
+	List<EgovMap> selectReimbursementItems(String clmNo);
+	
+	EgovMap selectReimburesementInfo(Map<String, Object> params);
+	
+	List<EgovMap> selectAttachList(String atchFileGrpId);
 
 }

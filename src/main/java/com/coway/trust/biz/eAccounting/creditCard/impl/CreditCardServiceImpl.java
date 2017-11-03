@@ -96,6 +96,68 @@ public class CreditCardServiceImpl implements CreditCardService {
 		// TODO Auto-generated method stub
 		return creditCardMapper.selectReimbursementList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectTaxCodeCreditCardFlag() {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectTaxCodeCreditCardFlag();
+	}
+
+	@Override
+	public EgovMap selectCrditCardInfoByNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectCrditCardInfoByNo(params);
+	}
+
+	@Override
+	public void insertReimbursement(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<Object> gridDataList = (List<Object>) params.get("gridDataList");
+		
+		Map<String, Object> masterData = (Map<String, Object>) gridDataList.get(0);
+		
+		String clmNo = creditCardMapper.selectNextClmNo();
+		params.put("clmNo", clmNo);
+		
+		masterData.put("clmNo", clmNo);
+		masterData.put("allTotAmt", params.get("allTotAmt"));
+		masterData.put("userId", params.get("userId"));
+		masterData.put("userName", params.get("userName"));
+		
+		LOGGER.debug("masterData =====================================>>  " + masterData);
+		creditCardMapper.insertReimbursement(masterData);
+		
+		for(int i = 0; i < gridDataList.size(); i++) {
+			Map<String, Object> item = (Map<String, Object>) gridDataList.get(i);
+			int clmSeq = creditCardMapper.selectNextClmSeq(clmNo);
+			item.put("clmNo", clmNo);
+			item.put("clmSeq", clmSeq);
+			item.put("userId", params.get("userId"));
+			item.put("userName", params.get("userName"));
+			LOGGER.debug("item =====================================>>  " + item);
+			creditCardMapper.insertReimbursementItem(item);
+		}
+	}
+
+	@Override
+	public List<EgovMap> selectReimbursementItems(String clmNo) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectReimbursementItems(clmNo);
+	}
+
+	@Override
+	public EgovMap selectReimburesementInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectReimburesementInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectAttachList(String atchFileGrpId) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectAttachList(atchFileGrpId);
+	}
 	
 	
 
