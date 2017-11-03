@@ -127,33 +127,37 @@ public class EnrollController {
 		enrollService.saveEnroll(param);
     	
     	//결과 뿌려보기 : 프로시저에서 p1이란 key값으로 객체를 반환한다.
-    	List<EgovMap> resultMapList = (List<EgovMap>)param.get("p1");
+    	List<EgovMap> p1List = (List<EgovMap>)param.get("p1");
+    	EgovMap map = null;
     	
-    	//Master Data 
-    	EgovMap map = (EgovMap ) resultMapList.get(0);
+    	if(p1List.size() > 0){
+    		
+    		//Master Data 
+        	map = (EgovMap ) p1List.get(0);
+        	
+        	//Detail Data Search
+        	List<EgovMap> resultList = enrollService.selectEnrollmentDetView(map);
+        	
+    		// 파일 생성하기
+        	if("2".equals(String.valueOf(map.get("bankId")))) {
+        		this.createEnrollmentFileALB(map , resultList);
+        		this.createEnrollmentFileNewALB(map , resultList);
+        		
+        	}else if("3".equals(String.valueOf(map.get("bankId")))){
+        		this.createEnrollmentFileCIMB(map , resultList);
+        		
+        	}else if("21".equals(String.valueOf(map.get("bankId")))){
+        		this.createEnrollmentFileMBB(map , resultList);
+        		
+        	}else if("7".equals(String.valueOf(map.get("bankId")))){
+        		this.createEnrollmentFileRHB(map , resultList);
+        		
+        	}else if("9".equals(String.valueOf(map.get("bankId")))){
+        		this.createEnrollmentFileBSN(map , resultList);
+        		
+        	}
+    	}
     	
-    	//Detail Data Search
-    	List<EgovMap> resultList = enrollService.selectEnrollmentDetView(map);
-    	
-		// 파일 생성하기
-    	if("2".equals(String.valueOf(map.get("bankId")))) {
-    		this.createEnrollmentFileALB(map , resultList);
-    		this.createEnrollmentFileNewALB(map , resultList);
-    		
-    	}else if("3".equals(String.valueOf(map.get("bankId")))){
-    		this.createEnrollmentFileCIMB(map , resultList);
-    		
-    	}else if("21".equals(String.valueOf(map.get("bankId")))){
-    		this.createEnrollmentFileMBB(map , resultList);
-    		
-    	}else if("7".equals(String.valueOf(map.get("bankId")))){
-    		this.createEnrollmentFileRHB(map , resultList);
-    		
-    	}else if("9".equals(String.valueOf(map.get("bankId")))){
-    		this.createEnrollmentFileBSN(map , resultList);
-    		
-    	}			
-
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
