@@ -33,6 +33,12 @@
                 return false;
             }  
         });
+        $('#_name').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                fn_selectPstRequestDOListAjax();
+                return false;
+            }  
+        });
     });
 	
 	function fn_setData(custId , item) { //edit by hgham 2017-09-21    event.item 추가 
@@ -148,7 +154,7 @@
 </tr>
 <tr>
 	<th scope="row">Customer Name</th>
-	<td colspan="3"><input id="name" name="name" type="text" title="" placeholder="Customer Name" class="w100p" /></td>
+	<td colspan="3"><input id="_name" name="name" type="text" title="" placeholder="Customer Name" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
