@@ -3,19 +3,13 @@ package com.coway.trust.web.payment.autodebit.controller;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,25 +19,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
-import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.autodebit.service.EnrollService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
-import com.ibm.icu.text.SimpleDateFormat;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
 @RequestMapping(value = "/payment")
 public class EnrollController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EnrollController.class);
 
 	@Resource(name = "enrollService")
 	private EnrollService enrollService ;
@@ -100,7 +88,7 @@ public class EnrollController {
 		EgovMap enrollInfo = enrollService.selectViewEnrollment(params);
 		List<EgovMap> resultList = enrollService.selectViewEnrollmentList(params);
 		
-		Map result = new HashMap();
+		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("enrollInfo", enrollInfo);
 		result.put("resultList", resultList);
 		
