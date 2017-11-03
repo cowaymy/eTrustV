@@ -40,7 +40,8 @@
     <select id="selectHolidayList"  parameterType="Map" resultType="egovMap">
         SELECT HOLIDAY_SEQ,
 		       TO_CHAR (HOLIDAY, 'YYYY-MM-DD') HOLIDAY,
-		       HOLIDAY_TYPE,
+		       CASE WHEN HOLIDAY_TYPE = 'P' THEN 'Public Holiday'
+		               ELSE 'State Holiday' END HOLIDAY_TYPE,
 		       STATE,
 		       HOLIDAY_DESC
 		  FROM SYS0081M
@@ -51,6 +52,12 @@
           <if test="holidayDt != null and holidayDt != ''">
             AND HOLIDAY =  TO_DATE(#{holidayDt},'DD/MM/YYYY')
           </if>
+          <if test="stateList != null and stateList != '' ">
+              AND STATE IN 
+              <foreach item="item" collection="stateList" index="index" open="(" separator="," close=")">
+              #{item}
+              </foreach>
+           </if>
     </select>
     <select id="selectCTList"  parameterType="Map" resultType="egovMap">
         SELECT B.MEM_CODE, B.NAME,count(C.ct_mem_id) as total_assign_date, B.MEM_ID
@@ -61,47 +68,86 @@
         group by b.mem_code, b.name,B.MEM_ID
     </select>
     <select id="selectCTAssignList"  parameterType="Map" resultType="egovMap">
-           select * from (SELECT 
-             C.HOLIDAY_TYPE,
-             C.STATE,
-             TO_CHAR (C.HOLIDAY,'YYYY-MM-DD') HOLIDAY, 
-             C.HOLIDAY_DESC,
-             C.HOLIDAY_SEQ,
-             A.CODE,
-             A.BRNCH_ID,
-             COUNT(D.CT_MEM_ID) AS Replacement_CT_Pax,
-             CASE WHEN COUNT(D.CT_MEM_ID) = 0 THEN 'Active' 
-                      WHEN  COUNT(D.CT_MEM_ID) > 0 THEN 'Complete' 
-             END ASSIGN_STATUS
-             FROM SYS0005M A 
-             LEFT OUTER JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID 
-             LEFT OUTER JOIN SYS0081M C ON C.STATE = B.STATE
-             LEFT OUTER JOIN ORG0020D D ON D.HOLIDAY = C.HOLIDAY AND D.HOLIDAY_TYPE = C.HOLIDAY_TYPE AND D.HOLIDAY_SEQ = C.HOLIDAY_SEQ
-             LEFT OUTER JOIN ORG0001D E ON E.MEM_ID = D.CT_MEM_ID AND E.BRNCH = D.BRNCH_ID AND E.BRNCH = A.BRNCH_ID
-             group by 
-             C.HOLIDAY_TYPE,
-             C.STATE,
-             C.HOLIDAY, 
-             C.HOLIDAY_DESC,
-             A.CODE,
-             A.BRNCH_ID,
-             C.HOLIDAY_SEQ
-             ) WHERE 1=1
-              <if test="stateTypeList != null and stateTypeList != '' ">
-                  AND ASSIGN_STATUS IN 
-                  <foreach item="item" collection="stateTypeList" index="index" open="(" separator="," close=")">
-                  #{item}
-                  </foreach>
-               </if>
-              <if test="type != null and type != ''">
-	            AND HOLIDAY_TYPE =  #{type}
-	          </if>
-	          <if test="holidayDt != null and holidayDt != ''">
-	            AND HOLIDAY =  TO_DATE(#{holidayDt},'DD/MM/YYYY')
-	          </if>
-	          <if test="branchId != null and branchId != ''">
-                AND CODE =  #{branchId}
-              </if>
+	       SELECT 
+	                A.HOLIDAY_TYPE,
+	                 A.STATE,
+	                 TO_CHAR(A.HOLIDAY,'YYYY-MM-DD') HOLIDAY,
+	                 A.HOLIDAY_DESC,
+	                 A.HOLIDAY_SEQ,
+	                 A.CT_BRNCH_CODE,
+	                 F.BRNCH_ID,
+	                  CASE
+	                   WHEN COUNT (D.CT_MEM_ID) = 0 THEN 'Active'
+	                   WHEN COUNT (D.CT_MEM_ID) > 0 THEN 'Complete'
+	                 END ASSIGN_STATUS,
+	                 COUNT ( CASE WHEN D.CT_MEM_ID IS NOT NULL
+	                                       THEN 1
+	                                END ) AS Replacement_CT_Pax
+	 FROM 
+	(        
+	  SELECT DISTINCT 
+	                 A.HOLIDAY_TYPE,
+	                 A.STATE,
+	                 A.HOLIDAY,
+	                 A.HOLIDAY_DESC,
+	                 A.HOLIDAY_SEQ,
+	                 CASE WHEN A.HOLIDAY_TYPE = 'S' AND A.STATE = B.STATE 
+	                         THEN B.CT_BRNCH_CODE
+	                         ELSE E.CT_BRNCH_CODE
+	                  END CT_BRNCH_CODE
+	            FROM SYS0081M A
+	                ,(SELECT STATE
+	                             ,CT_BRNCH_CODE
+	                     FROM SYS0064M
+	                    GROUP BY STATE
+	                             ,CT_BRNCH_CODE
+	                  ) B
+	                ,(SELECT CT_BRNCH_CODE
+	                    FROM SYS0064M 
+	                   GROUP BY CT_BRNCH_CODE
+	                 )  E
+	        WHERE A.STATE        = B.STATE(+)      
+        <if test="stateTypeList != null and stateTypeList != '' ">
+          AND ASSIGN_STATUS IN 
+          <foreach item="item" collection="stateTypeList" index="index" open="(" separator="," close=")">
+          #{item}
+          </foreach>
+       </if>
+       <if test="stateList != null and stateList != '' ">
+          AND STATE IN 
+          <foreach item="item" collection="stateList" index="index" open="(" separator="," close=")">
+          #{item}
+          </foreach>
+       </if>
+      <if test="type != null and type != ''">
+        AND HOLIDAY_TYPE =  #{type}
+      </if>
+      <if test="holidayDt != null and holidayDt != ''">
+        AND HOLIDAY =  TO_DATE(#{holidayDt},'DD/MM/YYYY')
+      </if>
+     <if test="branchList != null and branchList != '' ">
+          AND CT_BRNCH_CODE IN 
+          <foreach item="item" collection="stateList" index="index" open="(" separator="," close=")">
+          #{item}
+          </foreach>
+       </if>
+        ) A  ,ORG0020D D ,
+                 (SELECT BRNCH_ID, CODE
+                    FROM SYS0005M
+                   GROUP BY BRNCH_ID,CODE
+                 )  F
+      WHERE   A.HOLIDAY      = D.HOLIDAY(+)
+          AND A.HOLIDAY_TYPE = D.HOLIDAY_TYPE(+)
+          AND A.HOLIDAY_SEQ  = D.HOLIDAY_SEQ(+)
+          AND A.CT_BRNCH_CODE = D.BRNCH_CODE(+)
+          AND A.CT_BRNCH_CODE = F.CODE
+        GROUP BY A.HOLIDAY_TYPE,
+                 A.STATE,
+                 A.HOLIDAY,
+                 A.HOLIDAY_DESC,
+                 A.HOLIDAY_SEQ,
+                 A.CT_BRNCH_CODE,
+                 F.BRNCH_ID
     </select>
     <insert id="insertCTAssign" parameterType="Map">
         INSERT INTO ORG0020D(
@@ -110,7 +156,7 @@
         , HOLIDAY_SEQ
         , ASIGN_SEQ
         , STATE
-        , BRNCH_ID
+        , BRNCH_CODE
         , CT_MEM_ID
         )
         VALUES(
@@ -119,7 +165,7 @@
           , #{holidaySeq}
           , ORG0020D_ASIGN_SEQ.NEXTVAL
           , #{state}
-          , #{branchId}
+          , #{branchName}
           , TO_NUMBER(#{memId})
           )
     </insert>
@@ -131,10 +177,10 @@
     </select>
     <delete id="deleteCTAssign" parameterType="Map">
         DELETE FROM ORG0020D
-        WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_ID = #{branchId} AND CT_MEM_ID=#{memId}
+        WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_CODE = #{branchName} AND CT_MEM_ID=#{memId}
     </delete>
     <select id="selectCTInfo"  parameterType="Map" resultType="egovMap">
-        SELECT * FROM ORG0020D WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_ID = #{branchId} AND CT_MEM_ID=#{memId}
+        SELECT * FROM ORG0020D WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_CODE = #{brnchName} AND CT_MEM_ID=#{memId}
     </select>
     <select id="selectState" resultType="egovMap">
     SELECT STATE CODE_ID, STATE CODE_NAME FROM SYS0064M GROUP BY STATE
@@ -144,7 +190,8 @@
         WHERE HOLIDAY =  TO_DATE(#{holiday},'YYYY-MM-DD')
                    AND HOLIDAY_TYPE = #{holidayType}
                    AND HOLIDAY_SEQ = #{holidaySeq}
-                   
     </delete>
-    
+    <select id="selectBranch"  parameterType="Map" resultType="egovMap">
+        SELECT CODE CODE_ID, CODE CODE_NAME FROM SYS0005M GROUP BY CODE
+    </select>
 </mapper>
