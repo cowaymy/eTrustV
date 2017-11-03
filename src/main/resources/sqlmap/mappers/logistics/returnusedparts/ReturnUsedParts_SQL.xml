@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.returnusedparts.impl.ReturnUsedPartsMapper">
+
+<insert id="returnPartsInsert" parameterType="String">
+  INSERT INTO LOG0082M (SEQ, SVC_ORD_ID, CUST_ID, SVC_DT, STK_ID, QTY, OLD_SERIAL, NEW_SERIAL, CRT_DT , CRT_USER_ID)
+               SELECT 
+                    LOG0082M_SEQ.nextval
+                    , S08.NO
+                    , S01.CUST_ID 
+                    , S87.SRV_FILTER_PRV_CHG_DT
+                    , S87.SRV_FILTER_STK_ID
+                    , S07.BS_RESULT_PART_QTY
+                    , S87.SRV_FILTER_PREV_SERIAL
+                    , S87.SRV_FILTER_LAST_SERIAL
+                    , S06.RESULT_CRT_DT 
+                    , S06.RESULT_CRT_USER_ID
+                   FROM SVC0006D S06
+                           , SVC0008D S08
+                           , SVC0007D S07
+                           , SAL0090D S90
+                           , SAL0087D S87
+                           , SAL0001D S01
+               WHERE S08.SALES_ORD_ID = S01.SALES_ORD_ID
+               AND S06.SCHDUL_ID = S08.SCHDUL_ID
+               AND S06.RESULT_ID = S07.BS_RESULT_ID
+               AND S06.SALES_ORD_ID = S90.SRV_SO_ID
+               AND S90.SRV_CONFIG_ID = S87.SRV_CONFIG_ID
+               AND S07.BS_RESULT_PART_ID = S87.SRV_FILTER_STK_ID
+               AND S08.NO = #{param}
+</insert>
+
+	<select id="returnPartsList" parameterType="Map" resultType="egovMap">
+		SELECT
+		ROWNUM rnum,
+		l82.SEQ,
+		l82.SVC_ORD_ID service_order,
+		l82.CUST_ID customer,
+		s29.NAME customer_name,
+		<!-- TO_CHAR(l82.SVC_DT,'DD/MM/YYYY') service_date, -->
+		TO_CHAR(l82.SVC_DT,'YYYY/MM/DD') service_date,
+		s26.STK_CODE material_code,
+		s26.STK_DESC material_name,
+		l82.STK_ID,
+		l82.OLD_SERIAL serial_number,
+		l82.NEW_SERIAL serial,
+		l82.QTY qty,
+		l82.COMMENTS text,
+		l82.CMPLT_YN return_complete,
+	    <!-- TO_CHAR(l82.CMPLT_DT,'DD/MM/YYYY') return_complete_date, -->
+        TO_CHAR(l82.CMPLT_DT,'YYYY/MM/DD') return_complete_date,
+		<!-- l82.CMPLT_DT return_complete_date, -->
+		<!-- (SELECT CODE FROM SYS0013M WHERE CODE=l82.RESN_CODE AND  CODE_MASTER_ID='364')  no_parts_return, -->
+		l82.RESN_CODE no_parts_return,
+		l82.CRT_DT,
+		l82.CRT_USER_ID,
+		l82.UPD_DT,
+		l82.UPD_USER_ID,
+		S26.SERIAL_CHK,
+		S26.STK_TYPE_ID 
+		from LOG0082M l82,sal0029d s29,sys0026m s26
+		where 1=1
+		AND l82.CUST_ID=s29.CUST_ID
+		AND l82.STK_ID=s26.STK_ID
+	   <if test="searchOder != null and searchOder !=''">
+           AND l82.SVC_ORD_ID = #{searchOder}
+       </if>
+       <if test="searchCustomer != null and searchCustomer !=''">
+           AND s29.NAME = #{searchCustomer}
+       </if>
+       <if test="searchMaterialCode != null and searchMaterialCode !=''">
+           AND s26.STK_CODE = #{searchMaterialCode}
+       </if>
+       <if test="searchMaterialType != null and searchMaterialType !=''">
+           AND S26.STK_TYPE_ID = #{searchMaterialType}
+       </if>
+       <if test="searchComplete != null and searchComplete !=''">
+           AND l82.CMPLT_YN= #{searchComplete}
+       </if>
+	   <if test="servicesdt !=null and servicesdt !=''">
+           and to_char(l82.SVC_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{servicesdt},'dd/mm/yyyy'),'yyyymmdd')
+       </if>
+       <if test="serviceedt !=null and serviceedt !=''">
+          and to_char(l82.SVC_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{serviceedt},'dd/mm/yyyy'),'yyyymmdd')
+       </if>
+        <if test="returnsdt !=null and returnsdt !=''">
+          and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{returnsdt},'dd/mm/yyyy'),'yyyymmdd')
+       </if>
+       <if test="returnedt !=null and returnedt !=''">
+          and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd')
+       </if>	
+	</select>
+
+	<update id="upReturnParts" parameterType="Map">
+		UPDATE LOG0082M
+		SET
+		NEW_SERIAL=#{serial},
+		QTY =#{qty},
+		RESN_CODE=#{noPartsReturn},
+		COMMENTS=#{text},
+		CMPLT_YN ='Y',
+		CMPLT_DT=SYSDATE,
+		UPD_DT = SYSDATE,
+        UPD_USER_ID=#{userId}
+		WHERE SEQ =#{seq}
+	</update> 
+	
+	<delete id="returnPartsCanCle" parameterType="Map">
+        DELETE FROM LOG0082M
+        WHERE SEQ =#{seq}
+   </delete>
+
+   <delete id="returnPartsdelete" parameterType="String">
+        DELETE FROM LOG0082M
+        WHERE SVC_ORD_ID =#{param}
+   </delete>
+   
+
+     
+
+</mapper>
