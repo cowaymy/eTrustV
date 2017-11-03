@@ -45,7 +45,10 @@ public class HolidayController {
 	 */
 	@RequestMapping(value = "/initHolidayList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+		List<EgovMap> selectState = holidayService.selectState();
+		List<EgovMap> branchList = holidayService.selectBranch();
+		model.addAttribute("selectState", selectState);
+		model.addAttribute("branchList", branchList);
 		// 호출될 화면
 		return "services/servicePlanning/holidayList";
 	}
@@ -71,7 +74,7 @@ public class HolidayController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
 		
-		logger.debug("delList {}", delList);
+		logger.debug("addList {}", addList);
 		if(addList != null){
 			addSuccess = holidayService.insertHoliday(addList,sessionVO);
 		}
@@ -111,7 +114,8 @@ public class HolidayController {
 	 */
 	@RequestMapping(value = "/searchHolidayList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHolidayList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-
+		String[] stateList = request.getParameterValues("cmbState");
+		params.put("stateList", stateList);
 		List<EgovMap> holidayList = holidayService.selectHolidayList(params);
 		logger.debug("holidayList {}", holidayList);
 		return ResponseEntity.ok(holidayList);
@@ -167,7 +171,11 @@ public class HolidayController {
 	public ResponseEntity<List<EgovMap>> searchCTAssignList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
 		String[] stateTypeList = request.getParameterValues("assignState");
+		String[] stateList = request.getParameterValues("cmbState");
+		String[] branchList = request.getParameterValues("branchId");
 		params.put("stateTypeList", stateTypeList);
+		params.put("stateList", stateList);
+		params.put("branchList", branchList);
 		List<EgovMap> assignList = holidayService.selectCTAssignList(params);
 		logger.debug("assignList {}", assignList);
 		return ResponseEntity.ok(assignList);
