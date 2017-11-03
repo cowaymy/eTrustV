@@ -164,6 +164,15 @@ $(function(){
         document.location.href = '/logistics/stockMovement/StockMovementList.do';
     });
     $('#save').click(function() {
+    	var addedItems = AUIGrid.getColumnValues(reqGrid,"rqty");
+    	if (addedItems.length > 0){
+            for (var i = 0 ; i < addedItems.length ; i++){
+                if(""==addedItems[i] || 0==addedItems[i]){
+                    Common.alert("Plese Check Request Item Grid Request Qty.");
+                    return false;
+                }       
+            }
+        }
         if (f_validatation('save')){
             var dat = GridCommon.getEditData(reqGrid);
             dat.form = $("#headForm").serializeJSON();
@@ -175,7 +184,6 @@ $(function(){
                 try {
                 } catch (e) {
                 }
-    
                 Common.alert("Fail : " + jqXHR.responseJSON.message);
             });
         }
@@ -389,11 +397,11 @@ function f_multiCombo() {
 <h2>New-Stock Movement Request</h2>
 </aside><!-- title_line end -->
 
-<aside class="title_line"><!-- title_line start -->
+<aside class="title_line"> 
 <h3>Header Info</h3>
-</aside><!-- title_line end -->
-
-<section class="search_table"><!-- search_table start -->
+</aside> 
+<!-- search_table start -->
+<section class="search_table">
 <form id="headForm" name="headForm" method="post">
 <input type='hidden' id='pridic' name='pridic' value='M'/>
 <input type='hidden' id='headtitle' name='headtitle' value='SMO'/>
@@ -462,7 +470,7 @@ function f_multiCombo() {
 <!--         <option value="">22</option> -->
 <!--         <option value="">33</option> -->
 <!--     </select> -->
-<!--     </td> --> -->
+<!--     </td> --> 
 <!--     <td> -->
 <!--     </td> -->
 <!--     <td> -->
