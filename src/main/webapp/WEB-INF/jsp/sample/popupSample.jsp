@@ -24,10 +24,11 @@
     	
     	jsonObj = $("#dataForm").serializeJSON();
         
-        var divObj = Common.popupDiv("/account//accountCodeEditPop.do", jsonObj, function(params){
+        var divObj = Common.popupDiv("/sample/sampleSchedulePop.do", jsonObj, function(params){
             alert("callback....");
             //alert("params01 : " + params.param01);
-        }, null, "testId");
+        });
+//        }, null, "testId");
     }
 
     function fn_openWinPop(){
