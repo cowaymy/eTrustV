@@ -98,7 +98,7 @@ $(document).ready(function() {
 
 
 function fn_popClose(){
-    $("#_reversalClose").click();
+	$("#_reversalClose").click();
 }
 
 function createPurchaseGridID(){
@@ -199,7 +199,7 @@ function createPurchaseGridID(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>POS Reversal</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="__reversalClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_reversalClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
