@@ -288,7 +288,8 @@ function fn_popClose(){
 
 function fn_bookingAndpopClose(){
     //프로시저 호출
-	// 콜백  >> $("#_systemClose").click();
+	// 콜백  >> 
+	$("#_systemClose").click();
 }
 
 
