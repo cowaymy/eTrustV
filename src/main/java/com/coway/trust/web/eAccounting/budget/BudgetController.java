@@ -311,7 +311,7 @@ public class BudgetController {
 
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "budget", AppConstants.UPLOAD_MAX_FILE_SIZE);
+				File.separator + "eAccounting" + File.separator + "budget", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 		
 		LOGGER.debug("list.size : {}", list.size());
 		
@@ -325,7 +325,10 @@ public class BudgetController {
 				fileService.removeFilesByFileGroupId(FileType.WEB_DIRECT_RESOURCE, pAtchFileGrpId);
 			}
 			
-			fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
+			int fileGroupKey = fileService.insertFiles(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, (Integer) params.get("userId"));
+			params.put("fileGroupKey", fileGroupKey);
+			
+			//fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
 		}
 		
 		
