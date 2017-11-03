@@ -52,7 +52,7 @@ public class MobileAuthenticInterceptor extends WebContentInterceptor {
 
 		if (sessionVO == null || sessionVO.getUserId() == 0) {
 			LOGGER.debug("세션체크");
-			// throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
 	}
 

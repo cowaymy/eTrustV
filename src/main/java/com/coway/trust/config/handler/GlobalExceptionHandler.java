@@ -3,6 +3,7 @@ package com.coway.trust.config.handler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.coway.trust.web.mobile.MobileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -211,6 +212,11 @@ public class GlobalExceptionHandler {
 			return new ResponseEntity<Object>(message, headers, ex.getHttpStatus());
 		} else {
 			String redirect = AppConstants.REDIRECT_LOGIN;
+
+			if(request.getRequestURI().startsWith(MobileConstants.MOBILE_WEB + "/")){
+				redirect = AppConstants.REDIRECT_MOBILE_LOGIN;
+			}
+
 			HttpStatus httpStatus = ex.getHttpStatus();
 			if (HttpStatus.FORBIDDEN == httpStatus) {
 				redirect = AppConstants.REDIRECT_UNAUTHORIZED;

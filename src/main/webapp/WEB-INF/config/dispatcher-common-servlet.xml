@@ -72,15 +72,28 @@
             <mvc:exclude-mapping path="/sample/**"/>
 
             <!-- MOBILE WEB -->
-            <mvc:exclude-mapping path="/m/login/*.do"/>
+            <mvc:exclude-mapping path="/mobile/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
+        </mvc:interceptor>
+
+        <!-- mobile web Interceptor-->
+        <mvc:interceptor>
+            <mvc:mapping path="/mobile/**"/>
+
+            <mvc:exclude-mapping path="/mobile/login.do"/>
+
+            <bean class="com.coway.trust.cmmn.interceptor.MobileAuthenticInterceptor" />
         </mvc:interceptor>
 
 
         <!-- callcenter Interceptor : check token, create session info. -->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
+
+            <!-- MOBILE WEB -->
+            <mvc:exclude-mapping path="/mobile/**"/>
+
             <bean class="com.coway.trust.cmmn.interceptor.CallCenterAuthenticInterceptor" />
         </mvc:interceptor>
 
