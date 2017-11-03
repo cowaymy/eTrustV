@@ -104,11 +104,6 @@
         style : "my-column",
         editable : false
     },{
-        dataField : "r27",
-        headerText : "Incentive",
-        style : "my-column",
-        editable : false
-    },{
         dataField : "r28",
         headerText : "Incentive",
         style : "my-column",

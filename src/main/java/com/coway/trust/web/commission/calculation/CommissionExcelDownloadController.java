@@ -293,12 +293,12 @@ public class CommissionExcelDownloadController {
 				if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
-							"r4", "r5", "r6", "r7", "r8", "r10", "r11", "r27", "r28", "r29", "r30", "r34", "r35", "r36",
+							"r4", "r5", "r6", "r7", "r8", "r10", "r11", "r28", "r29", "r30", "r34", "r35", "r36",
 							"r38", "r39", "r99" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE",
 							"performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm",
 							"sales encouragement allowance", "rental collection Cmm", "Remove Phone Allowance",
-							"Healthy Family Fund", "newely entering allowance", "introduction fees", "Incentive",
+							"Healthy Family Fund", "newely entering allowance", "introduction fees",
 							"Incentive", "SHI_Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
 							"COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
