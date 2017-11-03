@@ -98,22 +98,11 @@ public class EnrollController {
 		
 		params.put("enrollId", params.get("enrollId"));
 		EgovMap enrollInfo = enrollService.selectViewEnrollment(params);
+		List<EgovMap> resultList = enrollService.selectViewEnrollmentList(params);
 		
 		Map result = new HashMap();
 		result.put("enrollInfo", enrollInfo);
-		
-		return ResponseEntity.ok(result);
-	}
-		
-	/**
-	* ViewEnrollmentList 팝업 Detail
-	*/
-	@RequestMapping(value = "/selectViewEnrollmentList")
-	public ResponseEntity<List<EgovMap>> selectViewEnrollmentList(@RequestParam Map<String, Object>params, ModelMap model) {
-			
-		LOGGER.debug("params : {} ", params);
-		params.put("enrollId", params.get("enrollId"));
-		List<EgovMap> result = enrollService.selectViewEnrollmentList(params);
+		result.put("resultList", resultList);
 		
 		return ResponseEntity.ok(result);
 	}
