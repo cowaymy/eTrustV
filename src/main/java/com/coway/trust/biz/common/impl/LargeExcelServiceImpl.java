@@ -30,7 +30,7 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 
 	@Override
 	public void downLoad09T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
-		this.downLoad(LargeExcelQuery.CMM0013T.getQueryId(), parameter, excelDownloadHandler);
+		this.downLoad(LargeExcelQuery.CMM0009T.getQueryId(), parameter, excelDownloadHandler);
 	}
 
 	@Override
