@@ -146,7 +146,7 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','searchStatus', 'S' , '');
-	   doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , '');
+	   /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
 	   var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
        doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , 'SearchListAjax');     
        doGetComboData('/logistics/pos/selectPosReqNo.do','' , '','searchOthersReq1', 'S' , '');
@@ -265,12 +265,61 @@ $(function(){
         }
     });
     
-      
+    $("#tlocationnm").keypress(function(event) {
+        $('#tlocation').val('');
+        if (event.which == '13') {
+            $("#stype").val('tlocation');
+            $("#svalue").val($('#tlocationnm').val());
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
+    
+//     $("#flocationnm").keypress(function(event) {
+//         $('#flocation').val('');
+//         if (event.which == '13') {
+//             $("#stype").val('flocation');
+//             $("#svalue").val($('#flocationnm').val());
+//             $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+//             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+//         }
+//     });
     
 });
 
-function SearchListAjax() {
+    function fn_itempopList(data){
+    
+    var rtnVal = data[0].item;
    
+    if ($("#stype").val() == "flocation" ){
+        $("#flocation").val(rtnVal.locid);
+        $("#flocationnm").val(rtnVal.locdesc);
+    }else{
+        $("#tlocation").val(rtnVal.locid);
+        $("#tlocationnm").val(rtnVal.locdesc);
+    }
+    
+    $("#svalue").val();
+} 
+
+function SearchListAjax() {
+	
+// 	   if ($("#flocationnm").val() == ""){
+// 	        $("#flocation").val('');
+// 	    }
+	    if ($("#tlocationnm").val() == ""){
+	        $("#tlocation").val('');
+	    }
+	    
+// 	    if ($("#flocation").val() == ""){
+// 	        $("#flocation").val($("#flocationnm").val());
+// 	    }
+	    if ($("#tlocation").val() == ""){
+	        $("#tlocation").val($("#tlocationnm").val());
+	    }
+	
     var url = "/logistics/pos/PosSearchList.do";
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(data){
@@ -431,7 +480,10 @@ function f_getTtype(g , v){
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
-        <input type="hidden" name="rStcode" id="rStcode" />    
+        <input type="hidden" name="rStcode" id="rStcode" />
+        <input type="hidden" id="svalue" name="svalue"/>
+        <input type="hidden" id="sUrl"   name="sUrl"  />
+        <input type="hidden" id="stype"  name="stype" />    
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -458,7 +510,9 @@ function f_getTtype(g , v){
                 <tr>
                     <th scope="row">Location</th>
                     <td>
-                        <select class="w100p" id="searchLoc" name="searchLoc"></select>
+                        <!-- <select class="w100p" id="searchLoc" name="searchLoc"></select> -->
+                        <input type="hidden"  id="tlocation" name="tlocation">
+                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
                     <th scope="row">Status</th>
                     <td>
