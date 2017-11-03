@@ -58,12 +58,18 @@
 		and l60.measure_bas_unit = ut.code_id(+)
 		and l59.trnsc_type_code = tt.code
 		and l60.INVNTRY_MOV_TYPE = mt.code <!-- 밑에서부터 where조건 시작 -->
-		<if test="searchFromLoc !=null and searchFromLoc !=''">
-			and l60.rciv_issu_storg_loc = #{searchFromLoc}
-		</if>
-		<if test="searchToLoc !=null and searchToLoc !=''">
-			and l60.storg_loc = #{searchToLoc}
-		</if>
+<!-- 		<if test="searchFromLoc !=null and searchFromLoc !=''"> -->
+<!-- 			and l60.rciv_issu_storg_loc = #{searchFromLoc} -->
+<!-- 		</if> -->
+<!-- 		<if test="searchToLoc !=null and searchToLoc !=''"> -->
+<!-- 			and l60.storg_loc = #{searchToLoc} -->
+<!-- 		</if> -->
+		<if test="tlocation !=null and tlocation !=''">
+            and l60.rciv_issu_storg_loc = #{tlocation}
+        </if>
+        <if test="flocation !=null and flocation !=''">
+            and l60.storg_loc = #{flocation}
+        </if>
 		<if test="searchMaterialCode !=null and searchMaterialCode !=''">
 			and l60.matrl_no = #{searchMaterialCode}
 		</if>
