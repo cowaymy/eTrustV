@@ -77,7 +77,7 @@ function fn_changeCombo(value){
 		$('<option />', {value: "SUS", text: "Suspend" }).appendTo($("#pRsCnvrStusTo"));
 	}else if(value=="SUS"){
 		$('<option />', { value: "REG", text: "Regular"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
-        $('<option />', { value: "SUS", text: "Suspend"}).appendTo($("#pRsCnvrStusTo"));
+        $('<option />', { value: "INV", text: "Investigate"}).appendTo($("#pRsCnvrStusTo"));
 	}else if(value=="RET"){
         $('<option />', { value: "SUS", text: "Suspend"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
         $('<option />', { value: "TER", text: "Terminate"}).appendTo($("#pRsCnvrStusTo"));
