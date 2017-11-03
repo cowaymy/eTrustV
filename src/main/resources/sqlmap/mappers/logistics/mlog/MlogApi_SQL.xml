@@ -758,15 +758,15 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 	<select id="getStockPriceList" parameterType="Map" resultType="egovMap">
 	 select S26T.STK_ID parts_Id,l44.BOM_COMPNT parts_Code,S26T.STK_DESC parts_Name,S26T.STK_CTGRY_ID,S26T.STK_TYPE_ID,1 price_Unit,s16.AMT parts_Price,
 	 (select CODE_NAME from sys0013m where CODE_MASTER_ID ='94' AND CODE_ID='1150') currency
-	from log0043m l43,  log0044d l44,SAL0016M s16  
-	<if test="searchKinds !=null and searchKinds !=''">
-	,(SELECT * FROM SYS0026M WHERE STK_TYPE_ID =#{searchKinds}) S26T 
-	</if>
+	from log0043m l43,  log0044d l44,SAL0016M s16  , SYS0026M s26t
 	where 1=1
 	AND S26T.STK_ID = s16.STK_ID
 	AND l44.BOM_COMPNT = S26T.stk_code(+)
 	AND l43.bom=l44.bom
 	AND l43.MATRL_NO=#{productCode}
+	<if test="searchKinds !=null and searchKinds !=''">
+    s26t.STK_TYPE_ID =#{searchKinds} 
+    </if>
 	 <if test="searchType == 1 ">
             AND S26T.STK_CODE=#{searchKeyword}
      </if>
@@ -925,14 +925,19 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
      </update>     
     
       <select id="selectStockMovementSerial" parameterType="Map" resultType="Map">
-		 SELECT NVL(MAX(YN) , 'N') check62, NVL(MAX(NN) , 'Y') check63 FROM (
-		SELECT L63.SERIAL_NO , DECODE(L63.SERIAL_NO , NULL , 'N','Y') YN,  (SELECT DELVRY_NO FROM LOG0061D WHERE SERIAL_NO = L63.SERIAL_NO) NN  FROM LOG0063D L63 , LOG0062M L62 
-		 WHERE 1 =1 
-		   AND L62.SERIAL_NO = L63.SERIAL_NO
-		   AND L63.MATNR     =  #{partsCode}
-		   AND L63.LOC_ID    =  (select WH_LOC_ID from sys0028m where WH_LOC_CODE=#{userId})
-		   AND L63.SERIAL_NO =  #{serialNo}
-		)
+		SELECT NVL (MAX (YN), 'N') check62, NVL (MAX (NN), 'Y') check63
+		  FROM (SELECT L63.SERIAL_NO,
+		               DECODE (L63.SERIAL_NO, NULL, 'N', 'Y') YN,
+		               (SELECT DELVRY_NO
+		                  FROM LOG0061D
+		                 WHERE SERIAL_NO = L63.SERIAL_NO)
+		                  NN
+		          FROM LOG0063D L63, LOG0062M L62
+		         WHERE 1 = 1 AND L62.SERIAL_NO = L63.SERIAL_NO
+				   AND L63.MATNR     =  #{partsCode}
+				   AND L63.LOC_ID    =  (select WH_LOC_ID from sys0028m where WH_LOC_CODE=#{userId})
+				   AND L63.SERIAL_NO =  #{serialNo}
+				)
      </select>
     <resultMap id="APIMOVEDATA" type="egovMap" />
     <select id="StockMovementIssue"  statementType="CALLABLE" parameterType="Map"> 
