@@ -94,21 +94,22 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
 	
 	@Override
 	public List<EgovMap> selectSchemaResultMgmt(Map<String, Object> params) {
-		
-		StringTokenizer str1 = new StringTokenizer(params.get("month").toString());
-		
-		for(int i =0; i <= 1 ; i++) {
-			str1.hasMoreElements();
-			String result = str1.nextToken("/");            //특정문자로 자를시 사용
-			
-			logger.debug("iiiii: {}", i);
-			
-			if(i==0){
-				params.put("searchMonth", result);
-			}else{
-				params.put("searchYear", result);
-			}
-		}		
+		/*if(params.get("ManuaMyBSMonth") != null) {
+    		StringTokenizer str1 = new StringTokenizer(params.get("month").toString());
+    		
+    		for(int i =0; i <= 1 ; i++) {
+    			str1.hasMoreElements();
+    			String result = str1.nextToken("/");            //특정문자로 자를시 사용
+    			
+    			logger.debug("iiiii: {}", i);
+    			
+    			if(i==0){
+    				params.put("searchMonth", result);
+    			}else{
+    				params.put("searchYear", result);
+    			}
+    		}		
+		}*/
 		return mileageCalculationMapper.selectSchemaResultMgmt(params);
 	}
 	
