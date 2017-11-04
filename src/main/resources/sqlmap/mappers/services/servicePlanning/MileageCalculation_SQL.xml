@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.servicePlanning.impl.MileageCalculationMapper">
+
+<insert id="insertDCPMaster" parameterType="Map">
+    INSERT INTO SVC0034M(
+      MEM_TYPE
+    , BRNCH_CODE
+    , DCP_FROM
+    , DCP_TO
+    , DISTANCE
+    , CRT_USER_ID
+    , CRT_DT
+    , UPD_USER_ID
+    , UPD_DT
+    )
+    VALUES(
+       #{memType}
+     , #{brnchCode}
+     , #{dcpFrom}
+     , #{dcpTo}
+     , #{distance}
+     , #{userId}
+     , SYSDATE
+     , #{userId}
+     , SYSDATE
+     )
+</insert>
+
+<update id="updatetDCPMaster" parameterType="Map">
+    UPDATE SVC0034M SET 
+	    MEM_TYPE = #{memType},
+	    BRNCH_CODE = #{brnchCode},
+	    DCP_FROM = #{dcpFrom},
+	    DCP_TO = #{dcpTo},
+	    DISTANCE = #{distance},
+	    UPD_USER_ID = #{userId},
+	    UPD_DT = SYSDATE
+    WHERE MEM_TYPE = #{memType1}
+	    AND BRNCH_CODE = #{brnchCode1}
+	    AND DCP_FROM = #{dcpFrom1}
+	    AND DCP_TO = #{dcpTo1}
+</update>
+<delete id="deleteDCPMaster" parameterType="Map">
+         DELETE FROM SVC0034M
+         WHERE  MEM_TYPE = #{memType1} AND BRNCH_CODE = #{brnchCode1}  AND DCP_FROM = #{dcpFrom1} AND DCP_TO = #{dcpTo1}
+</delete>
+<select id="selectDCPMaster"  parameterType="Map" resultType="egovMap">
+        SELECT 
+            CASE WHEN MEM_TYPE = 2 THEN 'CODY'
+             ELSE 'CT'  END MEM_TYPE,
+            BRNCH_CODE BRNCH_CODE,
+            DCP_FROM DCP_FROM,
+            DCP_TO DCP_TO,
+            DISTANCE DISTANCE,
+            MEM_TYPE MEM_TYPE1,
+            BRNCH_CODE BRNCH_CODE1,
+            DCP_FROM DCP_FROM1,
+            DCP_TO DCP_TO1,
+            DISTANCE DISTANCE1
+         FROM SVC0034M
+         WHERE 1=1
+         <if test="memTypeList != null and memTypeList != '' ">
+	          AND MEM_TYPE IN 
+	          <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+	          #{item}
+	          </foreach>
+           </if>
+           <if test="mcpFromList != null and mcpFromList != '' ">
+              AND DCP_FROM  IN 
+              <foreach item="item" collection="mcpFromList" index="index" open="(" separator="," close=")">
+              #{item}
+              </foreach>
+           </if>
+           <if test="mcpToList != null and mcpToList != '' ">
+              AND DCP_TO  IN 
+              <foreach item="item" collection="mcpToList" index="index" open="(" separator="," close=")">
+              #{item}
+              </foreach>
+           </if>
+           <if test="branchCodeList != null and branchCodeList != '' ">
+              AND BRNCH_CODE  IN 
+              <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+              #{item}
+              </foreach>
+           </if>
+</select>
+<select id="selectArea"  parameterType="Map" resultType="egovMap">
+        SELECT AREA CODE_ID, AREA CODE_NAME FROM SYS0064M GROUP BY AREA
+</select>
+
+<insert id="insertSchemaMgmt" parameterType="Map">
+    INSERT INTO SVC0033M(
+      SCHEM_ID
+    , MEM_TYPE
+    , RANGE_FROM
+    , RANGE_TO
+    , MILEAGE_AMT
+    , DEDUCT_FLAG
+    , MULTI_RATE
+    , PERIOD_FROM
+    , PERIOD_TO
+    , CRT_USER_ID
+    , CRT_DT
+    , UPD_USER_ID
+    , UPD_DT
+    )
+    VALUES(
+       SVC0033M_SCHEM_ID_SEQ.NEXTVAL
+     , #{memType}
+     , TO_NUMBER(#{rangeFrom})
+     , TO_NUMBER(#{rangeTo})
+     , TO_NUMBER(#{mileageAmt})
+     , TO_NUMBER(#{deductFlag})
+     , TO_NUMBER(#{multiRate})
+     , TO_DATE(#{applyFrom},'YYYY-MM-DD')
+     , TO_DATE(#{applyTo},'YYYY-MM-DD')
+     , #{userId}
+     , SYSDATE
+     , #{userId}
+     , SYSDATE
+     )
+</insert>
+<update id="updateSchemaMgmt" parameterType="Map">
+    UPDATE SVC0033M SET 
+        MEM_TYPE = #{memType},
+        RANGE_FROM = TO_NUMBER(#{rangeFrom}),
+	    RANGE_TO = TO_NUMBER(#{rangeTo}),
+	    MILEAGE_AMT = TO_NUMBER(#{mileageAmt}),
+	    DEDUCT_FLAG = TO_NUMBER(#{deductFlag}),
+	    MULTI_RATE = TO_NUMBER(#{multiRate}),
+	    PERIOD_FROM = TO_DATE(#{applyFrom},'YYYY-MM-DD'),
+	    PERIOD_TO = TO_DATE(#{applyTo},'YYYY-MM-DD'),
+        UPD_USER_ID = #{userId},
+        UPD_DT = SYSDATE
+    WHERE SCHEM_ID = #{schemId}
+</update>
+<delete id="deleteSchemaMgmt" parameterType="Map">
+         DELETE FROM SVC0033M
+         WHERE SCHEM_ID = #{schemId}
+</delete>
+<select id="selectSchemaMgmt"  parameterType="Map" resultType="egovMap">
+        SELECT 
+			SCHEM_ID SCHEM_ID,
+			CASE WHEN MEM_TYPE = 2 THEN 'CODY'
+			ELSE 'CT' END  MEM_TYPE,
+			RANGE_FROM RANGE_FROM,
+			RANGE_TO RANGE_TO,
+			MILEAGE_AMT MILEAGE_AMT,
+			DEDUCT_FLAG DEDUCT_FLAG,
+			MULTI_RATE MULTI_RATE,
+			TO_CHAR(PERIOD_FROM,'YYYY-MM-DD')  APPLY_FROM,
+			TO_CHAR(PERIOD_TO, 'YYYY-MM-DD')  APPLY_TO
+		FROM SVC0033M
+		WHERE 1=1
+		<if test="memTypeList != null and memTypeList != '' ">
+           AND MEM_TYPE IN 
+           <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+           #{item}
+           </foreach>
+        </if>
+        <if test="applyFrom != '' and applyFrom != null ">
+           <![CDATA[ AND  PERIOD_FROM  >= TO_DATE(#{applyFrom}, 'DD/MM/YYYY') ]]>
+        </if>
+         <if test="applyTo !='' and applyTo != null ">
+           <![CDATA[  AND PERIOD_TO <=  TO_DATE(#{applyTo}, 'DD/MM/YYYY') ]]>
+        </if>
+</select>
+<select id="selectSchemaResultMgmt"  parameterType="Map" resultType="egovMap">
+        SELECT A.MEM_TYPE, C.CODE, A.MEM_CODE, B.UPD_DT, SUM(B.DISTANCE)
+			FROM  ORG0001D A
+			INNER JOIN SVC0008D B ON A.MEM_ID = B.CODY_ID
+			INNER JOIN SYS0005M C ON C.BRNCH_ID = A.BRNCH
+			WHERE 1=1
+			<if test="branchList != null and branchList != '' ">
+	           AND C.CODE IN (
+	           <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+	           #{item}
+	           </foreach>
+            </if>memTypeList
+            <if test="memTypeList != null and memTypeList != '' ">
+               AND C.CODE IN (
+               <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+            </if>
+			<if test="memCode !='' and memCode != null ">
+              AND  A.MEM_CODE = #{memCode}
+            </if>
+            <if test="month != null and month != ''">
+                    AND  B.YEAR(+) = #{searchYear} 
+                    AND  B.MONTH (+) = #{searchMonth} 
+           </if>  
+			GROUP BY A.MEM_TYPE, C.CODE, A.MEM_CODE, B.UPD_DT
+
+        
+</select>
+</mapper>
