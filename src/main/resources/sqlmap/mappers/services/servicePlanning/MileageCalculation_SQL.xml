@@ -170,7 +170,7 @@
         SELECT A.MEM_TYPE,
                    C.CODE AS branch_id,
                    A.MEM_CODE,
-                   B.UPD_DT as service_date,
+                   TO_CHAR(B.UPD_DT,'DD-MM-YYYY') as service_date,
                    SUM(B.DISTANCE) AS total_distance
 		  FROM ORG0001D A
 			      INNER JOIN SVC0008D B ON A.MEM_ID = B.CODY_ID
