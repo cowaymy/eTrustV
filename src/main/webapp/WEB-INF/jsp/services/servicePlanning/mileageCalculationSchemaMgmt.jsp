@@ -24,7 +24,7 @@ function mileageCalSchemaList() {
                                   },
                                   keyField : "id1"
                               }},
-                          { dataField : "schemId", headerText  : "Schema Code",width : 100 },
+                          { dataField : "schemId", headerText  : "Schema Code",width : 100,  editable : false},
                           { dataField : "rangeFrom", headerText  : "Range From",    width : 100 },
                           { dataField : "rangeTo", headerText  : "Range To",    width : 100 },
                           { dataField : "mileageAmt", headerText  : "Mileage Amount",    width : 100 },
@@ -138,10 +138,10 @@ function mileageCalSchemaList() {
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD Schema</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
     <!-- <li><p class="btn_grid"><a href="#">EDIT Schema</a></p></li> -->
-    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">DEL Schema</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:save()">SAVE Schema</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:save()">SAVE</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

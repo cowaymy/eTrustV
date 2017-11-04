@@ -29,6 +29,11 @@ function fn_resultSearch(){
         AUIGrid.setGridData(gridID1, result);
     });
 }
+
+function fn_excelDown(){
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    GridCommon.exportTo("calculation_schema_result_grid_wap", "xlsx", "MemberList");
+}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -98,7 +103,7 @@ function fn_resultSearch(){
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_excelDown()">EXCEL DW</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
