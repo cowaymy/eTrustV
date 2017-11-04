@@ -1,0 +1,32 @@
+package com.coway.trust.biz.services.servicePlanning.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Mapper("mileageCalculationMapper")
+public interface MileageCalculationMapper {
+
+	void insertDCPMaster(Map<String, Object> params);
+	
+	void updatetDCPMaster(Map<String, Object> params);
+	
+	void deleteDCPMaster(Map<String, Object> params);
+	
+	List<EgovMap> selectDCPMaster(Map<String, Object> params);
+	
+	List<EgovMap> selectArea();
+	
+	void insertSchemaMgmt(Map<String, Object> params);
+	
+	void updateSchemaMgmt(Map<String, Object> params);
+	
+	void deleteSchemaMgmt(Map<String, Object> params);
+	
+	List<EgovMap> selectSchemaMgmt(Map<String, Object> params);
+	
+	List<EgovMap> selectSchemaResultMgmt(Map<String, Object> params);
+	
+}
