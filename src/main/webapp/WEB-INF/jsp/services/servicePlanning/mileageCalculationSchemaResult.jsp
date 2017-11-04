@@ -89,7 +89,7 @@ function fn_excelDown(){
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Period</th>
+    <th scope="row">Period<span class="must">*</span></th>
     <td><input type="text" title="Period" class="j_date2 w100p"  id="month" name="month"/></td>
     <th scope="row">Branch</th>
     <td>
