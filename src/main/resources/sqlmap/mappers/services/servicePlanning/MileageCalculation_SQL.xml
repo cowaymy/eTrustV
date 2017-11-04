@@ -28,7 +28,7 @@
 </insert>
 
 <update id="updatetDCPMaster" parameterType="Map">
-    UPDATE SVC0034M SET 
+    UPDATE SVC0034M SET
 	    MEM_TYPE = #{memType},
 	    BRNCH_CODE = #{brnchCode},
 	    DCP_FROM = #{dcpFrom},
@@ -46,7 +46,7 @@
          WHERE  MEM_TYPE = #{memType1} AND BRNCH_CODE = #{brnchCode1}  AND DCP_FROM = #{dcpFrom1} AND DCP_TO = #{dcpTo1}
 </delete>
 <select id="selectDCPMaster"  parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             CASE WHEN MEM_TYPE = 2 THEN 'CODY'
              ELSE 'CT'  END MEM_TYPE,
             BRNCH_CODE BRNCH_CODE,
@@ -61,25 +61,25 @@
          FROM SVC0034M
          WHERE 1=1
          <if test="memTypeList != null and memTypeList != '' ">
-	          AND MEM_TYPE IN 
+	          AND MEM_TYPE IN
 	          <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
 	          #{item}
 	          </foreach>
            </if>
            <if test="mcpFromList != null and mcpFromList != '' ">
-              AND DCP_FROM  IN 
+              AND DCP_FROM  IN
               <foreach item="item" collection="mcpFromList" index="index" open="(" separator="," close=")">
               #{item}
               </foreach>
            </if>
            <if test="mcpToList != null and mcpToList != '' ">
-              AND DCP_TO  IN 
+              AND DCP_TO  IN
               <foreach item="item" collection="mcpToList" index="index" open="(" separator="," close=")">
               #{item}
               </foreach>
            </if>
            <if test="branchCodeList != null and branchCodeList != '' ">
-              AND BRNCH_CODE  IN 
+              AND BRNCH_CODE  IN
               <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
               #{item}
               </foreach>
@@ -122,7 +122,7 @@
      )
 </insert>
 <update id="updateSchemaMgmt" parameterType="Map">
-    UPDATE SVC0033M SET 
+    UPDATE SVC0033M SET
         MEM_TYPE = #{memType},
         RANGE_FROM = TO_NUMBER(#{rangeFrom}),
 	    RANGE_TO = TO_NUMBER(#{rangeTo}),
@@ -140,7 +140,7 @@
          WHERE SCHEM_ID = #{schemId}
 </delete>
 <select id="selectSchemaMgmt"  parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
 			SCHEM_ID SCHEM_ID,
 			CASE WHEN MEM_TYPE = 2 THEN 'CODY'
 			ELSE 'CT' END  MEM_TYPE,
@@ -154,7 +154,7 @@
 		FROM SVC0033M
 		WHERE 1=1
 		<if test="memTypeList != null and memTypeList != '' ">
-           AND MEM_TYPE IN 
+           AND MEM_TYPE IN
            <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
            #{item}
            </foreach>
@@ -167,11 +167,31 @@
         </if>
 </select>
 <select id="selectSchemaResultMgmt"  parameterType="Map" resultType="egovMap">
-        SELECT A.MEM_TYPE, C.CODE, A.MEM_CODE, B.UPD_DT, SUM(B.DISTANCE)
-			FROM  ORG0001D A
-			INNER JOIN SVC0008D B ON A.MEM_ID = B.CODY_ID
+        SELECT A.MEM_TYPE,
+                   C.CODE AS branch_id,
+                   A.MEM_CODE,
+                   B.UPD_DT as service_date,
+                   SUM(B.DISTANCE) AS total_distance
+		  FROM ORG0001D A
+			      INNER JOIN SVC0008D B ON A.MEM_ID = B.CODY_ID
 			INNER JOIN SYS0005M C ON C.BRNCH_ID = A.BRNCH
 			WHERE 1=1
-			GROUP BY A.MEM_TYPE, C.CODE, A.MEM_CODE, B.UPD_DT
+			    AND A.MEM_ID = B.CODY_ID
+			    AND A.BRNCH = C.BRNCH_ID
+			    AND B.MONTH =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)  /* SUBSTR(  :month ,0,2)*/
+                AND B.YEAR =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)     /* SUBSTR(:month,3,4) */
+			<if test="memType != null and memType != ''">
+			  AND A.MEM_TYPE = #{memType}
+			</if>
+			<if test="memCode != null and memCode != ''">
+              AND A.MEM_CODE = #{memCode}
+            </if>
+            <if test="branch != null and branch != ''">
+              AND C.CODE = #{branch}
+            </if>
+		  GROUP BY A.MEM_TYPE,
+		                C.CODE,
+		                A.MEM_CODE,
+		                B.UPD_DT
 </select>
 </mapper>
