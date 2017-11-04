@@ -3,7 +3,7 @@
 
 <script type="text/javaScript">
 var gridID1;
-function mileageCalSchemaResList() { 
+function mileageCalSchemaResList() {
     var columnLayout = [
                           { dataField : "memType", headerText  : "Member Type",    width : 100 },
                           { dataField : "branchId", headerText  : "Branch Code",width : 100 },
@@ -13,21 +13,30 @@ function mileageCalSchemaResList() {
                           { dataField : "mileage Amount",       headerText  : "Mileage Amount",  width  : 200},
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
-        
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
+
         gridID1 = GridCommon.createAUIGrid("calculation_schema_result_grid_wap", columnLayout  ,"" ,gridPros);
     }
-    
+
 $(document).ready(function(){
 	mileageCalSchemaResList();
 });
 
 function fn_resultSearch(){
-	Common.ajax("GET", "/services/mileageCileage/selectSchemaResultMgmt.do",$("#schemaResultForm").serialize() , function(result) {
-        console.log("성공.");
-        console.log("data : " + result);
-        AUIGrid.setGridData(gridID1, result);
-    });
+	if($("#month").val() == "" || typeof($("#month").val()) == "undefined"){
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Period' htmlEscape='false'/>");
+        return;
+    }
+	Common.ajax(
+		    "GET",
+		    "/services/mileageCileage/selectSchemaResultMgmt.do",
+		    $("#schemaResultForm").serialize() ,
+		    function(result) {
+		        console.log("성공.");
+		        console.log("data : " + result);
+		        AUIGrid.setGridData(gridID1, result);
+		    }
+    );
 }
 
 function fn_excelDown(){
@@ -46,7 +55,7 @@ function fn_excelDown(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Mileage Claim Master</h2>
 <ul class="right_btns"><!--javascript:fn_resultSearch()  -->
-    <li><p class="btn_blue"><a href="#" onclick=""><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a onclick="fn_resultSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -81,14 +90,14 @@ function fn_excelDown(){
 </tr>
 <tr>
     <th scope="row">Period</th>
-    <td><input type="text" title="기준년월" class="j_date2 w100p"  id="month" name="month"/></td>
+    <td><input type="text" title="Period" class="j_date2 w100p"  id="month" name="month"/></td>
     <th scope="row">Branch</th>
     <td>
         <div class="search_100p"><!-- search_100p start -->
         <select class="multy_select w100p" multiple="multiple"id="branch" name="branch">
             <c:forEach var="list" items="${branchList}">
              <option value="${list.codeId}">${list.codeName}</option>
-         </c:forEach> 
+         </c:forEach>
         </select>
         </div><!-- search_100p end -->
     </td>
