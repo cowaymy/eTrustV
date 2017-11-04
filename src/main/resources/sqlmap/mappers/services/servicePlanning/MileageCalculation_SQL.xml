@@ -184,7 +184,7 @@
 			  AND A.MEM_TYPE = #{memType}
 			</if>
 			<if test="memCode != null and memCode != ''">
-              AND A.MEM_CODE = #{memCode}
+              AND UPPER(A.MEM_CODE) = UPPER(#{memCode})
             </if>
             <if test="branch != null and branch != ''">
               AND C.CODE = #{branch}
