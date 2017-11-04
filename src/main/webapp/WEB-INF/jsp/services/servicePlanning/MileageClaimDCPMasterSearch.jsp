@@ -4,9 +4,12 @@
 <script type="text/javaScript">
 var gridID1;
 $(document).ready(function(){
+	
 	DCPMasterGrid();
     AUIGrid.bind(gridID1, "addRow", auiAddRowHandler);
     AUIGrid.bind(gridID1, "removeRow", auiRemoveRowHandler);
+    
+    //doGetCombo('/services/mileageCileage/selectArea', '', '','mcpFrom', 'S'); 
 });
 function getTypeComboList() {
     //var list = [ {"codeId": "P","codeName": "PUBLIC"}, {"codeId": "S","codeName": "STATE"}];
@@ -45,7 +48,7 @@ function DCPMasterGrid() {
                                       },
                                       keyField : "id1"
                                   }},
-                          { dataField : "dcpFrom", headerText  : "DCP From",  width  : 100,
+                          { dataField : "dcpFrom", headerText  : "DCP From",  width  : 200,
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
                                           showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -66,8 +69,6 @@ function DCPMasterGrid() {
                                               keyField : "id1"
                                           }},
                           { dataField : "distance",       headerText  : "Distance",  width  :100},
-                          { dataField : "toll",       headerText  : "Toll",  width  : 100},
-                          { dataField : "tollAmount",       headerText  : "Toll Amount",  width  : 100},
                           { dataField : "memType1",       headerText  : "",  width  : 0},
                           { dataField : "brnchCode1",       headerText  : "",  width  : 0},
                           { dataField : "dcpFrom1",       headerText  : "",  width  : 0},
@@ -87,8 +88,6 @@ function DCPMasterGrid() {
         item.dcpForm = "";
         item.dcpTo = "";
         item.distance = "";
-        item.toll = "";
-        item.tollAmount = "";
         // parameter
         // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
         // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -157,32 +156,9 @@ function DCPMasterGrid() {
     <select class="multy_select w100p" multiple="multiple" id="memType" name="memType">
         <option value="2">CODY</option>
         <option value="3">CT</option>
-
     </select>
     </td>
-    <th scope="row"></th>
-    <td></td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">MCP From</th>
-    <td>
-        <select class="multy_select w100p" multiple="multiple" id="mcpFrom" name="mcpFrom">
-            <c:forEach var="list" items="${selectArea}">
-             <option value="${list.codeId}">${list.codeName}</option>
-         </c:forEach>
-        </select>
-    </td>
-    <th scope="row">MCP To</th>
-    <td>
-        <select class="multy_select w100p" multiple="multiple" id="mcpTo" name="mcpTo">
-           <c:forEach var="list" items="${selectArea}">
-             <option value="${list.codeId}">${list.codeName}</option>
-         </c:forEach>
-        </select>
-    </td>
-    <th scope="row">Branch</th>
+   <th scope="row">Branch</th>
     <td>
         <div class="search_100p"><!-- search_100p start -->
         <select class="multy_select w100p" multiple="multiple"  id="brnchCode" name="brnchCode">
@@ -192,6 +168,28 @@ function DCPMasterGrid() {
         </select>
         </div><!-- search_100p end -->
     </td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr>
+    <th scope="row">DCP From</th>
+    <td>
+        <select class="multy_select w100p" multiple="multiple" id="mcpFrom" name="mcpFrom">
+            <%-- <c:forEach var="list" items="${selectArea}">
+             <option value="${list.codeId}">${list.codeName}</option>
+         </c:forEach> --%>
+        </select>
+    </td>
+    <th scope="row">DCP To</th>
+    <td>
+        <select class="multy_select w100p" multiple="multiple" id="mcpTo" name="mcpTo">
+           <%-- <c:forEach var="list" items="${selectArea}">
+             <option value="${list.codeId}">${list.codeName}</option>
+         </c:forEach> --%>
+        </select>
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -201,8 +199,8 @@ function DCPMasterGrid() {
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li> -->
-    <li><p class="btn_grid"><a href="#" onclick="javascript:save()">SAVE</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:save()">SAVE</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
 </ul>
 
