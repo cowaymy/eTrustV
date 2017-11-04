@@ -172,27 +172,6 @@
 			INNER JOIN SVC0008D B ON A.MEM_ID = B.CODY_ID
 			INNER JOIN SYS0005M C ON C.BRNCH_ID = A.BRNCH
 			WHERE 1=1
-			<if test="branchList != null and branchList != '' ">
-	           AND C.CODE IN (
-	           <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
-	           #{item}
-	           </foreach>
-            </if>memTypeList
-            <if test="memTypeList != null and memTypeList != '' ">
-               AND C.CODE IN (
-               <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
-               #{item}
-               </foreach>
-            </if>
-			<if test="memCode !='' and memCode != null ">
-              AND  A.MEM_CODE = #{memCode}
-            </if>
-            <if test="month != null and month != ''">
-                    AND  B.YEAR(+) = #{searchYear} 
-                    AND  B.MONTH (+) = #{searchMonth} 
-           </if>  
 			GROUP BY A.MEM_TYPE, C.CODE, A.MEM_CODE, B.UPD_DT
-
-        
 </select>
 </mapper>

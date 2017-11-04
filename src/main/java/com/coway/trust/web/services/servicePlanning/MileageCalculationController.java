@@ -189,8 +189,8 @@ public class MileageCalculationController {
 	 */
 	@RequestMapping(value = "/cileageCalculationSchemaResult.do")
 	public String mainSchemaResultList(@RequestParam Map<String, Object> params, ModelMap model) {
-		List<EgovMap> branchList = holidayService.selectBranch();
-		model.addAttribute("branchList", branchList);
+		//List<EgovMap> branchList = holidayService.selectBranch();
+		//model.addAttribute("branchList", branchList);
 		// 호출될 화면
 		return "services/servicePlanning/mileageCalculationSchemaResult";
 	}
@@ -205,14 +205,29 @@ public class MileageCalculationController {
 	 */
 	@RequestMapping(value = "/selectSchemaResultMgmt.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSchemaResultMgmt( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		logger.debug("params {}", params);
+		/*logger.debug("params {}", params);
 		String[] branchList = request.getParameterValues("branch");
 		String[] memTypeList = request.getParameterValues("memType");
 		params.put("branchList", branchList);
-		params.put("memTypeList", memTypeList);
+		params.put("memTypeList", memTypeList);*/
 		List<EgovMap> selectSchemaMgmt = mileageCalculationService.selectSchemaResultMgmt(params);
 		logger.debug("selectSchemaMgmt {}", selectSchemaMgmt);
 		return ResponseEntity.ok(selectSchemaMgmt);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectArea", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectArea( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> selectArea = mileageCalculationService.selectArea();
+		logger.debug("selectArea {}", selectArea);
+		return ResponseEntity.ok(selectArea);
 	}
 	
 }
