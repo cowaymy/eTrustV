@@ -191,8 +191,8 @@
             WHERE 1=1
                 AND A.MEM_ID = B.CODY_ID
                 AND A.BRNCH = C.BRNCH_ID
-                AND B.MONTH =  REGEXP_SUBSTR('06/2017', '[^/]+', 1, 1)  /* SUBSTR(  :month ,0,2)*/
-                AND B.YEAR =  REGEXP_SUBSTR('06/2017', '[^/]+', 1, 2)     /* SUBSTR(:month,3,4) */
+                AND B.MONTH =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)  /* SUBSTR(  :month ,0,2)*/
+                AND B.YEAR =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)     /* SUBSTR(:month,3,4) */
                 ]]>
                 <if test="memTypeList != null and memTypeList != '' ">
 	               AND MEM_TYPE IN
