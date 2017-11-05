@@ -199,6 +199,31 @@ function fn_setCostCenter() {
 function fn_setPopCostCenter() {
     $("#newCostCenter").val($("#search_costCentr").val());
     $("#newCostCenterText").val($("#search_costCentrName").val());
+    
+    if(fn_checkEmpty()){
+        var data = {
+                memAccId : $("#newMemAccId").val(),
+                costCentr : $("#newCostCenter").val()
+        };
+        Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+            console.log(result);
+            console.log(FormUtil.isEmpty(result.data));
+            if(!FormUtil.isEmpty(result.data)) {
+                Common.alert('<spring:message code="pettyCashCustdn.alreadyRgist.msg" />');
+                $("#newCostCenter").val("");
+                $("#newCostCenterText").val("");
+                $("#newMemAccId").val("");
+                $("#newMemAccName").val("");
+                $("#custdnNric").val("");
+            } else {
+            	// USER_NRIC GET
+                Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
+                    console.log(result);
+                    $("#custdnNric").val(result.data.userNric);
+                });
+            }
+        });
+    }
 }
 
 function fn_setPopSupplier() {
@@ -208,11 +233,30 @@ function fn_setPopSupplier() {
     $("#bankName").val($("#search_bankName").val());
     $("#bankAccNo").val($("#search_bankAccNo").val());
     
-    // USER_NRIC GET
-    Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
-        console.log(result);
-        $("#custdnNric").val(result.data.userNric);
-    });
+    if(fn_checkEmpty()){
+        var data = {
+                memAccId : $("#newMemAccId").val(),
+                costCentr : $("#newCostCenter").val()
+        };
+        Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+            console.log(result);
+            console.log(FormUtil.isEmpty(result.data));
+            if(!FormUtil.isEmpty(result.data)) {
+                Common.alert('<spring:message code="pettyCashCustdn.alreadyRgist.msg" />');
+                $("#newCostCenter").val("");
+                $("#newCostCenterText").val("");
+                $("#newMemAccId").val("");
+                $("#newMemAccName").val("");
+                $("#custdnNric").val("");
+            } else {
+                // USER_NRIC GET
+                Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
+                    console.log(result);
+                    $("#custdnNric").val(result.data.userNric);
+                });
+            }
+        });
+    }
 }
 
 function fn_searchUserIdPop() {
