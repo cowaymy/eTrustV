@@ -349,7 +349,7 @@ function fn_checkEmpty() {
         return checkResult;
     }
     if($("#invcType").val() == "F") {
-        if(FormUtil.isEmpty($("#supplier").val())) {
+        if(FormUtil.isEmpty($("#sMemAccId").val())) {
             Common.alert('<spring:message code="webInvoice.supplier.msg" />');
             checkResult = false;
             return checkResult;
