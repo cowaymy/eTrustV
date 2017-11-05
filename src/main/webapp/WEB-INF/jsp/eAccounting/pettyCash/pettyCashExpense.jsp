@@ -369,7 +369,7 @@ function fn_checkEmpty() {
             checkResult = false;
             return checkResult;
         }
-        if(Number($("#gstBeforAmt").val().replace(/,/gi, "")) <= 0) {
+        if(FormUtil.isEmpty($("#gstBeforAmt").val())) {
             Common.alert('<spring:message code="pettyCashExp.amtBeforeGst.msg" />');
             checkResult = false;
             return checkResult;

@@ -414,7 +414,7 @@ function fn_checkEmpty() {
             checkResult = false;
             return checkResult;
         }
-        if(Number($("#netAmt").val().replace(/,/gi, "")) <= 0) {
+        if(FormUtil.isEmpty($("#netAmt").val())) {
             Common.alert('<spring:message code="crditCardReim.appvCashAmt.msg" />');
             checkResult = false;
             return checkResult;
