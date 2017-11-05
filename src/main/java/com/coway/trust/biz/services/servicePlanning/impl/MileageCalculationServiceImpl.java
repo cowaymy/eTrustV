@@ -83,13 +83,21 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
 	}
 	
 	@Override
-	public List<EgovMap> selectArea() {
-		return mileageCalculationMapper.selectArea();
+	public List<EgovMap> selectArea(Map<String, Object> params) {
+		return mileageCalculationMapper.selectArea(params);
+	}
+	@Override
+	public List<EgovMap> selectBranch(Map<String, Object> params) {
+		return mileageCalculationMapper.selectBranch(params);
 	}
 	
 	@Override
 	public List<EgovMap> selectSchemaMgmt(Map<String, Object> params) {
 		return mileageCalculationMapper.selectSchemaMgmt(params);
+	}
+	@Override
+	public List<EgovMap> selectMemberCode(Map<String, Object> params) {
+		return mileageCalculationMapper.selectMemberCode(params);
 	}
 	
 	@Override

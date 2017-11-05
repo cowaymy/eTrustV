@@ -17,7 +17,7 @@ public interface MileageCalculationService {
 	
 	List<EgovMap> selectDCPMaster(Map<String, Object> params);
 	
-	List<EgovMap> selectArea();
+	List<EgovMap> selectArea(Map<String, Object> params);
 	
 	void insertSchemaMgmt(List<Object> params, SessionVO sessionVO);
 	
@@ -28,6 +28,10 @@ public interface MileageCalculationService {
 	List<EgovMap> selectSchemaMgmt(Map<String, Object> params);
 	
 	List<EgovMap> selectSchemaResultMgmt(Map<String, Object> params);
+	
+	List<EgovMap> selectBranch(Map<String, Object> params);
+	
+	List<EgovMap> selectMemberCode(Map<String, Object> params);
 
 	
 }
