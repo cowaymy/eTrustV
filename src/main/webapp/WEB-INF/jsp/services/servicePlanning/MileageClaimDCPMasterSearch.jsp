@@ -22,8 +22,8 @@ $(document).ready(function(){
         }
      });
     
-    doGetCombo('/services/mileageCileage/selectArea', '', '','mcpFrom', 'M' ,  'f_multiCombo');
-    doGetCombo('/services/mileageCileage/selectArea', '', '','mcpTo', 'M' ,  'f_multiCombo');
+   // doGetCombo('/services/mileageCileage/selectArea', '', '','mcpFrom', 'M' ,  'f_multiCombo');
+    //doGetCombo('/services/mileageCileage/selectArea', '', '','mcpTo', 'M' ,  'f_multiCombo');
 });
 
 function f_multiCombo() {
