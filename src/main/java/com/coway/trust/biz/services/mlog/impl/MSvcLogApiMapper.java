@@ -21,6 +21,35 @@ public interface MSvcLogApiMapper {
 	List<EgovMap> heartServiceParts(Map<String, Object> params);
 
 	List<EgovMap> afterServiceParts(Map<String, Object> params);
+
+	int getNextSvc006dSeq();
+
+	void insertHsResultD(Map<String, Object> insMap);
+
+	void insertHsResultSAL0090D(Map<String, Object> insMap);
+
+	void insertHsResultSVC0006D(Map<String, Object> insMap);
+
+	int selectHSScheduleMCnt(Map<String, Object> insMap);
+
+	EgovMap selectHSResultMList(Map<String, Object> insMap);
+
+	void updateHsSVC0008D(Map<String, Object> insMap);
+
+	EgovMap selectSrvConfiguration(Map<String, Object> insMap);
+
+	EgovMap selectHsAssiinlList(Map<String, Object> insMap);
+
+	String getUseridToMemid(Map<String, Object> insMap);
+
+	List<EgovMap> getInstallationJobList(Map<String, Object> params);
+
+	List<EgovMap> getProductRetrunJobList(Map<String, Object> params);
+
+	void insertAsResultLog(Map<String, Object> asTransLog);
+
+	void updateSuccessASStatus(String transactionId);
+
 	
 	
 	

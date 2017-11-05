@@ -696,6 +696,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			sal0090.put("remark", hsBasicmap.get("remark"));
 			sal0090.put("srvBsWeek", hsBasicmap.get("srvBsWeek"));
 			sal0090.put("SrvUpdateAt", sessionVO.getUserId());
+			sal0090.put("hscodyId", hsBasicmap.get("hscodyId"));
 //			sal0090.put("SrvUpdateAt", SYSDATE);
 			
 			hsManualMapper.updateHsSVC0006D(sal0090);

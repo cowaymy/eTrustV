@@ -167,7 +167,105 @@
 
 
 
+
+    <select id="getInstallationJobList" parameterType="Map" resultType="egovMap">
+    
+            SELECT B.SALES_ORD_NO AS salesOrderNo,
+                   F.AS_RESULT_NO AS serviceNo,
+                   A.NAME,
+                   'AS' AS jobType,
+                   G.AS_RESULT_STUS_ID AS jobStatus,
+                   F.AS_SETL_DT AS appointmentDate,
+                   F.AS_SETL_TM AS appointmentTime,
+                   D.CODE,
+                   C.AS_NO,
+                   C.AS_REQST_DT,
+                   J.CODE,
+                   F.AS_RESULT_NO,
+                   H.NAME,
+                   B.SALES_ORD_NO,
+                   I.CODE APP_TYPE,
+                   A.NAME,
+                   A.NRIC SVC0004D
+              FROM SAL0029D A
+                   INNER JOIN SAL0001D B
+                      ON B.CUST_ID = A.CUST_ID
+                   INNER JOIN SVC0001D C
+                      ON C.AS_SO_ID = B.SALES_ORD_ID
+                   INNER JOIN SVC0004D F
+                      ON F.AS_ENTRY_ID = C.AS_ID
+                   INNER JOIN SVC0004D G
+                      ON G.AS_RESULT_ID = F.AS_RESULT_ID
+                   INNER JOIN SYS0038M C
+                      ON C.STUS_CODE_ID = F.AS_RESULT_STUS_ID
+                   INNER JOIN SYS0038M J
+                      ON J.STUS_CODE_ID = C.AS_STUS_ID
+                   INNER JOIN SYS0013M D
+                      ON D.CODE_ID = C.AS_TYPE_ID
+                   INNER JOIN ORG0001D H
+                      ON H.MEM_ID = G.AS_CT_ID
+                   INNER JOIN SYS0013M I
+                      ON I.CODE_ID = B.APP_TYPE_ID
+             WHERE     1 = 1
+                 AND C.AS_REQST_DT = TO_DATE ('20170611',    'YYYYMMDD')      
+<!--                 AND A.CODY_ID = #{userId} -->  
+
+     </select> 
+     
+     
+     
+     
+     
+         <select id="getProductRetrunJobList" parameterType="Map" resultType="egovMap">
+    
+            SELECT B.SALES_ORD_NO AS salesOrderNo,
+                   F.AS_RESULT_NO AS serviceNo,
+                   A.NAME,
+                   'AS' AS jobType,
+                   G.AS_RESULT_STUS_ID AS jobStatus,
+                   F.AS_SETL_DT AS appointmentDate,
+                   F.AS_SETL_TM AS appointmentTime,
+                   D.CODE,
+                   C.AS_NO,
+                   C.AS_REQST_DT,
+                   J.CODE,
+                   F.AS_RESULT_NO,
+                   H.NAME,
+                   B.SALES_ORD_NO,
+                   I.CODE APP_TYPE,
+                   A.NAME,
+                   A.NRIC SVC0004D
+              FROM SAL0029D A
+                   INNER JOIN SAL0001D B
+                      ON B.CUST_ID = A.CUST_ID
+                   INNER JOIN SVC0001D C
+                      ON C.AS_SO_ID = B.SALES_ORD_ID
+                   INNER JOIN SVC0004D F
+                      ON F.AS_ENTRY_ID = C.AS_ID
+                   INNER JOIN SVC0004D G
+                      ON G.AS_RESULT_ID = F.AS_RESULT_ID
+                   INNER JOIN SYS0038M C
+                      ON C.STUS_CODE_ID = F.AS_RESULT_STUS_ID
+                   INNER JOIN SYS0038M J
+                      ON J.STUS_CODE_ID = C.AS_STUS_ID
+                   INNER JOIN SYS0013M D
+                      ON D.CODE_ID = C.AS_TYPE_ID
+                   INNER JOIN ORG0001D H
+                      ON H.MEM_ID = G.AS_CT_ID
+                   INNER JOIN SYS0013M I
+                      ON I.CODE_ID = B.APP_TYPE_ID
+             WHERE     1 = 1
+                 AND C.AS_REQST_DT = TO_DATE ('20170611',    'YYYYMMDD')      
+<!--                 AND A.CODY_ID = #{userId} -->  
+
+     </select> 
+     
+     
+     
+     
+
  	    <select id="heartServiceParts" parameterType="Map" resultType="egovMap">
+ 	    
 			    select *
 		            from (
 			            SELECT S01A.SALES_ORD_ID sales_Order_No, 
@@ -323,11 +421,316 @@
 	        )
 	    </insert>
 	
+	
+	
+	
+        <insert id="insertAsResultLog" parameterType="Map">
+            INSERT INTO SVC0024T (
+				RESULT_SEQ
+				,RESULT_CRT_USER_ID
+				,SALES_ORD_ID
+				,SVC_NO
+				,LABOUR_CHRG
+				,AS_DEFECT_ID
+				,AS_DEFECT_PART_ID
+				,AS_DEFECT_DTL_RESN_ID
+				,AS_SLUTN_RESN_ID
+				,AS_DEFECT_TYPE_ID
+				,IN_HUSE_REPAIR_REM
+				,IN_HUSE_REPAIR_REP_YN
+				,IN_HUSE_REPAIR_PROMS_DATE
+				,IN_HUSE_REPAIR_PROD_GRP_CODE
+				,IN_HUSE_REPAIR_PROD_CODE
+				,IN_HUSE_REPAIR_SERIAL_NO
+				,RESULT_REM
+				,OWNER_CODE
+				,RESULT_CUST_NAME
+				,RESULT_IC_MOBILE_NO
+				,RESULT_EMAIL_NO
+				,ACCEPTANCE_NAME
+				,SIGN_DATA
+				,TRNSC_ID
+				,AS_RESULT_PART_ID
+				,CHRG_FOC
+				,EXCH_REASON_ID
+				,SALES_PRC
+				,AS_RESULT_PART_QTY
+				,PART_TYPE
+<!-- 				,filterBarcdSerialNo -->
+				,CRT_USER_ID
+				,CRT_DT
+				,TRAN_STUS_CD
+            ) VALUES (
+               SVC0024T_RESULT_SEQ.NEXTVAL
+				,#{userId}
+				,#{salesOrderNo}
+				,#{serviceNo}
+				,#{labourCharge}
+				,#{defectId}
+				,#{defectPartId}
+				,#{defectDetailReasonId}
+				,#{solutionReasonId}
+				,#{defectTypeId}
+				,#{inHouseRepairRemark}
+				,#{inHouseRepairReplacementYN}
+				,#{inHouseRepairPromisedDate}
+				,#{inHouseRepairProductGroupCode}
+				,#{inHouseRepairProductCode}
+				,#{inHouseRepairSerialNo}
+				,#{resultRemark}
+				,#{ownerCode}
+				,#{resultCustName}
+				,#{resultIcMobileNo}
+				,#{resultReportEmailNo}
+				,#{resultAcceptanceName}
+				,#{signData}
+				,#{transactionId}
+				,#{filterCode}
+				,#{chargesFoc}
+				,#{exchangeId}
+				,#{salesPrice}
+				,#{filterChangeQty}
+				,#{partsType}
+<!-- 				,#{filterBarcdSerialNo} --> 
+               ,#{userId}
+               , SYSDATE
+               , 'N'
+            )
+        </insert>
+        
+        
+        
+        	
 	   <update id="updateSuccessStatus" parameterType="string">
 	      UPDATE SVC0023T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
 	   </update>
 
 
+       <update id="updateSuccessASStatus" parameterType="string">
+          UPDATE SVC0024T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+       </update>
+       
+       
+
+       <update id="updateSuccessInstallStatus" parameterType="string">
+          UPDATE SVC0025T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+       </update>
+       
+              
+       
+
+        <select id="getNextSvc006dSeq"  resultType="int">
+             select GBSLCVD.SVC0006D_RESULT_ID_SEQ.NEXTVAL
+                from dual
+        </select>
+        
+        
+        
+         <insert id="insertHsResultD" parameterType="Map">
+         
+              insert into SVC0007D (
+                         BS_RESULT_ITM_ID
+                        ,BS_RESULT_ID
+                        ,BS_RESULT_PART_ID
+                        ,BS_RESULT_PART_QTY
+                        ,BS_RESULT_CRT_DT
+                        ,BS_RESULT_CRT_USER_ID
+                        )
+                 values (
+                      GBSLCVD.SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
+                    , #{bsResultId}
+                    , #{filterCode}
+                    , #{filterChangeQty}
+                    , sysdate
+                    , #{userId}
+            )
+            </insert>         
+        
+        
+             <select id="selectHSScheduleMCnt"  parameterType="Map" resultType="int">
+                        SELECT count(*) cnt
+                          FROM SVC0008D Extent1
+                        WHERE  Extent1.SCHDUL_ID = #{schdulId} 
+              </select>
 
 
+             <select id="selectHSResultMList"  parameterType="Map" resultType="egovMap">
+                        SELECT Extent1.RESULT_ID RESULT_ID  ,
+                               Extent1.NO NO  ,
+                               Extent1.TYPE_ID TYPE_ID  ,
+                               Extent1.SCHDUL_ID SCHDUL_ID  ,
+                               Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+                               Extent1.CODY_ID CODY_ID  ,
+                               Extent1.SETL_DT SETL_DT  ,
+                               Extent1.RESULT_STUS_CODE_ID RESULT_STUS_CODE_ID  ,
+                               Extent1.FAIL_RESN_ID FAIL_RESN_ID  ,
+                               Extent1.REN_COLCT_ID REN_COLCT_ID  ,
+                               Extent1.WH_ID WH_ID  ,
+                               Extent1.RESULT_REM RESULT_REM  ,
+                               Extent1.RESULT_CRT_DT RESULT_CRT_DT  ,
+                               Extent1.RESULT_CRT_USER_ID RESULT_CRT_USER_ID  ,
+                               Extent1.RESULT_UPD_DT RESULT_UPD_DT  ,
+                               Extent1.RESULT_UPD_USER_ID RESULT_UPD_USER_ID  ,
+                               Extent1.RESULT_IS_SYNC RESULT_IS_SYNC  ,
+                               Extent1.RESULT_IS_EDIT RESULT_IS_EDIT  ,
+                               Extent1.RESULT_STOCK_USE RESULT_STOCK_USE  ,
+                               Extent1.RESULT_IS_CURR RESULT_IS_CURR  ,
+                               Extent1.RESULT_MTCH_ID RESULT_MTCH_ID  ,
+                               Extent1.RESULT_IS_ADJ RESULT_IS_ADJ  ,
+                               Extent1.RESULT_ENTRY_POINT RESULT_ENTRY_POINT  ,
+                               Extent1.RESULT_MOBILE_ID RESULT_MOBILE_ID  
+                          FROM SVC0006D Extent1
+                <![CDATA[        WHERE  Extent1.SCHDUL_ID = #{schdulId}  AND ROWNUM <= 1    ]]> 
+
+                    </select>
+                    
+                    
+
+
+                  <update id="updateHsSVC0008D" parameterType="Map">
+                        UPDATE SVC0008D
+                           SET STUS_CODE_ID = #{resultStusCodeId}
+                                ,ACTN_MEM_ID = #{memId}
+                                ,CODY_ID = #{memId}
+                         WHERE   SCHDUL_ID = #{schdulId}
+                    </update>                    
+
+
+
+                    <select id="selectSrvConfiguration" parameterType="Map" resultType="egovMap">
+                                SELECT Extent1.RESULT_ID RESULT_ID  ,
+                                       Extent1.NO NO  ,
+                                       Extent1.TYPE_ID TYPE_ID  ,
+                                       Extent1.SCHDUL_ID SCHDUL_ID  ,
+                                       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+                                       Extent1.CODY_ID CODY_ID  ,
+                                       Extent1.SETL_DT SETL_DT  ,
+                                       Extent1.RESULT_STUS_CODE_ID RESULT_STUS_CODE_ID  ,
+                                       Extent1.FAIL_RESN_ID FAIL_RESN_ID  ,
+                                       Extent1.REN_COLCT_ID REN_COLCT_ID  ,
+                                       Extent1.WH_ID WH_ID  ,
+                                       Extent1.RESULT_REM RESULT_REM  ,
+                                       Extent1.RESULT_CRT_DT RESULT_CRT_DT  ,
+                                       Extent1.RESULT_CRT_USER_ID RESULT_CRT_USER_ID  ,
+                                       Extent1.RESULT_UPD_DT RESULT_UPD_DT  ,
+                                       Extent1.RESULT_UPD_USER_ID RESULT_UPD_USER_ID  ,
+                                       Extent1.RESULT_IS_SYNC RESULT_IS_SYNC  ,
+                                       Extent1.RESULT_IS_EDIT RESULT_IS_EDIT  ,
+                                       Extent1.RESULT_STOCK_USE RESULT_STOCK_USE  ,
+                                       Extent1.RESULT_IS_CURR RESULT_IS_CURR  ,
+                                       Extent1.RESULT_MTCH_ID RESULT_MTCH_ID  ,
+                                       Extent1.RESULT_IS_ADJ RESULT_IS_ADJ  ,
+                                       Extent1.RESULT_ENTRY_POINT RESULT_ENTRY_POINT  ,
+                                       Extent1.RESULT_MOBILE_ID RESULT_MOBILE_ID  
+                                  FROM SVC0006D Extent1
+                            <![CDATA[    WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} AND ROWNUM <= 1 ]]> 
+                            </select>
+                            
+                            
+             <insert id="insertHsResultSVC0006D" parameterType="Map" >
+               INSERT INTO GBSLCVD.SVC0006D (
+                       RESULT_ID, NO, TYPE_ID, SCHDUL_ID, SALES_ORD_ID , CODY_ID
+                      ,SETL_DT,RESULT_STUS_CODE_ID,FAIL_RESN_ID  , REN_COLCT_ID,WH_ID
+                      ,RESULT_REM,RESULT_CRT_DT,RESULT_CRT_USER_ID,RESULT_UPD_DT,RESULT_UPD_USER_ID
+                      ,RESULT_IS_SYNC,RESULT_IS_EDIT,RESULT_STOCK_USE,RESULT_IS_CURR,RESULT_MTCH_ID
+                      ,RESULT_IS_ADJ
+                       ) 
+                VALUES ( #{bsResultId}, #{docNo} , #{typeId},#{schdulId} ,#{salesOrdId} ,#{memId}
+                             ,SYSDATE,#{resultStusCodeId},#{failResnId} ,#{renColctId},#{whId}
+                            ,#{resultRemark} ,SYSDATE,#{memId},SYSDATE ,#{memId}
+                            ,#{resultIsSync},#{resultIsEdit},#{resultStockUse},#{resultIsCurr},#{resultMtchId}
+                            ,#{resultIsAdj}
+                 )
+             </insert>
+             
+                                         
+             <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
+						 
+                            SELECT  distinct Project2.No No  ,
+                                        Project2.HS_DATE HS_DATE  ,
+                                        Project2.STUS_CODE_ID STUS_CODE_ID  ,
+                                        Project2.Code Code  ,
+                                        Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                                        Project2.ASSIGN_CODY C5  ,
+                                        Project2.ACTION_CODY as ACTN_MEM_ID,
+                                        Project2.MEM_ID ,
+                                        Project2.Name Name  ,
+                                        Project2.cust_id,
+                                        Project2.cody_status_nm,
+                                        Project2.BRNCH_ID as BRNCH_ID,
+                                        Project2.SCHDUL_ID SCHDUL_ID   ,
+                                        Project2.SALES_ORD_ID,
+                                        Project2.branch_cd,
+                                        Project2.CODY_MANGR_USER_ID,
+                                        Project2.MEM_CODE,
+                                        Project2.sal_mem_id                                        
+                         from(       SELECT HS.NO AS NO,
+                                                   HS.STUS_CODE_ID as STUS_CODE_ID,
+                                                   HS.MONTH || '/' || HS.YEAR as HS_DATE ,
+                                                   HS.MONTH,
+                                                   HS.YEAR,
+                                                   ST.CODE,
+                                                   HR.NO AS Result,
+                                                   SO.SALES_ORD_NO,
+                                                   AP.CODE AS AppType,
+                                                   CU.NAME,
+                                                   CD.MEM_CODE AS ASSIGN_CODY,
+                                                   CD.MEM_ID,
+                                                   AC.MEM_CODE AS ACTION_CODY,
+                                                   MG.STATE,
+                                                   MG.AREA,
+                                                   cu.CUST_ID as cust_id,
+                                                (select code
+                                                   from SYS0038M
+                                                   where 1=1
+                                                   and stus_code_id = cu.STUS_CODE_ID ) as cody_status_nm,
+                                                   SO.BRNCH_ID as BRNCH_ID,
+                                                   HS.SCHDUL_ID SCHDUL_ID  ,
+                                                    SO.SALES_ORD_ID,
+                                                   BR.CODE as branch_cd,
+                                                   MG.CODY_MANGR_USER_ID  ,
+                                                   ( select  MEM_CODE
+                                                    from ORG0001D
+                                                    where mem_id =  SO.MEM_ID) as MEM_CODE,
+                                                    SO.MEM_ID as sal_mem_id
+                                              FROM SVC0008D HS                                                       
+                                                   INNER JOIN SAL0001D SO
+                                                      ON SO.SALES_ORD_ID = HS.SALES_ORD_ID
+                                                   INNER JOIN SAL0023D AD
+                                                      ON AD.CUST_ADD_ID = SO.CUST_ADD_ID
+                                                   INNER JOIN SYS0064M MG
+                                                      ON MG.AREA_ID = AD.AREA_ID
+                                                   left JOIN SVC0006D HR
+                                                      ON HR.SCHDUL_ID = HS.SCHDUL_ID
+                                                   INNER JOIN SYS0038M ST
+                                                      ON ST.STUS_CODE_ID = HS.STUS_CODE_ID
+                                                   INNER JOIN SYS0013M AP
+                                                      ON AP.CODE_ID = SO.APP_TYPE_ID
+                                                   INNER JOIN SAL0029D CU
+                                                      ON CU.CUST_ID = SO.CUST_ID
+                                                   INNER JOIN ORG0001D CD
+                                                      ON CD.MEM_ID = HS.CODY_ID
+                                                   left JOIN ORG0001D AC
+                                                      ON AC.MEM_ID = HS.ACTN_MEM_ID
+                                                   LEFT JOIN SYS0005M BR
+                                                      ON BR.CODE = MG.CODY_BRNCH_CODE                                                          
+                                             WHERE 1=1
+                                                    AND SO.SALES_ORD_NO = #{salesOrderNo}
+                                                     and HS.no = #{serviceNo}
+                        )Project2
+          </select>                            
+
+
+        <select id="getUseridToMemid" parameterType="Map" resultType="String">
+				select MEM_ID
+				from ORG0001D
+				where mem_code = #{userId}
+          </select>
+          
+          
+          
+          
+          
+          
+                   
 </mapper>
