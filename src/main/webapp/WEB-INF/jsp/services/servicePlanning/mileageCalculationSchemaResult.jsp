@@ -14,7 +14,7 @@ function mileageCalSchemaResList() {
                           { dataField : "mileage Amount",       headerText  : "Mileage Amount",  width  : 200},
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
 
         gridID1 = GridCommon.createAUIGrid("calculation_schema_result_grid_wap", columnLayout  ,"" ,gridPros);
     }
