@@ -314,7 +314,7 @@ function fn_checkEmpty() {
 	                checkResult = false;
 	                return checkResult;
 	            }
-	            if(AUIGrid.getCellValue(newGridID, i, "netAmt") <= 0) {
+	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "netAmt"))) {
                     Common.alert('<spring:message code="webInvoice.netAmt.msg" />' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
