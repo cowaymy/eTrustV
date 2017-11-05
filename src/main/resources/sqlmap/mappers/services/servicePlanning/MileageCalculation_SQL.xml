@@ -170,41 +170,53 @@
         </if>
 </select>
 <select id="selectSchemaResultMgmt"  parameterType="Map" resultType="egovMap">
+<![CDATA[
         SELECT A.MEM_TYPE,
-                   C.CODE AS branch_id,
+                   A.CODE AS branch_id,
                    A.MEM_CODE,
-                   TO_CHAR(B.UPD_DT,'DD-MM-YYYY') as service_date,
-                   SUM(B.DISTANCE) AS total_distance
-		  FROM ORG0001D A
-			      INNER JOIN SVC0008D B ON A.MEM_ID = B.CODY_ID
-			INNER JOIN SYS0005M C ON C.BRNCH_ID = A.BRNCH
-			WHERE 1=1
-			    AND A.MEM_ID = B.CODY_ID
-			    AND A.BRNCH = C.BRNCH_ID
-			    AND B.MONTH =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)  /* SUBSTR(  :month ,0,2)*/
-                AND B.YEAR =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)     /* SUBSTR(:month,3,4) */
-			<if test="memTypeList != null and memTypeList != '' ">
-               AND MEM_TYPE IN (
-               <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
-               #{item}
-               </foreach>
-            </if>
-            <if test="memCodeList != null and memCodeList != '' ">
-               AND A.MEM_CODE (
-               <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
-               #{item}
-               </foreach>
-            </if>
-            <if test="branchList != null and branchList != '' ">
-               AND  C.CODE  (
-               <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
-               #{item}
-               </foreach>
-            </if>
-		  GROUP BY A.MEM_TYPE,
-		                C.CODE,
-		                A.MEM_CODE,
-		                B.UPD_DT
+                   UPD_DT as service_date,
+                 DISTANCE,
+                (SELECT MILEAGE_AMT
+                FROM SVC0033M 
+                WHERE MEM_TYPE = '2' 
+                AND PERIOD_FROM <= UPD_DT
+                AND PERIOD_TO >= UPD_DT
+                AND RANGE_FROM <= DISTANCE
+                AND RANGE_TO > DISTANCE) AS MILEAGE
+                FROM (
+                SELECT A.MEM_TYPE, C.CODE, A.MEM_CODE, TO_DATE(B.UPD_DT, 'DD-MM-YYYY') AS UPD_DT, SUM(B.DISTANCE) AS DISTANCE
+          FROM ORG0001D A
+                  INNER JOIN SVC0008D B ON A.MEM_ID = B.CODY_ID
+            INNER JOIN SYS0005M C ON C.BRNCH_ID = A.BRNCH
+            WHERE 1=1
+                AND A.MEM_ID = B.CODY_ID
+                AND A.BRNCH = C.BRNCH_ID
+                AND B.MONTH =  REGEXP_SUBSTR('06/2017', '[^/]+', 1, 1)  /* SUBSTR(  :month ,0,2)*/
+                AND B.YEAR =  REGEXP_SUBSTR('06/2017', '[^/]+', 1, 2)     /* SUBSTR(:month,3,4) */
+                ]]>
+                <if test="memTypeList != null and memTypeList != '' ">
+	               AND MEM_TYPE IN
+	               <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+	               #{item}
+	               </foreach>
+                </if>
+                <if test="memCodeList != null and memCodeList != '' ">
+	               AND A.MEM_CODE
+	               <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+	               #{item}
+	               </foreach>
+                </if>
+                <if test="branchList != null and branchList != '' ">
+	               AND  C.CODE
+	               <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+	               #{item}
+	               </foreach>
+                </if>
+                 GROUP BY A.MEM_TYPE,
+                        C.CODE,
+                        A.MEM_CODE,
+                        B.UPD_DT) A
+		 
 </select>
     <select id="selectBranch"  parameterType="Map" resultType="egovMap">
         SELECT CODE CODE_ID,
