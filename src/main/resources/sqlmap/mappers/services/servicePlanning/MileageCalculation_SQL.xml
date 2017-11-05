@@ -85,8 +85,11 @@
               </foreach>
            </if>
 </select>
+
 <select id="selectArea"  parameterType="Map" resultType="egovMap">
-        SELECT AREA CODE_ID, AREA CODE_NAME FROM SYS0064M GROUP BY AREA
+	            SELECT DISTINCT AREA CODE_ID,
+                   AREA CODE_NAME
+        FROM SYS0064M 
 </select>
 
 <insert id="insertSchemaMgmt" parameterType="Map">
@@ -180,18 +183,46 @@
 			    AND A.BRNCH = C.BRNCH_ID
 			    AND B.MONTH =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)  /* SUBSTR(  :month ,0,2)*/
                 AND B.YEAR =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)     /* SUBSTR(:month,3,4) */
-			<if test="memType != null and memType != ''">
-			  AND A.MEM_TYPE = #{memType}
-			</if>
-			<if test="memCode != null and memCode != ''">
-              AND UPPER(A.MEM_CODE) = UPPER(#{memCode})
+			<if test="memTypeList != null and memTypeList != '' ">
+               AND MEM_TYPE IN (
+               <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
             </if>
-            <if test="branch != null and branch != ''">
-              AND C.CODE = #{branch}
+            <if test="memCodeList != null and memCodeList != '' ">
+               AND A.MEM_CODE (
+               <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+            </if>
+            <if test="branchList != null and branchList != '' ">
+               AND  C.CODE  (
+               <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
             </if>
 		  GROUP BY A.MEM_TYPE,
 		                C.CODE,
 		                A.MEM_CODE,
 		                B.UPD_DT
 </select>
+    <select id="selectBranch"  parameterType="Map" resultType="egovMap">
+        SELECT CODE CODE_ID,
+                     CODE CODE_NAME
+        FROM SYS0005M
+        WHERE 1=1
+         <if test="groupCode != null and groupCode != ''">
+           AND TYPE_ID=#{groupCode}
+         </if>
+        GROUP BY CODE
+    </select>
+    <select id="selectMemberCode"  parameterType="Map" resultType="egovMap">
+         SELECT A.MEM_CODE CODE_ID, A.MEM_CODE ||' - '|| A.NAME CODE_NAME, B.CODE
+		FROM ORG0001D A INNER JOIN SYS0005M B ON A.BRNCH = B.BRNCH_ID
+		WHERE 1=1
+		 <if test="groupCode != null and groupCode != ''">
+              AND A.MEM_TYPE  = #{groupCode}
+         </if>
+		  AND A.STUS = '1'
+    </select>
 </mapper>
