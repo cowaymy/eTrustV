@@ -212,10 +212,12 @@
 	               #{item}
 	               </foreach>
                 </if>
+                <![CDATA[
                  GROUP BY A.MEM_TYPE,
                         C.CODE,
                         A.MEM_CODE,
                         B.UPD_DT) A
+                ]]>
 		 
 </select>
     <select id="selectBranch"  parameterType="Map" resultType="egovMap">
