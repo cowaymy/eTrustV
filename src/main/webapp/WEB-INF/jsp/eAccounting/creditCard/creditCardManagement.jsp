@@ -23,33 +23,33 @@ var mgmtColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "crditCardUserName",
-    headerText : 'Credit cardholder<br>name',
+    headerText : '<spring:message code="crditCardMgmt.cardholderBrName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "crditCardNo",
-    headerText : 'Credit card no.'
+    headerText : '<spring:message code="crditCardMgmt.crditCardNo" />'
 }, {
     dataField : "chrgUserId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "chrgUserName",
-    headerText : 'Person-in-charge<br>name',
+    headerText : '<spring:message code="crditCardMgmt.chargeBrName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "costCentr",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "costCentrName",
-    headerText : 'Person-in-charge<br>department',
+    headerText : '<spring:message code="crditCardMgmt.chargeBrDepart" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "crtDt",
-    headerText : 'Create Date',
+    headerText : '<spring:message code="pettyCashCustdn.crtDt" />',
     dataType : "date",
     formatString : "mm/yyyy"
 }, {
     dataField : "updDt",
-    headerText : 'Last Update<br>Date',
+    headerText : '<spring:message code="pettyCashCustdn.lastUpdateDt" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
@@ -255,22 +255,22 @@ function fn_newMgmtPop() {
 function fn_checkEmpty() {
     var checkResult = true;
     if(FormUtil.isEmpty($("#newCrditCardUserName").val())) {
-        Common.alert("Please enter the Credit cardholder name.");
+        Common.alert('<spring:message code="crditCardMgmt.cardholder.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#newChrgUserName").val())) {
-        Common.alert("Please enter the Person-in-charge name.");
+        Common.alert('<spring:message code="crditCardMgmt.chargeName.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#newCostCenterText").val())) {
-        Common.alert("Please enter the Person-in-charge department.");
+        Common.alert('<spring:message code="crditCardMgmt.chargeDepart.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#crditCardNo1").val()) || FormUtil.isEmpty($("#crditCardNo2").val()) || FormUtil.isEmpty($("#crditCardNo3").val()) || FormUtil.isEmpty($("#crditCardNo4").val())) {
-        Common.alert("Please enter the Credit card no.");
+        Common.alert('<spring:message code="crditCardMgmt.crditCardNo.msg" />');
         checkResult = false;
         return checkResult;
     }
@@ -279,7 +279,7 @@ function fn_checkEmpty() {
 
 function fn_viewMgmtPop() {
 	if(crditCardSeq == 0) {
-		Common.alert("Please select the data.");
+		Common.alert('<spring:message code="crditCardMgmt.selectData.msg" />');
 	} else {
 		var data = {
 	            crditCardSeq : crditCardSeq,
@@ -291,10 +291,10 @@ function fn_viewMgmtPop() {
 
 function fn_removeRegistMsgPop() {
     if(crditCardSeq == 0) {
-        Common.alert("Please select the data.");
+        Common.alert('<spring:message code="crditCardMgmt.selectData.msg" />');
     } else {
     	if(checkRemoved) {
-    		Common.alert("The data you have selected is already deleted.");
+    		Common.alert('<spring:message code="crditCardMgmt.alreadyDel.msg" />');
     	} else {
     		Common.popupDiv("/eAccounting/creditCard/removeRegistMsgPop.do", null, null, true, "registMsgPop");
     	}
@@ -305,15 +305,13 @@ function fn_removeRegistMsgPop() {
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Credit Card Management</h2>
+<p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
+<h2><spring:message code="crditCardMgmt.title" /></h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectCrditCardMgmtList()"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectCrditCardMgmtList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
 	<!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
@@ -326,7 +324,7 @@ function fn_removeRegistMsgPop() {
 <input type="hidden" id="costCenter" name="costCentr">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:170px" />
 	<col style="width:*" />
@@ -335,32 +333,32 @@ function fn_removeRegistMsgPop() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Credit cardholder name</th>
+	<th scope="row"><spring:message code="crditCardMgmt.cardholderName" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="crditCardUserName" name="crditCardUserName"/><a href="#" class="search_btn" id="search_holder_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Credit card no.</th>
+	<th scope="row"><spring:message code="crditCardMgmt.crditCardNo" /></th>
 	<td><input type="text" title="" placeholder="Credit card No" class="" id="crditCardNo" name="crditCardNo" autocomplete=off/></td>
 </tr>
 <tr>
-	<th scope="row">Person-in-charge name</th>
+	<th scope="row"><spring:message code="crditCardMgmt.chargeName" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="chrgUserName" name="chrgUserName" /><a href="#" class="search_btn" id="search_charge_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Person-in-charge department</th>
+	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_depart_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
-	<th scope="row">Last Update Date</th>
+	<th scope="row"><spring:message code="crditCardMgmt.lastUpdateDt" /></th>
 	<td>
 
 	<div class="date_set"><!-- date_set start -->
 	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
-	<span>To</span>
+	<span><spring:message code="webInvoice.to" /></span>
 	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt"/></p>
 	</div><!-- date_set end -->
 
 	</td>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="webInvoice.status" /></th>
 	<td>
 	<select class="multy_select" multiple="multiple" id="crditCardStus" name="crditCardStus">
-		<option value="A"> Active</option>
-		<option value="R"> Removed</option>
+		<option value="A"> <spring:message code="crditCardMgmt.active" /></option>
+		<option value="R"> <spring:message code="crditCardMgmt.removed" /></option>
 	</select>
 	</td>
 </tr>
@@ -373,9 +371,9 @@ function fn_removeRegistMsgPop() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" id="delete_btn">Remove</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="edit_btn">Edit</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="registration_btn">New Registration</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="delete_btn"><spring:message code="pettyCashCustdn.remove" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="edit_btn"><spring:message code="pettyCashCustdn.edit" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="crditCardMgmt.newRgistration" /></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="mgmt_grid_wrap"><!-- grid_wrap start -->

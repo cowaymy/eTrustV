@@ -46,14 +46,14 @@ $(document).ready(function () {
        }
        
        if(str2[0].length > 11){
-           Common.alert("The amount can only be 13 digits, including 2 decimal point.");
+           Common.alert('<spring:message code="pettyCashNewCustdn.Amt.msg" />');
            str = "";
        }else{
            str = str2[0].substr(0, 11)+"."+str2[1];
        }
        
        if(Number(str) > Number($("#appvCashAmt").val().replace(/,/gi, ""))) {
-    	   Common.alert("Requested amount must be less than approved amount");
+    	   Common.alert('<spring:message code="pettyCashNewRqst.appvAmt.msg" />');
            str = "";
        }
        str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
@@ -98,7 +98,7 @@ function fn_saveNewRequest(st) {
             $("#clmNo").val(result.data.clmNo);
             $("#atchFileGrpId").val(result.data.atchFileGrpId);
             if(st == "new") {
-            	Common.alert("Temporary save succeeded.");
+            	Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
             	$("#newRequestPop").remove();
             }
             fn_selectRequestList();
@@ -131,7 +131,7 @@ function fn_saveUpdateRequest(st) {
         Common.ajaxFile("/eAccounting/pettyCash/updatePettyCashReqst.do", formData, function(result) {
             console.log(result);
             if(st == "view") {
-                Common.alert("Temporary save succeeded.");
+                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
                 $("#viewRequestPop").remove();
             }
             fn_selectRequestList();
@@ -161,9 +161,9 @@ function fn_reqstApproveLinePop() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New Request Petty Cash</h1>
+<h1><spring:message code="pettyCashNewRqst.title" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -178,7 +178,7 @@ function fn_reqstApproveLinePop() {
 <input type="hidden" id="bankCode" name="bankCode">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:190px" />
 	<col style="width:*" />
@@ -187,35 +187,35 @@ function fn_reqstApproveLinePop() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Cost Center</th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" /><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${userId}"/></td>
 </tr>
 <tr>
-	<th scope="row">Custodian</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">IC No / Passport No</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.icNoPassNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric"/></td>
 </tr>
 <tr>
-	<th scope="row">Bank</th>
+	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" name="bankName"/></td>
-	<th scope="row">Bank Account</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.bankAccNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo"/></td>
 </tr>
 <tr>
-	<th scope="row">Approved cash amount (RM)</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.appvCashAmt" /></th>
 	<td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="appvCashAmt" name="appvCashAmt"/></td>
 </tr>
 <tr>
-	<th scope="row">Request Amount</th>
+	<th scope="row"><spring:message code="pettyCashNewRqst.rqstAmt" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="reqstAmt" name="reqstAmt"/></td>
-	<th scope="row">Payment Date</th>
+	<th scope="row"><spring:message code="pettyCashNewRqst.payDt" /></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="payDueDt" name="payDueDt"/></td>
 </tr>
 <tr>
-	<th scope="row">Attachment</th>
+	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
 	<td colspan="3">
 	<div class="auto_file2"><!-- auto_file start -->
 	<input type="file" title="file add" />
@@ -223,15 +223,15 @@ function fn_reqstApproveLinePop() {
 	</td>
 </tr>
 <tr>
-	<th scope="row">Remark</th>
+	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
 	<td colspan="3"><textarea cols="20" rows="5" id="reqstRem" name="reqstRem"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#" id="tempSave_btn">Temp. save</a></p></li>
-	<li><p class="btn_blue2"><a href="#" id="request_btn">Request</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="request_btn"><spring:message code="webInvoice.select.request" /></a></p></li>
 </ul>
 
 </form>

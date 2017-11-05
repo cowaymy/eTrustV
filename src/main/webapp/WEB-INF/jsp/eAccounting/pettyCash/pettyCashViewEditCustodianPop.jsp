@@ -96,7 +96,7 @@ $(document).ready(function () {
        }
        
        if(str2[0].length > 11){
-           Common.alert("The amount can only be 13 digits, including 2 decimal point.");
+           Common.alert('<spring:message code="pettyCashNewCustdn.Amt.msg" />');
            str = "";
        }else{
            str = str2[0].substr(0, 11)+"."+str2[1];
@@ -183,9 +183,9 @@ function fn_saveViewCustodian() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>View/Edit Custodian</h1>
+<h1><spring:message code="pettyCashViewCustdn.title" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -199,7 +199,7 @@ function fn_saveViewCustodian() {
 <input type="hidden" id="bankCode" name="bankCode" value="${custodianInfo.bankCode}">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:190px" />
 	<col style="width:*" />
@@ -208,29 +208,29 @@ function fn_saveViewCustodian() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Cost Center</th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" style="width:150px;" id="newCostCenterText" name="costCentrName" value="${custodianInfo.costCentrName}" /><label><input type="checkbox" id="headDeptFlag" name="headDeptFlag" value="Y" disabled="disabled" <c:if test="${custodianInfo.headDeptFlag eq 'Y'}">checked</c:if>/><span>HQ Petty Cash</span></label></td>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${custodianInfo.crtUserId}" /></td>
 </tr>
 <tr>
-	<th scope="row">Custodian</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newMemAccName" name="memAccName" value="${custodianInfo.memAccName}" /></td>
-	<th scope="row">IC No / Passport No</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.icNoPassNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric" /></td>
 </tr>
 <tr>
-	<th scope="row">Bank</th>
+	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" name="bankName" value="${custodianInfo.bankName}"/></td>
-	<th scope="row">Bank Account No</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.bankAccNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo" value="${custodianInfo.bankAccNo}"/></td>
 </tr>
 <tr>
-	<th scope="row">Approved cash amount (RM)</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.appvCashAmt" /></th>
 	<td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="appvCashAmt" name="appvCashAmt" /></td>
 </tr>
 <tr>
-	<th scope="row">Attachment</th>
+	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
 	<td colspan="3">
 	<c:forEach var="files" items="${attachmentList}" varStatus="st">
     <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
@@ -251,15 +251,15 @@ function fn_saveViewCustodian() {
 	</td>
 </tr>
 <tr>
-	<th scope="row">Remark</th>
+	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
 	<td colspan="3"><textarea cols="20" rows="5" id="custdnRem" name="custdnRem"> ${custodianInfo.custdnRem}</textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#" id="viewEdit_btn">Edit</a></p></li>
-	<li><p class="btn_blue2"><a href="#" id="viewExit_btn">Exit</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="viewEdit_btn"><spring:message code="pettyCashCustdn.edit" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="viewExit_btn"><spring:message code="pettyCashViewCustdn.exit" /></a></p></li>
 </ul>
 
 </form>

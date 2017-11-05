@@ -149,7 +149,7 @@ function fn_setPayDueDtEvent() {
         console.log(payDueDt);
         console.log(now);
         if(Number(payDueDt) < Number(now)) {
-            Common.alert("Past dates can not be selected.");
+            Common.alert('<spring:message code="webInvoice.payDueDt.msg" />');
             $("#payDueDt").val(dd + "/" + mm + "/" + yyyy);
         }
    }); 
@@ -286,18 +286,18 @@ function fn_removeRow() {
 function fn_checkEmpty() {
 	var checkResult = true;
 	if(FormUtil.isEmpty($("#invcDt").val())) {
-        Common.alert("Please enter the Invoice Date.");
+        Common.alert('<spring:message code="webInvoice.invcDt.msg" />');
         checkResult = false;
         return checkResult;
     }
 	if($("#invcType").val() == "F") {
 	    if(FormUtil.isEmpty($("#newMemAccName").val())) {
-	        Common.alert("Please enter the Supplier.");
+	        Common.alert('<spring:message code="webInvoice.supplier.msg" />');
 	        checkResult = false;
 	        return checkResult;
 	    }
 	    if(FormUtil.isEmpty($("#invcNo").val())) {
-	        Common.alert("Please enter the invoice no.");
+	        Common.alert('<spring:message code="webInvoice.invcNo.msg" />');
 	        checkResult = false;
 	        return checkResult;
 	    }
@@ -305,17 +305,17 @@ function fn_checkEmpty() {
 	    if(length > 0) {
 	    	for(var i = 0; i < length; i++) {
 	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "expTypeName"))) {
-	                Common.alert("Please enter the Expense Type of Line " + (i +1) + ".");
+	                Common.alert('<spring:message code="webInvoice.expType.msg" />' + (i +1) + ".");
 	                checkResult = false;
 	                return checkResult;
 	            }
 	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "taxCode"))) {
-	                Common.alert("Please enter the Tax Code of Line " + (i +1) + ".");
+	                Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
 	                checkResult = false;
 	                return checkResult;
 	            }
 	            if(AUIGrid.getCellValue(newGridID, i, "netAmt") <= 0) {
-                    Common.alert("Please enter the Net Amount of Line " + (i +1) + ".");
+                    Common.alert('<spring:message code="webInvoice.netAmt.msg" />' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
                 }

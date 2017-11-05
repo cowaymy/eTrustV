@@ -61,14 +61,14 @@ var invoAprveGridColLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "invcType",
-    headerText : 'Invoice Type',
+    headerText : '<spring:message code="invoiceApprove.invcType" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
-    headerText : 'Member'
+    headerText : '<spring:message code="invoiceApprove.member" />',
 }, {
     dataField : "memAccName",
-    headerText : 'Member<br>Name',
+    headerText : '<spring:message code="invoiceApprove.memberName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvAmt",
@@ -293,7 +293,7 @@ function fn_loadOrderSalesman(memId, memCode) {
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
         if(memInfo == null) {
-            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+        	Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
         }
         else {
             console.log(memInfo);
@@ -421,7 +421,7 @@ function fn_appvRejctSubmit(type, rejctResn) {
 	<td><input type="text" title="" placeholder="" class="" id="createUser" name="createUser" /><a href="#" class="search_btn" id="search_createUser_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-	<th scope="row">Member</th>
+	<th scope="row"><spring:message code="invoiceApprove.member" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCenterText" /><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>

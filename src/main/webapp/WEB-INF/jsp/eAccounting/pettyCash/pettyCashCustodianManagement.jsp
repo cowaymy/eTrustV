@@ -22,17 +22,17 @@ var costCentr;
 var memAccId;
 var pettyCashCustdnColumnLayout = [ {
     dataField : "costCentr",
-    headerText : 'Cost Center'
+    headerText : '<spring:message code="webInvoice.costCenter" />'
 }, {
     dataField : "costCentrName",
-    headerText : 'Cost Center<br>Name',
+    headerText : '<spring:message code="pettyCashCustdn.costCentrName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
-    headerText : 'Custodian'
+    headerText : '<spring:message code="pettyCashCustdn.custdn" />'
 }, {
     dataField : "memAccName",
-    headerText : 'Custodian<br>Name',
+    headerText : '<spring:message code="pettyCashCustdn.custdnName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "atchFileGrpId",
@@ -88,12 +88,12 @@ var pettyCashCustdnColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "crtDt",
-    headerText : 'Create Date',
+    headerText : '<spring:message code="pettyCashCustdn.crtDt" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
     dataField : "updDt",
-    headerText : 'Last Update<br>Date',
+    headerText : '<spring:message code="pettyCashCustdn.lastUpdateDt" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
@@ -101,7 +101,7 @@ var pettyCashCustdnColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "userName",
-    headerText : 'Creator',
+    headerText : '<spring:message code="pettyCashCustdn.creator" />',
     style : "aui-grid-user-custom-left"
 }
 ];
@@ -225,7 +225,7 @@ function fn_loadOrderSalesman(memId, memCode) {
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
         if(memInfo == null) {
-            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+        	Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
         }
         else {
             console.log(memInfo);
@@ -249,12 +249,12 @@ function fn_newCustodianPop() {
 function fn_checkEmpty() {
     var checkResult = true;
     if(FormUtil.isEmpty($("#newCostCenterText").val())) {
-        Common.alert("Please enter the Cost Center.");
+    	Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#newMemAccName").val())) {
-        Common.alert("Please enter the Custodian.");
+        Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
         checkResult = false;
         return checkResult;
     }
@@ -277,15 +277,13 @@ function fn_deleteCustodianPop() {
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Petty Cash Custodian Management</h2>
+<p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
+<h2><spring:message code="pettyCashCustdn.title" /></h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectCustodianList()"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectCustodianList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -296,7 +294,7 @@ function fn_deleteCustodianPop() {
 <input type="hidden" id="memAccId" name="memAccId">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:110px" />
 	<col style="width:*" />
@@ -305,19 +303,19 @@ function fn_deleteCustodianPop() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Cost Center</th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="createUser" name="crtUserId"/><a href="#" class="search_btn" id="search_createUser_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-	<th scope="row">Custodian</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Last Update</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.lastUpdate" /></th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
 	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
-	<span>To</span>
+	<span><spring:message code="webInvoice.to" /></span>
 	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt" /></p>
 	</div><!-- date_set end -->
 	</td>
@@ -331,9 +329,9 @@ function fn_deleteCustodianPop() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" id="delete_btn">Remove</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="edit_btn">Edit</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="registration_btn">New Custodian</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="delete_btn"><spring:message code="pettyCashCustdn.remove" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="edit_btn"><spring:message code="pettyCashCustdn.edit" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="pettyCashCustdn.newCustdn" /></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="pettyCashCustdn_grid_wrap"><!-- grid_wrap start -->

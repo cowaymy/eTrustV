@@ -43,12 +43,12 @@ function fn_updateCustodian() {
 <div id="popup_wrap" class="popup_wrap msg_box"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Edit existing custodian information</h1>
+<h1><spring:message code="viewRgistCustdnMsg.title" /></h1>
 <p class="pop_close"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<p class="msg_txt">Are you sure you want to edit the existing petty cash custodian information?</p>
+<p class="msg_txt"><spring:message code="viewRgistCustdnMsg.rgistMsg" /></p>
 <ul class="center_btns">
 	<li><p class="btn_blue2"><a href="#" id="yes"><spring:message code="newWebInvoRegistMsg.yes" /></a></p></li>
 	<li><p class="btn_blue2"><a href="#" id="no"><spring:message code="newWebInvoRegistMsg.no" /></a></p></li>

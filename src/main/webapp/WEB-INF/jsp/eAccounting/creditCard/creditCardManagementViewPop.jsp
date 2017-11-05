@@ -115,7 +115,7 @@ $(document).ready(function () {
        }
        
        if(str2[0].length > 11){
-           Common.alert("The amount can only be 13 digits, including 2 decimal point.");
+           Common.alert('<spring:message code="pettyCashNewCustdn.Amt.msg" />');
            str = "";
        }else{
            str = str2[0].substr(0, 11)+"."+str2[1];
@@ -192,9 +192,9 @@ function fn_saveViewMgmt() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>View/Edit Registration</h1>
+<h1><spring:message code="crditCardViewMgmt.title" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -209,7 +209,7 @@ function fn_saveViewMgmt() {
 <input type="hidden" id="newCostCenter" name="costCentr" value="${crditCardInfo.costCentr}">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:190px" />
 	<col style="width:*" />
@@ -218,38 +218,38 @@ function fn_saveViewMgmt() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Credit cardholder name</th>
+	<th scope="row"><spring:message code="crditCardMgmt.cardholderName" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCrditCardUserName" name="crditCardUserName" value="${crditCardInfo.crditCardUserName}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/><c:if test="${crditCardInfo.crditCardStus eq 'A'}"><a href="#" class="search_btn" id="holder_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-	<th scope="row">Credit card no.</th>
+	<th scope="row"><spring:message code="crditCardMgmt.crditCardNo" /></th>
 	<td id="crditCardNoTd"><input type="text" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo1" name="crditCardNo1" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/> <input type="password" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo2" name="crditCardNo2" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/> <input type="password" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo3" name="crditCardNo3" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/> <input type="text" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo4" name="crditCardNo4" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/></td>
 </tr>
 <tr>
-	<th scope="row">Person-in-charge name</th>
+	<th scope="row"><spring:message code="crditCardMgmt.chargeName" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newChrgUserName" name="chrgUserName" value="${crditCardInfo.chrgUserName}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/><c:if test="${crditCardInfo.crditCardStus eq 'A'}"><a href="#" class="search_btn" id="charge_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-	<th scope="row">Person-in-charge department</th>
+	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" value="${crditCardInfo.costCentrName}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/><c:if test="${crditCardInfo.crditCardStus eq 'A'}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 </tr>
 <tr>
-	<th scope="row">Issue Bank</th>
+	<th scope="row"><spring:message code="crditCardNewMgmt.issueBank" /></th>
 	<td>
 		<select class="multy_select" id="bankCode" name="bankCode" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">disabled</c:if>></select>
 	</td>
-	<th scope="row">Card Type</th>
+	<th scope="row"><spring:message code="crditCardNewMgmt.cardType" /></th>
 	<td>
 		<select class="multy_select" id="crditCardType" name="crditCardType" value="${crditCardInfo.crditCardType}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">disabled</c:if>>
-		<option value="CC">Credit Card</option>
-		<option value="DC">Debit Card</option>
+		<option value="CC"><spring:message code="crditCardNewMgmt.crditCard" /></option>
+		<option value="DC"><spring:message code="crditCardNewMgmt.debitCard" /></option>
 		</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Approved credit limit</th>
+	<th scope="row"><spring:message code="crditCardNewMgmt.appvCrditLimit" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="appvCrditLimit" name="appvCrditLimit" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/></td>
-	<th scope="row">Expiry Date</th>
+	<th scope="row"><spring:message code="crditCardNewMgmt.expiryDt" /></th>
 	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="crditCardExprDt" name="crditCardExprDt" value="${crditCardInfo.crditCardExprDt}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">disabled</c:if>/></td>
 </tr>
 <tr>
-	<th scope="row">Attachment</th>
+	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
 	<td colspan="3">
 	<c:forEach var="files" items="${attachmentList}" varStatus="st">
     <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
@@ -276,7 +276,7 @@ function fn_saveViewMgmt() {
 	</td>
 </tr>
 <tr>
-	<th scope="row">Remark</th>
+	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
 	<td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="crditCardRem" name="crditCardRem" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>>${crditCardInfo.crditCardRem}</textarea></td>
 </tr>
 </tbody>
@@ -284,7 +284,7 @@ function fn_saveViewMgmt() {
 
 <c:if test="${crditCardInfo.crditCardStus eq 'A'}">
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#" id="save_btn">Save</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="save_btn"><spring:message code="pettyCashNewCustdn.save" /></a></p></li>
 </ul>
 </c:if>
 

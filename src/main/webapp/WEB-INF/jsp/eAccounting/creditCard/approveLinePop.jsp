@@ -56,7 +56,7 @@ var approveLineColumnLayout = [ {
         onclick : function(rowIndex, columnIndex, value, item) {
         	var rowCount = AUIGrid.getRowCount(approveLineGridID);
         	if (rowCount > 3) {
-        		Common.alert("Approval lines can be up to 4 levels.");
+        		Common.alert('<spring:message code="approveLine.appvLine.msg" />');
         	} else {
         		fn_addRow();
         	}
@@ -142,7 +142,7 @@ function fn_newRegistMsgPop() {
     if(length > 1) {
         for(var i = 0; i < length; i++) {
             if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
-                Common.alert("Please enter the User ID of Line " + (i +1) + ".");
+                Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ".");
                 checkMemCode = false;
             }
         }

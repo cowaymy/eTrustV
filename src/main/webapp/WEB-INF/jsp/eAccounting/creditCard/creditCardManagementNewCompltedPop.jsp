@@ -20,14 +20,14 @@ function fn_closePop() {
 <div id="popup_wrap" class="popup_wrap msg_box"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Create Credit Card Master Info.</h1>
-<p class="pop_close"><a href="#">close</a></p>
+<h1><spring:message code="newRgistMgmt.title" /></h1>
+<p class="pop_close"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<p class="msg_txt">The Credit Card Master information has been successfully Created.</p>
+<p class="msg_txt"><spring:message code="newRgistMgmt.compleMsg" /></p>
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#" id="ok_btn">Ok</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="ok_btn"><spring:message code="newWebInvoRegistMsg.ok" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

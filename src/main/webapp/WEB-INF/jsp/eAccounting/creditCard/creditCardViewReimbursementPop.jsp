@@ -59,19 +59,19 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "invcDt",
-    headerText : 'Invoice<br>Date',
+    headerText : '<spring:message code="crditCardNewReim.invcBrDt" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
     dataField : "costCentrName",
-    headerText : 'Cost Center<br>Name',
+    headerText : '<spring:message code="pettyCashCustdn.costCentrName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "expType",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "expTypeName",
-    headerText : 'Expense<br>Type',
+    headerText : '<spring:message code="pettyCashNewExp.expBrType" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "glAccCode",
@@ -90,7 +90,7 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "supplyName",
-    headerText : 'Supplier<br>Name',
+    headerText : '<spring:message code="crditCardNewReim.supplierBrName" />',
 }, {
     dataField : "taxCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -99,7 +99,7 @@ var newGridColumnLayout = [ {
     headerText : '<spring:message code="newWebInvoice.taxCode" />'
 }, {
     dataField : "gstRgistNo",
-    headerText : 'GST<br>Registration'
+    headerText : '<spring:message code="pettyCashNewExp.gstBrRgist" />'
 }, {
     dataField : "invcNo",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -108,26 +108,26 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "invcTypeName",
-    headerText : 'Invoice<br>Type',
+    headerText : '<spring:message code="pettyCashNewExp.invcBrType" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />'
 }, {
     dataField : "netAmt",
-    headerText : 'Amount<br>before GST',
+    headerText : '<spring:message code="pettyCashNewExp.amtBrBeforeGst" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
     dataField : "taxAmt",
-    headerText : 'GST',
+    headerText : '<spring:message code="pettyCashNewExp.gst" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
     dataField : "totAmt",
-    headerText : 'Total<br>Amount',
+    headerText : '<spring:message code="pettyCashNewExp.totBrAmt" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
@@ -146,7 +146,7 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "expDesc",
-    headerText : 'Remark',
+    headerText : '<spring:message code="newWebInvoice.remark" />',
     style : "aui-grid-user-custom-left",
     width : 200
 }, {
@@ -202,7 +202,7 @@ $(document).ready(function () {
                     atchFileGrpId = event.item.atchFileGrpId;
                     fn_selectReimbursementInfo();
                 } else {
-                    Common.alert("You must save it before you can edit it.");
+                    Common.alert('<spring:message code="pettyCashNewExp.beforeSave.msg" />');
                 }
             });
     
@@ -233,9 +233,9 @@ function fn_tempSave() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>View/Edit Reimbursement</h1>
+<h1><spring:message code="crditCardViewReim.title" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -257,8 +257,8 @@ function fn_tempSave() {
 
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="right_btns mb10">
-	<li><p class="btn_blue2"><a href="#" id="tempSave_btn">Temp. save</a></p></li>
-	<li><p class="btn_blue2"><a href="#" id="request_btn">Summit</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="request_btn"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
 </ul>
 </c:if>
 
@@ -272,28 +272,28 @@ function fn_tempSave() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Credit Card No</th>
+	<th scope="row"><spring:message code="crditCardNewReim.crditCardNo" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="maskingNo" maxlength="16" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
-	<th scope="row">Credit cardholder name</th>
+	<th scope="row"><spring:message code="crditCardMgmt.cardholderName" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrditCardUserName" name="crditCardUserName"/></td>
 </tr>
 <tr>
-	<th scope="row">Issue bank</th>
+	<th scope="row"><spring:message code="crditCardNewMgmt.issueBank" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" name="bankName"/></td>
-	<th scope="row">Person-in-charge name</th>
+	<th scope="row"><spring:message code="crditCardMgmt.chargeName" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newChrgUserName" name="chrgUserName"/></td>
 </tr>
 <tr>
-	<th scope="row">Claim Month</th>
+	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
     <td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="clmMonth" name="clmMonth" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
-	<th scope="row">Person-in-charge department</th>
+	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCostCenterText" name="costCentrName"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:190px" />
 	<col style="width:*" />
@@ -302,49 +302,49 @@ function fn_tempSave() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Invoice Date</th>
+	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
-	<th scope="row">Cost Center</th>
-	<td><input type="text" title="" placeholder="" class="" id="sCostCenterText" readonly="readonly"/></td>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" id="sCostCenterText" readonly="readonly"/></td>
 </tr>
 <tr>
-	<th scope="row">Expense Type</th>
+	<th scope="row"><spring:message code="pettyCashNewExp.expType" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-	<th scope="row">Tax Code</th>
+	<th scope="row"><spring:message code="newWebInvoice.taxCode" /></th>
 	<%-- <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
 	<td><select class="" id="taxCode" name="taxCode" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>></select></td>
 </tr>
 <tr>
-	<th scope="row">Supplier Name</th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="newSupplyName" name="supplyName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supply_search_btn" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-	<th scope="row">GST Registration No</th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
+	<th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
+	<td><input type="text" title="" placeholder="" class="" id="newSupplyName" name="supplyName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supply_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" id="gstRgistNo" name="gstRgistNo" readonly="readonly"/></td>
 </tr>
 <tr>
-	<th scope="row">Invoice Type</th>
+	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
-	<select class="w100p" id="invcType" name="invcType" onchange="javascript:fn_ActionInvcTypeS()" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>>
-		<option value="F">Full Tax invoice</option>
-		<option value="S">Simplified Tax invoice</option>
+	<select class="w100p" id="invcType" name="invcType" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>>
+		<option value="F"><spring:message code="newWebInvoice.select.fullTax" /></option>
+		<option value="S"><spring:message code="newWebInvoice.select.simpleTax" /></option>
 	</select>
 	</td>
-	<th scope="row">Invoice No</th>
+	<th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete="off" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr id="amt">
-	<th scope="row">Approved cash amount (RM)</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.appvCashAmt" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="netAmt" name="netAmt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
-	<th scope="row">GST (RM)</th>
+	<th scope="row"><spring:message code="pettyCashNewExp.gstRm" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="taxAmt" name="taxAmt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
 	<th scope="row"></th>
 	<td></td>
-	<th scope="row">Total Amount</th>
+	<th scope="row"><spring:message code="newWebInvoice.totalAmount" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="totAmt" name="totAmt"/></td>
 </tr>
 <tr>
-	<th scope="row">Attachment</th>
+	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
 	<td colspan="3" id="attachTd">
 	<div class="auto_file2 auto_file3"><!-- auto_file start -->
 	<input type="file" title="file add" />
@@ -352,7 +352,7 @@ function fn_tempSave() {
 	</td>
 </tr>
 <tr>
-	<th scope="row">Remark</th>
+	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
 	<td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="expDesc" name="expDesc" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>></textarea></td>
 </tr>
 </tbody>
@@ -360,8 +360,8 @@ function fn_tempSave() {
 
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#" id="add_btn">Add</a></p></li>
-	<li><p class="btn_blue2"><a href="#" id="clear_btn">Clear</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="add_btn"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="clear_btn"><spring:message code="pettyCashNewCustdn.clear" /></a></p></li>
 </ul>
 </c:if>
 
@@ -371,7 +371,7 @@ function fn_tempSave() {
 <section class="search_result"><!-- search_result start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2 class="total_text">Total Amount:<span id="allTotAmt_text"></span></h2>
+<h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="allTotAmt_text"></span></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap" id="newReimbursement_grid_wrap"><!-- grid_wrap start -->

@@ -234,7 +234,7 @@ function fn_insertWebInvoiceInfo(st) {
         fn_selectWebInvoiceItemList(result.data.clmNo);
         
         if(st == 'new') {
-            Common.alert("Temporary save succeeded.");
+            Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
             $("#newWebInvoicePop").remove();
         }
         fn_selectWebInvoiceList();
@@ -250,7 +250,7 @@ function fn_updateWebInvoiceInfo(st) {
         console.log(result);
         fn_selectWebInvoiceItemList(result.data.clmNo);
         if(st == "view"){
-            Common.alert("Temporary save succeeded.");
+            Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
             $("#viewEditWebInvoicePop").remove();
         }
         fn_selectWebInvoiceList();

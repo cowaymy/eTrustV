@@ -32,7 +32,7 @@ function fn_approveLineSubmit() {
     Common.ajax("POST", "/eAccounting/webInvoice/budgetCheck.do", data, function(result) {
         console.log(result);
         if(result.length > 0) {
-            Common.alert("Budget exceeded.");
+            Common.alert('<spring:message code="newWebInvoRegistMsg.budget.msg" />');
             console.log(result.length);
             for(var i = 0; i < result.length; i++) {
                 console.log(result[i]);

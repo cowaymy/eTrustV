@@ -597,6 +597,7 @@ SELECT T.APPV_PRCSS_NO
        ,INVC_NO = #{invcNo}
        ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,PAY_DUE_DT = TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
        ,INVC_REM = #{invcRem}
        ,TOT_AMT = #{totAmt}
        ,UPD_DT = SYSDATE

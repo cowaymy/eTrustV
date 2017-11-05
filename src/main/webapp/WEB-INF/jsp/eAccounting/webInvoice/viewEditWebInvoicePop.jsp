@@ -47,6 +47,9 @@ var obj = {
 };
 gridDataList.push(obj);
 </c:forEach>
+//file action list
+var update = new Array();
+var remove = new Array();
 var attachmentList = new Array();
 <c:forEach var="file" items="${attachmentList}">
 var obj = {
@@ -301,6 +304,30 @@ $(document).ready(function () {
     	}
     	fn_atchViewDown(fileGrpId, fileId);
     });
+    // 파일 수정
+    $("#form_newWebInvoice :file").change(function() {
+        var div = $(this).parents(".auto_file2");
+        var oriFileName = div.find(":text").val();
+        console.log(oriFileName);
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                update.push(attachmentList[i].atchFileId);
+                console.log(JSON.stringify(update));
+            }
+        }
+    });
+    // 파일 삭제
+    $(".auto_file2 a:contains('Delete')").click(function() {
+        var div = $(this).parents(".auto_file2");
+        var oriFileName = div.find(":text").val();
+        console.log(oriFileName);   
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                remove.push(attachmentList[i].atchFileId);
+                console.log(JSON.stringify(remove));
+            }
+        }
+    });
 });
 
 /* 인풋 파일(멀티) */
@@ -317,8 +344,12 @@ function fn_approveLinePop() {
     
 	// 수정 후 temp save가 아닌 바로 submit
     // 고려하여 update 후 approve
-    // 현재 파일 수정 미구현 상태
-    fn_updateWebInvoiceInfo("");
+    // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
+    if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+    	fn_attachmentUpload("");
+    } else {
+    	fn_attachmentUpdate("");
+    }
 	
     Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
@@ -351,7 +382,11 @@ function fn_tempSave() {
 var checkResult = fn_checkEmpty();
     
     if(checkResult){
-    	fn_updateWebInvoiceInfo(callType);
+    	if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+            fn_attachmentUpload(callType);
+        } else {
+            fn_attachmentUpdate(callType);
+        }
     }
 }
 
@@ -360,20 +395,25 @@ function fn_attachmentUpload(st) {
     Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
         console.log(result);
         // 신규 add return atchFileGrpId의 key = fileGroupKey
+        console.log(result.data.fileGroupKey);
         $("#atchFileGrpId").val(result.data.fileGroupKey);
+        fn_updateWebInvoiceInfo(st);
     });
 }
 
-// 공통 코드에 현재 미구현으로 불가
 function fn_attachmentUpdate(st) {
-	// file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
     // 신규 add or 추가 add인지 update or delete인지 분기 필요
     // 파일 수정해야 하는 경우 : delete 버튼 클릭 or file 버튼 클릭으로 수정
     // delete 버튼의 파일이름 찾아서 저장
     var formData = Common.getFormData("form_newWebInvoice");
+    formData.append("atchFileGrpId", $("#atchFileGrpId").val());
+    formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+    console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+    console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
     Common.ajaxFile("/eAccounting/webInvoice/attachmentUpdate.do", formData, function(result) {
         console.log(result);
-        //$("#atchFileGrpId").val(result.data.atchFileGrpId);
+        fn_updateWebInvoiceInfo(st);
     });
 }
 
@@ -386,7 +426,7 @@ function fn_updateWebInvoiceInfo(st) {
         console.log(result);
         fn_selectWebInvoiceItemList(result.data.clmNo);
         if(st == "view"){
-            Common.alert("Temporary save succeeded.");
+            Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
             $("#viewEditWebInvoicePop").remove();
         }
         fn_selectWebInvoiceList();

@@ -14,29 +14,29 @@
 <script type="text/javascript">
 var pettyCashExpColumnLayout = [ {
     dataField : "costCentr",
-    headerText : 'Cost Center'
+    headerText : '<spring:message code="webInvoice.costCenter" />'
 }, {
     dataField : "costCentrName",
-    headerText : 'Cost Center<br>Name',
+    headerText : '<spring:message code="pettyCashCustdn.costCentrName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "memAccId",
-    headerText : 'Custodian'
+    headerText : '<spring:message code="pettyCashCustdn.custdn" />'
 }, {
     dataField : "memAccName",
-    headerText : 'Custodian<br>Name',
+    headerText : '<spring:message code="pettyCashCustdn.custdnName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "clmMonth",
-    headerText : 'Claim Month',
+    headerText : '<spring:message code="pettyCashExp.clmMonth" />',
     dataType : "date",
     formatString : "mm/yyyy"
 }, {
     dataField : "clmNo",
-    headerText : 'Claim No'
+    headerText : '<spring:message code="invoiceApprove.clmNo" />'
 }, {
     dataField : "reqstDt",
-    headerText : 'Request<br>Date',
+    headerText : '<spring:message code="pettyCashRqst.rqstDt" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
@@ -44,7 +44,7 @@ var pettyCashExpColumnLayout = [ {
     headerText : '<spring:message code="newWebInvoice.cur" />'
 }, {
     dataField : "totAmt",
-    headerText : 'Amount',
+    headerText : '<spring:message code="webInvoice.amount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
@@ -57,7 +57,7 @@ var pettyCashExpColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvPrcssDt",
-    headerText : 'Approval<br>Date',
+    headerText : '<spring:message code="pettyCashRqst.appvalDt" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }
@@ -115,8 +115,6 @@ function fn_clearData() {
         this.reset();
     });
     
-    fn_ActionInvcTypeS();
-    
     $("#attachTd").html("");
     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
     
@@ -159,7 +157,7 @@ $("#amt :text").keydown(function (event) {
                }
                
                if(str2[0].length > 11){
-                   Common.alert("The amount can only be 13 digits, including 2 decimal point.");
+                   Common.alert('<spring:message code="pettyCashNewCustdn.Amt.msg" />');
                    str = "";
                }else{
                    str = str2[0].substr(0, 11)+"."+str2[1];
@@ -202,27 +200,11 @@ $("#amt :text").keydown(function (event) {
             console.log(clmMonth);
             console.log(now);
             if(Number(clmMonth) > Number(now)) {
-                Common.alert("Only past dates can be selected.");
+                Common.alert('<spring:message code="pettyCashExp.onlyPastDt.msg" />');
                 $(this).val(mm + "/" + yyyy);
             }
         }
    }); 
-}
-
-function fn_ActionInvcTypeS() {
-    var invcType = $("#invcType").val();
-    console.log(invcType);
-    if(invcType == "S") {
-        $("#sMemAccId").removeAttr("class");
-        $("#sSupplier_search_btn").show();
-        $("#gstRgistNo").attr("class", "readonly w100p");
-        $("#gstRgistNo").attr("readonly", "readonly");
-    } else {
-        $("#sMemAccId").attr("class", "w100p");
-        $("#sSupplier_search_btn").hide();
-        $("#gstRgistNo").attr("class", "w100p");
-        $("#gstRgistNo").removeAttr("readonly");
-    }
 }
 
 function fn_supplierSearchPop() {
@@ -275,7 +257,7 @@ function fn_setPopCostCenter() {
             console.log(result);
             console.log(FormUtil.isEmpty(result.data));
             if(FormUtil.isEmpty(result.data)) {
-                Common.alert("There is no data for cost centers and custodians.");
+                Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
             } else {
                 var custdnNric = result.data.custdnNric;
                 $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
@@ -303,7 +285,7 @@ function fn_setPopSupplier() {
             console.log(result);
             console.log(FormUtil.isEmpty(result.data));
             if(FormUtil.isEmpty(result.data)) {
-                Common.alert("There is no data for cost centers and custodians.");
+                Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
             } else {
                 var custdnNric = result.data.custdnNric;
                 $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
@@ -332,12 +314,12 @@ function fn_setPopExpType() {
 function fn_checkForCustdnNric() {
     var checkResult = true;
     if(FormUtil.isEmpty($("#newCostCenterText").val())) {
-        Common.alert("Please enter the Cost Center.");
+        Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#newMemAccName").val())) {
-        Common.alert("Please enter the Custodian.");
+        Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
         checkResult = false;
         return checkResult;
     }
@@ -347,53 +329,48 @@ function fn_checkForCustdnNric() {
 function fn_checkEmpty() {
     var checkResult = true;
     if(FormUtil.isEmpty($("#newCostCenterText").val())) {
-        Common.alert("Please enter the Cost Center.");
+    	Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#newMemAccName").val())) {
-        Common.alert("Please enter the Custodian.");
+    	Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#newClmMonth").val())) {
-        Common.alert("Please enter the Claim Month.");
+        Common.alert('<spring:message code="pettyCashExp.clmMonth.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#invcDt").val())) {
-        Common.alert("Please enter the Invoice Date.");
+        Common.alert('<spring:message code="webInvoice.invcDt.msg" />');
         checkResult = false;
         return checkResult;
     }
     if($("#invcType").val() == "F") {
         if(FormUtil.isEmpty($("#supplier").val())) {
-            Common.alert("Please enter the Supplier.");
-            checkResult = false;
-            return checkResult;
-        }
-        if(FormUtil.isEmpty($("#gstRgistNo").val())) {
-            Common.alert("Please enter the GST Registration No.");
+            Common.alert('<spring:message code="webInvoice.supplier.msg" />');
             checkResult = false;
             return checkResult;
         }
         if(FormUtil.isEmpty($("#invcNo").val())) {
-            Common.alert("Please enter the invoice no.");
+        	Common.alert('<spring:message code="webInvoice.invcNo.msg" />');
             checkResult = false;
             return checkResult;
         }
         if(FormUtil.isEmpty($("#expType").val())) {
-            Common.alert("Please enter the Expense Type");
+        	Common.alert('<spring:message code="webInvoice.expType.msg" />');
             checkResult = false;
             return checkResult;
         }
         if(FormUtil.isEmpty($("#taxCode").val())) {
-            Common.alert("Please enter the Tax Code");
+        	Common.alert('<spring:message code="webInvoice.taxCode.msg" />');
             checkResult = false;
             return checkResult;
         }
         if(Number($("#gstBeforAmt").val().replace(/,/gi, "")) <= 0) {
-            Common.alert("Please enter the Amount before GST");
+            Common.alert('<spring:message code="pettyCashExp.amtBeforeGst.msg" />');
             checkResult = false;
             return checkResult;
         }
@@ -505,7 +482,6 @@ function fn_addRow() {
         }
         
         fn_clearData();
-        fn_ActionInvcTypeS();
     }
 }
 
@@ -536,13 +512,13 @@ function fn_insertPettyCashExp(st) {
             clmNo = result.data.clmNo;
             fn_selectExpenseItemList();
             if(st == "new"){
-                Common.alert("Temporary save succeeded.");
+                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
                 $("#newExpensePop").remove();
             }
             fn_selectExpenseList();
         });
     } else {
-        Common.alert("There is no data to save. Please add.");
+        Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
     }
 }
 
@@ -580,7 +556,6 @@ function fn_selectExpenseInfo() {
         $("#budgetCodeName").val(result.budgetCodeName);
         $("#sMemAccId").val(result.sMemAccId);
         $("#invcType").val(result.invcType);
-        fn_ActionInvcTypeS();
         $("#invcNo").val(result.invcNo);
         $("#invcDt").val(result.invcDt);
         $("#gstRgistNo").val(result.gstRgistNo);
@@ -693,13 +668,13 @@ function fn_updatePettyCashExp(st) {
             clmNo = result.data.clmNo;
             fn_selectExpenseItemList();
             if(st == "view"){
-                Common.alert("Temporary save succeeded.");
+                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
                 $("#viewExpensePop").remove();
             }
             fn_selectExpenseList();
         });
     } else {
-        Common.alert("There is no data to save. Please add.");
+        Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
     }
 }
 
@@ -719,15 +694,13 @@ function fn_expApproveLinePop() {
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Petty Cash Expense</h2>
+<p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
+<h2><spring:message code="pettyCashExp.title" /></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectExpenseList()"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectExpenseList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -738,7 +711,7 @@ function fn_expApproveLinePop() {
 <input type="hidden" id="costCenter" name="costCentr">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
     <col style="width:110px" />
     <col style="width:*" />
@@ -747,15 +720,15 @@ function fn_expApproveLinePop() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Cost Center</th>
+    <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
     <td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-    <th scope="row">Custodian</th>
+    <th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
     <td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-    <th scope="row">Claim Month</th>
+    <th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
     <td><input type="text" title="Reference Month" placeholder="MM/YYYY" class="j_date2 w100p" id="clmMonth" name="clmMonth"/></td>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="webInvoice.status" /></th>
     <td>
     <select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
         <option value="T"><spring:message code="webInvoice.select.save" /></option>
@@ -775,7 +748,7 @@ function fn_expApproveLinePop() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="registration_btn">New Expense Claim</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="pettyCashExp.newExpClm" /></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="expenseMgmt_grid_wrap"><!-- grid_wrap start -->

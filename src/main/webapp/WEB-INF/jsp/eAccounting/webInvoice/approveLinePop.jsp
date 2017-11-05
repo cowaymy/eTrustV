@@ -56,7 +56,7 @@ var approveLineColumnLayout = [ {
         onclick : function(rowIndex, columnIndex, value, item) {
         	var rowCount = AUIGrid.getRowCount(approveLineGridID);
         	if (rowCount > 3) {
-        		Common.alert("Approval lines can be up to 4 levels.");
+        		Common.alert('<spring:message code="approveLine.appvLine.msg" />');
         	} else {
         		fn_addRow();
         	}
@@ -124,7 +124,7 @@ function fn_loadOrderSalesman(memId, memCode) {
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
         if(memInfo == null) {
-            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+        	Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
         }
         else {
         	console.log(memInfo);
@@ -142,7 +142,7 @@ function fn_newRegistMsgPop() {
     if(length > 1) {
         for(var i = 0; i < length; i++) {
             if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
-                Common.alert("Please enter the User ID of Line " + (i +1) + ".");
+                Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ".");
                 checkMemCode = false;
             }
         }

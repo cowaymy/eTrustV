@@ -42,7 +42,7 @@ $(document).ready(function () {
        }
        
        if(str2[0].length > 11){
-    	   Common.alert("The amount can only be 13 digits, including 2 decimal point.");
+    	   Common.alert('<spring:message code="pettyCashNewCustdn.Amt.msg" />');
            str = "";
        }else{
            str = str2[0].substr(0, 11)+"."+str2[1];
@@ -75,9 +75,9 @@ function fn_clearData() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New Custodian</h1>
+<h1><spring:message code="pettyCashNewCustdn.title" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -90,7 +90,7 @@ function fn_clearData() {
 <input type="hidden" id="bankCode" name="bankCode">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:190px" />
 	<col style="width:*" />
@@ -99,29 +99,29 @@ function fn_clearData() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Cost Center</th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" style="width:150px" id="newCostCenterText" name="costCentrName"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a><label><input type="checkbox" id="headDeptFlag" name="headDeptFlag" value="Y"/><span>HQ Petty Cash</span></label></td>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${userId}"/></td>
 </tr>
 <tr>
-	<th scope="row">Custodian</th>
+	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" /><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">IC No / Passport No</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.icNoPassNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric"/></td>
 </tr>
 <tr>
-	<th scope="row">Bank</th>
+	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName" name="bankName"/></td>
-	<th scope="row">Bank Account No</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.bankAccNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo"/></td>
 </tr>
 <tr>
-	<th scope="row">Approved cash amount (RM)</th>
+	<th scope="row"><spring:message code="pettyCashNewCustdn.appvCashAmt" /></th>
 	<td colspan="3"><input type="text" title="" placeholder="" class="" id="appvCashAmt" name="appvCashAmt"/></td>
 </tr>
 <tr>
-	<th scope="row">Attachment</th>
+	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
 	<td colspan="3">
 	<div class="auto_file2"><!-- auto_file start -->
 	<input type="file" title="file add" />
@@ -129,15 +129,15 @@ function fn_clearData() {
 	</td>
 </tr>
 <tr>
-	<th scope="row">Remark</th>
+	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
 	<td colspan="3"><textarea cols="20" rows="5" id="custdnRem" name="custdnRem"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
- 	<li><p class="btn_blue2"><a href="#" id="save_btn">Save</a></p></li>
-	<li><p class="btn_blue2"><a href="#" id="clear_btn">Clear</a></p></li>
+ 	<li><p class="btn_blue2"><a href="#" id="save_btn"><spring:message code="pettyCashNewCustdn.save" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="clear_btn"><spring:message code="pettyCashNewCustdn.clear" /></a></p></li>
 </ul>
 
 </form>

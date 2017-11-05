@@ -137,7 +137,7 @@ $(document).ready(function () {
 	<td id="viewReqstUserId"></td>
 </tr>
 <tr>
-	<th scope="row">Member</th>
+	<th scope="row"><spring:message code="invoiceApprove.member" /></th>
 	<td id="viewMemAccName"></td>
 	<th scope="row"><spring:message code="newWebInvoice.payDueDate" /></th>
 	<td id="viewPayDueDt"></td>

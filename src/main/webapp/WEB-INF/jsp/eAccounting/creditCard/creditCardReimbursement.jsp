@@ -19,36 +19,36 @@ var reimbursementColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "crditCardUserName",
-    headerText : 'Card Holder',
+    headerText : '<spring:message code="crditCardReim.cardholder" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "crditCardNo",
-    headerText : 'Card no.'
+    headerText : '<spring:message code="crditCardReim.cardNo" />'
 }, {
     dataField : "chrgUserId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "chrgUserName",
-    headerText : 'Charge Name',
+    headerText : '<spring:message code="crditCardReim.chargeName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "costCentr",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "costCentrName",
-    headerText : 'Cost Center',
+    headerText : '<spring:message code="webInvoice.costCenter" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "clmMonth",
-    headerText : 'Claim Month',
+    headerText : '<spring:message code="pettyCashExp.clmMonth" />',
     dataType : "date",
     formatString : "mm/yyyy"
 }, {
     dataField : "clmNo",
-    headerText : 'Claim No'
+    headerText : '<spring:message code="invoiceApprove.clmNo" />'
 }, {
     dataField : "reqstDt",
-    headerText : 'Request Date',
+    headerText : '<spring:message code="webInvoice.requestDate" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
@@ -69,7 +69,7 @@ var reimbursementColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvPrcssDt",
-    headerText : 'Approval Date',
+    headerText : '<spring:message code="crditCardReim.appvalDt" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
 } 
@@ -186,8 +186,6 @@ function fn_clearData() {
     
     $("#newCrditCardNo").val("");
     
-    fn_ActionInvcTypeS();
-    
     $("#attachTd").html("");
     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
     
@@ -217,22 +215,6 @@ function fn_setPopExpType() {
     
     $("#glAccCode").val($("#search_glAccCode").val());
     $("#glAccCodeName").val($("#search_glAccCodeName").val());
-}
-
-function fn_ActionInvcTypeS() {
-    var invcType = $("#invcType").val();
-    console.log(invcType);
-    if(invcType == "S") {
-        $("#newSupplyName").removeAttr("class");
-        $("#supply_search_btn").show();
-        $("#gstRgistNo").attr("class", "readonly w100p");
-        $("#gstRgistNo").attr("readonly", "readonly");
-    } else {
-        $("#newSupplyName").attr("class", "w100p");
-        $("#supply_search_btn").hide();
-        $("#gstRgistNo").attr("class", "w100p");
-        $("#gstRgistNo").removeAttr("readonly");
-    }
 }
 
 function fn_supplierSearchPop() {
@@ -268,7 +250,7 @@ function fn_setEvent() {
                     $("#bankCode").val(result.data.bankCode);
                     $("#bankName").val(result.data.bankName);
                 } else {
-                	Common.alert("There is no registered data for the card number you entered.");
+                	Common.alert('<spring:message code="crditCardReim.noData.msg" />');
                 	$("#maskingNo").val("");
                     $("#newCrditCardNo").val("");
                     $("#newCrditCardUserId").val("");
@@ -287,7 +269,7 @@ function fn_setEvent() {
         		$("#maskingNo").val("");
                 $("#newCrditCardNo").val("");
         	} else {
-        		Common.alert("The card number is 16 digits.");
+        		Common.alert('<spring:message code="crditCardReim.length.msg" />');
                 $("#maskingNo").val("");
                 $("#newCrditCardNo").val("");
         	}
@@ -344,7 +326,7 @@ function fn_setEvent() {
                }
                
                if(str2[0].length > 11){
-                   Common.alert("The amount can only be 13 digits, including 2 decimal point.");
+                   Common.alert('<spring:message code="pettyCashNewCustdn.Amt.msg" />');
                    str = "";
                }else{
                    str = str2[0].substr(0, 11)+"."+str2[1];
@@ -387,7 +369,7 @@ function fn_setEvent() {
             console.log(clmMonth);
             console.log(now);
             if(Number(clmMonth) > Number(now)) {
-                Common.alert("Only past dates can be selected.");
+                Common.alert('<spring:message code="pettyCashExp.onlyPastDt.msg" />');
                 $(this).val(mm + "/" + yyyy);
             }
         }
@@ -397,48 +379,43 @@ function fn_setEvent() {
 function fn_checkEmpty() {
     var checkResult = true;
     if(FormUtil.isEmpty($("#newCrditCardNo").val())) {
-        Common.alert("Please enter the Credit Card No.");
+        Common.alert('<spring:message code="crditCardMgmt.crditCardNo.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#clmMonth").val())) {
-        Common.alert("Please enter the Claim Month.");
+        Common.alert('<spring:message code="pettyCashExp.clmMonth.msg" />');
         checkResult = false;
         return checkResult;
     }
     if(FormUtil.isEmpty($("#invcDt").val())) {
-        Common.alert("Please enter the Invoice Date.");
+        Common.alert('<spring:message code="webInvoice.invcDt.msg" />');
         checkResult = false;
         return checkResult;
     }
     if($("#invcType").val() == "F") {
         if(FormUtil.isEmpty($("#newSupply").val())) {
-            Common.alert("Please enter the Supplier Name.");
-            checkResult = false;
-            return checkResult;
-        }
-        if(FormUtil.isEmpty($("#gstRgistNo").val())) {
-            Common.alert("Please enter the GST Registration No.");
+            Common.alert('<spring:message code="crditCardReim.supplierName.msg" />');
             checkResult = false;
             return checkResult;
         }
         if(FormUtil.isEmpty($("#invcNo").val())) {
-            Common.alert("Please enter the invoice no.");
+        	Common.alert('<spring:message code="webInvoice.invcNo.msg" />');
             checkResult = false;
             return checkResult;
         }
         if(FormUtil.isEmpty($("#expType").val())) {
-            Common.alert("Please enter the Expense Type");
+        	Common.alert('<spring:message code="webInvoice.expType.msg" />');
             checkResult = false;
             return checkResult;
         }
         if(FormUtil.isEmpty($("#taxCode").val())) {
-            Common.alert("Please enter the Tax Code");
+        	Common.alert('<spring:message code="webInvoice.taxCode.msg" />');
             checkResult = false;
             return checkResult;
         }
         if(Number($("#netAmt").val().replace(/,/gi, "")) <= 0) {
-            Common.alert("Please enter the Approved cash amount");
+            Common.alert('<spring:message code="crditCardReim.appvCashAmt.msg" />');
             checkResult = false;
             return checkResult;
         }
@@ -514,7 +491,6 @@ function fn_addRow() {
         }
         
         fn_clearData();
-        fn_ActionInvcTypeS();
     }
 }
 
@@ -545,13 +521,13 @@ function fn_insertReimbursement(st) {
             clmNo = result.data.clmNo;
             fn_selectReimbursementItemList();
             if(st == "new"){
-                Common.alert("Temporary save succeeded.");
+                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
                 $("#newReimbursementPop").remove();
             }
             fn_selectReimbursementList();
         });
     } else {
-        Common.alert("There is no data to save. Please add.");
+        Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
     }
 }
 
@@ -598,7 +574,6 @@ function fn_selectReimbursementInfo() {
         $("#bankName").val(result.bankName);
         $("#clmMonth").val(result.clmMonth);
         $("#invcType").val(result.invcType);
-        fn_ActionInvcTypeS();
         $("#invcNo").val(result.invcNo);
         $("#invcDt").val(result.invcDt);
         $("#newSupply").val(result.supply);
@@ -711,13 +686,13 @@ function fn_updateReimbursement(st) {
             clmNo = result.data.clmNo;
             fn_selectReimbursementItemList();
             if(st == "view"){
-                Common.alert("Temporary save succeeded.");
+                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
                 $("#viewReimbursementPop").remove();
             }
             fn_selectReimbursementList();
         });
     } else {
-        Common.alert("There is no data to save. Please add.");
+        Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
     }
 }
 
@@ -737,15 +712,13 @@ function fn_approveLinePop() {
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Credit Card Reimbursement</h2>
+<p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
+<h2><spring:message code="crditCardReim.title" /></h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectReimbursementList()"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectReimbursementList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
 	<!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
@@ -758,7 +731,7 @@ function fn_approveLinePop() {
 <input type="hidden" id="costCenter" name="costCentr">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:170px" />
 	<col style="width:*" />
@@ -767,28 +740,28 @@ function fn_approveLinePop() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Credit cardholder name</th>
+	<th scope="row"><spring:message code="crditCardMgmt.cardholderName" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="crditCardUserName" name="crditCardUserName"/><a href="#" class="search_btn" id="search_holder_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Credit card no.</th>
+	<th scope="row"><spring:message code="crditCardMgmt.crditCardNo" /></th>
 	<td><input type="text" title="" placeholder="Credit card No" class="" id="crditCardNo" name="crditCardNo" autocomplete=off/></td>
 </tr>
 <tr>
-	<th scope="row">Person-in-charge name</th>
+	<th scope="row"><spring:message code="crditCardMgmt.chargeName" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="chrgUserName" name="chrgUserName"/><a href="#" class="search_btn" id="search_charge_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Person-in-charge department</th>
+	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_depart_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
-	<th scope="row">Request Date</th>
+	<th scope="row"><spring:message code="webInvoice.requestDate" /></th>
 	<td>
 
 	<div class="date_set"><!-- date_set start -->
 	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  id="startDt" name="startDt"/></p>
-	<span>To</span>
+	<span><spring:message code="webInvoice.to" /></span>
 	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt"/></p>
 	</div><!-- date_set end -->
 
 	</td>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="webInvoice.status" /></th>
 	<td>
 	<select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
 		<option value="T"><spring:message code="webInvoice.select.save" /></option>
@@ -808,7 +781,7 @@ function fn_approveLinePop() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" id="registration_btn">New Expense Claim</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="crditCardReim.newExpClm" /></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="reimbursement_grid_wrap"><!-- grid_wrap start -->
