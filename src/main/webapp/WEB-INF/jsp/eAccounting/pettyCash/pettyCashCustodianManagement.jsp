@@ -215,6 +215,9 @@ function fn_setPopCostCenter() {
                 $("#newMemAccId").val("");
                 $("#newMemAccName").val("");
                 $("#custdnNric").val("");
+                $("#bankCode").val("");
+                $("#bankName").val("");
+                $("#bankAccNo").val("");
             } else {
             	// USER_NRIC GET
                 Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
@@ -248,6 +251,9 @@ function fn_setPopSupplier() {
                 $("#newMemAccId").val("");
                 $("#newMemAccName").val("");
                 $("#custdnNric").val("");
+                $("#bankCode").val("");
+                $("#bankName").val("");
+                $("#bankAccNo").val("");
             } else {
                 // USER_NRIC GET
                 Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
