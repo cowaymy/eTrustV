@@ -174,7 +174,7 @@
         SELECT A.MEM_TYPE,
                    A.CODE AS branch_id,
                    A.MEM_CODE,
-                   UPD_DT as service_date,
+                   TO_CHAR(UPD_DT,'YYYY-MM-DD')  service_date,
                  DISTANCE,
                 (SELECT MILEAGE_AMT
                 FROM SVC0033M 
