@@ -345,7 +345,7 @@ function fn_selectWebInvoiceItemList(clmNo) {
 <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
 <h2><spring:message code="webInvoice.title" /></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectWebInvoiceList()"><span class="search"><spring:message code="webInvoice.btn.search" /></span></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectWebInvoiceList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
