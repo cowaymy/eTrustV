@@ -246,10 +246,14 @@ function fn_setPopCostCenter() {
             if(FormUtil.isEmpty(result.data)) {
                 Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
             } else {
-                var appvCashAmt = "" + result.data.appvCashAmt;
-                $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-                var custdnNric = result.data.custdnNric;
-                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            	if(FormUtil.isEmpty(result.data.appvCashAmt)) {
+            		var appvCashAmt = "" + result.data.appvCashAmt;
+                    $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+            	}
+            	if(FormUtil.isEmpty(result.data.custdnNric)) {
+            		var custdnNric = result.data.custdnNric;
+                    $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            	}
             }
         });
     }
@@ -274,10 +278,14 @@ function fn_setPopSupplier() {
             if(FormUtil.isEmpty(result.data)) {
             	Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
             } else {
-            	var appvCashAmt = "" + result.data.appvCashAmt;
-                $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-                var custdnNric = result.data.custdnNric;
-                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            	if(FormUtil.isEmpty(result.data.appvCashAmt)) {
+                    var appvCashAmt = "" + result.data.appvCashAmt;
+                    $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+                }
+                if(FormUtil.isEmpty(result.data.custdnNric)) {
+                    var custdnNric = result.data.custdnNric;
+                    $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+                }
             }
         });
     }
