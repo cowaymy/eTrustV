@@ -259,8 +259,10 @@ function fn_setPopCostCenter() {
             if(FormUtil.isEmpty(result.data)) {
                 Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
             } else {
-                var custdnNric = result.data.custdnNric;
-                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            	if(!FormUtil.isEmpty(result.data.custdnNric)) {
+                    var custdnNric = result.data.custdnNric;
+                    $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+                }
             }
         });
     }
@@ -287,8 +289,10 @@ function fn_setPopSupplier() {
             if(FormUtil.isEmpty(result.data)) {
                 Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
             } else {
-                var custdnNric = result.data.custdnNric;
-                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+            	if(!FormUtil.isEmpty(result.data.custdnNric)) {
+                    var custdnNric = result.data.custdnNric;
+                    $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+                }
             }
         });
     }
