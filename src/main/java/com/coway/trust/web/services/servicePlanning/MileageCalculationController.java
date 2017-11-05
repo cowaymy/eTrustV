@@ -61,9 +61,9 @@ public class MileageCalculationController {
 	@RequestMapping(value = "/cileageCalculationDCPMaster.do")
 	public String initDCPMaster(@RequestParam Map<String, Object> params, ModelMap model) {
 		//List<EgovMap> selectArea = mileageCalculationService.selectArea();
-		List<EgovMap> branchList = holidayService.selectBranch();
+		//List<EgovMap> branchList = holidayService.selectBranch();
 		//model.addAttribute("selectArea", selectArea);
-		model.addAttribute("branchList", branchList);
+		//model.addAttribute("branchList", branchList);
 		// 호출될 화면
 		return "services/servicePlanning/MileageClaimDCPMasterSearch";
 	}
@@ -116,7 +116,7 @@ public class MileageCalculationController {
 		String[] memTypeList = request.getParameterValues("memType");
 		String[] mcpFromList = request.getParameterValues("mcpFrom");
 		String[] mcpToList = request.getParameterValues("mcpTo");
-		String[] branchCodeList = request.getParameterValues("brnchCode");
+		String[] branchCodeList = request.getParameterValues("brnch");
 		params.put("memTypeList", memTypeList);
 		params.put("mcpFromList", mcpFromList);
 		params.put("mcpToList", mcpToList);
@@ -205,11 +205,13 @@ public class MileageCalculationController {
 	 */
 	@RequestMapping(value = "/selectSchemaResultMgmt.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSchemaResultMgmt( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		/*logger.debug("params {}", params);
+		logger.debug("params {}", params);
 		String[] branchList = request.getParameterValues("branch");
 		String[] memTypeList = request.getParameterValues("memType");
+		String[] memCodeList = request.getParameterValues("memCode");
 		params.put("branchList", branchList);
-		params.put("memTypeList", memTypeList);*/
+		params.put("memTypeList", memTypeList);
+		params.put("memCodeList", memCodeList);
 		List<EgovMap> selectSchemaMgmt = mileageCalculationService.selectSchemaResultMgmt(params);
 		logger.debug("selectSchemaMgmt {}", selectSchemaMgmt);
 		return ResponseEntity.ok(selectSchemaMgmt);
@@ -225,9 +227,43 @@ public class MileageCalculationController {
 	 */
 	@RequestMapping(value = "/selectArea", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectArea( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		List<EgovMap> selectArea = mileageCalculationService.selectArea();
+		
+		List<EgovMap> selectArea = mileageCalculationService.selectArea(params);
 		logger.debug("selectArea {}", selectArea);
 		return ResponseEntity.ok(selectArea);
 	}
 	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectBranch", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBranch( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> branchList = mileageCalculationService.selectBranch(params);
+		//model.addAttribute("branchList", branchList);
+		logger.debug("branchList {}", branchList);
+		return ResponseEntity.ok(branchList);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectMemberCode", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMemberCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> memberCode = mileageCalculationService.selectMemberCode(params);
+		//model.addAttribute("branchList", branchList);
+		logger.debug("memberCode {}", memberCode);
+		return ResponseEntity.ok(memberCode);
+	}
 }
