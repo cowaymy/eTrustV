@@ -19,18 +19,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.coway.trust.AppConstants; 
-import com.coway.trust.api.mobile.Service.registration.RegistrationConstants;
+import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsForm;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobForm;
 import com.coway.trust.api.mobile.services.heartService.HeartServicePartsDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServicePartsForm;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
+import com.coway.trust.api.mobile.services.installation.InstallationJobDto;
+import com.coway.trust.api.mobile.services.installation.InstallationJobForm;
+import com.coway.trust.api.mobile.services.installation.InstallationResultDto;
+import com.coway.trust.api.mobile.services.installation.InstallationResultForm;
+import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobDto;
+import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobForm;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -99,6 +106,53 @@ public class ServiceApiController {
 	
 	
 	
+	
+	@ApiOperation(value = "InstallationJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/InstallationJobList", method = RequestMethod.GET)
+	public ResponseEntity<List<InstallationJobDto>> getInstallationJobList(
+			@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
+
+		Map<String, Object> params = InstallationJobForm.createMap(InstallationJobForm);
+
+		List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList(params);
+
+		for (int i = 0; i < InstallationJobList.size(); i++) {
+			LOGGER.debug("InstallationJobList    값 : {}", InstallationJobList.get(i));
+
+		}
+		
+		List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
+	@ApiOperation(value = "ProductRetrunJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/ProductRetrunJobList", method = RequestMethod.GET)
+	public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList(
+			@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
+
+		Map<String, Object> params = ProductRetrunJobForm.createMap(ProductRetrunJobForm);
+
+		List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
+
+		for (int i = 0; i < ProductRetrunJobList.size(); i++) {
+			LOGGER.debug("ProductRetrunJobList    값 : {}", ProductRetrunJobList.get(i));
+
+		}
+		
+		List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
 	@ApiOperation(value = "Heart Service Parts List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceParts", method = RequestMethod.GET)
 	public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts(
@@ -151,12 +205,14 @@ public class ServiceApiController {
 	public ResponseEntity<HeartServiceResultDto> hsRegistration (@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
 
 		String transactionId = "";
+		List<Map<String, Object>> heartLogs = null;
+		
 		// mobile 에서 받은 데이터를 로그 테이블에 insert......
 		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
 		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
 		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
 
-			List<Map<String, Object>> heartLogs = new ArrayList<>();
+			heartLogs = new ArrayList<>();
 			for (HeartServiceResultForm heart : heartForms) {
 				heartLogs.addAll(heart.createMaps(heart));
 			}
@@ -170,7 +226,9 @@ public class ServiceApiController {
 
 		// business service....
 		// TODO : heartService.xxxx 구현 필요.....
-
+		
+		MSvcLogApiService.resultRegistration(heartLogs);
+		
 		// TODO : 리턴할 dto 구현.
 
 		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
@@ -179,6 +237,116 @@ public class ServiceApiController {
 
 		return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
 	}
+	
+	
+	
+	
+	
+	
+	@ApiOperation(value = "AfterService Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/afterServiceResult", method = RequestMethod.POST)
+	public ResponseEntity<AfterServiceResultDto> asRegistration (@RequestBody List<AfterServiceResultForm> afterServiceForms) throws Exception {
+
+		String transactionId = "";
+		List<Map<String, Object>> asTransLogs = null;
+		
+		// mobile 에서 받은 데이터를 로그 테이블에 insert......
+		LOGGER.debug("### IS_INSERT_AS_LOG : {}", RegistrationConstants.IS_INSERT_AS_LOG);
+		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_AS_LOG);
+		if (RegistrationConstants.IS_INSERT_AS_LOG) {
+
+			asTransLogs = new ArrayList<>();
+			for (AfterServiceResultForm afterService : afterServiceForms) {
+				asTransLogs.addAll(afterService.createMaps(afterService));
+			}
+
+			MSvcLogApiService.saveAfterServiceLogs(asTransLogs);
+
+			transactionId = afterServiceForms.get(0).getTransactionId();
+		}
+
+		// business service....
+		// TODO : heartService.xxxx 구현 필요.....
+		
+		//MSvcLogApiService.resultRegistration(asTransLogs);
+		
+		// TODO : 리턴할 dto 구현.
+
+		if (RegistrationConstants.IS_INSERT_AS_LOG) {
+			MSvcLogApiService.updateSuccessASStatus(transactionId);
+		}
+
+		return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+	}
+	
+	
+//	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
+//	public ResponseEntity<InstallationResultDto> installationResult (@RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
+//
+//		String transactionId = "";
+//		List<Map<String, Object>> installTransLogs = null;
+//		
+//		// mobile 에서 받은 데이터를 로그 테이블에 insert......
+//		LOGGER.debug("### IS_INSERT_AS_LOG : {}", RegistrationConstants.IS_INSERT_AS_LOG);
+//		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_AS_LOG);
+//		if (RegistrationConstants.IS_INSERT_AS_LOG) {
+//
+////			installTransLogs = new ArrayList<>();
+////			for (InstallationResultForm installService : installationResultForms) {
+////				installTransLogs.addAll(installService.createMap(installService));
+////			}
+////
+////			MSvcLogApiService.saveAfterServiceLogs(installTransLogs);
+////
+////			transactionId = installationResultForm.get(0).getTransactionId();
+////		}
+////
+////		// business service....
+////		// TODO : heartService.xxxx 구현 필요.....
+////		
+////		//MSvcLogApiService.resultRegistration(asTransLogs);
+////		
+////		// TODO : 리턴할 dto 구현.
+////
+////		if (RegistrationConstants.IS_INSERT_AS_LOG) {
+////			MSvcLogApiService.updateSuccessASStatus(transactionId);
+////		}
+//
+////		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+//			return null;
+//		
+//		}	
+//	}
+	
+	
+//	@ApiOperation(value = "InstallationResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
+//	public void installationResult(@RequestBody InstallationResultForm installationResultForm)
+//			throws Exception {		
+//		String transactionId = "";
+//		Map<String, Object> params = InstallationResultForm.createMap(installationResultForm);
+//		
+//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//		
+//			
+//			MSvcLogApiService.saveInstallServiceLogs(params);
+//			
+//		}
+//		
+//		
+//		
+//		
+////		String str = MSvcLogApiService.stockMovementCommonCancle(params);
+//		
+//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//			MSvcLogApiService.updateSuccessASStatus(transactionId);
+//		}
+//		
+////		return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+//
+//	}
+	
 	
 	
 
