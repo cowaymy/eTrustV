@@ -12,6 +12,7 @@ function getTypeComboList(){
 	   var list = [ "CODY","CT"];
 	    return list;
 }
+
 function mileageCalSchemaList() { 
     var columnLayout = [
                           { dataField : "memType", headerText  : "Member Type",    width : 100  ,

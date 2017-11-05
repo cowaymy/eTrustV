@@ -3,6 +3,7 @@
 
 <script type="text/javaScript">
 var gridID1;
+var branchList = new Array();
 function mileageCalSchemaResList() {
     var columnLayout = [
                           { dataField : "memType", headerText  : "Member Type",    width : 100 },
@@ -18,8 +19,39 @@ function mileageCalSchemaResList() {
         gridID1 = GridCommon.createAUIGrid("calculation_schema_result_grid_wap", columnLayout  ,"" ,gridPros);
     }
 
+function f_multiCombo() {
+    $(function() {
+       
+        $('#branch').change(function() {
+        }).multipleSelect({
+            selectAll : true,
+            width : '80%'
+        });
+        $('#memCode').change(function() {
+        }).multipleSelect({
+            selectAll : true,
+            width : '80%'
+        });
+        
+
+    });
+}
 $(document).ready(function(){
 	mileageCalSchemaResList();
+	
+	$("#memType").change(function (){
+		var memType = $("#memType").val();
+		if(memType == 2){
+			 doGetCombo('/services/mileageCileage/selectBranch', 42, '','branch', 'M' ,  'f_multiCombo');
+			 doGetCombo('/services/mileageCileage/selectMemberCode', 2, '','memCode', 'M' ,  'f_multiCombo');
+		}else if(memType == 3){
+			doGetCombo('/services/mileageCileage/selectBranch', 43, '','branch', 'M' ,  'f_multiCombo');
+			doGetCombo('/services/mileageCileage/selectMemberCode', 3, '','memCode', 'M' ,  'f_multiCombo');
+		}else if(memType == 2,3){
+			doGetCombo('/services/mileageCileage/selectBranch', '', '','branch', 'M' ,  'f_multiCombo');
+			doGetCombo('/services/mileageCileage/selectMemberCode', '', '','memCode', 'M' ,  'f_multiCombo');
+		}
+	 });
 });
 
 function fn_resultSearch(){
@@ -95,16 +127,16 @@ function fn_excelDown(){
     <td>
         <div class="search_100p"><!-- search_100p start -->
         <select class="multy_select w100p" multiple="multiple"id="branch" name="branch">
-            <c:forEach var="list" items="${branchList}">
+            <%-- <c:forEach var="list" items="${branchList}">
              <option value="${list.codeId}">${list.codeName}</option>
-         </c:forEach>
+         </c:forEach> --%>
         </select>
         </div><!-- search_100p end -->
     </td>
     <th scope="row">Member Code</th>
     <td>
         <div class="search_100p"><!-- search_100p start -->
-        <input type="text" title="" placeholder="" class="w100p" id="memCode" name="memCode"/>
+        <select class="multy_select w100p" multiple="multiple" id="memCode" name="memCode"></select>
         </div><!-- search_100p end -->
     </td>
 </tr>

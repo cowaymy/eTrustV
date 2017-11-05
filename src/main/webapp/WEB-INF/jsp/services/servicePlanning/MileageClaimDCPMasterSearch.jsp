@@ -2,21 +2,63 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
+var branchList = new Array();
 var gridID1;
 $(document).ready(function(){
-	
 	DCPMasterGrid();
     AUIGrid.bind(gridID1, "addRow", auiAddRowHandler);
     AUIGrid.bind(gridID1, "removeRow", auiRemoveRowHandler);
+    //fn_selectArea();
+   
+    doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo');
+    $("#memType").change(function (){
+        var memType = $("#memType").val();
+        if(memType == 2){
+             doGetCombo('/services/mileageCileage/selectBranch', 42, '','brnch', 'M' ,  'f_multiCombo');
+        }else if(memType == 3){
+            doGetCombo('/services/mileageCileage/selectBranch', 43, '','brnch', 'M' ,  'f_multiCombo');
+        }else if(memType == ""){
+        	doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo');
+        }
+     });
     
-    //doGetCombo('/services/mileageCileage/selectArea', '', '','mcpFrom', 'S'); 
+    doGetCombo('/services/mileageCileage/selectArea', '', '','mcpFrom', 'M' ,  'f_multiCombo');
+    doGetCombo('/services/mileageCileage/selectArea', '', '','mcpTo', 'M' ,  'f_multiCombo');
 });
+
+function f_multiCombo() {
+    $(function() {
+       
+        $('#brnch').change(function() {
+        }).multipleSelect({
+            selectAll : true,
+            width : '80%'
+        });
+        $('#mcpFrom').change(function() {
+        }).multipleSelect({
+            selectAll : true,
+            width : '80%'
+        }); 
+        $('#mcpTo').change(function() {
+        }).multipleSelect({
+            selectAll : true,
+            width : '80%'
+        }); 
+    });
+}
 function getTypeComboList() {
     //var list = [ {"codeId": "P","codeName": "PUBLIC"}, {"codeId": "S","codeName": "STATE"}];
    var list = [ "CODY","CT"];
     return list;
 }
 
+function fn_selectArea(){
+	Common.ajax("GET", "/services/mileageCileage/selectArea", '', function(result) {
+        console.log("성공.");
+        console.log("AREA data : " + result);
+        //AUIGrid.setGridData(gridID1, result);
+    });
+}
 function getBrnchComboList(){
 	   var list = [ "CDB-04","CDB-02"];
 	    return list;
@@ -45,6 +87,9 @@ function DCPMasterGrid() {
                                       listFunction : function(rowIndex, columnIndex, item, dataField) {
                                           var list = getBrnchComboList();
                                           return list;
+                                      },
+                                      onchange : function(rowIndex, columnIndex, value, item) {
+                                    	 alert(222); 
                                       },
                                       keyField : "id1"
                                   }},
@@ -121,7 +166,7 @@ function DCPMasterGrid() {
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Mileage Claim Master</li>
 </ul>
@@ -161,10 +206,10 @@ function DCPMasterGrid() {
    <th scope="row">Branch</th>
     <td>
         <div class="search_100p"><!-- search_100p start -->
-        <select class="multy_select w100p" multiple="multiple"  id="brnchCode" name="brnchCode">
-        <c:forEach var="list" items="${branchList}">
+        <select class="multy_select w100p" multiple="multiple"id="brnch" name="brnch" >
+       <%-- <c:forEach var="list" items="${branchList }">
              <option value="${list.codeId}">${list.codeName}</option>
-         </c:forEach> 
+         </c:forEach> --%>
         </select>
         </div><!-- search_100p end -->
     </td>
