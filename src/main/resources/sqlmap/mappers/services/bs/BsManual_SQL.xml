@@ -166,7 +166,7 @@
                                <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
                                       AND SOM.SALES_ORD_NO = #{ManuaSalesOrder}
                                </if>
-                               <if test="ManualCustomer != null and manualCustomer != ''">
+                               <if test="ManualCustomer != null and ManualCustomer != ''">
                                       AND c.CUST_ID = #{ManualCustomer}
                                </if>
                                <if test="manualCustomer != null and manualCustomer != ''">
