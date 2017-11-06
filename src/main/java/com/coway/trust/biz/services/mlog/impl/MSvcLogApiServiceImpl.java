@@ -2,8 +2,6 @@ package com.coway.trust.biz.services.mlog.impl;
 
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import javax.annotation.Resource;
 
@@ -12,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.impl.CommonMapper;
+import com.coway.trust.biz.logistics.returnusedparts.impl.ReturnUsedPartsMapper;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+//import com.coway.trust.biz.logistics.returnusedparts.impl;
 
 @Service("MSvcLogApiService")
 public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MSvcLogApiService {
@@ -23,6 +23,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "MSvcLogApiMapper")
 	private MSvcLogApiMapper MSvcLogApiMapper;
+	
+	@Resource(name = "returnUsedPartsMapper")
+	private ReturnUsedPartsMapper returnUsedPartsMapper;
 	
 	@Resource(name = "commonMapper")
 	private CommonMapper commonMapper;
@@ -128,7 +131,14 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 //				insMap.put("actnMemId", getHsResultMList.get("codyId"));
 				
 				MSvcLogApiMapper.updateHsSVC0008D(insMap);
+				
 			}	
+			
+			
+			//logs call
+			logger.info(" serviceNo>>>>>> : {}", insMap.get("serviceNo").toString());
+			returnUsedPartsMapper.returnPartsInsert(insMap.get("serviceNo").toString());
+
 		}
 	}
 

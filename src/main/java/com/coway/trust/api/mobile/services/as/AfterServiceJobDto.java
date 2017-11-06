@@ -23,7 +23,7 @@ public class AfterServiceJobDto {
 	private String jobType;
 
 	@ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
-	private String jobStatus;
+	private int jobStatus;
 
 	@ApiModelProperty(value = "작업 예정날짜")
 	private String appointmentDate;
@@ -44,10 +44,10 @@ public class AfterServiceJobDto {
 	private String checkInGps;
 
 	@ApiModelProperty(value = "일반/법인 고객 구분")
-	private String customerType;
+	private int customerType;
 
 	@ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
-	private String customerId;
+	private int customerId;
 
 	@ApiModelProperty(value = "작업 영역(State)_170906 추가")
 	private String serviceState;
@@ -95,27 +95,27 @@ public class AfterServiceJobDto {
 	private String productCode;
 
 	@ApiModelProperty(value = "application Type (Rental…)")
-	private String appType;
+	private int appType;
 
 	private String instruction;
 
-	private String salesPromotion;
+	private int  salesPromotion;
 
-	private String requestor;
+	private int requestor;
 
 	private String requestorContact;
 
-	private String contractDuration;
+	private int  contractDuration;
 
-	private String monthlyRentalFees;
+	private int monthlyRentalFees;
 
-	private String registrationFees;
+	private int registrationFees;
 
 	@ApiModelProperty(value = "결제 방식 - Code")
 	private String paymentMode;
 
 	@ApiModelProperty(value = "결제 은행")
-	private String bankCode;
+	private int  bankCode;
 
 	@ApiModelProperty(value = "결제 은행명")
 	private String bankName;
@@ -147,21 +147,21 @@ public class AfterServiceJobDto {
 	private String installationDate;
 
 	@ApiModelProperty(value = "labour Charge 금액 (작업결과보기시 필요)")
-	private String labourCharge;
+	private int  labourCharge;
 
-	private String defectTypeId;
+	private int defectTypeId;
 
-	private String defectGroupId;
+	private int defectGroupId;
 
-	private String defectId;
+	private int  defectId;
 
-	private String defectPartGroupId;
+	private int defectPartGroupId;
 
-	private String defectPartId;
+	private int defectPartId;
 
-	private String defectDetailReasonId;
+	private int defectDetailReasonId;
 
-	private String solutionReasonId;
+	private int solutionReasonId;
 
 	private String resultRemark;
 
@@ -186,25 +186,25 @@ public class AfterServiceJobDto {
 	private String rcCode;
 
 	@ApiModelProperty(value = "결함코드")
-	private String malfunctionCode;
+	private int malfunctionCode;
 
 	@ApiModelProperty(value = "결함코드명")
 	private String malfunctionName;
 
 	@ApiModelProperty(value = "결함 사유 코드")
-	private String malfunctionReasonCode;
+	private int malfunctionReasonCode;
 
 	@ApiModelProperty(value = "결함 사유명")
 	private String malfunctionReasonName;
 
 	@ApiModelProperty(value = "실패 사유 코드")
-	private String failReasonCode;
+	private int failReasonCode;
 
 	@ApiModelProperty(value = "실패 사유명")
 	private String failReasonName;
 
 	@ApiModelProperty(value = "설치자")
-	private String settledBy;
+	private int settledBy;
 
 	@ApiModelProperty(value = "설치날짜")
 	private String settledDate;
@@ -233,7 +233,7 @@ public class AfterServiceJobDto {
 	@ApiModelProperty(value = "inHouseRepair 대상 여부(작업처리시, 대상이 Y 이면, 보여주기만하고 Complete)")
 	private String inHouseRepairYN;
 
-	private String renCollectionId;
+	private int renCollectionId;
 
 	@ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
 	private String lastPaymentDate;
@@ -242,13 +242,13 @@ public class AfterServiceJobDto {
 	private String asrNo;
 
 	@ApiModelProperty(value = "필터서비스 금액")
-	private String filterAmount;
+	private int filterAmount;
 
 	@ApiModelProperty(value = "부가서비스 금액")
-	private String accessoriesAmount;
+	private int accessoriesAmount;
 
 	@ApiModelProperty(value = "서비스 총 금액")
-	private String totalAmount;
+	private int totalAmount;
 
 	
 	public String getSalesOrderNo() {
@@ -283,11 +283,11 @@ public class AfterServiceJobDto {
 		this.jobType = jobType;
 	}
 
-	public String getJobStatus() {
+	public int getJobStatus() {
 		return jobStatus;
 	}
 
-	public void setJobStatus(String jobStatus) {
+	public void setJobStatus(int jobStatus) {
 		this.jobStatus = jobStatus;
 	}
 
@@ -339,19 +339,19 @@ public class AfterServiceJobDto {
 		this.checkInGps = checkInGps;
 	}
 
-	public String getCustomerType() {
+	public int getCustomerType() {
 		return customerType;
 	}
 
-	public void setCustomerType(String customerType) {
+	public void setCustomerType(int customerType) {
 		this.customerType = customerType;
 	}
 
-	public String getCustomerId() {
+	public int getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(String customerId) {
+	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
 	}
 
@@ -475,11 +475,11 @@ public class AfterServiceJobDto {
 		this.productCode = productCode;
 	}
 
-	public String getAppType() {
+	public int getAppType() {
 		return appType;
 	}
 
-	public void setAppType(String appType) {
+	public void setAppType(int appType) {
 		this.appType = appType;
 	}
 
@@ -491,19 +491,19 @@ public class AfterServiceJobDto {
 		this.instruction = instruction;
 	}
 
-	public String getSalesPromotion() {
+	public int getSalesPromotion() {
 		return salesPromotion;
 	}
 
-	public void setSalesPromotion(String salesPromotion) {
+	public void setSalesPromotion(int salesPromotion) {
 		this.salesPromotion = salesPromotion;
 	}
 
-	public String getRequestor() {
+	public int getRequestor() {
 		return requestor;
 	}
 
-	public void setRequestor(String requestor) {
+	public void setRequestor(int requestor) {
 		this.requestor = requestor;
 	}
 
@@ -515,27 +515,27 @@ public class AfterServiceJobDto {
 		this.requestorContact = requestorContact;
 	}
 
-	public String getContractDuration() {
+	public int getContractDuration() {
 		return contractDuration;
 	}
 
-	public void setContractDuration(String contractDuration) {
+	public void setContractDuration(int contractDuration) {
 		this.contractDuration = contractDuration;
 	}
 
-	public String getMonthlyRentalFees() {
+	public int getMonthlyRentalFees() {
 		return monthlyRentalFees;
 	}
 
-	public void setMonthlyRentalFees(String monthlyRentalFees) {
+	public void setMonthlyRentalFees(int monthlyRentalFees) {
 		this.monthlyRentalFees = monthlyRentalFees;
 	}
 
-	public String getRegistrationFees() {
+	public int getRegistrationFees() {
 		return registrationFees;
 	}
 
-	public void setRegistrationFees(String registrationFees) {
+	public void setRegistrationFees(int registrationFees) {
 		this.registrationFees = registrationFees;
 	}
 
@@ -547,11 +547,11 @@ public class AfterServiceJobDto {
 		this.paymentMode = paymentMode;
 	}
 
-	public String getBankCode() {
+	public int getBankCode() {
 		return bankCode;
 	}
 
-	public void setBankCode(String bankCode) {
+	public void setBankCode(int bankCode) {
 		this.bankCode = bankCode;
 	}
 
@@ -635,67 +635,67 @@ public class AfterServiceJobDto {
 		this.installationDate = installationDate;
 	}
 
-	public String getLabourCharge() {
+	public int getLabourCharge() {
 		return labourCharge;
 	}
 
-	public void setLabourCharge(String labourCharge) {
+	public void setLabourCharge(int labourCharge) {
 		this.labourCharge = labourCharge;
 	}
 
-	public String getDefectTypeId() {
+	public int getDefectTypeId() {
 		return defectTypeId;
 	}
 
-	public void setDefectTypeId(String defectTypeId) {
+	public void setDefectTypeId(int defectTypeId) {
 		this.defectTypeId = defectTypeId;
 	}
 
-	public String getDefectGroupId() {
+	public int getDefectGroupId() {
 		return defectGroupId;
 	}
 
-	public void setDefectGroupId(String defectGroupId) {
+	public void setDefectGroupId(int defectGroupId) {
 		this.defectGroupId = defectGroupId;
 	}
 
-	public String getDefectId() {
+	public int getDefectId() {
 		return defectId;
 	}
 
-	public void setDefectId(String defectId) {
+	public void setDefectId(int defectId) {
 		this.defectId = defectId;
 	}
 
-	public String getDefectPartGroupId() {
+	public int getDefectPartGroupId() {
 		return defectPartGroupId;
 	}
 
-	public void setDefectPartGroupId(String defectPartGroupId) {
+	public void setDefectPartGroupId(int defectPartGroupId) {
 		this.defectPartGroupId = defectPartGroupId;
 	}
 
-	public String getDefectPartId() {
+	public int getDefectPartId() {
 		return defectPartId;
 	}
 
-	public void setDefectPartId(String defectPartId) {
+	public void setDefectPartId(int defectPartId) {
 		this.defectPartId = defectPartId;
 	}
 
-	public String getDefectDetailReasonId() {
+	public int getDefectDetailReasonId() {
 		return defectDetailReasonId;
 	}
 
-	public void setDefectDetailReasonId(String defectDetailReasonId) {
+	public void setDefectDetailReasonId(int defectDetailReasonId) {
 		this.defectDetailReasonId = defectDetailReasonId;
 	}
 
-	public String getSolutionReasonId() {
+	public int getSolutionReasonId() {
 		return solutionReasonId;
 	}
 
-	public void setSolutionReasonId(String solutionReasonId) {
+	public void setSolutionReasonId(int solutionReasonId) {
 		this.solutionReasonId = solutionReasonId;
 	}
 
@@ -763,11 +763,11 @@ public class AfterServiceJobDto {
 		this.rcCode = rcCode;
 	}
 
-	public String getMalfunctionCode() {
+	public int getMalfunctionCode() {
 		return malfunctionCode;
 	}
 
-	public void setMalfunctionCode(String malfunctionCode) {
+	public void setMalfunctionCode(int malfunctionCode) {
 		this.malfunctionCode = malfunctionCode;
 	}
 
@@ -779,11 +779,11 @@ public class AfterServiceJobDto {
 		this.malfunctionName = malfunctionName;
 	}
 
-	public String getMalfunctionReasonCode() {
+	public int getMalfunctionReasonCode() {
 		return malfunctionReasonCode;
 	}
 
-	public void setMalfunctionReasonCode(String malfunctionReasonCode) {
+	public void setMalfunctionReasonCode(int malfunctionReasonCode) {
 		this.malfunctionReasonCode = malfunctionReasonCode;
 	}
 
@@ -795,11 +795,11 @@ public class AfterServiceJobDto {
 		this.malfunctionReasonName = malfunctionReasonName;
 	}
 
-	public String getFailReasonCode() {
+	public int getFailReasonCode() {
 		return failReasonCode;
 	}
 
-	public void setFailReasonCode(String failReasonCode) {
+	public void setFailReasonCode(int failReasonCode) {
 		this.failReasonCode = failReasonCode;
 	}
 
@@ -811,11 +811,11 @@ public class AfterServiceJobDto {
 		this.failReasonName = failReasonName;
 	}
 
-	public String getSettledBy() {
+	public int getSettledBy() {
 		return settledBy;
 	}
 
-	public void setSettledBy(String settledBy) {
+	public void setSettledBy(int settledBy) {
 		this.settledBy = settledBy;
 	}
 
@@ -891,11 +891,11 @@ public class AfterServiceJobDto {
 		this.inHouseRepairYN = inHouseRepairYN;
 	}
 
-	public String getRenCollectionId() {
+	public int getRenCollectionId() {
 		return renCollectionId;
 	}
 
-	public void setRenCollectionId(String renCollectionId) {
+	public void setRenCollectionId(int renCollectionId) {
 		this.renCollectionId = renCollectionId;
 	}
 
@@ -915,27 +915,27 @@ public class AfterServiceJobDto {
 		this.asrNo = asrNo;
 	}
 
-	public String getFilterAmount() {
+	public int getFilterAmount() {
 		return filterAmount;
 	}
 
-	public void setFilterAmount(String filterAmount) {
+	public void setFilterAmount(int filterAmount) {
 		this.filterAmount = filterAmount;
 	}
 
-	public String getAccessoriesAmount() {
+	public int getAccessoriesAmount() {
 		return accessoriesAmount;
 	}
 
-	public void setAccessoriesAmount(String accessoriesAmount) {
+	public void setAccessoriesAmount(int accessoriesAmount) {
 		this.accessoriesAmount = accessoriesAmount;
 	}
 
-	public String getTotalAmount() {
+	public int getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(String totalAmount) {
+	public void setTotalAmount(int totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 

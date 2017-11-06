@@ -9,10 +9,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "AfterServiceJobForm", description = "공통코드 Form")
 public class AfterServiceJobForm {
 
-	@ApiModelProperty(value = "userId [default : '' 전체] 예) 215682 ", example = "1, 2, 3")
+	@ApiModelProperty(value = "userId [default : '' 전체] 예) CT100583 ", example = "1, 2, 3")
 	private String userId;
 
-	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 20170124", example = "1, 2, 3")
+	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 20170501", example = "1, 2, 3")
 	private String requestDate;
 
 	
