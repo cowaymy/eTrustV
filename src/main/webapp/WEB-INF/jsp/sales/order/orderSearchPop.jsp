@@ -32,10 +32,15 @@
 	        fn_loadTrialNo(ordNo);
 	    }
 	    else if($('#callPrgm').val() == 'BILLING_ADD_NEW_GROUP' ||
-	    		     $('#callPrgm').val() == 'PAYMENT' ||
-	    	         $('#callPrgm').val() == 'FUND_TRANSFER') {
+	    		     $('#callPrgm').val() == 'FUND_TRANSFER') {
 	        fn_orderInfo(ordNo, ordId);
 	    }
+	    else if($('#callPrgm').val() == 'RENTAL_PAYMENT') {
+	    	fn_callBackRentalOrderInfo(ordNo, ordId);
+	    }
+	    else if($('#callPrgm').val() == 'OUTRIGHT_PAYMENT') {
+	    	fn_callBackOutOrderInfo(ordNo, ordId);
+        }
 	    else if($('#callPrgm').val() == 'BILLING_DISCOUNT_MGMT') {
             fn_orderInfo(ordNo, ordId);
         }else if($('#callPrgm').val() == 'EARLY_TERMINATION_BILLING') {

@@ -41,10 +41,18 @@ $(document).ready(function(){
     
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(serviceContractSearchPopGridID, "cellDoubleClick", function(event) {
-        fn_callOrderData(AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "srvCntrctId"), AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "salesOrdId"));
-        fn_createEvent('memberPopCloseBtn', 'click');
+    	
+    	var srvCntrctId = AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "srvCntrctId");
+    	var salesOrdId = AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "salesOrdId");    	
+    	var srvCntrctRefNo = AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "srvCntrctRefNo");
+    	
+    	if($('#callPrgm').val() == 'MEMBERSHIP_PAYMENT') {
+    		fn_callBackSrvcOrderInfo(srvCntrctId, salesOrdId, srvCntrctRefNo);
+    	} else{
+        	fn_callOrderData(srvCntrctId, salesOrdId);
+        	fn_createEvent('memberPopCloseBtn', 'click');
+        }
     });
-    
    
 });
 
@@ -52,6 +60,11 @@ $(document).ready(function(){
 	    $('#btnOrderSearch').click(function() {
 	        fn_selectListAjax();
 	    });
+	    
+	    $('#btnOrderClear').click(function() {
+	    	$("#_serviceContractForm")[0].reset();
+	    	AUIGrid.clearGridData(serviceContractSearchPopGridID);
+        });
 	});
 	
 	// 리스트 조회.
@@ -82,6 +95,7 @@ $(document).ready(function(){
 
 <section class="pop_body"><!-- pop_body start -->
 <form id="_serviceContractForm"> <!-- Form Start  -->
+<input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
 <section class="search_table"><!-- search_table start -->
 
 <table class="type1"><!-- table start -->
@@ -129,7 +143,7 @@ $(document).ready(function(){
 </form>
 <ul class="right_btns">
     <li><p class="btn_blue2 big"><a href="#" id="btnOrderSearch">Search</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="btnOrderClear">Clear</a></p></li>
 </ul>
 
 <article id="grid_serviceContractPop_wrap" class="grid_wrap"><!-- grid_wrap start -->
