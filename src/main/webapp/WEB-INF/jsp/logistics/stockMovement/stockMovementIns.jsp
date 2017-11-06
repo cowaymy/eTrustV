@@ -43,7 +43,7 @@ var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,wid
                      {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30},
                      {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false},
                      {dataField:"uom"       ,headerText:"UOM"               ,width:120    ,height:30, visible:false},
-                     {dataField:""      ,headerText:"Serial"    ,width:120    ,height:30}
+                     {dataField:"serialChk"      ,headerText:"Serial"    ,width:120    ,height:30, editable:false}
                     ];
                     
 var reqcolumnLayout;
@@ -100,7 +100,7 @@ $(document).ready(function(){
                              valueField : "codeName"
                           }
                       },
-                      {dataField:""      ,headerText:"Serial"    ,width:120    ,height:30}
+                      {dataField:"itmserial"      ,headerText:"Serial"    ,width:120    ,height:30,editable:false}
                      ];
     
     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
@@ -229,7 +229,8 @@ $(function(){
                             itmcd : checkedItems[i].stkcd,
                             itmname : checkedItems[i].stknm,
                             aqty : checkedItems[i].qty,
-                            uom : checkedItems[i].uom
+                            uom : checkedItems[i].uom,
+                            itmserial : checkedItems[i].serialChk
                         }
                 
                 AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
