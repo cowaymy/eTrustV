@@ -74,18 +74,18 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 			   q.put("requester", sessionVO.getUserId());
 			   if("42".equals(bType)){  //Cody Branch
 				   
-				   reslutMap =	territoryManagementMapper.cody42Vaild(q);
+				  // reslutMap =	territoryManagementMapper.cody42Vaild(q);
 				   
 				   boolean isErr =false;
 				  StringBuffer msg = new StringBuffer();
 				  
-				   if("0".equals( String.valueOf(reslutMap.get("acnt"))) ){
+				  /* if("0".equals( String.valueOf(reslutMap.get("acnt"))) ){
 					   
 					   isErr =true;
 					   msg.append("["+vo.get(i).getAreaId() +"]code does not exist \n");
-				   }
+				   }*/
 				   
-				   if("0".equals( String.valueOf( reslutMap.get("bcnt"))) ){
+				  /* if("0".equals( String.valueOf( reslutMap.get("bcnt"))) ){
 					   isErr =true;
 					   msg.append("["+vo.get(i).getBranch() +"]code does not exist \n");
 					   
@@ -95,7 +95,7 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
                 	   isErr =true;
 					   msg.append("["+vo.get(i).getExtBranch() +"]code does not exist \n");
 					   
-                   }
+                   }*/
                   
                   
 				  territoryManagementMapper.insertCody(q);
@@ -109,18 +109,18 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
                    
 			   }else if("43".equals(bType)){  //Dream Service Center
 				   
-					reslutMap =	 territoryManagementMapper.dream43Vaild(q);
+					//reslutMap =	 territoryManagementMapper.dream43Vaild(q);
 
-				   boolean isErr =false;
-				   StringBuffer msg = new StringBuffer();
+				   /*boolean isErr =false;
+				   StringBuffer msg = new StringBuffer();*/
 				  
-				   if("0".equals( String.valueOf(reslutMap.get("acnt"))) ){
+				  /* if("0".equals( String.valueOf(reslutMap.get("acnt"))) ){
 					   
 					   isErr =true;
 					   msg.append("["+vo.get(i).getAreaId() +"]code does not exist \n");
-				   }
+				   }*/
 				   
-				   if("0".equals( String.valueOf( reslutMap.get("bcnt"))) ){
+				   /*if("0".equals( String.valueOf( reslutMap.get("bcnt"))) ){
 					   isErr =true;
 					   msg.append("["+vo.get(i).getBranch() +"]code does not exist \n");
 					   
@@ -130,15 +130,15 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
                 	   isErr =true;
 					   msg.append("["+vo.get(i).getExtBranch() +"]code does not exist \n");
 					   
-                   }
+                   }*/
                    
 				   territoryManagementMapper.insertDreamServiceCenter(q);
 				   
-                   if(isErr){
+                  /* if(isErr){
                        rtnMap.put("isErr", isErr);
                        rtnMap.put("errMsg", msg.toString());
                        return   rtnMap;
-                   }
+                   }*/
 			   }else{
 					
 				}
