@@ -124,13 +124,43 @@ var maintenancePopLayout = [
 	}, {
 	    dataField : "fDepItmModeId",
 	    headerText : "Deposit Mode",
-	    styleFunction : cellStyleFunction,
-	    renderer : {
-	    	type       : "DropDownListRenderer",
-            list       : keyValueList, //key-value Object 로 구성된 리스트
-            keyField   : "code", //key 에 해당되는 필드명
-            valueField : "value"        //value 에 해당되는 필드명
+	    editable : false, // 그리드의 에디팅 사용 안함( 템플릿에서 만든 Select 로 에디팅 처리 하기 위함 )
+        renderer : { // HTML 템플릿 렌더러 사용
+            type : "TemplateRenderer"
+        },
+        labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
+            if(!value)  return "";
+            var code, text;
+            var template = '<div class="my_div">';
+            
+            if(value == "None") {
+                template += '<span style="line-height:2em;">선택할 수 없도록 작성됨(즉, 동적 select 표현)</span>';
+            } else {
+            	
+            	var disableYN = "";
+            	if(item.fDepItmIsMtch == "1"){
+            		disableYN = "disabled";
+            	}else{
+            		disableYN = "";
+            	}
+                
+                template += '<select style="width:100px;" onchange="" ' + disableYN + '>';
+                
+                for(var i=0, len=keyValueList.length; i<len; i++) {
+                    code =  keyValueList[i]["code"];
+                    text = keyValueList[i]["value"];
+                    if(code == value) { 
+                        template += '<option value="' + code + '" selected="selected">' + text + '</option>';
+                    } else {
+                        template += '<option value="' + code + '">' + text + '</option>';
+                    }
+                }
+                template += '</select>';
+            }
+            template += '</div>';
+            return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
         }
+
 	}, {
 	    dataField : "fDepItmSlipNo",
 	    headerText : "Deposit Slip No",
