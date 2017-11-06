@@ -559,14 +559,19 @@
 			nvl(T1.CRDIT_POINT,'0') CRDIT_POINT,
 			nvl(T1.RUN_ID,'0') RUN_ID,
 			nvl(T1.TASK_ID,'0') TASK_ID,
-			nvl(T2.IS_EXCLUDE, '0') IS_EXCLUDE
+			nvl(T2.IS_EXCLUDE, '0') IS_EXCLUDE,
+			nvl(T2.SALES_ORD_ID, '0') ORD_ID,
+			nvl(T2.NO, '0') BSR_NO
 		FROM CMM0008T T1 JOIN (
-		        SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
-                FROM CMM0008T s1 JOIN CMM0006T s2 
-                  ON s1.SVC_PERSON_ID=s2.EMPLY_ID 
-                      AND s2.IS_EXCLUDE=0 
-                      AND s2.COMM_TASK_ID=#{taskId}
-                WHERE s1.TASK_ID=#{taskId}  
+			SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE, s3.SALES_ORD_ID, s3.NO
+			FROM CMM0008T s1 JOIN CMM0006T s2 
+					ON s1.SVC_PERSON_ID=s2.EMPLY_ID 
+						AND s2.IS_EXCLUDE=0 
+						AND s2.COMM_TASK_ID=#{taskId}
+				JOIN SVC0008D s3
+				    ON s1.BS_SCHDUL_ID = s3.SCHDUL_ID
+			    
+			WHERE s1.TASK_ID=#{taskId}  
                   <if test="svcPersonCd != null and svcPersonCd != ''">
                     AND s2.EMPLY_CODE LIKE '%'|| #{svcPersonCd} ||'%'   
                   </if>
@@ -2297,5 +2302,49 @@
             <if test="memberCd != null and memberCd != ''">
               AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
           </if>
+    </select>
+    
+    <select id="commSHIMemberSearch" parameterType="Map" resultType="Map">
+	    SELECT 
+			sub.MEM_ID AS MEM_ID, 
+			sub.MEM_UP_ID AS MEM_UP_ID, 
+			sub.MEM_LVL AS MEM_LVL, 
+			sub.DEPT_CODE AS DEPT_CODE, 
+			sub.ORG_STUS_CODE_ID AS ORG_STUS_CODE_ID, 
+			sub.HIST_MONTH AS HIST_MONTH, 
+			sub.HIST_YEAR AS HIST_YEAR, 
+			sub.CRT_DT AS CRT_DT, 
+			sub.CRT_USER_ID AS CRT_USER_ID, 
+			sub.PR_CODE AS PR_CODE, 
+			sub.PR_MEM_ID AS PR_MEM_ID, 
+			sub.GRAND_PR_CODE AS GRAND_PR_CODE, 
+			sub.GRAND_PR_MEM_ID AS GRAND_PR_MEM_ID, 
+			sub.LAST_DEPT_CODE AS LAST_DEPT_CODE, 
+			sub.LAST_GRP_CODE AS LAST_GRP_CODE, 
+			sub.LAST_ORG_CODE AS LAST_ORG_CODE
+		FROM ( SELECT
+		    t2.MEM_ID AS MEM_ID, 
+		    t2.MEM_UP_ID AS MEM_UP_ID, 
+		    t2.MEM_LVL AS MEM_LVL, 
+		    t2.DEPT_CODE AS DEPT_CODE, 
+		    t2.ORG_STUS_CODE_ID AS ORG_STUS_CODE_ID, 
+		    t2.HIST_MONTH AS HIST_MONTH, 
+		    t2.HIST_YEAR AS HIST_YEAR, 
+		    t2.CRT_DT AS CRT_DT, 
+		    t2.CRT_USER_ID AS CRT_USER_ID, 
+		    t2.PR_CODE AS PR_CODE, 
+		    t2.PR_MEM_ID AS PR_MEM_ID, 
+		    t2.GRAND_PR_CODE AS GRAND_PR_CODE, 
+		    t2.GRAND_PR_MEM_ID AS GRAND_PR_MEM_ID, 
+		    t2.LAST_DEPT_CODE AS LAST_DEPT_CODE, 
+		    t2.LAST_GRP_CODE AS LAST_GRP_CODE, 
+		    t2.LAST_ORG_CODE AS LAST_ORG_CODE
+		    FROM  ORG0001D  t1 JOIN ORG0006D  t2 
+		      ON t2.MEM_ID = t1.MEM_ID
+		          AND t2.HIST_MONTH = #{pvMonth}
+		          AND t2.HIST_YEAR = #{pvYear}
+		    WHERE t1.MEM_CODE =#{memCode}
+		      AND t1.MEM_TYPE = #{typeCode}
+		)   sub
     </select>
 </mapper>
