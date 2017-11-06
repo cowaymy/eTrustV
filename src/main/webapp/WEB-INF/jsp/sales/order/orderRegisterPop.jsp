@@ -735,8 +735,7 @@
                     $('#aTabCS').click();
                 }
                 else {
-                    var stkType = '1';
-
+                            
                     switch(selVal) {
                         case '66' : //RENTAL
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
@@ -746,16 +745,22 @@
                             $("#gstChk").val('0');
                             fn_tabOnOffSet('REL_CER', 'HIDE');
                             
+                            appSubType = '367';
+                            
                             break;
 
                         case '67' : //OUTRIGHT
 //                          $("#gstChk").removeAttr("disabled");
-
+                            
+                            appSubType = '368';
+                            
                             break;
 
                         case '68' : //INSTALLMENT
                             $('#installDur').removeAttr("readonly").removeClass("readonly");
 //                          $("#gstChk").removeAttr("disabled");
+                            
+                            appSubType = '369';
                             
                             break;
 
@@ -767,25 +772,50 @@
                             
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
                           //fn_tabOnOffSet('REL_CER', 'HIDE');
-
-                            stkType = '3';
+                            
+                            appSubType = '370';
 
                             break;
-
+                        case '142' : //Sponsor                        
+                            appSubType = '371';    
+                            break;                            
+                        case '143' : //Service
+                            appSubType = '372';
+                            break;
+                        case '144' : //Education
+                            appSubType = '373';
+                            break;
+                        case '145' : //Free Trial
+                            appSubType = '374';
+                            break;
                         default :
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                             $("#gstChk").val('0');
                             fn_tabOnOffSet('REL_CER', 'HIDE');
-                            
+
                             break;
                     }
-
-                    doGetProductCombo('/common/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
+                    doGetComboData('/common/selectCodeList.do', {groupCode :appSubType}, '',  'srvPacId',  'S'); //APPLICATION SUBTYPE
 
                     $('#ordProudct').removeAttr("disabled");
                 }
             }
+            else {
+                $('#srvPacId option').remove();                    
+            }
 
+        });
+        $('#srvPacId').change(function() {
+            var idx    = $("#srvPacId option:selected").index();
+            var selVal = $("#srvPacId").val();
+            
+            if(idx > 0) {
+                var stkType = $("#appType").val() == '66' ? '1' : '2';
+                doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
+            }
+            else {
+                $('#ordProudct option').remove();
+            }
         });
         $('#ordProudct').change(function() {
 
@@ -1146,6 +1176,7 @@
             salesOrderMVO : {
                 advBill                 : $('input:radio[name="advPay"]:checked').val(),
                 appTypeId               : $('#appType').val(),
+                srvPacId                : $('#srvPacId').val(),
                 bindingNo               : vBindingNo,
                 cnvrSchemeId            : vCnvrSchemeId,
                 custAddId               : $('#hiddenBillAddId').val().trim(),
@@ -2227,7 +2258,8 @@
 <tr>
     <th scope="row">Application Type<span class="must">*</span></th>
     <td>
-    <select id="appType" name="appType" class="w100p"></select>
+    <p><select id="appType" name="appType" class="w100p"></select></p>
+    <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
     </td>
     <th scope="row">Ex-Trade/Related No</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p><p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
