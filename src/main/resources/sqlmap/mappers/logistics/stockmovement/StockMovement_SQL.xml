@@ -196,6 +196,7 @@
              , l56.stk_ctgry_id cateid , s11.code_name catenm
              , (l56.qty - nvl(l75.bookqty , 0)) as qty , s26.stk_id stkid
              , (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=s26.UOM) uom
+             , s26.SERIAL_CHK 
           from log0056m l56 , sys0026m s26
              ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
                 group by loc_id , itm_code ) l75
