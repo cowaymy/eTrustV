@@ -473,9 +473,9 @@ public class CommissionExcelDownloadController {
 				map.put("svcPersonCd", request.getParameter("svcPersonCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "bsSchdulId", "svcPersonId", "emplyCode", "bsStusId", "crditPoint", "runId",
+				columns = new String[] { "ordId","bsSchdulId", "bsrNo","svcPersonId", "emplyCode", "bsStusId", "crditPoint", "runId",
 						"taskId", "isExclude" };
-				titles = new String[] { "BS SCHDUL ID", "SVC PERSON ID", "EMPLY CODE", "BS STUS ID", "CRDIT POINT",
+				titles = new String[] { "ORDER ID", "BS SCHDUL ID", "BSR NO","SVC PERSON ID", "EMPLY CODE", "BS STUS ID", "CRDIT POINT",
 						"RUN ID", "TASK ID", "IS EXCLUDE" };
 
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
