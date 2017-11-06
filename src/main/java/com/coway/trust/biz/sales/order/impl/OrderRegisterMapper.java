@@ -131,4 +131,6 @@ public interface OrderRegisterMapper {
 	
 	EgovMap selectCheckAccessRight(Map<String, Object> params);
 	
+	List<EgovMap> selectProductCodeList(Map<String, Object> params);
+	
 }

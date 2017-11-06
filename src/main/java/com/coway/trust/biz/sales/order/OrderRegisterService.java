@@ -44,4 +44,6 @@ public interface OrderRegisterService {
 
 	EgovMap selectCheckAccessRight(Map<String, Object> params, SessionVO sessionVO);
 
+	List<EgovMap> selectProductCodeList(Map<String, Object> params);
+
 }
