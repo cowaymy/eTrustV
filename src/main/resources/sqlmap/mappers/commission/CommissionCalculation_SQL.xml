@@ -470,6 +470,7 @@
                 *
             FROM CMM0007T T1 JOIN CMM0006T T2 
                     ON T1.SALES_EMPLY_ID = T2.EMPLY_ID
+                    AND T1.TASK_ID=T2.COMM_TASK_ID
                 JOIN SYS0013M T3
                     ON T2.EMPLY_TYPE_ID = T3.CODE_ID
              WHERE T1.TASK_ID = #{taskId}  
@@ -508,6 +509,7 @@
 	            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, T1.IS_EXCLUDE, T2.EMPLY_CODE
 			FROM CMM0007T T1 JOIN CMM0006T T2 
 			        ON T1.SALES_EMPLY_ID = T2.EMPLY_ID
+			         AND T1.TASK_ID=T2.COMM_TASK_ID
 			    JOIN SYS0013M T3
 			        ON T2.EMPLY_TYPE_ID = T3.CODE_ID
 			 WHERE T1.TASK_ID = #{taskId}  
@@ -2346,5 +2348,12 @@
 		    WHERE t1.MEM_CODE =#{memCode}
 		      AND t1.MEM_TYPE = #{typeCode}
 		)   sub
+    </select>
+    
+    <resultMap id="commHIIndexMap" type="egovMap" />   
+    <select id="commSPCRgenrawSHIIndexCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_SPC_RGENRAW_SHI_IDX(#{memCode},#{pvMonth},#{pvYear},#{level},#{typeCode},#{teamCode},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commHIIndexMap})
+        }
     </select>
 </mapper>

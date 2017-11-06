@@ -343,4 +343,6 @@ public interface CommissionCalculationMapper {
 	int cntSimulCMM0024T(Map<String, Object>  param);
 	
 	Map commSHIMemberSearch (Map<String, Object> params);
+	
+	List<EgovMap> commSPCRgenrawSHIIndexCall (Map<String, Object> params);
 }

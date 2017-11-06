@@ -2108,4 +2108,178 @@ public class CommissionCalculationController {
 	}
 	
 	
+	@RequestMapping(value = "/commSHIIndexView.do")
+	public String commSHICollection(@RequestParam Map<String, Object> params, ModelMap model) {
+		List memType = commissionCalculationService.incentiveType(params);
+		model.addAttribute("memType", memType);
+		// 호출될 화면
+		return "commission/commissionSHICollectionTarget";
+	}
+	
+	@RequestMapping(value = "commSHIMemSearch")
+	public ResponseEntity<Map> commSHIMemSearch(@RequestParam Map<String, Object> params, ModelMap model) {
+		String date = params.get("shiDate").toString();
+		String pvMonth =date.substring(0,2);
+		String pvYear=date.substring(date.indexOf("/")+1,date.length());
+		params.put("pvMonth",pvMonth);
+		params.put("pvYear",pvYear);
+		
+		Map detail =commissionCalculationService.commSHIMemberSearch(params);
+		System.out.println(detail);
+		return ResponseEntity.ok(detail);
+	}
+	
+	@RequestMapping(value = "commSPCRgenrawSHIIndex")
+	public ResponseEntity<List> commSPCRgenrawSHIIndex(@RequestParam Map<String, Object> params, ModelMap model) {
+		String date = params.get("shiDate").toString();
+		String pvMonth =date.substring(0,2);
+		String pvYear=date.substring(date.indexOf("/")+1,date.length());
+		params.put("pvMonth",pvMonth);
+		params.put("pvYear",pvYear);
+		
+		commissionCalculationService.commSPCRgenrawSHIIndexCall(params);
+		
+		List<EgovMap> list = (List<EgovMap>)params.get("cv_1");
+		/*System.out.println("################################");
+		System.out.println(list);
+		System.out.println("################################");
+		
+		String sTOPORGCODE = "";
+		String sORGCODE = "";
+		String sGRPCODE = "";
+		String sDEPTCODE = "";
+		String sHPCODE = "";
+
+        int sTOPOUNIT = 0;
+        double sTOPOCOLLECTTARGET = 0;
+        double sTOPOCOLLECT_AMT = 0;
+        double sTOPOOUTSTDTRATE = 0;
+
+        int sOUNIT = 0;
+        double sOCOLLECTTARGET = 0;
+        double sOCOLLECT_AMT = 0;
+        double sOOUTSTDTRATE = 0;
+
+        int sGUNIT = 0;
+        double sGCOLLECTTARGET = 0;
+        double sGCOLLECT_AMT = 0;
+        double sGOUTSTDTRATE = 0;
+
+        int sDUNIT = 0;
+        double sDCOLLECTTARGET = 0;
+        double sDCOLLECT_AMT = 0;
+        double sDOUTSTDTRATE = 0;
+
+        Boolean bRecordExist = false;
+        
+        List<EgovMap> finalList = null;
+        EgovMap finalMap = new EgovMap();
+
+		for(int i=0; i< list.size(); i++){
+			
+			if (list.get(i).get("deptCode") != sDEPTCODE && sDUNIT > 0){
+				finalMap.put("topOrgCode","");
+				finalMap.put("orgCode","");
+				finalMap.put("grpCode","");
+				finalMap.put("deptCode",sDEPTCODE);
+				finalMap.put("memCode","");
+				finalMap.put("unit",sDUNIT);
+				finalMap.put("targetatmt",sDCOLLECTTARGET);
+				finalMap.put("collectamt",sDCOLLECT_AMT);
+				finalMap.put("collectrate",sDCOLLECTTARGET > 0 ? (100 *(sDCOLLECT_AMT / sDCOLLECTTARGET)) : 0);
+				
+				finalList.add(finalMap);
+				
+				if (list.get(i).get("grpCode") != sGRPCODE && sGUNIT > 0){
+					finalMap.put("topOrgCode","");
+					finalMap.put("orgCode","");
+					finalMap.put("grpCode",sGRPCODE);
+					finalMap.put("deptCode","");
+					finalMap.put("memCode","");
+					finalMap.put("unit",sGUNIT);
+					finalMap.put("targetatmt",sGCOLLECTTARGET);
+					finalMap.put("collectamt",sGCOLLECT_AMT);
+					finalMap.put("collectrate",sGCOLLECTTARGET > 0 ? (100 * (sGCOLLECT_AMT / sGCOLLECTTARGET)) : 0);
+					
+					finalList.add(finalMap);
+					
+					if(list.get(i).get("orgCode") != sORGCODE && sOUNIT > 0){
+						finalMap.put("topOrgCode","");
+						finalMap.put("orgCode",sORGCODE);
+						finalMap.put("grpCode","");
+						finalMap.put("deptCode","");
+						finalMap.put("memCode","");
+						finalMap.put("unit",sOUNIT);
+						finalMap.put("targetatmt",sOCOLLECTTARGET);
+						finalMap.put("collectamt",sOCOLLECT_AMT);
+						finalMap.put("collectrate",sOCOLLECTTARGET > 0 ? (100 *(sOCOLLECT_AMT / sOCOLLECTTARGET)) : 0);
+						
+						finalList.add(finalMap);
+						
+						sTOPORGCODE = list.get(i).get("topOrgCode").toString();
+                        sORGCODE =list.get(i).get("orgCode").toString(); 
+                        sGRPCODE= list.get(i).get("grpCode").toString();
+                        sDEPTCODE= list.get(i).get("deptCode").toString();
+                        sHPCODE = list.get(i).get("memCode").toString();
+                        sOUNIT = 0;
+                        sOCOLLECTTARGET = 0;
+                        sOCOLLECT_AMT = 0;
+                        sOOUTSTDTRATE = 0;
+					}//orgCode
+					
+					if (list.get(i).get("topOrgCode") != sTOPORGCODE && sTOPOUNIT > 0){
+						finalMap.put("topOrgCode",sTOPORGCODE);
+						finalMap.put("orgCode","");
+						finalMap.put("grpCode","");
+						finalMap.put("deptCode","");
+						finalMap.put("memCode","");
+						finalMap.put("unit",sTOPOUNIT);
+						finalMap.put("targetatmt",sTOPOCOLLECTTARGET);
+						finalMap.put("collectamt",sTOPOCOLLECT_AMT);
+						finalMap.put("collectrate",sTOPOCOLLECTTARGET > 0 ? (100 *(sTOPOCOLLECT_AMT / sTOPOCOLLECTTARGET)) : 0);
+						
+						finalList.add(finalMap);
+						
+						sTOPORGCODE = list.get(i).get("topOrgCode").toString();
+                        sORGCODE = list.get(i).get("orgCode").toString();
+                        sGRPCODE = list.get(i).get("grpCode").toString();
+                        sDEPTCODE = list.get(i).get("deptCode").toString();
+                        sHPCODE = list.get(i).get("memCode").toString();
+                        sTOPOUNIT = 0;
+                        sTOPOCOLLECTTARGET = 0;
+                        sTOPOCOLLECT_AMT = 0;
+                        sTOPOOUTSTDTRATE = 0;
+					}//topOrgCode
+					
+					sTOPORGCODE = list.get(i).get("topOrgCode").toString();
+                    sORGCODE = list.get(i).get("orgCode").toString();
+                    sGRPCODE = list.get(i).get("grpCode").toString();
+                    sDEPTCODE = list.get(i).get("deptCode").toString();
+                    sHPCODE = list.get(i).get("memCode").toString();
+                    sGUNIT = 0;
+                    sGCOLLECTTARGET = 0;
+                    sGCOLLECT_AMT = 0;
+                    sGOUTSTDTRATE = 0;
+				}//grpCode
+				
+				sTOPORGCODE = list.get(i).get("topOrgCode").toString();
+                sORGCODE = list.get(i).get("orgCode").toString();
+                sGRPCODE = list.get(i).get("grpCode").toString();
+                sDEPTCODE = list.get(i).get("deptCode").toString();
+                sHPCODE = list.get(i).get("memCode").toString();
+                sGUNIT = 0;
+                sGCOLLECTTARGET = 0;
+                sGCOLLECT_AMT = 0;
+                sGOUTSTDTRATE = 0;
+			}//deptCode
+			
+			if(list.get(i).get("memCode") != null && "".equals(list.get(i).get("memCode").toString())){
+				
+			}
+		}*///for i
+		//topOrgCode=CRS0002, orgCode=CRS1012, grpCode=CRS2055, deptCode=CRS3541, memCode=545631, 
+		//unit=1, targetatmt=140, collectamt=0, collectrate=0
+		return ResponseEntity.ok(list);
+	}
+	
 }
