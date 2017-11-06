@@ -80,7 +80,8 @@ $(document).ready(function(){
     	  return;
     	 }
     	 window.event.returnValue = false;
-    	 
+
+    	 return false;
     });
     
     $("#sendAmount").click(function () { 
