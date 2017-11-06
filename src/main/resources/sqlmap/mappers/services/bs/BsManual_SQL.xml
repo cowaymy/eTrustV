@@ -53,7 +53,7 @@
                 AND A.MEM_LVL = #{memLvl}
                 AND A.MEM_UP_ID = #{groupCode}
             </if>
-            ORDER BY DEPT_CODE
+            ORDER BY b.MEM_CODE
        </select>
   
   
@@ -370,7 +370,9 @@
 						                           left join ORG0005D Extent10
                                                       on ac.mem_id = extent10.mem_id    -->  
 									               LEFT JOIN SYS0005M BR
-									                  ON BR.CODE = MG.CODY_BRNCH_CODE                                                          
+									                  ON BR.CODE = MG.CODY_BRNCH_CODE             
+                                                   LEFT JOIN ORG0005D OG
+                                                        ON OG.DEPT_CODE = MG.CODY_MANGR_USER_ID <!-- 20171106 전선새님 추가 -->    									                                                               
 						                     WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')                                        
 						                         AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')                                          
                                            <if test="cmdcodyCode != null and cmdcodyCode != ''">
@@ -398,7 +400,7 @@
                                                      AND ( br.BRNCH_id = #{cmdBranchCode})
                                               </if>                    
                                               <if test="cmdCdManager != null and cmdCdManager != ''">
-                                                     AND MG.CODY_MANGR_USER_ID = #{cmdCdManager}
+                                                     AND OG.MEM_ID = #{cmdCdManager}
                                               </if>
                                     <![CDATA[                       and rownum  < 500 ]]>
 						)Project2
