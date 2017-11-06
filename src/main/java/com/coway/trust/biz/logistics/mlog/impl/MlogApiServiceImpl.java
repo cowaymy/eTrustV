@@ -371,15 +371,21 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			setmap.put("invenAdjustNoItem", form.getInvenAdjustNoItem());
 			setmap.put("countedQty", form.getCountedQty());
 
+			logger.debug("setmapS1111111 : {}", setmap);
+			
 			MlogApiMapper.updateBarcodeQty(setmap);
 
 			List<InputBarcodeListForm> serialList = form.getInputBarcodeListForm();
 			for (int j = 0; j < serialList.size(); j++) {
 				InputBarcodeListForm sForm = serialList.get(j);
-				Map<String, Object> setmapS = new HashMap();
-				setmapS.put("userId", form.getUserId());
-				setmapS.put("serialNo", sForm.getSerialNo());
-				setmapS.put("invenAdjustNoItem", form.getInvenAdjustNoItem());
+			//	Map<String, Object> setmapS = new HashMap();
+			//	setmap.put("userId", form.getUserId());
+				setmap.put("serialNo", sForm.getSerialNo());
+			//	setmap.put("invenAdjustNoItem", form.getInvenAdjustNoItem());
+				
+			//	logger.debug("setmapS222222 : {}", setmapS);
+			//	logger.debug("getSerialNo????? : {}", sForm.getSerialNo());
+							
 				MlogApiMapper.insertBarcode(setmap);
 			}
 
