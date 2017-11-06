@@ -576,7 +576,8 @@
             if( document.searchForm.elements['searchDivCd'][0].checked == true ) {
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="none";
-    
+                         $('#hSConfiguration').attr('disabled',false); //hSConfiguration 버튼 활성화
+                        
                         var divhsManagementObj = document.querySelector("#hsManagement");
                         divhsManagementObj.style.display="block";
                                              
@@ -584,7 +585,7 @@
 
 						//$('#hSConfiguration').attr('disabled',true); //hash
 //						$('#hSConfiguration').attr('disabled',false);  //SMS버튼 활성화 
-//                        $("select[name=hSConfiguration]").attr('disabled', 'disabled');
+//                       
 
                         //2번영역 데이터 클리어
                         //fn_checkboxChangeHandler();
@@ -596,7 +597,8 @@
             
                         var divhsManagementObj = document.querySelector("#hsManagement");
                         divhsManagementObj.style.display="none";
-                        
+                        $('#hSConfiguration').attr('disabled',true); //hSConfiguration 버튼 비활성화
+
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="block";
                         
@@ -737,7 +739,7 @@
 <ul class="right_btns">
      <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
-    <li><p class="btn_blue"><a id="hSConfiguration">Create HS Order</a></p></li>
+    <li><p class="btn_blue"><a id="hSConfiguration" name="hSConfiguration">Create HS Order</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBSListAjax();">Search</a></p></li>
 </ul>
 <!--조회조건 추가  -->
