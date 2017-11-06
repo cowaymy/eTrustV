@@ -73,3 +73,16 @@ $(function(){
 		}
 	};
 });
+
+/* 탭동작 start */
+$(document).on(
+	"click", ".tap_type1 li a", function(){
+	var theTapArea=$(this).parents(".tap_wrap").children(".tap_area");
+	var thisNum=$(this).parents().index();
+	
+	$(this).addClass("on").parent().siblings().children("a").removeClass("on");
+	
+	theTapArea.eq(thisNum).css("position","relative").css("top","0").siblings(".tap_area").css("position","absolute").css("top","-1000em");
+	return false;
+})
+/* 탭동작 end */
