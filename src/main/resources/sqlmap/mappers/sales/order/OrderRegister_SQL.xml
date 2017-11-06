@@ -769,6 +769,7 @@
              , NOR_RNT_FEE
              , DISC_RNT_FEE
              , GST_CHK
+             , SRV_PAC_ID
 		     )
 		VALUES
 		     ( #{salesOrdId}
@@ -827,6 +828,7 @@
              , #{norRntFee}
              , #{discRntFee}
              , #{gstChk}
+             , #{srvPacId}
 		     )
     </insert>
 
@@ -1826,5 +1828,43 @@
 		   AND T2.MODULE_UNIT_ID = #{moduleUnitId}
     </select>
     
+    <!--Product 정보 조회 -->
+    <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_ID
+             , CODE_NAME
+             , GROUPCD
+          FROM
+             (
+            <if test='stkType != null and stkType == "1"'>
+		  	   SELECT DISTINCT T1.STK_ID CODE_ID
+			        , T1.STK_CODE ||' - '||T1.STK_DESC CODE_NAME
+			        , T3.CODE_NAME GROUPCD
+			     FROM SYS0026M T1
+			        , SAL0082D T2
+			        , SYS0013M T3
+			    WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
+			      AND T1.STK_CTGRY_ID = T3.CODE_ID
+			  <!--AND 1 != T1.IS_NCV-->
+			      AND 1 = T2.SRV_PAC_ITM_STUS_ID
+			  <!--AND 61 = T1.STK_TYPE_ID-->
+			      AND T2.SRV_CNTRCT_PAC_ID = 1
+            </if>
+            <if test='stkType != null and stkType == "2"'>
+                SELECT DISTINCT T1.STK_ID CODE_ID
+                    , T1.STK_CODE ||' - '||T1.STK_DESC CODE_NAME
+                    , T3.CODE_NAME GROUPCD
+                 FROM SYS0026M T1
+                    , SAL0092M T2
+                    , SYS0013M T3
+                WHERE T1.STK_ID = T2.SRV_MEM_ITM_STK_ID
+                  AND T1.STK_CTGRY_ID = T3.CODE_ID
+              <!--AND 1 != T1.IS_NCV-->
+                  AND 1 = T2.SRV_MEM_ITM_STUS_ID
+              <!--AND 61 = T1.STK_TYPE_ID-->
+                  AND T2.SRV_MEM_PAC_ID = 2
+            </if>
+             )
+         ORDER BY CODE_NAME ASC, CODE_NAME ASC
+    </select>
     
 </mapper>

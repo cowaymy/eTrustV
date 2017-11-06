@@ -24,6 +24,8 @@ public class SalesOrderMVO implements Serializable {
 
 	private int appTypeId;
 
+	private int srvPacId;
+
 	private String bindingNo;
 
 	private int brnchId;
@@ -614,6 +616,14 @@ public class SalesOrderMVO implements Serializable {
 
 	public void setGstChk(int gstChk) {
 		this.gstChk = gstChk;
+	}
+
+	public int getSrvPacId() {
+		return srvPacId;
+	}
+
+	public void setSrvPacId(int srvPacId) {
+		this.srvPacId = srvPacId;
 	}
 	
 }

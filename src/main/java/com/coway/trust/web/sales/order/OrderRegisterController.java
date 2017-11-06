@@ -346,4 +346,10 @@ public class OrderRegisterController {
         // 데이터 리턴.
         return ResponseEntity.ok(result);
     }
+    
+	@RequestMapping(value = "/selectProductCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProductCodeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = orderRegisterService.selectProductCodeList(params);
+		return ResponseEntity.ok(codeList);
+	}
 }
