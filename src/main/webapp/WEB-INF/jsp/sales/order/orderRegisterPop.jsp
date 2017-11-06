@@ -795,9 +795,9 @@
 
                             break;
                     }
-                    doGetComboData('/common/selectCodeList.do', {groupCode :appSubType}, '',  'srvPacId',  'S'); //APPLICATION SUBTYPE
+                    doGetComboData('/common/selectCodeList.do', {groupCode :appSubType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
 
-                    $('#ordProudct').removeAttr("disabled");
+                    $('#ordProudct ').removeAttr("disabled");
                 }
             }
             else {
@@ -819,7 +819,7 @@
                 var stkType = $("#appType").val() == '66' ? '1' : '2';
               //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
                 
-                doGetComboAndGroup('/sales/order/selectProductCodeList.do', stkType, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+                doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
             }
         });
         $('#ordProudct').change(function() {
@@ -2009,6 +2009,14 @@
 
     function fn_setOptGrpClass() {
         $("optgroup").attr("class" , "optgroup_text")
+    }
+
+    function fn_setDefaultSrvPacId() {
+        if($('#srvPacId option').size() == 2) {
+            $('#srvPacId option:eq(1)').attr('selected', 'selected');
+        var stkType = $("#appType").val() == '66' ? '1' : '2';
+            doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+        }
     }
 </script>
 
