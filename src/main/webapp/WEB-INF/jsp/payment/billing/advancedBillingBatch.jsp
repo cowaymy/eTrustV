@@ -254,7 +254,7 @@ function fn_Clear(){
                   <th>Select CSV File *</th>
                   <td>
                     <div class="auto_file"><!-- auto_file start -->
-                          <input type="file" title="file add"  id="uploadfile" name="uploadfile"/>
+                          <input type="file" title="file add"  id="uploadfile" name="uploadfile"  accept=".csv"/>
                      </div><!-- auto_file end -->
                      <ul class="right_btns">
                         <li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/payment/BillingBatchUploadFormat.csv">Download CSV Format</a></p></li>
