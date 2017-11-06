@@ -298,13 +298,13 @@ var billingTargetLayout = [
 	        	
 	        	var item = new Object();
                 var rowList = [];
-                var j=0;
                 for (var i = 0 ; i < checkedItems.length ; i++){
                 	
-                	if(Number(activeList[0].installment + j) < Number(checkedItems[i].installment)){
-                		valid = false;
-                	}else{
-                		rowList[i] = {
+                	if(Number(activeList[i].installment) < Number(checkedItems[i].installment)){
+                        valid = false;
+                        break;
+                    }else{
+                        rowList[i] = {
                                 salesOrdNo : checkedItems[i].salesOrdNo,
                                 installment : checkedItems[i].installment,
                                 schdulDt : checkedItems[i].schdulDt,
@@ -313,9 +313,7 @@ var billingTargetLayout = [
                                 billingStus : checkedItems[i].billingStus,
                                 salesOrdId : checkedItems[i].salesOrdId
                                 }
-                	}
-                	j= j + 1;
-                    
+                    }
                 }
 
 	        	if(valid){
@@ -326,9 +324,7 @@ var billingTargetLayout = [
 	            }else{
 	            	Common.alert("Can not skip the previous unbilled schedules.");
 	            }
-	        	
 	        }
-	        
 	    });
 		
 		$("#btnRemoveBillTarget").click(function(){
@@ -340,11 +336,11 @@ var billingTargetLayout = [
             	
                 var item = new Object();
                 var rowList = [];
-                var j= 0;
                 for (var i = checkedItems.length-1 ; i >= 0; i--){
-                	
-                	if(Number(allItems[allItems.length-1].installment - j) >  Number(checkedItems[i].installment)){
+                	//alert("allItems[i].installment : "+allItems[allItems.length-1].installment + " checkedItems[i].installment :" + checkedItems[checkedItems.length-1].installment);
+                	if(Number(allItems[allItems.length-1].installment) >  Number(checkedItems[checkedItems.length-1].installment)){
                 		valid = false;
+                		break;
                     }else{
                     	rowList[i] = {
                                 salesOrdNo : checkedItems[i].salesOrdNo,
@@ -356,7 +352,6 @@ var billingTargetLayout = [
                                 salesOrdId : checkedItems[i].salesOrdId
                                 }
                     }
-                	j = j + 1;
                 }
                 
                 if(valid){

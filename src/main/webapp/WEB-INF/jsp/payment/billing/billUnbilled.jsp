@@ -265,11 +265,10 @@ var billingTargetLayout = [
 	        if (checkedItems.length > 0){
 	            var item = new Object();
 	            var rowList = [];
-	            var j=0;
-	            
 	            for (var i = 0 ; i < checkedItems.length ; i++){
-	            	if(Number(allItems[0].installment + j) <  Number(checkedItems[i].installment)){
+	            	if(Number(allItems[i].installment) <  Number(checkedItems[i].installment)){
                         valid = false;
+                        break;
                     }else{
                         rowList[i] = {
                                 salesOrdNo : checkedItems[i].salesOrdNo,
@@ -281,7 +280,6 @@ var billingTargetLayout = [
                                 salesOrdId : checkedItems[i].salesOrdId
                                 }
                     }
-                    j= j + 1;
 	            }
 	            
 	            if(valid){
@@ -303,10 +301,10 @@ var billingTargetLayout = [
             	
                 var item = new Object();
                 var rowList = [];
-                var j = 0;
                 for (var i = checkedItems.length-1 ; i >= 0; i--){
-                	if(Number(allItems[allItems.length-1].installment - j) >  Number(checkedItems[i].installment)){
+                	if(Number(allItems[allItems.length-1].installment) >  Number(checkedItems[checkedItems.length-1].installment)){
                         valid = false;
+                        break;
                     }else{
                         rowList[i] = {
                                 salesOrdNo : checkedItems[i].salesOrdNo,
@@ -318,7 +316,6 @@ var billingTargetLayout = [
                                 salesOrdId : checkedItems[i].salesOrdId
                                 }
                     }
-                    j = j + 1;
                 }
                 
                 if(valid){
