@@ -7,6 +7,11 @@
 .my-custom-up {
     text-align:left;
 }
+
+/* 커스컴 disable 스타일*/
+.mycustom-disable-color div{
+    color : #cccccc;
+}
 </style>
 <script type="text/javaScript">
 //AUIGrid 그리드 객체
@@ -27,11 +32,11 @@ $(document).ready(function(){
 	
 	masterListGridID = GridCommon.createAUIGrid("master_grid_wrap", masterColumnLayout, null, gridPros);
 	
-  //Grid 셀 클릭시 이벤트
+    //Grid 셀 클릭시 이벤트
     AUIGrid.bind(masterListGridID, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
     });
-	
+    
 });
 
 // AUIGrid 칼럼 설정
@@ -89,20 +94,37 @@ var maintenancePopLayout = [
 	{
 	    dataField : "fDepItmDepostDt",
 	    headerText : "Deposit Date",
-	    editable : false
+	    dataType : "date",
+        formatString : "dd/mm/yyyy",
+        styleFunction : cellStyleFunction,
+        editRenderer : {
+          type : "CalendarRenderer",
+          showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+          onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+          showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+          validator : function(oldValue, newValue, rowItem) { // 에디팅 유효성 검사
+        	  
+        	  if(rowItem.fDepItmIsMtch == "0"){
+        		  var date, isValid = true;
+                  if(isNaN(Number(newValue)) ) { //20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
+                      if(isNaN(Date.parse(newValue))) { // 그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
+                          isValid = false;
+                      } else {
+                          isValid = true;
+                      }
+                  }
+                  // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                  return { "validate" : isValid, "message"  : "" };
+        	  }
+              
+      }
+
+        }
+	    
 	}, {
 	    dataField : "fDepItmModeId",
 	    headerText : "Deposit Mode",
-	    labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
-            var retStr = value;
-            for(var i=0,len=keyValueList.length; i<len; i++) {
-                if(keyValueList[i]["code"] == value) {
-                    retStr = keyValueList[i]["value"];
-                    break;
-                }
-            }
-            return retStr;
-        },
+	    styleFunction : cellStyleFunction,
 	    renderer : {
 	    	type       : "DropDownListRenderer",
             list       : keyValueList, //key-value Object 로 구성된 리스트
@@ -112,36 +134,18 @@ var maintenancePopLayout = [
 	}, {
 	    dataField : "fDepItmSlipNo",
 	    headerText : "Deposit Slip No",
-	    editable : false
+	    styleFunction : cellStyleFunction
 	}, {
 	    dataField : "fDepItmRem",
 	    headerText : "Deposit Remark",
-	    editable : true,
-	    style : "my-custom-up",
-	    editRenderer : {
-            type : "InputEditRenderer",
-            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-            textAlign : "left",
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(item.fDepItmIsMtch == "0") {
-                    isValid = true;
-                }
-
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : ""};
-            }
-        }
+	    styleFunction : cellStyleFunction
 	}, {
 	    dataField : "fDepItmAmt",
 	    headerText : "Deposit Amount",
-	    editable : false
+	    styleFunction : cellStyleFunction
 	},{
 	    dataField : "",
 	    headerText : "Update",
-	    editable : false,
 	    renderer : {
             type : "ButtonRenderer",
             labelText : "Update",
@@ -155,7 +159,6 @@ var maintenancePopLayout = [
 	},{
 	    dataField : "",
 	    headerText : "Exclude",
-	    editable : false,
 	    renderer : {
             type : "ButtonRenderer",
             labelText : "Exclude",
@@ -199,6 +202,14 @@ var maintenancePopLayout = [
     			maintenanceGridID = GridCommon.createAUIGrid("maintenance_grid_wrap", maintenancePopLayout, null, gridPros);
     			AUIGrid.setGridData(maintenanceGridID, result.data.depositList);
     			
+    			// 에디팅 시작 이벤트 바인딩
+    		    AUIGrid.bind(maintenanceGridID, "cellEditBegin", function(event) {
+    		        // 셀이 Anna 인 경우
+    		        if(event.item.fDepItmIsMtch == "1"){
+    		            return false
+    		        }
+    		    });
+    			
     			$('#maintenanceTransNo').val(result.data.depositView.fDepReconRefNo);
     			$('#maintenanceRefDate').val(result.data.depositView.fDepostPayDt);
     			$('#maintenanceStatus').val(result.data.depositView.code1);
@@ -218,7 +229,7 @@ var maintenancePopLayout = [
     	
     	Common.ajax("GET","/payment/updDepositItem.do", 
     			{"fDepItmId" : fDepItmId, "fDepItmModeId" : fDepItmModeId, "remark":remark,"fDepItmDepostDt":fDepItmDepostDt,"fDepItmSlipNo":fDepItmSlipNo}, function(result){
-    				
+    			fn_depositMaintenancePop();
     			Common.alert(result.message);
     		   
     	});
@@ -232,7 +243,7 @@ var maintenancePopLayout = [
                 
                 Common.ajax("GET","/payment/saveExcludeDepositItem.do", 
                         {"fDepItmId" : fDepItmId, "fDepostId" : fDepostId, "remark":remark}, function(result){
-                            
+                        fn_depositMaintenancePop();
                         Common.alert(result.message);
                        
                 });
@@ -248,6 +259,14 @@ var maintenancePopLayout = [
         //AUIGrid.clearGridData(statementdetailPopGridID);
         //AUIGrid.clearGridData(journalEntryPopGridID);
     }
+    
+    function cellStyleFunction( rowIndex, columnIndex, value, headerText, item, dataField) {
+    	if(item.fDepItmIsMtch == "1")
+            return "mycustom-disable-color";
+        
+        return null;
+    };
+
     
 </script>
 
@@ -319,13 +338,13 @@ var maintenancePopLayout = [
 			<dl class="link_list">
 			    <dt>Link</dt>
 			    <dd>
-			    <ul class="btns">
-			        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-			    </ul>
-			    <ul class="btns">
-			        <li><p class="link_btn type2"><a href="javascript:fn_depositMaintenancePop();">Deposit Maintenance</a></p></li>
-			    </ul>
-			    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+				    <!-- <ul class="btns">
+				        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+				    </ul> -->
+				    <ul class="btns">
+				        <li><p class="link_btn type2"><a href="javascript:fn_depositMaintenancePop();">Deposit Maintenance</a></p></li>
+				    </ul>
+				    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			    </dd>
 			</dl>
 		</aside><!-- link_btns_wrap end -->

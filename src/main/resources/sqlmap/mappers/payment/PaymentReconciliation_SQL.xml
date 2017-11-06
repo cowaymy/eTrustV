@@ -230,7 +230,10 @@
     
     <update id="updDepositItem" parameterType="Map">
         UPDATE PAY0078D
-		   SET F_DEP_ITM_DEPOST_DT = TO_DATE(#{fDepItmDepostDt},'DD/MM/YYYY'),
+		   SET 
+		       <if test="fDepItmDepostDt != null and fDepItmDepostDt != ''">
+		          F_DEP_ITM_DEPOST_DT = DECODE (INSTR(#{fDepItmDepostDt} , '-') ,5 , TO_DATE(#{fDepItmDepostDt},'YYYY/MM/DD') ,TO_DATE(#{fDepItmDepostDt},'DD/MM/YYYY'))  , 
+		       </if>
 		       <if test="fDepItmModeId != null and fDepItmModeId != ''">
 		          F_DEP_ITM_MODE_ID = #{fDepItmModeId},
 		       </if>
