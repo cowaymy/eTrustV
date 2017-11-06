@@ -117,7 +117,7 @@ var maintenancePopLayout = [
                   return { "validate" : isValid, "message"  : "" };
         	  }
               
-      }
+        }
 
         }
 	    
@@ -138,11 +138,12 @@ var maintenancePopLayout = [
 	}, {
 	    dataField : "fDepItmRem",
 	    headerText : "Deposit Remark",
+	    style : "my-custom-up",
 	    styleFunction : cellStyleFunction
 	}, {
 	    dataField : "fDepItmAmt",
 	    headerText : "Deposit Amount",
-	    styleFunction : cellStyleFunction
+	    editable : false
 	},{
 	    dataField : "",
 	    headerText : "Update",
