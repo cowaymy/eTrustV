@@ -14,9 +14,7 @@
                    S.SRV_MEM_PART_CHRG_TYPE_ID,
                    S.SRV_MEM_CRT_DT,
                    S.SRV_MEM_CRT_USER_ID,
-                   CASE WHEN S.PAC_TYPE = 1 THEN 'Membership  Package' 
-                           WHEN S.PAC_TYPE = 0 THEN 'Starter Package' 
-                           ELSE '' END PAC_TYPE
+                   S.PAC_TYPE
               FROM ( SELECT X.SRV_MEM_PAC_ID   ,
                             X.SRV_MEM_CODE   ,
                             X.SRV_MEM_DESC   ,
@@ -86,9 +84,7 @@
  <select id="selectPopDetail" parameterType="Map" resultType="egovMap">
  
                     SELECT S.SRV_MEM_PAC_ID   ,
-                               CASE WHEN S.PAC_TYPE = 1 THEN 'Membership  Package' 
-			                           WHEN S.PAC_TYPE = 0 THEN 'Starter Package' 
-			                           ELSE '' END PAC_TYPE,
+                               S.PAC_TYPE ,
                                S.STK_ID   ,
                                S.STK_CODE   ,
                                S.STK_DESC   ,
@@ -125,14 +121,9 @@
                           
   </select>
       
-      
-      
-      
  <select id="selectPopUpList" parameterType="Map" resultType="egovMap">
              SELECT S.SRV_MEM_PAC_ID   ,
-                        CASE WHEN S.PAC_TYPE = 1 THEN 'Membership  Package' 
-		                        WHEN S.PAC_TYPE = 0 THEN 'Starter Package' 
-		                        ELSE '' END PAC_TYPE,
+                        S.PAC_TYPE,
                         S.STK_ID   ,
                         S.STK_CODE   ,
                         S.STK_DESC   ,
@@ -161,8 +152,10 @@
                                  JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent3.STK_CTGRY_ID
                                  JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent3.STK_TYPE_ID
                                  JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent2.SRV_MEM_ITM_STUS_ID
-                           WHERE  ( Extent3.STK_ID = #{STK_ID} )
-                                    AND ( Extent1.SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID} ) AND ROWNUM <![CDATA[<  ]]> = 1  ) S
+                           WHERE  1=1
+                               AND Extent3.STK_ID = #{STK_ID}
+                               AND Extent1.SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID} 
+                               AND ROWNUM <![CDATA[<  ]]> = 1  ) S
   </select>
       
       
@@ -207,6 +200,7 @@
 						       SRV_MEM_ITM_UPD_DT  = SYSDATE,
 						       SRV_MEM_ITM_UPD_USER_ID = #{updator}
 						WHERE  SRV_MEM_PAC_ID  = #{SRV_MEM_PAC_ID}
+						    AND  SRV_MEM_ITM_STK_ID = #{SRV_MEM_ITM_STK_ID} 
 
    </insert>
    

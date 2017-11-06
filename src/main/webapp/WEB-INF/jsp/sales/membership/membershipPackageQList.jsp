@@ -37,7 +37,19 @@ function fn_keyEvent(){
      });
 }
 
-
+function numberCheck(event){
+    var code = window.event.keyCode;
+    
+    
+    if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+    {
+     window.event.returnValue = true;
+     return;
+    }
+    window.event.returnValue = false;
+    
+    return false;
+}
 
 function createAUIGrid() {
 	
@@ -198,6 +210,9 @@ function fn_Clear(){
     $("#MBRSH_CRT_USER_ID").val("");
     $("#SRV_CNTRCT_PAC_STUS_ID").val("");
     $("#PAC_TYPE").val("");
+
+    AUIGrid.clearGridData(gridID);   
+    AUIGrid.clearGridData(detailGridID);   
 }
 
 
@@ -215,7 +230,7 @@ function  fn_goAdd(){
 	  console.log("====fn_goAdd=====>");  
 	  console.log(selectedItems);
 	  
-	  var pram ="?packID="+selectedItems[0].item.srvMemPacId+"&mod=ADD";
+	  var pram ="?packType="+selectedItems[0].item.pacType+"&packID="+selectedItems[0].item.srvMemPacId+"&mod=ADD";
 	  Common.popupDiv("/sales/mQPackages/membershipPackageQPop.do"+pram ,null, null , true , '_AddDiv1');
     
 }
@@ -248,6 +263,9 @@ Common.ajax("GET", "/sales/mQPackages/selectList", $("#sForm").serialize(), func
 	       
 	    console.log(result);
 	    AUIGrid.setGridData(gridID, result);
+	    
+
+	    AUIGrid.clearGridData(detailGridID);   
 	 });
 }
 
@@ -308,7 +326,6 @@ function fn_delete(){
 	
 	  
      }, function(jqXHR, textStatus, errorThrown) {
-         Common.alert("실패하였습니다.");
          console.log("실패하였습니다.");
          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
          console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
@@ -362,7 +379,7 @@ function fn_delete(){
 	<th scope="row">Package Description</th>
 	<td><input type="text" title="" placeholder="Package Description" class="w100p"  id='SRV_CNTRCT_PAC_DESC' name='SRV_CNTRCT_PAC_DESC' /></td>
 	<th scope="row">Package Duration</th>
-	<td><input type="text" title="" placeholder="Package Duration(Mth)" class="w100p" id='SRV_CNTRCT_PAC_DUR'  name='SRV_CNTRCT_PAC_DUR'/></td>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Package Duration(Mth)" class="w100p" id='SRV_CNTRCT_PAC_DUR'  name='SRV_CNTRCT_PAC_DUR'/></td>
 </tr>
 <tr>
 	<th scope="row">Status</th>
@@ -373,10 +390,12 @@ function fn_delete(){
 	</select>
 	</td>
 	<th scope="row">Package Type</th>
-	<td colspan="3"><select class="multy_select w40p"   multiple="multiple"  id='PAC_TYPE' name ='PAC_TYPE' >
+	<td colspan="3">
+	<select class="multy_select w40p"   multiple="multiple"  id='PAC_TYPE' name ='PAC_TYPE' >
      <option value="0">Starter Package</option>
      <option value="1">Membership  Package</option>
-    </select></td>
+    </select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

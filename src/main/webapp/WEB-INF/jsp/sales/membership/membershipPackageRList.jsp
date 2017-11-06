@@ -25,14 +25,26 @@ $(document).ready(function(){
     
 });
 
-
+function numberCheck(event){
+    var code = window.event.keyCode;
+    
+    
+    if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+    {
+     window.event.returnValue = true;
+     return;
+    }
+    window.event.returnValue = false;
+    
+    return false;
+}
 
 
 function fn_keyEvent(){
     
     $("#SRV_CNTRCT_PAC_CODE").keydown(function(key)  {
             if (key.keyCode == 13) {
-            	fn_selectListAjax();
+            	fn_mainSelectListAjax();
             }
      });
 }
@@ -42,6 +54,7 @@ function fn_keyEvent(){
 function createAUIGrid() {
 	
        var keyValueList = [{"code":"1", "value":"ACT"}, {"code":"8", "value":"IACT"}];
+       var typeKeyValueList = [{"code":"0", "value":"Starter Package"}, {"code":"1", "value":"Membership Package"}];
         
         var columnLayout = [
                             {dataField : "srvCntrPacId",     headerText  : "" ,editable       : false ,visible : false } ,
@@ -67,6 +80,24 @@ function createAUIGrid() {
                             },
                             
                             { dataField : "srvCntrctPacDur", headerText  : "Package Duration ",  width  : 80 , dataType:"numeric", formatString : "#,##0.00"},
+                            { dataField : "pacType", headerText  : "Package Type ",  width  : 150 , editable       : true
+                                , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                                    var retStr = "";
+                                    for(var i=0,len=typeKeyValueList.length; i<len; i++) {
+                                        if(typeKeyValueList[i]["code"] == value) {
+                                            retStr = typeKeyValueList[i]["value"];
+                                            break;
+                                        }
+                                    }
+                                                return retStr == "" ? value : retStr;
+                            }
+                          , editRenderer : {
+                                type       : "ComboBoxRenderer",
+                                list       : typeKeyValueList, //key-value Object 로 구성된 리스트
+                                keyField   : "code", // key 에 해당되는 필드명
+                                valueField : "value" // value 에 해당되는 필드명
+                            }
+                          },
                             { dataField : "srvCntrctPacStartDt",headerText  : "Start Date",  width : 150 ,dataType : "date", formatString : "dd/mm/yyyy",
                             	 editRenderer : {
                                      type : "CalendarRenderer",
@@ -128,7 +159,7 @@ function createDetailAUIGrid() {
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : false},
                             { dataField : "srvPacItmRental", headerText  : "price ",  width          : 100, editable       : false   ,dataType:"numeric", formatString : "#,##0.00"},
                             { dataField : "srvPacItmSvcFreq",headerText  : "Period",  width          : 100,   editable       : false },
-                            { dataField : "",         headerText  : "Remark",   width          : 300,     editable       : false  }
+                            { dataField : "srvPacItmRem",         headerText  : "Remark",   width          : 300,     editable       : false  }
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true};  
@@ -157,7 +188,6 @@ function fn_gSave(){
           fn_mainSelectListAjax();
           
       }, function(jqXHR, textStatus, errorThrown) {
-          Common.alert("실패하였습니다.");
           console.log("실패하였습니다.");
           console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
           
@@ -187,6 +217,10 @@ function fn_Clear(){
     $("#SRV_CNTRCT_PAC_DUR").val("");
     $("#MBRSH_CRT_USER_ID").val("");
     $("#SRV_CNTRCT_PAC_STUS_ID").val("");
+    $("#PAC_TYPE").val("");
+    
+    AUIGrid.clearGridData(gridID);   
+    AUIGrid.clearGridData(detailGridID);   
 }
 
 
@@ -204,7 +238,7 @@ function  fn_goAdd(){
 	  console.log("====fn_goAdd=====>");  
 	  console.log(selectedItems);
 	  
-	  var pram ="?packID="+selectedItems[0].item.srvCntrctPacId+"&mod=ADD";
+	  var pram ="?packType="+selectedItems[0].item.pacType+"&packID="+selectedItems[0].item.srvCntrctPacId+"&mod=ADD";
 	  Common.popupDiv("/sales/mPackages/membershipPackageRPop.do"+pram ,null, null , true , '_AddDiv1');
     
 }
@@ -226,6 +260,8 @@ Common.ajax("GET", "/sales/mPackages/selectList", $("#sForm").serialize(), funct
 	       
 	    console.log(result);
 	    AUIGrid.setGridData(gridID, result);
+
+	    AUIGrid.clearGridData(detailGridID);   
 	 });
 }
 
@@ -338,7 +374,7 @@ function fn_delete(){
 	<th scope="row">Package Description</th>
 	<td><input type="text" title="" placeholder="Package Description" class="w100p"  id='SRV_CNTRCT_PAC_DESC' name='SRV_CNTRCT_PAC_DESC' /></td>
 	<th scope="row">Package Duration</th>
-	<td><input type="text" title="" placeholder="Package Duration(Mth)" class="w100p" id='SRV_CNTRCT_PAC_DUR'  name='SRV_CNTRCT_PAC_DUR'/></td>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Package Duration(Mth)" class="w100p" id='SRV_CNTRCT_PAC_DUR'  name='SRV_CNTRCT_PAC_DUR'/></td>
 </tr>
 <tr>
 	<th scope="row">Status</th>
@@ -348,10 +384,11 @@ function fn_delete(){
           <option value="8">InActive</option>
 	</select>
 	</td>
-	<th scope="row"></th>
-	<td></td>
-	<th scope="row"></th>
-	<td></td>
+    <th scope="row">Package Type</th>
+    <td colspan="3"><select class="multy_select w40p"   multiple="multiple"  id='PAC_TYPE' name ='PAC_TYPE' >
+     <option value="0">Starter Package</option>
+     <option value="1">Membership  Package</option>
+    </select></td>
 </tr>
 </tbody>
 </table><!-- table end -->

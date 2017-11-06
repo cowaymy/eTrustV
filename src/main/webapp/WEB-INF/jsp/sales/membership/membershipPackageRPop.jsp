@@ -11,6 +11,19 @@ $(document).ready(function(){
 });
 
 
+function numberCheck(event){
+    var code = window.event.keyCode;
+    
+    
+    if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+    {
+     window.event.returnValue = true;
+     return;
+    }
+    window.event.returnValue = false;
+    
+    return window.event.returnValue;
+}
 
 
 //PackID=" + packID + "&PackItemID=" + packItemID;
@@ -19,8 +32,9 @@ function fn_selectListAjax() {
 	
 	var packItemID = '${packItemID}';
 	var packID = '${packID}';
+	var packType = '${packType}';	 
 	
-	Common.ajax("GET", "/sales/mPackages/selectPopUpList", {SRV_PAC_ITM_ID:packItemID }, function(result) {
+	Common.ajax("GET", "/sales/mPackages/selectPopUpList", {SRV_CNTRCT_PAC_ID: packID, SRV_PAC_ITM_ID:packItemID }, function(result) {
 	  
 		
 	     console.log(result);
@@ -36,7 +50,21 @@ function fn_selectListAjax() {
 	    	  $("#srvPacItmRental").val(packageInfo.srvPacItmRental);  
 	    	  $("#srvPacItmSvcFreq").val(packageInfo.srvPacItmSvcFreq);  
 	    	  $("#remark").val(packageInfo.srvPacItemRemark);
+	    	  $("#pacType").val(packageInfo.pacType);
 	    	  
+	    	  if($("#pacType").val() == "0"){
+                  $("#srvPacItmRental").prop("readonly", true);
+                  $("#srvPacItmRental").attr("class", "readonly");
+            }
+	    	  
+	        }else{
+	        	$("#pacType").val(packType);
+	            
+	            if($("#pacType").val() == '0'){
+	                $("#srvPacItmRental").prop("readonly", true);
+	                $("#srvPacItmRental").attr("class", "readonly");
+                    $("#srvPacItmRental").val("0");
+	          }
 	        }
 	});
 }
@@ -90,8 +118,9 @@ function fn_save(){
            Common.alert("Product Item Saved "+DEFAULT_DELIMITER + "<b>Product item successfully saved.</b>");
            fn_DisableField();
 
+           fn_selectDetailListAjax( '1');
        }, function(jqXHR, textStatus, errorThrown) {
-           Common.alert("실패하였습니다.");
+    	   
            console.log("실패하였습니다.");
            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
            
@@ -128,6 +157,18 @@ function fn_ValidRequiredField_Master(){
           message += "* Please key in the service frequency <br />";
     }  
     
+    if("${modType}" ==  "ADD"){
+    	var idx = AUIGrid.getRowCount(detailGridID);
+        
+        for(var i = 0 ; i < idx; i++){
+            
+            if($("#packcode").val() == AUIGrid.getCellValue(detailGridID, i, "srvPacItmProductId") ){
+                valid = false;
+                message+="* It is already registered contents.";
+                break;
+            }
+        }
+    }
     
     if (!valid)
         Common.alert("Add Package  "+DEFAULT_DELIMITER + message);
@@ -232,14 +273,26 @@ function fn_DisableField(){
 <tr>
 	<th scope="row">Product Item<span class="must">*</span></th>
 	<td> 
-	<select class="w100p"  id='packcode' name='packcode'  > </select>
-    <td>
+     <c:if test="${modType eq 'EDIT' }">
+       <select class="w100p disabled"   disabled ="disabled"  id='packcode' name='packcode'    > </select>
+     </c:if>
+      <c:if test="${modType eq 'ADD' }">
+        <select class="w100p " id='packcode' name='packcode' > </select>
+     </c:if>
+    </td>    
 	<th scope="row">Monthly Rental <span class="must">*</span></th>
-	<td><input type="text" title="" placeholder="Monthly Rental" class="w100p" id="srvPacItmRental"  name="srvPacItmRental"/></td>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Monthly Rental" class="w100p" id="srvPacItmRental"  name="srvPacItmRental"/></td>
 </tr>
 <tr>
-	<th scope="row">Package Description<span class="must">*</span></th>
-	<td colspan="3"><input type="text" title="" placeholder="Service Frequency" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
+	<th scope="row">Service Frequency <span class="must">*</span></th>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Service Frequency" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
+	<th scope="row">Package Type <span class="must">*</span></th>
+    <td>    
+    <select class="w40p disabled"  id='pacType' name ='pacType'  disabled ="disabled" >
+     <option value="0">Starter Package</option>
+     <option value="1">Membership  Package</option>
+    </select>
+    </td> 
 </tr>
 <tr>
     <th scope="row">Remark </th>

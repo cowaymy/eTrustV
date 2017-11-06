@@ -77,6 +77,7 @@ public class  MembershipPackageMController {
 		model.addAttribute("packItemID",params.get("packItemID")); 
 		model.addAttribute("packID",params.get("packID")); 
 		model.addAttribute("modType",params.get("mod")); 
+		model.addAttribute("packType",params.get("packType")); 
 		
 		return "sales/membership/membershipPackageRPop";  
 	}
@@ -107,8 +108,10 @@ public class  MembershipPackageMController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		String[] SRV_CNTRCT_PAC_STUS_ID = request.getParameterValues("SRV_CNTRCT_PAC_STUS_ID");
+		String[] PAC_TYPE = request.getParameterValues("PAC_TYPE");
 
 		params.put("SRV_CNTRCT_PAC_STUS_ID", SRV_CNTRCT_PAC_STUS_ID);
+		params.put("PAC_TYPE", PAC_TYPE);
 		List<EgovMap>  list = membershipPackageMService.selectList(params);
 		
 		return ResponseEntity.ok(list);

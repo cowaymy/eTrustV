@@ -121,12 +121,8 @@ function auiCellEditignHandler(event)
 
       if(event.dataField == "srvItemPrice")
       {
-
-          console.log("be ============> " + newGridID +" : "+event.item.rowId);
-          console.log("be ============> " +  $("#pacType").val());
           // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
         if(AUIGrid.isAddedById(newGridID, event.item.rowId) && $("#pacType").val()=='1'){  //추가된 Row
-        	console.log("af ==============> " + newGridID +" : "+event.item.rowId);
         	console.log("" + $("#pacType").val());
               return true; 
           } else {

@@ -11,6 +11,7 @@
                                S.SRV_CNTRCT_PAC_DUR   ,
                                S.SRV_CNTRCT_PAC_STUS_ID   ,
                                S.CODE   ,
+                               S.PAC_TYPE ,
                                to_char(S.C1,'yyyy/mm/dd')  c1   ,
                                S.USER_NAME   ,
                                to_char(S.SRV_CNTRCT_PAC_START_DT,'yyyy/mm/dd') SRV_CNTRCT_PAC_START_DT  ,
@@ -23,6 +24,7 @@
                                         F.SRV_CNTRCT_PAC_START_DT   ,
                                         F.SRV_CNTRCT_PAC_END_DT   ,
                                         F.CODE   ,
+                                        F.PAC_TYPE   ,
                                         U.USER_NAME   ,
                                         CASE 
                                              WHEN ( F.SRV_CNTRCT_PAC_CRT_DT IS NOT NULL ) THEN  F.SRV_CNTRCT_PAC_CRT_DT
@@ -37,6 +39,7 @@
                                    D.SRV_CNTRCT_PAC_CRT_USER_ID   ,
                                    D.SRV_CNTRCT_PAC_START_DT   ,
                                    D.SRV_CNTRCT_PAC_END_DT   ,
+                                   D.PAC_TYPE,
                                    Extent2.CODE   
                             FROM SAL0081D D
                                    JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = D.SRV_CNTRCT_PAC_STUS_ID
@@ -47,6 +50,12 @@
                                         #{item}
                                    </foreach>
                                </if>
+                               <if test="PAC_TYPE != null and PAC_TYPE != ''">
+                               AND D.PAC_TYPE  IN
+                                <foreach item="item" collection="PAC_TYPE" index="index" open="(" separator="," close=")">
+                                   #{item}
+                              </foreach>
+                          </if>
                            ) F
                             JOIN SYS0047M  U   ON U.USER_ID = F.SRV_CNTRCT_PAC_CRT_USER_ID
                       WHERE    1=1 
@@ -124,7 +133,8 @@
                            S.SRV_PAC_ITM_STUS_ID   ,
                            S.CODE   ,
                            S.SRV_PAC_ITM_UPD_DT   ,
-                           S.USER_NAME   
+                           S.USER_NAME ,
+                           S.SRV_PAC_ITM_REM  
                       FROM ( SELECT D.SRV_PAC_ITM_ID   ,
                                     D.SRV_CNTRCT_PAC_ID   ,
                                     D.SRV_PAC_ITM_PRODUCT_ID   ,
@@ -132,6 +142,7 @@
                                     D.SRV_PAC_ITM_RENTAL   ,
                                     D.SRV_PAC_ITM_STUS_ID   ,
                                     D.SRV_PAC_ITM_UPD_DT   ,
+                                    D.SRV_PAC_ITM_REM,
                                     E.STK_CODE   ,
                                     E.STK_DESC   ,
                                     Extent3.CODE_NAME   ,
@@ -149,32 +160,30 @@
                       ORDER BY S.STK_DESC ASC
         ]]>
   </select>
-      
-      
-      
-      
+            
  <select id="selectPopUpList" parameterType="Map" resultType="egovMap">
- 
           
-                       SELECT E.SRV_PAC_ITM_ID   ,
-                           E.SRV_CNTRCT_PAC_ID   ,
-                           E.SRV_PAC_ITM_PRODUCT_ID   ,
-                           S.STK_CODE   ,
-                           S.STK_DESC   ,
-                           M.CODE_NAME   ,
-                          TO_CHAR( E.SRV_PAC_ITM_RENTAL,'FM9999999999990.00') SRV_PAC_ITM_RENTAL  ,
-                           E.SRV_PAC_ITM_SVC_FREQ   ,
-                           E.SRV_PAC_ITM_STUS_ID   ,
-                           Extent4.CODE   ,
-                           E.SRV_PAC_ITM_UPD_DT   ,
-                           U.USER_NAME   
-                      FROM SAL0082D E
-                             JOIN SYS0026M S   ON ( S.STK_ID = E.SRV_PAC_ITM_PRODUCT_ID )
-                             AND ( 1 = S.STUS_CODE_ID )
-                             JOIN SYS0013M M   ON M.CODE_ID = S.STK_CTGRY_ID
-                             JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = E.SRV_PAC_ITM_STUS_ID
-                             JOIN SYS0047M U   ON U.USER_ID = E.SRV_PAC_ITM_UPD_USER_ID
-                     WHERE  E.SRV_PAC_ITM_ID = #{SRV_PAC_ITM_ID}  AND ROWNUM    <![CDATA[<  ]]> = 1
+          SELECT E.SRV_PAC_ITM_ID   ,
+		             E.SRV_CNTRCT_PAC_ID   ,
+		             E.SRV_PAC_ITM_PRODUCT_ID   ,
+		             S.STK_CODE   ,
+		             S.STK_DESC   ,
+		             M.CODE_NAME   ,
+		             TO_CHAR( E.SRV_PAC_ITM_RENTAL,'FM9999999999990.00') SRV_PAC_ITM_RENTAL  ,
+		             E.SRV_PAC_ITM_SVC_FREQ   ,
+		             E.SRV_PAC_ITM_STUS_ID   ,
+		             Extent4.CODE   ,
+		             E.SRV_PAC_ITM_UPD_DT   ,
+		             U.USER_NAME,   
+		             A.PAC_TYPE
+             FROM SAL0082D E 
+                JOIN SAL0081D  A ON E.SRV_CNTRCT_PAC_ID = A.SRV_CNTRCT_PAC_ID 
+                JOIN SYS0026M S   ON ( S.STK_ID = E.SRV_PAC_ITM_PRODUCT_ID )
+                AND ( 1 = S.STUS_CODE_ID )
+                JOIN SYS0013M M   ON M.CODE_ID = S.STK_CTGRY_ID
+                JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = E.SRV_PAC_ITM_STUS_ID
+                JOIN SYS0047M U   ON U.USER_ID = E.SRV_PAC_ITM_UPD_USER_ID
+        WHERE  E.SRV_PAC_ITM_ID = #{SRV_PAC_ITM_ID}  AND ROWNUM    <![CDATA[<  ]]> = 1
 
       
   </select>
@@ -191,7 +200,8 @@
                SRV_CNTRCT_PAC_DUR          = #{srvCntrctPacDur}, 
                SRV_CNTRCT_PAC_STUS_ID   =  decode(#{code},'ACT',1,'8') ,
                SRV_CNTRCT_PAC_START_DT = decode (INSTR(#{srvCntrctPacStartDt} , '/') ,5 , to_date(#{srvCntrctPacStartDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacStartDt},'dd/mm/yyyy')) , 
-               SRV_CNTRCT_PAC_END_DT     = decode (INSTR(#{srvCntrctPacEndDt} , '/') ,5 , to_date(#{srvCntrctPacEndDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacEndDt},'dd/mm/yyyy')  )
+               SRV_CNTRCT_PAC_END_DT     = decode (INSTR(#{srvCntrctPacEndDt} , '/') ,5 , to_date(#{srvCntrctPacEndDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacEndDt},'dd/mm/yyyy')  ),
+               PAC_TYPE                        = #{pacType} 
         WHERE  SRV_CNTRCT_PAC_ID        = #{srvCntrctPacId}
    </insert>
    
@@ -209,7 +219,8 @@
 											   SRV_CNTRCT_PAC_CRT_DT, 
 											   SRV_CNTRCT_PAC_CRT_USER_ID, 
 											   SRV_CNTRCT_PAC_START_DT, 
-											   SRV_CNTRCT_PAC_END_DT
+											   SRV_CNTRCT_PAC_END_DT,
+											   PAC_TYPE                 
 											) 
 			VALUES ( 
 				             #{SRV_CNTRCT_PAC_ID} , 
@@ -220,7 +231,8 @@
 							 sysdate,
 							 #{updator},  
 							 to_date(#{SRV_CNTRCT_PAC_START_DT},'dd/mm/yyyy')  , 
-							 to_date(#{SRV_CNTRCT_PAC_END_DT},'dd/mm/yyyy')  
+							 to_date(#{SRV_CNTRCT_PAC_END_DT},'dd/mm/yyyy')  ,
+							 #{pacType} 
 						 )
         
    </insert>

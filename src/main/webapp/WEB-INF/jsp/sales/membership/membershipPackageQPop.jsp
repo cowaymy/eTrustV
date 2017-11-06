@@ -8,18 +8,33 @@ var packageInfo={};
 
 $(document).ready(function(){
     fn_selectCodel();
-    
+
 });
 
+
+function numberCheck(event){
+	var code = window.event.keyCode;
+	
+	
+	if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+    {
+     window.event.returnValue = true;
+     return;
+    }
+    window.event.returnValue = false;
+    
+    return false;
+}
 
 
 
 //PackID=" + packID + "&PackItemID=" + packItemID;
 //리스트 조회.
-function fn_selectListAjax() {       
+function fn_selectListQAjax() {       
 	
 	var packItemID = '${packItemID}';
 	var packID = '${packID}';
+    var packType = '${packType}';   
 	
 	Common.ajax("GET", "/sales/mQPackages/selectPopUpList", {SRV_MEM_PAC_ID:packID  ,STK_ID: packItemID}, function(result) {
 	  
@@ -38,12 +53,20 @@ function fn_selectListAjax() {
 	    	  $("#remark").val(packageInfo.srvMemItmRem);
 	    	  $("#pacType").val(packageInfo.pacType);
 	    	  
-	    	  if($("#pacType").val() == "Starter Package"){
+	    	  if($("#pacType").val() == "0"){
 	    	        $("#srvPacItmSvcFreq").prop("readonly", true);
 	    	        $("#srvPacItmSvcFreq").attr("class", "readonly");
 	    	  }
 	    	  
 	    	  
+	        }else{
+	        	$("#pacType").val(packType);
+                
+                if($("#pacType").val() == "0"){
+                    $("#srvPacItmSvcFreq").prop("readonly", true);
+                    $("#srvPacItmSvcFreq").attr("class", "readonly");
+                    $("#srvPacItmSvcFreq").val("0");
+              }
 	        }
 	});
 }
@@ -100,7 +123,6 @@ function fn_save(){
            fn_selectDetailListAjax( '1');
 
        }, function(jqXHR, textStatus, errorThrown) {
-           Common.alert("실패하였습니다.");
            console.log("실패하였습니다.");
            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
            
@@ -121,6 +143,7 @@ function fn_ValidRequiredField_Master(){
 	var valid =true;
 	var message ="";
 	
+	var  STKID = '${packItemID}';
 	
 	if($('select[name="packcode"]').val()  ==""){
 	
@@ -138,10 +161,21 @@ function fn_ValidRequiredField_Master(){
           message += "* Please key in the service frequency <br />";
     }  
     
+    if("${modType}" ==  "ADD"){
+    	var idx = AUIGrid.getRowCount(detailGridID);
+        
+        for(var i = 0 ; i < idx; i++){
+            
+            if($("#packcode").val() == AUIGrid.getCellValue(detailGridID, i, "stkId") ){
+                valid = false;
+                message+="* It is already registered contents.";
+                break;
+            }
+        }
+    }
     
     if (!valid)
         Common.alert("Add Package  "+DEFAULT_DELIMITER + message);
-
     
     return valid;
 }
@@ -187,7 +221,7 @@ Common.ajax("GET", "/sales/mPackages/selectCodel", $("#sForm").serialize(), func
    	     
    	    $("optgroup").attr("class" , "optgroup_text");
    	    
-   	     fn_selectListAjax();
+   	     fn_selectListQAjax();
       }
    });
    
@@ -256,19 +290,24 @@ function fn_DisableField(){
 	  <c:if test="${modType eq 'ADD' }">
         <select class="w100p " id='packcode' name='packcode' > </select>
      </c:if>
-    <td>
-	<th scope="row">Service Frequency <span class="must">*</span></th>
-	<td><input type="text" title="" placeholder="Service Frequency" class="w100p" id="srvPacItmRental"  name="srvPacItmRental"/></td>
+    </td>
+	<th scope="row">Item Price <span class="must">*</span></th>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Item Price" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
 </tr>
 <tr>
-	<th scope="row">Item Price <span class="must">*</span></th>
-	<td colspan="2"><input type="text" title="" placeholder="Item Price" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
+	<th scope="row">Service Frequency <span class="must">*</span></th>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title=""  placeholder="Service Frequency" class="w100p" id="srvPacItmRental"  name="srvPacItmRental"/></td>
 	<th scope="row">Package Type <span class="must">*</span></th>
-    <td><input type="text" title=""  class="w100p readonly" placeholder="Package Type" class=""  id="pacType"  name="pacType" readonly="readonly"/></td> 
+    <td>    
+    <select class="w40p disabled"  id='pacType' name ='pacType'  disabled ="disabled" >
+     <option value="0">Starter Package</option>
+     <option value="1">Membership  Package</option>
+    </select>
+    </td> 
 </tr>
 <tr>
     <th scope="row">Remark </th>
-    <td colspan="4"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" name='remark'></textarea></td>
+    <td colspan="3"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" name='remark'></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->

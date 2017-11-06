@@ -92,6 +92,7 @@ public class  MembershipPackageQMController {
 		model.addAttribute("packItemID",params.get("packItemID")); 
 		model.addAttribute("packID",params.get("packID")); 
 		model.addAttribute("modType",params.get("mod")); 
+		model.addAttribute("packType",params.get("packType")); 
 		
 		return "sales/membership/membershipPackageQPop";  
 	}
