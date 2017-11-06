@@ -576,7 +576,7 @@
             if( document.searchForm.elements['searchDivCd'][0].checked == true ) {
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="none";
-                         $('#hSConfiguration').attr('disabled',false); //hSConfiguration 버튼 활성화
+                        $('#hSConfiguration').attr('disabled',true); //hSConfiguration 버튼 비활성화
                         
                         var divhsManagementObj = document.querySelector("#hsManagement");
                         divhsManagementObj.style.display="block";
@@ -597,7 +597,7 @@
             
                         var divhsManagementObj = document.querySelector("#hsManagement");
                         divhsManagementObj.style.display="none";
-                        $('#hSConfiguration').attr('disabled',true); //hSConfiguration 버튼 비활성화
+                        $('#hSConfiguration').attr('disabled',false); //hSConfiguration 버튼 활성화
 
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="block";
