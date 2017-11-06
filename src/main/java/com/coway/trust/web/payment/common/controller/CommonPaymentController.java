@@ -143,4 +143,26 @@ public class CommonPaymentController {
 		return ResponseEntity.ok(resultMapList);
 	}
 	
+	
+	/******************************************************
+	 * Payment - Order Info Rental Membership 
+	 *****************************************************/	
+	/**
+	 * Payment - Order Info Rental Membership 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	@RequestMapping(value = "/selectOrderInfoSrvc.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrderInfoSrvc(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		List<EgovMap> resultList = commonPaymentService.selectOrderInfoSrvc(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
 }

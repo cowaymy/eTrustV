@@ -742,5 +742,132 @@
         }
     </select>
     
+    <select id="selectOrderInfoSrvc" parameterType="Map" resultType="egovMap">
+        SELECT 
+            Extent1.SRV_CNTRCT_ID SRV_CNTRCT_ID  ,
+			Extent1.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+			Extent1.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
+			Extent1.SRV_CNTRCT_NET_YEAR SRV_CNTRCT_NET_YEAR  ,
+			Extent3.SALES_ORD_ID SALES_ORD_ID  ,
+			Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+			Extent2.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
+			Extent1.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
+			Extent5.CODE STATUS_CODE  ,
+			Extent4.CUST_ID CUST_ID  ,
+			Extent4.NAME CUST_NAME  ,
+			CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL ) THEN Extent3.CUST_BILL_ID ELSE 0 END CUST_BILL_ID  ,
+			Extent1.SRV_CNTRCT_RENTAL SRV_CNTRCT_RENTAL  ,
+			Extent1.SRV_CNTRCT_EXP_FILTER SRV_CNTRCT_EXP_FILTER  ,
+			TO_DATE('1900-01-01','YYYY-MM-DD') AS LAST_PAY_DT
+        FROM 
+            SAL0077D Extent1
+			JOIN SAL0078D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
+			JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SRV_CNTRCT_ORD_ID
+			JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+			JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID
+        WHERE  
+            Extent1.SRV_CNTRCT_ID =  #{srvcId} 
+    </select>
+    
+    <select id="selectOrderInfoSrvcCharge" parameterType="Map" resultType="egovMap">
+        SELECT 
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END ) AS FILTER_CHARGE,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END ) AS PENALTY_CHARGE
+        FROM 
+            PAY0023D A            
+        WHERE 
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
+            AND A.SRV_LDGR_AMT <![CDATA[ >= ]]>  0
+    </select>
+    
+    <select id="selectOrderInfoSrvcADJ" parameterType="Map" resultType="egovMap">
+        SELECT 
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 AND B.MEMO_ADJ_TYPE_ID = 1293 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS FILTER_CN,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS FILTER_DN,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 AND B.MEMO_ADJ_TYPE_ID = 1293 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS PENALTY_CN,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS PENALTY_DN
+        FROM 
+            PAY0023D A
+            JOIN PAY0011D B ON A.SRV_LDGR_REF_NO = B.MEMO_ADJ_INVC_NO
+        WHERE 
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
+            AND A.SRV_LDGR_AMT <![CDATA[ > ]]>  0 
+            AND A.SRV_LDGR_TYPE_ID = 1307
+            AND B.MEMO_ADJ_STUS_ID = 4
+    </select>
+    
+    <select id="selectOrderInfoSrvcPaid" parameterType="Map" resultType="egovMap">
+        SELECT 
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  FILTER_PAID,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  PENALTY_PAID,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1305 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  TOTAL_PAID,
+            MAX(CASE WHEN A.SRV_LDGR_TYPE_ID = 1305 THEN NVL(TO_CHAR(A.SRV_LDGR_REF_DT,'YYYY-MM-DD'),'1900-01-01') ELSE '1900-01-01' END) AS  LAST_PAY_DT
+        FROM 
+            PAY0023D A
+        WHERE 
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
+            AND A.SRV_LDGR_AMT <![CDATA[ < ]]>  0 
+    </select>
+    
+    <select id="selectOrderInfoSrvcRev" parameterType="Map" resultType="egovMap">
+        SELECT 
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(B.PAY_ITM_AMT,0) ELSE 0 END) AS  FILTER_REV,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(B.PAY_ITM_AMT,0) ELSE 0 END) AS  PENALTY_REV
+        FROM 
+            PAY0023D A 
+            JOIN (
+                    SELECT 
+                        Extent1.PAY_ID PAY_ID  ,
+					    NVL(Extent4.SVC_CNTRCT_ID,0) AS SVC_CNTRCT_ID,
+					    Extent4.OR_NO OR_NO  ,
+					    NVL(Extent2.PAY_ITM_AMT,0) AS PAY_ITM_AMT,
+					    NVL(Extent4.TYPE_ID,0) AS TYPE_ID  
+                    FROM 
+                        PAY0064D Extent1
+                        JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+                        LEFT JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
+                        JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.SVC_CNTRCT_ID = #{srvCntrctId} 
+                    WHERE
+                        Extent1.TYPE_ID = 101) B ON A.SRV_LDGR_REF_NO = B.OR_NO    
+        WHERE
+            SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
+            AND  SRV_LDGR_AMT <![CDATA[ < ]]> 0
+    </select>
+    
+    <select id="selectOrderInfoSrvcTotalRev" parameterType="Map" resultType="egovMap">
+        SELECT 
+            NVL(SUM(A.SRV_LDGR_AMT),0) AS  TOTAL_REV
+        FROM 
+            PAY0023D A
+        WHERE 
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}             
+            AND A.SRV_LDGR_TYPE_ID = 160
+            AND A.SRV_LDGR_PAY_TYPE = 1305
+    </select>
+    
+    <select id="selectOrderInfoSrvcBalance" parameterType="Map" resultType="egovMap">
+        SELECT 
+            NVL(SUM(SRV_LDGR_AMT),0) AS BALANCE,
+            NVL(MAX(SRV_LDGR_CNTRCT_SCHDUL_NO),0) AS MAX_SCHDUL_NO
+        FROM 
+            PAY0023D 
+        WHERE
+            SRV_LDGR_CNTRCT_ID = #{srvCntrctId} 
+            AND SRV_LDGR_AMT <![CDATA[ > ]]> 0
+            AND SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 160
+            AND SRV_LDGR_TYPE_ID = 1305
+    </select>
+    
+    <select id="selectOrderInfoSrvcUnbill" parameterType="Map" resultType="egovMap">
+        SELECT 
+            NVL(SRV_PAY_SCHDUL_NO,0) AS CURR_SCHDUL_NO,
+            NVL(SRV_PAY_SCHDUL_AMT,0) AS MONTHLY_FEE
+        FROM 
+            SAL0085D
+        WHERE
+            SRV_PAY_CNTRCT_ID = #{srvCntrctId} 
+            AND SRV_PAY_SCHDUL_MONTH = EXTRACT(MONTH FROM SYSDATE)
+            AND SRV_PAY_SCHDUL_YEAR =EXTRACT(YEAR FROM SYSDATE)
+    </select>           
     
 </mapper>

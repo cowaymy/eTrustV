@@ -681,7 +681,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	/*****************************************************************************
-	 * Membership Service 
+	 * Membership Service : FundTransfer  
 	 * 
 	 ******************************************************************************/
 	/**
@@ -695,4 +695,209 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	public Map<String, Object>  selectOrderInfoSVM(Map<String, Object> params) {
 		return commonPaymentMapper.selectOrderInfoSVM(params);
 	}
+	
+	/*****************************************************************************
+	 *  Rental Membership : Payment 
+	 * 
+	 ******************************************************************************/
+	/**
+	 * Payment - Order Info Rental Membership 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	@Override
+	public List<EgovMap>  selectOrderInfoSrvc(Map<String, Object> params) {
+		
+		List<EgovMap> rcList = commonPaymentMapper.selectOrderInfoSrvc(params);
+		
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) 
+			{
+				Map<String, Object> paymentInfo = this.getServiceContractPaymentInfo(obj);
+				
+				obj.put("filterCharges", paymentInfo.get("filterCharges"));
+				obj.put("filterChargesPaid", paymentInfo.get("filterChargesPaid"));
+				obj.put("penaltyCharges", paymentInfo.get("penaltyCharges"));
+				obj.put("penaltyChargesPaid", paymentInfo.get("penaltyChargesPaid"));
+				obj.put("totalPaid", paymentInfo.get("totalPaid"));
+				obj.put("balance", paymentInfo.get("balance"));
+				obj.put("lastPayment", paymentInfo.get("lastPayment"));
+				obj.put("unBilledCount", paymentInfo.get("unBilledCount"));
+				obj.put("unBillAmount", paymentInfo.get("unBillAmount"));      
+			}	
+		}
+		
+		return rcList;
+	}
+	
+	/**
+	 * Payment - Order Info Rental Billing 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * ServiceContractManager.cs : private ServiceContactBillingInfo GetServiceContractPaymentInfo(int scsID)
+	 */
+	public Map<String, Object> getServiceContractPaymentInfo(Map<String, Object> params) {
+		
+		
+		double filterCharge = 0.0D;
+		double filterCn = 0.0D;
+		double filterDn = 0.0D;
+		double filterPaid = 0.0D;
+		double filterReversed = 0.0D;
+		double penaltyCharge = 0.0D;
+		double penaltyCn = 0.0D;
+		double penaltyDn = 0.0D;
+		double penaltyPaid = 0.0D;
+		double penaltyReversed = 0.0D;
+		double totalPaid = 0.0D;
+		double reversePayment = 0.0D;
+		double balanceAmt = 0.0D;
+		double billAmt = 0.0D;
+		String lastPayDt = "1900-01-01";
+		int billSchedule = 0;
+		int currentSchedule = 0;
+		int unbillMth = 0;
+		double unbillAmt = 0.0D;
+		double monthlyFee = 0.0D;
+		
+		
+		/*********************************************************
+		 * Charge  Amount값 계산 
+		 *********************************************************/	
+		EgovMap srvcChargeMap = commonPaymentMapper.selectOrderInfoSrvcCharge(params);
+		
+		if(srvcChargeMap != null && srvcChargeMap.get("filterCharge") != null){
+			filterCharge = Double.parseDouble(String.valueOf(srvcChargeMap.get("filterCharge")));
+		}	
+		
+		if(srvcChargeMap != null && srvcChargeMap.get("penaltyCharge") != null){
+			penaltyCharge = Double.parseDouble(String.valueOf(srvcChargeMap.get("penaltyCharge")));
+		}	
+				
+		/*********************************************************
+		 * Adjustment CN / DN Amount값 계산 
+		 *********************************************************/	
+		EgovMap srvcAdjMap = commonPaymentMapper.selectOrderInfoSrvcADJ(params);
+		
+		if(srvcAdjMap != null && srvcAdjMap.get("filterCn") != null){
+			filterCn = Double.parseDouble(String.valueOf(srvcAdjMap.get("filterCn")));
+		}
+		
+		if(srvcAdjMap != null && srvcAdjMap.get("filterDn") != null){
+			filterDn = Double.parseDouble(String.valueOf(srvcAdjMap.get("filterDn")));
+		}
+		
+		if(srvcAdjMap != null && srvcAdjMap.get("penaltyCn") != null){
+			penaltyCn = Double.parseDouble(String.valueOf(srvcAdjMap.get("penaltyCn")));
+		}
+		
+		if(srvcAdjMap != null && srvcAdjMap.get("penaltyDn") != null){
+			penaltyDn = Double.parseDouble(String.valueOf(srvcAdjMap.get("penaltyDn")));
+		}
+		
+		filterCharge = filterCharge - filterCn + filterDn; 
+		penaltyCharge = penaltyCharge - penaltyCn + penaltyDn;
+		
+		
+		/*********************************************************
+		 * Paid Amount 값 계산
+		 *********************************************************/	
+		EgovMap srvcPaidMap = commonPaymentMapper.selectOrderInfoSrvcPaid(params);
+		
+		if(srvcPaidMap != null && srvcPaidMap.get("filterPaid") != null){
+			filterPaid = Double.parseDouble(String.valueOf(srvcPaidMap.get("filterPaid")));
+		}
+		
+		if(srvcPaidMap != null && srvcPaidMap.get("penaltyPaid") != null){
+			penaltyPaid = Double.parseDouble(String.valueOf(srvcPaidMap.get("penaltyPaid")));
+		}
+		
+		if(srvcPaidMap != null && srvcPaidMap.get("totalPaid") != null){
+			totalPaid = Double.parseDouble(String.valueOf(srvcPaidMap.get("totalPaid")));
+		}
+		
+		if(srvcPaidMap != null && srvcPaidMap.get("lastPayDt") != null){
+			lastPayDt = String.valueOf(srvcPaidMap.get("lastPayDt"));
+		}
+		
+		/*********************************************************
+		 * Paid Amount 값 계산
+		 *********************************************************/
+		EgovMap srvcRevMap = commonPaymentMapper.selectOrderInfoSrvcRev(params);
+		
+		if(srvcRevMap != null && srvcRevMap.get("filterRev") != null){
+			filterReversed = Double.parseDouble(String.valueOf(srvcRevMap.get("filterRev")));
+		}
+		
+		if(srvcRevMap != null && srvcRevMap.get("penaltyRev") != null){
+			penaltyReversed = Double.parseDouble(String.valueOf(srvcRevMap.get("penaltyRev")));
+		}
+		
+		filterPaid = (filterPaid * -1) + filterReversed;
+		penaltyPaid = (penaltyPaid * -1) + penaltyReversed; 
+		
+		/*********************************************************
+		 * Total Paid Amount 값 계산
+		 *********************************************************/
+		EgovMap srvcTotRevMap = commonPaymentMapper.selectOrderInfoSrvcTotalRev(params);
+		
+		if(srvcTotRevMap != null && srvcTotRevMap.get("totalRev") != null){
+			reversePayment = Double.parseDouble(String.valueOf(srvcTotRevMap.get("totalRev")));
+		}
+		totalPaid = (totalPaid * -1) - reversePayment;
+		
+		/*********************************************************
+		 * Balance Amount 값 계산
+		 *********************************************************/
+		EgovMap srvcBalanceMap = commonPaymentMapper.selectOrderInfoSrvcBalance(params);
+		
+		if(srvcBalanceMap != null && srvcBalanceMap.get("balance") != null){
+			billAmt = Double.parseDouble(String.valueOf(srvcBalanceMap.get("balance")));
+		}
+		
+		if(srvcBalanceMap != null && srvcBalanceMap.get("maxSchdulNo") != null){
+			billSchedule = Integer.parseInt(String.valueOf(srvcBalanceMap.get("maxSchdulNo")));
+		}
+		
+		balanceAmt = billAmt - totalPaid;  
+		
+		/*********************************************************
+		 * Unbill Amount 값 계산
+		 *********************************************************/
+		EgovMap srvcUnbillMap = commonPaymentMapper.selectOrderInfoSrvcUnbill(params);
+		
+		if(srvcUnbillMap != null && srvcUnbillMap.get("currSchdulNo") != null){
+			currentSchedule = Integer.parseInt(String.valueOf(srvcUnbillMap.get("currSchdulNo")));
+		}
+		
+		if(srvcUnbillMap != null && srvcUnbillMap.get("monthlyFee") != null){
+			monthlyFee = Double.parseDouble(String.valueOf(srvcUnbillMap.get("monthlyFee")));
+		}
+		
+		if (currentSchedule > 0) {
+			unbillMth = currentSchedule - billSchedule;
+			
+			if (unbillMth > 0) {
+                 unbillAmt = monthlyFee * unbillMth;
+			}
+		}
+        
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("filterCharges", filterCharge);		
+		resultMap.put("filterChargesPaid", filterPaid);
+		resultMap.put("penaltyCharges", penaltyCharge);
+		resultMap.put("penaltyChargesPaid", penaltyPaid);
+		resultMap.put("totalPaid", totalPaid);
+		resultMap.put("balance", balanceAmt);
+		resultMap.put("lastPayment", lastPayDt);
+		resultMap.put("unBilledCount", unbillMth);
+		resultMap.put("unBillAmount", unbillAmt);		
+		
+		return resultMap;
+		
+	}
+	
 }

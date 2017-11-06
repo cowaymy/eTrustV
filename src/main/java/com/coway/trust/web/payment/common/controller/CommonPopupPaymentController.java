@@ -64,6 +64,7 @@ public class CommonPopupPaymentController {
 	 */
 	@RequestMapping(value = "/initCommonServiceContractSearchPop.do")
 	public String initCommonServiceContractSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("callPrgm", params.get("callPrgm"));
 		return "payment/common/serviceContractSearchPop";
 	}
 	

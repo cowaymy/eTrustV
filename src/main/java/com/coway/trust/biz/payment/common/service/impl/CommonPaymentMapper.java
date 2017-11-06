@@ -297,7 +297,7 @@ public interface CommonPaymentMapper {
 	EgovMap selectLedgerInfo(Map<String, Object> params);
 	
 	/****************************************************************************
-	 * Payment : Membership Service 
+	 * Payment : Membership Service  : FundTransfer 
 	 ****************************************************************************/
 	/**
 	 * Payment - Order Info Membership Service 조회 
@@ -307,6 +307,85 @@ public interface CommonPaymentMapper {
 	 * 
 	 */
 	Map<String, Object> selectOrderInfoSVM(Map<String, Object> params);
+	
+	
+	/*****************************************************************************
+	 *  Rental Membership : Payment 
+	 * 
+	 ******************************************************************************/
+	/**
+	 * Payment - Order Info Rental Membership 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	List<EgovMap> selectOrderInfoSrvc(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Order Info Rental Membership 조회 : Filter, Penalty Charge
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectOrderInfoSrvcCharge(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Order Info Rental Membership 조회 : Filter, Penalty Adjustment CN / DN 값 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectOrderInfoSrvcADJ(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Order Info Rental Membership 조회 : Filter, Penalty Paid Amount 값 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectOrderInfoSrvcPaid(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Order Info Rental Membership 조회 : Filter, Penalty Reversed Amount 값 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectOrderInfoSrvcRev(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Order Info Rental Membership 조회 : Total Reversed Amount 값 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectOrderInfoSrvcTotalRev(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Order Info Rental Membership 조회 : Balance Amount 값 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectOrderInfoSrvcBalance(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Order Info Rental Membership 조회 : Unbill Info 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectOrderInfoSrvcUnbill(Map<String, Object> params);
+	
+	
 	
 	
 	

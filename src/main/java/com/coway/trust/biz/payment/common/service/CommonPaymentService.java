@@ -51,5 +51,15 @@ public interface CommonPaymentService{
 	 * 
 	 */
     Map<String, Object> selectOrderInfoSVM(Map<String, Object> params);
+    
+    /**
+	 * Payment - Order Info Rental Membership 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+    List<EgovMap> selectOrderInfoSrvc(Map<String, Object> params);
+    
 
 }
