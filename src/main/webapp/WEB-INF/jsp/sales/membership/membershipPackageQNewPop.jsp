@@ -209,12 +209,11 @@ function createAUIGrid() {
                                     allowPoint : true // 소수점(.) 입력 가능 설정
                                 }	
                             },
-                            { dataField : "srvItemPeriod",       headerText  : "Service Frequency",  width  : 150  ,editable       : true ,dataType:"numeric", formatString : "#,##0.00",
+                            { dataField : "srvItemPeriod",       headerText  : "Service Frequency",  width  : 150  ,editable       : true ,dataType:"numeric",
                             	editRenderer : {
                                     type : "InputEditRenderer",
                                     onlyNumeric : true,
                                     autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
-                                    allowPoint : true // 소수점(.) 입력 가능 설정
                                 }
                             },
                             { dataField : "srvRemark",     headerText  : "Remark",  width          :300,    editable       : true}

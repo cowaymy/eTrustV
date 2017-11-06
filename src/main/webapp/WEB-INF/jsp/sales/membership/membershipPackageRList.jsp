@@ -1,7 +1,15 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.my-right-style {
+    text-align:right;
+}
+.my-left-style {
+    text-align:left;
+}
+</style>
 <script type="text/javaScript" language="javascript">
     
 var  gridID;
@@ -58,8 +66,8 @@ function createAUIGrid() {
         
         var columnLayout = [
                             {dataField : "srvCntrPacId",     headerText  : "" ,editable       : false ,visible : false } ,
-                            { dataField : "srvCntrctPacCode", headerText  : "Package Code",    width : 200 ,editable : true},
-                            { dataField : "srvCntrctPacDesc", headerText  : "Package Description",width : 200 ,editable       : true},
+                            { dataField : "srvCntrctPacCode", headerText  : "Package Code",    width : 200 ,editable : true, style :"my-left-style" },
+                            { dataField : "srvCntrctPacDesc", headerText  : "Package Description",width : 200 ,editable       : true, style :"my-left-style" },
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
                                             , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
 		                                     var retStr = "";
@@ -154,8 +162,9 @@ function createDetailAUIGrid() {
                                     }
                                 }
                             },
-                            { dataField : "srvPacItmProductId", headerText  : "Product ID",    width : 100,  editable : false},
-                            { dataField : "stkDesc", headerText  : "Product Name",width : 150,  editable: false },
+                            { dataField : "srvPacItmProductId", headerText  : "Product id",    width : 100,  editable : false, visible : false },
+                            { dataField : "stkCode", headerText  : "Product Code",    width : 100,  editable : false, style :"my-left-style"},
+                            { dataField : "stkDesc", headerText  : "Product Name",width : 150,  editable: false, style :"my-left-style" },
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : false},
                             { dataField : "srvPacItmRental", headerText  : "price ",  width          : 100, editable       : false   ,dataType:"numeric", formatString : "#,##0.00"},
                             { dataField : "srvPacItmSvcFreq",headerText  : "Period",  width          : 100,   editable       : false },
