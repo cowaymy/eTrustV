@@ -322,10 +322,25 @@ public interface CommissionCalculationMapper {
 	
 	int cntCMM0028T(Map<String, Object>  param);
 	int cntCMM0029T(Map<String, Object>  param);
+	
 	List<EgovMap> selectCMM0028TCT(Map<String, Object> params);
 	List<EgovMap> selectCMM0028TCD(Map<String, Object> params);
 	List<EgovMap> selectCMM0028THP(Map<String, Object> params);
 	List<EgovMap> selectCMM0029TCT(Map<String, Object> params);
 	List<EgovMap> selectCMM0029TCD(Map<String, Object> params);
 	List<EgovMap> selectCMM0029THP(Map<String, Object> params);
+	
+	List<EgovMap> selectSimulCMM0018T(Map<String, Object> params);
+	List<EgovMap> selectSimulCMM0019T(Map<String, Object> params);
+	List<EgovMap> selectSimulCMM0020T(Map<String, Object> params);
+	List<EgovMap> selectSimulCMM0021T(Map<String, Object> params);
+	List<EgovMap> selectSimulCMM0024T(Map<String, Object> params);
+	
+	int cntSimulCMM0018T(Map<String, Object>  param);
+	int cntSimulCMM0019T(Map<String, Object>  param);
+	int cntSimulCMM0020T(Map<String, Object>  param);
+	int cntSimulCMM0021T(Map<String, Object>  param);
+	int cntSimulCMM0024T(Map<String, Object>  param);
+	
+	Map commSHIMemberSearch (Map<String, Object> params);
 }
