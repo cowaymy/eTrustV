@@ -1830,41 +1830,47 @@
     
     <!--Product 정보 조회 -->
     <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
-        SELECT CODE_ID
+        SELECT STK_ID
+             , C1
              , CODE_NAME
-             , GROUPCD
           FROM
              (
-            <if test='stkType != null and stkType == "1"'>
-		  	   SELECT DISTINCT T1.STK_ID CODE_ID
-			        , T1.STK_CODE ||' - '||T1.STK_DESC CODE_NAME
-			        , T3.CODE_NAME GROUPCD
+            <if test='groupCode != null and groupCode == "1"'>
+		  	   SELECT DISTINCT T1.STK_ID
+			        , T1.STK_CODE ||' - '||T1.STK_DESC C1
+			        , T3.CODE_NAME
 			     FROM SYS0026M T1
 			        , SAL0082D T2
 			        , SYS0013M T3
+                    , SAL0016M T4
 			    WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
 			      AND T1.STK_CTGRY_ID = T3.CODE_ID
-			  <!--AND 1 != T1.IS_NCV-->
+			      AND 1 != T1.IS_NCV
 			      AND 1 = T2.SRV_PAC_ITM_STUS_ID
-			  <!--AND 61 = T1.STK_TYPE_ID-->
+			      AND 61 = T1.STK_TYPE_ID
 			      AND T2.SRV_CNTRCT_PAC_ID = 1
+			      AND T1.STK_ID = T4.STK_ID
+			      AND T4.AMT &gt; 0
             </if>
-            <if test='stkType != null and stkType == "2"'>
-                SELECT DISTINCT T1.STK_ID CODE_ID
-                    , T1.STK_CODE ||' - '||T1.STK_DESC CODE_NAME
-                    , T3.CODE_NAME GROUPCD
+            <if test='groupCode != null and groupCode == "2"'>
+                SELECT DISTINCT T1.STK_ID
+                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                    , T3.CODE_NAME
                  FROM SYS0026M T1
                     , SAL0092M T2
                     , SYS0013M T3
+                    , SAL0016M T4
                 WHERE T1.STK_ID = T2.SRV_MEM_ITM_STK_ID
                   AND T1.STK_CTGRY_ID = T3.CODE_ID
-              <!--AND 1 != T1.IS_NCV-->
+                  AND 1 != T1.IS_NCV
                   AND 1 = T2.SRV_MEM_ITM_STUS_ID
-              <!--AND 61 = T1.STK_TYPE_ID-->
+                  AND 61 = T1.STK_TYPE_ID
                   AND T2.SRV_MEM_PAC_ID = 2
+                  AND T1.STK_ID = T4.STK_ID
+                  AND T4.AMT &gt; 0
             </if>
              )
-         ORDER BY CODE_NAME ASC, CODE_NAME ASC
+         ORDER BY CODE_NAME ASC, STK_ID ASC
     </select>
     
 </mapper>

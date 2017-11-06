@@ -801,20 +801,25 @@
                 }
             }
             else {
-                $('#srvPacId option').remove();                    
+                $('#srvPacId option').remove(); 
             }
-
+            
+            $('#ordProudct option').remove();
+            $('#ordProudct optgroup').remove();
         });
         $('#srvPacId').change(function() {
+
+            $('#ordProudct option').remove();
+            $('#ordProudct optgroup').remove();
+
             var idx    = $("#srvPacId option:selected").index();
             var selVal = $("#srvPacId").val();
             
             if(idx > 0) {
                 var stkType = $("#appType").val() == '66' ? '1' : '2';
-                doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
-            }
-            else {
-                $('#ordProudct option').remove();
+              //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
+                
+                doGetComboAndGroup('/sales/order/selectProductCodeList.do', stkType, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
             }
         });
         $('#ordProudct').change(function() {
@@ -1031,7 +1036,6 @@
         });
     });
 
-	
 	function fn_popOrderDetail() {	    
 	    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
 	}
@@ -2003,6 +2007,9 @@
         return chkCnt;
     }
 
+    function fn_setOptGrpClass() {
+        $("optgroup").attr("class" , "optgroup_text")
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
