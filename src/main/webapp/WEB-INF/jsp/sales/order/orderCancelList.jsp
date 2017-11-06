@@ -217,10 +217,13 @@
                 }
                 if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
                     this.value = '';
+                    this.text='';
                 }else if (type === 'checkbox' || type === 'radio'){
                     this.checked = false;
+                    this.text='';
                 }else if (tag === 'select'){
                     this.selectedIndex = -1;
+                    this.text='';
                 }
             });
         };

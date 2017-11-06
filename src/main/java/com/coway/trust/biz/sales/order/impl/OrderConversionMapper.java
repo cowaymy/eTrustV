@@ -1,0 +1,46 @@
+package com.coway.trust.biz.sales.order.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Mapper("orderConversionMapper")
+public interface OrderConversionMapper {
+
+	/**
+	 * 글 목록을 조회한다.
+	 * 
+	 * @param searchVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	List<EgovMap> orderConversionList(Map<String, Object> params);
+	
+	EgovMap orderConversionView(Map<String, Object> params);
+	
+	List<EgovMap> orderConversionViewItmList(Map<String, Object> params);
+	
+	List<EgovMap> orderCnvrValidItmList(Map<String, Object> params);
+	
+	List<EgovMap> orderCnvrInvalidItmList(Map<String, Object> params);
+	
+	void delCnvrItmSAL0073D(Map<String, Object> params);
+	
+	void updCnvrConfirm(Map<String, Object> params);
+	
+	void updCnvrDeactive(Map<String, Object> params);
+	
+	EgovMap orderCnvrInfo(Map<String, Object> params);
+	
+	void insertCnvrSAL0072D(Map<String, Object> params);
+	
+	void insertCnvrSAL0073D(Map<String, Object> setmap);
+	
+	void insertCnvrList(Map<String, Object> setmap);
+	
+	int crtSeqSAL0072D();
+	
+}
