@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.cmmn.model.EmailVO;
@@ -385,7 +387,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		return billingGroupMapper.getSAL0024DSEQ();
 	}
 
-	@Override
+	@Transactional
 	public String saveAddNewGroup(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -674,7 +676,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		return grpNo;
 	}
 
-	@Override
+	@Transactional
 	public boolean saveNewAddr(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -752,18 +754,22 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 					
 					
 			List<EgovMap> selectSalesOrderM = billingGroupMapper.selectSalesOrderM(params);
-			for(int i = 0 ; i < selectSalesOrderM.size() ; i++){
-				Map<String, Object> map = (Map<String, Object>)selectSalesOrderM.get(i);
-				String salesOrdId = String.valueOf(map.get("salesOrdId"));
-						
-				Map<String, Object> updSalesMap = new HashMap<String, Object>();
-				updSalesMap.put("userId", userId);
-				updSalesMap.put("salesOrdId", salesOrdId);
-				updSalesMap.put("addressIDNew", String.valueOf(params.get("custAddId")));
-				updSalesMap.put("addrFlag", "Y");
-				//SALES ORDER MASTER UPDATE
-				billingGroupMapper.updSalesOrderMaster(updSalesMap);
+			if(selectSalesOrderM.size() > 0){
+				
+				for(int i = 0 ; i < selectSalesOrderM.size() ; i++){
+					Map<String, Object> map = (Map<String, Object>)selectSalesOrderM.get(i);
+					String salesOrdId = String.valueOf(map.get("salesOrdId"));
+							
+					Map<String, Object> updSalesMap = new HashMap<String, Object>();
+					updSalesMap.put("userId", userId);
+					updSalesMap.put("salesOrdId", salesOrdId);
+					updSalesMap.put("addressIDNew", String.valueOf(params.get("custAddId")));
+					updSalesMap.put("addrFlag", "Y");
+					//SALES ORDER MASTER UPDATE
+					billingGroupMapper.updSalesOrderMaster(updSalesMap);
+				}
 			}
+			
 			
 			return true;
 			
@@ -773,7 +779,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveNewContPerson(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -873,7 +879,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveNewReq(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -1001,7 +1007,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveRemark(Map<String, Object> params, SessionVO sessionVO) {
 		
 		EgovMap custBillMasters = billingGroupMapper.selectCustBillMaster(params);
@@ -1077,7 +1083,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveChangeBillType(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -1173,7 +1179,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveApprRequest(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -1271,7 +1277,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveCancelRequest(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -1353,7 +1359,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveRemoveOrder(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -1541,7 +1547,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public boolean saveChgMainOrd(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String defaultDate = "1900-01-01";
@@ -1620,7 +1626,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 	}
 
-	@Override
+	@Transactional
 	public String saveAddOrder(Map<String, Object> params, SessionVO sessionVO) {
 		
 		int userId = sessionVO.getUserId();

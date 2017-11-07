@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.coway.trust.biz.payment.billing.service.RentalUnbillBillingService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.ibm.icu.text.DecimalFormat;
@@ -62,7 +64,7 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
 	 * @param params
 	 * @return
 	 */
-	@Override
+	@Transactional
 	public int createTaxesManualBills(List<Object> formList, List<Object> taskBillList, SessionVO sessionVO) {
 		
 		int userId = sessionVO.getUserId();
