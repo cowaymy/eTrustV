@@ -199,14 +199,13 @@ var discountLayout = [
     	Common.ajax("GET","/payment/saveDiscount.do", $("#billingForm").serialize(), function(result){
             console.log(result);
             
-            /* 
-            AS-IS 초기화 안해서 TO-BE도 초기화안함
+
             $('#discountType').val('');
             $('#startPeriod').val('');
             $('#endPeriod').val('');
             $('#discountAmount').val('');
             $('#remarks').val('');
-             */
+       
              $('#addNewEntryPop').hide();
             
             //BASIC INFO
