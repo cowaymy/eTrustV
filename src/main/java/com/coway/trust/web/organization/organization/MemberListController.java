@@ -456,5 +456,20 @@ public class MemberListController {
 		List<EgovMap> course = memberListService.selectCourse();
 		return ResponseEntity.ok(course);
 	}
+
+	/**
+	 * MemberList Edit Pop open
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/memberListEditPop.do")
+	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		// 호출될 화면
+		return "organization/organization/memberListEditPop";
+	}
 	
 }
