@@ -671,7 +671,7 @@
             if (event.which === 13) {    //enter  
                 fn_selectCustInfo();
                 return false;
-            }  
+            }
         });
         $('#salesmanCd').change(function(event) {
             var memCd = $('#salesmanCd').val().trim();
@@ -1810,7 +1810,7 @@
 
         $('#ordPromo').removeAttr("disabled");
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade}, '', 'ordPromo', 'S', ''); //Common Code
+        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
     }
 
     //LoadProductPrice

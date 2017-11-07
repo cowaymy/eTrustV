@@ -72,10 +72,17 @@
         });
     });
 	    // 리스트 조회.
-    function fn_selectPrdListAjax() {        
-        Common.ajax("POST", "/logistics/material/materialcdsearch.do", $("#popSearchForm").serializeJSON(), function(result) {
-            AUIGrid.setGridData(myGridID, result.data);
-        });
+    function fn_selectPrdListAjax() {
+        if('${gubun}' == 'stocklist') {
+            Common.ajax("POST", "/sales/promotion/selectProductCodeList.do", $("#popSearchForm").serializeJSON(), function(result) {
+                AUIGrid.setGridData(myGridID, result);
+            });
+        }
+        else {
+            Common.ajax("POST", "/logistics/material/materialcdsearch.do", $("#popSearchForm").serializeJSON(), function(result) {
+                AUIGrid.setGridData(myGridID, result.data);
+            });
+        }
     }
 </script>
 
@@ -92,9 +99,12 @@
 <ul class="right_btns">
 	<li><p class="btn_blue"><a id="btnProductSearch" href="#"><span class="search"></span>Search</a></p></li>
 </ul>
-<form id="popSearchForm" name="popSearchForm" action="#" method="post">
-    <input id="gubun" name="gubun" value="${gubun}" type="hidden" />
-    <input id="stateid" name="stateid" value="1" type="hidden" />
+<form id="popSearchForm" name="popSearchForm" action="#">
+    <input id="gubun" name="gubun" value="${gubun}" type="text" />
+    <input id="stateid" name="stateid" value="1" type="text" />
+
+    <input id="promoAppTypeId" name="promoAppTypeId" value="${promoAppTypeId}" type="text" />
+    <input id="srvPacId" name="srvPacId" value="${srvPacId}" type="text" />
     
 <table class="type1 mt10"><!-- table start -->
 <caption>table</caption>

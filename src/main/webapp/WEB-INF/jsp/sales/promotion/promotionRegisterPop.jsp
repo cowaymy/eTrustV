@@ -20,7 +20,6 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'promoDiscType',        'S'); //Discount Type
         doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         
-        doGetCombo('/sales/promotion/selectMembershipPkg.do', '', '9', 'promoSrvMemPacId', 'S'); //Common Code
     });
 
     function createAUIGridStk() {
@@ -236,11 +235,23 @@
     
     $(function(){
         $('#btnProductAdd').click(function() {
+            var isValid = true, msg = "";
+            
             if(FormUtil.checkReqValue($('#promoAppTypeId'))) {
-                Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>* Please select the promotion application.</b>");
+                isValid = false;
+                msg += "* Please select the promotion application.<br />";
+            }
+            if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.checkReqValue($('#promoSrvMemPacId'))) {
+                isValid = false;
+                msg += "* Please select the membership package.<br />";
+            }
+            
+            if(!isValid) {
+                Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
                 return false;
             }
-            Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "stocklist"});
+        
+            Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "stocklist", promoAppTypeId : $('#promoAppTypeId').val(), srvPacId : $('#promoSrvMemPacId').val()});
         });
         $('#btnProductDel').click(function() {
             fn_getPrdPriceInfo();
@@ -250,6 +261,8 @@
         });
         $('#promoAppTypeId').change(function() {
             fn_chgPromoDetail();
+            
+            doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : $('#promoAppTypeId').val()}, '', 'promoSrvMemPacId', 'S'); //Common Code
         });
         $('#promoTypeId').change(function() {
             fn_chgPromoDetail();
@@ -445,7 +458,7 @@
             $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
-            $('#promoSrvMemPacId').val('').prop("disabled", true);
+//          $('#promoSrvMemPacId').val('').prop("disabled", true);
             
             $('#sctPromoDetail').removeClass("blind");
         }
@@ -461,7 +474,7 @@
             $('#promoFreesvcPeriodTp').removeAttr("disabled");
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').removeAttr("disabled");
-            $('#promoSrvMemPacId').val('').prop("disabled", true);
+//          $('#promoSrvMemPacId').val('').prop("disabled", true);
             
             $('#sctPromoDetail').removeClass("blind");
         }
@@ -477,7 +490,7 @@
             $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').val('').prop("disabled", true);
-            $('#promoSrvMemPacId').removeAttr("disabled");
+//          $('#promoSrvMemPacId').removeAttr("disabled");
             
             $('#sctPromoDetail').removeClass("blind");
         }
@@ -493,7 +506,7 @@
             $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
-            $('#promoSrvMemPacId').val('').prop("disabled", true);
+ //         $('#promoSrvMemPacId').val('').prop("disabled", true);
             
             $('#sctPromoDetail').removeClass("blind");
         }
@@ -509,7 +522,7 @@
             $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
-            $('#promoSrvMemPacId').val('').prop("disabled", true);
+//          $('#promoSrvMemPacId').val('').prop("disabled", true);
             
             $('#sctPromoDetail').addClass("blind");
         }
@@ -524,7 +537,7 @@
             $('#promoFreesvcPeriodTp').removeAttr("disabled");
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').removeAttr("disabled");
-            $('#promoSrvMemPacId').removeAttr("disabled");
+//          $('#promoSrvMemPacId').removeAttr("disabled");
             
             $('#sctPromoDetail').removeClass("blind");
         }
