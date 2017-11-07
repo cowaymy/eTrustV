@@ -143,5 +143,21 @@ public class CTSubGroupListController {
 		return "services/servicePlanning/CTSubGroupAreaIDMainPop";
 	}
 	
+	/**
+	 * Services - Service Planning - Service Group Search
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCTSubGroupDscList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTSubGroupDscList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> selectCTSubGroupDscList = CTSubGroupListService.selectCTSubGroupDscList(params);
+		logger.debug("selectCTSubGroupDscList {}", selectCTSubGroupDscList);
+		return ResponseEntity.ok(selectCTSubGroupDscList);
+	}
+	
 	
 }
