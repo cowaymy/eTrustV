@@ -151,10 +151,14 @@ public class AdjustmentController {
 		logger.info("eventtype : {} ", params.get("eventtype"));
 		params.put("loginId", loginId);
 
-		adjustmentService.insertNewAdjustment(params);
+		String adjNo=adjustmentService.insertNewAdjustment(params);
+		
+		logger.info("adjNo : {} ", adjNo);
+		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(adjNo);
 		return ResponseEntity.ok(message);
 	}
 
