@@ -402,12 +402,12 @@ function SearchListAjax() {
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
     <li>Replenishment</li>
-    <li>Stock Qty Table</li>
+    <li>R.Mgmt Data</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Stock Qty Table</h2>
+<h2>R.Mgmt Data</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
