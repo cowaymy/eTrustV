@@ -166,6 +166,8 @@ public class PromotionController {
 	@RequestMapping(value = "/promotionProductPop.do")
 	public String promotionProductPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.put("gubun", params.get("gubun"));
+		model.put("promoAppTypeId", params.get("promoAppTypeId"));
+		model.put("srvPacId", params.get("srvPacId"));
 		return "sales/promotion/promotionProductPop";
 	}
 	
@@ -201,6 +203,13 @@ public class PromotionController {
     public ResponseEntity<List<EgovMap>> selectMembershipPkg(@RequestParam Map<String, Object> params)
     {
     	List<EgovMap> resultList = promotionService.selectMembershipPkg(params);
+    	return ResponseEntity.ok(resultList);
+    }
+    
+    @RequestMapping(value = "/selectProductCodeList.do", method = RequestMethod.POST)
+    public ResponseEntity<List<EgovMap>> selectProductCodeList(@RequestBody Map<String, Object> params)
+    {
+    	List<EgovMap> resultList = promotionService.selectProductCodeList(params);
     	return ResponseEntity.ok(resultList);
     }
     

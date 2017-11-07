@@ -222,7 +222,44 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 	
 	@Override
 	public List<EgovMap> selectMembershipPkg(Map<String, Object> params) {
+		
+		int promoAppType = CommonUtils.intNvl(params.get("promoAppTypeId"));
+		String selType = "";
+		
+		if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN) {
+			selType = "1";
+		}
+		else if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT || promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS) {
+			selType = "3";
+		}
+		else if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_RSVM) {
+			selType = "2";
+		}
+		else if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_OSVM || promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_FIL) {
+			selType = "4";
+		}
+		
+		params.put("selType", selType);
+		
 		return promotionMapper.selectMembershipPkg(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectProductCodeList(Map<String, Object> params) {
+		
+		int promoAppType = CommonUtils.intNvl(params.get("promoAppTypeId"));
+		String selType = "";
+		
+		if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN || promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_RSVM) {
+			selType = "1";
+		}
+		else {
+			selType = "2";
+		}
+		
+		params.put("stkType", selType);
+		
+		return promotionMapper.selectProductCodeList(params);
 	}
 	
 	@Override

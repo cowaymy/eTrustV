@@ -41,4 +41,6 @@ public interface PromotionMapper {
 
 	void updateSalesPromoFreeGift(SalesPromoFreeGiftVO salesPromoFreeGiftVO);
 
+	List<EgovMap> selectProductCodeList(Map<String, Object> params);
+
 }

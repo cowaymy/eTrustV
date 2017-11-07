@@ -74,21 +74,38 @@
     </update>
     
     <select id="selectMembershipPkg" parameterType="Map" resultType="egovMap">
-        SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
-             , T1.SRV_MEM_CODE
-             , T1.SRV_MEM_DESC AS CODE_NAME
-             , T1.SRV_MEM_DUR
-             , T1.SRV_MEM_PART_CHRG_TYPE_ID
-             , T1.SRV_MEM_LAB_CHRG
-             , T1.SRV_MEM_STUS_ID
-             , T1.SRV_MEM_CRT_DT
-             , T1.SRV_MEM_CRT_USER_ID
-             , T1.SRV_MEM_OLD_CODE
-          FROM SAL0091M T1
-         WHERE 1 = T1.SRV_MEM_STUS_ID
-           AND 9 = T1.SRV_MEM_PAC_ID
-         ORDER
-            BY T1.SRV_MEM_CODE ASC
+		SELECT CODE_ID
+		     , CODE_NAME
+		  FROM
+		     ( SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
+		            , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+		         FROM SAL0081D T1
+		        WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
+		          AND T1.PAC_TYPE IN ('0', '2')
+		          AND '1' = #{selType}
+		        UNION ALL
+		       SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
+		            , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+		         FROM SAL0081D T1
+		        WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
+		          AND T1.PAC_TYPE = '1'
+		          AND '2' = #{selType}
+		        UNION ALL
+		       SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+		            , T1.SRV_MEM_DESC AS CODE_NAME
+		         FROM SAL0091M T1
+		        WHERE T1.SRV_MEM_STUS_ID = 1
+		          AND T1.PAC_TYPE IN ('0', '2')
+		          AND '3' = #{selType}
+		        UNION ALL
+		       SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+		            , T1.SRV_MEM_DESC AS CODE_NAME
+		         FROM SAL0091M T1
+		        WHERE T1.SRV_MEM_STUS_ID = 1
+		          AND T1.PAC_TYPE = '1'
+		          AND '4' = #{selType}
+		     )
+		 ORDER BY CODE_ID
     </select>
     
     <select id="selectPriceInfo" parameterType="Map" resultType="egovMap">
@@ -387,5 +404,95 @@
            SET PROMO_FREE_GIFT_STUS_ID = #{promoFreeGiftStusId}
              , PROMO_FREE_GIFT_QTY     = #{promoFreeGiftQty}
          WHERE PROMO_FREE_GIFT_ID      = #{promoFreeGiftId}
-    </update>    
+    </update>
+
+    <!--Product 정보 조회 -->
+    <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
+        SELECT itemid
+             , itemcode
+             , itemname
+             , cateid
+             , typeid
+             , stateid
+             , catename
+             , statusname
+          FROM
+             (
+            <if test='stkType != null and stkType == "1"'>
+		       SELECT T1.STK_ID       itemid
+		            , T1.STK_CODE     itemcode
+		            , T1.STK_DESC     itemname
+		            , T1.STK_CTGRY_ID cateid
+		            , T1.STK_TYPE_ID  typeid
+		            , T1.STUS_CODE_ID stateid
+		            , (SELECT CODE_NAME
+		                 FROM SYS0013M
+		                WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+		            , (SELECT CODE_NAME
+		                 FROM SYS0013M
+		                WHERE CODE_ID = T1.STK_TYPE_ID)
+		                 typename
+		            , (SELECT SYS0038M.NAME
+		                 FROM SYS0038M
+		                WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+                 FROM SYS0026M T1
+                    , SAL0082D T2
+                    , SYS0013M T3
+                    , SAL0016M T4
+                WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
+                  AND T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 1 != T1.IS_NCV
+                  AND 1 = T2.SRV_PAC_ITM_STUS_ID
+                  AND 61 = T1.STK_TYPE_ID
+                  AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
+                  AND T1.STK_ID = T4.STK_ID
+                  AND T4.AMT &gt; 0
+            </if>
+            <if test='stkType != null and stkType == "2"'>
+               SELECT T1.STK_ID       itemid
+                    , T1.STK_CODE     itemcode
+                    , T1.STK_DESC     itemname
+                    , T1.STK_CTGRY_ID cateid
+                    , T1.STK_TYPE_ID  typeid
+                    , T1.STUS_CODE_ID stateid
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_TYPE_ID)
+                         typename
+                    , (SELECT SYS0038M.NAME
+                         FROM SYS0038M
+                        WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+                 FROM SYS0026M T1
+                    , SAL0092M T2
+                    , SYS0013M T3
+                    , SAL0016M T4
+                WHERE T1.STK_ID = T2.SRV_MEM_ITM_STK_ID
+                  AND T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 1 != T1.IS_NCV
+                  AND 1 = T2.SRV_MEM_ITM_STUS_ID
+                  AND 61 = T1.STK_TYPE_ID
+                  AND T2.SRV_MEM_PAC_ID = #{srvPacId}
+                  AND T1.STK_ID = T4.STK_ID
+                  AND T4.AMT &gt; 0
+            </if>
+             )
+         WHERE 1 = 1
+       <if test="scode != null and scode !=''">
+           AND itemcode LIKE  #{scode}||'%'
+       </if>
+       <if test="sname != null and sname !=''">
+           AND itemname LIKE '%'|| #{sname} ||'%'
+       </if>                
+       <if test="cateid != null and cateid !=''">
+           AND cateid =  #{cateid}
+       </if>
+       <if test="typeid != null and typeid !=''">
+           AND typeid =  #{typeid}
+       </if>
+         ORDER BY itemname ASC
+    </select>
+    
 </mapper>
