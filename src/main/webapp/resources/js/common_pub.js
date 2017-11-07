@@ -1,8 +1,5 @@
 $(document).ready(function(){
 /* 제이쿼리 ui달력 start*/
-var theTapArea=$(".tap_wrap").children(".tap_area");
-
-theTapArea.eq(0).show();
 
 var holidays = {//휴일 세팅 하기
     /*"0809":{type:0, title:"신정", year:"2017"}*/
