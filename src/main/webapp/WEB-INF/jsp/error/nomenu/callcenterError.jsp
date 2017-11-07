@@ -9,8 +9,7 @@
     <title>eTrust system - Invalid Token</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/master.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/common.css"/>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common_pub.js"></script>
+
 </head>
 <body>
 
