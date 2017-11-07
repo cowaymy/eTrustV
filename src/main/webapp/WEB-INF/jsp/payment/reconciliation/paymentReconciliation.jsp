@@ -134,7 +134,7 @@ var maintenancePopLayout = [
             var template = '<div class="my_div">';
             
             if(value == "None") {
-                template += '<span style="line-height:2em;">선택할 수 없도록 작성됨(즉, 동적 select 표현)</span>';
+                template += '';
             } else {
             	
             	var disableYN = "";
@@ -144,7 +144,7 @@ var maintenancePopLayout = [
             		disableYN = "";
             	}
                 
-                template += '<select style="width:100px;" onchange="" ' + disableYN + '>';
+                template += '<select style="width:100px;" onchange="javascript:mySelectChangeHandler(' + rowIndex + ', this.value, event);" ' + disableYN + '>';
                 
                 for(var i=0, len=keyValueList.length; i<len; i++) {
                     code =  keyValueList[i]["code"];
@@ -158,7 +158,7 @@ var maintenancePopLayout = [
                 template += '</select>';
             }
             template += '</div>';
-            return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
+            return template; // HTML 템플릿 반환..그대로 innerHTML 속성값으로 처리됨
         }
 
 	}, {
@@ -296,7 +296,17 @@ var maintenancePopLayout = [
             return "mycustom-disable-color";
         
         return null;
-    };
+    }
+    
+    // 셀렉트 변경 핸들러
+    function mySelectChangeHandler(rowIndex, selectedValue, event) {
+        alert(selectedValue);
+        
+        // 그리드에 실제 업데이트 적용 시킴
+        AUIGrid.updateRow(maintenanceGridID, {
+            "fDepItmModeId" : selectedValue
+        }, rowIndex);
+    }
 
     
 </script>
