@@ -830,11 +830,11 @@ function f_multiCombo() {
 <tr>
     <th scope="row">Category Type</th>
     <td>
-        <select class="multy_select" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" /></select>
+        <select class="multy_select" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" class="w100p" /></select>
     </td>
     <th scope="row">Material Type</th>
     <td>
-        <select class="multy_select" multiple="multiple" id="materialtype" name="materialtype[]" /></select>
+        <select class="multy_select" multiple="multiple" id="materialtype" name="materialtype[]"  class="w100p" /></select>
     </td>
     <th scope="row">Deletion Flag</th>
     <td>
