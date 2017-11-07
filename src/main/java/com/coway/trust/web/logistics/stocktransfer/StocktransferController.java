@@ -221,13 +221,13 @@ public class StocktransferController {
 		param.put("add", insList);
 		param.put("form", formMap);
 		param.put("userId", userId);
-		stock.insertStockTransferInfo(param);
-
+		String reqNo=stock.insertStockTransferInfo(param);
+		logger.debug("reqNo!!!!! : {}", reqNo);
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
+		message.setData(reqNo);
 		return ResponseEntity.ok(message);
 	}
 
