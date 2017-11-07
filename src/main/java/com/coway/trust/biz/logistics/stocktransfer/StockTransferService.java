@@ -10,7 +10,7 @@ public interface StockTransferService {
 
 	List<EgovMap> selectStockTransferDeliveryList(Map<String, Object> params);
 
-	void insertStockTransferInfo(Map<String, Object> params);
+	String insertStockTransferInfo(Map<String, Object> params);
 
 	List<EgovMap> addStockTransferInfo(Map<String, Object> params);
 
