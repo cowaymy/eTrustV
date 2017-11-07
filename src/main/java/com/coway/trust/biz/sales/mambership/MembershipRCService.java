@@ -21,7 +21,8 @@ public interface MembershipRCService {
 	 */
 	List<EgovMap> selectCancellationList(Map<String, Object> params);	
 	List<EgovMap> selectReasonList(Map<String, Object> params);	
-	List<EgovMap> selectBranchList(Map<String, Object> params);	
+	List<EgovMap> selectBranchList(Map<String, Object> params);
+	EgovMap selectCancellationInfo(Map<String, Object> params);	
 	
 }
   

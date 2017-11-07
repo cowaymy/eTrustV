@@ -49,5 +49,9 @@ public class MembershipRCServiceImpl extends EgovAbstractServiceImpl implements 
 	public List<EgovMap> selectReasonList(Map<String, Object> params) {
 		return membershipRCMapper.selectReasonList(params);
 	}
+	@Override
+	public EgovMap selectCancellationInfo(Map<String, Object> params) {
+		return membershipRCMapper.selectCancellationInfo(params);
+	}
 
 }

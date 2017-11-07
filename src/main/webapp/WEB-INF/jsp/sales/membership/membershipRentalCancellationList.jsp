@@ -80,6 +80,10 @@ function fn_selectListAjax() {
 function creatGrid(){
     
     var cancellColLayout = [ {
+        dataField : "trmnatId",
+        headerText : '',
+        visible : false
+    },{
         dataField : "trmnatRefNo",
         headerText : '<spring:message code="sales.cancellNo" />',
         width : 150
@@ -127,7 +131,24 @@ function creatGrid(){
          }; 
     
     cancellGrid = GridCommon.createAUIGrid("#cancellGrid", cancellColLayout, "", cancellOptions); 
+    
+    // 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(cancellGrid, "cellDoubleClick", function(event){
+
+        $("#trmnatId").val(AUIGrid.getCellValue(cancellGrid , event.rowIndex , "trmnatId"));
+        fn_viewPop();
+    });
 }
+
+//view 화면 호출.
+function fn_viewPop() {  	
+	//var pram  ="?trmnatId="+ $("#trmnatId").val() ; 
+    Common.popupDiv("/sales/membership/cancellationViewPop.do", {trmnatId :  $("#trmnatId").val()}, null, true, "_ViewSVMDetailsDiv1");
+    
+}
+
+
+
 
 </script>
 
@@ -151,7 +172,7 @@ function creatGrid(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="listSForm" name="listSForm">
-
+<input type = "hidden" id="trmnatId" name="trmnatId" >
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

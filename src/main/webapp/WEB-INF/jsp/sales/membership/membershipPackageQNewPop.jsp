@@ -50,7 +50,12 @@ $(document).ready(function(){
         window.event.returnValue = false;
         
    });
-        
+    
+    CommonCombo.make("pacType", "/common/selectCodeList.do", {groupCode:'366', orderValue:'CODE'}, "", {
+        id: "code",
+        name: "codeName"
+    });    
+    
 });
 
 
@@ -380,8 +385,6 @@ function fn_IsExistSVMContractPackCode(){
 	<th scope="row">Package Type<span class="must">*</span></th>
     <td>
     <select class=""  id='pacType' name ='pacType' >
-     <option value="0">Starter Package</option>
-     <option value="1">Membership  Package</option>
     </select>
     </td>
 </tr>

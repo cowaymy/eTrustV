@@ -8,6 +8,11 @@ var packageInfo={};
 
 $(document).ready(function(){
     fn_selectCodel();
+    
+    CommonCombo.make("pacType", "/common/selectCodeList.do", {groupCode:'366', orderValue:'CODE'}, "", {
+        id: "code",
+        name: "codeName"
+    });
 });
 
 
@@ -52,7 +57,7 @@ function fn_selectListAjax() {
 	    	  $("#remark").val(packageInfo.srvPacItemRemark);
 	    	  $("#pacType").val(packageInfo.pacType);
 	    	  
-	    	  if($("#pacType").val() == "0"){
+	    	  if($("#pacType").val() != "1"){
                   $("#srvPacItmRental").prop("readonly", true);
                   $("#srvPacItmRental").attr("class", "readonly");
             }
@@ -60,7 +65,7 @@ function fn_selectListAjax() {
 	        }else{
 	        	$("#pacType").val(packType);
 	            
-	            if($("#pacType").val() == '0'){
+	            if($("#pacType").val() != '1'){
 	                $("#srvPacItmRental").prop("readonly", true);
 	                $("#srvPacItmRental").attr("class", "readonly");
                     $("#srvPacItmRental").val("0");
@@ -289,8 +294,6 @@ function fn_DisableField(){
 	<th scope="row">Package Type <span class="must">*</span></th>
     <td>    
     <select class="w40p disabled"  id='pacType' name ='pacType'  disabled ="disabled" >
-     <option value="0">Starter Package</option>
-     <option value="1">Membership  Package</option>
     </select>
     </td> 
 </tr>

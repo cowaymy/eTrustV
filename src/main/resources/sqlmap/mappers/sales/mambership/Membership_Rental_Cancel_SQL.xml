@@ -71,6 +71,36 @@
   
     </select>
     
+    <select id="selectCancellationInfo" parameterType="Map" resultType="egovMap">
+		 SELECT A.TRMNAT_ID   ,
+			       A.TRMNAT_REF_NO   ,
+			       A.TRMNAT_CNTRCT_ID   ,
+			       B.SRV_CNTRCT_REF_NO   ,
+			       C.SALES_ORD_NO   ,
+			       A.TRMNAT_RESN_ID   ,
+			       D.RESN_DESC   ,
+			       TO_CHAR(A.TRMNAT_CRT_DT, 'DD/MM/YYYY')   TRMNAT_CRT_DT ,
+			       F.USER_NAME   ,
+			       G.BRNCH_ID   ,
+			       G.CODE   ,
+			       A.TRMNAT_PNALTY   ,
+			       H.TAX_INVC_REF_NO   ,
+			       E.CODE_NAME   ,
+			       A.TRMNAT_REM   ,
+			       A.TRMNAT_OBLIGT_PRIOD   ,
+			       A.TRMNAT_CNTRCT_SUB_PRIOD   
+			  FROM SAL0086D A
+			         JOIN SAL0077D B   ON B.SRV_CNTRCT_ID = A.TRMNAT_CNTRCT_ID
+			         JOIN SAL0001D C   ON C.SALES_ORD_ID = B.SRV_CNTRCT_ORD_ID
+			         JOIN SYS0032M D   ON D.RESN_ID = A.TRMNAT_RESN_ID
+			         JOIN SYS0013M E   ON E.CODE_ID = A.TRMNAT_REQSTER
+			         JOIN SYS0047M F   ON F.USER_ID = A.TRMNAT_CRT_USER_ID
+			         JOIN SYS0005M G   ON G.BRNCH_ID = F.USER_BRNCH_ID
+			         JOIN PAY0031D H   ON H.TAX_INVC_SVC_NO = A.TRMNAT_REF_NO
+			 WHERE  A.TRMNAT_ID = #{trmnatId} 
+			 AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
     
 	    
 </mapper>

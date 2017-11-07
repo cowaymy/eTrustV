@@ -534,7 +534,7 @@ public class  MembershipRentalController {
     			String v = (String) params.get("salesDate" );
     			
     			String temp[] = v.split("/");
-    			params.put("CutOffDate", temp[1]+"-"+temp[0]+"- 01");  
+    			params.put("CutOffDate", temp[1]+"-"+temp[0]+"-01");  
     			
 		}
 		

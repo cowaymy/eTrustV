@@ -30,6 +30,10 @@ $(document).ready(function(){
    
     fn_keyEvent();
     
+    CommonCombo.make("PAC_TYPE", "/common/selectCodeList.do", {groupCode:'366', orderValue:'CODE'}, "", {
+        id: "code",
+        name: "codeName"
+    });
 });
 
 
@@ -400,8 +404,6 @@ function fn_delete(){
 	<th scope="row">Package Type</th>
 	<td colspan="3">
 	<select class="multy_select w40p"   multiple="multiple"  id='PAC_TYPE' name ='PAC_TYPE' >
-     <option value="0">Starter Package</option>
-     <option value="1">Membership  Package</option>
     </select>
     </td>
 </tr>

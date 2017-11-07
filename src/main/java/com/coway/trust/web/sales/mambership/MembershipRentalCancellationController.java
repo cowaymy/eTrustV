@@ -3,6 +3,7 @@
  */
 package com.coway.trust.web.sales.mambership;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,18 @@ public class MembershipRentalCancellationController {
 		return "sales/membership/membershipRentalCancellationList";
 	} 
 	
+	@RequestMapping(value = "/cancellationViewPop.do")
+	public String cancellationView(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("in  cancellationView ");
+		logger.debug("param ===================>>  " + params);
+		
+
+		model.addAttribute("trmnatId",params.get("trmnatId")); 
+		
+		return "sales/membership/membershipRentalCancellationViewPop";
+	} 
+	
 	@RequestMapping(value = "/selectCancellationList", method = RequestMethod.GET) 
 	public ResponseEntity<List<EgovMap>> selectCancellationList(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) {
@@ -70,6 +83,7 @@ public class MembershipRentalCancellationController {
 		
 		return ResponseEntity.ok(list);
 	}
+	
 	@RequestMapping(value = "/selectReasonList", method = RequestMethod.GET) 
 	public ResponseEntity<List<EgovMap>> selectReasonList(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) {
@@ -81,5 +95,19 @@ public class MembershipRentalCancellationController {
 		return ResponseEntity.ok(list);
 	}
 	
+	
+	@RequestMapping(value = "/selectCancellationInfo", method = RequestMethod.GET) 
+	public ResponseEntity<EgovMap> selectCancellationInfo(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  selectReasonList ");
+		logger.debug("param ===================>>  " + params);		
+		
+		EgovMap cancellInfo = membershipRCService.selectCancellationInfo(params);		
+
+		cancellInfo.put("srvCntrctId", params.get("trmnatId"));
+		
+		return ResponseEntity.ok(cancellInfo);
+	}
 	
 }
