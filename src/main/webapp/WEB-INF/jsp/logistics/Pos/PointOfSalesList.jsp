@@ -145,7 +145,7 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     **********************************/
-       doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','searchStatus', 'S' , '');
+       doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
 	   /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
 	   var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
        doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , 'SearchListAjax');     
