@@ -394,7 +394,7 @@
 					</tbody>
 				</table>
 				<!-- table end -->
-			</form>02
+			</form>
 		</section>
 		<!-- search_table end -->
 		<aside class="link_btns_wrap">
