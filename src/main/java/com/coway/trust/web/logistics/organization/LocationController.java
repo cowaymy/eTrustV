@@ -249,8 +249,8 @@ public class LocationController {
 
 		Map<String, Object> smap = new HashMap();
 		smap.put("locid", locid);
-
-		loc.deleteLocationInfo(smap);
+		logger.debug("locid{} :   ", locid);
+		//loc.deleteLocationInfo(smap);
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
