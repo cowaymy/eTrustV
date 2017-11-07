@@ -714,14 +714,14 @@ $(document).ready(function()
 
     $("#pgmCode").focus();
 
-    $("#pgmCode").keydown(function(key)
-    {
-       if (key.keyCode == 13)
-       {
-    	   fnSelectPgmListAjax();
-       }
+//     $("#pgmCode").keydown(function(key)
+//     {
+//        if (key.keyCode == 13)
+//        {
+//     	   fnSelectPgmListAjax();
+//        }
 
-    });
+//     });
 
     $("#pgmCode").bind("keyup", function()
     {
