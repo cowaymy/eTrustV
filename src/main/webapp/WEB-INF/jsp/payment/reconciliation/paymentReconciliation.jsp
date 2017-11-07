@@ -326,69 +326,67 @@ var maintenancePopLayout = [
 	</aside><!-- title_line end -->
 	<section class="search_table"><!-- search_table start -->
 		<form action="#" method="post" id="searchForm">
-		<table class="type1"><!-- table start -->
-		<caption>table</caption>
-		<colgroup>
-		    <col style="width:170px" />
-		    <col style="width:*" />
-		    <col style="width:230px" />
-		    <col style="width:*" />
-		</colgroup>
-		<tbody>
-			<tr>
-			    <th scope="row">Transaction No.</th>
-			    <td><input type="text" title="" placeholder="Transaction No." class="w100p" id="transNo" name="transNo" /></td>
-			    <th scope="row">Bank Account</th>
-			    <td>
-				    <select class="w100p" id="accountId" name="accountId">
-				    </select>
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Branch Code</th>
-			    <td>
-			         <select class="w100p" id="branchId" name="branchId">
-			    </select>
-			    </td>
-			    <th scope="row">Payment Date</th>
-			    <td>
-				    <div class="date_set w100p"><!-- date_set start -->
-				    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="paymentDateFr" /></p>
-				    <span>To</span>
-				    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="paymentDateTo" /></p>
-				    </div><!-- date_set end -->
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Status</th>
-			    <td colspan="3">
-				    <select class="multy_select" multiple="multiple" id="statusId" name="statusId">
-				        <option value="44">Pending</option>
-				        <option value="6">Rejected</option>
-				        <option value="10">Cancelled</option>
-				        <option value="5">Approved</option>
-				    </select>
-			    </td>
-			</tr>
-		</tbody>
-		</table><!-- table end -->
-		
-		<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-			<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-			<dl class="link_list">
-			    <dt>Link</dt>
-			    <dd>
-				    <!-- <ul class="btns">
-				        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-				    </ul> -->
-				    <ul class="btns">
-				        <li><p class="link_btn type2"><a href="javascript:fn_depositMaintenancePop();">Deposit Maintenance</a></p></li>
-				    </ul>
-				    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-			    </dd>
-			</dl>
-		</aside><!-- link_btns_wrap end -->
-		
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:170px" />
+				    <col style="width:*" />
+				    <col style="width:230px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Transaction No.</th>
+					    <td><input type="text" title="" placeholder="Transaction No." class="w100p" id="transNo" name="transNo" /></td>
+					    <th scope="row">Bank Account</th>
+					    <td>
+						    <select class="w100p" id="accountId" name="accountId">
+						    </select>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Branch Code</th>
+					    <td>
+					         <select class="w100p" id="branchId" name="branchId">
+					    </select>
+					    </td>
+					    <th scope="row">Payment Date</th>
+					    <td>
+						    <div class="date_set w100p"><!-- date_set start -->
+						    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="paymentDateFr" /></p>
+						    <span>To</span>
+						    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="paymentDateTo" /></p>
+						    </div><!-- date_set end -->
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Status</th>
+					    <td colspan="3">
+						    <select class="multy_select" multiple="multiple" id="statusId" name="statusId">
+						        <option value="44">Pending</option>
+						        <option value="6">Rejected</option>
+						        <option value="10">Cancelled</option>
+						        <option value="5">Approved</option>
+						    </select>
+					    </td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+				<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+				<dl class="link_list">
+				    <dt>Link</dt>
+				    <dd>
+					    <!-- <ul class="btns">
+					        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+					    </ul> -->
+					    <ul class="btns">
+					        <li><p class="link_btn type2"><a href="javascript:fn_depositMaintenancePop();">Deposit Maintenance</a></p></li>
+					    </ul>
+					    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+				    </dd>
+				</dl>
+			</aside><!-- link_btns_wrap end -->
 		</form>
 	</section><!-- search_table end -->
 	
