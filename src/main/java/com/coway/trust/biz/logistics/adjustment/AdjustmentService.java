@@ -7,7 +7,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface AdjustmentService {
 
-	void insertNewAdjustment(Map<String, Object> params);
+	String insertNewAdjustment(Map<String, Object> params);
 
 	List<EgovMap> selectAdjustmentList(Map<String, Object> params);
 
