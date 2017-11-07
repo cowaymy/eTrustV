@@ -108,6 +108,7 @@ function fn_selectState(){
 	
 	 
 $(document).ready(function(){
+	doGetCombo('/services/mileageCileage/selectBranch', 43, '','branchId', 'M' ,  'f_multiCombo');
 	 holidayGrid();
 	 holidayCTassignGrid();
 	 fn_selectState();
@@ -140,6 +141,17 @@ $(document).ready(function(){
 	            console.log("data : " + result);
 	        });
     	}
+    }
+    
+    function f_multiCombo(){
+    	 $(function() {
+    	       
+    	        $('#branchId').change(function() {
+    	        }).multipleSelect({
+    	            selectAll : true,
+    	            width : '80%'
+    	        });
+    	    });
     }
     function fnValidationCheck() 
     {
@@ -336,9 +348,9 @@ $(document).ready(function(){
     <td>
         <div class="search_100p">
         <select class="multy_select w100p" multiple="multiple" id="branchId" name="branchId">
-        <c:forEach var="list" items="${branchList}">
+       <%--  <c:forEach var="list" items="${branchList}">
              <option value="${list.codeId}">${list.codeName}</option>
-         </c:forEach>
+         </c:forEach> --%>
         </select>
         </div>
     </td>
