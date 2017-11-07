@@ -500,6 +500,10 @@ var batchInfoLayout = [
         
         searchList();
     }
+    function fn_close(){
+        $("#searchForm")[0].reset();
+        AUIGrid.clearGridData(myGridID);
+    }
 </script>
 <!-- content start -->
 <section id="content">
@@ -514,7 +518,7 @@ var batchInfoLayout = [
         <h2>Internal Staff Payment</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="#" onclick="fn_close();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside><!-- title_line end -->
     <!-- search_table start -->
@@ -868,7 +872,7 @@ var batchInfoLayout = [
 		</form>
 		<ul class="center_btns mt20">
 		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
-		    <li><p class="btn_blue2 big"><a href="#">Download CSV Format</a></p></li>
+		    <li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/payment/batchPaymentList_internalStaffFormat.csv">Download CSV Format</a></p></li>
 		</ul>
 	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
