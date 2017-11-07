@@ -170,7 +170,8 @@ $(function(){
 	    	dat.form = $("#headForm").serializeJSON();
 	    	
 	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
-	            Common.alert(result.message , locationList);
+// 	    		Common.alert(result.message,locationList);
+	    		Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
 	            AUIGrid.resetUpdatedItems(reqGrid, "all");
 	        },  function(jqXHR, textStatus, errorThrown) {
 	            try {

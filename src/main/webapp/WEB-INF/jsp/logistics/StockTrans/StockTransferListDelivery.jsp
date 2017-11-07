@@ -48,7 +48,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                      {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
-                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 },
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"reqstqty"     ,headerText:"Requested Qty"                 ,width:120    ,height:30                },
                      {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
@@ -191,13 +191,43 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $('#delivery').click(function(){
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	
+    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);  	
+//     	if(checkedItems.length <= 0) {
+//             return false;
+//         }else{
+//             var data = {};
+//             data.checked = checkedItems; 
+//             Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
+//                 Common.alert(result.message);
+//                 AUIGrid.resetUpdatedItems(listGrid, "all");            
+//             },  function(jqXHR, textStatus, errorThrown) {
+//                 try {
+//                 } catch (e) {
+//                 }  
+//                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+//             });
+//             for (var i = 0 ; i < checkedItems.length ; i++){
+//                 AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
+//             }
+//         }	
+    	var chkfalg; 
     	if(checkedItems.length <= 0) {
+    		Common.alert('No data selected.');
     		return false;
-    	}else{
+    	}else{	
+    		
+    	for(var i=0, len = checkedItems.length; i<len; i++) {
+    	  if (checkedItems[i].delyqty > 0 ){
+                  chkfalg="Y";
+                  break;
+                }else{
+                   chkfalg="N";
+                } 
+    	  }
+    	if(chkfalg=="Y"){
 	    	var data = {};
 	    	data.checked = checkedItems; 
+	    	console.log(data);
 	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
 	            Common.alert(result.message , SearchListAjax);
 	            AUIGrid.resetUpdatedItems(listGrid, "all");            
@@ -209,7 +239,10 @@ $(function(){
 	        });
 	    	for (var i = 0 ; i < checkedItems.length ; i++){
 	    		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
-	    	}
+	    	}	
+	      }	else{
+	    	  Common.alert('Please Enter Delivered Qty');
+	      }       	    	
     	}
     });
     
