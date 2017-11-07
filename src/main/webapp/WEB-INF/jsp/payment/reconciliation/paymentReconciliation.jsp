@@ -300,7 +300,6 @@ var maintenancePopLayout = [
     
     // 셀렉트 변경 핸들러
     function mySelectChangeHandler(rowIndex, selectedValue, event) {
-        alert(selectedValue);
         
         // 그리드에 실제 업데이트 적용 시킴
         AUIGrid.updateRow(maintenanceGridID, {
