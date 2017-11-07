@@ -5,7 +5,7 @@
 
 var myGridID;
 var myGridID2;//AREA
-var subList;
+var subList = new Array();
 //popup 크기
 var option = {
         winName : "popup",
@@ -17,8 +17,7 @@ var option = {
 
 //subList=rsult.list;
 function getUseYnComboList() {
-    var list = [ "DSC-01-01", "DSC-01-02" ];
-    return list;
+	  
 }
 function getServiceWeekComboList() {
     var list = [ "1", "2", "3", "4" ];
@@ -54,10 +53,11 @@ function CTSubgGroupGrid() {
             type : "ComboBoxRenderer",
             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
             listFunction : function(rowIndex, columnIndex, item, dataField) {
-                var list = getUseYnComboList();
+                var list = subList;
                 return list;
             },
-            keyField : "id"
+            keyField : "ctSubGrp",
+            valueField : "codeName",
         }
     }];
      // 그리드 속성 설정
@@ -218,6 +218,30 @@ $(document).ready(function() {
 	CTSubgGroupGrid();
 	CTSubAreaGroupGrid();
 	$("#grid_wrap_ctaAreaSubGroup").hide();
+	
+	
+	 AUIGrid.bind(myGridID, "cellClick", function(event) {
+	        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
+	        branchCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
+	        Common.ajax("GET", "/services/serviceGroup/selectCTSubGroupDscList.do", {branchCode:branchCode}, function(result) {
+	            console.log("성공.");
+	            console.log("data : " + result);
+	            subList = new Array()
+	            for (var i = 0; i < result.length; i++) {
+	                var list = new Object();
+	                list.ctSubGrp = result[i].codeId;
+	                list.codeName = result[i].codeName;
+	                subList.push(list);
+	                 }
+	            return subList;
+	            //AUIGrid.setGridData(myGridID, result);
+	        });
+	        
+	        //memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
+	        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+	    }); 
+	     
+	
 	
 });
 
