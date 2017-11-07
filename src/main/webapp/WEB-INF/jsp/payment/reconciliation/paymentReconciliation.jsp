@@ -67,7 +67,7 @@ var masterColumnLayout = [
         dataField : "remark",
         headerText : "Remark",
         editable : false,
-        style : "my-custom-up",
+        style : "my-custom-up"
     }, {
         dataField : "fDepReconCrtDt",
         headerText : "Created",
@@ -237,7 +237,7 @@ var maintenancePopLayout = [
     		    AUIGrid.bind(maintenanceGridID, "cellEditBegin", function(event) {
     		        // 셀이 Anna 인 경우
     		        if(event.item.fDepItmIsMtch == "1"){
-    		            return false
+    		            return false;
     		        }
     		    });
     			
