@@ -12,16 +12,16 @@
         INNER JOIN ORG0001D E ON E.MEM_ID = D.MEM_ID AND E.STUS = '1'
         WHERE A.TYPE_ID = '43'
         <if test="dscCode != null and dscCode != ''">
-          AND  A.CODE = #{dscCode}
+          AND LOWER(A.CODE) = LOWER(#{dscCode})
         </if>
         <if test="memCode != null and memCode != ''">
-          AND  B.MEM_CODE =#{memCode}
+          AND  LOWER(B.MEM_CODE) =LOWER(#{memCode})
         </if>
          <if test="CTMemId != null and CTMemId != ''">
-          AND E.MEM_CODE  = #{CTMemId}
+          AND LOWER(E.MEM_CODE)  = LOWER(#{CTMemId})
         </if>
         <if test="ctSubGrp != null and ctSubGrp != ''">
-          AND D.CT_SUB_GRP   = #{ctSubGrp}
+          AND LOWER(D.CT_SUB_GRP)  = LOWER(#{ctSubGrp})
         </if>
         ORDER BY CODE
 </select>
