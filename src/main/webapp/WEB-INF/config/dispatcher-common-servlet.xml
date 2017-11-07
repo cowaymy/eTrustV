@@ -63,7 +63,6 @@
             <mvc:exclude-mapping path="/login/*.do"/>
             <mvc:exclude-mapping path="/resources/**"/>
             <mvc:exclude-mapping path="/**/*Pop.do"/>
-            <mvc:exclude-mapping path="/**/api/**"/>
             <mvc:exclude-mapping path="/swagger-ui.html"/>
             <mvc:exclude-mapping path="/swagger-resources/**"/>
             <mvc:exclude-mapping path="/webjars/**"/>
@@ -71,20 +70,11 @@
             <mvc:exclude-mapping path="/configuration/**"/>
             <mvc:exclude-mapping path="/sample/**"/>
 
+            <mvc:exclude-mapping path="/**/api/**"/>
             <!-- MOBILE WEB -->
             <mvc:exclude-mapping path="/mobileWeb/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
-        </mvc:interceptor>
-
-        <!-- mobile web Interceptor-->
-        <mvc:interceptor>
-            <mvc:mapping path="/mobileWeb/**"/>
-
-            <mvc:exclude-mapping path="/mobileWeb/login.do"/>
-            <mvc:exclude-mapping path="/**/api/**"/>
-
-            <bean class="com.coway.trust.cmmn.interceptor.MobileWebAuthenticInterceptor" />
         </mvc:interceptor>
 
 
@@ -99,6 +89,17 @@
             <bean class="com.coway.trust.cmmn.interceptor.CallCenterAuthenticInterceptor" />
         </mvc:interceptor>
 
+
+
+        <!-- mobile web Interceptor-->
+        <mvc:interceptor>
+            <mvc:mapping path="/mobileWeb/**"/>
+
+            <mvc:exclude-mapping path="/mobileWeb/login.do"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
+
+            <bean class="com.coway.trust.cmmn.interceptor.MobileWebAuthenticInterceptor" />
+        </mvc:interceptor>
 
         <!-- locale 설정 처리. -->
         <mvc:interceptor>

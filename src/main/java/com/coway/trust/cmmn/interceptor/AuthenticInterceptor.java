@@ -42,19 +42,19 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			throws ServletException {
 
 		// check request to Callcenter
-		if (VerifyRequest.isCallCenterRequest(request)) {
+		if (VerifyRequest.isNotCallCenterRequest(request)) {
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+			if (sessionVO != null && sessionVO.getUserId() > 0) {
+				checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
+			} else {
+				LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
+						request.getRequestURI());
+				throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+			}
+
+		}else{
 			LOGGER.info("[preHandle] this url is call by Callcenter.......");
-			return true;
-		}
-
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-
-		if (sessionVO != null && sessionVO.getUserId() > 0) {
-			checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
-		} else {
-			LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
-					request.getRequestURI());
-			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
 
 		return true;
@@ -87,7 +87,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			ModelAndView modelAndView) throws Exception {
 
 		// check request to Callcenter
-//		if (VerifyRequest.isNotCallCenterRequest(request)) {
+		if (VerifyRequest.isNotCallCenterRequest(request)) {
 
 			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
@@ -97,10 +97,10 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 
 			if (modelAndView != null) {
 				Map<String, Object> params = new HashMap<>();
+				params.put("userId", sessionVO.getUserId());
+				params.put("pgmPath", request.getRequestURI());
 
 				if (request.getRequestURI().endsWith(".do")) {
-					params.put("userId", sessionVO.getUserId());
-					params.put("pgmPath", request.getRequestURI());
 					params.put("userName", sessionVO.getUserName());
 					params.put("systemId", AppConstants.LOGIN_WEB);
 					params.put("pgmCode", "-");
@@ -116,9 +116,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
 				modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
 			}
-//		}else{
-//			LOGGER.info("[postHandle] this url is call by Callcenter.......");
-//		}
+		}else{
+			LOGGER.info("[postHandle] this url is call by Callcenter.......");
+		}
 	}
 
 }

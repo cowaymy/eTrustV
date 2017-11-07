@@ -18,11 +18,14 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.callcenter.TokenService;
+import com.coway.trust.biz.common.AccessMonitoringService;
+import com.coway.trust.biz.common.MenuService;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.exception.CallcenterException;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 
 public class CallCenterAuthenticInterceptor extends WebContentInterceptor {
 
@@ -39,6 +42,12 @@ public class CallCenterAuthenticInterceptor extends WebContentInterceptor {
 
 	@Autowired
 	private LoginService loginService;
+
+	@Autowired
+	private MenuService menuService;
+
+	@Autowired
+	private AccessMonitoringService accessMonitoringService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -59,7 +68,7 @@ public class CallCenterAuthenticInterceptor extends WebContentInterceptor {
 					if (sessionVO.getUserId() == 0) {
 						LoginVO loginVO = loginService.loginByCallcenter(params);
 
-						if ( loginVO == null || loginVO.getUserId() == 0) {
+						if (loginVO == null || loginVO.getUserId() == 0) {
 							throw new CallcenterException(HttpStatus.UNAUTHORIZED,
 									HttpStatus.UNAUTHORIZED.getReasonPhrase());
 						}
@@ -96,6 +105,37 @@ public class CallCenterAuthenticInterceptor extends WebContentInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 
+		if (VerifyRequest.isCallCenterRequest(request)) {
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+			if (sessionVO == null || sessionVO.getUserId() == 0) {
+				throw new CallcenterException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+			}
+
+			if (modelAndView != null) {
+
+				Map<String, Object> params = new HashMap<>();
+
+				params.put("userId", sessionVO.getUserId());
+				params.put("pgmPath", request.getRequestURI());
+
+				if (request.getRequestURI().endsWith(".do")) {
+					params.put("userName", sessionVO.getUserName());
+					params.put("systemId", AppConstants.LOGIN_CALL_CENTER);
+					params.put("pgmCode", "-");
+					params.put("ipAddr", CommonUtils.getClientIp(request));
+
+					accessMonitoringService.insertAccessMonitoring(params);
+				}
+
+				// url 로 직접 접근시 menuCode 처리.
+				modelAndView.getModelMap().put(AppConstants.CURRENT_MENU_CODE, sessionVO.getMenuCode());
+
+				modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
+				modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
+				modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
+			}
+		}
 	}
 
 }
