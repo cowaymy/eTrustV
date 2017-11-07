@@ -4,6 +4,6 @@ public class MobileConstants {
 	private MobileConstants() {
 	}
 
-	public static final String MOBILE_WEB = "/mobile";
+	public static final String MOBILE_WEB = "/mobileWeb";
 
 }
