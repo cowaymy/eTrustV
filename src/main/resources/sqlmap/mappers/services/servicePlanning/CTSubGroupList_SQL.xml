@@ -4,7 +4,7 @@
 
 <select id="selectCTSubGroupList" parameterType="Map" resultType="egovMap">
 	SELECT 
-        A.CODE, B.NAME, E.MEM_CODE, D.CT_SUB_GRP, D.LAST_GRP_CODE
+        A.CODE, B.NAME, E.MEM_CODE, E.MEM_ID,D.CT_SUB_GRP, D.LAST_GRP_CODE
         FROM SYS0005M A
         INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
         INNER JOIN ORG0005D C ON C.MEM_ID = B.MEM_ID AND C.MEM_LVL = '2'
@@ -23,6 +23,7 @@
         <if test="ctSubGrp != null and ctSubGrp != ''">
           AND D.CT_SUB_GRP   = #{ctSubGrp}
         </if>
+        ORDER BY CODE
 </select>
 
 <update id="insertCTSubGroup" parameterType="Map">
@@ -82,4 +83,10 @@
 	AND BRNCH_TYPE = 43
 	AND AVAIL_FLAG = 'Y'
 </update> 
+<select id="selectCTSubGroupDscList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT CT_SUB_GRP CODE_ID, CT_SUB_GRP CODE_NAME
+		  FROM SYS0064M
+		 WHERE CT_BRNCH_CODE = #{branchCode}
+</select>
+
 </mapper>
