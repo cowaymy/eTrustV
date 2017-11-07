@@ -26,6 +26,7 @@
         
         doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '', 'list_promoAppTypeId', 'M', 'fn_multiCombo'); //Common Code
         doGetCombo('/common/selectCodeList.do',  '76', '', 'list_promoTypeId',    'M', 'fn_multiCombo'); //Promo Type
+        
     });
 
     function auiGridSelectionChangeHandler(event) { 
@@ -52,6 +53,13 @@
 
     function fn_delApptype() {
         $("#promoAppTypeId").find("option").each(function() {
+            if(this.value == '2286') {
+                $(this).remove();
+            }
+        });
+    }
+    function fn_delApptype2() {
+        $("#list_promoAppTypeId").find("option").each(function() {
             if(this.value == '2286') {
                 $(this).remove();
             }
@@ -260,6 +268,8 @@
             width: '100%'
         });
         $('#list_promoTypeId').multipleSelect("checkAll");
+        
+        fn_delApptype2();
     }
 
     $.fn.clearForm = function() {
