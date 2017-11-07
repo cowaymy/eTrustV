@@ -33,6 +33,10 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 		return CTSubGroupListMapper.selectCTAreaSubGroupList(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectCTSubGroupDscList(Map<String, Object> params) {
+		return CTSubGroupListMapper.selectCTSubGroupDscList(params);
+	}
 	
 	@Override
 	public void insertCTSubGroup(List<Object> params) {
