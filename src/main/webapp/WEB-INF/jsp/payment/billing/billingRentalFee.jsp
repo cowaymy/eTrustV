@@ -373,15 +373,11 @@ var billingTargetLayout = [
 		
 		$("#createBills").click(function(){
 			
-			var checkedItems = AUIGrid.getCheckedRowItemsAll(billingTargetGridId);
-			
-			if(checkedItems != undefined){
-				
-				if (checkedItems.length > 0){
-	                $('#createBillsPop').show();
-	                $('#invoiceRemark').val("Effective from 1 September 2015, our company no longer gives any retrospective discount for outstanding rental fees which are billed before advance rental payment is received. The discount period for advance rental payment shall begin from the following month upon payment is received.");
-	            }
-				
+			var allItems = AUIGrid.getGridData(billingTargetGridId);
+            if(allItems != undefined && allItems.length > 0){
+            	
+            	$('#createBillsPop').show();
+                $('#invoiceRemark').val("Effective from 1 September 2015, our company no longer gives any retrospective discount for outstanding rental fees which are billed before advance rental payment is received. The discount period for advance rental payment shall begin from the following month upon payment is received.");
 			}
         });
 		
