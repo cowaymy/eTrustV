@@ -404,7 +404,7 @@
       with prdt as (select * from sys0026m where stk_type_id = '61')
       SELECT
         MATRL_NO PRODUCT_CODE,S26.STK_ID filter_Parts_Id,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP FILTER_GROUP_CODE,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT,'Main' AS DIVISION_CODE
-        ,prdt.stk_id product_Id, prdt.stk_desc--(select STK_ID from sys0026m  where  stk_code = l43.MATRL_NO)
+        ,prdt.stk_id product_Id, prdt.stk_desc <!-- (select STK_ID from sys0026m  where  stk_code = l43.MATRL_NO) -->
         FROM LOG0043M L43,LOG0044D L44,SYS0026M S26 , prdt
         WHERE 1=1
         and l43.MATRL_NO = prdt.stk_code(+)
