@@ -370,14 +370,18 @@ function fn_radioButton(val){
     <th scope="row">DSC Branch</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="dscCode" name="dscCode"/></td>
     <th scope="row">CTM</th>
-    <td><input type="text" title="" placeholder="Martin" class="w100p" id="memCode" name="memCode"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="memCode" name="memCode"/></td>
     <th scope="row">CT Sub Group</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="ctSubGrp" name="ctSubGrp"/></td>
 </tr>
 <tr>
     <th scope="row">CT</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="CTMemId"/></td>
-    <th scope="row">Local/Out Station</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="CTMemId" name="CTMemId"/></td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
+<!--     <th scope="row">Local/Out Station</th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="station" name="station">
         </select>
@@ -388,7 +392,7 @@ function fn_radioButton(val){
         <option value="">Complete</option>
         <option value="">Progress</option>
     </select>
-    </td>
+    </td> -->
 </tr>
 </tbody>
 </table><!-- table end -->
