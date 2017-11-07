@@ -90,6 +90,9 @@
     
         <!-- SearchPayment -->
         <typeAlias alias="PayDHistoryVO" type="com.coway.trust.biz.payment.payment.service.PayDHistoryVO" />
+        
+        <!--Pos Status Update  -->
+        <typeAlias alias="posMasterVO" type="com.coway.trust.biz.sales.pos.vo.PosMasterVO" />
     </typeAliases>
 
 
