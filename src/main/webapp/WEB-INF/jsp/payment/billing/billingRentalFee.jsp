@@ -274,57 +274,61 @@ var billingTargetLayout = [
 	$(function(){
 		
 		$("#btnAddToBillTarget").click(function(){
-	        var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
-	        var allItems = AUIGrid.getGridData(billingscheduleGridId);
-	        var valid = true;
-	        var activeList = [];
-	        
-	        if(allItems.length > 0){
-	        	var j = 0; 
-	        	for (var i = 0 ; i < allItems.length ; i++){
-	        		
-	        		if(allItems[i].billingStus == "Active"){
-	        			activeList[j] = {
-	        					billingStus : allItems[i].billingStus,
-	                            installment : allItems[i].installment
+			
+			var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
+			if(checkedItems != undefined){
+				
+				var allItems = AUIGrid.getGridData(billingscheduleGridId);
+	            var valid = true;
+	            var activeList = [];
+	            
+	            if(allItems.length > 0){
+	                var j = 0; 
+	                for (var i = 0 ; i < allItems.length ; i++){
+	                    
+	                    if(allItems[i].billingStus == "Active"){
+	                        activeList[j] = {
+	                                billingStus : allItems[i].billingStus,
+	                                installment : allItems[i].installment
+	                        }
+	                        j = j+1;
 	                    }
-	        			j = j+1;
-	        		}
-	        		
-                }
-	        }
-
-	        if(checkedItems.length > 0){
-	        	
-	        	var item = new Object();
-                var rowList = [];
-                for (var i = 0 ; i < checkedItems.length ; i++){
-                	
-                	if(Number(activeList[i].installment) < Number(checkedItems[i].installment)){
-                        valid = false;
-                        break;
-                    }else{
-                        rowList[i] = {
-                                salesOrdNo : checkedItems[i].salesOrdNo,
-                                installment : checkedItems[i].installment,
-                                schdulDt : checkedItems[i].schdulDt,
-                                billType : checkedItems[i].billType,
-                                billAmt : checkedItems[i].billAmt,
-                                billingStus : checkedItems[i].billingStus,
-                                salesOrdId : checkedItems[i].salesOrdId
-                                }
-                    }
-                }
-
-	        	if(valid){
-	        		AUIGrid.addRow(billingTargetGridId, rowList, "first");
-	                AUIGrid.setSorting(billingTargetGridId, sortingInfo);
-	                AUIGrid.removeCheckedRows(billingscheduleGridId);
-	        		
-	            }else{
-	            	Common.alert("Can not skip the previous unbilled schedules.");
+	                    
+	                }
 	            }
-	        }
+
+	            if(checkedItems.length > 0){
+	                
+	                var item = new Object();
+	                var rowList = [];
+	                for (var i = 0 ; i < checkedItems.length ; i++){
+	                    
+	                    if(Number(activeList[i].installment) < Number(checkedItems[i].installment)){
+	                        valid = false;
+	                        break;
+	                    }else{
+	                        rowList[i] = {
+	                                salesOrdNo : checkedItems[i].salesOrdNo,
+	                                installment : checkedItems[i].installment,
+	                                schdulDt : checkedItems[i].schdulDt,
+	                                billType : checkedItems[i].billType,
+	                                billAmt : checkedItems[i].billAmt,
+	                                billingStus : checkedItems[i].billingStus,
+	                                salesOrdId : checkedItems[i].salesOrdId
+	                                }
+	                    }
+	                }
+
+	                if(valid){
+	                    AUIGrid.addRow(billingTargetGridId, rowList, "first");
+	                    AUIGrid.setSorting(billingTargetGridId, sortingInfo);
+	                    AUIGrid.removeCheckedRows(billingscheduleGridId);
+	                    
+	                }else{
+	                    Common.alert("Can not skip the previous unbilled schedules.");
+	                }
+	            }
+			}
 	    });
 		
 		$("#btnRemoveBillTarget").click(function(){
@@ -332,42 +336,53 @@ var billingTargetLayout = [
             var allItems = AUIGrid.getGridData(billingTargetGridId);
             var valid = true;
             
-            if (checkedItems.length > 0){
+            if(checkedItems != undefined){
             	
-                var item = new Object();
-                var rowList = [];
-                for (var i = checkedItems.length-1 ; i >= 0; i--){
-                	//alert("allItems[i].installment : "+allItems[allItems.length-1].installment + " checkedItems[i].installment :" + checkedItems[checkedItems.length-1].installment);
-                	if(Number(allItems[allItems.length-1].installment) >  Number(checkedItems[checkedItems.length-1].installment)){
-                		valid = false;
-                		break;
-                    }else{
-                    	rowList[i] = {
-                                salesOrdNo : checkedItems[i].salesOrdNo,
-                                installment : checkedItems[i].installment,
-                                schdulDt : checkedItems[i].schdulDt,
-                                billType : checkedItems[i].billType,
-                                billAmt : checkedItems[i].billAmt,
-                                billingStus : checkedItems[i].billingStus,
-                                salesOrdId : checkedItems[i].salesOrdId
-                                }
+            	if (checkedItems.length > 0){
+                    
+                    var item = new Object();
+                    var rowList = [];
+                    for (var i = checkedItems.length-1 ; i >= 0; i--){
+                        //alert("allItems[i].installment : "+allItems[allItems.length-1].installment + " checkedItems[i].installment :" + checkedItems[checkedItems.length-1].installment);
+                        if(Number(allItems[allItems.length-1].installment) >  Number(checkedItems[checkedItems.length-1].installment)){
+                            valid = false;
+                            break;
+                        }else{
+                            rowList[i] = {
+                                    salesOrdNo : checkedItems[i].salesOrdNo,
+                                    installment : checkedItems[i].installment,
+                                    schdulDt : checkedItems[i].schdulDt,
+                                    billType : checkedItems[i].billType,
+                                    billAmt : checkedItems[i].billAmt,
+                                    billingStus : checkedItems[i].billingStus,
+                                    salesOrdId : checkedItems[i].salesOrdId
+                                    }
+                        }
                     }
-                }
-                
-                if(valid){
-                	AUIGrid.addRow(billingscheduleGridId, rowList, "first");
-                    AUIGrid.removeCheckedRows(billingTargetGridId);
-                    AUIGrid.setSorting(billingscheduleGridId, sortingInfo);
-                }else{
-                	Common.alert("Remove latest one.");
+                    
+                    if(valid){
+                        AUIGrid.addRow(billingscheduleGridId, rowList, "first");
+                        AUIGrid.removeCheckedRows(billingTargetGridId);
+                        AUIGrid.setSorting(billingscheduleGridId, sortingInfo);
+                    }else{
+                        Common.alert("Remove latest one.");
+                    }
                 }
             }
         });
 		
 		$("#createBills").click(function(){
-			$('#createBillsPop').show();
-			$('#invoiceRemark').val("Effective from 1 September 2015, our company no longer gives any retrospective discount for outstanding rental fees which are billed before advance rental payment is received. The discount period for advance rental payment shall begin from the following month upon payment is received.");
-			 
+			
+			var checkedItems = AUIGrid.getCheckedRowItemsAll(billingTargetGridId);
+			
+			if(checkedItems != undefined){
+				
+				if (checkedItems.length > 0){
+	                $('#createBillsPop').show();
+	                $('#invoiceRemark').val("Effective from 1 September 2015, our company no longer gives any retrospective discount for outstanding rental fees which are billed before advance rental payment is received. The discount period for advance rental payment shall begin from the following month upon payment is received.");
+	            }
+				
+			}
         });
 		
 		$("#btnSave").click(function(){
