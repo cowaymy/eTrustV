@@ -151,9 +151,6 @@ public class PointOfSalesController {
 		logger.debug("reqedt    값 : {}", params.get("reqedt"));
 
 		String Status = (String) params.get("searchStatus");
-		if (Status.equals("P")) {
-			Status = "S";
-		}
 		params.put("searchStatus", Status);
 		String crtsdt = (String) params.get("crtsdt");
 		crtsdt = crtsdt.replace("/", "");
