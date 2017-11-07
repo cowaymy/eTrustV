@@ -26,7 +26,7 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 	private AdjustmentMapper adjustmentMapper;
 
 	@Override
-	public void insertNewAdjustment(Map<String, Object> params) {
+	public String insertNewAdjustment(Map<String, Object> params) {
 
 		String adjNo = adjustmentMapper.selectNewAdjNo();
 
@@ -73,6 +73,9 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		params.put("catagory", catagory);
 
 		adjustmentMapper.insertNewAdjustment(params);
+		
+		return adjNo;
+		
 	}
 
 	@Override
