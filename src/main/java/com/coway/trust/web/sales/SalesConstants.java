@@ -14,7 +14,8 @@ public class SalesConstants {
 		
 	public static final String DEFAULT_DATE = "01/01/1900";	
 	public static final String DEFAULT_DATE2 = "1900-01-01";	
-	public static final String DEFAULT_DATE3 = "19000101";	
+	public static final String DEFAULT_DATE3 = "19000101";
+	public static final String DEFAULT_EDN_DATE = "31/12/2099";
 	public static final String DEFAULT_TM = "00:00:00";	
 	public static final String DEFAULT_DATE_FORMAT1 = "dd/MM/yyyy";	
 	public static final String DEFAULT_DATE_FORMAT2 = "yyyy-MM-dd";
@@ -192,8 +193,10 @@ public class SalesConstants {
 	
 	//POS
 	public static final int POS_DETAIL_NON_RECEIVE = 96;   //96 == nonReceive
+	public static final int POS_DETAIL_RECEIVE = 85;  // 85 == Receive
 	public static final int POS_SALES_STATUS_ACTIVE = 1;    //1  == Active
 	public static final int POS_SALES_STATUS_NON_RECEIVE = 96;    //96  == Non Receive
+	public static final int POS_SALES_STATUS_COMPLETE =  4; // 4 == Complete
 	
 	public static final String POS_SALES_TYPE_FILTER = "1352"; //Filter Type
 	public static final String POS_SALES_TYPE_ITMBANK = "1353"; //Filter Type
@@ -202,6 +205,7 @@ public class SalesConstants {
 	public static final String POS_SALES_TYPE_REVERSAL = "1361";
 	public static final String POS_SALES_MODULE_TYPE_POS_SALES = "2390"; //POS Sales
 	public static final String POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION = "2391"; //Deduction Commission
+	public static final String POS_SALES_MODULE_TYPE_OTH = "2392"; //Other Income
 	
 	public static final int POS_DRACC_ID_FILTER = 540;  //Filter - DR
 	public static final int POS_CRACC_ID_FILTER = 541;  //Filter - CR
@@ -209,6 +213,8 @@ public class SalesConstants {
 	public static final int POS_CRACC_ID_ITEMBANK = 549;  //Filter - CR
 	public static final int POS_DRACC_ID_OTH_HQ_BANK = 548;
 	public static final int POS_CRACC_ID_OTH_HQ_BANK = 549;  
+	public static final int POS_DRACC_ID_OTH = 548;
+	public static final int POS_CRACC_ID_OTH = 539;
 	
 	public static final int POS_ITM_TAX_CODE_ID = 32;
 	public static final int POS_DOC_NO_PSN_NO = 144;   // PSN No.
@@ -255,6 +261,8 @@ public class SalesConstants {
 	
 	public static final int  POS_ACC_INV_VOID_STATUS = 1; //InvVoidM.AccInvVoidStatusID = 1;
 	public static final int  POS_ACC_INV_VOID_ORD_ID = 0; //InvVoidS.AccInvVoidSubOrderID = 0;
+	
+	public static final int POS_OTH_CHECK_PARAM = 1;// Other Income Check Parameter
 	
 	/**
 	 * 메세지 KEY
