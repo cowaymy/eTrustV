@@ -42,14 +42,17 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public void insertStockTransferInfo(Map<String, Object> params) {
+	public String insertStockTransferInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
 
 		String seq = stocktran.selectStockTransferSeq();
 
 		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
-
-		fMap.put("reqno", fMap.get("headtitle") + seq);
+		
+		String reqNo = fMap.get("headtitle") + seq;
+		
+		fMap.put("reqno", reqNo);
+		//fMap.put("reqno", fMap.get("headtitle") + seq);
 		fMap.put("userId", params.get("userId"));
 
 		stocktran.insStockTransferHead(fMap);
@@ -66,6 +69,10 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 
 		//
 		insertStockBooking(fMap);
+		
+		
+		return reqNo;
+		
 	}
 
 	@Override
