@@ -15,7 +15,7 @@ public class SalesConstants {
 	public static final String DEFAULT_DATE = "01/01/1900";	
 	public static final String DEFAULT_DATE2 = "1900-01-01";	
 	public static final String DEFAULT_DATE3 = "19000101";
-	public static final String DEFAULT_EDN_DATE = "31/12/2099";
+	public static final String DEFAULT_END_DATE = "31/12/2099";
 	public static final String DEFAULT_TM = "00:00:00";	
 	public static final String DEFAULT_DATE_FORMAT1 = "dd/MM/yyyy";	
 	public static final String DEFAULT_DATE_FORMAT2 = "yyyy-MM-dd";
