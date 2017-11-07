@@ -77,9 +77,9 @@ select ROWNUM rnum , l47.REQST_STUS     status
             <if test="tlocation != null and tlocation !=''">
             AND l47.reqst_cdc_rdc = #{tlocation}
            </if>
-            <if test="searchStatus != null and searchStatus !=''">
-            AND l47.REQST_STUS = #{searchStatus}
-            </if> 
+<!--             <if test="searchStatus != null and searchStatus !=''"> -->
+<!--             AND l47.REQST_STUS = #{searchStatus} -->
+<!--             </if>  -->
            <if test="crtsdt !=null and crtsdt !=''">
               and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
@@ -92,6 +92,14 @@ select ROWNUM rnum , l47.REQST_STUS     status
            <if test="reqedt !=null and reqedt !=''">
               and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
+        <choose>
+        <when test="searchStatus != null and searchStatus !=''">
+           AND l47.REQST_STUS = #{searchStatus}
+        </when>
+        <otherwise>
+          AND l47.REQST_STUS='O'
+        </otherwise>
+      </choose>
            AND NVL(l47.REQST_DEL , 'N') = 'N'
            AND NVL(l48.REQST_DEL , 'N') = 'N'
           ORDER by l47.reqst_no desc
