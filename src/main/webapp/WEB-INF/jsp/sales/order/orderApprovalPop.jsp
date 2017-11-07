@@ -5,42 +5,57 @@
 
 	$(function(){
 	    $('#btnSaveApproval').click(function() {
-	        
-	        $('#lblErrorMsg_Approval').text('');
-	        
-	        if(FormUtil.checkReqValue($('#txtApprovalBy'))) {
-                $('#lblErrorMsg_Approval').text('Please key in approval by.');
-                return;
-	        }
-	        if(FormUtil.checkReqValue($('#txtApprovalCode'))) {
-                $('#lblErrorMsg_Approval').text('Please key in approval code.');
-                return;
-	        }
-	        
-            var userid = fn_getLoginInfo();
-            
-            console.log('userid:'+userid);
-            
-	        if(userid == 0) {
-                $('#lblErrorMsg_Approval').text('Approval error.');
-                return;
-	        }
-	        
-            var accessRight = fn_getCheckAccessRight(userid, '321');
-	        
-	        console.log('accessRight:'+accessRight);
-	        
-	        if(!accessRight) {
-                $('#lblErrorMsg_Approval').text('Sorry. You have no access rights to approve ex-order.');
-                return;
-	        }
-	        else {
-	            $('#orderApprvalCloseBtn').click();
-	            
-	            fn_popOrderDetail();
-	        }
+	        fn_onClickBtnSaveApproval();
 	    });
+        $('#txtApprovalBy').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                $('#txtApprovalCode').focus();
+                return false;
+            }  
+        });
+        $('#txtApprovalCode').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                fn_onClickBtnSaveApproval();
+                return false;
+            }  
+        });
 	});
+	
+	function fn_onClickBtnSaveApproval() {
+        $('#lblErrorMsg_Approval').text('');
+        
+        if(FormUtil.checkReqValue($('#txtApprovalBy'))) {
+            $('#lblErrorMsg_Approval').text('Please key in approval by.');
+            return;
+        }
+        if(FormUtil.checkReqValue($('#txtApprovalCode'))) {
+            $('#lblErrorMsg_Approval').text('Please key in approval code.');
+            return;
+        }
+        
+        var userid = fn_getLoginInfo();
+        
+        console.log('userid:'+userid);
+        
+        if(userid == 0) {
+            $('#lblErrorMsg_Approval').text('Approval error.');
+            return;
+        }
+        
+        var accessRight = fn_getCheckAccessRight(userid, '321');
+        
+        console.log('accessRight:'+accessRight);
+        
+        if(!accessRight) {
+            $('#lblErrorMsg_Approval').text('Sorry. You have no access rights to approve ex-order.');
+            return;
+        }
+        else {
+            $('#orderApprvalCloseBtn').click();
+            
+            fn_popOrderDetail();
+        }
+	}
 
     function fn_getLoginInfo(){
         var result = 0;

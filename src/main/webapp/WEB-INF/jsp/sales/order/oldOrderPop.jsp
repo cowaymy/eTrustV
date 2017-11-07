@@ -5,65 +5,74 @@
 
 	$(function(){
 	    $('#btnRWok').click(function() {
-	        
-	        $('#lblOldOrderNo').text('');
-	        $('#txtOldOrderID').val('');
-	        
-	        if(FormUtil.checkReqValue($('#rwOldOrder'))) {
-                $('#lblOldOrderNo').text('* Please key in old order no.');
-                return;
-	        }
-	        
-	        console.log('/sales/order/checkOldOrderId.do CALL START');
-	        console.log('param salesOrdId:'+$('#rwOldOrder').val());
-	        console.log('param custId:'+$('#custId').val());
-
-            Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : $('#rwOldOrder').val(), custId : $('#custId').val(), promoId : $('#ordPromo').val()}, function(RESULT) {
-                console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
-                console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
-                console.log('RESULT MSG         :'+RESULT.msg);
-                console.log('RESULT OLD_ORDER_ID:'+RESULT.oldOrderId);
-                console.log('RESULT INST_SPEC_INST:'+RESULT.instSpecInst);
-                
-                $('#txtOldOrderID').val(RESULT.oldOrderId);
-                 
-                if(RESULT.rootState == 'ROOT_1') {
-                    $('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNo').text('* Order Number not found!');
-                }
-                if(RESULT.rootState == 'ROOT_2') {
-                    $('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNo').text('* Service type order is disallowed to register for ex-trade!');
-                }
-                if(RESULT.rootState == 'ROOT_3') {
-                    $('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNo').text('* Order number invalid!');
-                }
-                if(RESULT.rootState == 'ROOT_4') {
-                    $('#oldOrderCloseBtn').click();
-                    $('#speclInstct').val(RESULT.instSpecInst);
-                    Common.confirm("Check Old Order No" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
-                }
-                if(RESULT.rootState == 'ROOT_5') {
-                    $('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNo').text('* Rental status not under REG, INV, SUS is disallowed to register for ex-trade!');
-                }
-                if(RESULT.rootState == 'ROOT_6') {
-                    $('#oldOrderCloseBtn').click();
-                    $('#speclInstct').val(RESULT.instSpecInst);
-                    Common.confirm("Confirm To Proceed" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
-                }
-                if(RESULT.rootState == 'ROOT_7') {
-                    $('#txtOldOrderID').val(RESULT.oldOrderId);
-                    $('#speclInstct').val(RESULT.instSpecInst);
-                }
-                if(RESULT.rootState == 'ROOT_8') {
-                    $('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNo').text('* Order Number has been used to register for ex-trade!');
-                }
-            });
+	        fn_onClickBtnRWok();
 	    });
+        $('#rwOldOrder').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                fn_onClickBtnRWok();
+                return false;
+            }  
+        });
 	});
+	
+	function fn_onClickBtnRWok() {
+        $('#lblOldOrderNo').text('');
+        $('#txtOldOrderID').val('');
+        
+        if(FormUtil.checkReqValue($('#rwOldOrder'))) {
+            $('#lblOldOrderNo').text('* Please key in old order no.');
+            return;
+        }
+        
+        console.log('/sales/order/checkOldOrderId.do CALL START');
+        console.log('param salesOrdId:'+$('#rwOldOrder').val());
+        console.log('param custId:'+$('#custId').val());
+
+        Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : $('#rwOldOrder').val(), custId : $('#custId').val(), promoId : $('#ordPromo').val()}, function(RESULT) {
+            console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
+            console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
+            console.log('RESULT MSG         :'+RESULT.msg);
+            console.log('RESULT OLD_ORDER_ID:'+RESULT.oldOrderId);
+            console.log('RESULT INST_SPEC_INST:'+RESULT.instSpecInst);
+            
+            $('#txtOldOrderID').val(RESULT.oldOrderId);
+             
+            if(RESULT.rootState == 'ROOT_1') {
+                $('#rwOldOrder').clearForm();
+                $('#lblOldOrderNo').text('* Order Number not found!');
+            }
+            if(RESULT.rootState == 'ROOT_2') {
+                $('#rwOldOrder').clearForm();
+                $('#lblOldOrderNo').text('* Service type order is disallowed to register for ex-trade!');
+            }
+            if(RESULT.rootState == 'ROOT_3') {
+                $('#rwOldOrder').clearForm();
+                $('#lblOldOrderNo').text('* Order number invalid!');
+            }
+            if(RESULT.rootState == 'ROOT_4') {
+                $('#oldOrderCloseBtn').click();
+                $('#speclInstct').val(RESULT.instSpecInst);
+                Common.confirm("Check Old Order No" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
+            }
+            if(RESULT.rootState == 'ROOT_5') {
+                $('#rwOldOrder').clearForm();
+                $('#lblOldOrderNo').text('* Rental status not under REG, INV, SUS is disallowed to register for ex-trade!');
+            }
+            if(RESULT.rootState == 'ROOT_6') {
+                $('#oldOrderCloseBtn').click();
+                $('#speclInstct').val(RESULT.instSpecInst);
+                Common.confirm("Confirm To Proceed" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
+            }
+            if(RESULT.rootState == 'ROOT_7') {
+                $('#txtOldOrderID').val(RESULT.oldOrderId);
+                $('#speclInstct').val(RESULT.instSpecInst);
+            }
+            if(RESULT.rootState == 'ROOT_8') {
+                $('#rwOldOrder').clearForm();
+                $('#lblOldOrderNo').text('* Order Number has been used to register for ex-trade!');
+            }
+        });
+	}
 	
 	function fn_apprvPopClose() {
 	    $('#orderApprvalCloseBtn').click();
