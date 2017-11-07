@@ -331,6 +331,9 @@ function fn_newAdjustment(){
     $.extend(param,{'auto_manual':'M'});//강제세팅함 
     
     Common.ajax("POST" , url , param , function(data){
+
+    	Common.alert(""+data.message+"</br> Created : "+data.data);
+    	
         $("#popup_wrap").hide();
         searchAjax();
     });
@@ -542,6 +545,7 @@ function fn_subGrid(invntryNo){
     <li><p class="btn_blue"><a id="list">List</a></p></li> 
     <li><p class="btn_blue"><a id="view">View</a></p></li>  
     -->
+    <li><p class="btn_blue"><a id="create">Create</a></p></li>
     <li><p class="btn_blue"><a id="search">Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -602,7 +606,7 @@ function fn_subGrid(invntryNo){
         <li><p class="link_btn"><a id="approval">Approval</a></p></li>
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a id="create">Create</a></p></li>
+        <!-- <li><p class="link_btn type2"><a id="create">Create</a></p></li> -->
         <!-- 
         <li><p class="link_btn type2"><a id="view">View</a></p></li>
         -->
