@@ -473,7 +473,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .tap_type1 li.right_opt .rm,
 .tap_type1 li.right_opt .rm span{line-height:30px; font-weight:bold; font-size:16px;}
 .tap_wrap{margin-top:20px;}
-.tap_area{/* position:absolute; top:-1000em;  */border:1px solid #ccc; padding:10px; border-radius:3px;}
+.tap_area{/* position:absolute; top:-1000em;  */border:1px solid #ccc; padding:10px; border-radius:3px;display:none;}
 .tap_type1+.tap_area{position:relative; top:0;}
 
 /* 페이징 */

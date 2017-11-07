@@ -1,5 +1,8 @@
 $(document).ready(function(){
 /* 제이쿼리 ui달력 start*/
+var theTapArea=$(".tap_wrap").children(".tap_area");
+
+theTapArea.eq(0).show();
 
 var holidays = {//휴일 세팅 하기
     /*"0809":{type:0, title:"신정", year:"2017"}*/
@@ -104,7 +107,7 @@ $(document).on(
 	"click", ".tap_type1 li a", function(){
 	var theTapArea=$(this).parents(".tap_wrap").children(".tap_area");
 	var thisNum=$(this).parents().index();
-	
+
 	$(this).addClass("on").parent().siblings().children("a").removeClass("on");
 	theTapArea.eq(thisNum).show().siblings(".tap_area").hide();
 	/*theTapArea.eq(thisNum).css("position","relative").css("top","0").siblings(".tap_area").css("position","absolute").css("top","-1000em");*/
