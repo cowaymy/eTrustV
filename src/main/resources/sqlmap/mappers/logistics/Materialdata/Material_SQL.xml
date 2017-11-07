@@ -21,7 +21,7 @@
 		       ITM_NAME  itemname,
 		       ITM_CODE  itemcode,
 		       CTGRY_ID  cateid,
-		       STUS_CODE_ID statid,
+		       STUS_CODE_ID stateid,
 		       DBMS_LOB.SUBSTR (ITM_DESC, 4000)  description,
 			   (SELECT code_name
 				  FROM SYS0013M
