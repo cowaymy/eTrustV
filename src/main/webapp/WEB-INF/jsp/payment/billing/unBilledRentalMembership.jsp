@@ -382,22 +382,22 @@ var billingTargetLayout = [
 				</aside><!-- title_line end -->
 				<section class="search_table"><!-- search_table start -->
 					<table class="type1"><!-- table start -->
-					<caption>table</caption>
-					<colgroup>
-					    <col style="width:190px" />
-					    <col style="width:*" />
-					</colgroup>
-					<tbody>
-					<tr>
-					    <th scope="row">Selected Order No.</th>
-					    <td>
-						    <input type="text"  id="orderNo" name="orderNo" title="" placeholder="" class="readonly" />
-						    <p class="btn_sky">
-						         <a href="javascript:fn_orderSearch();" id="search">Search</a>
-						    </p>
-					    </td>
-					</tr>
-					</tbody>
+						<caption>table</caption>
+						<colgroup>
+						    <col style="width:190px" />
+						    <col style="width:*" />
+						</colgroup>
+						<tbody>
+							<tr>
+							    <th scope="row">Selected Order No.</th>
+							    <td>
+								    <input type="text"  id="orderNo" name="orderNo" title="" placeholder="" class="readonly" />
+								    <p class="btn_sky">
+								         <a href="javascript:fn_orderSearch();" id="search">Search</a>
+								    </p>
+							    </td>
+							</tr>
+						</tbody>
 					</table><!-- table end -->
 					<article id="grid_wrap" class="grid_wrap"></article>
 				</section><!-- search_table end -->
@@ -429,41 +429,41 @@ var billingTargetLayout = [
 			</section><!-- content end -->
 			<hr />
 		</div><!-- wrap end -->
-	<div id="createBillsPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-		<header class="pop_header"><!-- pop_header start -->
-			<h1>Advance Bill Remark</h1>
-			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="" onclick="fn_createBillsPopClose();">CLOSE</a></p></li>
-			</ul>
-		</header><!-- pop_header end -->
-		<section class="pop_body"><!-- pop_body start -->
-			<table class="type1"><!-- table start -->
-				<caption>table</caption>
-				<colgroup>
-				    <col style="width:140px" />
-				    <col style="width:*" />
-				    <col style="width:180px" />
-				    <col style="width:*" />
-				</colgroup>
-				<tbody>
-					<tr>
-					    <th scope="row">Remark</th>
-					    <td colspan="3">
-					        <textarea cols="20" rows="5" placeholder="" id="remark"></textarea>
-					    </td>
-					</tr>
-					<tr>
-					    <th scope="row">Invoice Remark</th>
-					    <td colspan="3">
-					        <textarea cols="20" rows="5" placeholder="" id="invoiceRemark"></textarea>
-					    </td>
-					</tr>
-				</tbody>
+		<div id="createBillsPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+			<header class="pop_header"><!-- pop_header start -->
+				<h1>Advance Bill Remark</h1>
+				<ul class="right_opt">
+				    <li><p class="btn_blue2"><a href="" onclick="fn_createBillsPopClose();">CLOSE</a></p></li>
+				</ul>
+			</header><!-- pop_header end -->
+			<section class="pop_body"><!-- pop_body start -->
+				<table class="type1"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:140px" />
+					    <col style="width:*" />
+					    <col style="width:180px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+						<tr>
+						    <th scope="row">Remark</th>
+						    <td colspan="3">
+						        <textarea cols="20" rows="5" placeholder="" id="remark"></textarea>
+						    </td>
+						</tr>
+						<tr>
+						    <th scope="row">Invoice Remark</th>
+						    <td colspan="3">
+						        <textarea cols="20" rows="5" placeholder="" id="invoiceRemark"></textarea>
+						    </td>
+						</tr>
+					</tbody>
 				</table><!-- table end -->
 				<ul class="center_btns">
 				    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave">SAVE</a></p></li>
 				</ul>
-		</section><!-- pop_body end -->
-	</div><!-- popup_wrap end -->
+			</section><!-- pop_body end -->
+		</div><!-- popup_wrap end -->
 	</form>
 </body>
