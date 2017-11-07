@@ -115,7 +115,9 @@ public class HolidayController {
 	@RequestMapping(value = "/searchHolidayList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHolidayList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		String[] stateList = request.getParameterValues("cmbState");
+		String[] branchList = request.getParameterValues("branchId");
 		params.put("stateList", stateList);
+		params.put("branchList", branchList);
 		List<EgovMap> holidayList = holidayService.selectHolidayList(params);
 		logger.debug("holidayList {}", holidayList);
 		return ResponseEntity.ok(holidayList);
