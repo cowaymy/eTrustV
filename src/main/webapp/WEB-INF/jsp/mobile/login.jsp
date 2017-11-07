@@ -51,7 +51,7 @@
 
         $("#language").on("change", function (event) {
             $("#loginForm").attr({
-                action: "/mobile/login.do",
+                action: "/mobileWeb/login.do",
                 method: "POST"
             }).submit();
         });
@@ -68,7 +68,7 @@
     function fn_goMain() {
         $("#loginForm").attr("target", "");
         $("#loginForm").attr({
-            action: getContextPath() + "/mobile/common/main.do",
+            action: getContextPath() + "/mobileWeb/common/main.do",
             method: "POST"
         }).submit();
     }

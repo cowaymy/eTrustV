@@ -59,7 +59,7 @@ public class CallCenterAuthenticInterceptor extends WebContentInterceptor {
 					if (sessionVO.getUserId() == 0) {
 						LoginVO loginVO = loginService.loginByCallcenter(params);
 
-						if ( loginVO.getUserId() == 0) {
+						if ( loginVO == null || loginVO.getUserId() == 0) {
 							throw new CallcenterException(HttpStatus.UNAUTHORIZED,
 									HttpStatus.UNAUTHORIZED.getReasonPhrase());
 						}

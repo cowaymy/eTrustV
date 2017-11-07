@@ -72,16 +72,16 @@
             <mvc:exclude-mapping path="/sample/**"/>
 
             <!-- MOBILE WEB -->
-            <mvc:exclude-mapping path="/mobile/**"/>
+            <mvc:exclude-mapping path="/mobileWeb/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
 
         <!-- mobile web Interceptor-->
         <mvc:interceptor>
-            <mvc:mapping path="/mobile/**"/>
+            <mvc:mapping path="/mobileWeb/**"/>
 
-            <mvc:exclude-mapping path="/mobile/login.do"/>
+            <mvc:exclude-mapping path="/mobileWeb/login.do"/>
             <mvc:exclude-mapping path="/**/api/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.MobileWebAuthenticInterceptor" />
@@ -93,7 +93,7 @@
             <mvc:mapping path="/**"/>
 
             <!-- MOBILE WEB -->
-            <mvc:exclude-mapping path="/mobile/**"/>
+            <mvc:exclude-mapping path="/mobileWeb/**"/>
             <mvc:exclude-mapping path="/**/api/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.CallCenterAuthenticInterceptor" />

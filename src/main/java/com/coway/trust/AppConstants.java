@@ -46,7 +46,7 @@ public class AppConstants {
 	 * URL
 	 */
 	public static final String REDIRECT_LOGIN = "redirect:/login/login.do";
-	public static final String REDIRECT_MOBILE_LOGIN = "redirect:/mobile/login.do";
+	public static final String REDIRECT_MOBILE_LOGIN = "redirect:/mobileWeb/login.do";
 
 	public static final String REDIRECT_UNAUTHORIZED = "redirect:/common/unauthorized.do";
 

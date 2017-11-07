@@ -87,7 +87,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			ModelAndView modelAndView) throws Exception {
 
 		// check request to Callcenter
-		if (VerifyRequest.isNotCallCenterRequest(request)) {
+//		if (VerifyRequest.isNotCallCenterRequest(request)) {
 
 			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
@@ -116,9 +116,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
 				modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
 			}
-		}else{
-			LOGGER.info("[postHandle] this url is call by Callcenter.......");
-		}
+//		}else{
+//			LOGGER.info("[postHandle] this url is call by Callcenter.......");
+//		}
 	}
 
 }
