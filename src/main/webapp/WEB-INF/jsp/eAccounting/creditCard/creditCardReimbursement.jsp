@@ -202,7 +202,7 @@ function fn_setPopCostCenter() {
 }
 
 function fn_PopExpenseTypeSearchPop() {
-    Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J2'}, null, true, "expenseTypeSearchPop");
+    Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J3'}, null, true, "expenseTypeSearchPop");
 }
 
 function fn_setPopExpType() {
