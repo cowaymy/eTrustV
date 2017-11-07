@@ -7,6 +7,11 @@
 .my-custom-up {
     text-align:left;
 }
+
+/* 커스컴 disable 스타일*/
+.mycustom-disable-color div{
+    color : #cccccc;
+}
 </style>
 <script type="text/javaScript">
 //AUIGrid 그리드 객체
@@ -57,7 +62,7 @@ var masterColumnLayout = [
         dataField : "fBankJrnlRem",
         headerText : "Remark",
         editable : false,
-        style : "my-custom-up",
+        style : "my-custom-up"
     }, {
         dataField : "crtDt",
         headerText : "Created",
@@ -181,35 +186,51 @@ var journalPopLayout = [
 	    headerText : "Match",
 	    editable : false
 	},{
-	    dataField : "remark",
+	    dataField : "fTrnscInstct",
 	    headerText : "Remark",
 	    editable : true,
-	    editRenderer : {
-	        type : "InputEditRenderer",
-	        showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-	        textAlign : "left",
-	        // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(item.isMatch == "X") {
-                    isValid = true;
-                }
-
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : ""};
-            }
-	    }
+	    style : "my-custom-up",
+	    width: 200,
+	    styleFunction : cellStyleFunction
 	},{
 	    dataField : "journalAccount",
 	    headerText : "Account",
-        renderer : {
-            type : "DropDownListRenderer",
-            listFunction : function(rowIndex, columnIndex, item, dataField) {
-            	return keyValueList;
-            },
-            keyField : "code", // key 에 해당되는 필드명
-            valueField : "value" // value 에 해당되는 필드명
+	    editable : false, // 그리드의 에디팅 사용 안함( 템플릿에서 만든 Select 로 에디팅 처리 하기 위함 )
+	    width: 140,
+        renderer : { // HTML 템플릿 렌더러 사용
+            type : "TemplateRenderer"
+        },
+        labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
+            //if(!value)  return "";
+            var code, text;
+            var template = '<div class="my_div">';
+            
+            if(value == "None") {
+                
+            } else {
+                
+                var disableYN = "";
+                if(item.isMatch == "X"){
+                	disableYN = "";
+                }else{
+                    disableYN = "disabled";
+                }
+                
+                template += '<select style="width:100px;" onchange="javascript:mySelectChangeHandler(' + rowIndex + ', this.value, event);" ' + disableYN + '>';
+                template += '<option value="">Account</option>';
+                for(var i=0, len=keyValueList.length; i<len; i++) {
+                    code =  keyValueList[i]["code"];
+                    text = keyValueList[i]["value"];
+                    if(code == value) { 
+                        template += '<option value="' + code + '" selected="selected">' + text + '</option>';
+                    } else {
+                        template += '<option value="' + code + '">' + text + '</option>';
+                    }
+                }
+                template += '</select>';
+            }
+            template += '</div>';
+            return template; // HTML 템플릿 반환..그대로 innerHTML 속성값으로 처리됨
         }
 	},{
 	    dataField : "",
@@ -221,7 +242,7 @@ var journalPopLayout = [
             onclick : function(rowIndex, columnIndex, value, item) {
                 if(item.isMatch == "X"){
                 	
-                    fn_updateJournalPassEntry(item.journalAccount, item.remark, item.fTrnscCrditAmt, item.fTrnscDebtAmt, item.fTrnscId);
+                    fn_updateJournalPassEntry(item.journalAccount, item.fTrnscInstct, item.fTrnscCrditAmt, item.fTrnscDebtAmt, item.fTrnscId);
                 }else{
                 	
                 }
@@ -237,7 +258,7 @@ var journalPopLayout = [
             onclick : function(rowIndex, columnIndex, value, item) {
             	
             	if(item.isMatch == "X"){
-                	fn_updateJournalExclude(item.remark, item.fTrnscId);
+                	fn_updateJournalExclude(item.fTrnscInstct, item.fTrnscId);
                 }else{
                 	
                 }
@@ -322,6 +343,14 @@ var journalPopLayout = [
                 AUIGrid.destroy(journalEntryPopGridID);
                 journalEntryPopGridID = GridCommon.createAUIGrid("journal_pop_grid_wrap", journalPopLayout,null,gridPros);
                 AUIGrid.setGridData(journalEntryPopGridID, result.data.detailList);
+                
+                // 에디팅 시작 이벤트 바인딩
+                AUIGrid.bind(journalEntryPopGridID, "cellEditBegin", function(event) {
+                    // 셀이 Anna 인 경우
+                    if(event.item.isMatch == "O"){
+                        return false;
+                    }
+                });
             
             });
         }else{
@@ -343,6 +372,7 @@ var journalPopLayout = [
                 $('#lblRefNo').val($('#journalRefNo').text());
                 
                 Common.ajax("GET","/payment/updJournalPassEntry.do", $("#journalPassForm").serialize(), function(result){
+                	fn_journalEntryPop();
                     Common.alert(result.message);
                 });
     			
@@ -361,6 +391,7 @@ var journalPopLayout = [
     	if(remark != undefined){
         	
         	Common.ajax("GET","/payment/updJournalExclude.do", {"remark" : remark, "fTrnscId" : fTrnscId }, function(result){
+        		fn_journalEntryPop();
         		Common.alert(result.message);
             });
             
@@ -374,6 +405,22 @@ var journalPopLayout = [
         $(val).hide();
         AUIGrid.clearGridData(statementdetailPopGridID);
         AUIGrid.clearGridData(journalEntryPopGridID);
+    }
+    
+    function cellStyleFunction( rowIndex, columnIndex, value, headerText, item, dataField) {
+    	if(item.isMatch == "O")
+            return "mycustom-disable-color";
+        
+        return null;
+    }
+    
+    // 셀렉트 변경 핸들러
+    function mySelectChangeHandler(rowIndex, selectedValue, event) {
+        
+        // 그리드에 실제 업데이트 적용 시킴
+        AUIGrid.updateRow(journalEntryPopGridID, {
+            "journalAccount" : selectedValue
+        }, rowIndex);
     }
    
 </script>
