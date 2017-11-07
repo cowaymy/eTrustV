@@ -106,8 +106,8 @@ $(document).on(
 	var thisNum=$(this).parents().index();
 	
 	$(this).addClass("on").parent().siblings().children("a").removeClass("on");
-	
-	theTapArea.eq(thisNum).css("position","relative").css("top","0").siblings(".tap_area").css("position","absolute").css("top","-1000em");
+	theTapArea.eq(thisNum).show().siblings(".tap_area").hide();
+	/*theTapArea.eq(thisNum).css("position","relative").css("top","0").siblings(".tap_area").css("position","absolute").css("top","-1000em");*/
 	return false;
 })
 /* 탭동작 end */
