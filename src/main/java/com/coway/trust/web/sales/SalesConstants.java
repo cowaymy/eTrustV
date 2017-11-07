@@ -207,6 +207,8 @@ public class SalesConstants {
 	public static final String POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION = "2391"; //Deduction Commission
 	public static final String POS_SALES_MODULE_TYPE_OTH = "2392"; //Other Income
 	
+	public static final String POS_SALES_NOT_BANK = "2687"; //ItemBank from Code M 
+	
 	public static final int POS_DRACC_ID_FILTER = 540;  //Filter - DR
 	public static final int POS_CRACC_ID_FILTER = 541;  //Filter - CR
 	public static final int POS_DRACC_ID_ITEMBANK = 540;  //Filter - CR
