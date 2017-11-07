@@ -319,7 +319,7 @@ $(document).ready(function(){
          <c:forEach var="list" items="${selectState}">
              <option value="${list.codeId}">${list.codeName}</option>
          </c:forEach>
-        </select>
+        </select> 
     </td>
     <th scope="row">Holiday</th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="holidayDt" name="holidayDt"/></td>
