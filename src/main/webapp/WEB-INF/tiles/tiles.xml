@@ -61,27 +61,27 @@
 
     <!-- MOBILE WEB -->
 
-    <definition name="mobileWeb/login" extends="m.layout.empty.script">
+    <definition name="mobile/login" extends="m.layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/mobile/login.jsp" />
     </definition>
 
-    <definition name="mobileWeb/*/*Pop" extends="m.layout.empty.script">
+    <definition name="mobile/*/*Pop" extends="m.layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}/{2}Pop.jsp" />
     </definition>
 
-    <definition name="mobileWeb/*/*/*Pop" extends="m.layout.empty.script">
+    <definition name="mobile/*/*/*Pop" extends="m.layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}/{2}/{3}Pop.jsp" />
     </definition>
 
-    <definition name="mobileWeb/*" extends="m.layout.default">
+    <definition name="mobile/*" extends="m.layout.default">
         <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}.jsp" />
     </definition>
 
-    <definition name="mobileWeb/*/*" extends="m.layout.default">
+    <definition name="mobile/*/*" extends="m.layout.default">
         <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}/{2}.jsp" />
     </definition>
 
-    <definition name="mobileWeb/*/*/*" extends="m.layout.default">
+    <definition name="mobile/*/*/*" extends="m.layout.default">
         <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}/{2}/{3}.jsp" />
     </definition>
 
