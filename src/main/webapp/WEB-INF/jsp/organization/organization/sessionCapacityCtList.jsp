@@ -29,14 +29,24 @@
 
 			// AUIGrid 칼럼 설정
 			var columnLayout = [{
-			        dataField : "brnchId",
+			        dataField : "brnchId1",
 			        headerText : "Branch",
-			        width: 280
-			}, {
-                    dataField : "ctId",
-                    headerText : "CT",
-                    width: 280
-            }, {
+			        width: 0
+					}, {
+		                    dataField : "ctId1",
+		                    headerText : "CT",
+		                    width: 0
+		            }, {
+			            	dataField : "code",
+			                headerText : "Branch",
+			                width: 280
+			        }, {
+				        	dataField : "memCode",
+			                headerText : "CT",
+			                width: 280
+			        }, {
+            	
+            	
 			        headerText : "Morning",
 			        children : [
 			            {
@@ -65,7 +75,7 @@
 			                    headerText: "INS",
 			                    width:60
 			            }, {
-			                    dataField: "aftnonSesionIns",
+			                    dataField: "aftnonSesionRtn",
 			                    headerText: "RTN",
 			                    width:60
 			            }
@@ -104,8 +114,6 @@
                 
                 editable : true,
                 
-                showStateColumn : true, 
-                
                 displayTreeOpen : true,
                 
                 
@@ -119,6 +127,8 @@
                 
                 // 줄번호 칼럼 렌더러 출력
                 showRowNumColumn : true,
+                
+                showStateColumn : false
         
             };
 
@@ -149,10 +159,37 @@
 		        AUIGrid.setGridData(myGridID, result);
 		    });
 		}
+		function addRow() {
+	         var item = new Object();
+	         item.brnchId="";
+	         item.morngSesionAs="";
+	         item.morngSesionIns="";
+	         item.morngSesionRtn="";
+	         item.aftnonSesionAs="";
+	         item.aftnonSesionIns="";
+	         item.aftnonSesionRtn="";
+	         item.evngSesionAs="";
+	         item.evngSesionIns="";
+	         item.evngSesionRtn="";
+	         AUIGrid.addRow(myGridID, item, "first");
+	     }
     
+    function fn_save(){
+    	Common.ajax("POST", "/organization/saveCapacity.do", GridCommon.getEditData(myGridID), function(result) {
+            console.log("성공.");
+            console.log("data : " + result);
+        });
+    }
     
+    function removeRow(){
+        AUIGrid.removeRow(myGridID, "selectedIndex");
+        AUIGrid.removeSoftRows(myGridID);
+    }
     
-    
+    function fn_excelDown(){
+        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+        GridCommon.exportTo("grid_wrap", "xlsx", "CT Session Capacity");
+    }
     </script>
     
     
@@ -162,7 +199,7 @@
     
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order list</li>
 </ul>
@@ -174,7 +211,7 @@
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form action="#" method="post" id="searchForm">
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Search Option</h3>
@@ -209,8 +246,8 @@
     <td>
     
     <div class="search_100p"><!-- search_100p start -->
-    <input type="text" title="" placeholder="" class="w100p" />
-    <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a>
+    <input type="text" title="" placeholder="" class="w100p" id="CTCode" name="CTCode"/>
+    <a href="#" class="search_btn"></a>
     </div><!-- search_100p end -->
 
     </td>
@@ -218,8 +255,8 @@
     <td>
     
     <div class="search_100p"><!-- search_100p start -->
-    <input type="text" title="" placeholder="" class="w100p" />
-    <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a>
+    <input type="text" title="" placeholder="" class="w100p"/>
+    <a href="#" class="search_btn"></a>
     </div><!-- search_100p end -->
 
     </td>
@@ -233,7 +270,7 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<!-- <aside class="link_btns_wrap">link_btns_wrap start
 <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
@@ -261,8 +298,8 @@
     <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end -->
-
+</aside>link_btns_wrap end
+ -->
 </form>
 </section><!-- search_table end -->
 
@@ -271,29 +308,19 @@
 <aside class="title_line"><!-- title_line start -->
 <h3>CT Capacity Configuration</h3>
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="removeRow()">DEL</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_save()">INS</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="addRow()">ADD</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
       <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
-그리드 영역
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
 
 </section><!-- content end -->
 
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
-        
-</section><!-- container end -->
-<hr />
-
-</div><!-- wrap end -->    
     
