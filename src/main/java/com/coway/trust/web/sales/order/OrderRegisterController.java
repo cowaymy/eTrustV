@@ -104,7 +104,7 @@ public class OrderRegisterController {
     	
     //	EgovMap custAddInfo = orderRegisterService.selectCustAddInfo(params);
     	EgovMap custAddInfo = customerService.selectCustomerViewMainAddress(params);
-    
+/*    
     	if(custAddInfo != null) {
     		if(CommonUtils.isNotEmpty(custAddInfo.get("postcode"))) {
     			params.put("postCode", custAddInfo.get("postcode"));
@@ -114,7 +114,7 @@ public class OrderRegisterController {
     			custAddInfo.put("brnchId", brnchInfo.get("brnchId"));
     		}
     	}
-    	
+*/
     	// 데이터 리턴.
     	return ResponseEntity.ok(custAddInfo);
     }

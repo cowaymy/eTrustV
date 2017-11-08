@@ -175,6 +175,14 @@
         listMyGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
     }
     
+    function fn_calcGst(amt) {
+        var gstAmt = 0;
+        if(FormUtil.isNotEmpty(amt) || amt != 0) {
+            gstAmt = Math.floor(amt*(1/1.06));
+        }
+        return gstAmt;
+    }
+    
     function fn_multiCombo(){
         $('#listAppType').change(function() {
             //console.log($(this).val());

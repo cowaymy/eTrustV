@@ -130,7 +130,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params) {
 
-		BigDecimal orderPricePromo = BigDecimal.ZERO, orderPVPromo = BigDecimal.ZERO, orderRentalFeesPromo = BigDecimal.ZERO;
+		BigDecimal orderPricePromo = BigDecimal.ZERO, orderPVPromo = BigDecimal.ZERO, orderPVPromoGST = BigDecimal.ZERO, orderRentalFeesPromo = BigDecimal.ZERO;
 		
 		EgovMap priceInfo = null;
 		
@@ -145,16 +145,19 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(String.valueOf((BigDecimal)priceInfo.get("promoAppTypeId")))) { //Rental
     				orderPricePromo      = (BigDecimal)priceInfo.get("promoPrcRpf");
     				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+    				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
     				orderRentalFeesPromo = (BigDecimal)priceInfo.get("promoAmt");
     			}
     			else {
     				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
     				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+    				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
     				orderRentalFeesPromo = BigDecimal.ZERO;
     			}
     			
     			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
     			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
+    			priceInfo.put("orderPVPromoGST", new DecimalFormat("0.00").format(orderPVPromoGST));
     			priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
     			priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
     			priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));

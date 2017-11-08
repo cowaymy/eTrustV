@@ -371,6 +371,7 @@
              , FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
              , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_GST
              , T3.PROMO_APP_TYPE_ID
           FROM SAL0018D T1
           LEFT OUTER
@@ -386,6 +387,7 @@
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STUS_ID = 1
            AND T1.PROMO_ITM_STK_ID = #{stkId}
+           AND ROWNUM = 1
     </select>
     
     <select id="selectTrialNo" parameterType="Map" resultType="egovMap">

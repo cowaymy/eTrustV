@@ -285,10 +285,12 @@
 
                     if(custInfo.gstChk == '1') {
                         $("#gstChk").val('1').prop("disabled", true);
+                        $("#pBtnCal").removeClass("blind");
                         fn_tabOnOffSet('REL_CER', 'SHOW');
                     }
                     else {
                         $("#gstChk").val('0').removeAttr("disabled");
+                        $('#pBtnCal').addClass("blind");
                         fn_tabOnOffSet('REL_CER', 'HIDE');
                     }
 //              }
@@ -682,10 +684,19 @@
         });
         $('#gstChk').change(function(event) {
             if($("#gstChk").val() == '1') {
+                $('#pBtnCal').removeClass("blind");
                 fn_tabOnOffSet('REL_CER', 'SHOW');
             }
             else {
+                $('#pBtnCal').addClass("blind");
                 fn_tabOnOffSet('REL_CER', 'HIDE');
+                
+                var appTypeVal = $("#appType").val();
+                var stkIdVal   = $("#ordProudct").val();
+                var promoIdVal = $("#ordPromo").val();
+                
+                fn_loadProductPrice(appTypeVal, stkIdVal);
+                fn_loadPromotionPrice(promoIdVal, stkIdVal);
             }
         });
         $('#salesmanCd').keydown(function (event) {  
@@ -743,6 +754,7 @@
                             $('[name="advPay"]').removeAttr("disabled");
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                             $("#gstChk").val('0');
+                            $('#pBtnCal').addClass("blind");
                             fn_tabOnOffSet('REL_CER', 'HIDE');
                             
                             appSubType = '367';
@@ -791,6 +803,7 @@
                         default :
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                             $("#gstChk").val('0');
+                            $('#pBtnCal').addClass("blind");
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -906,6 +919,37 @@
             }
             $('#ordProudct').val('');
 
+        });
+        $('#btnCal').click(function() {            
+            if($("#ordProudct option:selected").index() <= 0) {
+                Common.alert('<b>* Please select a product.</b>');
+                return false;
+            }
+            var appTypeName  = $('#appType option:selected').text();
+            var productName  = $('#ordProudct option:selected').text();
+            //Amount before GST
+            var oldPrice     = $('#orgOrdPrice').val();
+            var newPrice     = $('#ordPrice').val();
+            var oldRental    = $('#orgOrdRentalFees').val();
+            var newRental    = $('#ordRentalFees').val();
+            var oldPv        = $('#ordPv').val();
+            //Amount of GST applied
+            var oldPriceGST  = fn_calcGst(oldPrice);
+            var newPriceGST  = fn_calcGst(newPrice);
+            var oldRentalGST = fn_calcGst(oldRental);
+            var newRentalGST = fn_calcGst(newRental);
+            var newPv        = $('#ordPvGST').val();
+            
+            var msg = '';
+            
+            msg += 'Application Type : '+appTypeName +'<br>';
+            msg += 'Product          : '+productName +'<br>';
+            msg += 'Price(RPF)       : '+newPriceGST +'<br>';
+            msg += 'Normal Rental    : '+oldRentalGST+'<br>';
+            msg += 'Promotion        : '+newRentalGST+'<br>';
+            msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]';
+            
+            Common.confirm('Confirm To Save' + DEFAULT_DELIMITER + '<b>'+msg+'</b>', fn_excludeGstAmt, fn_includeGstAmt);
         });
         $('#ordPromo').change(function() {
 
@@ -1038,6 +1082,32 @@
 
 	function fn_popOrderDetail() {	    
 	    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+	}
+	
+	function fn_excludeGstAmt() {
+        //Amount before GST
+        var oldPrice     = $('#orgOrdPrice').val();
+        var newPrice     = $('#ordPrice').val();
+        var oldRental    = $('#orgOrdRentalFees').val();
+        var newRental    = $('#ordRentalFees').val();
+        var oldPv        = $('#ordPv').val();
+        //Amount of GST applied
+        var oldPriceGST  = fn_calcGst(oldPrice);
+        var newPriceGST  = fn_calcGst(newPrice);
+        var oldRentalGST = fn_calcGst(oldRental);
+        var newRentalGST = fn_calcGst(newRental);
+        var newPv        = $('#ordPvGST').val();
+        
+        $('#orgOrdPrice').val(oldPriceGST);
+        $('#ordPrice').val(newPriceGST);
+        $('#orgOrdRentalFees').val(oldRentalGST);
+        $('#ordRentalFees').val(newRentalGST);
+        $('#ordPv').val(newPv);
+	}
+	
+	function fn_includeGstAmt() {
+	    $("#gstChk").val('0');
+	    $('#pBtnCal').addClass("blind");
 	}
 	
     function fn_selectCustInfo() {
@@ -1793,6 +1863,7 @@
 
                 $("#ordPrice").val(promoPriceInfo.orderPricePromo);
                 $("#ordPv").val(promoPriceInfo.orderPVPromo);
+                $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
                 $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
 
                 $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
@@ -1837,6 +1908,7 @@
 
                 $("#ordPrice").val(stkPriceInfo.orderPrice);
                 $("#ordPv").val(stkPriceInfo.orderPV);
+                $("#ordPvGST").val(stkPriceInfo.orderPV);
                 $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#ordPriceId").val(stkPriceInfo.priceId);
 
@@ -2343,7 +2415,8 @@
 </tr>
 <tr>
     <th scope="row">PV</th>
-    <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly /></td>
+    <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+        <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
     <th scope="row">Trial No</th>
     <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
                <input id="trialNo" name="trialNo" type="text" title="" placeholder="Trial No" style="width:210px;" class="readonly" readonly />
@@ -2992,7 +3065,8 @@
 <tr>
     <th scope="row">Zero GST<span class="must">*</span></th>
     <td>
-    <select id="gstChk" name="gstChk" class="w100p"></select>
+    <p><select id="gstChk" name="gstChk" class="w100p"></select></p>
+    <p id="pBtnCal" class="btn_sky blind"><a id="btnCal" href="#">Calculation</a></p>
     </td>
     <th scope="row">DSC Branch<span class="must">*</span></th>
     <td>
