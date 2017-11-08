@@ -519,6 +519,59 @@ function fn_setPopCostCenter (){
       
 } 
 
+function fn_getCodeName(str, value){
+    
+    Common.ajax("POST", "/eAccounting/budget/selectCodeName", {"codeType":str, "code" : value} , function(result)    {
+        console.log("성공." + JSON.stringify(result));
+        console.log("data : " + result.data);
+        
+        if(str == "SC"){
+            $("#sendCostCenterName").val(result.data);   
+            
+             if($("#pAdjustmentType").val() != "03"){
+                 if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
+
+                     $("#recvCostCenter").val($("#sendCostCenter").val());
+                     $("#recvCostCenterName").val( $("#sendCostCenterName").val());
+                 }
+             } 
+            
+        }else if(str == "SB"){
+            $("#sendBudgetCodeName").val(result.data);
+            
+            if($("#pAdjustmentType").val() != "04"){
+                if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
+
+                    $("#recvBudgetCode").val($("#sendBudgetCode").val());
+                    $("#recvBudgetCodeName").val( $("#sendBudgetCodeName").val());
+                }
+                
+            }
+            
+        }else if(str == "SG"){
+            $("#sendGlAccCodeName").val(result.data);            
+
+            if($("#pAdjustmentType").val() != "05"){
+                if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
+
+                    $("#recvGlAccCode").val($("#sendGlAccCode").val());
+                    $("#recvGlAccCodeName").val( $("#sendGlAccCodeName").val());
+                }
+               
+            }
+        }else if(str == "RC"){
+            $("#recvCostCenterName").val(result.data);            
+        }else if(str == "RB"){
+            $("#recvBudgetCodeName").val(result.data);            
+        }else if(str == "RG"){
+            $("#recvGlAccCodeName").val(result.data);            
+        }
+        
+    });
+         
+}
+
+
 function fn_chnCombo(str){
 	
     $("#pAdjForm")[0].reset();
@@ -869,30 +922,6 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
            window.open("/file/fileDown.do?subPath=" + fileSubPath
                + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
        }
-}
-
-function fn_getCodeName(str, value){
-	
-	Common.ajax("POST", "/eAccounting/budget/selectCodeName", {"codeType":str, "code" : value} , function(result)    {
-		console.log("성공." + JSON.stringify(result));
-        console.log("data : " + result.data);
-		
-        if(str == "SC"){
-        	$("#sendCostCenterName").val(result.data);        	
-        }else if(str == "SB"){
-            $("#sendBudgetCodeName").val(result.data);            
-        }else if(str == "SG"){
-            $("#sendGlAccCodeName").val(result.data);        	
-        }else if(str == "RC"){
-            $("#recvCostCenterName").val(result.data);            
-        }else if(str == "RB"){
-            $("#recvBudgetCodeName").val(result.data);            
-        }else if(str == "RG"){
-            $("#recvGlAccCodeName").val(result.data);            
-        }
-		
-	});
-	     
 }
 
 </script>
