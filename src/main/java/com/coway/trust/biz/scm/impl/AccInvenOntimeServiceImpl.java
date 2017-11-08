@@ -63,5 +63,32 @@ public class AccInvenOntimeServiceImpl implements AccInvenOntimeService {
 	public List<EgovMap> selectOnTimeMonthly(Map<String, Object> params) {
 		return accInvenOntimeMapper.selectOnTimeMonthly(params);
 	}
+	
+	
+	// Inventory Report	
+	@Override
+	public List<EgovMap> selectInvenRptTotalStatus(Map<String, Object> params) {
+		return accInvenOntimeMapper.selectInvenRptTotalStatus(params);
+	}
+	@Override
+	public List<EgovMap> selectPreviosMonth(Map<String, Object> params) {
+		return accInvenOntimeMapper.selectPreviosMonth(params);
+	}
+	@Override
+	public List<EgovMap> selectInvenMainAmountList(Map<String, Object> params) {
+		return accInvenOntimeMapper.selectInvenMainAmountList(params);
+	}
+	@Override
+	public List<EgovMap> selectInvenMainQtyList(Map<String, Object> params) {
+		return accInvenOntimeMapper.selectInvenMainQtyList(params);
+	}
+	@Override
+	public List<EgovMap> selectDetailAmountList(Map<String, Object> params) {
+		return accInvenOntimeMapper.selectDetailAmountList(params);
+	}
+	@Override
+	public List<EgovMap> selectDetailQuantityList(Map<String, Object> params) {
+		return accInvenOntimeMapper.selectDetailQuantityList(params);
+	}
 
 }

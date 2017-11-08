@@ -102,5 +102,142 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ScmMasterMngmentCon
 		
 	}	
 
+	
+	/********* Inventory Report **********/
+	@RequestMapping(value = "/inventoryReport.do")
+	public String doInventory(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
+	{
+		//model.addAttribute("languages", loginService.getLanguages());
+		return "/scm/inventoryReport";  	
+	}  
 
+	@RequestMapping(value = "/selectInvenRptTotalStatusList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectInvenRptTotalStatus(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectInvenRptTotalStatus_Input : {}", params.toString());
+		
+		List<EgovMap> selectInvenRptTotalStatus = accInvenOntimeService.selectInvenRptTotalStatus(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectInvenRptTotalStatusList", selectInvenRptTotalStatus);
+		
+		return ResponseEntity.ok(map);  
+		
+	}
+	
+	@RequestMapping(value = "/selectPreviosMonth.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectPreviosMonth(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectPreviosMonth_Input : {}", params.toString());
+		
+		List<EgovMap> selectPreviosMonth = accInvenOntimeService.selectPreviosMonth(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectPreviosMonthList", selectPreviosMonth);
+		
+		return ResponseEntity.ok(map);  
+		
+	}
+	
+	@RequestMapping(value = "/selectInvenMainAmountList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectInvenMainAmountList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectInvenMainAmountList_Input : {}", params.toString());
+		
+		List<EgovMap> selectInvenMainAmountList = accInvenOntimeService.selectInvenMainAmountList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectInvenMainAmountList", selectInvenMainAmountList);
+		
+		return ResponseEntity.ok(map);  
+		
+	}
+	
+	@RequestMapping(value = "/selectInvenMainQtyList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectInvenMainQtyList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectInvenMainQtyList_Input : {}", params.toString());
+		
+		List<EgovMap> selectPreviosMonth = accInvenOntimeService.selectPreviosMonth(params);
+		List<EgovMap> selectInvenMainQtyList = accInvenOntimeService.selectInvenMainQtyList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectPreviosMonth", selectPreviosMonth);
+		map.put("selectInvenMainQtyList", selectInvenMainQtyList);
+		
+		return ResponseEntity.ok(map);  
+		
+	}
+	
+	@RequestMapping(value = "/selectDetailAmountList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectDetailAmountList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectDetailAmountList_Input : {}", params.toString());
+		
+		List<EgovMap> selectDetailAmountList = accInvenOntimeService.selectDetailAmountList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectDetailAmountList", selectDetailAmountList);
+		
+		return ResponseEntity.ok(map);  
+		
+	}
+	
+	@RequestMapping(value = "/selectDetailQuantityList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectDetailQuantityList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectDetailQuantityList_Input : {}", params.toString());
+		
+		List<EgovMap> selectDetailQuantityList = accInvenOntimeService.selectDetailQuantityList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectDetailQuantityList", selectDetailQuantityList);
+		
+		return ResponseEntity.ok(map);  
+		
+	}
+	
+	// search btn
+	@RequestMapping(value = "/selectInvenRPTSearch.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectInvenByStockTypeAmountList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectOnTimeDeliverySearch_Input : {}", params.toString());
+		
+		List<EgovMap> selectInvenRptTotalStatus = accInvenOntimeService.selectInvenRptTotalStatus(params);
+		List<EgovMap> selectPreviosMonth = accInvenOntimeService.selectPreviosMonth(params);
+		List<EgovMap> selectInvenMainAmountList = accInvenOntimeService.selectInvenMainAmountList(params);
+		List<EgovMap> selectInvenDetailAmountList = accInvenOntimeService.selectDetailAmountList(params);
+
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectInvenRptTotalStatusList", selectInvenRptTotalStatus);
+		map.put("selectPreviosMonth", selectPreviosMonth);
+		map.put("selectInvenMainAmountList", selectInvenMainAmountList);
+		map.put("selectInvenDetailAmountList", selectInvenDetailAmountList);
+
+		return ResponseEntity.ok(map);
+		
+	}		
+	
+	
 }
