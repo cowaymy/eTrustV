@@ -126,7 +126,8 @@
 				            SAL0029D.NAME AS cust_Name,
 				            SVC0001D.AS_STUS_ID AS job_Status,
 				            to_char(SVC0001D.AS_APPNT_DT,'YYYYMMDD') AS appointment_Date,
-				            SVC0001D.AS_APPNT_TM AS appointment_Time,
+				            replace(substr(SVC0001D.AS_APPNT_TM, 0,5 ),':')  AS appointment_Time,
+				            <!-- SVC0001D.AS_APPNT_TM AS appointment_Time, -->
 				            SVC0001D.AS_SESION_CODE AS job_Session,
 				            SAL0029D.TYPE_ID AS customer_Type,
 				            SAL0001D.CUST_ID AS customer_Id,
@@ -215,7 +216,9 @@
 				AND   SYS0026M.STK_ID     = SYS0027M.STK_ID
 				AND   ORG0001D.MEM_ID       = SVC0004D.AS_CT_ID
 				AND   ORG0001D.BRNCH        = SYS0005M.BRNCH_ID
-				AND   SVC0001D.AS_APPNT_DT BETWEEN TO_DATE(#{requestDate}, 'YYYYMMDD') AND TO_DATE(#{requestDate}, 'YYYYMMDD')
+<!-- 				AND   SVC0001D.AS_APPNT_DT BETWEEN TO_DATE(#{requestDate}, 'YYYYMMDD') AND TO_DATE(#{requestDate}, 'YYYYMMDD') -->
+				AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
+				                                                 AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
 				and    ORG0001D.mem_code = #{userId}
 				ORDER BY AS_APPNT_DT
 
@@ -334,7 +337,7 @@
 						                S26A.STK_CODE AS product_Code,
 						                S26B.STK_CODE AS part_Code,
 						                S26B.STK_DESC as part_Name,
-						                S87A.SRV_FILTER_STK_ID partId,
+						                S87A.SRV_FILTER_STK_ID part_Id,
 						                L44A.BOM_COMPNT,
 						                L44A.COMPNT_QTY quanity,
 						                S87A.SRV_FILTER_PRV_CHG_DT last_Chg_Date,
@@ -415,7 +418,10 @@
 					AND   SVC0001D.AS_MEM_ID     = (SELECT MEM_ID
 					                                                        FROM ORG0001D
 					                                                            WHERE ORG0001D.MEM_CODE = #{userId})
-					AND   SVC0001D.AS_APPNT_DT BETWEEN TO_DATE(#{requestDate}, 'YYYYMMDD') AND TO_DATE(#{requestDate}, 'YYYYMMDD')
+<!-- 					AND   SVC0001D.AS_APPNT_DT BETWEEN TO_DATE(#{requestDate}, 'YYYYMMDD') AND TO_DATE(#{requestDate}, 'YYYYMMDD') -->
+                    AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
+                                                                    and LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
+
 					ORDER BY AS_NO
          </select>
          
@@ -549,6 +555,52 @@
             )
         </insert>
         
+        
+            <insert id="insertInstallServiceLog" parameterType="Map">
+            
+		             INSERT INTO SVC0025T (
+						 RESULT_SEQ
+						,RESULT_CRT_USER_ID
+						,SALES_ORD_ID
+						,SVC_NO
+						,SIRIM_NO
+						,SERIAL_NO
+						,AS_EXCHG_YN
+						,BEFOR_PRODUCT_SIRIM_NO
+						,RESULT_REM
+						,OWNER_CODE
+						,RESULT_CUST_NAME
+						,RESULT_IC_MOBILE_NO
+						,RESULT_EMAIL_NO
+						,ACCEPTANCE_NAME
+						,SIGN_DATA
+						,CRT_USER_ID
+						,CRT_DT
+						,TRNSC_ID
+						,TRAN_STUS_CD
+		            ) VALUES (
+		               SVC0025T_RESULT_SEQ.NEXTVAL
+		                ,#{userId}
+						,#{salesOrderNo}
+						,#{serviceNo}
+						,#{sirimNo}
+						,#{serialNo}
+						,#{asExchangeYN}
+						,#{beforeProductSerialNo}
+						,#{resultRemark}
+						,#{ownerCode}
+						,#{resultCustName}
+						,#{resultIcMobileNo}
+						,#{resultReportEmailNo}
+						,#{resultAcceptanceName}
+						,#{signData}
+						,#{userId}
+						, SYSDATE
+						,#{transactionId}
+                        , 'N'
+		            )       
+        
+            </insert>
         
         
         	
@@ -780,8 +832,147 @@
           
           
           
+    <select id="getInstallResultByInstallEntryID" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
+		           Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
+		           Extent3.SALES_ORD_ID SALES_ORD_ID  ,
+		           Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+		           Extent3.REF_NO REF_NO  ,
+		           Extent3.CUST_PO_NO CUST_PO_NO  ,
+		           TO_CHAR(Extent3.SALES_DT,'DD-MM-YYYY') SALES_DT  ,
+		           TO_CHAR(Extent1.INSTALL_DT,'DD-MM-YYYY')  C1  ,
+		           Extent1.INSTALL_STK_ID INSTALL_STK_ID  ,
+		           Extent9.STK_CODE STK_CODE  ,
+		           Extent9.STK_DESC STK_DESC  ,
+		           Extent10.NAME NAME  ,
+		           Extent8.CODE_ID CODE_ID  ,
+		           Extent8.CODE_NAME CODE_NAME  ,
+		           Extent7.CODE_ID CODEID1  ,
+		           Extent7.CODE CODE  ,
+		           Extent7.CODE_NAME CODENAME1  ,
+		           Extent13.STUS_CODE_ID STUS_CODE_ID  ,
+		           Extent13.CODE CODE1  ,
+		           Extent13.NAME NAME1  ,
+		           Extent14.BRNCH_ID BRNCH_ID  ,
+		           Extent10.CUST_ID CUST_ID  ,
+		           Extent10.NRIC NRIC  ,
+		           CASE 
+		                WHEN ( Extent3.CUST_ADD_ID IS NOT NULL ) THEN Extent3.CUST_ADD_ID
+		           ELSE 0
+		              END C2  ,
+		           Extent3.CUST_CNT_ID CUST_CNT_ID  ,
+		           Extent2.SIRIM_NO SIRIM_NO  ,
+		           Extent2.SERIAL_NO SERIAL_NO  ,
+		           Extent11.USER_NAME USER_NAME  ,
+		           Extent9.IS_SIRIM IS_SIRIM  ,
+		           Extent9.STK_GRAD STK_GRAD  ,
+		           TO_CHAR(Extent2.CRT_DT,'DD-MM-YYYY') C3  ,
+		           Extent9.STK_CTGRY_ID STK_CTGRY_ID  ,
+		           Extent2.DOC_REF_NO1 DOC_REF_NO1  ,
+		           Extent2.DOC_REF_NO2 DOC_REF_NO2  ,
+		           Extent2.ALLOW_COMM ALLOW_COMM  ,
+		           Extent2.IS_TRADE_IN IS_TRADE_IN  ,
+		           Extent2.REQUIRE_SMS REQUIRE_SMS  ,
+		           CASE 
+		                WHEN ( Extent12.USER_ID IS NOT NULL ) THEN Extent12.USER_NAME
+		           ELSE ' '
+		              END C4  ,
+		           Extent2.CRT_DT C5  ,
+		           CASE 
+		                WHEN ( Extent2.RESULT_ID IS NOT NULL ) THEN Extent2.CT_ID
+		           ELSE 0
+		              END C6  ,
+		           Extent15.MEM_CODE MEM_CODE  ,
+		           Extent15.NAME NAME2  ,
+		           Extent16.WH_LOC_ID WH_LOC_ID  ,
+		           Extent4.DOC_ID DOC_ID  ,
+		           Extent2.INSTALL_DT INSTALL_DT  ,
+		           Extent2.NEXT_CALL_DT NEXT_CALL_DT  ,
+		           Extent2.REM REM  ,
+		           CASE 
+		                WHEN ( Extent3.CUST_BILL_ID IS NOT NULL ) THEN Extent3.CUST_BILL_ID
+		           ELSE 0
+		              END C7  ,
+		           Extent6.CODE_NAME CODENAME2  
+		      FROM SAL0046D Extent1
+		             LEFT JOIN SAL0047D Extent2   ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
+		             JOIN SAL0001D Extent3   ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
+		             LEFT JOIN CCR0006D Extent4   ON Extent1.CALL_ENTRY_ID = Extent4.CALL_ENTRY_ID
+		             LEFT JOIN SAL0074D Extent5   ON Extent3.SALES_ORD_ID = Extent5.SALES_ORD_ID
+		             LEFT JOIN SYS0013M Extent6   ON Extent5.MODE_ID = Extent6.CODE_ID
+		             LEFT JOIN SYS0013M Extent7   ON Extent4.TYPE_ID = Extent7.CODE_ID
+		             LEFT JOIN SYS0013M Extent8   ON Extent3.APP_TYPE_ID = Extent8.CODE_ID
+		             LEFT JOIN SYS0026M Extent9   ON Extent1.INSTALL_STK_ID = Extent9.STK_ID
+		             LEFT JOIN SAL0029D Extent10   ON Extent3.CUST_ID = Extent10.CUST_ID
+		             LEFT JOIN SYS0047M  Extent11   ON Extent3.UPD_USER_ID = Extent11.USER_ID
+		             LEFT JOIN SYS0047M  Extent12   ON Extent2.CRT_USER_ID = Extent12.USER_ID
+		             LEFT JOIN SYS0038M Extent13   ON Extent1.STUS_CODE_ID = Extent13.STUS_CODE_ID
+		             JOIN SAL0045D Extent14   ON Extent3.SALES_ORD_ID = Extent14.SALES_ORD_ID
+		             LEFT JOIN ORG0001D Extent15   ON Extent2.CT_ID = Extent15.MEM_ID
+		             LEFT JOIN SYS0028M Extent16   ON ( Extent15.MEM_CODE = Extent16.WH_LOC_CODE )
+		             OR ( ( Extent15.MEM_CODE IS NULL )
+		             AND ( Extent16.WH_LOC_CODE IS NULL ) )
+		        WHERE  1=1
+                    and Extent3.SALES_ORD_NO = #{salesOrderNo}
+                    and Extent1.INSTALL_ENTRY_NO = #{serviceNo}
+
+    </select>          
           
           
           
+          
+          
+         <insert id="insertInstallResult" parameterType="Map">
+               INSERT INTO SAL0047D  ( 
+               RESULT_ID
+               , ENTRY_ID
+               , STUS_CODE_ID
+               , CT_ID
+               , INSTALL_DT
+               , REM
+               , GL_POST
+               , CRT_USER_ID
+               , CRT_DT
+               , SIRIM_NO
+               , SERIAL_NO
+               , FAIL_ID
+               , NEXT_CALL_DT
+               , ALLOW_COMM
+               , IS_TRADE_IN
+               , REQUIRE_SMS
+               , DOC_REF_NO1
+               , DOC_REF_NO2
+               , UPD_DT
+               , UPD_USER_ID
+               , ADJ_AMT
+               , MOBILE_ID 
+               )
+                VALUES (
+                SAL0047D_RESULT_ID_SEQ.NEXTVAL
+                , #{entryId}
+                , #{statusCodeId}
+                , #{ctid}
+                , TO_DATE(#{installDate},'YYYY-MM-DD')
+                , #{remark}
+                , #{glpost}
+                , #{creator}
+                , SYSDATE
+                , #{sirimNo}
+                , #{serialNo}
+                , #{failId}
+                , TO_DATE(#{nextCallDate},'YYYY-MM-DD')
+                , #{allowComm}
+                , #{inTradeIn}
+                , #{reqSms}
+                , #{docRefNo1}
+                , #{docRefNo2}
+                , SYSDATE
+                , #{updator}
+                , #{adjAmount}
+                , NULL 
+                )
+         </insert>
+         
+                   
                    
 </mapper>

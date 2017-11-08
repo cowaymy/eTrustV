@@ -33,6 +33,10 @@ public interface MSvcLogApiService {
 
 	void saveInstallServiceLogs(Map<String, Object> params);
 
+	void updateSuccessInstallStatus(String transactionId);
+
+	void insertInstallationResult(Map<String, Object> params);
+
 
 	
 	

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferRejectSMOReqForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
@@ -39,6 +40,7 @@ import com.coway.trust.api.mobile.services.installation.InstallationResultForm;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobForm;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.exception.PreconditionException;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -84,7 +86,7 @@ public class ServiceApiController {
 	
 	
 	@ApiOperation(value = "AfterServiceJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/AfterServiceJobList", method = RequestMethod.GET)
+	@RequestMapping(value = "/afterServiceJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<AfterServiceJobDto>> getHeartServiceJob(
 			@ModelAttribute AfterServiceJobForm AfterServiceJobForm) throws Exception {
 
@@ -108,7 +110,7 @@ public class ServiceApiController {
 	
 	
 	@ApiOperation(value = "InstallationJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/InstallationJobList", method = RequestMethod.GET)
+	@RequestMapping(value = "/installationJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<InstallationJobDto>> getInstallationJobList(
 			@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
 
@@ -131,7 +133,7 @@ public class ServiceApiController {
 	
 	
 	@ApiOperation(value = "ProductRetrunJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/ProductRetrunJobList", method = RequestMethod.GET)
+	@RequestMapping(value = "/productRetrunJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList(
 			@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
 
@@ -222,6 +224,9 @@ public class ServiceApiController {
 			MSvcLogApiService.saveHearLogs(heartLogs);
 
 			transactionId = heartForms.get(0).getTransactionId();
+			
+
+			
 		}
 
 		// business service....
@@ -280,72 +285,63 @@ public class ServiceApiController {
 	}
 	
 	
+	
 //	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
-//	public ResponseEntity<InstallationResultDto> installationResult (@RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
-//
+//	public ResponseEntity<InstallationResultDto> installationResult(@RequestBody  List<InstallationResultForm> installationResultForms)
+//			throws Exception {		
+//		
 //		String transactionId = "";
 //		List<Map<String, Object>> installTransLogs = null;
 //		
-//		// mobile 에서 받은 데이터를 로그 테이블에 insert......
-//		LOGGER.debug("### IS_INSERT_AS_LOG : {}", RegistrationConstants.IS_INSERT_AS_LOG);
-//		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_AS_LOG);
-//		if (RegistrationConstants.IS_INSERT_AS_LOG) {
-//
-////			installTransLogs = new ArrayList<>();
-////			for (InstallationResultForm installService : installationResultForms) {
-////				installTransLogs.addAll(installService.createMap(installService));
-////			}
-////
-////			MSvcLogApiService.saveAfterServiceLogs(installTransLogs);
-////
-////			transactionId = installationResultForm.get(0).getTransactionId();
-////		}
-////
-////		// business service....
-////		// TODO : heartService.xxxx 구현 필요.....
-////		
-////		//MSvcLogApiService.resultRegistration(asTransLogs);
-////		
-////		// TODO : 리턴할 dto 구현.
-////
-////		if (RegistrationConstants.IS_INSERT_AS_LOG) {
-////			MSvcLogApiService.updateSuccessASStatus(transactionId);
-////		}
-//
-////		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
-//			return null;
+//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//			
+//			installTransLogs = new ArrayList<>();
+//			for(InstallationResultForm installService : installationResultForms){
+//				installTransLogs.addAll(installService.createMap(installService));
+//			}
+//			
+//			MSvcLogApiService.saveInstallServiceLogs(installTransLogs);
+//			transactionId = MSvcLogApiService.get(0).getTransactionId();
+//		}
 //		
-//		}	
+//
+//		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+//		
+//							
 //	}
 	
 	
-//	@ApiOperation(value = "InstallationResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
-//	public void installationResult(@RequestBody InstallationResultForm installationResultForm)
-//			throws Exception {		
-//		String transactionId = "";
-//		Map<String, Object> params = InstallationResultForm.createMap(installationResultForm);
-//		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//		
-//			
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//			
-//		}
-//		
-//		
-//		
-//		
-////		String str = MSvcLogApiService.stockMovementCommonCancle(params);
-//		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.updateSuccessASStatus(transactionId);
-//		}
-//		
-////		return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
-//
-//	}
+	
+	
+	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
+	public ResponseEntity<InstallationResultDto> installationResult(@RequestBody InstallationResultForm installationResultForm)
+			throws Exception {		
+		String transactionId = "";
+
+		Map<String, Object> params = InstallationResultForm.createMaps(installationResultForm);
+		
+		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+			MSvcLogApiService.saveInstallServiceLogs(params);
+		}
+		
+		
+//		// business service....
+//		// TODO : installResult 구현 필요.....
+		MSvcLogApiService.insertInstallationResult(params);		
+
+		
+		// TODO : 리턴할 dto 구현.
+		transactionId = installationResultForm.getTransactionId();
+		
+		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+		}
+		
+		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+
+	}
 	
 	
 	

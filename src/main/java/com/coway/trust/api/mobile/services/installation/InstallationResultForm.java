@@ -1,7 +1,15 @@
 package com.coway.trust.api.mobile.services.installation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.codec.binary.Base64;
+
+import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
+import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -11,7 +19,7 @@ public class InstallationResultForm {
 	private String userId;
 
 	@ApiModelProperty(value = "주문번호")
-	private String salesOrderNo;
+	private int salesOrderNo;
 
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
@@ -32,7 +40,7 @@ public class InstallationResultForm {
 	private String resultRemark;
 
 	@ApiModelProperty(value = "결과 등록시, Owner Code")
-	private String ownerCode;
+	private int ownerCode;
 
 	@ApiModelProperty(value = "결과 등록시, Cust Name")
 	private String resultCustName;
@@ -60,11 +68,11 @@ public class InstallationResultForm {
 		this.userId = userId;
 	}
 
-	public String getSalesOrderNo() {
+	public int getSalesOrderNo() {
 		return salesOrderNo;
 	}
 
-	public void setSalesOrderNo(String salesOrderNo) {
+	public void setSalesOrderNo(int salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
 
@@ -116,11 +124,11 @@ public class InstallationResultForm {
 		this.resultRemark = resultRemark;
 	}
 
-	public String getOwnerCode() {
+	public int getOwnerCode() {
 		return ownerCode;
 	}
 
-	public void setOwnerCode(String ownerCode) {
+	public void setOwnerCode(int ownerCode) {
 		this.ownerCode = ownerCode;
 	}
 
@@ -174,28 +182,71 @@ public class InstallationResultForm {
 	
 	
 	
-	public static Map<String, Object> createMap(InstallationResultForm installationResultForm) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("userId", installationResultForm.getUserId());
-		params.put("salesOrderNo", installationResultForm.getSalesOrderNo());
-		params.put("serviceNo", installationResultForm.getServiceNo());
-		params.put("sirimNo", installationResultForm.getSirimNo());
-		params.put("serialNo", installationResultForm.getSerialNo());
-		params.put("asExchangeYN", installationResultForm.getAsExchangeYN());
-		params.put("beforeProductSerialNo", installationResultForm.getBeforeProductSerialNo());
-		params.put("resultRemark", installationResultForm.getResultRemark());
-		params.put("ownerCode", installationResultForm.getOwnerCode());
-		params.put("resultCustName", installationResultForm.getResultCustName());
-		params.put("resultIcMobileNo", installationResultForm.getResultIcMobileNo());
-		params.put("resultReportEmailNo", installationResultForm.getResultReportEmailNo());
-		params.put("resultAcceptanceName", installationResultForm.getResultAcceptanceName());
-		params.put("signData", installationResultForm.getSignData());
-		params.put("transactionId", installationResultForm.getTransactionId());
+
+	
+	
+	
+//	public static Map<String, Object> createMaps(InstallationResultForm installationResultForm) {
+//		Map<String, Object> params = new HashMap<>();
+//		params.put("userId", installationResultForm.getUserId());
+//		params.put("salesOrderNo", installationResultForm.getSalesOrderNo());
+//		params.put("serviceNo", installationResultForm.getServiceNo());
+//		params.put("sirimNo", installationResultForm.getSirimNo());
+//		params.put("serialNo", installationResultForm.getSerialNo());
+//		params.put("asExchangeYN", installationResultForm.getAsExchangeYN());
+//		params.put("beforeProductSerialNo", installationResultForm.getBeforeProductSerialNo());
+//		params.put("resultRemark", installationResultForm.getResultRemark());
+//		params.put("ownerCode", installationResultForm.getOwnerCode());
+//		params.put("resultCustName", installationResultForm.getResultCustName());
+//		params.put("resultIcMobileNo", installationResultForm.getResultIcMobileNo());
+//		params.put("resultReportEmailNo", installationResultForm.getResultReportEmailNo());
+//		params.put("resultAcceptanceName", installationResultForm.getResultAcceptanceName());
+//
+//		params.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+//		
+//		params.put("transactionId", installationResultForm.getTransactionId());
+//		
+//		return params;
+//	}
+
+
+	
+	public static Map<String, Object> createMaps(InstallationResultForm installationResultForm) {
 		
-		return params;
+		List<Map<String, Object>> list = new ArrayList<>();
+
+			Map<String, Object> map;
+			
+			
+				map = BeanConverter.toMap(installationResultForm, "signData", "partList");
+//				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+
+				// install Result
+				map.put("userId", installationResultForm.getUserId());
+				map.put("salesOrderNo", installationResultForm.getSalesOrderNo());
+				map.put("serviceNo", installationResultForm.getServiceNo());
+				map.put("sirimNo", installationResultForm.getSirimNo());
+				map.put("serialNo", installationResultForm.getSerialNo());
+				map.put("asExchangeYN", installationResultForm.getAsExchangeYN());
+				map.put("beforeProductSerialNo", installationResultForm.getBeforeProductSerialNo());
+				map.put("resultRemark", installationResultForm.getResultRemark());
+				map.put("ownerCode", installationResultForm.getOwnerCode());
+				map.put("resultCustName", installationResultForm.getResultCustName());
+				map.put("resultIcMobileNo", installationResultForm.getResultIcMobileNo());
+				map.put("resultReportEmailNo", installationResultForm.getResultReportEmailNo());
+				map.put("resultAcceptanceName", installationResultForm.getResultAcceptanceName());
+				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+				map.put("transactionId", installationResultForm.getTransactionId());				
+
+//				list.add(map);
+				
+				return map;
 	}
-
-
+	
+	
+	
+	
+	
 	
 
 	

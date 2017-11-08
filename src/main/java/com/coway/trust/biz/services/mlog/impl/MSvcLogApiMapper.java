@@ -49,6 +49,14 @@ public interface MSvcLogApiMapper {
 	void insertAsResultLog(Map<String, Object> asTransLog);
 
 	void updateSuccessASStatus(String transactionId);
+	
+	void updateSuccessInstallStatus(String transactionId);
+
+	void insertInstallServiceLog(Map<String, Object> params);
+
+	EgovMap getInstallResultByInstallEntryID(Map<String, Object> params);
+
+	void insertInstallResult(Map<String, Object> installResult);
 
 	
 	

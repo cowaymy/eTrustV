@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class HeartServiceJobDto {
 
 	@ApiModelProperty(value = "주문번호")	
-	private int salesOrderNo;
+	private String salesOrderNo;
 	
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
@@ -208,7 +208,7 @@ public class HeartServiceJobDto {
 	@ApiModelProperty(value = "필터교체대상 여부")
 	private String nextAppointmentTime;
 
-	public void setSalesOrderNo(int salesOrderNo) {
+	public void setSalesOrderNo(String salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
 
@@ -236,7 +236,7 @@ public class HeartServiceJobDto {
 		this.failReasonCode = failReasonCode;
 	}
 
-	public int getSalesOrderNo() {
+	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
 
