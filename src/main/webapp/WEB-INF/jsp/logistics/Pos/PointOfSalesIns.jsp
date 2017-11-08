@@ -39,6 +39,7 @@ var userCode;
 var UserBranchId;
 var checkedItems;
 var itm_qty  = 0;
+var searchReqType;
 
 var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
                      {dataField:"codeName"     ,headerText:"Material Type"          ,width:120    ,height:30 ,visible:true},
@@ -69,7 +70,7 @@ var reqcolumnLayout;
          usePaging : true,                
          pageRowCount : 20,                
          editable : false,                
-         noDataMessage : "출력할 데이터가 없습니다.",
+         noDataMessage : gridMsg["sys.info.grid.noDataMessage"],
          //enableSorting : true,
          //selectionMode : "multipleRows",
          //selectionMode : "multipleCells",
@@ -113,6 +114,7 @@ var reqcolumnLayout;
 //     * Header Setting
 //     ***********************************/
 SearchSessionAjax();
+$('#reqadd').hide();
 
 // var paramdatas = { groupCode : '306' ,Codeval: 'OH' , orderValue : 'CODE' , likeValue:''};
 // doGetComboData('/common/selectCodeList.do', paramdatas, '','smtype', 'S' , '');
@@ -181,6 +183,13 @@ var LocData2 = {brnch : UserBranchId};
             	return false;
             }
         }
+    	
+    	  if(event.dataField == "itmcode"){
+              $("#svalue").val(AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmcd"));
+              $("#sUrl").val("/logistics/material/materialcdsearch.do");
+              Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
+          }
+  	
     });
     
     
@@ -270,13 +279,39 @@ var LocData2 = {brnch : UserBranchId};
 // //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	if (f_validatation('search')){
-//     	    $("#slocation").val($("#tlocation").val());
-    	    SearchListAjax();
-    	}
+        if (searchReqType != 'OH03'){
+    	
+	    	if (f_validatation('search')){
+	//     	    $("#slocation").val($("#tlocation").val());
+	    	    SearchListAjax();
+	    	}
+    	}else{
+            Common.alert("Click The ADD Button");
+        }
     });
     
     
+    $('#insReqType').change(function() {
+        searchReqType = $('#insReqType').val();
+        //alert("searchReqType :  "+searchReqType);
+        if (searchReqType == 'OH03'){
+            $('#lirightBtn').hide();
+            $('#reqadd').show();
+            AUIGrid.setGridData(resGrid, []);
+            AUIGrid.clearGridData(reqGrid);
+        }else{
+            $('#lirightBtn').show();
+            $('#reqadd').hide();
+        }   
+    });
+        
+        $('#reqadd').click(function(){
+            $("#svalue").val('');
+            $("#sUrl").val("/logistics/material/materialcdsearch.do");
+            Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
+       });
+        
+
     $('#clear').click(function() {
     });
  
@@ -318,7 +353,7 @@ $(function(){
           $("#giopenwindow").show();
              AUIGrid.clearGridData(serialGrid);
              AUIGrid.resize(serialGrid); 
-             fn_itempopList(checkedItems);
+             fn_itemSerialPopList(checkedItems);
              //fn_itempopList_T(checkedItems);
          } 
          
@@ -569,16 +604,18 @@ function f_multiCombo() {
     $(function() {
         $('#PosItemType').change(function() {
         }).multipleSelect({
-            selectAll : true
-        }).multipleSelect("checkAll");        
+            selectAll : true,
+            width: '100%'
+        })      
     });
 }
 function f_multiCombos() {
     $(function() {
         $('#catetype').change(function() {
         }).multipleSelect({
-            selectAll : true
-        }).multipleSelect("checkAll"); 
+            selectAll : true,
+            width: '100%'
+        })
     });
 }
 
@@ -591,7 +628,7 @@ function f_LocMultiCombo() {
 }
 
 
-function fn_itempopList(data){
+function fn_itemSerialPopList(data){
     
  	checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
  	
@@ -613,6 +650,34 @@ function fn_itempopList(data){
     f_addrow();
     
 }
+
+
+function fn_itempopList(data){
+    
+    var rowPos = "first";
+    var rowList = [];
+    
+    AUIGrid.removeRow(reqGrid, "selectedIndex");
+    AUIGrid.removeSoftRows(reqGrid);
+    for (var i = 0 ; i < data.length ; i++){
+        rowList[i] = {
+            //itmid : data[i].item.itemid,
+            itmcode : data[i].item.itemcode,
+            itmdesc : data[i].item.itemname,
+            itemserialChk : data[i].item.serialchk,
+            itemuom       : data[i].item.uom
+        }
+    }
+    
+    AUIGrid.addRow(reqGrid, rowList, rowPos);
+    
+}
+
+
+
+
+
+
 
 function f_getTtype(g , v){
     var rData = new Array();
@@ -851,6 +916,7 @@ function saveSerialInfo(){
 <div class="border_box" style="height:340px;"><!-- border_box start -->
 
 <ul class="right_btns">
+    <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li>
     <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
 </ul>
 
@@ -859,7 +925,8 @@ function saveSerialInfo(){
 </article><!-- grid_wrap end -->
 
 <ul class="btns">
-    <li><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
+    <li id="lirightBtn"><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
+    <%-- <li><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li> --%>
 <%--     <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li> --%>
 </ul>
 
