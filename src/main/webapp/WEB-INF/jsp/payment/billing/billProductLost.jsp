@@ -116,8 +116,9 @@ function fn_createBills(){
     		
     		$("#grid_wrap").show();
             AUIGrid.setGridData(myGridID, result.data);
-            
+            AUIGrid.resize(myGridID, 1200, 280);
             Common.alert(result.message);
+            
     	}
     });
 }
