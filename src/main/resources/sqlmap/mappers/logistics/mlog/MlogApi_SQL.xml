@@ -901,7 +901,7 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
         <insert id="insertStockBooking" parameterType="Map">
             INSERT INTO LOG0075M (REQST_NO, SEQ, LOC_ID, TRNSC_TYPE_DTL, ITM_CODE, REQST_QTY, REQST_CRT_DT, CRT_DT)
                SELECT L47.REQST_NO
-                    , (SELECT DECODE(COUNT(1) , 0 , '0' , MAX(SEQ)) FROM LOG0075M WHERE REQST_NO = L47.REQST_NO AND LOC_ID = L47.REQST_CDC_RDC ) + ROWNUM
+                    , L48.REQST_NO_ITM
                     , L47.REQST_CDC_RDC 
                     , L47.TRNSC_TYPE_DTL 
                     , L48.ITM_CODE 
