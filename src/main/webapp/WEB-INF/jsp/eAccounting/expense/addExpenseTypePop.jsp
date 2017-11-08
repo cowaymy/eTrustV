@@ -184,6 +184,9 @@ function fn_selectPopListAjax(){
   //MstGrid 행 추가, 삽입
 function fn_AddRow()
 {
+    // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
+    AUIGrid.forceEditingComplete(expPopGridID, null, false);
+
     var item = new Object();
         
     if($("#claimTypeCombo").val() == ''){
@@ -335,6 +338,7 @@ function  fn_setBudgetData(){
 <h1><spring:message code="expense.AddExpenseType" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="alert(1);"><spring:message code="expense.Add" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

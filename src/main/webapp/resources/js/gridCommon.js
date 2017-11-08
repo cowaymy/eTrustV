@@ -60,7 +60,7 @@ var GridCommon = {
                 	try{
                         AUIGrid.resize(_gridID);
 					}catch (e){
-                		console.log("grid is not exist.....[gridID : " + _gridID + "]")
+                		// console.log("grid is not exist.....[gridID : " + _gridID + "]")
 					}
 	            } 
 	        }); 
