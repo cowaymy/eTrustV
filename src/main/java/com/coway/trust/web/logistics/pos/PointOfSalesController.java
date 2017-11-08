@@ -192,7 +192,7 @@ public class PointOfSalesController {
 		smap.put("catetype", catetype);
 		smap.put("reqLoc", reqLoc);
 
-		List<EgovMap> list = PointOfSalesService.PosItemList(smap);
+		List<EgovMap> list = PointOfSalesService.posItemList(smap);
 
 		smap.put("data", list);
 
