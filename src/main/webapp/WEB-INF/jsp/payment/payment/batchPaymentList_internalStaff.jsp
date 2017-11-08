@@ -547,36 +547,36 @@ var batchInfoLayout = [
 				        <td><input type="text" id="batchId" name="batchId" title="" placeholder="Batch ID (Number Only)" class="w100p" onkeydown="onlyNumber(this)"/></td>
 				        <th scope="row">Paymode</th>
 				        <td>
-				        <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
-				            <option value="105">Cash (CSH)</option>
-				            <option value="106">Cheque (CHQ)</option>
-				            <option value="108">Online Payment(ONL)</option>
-				        </select>
+					        <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
+					            <option value="105">Cash (CSH)</option>
+					            <option value="106">Cheque (CHQ)</option>
+					            <option value="108">Online Payment(ONL)</option>
+					        </select>
 				        </td>
 				        <th scope="row">Create Date</th>
 				        <td>
-				        <div class="date_set w100p"><!-- date_set start -->
-				        <p><input type="text" id="createDateFr" name="createDateFr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-				        <span>To</span>
-				        <p><input type="text" id="createDateTo" name="createDateTo" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-				        </div><!-- date_set end -->
+					        <div class="date_set w100p"><!-- date_set start -->
+						        <p><input type="text" id="createDateFr" name="createDateFr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+						        <span>To</span>
+						        <p><input type="text" id="createDateTo" name="createDateTo" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					        </div><!-- date_set end -->
 				        </td>
 				    </tr>
 				    <tr>
 				        <th scope="row">Confirm Status</th>
 				        <td>
-				        <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
-				            <option value="44">Pending</option>
-				            <option value="77">Confirm</option>
-				        </select>
+					        <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
+					            <option value="44">Pending</option>
+					            <option value="77">Confirm</option>
+					        </select>
 				        </td>
 				        <th scope="row">Batch Status</th>
 				        <td>
-				        <select id="batchStatus" name="batchStatus" class="multy_select w100p" multiple="multiple">
-				            <option value="1">Active</option>
-				            <option value="4">Completed</option>
-				            <option value="8">Inactive</option>
-				        </select>
+					        <select id="batchStatus" name="batchStatus" class="multy_select w100p" multiple="multiple">
+					            <option value="1">Active</option>
+					            <option value="4">Completed</option>
+					            <option value="8">Inactive</option>
+					        </select>
 				        </td>
 				        <th scope="row">Creator</th>
 				        <td><input type="text" id="creator" name="creator" title="" placeholder="OR No." class="w100p" /></td>
@@ -585,18 +585,18 @@ var batchInfoLayout = [
 		    </table>
 		    <!-- table end -->
 		    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-		    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-		    <dl class="link_list">
-		        <dt>Link</dt>
-		        <dd>
-		        <ul class="btns">
-		            <li><p class="link_btn"><a href="javascript:fn_uploadPopup();">Upload Batch Payment</a></p></li>
-		            <li><p class="link_btn"><a href="javascript:fn_viewBatchPopup();">View Batch Payment</a></p></li>
-		            <li><p class="link_btn"><a href="javascript:fn_confirmBatchPopup();">Confirm Batch Payment</a></p></li>
-		        </ul>
-		        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-		        </dd>
-		    </dl>
+			    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+			    <dl class="link_list">
+			        <dt>Link</dt>
+			        <dd>
+			        <ul class="btns">
+			            <li><p class="link_btn"><a href="javascript:fn_uploadPopup();">Upload Batch Payment</a></p></li>
+			            <li><p class="link_btn"><a href="javascript:fn_viewBatchPopup();">View Batch Payment</a></p></li>
+			            <li><p class="link_btn"><a href="javascript:fn_confirmBatchPopup();">Confirm Batch Payment</a></p></li>
+			        </ul>
+			        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+			        </dd>
+			    </dl>
 		    </aside><!-- link_btns_wrap end -->
 	    </form>
     </section><!-- search_table end -->
