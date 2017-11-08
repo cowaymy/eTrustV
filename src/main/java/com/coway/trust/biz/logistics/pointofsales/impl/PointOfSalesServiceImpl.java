@@ -30,9 +30,9 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public List<EgovMap> PosItemList(Map<String, Object> params) {
+	public List<EgovMap> posItemList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return PointOfSalesMapper.PosItemList(params);
+		return PointOfSalesMapper.posItemList(params);
 	}
 
 	@Override
