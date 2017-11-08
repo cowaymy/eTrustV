@@ -133,6 +133,8 @@ var stockLayout = [ { dataField : "itemid",     headerText : "itemid",      widt
                    { dataField : "catename",headerText : "Category", width : 120, visible:true  },
                    { dataField : "typename",headerText : "Type", width : 120, visible:true  },
                    { dataField : "cateid",headerText : "Category", width : 120, visible:false  },
+                   { dataField : "serialchk",headerText : "SerialChk", width : 120, visible:false  },
+                   { dataField : "uom",headerText : "UOM", width : 120, visible:false  },
                    { dataField : "typeid",headerText : "Type", width : 120, visible:false  }];     
 
 var locLayout = [
