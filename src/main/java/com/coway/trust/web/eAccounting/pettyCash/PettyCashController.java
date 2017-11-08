@@ -552,18 +552,6 @@ public class PettyCashController {
 		return "eAccounting/pettyCash/expRegistrationMsgPop";
 	}
 	
-	@RequestMapping(value = "/budgetCheck.do", method = RequestMethod.POST)
-	public ResponseEntity<List<Object>> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) {
-		
-		LOGGER.debug("params =====================================>>  " + params);
-		
-		List<Object> result = pettyCashService.budgetCheck(params);
-		
-		LOGGER.debug("result =====================================>>  " + result);
-		
-		return ResponseEntity.ok(result);
-	}
-	
 	@RequestMapping(value = "/expApproveLineSubmit.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> expApproveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		

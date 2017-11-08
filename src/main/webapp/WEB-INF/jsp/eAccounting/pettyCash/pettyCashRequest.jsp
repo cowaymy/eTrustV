@@ -16,6 +16,10 @@
 .aui-grid-user-custom-right {
     text-align:right;
 }
+/* 첨부파일 버튼 스타일 재정의*/
+.aui-grid-button-renderer {
+     width:150px;
+ }
 </style>
 <script type="text/javascript">
 var pettyCashReqstColumnLayout = [ {
@@ -85,6 +89,15 @@ var pettyCashReqstColumnLayout = [ {
     dataField : "atchFileName",
     headerText : '<spring:message code="newWebInvoice.attachment" />',
     width : 200,
+    labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+        var myString = value;
+        // 로직 처리
+        // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
+        if(FormUtil.isEmpty(myString)) {
+            myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
+        }
+        return myString;
+     }, 
     renderer : {
         type : "ButtonRenderer",
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -92,30 +105,34 @@ var pettyCashReqstColumnLayout = [ {
             if(item.fileCnt > 1) {
                 fn_fileListPop(item.atchFileGrpId);
             } else {
-                var data = {
-                        atchFileGrpId : item.atchFileGrpId,
-                        atchFileId : item.atchFileId
-                };
-                if(item.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
-                    // TODO View
-                    console.log(data);
-                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                        console.log(result);
-                        var fileSubPath = result.fileSubPath;
-                        fileSubPath = fileSubPath.replace('\', '/'');
-                        console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                        window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                    });
-                } else {
-                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                        console.log(result);
-                        var fileSubPath = result.fileSubPath;
-                        fileSubPath = fileSubPath.replace('\', '/'');
-                        console.log("/file/fileDown.do?subPath=" + fileSubPath
+            	if(item.fileCnt == 1) {
+                    var data = {
+                            atchFileGrpId : item.atchFileGrpId,
+                            atchFileId : item.atchFileId
+                    };
+                    if(item.fileExtsn == "jpg" || item.fileExtsn == "png") {
+                        // TODO View
+                        console.log(data);
+                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                            console.log(result);
+                            var fileSubPath = result.fileSubPath;
+                            fileSubPath = fileSubPath.replace('\', '/'');
+                            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                        });
+                    } else {
+                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                            console.log(result);
+                            var fileSubPath = result.fileSubPath;
+                            fileSubPath = fileSubPath.replace('\', '/'');
+                            console.log("/file/fileDown.do?subPath=" + fileSubPath
+                                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                            window.open("/file/fileDown.do?subPath=" + fileSubPath
                                 + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                        window.open("/file/fileDown.do?subPath=" + fileSubPath
-                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                    });
+                        });
+                    }
+                } else {
+                	Common.alert('<spring:message code="invoiceApprove.notFoundAtch.msg" />');
                 }
             }
         }
@@ -212,10 +229,6 @@ function fn_costCenterSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
-function fn_popSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
-}
-
 function fn_popCostCenterSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
 }
@@ -237,7 +250,6 @@ function fn_setPopCostCenter() {
     if(fn_checkEmpty()){
         // Approved Cash Amount GET and CUSTDN_NRIC GET
         var data = {
-                memAccId : $("#newMemAccId").val(),
                 costCentr : $("#newCostCenter").val()
         };
         Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
@@ -246,6 +258,11 @@ function fn_setPopCostCenter() {
             if(FormUtil.isEmpty(result.data)) {
                 Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
             } else {
+            	$("#newMemAccId").val(result.data.memAccId);
+            	$("#newMemAccName").val(result.data.memAccName);
+            	$("#bankCode").val(result.data.bankCode);
+            	$("#bankName").val(result.data.bankName);
+            	$("#bankAccNo").val(result.data.bankAccNo);
             	if(!FormUtil.isEmpty(result.data.appvCashAmt)) {
             		var appvCashAmt = "" + result.data.appvCashAmt;
                     $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
@@ -254,38 +271,6 @@ function fn_setPopCostCenter() {
             		var custdnNric = result.data.custdnNric;
                     $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
             	}
-            }
-        });
-    }
-}
-
-function fn_setPopSupplier() {
-    $("#newMemAccId").val($("#search_memAccId").val());
-    $("#newMemAccName").val($("#search_memAccName").val());
-    $("#bankCode").val($("#search_bankCode").val());
-    $("#bankName").val($("#search_bankName").val());
-    $("#bankAccNo").val($("#search_bankAccNo").val());
-    
-    if(fn_checkEmpty()){
-        // Approved Cash Amount GET and CUSTDN_NRIC GET
-        var data = {
-                memAccId : $("#newMemAccId").val(),
-                costCentr : $("#newCostCenter").val()
-        };
-        Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
-            console.log(result);
-            console.log(FormUtil.isEmpty(result.data));
-            if(FormUtil.isEmpty(result.data)) {
-            	Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
-            } else {
-            	if(!FormUtil.isEmpty(result.data.appvCashAmt)) {
-                    var appvCashAmt = "" + result.data.appvCashAmt;
-                    $("#appvCashAmt").val(appvCashAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-                }
-                if(!FormUtil.isEmpty(result.data.custdnNric)) {
-                    var custdnNric = result.data.custdnNric;
-                    $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
-                }
             }
         });
     }
@@ -306,11 +291,6 @@ function fn_checkEmpty() {
     var checkResult = true;
     if(FormUtil.isEmpty($("#newCostCenterText").val())) {
         Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
-        checkResult = false;
-        return checkResult;
-    }
-    if(FormUtil.isEmpty($("#newMemAccName").val())) {
-        Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
         checkResult = false;
         return checkResult;
     }

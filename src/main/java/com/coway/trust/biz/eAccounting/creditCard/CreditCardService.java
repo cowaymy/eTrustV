@@ -43,8 +43,6 @@ public interface CreditCardService {
 	
 	void updateReimbursement(Map<String, Object> params);
 	
-	List<Object> budgetCheck(Map<String, Object> params);
-	
 	void insertApproveManagement(Map<String, Object> params);
 	
 

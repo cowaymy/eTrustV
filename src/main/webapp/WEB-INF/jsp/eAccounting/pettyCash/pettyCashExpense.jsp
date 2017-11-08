@@ -300,6 +300,7 @@ function fn_setPopSupplier() {
 
 function fn_setPopSubSupplier() {
     $("#sMemAccId").val($("#search_memAccId").val());
+    $("#sMemAccName").val($("#search_memAccName").val());
     $("#gstRgistNo").val($("#search_gstRgistNo").val());
 }
 
@@ -353,7 +354,7 @@ function fn_checkEmpty() {
         return checkResult;
     }
     if($("#invcType").val() == "F") {
-        if(FormUtil.isEmpty($("#sMemAccId").val())) {
+        if(FormUtil.isEmpty($("#sMemAccName").val())) {
             Common.alert('<spring:message code="webInvoice.supplier.msg" />');
             checkResult = false;
             return checkResult;
@@ -414,6 +415,7 @@ function fn_addRow() {
                     ,budgetCode : $("#budgetCode").val()
                     ,budgetCodeName : $("#budgetCodeName").val()
                     ,sMemAccId : $("#sMemAccId").val()
+                    ,sMemAccName : $("#sMemAccName").val()
                     ,invcType : $("#invcType").val()
                     ,invcTypeName : $("#invcType option:selected").text()
                     ,invcNo : $("#invcNo").val()
@@ -452,6 +454,7 @@ function fn_addRow() {
                     ,budgetCode : $("#budgetCode").val()
                     ,budgetCodeName : $("#budgetCodeName").val()
                     ,sMemAccId : $("#sMemAccId").val()
+                    ,sMemAccName : $("#sMemAccName").val()
                     ,invcType : $("#invcType").val()
                     ,invcTypeName : $("#invcType option:selected").text()
                     ,invcNo : $("#invcNo").val()
@@ -559,6 +562,7 @@ function fn_selectExpenseInfo() {
         $("#budgetCode").val(result.budgetCode);
         $("#budgetCodeName").val(result.budgetCodeName);
         $("#sMemAccId").val(result.sMemAccId);
+        $("#sMemAccName").val(result.sMemAccName);
         $("#invcType").val(result.invcType);
         $("#invcNo").val(result.invcNo);
         $("#invcDt").val(result.invcDt);

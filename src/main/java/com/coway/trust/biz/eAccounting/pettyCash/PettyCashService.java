@@ -45,7 +45,5 @@ public interface PettyCashService {
 	
 	void updatePettyCashExp(Map<String, Object> params);
 	
-	List<Object> budgetCheck(Map<String, Object> params);
-	
 	void insertExpApproveManagement(Map<String, Object> params);
 }

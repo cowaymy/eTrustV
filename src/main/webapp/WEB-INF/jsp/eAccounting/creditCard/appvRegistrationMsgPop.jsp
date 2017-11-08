@@ -16,46 +16,19 @@ function fn_approveLineSubmit() {
 	$("#registMsgPop").remove();
 	
 	var newGridList = AUIGrid.getOrgGridData(newGridID);
-    var date = new Date();
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    var data = {
-            newGridList : newGridList
-            ,year : year
-            ,month : month
-            ,costCentr : newGridList[0].costCentr
+	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+    var obj = {
+            newGridList : newGridList,
+            apprGridList : apprGridList,
+            clmNo : clmNo,
+            allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, ''))
     };
-    console.log(data);
+    console.log(obj);
     
-    // 예산확인
-    Common.ajax("POST", "/eAccounting/creditCard/budgetCheck.do", data, function(result) {
+    Common.ajax("POST", "/eAccounting/creditCard/approveLineSubmit.do", obj, function(result) {
         console.log(result);
-        if(result.length > 0) {
-            Common.alert("Budget exceeded.");
-            console.log(result.length);
-            for(var i = 0; i < result.length; i++) {
-                console.log(result[i]);
-                var rowIndex = AUIGrid.rowIdToIndex(newGridID, result[i])
-                AUIGrid.setCellValue(newGridID, rowIndex, "yN", "N");
-                $("#registMsgPop").remove();
-                $("#approveLineSearchPop").remove();
-            }
-        } else {
-        	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
-            var obj = {
-            		newGridList : newGridList,
-                    apprGridList : apprGridList,
-                    clmNo : clmNo,
-                    allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, ''))
-            };
-            console.log(obj);
-            
-            Common.ajax("POST", "/eAccounting/creditCard/approveLineSubmit.do", obj, function(result) {
-                console.log(result);
-                Common.popupDiv("/eAccounting/creditCard/appvCompletedMsgPop.do", null, null, true, "completedMsgPop");
-                //Common.alert("Your authorization request was successful.");
-            });
-        }
+        Common.popupDiv("/eAccounting/creditCard/appvCompletedMsgPop.do", null, null, true, "completedMsgPop");
+        //Common.alert("Your authorization request was successful.");
     });
 }
 

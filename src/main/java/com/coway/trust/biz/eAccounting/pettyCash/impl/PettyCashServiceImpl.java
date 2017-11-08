@@ -255,30 +255,6 @@ public class PettyCashServiceImpl implements PettyCashService {
 	}
 
 	@Override
-	public List<Object> budgetCheck(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		List<Object> list = new ArrayList<Object>();
-		List<Object> newGridList = (List<Object>) params.get("newGridList");
-		for(int i = 0; i < newGridList.size(); i++) {
-			Map<String, Object> data = (Map<String, Object>) newGridList.get(i);
-			data.put("year", params.get("year"));
-			data.put("month", params.get("month"));
-			data.put("costCentr", params.get("costCentr"));
-			LOGGER.debug("data =====================================>>  " + data);
-			String yN = pettyCashMapper.budgetCheck(data);
-			LOGGER.debug("yN =====================================>>  " + yN);
-			if("N".equals(yN)) {
-				list.add(data.get("clmSeq"));
-			}
-		}
-		
-		LOGGER.debug("list =====================================>>  " + list);
-		LOGGER.debug("list.size() =====================================>>  " + list.size());
-		
-		return list;
-	}
-
-	@Override
 	public void insertExpApproveManagement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);

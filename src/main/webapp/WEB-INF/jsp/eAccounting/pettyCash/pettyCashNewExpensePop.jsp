@@ -54,8 +54,6 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "invcDt",
     headerText : '<spring:message code="pettyCashNewExp.date" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
 }, {
     dataField : "expType",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -89,6 +87,9 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "sMemAccId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "sMemAccName",
     headerText : '<spring:message code="webInvoice.supplier" />'
 }, {
     dataField : "gstRgistNo",
@@ -223,6 +224,7 @@ function fn_tempSave() {
 <form action="#" method="post" enctype="multipart/form-data" id="form_newExpense">
 <input type="hidden" id="newCostCenter" name="costCentr">
 <input type="hidden" id="newMemAccId" name="memAccId">
+<input type="hidden" id="sMemAccId" name="sMemAccId">
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="expType" name="expType">
 <input type="hidden" id="budgetCode" name="budgetCode">
@@ -295,7 +297,7 @@ function fn_tempSave() {
 </tr>
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="sMemAccId" name="sMemAccId"/><a href="#" class="search_btn" id="sSupplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" id="sMemAccName" name="sMemAccName"/><a href="#" class="search_btn" id="sSupplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" id="gstRgistNo" name="gstRgistNo" readonly="readonly"/></td>
 </tr>

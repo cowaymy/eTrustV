@@ -59,8 +59,6 @@ public interface PettyCashMapper {
 	
 	void updatePettyCashExpItem(Map<String, Object> params);
 	
-	String budgetCheck(Map<String, Object> params);
-	
 	void insertExpApproveItems(Map<String, Object> params);
 	
 	void updateExpAppvPrcssNo(Map<String, Object> params);

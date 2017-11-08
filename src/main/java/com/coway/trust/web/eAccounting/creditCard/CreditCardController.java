@@ -430,18 +430,6 @@ public class CreditCardController {
 		return "eAccounting/creditCard/appvRegistrationMsgPop";
 	}
 	
-	@RequestMapping(value = "/budgetCheck.do", method = RequestMethod.POST)
-	public ResponseEntity<List<Object>> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) {
-		
-		LOGGER.debug("params =====================================>>  " + params);
-		
-		List<Object> result = creditCardService.budgetCheck(params);
-		
-		LOGGER.debug("result =====================================>>  " + result);
-		
-		return ResponseEntity.ok(result);
-	}
-	
 	@RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		

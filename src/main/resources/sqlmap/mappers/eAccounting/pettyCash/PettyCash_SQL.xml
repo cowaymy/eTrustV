@@ -119,7 +119,7 @@ SELECT T1.COST_CENTR
   FROM FCM0011M T1 LEFT JOIN FCM0008M T2 ON T1.COST_CENTR = T2.COST_CENTER
        LEFT JOIN FCM0006M T3 ON T1.CUSTDN = T3.MEM_ACC_ID
        LEFT JOIN SYS0047M T4 ON T1.CRT_USER_ID = T4.USER_ID
-  WHERE T1.COST_CENTR = #{costCentr} AND T1.CUSTDN = #{memAccId}         
+  WHERE T1.COST_CENTR = #{costCentr}         
 </select>
 
 <update id="updateCustodian" parameterType="Map">
@@ -564,7 +564,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{sMemAccId}
+       ,#{sMemAccName}
        ,#{invcType}
        ,#{invcNo}
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
@@ -595,14 +595,15 @@ SELECT T1.CLM_SEQ,
        T1.GL_ACC_CODE_NAME, 
        T1.BUDGET_CODE, 
        T1.BUDGET_CODE_NAME, 
-       T1.SUPPLIER AS S_MEM_ACC_ID, 
+       T1.SUPPLIER AS S_MEM_ACC_NAME,
+       T4.MEM_ACC_ID AS S_MEM_ACC_ID, 
        T1.INVC_TYPE, 
        ( CASE T1.INVC_TYPE 
            WHEN 'F' THEN 'Full Tax invoice' 
            WHEN 'S' THEN 'Simplified Tax invoice' 
          END )     AS INVC_TYPE_NAME, 
        T1.INVC_NO, 
-       T1.INVC_DT, 
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT, 
        T1.GST_RGIST_NO, 
        T1.TAX_CODE, 
        T2.TAX_NAME, 
@@ -619,6 +620,8 @@ FROM   FCM0014D T1
               ON T1.TAX_CODE = T2.TAX_CODE 
        LEFT JOIN FCM0013M T3 
               ON T1.CLM_NO = T3.CLM_NO 
+       LEFT JOIN FCM0006M T4 
+              ON T1.SUPPLIER = T4.MEM_ACC_NAME 
 WHERE  T1.CLM_NO = #{clmNo} 
 ORDER  BY T1.CLM_SEQ 
 </select>
@@ -644,7 +647,8 @@ SELECT T1.CLM_SEQ,
        T1.GL_ACC_CODE_NAME, 
        T1.BUDGET_CODE, 
        T1.BUDGET_CODE_NAME, 
-       T1.SUPPLIER AS S_MEM_ACC_ID, 
+       T1.SUPPLIER AS S_MEM_ACC_NAME, 
+       T4.MEM_ACC_ID AS S_MEM_ACC_ID, 
        T1.INVC_TYPE,
        T1.INVC_NO, 
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT, 
@@ -661,6 +665,8 @@ FROM   FCM0014D T1
               ON T1.CLM_NO = T2.CLM_NO 
        LEFT JOIN FCM0006M T3 
               ON T2.MEM_ACC_ID = T3.MEM_ACC_ID 
+       LEFT JOIN FCM0006M T4 
+              ON T1.SUPPLIER = T4.MEM_ACC_NAME 
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 </select>
 
@@ -701,7 +707,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,GL_ACC_CODE_NAME = #{glAccCodeName}
        ,BUDGET_CODE = #{budgetCode}
        ,BUDGET_CODE_NAME = #{budgetCodeName}
-       ,SUPPLIER = #{sMemAccId}
+       ,SUPPLIER = #{sMemAccName}
        ,INVC_TYPE = #{invcType}
        ,INVC_NO = #{invcNo}
        ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
@@ -716,11 +722,6 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
     WHERE CLM_NO = #{clmNo}     
     AND CLM_SEQ = #{clmSeq}  
 </update>
-
-<select id="budgetCheck" parameterType="Map" resultType="String">
-/* pettyCashMapper.budgetCheck */
-    SELECT FN_GET_BUDGET_AMT(#{year}, #{month}, #{costCentr}, #{budgetCode}, #{glAccCode}, #{gstBeforAmt}) FROM DUAL
-</select>
 
 <insert id="insertExpApproveItems" parameterType="Map">
 /* pettyCashMapper.insertApproveItems */

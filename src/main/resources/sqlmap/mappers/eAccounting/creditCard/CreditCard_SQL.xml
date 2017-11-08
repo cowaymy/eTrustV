@@ -618,11 +618,6 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
     AND CLM_SEQ = #{clmSeq}  
 </update>
 
-<select id="budgetCheck" parameterType="Map" resultType="String">
-/* creditCardMapper.budgetCheck */
-    SELECT FN_GET_BUDGET_AMT(#{year}, #{month}, #{costCentr}, #{budgetCode}, #{glAccCode}, #{netAmt}) FROM DUAL
-</select>
-
 <insert id="insertApproveItems" parameterType="Map">
 /* creditCardMapper.insertApproveItems */
 <!-- CMM0042C_ITEM_SEQ.nextval -->

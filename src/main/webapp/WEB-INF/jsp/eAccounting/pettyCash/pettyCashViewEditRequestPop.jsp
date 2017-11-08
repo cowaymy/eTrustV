@@ -60,7 +60,6 @@ $(document).ready(function () {
         }
     });
     
-    $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#tempSave_btn").click(fn_tempSave);
     $("#request_btn").click(fn_reqstApproveLinePop);
@@ -251,7 +250,7 @@ function fn_reqstApproveLinePop() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" value="${requestInfo.memAccName}" <c:if test="${requestInfo.appvPrcssNo ne null and requestInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${requestInfo.appvPrcssNo eq null or requestInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newMemAccName" name="memAccName" value="${requestInfo.memAccName}"/></td>
 	<th scope="row"><spring:message code="pettyCashNewCustdn.icNoPassNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric" value="${requestInfo.custdnNric}"/></td>
 </tr>

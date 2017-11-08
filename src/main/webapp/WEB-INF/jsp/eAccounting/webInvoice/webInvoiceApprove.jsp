@@ -10,6 +10,10 @@
 .aui-grid-user-custom-right {
     text-align:right;
 }
+/* 첨부파일 버튼 스타일 재정의*/
+.aui-grid-button-renderer {
+     width:150px;
+ }
 </style>
 <script type="text/javascript">
 var appvPrcssNo;
@@ -93,6 +97,15 @@ var invoAprveGridColLayout = [ {
     dataField : "atchFileName",
     headerText : '<spring:message code="newWebInvoice.attachment" />',
     width : 200,
+    labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+        var myString = value;
+        // 로직 처리
+        // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
+        if(FormUtil.isEmpty(myString)) {
+        	myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
+        }
+        return myString;
+     }, 
     renderer : {
         type : "ButtonRenderer",
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -101,31 +114,35 @@ var invoAprveGridColLayout = [ {
         		atchFileGrpId = item.atchFileGrpId;
         		fn_fileListPop();
         	} else {
-        		var data = {
-                        atchFileGrpId : item.atchFileGrpId,
-                        atchFileId : item.atchFileId
-                };
-        		if(item.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
-                    // TODO View
-                    console.log(data);
-                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                        console.log(result);
-                        var fileSubPath = result.fileSubPath;
-                        fileSubPath = fileSubPath.replace('\', '/'');
-                        console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                        window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                    });
-                } else {
-                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                        console.log(result);
-                        var fileSubPath = result.fileSubPath;
-                        fileSubPath = fileSubPath.replace('\', '/'');
-                        console.log("/file/fileDown.do?subPath=" + fileSubPath
+        		if(item.fileCnt == 1) {
+        			var data = {
+                            atchFileGrpId : item.atchFileGrpId,
+                            atchFileId : item.atchFileId
+                    };
+                    if(item.fileExtsn == "jpg" || item.fileExtsn == "png") {
+                        // TODO View
+                        console.log(data);
+                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                            console.log(result);
+                            var fileSubPath = result.fileSubPath;
+                            fileSubPath = fileSubPath.replace('\', '/'');
+                            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                        });
+                    } else {
+                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                            console.log(result);
+                            var fileSubPath = result.fileSubPath;
+                            fileSubPath = fileSubPath.replace('\', '/'');
+                            console.log("/file/fileDown.do?subPath=" + fileSubPath
+                                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                            window.open("/file/fileDown.do?subPath=" + fileSubPath
                                 + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                        window.open("/file/fileDown.do?subPath=" + fileSubPath
-                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                    });
-                }
+                        });
+                    }
+        		} else {
+        			Common.alert('<spring:message code="invoiceApprove.notFoundAtch.msg" />');
+        		}
         	}
         }
     }

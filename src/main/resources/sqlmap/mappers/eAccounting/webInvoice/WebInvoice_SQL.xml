@@ -34,7 +34,7 @@ SELECT   T.CLM_NO
                 ,T1.MEM_ACC_ID
                 ,T2.MEM_ACC_NAME
                 ,NVL(T1.TOT_AMT, 0) AS TOT_AMT
-                ,TO_CHAR (T3.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
+                ,T3.REQST_DT
                 ,NVL (T3.APPV_PRCSS_STUS, 'T') AS APPV_PRCSS_STUS_CODE
                 ,NVL ( (CASE T3.APPV_PRCSS_STUS
                            WHEN 'R'
@@ -159,7 +159,7 @@ SELECT T.APPV_PRCSS_NO
                 ,T2.APPV_LINE_SEQ
                 ,T1.APPV_REQ_KEY_NO AS CLM_NO
                 ,T1.REQST_USER_ID
-                ,TO_CHAR (T1.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
+                ,T1.REQST_DT
                 ,T4.CODE
                 ,T4.CODE_NAME
                 ,T3.COST_CENTR
@@ -209,7 +209,8 @@ SELECT T.APPV_PRCSS_NO
                                                                                      F2.ATCH_FILE_ID
                                  ) F
                    WHERE F.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
-           WHERE     T2.APPV_LINE_USER_ID = #{userName}
+           <!-- WHERE     T2.APPV_LINE_USER_ID = #{userName} -->
+           WHERE 1=1
                  AND T1.APPV_PRCSS_STUS = 'R'
               OR     T1.APPV_PRCSS_STUS = 'P'
                  AND T2.APPV_STUS = 'R'

@@ -53,8 +53,6 @@ public interface CreditCardMapper {
 	
 	void updateReimbursementItem(Map<String, Object> params);
 	
-	String budgetCheck(Map<String, Object> params);
-	
 	void insertApproveItems(Map<String, Object> params);
 	
 	void updateAppvPrcssNo(Map<String, Object> params);
