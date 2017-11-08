@@ -159,5 +159,21 @@ public class CTSubGroupListController {
 		return ResponseEntity.ok(selectCTSubGroupDscList);
 	}
 	
+	/**
+	 * Services - Service Planning - Service Group Search
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCTM", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTM( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> selectCTSubGroupDscList = CTSubGroupListService.selectCTM(params);
+		logger.debug("selectCTSubGroupDscList {}", selectCTSubGroupDscList);
+		return ResponseEntity.ok(selectCTSubGroupDscList);
+	}
+	
 	
 }
