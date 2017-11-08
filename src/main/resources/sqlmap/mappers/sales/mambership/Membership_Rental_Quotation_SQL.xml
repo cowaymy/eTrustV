@@ -25,12 +25,12 @@
 						                E3.SALES_ORD_NO   ,
 						                E4.NAME   ,
 						                E5.USER_NAME   ,
-						                CASE     WHEN ( E1.QOTAT_VAL_ID_DT <![CDATA[<]]>  to_date( SYSDATE )) THEN 82
+						                CASE     WHEN ( to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date( SYSDATE ,'yyyy/mm/dd' )) THEN 82
 						                            WHEN ( 4 = E1.QOTAT_STUS_ID ) THEN 81
 						                            ELSE E1.QOTAT_STUS_ID
 						                END C1  ,
 						                CASE 
-							                     WHEN ( E1.QOTAT_VAL_ID_DT <![CDATA[<]]>   to_date(SYSDATE ) ) THEN 'EXP'
+							                     WHEN (  to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date( SYSDATE ,'yyyy/mm/dd' ) ) THEN 'EXP'
 							                     WHEN ( 4 = E1.QOTAT_STUS_ID ) THEN 'CON'
 							                     WHEN ( 1 = E1.QOTAT_STUS_ID ) THEN 'ACT'
 							                     WHEN ( 8 = E1.QOTAT_STUS_ID ) THEN 'DEA'
@@ -54,7 +54,7 @@
                                     <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
                                                   AND ( E5.USER_NAME = #{CRT_USER_ID} )
                                     </if>       
-						            
+						              
 						            
 						            <if test="CRT_SDT != null and CRT_SDT != ''">
                                                  AND ( E1.QOTAT_CRT_DT <![CDATA[>=]]>   to_date(#{CRT_SDT} ,'dd/mm/yyyy' ) )
@@ -66,7 +66,7 @@
                                     
                                     
                                     <if test="STUS_ID != null and  STUS_ID != ''">
-                                                        AND E1.QOTAT_VAL_ID_DT <![CDATA[<]]>  to_date(SYSDATE)
+                                                        AND  to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date(SYSDATE ,'yyyy/mm/dd')
                                                         AND  E1.QOTAT_STUS_ID IN
                                                     <foreach item="item" collection="STUS_ID" index="index" open="(" separator="," close=")">
                                                        #{item}
@@ -265,7 +265,8 @@
 					         /* Formatted on 2017-10-11 오후 2:44:03 (QP5 v5.115.810.9015) */
 					  SELECT   SRV_CNTRCT_PAC_ID code_Id , SRV_CNTRCT_PAC_DESC code_Name
 					    FROM   SAL0081D
-					   WHERE   SRV_CNTRCT_PAC_STUS_ID = 1
+					   WHERE   SRV_CNTRCT_PAC_STUS_ID = 1 
+					    AND PAC_TYPE = '1'
 					ORDER BY   SRV_CNTRCT_PAC_DESC DESC
 					
 

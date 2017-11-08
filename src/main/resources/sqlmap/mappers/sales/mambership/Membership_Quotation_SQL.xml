@@ -275,8 +275,8 @@
 							       S.SRV_MEM_CRT_USER_ID   ,
 							       S.SRV_MEM_OLD_CODE   
 							  FROM SAL0091M S
-							 WHERE  ( 1 = S.SRV_MEM_STUS_ID )
-							          AND ( 9 = S.SRV_MEM_PAC_ID )
+							 WHERE  PAC_TYPE ='1'
+                                AND SRV_MEM_STUS_ID = '1'
 							  ORDER BY S. SRV_MEM_CODE ASC
          </select>
     
