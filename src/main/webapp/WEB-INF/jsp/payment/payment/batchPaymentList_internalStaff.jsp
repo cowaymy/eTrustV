@@ -503,6 +503,10 @@ var batchInfoLayout = [
     function fn_close(){
         $("#searchForm")[0].reset();
         AUIGrid.clearGridData(myGridID);
+        
+        $("#payMode").multipleSelect("checkAll");
+        $("#confirmStatus").multipleSelect("setSelects", [44]);
+        $("#batchStatus").multipleSelect("setSelects", [1]);
     }
 </script>
 <!-- content start -->
@@ -544,9 +548,9 @@ var batchInfoLayout = [
 				        <th scope="row">Paymode</th>
 				        <td>
 				        <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
-				            <option value="105" selected>Cash (CSH)</option>
-				            <option value="106" selected>Cheque (CHQ)</option>
-				            <option value="108" selected>Online Payment(ONL)</option>
+				            <option value="105">Cash (CSH)</option>
+				            <option value="106">Cheque (CHQ)</option>
+				            <option value="108">Online Payment(ONL)</option>
 				        </select>
 				        </td>
 				        <th scope="row">Create Date</th>
@@ -562,14 +566,14 @@ var batchInfoLayout = [
 				        <th scope="row">Confirm Status</th>
 				        <td>
 				        <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
-				            <option value="44" selected>Pending</option>
+				            <option value="44">Pending</option>
 				            <option value="77">Confirm</option>
 				        </select>
 				        </td>
 				        <th scope="row">Batch Status</th>
 				        <td>
 				        <select id="batchStatus" name="batchStatus" class="multy_select w100p" multiple="multiple">
-				            <option value="1" selected>Active</option>
+				            <option value="1">Active</option>
 				            <option value="4">Completed</option>
 				            <option value="8">Inactive</option>
 				        </select>
