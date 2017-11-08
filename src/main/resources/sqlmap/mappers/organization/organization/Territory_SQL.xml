@@ -68,18 +68,20 @@
 	</select>
 	
 	<select id="selectTerritory"  parameterType="Map" resultType="egovMap">
-	    SELECT A.REQST_NO REQST_NO ,
+	   SELECT A.REQST_NO REQST_NO ,
             A.REQST_DT REQST_DT,
             A.REQST_USER_ID REQST_USER_ID,
             A.BRNCH_TYPE BRNCH_TYPE,
             A.BRNCH_NAME BRNCH_NAME,
             A.CNFM_STUS CNFM_STUS ,
-            A.CNFM_STUS_NAME CNFM_STUS_NAME
+            A.CNFM_STUS_NAME CNFM_STUS_NAME,
+            A.FULL_NAME
             FROM     (SELECT    REQST_NO,
                TO_CHAR(REQST_DT,'YYYY-MM-DD') REQST_DT,
                REQST_USER_ID,
                BRNCH_TYPE,
                CNFM_STUS,
+               B.FULL_NAME,
                CASE
                   WHEN (BRNCH_TYPE = 42) THEN 'CODY BRANCH'
                   ELSE 'DREAM SERVICE CENTER'
@@ -89,7 +91,7 @@
                   WHEN (CNFM_STUS = 4) THEN 'COM'
                   ELSE ''
                END  CNFM_STUS_NAME
-             FROM ORG0019M ) A
+             FROM ORG0019M INNER JOIN ORG0001D B ON REQST_USER_ID  = B.MEM_ID ) A
              WHERE 1=1
              <if test="branchTypeList != null and branchTypeList != '' ">
                  AND A.BRNCH_TYPE IN
@@ -98,15 +100,15 @@
                  </foreach>
               </if>
               <if test="requestNo != null and requestNo != ''">
-                  AND A.REQST_NO = #{requestNo}
+                  AND A.REQST_NO = LOWER(#{requestNo})
               </if>
               <if test="requestUserId != null and requestUserId != ''">
-                  AND A.REQST_USER_ID = #{requestUserId}
+                  AND A.FULL_NAME = LOWER(#{requestUserId})
               </if>
               <if test="requestDt != null and requestDt != ''">
                  <![CDATA[ AND  TO_DATE (A.REQST_DT, 'YYYY-MM-DD') =  TO_DATE(#{requestDt},'DD/MM/YYYY') ]]>
               </if>
-          GROUP BY A.REQST_NO,A.REQST_DT ,A.REQST_USER_ID,A.BRNCH_TYPE,A.BRNCH_NAME,A.CNFM_STUS,A.CNFM_STUS_NAME
+          GROUP BY A.REQST_NO,A.REQST_DT ,A.REQST_USER_ID,A.BRNCH_TYPE,A.BRNCH_NAME,A.CNFM_STUS,A.CNFM_STUS_NAME,A.FULL_NAME
           ORDER BY A.REQST_NO
 	</select>
 	
@@ -116,8 +118,10 @@
        CITY,
        POSTCODE,
        STATE,
-       CODY_BRNCH_CODE || '/' || CT_BRNCH_CODE BRANCH_CODE,  
-       CODY_MANGR_USER_ID||'/'||CT_SUB_GRP MANAGER 
+       CODY_BRNCH_CODE CODY_BRNCH_CODE,
+       CODY_MANGR_USER_ID CODY_MANGR_USER_ID,
+        CT_BRNCH_CODE CT_BRNCH_CODE,  
+       CT_SUB_GRP CT_SUB_GRP 
         from SYS0064M 
         where area_id in(select area_id from ORG0019M where reqst_no=#{reqstNo})
 	</select>
