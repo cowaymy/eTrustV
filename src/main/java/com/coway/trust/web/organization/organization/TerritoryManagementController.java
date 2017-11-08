@@ -80,7 +80,7 @@ public class TerritoryManagementController {
 	 */
 	@RequestMapping(value = "/territoryNew.do")
 	public String territoryNew(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+		model.addAttribute("memType", params.get("memType"));
 		// 호출될 화면
 		return "organization/organization/territoryNewPop";
 	}
