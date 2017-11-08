@@ -144,7 +144,7 @@ var LocData2 = {brnch : UserBranchId};
                         }
                       },
                       {dataField:"itemserialChk"       ,headerText:"Serial"            ,width:120    ,height:30,editable:false},
-                      {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30,editable:false
+                      {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
                               
@@ -503,6 +503,12 @@ function f_validatation(v){
     		Common.alert("Please enter Request Qty");
     		return false;
     	}
+    	 for (var i = 0 ; i < checkedItems.length ; i++){
+    	   if (checkedItems[i].itemuom =="" || checkedItems[i].itemuom == undefined){
+               Common.alert("Please enter UOM");
+               return false;
+           }
+    	 }
     }
     
     if (v == 'saveSerial'){	
@@ -511,10 +517,10 @@ function f_validatation(v){
     var serialcheckedItems = AUIGrid.getCheckedRowItemsAll(serialGrid);
     
     
-    if(serialRowCnt != itm_qty){
-    	Common.alert("The quantity is not equal Request Qty");
-    	return false;
-      }
+//     if(serialRowCnt != itm_qty){
+//     	Common.alert("The quantity is not equal Request Qty");
+//     	return false;
+//       }
      for (var j = 0 ; j < reqcheckedItems.length ; j++){
     	 var bool = false;
     	 if (reqcheckedItems[j].itemserialChk == 'Y'){
@@ -672,8 +678,8 @@ function insPosInfo(){
 		data.form = $("#headForm").serializeJSON();
 
 		Common.ajaxSync("POST", "/logistics/pos/insertPosInfo.do", data, function(result) {
-
-			Common.alert(result.message);
+			Common.alert(""+result.message+"</br> Created : "+result.data);
+			//Common.alert(result.message);
 			$("#giopenwindow").hide();
 			$("#posReqSeq").val(result.data);
 			
