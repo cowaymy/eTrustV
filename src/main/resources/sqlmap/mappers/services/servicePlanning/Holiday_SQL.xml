@@ -64,7 +64,7 @@
          FROM SYS0005M A 
          INNER JOIN ORG0001D B ON A.BRNCH_ID = B.BRNCH
          LEFT OUTER  JOIN ORG0020D C ON B.MEM_ID = C.CT_MEM_ID
-        WHERE A.CODE = #{branchName} AND MEM_TYPE = 3
+        WHERE A.CODE = #{branchName} AND MEM_TYPE = 3 AND STUS=1
         group by b.mem_code, b.name,B.MEM_ID
     </select>
     <select id="selectCTAssignList"  parameterType="Map" resultType="egovMap">
