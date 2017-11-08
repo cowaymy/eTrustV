@@ -154,12 +154,12 @@ ORDER BY Project1.CODE_NAME ASC
 			              </if>   
 			               
 			              <if test=" '' != calStartDate and null != calStartDate"> 
-			                 AND  Filter1.SALES_DT >= TO_DATE(#{calStartDate}, 'DD/MM/YYYY')     
+			                 AND  Filter1.SALES_DT >= TO_DATE(#{calStartDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')     
 			              </if>
 			               
 			              <if test=" '' != calEndDate and null != calEndDate"> 
 			                 <![CDATA[
-                             AND  Filter1.SALES_DT <= TO_DATE(#{calEndDate}, 'DD/MM/YYYY')     
+                             AND  Filter1.SALES_DT <= TO_DATE(#{calEndDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')     
                              ]]>
 			              </if>
 			               

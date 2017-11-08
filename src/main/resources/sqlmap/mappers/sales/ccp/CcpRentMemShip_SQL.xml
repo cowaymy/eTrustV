@@ -40,12 +40,12 @@
                          </if>
                            
                          <if test=" '' != sDate and null != sDate">
-                             AND Extent2.SRV_CNTRCT_CRT_DT >= TO_DATE(#{sDate}, 'DD/MM/YYYY')
+                             AND Extent2.SRV_CNTRCT_CRT_DT >= TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
                          </if>
                          
                          <if test=" '' != eDate and null != eDate">
                               <![CDATA[
-                              AND Extent2.SRV_CNTRCT_CRT_DT <= TO_DATE(#{eDate}, 'DD/MM/YYYY')
+                              AND Extent2.SRV_CNTRCT_CRT_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
                               ]]>
                          </if>
                          

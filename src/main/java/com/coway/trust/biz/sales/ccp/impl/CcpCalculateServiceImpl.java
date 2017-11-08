@@ -404,7 +404,9 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		LOGGER.info("########## getLoadIncomeRange `s   params : " + params.toString());
 		// 2 . basic Query
 		EgovMap ccpInfoMap = null;
+		params.put("groupCode", params.get("editCcpId"));
 		ccpInfoMap = ccpCalculateMapper.getCcpByCcpId(params);
+		
 		
 		// 3. Params Setting
 		if(ccpInfoMap == null){ 
@@ -432,6 +434,7 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		Map<String, Object> incMap = new HashMap<String, Object>();
 		
 		EgovMap ccpInfoMap = null;
+		params.put("groupCode", params.get("ccpId"));
 		ccpInfoMap = ccpCalculateMapper.getCcpByCcpId(params);
 		
 		if(ccpInfoMap == null){ 

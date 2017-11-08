@@ -81,14 +81,14 @@
 		        
 		        <!-- CRT_DT // FROM -->		        
 		        <if test="null != govAgCrtDtFrom and '' != govAgCrtDtFrom">
-		              AND Project2.GOV_AG_CRT_DT >= TO_DATE(#{govAgCrtDtFrom}, 'DD/MM/YYYY')
+		              AND Project2.GOV_AG_CRT_DT >= TO_DATE(#{govAgCrtDtFrom}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
 		        </if> 
 		        
 		         <!-- CRT_DT // TO -->			         	         
 		         <if test="null != govAgCrtDtTo and '' != govAgCrtDtTo">
 		             
 		             <![CDATA[   
-		              AND Project2.GOV_AG_CRT_DT <= TO_DATE(#{govAgCrtDtTo}, 'DD/MM/YYYY')  
+		              AND Project2.GOV_AG_CRT_DT <= TO_DATE(#{govAgCrtDtTo} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')  
 		             ]]>
 		             
 		         </if> 
@@ -106,14 +106,14 @@
 		          </if>         
 		        
 		         <if test="null != govAgStartDtFrom and  '' != govAgStartDtFrom ">
-		              AND Project2.GOV_AG_START_DT >= TO_DATE(#{govAgStartDtFrom}, 'DD/MM/YYYY')
+		              AND Project2.GOV_AG_START_DT >= TO_DATE(#{govAgStartDtFrom}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
 		         </if>
 		        
 		        
                  <if test="null != govAgStartDtTo and  '' != govAgStartDtTo ">
 	                
 	                 <![CDATA[
-	                      AND Project2.GOV_AG_START_DT <= TO_DATE(#{govAgStartDtTo}, 'DD/MM/YYYY')
+	                      AND Project2.GOV_AG_START_DT <= TO_DATE(#{govAgStartDtTo} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
 	                 ]]>
 	                 
                  </if>
@@ -125,13 +125,13 @@
 		        
 		       
 		        <if test=" null != govAgEndDtFrom  and '' != govAgEndDtFrom">
-	                   AND Project2.GOV_AG_END_DT >= TO_DATE(#{govAgEndDtFrom}, 'DD/MM/YYYY') 
+	                   AND Project2.GOV_AG_END_DT >= TO_DATE(#{govAgEndDtFrom}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS') 
 		        </if>
 		        
 		        
 		        <if test=" null != govAgEndDtTo and '' != govAgEndDtTo ">
 	                   <![CDATA[
-	                   AND Project2.GOV_AG_END_DT <= TO_DATE(#{govAgEndDtTo}, 'DD/MM/YYYY')
+	                   AND Project2.GOV_AG_END_DT <= TO_DATE(#{govAgEndDtTo} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
 	                     ]]>
 		        </if>
 		         

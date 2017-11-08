@@ -171,6 +171,13 @@ public class SalesConstants {
 	public static final String SALES_ORDER_IS_LOCK_APPROVED = "1";
 	public static final String SALES_ORDER_REF_ID = "0";
 	
+	public static final String CCP_INCOME_RANGE_MODE_ID = "131";  //ModeId
+	
+	public static final String CCP_INCOME_RANGE_MODE_ID_INDIVIDUAL = "29";
+	public static final String CCP_INCOME_RANGE_MODE_ID_COMPANY = "22";
+	
+	public static final String CCP_COMPANY_IS_BOOL = "969"; //company boolean
+	
 	//Order Investigation
 	public static final String  INVEST_CODEID = "73"; // Investigation (Get DocNo)
 	

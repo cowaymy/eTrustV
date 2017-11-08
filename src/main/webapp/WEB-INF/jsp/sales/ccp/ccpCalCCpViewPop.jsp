@@ -3,6 +3,7 @@
 <script type="text/javascript">
 
 var optionUnit = { isShowChoose: false};
+var optionUnitCh = { isShowChoose: true};
 
 $(document).ready(function() {
     
@@ -22,10 +23,15 @@ $(document).ready(function() {
     getUnitCombo(mst, 213  , rosUnitSelVal , '_ordMth');
     getUnitCombo(mst, 216  , susUnitSelVal , '_ordSuspen');
     getUnitCombo(mst, 210  , custUnitSelVal , '_ordExistingCust');  
-   
-    CommonCombo.make("_statusEdit", "/sales/ccp/getCcpStusCodeList", '', '' , optionUnit); //Status
-    CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', '' , optionUnit); //Status
-    doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCodeEdit', 'S'); //Reason
+    
+    var ccpStus = $("#_ccpStusId").val();
+    CommonCombo.make("_statusEdit", "/sales/ccp/getCcpStusCodeList", '', ccpStus , optionUnit); //Status
+    
+    CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', '' , optionUnitCh); //Status 
+     
+    var selReasonCode = $("#_ccpResnId").val();
+    CommonCombo.make("_reasonCodeEdit", "/sales/ccp/selectReasonCodeFbList", '', selReasonCode ,optionUnit ); //Status
+ //   doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCodeEdit', 'S'); //Reason
     
     //Income Range ComboBox
     loadIncomeRange(); 
@@ -61,7 +67,7 @@ function  bind_RetrieveData(){
 
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
-    $("#_statusEdit").val(ccpStus);
+ //   $("#_statusEdit").val(ccpStus);
     
     //pre Value
     $("#_isPreVal").val("1");
@@ -125,11 +131,6 @@ function  bind_RetrieveData(){
         $("#_letterOfUdt").attr("disabled" , false);
         
     }
-    
-    //Field Setting
-    $("#_incomeRangeEdit").val($("#_ccpIncRngId").val());
-    //_ccpResnId
-    $("#_reasonCodeEdit").val($("#_ccpResnId").val());
     
     //Set Check Box
     var ccpIsHold = $("#_ccpIsHold").val() == '1' ? true : false;
@@ -228,21 +229,22 @@ function loadIncomeRange(){
     
     var ccpId = $("#_editCcpId").val();
     var paramObj ={editCcpId : ccpId};
-    //param : editCcpId
-     CommonCombo.make("_incomeRangeEdit", "/sales/ccp/getLoadIncomeRange", paramObj , '' , optionUnit); //Status
-     
+    
     var rentPayModeId = $("#_rentPayModeId").val();
     var applicantTypeId = $("#_applicantTypeId").val();
+    
+    var selVal = '';
     
     if(rentPayModeId == 131){
         
         if(applicantTypeId == 964){
-            $("#_incomeRangeEdit").val("29");
+        	selVal = '29';
         }else{
-            $("#_incomeRangeEdit").val("22");
+        	selVal = '22';
         }
-        
     }
+    //param : editCcpId
+    CommonCombo.make("_incomeRangeEdit", "/sales/ccp/getLoadIncomeRange", paramObj , selVal , optionUnit); //Status
 }
 
 

@@ -38,17 +38,18 @@ $(document).ready(function() {
    
     //Income Range ComboBox
     var ccpId = $("#_editCcpId").val();
-    var selIncRange = $("#_ccpIncRngId").val();
-    doGetCombo('/sales/ccp/getLoadIncomeRange', ccpId , selIncRange ,'_incomeRangeEdit', 'S');
+    
     var rentPayModeId = $("#_rentPayModeId").val();
     var applicantTypeId = $("#_applicantTypeId").val();
+    var selVal = '';
     if(rentPayModeId == 131){
         if(applicantTypeId == 964){
-            $("#_incomeRangeEdit").val("29");
+        	selVal = '29';
         }else{
-            $("#_incomeRangeEdit").val("22");
+        	selVal = '22';
         }
     }
+    doGetCombo('/sales/ccp/getLoadIncomeRange', ccpId , selVal ,'_incomeRangeEdit', 'S');
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
     doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S'); 
