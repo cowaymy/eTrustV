@@ -230,6 +230,7 @@ function fn_glAccountSearchPop(rowIndex){
 }
 
 function fn_save(){
+	AUIGrid.forceEditingComplete(expPopGridID, null, false);
 
     if(fn_validation()){
         Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExpenseType);
@@ -338,7 +339,6 @@ function  fn_setBudgetData(){
 <h1><spring:message code="expense.AddExpenseType" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="alert(1);"><spring:message code="expense.Add" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
