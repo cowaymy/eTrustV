@@ -45,6 +45,8 @@ $(function()
 	  fnSelectPeriodReset();
 	  //setting scm teamCode ComboBox
 	  fnSetSCMTeamComboBox(); 
+    //stock type
+	  fnSelectStockTypeComboList('15');  	  
 });
 
 function fnClick()
@@ -56,6 +58,20 @@ function fnClick()
 function fnCallInterface()
 {
   $("#intfTypeCbBox option:eq(1)").prop("selected",true);
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
 }
 
 function fnSelectExcuteYear()
@@ -550,6 +566,11 @@ var bizPlanStockGridLayout =
 										         headerText : "<spring:message code='sys.scm.salesplan.Category'/>",
 										         editable : false,
 										      }
+                         ,{
+                             dataField : "stkTypeId",
+                             headerText : "<spring:message code='sys.scm.inventory.stockTypeId'/>",
+                             cellMerge: true,
+                          }										      
 										     ,{
 										         dataField : "stockCode",
 										         headerText : "<spring:message code='sys.scm.salesplan.Code'/>",
@@ -895,6 +916,15 @@ $(document).ready(function()
 	<select class="w100p" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
 	</select>
 	</td>
+</tr>
+<!-- Stock Type 줄 추가 -->
+<tr>
+  <th scope="row">Stock Type</th>
+  <td>
+    <select class="w100p" id="scmStockType" name="scmStockType">
+    </select>
+  </td>
+  <td colspan="4"></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -40,6 +40,8 @@ var gWeekThValue ="";
 $(function() 
 {
   
+ //stock type
+	fnSelectStockTypeComboList('15');
  // set Year
   fnSelectExcuteYear();
  // set PeriodByYear
@@ -51,7 +53,6 @@ $(function()
  //setting StockCode ComboBox	
 	fnSetStockComboBox(); 
 	
-	
 });
 
 function fnSelectPeriodReset()
@@ -59,6 +60,48 @@ function fnSelectPeriodReset()
    CommonCombo.initById("scmPeriodCbBox");  // reset...
    var periodCheckBox = document.getElementById("scmPeriodCbBox");
        periodCheckBox.options[0] = new Option("Select a YEAR","");  
+}
+
+function getTimeStamp() 
+{
+  function leadingZeros(n, digits) {
+      var zero = '';
+      n = n.toString();
+      if (n.length < digits) {
+          for (i = 0; i < digits - n.length; i++)
+              zero += '0';
+      }
+      return zero + n;
+  }
+
+  var d = new Date();
+  var date = leadingZeros(d.getFullYear(), 4)+ leadingZeros(d.getMonth() + 1, 2)+ leadingZeros(d.getDate(), 2);
+  var time = leadingZeros(d.getHours(), 2)+leadingZeros(d.getMinutes(), 2) + leadingZeros(d.getSeconds(), 2);
+
+  return date+"_"+time
+}
+
+//excel export
+function fnExcelExport(fileNm)
+{   // 1. grid ID 
+    // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    // 3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+
+    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileNm+'_'+getTimeStamp() ); 
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
 }
 
 function fnSelectExcuteYear()
@@ -398,8 +441,7 @@ function fnSelectSummaryHeadList(summaryHeadList)
     	 intToStrSummaryFieldCnt =  "0" + iSummaryLoopFieldCnt;
      }
       
-     dynamicSummaryFooterLayout.push(
-			                                {
+     dynamicSummaryFooterLayout.push({
 			                                   dataField : "w"+intToStrSummaryFieldCnt,
 			                                   positionField : "w"+intToStrSummaryFieldCnt,
 			                                   operation : "SUM",
@@ -411,8 +453,7 @@ function fnSelectSummaryHeadList(summaryHeadList)
 
 	  if(dynamicSummaryHeadList != null )
     {
-        dynamicSummaryLayout.push( 
-	                                  {                            
+        dynamicSummaryLayout.push({                            
 	                                    dataField : dynamicSummaryHeadList.categoryH1  // category
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
 	                                    ,editable : true
@@ -487,8 +528,7 @@ function fnSelectSummaryHeadList(summaryHeadList)
             intToStrFieldCnt =  "0" + intToStrFieldCnt;
           }
            
-           dynamicSummaryLayout.push(
-				                              {
+           dynamicSummaryLayout.push({
 				                                  dataField : "w"+intToStrFieldCnt,   
 				                                  headerText : dynamicSummaryHeadList[fieldStr],  // "w00"
 				                                  editable: false,
@@ -542,7 +582,7 @@ function fnSettiingHeader()
 	                  showEditedCellMarker : true, // 셀 병합 실행
 	                  enableCellMerge : true,
 	                  // 고정칼럼 카운트 지정
-	                  fixedColumnCount : 6               
+	                  fixedColumnCount : 7               
 		              };
 
   console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val());
@@ -585,8 +625,7 @@ function fnSettiingHeader()
             //  AUIGrid.setGridData(myGridID, result);
               if(result.header != null && result.header.length > 0)
               {
-		            	  dynamicLayout.push( 
-		            			                   { 
+		            	  dynamicLayout.push({ 
 		                			                 headerText : "Stock"
 		                			              // , width : 10 
 		                			               , children : [
@@ -600,6 +639,12 @@ function fnSettiingHeader()
 																													, { 
 																													    dataField : result.header[0].teamH1
 																													   ,headerText : "<spring:message code='sys.scm.salesplan.Team' />"
+																													   ,editable : true
+																													   //,width : "5%"
+																													  } 
+																													, { 
+																													    dataField : result.header[0].stkTypeIdH1
+																													   ,headerText : "<spring:message code='sys.scm.interface.stockType' />"
 																													   ,editable : true
 																													   //,width : "5%"
 																													  } 
@@ -744,21 +789,19 @@ function fnSettiingHeader()
 			                }
 		                  else if (parseInt(result.getChildField[i].weekTh) ==  parseInt(gWeekThValue))
 		                  {
-		                	  groupM_0.children.push(
-									                              {
+		                	  groupM_0.children.push({
 									                                 dataField : "w" + intToStrFieldCnt,   // "w00"
 									                                 headerText :result.header[0][fieldStr], 
 									                                 editable: false,
 									                                 style : "my-backColumn2"  
-									                              });
+									                            });
 		                  }
 			                else 
 			                { 
-		                	  groupM_0.children.push(
-														                    {
+		                	  groupM_0.children.push({
 														                       dataField : "w" + intToStrFieldCnt,   // "w00"
 														                       headerText :result.header[0][fieldStr] 
-														                    });
+														                  });
 			                }
 		                  
 		                  iLootCnt++;
@@ -796,8 +839,7 @@ function fnSettiingHeader()
 		                    intToStrFieldCnt =  "0" + intToStrFieldCnt;
 		                  }
 		
-		                  groupM_1.children.push(
-														                  {
+		                  groupM_1.children.push({
 														                   dataField : "w" + intToStrFieldCnt,
 														                   headerText :  result.header[0][fieldStr] 
 														                  });
@@ -826,8 +868,7 @@ function fnSettiingHeader()
 		                   intToStrFieldCnt =  "0" + intToStrFieldCnt;
 		                 }
 		
-		                 groupM_2.children.push(
-														                 {
+		                 groupM_2.children.push({
 														                          dataField : "w" + intToStrFieldCnt,
 														                          headerText :  result.header[0][fieldStr] 
 														                 });
@@ -849,21 +890,20 @@ function fnSettiingHeader()
 		               {
 		              	  fieldStr = "w" + iLootCnt + "WeekSeq";  
 		                  
-		                intToStrFieldCnt = iLootDataFieldCnt.toString();
-		                    
-		                if (intToStrFieldCnt.length == 1)
-		                {
-		                  intToStrFieldCnt =  "0" + intToStrFieldCnt;
-		                }
-		                 
-		                groupM_3.children.push(
-														                {
-														                	  dataField : "w" + intToStrFieldCnt,
-														                    headerText :  result.header[0][fieldStr] 
-														                });
-		
-		                iLootCnt ++;
-		                iLootDataFieldCnt++;					                         
+			                intToStrFieldCnt = iLootDataFieldCnt.toString();
+			                    
+			                if (intToStrFieldCnt.length == 1)
+			                {
+			                  intToStrFieldCnt =  "0" + intToStrFieldCnt;
+			                }
+			                 
+			                groupM_3.children.push({
+															                	  dataField : "w" + intToStrFieldCnt,
+															                    headerText :  result.header[0][fieldStr] 
+															                });
+			
+			                iLootCnt ++;
+			                iLootDataFieldCnt++;					                         
 		               }
 		               
 		               dynamicLayout.push(groupM_3);
@@ -1181,10 +1221,16 @@ $(document).ready(function()
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:160px" />
+	<!-- <col style="width:160px" />
 	<col style="width:*" />
 	<col style="width:90px" />
-	<col style="width:*" />
+	<col style="width:*" /> -->
+	<col style="width:160px" />
+  <col style="width:*" />
+  <col style="width:90px" />
+  <col style="width:*" />
+  <col style="width:120px" />
+  <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -1201,7 +1247,8 @@ $(document).ready(function()
 
 	</td>
 	<th scope="row">Team</th>
-	<td>
+	<!-- <td> -->
+	<td colspan="3">
 	<select class="w100p" id="scmTeamCbBox" name="scmTeamCbBox">
 	</select>
 	</td>
@@ -1217,6 +1264,12 @@ $(document).ready(function()
 	<select class="multy_select w100p" multiple="multiple" id="stockCodeCbBox" name="stockCodeCbBox">
 	</select>
 	</td>
+	<!-- Stock Type 추가 -->
+  <th scope="row">Stock Type</th>
+  <td>
+  <select class="w100p" id="scmStockType" name="scmStockType"> 
+  </select>
+  </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1259,19 +1312,19 @@ $(document).ready(function()
 <ul class="right_btns">
 	<li><p class="btn_grid">
 	<!-- <a href="javascript:void(0);">Create Plan</a> -->
-	<input type='button' id='CreatePlanBtn' value='Create Plan' disabled />
+	<input type='button' id='UpdateBtn' value='Update M0 Data' disabled />
 	</p></li>
 	<li><p class="btn_grid">
 	<!-- <a href="javascript:void(0);">Confirm</a> -->
-	<input type='button' id='ConfirmBtn' value='Confirm' disabled />
+	<!-- <input type='button' id='ConfirmBtn' value='Confirm' disabled /> -->
 	</p></li>
 	<li><p class="btn_grid">
 	<!-- <a href="javascript:void(0);">UnConfirm</a> -->
-	<input type='button' id='UnConfirmBtn' value='UnConfirm' disabled />
+	<!-- <input type='button' id='UnConfirmBtn' value='UnConfirm' disabled /> -->
 	</p></li>
 	<li><p class="btn_grid">
 	<!-- <a href="javascript:void(0);">Update M0 Data</a> -->
-	<input type='button' id='UpdateBtn' value='Update M0 Data' disabled />
+<!-- 	<input type='button' id='CreatePlanBtn' value='Create Plan' disabled /> -->
 	</p></li>
 </ul>
 
@@ -1343,8 +1396,7 @@ $(document).ready(function()
     </li>
     <li>
       <p class="btn_blue2">
-      <!-- <a>Excel download</a> -->
-      <input type='button' id='downloadBtn' value='download' disabled />
+        <a onclick="fnExcelExport('SalesPlanManagement');">Download</a>
       </p>
     </li>
   </ul>

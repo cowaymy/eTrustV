@@ -29,7 +29,9 @@ $(function()
 	 fnSetStockComboBox();  
 	//setting DropDownList  
 	//keyValueList = $.parseJSON('${selectStockCodeList}');   
-	fnSetStockDropDownList();  
+	fnSetStockDropDownList(); 
+  //stock type
+	fnSelectStockTypeComboList('15');  	 
 });
 
 function fnClick()
@@ -41,6 +43,20 @@ function fnClick()
 function fnCallInterface()
 {
   $("#intfTypeCbBox option:eq(1)").prop("selected",true);
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
 }
 
 function fnSetStockComboBox()
@@ -243,6 +259,10 @@ var masterManagerLayout =
                          {
                             dataField : "stkCtgryCode",
                             headerText : "<spring:message code='sys.scm.salesplan.Category'/>",
+                         }
+                        ,{
+                             dataField : "stkTypeId",
+                             headerText : "<spring:message code='sys.scm.interface.stockType'/>",
                          }
                         ,{
                             dataField : "stockCode",
@@ -531,7 +551,7 @@ $(document).ready(function()
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
             // 한 화면에 출력되는 행 개수 30개로 지정
             pageRowCount : 20,
-            fixedColumnCount    : 4, 
+            fixedColumnCount    : 5, 
           };
 
   // masterGrid 그리드를 생성합니다.
@@ -601,23 +621,34 @@ $(document).ready(function()
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
+	<!-- <col style="width:140px" />
 	<col style="width:*" />
 	<col style="width:110px" />
-	<col style="width:*" />
+	<col style="width:*" /> -->
+  <col style="width:140px" />
+  <col style="width:*" />
+  <col style="width:110px" />
+  <col style="width:*" />
+  <col style="width:140px" />
+  <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
 	<th scope="row">Stock Category</th>
 	<td>
-  <select id="stockCategoryCbBox" name="stockCategoryCbBox">
+  <select id="stockCategoryCbBox" name="stockCategoryCbBox" class="w100p">
   </select>
 	</td>
 	<th scope="row">Stock</th>
 	<td>
-  <select id="stockCodeCbBox" name="stockCodeCbBox">
+  <select id="stockCodeCbBox" name="stockCodeCbBox" class="w100p">
   </select>
 	</td>
+  <th scope="row">Stock Type</th>
+  <td>
+    <select id="scmStockType" name="scmStockType" class="w100p">
+    </select>
+  </td>
 </tr>
 </tbody>
 </table><!-- table end -->

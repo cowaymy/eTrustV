@@ -40,6 +40,10 @@ $(function()
 {
   //fnSelectTargetDateComboList('351');
   //fnSelectInterFaceTypeComboList('352');
+
+    //stock type
+	  fnSelectStockTypeComboList('15');   
+	  
 });
 
 function fnClick()
@@ -51,6 +55,20 @@ function fnClick()
 function fnCallInterface()
 {
   $("#intfTypeCbBox option:eq(1)").prop("selected",true);
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
 }
 
 function fnSelectTargetDateComboList(codeId)
@@ -90,12 +108,32 @@ function fnSelectInterFaceTypeComboList(codeId)
             , fnSelectIntfTypeCallback);     
 }
 
-// excel export
-function fnExcelExport()
+function getTimeStamp() 
+{
+  function leadingZeros(n, digits) {
+      var zero = '';
+      n = n.toString();
+      if (n.length < digits) {
+          for (i = 0; i < digits - n.length; i++)
+              zero += '0';
+      }
+      return zero + n;
+  }
+
+  var d = new Date();
+  var date = leadingZeros(d.getFullYear(), 4)+ leadingZeros(d.getMonth() + 1, 2)+ leadingZeros(d.getDate(), 2);
+  var time = leadingZeros(d.getHours(), 2)+leadingZeros(d.getMinutes(), 2) + leadingZeros(d.getSeconds(), 2);
+
+  return date+"_"+time
+}
+
+//excel export
+function fnExcelExport(fileNm)
 {   // 1. grid ID 
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    // 3. exprot ExcelFileName
-    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", "SupplyPlanSummary_W" +$('#scmPeriodCbBox').val() );
+    // 3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+
+    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileNm+'_'+getTimeStamp() ); 
 }
 
 // search
@@ -231,6 +269,11 @@ var OTDViewerLayout =
                         ,{
                             dataField : "stkCode",
                             headerText : "<spring:message code='sys.scm.otdview.StkCode'/>",
+                            cellMerge: true,
+                         }
+                        ,{
+                            dataField : "stkTypeId",
+                            headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
                             cellMerge: true,
                          }
                         ,{
@@ -485,6 +528,15 @@ $(document).ready(function()
   <input type="text" id="poNoTxt" name="poNoTxt" title="" placeholder="" class="w100p" />
   </td>
 </tr>
+<!-- Stock Type 줄 추가 -->
+<tr>
+  <th scope="row">Stock Type</th>
+  <td>
+    <select class="w100p" id="scmStockType" name="scmStockType">
+    </select>
+  </td>
+  <td colspan="4"></td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -536,7 +588,7 @@ $(document).ready(function()
 <ul class="center_btns">
   <li>
    <p class="btn_blue2 big">
-  <!--    <a href="javascript:void(0);">Download Raw Data</a> -->
+  <!--    <a href="javascript:void(0);">Download Raw Data</a> <a onclick="fnExcelExport('OTD Status Viewer');">Download</a> -->
    </p>
   </li>
 </ul>

@@ -37,6 +37,9 @@ $(function()
   fnSelectExcuteYear();
 
   $("#scmMonthCbBox").attr("disabled", "disabled");
+
+  //stock type
+  fnSelectStockTypeComboList('15');   
 });
 
 function fnSelectExcuteYear()
@@ -58,6 +61,20 @@ function fnSelectExcuteYear()
 function fnChangeEventYear(obj)
 {
 	   $("#scmMonthCbBox").attr("disabled", false);
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
 }
 
 //행 삭제 메소드
@@ -492,6 +509,12 @@ function fnMainGridCreate()
 	          editable: false,
 	       }
 	      ,{
+	          dataField : "stkTypeId",
+	          headerText : "<spring:message code='sys.scm.interface.stockType'/>",  
+	          width : "5%",
+	          editable: false,
+	       }
+	      ,{
 	          dataField : "stockCode",
 	          headerText : "<spring:message code='sys.scm.pomngment.stockCode'/>",
 	          width : "7%",
@@ -703,8 +726,125 @@ $(document).ready(function()
 </aside><!-- title_line end -->
 
   <ul class="right_btns">
-  <li><p class="btn_blue"><a onclick="fnSearchBtnList(); "><span class="search"></span>Search</a></p></li>
+  <li><p class="btn_blue"><a onclick="fnSearchBtnList();"><span class="search"></span>Search</a></p></li>
 </ul>
+
+
+
+<section class="search_table"><!-- search_table start -->
+<form id="MainForm" method="get" action="" >
+  <input type ="hidden" id="planMasterId" name="planMasterId" value=""/>
+<table class="type1 mt10"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+  <!-- <col style="width:95px" />
+  <col style="width:150px" />
+  <col style="width:150px" />
+  <col style="width:*" />
+  <col style="width:75px" />
+  <col style="width:*" />
+  <col style="width:160px" />
+  <col style="width:*" />
+  <col style="width:60px" />
+  <col style="width:180px" /> -->
+  <col style="width:105px" />
+  <col style="width:*" />
+  <col style="width:150px" />
+  <col style="width:*" />
+  <col style="width:180px" />
+  <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+  <th scope="row">Year/Month</th>
+  <td>
+    <select id="scmYearCbBox" name="scmYearCbBox" onchange="fnChangeEventYear(this);" class="wAuto">
+    </select> 
+  
+    <select class="ml5 wAuto" id="scmMonthCbBox" name="scmMonthCbBox">
+      <option value="" selected>Month</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+    </select>
+  </td>
+  <th scope="row"> Issued PO(Line item)</th>
+  <td>
+  <span id="issuedPO"></span>
+  </td>
+  <th scope="row">View</th>
+  <td>
+    <div class="w100p">
+    <select id="viewCbBox" name="viewCbBox" class="wAuto fl_left">
+      <option value="" selected>All</option>
+      <option value="1">On-time</option>
+      <option value="0">Delayed</option>
+    </select>
+    <p class="btn_sky ml10 fl_left"><a onclick="fnExcelExport('oneTimeDelivery');">Download</a></p>
+    </div>
+  </td>
+</tr>
+<tr>
+  <th scope="row">Stock Type</th>
+  <td>
+      <select id="scmStockType" name="scmStockType" onchange="fnChangeEventStockType(this);">
+      </select>
+  </td>
+  <th scope="row">On-time</th>
+  <td>
+  <span id="onTime"></span>
+  </td>
+  <th scope="row">On-time Delivery rate</th>
+  <td>
+  <span id="onTimeDelivery"></span>
+  </td>
+</tr>
+<tr>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+  <dt>Link</dt>
+  <dd>
+  <ul class="btns">
+    <li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
+    <li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
+    <li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
+    <li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
+    <li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
+    <li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
+    <li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
+    <li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
+  </ul>
+  <ul class="btns">
+    <li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
+    <li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+    <li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
+    <li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
+    <li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+    <li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
+    <li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
+    <li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
+  </ul>
+  <p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+  </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
+</form>
+</section><!-- search_table end -->
 
 <div class="divine_auto mt10"><!-- divine_auto start -->
 
@@ -743,111 +883,6 @@ $(document).ready(function()
 </div>
 
 </div><!-- divine_auto end -->
-
-
-<section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="get" action="" >
-  <input type ="hidden" id="planMasterId" name="planMasterId" value=""/>
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-  <col style="width:95px" />
-  <col style="width:150px" />
-  <col style="width:150px" />
-  <col style="width:*" />
-  <col style="width:75px" />
-  <col style="width:*" />
-  <col style="width:160px" />
-  <col style="width:*" />
-  <col style="width:60px" />
-  <col style="width:180px" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Year/Month</th>
-	<td>
-	  <select id="scmYearCbBox" name="scmYearCbBox" onchange="fnChangeEventYear(this);" class="wAuto">
-	  </select>	
-	
-		<select class="ml5 wAuto" id="scmMonthCbBox" name="scmMonthCbBox">
-			<option value="" selected>Month</option>
-			<option value="1">1</option>
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
-			<option value="6">6</option>
-			<option value="7">7</option>
-			<option value="8">8</option>
-			<option value="9">9</option>
-			<option value="10">10</option>
-			<option value="11">11</option>
-			<option value="12">12</option>
-		</select>
-	</td>
-  <th scope="row"> Issued PO(Line item)</th>
-  <td>
-  <span id="issuedPO"></span>
-  </td>
-  <th scope="row">On-time</th>
-  <td>
-  <span id="onTime"></span>
-  </td>
-  <th scope="row">On-time Delivery rate</th>
-  <td>
-  <span id="onTimeDelivery"></span>
-  </td>
-  <th scope="row">View</th>
-  <td>
-    <div class="w100p">
-    <select id="viewCbBox" name="viewCbBox" class="wAuto fl_left">
-      <option value="" selected>All</option>
-      <option value="1">On-time</option>
-      <option value="0">Delayed</option>
-    </select>
-		<p class="btn_sky ml10 fl_left"><a onclick="fnExcelExport('oneTimeDelivery');">Download</a></p>
-	  </div>
-  </td>
-</tr>
-<tr>
-</tr>
-<tr>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
-	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
-	</ul>
-	<p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	</dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
-
-</form>
-</section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
 

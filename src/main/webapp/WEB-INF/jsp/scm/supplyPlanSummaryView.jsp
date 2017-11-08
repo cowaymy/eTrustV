@@ -41,6 +41,8 @@ $(function()
   fnSelectPeriodReset(); 
   //setting StockCode ComboBox 
   fnSetStockComboBox();   
+  // set StockType
+  fnSelectStockTypeComboList('15');
 });
 
 function fnSelectPeriodReset()
@@ -115,6 +117,21 @@ function fnSetStockComboBox()
                      }
                    , "");
 }
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values                
+                  name: "codeName",
+                  chooseMessage: "All"
+                 }
+              , "");     
+}
+
 // excel export
 function fnExcelExport()
 {   // 1. grid ID 
@@ -170,7 +187,7 @@ function fnSettiingHeader()
                     showEditedCellMarker : false, // 셀 병합 실행
                     //enableCellMerge : true,
                     // 고정칼럼 카운트 지정
-                    fixedColumnCount : 4               
+                    fixedColumnCount : 5               
                   };
 
   console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /stock: " + $('#stockCodeCbBox').val());  
@@ -226,6 +243,18 @@ function fnSettiingHeader()
                                                              //,width : "5%"
                                                            }
                                                          , {                            
+                                                             dataField : result.header[0].stkTypeIdH1 //stkTypeId
+                                                             ,headerText : "<spring:message code='sys.scm.inventory.stockType' />"
+                                                             ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                              {
+                                                                if(item.divOdd == "0") 
+                                                                  return "my-backColumn0";
+                                                                else 
+                                                                  return "my-backColumn1";
+                                                              } 
+                                                             //,width : "5%"
+                                                           }
+                                                         , {                            
                                                              dataField : result.header[0].nameH1
                                                              ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
                                                              ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
@@ -236,7 +265,7 @@ function fnSettiingHeader()
                                                                   return "my-backColumn1";
                                                               } 
                                                              //,width : "5%"
-                                                           }
+                                                           } 
                                                          , { 
                                                              dataField : result.header[0].supplyCorpHPsi
                                                             ,headerText : "<spring:message code='sys.scm.supplyCorp.psi' />"
@@ -650,10 +679,16 @@ $(document).ready(function()
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
-		<col style="width:160px" />
+		<!-- <col style="width:160px" />
 		<col style="width:*" />
 		<col style="width:90px" />
-		<col style="width:*" />
+		<col style="width:*" /> -->
+		<col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:90px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
 	</colgroup>
 	<tbody>
 	<tr>
@@ -673,6 +708,12 @@ $(document).ready(function()
 		<select class="w100p" id="stockCodeCbBox" name="stockCodeCbBox">
 		</select>
 		</td>
+	  <!-- Stock Type 추가 -->
+    <th scope="row">Stock Type</th>
+    <td>
+    <select class="w100p" id="scmStockType" name="scmStockType">
+    </select>
+    </td>
 	</tr>
 	
 	</tbody>

@@ -77,6 +77,8 @@ $(function()
   fnSelectCDCComboList('349');
   //setting StockCode ComboBox 
   fnSetStockComboBox();   
+  //stock type
+  fnSelectStockTypeComboList('15');   
 });
 
 function fnSelectPeriodReset()
@@ -84,6 +86,20 @@ function fnSelectPeriodReset()
    CommonCombo.initById("scmPeriodCbBox");  // reset...
    var periodCheckBox = document.getElementById("scmPeriodCbBox");
        periodCheckBox.options[0] = new Option("Select a YEAR","");
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
 }
 
 function fnSelectCDC(selectYear, selectWeekTh)
@@ -182,12 +198,32 @@ function fnSetStockComboBox()
                      }
                    , "");
 }
-// excel export
-function fnExcelExport()
+function getTimeStamp() 
+{
+  function leadingZeros(n, digits) {
+      var zero = '';
+      n = n.toString();
+      if (n.length < digits) {
+          for (i = 0; i < digits - n.length; i++)
+              zero += '0';
+      }
+      return zero + n;
+  }
+
+  var d = new Date();
+  var date = leadingZeros(d.getFullYear(), 4)+ leadingZeros(d.getMonth() + 1, 2)+ leadingZeros(d.getDate(), 2);
+  var time = leadingZeros(d.getHours(), 2)+leadingZeros(d.getMinutes(), 2) + leadingZeros(d.getSeconds(), 2);
+
+  return date+"_"+time
+}
+
+//excel export
+function fnExcelExport(fileNm)
 {   // 1. grid ID 
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    // 3. exprot ExcelFileName
-    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", "SupplyPlanSummary_W" +$('#scmPeriodCbBox').val() );
+    // 3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+
+    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileNm+'_'+getTimeStamp() ); 
 }
 
 // search
@@ -361,11 +397,15 @@ var SCMPrePOViewLayout =
         {    
             dataField : "stockCode",
             headerText : "<spring:message code='sys.scm.pomngment.stockCode' />",
-            width : "25%"
+            width : "22%"
         }, {
             dataField : "stockName",
             headerText : "<spring:message code='sys.scm.pomngment.stockName'/>",
-            width : "40%"
+            width : "33%"
+        }, {
+            dataField : "stkTypeId",
+            headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+            width : "10%"
         }, {
             dataField : "planQty",
             headerText : "<spring:message code='sys.scm.pomngment.planQty'/>",
@@ -386,14 +426,18 @@ var SCMPrePOViewLayout2 =
         {
             dataField : "stockCode",
             headerText : "<spring:message code='sys.scm.pomngment.stockCode' />",
-            width : "25%",
+            width : "22%",
             editable : false
         }, {
             dataField : "stockName",
             headerText : "<spring:message code='sys.scm.pomngment.stockName'/>",
-            width : "25%",
+            width : "22%",
             editable : false
         }, {
+            dataField : "stkTypeId",
+            headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+            width : "10%"
+        },{
             dataField : "poQty",
             headerText : "<spring:message code='sys.scm.pomngment.poQty'/>",
             style : "aui-grid-right-column",
@@ -469,6 +513,10 @@ var SCMPOViewLayout =
           dataField : "stockName",
           headerText : "<spring:message code='sys.scm.pomngment.stockName'/>",
           width : "13%",
+      },{
+          dataField : "stkTypeId",
+          headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+          width : "7%",
       },{
           dataField : "qty",
           headerText : "<spring:message code='sys.scm.pomngment.quantity'/>",
@@ -738,15 +786,22 @@ $(document).ready(function()
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
+  <!-- <col style="width:160px" />
+  <col style="width:*" />
+  <col style="width:160px" />
+  <col style="width:*" /> -->
 	<col style="width:160px" />
 	<col style="width:*" />
+  <col style="width:160px" />
+  <col style="width:*" />
 	<col style="width:110px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
 	<th scope="row">EST Year &amp; Week</th>
-	<td>
+	<!-- <td> -->
+	<td colspan="3">
 
 	<div class="date_set w100p"><!-- date_set start -->
 	<p>
@@ -775,6 +830,12 @@ $(document).ready(function()
     <select class="w100p" id="stockCodeCbBox" name="stockCodeCbBox">
     </select>
 	</td>
+	<!-- Stock Type 추가 -->
+  <th scope="row">Stock Type</th>
+  <td>
+    <select class="w100p" id="scmStockType" name="scmStockType">
+    </select>
+  </td>
 	<th scope="row">PO Status</th>
 	<td>
 	 <div class="status_result">
@@ -838,7 +899,7 @@ $(document).ready(function()
 <ul class="center_btns">
 	<li>
 	 <p class="btn_blue2 big">
-	<!--    <a href="javascript:void(0);">Download Raw Data</a> -->
+	<!--    <a href="javascript:void(0);">Download Raw Data</a> <a onclick="fnExcelExport('PO ISSUE');">Download</a>-->
 	 </p>
 	</li>
 </ul>

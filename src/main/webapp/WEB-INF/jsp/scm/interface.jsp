@@ -28,12 +28,28 @@ $(function()
 {
 	fnSelectTargetDateComboList('351');
 	fnSelectInterFaceTypeComboList('352');
+  //stock type
+  fnSelectStockTypeComboList('15');  
 });
 
 function fnClick()
 {
 	$('#btn11').removeClass("btn_disabled");
 	//$('#btn11').addClass("btn_disabled");
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
 }
 
 function fnCallInterface()
@@ -78,12 +94,32 @@ function fnSelectInterFaceTypeComboList(codeId)
             , fnSelectIntfTypeCallback);     
 }
 
-// excel export
-function fnExcelExport()
+function getTimeStamp() 
+{
+  function leadingZeros(n, digits) {
+      var zero = '';
+      n = n.toString();
+      if (n.length < digits) {
+          for (i = 0; i < digits - n.length; i++)
+              zero += '0';
+      }
+      return zero + n;
+  }
+
+  var d = new Date();
+  var date = leadingZeros(d.getFullYear(), 4)+ leadingZeros(d.getMonth() + 1, 2)+ leadingZeros(d.getDate(), 2);
+  var time = leadingZeros(d.getHours(), 2)+leadingZeros(d.getMinutes(), 2) + leadingZeros(d.getSeconds(), 2);
+
+  return date+"_"+time
+}
+
+//excel export
+function fnExcelExport(fileNm)
 {   // 1. grid ID 
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    // 3. exprot ExcelFileName
-    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", "SupplyPlanSummary_W" +$('#scmPeriodCbBox').val() );
+    // 3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+
+    GridCommon.exportTo("#interface", "xlsx", fileNm+'_'+getTimeStamp() ); 
 }
 
 // search
@@ -224,6 +260,12 @@ var InterfaceLayout =
             width : "10%",
             //editable : false
         }, {
+            dataField : "stkTypeId",
+            headerText : "<spring:message code='sys.scm.inventory.stockTypeId'/>",
+            //style : "aui-grid-right-column",
+            width : "10%",
+            //editable : false
+        },{
             dataField : "ctgry",
             headerText : "<spring:message code='sys.scm.interface.ctgry'/>",
             width : "7%"
@@ -354,29 +396,44 @@ $(document).ready(function()
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:110px" />
+	<!-- <col style="width:110px" />
 	<col style="width:*" />
 	<col style="width:110px" />
 	<col style="width:*" />
 	<col style="width:110px" />
-	<col style="width:*" />
+	<col style="width:*" /> -->
+  <col style="width:110px" />
+  <col style="width:*" />
+  <col style="width:110px" />
+  <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
 	<th scope="row">Interface Type</th>
 	<td>
-    <select id="intfTypeCbBox" name="intfTypeCbBox">
+    <select id="intfTypeCbBox" name="intfTypeCbBox" class="w100p">
     </select>
 	</td>
 	<th scope="row">Target Date</th>
 	<td>
-    <select id="targetDateCbBox" name="targetDateCbBox">
+    <select id="targetDateCbBox" name="targetDateCbBox" class="w100p">
     </select>
 	</td>
-	 <th scope="row">Last Interface</th> 
+	 <!-- <th scope="row">Last Interface</th> 
 	<td>
 	 <span id="spanText" style="font-size:9pt;color:#FF0000"></span>
-	</td>
+	</td> -->
+</tr>
+<tr>
+  <th scope="row">Stock Type</th>
+  <td>
+    <select class="w100p" id="scmStockType" name="scmStockType">
+    </select>
+  </td>
+  <th scope="row">Last Interface</th> 
+  <td>
+   <span id="spanText" style="font-size:9pt;color:#FF0000"></span>
+  </td>
 </tr>
 </tbody>
 </table><!-- table end -->

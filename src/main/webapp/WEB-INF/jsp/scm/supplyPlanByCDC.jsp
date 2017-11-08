@@ -52,7 +52,9 @@ $(function()
   // set CDC
   fnSelectCDCComboList('349');
   //setting StockCode ComboBox 
-  fnSetStockComboBox();   
+  fnSetStockComboBox(); 
+  //stock type
+  fnSelectStockTypeComboList('15');  
 });
 
 function fnSelectPeriodReset()
@@ -72,6 +74,20 @@ function fnSelectCDCComboList(codeId)
                   id  : "code",     // use By query's parameter values                
                   name: "codeName",
                   chooseMessage: "Select a CDC"
+                 }
+              , "");     
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
                  }
               , "");     
 }
@@ -142,12 +158,32 @@ function fnSetStockComboBox()
                      }
                    , "");
 }
-// excel export
-function fnExcelExport()
+function getTimeStamp() 
+{
+  function leadingZeros(n, digits) {
+      var zero = '';
+      n = n.toString();
+      if (n.length < digits) {
+          for (i = 0; i < digits - n.length; i++)
+              zero += '0';
+      }
+      return zero + n;
+  }
+
+  var d = new Date();
+  var date = leadingZeros(d.getFullYear(), 4)+ leadingZeros(d.getMonth() + 1, 2)+ leadingZeros(d.getDate(), 2);
+  var time = leadingZeros(d.getHours(), 2)+leadingZeros(d.getMinutes(), 2) + leadingZeros(d.getSeconds(), 2);
+
+  return date+"_"+time
+}
+
+//excel export
+function fnExcelExport(fileNm)
 {   // 1. grid ID 
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    // 3. exprot ExcelFileName
-    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", "SupplyPlanSummary_W" +$('#scmPeriodCbBox').val() );
+    // 3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+
+    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileNm+'_'+getTimeStamp() ); 
 }
 
 // search
@@ -374,7 +410,7 @@ function fnSettiingHeader()
                     showEditedCellMarker : true, // 셀 병합 실행
                     enableCellMerge : true,
                     // 고정칼럼 카운트 지정
-                    fixedColumnCount : 5  , 
+                    fixedColumnCount : 6  , 
 
                     softRemoveRowMode : false,
                     // 체크박스 표시 설정
@@ -464,6 +500,18 @@ function fnSettiingHeader()
 																				                   return true;  // just CheckBox Visible But Not Checked.
 																				                 }
 																						          } // renderer
+                                                    }
+                                                  , {                            
+                                                       dataField : result.header[0].stkTypeIdH1  //stkTypeId
+                                                      ,headerText : "<spring:message code='sys.scm.interface.stockType' />" 
+                                                      ,editable : true
+                                                      ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                       {
+                                                         if(item.divOdd == "0") 
+                                                           return "my-backColumn0";
+                                                         else 
+                                                           return "my-backColumn1";
+                                                       }
                                                     }
                                                   , {                            
                                                         dataField : result.header[0].categoryH1
@@ -889,15 +937,22 @@ $(document).ready(function()
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
-		<col style="width:160px" />
+    <!-- <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" /> -->
+		<col style="width:130px" />
 		<col style="width:*" />
-		<col style="width:150px" />
+		<col style="width:130px" />
 		<col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
 	</colgroup>
 	<tbody>
 	<tr>
 		<th scope="row">EST Year &amp; Week</th>
-		<td>
+		<!-- <td> -->
+		<td colspan="3">
 	
     <div class="date_set w100p"><!-- date_set start -->
      <select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
@@ -919,6 +974,12 @@ $(document).ready(function()
 	    <select class="w100p" id="stockCodeCbBox" name="stockCodeCbBox">
 	    </select>
 		</td>
+		<!-- Stock Type 추가 -->
+    <th scope="row">Stock Type</th>
+    <td>
+      <select class="w100p" id="scmStockType" name="scmStockType"> 
+      </select>
+    </td>
 		<th scope="row">Planning Status</th>
 		<td>
 		  <div class="status_result">
@@ -933,7 +994,9 @@ $(document).ready(function()
 	</table><!-- table end -->
 	
 	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-	<p class="show_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+		<p class="show_btn">
+		 <%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+		</p>
 	<dl class="link_list">
 		<dt>Link</dt>
 		<dd>
@@ -1014,7 +1077,7 @@ $(document).ready(function()
 <ul class="center_btns">
 	<li>
 	 <p class="btn_blue2 big">
-<!-- 	   <a href="javascript:void(0);">Download Raw Data</a> -->
+<!-- 	   <a href="javascript:void(0);">Download Raw Data</a> <a onclick="fnExcelExport('SalesPlanManagement');">Download</a> -->
 	 </p>
 	</li>
 </ul>
