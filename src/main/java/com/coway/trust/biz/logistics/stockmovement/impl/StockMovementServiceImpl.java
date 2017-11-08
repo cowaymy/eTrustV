@@ -28,14 +28,17 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	private StockTransferService stock;
 
 	@Override
-	public void insertStockMovementInfo(Map<String, Object> params) {
+	public String insertStockMovementInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
 
 		String seq = stockMoveMapper.selectStockMovementSeq();
 
 		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
 
-		fMap.put("reqno", fMap.get("headtitle") + seq);
+		String reqNo= fMap.get("headtitle") + seq;
+		
+		fMap.put("reqno", reqNo);
+		//fMap.put("reqno", fMap.get("headtitle") + seq);
 		fMap.put("userId", params.get("userId"));
 
 		stockMoveMapper.insStockMovementHead(fMap);
@@ -50,6 +53,9 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		}
 
 		insertStockBooking(fMap);
+		
+		return reqNo;
+		
 	}
 
 	@Override
