@@ -22,8 +22,6 @@
         
         doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
 
-        fn_chgPromoDetail(${promoInfo.promoAppTypeId}, ${promoInfo.promoTypeId}, ${promoInfo.promoCustType});
-        
         fn_chgPageMode('VIEW');
     });
     
@@ -205,6 +203,7 @@
         var dscPvVal = 0;
         var addPvVal = FormUtil.isEmpty($('#promoAddDiscPv').val()) ? 0 : $('#promoAddDiscPv').val().trim();
         var newPvVal = 0;
+        var gstPvVal = 0;
         
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
 
@@ -212,19 +211,24 @@
             
             if($('#exTrade').val() == '1' && $('#promoAppTypeId').val() == '2284') {
                 orgPvVal = orgPvVal * (70/100);
-                dscPvVal = FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim();
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "prcRpf") - (FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim());
             }
             else if($('#exTrade').val() == '1' && ($('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287')) {
                 orgPvVal = orgPvVal * (70/100);
-                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "promoAmt");
             }
             else if($('#exTrade').val() == '0' && ($('#promoAppTypeId').val() == '2284' || $('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287')) {
-                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "promoAmt");
             }
             
             newPvVal = Math.round(orgPvVal - dscPvVal - addPvVal);
             
+            gstPvVal = Math.round(orgPvVal - Math.floor(dscPvVal*(1/1.06)) - addPvVal);
+            
             AUIGrid.setCellValue(stckGridID, i, "promoItmPv", newPvVal);
+            AUIGrid.setCellValue(stckGridID, i, "promoItmPvGst", gstPvVal);
         }
     }
     
@@ -263,10 +267,20 @@
     $(function(){
         $('#btnProductAdd').click(function() {
             if(FormUtil.checkReqValue($('#promoAppTypeId'))) {
-                Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>* Please select the promotion application.</b>");
+                isValid = false;
+                msg += "* Please select the promotion application.<br />";
+            }
+            if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.checkReqValue($('#promoSrvMemPacId'))) {
+                isValid = false;
+                msg += "* Please select the membership package.<br />";
+            }
+            
+            if(!isValid) {
+                Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
                 return false;
             }
-            Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "stocklist"});
+        
+            Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "stocklist", promoAppTypeId : $('#promoAppTypeId').val(), srvPacId : $('#promoSrvMemPacId').val()});
         });
         $('#btnProductDel').click(function() {
             fn_getPrdPriceInfo();
@@ -276,6 +290,8 @@
         });
         $('#promoAppTypeId').change(function() {
             fn_chgPromoDetail(null, null, null);
+
+            fn_chgPromoDetail(${promoInfo.promoAppTypeId}, ${promoInfo.promoTypeId}, ${promoInfo.promoCustType});
         });
         $('#promoTypeId').change(function() {
             fn_chgPromoDetail(null, null, null);
@@ -300,17 +316,27 @@
             }
             
             fn_calcDiscountPrice();
+            fn_calcDiscountRPF();
+            fn_calcDiscountPV();
         });
         $('#promoDiscValue').change(function() {
             fn_calcDiscountPrice();
+            fn_calcDiscountRPF();
+            fn_calcDiscountPV();
         });
         $('#promoAddDiscPrc').change(function() {
             fn_calcDiscountPrice();
+            fn_calcDiscountRPF();
+            fn_calcDiscountPV();
         });
         $('#promoRpfDiscAmt').change(function() {
+            fn_calcDiscountPrice();
             fn_calcDiscountRPF();
+            fn_calcDiscountPV();
         });
         $('#promoAddDiscPv').change(function() {
+            fn_calcDiscountPrice();
+            fn_calcDiscountRPF();
             fn_calcDiscountPV();
         });
         $('#exTrade').change(function() {
@@ -322,9 +348,7 @@
             }
             
             fn_calcDiscountPrice();
-            
             fn_calcDiscountRPF();
-            
             fn_calcDiscountPV();
         });
         $('#btnPromoSave').click(function() {

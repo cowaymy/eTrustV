@@ -219,7 +219,9 @@
              , CRT_USER_ID
              , CRT_DT
              , UPD_USER_ID
-             , UPD_DT) 
+             , UPD_DT
+             , PROMO_ITM_PV_GST
+             ) 
         VALUES
              ( #{promoItmId}
              , #{promoId}
@@ -233,6 +235,7 @@
              , SYSDATE
              , #{updUserId}
              , SYSDATE
+             , #{promoItmPvGst}
              )
     </insert>
     
@@ -307,6 +310,7 @@
              , T1.PROMO_ITM_RENTAL
              , T1.PROMO_ITM_RENT_PRIOD
              , T1.PROMO_ITM_OBLIG_PRIOD
+             , T1.PROMO_ITM_PV_GST
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2

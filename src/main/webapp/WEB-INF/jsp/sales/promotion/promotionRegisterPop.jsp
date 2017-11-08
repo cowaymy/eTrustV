@@ -36,6 +36,7 @@
             , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "promoAmt",     editable : false, width : 100  }
                           , { headerText : "RPF",                   dataField : "promoPrcRpf",  editable : false, width : 100  }
                           , { headerText : "PV",                    dataField : "promoItmPv",   editable : true,  width : 100  }]}
+          , { headerText : "promoItmPvGst", dataField   : "promoItmPvGst",  visible  : false,     width : 80  }
           , { headerText : "itmid",         dataField   : "promoItmStkId",  visible  : false,     width : 80  }
           ];
 
@@ -178,6 +179,7 @@
         var dscPvVal = 0;
         var addPvVal = FormUtil.isEmpty($('#promoAddDiscPv').val()) ? 0 : $('#promoAddDiscPv').val().trim();
         var newPvVal = 0;
+        var gstPvVal = 0;
         
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
 
@@ -185,19 +187,27 @@
             
             if($('#exTrade').val() == '1' && $('#promoAppTypeId').val() == '2284') {
                 orgPvVal = orgPvVal * (70/100);
-                dscPvVal = FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim();
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "prcRpf") - (FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim());
             }
             else if($('#exTrade').val() == '1' && ($('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287')) {
                 orgPvVal = orgPvVal * (70/100);
-                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "promoAmt");
             }
             else if($('#exTrade').val() == '0' && ($('#promoAppTypeId').val() == '2284' || $('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287')) {
-                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "promoAmt");
             }
             
             newPvVal = Math.round(orgPvVal - dscPvVal - addPvVal);
             
+            gstPvVal = Math.round(orgPvVal - Math.floor(dscPvVal*(1/1.06)) - addPvVal);
+            
+            console.log('dscPvVal   :'+dscPvVal);
+            console.log('dscPvValGST:'+Math.floor(dscPvVal*(1/1.06)));
+            
             AUIGrid.setCellValue(stckGridID, i, "promoItmPv", newPvVal);
+            AUIGrid.setCellValue(stckGridID, i, "promoItmPvGst", gstPvVal);
         }
     }
         
@@ -287,17 +297,27 @@
             }
             
             fn_calcDiscountPrice();
+            fn_calcDiscountRPF();
+            fn_calcDiscountPV();
         });
         $('#promoDiscValue').change(function() {
             fn_calcDiscountPrice();
+            fn_calcDiscountRPF();
+            fn_calcDiscountPV();
         });
         $('#promoAddDiscPrc').change(function() {
             fn_calcDiscountPrice();
+            fn_calcDiscountRPF();
+            fn_calcDiscountPV();
         });
         $('#promoRpfDiscAmt').change(function() {
+            fn_calcDiscountPrice();
             fn_calcDiscountRPF();
+            fn_calcDiscountPV();
         });
         $('#promoAddDiscPv').change(function() {
+            fn_calcDiscountPrice();
+            fn_calcDiscountRPF();
             fn_calcDiscountPV();
         });
         $('#exTrade').change(function() {
@@ -308,10 +328,8 @@
                 $('#promoRpfDiscAmt').val('').removeAttr("readonly").removeClass("readonly");
             }
             
-            fn_calcDiscountPrice();
-            
-            fn_calcDiscountRPF();
-            
+            fn_calcDiscountPrice();            
+            fn_calcDiscountRPF();            
             fn_calcDiscountPV();
         });
         $('#btnPromoSave').click(function() {

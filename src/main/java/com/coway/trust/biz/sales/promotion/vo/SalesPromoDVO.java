@@ -54,6 +54,8 @@ public class SalesPromoDVO implements Serializable {
 	
 	private int updUserId;
 	
+	private BigDecimal promoItmPvGst;
+	
 	public int getPromoItmId() {
 		return promoItmId;
 	}
@@ -204,6 +206,14 @@ public class SalesPromoDVO implements Serializable {
 
 	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
+	}
+
+	public BigDecimal getPromoItmPvGst() {
+		return promoItmPvGst;
+	}
+
+	public void setPromoItmPvGst(BigDecimal promoItmPvGst) {
+		this.promoItmPvGst = promoItmPvGst;
 	}
 	
 }
