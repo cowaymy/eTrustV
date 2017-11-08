@@ -61,7 +61,9 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 				insertValue.put("serviceWeek", 0);
 			}else{
 				insertValue.put("locType", "O");
-				insertValue.put("serviceWeek", Integer.parseInt(insertValue.get("svcWeek").toString()));
+				if(insertValue.get("svcWeek") != null){
+					insertValue.put("serviceWeek", Integer.parseInt(insertValue.get("svcWeek").toString()));
+				}
 			}
 			logger.debug("insertValue {}", insertValue);
 			CTSubGroupListMapper.insertCTSubAreaGroup(insertValue);
