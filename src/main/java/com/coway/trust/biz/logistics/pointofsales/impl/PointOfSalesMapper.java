@@ -11,7 +11,7 @@ public interface PointOfSalesMapper {
 
 	List<EgovMap> PosSearchList(Map<String, Object> params);
 
-	List<EgovMap> PosItemList(Map<String, Object> params);
+	List<EgovMap> posItemList(Map<String, Object> params);
 
 	List<EgovMap> selectPointOfSalesSerial(Map<String, Object> params);
 
