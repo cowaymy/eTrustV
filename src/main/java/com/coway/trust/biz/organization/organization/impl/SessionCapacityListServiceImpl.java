@@ -13,6 +13,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.organization.organization.SessionCapacityListService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -41,7 +42,42 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 		return sessionCapacityListMapper.selectSsCapacityBrList(params);
 	}
 
-	
+	@Override
+	public void insertCapacity(List<Object> params, SessionVO sessionVO) {
+		boolean addSuccess = false;
+		if(params.size() > 0){
+    		for(int i=0; i< params.size(); i++){
+    			Map<String, Object>  insertValue = (Map<String, Object>) params.get(i);
+    			insertValue.put("userId", sessionVO.getUserId());
+    			logger.debug("insertValue {}", insertValue);
+    			sessionCapacityListMapper.insertCapacity(insertValue);
+    		}
+		}
+	}
+
+	@Override
+	public void updateCapacity(List<Object> params, SessionVO sessionVO) {
+		if(params.size() > 0){
+    		for(int i=0; i< params.size(); i++){
+    			Map<String, Object>  updateValue = (Map<String, Object>) params.get(i);
+    			updateValue.put("userId", sessionVO.getUserId());
+    			logger.debug("updateValue {}", updateValue);
+    			sessionCapacityListMapper.updateCapacity(updateValue);
+    		}
+		}
+	}
+
+	@Override
+	public void deleteCapacity(List<Object> params, SessionVO sessionVO) {
+		if(params.size() > 0){
+    		for(int i=0; i< params.size(); i++){
+    			Map<String, Object>  deleteValue = (Map<String, Object>) params.get(i);
+    			deleteValue.put("userId", sessionVO.getUserId());
+    			logger.debug("deleteValue {}", deleteValue);
+    			sessionCapacityListMapper.deleteCapacity(deleteValue);
+    		}
+		}
+	}
 	
 	
 	
@@ -58,7 +94,7 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 //		return sessionCapacityListMapper.selectHpChildList(params);
 //	}
 
-	@Override
+	/*@Override
 	public List<EgovMap> getDeptTreeList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return null;
@@ -101,7 +137,7 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 
 	
 	
-	
+	*/
 	
 	
 	

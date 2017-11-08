@@ -11,18 +11,17 @@ public interface SessionCapacityListMapper {
 	List<EgovMap> selectOrgChartHpList(Map<String, Object> params);
 	
 	List<EgovMap> selectSsCapacityBrList(Map<String, Object> params);
+
+	void insertCapacity(Map<String, Object> params);
+
+	void updateCapacity(Map<String, Object> params);
+	
+	void deleteCapacity(Map<String, Object> params);
 	
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	List<EgovMap> selectOrgChartCdList(Map<String, Object> params);
+	/*List<EgovMap> selectOrgChartCdList(Map<String, Object> params);
 	
 	List<EgovMap> getDeptTreeList(Map<String, Object> params);
 	
@@ -32,7 +31,7 @@ public interface SessionCapacityListMapper {
 	
 	List<EgovMap> selectOrgChartCtList(Map<String, Object> params);
 	
-	List<EgovMap> selectCtChildList(Map<String, Object> params);
+	List<EgovMap> selectCtChildList(Map<String, Object> params);*/
 	
 
 	
