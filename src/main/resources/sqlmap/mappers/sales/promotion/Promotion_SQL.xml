@@ -372,7 +372,6 @@
     <update id="updateSalesPromoM" parameterType="salesPromoMVO">
         UPDATE SAL0017D
            SET PROMO_DESC              = #{promoDesc}
-             , PROMO_SRV_MEM_PAC_ID    = #{promoSrvMemPacId}
              , PROMO_DT_FROM           = TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
              , PROMO_DT_END            = TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
              , PROMO_UPD_DT            = SYSDATE
