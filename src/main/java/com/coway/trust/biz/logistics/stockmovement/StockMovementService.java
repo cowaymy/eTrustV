@@ -7,7 +7,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface StockMovementService {
 
-	void insertStockMovementInfo(Map<String, Object> param);
+	String insertStockMovementInfo(Map<String, Object> param);
 
 	List<EgovMap> selectStockMovementNoList(Map<String, Object> params);
 
