@@ -12,7 +12,7 @@
        , description
        </if>
        <if test="gubun =='stock' or gubun =='stocklist'">
-	   , typename,typeid
+	   , typename,typeid , uom , serialchk
 	   </if>
 	   from (
         <if test="gubun =='item'">
@@ -40,6 +40,8 @@
 		     , STK_CTGRY_ID cateid
 		     , STK_TYPE_ID typeid
 		     , STUS_CODE_ID stateid
+		     , UOM uom 
+		     , SERIAL_CHK serialchk
 		     ,(SELECT CODE_NAME
 		          FROM SYS0013M
 		         WHERE CODE_ID = SYS0026M.STK_CTGRY_ID)
