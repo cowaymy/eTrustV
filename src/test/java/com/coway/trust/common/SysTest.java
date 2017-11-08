@@ -1,5 +1,6 @@
 package com.coway.trust.common;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
@@ -213,5 +214,11 @@ public class SysTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void millisToMinutes() {
+		int m = 5;
+		LOGGER.debug("{} Minutes => {} millis", m, MINUTES.toMillis(m));
 	}
 }
