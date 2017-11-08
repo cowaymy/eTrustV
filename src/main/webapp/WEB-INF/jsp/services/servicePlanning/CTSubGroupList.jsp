@@ -19,6 +19,10 @@ var option = {
 function getUseYnComboList() {
 	  
 }
+function getLocalComboList(){
+    var list = [ "Local", "OutStation"];
+    return list;
+}
 function getServiceWeekComboList() {
     var list = [ "1", "2", "3", "4" ];
     return list;
@@ -146,6 +150,14 @@ function CTSubAreaGroupGrid() {
     }, {
         dataField : "locType",
         headerText : "Local Type",
+        editRenderer : {
+            type : "ComboBoxRenderer",
+            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+            listFunction : function(rowIndex, columnIndex, item, dataField) {
+                var list = getLocalComboList();
+                return list;
+            },
+          },
         width : 130
     }, {
         dataField : "svcWeek",
@@ -272,7 +284,6 @@ $(document).ready(function() {
 	     
 	 $("#dscCode").change(function (){
 	        doGetCombo('/services/serviceGroup/selectCTM',  $("#dscCode").val(), '','memCode', 'S' ,  ''); 
-	        
 	   });
 	    
 	
