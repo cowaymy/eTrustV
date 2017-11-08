@@ -39,6 +39,9 @@
 		<if test="stockCodeCbBox != null and stockCodeCbBox !=''">
 			   AND STOCK_ID = #{stockCodeCbBox}
 		</if>
+    <if test="scmStockType != null and scmStockType !=''">
+         AND STK_TYPE_ID = #{scmStockType}    
+   </if>		
 			 ORDER BY STK_CTGRY_CODE
 			         ,STOCK_DESC	 
   </select> 
@@ -132,6 +135,7 @@
 			 SELECT  PLAN_ID
 			       , TEAM    
 			       , STOCK_CTGRY 
+			       , STK_TYPE_ID 
 			       , STOCK_CODE  
 			       , STOCK_NAME  
 			       , M01 JAN
@@ -158,6 +162,9 @@
 			  WHERE TEAM = #{scmTeamCbBox} 
 			    AND YYYY = #{scmYearCbBox}
 			    AND VER  = #{scmPeriodCbBox}
+       <if test="scmStockType != null and scmStockType !=''">
+          AND STK_TYPE_ID = #{scmStockType}
+       </if>			    
 			  ORDER BY STOCK_NAME  
   </select> 
   
@@ -340,6 +347,7 @@
     SELECT
 		       GRP
 		      ,STOCK_CTGRY
+		      ,STK_TYPE_ID
 		      ,M1_BIZ_PLAN
 		      ,M1_SALES_PLAN
 		      ,M1_ORDED
@@ -398,6 +406,7 @@
 		         SELECT 
 		               GRP 
 		              ,STOCK_CTGRY 
+		              ,STK_TYPE_ID
 		              ,SCM_MONTH 
 		              ,BIZ_PLAN 
 		              ,SALES_PLAN 
@@ -408,7 +417,10 @@
 		          <if test='paramStockCtgry != null and paramStockCtgry !=""'>
 		          AND STOCK_CTGRY = #{paramStockCtgry}
 		          </if>
-		           <if test='paramGrp != null and paramGrp !=""'>
+		          <if test="scmStockType != null and scmStockType !=''">
+              AND STK_TYPE_ID = #{scmStockType}
+              </if>
+		          <if test='paramGrp != null and paramGrp !=""'>
 		          AND GRP= #{paramGrp}
 		          </if>
 		        GROUP BY GRP 
@@ -416,6 +428,7 @@
 		                ,SCM_QUARTER 
 		                ,SCM_MONTH 
 		                ,STOCK_CTGRY 
+		                ,STK_TYPE_ID
 		                ,BIZ_PLAN 
 		                ,SALES_PLAN 
 		                ,ORDED 

@@ -8,7 +8,8 @@
 	         PO_NO   
 	        ,ISSUEDATE ISSUE_DATE  
 	        ,STOCK_CODE STK_CODE  
-	        ,STOCK_DESC STK_DESC    
+	        ,STOCK_DESC STK_DESC   
+	        /*,STK_TYPE_ID*/  
 	        ,GR_WEEK   
 	        ,GR_DT   
 	        ,PO_QTY    
@@ -44,6 +45,9 @@
      </if>
      <if test='statusSelBox != null and statusSelBox !="" '>
       AND PO_STUS   =  #{statusSelBox}
+     </if>
+     <if test="scmStockType != null and scmStockType !=''">
+      <!-- AND STK_TYPE_ID = #{scmStockType} -->
      </if>
 </select>
 
@@ -92,7 +96,8 @@
 	        SPMON   
 	      , MATNR   
 	      , MATNR_NM   
-	      , STOCK_TYPE   
+	      , STOCK_TYPE 
+	      , STK_TYPE_ID  
 	      , CTGRY   
 	      , MEASURE   
 	      , AMT_K   
@@ -105,6 +110,9 @@
 	      , WAERS_USD   
 	  FROM SCM0045V  
 	 WHERE SPMON = #{targetDateCbBox}
+ <if test="scmStockType != null and scmStockType !=''">
+     AND STK_TYPE_ID = #{scmStockType}
+ </if>	 
 	 ORDER BY MATNR DESC
 </select>
 
@@ -153,7 +161,8 @@
 	       ,GR_MONTH   
 	       ,SN   
 	       ,STOCK_CTGRY   
-	       ,STOCK_ID   
+	       ,STOCK_ID  
+	       ,STK_TYPE_ID
 	       ,PO_ITM_APPV_STUS   
 	       ,GR_DT   
 	   FROM SCM0041V 
@@ -162,6 +171,9 @@
 	    AND CDC = #{cdcCbBox}
 	   <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
 	    AND STOCK_CODE = #{stockCodeCbBox}      
+	   </if>
+	   <if test="scmStockType != null and scmStockType !=''">
+	    AND STK_TYPE_ID = #{scmStockType}    
 	   </if>
       ORDER BY PO_NO DESC
   </select>
@@ -172,7 +184,8 @@
 		     , PRE_MONTH   
 		     , PRE_WEEK_TH   
 		     , PRE_STOCK_CODE STOCK_CODE
-		     , STK_DESC STOCK_NAME     
+		     , STK_DESC STOCK_NAME 
+		     , STK_TYPE_ID     
 		     , PRE_QTY  PLAN_QTY
 		     , PO_QTY
 		     , PRE_CDC 
@@ -188,6 +201,9 @@
 		   <if test='stockCodeCbBox != null and stockCodeCbBox !="" '> 
 		   AND PRE_STOCK_CODE = #{stockCodeCbBox}      
 		   </if>
+       <if test="scmStockType != null and scmStockType !=''">
+       AND STK_TYPE_ID = #{scmStockType}    
+       </if>		   
 
      </select>
  

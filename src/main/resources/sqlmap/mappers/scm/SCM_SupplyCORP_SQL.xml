@@ -20,6 +20,7 @@
   <select id="selectComboSupplyCDC" parameterType="Map" resultType="egovMap">
     SELECT CODE
          , CODE_NAME
+         , CODE_ID 
      FROM SYS0013M 
     WHERE CODE_MASTER_ID = #{codeMasterId}
   </select> 
@@ -84,7 +85,8 @@
            ,LAST_UPD_COLUMN   
            ,PSI_NAME   PSI
            ,STOCK_CTGRY CATEGORY
-           ,STOCK_NAME  NAME 
+           ,STOCK_NAME  NAME
+           ,S26M.STK_TYPE_ID 
            ,M_3   
            ,M_2   
            ,M_1   
@@ -132,19 +134,24 @@
            ,ROUND(W28) W28  
            ,ROUND(W29) W29  
            ,ROUND(W30) W30  
-      FROM SCM0006D
+      FROM SCM0006D  S06D
+          ,SYS0026M  S26M
      WHERE PLAN_MASTER_ID = ( SELECT PLAN_ID 
                                 FROM SCM0005M  
                                WHERE PLAN_YEAR = #{scmYearCbBox} 
                                  AND PLAN_WEEK = #{scmPeriodCbBox} 
                                  AND CDC = #{cdcCbBox} 
                             )
+        AND S06D.STOCK_CODE = S26M.STK_CODE
       <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
-       AND STOCK_CODE = #{stockCodeCbBox}         
+       AND S06D.STOCK_CODE = #{stockCodeCbBox}         
       </if>
-     ORDER BY STOCK_CTGRY 
-             ,STOCK_CODE 
-             ,PSI_ID
+      <if test="scmStockType != null and scmStockType !=''">
+       AND S26M.STK_TYPE_ID = #{scmStockType}         
+      </if>
+     ORDER BY S06D.STOCK_CTGRY 
+             ,S06D.STOCK_CODE 
+             ,S06D.PSI_ID
   </select>
   
   <!-- Supply-CORP -->
@@ -156,6 +163,7 @@
            ,STOCK_CTGRY CATEGORY
            ,STOCK_CODE  CODE 
            ,STOCK_NAME  NAME
+           ,STK_TYPE_ID 
            ,PSI_ID      
            ,PSI_NAME    PSI
            ,ROUND(M0_ORD)  M0_ORD 
@@ -205,6 +213,9 @@
        AND PLAN_WEEK  = #{scmPeriodCbBox}
        <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
        AND STOCK_CODE = #{stockCodeCbBox}   
+       </if>
+       <if test="scmStockType != null and scmStockType !=''">
+       AND STK_TYPE_ID = #{scmStockType}
        </if>
      ORDER BY STOCK_CTGRY
              ,STOCK_CODE
