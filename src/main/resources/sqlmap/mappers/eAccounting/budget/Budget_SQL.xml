@@ -17,8 +17,8 @@ SELECT  BUDGET_PLAN_YEAR
                            ,COST_CENTR           
                            ,GL_ACC_CODE
                            ,BUDGET_CODE
-                           ,M1, M2, M3, M4, M5, M6
-                           ,M7, M8, M9, M10, M11, M12  
+                           ,NVL(M1,0) M1, NVL(M2,0) M2, NVL(M3,0)M3, NVL(M4,0)M4, NVL(M5,0)M5, NVL(M6,0)M6
+                           ,NVL(M7,0) M7, NVL(M8,0) M8, NVL(M9,0) M9, NVL(M10,0) M10, NVL(M11,0) M11, NVL(M12,0) M12
                FROM (
                          SELECT A.BUDGET_PLAN_YEAR
                                    ,A.COST_CENTR
