@@ -68,59 +68,65 @@
         group by b.mem_code, b.name,B.MEM_ID
     </select>
     <select id="selectCTAssignList"  parameterType="Map" resultType="egovMap">
-	        SELECT * FROM (SELECT A.HOLIDAY_TYPE,
-         A.STATE,
-         TO_CHAR (A.HOLIDAY, 'YYYY-MM-DD') HOLIDAY,
-         A.HOLIDAY_DESC,
-         A.HOLIDAY_SEQ,
-         A.CT_BRNCH_CODE,
-         F.BRNCH_ID,
-         CASE
-            WHEN COUNT (D.CT_MEM_ID) = 0 THEN 'Active'
-            WHEN COUNT (D.CT_MEM_ID) > 0 THEN 'Complete'
-         END
-            ASSIGN_STATUS,
-         COUNT (CASE WHEN D.CT_MEM_ID IS NOT NULL THEN 1 END)
-            AS Replacement_CT_Pax
-    FROM (SELECT DISTINCT
-                 A.HOLIDAY_TYPE,
+	        SELECT * FROM ( 
+ SELECT 
+                    A.HOLIDAY_TYPE,
+                     A.STATE,
+                     TO_CHAR(A.HOLIDAY,'YYYY-MM-DD') HOLIDAY,
+                     A.HOLIDAY_DESC,
+                     A.HOLIDAY_SEQ,
+                     A.CT_BRNCH_CODE,
+                     F.BRNCH_ID,
+                      CASE
+                       WHEN COUNT (D.CT_MEM_ID) = 0 THEN 'Active'
+                       WHEN COUNT (D.CT_MEM_ID) > 0 THEN 'Complete'
+                     END ASSIGN_STATUS,
+                     COUNT ( CASE WHEN D.CT_MEM_ID IS NOT NULL
+                                           THEN 1
+                                    END ) AS Replacement_CT_Pax
+     FROM 
+    (        
+      SELECT DISTINCT 
+                     A.HOLIDAY_TYPE,
+                     A.STATE,
+                     A.HOLIDAY,
+                     A.HOLIDAY_DESC,
+                     A.HOLIDAY_SEQ,
+                     CASE WHEN A.HOLIDAY_TYPE = 'S' AND A.STATE = B.STATE 
+                             THEN B.CT_BRNCH_CODE
+                             ELSE E.CT_BRNCH_CODE
+                      END CT_BRNCH_CODE
+                FROM SYS0081M A
+                    ,(SELECT STATE
+                                 ,CT_BRNCH_CODE
+                         FROM SYS0064M
+                        GROUP BY STATE
+                                 ,CT_BRNCH_CODE
+                      ) B
+                    ,(SELECT CT_BRNCH_CODE
+                        FROM SYS0064M 
+                       GROUP BY CT_BRNCH_CODE
+                     )  E
+            WHERE A.STATE        = B.STATE(+)      
+        ) A  ,ORG0020D D ,
+                 (SELECT BRNCH_ID, CODE
+                    FROM SYS0005M
+                   GROUP BY BRNCH_ID,CODE
+                 )  F
+      WHERE   A.HOLIDAY      = D.HOLIDAY(+)
+          AND A.HOLIDAY_TYPE = D.HOLIDAY_TYPE(+)
+          AND A.HOLIDAY_SEQ  = D.HOLIDAY_SEQ(+)
+          AND A.CT_BRNCH_CODE = D.BRNCH_CODE(+)
+          AND A.CT_BRNCH_CODE = F.CODE
+        GROUP BY A.HOLIDAY_TYPE,
                  A.STATE,
                  A.HOLIDAY,
                  A.HOLIDAY_DESC,
                  A.HOLIDAY_SEQ,
-                 CASE
-                    WHEN A.HOLIDAY_TYPE = 'S' AND A.STATE = B.STATE
-                    THEN
-                       B.CT_BRNCH_CODE
-                    ELSE
-                       E.CT_BRNCH_CODE
-                 END
-                    CT_BRNCH_CODE
-            FROM SYS0081M A,
-                 (  SELECT STATE, CT_BRNCH_CODE
-                      FROM SYS0064M
-                  GROUP BY STATE, CT_BRNCH_CODE) B,
-                 (  SELECT CT_BRNCH_CODE
-                      FROM SYS0064M
-                  GROUP BY CT_BRNCH_CODE) E
-           WHERE A.STATE = B.STATE(+)) A,
-         ORG0020D D,
-         (  SELECT BRNCH_ID, CODE
-              FROM SYS0005M
-          GROUP BY BRNCH_ID, CODE) F
-   WHERE     A.HOLIDAY = D.HOLIDAY(+)
-         AND A.HOLIDAY_TYPE = D.HOLIDAY_TYPE(+)
-         AND A.HOLIDAY_SEQ = D.HOLIDAY_SEQ(+)
-         AND A.CT_BRNCH_CODE = D.BRNCH_CODE(+)
-         AND A.CT_BRNCH_CODE = F.CODE
-GROUP BY A.HOLIDAY_TYPE,
-         A.STATE,
-         A.HOLIDAY,
-         A.HOLIDAY_DESC,
-         A.HOLIDAY_SEQ,
-         A.CT_BRNCH_CODE,
-         F.BRNCH_ID) B
-         WHERE 1=1
+                 A.CT_BRNCH_CODE,
+                 F.BRNCH_ID
+                 ) B 
+                 WHERE 1=1
          <if test="stateTypeList != null and stateTypeList != '' ">
           AND B.ASSIGN_STATUS IN 
           <foreach item="item" collection="stateTypeList" index="index" open="(" separator="," close=")">
