@@ -3,30 +3,163 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script type="text/javaScript">
-
+var myGridID;
+var memCode;
+var today = "${today}";
 	$(document).ready(function() {
+		createAUIGrid();
+		AUIGrid.setSelectionMode(myGridID, "singleRow");
 		
 		$("#search").click(function(){
-			Common.ajax("GET", "/commission/calculation/commSHIMemSearch", $("#myForm").serializeJSON(), function(result) {
-				if(result != null){
-					$("#teamCode").val(result.DEPT_CODE);
-					$("#level").val(result.MEM_LVL);
-					
-					
-					Common.ajax("GET", "/commission/calculation/commSPCRgenrawSHIIndex", $("#myForm").serializeJSON(), function(result) {
-						alert("들어옴");
-					});
-				}else{
-					Common.alert("No member record found");
-				}
-			});
+			var valid = $("#memCode").val();
+			
+			if(valid == null || valid == ""){
+				Common.alert("Please select the member code");
+			}else{
+				Common.ajax("GET", "/commission/calculation/commSHIMemSearch", $("#myForm").serializeJSON(), function(result) {
+					if(result != null){
+						$("#teamCode").val(result.DEPT_CODE);
+						$("#level").val(result.MEM_LVL);
+						
+						
+						Common.ajax("GET", "/commission/calculation/commSPCRgenrawSHIIndex", $("#myForm").serializeJSON(), function(result) {
+							AUIGrid.setGridData(myGridID, result);
+						});
+					}else{
+						Common.alert("No member record found");
+					}
+				});
+			}
 		});
 		
 		$('#memBtn').click(function() {
 		    //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
 		    Common.popupDiv("/common/memberPop.do", $("#myForm").serializeJSON(), null, true);
 		});
+		
+		AUIGrid.bind(myGridID, "cellClick", function(event) {
+			memCode = null;
+			if(AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode") != null && AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode") != ""){
+				memCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode");
+				var date ={"memCode" : memCode};
+				Common.popupDiv("/commission/calculation/commSHIIndexViewDetailsPop.do",date);
+			}
+		});
+		
+		$("#clear").click(function(){
+			document.myForm.reset();
+		});
+		
+		$("#generate").click(function(){
+		    var valid = $("#memCode").val();
+            
+            if(valid == null || valid == ""){
+                Common.alert("Please select the member code");
+            }else{
+            	var date =$("#shiDate").val();
+                var month = Number(date.substring(0, 2));
+                if(month < 10){
+                    month = "0"+month;
+                }
+                var year = Number(date.substring(3));
+                var memCd = $("#memCode").val();
+                var typeCode = $("#typeCode").val();
+                var teamCode = $("#teamCode").val();
+                var level = $("#level").val();
+                
+                var reportFileName = "/commission/SHIIndexExcelRaw.rpt"; //reportFileName
+                var reportDownFileName = "SHIIndexExcelFile_" + today; //report name     
+                var reportViewType = "EXCEL"; //viewType
+                    
+                $("#reportForm #mCode").val(memCd);
+                $("#reportForm #month").val(month);
+                $("#reportForm #year").val(year);
+                $("#reportForm #mLvl").val(level);
+                $("#reportForm #mType").val(typeCode);
+                $("#reportForm #deptCode").val(teamCode);
+                
+                $("#reportForm #reportFileName").val(reportFileName);
+                $("#reportForm #reportDownFileName").val(reportDownFileName);
+                $("#reportForm #viewType").val(reportViewType);
+                
+            //  report 호출
+                var option = {
+                    isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+                };
+                Common.report("reportForm", option);
+            }
+		});
 	});
+	
+	function createAUIGrid() {
+	    var columnLayout3 = [{
+	        dataField : "topOrgCode",
+	        headerText : "Top Org Code",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "orgCode",
+	        headerText : "Org Code",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "grpCode",
+	        headerText : "Grp Code",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "deptCode",
+	        headerText : "Dept Code",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "memCode",
+	        headerText : "Member Code",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "unit",
+	        headerText : "Unit",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "targetatmt",
+	        headerText : "Target",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "collectamt",
+	        headerText : "Current Collection",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "collectrate",
+	        headerText : "Collection Rate",
+	        style : "my-column",
+	        editable : false
+	    }];
+	    // 그리드 속성 설정
+	    var gridPros = {
+	        
+	        // 페이징 사용       
+	        usePaging : true,
+	        
+	        // 한 화면에 출력되는 행 개수 20(기본값:20)
+	        pageRowCount : 20,
+	        
+	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        skipReadonlyColumns : true,
+	        
+	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        wrapSelectionMove : true,
+	        
+	        // 줄번호 칼럼 렌더러 출력
+	        showRowNumColumn : true,
+	        
+	        headerHeight : 40
+	    };
+	    myGridID = AUIGrid.create("#grid_wrap", columnLayout3,gridPros);
+	   }
 	
 	function fn_loadOrderSalesman(memId, memCode) {
 	    $("#memCode").val(memCode);
@@ -47,12 +180,23 @@
 		<h2>SHI Index - Collection Target</h2>
 		<ul class="right_btns">
 			<li><p class="btn_blue"><a href="#" id="search">Search</a></p></li>
-			<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span>Clear</a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
 	
 	
 	<section class="search_table"><!-- search_table start -->
+	   <form name="reportForm" id="reportForm">
+	       <input type="hidden" name="V_MEMCODE" id="mCode"/>
+	       <input type="hidden" name="V_PVMTH" id="month"/>
+	       <input type="hidden" name="V_PVYEAR" id="year"/>
+	       <input type="hidden" name="V_MEMLVL" id="mLvl"/>
+	       <input type="hidden" name="V_MEMTYPE" id="mType"/>
+	       <input type="hidden" name="V_DEPTCODE" id="deptCode"/>
+	       <input type="hidden" name="reportDownFileName" id="reportDownFileName"/>
+	       <input type="hidden" name="reportFileName" id="reportFileName"/>
+	       <input type="hidden" name="viewType" id="viewType"/>
+	   </form>
 		<form action="#" method="post" name="myForm" id="myForm">
 			
 			<table class="type1"><!-- table start -->
@@ -82,7 +226,7 @@
 						</td>
 						<th scope="row">Commission Month</th>
 						<td>
-						  <input type="text" title="기준년월" class="j_date2 w100p" id="shiDate" name="shiDate" />
+						  <input type="text" title="기준년월" class="j_date2 w100p" id="shiDate" name="shiDate" value="${searchDt }" />
 						</td>
 					</tr>
 					<tr>
@@ -153,11 +297,11 @@
 	<section class="search_result"><!-- search_result start -->
 	
 	<ul class="right_btns">
-		<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+		<li><p class="btn_grid"><a href="#" id="generate">EXCEL DW</a></p></li>
 	</ul>
 	
 	<article class="grid_wrap"><!-- grid_wrap start -->
-	그리드 영역
+	<div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 	</article><!-- grid_wrap end -->
 	
 	</section><!-- search_result end -->

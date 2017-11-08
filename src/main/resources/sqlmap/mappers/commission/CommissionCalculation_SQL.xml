@@ -1617,6 +1617,77 @@
         ORDER BY T1.EMPLY_CODE
     </select>
     
+    <select id="cntCMM0060T" parameterType="Map" resultType="integer">
+        SELECT 
+            COUNT(*)
+        FROM CMM0060M t1 JOIN (
+                SELECT 
+                    a.RUN_ID
+                FROM CMM0060M a JOIN cmm0006t b 
+                    on a.EMPLY_ID = b.EMPLY_ID 
+                        AND a.TASK_ID=b.COMM_TASK_ID 
+                        AND b.IS_EXCLUDE=0
+                WHERE a.TASK_ID=#{taskId}
+                <if test="emplyType != null and emplyType != ''">
+                    and b.EMPLY_TYPE_ID= #{emplyType}
+                </if>
+                <if test="emplyCd != null and emplyCd != ''">
+                    and b.EMPLY_CODE LIKE  '%'|| #{emplyCd} ||'%'
+                </if>
+            )t2
+            ON t1.RUN_ID = t2.RUN_ID
+        WHERE t1.TASK_ID=#{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND t2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    
+    <select id="selectCMM0060T" parameterType="Map" resultType="EgovMap">
+	    SELECT 
+			NVL(t1.RUN_ID, '0')  RUN_ID,                
+			NVL(t1.TASK_ID,'0')  TASK_ID,               
+			NVL(t2.EMPLY_CODE,'0')  EMPLY_CODE,     
+			NVL(t2.EMPLY_ID,'0')  EMPLY_ID,            
+			NVL(t1.M_RANK,'0')  M_RANK,              
+			NVL(t1.Q_RANK,'0')  Q_RANK,              
+			NVL(t1.Y_RANK,'0')  Y_RANK,               
+			NVL(t1.OUTRGT,'0')  OUTRGT,               
+			NVL(t1.INSTLMT,'0')  INSTLMT,              
+			NVL(t1.RENTAL,'0')  RENTAL,               
+			NVL(t1.OUTRIGHT_PLUS, '0')  OUTRIGHT_PLUS,
+			NVL(t1.PV,'0')  PV,                         
+			NVL(t1.TOT,'0')  TOT,                      
+			NVL(t1.PV_YEAR,'0')  PV_YEAR,              
+			NVL(t1.PV_MONTH,'0')  PV_MONTH,        
+			NVL(t1.DEPT_CODE,'-')  DEPT_CODE,         
+			NVL(t1.GRP_CODE,'-')  GRP_CODE,          
+			NVL(t1.ORG_CODE,'-')  ORG_CODE,          
+			t2.IS_EXCLUDE
+		FROM CMM0060M t1 JOIN (
+		        SELECT 
+		            a.RUN_ID,
+		            b.EMPLY_CODE,
+		            b.EMPLY_ID,
+		            case when (a.IS_EXCLUDE is null) then 0 else a.IS_EXCLUDE  end IS_EXCLUDE
+		        FROM CMM0060M a JOIN cmm0006t b 
+		            on a.EMPLY_ID = b.EMPLY_ID 
+		                AND a.TASK_ID=b.COMM_TASK_ID 
+		                AND b.IS_EXCLUDE=0
+		        WHERE a.TASK_ID=#{taskId}
+				<if test="emplyType != null and emplyType != ''">
+				    and b.EMPLY_TYPE_ID= #{emplyType}
+				</if>
+				<if test="emplyCd != null and emplyCd != ''">
+				    and b.EMPLY_CODE LIKE  '%'|| #{emplyCd} ||'%'
+				</if>
+		    )t2
+		    ON t1.RUN_ID = t2.RUN_ID
+	    WHERE t1.TASK_ID=#{taskId}
+	    <if test="useYnCombo != null and useYnCombo != ''">
+	      AND t2.IS_EXCLUDE = #{useYnCombo}
+	    </if>
+		ORDER BY t2.EMPLY_CODE
+    </select>
     <!-- ########################################################## -->
     <!-- 												Is Exclude Update													-->
     <!-- ########################################################## -->
@@ -1725,6 +1796,12 @@
     
     <update id="udtDataCMM0026T" parameterType="Map">
         UPDATE CMM0056M SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+    
+    <update id="udtDataCMM0060T" parameterType="Map">
+        UPDATE CMM0060M SET IS_EXCLUDE = #{isExclude}
         WHERE TASK_ID= #{taskId}
         AND RUN_ID=#{runId}
     </update>
@@ -2350,10 +2427,17 @@
 		)   sub
     </select>
     
-    <resultMap id="commHIIndexMap" type="egovMap" />   
-    <select id="commSPCRgenrawSHIIndexCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+    <resultMap id="commSHIIndexMap" type="egovMap" />   
+    <select id="commSHIIndexCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
         {
-        call  SP_SPC_RGENRAW_SHI_IDX(#{memCode},#{pvMonth},#{pvYear},#{level},#{typeCode},#{teamCode},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commHIIndexMap})
+        call  SP_SPC_RGENRAW_SHI_IDX(#{memCode},#{pvMonth},#{pvYear},#{level},#{typeCode},#{teamCode},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commSHIIndexMap})
+        }
+    </select>
+    
+    <resultMap id="commSHIDetailMap" type="egovMap" />   
+    <select id="commSHIIndexDetailsCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_SPC_RGENRAW_SHI_IDX_DTL(#{memberCd},#{pvMonth},#{pvYear},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commSHIDetailMap})
         }
     </select>
 </mapper>

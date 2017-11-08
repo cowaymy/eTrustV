@@ -200,6 +200,7 @@ public interface CommissionCalculationMapper {
 	List<EgovMap> selectCMM0024T(Map<String, Object> params);
 	List<EgovMap> selectCMM0025T(Map<String, Object> params);
 	List<EgovMap> selectCMM0026T(Map<String, Object> params);
+	List<EgovMap> selectCMM0060T(Map<String, Object> params);
 	
 	/**
 	 * search Basic Data Count
@@ -231,6 +232,7 @@ public interface CommissionCalculationMapper {
 	int cntCMM0024T(Map<String, Object>  param);
 	int cntCMM0025T(Map<String, Object>  param);
 	int cntCMM0026T(Map<String, Object>  param);
+	int cntCMM0060T(Map<String, Object>  param);
 	
 	/**
 	 * basic Data  Exclude Update
@@ -257,6 +259,7 @@ public interface CommissionCalculationMapper {
 	void udtDataCMM0022T(Map<String, Object>  param);
 	void udtDataCMM0023T(Map<String, Object>  param);
 	void udtDataCMM0026T(Map<String, Object>  param);
+	void udtDataCMM0060T(Map<String, Object>  param);
 	
 	/**
      * Adjustment Code List
@@ -344,5 +347,6 @@ public interface CommissionCalculationMapper {
 	
 	Map commSHIMemberSearch (Map<String, Object> params);
 	
-	List<EgovMap> commSPCRgenrawSHIIndexCall (Map<String, Object> params);
+	List<EgovMap> commSHIIndexCall (Map<String, Object> params);
+	List<EgovMap> commSHIIndexDetailsCall (Map<String, Object> params);
 }

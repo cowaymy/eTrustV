@@ -633,6 +633,17 @@ public class CommissionExcelDownloadController {
 						"AWARD(THIS MONTH)", "AWARD(LAST MONTH)", "CRITERIA(THIS MONTH)", "CRITERIA(LAST MONTH)", "RUN ID", "TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad26T(map, downloadHandler);
+			}else if (codeNm.equals(CommissionConstants.COMIS_BSD_P016)) {
+				map.put("codeId", request.getParameter("codeId"));
+				map.put("emplyCd", request.getParameter("emplyCd"));
+				map.put("useYnCombo", request.getParameter("useYnCombo"));
+
+				columns = new String[] { "emplyCode","emplyId","mRank", "qRank", "yRank", "outrgt", "instlmt", "rental", "outrightPlus", "pv",
+						"tot", "pvYear", "pvMonth", "deptCode", "grpCode", "orgCode", "runId", "taskId", "isExclude" };
+				titles = new String[] { "EMPLY CODE", "EMPLY ID",  "M RANK", "Q RANK","Y RANK","OUTRGT","INSTLMT","RENTAL","OUTRIGHT PLUS","PV"
+						,"TOT" ,"PV YEAR","PV MONTH","DEPT CODE","GRP CODE","ORG CODE","RUN ID","TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad60T(map, downloadHandler);
 			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P01)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("instPersonCd", request.getParameter("instPersonCd"));

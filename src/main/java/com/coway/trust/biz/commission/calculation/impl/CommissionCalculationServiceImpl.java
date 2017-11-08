@@ -539,6 +539,15 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		return commissionCalculationMapper.selectCMM0026T(params);
 	}
 	
+	@Override
+	public int cntCMM0060T(Map<String, Object> params) {
+		return commissionCalculationMapper.cntCMM0060T(params);
+	}
+	@Override
+	public List<EgovMap> selectCMM0060T(Map<String, Object> params) {
+		return commissionCalculationMapper.selectCMM0060T(params);
+	}
+	
 	
 	/**
 	 * Basic Data Exclude Update 
@@ -618,7 +627,11 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public void udtDataCMM0026T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0026T(params);
-	}	
+	}
+	@Override
+	public void udtDataCMM0060T(Map<String, Object> params) {
+		commissionCalculationMapper.udtDataCMM0060T(params);
+	}
 
 	
 	
@@ -860,7 +873,13 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	
 	@Override
 	public List<EgovMap> commSPCRgenrawSHIIndexCall (Map<String, Object> params){
-		return commissionCalculationMapper.commSPCRgenrawSHIIndexCall(params);
+		return commissionCalculationMapper.commSHIIndexCall(params);
+		
+	}
+	
+	@Override
+	public List<EgovMap> commSHIIndexDetailsCall (Map<String, Object> params){
+		return commissionCalculationMapper.commSHIIndexDetailsCall(params);
 		
 	}
 	

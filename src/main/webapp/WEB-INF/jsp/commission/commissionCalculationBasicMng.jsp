@@ -12,16 +12,6 @@
 </style>
 
 <script type="text/javaScript">
-
-	//Defalut MultiCombo
-	function fn_multiCombo() {
-		$('#cmbCategory').change(function() {
-		}).multipleSelect({
-			selectAll : true, // 전체선택 
-			width : '100%'
-		});
-	}
-	
 	// Make AUIGrid 
 	var myGridID_Basic;
 	var orgList = new Array(); //그룹 리스트

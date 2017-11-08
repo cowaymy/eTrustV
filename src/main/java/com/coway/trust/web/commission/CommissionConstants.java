@@ -75,21 +75,22 @@ public class CommissionConstants {
 	public static final String COMIS_HPB_P01 = "HPB-P01";					//
 	public static final String COMIS_HPB_P02 = "HPB-P02";					//
 	
-	public static final String COMIS_BSD_P01 = "BSD-P01";					//
-	public static final String COMIS_BSD_P02 = "BSD-P02";					//
-	public static final String COMIS_BSD_P03 = "BSD-P03";					//
-	public static final String COMIS_BSD_P04 = "BSD-P04";					//
-	public static final String COMIS_BSD_P05 = "BSD-P05";					//
-	public static final String COMIS_BSD_P06 = "BSD-P06";					//
-	public static final String COMIS_BSD_P07 = "BSD-P07";					//
-	public static final String COMIS_BSD_P08 = "BSD-P08";					//
-	public static final String COMIS_BSD_P09 = "BSD-P09";					//
-	public static final String COMIS_BSD_P010 = "BSD-P10";					//
-	public static final String COMIS_BSD_P011 = "BSD-P11";					//
-	public static final String COMIS_BSD_P012 = "BSD-P12";					//
-	public static final String COMIS_BSD_P013 = "BSD-P13";					//
-	public static final String COMIS_BSD_P014 = "BSD-P14";					//
-	public static final String COMIS_BSD_P015 = "BSD-P15";					//
+	public static final String COMIS_BSD_P01 = "BSD-P01";					//CMM0006T
+	public static final String COMIS_BSD_P02 = "BSD-P02";					//CMM0007T
+	public static final String COMIS_BSD_P03 = "BSD-P03";					//CMM0008T
+	public static final String COMIS_BSD_P04 = "BSD-P04";					//CMM0009T
+	public static final String COMIS_BSD_P05 = "BSD-P05";					//CMM0010T
+	public static final String COMIS_BSD_P06 = "BSD-P06";					//CMM0011T
+	public static final String COMIS_BSD_P07 = "BSD-P07";					//CMM0012T
+	public static final String COMIS_BSD_P08 = "BSD-P08";					//CMM0013T
+	public static final String COMIS_BSD_P09 = "BSD-P09";					//CMM0014T
+	public static final String COMIS_BSD_P010 = "BSD-P10";					//CMM0015T
+	public static final String COMIS_BSD_P011 = "BSD-P11";					//CMM0017T
+	public static final String COMIS_BSD_P012 = "BSD-P12";					//CMM0022T
+	public static final String COMIS_BSD_P013 = "BSD-P13";					//CMM0023T
+	public static final String COMIS_BSD_P014 = "BSD-P14";					//CMM0025T
+	public static final String COMIS_BSD_P015 = "BSD-P15";					//CMM0026T
+	public static final String COMIS_BSD_P016 = "BSD-P16";					//CMM0060T
 	public static final String COMIS_BSG_P01 = "BSG-P01";					//
 	
 	public static final String COMIS_NEO_TYPE = "NEOPRO";					//
