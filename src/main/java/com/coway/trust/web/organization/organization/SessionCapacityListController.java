@@ -24,6 +24,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.SessionCapacityListService;
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -72,7 +73,8 @@ public class SessionCapacityListController {
 	public ResponseEntity<List<EgovMap>> selectSsCapacityBrList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		
 		List<EgovMap> ssCapacityBrList = null;
-		
+		String[] branchList = request.getParameterValues("cmbbranchId");
+		params.put("branchList",branchList); // ct/br gb
         // 조회.
 		ssCapacityBrList = sessionCapacityListService.selectSsCapacityBrList(params); 
 		params.put("brGb", "br"); // ct/br gb
@@ -139,95 +141,53 @@ public class SessionCapacityListController {
 		return ResponseEntity.ok(message);
 	}	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	
-//	@RequestMapping(value = "/selectOrgChartHpList.do", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> selectOrgChartHpList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-//		
-//		List<EgovMap> orgChartHpList = null;
-//		
-//        // 조회.
-//		orgChartHpList = orgChartListService.selectOrgChartHpList(params);        
-//
-//		return ResponseEntity.ok(orgChartHpList);
-//	}
-//	
-//	
-//	
-//	
-//	@RequestMapping(value = "/selectHpChildList.do", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> selectHpChildList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-//		
-//        // 조회.
-//		List<EgovMap> orgHpChildList = orgChartListService.selectHpChildList(params);        
-//		
-//		return ResponseEntity.ok(orgHpChildList);
-//	}
-//	
-//	
-//
-//	
-//		
-//	@RequestMapping(value = "/getDeptTreeList.do", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> getDeptTreeList(@RequestParam Map<String, Object>params) {
-//        // Member Type 에 따른 Organization 조회.
-//		List<EgovMap> resultList = orgChartListService.getDeptTreeList(params);        
-//
-//		return ResponseEntity.ok(resultList);
-//	}
-//	
-//	
-//	
-//	@RequestMapping(value = "/getGroupTreeList.do", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> getGroupTreeList(@RequestParam Map<String, Object>params) {
-//       
-//		logger.debug("  "+params.toString());
-//		//Member Type 이 선행 조회된 이후(고정) Member Id 변경 시
-//		// 조회.
-//		List<EgovMap> resultList = orgChartListService.getGroupTreeList(params); 
-//		
-//		return ResponseEntity.ok(resultList);
-//	}
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	@RequestMapping(value = "/selectOrgChartCdList.do", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> selectCdChildList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-//		
-//        // 조회.
-//		List<EgovMap> orgChartCdList = orgChartListService.selectOrgChartCdList(params);        
-//		
-//		return ResponseEntity.ok(orgChartCdList);
-//	}
-//	
-	
-	
-	/////////////
-//	@RequestMapping(value = "/selectOrgChartCtList.do", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> selectCtChildList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-//		
-//        // 조회.
-//		List<EgovMap> orgChartCdList = orgChartListService.selectOrgChartCdList(params);        
-//		
-//		return ResponseEntity.ok(orgChartCdList);
-//	}	
-	
-	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/saveCapacity.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage>selectComfirmTerritory(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		boolean addSuccess = false;
+		boolean updateSuccess = false;
+		boolean delSuccess = false;
+		EgovMap rtm = new EgovMap();
+		
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
+		
+		logger.debug("addList {}", addList);
+		if(addList != null){
+			sessionCapacityListService.insertCapacity(addList,sessionVO);
+		}
+		if(addList != null){
+			sessionCapacityListService.updateCapacity(udtList,sessionVO);
+		}
+		if(delList != null){
+			sessionCapacityListService.deleteCapacity(delList,sessionVO);
+		}
+		
+		if(addSuccess){
+			message.setMessage("Save Success Holiday");
+		}else{
+			message.setMessage("Save Fail Holiday");
+		}
+		if(updateSuccess){
+			message.setMessage("Update Success Holiday");
+		}else{
+			message.setMessage("Update Fail Holiday");
+		}
+		if(delSuccess){
+			message.setMessage("Delete Success Holiday");
+		}else{
+			message.setMessage("Delete Fail Holiday");
+		}
+		return ResponseEntity.ok(message);
+	}
 	
 }
