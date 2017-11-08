@@ -214,10 +214,39 @@ var gridPros = {
     
 };
 
+
+
+function f_multiCombo() {
+         $(function(event) {
+        	 $('#dscCode').change(function(event) {
+             }).multipleSelect({
+                 selectAll : true, // 전체선택 
+                 width : '80%'
+             }).blur(function(){
+
+                 alert("This input field has lost its focus.");
+
+              });
+             
+       });
+}
+
+
+function fn_onchange(){
+   //alert(222);
+   // var brnchCode = $("#dscCode").val();
+    //alert(333);
+    //doGetCombo('/services/mileageCileage/selectCTM', {brnchCode:brnchCode}, '','memCode', 'M' ,  '');
+
+} 
+
 $(document).ready(function() {
+	//DSCCODE
+	 doGetCombo('/services/mileageCileage/selectBranch', 43, '','dscCode', 'S' ,  '');
 	CTSubgGroupGrid();
 	CTSubAreaGroupGrid();
 	$("#grid_wrap_ctaAreaSubGroup").hide();
+	
 	
 	
 	 AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -241,7 +270,11 @@ $(document).ready(function() {
 	        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
 	    }); 
 	     
-	
+	 $("#dscCode").change(function (){
+	        doGetCombo('/services/serviceGroup/selectCTM',  $("#dscCode").val(), '','memCode', 'S' ,  ''); 
+	        
+	   });
+	    
 	
 });
 
@@ -368,11 +401,11 @@ function fn_radioButton(val){
 <tbody>
 <tr>
     <th scope="row">DSC Branch</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="dscCode" name="dscCode"/></td>
+    <td><select class="w100p"  id="dscCode" name="dscCode" ></select></td>
     <th scope="row">CTM</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="memCode" name="memCode"/></td>
+    <td><select class="w100p"id="memCode" name="memCode" ></select></td>
     <th scope="row">CT Sub Group</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="ctSubGrp" name="ctSubGrp"/></td>
+    <td><select class="w100p"id="ctSubGrp" name="ctSubGrp"></select></td>
 </tr>
 <tr>
     <th scope="row">CT</th>
