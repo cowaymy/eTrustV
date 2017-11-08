@@ -39,6 +39,11 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 	}
 	
 	@Override
+	public List<EgovMap> selectCTM(Map<String, Object> params) {
+		return CTSubGroupListMapper.selectCTM(params);
+	}
+	
+	@Override
 	public void insertCTSubGroup(List<Object> params) {
 		for(int i=0; i< params.size(); i++){
 			Map<String, Object>  insertValue = (Map<String, Object>) params.get(i);

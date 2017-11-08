@@ -16,4 +16,6 @@ public interface CTSubGroupListService {
 	void insertCTSubAreaGroup(List<Object> params);
 	
 	List<EgovMap>  selectCTSubGroupDscList(Map<String, Object> params);
+	
+	List<EgovMap>  selectCTM(Map<String, Object> params);
 }
