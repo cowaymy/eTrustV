@@ -188,7 +188,7 @@ WHERE 1 = 1
 </select>  -->
   
 
-<select id="PosItemList" parameterType="Map" resultType="egovMap">
+<select id="posItemList" parameterType="Map" resultType="egovMap">
     SELECT rownum rnum,
                S15.CODE_NAME AS CODE_NAME, 
                L56.STK_CODE  AS STK_CODE , 
