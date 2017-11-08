@@ -829,7 +829,7 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 	AND l43.bom=l44.bom
 	AND l43.MATRL_NO=#{productCode}
 	<if test="searchKinds !=null and searchKinds !=''">
-    s26t.STK_TYPE_ID =#{searchKinds} 
+    AND s26t.STK_TYPE_ID =#{searchKinds} 
     </if>
 	 <if test="searchType == 1 ">
             AND S26T.STK_CODE=#{searchKeyword}
