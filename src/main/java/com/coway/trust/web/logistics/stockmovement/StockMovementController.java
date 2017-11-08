@@ -72,12 +72,13 @@ public class StockMovementController {
 		param.put("add", insList);
 		param.put("form", formMap);
 		param.put("userId", loginId);
-		stockMovementService.insertStockMovementInfo(param);
+		String reqNo =stockMovementService.insertStockMovementInfo(param);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(reqNo);
 
 		return ResponseEntity.ok(message);
 	}
