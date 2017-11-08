@@ -54,7 +54,8 @@ function createAUIGrid() {
                           { dataField : "reqstNo", headerText  : "TCR No",    width : 100 ,editable : false},
                           { dataField : "brnchName", headerText  : "Branch Type",width : 200 ,editable       : false},
                           { dataField : "reqstDt", headerText  : "Request Date",  width  : 100, dataType : "date", formatString : "dd/mm/yyyy" },
-                          { dataField : "reqstUserId",       headerText  : "Requester",  width  : 100},
+                          { dataField : "reqstUserId",       headerText  : "Requester",  width  : 0},
+                          { dataField : "fullName",       headerText  : "Requester",  width  : 200},
                           { dataField : "cnfmStusName",     headerText  : "Status",  width  :100},
                         /*   { dataField : "areaId",     headerText  : "areaId",  width  :100},
                           { dataField : "codyBrnchCode",     headerText  : "",  width  :100},
@@ -80,8 +81,10 @@ function createDetailAUIGrid() {
                             { dataField : "city",   headerText  : "City",  width          : 100,   editable       : false},
                             { dataField : "postcode", headerText  : "Postal Code ",  width   : 100, editable       : false},
                             { dataField : "state",headerText  : "State",  width          : 100,   editable       : false },
-                            { dataField : "branchCode",         headerText  : "CDB / DSC",   width          : 120,     editable       : false  },
-                            { dataField : "manager",  headerText  : "Cody Manager / CT Sub Grp",   width          : 200,     editable       : false  }
+                            { dataField : "codyBrnchCode",         headerText  : "CDB",   width          : 120,     editable       : false  },
+                            { dataField : "codyMangrUserId",  headerText  : "Cody Manager",   width          : 200,     editable       : false  },
+                            { dataField : "ctBrnchCode",         headerText  : "DSC",   width          : 120,     editable       : false  },
+                            { dataField : "ctSubGrp",  headerText  : "CT Sub Group",   width          : 200,     editable       : false  }
 
        ];
 
@@ -135,10 +138,21 @@ function fn_Clear(){
 
 
 function fn_New(){
-    Common.popupDiv("/organization/territory/territoryNew.do" ,null, null , true , '_NewAddDiv1');
+	
+    if($("#comBranchType").val() == ''){
+			        Common.alert("Please Select Branch Type");
+			        return false;
+	  }
+    Common.popupDiv("/organization/territory/territoryNew.do?memType="+$("#comBranchType").val() ,null, null , true , '_NewAddDiv1');
 }
 
 function fn_Comfirm() {
+	var selectedItems = AUIGrid.getSelectedItems(gridID);
+	  
+	  if(selectedItems.length <= 0 ){
+	        Common.alert("There Are No selected Items.");
+	        return ;
+	  }
     Common.ajax("GET", "/organization/territory/comfirmTerritory.do", { reqstNo: reqstNo, brnchType : brnchType }, function(result) {
     	Common.alert(result.message);
     });
@@ -146,7 +160,6 @@ function fn_Comfirm() {
 
 
 function fn_Cancel(){
-    alert('fn_Cancel');
 }
 
 </script>
@@ -164,7 +177,7 @@ function fn_Cancel(){
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_New()"><span class="Update Request"></span>Update Request</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Comfirm()"><span class="Comfirm"></span>Comfirm</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Cancel()"><span class="Cancel"></span>Cancel</a></p></li>
+    <!-- <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Cancel()"><span class="Cancel"></span>Cancel</a></p></li> -->
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_mainSelectListAjax()"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
 	
@@ -175,7 +188,7 @@ function fn_Cancel(){
 <form action="#" method="post" id="sForm" >
 
 <aside class="title_line"><!-- title_line start -->
-<h4>Assign Info</h4>
+<h4>Search Options</h4>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -194,7 +207,8 @@ function fn_Cancel(){
 <tr>
 	<th scope="row">Branch Type<span class="must">*</span></th>
 	<td>
-		<select class="multy_select w100p" multiple="multiple" id="comBranchType" name="comBranchType">
+		<select class="w100p"  id="comBranchType" name="comBranchType">
+		   <option value="">Choose One</option>
 		   <option value="42">Cody Branch</option>
           <option value="43">Dream Service Center</option>
 		</select>
@@ -247,7 +261,7 @@ function fn_Cancel(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="list_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+      <div id="list_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -255,7 +269,7 @@ function fn_Cancel(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="detail_list_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+      <div id="detail_list_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
