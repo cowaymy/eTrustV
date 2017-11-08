@@ -66,7 +66,8 @@ function f_multiCombo(){
 }
 
 function fn_reload(){
-	 location.reload();
+	// location.reload();
+	     location.replace("/eAccounting/expense/selectExpenseList.do");
 }
 
 // 리스트 조회.
