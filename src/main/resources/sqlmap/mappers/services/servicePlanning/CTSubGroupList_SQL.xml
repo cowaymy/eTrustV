@@ -88,5 +88,18 @@
 		  FROM SYS0064M
 		 WHERE CT_BRNCH_CODE = #{branchCode}
 </select>
-
+<select id="selectCTM" parameterType="Map" resultType="egovMap">
+        SELECT 
+        A.CODE CODE_ID, B.NAME CODE_NAME
+        FROM SYS0005M A
+        INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
+        INNER JOIN ORG0005D C ON C.MEM_ID = B.MEM_ID AND C.MEM_LVL = '2'
+        WHERE 1=1
+        <if test="dscCodeList != null and dscCodeList != '' ">
+             AND A.CODE IN
+           <foreach item="item" collection="dscCodeList" index="index" open="(" separator="," close=")">
+           #{item}
+           </foreach>
+        </if>
+</select>
 </mapper>
