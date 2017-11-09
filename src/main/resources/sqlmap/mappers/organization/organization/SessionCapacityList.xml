@@ -95,20 +95,20 @@
     </delete>
      <select id="seleCtCodeSearch" parameterType="Map" resultType="egovMap">
            select 
-            A.MEM_ID ,A.MEM_CODE , NAME
+            A.MEM_ID ,A.MEM_CODE || ' - '|| NAME MEM_CODE , NAME
             from org0001d A INNER JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID 
             where brnch =#{brnch}
             AND B.MEM_LVL IN(2,3,4) AND STUS = 1 
        </select>
        <select id="seleBranchCodeSearch" parameterType="Map" resultType="egovMap">
 	       SELECT BRNCH_ID CODE_ID,
-	                   CODE CODE_NAME
+	                   CODE ||' - '||NAME CODE_NAME 
 	        FROM SYS0005M
 	        WHERE 1=1
 	         <if test="groupCode != null and groupCode != ''">
 	           AND TYPE_ID=#{groupCode}
 	         </if>
-	        GROUP BY BRNCH_ID,CODE
+	        GROUP BY BRNCH_ID,CODE,NAME
 	        ORDER BY CODE
        </select>
                 <select id="selectHpChildList" parameterType="Map" resultType="egovMap">
