@@ -180,7 +180,8 @@ function createBSHistoryGrid(){
 
 function fn_doAllaction(){
 	
-    var ord_id ='${as_ord_basicInfo.ordNo}'   ;// '143486';
+	
+    var ord_id ='${as_ord_basicInfo.ordId}'   ;// '143486';
     var  vdte   =$("#appDate").val();
     
     
@@ -191,6 +192,9 @@ function fn_doAllaction(){
     	    CTIDObj: 'CTIDObj',
     	    CTgroupObj:'CTgroupObj'
     }
+    
+    console.log("========>");
+    console.log(options);
     Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options }, null , true , '_doAllactionDiv');
 }
 
