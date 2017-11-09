@@ -9,12 +9,12 @@
     
         // AUIGrid 생성 후 반환 ID
        var myGridID;
-    
            var option = {
            width : "1000px", // 창 가로 크기
            height : "600px" // 창 세로 크기
        };
-    
+            var  branchList =[];
+            var  ctCodeList = [];
     
             function createAUIGrid(){
 		        // AUIGrid 칼럼 설정
@@ -24,25 +24,44 @@
 			        headerText : "Branch",
 			        width : 120
 		        }];
-
-
+		        
+		     
 
 			// AUIGrid 칼럼 설정
-			var columnLayout = [{
-			        dataField : "brnchId1",
-			        headerText : "Branch",
-			        width: 0
+			var columnLayout = [
+			       
+					{
+					    dataField : "code",
+					    headerText : "Branch",
+					    width: 160,
+					    renderer : {
+					        type : "DropDownListRenderer",
+					        descendants : [ "memCode" ], // 자손 필드들
+					        descendantDefaultValues : [ "-" ], // 변경 시 자손들에게 기본값 지정
+					        list : branchList,
+					        keyField   : "codeId", //key 에 해당되는 필드명
+		                    valueField : "codeName"        //value 에 해당되는 필드명
+					    }
 					}, {
-		                    dataField : "ctId1",
-		                    headerText : "CT",
-		                    width: 0
-		            }, {
-			            	dataField : "code",
-			                headerText : "Branch",
+					    dataField : "memCode",
+					    headerText : "CT",
+					    width: 160,
+					    renderer : {
+					        type : "DropDownListRenderer",
+					        listFunction : function(rowIndex, columnIndex, item, dataField) {
+					        	return ctCodeList;
+				            },
+							keyField   : "memId", //key 에 해당되는 필드명
+		                    valueField : "memCode"        //value 에 해당되는 필드명
+					    }
+					},
+			        {
+			            	dataField : "codeId",
+			                headerText : "Branch1",
 			                width: 280
 			        }, {
-				        	dataField : "memCode",
-			                headerText : "CT",
+				        	dataField : "memId",
+			                headerText : "CT1",
 			                width: 280
 			        }, {
             	
@@ -144,10 +163,36 @@
                 // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         AUIGrid.setSelectionMode(myGridID, "singleRow");
+        fn_getCtCodeSearch1();
+        //fn_getCtCodeSearch('');
     
-    
+     // 에디팅 정상 종료, 취소 이벤트 바인딩
+        AUIGrid.bind(myGridID, ["cellEditEnd", "cellEditCancel"], auiCellEditingHandler);
     });
-    
+ // 편집 핸들러
+    function auiCellEditingHandler(event) {
+       //document.getElementById("ellapse").innerHTML = event.type  + ": ( " + event.rowIndex  + ", " + event.columnIndex + ") : " + event.value;
+        
+         var item = new Object();
+	        item.codeId="";
+	        item.memId="";
+	        
+        if(event.columnIndex  ==0){
+        	fn_getCtCodeSearch(event.value);
+            AUIGrid.setCellValue(myGridID, event.rowIndex , "codeId", event.value);
+            AUIGrid.setCellValue(myGridID, event.rowIndex , "memId", "");
+            
+        }
+        
+        if(event.columnIndex  ==1){
+        	  AUIGrid.setCellValue(myGridID, event.rowIndex , "memId", event.value);
+        	  if(event.value == '0'){
+        		  //fn_getCtCodeSearch(AUIGrid.getCellValue(myGridID, event.rowIndex ,2));
+        	  }
+        	  //fn_getCtCodeSearch(AUIGrid.getCellValue(myGridID, event.rowIndex ,0));
+         }
+        console.log(event);
+    };
 
 
     // 리스트 조회.
@@ -159,9 +204,14 @@
 		        AUIGrid.setGridData(myGridID, result);
 		    });
 		}
+		var bobj = new Object();
+		
 		function addRow() {
 	         var item = new Object();
-	         item.brnchId="";
+	         item.brnchId1="";
+	         item.ctId1="";
+	         item.code="";
+	         item.memCode="";
 	         item.morngSesionAs="";
 	         item.morngSesionIns="";
 	         item.morngSesionRtn="";
@@ -171,6 +221,17 @@
 	         item.evngSesionAs="";
 	         item.evngSesionIns="";
 	         item.evngSesionRtn="";
+	         
+	         //fn_getCtCodeSearch1();
+	         
+	         bobj = new Object();
+	         if($("#cmbbranchId option:selected").val() == ''){
+	        	 //fn_getCtCodeSearch1();
+	         }else{
+	        	 item.code =  $("#cmbbranchId option:selected").val();
+		        
+	        } 
+	         
 	         AUIGrid.addRow(myGridID, item, "first");
 	     }
     
@@ -190,13 +251,25 @@
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
         GridCommon.exportTo("grid_wrap", "xlsx", "CT Session Capacity");
     }
+    
+    function fn_getCtCodeSearch(_brnch){
+        Common.ajax("GET", "/organization/seleCtCodeSearch.do",{brnch:_brnch}, function(result) {
+        	ctCodeList = result;
+        }, null, {async : false});
+    }
+    
+    function fn_getCtCodeSearch1(){
+        Common.ajax("GET", "/organization/seleBranchCodeSearch.do",{groupCode:'43'}, function(result) {
+        	for( i in result){
+        	    console.log(result[i]);
+        		branchList.push(result[i]);
+        	}
+        }, null, {async : false});
+    }
+
+    
     </script>
-    
-    
-    
-    
-    
-    
+
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -235,7 +308,8 @@
     <th scope="row">Branch</th>
     <td>
 
-     <select id="cmbbranchId" name="cmbbranchId" class="multy_select w100p" multiple="multiple">
+     <select id="cmbbranchId" name="cmbbranchId" class="w100p" >
+        <option value="">Choose One</option>
          <c:forEach var="list" items="${dscBranchList }">
             <option value="${list.brnchId }">${list.brnchName }</option>
          </c:forEach>
@@ -310,7 +384,7 @@
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="removeRow()">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="fn_save()">INS</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_save()">SAVE</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="addRow()">ADD</a></p></li>
 </ul>
 </aside><!-- title_line end -->
