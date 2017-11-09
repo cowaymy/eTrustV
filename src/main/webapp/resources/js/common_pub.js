@@ -132,14 +132,27 @@ $(document).on(
 /* 링크버튼 숨기기/보이기 end*/
 
  /* 멀티셀렉트 플러그인 start */
- $('.multy_select').change(function() {
+ $('.multy_select').on("change", function() {
 	//console.log($(this).val());
-})
-
-.multipleSelect({
-	width: '100%'
+}).multipleSelect({
+	width: '100%',
+	// Callback 
+	onOpen: function() {
+ 		// alert("Open");
+	},
+	onClose: function() {
+ 		// alert("Close");
+	},
+	onCheckAll: function() {
+        // alert('Check all clicked!');
+    },
+    onUncheckAll: function() {
+        // alert('Uncheck all clicked!');
+    },
+	onClick: function(view) {
+ 		// alert(view.label);
+	}
 });
- /* 멀티셀렉트 플러그인 end */
 
 /*LNB start */
 $(document).on(
