@@ -229,6 +229,7 @@
            AND TYPE_ID=#{groupCode}
          </if>
         GROUP BY CODE
+        ORDER BY CODE
     </select>
     <select id="selectMemberCode"  parameterType="Map" resultType="egovMap">
          SELECT A.MEM_CODE CODE_ID, A.MEM_CODE ||' - '|| A.NAME CODE_NAME, B.CODE
