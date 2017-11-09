@@ -4,11 +4,8 @@
 
 <select id="selectAccessMonitoringList" parameterType="Map" resultType="egovMap">
     SELECT a.system_id ,
-               (SELECT a.code_name
-	               FROM SYS0013M a
-	             WHERE a.code_master_id = 336
-	                 AND a.code = a.system_id) AS system_nm ,
-               a.pgm_code ,
+               c.code_name AS system_nm ,
+               b.pgm_code ,
                b.pgm_name ,
                a.pgm_path ,
                a.user_id,
@@ -16,11 +13,14 @@
                a.ip_addr,
                TO_CHAR(a.access_dtm,'HH24:MI:SS MM-DD-YYYY') as access_dtm
        FROM SYS0078M a ,
-                SYS0050M b
+                SYS0050M b,
+                SYS0013M c
      WHERE 1=1
-         AND a.pgm_code = b.pgm_code
+         AND  A.PGM_PATH = B.PGM_PATH(+)
+         AND c.CODE_MASTER_ID = 336
+         AND c.CODE = A.SYSTEM_ID
          AND a.system_id = #{systemId}
-         AND a.access_dtm BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
+         AND a.ACCES_DAY BETWEEN TO_CHAR(TO_DATE(REPLACE(#{frDate},'/',''),'DDMMYYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(REPLACE(#{toDate},'/',''),'DDMMYYYY'), 'YYYYMMDD') /* Essential Param*/
          <if test="pgmCode != null and pgmCode !=''">
          AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
                 UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')
@@ -41,7 +41,7 @@
                    FROM SYS0013M a
                  WHERE a.code_master_id = 336
                      AND a.code = a.system_id) AS system_nm ,
-               a.pgm_code ,
+               b.pgm_code ,
                b.pgm_name ,
                TO_CHAR(a.access_dtm,'MM/DD/YYYY') as access_day ,
                TO_CHAR(a.access_dtm,'HH24') as access_time ,
@@ -49,9 +49,9 @@
        FROM SYS0078M a ,
                SYS0050M b
      WHERE 1=1
-         AND a.pgm_code = b.pgm_code
+         AND  A.PGM_PATH = B.PGM_PATH(+)
          AND a.system_id = #{systemId}
-         AND a.access_dtm BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
+         AND a.ACCES_DAY BETWEEN TO_CHAR(TO_DATE(REPLACE(#{frDate},'/',''),'DDMMYYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(REPLACE(#{toDate},'/',''),'DDMMYYYY'), 'YYYYMMDD') /* Essential Param*/
          <if test="pgmCode != null and pgmCode !=''">
          AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
                 UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')
@@ -66,7 +66,7 @@
       FROM SYS0078M a ,
                SYS0050M b
      WHERE 1=1
-         AND a.pgm_code = b.pgm_code
+         AND  A.PGM_PATH = B.PGM_PATH(+)
          AND a.system_id = #{systemId}
          AND a.pgm_code = #{pgmCode}
          AND TO_CHAR(a.access_dtm,'HH24MMDDYYYY') = #{searchDt}

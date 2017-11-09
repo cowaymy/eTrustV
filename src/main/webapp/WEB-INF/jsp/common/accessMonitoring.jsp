@@ -521,7 +521,7 @@ $(document).ready(function(){
     // click 이벤트 바인딩
     AUIGrid.bind(grdAccessDtm, ["cellClick"], function(event) {
         selectedRow = event.rowIndex;
-        var searchDt = event.item.accessDay.toString().replace(/\//g,"")+event.item.accessTime;
+        var searchDt = event.item.accessTime + event.item.accessDay.toString().replace(/\//g,"");
         fn_detailSearch(event.item.systemId, searchDt ,event.item.pgmCode);
     });
 
