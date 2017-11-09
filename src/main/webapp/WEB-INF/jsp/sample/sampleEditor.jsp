@@ -36,7 +36,7 @@
         alert(editor.getHTML());
     }
 
-    <!-- EDITOR -->
+    /*-- EDITOR --*/
     function fn_saveText() {
         Common.ajax("POST", "/sample/saveEditor.do", {memoCntnt: editor.getHTML()}, function (result) {
             console.log(result.data);
