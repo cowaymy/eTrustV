@@ -67,11 +67,11 @@
 </article><!-- tap_area end -->
 
 <!-- inc_membershipInfo  tab  start...-->
-    <jsp:include page ='/sales/membershipRental/inc_mRMerInfo.do'/>   
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRMerInfo.do'/>   
 <!--  inc_membershipInfotab  end...-->
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membershipRental/inc_mROrderInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mROrderInfo.do'/> 
 <!-- oder info tab  end...--> 
 
 </section><!-- tap_wrap end -->

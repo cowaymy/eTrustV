@@ -33,19 +33,19 @@ function fn_doBack(){
 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membershipRental/inc_mRQuotInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRQuotInfo.do'/> 
 <!-- oder info tab  end...--> 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membershipRental/inc_mROrderInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mROrderInfo.do'/> 
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membershipRental/inc_mRConPerInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRConPerInfo.do'/> 
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membershipRental/inc_mRQFilterInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRQFilterInfo.do'/> 
 <!-- oder info tab  end...-->
 
 
