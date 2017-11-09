@@ -220,4 +220,11 @@ public class PromotionController {
 
 		return ResponseEntity.ok(resultList);
 	}
+	
+    @RequestMapping(value = "/selectProductCategoryList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectProductCategoryList(@RequestParam Map<String, Object> params)
+    {
+    	List<EgovMap> resultList = promotionService.selectProductCategoryList();
+    	return ResponseEntity.ok(resultList);
+    }
 }

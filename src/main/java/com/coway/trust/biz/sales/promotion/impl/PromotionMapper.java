@@ -43,4 +43,6 @@ public interface PromotionMapper {
 
 	List<EgovMap> selectProductCodeList(Map<String, Object> params);
 
+	List<EgovMap> selectProductCategoryList();
+
 }

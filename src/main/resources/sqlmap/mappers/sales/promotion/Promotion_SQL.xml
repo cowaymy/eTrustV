@@ -449,6 +449,7 @@
                   AND 61 = T1.STK_TYPE_ID
                   AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
                   AND T1.STK_ID = T4.STK_ID
+                  AND T4.APP_TYPE_ID = #{appTypeId}
                   AND T4.AMT &gt; 0
             </if>
             <if test='stkType != null and stkType == "2"'>
@@ -479,6 +480,7 @@
                   AND 61 = T1.STK_TYPE_ID
                   AND T2.SRV_MEM_PAC_ID = #{srvPacId}
                   AND T1.STK_ID = T4.STK_ID
+                  AND T4.APP_TYPE_ID = #{appTypeId}
                   AND T4.AMT &gt; 0
             </if>
              )
@@ -497,5 +499,18 @@
        </if>
          ORDER BY itemname ASC
     </select>
-    
+
+    <select id="selectProductCategoryList" resultType="egovMap">
+		SELECT T2.CODE_ID
+		     , T2.CODE
+		     , T2.CODE_NAME
+		  FROM
+		     ( SELECT DISTINCT STK_CTGRY_ID
+		         FROM SYS0026M
+		        WHERE STK_TYPE_ID = '61'
+		          AND STK_CTGRY_ID IS NOT NULL) T1
+		     , SYS0013M T2
+		 WHERE T1.STK_CTGRY_ID = T2.CODE_ID
+		 ORDER BY T2.CODE_ID
+    </select>
 </mapper>

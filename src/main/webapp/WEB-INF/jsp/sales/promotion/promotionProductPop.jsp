@@ -10,11 +10,15 @@
 
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-
-        doGetCombo('/common/selectCodeList.do', '${gubun}' == 'stocklist' ? '11' : '63', '', 'stkCtgryId', 'S'); //Category
-        doGetCombo('/common/selectCodeList.do', '15', '', 'stkTypeId',  'S'); //Type
         
-        if('${gubun}' != 'stocklist') $('#stkTypeId').prop("disabled", true);
+        if('${gubun}' == 'stocklist') {
+            doGetComboCodeId('/sales/promotion/selectProductCategoryList.do', '', '', 'stkCtgryId', 'S'); //Category
+        }
+        else {
+            doGetCombo('/common/selectCodeList.do', '63', '', 'stkCtgryId', 'S'); //Category
+        }
+        
+        //doGetCombo('/common/selectCodeList.do', '15', '', 'stkTypeId',  'S'); //Type
     });
 
     function createAUIGrid() {
@@ -111,11 +115,9 @@
 <colgroup>
 	<col style="width:110px" />
 	<col style="width:*" />
-	<col style="width:80px" />
+	<col style="width:150px" />
 	<col style="width:*" />
-	<col style="width:110px" />
-	<col style="width:*" />
-	<col style="width:120px" />
+	<col style="width:150px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -124,10 +126,12 @@
 	<td>
 	<select id="stkCtgryId" name="cateid" class="w100p"></select>
 	</td>
+<!--
 	<th scope="row">Type<span class="must">*</span></th>
 	<td>
-	<select id="stkTypeId" name="typeid" class="w100p"></select>
+	<select id="stkTypeId" name="typeid" class="w100p" disabled></select>
 	</td>
+-->
 	<th scope="row">Stock Code</th>
 	<td><input id="stkCode" name="scode" type="text" title="" placeholder="" class="w100p" /></td>
 	<th scope="row">Stock Name</th>

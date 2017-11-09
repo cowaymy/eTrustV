@@ -38,4 +38,6 @@ public interface PromotionService {
 	List<EgovMap> selectPromotionPrdWithPriceList(Map<String, Object> params);
 
 	List<EgovMap> selectProductCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectProductCategoryList();
 }

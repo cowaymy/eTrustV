@@ -258,6 +258,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		}
 		
 		params.put("stkType", selType);
+		params.put("appTypeId", CommonUtils.changePromoAppTypeId(promoAppType));
 		
 		return promotionMapper.selectProductCodeList(params);
 	}
@@ -317,5 +318,10 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		}
 		
 		return promoAppTypId;
+	}
+	
+	@Override
+	public List<EgovMap> selectProductCategoryList() {
+		return promotionMapper.selectProductCategoryList();
 	}
 }
