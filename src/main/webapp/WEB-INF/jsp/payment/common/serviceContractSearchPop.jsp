@@ -85,71 +85,63 @@ $(document).ready(function(){
 
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>RENTAL MEMBERSHIP SEARCH</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="memberPopCloseBtn">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-<form id="_serviceContractForm"> <!-- Form Start  -->
-<input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
-<section class="search_table"><!-- search_table start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Membership No.</th>
-    <td><input type="text" title="" placeholder="Membership No." class="w100p" id="contractRefNo" name="contractRefNo" /></td>
-    <th scope="row">Invoice No.</th>
-    <td><input type="text" title="" placeholder="Invoice No." class="w100p" id="invoiceNo" name="invoiceNo"/></td>
-    <th scope="row">Sales Date</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="salesDate" name="salesDate"/></td>
-</tr>
-<tr>
-    <th scope="row">SRV Contract Status</th>
-    <td>
-    <select class="multy_select w100p" multiple="multiple" id="contractStatusType" name="contractStatusType">
-    </select>
-    </td>
-    <th scope="row">Order No.</th>
-    <td><input type="text" title="" placeholder="Order No." class="w100p" id="orderNo" name="orderNo"/></td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">Customer ID</th>
-    <td><input type="text" title="" placeholder="Customer ID (Numberic)" class="w100p" id="custId" name="custId" /></td>
-    <th scope="row">Customer Name</th>
-    <td><input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/></td>
-    <th scope="row">NRIC/Company No.</th>
-    <td><input type="text" title="" placeholder="NRIC/Company No." class="w100p" id="custNric" name="custNric"/></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</section><!-- search_table end -->
-</form>
-<ul class="right_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="btnOrderSearch">Search</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="btnOrderClear">Clear</a></p></li>
-</ul>
-
-<article id="grid_serviceContractPop_wrap" class="grid_wrap"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-
-</section><!-- pop_body end -->
-
+	<header class="pop_header"><!-- pop_header start -->
+		<h1>RENTAL MEMBERSHIP SEARCH</h1>
+		<ul class="right_opt">
+		    <li><p class="btn_blue2"><a href="#" id="memberPopCloseBtn">CLOSE</a></p></li>
+		</ul>
+	</header><!-- pop_header end -->
+	<section class="pop_body"><!-- pop_body start -->
+		<form id="_serviceContractForm"> <!-- Form Start  -->
+			<input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
+			<section class="search_table"><!-- search_table start -->
+				<table class="type1"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:150px" />
+					    <col style="width:*" />
+					    <col style="width:150px" />
+					    <col style="width:*" />
+					    <col style="width:150px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+						<tr>
+						    <th scope="row">Membership No.</th>
+						    <td><input type="text" title="" placeholder="Membership No." class="w100p" id="contractRefNo" name="contractRefNo" /></td>
+						    <th scope="row">Invoice No.</th>
+						    <td><input type="text" title="" placeholder="Invoice No." class="w100p" id="invoiceNo" name="invoiceNo"/></td>
+						    <th scope="row">Sales Date</th>
+						    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="salesDate" name="salesDate"/></td>
+						</tr>
+						<tr>
+						    <th scope="row">SRV Contract Status</th>
+						    <td>
+							    <select class="multy_select w100p" multiple="multiple" id="contractStatusType" name="contractStatusType">
+							    </select>
+						    </td>
+						    <th scope="row">Order No.</th>
+						    <td><input type="text" title="" placeholder="Order No." class="w100p" id="orderNo" name="orderNo"/></td>
+						    <th scope="row"></th>
+						    <td></td>
+						</tr>
+						<tr>
+						    <th scope="row">Customer ID</th>
+						    <td><input type="text" title="" placeholder="Customer ID (Numberic)" class="w100p" id="custId" name="custId" /></td>
+						    <th scope="row">Customer Name</th>
+						    <td><input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/></td>
+						    <th scope="row">NRIC/Company No.</th>
+						    <td><input type="text" title="" placeholder="NRIC/Company No." class="w100p" id="custNric" name="custNric"/></td>
+						</tr>
+					</tbody>
+				</table><!-- table end -->
+			</section><!-- search_table end -->
+		</form>
+		<ul class="right_btns">
+		    <li><p class="btn_blue2 big"><a href="#" id="btnOrderSearch">Search</a></p></li>
+		    <li><p class="btn_blue2 big"><a href="#" id="btnOrderClear">Clear</a></p></li>
+		</ul>
+		<article id="grid_serviceContractPop_wrap" class="grid_wrap"><!-- grid_wrap start -->
+		</article><!-- grid_wrap end -->
+	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
