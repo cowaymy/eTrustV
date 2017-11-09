@@ -14,7 +14,7 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
 		doDefCombo(reportTypeData, '' ,'reportType', 'S', '');
 		doDefCombo(modeTypeData, '' ,'modeId', 'S', '');
 		
-		doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'account' , 'S', '');
+		doGetCombo('/common/getAccountList.do', '' , ''   , 'account' , 'S', '');
 		doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
 	});
 	
