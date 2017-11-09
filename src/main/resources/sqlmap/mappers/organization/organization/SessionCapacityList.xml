@@ -35,9 +35,10 @@
                     FROM ORG0015M A 
                     INNER JOIN SYS0005M B ON A.BRNCH_ID = B.BRNCH_ID
                     INNER JOIN  ORG0001D C ON C.MEM_ID = A.CT_ID
+                    WHERE 1=1
                      ]]>    
                      <if test="cmbbranchId != null and cmbbranchId != '' ">
-			          AND A.BRNCH_ID = #{cmbbranchId}
+			          AND B.CODE = #{cmbbranchId}
 			       </if> 
 			       <if test="CTCode != null and CTCode != ''">
 				        AND C.MEM_CODE =  #{CTCode}
