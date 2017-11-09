@@ -673,12 +673,6 @@ function fn_itempopList(data){
     
 }
 
-
-
-
-
-
-
 function f_getTtype(g , v){
     var rData = new Array();
     $.ajax({
@@ -743,12 +737,9 @@ function insPosInfo(){
 		data.form = $("#headForm").serializeJSON();
 
 		Common.ajaxSync("POST", "/logistics/pos/insertPosInfo.do", data, function(result) {
-			Common.alert(""+result.message+"</br> Created : "+result.data);
+			Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
 			//Common.alert(result.message);
 			$("#giopenwindow").hide();
-			$("#posReqSeq").val(result.data);
-			
-			$("#list").click();
 
 		}, function(jqXHR, textStatus, errorThrown) {
 			try {
@@ -771,6 +762,11 @@ function saveSerialInfo(){
     $("#giopenwindow").hide();
 	
 }
+
+function locationList(){
+    $('#list').click();
+}
+
 
 </script>
 
@@ -959,7 +955,7 @@ function saveSerialInfo(){
             <input type="hidden" name="serialno" id="serialno"/>
             <input type="hidden" name="serialstus" id="serialstus"/>
             <input type="hidden" name="ttype" id="ttype" value="OH"/>
-            <input type="hidden" id="posReqSeq" name="posReqSeq">
+            <!-- <input type="hidden" id="posReqSeq" name="posReqSeq"> -->
             <table class="type1">
             <caption>search table</caption>
             <colgroup id="serialcolgroup">
