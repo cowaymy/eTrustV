@@ -162,23 +162,23 @@
 						          WHERE  1=1
 						          
 								            <if test="QUOT_NO != null and QUOT_NO != ''">
-					                             AND ( sL.QUOT_NO = #{QUOT_NO})
+					                             AND  sL.QUOT_NO = #{QUOT_NO}
 					                        </if>
 					                        
 			                                <if test="L_ORD_NO != null and L_ORD_NO != ''">
-                                                  AND ( sL.ORD_NO   = #{L_ORD_NO} )
+                                                  AND sL.ORD_NO   = #{L_ORD_NO}
                                             </if>
 			                                 
 			                                 <if test="CRT_SDT != null and CRT_SDT != ''">
-                                                 AND ( sL.CRT_DT<![CDATA[>=]]> tO_date( #{CRT_SDT} , 'dd-mm-yyyy') ))
+                                                 AND sL.CRT_DT<![CDATA[>=]]> tO_date( #{CRT_SDT} , 'dd-mm-yyyy')
                                             </if>
 						                  
 						                    <if test="CRT_EDT != null and CRT_EDT != ''">
-                                                 AND ( sL.CRT_DT<![CDATA[>=]]> tO_date( #{CRT_EDT} , 'dd-mm-yyyy') )
+                                                 AND sL.CRT_DT<![CDATA[>=]]> tO_date( #{CRT_EDT} , 'dd-mm-yyyy')
                                             </if>
                                             
 						                    <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
-                                                 AND ( sL.CRT_USER_ID = #{CRT_USER_ID})
+                                                 AND sL.CRT_USER_ID = #{CRT_USER_ID}
                                             </if>
                                             
 							                <if test="VALID_STUS_ID != null and VALID_STUS_ID != ''">
