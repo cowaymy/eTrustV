@@ -48,7 +48,7 @@ public class SessionCapacityListController {
 	
 	@RequestMapping(value = "/initSessionCapacityList.do")
 	public String initSessionCapacityList(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		
 		List<EgovMap> dscBranchList =   sessionCapacityListService.seleBranchCodeSearch(params);
 		params.put("groupCode", 43);
 		
