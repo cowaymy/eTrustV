@@ -9,4 +9,8 @@ public interface OrderApiService {
 
 	List<EgovMap> orderProductList(Map<String, Object> params);
 	
+	List<EgovMap> orderPromotionList(Map<String, Object> params);
+
+	EgovMap orderCostCalc(Map<String, Object> params);
+	
 }

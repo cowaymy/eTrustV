@@ -19,7 +19,7 @@
                   AND 1 != T1.IS_NCV
                   AND 1 = T2.SRV_PAC_ITM_STUS_ID
                   AND 61 = T1.STK_TYPE_ID
-                  AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
+                  AND T2.SRV_CNTRCT_PAC_ID = #{salesSubType}
                   AND T1.STK_ID = T4.STK_ID
                   AND T4.AMT &gt; 0
                   AND 66 = #{salesType}
@@ -56,4 +56,62 @@
          ORDER BY STK_ID ASC
     </select>
     
+    <!--Promotion 정보 조회 -->
+    <select id="orderPromotionList" parameterType="Map" resultType="egovMap">
+        SELECT T.PROMO_ID PROMOTION_CODE
+             , T.PROMO_DESC PROMOTION_NAME
+          FROM
+             ( SELECT DISTINCT T2.PROMO_ID PROMO_ID
+                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
+                 FROM SAL0018D T1
+                 JOIN SAL0017D T2
+                   ON T2.PROMO_ID = T1.PROMO_ID
+                  AND T2.PROMO_STUS_ID = 1
+                  AND T2.PROMO_APP_TYPE_ID IN (#{salesType}, DECODE(#{salesType}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999))
+                  AND T2.PROMO_SRV_MEM_PAC_ID = #{salesSubType}
+                  AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
+                  AND 0 = T2.PROMO_IS_TRIAL_CNVR
+                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND T2.EMP_CHK = 0
+                  AND T2.EX_TRADE = #{reOrderYN}
+                  AND (T2.PROMO_CUST_TYPE = #{customerType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
+                WHERE T1.PROMO_ITM_STK_ID = #{productCode}
+                  AND T1.PROMO_ITM_STUS_ID = 1
+             ) T
+         ORDER BY T.PROMO_DESC ASC
+    </select>
+    
+    <select id="selectOrderCostCalc" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.AMT
+             , T4.PRC_RPF
+             , T4.PRC_PV
+             , FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
+             , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_GST
+             , T3.PROMO_APP_TYPE_ID
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0016M T4
+            ON T4.STK_ID = T1.PROMO_ITM_STK_ID
+           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+         WHERE T1.PROMO_ID = #{promotionCode}
+           AND T1.PROMO_ITM_STUS_ID = 1
+           AND T1.PROMO_ITM_STK_ID = #{productCode}
+           AND ROWNUM = 1
+    </select>
 </mapper>

@@ -11,4 +11,8 @@ public interface OrderApiMapper {
 	
 	List<EgovMap> orderProductList(Map<String, Object> params);
 
+	List<EgovMap> orderPromotionList(Map<String, Object> params);
+
+	EgovMap selectOrderCostCalc(Map<String, Object> params);
+
 }

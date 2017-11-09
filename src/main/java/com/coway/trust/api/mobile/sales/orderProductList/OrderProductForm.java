@@ -12,8 +12,8 @@ public class OrderProductForm {
 	@ApiModelProperty(value = "salesType [default : '' 전체] 예) 66 ", example = "66, 67, 68, ")
 	private String salesType;
 	
-	@ApiModelProperty(value = "srvPacId [default : '' 전체] 예) 367 ", example = "367, 368, 369, 370, 371, 372, 373, 374")
-	private String srvPacId;
+	@ApiModelProperty(value = "salesSubType [default : '' 전체] 예) 2 ", example = "2")
+	private String salesSubType;
 	
 	@ApiModelProperty(value = "searchType [default : '' 전체] 예) CODE ", example = "CODE, NAME")
 	private String searchType;
@@ -21,13 +21,13 @@ public class OrderProductForm {
 	@ApiModelProperty(value = "searchKeyword [default : '' 전체] 예) CHP ", example = "CHP")
 	private String searchKeyword;
 
-	public static Map<String, Object> createMap(OrderProductForm OrderAddressForm){
+	public static Map<String, Object> createMap(OrderProductForm orderProductForm){
 		Map<String, Object> params = new HashMap<>();
 		
-		params.put("salesType", 	OrderAddressForm.getSalesType());
-		params.put("srvPacId", 	    OrderAddressForm.getSrvPacId());
-		params.put("searchType",    OrderAddressForm.getSearchType());
-		params.put("searchKeyword", OrderAddressForm.getSearchKeyword());
+		params.put("salesType", 	orderProductForm.getSalesType());
+		params.put("salesSubType", 	    orderProductForm.getSalesSubType());
+		params.put("searchType",    orderProductForm.getSearchType());
+		params.put("searchKeyword", orderProductForm.getSearchKeyword());
 		
 		return params;
 	}
@@ -40,12 +40,12 @@ public class OrderProductForm {
 		this.salesType = salesType;
 	}
 
-	public String getSrvPacId() {
-		return srvPacId;
+	public String getSalesSubType() {
+		return salesSubType;
 	}
 
-	public void setSrvPacId(String srvPacId) {
-		this.srvPacId = srvPacId;
+	public void setSalesSubType(String salesSubType) {
+		this.salesSubType = salesSubType;
 	}
 
 	public String getSearchType() {
@@ -63,5 +63,5 @@ public class OrderProductForm {
 	public void setSearchKeyword(String searchKeyword) {
 		this.searchKeyword = searchKeyword;
 	}
-	
+
 }
