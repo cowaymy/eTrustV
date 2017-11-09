@@ -18,6 +18,9 @@ public interface SessionCapacityListMapper {
 	
 	void deleteCapacity(Map<String, Object> params);
 	
+	List<EgovMap> seleCtCodeSearch(Map<String, Object> params);
+	
+	List<EgovMap> seleBranchCodeSearch(Map<String, Object> params);
 	
 	
 	

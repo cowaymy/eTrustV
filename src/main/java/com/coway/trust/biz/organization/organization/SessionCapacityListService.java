@@ -17,6 +17,9 @@ public interface SessionCapacityListService {
 	
 	void deleteCapacity(List<Object> params, SessionVO sessionVO);
 	
+	List<EgovMap> seleCtCodeSearch(Map<String, Object>params);
+	
+	List<EgovMap> seleBranchCodeSearch(Map<String, Object>params);
 	
 	/*List<EgovMap> selectHpChildList(Map<String, Object> params);
 	

@@ -41,7 +41,18 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 	
 		return sessionCapacityListMapper.selectSsCapacityBrList(params);
 	}
-
+	@Override
+	public List<EgovMap> seleCtCodeSearch(Map<String, Object> params) {
+	
+		return sessionCapacityListMapper.seleCtCodeSearch(params);
+	}
+	
+	@Override
+	public List<EgovMap> seleBranchCodeSearch(Map<String, Object> params) {
+	
+		return sessionCapacityListMapper.seleBranchCodeSearch(params);
+	}
+	
 	@Override
 	public void insertCapacity(List<Object> params, SessionVO sessionVO) {
 		boolean addSuccess = false;
