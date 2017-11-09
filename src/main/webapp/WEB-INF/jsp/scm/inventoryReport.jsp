@@ -191,8 +191,12 @@ function fnComplexChartDraw(chartData)
 																		    {
 																	        label:function(tooltipItem, data)
 																	              {
+																	              var retVal = tooltipItem.yLabel;
 																	                //console.log("tooltip: " + JSON.stringify(tooltipItem));
-																	                return tooltipItem.yLabel / 1000000;
+																	                if(tooltipItem.datasetIndex == 0){
+																	                	retVal = tooltipItem.yLabel / 1000000;
+																		              }
+																	                return retVal;
 																	              }
 																	      }
 																	    }
