@@ -151,22 +151,21 @@ function fnComplexChartDraw(chartData)
 									                borderWidth: 2,
 									                fill: false,
 									                data: dayInInventoryArray
-									            }
-				                    , {
+									             }
+				                     , {
 									                type: 'bar',
 									                label: columns[1],
 									                backgroundColor: '#36a2eb',
 									                data: totStockAmtArray,
 									                borderColor: 'white',
 									                borderWidth: 2
-									            }
-						                , {
+									             }
+						                 , {
 									                type: 'bar',
 									                label: columns[2],
 									                backgroundColor: '#cc65fe',
 									                data: agingAmtArray
-				                      }]
-				
+				                       }]
 				          };
 
 	var chartID = document.getElementById("ChartCanvasID").getContext("2d");
@@ -191,7 +190,7 @@ function fnComplexChartDraw(chartData)
 																		    {
 																	        label:function(tooltipItem, data)
 																	              {
-																	              var retVal = tooltipItem.yLabel;
+																	                var retVal = tooltipItem.yLabel;
 																	                //console.log("tooltip: " + JSON.stringify(tooltipItem));
 																	                if(tooltipItem.datasetIndex == 0){
 																	                	retVal = tooltipItem.yLabel / 1000000;
@@ -251,8 +250,6 @@ function fnSearchBtnList()
    if(AUIGrid.isCreated(gDetailQuantityGridID)) {
      AUIGrid.destroy(gDetailQuantityGridID);
    } 
-
-  // $( ".tap_type1>li:eq(0)>a" ).trigger( "click" );
 
    Common.ajax("GET"
              , "/scm/selectInvenRPTSearch.do"
@@ -316,9 +313,6 @@ function fnSearchBtnList()
                  
                  Common.alert("Fail : " + jqXHR.responseJSON.message);
                });
-
-  /*  $(".tap_type1[data-group='test1']>li:eq(0)>a").trigger("click");
-   $(".tap_type1[data-group='test2']>li:eq(0)>a").trigger("click"); */
 }
 
 function auiCellEditignHandler(event) 
@@ -554,7 +548,6 @@ function fnSelectDetailViewGrid(gubun, stockType)
 function fnTabClick(flag)
 {
     console.log("tabClick: " + flag + " /gAmtQtyFlag: " + gAmtQtyFlag + "  aa :" + $("#MainAmountGridDiv").width());
-    //$( ".tap_type1>li:eq(1)>a" ).trigger( "click" );
     //fnMonthlyGridCreate(MainAmountGridIDLayout,MainAmountGridFooterLayout,MainAmountGridLayoutOptions);
     //AUIGrid.setGridData(gMainQuantityGridID, gDashListData); 
     //AUIGrid.resize(gMainQuantityGridID, $("#MainAmountGridDiv").width(), $("#MainAmountGridDiv").height());
@@ -571,24 +564,18 @@ function fnTabClick(flag)
       if ($("#scmYearCbBox").val().length < 1)
       {
         Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
-      //  $(".tap_type1[data-group='test2']>li:eq(0)>a").trigger("click"); 
-      //  $(".tap_type1[data-group='test2']>li:eq(1)>a").trigger("click");   
         return false;
       }
 
       if ($("#scmMonthCbBox").val().length < 1)
       {
         Common.alert("<spring:message code='sys.msg.necessary' arguments='MONTH' htmlEscape='false'/>");
-       // $(".tap_type1[data-group='test2']>li:eq(0)>a").trigger("click"); 
-       // $(".tap_type1[data-group='test2']>li:eq(1)>a").trigger("click");   
         return false;
       }
 
    if(!AUIGrid.isCreated(gMainAmountGridID)) 
    {
 	   Common.alert("<spring:message code='expense.msg.NoData'  htmlEscape='false'/>");
-      // $(".tap_type1[data-group='test2']>li:eq(0)>a").trigger("click"); 
-      // $(".tap_type1[data-group='test2']>li:eq(1)>a").trigger("click");   
      return true;
    }
 
@@ -597,8 +584,6 @@ function fnTabClick(flag)
    
    if (flag == 'amount')
    {
-	   //$(".tap_type1[data-group='test2']>li:eq(0)>a").trigger("click"); //detail_amt 
-	   
        if(!AUIGrid.isCreated(gMainAmountGridID)) 
        {
          Common.ajax("GET"
@@ -634,7 +619,6 @@ function fnTabClick(flag)
     }
     else  //qtty
     {
-    	//$(".tap_type1[data-group='test2']>li:eq(1)>a").trigger("click"); //detail_qtty 
         // quantity
           if(!AUIGrid.isCreated(gMainQuantityGridID)) 
           {
@@ -1805,7 +1789,11 @@ function fnDetailQuantityGridCreate()
 
 $(document).ready(function()
 {
-  //$( ".tap_type1>li:eq(1)>a" ).trigger( "click" );
+	/* $(".tap_type1[data-group='test1']>li:eq(0)>a").trigger("click");
+	   $(".tap_type1[data-group='test2']>li:eq(0)>a").trigger("click"); 
+	   $( ".tap_type1>li:eq(0)>a" ).trigger( "click" );
+	   $( ".tap_type1>li:eq(1)>a" ).trigger( "click" );
+	*/
 });   //$(document).ready
 
 </script>
