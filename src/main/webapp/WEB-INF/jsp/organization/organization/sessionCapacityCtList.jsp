@@ -33,7 +33,7 @@
 					{
 					    dataField : "code",
 					    headerText : "Branch",
-					    width: 160,
+					    width: 280,
 					    renderer : {
 					        type : "DropDownListRenderer",
 					        descendants : [ "memCode" ], // 자손 필드들
@@ -45,7 +45,7 @@
 					}, {
 					    dataField : "memCode",
 					    headerText : "CT",
-					    width: 160,
+					    width: 280,
 					    renderer : {
 					        type : "DropDownListRenderer",
 					        listFunction : function(rowIndex, columnIndex, item, dataField) {
@@ -58,11 +58,11 @@
 			        {
 			            	dataField : "codeId",
 			                headerText : "Branch1",
-			                width: 280
+			                width: 0
 			        }, {
 				        	dataField : "memId",
 			                headerText : "CT1",
-			                width: 280
+			                width: 0
 			        }, {
             	
             	
