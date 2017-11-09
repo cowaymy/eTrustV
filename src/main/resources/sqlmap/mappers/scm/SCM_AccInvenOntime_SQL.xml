@@ -137,8 +137,8 @@
   </select> 
   
    <select id="selectPreviosMonth" parameterType="Map" resultType="egovMap">
-			SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{scmMonthCbBox},2,'0')||'01'),-1), 'MM/YYYY') PREVIOUS_MONTH
-			      ,TO_CHAR(LPAD(#{scmMonthCbBox},2,'0') ||'/'||#{scmYearCbBox}) CURRENT_MONTH
+	SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{scmMonthCbBox},2,'0')||'01','YYYYMMDD'),-1), 'MM/YYYY') PREVIOUS_MONTH
+			  ,TO_CHAR(LPAD(#{scmMonthCbBox},2,'0') ||'/'||#{scmYearCbBox}) CURRENT_MONTH
 		    FROM DUAL
   </select> 
   
