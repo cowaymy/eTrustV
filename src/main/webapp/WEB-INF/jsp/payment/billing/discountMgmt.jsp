@@ -151,11 +151,6 @@ var discountLayout = [
             Common.alert("Select an Order first.");
             return;
         }
-        
-        Common.ajax("GET","/payment/selectContractServiceId.do", {"salesOrdId" : salesOrdId}, function(result){
-            console.log(result);
-            $('#contractId').val(""+result.data.cntractServiceId);
-        });
     	
     	if(discountType == ""){
     		Common.alert("Required Field(Discount Type) was not fulfilled");

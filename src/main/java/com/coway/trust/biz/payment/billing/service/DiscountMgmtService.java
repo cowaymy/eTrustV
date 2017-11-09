@@ -29,13 +29,6 @@ public interface DiscountMgmtService{
     List<EgovMap> selectDiscountList(Map<String, Object> params);
     
     /**
-	 * selectContractServiceId 조회
-	 * @param params
-	 * @return
-	 */
-    String selectContractServiceId(Map<String, Object> params);
-    
-    /**
 	 * saveDiscount 저장
 	 * @param params
 	 * @return

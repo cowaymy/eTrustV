@@ -69,16 +69,12 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public String selectContractServiceId(Map<String, Object> params) {
-		return discountMgmtMapper.selectContractServiceId(params);
-	}
-
-	@Override
 	public EgovMap saveAddDiscount(Map<String, Object> params, SessionVO sessionVO) {
 		
-		int userId = sessionVO.getUserId();
+		String contractServiceId = discountMgmtMapper.selectContractServiceId(params);
 		params.put("dcStatusId", 1);
-		params.put("userId", userId);
+		params.put("userId", sessionVO.getUserId());
+		params.put("contractId", contractServiceId);
 		
 		int saveResult = discountMgmtMapper.saveAddDiscount(params);
         List<EgovMap> discountList = new ArrayList<EgovMap>();

@@ -89,28 +89,6 @@ public class DiscountMgmtController {
 	}
 	
 	/**
-	 * ContractServiceId 조회
-	 * @param 
-	 * @param params
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "/selectContractServiceId.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> selectContractServiceId(@RequestParam Map<String, Object> params, ModelMap model) {
-		ReturnMessage message = new ReturnMessage();
-        String cntractServiceId = discountMgmtService.selectContractServiceId(params);
-
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("cntractServiceId", cntractServiceId);
-        
-        // 조회 결과 리턴.
-    	message.setCode(AppConstants.SUCCESS);
-    	message.setData(resultMap);
-		
-		return ResponseEntity.ok(message);
-	}
-	
-	/**
 	 * saveDiscount 저장
 	 * @param 
 	 * @param params
