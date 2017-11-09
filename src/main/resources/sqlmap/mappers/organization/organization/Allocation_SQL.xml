@@ -23,7 +23,7 @@
                                  WHERE  1=1
                                  AND  AA.AS_MEM_ID =MEM_ID
                                  AND  AA.AS_STUS_ID =1
-                                 AND  TO_CHAR (AA.AS_APPNT_DT,'YYYYMMDD'  )  = TO_CHAR( ( to_date(INS_DATE,'yyyy-mm-dd') ) ,'yyyy-mm-dd')   ) ASCNT,
+                                 AND  TO_CHAR (AA.AS_APPNT_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( to_date(INS_DATE,'yyyy-mm-dd') ) ,'yyyy-mm-dd')   ) ASCNT,
                                 NVL(( SELECT  SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = MEM_ID ),0)SUMSESION_CNT 
                  FROM     ( 
                           select  
