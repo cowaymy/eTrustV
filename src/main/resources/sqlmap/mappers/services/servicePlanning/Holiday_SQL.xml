@@ -68,21 +68,22 @@
         group by b.mem_code, b.name,B.MEM_ID
     </select>
     <select id="selectCTAssignList"  parameterType="Map" resultType="egovMap">
-	       SELECT * FROM (
- SELECT A.HOLIDAY_TYPE,
-                     A.STATE,
-                     TO_CHAR(A.HOLIDAY,'YYYY-MM-DD') HOLIDAY,
-                     A.HOLIDAY_DESC,
-                     A.HOLIDAY_SEQ,
-                     A.CT_BRNCH_CODE,
-                     F.BRNCH_ID,
-                      CASE
-                       WHEN COUNT (D.CT_MEM_ID) = 0 THEN 'Active'
-                       WHEN COUNT (D.CT_MEM_ID) > 0 THEN 'Complete'
-                     END ASSIGN_STATUS,
-                     COUNT ( CASE WHEN D.CT_MEM_ID IS NOT NULL
-                                           THEN 1
-                                    END ) AS Replacement_CT_Pax
+	     SELECT * FROM (
+         SELECT     CASE WHEN A.HOLIDAY_TYPE = 'P' THEN 'Public Holiday'
+                         ELSE 'State Holiday' END HOLIDAY_TYPE,
+	                     A.STATE,
+	                     TO_CHAR(A.HOLIDAY,'YYYY-MM-DD') HOLIDAY,
+	                     A.HOLIDAY_DESC,
+	                     A.HOLIDAY_SEQ,
+	                     A.CT_BRNCH_CODE,
+	                     F.BRNCH_ID,
+	                      CASE
+	                       WHEN COUNT (D.CT_MEM_ID) = 0 THEN 'Active'
+	                       WHEN COUNT (D.CT_MEM_ID) > 0 THEN 'Complete'
+	                     END ASSIGN_STATUS,
+	                     COUNT ( CASE WHEN D.CT_MEM_ID IS NOT NULL
+	                                          THEN 1
+	                                    END ) AS Replacement_CT_Pax
      FROM 
     (        
       SELECT DISTINCT 
@@ -121,7 +122,7 @@
                      A.HOLIDAY_SEQ,
                      A.CT_BRNCH_CODE,
                      F.BRNCH_ID     
-        ORDER BY HOLIDAY_TYPE, STATE, HOLIDAY, HOLIDAY_DESC
+        ORDER BY CT_BRNCH_CODE,HOLIDAY_TYPE, STATE, HOLIDAY, HOLIDAY_DESC
           ) B WHERE 1=1
           <if test="stateTypeList != null and stateTypeList != '' ">
           AND B.ASSIGN_STATUS IN 
