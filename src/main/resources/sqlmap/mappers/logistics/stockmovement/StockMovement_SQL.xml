@@ -520,7 +520,7 @@
            SET REQST_STUS = 'P'
          WHERE REQST_NO = #{param}
      </update>
-     <insert id="" parameterType="Map">
+     <insert id="insertStockBooking" parameterType="Map">
         INSERT INTO LOG0075M (REQST_NO, SEQ, LOC_ID, TRNSC_TYPE_DTL, ITM_CODE, REQST_QTY, REQST_CRT_DT, CRT_DT)
                     SELECT L47.REQST_NO
                          , L48.REQST_NO_ITM
