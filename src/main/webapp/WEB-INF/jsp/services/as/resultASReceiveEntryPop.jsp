@@ -182,7 +182,7 @@ function fn_doAllaction(){
 	
 	
     var ord_id ='${as_ord_basicInfo.ordId}'   ;// '143486';
-    var  vdte   =$("#appDate").val();
+    var  vdte   =$("#requestDate").val();
     
     
     var options ={
@@ -555,8 +555,8 @@ function fn_validRequiredField_Save(){
     
     
     if(FormUtil.checkReqValue($("#requestTime"))){
-        rtnMsg  +="Please select the request time.<br/>" ;
-        rtnValue =false; 
+        //rtnMsg  +="Please select the request time.<br/>" ;
+        //rtnValue =false; 
     }
     
     
@@ -578,8 +578,8 @@ function fn_validRequiredField_Save(){
 	 }
 
     if(FormUtil.checkReqValue($("#appTime"))){
-        rtnMsg  +="Please select the appTime <br/>" ;
-        rtnValue =false; 
+       // rtnMsg  +="Please select the appTime <br/>" ;
+       // rtnValue =false; 
     }
     
     if($("#errorCode").val() == ""){
@@ -952,13 +952,20 @@ function fn_addRemark(){
 <tr>
     <th scope="row">Request Date<span class="must">*</span></th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate" onChange="fn_doAllaction()"/>
     </td>
-    <th scope="row">Request Time<span class="must">*</span></th>
+    
+    <th scope="row">Appointment Date<span class="must">*</span></th>
     <td>
-
-    <div class="time_picker w100p"><!-- time_picker start -->
-    <input type="text" title="" placeholder="" class="time_date w100p" id="requestTime" name="requestTime"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="appDate" name="appDate" />
+    </td>
+    
+    
+    <th scope="row">Appointment <br> Sessione <span class="must">*</span></th>
+    <td>
+    <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="w100p"/>
+    <div class="time_picker w100p" style="display:none"><!-- time_picker start -->
+      <input type="text" title="" placeholder="" class="time_date w100p" id="requestTime" name="requestTime"/>
     <ul>
         <li>Time Picker</li>
         <li><a href="#">12:00 AM</a></li>
@@ -989,14 +996,11 @@ function fn_addRemark(){
     </div><!-- time_picker end -->
 
     </td>
-    <th scope="row">Appointment Date<span class="must">*</span></th>
-    <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="appDate" name="appDate" onChange="fn_doAllaction()"/>
-    </td>
-    <th scope="row">Appointment Time<span class="must">*</span></th>
+   
+    <th scope="row"></th>
     <td>
 
-    <div class="time_picker w100p"><!-- time_picker start -->
+    <div class="time_picker w100p" style="display:none"><!-- time_picker start -->
     <input type="text" title="" placeholder="" class="time_date w100p" id="appTime" name="appTime"/>
     <ul>
         <li>Time Picker</li>
@@ -1061,7 +1065,6 @@ function fn_addRemark(){
     <th scope="row">Assign CT<span class="must">*</span></th>
     <td colspan="3">  
            <input type="text" title="" placeholder="" id="CTCode" name="CTCode"  onchange="fn_changeCTCode(this)"/>
-           <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode"/>
     </td>
     <th scope="row">Mobile No</th>
     <td>
