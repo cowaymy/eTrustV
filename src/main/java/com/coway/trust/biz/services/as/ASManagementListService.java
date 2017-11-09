@@ -12,7 +12,8 @@ public interface ASManagementListService {
 	List<EgovMap> selectASManagementList(Map<String, Object> params);
 	
 	List<EgovMap> getASHistoryList(Map<String, Object> params);
-	
+	 List<EgovMap> selectASDataInfo(Map<String, Object> params);
+
 	List<EgovMap> getBSHistoryList(Map<String, Object> params);
 	List<EgovMap> getBrnchId(Map<String, Object> params);
 	
@@ -32,6 +33,9 @@ public interface ASManagementListService {
 	EgovMap getASEntryDocNo(Map<String, Object> params);
 	
 	EgovMap   saveASEntry(Map<String, Object> params);
+	
+	EgovMap   spFilterClaimCheck(Map<String, Object> params);
+	
 
 	
 	EgovMap   updateASEntry(Map<String, Object> params);
