@@ -159,7 +159,6 @@
     
      // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
-    	 doGetCombo('/services/mileageCileage/selectBranch', 43, '','cmbbranchId', 'S' ,  '');
        // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         AUIGrid.setSelectionMode(myGridID, "singleRow");
@@ -318,9 +317,9 @@
 
      <select id="cmbbranchId" name="cmbbranchId" class="w100p" >
         <option value="">Choose One</option>
-         <%-- <c:forEach var="list" items="${dscBranchList }">
+         <c:forEach var="list" items="${dscBranchList }">
             <option value="${list.brnchId }">${list.brnchName }</option>
-         </c:forEach> --%>
+         </c:forEach>
      </select>
 
     </td>
