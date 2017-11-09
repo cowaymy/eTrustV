@@ -516,19 +516,19 @@ function  fn_Charges_init(){
 
 
 
-<%-- <!-- inc_membershipInfo  tab  start...-->
-    <jsp:include page ='/sales/membership/inc_membershipInfo.do'/> 
+ <!-- inc_membershipInfo  tab  start...-->
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_membershipInfo.do'/> 
 <!--  inc_membershipInfotab  end...-->
 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_orderInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_orderInfo.do'/> 
 <!-- oder info tab  end...-->
 
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/> 
-<!-- oder info tab  end...--> --%>
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_contactPersonInfo.do'/> 
+<!-- oder info tab  end...--> 
 
 <article class="tap_area"><!-- tap_area start -->
 

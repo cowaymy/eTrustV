@@ -34,22 +34,22 @@
 </ul>
 
 
-<%-- <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_quotInfo.do'/> 
+<!-- oder info tab  start...-->
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_quotInfo.do'/> 
 <!-- oder info tab  end...--> 
 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_orderInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_orderInfo.do'/> 
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_contactPersonInfo.do'/> 
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/> 
-<!-- oder info tab  end...--> --%>
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_quotFilterInfo.do'/> 
+<!-- oder info tab  end...-->
 
 
 </section><!-- tap_wrap end -->

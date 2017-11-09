@@ -76,28 +76,6 @@ function fn_selectListAjax() {
  
 function fn_goConvertSale(){
 
-   var selectedItems = AUIGrid.getSelectedItems(gridID);
-   
-   if(selectedItems ==""){
-       Common.alert("No quotation selected. ");
-       return ;
-   }
-   
-   var v_stus = selectedItems[0].item.validStus;
-   if(v_stus !="ACT" ){
-       Common.alert ("<b>[" + selectedItems[0].item.quotId + "] " + fn_getStatusActionByCode(v_stus) + ".<br />Convert this quotation to sales is disallowed.</b>");
-       return;
-       
-   }else{
-       $("#QUOT_ID").val(selectedItems[0].item.quotId);
-       $("#ORD_ID").val(selectedItems[0].item.ordId);
-       $("#PAY_ORD_ID").val(selectedItems[0].item.ordId);
-       $("#MBRSH_ID").val(selectedItems[0].item.memId);
-       
-       
-       var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId +"&MBRSH_ID="+selectedItems[0].item.memId; 
-       Common.popupDiv("/sales/membership/mConvSale.do"+pram);
-   }
  }
   
  
@@ -174,7 +152,7 @@ function fn_doPrint(){
 </ul>
 </aside><!-- title_line end -->
 
-<form action="#" method="post" id='listSForm' name='listSForm'>
+
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id='listSForm' name='listSForm'>

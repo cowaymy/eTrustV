@@ -75,83 +75,83 @@ function  fn_goAddNewTr(){
 
 //getPackageInfo 
 function fn_getPackageInfo (){ 
-	
-	var  v_QUOT_ID = $("#QUOT_ID").val();
-	
-	if  ('${QUOT_ID}'  !=""){
-		v_QUOT_ID = '${QUOT_ID}';
-	}	
-	
+    
+    var  v_QUOT_ID = $("#QUOT_ID").val();
+    
+    if  ('${QUOT_ID}'  !=""){
+        v_QUOT_ID = '${QUOT_ID}';
+    }   
+    
 Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT_ID  ,ORD_ID: $("#ORD_ID").val() }, function(result) {
      console.log( result);
      
      
-		     fn_doQuotInfoClear();
-		 
-		     if(result.length > 0){
-		    	 
-		    	   $("#convt_quotNo").html(result[0].quotNo);
-		           $("#convt_cretDt").html(result[0].crtDt);
-		           $("#convt_create").html(result[0].crtUserId); 
-		           $("#convt_sales").html("");
-		           $("#convt_validDt").html(result[0].validDt);  
-		           $("#convt_dur").html(result[0].dur+" month(s) ");     
-		           
-		           $("#convt_package").html(result[0].pacDesc);     
-		           $("#convt_totAmt").html(result[0].totAmt);
-		           $("#convt_pakAmt").html(result[0].pacAmt);  
-		           $("#convt_filterAmt").html(result[0].filterAmt);  
-		           $("#convt_packPromo").html(result[0].pacPromoCode +" "+ result[0].pacPromoDesc);
-		           $("#convt_filterPromo").html(result[0].promoCode + " " +result[0].promoDesc);  
-		           $("#convt_bsFreq").html(result[0].bsFreq +" month(s) ");  
-		           
-		           
-		           //Contact Person Tab //MembershipQuotInfo
-		              $("#inc_cntName").html(result[0].cntName);
-		              $("#inc_cntNric").html(result[0].cntNric);
-		              $("#inc_cntGender").html(result[0].cntGender);
-		              $("#inc_cntRace").html(result[0].cntRace);
-		              $("#inc_cntTelM").html(result[0].cntTelMob);
-		              $("#inc_cntTelR").html(result[0].cntTelR);
-		              $("#inc_cntTelO").html(result[0].cntTelO);
-		              $("#inc_cntTelF").html(result[0].cntTelF);
-		              $("#inc_cntEmail").html(result[0].cntEmail);
-		              
-		              
-		              if(result[0].ordId>0){
-		                  
-		            	  
-		            	  $("#ORD_ID").val(result[0].ordId);
-		                  $("#SALES_PERSON").val(result[0].memCode);
-		                  $("#SALES_PERSON_DESC").html( "<b>"+result[0].memName+"</b>");
-		                  
-		                  $("#sale_confirmbt").attr("style" ,"display:none");
-		                  $("#sale_searchbt").attr("style" ,"display:none");
-		                  $("#sale_resetbt").attr("style" ,"display:inline");
-		                  $("#SALES_PERSON").attr("class","readonly");
-		                  
-		                  
-		              }
-		     }
+             fn_doQuotInfoClear();
+         
+             if(result.length > 0){
+                 
+                   $("#convt_quotNo").html(result[0].quotNo);
+                   $("#convt_cretDt").html(result[0].crtDt);
+                   $("#convt_create").html(result[0].crtUserId); 
+                   $("#convt_sales").html("");
+                   $("#convt_validDt").html(result[0].validDt);  
+                   $("#convt_dur").html(result[0].dur+" month(s) ");     
+                   
+                   $("#convt_package").html(result[0].pacDesc);     
+                   $("#convt_totAmt").html(result[0].totAmt);
+                   $("#convt_pakAmt").html(result[0].pacAmt);  
+                   $("#convt_filterAmt").html(result[0].filterAmt);  
+                   $("#convt_packPromo").html(result[0].pacPromoCode +" "+ result[0].pacPromoDesc);
+                   $("#convt_filterPromo").html(result[0].promoCode + " " +result[0].promoDesc);  
+                   $("#convt_bsFreq").html(result[0].bsFreq +" month(s) ");  
+                   
+                   
+                   //Contact Person Tab //MembershipQuotInfo
+                      $("#inc_cntName").html(result[0].cntName);
+                      $("#inc_cntNric").html(result[0].cntNric);
+                      $("#inc_cntGender").html(result[0].cntGender);
+                      $("#inc_cntRace").html(result[0].cntRace);
+                      $("#inc_cntTelM").html(result[0].cntTelMob);
+                      $("#inc_cntTelR").html(result[0].cntTelR);
+                      $("#inc_cntTelO").html(result[0].cntTelO);
+                      $("#inc_cntTelF").html(result[0].cntTelF);
+                      $("#inc_cntEmail").html(result[0].cntEmail);
+                      
+                      
+                      if(result[0].ordId>0){
+                          
+                          
+                          $("#ORD_ID").val(result[0].ordId);
+                          $("#SALES_PERSON").val(result[0].memCode);
+                          $("#SALES_PERSON_DESC").html( "<b>"+result[0].memName+"</b>");
+                          
+                          $("#sale_confirmbt").attr("style" ,"display:none");
+                          $("#sale_searchbt").attr("style" ,"display:none");
+                          $("#sale_resetbt").attr("style" ,"display:inline");
+                          $("#SALES_PERSON").attr("class","readonly");
+                          
+                          
+                      }
+             }
      });
 }
 
 
 function fn_doQuotInfoClear(){
-	    $("#convt_quotNo").html("");
-	    $("#convt_cretDt").html("");
-	    $("#convt_create").html("");
-	    $("#convt_sales").html("");
-	    $("#convt_validDt").html("");
-	    $("#convt_package").html("");
-	    $("#convt_totAmt").html("");
-	    $("#convt_pakAmt").html("");
-	    $("#convt_filterAmt").html("");
-	    $("#convt_packPromo").html("");
-	    $("#convt_filterPromo").html("");
-	    $("#convt_bsFreq").html("");
-	    
-	     $("#inc_cntName").html("");
+        $("#convt_quotNo").html("");
+        $("#convt_cretDt").html("");
+        $("#convt_create").html("");
+        $("#convt_sales").html("");
+        $("#convt_validDt").html("");
+        $("#convt_package").html("");
+        $("#convt_totAmt").html("");
+        $("#convt_pakAmt").html("");
+        $("#convt_filterAmt").html("");
+        $("#convt_packPromo").html("");
+        $("#convt_filterPromo").html("");
+        $("#convt_bsFreq").html("");
+        
+         $("#inc_cntName").html("");
          $("#inc_cntNric").html("");
          $("#inc_cntGender").html("");
          $("#inc_cntRace").html("");
@@ -312,7 +312,7 @@ function fn_goCollecterReset(){
 
 //get Last Membership  &   Expire Date
 function fn_getConfigDataInfo (){ 
-	
+    
   Common.ajax("GET", "/sales/membership/paymentConfig", {PAY_ORD_ID:$("#ORD_ID").val()  }, function(result) {
        console.log( result);
        
@@ -343,50 +343,50 @@ function fn_getConfigDataInfo (){
 
 //get Last Membership  &   Expire Date
 function fn_getMembershipDataInfo (){ 
-	Common.ajax("GET", "/sales/membership/paymentLastMembership", {PAY_LAST_MBRSH_ID : $("#LAST_MBRSH_ID").val() },  function(result) {
-	     console.log( result);
-	     
-	     $("#last_membership_text").html( result[0].pacCode +" "+ result[0].pacName);
-	     $("#expire_date_text").html( result[0].mbrshExprDt);
-	});
+    Common.ajax("GET", "/sales/membership/paymentLastMembership", {PAY_LAST_MBRSH_ID : $("#LAST_MBRSH_ID").val() },  function(result) {
+         console.log( result);
+         
+         $("#last_membership_text").html( result[0].pacCode +" "+ result[0].pacName);
+         $("#expire_date_text").html( result[0].mbrshExprDt);
+    });
 }
 
 
 function fn_goSalesConfirm(){
     
        if($("#SALES_PERSON").val() =="") {
-		        
-		        Common.alert("Please key in the collector code before you confirm the payment collector ");
-		        return ;
-		}
-		    
-		    
-		Common.ajax("GET", "/sales/membership/paymentColleConfirm", { COLL_MEM_CODE:   $("#SALES_PERSON").val() } , function(result) {
-		         console.log( result);
-		         
-		         if(result.length > 0){
-		             
-		             $("#SALES_PERSON").val(result[0].memCode);
-		             $("#SALES_PERSON_DESC").html(result[0].name);
-		             
-		             $("#sale_confirmbt").attr("style" ,"display:none");
-		             $("#sale_searchbt").attr("style" ,"display:none");
-		             $("#sale_resetbt").attr("style" ,"display:inline");
-		             $("#SALES_PERSON").attr("class","readonly");
-		             
-		         }else {
-		             
-		             $("#SALES_PERSON_DESC").html("");
-		             Common.alert(" Unable to find [" +$("#SALES_PERSON").val() +"] in system. <br>  Please ensure you key in the correct member code.   ");
-		             return ;
-		         }
-		         
-		 });
+                
+                Common.alert("Please key in the collector code before you confirm the payment collector ");
+                return ;
+        }
+            
+            
+        Common.ajax("GET", "/sales/membership/paymentColleConfirm", { COLL_MEM_CODE:   $("#SALES_PERSON").val() } , function(result) {
+                 console.log( result);
+                 
+                 if(result.length > 0){
+                     
+                     $("#SALES_PERSON").val(result[0].memCode);
+                     $("#SALES_PERSON_DESC").html(result[0].name);
+                     
+                     $("#sale_confirmbt").attr("style" ,"display:none");
+                     $("#sale_searchbt").attr("style" ,"display:none");
+                     $("#sale_resetbt").attr("style" ,"display:inline");
+                     $("#SALES_PERSON").attr("class","readonly");
+                     
+                 }else {
+                     
+                     $("#SALES_PERSON_DESC").html("");
+                     Common.alert(" Unable to find [" +$("#SALES_PERSON").val() +"] in system. <br>  Please ensure you key in the correct member code.   ");
+                     return ;
+                 }
+                 
+         });
 } 
 
 function  fn_goSalesPerson(){
-	
-	  Common.popupDiv("/sales/membership/paymentCollecter.do?resultFun=S");
+    
+      Common.popupDiv("/sales/membership/paymentCollecter.do?resultFun=S");
 } 
 
 
@@ -402,7 +402,7 @@ function fn_goSalesPersonReset(){
 
 
 function fn_doSalesResult(item){
-	   
+       
     if (typeof (item) != "undefined"){
             
            $("#SALES_PERSON").val(item.memCode);
@@ -454,10 +454,10 @@ function fn_doSalesResult(item){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-	<li><a href="#" class="on">Package Info</a></li>
-	<li><a href="#">Order Info</a></li>
-	<li><a href="#">Contact Info</a></li>
-	<li><a href="#">Filter Charge Info</a></li>
+    <li><a href="#" class="on">Package Info</a></li>
+    <li><a href="#">Order Info</a></li>
+    <li><a href="#">Contact Info</a></li>
+    <li><a href="#">Filter Charge Info</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -465,51 +465,51 @@ function fn_doSalesResult(item){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:130px" />
-	<col style="width:*" />
-	<col style="width:130px" />
-	<col style="width:*" />
-	<col style="width:130px" />
-	<col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Quotation No</th>
-	<td><span id='convt_quotNo'>text</span></td>
-	<th scope="row">Creator Date</th>
-	<td><span  id='convt_cretDt' >text</span></td>
-	<th scope="row">Create</th>
-	<td><span  id='convt_create'  >text</span></td>
+    <th scope="row">Quotation No</th>
+    <td><span id='convt_quotNo'>text</span></td>
+    <th scope="row">Creator Date</th>
+    <td><span  id='convt_cretDt' >text</span></td>
+    <th scope="row">Create</th>
+    <td><span  id='convt_create'  >text</span></td>
 </tr>
 <tr>
-	<th scope="row">Membership Sales</th>
-	<td><span  id='convt_sales'  >text</span></td>
-	<th scope="row">Valid Date</th>
-	<td colspan="3"><span id='convt_validDt'  >text</span></td>
+    <th scope="row">Membership Sales</th>
+    <td><span  id='convt_sales'  >text</span></td>
+    <th scope="row">Valid Date</th>
+    <td colspan="3"><span id='convt_validDt'  >text</span></td>
 </tr>
 <tr>
-	<th scope="row">Duration</th>
-	<td><span id='convt_dur'  >text</span></td>
-	<th scope="row">Package</th>
-	<td colspan="3" id='convt_package'><span>text</span></td>
+    <th scope="row">Duration</th>
+    <td><span id='convt_dur'  >text</span></td>
+    <th scope="row">Package</th>
+    <td colspan="3" id='convt_package'><span>text</span></td>
 </tr>
 <tr>
-	<th scope="row">Total Amount</th>
-	<td><span  id='convt_totAmt'>text</span></td>
-	<th scope="row">Package Amount</th>
-	<td><span id='convt_pakAmt'>text</span></td>
-	<th scope="row">Filter Amount</th>
-	<td><span id='convt_filterAmt'>text</span></td>
+    <th scope="row">Total Amount</th>
+    <td><span  id='convt_totAmt'>text</span></td>
+    <th scope="row">Package Amount</th>
+    <td><span id='convt_pakAmt'>text</span></td>
+    <th scope="row">Filter Amount</th>
+    <td><span id='convt_filterAmt'>text</span></td>
 </tr>
 <tr>
-	<th scope="row">Package Promotion</th>
-	<td colspan="5" id='convt_packPromo' ><span>text</span></td>
+    <th scope="row">Package Promotion</th>
+    <td colspan="5" id='convt_packPromo' ><span>text</span></td>
 </tr>
 <tr>
-	<th scope="row">Filter Promotion</th>
-	<td colspan="3" id='convt_filterPromo' ><span>text</span></td>
-	<th scope="row">BS Frequency</th>
-	<td><span  id='convt_bsFreq' >text</span></td>
+    <th scope="row">Filter Promotion</th>
+    <td colspan="3" id='convt_filterPromo' ><span>text</span></td>
+    <th scope="row">BS Frequency</th>
+    <td><span  id='convt_bsFreq' >text</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -522,12 +522,12 @@ function fn_doSalesResult(item){
 
 
 <!-- person info tab  start...-->
-    <%-- <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/> --%> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_contactPersonInfo.do'/> 
 <!-- oder info tab  end...-->
 
 
 <!-- person info tab  start...-->
-  <%--  <%--  <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/> --%> --%> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_quotFilterInfo.do'/> 
 <!-- oder info tab  end...-->
 
 
@@ -539,13 +539,13 @@ function fn_doSalesResult(item){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Reference Number</th>
-	<td><input type="text" title="" placeholder="" class="" /></td>
+    <th scope="row">Reference Number</th>
+    <td><input type="text" title="" placeholder="" class="" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -566,21 +566,21 @@ function fn_doSalesResult(item){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:170px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Sales Person Code</th>
-	<td><input type="text" title="" placeholder="" class="" id="SALES_PERSON" name="SALES_PERSON"  />
+    <th scope="row">Sales Person Code</th>
+    <td><input type="text" title="" placeholder="" class="" id="SALES_PERSON" name="SALES_PERSON"  />
         <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
         <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
         <p class="btn_sky"  id="sale_resetbt"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
     </td>
-	<th scope="row">Sales Person Code</th>
-	<td><span id="SALES_PERSON_DESC"  name="SALES_PERSON_DESC"></span></td>
+    <th scope="row">Sales Person Code</th>
+    <td><span id="SALES_PERSON_DESC"  name="SALES_PERSON_DESC"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -636,10 +636,10 @@ function fn_doSalesResult(item){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:150px" />
-	<col style="width:*" />
-	<col style="width:150px" />
-	<col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -653,10 +653,10 @@ function fn_doSalesResult(item){
     <td><span id="COLL_MEM_NAME" NAME="COLL_MEM_NAME">-</span></td>
 </tr> 
 <tr>
-	<th scope="row">Commission</th>
-	<td colspan="3">
-	<label><input type="checkbox" /><span>Commission applied ?</span></label>
-	</td>
+    <th scope="row">Commission</th>
+    <td colspan="3">
+    <label><input type="checkbox" /><span>Commission applied ?</span></label>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -687,8 +687,8 @@ function fn_doSalesResult(item){
          fn_getMembershipQuotInfoFilterAjax();
          
     }else{
-    	//auto로 넘어온 경우 
-    	fn_getMembershipQuotInfoFilterAjax('${QUOT_ID}');
+        //auto로 넘어온 경우 
+        fn_getMembershipQuotInfoFilterAjax('${QUOT_ID}');
     }
 </script>
 
