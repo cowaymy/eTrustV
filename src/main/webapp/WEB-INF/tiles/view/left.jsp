@@ -13,33 +13,31 @@
         }
 
 
-        var availableTags = [
-            "ActionScript",
-            "AppleScript",
-            "Asp",
-            "BASIC",
-            "C",
-            "C++",
-            "Clojure",
-            "COBOL",
-            "ColdFusion",
-            "Erlang",
-            "Fortran",
-            "Groovy",
-            "Haskell",
-            "Java",
-            "JavaScript",
-            "Lisp",
-            "Perl",
-            "PHP",
-            "Python",
-            "Ruby",
-            "Scala",
-            "Scheme"
-        ];
+        // Applies only if the menu path exists.
+        var menuTags = new Array();
+        var itemValue = {};
+
+        <c:forEach var="item" items="${MENU_KEY}">
+            <c:if test="${not empty item.pgmPath}">
+            itemValue = {};
+            itemValue.value = "${item.menuCode}";
+            itemValue.label = "${item.menuName}" ;
+            menuTags.push(itemValue);
+            </c:if>
+        </c:forEach>
 
         $( "#_leftSearch" ).autocomplete({
-            source: availableTags
+            source: menuTags,
+            select: function( e, ui ) {
+                if(FormUtil.isNotEmpty(ui.item.value)){
+                    $("#a_" + ui.item.value).click();
+                }
+                return false;
+            },
+            focus: function(event, ui) {
+                $(this).val(ui.item.label);
+                return false;
+            }
         });
 
     });
@@ -115,8 +113,8 @@
                     <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
                 </h1>
                 <p class="search">
-                    <input type="text" id="_leftSearch" title="검색어 입력" />
-                    <input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
+                    <input type="text" id="_leftSearch" name="_leftSearch" title="Enter search term" onkeyPress="if (event.keyCode==13){return false;}" />
+                    <input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="Search" />
                 </p>
 
             </form>
