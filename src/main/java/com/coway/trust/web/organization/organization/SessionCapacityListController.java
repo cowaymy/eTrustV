@@ -49,9 +49,11 @@ public class SessionCapacityListController {
 	@RequestMapping(value = "/initSessionCapacityList.do")
 	public String initSessionCapacityList(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		List<EgovMap> dscBranchList =  orderCancelService.dscBranch(params);
+		List<EgovMap> dscBranchList =   sessionCapacityListService.seleBranchCodeSearch(params);
+		params.put("groupCode", 43);
+		
+		logger.debug("dscBranchList : {}", dscBranchList);
 		model.addAttribute("dscBranchList", dscBranchList);
-
 		return "organization/organization/sessionCapacityList";
 	}
 
@@ -189,5 +191,27 @@ public class SessionCapacityListController {
 		}
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/seleCtCodeSearch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> seleCtCodeSearch(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap> ssCapacityCtList = null;
+		
+        // 조회.
+		ssCapacityCtList = sessionCapacityListService.seleCtCodeSearch(params);        
+
+		return ResponseEntity.ok(ssCapacityCtList);
+	}	
+	
+	@RequestMapping(value = "/seleBranchCodeSearch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> seleBranchCodeSearch(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap> ssCapacityCtList = null;
+		
+        // 조회.
+		ssCapacityCtList = sessionCapacityListService.seleBranchCodeSearch(params);        
+
+		return ResponseEntity.ok(ssCapacityCtList);
+	}	
 	
 }
