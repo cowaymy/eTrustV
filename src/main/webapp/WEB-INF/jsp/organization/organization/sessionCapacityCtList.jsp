@@ -159,8 +159,8 @@
     
      // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
-    
-                // AUIGrid 그리드를 생성합니다.
+    	 doGetCombo('/services/mileageCileage/selectBranch', 43, '','cmbbranchId', 'S' ,  '');
+       // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         AUIGrid.setSelectionMode(myGridID, "singleRow");
         fn_getCtCodeSearch1();
@@ -236,6 +236,7 @@
 	     }
     
     function fn_save(){
+    	
     	Common.ajax("POST", "/organization/saveCapacity.do", GridCommon.getEditData(myGridID), function(result) {
             console.log("성공.");
             console.log("data : " + result);
@@ -243,6 +244,13 @@
     }
     
     function removeRow(){
+    	 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+         
+         if(selectedItems.length <= 0 ){
+               Common.alert("There Are No selected Items.");
+               return ;
+         }
+         
         AUIGrid.removeRow(myGridID, "selectedIndex");
         AUIGrid.removeSoftRows(myGridID);
     }
@@ -310,9 +318,9 @@
 
      <select id="cmbbranchId" name="cmbbranchId" class="w100p" >
         <option value="">Choose One</option>
-         <c:forEach var="list" items="${dscBranchList }">
+         <%-- <c:forEach var="list" items="${dscBranchList }">
             <option value="${list.brnchId }">${list.brnchName }</option>
-         </c:forEach>
+         </c:forEach> --%>
      </select>
 
     </td>
@@ -333,12 +341,6 @@
     <a href="#" class="search_btn"></a>
     </div><!-- search_100p end -->
 
-    </td>
-</tr>
-<tr>
-    <th scope="row">Configuration Category</th>
-    <td colspan="5">
-    <input type="text" title="" placeholder="" class="" />
     </td>
 </tr>
 </tbody>
