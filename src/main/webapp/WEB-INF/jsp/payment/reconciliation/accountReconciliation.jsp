@@ -422,6 +422,15 @@ var journalPopLayout = [
             "journalAccount" : selectedValue
         }, rowIndex);
     }
+    
+    
+    function fn_bankAccRclReportPop(){
+        Common.popupDiv('/payment/common/initCommonBankAccRclReportPop.do', {callPrgm : "ACCOUNT_RCL_REPORT"}, null , true ,'_accRclReport');
+    }
+    
+    function fn_rclStatisticReportPop(){
+        Common.popupDiv('/payment/common/initCommonRclStatisticReportPop.do', {callPrgm : "RCL_STATISTIC_REPORT"}, null , true ,'_rclStatisticReport');
+    }
    
 </script>
 <!-- content start -->
@@ -496,9 +505,9 @@ var journalPopLayout = [
 				    <dt>Link</dt>
 				    <dd>
 				    <ul class="btns">
-				        <li><p class="link_btn"><a href="/payment/initBankAccountReconciliation.do">Bank Account Reconciliation Report</a></p></li>
-				        <li><p class="link_btn"><a href="/payment/initBranchesCollectionSummary.do">Branches Collection Summary Report</a></p></li>
-				        <li><p class="link_btn"><a href="/payment/initReconciliationStatistic.do">Reconciliation Statistic Report</a></p></li>
+				        <li><p class="link_btn"><a href="javascript:fn_bankAccRclReportPop();">Bank Account Reconciliation Report</a></p></li>
+				        <li><p class="link_btn"><a href="#">Branches Collection Summary Report</a></p></li>
+				        <li><p class="link_btn"><a href="javascript:fn_rclStatisticReportPop();">Reconciliation Statistic Report</a></p></li>
 				    </ul>
 				    <ul class="btns">
 				        <li><p class="link_btn type2"><a href="javascript:fn_statementViewPop();">Statement View</a></p></li>
