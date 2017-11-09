@@ -18,7 +18,8 @@
 }
 /* 첨부파일 버튼 스타일 재정의*/
 .aui-grid-button-renderer {
-     width:150px;
+     width:100%;
+     padding: 4px;
  }
 </style>
 <script type="text/javascript">

@@ -218,9 +218,9 @@ public class PettyCashController {
 		return ResponseEntity.ok(message);
 	}
 	
-	@RequestMapping(value = "/deleteCompletedMsgPop.do")
+	@RequestMapping(value = "/removeCompletedMsgPop.do")
 	public String deleteCompletedMsgPop(ModelMap model, SessionVO session) {
-		return "eAccounting/pettyCash/deleteCustodianCompletedMsgPop";
+		return "eAccounting/pettyCash/removeCustodianCompletedMsgPop";
 	}
 	
 	@RequestMapping(value = "/pettyCashRequest.do")

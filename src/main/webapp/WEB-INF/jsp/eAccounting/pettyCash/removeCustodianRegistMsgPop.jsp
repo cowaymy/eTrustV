@@ -21,7 +21,7 @@ function fn_deleteCustodian() {
     }
 	Common.ajax("POST", "/eAccounting/pettyCash/deleteCustodian.do", data, function(result) {
         console.log(result);
-        Common.popupDiv("/eAccounting/pettyCash/deleteCompletedMsgPop.do", null, null, true, "completedMsgPop");
+        Common.popupDiv("/eAccounting/pettyCash/removeCompletedMsgPop.do", null, null, true, "completedMsgPop");
     });
 }
 

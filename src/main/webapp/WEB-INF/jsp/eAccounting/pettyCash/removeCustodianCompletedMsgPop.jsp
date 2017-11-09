@@ -9,7 +9,6 @@ $(document).ready(function () {
 
 function fn_closePop() {
     $("#completedMsgPop").remove();
-    $("#deleteCustodianPop").remove();
     
     fn_selectCustodianList();
 }
