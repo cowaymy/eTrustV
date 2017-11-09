@@ -475,10 +475,10 @@ function createDetailAllactionAUIGrid() {
 
 function fn_AllocationConfirm(){
 	
+	var selectedItemsMain = AUIGrid.getSelectedItems(mAgrid);
+	
+	
     var selectedItems = AUIGrid.getSelectedItems(dAgrid);
-    
-    console.log("===> "+selectedItems);
-    console.log(selectedItems);
     
     if(selectedItems.length <= 0 ){
           Common.alert("There Are No selected Items.");
@@ -490,13 +490,9 @@ function fn_AllocationConfirm(){
     for(i=0; i<selectedItems.length; i++) {
         rowInfoObj = selectedItems[i];
         
-        console.log("====>" );
-        console.log(rowInfoObj );
         
         var valArray  =new Array();
         valArray = rowInfoObj.value.split("-");
-        console.log(valArray);
-        
     
         if(rowInfoObj.dataField =="sumascnt" ||  rowInfoObj.dataField =="suminscnt" ||  rowInfoObj.dataField =="sumrtncnt"   ){
         	Common.alert("Summary 는 선택할 수 없습니다.");
@@ -547,6 +543,9 @@ function fn_AllocationConfirm(){
     $("#CTCode").val(selectedItems[0].item.memCode);    
     $("#CTID").val(selectedItems[0].item.ct);  
     $("#CTgroup").val(selectedItems[0].item.ctSubGrp); 
+    $("#appDate").val(selectedItemsMain[0].item.dDate); 
+    
+    
     
     $("#_doAllactionDiv").remove();
     
