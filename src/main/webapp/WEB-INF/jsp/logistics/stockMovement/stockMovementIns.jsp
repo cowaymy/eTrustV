@@ -180,7 +180,7 @@ $(function(){
             	Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
             	//Common.alert(result.message , locationList);
                 AUIGrid.resetUpdatedItems(reqGrid, "all");
-                location.href = '/logistics/stockMovement/StockMovementList.do'; 
+                //location.href = '/logistics/stockMovement/StockMovementList.do'; 
             },  function(jqXHR, textStatus, errorThrown) {
                 try {
                 } catch (e) {
