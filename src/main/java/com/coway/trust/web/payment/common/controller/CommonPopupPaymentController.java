@@ -68,6 +68,36 @@ public class CommonPopupPaymentController {
 		return "payment/common/serviceContractSearchPop";
 	}
 	
+	/******************************************************
+	 * Payment - Bank Account Reconciliation Report
+	 *****************************************************/	
+	/**
+	 * Payment - Bank Account Reconciliation Report Pop-up 초기화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initCommonBankAccRclReportPop.do")
+	public String initCommonBankAccRclReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("callPrgm", params.get("callPrgm"));
+		return "payment/common/bankAccRclReportPop";
+	}
+	
+	/******************************************************
+	 * Payment - Reconciliation Statistic Report
+	 *****************************************************/	
+	/**
+	 * Payment - Reconciliation Statistic Report Pop-up 초기화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initCommonRclStatisticReportPop.do")
+	public String initCommonRclStatisticReport(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("callPrgm", params.get("callPrgm"));
+		return "payment/common/rclStatisticReportPop";
+	}
+	
 	/**
 	 * Payment - Invoice Search Pop-up 리스트 조회
 	 * @param 
