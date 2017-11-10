@@ -13,20 +13,18 @@
     
 var  gridID;
 var  detailGridID;
+var  filterGridID;
 
-
+var typeKeyValueList = [];
 
 
 $(document).ready(function(){
-    
+
+    fn_codeSearch();
     //AUIGrid 그리드를 생성합니다.
     createAUIGrid();
     createDetailAUIGrid();
-
-    AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
-        console.log(event.rowIndex);
-        fn_selectDetailListAjax( '1');
-    });
+    createFilterAUIGrid();
    
     fn_keyEvent();
     
@@ -36,6 +34,13 @@ $(document).ready(function(){
     });
 });
 
+function fn_codeSearch(){
+    
+    Common.ajax("GET", "/common/selectCodeList.do", {groupCode:'366', orderValue:'CODE'}, function(result) {
+        typeKeyValueList = result;
+        console.log(typeKeyValueList);
+    }, null, {async : false});
+}
 
 
 
@@ -65,7 +70,7 @@ function numberCheck(event){
 function createAUIGrid() {
 	
        var keyValueList = [{"code":"1", "value":"ACT"}, {"code":"8", "value":"IACT"}];
-       var typeKeyValueList = [{"code":"0", "value":"Starter Package"}, {"code":"1", "value":"Membership Package"}];
+       //var typeKeyValueList = [{"code":"0", "value":"Starter Package"}, {"code":"1", "value":"Membership Package"}];
         
         var columnLayout = [
                             {dataField : "srvMemPacId",     headerText  : "" ,editable       : false ,visible : false } ,
@@ -97,7 +102,7 @@ function createAUIGrid() {
 					                                     return retStr == "" ? value : retStr;
 					                 }
 					               , editRenderer : {
-					                     type       : "ComboBoxRenderer",
+					                     type       : "ComboBoxDropDownListRendererRenderer",
 					                     list       : keyValueList, //key-value Object 로 구성된 리스트
 					                     keyField   : "code", // key 에 해당되는 필드명
 					                     valueField : "value" // value 에 해당되는 필드명
@@ -108,20 +113,20 @@ function createAUIGrid() {
                             { dataField : "srvMemLabChrg", headerText  : "Lab chrg ",  width  : 80 , dataType:"numeric", formatString : "#,##0.00" ,editable       : false },
                             { dataField : "pacType", headerText  : "Package Type ",  width  : 150 , editable       : true
                             	 , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
-                                     var retStr = "";
+                            		 var retStr = value;
                                      for(var i=0,len=typeKeyValueList.length; i<len; i++) {
                                          if(typeKeyValueList[i]["code"] == value) {
-                                             retStr = typeKeyValueList[i]["value"];
+                                             retStr = typeKeyValueList[i]["codeName"];
                                              break;
                                          }
                                      }
-                                                 return retStr == "" ? value : retStr;
+                                                 return retStr;
                              }
                            , editRenderer : {
-                                 type       : "ComboBoxRenderer",
+                                 type       : "DropDownListRenderer",
                                  list       : typeKeyValueList, //key-value Object 로 구성된 리스트
                                  keyField   : "code", // key 에 해당되는 필드명
-                                 valueField : "value" // value 에 해당되는 필드명
+                                 valueField : "codeName" // value 에 해당되는 필드명
                              }
                            },
                             { dataField : "srvMemCrtUserId",       headerText  : "Creator",  width  : 80 ,editable       : false },
@@ -132,6 +137,12 @@ function createAUIGrid() {
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
         
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
+        
+
+        AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+            console.log(event.rowIndex);
+            fn_selectDetailListAjax( '1');
+        });
     }
     
     
@@ -176,8 +187,46 @@ function createDetailAUIGrid() {
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true};  
         
         detailGridID = GridCommon.createAUIGrid("detail_list_grid_wrap", columnLayout  ,"" ,gridPros);
+        
+        // 셀 클릭 이벤트 바인딩
+        AUIGrid.bind(detailGridID, "cellClick", function(event){
+            
+            if(event.columnIndex != 0 && event.columnIndex != 1 ){
+
+                $("#srvPacType").val("1");
+                $("#matrlNo").val(AUIGrid.getCellValue(detailGridID, event.rowIndex, "stkCode"));
+                $("#productName").val(AUIGrid.getCellValue(detailGridID, event.rowIndex, "stkDesc"));
+                $("#srvPacId").val(AUIGrid.getCellValue(detailGridID, event.rowIndex, "srvMemPacId"));
+                $("#srvItmStkId").val( AUIGrid.getCellValue(detailGridID, event.rowIndex, "stkId"));   
+                
+                fn_filterListAjax();
+                
+            }
+
+        });
     }
     
+    
+function createFilterAUIGrid() {
+    
+    var columnLayout = [
+        { dataField : "srvFilterId", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "srvPacType", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "srvPacId", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "srvItmStkId", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "bom", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "productName", headerText  : "Product Name",  width : 150,  editable : false},
+        { dataField : "bomCompnt", headerText  : "Filter Code",   width : 150,  editable : false},
+        { dataField : "bomCompntDesc", headerText  : "Filter Name",       width : 250,  editable : false , style :"my-left-style" },
+        { dataField : "compntQty", headerText  : "BOM QTY",    width : 100,  editable : false},
+        { dataField : "leadTmOffset", headerText  : "BOM Period",    width : 150,  editable: false},
+        { dataField : "changePreiod", headerText  : "Change Period",  width : 120,  editable : true}
+   ];
+
+    var gridPros = { usePaging : false,  editable: true, selectionMode : "singleRow",  showRowNumColumn : true};  
+    
+    filterGridID = GridCommon.createAUIGrid("filter_list_grid_wrap", columnLayout  ,"" ,gridPros);
+}
     
     
 function fn_gSave(){
@@ -192,27 +241,64 @@ function fn_gSave(){
     param = GridCommon.getEditData(gridID); 
    
     
-    Common.ajax("POST", "/sales/mQPackages/mListUpdate.do", param, function(result) {
-       
-         // Common.alert(result.message);
-          Common.alert("Product Item Saved "+DEFAULT_DELIMITER + "<b>Product item successfully saved.</b>");
-          fn_selectListAjax();
-          
-      }, function(jqXHR, textStatus, errorThrown) {
-          Common.alert("실패하였습니다.");
-          console.log("실패하였습니다.");
-          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-          
 
-          console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-          
-      });
-    
+    Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
+    	Common.ajax("POST", "/sales/mQPackages/mListUpdate.do", param, function(result) {
+    		 // Common.alert(result.message);
+            Common.alert("Product Item Saved "+DEFAULT_DELIMITER + "<b>Product item successfully saved.</b>");
+            fn_selectListAjax();
+            
+        }, function(jqXHR, textStatus, errorThrown) {
+            Common.alert("실패하였습니다.");
+            console.log("실패하였습니다.");
+            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+            
+
+            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+            
+        });
+    });
+       
+        
     console.log(param);
 	   
 }
 
+function fn_filterSave(){
+    
+    var data = GridCommon.getGridData(filterGridID); 
+    var idx = AUIGrid.getRowCount(filterGridID); 
+    var formData = $("#filterSaveForm").serializeJSON();
+    data.formData = formData;
+    
+    if(idx <= 0) {
+        Common.alert("There Are No Save Items.");
+        return ;
+    }
+    console.log(data);
+    
 
+    Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
+    	Common.ajax("POST", "/sales/mPackages/saveFilterInfo.do", data, function(result) {
+    		// Common.alert(result.message);
+            Common.alert("Filter Item Saved "+DEFAULT_DELIMITER + "<b>Filter item successfully saved.</b>");
+            fn_filterListAjax();
+            
+        }, function(jqXHR, textStatus, errorThrown) {
+            console.log("실패하였습니다.");
+            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+            
+
+            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+            
+        });
+    });
+       
+         
+    
+    console.log(data);
+       
+}
 
 
 function fn_Clear(){
@@ -224,7 +310,8 @@ function fn_Clear(){
     $("#PAC_TYPE").val("");
 
     AUIGrid.clearGridData(gridID);   
-    AUIGrid.clearGridData(detailGridID);   
+    AUIGrid.clearGridData(detailGridID);     
+    AUIGrid.clearGridData(filterGridID); 
 }
 
 
@@ -278,6 +365,7 @@ Common.ajax("GET", "/sales/mQPackages/selectList", $("#sForm").serialize(), func
 	    
 
 	    AUIGrid.clearGridData(detailGridID);   
+	    AUIGrid.clearGridData(filterGridID);   
 	 });
 }
 
@@ -305,11 +393,28 @@ function fn_selectDetailListAjax(statecd) {
 	         
       console.log(result);
       AUIGrid.setGridData(detailGridID, result);
+
+      AUIGrid.clearGridData(filterGridID);   
    });
 	 
 }
 
+//리스트 조회.
+function fn_filterListAjax() {        
+	Common.ajax("POST", "/sales/mPackages/selectFilterList", $("#filterSaveForm").serializeJSON() , function(result) {
+        
+        console.log(result);
+        AUIGrid.setGridData(filterGridID, result);
 
+     }, function(jqXHR, textStatus, errorThrown) {
+         
+         console.log("실패하였습니다.");
+         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+
+         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+         
+     });
+}
 
 
 
@@ -331,18 +436,21 @@ function fn_delete(){
             SRV_MEM_ITM_STK_ID :  selectedItems[0].item.stkId
    };
 
-  Common.ajax("POST", "/sales/mQPackages/deletePackage.do", deleteForm, function(result) {
+    Common.confirm("<spring:message code='sys.common.alert.delete'/>",function(){
+    	Common.ajax("POST", "/sales/mQPackages/deletePackage.do", deleteForm, function(result) {
+    		 Common.alert("PRODUCT ITEM DEACTIVATED  "+DEFAULT_DELIMITER + "The product item has been deactivated for this package.  ");
+    	      fn_selectDetailListAjax('1');
+    	    
+    	      
+   	     }, function(jqXHR, textStatus, errorThrown) {
+   	         console.log("실패하였습니다.");
+   	         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+   	         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+   	         
+   	     }); 
+    });
       
-      Common.alert("PRODUCT ITEM DEACTIVATED  "+DEFAULT_DELIMITER + "The product item has been deactivated for this package.  ");
-      fn_selectDetailListAjax('1');
-	
-	  
-     }, function(jqXHR, textStatus, errorThrown) {
-         console.log("실패하였습니다.");
-         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-         
-     }); 
+     
 }
 
 
@@ -372,6 +480,13 @@ function fn_delete(){
 
 
 <section class="search_table"><!-- search_table start -->
+<form action="#" method="post" id='filterSaveForm' name='filterSaveForm'>
+    <input type="hidden" id="matrlNo" name = "matrlNo">
+    <input type="hidden" id="productName" name = "productName">
+    <input type="hidden" id="srvPacId" name = "srvPacId">
+    <input type="hidden" id="srvItmStkId" name = "srvItmStkId">
+    <input type="hidden" id="srvPacType" name = "srvPacType">
+</form>
 <form action="#" method="post" id='sForm' name='sForm'>
 
 <table class="type1"><!-- table start -->
@@ -422,7 +537,7 @@ function fn_delete(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="list_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+      <div id="list_grid_wrap" style="width:100%; height:250px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 
@@ -435,8 +550,15 @@ function fn_delete(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="detail_list_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+      <div id="detail_list_grid_wrap" style="width:100%; height:250px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_filterSave()">Save</a></p></li>
+</ul>
+<article class="grid_wrap"><!-- grid_wrap start -->
+      <div id="filter_list_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
 
 </section><!-- search_result end -->
 

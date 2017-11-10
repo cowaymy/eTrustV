@@ -3,29 +3,37 @@
 <script type="text/javaScript" language="javascript">
     
 var  newGridID;
+var  filterNewGridID;
+var  filterHiddenGridID;
 
 
 $(document).ready(function(){
     
     createAUIGrid();
-
-    AUIGrid.bind(newGridID, "cellDoubleClick", function(event) {
-        console.log(event.rowIndex);
+    createFilterAUIGrid();
+    
+    $("#pacType").on("change", function(){
+    	
+        var $this = $(this);
+    	 if( $this.val() == "0"){
+    		 $("#OBLIGT_PRIOD").show(); 
+    	 }else{
+    	     $("#OBLIGT_PRIOD").hide();
+    	 }
+    	
     });
+    
+    $("#filterHidden_list_grid_wrap").hide();
+    
+    if($("#pacType").val()=='0'){
+        
+    }else{
+    }
 
-    // 에디팅 시작 이벤트 바인딩
-    AUIGrid.bind(newGridID, "cellEditBegin", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
-    AUIGrid.bind(newGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
-    AUIGrid.bind(newGridID, "removeRow", auiRemoveRowHandler);
-    
     fn_selectCodel();
     
-    fn_keyEvent();
-    
+/*     OBLIGT_PRIOD
+        
     $("#SRV_CNTRCT_PAC_DUR_POP").keydown(function (event) { 
         
         var code = window.event.keyCode;
@@ -37,28 +45,27 @@ $(document).ready(function(){
         }
         window.event.returnValue = false;
         
-   });
+   }); */
     
     CommonCombo.make("pacType", "/common/selectCodeList.do", {groupCode:'366', orderValue:'CODE'}, "", {
         id: "code",
-        name: "codeName"
+        name: "codeName",
+        isShowChoose: false
     });
 });
 
 
-
-function fn_keyEvent(){
-    
-  //  $("#SRV_CNTRCT_PAC_CODE").keydown(function(key)  {
-   //         if (key.keyCode == 13) {
-    //            fn_selectListAjax();
-   //         }
-   //  });
+function fn_keyDown(){
+	 var code = window.event.keyCode;
+     
+     if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
+     {
+      window.event.returnValue = true;
+      return;
+     }
+     window.event.returnValue = false;
+     return false;
 }
-
-
-
-
 
 //리스트 조회.
 function fn_selectCodel() {        
@@ -114,12 +121,15 @@ function auiRemoveRowHandler(event) {}
 
 
 function fn_addRow() {
-	 
+	
+    AUIGrid.forceEditingComplete(filterNewGridID, null, false);
+    AUIGrid.forceEditingComplete(newGridID, null, false);
+    
 	if($('select[name="packcode"]').val() ==""){
         Common.alert("Product Item ADD "+DEFAULT_DELIMITER + "<b>Please key select a product item. <br/>");
 		return ;
 	}
-	 
+	
 	 var item = new Object();
 	 
 	 item.stockID =$('select[name="packcode"]').val() ;
@@ -132,40 +142,53 @@ function fn_addRow() {
 	 
 	 
      if( AUIGrid.isUniqueValue (newGridID,"stockID" ,$('select[name="packcode"]').val())){
+
+    	    Common.ajax("GET", "/sales/mPackages/selectStkCode", {stkId: $('select[name="packcode"]').val()}, function(result) {
+    	        
+    	        console.log(result);
+    	        $("#pMatrlNo").val(result);
+    	        $("#pSrvPacType").val('0');
+    	        $("#pProductName").val($('select[name="packcode"] :selected').text());
+    	        $("#pSrvItmStkId").val($('select[name="packcode"]').val());
+
+                fn_filterNewAjax();
+    	        
+    	     }, function(jqXHR, textStatus, errorThrown) {
+    	         
+    	         console.log("실패하였습니다.");
+    	         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+
+    	         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+    	         
+    	     });
+    	 
           AUIGrid.addRow(newGridID, item, "first");
     }else{
         Common.alert("<b>This product item is exist in list. </b>");
         return ;
     }
-    
      
 }
 
 
 function fn_removeRow() {
- AUIGrid.removeRow(newGridID, "selectedIndex");
-}
+	var selectedItems = AUIGrid.getSelectedItems(newGridID);
+	
+    var idx = AUIGrid.getRowCount(filterHiddenGridID);
+    var stkId = AUIGrid.getCellValue(newGridID,  selectedItems[0].rowIndex, "stockID" ) ;
+    
+    AUIGrid.clearGridData(filterNewGridID); 
+    
+    for (var i = 0; i < idx; i++){
+        
+        if( stkId == AUIGrid.getCellValue(filterHiddenGridID, i, "srvItmStkId" ) ){
+            AUIGrid.removeRow(filterHiddenGridID, i);
+        }
+    } 
 
-//AUIGrid 메소드
-function auiCellEditignHandler(event)
-{
-  if(event.type == "cellEditBegin")
-  {
-      console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-      //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
-      
-      if(event.dataField == "rentalFee")
-      {
-          // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
-        if(AUIGrid.isAddedById(newGridID, event.item.rowId) && $("#pacType").val()=='1'){  //추가된 Row
-              return true; 
-          } else {
-              return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
-          }
-      }
-  }
-}
-
+    AUIGrid.removeSoftRows(filterHiddenGridID);
+    AUIGrid.removeRow(newGridID, "selectedIndex");
+ }
 
 function createAUIGrid() {
     
@@ -173,6 +196,7 @@ function createAUIGrid() {
         
         var columnLayout = [
                             {dataField : "rowId", dataType : "string", visible : false},     /* PK , rowid 용 칼럼*/
+                            {dataField : "bom",     headerText  : "" ,editable       : false ,visible : false } ,
                             {dataField : "stockID",     headerText  : "ID" ,editable       : false ,visible : true, editable : false } ,
                             { dataField : "stockDesc", headerText  : "Product Name",    width : 200 ,editable : false},
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
@@ -211,14 +235,126 @@ function createAUIGrid() {
                             { dataField : "remark",     headerText  : "Remark",  width          :300,    editable       : true}
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, softRemovePolicy : "exceptNew"};  
+        var gridPros = { usePaging : false,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, softRemovePolicy : "exceptNew"};  
         
         newGridID = GridCommon.createAUIGrid("new_list_grid_wrap", columnLayout  ,"rowId" ,gridPros);
+        
+        // 셀 클릭 이벤트 바인딩
+        AUIGrid.bind(newGridID, "cellClick", function(event){
+        	
+            // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
+           AUIGrid.forceEditingComplete(filterNewGridID, null, false);
+           AUIGrid.forceEditingComplete(newGridID, null, false);
+           
+        	var id = AUIGrid.getCellValue(newGridID, event.rowIndex, "stockID");
+        	
+            var activeItems = AUIGrid.getItemsByValue(filterHiddenGridID, "srvItmStkId", id);
+
+            AUIGrid.clearGridData(filterNewGridID); 
+            AUIGrid.setGridData(filterNewGridID, activeItems);
+                
+
+        });
+        
+        //셀 더블클릭 이벤트
+        AUIGrid.bind(newGridID, "cellDoubleClick", function(event) {
+            console.log(event.rowIndex);
+        });
+
+        // 에디팅 시작 이벤트 바인딩
+        AUIGrid.bind(newGridID, "cellEditBegin", auiCellEditignHandler);
+        
+        // 행 추가 이벤트 바인딩 
+        AUIGrid.bind(newGridID, "addRow", auiAddRowHandler);
+        
+        // 행 삭제 이벤트 바인딩 
+        AUIGrid.bind(newGridID, "removeRow", auiRemoveRowHandler);
+     
 }
+
+
+//AUIGrid 메소드
+function auiCellEditignHandler(event)
+{
+	if(event.type == "cellEditBegin")
+	{
+	    console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+	    //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
+	    
+	    if(event.dataField == "rentalFee")
+	    {
+	        // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
+            if(AUIGrid.isAddedById(newGridID, event.item.rowId) && $("#pacType").val()=='1'){  //추가된 Row
+	            return true; 
+	        } else {
+	            return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
+	        }
+	    }
+	}
+}
+
+
+function createFilterAUIGrid() {
+    
+    var columnLayout = [
+        { dataField : "srvFilterId", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "srvPacType", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "srvPacId", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "srvItmStkId", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "bom", headerText  : "",  width : 50,  editable : false, visible : false},
+        { dataField : "productName", headerText  : "Product Name",  width : 150,  editable : false},
+        { dataField : "bomCompnt", headerText  : "Filter Code",   width : 150,  editable : false},
+        { dataField : "bomCompntDesc", headerText  : "Filter Name",       width : 280,  editable : false , style :"my-left-style" },
+        { dataField : "compntQty", headerText  : "BOM QTY",    width : 80,  editable : false},
+        { dataField : "leadTmOffset", headerText  : "BOM Period",    width : 110,  editable: false},
+        { dataField : "changePreiod", headerText  : "Change Period",  width : 110,  editable : true}
+   ];
+  
+    var gridPros = { usePaging : false,  editable: true, selectionMode : "singleRow",  showRowNumColumn : true};  
+    
+    filterNewGridID = GridCommon.createAUIGrid("filterNew_list_grid_wrap", columnLayout  ,"" ,gridPros);
+    filterHiddenGridID = GridCommon.createAUIGrid("filterHidden_list_grid_wrap", columnLayout  ,"" ,gridPros);
     
     
+    // 에디팅 시작 이벤트 바인딩
+    AUIGrid.bind(filterNewGridID, "cellEditBegin", filterNewCellEditignHandler);
+
+    // 에디팅 정상 종료 이벤트 바인딩
+    AUIGrid.bind(filterNewGridID, "cellEditEnd", filterNewCellEditignHandler);
+}
+
+//AUIGrid 메소드
+function filterNewCellEditignHandler(event)
+{
+  if(event.type == "cellEditBegin")
+  {
+      console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+   }
+  else if(event.type == "cellEditEnd")
+  {
+      console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+      
+      var filterCode = AUIGrid.getCellValue(filterNewGridID, event.rowIndex, "bomCompnt" );
+      var bom = AUIGrid.getCellValue(filterNewGridID, event.rowIndex, "bom" );
+      var changePreiod = AUIGrid.getCellValue(filterNewGridID, event.rowIndex, "changePreiod" );
+      
+      var idx = AUIGrid.getRowCount(filterHiddenGridID);
+      for(var i = 0; i < idx ; i++){
+    	  
+    	  if(filterCode == AUIGrid.getCellValue(filterHiddenGridID, i, "bomCompnt" ) && bom == AUIGrid.getCellValue(filterHiddenGridID, i, "bom" )){
+    		  AUIGrid.setCellValue(filterHiddenGridID, i, "changePreiod", changePreiod );
+    	  }
+      }
+  }
+
+}
+
     
 function fn_Save(){
+	 // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
+    AUIGrid.forceEditingComplete(filterNewGridID, null, false);
+    AUIGrid.forceEditingComplete(newGridID, null, false);
+    
 	
 	if(! fn_ValidRequiredField_Master() ) return ;
 	
@@ -234,17 +370,23 @@ function fn_Save(){
     //삭제된 행 아이템들(배열)
     var removedRowItems = AUIGrid.getRemovedItems(newGridID);
     
+    var filter = AUIGrid.getGridData(filterHiddenGridID); //     GridCommon.getGridData(filterHiddenGridID); 
+    
     //서버로 보낼 데이터 작성
     var saveForm = {
        "add" : addedRowItems,
        "update" : editedRowItems,
        "remove" : removedRowItems,
+       "all" : filter,
+       "formData" : $("#pSaveForm").serializeJSON() ,
        "SRV_CNTRCT_PAC_CODE" : $("#SRV_CNTRCT_PAC_CODE_POP").val()  ,
        "SRV_CNTRCT_PAC_DUR" : $("#SRV_CNTRCT_PAC_DUR_POP").val() ,
        "SRV_CNTRCT_PAC_DESC" :  $("#SRV_CNTRCT_PAC_DESC_POP").val() ,
        "SRV_CNTRCT_PAC_START_DT" :  $("#SRV_CNTRCT_PAC_START_DT_POP").val() ,
        "SRV_CNTRCT_PAC_END_DT" :  $("#SRV_CNTRCT_PAC_END_DT_POP").val(), 
-       "pacType" :  $("#pacType").val() 
+       "OBLIGT_PRIOD" :  $("#OBLIGT_PRIOD").val(), 
+       "pacType" :  $("#pacType").val(), 
+       "srvPacType" :  $("#pSrvPacType").val() 
     };
     
     Common.ajaxSync("POST", "/sales/mPackages/newRPackageAdd.do", saveForm , function(result) {
@@ -290,6 +432,11 @@ function fn_ValidRequiredField_Master(){
    if($('#SRV_CNTRCT_PAC_DESC_POP').val() ==""){
         valid = false;
         message += "* Please key in the package description.  <br />";
+  }
+   
+   if($("#pacType").val() == "0" && $('#OBLIGT_PRIOD').val() ==""){
+        valid = false;
+        message += "* Please key in the obligt priod.  <br />";
   }
   
    
@@ -351,6 +498,23 @@ function fn_IsExistSVMContractPackCode(){
     });
    
 }
+
+//리스트 조회.
+function fn_filterNewAjax() {        
+    Common.ajax("POST", "/sales/mPackages/selectFilterList", $("#pSaveForm").serializeJSON() , function(result) {
+        
+        console.log(result);
+        AUIGrid.appendData(filterHiddenGridID, result);
+
+     }, function(jqXHR, textStatus, errorThrown) {
+         
+         console.log("실패하였습니다.");
+         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+
+         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+         
+     });
+}
     
 </script>
 
@@ -371,6 +535,13 @@ function fn_IsExistSVMContractPackCode(){
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
+<form action="#" method="post" id='pSaveForm' name='pSaveForm'>
+    <input type="hidden" id="pMatrlNo" name = "matrlNo">
+    <input type="hidden" id="pProductName" name = "productName">
+    <input type="hidden" id="pSrvPacId" name = "srvPacId">
+    <input type="hidden" id="pSrvItmStkId" name = "srvItmStkId">
+    <input type="hidden" id="pSrvPacType" name = "srvPacType">
+</form>
 <form action="#" method="post">
 
 <table class="type1"><!-- table start -->
@@ -386,15 +557,16 @@ function fn_IsExistSVMContractPackCode(){
 	<th scope="row">Package Code<span class="must">*</span></th>
 	<td><input type="text" title="" id='SRV_CNTRCT_PAC_CODE_POP'  name='SRV_CNTRCT_PAC_CODE_POP'  placeholder="Package Code" class="w100p" /></td>
 	<th scope="row">Package Duration<span class="must">*</span></th>
-	<td><input type="text" title="" placeholder="Package Duration" id='SRV_CNTRCT_PAC_DUR_POP' name='SRV_CNTRCT_PAC_DUR_POP'   class="w100p" /></td>
+	<td><input type="text" title="" onkeydown="javascript:fn_keyDown(this.event);"    placeholder="Package Duration" id='SRV_CNTRCT_PAC_DUR_POP' name='SRV_CNTRCT_PAC_DUR_POP'   class="w100p" /></td>
 </tr>
 <tr>
 	<th scope="row">Package Description<span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="Package Description" id='SRV_CNTRCT_PAC_DESC_POP' name='SRV_CNTRCT_PAC_DESC_POP'  class="" /></td>
-	<th scope="row">Package Type<span class="must">*</span></th>
+	<th scope="row">Package Type </br>/ Obligation Period<span class="must">*</span></th>
     <td>
-    <select class=""  id='pacType' name ='pacType' >
+    <select style="width: 150px" id='pacType' name ='pacType' >
     </select>
+    <input type="text" title="" onkeydown="javascript:fn_keyDown(this.event);" placeholder="Obligation Period" id='OBLIGT_PRIOD' name='OBLIGT_PRIOD' style="width: 120px;     margin-left: 4px"  />
     </td>
 </tr>
 
@@ -430,7 +602,7 @@ function fn_IsExistSVMContractPackCode(){
     <th scope="row">Product Item<span class="must">*</span></th>
     <td colspan="3">
     
-    <select class=""  id='packcode' name ='packcode' >
+    <select class="" style="width: 270px" id='packcode' name ='packcode' >
     </select>
     
     <p class="btn_sky"><a href="#" onclick="javascript:fn_addRow()">Add Details</a></p></td>
@@ -443,14 +615,19 @@ function fn_IsExistSVMContractPackCode(){
 </form>
 </section><!-- search_table end -->
 
-<section class="search_result mt30"><!-- search_result start -->
+<section class="search_result mt10"><!-- search_result start -->
 
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_removeRow()">DEL</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="new_list_grid_wrap" style="width:100%; height:210px; margin:0 auto;"></div>
+      <div id="new_list_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+      <div id="filterNew_list_grid_wrap" style="width:100%; height:180px; margin:0 auto;"></div>
+      <div id="filterHidden_list_grid_wrap" style="width:100%; height:210px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

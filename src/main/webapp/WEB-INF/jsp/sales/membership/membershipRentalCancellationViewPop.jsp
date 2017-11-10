@@ -3,7 +3,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Rental Membership Cancellation View</h1>
+<h1><spring:message code="salse.title.mRCancellView" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"  id="pcl_close">CLOSE</a></p></li>
 </ul>
@@ -13,9 +13,9 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-	<li><a href="#" class="on">Cancellation Info</a></li>
-	<li><a href="#">Membership Info</a></li>
-	<li><a href="#">Order Info</a></li>
+	<li><a href="#" class="on"><spring:message code="salse.tap.cancell" /></a></li>
+	<li><a href="#"><spring:message code="sales.tap.member" /></a></li>
+	<li><a href="#"><spring:message code="sales.tap.order" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -32,33 +32,33 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Cancellation Ref No.</th>
+    <th scope="row"><spring:message code="sales.CancellationRefNo" /></th>
     <td><span id= "textTrmnatRefNo"></span></td>
-    <th scope="row">Requested Date</th>
+    <th scope="row"><spring:message code="sales.RequestedDate" /></th>
     <td><span id="textTrmnatCrtDt"></span></td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sales.Creator" /></th>
     <td><span id="textUserName"></span></td>
 </tr>
 <tr>
-    <th scope="row">Total Used Month</th>
+    <th scope="row"><spring:message code="sales.TotalUsedMonth" /></th>
     <td><span id="textTrmnatCntrctSubPriod"></span></td>
-    <th scope="row">Obligation Period</th>
+    <th scope="row"><spring:message code="sales.ObligationPeriod" /></th>
     <td><span id="textTrmnatObligtPriod"></span></td>
-    <th scope="row">Penalty Charge</th>
+    <th scope="row"><spring:message code="sales.PenaltyCharge" /></th>
     <td><span id="textTrmnatPnalty"></span></td>
 </tr>
 <tr>
-    <th scope="row">Requestor</th>
+    <th scope="row"><spring:message code="sales.Requestor" /></th>
     <td colspan="3"><span id="textCodeName"></span></td>
-    <th scope="row">Penalty Invoice</th>
+    <th scope="row"><spring:message code="sales.PenaltyInvoice" /></th>
     <td><span id="textTaxInvcRefNo"></span></td>
 </tr>
 <tr>
-    <th scope="row">Reason</th>
+    <th scope="row"><spring:message code="sales.Reason" /></th>
     <td colspan="5"><span id="textResnDesc"></span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sales.Remark" /></th>
     <td colspan="5"><span id="textTrmnatRem"></span></td>
 </tr>
 </tbody>
@@ -77,7 +77,7 @@
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_doBack();">Back</a></p></li>
+	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_doBack();"><spring:message code="sales.Back" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
