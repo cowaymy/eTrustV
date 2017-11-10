@@ -384,7 +384,7 @@ function fn_checkEmpty() {
 }
 
 function fn_selectExpenseList() {
-    Common.ajax("GET", "/eAccounting/pettyCash/selectExpenseList.do?" + Math.random(), $("#form_pettyCashExp").serializeJSON(), function(result) {
+    Common.ajax("GET", "/eAccounting/pettyCash/selectExpenseList.do?_cacheId=" + Math.random(), $("#form_pettyCashExp").serializeJSON(), function(result) {
         console.log(result);
         AUIGrid.setGridData(pettyCashExpGridID, result);
     });

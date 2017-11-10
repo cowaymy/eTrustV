@@ -188,7 +188,7 @@ function fn_expenseTypeSearchPop() {
 }
 
 function fn_selectWebInvoiceList() {
-    Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceList.do?" + Math.random(), $("#form_webInvoice").serializeJSON(), function(result) {
+    Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceList.do?_cacheId=" + Math.random(), $("#form_webInvoice").serializeJSON(), function(result) {
     	console.log(result);
         AUIGrid.setGridData(webInvoiceGridID, result);
     });
