@@ -4,7 +4,7 @@
    
     <select id="selectBranchList" parameterType="Map" resultType="egovMap">
 		 SELECT BRNCH_ID   ,
-		            CODE ||'-'||NAME BRNCH_NAME  
+		            CODE ||' - '||NAME BRNCH_NAME  
 		 FROM SYS0005M 
 		  WHERE STUS_ID = 1
 		ORDER BY BRNCH_NAME   
@@ -101,6 +101,26 @@
 			 AND ROWNUM <![CDATA[<= ]]> 1
     </select>
     
+    <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+		SELECT A.DEPT_CODE   ,
+		       B.MEM_ID    ,
+		       B.NAME   ,
+		       B.FULL_NAME   ,
+		       CASE 
+		            WHEN ( 4 = A.MEM_LVL ) THEN B.MEM_CODE || ' - ' || B.NAME
+		       ELSE A.DEPT_CODE || ' - ' || B.NAME
+		          END DEPT_CODE_NAME  
+		  FROM ORG0005D A
+		         JOIN ORG0001D B   ON A.MEM_ID = B.MEM_ID
+		 WHERE   A.DEPT_CODE IS NOT NULL 
+		          AND  ' ' <![CDATA[<> ]]>A.DEPT_CODE 
+		          AND  1 = B.STUS 
+		          AND  B.MEM_TYPE = #{memType} 
+		          AND  A.MEM_LVL = #{memLvl} 
+		          AND  A.MEM_UP_ID = #{memUpId}
+		          AND  B.STUS IN ( 1,8 )         
+		  ORDER BY A.DEPT_CODE ASC
+    </select>
     
 	    
 </mapper>

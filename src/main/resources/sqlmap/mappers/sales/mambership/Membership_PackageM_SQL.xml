@@ -12,6 +12,7 @@
                                S.SRV_CNTRCT_PAC_STUS_ID   ,
                                S.CODE   ,
                                S.PAC_TYPE ,
+                               S.OBLIGT_PRIOD ,
                                to_char(S.C1,'yyyy/mm/dd')  c1   ,
                                S.USER_NAME   ,
                                to_char(S.SRV_CNTRCT_PAC_START_DT,'yyyy/mm/dd') SRV_CNTRCT_PAC_START_DT  ,
@@ -25,6 +26,7 @@
                                         F.SRV_CNTRCT_PAC_END_DT   ,
                                         F.CODE   ,
                                         F.PAC_TYPE   ,
+                                        F.OBLIGT_PRIOD   ,
                                         U.USER_NAME   ,
                                         CASE 
                                              WHEN ( F.SRV_CNTRCT_PAC_CRT_DT IS NOT NULL ) THEN  F.SRV_CNTRCT_PAC_CRT_DT
@@ -40,6 +42,7 @@
                                    D.SRV_CNTRCT_PAC_START_DT   ,
                                    D.SRV_CNTRCT_PAC_END_DT   ,
                                    D.PAC_TYPE,
+                                   D.OBLIGT_PRIOD,
                                    Extent2.CODE   
                             FROM SAL0081D D
                                    JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = D.SRV_CNTRCT_PAC_STUS_ID
@@ -201,7 +204,8 @@
                SRV_CNTRCT_PAC_STUS_ID   =  decode(#{code},'ACT',1,'8') ,
                SRV_CNTRCT_PAC_START_DT = decode (INSTR(#{srvCntrctPacStartDt} , '/') ,5 , to_date(#{srvCntrctPacStartDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacStartDt},'dd/mm/yyyy')) , 
                SRV_CNTRCT_PAC_END_DT     = decode (INSTR(#{srvCntrctPacEndDt} , '/') ,5 , to_date(#{srvCntrctPacEndDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacEndDt},'dd/mm/yyyy')  ),
-               PAC_TYPE                        = #{pacType} 
+               PAC_TYPE                           = #{pacType} ,
+               OBLIGT_PRIOD                      = #{obligtPriod} 
         WHERE  SRV_CNTRCT_PAC_ID        = #{srvCntrctPacId}
    </insert>
    
@@ -220,7 +224,8 @@
 											   SRV_CNTRCT_PAC_CRT_USER_ID, 
 											   SRV_CNTRCT_PAC_START_DT, 
 											   SRV_CNTRCT_PAC_END_DT,
-											   PAC_TYPE                 
+											   PAC_TYPE,
+											   OBLIGT_PRIOD                 
 											) 
 			VALUES ( 
 				             #{SRV_CNTRCT_PAC_ID} , 
@@ -232,7 +237,8 @@
 							 #{updator},  
 							 to_date(#{SRV_CNTRCT_PAC_START_DT},'dd/mm/yyyy')  , 
 							 to_date(#{SRV_CNTRCT_PAC_END_DT},'dd/mm/yyyy')  ,
-							 #{pacType} 
+							 #{pacType}, 
+							 #{OBLIGT_PRIOD}
 						 )
         
    </insert>
@@ -341,9 +347,90 @@
                  WHERE   upper(Extent1.SRV_CNTRCT_PAC_CODE)  =  upper(#{SRV_CNTRCT_PAC_CODE}) AND ROWNUM <![CDATA[<  ]]> = 1
       </select>
       
-    
-     
-   
-   
-      
+	<select id="selectFilterList" parameterType="Map" resultType="egovMap">
+		SELECT #{productName} PRODUCT_NAME
+		          ,C.SRV_FILTER_ID
+		          ,C.SRV_PAC_TYPE
+		          ,C.SRV_PAC_ID
+		          ,CASE WHEN C.SRV_ITM_STK_ID IS NULL THEN #{srvItmStkId} ELSE C.SRV_ITM_STK_ID END SRV_ITM_STK_ID
+		          ,CASE WHEN C.BOM IS NULL THEN A.BOM ELSE C.BOM END BOM
+		          ,CASE WHEN C.BOM_COMPNT IS NULL THEN A.BOM_COMPNT ELSE C.BOM_COMPNT END BOM_COMPNT 
+		          ,CASE WHEN C.BOM_COMPNT_DESC IS NULL THEN B.STK_DESC ELSE C.BOM_COMPNT_DESC  END BOM_COMPNT_DESC
+		          ,CASE WHEN C.COMPNT_QTY IS NULL THEN A.COMPNT_QTY ELSE C.COMPNT_QTY END COMPNT_QTY
+		          ,A.LEAD_TM_OFFSET_N LEAD_TM_OFFSET
+		          ,C.LEAD_TM_OFFSET CHANGE_PREIOD
+	  	  FROM LOG0044D A 
+		   JOIN SYS0026M B ON A.BOM_COMPNT = B.STK_CODE
+		   LEFT OUTER JOIN SAL0203D C ON A.BOM = C.BOM
+            AND  A.BOM_COMPNT = C.BOM_COMPNT 
+            AND C.SRV_PAC_TYPE = #{srvPacType}
+            AND C.SRV_PAC_ID = #{srvPacId}
+		WHERE  A.BOM = (SELECT BOM FROM LOG0043M WHERE MATRL_NO =#{matrlNo} )
+		     <![CDATA[ 
+		    AND VALID_FROM_DT <= SYSDATE 
+		    AND VALID_TO_DT >= SYSDATE
+		    ]]> 
+		    AND B.STK_TYPE_ID = '62'
+		    AND B. STUS_CODE_ID = '1'
+	</select>
+	 
+	 <update id="saveFilterInfo" parameterType="Map">
+        
+		   MERGE INTO SAL0203D A
+		            USING (SELECT #{srvFilterId} AS SRV_FILTER_ID ,
+		                                  #{srvPacType} AS SRV_PAC_TYPE ,
+		                                  #{srvPacId} AS SRV_PAC_ID ,
+		                                  #{srvItmStkId} AS SRV_ITM_STK_ID 
+		                         FROM dual)b
+		            ON (     
+		                      A.SRV_FILTER_ID = B.SRV_FILTER_ID
+		               AND A.SRV_PAC_TYPE = B.SRV_PAC_TYPE  
+		               AND A.SRV_PAC_ID = B.SRV_PAC_ID  
+		               AND A.SRV_ITM_STK_ID = B.SRV_ITM_STK_ID  
+		            )
+		       WHEN MATCHED THEN
+		    UPDATE  SET 
+		               A.LEAD_TM_OFFSET = #{changePreiod},
+		               A.UPD_DT = SYSDATE,
+		               A.UPD_USER_ID = #{userId}
+		    WHEN NOT MATCHED THEN
+		           INSERT 
+		           (
+		                SRV_FILTER_ID
+		               ,SRV_PAC_TYPE
+		               ,SRV_PAC_ID
+		               ,SRV_ITM_STK_ID
+		               ,BOM
+		               ,BOM_COMPNT
+		               ,BOM_COMPNT_DESC
+		               ,COMPNT_QTY
+		               ,LEAD_TM_OFFSET
+		               ,CRT_DT
+		               ,CRT_USER_ID
+		               ,UPD_DT
+		               ,UPD_USER_ID
+		           )
+		         VALUES
+		           (
+		                SAL0203D_SRV_FILTER_ID_SEQ.nextval
+		               ,#{srvPacType}
+		               ,#{srvPacId}
+		               ,#{srvItmStkId}
+		               ,#{bom}
+		               ,#{bomCompnt}
+		               ,#{bomCompntDesc}
+		               ,#{compntQty}
+		               ,#{changePreiod}
+		               ,SYSDATE
+		               ,#{userId}
+		               ,SYSDATE
+		               ,#{userId}
+		           )
+    </update>     
+	   
+	 <select id="selectStkCode" parameterType="Map" resultType="String">
+	   SELECT STK_CODE
+		  FROM SYS0026M 
+		  where STK_ID = #{stkId}	 
+	 </select>   
 </mapper>

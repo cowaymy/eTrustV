@@ -186,6 +186,7 @@ public class  MembershipPackageQMController {
 		logger.debug("			pram set end  ");  
 		
 		params.put("updator", sessionVO.getUserId());
+		params.put("userId", sessionVO.getUserId());
 		
 		List<EgovMap>  add			= (List<EgovMap>)  params.get("add");
 		List<EgovMap>  remove	= (List<EgovMap>)  params.get("remove");

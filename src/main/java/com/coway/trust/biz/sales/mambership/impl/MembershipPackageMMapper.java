@@ -61,6 +61,7 @@ public interface MembershipPackageMMapper {
 	
 	List<EgovMap>   IsExistSVMPackage(Map<String, Object> params);
 	EgovMap  getSAL0081D_SEQ(Map<String, Object> params);
-	
-	
+	List<EgovMap> selectFilterList(Map<String, Object> params);
+	int saveFilterInfo(Map<String, Object> updateMap);
+	String selectStkCode(Map<String, Object> params);
 }

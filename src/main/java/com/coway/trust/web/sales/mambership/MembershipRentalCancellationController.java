@@ -58,6 +58,11 @@ public class MembershipRentalCancellationController {
 		return "sales/membership/membershipRentalCancellationViewPop";
 	} 
 	
+	@RequestMapping(value = "/cancellationRAW.do")
+	public String cancellationRAW(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "sales/membership/membershipRCRAW";
+	} 
+	
 	@RequestMapping(value = "/selectCancellationList", method = RequestMethod.GET) 
 	public ResponseEntity<List<EgovMap>> selectCancellationList(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) {
@@ -92,6 +97,17 @@ public class MembershipRentalCancellationController {
 		logger.debug("param ===================>>  " + params);		
 		
 		List<EgovMap> list = membershipRCService.selectReasonList(params);		
+		return ResponseEntity.ok(list);
+	}
+	
+	@RequestMapping(value = "/selectCodeList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  selectCodeList ");
+		logger.debug("param ===================>>  " + params);		
+		
+		List<EgovMap> list = membershipRCService.selectCodeList(params);		
 		return ResponseEntity.ok(list);
 	}
 	

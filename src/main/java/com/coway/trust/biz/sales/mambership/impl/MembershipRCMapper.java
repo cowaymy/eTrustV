@@ -47,6 +47,7 @@ public interface MembershipRCMapper {
 	List<EgovMap> selectReasonList(Map<String, Object> params);
 	List<EgovMap> selectBranchList(Map<String, Object> params);
 	EgovMap selectCancellationInfo(Map<String, Object> params);
+	List<EgovMap> selectCodeList(Map<String, Object> params);
 
 
 }

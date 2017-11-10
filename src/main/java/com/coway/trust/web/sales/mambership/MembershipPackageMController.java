@@ -254,10 +254,6 @@ public class  MembershipPackageMController {
 		return ResponseEntity.ok(map);
 	}
 	
-	
-
-	
-	
 
 	@RequestMapping(value = "/newRPackageAdd.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> newQPackageAdd(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
@@ -268,6 +264,7 @@ public class  MembershipPackageMController {
 		logger.debug("			pram set end  ");  
 		
 		params.put("updator", sessionVO.getUserId());
+		params.put("userId", sessionVO.getUserId());
 		
 		List<EgovMap>  add			= (List<EgovMap>)  params.get("add");
 		List<EgovMap>  remove	= (List<EgovMap>)  params.get("remove");
@@ -288,7 +285,6 @@ public class  MembershipPackageMController {
 	
 	
 	
-	
 	@RequestMapping(value = "/IsExistSVMPackage" ,method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>>  IsExistSVMPackage(@RequestParam Map<String, Object> params, Model model)	throws Exception {
 
@@ -302,12 +298,57 @@ public class  MembershipPackageMController {
 		return ResponseEntity.ok(list);
 	}
 	
+	@RequestMapping(value = "/selectFilterList" ,method = RequestMethod.POST)
+	public ResponseEntity<List<EgovMap>>  selectFilterList(@RequestBody Map<String, Object> params, Model model)	throws Exception {
+		
+		logger.debug("in  selectFilterList ");
+		logger.debug("			pram set  log");  
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		params.put("srvItmStkId", Integer.parseInt(params.get("srvItmStkId").toString()));
+		
+		List<EgovMap>  list = membershipPackageMService.selectFilterList(params); 
+		
+		return ResponseEntity.ok(list);
+	}
 	
+	@RequestMapping(value = "/saveFilterInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveFilterInfo(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  saveFilterInfo ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("userId", sessionVO.getUserId());
+		
+		int rtnValue = membershipPackageMService.saveFilterInfo(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(rtnValue);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		
+		return ResponseEntity.ok(message);  
+		
+	}
 	
-	
+	@RequestMapping(value = "/selectStkCode" ,method = RequestMethod.GET)
+	public ResponseEntity<String>  selectStkCode(@RequestParam Map<String, Object> params, Model model)	throws Exception {
+		
+		logger.debug("in  IsExistSVMPackage ");
+		logger.debug("			pram set  log");  
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		String stkCode = membershipPackageMService.selectStkCode(params); 
+		
+		return ResponseEntity.ok(stkCode);
+	}	
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
 	
 }

@@ -15,7 +15,6 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.mambership.MembershipRCService;
-import com.coway.trust.biz.sales.order.impl.OrderListServiceImpl;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -27,7 +26,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("membershipRCService")
 public class MembershipRCServiceImpl extends EgovAbstractServiceImpl implements MembershipRCService {
 
-	private static Logger logger = LoggerFactory.getLogger(OrderListServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(MembershipRCServiceImpl.class);
 	
 	@Resource(name = "membershipRCMapper")
 	private MembershipRCMapper membershipRCMapper;
@@ -52,6 +51,11 @@ public class MembershipRCServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public EgovMap selectCancellationInfo(Map<String, Object> params) {
 		return membershipRCMapper.selectCancellationInfo(params);
+	}
+	@Override
+	public List<EgovMap> selectCodeList(Map<String, Object> params) {
+		// 
+		return membershipRCMapper.selectCodeList(params);
 	}
 
 }

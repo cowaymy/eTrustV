@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.mambership.MembershipPackageMService;
 import com.coway.trust.biz.sales.mambership.MembershipPackageQMService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -26,6 +27,9 @@ public class MembershipPackageQMServiceImpl extends EgovAbstractServiceImpl impl
 
 	@Resource(name = "membershipPackageQMMapper")
 	private MembershipPackageQMMapper membershipPackageQMMapper;  
+	
+	@Resource(name = "membershipPackageMService") 
+	private MembershipPackageMService  membershipPackageMService;     
 	
 	@Override
 	public List<EgovMap> selectList(Map<String, Object> params) {
@@ -107,6 +111,9 @@ public class MembershipPackageQMServiceImpl extends EgovAbstractServiceImpl impl
 		 //채번 
 		 String  SEQ = String.valueOf(membershipPackageQMMapper.getSAL0091M_SEQ(params).get("seq"));  
 		 params.put("SRV_MEM_PAC_ID", SEQ);
+		 params.put("srvPacId", SEQ);
+		 
+		 params.put("txtDuration", Integer.parseInt(params.get("txtDuration").toString()));
 		 
 		 //master 
 		 int o = membershipPackageQMMapper.SAL0091M_insert(params) ;
@@ -136,6 +143,9 @@ public class MembershipPackageQMServiceImpl extends EgovAbstractServiceImpl impl
 				}
 		 }
     	
+		 membershipPackageMService.saveFilterInfo(params);
+		 
+		 
 		return o ;
 	}
 	
