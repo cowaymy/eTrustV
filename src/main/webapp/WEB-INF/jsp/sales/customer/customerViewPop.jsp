@@ -374,9 +374,17 @@
     }
     
     //resize func (tab click)
-     function fn_resizefunc(gridName){ // 
-    	 AUIGrid.resize(gridName, 900, 300);
-    } 
+     function fn_resizefunc(obj, gridName){ //
+
+         var $this = $(obj);
+         var width = $this.width();
+
+    	  AUIGrid.resize(gridName, width, $(".grid_wrap").innerHeight());
+
+//         setTimeout(function(){
+//             AUIGrid.resize(gridName);
+//         }, 100);
+    }
     
 /*     function fn_moveCenter() {
            var sw = screen.width;
@@ -600,42 +608,42 @@
     </dd>
     <!-- ######### Tab Area #########  -->
     <!-- ######### Customer Address List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(addrGridID)">Customer Address List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, addrGridID)">Customer Address List</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="address_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Contact List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(contactGridID)">Customer Contact List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, contactGridID)">Customer Contact List</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="contact_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Bank Account List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(bankAccountGirdID)">Customer Bank Account List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, bankAccountGirdID)">Customer Bank Account List</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="bank_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Credit Card List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(creditCardGridID)">Customer Credit Card List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, creditCardGridID)">Customer Credit Card List</a></dt>
     <dd> 
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="creditcard_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Own Order(s) List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(ownOrderGridID)">Own Order(s)</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, ownOrderGridID)">Own Order(s)</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="ownorder_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- #########hird Party Order(s) List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(thirdPartyGridID)">Third Party Order(s)</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, thirdPartyGridID)">Third Party Order(s)</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="thirdparty_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
