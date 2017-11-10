@@ -32,7 +32,7 @@ var columnLayout=[
     {dataField:"scol", headerText:"Collection", dataType:"numeric", formatString:"###0.#"},
     {dataField:"sadj", headerText:"Adjsutment", dataType:"numeric"},
     {dataField:"sout", headerText:"Outstanding", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"srate", headerText:"Out Rate", dataType:"numeric", formatString:"###0.##", style:"my-column-style2"}
+    {dataField:"srate", headerText:"Out Rate", dataType:"numeric", formatString:"###0.00", style:"my-column-style2"}
     ];
 
 //리스트 조회.
