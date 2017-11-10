@@ -102,17 +102,19 @@ public interface ASManagementListMapper {
 	 EgovMap   getPAY0017DSEQ(Map<String, Object> params);
 	 EgovMap   getPAY0027DSEQ(Map<String, Object> params);
 	 EgovMap   getPAY0069DSEQ(Map<String, Object> params);
-	 
-	 
+	 EgovMap   getPAY0064DSEQ(Map<String, Object> params);
+	 EgovMap   getPAY0065DSEQ(Map<String, Object> params);
+
 	 
 	 
 	 List<EgovMap> getResult_SVC0004D(Map<String, Object> params);
 	 List<EgovMap> getResult_PAY0016D(Map<String, Object> params);
 	 List<EgovMap> getResult_PAY0031D(Map<String, Object> params);
 	 List<EgovMap> getResult_PAY0006D(Map<String, Object> params);
+	 List<EgovMap> getResult_DocNo_PAY0006D(Map<String, Object> params);	 
 	 List<EgovMap> getResult_PAY0007D(Map<String, Object> params);
 	 List<EgovMap> getResult_PAY0064D(Map<String, Object> params);
-	 
+	 List<EgovMap> getResult_PAY0065D(Map<String, Object> params);
 	 
 	 
 	 int   reverse_SVC0004D(Map<String, Object> params);  				  // reverse_SVC0004D  기존 금액 -처리 
@@ -122,6 +124,17 @@ public interface ASManagementListMapper {
 	 int   insert_LOG0016D(Map<String, Object> params);  	 
 	 int   insert_LOG0014D(Map<String, Object> params);  	 
 	 int   insert_PAY0069D(Map<String, Object> params); 
+	 int   insert_PAY0064D(Map<String, Object> params); 
+	 int   insert_PAY0065D(Map<String, Object> params); 
+	 int   insert_PAY0009D(Map<String, Object> params); 
+	 int   insert_Pay0018d(Map<String, Object> params); 
+	 int   insert_Pay0017d(Map<String, Object> params); 
+
+	 
+	 
+	 
+	 
+	 
 	 
 	 
 	 int   reverse_PAY0007D(Map<String, Object> params);  	 			 //UPDATE 
@@ -130,9 +143,9 @@ public interface ASManagementListMapper {
 	 int   reverse_PAY0027D(Map<String, Object> params);  	 			 //UPDATE 
 	 int   reverse_PAY0028D(Map<String, Object> params);  	 			 //UPDATE 
 	 int   reverse_PAY0006D(Map<String, Object> params);  	 			 //UPDATE 
+	 int   reverse_DocNo_PAY0006D(Map<String, Object> params);  	 			 //UPDATE 
 	 int	reverse_StateUpPAY0007D(Map<String, Object> params);  	 //UPDATE 
-	 
-	 
+	 int   reverse_State_CCR0001D(Map<String, Object> params);
 	 
 	 
 	 EgovMap   getLog0016DCount(Map<String, Object> params);	      //log0016d count

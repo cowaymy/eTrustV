@@ -46,5 +46,31 @@
                            AND 1= ${asTicketNum}
                    </if>
     </select>
+    
+    
+           
+         <resultMap id="callasLogClobMap" type="egovMap">
+                <result property="callRem" column="CALL_REM" jdbcType="CLOB" javaType="string"/>
+         </resultMap>
+         
+         <select id="getCallLog" parameterType="Map" resultMap="callasLogClobMap">
+                           SELECT 
+                                   S.CALL_RESULT_ID   ,
+                                   S.CALL_REM   ,
+                                   S.CALL_CRT_DT   ,
+                                   S.C2   
+                              FROM ( SELECT          E.CALL_RESULT_ID   ,
+                                                     E.CALL_REM   ,
+                                                     E.CALL_CRT_DT   ,
+                                                    CASE   WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME   ELSE '-'  END C2  
+                                     FROM SVC0001D D
+                                            JOIN CCR0006D C   ON ( D.AS_CALLLOG_ID = C.CALL_ENTRY_ID )
+                                            AND ( #{TYPE_ID} = C.TYPE_ID )
+                                            AND ( D.AS_ID = C.DOC_ID )
+                                            JOIN CCR0007D E   ON C.CALL_ENTRY_ID = E.CALL_ENTRY_ID
+                                            LEFT JOIN SYS0047M Extent4   ON E.CALL_CRT_USER_ID = Extent4.USER_ID
+                                      WHERE  D.AS_ID = #{AS_ID}
+                            ) S
+            </select>
      
 </mapper>

@@ -2611,7 +2611,7 @@
 			    FROM LOG0016D 
 			WHERE REQ_ITM_REF_ID  =#{OLD_AS_RESULT_ID}
 			    AND REQ_ITM_TYPE_ID ='457'
-			    AND REQ_ITM_STUS_ID  ='4's
+			    AND REQ_ITM_STUS_ID  ='4'
         </select>
         
         
@@ -3083,4 +3083,246 @@
     </insert>
      
      
+      <insert id="insert_PAY0064D" parameterType="Map" >   
+			INSERT INTO PAY0064D (
+			   PAY_ID, OR_NO, SALES_ORD_ID, 
+			   BILL_ID, TR_NO, TYPE_ID, 
+			   PAY_DATA, BANK_CHG_AMT, BANK_CHG_ACC_ID, 
+			   COLL_MEM_ID, BRNCH_ID, BANK_ACC_ID, 
+			   ALLOW_COMM, STUS_CODE_ID, UPD_USER_ID, 
+			   UPD_DT, SYNC_HECK, CUST_ID_3PARTY, 
+			   TOT_AMT, MTCH_ID, CRT_USER_ID, 
+			   CRT_DT, IS_ALLOW_REV_MULTI, IS_GL_POST_CLM, 
+			   GL_POST_CLM_DT, TRX_ID, ADV_MONTH, 
+			   ACC_BILL_ID, TR_ISSU_DT, TAX_INVC_IS_GEN, 
+			   TAX_INVC_REF_NO, TAX_INVC_REF_DT, SVC_CNTRCT_ID, 
+			   BATCH_PAY_ID) 
+			VALUES (
+			   #{payId}, 
+			   #{orNo}, 
+			   #{salesOrdId}, 
+			   #{billId}, 
+			   #{trNo}, 
+			   #{typeId}, 
+			   #{payData}, 
+			   #{bankChgAmt}, 
+			   #{bankChgAccId}, 
+			   #{collMemId}, 
+			   #{brnchId}, 
+			   #{bankAccId}, 
+			   #{allowComm}, 
+			   #{stusCodeId}, 
+			   #{updUserId}, 
+			   #{updDt}, 
+			   #{syncHeck}, 
+			   #{custId3party}, 
+			   #{totAmt}, 
+			   #{mtchId}, 
+			   #{crtUserId}, 
+			   #{crtDt}, 
+			   #{isAllowRevMulti}, 
+			   #{isGlPostClm}, 
+			   #{glPostClmDt}, 
+			   #{trxId}, 
+			   #{advMonth}, 
+			   #{accBillId}, 
+			   #{trIssuDt}, 
+			   #{taxInvcIsGen}, 
+			   #{taxInvcRefNo}, 
+			   #{taxInvcRefDt}, 
+			   #{svcCntrctId}, 
+			   #{batchPayId})
+     </insert>
+     
+     <select id="getPAY0064DSEQ" parameterType="Map" resultType="egovMap">
+         <![CDATA[ 
+                  SELECT  PAY0064D_SEQ.NEXTVAL    seq FROM DUAL
+          ]]> 
+    </select>
+    
+     <select id="getPAY0065DSEQ" parameterType="Map" resultType="egovMap">
+         <![CDATA[ 
+                  SELECT  PAY0065D_SEQ.NEXTVAL    seq FROM DUAL
+          ]]> 
+    </select>
+    
+    
+     <select id="getResult_PAY0065D" parameterType="Map" resultType="egovMap">   
+     
+		 SELECT 
+		   P.PAY_ITM_ID, P.PAY_ID, P.PAY_ITM_MODE_ID, 
+		   P.PAY_ITM_REF_NO, P.PAY_ITM_CC_NO, P.PAY_ITM_ORI_CC_NO, 
+		   P.PAY_ITM_ENCRYPT_CC_NO, P.PAY_ITM_CC_TYPE_ID, P.PAY_ITM_CHQ_NO, 
+		   P.PAY_ITM_ISSU_BANK_ID, P.PAY_ITM_AMT, P.PAY_ITM_IS_ONLINE, 
+		   P.PAY_ITM_BANK_ACC_ID, P.PAY_ITM_REF_DT, P.PAY_ITM_APPV_NO, 
+		   P.PAY_ITM_REM, P.PAY_ITM_STUS_ID, P.PAY_ITM_IS_LOK, 
+		   P.PAY_ITM_CC_HOLDER_NAME, P.PAY_ITM_CC_EXPR_DT, P.PAY_ITM_BANK_CHRG_AMT, 
+		   P.PAY_ITM_IS_THRD_PARTY, P.PAY_ITM_THRD_PARTY_IC, P.PAY_ITM_BANK_BRNCH_ID, 
+		   P.PAY_ITM_BANK_IN_SLIP_NO, P.PAY_ITM_EFT_NO, P.PAY_ITM_CHQ_DEP_RECIPT_NO, 
+		   P.ETC1, P.ETC2, P.ETC3, 
+		   P.PAY_ITM_MID, P.PAY_ITM_GRP_ID, P.PAY_ITM_REF_ITM_ID, 
+		   P.PAY_ITM_BANK_CHRG_ACC_ID, P.PAY_ITM_RUNNG_NO, P.UPD_USER_ID, 
+		   P.UPD_DT, P.IS_FUND_TRNSFR, P.SKIP_RECON, 
+		   P.PAY_ITM_CARD_TYPE_ID, P.PAY_ITM_CARD_MODE_ID
+		FROM PAY0065D P
+		WHERE PAY_ID = #{PAY_ID}
+		   AND PAY_ITM_STUS_ID =1 
+		   ORDER BY PAY_ITM_ID
+     </select> 
+       
+                   
+   <insert id="insert_PAY0065D" parameterType="Map" >   
+			   
+			INSERT INTO PAY0065D (
+			   PAY_ITM_ID, PAY_ID, PAY_ITM_MODE_ID, 
+			   PAY_ITM_REF_NO, PAY_ITM_CC_NO, PAY_ITM_ORI_CC_NO, 
+			   PAY_ITM_ENCRYPT_CC_NO, PAY_ITM_CC_TYPE_ID, PAY_ITM_CHQ_NO, 
+			   PAY_ITM_ISSU_BANK_ID, PAY_ITM_AMT, PAY_ITM_IS_ONLINE, 
+			   PAY_ITM_BANK_ACC_ID, PAY_ITM_REF_DT, PAY_ITM_APPV_NO, 
+			   PAY_ITM_REM, PAY_ITM_STUS_ID, PAY_ITM_IS_LOK, 
+			   PAY_ITM_CC_HOLDER_NAME, PAY_ITM_CC_EXPR_DT, PAY_ITM_BANK_CHRG_AMT, 
+			   PAY_ITM_IS_THRD_PARTY, PAY_ITM_THRD_PARTY_IC, PAY_ITM_BANK_BRNCH_ID, 
+			   PAY_ITM_BANK_IN_SLIP_NO, PAY_ITM_EFT_NO, PAY_ITM_CHQ_DEP_RECIPT_NO, 
+			   ETC1, ETC2, ETC3, 
+			   PAY_ITM_MID, PAY_ITM_GRP_ID, PAY_ITM_REF_ITM_ID, 
+			   PAY_ITM_BANK_CHRG_ACC_ID, PAY_ITM_RUNNG_NO, UPD_USER_ID, 
+			   UPD_DT, IS_FUND_TRNSFR, SKIP_RECON, 
+			   PAY_ITM_CARD_TYPE_ID, PAY_ITM_CARD_MODE_ID) 
+			VALUES ( 
+			#{PayItmId}, 
+			   #{payId}, 
+			   #{payItmModeId}, 
+			   #{payItmRefNo}, 
+			   #{payItmCcNo}, 
+			   #{payItmOriCcNo}, 
+			   #{payItmEncryptCcNo}, 
+			   #{payItmCcTypeId}, 
+			   #{payItmChqNo}, 
+			   #{payItmIssuBankId}, 
+			   #{payItmAmt}, 
+			   #{payItmIsOnline}, 
+			   #{payItmBankAccId}, 
+			   #{payItmRefDt}, 
+			   #{payItmAppvNo}, 
+			   #{payItmRem}, 
+			   #{payItmStusId}, 
+			   #{payItmIsLok}, 
+			   #{payItmCcHolderName}, 
+			   #{payItmCcExprDt}, 
+			   #{payItmBankChrgAmt}, 
+			   #{payItmIsThrdParty}, 
+			   #{payItmThrdPartyIc}, 
+			   #{payItmBankBrnchId}, 
+			   #{payItmBankInSlipNo}, 
+			   #{payItmEftNo}, 
+			   #{payItmChqDepReciptNo}, 
+			   #{etc1}, 
+			   #{etc2}, 
+			   #{etc3}, 
+			   #{payItmMid}, 
+			   #{payItmGrpId}, 
+			   #{payItmRefItmId}, 
+			   #{payItmBankChrgAccId}, 
+			   #{payItmRunngNo}, 
+			   #{updUserId}, 
+			   #{updDt}, 
+			   #{isFundTrnsfr}, 
+			   #{skipRecon}, 
+			   #{payItmCardTypeId}, 
+			   #{payItmCardModeId})
+   </insert>                
+   
+   
+      <insert id="insert_PAY0009D" parameterType="Map" >   
+      
+	      
+	    INSERT INTO  PAY0009D (
+                  ID, GLPOSTNGDT, GLFISCALDT, 
+                  GLBATCHNO, GLBATCHTYPEDESC, GLBATCHTOT, 
+                  GLRECIPTNO, GLRECIPTTYPEID, GLRECIPTBRNCHID, 
+                  GLRECIPTSETLACCID, GLRECIPTACCID, GLRECIPTITMID, 
+                  GLRECIPTITMMODEID, GLREVRSRECIPTITMID, GLRECIPTITMAMT, 
+                  GLRECIPTITMCHRG, GLRECIPTITMRCLSTUS, GLJRNLNO, 
+                  GLAUDITREF, GLCNVRSTUS, GLCNVRDT) 
+               VALUES ( 
+                  PAY0009D_SEQ.nextval, 
+                  #{glPostngDt}, 
+                  #{glFiscalDt}, 
+                  #{glBatchNo}, 
+                  #{glBatchTypeDesc}, 
+                  #{glBatchTot}, 
+                  #{glReciptNo}, 
+                  #{glReciptTypeId}, 
+                  #{glReciptBrnchId}, 
+                  #{glReciptSetlAccId}, 
+                  #{glReciptAccId}, 
+                  #{glReciptItmId}, 
+                  #{glReciptItmModeId}, 
+                  #{glRevrsReciptItmId}, 
+                  #{glReciptItmAmt}, 
+                  #{glReciptItmChrg}, 
+                  #{glReciptItmRclStus}, 
+                  #{glJrnlNo}, 
+                  #{glAuditRef}, 
+                  #{glCnvrStus}, 
+                  #{glCnvrDt}
+               )
+	                                        
+	                                        
+      </insert>                
+      
+       <select id="getResult_DocNo_PAY0006D" parameterType="Map" resultType="egovMap">   
+		    SELECT 
+		        AS_ID, 
+		        AS_DOC_NO, 
+		        AS_LG_DOC_TYPE_ID, 
+		        AS_LG_DT, AS_LG_AMT, 
+		        AS_LG_UPD_USER_ID, 
+		        AS_LG_UPD_DT,
+		        AS_SO_NO, 
+		        AS_RESULT_NO, 
+		        AS_SO_ID, 
+		        AS_ADV_PAY, 
+		        R01
+		    FROM PAY0006D  
+		    WHERE AS_DOC_NO  = #{AS_DOC_NO}
+		    ORDER BY AS_LDGR_ID
+    </select>
+    
+   
+   <insert id="reverse_DocNo_PAY0006D" parameterType="Map" > 
+   
+        INSERT INTO PAY0006D (
+           AS_LDGR_ID, AS_ID, AS_DOC_NO, 
+           AS_LG_DOC_TYPE_ID, AS_LG_DT, AS_LG_AMT, 
+           AS_LG_UPD_USER_ID, AS_LG_UPD_DT, AS_SO_NO, 
+           AS_RESULT_NO, AS_SO_ID, AS_ADV_PAY, 
+           R01) 
+        VALUES ( 
+           PAY0006D_SEQ.NEXTVAL, 
+           #{asId}, 
+           #{asDocNo}, 
+           #{asLgDocTypeId}, 
+           #{asLgDt}, 
+           #{asLgAmt}, 
+           #{asLgUpdUserId}, 
+           #{asLgUpdDt}, 
+           #{asSoNo}, 
+           #{asResultNo}, 
+           #{asSoId}, 
+           #{asAdvPay}, 
+           #{r01} 
+         )
+   </insert>
+   
+   
+      <insert id="reverse_State_CCR0001D" parameterType="Map" > 
+		  UPDATE CCR0001D
+		   SET HC_STUS_ID =4,
+		       UPD_USER_ID = #{updator},
+		       UPD_DT =SYSDATE 
+		  WHERE HC_TYPE_NO =#{HC_TYPE_NO} AND HC_STUS_ID='33'
+     </insert>
+   
+                   
 </mapper>

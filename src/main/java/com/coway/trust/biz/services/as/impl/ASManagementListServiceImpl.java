@@ -1091,9 +1091,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		int callint =updateSTATE_CCR0006D(svc0004dmap);
 		insertSVC0005D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator"))); 
 		
-	    svc0004dmap.put("AS_RESULT_STUS_ID", params.get("AS_RESULT_STUS_ID") );
-	    svc0004dmap.put("AS_ID", params.get("AS_ENTRY_ID") );
-	    svc0004dmap.put("USER_ID", String.valueOf(params.get("updator")) );
+	    svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID") );
+	    svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")) );
 		this.updateStateSVC0001D(svc0004dmap);
 		
 		EgovMap em = new EgovMap();
@@ -1128,10 +1127,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     	
     	int  asTotAmt =0;
     	
-     	
-     	String  AS_ID 			   =  String.valueOf(params.get("AS_ID"));
-     	String  ACC_BILL_ID  =  String.valueOf(params.get("ACC_BILL_ID"));
-     	String  ACC_INVOICE_NO  =  String.valueOf(params.get("ACC_INVOICE_NO")) !="" ? String.valueOf(params.get("ACC_INVOICE_NO")) : String.valueOf(params.get("AS_RESULT_NO"));
+    	svc0004dmap = (LinkedHashMap)  params.get("asResultM");
+    	
+     	String  AS_ID 			   =  String.valueOf(svc0004dmap.get("AS_ID"));
+     	String  ACC_BILL_ID  =  String.valueOf(svc0004dmap.get("ACC_BILL_ID"));
+     	String  ACC_INVOICE_NO  =  String.valueOf(svc0004dmap.get("ACC_INVOICE_NO")) !="" ? String.valueOf(svc0004dmap.get("ACC_INVOICE_NO")) : String.valueOf(svc0004dmap.get("AS_RESULT_NO"));
      	params.put("ACC_BILL_ID", ACC_BILL_ID);
      	params.put("ACC_INVOICE_NO", ACC_INVOICE_NO);
 
@@ -1146,19 +1146,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		NEW_AS_RESULT_ID   = String.valueOf(asResultASEntryId.get("seq"));
 		NEW_AS_RESULT_NO  = String.valueOf(eASEntryDocNo.get("asno"));
-		 
-		//params.put("AS_RESULT_ID",  NEW_AS_RESULT_ID);
-		//params.put("AS_RESULT_NO", NEW_AS_RESULT_NO);
-		
-		
-		svc0004dmap = (LinkedHashMap)  params.get("asResultM");
 		
 		svc0004dmap.put("NEW_AS_RESULT_ID", NEW_AS_RESULT_ID);
 		svc0004dmap.put("NEW_AS_RESULT_NO", NEW_AS_RESULT_NO);
-		
 		svc0004dmap.put("updator",params.get("updator"));
-		svc0004dmap.put("AS_NO",  String.valueOf(params.get("AS_NO")));
-		svc0004dmap.put("AS_ID",  String.valueOf(params.get("AS_ID")));
 		
 		
 		vewList = new ArrayList<AsResultChargesViewVO>();
@@ -1166,18 +1157,20 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		 
 		
 		resultMList =ASManagementListMapper.getResult_SVC0004D(svc0004dmap);
-		svc0004dmap.put("AS_RESULT_ID",  (String)((EgovMap)resultMList.get(0)).get("asResultId"));
-		svc0004dmap.put("AS_RESULT_NO",  (String)((EgovMap)resultMList.get(0)).get("asResultNo"));
-		asTotAmt = Integer.parseInt( (String)((EgovMap)resultMList.get(0)).get("asTotAmt"));  
 		
+		EgovMap  emp =(EgovMap)resultMList.get(0);
+		svc0004dmap.put("AS_RESULT_ID",   String.valueOf(emp.get("asResultId") )); 
+		svc0004dmap.put("AS_RESULT_NO",  (String)((EgovMap)resultMList.get(0)).get("asResultNo"));
+		asTotAmt = Integer.parseInt( String.valueOf(((EgovMap)resultMList.get(0)).get("asTotAmt")));  
+		   
 		
 		//reverse_SVC0004D
-		 svc0004dmap.put("OLD_AS_RESULT_ID", params.get("AS_RESULT_ID"));
-		 ASManagementListMapper.reverse_SVC0004D(svc0004dmap);
-		 ASManagementListMapper.reverse_CURR_SVC0004D(svc0004dmap);
+		 svc0004dmap.put("OLD_AS_RESULT_ID", svc0004dmap.get("AS_RESULT_ID"));
+		 int reverse_SVC0004D_cnt = ASManagementListMapper.reverse_SVC0004D(svc0004dmap);
+		 int reverse_CURR_SVC0004D_cnt =ASManagementListMapper.reverse_CURR_SVC0004D(svc0004dmap);
 		 
 		 EgovMap  cm = ASManagementListMapper. getLog0016DCount(svc0004dmap); 
-		 int  log0016dCnt = Integer.parseInt((String)cm.get("cnt"));
+		 int  log0016dCnt = Integer.parseInt( String.valueOf(cm.get("cnt")));
 		 
 		 
 		 //Auto Request PDO (If current result has complete PDO claim)
@@ -1201,13 +1194,15 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			 
 			 int a =ASManagementListMapper.insert_LOG0015D(svc0004dmap);
 			 if(a>0){
-				 ASManagementListMapper.insert_LOG0016D(svc0004dmap);
+				int insert_LOG0016D_cnt  = ASManagementListMapper.insert_LOG0016D(svc0004dmap);
 			 }
 		 }
 		
 		 
 		 //Reverse InvStkRecordCard (Return Stock To Member's Hand) -- Prepare for PDO return (ACF)
-		 ASManagementListMapper.insert_LOG0014D(svc0004dmap);
+		 
+		 //~~~~~~~~~~~~~ 수정필요 SEELECT 후 INSERT 처리 하자. ......
+		// ASManagementListMapper.insert_LOG0014D(svc0004dmap);  꼭 주석  ㅜ
 		 
 		 
 		//CN Waive Billing (If Current Result has charge)
@@ -1215,13 +1210,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         	 //AccBillings
         	 ASManagementListMapper.reverse_PAY0007D(svc0004dmap);
         	 
-         	 svc0004dmap.put("ACC_BILL_ID", params.get("ACC_BILL_ID") );
+         	 svc0004dmap.put("ACC_BILL_ID", svc0004dmap.get("ACC_BILL_ID") );
          	 List<EgovMap>  resultPAY0016DList   	=null;
      		 					   resultPAY0016DList =ASManagementListMapper.getResult_SVC0004D(svc0004dmap);
      		 					   
      		 EgovMap  pay0016dData = resultPAY0016DList.get(0);			   
 
-     		 
+     		    
         	 //AccOrderBill
         	 ASManagementListMapper.reverse_PAY0016D(svc0004dmap);
         	 
@@ -1346,9 +1341,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
             pay06d_insert.put("asLgAmt", (-1 * asTotAmt) ); 
             pay06d_insert.put("asLgUpdUserId",svc0004dmap.get("updator"));
             pay06d_insert.put("asLgUpdDt", new Date());
-            pay06d_insert.put("asSoNo",  params.get("AS_SO_NO")); 
+            pay06d_insert.put("asSoNo",  svc0004dmap.get("AS_SO_NO")); 
             pay06d_insert.put("asResultNo",(String)((EgovMap)resultMList.get(0)).get("asResultNo"));
-            pay06d_insert.put("asSoId",params.get("AS_SO_ID"));
+            pay06d_insert.put("asSoId",svc0004dmap.get("AS_SO_ID"));
             pay06d_insert.put("asAdvPay","0");
             pay06d_insert.put("r01","");
             
@@ -1364,7 +1359,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         		 EgovMap pay06d_insert =p6dList.get(i);
         		 
         		 //////////////////pay06d    1set //////////////////// 
-        		 int p16d_asTotAmt =  pay06d_insert.get("asLgAmt") ==null  ? 0 : Integer.parseInt((String)pay06d_insert.get("asLgAmt") );
+        		 double p16d_asTotAmt =  pay06d_insert.get("asLgAmt") ==null  ? 0 : Double.parseDouble((String)pay06d_insert.get("asLgAmt") );
 				
         		 pay06d_insert.put("asId",AS_ID); 
 		         pay06d_insert.put("asDocNo",NEW_AS_RESULT_NO); 
@@ -1373,9 +1368,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		         pay06d_insert.put("asLgAmt", (-1 * p16d_asTotAmt) ); 
 		         pay06d_insert.put("asLgUpdUserId",svc0004dmap.get("updator"));
 		         pay06d_insert.put("asLgUpdDt", new Date());
-		         pay06d_insert.put("asSoNo",  params.get("AS_SO_NO")); 
+		         pay06d_insert.put("asSoNo",  svc0004dmap.get("AS_SO_NO")); 
 		         pay06d_insert.put("asResultNo",(String)((EgovMap)resultMList.get(0)).get("asResultNo"));
-		         pay06d_insert.put("asSoId",params.get("AS_SO_ID"));
+		         pay06d_insert.put("asSoId",svc0004dmap.get("AS_SO_ID"));
 		         pay06d_insert.put("asAdvPay","1");
 		         pay06d_insert.put("r01","");
 		            
@@ -1390,9 +1385,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		         pay06d_insert.put("asLgAmt", (-1 * p16d_asTotAmt) ); 
 		         pay06d_insert.put("asLgUpdUserId",svc0004dmap.get("updator"));
 		         pay06d_insert.put("asLgUpdDt", new Date());
-		         pay06d_insert.put("asSoNo",  params.get("AS_SO_NO")); 
+		         pay06d_insert.put("asSoNo",  svc0004dmap.get("AS_SO_NO")); 
 		         pay06d_insert.put("asResultNo","");
-		         pay06d_insert.put("asSoId",params.get("AS_SO_ID"));
+		         pay06d_insert.put("asSoId",svc0004dmap.get("AS_SO_ID"));
 		         pay06d_insert.put("asAdvPay","1");
 		         pay06d_insert.put("r01","");
 		            
@@ -1413,13 +1408,15 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         	 
         	 
         	 //////////////////PAY0064D   SELECT //////////////// 
+        	 
+        	 svc0004dmap.put("BILL_ID", String.valueOf((p7dList.get(0)).get("billId")));
         	 List<EgovMap>  p64dList = ASManagementListMapper. getResult_PAY0064D(svc0004dmap); 
         	 //////////////////PAY0064D   			 //////////////// 
              if(null != p64dList && p64dList.size() >0){
             	 for(int i=0;i<p64dList.size(); i++){
             		 
             		 EgovMap p64dList_Map =p64dList.get(i);
-            		 int trxTotAmt =  p64dList_Map.get("totAmt") ==null  ? 0 : Integer.parseInt((String)p64dList_Map.get("totAmt") );
+            		 double trxTotAmt =  p64dList_Map.get("totAmt") ==null  ? 0 : Double.parseDouble((String)p64dList_Map.get("totAmt") );
 
                 	 Map  PAY_DocNoMap =null;
                 	 String PAYNO_REV =null;
@@ -1444,255 +1441,216 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                      
                      
                      
+                	 //////////////////PAY0064D   insert //////////////// 
+                     EgovMap PAY0064DSEQMap = ASManagementListMapper.getPAY0064DSEQ(params); 
+                     String PAY0064DSEQ = String.valueOf(PAY0064DSEQMap.get("seq"));
                      
-            		 
+                     EgovMap pay064d_insert = new EgovMap();  
+                     pay064d_insert.put("payId",PAY0064DSEQ); 
+                     pay064d_insert.put("orNo",PAYNO_REV); 
+                     pay064d_insert.put("salesOrdId",p64dList_Map.get("saleOrdId")); 
+                     pay064d_insert.put("billId",p64dList_Map.get("billId"));   
+                     pay064d_insert.put("trNo",p64dList_Map.get("trNo")); 
+                     pay064d_insert.put("typeId","101");
+                     pay064d_insert.put("payData",new  Date()); 
+                     pay064d_insert.put("bankChgAmt",p64dList_Map.get("bankChgAmt"));    
+                     pay064d_insert.put("bankChgAccId",p64dList_Map.get("bankChgAccId"));  
+                     pay064d_insert.put("collMemId",p64dList_Map.get("collMemId"));    
+                     pay064d_insert.put("brnchId",params.get("brnchId")  );  
+                     pay064d_insert.put("bankAccId",p64dList_Map.get("bankAccId"));  
+                     pay064d_insert.put("allowComm",p64dList_Map.get("allowComm"));  
+                     pay064d_insert.put("stusCodeId","1");  
+                     pay064d_insert.put("updUserId",svc0004dmap.get("updator")); 
+                     pay064d_insert.put("updDt",new Date()); 
+                     pay064d_insert.put("syncHeck","0");   
+                     pay064d_insert.put("custId3party",p64dList_Map.get("custId3party"));  
+                     double  p46TotAmt =  p64dList_Map.get("totAmt") ==null  ? 0 : Double.parseDouble((String)p64dList_Map.get("totAmt") );
+                     pay064d_insert.put("totAmt",(-1 * p46TotAmt));   
+                     pay064d_insert.put("mtchId",p64dList_Map.get("payId"));  
+                     pay064d_insert.put("crtUserId",svc0004dmap.get("updator"));
+                     pay064d_insert.put("crtDt",new Date()); 
+                     pay064d_insert.put("isAllowRevMulti","0");   
+                     pay064d_insert.put("isGlPostClm","0");   
+                     pay064d_insert.put("glPostClmDt","01/01/1900");   
+                     pay064d_insert.put("trxId",PAY0069DSEQ);   
+                     pay064d_insert.put("advMonth","0");   
+                     pay064d_insert.put("accBillId","0");   
+                     pay064d_insert.put("trIssuDt","");   
+                     pay064d_insert.put("taxInvcIsGen","0");   
+                     pay064d_insert.put("taxInvcRefNo","");   
+                     pay064d_insert.put("taxInvcRefDt","");   
+                     pay064d_insert.put("svcCntrctId","0"); 
+                     pay064d_insert.put("batchPayId","0");
+                     int insert_PAY0064D_cnt =ASManagementListMapper. insert_PAY0064D (pay069d_insert); 
+                     //////////////////PAY0064D   out    //////////////// 
+                     
+                     
+                     
+                     
+                     //////////////////PAY0065D   insert //////////////// 
+                     svc0004dmap.put("PAY_ID", PAY0064DSEQ);
+                	 List<EgovMap>  p65dList = ASManagementListMapper. getResult_PAY0065D(svc0004dmap); 
+                     EgovMap PAY0065DSEQMap = ASManagementListMapper.getPAY0065DSEQ(params); 
+                     String PAY0065DSEQ = String.valueOf(PAY0065DSEQMap.get("seq"));
+                     
+                     if(null != p65dList && p65dList.size() >0){
+                    	 for(int a=0;a<p65dList.size(); a++){
+                    		 
+                             //////////////////PAY0065D   insert //////////////// 
+                    		 EgovMap p65dList_Map =p65dList.get(i);
+                    		 double payTotAmt =  p65dList_Map.get("payItmAmt") ==null  ? 0 : Double.parseDouble(((String)p65dList_Map.get("payItmAmt") ));
+
+
+                             EgovMap pay065d_insert = new EgovMap();  
+                             pay065d_insert.put("payItmId",PAY0065DSEQ); 
+                             pay065d_insert.put("payId",PAY0064DSEQ); 
+                             pay065d_insert.put("payItmModeId",p65dList_Map.get("payItmModeId")); 
+                             pay065d_insert.put("payItmRefNo",p65dList_Map.get("payItmRefNo")); 
+                             pay065d_insert.put("payItmCcNo",p65dList_Map.get("payItmCcNo")); 
+                             pay065d_insert.put("payItmOriCcNo",p65dList_Map.get("payItmOriCcNo")); 
+                             pay065d_insert.put("payItmEncryptCcNo",p65dList_Map.get("payItmEncryptCcNo")); 
+                             pay065d_insert.put("payItmCcTypeId",p65dList_Map.get("payItmCcTypeId")); 
+                             pay065d_insert.put("payItmChqNo",p65dList_Map.get("payItmChqNo")); 
+                             pay065d_insert.put("payItmIssuBankId",p65dList_Map.get("payItmIssuBankId")); 
+                             pay065d_insert.put("payItmAmt",(-1 * payTotAmt)); 
+                             pay065d_insert.put("payItmIsOnline",p65dList_Map.get("payItmIssuBankId")); 
+                             pay065d_insert.put("payItmBankAccId",p65dList_Map.get("payItmIssuBankId")); 
+                             pay065d_insert.put("payItmRefDt","01/01/1900"); 
+                             pay065d_insert.put("payItmAppvNo",p65dList_Map.get("payItmIssuBankId")); 
+                             pay065d_insert.put("payItmRem","AS RESULT EDIT (REVERSE PAYMENT)"); 
+                             pay065d_insert.put("payItmStusId","1"); 
+                             pay065d_insert.put("payItmIsLok","0"); 
+                             pay065d_insert.put("payItmCcHolderName",p65dList_Map.get("payItmCcHolderName")); 
+                             pay065d_insert.put("payItmCcExprDt",p65dList_Map.get("payItmCcExprDt"));
+                             pay065d_insert.put("payItmBankChrgAmt",p65dList_Map.get("payItmBankChrgAmt")); 
+                             pay065d_insert.put("payItmIsThrdParty",p65dList_Map.get("payItmIsThrdParty")); 
+                             pay065d_insert.put("payItmThrdPartyIc",p65dList_Map.get("payItmThrdPartyIc")); 
+                             pay065d_insert.put("payItmRefItmId",p65dList_Map.get("payItmId")); 
+                             pay065d_insert.put("skipRecon","0");
+                                                       
+                             pay065d_insert.put("payItmBankBrnchId","0"); 
+                             pay065d_insert.put("payItmBankInSlipNo","0"); 
+                             pay065d_insert.put("payItmEftNo","0"); 
+                             pay065d_insert.put("payItmChqDepReciptNo","0"); 
+                             pay065d_insert.put("etc1","0"); 
+                             pay065d_insert.put("etc2","0"); 
+                             pay065d_insert.put("etc3","0"); 
+                             pay065d_insert.put("payItmGrpId","0"); 
+                             pay065d_insert.put("payItmBankChrgAccId","0"); 
+                             pay065d_insert.put("updUserId","0"); 
+                             pay065d_insert.put("updDt",""); 
+                             pay065d_insert.put("isFundTrnsfr","0"); 
+                             pay065d_insert.put("payItmCardTypeId","0"); 
+                             pay065d_insert.put("payItmCardModeId","0");
+                             pay065d_insert.put("payItmRunngNo",""); 
+                             pay065d_insert.put("payItmMid",""); 
+
+                             int insert_PAY0065D_cnt =ASManagementListMapper. insert_PAY0065D (pay065d_insert); 
+                             //////////////////PAY0065D   insert //////////////// 
+
+                             
+                             
+                             
+                             //////////////////PAY0009D   insert //////////////// 
+                             EgovMap pay09d_insert = new EgovMap();  
+                             pay09d_insert.put("glPostngDt",new Date()); 
+                             pay09d_insert.put("glFiscalDt","01/01/1900"); 
+                             pay09d_insert.put("glBatchNo",PAY0064DSEQ); 
+                             pay09d_insert.put("glBatchTypeDesc",""); 
+                             pay09d_insert.put("glBatchTot", (-1 * payTotAmt)); 
+                             pay09d_insert.put("glReciptNo",PAYNO_REV); 
+                             pay09d_insert.put("glReciptTypeId","101" ); 
+                             pay09d_insert.put("glReciptBrnchId",svc0004dmap.get("brnchId")); 
+                             
+                             if("107".equals(p65dList_Map.get("payItmModeId"))){  //ConvertTempAccountToSettlementAccount
+                            	 int t_payItmIssuBankId =  p65dList_Map.get("payItmIssuBankId") ==null ?0 :Integer.parseInt((String)p65dList_Map.get("payItmIssuBankId"));
+                            	 pay09d_insert.put("glReciptSetlAccId", this.convertTempAccountToSettlementAccount(t_payItmIssuBankId));   
+                                 pay09d_insert.put("glReciptAccId",   p65dList_Map.get("payItmIssuBankId")); 
+                                 
+                             }else{
+                            	 int t_payItmModeId =  p65dList_Map.get("payItmModeId") ==null ?0 :Integer.parseInt((String)p65dList_Map.get("payItmModeId"));
+                                 pay09d_insert.put("glReciptAccId",this.convertAccountToTempBasedOnPayMode(t_payItmModeId));   //ConvertAccountToTempBasedOnPayMode
+                            	 pay09d_insert.put("glReciptSetlAccId","0"); 
+                             }
+                            
+                             
+                             pay09d_insert.put("glReciptItmId",PAY0065DSEQ); 
+                             pay09d_insert.put("glReciptItmModeId",p65dList_Map.get("payItmModeId") ); 
+                             pay09d_insert.put("glRevrsReciptItmId",p65dList_Map.get("payItmId") ); 
+                             pay09d_insert.put("glReciptItmAmt",( -1 * payTotAmt ) ); 
+                             
+                        	 double t_payItemBankChargeAmt  =  p65dList_Map.get("payItmBankChrgAmt") ==null ?0 :Double.parseDouble(((String)p65dList_Map.get("payItmBankChrgAmt")));
+                             pay09d_insert.put("glReciptItmChrg",t_payItemBankChargeAmt); 
+                             pay09d_insert.put("glReciptItmRclStus","N"); 
+                             pay09d_insert.put("glJrnlNo",""); 
+                             pay09d_insert.put("glAuditRef",""); 
+                             pay09d_insert.put("glCnvrStus","Y"); 
+                             pay09d_insert.put("glCnvrDt","");
+                             int insert_PAY0009D_cnt =ASManagementListMapper. insert_PAY0009D (pay09d_insert); 
+                             //////////////////PAY0009D   insert ////////////////  
+                    	 
+                    	 }//p65dList for eof
+                     }//p65dList eof
+
+                     
+                 	 //////////////////PAY0006D    inert //////////////// 
+                     svc0004dmap.put("AS_DOC_NO", String.valueOf(p64dList_Map.get("orNo")));
+                	 List<EgovMap>  p06dList = ASManagementListMapper. getResult_DocNo_PAY0006D(svc0004dmap); 
+               
+                	   if(null != p06dList && p06dList.size() >0){
+                          	 for(int a=0;a<p06dList.size(); a++){
+                          		 
+                          		 
+
+                               	EgovMap p06dList_Map =p06dList.get(i);
+                               	double asLgAmt =  p06dList_Map.get("asLgAmt") ==null  ? 0 : Double.parseDouble(((String)p06dList_Map.get("asLgAmt") ));
+                               	
+                          	      //////////////////pay06d    //////////////////// 
+                              	EgovMap pay06d_insert = new EgovMap();
+
+                              	 pay06d_insert.put("asId",AS_ID); 
+                              	 pay06d_insert.put("asDocNo",PAYNO_REV); 
+                                 pay06d_insert.put("asLgDocTypeId","160"); 
+                                 pay06d_insert.put("asLgDt",new Date()); 
+                                 pay06d_insert.put("asLgAmt", (asLgAmt * -1) ); 
+                                 pay06d_insert.put("asLgUpdUserId",svc0004dmap.get("updator"));
+                                 pay06d_insert.put("asLgUpdDt", new Date());
+                                 pay06d_insert.put("asSoNo",  p06dList_Map.get("asSoNo")); 
+                                 pay06d_insert.put("asResultNo",p06dList_Map.get("asSoNo"));
+                                 pay06d_insert.put("asSoId",p06dList_Map.get("asSoId"));
+                                 pay06d_insert.put("asAdvPay",p06dList_Map.get("asAdvPay"));
+                                 pay06d_insert.put("r01","");
+                                 
+                                 int   reverse_PAY0006D_cnt = ASManagementListMapper.reverse_DocNo_PAY0006D(pay06d_insert);
+                          		 
+                          	 }
+                	   }
+                	 //////////////////PAY0006D   	out//////////////// 
             	 }
              }
-        	 
-        	 
         	 
          }// p7dList eof 
          
          
+         //////////////////CCR0001D   	insert //////////////// 
+         svc0004dmap.put("HC_TYPE_NO", svc0004dmap.get("AS_NO"));
+         int reverse_State_CCR0001D_cnt =  ASManagementListMapper.reverse_State_CCR0001D(svc0004dmap);
+         //////////////////CCR0001D   	insert //////////////// 
+     	LOGGER.debug("==========asResult_update  Log  in================");
          
          
          
-		 
+         //////////////////ADD NEW AS RESULT  //////////////// 
+     	 EgovMap   returnemp= this.asResult_insert(params);
+         //////////////////ADD NEW AS RESULT  ////////////////   
+     	 
+     	 return returnemp;
          
-		 //reverse_SVC0005D
-		 ASManagementListMapper.reverse_CURR_SVC0005D(svc0004dmap);
-		 
-		 int c=  ASManagementListMapper.insertSVC0004D(svc0004dmap);  
-			
-		 double AS_TOT_AMT =0;
-		 AS_TOT_AMT = Double.parseDouble((String)svc0004dmap.get("AS_TOT_AMT"));
-		
-		
-		LOGGER.debug("				Logic 1===> AS_TOT_AMT["+AS_TOT_AMT+"]");
-		if(AS_TOT_AMT > 0){
-		
-			
-			
-			if(  Double.parseDouble((String)svc0004dmap.get("AS_WORKMNSH")) > 0 ){   //txtLabourCharge
-				  
-				    double txtLabourCharge  =  Double.parseDouble((String)svc0004dmap.get("AS_WORKMNSH"));
-			        double t_SpareCharges = (txtLabourCharge *100/106);
-					double t_SpareTaxes =    txtLabourCharge - t_SpareCharges ;
-					
-			     	LOGGER.debug("txtLabourCharge["+txtLabourCharge+"]");
-			     	LOGGER.debug("t_SpareCharges===>["+t_SpareCharges+"]");
-			     	LOGGER.debug("vewList  loop===>["+t_SpareTaxes+"]");
-
-					 
-					//setAsChargesTypeId 1261
-					AsResultChargesViewVO vo_1261  =null;
-					vo_1261 =  new AsResultChargesViewVO();
-					vo_1261.setAsEntryId("");
-					vo_1261.setAsChargesTypeId("1261");
-					vo_1261.setAsChargeQty("1");
-					vo_1261.setSparePartId("0");
-					vo_1261.setSparePartCode((String)svc0004dmap.get("productCode"));
-					vo_1261.setSparePartName((String)svc0004dmap.get("productName"));
-					vo_1261.setSparePartSerial((String)svc0004dmap.get("serialNo"));
-					vo_1261.setSpareCharges(Double.toString(t_SpareCharges) );   //
-					vo_1261.setSpareTaxes(Double.toString(t_SpareTaxes));
-					vo_1261.setSpareAmountDue(Double.toString(txtLabourCharge));   
-					vo_1261.setGstRate("6");
-					vo_1261.setGstCode("32");
-					vewList.add(vo_1261);
-			}
-			
-			
-			boolean isTaxCode_0 =this.geGST_CHK(svc0004dmap) ; //1   0 구분 
-		
-			 
-			 //isTaxCode  0
-			if(isTaxCode_0){
-
-				 //호출후 값 세팅 하기 
-				 svc0004dmap.put("TaxCode", "39");
-				 svc0004dmap.put("TaxRate", "0");
-				 
-            			 if(  Double.parseDouble((String)svc0004dmap.get("AS_FILTER_AMT")) > 0 ){   //txtFilterCharge
-            				  if (addItemList.size() > 0) {  
-            						for (int i = 0; i < addItemList.size(); i++) {
-            							Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
-            							Map<String, Object> iMap = new HashMap();
-            							
-            							String tempFilterTotal =String.valueOf( updateMap.get("filterTotal"));
-            							double ft =Double.parseDouble(tempFilterTotal);
-            							if( ft >0){
-            							
-            								    String filterCode ="";
-            								    String filterName ="";
-                								if(! "".equals(updateMap.get("filterDesc") )){
-                									
-                									String temp =(String)updateMap.get("filterDesc");
-                									String[] animals = temp.split("-"); 
-                									
-                									if(animals.length>0){
-                										filterCode = animals[0];
-                										filterName = animals[1];
-                									}
-                								}
-                								
-                								
-                								//setAsChargesTypeId 1261
-                								AsResultChargesViewVO vo_filter  =null;
-                								vo_filter =  new AsResultChargesViewVO();
-                								vo_filter.setAsEntryId("");
-                								vo_filter.setAsChargesTypeId("1262");
-                								vo_filter.setAsChargeQty((String)updateMap.get("filterQty"));
-                								vo_filter.setSparePartId((String)updateMap.get("filterID") );
-                								vo_filter.setSparePartCode(filterCode);
-                								vo_filter.setSparePartName(filterName);
-                								vo_filter.setSparePartSerial("");
-                								vo_filter.setSpareCharges(Double.toString(ft) );   //
-                								vo_filter.setSpareTaxes("0");
-                								vo_filter.setSpareAmountDue(Double.toString(ft));   
-                								vo_filter.setGstRate("0");
-                								vo_filter.setGstCode("0");
-                								vewList.add(vo_filter);   //   view.GSTCode = ZRLocationID.ToString() == "0" ? ZRLocationID.ToString() : ZRLocationID.ToString();
-                						}
-            						}
-            				  }
-            			  }
-			 
-			 //tax 32 
-			 }else {
-				 
-				 //호출후 값 세팅 하기 
-				 svc0004dmap.put("TaxCode", "32");
-				 svc0004dmap.put("TaxRate", "6");
-				 
-    				 if(  Double.parseDouble((String)svc0004dmap.get("AS_FILTER_AMT")) > 0 ){   //txtFilterCharge
-    					 if (addItemList.size() > 0) {  
-       						for (int i = 0; i < addItemList.size(); i++) {
-       							Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
-       							Map<String, Object> iMap = new HashMap();
-
-    							String tempFilterTotal =String.valueOf( updateMap.get("filterTotal"));
-    							double ft =Double.parseDouble(tempFilterTotal);
-    							
-       							if( ft >0){
-       							
-       								    String filterCode ="";
-       								    String filterName ="";
-           								if(! "".equals(updateMap.get("filterDesc") )){
-           									
-           									String temp =(String)updateMap.get("filterDesc");
-           									String[] animals = temp.split("-"); 
-           									   
-           									if(animals.length>0){
-           										filterCode = animals[0];
-           										filterName = animals[1];
-           									}
-           								}
-           								
-           							    double t_SpareCharges = (ft *100/106);
-           								double t_SpareTaxes =  ft - t_SpareCharges ;
-           						
-           								
-           								
-           								//setAsChargesTypeId 1261
-           								AsResultChargesViewVO vo_filter32  =null;
-           								vo_filter32 =  new AsResultChargesViewVO();
-           								vo_filter32.setAsEntryId("");
-           								vo_filter32.setAsChargesTypeId("1262");
-           								vo_filter32.setAsChargeQty((String)updateMap.get("filterQty"));
-           								vo_filter32.setSparePartId((String)updateMap.get("filterID") );
-           								vo_filter32.setSparePartCode(filterCode);
-           								vo_filter32.setSparePartName(filterName);
-           								vo_filter32.setSparePartSerial("");
-           								vo_filter32.setSpareCharges(Double.toString(t_SpareCharges) );   //
-           								vo_filter32.setSpareTaxes("0");
-           								vo_filter32.setSpareAmountDue(Double.toString(t_SpareTaxes));   
-           								vo_filter32.setGstRate("6");
-           								vo_filter32.setGstCode("32");
-           								vewList.add(vo_filter32);   //   view.GSTCode = ZRLocationID.ToString() == "0" ? ZRLocationID.ToString() : ZRLocationID.ToString();
-           						}
-       						}
-       				  }
-       			  }
-			}//isTaxCode_0  if eof 
-			
-			//InvoiceNum 채번 
-			params.put("DOCNO", "128");
-			invoiceDocNo = ASManagementListMapper.getASEntryDocNo(params); 		
-			svc0004dmap.put("taxInvcRefNo", String.valueOf(invoiceDocNo.get("asno")))	;
-			this.setPay31dData(vewList,svc0004dmap);
-			this.setPay32dData(vewList,svc0004dmap) ;
-			
-			
-			
-			double labourCharges = 0;
-			double labourTaxes = 0;
-	        double labourAmountDue = 0;
-	        double partCharges = 0;
-	        double partTaxes = 0;
-	        double partAmountDue = 0;
-			 
-	         
-	     	if(vewList.size()>0){
-				for(AsResultChargesViewVO vo :   vewList){
-					if(vo.getAsChargesTypeId().equals("1261")){
-						labourCharges  		+= Double.parseDouble((vo.getSpareCharges()));
-						labourTaxes     		+= Double.parseDouble((vo.getSpareTaxes()));
-						labourAmountDue     += Double.parseDouble((vo.getSpareAmountDue()));
-					}else if(vo.getAsChargesTypeId().equals("1262")){
-						partCharges  		+= Double.parseDouble((vo.getSpareCharges()));
-						partTaxes     		+= Double.parseDouble((vo.getSpareTaxes()));
-						partAmountDue    += Double.parseDouble((vo.getSpareAmountDue()));
-					} 
-				}
-	     	}
-	     	
-	     	LOGGER.debug("vewList  loop===>");
-	     	LOGGER.debug("					getAsChargesTypeId  1261 in===>");
-	     	LOGGER.debug("											labourCharges["+labourCharges+"]");
-	     	LOGGER.debug("											labourTaxes["+labourTaxes+"]");
-	     	LOGGER.debug("											labourAmountDue["+labourAmountDue+"]");
-	    	LOGGER.debug("					getAsChargesTypeId  1261  out===>");
-
-	     	LOGGER.debug("					getAsChargesTypeId  1262 in===>");
-	     	LOGGER.debug("											partCharges["+partCharges+"]");
-	     	LOGGER.debug("											partTaxes["+partTaxes+"]");
-	     	LOGGER.debug("											partAmountDue["+partAmountDue+"]");
-	    	LOGGER.debug("					getAsChargesTypeId  1262  out===>");
-	     	LOGGER.debug("vewList  loop===>");
-	     	
-
-	     	if (labourAmountDue > 0){
-	     		this.setPay16dLabourData(vewList ,svc0004dmap);
-	     	} 
-	     	
-	     	
-	      	if (partAmountDue > 0){
-	     		this.setPay16dPartData(vewList ,svc0004dmap);
-	     	} 
-	     	
-	      	
-
-	      	if(labourTaxes > 0){
-				svc0004dmap.put("AS_WORKMNSH_TAX_CODE_ID", "32");  
-
-			}else{
-				svc0004dmap.put("AS_WORKMNSH_TAX_CODE_ID", "0");  
-			}   
-    		svc0004dmap.put("AS_WORKMNSH_TXS",Double.toString(labourTaxes));
-		}
-		
-	
-		EgovMap em = new EgovMap();
-		
-		
-		
-		return em;
 	}
 	
 	
 	public  int  setPay17dData(Map<String, Object> params){
-		
+		   
 		LOGGER.debug("									===> setPay17dData   out");	
 		Map<String, Object>  pay17dMap = new HashMap() ;
 	
@@ -1711,12 +1669,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		pay17dMap.put("accInvVoidCrtDt",new Date());
 		
 		
-		 //int a=  ASManagementListMapper.insert_Pay0017d(pay17dMap);
+		 int a=  ASManagementListMapper.insert_Pay0017d(pay17dMap);
 
 		
-		return 0;
+		return a;
 	}
-	
+	 
 	
 	public  int  setPay18dData(Map<String, Object> params){
 		
@@ -1733,10 +1691,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		pay18dMap.put("accInvVoidSubRem","Result Reversal.");
 		   
 		
-		 //int a=  ASManagementListMapper.insert_Pay0018d(pay18dMap);
+		 int a=  ASManagementListMapper.insert_Pay0018d(pay18dMap);
 
 		
-		return 0;
+		return a;
 	}
 	
 	
@@ -1749,7 +1707,78 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		return c;    
 	}
 
+
 	
+	
+	public  int convertAccountToTempBasedOnPayMode(int pMode){
+        int rc = 0;
+        switch (pMode)
+        {
+            case 105://cash
+                rc = 531;
+                break;
+            case 106://cheque
+                rc = 532;
+                break;
+            case 108://online
+                rc = 533;
+                break;
+            default:
+                break;
+        }
+        return rc;
+    }
+	
+    public  int convertTempAccountToSettlementAccount(int p){
+    	
+        int rc = 0;
+        switch (p) {
+            case 99:
+                rc = 83;
+                break;
+            case 100:
+                rc = 90;
+                break;
+            case 101:
+                rc = 84;
+                break;
+            case 102:
+                rc = 92;
+                break;
+            case 103:
+                rc = 83;
+                break;
+            case 104:
+                rc = 86;
+                break;
+            case 105:
+                rc = 85;
+                break;
+            case 106:
+                rc = 84;
+                break;
+            case 107:
+                rc = 88;
+                break;
+            case 110:
+                rc = 89;
+                break;
+            case 497:
+                rc = 497;
+                break;
+            case 545:
+                rc = 546;
+                break;
+            case 553:
+                rc = 551;
+                break;
+            default:
+                break;
+        }
+        return rc;
+    }
+
+    
 	
 	private Map<String, Object> getSaveASEntry(Map<String, Object> params,SessionVO sessionVO){
 		Map<String, Object> asEntry = new HashMap<String, Object>(); 

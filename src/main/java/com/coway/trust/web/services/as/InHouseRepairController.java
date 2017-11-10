@@ -64,6 +64,9 @@ public class InHouseRepairController {
 	}
 	
 	
+	
+	
+	
 	@RequestMapping(value = "/selInhouseList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selInhouseList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		
@@ -97,18 +100,31 @@ public class InHouseRepairController {
 
 
 	@RequestMapping(value = "/save.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> addASRemark(@RequestParam Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+	public ResponseEntity<ReturnMessage> save(@RequestParam Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
 		
 		logger.debug("in  save ");
-		logger.debug("			pram set  log");
+		logger.debug("			pram set  log");   
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");  
 		
-		params.put("USER_ID", sessionVO.getUserId());   
-		   
-		
+		params.put("updator", sessionVO.getUserId());   
 		int  rtnValue = 1;
-		//inHouseRepairService.addASRemark(params);  
+		
+		List<EgovMap>  asresultmst			= (List<EgovMap>)  params.get("asResultM");
+		List<EgovMap>  add					 	= (List<EgovMap>)  params.get("add");
+		List<EgovMap>  remove				= (List<EgovMap>)  params.get("remove");
+		List<EgovMap>  update 				= (List<EgovMap>)  params.get("update");
+		List<EgovMap>  inhouse 				= (List<EgovMap>)  params.get("inhouse");
+		   
+		logger.debug("asresultmst ===>"+asresultmst.toString());  
+		logger.debug("asresultmst ===>"+inhouse.toString());  
+		
+		logger.debug("add ===>"+add.toString());
+		logger.debug("remove ===>"+remove.toString());
+		logger.debug("update ===>"+update.toString());
+		
+		
+		//inHouseRepairService.asResult_insert(params);  
 		
 		ReturnMessage message = new ReturnMessage();
 		if(rtnValue >0 ){
@@ -175,5 +191,21 @@ public class InHouseRepairController {
 		}
 		return ResponseEntity.ok(message);  
 	}
+	
+	
+
+	@RequestMapping(value = "/getCallLog", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getCallLog(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  getCallLog.....");		
+		logger.debug("params : {}", params.toString());
+		
+		List<EgovMap>  list = inHouseRepairService.getCallLog(params);
+		
+		return ResponseEntity.ok(list);  
+	}
+	
+	
+	
 	
 }

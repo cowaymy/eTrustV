@@ -38,6 +38,12 @@ public class  InHouseRepairServiceImpl  extends EgovAbstractServiceImpl implemen
 	public List<EgovMap> selInhouseDetailList(Map<String, Object> params) {
 		return inHouseRepairMapper.selInhouseDetailList(params);
 	}  
-	 
+	
+	
+	@Override 
+	public List<EgovMap> getCallLog(Map<String, Object> params) {
+		return inHouseRepairMapper.getCallLog(params);
+	}
+	
 	
 }

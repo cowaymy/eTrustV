@@ -13,5 +13,6 @@ public interface InHouseRepairMapper {
 	
 	List<EgovMap> selInhouseDetailList(Map<String, Object> params);
 	
-	 
+	 List<EgovMap> getCallLog(Map<String, Object> params);
+
 }

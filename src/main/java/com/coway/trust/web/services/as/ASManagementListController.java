@@ -62,6 +62,26 @@ public class ASManagementListController {
 		return "services/as/ASManagementList";
 	}
 	
+	
+
+	
+	@RequestMapping(value = "/asResultInfo.do")
+	public String asResultInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+				
+		return "services/as/inc_asResultInfoPop";
+	}
+
+	
+	@RequestMapping(value = "/asResultInfoEdit.do")
+	public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+				
+		return "services/as/inc_asResultEditPop";
+	}
+	
+	
+	
 	/**
 	 * Services - AS  - AS Management List Search
 	 *
@@ -214,24 +234,7 @@ public class ASManagementListController {
 		return ResponseEntity.ok(sm);
 	}
 	
-	/**
-	 * Services - AS  - ASReceiveEntry Order No search
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/addASNo.do")
-	public ResponseEntity<ReturnMessage> insertAddASNo(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
-		ReturnMessage message = new ReturnMessage();
-		boolean success =false; 
-		logger.debug("params : {}", params);
-		success = ASManagementListService.insertASNo(params,sessionVO);
-		
-		// 호출될 화면
-		return ResponseEntity.ok(message);
-	}
+	
 	
 	
 	/**
@@ -365,6 +368,23 @@ public class ASManagementListController {
 		
 		 Map<String, Object> map = new HashMap();
 		 map.put("mInfo", meminfo);
+			
+		return ResponseEntity.ok(map);
+	}
+	
+	
+
+	
+	@RequestMapping(value = "/getTotalUnclaimItem", method = RequestMethod.GET)
+	public  ResponseEntity<Map>  getTotalUnclaimItem(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  getTotalUnclaimItem.....");		
+		logger.debug("params : {}", params.toString());
+		
+		 EgovMap   meminfo = ASManagementListService.spFilterClaimCheck(params);
+		
+		 Map<String, Object> map = new HashMap();
+		 map.put("filter", meminfo); 
 			
 		return ResponseEntity.ok(map);
 	}
@@ -581,6 +601,19 @@ public class ASManagementListController {
 	}
 	
 	
+	@RequestMapping(value = "/selectASDataInfo", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectASDataInfo(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  selectASDataInfo.....");		
+		logger.debug("params : {}", params.toString());
+		List<EgovMap>  list = ASManagementListService.selectASDataInfo(params);
+		return ResponseEntity.ok(list);  
+	}
+	
+	
+	
+	
+	
 	
 	
 
@@ -608,7 +641,7 @@ public class ASManagementListController {
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(99);
+		message.setData(rtnValue.get("AS_NO"));
 		message.setMessage("");
 
 				
@@ -635,9 +668,9 @@ public class ASManagementListController {
 		logger.debug("asResultM ===>"+asResultM.toString());  
 		logger.debug("add ===>"+add.toString());
 		logger.debug("remove ===>"+remove.toString());
-		logger.debug("update ===>"+update.toString());
+		logger.debug("update ===>"+update.toString()); 
 		
-		//EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
+		EgovMap  rtnValue = ASManagementListService.asResult_update(params);  
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
