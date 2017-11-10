@@ -15,6 +15,15 @@ $(document).ready(function() {
             Common.popupDiv("/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
         });
  */
+ 
+		 AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+			 callStusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
+		        callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
+		        salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+		        callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
+		        salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
+		     Common.popupDiv("/callCenter/viewCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo+"&salesOrderId=" + salesOrdId);
+		 }); 
      AUIGrid.bind(myGridID, "cellClick", function(event) {
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
         callStusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
@@ -24,6 +33,8 @@ $(document).ready(function() {
         salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
         //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
         console.log(callStusCode+ "     " + callStusId + "     " + salesOrdId+ "     "  + callEntryId)
+        
+        
     });  
      
  
@@ -202,6 +213,7 @@ function fn_excelDown(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order Call Log Search</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onClick="fn_openAddCall()"><span class="search"></span>Add Call Log Result</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_orderCallList()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -332,35 +344,35 @@ function fn_excelDown(){
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="#" onClick="fn_openAddCall()">Add Call Log Result</a></p></li>
-       <!--  <li><p class="link_btn"><a href="#">menu2</a></p></li>
+       <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn"><a href="#">menu6</a></p></li>
         <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
+        <li><p class="link_btn"><a href="#">menu8</a></p></li> 
     </ul>
     <ul class="btns">
-        <!-- <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end -->
+</aside><!-- link_btns_wrap end --> --%>
 
 </form>
 </section><!-- search_table end -->
