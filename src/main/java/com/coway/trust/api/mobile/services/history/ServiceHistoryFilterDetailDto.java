@@ -8,17 +8,17 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "ServiceHistoryFilterDetailDto", description = "ServiceHistoryFilterDetailDto")
 public class ServiceHistoryFilterDetailDto {
 
-	private String filterCode;
+	private int filterCode;
 	private String filterName;
 	private String lastChangeDate;
-	private String filterPeriod;
+	private int filterPeriod;
 	private String nextChangeDate;
-	private String changeQty;
+	private int changeQty;
 	
-	public String getFilterCode() {
+	public int getFilterCode() {
 		return filterCode;
 	}
-	public void setFilterCode(String filterCode) {
+	public void setFilterCode(int filterCode) {
 		this.filterCode = filterCode;
 	}
 	public String getFilterName() {
@@ -33,10 +33,10 @@ public class ServiceHistoryFilterDetailDto {
 	public void setLastChangeDate(String lastChangeDate) {
 		this.lastChangeDate = lastChangeDate;
 	}
-	public String getFilterPeriod() {
+	public int getFilterPeriod() {
 		return filterPeriod;
 	}
-	public void setFilterPeriod(String filterPeriod) {
+	public void setFilterPeriod(int filterPeriod) {
 		this.filterPeriod = filterPeriod;
 	}
 	public String getNextChangeDate() {
@@ -45,10 +45,10 @@ public class ServiceHistoryFilterDetailDto {
 	public void setNextChangeDate(String nextChangeDate) {
 		this.nextChangeDate = nextChangeDate;
 	}
-	public String getChangeQty() {
+	public int getChangeQty() {
 		return changeQty;
 	}
-	public void setChangeQty(String changeQty) {
+	public void setChangeQty(int changeQty) {
 		this.changeQty = changeQty;
 	}
 

@@ -14,10 +14,10 @@ import io.swagger.annotations.ApiModelProperty;
 public class ServiceHistoryForm {
 	
 	
-	@ApiModelProperty(value = "userId [default : '' 전체] 예) CT100559 ", example = "1, 2, 3")
+	@ApiModelProperty(value = "userId [default : '' 전체] 예)  ", example = "1, 2, 3")
 	private String userId;
 
-	@ApiModelProperty(value = "salesOrderNo [default : '' 전체] 예) 201706", example = "1, 2, 3")
+	@ApiModelProperty(value = "salesOrderNo [default : '' 전체] 예) 1209382", example = "1, 2, 3")
 	private String salesOrderNo;
 	
 	

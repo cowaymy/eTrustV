@@ -35,7 +35,7 @@ public class ServiceHistoryDto {
 	private String failReason;
 
 
-	private String collectionCode;
+	private int collectionCode;
 
 
 	private String collectionName;
@@ -149,12 +149,12 @@ public class ServiceHistoryDto {
 	}
 
 
-	public String getCollectionCode() {
+	public  int getCollectionCode() {
 		return collectionCode;
 	}
 
 
-	public void setCollectionCode(String collectionCode) {
+	public void setCollectionCode( int collectionCode) {
 		this.collectionCode = collectionCode;
 	}
 

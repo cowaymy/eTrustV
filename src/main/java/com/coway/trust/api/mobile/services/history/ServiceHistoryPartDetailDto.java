@@ -11,7 +11,7 @@ public class ServiceHistoryPartDetailDto {
 
 	private String partCode;
 	private String partName;
-	private String changeQty;
+	private int changeQty;
 	
 	public String getPartCode() {
 		return partCode;
@@ -25,10 +25,10 @@ public class ServiceHistoryPartDetailDto {
 	public void setPartName(String partName) {
 		this.partName = partName;
 	}
-	public String getChangeQty() {
+	public int getChangeQty() {
 		return changeQty;
 	}
-	public void setChangeQty(String changeQty) {
+	public void setChangeQty(int changeQty) {
 		this.changeQty = changeQty;
 	}
 
