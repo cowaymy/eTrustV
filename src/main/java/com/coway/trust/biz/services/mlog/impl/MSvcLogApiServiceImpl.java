@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.logistics.returnusedparts.impl.ReturnUsedPartsMapper;
@@ -287,6 +287,12 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	public void updateSuccessInstallStatus(String transactionId) {
 		// TODO Auto-generated method stub
 		MSvcLogApiMapper.updateSuccessInstallStatus(transactionId);
+	}
+
+	@Override
+	public List<EgovMap> getRentalCustomerList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getRentalCustomerList(params);
 	}
 
 	@Override

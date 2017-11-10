@@ -1,6 +1,7 @@
 package com.coway.trust.api.mobile.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.logistics.ctcodylist.DisplayCt_CodyListDto;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferRejectSMOReqForm;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestDto;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestForm;
 import com.coway.trust.api.mobile.services.as.ASReAppointmentRequestDto;
@@ -57,6 +60,8 @@ import com.coway.trust.api.mobile.services.productRetrun.PRFailJobRequestForm;
 import com.coway.trust.api.mobile.services.productRetrun.PRReAppointmentRequestDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobForm;
+import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
+import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
 import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultForm;
 import com.coway.trust.biz.services.as.ASManagementListService;
@@ -391,7 +396,26 @@ public class ServiceApiController {
 	}
 	
 	
-	
+	@ApiOperation(value = "Display RC List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/rcList", method = RequestMethod.POST)
+	public ResponseEntity<List<RentalServiceCustomerDto>> rentalCustomerPaymentList(@RequestBody RentalServiceCustomerForm rentalForm)
+			throws Exception {		
+		String transactionId = "";
+		
+		Map<String, Object> map = new HashMap();
+		
+		map.put("userId" , (String)rentalForm.getUserId());
+		map.put("searchType" , (String)rentalForm.getSerchType());
+		map.put("searchKeyword" , (String)rentalForm.getSearchKeyword());
+		
+		List<EgovMap> rcList = MSvcLogApiService.getRentalCustomerList(map);
+		
+		List<RentalServiceCustomerDto> list = rcList.stream().map(r -> RentalServiceCustomerDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+
+	}
 	
 
 	

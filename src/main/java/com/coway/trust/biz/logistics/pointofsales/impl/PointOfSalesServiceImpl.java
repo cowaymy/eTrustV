@@ -103,10 +103,6 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		List<EgovMap> GIList = (List<EgovMap>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> GiMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 
-		// logger.debug("GIList사이즈 값 : {}", GIList.size());
-		// for (int i = 0; i < GIList.size(); i++) {
-		// logger.debug("GIList! : {}", GIList.get(i));
-		// }
 		int iCnt = 0;
 		String ttype = "";
 		String docno = "";

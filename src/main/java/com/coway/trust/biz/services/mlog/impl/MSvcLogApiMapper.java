@@ -3,6 +3,8 @@ package com.coway.trust.biz.services.mlog.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -58,6 +60,8 @@ public interface MSvcLogApiMapper {
 
 	void insertInstallResult(Map<String, Object> installResult);
 
+	List<EgovMap> getRentalCustomerList(Map<String, Object> params);
+
 	void insertProductReturnResult(Map<String, Object> params);
 
 	List<EgovMap> serviceHistory(Map<String, Object> params);
@@ -74,8 +78,6 @@ public interface MSvcLogApiMapper {
 
 	List<EgovMap> getAsFilterHistoryDList(Map<String, Object> params);
 
-	
-	
 	
 	
 }

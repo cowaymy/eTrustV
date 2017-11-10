@@ -1381,6 +1381,39 @@
                                <![CDATA[  AND ROWNUM < 4]]> 
                    
            </select>                     
-                   
+           
+           <select id="getRentalCustomerList" parameterType="Map" resultType="egovMap">
+            SELECT C.NAME as cust_name,
+                   B.SALES_ORD_NO as sales_order_no,
+                   E.CODE_NAME as payment_mode,
+                   NVL(B.MTH_RENT_AMT , 0) as target_amount,
+                   NVL(A.RENT_AMT , 0) as amount
+              FROM PAY0022D A,
+                   SAL0001D B,
+                   SAL0029D C,
+                   SAL0074D D,
+                   SYS0013M E,
+                   ORG0001D F
+             WHERE     A.rent_so_id = B.sales_ord_id
+                   AND B.cust_id = C.cust_id
+                   AND B.sales_ord_id = D.sales_ord_id
+                   AND D.MODE_ID = E.CODE_ID(+)
+                   AND E.CODE_MASTER_ID = 19
+                   AND B.MEM_ID = F.MEM_ID
+                   AND F.MEM_CODE = #{userId}
+                   <if test="searchKeyword != null and searchKeyword != ''">
+                    <choose>
+                        <when test="searchType == 1">
+                            AND C.NAME LIKE  '%'||#{searchKeyword}||'%'
+                        </when>
+                        <when test="searchType == 2">
+                            AND B.sales_ord_no = #{searchKeyword}
+                        </when>
+                        <otherwise>
+                          AND 1 = 1
+                        </otherwise>
+                    </choose>
+                   </if>
+         </select>        
                    
 </mapper>

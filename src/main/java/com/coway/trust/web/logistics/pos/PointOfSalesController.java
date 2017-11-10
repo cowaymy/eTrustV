@@ -261,15 +261,7 @@ public class PointOfSalesController {
 
 		List<Object> GIList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> GIMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		// logger.debug("posSeq@@@@@: {}", GIMap.get("giptdate"));
-		// logger.debug("posSeq@@@@@: {}", GIMap.get("gipfdate"));
-		// logger.debug("posSeq@@@@@: {}", GIMap.get("doctext"));
-		// logger.debug("posSeq@@@@@: {}",GIMap);
-
-		for (int i = 0; i < GIList.size(); i++) {
-			logger.debug("GIList! : {}", GIList.get(i));
-		}
-
+		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
+import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -51,10 +52,6 @@ public interface MSvcLogApiService {
 
 	List<EgovMap> getHsFilterHistoryDList(Map<String, Object> tmpMap1);
 
+	List<EgovMap> getRentalCustomerList(Map<String, Object> params);	
 
-	
-	
-	
-	
-	
 }
