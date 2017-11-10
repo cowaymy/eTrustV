@@ -19,6 +19,7 @@
 	    <li><a href="/login/logout.do" class="logout">Logout</a></li>
 	    <li><a href="/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
 	    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
+	    <li id="menuLinkHelp"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_help.gif" alt="Help" /></a></li>
 	</ul>
 	</header><!-- header end -->
 	
@@ -131,7 +132,15 @@
                     , "mymenuPop"
                );
 		   }			   		   		   
-	   })	   	  
+	   });
+
+		$("#menuLinkHelp").on("click", function(){
+		    var menuCode = $("#CURRENT_MENU_CODE").val();
+
+		    if(FormUtil.isNotEmpty(menuCode)){
+		        window.open(DEFAULT_HELP_FILE + "/" + menuCode.substr(0, 3) + "/" + menuCode + ".jpg")
+			}
+		});
    });
       
    
