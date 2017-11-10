@@ -204,21 +204,52 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	public void StocktransferReqDelivery(Map<String, Object> params) {
 
 		List<Object> updList = (List<Object>) params.get("check");
-
+		List<Object> serialList = (List<Object>) params.get("add");
+		Map<String, Object> formMap = (Map<String, Object>) params.get("formMap");
+		
+//		for (int i = 0; i < updList.size(); i++) {
+//			logger.info(" updList.get(i) : {}", updList.get(i));
+//		}
+//		for (int i = 0; i < serialList.size(); i++) {
+//			logger.info(" serialList.get(i) : {}", serialList.get(i));
+//		}
+//		
+//		logger.info(" reqstno : {}", formMap.get("reqstno"));
+		
 		String seq = stocktran.selectDeliveryStockTransferSeq();
-
+		
 		if (updList.size() > 0) {
+			Map<String, Object> imap = new HashMap();
 			Map<String, Object> insMap = null;
 			for (int i = 0; i < updList.size(); i++) {
-
+				
 				logger.info(" updList.get(i) : {}", updList.get(i).toString());
 				insMap = (Map<String, Object>) updList.get(i);
-				insMap.put("delno", seq);
-				insMap.put("userId", params.get("userId"));
-				stocktran.deliveryStockTransferDetailIns(insMap);
+				
+				imap = (Map<String, Object>) insMap.get("item");
+				
+				imap.put("delno", seq);
+				imap.put("userId", params.get("userId"));
+				stocktran.deliveryStockTransferDetailIns(imap);
 			}
-			stocktran.deliveryStockTransferIns(insMap);
+			stocktran.deliveryStockTransferIns(imap);
 		}
+		
+		if (serialList.size() > 0) {
+
+			for (int j = 0; j < serialList.size(); j++) {
+
+				Map<String, Object> insSerial = null;
+
+				insSerial = (Map<String, Object>) serialList.get(j);
+
+				insSerial.put("delno", seq);
+				insSerial.put("reqstno", formMap.get("reqstno"));
+				insSerial.put("userId", params.get("userId"));
+				stocktran.insertTransferSerial(insSerial);
+			}
+		}
+			
 	}
 
 	@Override
