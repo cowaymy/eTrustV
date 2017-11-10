@@ -327,7 +327,7 @@ function fn_setSupplier() {
 }
 
 function fn_selectApproveList() {
-    Common.ajax("GET", "/eAccounting/webInvoice/selectApproveList.do", $("#form_approve").serializeJSON(), function(result) {
+    Common.ajax("GET", "/eAccounting/webInvoice/selectApproveList.do?" + Math.random(), $("#form_approve").serializeJSON(), function(result) {
         console.log(result);
         AUIGrid.setGridData(invoAprveGridID, result);
     });

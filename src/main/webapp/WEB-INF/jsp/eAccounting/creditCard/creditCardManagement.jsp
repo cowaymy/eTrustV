@@ -248,7 +248,7 @@ function fn_setPopCostCenter() {
 }
 
 function fn_selectCrditCardMgmtList() {
-    Common.ajax("GET", "/eAccounting/creditCard/selectCrditCardMgmtList.do", $("#form_mgmt").serializeJSON(), function(result) {
+    Common.ajax("GET", "/eAccounting/creditCard/selectCrditCardMgmtList.do?" + Math.random(), $("#form_mgmt").serializeJSON(), function(result) {
         console.log(result);
         AUIGrid.setGridData(mgmtGridID, result);
     });
