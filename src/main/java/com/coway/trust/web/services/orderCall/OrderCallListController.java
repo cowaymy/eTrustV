@@ -145,4 +145,31 @@ public class OrderCallListController {
 		return ResponseEntity.ok(callLogTran);
 	}
 	
+	/**
+	 * Call Center - order Call List - Add Call Log Result 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/viewCallResultPop.do")
+	public String selectCallResultPop(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) throws Exception {
+		EgovMap orderCall = orderCallListService.getOrderCall(params);
+		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
+		
+		//Order Detail Tab
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVO);
+		logger.debug("orderCall : {}", orderCall);
+		model.addAttribute("callStusCode", params.get("callStusCode"));
+		model.addAttribute("callStusId", params.get("callStusId"));
+		model.addAttribute("salesOrdId", params.get("salesOrdId"));
+		model.addAttribute("callEntryId", params.get("callEntryId"));
+		model.addAttribute("salesOrdNo", params.get("salesOrdNo"));
+		model.addAttribute("orderCall", orderCall);
+		model.addAttribute("callStatus", callStatus);
+		model.addAttribute("orderDetail", orderDetail);
+		return "services/orderCall/viewCallLogResultPop";
+	}
+	
 }
