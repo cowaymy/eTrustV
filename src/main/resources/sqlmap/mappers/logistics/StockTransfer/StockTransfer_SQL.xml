@@ -27,6 +27,7 @@
 		     , s28q.wh_loc_code  reqlocnm
 		     , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
 		     , l48.itm_code      itmcd
+		     , (select SERIAL_CHK from sys0026m where stk_code = l48.itm_code) serialchk
 		     , l48.itm_name      itmname
 		     , l48.reqst_qty     reqstqty
 		     , NVL (l55.DELVRY_QTY, 0) AS delyqty
@@ -437,4 +438,28 @@
 					   AND L47.REQST_NO = L48.REQST_NO
 					   AND L47.REQST_NO = #{reqno}
      </insert>
+     
+     <insert id="insertTransferSerial" parameterType="Map">
+     INSERT INTO LOG0061D (
+                                        SERIAL_NO,
+                                        DELVRY_NO,
+                                        PDELVRY_NO_ITM,
+                                        TTYPE,
+                                        CRT_DT,
+                                        CRT_USER_ID
+                                        )
+                          SELECT
+                                   #{serial},
+                                   #{delno},
+                                   DELVRY_NO_ITM,
+                                    (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) ,
+                                    SYSDATE,
+                                    #{userId}
+                                    FROM LOG0055D
+                                    WHERE 1=1
+                                              AND DELVRY_NO= #{delno}
+                                              AND ITM_CODE =#{itmcd}
+                                              AND REQST_NO =#{reqstno}                                      
+                                                       
+     </insert>  
 </mapper>
