@@ -351,7 +351,7 @@ $("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header",containment: "htm
 	 });
  }
  $(document).on("click",function(e){
- 	if($(e.target).parent().hasClass("popup_wrap")){
+ 	if($(e.target).parent().attr("id") === "popup_wrap"){
  		var target = $(e.target).parent().find(".pop_header .right_opt a:contains('CLOSE') ,.pop_close");	
  		popupKeyEvent(target);
 	}
