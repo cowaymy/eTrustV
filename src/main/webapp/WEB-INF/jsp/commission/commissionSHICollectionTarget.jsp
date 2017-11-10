@@ -221,7 +221,7 @@ var today = "${today}";
 						</td>
 						<th scope="row">Member Code</th>
 						<td>
-						  <input type="text" title="" placeholder="" class="" id="memCode" name="memCode"/>
+						  <input type="text" title="" placeholder="" id="memCode" name="memCode"/>
 						  <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
 						<th scope="row">Commission Month</th>
