@@ -175,5 +175,20 @@ public class CTSubGroupListController {
 		return ResponseEntity.ok(selectCTSubGroupDscList);
 	}
 	
+	@RequestMapping(value = "/selectCTMByDSC", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTMByDSC( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> selectCTSubGroupDscList = CTSubGroupListService.selectCTMByDSC(params);
+		logger.debug("selectCTSubGroupDscList {}", selectCTSubGroupDscList);
+		return ResponseEntity.ok(selectCTSubGroupDscList);
+	}
+	
+	@RequestMapping(value = "/selectCTSubGrb", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTSubGrb( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> selectCTSubGrb = CTSubGroupListService.selectCTSubGrb(params);
+		logger.debug("selectCTSubGroupDscList {}", selectCTSubGrb);
+		return ResponseEntity.ok(selectCTSubGrb);
+	}
 	
 }

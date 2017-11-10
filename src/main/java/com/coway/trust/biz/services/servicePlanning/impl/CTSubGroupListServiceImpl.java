@@ -69,5 +69,17 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 			CTSubGroupListMapper.insertCTSubAreaGroup(insertValue);
 		}
 	}
+
+	@Override
+	public List<EgovMap> selectCTMByDSC(Map<String, Object> params) {
+
+		return CTSubGroupListMapper.selectCTMByDSC(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCTSubGrb(Map<String, Object> params) {
+		
+		return CTSubGroupListMapper.selectCTSubGrb(params);
+	}
 	
 }

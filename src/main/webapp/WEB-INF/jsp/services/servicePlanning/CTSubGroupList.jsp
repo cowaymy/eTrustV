@@ -284,19 +284,17 @@ $(document).ready(function() {
 	    }); 
 	 
 	 $("#state").change(function(){
+		 
 		 doGetCombo('/services/holiday/selectCity.do',  $("#state").val(), '','city', 'S' ,  ''); 
 		 
 	 });
 	 
 	 $("#dscCode").change(function (){
-	        doGetCombo('/services/serviceGroup/selectCTM',  $("#dscCode").val(), '','memCode', 'S' ,  ''); 
+	        doGetCombo('/services/serviceGroup/selectCTMByDSC',  $("#dscCode").val(), '','memCode', 'S' ,  ''); 
+	        doGetCombo('/services/serviceGroup/selectCTSubGrb',  $("#dscCode").val(), '','ctSubGrp', 'S' ,  ''); 
 	   });
 	 
-	 
-	 //Todo
-	 $("#memCode").change(function(){
-		  
-	 });
+
 	    
 	
 });
