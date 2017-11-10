@@ -508,8 +508,10 @@ function fn_itempopList_T(data){
 	var itm_qty  = 0;
 	var itmdata = [];
 	for (var i = 0 ; i < data.length ; i++){
+		if (data[i].item.serialchk == 'Y'){
 		itm_qty = itm_qty + data[i].item.indelyqty;
-		$("#reqstno").val(data[i].item.reqstno)
+		$("#reqstno").val(data[i].item.reqstno);
+		}
 	}
 	$("#serialqty").val(itm_qty);
 	
