@@ -101,7 +101,7 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		Map<String, Object>  insertValue = null;
 		for(int i=0; i< updList.size(); i++){
 			insertValue = (Map<String, Object>) updList.get(i);
-			insertValue.put("holidayType", formMap.get("holidayType"));
+			insertValue.put("holidayType",(formMap.get("holidayType").toString()).substring(0, 1));
 			insertValue.put("holiday", formMap.get("holiday"));
 			insertValue.put("branchName", formMap.get("branchName"));
 			insertValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );
