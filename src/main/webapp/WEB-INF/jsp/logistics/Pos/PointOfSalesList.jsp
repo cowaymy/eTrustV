@@ -237,6 +237,9 @@ $(function(){
               }  	       	
             document.giForm.gitype.value="GI";
             $("#dataTitle").text("Good Issue Posting Data");
+            $("#giptdate").val("");
+            $("#gipfdate").val("");
+            $("#doctext").val("");
             doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
             $("#giopenwindow").show();
@@ -259,6 +262,9 @@ $(function(){
             }
             document.giForm.gitype.value="GC";
             $("#dataTitle").text("Issue Cancel Posting Data");
+            $("#giptdate").val("");
+            $("#gipfdate").val("");
+            $("#doctext").val("");
             doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
             $("#giopenwindow").show();
@@ -550,8 +556,8 @@ function f_getTtype(g , v){
     
         <ul class="right_btns">
          <li><p class="btn_grid"><a id="insert"><span class="search"></span>INS</a></p></li>            
-         <li><p class="btn_grid"><a id="goodIssue">Good Issue</a></p></li>
-         <li><p class="btn_grid"><a id="issueCancel">Issue Cancel</a></p></li>
+         <li><p class="btn_grid"><a id="goodIssue">GI/GR</a></p></li>
+         <li><p class="btn_grid"><a id="issueCancel">GI/GR Cancel</a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
@@ -583,9 +589,9 @@ function f_getTtype(g , v){
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">GI Posting Date</th>
+                    <th scope="row">GI/GR Posting Date</th>
                     <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
-                    <th scope="row">GI Doc Date</th>
+                    <th scope="row">GI/GR Doc Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
                 </tr>
                 <tr>    
