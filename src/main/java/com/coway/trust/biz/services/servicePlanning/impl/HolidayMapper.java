@@ -29,6 +29,8 @@ public interface HolidayMapper {
 	
 	List<EgovMap> selectState();
 	
+	List<EgovMap> selectCity(Map<String, Object> params);
+	
 	void deleteHoliday(Map<String, Object> params);
 	
 	List<EgovMap> selectBranch();

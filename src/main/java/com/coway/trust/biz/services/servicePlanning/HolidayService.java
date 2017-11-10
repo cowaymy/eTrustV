@@ -31,5 +31,7 @@ public interface HolidayService {
 	boolean deleteHoliday(List<Object> params,SessionVO sessionVO);
 	
 	List<EgovMap> selectBranch();
+	
+	List<EgovMap> selectCity(Map<String, Object> params);
 
 }

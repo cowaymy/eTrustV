@@ -185,6 +185,16 @@
     <select id="selectState" resultType="egovMap">
     SELECT STATE CODE_ID, STATE CODE_NAME FROM SYS0064M GROUP BY STATE
     </select>
+    
+    <select id="selectCity" parameterType="Map" resultType="egovMap">
+ 
+		SELECT DISTINCT CITY CODE_ID 
+		            ,  CITY CODE_NAME
+		FROM SYS0064M WHERE 1=1 
+		<if test = "groupCode != null and groupCode != '' ">
+		   AND  STATE = #{groupCode}
+		</if>
+    </select>
     <delete id="deleteHoliday" parameterType="Map">
         DELETE FROM SYS0081M 
         WHERE HOLIDAY =  TO_DATE(#{holiday},'YYYY-MM-DD')

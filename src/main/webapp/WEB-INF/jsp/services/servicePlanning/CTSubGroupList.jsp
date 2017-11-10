@@ -255,6 +255,7 @@ function fn_onchange(){
 $(document).ready(function() {
 	//DSCCODE
 	 doGetCombo('/services/mileageCileage/selectBranch', 43, '','dscCode', 'S' ,  '');
+	 doGetCombo('/services/holiday/selectState.do', '' , '', 'state' , 'S', '');
 	CTSubgGroupGrid();
 	CTSubAreaGroupGrid();
 	$("#grid_wrap_ctaAreaSubGroup").hide();
@@ -281,10 +282,21 @@ $(document).ready(function() {
 	        //memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
 	        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
 	    }); 
-	     
+	 
+	 $("#state").change(function(){
+		 doGetCombo('/services/holiday/selectCity.do',  $("#state").val(), '','city', 'S' ,  ''); 
+		 
+	 });
+	 
 	 $("#dscCode").change(function (){
 	        doGetCombo('/services/serviceGroup/selectCTM',  $("#dscCode").val(), '','memCode', 'S' ,  ''); 
 	   });
+	 
+	 
+	 //Todo
+	 $("#memCode").change(function(){
+		  
+	 });
 	    
 	
 });
@@ -369,13 +381,14 @@ function fn_radioButton(val){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Region</th>
+ <th scope="row">State</th>
     <td>
-        <input type="text" title="" placeholder="" class="w100p"  id="region" name="region">
-    </td>
+        <select class="w100p" id="state" name="state"></select>
+   </td>
+    
     <th scope="row">City</th>
     <td>
-        <input type="text" title="" placeholder="" class="w100p"  id="city" name="city">
+        <select class="w100p" id="city" name="city"></select>
     </td>
     <th scope="row">Area</th>
     <td>
@@ -387,8 +400,10 @@ function fn_radioButton(val){
     <td>
         <input type="text" title="" placeholder="" class="w100p"  id="postCode" name="postCode">
     </td>
-    <th scope="row">State</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="state" name="state"/></td>
+    <th scope="row"></th>
+    <td>
+        
+    </td>
     <th scope="row">Area ID</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="areaId" name="areaId"/></td>
 </tr>

@@ -263,4 +263,12 @@ public class HolidayController {
 		return ResponseEntity.ok(selectState);
 	}
 	
+	@RequestMapping(value = "/selectCity.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTM( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> selectCityList = holidayService.selectCity(params);
+		logger.debug("selectCityList {}", selectCityList);
+		return ResponseEntity.ok(selectCityList);
+	}
+	
 }
