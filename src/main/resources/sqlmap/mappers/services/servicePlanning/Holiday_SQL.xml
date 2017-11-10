@@ -126,7 +126,7 @@
           AND A.HOLIDAY_TYPE = D.HOLIDAY_TYPE(+)
           AND A.HOLIDAY_SEQ  = D.HOLIDAY_SEQ(+)
           AND A.CT_BRNCH_CODE = D.BRNCH_CODE(+)
-          AND A.CT_BRNCH_CODE = F.CODE(+)
+          AND A.CT_BRNCH_CODE = F.CODE
      group by A.HOLIDAY_TYPE,
                      A.STATE,
                      A.HOLIDAY,
