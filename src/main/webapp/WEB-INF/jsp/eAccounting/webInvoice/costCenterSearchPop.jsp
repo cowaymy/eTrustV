@@ -50,7 +50,7 @@ $(document).ready(function () {
 });
 
 function fn_selectCostCenter() {
-    Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do", $("#form_costCenter").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do", $("#form_costCenter").serializeJSON(), function(result) {
         AUIGrid.setGridData(costCenterGridID, result);
     });
 }

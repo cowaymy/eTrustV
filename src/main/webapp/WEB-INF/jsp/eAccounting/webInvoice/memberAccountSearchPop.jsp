@@ -79,7 +79,7 @@ $(document).ready(function () {
 });
 
 function fn_selectMember() {
-	Common.ajax("GET", "/eAccounting/webInvoice/selectSupplier.do", $("#form_supplier").serialize(), function(result) {
+	Common.ajax("GET", "/eAccounting/webInvoice/selectSupplier.do", $("#form_supplier").serializeJSON(), function(result) {
         AUIGrid.setGridData(supplierGridID, result);
 	});
 }

@@ -304,7 +304,7 @@ function fn_loadOrderSalesman(memId, memCode) {
 }
 
 function fn_selectCustodianList() {
-    Common.ajax("GET", "/eAccounting/pettyCash/selectCustodianList.do", $("#form_pettyCashCustdn").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/pettyCash/selectCustodianList.do", $("#form_pettyCashCustdn").serializeJSON(), function(result) {
         console.log(result);
         AUIGrid.setGridData(pettyCashCustdnGridID, result);
     });
