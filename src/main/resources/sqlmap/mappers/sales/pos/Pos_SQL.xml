@@ -101,6 +101,9 @@
                         LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
                         JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
                         LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
+                        <if test="(deducMem != null and deducMem != '') or (deducMemNric != null and deducMemNric != '' )">    
+                            LEFT JOIN (SELECT DISTINCT POS_ID, MEM_CODE, NRIC FROM SAL0058D) Extent8   ON Extent8.POS_ID = Extent1.POS_ID
+                        </if>
                 WHERE  1=1
                <if test=" null != posModuleTypeId and '' != posModuleTypeId">
                    AND  Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
@@ -126,333 +129,118 @@
                 
                 <if test="sDate != null and sDate != '' ">   
                     <![CDATA[
-                    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}, 'DD-MM-YYYY')
+                    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS') 
                      ]]>
                 </if>
                 
                 <if test="eDate != null and eDate != '' "> 
                    <![CDATA[                    
-                    AND  Extent1.POS_DT <= TO_DATE(#{eDate}, 'DD-MM-YYYY')  
+                    AND  Extent1.POS_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')  
                     ]]>
                 </if> 
-                
+                <if test="brnchId != null and brnchId != '' ">
+                    AND Extent1.BRNCH_ID = #{brnchId}
+                </if>
                 <if test=" null != salesmanId and '' != salesmanId">
                     AND Extent1.POS_MEM_ID = #{salesmanId}
                 </if>
                 
                 <if test=" null != posCustName and '' != posCustName">
                     AND  Extent1.POS_CUST_NAME  = #{posCustName}
+                </if>
+                
+                <if test="deducMem != null and deducMem != '' ">    
+                    AND Extent1.POS_MODULE_TYPE_ID = 2391
+                    AND Extent8.MEM_CODE = #{deducMem}
+                </if>
+                
+                <if test="deducMemNric != null and deducMemNric != '' ">
+                    AND Extent1.POS_MODULE_TYPE_ID = 2391
+                    AND Extent8.NRIC = #{deducMemNric}
                 </if>  
     </select>
     
-    <select id="selectPSMItmTypeList" parameterType="Map" resultType="egovMap"> 
-<![CDATA[
-SELECT DISTINCT 
-       Project4.CODE_DESC CODE_NAME,
-       Project4.STK_TYPE_ID CODE_ID
-  FROM ( SELECT 1 C1  ,
-                Distinct2.CODE_DESC   ,
-                Distinct3.STK_ID   ,
-                Distinct3.STK_CODE   ,
-                Distinct3.STK_DESC   ,
-                Distinct3.STK_CTGRY_ID   ,
-                Distinct3.STK_TYPE_ID   ,
-                Distinct3.STUS_CODE_ID   ,
-                Distinct3.IS_SIRIM   ,
-                Distinct3.IS_NCV  ,
-                Distinct3.QTY_PER_CARTON   ,
-                Distinct3.UPD_USER_ID   ,
-                Distinct3.UPD_DT   ,
-                Distinct3.IS_SYNCH   ,
-                Distinct3.NET_WT   ,
-                Distinct3.GROS_WT   ,
-                Distinct3.MEASURE_CBM   ,
-                Distinct3.MASTER_STK_ID   ,
-                Distinct3.STK_GRAD   ,
-                Distinct3.STK_IMG   ,
-                Distinct3.BS_POINT   ,
-                Distinct3.UNIT_VALU   ,
-                Distinct3.STK_COMM_OS_AS   ,
-                Distinct3.STK_COMM_AS   ,
-                Distinct3.STK_COMM_OS_BS   ,
-                Distinct3.STK_COMM_BS   ,
-                Distinct3.STK_COMM_OS_INS   ,
-                Distinct3.STK_COMM_INS   ,
-                Distinct3.STK_ALLOW_SALES   ,
-                Distinct3.IS_SVC_STK   ,
-                Distinct3.CODE_DESC DESCRIPTION1  ,
-                CASE 
-                     WHEN ( Distinct3.STK_ID IS NULL ) THEN UTILS.CONVERT_TO_NUMBER('',10,0)
-                ELSE 1
-                   END C2  
-         FROM ( SELECT DISTINCT Distinct1.CODE_DESC   
-                FROM ( SELECT DISTINCT Extent1.STK_ID   ,
-                                       Extent1.STK_CODE   ,
-                                       Extent1.STK_DESC   ,
-                                       Extent1.STK_CTGRY_ID   ,
-                                       Extent1.STK_TYPE_ID   ,
-                                       Extent1.STUS_CODE_ID   ,
-                                       Extent1.IS_SIRIM   ,
-                                       Extent1.IS_NCV   ,
-                                       Extent1.QTY_PER_CARTON   ,
-                                       Extent1.UPD_USER_ID   ,
-                                       Extent1.UPD_DT   ,
-                                       Extent1.IS_SYNCH   ,
-                                       Extent1.NET_WT   ,
-                                       Extent1.GROS_WT   ,
-                                       Extent1.MEASURE_CBM   ,
-                                       Extent1.MASTER_STK_ID   ,
-                                       Extent1.STK_GRAD   ,
-                                       Extent1.STK_IMG   ,
-                                       Extent1.BS_POINT   ,
-                                       Extent1.UNIT_VALU   ,
-                                       Extent1.STK_COMM_OS_AS   ,
-                                       Extent1.STK_COMM_AS   ,
-                                       Extent1.STK_COMM_OS_BS   ,
-                                       Extent1.STK_COMM_BS   ,
-                                       Extent1.STK_COMM_OS_INS   ,
-                                       Extent1.STK_COMM_INS   ,
-                                       Extent1.STK_ALLOW_SALES   ,
-                                       Extent1.IS_SVC_STK   ,
-                                       Extent2.CODE_DESC   
-                       FROM SYS0026M Extent1
-                              LEFT JOIN SYS0013M Extent2   ON Extent1.STK_TYPE_ID = Extent2.CODE_ID
-                        WHERE  ( 1 = Extent1.STUS_CODE_ID )
-                                 AND ( ( 61 <> Extent1.STK_TYPE_ID )
-                                 OR ( ( 61 = Extent1.STK_TYPE_ID )
-                                 AND ( 965 = Extent1.STK_ID ) ) ) ) Distinct1 ) Distinct2
-                LEFT JOIN ( SELECT DISTINCT Extent3.STK_ID   ,
-                                            Extent3.STK_CODE   ,
-                                            Extent3.STK_DESC   ,
-                                            Extent3.STK_CTGRY_ID   ,
-                                            Extent3.STK_TYPE_ID   ,
-                                            Extent3.STUS_CODE_ID   ,
-                                            Extent3.IS_SIRIM   ,
-                                            Extent3.IS_NCV   ,
-                                            Extent3.QTY_PER_CARTON   ,
-                                            Extent3.UPD_USER_ID   ,
-                                            Extent3.UPD_DT   ,
-                                            Extent3.IS_SYNCH   ,
-                                            Extent3.NET_WT   ,
-                                            Extent3.GROS_WT   ,
-                                            Extent3.MEASURE_CBM   ,
-                                            Extent3.MASTER_STK_ID   ,
-                                            Extent3.STK_GRAD   ,
-                                            Extent3.STK_IMG   ,
-                                            Extent3.BS_POINT   ,
-                                            Extent3.UNIT_VALU   ,
-                                            Extent3.STK_COMM_OS_AS   ,
-                                            Extent3.STK_COMM_AS   ,
-                                            Extent3.STK_COMM_OS_BS   ,
-                                            Extent3.STK_COMM_BS   ,
-                                            Extent3.STK_COMM_OS_INS   ,
-                                            Extent3.STK_COMM_INS   ,
-                                            Extent3.STK_ALLOW_SALES   ,
-                                            Extent3.IS_SVC_STK   ,
-                                            Extent4.CODE_DESC   
-                            FROM SYS0026M Extent3
-                                   LEFT JOIN SYS0013M Extent4   ON Extent3.STK_TYPE_ID = Extent4.CODE_ID
-                             WHERE  ( 1 = Extent3.STUS_CODE_ID )
-                                      AND ( ( 61 <> Extent3.STK_TYPE_ID )
-                                      OR ( ( 61 = Extent3.STK_TYPE_ID )
-                                      AND ( 965 = Extent3.STK_ID ) ) ) ) Distinct3   ON ( Distinct2.CODE_DESC = Distinct3.CODE_DESC )
-                OR ( ( Distinct2.CODE_DESC IS NULL )
-                AND ( Distinct3.CODE_DESC IS NULL ) ) ) Project4
-                ]]>
-                <if test=" null != exArr and exArr.length > 0">
-                WHERE Project4.STK_TYPE_ID NOT IN 
-                    <foreach collection="exArr" item="item" open="(" separator=","  close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                ORDER BY Project4.STK_TYPE_ID
-<!-- SELECT 
-        CODE_ID,
-        CODE_NAME
-    FROM 
-        SYS0013M 
-    WHERE 
-        CODE_MASTER_ID  = 141 -->
+    <select id="selectPosTypeList" parameterType="Map" resultType="egovMap"> 
+				SELECT 
+				    CODE_ID ,
+				    CODE_NAME
+				FROM 
+				    SYS0013M 
+				WHERE 
+				    CODE_MASTER_ID = #{codeM}
+				    <if test=" null != codArr and codArr.length > 0 ">
+				          AND CODE_ID IN
+				          <foreach collection="codArr" item="item" open="(" separator="," close=")">
+				                #{item}
+				          </foreach>   
+				    </if> 
+				    <!-- <if test=" null != exArr and exArr.length > 0">
+				          AND CODE_ID NOT IN 
+				         <foreach collection="exArr" item="item" open="(" separator=","  close=")">
+				             #{item}
+				         </foreach>
+				    </if> -->
+				ORDER BY CODE_ID            
     </select>
     
-    
-        <select id="selectPIItmTypeList" resultType="egovMap">
-            SELECT 
-                DISTINCT Extent2.CODE_ID,
-                              Extent2.CODE_NAME   
-             FROM 
-                LOG0026D Extent1
-             JOIN SYS0013M Extent2   ON ( Extent2.CODE_ID = Extent1.ITM_TYPE_ID )
-              AND 
-                0 = Extent2.DISAB 
-            WHERE 
-                1 = Extent1.ALLOW_SALES 
-           
-    <!-- SELECT 
-        CODE_ID,
-        CODE_NAME
-    FROM 
-        SYS0013M 
-    WHERE 
-        CODE_MASTER_ID  = 15 -->
-    </select>
      
-     <select id="selectPSMItmList" parameterType="Map" resultType="egovMap">
-     <![CDATA[
-			SELECT 
-			       Project4.CODE_DESC || ' - ' || Project4.STK_DESC CODE_NAME,
-                   Project4.C1 C1  ,
-                   Project4.CODE_DESC  ,
-                   Project4.CODE_ID CODE_RE_ID,
-                   Project4.C2 C2  ,
-                   Project4.STK_ID STK_ID  ,
-                   Project4.DESCRIPTION1 DESCRIPTION1  ,
-                   Project4.STK_CODE CODE_ID  ,
-                   Project4.STK_DESC STK_DESC  ,
-                   Project4.STK_CTGRY_ID STK_CTGRY_ID  ,
-                   Project4.STK_TYPE_ID STK_TYPE_ID  ,
-                   Project4.STUS_CODE_ID STUS_CODE_ID  ,
-                   Project4.IS_SIRIM IS_SIRIM  ,
-                   Project4.IS_NCV IS_NCV  ,
-                   Project4.QTY_PER_CARTON QTY_PER_CARTON  ,
-                   Project4.UPD_USER_ID UPD_USER_ID  ,
-                   Project4.UPD_DT UPD_DT  ,
-                   Project4.IS_SYNCH IS_SYNCH  ,
-                   Project4.NET_WT NET_WT  ,
-                   Project4.GROS_WT GROS_WT  ,
-                   Project4.MEASURE_CBM MEASURE_CBM  ,
-                   Project4.MASTER_STK_ID MASTER_STK_ID  ,
-                   Project4.STK_GRAD STK_GRAD  ,
-                   Project4.STK_IMG STK_IMG  ,
-                   Project4.BS_POINT BS_POINT  ,
-                   Project4.UNIT_VALU UNIT_VALU  ,
-                   Project4.STK_COMM_OS_AS STK_COMM_OS_AS  ,
-                   Project4.STK_COMM_AS STK_COMM_AS  ,
-                   Project4.STK_COMM_OS_BS STK_COMM_OS_BS  ,
-                   Project4.STK_COMM_BS STK_COMM_BS  ,
-                   Project4.STK_COMM_OS_INS STK_COMM_OS_INS  ,
-                   Project4.STK_COMM_INS STK_COMM_INS  ,
-                   Project4.STK_ALLOW_SALES STK_ALLOW_SALES  ,
-                   Project4.IS_SVC_STK IS_SVC_STK    
-			  FROM ( SELECT 1 C1  ,
-			                Distinct2.CODE_DESC CODE_DESC  ,
-			                Distinct2.CODE_ID,
-			                Distinct3.STK_ID STK_ID  ,
-			                Distinct3.STK_CODE STK_CODE  ,
-			                Distinct3.STK_DESC STK_DESC  ,
-			                Distinct3.STK_CTGRY_ID STK_CTGRY_ID  ,
-			                Distinct3.STK_TYPE_ID STK_TYPE_ID  ,
-			                Distinct3.STUS_CODE_ID STUS_CODE_ID  ,
-			                Distinct3.IS_SIRIM IS_SIRIM  ,
-			                Distinct3.IS_NCV IS_NCV  ,
-			                Distinct3.QTY_PER_CARTON QTY_PER_CARTON  ,
-			                Distinct3.UPD_USER_ID UPD_USER_ID  ,
-			                Distinct3.UPD_DT UPD_DT  ,
-			                Distinct3.IS_SYNCH IS_SYNCH  ,
-			                Distinct3.NET_WT NET_WT  ,
-			                Distinct3.GROS_WT GROS_WT  ,
-			                Distinct3.MEASURE_CBM MEASURE_CBM  ,
-			                Distinct3.MASTER_STK_ID MASTER_STK_ID  ,
-			                Distinct3.STK_GRAD STK_GRAD  ,
-			                Distinct3.STK_IMG STK_IMG  ,
-			                Distinct3.BS_POINT BS_POINT  ,
-			                Distinct3.UNIT_VALU UNIT_VALU  ,
-			                Distinct3.STK_COMM_OS_AS STK_COMM_OS_AS  ,
-			                Distinct3.STK_COMM_AS STK_COMM_AS  ,
-			                Distinct3.STK_COMM_OS_BS STK_COMM_OS_BS  ,
-			                Distinct3.STK_COMM_BS STK_COMM_BS  ,
-			                Distinct3.STK_COMM_OS_INS STK_COMM_OS_INS  ,
-			                Distinct3.STK_COMM_INS STK_COMM_INS  ,
-			                Distinct3.STK_ALLOW_SALES STK_ALLOW_SALES  ,
-			                Distinct3.IS_SVC_STK IS_SVC_STK  ,
-			                Distinct3.CODE_DESC DESCRIPTION1  ,
-			                CASE 
-			                     WHEN ( Distinct3.STK_ID IS NULL ) THEN UTILS.CONVERT_TO_NUMBER('',10,0)
-			                ELSE 1
-			                   END C2  
-			         FROM ( SELECT DISTINCT Distinct1.CODE_DESC CODE_DESC,
-			                                Distinct1.CODE_ID  
-			                FROM ( SELECT DISTINCT Extent1.STK_ID STK_ID  ,
-			                                       Extent1.STK_CODE STK_CODE  ,
-			                                       Extent1.STK_DESC STK_DESC  ,
-			                                       Extent1.STK_CTGRY_ID STK_CTGRY_ID  ,
-			                                       Extent1.STK_TYPE_ID STK_TYPE_ID  ,
-			                                       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
-			                                       Extent1.IS_SIRIM IS_SIRIM  ,
-			                                       Extent1.IS_NCV IS_NCV  ,
-			                                       Extent1.QTY_PER_CARTON QTY_PER_CARTON  ,
-			                                       Extent1.UPD_USER_ID UPD_USER_ID  ,
-			                                       Extent1.UPD_DT UPD_DT  ,
-			                                       Extent1.IS_SYNCH IS_SYNCH  ,
-			                                       Extent1.NET_WT NET_WT  ,
-			                                       Extent1.GROS_WT GROS_WT  ,
-			                                       Extent1.MEASURE_CBM MEASURE_CBM  ,
-			                                       Extent1.MASTER_STK_ID MASTER_STK_ID  ,
-			                                       Extent1.STK_GRAD STK_GRAD  ,
-			                                       Extent1.STK_IMG STK_IMG  ,
-			                                       Extent1.BS_POINT BS_POINT  ,
-			                                       Extent1.UNIT_VALU UNIT_VALU  ,
-			                                       Extent1.STK_COMM_OS_AS STK_COMM_OS_AS  ,
-			                                       Extent1.STK_COMM_AS STK_COMM_AS  ,
-			                                       Extent1.STK_COMM_OS_BS STK_COMM_OS_BS  ,
-			                                       Extent1.STK_COMM_BS STK_COMM_BS  ,
-			                                       Extent1.STK_COMM_OS_INS STK_COMM_OS_INS  ,
-			                                       Extent1.STK_COMM_INS STK_COMM_INS  ,
-			                                       Extent1.STK_ALLOW_SALES STK_ALLOW_SALES  ,
-			                                       Extent1.IS_SVC_STK IS_SVC_STK  ,
-			                                       Extent2.CODE_DESC CODE_DESC,
-			                                       Extent2.CODE_ID
-			                       FROM SYS0026M Extent1
-			                              LEFT JOIN SYS0013M Extent2   ON Extent1.STK_TYPE_ID = Extent2.CODE_ID
-			                        WHERE  ( 1 = Extent1.STUS_CODE_ID )
-			                                 AND ( ( 61 <> Extent1.STK_TYPE_ID )
-			                                 OR ( ( 61 = Extent1.STK_TYPE_ID )
-			                                 AND ( 965 = Extent1.STK_ID ) ) ) ) Distinct1 ) Distinct2
-			                LEFT JOIN ( SELECT DISTINCT Extent3.STK_ID STK_ID  ,
-			                                            Extent3.STK_CODE STK_CODE  ,
-			                                            Extent3.STK_DESC STK_DESC  ,
-			                                            Extent3.STK_CTGRY_ID STK_CTGRY_ID  ,
-			                                            Extent3.STK_TYPE_ID STK_TYPE_ID  ,
-			                                            Extent3.STUS_CODE_ID STUS_CODE_ID  ,
-			                                            Extent3.IS_SIRIM IS_SIRIM  ,
-			                                            Extent3.IS_NCV IS_NCV  ,
-			                                            Extent3.QTY_PER_CARTON QTY_PER_CARTON  ,
-			                                            Extent3.UPD_USER_ID UPD_USER_ID  ,
-			                                            Extent3.UPD_DT UPD_DT  ,
-			                                            Extent3.IS_SYNCH IS_SYNCH  ,
-			                                            Extent3.NET_WT NET_WT  ,
-			                                            Extent3.GROS_WT GROS_WT  ,
-			                                            Extent3.MEASURE_CBM MEASURE_CBM  ,
-			                                            Extent3.MASTER_STK_ID MASTER_STK_ID  ,
-			                                            Extent3.STK_GRAD STK_GRAD  ,
-			                                            Extent3.STK_IMG STK_IMG  ,
-			                                            Extent3.BS_POINT BS_POINT  ,
-			                                            Extent3.UNIT_VALU UNIT_VALU  ,
-			                                            Extent3.STK_COMM_OS_AS STK_COMM_OS_AS  ,
-			                                            Extent3.STK_COMM_AS STK_COMM_AS  ,
-			                                            Extent3.STK_COMM_OS_BS STK_COMM_OS_BS  ,
-			                                            Extent3.STK_COMM_BS STK_COMM_BS  ,
-			                                            Extent3.STK_COMM_OS_INS STK_COMM_OS_INS  ,
-			                                            Extent3.STK_COMM_INS STK_COMM_INS  ,
-			                                            Extent3.STK_ALLOW_SALES STK_ALLOW_SALES  ,
-			                                            Extent3.IS_SVC_STK IS_SVC_STK  ,
-			                                            Extent4.CODE_DESC CODE_DESC,
-			                                            Extent4.CODE_ID
-			                            FROM SYS0026M Extent3
-			                                   LEFT JOIN SYS0013M Extent4   ON Extent3.STK_TYPE_ID = Extent4.CODE_ID
-			                             WHERE  ( 1 = Extent3.STUS_CODE_ID )
-			                                      AND ( ( 61 <> Extent3.STK_TYPE_ID )
-			                                      OR ( ( 61 = Extent3.STK_TYPE_ID )
-			                                      AND ( 965 = Extent3.STK_ID ) ) ) ) Distinct3   ON ( Distinct2.CODE_DESC = Distinct3.CODE_DESC )
-			                OR ( ( Distinct2.CODE_DESC IS NULL )
-			                AND ( Distinct3.CODE_DESC IS NULL ) ) ) Project4
-			                WHERE Project4.CODE_ID = #{itemType}
-			  ORDER BY Project4.CODE_DESC ASC,
-			           Project4.C2 ASC
-           ]]>
+     <select id="selectPosItmList" parameterType="Map" resultType="egovMap">
+	    SELECT
+            Project1.CODE_NAME,
+            Project1.STK_CODE,
+            Project1.CODE_ID,
+            Project1.STK_DESC,
+            Project1.STK_CTGRY_ID,
+            Project1.STK_TYPE_ID,
+            Project1.STK_GRAD,
+            Project1. ALLOW_SALES,
+            Project1.STUS_CODE_ID           
+        FROM    
+        (SELECT
+                T1.STK_CODE || ' - ' || T1.STK_DESC CODE_NAME,
+                T1.STK_ID CODE_ID,
+                T1.STK_CODE,
+                T1.STK_DESC,
+                T1.STK_CTGRY_ID,
+                T1.STK_TYPE_ID,
+                T1.STK_GRAD,
+                T1.ALLOW_SALES,
+                T1.STUS_CODE_ID
+            FROM 
+                SYS0026M T1
+                LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
+            WHERE 
+                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  965 = STK_ID  )) Project1
+            <!-- Filter / Parts -->
+            <if test=" null != posSal and '' != posSal">
+                WHERE Project1.STK_TYPE_ID = #{itemType}
+            </if> 
+             
+             <!-- Item Bank -->
+             <if test=" null != posItm and '' != posItm">
+                WHERE 
+                     Project1. ALLOW_SALES = 1
+                AND 
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1.STK_CTGRY_ID = #{itemType}
+                 AND 
+                     Project1.STK_TYPE_ID = #{stkTypeId}
+             </if>
+             
+             <!-- OtherIncome & Item Bank HQ-->
+             <if test=" null != posOth and '' != posOth">
+                WHERE 
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1.STK_CTGRY_ID = #{itemType}
+                 AND 
+                     Project1.STK_TYPE_ID = #{stkTypeId}
+             </if>
+              
      </select>
      
-     <select id="selectPIItmList" parameterType="Map" resultType="egovMap">
+     <!-- <select id="selectPIItmList" parameterType="Map" resultType="egovMap">
             SELECT Project1.ITM_ID CODE_ID  ,
                    Project1.ITM_ID STK_ID  ,
                    Project1.ITM_CODE STK_CODE ,
@@ -481,7 +269,7 @@ SELECT DISTINCT
                                </if>
                                 ) Project1
               ORDER BY Project1.ITM_CODE ASC
-     </select>
+     </select> -->
      
      
      <select id="chkStockList" parameterType="Map" resultType="egovMap">
@@ -492,7 +280,8 @@ SELECT DISTINCT
                         Project1.STK_DESC,
                         Project1.STK_TYPE_ID,
                         Project1.STK_CTGRY_ID,
-                        NVL(Project1.QTY, 0 ) QTY,
+                        <!-- NVL(Project1.QTY, 0 ) QTY, -->
+                        100 QTY,
                         Project1.MOV_QTY,
                         NVL(Project1.AMT , 0) AMT,                     
                         (AMT * 100) / 106 SUB_CHANGES,
@@ -512,67 +301,39 @@ SELECT DISTINCT
                                 SYS0026M Extent1 
                             LEFT JOIN 
                                 LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
-                            LEFT JOIN                                
-                               (SELECT 
-                                    T1.STK_ID, T1.AMT, T1.UPD_DT
-                                FROM 
-                                <![CDATA[
-                                (SELECT STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT FROM SAL0016M WHERE MEM_PAC_ID = 0) T1
-                                WHERE T1.CNT <= 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                            LEFT JOIN
+                               <!-- Price  -->
+                               <!-- <![CDATA[
+                               (SELECT STK_ID , AMT FROM  SAL0016M WHERE APP_TYPE_ID = 67 AND STUS_CODE_ID = 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                               ]]>       -->
+                               <![CDATA[                          
+                                (SELECT 
+									     T1.STK_ID, T1.AMT
+									   FROM 
+									      (SELECT 
+									          STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
+									       FROM SAL0016M 
+									       WHERE MEM_PAC_ID = 0
+									       AND APP_TYPE_ID = 67
+									       AND STUS_CODE_ID = 1
+									      ) T1
+									WHERE T1.CNT <= 1)
+                                                                              Extent3 ON Extent3.STK_ID = Extent1.STK_ID 
+                                 ]]>
+                                
+                             <![CDATA[    
                             LEFT JOIN                                 
                                 (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'  GROUP BY LOC_ID , ITM_CODE ) Extent4
                                  ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
+                             ]]>    
                          ) Project1
-                         ]]>
                     WHERE   1 = 1
                     <if test=" null != stkId and stkId.length > 0">
-                              AND Project1.STK_CODE IN
+                              AND Project1.STK_ID IN
                               <foreach collection="stkId" item="item" open="(" separator="," close=")">
                                   #{item}
                               </foreach>
                         </if> 
-                   <!--  SELECT 
-                        Project1.LOC_ID,
-                        Project1.STK_ID,
-                        Project1.STK_CODE,
-                        Project1.STK_DESC,
-                        Project1.STK_TYPE_ID,
-                        Project1.STK_CTGRY_ID,
-                        Project1.QTY,
-                        Project1.MOV_QTY,
-                        NVL(Project1.AMT , 0) AMT,                     
-                        (AMT * 100) / 106 SUB_CHANGES,
-                        AMT - ((AMT * 100) / 106) TAXES
-                    FROM ( 
-                            SELECT 
-                                NVL(Extent2.LOC_ID, 0) LOC_ID,
-                                Extent1.STK_ID,
-                                Extent1.STK_CODE,
-                                Extent1.STK_DESC,
-                                Extent1.STK_TYPE_ID,
-                                Extent1.STK_CTGRY_ID,
-                                NVL(Extent2.QTY , 0) QTY,
-                                Extent2.MOV_QTY,
-                                Extent3.AMT
-                            FROM                     
-                                SYS0026M Extent1 
-                            LEFT JOIN 
-                                LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
-                            LEFT JOIN
-                                <![CDATA[
-                               (SELECT 
-                                    T1.STK_ID, T1.AMT, T1.UPD_DT
-                                FROM 
-                                (SELECT STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT FROM SAL0016M WHERE MEM_PAC_ID = 0) T1
-                                WHERE T1.CNT <= 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID) Project1
-                    WHERE   1 = 1
-					]]>
-					   <if test=" null != stkId and stkId.length > 0">
-					          AND Project1.STK_CODE IN
-					          <foreach collection="stkId" item="item" open="(" separator="," close=")">
-					              #{item}
-					          </foreach>
-					    </if>  -->
      </select>
      
      <select id="getMemCode" parameterType="Map" resultType="egovMap">
@@ -643,6 +404,7 @@ SELECT DISTINCT
                         </if> 
      </select>
      
+     <!--현재 미사용 : 계정과목 부여 Query  -->
      <select id="getItemBankAccCodeByItemTypeID" parameterType="Map" resultType="egovMap">
 					SELECT Extent1.ITM_BANK_TYPE_ID   ,
 					       Extent1.CR_ACC_ID   , 
@@ -734,6 +496,12 @@ SELECT DISTINCT
 				    BRNCH_ID,
 				    POS_RCV_DT,
 				    STUS_ID,
+				    <!--Case Other Income  -->
+				    <if test=" null != othCheck and othCheck > 0">
+    				   AREA_ID,
+    				   ADDR_DTL,
+    				   STREET,
+				    </if>
 				    CRT_USER_ID, 
 				    CRT_DT,
 				    UPD_USER_ID,
@@ -761,8 +529,21 @@ SELECT DISTINCT
            #{drAccId},
            #{posReason},
            #{cmbWhBrnchIdPop},
-           TO_DATE(#{recvDate}, 'DD/MM/YYYY'),
+           <choose>
+               <when test=" null != othCheck and othCheck > 0">
+                    SYSDATE,
+               </when>
+               <otherwise>
+                   TO_DATE(#{recvDate}, 'DD/MM/YYYY'),
+               </otherwise>                    
+            </choose>
            #{posStusId},
+           <!--Case Other Income  -->
+           <if test=" null != othCheck and othCheck > 0">
+              #{areaId},
+              #{addrDtl},
+              #{streetDtl},         
+           </if>
            #{userId},
            SYSDATE,
            #{userId},
@@ -1212,8 +993,8 @@ SELECT DISTINCT
                         T3.CODE                       
                     FROM
                         SAL0057D T1 
-                    INNER JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
-                    INNER JOIN SYS0005M T3 ON T3.BRNCH_ID = T2.BRNCH
+                    LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
+                    LEFT JOIN SYS0005M T3 ON T3.BRNCH_ID = T2.BRNCH
                     WHERE
                         POS_ID = #{posId}
                     AND
@@ -1227,14 +1008,14 @@ SELECT DISTINCT
                 T1.POS_ITM_ID,
                 T1.POS_ID,
                 T1.POS_ITM_STOCK_ID,
-                <if test=" null != filterType and '' != filterType">
-                    T2.STK_DESC,
-                    T2.STK_CODE,
-                </if>
-                <if test=" null != itembankType and '' != itembankType">
+                T2.STK_DESC,
+                T2.STK_CODE,
+                <!-- <if test=" null != filterType and '' != filterType">
+                </if> -->
+                <!-- <if test=" null != itembankType and '' != itembankType">
                     T2.ITM_DESC STK_DESC,
                     T2.ITM_CODE STK_CODE,
-                </if>
+                </if> -->
                 T1.POS_ITM_QTY QTY,
                 T1.POS_ITM_UNIT_PRC AMT,
                 T1.POS_ITM_TOT TOT,
@@ -1243,13 +1024,14 @@ SELECT DISTINCT
                 T1.MEM_ID,
                 T1.RCV_STUS_ID
             FROM 
-                SAL0058D T1 
-                <if test=" null != filterType and '' != filterType">
-                   LEFT JOIN SYS0026M T2 ON T2.STK_ID = T1.POS_ITM_STOCK_ID
-                </if>
-                <if test=" null != itembankType and '' != itembankType">
+                SAL0058D T1
+                LEFT JOIN SYS0026M T2 ON T2.STK_ID = T1.POS_ITM_STOCK_ID 
+                <!-- <if test=" null != filterType and '' != filterType">
+                   
+                </if> -->
+                <!-- <if test=" null != itembankType and '' != itembankType">
                     LEFT JOIN LOG0026D T2 ON T2.ITM_ID = T1.POS_ITM_STOCK_ID
-                </if>
+                </if> -->
             WHERE 
                T1.POS_ID = #{rePosId}
                <if test=" null != memId and '' != memId">
@@ -1284,6 +1066,11 @@ SELECT DISTINCT
                     BRNCH_ID,
                     POS_RCV_DT,
                     STUS_ID,
+                    <if test=" null != chkOth and chkOth > 0">
+                        AREA_ID , 
+                        ADDR_DTL, 
+                        STREET,
+                    </if>
                     CRT_USER_ID, 
                     CRT_DT,
                     UPD_USER_ID,
@@ -1311,9 +1098,14 @@ SELECT DISTINCT
            #{drAccId},
            #{posReason},
            #{cmbWhBrnchIdPop},
-           TO_DATE(#{recvDate}, 'YYYY/MM/DD HH24:MI:SS'),
+           TO_DATE(#{recvDate}, 'DD/MM/YYYY HH24:MI:SS'),
            #{posStusId},
-           #{userId},
+           <if test=" null != chkOth and chkOth > 0">
+                 #{getAreaId},
+                 #{addrDtl},
+                 #{streetDtl},
+            </if>
+            #{userId},
            SYSDATE,
            #{userId},
            SYSDATE)
@@ -1974,5 +1766,173 @@ SELECT DISTINCT
 				          WHERE T1.POS_ID = #{rePosId}
 				          GROUP BY MEM_ID, RCV_STUS_ID ) Project1
 				 WHERE Project1.ROW_NUM = 1		    
-	</select>	    
+	</select>
+	
+	
+	<update id="updatePosMStatus"  parameterType="posMasterVO">
+	   UPDATE 
+	        SAL0057D
+	   SET
+	        STUS_ID = #{stusId}
+	   WHERE 
+	        POS_ID = #{posId}
+	</update>
+	
+	<update id="updatePosDStatus" parameterType="posMasterVO">
+	   UPDATE 
+	       SAL0058D 
+	   SET 
+	       RCV_STUS_ID = #{changeStatus}
+	   WHERE 
+	       POS_ID = #{posId}
+	</update>
+	
+	
+	<select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
+        SELECT T.MEM_ID
+             , T.MEM_CODE
+             , T.NAME
+             , T.NRIC
+             , T.MEM_TYPE
+             , T.CODE_NAME
+             , T.DEPT_CODE
+             , T.GRP_CODE
+             , T.ORG_CODE
+             , T.MEM_LVL
+             , T.LVL3_UP_ID
+             , T.LVL2_UP_ID
+             , T.LVL1_UP_ID
+          FROM (
+             SELECT T1.MEM_ID
+                  , T1.MEM_CODE
+                  , T1.MEM_TYPE
+                  , T1.NAME
+                  , T1.NRIC
+                  , T2.CODE_NAME
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID
+               FROM ORG0001D T1
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+              WHERE 1 = 1
+              <if test='memId != null and memId !=0'>
+                AND T1.MEM_ID = #{memId}
+              </if>
+              <if test='memCode != null and memCode !=""'>
+                AND T1.MEM_CODE = #{memCode}
+              </if>
+                AND ROWNUM &lt;= 1 ) T
+    </select>
+		    
 </mapper>

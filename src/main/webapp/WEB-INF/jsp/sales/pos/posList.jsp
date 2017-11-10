@@ -21,6 +21,9 @@ var arrPosStusCode; //POS GRID
 var arrItmStusCode;  //ITEM GRID
 var arrMemStusCode; //MEMBER GRID
 
+//Ajax async
+var ajaxOtp= {async : false};
+
 $(document).ready(function() {
 
     
@@ -77,7 +80,7 @@ $(document).ready(function() {
         var tempVal = $(this).val();
         
         if(tempVal == 2392){
-            var systemParam = {groupCode : 140 , codeIn : [1357]};
+            var systemParam = {groupCode : 140 , codeIn : [1358 , 1361]};
             var optionSystem = {
                     type: "M",                  
                     isShowChoose: false  
@@ -111,6 +114,32 @@ $(document).ready(function() {
     //Search
     $("#_search").click(function() {
         
+    	//Case Dededuction ComboChange
+    	if( ($("#_deducMem").val() != null && $("#_deducMem").val() != '') ||
+    			($("#_deducMemNric").val() != null && $("#_deducMemNric").val() != '')){
+    		//cmbPosTypeId
+    		$("#cmbPosTypeId").val(2391);
+    	}
+    	
+    	//Validation   
+    	if(FormUtil.isEmpty($('#_sDate').val()) || FormUtil.isEmpty($('#_eDate').val())) {
+			    Common.alert("* Please select order date<br/>");
+			    return;
+    	}
+    	
+    	var startDate = $('#_sDate').val();
+    	var endDate = $('#_eDate').val();
+    	
+    	if( fn_getDateGap(startDate , endDate) > 7){
+    		Common.alert("Start date can not be more than 31 days before the end date.");
+    		return;
+    	}
+    	
+    	//Grid Clear
+    	AUIGrid.clearGridData(posGridID);
+    	AUIGrid.clearGridData(posItmDetailGridID);  
+        AUIGrid.clearGridData(deductionCmGridID);
+        
         fn_getPosListAjax();
     });
     
@@ -129,20 +158,28 @@ $(document).ready(function() {
     		return;
     	}
     	
-    	if(clickChk[0].item.codeName1 == 1361){  //reversal
+    	if(clickChk[0].item.posTypeId == 1361){  //reversal
     		Common.alert("* Reversal POS are prohibited!");
     		return;
     	}
     	
     	// Invoice Chk
-    	var reRefNo = clickChk[0].item.taxInvcRefNo;
+    	var reRefNo = clickChk[0].item.posNo;
     	var reObject = { reRefNo : reRefNo};
+    	var chkRv = true;
+    	
     	Common.ajax("GET", "/sales/pos/chkReveralBeforeReversal", reObject, function(result) {
     	    if(result != null){
-    	    	Common.alert("* Reversal POS are prohibited!(invoice)");
-                return;
+    	    	chkRv = false;
     	    }			
-		});
+		}, null ,ajaxOtp);
+    	
+    	
+    	if(chkRv == false){
+    		Common.alert("* Reversal POS are prohibited!");
+            return;
+    	}
+    	
     	
     	//TODO payment 완료 후 추가 Validation 
     	// IsPaymentKnowOffByPOSNo
@@ -168,24 +205,24 @@ $(document).ready(function() {
     	AUIGrid.clearGridData(posItmDetailGridID);  
     	AUIGrid.clearGridData(deductionCmGridID);  
     	
-    	if(event.item.posModuleTypeId == 2390){ // POS SALES
+    	if(event.item.posModuleTypeId == 2390 || event.item.posModuleTypeId == 2392){ // POS SALES & OTHER(ITEM BANK(HQ))
     		
     		//Mybatis Separate Param
     		//1. Grid Display Control
     		$("#_itmDetailGridDiv").css("display" , "");
     		$("#_deducGridDiv").css("display", "none");
     		
-    		//2. Grid Set Data
+    		/* //2. Grid Set Data
             var filterType = '';
             var itembankType = '';
             if(event.item.posTypeId == 1352){   //filter
                 filterType = event.item.posTypeId;
             }
             if(event.item.posTypeId == 1353){   //item bank
-                itembankType = event.item.posTypeId;
+                it embankType = event.item.posTypeId;
             }
-            
-            var detailParam = {filterType : filterType , itembankType : itembankType , rePosId : event.item.posId};
+            */
+            var detailParam = {rePosId : event.item.posId};
             //Ajax
             Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
                 AUIGrid.setGridData(posItmDetailGridID, result);
@@ -215,7 +252,7 @@ $(document).ready(function() {
     AUIGrid.bind(deductionCmGridID, "cellClick", function(event){
     	
     	$("#_itmDetailGridDiv").css("display" , "");
-    	//2. Grid Set Data
+    	/* //2. Grid Set Data
         var filterType = '';
         var itembankType = '';
         if(event.item.posTypeId == 1352){   //filter
@@ -223,9 +260,9 @@ $(document).ready(function() {
         }
         if(event.item.posTypeId == 1353){   //item bank
             itembankType = event.item.posTypeId;
-        }
+        } */
         
-        var detailParam = {filterType : filterType , itembankType : itembankType , rePosId : event.item.posId , memId : event.item.memId};
+        var detailParam = {rePosId : event.item.posId , memId : event.item.memId};
         //Ajax
         Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
             AUIGrid.setGridData(posItmDetailGridID, result);
@@ -233,6 +270,26 @@ $(document).ready(function() {
     });
 
 });//Doc ready Func End
+
+
+function fn_getDateGap(sdate, edate){
+	
+	var startArr, endArr;
+	
+	startArr = sdate.split('/');
+    endArr = edate.split('/');
+    
+    var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
+    var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
+    
+    var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+    
+    console.log("gap : " + gap);
+    
+    return gap;
+}
+
+
 
 function girdHide(){
     //Grid Hide
@@ -503,7 +560,7 @@ function createAUIGrid(){
     var posColumnLayout =  [ 
                             {dataField : "posNo", headerText : "POS No.", width : '8%'}, 
                             {dataField : "posDt", headerText : "Sales Date", width : '8%'},
-                            {dataField : "posDt", headerText : "Member ID", width : '8%'},
+                            {dataField : "userName", headerText : "Member ID", width : '8%'},
                             {dataField : "codeName", headerText : "POS Type", width : '8%'},
                             {dataField : "codeName1", headerText : "Sales Type", width : '8%'},
                             {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '8%'}, 
@@ -533,7 +590,8 @@ function createAUIGrid(){
                                  }
                            },
                             {dataField : "posId", visible : false},
-                            {dataField : "posModuleTypeId", visible : false}
+                            {dataField : "posModuleTypeId", visible : false},
+                            {dataField : "posTypeId", visible : false}  
                            ];
     
     //그리드 속성 설정
@@ -625,9 +683,9 @@ function fn_getPosListAjax(){
     <th scope="row">Sales Date</th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate"/></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_sDate" value="${bfDay}"/></p>  
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate" /></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate"  id="_eDate" value="${toDay}"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row">Member Code</th>
@@ -640,7 +698,7 @@ function fn_getPosListAjax(){
 <tr>
     <th scope="row">Branch / Warehouse</th>
     <td colspan="3">
-        <select  id="cmbWhBrnchId" ></select>
+        <select  id="cmbWhBrnchId"  name="brnchId"></select>
         <input type="text" disabled="disabled" id="cmbWhId" >
     </td>
     <th scope="row">Customer Name</th>
@@ -651,11 +709,11 @@ function fn_getPosListAjax(){
 <tr>
     <th scope="row">Member Name(Deduction)</th>
     <td>
-        <input type="text" title="" placeholder="Member Name" class="w100p" />
+        <input type="text" title="" placeholder="Member Name" class="w100p" name="deducMem" id="_deducMem" /> 
     </td>
     <th scope="row">Member IC(Deduction)</th>
     <td colspan="3">
-    <input type="text" title="" placeholder="Member IC" class="w100p" />
+    <input type="text" title="" placeholder="Member IC" class="w100p"  name="deducMemNric" id="_deducMemNric"/>
     </td>
 </tr>
 </tbody>

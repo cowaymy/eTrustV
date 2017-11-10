@@ -3,6 +3,8 @@ package com.coway.trust.biz.sales.pos;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.pos.vo.PosGridVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface PosService {
@@ -17,13 +19,13 @@ public interface PosService {
 	
 	EgovMap selectWarehouse(Map<String, Object> params) throws Exception;
 	
-	List<EgovMap> selectPSMItmTypeList(Map<String, Object> params)throws Exception;
+	List<EgovMap> selectPosTypeList(Map<String, Object> params)throws Exception;
 	
-	List<EgovMap> selectPIItmTypeList()throws Exception;
+//	List<EgovMap> selectPIItmTypeList()throws Exception;
 	
-	List<EgovMap> selectPIItmList(Map<String, Object> params)throws Exception;
+//	List<EgovMap> selectPIItmList(Map<String, Object> params)throws Exception;
 	
-	List<EgovMap> selectPSMItmList(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectPosItmList(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> chkStockList(Map<String, Object> params) throws Exception;
 	
@@ -48,4 +50,7 @@ public interface PosService {
 	EgovMap insertPosReversal(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> getPurchMemList(Map<String, Object> params)throws Exception;
+	
+	void  updatePosMStatus (PosGridVO pgvo) throws Exception;
+	
 }

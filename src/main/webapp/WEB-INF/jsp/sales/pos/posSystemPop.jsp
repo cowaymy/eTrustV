@@ -13,7 +13,7 @@ $(document).ready(function() {
 	creatememGridID();
 	
 	//PosModuleTypeComboBox
-	var modulePopParam = {groupCode : 143, codeIn : [2390, 2391]};
+	var modulePopParam = {groupCode : 143, codeIn : [2390, 2391, 2392]};
 	CommonCombo.make('_insPosModuleType', "/sales/pos/selectPosModuleCodeList", modulePopParam , '', optionModule);
 	
 	//PosSystemTypeComboBox
@@ -69,6 +69,23 @@ $(document).ready(function() {
              fn_clearAllGrid();
         }
         
+        if(tempVal == 2392){ //Other Income
+            var optionSystem = {
+                    type: "M",                  
+                    isShowChoose: false  
+            };
+            var systemPopParam = {groupCode : 140 , codeIn : [1358]};
+            CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
+             //MEM GRID DISPLAY
+            $("#_purchMemBtn").css("display" , "none");
+            $("#_mainMemberGrid").css("display" , "none");
+            
+            //SERIAL GRID DISPLAY
+            $("#_mainSerialGrid").css("display" , "none");
+            
+            fn_clearAllGrid();
+       }
+        
     });
     
     //Member Search Popup
@@ -117,8 +134,8 @@ $(document).ready(function() {
     //Purchase Btn
     $("#_purchBtn").click(function() {
 		
-    	//1. Pos Type Check
-    	if($("#_insPosModuleType").val() == 2390 || $("#_insPosModuleType").val() == 2391) { //Pos Sales
+    	//Pos Sales  AND Deduction
+    	if($("#_insPosModuleType").val() == 2390 || $("#_insPosModuleType").val() == 2391) { 
 			
     		if($("#_insPosSystemType").val() == 1352){ //Pos Filter / Spare Part / Miscellaneous
     			
@@ -144,7 +161,27 @@ $(document).ready(function() {
     		   		
 		}
     	
-    	//others
+    	//Other Income - Item Bank(HQ)
+    	if($("#_insPosModuleType").val() == 2392) { 
+    		
+    		if($("#_insPosSystemType").val() == 1358){ //Item Bank(HQ)
+    			
+    		    // 창고 Validation
+                if($("#_cmbWhBrnchIdPop").val() == null || $("#_cmbWhBrnchIdPop").val() == ''){
+                    Common.alert('* please Select Warehouse`s Branch.');
+                    return;
+                }
+                if($("#_hidLocId").val() == null || $("#_hidLocId").val() == ''){
+                    Common.alert('* Warehouse`s Branch has no Location Id.');
+                    return;
+                }
+                //창고 parameter
+            //  $("#_cmbWhBrnchIdPop").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+                Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
+    		
+    		
+    		}
+    	}
     	
 	});
     
@@ -204,16 +241,17 @@ $(document).ready(function() {
     	//TODO payment not Enter
     	/*###############  Payment Validation Part #################################*/
     	
-    	
-    	
-    	
-    	
-    	
+    	if($("#_insPosModuleType").val() == 2390){   //POS SALES
+    		//Save
+            Common.confirm("Will you proceed with payment?", fn_payProceed, fn_payPass);
+    		
+    	}else{ //Deduction , Other Income
+    		//Save
+    		fn_payPass();
+    		
+    	}
     	/*###############  Payment Validation Part #################################*/
     	
-    	
-    	//Save
-    	Common.confirm("Will you proceed with payment?", fn_payProceed, fn_payPass);
 		//, (), ()
 	});
     

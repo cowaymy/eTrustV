@@ -15,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.pos.PosService;
+import com.coway.trust.biz.sales.pos.vo.PosGridVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -42,6 +47,12 @@ public class PosController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 		//TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
+		
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
 		
 		return "sales/pos/posList";
 	}
@@ -148,46 +159,48 @@ public class PosController {
 		model.addAttribute("posSystemModuleType", params.get("insPosModuleType"));
 		model.addAttribute("posSystemType", params.get("insPosSystemType"));
 		model.addAttribute("whBrnchId", params.get("hidLocId"));
-		model.addAttribute("", params.get("hidLocDesc"));
+		//model.addAttribute("", params.get("hidLocDesc"));
 		
 		return "sales/pos/posItmSrchPop";
 		
 	}
 	
 	
-	@RequestMapping(value = "/selectPSMItmTypeList")
-	public ResponseEntity<List<EgovMap>> selectPSMItmTypeList(@RequestParam Map<String, Object> params) throws Exception{
+	@RequestMapping(value = "/selectPosTypeList")
+	public ResponseEntity<List<EgovMap>> selectPosTypeList(@RequestParam Map<String, Object> params , @RequestParam(value = "codes[]")  String[] codes) throws Exception{
 		
 		List<EgovMap> codeList = null;
-		codeList = posService.selectPSMItmTypeList(params);
+		
+		params.put("codArr", codes);
+		codeList = posService.selectPosTypeList(params);
 		
 		return ResponseEntity.ok(codeList);
 	}
 	
-	@RequestMapping(value = "/selectPSMItmTypeDeductionList")
+/*	@RequestMapping(value = "/selectPSMItmTypeDeductionList")
 	public ResponseEntity<List<EgovMap>> selectPSMItmTypeDeductionList(@RequestParam Map<String, Object> params, @RequestParam(value = "exceptCodes[]")  String[] exceptArr) throws Exception{
 		
 		List<EgovMap> codeList = null;
 		
 		params.put("exArr", exceptArr);
 		
-		codeList = posService.selectPSMItmTypeList(params);
+		codeList = posService.selectPosTypeList(params);
 		
 		return ResponseEntity.ok(codeList);
-	}
+	}*/
 	
 	
-	@RequestMapping(value = "/selectPIItmTypeList")
+/*	@RequestMapping(value = "/selectPIItmTypeList")
 	public ResponseEntity<List<EgovMap>> selectPIItmTypeList() throws Exception{
 		
 		List<EgovMap> codeList = null;
 		codeList = posService.selectPIItmTypeList();
 		
 		return ResponseEntity.ok(codeList);
-	}
+	}*/
 	
 	
-	@RequestMapping(value = "/selectPIItmList")
+	/*@RequestMapping(value = "/selectPIItmList")
 	public ResponseEntity<List<EgovMap>> selectPIItmList(@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception{
 		
 		List<EgovMap> codeList = null;
@@ -197,14 +210,16 @@ public class PosController {
 		
 		codeList = posService.selectPIItmList(params);
 		return ResponseEntity.ok(codeList);
-	}
+	}*/
 	
 	
-	@RequestMapping(value = "/selectPSMItmList")
-	public ResponseEntity<List<EgovMap>> selectPSMItmList(@RequestParam Map<String, Object> params) throws Exception{
+	@RequestMapping(value = "/selectPosItmList")
+	public ResponseEntity<List<EgovMap>> selectPosItmList(@RequestParam Map<String, Object> params) throws Exception{
 		
 		List<EgovMap> codeList = null;
-		codeList = posService.selectPSMItmList(params);
+		
+		params.put("stkTypeId", SalesConstants.POS_SALES_NOT_BANK); //2687
+		codeList = posService.selectPosItmList(params);
 		return ResponseEntity.ok(codeList);
 		
 	}
@@ -327,6 +342,10 @@ public class PosController {
 		
 		EgovMap chkMap = null;
 		
+		
+		LOGGER.info("############################ chkReveralBeforeReversal  params.toString :    " + params.toString());
+		
+		
 		chkMap = posService.chkReveralBeforeReversal(params);
 		
 		return ResponseEntity.ok(chkMap);
@@ -385,4 +404,22 @@ public class PosController {
 		
 		return ResponseEntity.ok(memList);
 	}
+	
+	
+	@RequestMapping(value= "/updatePosMStatus" , method = RequestMethod.POST)				 
+	public ResponseEntity<ReturnMessage> updatePosMStatus (@RequestBody PosGridVO pgvo) throws Exception{
+		
+		LOGGER.info("############################# pgvo : " + pgvo.toString());
+		
+		posService.updatePosMStatus(pgvo);
+		
+		//Return MSG
+    	ReturnMessage message = new ReturnMessage();
+    	
+        message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+    	return ResponseEntity.ok(message);
+	}
+	
 }

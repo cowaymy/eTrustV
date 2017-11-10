@@ -4,6 +4,9 @@
 
 //AUIGrid 생성 후 반환 ID
 var posGridID;
+
+var posItmDetailGridID;
+
 var optionModule = {
         type: "S",                  
         isShowChoose: false  
@@ -14,50 +17,37 @@ var optionSystem = {
 };
 
 //Grid in SelectBox  - Selcet value
-var arrStusCode;
+var arrPosStusCode; //POS GRID
+var arrItmStusCode;  //ITEM GRID
+var arrMemStusCode; //MEMBER GRID
+
+//Ajax async
+var ajaxOtp= {async : false};
 
 $(document).ready(function() {
 
     
-    fn_getStatusCode();
+    fn_getStatusCode('9');
+    fn_getStatusCode('10');
+    fn_getStatusCode('11');
+    createAUIGrid();
+    createPosItmDetailGrid();
+    girdHide();
     
      /*######################## Init Combo Box ########################*/
      
     //PosModuleTypeComboBox
-    var moduleParam = {groupCode : 143, codeIn : [2390, 2391, 2392]};
-
+    var moduleParam = {groupCode : 143, codeIn : [2392]};
     CommonCombo.make('cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
     
     //PosSystemTypeComboBox
-    var systemParam = {groupCode : 140 , codeIn : [1352, 1353 , 1361]};
+    var systemParam = {groupCode : 140 , codeIn : [1357 ,1361]};
 
-    CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionSystem);
+    CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionModule);
 
     //selectStatusCodeList
     var statusParam = {groupCode : 9};
     CommonCombo.make('cmbStatusTypeId', "/sales/pos/selectStatusCodeList", statusParam , '', optionSystem);
-    
-    //branch List
-    CommonCombo.make('cmbWhBrnchId', "/sales/pos/selectWhBrnchList", '' , '', '');
-    
-    //Wh List
-    $("#cmbWhBrnchId").change(function() {
-        
-        var tempVal = $(this).val();
-        if(tempVal == null || tempVal == '' ){
-            $("#cmbWhId").val("");
-        }else{
-            var paramObj = {brnchId : tempVal};
-            Common.ajax('GET', "/sales/pos/selectWarehouse", paramObj,function(result){
-                
-                if(result != null){
-                    $("#cmbWhId").val(result.whLocDesc);    
-                }else{
-                    $("#cmbWhId").val('');
-                }
-            });
-        }
-    });
     
     /*######################## Init Combo Box ########################*/
     
@@ -100,27 +90,196 @@ $(document).ready(function() {
     
     //Search
     $("#_search").click(function() {
+    	
+    	AUIGrid.clearGridData(posGridID);
+    	AUIGrid.clearGridData(posItmDetailGridID);
+    	
+    	//Validation   
+        if(FormUtil.isEmpty($('#_sDate').val()) || FormUtil.isEmpty($('#_eDate').val())) {
+                Common.alert("* Please select order date<br/>");
+                return;
+        }
         
+        var startDate = $('#_sDate').val();
+        var endDate = $('#_eDate').val();
+        
+        if( fn_getDateGap(startDate , endDate) > 7){
+            Common.alert("Start date can not be more than 31 days before the end date.");
+            return;
+        }
+    	
+    	
+    	
         fn_getPosListAjax();
     });
     
-    
-    // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(posGridID, "cellDoubleClick", function(event){
-        
-        alert("개발중...");
-       /*  $("#_posNo").val(event.item.posNo);
-        Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '123123'); */
-        
-    });
-    
+    //Pos System
     $("#_systemBtn").click(function() {
-        Common.popupDiv("/sales/pos/posSystemPop.do", '', null , true , '_insDiv');
+        Common.popupDiv("/sales/pos/posSystemOthPop.do", '', null , true , '_insDiv');
     });
     
+    //Pos Reversal
+    $("#_reversalBtn").click(function() {
+        
+        var clickChk = AUIGrid.getSelectedItems(posGridID);
+        //Validation
+        if(clickChk == null || clickChk.length <= 0 ){
+            Common.alert("* No Order Selected. ");
+            return;
+        }
+        
+        if(clickChk[0].item.posTypeId == 1361){  //reversal
+            Common.alert("* Reversal POS are prohibited!");
+            return;
+        }
+        
+        // Invoice Chk
+        var reRefNo = clickChk[0].item.posNo;
+        var reObject = { reRefNo : reRefNo};
+        var chkRv = true;
+        
+        Common.ajax("GET", "/sales/pos/chkReveralBeforeReversal", reObject, function(result) {
+        	if(result != null){
+                chkRv = false;
+            }        
+        }, null ,ajaxOtp);
+        
+        if(chkRv == false){
+            Common.alert("* Reversal POS are prohibited!");
+            return;
+        }
+        //TODO payment 완료 후 추가 Validation 
+        // IsPaymentKnowOffByPOSNo
+        
+        
+        //TODO Check Auth
+        
+        //Call controller
+        var reversalForm = { posId : clickChk[0].item.posId };
+        Common.popupDiv("/sales/pos/posReversalOthPop.do", reversalForm , null , true , "_revDiv");
+        
+    });
+    
+    //Cell Click Event
+    AUIGrid.bind(posGridID, "cellClick", function(event){
+        
+        //clear data
+        AUIGrid.clearGridData(posItmDetailGridID);  
+        
+        if(event.item.posModuleTypeId == 2392){ // POS SALES
+            
+            //Mybatis Separate Param
+            //1. Grid Display Control
+            $("#_itmDetailGridDiv").css("display" , "");
+            
+            
+            //2. Grid Set Data
+            var itembankType = '';
+            itembankType = event.item.posTypeId;
+            
+            var detailParam = {itembankType : itembankType , rePosId : event.item.posId};
+            //Ajax
+            Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
+                AUIGrid.setGridData(posItmDetailGridID, result);
+            }); 
+        }
+    });
+
+    
+    
+    /***************** Status Change  *****************/
+    // 1) Pos Master Update
+    $("#_posStatusBtn").click(function() {
+        
+    	var PosGridVO = {posStatusDataSetList : GridCommon.getEditData(posGridID)}; // name Careful
+    	
+    	var aa = GridCommon.getEditData(posGridID);
+    	
+    	console.log("aa : " +  JSON.stringify(aa));
+    	
+		Common.ajax("POST", "/sales/pos/updatePosMStatus", PosGridVO, function(result) {
+			
+			Common.alert(result.message);
+			fn_getPosListAjax();
+		});
+	});
+    
+ // 2) Pos Detail Update
+    $("#_itemStatusBtn").click(function() {
+        var editedCells = AUIGrid.getEditedRowItems(posItmDetailGridID);
+        
+        /* for (var idx = 0; idx < editedCells.length; idx++) {
+            
+            console.log(" 3 : " + editedCells[idx].rcvStusId);
+            console.log(" 4 : " + editedCells[idx].posItmId);
+        } */
+    });
 });//Doc ready Func End
 
-//TODO 미개발
+
+function girdHide(){
+    //Grid Hide
+    $("#_itmDetailGridDiv").css("display" , "none");
+}
+
+function createPosItmDetailGrid(){
+    var posItmColumnLayout =  [ 
+                                {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
+                                {dataField : "stkDesc", headerText : "Item Description", width : '30%'},
+                                {dataField : "qty", headerText : "Qty", width : '10%'},
+                                {dataField : "amt", headerText : "Unit Price", width : '10%' , dataType : "numeric", formatString : "#,##0.00"}, 
+                                {dataField : "chrg", headerText : "Sub Total(Exclude GST)", width : '10%', dataType : "numeric", formatString : "#,##0.00"},
+                                {dataField : "txs", headerText : "GST(6%)", width : '10%', dataType : "numeric", formatString : "#,##0.00"},
+                                {dataField : "tot", headerText : "Total Amount", width : '10%', dataType : "numeric", formatString : "#,##0.00"},
+                                {
+                                    dataField : "rcvStusId",
+                                    headerText : "rcvStusId",
+                                    width : '10%',
+                                    labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                                        var retStr = "";
+                                        for(var i=0,len=arrItmStusCode.length; i<len; i++) {
+                                            if(arrItmStusCode[i]["codeId"] == value) {
+                                                retStr = arrItmStusCode[i]["codeName"];
+                                                break;
+                                            }
+                                        }
+                                                    return retStr == "" ? value : retStr;
+                                },
+                                    renderer : { // 셀 자체에 드랍다운리스트 출력하고자 할 때
+                                           type : "DropDownListRenderer",
+                                           list : arrItmStusCode,
+                                           keyField   : "codeId", // key 에 해당되는 필드명
+                                           valueField : "codeName" // value 에 해당되는 필드명
+                                     }
+                               },
+                               {dataField : "posItmStockId", visible : false}
+                           ];
+     //그리드 속성 설정
+    var itmGridPros = {
+            
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 1,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+    };
+    
+    posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap", posItmColumnLayout,'', itmGridPros);  // address list
+    AUIGrid.resize(posItmDetailGridID , 1660, 300);
+}
+
+
+
+//TODO 미개발 message
 function fn_underDevelop(){
     Common.alert('The program is under development.');
 }
@@ -141,37 +300,100 @@ $.fn.clearForm = function() {
     });
 };
 
-function fn_getStatusCode(){
+function fn_getStatusCode(grpCode){
     
-    $.ajax({
-        type: 'get',
-        url : getContextPath() + '/sales/pos/selectStatusCodeList',
-        data : {groupCode : '9'},
-        dataType : 'json',
-        beforeSend: function (request) {
-             // loading start....
-             Common.showLoader();
-         },
-         complete: function (data) {
-             // loading end....
-             createAUIGrid();
-             Common.removeLoader();
-         },
-         success: function(result) {
-             
-             var tempArr = new Array();
-             
-             for (var idx = 0; idx < result.length; idx++) {
-                 tempArr.push(result[idx]); 
-             }
-             
-             arrStusCode = tempArr;
-             
-        },error: function () {
-            Common.alert("Fail to Get Code List....");
-        }
-        
-    });
+    if(grpCode == '9'){
+        $.ajax({
+            type: 'get',
+            url : getContextPath() + '/sales/pos/selectStatusCodeList',
+            data : {groupCode : grpCode},
+            dataType : 'json',
+            async : false,
+            beforeSend: function (request) {
+                 // loading start....
+                 Common.showLoader();
+             },
+             complete: function (data) {
+                 // loading end....
+                 Common.removeLoader();
+             },
+             success: function(result) {
+                 
+                 var tempArr = new Array();
+                 
+                 for (var idx = 0; idx < result.length; idx++) {
+                     tempArr.push(result[idx]); 
+                 }
+                 arrPosStusCode = tempArr;
+                 
+            },error: function () {
+                Common.alert("Fail to Get Code List....");
+            }
+            
+        });
+    }
+    
+    if(grpCode == '10'){
+        $.ajax({
+            type: 'get',
+            url : getContextPath() + '/sales/pos/selectStatusCodeList',
+            data : {groupCode : grpCode},
+            dataType : 'json',
+            async : false,
+            beforeSend: function (request) {
+                 // loading start....
+                 Common.showLoader();
+             },
+             complete: function (data) {
+                 // loading end....
+                 Common.removeLoader();
+             },
+             success: function(result) {
+                 
+                 var tempArr = new Array();
+                 
+                 for (var idx = 0; idx < result.length; idx++) {
+                     tempArr.push(result[idx]); 
+                 }
+                 arrItmStusCode = tempArr; 
+                 
+            },error: function () {
+                Common.alert("Fail to Get Code List....");
+            }
+            
+        });
+    }
+    
+    if(grpCode == '11'){
+        $.ajax({
+            type: 'get',
+            url : getContextPath() + '/sales/pos/selectStatusCodeList',
+            data : {groupCode : grpCode},
+            dataType : 'json',
+            async : false,
+            beforeSend: function (request) {
+                 // loading start....
+                 Common.showLoader();
+             },
+             complete: function (data) {
+                 // loading end....
+                 Common.removeLoader();
+             },
+             success: function(result) {
+                 
+                 var tempArr = new Array();
+                 
+                 for (var idx = 0; idx < result.length; idx++) {
+                     tempArr.push(result[idx]); 
+                 }
+                 arrMemStusCode = tempArr; 
+                 
+            },error: function () {
+                Common.alert("Fail to Get Code List....");
+            }
+            
+        });
+    }
 }
 
 
@@ -208,12 +430,12 @@ function createAUIGrid(){
     var posColumnLayout =  [ 
                             {dataField : "posNo", headerText : "POS No.", width : '8%'}, 
                             {dataField : "posDt", headerText : "Sales Date", width : '8%'},
-                            {dataField : "posDt", headerText : "Member ID", width : '8%'},
+                            {dataField : "userName", headerText : "Member ID", width : '8%'},
                             {dataField : "codeName", headerText : "POS Type", width : '8%'},
                             {dataField : "codeName1", headerText : "Sales Type", width : '8%'},
                             {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '8%'}, 
                             {dataField : "name", headerText : "Customer Name", width : '18%'},
-                            {dataField : "whLocCode", headerText : "Branch", width : '8%'},
+                            {dataField : "whLocCode", headerText : "Branch", width : '8%' , style : 'left_style'},
                             {dataField : "whLocCode", headerText : "Warehouse", width : '8%'},
                             {dataField : "posTotAmt", headerText : "Total Amount", width : '8%'},
                             {
@@ -222,9 +444,9 @@ function createAUIGrid(){
                                 width : '10%',
                                 labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                     var retStr = "";
-                                    for(var i=0,len=arrStusCode.length; i<len; i++) {
-                                        if(arrStusCode[i]["codeId"] == value) {
-                                            retStr = arrStusCode[i]["codeName"];
+                                    for(var i=0,len=arrPosStusCode.length; i<len; i++) {
+                                        if(arrPosStusCode[i]["codeId"] == value) {
+                                            retStr = arrPosStusCode[i]["codeName"];
                                             break;
                                         }
                                     }
@@ -232,12 +454,14 @@ function createAUIGrid(){
                             },
                                 renderer : { // 셀 자체에 드랍다운리스트 출력하고자 할 때
                                        type : "DropDownListRenderer",
-                                       list : arrStusCode,
+                                       list : arrPosStusCode,
                                        keyField   : "codeId", // key 에 해당되는 필드명
                                        valueField : "codeName" // value 에 해당되는 필드명
                                  }
                            },
-                            {dataField : "posId", visible : false}
+                            {dataField : "posId", visible : false},
+                            {dataField : "posModuleTypeId", visible : false},
+                            {dataField : "posTypeId", visible : false}
                            ];
     
     //그리드 속성 설정
@@ -264,7 +488,10 @@ function createAUIGrid(){
 }
 
 function fn_getPosListAjax(){
-
+    
+	  $("#_posModuleTypeId").val($("#cmbPosTypeId").val());
+	  $("#_posTypeId").val($("#cmbSalesTypeId").val());
+	  
       Common.ajax("GET", "/sales/pos/selectPosJsonList", $("#searchForm").serialize(), function(result) {
         
           AUIGrid.setGridData(posGridID, result);
@@ -272,6 +499,23 @@ function fn_getPosListAjax(){
       
 }
 
+
+function fn_getDateGap(sdate, edate){
+    
+    var startArr, endArr;
+    
+    startArr = sdate.split('/');
+    endArr = edate.split('/');
+    
+    var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
+    var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
+    
+    var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+    
+    console.log("gap : " + gap);
+    
+    return gap;
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 </script>
@@ -286,16 +530,18 @@ function fn_getPosListAjax(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>POS Listing</h2>
+<h2>POS Other income Listing</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_underDevelop()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
 <form  id="searchForm">
+<input type="hidden" id="_posModuleTypeId" name="posModuleTypeId">
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -306,15 +552,15 @@ function fn_getPosListAjax(){
     <col style="width:170px" />
     <col style="width:*" />
 </colgroup>
-<tbody>
+<tbody> 
 <tr>
     <th scope="row">POS Type</th>
     <td>
-    <select class="w100p" id="cmbPosTypeId"  name="posModuleTypeId"></select>
+    <select class="w100p disabled" id="cmbPosTypeId"  disabled="disabled"></select>
     </td>
     <th scope="row">POS Sales Type</th>
     <td>
-    <select class="w100p" id="cmbSalesTypeId" name="posTypeId" ></select>
+    <select class="w100p" id="cmbSalesTypeId" name="posTypeId"></select>
     </td>
     <th scope="row">Status</th>
     <td>
@@ -322,21 +568,21 @@ function fn_getPosListAjax(){
     </td>
 </tr>
 <tr>
-    <th scope="row">POS Ref No.</th>
+    <th scope="row">POS No.</th>
     <td>
-    <input type="text" title="" placeholder="POS No." class="w100p"  name="posNo"/>
+    <input type="text" title="" placeholder="POS No." class="w100p"  name="posNo" />
     </td>
     <th scope="row">Sales Date</th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate"/></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_sDate" value="${bfDay}"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate" /></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate"  id="_eDate" value="${toDay}"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row">Member Code</th>
     <td>
-        <input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="" />
+        <input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class=""  style="width: 180px;"/>
         <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </td>
@@ -344,22 +590,12 @@ function fn_getPosListAjax(){
 <tr>
     <th scope="row">Branch / Warehouse</th>
     <td colspan="3">
-        <select  id="cmbWhBrnchId" ></select>
+        <select  id="cmbWhBrnchId"  disabled="disabled" class="disabled"></select>
         <input type="text" disabled="disabled" id="cmbWhId" >
     </td>
     <th scope="row">Customer Name</th>
     <td>
     <input type="text" title="" placeholder="Customer Name" class="w100p" name="posCustName" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Member Name(Deduction)</th>
-    <td>
-        <input type="text" title="" placeholder="Member Name" class="w100p" />
-    </td>
-    <th scope="row">Member IC(Deduction)</th>
-    <td colspan="3">
-    <input type="text" title="" placeholder="Member IC" class="w100p" />
     </td>
 </tr>
 </tbody>
@@ -388,8 +624,8 @@ function fn_getPosListAjax(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="_systemBtn">POS System</a></p></li>
-    <li><p class="btn_grid"><a href="#">POS Reversal</a></p></li>
+    <li><p class="btn_grid"><a  id="_systemBtn">POS System</a></p></li>
+    <li><p class="btn_grid"><a  id="_reversalBtn">POS Reversal</a></p></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -397,36 +633,25 @@ function fn_getPosListAjax(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="pos_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="pos_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big mt20"><a href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_posStatusBtn">Save</a></p></li>  
 </ul>
-
-<aside class="title_line"><!-- title_line start -->
-<h3>Deduction Member List</h3>
-</aside><!-- title_line end -->
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big mt20"><a href="#">Save</a></p></li>
-</ul>
-
+<!--item Grid  -->
+<div id="_itmDetailGridDiv">
 <aside class="title_line"><!-- title_line start -->
 <h3>Item List</h3>
 </aside><!-- title_line end -->
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<article class="grid_wrap"><!-- grid_wrap start --> 
+<div id="itm_detail_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big mt20"><a href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_itemStatusBtn">Save</a></p></li>
 </ul>
+</div>
 </section><!-- search_result end -->
 </section><!-- content end -->
 <hr />

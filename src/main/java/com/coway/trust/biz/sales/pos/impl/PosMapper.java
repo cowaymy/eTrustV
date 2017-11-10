@@ -2,6 +2,9 @@ package com.coway.trust.biz.sales.pos.impl;
 
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.biz.sales.pos.vo.PosMasterVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -18,13 +21,13 @@ public interface PosMapper {
 	
 	EgovMap selectWarehouse(Map<String, Object> params);
 	
-	List<EgovMap> selectPSMItmTypeList(Map<String, Object> params);
+	List<EgovMap> selectPosTypeList(Map<String, Object> params);
 	
-	List<EgovMap> selectPIItmTypeList();
+	//List<EgovMap> selectPIItmTypeList();
 	
-	List<EgovMap> selectPIItmList(Map<String, Object> params);
+	//List<EgovMap> selectPIItmList(Map<String, Object> params);
 	
-	List<EgovMap> selectPSMItmList(Map<String, Object> params);
+	List<EgovMap> selectPosItmList(Map<String, Object> params);
 	
 	List<EgovMap> chkStockList(Map<String, Object> params);
 	
@@ -134,4 +137,10 @@ public interface PosMapper {
 	void insertStkCardRecordReversal(EgovMap params);
 	
 	List<EgovMap> getPurchMemList(Map<String, Object> params);
+	
+	void updatePosMStatus(PosMasterVO pvo);
+	
+	void updatePosDStatus(PosMasterVO pvo);
+	
+	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
 }

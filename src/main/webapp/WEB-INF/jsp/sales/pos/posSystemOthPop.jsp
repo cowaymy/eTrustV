@@ -1,0 +1,523 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript">
+
+//Combo Box Choose Message    
+var optionState = {chooseMessage: " 1.States "};
+var optionCity = {chooseMessage: "2. City"};
+var optionPostCode = {chooseMessage: "3. Post Code"};
+var optionArea = {chooseMessage: "4. Area"};
+
+//생성 후 반환 ID
+var purchaseGridID;
+var optionModule = {
+        type: "S",                  
+        isShowChoose: false  
+};
+//posCustId
+$(document).ready(function() {
+	//MagicAddr
+    fn_initAddress();
+    CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
+    
+    //MagicAddr
+    createPurchaseGridID();
+    //PosModuleTypeComboBox
+    var modulePopParam = {groupCode : 143, codeIn : [2392]};
+    CommonCombo.make('_insPosModuleType', "/sales/pos/selectPosModuleCodeList", modulePopParam , '', optionModule);
+    
+    //PosSystemTypeComboBox
+    var systemPopParam = {groupCode : 140 , codeIn : [1357]};
+    CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
+    
+    $("#_purcDelBtn").click(function() {
+        
+    	AUIGrid.removeCheckedRows(purchaseGridID);
+    });
+    
+    //Purchase Btn
+    $("#_purchBtn").click(function() {
+    	
+    	 //TODO 창고 파라미터가져가야함
+    	 Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
+    });
+    
+  //Save Request
+    $("#_posReqSaveBtn").click(function() {
+        
+        /****Validation ***/
+        //Purchase Grid Null Check
+        if(AUIGrid.getGridData(purchaseGridID) <= 0){
+            Common.alert("* Please select the Item(s). ");
+            return;
+        }
+        
+        //Member Check
+        var ajaxOption = {
+            async: false,
+            isShowLoader : true
+        };
+        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : $("#hiddenSalesmanPopId").val(), memCode : $("#salesmanPopCd").val()}, function(memInfo) {
+            if(memInfo == null) {
+                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                return;
+            }
+        },null,ajaxOption);
+        
+        //Branch WareHouse Null Check
+/*         if( null == $("#_cmbWhBrnchIdPop").val() || '' == $("#_cmbWhBrnchIdPop").val()){
+            Common.alert("* Please select the warehouse. ");
+            return;
+        } */
+/*         //Receive Date Null Check
+        if( null == $("#_recvDate").val() || '' == $("#_recvDate").val()){
+            Common.alert("* Please select the Receive date.");
+            return;
+        } */
+        // Compare with Todaty?
+        
+        //Remark Null Check
+        if( null == $("#_posRemark").val() || '' == $("#_posRemark").val()){
+            Common.alert(" * Please key in Remark. ");
+            return;
+        }
+        //Save
+       fn_payPass(); //No payment Save
+      
+    });
+    
+    //Enter Event
+    $('#searchSt').keydown(function (event) {  
+        if (event.which === 13) {    //enter  
+            fn_addrSearch();
+        }  
+    });
+});//Document Ready Func End
+
+//////////////////////////////////////////////////
+function fn_payPass(){
+    
+    var data = {};
+    var prchParam = AUIGrid.getGridData(purchaseGridID);
+    
+    data.prch = prchParam;
+    $("#_payResult").val('-1'); //payment
+    data.form = $("#_sysForm").serializeJSON();
+    
+    Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
+        Common.alert("POS saved. <br /> POS Ref No. :  [" + result.reqDocNo + "]" ,  fn_bookingAndpopClose()); 
+    });
+   
+}
+
+function fn_bookingAndpopClose(){
+   //프로시저 호출
+   // 콜백  >> 
+   $("#_systemClose").click();
+}
+//////////////////////////////////////////////////
+
+
+function fn_initAddress(){
+    
+    $('#mCity').append($('<option>', { value: '', text: '2. City' }));
+    $('#mCity').val('');
+    $("#mCity").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+    
+    $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+    $('#mPostCd').val('');
+    $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+    
+    $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+    $('#mArea').val('');
+    $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+}
+
+function fn_selectState(selVal){
+    
+    var tempVal = selVal;
+    
+    if('' == selVal || null == selVal){
+        //전체 초기화
+        fn_initAddress();   
+        
+    }else{
+        
+        $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
+        
+        $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+        $('#mPostCd').val('');
+        $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+        $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+        $('#mArea').val('');
+        $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+        //Call ajax
+        var cityJson = {state : tempVal}; //Condition
+        CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
+    }
+    
+}
+
+
+function fn_selectCity(selVal){
+    
+    var tempVal = selVal;
+    
+    if('' == selVal || null == selVal){
+       
+         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+         $('#mPostCd').val('');
+         $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+         $('#mArea').val('');
+         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+    }else{
+        
+         $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+         
+         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+         $('#mArea').val('');
+         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+        
+        //Call ajax
+        var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
+        CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
+    }
+    
+}
+
+
+function fn_selectPostCode(selVal){
+    
+    var tempVal = selVal;
+    
+    if('' == selVal || null == selVal){
+       
+        $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+        $('#mArea').val('');
+        $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+    }else{
+        
+        $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
+        
+        //Call ajax
+        var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
+        CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
+    }
+    
+}
+
+
+function fn_addrSearch(){
+    if($("#searchSt").val() == ''){
+        Common.alert("Please search.");
+        return false;
+    }
+    var srchParam = {searchSt : $("#searchSt").val()};
+    Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , srchParam , null , true, '_searchDiv');
+}
+
+
+function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
+    
+    if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
+        
+        $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
+        $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
+        $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+        $("#mState").attr({"disabled" : false  , "class" : "w100p"});
+        
+        //Call Ajax
+       
+        CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
+        
+        var cityJson = {state : mstate}; //Condition
+        CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
+        
+        var postCodeJson = {state : mstate , city : mcity}; //Condition
+        CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
+        
+        var areaJson = {groupCode : mpostcode};
+        var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
+        CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
+        
+        $("#areaId").val(areaid);
+        $("#_searchDiv").remove();
+    }else{
+        Common.alert("Please check your address.");
+    }
+}
+
+//Get Area Id
+function fn_getAreaId(){
+    
+    var statValue = $("#mState").val();
+    var cityValue = $("#mCity").val();
+    var postCodeValue = $("#mPostCd").val();
+    var areaValue = $("#mArea").val();
+    
+    
+    
+    if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
+        
+        var jsonObj = { statValue : statValue ,
+                              cityValue : cityValue,
+                              postCodeValue : postCodeValue,
+                              areaValue : areaValue
+                            };
+        Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
+            
+             $("#areaId").val(result.areaId);
+            
+        });
+        
+    }
+    
+}
+
+////////////// Magic Addr End //////////////
+
+
+function createPurchaseGridID(){
+    
+    
+    var posColumnLayout =  [ 
+                            {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
+                            {dataField : "stkDesc", headerText : "Item Description", width : '30%'},
+                            {dataField : "qty", headerText : "Inv.Stock", width : '10%'},
+                            {dataField : "inputQty", headerText : "Qyt", width : '10%'},
+                            {dataField : "amt", headerText : "Unit Price", width : '10%' , dataType : "numeric", formatString : "#,##0.00"}, 
+                            {dataField : "subTotal", headerText : "Sub Total(Exclude GST)", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                                var calObj = fn_calculateAmt(item.amt , item.inputQty);
+                                return Number(calObj.subChanges); 
+                            }},
+                            {dataField : "subChng", headerText : "GST(6%)", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                                var calObj = fn_calculateAmt(item.amt , item.inputQty);
+                                return Number(calObj.taxes);
+                            }},
+                            {dataField : "totalAmt", headerText : "Total Amount", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                                var calObj = fn_calculateAmt(item.amt , item.inputQty);
+                                return Number(calObj.subTotal);
+                            }},
+                            {dataField : "stkTypeId" , visible :false},
+                            {dataField : "stkId" , visible :false}//STK_ID
+                           ];
+    
+    //그리드 속성 설정
+    var gridPros = {
+            showFooter : true,
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 1,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            showRowCheckColumn : true, //checkBox
+            softRemoveRowMode : false,
+            noDataMessage       : "No Item found.",
+            groupingMessage     : "Here groupping"
+    };
+    
+    purchaseGridID = GridCommon.createAUIGrid("#item_grid_wrap", posColumnLayout,'', gridPros);  // address list
+    AUIGrid.resize(purchaseGridID , 960, 300);
+    
+    //
+    var footerLayout = [ {
+        labelText : "Total(RM)",
+        positionField : "#base"
+      },{
+        dataField : "subTotal",
+        positionField : "subTotal",
+        operation : "SUM",
+        formatString : "#,##0.00",
+        style : "aui-grid-my-footer-sum-total2"
+      }, {
+        dataField : "subChng",
+        positionField : "subChng",
+        operation : "SUM",
+        formatString : "#,##0.00",
+        style : "aui-grid-my-footer-sum-total2"
+       },{
+           dataField : "totalAmt",
+           positionField : "totalAmt",
+           operation : "SUM",
+           formatString : "#,##0.00",
+           style : "aui-grid-my-footer-sum-total2"
+      }];
+   // 푸터 레이아웃 그리드에 설정
+   AUIGrid.setFooter(purchaseGridID, footerLayout);
+}
+
+//posItmSrchPop -> posSystemPop
+function getItemListFromSrchPop(itmList){
+    AUIGrid.setGridData(purchaseGridID, itmList);
+}
+
+function fn_calculateAmt(amt, qty) {
+    
+    var subTotal = 0;
+    var subChanges = 0;
+    var taxes = 0;
+    
+    subTotal = amt * qty;
+    subChanges = (subTotal * 100) / 106;
+    subChanges = subChanges.toFixed(2); //소수점2반올림
+    taxes = subTotal - subChanges;
+    taxes = taxes.toFixed(2);
+    
+    var retObj = {subTotal : subTotal , subChanges : subChanges , taxes : taxes};
+    
+    return retObj;
+    
+}
+
+</script>
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>POS Request</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a id="_systemClose">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<ul class="right_btns">
+    <li><p class="btn_blue2"><a id="_posReqSaveBtn">Save</a></p></li>
+</ul>
+
+<aside class="title_line"><!-- title_line start -->
+<h2>POS Information</h2>
+</aside><!-- title_line end -->
+<form id="_sysForm">
+<!-- HIDDEN VALUES -->
+<input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId }">
+<input type="hidden" name="cmbWhBrnchIdPop" value="${memCodeMap.brnch}">
+
+<input type="hidden" name="posReason" id="_posReason">  
+<input type="hidden" name="payResult" id="_payResult">
+<input type="hidden" name="areaId" id="areaId">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">POS Type</th>
+    <td>
+    <select class="w100p" id="_insPosModuleType" name="insPosModuleType"></select>
+    </td>
+    <th scope="row">POS Sales Type</th>
+    <td>
+    <select class="w100p" id="_insPosSystemType" name="insPosSystemType"></select>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Particular Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+     <th scope="row">Customer Name</th>
+     <td colspan="3">
+        <input type="text" title="" placeholder="CustomerName" class="w100p"  value="CASH" name="insPosCustName"/>
+    </td>   
+</tr>
+<tr>
+    <th scope="row">Area search</th>
+    <td colspan="3">
+        <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Address Detail</th>
+    <td colspan="3">
+        <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Street</th>
+    <td colspan="3">
+        <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Area(4)<span class="must">*</span></th>
+    <td colspan="3">
+        <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">City(2)<span class="must">*</span></th>
+    <td>
+    <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+    </td>
+    <th scope="row">PostCode(3)<span class="must">*</span></th>
+    <td>
+    <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">State(1)<span class="must">*</span></th>
+    <td>
+    <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+    </td>
+    <th scope="row">Country<span class="must">*</span></th>
+    <td>
+    <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3">
+        <input type="text" title="" placeholder="" class="w100p"  id="_posRemark" name="posRemark"/>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+<aside class="title_line"><!-- title_line start -->
+<h2>Charges Balance</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns">
+    <li><p class="btn_grid"><a id="_purchBtn">Purchase Items</a></p></li>
+    <li><p class="btn_grid"><a id="_purcDelBtn">DEL</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="item_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->

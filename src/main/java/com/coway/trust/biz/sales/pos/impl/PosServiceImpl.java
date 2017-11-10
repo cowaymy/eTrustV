@@ -3,19 +3,17 @@ package com.coway.trust.biz.sales.pos.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
-import org.bouncycastle.tsp.GenTimeAccuracy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.coway.trust.biz.sales.pos.PosService;
+import com.coway.trust.biz.sales.pos.vo.PosGridVO;
+import com.coway.trust.biz.sales.pos.vo.PosMasterVO;
+import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.math.BigDecimal;
-
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -26,6 +24,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 	
 	@Resource(name = "posMapper")
 	private PosMapper posMapper;
+	
 
 	@Override
 	public List<EgovMap> selectPosModuleCodeList(Map<String, Object> params) throws Exception {
@@ -58,27 +57,27 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 	}
 
 	@Override
-	public List<EgovMap> selectPSMItmTypeList(Map<String, Object> params) throws Exception {
+	public List<EgovMap> selectPosTypeList(Map<String, Object> params) throws Exception {
 		
-		return posMapper.selectPSMItmTypeList(params);
+		return posMapper.selectPosTypeList(params);
 	}
 
-	@Override
+/*	@Override
 	public List<EgovMap> selectPIItmTypeList() throws Exception {
 		
 		return posMapper.selectPIItmTypeList();
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<EgovMap> selectPIItmList(Map<String, Object> params) throws Exception {
 		
 		return posMapper.selectPIItmList(params);
-	}
+	}*/
 
 	@Override
-	public List<EgovMap> selectPSMItmList(Map<String, Object> params) throws Exception {
+	public List<EgovMap> selectPosItmList(Map<String, Object> params) throws Exception {
 		
-		return posMapper.selectPSMItmList(params);
+		return posMapper.selectPosItmList(params);
 	}
 
 	@Override
@@ -205,18 +204,31 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		}
 		if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_OTHER_INCOME) ||
 				String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK_HQ)){  //1357 or 1358
-			
-			EgovMap accCodeMap = null;
-			accCodeMap = posMapper.getItemBankAccCodeByItemTypeID(posMap);
-			posMap.put("drAccId", accCodeMap.get("drAccId"));
-			posMap.put("crAccId", accCodeMap.get("crAccId"));
+	//TODO ASIS 기준으로는 하나의 아이템 타입만 구입할 수있었으니 지금은 여러가지 타입의 아이템을 구할수 있으므로 해당 로직 사용 불가함  //임의 수치 부여		
+	//		EgovMap accCodeMap = null;
+	//		accCodeMap = posMapper.getItemBankAccCodeByItemTypeID(posMap);
+			posMap.put("drAccId", SalesConstants.POS_DRACC_ID_OTH);
+			posMap.put("crAccId", SalesConstants.POS_CRACC_ID_OTH);
 			
 		}
 		
 		posMap.put("posMasterSeq", posMasterSeq); //posId = 0   -- 시퀀스 
 		posMap.put("docNoPsn", docNoPsn); //posNo = 0  --문서채번
 		posMap.put("posBillId", SalesConstants.POS_BILL_ID); //pos Bill Id // 0
-		posMap.put("posCustName", nameMAp.get("name")); //posCustName = other Income만 사용함 .. 그러면 나머지는??
+		
+		//TODO Other Income 만 사용?? Branch 없음 임시 번호 부여
+		if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_OTHER_INCOME)){ // 1357 Other Income 
+			
+			posMap.put("othCheck", SalesConstants.POS_OTH_CHECK_PARAM);  //OTH Check
+			posMap.put("posCustName", posMap.get("insPosCustName")); //posCustName = other Income만 사용함 .. 그러면 나머지는??
+			params.put("memCode", params.get("userName"));
+			EgovMap memCodeMap = null;
+			memCodeMap = posMapper.selectMemberByMemberIDCode(params);
+			posMap.put("salesmanPopId", memCodeMap.get("memId"));
+			
+		}else{
+			posMap.put("posCustName", nameMAp.get("name")); //posCustName = other Income만 사용함 .. 그러면 나머지는??
+		}
 		posMap.put("posTotalAmt", rtnAmt);
 		posMap.put("posCharge", rtnCharge); 
 		posMap.put("posTaxes", rtnTax);
@@ -237,7 +249,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			}
 		}
 		
-		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391  //POS TYPE :   DEDUCTION COMMISSION   - NO PAYMENT
+		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType"))) || ////2391  //POS TYPE :   DEDUCTION COMMISSION   - NO PAYMENT
+				(SalesConstants.POS_SALES_MODULE_TYPE_OTH).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2392 //POS TYPE : OTHER
 			posMap.put("posStusId", SalesConstants.POS_SALES_STATUS_NON_RECEIVE); //STUS_ID  == Non Receive
 		}
 		
@@ -266,7 +279,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		LOGGER.info("************************************* POSMAP - constans(pos_sales)  : " + SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES);
 		LOGGER.info("************************************* POSMAP - constans(deduction_commission)  : " + SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION);
 		
-		if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2390
+		if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType"))) //2390
+				 || (SalesConstants.POS_SALES_MODULE_TYPE_OTH).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2392 
                 for (int idx = 0; idx < basketGrid.size(); idx++) {  //basket Grid
                 	Map<String, Object> itemMap = 	(Map<String, Object>)basketGrid.get(idx);
                 	
@@ -318,7 +332,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 					memMap.put("posDetailDuducSeq", posDetailDuducSeq);
 					memMap.put("posMasterSeq", posMasterSeq);
 					memMap.put("posDetailStkId", deducItemMap.get("stkId"));  //POS_ITM_STOCK_ID
-					memMap.put("posDetailQty", deducItemMap.get("qty"));  //POS_ITM_QTY
+					memMap.put("posDetailQty", deducItemMap.get("inputQty"));  //POS_ITM_QTY
 					memMap.put("posDetailUnitPrc", deducItemMap.get("amt")); //Price
 					memMap.put("posDetailTotal", deducItemMap.get("totalAmt")); //ToTal
 					memMap.put("posDetailCharge", deducItemMap.get("subTotal")); //Charge 
@@ -411,9 +425,16 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		accTaxInvoiceMiscellaneouMap.put("accTaxInvMiscSeq", accTaxInvMiscSeq); //InvMiscMaster.TaxInvoiceID = 0;
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvRefNo", docNoInvoice); //InvMiscMaster.TaxInvoiceRefNo = ""; //update later
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvSvcNo", docNoPsn); //InvMiscMaster.TaxInvoiceServiceNo = ""; //SOI No.
-    		accTaxInvoiceMiscellaneouMap.put("posTaxInvType", SalesConstants.POS_TAX_INVOICE_TYPE); //  InvMiscMaster.TaxInvoiceType = 142; //pos new version 
-    		accTaxInvoiceMiscellaneouMap.put("posTaxInvCustName", nameMAp.get("name")); //   InvMiscMaster.TaxInvoiceCustName = this.txtCustName.Text.Trim();
-    		accTaxInvoiceMiscellaneouMap.put("posTaxInvCntcPerson", nameMAp.get("name")); // InvMiscMaster.TaxInvoiceContactPerson = this.txtCustName.Text.Trim();
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvType", SalesConstants.POS_TAX_INVOICE_TYPE); //  InvMiscMaster.TaxInvoiceType = 142; //pos new version
+    		
+    		if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_OTHER_INCOME)){ // 1357 Other Income 
+    			accTaxInvoiceMiscellaneouMap.put("posTaxInvCustName", posMap.get("insPosCustName")); //   InvMiscMaster.TaxInvoiceCustName = this.txtCustName.Text.Trim();
+    			accTaxInvoiceMiscellaneouMap.put("posTaxInvCntcPerson", posMap.get("insPosCustName")); // InvMiscMaster.TaxInvoiceContactPerson = this.txtCustName.Text.Trim();
+    			
+    		}else{
+    			accTaxInvoiceMiscellaneouMap.put("posTaxInvCustName", nameMAp.get("name")); //   InvMiscMaster.TaxInvoiceCustName = this.txtCustName.Text.Trim();
+    			accTaxInvoiceMiscellaneouMap.put("posTaxInvCntcPerson", nameMAp.get("name")); // InvMiscMaster.TaxInvoiceContactPerson = this.txtCustName.Text.Trim();
+    		}
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvTaskId", 0); //InvMiscMaster.TaxInvoiceTaskID = 0;
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvUserName", params.get("userName")); // InvMiscMaster.TaxInvoiceRemark = li.LoginID;
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvCharges", rtnCharge); //  InvMiscMaster.TaxInvoiceCharges = Convert.ToDecimal(string.Format("{0:0.00}", (decimal.Parse(totalcharges) * 100 / 106)));
@@ -630,6 +651,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			posMap.put("posMasterSeq", posMasterSeq); //posId = 0   -- 시퀀스 
 			posMap.put("docNoPsn", posRefNo); //posNo = 0  --문서채번
 			posMap.put("posBillId", SalesConstants.POS_BILL_ID); //pos Bill Id // 0
+			
 			posMap.put("posCustName", params.get("rePosCustName")); //posCustName = other Income만 사용함 .. 그러면 나머지는??
 			posMap.put("insPosModuleType", params.get("rePosModuleTypeId"));
 			posMap.put("insPosSystemType", SalesConstants.POS_SALES_TYPE_REVERSAL); // 1361
@@ -650,6 +672,13 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			posMap.put("cmbWhBrnchIdPop", params.get("rePosBrnchId")); //Brnch
 			posMap.put("recvDate", params.get("rePosRcvDt"));
 			posMap.put("posStusId",params.get("rePosStusId"));
+			
+			if(params.get("rePosModuleTypeId").equals(SalesConstants.POS_SALES_MODULE_TYPE_OTH)){
+				posMap.put("chkOth", SalesConstants.POS_OTH_CHECK_PARAM);
+				posMap.put("getAreaId", params.get("getAreaId"));
+				posMap.put("addrDtl", params.get("addrDtl"));
+				posMap.put("streetDtl", params.get("streetDtl"));
+			}
 			
 			//Pos Master Insert
 			LOGGER.info("############### 1. POS MASTER REVERSAL INSERT START  ################");
@@ -985,4 +1014,29 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		
 		return posMapper.getPurchMemList(params);
 	}
+
+	@Override
+	@Transactional
+	public void updatePosMStatus(PosGridVO pgvo) throws Exception {
+		
+		GridDataSet<PosMasterVO> posMGridDataSetList = pgvo.getPosStatusDataSetList();
+		
+		List<PosMasterVO> updateList = posMGridDataSetList.getUpdate();
+		
+		//Update PosMaster
+		for(PosMasterVO pvo : updateList){
+			
+			//Update Pos Master
+			posMapper.updatePosMStatus(pvo);
+			
+			//Complete to Update Pos Detail  
+			if(pvo.getStusId() == SalesConstants.POS_SALES_STATUS_COMPLETE){  // to 4
+				pvo.setChangeStatus(SalesConstants.POS_DETAIL_RECEIVE); //to Detail Status  85
+				posMapper.updatePosDStatus(pvo);
+			}
+		}
+		
+		
+	}
+	
 }

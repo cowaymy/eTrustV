@@ -16,34 +16,59 @@ var optionSystem = {
         isShowChoose: false  
 };
 
+//Ajax Async
+var ajaxOpt= {
+		async : false
+};
+
 //Doc Ready Func
 $(document).ready(function() {
-	
-	/*#######  Init Field ########*/
-	
-	//1. POS MASTER
-	//PosModuleTypeComboBox
+    
+    /*#######  Init Field ########*/
+    
+    //1. POS MASTER
+    //PosModuleTypeComboBox
     var moduleParam = {groupCode : 143, codeIn : [2390, 2391, 2392]};
-	var moduleSelVal = $("#_rePosModuleTypeId").val();
+    var moduleSelVal = $("#_rePosModuleTypeId").val();
     CommonCombo.make('_reversalPosModuleTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , moduleSelVal, optionModule);
     
     //PosSystemTypeComboBox
-    var systemParam = {groupCode : 140 , codeIn : [1352, 1353, 1357, 1358]};
+    var systemParam = {groupCode : 140 , codeIn : [1352, 1353, 1357]};
     var systemSelVal = $("#_rePosSysTypeId").val();
     CommonCombo.make('_reversalPosTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , systemSelVal, optionSystem);
-	
-    //branch List(Warehouse)
+    
+    var magicAddrParam = { areaId : $("#_getAreaId").val()};
+    var mArea;
+    var mCity;
+    var mPostCd;
+    var mState;
+    
+    Common.ajax("GET", "/sales/pos/getAddressDetails", magicAddrParam, function (result){
+    	
+    	/* console.log("result.area : " + result.area);
+    	console.log("result.city : " + result.city);
+    	console.log("result.postcode : " + result.postcode);
+    	console.log("result.state : " + result.state); */
+        $("#mArea").val(result.area);
+    	$("#mCity").val(result.city);
+    	$("#mPostCd").val(result.postcode);
+    	$("#mState").val(result.state);
+    	
+    });
+    
+    
+  /*   //branch List(Warehouse)
     var whbrnchSelVal = $("#_rePosWhBrnchId").val();
-    if(moduleSelVal == 2392 && systemSelVal == 1357){
-    	$("#_reversalPosWhBrnchId").val('');
-    	$("#_reversalPosWhBrnchId").attr({"class" : "disabled"});
+    if(moduleSelVal == 2392){
+        $("#_reversalPosWhBrnchId").val('');
+        $("#_reversalPosWhBrnchId").attr({"class" : "disabled"});
     }else{
-    	CommonCombo.make('_reversalPosWhBrnchId', "/sales/pos/selectWhBrnchList", '' , whbrnchSelVal , optionModule);
-    }
+        CommonCombo.make('_reversalPosWhBrnchId', "/sales/pos/selectWhBrnchList", '' , whbrnchSelVal , optionModule);
+    } */
     
     
-	
-    //Get Wharehouse`s Desc
+    
+    /* //Get Wharehouse`s Desc
     var paramObj = {brnchId : whbrnchSelVal};
     Common.ajax('GET', "/sales/pos/selectWarehouse", paramObj,function(result){
         if(result != null){
@@ -51,61 +76,61 @@ $(document).ready(function() {
         }else{
             $("#_reversalPosWhDesc").val('');
         }
-    });
+    }); */
     
     
     //2. POS DETAIL - GRID
     createPurchaseGridID();
     
     //Mybatis Separate Param
-  /*   var filterType = '';
+    var filterType = '';
     var itembankType = '';
     if($("#_rePosSysTypeId").val() == 1352){   //filter
-    	//파라미터 주기
-    	filterType = $("#_rePosSysTypeId").val();
+        //파라미터 주기
+        filterType = $("#_rePosSysTypeId").val();
     }
     if($("#_rePosSysTypeId").val() == 1353 || $("#_rePosSysTypeId").val() == 1357){   //item bank
-    	// 파라미터 주기
-    	itembankType = $("#_rePosSysTypeId").val();
-    } */
+        // 파라미터 주기
+        itembankType = $("#_rePosSysTypeId").val();
+    }
     
     //파라미터 세팅
-    var detailParam = {rePosId : $("#_rePosId").val()};
+    var detailParam = {filterType : filterType , itembankType : itembankType , rePosId : $("#_rePosId").val()};
     //Ajax
     Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
-    	AUIGrid.setGridData(posChargeBalGridID, result);
-	});    
+        AUIGrid.setGridData(posChargeBalGridID, result);
+    });    
     
     
     //Save
     $("#_confirmReversalBtn").click(function() {
-		
-    	console.log("rem : " + $("#_reversalRem").val());
-    	//Validation
-    	if ($("#_reversalRem").val() == null || $("#_reversalRem").val().trim() == "") {
-			Common.alert("* Reversal Remark can not be Empty!.");
-			return;
-		}
-    	
-    	//Param Setting
-    	 $("#_rePosRcvDt").val($("#_recevDateOri").val());
-    	 Common.ajax("POST", "/sales/pos/insertPosReversal.do", $("#_revForm").serializeJSON(), function(result){
-    		 
-    		 if(result == null){
-    			 Common.alert("<b>Failed to reverse. Please try again later.</b>");
-    		 }else{
-    			 //console.log("result : "+result);
+        
+        console.log("rem : " + $("#_reversalRem").val());
+        //Validation
+        if ($("#_reversalRem").val() == null || $("#_reversalRem").val().trim() == "") {
+            Common.alert("* Reversal Remark can not be Empty!.");
+            return;
+        }
+        
+        //Param Setting
+      //   $("#_rePosRcvDt").val($("#_recevDateOri").val());
+         Common.ajax("POST", "/sales/pos/insertPosReversal.do", $("#_revForm").serializeJSON(), function(result){
+             
+             if(result == null){
+                 Common.alert("<b>Failed to reverse. Please try again later.</b>");
+             }else{
+                 //console.log("result : "+result);
                  //console.log("result.posRefNo : " + result.posRefNo); 
                  Common.alert("POS Reverse successfully. <br />  POS Ref No. : " + result.posRefNo + " <br />" , fn_popClose());
-    		 }
-    	 });
-	});
+             }
+         });
+    });
     
 })//Doc Ready Func End
 
 
 function fn_popClose(){
-	$("#_reversalClose").click();
+    $("#_reversalClose").click();
 }
 
 function createPurchaseGridID(){
@@ -187,8 +212,6 @@ function createPurchaseGridID(){
 <input type="hidden" id="_rePosResnId" name="rePosResnId" value="${revDetailMap.posResnId}">
 <input type="hidden" id="_rePosBrnchId" name="rePosBrnchId" value="${revDetailMap.brnchId}">
 
-
-
 <input type="hidden" id="_rePosRcvDt" name="rePosRcvDt" > <!-- from Display  --> 
 
 <!-- Price and Tax  -->
@@ -202,7 +225,10 @@ function createPurchaseGridID(){
 <input type="hidden" id="_rePosNo" name="rePosNo" value="${revDetailMap.posNo}">  <!-- PNS00.... -->
 <%-- <input type="hidden" id="_salesmanPopCd" name="salesmanPopCd" value="${revDetailMap.memCode}"> --%>
 
-
+<!-- Magic Address  -->
+<input type="hidden" id="_getAreaId"  name="getAreaId" value="${revDetailMap.areaId }">
+<input type="hidden"  placeholder="DD/MM/YYYY" class="j_date" value="${revDetailMap.posDt}"   id="_getRcvDt" name="rePosRcvDt"/>
+ 
 <header class="pop_header"><!-- pop_header start -->
 <h1>POS Reversal</h1>
 <ul class="right_opt">
@@ -242,40 +268,70 @@ function createPurchaseGridID(){
 </tbody>
 </table><!-- table end -->
 
+
 <aside class="title_line"><!-- title_line start -->
 <h2>Particular Information</h2>
 </aside><!-- title_line end -->
 
+
+<!-- MAGIC ADDRESS PARTS  -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:150px" />
     <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Member Code<span class="must">*</span></th>
-    <td>
-        <input type="text" title="" placeholder="" class="w100p disabled"  value="${revDetailMap.memCode}" disabled="disabled" /><!-- <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
+     <th scope="row">Customer Name</th>
+     <td colspan="3">
+        <input type="text" title="" placeholder="CustomerName" class="w100p readonly"  value="${revDetailMap.posCustName}" name="insPosCustName" readonly="readonly"/>
+    </td>   
+</tr>
+<tr>
+    <th scope="row">Address Detail</th>
+    <td colspan="3">
+        <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p readonly"  value="${revDetailMap.addrDtl}"  readonly="readonly"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch / Warehouse<span class="must">*</span></th>
-    <td>
-        <select  id="_reversalPosWhBrnchId" disabled="disabled"></select>
-        <input type="text" disabled="disabled" id="_reversalPosWhDesc" >
+    <th scope="row">Street</th>
+    <td colspan="3">
+        <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Street" class="w100p readonly"  value="${revDetailMap.street}" readonly="readonly"/>
+    </td>
+</tr>
+<tr>  
+    <th scope="row">Area(4)<span class="must">*</span></th>
+    <td colspan="3">
+        <input type="text" title="" id="mArea"  class="w100p readonly"  readonly="readonly"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Receive Date<span class="must">*</span></th>
+    <th scope="row">City(2)<span class="must">*</span></th>
     <td>
-        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" value="${revDetailMap.posDt}" disabled="disabled"  id="_recevDateOri"/>
+    <input type="text" title="" id="mCity"  class="w100p readonly"  readonly="readonly"/>  
+    </td>
+    <th scope="row">PostCode(3)<span class="must">*</span></th>
+    <td>
+    <input type="text" title="" id="mPostCd"  class="w100p readonly"  readonly="readonly"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">State(1)<span class="must">*</span></th>
+    <td>
+    <input type="text" title="" id="mState"  class="w100p readonly"  readonly="readonly"/>
+    </td>
+    <th scope="row">Country<span class="must">*</span></th>
+    <td>
+    <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td>
-        <input type="text" title="" placeholder="" class="w100p disabled" value="${revDetailMap.posRem}" disabled="disabled"/>
+    <td colspan="3">
+        <input type="text" title="" placeholder="" class="w100p readonly"  id="_posRemark" name="posRemark" value="${revDetailMap.posRem}" readonly="readonly"/> 
     </td>
 </tr>
 </tbody>

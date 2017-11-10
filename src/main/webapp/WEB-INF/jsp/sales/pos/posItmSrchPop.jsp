@@ -47,15 +47,25 @@ $(document).ready(function() {
     	if ($(this).val() != null && $(this).val() != '' ) {
     		//Filed Enabled
             $("#_purcItems").attr({"disabled" : false , "class" : "w100p"});
-    		//params
-            var itmType = {itemType : $(this).val()};
-            
-            if($("#_posSystemType").val() == 1352){ 
-                CommonCombo.make('_purcItems', "/sales/pos/selectPSMItmList", itmType , '', ItmOption);
+    		
+            if($("#_posSystemType").val() == 1352){  //Filter
+            	var itmType = {itemType : $(this).val() , posSal : 1};
+            	CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
             }
             
-            if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
-                CommonCombo.make('_purcItems', "/sales/pos/selectPIItmList", itmType , '', ItmOption);
+            if($("#_posSystemType").val() == 1353){  //Item Bank
+            	var itmType = {itemType : $(this).val() , posItm : 1};
+            	CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
+            }
+            
+            if($("#_posSystemType").val() == 1357){ // Other Income
+            	var itmType = {itemType : $(this).val() , posOth : 1};
+            	CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
+            }
+            
+            if($("#_posSystemType").val() == 1358){ // Item Bank HQ
+                var itmType = {itemType : $(this).val() , posOth : 1};
+                CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
             }
 		}
 		
@@ -109,9 +119,9 @@ $(document).ready(function() {
     	// 2. item bank
     	//TODO  Table 미확정으로 임시 로직 구현
     	if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
-    		//id="selectPIItmList"
+    		//id="chkStockList"
     		
-            Common.ajax('GET', '/sales/pos/selectPIItmList', $("#_itemSrcForm").serialize(), function(result) {
+            Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
                 
                 for (var i = 0; i < result.length; i++) {
                    var calResult = fn_calculateAmt(result[i].amt, 1);
@@ -128,6 +138,47 @@ $(document).ready(function() {
                 
             });
     	}
+    	
+    	
+    	// 3. Other Income
+    	if($("#_posSystemType").val() == 1357){ //// Other Income 창고 Query Fix
+    		
+    		Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
+                
+                for (var i = 0; i < result.length; i++) {
+                   var calResult = fn_calculateAmt(result[i].amt, 1);
+                   result[i].subTotal  = calResult.subTotal;
+                   result[i].subChanges = calResult.subChanges;
+                   result[i].taxes  = calResult.taxes;
+                   result[i].inputQty = 1;
+               }
+                
+                //GridSet
+                /* AUIGrid.setGridData(basketGridID, result); */
+                //_purcReason
+                AUIGrid.addRow(basketGridID, result, 'last');
+            });
+    	}
+    	
+    	// 4. Item Bank HQ
+        if($("#_posSystemType").val() == 1358){ //// Other Income 창고 Query Fix
+            
+            Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
+                
+                for (var i = 0; i < result.length; i++) {
+                   var calResult = fn_calculateAmt(result[i].amt, 1);
+                   result[i].subTotal  = calResult.subTotal;
+                   result[i].subChanges = calResult.subChanges;
+                   result[i].taxes  = calResult.taxes;
+                   result[i].inputQty = 1;
+               }
+                
+                //GridSet
+                /* AUIGrid.setGridData(basketGridID, result); */
+                //_purcReason
+                AUIGrid.addRow(basketGridID, result, 'last');
+            });
+        }
 	});
 	
 	//Delete Low
@@ -304,6 +355,34 @@ $(document).ready(function() {
 		
 	});
 	
+	
+	//Check Amt Can be Modifiy
+	AUIGrid.bind(basketGridID, "cellEditBegin", function( event ) {
+		
+		var chkParam = {stkId : event.item.stkId};
+		var isEdit = false;
+		var ajaOpt = { async : false};
+		Common.ajax("GET", "/sales/pos/chkAllowSalesKeyInPrc", chkParam, function (result){
+			 isEdit =  result;
+		}, null, ajaOpt);
+		
+		//Force Editing
+		AUIGrid.forceEditingComplete(basketGridID, null, false);
+		
+		return isEdit;
+	});
+	
+	//Edit Grid by Half Round
+	AUIGrid.bind(basketGridID, "cellEditEndBefore", function( event ) {
+	      
+		var fixVal = 0 ;
+		fixVal = event.value.toFixed(2);
+		
+		console.log("event.value : " + event.value);
+		console.log("fixVal : " + fixVal);
+		return fixVal; // 사용자가 입력한 값에 컴마가 있으면 제거 후 적용
+	});
+	
 });//Doc Ready Func End
 
 function fn_getConfirmFilterListAjax(rtnObject){
@@ -403,7 +482,11 @@ function fn_createBasketGrid(){
 	                            {dataField : "stkDesc", headerText : "Item Description", width : '30%', editable : false},
 	                            {dataField : "qty", headerText : "Inventory", width : '10%', editable : false},
 	                            {dataField : "inputQty", headerText : "Qty", width : '10%', editable : true, dataType : "numeric", renderer : {type : "NumberStepRenderer", min : 0 ,step : 1 }},
-	                            {dataField : "amt", headerText : "Unit Price", width : '10%', dataType : "numeric", formatString : "#,##0.00", editable : false },
+	                            {dataField : "amt", headerText : "Unit Price", width : '10%', dataType : "numeric", formatString : "#,##0.00",editRenderer : {
+	                                type : "InputEditRenderer",
+	                                onlyNumeric : true,
+	                                allowPoint : true
+	                            }},
 	                            {dataField : "subChanges", headerText : "Exclude GST", width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00",expFunction : function(  rowIndex, columnIndex, item, dataField ) { 
 	                                var subObj = fn_calculateAmt(item.amt , item.inputQty);
 	                                return Number(subObj.subChanges); 
@@ -469,44 +552,80 @@ function fn_initField(){
 	
 	    if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
 	    	$("#_gridArea").css("display" , "");  //Serial Grid Display None
-	    	//ComboBox 호출 (Type)
-	        CommonCombo.make('_purcItemType', "/sales/pos/selectPSMItmTypeList", '' , '', ComboOption);
-	         // 추후 변경
-	        var itmType = {itemType : 61};
-	        CommonCombo.make('_purcItems', "/sales/pos/selectPSMItmList", itmType , '', ItmOption);
+	    	//Type
+	    	var codes = [61 , 62 , 63 , 64 , 1370];
+	    	var codeM = {codeM : 15 , codes : codes};
+	        CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
+	       //Itm List  
+	        var itmType = {itemType : 61 , posSal : 1};  
+	        CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 	    }
 	    
 	    if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
 	    	
 	    	$("#_gridArea").css("display" , "none");  //Serial Grid Display None
-	    	//ComboBox 호출 (Type)
-	        CommonCombo.make('_purcItemType', "/sales/pos/selectPIItmTypeList", '' , '', ComboOption);
-	        // Select Value 추후 변경 
-	        var itmType = {itemType : 1345};
-	        CommonCombo.make('_purcItems', "/sales/pos/selectPIItmList", itmType , '', ItmOption);
+	    	//Type
+	    	var codes = [1345 , 1346 , 1347 , 1348 , 1362];  
+            var codeM = {codeM : 11 , codes : codes};
+	        CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
+	        //Itm List
+	        var itmType = {itemType : 1345 , posItm : 1};
+	        CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 	    }
 	}
 	
 	if($("#_posModuleType").val() == 2391){ //2391 == Deduction Commission
 		
 		if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
-            //ComboBox 호출 (Type)
-			var exceptCodes = [62,63];   //filter , parts
-			var excepMap = { exceptCodes : exceptCodes};
+			//Type
+			var codes = [61 , 64 , 1370];
+            var codeM = {codeM : 15 , codes : codes};
 			$("#_gridArea").css("display" , "none");  //Serial Grid Display None
-            CommonCombo.make('_purcItemType', "/sales/pos/selectPSMItmTypeDeductionList", excepMap , '', ComboOption);
-             // 추후 변경
-            var itmType = {itemType : 61};
-            CommonCombo.make('_purcItems', "/sales/pos/selectPSMItmList", itmType , '', ItmOption);
+            CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);  
+            //Itm List
+            var itmType = {itemType : 61 , posSal : 1};
+            CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
         }
 		
-		if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
-            //ComboBox 호출 (Type)
-            CommonCombo.make('_purcItemType', "/sales/pos/selectPIItmTypeList", '' , '', ComboOption);
-            // Select Value 추후 변경 
+		if($("#_posSystemType").val() == 1353){ // Pos Item Bank 창고 Query Fix
+			//Type
+			var codes = [1345 , 1346 , 1347 , 1348 , 1362];  
+            var codeM = {codeM : 11 , codes : codes};
+            CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
+            //Itm List
             $("#_gridArea").css("display" , "none"); //Serial Grid Display None
-            var itmType = {itemType : 1345};
-            CommonCombo.make('_purcItems', "/sales/pos/selectPIItmList", itmType , '', ItmOption);
+            var itmType = {itemType : 1345 , posItm : 1};
+            CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
+        }
+	}
+	
+	if($("#_posModuleType").val() == 2392){ //2392  == Other Income
+	    
+		if($("#_posSystemType").val() == 1357){ // Other Income
+			
+			$("#_gridArea").css("display" , "none");  //Serial Grid Display None
+	        
+	        var codes = [1348 , 1349 , 1350];  
+	        var codeM = {codeM : 11 , codes : codes};
+	        CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
+	        
+	        //Itm List
+	        var itmType = {itemType : 1348 , posOth : 1};
+	        CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
+		}
+	
+	    if($("#_posSystemType").val() == 1358){ // Item Bank HQ
+            
+	    	$("#_gridArea").css("display" , "none");  //Serial Grid Display None
+	    	
+	    	var codes = [1345 , 1346 , 1347  , 1362 , 1426];  
+            var codeM = {codeM : 11 , codes : codes};
+            CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
+            
+            //Itm List
+            var itmType = {itemType : 1345 , posOth : 1};
+            CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
+	    	
         }
 	}
 }
