@@ -322,7 +322,7 @@ $(document).on(//인풋파일 삭제
 /* 인풋 파일(멀티) end */
 
 /* 팝업 드래그 start */
-$("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header"});
+$("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header",containment: "html"});
 /* 팝업 드래그 end */
 
 /* 팝업 닫기 start */
@@ -341,6 +341,21 @@ $("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header"});
 	}
 	return false;
 });
+
+ function popupKeyEvent(target){
+	 $(document).on("keydown",function(e){
+	 	// ESC
+	 	if(e.keyCode === 27){
+	 		target.trigger('click');
+	 	}
+	 });
+ }
+ $(document).on("click",function(e){
+ 	if($(e.target).parent().hasClass("popup_wrap")){
+ 		var target = $(e.target).parent().find(".pop_header .right_opt a:contains('CLOSE') ,.pop_close");	
+ 		popupKeyEvent(target);
+	}
+ });
 /* 팝업 닫기 start */
 
 /* 시간선택기 start */

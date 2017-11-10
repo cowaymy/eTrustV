@@ -320,7 +320,7 @@ var Common = {
                 });
 
                 /* 팝업 드래그 start */
-                $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
+                $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header',containment: "html"});
                 /* 팝업 드래그 end */
 
             },
