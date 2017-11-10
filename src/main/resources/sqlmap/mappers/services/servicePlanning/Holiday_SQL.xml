@@ -83,7 +83,7 @@
 	                     END ASSIGN_STATUS,
 	                     COUNT ( CASE WHEN D.CT_MEM_ID IS NOT NULL
 	                                          THEN 1
-	                                    END ) AS Replacement_CT_Pax
+	                                     END ) AS Replacement_CT_Pax
      FROM 
     (        
       SELECT DISTINCT 
