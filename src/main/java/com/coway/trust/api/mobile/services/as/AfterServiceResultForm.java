@@ -1,6 +1,7 @@
 package com.coway.trust.api.mobile.services.as;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +87,73 @@ public class AfterServiceResultForm {
 
 	@ApiModelProperty(value = "partList")
 	private List<AfterServiceResultDetailForm>  partList;
+	
+	
+	
+	
+/*	public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
+
+		List<Map<String, Object>> list = new ArrayList<>();
+
+		if (partList != null && partList.size() > 0) {
+			Map<String, Object> map;
+			for (AfterServiceResultDetailForm dtl : partList) {
+				map = BeanConverter.toMap(afterServiceResultForm, "signData", "partList");
+				map.put("signData", Base64.decodeBase64(afterServiceResultForm.getSignData()));
+
+				// as Dtails
+				map.put("filterCode", dtl.getFilterCode());
+				map.put("chargesFoc", dtl.getChargesFoc());
+				map.put("exchangeId", dtl.getExchangeId());
+				map.put("salesPrice", dtl.getSalesPrice());
+				map.put("filterChangeQty", dtl.getFilterChangeQty());
+				map.put("partsType", dtl.getPartsType());
+				map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
+
+				list.add(map);
+			}
+		}
+		return list;
+	}*/
+	
+	
+	
+	
+	public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
+
+    	List<Map<String, Object>> list = new ArrayList<>();
+
+		Map<String, Object> params = new HashMap<>();				
+			params.put("userId",afterServiceResultForm.getUserId());
+			params.put("salesOrderNo",afterServiceResultForm.getSalesOrderNo());
+			params.put("serviceNo",afterServiceResultForm.getServiceNo());
+			params.put("labourCharge",afterServiceResultForm.getLabourCharge());
+			params.put("defectId",afterServiceResultForm.getDefectPartId());
+			params.put("defectPartId",afterServiceResultForm.getDefectPartId());
+			params.put("defectDetailReasonId",afterServiceResultForm.getDefectDetailReasonId());
+			params.put("solutionReasonId",afterServiceResultForm.getSolutionReasonId());
+			params.put("defectTypeId",afterServiceResultForm.getDefectTypeId());
+			params.put("inHouseRepairRemark",afterServiceResultForm.getInHouseRepairRemark());
+			params.put("inHouseRepairReplacementYN",afterServiceResultForm.getInHouseRepairReplacementYN());
+			params.put("inHouseRepairPromisedDate",afterServiceResultForm.getInHouseRepairPromisedDate());
+			params.put("inHouseRepairProductGroupCode",afterServiceResultForm.getInHouseRepairProductGroupCode());
+			params.put("inHouseRepairProductCode",afterServiceResultForm.getInHouseRepairProductCode());
+			params.put("inHouseRepairSerialNo",afterServiceResultForm.getInHouseRepairSerialNo());
+			params.put("resultRemark",afterServiceResultForm.getResultRemark());
+			params.put("ownerCode",afterServiceResultForm.getOwnerCode());
+			params.put("resultCustName",afterServiceResultForm.getResultCustName());
+			params.put("resultIcMobileNo",afterServiceResultForm.getResultIcMobileNo());
+			params.put("resultReportEmailNo",afterServiceResultForm.getResultReportEmailNo());
+			params.put("resultAcceptanceName",afterServiceResultForm.getResultAcceptanceName());
+			params.put("signData",afterServiceResultForm.getSignData());
+			params.put("transactionId",afterServiceResultForm.getTransactionId());
+            	
+			list.add(params);
+			
+    	return list;
+	
+	}
+	
 	
 	
 	
@@ -282,29 +350,6 @@ public class AfterServiceResultForm {
 	}
 	
 	
-	public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
 
-		List<Map<String, Object>> list = new ArrayList<>();
-
-		if (partList != null && partList.size() > 0) {
-			Map<String, Object> map;
-			for (AfterServiceResultDetailForm dtl : partList) {
-				map = BeanConverter.toMap(afterServiceResultForm, "signData", "partList");
-				map.put("signData", Base64.decodeBase64(afterServiceResultForm.getSignData()));
-
-				// heartDtails
-				map.put("filterCode", dtl.getFilterCode());
-				map.put("chargesFoc", dtl.getChargesFoc());
-				map.put("exchangeId", dtl.getExchangeId());
-				map.put("salesPrice", dtl.getSalesPrice());
-				map.put("filterChangeQty", dtl.getFilterChangeQty());
-				map.put("partsType", dtl.getPartsType());
-				map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
-
-				list.add(map);
-			}
-		}
-		return list;
-	}
 	
 }

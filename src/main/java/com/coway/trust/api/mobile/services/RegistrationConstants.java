@@ -11,5 +11,5 @@ public class RegistrationConstants {
 
 	public static final boolean IS_INSERT_INSTALL_LOG = true;
 	
-	
+	public static final boolean IS_INSERT_PR_LOG = true;
 }

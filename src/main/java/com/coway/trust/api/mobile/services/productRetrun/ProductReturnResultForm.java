@@ -1,4 +1,4 @@
-package com.coway.trust.api.mobile.services.heartService;
+package com.coway.trust.api.mobile.services.productRetrun;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,98 +6,48 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 
-//import com.coway.trust.api.mobile.common.MalfunctionCodeForm;
 import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "HeartServiceResultForm", description = "HeartServiceResultForm")
-public class HeartServiceResultForm {
+@ApiModel(value = "ProductReturnResultForm", description = "공통코드 Form")
+public class ProductReturnResultForm {
 
+	
 	@ApiModelProperty(value = "사용자 ID (예_CT123456)")
 	private String userId;
-	
+
 	@ApiModelProperty(value = "주문번호")
-	private int salesOrderNo;
-	
+	private String salesOrderNo;
+
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
-	
-	@ApiModelProperty(value = "Y/ N")
-	private String temperatureSetting;
-	
+
 	@ApiModelProperty(value = "결과 등록 메모")
 	private String resultRemark;
-	
-	@ApiModelProperty(value = "다음 작업 날짜(YYYYMMDD)")
-	private String nextAppointmentDate;
-	
-	@ApiModelProperty(value = "다음 작업 시간(HHMM)")
-	private String nextAppointmentTime;
-	
+
 	@ApiModelProperty(value = "결과 등록시, Owner Code")
-	private int ownerCode;
-	
+	private String ownerCode;
+
 	@ApiModelProperty(value = "결과 등록시, Cust Name")
 	private String resultCustName;
-	
+
 	@ApiModelProperty(value = "결과 등록시, NrIc 또는 Mobile No")
 	private String resultIcMobileNo;
-	
+
 	@ApiModelProperty(value = "결과 등록시, Email_No")
 	private String resultReportEmailNo;
-	
+
 	@ApiModelProperty(value = "결과 등록시, Acceptance Name")
 	private String resultAcceptanceName;
-	
-	@ApiModelProperty(value = "")
-	private int rcCode;
 
 	@ApiModelProperty(value = "base64 Data")
 	private String signData;
-	
+
 	@ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
 	private String transactionId;
-	
-	@ApiModelProperty(value = "heartDtails")
-	private List<HeartServiceResultDetailForm> heartDtails;
 
-	
-	
-	
-	public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
-
-		List<Map<String, Object>> list = new ArrayList<>();
-
-		if (heartDtails != null && heartDtails.size() > 0) {
-			Map<String, Object> map;
-			for (HeartServiceResultDetailForm dtl : heartDtails) {
-				map = BeanConverter.toMap(heartServiceResultForm, "signData", "heartDtails");
-				map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
-
-				// heartDtails
-				map.put("filterCode", dtl.getFilterCode());
-				map.put("exchangeId", dtl.getExchangeId());
-				map.put("filterChangeQty", dtl.getFilterChangeQty());
-				map.put("alternativeFilterCode", dtl.getAlternativeFilterCode());
-				map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
-
-				list.add(map);
-			}
-		}
-		return list;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public String getUserId() {
 		return userId;
 	}
@@ -106,11 +56,11 @@ public class HeartServiceResultForm {
 		this.userId = userId;
 	}
 
-	public int getSalesOrderNo() {
+	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
 
-	public void setSalesOrderNo(int salesOrderNo) {
+	public void setSalesOrderNo(String salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
 
@@ -122,14 +72,6 @@ public class HeartServiceResultForm {
 		this.serviceNo = serviceNo;
 	}
 
-	public String getTemperatureSetting() {
-		return temperatureSetting;
-	}
-
-	public void setTemperatureSetting(String temperatureSetting) {
-		this.temperatureSetting = temperatureSetting;
-	}
-
 	public String getResultRemark() {
 		return resultRemark;
 	}
@@ -138,27 +80,11 @@ public class HeartServiceResultForm {
 		this.resultRemark = resultRemark;
 	}
 
-	public String getNextAppointmentDate() {
-		return nextAppointmentDate;
-	}
-
-	public void setNextAppointmentDate(String nextAppointmentDate) {
-		this.nextAppointmentDate = nextAppointmentDate;
-	}
-
-	public String getNextAppointmentTime() {
-		return nextAppointmentTime;
-	}
-
-	public void setNextAppointmentTime(String nextAppointmentTime) {
-		this.nextAppointmentTime = nextAppointmentTime;
-	}
-
-	public int getOwnerCode() {
+	public String getOwnerCode() {
 		return ownerCode;
 	}
 
-	public void setOwnerCode(int ownerCode) {
+	public void setOwnerCode(String ownerCode) {
 		this.ownerCode = ownerCode;
 	}
 
@@ -194,14 +120,6 @@ public class HeartServiceResultForm {
 		this.resultAcceptanceName = resultAcceptanceName;
 	}
 
-	public int getRcCode() {
-		return rcCode;
-	}
-
-	public void setRcCode(int rcCode) {
-		this.rcCode = rcCode;
-	}
-
 	public String getSignData() {
 		return signData;
 	}
@@ -218,18 +136,35 @@ public class HeartServiceResultForm {
 		this.transactionId = transactionId;
 	}
 
-	public List<HeartServiceResultDetailForm> getHeartDtails() {
-		return heartDtails;
-	}
+	
+	
+	public static Map<String, Object> createMaps(ProductReturnResultForm productReturnResultForm) {
+		
+		List<Map<String, Object>> list = new ArrayList<>();
 
-	public void setHeartDtails(List<HeartServiceResultDetailForm> heartDtails) {
-		this.heartDtails = heartDtails;
+			Map<String, Object> map;
+			
+				map = BeanConverter.toMap(productReturnResultForm, "signData", "partList");
+//				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+
+				// install Result
+				map.put("userId", productReturnResultForm.getUserId());
+				map.put("salesOrderNo", productReturnResultForm.getSalesOrderNo());
+				map.put("serviceNo", productReturnResultForm.getServiceNo());
+				map.put("resultRemark", productReturnResultForm.getResultRemark());
+				map.put("ownerCode", productReturnResultForm.getOwnerCode());
+				map.put("resultCustName", productReturnResultForm.getResultCustName());
+				map.put("resultIcMobileNo", productReturnResultForm.getResultIcMobileNo());
+				map.put("resultReportEmailNo", productReturnResultForm.getResultReportEmailNo());
+				map.put("resultAcceptanceName", productReturnResultForm.getResultAcceptanceName());
+				map.put("signData", Base64.decodeBase64(productReturnResultForm.getSignData()));
+				map.put("transactionId", productReturnResultForm.getTransactionId());				
+
+//				list.add(map);
+				
+				return map;
 	}
 	
-
-
-
-
-
+	
 	
 }

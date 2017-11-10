@@ -20,6 +20,29 @@ public class HeartServiceResultDetailForm {
 	@ApiModelProperty(value = "필터 교체 수량 예) 20170827", example = "29092017")
 	private int filterChangeQty;
 
+	
+	@ApiModelProperty(value = "대체 필터 코드(123456)", example = "")
+	private int alternativeFilterCode;
+
+	@ApiModelProperty(value = "교체 필터 바코드", example = "")
+	private int filterBarcdSerialNo;
+	
+	public int getAlternativeFilterCode() {
+		return alternativeFilterCode;
+	}
+
+	public void setAlternativeFilterCode(int alternativeFilterCode) {
+		this.alternativeFilterCode = alternativeFilterCode;
+	}
+
+	public int getFilterBarcdSerialNo() {
+		return filterBarcdSerialNo;
+	}
+
+	public void setFilterBarcdSerialNo(int filterBarcdSerialNo) {
+		this.filterBarcdSerialNo = filterBarcdSerialNo;
+	}
+
 	public int getFilterCode() {
 		return filterCode;
 	}

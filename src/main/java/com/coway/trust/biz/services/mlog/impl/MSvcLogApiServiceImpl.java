@@ -3,6 +3,7 @@ package com.coway.trust.biz.services.mlog.impl;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,10 +11,13 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.logistics.returnusedparts.impl.ReturnUsedPartsMapper;
+import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
 import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -37,6 +41,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
 	@Resource(name = "installationResultListMapper")
 	private InstallationResultListMapper installationResultListMapper;
+
+	@Resource(name = "ASManagementListMapper")
+	private ASManagementListMapper ASManagementListMapper;
 	
 	
 	
@@ -167,35 +174,12 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		Map<String, Object> callResult = new HashMap<String, Object>();
 		Map<String, Object> orderLog = new HashMap<String, Object>();
 		
-//		String sirimNo = params.get("hidStockIsSirim").toString() != "0" ? params.get("hidStockIsSirim").toString().toUpperCase() : "";
 		String serialNo = params.get("serialNo").toString();
-//		int failId = params.get("failReason") != null ? Integer.parseInt(params.get("failReason").toString()) : 0;
-//		String nextCallDate = params.get("nextCallDate").toString();
-//		boolean allowComm = params.get("checkCommission") != null ? true : false;
-//		boolean inTradeIn = params.get("checkTrade")!= null ? true : false;
-//		boolean reqSms = params.get("reqSms") != null ? true : false;
-//		String refNo1 = params.get("refNo1").toString();
-//		String refNo2 = params.get("refNo2").toString();
-//		String nextDateCall = (String) params.get("nextCallDate");
-//		int statusId =  Integer.parseInt(params.get("installStatus").toString());
 
 		//api setting 
-//		List<EgovMap> failReason = installationResultListMapper.selectFailReason(params);
-//		params.put("installEntryId", params.get("serviceNo"));
-		
-//		EgovMap callType = installationResultListMapper.selectCallType(params);
 		EgovMap installResult = MSvcLogApiMapper.getInstallResultByInstallEntryID(params);
 		String usrId = MSvcLogApiMapper.getUseridToMemid(params);
-//		EgovMap stock = installationResultListMapper.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
-//		EgovMap sirimLoc = installationResultListMapper.getSirimLocByInstallEntryID(installResult);
-//		EgovMap orderInfo = null;
-		
-//		EgovMap customerInfo = installationResultListMapper.getcustomerInfo(orderInfo == null ?installResult.get("custId") :  orderInfo.get("custId"));
-//		EgovMap customerContractInfo = installationResultListMapper.getCustomerContractInfo(customerInfo);
-//		EgovMap installation = installationResultListMapper.getInstallationBySalesOrderID(installResult);
-//		EgovMap installationContract = installationResultListMapper.getInstallContactByContactID(installation);
-//		EgovMap salseOrder = installationResultListMapper.getSalesOrderMBySalesOrderID(installResult);
-//		EgovMap hpMember= installationResultListMapper.getMemberFullDetailsByMemberIDCode(salseOrder);
+
 		
 		int statusId = '4'; //installStatus
 		String sirimNo = params.get("sirimNo").toString();
@@ -223,15 +207,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		
 		resultValue.put("value", "Completed");
 		resultValue.put("installEntryNo", installResult.get("installEntryId"));
-//		resultValue.put("installEntryNo", params.get("hiddeninstallEntryNo"));
-//		installResult.put("entryId", Integer.parseInt(params.get("hidEntryId").toString()));
-//		installResult.put("failId", failId);
-//		installResult.put("nextCallDate", nextCallDate);
-//		installResult.put("allowComm", allowComm);
-//		installResult.put("inTradeIn", inTradeIn);
-//		installResult.put("reqSms", reqSms);
-//		installResult.put("docRefNo1", refNo1);
-//		installResult.put("docRefNo2", refNo2);		
+
 		
 		try {
 			insertInstallation(statusId,installResult,callEntry,callResult,orderLog);
@@ -313,9 +289,98 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		MSvcLogApiMapper.updateSuccessInstallStatus(transactionId);
 	}
 
+	@Override
+	public void insertProductReturnResult(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertProductReturnResult(params);
+	}
 
+	@Override
+	public void aSresultRegistration(List<Map<String, Object>> asTransLogs) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public List<EgovMap> serviceHistory(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.serviceHistory(params);
+	}
 
+	@Override
+	public List<EgovMap> getAsFilterHistoryDList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getAsFilterHistoryDList(params);
+	}
+
+	@Override
+	public List<EgovMap> getAsPartsHistoryDList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getAsPartsHistoryDList(params);
+	}
+
+	
+	
+	@Override
+	public List<EgovMap> getHsFilterHistoryDList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getHsFilterHistoryDList(params);
+	}
+
+	@Override
+	public List<EgovMap> getHsPartsHistoryDList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getHsPartsHistoryDList(params);
+	}
+	
+
+/*	@Override
+	public void aSresultRegistration(List<Map<String, Object>> asTransLogs) {
+		// TODO Auto-generated method stub
+		
+		Map<String, Object> insMap = null;
+		int r=0;
+		
+		if(asTransLogs.size()>0){
+			
+			insMap.put("DOCNO", "21");
+			EgovMap  eMap = ASManagementListMapper.getASEntryDocNo(insMap); 		
+			EgovMap  seqMap = ASManagementListMapper.getResultASEntryId(insMap); 
+			
+			String AS_RESULT_ID    = String.valueOf(seqMap.get("seq"));
+			
+			insMap.put("AS_RESULT_ID", AS_RESULT_ID);
+			insMap.put("AS_RESULT_NO", String.valueOf(eMap.get("asno")));
+			insMap.put("updator",insMap.get("updator"));
+			
+			//master insert
+			int c=  ASManagementListMapper.insertSVC0004D(insMap);  
+			
+			//svc0001d 상태 업데이트 
+			int b=  ASManagementListMapper.updateStateSVC0001D(insMap);
+			
+
+			for (int i = 0; i < asTransLogs.size(); i++) {
+				
+				Map<String, Object> insMapDtail = asTransLogs.get(i);
+				Map<String, Object> iMap = new HashMap();
+
+				iMap.put("AS_RESULT_ID",			 AS_RESULT_ID);
+				iMap.put("ASR_ITM_CLM",   		  		"0"); 
+				iMap.put("ASR_ITM_TAX_CODE_ID",    "0" ); 
+				iMap.put("ASR_ITM_TXS_AMT" , 			"0" ); 
+				
+				r = ASManagementListMapper.insertSVC0005D(iMap) ;
+			}
+		}
+	}*/
+	
+	
+	
+	
+	
+
+	
 
 	
 }

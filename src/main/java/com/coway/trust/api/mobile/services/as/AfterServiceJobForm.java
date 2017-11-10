@@ -12,7 +12,7 @@ public class AfterServiceJobForm {
 	@ApiModelProperty(value = "userId [default : '' 전체] 예) CT100583 ", example = "1, 2, 3")
 	private String userId;
 
-	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 20170501", example = "1, 2, 3")
+	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 201705", example = "1, 2, 3")
 	private String requestDate;
 
 	

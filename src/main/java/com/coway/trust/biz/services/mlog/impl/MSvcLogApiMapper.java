@@ -58,6 +58,22 @@ public interface MSvcLogApiMapper {
 
 	void insertInstallResult(Map<String, Object> installResult);
 
+	void insertProductReturnResult(Map<String, Object> params);
+
+	List<EgovMap> serviceHistory(Map<String, Object> params);
+
+	List<EgovMap> getFilterHistoryDList(Map<String, Object> params);
+
+	List<EgovMap> getPartsHistoryDList(Map<String, Object> params);
+
+	List<EgovMap> getHsPartsHistoryDList(Map<String, Object> params);
+
+	List<EgovMap> getHsFilterHistoryDList(Map<String, Object> params);
+
+	List<EgovMap> getAsPartsHistoryDList(Map<String, Object> params);
+
+	List<EgovMap> getAsFilterHistoryDList(Map<String, Object> params);
+
 	
 	
 	
