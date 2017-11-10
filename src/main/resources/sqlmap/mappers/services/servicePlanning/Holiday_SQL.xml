@@ -220,4 +220,13 @@
         GROUP BY CODE
         ORDER BY CODE 
     </select>
+    
+    <select id="selectBranchWithNM"  parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT CODE CODE_ID,
+                    CODE || '-' || NAME  CODE_NAME
+        FROM SYS0005M
+        WHERE 1=1
+          AND TYPE_ID= 43
+        ORDER BY CODE
+    </select>
 </mapper>

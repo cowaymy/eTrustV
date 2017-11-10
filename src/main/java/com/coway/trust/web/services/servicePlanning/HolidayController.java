@@ -271,4 +271,11 @@ public class HolidayController {
 		return ResponseEntity.ok(selectCityList);
 	}
 	
+	@RequestMapping(value = "/selectBranchWithNM", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBranchWithNm( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> selectBranchWithNmList = holidayService.selectBranchWithNM();
+		logger.debug("selectCityList {}", selectBranchWithNmList);
+		return ResponseEntity.ok(selectBranchWithNmList);
+	}
 }

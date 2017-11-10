@@ -154,6 +154,12 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 	public List<EgovMap> selectCity(Map<String, Object> params) {
 		return holidayMapper.selectCity(params);
 	}
+
+	@Override
+	public List<EgovMap> selectBranchWithNM() {
+		
+		return holidayMapper.selectBranchWithNM();
+	}
 	
 	
 	

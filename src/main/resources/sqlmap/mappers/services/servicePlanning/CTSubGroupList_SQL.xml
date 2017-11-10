@@ -104,7 +104,7 @@
 </select>
 
 <select id="selectCTMByDSC" parameterType="Map" resultType="egovMap">
-	SELECT A.MEM_CODE || '-' || A.NAME CODE_ID
+	SELECT A.MEM_CODE  CODE_ID
 	     , A.MEM_CODE || '-' || A.NAME CODE_NAME
 	FROM ORG0001D A, ORG0005D B, SYS0005M C
 	WHERE  A.MEM_ID = B.MEM_ID
@@ -128,5 +128,7 @@
     </if>
 
 </select>
+
+
 
 </mapper>

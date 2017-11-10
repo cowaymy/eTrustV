@@ -34,4 +34,6 @@ public interface HolidayMapper {
 	void deleteHoliday(Map<String, Object> params);
 	
 	List<EgovMap> selectBranch();
+	
+	List<EgovMap> selectBranchWithNM();
 }

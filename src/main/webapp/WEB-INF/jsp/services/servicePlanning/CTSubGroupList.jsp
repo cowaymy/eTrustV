@@ -254,7 +254,7 @@ function fn_onchange(){
 
 $(document).ready(function() {
 	//DSCCODE
-	 doGetCombo('/services/mileageCileage/selectBranch', 43, '','dscCode', 'S' ,  '');
+	 doGetCombo('/services/holiday/selectBranchWithNM', 43, '','dscCode', 'S' ,  '');
 	 doGetCombo('/services/holiday/selectState.do', '' , '', 'state' , 'S', '');
 	CTSubgGroupGrid();
 	CTSubAreaGroupGrid();

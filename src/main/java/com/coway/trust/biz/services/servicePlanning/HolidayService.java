@@ -33,5 +33,7 @@ public interface HolidayService {
 	List<EgovMap> selectBranch();
 	
 	List<EgovMap> selectCity(Map<String, Object> params);
+	
+	List<EgovMap> selectBranchWithNM();
 
 }
