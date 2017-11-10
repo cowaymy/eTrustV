@@ -83,42 +83,27 @@
                        vCallLogOrderCall.CALL_TYPE_NAME CALL_TYPE_NAME  ,
                        vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID  ,
                        vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE  ,
-                       vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC  
-                FROM CCR1002V vCallLogOrderCall ) Extent1
-          WHERE  ( ( 144 = (CASE 
-                                 WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
-                 ELSE 0
-                    END) )
-                   OR ( 145 = (CASE 
-                                    WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
-                 ELSE 0
-                    END) )
-                   OR ( 68 = (CASE 
-                                   WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
-                 ELSE 0
-                    END) )
-                   OR ( 67 = (CASE 
-                                   WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
-                 ELSE 0
-                    END) )
-                   OR ( 1412 = (CASE 
-                                     WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
-                 ELSE 0
-                    END) )
-                   OR ( 66 = (CASE 
-                                   WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
-                 ELSE 0
-                    END) )
-                   OR ( 143 = (CASE 
-                                    WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
-                 ELSE 0
-                    END) )
-                   OR ( 142 = (CASE 
-                                    WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
-                 ELSE 0
-                    END) ) )
-                  ]]> 
-                  <if test="orderNo != null and orderNo != '' ">
+                       vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC  ,
+                         N.CODE,
+                       M.CT_BRNCH_CODE,
+                       D.AREA_ID,
+                       N.BRNCH_ID
+                  FROM SYS0005M N
+                  INNER JOIN SYS0064M M
+                          ON N.CODE = M.CT_BRNCH_CODE
+                  INNER JOIN SAL0023D D
+                          ON M.AREA_ID = D.AREA_ID
+                  INNER JOIN CCR1002V vCallLogOrderCall
+                          ON D.CUST_ID = vCallLogOrderCall.CUST_ID ) Extent1
+          WHERE  1=1
+            ]]> 
+                <if test="appTypeList != null and appTypeList != '' ">
+                            and Extent1.APP_TYPE_ID IN
+				<foreach item="item" collection="appTypeList" index="index" open="(" separator="," close=")">
+				                            #{item}
+				</foreach>
+				</if>
+                 <if test="orderNo != null and orderNo != '' ">
                      AND (Extent1.SALES_ORD_NO=#{orderNo} )  
                   </if>
                   <if test="product != null and product != '' ">
@@ -156,7 +141,7 @@
                             </foreach>
                    </if>
                    <if test="DSCCodeList != null and DSCCodeList != '' ">
-                            and Extent1.DSC_BRNCH_ID IN
+                            and Extent1.BRNCH_ID IN
                             <foreach item="item" collection="DSCCodeList" index="index" open="(" separator="," close=")">
                             #{item}
                             </foreach>
@@ -179,10 +164,7 @@
                    <if test="callStrDate != '' and callEndDate != '' ">
                             <![CDATA[  AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')    between TO_DATE(#{callStrDate},  'DD/MM/YYYY') and  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
                    </if>
-                   <![CDATA[
-                AND ROWNUM < 100
-            ]]> 
-                   <if test="sortBy != null and sortBy != '' and sortBy == 1 " >
+                    <if test="sortBy != null and sortBy != '' and sortBy == 1 " >
                      ORDER BY Extent1.SALES_ORD_NO ASC 
                   </if>
                   <if test="sortBy != null and sortBy != '' and sortBy == 2 " >
