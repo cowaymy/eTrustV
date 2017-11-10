@@ -68,7 +68,7 @@
      WHERE 1=1
          AND  A.PGM_PATH = B.PGM_PATH(+)
          AND a.system_id = #{systemId}
-         AND a.pgm_code = #{pgmCode}
+         AND b.pgm_code(+) = #{pgmCode}
          AND TO_CHAR(a.access_dtm,'HH24MMDDYYYY') = #{searchDt}
       ORDER BY a.access_dtm
 </select>
