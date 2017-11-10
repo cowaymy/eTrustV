@@ -185,7 +185,6 @@ $(document).ready(function(){
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
     
-    
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
     
     AUIGrid.bind(listGrid, "cellEditBegin", function (event){
