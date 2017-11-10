@@ -195,15 +195,15 @@
 </aside><!-- title_line end -->
 
 <form id="gridForm" name="gridForm" method="GET">
-    <input type="text" id="validChk" name="validChk">
-    <input type="text" id="invalidChk" name="invalidChk">
-    <input type="text" id="rsItmId" name="rsItmId">
-    <input type="text" id="rsCnvrId" name="rsCnvrId" value="${cnvrInfo.rsCnvrId}">
-    <input type="text" id="validRows" name="validRows" value="${validRows }">
-    <input type="text" id="invalidRows" name="invalidRows" value="${invalidRows }">
-    <input type="text" id="allRows" name="allRows" value="${allRows }">
-    <input type="text" id="rsCnvrStusFrom" name="rsCnvrStusFrom" value="${cnvrInfo.rsCnvrStusFrom }">
-    <input type="text" id="rsCnvrStusTo" name="rsCnvrStusTo" value="${cnvrInfo.rsCnvrStusTo }">
+    <input type="hidden" id="validChk" name="validChk">
+    <input type="hidden" id="invalidChk" name="invalidChk">
+    <input type="hidden" id="rsItmId" name="rsItmId">
+    <input type="hidden" id="rsCnvrId" name="rsCnvrId" value="${cnvrInfo.rsCnvrId}">
+    <input type="hidden" id="validRows" name="validRows" value="${validRows }">
+    <input type="hidden" id="invalidRows" name="invalidRows" value="${invalidRows }">
+    <input type="hidden" id="allRows" name="allRows" value="${allRows }">
+    <input type="hidden" id="rsCnvrStusFrom" name="rsCnvrStusFrom" value="${cnvrInfo.rsCnvrStusFrom }">
+    <input type="hidden" id="rsCnvrStusTo" name="rsCnvrStusTo" value="${cnvrInfo.rsCnvrStusTo }">
 </form>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
