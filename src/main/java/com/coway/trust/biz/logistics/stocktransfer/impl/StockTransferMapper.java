@@ -53,4 +53,7 @@ public interface StockTransferMapper {
 	void updateRequestTransfer(String param);
 	
 	void insertStockBooking(Map<String, Object> params);
+	
+	void insertTransferSerial(Map<String, Object> params);
+		
 }
