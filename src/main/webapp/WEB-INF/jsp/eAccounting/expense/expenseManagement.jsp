@@ -15,8 +15,6 @@ var glAccDesc;
 
 $(document).ready(function(){
 	
-	fn_selectListAjax();
-    
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid();
     
@@ -50,6 +48,8 @@ $(document).ready(function(){
         }
         //, calback
         );
+        
+        fn_selectListAjax();
 
 });
 
