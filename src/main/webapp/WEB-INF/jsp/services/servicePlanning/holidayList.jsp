@@ -43,31 +43,37 @@ function holidayGrid() {
                           },
                           { dataField : "state", headerText  : "State",     width : 200 ,
                         	  editRenderer : {
-                              type : "ComboBoxRenderer",
-                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                              listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                  var list = rData;
-                                  return list;
-                              },
-                              keyField : "state",
-                              valueField : "codeName",
-                          }},
+                        		  type : "ComboBoxRenderer",
+                                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                  listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                      var list = rData;
+                                      return list;
+                                  },
+                                  keyField : "state",
+                                  valueField : "codeName"
+                        	  }
+                          },
                           { dataField : "holiday", headerText  : "Date",  width  : 100, dataType : "date" ,
                         	  editRenderer : {
                                   type : "CalendarRenderer",
                                   showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-                                  onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
                                   showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
-                                }},
+                                },
+                                onlyCalendar : false // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+                          },
                           { dataField : "holidayDesc",       headerText  : "Description",  width  : 200},
                           { dataField : "holidaySeq",       headerText  : "",  width  : 0}
                           
                            
        ];
-
+	    
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
         
         gridID = GridCommon.createAUIGrid("holiday_grid_wap", columnLayout  ,"" ,gridPros);
+        
+        // 에디팅 정상 종료 이벤트 바인딩
+        AUIGrid.bind(gridID, "cellEditEnd", auiCellEditingHandler);
+
     }
 function getStateComboList() {
     var list = [ "Johor", "Perlis", "Pahang" ];
@@ -94,18 +100,28 @@ function fn_selectState(){
         });
 	 return rData;
 }
-	function addRow() {
-	    var item = new Object();
-	    item.holidayType = "";
-	    item.state = "";
-	    item.holiday = "";
-	    item.dscription = "";
-	    // parameter
-	    // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-	    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-	    AUIGrid.addRow(gridID, item, "first");
-	}
-	
+
+function addRow() {
+    var item = new Object();
+    item.holidayType = "";
+    item.state = "";
+    item.holiday = "";
+    item.dscription = "";
+    // parameter
+    // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+    AUIGrid.addRow(gridID, item, "first");
+}
+
+// 편집 핸들러
+function auiCellEditingHandler(event) {
+	if(event.columnIndex == 0 && event.value == "Public Holiday"){
+        AUIGrid.setCellValue(gridID, event.rowIndex,  1, "");
+        AUIGrid.setColumnProp( gridID, 1, { editable : false } );
+    } else if(event.columnIndex == 0 && event.value != "Public Holiday") {
+    	AUIGrid.setColumnProp( gridID, 1, { editable : true } );
+    }
+};
 	 
 $(document).ready(function(){
 	doGetCombo('/services/mileageCileage/selectBranch', 43, '','branchId', 'M' ,  'f_multiCombo');
@@ -170,12 +186,31 @@ $(document).ready(function(){
         {
         	var holidayType  = addList[i].holidayType;
             var holiday  = addList[i].holiday;
+            var state = addList[i].state;
               if (holidayType == "" || holidayType.length == 0) 
               {
                 result = false;
                 // {0} is required.
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Holiday Type' htmlEscape='false'/>");
                 break;
+              }
+              
+              if (holidayType == "Public Holiday") 
+              {
+            	  if (state.length > 0)
+            	  {
+            		result = false;
+            	    Common.alert("<spring:message text='Not allowed to place a particular state for public holiday.' htmlEscape='false'/>");
+            	    break;
+            	  }
+              } else {
+            	  if (state == "" || state.length == 0) 
+                  {
+                    result = false;
+                    // {0} is required.
+                    Common.alert("<spring:message text='Required to place a state for the holiday type.' htmlEscape='false'/>");
+                    break;
+                  }
               }
               
               if (holiday == "" || holiday.length == 0) 
@@ -185,18 +220,38 @@ $(document).ready(function(){
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Holiday' htmlEscape='false'/>");
                 break;
               }
+              
         }
 
         for (var i = 0; i < udtList.length; i++) 
         {
         	var holidayType  = udtList[i].holidayType;
             var holiday  = udtList[i].holiday; 
+            var state = addList[i].state;
               if (holidayType == "" || holidayType.length == 0) 
               {
                 result = false;
                 // {0} is required.
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Holiday Type' htmlEscape='false'/>");
                 break;
+              }
+              
+              if (holidayType == "Public Holiday") 
+              {
+                  if (state.length > 0)
+                  {
+                    result = false;
+                    Common.alert("<spring:message text='Not allowed to place a particular state for public holiday.' htmlEscape='false'/>");
+                    break;
+                  }
+              } else {
+                  if (state == "" || state.length == 0) 
+                  {
+                    result = false;
+                    // {0} is required.
+                    Common.alert("<spring:message text='Required to place a state for the holiday type.' htmlEscape='false'/>");
+                    break;
+                  }
               }
               
               if (holiday == "" || holiday.length == 0) 
