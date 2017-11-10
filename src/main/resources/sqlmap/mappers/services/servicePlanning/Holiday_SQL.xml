@@ -68,9 +68,21 @@
         group by b.mem_code, b.name,B.MEM_ID
     </select>
     <select id="selectCTAssignList"  parameterType="Map" resultType="egovMap">
-	     SELECT * FROM (
-         SELECT     CASE WHEN A.HOLIDAY_TYPE = 'P' THEN 'Public Holiday'
-                         ELSE 'State Holiday' END HOLIDAY_TYPE,
+	    SELECT  CASE
+                            WHEN B.HOLIDAY_TYPE = 'P' THEN 'Public Holiday'
+                              ELSE 'State Holiday'
+                             END
+                         HOLIDAY_TYPE,
+                         B.STATE,
+                         B.HOLIDAY,
+                         B.HOLIDAY_DESC,
+                         B.HOLIDAY_SEQ,
+                         B.CT_BRNCH_CODE,
+                         B.BRNCH_ID,
+                         B.ASSIGN_STATUS,
+                         B.Replacement_CT_Pax
+          FROM (  SELECT 
+                         A.HOLIDAY_TYPE,
 	                     A.STATE,
 	                     TO_CHAR(A.HOLIDAY,'YYYY-MM-DD') HOLIDAY,
 	                     A.HOLIDAY_DESC,
