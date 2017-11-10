@@ -67,7 +67,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                              allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                        }
                      },
-                     {dataField:"serialchk"    ,headerText:"SERIAL CHECK"                ,width:120    ,height:30 },
+                     {dataField:"serialchk"    ,headerText:"SERIAL CHECK"                ,width:120    ,height:30,visible:false },
                      {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30,visible:false},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
@@ -134,6 +134,7 @@ $(document).ready(function(){
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
+    SearchListAjax();
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
     
