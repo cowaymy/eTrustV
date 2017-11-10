@@ -210,12 +210,7 @@ function CTListGrid2() {
 <tr>
     <th scope="row">Holiday Type</th>
     <td>
-    <c:if test="${params.holidayType == 'S' }">
-    <span>State</span>
-    </c:if>
-    <c:if test="${params.holidayType == 'P' }">
-    <span>Public</span>
-    </c:if>
+    <span>${params.holidayType}</span>
     </td>
     <th scope="row">Branch</th>
     <td><c:out value="${params.branchName}"/></td>
