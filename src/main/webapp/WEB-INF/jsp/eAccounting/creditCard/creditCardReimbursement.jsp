@@ -169,7 +169,7 @@ function fn_setCostCenter() {
 }
 
 function fn_selectReimbursementList() {
-    Common.ajax("GET", "/eAccounting/creditCard/selectReimbursementList.do?_cacheId=" + Math.random(), $("#form_reimbursement").serializeJSON(), function(result) {
+    Common.ajax("GET", "/eAccounting/creditCard/selectReimbursementList.do?_cacheId=" + Math.random(), $("#form_reimbursement").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(reimbursementGridID, result);
     });

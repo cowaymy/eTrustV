@@ -278,7 +278,7 @@ function fn_setPopCostCenter() {
 }
 
 function fn_selectRequestList() {
-    Common.ajax("GET", "/eAccounting/pettyCash/selectRequestList.do?_cacheId=" + Math.random(), $("#form_pettyCashReqst").serializeJSON(), function(result) {
+    Common.ajax("GET", "/eAccounting/pettyCash/selectRequestList.do?_cacheId=" + Math.random(), $("#form_pettyCashReqst").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(pettyCashReqstGridID, result);
     });
