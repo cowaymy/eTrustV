@@ -73,7 +73,7 @@ function callLogTranGrid() {
         editable : false,
         width : 150
     }, {
-        dataField : "appTypeName",
+        dataField : "c5",
         headerText : "Assign CT",
         editable : false,
         style : "my-column",
@@ -224,7 +224,7 @@ function fn_doAllaction(){
 <h2>DSC Verification Remark</h2>
 </aside><!-- title_line end -->
 
-<table class="type1" id="hideContent"><!-- table start -->
+<!-- <table class="type1" id="hideContent">table start
 <caption>table</caption>
 <colgroup>
     <col style="width:130px" />
@@ -238,11 +238,11 @@ function fn_doAllaction(){
     </td>
 </tr>
 </tbody>
-</table><!-- table end -->
+</table>table end
 
-<%-- <aside class="title_line mt20"  id="hideContent4"><!-- title_line start -->
+ <aside class="title_line mt20"  id="hideContent4">title_line start
 <h2>New Call Log Result</h2>
-</aside><!-- title_line end -->
+</aside>title_line end -->
 <form action="#" id="addCallForm">
 <input type="hidden" value="${orderCall.c4}" id="hiddenProductId" name="hiddenProductId"/>
 <input type="hidden" value="${orderCall.callStusId}" id="hiddenCallLogStatusId" name="hiddenCallLogStatusId"/>
@@ -252,7 +252,7 @@ function fn_doAllaction(){
 <input type="hidden" value="${callEntryId}" id="callEntryId" name="callEntryId"/>
 <input type="hidden" value="${salesOrdNo}" id="salesOrdNo" name="salesOrdNo"/>
 
-<table class="type1" id="hideContent1"><!-- table start -->
+<%-- <table class="type1" id="hideContent1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:130px" />
@@ -332,8 +332,8 @@ function fn_doAllaction(){
 <ul class="center_btns" id="hiddenBtn">
     <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">Save</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
-</ul>
- --%>
+</ul> --%>
+</form>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->

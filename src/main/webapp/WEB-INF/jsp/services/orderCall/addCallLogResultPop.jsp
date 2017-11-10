@@ -73,7 +73,7 @@ function callLogTranGrid() {
         editable : false,
         width : 150
     }, {
-        dataField : "appTypeName",
+        dataField : "c5",
         headerText : "Assign CT",
         editable : false,
         style : "my-column",
