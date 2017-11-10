@@ -374,11 +374,18 @@ public class StocktransferController {
 	public ResponseEntity<ReturnMessage> StocktransferReqDelivery(@RequestBody Map<String, Object> params, Model mode,
 			SessionVO sessionVo) {
 		int userId = sessionVo.getUserId();
-
-		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-
+		
+		logger.debug("params : {}", params.toString());
+		//List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		
 		Map<String, Object> param = new HashMap();
-		param.put("check", list);
+		param.put("check", updList);
+		param.put("add", serialList);
+		param.put("formMap", formMap);
 		param.put("userId", userId);
 
 		stock.StocktransferReqDelivery(param);
