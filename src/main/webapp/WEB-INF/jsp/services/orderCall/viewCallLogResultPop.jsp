@@ -220,9 +220,9 @@ function fn_doAllaction(){
 </dl>
 </article><!-- acodi_wrap end -->
 
-<aside class="title_line mt20" id="hideContent3"><!-- title_line start -->
+<!-- <aside class="title_line mt20" id="hideContent3">title_line start
 <h2>DSC Verification Remark</h2>
-</aside><!-- title_line end -->
+</aside>title_line end -->
 
 <!-- <table class="type1" id="hideContent">table start
 <caption>table</caption>
