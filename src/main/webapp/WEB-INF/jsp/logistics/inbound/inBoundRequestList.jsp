@@ -81,11 +81,56 @@ var rescolumnLayout=[
 							 {dataField:"reqQty" ,headerText:"Req Qty",width:120 ,height:30}
 							];
 
-
+var smoLayout=[
+						{dataField:"reqstNo" ,headerText:"reqstNo",width:120 ,height:30},
+						{dataField:"trnscType" ,headerText:"trnscType",width:120 ,height:30},
+						{dataField:"trnscTypeDtl" ,headerText:"trnscTypeDtl",width:120 ,height:30},
+						{dataField:"pridicFrqncy" ,headerText:"pridicFrqncy",width:120 ,height:30},
+						{dataField:"reqstCrtDt" ,headerText:"reqstCrtDt",width:120 ,height:30},
+						{dataField:"reqstRequireDt" ,headerText:"reqstRequireDt",width:120 ,height:30},
+						{dataField:"refDocNo" ,headerText:"refDocNo",width:120 ,height:30},
+						{dataField:"docHderTxt" ,headerText:"docHderTxt",width:120 ,height:30},
+						{dataField:"goodsRcipt" ,headerText:"goodsRcipt",width:120 ,height:30},
+						{dataField:"rcivCdcRdc" ,headerText:"rcivCdcRdc",width:120 ,height:30},
+						{dataField:"rcivCdcRdc2" ,headerText:"rcivCdcRdc2",width:120 ,height:30},
+						{dataField:"reqstCdcRdc" ,headerText:"reqstCdcRdc",width:120 ,height:30},
+						{dataField:"reqstCdcRdc2" ,headerText:"reqstCdcRdc2",width:120 ,height:30},
+						{dataField:"reqstRem" ,headerText:"reqstRem",width:120 ,height:30},
+						{dataField:"retnDefectResn" ,headerText:"retnDefectResn",width:120 ,height:30},
+						{dataField:"retnPrsnCtCody" ,headerText:"retnPrsnCtCody",width:120 ,height:30},
+						{dataField:"crtUserId " ,headerText:"crtUserId ",width:120 ,height:30},
+						{dataField:"crtDt" ,headerText:"crtDt",width:120 ,height:30},
+						{dataField:"reqstStus" ,headerText:"reqstStus",width:120 ,height:30},
+						{dataField:"reqstDel" ,headerText:"reqstDel",width:120 ,height:30},
+						{dataField:"reqstType" ,headerText:"reqstType",width:120 ,height:30},
+						{dataField:"reqstTypeDtl" ,headerText:"reqstTypeDtl",width:120 ,height:30},
+						{dataField:"reqstNo" ,headerText:"reqstNo",width:120 ,height:30},
+						{dataField:"reqstNoItm" ,headerText:"reqstNoItm",width:120 ,height:30},
+						{dataField:"itmCode" ,headerText:"itmCode",width:120 ,height:30},
+						{dataField:"itmName" ,headerText:"itmName",width:120 ,height:30},
+						{dataField:"reqstQty" ,headerText:"reqstQty",width:120 ,height:30},
+						{dataField:"uom" ,headerText:"uom",width:120 ,height:30},
+						{dataField:"uomname" ,headerText:"uomname",width:120 ,height:30},
+						{dataField:"itmTxt" ,headerText:"itmTxt",width:120 ,height:30},
+						{dataField:"reqstDel" ,headerText:"reqstDel",width:120 ,height:30},
+						{dataField:"finalCmplt" ,headerText:"finalCmplt",width:120 ,height:30},
+						{dataField:"crtUserId" ,headerText:"crtUserId",width:120 ,height:30},
+						{dataField:"crtDt" ,headerText:"crtDt",width:120 ,height:30},
+						{dataField:"updUserId" ,headerText:"updUserId",width:120 ,height:30},
+						{dataField:"updDt" ,headerText:"updDt",width:120 ,height:30},
+						{dataField:"rciptQty" ,headerText:"rciptQty",width:120 ,height:30},
+						{dataField:"blNo" ,headerText:"blNo",width:120 ,height:30}
+                     ];
 var reqop = {
 		            enableCellMerge : true,
 					showRowCheckColumn : true ,
 					editable : true,
+					usePaging : false ,
+					showStateColumn : false
+		         };
+var smoop = {
+		            enableCellMerge : true,
+					editable : false,
 					usePaging : false ,
 					showStateColumn : false
 		         };
@@ -95,12 +140,14 @@ $(document).ready(function(){
    //doGetComboData('/logistics/inbound/InboundLocationPort', '', '','location', 'A' , '');
    doGetCombo('/logistics/inbound/InboundLocation', 'port', '','location', 'S' , ''); 
    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, reqop);
-   subGrid  = AUIGrid.create("#sub_grid_wrap", rescolumnLayout, reqop);
+   subGrid  = AUIGrid.create("#sub_grid_wrap", smoLayout, smoop);
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
+    	//alert(event.rowIndex);
+    	searchSMO(event.rowIndex);
     });
     
     AUIGrid.bind(listGrid, "ready", function(event) {
@@ -143,20 +190,28 @@ function createSMO(){
 	data.checked = check;
 	data.form    = $("#giForm").serializeJSON();
     var url = "/logistics/inbound/reqSMO.do";
-    console.log(data);
     Common.ajax("POST" , url , data , function(data){
-        //console.log(data);
-        //AUIGrid.setGridData(listGrid, data.dataList);
-    /*     Common.alert(result.message , SearchListAjax);
-        AUIGrid.resetUpdatedItems(listGrid, "all");    
-    $("#giopenwindow").hide();
-    $('#search').click(); */
-	    console.log(data);
-    	Common.alert("Created : "+data.data);
+    	//Common.alert("Created : "+data.data);
         $("#popup_wrap").hide();
     });
 }
 
+function searchSMO(index){
+	 var whLocId =AUIGrid.getCellValue(listGrid ,index ,'whLocId');
+	 var blNo =AUIGrid.getCellValue(listGrid ,index ,'blNo');
+	 var matrlNo =AUIGrid.getCellValue(listGrid ,index ,'matrlNo');
+	var data = {
+		      whLocId:whLocId,
+			  blNo:blNo,
+			  matrlNo:matrlNo
+			  };
+    var url = "/logistics/inbound/searchSMO.do";
+    console.log(data);
+    Common.ajax("POST" , url , data , function(data){
+    console.log(data);
+    	 AUIGrid.setGridData(subGrid, data.dataList);
+    });
+}
 </script>
 
 <section id="content"><!-- content start -->

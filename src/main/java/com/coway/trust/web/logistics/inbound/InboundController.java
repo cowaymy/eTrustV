@@ -104,4 +104,16 @@ public class InboundController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/searchSMO.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> searchSMO(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) {
+		// params.put("userId", sessionVo.getUserId());
+		List<EgovMap> dataList = inboundService.searchSMO(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(dataList);
+		return ResponseEntity.ok(message);
+	}
+
 }

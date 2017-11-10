@@ -33,4 +33,6 @@ public interface InboundMapper {
 
 	void CreateIssue(Map<String, Object> formMap);
 
+	List<EgovMap> searchSMO(Map<String, Object> params);
+
 }

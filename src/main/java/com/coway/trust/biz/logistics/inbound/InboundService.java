@@ -17,4 +17,6 @@ public interface InboundService {
 
 	Map<String, Object> reqSTO(Map<String, Object> params);
 
+	List<EgovMap> searchSMO(Map<String, Object> params);
+
 }

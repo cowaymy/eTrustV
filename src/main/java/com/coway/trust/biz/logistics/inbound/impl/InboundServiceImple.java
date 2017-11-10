@@ -111,4 +111,10 @@ public class InboundServiceImple extends EgovAbstractServiceImpl implements Inbo
 
 		return reMap;
 	}
+
+	@Override
+	public List<EgovMap> searchSMO(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return inboundMapper.searchSMO(params);
+	}
 }
