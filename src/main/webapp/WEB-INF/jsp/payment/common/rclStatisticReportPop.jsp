@@ -74,28 +74,24 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
 	                        <td colspan="3">
 	                           <select id="reportType" name="reportType" class="w100p"></select>
 	                        </td>
-	                    </tr>
-	                    <tr>
 	                        <th scope="row">Branch</th>
-	                        <td colspan="3">
-	                           <select id="branchId" name="branchId" class="w100p"></select>
-	                        </td>
+                            <td colspan="3">
+                               <select id="branchId" name="branchId" class="w100p"></select>
+                            </td>
 	                    </tr>
 	                    <tr>
 	                        <th scope="row">Account</th>
 	                        <td colspan="3">
 	                           <select id="account" name="account" class="w100p"></select>
 	                        </td>
-	                    </tr>
-	                    <tr>
 	                        <th scope="row">Mode</th>
-	                        <td colspan="3">
-	                           <select id="modeId" name="modeId" class="w100p"></select>
-	                        </td>
+                            <td colspan="3">
+                               <select id="modeId" name="modeId" class="w100p"></select>
+                            </td>
 	                    </tr>
 	                    <tr>
 	                        <th scope="row">Date</th>
-	                        <td colspan="3">
+	                        <td colspan="7">
 	                            <div class="date_set"><!-- date_set start -->
 		                            <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="fromUploadDate"/></p>
 		                            <span>To</span>
