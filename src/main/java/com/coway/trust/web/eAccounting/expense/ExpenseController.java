@@ -54,11 +54,12 @@ public class ExpenseController {
 		String[] expType = request.getParameterValues("expType");
 
 		params.put("claimType", claimType);
+		params.put("expType", expType);
 		
-		if(CommonUtils.isEmpty(params.get("type"))){
-
-			params.put("expType", expType);
-		}
+//		if(CommonUtils.isEmpty(params.get("type"))){
+//
+//			params.put("expType", expType);
+//		}
 
 		
 		LOGGER.debug("groupCd =====================================>>  " + params);
