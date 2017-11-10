@@ -214,6 +214,13 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 		
 		pettyCashService.updatePettyCashReqst(params);
 	}
+	
+	@Override
+	public void insertPettyCashAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
+		params.put("fileGroupKey", fileGroupKey);
+	}
 
 	@Override
 	public void updatePettyCashAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {

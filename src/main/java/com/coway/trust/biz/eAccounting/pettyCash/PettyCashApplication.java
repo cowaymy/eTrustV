@@ -21,6 +21,8 @@ public interface PettyCashApplication {
 	
 	void updatePettyCashReqstBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 	
+	void insertPettyCashAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
+	
 	void updatePettyCashAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 
 }

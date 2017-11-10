@@ -146,6 +146,7 @@ SELECT T.APPV_PRCSS_NO
       ,T.INVC_DT
       ,T.MEM_ACC_ID
       ,T.MEM_ACC_NAME
+      ,'MYR'                                               AS CUR
       ,T.APPV_AMT
       ,T.APPV_PRCSS_STUS
       ,T.APPV_PRCSS_STUS_CODE
@@ -311,6 +312,7 @@ SELECT T.APPV_PRCSS_NO
                       ,T3.BUDGET_CODE_NAME
                       ,T3.TAX_CODE
                       ,NVL2(T3.TAX_CODE, T3.TAX_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '') AS TAX_NAME
+                      ,'MYR'                                               AS CUR
                       ,T3.NET_AMT
                       ,T3.TAX_AMT
                       ,T3.APPV_AMT

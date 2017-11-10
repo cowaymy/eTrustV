@@ -76,6 +76,9 @@ var invoAprveGridColLayout = [ {
     headerText : '<spring:message code="invoiceApprove.memberName" />',
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />'
+}, {
     dataField : "appvAmt",
     headerText : '<spring:message code="webInvoice.amount" />',
     style : "aui-grid-user-custom-right",

@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
-import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.creditCard.CreditCardApplication;
@@ -62,9 +61,6 @@ public class CreditCardController {
 	
 	@Autowired
 	private WebInvoiceService webInvoiceService;
-	
-	@Autowired
-	private FileApplication fileApplication;
 	
 	@RequestMapping(value = "/creditCardMgmt.do")
 	public String creditCardMgmt(ModelMap model) {
@@ -299,7 +295,7 @@ public class CreditCardController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		// serivce 에서 파일정보를 가지고, DB 처리.
-		fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
+		creditCardApplication.insertReimbursementAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params);
 		
 		params.put("attachFiles", list);
 		

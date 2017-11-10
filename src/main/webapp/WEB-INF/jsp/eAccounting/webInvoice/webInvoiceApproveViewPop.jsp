@@ -36,6 +36,9 @@ var myColumnLayout = [ {
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />'
+}, {
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
     style : "aui-grid-user-custom-right",

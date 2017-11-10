@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
-import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.pettyCash.PettyCashApplication;
@@ -62,9 +60,6 @@ public class PettyCashController {
 	
 	@Autowired
 	private WebInvoiceService webInvoiceService;
-	
-	@Autowired
-	private FileApplication fileApplication;
 	
 	@RequestMapping(value = "/pettyCashCustodian.do")
 	public String pettyCashCustodian(ModelMap model) {
@@ -421,7 +416,7 @@ public class PettyCashController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		// serivce 에서 파일정보를 가지고, DB 처리.
-		fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
+		pettyCashApplication.insertPettyCashAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 		
 		params.put("attachFiles", list);
 		

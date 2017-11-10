@@ -175,6 +175,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 		
 		creditCardService.insertCrditCardInterface(params);
 	}
+	
+	@Override
+	public void insertReimbursementAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
+		params.put("fileGroupKey", fileGroupKey);
+	}
 
 	@Override
 	public void updateReimbursementAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
