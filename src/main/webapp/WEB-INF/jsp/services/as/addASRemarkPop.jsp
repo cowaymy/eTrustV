@@ -5,7 +5,7 @@
 
 
 function fn_asAddRemark(){
-    
+	
 
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
@@ -35,7 +35,7 @@ function fn_asAddRemark(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>ADD AS REMARK</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -44,7 +44,7 @@ function fn_asAddRemark(){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Add Remark </a></li>
+	<li><a href="#" class="on">Add Remark </a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -54,24 +54,24 @@ function fn_asAddRemark(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:130px" />
-    <col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Remark</th>
-    <td>
-       <textarea  id='callRem' name='callRem'   rows='5' placeholder=""  class="w100p" ></textarea>
-       
-        <input  type='hidden' id='asId' name='asId'  value='${AS_ID}'></textarea>
-    </td>
+	<th scope="row">Remark</th>
+	<td>
+	   <textarea  id='callRem' name='callRem'   rows='5' placeholder=""  class="w100p" ></textarea>
+	   
+	    <input  type='hidden' id='asId' name='asId'  value='${AS_ID}'></textarea>
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#"  onclick="fn_asAddRemark()">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#"  onclick="javascript:$('#callRem').val('')" >Clear</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#"  onclick="fn_asAddRemark()">Save</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#"  onclick="javascript:$('#callRem').val('')" >Clear</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
