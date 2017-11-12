@@ -196,7 +196,7 @@ function fn_selectASDataInfo(){
 </tr>
 <tr>
     <th scope="row">Customer Name</th>
-    <td colspan="3">   <span id="txtCustName"></span> </td>
+    <td colspan="3">   <span id="txtCustName"></span> </td> 
     <th scope="row">NRIC/Company Np</th>
     <td>   <span id="txtCustIC"></span> </td>
 </tr>
