@@ -759,7 +759,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
         #{appvPrcssNo}
        ,#{appvItmSeq}
        ,#{invcNo}
-       ,SYSDATE
+       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{invcType}
        ,#{sMemAccId}
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')

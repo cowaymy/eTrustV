@@ -53,7 +53,7 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "invcDt",
-    headerText : '<spring:message code="pettyCashNewExp.date" />',
+    headerText : '<spring:message code="pettyCashNewExp.date" />'
 }, {
     dataField : "expType",
     visible : false // Color 칼럼은 숨긴채 출력시킴

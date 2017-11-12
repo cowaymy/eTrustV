@@ -59,9 +59,7 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "invcDt",
-    headerText : '<spring:message code="crditCardNewReim.invcBrDt" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
+    headerText : '<spring:message code="crditCardNewReim.invcBrDt" />'
 }, {
     dataField : "costCentrName",
     headerText : '<spring:message code="pettyCashCustdn.costCentrName" />',
