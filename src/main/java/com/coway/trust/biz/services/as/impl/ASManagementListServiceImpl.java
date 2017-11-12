@@ -403,6 +403,74 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	
+
+	/**
+	 * insert_stkCardLOG0014D insert
+	 * @param params
+	 * @return
+	 */
+	public int insert_stkCardLOG0014D(List <EgovMap> addItemList , String AS_RESULT_ID  , String  UPDATOR   ,LinkedHashMap svc0004dmap ){
+		
+		LOGGER.debug("							===> insert_stkCardLOG0014D  in ");
+		int rtnValue =-1;
+		if (addItemList.size() > 0) {  
+			for (int i = 0; i < addItemList.size(); i++) {
+				
+				Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
+				Map<String, Object> map = new HashMap();
+			 
+				map.put("locId","0"); 
+				map.put("stockId",updateMap.get("filterID")); 
+				map.put("entryDt",new Date()); 
+				map.put("typeId","461"); 
+				map.put("refNo",svc0004dmap.get("AS_NO")); 
+			    map.put("salesOrdId",svc0004dmap.get("AS_SO_ID"));
+			    map.put("itmNo", (i+1) ); 
+			    map.put("srcId","477"); 
+			    map.put("prjctId","0"); 
+			    map.put("batchNo","0"); 
+			    map.put("qty",(-1 *    Integer.parseInt( (String)(updateMap.get("filterQty") ) ))); 
+			    map.put("currId","479"); 
+			    map.put("currRate","1"); 
+			    map.put("cost","0"); 
+			    map.put("prc","0"); 
+			    map.put("rem",""); 
+			    map.put("serialNo",""); 
+			    map.put("installNo",svc0004dmap.get("AS_RESULT_NO")  ) ; 
+			    map.put("costDt","01/01/1900"); 
+			    map.put("appTypeId","0"); 
+			    map.put("stkGrad","A");
+			    map.put("installFail","0");
+			    map.put("isSynch","0"); 
+			    map.put("entryMthId","764"); 
+			    map.put("orgn","");
+			    map.put("transType","");
+			    map.put("docLneNo","0");
+			    map.put("poNo",""); 
+			    map.put("insertDt",new Date());
+			    map.put("isGr","0");
+			    map.put("poStus","");
+				LOGGER.debug("					insertSVC0005D {} ",map);
+			
+				Map<String, Object> map87mp = new HashMap();
+				map87mp.put("SRV_FILTER_PRV_CHG_DT",  svc0004dmap.get("AS_SETL_DT") );
+				map87mp.put("SRV_FILTER_STK_ID",updateMap.get("filterID"));
+				map87mp.put("SRV_SO_ID",svc0004dmap.get("AS_SO_ID"));
+				map87mp.put("updator",svc0004dmap.get("updator"));
+				
+				int update_SAL0087D_cnt = ASManagementListMapper.update_SAL0087D(map87mp);
+				rtnValue = ASManagementListMapper.insert_stkCardLOG0014D(map) ;
+				    
+			        
+			}
+		}
+	   
+		LOGGER.debug(" insert_stkCardLOG0014D  결과 {}",rtnValue);
+		LOGGER.debug("							===> insert_stkCardLOG0014D  out ");
+		return rtnValue;
+	}
+	
+	
 	
 	//invoice
 	public  int  setPay31dData(ArrayList<AsResultChargesViewVO>  vewList ,Map<String, Object> params){ 
@@ -797,7 +865,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		String AS_RESULT_ID    = String.valueOf(seqMap.get("seq"));
 		
-		LOGGER.debug("			getASEntryDocNo===>AS_RESULT_ID["+AS_RESULT_ID+"]");
+		LOGGER.debug("			NEW AS_RESULT_ID===> NEW AS_RESULT_ID["+AS_RESULT_ID+"]");
+		LOGGER.debug("			NEW AS_RESULT_NO===> NEW AS_RESULT_NO["+eMap.get("asno")+"]");
 		
 		
 		
@@ -819,6 +888,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		
 		LOGGER.debug("				Logic 1===> AS_TOT_AMT["+AS_TOT_AMT+"]");
+		
 		if(AS_TOT_AMT > 0){
 			
 			//asBillNo 채번 
@@ -1089,7 +1159,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		//insert svc0004d 
 		int c=  this.insertSVC0004D(svc0004dmap);  
 		int callint =updateSTATE_CCR0006D(svc0004dmap);
-		insertSVC0005D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator"))); 
+	   this.insertSVC0005D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator"))); 
+		this.insert_stkCardLOG0014D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator")) ,svc0004dmap); 
 		
 	    svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID") );
 	    svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")) );
@@ -1164,6 +1235,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		asTotAmt = Integer.parseInt( String.valueOf(((EgovMap)resultMList.get(0)).get("asTotAmt")));  
 		   
 		
+		LOGGER.debug("OLD SVC0004D==>["+resultMList+"]");
+     	LOGGER.debug("==========asTotAmt ==> ["+asTotAmt+"]");
+		
 		//reverse_SVC0004D
 		 svc0004dmap.put("OLD_AS_RESULT_ID", svc0004dmap.get("AS_RESULT_ID"));
 		 int reverse_SVC0004D_cnt = ASManagementListMapper.reverse_SVC0004D(svc0004dmap);
@@ -1211,14 +1285,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         	 ASManagementListMapper.reverse_PAY0007D(svc0004dmap);
         	 
          	 svc0004dmap.put("ACC_BILL_ID", svc0004dmap.get("ACC_BILL_ID") );
-         	 List<EgovMap>  resultPAY0016DList   	=null;
-     		 					   resultPAY0016DList =ASManagementListMapper.getResult_SVC0004D(svc0004dmap);
-     		 					   
-     		 EgovMap  pay0016dData = resultPAY0016DList.get(0);			   
-
-     		    
-        	 //AccOrderBill
-        	 ASManagementListMapper.reverse_PAY0016D(svc0004dmap);
+         	 List<EgovMap>  resultPAY0016DList  = ASManagementListMapper.getResult_SVC0004D(svc0004dmap);
+         	 
+         	EgovMap  pay0016dData =null;
+         	if(null != resultPAY0016DList){
+         		    
+               	//AccOrderBill
+         		int reverse_updatePAY0016D_cnt=	 ASManagementListMapper.reverse_updatePAY0016D(svc0004dmap);
+         	}
         	 
         	 EgovMap CN_DocNoMap=null;
         	 String CNNO=null;

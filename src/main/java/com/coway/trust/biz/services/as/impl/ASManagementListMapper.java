@@ -122,6 +122,7 @@ public interface ASManagementListMapper {
 	 int   reverse_CURR_SVC0005D(Map<String, Object> params);  	  // reverse_SVC0005D  기존 수량 -처리 
 	 int   insert_LOG0015D(Map<String, Object> params);  	 
 	 int   insert_LOG0016D(Map<String, Object> params);  	 
+	 int   insert_stkCardLOG0014D(Map<String, Object> params);  
 	 int   insert_LOG0014D(Map<String, Object> params);  	 
 	 int   insert_PAY0069D(Map<String, Object> params); 
 	 int   insert_PAY0064D(Map<String, Object> params); 
@@ -129,11 +130,7 @@ public interface ASManagementListMapper {
 	 int   insert_PAY0009D(Map<String, Object> params); 
 	 int   insert_Pay0018d(Map<String, Object> params); 
 	 int   insert_Pay0017d(Map<String, Object> params); 
-
-	 
-	 
-	 
-	 
+	 int   update_SAL0087D(Map<String, Object> params);	 
 	 
 	 
 	 
@@ -143,9 +140,10 @@ public interface ASManagementListMapper {
 	 int   reverse_PAY0027D(Map<String, Object> params);  	 			 //UPDATE 
 	 int   reverse_PAY0028D(Map<String, Object> params);  	 			 //UPDATE 
 	 int   reverse_PAY0006D(Map<String, Object> params);  	 			 //UPDATE 
-	 int   reverse_DocNo_PAY0006D(Map<String, Object> params);  	 			 //UPDATE 
+	 int   reverse_DocNo_PAY0006D(Map<String, Object> params);  	 //UPDATE 
 	 int	reverse_StateUpPAY0007D(Map<String, Object> params);  	 //UPDATE 
 	 int   reverse_State_CCR0001D(Map<String, Object> params);
+	 int   reverse_updatePAY0016D(Map<String, Object> params);  
 	 
 	 
 	 EgovMap   getLog0016DCount(Map<String, Object> params);	      //log0016d count
