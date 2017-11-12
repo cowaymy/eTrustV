@@ -672,9 +672,12 @@ public class ASManagementListController {
 		
 		EgovMap  rtnValue = ASManagementListService.asResult_update(params);  
 		
+		
+		logger.debug("newResultUpdate   done!!--->"+rtnValue.toString());  
+		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(99);
+		message.setData(rtnValue.get("AS_NO"));
 		message.setMessage("");
 
 				
