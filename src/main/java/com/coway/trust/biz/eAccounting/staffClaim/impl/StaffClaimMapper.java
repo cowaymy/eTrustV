@@ -41,5 +41,9 @@ public interface StaffClaimMapper {
 	
 	void updateAppvPrcssNo(Map<String, Object> params);
 	
+	void deleteStaffClaimExpItem(Map<String, Object> params);
+	
+	void deleteStaffClaimExpMileage(Map<String, Object> params);
+	
 	
 }

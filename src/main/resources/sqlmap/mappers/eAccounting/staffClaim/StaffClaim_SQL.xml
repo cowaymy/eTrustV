@@ -448,5 +448,15 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
     WHERE CLM_NO = #{clmNo}       
 </update>
 
+<delete id="deleteStaffClaimExpItem" parameterType="Map">
+/* staffClaimMapper.deleteStaffClaimExpItem */
+   DELETE FROM FCM0020D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+</delete>
+
+<delete id="deleteStaffClaimExpMileage" parameterType="Map">
+/* staffClaimMapper.deleteStaffClaimExpMileage */
+   DELETE FROM FCM0021D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+</delete>
+
 
 </mapper>

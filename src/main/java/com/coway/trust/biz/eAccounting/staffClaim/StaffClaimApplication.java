@@ -11,5 +11,7 @@ public interface StaffClaimApplication {
 	void insertStaffClaimAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 	
 	void updateStaffClaimAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
+	
+	void deleteStaffClaimAttachBiz(FileType type, Map<String, Object> params);
 
 }

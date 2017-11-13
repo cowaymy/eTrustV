@@ -488,6 +488,10 @@ function fn_addRow() {
                     }
                     
                     fn_getAllTotAmt();
+                    
+                    // Grid 초기화
+                    fn_destroyGrid();
+                    fn_createAUIGrid();
                 });
         	} else {
         		formData.append("atchFileGrpId", atchFileGrpId);
@@ -540,6 +544,10 @@ function fn_addRow() {
                     fn_getAllTotAmt();
                     
                     clmSeq = 0;
+                    
+                    // Grid 초기화
+                    fn_destroyGrid();
+                    fn_createAUIGrid();
                 });
         	}
         } else {
@@ -921,6 +929,23 @@ function fn_approveLinePop() {
     }
     
     Common.popupDiv("/eAccounting/staffClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+}
+
+function fn_deleteStaffClaimExp() {
+	var data = {
+			clmNo : clmNo,
+			clmSeq : clmSeq,
+			atchFileGrpId : atchFileGrpId,
+			expTypeName : expTypeName
+	};
+	console.log(data);
+	Common.ajax("POST", "/eAccounting/staffClaim/deleteStaffClaimExp.do", data, function(result) {
+        console.log(result);
+        // Grid Row 삭제
+        AUIGrid.removeRow(newGridID, deleteRowIdx);
+        
+        fn_getAllTotAmt();
+    });
 }
 </script>
 

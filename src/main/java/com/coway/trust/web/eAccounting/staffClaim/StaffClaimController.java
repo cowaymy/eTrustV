@@ -270,5 +270,24 @@ public class StaffClaimController {
 	public String completedMsgPop(ModelMap model) {
 		return "eAccounting/staffClaim/completedMsgPop";
 	}
+	
+	@RequestMapping(value = "/deleteStaffClaimExp.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteStaffClaimExp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		
+		// TODO insert
+		staffClaimApplication.deleteStaffClaimAttachBiz(FileType.WEB_DIRECT_RESOURCE, params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
 
 }

@@ -218,6 +218,18 @@ LOGGER.debug("params =====================================>>  " + params);
 		// TODO pettyCashReqst table update
 		staffClaimMapper.updateAppvPrcssNo(params);
 	}
+
+	@Override
+	public void deleteStaffClaimExpItem(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		staffClaimMapper.deleteStaffClaimExpItem(params);
+	}
+
+	@Override
+	public void deleteStaffClaimExpMileage(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		staffClaimMapper.deleteStaffClaimExpMileage(params);
+	}
 	
 	
 

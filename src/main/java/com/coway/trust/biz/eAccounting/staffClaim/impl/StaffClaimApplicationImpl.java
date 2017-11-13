@@ -17,6 +17,8 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.staffClaim.StaffClaimApplication;
+import com.coway.trust.biz.eAccounting.staffClaim.StaffClaimService;
+import com.coway.trust.util.CommonUtils;
 
 @Service("staffClaimApplication")
 public class StaffClaimApplicationImpl implements StaffClaimApplication {
@@ -31,6 +33,9 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 	
 	@Autowired
 	private FileMapper fileMapper;
+	
+	@Autowired
+	private StaffClaimService staffClaimService;
 
 	@Override
 	public void insertStaffClaimAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
@@ -96,5 +101,26 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 			}
 		}
 	}
+
+	@Override
+	public void deleteStaffClaimAttachBiz(FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
+		if(CommonUtils.isEmpty(params.get("clmNo"))) {
+			// Not Temp. Save
+			// 저장된 파일만 삭제
+			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+		} else {
+			// Temp. Save
+			// 저장된 파일 삭제 및 테이블 데이터 삭제
+			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+			staffClaimService.deleteStaffClaimExpItem(params);
+			if("Car Mileage Expense".equals(params.get("expTypeName"))) {
+				staffClaimService.deleteStaffClaimExpMileage(params);
+			}
+		}
+	}
+	
+	
 
 }
