@@ -98,9 +98,8 @@ var columnLayout = [
         formatString : "#,##0.##"
     }];
     
-// ajax list 조회.
-    function searchList()
-    {
+    // ajax list 조회.
+    function searchList(){
     	   Common.ajax("GET","/payment/selectRentalCollectionByBSList.do",$("#searchForm").serialize(), function(result){
     		AUIGrid.setGridData(myGridID, result);
     	});
