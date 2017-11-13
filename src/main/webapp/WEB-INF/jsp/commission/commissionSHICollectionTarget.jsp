@@ -2,6 +2,13 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.right-column {
+    text-align:right;
+    margin-top:-20px;
+}
+</style>
 <script type="text/javaScript">
 var myGridID;
 var memCode;
@@ -15,6 +22,8 @@ var today = "${today}";
 			
 			if(valid == null || valid == ""){
 				Common.alert("Please select the member code");
+				$("#teamCode").val("");
+                $("#level").val("");
 			}else{
 				Common.ajax("GET", "/commission/calculation/commSHIMemSearch", $("#myForm").serializeJSON(), function(result) {
 					if(result != null){
@@ -27,6 +36,9 @@ var today = "${today}";
 						});
 					}else{
 						Common.alert("No member record found");
+						$("#memCode").val("");
+						$("#teamCode").val("");
+						$("#level").val("");
 					}
 				});
 			}
@@ -41,7 +53,7 @@ var today = "${today}";
 			memCode = null;
 			if(AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode") != null && AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode") != ""){
 				memCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode");
-				var date ={"memCode" : memCode};
+				var date ={"memCode" : memCode, "searchDt" : $("#shiDate").val()};
 				Common.popupDiv("/commission/calculation/commSHIIndexViewDetailsPop.do",date);
 			}
 		});
@@ -95,47 +107,42 @@ var today = "${today}";
 	    var columnLayout3 = [{
 	        dataField : "topOrgCode",
 	        headerText : "Top Org Code",
-	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "orgCode",
 	        headerText : "Org Code",
-	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "grpCode",
 	        headerText : "Grp Code",
-	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "deptCode",
 	        headerText : "Dept Code",
-	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "memCode",
 	        headerText : "Member Code",
-	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "unit",
 	        headerText : "Unit",
-	        style : "my-column",
+	        style : "right-column",
 	        editable : false
 	    },{
 	        dataField : "targetatmt",
 	        headerText : "Target",
-	        style : "my-column",
+	        style : "right-column",
 	        editable : false
 	    },{
 	        dataField : "collectamt",
 	        headerText : "Current Collection",
-	        style : "my-column",
+	        style : "right-column",
 	        editable : false
 	    },{
 	        dataField : "collectrate",
 	        headerText : "Collection Rate",
-	        style : "my-column",
+	        style : "right-column",
 	        editable : false
 	    }];
 	    // 그리드 속성 설정

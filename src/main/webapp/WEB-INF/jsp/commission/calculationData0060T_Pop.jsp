@@ -107,6 +107,11 @@
         style : "my-column",
         editable : false
     }, {
+        dataField : "orgTypeCode",
+        headerText : "ORG TYPE",
+        style : "my-column",
+        editable : false
+    }, {
         dataField : "mRank",
         headerText : "M RANK",
         style : "my-column",
@@ -340,7 +345,7 @@
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0060T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
                         <th scope="row">ORG Group<span class="must">*</span></th>
-                        <td><select id="orgGroup_60" name="codeId" style="width: 100px;">
+                        <td><select id="orgGroup_60" name="codeId" style="width: 100px;" >
                                 <c:forEach var="list" items="${orgGrList }">
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>

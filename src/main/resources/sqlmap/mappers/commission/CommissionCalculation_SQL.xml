@@ -1628,8 +1628,8 @@
                         AND a.TASK_ID=b.COMM_TASK_ID 
                         AND b.IS_EXCLUDE=0
                 WHERE a.TASK_ID=#{taskId}
-                <if test="emplyType != null and emplyType != ''">
-                    and b.EMPLY_TYPE_ID= #{emplyType}
+                <if test="codeId != null and codeId != ''">
+                    and b.EMPLY_TYPE_ID= #{codeId}
                 </if>
                 <if test="emplyCd != null and emplyCd != ''">
                     and b.EMPLY_CODE LIKE  '%'|| #{emplyCd} ||'%'
@@ -1662,20 +1662,27 @@
 			NVL(t1.DEPT_CODE,'-')  DEPT_CODE,         
 			NVL(t1.GRP_CODE,'-')  GRP_CODE,          
 			NVL(t1.ORG_CODE,'-')  ORG_CODE,          
-			t2.IS_EXCLUDE
+			t2.IS_EXCLUDE,
+			t2.ORG_TYPE_CODE
 		FROM CMM0060M t1 JOIN (
 		        SELECT 
 		            a.RUN_ID,
 		            b.EMPLY_CODE,
 		            b.EMPLY_ID,
-		            case when (a.IS_EXCLUDE is null) then 0 else a.IS_EXCLUDE  end IS_EXCLUDE
+		            case when (a.IS_EXCLUDE is null) then 0 else a.IS_EXCLUDE  end IS_EXCLUDE,
+		            case when b.emply_type_id=1  and b.emply_lev = 4 and  EMPLY_LEV_RANK = 'PRO' then 'FULL TIME'
+				        when b.emply_type_id=1  and b.emply_lev = 4 and  EMPLY_LEV_RANK = 'ACT' then 'PART TIME'
+				        when b.emply_type_id=1  and b.emply_lev = 3 then 'HM'
+				        when b.emply_type_id=1  and b.emply_lev = 2 then 'SM'
+				        when b.emply_type_id=1  and b.emply_lev = 1 then 'GM'
+				    end ORG_TYPE_CODE
 		        FROM CMM0060M a JOIN cmm0006t b 
 		            on a.EMPLY_ID = b.EMPLY_ID 
 		                AND a.TASK_ID=b.COMM_TASK_ID 
 		                AND b.IS_EXCLUDE=0
 		        WHERE a.TASK_ID=#{taskId}
-				<if test="emplyType != null and emplyType != ''">
-				    and b.EMPLY_TYPE_ID= #{emplyType}
+				<if test="codeId != null and codeId != ''">
+				    and b.EMPLY_TYPE_ID= #{codeId}
 				</if>
 				<if test="emplyCd != null and emplyCd != ''">
 				    and b.EMPLY_CODE LIKE  '%'|| #{emplyCd} ||'%'
@@ -1686,7 +1693,7 @@
 	    <if test="useYnCombo != null and useYnCombo != ''">
 	      AND t2.IS_EXCLUDE = #{useYnCombo}
 	    </if>
-		ORDER BY t2.EMPLY_CODE
+		ORDER BY t1.M_RANK
     </select>
     <!-- ########################################################## -->
     <!-- 												Is Exclude Update													-->

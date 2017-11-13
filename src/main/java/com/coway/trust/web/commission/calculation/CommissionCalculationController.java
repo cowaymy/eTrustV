@@ -2408,6 +2408,19 @@ public class CommissionCalculationController {
 			
 			finalMap = new EgovMap();
 			finalMap.put("topOrgCode","");
+			finalMap.put("orgCode","");
+			finalMap.put("grpCode",sGRPCODE);
+			finalMap.put("deptCode","");
+			finalMap.put("memCode","");
+			finalMap.put("unit",sGUNIT);
+			finalMap.put("targetatmt",sGCOLLECTTARGET);
+			finalMap.put("collectamt",sGCOLLECT_AMT);
+			finalMap.put("collectrate",sGCOLLECTTARGET != 0 ? (100 * (sGCOLLECT_AMT / sGCOLLECTTARGET)) : 0);
+			finalList.add(finalMap);
+			
+			
+			finalMap = new EgovMap();
+			finalMap.put("topOrgCode","");
 			finalMap.put("orgCode",sORGCODE);
 			finalMap.put("grpCode","");
 			finalMap.put("deptCode","");
@@ -2440,8 +2453,14 @@ public class CommissionCalculationController {
 	@RequestMapping(value = "/commSHIIndexViewDetailsPop.do")
 	public String commSHIIndexViewDetailsPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		String dt = CommonUtils.getCalMonth(0);
-		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		String dt ="";
+		
+		if(params.get("searchDt") != null){
+			dt = params.get("searchDt").toString();
+		}else{
+			dt = CommonUtils.getCalMonth(0);
+			dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		}
 
 		Date date = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
