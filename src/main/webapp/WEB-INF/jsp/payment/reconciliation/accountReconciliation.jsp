@@ -275,9 +275,7 @@ var journalPopLayout = [
     }];
 
     function searchList(){
-    	
     	Common.ajax("GET","/payment/selectJournalMasterList.do", $("#searchForm").serialize(), function(result){
-    		console.log(result);
     		AUIGrid.setGridData(masterListGridID, result);
     		
     	});
@@ -292,10 +290,8 @@ var journalPopLayout = [
             var journalId = AUIGrid.getCellValue(masterListGridID, selectedGridValue, "fBankJrnlId");
     	
             Common.ajax("GET","/payment/selectJournalBasicInfo.do",{"journalId" : journalId}, function(result){
-            	console.log(result);
             	
 	            $('#statement_popup_wrap').show();
-	            
 	            $('#statementRefNo').text(result.data.masterView.fBankJrnlRefNo);
 	            $('#statementStatus').text(result.data.masterView.name);
 	            $('#statementAccount').text(result.data.masterView.accDesc);
@@ -325,10 +321,8 @@ var journalPopLayout = [
             var journalId = AUIGrid.getCellValue(masterListGridID, selectedGridValue, "fBankJrnlId");
         
             Common.ajax("GET","/payment/selectJournalBasicInfo.do",{"journalId" : journalId}, function(result){
-                console.log(result);
                 
                 $('#journal_popup_wrap').show();
-                
                 $('#journalRefNo').text(result.data.masterView.fBankJrnlRefNo);
                 $('#journalStatus').text(result.data.masterView.name);
                 $('#journalAccount').text(result.data.masterView.accDesc);
