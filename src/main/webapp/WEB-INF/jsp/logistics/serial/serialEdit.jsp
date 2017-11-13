@@ -55,9 +55,11 @@ var columnLayout = [
 							{dataField:"matnr" ,headerText:"Material Code",width:120 ,height:30},
 							{dataField:"stkDesc" ,headerText:"Material Name",width:200 ,height:30},
 							{dataField:"stkCtgryNm" ,headerText:"Catagory Type",width:150 ,height:30},
+							{dataField:"lvorm" ,headerText:"Deletion",width:150 ,height:30},
+							{dataField:"gltri" ,headerText:"Prod Date",width:150 ,height:30},		
 							{dataField:"latransit" ,headerText:"latransit",width:120 ,height:30, visible:false},
-							{dataField:"gltri" ,headerText:"gltri",width:120 ,height:30, visible:false},
-							{dataField:"lvorm" ,headerText:"lvorm",width:120 ,height:30, visible:false},
+// 							{dataField:"gltri" ,headerText:"gltri",width:120 ,height:30},
+// 							{dataField:"lvorm" ,headerText:"lvorm",width:120 ,height:30},
 							{dataField:"crtDt" ,headerText:"Create Date",width:120 ,height:30},
 							{dataField:"crtUserId" ,headerText:"Create User",width:120 ,height:30},
 							{dataField:"usedSerialNo" ,headerText:"usedSerialNo",width:120 ,height:30, visible:false},
@@ -533,7 +535,7 @@ function selialValidationchk(pm){
     	Common.alert('Please enter the Material Code.');
         return true;
     }
-    if (pm.gltriPop ==""){
+    if (pm.gltriPop =="" || pm.gltriPop == undefined){
     	Common.alert('Please enter the Product Finished Date in HQ.');
         return true;
     }
