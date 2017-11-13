@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.notice.impl.NoticeMapper">
+    
+        <!-- 공통코드 활용해서 SELECT하기 -->
+    <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_ID,
+               CODE, 
+               CODE_NAME 
+          FROM SYS0013M
+         WHERE DISAB = 0
+         <if test="groupCode != null and groupCode !=''">
+            AND CODE_MASTER_ID = #{groupCode}
+            AND CODE_ID IN (2563,2564,2565)
+        </if>
+    </select>
+    
+    
+    <update id="updateNotice" parameterType="Map">
+        UPDATE SYS0069M
+           SET NTCE_SUBJECT    = #{ntceSubject},
+               NTCE_CNTNT      = #{ntceCntnt},
+               NTCE_START_DT   = TO_DATE(#{ntceStartDt}, 'DD/MM/YYYY'),
+               NTCE_END_DT     = TO_DATE(#{ntceEndDt}, 'DD/MM/YYYY'),
+               PASSWORD        = #{password},
+               <!-- UPD_USER_ID     = #{userId} -->
+               UPD_DT          = SYSDATE
+         WHERE NTCE_NO = #{ntceNo}
+    </update>
+    
+    <select id="noticeInfo" parameterType="Map" resultType="egovMap">
+    
+        SELECT
+             NTCE_NO
+            ,NTCE_SUBJECT 
+            ,RGST_USER_NM
+            ,TO_CHAR(NTCE_START_DT, 'DD/MM/YYYY') AS NTCE_START_DT
+            ,TO_CHAR(NTCE_END_DT, 'DD/MM/YYYY') AS NTCE_END_DT
+            ,READ_CNT
+            ,EMGNCY_FLAG        
+            ,PASSWORD
+            ,NTCE_CNTNT
+            ,ATCH_FILE_GRP_ID 
+            ,CRT_DT
+            ,CRT_USER_ID
+        FROM SYS0069M
+        WHERE NTCE_NO = #{ntceNo}   
+        
+    </select>
+    
+    <select id="noticeList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT
+             NTCE_NO,
+             NTCE_SUBJECT,
+             RGST_USER_NM,
+             READ_CNT,
+             CRT_DT,
+             SYSDATE,
+             CASE  
+                 WHEN SYSDATE - CRT_DT >= 1 THEN 'N' 
+                 ELSE 'Y' 
+             END IMG_FLAG 
+        FROM 
+             SYS0069M 
+       WHERE NTCE_END_DT  >= TO_CHAR(SYSDATE, 'DD/MM/YY')       
+    ORDER BY EMGNCY_FLAG DESC, NTCE_NO DESC ]]>
+   
+    </select>
+    
+
+    <update id="upViewCnt" parameterType="Map">
+        UPDATE SYS0069M
+           SET READ_CNT = READ_CNT +1 
+           WHERE NTCE_NO = #{ntceNo}
+    </update>
+    
+    <select id="getNtceNOSeq" resultType="Integer">
+        SELECT SYS0069M_NTCE_NO_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+
+    <insert id="insertNotice" parameterType="Map">
+        INSERT INTO SYS0069M(
+			     NTCE_NO            
+			    ,NTCE_SUBJECT       
+			    ,RGST_USER_NM       
+			    ,EMGNCY_FLAG        
+			    ,PASSWORD
+			    ,NTCE_CNTNT           
+			    ,NTCE_START_DT       
+			    ,NTCE_END_DT        
+			    ,RGST_USER_ID       
+			    ,ATCH_FILE_GRP_ID   
+			    ,CRT_USER_ID        
+			    ,CRT_DT             
+			    ,UPD_USER_ID        
+			    ,UPD_DT 
+			    ,READ_CNT             
+              )          
+		VALUES
+		    (
+		        #{noticeSeq}
+		       ,#{ntceSubject}
+		       ,#{rgstUserNm}
+		       ,#{emgncyFlag}
+		       ,#{password}
+		       ,#{ntceCntnt}
+		       ,TO_DATE(#{ntceStartDt}, 'DD/MM/YYYY')
+		       ,TO_DATE(#{ntceEndDt}, 'DD/MM/YYYY')
+		       ,#{userId}
+		       ,#{atchFileGrpId}
+		       ,#{userId}
+		       ,SYSDATE
+		       ,#{userId}
+		       ,SYSDATE
+		       ,0
+		    )
+    </insert>
+    
+    
+<!--     <select id="getAttachmentFileInfo" parameterType="Map" resultType="egovMap">
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          AND T1.ATCH_FILE_ID = #{atchFileId}         
+    </select> -->
+    
+<!--     <delete id="deleteNotice" parameterType="int"> -->
+<!--         DELETE FROM SYS0069M -->
+<!--          WHERE NTCE_NO = #{ntceNo} -->
+<!--     </delete> -->
+
+
+</mapper>
