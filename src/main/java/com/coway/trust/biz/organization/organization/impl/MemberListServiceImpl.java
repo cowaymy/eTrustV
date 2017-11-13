@@ -25,15 +25,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public class MemberListServiceImpl extends EgovAbstractServiceImpl implements MemberListService{
 	private static final Logger logger = LoggerFactory.getLogger(MemberListController.class);
-	
+
 	@Resource(name = "memberListMapper")
 	private MemberListMapper memberListMapper;
-	
-	
+
+
 	//private SessionHandler sessionHandler;
 	/**
 	 * search Organization Gruop List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -47,10 +47,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memberListMapper.selectStatus();
 	}
 
+	/*By KV start Position */
+	public List<EgovMap> selectPosition(Map<String, Object> params) {
+		return memberListMapper.selectPosition(params);
+	}
+	/*By KV end Position */
+
 	public List<EgovMap> selectUserBranch() {
 		return memberListMapper.selectUserBranch();
 	}
-	
+
 	public List<EgovMap> selectUser() {
 		return memberListMapper.selectUser();
 	}
@@ -63,7 +69,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public EgovMap selectMemberListView(Map<String, Object> params) {
 		return memberListMapper.selectMemberListView(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectDocSubmission(Map<String, Object> params) {
 		return memberListMapper.selectDocSubmission(params);
@@ -77,52 +83,52 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public List<EgovMap> selectPaymentHistory(Map<String, Object> params) {
 		return memberListMapper.selectPaymentHistory(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectRenewalHistory(Map<String, Object> params) {
 		return memberListMapper.selectRenewalHistory(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectDocSubmission2(Map<String, Object> params) {
 		return memberListMapper.selectDocSubmission2(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectIssuedBank() {
 		return memberListMapper.selectIssuedBank();
 	}
-	
+
 	@Override
 	public EgovMap selectApplicantConfirm(Map<String, Object> params) {
 		return memberListMapper.selectApplicantConfirm(params);
 	}
-	
+
 	@Override
 	public EgovMap selectCodyPAExpired(Map<String, Object> params) {
 		return memberListMapper.selectCodyPAExpired(params);
 	}
-	
+
 	@Override
 	public List<EgovMap>  selectCodyDocSubmission(Map<String, Object> params) {
 		return memberListMapper.selectCodyDocSubmission(params);
 	}
-	
+
 	@Override
 	public List<EgovMap>  selectHpDocSubmission(Map<String, Object> params) {
 		return memberListMapper.selectHpDocSubmission(params);
 	}
-	
-	
+
+
 	@Transactional
 	@Override
 	public String saveMember(Map<String, Object> params, List<Object> docType) {
-		
+
 		String appId="";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
 		if(Integer.parseInt((String) params.get("memberType")) == 2){
-			
+
 			MemApp.put("applicationID", 0);
 			MemApp.put("applicantCode", "");
 			MemApp.put("applicantType",Integer.parseInt((String) params.get("memberType")));
@@ -172,20 +178,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("areaId",params.get("areaId").toString());
 			MemApp.put("streetDtl",params.get("streetDtl").toString());
 			MemApp.put("addrDtl",params.get("addrDtl").toString());
-			
+
 			logger.debug("MemApp : {}",MemApp);
-			
+
 			EgovMap appNo = getDocNo("145");
 			MemApp.put("applicantCode", appNo.get("docNo"));
 			logger.debug("appNo : {}",appNo);
 			updateDocNoNumber("145");
-			
+
 			memberListMapper.insertMemApp(MemApp);
 			codeMap1.put("code", "memApp");
 			appId = memberListMapper.selectMemberId(codeMap1);
 		}
-		
-		
+
+
 		int rank = 0;
 		if(params.get("memberType").equals("1") ){
 			rank=433;
@@ -196,7 +202,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		if(params.get("memberType").equals("4")){
 			rank=427;
 		}
-		
+
 		params.put("memberID", 0);
 		params.put("memberCode", "");
 		params.put("memberType", Integer.parseInt((String) params.get("memberType")));
@@ -245,13 +251,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("Hospitalization",false);
 		params.put("deptCode",params.get("deptCd")!=null ? params.get("deptCd").toString().trim() : "");
 		params.put("codyPaExpr",params.get("codyPaExpr")!=null ? params.get("codyPaExpr").toString().trim() : "");
-		
+
 		//addr 가져오기
 		params.put("areaId",params.get("areaId").toString());
 		params.put("streetDtl",params.get("streetDtl").toString());
 		params.put("addrDtl",params.get("addrDtl").toString());
-		
-		
+
+
 		//두번째 탭 text 가져오기
 		params.put("spouseCode", params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
 		params.put("spouseName", params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
@@ -259,12 +265,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("spouseOcc", params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
 		params.put("spouseDob", params.get("spouseDOB").toString().equals("") ? "01/01/1900":params.get("spouseDOB").toString().trim() );
 		params.put("spouseContat", params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
-		
+
 		Boolean success = false;
 		String memCode = "";
 		if(params != null){
 			memCode = doSaveMember(params, docType);
-			
+
 			/*if(success){
 				if(Integer.parseInt((String) params.get("memberType")) == 2){
 					if(MemApp != null){
@@ -273,38 +279,38 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				}
 			}*/
 		}
-		
-		
-		
+
+
+
 		return memCode;
 	}
-	
+
 	public String getRandomNumber(int a){
 		Random random = new Random();
 		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 		StringBuilder sb = new StringBuilder();
-		
+
 		for(int i=0; i<a; i++){
 			int num = random.nextInt(a);
 			sb.append(chars[num]);
 		}
-		
+
 		return sb.toString();
 	}
-	
-	
+
+
 	public void sendSMS(Map<String, Object> params){
 		String phoneNumber = params.get("mobileNo").toString();
-		
+
 		String msg = "RM0.00 Your Cody application is successful. Cody Code: " +//MemberCode +
                 ". Password: 6 digit at the back from your NRIC no. Kindly login Cody Web for activation in 2 day.";
 		//PhoneNumber, Message, li.UserID, 1, 1, 975, "", 1, 0,success,,2
 		//string MobileNo, string Message, int SenderUserID,
        // int Priority, int ExpireDayAdd, int SMSType, string Remark, int StatusID,
        // int RetryNo
-		
+
 		Map<String, Object> smsEntry =new HashMap<String, Object>();
-		
+
 		smsEntry.put("smsId", 0);
 		smsEntry.put("SMSMessage", "");
 		smsEntry.put("SMSMSISDN", phoneNumber);
@@ -322,12 +328,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		smsEntry.put("SMSUpdateAt",params.get("creator"));
 		smsEntry.put("SMSUpdateBy",1);
 		smsEntry.put("SMSVendorID",1);
-		
+
 		logger.debug("smsEntry : {}",smsEntry);
 		//memberListMapper.insertSmsEntry(smsEntry);
-		
+
 		Map<String, Object> smsReply =new HashMap<String, Object>();
-		
+
 		smsReply.put("replyID", 0);
 		smsReply.put("SMSID", 0);
 		smsReply.put("replyCode", 0);
@@ -335,10 +341,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		smsReply.put("replyCreateAt", new Date());
 		smsReply.put("replyCreateBy", params.get("Creator"));
 		smsReply.put("replyFeedbackID", "");
-		
+
 		logger.debug("smsReply : {}",smsReply);
 		//memberListMapper.insertSmsReply(smsReply);
-		
+
 	}
 	public EgovMap getDocNo(String docNoId){
 		int tmp = Integer.parseInt(docNoId);
@@ -346,9 +352,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		EgovMap selectDocNo = memberListMapper.selectDocNo(docNoId);
 		logger.debug("selectDocNo : {}",selectDocNo);
 		String prefix = "";
-		
+
 		if(Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
-			
+
 			if(selectDocNo.get("c2") != null){
 				prefix = (String) selectDocNo.get("c2");
 			}else{
@@ -362,13 +368,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		return selectDocNo;
 	}
-	
+
 	public EgovMap getDocNoNumber(String docNoId){
 		int tmp = Integer.parseInt(docNoId);
 		String docNo = "";
 		EgovMap selectDocNo = memberListMapper.selectDocNo(docNoId);
 		logger.debug("selectDocNo : {}",selectDocNo);
-		
+
 		if(docNoId.equals("130") && Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
 			docNo = (String) selectDocNo.get("c2")+(String) selectDocNo.get("c1");
 			logger.debug("docNo : {}",docNo);
@@ -390,7 +396,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		logger.debug("selectDocNoNumber last : {}",selectDocNoNumber);
 		memberListMapper.updateDocNo(selectDocNoNumber);
 	}
-	
+
 	public String getNextDocNo(String prefixNo,String docNo){
 		String nextDocNo = "";
 		int docNoLength=0;
@@ -403,13 +409,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			System.out.println("들어와얗ㅁ");
 			docNoLength = docNo.length();
 		}
-		
+
 		int nextNo = Integer.parseInt(docNo) + 1;
 		nextDocNo = String.format("%0"+docNoLength+"d", nextNo);
 		logger.debug("nextDocNo : {}",nextDocNo);
 		return nextDocNo;
 	}
-	
+
 	@Transactional
 	public String doSaveMember(Map<String, Object> params,List<Object> docType) {
 			Boolean success = false;
@@ -418,9 +424,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			String nextDocNo= "";
 			EgovMap selectMemberCode = null; // 각가 docNo, docNoId, prefix구함
 			Map<String, Object> CodeMap = new HashMap<String, Object>();
-			
+
 			switch(Integer.parseInt(params.get("memberType").toString())){
-			
+
 			case 1:
 				selectMemberCode = getDocNo("1");
 				memberCode = selectMemberCode.get("docNo").toString();
@@ -430,7 +436,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("nextDocNo : {}",nextDocNo);
 				selectMemberCode.put("nextDocNo", nextDocNo);
 				break;
-				
+
 			case 2:
 				logger.debug("코디로 insert");
         		selectMemberCode = getDocNo("6");
@@ -441,7 +447,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         		logger.debug("nextDocNo : {}",nextDocNo);
         		selectMemberCode.put("nextDocNo", nextDocNo);
         		break;
-        		
+
 			case 3:
 				logger.debug("tchenici로 insert");
         		selectMemberCode = getDocNo("7");
@@ -452,7 +458,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         		logger.debug("nextDocNo : {}",nextDocNo);
         		selectMemberCode.put("nextDocNo", nextDocNo);
         		break;
-        		
+
 			case 4:
 				logger.debug("staff insert");
         		selectMemberCode = getDocNo("8");
@@ -463,7 +469,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         		logger.debug("nextDocNo : {}",nextDocNo);
         		selectMemberCode.put("nextDocNo", nextDocNo);
         		break;
-        		
+
 			case 5:
 				logger.debug("코디로 insert");
         		selectMemberCode = getDocNo("155");
@@ -481,14 +487,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("update 문 탈 예정");
 				memberListMapper.updateDocNo(selectMemberCode);
 			}
-			
+
 			//Member Save
 			memberListMapper.insertMember(params);
-			
-			
+
+
 			logger.debug("params : {}",params);
-			
-			
+
+
 			//MemberOrganization save
 			EgovMap selectOrganization = null;
 			selectOrganization = memberListMapper.selectOranization(params);//deptCode 가져가서 select
@@ -505,7 +511,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			String MemberId = memberListMapper.selectMemberId(CodeMap);//asis 어떻게 가져오는지 확인 다시해봐
 
 			if(params.get("deptCode").toString() != null){
-				
+
 				memOrg.put("memberId",MemberId);
 				memOrg.put("memberUpID",Integer.parseInt((deptParentID)));
 				memOrg.put("memberLvl", 4);
@@ -526,15 +532,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memOrg.put("lastOrgCode","");
 				memOrg.put("lastTopOrgCode","");
 				memOrg.put("branchId",0);
-				
-				
+
+
 				logger.debug("memOrg : {}",memOrg);
-				
+
 				memberListMapper.insertOrganization(memOrg);
-				
+
 			}else{
 				if(params.get("memberType").toString().equals("4")){
-					
+
 					memOrg.put("memberId", MemberId);
 					memOrg.put("MemberUpID",0);
 					memOrg.put("memberLvl", 4);
@@ -555,20 +561,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					memOrg.put("lastOrgCode","");
 					memOrg.put("lastTopOrgCode","");
 					memOrg.put("branchId",0);
-					
+
 					logger.debug("memOrg : {}",memOrg);
-					
+
 					memberListMapper.insertOrganization(memOrg);
 				}
 			}
-			
+
 			/*EgovMap selectHpBillNo = null;
 			String hpBillNo="";
 			EgovMap selectInvoiceNo = null;
 			//AcBilling Save (for Hp)
-			
+
 			if(params.get("memberType").toString().equals("1")){
-				
+
 				selectHpBillNo = getDocNo("5");
 				logger.debug("selectHpBillNo : {}",selectHpBillNo);
 				hpBillNo=(String)selectHpBillNo.get("docNo");
@@ -582,7 +588,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					memberListMapper.updateDocNo(selectHpBillNo);
 				}
 				params.put("hpBillNo", hpBillNo);
-				
+
 				Map<String, Object> accBill = new HashMap<String, Object>();
 				accBill.put("billId", 0);
 				accBill.put("billINo", hpBillNo);
@@ -602,11 +608,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				accBill.put("syncCheck", true);
 				accBill.put("courseId", 0);
 				accBill.put("statusId", 1);
-				
+
 				logger.debug("accBill : {}",accBill);
 				memberListMapper.insertAccBill(accBill);
-			
-			
+
+
     			//AccOrderBill Save
     			Map<String, Object> accOrderBill = new HashMap<String, Object>();
     			accOrderBill.put("accBillTaskId", 0);
@@ -622,7 +628,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     			accOrderBill.put("accBillScheduleAmount", 100);
     			accOrderBill.put("accBillAdjustmentAmount", 0);
     			accOrderBill.put("accBillTaxesAmount",String.format("%.2f", 100 - ((100) * 100 / (double)106)));
-    			accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)100)); 
+    			accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)100));
     			accOrderBill.put("accBillStatus", 1);
     			accOrderBill.put("accBillRemark",memberCode);
     			accOrderBill.put("accBillCreateAt", new Date());
@@ -632,14 +638,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     			accOrderBill.put("accBillTaxRate", 6);
     			accOrderBill.put("accBillAcctConversion", 0);
     			accOrderBill.put("accBillContractId", 0);
-    			
+
     			logger.debug("accOrderBill : {}",accOrderBill);
     			 memberListMapper.insertAccOrderBill(accOrderBill);
-    			
+
     			//GST 2015-01-06
     			selectInvoiceNo = getDocNoNumber("130");
     			updateDocNoNumber("130");
-    			
+
     			Map<String, Object> selectMiscValue = new HashMap<String, Object>();
     			selectMiscValue.put("memberId", MemberId);
     			selectMiscValue.put("memberName", params.get("memberNm"));
@@ -649,14 +655,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     			selectMiscValue.put("address3", params.get("address3"));
     			selectMiscValue.put("address4", params.get("address4"));
     			selectMiscValue.put("memberNirc", params.get("nric"));
-    			
-    			
+
+
     			EgovMap selectMiscList = null;
     			selectMiscList = memberListMapper.selectMiscList(selectMiscValue) ;
-			
+
     			if(selectMiscList != null){
     				Map<String, Object>  InvMISC = new HashMap<String, Object>();
-    				
+
     				InvMISC.put("taxInvoiceRefNo", selectInvoiceNo.get("docNo"));
     				InvMISC.put("taxInvoiceRefDate", new Date());
     				InvMISC.put("taxInvoiceServiceNo",memberCode);
@@ -677,10 +683,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)100));
     				InvMISC.put("taxInvoiceCreated",new Date());
     				InvMISC.put("taxInvoiceCreator",Integer.parseInt(params.get("creator").toString()));
- 
+
     				logger.debug("InvMISC : {}",InvMISC);
     				memberListMapper.insertInvMISC(InvMISC);
-    				
+
     				CodeMap.put("code", "tax");
     				String taxInvId = memberListMapper.selectMemberId(CodeMap);
     				Map<String, Object>  InvMISCD = new HashMap<String, Object>();
@@ -703,17 +709,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				InvMISCD.put("invoiceItemPostCode","");
     				InvMISCD.put("invoiceItemStateName","");
     				InvMISCD.put("invoiceItemCountry","");
-    				
+
     				logger.debug("InvMISCD : {}",InvMISCD);
     				memberListMapper.insertInvMISCD(InvMISCD);
-    				
-    				
+
+
     				accOrderBill.put("accBillRemark",selectInvoiceNo.get("docNo"));
     				memberListMapper.updateBillRem(accOrderBill);
     			}
-			
+
 			}*/
-			
+
 			//Save DocSubmission (For HP)
 			if(params.get("memberType").toString().equals("1") && docType.size() > 0){
 				for(int i=0; i< docType.size(); i++){
@@ -731,14 +737,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					docSub.put("Updator", params.get("creator"));
 					docSub.put("Updated",  new Date());
 					docSub.put("docSubBatchId",  0);
-					
+
 					logger.debug("docSub : {}",docSub);
 					memberListMapper.insertDocSubmission(docSub);
 				}
 			}
-			
+
 			//Save DocSubmission( For Cody)
-			
+
 			if(params.get("memberType").toString().equals("2") && docType.size() > 0){
 				for(int i=0; i< docType.size(); i++){
 					Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
@@ -755,12 +761,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					docSub.put("Updator", params.get("creator"));
 					docSub.put("Updated",  new Date());
 					docSub.put("docSubBatchId",  0);
-					
+
 					logger.debug("docSub : {}",docSub);
 					memberListMapper.insertDocSubmission(docSub);
 				}
 			}
-			
+
 			//Save MemberAgreement
 			if(! params.get("codyPaExpr").toString().equals(null) &&! params.get("codyPaExpr").toString().equals("")){
 				Map<String, Object>  MA = new HashMap<String, Object>();
@@ -776,11 +782,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				MA.put("agreementCreated", new Date());
 				MA.put("AgreementUpdator", null);
 				MA.put("AgreementUpdated", null);
-				
+
 				logger.debug("MA : {}",MA);
 				memberListMapper.insertMemberAgr(MA);
 			}
-			
+
 			//Save User(for HP & CD& CT)
 			if(!params.get("memberType").toString().equals("4")){
 				Map<String, Object>  user = new HashMap<String, Object>();
@@ -811,11 +817,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				user.put("userIsPartTime", 0);
 				user.put("userDepartmentID", 0);
 				user.put("userIsExternal", 0);
-				
+
 				logger.debug("user : {}",user);
 				memberListMapper.insertUser(user);
-				
-				
+
+
 				//Save SystemRoleUser(For HP & CD)
 				CodeMap.put("code", "user");
 				String userId = memberListMapper.selectMemberId(CodeMap);//userid에 넣을 값을 select
@@ -832,14 +838,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					roleuser.put("createdBy", params.get("creator"));
 					//roleuser.put("updatedAt", a.format(LocalDate.now()));
 					roleuser.put("updatedBy",params.get("creator"));
-					
+
 					logger.debug("roleuser : {}",roleuser);
 					//memberListMapper.insertRoleUser(roleuser);
 				}
 			}
-			
+
 			//Save InvWhlocation(For DC & CT)
-			
+
 			if(params.get("memberType").toString().equals("2") || params.get("memberType").toString().equals("3")){
 				Map<String, Object>  invWH = new HashMap<String, Object>();
 				invWH.put("WHLocID", 0);
@@ -859,20 +865,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				invWH.put("WHLocStkGrade", "");
 				invWH.put("WHLocStatusID", 1);
 				invWH.put("WHLocUpdateBy", params.get("creator"));
-				invWH.put("WHLocUpdateAt", new Date()); 
+				invWH.put("WHLocUpdateAt", new Date());
 				invWH.put("Code2", "");
 				invWH.put("Desc2", "");
 				invWH.put("WHLocIsSync", true);
-				
+
 				logger.debug("invWH : {}",invWH);
 				memberListMapper.insertinvWH(invWH);
 			}
 			success=true;
 			String memCode = selectMemberCode.get("docNo").toString();
-		
+
 		return memCode;
-	}	
-	
+	}
+
 	@Transactional
 	@Override
 	public Map<String, Object> insertTerminateResign(Map<String, Object> params,SessionVO sessionVO) {
@@ -914,7 +920,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			promoEntry.put("branchId",params.get("branchCode") != null && params.get("branchCode") != "" ? Integer.parseInt(params.get("branchCode").toString()) : 0);
 			logger.debug("promoEntry : {}",promoEntry);
 			EgovMap selectMemberOrgs = memberListMapper.selectMemberOrgs(params);
-			
+
 			if(selectMemberOrgs != null){
 				EgovMap eventCode = null;
 				eventCode = getDocNo("66");
@@ -942,26 +948,26 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
 				promoEntry.put("PRmemId",promoEntry.get("promoTypeId").toString().equals("747") ? selectMemberOrgs.get("memUpId").toString() : 0);
 				logger.debug("promoEntry : {}",promoEntry);
-				
+
 				memberListMapper.insertPromoEntry(promoEntry);
 				if(params.get("action1").toString() == "747"){
-    				resultValue.put("message", "Promote request successfully saved.<br />"  
+    				resultValue.put("message", "Promote request successfully saved.<br />"
     				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
 				}else{
-					resultValue.put("message", " Demote request successfully saved.<br />"  
+					resultValue.put("message", " Demote request successfully saved.<br />"
 		    				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
 				}
 			}else{
 				resultValue.put("message", "<b>Failed to save. Please try again later.</b>");
-				
+
 			}
-			
+
 		}else{
         		//Request Terminate/Resign
         		EgovMap memberView = memberListMapper.selectMemberListView(params);
         		logger.debug("memberView : {}",memberView);
         		EgovMap eventCode = null;
-        		
+
         		if(memberView.get("c32").toString().equals("1")){
         			member.put("memberId", memberView.get("memId"));
         			member.put("updated", new Date());
@@ -969,10 +975,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			member.put("status", Integer.parseInt(params.get("action").toString()) == 757 ? 3:51);
         			member.put("termDate", Integer.parseInt(params.get("action").toString()) == 757 ? params.get("dtT/R").toString() : "01/01/1900" );
         			member.put("resignDate", Integer.parseInt(params.get("action").toString()) == 758 ? params.get("dtT/R").toString() : "01/01/1900" );
-        			
+
         			logger.debug("member : {}",member);
-        			
-        			
+
+
         			promoEntry.put("promoId", 0);
         			promoEntry.put("requestNo", "");
         			promoEntry.put("statusId", 4);
@@ -1002,7 +1008,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			promoEntry.put("PRmemId",0);
         			promoEntry.put("branchId",null);
         			logger.debug("promoEntry : {}",promoEntry);
-        			
+
         			EgovMap selectMember = memberListMapper.selectMember(member);
         			logger.debug("selectMember : {}",selectMember);
         			if(selectMember != null){
@@ -1017,7 +1023,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         					promoEntry.put("parentIDTo", selectOrganization.get("memUpId") != null ? Integer.parseInt(selectOrganization.get("memUpId").toString()) : 0);
         					promoEntry.put("parentDeptCodeFrom", selectOrganization.get("deptCode"));
         					promoEntry.put("parentDeptCodeTo", selectOrganization.get("deptCode"));
-        					
+
         					//update MemberOrganization
         					selectOrganization.put("orgStatusCodeID", 8);
         					selectOrganization.put("orgUpdateAt", new Date());
@@ -1026,10 +1032,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         					selectOrganization.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
         					selectOrganization.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
         					selectOrganization.put("lastTopOrgCode", selectMemberOrgs.get("topOrgCode"));
-        					
+
         					memberListMapper.updateOrganization(selectOrganization);
         				}
-        				
+
         				eventCode = getDocNo("66");
         				int ID = 66;
         				String nextDocNo = getNextDocNo("PMR", eventCode.get("docNo").toString());
@@ -1040,10 +1046,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         					memberListMapper.updateDocNo(eventCode);
         				}
         				promoEntry.put("requestNo", eventCode.get("docNo").toString());
-        				
+
         				//MemberPromoEntry
         				memberListMapper.insertPromoEntry(promoEntry);
-        				
+
         				//Member
         				selectMember.put("status", member.get("status"));
         				selectMember.put("resignDate", member.get("resignDate"));
@@ -1051,7 +1057,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         				selectMember.put("updated", member.get("updated"));
         				selectMember.put("updator", member.get("updator"));
         				selectMember.put("syncCheck", member.get("syncCheck"));
-        				
+
         				logger.debug("selectMember : {}",selectMember);
         				memberListMapper.updateMember(selectMember);
         				//User
@@ -1060,24 +1066,24 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         					selectUserName.put("userStatusID", 8);
         					selectUserName.put("userUpdateAt", new Date());
         					selectUserName.put("userUpdateBy", member.get("updator"));
-        					
+
         					memberListMapper.updateUser(selectUserName);
         				}
         			}
         		}
         		if(Integer.parseInt(params.get("action").toString()) == 757){
-    				resultValue.put("message", "Terminate request successfully saved.<br />"  
+    				resultValue.put("message", "Terminate request successfully saved.<br />"
     				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
 				}else{
-					resultValue.put("message", " Resign request successfully saved.<br />"  
+					resultValue.put("message", " Resign request successfully saved.<br />"
 		    				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
 				}
-        		
+
 		}
 		success=true;
 		return resultValue;
 	}
-	
+
 	@Override
 	public List<EgovMap>  selectSuperiorTeam(Map<String, Object> params) {
 		return memberListMapper.selectSuperiorTeam(params);
@@ -1086,7 +1092,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public List<EgovMap>  selectDeptCode(Map<String, Object> params) {
 		return memberListMapper.selectDeptCode(params);
 	}
-	
+
 	@Override
 	public List<EgovMap>  selectCourse() {
 		return memberListMapper.selectCourse();
