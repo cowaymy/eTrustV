@@ -112,10 +112,8 @@ var contPersonLayout = [
 	            //Grid 셀 클릭시 이벤트
 	            AUIGrid.bind(emailAddrPopGridID, "cellClick", function( event ){
 	                selectedGridValue = event.rowIndex;
-	                
 	                $("#maillingAddr").text(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "addr"));
 	                $("#custAddId").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "custAddId"));
-	                
 	                $("#selectMaillAddrPop").hide();
 	                AUIGrid.destroy(emailAddrPopGridID);
 	    
@@ -170,11 +168,8 @@ var contPersonLayout = [
 	                $("#officeNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telO"));
 	                $("#residenceNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telR"));
 	                $("#faxNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telf"));
-	               
-	                
 	                $("#selectContPersonPop").hide();
 	                AUIGrid.destroy(contPersonPopGridID);
-	    
 	            });
 	        });
 	    }
