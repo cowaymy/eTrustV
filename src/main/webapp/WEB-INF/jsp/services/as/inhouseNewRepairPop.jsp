@@ -81,7 +81,7 @@ function fn_selDetailInhouseList(_pram){
 
         	  fn_setASDataInit(options);
         	  fn_asResult_editPageContral("INHOUSE");
-        	  fn_setResultData(result);
+        	  fn_setResultData(result); 
           }
       });
 }

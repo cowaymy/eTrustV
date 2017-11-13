@@ -18,7 +18,10 @@ $(document).ready(function(){
     doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
     doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
     
-});  
+    
+    AUIGrid.resize(myFltGrd10, 950,200);
+    
+});   
 
 function createCFilterAUIGrid() {
     
@@ -708,7 +711,7 @@ function  fn_setSaveFormData(){
 
 
 <form  id="asDataForm" method="post">
-    <div style='display:inline'>
+    <div style='display:none'>
                <input type="text"   id= 'asData_AS_ID' name='asData_AS_ID'/> 
                <input type="text"   id= 'asData_AS_SO_ID' name='asData_AS_SO_ID'/> 
                <input type="text"   id= 'asData_AS_RESULT_ID' name='asData_AS_RESULT_ID'/> 
