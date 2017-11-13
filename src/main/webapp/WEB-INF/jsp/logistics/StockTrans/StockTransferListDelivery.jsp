@@ -134,7 +134,6 @@ $(document).ready(function(){
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
-    SearchListAjax();
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
     

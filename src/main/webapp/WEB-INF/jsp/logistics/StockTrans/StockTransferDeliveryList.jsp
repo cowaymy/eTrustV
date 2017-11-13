@@ -77,7 +77,7 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , likeValue:'US'};
-    doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
+    doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'US':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
@@ -163,7 +163,6 @@ $(document).ready(function(){
         	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }
     });
-    SearchListAjax();
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};

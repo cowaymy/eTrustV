@@ -160,7 +160,6 @@ $(document).ready(function(){
         	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }
     });
-    SearchListAjax();
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};

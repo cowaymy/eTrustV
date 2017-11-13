@@ -164,7 +164,6 @@ $(document).ready(function(){
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
     
-    //SearchListAjax();
     
 });
 
