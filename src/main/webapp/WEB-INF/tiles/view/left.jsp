@@ -40,6 +40,13 @@
             }
         });
 
+        $( "#_leftSearchImg" ).on("click", function () {
+            var selectedMenuCode = $(".ui-helper-hidden-accessible").text();
+            if(FormUtil.isNotEmpty(selectedMenuCode)){
+                $("#a_" + selectedMenuCode).click();
+            }
+        });
+
     });
 
     // 현재 메뉴 표시.
@@ -107,16 +114,15 @@
     <aside class="lnb_wrap"><!-- lnb_wrap start -->
 
         <header class="lnb_header"><!-- lnb_header start -->
-            <form action="#" method="post">
+            <form method="post">
                 <h1 class="logo_type">
                     <a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/CowayLeftLogo.png" alt="COWAY" /></a>
                     <a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
                 </h1>
                 <p class="search">
                     <input type="text" id="_leftSearch" name="_leftSearch" title="Enter search term" onkeyPress="if (event.keyCode==13){return false;}" />
-                    <input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="Search" />
+                    <input type="image" id="_leftSearchImg" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="Search" />
                 </p>
-
             </form>
         </header><!-- lnb_header end -->
 
