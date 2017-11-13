@@ -464,9 +464,11 @@ var addOrderLayout = [
                         $("#residenceNumber").text(result.data.selecContractInfo.telR);
                         $("#faxNumber").text(result.data.selecContractInfo.telf);
                         
+                        AUIGrid.clearGridData(groupListGridID);
                         AUIGrid.setGridData(groupListGridID, result.data.selectGroupList);
                         AUIGrid.resize(groupListGridID);
                         
+                        AUIGrid.clearGridData(esmListGridID);
                         AUIGrid.setGridData(esmListGridID, result.data.selectEstmReqHistory);
                         AUIGrid.resize(esmListGridID);
                         
@@ -497,12 +499,10 @@ var addOrderLayout = [
     
     function fn_billGrpHistory(){
         
-        AUIGrid.destroy(billGrpHisGridID); 
-        
-        
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectBillGrpHistory.do", {"custBillId":custBillId}, function(result){
             $("#viewHistorytPopup").show();
+            AUIGrid.destroy(billGrpHisGridID); 
             billGrpHisGridID = GridCommon.createAUIGrid("history_wrap", billGrpHistoryLayout,null,gridPros);
             AUIGrid.setGridData(billGrpHisGridID, result);
         });
@@ -516,15 +516,13 @@ var addOrderLayout = [
     
     function fn_changeMainOrder(){
         
-        AUIGrid.destroy(changeOrderGridID); 
-        
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectChangeOrder.do", {"custBillId":custBillId}, function(result){
         	 $("#changeMainOrderPop").show();
             $('#custBillSoId').val(result.data.basicInfo.custBillSoId);
             $('#changePop_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#changePop_ordGrp').text(result.data.grpOrder.orderGrp);$('#changePop_ordGrp').css("color","red");
-            
+            AUIGrid.destroy(changeOrderGridID); 
             changeOrderGridID = GridCommon.createAUIGrid("changeOrderGrid", changeOrderLayout,null,gridPros);
             AUIGrid.setGridData(changeOrderGridID, result.data.billGroupOrderView);
             
@@ -610,7 +608,6 @@ var addOrderLayout = [
     function fn_changeBillType(){
         
         $("#tab_billType").trigger("click");
-        AUIGrid.destroy(estmHisPopGridID); 
         var custBillId = $("#custBillId").val();
         
         Common.ajax("GET","/payment/selectChangeBillType.do", {"custBillId":custBillId}, function(result){
@@ -642,6 +639,7 @@ var addOrderLayout = [
                 $("#changePop_estm").prop('disabled', true);
                 $('#changePop_estmVal').val("");
             }
+            AUIGrid.destroy(estmHisPopGridID); 
             estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
             AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
             AUIGrid.resize(estmHisPopGridID,930,300); 
@@ -688,19 +686,15 @@ var addOrderLayout = [
     }
     
     function fn_chgContPerPopClose() {
-        
         $('#chgContPerPop').hide();
         searchList();
-        
     }
     
     function showDetailHistory(historyId){
         
-        
-        
         Common.ajax("GET", "/payment/selectDetailHistoryView", {"historyId" : historyId} , function(result) {
-        	$("#detailhistoryViewPop").show();
         	
+        	$("#detailhistoryViewPop").show();
            var typeId = result.data.detailHistoryView.typeId;
            
            $('#det_typeName').text(result.data.detailHistoryView.codeName);
@@ -918,14 +912,13 @@ var addOrderLayout = [
     
     function fn_selectMailAddr(){
         
-        AUIGrid.destroy(emailAddrPopGridID); 
+        
         var custBillCustId = $("#custBillCustId").val();
         var custAddr = $("#custAddr").val();
         
-        
-        
         Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custBillCustId, "custAddr" : custAddr}, function(result){
         	$("#selectMaillAddrPop").show();
+        	AUIGrid.destroy(emailAddrPopGridID); 
         	emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
             AUIGrid.setGridData(emailAddrPopGridID, result);
             
@@ -991,13 +984,12 @@ var addOrderLayout = [
     
     function fn_selectContPerson(){
         
-        AUIGrid.destroy(contPersonPopGridID); 
         var custBillCustId = $("#custBillCustId").val();
         var personKeyword = $("#personKeyword").val();
         
         Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custBillCustId, "personKeyword" : personKeyword}, function(result){
         	$("#selectContPersonPop").show();
-        	
+        	AUIGrid.destroy(contPersonPopGridID); 
         	contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
             AUIGrid.setGridData(contPersonPopGridID, result);
             
@@ -1011,7 +1003,6 @@ var addOrderLayout = [
                 $("#newOffNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telO"));
                 $("#newResNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telR"));
                 $("#newFaxNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telf"));
-                
                 
                 $("#selectContPersonPop").hide();
                 AUIGrid.destroy(contPersonPopGridID);
@@ -1410,16 +1401,14 @@ var addOrderLayout = [
     
     function fn_addOrder() {
         
-        AUIGrid.destroy(addOrdPopGridID); 
-        
         var custBillId = $("#custBillId").val();
-        
         
         Common.ajax("GET","/payment/selectAddOrder.do", {"custBillId":custBillId}, function(result){
         	$("#addOrderPop").show();
             $("#addOrd_grpNo").text(result.data.basicInfo.custBillGrpNo);
             $("#addOrd_ordGrp").text(result.data.grpOrder.orderGrp);$('#addOrd_ordGrp').css("color","red");
             
+            AUIGrid.destroy(addOrdPopGridID); 
             addOrdPopGridID = GridCommon.createAUIGrid("addOrdGrid", addOrderLayout,null,gridPros2);
             AUIGrid.setGridData(addOrdPopGridID, result.data.orderGrpList);
             
@@ -1431,9 +1420,7 @@ var addOrderLayout = [
                 $("#salesOrdId").val(AUIGrid.getCellValue(addOrdPopGridID , event.rowIndex , "salesOrdId"));
                 
             });
-            
         });
-        
     }
     
     function fn_addOrdSave() {
@@ -1488,7 +1475,6 @@ var addOrderLayout = [
                     fn_addOrder();
                     
                 });
-                
             });
             
         }else{
