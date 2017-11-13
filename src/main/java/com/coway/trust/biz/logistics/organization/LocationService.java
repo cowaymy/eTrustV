@@ -19,7 +19,7 @@ public interface LocationService {
 
 	void updateLocationInfo(Map<String, Object> params);
 
-	void insertLocationInfo(Map<String, Object> params);
+	int insertLocationInfo(Map<String, Object> params);
 
 	void deleteLocationInfo(Map<String, Object> params);
 
