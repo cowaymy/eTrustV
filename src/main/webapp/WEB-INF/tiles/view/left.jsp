@@ -40,11 +40,12 @@
             }
         });
 
-        $( "#_leftSearchImg" ).on("click", function () {
+        $( "#_leftSearchImg" ).on("click", function (e) {
             var selectedMenuCode = $(".ui-helper-hidden-accessible").text();
             if(FormUtil.isNotEmpty(selectedMenuCode)){
                 $("#a_" + selectedMenuCode).click();
             }
+            return false;
         });
 
     });
