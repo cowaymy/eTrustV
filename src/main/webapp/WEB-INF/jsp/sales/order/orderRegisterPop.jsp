@@ -2086,7 +2086,9 @@
     function fn_setDefaultSrvPacId() {
         if($('#srvPacId option').size() == 2) {
             $('#srvPacId option:eq(1)').attr('selected', 'selected');
-        var stkType = $("#appType").val() == '66' ? '1' : '2';
+            
+            var stkType = $("#appType").val() == '66' ? '1' : '2';
+            
             doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
         }
     }

@@ -97,6 +97,8 @@
         console.log('!@# fn_doSavePromtion START');
         console.log($('#promoCode').val().trim());
         
+        $('#exTrade').removeAttr("disabled");
+        
         var promotionVO = {
             
             salesPromoMVO : {
@@ -439,7 +441,7 @@
             msg += "* Please select the customer type.<br />";
         }
 */
-        if(FormUtil.checkReqValue($('#exTrade'))) {
+        if(!$('#exTrade').is(":disabled") && FormUtil.checkReqValue($('#exTrade'))) {
             isValid = false;
             msg += "* Please select the Ex-Trade.<br />";
         }
@@ -527,7 +529,7 @@
             $('#exTrade').removeAttr("disabled");
         }
         else {
-            $('#exTrade').val('').prop("disabled", true);
+            $('#exTrade').val('0').prop("disabled", true);
         }
         
         //Promo Application <> Expired Filter & Customer = Individual
