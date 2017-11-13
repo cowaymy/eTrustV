@@ -170,7 +170,7 @@ var contPersonLayout = [
 	                $("#officeNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telO"));
 	                $("#residenceNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telR"));
 	                $("#faxNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telf"));
-	                
+	               
 	                
 	                $("#selectContPersonPop").hide();
 	                AUIGrid.destroy(contPersonPopGridID);
@@ -181,18 +181,15 @@ var contPersonLayout = [
 	}
 	
 	function fn_custAddrClose(){
-	    
 	    $("#selectMaillAddrPop").hide();
 	    $("#custAddr").val("");
 	}
 	
 	function fn_keywordClear(){
-	    
 	    $("#custAddr").val("");
 	}
 	
 	function fn_contPerPopClose(){
-	    
 	    $("#selectContPersonPop").hide();
 	    $("#personKeyword").val("");
 	}
@@ -248,7 +245,6 @@ var contPersonLayout = [
             }else{
             	Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
             } 
-            
         });
     }
     
