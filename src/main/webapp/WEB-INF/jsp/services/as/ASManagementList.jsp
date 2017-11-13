@@ -301,21 +301,19 @@ $(document).ready(function() {
     
     AUIGrid.setSelectionMode(myGridID, "singleRow");
     
-/*  // 셀 더블클릭 이벤트 바인딩
-      AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-            Common.popupDiv("/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-        });
- */
-   /*   AUIGrid.bind(myGridID, "cellClick", function(event) {
-        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-        callStusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
-        callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
-        salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-        callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
-        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-        console.log(callStusCode+ "     " + callStusId + "     " + salesOrdId+ "     "  + callEntryId)
-    });   */
+    // 171110 :: 선한이
+    // 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+        var asid =    AUIGrid.getCellValue(myGridID, event.rowIndex, "asId");
+        var asNo =    AUIGrid.getCellValue(myGridID, event.rowIndex, "asNo");
+        var asStusId     = AUIGrid.getCellValue(myGridID, event.rowIndex, "asStusId");
+        var salesOrdNo  = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
+        var salesOrdId  = AUIGrid.getCellValue(myGridID, event.rowIndex, "asSoId");
+        
+        alert("asid"+asid);
+        var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
+        Common.popupDiv("/services/as/asResultViewPop.do"+param ,null, null , true , '_newASResultDiv1');
+    });   
      
 });
 function asManagementGrid() {
@@ -377,7 +375,31 @@ function asManagementGrid() {
         dataField : "asBrnchId",
         headerText : "as asBrnc",
         width : 100,  visible : false
-    }
+    }, {
+        dataField : "undefined",
+        headerText : "Edit",
+        width : 170,
+        renderer : {
+              type : "ButtonRenderer",
+              labelText : "Edit",
+              onclick : function(rowIndex, columnIndex, value, item) {
+                   
+                  // 171110 :: 선한이
+                  var AS_ID =    AUIGrid.getCellValue(myGridID, rowIndex, "asId");
+                  var AS_NO =    AUIGrid.getCellValue(myGridID, rowIndex, "asNo");
+                  var asStusId     = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
+                  var ordno  = AUIGrid.getCellValue(myGridID, rowIndex, "salesOrdNo");
+                  var ordId  = AUIGrid.getCellValue(myGridID, rowIndex, "asSoId");
+                  
+                  if(asStusId  !="ACT"){
+                        Common.alert( "AS Info Edit Restrict</br>" +DEFAULT_DELIMITER+"<b>[" + AS_NO + "]  is not in active status.</br> AS information edit is disallowed.</b>" );
+                        return ;
+                  }
+                  
+                  Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId="+ordId+"&ordNo="+ordno+"&AS_NO="+AS_NO  ,null, null , true , '_viewEntryPopDiv1'); 
+                  }
+        }                            
+	}
     
     ];
      // 그리드 속성 설정
@@ -435,6 +457,7 @@ function fn_excelDown(){
     GridCommon.exportTo("grid_wrap_asList", "xlsx", "AS Management");
 }
 </script>
+
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -443,9 +466,27 @@ function fn_excelDown(){
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
+
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>AS Management</h2>
+
+<!-- 
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASPop()">ADD AS Order</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASResultPop()">ADD AS Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT AS Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultViewPop()"> VIEW AS Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_assginCTTransfer()">Assign CT Transfer</a></p></li>
+</ul>
+<br> -->
+
+<ul class="right_btns">
+    <!-- 171110 :: 선한이  -->
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASPop()">ADD AS Order</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASResultPop()">ADD AS Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT AS Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultViewPop()"> VIEW AS Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_assginCTTransfer()">Assign CT Transfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_searchASManagement()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -516,12 +557,13 @@ function fn_excelDown(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>
+        <!-- 171110 :: 선한이  -->
+        <!-- <li><p class="link_btn"><a href="#" ondblclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li> -->
+        <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li> -->
+        <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultViewPop()"> AS Result  View</a></p></li>
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditBasicPop()"> AS Result  Edit(Basic)</a></p></li>
-         <li><p class="link_btn"><a href="#" onclick="javascript:fn_assginCTTransfer()"> AssginCTTransfer</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_assginCTTransfer()"> AssginCTTransfer</a></p></li> -->
         
         
         
@@ -536,16 +578,17 @@ function fn_excelDown(){
         <li><p class="link_btn"><a href="#">menu7</a></p></li>
         <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
-    <ul class="btns">
+    <!-- 171110 :: 선한이  -->
+    <!-- <ul class="btns">
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_newASPop()">New AS Application</a></p></li>
-        <!-- <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
-    </ul>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+    </ul> -->
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
