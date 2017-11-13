@@ -49,7 +49,7 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 	}
 
 	@Override
-	public void insertLocationInfo(Map<String, Object> params) {
+	public int insertLocationInfo(Map<String, Object> params) {
 
 		int inlocid = locMapper.locCreateSeq();
 
@@ -57,6 +57,9 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 
 		// TODO Auto-generated method stub
 		locMapper.insertLocationInfo(params);
+		
+		return inlocid;
+		
 	}
 
 	@Override
