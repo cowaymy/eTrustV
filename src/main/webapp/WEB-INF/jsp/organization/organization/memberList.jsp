@@ -16,7 +16,7 @@ function fn_memberListSearch(){
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID, result);
     });
-	
+
 }
 
 function fn_excelDown(){
@@ -43,35 +43,38 @@ function fn_TerminateResign(val){
 }
 
 
-//Start AUIGrid
+//Start AUIGrid --start Load Page- user 1st click Member
 $(document).ready(function() {
 
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid();
-    
+
     AUIGrid.setSelectionMode(myGridID, "singleRow");
-    
+
  // 셀 더블클릭 이벤트 바인딩
 	  AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 	        //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
 	        Common.popupDiv("/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
 	    });
- 
+
      AUIGrid.bind(myGridID, "cellClick", function(event) {
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
     	memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
         memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
     	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-    }); 
-     
-});
+    });
+
+    /*By KV Start  - Position button disable function in selection*/
+    $("#position").attr("disabled",true);
+    /*By KV End - Position button disable function in selection*/
+ });
 
 function createAUIGrid() {
 		//AUIGrid 칼럼 설정
 		var columnLayout = [ {
 		    dataField : "codename",
 		    headerText : "Type Name",
-		    editable : false,
+		    editable : true,
 		    width : 130
 		}, {
 		    dataField : "memberid",
@@ -95,7 +98,7 @@ function createAUIGrid() {
 		    style : "my-column",
 		    width : 130
 		}, {
-		    dataField : "name1",
+		    dataField : "statusName",
 		    headerText : "Status",
 		    editable : false,
 		    width : 130
@@ -104,74 +107,110 @@ function createAUIGrid() {
 		    headerText : "Last Update",
 		    editable : false,
 		    width : 130
-		    
-		}, {
+
+		},
+		/*BY KV Position*/
+		{
+            dataField : "positionName",
+            headerText : "Position Desc",
+            editable : false,
+            width : 130
+
+        },
+        {
             dataField : "membertype",
             headerText : "Member Type",
             width : 0
 		}];
+
+
 		 // 그리드 속성 설정
         var gridPros = {
-            
+
         		 usePaging           : true,         //페이징 사용
-                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-                 editable            : false,            
-                 fixedColumnCount    : 1,            
-                 showStateColumn     : false,             
-                 displayTreeOpen     : false,            
-                 selectionMode       : "singleRow",  //"multipleCells",            
-                 headerHeight        : 30,       
+                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                 editable            : false,
+                 fixedColumnCount    : 1,
+                 showStateColumn     : false,
+                 displayTreeOpen     : false,
+                 selectionMode       : "singleRow",  //"multipleCells",
+                 headerHeight        : 30,
                  useGroupingPanel    : false,        //그룹핑 패널 사용
                  skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                  wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                 showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-
+                 showRowNumColumn    : true       //줄번호 칼럼 렌더러 출력
         };
-        
+
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID = AUIGrid.create("#grid_wrap_memList", columnLayout, gridPros);
     }
 
 var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : true,
-        
+
         fixedColumnCount : 1,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
+
         selectionMode : "singleRow",
-        
+
         headerHeight : 30,
-        
+
         // 그룹핑 패널 사용
         useGroupingPanel : true,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : false
-        
+
     };
-    
+
 
 function fn_memberEditPop(){
 	     Common.popupDiv("/organization/memberListEditPop.do?isPop=true", "searchForm");
 }
+
+
+/*By KV start - Position - This is for display Position data only in Position selection.*/
+function fn_searchPosition(selectedData){
+	$("#position option").remove();
+	  if(selectedData == "2" || selectedData =="3" || selectedData =="1"){
+		   $("#position").attr("disabled",false);   /*position button enable*/
+		   Common.ajax("GET",
+				    "/organization/positionList.do",
+				    "memberType="+selectedData,
+				    function(result) {
+				        for(var idx=0; idx < result.length ; idx++){
+				            $("#position").append("<option value=' " +result[idx].positionLevel+ " '> "+result[idx].positionName+ "</option>");
+				        }
+				    }
+		   );
+	   }else{
+		   /*position button disable*/
+		   $("#position").attr("disabled",true);
+		   /* If you want to set position default value remove under comment.*/
+		   $("#position").append("<option value=' '  '>Select Account</option> " );
+	   }
+}
+/*By KV end - Position - This is for display Position data only in Position selection.*/
+
 </script>
 
+<!-- --------------------------------------DESIGN------------------------------------------------ -->
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -208,7 +247,11 @@ function fn_memberEditPop(){
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select class="w100p" id="memTypeCom" name="memTypeCom">
+
+    <!-- By KV start - when memtypecom selected item then go to fn_searchPosition function-->
+    <select class="w100p" id="memTypeCom" name="memTypeCom" onchange="fn_searchPosition(this.value)">
+     <!-- By KV end - when memtypecom selected item then go to fn_searchPosition function-->
+
         <option value="" selected>Select Account</option>
          <c:forEach var="list" items="${memberType }" varStatus="status">
            <option value="${list.codeId}">${list.codeName}</option>
@@ -266,9 +309,19 @@ function fn_memberEditPop(){
     <td>
     <input type="text" title="Contact No" placeholder="" class="w100p" id="contact" name="contact"/>
     </td>
-    <th scope="row"></th>
+
+    <%-- By KV start - Position Selection button --%>
+    <th scope="row">Position</th>
     <td>
+    <select class="w100p" id="position" name="position">
+        <option value="" selected>Select Account</option>
+        <c:forEach var="list" items="${position}" varStatus="status">
+            <option value="${list.positionLevel}">${list.positionName}</option>
+        </c:forEach>
+    </select>
     </td>
+    <%-- By KV end - Position Selection button --%>
+
     <th scope="row"></th>
     <td>
     </td>
@@ -348,7 +401,7 @@ function fn_memberEditPop(){
 <ul class="right_btns">
 <li><p class="btn_grid"><a href="javascript:fn_excelDown();">EXCEL DW</a></p></li>
    <!--  <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    
+
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
@@ -366,7 +419,7 @@ function fn_memberEditPop(){
 <aside class="bottom_msg_box"><!-- bottom_msg_box start -->
 <p>Information Message Area</p>
 </aside><!-- bottom_msg_box end -->
-        
+
 </section><!-- container end -->
 
 </div><!-- wrap end -->
