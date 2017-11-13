@@ -179,7 +179,7 @@
             UPDATE 
                 SET  MATNR= #{matnr}, 
                 GLTRI  = TO_CHAR(TO_DATE(#{gltri},'YYYY/MM/DD'), 'YYYYMMDD'),
-                LVORM  = #{lvormPop},
+                LVORM  = #{lvorm},
                 CRT_DT = SYSDATE,
                 CRT_USER_ID  =  #{loginId}  
              WHERE SERIAL_NO= #{serialNo}     
@@ -189,17 +189,19 @@
                 (
                 SERIAL_NO,
                 MATNR,
+                GLTRI,  
                 LVORM,
                 CRT_DT,
-                CRT_USER_ID               
+                CRT_USER_ID                            
                 )        
                 VALUES
                 (
                 #{serialNo},
                 #{matnr},
-                #{lvormPop},
+                 TO_CHAR(TO_DATE(#{gltri},'YYYY/MM/DD'), 'YYYYMMDD'),  
+                #{lvorm},
                 SYSDATE,
-                #{loginId} 
+                #{loginId}    
                 )    
     </update>
     
