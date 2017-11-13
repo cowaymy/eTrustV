@@ -68,6 +68,11 @@ public class SerialController {
 			params.put("typeList", tmp);
 		}
 		List<EgovMap> list = serialService.searchSeialList(params);
+		
+		for (int i = 0; i < list.size(); i++) {
+			logger.debug("list ??  : {}", list.get(i));
+		}
+		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -108,6 +113,15 @@ public class SerialController {
 		int cnt = 0;
 		List<Object> addList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		List<Object> updateList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		
+		for (int i = 0; i < addList.size(); i++) {
+			logger.debug("addList : {}", addList.get(i));
+		}
+		
+		for (int i = 0; i < updateList.size(); i++) {
+			logger.debug("updateList : {}", updateList.get(i));
+		}
+		
 		if (addList.size() > 0) {
 			logger.info("addList : {}", addList.toString());
 			cnt = serialService.insertSerial(addList, loginId);
