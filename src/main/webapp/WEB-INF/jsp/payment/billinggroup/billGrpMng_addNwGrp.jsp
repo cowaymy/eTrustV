@@ -95,8 +95,7 @@ var contPersonLayout = [
 	}
 	
 	function fn_selectMailAddr(){
-		
-	    AUIGrid.destroy(emailAddrPopGridID);
+	    
 	    var custTypeId = $("#custTypeId").val();
 	    var custAddr = $("#custAddr").val();
 	    
@@ -106,6 +105,7 @@ var contPersonLayout = [
 	        
 	        Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custTypeId, "custAddr" : custAddr}, function(result){
 	        	$("#selectMaillAddrPop").show();
+	        	AUIGrid.destroy(emailAddrPopGridID);
 	        	emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
 	            AUIGrid.setGridData(emailAddrPopGridID, result);
 	            
@@ -147,7 +147,6 @@ var contPersonLayout = [
 	
 	function fn_selectContPerson(){
 	    
-	    AUIGrid.destroy(contPersonPopGridID); 
 	    var custTypeId = $("#custTypeId").val();
 	    var personKeyword = $("#personKeyword").val();
 	    
@@ -157,6 +156,7 @@ var contPersonLayout = [
 	    	
 	        Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custTypeId , "personKeyword" : personKeyword}, function(result){
 	        	$("#selectContPersonPop").show();
+	        	AUIGrid.destroy(contPersonPopGridID); 
 	            contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
 	            AUIGrid.setGridData(contPersonPopGridID, result);
 	            
@@ -198,14 +198,11 @@ var contPersonLayout = [
 	}
 	
 	function fn_keywordClear2(){
-	    
 	    $("#personKeyword").val("");
 	}
 	
     function fn_orderSearch(){
-        
     	Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "BILLING_ADD_NEW_GROUP", indicator : "SearchTrialNo"});
-
     }
     
     function fn_orderInfo(ordNo, ordId){
@@ -223,7 +220,6 @@ var contPersonLayout = [
                     
                     $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
                     $('#custTypeId').val(result.data.orderInfo.custId);//히든값
-                    
                     $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
 
                     //BASIC INFO
@@ -273,7 +269,6 @@ var contPersonLayout = [
                     
                     $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
                     $('#custTypeId').val(result.data.orderInfo.custId);//히든값
-                    
                     $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
 
                     //BASIC INFO
@@ -304,11 +299,9 @@ var contPersonLayout = [
                 }
             	
             }else{
-            	
             	displayReset();
             	Common.alert("Order not found.");
             }
-            
         });
     }
     
@@ -401,17 +394,14 @@ var contPersonLayout = [
     }
     
     function fn_disableControl(){
-    	
     	$('#_btnSave').hide();
     	$('#trialNoBtn').hide();
     	$("#orderNo").attr('disabled', true);
     	$("#sms").attr('disabled', true);
     	$("#post").attr('disabled', true);
     	$("#estm").attr('disabled', true);
-    	
     	$("#email").attr('disabled', true);
         $("#custBillRemark").attr('disabled', true);
-        
         $('#addNewAddr').hide();
         $('#selectMailAddr').hide();
         $('#addNewContact').hide();
@@ -434,8 +424,8 @@ var contPersonLayout = [
 				        <li>Add New Group</li>
 				</ul>
 				<aside class="title_line"><!-- title_line start -->
-				<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-				<h2>Add New Group</h2>
+					<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+					<h2>Add New Group</h2>
 				</aside><!-- title_line end -->
 				<section class="search_result"><!-- search_result start -->
 					<section class="tap_wrap"><!-- tap_wrap start -->
