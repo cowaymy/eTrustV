@@ -872,6 +872,7 @@ function createAUIGrid11() {
         <input type="text" title="" placeholder="" class="" style="width:100px" id="_inputMemCode" name="inputMemCode"/> 
         <input type="hidden" id="_hiddenInputMemCode" >
         <input type="hidden" id="_govAgMemId" name="govAgMemId">
+        <input type="hidden" id="_getMemName" name="getMemName">
         <p class="btn_sky"><a href="#" id="_memConfirm">Confirm</a></p> 
         <p class="btn_sky"><a href="#" id="_memSearch">Search</a></p>
         <p class="btn_sky"><a  id="_memReSelected">Reselect</a></p>
