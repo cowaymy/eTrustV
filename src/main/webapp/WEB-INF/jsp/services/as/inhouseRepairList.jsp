@@ -6,7 +6,7 @@ var   inHouseRGridID;
 
 function fn_selInhouseList(){
         Common.ajax("GET", "/services/inhouse/selInhouseList.do", $("#inHoForm").serialize(), function(result) {
-            console.log("data : " + result);
+            console.log(result );
             AUIGrid.setGridData(inHouseRGridID, result);
         
         });
@@ -16,61 +16,45 @@ function fn_selInhouseList(){
 
 $(document).ready(function() {
 	createAUIGrid() ;
+  
 });
 
 function createAUIGrid() {
     
     var columnLayout = [
-                        {dataField : "c1",     headerText  : "DSC Branch" ,width  : 100 ,  editable       : false  } ,
-                        { dataField : "c2",    headerText  : "CT Code",  width  : 120 , editable       : false},
-                        { dataField : "c3", headerText  : "Product Code ",  width  : 120   , editable       : false},
-                        { dataField : "c4", headerText  : "Defect Type",  width  : 120   , editable       : false},
-                        {dataField : "c5", headerText  : "AS Ticket <br> Registration Date ",  width  : 140 ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
-                        {dataField : "c6", headerText  : "In-house Repair <br>Registration Date",  width  : 140 ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
-                        {dataField : "c7", headerText  : "Promised <br>Completion Date",  width  : 140 , 
-		                        	    editRenderer : {
-				                                type : "CalendarRenderer",
-				                                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-				                                onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-				                                showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
-				                                validator : function(oldValue, newValue, rowItem) { // 에디팅 유효성 검사
-				                                    var date, isValid = true;
-				                                    var msg = "";
-				
-				                                    if(isNaN(Number(newValue)) ) { //20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
-				                                        if(isNaN(Date.parse(newValue))) { // 그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
-				                                            isValid = false;
-				                                            msg = "Invalid Date Type.";
-				                                        } else {
-				                                            isValid = true;
-				                                        }
-				                                    }
-				
-				                                    if(isValid){
-				                                        var dtFrom = Number(rowItem.validDtFrom.toString().replace(/\//g,""));
-				                                        var dtTo = Number(rowItem.validDtTo.toString().replace(/\//g,""));
-				                                        if(dtFrom != 0 && dtTo != 0 && dtFrom > dtTo){
-				                                            msg = "Start date can not be greater than End date.";
-				                                            isValid = false;
-				                                        }
-				                                    }
-				                                    // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-				                                    return { "validate" : isValid, "message"  : msg };
-				                            }
-		                            }
+                        
+                        {
+                        	headerText : "As_Entry",
+                        	children : [ 
+                        	            {dataField : "asBrnchDesc",     headerText  : "DSC Branch" ,width  : 120 ,  editable       : false  } ,
+                                        { dataField : "asMemCode",     headerText  : "CT Code",  width  : 120 , editable       : false},
+                                        { dataField : "asStkDesc",       headerText  : "Product",  width  : 200   , editable       : false},
+                                        { dataField : "asDfDesc",         headerText  : "Defect Type",  width  : 100   , editable       : false},
+                                        {dataField : "asStus",             headerText  : "AS Statu ",  width  : 120,  editable       : false}
+                        	]
                         },
-                        {dataField : "c8", headerText  : "Repair",  width  : 120  , editable       : false}
+                        {
+                            headerText : "Repair_Entry",
+                            children : [ 
+                                        {dataField : "reMemCode",     headerText  : "DRM Code" ,width  : 100 ,  editable       : false  } ,
+                                        { dataField : "reStdDate",    headerText  : "In-house <br> Reg Date",  width  : 150 ,  dataType : "date", formatString : "dd/mm/yyyy"  ,editable       : false},
+                                        { dataField : "reEndDate", headerText  : "In-house <br> End Date ",  width  : 150    ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
+                                        { dataField : "rePromDatem", headerText  : "Promised <br>Com Date",  width  : 150   ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
+                                        {dataField : "rasStus", headerText  : "Repair Statu",  width  : 120 , editable    : false}
+                            ]
+                        }
+                        
+                        
    ];   
    
     
-    var gridPros = { usePaging : true,     
-            editable : true,
-            displayTreeOpen : true,
+  var gridPros = { usePaging : true,     
             headerHeight : 50,
             skipReadonlyColumns : true,
             wrapSelectionMove : true,
             showRowNumColumn : true,
-            selectionMode       : "singleRow"
+            selectionMode       : "singleRow",
+            editable :  false
 
     };  
     inHouseRGridID= GridCommon.createAUIGrid("grid_wrap_inHouseList", columnLayout  ,"" ,gridPros);
@@ -98,15 +82,22 @@ function fn_editResultPop(){
             Common.alert("<b>No Item selected.</b>");
          return ;
     }
-    
+   
     Common.popupDiv("/services/inhouse/inhouseDPop.do?mode=edit" ,null, null , true , '_editResultDiv');
 
 }
 
 
 
-function fn_addResultPop(){
-    Common.popupDiv("/services/inhouse/inhouseDPop.do?mode=new" ,null, null , true , '_addResultDiv');
+function fn_addRepairPop(){
+	
+	var selectedItems = AUIGrid.getSelectedItems(inHouseRGridID);
+    if(selectedItems.length <= 0) {
+            Common.alert("<b>No Item selected.</b>");
+         return ;
+    }
+    
+    Common.popupDiv("/services/inhouse/inhouseDPop.do?mode=NEW" ,null, null , true , '_addResultDiv');
 }
 
 
@@ -170,30 +161,38 @@ function fn_addSave(){
 <tr>
     <th scope="row">AS Ticket Number</th>
     <td>
-         <input type="text" title="" placeholder="AS Ticket Number" class="w100p" id="asTicketNum" name="asTicketNum"/>
+         <input type="text" title="" placeholder="AS Ticket Number" class="w100p" id="asNo" name="asNo"/>
     </td>
     <th scope="row">DSC Branch</th>
     <td>
-          <input type="text" title="" placeholder="DSC Branch" class="w100p" id="" name=""/>
+          <input type="text" title="" placeholder="DSC Branch" class="w100p" id="asBrnchId" name="asBrnchId"/>
     </td>
     <th scope="row">Registration CT Code</th>
      <td>
-        <input type="text" title="" placeholder="Registration CT Code" class="w100p" id="" name=""/>
+        <input type="text" title="" placeholder="Registration CT Code" class="w100p" id="regCtCode" name="regCtCode"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Repair Status</th>
-    <td><input type="text" title="" placeholder="Repair Status" class="w100p" id="" name=""/></td>
+    <th scope="row">AS Status</th>
+    <td>
+    <select class="multy_select w100p" multiple="multiple" id="repState" name="repState">
+			<option value="1"  selected>Active</option>
+		    <option value="4">Completed</option>
+		    <option value="21">Fail</option>
+		    <option value="10">Cancelled</option>
+    </select>
+    
+    </td>
     <th scope="row">Repair CT Code</th>
-    <td><input type="text" title="" placeholder="Repair CT Code" class="w100p" id="" name=""/></td>
+    <td><input type="text" title="" placeholder="Repair CT Code" class="w100p" id="rePairCtCode" name="rePairCtCode"/></td>
     <th scope="row">Defect Type</th>
-    <td><input type="text" title="" placeholder="Defect Type" class="w100p" id="" name=""/></td>
+    <td><input type="text" title="" placeholder="Defect Type" class="w100p" id="defType" name="defType"/></td>
 </tr>
 <tr>
     <th scope="row">Product Code</th>
-    <td><input type="text" title="" placeholder="Repair Status" class="w100p" id="asNum" name=""/></td>
+    <td><input type="text" title="" placeholder="Product Code" class="w100p" id="stkCode" name="stkCode"/></td>
     <th scope="row">Replacement Product Code</th>
-    <td><input type="text" title="" placeholder="Replacement Product Code" class="w100p" id="" name=""/></td>
+    <td><input type="text" title="" placeholder="Replacement Product Code" class="w100p" id="inReProdCode" name="inReProdCode"/></td>
     <th scope="row"></th>
     <td></td>
 </tr>
@@ -208,7 +207,7 @@ function fn_addSave(){
     <ul class="btns">
        <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewResultPop()">View Result</a></p></li> 
        <li><p class="link_btn"><a href="#" onclick="javascript:fn_editResultPop()">Edit Result</a></p></li> 
-       <li><p class="link_btn"><a href="#" onclick="javascript:fn_addResultPop()">Add Result</a></p></li> 
+       <li><p class="link_btn"><a href="#" onclick="javascript:fn_addRepairPop()">Add Repair</a></p></li> 
        
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_addSave()">gridsave</a></p></li> 
     </ul>

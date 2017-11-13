@@ -6,7 +6,7 @@
 
 var  myFltGrd10;
 
-  
+
 $(document).ready(function(){
     
     createCFilterAUIGrid() ;
@@ -19,7 +19,7 @@ $(document).ready(function(){
     doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
     
 });  
-  
+
 function createCFilterAUIGrid() {
     
         var  clayout = [
@@ -207,24 +207,29 @@ function fn_openField_Complete(){
     $("#txtFilterRemark").attr("disabled", false); 
     fn_clearPanelField_ASChargesFees();
     
-    console.log(asDataInfo[0]);
     
-    $("#txtRemark").val(asDataInfo[0].callRem);
-    $("#ddlErrorCode").val(asDataInfo[0].c12);
-    $("#ddlErrorDesc").val(asDataInfo[0].c15);
-    $("#ddlCTCode").val(asDataInfo[0].c9);
-    $("#ddlDSCCode").val(asDataInfo[0].c6);
-    
-    if(asDataInfo[0].asAllowComm =="1"){
-        $("#iscommission").attr("checked",true);
-    }
-    
-    
-    if (asDataInfo[0].asStusId  != 1){
-        Common.alert("AS Not Active" +DEFAULT_DELIMITER +"<b>AS is no longer active. Result key-in is disallowed.</b>" );
-        $("#btnSaveDiv").attr("style","display:none");
-    }
+    try{
+    	   console.log(asDataInfo[0]);
+        $("#txtRemark").val(asDataInfo[0].callRem);
+        $("#ddlErrorCode").val(asDataInfo[0].c12);
+        $("#ddlErrorDesc").val(asDataInfo[0].c15);  
+        $("#ddlCTCode").val(asDataInfo[0].c9);
+        $("#ddlDSCCode").val(asDataInfo[0].c6);
+        
+        if(asDataInfo[0].asAllowComm =="1"){
+            $("#iscommission").attr("checked",true);
+        }
+        
+        
+        if (asDataInfo[0].asStusId  != 1){
+            Common.alert("AS Not Active" +DEFAULT_DELIMITER +"<b>AS is no longer active. Result key-in is disallowed.</b>" );
+            $("#btnSaveDiv").attr("style","display:none");
+        }
 
+        
+    	
+    }catch(e){}
+ 
     
     
     
@@ -546,10 +551,13 @@ function fn_validRequiredField_Save_ResultInfo(){
               }
         }else{
             
-              if(FormUtil.checkReqValue($("#ddlFailReason"))){
-                    rtnMsg  +="Please select the ddlFailReason.<br/>" ;
-                    rtnValue =false; 
-                }
+        	if($("#requestMod").val() !="INHOUSE"){
+        		  if(FormUtil.checkReqValue($("#ddlFailReason"))){
+                      rtnMsg  +="Please select the ddlFailReason.<br/>" ;
+                      rtnValue =false; 
+                 }
+        	}
+        	
         }
     }
     
@@ -745,6 +753,8 @@ function  fn_setSaveFormData(){
         
             <select class="w100p"  id="ddlStatus" name="ddlStatus"  onChange="fn_ddlStatus_SelectedIndexChanged()">
                  <option value=""></option>
+               
+                 
                 <option value="4">Complete</option>
                 <option value="10">Cancel</option>
                 <option value="21">Failure</option>
@@ -1032,7 +1042,18 @@ function fn_asResult_editPageContral(_type){
     
     
     if("INHOUSE"==_type){
-        $("#solut_code_text").attr("disabled", true); 
+    	
+    	if($("#requestMod").val()  =="NEW"){
+    		
+    		$("#ddlStatus").html(   "<option value='99'>In Process</option>");
+    		fn_asResult_viewPageContral();
+    		$("#ddlStatus").attr("disabled", false); 
+    		
+
+    	}else{
+    		  $("#solut_code_text").attr("disabled", true); 
+    	}    
+        
     }else{
         $("#newRno").attr("style","display:inline");
         $('#solut_code').removeAttr("disabled").removeClass("readonly");  
@@ -1111,6 +1132,59 @@ function fn_setASDataInit(ops){
     fn_getASRulstEditFilterInfo();   //AS_RESULT_NO
     fn_getASRulstSVC0004DInfo();  //AS_RESULT_NO
     fn_setCTcodeValue();
+    
+    
+
+}
+
+
+
+function fn_DisablePageControl(){ 
+    
+    $("#ddlStatus").attr("disabled", true); 
+    $("#dpSettleDate").attr("disabled", true); 
+    $("#ddlFailReason").attr("disabled", true); 
+    $("#ddlStatus").attr("disabled", true); 
+    $("#tpSettleTime").attr("disabled", true); 
+    $("#ddlDSCCode").attr("disabled", true); 
+    $("#ddlErrorCode").attr("disabled", true); 
+    $("#ddlErrorDesc").attr("disabled", true); 
+    $("#ddlCTCode").attr("disabled", true); 
+    $("#ddlWarehouse").attr("disabled", true); 
+    $("#txtRemark").attr("disabled", true); 
+    $("#iscommission").attr("disabled", true); 
+    
+    $("#def_type").attr("disabled", true); 
+    $("#def_code").attr("disabled", true); 
+    $("#def_def").attr("disabled", true); 
+    $("#def_part").attr("disabled", true); 
+    $("#solut_code").attr("disabled", true);
+
+    $("#def_type_text").attr("disabled", true); 
+    $("#def_code_text").attr("disabled", true); 
+    $("#def_def_text").attr("disabled", true); 
+    $("#def_part_text").attr("disabled", true); 
+    $("#solut_code_text").attr("disabled", true); 
+    
+    
+    $("#ddlWarehouse").attr("disabled", true); 
+    
+    
+    $("#ddlFilterQty").attr("disabled", true); 
+    $("#def_code").attr("disabled", true); 
+    $("#def_def_id").attr("disabled", true); 
+    $("#def_part").attr("disabled", true); 
+    $("#solut_code").attr("disabled", true); 
+    $("#ddlWarehouse").attr("disabled", true);
+    
+    
+    $("#ddlFilterCode").attr("disabled", true); 
+    $("#ddlFilterQty").attr("disabled", true); 
+    $("#ddlFilterPayType").attr("disabled", true); 
+    $("#ddlFilterExchangeCode").attr("disabled", true); 
+    $("#txtFilterRemark").attr("disabled", true); 
+    fn_clearPanelField_ASChargesFees();
+    
 }
 
 

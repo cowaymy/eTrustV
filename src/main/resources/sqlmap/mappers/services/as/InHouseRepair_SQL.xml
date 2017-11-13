@@ -3,48 +3,138 @@
 <mapper namespace="com.coway.trust.biz.services.as.impl.InHouseRepairMapper">
 
     <select id="selInhouseList" parameterType="Map" resultType="egovMap">
-                   		SELECT 
-							    'DSC-01'         AS  c1,
-							    'CT239482'      AS  c2,
-							    '112098'          AS  c3,
-							    'TBD'              AS  c4,
-							    '20/11/2017'    AS  c5,
-							    '20/11/2017'    AS  c6,
-							    '20/11/2017'    AS  c7
-							FROM DUAL
-						WHERE  1=1  
-				   <if test="asTicketNum != null and asTicketNum != '' ">
-				           AND 1= ${asTicketNum}
-				   </if>
-    </select>
+				SELECT 
+						       A.AS_BRNCH_ID                                  AS AS_BRNCH_ID,            
+						       F.CODE                                             AS AS_BRNCH_DESC,          
+						       B.AS_CT_ID                                       AS AS_CT_ID ,             
+						       AI.MEM_CODE                                    AS AS_MEM_CODE,            
+						       G.STK_CODE                                      AS AS_STK_CODE,            
+						       G.STK_DESC                                      AS AS_STK_DESC,
+						       B.AS_DEFECT_TYPE_ID                        AS AS_DF_TYPE,
+						       E.CODE                                             AS AS_DF_DESC,
+						       A.AS_STUS_ID                                   AS AS_STUS_ID ,
+						       DECODE( A.AS_STUS_ID ,'1' ,'ACT',
+						                                          '4','COM',
+						                                          '21','FAI',
+						                                          '10','CAN')      AS AS_STUS,
+						       B.AS_RESULT_CRT_DT                         AS AS_RET_DATE,             
+						       RI.MEM_CODE                                    AS RE_MEM_CODE,           
+						       RI.MEM_ID                                         AS RE_MEM_ID,               
+						       RAS.AS_CRT_DT                                 AS RE_STD_DATE,           
+						       RASR.AS_RESULT_CRT_DT                    AS RE_END_DATE,             
+						       RASR.APPNT_DT                                 AS RE_PROM_DATEM,        
+						       RAS.AS_STUS_ID                                AS RE_STUS_ID,
+						       DECODE( RAS.AS_STUS_ID ,'1' ,'ACT',
+						                                                 '4','COM',
+						                                                 '21','FAI',
+						                                                 '10','CAN') AS RAS_STUS,
+						       A.AS_ID                                             AS AS_ID ,  
+						       A.AS_NO                                            AS AS_NO ,  
+						       RAS.AS_NO                                         AS RAS_AS_NO ,  
+						       RAS.AS_ID                                          AS RAS_AS_ID                                         
+				FROM SVC0001D A  ,    
+					     SVC0004D B  ,     
+					     SAL0001D C  ,
+					     SAL0002D D  ,
+					     SYS0026M G  ,
+					     SYS0032M E  ,
+					     SYS0005M F  ,
+					     ORG0001D  AI,
+					     ORG0001D  RI,
+					     SVC0001D RAS ,
+					     SVC0004D RASR 
+				WHERE 1=1 
+				    AND A.AS_ID =B.AS_ENTRY_ID
+				    AND A.AS_SO_ID = C.SALES_ORD_ID
+				    AND C.SALES_ORD_ID = D.SALES_ORD_ID
+				    AND D.ITM_STK_ID   = G.STK_ID
+				    AND B.AS_CT_ID     = AI.MEM_ID
+				    AND A.AS_BRNCH_ID  = F.BRNCH_ID
+				    AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
+				    AND A.AS_NO = RAS.REF_REQST(+)
+				    AND RAS.AS_ID =RASR.AS_ENTRY_ID(+)
+				    AND RASR.AS_CT_ID = RI.MEM_ID(+)
+                  <if test="asNo != null and asNo != ''">
+                          AND A.AS_NO=#{asNo}           
+                  </if>
+                  
+                  <if test="asBrnchId != null and asBrnchId != ''">
+                          AND F.CODE=#{asBrnchId}              
+                  </if>
+                  
+                  <if test="rePairCtCode != null and rePairCtCode != ''">
+                          AND RI.MEM_CODE=#{memCode}                 
+                  </if>
+                  
+                  <if test="regCtCode != null and  regCtCode != ''">
+                          AND AI.MEM_CODE =#{regCtCode}               
+                  </if>
+                  
+                  <if test="stkCode != null and  stkCode != ''">
+                          AND G.STK_CODE  =#{stkCode}                 
+                  </if>
+                
+                  <if test="inReProdCode != null and  inReProdCode != ''">
+                            AND RASR.IN_HUSE_REPAIR_PRODUCT_CODE = #{inReProdCode}  
+                  </if>
+                  
+                  <if test="defType != null and  defType != '' ">
+                            AND B.RESN_ID = #{defType}                
+                  </if>
+                  
+                  <if test="repStateList != null and repStateList != ''">
+                          AND A.AS_STUS_ID  IN
+                           <foreach item="item" collection="repStateList" index="index" open="(" separator="," close=")">
+                                     #{item}
+                           </foreach>
+                  </if>
+
+
+								
+                          
+          </select>
 
 
 
     <select id="selInhouseDetailList" parameterType="Map" resultType="egovMap">
-                       SELECT 
-						    't1'  t1 ,
-						    't2'  t2 ,
-						    't3'  t3 ,
-						    't4'  t4 ,
-						    't5'  t5 ,
-						    't6'  t6 ,
-						    't7'  t7 ,
-						    't8'  t8 ,
-						    't9'  t9 ,
-						    't10'  t10 ,
-						    't11'  t11 ,
-						    't12'  t12 ,
-						    't13'  t13 ,
-						    't14'  t14 ,
-						    't15'  t15 ,
-						    't16'  t16 ,
-						    't17'  t17 ,
-						    't18'  t18 
-						FROM DUAL
-						 WHERE 1=1 
-                   <if test="asTicketNum != null and asTicketNum != '' ">
-                           AND 1= ${asTicketNum}
-                   </if>
+				SELECT C.CUST_ID, C.SALES_ORD_NO,  
+				   S.AS_ID, S.AS_NO, S.AS_SO_ID, 
+				   S.AS_MEM_ID, S.AS_MEM_GRP, S.AS_REQST_DT, 
+				   S.AS_REQST_TM, S.AS_APPNT_DT, S.AS_APPNT_TM, 
+				   S.AS_BRNCH_ID, S.AS_MALFUNC_ID, S.AS_MALFUNC_RESN_ID, 
+				   S.AS_REM_REQSTER, S.AS_REM_REQSTER_CNTC, S.AS_CALLLOG_ID, 
+				   S.AS_STUS_ID, S.AS_SMS, S.AS_CRT_USER_ID, 
+				   S.AS_CRT_DT, S.AS_UPD_USER_ID, S.AS_UPD_DT, 
+				   S.AS_ENTRY_IS_SYNCH, S.AS_ENTRY_IS_EDIT, S.AS_TYPE_ID, 
+				   S.AS_REQSTER_TYPE_ID, S.AS_IS_BS_WITHIN_30DAYS, S.AS_ALLOW_COMM, 
+				   S.AS_PREV_MEM_ID, S.AS_REM_ADD_CNTC, S.AS_REM_REQSTER_CNTC_SMS, 
+				   S.AS_REM_ADD_CNTC_SMS, S.AS_SESION_CODE, S.CALL_MEM, 
+				   S.REF_REQST, S.PREV_COMP_SVC, S.NEXT_COMP_SVC, 
+				   S.SIGN_DT_TIME, S.COMP_DT_SEQ, S.DISTANCE, 
+				   S.FIRST, S.LAST, S.HOME, S.AS_MOBILE_REQST_ID,
+				   B.AS_RESULT_ID, B.AS_RESULT_NO, B.AS_ENTRY_ID, 
+				   B.AS_SO_ID, B.AS_CT_ID, B.AS_SETL_DT, 
+				   B.AS_SETL_TM, B.AS_RESULT_STUS_ID, B.AS_FAIL_RESN_ID, 
+				   B.AS_REN_COLCT_ID, B.AS_CMMS, B.AS_BRNCH_ID, 
+				   B.AS_WH_ID, B.AS_RESULT_REM, B.AS_RESULT_CRT_DT, 
+				   B.AS_RESULT_CRT_USER_ID, B.AS_MALFUNC_ID, B.AS_MALFUNC_RESN_ID, 
+				   B.AS_DEFECT_TYPE_ID, B.AS_DEFECT_GRP_ID, B.AS_DEFECT_ID, 
+				   B.AS_DEFECT_PART_GRP_ID, B.AS_DEFECT_PART_ID, B.AS_DEFECT_DTL_RESN_ID, 
+				   B.AS_SLUTN_RESN_ID, B.AS_WORKMNSH, B.AS_FILTER_AMT, 
+				   B.AS_ACSRS_AMT, B.AS_TOT_AMT, B.AS_RESULT_IS_SYNCH, 
+				   B.AS_RCALL, B.AS_RESULT_STOCK_USE, B.AS_RESULT_TYPE_ID, 
+				   B.AS_RESULT_IS_CURR, B.AS_RESULT_MTCH_ID, B.AS_RESULT_NO_ERR, 
+				   B.AS_RESULT_UPD_DT, B.AS_RESULT_UPD_USER_ID, B.AS_ENTRY_POINT, 
+				   B.AS_WORKMNSH_TAX_CODE_ID, B.AS_WORKMNSH_TXS, B.AS_RESULT_MOBILE_ID, 
+				   B.APPNT_DT, B.APPNT_TM, B.IN_HUSE_REPAIR_REM, 
+				   B.IN_HUSE_REPAIR_REPLACE_YN, B.IN_HUSE_REPAIR_PROMIS_DT, B.IN_HUSE_REPAIR_GRP_CODE, 
+				   B.IN_HUSE_REPAIR_PRODUCT_CODE, B.IN_HUSE_REPAIR_SERIAL_NO, B.RESULT_CUST_NAME, 
+				   B.RESULT_MOBILE_NO, B.RESULT_REP_EMAIL_NO, B.RESULT_ACEPT_NAME, 
+				   B.SGN_DT, B.TRNSC_ID
+				FROM  SVC0001D S  ,SVC0004D  B  ,SAL0001D C
+				WHERE   S.AS_ID =  B.AS_ENTRY_ID(+)
+				 AND S.AS_SO_ID = C.SALES_ORD_ID
+				AND S.AS_ID = #{AS_ID}
     </select>
     
     

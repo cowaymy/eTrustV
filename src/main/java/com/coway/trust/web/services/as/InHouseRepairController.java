@@ -60,7 +60,7 @@ public class InHouseRepairController {
 		
 		model.put("mode", (String)params.get("mode"));   
 		// 호출될 화면
-		return "services/as/inhouseRepairDetailPop";
+		return "services/as/inhouseNewRepairPop";
 	}
 	
 	
@@ -72,6 +72,10 @@ public class InHouseRepairController {
 		
 		logger.debug("selInhouseList in.............");
 		logger.debug("params : {}", params);
+		
+		
+		String[] repStateList =  request.getParameterValues("repState");
+		params.put("repStateList",repStateList);
 		
 		List<EgovMap> mList = inHouseRepairService.selInhouseList(params);
 		
