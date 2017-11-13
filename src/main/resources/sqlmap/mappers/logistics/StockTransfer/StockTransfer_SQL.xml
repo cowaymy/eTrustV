@@ -461,5 +461,17 @@
                                               AND ITM_CODE =#{itmcd}
                                               AND REQST_NO =#{reqstno}                                      
                                                        
-     </insert>  
+     </insert>
+     <delete id="deliveryDelete54" parameterType="Map">
+        delete from LOG0054M WHERE DELVRY_NO = #{delyno}
+     </delete>
+     <delete id="deliveryDelete55" parameterType="Map">
+        delete from LOG0055D WHERE DELVRY_NO = #{delyno}
+     </delete>
+     <delete id="deliveryDelete61" parameterType="Map">
+        delete from LOG0061D WHERE DELVRY_NO = #{delyno}
+     </delete>
+     <delete id="updateRequestTransferStus" parameterType="Map">
+        update LOG0047M set REQST_STUS = 'O' where REQST_NO = #{reqstno}; 
+     </delete>
 </mapper>

@@ -55,5 +55,13 @@ public interface StockTransferMapper {
 	void insertStockBooking(Map<String, Object> params);
 	
 	void insertTransferSerial(Map<String, Object> params);
+	
+	void deliveryDelete54(Map<String, Object> params);
+	
+	void deliveryDelete55(Map<String, Object> params);
+	
+	void deliveryDelete61(Map<String, Object> params);
+	
+	void updateRequestTransfer(Map<String, Object> params);
 		
 }

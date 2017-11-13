@@ -100,7 +100,7 @@ $(document).ready(function(){
 	/**********************************
     * Header Setting
     **********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
+    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , Codeval:'UM'};
     doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
     doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
@@ -161,7 +161,7 @@ $(document).ready(function(){
         	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }
     });
-    SearchListAjax();
+    //SearchListAjax();
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};

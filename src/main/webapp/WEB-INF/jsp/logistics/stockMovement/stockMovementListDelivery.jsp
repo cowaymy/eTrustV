@@ -165,7 +165,7 @@ $(document).ready(function(){
     **********************************/
     
     //paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
+	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , Codeval:'UM'};
     //doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
@@ -314,7 +314,7 @@ $(document).ready(function(){
     	}
     	AUIGrid.resetUpdatedItems(listGrid, "all");
     });
-    SearchListAjax();
+    //SearchListAjax();
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};

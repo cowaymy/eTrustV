@@ -65,8 +65,6 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 				stocktran.insStockTransfer(insMap);
 			}
 		}
-		stocktran.updateRequestTransfer(((String) fMap.get("headtitle") + seq));
-
 		//
 		insertStockBooking(fMap);
 		
@@ -276,6 +274,8 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 					}
 					iCnt++;
 				}
+				String reqstNo = (String)imap.get("reqstno");
+				stocktran.updateRequestTransfer(reqstNo);
 			}
 		}
 
@@ -310,5 +310,27 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		// return stocktran.selectStockTransferMtrDocInfoList(params);
 		stocktran.insertStockBooking(params);
+	}
+
+	@Override
+	public void StocktransferDeliveryDelete(Map<String, Object> params) {
+		List<Object> updList = (List<Object>) params.get("check");
+		String delno = "";
+		if (updList.size() > 0) {
+			for (int i = 0 ; i < updList.size() ; i++){
+				Map<String, Object> dmap = (Map<String, Object>)((Map<String, Object>)updList.get(i)).get("item");
+				logger.debug("323 Line params ::: {}", dmap);
+				
+				if (!delno.equals((String)dmap.get("delyno"))){
+					delno = (String)dmap.get("delyno");
+					stocktran.deliveryDelete54(dmap);
+					stocktran.deliveryDelete55(dmap);
+					stocktran.deliveryDelete61(dmap);
+					logger.debug("329Line :::: " + delno);
+				}
+				stocktran.updateRequestTransfer(dmap);
+
+			}
+		}
 	}
 }

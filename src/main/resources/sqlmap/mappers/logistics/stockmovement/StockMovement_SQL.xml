@@ -60,18 +60,18 @@
            <if test="streq !=null and streq !=''">
               and l47.reqst_no = #{streq}
            </if>
-<!--            <if test="smtype !=null and smtype !=''">
+           <if test="smtype !=null and smtype !=''">
               and l47.trnsc_type_dtl = #{smtype}
            </if>
            <if test="sttype !=null and sttype !=''">
               and l47.trnsc_type = #{sttype}
-           </if> -->
-           <if test="smtype !=null and smtype !=''">
-              and l47.REQST_TYPE_DTL = #{smtype}
            </if>
-           <if test="sttype !=null and sttype !=''">
-              and l47.REQST_TYPE = #{sttype}
-           </if>
+<!--            <if test="smtype !=null and smtype !=''"> -->
+<!--               and l47.REQST_TYPE_DTL = #{smtype} -->
+<!--            </if> -->
+<!--            <if test="sttype !=null and sttype !=''"> -->
+<!--               and l47.REQST_TYPE = #{sttype} -->
+<!--            </if> -->
            <if test="flocation !=null and flocation !=''">
               and l47.rciv_cdc_rdc = #{flocation}
            </if>
@@ -342,18 +342,18 @@
            <if test="seldelno != null and seldelno != ''">
               and l54.delvry_no  = #{seldelno}
            </if>
-<!--            <if test="smtype !=null and smtype !=''">
+           <if test="smtype !=null and smtype !=''">
               and l47.trnsc_type_dtl = #{smtype}
            </if>
            <if test="sttype !=null and sttype !=''">
               and l47.trnsc_type = #{sttype}
-           </if> -->
-           <if test="smtype !=null and smtype !=''">
-              and l47.REQST_TYPE_DTL = #{smtype}
            </if>
-           <if test="sttype !=null and sttype !=''">
-              and l47.REQST_TYPE = #{sttype}
-           </if>
+<!--            <if test="smtype !=null and smtype !=''"> -->
+<!--               and l47.REQST_TYPE_DTL = #{smtype} -->
+<!--            </if> -->
+<!--            <if test="sttype !=null and sttype !=''"> -->
+<!--               and l47.REQST_TYPE = #{sttype} -->
+<!--            </if> -->
            <if test="flocation !=null and flocation !=''">
               and l47.rciv_cdc_rdc = #{flocation}
            </if>
@@ -485,12 +485,14 @@
                     lg48d.UOM,
                     uomt.CODE_NAME uomnm,
                     lg47m.REQST_CDC_RDC rqloc,
+                    sy28rq.WH_LOC_CODE  rqloccode,
                     sy28rq.WH_LOC_ID rqlocid,
                     sy28rq.WH_LOC_DESC rqlocnm,
                     lg60d.DELVRY_NO,
                     lg48d.ITM_CODE,
                     lg60d.STOCK_TRNSFR_REQST,
                     lg47m.RCIV_CDC_RDC rcloc,
+                    sy28rc.WH_LOC_CODE  rcloccode,
                     sy28rc.WH_LOC_ID rclocid,
                     sy28rc.WH_LOC_DESC rclocnm
             FROM LOG0059M lg59m JOIN LOG0060D lg60d

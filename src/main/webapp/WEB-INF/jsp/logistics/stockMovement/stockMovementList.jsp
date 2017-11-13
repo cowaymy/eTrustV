@@ -92,16 +92,18 @@ var mtrcolumnLayout = [
                         {dataField:"itmName", headerText:"" ,width:120    ,height:30},
                         {dataField:"qty", headerText:"" ,width:120    ,height:30},
                         {dataField:"codeName", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rqloc", headerText:"" ,width:120    ,height:30},
+                        {dataField:"rqloc", headerText:"" ,width:120    ,height:30 , visible:false},
+                        {dataField:"rqloccode", headerText:"" ,width:120    ,height:30},
                         {dataField:"rqlocid", headerText:"" ,width:120    ,height:30},
                         {dataField:"rqlocnm", headerText:"" ,width:120    ,height:30},
                         {dataField:"delvryNo", headerText:"" ,width:120    ,height:30},
                         {dataField:"itmCode", headerText:"" ,width:120    ,height:30},
                         {dataField:"stockTrnsfrReqst", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rcloc", headerText:"" ,width:120    ,height:30},
+                        {dataField:"rcloc", headerText:"" ,width:120    ,height:30 , visible:false},
+                        {dataField:"rcloccode", headerText:"" ,width:120    ,height:30},
                         {dataField:"rclocid", headerText:"" ,width:120    ,height:30},
                         {dataField:"rclocnm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"uom", headerText:"" ,width:120    ,height:30},
+                        {dataField:"uom", headerText:"" ,width:120    ,height:30 , visible:false},
                         {dataField:"uomnm", headerText:"" ,width:120    ,height:30}
            ];
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
@@ -125,7 +127,8 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     var arrsttype = 'US,OH'.split(',');
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
+    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , Codeval:'UM'};
+    //paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
     
     //doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
@@ -418,8 +421,8 @@ function f_getTtype(g , v){
     </section><!-- search_result end -->
     <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
-            <li><a href="#" class="on">Register Order</a></li>
-            <li><a href="#">Compliance Remark</a></li>
+            <li><a href="#" class="on">Delivery No Info</a></li>
+            <li><a href="#">Material Document Info</a></li>
         </ul>
         
         <article class="tap_area"><!-- tap_area start -->

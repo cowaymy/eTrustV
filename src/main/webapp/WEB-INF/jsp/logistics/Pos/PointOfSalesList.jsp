@@ -148,7 +148,7 @@ $(document).ready(function(){
        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
 	   /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
 	   var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
-       doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , 'SearchListAjax');     
+       doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');     
        doGetComboData('/logistics/pos/selectPosReqNo.do','' , '','searchOthersReq1', 'S' , '');
        doGetComboData('/logistics/pos/selectPosReqNo.do','', '','searchOthersReq2', 'S' , '');
        
@@ -163,28 +163,32 @@ $(document).ready(function(){
     $("#mdc_grid").hide(); 
 
     
+    AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
+    	console.log('11');
+        $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+        document.searchForm.action = '/logistics/pos/PosView.do';
+        document.searchForm.submit();
+    });
+    
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
+        console.log('22');
+        
         $("#mdc_grid").hide(); 
 
         if (event.dataField == "reqstno"){
-        	SearchMaterialDocListAjax(event.value)
+            SearchMaterialDocListAjax(event.value)
         }
         
 
     });
     
-    AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-        $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
-        document.searchForm.action = '/logistics/pos/PosView.do';
-        document.searchForm.submit();
-    });
     
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
     
     
     AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
-        
+    	
         var reqno = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno");
         
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
@@ -255,7 +259,7 @@ $(function(){
         }else{
             for (var i = 0 ; i < checkedItems.length ; i++){
                 if(checkedItems[i].item.status == 'O'){
-                    Common.alert('Already processed.');
+                    Common.alert('Status cnanot Issue Cancel.');
                     return false;
                     break;
                 }

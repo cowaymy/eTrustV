@@ -431,5 +431,30 @@ public class StocktransferController {
 
 		return ResponseEntity.ok(rmap);
 	}
+	
+	
+	@RequestMapping(value = "/StocktransferDeliveryDelete.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> StocktransferDeliveryDelete(@RequestBody Map<String, Object> params, Model mode,
+			SessionVO sessionVo) {
+		int userId = sessionVo.getUserId();
+		
+		logger.debug("params : {}", params.toString());
+		//List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		
+		Map<String, Object> param = new HashMap();
+		param.put("check", updList);
+		param.put("userId", userId);
+
+		stock.StocktransferDeliveryDelete(param);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
 
 }

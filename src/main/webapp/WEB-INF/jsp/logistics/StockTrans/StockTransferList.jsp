@@ -126,7 +126,7 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     **********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , likeValue:'US'};
+    paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , Codeval:'UM'};
     
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'US':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
@@ -416,8 +416,8 @@ function f_getTtype(g , v){
     </section><!-- search_result end -->
     <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
-            <li><a href="#" class="on">Register Order</a></li>
-            <li><a href="#">Compliance Remark</a></li>
+            <li><a href="#" class="on">Delivery No Info</a></li>
+            <li><a href="#">Material Document Info</a></li>
         </ul>
         
         <article class="tap_area"><!-- tap_area start -->

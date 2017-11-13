@@ -258,6 +258,35 @@ $(function(){
             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
         }
     });
+    $("#deliverydelete").click(function(){
+        var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+        console.log(checkedItems);
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else{
+            for (var i = 0 ; i < checkedItems.length ; i++){
+                if(checkedItems[i].gicmplt == 'Y'){
+                    Common.alert('Already Good Issue processed.');
+                    return false;
+                    break;
+                }
+            }
+            var data = {};
+            data.checked = checkedItems; 
+            Common.ajax("POST", "/logistics/stocktransfer/StocktransferDeliveryDelete.do", data, function(result) {
+                Common.alert(result.message);
+          //      AUIGrid.resetUpdatedItems(listGrid, "all");            
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }  
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+            
+            $("#search").click();
+        }
+    });
 });
 
 function fn_itempopList(data){
@@ -451,6 +480,7 @@ function giFunc(){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
+            <li><p class="btn_grid"><a id="deliverydelete"><span class="search"></span>Delete Delivery</a></p></li>
             <li><p class="btn_grid"><a id="gissue"><span class="search"></span>Good Issue</a></p></li>
             <li><p class="btn_grid"><a id="gcissue"><span class="search"></span>Issue Cancel</a></p></li>
         </ul>
