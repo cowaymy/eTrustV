@@ -56,5 +56,9 @@ public interface CreditCardMapper {
 	void insertApproveItems(Map<String, Object> params);
 	
 	void updateAppvPrcssNo(Map<String, Object> params);
+	
+	void deleteReimbursement(Map<String, Object> params);
+	
+	void updateReimbursementTotAmt(Map<String, Object> params);
 
 }

@@ -166,6 +166,8 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			}
 		}
 		
+		webInvoiceMapper.updateWebInvoiceInfoTotAmt(params);
+		
 		LOGGER.info("추가 : {}", addList.toString());
 		LOGGER.info("수정 : {}", updateList.toString());
 		LOGGER.info("삭제 : {}", removeList.toString());
@@ -388,6 +390,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		}
 		LOGGER.debug("appvPrcssStus =====================================>>  " + appvPrcssStus);
 		return appvPrcssStus;
+	}
+
+	@Override
+	public void updateWebInvoiceInfoTotAmt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.updateWebInvoiceInfoTotAmt(params);
 	}
 	
 	

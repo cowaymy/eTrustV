@@ -932,19 +932,26 @@ function fn_approveLinePop() {
 }
 
 function fn_deleteStaffClaimExp() {
+	// Grid Row 삭제
+    AUIGrid.removeRow(newGridID, deleteRowIdx);
+    
+    fn_getAllTotAmt();
 	var data = {
 			clmNo : clmNo,
 			clmSeq : clmSeq,
 			atchFileGrpId : atchFileGrpId,
-			expTypeName : expTypeName
+			expTypeName : expTypeName,
+			allTotAmt : $("#allTotAmt_text").text().replace(/,/gi, "")
 	};
 	console.log(data);
 	Common.ajax("POST", "/eAccounting/staffClaim/deleteStaffClaimExp.do", data, function(result) {
         console.log(result);
-        // Grid Row 삭제
-        AUIGrid.removeRow(newGridID, deleteRowIdx);
-        
-        fn_getAllTotAmt();
+       
+        // function 호출 안되서 ajax 직접호출
+        Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
+            console.log(result);
+            AUIGrid.setGridData(staffClaimGridID, result);
+        });
     });
 }
 </script>

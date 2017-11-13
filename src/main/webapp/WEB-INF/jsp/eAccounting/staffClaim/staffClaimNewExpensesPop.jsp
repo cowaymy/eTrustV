@@ -535,7 +535,7 @@ function fn_tempSave() {
 
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" id="add_btn"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
-    <li><p class="btn_blue2"><a href="#" id="delete_btn">Delete</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="delete_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
     <li><p class="btn_blue2"><a href="#" id="clear_btn"><spring:message code="pettyCashNewCustdn.clear" /></a></p></li>
 </ul>
 

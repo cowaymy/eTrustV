@@ -27,6 +27,12 @@ public interface PettyCashMapper {
 	
 	void insertPettyCashReqst(Map<String, Object> params);
 	
+	String selectNextIfKey();
+	
+	int selectNextSeq(String ifKey);
+	
+	void insertPettyCashReqstInterface(Map<String, Object> params);
+	
 	EgovMap selectRequestInfo(Map<String, Object> params);
 	
 	void updatePettyCashReqst(Map<String, Object> params);
@@ -47,7 +53,7 @@ public interface PettyCashMapper {
 	
 	void insertPettyCashExpItem(Map<String, Object> params);
 	
-	void updateExpTotAmt(Map<String, Object> params);
+	void updatePettyCashExpTotAmt(Map<String, Object> params);
 	
 	List<EgovMap> selectExpenseItems(String clmNo);
 	
@@ -62,5 +68,7 @@ public interface PettyCashMapper {
 	void insertExpApproveItems(Map<String, Object> params);
 	
 	void updateExpAppvPrcssNo(Map<String, Object> params);
-
+	
+	void deletePettyCashExpItem(Map<String, Object> params);
+	
 }

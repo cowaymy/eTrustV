@@ -849,4 +849,9 @@ SELECT T.APPV_PRCSS_NO
     SELECT FN_GET_BUDGET_AMT(#{year}, #{month}, #{costCentr}, #{budgetCode}, #{glAccCode}, #{netAmt}) FROM DUAL
 </select>
 
+<update id="updateWebInvoiceInfoTotAmt" parameterType="Map">
+/* webInvoiceMapper.updateWebInvoiceInfoTotAmt */
+   UPDATE FCM0002M SET TOT_AMT = #{totAmt} WHERE CLM_NO = #{clmNo}
+</update>
+
 </mapper>

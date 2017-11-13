@@ -489,7 +489,9 @@ public class PettyCashController {
 		model.addAttribute("userName", sessionVO.getUserName());
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
-		model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
+		if(itemList.size() > 0) {
+			model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
+		}
 		return "eAccounting/pettyCash/pettyCashViewEditExpensePop";
 	}
 	
@@ -571,6 +573,25 @@ public class PettyCashController {
 	@RequestMapping(value = "/expCompletedMsgPop.do")
 	public String expCompletedMsgPop(ModelMap model) {
 		return "eAccounting/pettyCash/expCompletedMsgPop";
+	}
+	
+	@RequestMapping(value = "/deletePettyCashExp.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deletePettyCashExp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		
+		// TODO insert
+		pettyCashApplication.deletePettyCashAttachBiz(FileType.WEB_DIRECT_RESOURCE, params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 	
 	

@@ -168,7 +168,9 @@ public class StaffClaimController {
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
 		model.addAttribute("expTypeName", itemList.get(0).get("expTypeName"));
-		model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
+		if(itemList.size() > 0) {
+			model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
+		}
 		return "eAccounting/staffClaim/staffClaimViewExpensesPop";
 	}
 	

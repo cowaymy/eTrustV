@@ -23,8 +23,6 @@ public interface StaffClaimMapper {
 	
 	void insertStaffClaimExpMileage(Map<String, Object> params);
 	
-	void updateStaffClaimTotAmt(Map<String, Object> params);
-	
 	List<EgovMap> selectStaffClaimItems(String clmNo);
 	
 	EgovMap selectStaffClaimInfo(Map<String, Object> params);
@@ -44,6 +42,8 @@ public interface StaffClaimMapper {
 	void deleteStaffClaimExpItem(Map<String, Object> params);
 	
 	void deleteStaffClaimExpMileage(Map<String, Object> params);
+	
+	void updateStaffClaimExpTotAmt(Map<String, Object> params);
 	
 	
 }

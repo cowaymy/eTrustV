@@ -18,5 +18,7 @@ public interface CreditCardApplication {
 	
 	void updateReimbursementAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 	
+	void deleteReimbursementAttachBiz(FileType type, Map<String, Object> params);
+	
 
 }

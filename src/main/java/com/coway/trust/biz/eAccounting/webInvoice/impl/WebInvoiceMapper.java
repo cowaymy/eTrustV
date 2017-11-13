@@ -75,4 +75,6 @@ public interface WebInvoiceMapper {
 	
 	String budgetCheck(Map<String, Object> params);
 	
+	void updateWebInvoiceInfoTotAmt(Map<String, Object> params);
+	
 }

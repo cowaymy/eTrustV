@@ -688,4 +688,14 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
     WHERE CLM_NO = #{clmNo}       
 </update>
 
+<delete id="deleteReimbursement" parameterType="Map">
+/* creditCardMapper.deleteReimbursement */
+   DELETE FROM FCM0018D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+</delete>
+
+<update id="updateReimbursementTotAmt" parameterType="Map">
+/* creditCardMapper.updateReimbursementTotAmt */
+   UPDATE FCM0017M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
+</update>
+
 </mapper>

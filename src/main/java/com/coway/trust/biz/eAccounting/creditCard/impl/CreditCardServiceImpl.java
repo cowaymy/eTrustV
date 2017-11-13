@@ -181,12 +181,14 @@ public class CreditCardServiceImpl implements CreditCardService {
 			for (Object map : addList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("clmNo", params.get("clmNo"));
+				hm.put("allTotAmt", params.get("allTotAmt"));
 				int clmSeq = creditCardMapper.selectNextClmSeq((String) params.get("clmNo"));
 				hm.put("clmSeq", clmSeq);
 				hm.put("userId", params.get("userId"));
 				hm.put("userName", params.get("userName"));
 				LOGGER.debug("insertReimbursementItem =====================================>>  " + hm);
-				creditCardMapper.insertReimbursementItem(params);
+				creditCardMapper.insertReimbursementItem(hm);
+				creditCardMapper.updateReimbursementTotAmt(hm);
 			}
 		}
 		if (updateList.size() > 0) {
@@ -208,7 +210,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 				creditCardMapper.updateReimbursementItem(hm);
 			}
 		}
-
 		
 		LOGGER.info("추가 : {}", addList.toString());
 		LOGGER.info("수정 : {}", updateList.toString());
@@ -263,6 +264,18 @@ public class CreditCardServiceImpl implements CreditCardService {
 		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
 		// TODO pettyCashReqst table update
 		creditCardMapper.updateAppvPrcssNo(params);
+	}
+
+	@Override
+	public void deleteReimbursement(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		creditCardMapper.deleteReimbursement(params);
+	}
+
+	@Override
+	public void updateReimbursementTotAmt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		creditCardMapper.updateReimbursementTotAmt(params);
 	}
 	
 	

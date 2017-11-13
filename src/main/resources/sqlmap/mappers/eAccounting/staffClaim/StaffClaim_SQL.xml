@@ -458,5 +458,10 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
    DELETE FROM FCM0021D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
 </delete>
 
+<update id="updateStaffClaimExpTotAmt" parameterType="Map">
+/* staffClaimMapper.updateStaffClaimExpTotAmt */
+   UPDATE FCM0019M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
+</update>
+
 
 </mapper>

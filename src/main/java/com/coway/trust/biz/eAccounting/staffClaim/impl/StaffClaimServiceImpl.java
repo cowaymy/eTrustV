@@ -121,6 +121,7 @@ LOGGER.debug("params =====================================>>  " + params);
 			for (Object map : addList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("clmNo", params.get("clmNo"));
+				hm.put("allTotAmt", params.get("allTotAmt"));
 				int clmSeq = staffClaimMapper.selectNextClmSeq((String) params.get("clmNo"));
 				hm.put("clmSeq", clmSeq);
 				hm.put("userId", params.get("userId"));
@@ -135,6 +136,7 @@ LOGGER.debug("params =====================================>>  " + params);
 					LOGGER.debug("insertStaffClaimExpMileage =====================================>>  " + hm);
 					staffClaimMapper.insertStaffClaimExpMileage(hm);
 				}
+				staffClaimMapper.updateStaffClaimExpTotAmt(hm);
 			}
 		}
 		if (updateList.size() > 0) {
@@ -229,6 +231,12 @@ LOGGER.debug("params =====================================>>  " + params);
 	public void deleteStaffClaimExpMileage(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		staffClaimMapper.deleteStaffClaimExpMileage(params);
+	}
+
+	@Override
+	public void updateStaffClaimExpTotAmt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		staffClaimMapper.updateStaffClaimExpTotAmt(params);
 	}
 	
 	

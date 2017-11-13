@@ -345,7 +345,10 @@ $(document).ready(function () {
     console.log($.parseJSON('${itemList}'))
     
     var result = $.parseJSON('${itemList}');
-    var allTotAmt = "" + result[0].allTotAmt;
+    var allTotAmt = "0.00";
+    if(result.length > 0) {
+        allTotAmt = "" + result[0].allTotAmt;
+    }
     $("#allTotAmt_text").text(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
     
     setInputFile2();
@@ -562,7 +565,7 @@ function fn_tempSave() {
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" id="add_btn"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
-    <li><p class="btn_blue2"><a href="#" id="delete_btn">Delete</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="delete_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
     <li><p class="btn_blue2"><a href="#" id="clear_btn"><spring:message code="pettyCashNewCustdn.clear" /></a></p></li>
 </ul>
 </c:if>

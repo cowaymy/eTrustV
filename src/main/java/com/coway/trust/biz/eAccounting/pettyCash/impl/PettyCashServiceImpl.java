@@ -96,6 +96,24 @@ public class PettyCashServiceImpl implements PettyCashService {
 	}
 	
 	@Override
+	public String selectNextIfKey() {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectNextIfKey();
+	}
+
+	@Override
+	public int selectNextSeq(String ifKey) {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectNextSeq(ifKey);
+	}
+
+	@Override
+	public void insertPettyCashReqstInterface(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		pettyCashMapper.insertPettyCashReqstInterface(params);
+	}
+
+	@Override
 	public EgovMap selectRequestInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return pettyCashMapper.selectRequestInfo(params);
@@ -221,12 +239,14 @@ public class PettyCashServiceImpl implements PettyCashService {
 			for (Object map : addList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("clmNo", params.get("clmNo"));
+				hm.put("allTotAmt", params.get("allTotAmt"));
 				int clmSeq = pettyCashMapper.selectNextExpClmSeq((String) params.get("clmNo"));
 				hm.put("clmSeq", clmSeq);
 				hm.put("userId", params.get("userId"));
 				hm.put("userName", params.get("userName"));
 				LOGGER.debug("insertPettyCashExpItem =====================================>>  " + hm);
 				pettyCashMapper.insertPettyCashExpItem(hm);
+				pettyCashMapper.updatePettyCashExpTotAmt(hm);
 			}
 		}
 		if (updateList.size() > 0) {
@@ -248,7 +268,6 @@ public class PettyCashServiceImpl implements PettyCashService {
 				pettyCashMapper.updatePettyCashExpItem(hm);
 			}
 		}
-
 		
 		LOGGER.info("추가 : {}", addList.toString());
 		LOGGER.info("수정 : {}", updateList.toString());
@@ -301,6 +320,18 @@ public class PettyCashServiceImpl implements PettyCashService {
 		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
 		// TODO pettyCashReqst table update
 		pettyCashMapper.updateExpAppvPrcssNo(params);
+	}
+
+	@Override
+	public void deletePettyCashExpItem(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		pettyCashMapper.deletePettyCashExpItem(params);
+	}
+
+	@Override
+	public void updatePettyCashExpTotAmt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		pettyCashMapper.updatePettyCashExpTotAmt(params);
 	}
 	
 	

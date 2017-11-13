@@ -118,6 +118,7 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 			if("Car Mileage Expense".equals(params.get("expTypeName"))) {
 				staffClaimService.deleteStaffClaimExpMileage(params);
 			}
+			staffClaimService.updateStaffClaimExpTotAmt(params);
 		}
 	}
 	

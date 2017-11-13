@@ -19,6 +19,7 @@ import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.pettyCash.PettyCashApplication;
 import com.coway.trust.biz.eAccounting.pettyCash.PettyCashService;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -154,6 +155,14 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 		params.put("clmNo", clmNo);
 		
 		pettyCashService.insertPettyCashReqst(params);
+		
+		String ifKey = pettyCashService.selectNextIfKey();
+		params.put("ifKey", ifKey);
+		
+		int seq = pettyCashService.selectNextSeq(ifKey);
+		params.put("seq", seq);
+		
+		pettyCashService.insertPettyCashReqstInterface(params);
 	}
 
 	@Override
@@ -276,6 +285,23 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
 				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
+		}
+	}
+
+	@Override
+	public void deletePettyCashAttachBiz(FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
+		if(CommonUtils.isEmpty(params.get("clmNo"))) {
+			// Not Temp. Save
+			// 저장된 파일만 삭제
+			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+		} else {
+			// Temp. Save
+			// 저장된 파일 삭제 및 테이블 데이터 삭제
+			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+			pettyCashService.deletePettyCashExpItem(params);
+			pettyCashService.updatePettyCashExpTotAmt(params);
 		}
 	}
 	

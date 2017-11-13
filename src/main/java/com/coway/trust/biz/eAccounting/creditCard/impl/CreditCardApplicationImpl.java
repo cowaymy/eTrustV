@@ -19,6 +19,7 @@ import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.creditCard.CreditCardApplication;
 import com.coway.trust.biz.eAccounting.creditCard.CreditCardService;
+import com.coway.trust.util.CommonUtils;
 
 @Service("creditCardApplication")
 public class CreditCardApplicationImpl implements CreditCardApplication {
@@ -237,6 +238,23 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
 				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
+		}
+	}
+
+	@Override
+	public void deleteReimbursementAttachBiz(FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
+		if(CommonUtils.isEmpty(params.get("clmNo"))) {
+			// Not Temp. Save
+			// 저장된 파일만 삭제
+			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+		} else {
+			// Temp. Save
+			// 저장된 파일 삭제 및 테이블 데이터 삭제
+			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+			creditCardService.deleteReimbursement(params);
+			creditCardService.updateReimbursementTotAmt(params);
 		}
 	}
 	

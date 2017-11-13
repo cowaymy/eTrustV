@@ -49,4 +49,6 @@ public interface WebInvoiceService {
 	
 	String getAppvPrcssStus(List<EgovMap> appvLineInfo, List<EgovMap> appvInfoAndItems);
 	
+	void updateWebInvoiceInfoTotAmt(Map<String, Object> params);
+	
 }

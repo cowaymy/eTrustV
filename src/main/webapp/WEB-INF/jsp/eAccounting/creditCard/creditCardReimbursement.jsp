@@ -707,6 +707,30 @@ function fn_approveLinePop() {
     
     Common.popupDiv("/eAccounting/creditCard/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
+
+function fn_deleteReimbursement() {
+    // Grid Row 삭제
+    AUIGrid.removeRow(newGridID, deleteRowIdx);
+    
+    fn_getAllTotAmt();
+    var data = {
+            clmNo : clmNo,
+            clmSeq : clmSeq,
+            atchFileGrpId : atchFileGrpId,
+            allTotAmt : $("#allTotAmt_text").text().replace(/,/gi, "")
+    };
+    console.log(data);
+    Common.ajax("POST", "/eAccounting/creditCard/deleteReimbursement.do", data, function(result) {
+        console.log(result);
+        
+        // function 호출 안되서 ajax 직접호출
+        //fn_selectReimbursementList();
+        Common.ajax("GET", "/eAccounting/creditCard/selectReimbursementList.do?_cacheId=" + Math.random(), $("#form_reimbursement").serialize(), function(result) {
+            console.log(result);
+            AUIGrid.setGridData(reimbursementGridID, result);
+        });
+    });
+}
 </script>
 
 <section id="content"><!-- content start -->

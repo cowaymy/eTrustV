@@ -45,5 +45,8 @@ public interface CreditCardService {
 	
 	void insertApproveManagement(Map<String, Object> params);
 	
+	void deleteReimbursement(Map<String, Object> params);
+	
+	void updateReimbursementTotAmt(Map<String, Object> params);
 
 }

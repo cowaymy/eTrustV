@@ -697,6 +697,30 @@ function fn_expApproveLinePop() {
     
     Common.popupDiv("/eAccounting/pettyCash/expApproveLinePop.do", null, null, true, "approveLineSearchPop");
 }
+
+function fn_deletePettyCashExp() {
+	// Grid Row 삭제
+    AUIGrid.removeRow(newGridID, deleteRowIdx);
+    
+    fn_getAllTotAmt();
+    var data = {
+            clmNo : clmNo,
+            clmSeq : clmSeq,
+            atchFileGrpId : atchFileGrpId,
+            allTotAmt : $("#allTotAmt_text").text().replace(/,/gi, "")
+    };
+    console.log(data);
+    Common.ajax("POST", "/eAccounting/pettyCash/deletePettyCashExp.do", data, function(result) {
+        console.log(result);
+        
+        // function 호출 안되서 ajax 직접호출
+        //fn_selectExpenseList();
+        Common.ajax("GET", "/eAccounting/pettyCash/selectExpenseList.do?_cacheId=" + Math.random(), $("#form_pettyCashExp").serialize(), function(result) {
+            console.log(result);
+            AUIGrid.setGridData(pettyCashExpGridID, result);
+        });
+    });
+}
 </script>
 
 <section id="content"><!-- content start -->

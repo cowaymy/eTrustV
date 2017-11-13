@@ -24,6 +24,7 @@ var atchFileGrpId;
 var attachList;
 var callType = "${callType}";
 var selectRowIdx;
+var deleteRowIdx;
 //file action list
 var update = new Array();
 var remove = new Array();
@@ -179,6 +180,7 @@ $(document).ready(function () {
     $("#supply_search_btn").click(fn_supplierSearchPop);
     $("#clear_btn").click(fn_clearData);
     $("#add_btn").click(fn_addRow);
+    $("#delete_btn").click(fn_deleteReimbursement);
     $("#tempSave_btn").click(fn_tempSave);
     $("#request_btn").click(fn_approveLinePop);
     
@@ -195,6 +197,16 @@ $(document).ready(function () {
                 } else {
                     Common.alert("You must save it before you can edit it.");
                 }
+            });
+    
+    AUIGrid.bind(newGridID, "cellClick", function( event ) 
+            {
+                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                console.log("CellClick clmSeq : " + event.item.clmSeq);
+                // TODO pettyCash Expense Info GET
+                deleteRowIdx = event.rowIndex;
+                clmSeq = event.item.clmSeq;
+                atchFileGrpId = event.item.atchFileGrpId;
             });
     
     CommonCombo.make("taxCode", "/eAccounting/creditCard/selectTaxCodeCreditCardFlag.do", null, "", {
@@ -344,6 +356,7 @@ function fn_tempSave() {
 
 <ul class="center_btns">
 	<li><p class="btn_blue2"><a href="#" id="add_btn"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="delete_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
 	<li><p class="btn_blue2"><a href="#" id="clear_btn"><spring:message code="pettyCashNewCustdn.clear" /></a></p></li>
 </ul>
 

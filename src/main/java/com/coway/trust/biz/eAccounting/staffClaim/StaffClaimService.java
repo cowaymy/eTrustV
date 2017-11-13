@@ -26,5 +26,7 @@ public interface StaffClaimService {
 	void deleteStaffClaimExpItem(Map<String, Object> params);
 	
 	void deleteStaffClaimExpMileage(Map<String, Object> params);
+	
+	void updateStaffClaimExpTotAmt(Map<String, Object> params);
 
 }

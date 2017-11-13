@@ -24,6 +24,7 @@ var atchFileGrpId;
 var attachList;
 var callType = "${callType}";
 var selectRowIdx;
+var deleteRowIdx;
 //file action list
 var update = new Array();
 var remove = new Array();
@@ -155,6 +156,7 @@ var newGridPros = {
     headerHeight : 40,
     // 그리드가 height 지정( 지정하지 않으면 부모 height 의 100% 할당받음 )
     height : 175,
+    softRemoveRowMode : false,
     rowIdField : "clmSeq"
 };
 
@@ -171,6 +173,7 @@ $(document).ready(function () {
     $("#sSupplier_search_btn").click(fn_popSubSupplierSearchPop);
     $("#clear_btn").click(fn_clearData);
     $("#add_btn").click(fn_addRow);
+    $("#delete_btn").click(fn_deletePettyCashExp);
     $("#tempSave_btn").click(fn_tempSave);
     $("#request_btn").click(fn_expApproveLinePop);
     
@@ -187,6 +190,16 @@ $(document).ready(function () {
                 } else {
                 	Common.alert('<spring:message code="pettyCashNewExp.beforeSave.msg" />');
                 }
+            });
+    
+    AUIGrid.bind(newGridID, "cellClick", function( event ) 
+            {
+                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                console.log("CellClick clmSeq : " + event.item.clmSeq);
+                // TODO pettyCash Expense Info GET
+                deleteRowIdx = event.rowIndex;
+                clmSeq = event.item.clmSeq;
+                atchFileGrpId = event.item.atchFileGrpId;
             });
     
     CommonCombo.make("taxCode", "/eAccounting/pettyCash/selectTaxCodePettyCashFlag.do", null, "", {
@@ -341,6 +354,7 @@ function fn_tempSave() {
 
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" id="add_btn"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="delete_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
     <li><p class="btn_blue2"><a href="#" id="clear_btn"><spring:message code="pettyCashNewCustdn.clear" /></a></p></li>
 </ul>
 
