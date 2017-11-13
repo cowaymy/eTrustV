@@ -232,25 +232,25 @@ public class LocationController {
 		insmap.put("plant"       , plant);
 		insmap.put("slplant"     , slplant);
 
-		loc.insertLocationInfo(insmap);
-
+		int inlocid =loc.insertLocationInfo(insmap);
+		//System.out.println("inlocid 값!!!  : " + inlocid);
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(inlocid);
 
 		return ResponseEntity.ok(message);
 	}
 
-	@RequestMapping(value = "/locationDelete.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> deleteLocation(ModelMap model, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		String locid = request.getParameter("locid");
-
+	@RequestMapping(value = "/locationDelete.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> deleteLocation(@RequestParam Map<String, Object> params,ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		//String locid = request.getParameter("locid");
+		logger.debug("locid    값 : {}", params.get("locid"));
 		Map<String, Object> smap = new HashMap();
-		smap.put("locid", locid);
-		logger.debug("locid{} :   ", locid);
-		//loc.deleteLocationInfo(smap);
+		smap.put("locid", params.get("locid"));
+		logger.debug("smap.locid    값 : {}", smap.get("locid"));
+		loc.deleteLocationInfo(smap);
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
