@@ -72,7 +72,8 @@
             d.DT_RCORD_CRT_ON  dt_rcord_crt_on ,
             d.USER_WHO_CRT_RCORD  user_who_crt_rcord ,
             d.CHNG_ON  chng_on ,
-            d.NAME_PERSON_WHO_CHG_OBJ name_person_who_chg_obj
+            d.NAME_PERSON_WHO_CHG_OBJ name_person_who_chg_obj,
+            d.LEAD_TM_OFFSET LEAD_TM_OFFSET
         FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
               WHERE m.BOM  = d.BOM
               AND d.BOM_COMPNT = m2.STK_CODE
@@ -89,9 +90,12 @@
               <if test="srchcatagorytype !=null and srchcatagorytype !=''">
                     AND  sm.CODE_ID = #{srchcatagorytype}
              </if> 
-	           <if test="srchValid != null and srchValid != ''">
-	              AND TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY') = TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'DD/MM/YYYY')
-	           </if>  
+<!-- 	           <if test="srchValid != null and srchValid != ''"> -->
+<!-- 	              AND TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY') = TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'DD/MM/YYYY') -->
+<!-- 	           </if>   -->
+	            <if test="srchValid != null and srchValid != ''">
+                  AND TO_CHAR (TO_DATE (#{srchValid},   'DD/MM/YYYY'),'YYYYMMDD')   between TO_CHAR(d.VALID_FROM_DT, 'YYYYMMDD')  AND TO_CHAR(d.VALID_TO_DT, 'YYYYMMDD')
+               </if> 
               </otherwise>
              </choose>
                 ORDER BY m.BOM, d.BOM_ITM_NODE_NO 
