@@ -53,5 +53,9 @@ public interface MSvcLogApiService {
 	List<EgovMap> getHsFilterHistoryDList(Map<String, Object> tmpMap1);
 
 	List<EgovMap> getRentalCustomerList(Map<String, Object> params);	
+	
+	Map<String, Object> selectOutstandingResult(Map<String, Object> params);
+	
+	List<EgovMap> selectOutstandingResultDetailList(Map<String, Object> params);
 
 }

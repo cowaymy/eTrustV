@@ -15,6 +15,17 @@ public class RentalServiceCustomerForm {
 	
 	@ApiModelProperty(value = "검색내용") 
 	private String searchKeyword;
+	
+	@ApiModelProperty(value = "주문번호") 
+	private String salesOrderNo;
+
+	public String getSalesOrderNo() {
+		return salesOrderNo;
+	}
+
+	public void setSalesOrderNo(String salesOrderNo) {
+		this.salesOrderNo = salesOrderNo;
+	}
 
 	public String getUserId() {
 		return userId;

@@ -78,6 +78,8 @@ public interface MSvcLogApiMapper {
 
 	List<EgovMap> getAsFilterHistoryDList(Map<String, Object> params);
 
+	EgovMap selectOutstandingResult(Map<String, Object> params);
 	
+	List<EgovMap> selectOutstandingResultDetailList(Map<String, Object> params);
 	
 }

@@ -60,6 +60,8 @@ import com.coway.trust.api.mobile.services.productRetrun.PRFailJobRequestForm;
 import com.coway.trust.api.mobile.services.productRetrun.PRReAppointmentRequestDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobForm;
+import com.coway.trust.api.mobile.services.sales.OutStandignResultDetail;
+import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
 import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultDto;
@@ -786,7 +788,40 @@ public class ServiceApiController {
 
 	}
 	
-	
+	@ApiOperation(value = "Outstanding Result", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/outstandingResult", method = RequestMethod.POST)
+	public ResponseEntity<OutStandingResultVo> outStandingResult(@RequestBody RentalServiceCustomerForm rentalForm)
+			throws Exception {		
+		String transactionId = "";
+		
+		Map<String, Object> map = new HashMap();
+		
+		map.put("userId" , (String)rentalForm.getUserId());
+		map.put("salesOrderNo" , (String)rentalForm.getSalesOrderNo());
+		
+		OutStandingResultVo orv = new OutStandingResultVo(); 
+		
+		
+		Map<String, Object> rmap = MSvcLogApiService.selectOutstandingResult(map);
+		
+		if (!rmap.isEmpty()){
+			LOGGER.debug(" :::: {}" ,rmap);
+		}
+		
+		List<EgovMap> rcList = MSvcLogApiService.selectOutstandingResultDetailList(map);
+		
+		List<OutStandignResultDetail> list = rcList.stream().map(r -> OutStandignResultDetail.create(r))
+				.collect(Collectors.toList());
+		
+		orv.setOsrd(list);
+		/*
+		
+		List<OutStandignResultDetail> list = rcList.stream().map(r -> RentalServiceCustomerDto.create(r))
+				.collect(Collectors.toList());
+		*/
+		return ResponseEntity.ok(orv);
+
+	}
 	
 	
 	

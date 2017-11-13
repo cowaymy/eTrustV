@@ -1414,6 +1414,54 @@
                         </otherwise>
                     </choose>
                    </if>
-         </select>        
+         </select>
+         
+         
+         <select id="selectOutstandingResult" parameterType="Map" resultType="egovMap">
+            select 0 as sum_rpf ,
+			       0 as sum_rpt , 
+			       0 as sum_rhf ,
+			       0 as sum_rental , 
+			       0 as sum_adjust
+			 from dual  
+         </select>
+         
+         <select id="selectOutstandingResultDetailList" parameterType="Map" resultType="egovMap">
+            SELECT A.CODE_NAME AS TYPE,
+			       A.RENT_DOC_NO AS DOC_NO,
+			       0 AS NALANCE_AMT,
+			       NVL (SUM (CASE WHEN A.MODE_ID = '132' THEN A.RENT_AMT  END ), 0)
+			          DEBIT_AMT,
+			       NVL(SUM (CASE WHEN A.MODE_ID = '131' THEN A.RENT_AMT END ) , 0) CREDIT_AMT,
+			       SUM (NVL(A.RENT_INST_AMT , 0)) INSTALL_AMT,
+			       TO_CHAR(A.RENT_INST_DT , 'YYYYMMDD') AS EVENT_DATE
+			  FROM (SELECT /*+ USE_NL(A B C  D E )     */
+			                C.CODE_NAME,
+			                 D.RENT_DOC_NO,
+			                 D.RENT_AMT,
+			                 A.RENT_INST_AMT,
+			                 A.RENT_INST_DT,
+			                 E.MODE_ID
+			            FROM SAL0070D A,
+			                 SAL0001D B,
+			                 SYS0013M C,
+			                 PAY0022D D,
+			                 SAL0074D E,
+			                 ORG0001D F
+			           WHERE     a.sales_ord_id = b.sales_ord_id
+			                 AND a.rent_inst_insert_year = 2017
+			                 AND A.SALES_ORD_ID = D.RENT_SO_ID
+			                 AND A.RENT_INST_TYPE_ID = C.CODE_ID(+)
+			                 AND b.app_type_id = 66
+			                 AND C.CODE_MASTER_ID = 37
+			                 AND D.RENT_AMT > 0
+			                 AND E.SALES_ORD_ID = A.sales_ord_id
+			                 AND B.MEM_ID = F.MEM_ID
+			                 AND F.MEM_CODE LIKE ('CD%')
+			                 AND F.MEM_CODE = #{userId}
+			                 AND B.sales_ord_ID = #{salesOrderNo}
+			                                              ) A
+			GROUP BY A.CODE_NAME, A.RENT_DOC_NO, A.RENT_INST_DT  
+         </select>
                    
 </mapper>
