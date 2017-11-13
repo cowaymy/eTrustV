@@ -59,7 +59,7 @@
 		                            mergePolicy : "restrict"},
 								{dataField:"",headerText:"Base Qty",width:"5%",visible:false},
 								{dataField:"bomUse",headerText:"",width:100,visible:false},
-								{dataField:"bomItmNodeNo",headerText:"Component No.",width:"9%",visible:true,style :"aui-grid-user-custom-right"},
+								{dataField:"bomItmNodeNo",headerText:"Component No.",width:"3%",visible:true,style :"aui-grid-user-custom-right"},
 								{dataField:"bomCtgry",headerText:"",width:100,visible:false},
 								{dataField:"intnlCntr",headerText:"",width:100,visible:false},
 								{dataField:"itmCtgry",headerText:"",width:100,visible:false},
@@ -73,6 +73,9 @@
 								{dataField:"compntUnitOfMeasure",headerText:"",width:100,visible:false},
 								{dataField:"validFromDt",headerText:"Valid From",width:"8%",visible:true},
 								{dataField:"validToDt",headerText:"Valid To",width:"8%",visible:true},
+								{dataField:"leadTmOffset",headerText:"Filter Changing Period",width:"6%",visible:true},
+								{dataField:"",headerText:"Alternative Item by group",width:"6%",visible:true},
+								{dataField:"",headerText:"Priority of alternative item",width:"6%",visible:true},
 								{dataField:"chngNo",headerText:"",width:100,visible:false},
 								{dataField:"delIndict",headerText:"",width:100,visible:false},
 								{dataField:"dtRcordCrtOn",headerText:"",width:100,visible:false},
@@ -269,13 +272,12 @@
            $("#txtMeasurement").empty();
 
            //$("#txtStockType").text(data[0].stkCtgryID);
-           $("#txtStockType").text(data[0].stkCtgryNm);
+           $("#txtStockType").text(data[0].stkTypeNm);
            $("#txtStatus").text(data[0].stusCodeNm);
            $("#txtStockCode").text(data[0].matrlNo);
            $("#txtUOM").text(data[0].uomName);
            $("#txtStockName").text(data[0].stkDesc);
-           $("#txtCategory").text(data[0].stkTypeNm );
-
+           $("#txtCategory").text(data[0].stkCtgryNm );
            $("#txtNetWeight").text(data[0].netWt);
            $("#txtGrossWeight").text(data[0].grosWt);
            $("#txtMeasurement").text(data[0].measureCbm);
