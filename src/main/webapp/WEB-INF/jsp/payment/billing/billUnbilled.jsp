@@ -202,10 +202,8 @@ var billingTargetLayout = [
 	function orderList(ordNo, ordId){
 	
 	    Common.ajax("GET","/payment/selectCustBillOrderNoList.do", {"salesOrdId" : ordId}, function(result){
-	        console.log(result);
 	        
 	        $('#orderId').val(ordId);
-	        //$('#orderNo').val(ordNo);
 	        AUIGrid.destroy(orderListGridId);
 	        orderListGridId = GridCommon.createAUIGrid("grid_wrap", orderListLayout,"",gridPros);
 	        AUIGrid.setGridData(orderListGridId, result.data.orderList);
@@ -223,7 +221,6 @@ var billingTargetLayout = [
 	
 	function fn_billingschedule(ordId){
 		Common.ajax("GET","/payment/selectUnbilledRentalBillingSchedule.do", {"salesOrdId" : ordId}, function(result){
-            console.log(result);
             
             AUIGrid.destroy(billingscheduleGridId);
             AUIGrid.destroy(billingTargetGridId);
@@ -235,7 +232,6 @@ var billingTargetLayout = [
     }
 	
 	function fn_createBillsPopClose(){
-		
 		$('#createBillsPop').hide();
 		$('#invoiceRemark').val("");
 		$('#remark').val("");
@@ -364,8 +360,6 @@ var billingTargetLayout = [
 	        data.form = [{"orderId":orderId,"orderNo":orderNo,"remark":remark, "invoiceRemark":invoiceRemark}];
 	        
 	        Common.ajax("POST","/payment/saveCreateTaxesManualBills.do", data, function(result){
-	            
-	            console.log(result);
 	            fn_createBillsPopClose();
 	            AUIGrid.clearGridData(billingscheduleGridId);
                 AUIGrid.clearGridData(billingTargetGridId);

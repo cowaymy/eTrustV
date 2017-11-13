@@ -220,7 +220,6 @@ var billingTargetLayout = [
 	function orderList(ordNo, ordId){
 	
 	    Common.ajax("GET","/payment/selectCustBillOrderList.do", {"salesOrdId" : ordId}, function(result){
-	        console.log(result);
 	        
 	        $('#orderId').val(ordId);
 	        //$('#orderNo').val(ordNo);
@@ -241,7 +240,6 @@ var billingTargetLayout = [
 	
 	function fn_billingschedule(ordId){
 		Common.ajax("GET","/payment/selectRentalBillingSchedule.do", {"salesOrdId" : ordId}, function(result){
-            console.log(result);
             
             AUIGrid.destroy(billingscheduleGridId);
             AUIGrid.destroy(billingTargetGridId);
@@ -397,12 +395,10 @@ var billingTargetLayout = [
 	        data.form = [{"orderId":orderId ,"remark":remark, "invoiceRemark":invoiceRemark}];
 	        
 	        Common.ajax("POST","/payment/saveCreateBills.do", data, function(result){
-	            console.log(result);
 	            AUIGrid.clearGridData(billingscheduleGridId);
                 AUIGrid.clearGridData(billingTargetGridId);
                 fn_createBillsPopClose();
 	            Common.alert(result.message);
-	           
 	        });
 	        
 	    }); //btnSave end
