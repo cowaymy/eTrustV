@@ -230,6 +230,7 @@ input[type=text]:-webkit-input-placeholder {color:#ccc; font-style:italic;}
 .center_btns li{display:inline-block; vertical-align:top;}
 table+.center_btns{padding-top:5px;}
 .grid_wrap{margin:5px 0 10px 0;}
+.grid_wrap table{table-layout: auto}
 .grid_wrap.h220{height:220px;}
 .left_btns li input[type=text],
 .center_btns li input[type=text],
