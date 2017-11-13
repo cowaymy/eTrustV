@@ -431,6 +431,15 @@ var journalPopLayout = [
     function fn_rclStatisticReportPop(){
         Common.popupDiv('/payment/common/initCommonRclStatisticReportPop.do', {callPrgm : "RCL_STATISTIC_REPORT"}, null , true ,'_rclStatisticReport');
     }
+    
+    // 화면 초기화
+    function fn_clear(){
+        //화면내 모든 form 객체 초기화
+        $("#searchForm")[0].reset();
+
+        //그리드 초기화
+        AUIGrid.clearGridData(masterListGridID);
+    }
    
 </script>
 <!-- content start -->
@@ -445,7 +454,7 @@ var journalPopLayout = [
 		<h2>Bank Account Reconciliation</h2>
 		<ul class="right_btns">
 		    <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>
-		    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+		    <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
 	<section class="search_table"><!-- search_table start -->
