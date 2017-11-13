@@ -16,8 +16,8 @@
 	</ul>
 	<ul class="right_opt">
 	    <li>Login as <span>${SESSION_INFO.userName}</span></li>
-	    <li><a href="/login/logout.do" class="logout">Logout</a></li>
-	    <li><a href="/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
+	    <li><a href="${pageContext.request.contextPath}/login/logout.do" class="logout">Logout</a></li>
+	    <li><a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
 	    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
 	    <li id="menuLinkHelp"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_help.gif" alt="Help" /></a></li>
 	</ul>
