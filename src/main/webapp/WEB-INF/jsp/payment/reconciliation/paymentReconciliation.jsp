@@ -213,7 +213,6 @@ var maintenancePopLayout = [
 
     function searchList(){
     	Common.ajax("GET","/payment/selectReconciliationMasterList.do", $("#searchForm").serialize(), function(result){
-    		console.log(result)
     		AUIGrid.setGridData(masterListGridID, result);
     	});
     }
@@ -226,9 +225,8 @@ var maintenancePopLayout = [
     		var reconId = AUIGrid.getCellValue(masterListGridID, selectedGridValue, "fDepReconId");
     		
     		Common.ajax("GET","/payment/selectLoadReconciliation.do", {"reconId" : reconId}, function(result){
-                console.log(result);
-    			$('#maintenance_popup_wrap').show();
     			
+    			$('#maintenance_popup_wrap').show();
     			AUIGrid.destroy(maintenanceGridID);// 그리드 삭제
     			maintenanceGridID = GridCommon.createAUIGrid("maintenance_grid_wrap", maintenancePopLayout, null, gridPros);
     			AUIGrid.setGridData(maintenanceGridID, result.data.depositList);
