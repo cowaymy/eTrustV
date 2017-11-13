@@ -98,7 +98,6 @@ var discountLayout = [
     function loadOrderInfo(ordNo, ordId){
 
     	Common.ajax("GET","/payment/selectBasicInfo.do", {"salesOrdId" : ordId}, function(result){
-        	console.log(result);
             
             //BASIC INFO
             $('#salesOrdId').val(result.data.basicInfo.ordId);
@@ -144,7 +143,7 @@ var discountLayout = [
         var startPeriod = $('#startPeriod').val();
         var endPeriod = $('#endPeriod').val();
         var discountAmount = $('#discountAmount').val();
-        var remarks = $('#remarks').val();
+        var remarks = $('#remarks').val().trim();
         var contractId = "";
         
         if(FormUtil.isEmpty(salesOrdId)){
@@ -192,15 +191,11 @@ var discountLayout = [
     	}
     	
     	Common.ajax("GET","/payment/saveDiscount.do", $("#billingForm").serialize(), function(result){
-            console.log(result);
-            
-
             $('#discountType').val('');
             $('#startPeriod').val('');
             $('#endPeriod').val('');
             $('#discountAmount').val('');
             $('#remarks').val('');
-       
              $('#addNewEntryPop').hide();
             
             //BASIC INFO
@@ -209,12 +204,10 @@ var discountLayout = [
             $('#custName').val(result.data.basicInfo.custName);
             
             AUIGrid.setGridData(discountGridId, result.data.discountList);
-            
         });
     }
     
     function fn_close() {
-        
         $('#addNewEntryPop').hide();
     }
     
@@ -227,15 +220,12 @@ var discountLayout = [
     		
     		Common.confirm('Are you sure you want to disable the selected discount entry? Once disabled, can not restore.',function (){
                 Common.ajax("GET","/payment/saveDisableDiscount.do", {"dscntEntryId" : dscntEntryId, "salesOrdId" : salesOrdId}, function(result){
-                    console.log(result);
                     
                     //BASIC INFO
                     $('#salesOrdId').val(result.data.basicInfo.ordId);
                     $('#orderNo').val(result.data.basicInfo.ordNo);
                     $('#custName').val(result.data.basicInfo.custName);
-                    
                     AUIGrid.setGridData(discountGridId, result.data.discountList);
-                    
                     Common.alert(result.data.resultMessage);
                 });
             });
