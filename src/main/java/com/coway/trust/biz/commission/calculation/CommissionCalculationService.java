@@ -238,8 +238,4 @@ public interface CommissionCalculationService
     void incentiveDeactivate(Map<String, Object> params);
     void callIncentiveConfirm(Map<String, Object> params);
     
-    Map commSHIMemberSearch (Map<String, Object> params);
-    
-    List<EgovMap> commSPCRgenrawSHIIndexCall (Map<String, Object> params);
-    List<EgovMap> commSHIIndexDetailsCall (Map<String, Object> params);
 }

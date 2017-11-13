@@ -23,5 +23,264 @@
     </if>
 		
 	</select>
+	
+	<select id="commissionGroupType" resultType="EgovMap">
+        SELECT
+            T2.CODE_ID AS cdId,
+            T2.CODE AS cd,
+            T2.CODE_NAME AS cdNm
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE T2.CODE_ID IN (1,2)
+        ORDER BY T2.CODE
+   </select>
+   
+   <select id="commSHIMemberSearch" parameterType="Map" resultType="Map">
+        SELECT 
+            sub.MEM_ID AS MEM_ID, 
+            sub.MEM_UP_ID AS MEM_UP_ID, 
+            sub.MEM_LVL AS MEM_LVL, 
+            sub.DEPT_CODE AS DEPT_CODE, 
+            sub.ORG_STUS_CODE_ID AS ORG_STUS_CODE_ID, 
+            sub.HIST_MONTH AS HIST_MONTH, 
+            sub.HIST_YEAR AS HIST_YEAR, 
+            sub.CRT_DT AS CRT_DT, 
+            sub.CRT_USER_ID AS CRT_USER_ID, 
+            sub.PR_CODE AS PR_CODE, 
+            sub.PR_MEM_ID AS PR_MEM_ID, 
+            sub.GRAND_PR_CODE AS GRAND_PR_CODE, 
+            sub.GRAND_PR_MEM_ID AS GRAND_PR_MEM_ID, 
+            sub.LAST_DEPT_CODE AS LAST_DEPT_CODE, 
+            sub.LAST_GRP_CODE AS LAST_GRP_CODE, 
+            sub.LAST_ORG_CODE AS LAST_ORG_CODE
+        FROM ( SELECT
+            t2.MEM_ID AS MEM_ID, 
+            t2.MEM_UP_ID AS MEM_UP_ID, 
+            t2.MEM_LVL AS MEM_LVL, 
+            t2.DEPT_CODE AS DEPT_CODE, 
+            t2.ORG_STUS_CODE_ID AS ORG_STUS_CODE_ID, 
+            t2.HIST_MONTH AS HIST_MONTH, 
+            t2.HIST_YEAR AS HIST_YEAR, 
+            t2.CRT_DT AS CRT_DT, 
+            t2.CRT_USER_ID AS CRT_USER_ID, 
+            t2.PR_CODE AS PR_CODE, 
+            t2.PR_MEM_ID AS PR_MEM_ID, 
+            t2.GRAND_PR_CODE AS GRAND_PR_CODE, 
+            t2.GRAND_PR_MEM_ID AS GRAND_PR_MEM_ID, 
+            t2.LAST_DEPT_CODE AS LAST_DEPT_CODE, 
+            t2.LAST_GRP_CODE AS LAST_GRP_CODE, 
+            t2.LAST_ORG_CODE AS LAST_ORG_CODE
+            FROM  ORG0001D  t1 JOIN ORG0006D  t2 
+              ON t2.MEM_ID = t1.MEM_ID
+                  AND t2.HIST_MONTH = #{pvMonth}
+                  AND t2.HIST_YEAR = #{pvYear}
+            WHERE t1.MEM_CODE =#{memCode}
+              AND t1.MEM_TYPE = #{typeCode}
+        )   sub
+    </select>
+    
+    <resultMap id="commSHIIndexMap" type="egovMap" />   
+    <select id="commSHIIndexCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_SPC_RGENRAW_SHI_IDX(#{memCode},#{pvMonth},#{pvYear},#{level},#{typeCode},#{teamCode},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commSHIIndexMap})
+        }
+    </select>
+    
+    <resultMap id="commSHIDetailMap" type="egovMap" />   
+    <select id="commSHIIndexDetailsCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_SPC_RGENRAW_SHI_IDX_DTL(#{memberCd},#{pvMonth},#{pvYear},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commSHIDetailMap})
+        }
+    </select>
+    
+    <!-- searchOrganization Gruop List -->
+    <select id="selectOrgGrList" parameterType="Map" resultType="EgovMap">
+       <![CDATA[
+        SELECT
+        T2.CODE_MASTER_ID AS mstId ,
+        T1.CODE_MASTER_NAME AS mstNm,
+        T2.CODE_ID AS cdId,
+        T2.CODE AS cd,
+        T2.CODE_NAME AS cdNm,
+        T2.CODE_DESC AS cdDs
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE 1=1
+         ]]>
+        <if test="mstId != null and mstId != ''">
+            AND T1.CODE_MASTER_ID = #{mstId}
+            AND T2.CODE_ID IN (1,2,3)
+        </if>
+         <![CDATA[
+        ORDER BY T2.CODE
+         ]]>
+    </select>
+
+    <!-- search Organization List -->
+    <select id="selectOrgList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+        SELECT
+            T2.CODE_MASTER_ID AS mstId ,
+            T1.CODE_MASTER_NAME AS mstNm,
+            T2.CODE_ID AS cdId,
+            T2.CODE AS cd,
+            T2.CODE_NAME AS cdNm,
+            T2.CODE_DESC AS cdDs
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+            ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE 1=1
+         ]]>
+        <if test="mstId != null and mstId != ''">
+            AND T1.CODE_MASTER_ID = #{mstId}
+        </if>
+           <![CDATA[   
+        ORDER BY T2.CODE_ID
+         ]]>
+    </select>
+    
+    <!-- searchOrganization Gruop Code All List -->
+    <select id="selectOrgCdListAll" parameterType="Map" resultType="EgovMap">
+  <![CDATA[
+    SELECT
+    ORG_SEQ,
+    ORG_CD ,
+    ORG_NM 
+    FROM CMM0041C
+    WHERE 1=1
+     ]]>
+        <if test="orgGrCombo != null and orgGrCombo != ''">
+            AND ORG_GR_CD = #{orgGrCombo}
+        </if>    
+        <if test="searchDt != null and searchDt != ''">
+            AND #{searchDt} between START_YEARMONTH and END_YEARMONTH
+        </if>    
+    <![CDATA[
+    GROUP BY ORG_SEQ,ORG_CD, ORG_NM
+    ORDER BY ORG_NM 
+     ]]>
+    </select>
   
+    
+    <select id="selectCodyRawData" parameterType="Map" resultType="EgovMap">
+      <![CDATA[   
+        select 
+            t2.MEM_CODE as A_MEM_CODE , 
+            t2.NAME as A_MEM_NAME , 
+            (case when t1.EMPLY_LEV=4 then 'CD'
+            when t1.EMPLY_LEV=3 then 'CM'
+            when t1.EMPLY_LEV=2 then 'SCM'
+            else 'GCM' 
+            end) AS A_RANK ,
+            t2.NRIC as A_NRIC ,
+            (t0.R20 + t0.R1) as A_PER_AMT,
+            (t0.R2 + t0.R3 +t0.R18 + t0.R19 + t0.R21+ t0.R22) as A_SALES_AMT,
+            t0.R4 as A_BONUS_AMT,
+            t0.R6 as A_COLLECT_AMT,
+            t0.R13 as A_MEMBERSHIP_AMT,
+            0 as A_HP_AMT,
+            0 as A_TRANSPORT_AMT,
+            t0.R23 as A_NEWCODY_AMT,
+            0 as A_INTRODUCTION_FEES,
+            0 as A_STAFF_PURCHASE,
+            0 as A_TELEPHONE_DEDUCT,
+            t0.R28 as A_INCENTIVE,
+            t0.R99 as A_ADJ,
+            t0.R29 as A_SHI_AMT,
+            t0.R34 as A_RENTALMEMBERSHIP_AMT,
+            t0.R35 as A_SHI_RENTALMEMBERSHIP_AMT
+        from CMM0029D t0 
+            join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID
+            join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
+            left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
+        where t1.EMPLY_TYPE_CODE = 'CD' and t1.EMPLY_LEV < 4 
+            and t3.F_MEM_ID is null and t1.EMPLY_STUS_ID<>3  and 
+                (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+                +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25)>0
+            and t1.EMPLY_TYPE_ID=2 and t0.TASK_ID=48
+        ]]>
+  </select>
+  <select id="selectCMRawData" parameterType="Map" resultType="EgovMap">
+      <![CDATA[   
+        SELECT 
+            t1.MEM_CODE as A_MEM_CODE , 
+            t1.NAME as A_MEM_NAME , 
+            (case when t1.EMPLY_LEV=4 then 'CD'
+                        when t1.EMPLY_LEV=3 then 'CM'
+                        when t1.EMPLY_LEV=2 then 'SCM'
+                        else 'GCM'  end) AS A_RANK ,
+            t1.NRIC as A_NRIC ,
+            (t1.R20 + t1.R1) as A_PER_AMT,
+            (t1.R2 + t1.R3 +t1.R18 + t1.R19 + t1.R21+ t1.R22) as A_SALES_AMT,
+            t1.R4 as A_BONUS_AMT,
+            t1.R6 as A_COLLECT_AMT,
+            t1.R13 as A_MEMBERSHIP_AMT,
+            0 as A_HP_AMT,
+            0 as A_TRANSPORT_AMT,
+            t1.R23 as A_NEWCODY_AMT,
+            0 as A_INTRODUCTION_FEES,
+            0 as A_STAFF_PURCHASE,
+            0 as A_TELEPHONE_DEDUCT,
+            t1.R28 as A_INCENTIVE,
+            t1.R99 as A_ADJ,
+            t1.R29 as A_SHI_AMT,
+            t1.R34 as A_RENTALMEMBERSHIP_AMT,
+            t2.R35 as A_SHI_RENTALMEMBERSHIP_AMT,
+            t2.MEM_CODE as S_MEM_CODE , 
+            t2.NAME as MEM_NAME , 
+            (case when t1.EMPLY_LEV=4 then 'CD'
+            when t2.EMPLY_LEV=3 then 'CM'
+            when t2.EMPLY_LEV=2 then 'SCM'
+            else 'GCM' 
+            end) AS S_RANK ,
+            t2.NRIC as S_NRIC ,
+            (t2.R20 + t2.R1) as S_PER_AMT,
+            (t2.R2 + t2.R3 +t2.R18 + t2.R19 + t2.R21+ t2.R22) as S_SALES_AMT,
+            t2.R4 as S_BONUS_AMT,
+            t2.R6 as S_COLLECT_AMT,
+            t2.R13 as S_MEMBERSHIP_AMT,
+            0 as S_HP_AMT,
+            0 as S_TRANSPORT_AMT,
+            t2.R23 as S_NEWCODY_AMT,
+            0 as S_INTRODUCTION_FEES,
+            0 as S_STAFF_PURCHASE,
+            0 as S_TELEPHONE_DEDUCT,
+            t2.R28 as S_INCENTIVE,
+            t2.R99 as S_ADJ,
+            t2.R29 as S_SHI_AMT,
+            t2.R34 as S_RENTALMEMBERSHIP_AMT,
+            t2.R35 as S_SHI_RENTALMEMBERSHIP_AMT
+        FROM (
+                select *
+                from CMM0029D t0 
+                    join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID
+                    join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
+                    left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
+                where t1.EMPLY_TYPE_CODE = 'CD' and t1.EMPLY_LEV < 4 
+                    and t3.F_MEM_ID is null and t1.EMPLY_STUS_ID<>3  and 
+                        (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+                        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25)>0
+                    and t1.EMPLY_TYPE_ID=2 and t0.TASK_ID=48 ) t1, 
+                (
+                select  *
+                from CMM0029T t0 
+                    join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID
+                    join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
+                    left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
+                where t1.EMPLY_TYPE_CODE = 'CD' and t1.EMPLY_LEV < 4 
+                    and t3.F_MEM_ID is null and t1.EMPLY_STUS_ID<>3  and 
+                        (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+                        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25)>0
+                    and t1.EMPLY_TYPE_ID=2 and t0.TASK_ID=48) t2
+        ]]>
+        WHERE t1.TASK_ID = T2.TASK_ID 
+            AND T1.MEM_CODE = T2.MEM_CODE
+            AND T1.MEM_TYPE = T2.MEM_TYPE
+            AND t1.TASK_ID = #{taskId}
+            <if test="memCode != null and memCode != ''">
+                AND t1.MEM_CODE LIKE '%'||#{memCode}||'%'
+            </if>
+  </select>
 </mapper>

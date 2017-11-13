@@ -25,13 +25,13 @@ var today = "${today}";
 				$("#teamCode").val("");
                 $("#level").val("");
 			}else{
-				Common.ajax("GET", "/commission/calculation/commSHIMemSearch", $("#myForm").serializeJSON(), function(result) {
+				Common.ajax("GET", "/commission/report/commSHIMemSearch", $("#myForm").serializeJSON(), function(result) {
 					if(result != null){
 						$("#teamCode").val(result.DEPT_CODE);
 						$("#level").val(result.MEM_LVL);
 						
 						
-						Common.ajax("GET", "/commission/calculation/commSPCRgenrawSHIIndex", $("#myForm").serializeJSON(), function(result) {
+						Common.ajax("GET", "/commission/report/commSPCRgenrawSHIIndex", $("#myForm").serializeJSON(), function(result) {
 							AUIGrid.setGridData(myGridID, result);
 						});
 					}else{
@@ -54,7 +54,7 @@ var today = "${today}";
 			if(AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode") != null && AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode") != ""){
 				memCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode");
 				var date ={"memCode" : memCode, "searchDt" : $("#shiDate").val()};
-				Common.popupDiv("/commission/calculation/commSHIIndexViewDetailsPop.do",date);
+				Common.popupDiv("/commission/report/commSHIIndexViewDetailsPop.do",date);
 			}
 		});
 		

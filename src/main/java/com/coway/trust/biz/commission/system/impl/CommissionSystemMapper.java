@@ -247,23 +247,77 @@ public interface CommissionSystemMapper {
 	 */
 	int udtWeeklyCommissionGrid(Map<String, Object> params);
 	
+	/**
+	 * simulation Version Mng List
+	 * @param params
+	 * @return
+	 */
 	List<EgovMap> selectSimulationMngList(Map<String, Object> params);
 	
+	/**
+	 * simulation rule endDate update
+	 * @param params
+	 */
 	void udtVersionItemEndDt (Map<String, Object> params);
 	
+	/**
+	 * simulation rule book vaild Search
+	 * @param itemCd
+	 * @return
+	 */
 	String varsionVaildSearch (String itemCd);
 	
+	/**
+	 * simulation rule insert
+	 * @param params
+	 */
 	void versionItemInsert(Map<String, Object> params);
 	
+	/**
+	 * actual rule book item list select(new Seq)
+	 * @param params
+	 * @return
+	 */
 	List<EgovMap> selectVersionRuleBookList(Map<String, Object> params);
+	
+	/**
+	 * simulation item insert
+	 * @param params
+	 */
 	void addCommVersionRuleData(Map<String, Object> params);
+	
+	/**
+	 * simulation item endDate update
+	 * @param params
+	 */
 	void udtCommVersionRuleEndDt(Map<String, Object> params);
 	
+	/**
+	 * simulation rule book item list select
+	 * @param params
+	 * @return
+	 */
 	List<EgovMap> selectVersionRuleBookMngList(Map<String, Object> params);
 	
+	/**
+	 * simulation item update type cnt
+	 * @param params
+	 * @return
+	 */
 	int cntSimulUpdateData(Map<String, Object> params);
+	
+	/**
+	 * simulation item description update
+	 * @param params
+	 * @return
+	 */
 	void udtSimulRuleDescData(Map<String, Object> params);
 	
+	/**
+	 * simulation update data valid list
+	 * @param params
+	 * @return
+	 */
 	List<EgovMap>selectSimulRuleMngChk(Map<String, Object> params);
 	
 }

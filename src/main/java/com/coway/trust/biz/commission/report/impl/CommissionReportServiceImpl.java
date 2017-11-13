@@ -1,5 +1,6 @@
 package com.coway.trust.biz.commission.report.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.commission.report.CommissionReportService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
  * @Class Name : EgovSampleServiceImpl.java
@@ -56,6 +58,74 @@ public class CommissionReportServiceImpl extends EgovAbstractServiceImpl impleme
 	public int selectMemberCount(Map<java.lang.String, Object> param) {
 		int cnt = commissionReportMapper.selectMemberCount(param);
 		return cnt;
+	}
+	
+	@Override
+	public List<EgovMap> commissionGroupType(Map<String, Object> params) {
+		return commissionReportMapper.commissionGroupType(params);
+	}
+	
+	@Override
+	public Map commSHIMemberSearch (Map<String, Object> params){
+		return commissionReportMapper.commSHIMemberSearch(params);
+	}
+	
+	@Override
+	public List<EgovMap> commSPCRgenrawSHIIndexCall (Map<String, Object> params){
+		return commissionReportMapper.commSHIIndexCall(params);
+		
+	}
+	
+	@Override
+	public List<EgovMap> commSHIIndexDetailsCall (Map<String, Object> params){
+		return commissionReportMapper.commSHIIndexDetailsCall(params);
+		
+	}
+	
+	/**
+	 * search Organization Gruop List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgGrList(Map<String, Object> params) {
+		return commissionReportMapper.selectOrgGrList(params);
+	}
+
+	/**
+	 * search Organization List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgList(Map<String, Object> params) {
+		return commissionReportMapper.selectOrgList(params);
+	}
+	
+	/**
+	 * search Organization Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgCdListAll(Map<String, Object> params) {
+		return commissionReportMapper.selectOrgCdListAll(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectCMRawData(Map<String, Object> params) {
+		return commissionReportMapper.selectCMRawData(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectCodyRawData(Map<String, Object> params) {
+		return commissionReportMapper.selectCodyRawData(params);
 	}
 
 }

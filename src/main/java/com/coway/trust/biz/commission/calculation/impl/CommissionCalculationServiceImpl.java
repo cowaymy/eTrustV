@@ -866,21 +866,4 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		commissionCalculationMapper.callIncentiveConfirm(params);
 	}
 	
-	@Override
-	public Map commSHIMemberSearch (Map<String, Object> params){
-		return commissionCalculationMapper.commSHIMemberSearch(params);
-	}
-	
-	@Override
-	public List<EgovMap> commSPCRgenrawSHIIndexCall (Map<String, Object> params){
-		return commissionCalculationMapper.commSHIIndexCall(params);
-		
-	}
-	
-	@Override
-	public List<EgovMap> commSHIIndexDetailsCall (Map<String, Object> params){
-		return commissionCalculationMapper.commSHIIndexDetailsCall(params);
-		
-	}
-	
 }

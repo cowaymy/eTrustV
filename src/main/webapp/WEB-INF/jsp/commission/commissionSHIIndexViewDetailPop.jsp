@@ -13,7 +13,7 @@
 		createAUIGrid();
 		
 		$("#searchD").click(function(){
-			Common.ajax("GET", "/commission/calculation/commSHIDetailSearch", $("#detailFrom").serializeJSON(), function(result) {
+			Common.ajax("GET", "/commission/report/commSHIDetailSearch", $("#detailFrom").serializeJSON(), function(result) {
 				AUIGrid.setGridData(detailGridID, result);
 			});
 		});
