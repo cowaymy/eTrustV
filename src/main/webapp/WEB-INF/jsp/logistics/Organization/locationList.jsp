@@ -242,8 +242,8 @@
             
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
-            	Common.confirm("<spring:message code='sys.common.alert.save'/>");    
-            //	fn_deleteWare(selectedItem[0]);
+            //	Common.confirm("<spring:message code='sys.common.alert.delete'/>",fn_deleteAjax(selectedItem[0]));    
+            	fn_deleteWare(selectedItem[0]);
             }else{
             Common.alert('Choice Data please..');
             }
@@ -354,24 +354,18 @@
 	    doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#icdccode").val()}, '','irdccode', 'S' , '');
   }
   function fn_deleteWare(rowid){      
-	  var locid=AUIGrid.getCellValue(myGridID ,rowid,'locid');	    
-      var param = "?locid="+locid;
-        $.ajax({
-          type : "POST",
-          url : "/logistics/organization/locationDelete.do"+param,
-          dataType : "json",               
-          contentType : "application/json;charset=UTF-8",
-          success : function(result) {
-          Common.alert(result.message);
-          $("#search").click();
-          },
-          error: function(jqXHR, textStatus, errorThrown){
-              alert("실패하였습니다.");
-          }
-      });  
-  }
-  
-  
+	  var locid=AUIGrid.getCellValue(myGridID ,rowid,'locid');	
+     // var param = "?locid="+locid;
+      Common.ajax("GET", "/logistics/organization/locationDelete.do", {"locid":locid}, function(result) { 
+    	  Common.alert(result.message);
+        $("#search").click();
+      }, function(jqXHR, textStatus, errorThrown) {
+          Common.alert("실패하였습니다.");
+          
+          alert(jqXHR.responseJSON.message);
+          
+      });    
+  }    
   function inValidation(){
    
 	   var inwarecd     = $("#inwarecd").val().trim();
@@ -511,7 +505,8 @@
     		 console.log($("#insForm").serialize());
              //$('#instockgrade').attr("disabled",false)
                Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
-                Common.alert(result.message);
+                Common.alert(""+result.message+"</br> Created WHID: "+result.data);             	   
+                //Common.alert(result.message);
                 $( "#registWindow" ).hide();
                 $('#insForm')[0].reset();
                 
@@ -554,6 +549,11 @@
         	 }        	 
          }
      }
+     
+//      function fn_deleteAjax(rowid) {
+//     	 alert("rowid :   "+rowid);
+//       fn_deleteWare(rowid);
+// 	}
      
 </script>
 </head>
@@ -663,7 +663,7 @@
 
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li> --%>
-    <%-- <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li> --%>
+    <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
