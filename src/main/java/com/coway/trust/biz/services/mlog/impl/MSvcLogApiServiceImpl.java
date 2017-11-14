@@ -340,6 +340,12 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 
 	@Override
+	public Map<String, Object> getAsBasic(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getAsBasic(params);
+	}
+	
+	@Override
 	public Map<String, Object> selectOutstandingResult(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.selectOutstandingResult(params);
