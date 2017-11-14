@@ -425,11 +425,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#price_info_edit").text() == "EDIT"){
-                    if (selectedItems[i].item.statuscodeid == '1'){
+                  //  if (selectedItems[i].item.statuscodeid == '1'){
                         f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "EP");
-                    }else{
-                        alert(selectedItems[i].item.name + ' is a state that can not be changed.');
-                    }
+                 //   }else{
+                  //      alert(selectedItems[i].item.name + ' is a state that can not be changed.');
+                  //  }
                 }else if ($("#price_info_edit").text() == "SAVE"){
                     f_info_save("/stock/modifyPriceInfo.do" , selectedItems[i].item.stkid , "priceForm" ,"price_info");
                     //$("#stock_info_edit").text("EDIT");
@@ -520,6 +520,81 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
             }
         });
+        
+        
+        $('#txtNormalPrice').keypress(function() {
+            if (event.which == '13') {
+                var findStr=".";
+                var sublen;
+                var prices = $("#dNormalPrice").val();
+                var priceslen=prices.length;
+                //alert("????"+prices.indexOf(findStr));
+                if (prices.indexOf(findStr) > 0) {  
+                  sublen= prices.indexOf('.');
+                  sublen=sublen+1;
+                  var sums = priceslen - sublen;
+                //  alert("sums :  "+sums);
+                  if(sums == 0 ){
+                      $("#dNormalPrice").val(prices+"00");  
+                  }else if(sums == 1 ){
+                      $("#dNormalPrice").val(prices+"0");  
+                  }else if(sums == 2){
+                        
+                  }else{
+                      Common.alert("Please enter only the second decimal place.");
+                      $("#dNormalPrice").val("");
+                  }
+                 
+                  }else if(prices.indexOf(findStr) == 0){
+                      Common.alert('You can not enter decimal numbers first.');
+                      $("#dNormalPrice").val("");
+                  }else{
+                    //  alert('Not Found!!');
+                      $("#dNormalPrice").val($.number(prices,2));  
+                  } 
+    
+            }
+        });
+        
+        
+        $('#txtCost').keypress(function() {
+            if (event.which == '13') {
+                var findStr=".";
+                var sublen;
+                var prices = $("#dCost").val();
+                var priceslen=prices.length;
+                //alert("????"+prices.indexOf(findStr));
+                if (prices.indexOf(findStr) > 0) {  
+                  sublen= prices.indexOf('.');
+                  sublen=sublen+1;
+                  var sums = priceslen - sublen;
+                //  alert("sums :  "+sums);
+                  if(sums == 0 ){
+                      $("#dCost").val(prices+"00");  
+                  }else if(sums == 1 ){
+                      $("#dCost").val(prices+"0");  
+                  }else if(sums == 2){
+                        
+                  }else{
+                      Common.alert("Please enter only the second decimal place.");
+                      $("#dCost").val("");
+                  }
+                 
+                  }else if(prices.indexOf(findStr) == 0){
+                      Common.alert('You can not enter decimal numbers first.');
+                      $("#dCost").val("");
+                  }else{
+                    //  alert('Not Found!!');
+                      $("#dCost").val($.number(prices,2));  
+                  } 
+    
+            }
+        });
+        
+        
+        
+ 
+        
     });
     
     function f_info_save(url, key, v, f) {
@@ -782,6 +857,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
             $("#typeid").val(data[0].typeid);
         } else if (v == 'ES') {
+        	
+        	
             $("#cbNCV").prop("disabled", false);
             $("#cbSirim").prop("disabled", false);
 
@@ -790,9 +867,12 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     .append(
                             "<input type='hidden' name='stock_type' id='stock_type' value=''/>");
             $("#stock_type").val(data[0].typeid);
+//             $("#txtStatus").text(data[0].statusname);
+//             $("#txtStatus").html("<select id='statusselect' name='statusselect' class='w100'></select>");
+//             doDefCombo(comboData,  data[0].statusname,'statusselect', 'S'); 
             $("#txtStatus").text(data[0].statusname);
             $("#txtStatus").html("<select id='statusselect' name='statusselect' class='w100'></select>");
-            doDefCombo(comboData,  data[0].statusname,'statusselect', 'S'); 
+            doDefCombo(comboData,  data[0].statusid,'statusselect', 'S'); 
             $("#txtStockCode")
                     .html(
                             "<input type='text' name='stock_code' id='stock_code' class='w100p' value='' disabled=true/>");
@@ -1339,14 +1419,14 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         <col style="width:*" />
                     </colgroup>
                     <tbody>
-                    <tr>
-                        <th scope="row">Cost</th>
-                        <td ID="txtCost"></td>
-                        <th scope="row">Normal Price</th>
-                        <td ID="txtNormalPrice"></td>
-                        <th scope="row">Point of Value (PV)</th>
-                        <td ID="txtPV"></td>
-                    </tr>
+<!--                     <tr> -->
+<!--                         <th scope="row">Cost</th> -->
+<!--                         <td ID="txtCost"></td> -->
+<!--                         <th scope="row">Normal Price</th> -->
+<!--                         <td ID="txtNormalPrice"></td> -->
+<!--                         <th scope="row">Point of Value (PV)</th> -->
+<!--                         <td ID="txtPV"></td> -->
+<!--                     </tr> -->
                     <tr>
                         <th scope="row">Monthly Rental</th>
                         <td ID="txtMonthlyRental"></td>
@@ -1358,6 +1438,19 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     <tr>
                         <th scope="row">Trade In (PV) Value</th>
                         <td colspan="5" ID="txtTradeInPV"></td>
+                    </tr>
+                    
+                     <tr>
+                        <th scope="row">Cost</th>
+                        <td colspan="5" ID="txtCost"></td>
+                    </tr>
+                     <tr>
+                        <th scope="row">Normal Price</th>
+                        <td colspan="5" ID="txtNormalPrice"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Point of Value (PV)</th> 
+                        <td colspan="5" ID="txtPV"></td>
                     </tr>
                     </tbody>
                 </table>
