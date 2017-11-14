@@ -11,7 +11,7 @@
 			   CANCL_MOV_TYPE cmtype,
 			   CANCL_MVT cmvt,
 			   DEBT_CRDIT decr,
-			   decode (DEBT_CRDIT , 'H' , 'Debit' , 'S' , 'Credit' , DEBT_CRDIT) decrdesc ,
+			   decode (DEBT_CRDIT , 'H' , 'Credit' , 'S' , 'Debit' , DEBT_CRDIT) decrdesc ,
 			   MOV_INDICT mvindict,
 			   (SELECT code_name FROM sys0013m where code_master_id = 307 and code = LOG0046M.MOV_INDICT) mvindictdesc, 
 			   MOV_RETN mretn,
