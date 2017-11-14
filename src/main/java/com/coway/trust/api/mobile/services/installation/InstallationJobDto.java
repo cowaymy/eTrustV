@@ -22,12 +22,11 @@ public class InstallationJobDto {
 	private String jobType;
 
 	@ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
-	private String jobStatus;
+	private int jobStatus;
 
 	@ApiModelProperty(value = "작업 예정날짜(YYYYMMDD)")
 	private String appointmentDate;
 
-	@ApiModelProperty(value = "작업 예정시간(HHMM)")
 	private String appointmentTime;
 
 	@ApiModelProperty(value = "오전/오후/저녁")
@@ -46,16 +45,16 @@ public class InstallationJobDto {
 	private String customerType;
 
 	@ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
-	private String customerId;
+	private int customerId;
 
 	@ApiModelProperty(value = "작업 영역(State)_170906 추가")
 	private String serviceState;
 
 	@ApiModelProperty(value = "작업예정일(년)_170908 추가")
-	private String planYear;
+	private int planYear;
 
 	@ApiModelProperty(value = "작업예정일(월)_170908 추가")
-	private String planMonth;
+	private int planMonth;
 
 	@ApiModelProperty(value = "고객 GPS 값 (위도/경도값)")
 	private String customerGps;
@@ -100,22 +99,22 @@ public class InstallationJobDto {
 	private String instruction;
 
 	@ApiModelProperty(value = "")
-	private String salesPromotion;
+	private int salesPromotion;
 
 	@ApiModelProperty(value = "")
-	private String contractDuration;
+	private int contractDuration;
 
 	@ApiModelProperty(value = "")
-	private String monthlyRentalFees;
+	private int monthlyRentalFees;
 
 	@ApiModelProperty(value = "")
-	private String registrationFees;
+	private int registrationFees;
 
 	@ApiModelProperty(value = "결제 방식")
 	private String paymentMode;
 
 	@ApiModelProperty(value = "결제 은행")
-	private String bankCode;
+	private int bankCode;
 
 	@ApiModelProperty(value = "결제 은행명")
 	private String bankName;
@@ -196,10 +195,10 @@ public class InstallationJobDto {
 	private String resultAcceptanceName;
 
 	@ApiModelProperty(value = "")
-	private String rcCode;
+	private int rcCode;
 
 	@ApiModelProperty(value = "실패 사유 코드")
-	private String failReasonCode;
+	private int failReasonCode;
 
 	@ApiModelProperty(value = "실패 사유명")
 	private String failReasonName;
@@ -263,11 +262,11 @@ public class InstallationJobDto {
 		this.jobType = jobType;
 	}
 
-	public String getJobStatus() {
+	public int getJobStatus() {
 		return jobStatus;
 	}
 
-	public void setJobStatus(String jobStatus) {
+	public void setJobStatus(int jobStatus) {
 		this.jobStatus = jobStatus;
 	}
 
@@ -327,11 +326,11 @@ public class InstallationJobDto {
 		this.customerType = customerType;
 	}
 
-	public String getCustomerId() {
+	public int getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(String customerId) {
+	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
 	}
 
@@ -343,19 +342,19 @@ public class InstallationJobDto {
 		this.serviceState = serviceState;
 	}
 
-	public String getPlanYear() {
+	public int getPlanYear() {
 		return planYear;
 	}
 
-	public void setPlanYear(String planYear) {
+	public void setPlanYear(int planYear) {
 		this.planYear = planYear;
 	}
 
-	public String getPlanMonth() {
+	public int getPlanMonth() {
 		return planMonth;
 	}
 
-	public void setPlanMonth(String planMonth) {
+	public void setPlanMonth(int planMonth) {
 		this.planMonth = planMonth;
 	}
 
@@ -471,35 +470,35 @@ public class InstallationJobDto {
 		this.instruction = instruction;
 	}
 
-	public String getSalesPromotion() {
+	public int getSalesPromotion() {
 		return salesPromotion;
 	}
 
-	public void setSalesPromotion(String salesPromotion) {
+	public void setSalesPromotion(int salesPromotion) {
 		this.salesPromotion = salesPromotion;
 	}
 
-	public String getContractDuration() {
+	public int getContractDuration() {
 		return contractDuration;
 	}
 
-	public void setContractDuration(String contractDuration) {
+	public void setContractDuration(int contractDuration) {
 		this.contractDuration = contractDuration;
 	}
 
-	public String getMonthlyRentalFees() {
+	public int getMonthlyRentalFees() {
 		return monthlyRentalFees;
 	}
 
-	public void setMonthlyRentalFees(String monthlyRentalFees) {
+	public void setMonthlyRentalFees(int monthlyRentalFees) {
 		this.monthlyRentalFees = monthlyRentalFees;
 	}
 
-	public String getRegistrationFees() {
+	public int getRegistrationFees() {
 		return registrationFees;
 	}
 
-	public void setRegistrationFees(String registrationFees) {
+	public void setRegistrationFees(int registrationFees) {
 		this.registrationFees = registrationFees;
 	}
 
@@ -511,11 +510,11 @@ public class InstallationJobDto {
 		this.paymentMode = paymentMode;
 	}
 
-	public String getBankCode() {
+	public int getBankCode() {
 		return bankCode;
 	}
 
-	public void setBankCode(String bankCode) {
+	public void setBankCode(int bankCode) {
 		this.bankCode = bankCode;
 	}
 
@@ -727,19 +726,19 @@ public class InstallationJobDto {
 		this.resultAcceptanceName = resultAcceptanceName;
 	}
 
-	public String getRcCode() {
+	public int getRcCode() {
 		return rcCode;
 	}
 
-	public void setRcCode(String rcCode) {
+	public void setRcCode(int rcCode) {
 		this.rcCode = rcCode;
 	}
 
-	public String getFailReasonCode() {
+	public int getFailReasonCode() {
 		return failReasonCode;
 	}
 
-	public void setFailReasonCode(String failReasonCode) {
+	public void setFailReasonCode(int failReasonCode) {
 		this.failReasonCode = failReasonCode;
 	}
 
