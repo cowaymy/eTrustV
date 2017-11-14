@@ -32,33 +32,32 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsManualService {
 
 	private static final Logger logger = LoggerFactory.getLogger(MemberEventListController.class);
-	
+
 	@Value("${app.name}")
 	private String appName;
-	
+
 	@Resource(name = "commonMapper")
 	private CommonMapper commonMapper;
-	
+
 	@Resource(name = "hsManualMapper")
 	private HsManualMapper hsManualMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
-	
-	
+
 	@Override
-	public List<EgovMap> selectHsManualList(Map<String, Object> params) {
+	public List<EgovMap> selectHsConfigList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		
+
 		if(params.get("ManuaMyBSMonth") != null) {
 				StringTokenizer str1 = new StringTokenizer(params.get("ManuaMyBSMonth").toString());
-        		
+
         		for(int i =0; i <= 1 ; i++) {
         			str1.hasMoreElements();
         			String result = str1.nextToken("/");            //특정문자로 자를시 사용
-        			
+
         			logger.debug("iiiii: {}", i);
-        			
+
         			if(i==0){
         				params.put("myBSMonth", result);
         				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
@@ -66,31 +65,62 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         				params.put("myBSYear", result);
         				logger.debug("myBSYear : {}", params.get("myBSYear"));
         			}
-        		}		
-			
+        		}
+
 		}
-		
+
 		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
 		logger.debug("saleOrdListSp : {}", params.get("saleOrdListSp"));
 		logger.debug("ManualCustId : {}", params.get("ManualCustId"));
-		
+
+		return hsManualMapper.selectHsConfigList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectHsManualList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+		if(params.get("ManuaMyBSMonth") != null) {
+				StringTokenizer str1 = new StringTokenizer(params.get("ManuaMyBSMonth").toString());
+
+        		for(int i =0; i <= 1 ; i++) {
+        			str1.hasMoreElements();
+        			String result = str1.nextToken("/");            //특정문자로 자를시 사용
+
+        			logger.debug("iiiii: {}", i);
+
+        			if(i==0){
+        				params.put("myBSMonth", result);
+        				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
+        			}else{
+        				params.put("myBSYear", result);
+        				logger.debug("myBSYear : {}", params.get("myBSYear"));
+        			}
+        		}
+
+		}
+
+		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
+		logger.debug("saleOrdListSp : {}", params.get("saleOrdListSp"));
+		logger.debug("ManualCustId : {}", params.get("ManualCustId"));
+
 		return hsManualMapper.selectHsManualList(params);
 	}
 
-	
-	
+
+
 	@Override
 	public List<EgovMap> selectHsAssiinlList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
 		StringTokenizer str1 = new StringTokenizer(params.get("myBSMonth").toString());
 		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
-		
+
 		return hsManualMapper.selectHsAssiinlList(params);
 	}
-	
-	
-	
+
+
+
 	@Override
 	public List<EgovMap> selectBranchList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -111,7 +141,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		return hsManualMapper.getCdUpMemList(params);
 	}
 
-	
+
 	@Override
 	public List<EgovMap> getCdList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -133,16 +163,16 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	@Override
 	public List<EgovMap> selectHsManualListPop(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-        		
+
         		if(params.get("ManuaMyBSMonth") != null) {
         				StringTokenizer str1 = new StringTokenizer(params.get("ManuaMyBSMonth").toString());
-                		
+
                 		for(int i =0; i <= 1 ; i++) {
                 			str1.hasMoreElements();
                 			String result = str1.nextToken("/");            //특정문자로 자를시 사용
-                			
+
                 			logger.debug("iiiii: {}", i);
-                			
+
                 			if(i==0){
                 				params.put("myBSMonth", result);
                 				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
@@ -150,51 +180,51 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                 				params.put("myBSYear", result);
                 				logger.debug("myBSYear : {}", params.get("myBSYear"));
                 			}
-                		}		
-        			
+                		}
+
         		}
-        		
+
         		logger.debug("myBSMonth : {}", params.get("myBSMonth"));
         		logger.debug("saleOrdListSp : {}", params.get("saleOrdListSp"));
         		logger.debug("ManualCustId : {}", params.get("ManualCustId"));
-        		
+
         		return hsManualMapper.selectHsManualListPop(params);
 	}
 
-	
-	
+
+
 	public Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType)  {
 
 		Boolean success = false;
-		
+
 		String appId="";
 		String saveDocNo = "";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		
 
-		
+
+
 		for(int i=0; i< docType.size(); i++){
 //		for(Object obj : docType){
-			
+
 			Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
-			
+
 			int fomSalesOrdNo = Integer.parseInt((String)docSub.get("salesOrdNo"));
 //			int nextSchId = (int) docSub.get("salesOrdNo");
 			int nextSchId  = hsManualMapper.getNextSchdulId();
 			String docNo= commonMapper.selectDocNo("10");
-			
-			
+
+
 			if(docSub.get("year") != null) {
 				StringTokenizer str1 = new StringTokenizer(docSub.get("year").toString());
-	    		
+
 	    		for(int k =0; k <= 1 ; k++) {
 	    			str1.hasMoreElements();
 	    			String result = str1.nextToken("/");            //특정문자로 자를시 사용
-	    			
+
 	    			logger.debug("iiiii: {}", i);
-	    			
+
 	    			if(k==0){
 	    				docSub.put("myBSMonth", result);
 	    				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
@@ -202,11 +232,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	    				docSub.put("myBSYear", result);
 	    				logger.debug("myBSYear : {}", params.get("myBSYear"));
 	    			}
-	    		}		
-			
+	    		}
+
 		}
-			
-			
+
+
 			docSub.put("no", docNo);
 			docSub.put("schdulId", nextSchId);
 			docSub.put("salesOrdId", docSub.get("salesOrdId"));
@@ -223,39 +253,39 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		docSub.put("creator", "1111");
     		docSub.put("created", new Date());
 
-			
+
     		hsManualMapper.insertHsResult(docSub);
 //    		hsManualMapper.insertHsResult((Map<String, Object>)obj);
-    		
+
     		saveDocNo += docNo;
-    				
+
     		if(docType.size()>1 && docType.size() > i){
-    			saveDocNo += "," ;	
+    			saveDocNo += "," ;
     		}
-    		
-    		
+
+
     		resultValue.put("docNo", saveDocNo);
 		}
-		
-		
+
+
 		success=true;
 		//hsManualMapper.insertHsResult(MemApp);
 
 		return resultValue;
 	}
-	
-	
-	
+
+
+
 	private boolean Save(boolean isfreepromo,Map<String, Object> params,SessionVO sessionVO) throws ParseException{
-		
+
 		String appId="";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
-    	
+
 		hsManualMapper.insertHsResult(MemApp);
-		
+
 		insertHs(MemApp);
-		 
+
 		return true;
 	}
 
@@ -268,37 +298,37 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		String appId="";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
-    	
+
 		hsManualMapper.insertHsResult(MemApp);
 		return true;
 	}
-	
 
-	
-	
+
+
+
 	@Override
 	public EgovMap selectHsInitDetailPop(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-        		
+
         		return hsManualMapper.selectHsInitDetailPop(params);
 	}
 
-	
-	
-	
+
+
+
 	@Override
 	@Transactional
 	public Map<String, Object> addIHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
-		
+
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		
+
 			resultValue = SaveResult(true,params,docType,sessionVO);
-		
+
 		return resultValue;
 	}
-	
-	
-	
+
+
+
 	public String getNextDocNo(String prefixNo,String docNo){
 		String nextDocNo = "";
 		int docNoLength=0;
@@ -309,16 +339,16 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		}else{
 			docNoLength = docNo.length();
 		}
-		
+
 		int nextNo = Integer.parseInt(docNo) + 1;
 		nextDocNo = String.format("%0"+docNoLength+"d", nextNo);
 		logger.debug("nextDocNo : {}",nextDocNo);
 		return nextDocNo;
 	}
-	
-	
+
+
 	private Map<String, Object> SaveResult(boolean isfreepromo,Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException{
-		
+
 		int schdulId =  Integer.parseInt(params.get("hidschdulId").toString());
 		String docNo= commonMapper.selectDocNo("11");
 //		EgovMap selectHSResultMList = hsManualMapper.selectHSResultMList(params);
@@ -327,19 +357,19 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		int nextSeq  = hsManualMapper.getNextSvc006dSeq();
 //		EgovMap selectHSDocNoList =   hsManualMapper.selectHSDocNoList(params); //현재 docNo
 //		String resultNo = selectHSDocNoList.get("c2").toString()+selectHSDocNoList.get("c1").toString(); //현재 docNo
-		
-		EgovMap insertHsResultfinal = new EgovMap();
-		
 
-		
+		EgovMap insertHsResultfinal = new EgovMap();
+
+
+
 		if(masterCnt > 0 ) { //master y
-			
+
 			params.put("resultId", nextSeq);
 			hsManualMapper.insertHsResultCopy(params);
-			
+
 		} else {//master n
 			params.put("resultId", nextSeq);
-			
+
 			//doc nextDocNo
 //			String nextDocNo = getNextDocNo(selectHSDocNoList.get("c2").toString(),selectHSDocNoList.get("c1").toString()); //next docNo
 //			logger.debug("nextDocNo : {}",nextDocNo);
@@ -347,49 +377,49 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //			EgovMap docNoM = new EgovMap();
 //			docNoM.put("nextDocNo", nextDocNo);
 //			hsManualMapper.updateDocNo(docNoM);
-			
-			
+
+
 			logger.debug("nextSeq : {}",nextSeq);
 			logger.debug("nextSeq : {}",params);
-			
+
 			//BSResultM
 			insertHsResultfinal.put("resultId", nextSeq);
-			
+
 			insertHsResultfinal.put("docNo", docNo);
 			insertHsResultfinal.put("typeId", 306);
 			insertHsResultfinal.put("schdulId", schdulId);
 			insertHsResultfinal.put("salesOrdId", params.get("hidSalesOrdId"));
 			insertHsResultfinal.put("codyId", params.get("hidCodyId"));
-			
+
 			insertHsResultfinal.put("setlDt", params.get("settleDate"));
 			insertHsResultfinal.put("resultStusCodeId", params.get("cmbStatusType"));
 //			insertHsResultfinal.put("failResnId", params.get("failReason"));
 			insertHsResultfinal.put("failResnId", 0);
 			insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
 			insertHsResultfinal.put("whId", params.get("wareHouse"));
-			
+
 			insertHsResultfinal.put("resultRem", params.get("remark"));
 //			insertHsResultfinal.put("resultCrtDt", SYSDATE);
 			insertHsResultfinal.put("resultCrtUserId", sessionVO.getUserId());
 //			insertHsResultfinal.put("resultUpdDt", SYSDATE);
 			insertHsResultfinal.put("resultUpdUserId", sessionVO.getUserId());
-			
+
 			insertHsResultfinal.put("resultIsSync", '0');
 			insertHsResultfinal.put("resultIsEdit", '0');
 			insertHsResultfinal.put("resultStockUse", '1');
 			insertHsResultfinal.put("resultIsCurr", '1');
 			insertHsResultfinal.put("resultMtchId", '0');
-			
+
 			insertHsResultfinal.put("resultIsAdj", '0');
-	
+
 			hsManualMapper.insertHsResultfinal(insertHsResultfinal);
-			
-			
+
+
 	        //BSResultD
 			for(int i=0; i< docType.size(); i++) {
-				
+
 				Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
-								
+
 	            docSub.put("bsResultId", nextSeq);
 				docSub.put("bsResultPartId", docSub.get("stkId"));
 	            docSub.put("bsResultPartDesc", docSub.get("stkDesc"));
@@ -399,35 +429,35 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	            docSub.put("bsResultCrtUserId",sessionVO.getUserId());
 	            docSub.put("bsResultFilterClm",docSub.get("name"));
 
-	            
+
 	            hsManualMapper.insertHsResultD(docSub);
-	            
+
 			}
 		}
-		
-		
+
+
 		EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params);
-		
-		 //BSScheduleM		
+
+		 //BSScheduleM
 		int scheduleCnt = hsManualMapper.selectHSScheduleMCnt(params);
 
 		if(scheduleCnt > 0 ) {
-			
+
 			EgovMap insertHsScheduleM = new EgovMap();
 
 
 			insertHsScheduleM.put("hidschdulId", params.get("hidschdulId"));
 			insertHsScheduleM.put("resultStusCodeId", getHsResultMList.get("resultStusCodeId"));
 			insertHsScheduleM.put("actnMemId", getHsResultMList.get("codyId"));
-			
+
             hsManualMapper.updateHsScheduleM(insertHsScheduleM);
-            
+
 		}
-		
-		
+
+
         //SrvConfiguration
 		EgovMap srvConfiguration = hsManualMapper.selectSrvConfiguration(params);
-		
+
 		if(srvConfiguration.size()> 0){
 			if(getHsResultMList.get("resultStusCodeId").equals("4")){
 //                    //COMPLETE
@@ -435,7 +465,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //                    qryConfig.SrvPreviousDate = bsResultMas.SettleDate;
 //                    qryConfig.SrvBSWeek = bsPreferWeek;
 //                    entity.SaveChanges();
-				
+
 				EgovMap insertHsSrvConfigM = new EgovMap();
 				insertHsSrvConfigM.put("salesOrdId", getHsResultMList.get("salesOrdId"));
 				insertHsSrvConfigM.put("srvRem", params.get("instruction"));
@@ -443,7 +473,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 				insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
 
 //				hsManualMapper.updateHsSrvConfigM(insertHsSrvConfigM);
-				
+
 //                    HappyCallM callMas = new HappyCallM();
 //                    callMas.HCID = 0;
 //                    callMas.HCSOID = bsResultMas.SalesOrderId;
@@ -470,21 +500,21 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //                qryConfig.SrvBSWeek = bsPreferWeek;
 //                entity.SaveChanges();
             }
-			
+
 		}
-		
-		
-		
+
+
+
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue.put("resultId",  params.get("hidSalesOrdCd"));
 		return resultValue;
 	}
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	@Transactional
 	private boolean insertHsResultfinal(int statusId,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog) throws ParseException{
     		//installEntry status가 1,21 이면 그 밑에 있는걸 ㅌ야된다(컴플릿이 되어도 다시 상태값 변경 가능하게 해야된다
@@ -492,7 +522,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //    		EgovMap maxIdValue = new EgovMap();
 		hsManualMapper.insertHsResultfinal(installResult);
 //    		EgovMap entry = installationResultListMapper.selectEntry(installResult);
-//    		logger.debug("entry : {}", entry);	
+//    		logger.debug("entry : {}", entry);
 //    		maxIdValue.put("value", "resultId");
 //    		maxId = installationResultListMapper.selectMaxId(maxIdValue);
 //    		logger.debug("maxId : {}", maxId);
@@ -508,7 +538,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //    				maxIdValue.put("value", "callEntryId");
 //    				maxId = installationResultListMapper.selectMaxId(maxIdValue);
 //    				callResult.put("callEntryId", maxId);
-//    				
+//
 //    				installationResultListMapper.insertCallResult(callResult);
 //    				//callresult에 max값 구해서 callEntry에 업데이트
 //    				maxIdValue.put("value", "callResultId");
@@ -519,7 +549,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //    				callEntry.put("callEntryId", maxId);
 //    				installationResultListMapper.updateCallEntry(callEntry);
 //    			}
-//    			
+//
 //			hsManualMapper.insertOrderLog(orderLog);
 //    		}
 		return true;
@@ -539,7 +569,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		// TODO Auto-generated method stub
 		return hsManualMapper.cmbServiceMemList();
 	}
-	
+
 
 	@Override
 	public List<EgovMap> selectHsFilterList(Map<String, Object> params) {
@@ -591,25 +621,25 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	@Override
 	@Transactional
 	public Map<String, Object> UpdateHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
-		
+
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		
+
 		EgovMap UpdateHsResult = new EgovMap();
-		
+
         //BSResultD
 		for(int i=0; i< docType.size(); i++) {
 			Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
-			docSub.put("bsResultId", params.get("hidschdulId"));				
+			docSub.put("bsResultId", params.get("hidschdulId"));
 			docSub.put("bsResultPartId", docSub.get("stkId"));
             docSub.put("bsResultPartDesc", docSub.get("stkDesc"));
             docSub.put("bsResultPartQty", docSub.get("name"));
 //            docSub.put("bsResultCrtDt");
             docSub.put("bsResultCrtUserId",sessionVO.getUserId());
             docSub.put("bsResultFilterClm",docSub.get("name"));
-            
+
             hsManualMapper.updateHsResultD(docSub);
 		}
-		
+
 		//BSResultM
 		EgovMap HsResultUdateEdit = new EgovMap();
 		HsResultUdateEdit.put("hidschdulId", params.get("hidschdulId"));
@@ -618,12 +648,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		HsResultUdateEdit.put("failReason", params.get("failReason"));
 		HsResultUdateEdit.put("renColctId", params.get("cmbCollectType"));
 		HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
-		
+
 	     hsManualMapper.updateHsResultM(HsResultUdateEdit);	//m
-		
-	     
-	     
-		 //BSScheduleM		
+
+
+
+		 //BSScheduleM
 		int scheduleCnt = hsManualMapper.selectHSScheduleMCnt(params);
 
 		if(scheduleCnt > 0 ) {
@@ -631,19 +661,19 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			insertHsScheduleM.put("hidschdulId", params.get("hidschdulId"));
 			insertHsScheduleM.put("resultStusCodeId", params.get("cmbStatusType2"));
 			insertHsScheduleM.put("actnMemId", params.get("cmbServiceMem"));
-			
-			
+
+
             hsManualMapper.updateHsScheduleM(insertHsScheduleM);
 		}
-		
-	     
+
+
 			EgovMap updateHsSrvConfigM = new EgovMap();
-			
+
 			updateHsSrvConfigM.put("salesOrdId", params.get("hidschdulId"));
 			updateHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
-			
-//			hsManualMapper.updateHsSrvConfigM(updateHsSrvConfigM);	
-		
+
+//			hsManualMapper.updateHsSrvConfigM(updateHsSrvConfigM);
+
 		return resultValue;
 	}
 
@@ -676,17 +706,17 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	@Override
 	public int updateHsConfigBasic(Map<String, Object> params, SessionVO sessionVO) {
 		// TODO Auto-generated method stub
-		
+
 		int cnt =0;
-		
+
 		LinkedHashMap  hsBasicmap = (LinkedHashMap)  params.get("hsResultM");
-		
-		logger.debug("hsResultM services ===>"+params);  
+
+		logger.debug("hsResultM services ===>"+params);
 		EgovMap selectConfigBasicInfoYn = hsManualMapper.selectConfigBasicInfoYn(hsBasicmap);
-		
-		
+
+
 		if(selectConfigBasicInfoYn.size() > 0) {
-			Map<String, Object> sal0090 = new HashMap<String, Object>(); 
+			Map<String, Object> sal0090 = new HashMap<String, Object>();
 
 			sal0090.put("salesOrderId", hsBasicmap.get("salesOrderId"));
 			sal0090.put("availability", hsBasicmap.get("availability"));
@@ -698,20 +728,20 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			sal0090.put("SrvUpdateAt", sessionVO.getUserId());
 			sal0090.put("hscodyId", hsBasicmap.get("hscodyId"));
 //			sal0090.put("SrvUpdateAt", SYSDATE);
-			
+
 			hsManualMapper.updateHsSVC0006D(sal0090);
 			cnt = hsManualMapper.updateHsConfigBasic(sal0090);
-            
-            
-            
-	          //SrvConfigSetting --> Installation : 281            
+
+
+
+	          //SrvConfigSetting --> Installation : 281
             List<EgovMap> configSettingMap = hsManualMapper.selectConfigSettingYn(hsBasicmap);
 
             if(configSettingMap.size()>0){
             	for(int i=0; i< configSettingMap.size(); i++){
-            		
+
             		Map<String, Object> sal0089 = configSettingMap.get(i);
-            		
+
             			if(configSettingMap.get(i).get("srvSettTypeId").toString().equals("281")){
         					if("1".equals(hsBasicmap.get("settIns").toString())){
                 					sal0089.put("srvSettStusId", 1);
@@ -737,14 +767,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             			sal0089.put("srvSettRem", "");
             			sal0089.put("srvSettCrtUserId", sessionVO.getUserId());
 
-            		
+
             			hsManualMapper.updateHsconfigSetting(sal0089);
 
             	}
             }
 		}
-		
-		 
+
+
 		 return cnt;
 	}
 
@@ -779,23 +809,23 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		List <EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
 		String rtnValue  ="";
 		String line = System.getProperty("line.separator");
-		  
 
-		if (updateItemList.size() > 0) {  
-			
+
+		if (updateItemList.size() > 0) {
+
 			for (int i = 0; i < updateItemList.size(); i++) {
 				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
 				hsManualMapper.updateAssignCody(updateMap) ;
-				
+
 				rtnValue += "Cody Transfer for HS Order ‘" + updateMap.get("no") +"'" + " from " + "'" + updateMap.get("oldCodyCd") +"'"+ " to " + "'" +updateMap.get("codyCd")  + "'"  + "\r\n";
 				rtnValue = rtnValue.replace("\n", line);
 			}
 		}
 		return rtnValue;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 }
