@@ -357,7 +357,7 @@ function fn_checkEmpty() {
         return checkResult;
     }
     if(FormUtil.isEmpty($("#newMemAccName").val())) {
-        Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
+        Common.alert('<spring:message code="staffClaim.staffCode.msg" />');
         checkResult = false;
         return checkResult;
     }
@@ -407,7 +407,7 @@ function fn_checkEmpty() {
         }
         if($("#invcType").val() == "F") {
             if(FormUtil.isEmpty($("#supplirName").val())) {
-                Common.alert('<spring:message code="webInvoice.supplier.msg" />');
+                Common.alert('<spring:message code="staffClaim.supplierName.msg" />');
                 checkResult = false;
                 return checkResult;
             }
