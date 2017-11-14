@@ -56,7 +56,6 @@ public class InboundServiceImple extends EgovAbstractServiceImpl implements Inbo
 		String seq = inboundMapper.selectStockTransferSeq();
 		String reqNo = "SMO" + seq;
 
-		// inboundMapper.reqSTO(params);
 		formMap.put("reqNo", reqNo);
 		formMap.put("userId", params.get("userId"));
 
@@ -78,16 +77,13 @@ public class InboundServiceImple extends EgovAbstractServiceImpl implements Inbo
 		formMap.put("deliveryNo", deliveryNo);
 		inboundMapper.CreateDeliveryM(formMap);
 
-		// for (int i = 0; i < checkList.size(); i++) {
-		// inboundMapper.CreateDeliveryD(formMap);
-		// }
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> map = (Map<String, Object>) checkList.get(i);
+		List<EgovMap> delList = inboundMapper.selectDeliveryList(formMap);
+		logger.info("delList : {} ", delList.toString());
+		if (delList.size() > 0) {
+			for (int i = 0; i < delList.size(); i++) {
 
-				Map<String, Object> setMap = new HashMap();
-				setMap = (Map<String, Object>) map.get("item");
-				setMap.put("reqNo", reqNo);
+				Map<String, Object> setMap = delList.get(i);
+				logger.info("setMap : {} ", setMap);
 				setMap.put("deliveryNo", deliveryNo);
 				setMap.put("userId", params.get("userId"));
 				inboundMapper.CreateDeliveryD(setMap);
@@ -116,5 +112,45 @@ public class InboundServiceImple extends EgovAbstractServiceImpl implements Inbo
 	public List<EgovMap> searchSMO(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return inboundMapper.searchSMO(params);
+	}
+
+	@Override
+	public void receipt(Map<String, Object> params) {
+		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+
+		String delyCd = "";
+		if (checklist.size() > 0) {
+			Map<String, Object> map = (Map<String, Object>) checklist.get(0);
+			Map<String, Object> imap = new HashMap();
+			imap = (Map<String, Object>) map.get("item");
+			delyCd = (String) imap.get("delyno");
+		}
+
+		// String[] delvcd = delyCd.split("∈");
+		String[] delvcd = new String[1];
+		delvcd[0] = delyCd;
+		formMap.put("parray", delvcd);
+		formMap.put("userId", params.get("userId"));
+		// formMap.put("prgnm", params.get("prgnm"));
+		formMap.put("refdocno", "");
+		formMap.put("salesorder", "");
+
+		inboundMapper.CreateIssue(formMap);
+
+		if (serialList.size() > 0) {
+
+			for (int j = 0; j < serialList.size(); j++) {
+
+				Map<String, Object> insSerial = null;
+
+				insSerial = (Map<String, Object>) serialList.get(j);
+
+				insSerial.put("delno", delyCd);
+				insSerial.put("userId", params.get("userId"));
+				inboundMapper.insertLocSerial(insSerial);
+			}
+		}
 	}
 }

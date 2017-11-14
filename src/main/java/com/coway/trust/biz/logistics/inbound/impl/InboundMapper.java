@@ -35,4 +35,8 @@ public interface InboundMapper {
 
 	List<EgovMap> searchSMO(Map<String, Object> params);
 
+	void insertLocSerial(Map<String, Object> insSerial);
+
+	List<EgovMap> selectDeliveryList(Map<String, Object> formMap);
+
 }

@@ -19,4 +19,6 @@ public interface InboundService {
 
 	List<EgovMap> searchSMO(Map<String, Object> params);
 
+	void receipt(Map<String, Object> params);
+
 }

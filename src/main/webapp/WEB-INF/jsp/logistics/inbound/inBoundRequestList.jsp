@@ -31,54 +31,30 @@ var listGrid;
 var subGrid;
 
 var rescolumnLayout=[
- /*                    
-							{dataField:"impNo" ,headerText:"impNo",width:120 ,height:30,editable:false},
-							{dataField:"invNo" ,headerText:"invNo",width:120 ,height:30,editable:false},
-							{dataField:"blNo" ,headerText:"blNo",width:120 ,height:30,editable:false},
-							{dataField:"plant" ,headerText:"plant",width:120 ,height:30,editable:false},
-							{dataField:"accNo" ,headerText:"accNo",width:120 ,height:30,editable:false},
-							{dataField:"invCrtDt" ,headerText:"invCrtDt",width:120 ,height:30,editable:false},
-							{dataField:"shipDt" ,headerText:"shipDt",width:120 ,height:30,editable:false},
-							{dataField:"grDt" ,headerText:"grDt",width:120 ,height:30,editable:false},
-							{dataField:"apCmplt" ,headerText:"apCmplt",width:120 ,height:30,editable:false},
-							{dataField:"grCmplt" ,headerText:"grCmplt",width:120 ,height:30,editable:false},
-							{dataField:"delFlag" ,headerText:"delFlag",width:120 ,height:30,editable:false},
-							//{dataField:"blNo" ,headerText:"blNo",width:120 ,height:30,editable:false},
-							//{dataField:"invNo" ,headerText:"invNo",width:120 ,height:30,editable:false},
-							{dataField:"itmSeq" ,headerText:"itmSeq",width:120 ,height:30,editable:false},
-							{dataField:"purDocNo" ,headerText:"purDocNo",width:120 ,height:30,editable:false},
-							{dataField:"purItmQty" ,headerText:"purItmQty",width:120 ,height:30,editable:false},
-							{dataField:"reqQty" ,headerText:"Req Qty",width:120 ,height:30},
-							{dataField:"matrlNo" ,headerText:"matrlNo",width:120 ,height:30,editable:false},
-							{dataField:"freeItm" ,headerText:"freeItm",width:120 ,height:30,editable:false},
-							{dataField:"importCd" ,headerText:"importCd",width:120 ,height:30,editable:false},
-							{dataField:"wty" ,headerText:"wty",width:120 ,height:30,editable:false},
-							{dataField:"uom" ,headerText:"uom",width:120 ,height:30,editable:false},
-							{dataField:"delFlagD" ,headerText:"delFlagD",width:120 ,height:30,editable:false}
-*/
+							 {dataField:"rnum" ,headerText:"rnum",width:120 ,height:30,editable:false, visible:false},
 							 {dataField:"whLocId" ,headerText:"whLocId",width:120 ,height:30,editable:false, visible:false},
 							 {dataField:"whLocCode" ,headerText:"whLocCode",width:120 ,height:30,editable:false, visible:false},
-							 {dataField:"whLocDesc" ,headerText:"whLocDesc",width:120 ,height:30,editable:false
+							 {dataField:"whLocDesc" ,headerText:"Port",width:250 ,height:30,editable:false
                               ,cellMerge : true  },
-							 {dataField:"plant" ,headerText:"plant",width:120 ,height:30,editable:false},
-							 {dataField:"blNo" ,headerText:"blNo",width:120 ,height:30,editable:false,
+							 {dataField:"plant" ,headerText:"plant",width:120 ,height:30,editable:false, visible:false},
+							 {dataField:"blNo" ,headerText:"BL No.",width:200 ,height:30,editable:false,
                               cellMerge : true,
                               mergeRef : "whLocDesc", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
                               mergePolicy : "restrict"     },
-							 {dataField:"itmSeq" ,headerText:"itmSeq",width:120 ,height:30,editable:false},
+							 {dataField:"itmSeq" ,headerText:"Seq.",width:120 ,height:30,editable:false},
 							 {dataField:"stkid" ,headerText:"stkid",width:120 ,height:30,editable:false, visible:false},
-							 {dataField:"matrlNo" ,headerText:"matrlNo",width:120 ,height:30,editable:false},
-							 {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30,editable:false},
-							 {dataField:"typename" ,headerText:"typename",width:120 ,height:30,editable:false},
-							 {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30,editable:false},
-							 {dataField:"ctgryname" ,headerText:"ctgryname",width:120 ,height:30,editable:false},
-							 {dataField:"stkdesc" ,headerText:"stkdesc",width:120 ,height:30,editable:false},
+							 {dataField:"matrlNo" ,headerText:"Material Cd.",width:120 ,height:30,editable:false},
+							 {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30,editable:false, visible:false},
+							 {dataField:"typename" ,headerText:"Type",width:120 ,height:30,editable:false},
+							 {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30,editable:false, visible:false},
+							 {dataField:"ctgryname" ,headerText:"Catagory",width:120 ,height:30,editable:false},
+							 {dataField:"stkdesc" ,headerText:"Material",width:250,height:30,editable:false},
 							 {dataField:"uom" ,headerText:"uom",width:120 ,height:30,editable:false, visible:false},
 							 {dataField:"uomnm" ,headerText:"UOM",width:120 ,height:30,editable:false},
-							 {dataField:"qty" ,headerText:"qty",width:120 ,height:30,editable:false},
-							 {dataField:"reqedQty" ,headerText:"reqedQty",width:120 ,height:30,editable:false},
-							 {dataField:"avrqty" ,headerText:"avrqty",width:120 ,height:30,editable:false},
-							 {dataField:"reqQty" ,headerText:"Req Qty",width:120 ,height:30}
+							 {dataField:"qty" ,headerText:"System Qty",width:120 ,height:30,editable:false},
+							 {dataField:"reqedQty" ,headerText:"Requested Qty",width:120 ,height:30,editable:false},
+							 {dataField:"avrqty" ,headerText:"Available Qty",width:120 ,height:30,editable:false},
+							 {dataField:"reqQty" ,headerText:"Req. Qty",width:120 ,height:30}
 							];
 
 var smoLayout=[
@@ -137,22 +113,52 @@ var smoop = {
 
 $(document).ready(function(){
     
-   //doGetComboData('/logistics/inbound/InboundLocationPort', '', '','location', 'A' , '');
    doGetCombo('/logistics/inbound/InboundLocation', 'port', '','location', 'S' , ''); 
    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, reqop);
    subGrid  = AUIGrid.create("#sub_grid_wrap", smoLayout, smoop);
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
     });
+    AUIGrid.bind(listGrid, "cellEditBegin", function (event){
+    	  if (AUIGrid.getCellValue(listGrid, event.rowIndex, "avrqty") <= 0){
+              Common.alert('Req Qty can not be greater than Available Qty.');
+              return false;
+          }
+    });
+    AUIGrid.bind(listGrid, "cellEditEnd", function( event ) {
+    	if (event.dataField != "reqQty"){
+            return false;
+        }else{
+            
+            var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqQty");
+            if (del > 0){
+                if ((Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "avrqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqQty")))){
+                	Common.alert('Req Qty can not be greater than Available Qty.');
+                    AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+                }else{
+                    
+			    	 var rnum = AUIGrid.getCellValue(listGrid, event.rowIndex, "rnum");
+			    	 AUIGrid.addCheckedRowsByValue(listGrid, "rnum" , rnum);
+                }
+            }else{
+                AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+                AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);               
+            }
+            
+            
+        }
+    });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
     	//alert(event.rowIndex);
     	searchSMO(event.rowIndex);
+    	$("#sub_grid_wrap").show();
+        AUIGrid.clearGridData(subGrid);
+        AUIGrid.resize(subGrid); 
     });
     
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
-    
     
 });
 $(function(){
@@ -160,10 +166,28 @@ $(function(){
         SearchListAjax();
     });
     $('#insert').click(function(){
+    	var  status = true;
+    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid)
+    	 if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else{
+        	   for (var i = 0 ; i < checkedItems.length ; i++){
+        		   console.log(checkedItems[i].reqQty);
+                   if(null==checkedItems[i].reqQty || 0==checkedItems[i].reqQty){
+                       Common.alert('Please Check Req Qty.');
+                       status = false;
+                       return false;
+                       break;
+                   }
+               }
+        }
+    	if(status){
         setToCdc();
+    	}
     });
     $('#save').click(function(){
-        createSMO();
+	        createSMO();
     });
 });
  
@@ -191,8 +215,8 @@ function createSMO(){
 	data.form    = $("#giForm").serializeJSON();
     var url = "/logistics/inbound/reqSMO.do";
     Common.ajax("POST" , url , data , function(data){
-    	//Common.alert("Created : "+data.data);
         $("#popup_wrap").hide();
+        SearchListAjax();
     });
 }
 
@@ -200,10 +224,12 @@ function searchSMO(index){
 	 var whLocId =AUIGrid.getCellValue(listGrid ,index ,'whLocId');
 	 var blNo =AUIGrid.getCellValue(listGrid ,index ,'blNo');
 	 var matrlNo =AUIGrid.getCellValue(listGrid ,index ,'matrlNo');
+	 var itmSeq =AUIGrid.getCellValue(listGrid ,index ,'itmSeq');
 	var data = {
 		      whLocId:whLocId,
 			  blNo:blNo,
-			  matrlNo:matrlNo
+			  matrlNo:matrlNo,
+			  itmSeq:itmSeq,
 			  };
     var url = "/logistics/inbound/searchSMO.do";
     console.log(data);
@@ -308,8 +334,8 @@ function searchSMO(index){
         
 
     </section><!-- search_result end -->
-    <section class="search_result"><!-- search_result start -->
-        <div id="sub_grid_wrap" class="mt10" style="height:300px"></div>
+    <section class="search_result" ><!-- search_result start -->
+        <div id="sub_grid_wrap" class="mt10" style="height:300px; display: none;" ></div>
     </section><!-- search_result end -->
         
             

@@ -23,13 +23,19 @@
     color:#000;
 }
 
+.my-row-style {
+    background:#9FC93C;
+    font-weight:bold;
+    color:#22741C;
+}
+
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
 var serialGrid;
-
+var serialchk = false;
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyno"       ,headerText:"Delivery No"                 ,width:120    ,height:30                },
                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
@@ -44,7 +50,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
                      {dataField:"delydt"       ,headerText:"Delivery Date"               ,width:120    ,height:30 },
                      {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
-                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
                      {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"             ,width:120    ,height:30 , editable:true},
@@ -90,13 +96,13 @@ var resop = {
         };
 
 var serialop = {
-        //rowIdField : "rnum",            
-        editable : false,
-        displayTreeOpen : true,
+        //rowIdField : "rnum",          
+        editable : true
+        //displayTreeOpen : true,
         //showRowCheckColumn : true ,
-        enableCellMerge : true,
-        showStateColumn : false,
-        showBranchOnGrouping : false
+        //enableCellMerge : true,
+        //showStateColumn : false,
+        //showBranchOnGrouping : false
         };
 
 
@@ -107,7 +113,7 @@ $(document).ready(function(){
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
     doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
-    doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
+   //doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
      doGetCombo('/logistics/inbound/InboundLocation', 'port', '','flocation', 'A' , ''); 
      doGetCombo('/logistics/inbound/InboundLocation', '', '','tlocation', 'A' , ''); 
     /**********************************
@@ -123,7 +129,7 @@ $(document).ready(function(){
         var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
         AUIGrid.clearGridData(serialGrid);
         AUIGrid.resize(serialGrid,980,380); 
-        fn_ViewSerial(delno);
+        //fn_ViewSerial(delno);
         
     });
     
@@ -140,71 +146,63 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
-        
-        var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
+         var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
         
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
+        	 var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
+        	 var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+             for(var i = 0 ; i < checklist.length ; i++){
+                 if (checklist[i].delyno != event.item.delyno){
+                     Common.alert("Delivery number is different.");
+                     AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+                     return false;
+                 }
+             }
             AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }else{
-            var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
-            for (var i = 0 ; i < rown.length ; i++){
-                AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
-            }
-        }
+            AUIGrid.setCheckedRowsByValue(listGrid,  "delyno", []);
+        }  
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function( event ) {
-        var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
-        
-        if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
-            var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
-            for (var i = 0 ; i < rown.length ; i++){
-                AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
-            }
-        }else{
-            AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
-        }
     });
-    SearchListAjax();
-});
-
-AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
-    var tvalue = true;
-   var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
-   serial=serial.trim();
-   if(""==serial || null ==serial){
-      //alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
-      //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
-       Common.alert('Please input Serial Number.');
-       return false;
-   }else{
-       for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-           if (event.rowIndex != i){
-               if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
-                   tvalue = false;
-                   break;
+    AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
+        var tvalue = true;
+       var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
+       serial=serial.trim();
+       if(""==serial || null ==serial){
+           Common.alert('Please input Serial Number.');
+           return false;
+       }else{
+           for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+               if (event.rowIndex != i){
+                   if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
+                       tvalue = false;
+                       break;
+                   }
                }
            }
+           
+           if (tvalue){
+               fn_serialChck(event.rowIndex ,event.item , serial)
+           }else{
+               AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
+               AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+                   if (item.statustype  == 'N'){
+                       return "my-row-style";
+                   }
+               });
+               AUIGrid.update(serialGrid);
+           }
+          
+          if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
+             f_addrow();      
+          }
+          
        }
-       
-       if (tvalue){
-           fn_serialChck(event.rowIndex ,event.item , serial)
-       }else{
-           AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
-           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
-               if (item.statustype  == 'N'){
-                   return "my-row-style";
-               }
-           });
-           AUIGrid.update(serialGrid);
-       }
-      
-      if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
-         f_addrow();      
-      }
-      
-   }
+    });    
 });
+
 
 
 function f_change(){
@@ -248,9 +246,8 @@ $(function(){
                 doSysdate(0 , 'giptdate');
                 doSysdate(0 , 'gipfdate');
                 $('#grForm #gtype').val("GR");
-                $("#dataTitle").text("Good Receipt Posting Data");
+                $("#dataTitle").text("InBound's Good Receipt Serials");
                 AUIGrid.clearGridData(serialGrid);
-                //AUIGrid.resize(serialGrid);
                 AUIGrid.resize(serialGrid,980,380); 
                 if (serialchk){
                     //fn_itempopListSerial(checkedItems);
@@ -261,51 +258,7 @@ $(function(){
                 }
                 
             }        	
-            //doSysdate(0 , 'giptdate');
-            //doSysdate(0 , 'gipfdate');
-            //$('#grForm #gtype').val("GR");
-            //$("#dataTitle").text("Good Receipt Posting Data");
-            //$("#gropenwindow").show();
     });
-    /* 
-    $("#gissue").click(function(){
-        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-        if(checkedItems.length <= 0) {
-            Common.alert('No data selected.');
-            return false;
-        }else{
-            for (var i = 0 ; i < checkedItems.length ; i++){
-                if(checkedItems[i].grcmplt == 'Y'){
-                    Common.alert('Already processed.');
-                    return false;
-                    break;
-                }
-            }
-            doSysdate(0 , 'giptdate');
-            doSysdate(0 , 'gipfdate');
-            $('#grForm #gtype').val("GR");
-            $("#dataTitle").text("Good Receipt Posting Data");
-            $("#gropenwindow").show();
-        }
-    });
- $("#receiptcancel").click(function(){
-        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-        if(checkedItems.length <= 0) {
-            Common.alert('No data selected.');
-            return false;
-        }else{
-            for (var i = 0 ; i < checkedItems.length ; i++){
-                if(checkedItems[i].grcmplt == 'N'){
-                    Common.alert('Can not cancel before wearing.');
-                    return false;
-                    break;
-                }
-            }
-            $('#grForm #gtype').val("RC");
-            $("#dataTitle").text("Receipt Cancel Posting Data");
-            $("#gropenwindow").show();
-        }
-    }); */
     
 });
 
@@ -319,73 +272,53 @@ function SearchListAjax() {
         AUIGrid.setGridData(listGrid, data.dataList);
     });
 }
-/*
+
 function grFunc(){
     var data = {};
     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
     var check     = AUIGrid.getCheckedRowItems(listGrid);
+    var serials   = AUIGrid.getAddedRowItems(serialGrid);
     
-    data.check   = check;
-    data.checked = check;
-    
-    data.form    = $("#grForm").serializeJSON();
-    Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-        
-        if (result.rdata == '000'){
-            if ($('#grForm #gtype').val() == "RC"){
-                Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-                    Common.alert(result.message.message);
-                },  function(jqXHR, textStatus, errorThrown) {
-                    try {
-                    } catch (e) {
-                    }
-                    Common.alert("Fail : " + jqXHR.responseJSON.message);
-                });
-            }else{
-                Common.alert(result.message.message);
+    if (serialchk){
+        for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+            if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+                Common.alert("Please check the serial.")
+                return false;
             }
             
-        }else{
-            if ($('#grForm #gtype').val() == "RC"){
-                Common.alert('GoodRecipt Cancel Fail.');
-            }else{
-                Common.alert('GoodRecipt Fail.');
+            if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+                Common.alert("Please check the serial.")
+                return false;
             }
         }
         
-        $("#giptdate").val("");
-        $("#gipfdate").val("");
-        $("#doctext" ).val("");
+        if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+            Common.alert("Please check the serial.")
+            return false;
+        }
+    }
+    data.check   = check;
+    data.checked = check;
+    data.add = serials;
+    data.form    = $("#grForm").serializeJSON();
+    console.log(data);
+    Common.ajax("POST", "/logistics/inbound/receipt.do", data, function(result) {
+       
+        Common.alert(result.message);
         $("#gropenwindow").hide();
-        
-        $('#search').click();
+        SearchListAjax()
+
     },  function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
         }
         Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
+        for (var i = 0 ; i < checkdata.length ; i++){
+            AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
+        }
 }
 
-function fn_ViewSerial(str){
-    
-    var data = { delno : str };
-    
-    Common.ajax("GET", "/logistics/stockMovement/StockMovementDeliverySerialView.do",
-            data,
-            function(result) {
-                AUIGrid.setGridData(serialGrid, result.data);
-                
-                $("#serialopenwindow").show();
-          
-    },  function(jqXHR, textStatus, errorThrown) {
-        try {
-        } catch (e) {
-        }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);
-    });
-}
-*/
 function fn_serialChck(rowindex , rowitem , str){
     var schk = true;
     var ichk = true;
@@ -409,7 +342,8 @@ function fn_serialChck(rowindex , rowitem , str){
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
              
-             if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
+             //if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
+             if (result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){ // 이동중인 serial 제외
                  schk = false;
              }else{
                  schk = true;
@@ -463,7 +397,9 @@ function fn_itempopList_T(data){
     var itm_qty  = 0;
     var itmdata = [];
     for (var i = 0 ; i < data.length ; i++){
-        itm_qty = itm_qty + data[i].item.indelyqty;
+    	if("Y"==data[i].item.serialchk){
+           itm_qty = itm_qty + data[i].item.rciptqty;
+    	}
         $("#reqstno").val(data[i].item.reqstno)
     }
     $("#serialqty").val(itm_qty);
@@ -483,14 +419,14 @@ function fn_itempopList_T(data){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>InBound's STO Receipt</h2>
+<h2>InBound's SMO Receipt</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3> </h3>
     <ul class="right_btns">
-            <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-            <li><p class="btn_gray"><a id="search"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
         </ul>
 </aside><!-- title_line end -->
 
@@ -515,9 +451,10 @@ function fn_itempopList_T(data){
                 <tr>
                     <th scope="row">Delivery Number</th>
                     <td>
-                        <select class="w100p" id="seldelno" name="seldelno"></select>
+                        <!-- <select class="w100p" id="seldelno" name="seldelno"></select> -->
+                         <input type="text" class="w100p" id="seldelno" name="seldelno"> 
                     </td>
-                    <th scope="row">Transfer Type</th>
+<!--                     <th scope="row">Transfer Type</th>
                     <td>
                         <select class="w100p" id="sttype" name="sttype"></select>
                     </td>
@@ -526,7 +463,7 @@ function fn_itempopList_T(data){
                         <select class="w100p" id="smtype" name="smtype"><option value=''>Choose One</option></select>
                     </td>
                 </tr>
-                <tr>
+                <tr> -->
                     <th scope="row">From Location</th>
                     <td>
                          <select class="w100p" id="flocation" name="flocation"></select> 
@@ -538,30 +475,30 @@ function fn_itempopList_T(data){
                         <select class="w100p" id="tlocation" name="tlocation"></select>
                     <!--     <input type="hidden"  id="flocation" name="flocation">
                         <input type="text" class="w100p" id="flocationnm" name="flocationnm"> -->
-                    </td>
+                 <!--    </td>
                     <td colspan="2">
-                    </td>                
+                    </td>  -->               
                 </tr>
-                
+    <!--             
                 <tr>
                     <th scope="row">Delivery Date</th>
                     <td>
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set">date_set start
                         <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div><!-- date_set end -->                        
+                        </div>date_set end                        
                     </td>
                     <th scope="row">Required Date</th>
                     <td >
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set">date_set start
                         <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div><!-- date_set end -->
+                        </div>date_set end
                     </td>
                     <td colspan="2">&nbsp;</td>                
-                </tr>                
+                </tr>                 -->
                
             </tbody>
         </table><!-- table end -->        
@@ -591,7 +528,8 @@ function fn_itempopList_T(data){
         <section class="pop_body"><!-- pop_body start -->
             <form id="grForm" name="grForm" method="POST">
             <input type="hidden" name="gtype" id="gtype" value="GR">
-            <!-- <input type="text" name="gtype" id="gtype" value="GR">  -->
+            <input type="hidden" name="serialqty" id="serialqty"/>
+            <input type="hidden" name="reqstno" id="reqstno"/>
             <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>  
             <table class="type1">
             <caption>search table</caption>
@@ -608,10 +546,10 @@ function fn_itempopList_T(data){
                     <th scope="row">GR Doc Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
                 </tr>
-                <tr>    
+<!--                 <tr>    
                     <th scope="row">Header Text</th>
                     <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
-                </tr>
+                </tr> -->
             </tbody>
             </table>
             <article class="grid_wrap"><!-- grid_wrap start -->

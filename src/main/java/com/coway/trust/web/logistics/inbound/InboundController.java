@@ -116,4 +116,15 @@ public class InboundController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/receipt.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> receipt(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) {
+		params.put("userId", sessionVo.getUserId());
+		inboundService.receipt(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
+
 }
