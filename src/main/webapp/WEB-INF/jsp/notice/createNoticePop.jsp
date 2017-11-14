@@ -2,7 +2,8 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script>
-		//save
+
+	//save
 	function fn_saveNewNotice(){
 		var formData = Common.getFormData("insertNoticeForm");
    //Validation Check
@@ -25,7 +26,8 @@
 	// 공통 메세지 영역에 메세지 표시.
 	Common.setMsg("<spring:message code='sys.msg.success'/>");	
        }, function(jqXHR, textStatus, errorThrown) {
-           Common.alert("실패하였습니다.");
+           //Common.alert("실패하였습니다.");
+    	   //Common.setMsg("<spring:message code='sys.msg.fail'/>");
        });
 		
 	}
