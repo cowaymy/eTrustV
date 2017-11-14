@@ -233,6 +233,77 @@
             	Common.searchpopupWin("searchForm", "/common/searchPopList.do","item");
             }
         });
+    	//insert
+		$('#insprice').keypress(function() {
+		    if (event.which == '13') {
+		        var findStr=".";
+		        var sublen;
+		        var prices = $("#insprice").val();
+		        var priceslen=prices.length;
+		        //alert("????"+prices.indexOf(findStr));
+		        if (prices.indexOf(findStr) > 0) {	
+		          sublen= prices.indexOf('.');
+                  sublen=sublen+1;
+                  var sums = priceslen - sublen;
+                //  alert("sums :  "+sums);
+                  if(sums == 0 ){
+                	  $("#insprice").val(prices+"00");  
+                  }else if(sums == 1 ){
+                      $("#insprice").val(prices+"0");  
+                  }else if(sums == 2){
+                	    
+                  }else{
+                	  Common.alert("Please enter only the second decimal place.");
+                	  $("#insprice").val("");
+                  }
+                 
+			      }else if(prices.indexOf(findStr) == 0){
+			    	  Common.alert('You can not enter decimal numbers first.');
+			    	  $("#insprice").val("");
+			      }else{
+			    	//  alert('Not Found!!');
+	                  $("#insprice").val($.number(prices,2));  
+			      } 
+	
+		    }
+		});
+	    //update
+		$('#price').keypress(function() {
+            if (event.which == '13') {
+                var findStr=".";
+                var sublen;
+                var prices = $("#price").val();
+                var priceslen=prices.length;
+                //alert("????"+prices.indexOf(findStr));
+                if (prices.indexOf(findStr) > 0) {  
+                  sublen= prices.indexOf('.');
+                  sublen=sublen+1;
+                  var sums = priceslen - sublen;
+                //  alert("sums :  "+sums);
+                  if(sums == 0 ){
+                      $("#price").val(prices+"00");  
+                  }else if(sums == 1 ){
+                      $("#price").val(prices+"0");  
+                  }else if(sums == 2){
+                        
+                  }else{
+                      Common.alert("Please enter only the second decimal place.");
+                      $("#price").val("");
+                  }
+                 
+                  }else if(prices.indexOf(findStr) == 0){
+                      Common.alert('You can not enter decimal numbers first.');
+                      $("#price").val("");
+                  }else{
+                    //  alert('Not Found!!');
+                      $("#price").val($.number(prices,2));  
+                  } 
+    
+            }
+        });
+		
+		
+
     	$("#search").click(function(){
             getMaterialListAjax("");
             $("#detailView").hide();
@@ -576,7 +647,7 @@
     function f_insertView(){
     	$("#detailView").hide();
         $("#insertView").show();
-           
+  
         doGetCombo('/common/selectCodeList.do', '63','','inscateid', 'S' , '');
         doGetCombo('/common/selectCodeList.do', '42', ''     ,'insuom', 'S' , '');
         doGetCombo('/common/selectCodeList.do', '94', '','inscurrency', 'S' , '');
@@ -624,6 +695,27 @@
         });
           
     }    
+   
+    
+    
+  
+//     function priceValied(prices){
+//     	var position = new Array();
+//     	var pos = prices.indexOf(".");
+//         while(pos > -1){
+//             position.push(pos);
+//         }
+   
+//         if(position > 1){
+//         	alert("Only one decimal point can be entered.");
+//         	$("#insprice").val("");
+//         	return false;
+//         }else{
+//         	return true;
+//         }
+        
+//     } 
+     
 </script>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
 <section id="content"><!-- content start -->
