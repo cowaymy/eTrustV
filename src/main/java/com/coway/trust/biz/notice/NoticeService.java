@@ -17,7 +17,9 @@ public interface NoticeService {
 	
 	EgovMap noticeInfo(Map<String, Object> params)throws Exception;
 	
-	void deleteNotice(int ntceNo) throws Exception;
+	boolean checkPassword(Map<String, Object> params) throws Exception;
+	
+	void deleteNotice(Map<String, Object> params) throws Exception;
 	
 	void updateNotice(Map<String, Object> params) throws Exception;
 	
