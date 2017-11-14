@@ -408,11 +408,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#stock_info_edit").text() == "EDIT"){
-                    if (selectedItems[i].item.statuscodeid == '1'){
+                   // if (selectedItems[i].item.statuscodeid == '1'){
                         f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid+"&mode=edit", "ES");
-                    }else{
-                        alert(selectedItems[i].item.name + ' is a state that can not be changed.');
-                    }
+                  //  }else{
+                  //      alert(selectedItems[i].item.name + ' is a state that can not be changed.');
+                  //  }
                 }else if ($("#stock_info_edit").text() == "SAVE"){
                     f_info_save("/stock/modifyStockInfo.do" , selectedItems[i].item.stkid , "stockInfo" ,"stock_info");
                     //$("#stock_info_edit").text("EDIT");
