@@ -288,6 +288,15 @@ table+.center_btns{padding-top:5px;}
 .itemPriceDate > p{display: inline-block!important;width:30%;}
 .itemPriceDate > p.short{width:15%!important}
 .itemPriceDate > span{width:calc(100%-6px)!important}
+.text_select{position: relative;width:100%!important;}
+.text_select > select{width:26%!important;}
+.text_select > input[type=text]{width:72%!important;}
+.code_name{position: relative;width:100%!important;}
+.code_name > input[type=text]{width:72%!important;}
+.code_name > input[type=text]:first-child{width:26%!important;margin-right: 5px}
+.cardText{position: relative;margin-right: 0!important}
+.cardText input[type=text]{width:22%!important;float:left;}
+.cardText span{float:left;padding:0 1%;padding-top:4px;}
 
 /* 테이블 */
 table.type1{margin-bottom:5px; border-top:1px solid #d3d9dd;}
@@ -372,6 +381,8 @@ table.type2.acodi .aco_tr{display:none;}
 .auto_file2 span.label_text a{display:block; height:20px; line-height:20px; margin-left:5px; min-width:47px; text-align:center; padding:0 5px; background:#a1c4d7; color:#fff; font-size:11px; font-weight:bold; border-radius:3px;}
 .auto_file3 label{width:365px;}
 .auto_file3 label input[type=text]{width:301px!important;}
+.file_flag{width:auto;}
+.file_flag label{display: inline-block;width:100px;}
 
 /* 제이쿼리 달력 */
 .ui-datepicker-header{position:relative; width:178px; padding:5px 10px; border:1px solid #ccc; text-align:center; background:#f3f3f3;}
