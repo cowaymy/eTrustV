@@ -179,7 +179,7 @@ public interface CommonMapper {
 	 * @param 
 	 * @return
 	 */
-	List<EgovMap> selectBankList();
+	List<EgovMap> selectBankList(Map<String, Object> params);
 	
 	/**
 	*  IssuedBank 조회

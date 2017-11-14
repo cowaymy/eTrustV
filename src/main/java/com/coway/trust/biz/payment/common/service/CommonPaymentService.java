@@ -61,5 +61,33 @@ public interface CommonPaymentService{
 	 */
     List<EgovMap> selectOrderInfoSrvc(Map<String, Object> params);
     
+    /**
+	 * Payment - Bill Info Rental Membership 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * ServiceContractManager.cs : public List<ServiceContactBillingInfo> GetServiceContractBillDetailList(int scsID, bool excludeFilterCharges, bool excludePenaltyCharges)
+	 */
+    List<EgovMap> selectBillInfoSrvc(Map<String, Object> params);
+    
+    /**
+	 * Payment - Order Info Rental Payment 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+    List<EgovMap> selectOrderInfoBillPayment(Map<String, Object> params);
+    
+    /**
+   	 * Payment - 등록 처리 
+   	 * @param params
+   	 * @param model
+   	 * @return
+   	 * 
+   	 */
+    void savePayment(Map<String, Object> paramMap, List<Object> paramList );
+    
+    
 
 }

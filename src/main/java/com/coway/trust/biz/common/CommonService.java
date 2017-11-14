@@ -212,7 +212,7 @@ public interface CommonService {
 	 * @param
 	 * @return
 	 */
-	List<EgovMap> selectBankList();
+	List<EgovMap> selectBankList(Map<String, Object> param);
 
 	EgovMap selectBrnchIdByPostCode(Map<String, Object> params);
 

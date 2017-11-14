@@ -97,7 +97,8 @@
 		       Project1.CUST_ID CUST_ID  ,
 		       Project1.NAME NAME  ,
 		       Project1.NRIC NRIC  ,
-		       Project1.SALES_ORD_ID SALES_ORD_ID  
+		       Project1.SALES_ORD_ID SALES_ORD_ID,
+		       Project1.CUST_BILL_ID  CUST_BILL_ID 
 		  FROM ( SELECT Extent1.SRV_CNTRCT_ID SRV_CNTRCT_ID  ,
 		                Extent1.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
 		                Extent1.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
@@ -107,6 +108,7 @@
 		                Extent2.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
 		                Extent3.SALES_ORD_ID SALES_ORD_ID  ,
 		                Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+		                Extent3.CUST_BILL_ID CUST_BILL_ID  ,
 		                Extent4.CUST_ID CUST_ID  ,
 		                Extent4.NAME NAME  ,
 		                Extent4.NRIC NRIC  ,

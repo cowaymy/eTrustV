@@ -45,29 +45,34 @@
 	    {dataField : "bankName",headerText : "Bank", editable : false},                    
 	    {dataField : "bankAccName",headerText : "Bank Account.",editable : false},                    
 	    {dataField : "fTrnscDt",headerText : "Date/<br>Time", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-	    {dataField : "refNo",headerText : "Ref/<br>Cheq No", editable : false},                    
-	    {dataField : "fTrnscRef3",headerText : "Description1",editable : false},
-	    {dataField : "fTrnscRef1",headerText : "Description2", editable : false},
-	    {dataField : "fTrnscRef4",headerText : "ref5", editable : false},
+	    {dataField : "fTrnscTellerId",headerText : "Teller ID", editable : false},
+	    {dataField : "fTrnscRef3",headerText : "Transaction Code",editable : false},
+	    {dataField : "fTrnscRefChqNo",headerText : "Ref/<br>Cheq No", editable : false},
+	    {dataField : "fTrnscRef1",headerText : "Description", editable : false},
 	    {dataField : "fTrnscRef2",headerText : "ref6", editable : false},
-	    {dataField : "fTrnscRef6",headerText : "ref7", editable : false},                    
-	    {dataField : "fTrnscRem",headerText : "Type", editable : false},
-	    {dataField : "fTrnscDebtAmt",headerText : "Debit", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-	    {dataField : "fTrnscCrditAmt",headerText : "Credit", editable : false, dataType:"numeric", formatString:"#,##0.00"}
+        {dataField : "fTrnscRef6",headerText : "ref7", editable : false},                    
+        {dataField : "fTrnscRem",headerText : "Type", editable : false},
+        {dataField : "fTrnscDebtAmt",headerText : "Debit", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "fTrnscCrditAmt",headerText : "Credit", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+	    {dataField : "fTrnscRef4",headerText : "Deposit Slip No / EFT / MID", editable : false},
+	    {dataField : "fTrnscNewChqNo",headerText : "Chq No", editable : false},
+	    {dataField : "fTrnscRefVaNo",headerText : "VA number", editable : false}
 	    ];    
-
 
     //AUIGrid 칼럼 설정
 	var uploadGridLayout = [
-		{dataField : "0", headerText : "Ref/<br>Cheq No", editable : true},
-		{dataField : "1", headerText : "Description1", editable : true},
-		{dataField : "2", headerText : "Description2", editable : true},
-		{dataField : "3", headerText : "ref5", editable : true},
+		{dataField : "0", headerText : "Teller ID", editable : true},
+		{dataField : "1", headerText : "Transaction Code", editable : true},
+		{dataField : "2", headerText : "Ref/Cheq No", editable : true},
+		{dataField : "3", headerText : "Description", editable : true},
 		{dataField : "4", headerText : "ref6", editable : true},
-		{dataField : "5", headerText : "ref7", editable : true},
-		{dataField : "6", headerText : "TYPE", editable : true},
-		{dataField : "7", headerText : "Debit", editable : true},
-		{dataField : "8", headerText : "Credit", editable : true}
+        {dataField : "5", headerText : "ref7", editable : true},
+        {dataField : "6", headerText : "TYPE", editable : true},
+        {dataField : "7", headerText : "Debit", editable : true},
+        {dataField : "8", headerText : "Credit", editable : true},        
+		{dataField : "9", headerText : "Deposit Slip No/EFT/MID", editable : true},
+		{dataField : "10", headerText : "Chq No", editable : true},
+		{dataField : "11", headerText : "VA number", editable : true}
 		];
     
     

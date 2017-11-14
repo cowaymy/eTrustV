@@ -61,11 +61,16 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		
 		List<EgovMap> rcList = commonPaymentMapper.selectOrderInfoRental(params);
 		
+		Map<String , Object > newParams = null;
+		EgovMap rpfCnMap = null;
+		EgovMap rpfDnMap = null;
+		Map<String, Object> billInfo = null;
+		
 		if(rcList != null && rcList.size() > 0){
 			for (EgovMap obj : rcList) 
 			{
 				
-				Map<String , Object > newParams = new HashMap<String,Object>();
+				newParams = new HashMap<String,Object>();
 				newParams.put("orderId", obj.get("salesOrdId"));
 				
 				rpfCnt = Integer.parseInt(String.valueOf(obj.get("rpfCnt")));
@@ -73,8 +78,8 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 				
 				//rpfCnt 가 0보다 크면 CN/DN 값을 조회한다. 
 				if(rpfCnt > 0){
-					EgovMap rpfCnMap = commonPaymentMapper.selectRPFCN(newParams);
-					EgovMap rpfDnMap = commonPaymentMapper.selectRPFDN(newParams);
+					rpfCnMap = commonPaymentMapper.selectRPFCN(newParams);
+					rpfDnMap = commonPaymentMapper.selectRPFDN(newParams);
 					
 					if(rpfCnMap != null && rpfCnMap.get("cnAmt") != null){
 						rpfCn = Integer.parseInt(String.valueOf(rpfCnMap.get("cnAmt")));
@@ -89,7 +94,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 					obj.put("totAmt", rpfCharge);
 				}
 				
-				Map<String, Object> billInfo = this.getRentalPayInfoV2(newParams);
+				billInfo = this.getRentalPayInfoV2(newParams);
 				
 				obj.put("rpf", billInfo.get("rpf"));
 				obj.put("lastPayment", billInfo.get("lastPayment"));
@@ -457,12 +462,14 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		rhfRev = rhfRev2;
 		balRHF = rhfPaid - rhfRev + rhfCN1;
 		
+		double setAmount = 0.0D;
+		
 		// Billing 정보 재정의
 		if(rcList != null && rcList.size() > 0){
 			for (EgovMap obj : rcList) 
 			{
 				
-				double setAmount = 0.0D;
+				setAmount = 0.0D;
 				
 				if(Integer.parseInt(String.valueOf(obj.get("billTypeId"))) == 162){			//penalty
 					if(balPenalty > 0){
@@ -507,7 +514,6 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
                 }
 				
 				obj.put("targetAmt",Double.parseDouble(String.valueOf(obj.get("billAmt"))) - Double.parseDouble(String.valueOf(obj.get("paidAmt"))));
-				
 			}
 		}
 		
@@ -521,7 +527,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 					returnList.add(obj);
 				}
 			}
-		}		
+		}	
 		
 		return returnList;
 	}
@@ -542,13 +548,15 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		
 		List<EgovMap> rcList = commonPaymentMapper.selectOrderInfoNonRental(params);
 		
+		Map<String , Object > newParams = null;
+		Map<String, Object> billInfo = null;
+		
 		if(rcList != null && rcList.size() > 0){
-			for (EgovMap obj : rcList) 
-			{
-				Map<String , Object > newParams = new HashMap<String,Object>();
+			for (EgovMap obj : rcList) {
+				newParams = new HashMap<String,Object>();
 				newParams.put("orderId", obj.get("salesOrdId"));
 				
-				Map<String, Object> billInfo = this.getOutrightPayInfo(newParams);
+				billInfo = this.getOutrightPayInfo(newParams);
 				
 				Double totalPaid = Double.parseDouble(String.valueOf(billInfo.get("paidTotal"))) -  Double.parseDouble(String.valueOf(billInfo.get("reverseAmount")));
 				
@@ -712,10 +720,12 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		
 		List<EgovMap> rcList = commonPaymentMapper.selectOrderInfoSrvc(params);
 		
+		Map<String, Object> paymentInfo = null;
+		
 		if(rcList != null && rcList.size() > 0){
 			for (EgovMap obj : rcList) 
 			{
-				Map<String, Object> paymentInfo = this.getServiceContractPaymentInfo(obj);
+				paymentInfo = this.getServiceContractPaymentInfo(obj);
 				
 				obj.put("filterCharges", paymentInfo.get("filterCharges"));
 				obj.put("filterChargesPaid", paymentInfo.get("filterChargesPaid"));
@@ -899,5 +909,219 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		return resultMap;
 		
 	}
+	
+	/**
+	 * Payment - Bill Info Rental Membership 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * ServiceContractManager.cs : public List<ServiceContactBillingInfo> GetServiceContractBillDetailList(int scsID, bool excludeFilterCharges, bool excludePenaltyCharges)
+	 */
+	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
+	public List<EgovMap>  selectBillInfoSrvc(Map<String, Object> params) {
+		
+		double balRentalPayment = 0.0D;
+		double rentalPaid = 0.0D;
+		double rentalReversed = 0.0D;
+		double rentalCN = 0.0D;
+		double rentalDN = 0.0D;
+		
+		double balFilterPayment = 0.0D;
+		double filterPaid = 0.0D;
+		double filterReversed = 0.0D;
+		double filterCN = 0.0D;
+		double filterDN = 0.0D;
+		
+		double balPenaltyPayment = 0.0D;
+		double penaltyPaid = 0.0D;
+		double penaltyReversed = 0.0D;
+		double penaltyCN = 0.0D;
+		double penaltyDN = 0.0D;
+		
+		
+		/*********************************************************
+		 * Rental Paid Amount 값 계산
+		 *********************************************************/
+		EgovMap srvcPaidMap = commonPaymentMapper.selectBillInfoSrvcPaid(params);
+		
+		if(srvcPaidMap != null && srvcPaidMap.get("rentalPaid") != null){
+			rentalPaid = Double.parseDouble(String.valueOf(srvcPaidMap.get("rentalPaid")));
+		}
+		
+		/*********************************************************
+		 * Rental Reversed Amount 값 계산
+		 *********************************************************/
+		EgovMap srvcRevMap = commonPaymentMapper.selectBillInfoSrvcRev(params);
+		
+		if(srvcRevMap != null && srvcRevMap.get("rentalRev") != null){
+			rentalReversed = Double.parseDouble(String.valueOf(srvcRevMap.get("rentalRev")));
+		}
+		
+		/*********************************************************
+		 * Rental Adjustment CN/DN 값 계산
+		 *********************************************************/
+		EgovMap srvcAdjMap = commonPaymentMapper.selectOrderInfoSrvcADJ(params);
+		
+		if(srvcAdjMap != null && srvcAdjMap.get("rentalCn") != null){
+			rentalCN = Double.parseDouble(String.valueOf(srvcAdjMap.get("rentalCn")));
+		}
+		
+		if(srvcAdjMap != null && srvcAdjMap.get("rentalDn") != null){
+			rentalDN = Double.parseDouble(String.valueOf(srvcAdjMap.get("rentalDn")));
+		}
+		
+		balRentalPayment = (rentalPaid * -1) + rentalReversed + rentalCN - rentalDN;
+		
+		
+		
+		/*********************************************************
+		 * Filter Amount 값 계산
+		 *********************************************************/
+		if(!"Y".equals(params.get("excludeFilterCharges"))){
+			
+			if(srvcPaidMap != null && srvcPaidMap.get("filterPaid") != null){
+				filterPaid = Double.parseDouble(String.valueOf(srvcPaidMap.get("filterPaid")));
+			}
+			
+			if(srvcRevMap != null && srvcRevMap.get("filterRev") != null){
+				filterReversed = Double.parseDouble(String.valueOf(srvcRevMap.get("filterRev")));
+			}
+			
+			if(srvcAdjMap != null && srvcAdjMap.get("filterCn") != null){
+				filterCN = Double.parseDouble(String.valueOf(srvcAdjMap.get("filterCn")));
+			}
+			
+			if(srvcAdjMap != null && srvcAdjMap.get("filterDn") != null){
+				filterDN = Double.parseDouble(String.valueOf(srvcAdjMap.get("filterDn")));
+			}
+			
+			balFilterPayment = (filterPaid * -1) + filterReversed + filterCN - filterDN;
+		}
+		
+		/*********************************************************
+		 * Penalty Amount 값 계산
+		 *********************************************************/
+		if(!"Y".equals(params.get("excludePenaltyCharges"))){
+			
+			if(srvcPaidMap != null && srvcPaidMap.get("penaltyPaid") != null){
+				penaltyPaid = Double.parseDouble(String.valueOf(srvcPaidMap.get("penaltyPaid")));
+			}
+			
+			if(srvcRevMap != null && srvcRevMap.get("penaltyRev") != null){
+				penaltyReversed = Double.parseDouble(String.valueOf(srvcRevMap.get("penaltyRev")));
+			}
+			
+			if(srvcAdjMap != null && srvcAdjMap.get("penaltyCn") != null){
+				penaltyCN = Double.parseDouble(String.valueOf(srvcAdjMap.get("penaltyCn")));
+			}
+			
+			if(srvcAdjMap != null && srvcAdjMap.get("penaltyDn") != null){
+				penaltyDN = Double.parseDouble(String.valueOf(srvcAdjMap.get("penaltyDn")));
+			}
+			
+			balPenaltyPayment = (penaltyPaid * -1) + penaltyReversed + penaltyCN - penaltyDN;
+		}
+		
+		List<EgovMap> rcList = commonPaymentMapper.selectBillInfoSrvcList(params);
+		
+		
+		double setAmount = 0.0D;
+		
+		// Billing 정보 재정의
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) {
+				setAmount = 0.0D;
+				
+				if(Integer.parseInt(String.valueOf(obj.get("srvLdgrTypeId"))) == 1305){			//Rental
+					if(balRentalPayment > 0){
+						setAmount = balRentalPayment > Double.parseDouble(String.valueOf(obj.get("srvLdgrAmt"))) ? Double.parseDouble(String.valueOf(obj.get("srvLdgrAmt"))): balRentalPayment;
+						obj.put("paidTotal",setAmount);
+						balRentalPayment = balRentalPayment - setAmount;
+					}else{
+						obj.put("paidTotal",0);
+					}
+				} else if(Integer.parseInt(String.valueOf(obj.get("srvLdgrTypeId"))) == 1307){			//Filter
+					if(balFilterPayment > 0){
+						setAmount = balFilterPayment > Double.parseDouble(String.valueOf(obj.get("srvLdgrAmt"))) ? Double.parseDouble(String.valueOf(obj.get("srvLdgrAmt"))) : balFilterPayment;
+						obj.put("paidTotal",setAmount);
+                        balFilterPayment = balFilterPayment - setAmount;
+					}else{
+						obj.put("paidTotal",0);
+					}
+				} else if(Integer.parseInt(String.valueOf(obj.get("srvLdgrTypeId"))) == 1306){			//Penalty
+					if (balPenaltyPayment > 0) {
+                        setAmount = balPenaltyPayment > Double.parseDouble(String.valueOf(obj.get("srvLdgrAmt"))) ? Double.parseDouble(String.valueOf(obj.get("srvLdgrAmt"))) : balPenaltyPayment;
+                        obj.put("paidTotal",setAmount);
+                        balPenaltyPayment = balPenaltyPayment - setAmount;
+                    }else{
+                    	obj.put("paidTotal",0);
+                    }
+				}
+			}
+		}	
+		
+		// 반환할 Billing 정보 정의
+		List<EgovMap> returnList = new ArrayList<EgovMap>();
+		
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) {
+				//
+				if(Double.parseDouble(String.valueOf(obj.get("paidTotal"))) != Double.parseDouble(String.valueOf(obj.get("srvLdgrAmt")))){
+					obj.put("targetAmt", Double.parseDouble(String.valueOf(obj.get("srvLdgrAmt"))) - Double.parseDouble(String.valueOf(obj.get("paidTotal"))));
+					returnList.add(obj);
+				}
+			}
+		}	
+		
+		return returnList;
+	}
+	
+	/**
+	 * Payment - Order Info Rental Payment 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+    public List<EgovMap>  selectOrderInfoBillPayment(Map<String, Object> params) {
+    	
+    	List<EgovMap> returnList = null;
+    	
+    	if("1".equals(String.valueOf(params.get("billType")))){
+    		returnList = commonPaymentMapper.selectOrderInfoBillPaymentAS(params);
+    	}else{
+    		returnList = commonPaymentMapper.selectOrderInfoBillPaymentHP(params);
+    	}
+    	
+    	return returnList;    	
+    }
+    
+    /**
+	 * Payment - 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+    public void  savePayment(Map<String, Object> paramMap, List<Object> paramList ) {
+    	
+    	//시퀀스 조회
+    	Integer seq = commonPaymentMapper.getPayTempSEQ();
+    	
+    	//payment 임시정보 등록
+    	paramMap.put("seq", seq);
+    	commonPaymentMapper.insertTmpPaymentInfo(paramMap);
+		
+		//billing 임시정보 등록
+    	if (paramList.size() > 0) {    		
+    		Map<String, Object> hm = null;    		
+    		for (Object map : paramList) {
+    			hm = (HashMap<String, Object>) map;  
+    			hm.put("seq", seq);
+    			commonPaymentMapper.insertTmpBillingInfo(hm);    			
+    		}
+    	}
+    }
 	
 }

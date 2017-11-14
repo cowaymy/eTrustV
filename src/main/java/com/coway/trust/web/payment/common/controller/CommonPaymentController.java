@@ -1,5 +1,6 @@
 package com.coway.trust.web.payment.common.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.payment.common.service.CommonPopupPaymentService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -137,9 +139,7 @@ public class CommonPaymentController {
 		commonPaymentService.selectOrderInfoSVM(params);
     	List<EgovMap> resultMapList = (List<EgovMap>)params.get("resultMemSvm");         	//결과 뿌려보기 : 프로시저에서 resultMemSvm 이란 key값으로 객체를 반환한다.
     	
-    	System.out.println("#################### 결과값 : " + resultMapList.size());
-    
-		// 조회 결과 리턴.
+    	// 조회 결과 리턴.
 		return ResponseEntity.ok(resultMapList);
 	}
 	
@@ -163,6 +163,91 @@ public class CommonPaymentController {
     
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * Payment - Bill Info Rental Membership 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	@RequestMapping(value = "/selectBillInfoSrvc.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBillInfoSrvc(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		List<EgovMap> resultList = commonPaymentService.selectBillInfoSrvc(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
+	/******************************************************
+	 * Payment - Order Info Bill Payment
+	 *****************************************************/	
+	/**
+	 * Payment - Order Info Rental Payment 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	@RequestMapping(value = "/selectOrderInfoBillPayment.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrderInfoBillPayment(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		// 조회.
+		List<EgovMap> resultList = commonPaymentService.selectOrderInfoBillPayment(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
+	
+	/**
+	 * Payment 처리
+	 * @param Map
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/savePayment", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> savePayment(
+			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
+		String message = "";
+		
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+    	
+    	Map<String, Object> formInfo = new HashMap<String, Object> ();
+    	if(formList.size() > 0){
+    		for(Object obj : formList){
+    			Map<String, Object> map = (Map<String, Object>) obj;
+    			formInfo.put((String)map.get("name"), map.get("value"));
+    		}
+    	}
+    	
+    	//Credit Card일때
+    	if("107".equals(String.valueOf(formInfo.get("keyInPayType")))){
+    		formInfo.put("keyInIsOnline",  "1299".equals(String.valueOf(formInfo.get("keyInCardMode"))) ? 0 : 1 );
+    		formInfo.put("keyInIsLock",  0);
+    		formInfo.put("keyInIsThirdParty",  0);
+    		formInfo.put("keyInStatusId",  1);
+    		formInfo.put("keyInIsFundTransfer",  0);
+    		formInfo.put("keyInSkipRecon",  0);
+    		formInfo.put("keyInPayItmCardType",  formInfo.get("keyCrcCardType"));
+    		formInfo.put("keyInPayItmCardMode",  formInfo.get("keyInCardMode"));
+    		
+    	}	
+		
+		// 저장
+		commonPaymentService.savePayment(formInfo,gridList);
+		
+		// 결과 만들기.
+    	ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	msg.setMessage(message);
+        return ResponseEntity.ok(msg);
 	}
 	
 }

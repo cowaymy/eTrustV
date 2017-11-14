@@ -385,6 +385,71 @@ public interface CommonPaymentMapper {
 	 */
 	EgovMap selectOrderInfoSrvcUnbill(Map<String, Object> params);
 	
+	/**
+	 *  Payment - Bill Info Rental Membership 조회 : Filter Paid  조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectBillInfoSrvcPaid(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Bill Info Rental Membership 조회 : Filter Reversed Info 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectBillInfoSrvcRev(Map<String, Object> params);
+	
+	/**
+	 *  Payment - Bill Info Rental Membership 조회 : Filter Reversed Info 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	List<EgovMap> selectBillInfoSrvcList(Map<String, Object> params);
+	
+	
+	/**
+	 * Payment - Order Info Rental Payment AS 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	List<EgovMap> selectOrderInfoBillPaymentAS (Map<String, Object> params);
+	
+	/**
+	 * Payment - Order Info Rental Payment HP 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	List<EgovMap> selectOrderInfoBillPaymentHP (Map<String, Object> params);
+	
+	/**
+	 * Payment 임시정보 Sequence 가져오기
+	 * @return
+	 */
+	Integer getPayTempSEQ();
+	
+	/**
+	 * Payment 임시정보 등록하기
+	 * @return
+	 */
+	void insertTmpPaymentInfo(Map<String, Object> params);
+	
+	/**
+	 * Payment Billing 임시정보 등록하기
+	 * @return
+	 */
+	void insertTmpBillingInfo(Map<String, Object> params);
+	
+	
 	
 	
 	

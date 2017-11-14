@@ -109,18 +109,20 @@ public class BankStatementController {
 			
 				itemMap = new HashMap<String, Object>();
 				itemMap.put("fTrnscDt", formData.get("uploadTranDt"));			
-				itemMap.put("fTrnscRefChqNo", String.valueOf(gridMap.get("0")));	//B
-				itemMap.put("fTrnscRefVaNo", String.valueOf(gridMap.get("0")));	//B
-				itemMap.put("fTrnscRef3", String.valueOf(gridMap.get("1")));		//C
-				itemMap.put("fTrnscRef1", String.valueOf(gridMap.get("2")));		//D
-				itemMap.put("fTrnscRef4", String.valueOf(gridMap.get("3")));		//E
+				itemMap.put("fTrnscTellerId", String.valueOf(gridMap.get("0")));	
+				itemMap.put("fTrnscRef3", String.valueOf(gridMap.get("1")));						
+				itemMap.put("fTrnscRefChqNo", String.valueOf(gridMap.get("2")));	
+				itemMap.put("fTrnscRef1", String.valueOf(gridMap.get("3")));		//D
 				itemMap.put("fTrnscRef2", String.valueOf(gridMap.get("4")));		//F
 				itemMap.put("fTrnscRef6", String.valueOf(gridMap.get("5")));		//G
 				itemMap.put("fTrnscRem", String.valueOf(gridMap.get("6")));		//H
 				itemMap.put("fTrnscDebtAmt", String.valueOf(gridMap.get("7")));	//I
 				itemMap.put("fTrnscCrditAmt", String.valueOf(gridMap.get("8")));	//J
-				itemMap.put("userNm", sessionVO.getUserName());	//J
-			
+				itemMap.put("fTrnscRef4", String.valueOf(gridMap.get("9")));	//J
+				itemMap.put("fTrnscNewChqNo", String.valueOf(gridMap.get("10")));		//E
+				itemMap.put("fTrnscRefVaNo", String.valueOf(gridMap.get("11")));	//B
+				itemMap.put("userNm", sessionVO.getUserName());	//J	
+				
 				itemList.add(itemMap);
 			}
 		}

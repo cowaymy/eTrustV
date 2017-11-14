@@ -44,7 +44,8 @@
             A.F_BANK_JRNL_ACC_ID AS BANK_ACC,
             D.ACC_CODE || ' - ' ||  D.ACC_DESC AS BANK_ACC_NAME,
             B.F_TRNSC_DT,
-            (CASE WHEN B.F_TRNSC_REF_CHQ_NO IS NOT NULL THEN B.F_TRNSC_REF_CHQ_NO ELSE B.F_TRNSC_REF_VA_NO END) AS REF_NO,
+            B.F_TRNSC_REF_CHQ_NO,
+            B.F_TRNSC_REF_VA_NO,
             B.F_TRNSC_REF3,
             B.F_TRNSC_REF1,
             B.F_TRNSC_REF4,
@@ -52,7 +53,9 @@
             B.F_TRNSC_REF6,
             B.F_TRNSC_REM,
             B.F_TRNSC_DEBT_AMT,
-            B.F_TRNSC_CRDIT_AMT
+            B.F_TRNSC_CRDIT_AMT,
+            B.F_TRNSC_TELLER_ID,
+            B.F_TRNSC_NEW_CHQ_NO
         FROM
             PAY0079D A 
             JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID 
@@ -113,6 +116,8 @@
             F_TRNSC_REM,
             F_TRNSC_REF_CHQ_NO,
             F_TRNSC_REF_VA_NO,
+            F_TRNSC_TELLER_ID,
+            F_TRNSC_NEW_CHQ_NO,
             CRC_MAPPING_STUS_ID,
             OTH_KEYIN_STUS_ID
         ) VALUES (
@@ -129,7 +134,9 @@
             0,
             #{fTrnscRem},    
             #{fTrnscRefChqNo},
-            #{fTrnscRefVaNo},
+            #{fTrnscRefVaNo},            
+            #{fTrnscTellerId},
+            #{fTrnscNewChqNo},            
             1,
             1
         )

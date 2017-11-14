@@ -1044,9 +1044,9 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	}
 
 	@Override
-	public List<EgovMap> selectBankList() {
+	public List<EgovMap> selectBankList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return commonMapper.selectBankList();
+		return commonMapper.selectBankList(params);
 	}
 
 	@Override
