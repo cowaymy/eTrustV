@@ -22,7 +22,8 @@ var serviceContractSearchPopLayout = [
     { dataField:"salesOrdNo" ,headerText:"Order No.",width: 100 , editable : false},
     { dataField:"name" ,headerText:"Customer Name",width: 230 , editable : false},
     { dataField:"srvCntrctId" ,headerText:"" , visible : false },
-    { dataField:"salesOrdId" ,headerText:"" , visible : false }
+    { dataField:"salesOrdId" ,headerText:"" , visible : false },
+    { dataField:"custBillId" ,headerText:"custBillID" , visible : false }
     ];
     
 //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
@@ -45,9 +46,10 @@ $(document).ready(function(){
     	var srvCntrctId = AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "srvCntrctId");
     	var salesOrdId = AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "salesOrdId");    	
     	var srvCntrctRefNo = AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "srvCntrctRefNo");
+    	var custBillId = AUIGrid.getCellValue(serviceContractSearchPopGridID , event.rowIndex , "custBillId");
     	
     	if($('#callPrgm').val() == 'MEMBERSHIP_PAYMENT') {
-    		fn_callBackSrvcOrderInfo(srvCntrctId, salesOrdId, srvCntrctRefNo);
+    		fn_callBackSrvcOrderInfo(srvCntrctId, salesOrdId, srvCntrctRefNo,custBillId);
     	} else{
         	fn_callOrderData(srvCntrctId, salesOrdId);
         	fn_createEvent('memberPopCloseBtn', 'click');
