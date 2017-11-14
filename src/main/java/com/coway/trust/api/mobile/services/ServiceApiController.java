@@ -1,6 +1,8 @@
 package com.coway.trust.api.mobile.services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.mobile.logistics.ctcodylist.DisplayCt_CodyListDto;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGiDForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferRejectSMOReqForm;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestDto;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestForm;
@@ -31,6 +33,7 @@ import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsForm;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestDto;
@@ -60,14 +63,15 @@ import com.coway.trust.api.mobile.services.productRetrun.PRFailJobRequestForm;
 import com.coway.trust.api.mobile.services.productRetrun.PRReAppointmentRequestDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobForm;
+import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultDto;
+import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultForm;
 import com.coway.trust.api.mobile.services.sales.OutStandignResultDetail;
 import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
-import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultDto;
-import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultForm;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -280,6 +284,28 @@ public class ServiceApiController {
 
 		String transactionId = "";
 		List<Map<String, Object>> asTransLogs = null;
+		List<Map<String, Object>> asTransLogs1 = null;
+		
+		Calendar cal = Calendar.getInstance();
+		 
+		//현재 년도, 월, 일
+		int year = cal.get ( cal.YEAR );
+		int month = cal.get ( cal.MONTH ) + 1 ;
+		int date = cal.get ( cal.DATE ) ;
+			
+		String todate2 = (String.valueOf(date) +String.valueOf(month) + String.valueOf(year));
+
+		
+		Date todate = new Date();
+		Calendar today1 = Calendar.getInstance();
+		
+		SimpleDateFormat transFormat = new SimpleDateFormat("dd-mm-yyyy");
+		SimpleDateFormat transFormatYY = new SimpleDateFormat("yyyymmdd");
+		SimpleDateFormat transFormatHH = new SimpleDateFormat("HHmmss");
+
+		String ddMMCurDate =  transFormat.format(new Date());
+		String curDate = transFormatYY.format(new Date());
+		String curTime = transFormatHH.format(new Date());
 		
 		// mobile 에서 받은 데이터를 로그 테이블에 insert......
 		LOGGER.debug("### IS_INSERT_AS_LOG : {}", RegistrationConstants.IS_INSERT_AS_LOG);
@@ -292,7 +318,7 @@ public class ServiceApiController {
 				asTransLogs.addAll(afterService.createMaps(afterService));
 			}
 
-//			MSvcLogApiService.saveAfterServiceLogs(asTransLogs);
+			MSvcLogApiService.saveAfterServiceLogs(asTransLogs);
 
 			transactionId = afterServiceForms.get(0).getTransactionId();
 		}
@@ -301,20 +327,126 @@ public class ServiceApiController {
 		// business service....
 		// TODO : heartService.xxxx 구현 필요.....		
 //		MSvcLogApiService.aSresultRegistration(asTransLogs);
-		if(asTransLogs.size()> 0) {
-			for(int i=0 ; i < asTransLogs.size() ; i++ ){
-				Map<String, Object> asMasterMap = asTransLogs.get(i);
-				Map<String, Object> servasMasterMap = asTransLogs.get(i);
-				asMasterMap.put("AS_ENTRY_ID", asMasterMap.get(""));
+
+//		for (AfterServiceResultForm afterService1 : afterServiceForms) {
+//			asTransLogs1.addAll(afterService1.createMaps1(afterService1));
+//		}
+		
+		
+
+		
+		asTransLogs1 = new ArrayList<>();
+		for(AfterServiceResultForm afterService1 : afterServiceForms) {
+			asTransLogs1.addAll(afterService1.createMaps1(afterService1)); 
+		}
+		
+		if(asTransLogs1.size()> 0) {  
+			for(int i=0 ; i < asTransLogs1.size() ; i++ ){
+				  
+				LOGGER.debug("asTransLogs11111 값 : {}", asTransLogs1.get(i));
+				
+				Map<String, Object>   afterServiceDetail = null;
+//				Map<String, Object> paramsDetail = asTransLogs1.get(i).get("partList");
+				
+				List<Map<String, Object>> paramsDetail = AfterServiceResultDetailForm.createMaps((List<AfterServiceResultDetailForm>) asTransLogs1.get(i).get("partList"));
+
+				Map<String , Object> paramsFilter = paramsDetail.get(i);
+				paramsDetail.get(i).put("filterType", paramsDetail.get(i).get("partsType"));
+				paramsDetail.get(i).put("filterDesc", "aaaa-bbbb");
+				paramsDetail.get(i).put("filterExCode", paramsDetail.get(i).get("filterCode"));
+				paramsDetail.get(i).put("filterQty", paramsDetail.get(i).get("filterChangeQty"));
+				paramsDetail.get(i).put("filterPrice", paramsDetail.get(i).get("salesPrice"));
+				paramsDetail.get(i).put("filterTotal", "1");
+				paramsDetail.get(i).put("filterRemark", "1");
+				paramsDetail.get(i).put("filterID", "1");
+
+				
+				
+				Map<String, Object> params = asTransLogs1.get(i);  
+//				Map<String, Object> servasMasterMap = asTransLogs.get(i);
+				
+				
+				Map<String, Object> getAsBasic = MSvcLogApiService.getAsBasic(params);
+				
+				params.put("AS_ENTRY_ID", getAsBasic.get("asEntryId"));
+				params.put("AS_SO_ID", getAsBasic.get("asSoId"));
+				params.put("AS_CT_ID", getAsBasic.get("asCtId"));
+				params.put("AS_RESULT_STUS_ID", '4');
+				params.put("AS_FAIL_RESN_ID", getAsBasic.get("as_failResnId"));
+				params.put("AS_REN_COLCT_ID", 0);
+				params.put("AS_CMMS", getAsBasic.get("asCmms"));
+				params.put("AS_BRNCH_ID", getAsBasic.get("asBrnchId"));
+				params.put("AS_WH_ID", getAsBasic.get("asWhId"));
+				params.put("AS_RESULT_REM", getAsBasic.get("resultRemark"));
+				params.put("AS_MALFUNC_ID", getAsBasic.get("asMalfuncId"));
+				params.put("AS_MALFUNC_RESN_ID", getAsBasic.get("asMalfuncResnId"));
+				params.put("AS_DEFECT_GRP_ID", 0);
+				params.put("AS_DEFECT_PART_GRP_ID", 0);
+				params.put("AS_WORKMNSH", getAsBasic.get("asWorkmnsh"));
+				params.put("AS_FILTER_AMT", getAsBasic.get("asFilterAmt"));
+				params.put("AS_ACSRS_AMT", 0);
+				params.put("AS_TOT_AMT", String.valueOf(getAsBasic.get("asTotAmt")));
+				params.put("AS_RESULT_IS_SYNCH", 0);
+				params.put("AS_RCALL", 0);
+				params.put("AS_RESULT_STOCK_USE", getAsBasic.get("asResultStockUse"));
+				params.put("AS_RESULT_TYPE_ID", 457);
+				params.put("AS_RESULT_IS_CURR", 1);
+				params.put("AS_RESULT_MTCH_ID", 0);
+				params.put("AS_RESULT_NO_ERR", "");
+				params.put("AS_ENTRY_POINT", 0);
+				params.put("AS_WORKMNSH_TAX_CODE_ID", 0);
+				params.put("AS_WORKMNSH_TXS", 0);
+				params.put("AS_RESULT_MOBILE_ID", 0);
+				params.put("AS_RESULT_NO", getAsBasic.get("asResultNo"));
+				params.put("AS_RESULT_ID", getAsBasic.get("asResultId"));
+				params.put("AS_NO", getAsBasic.get("asno"));
+				params.put("HC_REM", " ");
+				
+				//004
+				params.put("AS_NO", asTransLogs1.get(i).get("serviceNo"));//asTransLogs
+				params.put("AS_DEFECT_TYPE_ID",  asTransLogs1.get(i).get("defectTypeId")); //asTransLogs
+				params.put("AS_DEFECT_ID", asTransLogs1.get(i).get("defectId")); //asTransLogs
+				params.put("AS_DEFECT_PART_ID", asTransLogs1.get(i).get("defectPartId")); //asTransLogs
+				params.put("AS_DEFECT_DTL_RESN_ID", asTransLogs1.get(i).get("defectDetailReasonId"));//asTransLogs
+				params.put("AS_SLUTN_RESN_ID", asTransLogs1.get(i).get("solutionReasonId"));//asTransLogs
+				params.put("AS_SETL_DT", todate2);
+				params.put("AS_SETL_TM", curTime);
+
+				//
+				params.put("IN_HUSE_REPAIR_REM", asTransLogs1.get(i).get("inHouseRepairRemark"));//asTransLogs
+				params.put("IN_HUSE_REPAIR_REPLACE_YN", asTransLogs1.get(i).get("inHouseRepairReplacementYN"));//asTransLogs
+				params.put("IN_HUSE_REPAIR_PROMIS_DT", asTransLogs1.get(i).get("inHouseRepairPromisedDate"));//asTransLogs
+				params.put("IN_HUSE_REPAIR_GRP_CODE", asTransLogs1.get(i).get("inHouseRepairProductGroupCode"));//asTransLogs
+				params.put("IN_HUSE_REPAIR_PRODUCT_CODE", asTransLogs1.get(i).get("inHouseRepairProductCode"));//asTransLogs
+				params.put("IN_HUSE_REPAIR_SERIAL_NO", asTransLogs1.get(i).get("inHouseRepairSerialNo"));//asTransLogs
+				params.put("RESULT_CUST_NAME", asTransLogs1.get(i).get("resultCustName"));//asTransLogs
+				params.put("RESULT_MOBILE_NO", asTransLogs1.get(i).get("resultIcMobileNo"));//asTransLogs
+				params.put("RESULT_REP_EMAIL_NO", asTransLogs1.get(i).get("resultReportEmailNo"));//asTransLogs
+				params.put("RESULT_ACEPT_NAME", asTransLogs1.get(i).get("resultAcceptanceName"));//asTransLogs
+				params.put("SGN_DT", asTransLogs1.get(i).get("signData"));//asTransLogs
+				
+				LOGGER.debug("params22222 값 : {}", params);
+				
 				
 
-			
-			
-			
-			
-			}
-		}
+				
+				
+				
+				
+				Map<String, Object>   asResultInsert = new HashMap();
+				
+				asResultInsert.put("asResultM", params);
+				asResultInsert.put("updator",getAsBasic.get("userId"));
+				asResultInsert.put("add", paramsDetail);				 
+				
+				LOGGER.debug("asResultInsert1111111111 값 : {}", asResultInsert);
+				
+				ASManagementListService.asResult_insert(asResultInsert);
+				
 
+				
+			}
+		}   
 		
 //		LinkedHashMap  asResultM = (LinkedHashMap)  params.get("asResultM");
 //		List<EgovMap>  add			= (List<EgovMap>)  params.get("add");
