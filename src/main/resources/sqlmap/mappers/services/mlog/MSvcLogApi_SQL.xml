@@ -774,7 +774,7 @@ AND   O1DA.MEM_CODE = #{userId}
                     , #{filterCode}
                     , #{filterChangeQty}
                     , sysdate
-                    , #{userId}
+                    , #{memId}
             )
             </insert>
 
