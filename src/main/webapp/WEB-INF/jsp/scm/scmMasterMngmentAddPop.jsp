@@ -13,6 +13,42 @@
 
 var setMainRowIdx = 0;
 
+$(function() 
+{
+  //stock type
+  fnSelectStockTypeComboList('15');    
+  //category
+  fnSelectCategoryComboList('11');    
+});
+
+function fnSelectStockTypeComboList(codeId)
+{ 
+    CommonCombo.make("scmStockTypeCbBox"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
+}
+
+function fnSelectCategoryComboList(codeId)
+{
+    CommonCombo.make("scmCategoryCbBox"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
+}
+
 function fnSelectBoxChanged()
 {
    $("#menuCdNm").val("");
@@ -21,25 +57,36 @@ function fnSelectBoxChanged()
 
 function fnClose()
 {
-  $("#otdDetailPop").remove();
+  $("#scmMstMngmentAddPop").remove();
 }
 
-function fnSelectOTDDetailPopData()
+function fnStockTypeCbBoxChangeEvent(obj)
+{
+	console.log("StockCB: " + obj.value);
+	fnSelectCategoryData();
+}
+
+function fnCategoryCbBoxChangeEvent(obj)
+{
+	console.log("categoryCB: " + obj.value);
+	fnSelectCategoryData();
+}
+
+function fnSelectCategoryData()
 {
      Common.ajax("GET"
-               , "/scm/selectOtdSODetailPop.do"
-               , $("#MainForm").serialize()
+               , "/scm/selectInvenCbBoxByCategory.do"
+               , $("#PopForm").serialize()
                , function(result) 
                  {
-                    console.log("성공 fnPopUpSOGIDetailPopList: " + result.selectOtdSOGIDetailPopList.length);
-                    console.log("성공 fnPopUpSOPPDetailPopList: " + result.selectOtdSOPPDetailPopList.length);
+                    console.log("성공 scmMstInvenByCategoryList: " + result.scmMstInvenByCategoryList.length);
 
-                    AUIGrid.setGridData(soGIGridID, result.selectOtdSOGIDetailPopList);
-                    AUIGrid.setGridData(soPPGridID, result.selectOtdSOPPDetailPopList);
-                    if(result != null )
+                    AUIGrid.setGridData(MasterGridID, result.scmMstInvenByCategoryList);
+                    
+                    if(result.scmMstInvenByCategoryList.length > 0 )
                     {
-                        console.log("success_GI_poNo: " + result.selectOtdSOGIDetailPopList[0].poNo
-                                   +"success_PP_poNo: " + result.selectOtdSOPPDetailPopList[0].poNo); 
+                        console.log("success_stockCode: " + result.scmMstInvenByCategoryList[0].stkCode
+                                   +"success_stockName: " + result.scmMstInvenByCategoryList[0].stkName); 
                     }
                  }
                , function(jqXHR, textStatus, errorThrown)
@@ -60,145 +107,152 @@ function fnSelectOTDDetailPopData()
                  });
 
 }
-var otdSOGILayout = 
+
+function fnSaveAsIns()
+{
+   if ( $("#stkId").val().length == 0)
+   {
+   	 Common.alert('<spring:message code="sys.msg.first.Select" arguments=" [Stock Infomation] " htmlEscape="false"/>');  
+     return false;
+   } 
+
+   isValidDate($("#StartedDateTxt").val());
+   isValidDate($("#EndDateTxt").val());
+
+   if (AUIGrid.formatDate(isValidDate($("#EndDateTxt").val()), "yyyymmdd") < AUIGrid.formatDate(isValidDate($("#StartedDateTxt").val()), "yyyymmdd"))
+   {    
+     Common.alert("<spring:message code='sys.msg.limitMore' arguments='START DATE ; END DATE.' htmlEscape='false' argumentSeparator=';'/>");
+     $("#EndDateTxt").val("");
+     return false;
+   }
+      
+   if ( $("#supplyPlanSafetyStockTxt").val().length == 0 || $("#supplyPlanSafetyStockTxt").val() < 0) $("#supplyPlanSafetyStockTxt").val("0");
+   if ( $("#supplyPlanLTtxt").val().length == 0  || $("#supplyPlanLTtxt").val() < 0)                  $("#supplyPlanLTtxt").val("0");
+   if ( $("#supplyPlanMoqTxt").val().length == 0 || $("#supplyPlanMoqTxt").val() < 0)                 $("#supplyPlanMoqTxt").val("0");
+   if ( $("#supplyPlanLoadingQtyTxt").val().length == 0 || $("#supplyPlanLoadingQtyTxt").val() < 0)   $("#supplyPlanLoadingQtyTxt").val("0");
+
+   Common.ajax("POST"
+				     , "/scm/insertMstMngMasterCDC.do"
+		         , $("#PopForm").serializeJSON({checkboxUncheckedValue: "0"})   
+		         , function(result) 
+		          {
+		             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+		             fnSelectCategoryData();
+		             
+		             console.log("성공." + JSON.stringify(result));
+		             console.log("data : " + result.data);
+		          } 
+		        , function(jqXHR, textStatus, errorThrown) 
+		         {
+		           try 
+		           {
+		             console.log("Fail Status : " + jqXHR.status);
+		             console.log("code : "        + jqXHR.responseJSON.code);
+		             console.log("message : "     + jqXHR.responseJSON.message);
+		             console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+		           } 
+		           catch (e) 
+		           {
+		             console.log(e);
+		           }
+		           Common.alert("Fail : " + jqXHR.responseJSON.message);
+		         }); 
+}
+
+var MasterGridLayout = 
     [      
         {       
-            dataField : "poNo",
-            headerText : "<spring:message code='sys.scm.otdview.PO' />",
-            width : "15%",
+            dataField : "stkCode",
+            headerText : "<spring:message code='sys.scm.pomngment.stockCode' />",
+            style : "aui-grid-left-column",            
+            width : "20%",
         },{
-            dataField : "stockCode",
-            headerText : "<spring:message code='sys.scm.otdview.StkCode' />",
-            width : "10%",
+            dataField : "stkName",
+            headerText : "<spring:message code='sys.scm.pomngment.stockName' />",
+            style : "aui-grid-left-column",
+            width : "80%",
         },{
-            dataField : "stkDesc",
-            headerText : "<spring:message code='sys.scm.otdview.StkDesc' />",
-            width : "15%",
+            dataField : "stkId",
+            visible : false,
         },{
-            dataField : "poQty",
-            headerText :"<spring:message code='sys.scm.otdview.poQty' />",
-            width : "10%"
+            dataField : "categoryId",
+            visible : false,
         },{
-            dataField : "soQty",
-            headerText :"<spring:message code='sys.scm.otdview.soQty' />",
-            width : "10%"
+            dataField : "stkTypeCode",
+            visible : false,
         },{
-            dataField : "giQty",
-            headerText :"<spring:message code='sys.scm.otdview.giQty' />",
-            width : "10%"
+            dataField : "categoryCode",
+            visible : false,
         },{
-            dataField : "soDate",
-            headerText :"<spring:message code='sys.scm.otdview.soDate' />",
-            width : "15%"
-        },{
-            dataField : "giDate",
-            headerText :"<spring:message code='sys.scm.otdview.giDate' />",
-            width : "15%"
+            dataField : "stkType",
+            visible : false,
         }
     ];
 
-
+var MainGridOptions = {
+		    usePaging : true,
+		    //pageRowCount : 20,
+        pagingMode : "simple",// 페이징을 간단한 유형으로 나오도록 설정
+        useGroupingPanel : false,
+        editable : false,
+        showStateColumn : false, // 행 상태 칼럼 보이기
+        showRowNumColumn : false  // 그리드 넘버링
+      };
 
 
 /***************************************************[ Main GRID] ***************************************************/    
-var soGIGridID, soPPGridID;
+var MasterGridID;
 
 $(document).ready(function()
 {
-   var gridOptions = {
-                    usePaging : false,
-                    useGroupingPanel : false,
-                    editable : false,
-                    showRowNumColumn : false  // 그리드 넘버링
-                  };
+    $("#scmStockNameTxt").bind("keyup", function()
+    {
+      $(this).val($(this).val().toUpperCase());
+    });
 
+    $("#scmStockNameTxt").keypress(function (event) 
+    {
+      if (event.keyCode == 13) fnSelectCategoryData();
+    });
+
+    $("#stkId").val("");
+    
     /********************************
-      soGI GRID
+      Master GRID
     *********************************/
       
       // AUIGrid 그리드를 생성합니다.
-      soGIGridID = GridCommon.createAUIGrid("soGIGridDiv", otdSOGILayout,"", gridOptions);
+      MasterGridID = GridCommon.createAUIGrid("MasterGridDiv", MasterGridLayout,"", MainGridOptions);
 
       // cellClick event.
-      AUIGrid.bind(soGIGridID, "cellClick", function( event ) 
+      AUIGrid.bind(MasterGridID, "cellClick", function( event ) 
       {
-          console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParammenuId: " + $("#searchParamMenuId").val() +" / "+ $("#searchParammenuName").val());        
+          console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " EVENT_VALUE: " + event.value);
+          console.log("stkCode: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkCode")
+                     +" stkName: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkName") 
+                     +" stkId: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkId") 
+        		         +" categoryId: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "categoryId")
+        		         +" stkTypeCode: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkTypeCode")
+        		         +" categoryCode: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "categoryCode")
+        		         +" stkType: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkType")
+                     ); 
+          
+            $("#stockCodeTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkCode"));
+            $("#stockTypeTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkType"));
+            $("#categoryTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "categoryCode"));
+            $("#descriptionTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkName"));
+            $("#stkId").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkId"));
+           
       });
 
       // 셀 더블클릭 이벤트 바인딩
-      AUIGrid.bind(soGIGridID, "cellDoubleClick", function(event) 
+      AUIGrid.bind(MasterGridID, "cellDoubleClick", function(event) 
       {
-          console.log("GI_DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
+          console.log("cellDoubleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
       });  
 
-
-
-    /********************************
-      soPP GRID
-    *********************************/
-
-    var otdSOPPLayout = 
-        [      
-            {       
-                dataField : "poNo",
-                headerText : "<spring:message code='sys.scm.otdview.PO' />",
-                width : "10%",
-            },{
-                dataField : "stockCode",
-                headerText : "<spring:message code='sys.scm.otdview.StkCode' />",
-                width : "10%",
-            },{
-                dataField : "stkDesc",
-                headerText : "<spring:message code='sys.scm.otdview.StkDesc' />",
-                width : "10%",
-            },{
-                dataField : "poQty",
-                headerText :"<spring:message code='sys.scm.otdview.poQty' />",
-                width : "10%",
-            },{
-                dataField : "soNo",
-                headerText :"<spring:message code='sys.scm.otdview.soNo' />",
-                width : "10%",
-            },{
-                dataField : "soQty",
-                headerText :"<spring:message code='sys.scm.otdview.soQty' />",
-                width : "10%",
-            },{
-                dataField : "planQty",
-                headerText :"<spring:message code='sys.scm.otdview.planQty' />",
-                width : "10%",
-            },{
-                dataField : "planDate",
-                headerText :"<spring:message code='sys.scm.otdview.planDate' />",
-                width : "10%",
-            },{
-                dataField : "resultQty",
-                headerText :"<spring:message code='sys.scm.otdview.resultQty' />",
-                width : "10%",
-            },{
-                dataField : "resultDate",
-                headerText :"<spring:message code='sys.scm.otdview.resultDate' />",
-                width : "10%",
-            }
-        ];    
-       
-    // AUIGrid 그리드를 생성합니다.
-      soPPGridID = GridCommon.createAUIGrid("soPPGridDiv", otdSOPPLayout,"", gridOptions);
-
-      // cellClick event.
-      AUIGrid.bind(soPPGridID, "cellClick", function( event ) 
-      {
-          console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParammenuId: " + $("#searchParamMenuId").val() +" / "+ $("#searchParammenuName").val());        
-      });
-
-   // 셀 더블클릭 이벤트 바인딩
-      AUIGrid.bind(soPPGridID, "cellDoubleClick", function(event) 
-      {
-          console.log("PP_DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-      });  
-
-   // Call
-      fnSelectOTDDetailPopData();
+      // CategoryList search
+      fnSelectCategoryData();
    
 });   //$(document).ready
 
@@ -212,211 +266,206 @@ $(document).ready(function()
 <header class="pop_header"><!-- pop_header start -->
 <h1>SCM Master Management Add New</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<!-- <li><p class="btn_blue2"><a onclick="fnClose();">CLOSE</a></p></li>  -->
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-
-<div class="divine_auto"><!-- divine_auto start -->
-
-<div style="width:35%;">
-
-<div class="border_box" style="height:670px;"><!-- border_box start -->
-
-<ul class="right_btns">
-	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
-</ul>
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:110px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Stock Type</th>
-	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	</td>
-</tr>
-<tr>
-	<th scope="row">Category</th>
-	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	</td>
-</tr>
-<tr>
-	<th scope="row">Stock Name</th>
-	<td>
-	<input type="text" title="" placeholder="" class="w100p" />
-	</td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</div><!-- border_box end -->
-
-</div>
-
-<div style="width:65%;">
-
-<div class="border_box"><!-- border_box start -->
-
-<aside class="title_line"><!-- title_line start -->
-<h2>Stock Info</h2>
-</aside><!-- title_line end -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:110px" />
-	<col style="width:*" />
-	<col style="width:100px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Stock Code</th>
-	<td colspan="3">
-	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
-	</td>
-</tr>
-<tr>
-	<th scope="row">Stock Type</th>
-	<td>
-	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
-	</td>
-	<th scope="row">Category</th>
-	<td>
-	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
-	</td>
-</tr>
-<tr>
-	<th scope="row">Description</th>
-	<td colspan="3">
-	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
-	</td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h2>Sales Planning</h2>
-</aside><!-- title_line end -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:110px" />
-	<col style="width:*" />
-	<col style="width:100px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Target</th>
-	<td colspan="3">
-	<label><input type="radio" name="target" /><span>Yes</span></label>
-	<label><input type="radio" name="target" /><span>No</span></label>
-	</td>
-</tr>
-<tr>
-	<th scope="row">Started</th>
-	<td>
-	<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
-	</td>
-	<th scope="row">Ended</th>
-	<td>
-	<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
-	</td>
-</tr>
-<tr>
-	<th scope="row">Memo</th>
-	<td colspan="3">
-	<textarea cols="20" rows="5" placeholder=""></textarea>
-	</td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h2>Supply Planning</h2>
-</aside><!-- title_line end -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:110px" />
-	<col style="width:*" />
-	<col style="width:100px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Target</th>
-	<td colspan="3">
-	<label><input type="radio" name="target2" /><span>KL</span></label>
-	<label><input type="radio" name="target2" /><span>KK</span></label>
-	<label><input type="radio" name="target2" /><span>JB</span></label>
-	<label><input type="radio" name="target2" /><span>PN</span></label>
-	<label><input type="radio" name="target2" /><span>KC</span></label>
-	</td>
-</tr>
-<tr>
-	<th scope="row">Safety Stock</th>
-	<td>
-	<input type="text" title="" placeholder="" class="w100p al_right" />
-	</td>
-	<th scope="row">LT</th>
-	<td>
-	<input type="text" title="" placeholder="" class="w100p al_right" />
-	</td>
-</tr>
-<tr>
-	<th scope="row">MOQ</th>
-	<td>
-	<input type="text" title="" placeholder="" class="w100p al_right" />
-	</td>
-	<th scope="row">Loading Quantity</th>
-	<td>
-	<input type="text" title="" placeholder="" class="w100p al_right" />
-	</td>
-</tr>
-<tr>
-	<th scope="row">Remark</th>
-	<td colspan="3">
-	<textarea cols="20" rows="5" placeholder=""></textarea>
-	</td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
-	<li><p class="btn_blue2 big"><a href="#">Delete</a></p></li>
-	<li><p class="btn_blue2 big"><a href="#">Close</a></p></li>
-</ul>
-
-</div><!-- border_box end -->
-
-</div>
-
-</div><!-- divine_auto end -->
-
+  <form id="PopForm" method="get" action="" onsubmit="return false;">  
+    <input type ="hidden" id="stkId" name="stkId" value=""/>
+		<div class="divine_auto"><!-- divine_auto start -->
+		
+		<div style="width:35%;">
+		
+		<div class="border_box" style="height:506px;"><!-- border_box start -->
+		
+		<ul class="right_btns">
+			<li><p class="btn_blue"><a onclick="fnSelectCategoryData();"><span class="search"></span>Search</a></p></li>
+		</ul>
+		
+		<table class="type1 mt10"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+			<col style="width:110px" />
+			<col style="width:*" />
+		</colgroup>
+		<tbody>
+		<tr>
+			<th scope="row">Stock Type</th>
+			<td>
+			<select class="w100p" id="scmStockTypeCbBox" name="scmStockTypeCbBox" onchange="fnStockTypeCbBoxChangeEvent(this);">
+			</select>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">Category</th>
+			<td>
+			<select class="w100p" id="scmCategoryCbBox" name="scmCategoryCbBox" onchange="fnCategoryCbBoxChangeEvent(this);">
+			</select>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">Stock Name</th>
+			<td>
+			<input type="text" id="scmStockNameTxt" name="scmStockNameTxt" title="" placeholder="" class="w100p" />
+			</td>
+		</tr>
+		</tbody>
+		</table><!-- table end -->
+		
+		<article class="grid_wrap"><!-- grid_wrap start -->
+		 <div id="MasterGridDiv" style="width:100%; height:390px; margin:0 auto;"></div>
+		</article><!-- grid_wrap end -->
+		
+		</div><!-- border_box end -->
+		
+		</div>
+		
+		<div style="width:65%;">
+		
+		<div class="border_box"><!-- border_box start -->
+		
+		<aside class="title_line"><!-- title_line start -->
+		<h2>Stock Info</h2>
+		</aside><!-- title_line end -->
+		
+		<table class="type1"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+			<col style="width:110px" />
+			<col style="width:*" />
+			<col style="width:100px" />
+			<col style="width:*" />
+		</colgroup>
+		<tbody>
+		<tr>
+			<th scope="row">Stock Code</th>
+			<td colspan="3">
+			<input type="text" id="stockCodeTxt" name="stockCodeTxt" title="" placeholder="" class="w100p readonly" readonly="readonly" onkeydown="return false;"/>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">Stock Type</th>
+			<td>
+			<input type="text" id="stockTypeTxt" name="stockTypeTxt" title="" placeholder="" class="w100p readonly" readonly="readonly" onkeydown="return false;"/>
+			</td>
+			<th scope="row">Category</th>
+			<td>
+			<input type="text" id="categoryTxt" name="categoryTxt" title="" placeholder="" class="w100p readonly" readonly="readonly" onkeydown="return false;"/>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">Description</th>
+			<td colspan="3">
+			<input type="text" id="descriptionTxt" name="descriptionTxt" title="" placeholder="" class="w100p readonly" readonly="readonly" onkeydown="return false;"/>
+			</td>
+		</tr>
+		</tbody>
+		</table><!-- table end -->
+		
+		<aside class="title_line"><!-- title_line start -->
+		<h2>Sales Planning</h2>
+		</aside><!-- title_line end -->
+		
+		<table class="type1"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+			<col style="width:110px" />
+			<col style="width:*" />
+			<col style="width:100px" />
+			<col style="width:*" />
+		</colgroup>
+		<tbody>
+		<tr>
+			<th scope="row">Target</th>
+			<td colspan="3">
+			<label><input type="radio" id="targetYNRadioY" name="targetYNRadio" value="1" checked="checked"/><span>Yes</span></label>
+			<label><input type="radio" id="targetYNRadioN" name="targetYNRadio" value="0"/><span>No</span></label>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">Started</th>
+			<td>
+			<input type="text" id="StartedDateTxt" name="StartedDateTxt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+			</td>
+			<th scope="row">Ended</th>
+			<td>
+			<input type="text" id="EndDateTxt" name="EndDateTxt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">Memo</th>
+			<td colspan="3">
+			<textarea cols="20" rows="5" id="memoTxt" name="memoTxt" placeholder=""></textarea>
+			</td>
+		</tr>
+		</tbody>
+		</table><!-- table end -->
+		
+		<aside class="title_line"><!-- title_line start -->
+		<h2>Supply Planning</h2>
+		</aside><!-- title_line end -->
+		
+		<table class="type1"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+			<col style="width:110px" />
+			<col style="width:*" />
+			<col style="width:100px" />
+			<col style="width:*" />
+		</colgroup>
+		<tbody>
+		<tr>
+			<th scope="row">Target</th>
+			<td colspan="3">
+			<label><input type="checkbox" id="klChkbox" name="klChkbox" value="1"  checked="checked"/><span>KL</span></label>
+			<label><input type="checkbox" id="kkChkbox" name="kkChkbox" value="1"  checked="checked"/><span>KK</span></label>
+			<label><input type="checkbox" id="jbChkbox" name="jbChkbox" value="1"  checked="checked"/><span>JB</span></label>
+			<label><input type="checkbox" id="pnChkbox" name="pnChkbox" value="1"  checked="checked"/><span>PN</span></label>
+			<label><input type="checkbox" id="kcChkbox" name="kcChkbox" value="1"  checked="checked"/><span>KC</span></label>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">Safety Stock</th>
+			<td>
+			<input type="text" title="" id="supplyPlanSafetyStockTxt" name="supplyPlanSafetyStockTxt" value="60" placeholder="" class="w100p al_right" />
+			</td>
+			<th scope="row">LT</th>
+			<td>
+			<input type="text" title="" id="supplyPlanLTtxt" name="supplyPlanLTtxt" value="8" placeholder="" class="w100p al_right" />
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">MOQ</th>
+			<td>
+			<input type="text" title="" id="supplyPlanMoqTxt" name="supplyPlanMoqTxt" value="50" placeholder="" class="w100p al_right" />
+			</td>
+			<th scope="row">Loading Quantity</th>
+			<td>
+			<input type="text" title="" id="supplyPlanLoadingQtyTxt" name="supplyPlanLoadingQtyTxt" value="0" placeholder="" class="w100p al_right" />
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">Remark</th>
+			<td colspan="3">
+			<textarea id="supplyPlanRemarkTxt" name="supplyPlanRemarkTxt"  cols="20" rows="5" placeholder=""></textarea>
+			</td>
+		</tr>
+		</tbody>
+		</table><!-- table end -->
+		
+		<ul class="center_btns">
+			<li><p class="btn_blue2 big"><a onclick="fnSaveAsIns();">Save</a></p></li>
+			<!-- <li><p class="btn_blue2 big"><a href="javascript:void(0);">Delete</a></p></li> -->
+			<li><p class="btn_blue2 big"><a onclick="fnClose();">Close</a></p></li>
+		</ul>
+		
+		</div><!-- border_box end -->
+		
+		</div>
+		
+		</div><!-- divine_auto end -->
+  </form> 
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->

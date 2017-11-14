@@ -190,8 +190,9 @@ function fnComplexChartDraw(chartData)
 																		    {
 																	        label:function(tooltipItem, data)
 																	              {
-																	                var retVal = tooltipItem.yLabel;
 																	                //console.log("tooltip: " + JSON.stringify(tooltipItem));
+																	                var retVal = tooltipItem.yLabel;
+																	                
 																	                if(tooltipItem.datasetIndex == 0){
 																	                	retVal = tooltipItem.yLabel / 1000000;
 																		              }
@@ -226,11 +227,6 @@ function fnSearchBtnList()
      AUIGrid.destroy(gChartGridID);
    }
 
-/*     if (ComplexChartData != null) 
-    {
-      ComplexChartData.destroy();
-    } */
-   
    if(AUIGrid.isCreated(gInventoryRPTStatusGridID)) {
      AUIGrid.destroy(gInventoryRPTStatusGridID);
    }

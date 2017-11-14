@@ -66,6 +66,8 @@ $(function()
 {
    // set Year
     fnSelectExcuteYear();
+   //stock type
+    fnSelectStockTypeComboList('15');
 });
 
 
@@ -87,6 +89,20 @@ function fnSelectExcuteYear()
 function fnChangeEventYear(object)
 {
 	$("#paramChartExt").val("0");
+}
+
+function fnSelectStockTypeComboList(codeId)
+{
+    CommonCombo.make("scmStockType"
+              , "/scm/selectComboSupplyCDC.do"  
+              , { codeMasterId: codeId }       
+              , ""                         
+              , {  
+                  id  : "codeId",     // use By query's parameter values(real value)               
+                  name: "codeName",   // display
+                  chooseMessage: "All"
+                 }
+              , "");     
 }
 
 function fnQtMonthlyGridVisible()
@@ -2387,15 +2403,25 @@ $(document).ready(function()
 <caption>table</caption>
 <colgroup>
   <col style="width:110px" />
+  <col style="width:245px" />
+  <col style="width:110px" />
+  <col style="width:245px" />
   <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
   <th scope="row">Year</th>
   <td>
-  <select id="scmYearCbBox" name="scmYearCbBox" onchange="fnChangeEventYear(this);">
-  </select>
+	  <select id="scmYearCbBox" name="scmYearCbBox" onchange="fnChangeEventYear(this);" class="w100p">
+	  </select>
   </td>
+  <!-- Stock Type 추가 -->
+  <th scope="row">Stock Type</th>
+  <td>
+	  <select class="w100p" id="scmStockType" name="scmStockType"> 
+	  </select>
+  </td> 
+  <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->

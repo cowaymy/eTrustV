@@ -20,6 +20,7 @@
 <script type="text/javaScript">
 
 var keyValueList = new Array();
+var format = /^(19[7-9][0-9]|20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
 
 $(function() 
 {
@@ -43,6 +44,16 @@ function fnClick()
 function fnCallInterface()
 {
   $("#intfTypeCbBox option:eq(1)").prop("selected",true);
+}
+
+function fnAddNewPop()
+{
+	   var popUpObj = Common.popupDiv("/scm/scmMasterMngmentAddPop.do"
+		         , $("#MainForm").serializeJSON()
+		         , null
+		         , false // when doble click , Not close
+		         , "scmMstMngmentAddPop"  
+		         );  
 }
 
 function fnSelectStockTypeComboList(codeId)
@@ -73,31 +84,23 @@ function fnSetStockComboBox()
                 , "");
 }
 
-function fnSetStockDropDownList(callBack)
+function fnSetStockDropDownList()
 {
-    Common.ajaxSync("GET","/scm/selectStockCode.do"  
+    Common.ajaxSync("GET","/scm/selectDefaultStockCode.do"  
                  , $("#MainForm").serialize()
                  , function(result)
                  {
-
-                   
-        
                    //keyValueList.push({id:"" ,value:""});
                     for (var i = 0; i < result.length; i++)
                     {
                       var list = new Object();
-                          list.id = result[i].stkDesc ;  // display 
+                          list.id = result[i].stkCode ;  // display 
                           list.value = result[i].stkDesc;  // true value
                           keyValueList.push(list);
                     }
 
                     console.log("keyValueList_length: " + keyValueList.length);
                     console.log("keyValueList_sktCode: " + keyValueList[0]["id"] );  // view
-                    
-                    //if you need callBack Function , you can use that function
-                    /* if (callBack) {
-                      callBack(keyValueList);
-                    } */
 
                   });
     return keyValueList;
@@ -190,39 +193,152 @@ function fnSearchBtnList()
                });
 }
 
+function fnValidationCheck()
+{
+    var result = true;
+    var addList = AUIGrid.getAddedRowItems(myGridID);
+    var udtList = AUIGrid.getEditedRowItems(myGridID);
+    var delList = AUIGrid.getRemovedItems(myGridID);
+
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0)
+    {
+      Common.alert("No Change");
+      return false;
+    }
+   
+}
+
+function fnSave() 
+{
+   if (fnValidationCheck() == false)
+  {
+	   fnSearchBtnList() ;
+	   return false;
+  }
+  
+  Common.ajax("POST"
+				    , "/scm/saveScmMasterMngment.do"
+		        , GridCommon.getEditData(myGridID)
+		        , function(result) 
+		          {
+		            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+		            fnSearchBtnList() ;
+		            
+		            console.log("성공." + JSON.stringify(result));
+		            console.log("data : " + result.data);
+		          } 
+		        , function(jqXHR, textStatus, errorThrown) 
+		          {
+		            try 
+		            {
+		              console.log("Fail Status : " + jqXHR.status);
+		              console.log("code : "        + jqXHR.responseJSON.code);
+		              console.log("message : "     + jqXHR.responseJSON.message);
+		              console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+		            } 
+		            catch (e) 
+		            {
+		              console.log(e);
+		            }
+		            
+		            Common.alert("Fail : " + jqXHR.responseJSON.message);
+		            
+		          }); 
+}
+
+function isValidDate(param) 
+{
+	console.log("param: " + param);  // 03-07-2017 
+	var succDate = "";
+  //자리수가 맞지않을때
+/*   if( isNaN(param) || param.length!=10 ) {
+    return false;
+  } */
+  
+  //var arySrtDt = param.split("\/"); // ex) 시작일자(2007-10-09)
+  //var aryEndDt = endDt.split("-"); // ex) 종료일자(2007-12-05)
+  //var startDt = new Date(Number(arySrtDt[0]),Number(arySrtDt[1])-1,Number(arySrtDt[2]));
+  // var endDt = new Date(Number(aryEndDt[0]),Number(aryEndDt[1])-1,Number(aryEndDt[2]));
+   
+  console.log("/0: " + param.split("\/")[0]+" /1: " +param.split("\/")[1] +" /2: " +param.split("\/")[2]);
+  /*
+  var year = Number(param.substring(0, 4)); 
+  var month = Number(param.substring(4, 6));
+  var day = Number(param.substring(6, 8)); 	  
+   */
+  var day = Number(param.split("\/")[0]);
+  var month   = Number(param.split("\/")[1]);
+  var year  = Number(param.split("\/")[2]);
+ /*
+  var year = Number(param.substring(0, 4));
+  var month = Number(param.substring(4, 6));
+  var day = Number(param.substring(6, 8)); */
+
+  console.log("year: " + year + " /month: " + month + " /day: " + day);
+  
+  if( month<1 || month>12 ) {
+	  console.log("error1");
+    return succDate;
+  }
+  
+  var maxDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  var maxDay = maxDaysInMonth[month-1];
+  
+  // 윤년 체크
+  if( month==2 && ( year%4==0 && year%100!=0 || year%400==0 ) ) {
+    maxDay = 29;
+  }
+  
+  if( day<=0 || day>maxDay ) {
+	  console.log("error2");
+    return succDate;
+  }
+
+  if (String(day).length == 1)
+	  day = '0'+day;
+      
+  if (String(month).length == 1)
+	  month = '0'+month;
+
+  succDate = (day+'-'+month+'-'+year);
+  console.log("succDate: " +succDate )
+  
+  return succDate;
+}
+
+
 function auiCellEditignHandler(event) 
 {
     if(event.type == "cellEditBegin") 
     {
-        console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+        console.log("Click_에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+        console.log("formatDate: " +  AUIGrid.formatDate(event.value, "yyyymmdd") );
     } 
     else if(event.type == "cellEditEnd") 
     {
-        console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+        console.log("Click_에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
 
-        if (event.columnIndex == 2 && event.headerText == "SEQ NO") // SEQ NO
-        {
-          if (parseInt(event.value) < 1)
-          {
-            //Common.alert("Menu Level is not more than 4. ");
-                Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
-                AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
-                return false;
-          }  
-        }
+        //console.log("formatDate_StrDT: " +  AUIGrid.formatDate(event.value, "dd-mm-yyyy") );
+        //console.log("startDt: " +  AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt") ) ;
 
-        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
+        if (event.headerText == "Start")
         {
-          if (parseInt(event.value) < 1)
-          {
-             Common.alert("<spring:message code='sys.msg.necessary' arguments='CATEGORY NAME' htmlEscape='false'/>");
-             AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "stusCtgryName"] );
-             return false;
+        	if (AUIGrid.formatDate(AUIGrid.getCellValue(myGridID, event.rowIndex, "endDt"), "yyyymmdd") < AUIGrid.formatDate(AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt"), "yyyymmdd"))
+          {  	 
+        		Common.alert("<spring:message code='sys.msg.limitMore' arguments='START DATE ; END DATE.' htmlEscape='false' argumentSeparator=';'/>");
+            AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "startDt"] );
+            return false;
           }
-          else
+        }
+           
+        if (event.headerText == "End")
+        {
+        	if (AUIGrid.formatDate(AUIGrid.getCellValue(myGridID, event.rowIndex, "endDt"), "yyyymmdd") < AUIGrid.formatDate(AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt"), "yyyymmdd"))
           {
-            AUIGrid.setCellValue(myGridID, event.rowIndex, 2, AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCtgryName"));
-          }  
+        		Common.alert("<spring:message code='sys.msg.limitMore' arguments='START DATE ; END DATE.' htmlEscape='false' argumentSeparator=';'/>");
+            AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "endDt"] );
+            return false;
+          }
         }
         
     } 
@@ -230,7 +346,6 @@ function auiCellEditignHandler(event)
     {
         console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     }
-  
 }
 
 //행 추가 이벤트 핸들러
@@ -262,7 +377,7 @@ var masterManagerLayout =
                          }
                         ,{
                              dataField : "stkTypeId",
-                             headerText : "<spring:message code='sys.scm.interface.stockType'/>",
+                             headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
                          }
                         ,{
                             dataField : "stockCode",
@@ -331,14 +446,14 @@ var masterManagerLayout =
                               {
                                 type : "CheckBoxEditRenderer"
                                 ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
-                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                ,editable   : true // 체크박스 편집 활성화 여부(기본값 : false)
                                 ,checkValue : true // true, false 인 경우가 기본
                                 ,unCheckValue : false
                                     
                                    // 체크박스 Visible 함수
                                 ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
                                  {
-                                   if(item.isTarget == true)  // if 1 then
+                                   if(item.isTrget == true)  // if 1 then
                                      return true; // CheckBox is Checked
                                                                             
                                    return true;  // just CheckBox Visible But Not Checked.
@@ -356,24 +471,70 @@ var masterManagerLayout =
                               formatString : "dd-mm-yyyy",
                               editRenderer : {
                                   type : "CalendarRenderer",
+                                  defaultFormat : "mm/dd/yyyy", // 원래 데이터 날짜 포맷과 일치 시키세요. (기본값: "yyyy/mm/dd")
                                   showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-                                  onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-                                  showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
-                                  }   
+                                  onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+                                  showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+                                  validator : function(oldValue, newValue, rowItem) 
+                                  { // 에디팅 유효성 검사
+                                	  
+                                	  console.log("rowItem: " + JSON.stringify(rowItem));
+                                	  console.log("rowItem.endDt: " + rowItem.endDt);
+                                	  
+                                 	  var date, isValid = true;
+                                    if(isNaN(Number(newValue)) ) 
+                                    { //20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
+                                      if(isNaN(Date.parse(newValue))) 
+                                      { // 그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
+                                        isValid = false;
+                                      } 
+                                      else
+                                      {
+                                         if (newValue.length != 8)
+                                         {
+                                        	 isValid = false;
+                                          }
+                                         isValid = true;
+                                      }
+                                    } 
+                                                                                
+                                    // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                                    return { "validate" : isValid, "message"  : " Type In 'yyyymmdd' Input." };
+                                  }
+                              }   
                            }
                           ,{
                               dataField : "endDt",
                               headerText : "<spring:message code='sys.scm.mastermanager.End'/>",
                               dataType : "date",
                               formatString : "dd-mm-yyyy",
-                              editRenderer : {
+                              editRenderer : 
+                              {
                                 type : "CalendarRenderer",
+                                defaultFormat : "mm/dd/yyyy", // 원래 데이터 날짜 포맷과 일치 시키세요. (기본값: "yyyy/mm/dd")
                                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
                                 onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-                                showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
-                                }                             
+                                showExtraDays : true,  // 지난 달, 다음 달 여분의 날짜(days) 출력
+                                validator : function(oldValue, newValue, rowItem) 
+                                { // 에디팅 유효성 검사
+                                  var date, isValid = true;
+                                  if(isNaN(Number(newValue)) ) 
+                                  { //20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
+                                    if(isNaN(Date.parse(newValue))) 
+                                    { // 그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
+                                      isValid = false;
+                                    } 
+                                    else
+                                    {
+                                      isValid = true;
+                                    }
+                                  } 
+                                                                              
+                                  // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                                  return { "validate" : isValid, "message"  : " Type In 'yyyyMMdd' Input." };
+                                }
+                             }                             
                            }
-                          
                        ]
       }       
      ,{  //Supply Plan
@@ -391,7 +552,7 @@ var masterManagerLayout =
 	                                            {
 	                                              type : "CheckBoxEditRenderer"
 	                                              ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
-	                                              ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+	                                              ,editable   : true // 체크박스 편집 활성화 여부(기본값 : false)
 	                                              ,checkValue : true // true, false 인 경우가 기본
 	                                              ,unCheckValue : false
 	                                                  
@@ -412,7 +573,7 @@ var masterManagerLayout =
                                               {
                                                 type : "CheckBoxEditRenderer"
                                                 ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
-                                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                                ,editable   : true // 체크박스 편집 활성화 여부(기본값 : false)
                                                 ,checkValue : true // true, false 인 경우가 기본
                                                 ,unCheckValue : false
                                                     
@@ -433,7 +594,7 @@ var masterManagerLayout =
                                               {
                                                 type : "CheckBoxEditRenderer"
                                                 ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
-                                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                                ,editable   : true // 체크박스 편집 활성화 여부(기본값 : false)
                                                 ,checkValue : true // true, false 인 경우가 기본
                                                 ,unCheckValue : false
                                                     
@@ -454,7 +615,7 @@ var masterManagerLayout =
                                               {
                                                 type : "CheckBoxEditRenderer"
                                                 ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
-                                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                                ,editable   : true // 체크박스 편집 활성화 여부(기본값 : false)
                                                 ,checkValue : true // true, false 인 경우가 기본
                                                 ,unCheckValue : false
                                                     
@@ -475,7 +636,7 @@ var masterManagerLayout =
                                               {
                                                 type : "CheckBoxEditRenderer"
                                                 ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
-                                                ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+                                                ,editable   : true // 체크박스 편집 활성화 여부(기본값 : false)
                                                 ,checkValue : true // true, false 인 경우가 기본
                                                 ,unCheckValue : false
                                                     
@@ -529,6 +690,16 @@ var masterManagerLayout =
                           ,{
                               dataField : "loadingQty",
                               headerText : "<spring:message code='sys.scm.mastermanager.LQty'/>",
+                           }
+                          ,{
+                              dataField : "formatStartDate",
+                              headerText : "formatStartDate",
+                              visible: false,
+                           }
+                          ,{
+                              dataField : "formatEndDate",
+                              headerText : "formatEndDate",
+                              visible: false,
                            }
                           
                        ]
@@ -689,7 +860,17 @@ $(document).ready(function()
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid btn_disabled"><a href="javascript:void(0);">Add New</a></p></li>
+	<li>
+<!-- 	 <p class="btn_grid btn_disabled"> -->
+	 <p class="btn_grid">
+	     <a onclick="fnAddNewPop();">Add New</a>
+	 </p>
+  </li>
+	<li>
+	 <p class="btn_grid">
+	     <a onclick="fnSave();">Save</a>
+	 </p>
+  </li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

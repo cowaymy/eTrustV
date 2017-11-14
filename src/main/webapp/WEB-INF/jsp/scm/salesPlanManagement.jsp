@@ -39,7 +39,6 @@ var gWeekThValue ="";
 
 $(function() 
 {
-  
  //stock type
 	fnSelectStockTypeComboList('15');
  // set Year
