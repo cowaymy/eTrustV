@@ -20,6 +20,8 @@ public class SalesConstants {
 	public static final String DEFAULT_DATE_FORMAT1 = "dd/MM/yyyy";	
 	public static final String DEFAULT_DATE_FORMAT2 = "yyyy-MM-dd";
 	public static final String DEFAULT_DATE_FORMAT3 = "yyyyMMdd";
+	
+	public static final String DEFAULT_DATE_FORMAT4 = "MM/yyyy";
 
 	//COMMON CODE : Rental Verify(CODEMASTERID = 9)
 	public static final int SALES_AEON_CODEID = 121;
