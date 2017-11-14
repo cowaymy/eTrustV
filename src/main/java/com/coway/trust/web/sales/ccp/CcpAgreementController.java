@@ -45,6 +45,26 @@ public class CcpAgreementController {
 		return "sales/ccp/ccpAgreementList";
 	}
 	
+	@RequestMapping(value="/ccpAgreementRawPop.do" )
+	public String ccpAgreementRawPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/ccp/ccpAgreementRawPop";
+	}
+	
+	@RequestMapping(value="/ccpAgreementListingPop.do")
+	public String ccpAgreementListingPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/ccp/ccpAgreementListingPop";
+	}
+	
+	@RequestMapping(value="/ccpAgreementSummaryReportPop.do")
+	public String ccpAgreementSummaryReportPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/ccp/ccpAgreementSummaryReportPop";
+	}
+	
+	@RequestMapping(value="/ccpAgreementConsignmentCourierListingPop")
+	public String ccpAgreementConsignmentCourierListingPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/ccp/ccpAgreementConsignmentCourierListingPop";
+	}
+	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	

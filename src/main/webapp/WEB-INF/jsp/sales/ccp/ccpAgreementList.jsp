@@ -141,6 +141,21 @@ function createOrdAUIGrid(){
       ordGridID = GridCommon.createAUIGrid("ord_grid_wrap", orderColumnLayout,'', gridPros);
 	
 }
+
+function popup(location){
+	if(location == "rowData"){
+        Common.popupDiv("/sales/ccp/ccpAgreementRawPop.do", $("#popForm").serializeJSON(), null, true);
+	}else if(location == 'listing'){
+		Common.popupDiv("/sales/ccp/ccpAgreementListingPop.do", $("#popForm").serializeJSON(), null, true);
+	}else if(location == 'summary'){
+		Common.popupDiv("/sales/ccp/ccpAgreementSummaryReportPop.do", $("#popForm").serializeJSON(), null, true);
+	}else if(location == 'consignmentCourier'){
+		Common.popupDiv("/sales/ccp/ccpAgreementConsignmentCourierListingPop.do", $("#popForm").serializeJSON(), null, true);
+	}
+	
+}
+
+
 </script>
 <div id="wrap"><!-- wrap start -->
 <form id="ordGridForm">
@@ -250,10 +265,10 @@ function createOrdAUIGrid(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">ROW Data</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">Listing</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">Summary</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">Consignment Courier</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('rowData')">ROW Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('listing')">Listing</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('summary')">Summary</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('consignmentCourier')">Consignment Courier</a></p></li>
     </ul>
     <ul class="btns">
     </ul>
