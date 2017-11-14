@@ -193,7 +193,7 @@
         <option value="">Writer</option>
     </select> -->
     </td>
-    <td><input type="text" name="word" id="word" placeholder="" class="w20p" /></td>
+    <td><input type="text" name="keyword" id="keyword" placeholder="" class="w20p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
