@@ -57,5 +57,9 @@ public interface MSvcLogApiService {
 	Map<String, Object> selectOutstandingResult(Map<String, Object> params);
 	
 	List<EgovMap> selectOutstandingResultDetailList(Map<String, Object> params);
+	
+	Map<String, Object> getAsBasic(Map<String, Object> params);
+	
+	
 
 }
