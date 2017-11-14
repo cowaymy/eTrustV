@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
+import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -37,6 +38,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	
 	@Resource(name = "memberListMapper")
 	private MemberListMapper memberListMapper;
+	
+	
+	@Resource(name = "servicesLogisticsPFCMapper")
+	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
+	
 	
 	@Override
 	public List<EgovMap> selectApplicationType() {
@@ -291,9 +297,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			//sirimList = saveDataSirim(params,sessionVO);
 		}
 		if(doSaveInstallResult(installResult,sirimList,sessionVO)){
-			
+    			
 		}
-		
 		
 		
 		return false;
@@ -310,6 +315,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			logger.debug("entry : {}", entry);
 			logger.debug("exchange : {}", exchange);
 			logger.debug("salesOrderM : {}", salesOrderM);
+			
 			if(entry != null && Integer.parseInt(entry.get("installEntryId").toString()) > 0
 					 && exchange!= null && Integer.parseInt(exchange.get("soExchgId").toString()) > 0
 					 && salesOrderM!= null && Integer.parseInt(salesOrderM.get("salesOrdId").toString()) > 0) 
@@ -1274,6 +1280,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		if(sessionVO != null){
 			resultValue= Save(true,params,sessionVO);
+			
 		}
 		
 		return resultValue;
@@ -1383,6 +1390,42 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		}
 		resultValue.put("installEntryNo", params.get("hiddeninstallEntryNo"));
 		insertInstallation(statusId,installResult,callEntry,callResult,orderLog);
+		
+		
+		//물류 호출   add by hgham
+        Map<String, Object>  logPram = null ;
+		if(Integer.parseInt(params.get("installStatus").toString()) == 4 ){
+    
+			/////////////////////////물류 호출//////////////////////
+			logPram =new HashMap<String, Object>();
+            logPram.put("ORD_ID",    params.get("hiddeninstallEntryNo") );
+            logPram.put("RETYPE", "COMPLET");  
+            logPram.put("P_TYPE", "OD01");  
+            logPram.put("P_PRGNM", "INSCOM");  
+            logPram.put("USERID", sessionVO.getUserId());   
+            
+            logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+            /////////////////////////물류 호출 END //////////////////////   			
+        			
+      }else if(Integer.parseInt(params.get("installStatus").toString()) == 21){
+          
+    	  /////////////////////////물류 호출//////////////////////
+    		logPram =new HashMap<String, Object>();  
+            logPram.put("ORD_ID",    params.get("hiddeninstallEntryNo") );
+            logPram.put("RETYPE", "SVO");  
+            logPram.put("P_TYPE", "OD02");  
+            logPram.put("P_PRGNM", "INSCAN");  
+            logPram.put("USERID", sessionVO.getUserId());   
+            
+            logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+            /////////////////////////물류 호출 END //////////////////////   			
+      }
+		
+		
 		return resultValue;
 	}
 	@Transactional

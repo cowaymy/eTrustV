@@ -309,7 +309,7 @@ function fn_doAllaction(){
 
     <div class="search_100p"><!-- search_100p start -->
     <input type="text" title="" placeholder="" class="w100p" id="CTCode" name="CTCode"/>
-    <input type="hidden" placeholder="" class="w100p" id="CTID" name="CTID"/>
+    <input type="text" placeholder="" class="w100p" id="CTID" name="CTID"/>
     <%-- <a href="#" class="search_btn" onclick="javascript:fn_doAllaction()"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> --%>
     </div><!-- search_100p end -->
 

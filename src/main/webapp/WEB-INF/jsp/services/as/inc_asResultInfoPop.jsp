@@ -553,8 +553,9 @@ function fn_validRequiredField_Save_ResultInfo(){
                   rtnValue =false; 
               }
         }else{
-            
-        	if($("#requestMod").val() !="INHOUSE"){
+        	
+
+        	if($("#requestViewId").val() !="INHOUSE"){
         		  if(FormUtil.checkReqValue($("#ddlFailReason"))){
                       rtnMsg  +="Please select the ddlFailReason.<br/>" ;
                       rtnValue =false; 
@@ -717,6 +718,7 @@ function  fn_setSaveFormData(){
                <input type="text"   id= 'asData_AS_RESULT_ID' name='asData_AS_RESULT_ID'/> 
                <input type="text"   id= 'asData_AS_RESULT_NO' name='asData_AS_RESULT_NO'/> 
                <input type="text"   id= 'requestMod' name='requestMod'/> 
+               <input type="text"   id= 'requestViewId' name='requestViewId'/>   
     </div>
 </form>
 
@@ -1046,6 +1048,7 @@ function fn_asResult_editPageContral(_type){
     
     if("INHOUSE"==_type){
     	
+    	$("#requestViewId").val("INHOUSE");
     	if($("#requestMod").val()  =="NEW"){
     		
     		$("#ddlStatus").html(   "<option value='99'>In Process</option>");

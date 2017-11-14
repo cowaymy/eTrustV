@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
+import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.services.installation.InstallationResultListController;
@@ -32,6 +33,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	private MemberListMapper memberListMapper;
 	
 	
+	@Resource(name = "servicesLogisticsPFCMapper")
+	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
+	
+	 
 	
 	@Override
 	public List<EgovMap> selectOrderCall(Map<String, Object> params) {
@@ -73,7 +78,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			String returnNo="";
 			boolean success = false;
 			resultValue = orderCallLogSave(callMaster, callDetails, installMaster,  orderLogList ,salesOrdNo);
-			//returnNo = 
+			
 		}
 		
 		return resultValue;
@@ -123,7 +128,20 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 				logger.debug("installMaster : {}", installMaster);
 				orderCallListMapper.insertInstallEntry(installMaster);
 				
-				//물류내용도 여기에 포함
+				
+				/////////////////////////물류 호출//////////////////////
+				Map<String, Object>  logPram = new HashMap<String, Object>();
+				logPram.put("ORD_ID", installNo.get("docNo"));
+				logPram.put("RETYPE", "SVO");  
+				logPram.put("P_TYPE", "OD01");  
+				logPram.put("P_PRGNM", "OCALL");  
+				logPram.put("USERID", Integer.parseInt(String.valueOf(callMaster.get("updator"))));   
+				
+				logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+				servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+				logger.debug("ORDERCALL 물류 호출 결과 ===>");
+				/////////////////////////물류 호출 END //////////////////////   
+				
 			}
 			if(orderLogList != null && orderLogList.size() > 0 && Integer.parseInt(callMaster.get("statusCodeId").toString()) == 20){
 				

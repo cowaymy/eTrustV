@@ -70,7 +70,8 @@ function fn_selDetailInhouseList(_pram){
           console.log( result);
           
           if(result != null ){ 
-        	     
+        	  asDataInfo = result;
+        	  
         	   var options ={  
         	            AS_ID : result[0].asId,  
         	            AS_SO_ID:result[0].asSoId,   
@@ -293,7 +294,7 @@ $.fn.clearForm = function() {
     </td>
     <th scope="row">Appointment Date </th>
     <td >
-            <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="t5" name="t5"/>
+            <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="appntDt" name="appntDt"/>
     </td>
  </tr>
  
