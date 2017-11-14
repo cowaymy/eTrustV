@@ -20,7 +20,8 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, ${promoInfo.promoDiscType},        'promoDiscType',        'S'); //Discount Type
         doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         
-        doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
+      //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
+        doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : ${promoInfo.promoAppTypeId}}, ${promoInfo.promoSrvMemPacId}, 'promoSrvMemPacId', 'S'); //Common Code
 
         fn_chgPageMode('VIEW');
     });
@@ -268,6 +269,8 @@
     
     $(function(){
         $('#btnProductAdd').click(function() {
+            var isValid = true, msg = "";
+            
             if(FormUtil.checkReqValue($('#promoAppTypeId'))) {
                 isValid = false;
                 msg += "* Please select the promotion application.<br />";
@@ -552,7 +555,7 @@
             $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
-            $('#promoSrvMemPacId').val('').prop("disabled", true);
+//          $('#promoSrvMemPacId').val('').prop("disabled", true);
             
             $('#sctPromoDetail').removeClass("blind");
         }
@@ -568,7 +571,7 @@
             $('#promoFreesvcPeriodTp').removeAttr("disabled");
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').removeAttr("disabled");
-            $('#promoSrvMemPacId').val('').prop("disabled", true);
+//          $('#promoSrvMemPacId').val('').prop("disabled", true);
             
             $('#sctPromoDetail').removeClass("blind");
         }
@@ -584,7 +587,7 @@
             $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').val('').prop("disabled", true);
-            $('#promoSrvMemPacId').removeAttr("disabled");
+//          $('#promoSrvMemPacId').removeAttr("disabled");
             
             $('#sctPromoDetail').removeClass("blind");
         }
@@ -600,7 +603,7 @@
             $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
-            $('#promoSrvMemPacId').val('').prop("disabled", true);
+//          $('#promoSrvMemPacId').val('').prop("disabled", true);
             
             $('#sctPromoDetail').removeClass("blind");
         }
@@ -616,7 +619,7 @@
             $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
-            $('#promoSrvMemPacId').val('').prop("disabled", true);
+//          $('#promoSrvMemPacId').val('').prop("disabled", true);
             
             $('#sctPromoDetail').addClass("blind");
         }
@@ -631,7 +634,7 @@
             $('#promoFreesvcPeriodTp').removeAttr("disabled");
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').removeAttr("disabled");
-            $('#promoSrvMemPacId').removeAttr("disabled");
+//          $('#promoSrvMemPacId').removeAttr("disabled");
             
             $('#sctPromoDetail').removeClass("blind");
         }
