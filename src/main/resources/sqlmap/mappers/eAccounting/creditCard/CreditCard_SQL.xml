@@ -186,9 +186,7 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
         ,RGST_ID
         ,AGENT_NO
         ,AGENT_NM
-        ,BANK_CD
         ,ACCT_ST
-        ,COSTCENTER
         ,SUPP_GROUP
     )
     values
@@ -202,9 +200,7 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
        ,#{userId}
        ,#{agentNo}
        ,#{agentNm}
-       ,#{bankCode}
        ,#{acctSt}
-       ,#{costCentr}
        ,'VM05'
     )
 </insert>
