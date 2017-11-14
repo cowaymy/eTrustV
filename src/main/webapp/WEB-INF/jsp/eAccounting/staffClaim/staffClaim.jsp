@@ -837,7 +837,7 @@ function fn_selectStaffClaimInfo() {
                     fn_atchViewDown(fileGrpId, fileId);
                 });
                 // 파일 수정
-                $("#form_newExpense :file").change(function() {
+                $("#form_newStaffClaim :file").change(function() {
                     var div = $(this).parents(".auto_file2");
                     var oriFileName = div.find(":text").val();
                     console.log(oriFileName);
