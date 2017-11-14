@@ -218,7 +218,7 @@ public class HsManualController {
 		params.put("user_id", sessionVO.getUserId());
 
         // 조회.
-		List<EgovMap> hsBasicList = hsManualService.selectHsManualList(params);
+		List<EgovMap> hsBasicList = hsManualService.selectHsConfigList(params);
 
 		//brnch 임시 셋팅
 		for (int i=0 ; i < hsBasicList.size() ; i++){
@@ -499,8 +499,8 @@ public class HsManualController {
 
 //		model.put("as_ord_basicInfo", as_ord_basicInfo);
 //		model.put("AS_NO", (String)params.get("AS_NO"));
-		model.put("BRNCH_ID",(String) params.get("brnchId"));   
-		
+		model.put("BRNCH_ID",(String) params.get("brnchId"));
+
 		return "services/bs/hsConfigBasicPop";
 	}
 
@@ -534,15 +534,15 @@ public class HsManualController {
 	public ResponseEntity<List<EgovMap>> getHSCody(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
 		logger.debug("params : {}", params.toString());
-		
+
 		List<EgovMap>  serMemList = hsManualService.serMemList(params);
-		
-		return ResponseEntity.ok(serMemList);  
+
+		return ResponseEntity.ok(serMemList);
 	}
-	
-	
-	
-	
+
+
+
+
 	@RequestMapping(value = "/hSFilterSettingPop.do" )
 	public String hSFilterSettingPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
 
