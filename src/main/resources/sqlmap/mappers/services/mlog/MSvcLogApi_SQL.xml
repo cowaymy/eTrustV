@@ -9,43 +9,34 @@
 
 
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
-    
-						SELECT OR1.MEM_CODE AS settled_By,
-						       S01.SALES_ORD_NO AS sales_Order_No,
-<!-- 						       S01.APP_TYPE_ID AS app_Type, -->
-                               FN_GET_COMMCD(10, S01.APP_TYPE_ID) as app_Type,
-<!-- 						       S17.PROMO_ID AS sales_Promotion, -->
-				              (select PROMO_DESC
-							       from SAL0017D
-							       where 1=1
-							       and promo_id =  S17.PROMO_ID)  AS sales_Promotion,
-						       S22.CUST_ACC_BANK_ID AS bank_Code,
-						       S22.CUST_ACC_NO AS card_Account_No,
-						       S27.TEL_M1 AS handphone_Tel,
-						       S27.TEL_O AS home_Tel,
-						       S27.TEL_R AS office_Tel,
-						       S27.EMAIL AS mail_Address,
-						       S27.NRIC AS resultIc_Mobile_No,
-						       S29.NAME AS cust_Name,
-<!-- 						       S29.corp_type_id AS customer_Type, -->
-						       FN_GET_COMMCD(8,  S29.corp_type_id) as customer_Type,
-						       S29.cust_id AS customer_Id,
-<!-- 						       S45.BRNCH_ID AS dsc_Code, -->
-								(select name
-								from SYS0005M
-								where 1=1
-								and brnch_id = S45.BRNCH_ID)AS dsc_Code,
-						       S47.SIRIM_NO AS sirim_No,
-						       S47.SERIAL_NO AS serial_No,
-						       SV6.REN_COLCT_ID AS rc_Code,
-						       SV6.FAIL_RESN_ID AS fail_Reason_Code,
-						       SV8.NO AS service_No,
-						       SV8.STUS_CODE_ID AS job_Status,
-						       SV8.YEAR AS plan_Year,
-						       SV8.MONTH AS plan_Month,
-						       SYS.STK_DESC AS product_Name,
-						       SYS.STK_CODE AS product_Code
- 						       ,
+
+                                /* By KV -mobile- get job list */
+                               SELECT OR1.MEM_CODE AS settled_By,
+                               S01.SALES_ORD_NO AS sales_Order_No,
+                               S01.APP_TYPE_ID AS app_Type,
+                               S17.PROMO_ID AS sales_Promotion,
+                               S22.CUST_ACC_BANK_ID AS bank_Code,
+                               S22.CUST_ACC_NO AS card_Account_No,
+                               S27.TEL_M1 AS handphone_Tel,
+                               S27.TEL_O AS home_Tel,
+                               S27.TEL_R AS office_Tel,
+                               S27.EMAIL AS mail_Address,
+                               S27.NRIC AS resultIc_Mobile_No,
+                               S29.NAME AS cust_Name,
+                               S29.corp_type_id AS customer_Type,
+                               S29.cust_id AS customer_Id,
+                               S45.BRNCH_ID AS dsc_Code,
+                               S47.SIRIM_NO AS sirim_No,
+                               S47.SERIAL_NO AS serial_No,
+                               SV6.REN_COLCT_ID AS rc_Code,
+                               SV6.FAIL_RESN_ID AS fail_Reason_Code,
+                               SV8.NO AS service_No,
+                               SV8.STUS_CODE_ID AS job_Status,
+                               SV8.YEAR AS plan_Year,
+                               SV8.MONTH AS plan_Month,
+                               SYS.STK_DESC AS product_Name,
+                               SYS.STK_CODE AS product_Code
+                               ,
                                  '1' as job_Type
                                 , '1'  as appointment_Date
                                 , '1' as appointment_Time
@@ -92,45 +83,41 @@
                                 , '1' as bank_Code
                                 , '1' as dsc_Code
                                 , '1' as rc_Code
-                                , '1' as failReason_Code 
-						  FROM SVC0008D SV8
-						       INNER JOIN SAL0001D S01
-						          ON S01.SALES_ORD_ID = SV8.SALES_ORD_ID
-						       INNER JOIN SAL0002D S02
-						          ON S02.SALES_ORD_ID = S01.SALES_ORD_ID
-						       INNER JOIN SAL0017D S17
-						          ON S17.PROMO_ID = S01.PROMO_ID
-						       INNER JOIN SAL0022D S22
-						          ON S22.CUST_ID = S01.CUST_ID
-						       INNER JOIN SAL0027D S27
-						          ON S27.CUST_ID = S01.CUST_ID
-						       INNER JOIN SAL0029D S29
-						          ON S29.CUST_ID = S01.CUST_ID
-						       INNER JOIN SAL0045D S45
-						          ON S45.SALES_ORD_ID = S01.SALES_ORD_ID
-						       INNER JOIN SAL0046D S46
-						          ON S46.SALES_ORD_ID = S01.SALES_ORD_ID
-						       INNER JOIN SAL0047D S47
-						          ON S47.ENTRY_ID = S46.INSTALL_ENTRY_ID
-						       INNER JOIN SVC0006D SV6
-						          ON SV6.SCHDUL_ID = SV8.SCHDUL_ID
-						       INNER JOIN ORG0001D OR1
-						          ON OR1.MEM_ID = S46.CT_ID
-						       INNER JOIN SYS0026M SYS
-						          ON SYS.STK_ID = S02.ITM_STK_ID
+                                , '1' as failReason_Code
+                          FROM SVC0008D SV8
+                               INNER JOIN SAL0001D S01
+                                  ON S01.SALES_ORD_ID = SV8.SALES_ORD_ID
+                               INNER JOIN SAL0002D S02
+                                  ON S02.SALES_ORD_ID = S01.SALES_ORD_ID
+                               INNER JOIN SAL0017D S17
+                                  ON S17.PROMO_ID = S01.PROMO_ID
+                               LEFT OUTER JOIN SAL0022D S22
+                                  ON S22.CUST_ID = S01.CUST_ID
+                               INNER JOIN SAL0027D S27
+                                  ON S27.CUST_ID = S01.CUST_ID
+                               INNER JOIN SAL0029D S29
+                                  ON S29.CUST_ID = S01.CUST_ID
+                               INNER JOIN SAL0045D S45
+                                  ON S45.SALES_ORD_ID = S01.SALES_ORD_ID
+                               INNER JOIN SAL0046D S46
+                                  ON S46.SALES_ORD_ID = S01.SALES_ORD_ID
+                               INNER JOIN SAL0047D S47
+                                  ON S47.ENTRY_ID = S46.INSTALL_ENTRY_ID
+                               LEFT OUTER JOIN SVC0006D SV6
+                                  ON SV8.SCHDUL_ID = SV6.SCHDUL_ID
+                               INNER JOIN ORG0001D OR1
+                                  ON OR1.MEM_ID = SV8.CODY_ID
+                               INNER JOIN SYS0026M SYS
+                                  ON SYS.STK_ID = S02.ITM_STK_ID
                                  AND SV8.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
-                                 AND SV8.MONTH = TO_CHAR(to_date(#{requestDate} ,'YYYY/MM'),'MM')     
+                                 AND SV8.MONTH = TO_CHAR(to_date(#{requestDate} ,'YYYY/MM'),'MM')
                                  AND OR1.MEM_CODE = #{userId}
-                   
-     </select> 
-
-
-
+     </select>
 
 
 
     <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
-    
+
 				SELECT SAL0001D.SALES_ORD_NO AS sales_Order_No,
 				            SVC0001D.AS_NO AS service_No,
 				            SAL0029D.NAME AS cust_Name,
@@ -140,7 +127,7 @@
 				            <!-- SVC0001D.AS_APPNT_TM AS appointment_Time, -->
 				            SVC0001D.AS_SESION_CODE AS job_Session,
 <!-- 				            SAL0029D.TYPE_ID AS customer_Type, -->
-				            FN_GET_COMMCD(8,  SAL0029D.TYPE_ID) as customer_Type,   
+				            FN_GET_COMMCD(8,  SAL0029D.TYPE_ID) as customer_Type,
 				            SAL0001D.CUST_ID AS customer_Id,
 				            SAL0023D.ADDR_DTL AS install_Address,
 				            SAL0027D.TEL_M1 AS handphone_Tel,
@@ -223,7 +210,7 @@
 				AND   SAL0001D.CUST_CNT_ID  = SAL0027D.CUST_CNTC_ID
 				AND   SAL0001D.CUST_ID      = SAL0029D.CUST_ID
 				AND   SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID
-				AND   SAL0001D.SALES_ORD_ID = SVC0004D.AS_SO_ID    
+				AND   SAL0001D.SALES_ORD_ID = SVC0004D.AS_SO_ID
 				AND   SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID
 				AND   SAL0001D.SALES_ORD_ID = SVC0001D.AS_SO_ID
 				AND   SVC0001D.AS_ID        = SVC0004D.AS_ENTRY_ID
@@ -240,8 +227,8 @@
 				and    ORG0001D.mem_code = #{userId}
 				ORDER BY AS_APPNT_DT
 
-                   
-     </select> 
+
+     </select>
 
 
 
@@ -290,7 +277,7 @@
             ORG0001D.MEM_CODE               AS settled_By,
             TO_CHAR(SAL0047D.INSTALL_DT,'YYYYMMDD')             AS settled_Date
             --SVC0004D.AS_SETL_TM             AS settledTime
-            FROM 
+            FROM
            ORG0001D,
            ORG0001D ORG0001DA,
             ORG0005D,
@@ -332,14 +319,14 @@
             AND   SAL0023D.AREA_ID          = SYS0064M.AREA_ID(+)
             AND TO_CHAR(SAL0047D.INSTALL_DT,'YYYYMM') = #{requestDate}
             AND ORG0001D.mem_code = #{userId}
-     </select> 
-     
-     
-     
-     
-     
+     </select>
+
+
+
+
+
          <select id="getProductRetrunJobList" parameterType="Map" resultType="egovMap">
-    
+
             SELECT B.SALES_ORD_NO AS salesOrderNo,
                    F.AS_RESULT_NO AS serviceNo,
                    A.NAME,
@@ -377,20 +364,20 @@
                    INNER JOIN SYS0013M I
                       ON I.CODE_ID = B.APP_TYPE_ID
              WHERE     1 = 1
-                 AND C.AS_REQST_DT = TO_DATE ('20170611',    'YYYYMMDD')      
-<!--                 AND A.CODY_ID = #{userId} -->  
+                 AND C.AS_REQST_DT = TO_DATE ('20170611',    'YYYYMMDD')
+<!--                 AND A.CODY_ID = #{userId} -->
 
-     </select> 
-     
-     
-     
-     
+     </select>
+
+
+
+
 
  	    <select id="heartServiceParts" parameterType="Map" resultType="egovMap">
- 	    
+
 			    select *
 		            from (
-			            SELECT S01A.SALES_ORD_ID sales_Order_No, 
+			            SELECT S01A.SALES_ORD_ID sales_Order_No,
 						             S01A.SALES_ORD_NO service_No,
 						                S08A.NO,
 						                S08A.YEAR,
@@ -421,7 +408,7 @@
 				                       S90A.SRV_CODY_ID,
 				                        (SELECT MEM_CODE
 				                           FROM ORG0001D ME
-				                          WHERE 1 = 1 AND ME.MEM_ID = S90A.SRV_CODY_ID) as cody_cd 
+				                          WHERE 1 = 1 AND ME.MEM_ID = S90A.SRV_CODY_ID) as cody_cd
 						FROM SAL0001D S01A
 						INNER JOIN SAL0002D S02A ON S02A.SALES_ORD_ID = S01A.SALES_ORD_ID
 						INNER JOIN SYS0026M S26A ON S26A.STK_ID = S02A.ITM_STK_ID
@@ -434,22 +421,22 @@
 						LEFT  JOIN SVC0006D S06A ON S06A.SCHDUL_ID = S08A.SCHDUL_ID
 						LEFT  JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID
 			             WHERE     1 = 1
-			               and S08A.YEAR = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY') 
-			               and S08A.MONTH = TO_CHAR(to_date(#{requestDate} ,'YYYY/MM'),'MM')  
+			               and S08A.YEAR = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
+			               and S08A.MONTH = TO_CHAR(to_date(#{requestDate} ,'YYYY/MM'),'MM')
 			               and S07A.BS_RESULT_PART_ID = '0'
-		)                 
-		 where  cody_cd =  #{userId}      
-		 
+		)
+		 where  cody_cd =  #{userId}
+
 
 	     </select>
-	
-	
-	
-	
+
+
+
+
 
         <select id="afterServiceParts" parameterType="Map" resultType="egovMap">
-        
-					SELECT 
+
+					SELECT
 					SAL0001D.CUST_ID,
 					SAL0001D.SALES_ORD_id AS sales_Orderid,
 					SAL0001D.SALES_ORD_NO AS sales_Order_No,
@@ -485,10 +472,10 @@
 
 					ORDER BY AS_NO
          </select>
-         
-         
-         	
-	
+
+
+
+
 	    <insert id="insertHeatLog" parameterType="Map">
 	        INSERT INTO SVC0023T (
 	           RESULT_SEQ
@@ -538,10 +525,10 @@
 	           , 'N'
 	        )
 	    </insert>
-	
-	
-	
-	
+
+
+
+
         <insert id="insertAsResultLog" parameterType="Map">
             INSERT INTO SVC0024T (
 				RESULT_SEQ
@@ -609,16 +596,16 @@
 				,#{salesPrice}
 				,#{filterChangeQty}
 				,#{partsType}
-<!-- 				,#{filterBarcdSerialNo} --> 
+<!-- 				,#{filterBarcdSerialNo} -->
                ,#{userId}
                , SYSDATE
                , 'N'
             )
         </insert>
-        
-        
+
+
             <insert id="insertInstallServiceLog" parameterType="Map">
-            
+
 		             INSERT INTO SVC0025T (
 						 RESULT_SEQ
 						,RESULT_CRT_USER_ID
@@ -659,12 +646,12 @@
 						, SYSDATE
 						,#{transactionId}
                         , 'N'
-		            )       
-        
+		            )
+
             </insert>
-        
-        
-        	
+
+
+
 	   <update id="updateSuccessStatus" parameterType="string">
 	      UPDATE SVC0023T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
 	   </update>
@@ -673,25 +660,25 @@
        <update id="updateSuccessASStatus" parameterType="string">
           UPDATE SVC0024T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
        </update>
-       
-       
+
+
 
        <update id="updateSuccessInstallStatus" parameterType="string">
           UPDATE SVC0025T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
        </update>
-       
-              
-       
+
+
+
 
         <select id="getNextSvc006dSeq"  resultType="int">
              select GBSLCVD.SVC0006D_RESULT_ID_SEQ.NEXTVAL
                 from dual
         </select>
-        
-        
-        
+
+
+
          <insert id="insertHsResultD" parameterType="Map">
-         
+
               insert into SVC0007D (
                          BS_RESULT_ITM_ID
                         ,BS_RESULT_ID
@@ -708,13 +695,13 @@
                     , sysdate
                     , #{userId}
             )
-            </insert>         
-        
-        
+            </insert>
+
+
              <select id="selectHSScheduleMCnt"  parameterType="Map" resultType="int">
                         SELECT count(*) cnt
                           FROM SVC0008D Extent1
-                        WHERE  Extent1.SCHDUL_ID = #{schdulId} 
+                        WHERE  Extent1.SCHDUL_ID = #{schdulId}
               </select>
 
 
@@ -742,13 +729,13 @@
                                Extent1.RESULT_MTCH_ID RESULT_MTCH_ID  ,
                                Extent1.RESULT_IS_ADJ RESULT_IS_ADJ  ,
                                Extent1.RESULT_ENTRY_POINT RESULT_ENTRY_POINT  ,
-                               Extent1.RESULT_MOBILE_ID RESULT_MOBILE_ID  
+                               Extent1.RESULT_MOBILE_ID RESULT_MOBILE_ID
                           FROM SVC0006D Extent1
-                <![CDATA[        WHERE  Extent1.SCHDUL_ID = #{schdulId}  AND ROWNUM <= 1    ]]> 
+                <![CDATA[        WHERE  Extent1.SCHDUL_ID = #{schdulId}  AND ROWNUM <= 1    ]]>
 
                     </select>
-                    
-                    
+
+
 
 
                   <update id="updateHsSVC0008D" parameterType="Map">
@@ -757,7 +744,7 @@
                                 ,ACTN_MEM_ID = #{memId}
                                 ,CODY_ID = #{memId}
                          WHERE   SCHDUL_ID = #{schdulId}
-                    </update>                    
+                    </update>
 
 
 
@@ -785,12 +772,12 @@
                                        Extent1.RESULT_MTCH_ID RESULT_MTCH_ID  ,
                                        Extent1.RESULT_IS_ADJ RESULT_IS_ADJ  ,
                                        Extent1.RESULT_ENTRY_POINT RESULT_ENTRY_POINT  ,
-                                       Extent1.RESULT_MOBILE_ID RESULT_MOBILE_ID  
+                                       Extent1.RESULT_MOBILE_ID RESULT_MOBILE_ID
                                   FROM SVC0006D Extent1
-                            <![CDATA[    WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} AND ROWNUM <= 1 ]]> 
+                            <![CDATA[    WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} AND ROWNUM <= 1 ]]>
                             </select>
-                            
-                            
+
+
              <insert id="insertHsResultSVC0006D" parameterType="Map" >
                INSERT INTO GBSLCVD.SVC0006D (
                        RESULT_ID, NO, TYPE_ID, SCHDUL_ID, SALES_ORD_ID , CODY_ID
@@ -798,7 +785,7 @@
                       ,RESULT_REM,RESULT_CRT_DT,RESULT_CRT_USER_ID,RESULT_UPD_DT,RESULT_UPD_USER_ID
                       ,RESULT_IS_SYNC,RESULT_IS_EDIT,RESULT_STOCK_USE,RESULT_IS_CURR,RESULT_MTCH_ID
                       ,RESULT_IS_ADJ
-                       ) 
+                       )
                 VALUES ( #{bsResultId}, #{docNo} , #{typeId},#{schdulId} ,#{salesOrdId} ,#{memId}
                              ,SYSDATE,#{resultStusCodeId},#{failResnId} ,#{renColctId},#{whId}
                             ,#{resultRemark} ,SYSDATE,#{memId},SYSDATE ,#{memId}
@@ -806,10 +793,10 @@
                             ,#{resultIsAdj}
                  )
              </insert>
-             
-                                         
+
+
              <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
-						 
+
                             SELECT  distinct Project2.No No  ,
                                         Project2.HS_DATE HS_DATE  ,
                                         Project2.STUS_CODE_ID STUS_CODE_ID  ,
@@ -827,7 +814,7 @@
                                         Project2.branch_cd,
                                         Project2.CODY_MANGR_USER_ID,
                                         Project2.MEM_CODE,
-                                        Project2.sal_mem_id                                        
+                                        Project2.sal_mem_id
                          from(       SELECT HS.NO AS NO,
                                                    HS.STUS_CODE_ID as STUS_CODE_ID,
                                                    HS.MONTH || '/' || HS.YEAR as HS_DATE ,
@@ -857,7 +844,7 @@
                                                     from ORG0001D
                                                     where mem_id =  SO.MEM_ID) as MEM_CODE,
                                                     SO.MEM_ID as sal_mem_id
-                                              FROM SVC0008D HS                                                       
+                                              FROM SVC0008D HS
                                                    INNER JOIN SAL0001D SO
                                                       ON SO.SALES_ORD_ID = HS.SALES_ORD_ID
                                                    INNER JOIN SAL0023D AD
@@ -877,12 +864,12 @@
                                                    left JOIN ORG0001D AC
                                                       ON AC.MEM_ID = HS.ACTN_MEM_ID
                                                    LEFT JOIN SYS0005M BR
-                                                      ON BR.CODE = MG.CODY_BRNCH_CODE                                                          
+                                                      ON BR.CODE = MG.CODY_BRNCH_CODE
                                              WHERE 1=1
                                                     AND SO.SALES_ORD_NO = #{salesOrderNo}
                                                      and HS.no = #{serviceNo}
                         )Project2
-          </select>                            
+          </select>
 
 
         <select id="getUseridToMemid" parameterType="Map" resultType="String">
@@ -890,9 +877,9 @@
 				from ORG0001D
 				where mem_code = #{userId}
           </select>
-          
-          
-          
+
+
+
     <select id="getInstallResultByInstallEntryID" parameterType="Map" resultType="egovMap">
         SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
 		           Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
@@ -917,7 +904,7 @@
 		           Extent14.BRNCH_ID BRNCH_ID  ,
 		           Extent10.CUST_ID CUST_ID  ,
 		           Extent10.NRIC NRIC  ,
-		           CASE 
+		           CASE
 		                WHEN ( Extent3.CUST_ADD_ID IS NOT NULL ) THEN Extent3.CUST_ADD_ID
 		           ELSE 0
 		              END C2  ,
@@ -934,12 +921,12 @@
 		           Extent2.ALLOW_COMM ALLOW_COMM  ,
 		           Extent2.IS_TRADE_IN IS_TRADE_IN  ,
 		           Extent2.REQUIRE_SMS REQUIRE_SMS  ,
-		           CASE 
+		           CASE
 		                WHEN ( Extent12.USER_ID IS NOT NULL ) THEN Extent12.USER_NAME
 		           ELSE ' '
 		              END C4  ,
 		           Extent2.CRT_DT C5  ,
-		           CASE 
+		           CASE
 		                WHEN ( Extent2.RESULT_ID IS NOT NULL ) THEN Extent2.CT_ID
 		           ELSE 0
 		              END C6  ,
@@ -950,11 +937,11 @@
 		           Extent2.INSTALL_DT INSTALL_DT  ,
 		           Extent2.NEXT_CALL_DT NEXT_CALL_DT  ,
 		           Extent2.REM REM  ,
-		           CASE 
+		           CASE
 		                WHEN ( Extent3.CUST_BILL_ID IS NOT NULL ) THEN Extent3.CUST_BILL_ID
 		           ELSE 0
 		              END C7  ,
-		           Extent6.CODE_NAME CODENAME2  
+		           Extent6.CODE_NAME CODENAME2
 		      FROM SAL0046D Extent1
 		             LEFT JOIN SAL0047D Extent2   ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
 		             JOIN SAL0001D Extent3   ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -977,14 +964,14 @@
                     and Extent3.SALES_ORD_NO = #{salesOrderNo}
                     and Extent1.INSTALL_ENTRY_NO = #{serviceNo}
 
-    </select>          
-          
-          
-          
-          
-          
+    </select>
+
+
+
+
+
          <insert id="insertInstallResult" parameterType="Map">
-               INSERT INTO SAL0047D  ( 
+               INSERT INTO SAL0047D  (
                RESULT_ID
                , ENTRY_ID
                , STUS_CODE_ID
@@ -1006,7 +993,7 @@
                , UPD_DT
                , UPD_USER_ID
                , ADJ_AMT
-               , MOBILE_ID 
+               , MOBILE_ID
                ,APPNT_DT
 			   ,APPNT_TM
 				,AS_EXCHN_YN
@@ -1039,7 +1026,7 @@
                 , SYSDATE
                 , #{updator}
                 , #{adjAmount}
-                , NULL 
+                , NULL
                 ,#{appointmentDate}
 				,#{appointmentTime}
 				,#{asExchangeYN}
@@ -1051,9 +1038,9 @@
 				,#{transactionId}
                 )
          </insert>
-         
-         
-         
+
+
+
 <select id="serviceHistory" parameterType="Map" resultType="egovMap">
          SELECT decode(job_Status ,'4' ,'Completed','21','Failed','10','Cancelled',job_Status) as job_Status,
 			        service_No,
@@ -1100,7 +1087,7 @@
                  '' part_Name,
                  '' part_Change_Qty,
                  c.AS_RESULT_ID
-			    FROM  SVC0004D S , 
+			    FROM  SVC0004D S ,
 			                   SAL0001D B ,
 			                   SVC0005D C ,
 			                   SAL0087D E
@@ -1108,7 +1095,7 @@
 			   AND B.SALES_ORD_NO = #{salesOrderNo}
 			   AND S.AS_RESULT_ID = C.AS_RESULT_ID(+)
 			   AND C.ASR_ITM_PART_ID =SRV_FILTER_ID(+)
-			  <![CDATA[  AND ROWNUM < 4]]> 
+			  <![CDATA[  AND ROWNUM < 4]]>
 			   ORDER BY S.AS_RESULT_ID ASC
 			   )
 			union all
@@ -1120,7 +1107,7 @@
 			                    ,'HS' as job_Type
 			                    ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason
 			                    ,REN_COLCT_ID as collection_Code
-			                    ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name                    
+			                    ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
 			                    ,RESULT_REM as result_Remark
 			                    ,BS_RESULT_PART_ID as filter_Code
 			                    ,BS_RESULT_PART_DESC as filter_Name
@@ -1169,13 +1156,13 @@
 			            and c.sales_ord_no = #{salesOrderNo}
 			            order by SETL_DT desc ) x
 			      where 1=1
-			                   <![CDATA[  AND ROWNUM < 4]]> 
-			       
-           </select>   
-       
+			                   <![CDATA[  AND ROWNUM < 4]]>
+
+           </select>
+
 
 <select id="getAsFilterHistoryDList" parameterType="Map" resultType="egovMap">
- 
+
          SELECT decode(job_Status ,'4' ,'Completed','21','Failed','10','Cancelled',job_Status) as job_Status,
                     service_No,
                     settle_Date,
@@ -1219,7 +1206,7 @@
                  '' part_Code,
                  '' part_Name,
                  '' part_Change_Qty
-                FROM  SVC0004D S , 
+                FROM  SVC0004D S ,
                                SAL0001D B ,
                                SVC0005D C ,
                                SAL0087D E
@@ -1227,14 +1214,14 @@
                AND c.AS_RESULT_ID = #{asResultId}
                AND S.AS_RESULT_ID = C.AS_RESULT_ID(+)
                AND C.ASR_ITM_PART_ID =SRV_FILTER_ID(+)
-              <![CDATA[  AND ROWNUM < 4]]> 
+              <![CDATA[  AND ROWNUM < 4]]>
                ORDER BY S.AS_RESULT_ID ASC
                )
-                   
-           </select>   
-           
-           
-           
+
+           </select>
+
+
+
 
 
 <select id="getAsPartsHistoryDList" parameterType="Map" resultType="egovMap">
@@ -1282,7 +1269,7 @@
 						                 '' part_Code,
 						                 '' part_Name,
 						                 '' part_Change_Qty
-                FROM  SVC0004D S , 
+                FROM  SVC0004D S ,
                                SAL0001D B ,
                                SVC0005D C ,
                                SAL0087D E
@@ -1290,16 +1277,16 @@
                AND c.AS_RESULT_ID = #{asResultId}
                AND S.AS_RESULT_ID = C.AS_RESULT_ID(+)
                AND C.ASR_ITM_PART_ID =SRV_FILTER_ID(+)
-              <![CDATA[  AND ROWNUM < 4]]> 
+              <![CDATA[  AND ROWNUM < 4]]>
                ORDER BY S.AS_RESULT_ID ASC
                )
-                   
-           </select>       
-           
-                  
-       
+
+           </select>
+
+
+
 <select id="getHsFilterHistoryDList" parameterType="Map" resultType="egovMap">
- 
+
             select    decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as job_Status
                                ,SALES_ORD_NO as service_No
                                 ,SETL_DT as settle_Date
@@ -1308,7 +1295,7 @@
                                 ,'HS' as job_Type
                                 ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason
                                 ,REN_COLCT_ID as collection_Code
-                                ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name                    
+                                ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
                                 ,RESULT_REM as result_Remark
                                 ,BS_RESULT_PART_ID as filter_Code
                                 ,BS_RESULT_PART_DESC as filter_Name
@@ -1334,8 +1321,8 @@
                                 ,e.BS_RESULT_PART_ID
                                 ,e.BS_RESULT_PART_DESC
                                 ,to_char(e.BS_RESULT_CRT_DT,'YYYYMMDD')as BS_RESULT_CRT_DT
-                                ,F.SRV_FILTER_PRIOD       
-                                ,E.BS_RESULT_PART_QTY,       
+                                ,F.SRV_FILTER_PRIOD
+                                ,E.BS_RESULT_PART_QTY,
 				                 '' next_Change_Date,
 				                 '' part_Code,
 				                 '' part_Name,
@@ -1355,12 +1342,12 @@
                         and e.BS_RESULT_ID = #{bsResultId}
                         order by SETL_DT desc ) x
                   where 1=1
-                               <![CDATA[  AND ROWNUM < 4]]> 
-                   
-           </select>   
-           
-           
-           
+                               <![CDATA[  AND ROWNUM < 4]]>
+
+           </select>
+
+
+
 
 
 <select id="getHsPartsHistoryDList" parameterType="Map" resultType="egovMap">
@@ -1373,7 +1360,7 @@
                                 ,'HS' as job_Type
                                 ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason
                                 ,REN_COLCT_ID as collection_Code
-                                ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name                    
+                                ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
                                 ,RESULT_REM as result_Remark
                                 ,BS_RESULT_PART_ID as filter_Code
                                 ,BS_RESULT_PART_DESC as filter_Name
@@ -1399,8 +1386,8 @@
                                 ,e.BS_RESULT_PART_ID
                                 ,e.BS_RESULT_PART_DESC
                                 ,to_char(e.BS_RESULT_CRT_DT,'YYYYMMDD')as BS_RESULT_CRT_DT
-                                ,F.SRV_FILTER_PRIOD       
-                                ,E.BS_RESULT_PART_QTY,       
+                                ,F.SRV_FILTER_PRIOD
+                                ,E.BS_RESULT_PART_QTY,
                  '' next_Change_Date,
                  '' part_Code,
                  '' part_Name,
@@ -1421,10 +1408,10 @@
                         and e.BS_RESULT_ID = #{bsResultId}
                         order by SETL_DT desc ) x
                   where 1=1
-                               <![CDATA[  AND ROWNUM < 4]]> 
-                   
-           </select>                     
-           
+                               <![CDATA[  AND ROWNUM < 4]]>
+
+           </select>
+
            <select id="getRentalCustomerList" parameterType="Map" resultType="egovMap">
             SELECT C.NAME as cust_name,
                    B.SALES_ORD_NO as sales_order_no,
@@ -1458,17 +1445,17 @@
                     </choose>
                    </if>
          </select>
-         
-         
+
+
          <select id="selectOutstandingResult" parameterType="Map" resultType="egovMap">
             select 0 as sum_rpf ,
-			       0 as sum_rpt , 
+			       0 as sum_rpt ,
 			       0 as sum_rhf ,
-			       0 as sum_rental , 
+			       0 as sum_rental ,
 			       0 as sum_adjust
-			 from dual  
+			 from dual
          </select>
-         
+
          <select id="selectOutstandingResultDetailList" parameterType="Map" resultType="egovMap">
             SELECT A.CODE_NAME AS TYPE,
 			       A.RENT_DOC_NO AS DOC_NO,
@@ -1504,7 +1491,7 @@
 			                 AND F.MEM_CODE = #{userId}
 			                 AND B.sales_ord_ID = #{salesOrderNo}
 			                                              ) A
-			GROUP BY A.CODE_NAME, A.RENT_DOC_NO, A.RENT_INST_DT  
+			GROUP BY A.CODE_NAME, A.RENT_DOC_NO, A.RENT_INST_DT
          </select>
-                   
+
 </mapper>
