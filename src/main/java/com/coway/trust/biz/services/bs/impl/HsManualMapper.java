@@ -12,14 +12,16 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("hsManualMapper")
 public interface HsManualMapper {
 
+	List<EgovMap> selectHsConfigList(Map<String, Object> params);
+
 	List<EgovMap> selectHsManualList(Map<String, Object> params);
 
 	List<EgovMap> selectHsAssiinlList(Map<String, Object> params);
-	
+
 	EgovMap selectHsAssiinlList_1(Map<String, Object> params);
-	
+
 	List<EgovMap> selectBranchList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectCtList(Map<String, Object> params);
 
 	List<EgovMap> getCdList(Map<String, Object> params);
@@ -29,23 +31,23 @@ public interface HsManualMapper {
 	List<EgovMap> getCdList_1(Map<String, Object> params);
 
 	List<EgovMap> selectHsManualListPop(Map<String, Object> params);
-	
+
 	EgovMap selectHSResultMList(Map<String, Object> params);
-	
+
 	void insertHsResult(Map<String, Object> params);
 
 	void updateHsScheduleM(Map<String, Object> params);
-	
+
 	int getNextSchdulId();
-	
+
 	int getNextSvc006dSeq();
-	
+
 	EgovMap selectHsInitDetailPop(Map<String, Object> params);
-	
+
 	void insertHsResultfinal(Map<String, Object> params);
 
 	void insertHsResultCopy(Map<String, Object> params);
-	
+
 	List<EgovMap> cmbCollectTypeComboList();
 
 	void updateDocNo(Map<String, Object> params);
@@ -110,5 +112,5 @@ public interface HsManualMapper {
 
 
 
-	
+
 }
