@@ -73,7 +73,10 @@
             d.USER_WHO_CRT_RCORD  user_who_crt_rcord ,
             d.CHNG_ON  chng_on ,
             d.NAME_PERSON_WHO_CHG_OBJ name_person_who_chg_obj,
-            d.LEAD_TM_OFFSET LEAD_TM_OFFSET
+            d.LEAD_TM_OFFSET LEAD_TM_OFFSET,
+            d.ALTER_ITM_GRP ALTER_ITM_GRP,
+            d.ALTER_ITM_RANK_ORD ALTER_ITM_RANK_ORD,
+            d.USE_PROBABILTIY USE_PROBABILTIY
         FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
               WHERE m.BOM  = d.BOM
               AND d.BOM_COMPNT = m2.STK_CODE
