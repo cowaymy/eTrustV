@@ -96,10 +96,26 @@ public class NoticeServiceImpl extends EgovAbstractServiceImpl implements Notice
 	}
 
 	@Override
-	public void deleteNotice(int ntceNo) throws Exception {
-		// TODO Auto-generated method stub
+	public void deleteNotice(Map<String, Object> params) throws Exception {
+		noticeMapper.deleteNotice(params);
 		
 	}
+
+	@Override
+	public boolean checkPassword(Map<String, Object> params) throws Exception {
+		
+		boolean result = false;
+		
+		int cnt = noticeMapper.checkPassword(params);
+		
+		if(cnt == 1){
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	
 
 //	@Override
 //	public EgovMap getAttachmentFileInfo(Map<String, Object> params) throws Exception {
