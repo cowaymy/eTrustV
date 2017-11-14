@@ -126,7 +126,7 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     **********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , Codeval:'UM'};
+    paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , Codeval:'US'};
     
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'US':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
