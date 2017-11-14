@@ -96,22 +96,21 @@ $(document).ready(function(){
     
      $("#sendAmount").change(function(){
         var str =""+ Math.floor($("#sendAmount").val() * 100)/100;
-        
+               
         var str2 = str.split(".");
        
-        if(str2.length == 1){
+        if(str2.length == 1){        	
         	str2[1] = "00";
         }
         
-        if(str2[0].length > 11){
-        	alert("<spring:message code="budget.msg.inputAmount" />");
-        	str = "";
-        }else{
-        	str = str2[0].substr(0, 11)+"."+str2[1];
+       	if(str2[0].length > 11){
+               alert("<spring:message code="budget.msg.inputAmount" />");
+               str = "";
+        }else{               
+            str = str2[0].substr(0, 11)+"."+str2[1] + "00".substring(str2[1].length, 2);   
         }
         str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-        
-        
+                        
     	if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
             $("#recvAmount").val(str);
     	}
