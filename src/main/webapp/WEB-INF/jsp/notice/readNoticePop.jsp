@@ -4,7 +4,12 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
+		
 	    fn_selectNoticeListAjax(); 
+	    
+	    $("#delete").click(function() {
+	    	Common.confirm("Are you sure you want to delete?", fn_deleteNotice);
+		});
 	});
 	
     function fn_close() {
@@ -29,6 +34,10 @@
             Common.alert("Please key in Content");
             return false;
         }
+        if($("#password").val() == ''){
+            Common.alert("Please key in Password");
+            return false;
+        }
         
         Common.ajax("POST", "/notice/updateNotice.do", $("#noticeForm").serializeJSON(), function(result){
             
@@ -44,6 +53,22 @@
                 fn_selectNoticeListAjax(); 
         });
     };
+
+    function fn_deleteNotice() {
+    	
+        if($("#password").val() == ''){
+            Common.alert("Please key in Password");
+            return false;
+        }
+    	
+    	Common.ajax("POST", "/notice/deleteNotice.do", $("#noticeForm").serializeJSON(), function(result){
+            
+		      Common.alert(result.message);
+		      $("#popClose").click();
+		      fn_selectNoticeListAjax(); 
+    	});
+	}
+    
     
     //Check Box
     var emgncyFlag = $("#_emgncyFlag").val() == 'Y' ? true : false;
@@ -107,7 +132,7 @@
     </td>
     <th scope="row">Password</th>
     <td colspan="3">
-    <input id="password" name="password" value="${noticeInfo.password}" type="password" title="" placeholder="" class="" />
+    <input id="password" name="password" type="password" value="${noticeInfo.password}" title="" placeholder="" class="" />
     </td>
 </tr>
 <tr>
@@ -157,7 +182,7 @@
     <c:when test="${not empty noticeInfo.crtUserId && noticeInfo.rgstUserNm eq userName}">
      <ul class="center_btns">
 	    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_modifyNotice();">Modify</a></p></li>
-	    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_deleteNotice();">Delete</a></p></li>
+	    <li><p class="btn_blue2 big"><a href="#" id="delete">Delete</a></p></li>
 	    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_close();">List</a></p></li>
     </ul>
     </c:when>
