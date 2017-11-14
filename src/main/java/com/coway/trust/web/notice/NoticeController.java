@@ -138,7 +138,7 @@ public class NoticeController {
 //			fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
 //		}
 		
-		boolean result = false;
+//		boolean result = false;
 		int loginId;
 		String loginName = null;
 		
@@ -157,14 +157,9 @@ public class NoticeController {
 		
 		ReturnMessage message = new ReturnMessage();
 		
-		if(result == true){
-			message.setCode(AppConstants.SUCCESS);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		}else{
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		}
-		
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
 		return ResponseEntity.ok(message);
 		
 	}
@@ -190,33 +185,50 @@ public class NoticeController {
 		return "notice/readNoticePop";
 	}
 	
-//	@RequestMapping(value = "/deleteNotice.do", method = RequestMethod.POST)
-//	public String deleteNotice(@RequestParam(value = "ntceNo") int ntceNo) throws Exception{
-//		
-//		noticeService.deleteNotice(ntceNo);
-//		return "redirect:/noticeList.do";
-//	}
+	@RequestMapping(value = "/deleteNotice.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteNotice(@RequestBody Map<String, Object> params) throws Exception{
+		
+		boolean result = noticeService.checkPassword(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		if(result){
+			
+			noticeService.deleteNotice(params);
+			
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			
+		}else{
+			
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage("Password mismatch. Please try again."));
+
+		}
+		
+		return ResponseEntity.ok(message);
+	}
 	
 	@RequestMapping(value ="/updateNotice.do" , method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateNotice(@RequestBody Map<String, Object> params) throws Exception{
 		
 		LOGGER.info("<<<<<<<<<<<<params>>>>>>>>>>>>" + params.toString());
 		
-		boolean result = false; 
+		boolean result = noticeService.checkPassword(params);
 		
-		noticeService.updateNotice(params);
-		 
 		ReturnMessage message = new ReturnMessage();
-		 
-//		message.setCode(AppConstants.SUCCESS);
-//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		if(result == true){
+		
+		if(result){
+			
+			noticeService.updateNotice(params);
+			
 			message.setCode(AppConstants.SUCCESS);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			
 		}else{
+			
 			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			message.setMessage(messageAccessor.getMessage("Password mismatch. Please try again."));
 		}
 
 		return ResponseEntity.ok(message);
@@ -224,20 +236,3 @@ public class NoticeController {
 	
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
