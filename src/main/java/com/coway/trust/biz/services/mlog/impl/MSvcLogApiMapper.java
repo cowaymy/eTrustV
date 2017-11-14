@@ -42,7 +42,7 @@ public interface MSvcLogApiMapper {
 
 	EgovMap selectHsAssiinlList(Map<String, Object> insMap);
 
-	String getUseridToMemid(Map<String, Object> insMap);
+	String getUseridToMemid(Object object);
 
 	List<EgovMap> getInstallationJobList(Map<String, Object> params);
 
@@ -81,5 +81,7 @@ public interface MSvcLogApiMapper {
 	EgovMap selectOutstandingResult(Map<String, Object> params);
 	
 	List<EgovMap> selectOutstandingResultDetailList(Map<String, Object> params);
+
+	Map<String, Object> getAsBasic(Map<String, Object> params);
 	
 }
