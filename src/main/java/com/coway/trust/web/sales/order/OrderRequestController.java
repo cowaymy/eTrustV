@@ -92,6 +92,22 @@ public class OrderRequestController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/requestSchmConv.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> requestSchmConv(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		ReturnMessage message = orderRequestService.requestSchmConv(params, sessionVO);
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/requestAppExch.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> requestAppExch(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		ReturnMessage message = orderRequestService.requestApplicationExchange(params, sessionVO);
+
+		return ResponseEntity.ok(message);
+	}
+	
     @RequestMapping(value = "/selectCompleteASIDByOrderIDSolutionReason.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> selectCompleteASIDByOrderIDSolutionReason(@RequestParam Map<String, Object> params)    {
     	EgovMap rslt = orderRequestService.selectCompleteASIDByOrderIDSolutionReason(params);
@@ -107,4 +123,33 @@ public class OrderRequestController {
 		
 		return ResponseEntity.ok(map);
 	}
+	
+    @RequestMapping(value = "/selectSalesOrderSchemeList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectSalesOrderSchemeList(@RequestParam Map<String, Object> params)    {
+    	List<EgovMap> rsltList = orderRequestService.selectSalesOrderSchemeList(params);
+    	return ResponseEntity.ok(rsltList);
+    }
+
+    @RequestMapping(value = "/selectSchemePriceSettingByPromoCode.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectSchemePriceSettingByPromoCode(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.selectSchemePriceSettingByPromoCode(params);
+    	return ResponseEntity.ok(rslt);
+    }
+
+    @RequestMapping(value = "/selectSchemePartSettingBySchemeIDList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectSchemePartSettingBySchemeIDList(@RequestParam Map<String, Object> params)    {
+    	List<EgovMap> rsltList = orderRequestService.selectSchemePartSettingBySchemeIDList(params);
+    	return ResponseEntity.ok(rsltList);
+    }
+    
+	@RequestMapping(value = "/schemConvPop.do")
+	public String schemConvPop() {
+		return "sales/order/schemConvPop";
+	}
+	
+    @RequestMapping(value = "/selectValidateInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectValidateInfo(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.selectValidateInfo(params);
+    	return ResponseEntity.ok(rslt);
+    }
 }

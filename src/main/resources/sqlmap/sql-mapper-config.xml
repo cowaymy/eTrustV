@@ -74,7 +74,7 @@
         <typeAlias alias="custAccVO" type="com.coway.trust.biz.sales.order.vo.CustAccVO"/>
         <typeAlias alias="custCrcVO" type="com.coway.trust.biz.sales.order.vo.CustCrcVO"/>
         <typeAlias alias="referralVO" type="com.coway.trust.biz.sales.order.vo.ReferralVO"/>
-        <!-- Order Request Cancellation -->
+        <!-- Order Request -->
         <typeAlias alias="salesReqCancelVO" type="com.coway.trust.biz.sales.order.vo.SalesReqCancelVO"/>
         <typeAlias alias="salesOrderExchangeVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeVO"/>
         <typeAlias alias="invStkMovementVO" type="com.coway.trust.biz.sales.order.vo.InvStkMovementVO"/>
@@ -83,6 +83,13 @@
         <typeAlias alias="salesOrderExchangeBUSrvFilterVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvFilterVO"/>
         <typeAlias alias="salesOrderExchangeBUSrvPeriodVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvPeriodVO"/>
         <typeAlias alias="salesOrderExchangeBUSrvSettingVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvSettingVO"/>
+        <typeAlias alias="salesOrderSchemeConversionVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderSchemeConversionVO"/>
+        <typeAlias alias="discountEntryVO" type="com.coway.trust.biz.sales.order.vo.DiscountEntryVO"/>
+        <typeAlias alias="accTradeLedgerVO" type="com.coway.trust.biz.sales.order.vo.AccTradeLedgerVO"/>
+        <typeAlias alias="accTRXVO" type="com.coway.trust.biz.sales.order.vo.AccTRXVO"/>
+        <typeAlias alias="accOrderBillVO" type="com.coway.trust.biz.sales.order.vo.AccOrderBillVO"/>
+        <typeAlias alias="accTaxInvoiceOutrightVO" type="com.coway.trust.biz.sales.order.vo.AccTaxInvoiceOutrightVO"/>
+        <typeAlias alias="accTaxInvoiceOutright_SubVO" type="com.coway.trust.biz.sales.order.vo.AccTaxInvoiceOutright_SubVO"/>
         
         <!-- Enrollment Result Update -->
         <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />

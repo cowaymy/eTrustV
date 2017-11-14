@@ -2,7 +2,6 @@ package com.coway.trust.biz.sales.order.vo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 
 /**
@@ -16,11 +15,11 @@ public class SrvConfigFilterVO implements Serializable {
 
 	private int srvConfigId;
 
-	private Date srvFilterCrtDt;
+	private String srvFilterCrtDt;
 
 	private int srvFilterCrtUserId;
 
-	private Date srvFilterExprDt;
+	private String srvFilterExprDt;
 
 	private int srvFilterPriod;
 
@@ -32,7 +31,7 @@ public class SrvConfigFilterVO implements Serializable {
 
 	private int srvFilterStusId;
 
-	private Date srvFilterUpdDt;
+	private String srvFilterUpdDt;
 
 	private int srvFilterUpdUserId;
 
@@ -55,11 +54,11 @@ public class SrvConfigFilterVO implements Serializable {
 		this.srvConfigId = srvConfigId;
 	}
 
-	public Date getSrvFilterCrtDt() {
+	public String getSrvFilterCrtDt() {
 		return srvFilterCrtDt;
 	}
 
-	public void setSrvFilterCrtDt(Date srvFilterCrtDt) {
+	public void setSrvFilterCrtDt(String srvFilterCrtDt) {
 		this.srvFilterCrtDt = srvFilterCrtDt;
 	}
 
@@ -71,11 +70,11 @@ public class SrvConfigFilterVO implements Serializable {
 		this.srvFilterCrtUserId = srvFilterCrtUserId;
 	}
 
-	public Date getSrvFilterExprDt() {
+	public String getSrvFilterExprDt() {
 		return srvFilterExprDt;
 	}
 
-	public void setSrvFilterExprDt(Date srvFilterExprDt) {
+	public void setSrvFilterExprDt(String srvFilterExprDt) {
 		this.srvFilterExprDt = srvFilterExprDt;
 	}
 
@@ -119,11 +118,11 @@ public class SrvConfigFilterVO implements Serializable {
 		this.srvFilterStusId = srvFilterStusId;
 	}
 
-	public Date getSrvFilterUpdDt() {
+	public String getSrvFilterUpdDt() {
 		return srvFilterUpdDt;
 	}
 
-	public void setSrvFilterUpdDt(Date srvFilterUpdDt) {
+	public void setSrvFilterUpdDt(String srvFilterUpdDt) {
 		this.srvFilterUpdDt = srvFilterUpdDt;
 	}
 

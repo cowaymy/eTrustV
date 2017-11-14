@@ -53,6 +53,7 @@ public class DocTypeConstants {
 	public static final int BILL_PENALTY_PRODUCTRETURN  = 109;
 	public static final int BILL_PENALTY_PRODUCTLOST    = 110;
 	public static final int BILL_VOID                   = 112;
+	public static final int RENT_CONV_TAX_INV_NO      = 125;
 	public static final int CASE_NO                     = 148;
 	public static final int COD_NO                      = 151;
 	

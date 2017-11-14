@@ -27,4 +27,18 @@ public interface OrderRequestService {
 
 	ReturnMessage requestProductExchange(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+	List<EgovMap> selectSalesOrderSchemeList(Map<String, Object> params);
+
+	EgovMap selectSchemePriceSettingByPromoCode(Map<String, Object> params);
+
+	List<EgovMap> selectSchemePartSettingBySchemeIDList(Map<String, Object> params);
+
+	ReturnMessage requestSchmConv(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	EgovMap selectValidateInfo(Map<String, Object> params);
+
+	EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params);
+
+	ReturnMessage requestApplicationExchange(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
 }

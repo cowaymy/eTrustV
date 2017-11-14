@@ -183,6 +183,27 @@ public final class CommonUtils {
 
 	/**
 	 * <pre>
+	 * Description  : 특정 날짜에서 +-된 날짜를 반환한다.
+	 * </pre>
+	 * 
+	 * inputDate : 기준일자 d : 기준일자에서 +-될 일수 format : 기준일자와 반환일자 format
+	 * 
+	 * @throws java.text.ParseException
+	 */
+	public static String getAddMonth(String inputDate, int m, String format) throws java.text.ParseException {
+
+		SimpleDateFormat df = new SimpleDateFormat(format, Locale.getDefault(Locale.Category.FORMAT));
+		Date date = df.parse(inputDate);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.MONTH, m);
+
+		return df.format(calendar.getTime());
+	}
+
+	/**
+	 * <pre>
 	 * Description  : 현재 시간을 가져온다.
 	 * </pre>
 	 */

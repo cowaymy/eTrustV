@@ -131,6 +131,8 @@ public class SalesConstants {
 	public static final String CATEGORY_MASTER_ID_INDIVIDUAL = "1";
 	public static final String RENTAL_STATUS_SUS = "SUS";
 	public static final String RENTAL_STATUS_TER = "TER";
+	public static final String RENTAL_STATUS_RET = "RET";
+	public static final String RENTAL_STATUS_WOF = "WOF";
 	public static final String APPLICANT_TYPE_ID_INDIVIDUAL = "964";
 	public static final String APPLICANT_TYPE_ID_COMPANY = "965";
 	public static final String CCP_ITM_STUS_UPD = "8"; //
@@ -198,6 +200,8 @@ public class SalesConstants {
 	//Order Edit Type
 	public static final String ORDER_REQ_TYPE_CD_CANC = "CANC"; //Cancellation
 	public static final String ORDER_REQ_TYPE_CD_PEXC = "PEXC"; //Product Exchange
+	public static final String ORDER_REQ_TYPE_CD_AEXC = "AEXC"; //Application Exchange
+	public static final String ORDER_REQ_TYPE_CD_SCHM = "SCHM"; //Scheme Conversion
 	
 	
 	//POS
