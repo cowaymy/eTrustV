@@ -279,6 +279,9 @@
         WHERE T1.TASK_ID = #{taskId}
           AND T3.CODE = #{codeGruop}
           AND T4.EMPLY_LEV = #{emplyLev}
+          <if test="emplyLev == '4' ">
+              AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
+          </if>
           <if test="memberCd != null and memberCd != ''">
               AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
           </if>
@@ -364,9 +367,12 @@
         WHERE T1.TASK_ID = #{taskId}
             AND T3.CODE = #{codeGruop}
             AND T4.EMPLY_LEV = #{emplyLev}
-            <if test="memberCd != null and memberCd != ''">
-              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
-          </if>
+            <if test="emplyLev == '4' ">
+                AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
+            </if>
+			<if test="memberCd != null and memberCd != ''">
+			    AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+			</if>
     </select>
     <select id="selectCMM0029DHP" parameterType="Map" resultType="EgovMap">
         SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,

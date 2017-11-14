@@ -29,12 +29,54 @@ public class CommissionConstants {
 	public static final String COMIS_FAIL = "9";					//Default end fail
 	public static final String COMIS_STATUS_ID = "15";					//Status Code Id
 	
-	
+
+	//**CALCULATION EXCEL DOWNLOAD LEVEL**//
 	public static final String COMIS_S_G_MANAGER_MEM_LEV = "0";			//Super General Manager
 	public static final String COMIS_G_MANAGER_MEM_LEV = "1";			//General Manager
 	public static final String COMIS_S_MANAGER_MEM_LEV = "2";				//Super Manager
 	public static final String COMIS_MANAGER_MEM_LEV = "3";				//Manager(Leader)
 	public static final String COMIS_NORMAL_MEM_LEV = "4";					//Normal
+	
+	public static final String COMIS_HP_SGM_LEV = "0";				//Normal
+	public static final String COMIS_HP_GM_LEV = "1";				//Normal
+	public static final String COMIS_HP_SM_LEV = "2";					//Normal
+	public static final String COMIS_HP_HM_LEV = "3";				//Normal
+	public static final String COMIS_HP_HP_LEV = "4";					//Normal
+	
+	public static final String COMIS_CD_GCM_LEV = "1";				//Normal
+	public static final String COMIS_CD_SCM_LEV = "2";				//Normal
+	public static final String COMIS_CD_CM_LEV = "3";				//Normal
+	public static final String COMIS_CD_CD_LEV = "4";					//Normal	
+		
+	public static final String COMIS_CT_CTM_LEV = "2";				//Normal
+	public static final String COMIS_CT_CTL_LEV = "3";				//Normal
+	public static final String COMIS_CT_CT_LEV = "4";					//Normal	
+	
+	
+	public static final String COMIS_HP_SGM_CD = "HPT";			//Normal
+	public static final String COMIS_HP_GM_CD = "HPG";				//Normal
+	public static final String COMIS_HP_SM_CD = "HPS";				//Normal
+	public static final String COMIS_HP_HM_CD = "HPM";			//Normal
+	public static final String COMIS_HP_HPP_CD = "HPP";				//Normal
+	public static final String COMIS_HP_HPF_CD = "HPF";				//Normal
+	
+	public static final String COMIS_CD_GCM_CD = "CDG";			//Normal
+	public static final String COMIS_CD_SCM_CD = "CDS";			//Normal
+	public static final String COMIS_CD_CM_CD = "CDM";				//Normal
+	public static final String COMIS_CD_CDC_CD = "CDC";			//Normal	
+	public static final String COMIS_CD_CDN_CD = "CDN";			//Normal	
+		
+	public static final String COMIS_CT_CTM_CD = "CTM";			//Normal
+	public static final String COMIS_CT_CTL_CD = "CTL";				//Normal
+	public static final String COMIS_CT_CTN_CD = "CTN";				//Normal
+	public static final String COMIS_CT_CTR_CD = "CTR";				//Normal
+	public static final String COMIS_CT_CTE_CD = "CTE";				//Normal
+	
+	public static final String COMIS_CD_CDN_BIZTYPE = "1375";					//CD-N
+	public static final String COMIS_CD_CDC_BIZTYPE = "1376";					//CD-C
+	
+	public static final String COMIS_HP_HPP_EMPTYPE = "ACT";					//HPP
+	public static final String COMIS_HP_HPF_EMPTYPE = "PRO";					//HPF
 	
 	/**
 	 * Commission Procedure Code
