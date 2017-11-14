@@ -40,7 +40,8 @@ function fn_downFile() {
 
 
 $(document).ready(function(){
-	
+	var stringMemType ="${param.memType}"; 
+	$("#comBranchTypep").val(stringMemType);
 });
 
 
