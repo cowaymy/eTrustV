@@ -13,7 +13,6 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +23,7 @@ import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -399,6 +399,26 @@ public class CcpCalculateController {
 		
 		
 		return "sales/ccp/ccpCalCcpCustInfoLimitEditPop";
+	}
+	
+	/* RPT */
+	
+	@RequestMapping(value = "/goCcpPerformancePop.do")
+	public String goCcpPerformancePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toMonth = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT4);
+		
+		
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
+		model.put("toMonth", toMonth);
+		
+		
+		
+		return "sales/ccp/ccpCalPerformancePop";
 	}
 	
 }

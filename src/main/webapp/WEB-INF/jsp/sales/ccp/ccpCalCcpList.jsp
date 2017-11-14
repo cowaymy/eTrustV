@@ -79,6 +79,12 @@ $(document).ready(function() {
         Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv6');
     });
 	
+	
+	/*** RPT ***/
+	$("#_rptPerFoBtn").click(function() {
+		Common.popupDiv("/sales/ccp/goCcpPerformancePop.do", '', null , true , '_rtpPerformance');
+	});
+	
 });//Doc Ready Func End
 
 $.fn.clearForm = function() {
@@ -298,7 +304,7 @@ function fn_underDevelop(){
     <ul class="btns">
         <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Listing</a></p></li>
         <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">RAW Data</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Performance</a></p></li>
+        <li><p class="link_btn"><a  id="_rptPerFoBtn">Performance</a></p></li>
     </ul>
     <ul class="btns">
     </ul>
