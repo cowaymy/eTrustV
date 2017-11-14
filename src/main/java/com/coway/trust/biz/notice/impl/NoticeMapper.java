@@ -3,7 +3,6 @@ package com.coway.trust.biz.notice.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.biz.notice.NoticeVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -19,11 +18,15 @@ public interface NoticeMapper {
 	
 	int getNtceNOSeq() throws Exception;
 	
-	EgovMap noticeInfo(Map<String, Object> params) throws Exception;
+	EgovMap noticeInfo(Map<String, Object> params) throws Exception; 
+	
+	int checkPassword(Map<String, Object> params) throws Exception;
 	
 	void updateNotice(Map<String, Object> params) throws Exception;
 	
 	void upViewCnt(Map<String, Object> params) throws Exception;
+	
+	void deleteNotice(Map<String, Object> params) throws Exception;
 	
 //	EgovMap getAttachmentFileInfo(Map<String, Object> params) throws Exception;
 	
