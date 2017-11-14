@@ -183,6 +183,10 @@
 		          FROM SYS0038M
 		         WHERE STUS_CODE_ID = INV.STUS_CODE_ID)
 		          statusname,
+		        (SELECT STUS_CODE_ID
+		          FROM SYS0038M
+		         WHERE STUS_CODE_ID = INV.STUS_CODE_ID)
+		          statusid,		          
 		       inv.IS_SIRIM issirim,
 		       inv.IS_NCV isncv,
 		       inv.STK_CODE stockcode,
