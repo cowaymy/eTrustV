@@ -25,17 +25,17 @@ public interface PettyCashService {
 	
 	void insertPettyCashReqst(Map<String, Object> params);
 	
-	String selectNextIfKey();
-	
-	int selectNextSeq(String ifKey);
-	
-	void insertPettyCashReqstInterface(Map<String, Object> params);
-	
 	EgovMap selectRequestInfo(Map<String, Object> params);
 	
 	void updatePettyCashReqst(Map<String, Object> params);
 	
 	void insertRqstApproveManagement(Map<String, Object> params);
+	
+	String selectNextIfKey();
+	
+	int selectNextSeq(String ifKey);
+	
+	void insertPettyCashReqstInterface(Map<String, Object> params);
 	
 	List<EgovMap> selectExpenseList(Map<String, Object> params);
 	

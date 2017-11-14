@@ -386,7 +386,7 @@ function fn_selectWebInvoiceItemList(clmNo) {
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>
         <option value="A"><spring:message code="webInvoice.select.approved" /></option>
-        <option value="J"><spring:message code="webInvoice.select.reject" /></option>
+        <option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
     </select>
     </td>
 </tr>

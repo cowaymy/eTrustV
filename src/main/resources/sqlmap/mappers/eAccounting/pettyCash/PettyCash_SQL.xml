@@ -320,6 +320,7 @@ ORDER BY T.CLM_NO, T.REQST_DT
         ,DOCETY
         ,REQDATE
         ,REQPERNM
+        ,REQDEPTCD
         ,REQDEPTNM
         ,PETR_AMT
     )
@@ -332,10 +333,11 @@ ORDER BY T.CLM_NO, T.REQST_DT
        ,TO_CHAR(SYSDATE, 'YYYYDDMM')
        ,TO_CHAR(SYSDATE, 'HH24MISS')
        ,#{userId}
-       ,#{clmNo}
+       ,#{appvPrcssNo}
        ,'R1'
        ,SYSDATE
        ,#{memAccName}
+       ,#{costCentr}
        ,#{costCentrName}
        ,#{reqstAmt}
     )

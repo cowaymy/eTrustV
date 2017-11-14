@@ -18,10 +18,10 @@ var myFileCaches = {};
 var recentGridItem = null;
 var staffClaimColumnLayout = [ {
     dataField : "memAccId",
-    headerText : '<spring:message code="staffClaim.staffCode" />'
+    headerText : '<spring:message code="smGmClaim.hpId" />'
 }, {
     dataField : "memAccName",
-    headerText : '<spring:message code="staffClaim.staffName" />',
+    headerText : '<spring:message code="smGmClaim.smGmBrName" />',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "clmMonth",
@@ -276,7 +276,7 @@ function fn_setPopSupplier() {
 }
 
 function fn_PopExpenseTypeSearchPop() {
-    Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J4'}, null, true, "expenseTypeSearchPop");
+    Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J6'}, null, true, "expenseTypeSearchPop");
 }
 
 function fn_setPopExpType() {
@@ -339,14 +339,14 @@ function fn_setPopSubSupplier() {
 }
 
 function fn_selectStaffClaimList() {
-	Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
+	Common.ajax("GET", "/eAccounting/smGmClaim/selectSmGmClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(staffClaimGridID, result);
     });
 }
 
 function fn_newStaffClaimPop() {
-	Common.popupDiv("/eAccounting/staffClaim/newStaffClaimPop.do", {callType:"new"}, null, true, "newStaffClaimPop");
+	Common.popupDiv("/eAccounting/smGmClaim/newSmGmClaimPop.do", {callType:"new"}, null, true, "newStaffClaimPop");
 }
 
 function fn_checkEmpty() {
@@ -357,7 +357,7 @@ function fn_checkEmpty() {
         return checkResult;
     }
     if(FormUtil.isEmpty($("#newMemAccName").val())) {
-        Common.alert('<spring:message code="staffClaim.staffCode.msg" />');
+        Common.alert('<spring:message code="smGmClaim.hpCode.msg" />');
         checkResult = false;
         return checkResult;
     }
@@ -407,7 +407,7 @@ function fn_checkEmpty() {
         }
         if($("#invcType").val() == "F") {
             if(FormUtil.isEmpty($("#supplirName").val())) {
-                Common.alert('<spring:message code="staffClaim.supplierName.msg" />');
+            	Common.alert('<spring:message code="staffClaim.supplierName.msg" />');
                 checkResult = false;
                 return checkResult;
             }
@@ -451,7 +451,7 @@ function fn_addRow() {
                 formData.append(n, v.file);
             });
         	if(clmSeq == 0) {
-        		Common.ajaxFile("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
+        		Common.ajaxFile("/eAccounting/smGmClaim/attachFileUpload.do", formData, function(result) {
                     console.log(result);
                     
                     var gridDataList = AUIGrid.getGridData(mileageGridID);
@@ -500,7 +500,7 @@ function fn_addRow() {
                 formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
                 console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
                 
-        		Common.ajaxFile("/eAccounting/staffClaim/attachFileUpdate.do", formData, function(result) {
+        		Common.ajaxFile("/eAccounting/smGmClaim/attachFileUpdate.do", formData, function(result) {
                     console.log(result);
                     
                     var gridDataList = AUIGrid.getGridData(mileageGridID);
@@ -581,7 +581,7 @@ function fn_addRow() {
                         ,expDesc : $("#expDesc").val()
                 };
                 
-                Common.ajaxFile("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
+                Common.ajaxFile("/eAccounting/smGmClaim/attachFileUpload.do", formData, function(result) {
                     console.log(result);
                     
                     data.atchFileGrpId = result.data.fileGroupKey
@@ -627,7 +627,7 @@ function fn_addRow() {
                 console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
                 formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
                 console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-                Common.ajaxFile("/eAccounting/staffClaim/attachFileUpdate.do", formData, function(result) {
+                Common.ajaxFile("/eAccounting/smGmClaim/attachFileUpdate.do", formData, function(result) {
                     console.log(result);
                     
                     console.log(data);
@@ -667,7 +667,7 @@ function fn_insertStaffClaimExp(st) {
                 ,allTotAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
         }
         console.log(data);
-        Common.ajax("POST", "/eAccounting/staffClaim/insertStaffClaimExp.do", data, function(result) {
+        Common.ajax("POST", "/eAccounting/smGmClaim/insertSmGmClaimExp.do", data, function(result) {
             console.log(result);
             clmNo = result.data.clmNo;
             fn_selectStaffClaimItemList();
@@ -687,7 +687,7 @@ function fn_selectStaffClaimItemList() {
     var obj = {
             clmNo : clmNo
     };
-    Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimItemList.do", obj, function(result) {
+    Common.ajax("GET", "/eAccounting/smGmClaim/selectSmGmClaimItemList.do", obj, function(result) {
         console.log(result);
         AUIGrid.setGridData(newGridID, result);
     });
@@ -698,7 +698,7 @@ function fn_viewStaffClaimPop(clmNo) {
             clmNo : clmNo,
             callType : "view"
     };
-    Common.popupDiv("/eAccounting/staffClaim/viewStaffClaimPop.do", data, null, true, "viewStaffClaimPop");
+    Common.popupDiv("/eAccounting/smGmClaim/viewSmGmClaimPop.do", data, null, true, "viewStaffClaimPop");
 }
 
 function fn_selectStaffClaimInfo() {
@@ -706,7 +706,7 @@ function fn_selectStaffClaimInfo() {
             clmNo : clmNo
             ,clmSeq : clmSeq
     };
-    Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimInfo.do", obj, function(result) {
+    Common.ajax("GET", "/eAccounting/smGmClaim/selectSmGmClaimInfo.do", obj, function(result) {
         console.log(result);
         // Expense Type Name == Car Mileage Expense
         //$("#expTypeName").val() == "Car Mileage Expense"
@@ -904,7 +904,7 @@ function fn_updateStaffClaimExp(st) {
         gridDataObj.clmNo = clmNo;
         gridDataObj.allTotAmt = Number($("#allTotAmt_text").text().replace(/,/gi, ""));
         console.log(gridDataObj);
-        Common.ajax("POST", "/eAccounting/staffClaim/updateStaffClaimExp.do", gridDataObj, function(result) {
+        Common.ajax("POST", "/eAccounting/smGmClaim/updateSmGmClaimExp.do", gridDataObj, function(result) {
             console.log(result);
             clmNo = result.data.clmNo;
             fn_selectStaffClaimItemList();
@@ -928,7 +928,7 @@ function fn_approveLinePop() {
         fn_updateStaffClaimExp("");
     }
     
-    Common.popupDiv("/eAccounting/staffClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    Common.popupDiv("/eAccounting/smGmClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
 function fn_deleteStaffClaimExp() {
@@ -944,11 +944,11 @@ function fn_deleteStaffClaimExp() {
 			allTotAmt : $("#allTotAmt_text").text().replace(/,/gi, "")
 	};
 	console.log(data);
-	Common.ajax("POST", "/eAccounting/staffClaim/deleteStaffClaimExp.do", data, function(result) {
+	Common.ajax("POST", "/eAccounting/smGmClaim/deleteSmGmClaimExp.do", data, function(result) {
         console.log(result);
        
         // function 호출 안되서 ajax 직접호출
-        Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
+        Common.ajax("GET", "/eAccounting/smGmClaim/selectSmGmClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
             console.log(result);
             AUIGrid.setGridData(staffClaimGridID, result);
         });
@@ -963,7 +963,7 @@ function fn_deleteStaffClaimExp() {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
-<h2><spring:message code="staffClaim.title" /></h2>
+<h2><spring:message code="smGmClaim.title" /></h2>
 <ul class="right_btns">
 	<!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectStaffClaimList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
@@ -987,7 +987,7 @@ function fn_deleteStaffClaimExp() {
 <tr>
 	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
     <td><input type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" id="clmMonth" name="clmMonth"/></td>
-	<th scope="row"><spring:message code="staffClaim.staffCode" /></th>
+	<th scope="row"><spring:message code="smGmClaim.hpId" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>

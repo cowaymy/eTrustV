@@ -156,13 +156,14 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 		
 		pettyCashService.insertPettyCashReqst(params);
 		
-		String ifKey = pettyCashService.selectNextIfKey();
+		// interface 생성
+		/*String ifKey = pettyCashService.selectNextIfKey();
 		params.put("ifKey", ifKey);
 		
 		int seq = pettyCashService.selectNextSeq(ifKey);
 		params.put("seq", seq);
 		
-		pettyCashService.insertPettyCashReqstInterface(params);
+		pettyCashService.insertPettyCashReqstInterface(params);*/
 	}
 
 	@Override
