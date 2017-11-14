@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper">
+
+    
+   <resultMap id="rtnCode" type="egovMap" />   
+      
+    <select id="install_Active_SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+       <![CDATA[    
+            {
+                  call SP_LOGISTIC_REQUEST(   #{ORD_ID},
+                                                           #{RETYPE},
+                                                           #{P_TYPE},
+                                                           #{P_PRGNM},
+                                                           #{USERID},
+                                                           #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+            }
+         ]]>
+     </select>     
+      
+      
+</mapper>

@@ -3350,5 +3350,21 @@
 	
 	</select>
    
-                   
+   
+   <insert id="update_SAL0087D" parameterType="Map" > 
+			UPDATE  SAL0087D
+			    SET SRV_FILTER_PRV_CHG_DT =  TO_DATE(#{SRV_FILTER_PRV_CHG_DT},'dd/mm/yyyy'),
+			        SRV_FILTER_UPD_DT =SYSDATE,
+			        SRV_FILTER_UPD_USER_ID =#{updator}
+			where SRV_CONFIG_ID =(
+					                        select SRV_CONFIG_ID 
+					                        from SAL0090D  
+					                        where 1=1 
+					                        and SRV_SO_ID =#{SRV_SO_ID}
+					                        and SRV_STUS_ID =1
+			                        )
+			and SRV_FILTER_STUS_ID =1
+			and SRV_FILTER_STK_ID = #{SRV_FILTER_STK_ID} 
+   </insert>
+   
 </mapper>

@@ -33,6 +33,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	@Resource(name = "ASManagementListMapper")
 	private ASManagementListMapper ASManagementListMapper;
 	
+
+	@Resource(name = "servicesLogisticsPFCMapper")
+	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
+	
 	@Resource(name = "posMapper")
 	private PosMapper posMapper;
 	
@@ -216,8 +220,22 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		}
 		
 		
-		//물류 호출   
-	
+		//물류 호출 
+		/////////////////////////물류 호출//////////////////////
+		Map<String, Object>  logPram = new HashMap<String, Object>();
+		logPram.put("ORD_ID", String.valueOf( eMap.get("asno")).trim());
+		logPram.put("RETYPE", "SVO");  
+		logPram.put("P_TYPE", "OD01");  
+		logPram.put("P_PRGNM", "ASACT");  
+		logPram.put("USERID", Integer.parseInt(String.valueOf(params.get("USER_ID"))));   
+		
+		LOGGER.debug("ASACT 물류 호출 PRAM ===>"+ logPram.toString());
+		servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+		LOGGER.debug("ASACT 물류 호출 결과 ===>");
+		/////////////////////////물류 호출 END //////////////////////   
+		
+		
+		
 		EgovMap em = new EgovMap();
 		em.put("AS_NO", String.valueOf( eMap.get("asno")).trim());
 		
@@ -1159,12 +1177,33 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		//insert svc0004d 
 		int c=  this.insertSVC0004D(svc0004dmap);  
 		int callint =updateSTATE_CCR0006D(svc0004dmap);
-	   this.insertSVC0005D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator"))); 
+	    this.insertSVC0005D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator"))); 
 		this.insert_stkCardLOG0014D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator")) ,svc0004dmap); 
 		
 	    svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID") );
 	    svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")) );
 		this.updateStateSVC0001D(svc0004dmap);
+		
+		
+		
+		if(svc0004dmap.get("AS_RESULT_STUS_ID").equals("04") ){
+			
+			//물류 호출   add by hgham
+	        Map<String, Object>  logPram = null ;
+			/////////////////////////물류 호출//////////////////////
+			logPram =new HashMap<String, Object>();
+            logPram.put("ORD_ID",    params.get("hiddeninstallEntryNo") );
+            logPram.put("RETYPE", "COMPLET");  
+            logPram.put("P_TYPE", "OD01");  
+            logPram.put("P_PRGNM", "ASCOM");  
+            logPram.put("USERID", String.valueOf(params.get("updator")));   
+            
+            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
+            /////////////////////////물류 호출 END //////////////////////   			
+		}
+		
 		
 		EgovMap em = new EgovMap();
 		em.put("AS_NO",String.valueOf(eMap.get("asno")));
