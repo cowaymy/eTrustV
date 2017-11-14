@@ -306,7 +306,6 @@ $(document).ready(function() {
     
 	// 171114 :: 선한이
 	$("#cmbbranchId").change(function (){
-		
 		doGetCombo('/services/as/selectCTByDSC.do',  $("#cmbbranchId").val(), '','cmbctId', 'S' ,  '');
 	});
     

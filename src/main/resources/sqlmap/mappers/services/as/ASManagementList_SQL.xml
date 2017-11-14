@@ -85,6 +85,9 @@
 						                       JOIN SAL0001D Extent4   ON Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
 						                       JOIN SYS0013M Extent5   ON Extent4.APP_TYPE_ID = Extent5.CODE_ID
 						                       JOIN SAL0029D Extent6   ON Extent4.CUST_ID = Extent6.CUST_ID
+						                       <!-- 171114 :: 선한이 (추가) -->
+						                       JOIN ORG0001D Extent8   ON Extent8.MEM_ID = Extent1.AS_MEM_ID
+						                       JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent8.BRNCH
 						                       LEFT JOIN SVC0004D Extent7   ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
 						                       AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
 						                       AND ( 1 = Extent7.AS_RESULT_IS_CURR )
@@ -101,6 +104,15 @@
 									                            #{item}
 									                  </foreach>
 								              </if>
+								              
+								              <!-- 171114 :: 선한이 (추가) -->
+								              <if test="cmbbranchId != null and cmbbranchId != '' ">
+                                                     AND Extent9.CODE  IN #{cmbbranchId}
+                                              </if>
+                                              <if test="cmbctId != null and cmbbranchId != '' ">
+                                                     AND Extent8.MEM_CODE IN #{cmbctId}
+                                              </if>
+								              
 						               ) E
 						                LEFT JOIN SYS0047M Extent8   ON E.AS_CRT_USER_ID = Extent8.USER_ID
 						          WHERE  1=1

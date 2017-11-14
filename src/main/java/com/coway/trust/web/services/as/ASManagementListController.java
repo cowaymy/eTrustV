@@ -98,8 +98,15 @@ public class ASManagementListController {
 		String[] asTypeList =  request.getParameterValues("asType");
 		String[] asStatusList =  request.getParameterValues("asStatus");
 		
+		String cmbbranchId =  request.getParameter("cmbbranchId");
+		logger.debug("cmbbranchId : " + cmbbranchId);
+		String cmbctId =  request.getParameter("cmbctId");
+		logger.debug("cmbctId : " + cmbctId);
+		
 		params.put("asTypeList",asTypeList);
 		params.put("asStatusList",asStatusList);
+		params.put("cmbbranchId",cmbbranchId);
+		params.put("cmbctId",cmbctId);
 		
 		List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
 		
