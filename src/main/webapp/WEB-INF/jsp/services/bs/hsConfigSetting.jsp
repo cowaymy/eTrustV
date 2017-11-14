@@ -10,149 +10,149 @@
 
         var StatusTypeData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
        var gradioVal = $("input:radio[name='searchDivCd']:checked").val();
-       
+
         // AUIGrid 생성 후 반환 ID
         var myGridID;
-        
+
         var option = {
 		        width : "1200px",   // 창 가로 크기
 		        height : "600px"    // 창 세로 크기
             };
-    
+
         function basicManagementGrid(){
                 // AUIGrid 칼럼 설정
-		       var columnManualLayout = [ {
+		       var columnManualLayout = [/* {
 		                            dataField:"rnum",
 		                            headerText:"RowNum",
 		                            width:120,
 		                            height:30
 		                            ,
 		                            visible:false
-		                              }, {                        
+		                              },*/ {
 		                            dataField : "custId",
 		                            headerText : "Customer",
 		                            width : 120
 		                        }, {
 		                            dataField : "name",
 		                            headerText : "Customer Name",
-		                            width : 120                            
+		                            width : 120
 		                       }, {
 		                            dataField : "salesOrdNo",
 		                            headerText : "Sales Order",
 		                            width : 120
-		                        }, {
+		                        }, /*{
 		                            dataField : "hsDate",
 		                            headerText : "HS Date",
-		                            width : 120 ,                             
-		                            visible:false   
-		                        }, {                        
+		                            width : 120 ,
+		                            visible:false
+		                        }, {
 		                            dataField : "no",
 		                            headerText : "HS Order",
-		                            width : 120,                             
-                                    visible:false  
+		                            width : 120,
+                                    visible:false
 		                        }, {
 		                            dataField : "c5",
 		                            headerText : "Assign Cody",
-		                            width : 120,                             
-                                    visible:false                
+		                            width : 120,
+                                    visible:false
 		                        }, {
 		                            dataField : "code",
 		                            headerText : "Cody Status",
-		                            width : 120,                             
-                                    visible:false  
+		                            width : 120,
+                                    visible:false
 		                        }, {
 		                            dataField : "code1",
 		                            headerText : "HS Status",
-		                            width : 120,                             
-                                    visible:false               
+		                            width : 120,
+                                    visible:false
 		                        }, {
 		                            dataField : "month",
 		                            headerText : "Complete Cody",
-		                            width : 120                             ,                             
-		                            visible:false   
+		                            width : 120                             ,
+		                            visible:false
 		                        }, {
 		                            dataField : "brnchId",
 		                            headerText : "Branch",
-		                            width : 120    
-		                             ,                             
-		                            visible:false   
+		                            width : 120
+		                             ,
+		                            visible:false
 		                        }, {
 		                            dataField : "schdulId",
 		                            headerText : "schdulId",
-		                            width : 120                                 ,                             
-		                            visible:false   
-		                          /*     ,                             
-		                            visible:false      */
+		                            width : 120                                 ,
+		                            visible:false
+		                               ,
+		                            visible:false
 		                        }, {
 		                            dataField : "salesOrdId",
 		                            headerText : "salesOrdId",
-		                            width : 120,                             
-                                    visible:false    
-                                        }, {
+		                            width : 120,
+                                    visible:false
+                                        },*/ {
                                     dataField : "codyMangrUserId",
                                     headerText : "Cody Manager",
-                                    width : 120  
+                                    width : 120
 		                              }, {
 		                            dataField : "codyBrnchCode",
 		                            headerText : "Branch Code",
 		                            width : 120
 		                    }];
-		                       
+
 		             // 그리드 속성 설정
 	                 var gridPros = {
-	                    // 페이징 사용       
+	                    // 페이징 사용
 	                    usePaging : true,
 	                    // 한 화면에 출력되는 행 개수 20(기본값:20)
 	                    pageRowCount : 20,
-	                    
+
 	                    editable : false,
-	                    
-	                    //showStateColumn : true, 
-	                    
+
+	                    //showStateColumn : true,
+
 	                    displayTreeOpen : true,
-	                    
+
 	                    headerHeight : 30,
-	                    
+
 	                    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	                    skipReadonlyColumns : true,
-	                    
+
 	                    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	                    wrapSelectionMove : true,
-	                    
+
 	                    // 줄번호 칼럼 렌더러 출력
 	                    showRowNumColumn : true
-	                };             
+	                };
                             //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
                         myGridID = AUIGrid.create("#grid_wrap", columnManualLayout, gridPros);
             }
-        
+
         $(document).ready(function() {
-            
+
             $('#ManuaMyBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
 		    // AUIGrid 그리드를 생성합니다.
 		    basicManagementGrid();
-		    
+
 		    AUIGrid.setSelectionMode(myGridID, "singleRow");
-		    
+
 	        // 셀 더블클릭 이벤트 바인딩
 /* 	        AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 	           salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
 	//                var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
 	           Common.popupDiv("/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
-	        });    */ 
-	        
-	        
+	        });    */
+
+
  	            AUIGrid.bind(myGridID, "cellClick", function(event) {
 			      salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
 			      brnchId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId");
-			  }); 
-  
-	
+			  });
+
+
 		});
-        
+
 
          // 리스트 조회.
-        function fn_getBasicListAjax() {        
+        function fn_getBasicListAjax() {
 	            Common.ajax("GET", "/services/bs/selectHsBasicList.do", $("#searchForm").serialize(), function(result) {
 	                console.log("성공.");
 	                console.log("data : " + result);
@@ -162,7 +162,7 @@
 
 
         function fn_basicInfo() {
-        
+
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             if(selectedItems.length  <= 0) {
 		        Common.alert("<b>No HS selected.</b>");
@@ -170,13 +170,13 @@
 		    }
 
 
-                
+
                Common.popupDiv("/services/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
-               
+
         }
-    
+
         function fn_filterSetInfo() {
-        
+
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             if(selectedItems.length  <= 0) {
                 Common.alert("<b>No HS selected.</b>");
@@ -185,7 +185,7 @@
                Common.popupDiv("/services/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId, null, null , true , '_FilterSetPop');
         }
 
-    
+
     </script>
 
 
@@ -193,7 +193,7 @@
 
 
 
-<form action="#" id="searchForm" name="searchForm">    
+<form action="#" id="searchForm" name="searchForm">
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -244,11 +244,11 @@
                 <td>
                     <input id="manualCustomer" name="manualCustomer"  type="text" title="" placeholder="Customer" class="w100p" />
                 </td>
-                
+
             </tr>
             </tbody>
             </table><!-- table end -->
-            
+
             <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <%--             <p class="show_btn"><a href="#"><br><br><br><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
             <%-- <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
@@ -273,7 +273,7 @@
     <ul class="right_btns">
 
 
-    </ul>     
+    </ul>
 
 <section class="search_result"><!-- search_result start -->
 
