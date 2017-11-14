@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.coway.trust.api.mobile.services.installation.InstallationResultForm;
 import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModel;
@@ -88,10 +89,11 @@ public class AfterServiceResultForm {
 	@ApiModelProperty(value = "partList")
 	private List<AfterServiceResultDetailForm>  partList;
 	
+
 	
 	
 	
-/*	public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
+public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 
@@ -112,48 +114,62 @@ public class AfterServiceResultForm {
 
 				list.add(map);
 			}
+
 		}
 		return list;
-	}*/
-	
-	
-	
-	
-	public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
-
-    	List<Map<String, Object>> list = new ArrayList<>();
-
-		Map<String, Object> params = new HashMap<>();				
-			params.put("userId",afterServiceResultForm.getUserId());
-			params.put("salesOrderNo",afterServiceResultForm.getSalesOrderNo());
-			params.put("serviceNo",afterServiceResultForm.getServiceNo());
-			params.put("labourCharge",afterServiceResultForm.getLabourCharge());
-			params.put("defectId",afterServiceResultForm.getDefectPartId());
-			params.put("defectPartId",afterServiceResultForm.getDefectPartId());
-			params.put("defectDetailReasonId",afterServiceResultForm.getDefectDetailReasonId());
-			params.put("solutionReasonId",afterServiceResultForm.getSolutionReasonId());
-			params.put("defectTypeId",afterServiceResultForm.getDefectTypeId());
-			params.put("inHouseRepairRemark",afterServiceResultForm.getInHouseRepairRemark());
-			params.put("inHouseRepairReplacementYN",afterServiceResultForm.getInHouseRepairReplacementYN());
-			params.put("inHouseRepairPromisedDate",afterServiceResultForm.getInHouseRepairPromisedDate());
-			params.put("inHouseRepairProductGroupCode",afterServiceResultForm.getInHouseRepairProductGroupCode());
-			params.put("inHouseRepairProductCode",afterServiceResultForm.getInHouseRepairProductCode());
-			params.put("inHouseRepairSerialNo",afterServiceResultForm.getInHouseRepairSerialNo());
-			params.put("resultRemark",afterServiceResultForm.getResultRemark());
-			params.put("ownerCode",afterServiceResultForm.getOwnerCode());
-			params.put("resultCustName",afterServiceResultForm.getResultCustName());
-			params.put("resultIcMobileNo",afterServiceResultForm.getResultIcMobileNo());
-			params.put("resultReportEmailNo",afterServiceResultForm.getResultReportEmailNo());
-			params.put("resultAcceptanceName",afterServiceResultForm.getResultAcceptanceName());
-			params.put("signData",afterServiceResultForm.getSignData());
-			params.put("transactionId",afterServiceResultForm.getTransactionId());
-            	
-			list.add(params);
-			
-    	return list;
-	
 	}
 	
+			
+			
+public static List<Map<String, Object>>  createMap1(AfterServiceResultForm afterServiceResultForm) {
+
+		List<Map<String, Object>> list = new ArrayList<>();
+		Map<String, Object> map;
+	
+//		map = BeanConverter.toMap(afterServiceResultForm, "partList");
+		map = BeanConverter.toMap(afterServiceResultForm);
+		list.add(map);
+		
+	return list;
+}
+
+	
+	
+//	public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
+//
+//    	List<Map<String, Object>> list = new ArrayList<>();
+//
+//		Map<String, Object> params = new HashMap<>();				
+//			params.put("userId",afterServiceResultForm.getUserId());
+//			params.put("salesOrderNo",afterServiceResultForm.getSalesOrderNo());
+//			params.put("serviceNo",afterServiceResultForm.getServiceNo());
+//			params.put("labourCharge",afterServiceResultForm.getLabourCharge());
+//			params.put("defectId",afterServiceResultForm.getDefectPartId());
+//			params.put("defectPartId",afterServiceResultForm.getDefectPartId());
+//			params.put("defectDetailReasonId",afterServiceResultForm.getDefectDetailReasonId());
+//			params.put("solutionReasonId",afterServiceResultForm.getSolutionReasonId());
+//			params.put("defectTypeId",afterServiceResultForm.getDefectTypeId());
+//			params.put("inHouseRepairRemark",afterServiceResultForm.getInHouseRepairRemark());
+//			params.put("inHouseRepairReplacementYN",afterServiceResultForm.getInHouseRepairReplacementYN());
+//			params.put("inHouseRepairPromisedDate",afterServiceResultForm.getInHouseRepairPromisedDate());
+//			params.put("inHouseRepairProductGroupCode",afterServiceResultForm.getInHouseRepairProductGroupCode());
+//			params.put("inHouseRepairProductCode",afterServiceResultForm.getInHouseRepairProductCode());
+//			params.put("inHouseRepairSerialNo",afterServiceResultForm.getInHouseRepairSerialNo());
+//			params.put("resultRemark",afterServiceResultForm.getResultRemark());
+//			params.put("ownerCode",afterServiceResultForm.getOwnerCode());
+//			params.put("resultCustName",afterServiceResultForm.getResultCustName());
+//			params.put("resultIcMobileNo",afterServiceResultForm.getResultIcMobileNo());
+//			params.put("resultReportEmailNo",afterServiceResultForm.getResultReportEmailNo());
+//			params.put("resultAcceptanceName",afterServiceResultForm.getResultAcceptanceName());
+//			params.put("signData",afterServiceResultForm.getSignData());
+//			params.put("transactionId",afterServiceResultForm.getTransactionId());
+//            	
+//			list.add(params);
+//			
+//    	return list;
+//	
+//	}
+//	
 	
 	
 	
@@ -348,6 +364,9 @@ public class AfterServiceResultForm {
 	public void setPartList(List<AfterServiceResultDetailForm> partList) {
 		this.partList = partList;
 	}
+
+
+
 	
 	
 
