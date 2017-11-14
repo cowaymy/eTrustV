@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.notice.impl.NoticeMapper">
-    
-        <!-- 공통코드 활용해서 SELECT하기 -->
+
+    <!-- 공통코드 활용해서 SELECT하기 -->
     <select id="selectCodeList" parameterType="Map" resultType="egovMap">
         SELECT CODE_ID,
-               CODE, 
-               CODE_NAME 
-          FROM SYS0013M
-         WHERE DISAB = 0
-         <if test="groupCode != null and groupCode !=''">
+        CODE,
+        CODE_NAME
+        FROM SYS0013M
+        WHERE DISAB = 0
+        <if test="groupCode != null and groupCode !=''">
             AND CODE_MASTER_ID = #{groupCode}
             AND CODE_ID IN (2563,2564,2565)
         </if>
     </select>
-    
+
     <select id="checkPassword" resultType="int">
         SELECT COUNT(*) 
           FROM SYS0069M
          WHERE NTCE_NO = #{ntceNo} 
            AND PASSWORD = #{password}
     </select>
-    
-    
+
+
     <update id="deleteNotice" parameterType="Map">
         UPDATE SYS0069M
            SET STUS_FLAG = 'Y'
          WHERE NTCE_NO = #{ntceNo}
     </update>
-    
+
     <update id="updateNotice" parameterType="Map">
         UPDATE SYS0069M
-           SET NTCE_SUBJECT    = #{ntceSubject},
-               NTCE_CNTNT      = #{ntceCntnt},
-               NTCE_START_DT   = TO_DATE(#{ntceStartDt}, 'DD/MM/YYYY'),
-               NTCE_END_DT     = TO_DATE(#{ntceEndDt}, 'DD/MM/YYYY'),
-               PASSWORD        = #{password},
-               <!-- UPD_USER_ID     = #{userId} -->
-               UPD_DT          = SYSDATE
-         WHERE NTCE_NO = #{ntceNo}
+        SET NTCE_SUBJECT = #{ntceSubject},
+        NTCE_CNTNT = #{ntceCntnt},
+        ATCH_FILE_GRP_ID = nvl(#{atchFileGrpId}, ATCH_FILE_GRP_ID),
+        NTCE_START_DT = TO_DATE(#{ntceStartDt}, 'DD/MM/YYYY'),
+        NTCE_END_DT = TO_DATE(#{ntceEndDt}, 'DD/MM/YYYY'),
+        PASSWORD = #{password},
+        <!-- UPD_USER_ID     = #{userId} -->
+        UPD_DT = SYSDATE
+        WHERE NTCE_NO = #{ntceNo}
     </update>
-    
+
     <select id="noticeInfo" parameterType="Map" resultType="egovMap">
     
         SELECT
@@ -60,9 +61,10 @@
         WHERE NTCE_NO = #{ntceNo}   
         
     </select>
-    
+
     <select id="noticeList" parameterType="Map" resultType="egovMap">
     <![CDATA[
+
       SELECT
              NTCE_NO,
              NTCE_SUBJECT,
@@ -78,16 +80,17 @@
              SYS0069M 
        WHERE  STUS_FLAG = 'N'
     ORDER BY EMGNCY_FLAG DESC, NTCE_NO DESC 
-    ]]>
-    </select>
-    
 
-    <update id="upViewCnt" parameterType="Map">
+        ]]>
+    </select>
+
+
+    <update id="updateViewCnt" parameterType="Map">
         UPDATE SYS0069M
            SET READ_CNT = READ_CNT +1 
            WHERE NTCE_NO = #{ntceNo}
     </update>
-    
+
     <select id="getNtceNOSeq" resultType="Integer">
         SELECT SYS0069M_NTCE_NO_SEQ.NEXTVAL FROM DUAL
     </select>
@@ -130,9 +133,9 @@
 		       ,0
 		    )
     </insert>
-    
-    
-<!--     <select id="getAttachmentFileInfo" parameterType="Map" resultType="egovMap">
+
+
+    <select id="selectAttachmentFileInfo" parameterType="Map" resultType="egovMap">
             SELECT T1.ATCH_FILE_GRP_ID
                    ,T1.ATCH_FILE_ID
                    ,T2.ATCH_FILE_NAME
@@ -144,9 +147,7 @@
           LEFT JOIN SYS0071D T2
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
-          AND T1.ATCH_FILE_ID = #{atchFileId}         
-    </select> -->
-    
+    </select>
 
 
 </mapper>

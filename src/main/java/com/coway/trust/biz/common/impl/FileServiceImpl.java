@@ -44,7 +44,8 @@ public class FileServiceImpl implements FileService {
 		return fileGroupKey;
 	}
 
-	private int insertFile(int fileGroupId, FileVO fileVO, FileType type, int userId) {
+	@Override
+	public int insertFile(int fileGroupId, FileVO fileVO, FileType type, int userId) {
 		FileGroupVO fileGroupVO = new FileGroupVO();
 
 		fileMapper.insertFileDetail(fileVO);
@@ -81,7 +82,7 @@ public class FileServiceImpl implements FileService {
 						new File(baseDir + fileVO.getFileSubPath() + File.separator + fileVO.getPhysiclFileName()));
 			} catch (IOException e) {
 				LOGGER.error("deleteFile Fail : {}", e.getMessage());
-				throw new ApplicationException(e);
+				//throw new ApplicationException(e);
 			}
 		});
 
@@ -119,14 +120,14 @@ public class FileServiceImpl implements FileService {
 
 		try {
 			FileUtils.forceDelete(
-					new File(baseDir + fileVO.getFileSubPath() + File.separator + fileVO.getPhysiclFileName()));
+					new File(baseDir + File.separator+ fileVO.getFileSubPath() + File.separator + fileVO.getPhysiclFileName()));
 		} catch (IOException e) {
 			LOGGER.error("deleteFile Fail : {}", e.getMessage());
-			throw new ApplicationException(e);
+			//throw new ApplicationException(e);
 		}
 
-		fileMapper.deleteFileGroupByFileId(fileId);
 		fileMapper.deleteFileByFileId(fileId);
+		fileMapper.deleteFileGroupByFileId(fileId);
 	}
 
 	@Override

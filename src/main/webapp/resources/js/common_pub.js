@@ -291,6 +291,13 @@ $(document).on(
 	var thisfakeInput=$(this).next().children(".input_text");
 
 	thisfakeInput.val(thisVal);
+
+	try{
+		// 첨부파일 변경시 처리 함수.. : 본문에 구현이 되어야 호출 됨...
+		fn_abstractChangeFile(thisfakeInput);
+	}catch(e){
+		//본문에 함수가 없다면.... 무시..
+	}
 });
 /* 인풋 파일 end */
 
@@ -302,9 +309,10 @@ setInputFile2();
 
 $(document).on(//인풋파일 추가
 	"click", ".auto_file2 a:contains('Add')", function(){
-	
+
 	$(".auto_file2:last-child").clone().insertAfter(".auto_file2:last-child");
 	$(".auto_file2:last-child :file, .auto_file2:last-child :text").val("");
+	$(".auto_file2:last-child :file, .auto_file2:last-child :text").attr("data-id", "");
 	return false;
 });
 
@@ -316,7 +324,16 @@ $(document).on(//인풋파일 삭제
 
 	}else{
 		$(this).parents(".auto_file2").remove();
+
+        try{
+            var thisfakeInput=$(this).parent().prev().prev().children(".input_text");
+            // 첨부파일 삭제시 처리 함수.. : 본문에 구현이 되어야 호출 됨...
+            fn_abstractDeleteFile(thisfakeInput);
+        }catch(e){
+			//본문에 함수가 없다면.... 무시..
+        }
 	}
+
 	return false;
 });
 /* 인풋 파일(멀티) end */

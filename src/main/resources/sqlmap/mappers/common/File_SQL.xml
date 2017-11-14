@@ -107,4 +107,13 @@
         WHERE ATCH_FILE_ID = #{fileId}
     </delete>
 
+    <select id="selectFileGroupCountByFileId" parameterType="int" resultType="int">
+        SELECT COUNT(1) CNT
+        FROM SYS0070M
+        WHERE  ATCH_FILE_GRP_ID = (
+            SELECT GRP.ATCH_FILE_GRP_ID
+              FROM SYS0070M GRP
+             WHERE GRP.ATCH_FILE_ID = #{fileId}
+        )
+    </select>
 </mapper>

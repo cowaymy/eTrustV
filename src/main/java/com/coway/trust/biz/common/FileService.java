@@ -17,6 +17,8 @@ public interface FileService {
 	 */
 	int insertFiles(List<FileVO> fileVOList, FileType type, int userId);
 
+	int insertFile(int fileGroupId, FileVO fileVO, FileType type, int userId);
+
 	FileVO getFile(int fileId);
 
 	List<FileVO> getFiles(int fileGroupId);

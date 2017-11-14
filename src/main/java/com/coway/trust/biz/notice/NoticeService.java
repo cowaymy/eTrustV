@@ -6,24 +6,24 @@ import java.util.Map;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface NoticeService {
-	
-	List<EgovMap> selectCodeList(Map<String, Object> params) throws Exception;
-	
-	List<EgovMap> noticeList(Map<String, Object> params) throws Exception;
-	
-	int getNtceNOSeq() throws Exception;
-	
-	void insertNotice(Map<String, Object> params) throws Exception;
-	
-	EgovMap noticeInfo(Map<String, Object> params)throws Exception;
-	
-	boolean checkPassword(Map<String, Object> params) throws Exception;
-	
-	void deleteNotice(Map<String, Object> params) throws Exception;
-	
-	void updateNotice(Map<String, Object> params) throws Exception;
-	
-	void upViewCnt(Map<String, Object> params) throws Exception;
-	
-//	EgovMap getAttachmentFileInfo(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectCodeList(Map<String, Object> params);
+
+	List<EgovMap> getNoticeList(Map<String, Object> params);
+
+	int getNtceNOSeq();
+
+	void insertNotice(Map<String, Object> params);
+
+	EgovMap getNoticeInfo(Map<String, Object> params);
+
+	boolean checkPassword(Map<String, Object> params);
+
+	void deleteNotice(Map<String, Object> params);
+
+	void updateNotice(Map<String, Object> params);
+
+	void updateViewCnt(Map<String, Object> params);
+
+	List<EgovMap> getAttachmentFileInfo(Map<String, Object> params);
 }
