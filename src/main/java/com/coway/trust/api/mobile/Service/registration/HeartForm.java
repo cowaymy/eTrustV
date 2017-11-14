@@ -17,7 +17,7 @@ public class HeartForm {
 	@ApiModelProperty(value = "userId")
 	private String userId;
 	@ApiModelProperty(value = "salesOrderNo")
-	private int salesOrderNo;
+	private String salesOrderNo;
 	@ApiModelProperty(value = "serviceNo")
 	private String serviceNo;
 	@ApiModelProperty(value = "temperatureSetting")
@@ -77,11 +77,11 @@ public class HeartForm {
 		this.userId = userId;
 	}
 
-	public int getSalesOrderNo() {
+	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
 
-	public void setSalesOrderNo(int salesOrderNo) {
+	public void setSalesOrderNo(String salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
 

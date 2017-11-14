@@ -377,9 +377,9 @@
 
 			SELECT
 
-S01A.SALES_ORD_ID as sales_Order_No, 
-S01A.SALES_ORD_NO as service_No,
-S08A.NO,
+
+S01A.SALES_ORD_NO AS sales_Order_No,
+S08A.NO as service_No,
 S08A.YEAR,
 S08A.MONTH,
 S26A.STK_CODE AS product_Code,
@@ -389,7 +389,7 @@ S87A.SRV_FILTER_STK_ID as part_Id,
 L44A.BOM_COMPNT,
 L44A.COMPNT_QTY as quanity,
 --S07A.EXCH_REASON_ID,
-S87A.SRV_FILTER_PRV_CHG_DT as last_Chg_Date,
+to_char(S87A.SRV_FILTER_PRV_CHG_DT,'YYYYMMDD') as last_Chg_Date,
 S87A.SRV_FILTER_PRIOD as parts_Period,
 NVL2(L44A.ALTER_ITM_GRP, 'N', 'Y') AS alternative_YN,
 S06A.RESULT_ID,
