@@ -44,7 +44,7 @@ SELECT   T.CLM_NO
                            WHEN 'A'
                               THEN 'Approved'
                            WHEN 'J'
-                              THEN 'Reject'
+                              THEN 'Rejected'
                         END
                        )
                      ,'Temporary Save'
@@ -182,7 +182,7 @@ SELECT T.APPV_PRCSS_NO
                       WHEN 'A'
                          THEN 'Approved'
                       WHEN 'J'
-                         THEN 'Reject'
+                         THEN 'Rejected'
                    END
                   ) APPV_PRCSS_STUS
                 ,T2.APPV_STUS AS APPV_PRCSS_STUS_CODE
