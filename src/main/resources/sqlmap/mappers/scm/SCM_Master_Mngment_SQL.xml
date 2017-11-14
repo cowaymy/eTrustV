@@ -11,8 +11,8 @@
 			      , DEFAULTSTOCKNAME DEFAUT_STOCK_NAME  
 			      , IS_TRGET   
 			      , MEMO   
-			      , TO_CHAR(START_DT,'DD-MM-YYYY') START_DT
-			      , TO_CHAR(END_DT,'DD-MM-YYYY') END_DT
+			      , TO_CHAR(START_DT,'mm-dd-yyyy') START_DT
+			      , TO_CHAR(END_DT,'mm-dd-yyyy') END_DT
 			      , KL_TARGET   
 			      , JB_TARGET   
 			      , KK_TARGET   
@@ -45,6 +45,100 @@
 			 ORDER BY STK_CTGRY_CODE
 			         ,STOCK_DESC	 
   </select> 
+  
+  <update id="updateMasterMngment" parameterType="Map">
+      UPDATE SCM0008M
+         SET IS_TRGET = #{isTrget}
+         <if test='startDt != null and startDt !=""'>
+            ,START_DT = TO_DATE(#{startDt},'mm-dd-yyyy')      
+         </if>
+         <if test='endDt != null and endDt !=""'>
+            ,END_DT   = TO_DATE(#{endDt},'mm-dd-yyyy')
+         </if>            
+         <if test='memo != null and memo !=""'>
+            ,MEMO     = #{memo}
+         </if>
+         <if test='safetyStock != null and safetyStock !=""'>
+            ,SAFETY_STOCK = #{safetyStock} 
+         </if>
+         <if test='leadTm != null and leadTm !=""'>
+            ,LEAD_TM     = #{leadTm}
+         </if>
+         <if test='loadingQty != null and loadingQty !=""'>
+            ,LOADING_QTY = #{loadingQty}
+         </if>
+         <if test='defautStockName != null and defautStockName !=""'>
+            ,DFLT_STOCK  = (SELECT DECODE(STOCK_CODE,NULL, #{defautStockName}, STOCK_CODE ) STOCK_CODE
+                              FROM SCM0008M T0 LEFT JOIN SYS0026M T1 ON T1.STK_CODE=T0.STOCK_CODE WHERE (T1.STK_DESC= #{defautStockName} OR STOCK_CODE = #{defautStockName})
+                           )
+         </if>
+			 WHERE STOCK_ID    = #{stockId}    
+  </update>  
+  
+  <update id="updateMasterMngSupplyPlanTgtMoq" parameterType="Map">
+    UPDATE SCM0017M
+       SET IS_TRGET = #{cdcIsTarget}
+       <if test='moq != null and moq !=""'>
+         , MOQ      = #{moq}
+       </if>
+     WHERE STOCK_ID = #{stockId}
+       AND CDC_CODE = #{cdcCode}
+  </update> 
+  
+<insert id="insertMstMngMasterCDC" parameterType="Map">
+  INSERT INTO SCM0017M 
+                     ( STOCK_ID 
+                      ,CDC_CODE 
+                      ,STOCK_CODE 
+                      ,IS_TRGET 
+                      ,MOQ
+                     )
+              VALUES 
+                     (
+                       #{stkId} 
+                      ,#{cdcCode} 
+                      ,NULL
+                      ,#{cdcIsTarget} 
+                      ,NULL
+                     )
+</insert>    
+  
+<insert id="insertMstMngMasterHeader" parameterType="Map">
+  INSERT INTO SCM0008M 
+                     ( 
+                       STOCK_ID 
+                     , STOCK_CODE 
+                     , IS_TRGET 
+                     <if test="memoTxt != null and memoTxt !=''">
+                     , MEMO 
+                     </if>
+                     , START_DT 
+                     , END_DT 
+                     , SAFETY_STOCK 
+                     , LEAD_TM 
+                     , MIN_ORD_QTY 
+                     , LOADING_QTY 
+                     , STUS_CODE 
+                     , DFLT_STOCK
+                     )
+              VALUES 
+                     (
+                       #{stkId} 
+                     , #{stockCodeTxt} 
+                     , #{headerIsTrget}
+                     <if test="memoTxt != null and memoTxt !=''"> 
+                     , #{memoTxt} 
+                     </if>
+                     , TO_DATE(#{StartedDateTxt},'dd-mm-yyyy')  
+                     , TO_DATE(#{EndDateTxt},'dd-mm-yyyy')   
+                     , #{supplyPlanSafetyStockTxt} 
+                     , #{supplyPlanLTtxt} 
+                     , #{supplyPlanMoqTxt} 
+                     , #{supplyPlanLoadingQtyTxt} 
+                     , NULL 
+                     , NULL
+                     )
+</insert>    
 
   <!-- WARE HOUSE MAPPING -->
   <select id="selectCdcWareMapping" parameterType="Map" resultType="egovMap">
@@ -92,7 +186,67 @@
      DELETE FROM SCM0022M WHERE  WH_ID = #{whId} AND CDC = #{cdc}
   </delete> 
   
-   
+<select id="selectInvenCbBoxByStockType" parameterType="Map" resultType="egovMap">
+		SELECT 
+		       SCM26M.STK_CODE  STOCK_CODE
+		     , SCM26M.STK_DESC  STOCK_NAME 
+		     , SCM26M.STK_ID 
+		     , Extent2.CODE_ID  CODE_ID_1
+		     , Extent3.CODE_ID  CODE_ID_2
+		     , Extent2.CODE     CODE_2  
+		     , Extent3.CODE     CODE_SUB
+		FROM   SYS0026M  SCM26M
+		       INNER JOIN SYS0013M  Extent2 ON SCM26M.STK_CTGRY_ID = Extent2.CODE_ID  
+		       INNER JOIN SYS0013M  Extent3 ON SCM26M.STK_TYPE_ID = Extent3.CODE_ID
+		WHERE  NOT EXISTS (SELECT '1' 
+		                     FROM SCM0008M  SCM08M
+		                    WHERE SCM08M.STOCK_ID = SCM26M.STK_ID
+		                  )
+		  AND SCM26M.STUS_CODE_ID = 1 
+		  AND TO_NUMBER( SCM26M.IS_NCV ) = 0 
+	 <if test='scmStockTypeCbBox != null and scmStockTypeCbBox !=""'>
+		  AND Extent3.CODE_ID = #{scmStockTypeCbBox}
+	 </if>
+		ORDER BY SCM26M.STK_ID
+</select> 
+  
+<select id="selectInvenCbBoxByCategory" parameterType="Map" resultType="egovMap">
+		SELECT 
+		      Filter2.STK_CODE STK_CODE
+        , Filter2.STK_DESC STK_NAME 
+        , Filter2.STK_ID 
+        , Filter2.CODE_ID CATEGORY_ID 
+        , Extent4.CODE_ID STK_TYPE_CODE
+        , Filter2.CODE    CATEGORY_CODE
+        , Extent4.CODE    STK_TYPE
+		FROM   (SELECT SYS26M.STK_ID AS STK_ID
+		             , SYS26M.STK_CODE AS STK_CODE
+		             , SYS26M.STK_DESC AS STK_DESC
+		             , SYS26M.STK_TYPE_ID AS STK_TYPE_ID
+		             , SYS13M.CODE_ID AS CODE_ID
+		             , SYS13M.Code AS Code
+		          FROM SYS0026M  SYS26M
+		         INNER JOIN SYS0013M  SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
+		         WHERE NOT EXISTS (SELECT 
+		                                 '1'
+		                             FROM SCM0008M  Extent3
+		                            WHERE Extent3.STOCK_ID = SYS26M.STK_ID
+		                          )
+		           AND SYS26M.STUS_CODE_ID = 1 
+		           AND TO_NUMBER( SYS26M.IS_NCV ) = 0  
+		        )  Filter2
+		    INNER JOIN SYS0013M  Extent4 ON Filter2.STK_TYPE_ID = Extent4.CODE_ID
+		WHERE 1 = 1
+	 <if test='scmStockTypeCbBox != null and scmStockTypeCbBox !=""'>	
+	    AND Extent4.CODE_ID = #{scmStockTypeCbBox}
+   </if>
+   <if test='scmCategoryCbBox != null and scmCategoryCbBox !=""'>
+		  AND Filter2.CODE_ID = #{scmCategoryCbBox}
+	 </if>
+	 <if test='scmStockNameTxt != null and scmStockNameTxt !=""'>	
+      AND Filter2.STK_DESC LIKE '%' || #{scmStockNameTxt} || '%'
+   </if>
+</select> 
 
   <!-- Business Plan Manager -->
   <select id="selectVersionCbList" parameterType="Map" resultType="egovMap">

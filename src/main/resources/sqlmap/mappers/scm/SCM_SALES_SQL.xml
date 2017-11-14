@@ -338,6 +338,12 @@
 	     ORDER BY CODE_ID 
     </select>
 
+    <select id="selectDefaultStockCode" parameterType="Map" resultType="egovMap">
+			SELECT STOCK_CODE AS STK_CODE
+			     , T1.STK_DESC AS STK_DESC  
+        FROM SCM0008M T0 LEFT JOIN SYS0026M T1 ON T1.STK_CODE=T0.STOCK_CODE
+    </select>
+
     <select id="selectStockCategoryCode" parameterType="Map" resultType="egovMap">
 	     SELECT CODE_ID 
 				    , CODE 
