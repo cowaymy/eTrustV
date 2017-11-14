@@ -210,6 +210,15 @@ public class SalesPlanManagementController {
 		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode(params);
 		return ResponseEntity.ok(selectStockCodeList);
 	}
+	
+	@RequestMapping(value = "/selectDefaultStockCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDefaultStockCode(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectDefaultStockCode : {}", params.toString());
+		
+		List<EgovMap> selectDefaultStockCode = salesPlanMngementService.selectDefaultStockCode(params);
+		return ResponseEntity.ok(selectDefaultStockCode);
+	}
 
 	// save 
 	@RequestMapping(value = "/saveScmSalesPlan.do", method = RequestMethod.POST)

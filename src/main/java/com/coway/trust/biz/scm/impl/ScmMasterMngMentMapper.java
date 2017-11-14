@@ -11,6 +11,12 @@ public interface ScmMasterMngMentMapper
 {
 	/* SCM MASTER MANAGEMENT */
 	List<EgovMap> selectMasterMngmentSearch(Map<String, Object> params);
+	List<EgovMap> selectInvenCbBoxByStockType(Map<String, Object> params);
+	List<EgovMap> selectInvenCbBoxByCategory(Map<String, Object> params);
+	int updateMasterMngment(Map<String, Object> params);
+	int updateMasterMngSupplyPlanTgtMoq(Map<String, Object> params);
+	int insertMstMngMasterCDC(Map<String, Object> params);
+	int insertMstMngMasterHeader(Map<String, Object> params);
 	
 	/* CDC WARE MAPPING */
 	List<EgovMap> selectCdcWareMapping(Map<String, Object> params);

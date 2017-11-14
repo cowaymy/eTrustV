@@ -108,6 +108,11 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	}
 	
 	@Override
+	public List<EgovMap> selectDefaultStockCode(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectDefaultStockCode(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectSalesPlanMngmentList(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectSalesPlanMngmentList(params);
 	}

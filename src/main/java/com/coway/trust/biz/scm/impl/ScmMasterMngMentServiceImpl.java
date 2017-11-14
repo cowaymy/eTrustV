@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.scm.ScmMasterMngMentService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.crystaldecisions.reports.common.value.StringValue;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -42,6 +43,188 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 	public List<EgovMap> selectMasterMngmentSearch(Map<String, Object> params) {
 		return scmMasterMngMentMapper.selectMasterMngmentSearch(params);
 	}
+	@Override
+	public List<EgovMap> selectInvenCbBoxByStockType(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectInvenCbBoxByStockType(params);
+	}
+	@Override
+	public List<EgovMap> selectInvenCbBoxByCategory(Map<String, Object> params) {
+		return scmMasterMngMentMapper.selectInvenCbBoxByCategory(params);
+	}
+	
+	@Override
+	public int updateMasterMngment(List<Object> updList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : updList) 
+		{
+			/*((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);*/
+			
+			LOGGER.debug(" >>>>> updateMasterMngment_imple: {} ", updList.toString() );
+			LOGGER.debug(" startDt : {}", String.valueOf(((Map<String, Object>) obj).get("startDt")));
+			LOGGER.debug(" endDt : {}", String.valueOf(((Map<String, Object>) obj).get("endDt")));
+			LOGGER.debug( " klTarget : {}",  String.valueOf(((Map<String, Object>) obj).get("klTarget")) );
+			
+			((Map<String, Object>) obj).put("cdcCode", "KL");	
+			((Map<String, Object>) obj).put("cdcIsTarget", ((Map<String, Object>) obj).get("klTarget"));
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("klMoq"));
+			scmMasterMngMentMapper.updateMasterMngSupplyPlanTgtMoq((Map<String, Object>) obj);
+			
+			((Map<String, Object>) obj).put("cdcCode", "KK");	
+			((Map<String, Object>) obj).put("cdcIsTarget", ((Map<String, Object>) obj).get("kkTarget"));
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kkMoq"));
+			scmMasterMngMentMapper.updateMasterMngSupplyPlanTgtMoq((Map<String, Object>) obj);
+			
+			((Map<String, Object>) obj).put("cdcCode", "JB");	
+			((Map<String, Object>) obj).put("cdcIsTarget", ((Map<String, Object>) obj).get("jbTarget"));
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("jbMoq"));
+			scmMasterMngMentMapper.updateMasterMngSupplyPlanTgtMoq((Map<String, Object>) obj);
+			
+			((Map<String, Object>) obj).put("cdcCode", "PN");	
+			((Map<String, Object>) obj).put("cdcIsTarget", ((Map<String, Object>) obj).get("pnTarget"));
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("pnMoq"));
+			scmMasterMngMentMapper.updateMasterMngSupplyPlanTgtMoq((Map<String, Object>) obj);
+			
+			((Map<String, Object>) obj).put("cdcCode", "KC");	
+			((Map<String, Object>) obj).put("cdcIsTarget", ((Map<String, Object>) obj).get("kcTarget"));
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kcMoq"));
+			scmMasterMngMentMapper.updateMasterMngSupplyPlanTgtMoq((Map<String, Object>) obj);
+			
+			saveCnt++; 
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("startDt")).length() == 8 )
+			{
+			  String strYear = String.valueOf(((Map<String, Object>) obj).get("startDt")).substring(0, 4);
+			  String strMonth = String.valueOf(((Map<String, Object>) obj).get("startDt")).substring(4, 6);
+			  String strday = String.valueOf(((Map<String, Object>) obj).get("startDt")).substring(6, 8);
+			  
+			  ((Map<String, Object>) obj).put("startDt", strMonth+"-"+ strday+"-"+strYear);
+				
+			}
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("endDt")).length() == 8 )
+			{
+				String strYear = String.valueOf(((Map<String, Object>) obj).get("endDt")).substring(0, 4);
+				String strMonth = String.valueOf(((Map<String, Object>) obj).get("endDt")).substring(4, 6);
+				String strday = String.valueOf(((Map<String, Object>) obj).get("endDt")).substring(6, 8);
+				
+				((Map<String, Object>) obj).put("endDt", strMonth+"-"+ strday+"-"+strYear);
+				
+			}
+			
+			scmMasterMngMentMapper.updateMasterMngment((Map<String, Object>) obj);
+			
+		}
+		
+		return saveCnt;
+	}
+	
+	
+	@Override
+	public int updateMasterMngSupplyPlanTgtMoq(List<Object> updList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : updList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug(" >>>>> updateMasterMngmentCDC_impl ");
+			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			
+			scmMasterMngMentMapper.updateMasterMngSupplyPlanTgtMoq((Map<String, Object>) obj);
+
+			saveCnt++;
+		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int insertMstMngMasterCDC(Map<String, Object> params, SessionVO sessionVO) 
+	{
+		int saveCnt = 0;
+		int looCnt = 0;
+		
+		LOGGER.debug(" insertMstMngMasterCDC_Imple_params : {}", params);
+		//params.put("crtUserId", sessionVO.getUserId());
+		//params.put("updUserId", sessionVO.getUserId());
+		
+		//SCM0017M
+		if ("1".equals(String.valueOf(params.get("klChkbox")))) {
+			params.put("cdcIsTarget", 1);
+		} else {
+			params.put("cdcIsTarget", 0);
+		}
+		((Map<String, Object>) params).put("cdcCode", "KL");
+		looCnt = scmMasterMngMentMapper.insertMstMngMasterCDC(params);
+		saveCnt = saveCnt+looCnt;
+
+		if ("1".equals(String.valueOf(params.get("kkChkbox")))) {
+			params.put("cdcIsTarget", 1);
+		} else {
+			params.put("cdcIsTarget", 0);
+		}
+		((Map<String, Object>) params).put("cdcCode", "KK");
+		looCnt = scmMasterMngMentMapper.insertMstMngMasterCDC(params);
+		saveCnt = saveCnt+looCnt;
+		
+		if ("1".equals(String.valueOf(params.get("jbChkbox")))) {
+			params.put("cdcIsTarget", 1);
+		} else {
+			params.put("cdcIsTarget", 0);
+		}
+		((Map<String, Object>) params).put("cdcCode", "JB");
+		looCnt = scmMasterMngMentMapper.insertMstMngMasterCDC(params);
+		saveCnt = saveCnt+looCnt;
+
+		if ("1".equals(String.valueOf(params.get("pnChkbox")))) {
+			params.put("cdcIsTarget", 1);
+		} else {
+			params.put("cdcIsTarget", 0);
+		}
+		((Map<String, Object>) params).put("cdcCode", "PN");
+		looCnt = scmMasterMngMentMapper.insertMstMngMasterCDC(params);
+		saveCnt = saveCnt+looCnt;
+		
+		if ("1".equals(String.valueOf(params.get("kcChkbox")))) {
+			params.put("cdcIsTarget", 1);
+		} else {
+			params.put("cdcIsTarget", 0);
+		}		
+		((Map<String, Object>) params).put("cdcCode", "KC");
+		looCnt = scmMasterMngMentMapper.insertMstMngMasterCDC(params);	
+		saveCnt = saveCnt+looCnt;
+		
+		// header  (SCM0008M)
+		if ("1".equals(String.valueOf(params.get("targetYNRadio")))) {
+			params.put("headerIsTrget", 1);
+		} else {
+			params.put("headerIsTrget", 0);
+		}	
+		looCnt = scmMasterMngMentMapper.insertMstMngMasterHeader(params);
+		saveCnt = saveCnt+looCnt;
+		
+		return looCnt;
+	}
+	
+	@Override
+	public int insertMstMngMasterHeader(Map<String, Object> params, SessionVO sessionVO)
+	{
+		int saveCnt = 0;
+		
+		LOGGER.debug(" insertMstMngMasterHeader_Imple_params : {}", params.toString());
+		
+		params.put("crtUserId", sessionVO.getUserId());
+		params.put("updUserId", sessionVO.getUserId());
+		
+		saveCnt = scmMasterMngMentMapper.insertMstMngMasterHeader(params);
+		
+		return saveCnt;
+	}	
 	
 	// CDC WareHouse Mapping
 	@Override
@@ -50,7 +233,7 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 	}
 	@Override
 	public List<EgovMap> selectWhLocationMapping(Map<String, Object> params) {
-		return scmMasterMngMentMapper.selectWhLocationMapping(params);
+		return scmMasterMngMentMapper.selectWhLocationMapping(params);  
 	}
 	
 	@Override
