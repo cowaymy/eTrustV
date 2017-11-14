@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.coway.trust.api.mobile.logistics.audit.InputBarcodeListForm;
 import com.coway.trust.api.mobile.services.installation.InstallationResultForm;
 import com.coway.trust.util.BeanConverter;
 
@@ -121,20 +122,37 @@ public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceR
 	
 			
 			
-public static List<Map<String, Object>>  createMap1(AfterServiceResultForm afterServiceResultForm) {
+//public static List<Map<String, Object>>  createMap1(AfterServiceResultForm afterServiceResultForm) {
+//
+//		List<Map<String, Object>> list = new ArrayList<>();
+//		Map<String, Object> map;
+//	
+////		map = BeanConverter.toMap(afterServiceResultForm, "partList");
+//		map = BeanConverter.toMap(afterServiceResultForm);
+//		list.add(map);
+//		
+//	return list;
+//}
+
+	
+
+public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServiceResultForm) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
-		Map<String, Object> map;
 	
-//		map = BeanConverter.toMap(afterServiceResultForm, "partList");
-		map = BeanConverter.toMap(afterServiceResultForm);
-		list.add(map);
+		if (partList != null && partList.size() > 0) {
+			Map<String, Object> map;
+			for (AfterServiceResultDetailForm obj : partList) {
+				map = BeanConverter.toMap(afterServiceResultForm, "AfterServiceResultForm");	
+//				map.put("serialNo", obj.getSerialNo());
+				list.add(map);
+			}
+		}
 		
 	return list;
 }
 
-	
-	
+
 //	public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
 //
 //    	List<Map<String, Object>> list = new ArrayList<>();

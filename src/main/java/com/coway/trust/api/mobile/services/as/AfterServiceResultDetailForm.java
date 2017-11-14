@@ -1,7 +1,11 @@
 package com.coway.trust.api.mobile.services.as;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.codec.binary.Base64;
 
 import com.coway.trust.util.BeanConverter;
 
@@ -91,6 +95,27 @@ public class AfterServiceResultDetailForm {
 	
 	
 	
+	public static List<Map<String, Object>>  createMaps(List<AfterServiceResultDetailForm> afterServiceResultDetailForms) {
+
+		List<Map<String, Object>> list = new ArrayList<>();
+		Map<String, Object> map;
+	
+//		map = BeanConverter.toMap(afterServiceResultForm, "partList");
+		
+		for(AfterServiceResultDetailForm form : afterServiceResultDetailForms){
+			map = BeanConverter.toMap(form);
+			list.add(map);
+		}
+		
+		return list;
+	}
+	
+	
+
+
+
+	
+
 	
 	
 	
