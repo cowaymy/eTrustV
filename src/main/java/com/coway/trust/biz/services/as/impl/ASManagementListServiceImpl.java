@@ -1898,4 +1898,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		return asEntry;
 	}
+
+	@Override
+	public List<EgovMap> selectCTByDSC(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return ASManagementListMapper.selectCTByDSC(params);
+	}
 }

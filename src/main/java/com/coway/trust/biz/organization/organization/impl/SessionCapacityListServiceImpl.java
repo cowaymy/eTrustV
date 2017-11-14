@@ -46,6 +46,11 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 	
 		return sessionCapacityListMapper.seleCtCodeSearch(params);
 	}
+	@Override
+	public List<EgovMap> seleCtCodeSearch2(Map<String, Object> params) {
+	
+		return sessionCapacityListMapper.seleCtCodeSearch2(params);
+	}
 	
 	@Override
 	public List<EgovMap> seleBranchCodeSearch(Map<String, Object> params) {

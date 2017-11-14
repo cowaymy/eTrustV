@@ -19,8 +19,10 @@ public interface SessionCapacityListService {
 	
 	List<EgovMap> seleCtCodeSearch(Map<String, Object>params);
 	
-	List<EgovMap> seleBranchCodeSearch(Map<String, Object>params);
+	List<EgovMap> seleCtCodeSearch2(Map<String, Object> params);
 	
+	List<EgovMap> seleBranchCodeSearch(Map<String, Object>params);
+
 	/*List<EgovMap> selectHpChildList(Map<String, Object> params);
 	
 	List<EgovMap> getDeptTreeList(Map<String, Object> params);        

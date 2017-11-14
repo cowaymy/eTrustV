@@ -147,6 +147,7 @@ public interface ASManagementListMapper {
 	 
 	 
 	 EgovMap   getLog0016DCount(Map<String, Object> params);	      //log0016d count
+	 List<EgovMap> selectCTByDSC(Map<String, Object> params);
 
 	 
 

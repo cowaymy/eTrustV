@@ -164,6 +164,12 @@
         AUIGrid.setSelectionMode(myGridID, "singleRow");
         fn_getCtCodeSearch1();
         //fn_getCtCodeSearch('');
+        
+        // 171114 :: 선한이
+	    $("#cmbbranchId").change(function (){
+	        
+	        doGetCombo('/organization/seleCtCodeSearch2.do',  $("#cmbbranchId").val(), '','cmbctId', 'S' ,  '');
+	    });
     
      // 에디팅 정상 종료, 취소 이벤트 바인딩
         AUIGrid.bind(myGridID, ["cellEditEnd", "cellEditCancel"], auiCellEditingHandler);
@@ -228,6 +234,9 @@
 	        	 //fn_getCtCodeSearch1();
 	         }else{
 	        	 item.code =  $("#cmbbranchId option:selected").val();
+	        	 if($("#cmbctId option:selected").val() != ''){
+	            	 item.memCode =  $("#cmbctId option:selected").text();
+	             }
 		        
 	        } 
 	         
@@ -326,10 +335,12 @@
     <th scope="row">CT Code</th>
     <td>
     
-    <div class="search_100p"><!-- search_100p start -->
-    <input type="text" title="" placeholder="" class="w100p" id="CTCode" name="CTCode"/>
-    <a href="#" class="search_btn"></a>
-    </div><!-- search_100p end -->
+    <select id="cmbctId" name="cmbctId" class="w100p" >
+        <%-- <option value="">Choose One</option>
+         <c:forEach var="list" items="${ssCapacityCtList2 }">
+            <option value="${list.memId }">${list.memCode }</option>
+         </c:forEach> --%>
+     </select>
 
     </td>
     <th scope="row">Status</th>

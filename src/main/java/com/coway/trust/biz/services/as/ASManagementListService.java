@@ -74,6 +74,7 @@ public interface ASManagementListService {
 
 	List<EgovMap> assignCtOrderList(Map<String, Object> params);
 	List<EgovMap> assignCtList(Map<String, Object> params);
+	List<EgovMap> selectCTByDSC(Map<String, Object> params);
 	
 	
 }

@@ -20,8 +20,10 @@ public interface SessionCapacityListMapper {
 	
 	List<EgovMap> seleCtCodeSearch(Map<String, Object> params);
 	
+	List<EgovMap> seleCtCodeSearch2(Map<String, Object> params);
+
 	List<EgovMap> seleBranchCodeSearch(Map<String, Object> params);
-	
+
 	
 	
 	/*List<EgovMap> selectOrgChartCdList(Map<String, Object> params);

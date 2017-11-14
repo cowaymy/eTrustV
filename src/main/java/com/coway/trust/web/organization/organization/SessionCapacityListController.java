@@ -193,14 +193,27 @@ public class SessionCapacityListController {
 	}
 	
 	@RequestMapping(value = "/seleCtCodeSearch.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> seleCtCodeSearch(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+	public ResponseEntity<List<EgovMap>> seleCtCodeSearch(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
 		List<EgovMap> ssCapacityCtList = null;
 		
         // 조회.
 		ssCapacityCtList = sessionCapacityListService.seleCtCodeSearch(params);        
+		logger.debug("ssCapacityCtList {}", ssCapacityCtList);
 
 		return ResponseEntity.ok(ssCapacityCtList);
+	}	
+	
+	@RequestMapping(value = "/seleCtCodeSearch2.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> seleCtCodeSearch2(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> ssCapacityCtList2 = null;
+		
+        // 조회.
+		ssCapacityCtList2 = sessionCapacityListService.seleCtCodeSearch2(params);        
+		logger.debug("ssCapacityCtList {}", ssCapacityCtList2);
+
+		return ResponseEntity.ok(ssCapacityCtList2);
 	}	
 	
 	@RequestMapping(value = "/seleBranchCodeSearch.do", method = RequestMethod.GET)

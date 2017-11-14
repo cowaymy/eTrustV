@@ -301,6 +301,15 @@ $(document).ready(function() {
     
     AUIGrid.setSelectionMode(myGridID, "singleRow");
     
+    // 171113 :: 선한이
+    doGetCombo('/services/holiday/selectBranchWithNM', 43, '','cmbbranchId', 'S' ,  '');
+    
+	// 171114 :: 선한이
+	$("#cmbbranchId").change(function (){
+		
+		doGetCombo('/services/as/selectCTByDSC.do',  $("#cmbbranchId").val(), '','cmbctId', 'S' ,  '');
+	});
+    
     // 171110 :: 선한이
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -310,12 +319,12 @@ $(document).ready(function() {
         var salesOrdNo  = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
         var salesOrdId  = AUIGrid.getCellValue(myGridID, event.rowIndex, "asSoId");
         
-        alert("asid"+asid);
         var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
         Common.popupDiv("/services/as/asResultViewPop.do"+param ,null, null , true , '_newASResultDiv1');
     });   
-     
+    
 });
+
 function asManagementGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -499,17 +508,19 @@ function fn_excelDown(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:70px" />
+    <col style="width:130px" />
+    <col style="width:90px" />
+    <col style="width:*" />
     <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:170px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
     <th scope="row">AS Type</th>
-    <td>
+    <td colspan="2">
     <select class="multy_select w100p" multiple="multiple" id="asType" name="asType">
     <option value="675">Auto AS</option>
     <option value="674">Normal AS</option>
@@ -517,7 +528,7 @@ function fn_excelDown(){
     </select>
     </td>
     <th scope="row">AS Status</th>
-    <td>
+    <td colspan="2">
     <select class="multy_select w100p" multiple="multiple" id="asStatus" name="asStatus">
     <option value="1"  selected>Active</option>
     <option value="4">Completed</option>
@@ -536,15 +547,34 @@ function fn_excelDown(){
 </tr>
 <tr>
     <th scope="row">AS Number</th>
-    <td><input type="text" title="" placeholder="AS Number" class="w100p" id="asNum" name="asNum"/></td>
+    <td colspan="2"><input type="text" title="" placeholder="AS Number" class="w100p" id="asNum" name="asNum"/></td>
     <th scope="row">Result Number</th>
-    <td><input type="text" title="" placeholder="Result Number" class="w100p" id="resultNum" name="resultNum"/></td>
+    <td colspan="2"><input type="text" title="" placeholder="Result Number" class="w100p" id="resultNum" name="resultNum"/></td>
     <th scope="row">Order Number</th>
     <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum"/></td>
 </tr>
 <tr>
     <th scope="row">Customer Name</th>
-    <td colspan="3"><input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/></td>
+    <td><input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/></td>
+    <th scope="row">DSC</th>
+    <td>
+    <select id="cmbbranchId" name="cmbbranchId" class="w100p" >
+        <%-- <option value="">Choose One</option>
+         <c:forEach var="list" items="${ssCapacityCtList }">
+            <option value="${list.codeId }">${list.codeName }</option>
+            <option value="${list.codeId }">${list.codeName }</option>
+         </c:forEach> --%>
+    </select>
+    </td>
+    <th scope="row">CT</th>
+    <td>
+    <select id="cmbctId" name="cmbctId" class="w100p" >
+        <%-- <option value="">Choose One</option>
+         <c:forEach var="list" items="${selectCTSubGroupDscList }">
+            <option value="${list.codeId }">${list.codeName }</option>
+         </c:forEach> --%>
+    </select>
+    </td>
     <th scope="row">NRIC/Company No</th>
     <td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="nricNum"  name="nricNum"/></td>
 </tr>

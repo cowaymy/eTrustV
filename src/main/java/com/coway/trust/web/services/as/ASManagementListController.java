@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.servicePlanning.CTSubGroupListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -832,6 +833,14 @@ public class ASManagementListController {
 				
 		return ResponseEntity.ok(message);  
 		
+	}
+	
+	@RequestMapping(value = "/selectCTByDSC.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTMByDSC( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> selectCTSubGroupDscList = ASManagementListService.selectCTByDSC(params);
+		logger.debug("selectCTSubGroupDscList {}", selectCTSubGroupDscList);
+		return ResponseEntity.ok(selectCTSubGroupDscList);
 	}
 	
 }
