@@ -139,12 +139,12 @@
                                            sys064.area_id,
                                            sys064.CODY_BRNCH_CODE,
                                            sys064.CODY_MANGR_USER_ID,
-									      (select  MEM_CODE
-									            from ORG0001D ME
-									            where 1=1
-									            and ME.MEM_ID = HSM.cody_ID )AS c5,
-									       HSM.STUS_CODE_ID STUS_CODE_ID,
-									       EXTENT2.code,
+                                          (select  MEM_CODE
+                                                from ORG0001D ME
+                                                where 1=1
+                                                and ME.MEM_ID = HSM.cody_ID )AS c5,
+                                           HSM.STUS_CODE_ID STUS_CODE_ID,
+                                           EXTENT2.code,
                                             sys064.CT_BRNCH_CODE,
                                           SOM.SALES_ORD_ID AS SALES_ORD_ID,
                                             sys064.CODY_MANGR_USER_ID,
@@ -191,8 +191,75 @@
 
           </select>
 
+<!-- cyc 2017- Nov- 13 -->
+ <select id="selectHsConfigList" parameterType="Map" resultType="egovMap">
+
+                            SELECT   distinct C.CUST_ID CUST_ID
+                                        , C.NAME Name
+                                         ,SOM.SALES_ORD_NO SALES_ORD_NO,
+                                         <!-- ,HSM.MONTH
+                                         ,HSM.YEAR YEAR
+                                         ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
+                                         ,HSM.NO
+                                         ,HSM.CODY_ID
+                                         ,HSM.STUS_CODE_ID STUS_CODE_ID
+                                         ,EXTENT2.CODE CODE -->
+<!--                                          ,sys064.CODY_BRNCH_CODE AS BRNCH_ID -->
+                                         <!-- ,SAL023.area_id,
+                                           sys064.area_id, -->
+                                           sys064.CODY_BRNCH_CODE,
+                                           sys064.CODY_MANGR_USER_ID
+                                          <!-- (select  MEM_CODE
+                                                from ORG0001D ME
+                                                where 1=1
+                                                and ME.MEM_ID = HSM.cody_ID )AS c5,
+                                           HSM.STUS_CODE_ID STUS_CODE_ID,
+                                           EXTENT2.code,
+                                            sys064.CT_BRNCH_CODE,
+                                          SOM.SALES_ORD_ID AS SALES_ORD_ID,
+                                            sys064.CODY_MANGR_USER_ID,
+                                            som.BRNCH_ID as brnch_id -->
+                                FROM SAL0001D SOM
+                                        ,SAL0029D C
+                                        ,SYS0013M CORPTYPE
+<!--                                         ,SAL0002D SOD -->
+                                        ,SVC0008D HSM
+                                        ,SYS0038M EXTENT2
+                                        ,sal0023d sal023
+                                        ,SYS0064M sys064
+                                WHERE 1=1
+                                AND SOM.CUST_ID = C.CUST_ID
+                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
+                                <!-- AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID  -->
+                                AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
+                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
+<!--                                 and som.cust_id = sal023.cust_id -->
+                                AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
+                                and sal023.area_id = sys064.area_id
+                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8
+                                and rownum  < 500 ]]>
+                             <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
+                                      AND  hsm.YEAR(+) = #{myBSYear}
+                                      AND  hsm.MONTH(+) = #{myBSMonth}
+                             </if>
+                               <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
+                                      AND SOM.SALES_ORD_NO = #{ManuaSalesOrder}
+                               </if>
+                               <if test="ManualCustomer != null and ManualCustomer != ''">
+                                      AND c.CUST_ID = #{ManualCustomer}
+                               </if>
+                               <if test="manualCustomer != null and manualCustomer != ''">
+                                      AND c.CUST_ID = #{manualCustomer}
+                               </if>
+                                <if test="saleOrdListSp != null and saleOrdListSp != '' ">
+                                    AND SOM.SALES_ORD_NO IN
+                                   <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                    </foreach>
+                                </if>
 
 
+          </select>
 
 
 
@@ -312,7 +379,7 @@
 
                   <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
 
-            			              SELECT  Project2.No No  ,
+            			              SELECT distinct Project2.No No  ,
 						                Project2.HS_DATE HS_DATE  ,
 						                Project2.STUS_CODE_ID STUS_CODE_ID  ,
 						                Project2.Code Code  ,
