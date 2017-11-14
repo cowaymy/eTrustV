@@ -98,15 +98,21 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		int seq = MSvcLogApiMapper.getNextSvc006dSeq();
 		String docNo= commonMapper.selectDocNo("11");
 		String returnMsg = "";
+		String memId ="";
+		
 		
 		if (heartLogs.size() > 0) {
 			//SVC0007D
 			for (int i = 0; i < heartLogs.size(); i++) {
 				insMap = heartLogs.get(i);
+				memId = MSvcLogApiMapper.getUseridToMemid(insMap);
 				
 				insMap.put("bsResultId", seq);
 				insMap.put("docNo", docNo);
 				insMap.put("typeId", 306);
+				insMap.put("memId", memId);
+				
+				
 
 				//insert start >>>>
 				//SVC0007D
@@ -114,13 +120,13 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 				logger.info(" reqstno : {}", insMap);
 			}
 			
-			String memId = MSvcLogApiMapper.getUseridToMemid(insMap);
+
 			
 			//baseInfo
 			EgovMap hsAssiinlList = MSvcLogApiMapper.selectHsAssiinlList(insMap);
 			insMap.put("salesOrdId", hsAssiinlList.get("salesOrdId"));
 			insMap.put("schdulId", hsAssiinlList.get("schdulId"));
-			insMap.put("memId", memId); //userid -> memcode
+//			insMap.put("memId", memId); //userid -> memcode
 			insMap.put("failResnId", 0);
 
 			if(hsAssiinlList.size()<0 ){
