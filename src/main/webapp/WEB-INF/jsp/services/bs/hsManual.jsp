@@ -220,6 +220,7 @@
                               onclick : function(rowIndex, columnIndex, value, item) {               
                                    
                                    if(item.result == "" || item.result == undefined) {
+                                        Common.alert('Not able to EDIT for the HS order status in Active.');    
                                         return false;
                                    }
                                    
