@@ -13,7 +13,7 @@
 				    Extent2.ZERO,
 				    Extent2.GT501,
 				    Extent2.LT500,
-				    TO_CHAR(Extent1.UPD_DT , 'DD/MM/YYYY') UPD_DT,
+				    TO_CHAR(Extent1.UPD_DT , 'DD/MM/YYYY HH24:MI:SS') UPD_DT,
 				    Extent1.STUS,
 				    Extent1.UPD_USER_ID
 				FROM SAL0106D Extent1 JOIN ( SELECT      
