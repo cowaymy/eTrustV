@@ -145,6 +145,7 @@ public class CommissionConstants {
 	public static final String COMIS_INCENTIVE_VALID = "4";					//
 	public static final String COMIS_INCENTIVE_INVALID = "21";					//
 	
-	
+	public static final String COMIS_ACTION_TYPE = "A";
+	public static final String COMIS_SIMUL_TYPE = "S";//
 	
 }

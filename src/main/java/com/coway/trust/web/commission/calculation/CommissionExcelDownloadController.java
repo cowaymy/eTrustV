@@ -86,7 +86,7 @@ public class CommissionExcelDownloadController {
 				}
 				map.put("memberCd", request.getParameter("memberCd"));
 
-				if("A".equals(actionType)){
+				if((CommissionConstants.COMIS_ACTION_TYPE).equals(actionType)){
 					largeExcelService.downLoad28CT(map, downloadHandler);
 				}else{
 					largeExcelService.downLoad28TCT(map, downloadHandler);
@@ -147,18 +147,18 @@ public class CommissionExcelDownloadController {
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
 							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31" };
-					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE",
-							"performance index", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "net sales marks",
-							"group sales productivity", "v11", "dropped rate", "v13", "v14", "rental collection rate",
+					titles = new String[] { "TASK ID", "RUN ID", "MEM ID", "MEM CODE", "MEM RANK",
+							"performance index", "HappyCall Rate", "HappyCall Mark", "HS Rate", "HS Mark", "RC Rate", "RC Mark", "v8", "net sales marks",
+							"group sales productivity", "GrpSalesProduct Mark", "Drop Rate PenaltyMark", "v13", "v14", "CollectionAmt",
 							"Membership Sales Amount total", "v18", "v19", "v20", "v21", "v22", "v23",
-							"SHI rental collection rate", "v25", "SHI rental membership collection rate", "v27", "v29",
-							"v30", "v31" };
+							"SHI rental collection rate", "SHI Index", "SHI rental membership collection rate", "SHI RentMembership Index", "HS Productivity",
+							"HS Productivity Mark", "v31" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				}
 				map.put("memberCd", request.getParameter("memberCd"));
 
-				if("A".equals(actionType)){
+				if((CommissionConstants.COMIS_ACTION_TYPE).equals(actionType)){
 					largeExcelService.downLoad28CD(map, downloadHandler);
 				}else{
 					largeExcelService.downLoad28TCD(map, downloadHandler);
@@ -232,7 +232,7 @@ public class CommissionExcelDownloadController {
 				map.put("memberCd", request.getParameter("memberCd"));
 
 				
-				if("A".equals(actionType)){
+				if((CommissionConstants.COMIS_ACTION_TYPE).equals(actionType)){
 					largeExcelService.downLoad28HP(map, downloadHandler);
 				}else{
 					largeExcelService.downLoad28THP(map, downloadHandler);
@@ -277,7 +277,7 @@ public class CommissionExcelDownloadController {
 
 				map.put("memberCd", request.getParameter("memberCd"));
 
-				if("A".equals(actionType)){
+				if((CommissionConstants.COMIS_ACTION_TYPE).equals(actionType)){
 					largeExcelService.downLoad29CT(map, downloadHandler);
 				}else{
 					largeExcelService.downLoad29TCT(map, downloadHandler);
@@ -297,9 +297,9 @@ public class CommissionExcelDownloadController {
 							"r38", "r39", "r99" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE",
 							"performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm",
-							"sales encouragement allowance", "rental collection Cmm", "Remove Phone Allowance",
+							"sales encouragement allowance", "rental collection Cmm", "PE Encouragement",
 							"Healthy Family Fund", "newely entering allowance", "introduction fees",
-							"Incentive", "SHI_Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
+							"Incentive", "SHI Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
 							"COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
@@ -312,7 +312,7 @@ public class CommissionExcelDownloadController {
 							"performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm",
 							"sales encouragement allowance", "rental collection Cmm", "Remove Phone Allowance",
 							"Healthy Family Fund", "newely entering allowance", "introduction fees", "Incentive",
-							"Incentive", "SHI_Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
+							"Incentive", "SHI Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
 							"COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment","W/S" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
@@ -325,7 +325,7 @@ public class CommissionExcelDownloadController {
 							"Personal sales Cmm", "Personal Rental Cmm", "Bonus Cmm",
 							"performance incentive basic salary", "sales commission Overiding", "sales Cmm Overiding",
 							"monthly allowance", "mobile phone allowance", "Telephone_Deduct", "Staff_Purchase",
-							"Others", "SHI_Amt", "r31", "Personal Rental Mem Cmm", "Outright Plus Personal Rental Cmm",
+							"Others", "SHI Amt", "r31", "Personal Rental Mem Cmm", "Outright Plus Personal Rental Cmm",
 							"Outright Plus Overidding", "Adjustment" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
@@ -334,10 +334,10 @@ public class CommissionExcelDownloadController {
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
 							"r4", "r19", "r20", "r21", "r22", "r23", "r24", "r27", "r28", "r29", "r32", "r34", "r39",
 							"r41", "r42", "r99" };
-					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE", "Per_Amt",
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM RANK", "Per Amt",
 							"Personal sales Cmm", "Personal Rental Cmm", "Bonus Amt", "sales Cmm",
 							"performance incentive basic salary", "sales Cmm Overiding", "sales Cmm Overiding",
-							"monthly allowance", "mobile phone allowance", "Staff_Purchase", "Others", "SHI_Amt", "r32",
+							"monthly allowance", "mobile phone allowance", "Staff Purchase", "Others", "SHI Amt", "r32",
 							"RentalMembership Amt", "Outright Plus Personal Rental Cmm", "Outright Plus Overidding",
 							"r42", "Adjustment" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
@@ -345,7 +345,7 @@ public class CommissionExcelDownloadController {
 				}
 				map.put("memberCd", request.getParameter("memberCd"));
 
-				if("A".equals(actionType)){
+				if((CommissionConstants.COMIS_ACTION_TYPE).equals(actionType)){
 					largeExcelService.downLoad29CD(map, downloadHandler);
 				}else{
 					largeExcelService.downLoad29TCD(map, downloadHandler);
@@ -431,7 +431,7 @@ public class CommissionExcelDownloadController {
 				}
 				map.put("memberCd", request.getParameter("memberCd"));
 
-				if("A".equals(actionType)){
+				if((CommissionConstants.COMIS_ACTION_TYPE).equals(actionType)){
 					largeExcelService.downLoad29HP(map, downloadHandler);
 				}else{
 					largeExcelService.downLoad29THP(map, downloadHandler);

@@ -217,7 +217,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public int cntCMM0028D(Map<String, Object> params) {
 		int cnt = 0;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			cnt = commissionCalculationMapper.cntCMM0028D(params);
 		}else{
 			cnt = commissionCalculationMapper.cntCMM0028T(params);
@@ -226,7 +226,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	}
 	@Override
 	public List<EgovMap> selectData7001(Map<String, Object> params) {
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
 				return commissionCalculationMapper.selectCMM0028DCT(params);
 			}else if(CommissionConstants.COMIS_CD.equals(params.get("codeGruop"))){
@@ -254,7 +254,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public int cntCMM0029D(Map<String, Object> params) {
 		int cnt= 0;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			cnt = commissionCalculationMapper.cntCMM0029D(params);
 		}else{
 			cnt = commissionCalculationMapper.cntCMM0029T(params);
@@ -263,7 +263,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	}
 	@Override
 	public List<EgovMap> selectData7002(Map<String, Object> params) {
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
 				return commissionCalculationMapper.selectCMM0029DCT(params);
 			}else if(CommissionConstants.COMIS_CD.equals(params.get("codeGruop"))){
@@ -401,7 +401,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public int cntCMM0018T(Map<String, Object> params) {
 		int cnt =0;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			cnt = commissionCalculationMapper.cntCMM0018T(params);
 		}else{
 			cnt = commissionCalculationMapper.cntCMM0018T(params);
@@ -411,7 +411,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public List<EgovMap> selectCMM0018T(Map<String, Object> params) {
 		List<EgovMap> list =null;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			list = commissionCalculationMapper.selectCMM0018T(params);
 		}else{
 			list = commissionCalculationMapper.selectSimulCMM0018T(params);
@@ -422,7 +422,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public int cntCMM0019T(Map<String, Object> params) {
 		int cnt =0;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			cnt = commissionCalculationMapper.cntCMM0019T(params);
 		}else{
 			cnt = commissionCalculationMapper.cntCMM0019T(params);
@@ -432,7 +432,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public List<EgovMap> selectCMM0019T(Map<String, Object> params) {
 		List<EgovMap> list =null;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			list =commissionCalculationMapper.selectCMM0019T(params);
 		}else{
 			list =commissionCalculationMapper.selectSimulCMM0019T(params);
@@ -443,7 +443,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public int cntCMM0020T(Map<String, Object> params) {
 		int cnt =0;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			cnt = commissionCalculationMapper.cntCMM0020T(params);
 		}else{
 			cnt = commissionCalculationMapper.cntCMM0020T(params);
@@ -453,7 +453,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public List<EgovMap> selectCMM0020T(Map<String, Object> params) {
 		List<EgovMap> list =null;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			list = commissionCalculationMapper.selectCMM0020T(params);
 		}else{
 			list = commissionCalculationMapper.selectSimulCMM0020T(params);
@@ -464,7 +464,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public int cntCMM0021T(Map<String, Object> params) {
 		int cnt =0;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			cnt = commissionCalculationMapper.cntCMM0021T(params);
 		}else{
 			cnt = commissionCalculationMapper.cntCMM0021T(params);
@@ -474,7 +474,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public List<EgovMap> selectCMM0021T(Map<String, Object> params) {
 		List<EgovMap> list =null;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			list = commissionCalculationMapper.selectCMM0021T(params);
 		}else{
 			list = commissionCalculationMapper.selectSimulCMM0021T(params);
@@ -503,7 +503,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public int cntCMM0024T(Map<String, Object> params) {
 		int cnt =0;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			cnt  = commissionCalculationMapper.cntCMM0024T(params);
 		}else{
 			cnt  = commissionCalculationMapper.cntCMM0024T(params);
@@ -513,7 +513,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public List<EgovMap> selectCMM0024T(Map<String, Object> params) {
 		List<EgovMap> list =null;
-		if( "A".equals(params.get("actionType")) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType")) ){
 			list = commissionCalculationMapper.selectCMM0024T(params);
 		}else{
 			list = commissionCalculationMapper.selectSimulCMM0024T(params);

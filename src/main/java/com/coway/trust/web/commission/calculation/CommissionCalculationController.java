@@ -121,7 +121,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<List<EgovMap>> selectCalculationList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		List<EgovMap> itemList = null;
 		
-		if( "A".equals(params.get("actionType").toString()) ){
+		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType").toString()) ){
 			params.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
 			// 조회.
 			params.put("searchDt", (params.get("searchDt").toString()).replace("/", ""));
