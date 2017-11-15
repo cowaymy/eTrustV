@@ -579,8 +579,8 @@
                     treeIdField : "ruleSeq",
                      // 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
                      treeIdRefField : "rulePid",
-                     height : 334,
-                     editable : false
+                     //editable : false,
+                     height : 334
                 };
                 if(!myGridID2){
                     myGridID2= GridCommon.createAUIGrid("grid_wrap2", columnLayout2, "ruleSeq", options);
@@ -659,62 +659,77 @@
 	    headerText : "ORG Name",
 	    width : 120,
 	    style : "my-column",
+	    editable : false
 	  } ,{
 		dataField : "orgSeq",
 		headerText : "ORG SEQ",
+		editable : false,
 		visible : false
 	}, {
 		dataField : "itemSeq",
 		headerText : "ITEM SEQ",
+		editable : false,
 		visible : false
 	},  {
 		dataField : "ruleSeq",
 		headerText : "RULE SEQ",
+		editable : false,
 		visible : false
 	} , {
 		dataField : "ruleLevel",
 		headerText : "RULE Level",
+		editable : false,
 		visible : false
 	}, {
 		dataField : "ruleCategory",
 		headerText : "RULE CATEGORY",
 		width : 200,
+		editable : false,
 		style : "my-column"
 	}, {
 		dataField : "ruleOpt1",
 		headerText : "Range Start Value",
+		editable : false,
 		width : 100
 	}, {
 		dataField : "ruleOpt2",
 		headerText : "Range End Value",
+		editable : false,
 		width : 100
 	}, {
 		dataField : "valueType",
 		headerText : "Range Value Type",
+		editable : false,
 		width : 100
 	}, {
 		dataField : "resultValue",
 		headerText : "Conditional Value",
+		editable : false,
 		width : 100
 	}, {
 		dataField : "resultValueNm",
 		headerText : "Condition Value Type",
+		editable : false,
 		width : 100
 	}, {
 		dataField : "startDt",
 		headerText : "Start Month/Year",
+		editable : false,
 		width : 100
 	}, {
 		dataField : "endDt",
 		headerText : "End Month/Year",
+		editable : false,
 		width : 100
 	}, {
 		dataField : "useYn",
 		headerText : "USE(Y/N)",
+		editable : false,
 		width : 100
 	}, {
 	    dataField : "rulePid",
 	    headerText : "Rule Parent ID",
+	    editable : false,
 	    visible : false
 	  }  ];
 	
