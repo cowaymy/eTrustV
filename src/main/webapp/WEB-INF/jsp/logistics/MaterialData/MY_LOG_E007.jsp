@@ -765,15 +765,6 @@
 </table><!-- table end -->
 </form>
 </section><!-- search_table end -->
-<!-- <aside class="link_btns_wrap">link_btns_wrap start -->
-<%-- <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
-<!-- <dl class="link_list"> -->
-<!--     <dt>Link</dt> -->
-<!--     <dd> -->
-<%--     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p> --%>
-<!--     </dd> -->
-<!-- </dl> -->
-<!-- </aside> -->
 
 <section class="search_result"><!-- search_result start -->
 
@@ -959,14 +950,15 @@
     <td>
     <input type="text" placeholder="" id="insprice" name="insprice"  class="numberAmt"/>
     </td>
-    <th scope="row">Used</th>
+<!--     <th scope="row">Used</th>
     <td>
     <select class="w100p" id="insstuscode" name="insstuscode">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
     </select>
-    </td>
+    </td> -->
+    <td colspan="2"></td>
 </tr> 
 </tbody>
 </table><!-- table end -->
