@@ -22,10 +22,10 @@ $(document).ready(function() {
 			return;
 		}
 		
-		if(null == $("#_eDate").val() || '' == $("#_eDate").val()){
+		/* if(null == $("#_eDate").val() || '' == $("#_eDate").val()){
 		    Common.alert("* please key in to Date");
 		    return;
-		}
+		} */
 		
 		Common.ajax("GET", "/sales/ccp/selectCTOSB2BList", $("#_searchForm").serialize(), function(result){
 			//set Grid
@@ -283,7 +283,7 @@ function fn_detailComplete() {
 <tbody>
 <tr>
     <th scope="row">From Date</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="_sDate" name="sDate"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="_sDate" name="sDate" value="${toDay}"/></td>
     <th scope="row">To Date</th>
     <td><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_eDate"  name="eDate"/></td>
    <!--  <th scope="row">Status</th>

@@ -12,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.ccp.CcpCTOSB2BService;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -37,9 +40,14 @@ public class CcpCTOSB2BController {
 	
 	
 	@RequestMapping(value = "/selectB2BList.do")
-	public String selectB2BList(@RequestParam Map<String, Object> params) throws Exception{
+	public String selectB2BList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		LOGGER.info("################ Start B2BList #########");
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
 		
 		return "sales/ccp/ccpCTOSB2BList";
 		
