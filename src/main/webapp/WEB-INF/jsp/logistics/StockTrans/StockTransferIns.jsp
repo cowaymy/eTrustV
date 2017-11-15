@@ -419,7 +419,7 @@ function f_multiCombo() {
     <th scope="row">Remark</th>
     <td colspan="3"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
-<tr id="cancelTr">
+<!-- <tr id="cancelTr">
     <th scope="row">Defect Reason</th>
     <td>
     <select class="w100p">
@@ -436,7 +436,7 @@ function f_multiCombo() {
         <option value="">33</option>
     </select>
     </td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 

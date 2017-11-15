@@ -101,7 +101,8 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , Codeval:'UM'};
-    doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
+    //doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
+    doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
@@ -386,8 +387,8 @@ function fn_ViewSerial(str){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-            <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-            <li><p class="btn_gray"><a id="search"><span class="search"></span>Search</a></p></li>
+            <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
         </ul>
 </aside><!-- title_line end -->
 

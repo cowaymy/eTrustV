@@ -83,28 +83,28 @@ var reqcolumnLayout = [{dataField:"delyno"     ,headerText:"Delivery No"        
                        {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
 
 var mtrcolumnLayout = [
-                        {dataField:"matrlDocNo", headerText:"" ,width:120    ,height:30},
-                        {dataField:"matrlDocItm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"trnscTypeCode", headerText:"" ,width:120    ,height:30},
-                        {dataField:"invntryMovType", headerText:"" ,width:120    ,height:30},
-                        {dataField:"matrlDocYear", headerText:"" ,width:120    ,height:30},
-                        {dataField:"autoCrtItm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"debtCrditIndict", headerText:"" ,width:120    ,height:30},
-                        {dataField:"matrlNo", headerText:"" ,width:120    ,height:30},
-                        {dataField:"itmName", headerText:"" ,width:120    ,height:30},
-                        {dataField:"qty", headerText:"" ,width:120    ,height:30},
-                        {dataField:"codeName", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rqloc", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rqlocid", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rqlocnm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"delvryNo", headerText:"" ,width:120    ,height:30},
-                        {dataField:"itmCode", headerText:"" ,width:120    ,height:30},
-                        {dataField:"stockTrnsfrReqst", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rcloc", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rclocid", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rclocnm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"uom", headerText:"" ,width:120    ,height:30},
-                        {dataField:"uomnm", headerText:"" ,width:120    ,height:30}
+                        {dataField:"matrlDocNo", headerText:"Matrl Doc No" ,width:200    ,height:30},
+                        {dataField:"matrlDocItm", headerText:"Matrl Doc Itm" ,width:120    ,height:30},
+                        {dataField:"trnscTypeCode", headerText:"Transfer Type" ,width:120    ,height:30},
+                        {dataField:"invntryMovType", headerText:"Transfer Type Dtl" ,width:120    ,height:30},
+                        {dataField:"matrlDocYear", headerText:"Matrl Doc Year" ,width:120    ,height:30},
+                        {dataField:"autoCrtItm", headerText:"Auto Crt " ,width:120    ,height:30},
+                        {dataField:"debtCrditIndict", headerText:"Debt Crdit Indict" ,width:120    ,height:30},
+                        {dataField:"matrlNo", headerText:"Matrl No" ,width:120    ,height:30},
+                        {dataField:"itmName", headerText:"Matrl Name" ,width:200    ,height:30},
+                        {dataField:"qty", headerText:"Qty" ,width:100    ,height:30},
+                        {dataField:"codeName", headerText:" " ,width:120    ,height:30, visible:false},
+                        {dataField:"rqloc", headerText:"" ,width:120    ,height:30, visible:false},
+                        {dataField:"rqlocid", headerText:"" ,width:120    ,height:30, visible:false},
+                        {dataField:"delvryNo", headerText:"Delivery No" ,width:200    ,height:30},
+                        {dataField:"itmCode", headerText:"Itm Code" ,width:120    ,height:30},
+                        {dataField:"stockTrnsfrReqst", headerText:"Req No" ,width:120    ,height:30},
+                        {dataField:"rcloc", headerText:"" ,width:120    ,height:30, visible:false},
+                        {dataField:"rclocid", headerText:"" ,width:120    ,height:30, visible:false},
+                        {dataField:"rclocnm", headerText:"From" ,width:200   ,height:30},
+                        {dataField:"rqlocnm", headerText:"To" ,width:200   ,height:30},
+                        {dataField:"uom", headerText:"" ,width:120    ,height:30 , visible:false},
+                        {dataField:"uomnm", headerText:"UOM" ,width:120    ,height:30}
            ];
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
@@ -156,9 +156,11 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
+    	/*
         $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
         document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
         document.searchForm.submit();
+        */
     });
     
     AUIGrid.bind(listGrid, "ready", function(event) {
@@ -259,7 +261,8 @@ function SearchDeliveryListAjax( reqno ) {
     Common.ajax("GET" , url , param , function(data){
         AUIGrid.setGridData(subGrid, data.data);
         //mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", reqcolumnLayout ,"", reqop);
-        AUIGrid.resize(mdcGrid,1620,150); 
+        //AUIGrid.resize(mdcGrid,1620,150); 
+        AUIGrid.resize(mdcGrid,1876,191); 
         AUIGrid.setGridData(mdcGrid, data.data2);
         
     });
@@ -309,8 +312,8 @@ function f_getTtype(g , v){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-      <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-      <li><p class="btn_gray"><a id="search"><span class="search"></span>Search</a></p></li>
+      <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+      <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 

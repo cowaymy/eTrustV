@@ -30,7 +30,7 @@
 var listGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"delyno"       ,headerText:"Delivery No"                 ,width:120    ,height:30                },
+                     {dataField:"delyno"       ,headerText:"Delivery No"                 ,width:200    ,height:30                },
                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
                      {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
@@ -74,8 +74,9 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , Codeval:'US'};
-    doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
-    doGetCombo('/logistics/stocktransfer/selectStockTransferNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
+   // doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
+    doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'US':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
+   doGetCombo('/logistics/stocktransfer/selectStockTransferNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
     //doDefCombo(amdata, '' ,'sam', 'S', '');
@@ -362,8 +363,8 @@ function grFunc(){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-            <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-            <li><p class="btn_gray"><a id="search"><span class="search"></span>Search</a></p></li>
+            <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
         </ul>
 </aside><!-- title_line end -->
 
