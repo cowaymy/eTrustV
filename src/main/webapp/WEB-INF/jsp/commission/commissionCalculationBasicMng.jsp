@@ -22,7 +22,7 @@
 	$(document).ready(function() {
 		
 		// AUIGrid 그리드를 생성합니다.
-		myGridID_Basic = GridCommon.createAUIGrid("grid_wrap", columnLayout,"itemSeq");
+		createAUIGrid();
 
 		// cellClick event.
 		AUIGrid.bind(myGridID_Basic, "cellClick", function(event) {
@@ -76,60 +76,71 @@
     function auiRemoveRowHandler(event) {
     }
 
-
-	// 아이템 AUIGrid 칼럼 설정
-	var columnLayout = [ { 
-		dataField : "codeName",
-        headerText : "Procedure Name",
-        style : "my-column",
-        editable : false,
-        width : 200
-	}, {
-		dataField : "cdds",
-        headerText : "Description",
-        style : "my-column",
-        editable : false
-	}, {
-        dataField : "DATA",
-        headerText : "Data Search",
-        style : "my-column",
-        renderer : {
-            type : "ButtonRenderer",
-            labelText : "SEARCH",
-            onclick : function(rowIndex, columnIndex, value, item) {
-            	$("#codeId").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 5));
-            	$("#prdNm").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 0));
-            	$("#prdDec").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 1));
-                Common.popupDiv("/commission/calculation/calBasicDataPop.do", $("#basicForm").serializeJSON());
-            }
-        },
-        editable : false,
-        width : 105
-    },{
-        dataField : "LOGE",
-        headerText : "Log Search",
-        style : "my-column",
-        renderer : {
-            type : "ButtonRenderer",
-            labelText : "SEARCH",
-            onclick : function(rowIndex, columnIndex, value, item) {
-            	$("#codeId").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 4));
-            	Common.popupDiv("/commission/calculation/calBasicLogPop.do", $("#basicForm").serializeJSON());
-            }
-        },
-        editable : false,
-        visible : false,
-        width : 105
-    }, {
-		dataField : "codeId",
-        headerText : "CODE ID",
-       visible : false
-	},  {
-        dataField : "code",
-        headerText : "CODE",
-        visible : false
-    }];
-    
+    function createAUIGrid() {
+		// 아이템 AUIGrid 칼럼 설정
+		var columnLayout = [ { 
+			dataField : "codeName",
+	        headerText : "Procedure Name",
+	        style : "my-column",
+	        editable : false,
+	        width : 200
+		}, {
+			dataField : "cdds",
+	        headerText : "Description",
+	        style : "my-column",
+	        editable : false
+		}, {
+	        dataField : "DATA",
+	        headerText : "Data Search",
+	        style : "my-column",
+	        renderer : {
+	            type : "ButtonRenderer",
+	            labelText : "SEARCH",
+	            onclick : function(rowIndex, columnIndex, value, item) {
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 5));
+	            	$("#prdNm").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 0));
+	            	$("#prdDec").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 1));
+	                Common.popupDiv("/commission/calculation/calBasicDataPop.do", $("#basicForm").serializeJSON());
+	            }
+	        },
+	        editable : false,
+	        width : 105
+	    },{
+	        dataField : "LOGE",
+	        headerText : "Log Search",
+	        style : "my-column",
+	        renderer : {
+	            type : "ButtonRenderer",
+	            labelText : "SEARCH",
+	            onclick : function(rowIndex, columnIndex, value, item) {
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 4));
+	            	Common.popupDiv("/commission/calculation/calBasicLogPop.do", $("#basicForm").serializeJSON());
+	            }
+	        },
+	        editable : false,
+	        visible : false,
+	        width : 105
+	    }, {
+			dataField : "codeId",
+	        headerText : "CODE ID",
+	       visible : false
+		},  {
+	        dataField : "code",
+	        headerText : "CODE",
+	        visible : false
+	    }];
+		
+		// 그리드 속성 설정
+        var gridPros = {
+            usePaging : true,                   // 페이징 사용       
+            pageRowCount : 20,               // 한 화면에 출력되는 행 개수 20(기본값:20)
+            skipReadonlyColumns : true,    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove : true,      // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn : true,    // 줄번호 칼럼 렌더러 출력
+            selectionMode : "singleRow"
+        };
+		myGridID_Basic = AUIGrid.create("grid_wrap", columnLayout,gridPros);
+    }
 </script>
 
 

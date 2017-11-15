@@ -47,7 +47,8 @@
         dataField : "runId",
         headerText : "RUN ID",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "emplyId",
         headerText : " MEMBER ID",
@@ -184,7 +185,7 @@
    }
    
    function fn_AlldownFile() {
-       var data = { "searchDt" : $("#7002CT_Dt").val() , "code": $("#code").val() };
+       var data = { "searchDt" : $("#7002CT_Dt").val() , "code": $("#code").val() ,"actionType":$("#actionType_7002").val()};
        Common.ajax("GET", "/commission/calculation/cntData7002CT", data, function(result) {
            var cnt = result;
            if(cnt > 0){
