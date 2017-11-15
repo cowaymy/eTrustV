@@ -62,7 +62,7 @@ public class BudgetController {
 
 	
 	@RequestMapping(value = "/monthlyBudgetList.do")
-	public String selectExpenseList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	public String monthlyBudgetList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		String year = CommonUtils.getNowDate().substring(0,4);
 		
@@ -71,7 +71,7 @@ public class BudgetController {
 	}
 	
 	@RequestMapping(value = "/selectMonthlyBudgetList", method = RequestMethod.GET) 
-	public ResponseEntity<List<EgovMap>> selectExpenseList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+	public ResponseEntity<List<EgovMap>> selectMonthlyBudgetList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
 		
 		List<EgovMap> budgetList = null; 
 
