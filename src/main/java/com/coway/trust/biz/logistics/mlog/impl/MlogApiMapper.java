@@ -38,6 +38,8 @@ public interface MlogApiMapper {
 	List<EgovMap> getItemBankLocationList(Map<String, Object> params);
 
 	List<EgovMap> getItemBankItemList();
+	
+	List<EgovMap> getItemBankResultList(Map<String, Object> params);
 
 	List<EgovMap> getCommonReqHeader(Map<String, Object> params);
 
