@@ -37,6 +37,7 @@
         NTCE_START_DT = TO_DATE(#{ntceStartDt}, 'DD/MM/YYYY'),
         NTCE_END_DT = TO_DATE(#{ntceEndDt}, 'DD/MM/YYYY'),
         PASSWORD = #{password},
+        EMGNCY_FLAG = #{emgncyFlag},
         <!-- UPD_USER_ID     = #{userId} -->
         UPD_DT = SYSDATE
         WHERE NTCE_NO = #{ntceNo}
