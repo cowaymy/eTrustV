@@ -220,7 +220,7 @@ function fn_makeGrid(){
                 },{
                     dataField : "cntrlType",
                     headerText : '<spring:message code="budget.ControlType" />',
-                    width : 100
+                    width : 50
                 });
     
     
