@@ -555,4 +555,51 @@ public class CommissionReportController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(rawList);
 	}
+	
+	/**
+	 * Call Finance commission report 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/commissionFinanceReport.do")
+	public String commissionFinanceReport(@RequestParam Map<String, Object> params, ModelMap model) {
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		
+		//model.addAttribute("memberType", CommissionConstants.COMIS_CD_GRCD);
+		model.addAttribute("today", today);
+		model.addAttribute("cmmDt", dt);
+		// 호출될 화면
+		return "commission/commissionFinanceReport";
+	}
+	
+	/**
+	 * Call commissionRentalToOutrightReport commission report 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/commissionRentalToOutrightReport.do")
+	public String commissionRentalToOutrightReport(@RequestParam Map<String, Object> params, ModelMap model) {
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		
+		//model.addAttribute("memberType", CommissionConstants.COMIS_CD_GRCD);
+		model.addAttribute("today", today);
+		model.addAttribute("cmmDt", dt);
+		// 호출될 화면
+		return "commission/commissionRentalToOutrightReport";
+	}
+	
 }
