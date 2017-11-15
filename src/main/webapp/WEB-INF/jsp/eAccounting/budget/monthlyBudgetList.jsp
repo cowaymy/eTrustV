@@ -217,6 +217,10 @@ function fn_makeGrid(){
                     dataField : "glAccDesc",
                     headerText : '<spring:message code="budget.GLDescription" />',
                     width : 100
+                },{
+                    dataField : "cntrlType",
+                    headerText : '<spring:message code="budget.ControlType" />',
+                    width : 100
                 });
     
     
