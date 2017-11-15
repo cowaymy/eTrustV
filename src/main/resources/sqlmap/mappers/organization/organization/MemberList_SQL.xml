@@ -167,7 +167,7 @@
                            AND  Extent4.MEM_CODE LIKE  '%' ||  #{code} || '%'
                          </if>
                          <if test="name != null and name != ''">
-                           AND  Extent4.NAME LIKE '%' || #{name} || '%'
+                           AND  UPPER(Extent4.NAME) LIKE UPPER('%' || #{name} || '%')
                          </if>
                          <if test="icNum != null and icNum != ''">
                            AND  Extent4.NRIC LIKE   '%' || #{icNum} || '%'
@@ -217,7 +217,7 @@
                            AND  Extent1.MEM_CODE LIKE  '%' ||  #{code} || '%'
                          </if>
                          <if test="name != null and name != ''">
-                           AND  Extent1.NAME LIKE '%' || #{name} || '%'
+                           AND  UPPER(Extent1.NAME) LIKE UPPER('%' || #{name} || '%')
                          </if>
                          <if test="icNum != null and icNum != ''">
                            AND  Extent1.NRIC LIKE   '%' || #{icNum} || '%'
