@@ -14,7 +14,7 @@ public class ServiceHistoryDto {
 
 
 	@ApiModelProperty(value = "작업 상태")
-	private String jobStatus;
+	private int jobStatus;
 
 	@ApiModelProperty(value = "서비스 번호")
 	private String serviceNo;
@@ -79,12 +79,12 @@ public class ServiceHistoryDto {
 	}
 
 
-	public String getJobStatus() {
+	public int getJobStatus() {
 		return jobStatus;
 	}
 
 
-	public void setJobStatus(String jobStatus) {
+	public void setJobStatus(int jobStatus) {
 		this.jobStatus = jobStatus;
 	}
 
