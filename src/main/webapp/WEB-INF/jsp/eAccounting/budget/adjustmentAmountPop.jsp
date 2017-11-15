@@ -59,7 +59,7 @@ $(document).ready(function(){
          headerText : '<spring:message code="budget.Change" /> <spring:message code="budget.Amount" />',
          width : 150,
          dataType : "numeric",
-         formatString : "#,##0",
+         formatString : "#,##0.00",
          style : "my-right-style",
      },{
          dataField : "adjRem",
@@ -79,7 +79,7 @@ $(document).ready(function(){
      },{
          positionField : "budgetAdjMonth",
          dataField : "adjAmt",
-         formatString : "#,##0",
+         formatString : "#,##0.00",
          style : "my-right-style",
          expFunction : function(columnValues) {
              
@@ -99,7 +99,7 @@ $(document).ready(function(){
      },{
          positionField : "glAccDesc",
          dataField : "adjAmt",
-         formatString : "#,##0",
+         formatString : "#,##0.00",
          style : "my-right-style",
          expFunction : function(columnValues) {
              
@@ -119,7 +119,7 @@ $(document).ready(function(){
      },{
          positionField : "adjRem",
          dataField : "adjAmt",
-         formatString : "#,##0",
+         formatString : "#,##0.00",
          style : "my-right-style",
          expFunction : function(columnValues) {
              

@@ -117,7 +117,7 @@ $(document).ready(function(){
         dataField : "adjAmt",
         headerText : '<spring:message code="budget.Amount" />',
         dataType : "numeric",
-        formatString : "#,##0",
+        formatString : "#,##0.00",
         style : "my-right-style",
         width : 100
     },{

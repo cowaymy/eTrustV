@@ -259,7 +259,7 @@ function fn_makeGrid(){
                  headerText :msg,
                  width : 80,
                  dataType : "numeric",
-                 formatString : "#,##0",
+                 formatString : "#,##0.00",
                  style : "my-right-style",
                  editable : false
             });
@@ -273,7 +273,7 @@ function fn_makeGrid(){
         headerStyle : "my-right-style",
         style : "my-custom-style1",
         dataType : "numeric",
-        formatString : "#,##0",
+        formatString : "#,##0.00",
         width:120
     });
     
@@ -291,7 +291,7 @@ function fn_makeGrid(){
 	         dataField : "m"+i,
 	         positionField : "m"+i,
 	         operation : "SUM",
-	         formatString : "#,##0"
+	         formatString : "#,##0.00"
 	    });
 	 }
 	 
@@ -299,7 +299,7 @@ function fn_makeGrid(){
 	        dataField : "total", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
             positionField : "total",
             operation : "SUM",
-            formatString : "#,##0"
+            formatString : "#,##0.00"
 	    });
 	    
      var monOptions = {
