@@ -374,7 +374,7 @@
 <h2>Courier Search</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span><spring:message code='sys.btn.search' /></a></p></li>
-    <li><p class="btn_blue"><a id="clear"><span class="clear"></span><spring:message code='sys.btn.clear' /></a></p></li>
+    <%-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span><spring:message code='sys.btn.clear' /></a></p></li> --%>
 </ul>
 </aside><!-- title_line end -->
 
