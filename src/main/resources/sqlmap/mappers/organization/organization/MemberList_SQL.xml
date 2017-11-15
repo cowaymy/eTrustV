@@ -108,7 +108,7 @@
 			Project1.UPD_DT Updated,
 			Project1.STUS Status,
 
-			/*By KV*/
+            /*By KV*/
 			Project1.position_name,
 
 
@@ -173,7 +173,7 @@
                            AND  Extent4.NRIC LIKE   '%' || #{icNum} || '%'
                          </if>
                          <if test="birth != null and birth != ''">
-                           AND  TO_CHAR(TO_DATE(Extent4.DOB, 'YYYY-MM-DD'), 'DD/MM/YYYY') =  #{birth}
+                           AND Extent4.DOB =  TO_DATE(#{birth}, 'DD/MM/YYYY')
                          </if>
                          <if test="nation != null and nation != ''">
                            AND  Extent4.NATION =  #{nation}
@@ -223,7 +223,7 @@
                            AND  Extent1.NRIC LIKE   '%' || #{icNum} || '%'
                          </if>
                          <if test="birth != null and birth != ''">
-                           AND  TO_CHAR(TO_DATE(Extent1.DOB, 'YYYY-MM-DD'), 'DD/MM/YYYY') =  #{birth}
+                           AND Extent1.DOB =  TO_DATE(#{birth}, 'DD/MM/YYYY')
                          </if>
                           <if test="nation != null and nation != ''">
                            AND  Extent1.NATION =  #{nation}
