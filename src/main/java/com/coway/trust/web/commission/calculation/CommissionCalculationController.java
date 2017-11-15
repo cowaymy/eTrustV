@@ -463,7 +463,7 @@ public class CommissionCalculationController {
 			popName = "calculationData7001CTL_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P01)) {
 			popName = "calculationData7001CTM_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P01)){
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P01)){
 			popName = "calculationData7001CTW_Pop";
 		}
 		else if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P01)) {
@@ -493,7 +493,7 @@ public class CommissionCalculationController {
 			popName = "calculationData7002CTL_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P02)) {
 			popName = "calculationData7002CTM_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P02)){
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P02)){
 			popName = "calculationData7002CTW_Pop";
 		}
 		else if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P02)){
@@ -554,7 +554,7 @@ public class CommissionCalculationController {
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CT);
 		
-		if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P01))
+		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CT_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTL_LEV);
@@ -570,7 +570,7 @@ public class CommissionCalculationController {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CT);
-		if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P01))
+		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CT_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTL_LEV);
@@ -596,7 +596,7 @@ public class CommissionCalculationController {
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CT);
 		
-		if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P02))
+		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CT_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTL_LEV);
@@ -613,7 +613,7 @@ public class CommissionCalculationController {
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CT);
 		
-		if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P02))
+		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CT_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTL_LEV);

@@ -83,10 +83,10 @@ public class CommissionConstants {
 	 */
 	public static final String COMIS_CTL_P01 = "CTL-P01";					//
 	public static final String COMIS_CTM_P01 = "CTM-P01";					//
-	public static final String COMIS_CTW_P01 = "CTE-P01";					//
+	public static final String COMIS_CTR_P01 = "CTE-P01";					//
 	public static final String COMIS_CTL_P02 = "CTL-P02";					//
 	public static final String COMIS_CTM_P02 = "CTM-P02";					//
-	public static final String COMIS_CTW_P02 = "CTE-P02";					//
+	public static final String COMIS_CTR_P02 = "CTE-P02";					//
 	public static final String COMIS_CTB_P01 = "CTB-P01";					//
 	public static final String COMIS_CTB_P02 = "CTB-P02";					//
 	public static final String COMIS_CTB_P03 = "CTB-P03";					//

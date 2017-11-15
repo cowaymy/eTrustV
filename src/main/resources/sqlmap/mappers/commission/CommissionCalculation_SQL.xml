@@ -1472,7 +1472,7 @@
         SELECT 
            count(*) cnt
         FROM CMM0024T t1 JOIN CMM0006T t2 
-                  ON t1.MEM_CODE=t2.EMPLY_CODE 
+                  ON t1.EMPLY_CODE=t2.EMPLY_CODE 
                       AND t2.IS_EXCLUDE=0 
                       AND t2.COMM_TASK_ID=#{taskId}
         WHERE t1.TASK_ID=#{taskId}
@@ -1495,7 +1495,7 @@
 			nvl(t1.PAYOUT_AMT,'0') PAYOUT_AMT,
 			nvl(t1.TASK_ID,'0') TASK_ID
 		FROM CMM0024T t1 JOIN CMM0006T t2 
-                  ON t1.MEM_CODE=t2.EMPLY_CODE 
+                  ON t1.EMPLY_CODE=t2.EMPLY_CODE 
                       AND t2.IS_EXCLUDE=0 
                       AND t2.COMM_TASK_ID=#{taskId}
 		WHERE t1.TASK_ID=#{taskId}

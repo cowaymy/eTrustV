@@ -192,7 +192,7 @@
                var month = searchDt.substr(0,searchDt.indexOf("/"));
                var code = $("#code_18T").val();
                var ordId = $("#ordId_18T").val();
-               var instPersonId = $("#instPersonId_18T").val();
+               var instPersonCd = $("#instPersonCd_18T").val();
                var useYnCombo = $("#useYnCombo_18T").val();
                
                var actionType = $("#actionType18T").val();
@@ -201,7 +201,7 @@
                //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&instPersonId="+instPersonId+"&useYnCombo="+useYnCombo+"'/>";
                
                Common.showLoader();
-               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&instPersonId="+instPersonId+"&useYnCombo="+useYnCombo +"&actionType="+actionType)
+               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&instPersonCd="+instPersonCd+"&useYnCombo="+useYnCombo +"&actionType="+actionType)
                .done(function () {
                    Common.alert('File download a success!');                
                    Common.removeLoader();            
@@ -217,7 +217,7 @@
    }
    
    function fn_AlldownFile() {
-	   var data = { "searchDt" : $("#CMM0018T_Dt").val() , "code": $("#code_18T").val()};
+	   var data = { "searchDt" : $("#CMM0018T_Dt").val() , "code": $("#code_18T").val() ,"actionType":$("#actionType18T").val()};
 	   Common.ajax("GET", "/commission/calculation/cntCMM0018T", data, function(result) {
            var cnt = result;
            if(cnt > 0){

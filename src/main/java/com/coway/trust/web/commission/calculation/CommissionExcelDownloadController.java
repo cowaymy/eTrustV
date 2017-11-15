@@ -50,10 +50,10 @@ public class CommissionExcelDownloadController {
 			map.put("taskId", sTaskID);
 
 			if (codeNm.equals(CommissionConstants.COMIS_CTL_P01) || codeNm.equals(CommissionConstants.COMIS_CTM_P01)
-					|| codeNm.equals(CommissionConstants.COMIS_CTW_P01)) {
+					|| codeNm.equals(CommissionConstants.COMIS_CTR_P01)) {
 
 				map.put("codeGruop", CommissionConstants.COMIS_CT);
-				if (codeNm.equals(CommissionConstants.COMIS_CTW_P01)) {
+				if (codeNm.equals(CommissionConstants.COMIS_CTR_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
 							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
@@ -240,14 +240,13 @@ public class CommissionExcelDownloadController {
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_CTL_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_CTM_P02)
-					|| codeNm.equals(CommissionConstants.COMIS_CTW_P02)) {
+					|| codeNm.equals(CommissionConstants.COMIS_CTR_P02)) {
 
 				map.put("codeGruop", CommissionConstants.COMIS_CT);
-				if (codeNm.equals(CommissionConstants.COMIS_CTW_P02)) {
+				if (codeNm.equals(CommissionConstants.COMIS_CTR_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "Gross Comm",
-							"Rental Comm", "Srv Mem Comm", "Basic   Allowance", "Performance Incentive", "Adjustment",
-							"CFF + Reward", "Seniority" };
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType",
+							"r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE", "Gross Comm",
 							"Rental Comm", "Srv Mem Comm", "Basic   Allowance", "Performance Incentive", "Adjustment",
 							"CFF + Reward", "Seniority" };
@@ -255,9 +254,8 @@ public class CommissionExcelDownloadController {
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CTL_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "Gross Comm",
-							"Rental Comm", "Srv Mem Comm", "Basic   Allowance", "Performance Incentive", "Adjustment",
-							"CFF + Reward", "Seniority" };
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType",
+							"r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE", "Gross Comm",
 							"Rental Comm", "Srv Mem Comm", "Basic   Allowance", "Performance Incentive", "Adjustment",
 							"CFF + Reward", "Seniority" };
@@ -265,16 +263,15 @@ public class CommissionExcelDownloadController {
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CTM_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "Gross Comm",
-							"Rental Comm", "Srv Mem Comm", "Basic   Allowance", "Performance Incentive", "Adjustment",
-							"CFF + Reward", "Seniority" };
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType",
+							"r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE", "Gross Comm",
 							"Rental Comm", "Srv Mem Comm", "Basic   Allowance", "Performance Incentive", "Adjustment",
 							"CFF + Reward", "Seniority" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				}
-
+				
 				map.put("memberCd", request.getParameter("memberCd"));
 
 				if((CommissionConstants.COMIS_ACTION_TYPE).equals(actionType)){

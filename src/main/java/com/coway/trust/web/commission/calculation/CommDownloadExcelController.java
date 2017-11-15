@@ -87,7 +87,7 @@ public class CommDownloadExcelController {
 		ArrayList<String> getHeadData = new ArrayList<>();
 		
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01) || (params.get("code")).equals(CommissionConstants.COMIS_CTM_P01) 
-				|| (params.get("code")).equals(CommissionConstants.COMIS_CTW_P01)){
+				|| (params.get("code")).equals(CommissionConstants.COMIS_CTR_P01)){
 			params.put("codeGruop", CommissionConstants.COMIS_CT);
 			getHeadData = getDataHead7001CT(params);
 			getBodyDataList=getDataList7001CT(params);
@@ -105,7 +105,7 @@ public class CommDownloadExcelController {
 			getBodyDataList=getDataList7001HP(params);
 		}
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02) || (params.get("code")).equals(CommissionConstants.COMIS_CTM_P02) 
-				|| (params.get("code")).equals(CommissionConstants.COMIS_CTW_P02)){
+				|| (params.get("code")).equals(CommissionConstants.COMIS_CTR_P02)){
 			params.put("codeGruop", CommissionConstants.COMIS_CT);
 			getHeadData = getDataHead7002CT(params);
 			getBodyDataList = getDataList7002CT(params);
@@ -282,7 +282,7 @@ public class CommDownloadExcelController {
 		return head;
 	}
 	private ArrayList<ArrayList<String>> getDataList7001CT(Map<String, Object> params){
-		if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P01))
+		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
@@ -521,7 +521,7 @@ public class CommDownloadExcelController {
 	}
 	
 	private ArrayList<ArrayList<String>> getDataList7002CT(Map<String, Object> params){
-		if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P02))
+		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
