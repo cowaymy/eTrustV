@@ -35,7 +35,9 @@
                                SV8.YEAR AS plan_Year,
                                SV8.MONTH AS plan_Month,
                                SYS.STK_DESC AS product_Name,
-                               SYS.STK_CODE AS product_Code
+                               SYS.STK_CODE AS product_Code,
+                               SV8.APPNT_DT as appointment_Date,
+                               SV8.APPNT_TM as appointment_Time
                                ,
                                  '1' as job_Type
                                 , '1'  as appointment_Date
@@ -1374,7 +1376,7 @@ AND   O1DA.MEM_CODE = #{userId}
                                 ,no as hsr_Asr_No
                                 ,MEM_CODE as action_Member
                                 ,'HS' as job_Type
-                                ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason
+                                ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason
                                 ,REN_COLCT_ID as collection_Code
                                 ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
                                 ,RESULT_REM as result_Remark
@@ -1439,7 +1441,7 @@ AND   O1DA.MEM_CODE = #{userId}
                                 ,no as hsr_Asr_No
                                 ,MEM_CODE as action_Member
                                 ,'HS' as job_Type
-                                ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason
+                                ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason
                                 ,REN_COLCT_ID as collection_Code
                                 ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
                                 ,RESULT_REM as result_Remark
