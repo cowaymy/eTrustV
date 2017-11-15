@@ -476,8 +476,14 @@
              if (selectedItem[0] > -1){
                  fn_assetDetail(selectedItem[0]);
                  fn_setVisiable(div);
+                 $("#CopyAssetInfo").show();
                  $("#masterWindow").show();
+                 $("#Insert_info").hide();
+                 $("#Update_info").hide();
                  $("#cancelPopbtn").hide();
+                 $("#saveStatusBtn").hide();
+                 $("#trnasInfo").hide();
+                 $("#statusInfo").hide();
              }else{
              Common.alert('Choice Data please..');
              }
@@ -525,11 +531,11 @@
          
          $("#transAssetOpen").click(function(){
         	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-        	 var stusId=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'stusid');
+             if (selectedItem[0] > -1){
+            	       var stusId=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'stusid');
 	                  doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
 	                  doDefCombos('', '' ,'transdepartment', 'S', '');
 	                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
-             if (selectedItem[0] > -1){
             	 if(stusId=="1"){
 	                 div="V";              
 	                 $("#detailHead").text("Transfer Asset");
@@ -545,7 +551,9 @@
 	                  $("#transH3_01").show();
 	                  $("#saveTrnsBtn").show();
 	                  $("#returnTrnsBtn").hide();
+	                  $("#saveStatusBtn").hide();
 	                  $("#trnasInfo").show();
+	                  $("#statusInfo").hide();
             		 
             	 }else{
 		             Common.alert('This asset is not active. Transfer asset is disallowed.');
@@ -557,12 +565,12 @@
          
          $("#returnAssetOpen").click(function(){
         	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-        	 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
-        	 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
-	                  //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
-	                  //doDefCombos('', '' ,'transdepartment', 'S', '');
-	                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
              if (selectedItem[0] > -1){
+	        	 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
+	        	 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
+		                  //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
+		                  //doDefCombos('', '' ,'transdepartment', 'S', '');
+		                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
             	 if(currbrnchid == '42' && currbrnchid == '38'){
 		             Common.alert('This asset is already at IT Department store.');
             	 }else{
@@ -580,8 +588,9 @@
 	                  $("#transH3_01").show();
 	                  $("#saveTrnsBtn").hide();
 	                  $("#returnTrnsBtn").show();
+	                  $("#saveStatusBtn").hide();
 	                  $("#trnasInfo").hide();
-            		 
+	                  $("#statusInfo").hide();
             	 }
              }else{
              Common.alert('Choice Data please..');
@@ -591,20 +600,21 @@
         	 $("#status").val("");
         	 $("#statusremark").val("");
         	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-        	 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
-        	 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
-	                  //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
-	                  //doDefCombos('', '' ,'transdepartment', 'S', '');
-	                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
              if (selectedItem[0] > -1){
+	        	 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
+	        	 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
+		                  //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
+		                  //doDefCombos('', '' ,'transdepartment', 'S', '');
+		                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
             	 if(currbrnchid == '42' && currbrnchid == '38'){
 		             Common.alert('Only IT Department Store asset can be');
             	 }else{
 	                 div="V";              
-	                 $("#detailHead").text("Return Asset");
+	                 $("#detailHead").text("Asset - Report Obsolete/Lost");
 	                 fn_setVisiable(div); 
 	                 fn_assetDetail(selectedItem[0]);
 	                  $("#masterWindow").show();
+	                  $("#saveStatusBtn").show();
 	                  $("#Details_info").show();
 	                  $("#Insert_info").hide();
 	                  $("#Update_info").hide();
@@ -615,6 +625,7 @@
 	                  $("#saveTrnsBtn").hide();
 	                  $("#returnTrnsBtn").hide();
 	                  $("#trnasInfo").hide();
+                      $("#statusInfo").show();
             		 
             	 }
              }else{
@@ -1636,21 +1647,13 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a id="copyAssetOpen">Copy Asset</a></p></li>
+        <li><p class="link_btn"><a id="transAssetOpen">Transfer Asset (Single)</a></p></li>
+        <li><p class="link_btn"><a id="returnAssetOpen">Return Asset</a></p></li>
+        <li><p class="link_btn"><a id="statusAssetOpen">Lost / Obsolete / Deactivate</a></p></li>
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a id="copyAssetOpen">Copy Asset</a></p></li>
-        <li><p class="link_btn type2"><a id="transAssetOpen">Transfer Asset (Single)</a></p></li>
         <li><p class="link_btn type2"><a id="transBulkAssetOpen">Transfer Asset (Bulk)</a></p></li>
-        <li><p class="link_btn type2"><a id="returnAssetOpen">Return Asset</a></p></li>
-        <li><p class="link_btn type2"><a id="statusAssetOpen">Lost / Obsolete / Deactivate</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
