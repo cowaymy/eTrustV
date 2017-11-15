@@ -146,7 +146,7 @@ var LocData2 = {brnch : UserBranchId};
                         }
                       },
                       {dataField:"itemserialChk"       ,headerText:"Serial"            ,width:120    ,height:30,editable:false},
-                      {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30
+                      {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30,editable:false
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
                               
