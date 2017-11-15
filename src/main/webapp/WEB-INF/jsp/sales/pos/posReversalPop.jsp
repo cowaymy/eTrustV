@@ -33,11 +33,14 @@ $(document).ready(function() {
     CommonCombo.make('_reversalPosTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , systemSelVal, optionSystem);
 	
     //branch List(Warehouse)
-    var whbrnchSelVal = $("#_rePosWhBrnchId").val();
+    var whbrnchSelVal = $("#_rePosBrnchId").val();
+    console.log("whbrnchSelVal : " + whbrnchSelVal);
     if(moduleSelVal == 2392 && systemSelVal == 1357){
+    	console.log("2392 && 1357");
     	$("#_reversalPosWhBrnchId").val('');
     	$("#_reversalPosWhBrnchId").attr({"class" : "disabled"});
     }else{
+    	console.log("else~");
     	CommonCombo.make('_reversalPosWhBrnchId', "/sales/pos/selectWhBrnchList", '' , whbrnchSelVal , optionModule);
     }
     
@@ -262,7 +265,7 @@ function createPurchaseGridID(){
 <tr>
     <th scope="row">Branch / Warehouse<span class="must">*</span></th>
     <td>
-        <select  id="_reversalPosWhBrnchId" disabled="disabled"></select>
+        <select  id="_reversalPosWhBrnchId" disabled="disabled" class="disabled"></select>
         <input type="text" disabled="disabled" id="_reversalPosWhDesc" >
     </td>
 </tr>

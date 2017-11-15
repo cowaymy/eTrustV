@@ -13,7 +13,7 @@ $(document).ready(function() {
 	creatememGridID();
 	
 	//PosModuleTypeComboBox
-	var modulePopParam = {groupCode : 143, codeIn : [2390, 2391, 2392]};
+	var modulePopParam = {groupCode : 143, codeIn : [2390, 2391]};
 	CommonCombo.make('_insPosModuleType', "/sales/pos/selectPosModuleCodeList", modulePopParam , '', optionModule);
 	
 	//PosSystemTypeComboBox
@@ -69,7 +69,7 @@ $(document).ready(function() {
              fn_clearAllGrid();
         }
         
-        if(tempVal == 2392){ //Other Income
+       /*  if(tempVal == 2392){ //Other Income
             var optionSystem = {
                     type: "M",                  
                     isShowChoose: false  
@@ -84,9 +84,19 @@ $(document).ready(function() {
             $("#_mainSerialGrid").css("display" , "none");
             
             fn_clearAllGrid();
-       }
+       } */
         
     });
+    
+    $("#_insPosSystemType").change(function() {
+		
+    	//clear Grid
+    	fn_clearAllGrid();
+    	
+    	//
+    	$("#_mainSerialGrid").css("display" , "none");
+    	
+	});
     
     //Member Search Popup
     $('#memBtnPop').click(function() {
@@ -99,7 +109,7 @@ $(document).ready(function() {
         var memCd = $('#salesmanPopCd').val().trim();
 
         if(FormUtil.isNotEmpty(memCd)) {
-            fn_loadOrderSalesman(0, memCd);
+            fn_loadOrderSalesman(0, memCd, 1);
         }
     });
     
@@ -257,6 +267,13 @@ $(document).ready(function() {
     
     //Member List
     $("#_purchMemBtn").click(function() {
+    	
+    	
+    	if(null == $("#_cmbWhBrnchIdPop").val() || '' == $("#_cmbWhBrnchIdPop").val()){
+    		Common.alert("* Please select Warehouse first.");
+    		return;
+    	}
+    	
     	Common.popupDiv("/sales/pos/posMemUploadPop.do", $("#_sysForm").serializeJSON(), null , true , '_memDiv');
 	});
     

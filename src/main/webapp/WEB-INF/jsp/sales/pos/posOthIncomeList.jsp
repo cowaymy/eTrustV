@@ -41,7 +41,7 @@ $(document).ready(function() {
     CommonCombo.make('cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
     
     //PosSystemTypeComboBox
-    var systemParam = {groupCode : 140 , codeIn : [1357 ,1361]};
+    var systemParam = {groupCode : 140 , codeIn : [1357, 1358 ,1361]};
 
     CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionModule);
 
@@ -49,6 +49,40 @@ $(document).ready(function() {
     var statusParam = {groupCode : 9};
     CommonCombo.make('cmbStatusTypeId', "/sales/pos/selectStatusCodeList", statusParam , '', optionSystem);
     
+    //branch List
+    CommonCombo.make('cmbWhBrnchId', "/sales/pos/selectWhBrnchList", '' , '', '');
+    
+   //Wh List
+    $("#cmbWhBrnchId").change(function() {
+        
+        var tempVal = $(this).val();
+        if(tempVal == null || tempVal == '' ){
+            $("#cmbWhId").val("");
+        }else{
+            var paramObj = {brnchId : tempVal};
+            Common.ajax('GET', "/sales/pos/selectWarehouse", paramObj,function(result){
+                
+                if(result != null){
+                    $("#cmbWhId").val(result.whLocDesc);    
+                }else{
+                    $("#cmbWhId").val('');
+                }
+            });
+        }
+    });
+    
+   
+   $("#cmbSalesTypeId").change(function() {
+	   //clear field
+	   $("#cmbWhBrnchId").val('');
+	   $("#cmbWhId").val('');
+	   
+	   if(this.value == 1358){ //hq
+		   $("#cmbWhBrnchId").attr({"disabled" : false  , "class" : ""});
+	   }else{  //other
+		   $("#cmbWhBrnchId").attr({"disabled" : "disabled", "class" : "disabled"});
+	   }
+   });
     /*######################## Init Combo Box ########################*/
     
     //cmbPosTypeId Change Func
@@ -156,7 +190,14 @@ $(document).ready(function() {
         
         //Call controller
         var reversalForm = { posId : clickChk[0].item.posId };
-        Common.popupDiv("/sales/pos/posReversalOthPop.do", reversalForm , null , true , "_revDiv");
+        
+        if($("#cmbSalesTypeId").val() == 1358){
+        	Common.popupDiv("/sales/pos/posReversalPop.do", reversalForm , null , true , "_revDiv");
+        }else{
+        	Common.popupDiv("/sales/pos/posReversalOthPop.do", reversalForm , null , true , "_revDiv");        	
+        }
+        
+        
         
     });
     
@@ -274,7 +315,7 @@ function createPosItmDetailGrid(){
     };
     
     posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap", posItmColumnLayout,'', itmGridPros);  // address list
-    AUIGrid.resize(posItmDetailGridID , 1660, 300);
+    //AUIGrid.resize(posItmDetailGridID , 1660, 300);
 }
 
 
@@ -428,20 +469,20 @@ function createAUIGrid(){
     
     
     var posColumnLayout =  [ 
-                            {dataField : "posNo", headerText : "POS No.", width : '8%'}, 
-                            {dataField : "posDt", headerText : "Sales Date", width : '8%'},
-                            {dataField : "userName", headerText : "Member ID", width : '8%'},
-                            {dataField : "codeName", headerText : "POS Type", width : '8%'},
-                            {dataField : "codeName1", headerText : "Sales Type", width : '8%'},
-                            {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '8%'}, 
-                            {dataField : "name", headerText : "Customer Name", width : '18%'},
-                            {dataField : "whLocCode", headerText : "Branch", width : '8%' , style : 'left_style'},
-                            {dataField : "whLocCode", headerText : "Warehouse", width : '8%'},
-                            {dataField : "posTotAmt", headerText : "Total Amount", width : '8%'},
+                            {dataField : "posNo", headerText : "POS No.", width : 80}, 
+                            {dataField : "posDt", headerText : "Sales Date", width : 80},
+                            {dataField : "userName", headerText : "Member ID", width : 80},
+                            {dataField : "codeName", headerText : "POS Type", width : 80},
+                            {dataField : "codeName1", headerText : "Sales Type", width : 80},
+                            {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : 80}, 
+                            {dataField : "name", headerText : "Customer Name", width : 100},
+                            {dataField : "whLocCode", headerText : "Branch", width : 80 , style : 'left_style'},
+                            {dataField : "whLocCode", headerText : "Warehouse", width : 80},
+                            {dataField : "posTotAmt", headerText : "Total Amount", width : 80},
                             {
                                 dataField : "stusId",
                                 headerText : "Status",
-                                width : '10%',
+                                width : 80,
                                 labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                     var retStr = "";
                                     for(var i=0,len=arrPosStusCode.length; i<len; i++) {
@@ -484,7 +525,7 @@ function createAUIGrid(){
     };
     
     posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,'', gridPros);  // address list
-    AUIGrid.resize(posGridID , 1660, 300);
+   // AUIGrid.resize(posGridID , 1660, 300);
 }
 
 function fn_getPosListAjax(){
@@ -519,7 +560,6 @@ function fn_getDateGap(sdate, edate){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 </script>
-<div id="wrap"><!-- wrap start -->
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -590,7 +630,7 @@ function fn_getDateGap(sdate, edate){
 <tr>
     <th scope="row">Branch / Warehouse</th>
     <td colspan="3">
-        <select  id="cmbWhBrnchId"  disabled="disabled" class="disabled"></select>
+        <select  id="cmbWhBrnchId"  disabled="disabled" class="disabled" name="brnchId"></select>
         <input type="text" disabled="disabled" id="cmbWhId" >
     </td>
     <th scope="row">Customer Name</th>
@@ -655,4 +695,3 @@ function fn_getDateGap(sdate, edate){
 </section><!-- search_result end -->
 </section><!-- content end -->
 <hr />
-</div><!-- wrap end -->

@@ -38,7 +38,7 @@ $(document).ready(function() {
      /*######################## Init Combo Box ########################*/
      
     //PosModuleTypeComboBox
-    var moduleParam = {groupCode : 143, codeIn : [2390, 2391, 2392]};
+    var moduleParam = {groupCode : 143, codeIn : [2390, 2391]};
     CommonCombo.make('cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
     
     //PosSystemTypeComboBox
@@ -79,21 +79,21 @@ $(document).ready(function() {
         
         var tempVal = $(this).val();
         
-        if(tempVal == 2392){
+      /*   if(tempVal == 2392){
             var systemParam = {groupCode : 140 , codeIn : [1358 , 1361]};
             var optionSystem = {
                     type: "M",                  
                     isShowChoose: false  
             };
             CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionSystem);
-        }else{
+        }else{ */
             var systemParam = {groupCode : 140 , codeIn : [1352, 1353 , 1361]};
             var optionSystem = {
                     type: "M",                  
                     isShowChoose: false  
             };
             CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionSystem);
-        }
+      //  }
         
     });
     
@@ -127,10 +127,11 @@ $(document).ready(function() {
 			    return;
     	}
     	
+    	//Gap
     	var startDate = $('#_sDate').val();
     	var endDate = $('#_eDate').val();
     	
-    	if( fn_getDateGap(startDate , endDate) > 7){
+    	if( fn_getDateGap(startDate , endDate) > 31){
     		Common.alert("Start date can not be more than 31 days before the end date.");
     		return;
     	}
@@ -535,13 +536,16 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
             Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
         }
         else {
-            
+            console.log("멤버정보 가꼬옴");
         	if(isPop == 1){
+        		console.log("팝임");
+        		console.log("memInfo.memId : " + memInfo.memId);
         		$('#hiddenSalesmanPopId').val(memInfo.memId);
                 $('#salesmanPopCd').val(memInfo.memCode);
                
                 $('#salesmanPopCd').removeClass("readonly");	
         	}else{
+        		console.log("리스트임");
         		$('#hiddenSalesmanId').val(memInfo.memId);
                 $('#salesmanCd').val(memInfo.memCode);
                
@@ -629,7 +633,6 @@ function fn_getPosListAjax(){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 </script>
-<div id="wrap"><!-- wrap start -->
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -785,4 +788,3 @@ function fn_getPosListAjax(){
 </section><!-- search_result end -->
 </section><!-- content end -->
 <hr />
-</div><!-- wrap end -->

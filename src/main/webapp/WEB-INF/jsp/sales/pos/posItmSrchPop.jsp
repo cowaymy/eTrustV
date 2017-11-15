@@ -566,7 +566,7 @@ function fn_initField(){
 	    	$("#_gridArea").css("display" , "none");  //Serial Grid Display None
 	    	//Type
 	    	var codes = [1345 , 1346 , 1347 , 1348 , 1362];  
-            var codeM = {codeM : 11 , codes : codes};
+            var codeM = {codeM : 141 , codes : codes};
 	        CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
 	        //Itm List
 	        var itmType = {itemType : 1345 , posItm : 1};
@@ -590,7 +590,7 @@ function fn_initField(){
 		if($("#_posSystemType").val() == 1353){ // Pos Item Bank 창고 Query Fix
 			//Type
 			var codes = [1345 , 1346 , 1347 , 1348 , 1362];  
-            var codeM = {codeM : 11 , codes : codes};
+            var codeM = {codeM : 141 , codes : codes};
             CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
             //Itm List
             $("#_gridArea").css("display" , "none"); //Serial Grid Display None
@@ -606,7 +606,7 @@ function fn_initField(){
 			$("#_gridArea").css("display" , "none");  //Serial Grid Display None
 	        
 	        var codes = [1348 , 1349 , 1350];  
-	        var codeM = {codeM : 11 , codes : codes};
+	        var codeM = {codeM : 141 , codes : codes};
 	        CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
 	        
 	        //Itm List
@@ -619,7 +619,7 @@ function fn_initField(){
 	    	$("#_gridArea").css("display" , "none");  //Serial Grid Display None
 	    	
 	    	var codes = [1345 , 1346 , 1347  , 1362 , 1426];  
-            var codeM = {codeM : 11 , codes : codes};
+            var codeM = {codeM : 141 , codes : codes};
             CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
             
             //Itm List

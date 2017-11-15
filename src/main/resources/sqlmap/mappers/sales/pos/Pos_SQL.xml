@@ -210,10 +210,18 @@
                 SYS0026M T1
                 LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
             WHERE 
-                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  965 = STK_ID  )) Project1
+                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '700002' = STK_CODE  )) Project1  
+                
             <!-- Filter / Parts -->
             <if test=" null != posSal and '' != posSal">
-                WHERE Project1.STK_TYPE_ID = #{itemType}
+                WHERE 
+                    Project1.STUS_CODE_ID = 1
+                AND 
+                    Project1.ALLOW_SALES = 1
+                AND
+                    Project1.STK_CTGRY_ID IN ('54','55','56','57','58','59','400','924')   
+                AND
+                    Project1.STK_TYPE_ID = #{itemType}
             </if> 
              
              <!-- Item Bank -->
@@ -228,7 +236,7 @@
                      Project1.STK_TYPE_ID = #{stkTypeId}
              </if>
              
-             <!-- OtherIncome & Item Bank HQ-->
+             <!-- OtherIncome -->
              <if test=" null != posOth and '' != posOth">
                 WHERE 
                      Project1.STUS_CODE_ID = 1
@@ -238,6 +246,20 @@
                      Project1.STK_TYPE_ID = #{stkTypeId}
              </if>
               
+              <!--Item Bank HQ -->
+              <if test=" null != posHQ and '' != posHQ">
+                WHERE 
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1. ALLOW_SALES = 0     
+                 AND 
+                     Project1.STK_TYPE_ID = #{stkTypeId}
+                     <if test="stkTypeId != '1350' ">
+                        AND
+                            Project1.STK_CTGRY_ID = #{itemType}
+                     </if>
+                     
+             </if>
      </select>
      
      <!-- <select id="selectPIItmList" parameterType="Map" resultType="egovMap">
@@ -461,12 +483,19 @@
     </select>
     
     <select id="getUserFullName" parameterType="Map" resultType="egovMap">
-		 SELECT
+		<!--  SELECT
 		    USER_NAME || ' - ' || USER_FULL_NAME NAME 
 		 FROM 
 		    SYS0047M 
 		 WHERE
-		    USER_NAME = #{salesmanPopCd}
+		    USER_NAME = #{salesmanPopCd} -->
+		    
+			SELECT 
+			    FULL_NAME
+			NAME 
+			    FROM ORG0001D
+			WHERE 
+			    MEM_CODE = #{salesmanPopCd}
     </select>
     
     <insert id="insertPosMaster" parameterType="Map" >

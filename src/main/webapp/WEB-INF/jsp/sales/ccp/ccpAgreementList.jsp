@@ -157,7 +157,6 @@ function popup(location){
 
 
 </script>
-<div id="wrap"><!-- wrap start -->
 <form id="ordGridForm">
     <input type="hidden" id="_ordAgId" name="ordAgId">    
 </form>
@@ -303,4 +302,3 @@ function popup(location){
 
 </section><!-- content end -->
 <hr />
-</div><!-- wrap end -->

@@ -141,7 +141,6 @@
 
 </script>
 
-<div id="wrap">
 	<!-- wrap start -->
 	<section id="content">
 		<!-- content start -->
@@ -332,7 +331,5 @@
 		<!-- search_result end -->
 	</section>
 	<!-- content end -->
-</div>
-<!-- wrap end -->
 </body>
 </html>

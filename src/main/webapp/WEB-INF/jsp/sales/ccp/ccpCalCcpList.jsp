@@ -174,7 +174,6 @@ function fn_underDevelop(){
     Common.alert('The program is under development.');
 }
 </script>
-<div id="wrap"><!-- wrap start -->
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -333,6 +332,5 @@ function fn_underDevelop(){
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-</div><!-- wrap end -->
 </body>
 </html>

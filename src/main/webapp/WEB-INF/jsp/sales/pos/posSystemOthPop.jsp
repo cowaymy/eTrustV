@@ -27,8 +27,15 @@ $(document).ready(function() {
     CommonCombo.make('_insPosModuleType', "/sales/pos/selectPosModuleCodeList", modulePopParam , '', optionModule);
     
     //PosSystemTypeComboBox
-    var systemPopParam = {groupCode : 140 , codeIn : [1357]};
+    var systemPopParam = {groupCode : 140 , codeIn : [1357, 1358]};
     CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
+    
+    CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhBrnchList", '' , '', '');
+    
+    //Wh List
+    $("#_cmbWhBrnchIdPop").change(function() {
+        getLocIdByBrnchId($(this).val());
+    });
     
     $("#_purcDelBtn").click(function() {
         
@@ -45,6 +52,16 @@ $(document).ready(function() {
   //Save Request
     $("#_posReqSaveBtn").click(function() {
         
+    	//remark
+    	if($("#_insPosSystemType").val() == 1357){ //income
+    		//_posRemark
+    		$("#_posRemark").val($("#_posRemarkOth").val());
+    	}
+        if($("#_insPosSystemType").val() == 1358){//hq
+            //_posRemark
+            $("#_posRemark").val($("#_posRemarkHq").val());
+        }
+    	
         /****Validation ***/
         //Purchase Grid Null Check
         if(AUIGrid.getGridData(purchaseGridID) <= 0){
@@ -92,8 +109,80 @@ $(document).ready(function() {
             fn_addrSearch();
         }  
     });
+    
+    //Pos Sales Type Change
+    $("#_insPosSystemType").change(function() {
+		
+		if(this.value == 1357){  //INCOMOE
+			$("#_divOth").css("display" , "");
+			$("#_divHq").css("display" , "none");
+			
+			//FIELD CLEAR
+			fn_initAddress();
+			$("#_insPosCustName").val("");
+			$("#searchSt").val("");
+			$("#addrDtl").val("");
+			$("#streetDtl").val("");
+			$("#_posRemark").val("");
+			$("#_posRemarkOth").val("");
+			
+			//CLEAR GRID
+			AUIGrid.clearGridData(purchaseGridID);  
+		}
+		
+	    if(this.value == 1358){  //HQ
+	    	$("#_divOth").css("display" , "none");
+            $("#_divHq").css("display" , "");
+           //FIELD CLEAR 
+           $("#salesmanPopCd").val("");
+           $("#_cmbWhBrnchIdPop").val("");
+           $("#cmbWhIdPop").val("");
+           $("#_recvDate").val("");
+           $("#_posRemark").val("");
+           $("#_posRemarkHq").val("");
+          //CLEAR GRID
+            AUIGrid.clearGridData(purchaseGridID);
+        }
+		
+	});
+    
+  //Member Search Popup
+    $('#memBtnPop').click(function() {
+        var callParam = {callPrgm : "1"};
+        Common.popupDiv("/common/memberPop.do", callParam, null, true);
+    });
+    
+    $('#salesmanPopCd').change(function(event) {
+
+        var memCd = $('#salesmanPopCd').val().trim();
+
+        if(FormUtil.isNotEmpty(memCd)) {
+            fn_loadOrderSalesman(0, memCd, 1);
+        }
+    });
 });//Document Ready Func End
 
+
+//////////////////////////////////////////////////
+function getLocIdByBrnchId(tempVal) {
+    
+	   /*  var tempVal = $(this).val(); */
+	    if(tempVal == null || tempVal == '' ){
+	        $("#cmbWhIdPop").val("");
+	    }else{
+	        var paramObj = {brnchId : tempVal};
+	        Common.ajax('GET', "/sales/pos/selectWarehouse", paramObj,function(result){
+	            
+	            if(result != null){
+	                $("#cmbWhIdPop").val(result.whLocDesc);
+	                $("#_hidLocId").val(result.whLocId); 
+	            }else{
+	                $("#cmbWhIdPop").val('');
+	                $("#_hidLocId").val(''); 
+	            }
+	        });
+	    }
+	}
 //////////////////////////////////////////////////
 function fn_payPass(){
     
@@ -411,6 +500,8 @@ function fn_calculateAmt(amt, qty) {
 <input type="hidden" name="payResult" id="_payResult">
 <input type="hidden" name="areaId" id="areaId">
 
+
+<input type="hidden"  id="_posRemark" name="posRemark" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -437,6 +528,7 @@ function fn_calculateAmt(amt, qty) {
 <h2>Particular Information</h2>
 </aside><!-- title_line end -->
 
+<div id="_divOth">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -449,7 +541,7 @@ function fn_calculateAmt(amt, qty) {
 <tr>
      <th scope="row">Customer Name</th>
      <td colspan="3">
-        <input type="text" title="" placeholder="CustomerName" class="w100p"  value="CASH" name="insPosCustName"/>
+        <input type="text" title="" placeholder="CustomerName" class="w100p"  value="CASH" name="insPosCustName" id="_insPosCustName"/> 
     </td>   
 </tr>
 <tr>
@@ -499,13 +591,56 @@ function fn_calculateAmt(amt, qty) {
 <tr>
     <th scope="row">Remark</th>
     <td colspan="3">
-        <input type="text" title="" placeholder="" class="w100p"  id="_posRemark" name="posRemark"/>
+        <input type="text" title="" placeholder="" class="w100p"  id="_posRemarkOth" /> 
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
+</div>
+
+<div id="_divHq" style="display: none;">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Member Code</th> 
+    <td> 
+        <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class=""  value="${memCodeMap.memCode}"/>
+        <input id="hiddenSalesmanPopId" name="salesmanPopId" type="hidden"  value="${memCodeMap.memId}"/>
+        <a id="memBtnPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Branch / Warehouse</th>
+    <td>
+         <select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop"></select>
+        <input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}">
+    </td>
+</tr>
+<tr>
+    <th scope="row">Receive Date</th>
+    <td>
+        <input type="text" title="기준년월" class="j_date w100p" placeholder="MM/YYYY" readonly="readonly"  id="_recvDate" name="recvDate"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td>
+        <input type="text" title="" placeholder="" class="w100p" id="_posRemarkHq"  />
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+
+</div>
 </form>
-<aside class="title_line"><!-- title_line start -->
+<aside class="title_line"><!-- title_line start --> 
 <h2>Charges Balance</h2>
 </aside><!-- title_line end -->
 

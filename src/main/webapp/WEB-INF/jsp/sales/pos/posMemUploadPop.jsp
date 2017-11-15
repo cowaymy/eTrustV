@@ -172,7 +172,7 @@ function setAUIGrid(jsonData) {
 	$.each(jsonData, function(key , value) {
 	  $.each(value, function(k, v) {
 			//console.log("key : " + k)
-			if(k.trim() == "MEMBERID"){  //Template
+			if(k.trim() == "MEMBER_CODE"){  //Template
 				memIdArray.push(v);
 			}
 	  });
@@ -309,7 +309,7 @@ function setInputFile2(){//인풋파일 세팅하기
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#">Template</a></p></li>
+    <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/sales/PosMemberUploadTemplate.xlsx">Template</a></p></li>
 </ul>
 
 <table class="type1 mt10"><!-- table start -->

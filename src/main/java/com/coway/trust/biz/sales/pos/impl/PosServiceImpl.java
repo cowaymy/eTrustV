@@ -211,7 +211,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			posMap.put("crAccId", SalesConstants.POS_CRACC_ID_OTH);
 			
 		}
-		
+	
 		posMap.put("posMasterSeq", posMasterSeq); //posId = 0   -- 시퀀스 
 		posMap.put("docNoPsn", docNoPsn); //posNo = 0  --문서채번
 		posMap.put("posBillId", SalesConstants.POS_BILL_ID); //pos Bill Id // 0
@@ -224,7 +224,14 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			params.put("memCode", params.get("userName"));
 			EgovMap memCodeMap = null;
 			memCodeMap = posMapper.selectMemberByMemberIDCode(params);
-			posMap.put("salesmanPopId", memCodeMap.get("memId"));
+			
+			//TODO IVYLIM is NULL
+			if(memCodeMap != null){
+				posMap.put("salesmanPopId", memCodeMap.get("memId"));
+			}else{
+				posMap.put("salesmanPopId", "0");
+			}
+			
 			
 		}else{
 			posMap.put("posCustName", nameMAp.get("name")); //posCustName = other Income만 사용함 .. 그러면 나머지는??
@@ -234,6 +241,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		posMap.put("posTaxes", rtnTax);
 		posMap.put("posDiscount", 0);    //TODO 확인 필요
 		//hidLocId  와 branch ID
+		if(params.get("hidLocId") == null ){
+			posMap.put("hidLocId", "0");
+		}
 		posMap.put("posMtchId", 0);
 		posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);  //107205
 		posMap.put("userId", params.get("userId"));
