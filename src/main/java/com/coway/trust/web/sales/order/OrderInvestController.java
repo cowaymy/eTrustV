@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderInvestService;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -38,16 +40,18 @@ public class OrderInvestController {
 	
 	@RequestMapping(value = "/orderInvestList.do")
 	public String orderInvestList(@RequestParam Map<String, Object> params, ModelMap model) {
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
+		
 		return "sales/order/orderInvestigationList";
 	}
 	
 	
 	@RequestMapping(value = "/orderInvestJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> orderInvestJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		logger.debug("!@###### startCrtDt : "+params.get("startCrtDt"));
-		logger.debug("!@###### ::::::::::: : "+params.toString());
-		
 		
 		String[] invReqStusId = request.getParameterValues("invReqStusId");
 		params.put("invReqStusIdList", invReqStusId);
