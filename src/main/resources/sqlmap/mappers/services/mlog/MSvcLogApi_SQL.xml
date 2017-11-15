@@ -126,10 +126,11 @@
 		from (
 		  SELECT ROW_NUMBER() OVER(PARTITION BY SRV_SALES_ORD_ID ORDER BY srv_expr_dt DESC) rn,
 		                    SAL0095D.srv_expr_dt,
+		                           SAL0001D.SALES_ORD_NO AS sales_Order_No,
 		                           SVC0001D.AS_NO AS service_No,
 		                            SAL0029D.NAME AS cust_Name,
 		                            SVC0001D.AS_STUS_ID AS job_Status,
-		                            <!--to_char(SVC0001D.AS_APPNT_DT,'YYYYMMDD') AS appointment_Date,
+		                            to_char(SVC0001D.AS_APPNT_DT,'YYYYMMDD') AS appointment_Date,
 		                            replace(substr(SVC0001D.AS_APPNT_TM, 0,5 ),':')  AS appointment_Time,
 		                            SVC0001D.AS_SESION_CODE AS job_Session,
 		                            SAL0029D.TYPE_ID as customer_Type,
@@ -140,7 +141,7 @@
 		                            SAL0027D.TEL_O AS office_Tel,
 		                            SAL0029D.EMAIL AS mail_Address,
 		                             SAL0029D.CUST_VA_NO AS customer_Va_No,
-		                            SAL0024D.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,  -->
+		                            SAL0024D.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,  
 		                            '' AS image_Url,
 		                            SYS0026M.STK_DESC AS product_Name,
 		                            SYS0026M.STK_CODE AS product_Code,
