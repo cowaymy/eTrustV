@@ -225,7 +225,7 @@ var cnvrListGrid;
 	            console.log("성공." + JSON.stringify(result));
 	            console.log("data : " + result.data);
 	            
-	            Common.alert("Success!!!!");       // 메시지 다시 만들어야함.
+	            Common.alert("New conversion batch successfully saved.");       // 메시지 다시 만들어야함.
 	          
 	        }
 	        , function(jqXHR, textStatus, errorThrown){
