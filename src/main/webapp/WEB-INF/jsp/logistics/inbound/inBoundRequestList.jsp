@@ -163,6 +163,44 @@ $(document).ready(function(){
 });
 $(function(){
     $('#search').click(function() {
+    	   var fromVal = $("#grsdt").val();
+           var toVal = $("#gredt").val();
+           var from =  new Date( $("#grsdt").datepicker("getDate"));
+           var to =  new Date( $("#gredt").datepicker("getDate"));
+           if("" != $("#grsdt").val() &&  "" == $("#gredt").val()){
+                   Common.alert("Please Check GR To Date.")
+                    $("#gredt").focus();   
+                   return false;
+           }else if("" == $("#grsdt").val() &&   "" != $("#gredt").val()){
+                   Common.alert("Please Check GR From Date.")
+                    $("#grsdt").focus();   
+                   return false;
+           }else if("" !=  $("#grsdt").val() && "" !=  $("#gredt").val() ){
+               if(0>= to - from ){
+                   Common.alert("Please Check GR Date.")
+                   return false;
+               }
+               
+           }
+    	   fromVal = $("#blsdt").val();
+           toVal = $("#bledt").val();
+           from =  new Date( $("#blsdt").datepicker("getDate"));
+           to =  new Date( $("#bledt").datepicker("getDate"));
+           if("" != $("#blsdt").val() &&  "" == $("#bledt").val()){
+                   Common.alert("Please Check B/L To Date.")
+                    $("#bledt").focus();   
+                   return false;
+           }else if("" == $("#blsdt").val() &&   "" != $("#bledt").val()){
+                   Common.alert("Please Check B/L From Date.")
+                    $("#blsdt").focus();   
+                   return false;
+           }else if("" !=  $("#blsdt").val() && "" !=  $("#bledt").val() ){
+               if(0>= to - from ){
+                   Common.alert("Please Check B/L Date.")
+                   return false;
+               }
+               
+           }
         SearchListAjax();
     });
     $('#insert').click(function(){
@@ -195,6 +233,7 @@ $(function(){
 function SearchListAjax() {
     var url = "/logistics/inbound/InBoundList.do";
     var param = $('#searchForm').serializeJSON();
+    console.log(param);
     Common.ajax("POST" , url , param , function(data){
     	console.log(data);
         AUIGrid.setGridData(listGrid, data.dataList);
@@ -309,12 +348,14 @@ function searchSMO(index){
                         <span> ~ </span>
                         <p><input id="bledt" name="bledt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
-                    <th scope="row">Status</th>
+                   <!--  <th scope="row">Status</th>
                     <td>
                         <select class="w100p" id="status" name="status">
                            <option value="N"  selected="selected">Not Yet</option>
                            <option value="D">Done</option>
                         </select>
+                    </td> -->
+                    <td colspan="2">
                     </td>
                 </tr>
             </tbody>

@@ -47,6 +47,7 @@
 			   WHERE L83.AP_CMPLT = 'X'
 				     AND L83.GR_CMPLT = 'X'
 				     AND NVL (L83.DEL_FLAG, 'Y') <> 'X'
+]]>					   
 				     AND S28.WH_LOC_GB = '06'
 				     AND L83.BL_NO = L84.BL_NO
 				     AND L83.INV_NO = L84.INV_NO
@@ -55,8 +56,22 @@
 				     AND L84.BL_NO = REQ.BL_NO(+)
 				     AND L84.ITM_SEQ = REQ.BL_ITM_SEQ(+)
 				     AND L84.MATRL_NO = REQ.ITM_CODE(+)
+				     <if test="invno != null and invno != ''">
+				     AND L83.BL_NO LIKE #{invno}||'%'
+                    </if>
+				     <if test="blno != null and blno != ''">
+				     AND L83.INV_NO LIKE #{invno}||'%'
+                    </if>
+				     <if test="location != null and location != ''">
+				     AND S28.WH_LOC_ID =  #{location} 
+                    </if>
+				     <if test="grsdt != null and grsdt != '' and gredt != null and gredt != ''">
+				     AND L83.GR_DT BETWEEN TO_CHAR(TO_DATE(#{grsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{gredt},'DD/MM/YYYY'),'YYYYMMDD') 
+                    </if>
+				     <if test="blsdt != null and blsdt != '' and bledt != null and bledt != ''">
+				     AND L83.SHIP_DT BETWEEN TO_CHAR(TO_DATE(#{blsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{bledt},'DD/MM/YYYY'),'YYYYMMDD') 
+                    </if>
 			ORDER BY L83.BL_NO, L84.ITM_SEQ
-]]>					   
 	</select>
 	
 	<select id="inboundLocation" parameterType="map" resultType="EgovMap">
@@ -181,8 +196,8 @@
                     L47.TRNSC_TYPE,
                     L47.TRNSC_TYPE_DTL,
                     L47.PRIDIC_FRQNCY,
-                    L47.REQST_CRT_DT,
-                    L47.REQST_REQUIRE_DT,
+                    TO_CHAR(L47.REQST_CRT_DT,'DD/MM/YYYY') REQST_CRT_DT,
+                    TO_CHAR(L47.REQST_REQUIRE_DT,'DD/MM/YYYY') REQST_REQUIRE_DT,
                     L47.REF_DOC_NO,
                     L47.DOC_HDER_TXT,
                     L47.GOODS_RCIPT,
