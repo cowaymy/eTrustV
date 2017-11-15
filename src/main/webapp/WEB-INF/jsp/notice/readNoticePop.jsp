@@ -11,21 +11,44 @@
             Common.confirm("Are you sure you want to delete?", fn_deleteNotice);
         });
 
+        $("input[name=attachFile]").on("dblclick", function () {
+
+            Common.showLoader();
+
+            var $this = $(this);
+            var fileId = $this.attr("data-id");
+
+            $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
+                httpMethod: "POST",
+                data: {
+                    fileId: fileId
+                }
+            })
+                .done(function () {
+                    Common.removeLoader();
+                    console.log('File download a success!');
+                })
+                .fail(function () {
+                    Common.removeLoader();
+                    Common.alert('File download failed!');
+                });
+            return false; //this is critical to stop the click event which will trigger a normal file download
+        });
     });
 
     //common_pub.js 에서 파일 change 이벤트 발생시 호출됨...
-    function fn_abstractChangeFile(thisfakeInput){
+    function fn_abstractChangeFile(thisfakeInput) {
         // modyfy file case
-        if(FormUtil.isNotEmpty(thisfakeInput.attr("data-id"))){
+        if (FormUtil.isNotEmpty(thisfakeInput.attr("data-id"))) {
             var updateFileIds = $("#updateFileIds").val();
             $("#updateFileIds").val(thisfakeInput.attr("data-id") + DEFAULT_DELIMITER + updateFileIds);
         }
     }
 
     //common_pub.js 에서 파일 delete 이벤트 발생시 호출됨...
-    function fn_abstractDeleteFile(thisfakeInput){
+    function fn_abstractDeleteFile(thisfakeInput) {
         // modyfy file case
-        if(FormUtil.isNotEmpty(thisfakeInput.attr("data-id"))){
+        if (FormUtil.isNotEmpty(thisfakeInput.attr("data-id"))) {
             var deleteFileIds = $("#deleteFileIds").val();
             $("#deleteFileIds").val(thisfakeInput.attr("data-id") + DEFAULT_DELIMITER + deleteFileIds);
         }
@@ -205,57 +228,58 @@
                     <th scope="row" rowspan="2">Attached File</th>
                     <td>
                         <c:forEach var="fileInfo" items="${files}" varStatus="status">
-                            <div class="auto_file2"><!-- auto_file start -->
-                                <input title="file add" style="width: 300px;" type="file">
-                                <label>
-                                    <input type='text' class='input_text' readonly='readonly' value="${fileInfo.atchFileName}" data-id="${fileInfo.atchFileId}" />
-                                    <span class='label_text'><a href='#'>File</a></span>
-                                </label>
-                                <span class='label_text'><a href='#'>Add</a></span>
-                                <span class='label_text'><a href='#'>Delete</a></span>
-                            </div>
+                        <div class="auto_file2"><!-- auto_file start -->
+                            <input title="file add" style="width: 300px;" type="file">
+                            <label>
+                                <input type='text' class='input_text' readonly='readonly' name="attachFile"
+                                       value="${fileInfo.atchFileName}" data-id="${fileInfo.atchFileId}"/>
+                                <span class='label_text'><a href='#'>File</a></span>
+                            </label>
+                            <span class='label_text'><a href='#'>Add</a></span>
+                            <span class='label_text'><a href='#'>Delete</a></span>
+                        </div>
                         </c:forEach>
 
-                            <div class="auto_file2"><!-- auto_file start -->
-                                <input title="file add" style="width: 300px;" type="file">
-                                <label>
-                                    <input type='text' class='input_text' readonly='readonly' value="" data-id="" />
-                                    <span class='label_text'><a href='#'>File</a></span>
-                                </label>
-                                <span class='label_text'><a href='#'>Add</a></span>
-                                <span class='label_text'><a href='#'>Delete</a></span>
-                            </div>
+                        <div class="auto_file2"><!-- auto_file start -->
+                            <input title="file add" style="width: 300px;" type="file">
+                            <label>
+                                <input type='text' class='input_text' readonly='readonly' value="" data-id=""/>
+                                <span class='label_text'><a href='#'>File</a></span>
+                            </label>
+                            <span class='label_text'><a href='#'>Add</a></span>
+                            <span class='label_text'><a href='#'>Delete</a></span>
+                        </div>
 
-                        </div><!-- auto_file end -->
-                    </td>
-                </tr>
-                </tbody>
-            </table><!-- table end -->
-        </form>
+</div><!-- auto_file end -->
+</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
 
-        <!--
-        <ul class="left_btns">
-            <li><p class="red_text">* 표시가 된 곳은 필수 입력입니다.</p></li>
+<!--
+<ul class="left_btns">
+    <li><p class="red_text">* 표시가 된 곳은 필수 입력입니다.</p></li>
+</ul>
+-->
+
+<c:choose>
+    <c:when test="${not empty noticeInfo.crtUserId && noticeInfo.rgstUserNm eq userName}">
+        <ul class="center_btns">
+            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_modifyNotice();">Modify</a></p></li>
+            <li><p class="btn_blue2 big"><a href="#" id="delete">Delete</a></p></li>
+            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_close();">List</a></p></li>
         </ul>
-        -->
-
-        <c:choose>
-            <c:when test="${not empty noticeInfo.crtUserId && noticeInfo.rgstUserNm eq userName}">
-                <ul class="center_btns">
-                    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_modifyNotice();">Modify</a></p></li>
-                    <li><p class="btn_blue2 big"><a href="#" id="delete">Delete</a></p></li>
-                    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_close();">List</a></p></li>
-                </ul>
-            </c:when>
-            <c:otherwise>
-                <ul class="center_btns">
-                    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_close();">List</a></p></li>
-                </ul>
-            </c:otherwise>
-        </c:choose>
+    </c:when>
+    <c:otherwise>
+        <ul class="center_btns">
+            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_close();">List</a></p></li>
+        </ul>
+    </c:otherwise>
+</c:choose>
 
 
-    </section><!-- pop_body end -->
+</section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
 </body>

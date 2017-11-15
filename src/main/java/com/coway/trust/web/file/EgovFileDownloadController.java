@@ -1,23 +1,22 @@
 package com.coway.trust.web.file;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.common.FileService;
+import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.util.EgovBasicLogger;
 import com.coway.trust.util.EgovResourceCloseHelper;
 
@@ -43,13 +42,12 @@ import com.coway.trust.util.EgovResourceCloseHelper;
 @Controller
 @RequestMapping(value = "/file")
 public class EgovFileDownloadController {
-	
+
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
 
-	// TODO : 파일 데이터 조회를 위한 service
-	// @Resource(name = "EgovFileMngService")
-	// private EgovFileMngService fileService;
+	@Autowired
+	private FileService fileService;
 
 	/**
 	 * 브라우저 구분 얻기.
@@ -127,9 +125,21 @@ public class EgovFileDownloadController {
 	public void fileDownload(@RequestParam Map<String, Object> params, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		String subPath = (String) params.get("subPath");
-		String fileName = (String) params.get("fileName");
-		String orignlFileNm = (String) params.get("orignlFileNm");
+		String fileId = (String) params.get("fileId");
+		String subPath;
+		String fileName;
+		String originalFileName;
+
+		if (StringUtils.isNotEmpty(fileId)) {
+			FileVO fileVO = fileService.getFile(Integer.parseInt(fileId));
+			subPath = fileVO.getFileSubPath();
+			fileName = fileVO.getPhysiclFileName();
+			originalFileName = fileVO.getAtchFileName();
+		} else {
+			subPath = (String) params.get("subPath");
+			fileName = (String) params.get("fileName");
+			originalFileName = (String) params.get("orignlFileNm");
+		}
 
 		File uFile = new File(uploadDir + File.separator + subPath, fileName);
 		long fSize = uFile.length();
@@ -137,7 +147,8 @@ public class EgovFileDownloadController {
 		if (fSize > 0) {
 			String mimetype = "application/x-msdownload";
 			response.setContentType(mimetype);
-			setDisposition(orignlFileNm, request, response);
+			response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
+			setDisposition(originalFileName, request, response);
 			BufferedInputStream in = null;
 			BufferedOutputStream out = null;
 
@@ -155,11 +166,11 @@ public class EgovFileDownloadController {
 
 		} else {
 			response.setContentType("application/x-msdownload");
-
+			response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
 			PrintWriter printwriter = response.getWriter();
 
 			printwriter.println("<html>");
-			printwriter.println("<br><br><br><h2>Could not get file name:<br>" + orignlFileNm + "</h2>");
+			printwriter.println("<br><br><br><h2>Could not get file name:<br>" + originalFileName + "</h2>");
 			printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
 			printwriter.println("<br><br><br>&copy; webAccess");
 			printwriter.println("</html>");
