@@ -109,7 +109,7 @@
 								              <if test="cmbbranchId != null and cmbbranchId != '' ">
                                                      AND Extent9.CODE  IN #{cmbbranchId}
                                               </if>
-                                              <if test="cmbctId != null and cmbbranchId != '' ">
+                                              <if test="cmbctId != null and cmbctId != '' ">
                                                      AND Extent8.MEM_CODE IN #{cmbctId}
                                               </if>
 								              

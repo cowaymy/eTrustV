@@ -507,19 +507,17 @@ function fn_excelDown(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:70px" />
-    <col style="width:130px" />
-    <col style="width:90px" />
-    <col style="width:*" />
     <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:170px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
     <th scope="row">AS Type</th>
-    <td colspan="2">
+    <td>
     <select class="multy_select w100p" multiple="multiple" id="asType" name="asType">
     <option value="675">Auto AS</option>
     <option value="674">Normal AS</option>
@@ -527,7 +525,7 @@ function fn_excelDown(){
     </select>
     </td>
     <th scope="row">AS Status</th>
-    <td colspan="2">
+    <td>
     <select class="multy_select w100p" multiple="multiple" id="asStatus" name="asStatus">
     <option value="1"  selected>Active</option>
     <option value="4">Completed</option>
@@ -546,15 +544,14 @@ function fn_excelDown(){
 </tr>
 <tr>
     <th scope="row">AS Number</th>
-    <td colspan="2"><input type="text" title="" placeholder="AS Number" class="w100p" id="asNum" name="asNum"/></td>
+    <td><input type="text" title="" placeholder="AS Number" class="w100p" id="asNum" name="asNum"/></td>
     <th scope="row">Result Number</th>
-    <td colspan="2"><input type="text" title="" placeholder="Result Number" class="w100p" id="resultNum" name="resultNum"/></td>
+    <td><input type="text" title="" placeholder="Result Number" class="w100p" id="resultNum" name="resultNum"/></td>
     <th scope="row">Order Number</th>
     <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum"/></td>
 </tr>
+<!-- 171115 :: 선한이  -->
 <tr>
-    <th scope="row">Customer Name</th>
-    <td><input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/></td>
     <th scope="row">DSC</th>
     <td>
     <select id="cmbbranchId" name="cmbbranchId" class="w100p" >
@@ -574,6 +571,10 @@ function fn_excelDown(){
          </c:forEach> --%>
     </select>
     </td>
+</tr>
+<tr>
+    <th scope="row">Customer Name</th>
+    <td colspan="3"><input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/></td>
     <th scope="row">NRIC/Company No</th>
     <td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="nricNum"  name="nricNum"/></td>
 </tr>
