@@ -102,15 +102,15 @@
                   AND T3.SRV_CNTRCT_PAC_STUS_ID = '1'
                   AND TO_CHAR(T3.SRV_CNTRCT_PAC_START_DT, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND TO_CHAR(T3.SRV_CNTRCT_PAC_END_DT,   'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND T3.PAC_TYPE = '2'
                  LEFT OUTER
                  JOIN SAL0091M T4
                    ON 2284 != #{salesType}
                   AND T4.SRV_MEM_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T4.SRV_MEM_STUS_ID = '1'
+                  AND T4.PAC_TYPE = '2'
                 WHERE T1.PROMO_ITM_STK_ID = #{productCode}
                   AND T1.PROMO_ITM_STUS_ID = 1
-                  AND T3.PAC_TYPE = '2'
-                  AND T4.PAC_TYPE = '2'
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
     </select>

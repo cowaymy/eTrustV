@@ -1660,7 +1660,7 @@
 		     , STREET
 		     ) 
 		VALUES
-		     ( PAY0033D_SEQ.NEXTVAL
+		     ( PAY0033D_TAX_INVC_ID_SEQ.NEXTVAL
 		     , #{taxInvcRefNo}
 		     , SYSDATE
 		     , #{taxInvcCustName}
@@ -1713,7 +1713,7 @@
 		     , STREET
 		     )
 		VALUES
-		     ( PAY0034D.SEQ_NEXTVAL
+		     ( PAY0034D_INVC_ITM_ID_SEQ.NEXTVAL
 		     , #{taxInvcId}
 		     , #{invcItmOrdNo}
 		     , #{invcItmPoNo}

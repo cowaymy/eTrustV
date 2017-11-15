@@ -974,7 +974,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
                     TaxInvoiceOutright.setTaxInvcCnty(street);
                     TaxInvoiceOutright.setTaxInvcTaskId(0);
                   //TaxInvoiceOutright.TaxInvoiceCreated = DateTime.Now;
-                    TaxInvoiceOutright.setTaxInvcRem((String) irv.get("installEntryId"));
+                    TaxInvoiceOutright.setTaxInvcRem(String.valueOf((BigDecimal)irv.get("installEntryId")));
                     
                     BigDecimal totAmt = salesOrderMVO.getTotAmt();
                     
@@ -991,6 +991,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
                     
                     TaxInvoiceOutright.setTaxInvcOverdu(BigDecimal.ZERO);
                     TaxInvoiceOutright.setTaxInvcAmtDue(salesOrderMVO.getTotAmt());
+                    TaxInvoiceOutright.setAreaId(areaId);
+                    TaxInvoiceOutright.setAddrDtl(addrDtl);
+                    TaxInvoiceOutright.setStreet(street);
                     
                     orderRequestMapper.insertAccTaxInvoiceOutright(TaxInvoiceOutright);
                     
@@ -1053,7 +1056,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             if(orderExchangeMasterVO.getSoCurStusId() == 25) {
                 //INSERT ORDER LOG >> CUSTOMER IN-USE
                 //lv = cm.GetLatestOrderLogByOrderID(qryOrder.SalesOrderID, 5);
-            	logMap.put("salesOrderId", (String)params.get("salesOrdNo"));
+            	logMap.put("salesOrderId", CommonUtils.intNvl(params.get("salesOrdId")));
             	logMap.put("prgrsId", 5);
             	
                 lv = orderDetailMapper.selectLatestOrderLogByOrderID(logMap);
@@ -1064,7 +1067,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             else {
                 //INSERT ORDER LOG >> INSTALLATION CALL LOG (NEW INSTALLATION)
                 //lv = cm.GetLatestOrderLogByOrderID(qryOrder.SalesOrderID, 2);
-            	logMap.put("salesOrderId", (String)params.get("salesOrdNo"));
+            	logMap.put("salesOrderId", CommonUtils.intNvl(params.get("salesOrdId")));
             	logMap.put("prgrsId", 2);
             	
                 lv = orderDetailMapper.selectLatestOrderLogByOrderID(logMap);
@@ -1078,7 +1081,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             OrderLog.setSalesOrdId(orderExchangeMasterVO.getSoId());
             OrderLog.setPrgrsId(ProgressID);
           //OrderLog.LogDate = DateTime.Now;
-            OrderLog.setRefId(lv != null ? (int) lv.get("refId") : 0);
+            OrderLog.setRefId(lv != null ? CommonUtils.intNvl(lv.get("refId")) : 0);
             OrderLog.setIsLok(isLock == false ? SalesConstants.IS_FALSE : SalesConstants.IS_TRUE);
             OrderLog.setLogCrtUserId(orderExchangeMasterVO.getSoExchgCrtUserId());
           //OrderLog.LogCreated = DateTime.Now;
@@ -1086,8 +1089,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             orderRegisterMapper.insertSalesOrderLog(OrderLog);
 		}
 		
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if(true) throw new Exception();
+//		if(true) throw new Exception(); //For Test
         
 		String msg = "Order Number : " + (String)somMap.get("salesOrdNo") + "<br/>Application type successfully exchanged.";
         
@@ -1778,7 +1780,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 	@Override
 	public EgovMap selectValidateInfo(Map<String, Object> params) {
 		
-		String isInValid = "", msgT = "", msg = "";
+		String isInValid = "Valid", msgT = "", msg = "";
 				
 		EgovMap view = this.selectOrderSimulatorViewByOrderNo2(params);
 		EgovMap RESULT = new EgovMap();

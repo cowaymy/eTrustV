@@ -592,15 +592,16 @@
         
         Common.ajaxSync("GET", "/sales/order/selectValidateInfo.do", {salesOrdNo : ORD_NO}, function(rsltInfo) {
             if(rsltInfo != null) {
-                valid = rsltInfo.IS_IN_VALID;
-                msgT  = rsltInfo.MSG_T;
-                msg   = rsltInfo.MSG;
+                valid = rsltInfo.isInValid;
+                msgT  = rsltInfo.msgT;
+                msg   = rsltInfo.msg;
             }
-            console.log('fn_validateOrder valid:'+valid);
         });
 
-        if(valid == 'isInValid') {
-            Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_selfClose);
+//      if(valid == 'isInValid') {
+        if(valid != 'isInValid') { //TEST
+//          Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_selfClose);
+            Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
             fn_disableControlAexc();
         }
     }
