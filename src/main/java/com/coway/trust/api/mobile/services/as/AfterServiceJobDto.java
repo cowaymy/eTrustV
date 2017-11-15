@@ -44,7 +44,7 @@ public class AfterServiceJobDto {
 	private String checkInGps;
 
 	@ApiModelProperty(value = "일반/법인 고객 구분")
-	private String customerType;
+	private int customerType;
 
 	@ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
 	private int customerId;
@@ -338,11 +338,11 @@ public class AfterServiceJobDto {
 		this.checkInGps = checkInGps;
 	}
 
-	public String getCustomerType() {
+	public int getCustomerType() {
 		return customerType;
 	}
 
-	public void setCustomerType(String customerType) {
+	public void setCustomerType(int customerType) {
 		this.customerType = customerType;
 	}
 
