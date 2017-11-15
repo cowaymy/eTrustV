@@ -44,6 +44,8 @@ public interface MlogApiService {
 	
 	List<EgovMap> getItemBankItemList();
 	
+	List<EgovMap> getItemBankResultList(Map<String, Object> params);
+	
 	List<EgovMap> getCommonReqHeader(Map<String, Object> params);
 	
 	List<EgovMap> getCommonReqParts(Map<String, Object> params);
