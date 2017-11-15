@@ -40,8 +40,8 @@
                      <if test="cmbbranchId != null and cmbbranchId != '' ">
 			          AND B.BRNCH_ID = #{cmbbranchId}
 			       </if> 
-			       <if test="CTCode != null and CTCode != ''">
-				        AND C.MEM_CODE =  #{CTCode}
+			       <if test="cmbctId != null and cmbctId != ''">
+				        AND C.MEM_CODE =  #{cmbctId}
 				      </if>
         </select>
         
@@ -105,7 +105,7 @@
        <!-- 171114 :: 선한이 -->
        <select id="seleCtCodeSearch2" parameterType="Map" resultType="egovMap">
            select 
-            A.MEM_ID CODE_ID, A.MEM_CODE || ' - '|| NAME CODE_NAME , NAME
+            A.MEM_CODE CODE_ID, A.MEM_CODE || ' - '|| NAME CODE_NAME , NAME
             from org0001d A INNER JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID 
             where brnch =#{groupCode}
             AND B.MEM_LVL IN(2,3,4) AND STUS = 1

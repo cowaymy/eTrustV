@@ -334,14 +334,12 @@
     </td>
     <th scope="row">CT Code</th>
     <td>
-    
     <select id="cmbctId" name="cmbctId" class="w100p" >
         <%-- <option value="">Choose One</option>
          <c:forEach var="list" items="${ssCapacityCtList2 }">
             <option value="${list.memId }">${list.memCode }</option>
          </c:forEach> --%>
      </select>
-
     </td>
     <th scope="row">Status</th>
     <td>
