@@ -238,7 +238,7 @@
 <h2>Non-Valued Material Code</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+<!--     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
@@ -275,15 +275,15 @@
 </table><!-- table end -->
 </form>
 </section><!-- search_table end -->
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-    <dt>Link</dt>
-    <dd>
-    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-    </dd>
-</dl>
-</aside>
+<!-- <aside class="link_btns_wrap">link_btns_wrap start -->
+<%-- <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
+<!-- <dl class="link_list"> -->
+<!--     <dt>Link</dt> -->
+<!--     <dd> -->
+<%--     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p> --%>
+<!--     </dd> -->
+<!-- </dl> -->
+<!-- </aside> -->
 
 <section class="search_result"><!-- search_result start -->
 
