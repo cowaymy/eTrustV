@@ -366,8 +366,8 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-      <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-      <li><p class="btn_gray"><a id="search"><span class="search"></span>Search</a></p></li>
+<!--       <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+      <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 
@@ -407,10 +407,10 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 		<dl class="link_list">
 		    <dt>Link</dt>
 		    <dd>
-		    <ul class="btns">
-		        <li><p class="link_btn"><a id="editFile">Edit File Space</a></p></li>
-		        <li><p class="link_btn"><a id="reUpFile">Re-Upload File</a></p></li>
-		    </ul>
+<!-- 		    <ul class="btns"> --> <!-- 추후개발 -->
+<!-- 		        <li><p class="link_btn"><a id="editFile">Edit File Space</a></p></li> -->
+<!-- 		        <li><p class="link_btn"><a id="reUpFile">Re-Upload File</a></p></li> -->
+<!-- 		    </ul> -->
 		    <ul class="btns">
 		        <li><p class="link_btn type2"><a id="newUpFile">Upload New File</a></p></li>
 		    </ul>
