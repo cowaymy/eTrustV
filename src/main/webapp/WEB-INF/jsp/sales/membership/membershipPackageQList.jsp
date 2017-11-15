@@ -30,7 +30,8 @@ $(document).ready(function(){
     
     CommonCombo.make("PAC_TYPE", "/common/selectCodeList.do", {groupCode:'366', orderValue:'CODE'}, "", {
         id: "code",
-        name: "codeName"
+        name: "codeName",
+        type: "M"
     });
 });
 
