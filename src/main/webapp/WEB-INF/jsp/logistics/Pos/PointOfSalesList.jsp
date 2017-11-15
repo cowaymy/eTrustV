@@ -126,7 +126,7 @@ var subgridpros = {
         };
 var resop = {
         rowIdField : "rnum",            
-        editable : true,
+        editable : false,
         fixedColumnCount : 6,
         groupingFields : ["reqstno"],
         displayTreeOpen : true,
