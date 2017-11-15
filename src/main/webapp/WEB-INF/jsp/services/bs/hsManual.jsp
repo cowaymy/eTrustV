@@ -202,17 +202,26 @@
                     }, {
                         dataField : "salesOrdId",
                         headerText : "salesOrdId",
-                        width : 120
-                        ,                             
+                        width : 120,                             
                         visible:false
                      },{
+                        dataField : "result",
+                        headerText : "result",
+                        width : 120
+                         ,                             
+                        visible:false
+                     },{                     
                         dataField : "undefined",
                         headerText : "Edit",
                         width : 170,
                         renderer : {
                               type : "ButtonRenderer",
                               labelText : "Edit",
-                              onclick : function(rowIndex, columnIndex, value, item) {
+                              onclick : function(rowIndex, columnIndex, value, item) {               
+                                   
+                                   if(item.result == "" || item.result == undefined) {
+                                        return false;
+                                   }
                                    
                                   $("#_schdulId").val(item.schdulId);
                                   $("#_salesOrdId").val(item.salesOrdId);
@@ -542,7 +551,7 @@
 			      schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
 			      salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
 			      hsStuscd = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId");
-
+                  result =     AUIGrid.getCellValue(myGridID, event.rowIndex, "result");
                     //Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
 			  }); 
 
