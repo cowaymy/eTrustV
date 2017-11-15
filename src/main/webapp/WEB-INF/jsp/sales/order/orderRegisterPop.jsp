@@ -1161,29 +1161,15 @@
         
         if($("#ordPromo option:selected").index() > 0) {
 
-            if($("#exTrade").val() == 1) {
-                
-                console.log('!@#### fn_hiddenSave START 11111');
-                
-                //this.RW_OldOrder.VisibleOnPageLoad = true;
-                //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
-                Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
-            }
-            else {
-                console.log('!@#### fn_hiddenSave START 22222');
-                
-                //this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
-                //this.LoadRadWindowOrderInfo();
-                
+            //For Test 2017.11.15
+            //if($("#exTrade").val() == 1) {
+            //    Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+            //}
+            //else {
                 Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-            }
+            //}
         }
         else {
-            console.log('!@#### fn_hiddenSave START 33333');
-            
-            //this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
-            //this.LoadRadWindowOrderInfo();
-            
             Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
         }
     }
