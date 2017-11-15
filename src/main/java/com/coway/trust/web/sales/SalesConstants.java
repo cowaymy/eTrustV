@@ -287,5 +287,6 @@ public class SalesConstants {
 	public static final String ORD_NO = "sales.OrderNo";
 	public static final String MSG_NO_ORDNO = "sales.msg.noOrdNo";
 	public static final String MSG_STUS_MISMATCH = "sales.msg.stusMismatch";
+	public static final String MSG_RENTAL_REM = "sales.msg.rem";
 
 }

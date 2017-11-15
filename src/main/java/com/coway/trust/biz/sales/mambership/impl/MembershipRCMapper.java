@@ -48,6 +48,29 @@ public interface MembershipRCMapper {
 	List<EgovMap> selectBranchList(Map<String, Object> params);
 	EgovMap selectCancellationInfo(Map<String, Object> params);
 	List<EgovMap> selectCodeList(Map<String, Object> params);
+	List<EgovMap> selectCancellReqInfo(Map<String, Object> params);
+	EgovMap selectCancellMemInfo(Map<String, Object> params);
+	int selectBillInfo(Map<String, Object> params);
+	EgovMap selectContractSchedules(Map<String, Object> params);
+	float selectContractLedger(Map<String, Object> params);
+	EgovMap selectOrdInfo(Map<String, Object> params);
+	EgovMap selectSrvMemConfigInfo(Map<String, Object> params);
+	EgovMap selectMemAddrInfo(Map<String, Object> params);
+	EgovMap selectCustInfo(Map<String, Object> params);
+	EgovMap selectCustContactInfo(Map<String, Object> params);
+	
+	String getDocNo(Map<String, Object> params);
+	void insert_SAL0086D(Map<String, Object> params);
+	
+	EgovMap selectServiceContracts(Map<String, Object> params);
+	void update_SAL0077D(Map<String, Object> params);
+	
+	EgovMap selectSrvConfigPeriods(Map<String, Object> params);
+	void update_SAL0088D(Map<String, Object> params);
+	
+	EgovMap selectServiceContractDetail(Map<String, Object> params);
+	void update_SAL0078D(Map<String, Object> params);
+	void saveCanclPnaltyBill(Map<String, Object> params);
 
 
 }

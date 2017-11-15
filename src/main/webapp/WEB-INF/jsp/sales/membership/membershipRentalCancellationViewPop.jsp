@@ -5,7 +5,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="salse.title.mRCancellView" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#"  id="pcl_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"  id="pcl_close"><spring:message code="expense.CLOSE" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

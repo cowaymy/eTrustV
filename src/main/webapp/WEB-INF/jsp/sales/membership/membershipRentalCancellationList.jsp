@@ -25,7 +25,7 @@ $(document).ready(function(){
     
     $("#btnSearch").click(fn_selectListAjax);
     $("#btnClear").click(fn_Clear);
-   // $("#btnNew").click(fn_newRequest);
+    $("#btnNew").click(fn_newPop);
     
     CommonCombo.make("branch", "/sales/membership/selectBranchList", "", "", {
         id: "brnchId",
@@ -125,7 +125,7 @@ function creatGrid(){
     var cancellOptions = {
                showStateColumn:false,
                showRowNumColumn    : false,
-               usePaging : false,
+               usePaging : true,
                editable : false,
                softRemoveRowMode:false
          }; 
@@ -148,6 +148,14 @@ function fn_viewPop() {
 }
 
 
+function fn_goCancellRAW(){
+    location.replace("/sales/membership/cancellationRAW.do");
+}
+
+function fn_newPop(){
+    Common.popupDiv("/sales/membership/cancellationNewPop.do", null, null, true, "cancellationNewPop");
+    
+}
 
 
 </script>
@@ -176,11 +184,11 @@ function fn_viewPop() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
+	<col style="width:150px" />
 	<col style="width:*" />
-	<col style="width:180px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:180px" />
+	<col style="width:130px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -227,9 +235,9 @@ function fn_viewPop() {
 	<dt><spring:message code="sales.Link" /></dt>
 	<dd>	
 	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#"><spring:message code="sales.raw" /></a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript:fn_goCancellRAW();"><spring:message code="sales.raw" /></a></p></li>
 	</ul>
-	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+	<p class="hide_btn"><a href="#" ><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
 </dl>
 </aside><!-- link_btns_wrap end -->

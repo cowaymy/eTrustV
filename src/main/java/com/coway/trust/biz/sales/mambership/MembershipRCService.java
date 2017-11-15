@@ -23,7 +23,17 @@ public interface MembershipRCService {
 	List<EgovMap> selectReasonList(Map<String, Object> params);	
 	List<EgovMap> selectBranchList(Map<String, Object> params);
 	EgovMap selectCancellationInfo(Map<String, Object> params);
-	List<EgovMap> selectCodeList(Map<String, Object> params);	
+	List<EgovMap> selectCodeList(Map<String, Object> params);
+	List<EgovMap> selectCancellReqInfo(Map<String, Object> params);
+	
+	EgovMap selectMemInfo(Map<String, Object> params);
+
+	EgovMap selectOrdInfo(Map<String, Object> params);
+	
+	EgovMap selectCustInfo(Map<String, Object> params);
+	
+	String saveContractCancellation(Map<String, Object> params);
+	EgovMap selectSrvMemConfigInfo(Map<String, Object> params);
 	
 }
   
