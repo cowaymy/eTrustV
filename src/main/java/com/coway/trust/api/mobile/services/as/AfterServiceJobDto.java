@@ -105,7 +105,7 @@ public class AfterServiceJobDto {
 
 	private String requestorContact;
 
-	private String contractDuration;
+	private int contractDuration;
 
 	private int monthlyRentalFees;
 
@@ -514,11 +514,11 @@ public class AfterServiceJobDto {
 		this.requestorContact = requestorContact;
 	}
 
-	public String getContractDuration() {
+	public int getContractDuration() {
 		return contractDuration;
 	}
 
-	public void setContractDuration(String contractDuration) {
+	public void setContractDuration(int contractDuration) {
 		this.contractDuration = contractDuration;
 	}
 
