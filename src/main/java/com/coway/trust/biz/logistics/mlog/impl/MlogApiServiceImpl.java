@@ -122,6 +122,12 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getItemBankItemList();
 	}
+	
+	@Override
+	public List<EgovMap> getItemBankResultList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getItemBankResultList(params);
+	}
 
 	@Override
 	public List<EgovMap> getCommonReqHeader(Map<String, Object> params) {
