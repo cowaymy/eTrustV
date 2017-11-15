@@ -113,7 +113,7 @@ function comma(str) {
     <th scope="col" class="bg_color_gray"><spring:message code="budget.Adjustment" /> <spring:message code="budget.Amount" /></th>
     <th scope="col"><spring:message code="budget.Total" /> <spring:message code="budget.Amount" /></th>
     <th scope="col" class="bg_color_gray"><spring:message code="budget.Pending" /> <spring:message code="budget.Amount" /></th>
-    <th scope="col" class="bg_color_gray"><spring:message code="budget.Consumed" /> <spring:message code="budget.Amount" /></th>
+    <th scope="col" class="bg_color_gray"><spring:message code="budget.Utilised" /> <spring:message code="budget.Amount" /></th>
     <th scope="col" class="black_text bold_text"><spring:message code="budget.Available" /> <spring:message code="budget.Amount" /></th>
 </tr>
 </thead>
