@@ -82,13 +82,14 @@
 			<!-- <input type="text" id="reportFileName" name="reportFileName" value="/sample/CustOwnOrderList.rpt" /><br /> -->
 
 
-			<input type="text" id="reportFileName" name="reportFileName" value="/sample/GovAgreementPDF_OracleServer.rpt" /><br />
+			<input type="text" id="reportFileName" name="reportFileName" value="/scm/PO_management.rpt" /><br />
 
 
 			<!-- view type
 			WINDOW : window popup
 			PDF : PDF 다운로드
-			EXCEL : EXCEL 다운로드
+			EXCEL : EXCEL 다운로드 (데이터만)
+			EXCEL_FULL : 리포트 그대로 엑셀로 저장.
 			CVS : CVS 다운로드
 			MAIL_PDF, MAIL_EXCEL, MAIL_CVS:  이메일 전송
 			-->
@@ -107,7 +108,7 @@
 			리포트 파일에 전달될 파라미터 설정 : <br/>
 
 			<input type="text" id="V_WHERESQL" name="V_WHERESQL" value="AND ArgM.GOV_AG_BATCH_NO = 'AGM0001691'" /><br />
-			<input type="text" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" /><br />
+			<input type="text" id="V_PO_NO" name="V_PO_NO" value="MYKL170112A011" /><br />
 
 			<!--
 			<input type="text" id="V_REFNO" name="V_REFNO" value="1111111" /><br />
