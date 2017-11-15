@@ -44,7 +44,7 @@ public class AfterServiceJobDto {
 	private String checkInGps;
 
 	@ApiModelProperty(value = "일반/법인 고객 구분")
-	private int customerType;
+	private String customerType;
 
 	@ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
 	private int customerId;
@@ -95,17 +95,17 @@ public class AfterServiceJobDto {
 	private String productCode;
 
 	@ApiModelProperty(value = "application Type (Rental…)")
-	private int appType;
+	private String appType;
 
 	private String instruction;
 
-	private int  salesPromotion;
+	private String salesPromotion;
 
-	private int requestor;
+	private String requestor;
 
 	private String requestorContact;
 
-	private int  contractDuration;
+	private String contractDuration;
 
 	private int monthlyRentalFees;
 
@@ -115,7 +115,7 @@ public class AfterServiceJobDto {
 	private String paymentMode;
 
 	@ApiModelProperty(value = "결제 은행")
-	private int  bankCode;
+	private int bankCode;
 
 	@ApiModelProperty(value = "결제 은행명")
 	private String bankName;
@@ -147,13 +147,13 @@ public class AfterServiceJobDto {
 	private String installationDate;
 
 	@ApiModelProperty(value = "labour Charge 금액 (작업결과보기시 필요)")
-	private int  labourCharge;
+	private int labourCharge;
 
 	private int defectTypeId;
 
 	private int defectGroupId;
 
-	private int  defectId;
+	private int defectId;
 
 	private int defectPartGroupId;
 
@@ -204,7 +204,7 @@ public class AfterServiceJobDto {
 	private String failReasonName;
 
 	@ApiModelProperty(value = "설치자")
-	private int settledBy;
+	private String settledBy;
 
 	@ApiModelProperty(value = "설치날짜")
 	private String settledDate;
@@ -250,7 +250,6 @@ public class AfterServiceJobDto {
 	@ApiModelProperty(value = "서비스 총 금액")
 	private int totalAmount;
 
-	
 	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
@@ -339,11 +338,11 @@ public class AfterServiceJobDto {
 		this.checkInGps = checkInGps;
 	}
 
-	public int getCustomerType() {
+	public String getCustomerType() {
 		return customerType;
 	}
 
-	public void setCustomerType(int customerType) {
+	public void setCustomerType(String customerType) {
 		this.customerType = customerType;
 	}
 
@@ -475,11 +474,11 @@ public class AfterServiceJobDto {
 		this.productCode = productCode;
 	}
 
-	public int getAppType() {
+	public String getAppType() {
 		return appType;
 	}
 
-	public void setAppType(int appType) {
+	public void setAppType(String appType) {
 		this.appType = appType;
 	}
 
@@ -491,19 +490,19 @@ public class AfterServiceJobDto {
 		this.instruction = instruction;
 	}
 
-	public int getSalesPromotion() {
+	public String getSalesPromotion() {
 		return salesPromotion;
 	}
 
-	public void setSalesPromotion(int salesPromotion) {
+	public void setSalesPromotion(String salesPromotion) {
 		this.salesPromotion = salesPromotion;
 	}
 
-	public int getRequestor() {
+	public String getRequestor() {
 		return requestor;
 	}
 
-	public void setRequestor(int requestor) {
+	public void setRequestor(String requestor) {
 		this.requestor = requestor;
 	}
 
@@ -515,11 +514,11 @@ public class AfterServiceJobDto {
 		this.requestorContact = requestorContact;
 	}
 
-	public int getContractDuration() {
+	public String getContractDuration() {
 		return contractDuration;
 	}
 
-	public void setContractDuration(int contractDuration) {
+	public void setContractDuration(String contractDuration) {
 		this.contractDuration = contractDuration;
 	}
 
@@ -811,11 +810,11 @@ public class AfterServiceJobDto {
 		this.failReasonName = failReasonName;
 	}
 
-	public int getSettledBy() {
+	public String getSettledBy() {
 		return settledBy;
 	}
 
-	public void setSettledBy(int settledBy) {
+	public void setSettledBy(String settledBy) {
 		this.settledBy = settledBy;
 	}
 
@@ -939,12 +938,8 @@ public class AfterServiceJobDto {
 		this.totalAmount = totalAmount;
 	}
 
-	
-	
 	public static AfterServiceJobDto create(EgovMap egovMap) {
 		return BeanConverter.toBean(egovMap, AfterServiceJobDto.class);
 	}
 
-
-	
 }
