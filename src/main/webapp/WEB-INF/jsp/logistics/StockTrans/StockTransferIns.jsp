@@ -74,7 +74,7 @@ $(document).ready(function(){
                       {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30 , editable:false},
                       {dataField:"aqty"      ,headerText:"Available Qty"    ,width:120    ,height:30 , editable:false},
                       {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
-                      {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
+                      {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30, editable:false
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
                               
