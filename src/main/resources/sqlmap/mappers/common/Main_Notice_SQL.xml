@@ -31,4 +31,32 @@
 	]]>
 	</select>
 
+
+	<select id="selectMainNotice" parameterType="Map" resultType="egovMap">
+		<![CDATA[
+		SELECT *
+		FROM (
+				SELECT   NTCE_NO
+						,NTCE_SUBJECT
+						,RGST_USER_NM
+						,READ_CNT
+						,CRT_DT
+						,EMGNCY_FLAG
+						,SYSDATE
+						,CASE
+							WHEN SYSDATE - CRT_DT >= 1
+							   THEN 'N'
+							ELSE 'Y'
+						 END IMG_FLAG
+					FROM SYS0069M
+				   WHERE STUS_FLAG = 'N'
+					 AND (    SYSDATE >= NVL (NTCE_START_DT, TO_DATE ('19900101', 'YYYYMMDD') )
+						  AND SYSDATE < NVL (NTCE_END_DT, TO_DATE ('29900101', 'YYYYMMDD') ) + 1
+						 )
+				ORDER BY NVL (EMGNCY_FLAG, 'N') DESC, NTCE_NO DESC
+		) TBL
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
+
 </mapper>

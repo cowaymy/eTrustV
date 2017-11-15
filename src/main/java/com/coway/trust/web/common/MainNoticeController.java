@@ -24,28 +24,25 @@ public class MainNoticeController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainNoticeController.class);
 
 	@Autowired
-	private MainNoticeService mainNoticeService ;
+	private MainNoticeService mainNoticeService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
-/*	//GST Zero Rate Exportation
-	@RequestMapping(value = "/gstZeroRateExporation.do")
-	public String gstZeroRateExporationList(@RequestParam Map<String, Object> params, ModelMap model) 
-	{
-		return "/common/gstZeroRateExportation";
-	}*/
-	
+
 	@RequestMapping(value = "/selectDailyCount.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectDailyCount(@RequestParam Map<String, Object> params) 
-	{
+	public ResponseEntity<List<EgovMap>> selectDailyCount(@RequestParam Map<String, Object> params) {
 		List<EgovMap> selectDailyCountList = mainNoticeService.selectDailyCount(params);
-		
-		LOGGER.debug("return_Values: " + selectDailyCountList.toString() );
+
+		LOGGER.debug("return_Values: " + selectDailyCountList.toString());
 
 		return ResponseEntity.ok(selectDailyCountList);
-
 	}
 
+
+	@RequestMapping(value = "/getMainNotice.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getMainNotice(@RequestParam Map<String, Object> params) {
+		List<EgovMap> notice = mainNoticeService.getMainNotice(params);
+		return ResponseEntity.ok(notice);
+	}
 
 }

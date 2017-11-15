@@ -5,9 +5,9 @@ import java.util.Map;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-public interface MainNoticeService 
-{
+public interface MainNoticeService {
 	// MainNotice DailyCount
 	List<EgovMap> selectDailyCount(Map<String, Object> params);
-	
+
+	List<EgovMap> getMainNotice(Map<String, Object> params);
 }
