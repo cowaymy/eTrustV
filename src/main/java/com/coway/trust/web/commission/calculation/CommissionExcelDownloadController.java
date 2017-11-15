@@ -208,7 +208,7 @@ public class CommissionExcelDownloadController {
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_HPS_P01)) {
-					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
+					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v8", "v9",
 							"v13", "v14", "v15", "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v24", "v25", "v26",
 							"v27" };
@@ -407,7 +407,7 @@ public class CommissionExcelDownloadController {
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_HPS_P02)) {
-					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
+					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r2", "r33", "r99" ,"r50"};
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE", "sales Cmm",
 							"Rental before", "Adjust_Amt" ,"W/S"};

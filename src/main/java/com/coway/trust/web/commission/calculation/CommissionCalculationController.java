@@ -517,6 +517,8 @@ public class CommissionCalculationController {
 			popName = "calculationData7002HPS_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPT_P02)){
 			popName = "calculationData7002HPT_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P02)){
+			popName = "calculationData7002HPB_Pop";
 		}
 		
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P01)){
