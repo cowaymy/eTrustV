@@ -373,8 +373,8 @@ Common.ajax("GET" , url , param , function(result){
 <ul class="left_btns">
     <li><p class="btn_blue"><a id="approve"><span class="approve"></span>Approve</a></p></li>
   <li><p class="btn_blue"><a id="reject"><span class="reject"> </span>Reject</a></p></li>
-    <li><p class="btn_blue"><a id="approve2"><span class="approve2"></span> Approve2</a></p></li>
-  <li><p class="btn_blue"><a id="reject2"><span class="reject2"></span> Reject2</a></p></li>
+    <li><p class="btn_blue"><a id="approve2"><span class="approve2"></span> Approve</a></p></li>
+  <li><p class="btn_blue"><a id="reject2"><span class="reject2"></span> Reject</a></p></li>
   <li><p class="btn_blue"><div class="auto_file" id="auto_file"><!-- auto_file start -->
                                     <input type="file" id="fileSelector" name="pdfUpload" title="file add" accept=".pdf"/>
                                 </div>
