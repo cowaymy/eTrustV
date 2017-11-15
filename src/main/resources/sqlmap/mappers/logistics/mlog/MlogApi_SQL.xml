@@ -466,6 +466,25 @@
 	        AND CODE_MASTER_ID = '63'
 	</select>
 	
+	<select id="getItemBankResultList" resultType="egovMap">
+	   SELECT L56.STK_CODE parts_Code, L56.STK_DESC parts_Name, L56.QTY qty, S26.STK_ID parts_Id,S28.WH_LOC_DESC cust_Name,S28.WH_LOC_ID
+		  FROM LOG0056M L56 , SYS0028M S28 , SYS0026M S26 
+		 WHERE 1 =1
+		   AND L56.STK_CODE    = S26.STK_CODE
+		   AND L56.LOC_ID      = S28.WH_LOC_ID
+		   AND S26.STK_TYPE_ID = '2687'
+		   AND S28.WH_LOC_CODE= #{searchLocation}
+		<if test="searchType == 1 ">
+            AND S26.STK_CODE= #{searchKeyword}
+        </if>
+        <if test="searchType == 2 ">
+            AND UPPER(S26.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
+        </if>
+		<if test="searchItem != null and searchItem !=''">
+            AND S26.STK_CTGRY_ID=#{searchItem}
+        </if>	
+    </select>
+		
 	<!-- <select id="getCommonReqHeader" parameterType="Map" resultType="egovMap">
        SELECT
         LG47M.REQST_NO smo_No,
