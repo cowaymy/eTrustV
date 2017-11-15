@@ -49,6 +49,8 @@ import com.coway.trust.api.mobile.logistics.itembank.ItemBankItemListDto;
 import com.coway.trust.api.mobile.logistics.itembank.ItemBankItemListForm;
 import com.coway.trust.api.mobile.logistics.itembank.ItemBankLocationListDto;
 import com.coway.trust.api.mobile.logistics.itembank.ItemBankLocationListForm;
+import com.coway.trust.api.mobile.logistics.itembank.ItemBankResultListDto;
+import com.coway.trust.api.mobile.logistics.itembank.ItemBankResultListForm;
 import com.coway.trust.api.mobile.logistics.mystock.MyStockListDto;
 import com.coway.trust.api.mobile.logistics.mystock.MyStockListForm;
 import com.coway.trust.api.mobile.logistics.rdcstock.RdcStockListDto;
@@ -393,7 +395,27 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(list);
 	}
+	
+	
+	@ApiOperation(value = "Item Bank & Cody Item - Result List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/itemBankResultList", method = RequestMethod.GET)
+	public ResponseEntity<List<ItemBankResultListDto>> getItemBankResultList( @ModelAttribute ItemBankResultListForm itemBankResultListForm) throws Exception {
 
+		Map<String, Object> params = ItemBankResultListForm.createMap(itemBankResultListForm);
+
+		List<EgovMap> itemBankResultList = MlogApiService.getItemBankResultList(params);
+
+		for (int i = 0; i < itemBankResultList.size(); i++) {
+			LOGGER.debug("itemBankResultList    값 : {}", itemBankResultList.get(i));
+		}
+
+		List<ItemBankResultListDto> list = itemBankResultList.stream().map(r -> ItemBankResultListDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
 	@ApiOperation(value = "Request Result - List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/requestResultList", method = RequestMethod.GET)
 	public ResponseEntity<List<RequestResultMListDto>> getRequestResultList(
