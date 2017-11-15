@@ -140,23 +140,21 @@
                             SYS0026M.STK_DESC AS product_Name,
                             SYS0026M.STK_CODE AS product_Code,
                             FN_GET_COMMCD(10, SAL0001D.APP_TYPE_ID) as app_Type,
-                            
-<!--                             (select PROMO_DESC
+                             (select PROMO_DESC
                                from SAL0017D
                                where 1=1
                                and promo_id =  SAL0001D.PROMO_ID)  AS sales_Promotion,
                             FN_GET_COMMCD(24, SVC0001D.AS_REQSTER_TYPE_ID) as requestor,
                             SVC0001D.AS_REM_REQSTER_CNTC AS requestor_Contact,
-                            SAL0095D.SRV_DUR AS contract_Duration,
-                            SAL0001D.MTH_RENT_AMT AS monthly_Rental_Fees,
-                            SAL0001D.TOT_AMT AS registration_Fees,
+                            SAL0095D.SRV_DUR AS contract_Duration, 
+                          SAL0001D.MTH_RENT_AMT AS monthly_Rental_Fees,
+                               SAL0001D.TOT_AMT AS registration_Fees,
                             SAL0022D.CUST_ACC_BANK_ID AS bank_Code,
                             SAL0022D.CUST_ACC_NO AS card_Account_No,
                             SAL0047D.SIRIM_NO AS sirim_No,
                             SAL0047D.SERIAL_NO AS serial_No,
                             to_char(SAL0095D.SRV_EXPR_DT,'YYYYMMDD') AS Membership_Contract_Expiry,
-                            SAL0071D.STUS_CODE_ID AS rental_Status, -->
-                            
+                            SAL0071D.STUS_CODE_ID AS rental_Status, 
                             SYS0005M.CODE AS dsc_Code,
                             to_char(SAL0047D.INSTALL_DT,'YYYYMMDD') AS installation_Date,
                             SVC0004D.AS_WORKMNSH AS labour_Charge,
@@ -423,7 +421,8 @@
     
 
     <select id="getInstallationJobList" parameterType="Map" resultType="egovMap">
-            SELECT
+    
+    SELECT
             SAL0001D.SALES_ORD_NO           AS sales_Order_No,
             SAL0046D.INSTALL_ENTRY_NO       AS service_No,
             SAL0029D.NAME                   AS cust_Name,
@@ -464,7 +463,90 @@
            ORG0001DA.TEL_MOBILE           AS hmTel,
             ORG0001D.MEM_CODE               AS settled_By,
             TO_CHAR(SAL0047D.INSTALL_DT,'YYYYMMDD')             AS settled_Date
-            --SVC0004D.AS_SETL_TM             AS settledTime
+            FROM
+           ORG0001D,
+           ORG0001D ORG0001DA,
+            ORG0005D,
+            SAL0001D,
+            SAL0002D,
+            SAL0022D,
+            SAL0023D,
+            SAL0024D,
+            SAL0027D,
+            SAL0029D,
+            SAL0045D,
+            SAL0046D,
+            SAL0047D,
+            SAL0095D,
+            SYS0005M,
+            SYS0026M,
+            SYS0027M,
+            SYS0064M
+            WHERE SAL0001D.CUST_ID          = SAL0022D.CUST_ID(+)
+            AND   SAL0001D.SALES_ORD_ID     = SAL0002D.SALES_ORD_ID   
+            AND   SAL0001D.CUST_ADD_ID      = SAL0023D.CUST_ADD_ID
+            AND   SAL0001D.CUST_BILL_ID     = SAL0024D.CUST_BILL_ID(+)
+            AND   SAL0001D.CUST_ID          = SAL0027D.CUST_ID
+            AND   SAL0001D.CUST_CNT_ID      = SAL0027D.CUST_CNTC_ID
+            AND   SAL0001D.CUST_ID          = SAL0029D.CUST_ID
+            AND   SAL0001D.SALES_ORD_ID     = SAL0095D.SRV_SALES_ORD_ID(+)
+            AND   SAL0002D.ITM_STK_ID       = SYS0026M.STK_ID
+            AND   SYS0026M.STK_ID           = SYS0027M.STK_ID
+            AND   SAL0001D.SALES_ORD_ID     = SAL0046D.SALES_ORD_ID            
+            AND   ORG0001D.MEM_ID           = SAL0046D.CT_ID
+            AND   SAL0001D.SALES_ORD_ID     = SAL0045D.SALES_ORD_ID(+)            
+            AND   SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
+            AND   ORG0001DA.MEM_ID          = SAL0001D.MEM_ID
+            AND   ORG0005D.MEM_ID           = SAL0001D.MEM_ID
+            AND   ORG0005D.MEM_ID           = ORG0001DA.MEM_ID
+            AND   ORG0001D.BRNCH            = SYS0005M.BRNCH_ID
+            AND   SAL0023D.AREA_ID          = SYS0064M.AREA_ID(+)
+            AND TO_CHAR(SAL0046D.INSTALL_DT,'YYYYMM') > #{requestDate}
+            AND ORG0001D.mem_code = #{userId}
+   
+ 
+    
+   <!--           SELECT
+            SAL0001D.SALES_ORD_NO           AS sales_Order_No,
+            SAL0046D.INSTALL_ENTRY_NO       AS service_No,
+            SAL0029D.NAME                   AS cust_Name,
+            SAL0046D.STUS_CODE_ID           AS job_Status,
+            TO_CHAR(SAL0047D.APPNT_DT,'YYYYMMDD')               AS appointment_Date,
+            replace(substr(SAL0047D.APPNT_TM, 0,5 ),':')               AS appointment_Time,
+            SAL0046D.SESION_CODE            AS job_Session,
+            TO_CHAR(SAL0095D.SRV_EXPR_DT,'YYYYMMDD')            AS expiry_Date,
+            FN_GET_COMMCD(8,SAL0029D.TYPE_ID)               AS customer_Type,
+            SAL0001D.CUST_ID                AS customer_Id,
+            SYS0064M.POSTCODE               AS postcode,
+            SYS0064M.STATE                  AS serviceState,
+            SAL0023D.ADDR_DTL               AS install_Address,
+            SAL0027D.TEL_M1                 AS handphone_Tel,
+            SAL0027D.TEL_R                  AS home_Tel,
+            SAL0027D.TEL_O                  AS office_Tel,
+            SAL0029D.EMAIL                  AS mail_Address,
+            SAL0029D.CUST_VA_NO             AS customer_Va_No,
+            SAL0024D.CUST_BILL_PAY_REF_NO1  AS customer_Jom_Pay_Ref_No,
+            SYS0027M.IMG_URL                AS image_Url,
+            SYS0026M.STK_DESC               AS product_Name,
+            SYS0026M.STK_CODE               AS product_Code,
+            FN_GET_COMMCD(10,SAL0001D.APP_TYPE_ID)            AS app_Type,
+            SAL0001D.PROMO_ID               AS sales_Promotion,
+            SAL0095D.SRV_DUR                AS contract_Duration,
+            SAL0001D.MTH_RENT_AMT           AS monthly_Rental_Fees,
+            SAL0001D.TOT_AMT                AS registration_Fees,
+            SAL0022D.CUST_ACC_BANK_ID       AS bank_Code,
+            SAL0022D.CUST_ACC_NO            AS card_Account_No,
+            SYS0005M.CODE                   AS dsc_Code,
+            SAL0047D.SIRIM_NO               AS sirim_No,
+            SAL0047D.SERIAL_NO              AS serial_No,
+           ORG0001DA.NAME                  AS hp_Name,
+           ORG0001DA.TEL_MOBILE            AS hp_Tel,
+            ORG0001DA.NAME                  AS smName,
+            ORG0001DA.TEL_MOBILE            AS smTel,
+            ORG0001DA.NAME                  AS hmName,
+           ORG0001DA.TEL_MOBILE           AS hmTel,
+            ORG0001D.MEM_CODE               AS settled_By,
+            TO_CHAR(SAL0047D.INSTALL_DT,'YYYYMMDD')             AS settled_Date
             FROM
            ORG0001D,
            ORG0001D ORG0001DA,
@@ -506,7 +588,10 @@
             AND   SAL0045D.BRNCH_ID         = SYS0005M.BRNCH_ID
             AND   SAL0023D.AREA_ID          = SYS0064M.AREA_ID(+)
             AND TO_CHAR(SAL0047D.INSTALL_DT,'YYYYMM') = #{requestDate}
-            AND ORG0001D.mem_code = #{userId}
+            AND ORG0001D.mem_code = #{userId}  -->
+            
+            
+            
      </select>
 
 
