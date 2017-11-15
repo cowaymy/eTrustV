@@ -329,6 +329,13 @@ function fn_CTSubGroupSave(){
 	}
 	
 }
+
+// 171115 :: 선한이
+//엑셀 내보내기(Export);
+function fn_exportTo() {
+	GridCommon.exportTo("grid_wrap_ctSubGroup", 'xlsx', "Service Group");
+};
+
 function fn_openAreaMain(){
     Common.popupDiv("/services/serviceGroup/openAreaMainPop.do?isPop=true","" );
 }
@@ -500,6 +507,7 @@ function fn_radioButton(val){
 
 <ul class="right_btns">
    <!--  <li><p class="btn_grid"><a href="#">Edit</a></p></li> -->
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">Excel Download</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubGroupSave()">Save</a></p></li>
 <!--     <li><p class="btn_grid"><a href="#">Outstation Schedule Maintenance</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_openAreaMain()">CT Sub Group – Area ID Maintenance</a></p></li> -->
