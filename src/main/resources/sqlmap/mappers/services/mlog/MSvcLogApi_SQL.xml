@@ -1123,28 +1123,28 @@ AND   O1DA.MEM_CODE = #{userId}
 
 
 <select id="serviceHistory" parameterType="Map" resultType="egovMap">
-         SELECT decode(job_Status ,'4' ,'Completed','21','Failed','10','Cancelled',job_Status) as job_Status,
-			        service_No,
-			        settle_Date,
-			        hsr_Asr_No,
-			        action_Member,
-			        job_Type,
-			        fail_Reason,
-			        collection_Code,
-			        collection_Name,
-			        result_Remark,
-			        filter_Code,
-			        filter_Name,
-			        last_Change_Date,
-			        filter_Period,
-			        to_char(next_Change_Date)as next_Change_Date,
-			        change_Qty,
-			        part_Code,
-			        part_Name,
-			        part_Change_Qty,
-			        AS_RESULT_ID
-			FROM(
-			    SELECT S.AS_RESULT_STUS_ID job_Status,
+         SELECT  job_Status,
+                    service_No,
+                    settle_Date,
+                    hsr_Asr_No,
+                    action_Member,
+                    job_Type,
+                    fail_Reason,
+                    collection_Code,
+                    collection_Name,
+                    result_Remark,
+                    filter_Code,
+                    filter_Name,
+                    last_Change_Date,
+                    filter_Period,
+                    to_char(next_Change_Date)as next_Change_Date,
+                    change_Qty,
+                    part_Code,
+                    part_Name,
+                    part_Change_Qty,
+                    AS_RESULT_ID
+            FROM(
+                SELECT S.AS_RESULT_STUS_ID job_Status,
                  S.AS_RESULT_NO service_No,
                  to_char(S.AS_SETL_DT,'YYYYMMDD') settle_Date,
                  'Asr' hsr_Asr_No,
@@ -1168,76 +1168,76 @@ AND   O1DA.MEM_CODE = #{userId}
                  '' part_Name,
                  '' part_Change_Qty,
                  c.AS_RESULT_ID
-			    FROM  SVC0004D S ,
-			                   SAL0001D B ,
-			                   SVC0005D C ,
-			                   SAL0087D E
-			   WHERE S.AS_SO_ID = B.SALES_ORD_ID
-			   AND B.SALES_ORD_NO = #{salesOrderNo}
-			   AND S.AS_RESULT_ID = C.AS_RESULT_ID(+)
-			   AND C.ASR_ITM_PART_ID =SRV_FILTER_ID(+)
-			  <![CDATA[  AND ROWNUM < 4]]>
-			   ORDER BY S.AS_RESULT_ID ASC
-			   )
-			union all
-			select    decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as job_Status
-			                   ,SALES_ORD_NO as service_No
-			                    ,SETL_DT as settle_Date
-			                    ,no as hsr_Asr_No
-			                    ,MEM_CODE as action_Member
-			                    ,'HS' as job_Type
-			                    ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason
-			                    ,REN_COLCT_ID as collection_Code
-			                    ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
-			                    ,RESULT_REM as result_Remark
-			                    ,BS_RESULT_PART_ID as filter_Code
-			                    ,BS_RESULT_PART_DESC as filter_Name
-			                    ,BS_RESULT_CRT_DT as last_Change_Date
-			                    ,SRV_FILTER_PRIOD as filter_Period
-			                    ,to_char(next_Change_Date) next_Change_Date
-			                    ,BS_RESULT_PART_QTY change_Qty
-			                    ,part_Code
-			                    ,part_Name
-			                    ,part_Change_Qty
-			                     ,BS_RESULT_ID
-			        from (  SELECT ROWNUM,
-						                 b.STUS_CODE_ID,
-						                 b.SCHDUL_ID,
-						                 b.SALES_ORD_ID,
-						                 c.SALES_ORD_NO,
-						                 to_char(a.SETL_DT,'YYYYMMDD')as SETL_DT,
-						                 a.NO,
-						                 a.CODY_ID,
-						                 d.MEM_CODE,
-						                 a.FAIL_RESN_ID,
-						                 a.RESULT_REM,
-						                 a.REN_COLCT_ID,
-						                 e.BS_RESULT_PART_ID,
-						                 e.BS_RESULT_PART_DESC,
-						                 to_char(e.BS_RESULT_CRT_DT,'YYYYMMDD')as BS_RESULT_CRT_DT,
-						                 F.SRV_FILTER_PRIOD,
-						                 E.BS_RESULT_PART_QTY,
-						                 '' next_Change_Date,
-						                 '' part_Code,
-						                 '' part_Name,
-						                 '' part_Change_Qty,
-						                 e.BS_RESULT_ID
-			            from SVC0006D a
-			                    ,SVC0008D b
-			                    ,sal0001d c
-			                    ,org0001d d
-			                    ,SVC0007D e
-			                    ,sal0087d f
-			            where 1=1
-			            and a.SCHDUL_ID = b.SCHDUL_ID
-			            and a.sales_ord_id = c.sales_ord_id
-			            and a.CODY_ID = d.mem_id
-			            and a.RESULT_ID = e.BS_RESULT_ID
-			            AND e.BS_RESULT_ITM_ID =f.SRV_FILTER_ID(+)
-			            and c.sales_ord_no = #{salesOrderNo}
-			            order by SETL_DT desc ) x
-			      where 1=1
-			                   <![CDATA[  AND ROWNUM < 4]]>
+                FROM  SVC0004D S , 
+                               SAL0001D B ,
+                               SVC0005D C ,
+                               SAL0087D E
+               WHERE S.AS_SO_ID = B.SALES_ORD_ID
+               AND B.SALES_ORD_NO = #{salesOrderNo}
+               AND S.AS_RESULT_ID = C.AS_RESULT_ID(+)
+               AND C.ASR_ITM_PART_ID =SRV_FILTER_ID(+)
+              <![CDATA[  AND ROWNUM < 4]]> 
+               ORDER BY S.AS_RESULT_ID ASC
+               )
+            union all
+            select           STUS_CODE_ID
+                                ,NO  as service_No
+                                ,SETL_DT as settle_Date
+                                ,'Hsr' AS hsr_Asr_No
+                                ,MEM_CODE as action_Member
+                                ,'HS' as job_Type
+                                ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason
+                                ,REN_COLCT_ID as collection_Code
+                                ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name                    
+                                ,RESULT_REM as result_Remark
+                                ,BS_RESULT_PART_ID as filter_Code
+                                ,BS_RESULT_PART_DESC as filter_Name
+                                ,BS_RESULT_CRT_DT as last_Change_Date
+                                ,SRV_FILTER_PRIOD as filter_Period
+                                ,to_char(next_Change_Date) next_Change_Date
+                                ,BS_RESULT_PART_QTY change_Qty
+                                ,part_Code
+                                ,part_Name
+                                ,part_Change_Qty
+                                 ,BS_RESULT_ID
+                    from (  SELECT ROWNUM,
+                                         b.STUS_CODE_ID,
+                                         b.SCHDUL_ID,
+                                         b.SALES_ORD_ID,
+                                         c.SALES_ORD_NO,
+                                         to_char(a.SETL_DT,'YYYYMMDD')as SETL_DT,
+                                         a.NO,
+                                         a.CODY_ID,
+                                         d.MEM_CODE,
+                                         a.FAIL_RESN_ID,
+                                         a.RESULT_REM,
+                                         a.REN_COLCT_ID,
+                                         e.BS_RESULT_PART_ID,
+                                         e.BS_RESULT_PART_DESC,
+                                         to_char(e.BS_RESULT_CRT_DT,'YYYYMMDD')as BS_RESULT_CRT_DT,
+                                         F.SRV_FILTER_PRIOD,
+                                         E.BS_RESULT_PART_QTY,
+                                         '' next_Change_Date,
+                                         '' part_Code,
+                                         '' part_Name,
+                                         '' part_Change_Qty,
+                                         e.BS_RESULT_ID
+                        from SVC0006D a
+                                ,SVC0008D b
+                                ,sal0001d c
+                                ,org0001d d
+                                ,SVC0007D e
+                                ,sal0087d f
+                        where 1=1
+                        and a.SCHDUL_ID = b.SCHDUL_ID
+                        and a.sales_ord_id = c.sales_ord_id
+                        and a.CODY_ID = d.mem_id
+                        and a.RESULT_ID = e.BS_RESULT_ID
+                        AND e.BS_RESULT_ITM_ID =f.SRV_FILTER_ID(+)
+                        and c.sales_ord_no = #{salesOrderNo}
+                        order by SETL_DT desc ) x
+                  where 1=1
+                               <![CDATA[  AND ROWNUM < 4]]> 
 
            </select>
 
