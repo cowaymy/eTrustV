@@ -11,46 +11,6 @@ public interface WebInvoiceMapper {
 	
 	List<EgovMap> selectWebInvoiceList(Map<String, Object> params);
 	
-	EgovMap selectWebInvoiceInfo(String clmNo);
-	
-	List<EgovMap> selectWebInvoiceItems(String clmNo);
-	
-	List<EgovMap> selectApproveList(Map<String, Object> params);
-	
-	List<EgovMap> selectAppvLineInfo(String appvPrcssNo);
-	
-	List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo);
-	
-	List<EgovMap> selectAttachList(String atchFileGrpId);
-	
-	EgovMap selectAttachmentInfo(Map<String, Object> params);
-	
-	void insertWebInvoiceInfo(Map<String, Object> params);
-	
-	void insertWebInvoiceDetail(Map<String, Object> params);
-	
-	void updateWebInvoiceInfo(Map<String, Object> params);
-	
-	void updateWebInvoiceDetail(Map<String, Object> params);
-	
-	void deleteWebInvoiceDetail(Map<String, Object> params);
-	
-	void insertApproveManagement(Map<String, Object> params);
-	
-	void insertApproveLineDetail(Map<String, Object> params);
-	
-	void insertApproveItems(Map<String, Object> params);
-	
-	void updateAppvPrcssNo(Map<String, Object> params);
-	
-	void updateAppvInfo(Map<String, Object> params);
-	
-	void updateAppvLine(Map<String, Object> params);
-	
-	void updateLastAppvLine(Map<String, Object> params);
-	
-	void insertAppvInterface(Map<String, Object> params);
-	
 	List<EgovMap> selectSupplier(Map<String, Object> params);
 	
 	List<EgovMap> selectCostCenter(Map<String, Object> params);
@@ -59,21 +19,67 @@ public interface WebInvoiceMapper {
 	
 	String selectNextClmNo();
 	
+	void insertWebInvoiceInfo(Map<String, Object> params);
+	
 	int selectNextClmSeq(String clmNo);
+	
+	void insertWebInvoiceDetail(Map<String, Object> params);
+	
+	EgovMap selectWebInvoiceInfo(String clmNo);
+	
+	List<EgovMap> selectWebInvoiceItems(String clmNo);
+	
+	List<EgovMap> selectAttachList(String atchFileGrpId);
+	
+	EgovMap selectAttachmentInfo(Map<String, Object> params);
+	
+	void updateWebInvoiceInfo(Map<String, Object> params);
+	
+	void updateWebInvoiceDetail(Map<String, Object> params);
+	
+	void deleteWebInvoiceDetail(Map<String, Object> params);
+	
+	String budgetCheck(Map<String, Object> params);
 	
 	String selectNextAppvPrcssNo();
 	
+	void insertApproveManagement(Map<String, Object> params);
+	
+	void insertApproveLineDetail(Map<String, Object> params);
+	
 	int selectNextAppvItmSeq(String appvPrcssNo);
+	
+	void insertApproveItems(Map<String, Object> params);
+	
+	void updateAppvPrcssNo(Map<String, Object> params);
+	
+	List<EgovMap> selectApproveList(Map<String, Object> params);
+	
+	List<EgovMap> selectAppvLineInfo(String appvPrcssNo);
+	
+	List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo);
 	
 	int selectAppvLineCnt(String appvPrcssNo);
 	
 	int selectAppvLinePrcssCnt(String appvPrcssNo);
 	
-	String selectNextIfKey();
+	void updateAppvInfo(Map<String, Object> params);
 	
-	int selectNextSeq(String ifKey);
+	void updateAppvLine(Map<String, Object> params);
 	
-	String budgetCheck(Map<String, Object> params);
+	void updateLastAppvLine(Map<String, Object> params);
+	
+	String selectNextAppvIfKey();
+	
+	int selectNextAppvSeq(String ifKey);
+	
+	void insertAppvInterface(Map<String, Object> params);
+	
+	String selectNextReqstIfKey();
+	
+	int selectNextReqstSeq(String ifKey);
+	
+	void insertReqstInterface(Map<String, Object> params);
 	
 	void updateWebInvoiceInfoTotAmt(Map<String, Object> params);
 	

@@ -143,7 +143,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 		params.put("agentNo", agentNo);
 		
 		String crditCardUserId = (String) params.get("crditCardUserId");
-		String agentNm = "CORPORATE CARD_" + crditCardUserId;
+		String agentNm = "Corporate_" + crditCardUserId;
 		params.put("agentNm", agentNm);
 		
 		params.put("acctSt", "02");
@@ -169,7 +169,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 		params.put("agentNo", agentNo);
 		
 		String crditCardUserId = String.valueOf(params.get("crditCardUserId"));
-		String agentNm = "CORPORATE CARD_" + crditCardUserId;
+		String agentNm = "Corporate_" + crditCardUserId;
 		params.put("agentNm", agentNm);
 		
 		params.put("acctSt", "03");

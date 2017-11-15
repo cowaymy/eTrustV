@@ -60,5 +60,7 @@ public interface CreditCardMapper {
 	void deleteReimbursement(Map<String, Object> params);
 	
 	void updateReimbursementTotAmt(Map<String, Object> params);
+	
+	List<EgovMap> selectCreditCardNoToMgmt();
 
 }

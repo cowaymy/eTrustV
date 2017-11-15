@@ -228,7 +228,7 @@ function fn_setSupplier() {
 }
 
 function fn_setEvent() {
-	$("#maskingNo").change(function() {
+	/* $("#maskingNo").change(function() {
         var crditCardNo = $("#maskingNo").val();
         if(crditCardNo.length == 16) {
             $("#newCrditCardNo").val(crditCardNo);
@@ -292,7 +292,7 @@ function fn_setEvent() {
             console.log(crditCardNo);
             $("#maskingNo").val(crditCardNo);
         }
-	  });
+	  }); */
 	
 	$("#amt :text").keydown(function (event) { 
         var code = window.event.keyCode;
@@ -374,6 +374,47 @@ function fn_setEvent() {
             }
         }
    }); 
+}
+
+function fn_creditCardNoChange() {
+	console.log("fn_creditCardNoChange() Action");
+	if(!FormUtil.isEmpty($("#newCrditCardNo").val())) {
+		Common.ajax("GET", "/eAccounting/creditCard/selectCrditCardInfoByNo.do", {crditCardNo:$("#newCrditCardNo").val()}, function(result) {
+	        console.log(result);
+	        if(result.data) {
+	            $("#newCrditCardUserId").val(result.data.crditCardUserId);
+	            $("#newCrditCardUserName").val(result.data.crditCardUserName);
+	            $("#newChrgUserId").val(result.data.chrgUserId);
+	            $("#newChrgUserName").val(result.data.chrgUserName);
+	            $("#newCostCenter").val(result.data.costCentr);
+	            $("#newCostCenterText").val(result.data.costCentrName);
+	            $("#sCostCenterText").val(result.data.costCentrName);
+	            $("#bankCode").val(result.data.bankCode);
+	            $("#bankName").val(result.data.bankName);
+	        } else {
+	            Common.alert('<spring:message code="crditCardReim.noData.msg" />');
+	            $("#newCrditCardUserId").val("");
+	            $("#newCrditCardUserName").val("");
+	            $("#newChrgUserId").val("");
+	            $("#newChrgUserName").val("");
+	            $("#newCostCenter").val("");
+	            $("#newCostCenterText").val("");
+	            $("#sCostCenterText").val("");
+	            $("#bankCode").val("");
+	            $("#bankName").val("");
+	        }
+	    });
+	} else {
+        $("#newCrditCardUserId").val("");
+        $("#newCrditCardUserName").val("");
+        $("#newChrgUserId").val("");
+        $("#newChrgUserName").val("");
+        $("#newCostCenter").val("");
+        $("#newCostCenterText").val("");
+        $("#sCostCenterText").val("");
+        $("#bankCode").val("");
+        $("#bankName").val("");
+	}
 }
 
 function fn_checkEmpty() {
@@ -558,11 +599,11 @@ function fn_selectReimbursementInfo() {
         console.log(result);
         var crditCardNo = result.crditCardNo;
         $("#newCrditCardNo").val(crditCardNo);
-        var crditCardNo1 = crditCardNo.substr(0, 4);
+        /* var crditCardNo1 = crditCardNo.substr(0, 4);
         var crditCardNo4 = crditCardNo.substr(12);
         crditCardNo = crditCardNo1 + "********" + crditCardNo4;
         console.log(crditCardNo);
-        $("#maskingNo").val(crditCardNo);
+        $("#maskingNo").val(crditCardNo); */
         $("#newCrditCardUserId").val(result.crditCardUserId);
         $("#newCrditCardUserName").val(result.crditCardUserName);
         $("#newChrgUserId").val(result.chrgUserId);

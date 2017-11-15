@@ -472,5 +472,13 @@ public class CreditCardController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/selectCreditCardNoToMgmt.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCreditCardNoToMgmt(Model model) {
+		
+		List<EgovMap> creditCardNoList = creditCardService.selectCreditCardNoToMgmt();
+		
+		return ResponseEntity.ok(creditCardNoList);
+	}
 
 }

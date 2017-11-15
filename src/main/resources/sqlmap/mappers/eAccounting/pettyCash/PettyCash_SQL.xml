@@ -290,59 +290,6 @@ ORDER BY T.CLM_NO, T.REQST_DT
     )
 </insert>
 
-<select id="selectNextIfKey" resultType="String">
-/* pettyCashMapper.selectNextIfKey */
-    SELECT    961
-       || TO_CHAR (SYSDATE, 'yymmdd')
-       || '_'
-       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 11, 7) + 1), 'FM0000000'), '0000001') AS IF_KEY
-  FROM ITF0961M
- WHERE SUBSTR (IF_KEY, 4, 6) = TO_CHAR (SYSDATE, 'yymmdd')
-</select>
-
-<select id="selectNextSeq" parameterType="String" resultType="int">
-/* pettyCashMapper.selectNextSeq */
-    SELECT NVL(MAX(SEQ) + 1, 1) AS SEQ FROM ITF0961M WHERE IF_KEY = #{ifKey}
-</select>
-
-<insert id="insertPettyCashReqstInterface" parameterType="Map">
-/* pettyCashMapper.insertPettyCashReqstInterface */
-   INSERT INTO ITF0961M
-   (
-        IF_KEY
-        ,SEQ
-        ,IF_TYPE
-        ,TRAN_STATUS_CD
-        ,RGST_DT
-        ,RGST_TM
-        ,RGST_ID
-        ,DOCENTRY
-        ,DOCETY
-        ,REQDATE
-        ,REQPERNM
-        ,REQDEPTCD
-        ,REQDEPTNM
-        ,PETR_AMT
-    )
-    values
-    (
-        #{ifKey}
-       ,#{seq}
-       ,'961'
-       ,'10'
-       ,TO_CHAR(SYSDATE, 'YYYYDDMM')
-       ,TO_CHAR(SYSDATE, 'HH24MISS')
-       ,#{userId}
-       ,#{appvPrcssNo}
-       ,'R1'
-       ,SYSDATE
-       ,#{memAccName}
-       ,#{costCentr}
-       ,#{costCentrName}
-       ,#{reqstAmt}
-    )
-</insert>
-
 <select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
 /* pettyCashMapper.selectRequestInfo */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
@@ -440,7 +387,7 @@ WHERE T1.CLM_NO = #{clmNo}
        ,#{taxCode}
        ,#{reqstAmt}
        ,0
-       ,#{appvCashAmt}
+       ,#{reqstAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}
        ,SYSDATE

@@ -225,6 +225,12 @@ $(document).ready(function () {
         type:"S"
     });
     
+    CommonCombo.make("newCrditCardNo", "/eAccounting/creditCard/selectCreditCardNoToMgmt.do", null, "", {
+        id: "cardNo",
+        name: "cardName",
+        type:"S"
+    });
+    
     fn_setEvent();
     
     var appvPrcssNo = "${appvPrcssNo}";
@@ -256,7 +262,7 @@ function fn_tempSave() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_newReimbursement">
-<input type="hidden" id="newCrditCardNo" name="crditCardNo">
+<!-- <input type="hidden" id="newCrditCardNo" name="crditCardNo"> -->
 <input type="hidden" id="newCrditCardUserId" name="crditCardUserId">
 <input type="hidden" id="newChrgUserId" name="chrgUserId">
 <input type="hidden" id="newSupply" name="supply">
@@ -286,7 +292,8 @@ function fn_tempSave() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="crditCardNewReim.crditCardNo" /></th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="maskingNo" maxlength="16" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
+	<%-- <td><input type="text" title="" placeholder="" class="w100p" id="maskingNo" maxlength="16" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td> --%>
+	<td><select class="w100p" id="newCrditCardNo" name="crditCardNo" onchange="javascript:fn_creditCardNoChange()" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>></select></td>
 	<th scope="row"><spring:message code="crditCardMgmt.cardholderName" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrditCardUserName" name="crditCardUserName"/></td>
 </tr>

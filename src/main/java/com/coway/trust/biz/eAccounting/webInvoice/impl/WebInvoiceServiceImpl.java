@@ -258,18 +258,44 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				// 마지막 승인인 경우 재업데이트
 				webInvoiceMapper.updateLastAppvLine(invoAppvInfo);
 				// TODO 인터페이스 생성
-				String ifKey = webInvoiceMapper.selectNextIfKey();
-				// appvPrcssNo의 items get
-				List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
-				for(int j = 0; j < appvInfoAndItems.size(); j++) {
-					Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
-					int seq = webInvoiceMapper.selectNextSeq(ifKey);
-					invoAppvItems.put("ifKey", ifKey);
-					invoAppvItems.put("seq", seq);
-					invoAppvItems.put("userId", params.get("userId"));
-					LOGGER.debug("insertAppvInterface =====================================>>  " + invoAppvItems);
-					webInvoiceMapper.insertAppvInterface(invoAppvItems);
+				// interface 생성
+				String clmNo = String.valueOf(invoAppvInfo.get("clmNo"));
+				String clmType = clmNo.substring(0, 2);
+				LOGGER.debug("clmType =====================================>>  " + clmType);
+				if("J1".equals(clmType) || "J2".equals(clmType) || "J3".equals(clmType) || "J4".equals(clmType) || "J5".equals(clmType) || "J6".equals(clmType)) {
+					String ifKey = webInvoiceMapper.selectNextAppvIfKey();
+					// appvPrcssNo의 items get
+					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
+					for(int j = 0; j < appvInfoAndItems.size(); j++) {
+						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
+						int seq = webInvoiceMapper.selectNextAppvSeq(ifKey);
+						invoAppvItems.put("ifKey", ifKey);
+						invoAppvItems.put("seq", seq);
+						invoAppvItems.put("userId", params.get("userId"));
+						LOGGER.debug("insertAppvInterface =====================================>>  " + invoAppvItems);
+						webInvoiceMapper.insertAppvInterface(invoAppvItems);
+					}
+				} else if("R1".equals(clmType)) {
+					String ifKey = webInvoiceMapper.selectNextReqstIfKey();
+					// appvPrcssNo의 items get
+					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
+					for(int j = 0; j < appvInfoAndItems.size(); j++) {
+						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
+						int seq = webInvoiceMapper.selectNextReqstSeq(ifKey);
+						invoAppvItems.put("ifKey", ifKey);
+						invoAppvItems.put("seq", seq);
+						invoAppvItems.put("userId", params.get("userId"));
+						LOGGER.debug("insertReqstInterface =====================================>>  " + invoAppvItems);
+						webInvoiceMapper.insertReqstInterface(invoAppvItems);
+					}
 				}
+				
+				
+				
+				
+				
+					
+				
 			}
 		}
 	}
@@ -324,12 +350,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	public String selectNextAppvPrcssNo() {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectNextAppvPrcssNo();
-	}
-
-	@Override
-	public String selectNextIfKey() {
-		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectNextIfKey();
 	}
 
 	@Override

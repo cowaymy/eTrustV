@@ -251,8 +251,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
 				int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
 				hm.put("appvItmSeq", appvItmSeq);
-				Date invcDt = new Date((long) hm.get("invcDt"));
-				hm.put("invcDt", invcDt);
 				hm.put("userId", params.get("userId"));
 				hm.put("userName", params.get("userName"));
 				LOGGER.debug("insertApproveItems =====================================>>  " + hm);
@@ -276,6 +274,12 @@ public class CreditCardServiceImpl implements CreditCardService {
 	public void updateReimbursementTotAmt(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		creditCardMapper.updateReimbursementTotAmt(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCreditCardNoToMgmt() {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectCreditCardNoToMgmt();
 	}
 	
 	

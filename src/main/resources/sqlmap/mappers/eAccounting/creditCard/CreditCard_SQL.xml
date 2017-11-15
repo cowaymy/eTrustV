@@ -694,4 +694,17 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
    UPDATE FCM0017M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
 </update>
 
+<select id="selectCreditCardNoToMgmt" resultType="egovMap">
+/* creditCardMapper.selectCreditCardNoToMgmt */
+SELECT CRDIT_CARD_NO AS CARD_NO, 
+       ( SUBSTR(CRDIT_CARD_NO, 1, 4) 
+         || '********' 
+         || SUBSTR(CRDIT_CARD_NO, -4)
+         || ' ' 
+         || '(' 
+         || CRDIT_CARD_USER_NAME 
+         || ')' )    AS CARD_NAME 
+FROM   FCM0016M
+</select>
+
 </mapper>
