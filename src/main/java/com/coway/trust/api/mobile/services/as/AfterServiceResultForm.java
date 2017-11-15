@@ -28,22 +28,22 @@ public class AfterServiceResultForm {
 	private String serviceNo;
 
 	@ApiModelProperty(value = "0/60/120")
-	private String labourCharge;
+	private int labourCharge;
 
 	@ApiModelProperty(value = "")
-	private String defectId;
+	private int defectId;
 
 	@ApiModelProperty(value = "")
-	private String defectPartId;
+	private int defectPartId;
 
 	@ApiModelProperty(value = "")
-	private String defectDetailReasonId;
+	private int defectDetailReasonId;
 
 	@ApiModelProperty(value = "")
-	private String solutionReasonId;
+	private int solutionReasonId;
 
 	@ApiModelProperty(value = "")
-	private String defectTypeId;
+	private int defectTypeId;
 
 	@ApiModelProperty(value = "")
 	private String inHouseRepairRemark;
@@ -67,7 +67,7 @@ public class AfterServiceResultForm {
 	private String resultRemark;
 
 	@ApiModelProperty(value = "결과 등록시, Owner Code")
-	private String ownerCode;
+	private int ownerCode;
 
 	@ApiModelProperty(value = "결과 등록시, Cust Name")
 	private String resultCustName;
@@ -215,51 +215,51 @@ public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServi
 		this.serviceNo = serviceNo;
 	}
 
-	public String getLabourCharge() {
+	public int getLabourCharge() {
 		return labourCharge;
 	}
 
-	public void setLabourCharge(String labourCharge) {
+	public void setLabourCharge(int labourCharge) {
 		this.labourCharge = labourCharge;
 	}
 
-	public String getDefectId() {
+	public int getDefectId() {
 		return defectId;
 	}
 
-	public void setDefectId(String defectId) {
+	public void setDefectId(int defectId) {
 		this.defectId = defectId;
 	}
 
-	public String getDefectPartId() {
+	public int getDefectPartId() {
 		return defectPartId;
 	}
 
-	public void setDefectPartId(String defectPartId) {
+	public void setDefectPartId(int defectPartId) {
 		this.defectPartId = defectPartId;
 	}
 
-	public String getDefectDetailReasonId() {
+	public int getDefectDetailReasonId() {
 		return defectDetailReasonId;
 	}
 
-	public void setDefectDetailReasonId(String defectDetailReasonId) {
+	public void setDefectDetailReasonId(int defectDetailReasonId) {
 		this.defectDetailReasonId = defectDetailReasonId;
 	}
 
-	public String getSolutionReasonId() {
+	public int getSolutionReasonId() {
 		return solutionReasonId;
 	}
 
-	public void setSolutionReasonId(String solutionReasonId) {
+	public void setSolutionReasonId(int solutionReasonId) {
 		this.solutionReasonId = solutionReasonId;
 	}
 
-	public String getDefectTypeId() {
+	public int getDefectTypeId() {
 		return defectTypeId;
 	}
 
-	public void setDefectTypeId(String defectTypeId) {
+	public void setDefectTypeId(int defectTypeId) {
 		this.defectTypeId = defectTypeId;
 	}
 
@@ -319,11 +319,11 @@ public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServi
 		this.resultRemark = resultRemark;
 	}
 
-	public String getOwnerCode() {
+	public int getOwnerCode() {
 		return ownerCode;
 	}
 
-	public void setOwnerCode(String ownerCode) {
+	public void setOwnerCode(int ownerCode) {
 		this.ownerCode = ownerCode;
 	}
 

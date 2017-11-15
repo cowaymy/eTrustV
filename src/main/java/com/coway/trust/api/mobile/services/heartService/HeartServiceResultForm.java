@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 //import com.coway.trust.api.mobile.common.MalfunctionCodeForm;
 import com.coway.trust.util.BeanConverter;
 
@@ -19,7 +21,7 @@ public class HeartServiceResultForm {
 	private String userId;
 	
 	@ApiModelProperty(value = "주문번호")
-	private int salesOrderNo;
+	private String salesOrderNo;
 	
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
@@ -56,48 +58,37 @@ public class HeartServiceResultForm {
 
 	@ApiModelProperty(value = "base64 Data")
 	private String signData;
+
+	@ApiModelProperty(value = "")
+	private String signRegDate;
+
+	@ApiModelProperty(value = "")
+	private String signRegTime;
+	
 	
 	@ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
 	private String transactionId;
 	
 	@ApiModelProperty(value = "heartDtails")
 	private List<HeartServiceResultDetailForm> heartDtails;
-
 	
 	
-	
-	public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
-
-		List<Map<String, Object>> list = new ArrayList<>();
-
-		if (heartDtails != null && heartDtails.size() > 0) {
-			Map<String, Object> map;
-			for (HeartServiceResultDetailForm dtl : heartDtails) {
-				map = BeanConverter.toMap(heartServiceResultForm, "signData", "heartDtails");
-				map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
-
-				// heartDtails
-				map.put("filterCode", dtl.getFilterCode());
-				map.put("exchangeId", dtl.getExchangeId());
-				map.put("filterChangeQty", dtl.getFilterChangeQty());
-				map.put("alternativeFilterCode", dtl.getAlternativeFilterCode());
-				map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
-
-				list.add(map);
-			}
-		}
-		return list;
+	public String getSignRegDate() {
+		return signRegDate;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	public void setSignRegDate(String signRegDate) {
+		this.signRegDate = signRegDate;
+	}
+
+	public String getSignRegTime() {
+		return signRegTime;
+	}
+
+	public void setSignRegTime(String signRegTime) {
+		this.signRegTime = signRegTime;
+	}
+
 	public String getUserId() {
 		return userId;
 	}
@@ -106,11 +97,11 @@ public class HeartServiceResultForm {
 		this.userId = userId;
 	}
 
-	public int getSalesOrderNo() {
+	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
 
-	public void setSalesOrderNo(int salesOrderNo) {
+	public void setSalesOrderNo(String salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
 
@@ -226,9 +217,48 @@ public class HeartServiceResultForm {
 		this.heartDtails = heartDtails;
 	}
 	
+	public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
+
+		List<Map<String, Object>> list = new ArrayList<>();
+
+		if (heartDtails != null && heartDtails.size() > 0) {
+			Map<String, Object> map;
+			for (HeartServiceResultDetailForm dtl : heartDtails) {
+				map = BeanConverter.toMap(heartServiceResultForm, "signData", "heartDtails");
+				map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
+
+				// heartDtails
+				map.put("filterCode", dtl.getFilterCode());
+				map.put("exchangeId", dtl.getExchangeId());
+				map.put("filterChangeQty", dtl.getFilterChangeQty());
+				map.put("alternativeFilterCode", dtl.getAlternativeFilterCode());
+				map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
+
+				list.add(map);
+			}
+		}
+		return list;
+	}
 
 
+	
+	
+	public  List<Map<String, Object>>  createMaps1(HeartServiceResultForm heartServiceResultForm) {
 
+		List<Map<String, Object>> list = new ArrayList<>();
+	
+		if (heartDtails != null && heartDtails.size() > 0) {
+			Map<String, Object> map;
+			for (HeartServiceResultDetailForm obj : heartDtails) {
+				map = BeanConverter.toMap(heartServiceResultForm, "HeartServiceResultForm");	
+//				map.put("serialNo", obj.getSerialNo());
+				list.add(map);
+			}
+		}
+		
+		return list;
+	}
+	
 
 
 	

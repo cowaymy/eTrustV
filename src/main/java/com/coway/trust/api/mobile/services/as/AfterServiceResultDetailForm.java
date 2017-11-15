@@ -20,19 +20,19 @@ public class AfterServiceResultDetailForm {
 	private String filterCode;
 
 	@ApiModelProperty(value = "foc??")
-	private String chargesFoc;
+	private int chargesFoc;
 
 	@ApiModelProperty(value = "chgid??")
-	private String exchangeId;
+	private int exchangeId;
 
 	@ApiModelProperty(value = "filter price")
-	private String salesPrice;
+	private int salesPrice;
 
 	@ApiModelProperty(value = "필터 교체 수량")
-	private String filterChangeQty;
+	private int filterChangeQty;
 
 	@ApiModelProperty(value = "filter / sparepart / msc(Miscellaneous) 구분")
-	private String partsType;
+	private int partsType;
 
 	@ApiModelProperty(value = "교체 필터 바코드")
 	private String filterBarcdSerialNo;
@@ -45,43 +45,43 @@ public class AfterServiceResultDetailForm {
 		this.filterCode = filterCode;
 	}
 
-	public String getChargesFoc() {
+	public int getChargesFoc() {
 		return chargesFoc;
 	}
 
-	public void setChargesFoc(String chargesFoc) {
+	public void setChargesFoc(int chargesFoc) {
 		this.chargesFoc = chargesFoc;
 	}
 
-	public String getExchangeId() {
+	public int getExchangeId() {
 		return exchangeId;
 	}
 
-	public void setExchangeId(String exchangeId) {
+	public void setExchangeId(int exchangeId) {
 		this.exchangeId = exchangeId;
 	}
 
-	public String getSalesPrice() {
+	public int getSalesPrice() {
 		return salesPrice;
 	}
 
-	public void setSalesPrice(String salesPrice) {
+	public void setSalesPrice(int salesPrice) {
 		this.salesPrice = salesPrice;
 	}
 
-	public String getFilterChangeQty() {
+	public int getFilterChangeQty() {
 		return filterChangeQty;
 	}
 
-	public void setFilterChangeQty(String filterChangeQty) {
+	public void setFilterChangeQty(int filterChangeQty) {
 		this.filterChangeQty = filterChangeQty;
 	}
 
-	public String getPartsType() {
+	public int getPartsType() {
 		return partsType;
 	}
 
-	public void setPartsType(String partsType) {
+	public void setPartsType(int partsType) {
 		this.partsType = partsType;
 	}
 
