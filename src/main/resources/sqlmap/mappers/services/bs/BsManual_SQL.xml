@@ -394,7 +394,8 @@
 								        Project2.SCHDUL_ID SCHDUL_ID   ,
 								        Project2.SALES_ORD_ID,
    								        Project2.branch_cd,
- 								        Project2.CODY_MANGR_USER_ID
+ 								        Project2.CODY_MANGR_USER_ID,
+                                        Project2.Result as Result
 						 from(       SELECT HS.NO AS NO,
 						                           HS.STUS_CODE_ID as STUS_CODE_ID,
 						                           HS.MONTH || '/' || HS.YEAR as HS_DATE ,
