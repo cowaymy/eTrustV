@@ -135,7 +135,7 @@ function f_multiCombo() {
 <h2>TR Book Management</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#"  id="search"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"  id="clear"><span class="clear"></span>Clear</a></p></li>
+<!--     <li><p class="btn_blue"><a href="#"  id="clear"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
@@ -198,35 +198,35 @@ function f_multiCombo() {
 </table><!-- table end -->
 </form>
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-    <dt>Link</dt>
-    <dd>
-    <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-    </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-    </ul>
-    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-    </dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
+<!-- <aside class="link_btns_wrap">link_btns_wrap start -->
+<%-- <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
+<!-- <dl class="link_list"> -->
+<!--     <dt>Link</dt> -->
+<!--     <dd> -->
+<!--     <ul class="btns"> -->
+<!--         <li><p class="link_btn"><a href="#">menu1</a></p></li> -->
+<!--         <li><p class="link_btn"><a href="#">menu2</a></p></li> -->
+<!--         <li><p class="link_btn"><a href="#">menu3</a></p></li> -->
+<!--         <li><p class="link_btn"><a href="#">menu4</a></p></li> -->
+<!--         <li><p class="link_btn"><a href="#">Search Payment</a></p></li> -->
+<!--         <li><p class="link_btn"><a href="#">menu6</a></p></li> -->
+<!--         <li><p class="link_btn"><a href="#">menu7</a></p></li> -->
+<!--         <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
+<!--     </ul> -->
+<!--     <ul class="btns"> -->
+<!--         <li><p class="link_btn type2"><a href="#">menu1</a></p></li> -->
+<!--         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li> -->
+<!--         <li><p class="link_btn type2"><a href="#">menu3</a></p></li> -->
+<!--         <li><p class="link_btn type2"><a href="#">menu4</a></p></li> -->
+<!--         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li> -->
+<!--         <li><p class="link_btn type2"><a href="#">menu6</a></p></li> -->
+<!--         <li><p class="link_btn type2"><a href="#">menu7</a></p></li> -->
+<!--         <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
+<!--     </ul> -->
+<%--     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p> --%>
+<!--     </dd> -->
+<!-- </dl> -->
+<!-- </aside>link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
@@ -238,9 +238,9 @@ function f_multiCombo() {
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     <li><p class="btn_grid"><a id="#"><spring:message code='sys.btn.del' /></a></p></li>
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
-    <li><p class="btn_grid"><a id="view"><spring:message code='sys.btn.view' /></a></p></li>
-    <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
-    <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
+<%--     <li><p class="btn_grid"><a id="view"><spring:message code='sys.btn.view' /></a></p></li> --%>
+<%--     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li> --%>
+<%--     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li> --%>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
