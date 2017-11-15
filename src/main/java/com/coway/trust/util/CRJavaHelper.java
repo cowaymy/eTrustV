@@ -694,15 +694,28 @@ public class CRJavaHelper {
 	 */
 	public static void exportExcelDataOnly(ReportClientDocument clientDoc, HttpServletResponse response,
 			boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
+		ExportOptions exportOptions = getExcelExportptionsDataOnly();
+		export(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName);
+	}
+
+	public static ExportOptions getExcelExportptionsDataOnly() {
+		DataOnlyExcelExportFormatOptions excelOptions = new DataOnlyExcelExportFormatOptions();
+		ExportOptions exportOptions = new ExportOptions();
+		exportOptions.setExportFormatType(ReportExportFormat.recordToMSExcel);
+		exportOptions.setFormatOptions(excelOptions);
+		return exportOptions;
+	}
+
+	public static void exportExcel(ReportClientDocument clientDoc, HttpServletResponse response,
+										   boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
 		ExportOptions exportOptions = getExcelExportOptions();
 		export(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName);
 	}
 
 	public static ExportOptions getExcelExportOptions() {
-		DataOnlyExcelExportFormatOptions excelOptions = new DataOnlyExcelExportFormatOptions();
 		ExportOptions exportOptions = new ExportOptions();
-		exportOptions.setExportFormatType(ReportExportFormat.recordToMSExcel);
-		exportOptions.setFormatOptions(excelOptions);
+//		exportOptions.setExportFormatType(ReportExportFormat.recordToMSExcel);
+		exportOptions.setExportFormatType(ReportExportFormat.MSExcel);
 		return exportOptions;
 	}
 

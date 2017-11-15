@@ -248,6 +248,9 @@ public class ReportController {
 			viewPDF(response, clientDoc, downFileName);
 			break;
 		case EXCEL:
+			viewDataEXCEL(response, clientDoc, downFileName);
+			break;
+		case EXCEL_FULL:
 			viewEXCEL(response, clientDoc, downFileName);
 			break;
 		case MAIL_CSV:
@@ -288,6 +291,11 @@ public class ReportController {
 	}
 
 	private void viewEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
+		this.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper
+				.exportExcel(clientDoc, response, true, downFileName), response, clientDoc, downFileName);
+	}
+
+	private void viewDataEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
 		this.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper
 				.exportExcelDataOnly(clientDoc, response, true, downFileName), response, clientDoc, downFileName);
 	}
@@ -344,7 +352,7 @@ public class ReportController {
 	}
 
 	enum ViewType {
-		WINDOW, PDF, EXCEL, CSV, MAIL_PDF, MAIL_EXCEL, MAIL_CSV
+		WINDOW, PDF, EXCEL, EXCEL_FULL, CSV, MAIL_PDF, MAIL_EXCEL, MAIL_CSV
 	}
 
 	interface ExportFile {
