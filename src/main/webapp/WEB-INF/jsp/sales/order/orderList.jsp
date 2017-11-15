@@ -146,7 +146,7 @@
           , { headerText : "Ref No",          dataField : "refNo",       editable : false, width : 60  }
           , { headerText : "Product",         dataField : "productName", editable : false, width : 150 }
           , { headerText : "Cust ID",         dataField : "custId",      editable : false, width : 70  }
-          , { headerText : "Customer Name",   dataField : "custName",    editable : false, width : 100 }
+          , { headerText : "Customer Name",   dataField : "custName",    editable : false}
           , { headerText : "NRIC/Company No", dataField : "custIc",      editable : false, width : 100 }
           , { headerText : "Creator",         dataField : "crtUserId",   editable : false, width : 100 }
           , { headerText : "PV Year",         dataField : "pvYear",      editable : false, width : 60  }
