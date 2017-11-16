@@ -1,38 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/combodraw.js"></script>
-<style type="text/css">
-
-/* 커스텀 칼럼 스타일 정의 */
-.aui-grid-user-custom-left {
-    text-align:left;
-}
-
-/* 커스컴 disable 스타일*/
-.mycustom-disable-color {
-    color : #cccccc;
-}
-
-/* 그리드 오버 시 행 선택자 만들기 */
-.aui-grid-body-panel table tr:hover {
-    background:#D9E5FF;
-    color:#000;
-}
-.aui-grid-main-panel .aui-grid-body-panel table tr td:hover {
-    background:#D9E5FF;
-    color:#000;
-}
-
-
-/* #regFilterWind {
-    font-size:13px;
-}
-#regFilterWind label, input { display:block; }
-#regFilterWind input.text { margin-bottom:10px; width:95%; padding: 0.1em;  }
-#regFilterWind fieldset { padding:0; border:0; margin-top:10px; } */
-</style>
 
 <script type="text/javaScript">
 
@@ -286,6 +253,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     }
 
     $(function(){
+    	$("#stockIns").click(function(){
+    		$("#editWindow").show();
+    		doGetCombo('/common/selectCodeList.do', '42', '','insUom', 'S'); //청구처 리스트 조회
+    		doGetCombo('/common/selectCodeList.do', '11', '', 'insCate', 'S', '');
+    	});
         $("#stock_info").click(function(){
             if($("#stock_info_div").css("display") == "none"){
                 f_removeclass();
@@ -457,46 +429,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
         });
         
-        //
-/*         $("#filter_info_edit").click(function(){
-            if($("#filter_info_edit").text() == "EDIT"){    
-                colShowHide(filterGrid,"",true);
-                $("#filter_info_edit").text("Add Filter");
-            }else if ($("#filter_info_edit").text() == "Add Filter"){
-                popClear();
-                $("#regFilterWindow").show();
-                var comUrl= "/common/selectCodeList.do";
-                doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
-                //doGetCombo(comUrl, '15', '','cmbTypePop', 'A' , ''); //청구처 리스트 조회
-
-            }else if($("#filter_info_edit").text() == "SAVE"){
-                var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(filterGrid),"filter_info");  
-            }
-
-        }); */
-
-
-/*         $("#spare_info_edit").click(function() {
-            if($("#spare_info_edit").text() == "EDIT"){
-                colShowHide(spareGrid,"",true);
-                $("#spare_info_edit").text("Add Spare Part");
-            } else if ($("#spare_info_edit").text() == "Add Spare Part") {
-                popClear();
-                $("#regSpareWindow").show();
-                var comUrl = "/common/selectCodeList.do";
-                doGetCombo(comUrl, '11', '', 'categoryPop_sp','S', '');
-
-            } else if ($("#spare_info_edit").text() == "SAVE") {
-                var selectedItems = AUIGrid.getSelectedItems(myGridID);
-
-                f_info_save("/stock/modifyFilterInfo.do",
-                selectedItems[0].item.stkid, GridCommon.getEditData(spareGrid),
-                "spare_info");
-            }
-
-        }); */
-
         $("#stock_comm_edit").click(function(){
             var selectedItems = AUIGrid.getSelectedIndex(myGridID);
             var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
@@ -594,11 +526,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     
             }
         });
-        
-        
-        
- 
-        
     });
     
     function f_info_save(url, key, v, f) {
@@ -793,27 +720,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 //         });
     }
 
-    function f_showModal() {
-        $.blockUI.defaults.css = {
-            textAlign : 'center'
-        }
-        $('div.SalesWorkDiv')
-                .block(
-                        {
-                            message : "<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' /><div class='preloader'><i id='iloader'>.</i><i id='iloader'>.</i><i id='iloader'>.</i></div>",
-                            centerY : false,
-                            centerX : true,
-                            css : {
-                                top : '300px',
-                                border : 'none'
-                            }
-                        });
-    }
-    function hideModal() {
-        $('div.SalesWorkDiv').unblock();
-
-    }
-
+    
     function f_view(url, v) {
         f_clearForm();
         $.ajax({
@@ -1263,6 +1170,100 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 AUIGrid.hideColumnByDataField(gridNm, fied);
             }
     }
+    
+    function fn_nonvalueItem(val){
+    	if (val == '2'){
+    		$("#editWindow").hide();
+    	}else{
+    		if (nonvalueValidationChk()){
+    			fdata = $("#insForm").serializeJSON();
+    			
+    			if ($("#insNCV").is(":checked") == true) {
+   	                $.extend(fdata, {
+   	                    'insNCV' : '1'
+   	                });
+   	            } else {
+   	                $.extend(fdata, {
+   	                    'insNCV' : '0'
+   	                });
+   	            }
+   	            if ($("#insSirim").is(":checked") == true) {
+   	                $.extend(fdata, {
+   	                    'insSirim' : '1'
+   	                });
+   	            } else {
+   	                $.extend(fdata, {
+   	                    'insSirim' : '0'
+   	                });
+   	            }
+	   	        if ($("#insas").is(":checked") == true) {
+	                $.extend(fdata, {
+	                    'insas' : '1'
+	                });
+	            } else {
+	                $.extend(fdata, {
+	                    'insas' : '0'
+	                });
+	            }
+	            var url = "/stock/nonvalueStockIns.do"
+	            
+    	        Common.ajax("POST", url, fdata, function(data) {
+    	        	console.log(data);
+    	        	if (data.data != '0'){
+    	        		Common.alert("Code already registered.");
+                        return false;
+    	        	}else{
+    	        		getSampleListAjax();
+    	        		$("#editWindow").hide();
+    	        	}
+    	        });
+    		}else{
+    			return false;
+    		}
+    	}
+    }
+    function nonvalueValidationChk(){
+    	console.log($("#insForm").serializeJSON());
+    	/*insCate    	:    	"55"
+    	insNCV    	:    	"on"
+    	insSirim    	:    	"on"
+    	insStockCode    	:    	"safas"
+    	insUom    	:    	"71"
+    	insas    	:    	"on"
+    	insnp    	:    	"200"
+    	istockType    	:    	"2687"
+    	mwarenm    	:    	"safdasf"
+    	oldStockNo    	:    	"safdasfd"*/
+    	if ($("#insStockCode").val() == ""){
+    		return false;
+    	}else{
+    		var stype = $("#insStockCode").val();
+    		console.log(stype.substr(0,1));
+    		console.log(stype.substr(1));
+    		if (stype.substr(0,1) != 'M'){
+    			Common.alert("The Stock Code can only be generated from M500000 to M599999.");
+    			return false;
+    		}else {
+    			if (stype.substr(1) < "500000" || stype.substr(1) > "599999"){
+    				Common.alert("The Stock Code can only be generated from M500000 to M599999.");
+                    return false;
+    			}
+    		}
+    	}
+    	if ($("#insUom").val() == ""){
+    		Common.alert("UOM is a required value.");
+            return false;
+        }
+    	if ($("#istocknm").val() == ""){
+    		Common.alert("Stock Name is a required value.");
+            return false;
+        }
+    	if ($("#insCate").val() == ""){
+    		Common.alert("Stock Category is a required value.");
+            return false;
+        }
+    	return true;
+    }
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv">
@@ -1336,7 +1337,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li> -->
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
-<!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li> -->
+            <li><p class="btn_grid"><a id="stockIns"><span class="search"></span>INS</a></p></li>
 <!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()"><span class="search"></span>ADD</a></p></li> -->
         </ul>
 
@@ -1709,41 +1710,138 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->          
-                <form id="spareForm" name="spareForm" method="POST">
-                    <table class="type1">
-                        <caption>search table</caption>
-                        <colgroup>
-                            <col style="width: 150px" />
-                            <col style="width: *" />
-                            <col style="width: 160px" />
-                            <col style="width: *" />
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Category</th>
-                                <td colspan="3"><select id="categoryPop_sp" name="categoryPop_sp"
-                                    onchange="getCdForStockList('sparecdPop' , this.value , 'sparecd', '')"></select></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Spare Part Code</th>
-                                <td colspan="3" class="w100p"><select id="sparecdPop"
-                                    class="w100p" name="sparecdPop"></select></td>
-                            </tr>
-                            <tr>
-                                <th scope="row" rowspan="3">Quantity</th>
-                                <td colspan="3"><input type="text" id="quantityPop_sp"
-                                    name="quantityPop_sp"  onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <ul class="center_btns">
-                        <li><p class="btn_blue2 big"><a onclick="javascript:addRowSparePart();">SAVE</a></p></li> 
-                        <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowSparePart();">CANCEL</a></p></li>
-                    </ul>
-                </form>       
+    <form id="spareForm" name="spareForm" method="POST">
+        <table class="type1">
+            <caption>search table</caption>
+            <colgroup>
+                <col style="width: 150px" />
+                <col style="width: *" />
+                <col style="width: 160px" />
+                <col style="width: *" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th scope="row">Category</th>
+                    <td colspan="3"><select id="categoryPop_sp" name="categoryPop_sp"
+                        onchange="getCdForStockList('sparecdPop' , this.value , 'sparecd', '')"></select></td>
+                </tr>
+                <tr>
+                    <th scope="row">Spare Part Code</th>
+                    <td colspan="3" class="w100p"><select id="sparecdPop"
+                        class="w100p" name="sparecdPop"></select></td>
+                </tr>
+                <tr>
+                    <th scope="row" rowspan="3">Quantity</th>
+                    <td colspan="3"><input type="text" id="quantityPop_sp"
+                        name="quantityPop_sp"  onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  /></td>
+                </tr>
+            </tbody>
+        </table>
+        <ul class="center_btns">
+            <li><p class="btn_blue2 big"><a onclick="javascript:addRowSparePart();">SAVE</a></p></li> 
+            <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowSparePart();">CANCEL</a></p></li>
+        </ul>
+    </form>       
  </section>     
 </div>      
         
+<!-- insert into -->
+<div class="popup_wrap" id="editWindow" style="display:none"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>Non-Valued Item</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->
+
+<form id="insForm" name="insForm" method="POST">
+<table class="type1"><!-- table start -->
+<caption>search table</caption>
+<colgroup>
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Stock Type</th>
+    <td ><select id="istockType" name="istockType" class="w100p">
+            <option value="2687">Item Bank</option>
+        </select>
+    </td>
+    <td colspan="4">
+        <label><input type="checkbox" name="insSirim" id="insSirim"/><span>Sirim Certificate</span></label>
+        <label><input type="checkbox" name="insNCV"   id="insNCV" /><span>NCV</span></label>
+        <label><input type="checkbox" name="insas"    id="insas" /><span>ALLOW_SALES</span></label>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Stock Code</th>
+    <td><input type="text" name="insStockCode" id="insStockCode" class="w100p"/></td>    
+    <th scope="row">UOM</th>
+    <td>
+        <select id="insUom" name="insUom" class="w100p"></select>
+    </td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <th scope="row">Stock Name</th>
+    <td colspan="3"><input type="text" name="istocknm" id="istocknm" class="w100p"/></td>
+    <th scope="row">Category</th>
+    <td><select id="insCate" name="insCate" class="w100p"></select></td>
+</tr>
+<tr>
+    <th scope="row" colspan="6">Price & Value Information</th>    
+</tr>
+<tr>
+    <th scope="row">Old Material Number</th>
+    <td colspan="3"><input type="text" name="oldStockNo" id="oldStockNo" class="w100p"/></td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <th scope="row">Net Weight (KG)</th>
+    <td><input type="text" id="insnw" name="insgw" class="w100p" value="" disabled=true/></td>
+    <th scope="row">Gross Weight (KG)</th>
+    <td><input type="text" id="insgw" name="insgw" class="w100p" value="" disabled=true/></td>
+    <th scope="row">Measurement CBM</th>
+    <td><input type="text" id="insmscbm" name="insmscbm" class="w100p" value="" disabled=true/></td>
+</tr>
+
+<tr>
+    <th scope="row">Cost</th>
+    <td><input type="text" id="inscost" name="inscost" class="w100p" value="" disabled=true/></td>
+    <th scope="row">Normal Price</th>
+    <td><input type="text" id="insnp" name="insnp" class="w100p" value=""/></td>
+    <th scope="row">Point of Value(PV)</th>
+    <td><input type="text" id="inspov" name="inspov" class="w100p" value="" disabled=true/></td>
+</tr>
+<tr>
+    <th scope="row">Monthly Rental</th>
+    <td><input type="text" id="insmr" name="insmr" class="w100p" value="" disabled=true/></td>
+    <th scope="row">Rental Deposit</th>
+    <td><input type="text" id="insrd" name="insrd" class="w100p" value="" disabled=true/></td>
+    <th scope="row">Penalty Charges</th>
+    <td><input type="text" id="inspc" name="inspc" class="w100p" value="" disabled=true/></td>
+</tr>
+<tr>
+    <th scope="row">Trade In (PV) Value</th>
+    <td colspan="3"><input type="text" id="insti" name="insti" class="w100p" value="" disabled=true/></td>
+    <td colspan="2"></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_nonvalueItem('1');">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_nonvalueItem('2');">CANCEL</a></p></li>
+</ul>
+</form>
+
+</section>
+</div>
         
     </section><!-- content end -->
 </div>
