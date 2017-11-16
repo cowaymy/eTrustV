@@ -181,11 +181,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			param.put("productId", productId);
 			EgovMap defaultView = installationResultListMapper.getPromoPriceAndPV(param);
 			
-			resultView.put("swapPormoPrice", swapView.get("promoItmPrc"));
-			resultView.put("swapPromoPV", swapView.get("promoItmPv"));
+			resultView.put("swapPormoPrice", CommonUtils.nvl(swapView.get("promoItmPrc")));
+			resultView.put("swapPromoPV", CommonUtils.nvl(swapView.get("promoItmPv")));
 			resultView.put("promoId", list.get(0).get("promoMtchId"));
-			resultView.put("promoPrice",defaultView.get("promoItmPrc"));
-			resultView.put("promoPV",defaultView.get("promoItmPv"));
+			resultView.put("promoPrice",CommonUtils.nvl(defaultView.get("promoItmPrc")));
+			resultView.put("promoPV",CommonUtils.nvl(defaultView.get("promoItmPv")));
 		}else{
 			logger.debug("22222222222222");
 			list =  installationResultListMapper.selectSalesPromoMs(promotionId);
@@ -200,11 +200,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 				EgovMap defaultView = installationResultListMapper.getPromoPriceAndPV(param);
 				
 				resultView.put("swapPromoId", Integer.parseInt(list.get(0).get("promoId").toString()));
-				resultView.put("swapPormoPrice",swapView.get("promoItmPrc"));
-				resultView.put("swapPromoPV",swapView.get("promoItmPv"));
+				resultView.put("swapPormoPrice",CommonUtils.nvl(swapView.get("promoItmPrc")));  
+				resultView.put("swapPromoPV",CommonUtils.nvl(swapView.get("promoItmPv")));
 				resultView.put("promoId",promotionId);
-				resultView.put("promoPrice",defaultView.get("promoItmPrc"));
-				resultView.put("promoPV",defaultView.get("promoItmPv"));
+				resultView.put("promoPrice",CommonUtils.nvl(defaultView.get("promoItmPrc")));
+				resultView.put("promoPV",CommonUtils.nvl(defaultView.get("promoItmPv")));
 			}else{
 				logger.debug("444444444444444");
 				param.put("promotionId", promotionId);
@@ -212,8 +212,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 				EgovMap defaultView = installationResultListMapper.getPromoPriceAndPV(param);
 				logger.debug("defaultView : {}", defaultView);
 				resultView.put("swapPromoId", promotionId);
-				resultView.put("swapPormoPrice", defaultView.get("promoItmPrc"));
-				resultView.put("swapPromoPV", defaultView.get("promoItmPv"));
+				resultView.put("swapPormoPrice", CommonUtils.nvl(defaultView.get("promoItmPrc")));
+				resultView.put("swapPromoPV", CommonUtils.nvl(defaultView.get("promoItmPv")));
 				resultView.put("promoId", 0);
 				resultView.put("promoPrice", 0);
 				resultView.put("promoPV", 0);
