@@ -1412,7 +1412,8 @@ AND   O1DA.MEM_CODE = #{userId}
 
 
 <select id="serviceHistory" parameterType="Map" resultType="egovMap">
-         SELECT  job_Status,
+         SELECT  sales_ord_no,
+                    job_Status,
                     service_No,
                     settle_Date,
                     hsr_Asr_No,
@@ -1433,30 +1434,36 @@ AND   O1DA.MEM_CODE = #{userId}
                     part_Change_Qty,
                     AS_RESULT_ID
             FROM(
-                SELECT S.AS_RESULT_STUS_ID job_Status,
-                 S.AS_RESULT_NO service_No,
-                 to_char(S.AS_SETL_DT,'YYYYMMDD') settle_Date,
-                 'Asr' hsr_Asr_No,
-                 S.AS_CT_ID,
-                 (SELECT MEM_CODE
-                    FROM org0001d d
-                   WHERE 1 = 1 AND d.mem_id = S.AS_CT_ID)
-                    action_Member,
-                 'AS' job_Type,
-                 FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason,
-                 S.AS_RESULT_REM result_Remark,
-                 TO_NUMBER ('') collection_Code,
-                 TO_CHAR ('') collection_Name,
-                 C.ASR_ITM_PART_ID filter_Code,
-                 C.ASR_ITM_PART_DESC filter_Name,
-                 to_char(E.SRV_FILTER_PRV_CHG_DT,'YYYYMMDD') as  last_Change_Date,
-                 E.SRV_FILTER_PRIOD filter_Period,
-                 C.ASR_ITM_PART_QTY change_Qty,
-                 '' next_Change_Date,
-                 '' part_Code,
-                 '' part_Name,
-                 '' part_Change_Qty,
-                 c.AS_RESULT_ID
+                SELECT b.SALES_ORD_NO,
+		                 S.AS_RESULT_STUS_ID job_Status,
+		                 S.AS_RESULT_NO service_No,
+		                 to_char(S.AS_SETL_DT,'YYYYMMDD') settle_Date,
+		                 'Asr' hsr_Asr_No,
+		                 S.AS_CT_ID,
+		                 (SELECT MEM_CODE
+		                    FROM org0001d d
+		                   WHERE 1 = 1 AND d.mem_id = S.AS_CT_ID)
+		                    action_Member,
+		                 'AS' job_Type,
+                        (SELECT Extent1.RESN_DESC 
+                              FROM SYS0032M Extent1
+                             WHERE   Extent1.RESN_TYPE_ID = '166' 
+                                      AND Extent1.STUS_CODE_ID =1
+                                      and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason,
+	<!-- 	                 FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason, -->
+		                 S.AS_RESULT_REM result_Remark,
+		                 TO_NUMBER ('') collection_Code,
+		                 TO_CHAR ('') collection_Name,
+		                 C.ASR_ITM_PART_ID filter_Code,
+		                 C.ASR_ITM_PART_DESC filter_Name,
+		                 to_char(E.SRV_FILTER_PRV_CHG_DT,'YYYYMMDD') as  last_Change_Date,
+		                 E.SRV_FILTER_PRIOD filter_Period,
+		                 C.ASR_ITM_PART_QTY change_Qty,
+		                 '' next_Change_Date,
+		                 '' part_Code,
+		                 '' part_Name,
+		                 '' part_Change_Qty,
+		                 c.AS_RESULT_ID
                 FROM  SVC0004D S , 
                                SAL0001D B ,
                                SVC0005D C ,
@@ -1469,13 +1476,19 @@ AND   O1DA.MEM_CODE = #{userId}
                ORDER BY S.AS_RESULT_ID ASC
                )
             union all
-            select           STUS_CODE_ID
+            select           sales_ord_no
+                                ,STUS_CODE_ID
                                 ,NO  as service_No
                                 ,SETL_DT as settle_Date
                                 ,'Hsr' AS hsr_Asr_No
                                 ,MEM_CODE as action_Member
                                 ,'HS' as job_Type
-                                ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason
+                                ,(SELECT Extent1.RESN_DESC 
+		                              FROM SYS0032M Extent1
+		                             WHERE   Extent1.RESN_TYPE_ID = '167' 
+		                                      AND Extent1.STUS_CODE_ID =1
+		                                      and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
+<!--                                 ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason -->
                                 ,REN_COLCT_ID as collection_Code
                                 ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name                    
                                 ,RESULT_REM as result_Remark
@@ -1490,27 +1503,28 @@ AND   O1DA.MEM_CODE = #{userId}
                                 ,part_Change_Qty
                                  ,BS_RESULT_ID
                     from (  SELECT ROWNUM,
-                                         b.STUS_CODE_ID,
-                                         b.SCHDUL_ID,
-                                         b.SALES_ORD_ID,
-                                         c.SALES_ORD_NO,
-                                         to_char(a.SETL_DT,'YYYYMMDD')as SETL_DT,
-                                         a.NO,
-                                         a.CODY_ID,
-                                         d.MEM_CODE,
-                                         a.FAIL_RESN_ID,
-                                         a.RESULT_REM,
-                                         a.REN_COLCT_ID,
-                                         e.BS_RESULT_PART_ID,
-                                         e.BS_RESULT_PART_DESC,
-                                         to_char(e.BS_RESULT_CRT_DT,'YYYYMMDD')as BS_RESULT_CRT_DT,
-                                         F.SRV_FILTER_PRIOD,
-                                         E.BS_RESULT_PART_QTY,
-                                         '' next_Change_Date,
-                                         '' part_Code,
-                                         '' part_Name,
-                                         '' part_Change_Qty,
-                                         e.BS_RESULT_ID
+                                   c.sales_ord_no,
+                                    b.STUS_CODE_ID,
+                                    b.SCHDUL_ID,
+                                    b.SALES_ORD_ID,
+                                    c.SALES_ORD_NO,
+                                    to_char(a.SETL_DT,'YYYYMMDD')as SETL_DT,
+                                    a.NO,
+                                    a.CODY_ID,
+                                    d.MEM_CODE,
+                                    a.FAIL_RESN_ID,
+                                    a.RESULT_REM,
+                                    a.REN_COLCT_ID,
+                                    e.BS_RESULT_PART_ID,
+                                    e.BS_RESULT_PART_DESC,
+                                    to_char(e.BS_RESULT_CRT_DT,'YYYYMMDD')as BS_RESULT_CRT_DT,
+                                    F.SRV_FILTER_PRIOD,
+                                    E.BS_RESULT_PART_QTY,
+                                    '' next_Change_Date,
+                                    '' part_Code,
+                                    '' part_Name,
+                                    '' part_Change_Qty,
+                                    e.BS_RESULT_ID
                         from SVC0006D a
                                 ,SVC0008D b
                                 ,sal0001d c
@@ -1563,7 +1577,12 @@ AND   O1DA.MEM_CODE = #{userId}
                    WHERE 1 = 1 AND d.mem_id = S.AS_CT_ID)
                     action_Member,
                  'AS' job_Type,
-                 FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason,
+                (SELECT Extent1.RESN_DESC 
+	              FROM SYS0032M Extent1
+	              WHERE   Extent1.RESN_TYPE_ID = '166' 
+	                          AND Extent1.STUS_CODE_ID =1
+	                          and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason,
+<!--                  FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason, -->
                  S.AS_RESULT_REM result_Remark,
                  TO_NUMBER ('') collection_Code,
                  TO_CHAR ('') collection_Name,
@@ -1626,7 +1645,12 @@ AND   O1DA.MEM_CODE = #{userId}
 						                   WHERE 1 = 1 AND d.mem_id = S.AS_CT_ID)
 						                    action_Member,
 						                 'AS' job_Type,
-						                 FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason,
+                                    (SELECT Extent1.RESN_DESC 
+		                              FROM SYS0032M Extent1
+		                             WHERE   Extent1.RESN_TYPE_ID = '166' 
+		                                      AND Extent1.STUS_CODE_ID =1
+		                                      and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason,
+				<!-- 		                 FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason, -->
 						                 S.AS_RESULT_REM result_Remark,
 						                 TO_NUMBER ('') collection_Code,
 						                 TO_CHAR ('') collection_Name,
@@ -1663,7 +1687,12 @@ AND   O1DA.MEM_CODE = #{userId}
                                 ,no as hsr_Asr_No
                                 ,MEM_CODE as action_Member
                                 ,'HS' as job_Type
-                                ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason
+                                ,(SELECT Extent1.RESN_DESC 
+                                      FROM SYS0032M Extent1
+                                     WHERE   Extent1.RESN_TYPE_ID = '167' 
+                                              AND Extent1.STUS_CODE_ID =1
+                                              and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
+                                <!-- ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason -->
                                 ,REN_COLCT_ID as collection_Code
                                 ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
                                 ,RESULT_REM as result_Remark
@@ -1728,7 +1757,12 @@ AND   O1DA.MEM_CODE = #{userId}
                                 ,no as hsr_Asr_No
                                 ,MEM_CODE as action_Member
                                 ,'HS' as job_Type
-                                ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason
+                                ,(SELECT Extent1.RESN_DESC 
+                                      FROM SYS0032M Extent1
+                                     WHERE   Extent1.RESN_TYPE_ID = '167' 
+                                              AND Extent1.STUS_CODE_ID =1
+                                              and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
+      <!--                           ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason -->
                                 ,REN_COLCT_ID as collection_Code
                                 ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
                                 ,RESULT_REM as result_Remark
