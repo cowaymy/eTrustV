@@ -227,6 +227,9 @@ public class CommonPaymentController {
     		}
     	}
     	
+    	//User ID 세팅
+    	formInfo.put("userid", sessionVO.getUserId());
+    	
     	//Credit Card일때
     	if("107".equals(String.valueOf(formInfo.get("keyInPayType")))){
     		formInfo.put("keyInIsOnline",  "1299".equals(String.valueOf(formInfo.get("keyInCardMode"))) ? 0 : 1 );

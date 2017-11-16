@@ -1122,6 +1122,9 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     			commonPaymentMapper.insertTmpBillingInfo(hm);    			
     		}
     	}
+    	
+    	//payment 처리 프로시저 호출
+    	commonPaymentMapper.processPayment(paramMap);
     }
 	
 }

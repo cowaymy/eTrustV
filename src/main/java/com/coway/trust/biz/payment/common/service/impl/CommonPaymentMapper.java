@@ -450,10 +450,12 @@ public interface CommonPaymentMapper {
 	void insertTmpBillingInfo(Map<String, Object> params);
 	
 	
-	
-	
-	
-	
+	/**
+	 * Payment 처리 프로시저 처리
+	 * @param params
+	 * @return
+	 */
+	int processPayment(Map<String, Object> params);
 	
 	
 }

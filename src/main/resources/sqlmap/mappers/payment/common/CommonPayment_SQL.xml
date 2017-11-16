@@ -292,7 +292,7 @@
         WHERE 
             BILL_AMT <![CDATA[ > ]]> 0
             AND BILL_TYPE_ID <![CDATA[ <> ]]> 160
-            <if test='excludeRPF != null and excludeRPF == "ADD" '>
+            <if test='excludeRPF != null and excludeRPF == "Y" '>
             AND BILL_TYPE_ID <![CDATA[ <> ]]> 161
             </if>
         ORDER BY BILL_DT         
@@ -766,7 +766,7 @@
 			JOIN SAL0078D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
 			JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SRV_CNTRCT_ORD_ID
 			JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-			JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID
+			JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID			            
         WHERE 
             1=1
             <if test="srvcId != null and srvcId != ''">
@@ -917,7 +917,7 @@
             Extent4.SALES_ORD_NO SALES_ORD_NO,
             Extent1.SRV_LDGR_TYPE_ID SRV_LDGR_TYPE_ID  ,
             Extent5.CODE_NAME SRV_LDGR_TYPE_NM  ,
-            Extent1.SRV_LDGR_REF_DT SRV_LDGR_REF_DT  ,
+            TO_CHAR(Extent1.SRV_LDGR_REF_DT,'YYYY-MM-DD') SRV_LDGR_REF_DT  ,
             Extent3.SRV_PAY_SCHDUL_ID SRV_PAY_SCHDUL_ID,
             0 AS BTN_CHECK   
         FROM 
@@ -968,7 +968,8 @@
             NRIC,
             CUST_NM,        
             AS_LG_AMT,
-            PAID_AMT
+            PAID_AMT,
+            'AS' AS APP_TYPE
         FROM
             (
             SELECT 
@@ -985,7 +986,7 @@
 	            Extent6.CODE_DESC AS RULE_DESC,
 	            Extent3.BILL_NO,
 	            Extent3.BILL_MEM_SHIP_NO,
-	            Extent3.BILL_DT,
+	            TO_CHAR(Extent3.BILL_DT,'YYYY-MM-DD') AS BILL_DT,
 	            Extent3.BILL_AMT,
 	            Extent3.BILL_REM,
 	            (CASE WHEN NVL(Extent3.BILL_IS_PAID,0) = 1 THEN  'True' ELSE 'False' END) AS BILL_IS_PAID,
@@ -1061,7 +1062,8 @@
             STUS_NM  ,
             NRIC,
             CUST_NM,
-            PAID_AMT        
+            PAID_AMT,
+            'HP' AS APP_TYPE        
         FROM 
             (
             SELECT 
@@ -1078,7 +1080,7 @@
 	            Extent4.CODE_DESC RULE_DESC  ,
 	            Extent1.BILL_NO   ,
 	            Extent1.BILL_MEM_SHIP_NO   ,
-	            Extent1.BILL_DT,
+	            TO_CHAR(Extent1.BILL_DT,'YYYY-MM-DD') AS BILL_DT,
 	            Extent1.BILL_AMT   ,
 	            Extent1.BILL_REM   ,
 	            (CASE WHEN NVL(Extent1.BILL_IS_PAID,0) = 1 THEN  'True' ELSE 'False' END) AS BILL_IS_PAID,
@@ -1224,7 +1226,9 @@
 			ASIGN_AMT,
 			BILL_STUS,
 			CUST_NM,
-			DSCNT_AMT
+			DSCNT_AMT,
+			SRV_LDGR_CNTRCT_ID,
+			BILL_AS_ID
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
 			#{seq},
@@ -1248,9 +1252,16 @@
 			#{assignAmt},
 			#{billStatus},
 			#{custNm},
-			#{discountAmt}
+			#{discountAmt},
+			#{srvcContractID},
+			#{billAsId}
+			
         )
     </insert>
+    
+    <update id="processPayment" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_PAYMENT(#{seq},#{userid} )}
+    </update>
     
     
     
