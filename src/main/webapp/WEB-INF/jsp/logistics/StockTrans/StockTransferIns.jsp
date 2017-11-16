@@ -33,13 +33,13 @@ var reqGrid;
 var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
                      {dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
                      {dataField:"stkid"     ,headerText:"ITEM CD"           ,width:120    ,height:30 ,visible:false},
-                     {dataField:"stkcd"     ,headerText:"ITEM CD"           ,width:120    ,height:30,editable:false},
-                     {dataField:"stknm"     ,headerText:"ITEM NAME"         ,width:120    ,height:30,editable:false},
+                     {dataField:"stkcd"     ,headerText:"Mat.Code"           ,width:120    ,height:30,editable:false},
+                     {dataField:"stknm"     ,headerText:"Material Name"         ,width:120    ,height:30,editable:false},
+                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false},
                      {dataField:"typeid"    ,headerText:"Type Id"           ,width:120    ,height:30,visible:false},
-                     {dataField:"typenm"    ,headerText:"TYPE Name"         ,width:120    ,height:30,editable:false},
+                     {dataField:"typenm"    ,headerText:"TYPE"         ,width:120    ,height:30,editable:false},
                      {dataField:"cateid"    ,headerText:"Cate Id"           ,width:120    ,height:30,visible:false},
                      {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30,editable:false},
-                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false},
                      {dataField:"uom"       ,headerText:"UOM"               ,width:120    ,height:30, visible:false}
                     ];
                     
@@ -70,8 +70,8 @@ $(document).ready(function(){
      ***********************************/
     
      reqcolumnLayout=[{dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
-                      {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30 , editable:false},
-                      {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30 , editable:false},
+                      {dataField:"itmcd"     ,headerText:"Mat.Code"        ,width:120    ,height:30 , editable:false},
+                      {dataField:"itmname"   ,headerText:"Material Name"      ,width:120    ,height:30 , editable:false},
                       {dataField:"aqty"      ,headerText:"Available Qty"    ,width:120    ,height:30 , editable:false},
                       {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
                       {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30, editable:false
