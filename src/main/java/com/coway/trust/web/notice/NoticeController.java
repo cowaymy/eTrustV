@@ -60,8 +60,7 @@ public class NoticeController {
 	}
 
 	@RequestMapping(value = "/noticeList.do")
-	public String noticeList(@ModelAttribute("noticeVO") NoticeVO noticeVO) throws Exception {
-
+	public String noticeList(ModelMap model) throws Exception {
 		return "notice/noticeList";
 	}
 
@@ -155,5 +154,5 @@ public class NoticeController {
 
 		return ResponseEntity.ok(message);
 	}
-
+	
 }
