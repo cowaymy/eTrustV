@@ -11,7 +11,7 @@
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
 
                                 /* By KV -mobile- get job list */
-                               SELECT OR1.MEM_CODE AS settled_By,
+                        SELECT OR1.MEM_CODE AS settled_By,
                                S01.SALES_ORD_NO AS sales_Order_No,
                                S01.APP_TYPE_ID AS app_Type,
                                S17.PROMO_ID AS sales_Promotion,
@@ -32,16 +32,18 @@
                                SV6.FAIL_RESN_ID AS fail_Reason_Code,
                                SV8.NO AS service_No,
                                SV8.STUS_CODE_ID AS job_Status,
-                               SV8.YEAR AS plan_Year,
-                               SV8.MONTH AS plan_Month,
+<!--                                SV8.YEAR AS plan_Year,
+                               SV8.MONTH AS plan_Month, -->
                                SYS.STK_DESC AS product_Name,
                                SYS.STK_CODE AS product_Code,
                                SV8.APPNT_DT as appointment_Date,
-                               SV8.APPNT_TM as appointment_Time
+                               SV8.APPNT_TM as appointment_Time,
+				               TO_CHAR (SV8.APPNT_DT, 'YYYY') as   plan_Year,
+				               TO_CHAR (SV8.APPNT_DT, 'MM') as plan_Month
                                ,
                                  '1' as job_Type
-                                , '1'  as appointment_Date
-                                , '1' as appointment_Time
+<!--                                 , '1'  as appointment_Date
+                                , '1' as appointment_Time -->
                                 , '1' as job_Session
                                 , '1' as checkIn_Date
                                 , '1' as checkIn_Time
@@ -132,6 +134,8 @@
 		                            SVC0001D.AS_STUS_ID AS job_Status,
 		                            to_char(SVC0001D.AS_APPNT_DT,'YYYYMMDD') AS appointment_Date,
 		                            replace(substr(SVC0001D.AS_APPNT_TM, 0,5 ),':')  AS appointment_Time,
+		                            TO_CHAR (SVC0001D.AS_APPNT_DT, 'YYYY') as   plan_Year,
+                                    TO_CHAR (SVC0001D.AS_APPNT_DT, 'MM') as plan_Month,
 		                            SVC0001D.AS_SESION_CODE AS job_Session,
 		                            SAL0029D.TYPE_ID as customer_Type,
 		                            SAL0001D.CUST_ID AS customer_Id,
@@ -526,6 +530,8 @@
             SAL0046D.STUS_CODE_ID           AS job_Status,
             TO_CHAR(SAL0047D.APPNT_DT,'YYYYMMDD')               AS appointment_Date,
             replace(substr(SAL0047D.APPNT_TM, 0,5 ),':')               AS appointment_Time,
+            TO_CHAR (SAL0047D.APPNT_DT, 'YYYY') as   plan_Year,
+            TO_CHAR (SAL0047D.APPNT_DT, 'MM') as plan_Month,
             SAL0046D.SESION_CODE            AS job_Session,
             TO_CHAR(SAL0095D.SRV_EXPR_DT,'YYYYMMDD')            AS expiry_Date,
             FN_GET_COMMCD(8,SAL0029D.TYPE_ID)               AS customer_Type,
