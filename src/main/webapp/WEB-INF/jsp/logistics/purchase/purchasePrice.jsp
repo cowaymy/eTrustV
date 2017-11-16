@@ -46,8 +46,7 @@
 						{dataField:"vendorTxt" ,headerText:"Vendor Text",width:120 ,height:30},
 						{dataField:"matrlMst" ,headerText:"Material Code",width:120 ,height:30},
 						{dataField:"purchsInfoRcordCtgry" ,headerText:"purchsInfoRcordCtgry",width:120 ,height:30, visible:false},
-						{dataField:"purchsOrg" ,headerText:"purchsOrg",width:120 ,height:30, visible:false},
-						{dataField:"purchsOrgTxt" ,headerText:"purchsOrgTxt",width:120 ,height:30, visible:false},
+
 						{dataField:"matrlTxt" ,headerText:"Material code Text",width:350,height:30},
 						{dataField:"purchsGrp" ,headerText:"purchsGrp",width:120 ,height:30, visible:false},
 						{dataField:"purchsGrpTxt" ,headerText:"purchsGrpTxt",width:120 ,height:30, visible:false},
@@ -55,11 +54,14 @@
 						{dataField:"planDelvryTmDay" ,headerText:"planDelvryTmDay",width:120 ,height:30, visible:false},
 						{dataField:"taxCode" ,headerText:"taxCode",width:120 ,height:30, visible:false},
 						{dataField:"taxCodeTxt" ,headerText:"taxCodeTxt",width:120 ,height:30, visible:false},
+						{dataField:"purchsPrc" ,headerText:"Pur. Price",width:120 ,height:30,style :"aui-grid-user-custom-right"},
 						{dataField:"curname" ,headerText:"Currency",width:120 ,height:30},
-						{dataField:"purchsPrc" ,headerText:"Purchase Price",width:120 ,height:30,style :"aui-grid-user-custom-right"},
 						{dataField:"condiPrcUnit" ,headerText:"Per",width:120 ,height:30,style :"aui-grid-user-custom-right"},
 						{dataField:"validStartDt" ,headerText:"Valid From",width:120 ,height:30},
 						{dataField:"validEndDt" ,headerText:"Valid To",width:120 ,height:30},
+	                    {dataField:"purchsOrg" ,headerText:"purchsOrg",width:120 ,height:30},
+	                    {dataField:"purchsOrgTxt" ,headerText:"purchsOrgTxt",width:120 ,height:30},
+	                    {dataField:"type" ,headerText:"type",width:120 ,height:30},
 						{dataField:"cur" ,headerText:"cur",width:120 ,height:30, visible:false},
 						{dataField:"condiUnit" ,headerText:"condiUnit",width:120 ,height:30, visible:false},
 						{dataField:"prcDterminDtCntrl" ,headerText:"prcDterminDtCntrl",width:120 ,height:30, visible:false},
@@ -68,7 +70,6 @@
 						{dataField:"stkDesc" ,headerText:"stkDesc",width:120 ,height:30, visible:false},
 						{dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30, visible:false},
 						{dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30, visible:false},
-						{dataField:"type" ,headerText:"type",width:120 ,height:30, visible:false},
 						{dataField:"stusCodeId" ,headerText:"stusCodeId",width:120 ,height:30, visible:false},
 						{dataField:"isSirim" ,headerText:"isSirim",width:120 ,height:30, visible:false},
 						{dataField:"isNcv" ,headerText:"isNcv",width:120 ,height:30, visible:false},
@@ -148,7 +149,9 @@
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         historyGrid = GridCommon.createAUIGrid("history_grid", historyLayout,"", gridoptions);
-        doGetCombo('/common/selectCodeList.do', '15', '','msttype', 'S' , ''); //Type 리스트 조회
+        //doGetCombo('/common/selectCodeList.do', '15', '','msttype', 'S' , ''); //Type 리스트 조회
+        doGetCombo('/common/selectCodeList.do', '15', '', 'msttype', 'M','f_multiCombo'); //Type 리스트 조회
+  
         AUIGrid.bind(myGridID, "cellClick", function( event )  
         {
         });
@@ -233,9 +236,9 @@
     }); 
     function getListAjax() {
         var url = "/logistics/purchase/purchasePriceList.do";
-        var param = $("#searchForm").serializeJSON();
+        var param = $("#searchForm").serialize();
         console.log(param);
-        Common.ajax("POST" , url , param , function(data){
+        Common.ajax("GET" , url , param , function(data){
             var list= data.dataList
 	        console.log(list);
             AUIGrid.setGridData(myGridID, list);
@@ -278,6 +281,16 @@
         // $("#basic").attr("class","on");
          $("#basic").click();
      }
+     
+     function f_multiCombo() {
+    	    $(function() {
+    	        $('#msttype').change(function() {
+    	        }).multipleSelect({
+    	            selectAll : true,
+    	            width: '100%'
+    	        })      
+    	    });
+    	}   
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
