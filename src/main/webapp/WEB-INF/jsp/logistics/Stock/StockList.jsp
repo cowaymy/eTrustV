@@ -1279,8 +1279,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Stocks</h2>
         <ul class="right_opt">
-<%--             <%//@ include file="/WEB-INF/jsp/common/contentButton.jsp" %>
-            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> --%>
+          <%//@ include file="/WEB-INF/jsp/common/contentButton.jsp" %>
+            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside><!-- title_line end -->
