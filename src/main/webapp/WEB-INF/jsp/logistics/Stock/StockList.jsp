@@ -303,9 +303,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 }
             }
             $(this).find("a").attr("class","on");
+            $("#stock_info_edit").text("EDIT");
         });
         
         $("#price_info").click(function(){
+        	
             if($("#price_info_div").css("display") == "none"){
                 f_removeclass();
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
@@ -320,6 +322,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 }
             }
             $(this).find("a").attr("class","on");
+            $("#price_info_edit").text("EDIT");
         });
         
         $("#filter_info").click(function(){
@@ -352,6 +355,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 f_view("/stock/ServiceInfo.do?stkid="+selectedItems[i].item.stkid, "V");
             }
             $(this).find("a").attr("class","on");
+            $("#service_info_edit").text("EDIT");
         });
         
         $("#stock_image").click(function(){
@@ -421,7 +425,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         });
 
         $("#price_info_edit").click(function(){
-
+            
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#price_info_edit").text() == "EDIT"){
@@ -727,6 +731,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     $("#stock_commisssion_div").hide();
                     $("#imgShow").html("");
                     $("#stock_info").find("a").attr("class", "on");
+                    $("#stock_info_edit").text("EDIT");
                     /*if (){
                         
                     }*/
