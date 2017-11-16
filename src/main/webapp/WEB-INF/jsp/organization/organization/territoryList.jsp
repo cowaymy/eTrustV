@@ -261,7 +261,7 @@ function fn_Cancel(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="list_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
+      <div id="list_grid_wrap" style="width:100%; height:100px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
