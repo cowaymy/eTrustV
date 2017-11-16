@@ -377,12 +377,12 @@ function fn_openDivPop(val){
 		
 	}else if(val == "EDIT"){
 		if(selectedGridValue !=  undefined){
-            $("#popup_wrap2").show();
+            
             editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popEditColumnLayout, null, gridPros_popList);
             
             Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
-                console.log("result : " + result);
-
+            	$("#popup_wrap2").show();
+                
                 //Payment Information
                 $('#edit_txtORNo').text(result.viewMaster.orNo);$("#edit_txtORNo").css("color","red");
                 $('#edit_txtLastUpdator').text(result.viewMaster.lastUpdUserName);$("#edit_txtLastUpdator").css("color","red");
@@ -420,7 +420,7 @@ function fn_openDivPop(val){
                 $('#edit_txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
                 $('#edit_txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
                 
-                $('#edit_branchId').val(result.viewMaster.clctrBrnchId);$("#edit_branchId").css("backgroundColor","#F5F6CE");
+                $('#edit_branchId').val(result.viewMaster.clctrBrnchId);
                 $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
                 $('#edit_txtClctrName').text(result.viewMaster.clctrName);
                 $('#edit_txtCollectorId').val(result.viewMaster.clctrId);
@@ -435,8 +435,11 @@ function fn_openDivPop(val){
                 if(result.passReconSize  > 0 ){
                 	$("#edit_branchId").prop('disabled', true);
                 	reconLock = 1;
+                	$("#edit_branchId").css("backgroundColor","transparent");
+               	
                 }else{
                 	$("#edit_branchId").prop('disabled', false);
+                	$("#edit_branchId").css("backgroundColor","#F5F6CE");
                 }
                  
                 //팝업그리드 뿌리기
@@ -844,7 +847,13 @@ function fn_goSalesConfirm(){
               }
               
       });
-} 
+}
+
+function fn_clear(){
+    $("#searchForm")[0].reset();
+    AUIGrid.clearGridData(myGridID);
+    AUIGrid.clearGridData(subGridID);
+}
 </script>
 
 <!-- content start -->
@@ -863,6 +872,7 @@ function fn_goSalesConfirm(){
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>            
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax(1);"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -1022,275 +1032,275 @@ function fn_goSalesConfirm(){
 </section>
 
 <div id="popup_wrap" style="display:none;">
-<!-- popup_wrap start -->
-<header class="pop_header"><!-- pop_header start -->
-<h1>VIEW PAYMENT DETAILS</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_close();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-    <aside class="title_line"><!-- title_line start -->
-        <h2>Payment Information</h2>
-    </aside><!-- title_line end -->
-    <table class="type1"><!-- table start -->
-        <caption>table</caption>
-                <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">OR(Official Receipt) No</th>
-                        <td id="txtORNo"></td>
-                        <th scope="row"> Last Updated By </th>
-                        <td id="txtLastUpdator"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Payment Key By</th>
-                        <td id="txtKeyInUser"></td>
-                        <th scope="row">Order No.</th>
-                        <td id="txtOrderNo"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">TR Ref. No.</th>
-                        <td id="txtTRRefNo"></td>
-                        <th scope="row">TR Issued Date</th>
-                        <td id="txtTRIssueDate"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Product Category</th>
-                        <td id="txtProductCategory"></td>
-                        <th scope="row">Product Name</th>
-                        <td id="txtProductName"></td>
-                        
-                    </tr>
-                    <tr>
-                        <th scope="row">Application Type</th>
-                        <td id="txtAppType"></td>
-                        <th scope="row">Customer Name</th>
-                        <td id="txtCustomerName"></td>
-                        
-                    </tr>
-                    <tr>
-                        <th scope="row">Customer Type</th>
-                        <td id="txtCustomerType"></td>
-                        <th scope="row"> Customer ID </th>
-                        <td id="txtCustomerID"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Order Progress Status</th>
-                        <td id="txtOrderProgressStatus"></td>
-                        <th scope="row">Install No.</th>
-                        <td id="txtInstallNo"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Cust. NRIC/Company No.</th>
-                        <td id="txtNRIC"></td>
-                        <th scope="row">Payment Type</th>
-                        <td id="txtPayType"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Advance Month</th>
-                        <td id="txtAdvMth"></td>
-                        <th scope="row"> Payment Date </th>
-                        <td id="txtPayDate"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">HP Code</th>
-                        <td id="txtHPCode"></td>
-                        <th scope="row">HP Name</th>
-                        <td id="txtHPName"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Batch Payment ID</th>
-                        <td id="txtBatchPaymentID"></td>
-                    </tr>
-                </tbody>
-    </table>
-    <aside class="title_line"><!-- title_line start -->
-        <h2>Collector Information</h2>
-    </aside><!-- title_line end -->
-    <table class="type1"><!-- table start -->
-            <caption>table</caption>
-                <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Payment Collector Code</th>
-                        <td id="txtCollectorCode"></td>
-                        <th scope="row">HP Code/Dealer</th>
-                        <td id="txtSalesPerson"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Branch Code</th>
-                        <td id="txtBranch"></td>
-                        <th scope="row">Debtor Account</th>
-                        <td id="txtDebtor"></td>
-                    </tr>
-                </tbody>
-    </table>
-    <ul class="center_btns">
-        <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
-    </ul>
-    <section class="search_result"><!-- search_result start -->
-	    <article class="grid_wrap"  id="popList_wrap" style="width  : 100%;">
-	    </article><!-- grid_wrap end -->
-    </section><!-- search_result end -->
-    <section class="search_result"><!-- search_result start -->
-       <aside class="title_line" ><!-- title_line start -->
-        <h2 id="gridTitle">All Related Payments In This Transaction.(Click A Row To View Details) </h2>
-        </aside><!-- title_line end -->
-	    <article class="grid_wrap"  id="popSlaveList_wrap" style="width  : 100%;">
-	    </article><!-- grid_wrap end -->
-    </section><!-- search_result end -->
-</section><!-- pop_body end -->
+	<!-- popup_wrap start -->
+	<header class="pop_header"><!-- pop_header start -->
+		<h1>VIEW PAYMENT DETAILS</h1>
+		<ul class="right_opt">
+		    <li><p class="btn_blue2"><a href="#" onclick="fn_close();">CLOSE</a></p></li>
+		</ul>
+	</header><!-- pop_header end -->
+	
+	<section class="pop_body"><!-- pop_body start -->
+	    <aside class="title_line"><!-- title_line start -->
+	        <h2>Payment Information</h2>
+	    </aside><!-- title_line end -->
+	    <table class="type1"><!-- table start -->
+	        <caption>table</caption>
+	                <colgroup>
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">OR(Official Receipt) No</th>
+	                        <td id="txtORNo"></td>
+	                        <th scope="row"> Last Updated By </th>
+	                        <td id="txtLastUpdator"></td>
+	                    </tr>
+	                     <tr>
+	                        <th scope="row">Payment Key By</th>
+	                        <td id="txtKeyInUser"></td>
+	                        <th scope="row">Order No.</th>
+	                        <td id="txtOrderNo"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">TR Ref. No.</th>
+	                        <td id="txtTRRefNo"></td>
+	                        <th scope="row">TR Issued Date</th>
+	                        <td id="txtTRIssueDate"></td>
+	                    </tr>
+	                     <tr>
+	                        <th scope="row">Product Category</th>
+	                        <td id="txtProductCategory"></td>
+	                        <th scope="row">Product Name</th>
+	                        <td id="txtProductName"></td>
+	                        
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Application Type</th>
+	                        <td id="txtAppType"></td>
+	                        <th scope="row">Customer Name</th>
+	                        <td id="txtCustomerName"></td>
+	                        
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Customer Type</th>
+	                        <td id="txtCustomerType"></td>
+	                        <th scope="row"> Customer ID </th>
+	                        <td id="txtCustomerID"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Order Progress Status</th>
+	                        <td id="txtOrderProgressStatus"></td>
+	                        <th scope="row">Install No.</th>
+	                        <td id="txtInstallNo"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Cust. NRIC/Company No.</th>
+	                        <td id="txtNRIC"></td>
+	                        <th scope="row">Payment Type</th>
+	                        <td id="txtPayType"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Advance Month</th>
+	                        <td id="txtAdvMth"></td>
+	                        <th scope="row"> Payment Date </th>
+	                        <td id="txtPayDate"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">HP Code</th>
+	                        <td id="txtHPCode"></td>
+	                        <th scope="row">HP Name</th>
+	                        <td id="txtHPName"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Batch Payment ID</th>
+	                        <td id="txtBatchPaymentID"></td>
+	                    </tr>
+	                </tbody>
+	    </table>
+	    <aside class="title_line"><!-- title_line start -->
+	        <h2>Collector Information</h2>
+	    </aside><!-- title_line end -->
+	    <table class="type1"><!-- table start -->
+	            <caption>table</caption>
+	                <colgroup>
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">Payment Collector Code</th>
+	                        <td id="txtCollectorCode"></td>
+	                        <th scope="row">HP Code/Dealer</th>
+	                        <td id="txtSalesPerson"></td>
+	                    </tr>
+	                     <tr>
+	                        <th scope="row">Branch Code</th>
+	                        <td id="txtBranch"></td>
+	                        <th scope="row">Debtor Account</th>
+	                        <td id="txtDebtor"></td>
+	                    </tr>
+	                </tbody>
+	    </table>
+	    <ul class="center_btns">
+	        <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
+	    </ul>
+	    <section class="search_result"><!-- search_result start -->
+		    <article class="grid_wrap"  id="popList_wrap" style="width  : 100%;">
+		    </article><!-- grid_wrap end -->
+	    </section><!-- search_result end -->
+	    <section class="search_result"><!-- search_result start -->
+	       <aside class="title_line" ><!-- title_line start -->
+	        <h2 id="gridTitle">All Related Payments In This Transaction.(Click A Row To View Details) </h2>
+	        </aside><!-- title_line end -->
+		    <article class="grid_wrap"  id="popSlaveList_wrap" style="width  : 100%;">
+		    </article><!-- grid_wrap end -->
+	    </section><!-- search_result end -->
+	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
 <div id="popup_wrap2" class="popup_wrap" style="display:none;">
-<!-- popup_wrap start -->
-<header class="pop_header"><!-- pop_header start -->
-<h1>PAYMENT EDITOR</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-<form name="myForm" id="myForm">
-<section class="pop_body"><!-- pop_body start -->
-    <aside class="title_line"><!-- title_line start -->
-        <h2>Payment Information</h2>
-    </aside><!-- title_line end -->
-    <table class="type1"><!-- table start -->
-        <caption>table</caption>
-                <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">OR(Official Receipt) No</th>
-                        <td id="edit_txtORNo"></td>
-                        <th scope="row"> Last Updated By </th>
-                        <td id="edit_txtLastUpdator"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Payment Key By</th>
-                        <td id="edit_txtKeyInUser"></td>
-                        <th scope="row">Order No.</th>
-                        <td id="edit_txtOrderNo"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">TR Ref. No.</th>
-                        <td><input type="text" name="edit_txtTRRefNo" id="edit_txtTRRefNo"></td>
-                        <th scope="row">TR Issued Date</th>
-                        <td id="">
-                            <div class="date_set"><!-- date_set start -->
-                                <p><input type="text"  name="edit_txtTRIssueDate" id="edit_txtTRIssueDate" title="Create Date From"  class="j_date" /></p>
-                            </div>
-                        </td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Product Category</th>
-                        <td id="edit_txtProductCategory"></td>
-                        <th scope="row">Product Name</th>
-                        <td id="edit_txtProductName"></td>
-                        
-                    </tr>
-                    <tr>
-                        <th scope="row">Application Type</th>
-                        <td id="edit_txtAppType"></td>
-                        <th scope="row">Customer Name</th>
-                        <td id="edit_txtCustomerName"></td>
-                        
-                    </tr>
-                    <tr>
-                        <th scope="row">Customer Type</th>
-                        <td id="edit_txtCustomerType"></td>
-                        <th scope="row"> Customer ID </th>
-                        <td id="edit_txtCustomerID"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Order Progress Status</th>
-                        <td id="edit_txtOrderProgressStatus"></td>
-                        <th scope="row">Install No.</th>
-                        <td id="edit_txtInstallNo"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Cust. NRIC/Company No.</th>
-                        <td id="edit_txtNRIC"></td>
-                        <th scope="row">Payment Type</th>
-                        <td id="edit_txtPayType"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Advance Month</th>
-                        <td id="edit_txtAdvMth"></td>
-                        <th scope="row"> Payment Date </th>
-                        <td id="edit_txtPayDate"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Branch Code</th>
-                        <td id="" colspan="3">
-                            <select id="edit_branchId" name="edit_branchId" class="w100p">
-                             </select>
-                        </td>
-                    </tr>
-                </tbody>
-    </table>
-    <aside class="title_line"><!-- title_line start -->
-        <h2>Collector Information</h2>
-    </aside><!-- title_line end -->
-    <table class="type1"><!-- table start -->
-            <caption>table</caption>
-                <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Collector Code</th>
-                        <td id="">
-                            <input type="text" name="edit_txtCollectorCode" id="edit_txtCollectorCode" style="width:100px">
-                            <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
-                            <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
-                            <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
-                         </td>
-                        <th scope="row">HP Code/Dealer</th>
-                        <td id="edit_txtSalesPerson"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Collector Name</th>
-                        <td id="edit_txtClctrName"></td>
-                        <th scope="row">Debtor Account</th>
-                        <td id="edit_txtDebtor"></td>
-                    </tr>
-                </tbody>
-    </table>
-    <ul class="left_btns">
-        <li><label><input name="btnAllowComm" id="btnAllowComm" type="checkbox"  /><span>Allow commission for this payment </span></label></li>
-    </ul>
-    <ul class="center_btns">
-        <li><p class="btn_blue2"><a href="javascript:saveChanges()">Update</a></p></li>
-        <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
-    </ul>
-    <section class="search_result"><!-- search_result start -->
-        <article class="grid_wrap"  id="editPopList_wrap" style="width  : 100%;">
-        </article><!-- grid_wrap end -->
-    </section><!-- search_result end -->
-</section><!-- pop_body end -->
-<input type="hidden" name="hiddenPayId" id="hiddenPayId">
-<input type="hidden" name="allowComm" id="allowComm">
-<input type="hidden" name="edit_txtCollectorId"  id="edit_txtCollectorId"/> 
-</form>
+	<!-- popup_wrap start -->
+	<header class="pop_header"><!-- pop_header start -->
+	<h1>PAYMENT EDITOR</h1>
+	<ul class="right_opt">
+	    <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
+	</ul>
+	</header><!-- pop_header end -->
+	<form name="myForm" id="myForm">
+	<section class="pop_body"><!-- pop_body start -->
+	    <aside class="title_line"><!-- title_line start -->
+	        <h2>Payment Information</h2>
+	    </aside><!-- title_line end -->
+	    <table class="type1"><!-- table start -->
+	        <caption>table</caption>
+	                <colgroup>
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">OR(Official Receipt) No</th>
+	                        <td id="edit_txtORNo"></td>
+	                        <th scope="row"> Last Updated By </th>
+	                        <td id="edit_txtLastUpdator"></td>
+	                    </tr>
+	                     <tr>
+	                        <th scope="row">Payment Key By</th>
+	                        <td id="edit_txtKeyInUser"></td>
+	                        <th scope="row">Order No.</th>
+	                        <td id="edit_txtOrderNo"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">TR Ref. No.</th>
+	                        <td><input type="text" name="edit_txtTRRefNo" id="edit_txtTRRefNo"></td>
+	                        <th scope="row">TR Issued Date</th>
+	                        <td id="">
+	                            <div class="date_set"><!-- date_set start -->
+	                                <p><input type="text"  name="edit_txtTRIssueDate" id="edit_txtTRIssueDate" title="Create Date From"  class="j_date" /></p>
+	                            </div>
+	                        </td>
+	                    </tr>
+	                     <tr>
+	                        <th scope="row">Product Category</th>
+	                        <td id="edit_txtProductCategory"></td>
+	                        <th scope="row">Product Name</th>
+	                        <td id="edit_txtProductName"></td>
+	                        
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Application Type</th>
+	                        <td id="edit_txtAppType"></td>
+	                        <th scope="row">Customer Name</th>
+	                        <td id="edit_txtCustomerName"></td>
+	                        
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Customer Type</th>
+	                        <td id="edit_txtCustomerType"></td>
+	                        <th scope="row"> Customer ID </th>
+	                        <td id="edit_txtCustomerID"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Order Progress Status</th>
+	                        <td id="edit_txtOrderProgressStatus"></td>
+	                        <th scope="row">Install No.</th>
+	                        <td id="edit_txtInstallNo"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Cust. NRIC/Company No.</th>
+	                        <td id="edit_txtNRIC"></td>
+	                        <th scope="row">Payment Type</th>
+	                        <td id="edit_txtPayType"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Advance Month</th>
+	                        <td id="edit_txtAdvMth"></td>
+	                        <th scope="row"> Payment Date </th>
+	                        <td id="edit_txtPayDate"></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Branch Code</th>
+	                        <td id="" colspan="3">
+	                            <select id="edit_branchId" name="edit_branchId" class="w100p">
+	                             </select>
+	                        </td>
+	                    </tr>
+	                </tbody>
+	    </table>
+	    <aside class="title_line"><!-- title_line start -->
+	        <h2>Collector Information</h2>
+	    </aside><!-- title_line end -->
+	    <table class="type1"><!-- table start -->
+	            <caption>table</caption>
+	                <colgroup>
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">Collector Code</th>
+	                        <td id="">
+	                            <input type="text" name="edit_txtCollectorCode" id="edit_txtCollectorCode" style="width:100px">
+	                            <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
+	                            <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
+	                            <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
+	                         </td>
+	                        <th scope="row">HP Code/Dealer</th>
+	                        <td id="edit_txtSalesPerson"></td>
+	                    </tr>
+	                     <tr>
+	                        <th scope="row">Collector Name</th>
+	                        <td id="edit_txtClctrName"></td>
+	                        <th scope="row">Debtor Account</th>
+	                        <td id="edit_txtDebtor"></td>
+	                    </tr>
+	                </tbody>
+	    </table>
+	    <ul class="left_btns">
+	        <li><label><input name="btnAllowComm" id="btnAllowComm" type="checkbox"  /><span>Allow commission for this payment </span></label></li>
+	    </ul>
+	    <ul class="center_btns">
+	        <li><p class="btn_blue2"><a href="javascript:saveChanges()">Update</a></p></li>
+	        <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
+	    </ul>
+	    <section class="search_result"><!-- search_result start -->
+	        <article class="grid_wrap"  id="editPopList_wrap" style="width  : 100%;">
+	        </article><!-- grid_wrap end -->
+	    </section><!-- search_result end -->
+	</section><!-- pop_body end -->
+	<input type="hidden" name="hiddenPayId" id="hiddenPayId">
+	<input type="hidden" name="allowComm" id="allowComm">
+	<input type="hidden" name="edit_txtCollectorId"  id="edit_txtCollectorId"/> 
+	</form>
 </div><!-- popup_wrap end -->
 <div id="view_history_wrap" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">
