@@ -1280,8 +1280,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         <h2>Stocks</h2>
         <ul class="right_opt">
           <%//@ include file="/WEB-INF/jsp/common/contentButton.jsp" %>
-            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
         </ul>
     </aside><!-- title_line end -->
 
