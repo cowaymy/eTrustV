@@ -101,6 +101,14 @@ function fn_mainSelectListAjax() {
 Common.ajax("GET", "/organization/territory/selectList", $("#sForm").serialize(), function(result) {
       console.log(result);
       AUIGrid.setGridData(gridID, result);
+      
+
+//hash
+      var rowCount = AUIGrid.getRowCount(gridID);
+      if(rowCount <= 0){
+        AUIGrid.clearGridData("#detail_list_grid_wrap");
+      }
+      
    });
 }
 
@@ -129,10 +137,11 @@ function fn_selectDetailListAjax(reqstNo) {
 
 function fn_Clear(){
 	
+	//hash
     $("#comBranchType").val(""); 
-    $("#REQST_NO").val("");
-    $("#REQST_USER_ID").val("");
-    $("#REQST_DT").val("");
+    $("#requestNo").val("");
+    $("#requestUserId").val("");
+    $("#requestDt").val("");
 }
 
 
