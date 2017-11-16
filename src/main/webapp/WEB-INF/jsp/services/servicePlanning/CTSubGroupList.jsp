@@ -349,6 +349,22 @@ function fn_radioButton(val){
 			 $("#grid_wrap_ctSubGroup").hide();
 	}
 }
+
+
+function fn_Clear(){
+    
+    //hash
+	$("#state").val("");
+	$("#city").val("");
+	$("#area").val("");
+	$("#postCode").val("");
+	$("#areaId").val("");
+	$("#dscCode").val("");
+	$("#memCode").val("");
+	$("#ctSubGrp").val("");
+	$("#CTMemId").val("");
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -363,7 +379,7 @@ function fn_radioButton(val){
 <h2>Service Group</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTSubGroupSearch()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
