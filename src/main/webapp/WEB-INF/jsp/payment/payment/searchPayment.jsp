@@ -851,8 +851,6 @@ function fn_goSalesConfirm(){
 
 function fn_clear(){
     $("#searchForm")[0].reset();
-    AUIGrid.clearGridData(myGridID);
-    AUIGrid.clearGridData(subGridID);
 }
 </script>
 
