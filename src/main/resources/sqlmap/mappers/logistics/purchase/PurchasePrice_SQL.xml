@@ -65,9 +65,15 @@
               <if test="mstcd !=null and mstcd !=''">
                AND LG78M.MATRL_MST LIKE #{mstcd}||'%'
               </if>
-              <if test="msttype !=null and msttype !=''">
-               AND SY26M.STK_TYPE_ID    = #{msttype}
-              </if>
+<!--               <if test="msttype !=null and msttype !=''"> -->
+<!--                AND SY26M.STK_TYPE_ID    = #{msttype} -->
+<!--               </if> -->
+              <if test="msttype != null and msttype !=''">
+		        AND SY26M.STK_TYPE_ID IN
+		        <foreach item="item" collection="msttype" index="index" open="(" separator="," close=")">
+		         #{item}
+		        </foreach>
+             </if>  
               <if test="purchasorg !=null and purchasorg !=''">
                AND LG78M.PURCHS_ORG = #{purchasorg}
               </if>
