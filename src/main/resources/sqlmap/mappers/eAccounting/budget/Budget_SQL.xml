@@ -349,7 +349,7 @@ FROM     (
 		    (
 		        #{budgetDocNo}
 		       ,#{atchFileGrpId}
-		       ,#{appvStus}
+		       ,'T'
 		       ,SYSDATE
 		       ,#{userId}
 		       ,SYSDATE

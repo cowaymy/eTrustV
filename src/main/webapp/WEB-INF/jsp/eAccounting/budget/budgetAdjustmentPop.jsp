@@ -779,7 +779,7 @@ function fn_AddRow()
     } */
     
    
-       
+	    fn_clearData();
                 
 }  
 
@@ -837,45 +837,55 @@ function fn_saveAdjustement(){
            if($("#type").val() == "approval"){
            	 if(result.data.overbudget == "Y"){
            		 
-           		 var arryList = result.data.resultAmtList;
-           		             		 
-                    var idx = arryList.length;
-                    
-                    for(var i = 0; i < idx; i++){
-                   	 var costCentr = arryList[i].costCentr;
-                        var budgetCode = arryList[i].budgetCode;
-                        var glAccCode = arryList[i].glAccCode;
-                        var adjYearMonth = arryList[i].budgetAdjMonth + "/"+ arryList[i].budgetAdjYear;
-                        
-                        for(var j=0; j < AUIGrid.getRowCount(adjPGridID); j++){
-                       	 
-	                       	var gridCostCentr = AUIGrid.getCellValue(adjPGridID, j, "costCentr"); 
-	                       	var gridBudgetCode = AUIGrid.getCellValue(adjPGridID, j, "budgetCode"); 
-	                       	var gridGlAccCode = AUIGrid.getCellValue(adjPGridID, j, "glAccCode"); 
-	                       	var gridAdjYearMonth = AUIGrid.getCellValue(adjPGridID, j, "adjYearMonth"); 
-	                       	var gridBudgetAdjType = AUIGrid.getCellValue(adjPGridID, j, "budgetAdjType"); 
-	                       	
-	                       	 if(gridCostCentr == costCentr && gridBudgetCode == budgetCode 
-	                                    && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
-	                       		 AUIGrid.setCellValue(adjPGridID, j, "overBudgetFlag","Y"); 
-	                       	 }
-                       	 
-                        }
-                   	 
-                    }
-                    
-                    AUIGrid.setProp(adjPGridID, "rowStyleFunction", function(rowIndex, item) {
-                   	 if(item.overBudgetFlag == "Y") {
-                            return "my-row-style";
-                        }
-                        return "";
+           		 // budget Adjustment Detail Grid Reload
+                 Common.ajax("GET", "/eAccounting/budget/selectAdjustmentPopList", $("#pAdjForm").serialize(), function(data) {
+                     console.log("성공.");
+                     console.log( data);
+                     
+                     AUIGrid.setGridData(adjPGridID, data.adjustmentList);
+                     
+                     
+                     // budget exceeded row background color set start
+                     var arryList = result.data.resultAmtList;
+                     
+                     var idx = arryList.length;
+                     
+                     for(var i = 0; i < idx; i++){
+                      var costCentr = arryList[i].costCentr;
+                         var budgetCode = arryList[i].budgetCode;
+                         var glAccCode = arryList[i].glAccCode;
+                         var adjYearMonth = arryList[i].budgetAdjMonth + "/"+ arryList[i].budgetAdjYear;
+                         
+                         for(var j=0; j < AUIGrid.getRowCount(adjPGridID); j++){
+                          
+                             var gridCostCentr = AUIGrid.getCellValue(adjPGridID, j, "costCentr"); 
+                             var gridBudgetCode = AUIGrid.getCellValue(adjPGridID, j, "budgetCode"); 
+                             var gridGlAccCode = AUIGrid.getCellValue(adjPGridID, j, "glAccCode"); 
+                             var gridAdjYearMonth = AUIGrid.getCellValue(adjPGridID, j, "adjYearMonth"); 
+                             var gridBudgetAdjType = AUIGrid.getCellValue(adjPGridID, j, "budgetAdjType"); 
+                             
+                              if(gridCostCentr == costCentr && gridBudgetCode == budgetCode 
+                                         && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
+                                  AUIGrid.setCellValue(adjPGridID, j, "overBudgetFlag","Y"); 
+                              }
+                          
+                         }
+                      
+                     }
+                     
+                     AUIGrid.setProp(adjPGridID, "rowStyleFunction", function(rowIndex, item) {
+                      if(item.overBudgetFlag == "Y") {
+                             return "my-row-style";
+                         }
+                         return "";
 
-                    }); 
+                     }); 
 
-                    // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
-                    AUIGrid.update(adjPGridID);
-           		 
-                     alert("<spring:message code="budget.exceeded" />"); 
+                     // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+                     AUIGrid.update(adjPGridID);
+                  
+                      alert("<spring:message code="budget.exceeded" />"); 
+                 });
            		 
                 }else{                	 
                	// Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
