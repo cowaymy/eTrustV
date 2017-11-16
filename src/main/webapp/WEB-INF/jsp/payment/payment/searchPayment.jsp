@@ -317,12 +317,12 @@ function fn_openDivPop(val){
 	
 	if(val == "VIEW"){
 		if(selectedGridValue !=  undefined){
-	        $("#popup_wrap").show();
+	        
 	        popGridID = GridCommon.createAUIGrid("popList_wrap", popColumnLayout, null, gridPros_popList);
 	        popSlaveGridID = GridCommon.createAUIGrid("popSlaveList_wrap", popSlaveColumnLayout, null, gridPros_popList);
 	        
 	        Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
-	            console.log(result);
+	        	$("#popup_wrap").show();
 	            
 	            //Payment Information
 	            $('#txtORNo').text(result.viewMaster.orNo);$("#txtORNo").css("color","red");
