@@ -339,6 +339,11 @@ $(document).ready(function(){
         AUIGrid.removeSoftRows(gridID);
     }
     
+    
+    
+
+
+   
     function auiRemoveRowHandler(){}
 </script>
 <section id="content"><!-- content start -->
@@ -353,7 +358,7 @@ $(document).ready(function(){
 <h2>Holiday List Search</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_holidayListSearch()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+<!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
