@@ -332,7 +332,7 @@ function destory(gridNm) {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>View-Point Of Sales</h2>
+<h2>View-Other GI/GR</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->

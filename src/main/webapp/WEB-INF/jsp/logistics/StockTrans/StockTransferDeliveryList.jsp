@@ -49,6 +49,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
                      {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30},
+                     {dataField:"reqitmno"     ,headerText:"STOITMNO"                    ,width:120    ,height:30 , visible:true},
                      {dataField:"gicmplt"      ,headerText:"GI COMPLET"                  ,width:120    ,height:30 , visible:true},
                      {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:false}
                      ];

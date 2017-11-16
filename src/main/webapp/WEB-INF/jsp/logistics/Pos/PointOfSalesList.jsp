@@ -1,13 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
-
-<style type="text/css">
-
-/* 커스텀 칼럼 스타일 정의 */
-.aui-grid-user-custom-left {
-    text-align:left;
-}
-
 /* 커스컴 disable 스타일*/
 .mycustom-disable-color {
     color : #cccccc;
@@ -50,8 +42,8 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                       {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30 ,visible:false               },
                       {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:true},
                       {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                      {dataField:"reqstqty"     ,headerText:"Others Request QTY"                 ,width:120    ,height:30                },
-                      {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
+                      {dataField:"reqstqty"     ,headerText:"GI/GR REQ QTY"               ,width:120    ,height:30                },
+                      {dataField:"rmqty"        ,headerText:"Remain Qty"                  ,width:120    ,height:30                },
                       {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30,  visible:false  },
@@ -88,7 +80,7 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                                    list : decedata,
                                    keyField : "code",
                                    valueField : "code"
-                                }	
+                                }   
                           
                             },
                             {dataField:"autoCrtItm", headerText:"" ,width:120    ,height:30},
@@ -99,19 +91,19 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                ];                   
                                     
 var options = {
-		usePaging : true,
-		editable : false,
-		useGroupingPanel : false,
-		showStateColumn : false 
-		};
+        usePaging : true,
+        editable : false,
+        useGroupingPanel : false,
+        showStateColumn : false 
+        };
 var gridoptions = {
-		showStateColumn : false , 
-		editable : false, 
-		pageRowCount : 30, 
-		usePaging : true, 
-		useGroupingPanel : false,
-		};
-		
+        showStateColumn : false , 
+        editable : false, 
+        pageRowCount : 30, 
+        usePaging : true, 
+        useGroupingPanel : false,
+        };
+        
 var subgridpros = {
         // 페이지 설정
         usePaging : true,                
@@ -142,7 +134,7 @@ var resop = {
         };
 
 
-		
+        
 var paramdata;
 
 $(document).ready(function(){
@@ -150,8 +142,8 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
-	   /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
-	   var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
+       /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
+       var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
        doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');     
        doGetComboData('/logistics/pos/selectPosReqNo.do','' , '','searchOthersReq1', 'S' , '');
        doGetComboData('/logistics/pos/selectPosReqNo.do','', '','searchOthersReq2', 'S' , '');
@@ -168,7 +160,7 @@ $(document).ready(function(){
 
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-    	console.log('11');
+        console.log('11');
         $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
         document.searchForm.action = '/logistics/pos/PosView.do';
         document.searchForm.submit();
@@ -192,7 +184,7 @@ $(document).ready(function(){
     
     
     AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
-    	
+        
         var reqno = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno");
         
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
@@ -208,20 +200,20 @@ $(document).ready(function(){
  });
     
 function f_onchange(obj, value, tag, selvalue){
-	var reqNo= value;
-	var paramdata = { groupCode : reqNo};
-	doGetComboData('/logistics/pos/selectPosReqNo.do',paramdata, '','searchOthersReq2', 'S' , '');
+    var reqNo= value;
+    var paramdata = { groupCode : reqNo};
+    doGetComboData('/logistics/pos/selectPosReqNo.do',paramdata, '','searchOthersReq2', 'S' , '');
 }
 
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	//if(valiedcheck('search')){
+        //if(valiedcheck('search')){
         SearchListAjax();
-    	//}
+        //}
     });
     $('#clear').click(function() {
-    	   $('#searchOthersReq1').val('');
+           $('#searchOthersReq1').val('');
            $('#searchOthersReq2').val('');
            $('#searchReqType').val('');
            $('#tlocationnm').val('');
@@ -244,7 +236,7 @@ $(function(){
             Common.alert('No data selected.');
             return false;
         }else{
-        	  for (var i = 0 ; i < checkedItems.length ; i++){
+              for (var i = 0 ; i < checkedItems.length ; i++){
                   if(checkedItems[i].item.status != 'O'){
                       Common.alert('Please enter the Serial Number.');
                       return false;
@@ -254,7 +246,7 @@ $(function(){
                        return false;
                        break;
                   }             
-              }  	       	
+              }             
             document.giForm.gitype.value="GI";
             $("#dataTitle").text("Good Issue Posting Data");
             $("#giptdate").val("");
@@ -268,7 +260,7 @@ $(function(){
 
     
     $("#issueCancel").click(function(){
-    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+        var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
@@ -301,6 +293,22 @@ $(function(){
             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
         }
     });
+    $("#clear").click(function(){
+        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
+        /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
+        var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
+        doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');     
+        doGetComboData('/logistics/pos/selectPosReqNo.do','' , '','searchOthersReq1', 'S' , '');
+        doGetComboData('/logistics/pos/selectPosReqNo.do','', '','searchOthersReq2', 'S' , '');
+        $("#tlocationnm").val('');
+        $("#tlocation").val('');
+        $("#flocationnm").val('');
+        $("#flocation").val('');
+        $("#crtsdt").val('');
+        $("#crtedt").val('');
+        $("#reqsdt").val('');
+        $("#reqedt").val('');
+    });
     
 //     $("#flocationnm").keypress(function(event) {
 //         $('#flocation').val('');
@@ -331,21 +339,21 @@ $(function(){
 } 
 
 function SearchListAjax() {
-	
-// 	   if ($("#flocationnm").val() == ""){
-// 	        $("#flocation").val('');
-// 	    }
-	    if ($("#tlocationnm").val() == ""){
-	        $("#tlocation").val('');
-	    }
-	    
-// 	    if ($("#flocation").val() == ""){
-// 	        $("#flocation").val($("#flocationnm").val());
-// 	    }
-	    if ($("#tlocation").val() == ""){
-	        $("#tlocation").val($("#tlocationnm").val());
-	    }
-	
+    
+//     if ($("#flocationnm").val() == ""){
+//          $("#flocation").val('');
+//      }
+        if ($("#tlocationnm").val() == ""){
+            $("#tlocation").val('');
+        }
+        
+//      if ($("#flocation").val() == ""){
+//          $("#flocation").val($("#flocationnm").val());
+//      }
+        if ($("#tlocation").val() == ""){
+            $("#tlocation").val($("#tlocationnm").val());
+        }
+    
     var url = "/logistics/pos/PosSearchList.do";
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(data){
@@ -355,15 +363,15 @@ function SearchListAjax() {
 }
 
 function GiSaveAjax() {
-	   
+       
     var data = {};
     var checkdata = AUIGrid.getCheckedRowItems(listGrid);
     data.checked = checkdata;
     data.form = $("#giForm").serializeJSON();
 
     Common.ajaxSync("POST", "/logistics/pos/PosGiSave.do", data, function(result) {
-
-        Common.alert(result.message);
+        console.log(result);
+        Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
 
         // AUIGrid.resetUpdatedItems(listGrid, "all");
         $("#giptdate").val("");
@@ -382,58 +390,58 @@ function GiSaveAjax() {
 
 
 function giSave() {
-	if(valiedcheck('save')){
-	GiSaveAjax();
-	}
+    if(valiedcheck('save')){
+    GiSaveAjax();
+    }
 }
 
  function valiedcheck(v) {
-	var ReqType;
-	var Location;
-	var Status;
+    var ReqType;
+    var Location;
+    var Status;
 if(v=='search'){
     if ($("#searchReqType").val() == "") {
         ReqType = false;
     }else{
-    	ReqType = true;
+        ReqType = true;
     }
     if ($("#searchLoc").val() == "") {
         Location = false;
     }else{
-    	Location = true;
+        Location = true;
     } 
     if ($("#searchStatus").val() == "") {
         Status = false;
     }else{
-    	Status = true;
+        Status = true;
     }   
 
     if(ReqType == false && Location == false && Status == false){  
-    	alert("Please select the Request Type. \nPlease select the Location.\nPlease key in the Status.");
+        alert("Please select the Request Type. \nPlease select the Location.\nPlease key in the Status.");
         return false;
     }
-    if(ReqType == true || Location == true || Status == true){	
-    	  return true;
+    if(ReqType == true || Location == true || Status == true){  
+          return true;
     }
     
 }else if(v=='save'){
-	
-	  if ($("#giptdate").val() == "") {
+    
+      if ($("#giptdate").val() == "") {
           Common.alert("Please select the GI Posting Date.");
           $("#giptdate").focus();
           return false;
       }
-	  if ($("#gipfdate").val() == "") {
+      if ($("#gipfdate").val() == "") {
           Common.alert("Please select the GI Proof Date.");
           $("#gipfdate").focus();
           return false;
       }
-	  if ($("#doctext").val() == "") {
+      if ($("#doctext").val() == "") {
           Common.alert("Please enter the Header Text.");
           $("#doctext").focus();
           return false;
       }
-	  return true;
+      return true;
 }   
     
     
@@ -501,7 +509,11 @@ function f_getTtype(g , v){
 <h3>Header Info</h3>
     <ul class="right_btns">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+<<<<<<< .mine
+      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+=======
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
+>>>>>>> .r4448
     </ul>
 </aside><!-- title_line end -->
 

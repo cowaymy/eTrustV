@@ -36,7 +36,7 @@ select ROWNUM rnum , l47.REQST_STUS     status
              , l48.reqst_qty     reqstqty
              , NVL (l55.DELVRY_QTY, 0) AS delyqty
              , 0 AS indelyqty
-             , nvl(l55.RCIPT_QTY , 0) as rciptqty
+             , decode(l47.REQST_STUS , 'C' ,l48.reqst_qty , '0') rciptqty
              , l48.uom
              , uomt.code_name uomnm
              , S26.SERIAL_CHK SERIAL_CHK

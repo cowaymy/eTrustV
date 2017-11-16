@@ -98,10 +98,11 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public void insertGiInfo(Map<String, Object> params) {
+	public String insertGiInfo(Map<String, Object> params) {
 
 		List<EgovMap> GIList = (List<EgovMap>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> GiMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		String reVal = "";
 
 		int iCnt = 0;
 		String ttype = "";
@@ -143,9 +144,17 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 		if ("GC".equals(GiMap.get("gitype"))) {
 			PointOfSalesMapper.GICancelIssue(GiMap);
+			reVal = (String)GiMap.get("rdata");
 		} else {
 			PointOfSalesMapper.GIRequestIssue(GiMap);
+			logger.debug("149Line ::::: {}" , GiMap);
+			logger.debug("150Line ::::: " + (String)GiMap.get("rdata"));
+			reVal = (String)GiMap.get("rdata");
 		}
+		logger.debug("154Line :::: " + reVal);
+		String returnValue[] = reVal.split("∈"); 
+		logger.debug("155Line :::: " + returnValue.length);
+		return returnValue[1];
 	}
 
 	@Override

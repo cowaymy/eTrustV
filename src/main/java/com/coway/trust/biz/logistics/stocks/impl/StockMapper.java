@@ -35,6 +35,8 @@ public interface StockMapper {
 	int removeServiceInfoGrid(Map<String, Object> param);
 
 	int selectBomId();
+	
+	int stockSTKIDsearch();
 
 	int addFilterInfoGrid(Map<String, Object> param);
 
@@ -47,4 +49,10 @@ public interface StockMapper {
 	List<EgovMap> selectStockCommisionSetting(Map<String, Object> param);
 
 	void updateStockCommision(Map<String, Object> params);
+	
+	void nonvalueStockIns(Map<String, Object> params);
+	
+	void nonvalueItemPriceins(Map<String, Object> params);
+	
+	String nonvaluedItemCodeChk(Map<String, Object> params);
 }

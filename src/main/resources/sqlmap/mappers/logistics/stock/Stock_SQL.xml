@@ -829,4 +829,25 @@
 			       STK_COMM_INS =#{rate_install}
 			 WHERE  STK_ID = #{stockId}
          </update>
+         
+         <insert id="nonvalueItemPriceins" parameterType="Map">
+            INSERT INTO SAL0016M (PRC_ID, MEM_PAC_ID , STK_ID, AMT, UOM_ID, UOM_CONV, START_DT, END_DT, CNTY_ID , APP_TYPE_ID, CRT_USER_ID, CRT_DT)
+                           VALUES((SELECT MAX(PRC_ID)+1 FROM SAL0016M),
+                                  #{stkid} , 0 ,#{insnp} , #{insUom} , 1 , sysdate , to_date('209912312359','yyyymmddhh24miss'),0,#{istockType} , #{loginId} , sysdate
+                                 )
+         </insert>
+         <select id="stockSTKIDsearch" resultType="int">
+            select max(stk_id) +1 from sys0026m
+         </select>
+         <insert id="nonvalueStockIns" parameterType="Map">
+            INSERT INTO SYS0026M (STK_ID, STK_CODE, STK_DESC, STK_CTGRY_ID, STK_TYPE_ID, STUS_CODE_ID, STK_OLD_CODE, ALLOW_SALES, IS_SIRIM, IS_NCV, UPD_USER_ID, UPD_DT, STK_ALLOW_SALES, UOM)
+                           VALUES(#{stkid} , #{insStockCode} , #{istocknm} , #{insCate} , #{istockType} , 1 ,#{oldStockNo} , #{insas} , #{insSirim}, #{insNCV} , #{loginId} , sysdate, #{insas} , #{insUom}
+                                 )
+         </insert>
+         
+         <select id="nonvaluedItemCodeChk" parameterType="Map" resultType="String">
+            select count(1) cnt from sys0026m where stk_code = #{insStockCode}
+         </select>
+         
+         
 </mapper>

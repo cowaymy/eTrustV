@@ -45,5 +45,9 @@ public interface StockService {
 	List<EgovMap> selectStockCommisionSetting(Map<String, Object> param);
 
 	void updateStockCommision(Map<String, Object> params);
+	
+	String nonvalueStockIns(Map<String, Object> params);
+	
+	EgovMap nonvaluedItemCodeChk(Map<String, Object> params);
 
 }

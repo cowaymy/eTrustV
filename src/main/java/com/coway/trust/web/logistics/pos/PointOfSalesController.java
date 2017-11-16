@@ -266,11 +266,12 @@ public class PointOfSalesController {
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);
 
-		PointOfSalesService.insertGiInfo(params);
+		String reVal = PointOfSalesService.insertGiInfo(params);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
+		message.setData(reVal);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);

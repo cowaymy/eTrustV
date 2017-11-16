@@ -253,4 +253,24 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		stockMapper.updateStockCommision(params);
 	}
 
+	@Override
+	public String nonvalueStockIns(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		String reVal = stockMapper.nonvaluedItemCodeChk(params);
+		if ("0".equals(reVal)){
+
+    		int stkid = stockMapper.stockSTKIDsearch();
+    		params.put("stkid", stkid);
+    		stockMapper.nonvalueStockIns(params);
+    		stockMapper.nonvalueItemPriceins(params);
+		}
+		return reVal;
+	}
+
+	@Override
+	public EgovMap nonvaluedItemCodeChk(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;//stockMapper.nonvaluedItemCodeChk(params);
+	}
+
 }

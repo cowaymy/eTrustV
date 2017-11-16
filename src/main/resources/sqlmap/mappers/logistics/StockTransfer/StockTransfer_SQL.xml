@@ -261,13 +261,14 @@
                WHEN MATCHED THEN
                      UPDATE SET
                                 A.DELVRY_QTY  = #{delyqty}
+                              , A.REQST_NO_ITM = #{reqitmno}
                               , A.UPD_USER_ID = #{userId}
                               , A.UPD_DT      = SYSDATE
                WHEN NOT MATCHED THEN    
                      INSERT (  DELVRY_NO, DELVRY_NO_ITM
-		                     , ITM_CODE, ITM_NAME, DELVRY_QTY, REQST_NO, CRT_USER_ID, CRT_DT)
+		                     , ITM_CODE, ITM_NAME, DELVRY_QTY, REQST_NO, CRT_USER_ID, CRT_DT, REQST_NO_ITM)
 		             VALUES (  #{delno} , (select decode(count(DELVRY_NO_ITM) , 0 , 1 , max(DELVRY_NO_ITM +1)) from log0055d where DELVRY_NO = #{delno})
-		                     , #{itmcd} , #{itmname}, #{delyqty} , #{reqstno} , ${userId} , SYSDATE)
+		                     , #{itmcd} , #{itmname}, #{delyqty} , #{reqstno} , ${userId} , SYSDATE , #{reqitmno})
     </insert>
     <delete id="deliveryStockTransferItmDel" parameterType="Map">
         delete from LOG0055D where DELVRY_NO = #{delyno} and ITM_CODE = #{itmcd}
@@ -280,6 +281,7 @@
         SELECT Rownum rnum , T.* FROM (
         select 
                l47.reqst_no reqstno
+             , l48.reqst_no_itm reqitmno
 		     , l55.delvry_no delyno
 		     , l55.delvry_no_itm 
 		     , l47.trnsc_type ttype

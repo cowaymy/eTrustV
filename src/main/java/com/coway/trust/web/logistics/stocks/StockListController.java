@@ -21,6 +21,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stocks.StockService;
@@ -344,5 +345,32 @@ public class StockListController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/nonvalueStockIns.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> nonvalueStockIns(@RequestBody Map<String, Object> params, Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		String reVal = stock.nonvalueStockIns(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(reVal);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/nonvaluedItemCodeChk.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> nonvaluedItemCodeChk(@RequestParam Map<String, Object> params){
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		EgovMap result = stock.nonvaluedItemCodeChk(params);
+		
+		return ResponseEntity.ok(result);
+	}
+	
 
 }
