@@ -102,8 +102,8 @@ var Common = {
                         Common.setMsg("Fail : " + jqXHR.responseJSON.message);
                         Common.alert("Fail : " + jqXHR.responseJSON.message);
                     }else{
-                        Common.setMsg("Fail ........ ");
-                        Common.alert("Fail ........ ");
+                        Common.setMsg("Fail.(common.js : ajax error)");
+                        Common.alert("Fail.(common.js : ajax error)");
                     }
                 }
             }
