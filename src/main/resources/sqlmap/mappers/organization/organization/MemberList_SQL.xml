@@ -164,7 +164,7 @@
 			               AND  Extent4.MEM_TYPE =  #{memTypeCom}
 			             </if>
 			             <if test="code != null and code != ''">
-                           AND  Extent4.MEM_CODE LIKE  '%' ||  #{code} || '%'
+                           AND  UPPER(Extent4.MEM_CODE) LIKE  UPPER('%' ||  #{code} || '%')
                          </if>
                          <if test="name != null and name != ''">
                            AND  UPPER(Extent4.NAME) LIKE UPPER('%' || #{name} || '%')
@@ -214,7 +214,7 @@
                           AND   Extent1.MEM_TYPE =  #{memTypeCom}
                          </if>
                          <if test="code != null and code != ''">
-                           AND  Extent1.MEM_CODE LIKE  '%' ||  #{code} || '%'
+                           AND  UPPER(Extent1.MEM_CODE) LIKE  UPPER('%' ||  #{code} || '%')
                          </if>
                          <if test="name != null and name != ''">
                            AND  UPPER(Extent1.NAME) LIKE UPPER('%' || #{name} || '%')
