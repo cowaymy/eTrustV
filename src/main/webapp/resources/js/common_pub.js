@@ -138,10 +138,18 @@ $(document).on(
 	width: '100%',
 	// Callback 
 	onOpen: function() {
+		// 팝업의 세로길이가 짧아서 Select 박스가 가려질 경우
+		if($("#popup_wrap").is(":visible")){
+			multipleSelectPopupFn("open");
+		}
  		// alert("Open");
 	},
 	onClose: function() {
  		// alert("Close");
+		// 팝업의 세로길이가 짧아서 Select 박스가 가려질 경우의 초기값
+		if($("#popup_wrap").is(":visible")){
+			multipleSelectPopupFn("close");
+		}
 	},
 	onCheckAll: function() {
         // alert('Check all clicked!');
@@ -153,6 +161,21 @@ $(document).on(
  		// alert(view.label);
 	}
 });
+
+// 팝업의 세로길이가 짧아서 Select 박스가 가려질 경우 처리함수
+function multipleSelectPopupFn(eTarget){
+	var popupHeight = $(".pop_body").height(),
+		popupMaxHeight = $(".pop_body").css("max-height").replace(/[^-\d\.]/g, '');
+
+	if(popupHeight < popupMaxHeight){
+		if(eTarget == "open"){
+			var newHeight = $(".pop_body").prop("scrollHeight");
+			$(".pop_body").css("height",newHeight);
+		} else if(eTarget == "close"){
+			$(".pop_body").css("height","auto");
+		}
+	}
+}
 
 /*LNB start */
 $(document).on(
