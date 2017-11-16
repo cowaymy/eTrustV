@@ -747,7 +747,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  Extent1.PARENT_DEPT_CODE_TO PARENT_DEPT_CODE_TO,
                  Extent1.REM REM,
                  Extent5.USER_NAME USER_NAME,
-                 TO_CHAR(TO_DATE(Extent1.CRT_DT ,'DD-MM-YYYY'),'YYYY-MM-DD') CRT_DT
+                 TO_CHAR(Extent1.CRT_DT ,'DD-MM-YYYY') CRT_DT
+
                  FROM    ORG0007D Extent1
                  INNER JOIN ORG0012D Extent2 ON (Extent2.MEM_TYPE_ID = Extent1.MEM_TYPE_ID) AND (Extent2.MEM_ORG_LVL = Extent1.MEM_LVL_FROM)
                  INNER JOIN ORG0012D Extent3 ON (Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE_ID) AND (Extent3.MEM_ORG_LVL = Extent1.MEM_LVL_TO)
@@ -786,7 +787,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	                Extent2.BILL_NO BILL_NO  ,
 	                Extent3.CODE_NAME CODE_NAME  ,
 	                Extent4.OR_NO OR_NO  ,
-	               TO_CHAR(TO_DATE(Extent4.PAY_DATA,'YYYY-MM-DD'),'DD-MM-YYYY') C1  ,
+	                 <!-- By KV start change  date format in correct way -->
+	               TO_CHAR(Extent4.PAY_DATA,'DD-MM-YYYY') C1  ,
+	                 <!-- By KV end change  date format in correct way -->
+
 	                CASE
 	                     WHEN ( Extent4.TOT_AMT IS NOT NULL ) THEN Extent4.TOT_AMT
 	                ELSE 0
