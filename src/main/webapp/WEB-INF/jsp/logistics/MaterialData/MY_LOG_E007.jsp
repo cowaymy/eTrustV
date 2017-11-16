@@ -309,10 +309,10 @@
             $("#detailView").hide();
         });
         $("#clear").click(function(){
-            doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
-            doDefCombo(comboData, '' ,'status', 'S', '');
-            $("#loccd").val('');
-            $("#locdesc").val('');
+            doGetCombo('/common/selectCodeList.do', '63', '','spgroup', 'A' , ''); 
+            doDefCombo(comboData, '' ,'sused', 'A', '');
+            $("#svalue").val('');
+
         });
         $("#update").click(function(){
             var updCnt = GridCommon.getEditData(myGridID).update.length;
@@ -730,7 +730,7 @@
 <h2>Non-Valued Material Code</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-<!--     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
