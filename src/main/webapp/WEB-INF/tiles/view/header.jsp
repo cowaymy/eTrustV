@@ -138,7 +138,7 @@
 		    var menuCode = $("#CURRENT_MENU_CODE").val();
 
 		    if(FormUtil.isNotEmpty(menuCode)){
-		        window.open(DEFAULT_HELP_FILE + "/" + menuCode.substr(0, 3) + "/" + menuCode + ".jpg", 'blank', 'width=1024,height=768');
+		        window.open(DEFAULT_HELP_FILE + "/" + menuCode.substr(0, 3) + "/" + menuCode + ".pdf", 'blank', 'width=1024,height=768');
 			}
 		});
    });
