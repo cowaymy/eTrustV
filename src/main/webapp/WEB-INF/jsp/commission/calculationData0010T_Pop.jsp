@@ -304,7 +304,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Order ID<span class="must">*</span></th>
+                        <th scope="row">Order ID</th>
                         <td>
                               <input type="text" id="ordId_10T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
