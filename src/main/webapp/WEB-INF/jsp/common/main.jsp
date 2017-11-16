@@ -1,14 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
-
-<style type="text/css">
-    /* 칼럼 스타일 전체 재정의 */
-    .aui-grid-left-column {
-        text-align: left;
-    }
-</style>
-
 <script type="text/javaScript">
 
     var noticeLayout = [{
@@ -16,7 +8,7 @@
         visible: false
     }, {
         dataField: "ntceSubject",  //NTCE_SUBJECT
-        headerText: "Subject",
+        headerText: "<spring:message code='sys.title.subject'/>",
         editable: false,
         visible: true,
         style: "aui-grid-user-custom-left",
@@ -37,13 +29,13 @@
         }
     }, {
         dataField: "rgstUserNm",    //RGST_USER_NM
-        headerText: "Writer",
+        headerText: "<spring:message code='sys.title.writer'/>",
         width: 160,
         editable: false,
         visible: true
     }, {
         dataField: "crtDt",     //CRT_DT
-        headerText: "Issue Date",
+        headerText: "<spring:message code='sys.title.issue'/> <spring:message code='sys.title.date'/>",
         width: 170,
         editable: false,
         visible: true,
@@ -51,13 +43,13 @@
         formatString: "dd-mm-yyyy"
     }, {
         dataField: "readCnt",     //READ_CNT
-        headerText: "Read Count",
+        headerText: "<spring:message code='sys.title.read'/> <spring:message code='sys.title.count'/>",
         width: 140,
         editable: false,
         visible: true
     }, {
         dataField: "imgFlag",
-        headerText: "Img Flag",
+        headerText: "<spring:message code='sys.title.image'/> <spring:message code='sys.title.flag'/>",
         width: 140,
         editable: false,
         visible: false
@@ -144,11 +136,15 @@
     //AUIGrid 생성 후 반환 ID
     var noticeGridID, detailGridID, statusCodeGridID;
 
+    var gridOption = {
+        showStateColumn : false
+    };
+
     $(document).ready(function () {
 
         /***********************************************[ NOTICE GRID] ************************************************/
 
-        noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout);
+        noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(noticeGridID, "cellDoubleClick", function (event) {
@@ -204,8 +200,8 @@
 <section id="content"><!-- content start -->
 
     <aside class="title_line main_title"><!-- title_line start -->
-        <h2>Notice</h2>
-        <p class="more"><a href="${pageContext.request.contextPath}/notice/noticeList.do">More ></a></p>
+        <h2><spring:message code='sys.label.notice'/></h2>
+        <p class="more"><a href="${pageContext.request.contextPath}/notice/noticeList.do"><spring:message code='sys.label.more'/> ></a></p>
     </aside><!-- title_line end -->
 
     <form id="MainForm" method="get" action="">
@@ -219,7 +215,7 @@
 
         <aside class="title_line main_title mt40"><!-- title_line start -->
             <h2>Trust Ticket Status</h2>
-            <p class="more"><a href="javascript:;">More ></a></p>
+            <p class="more"><a href="javascript:;"><spring:message code='sys.label.more'/> ></a></p>
         </aside><!-- title_line end -->
 
         <article class="grid_wrap"><!-- grid_wrap start -->
@@ -229,7 +225,7 @@
 
         <aside class="title_line main_title mt40"><!-- title_line start -->
             <h2>Daily Performance</h2>
-            <p class="more"><a href="javascript:;">More ></a></p>
+            <p class="more"><a href="javascript:;"><spring:message code='sys.label.more'/> ></a></p>
         </aside><!-- title_line end -->
 
         <article class="grid_wrap"><!-- grid_wrap start -->
