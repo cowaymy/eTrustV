@@ -34,5 +34,6 @@ public interface BudgetService {
 	String selectBudgetCodeName(Map<String, Object> params);
 
 	String selectGlAccCodeName(Map<String, Object> params);
-
+	
+	EgovMap deleteAdjustmentInfo (Map<String, Object> params) throws Exception;
 }

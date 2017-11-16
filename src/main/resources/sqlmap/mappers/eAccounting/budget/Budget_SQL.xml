@@ -302,7 +302,10 @@ FROM     (
           AND A.BUDGET_DOC_NO LIKE '%' || #{budgetDocNo} || '%'
           </if>          
         <if test="appvStus != null and appvStus != ''">
-           AND A.APPV_STUS = #{appvStus}
+           AND A.APPV_STUS IN
+           <foreach item="item" collection="appvStus" index="index" open="(" separator="," close=")">
+           #{item}
+         </foreach>
            </if>
            ORDER BY A.BUDGET_DOC_NO, BUDGET_DOC_SEQ
   </select>
@@ -584,5 +587,10 @@ FROM     (
   <select id="selectGlAccCodeName" parameterType="Map" resultType="String">
 	  SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{code}
   </select>
+  
+  <update id="deleteAdjustmentDByDocNo" parameterType="Map">
+   DELETE FROM FCM0103D      
+    WHERE BUDGET_DOC_NO     = #{budgetDocNo}
+</update>
 
 </mapper>

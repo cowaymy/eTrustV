@@ -187,8 +187,10 @@ public class BudgetController {
 		LOGGER.debug("params =====================================>>  " + params);
 
 		String[] budgetAdjType = request.getParameterValues("budgetAdjType");
+		String[] appvStus = request.getParameterValues("appvStus");
 
 		params.put("budgetAdjType", budgetAdjType);
+		params.put("appvStus", appvStus);
 		
 		List<EgovMap> adjustmentList = null; 
 		
@@ -253,7 +255,7 @@ public class BudgetController {
 			model.addAttribute("adjustmentList", new Gson().toJson(adjustmentList));
 
 			model.addAttribute("budgetStatus", adjustmentList.get(0).get("status"));	
-			if(!adjustmentList.get(0).get("status").toString().equals("Open") && !adjustmentList.get(0).get("status").toString().equals("Temp. Save")){
+			if(!adjustmentList.get(0).get("status").toString().equals("Temp. Save")){
 				model.addAttribute("budgetStatus","N");
 			}else{
 				if(!CommonUtils.isEmpty(params.get("appvFlag")) && "Y".equals(params.get("appvFlag").toString())){					
@@ -554,6 +556,26 @@ public class BudgetController {
     	return ResponseEntity.ok(message);
 		
 	}
+	
+	@RequestMapping(value = "/deleteBudgetAdjustment", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> deleteBudgetAdjustment (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+			
+		LOGGER.debug("params =====================================>>  " + params);
+	
+		Map result = new HashMap<String, Object>();
+		
+		result = budgetService.deleteAdjustmentInfo(params);
+			
+			
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(result);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+    	return ResponseEntity.ok(message);
+		
+	}		
 	
 }
 

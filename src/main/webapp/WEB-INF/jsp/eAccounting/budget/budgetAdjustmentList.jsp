@@ -50,7 +50,7 @@ $(document).ready(function(){
             checkValue : "Y", // true, false 인 경우가 기본
             unCheckValue : "N",
             disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
-                if(item.status == "Close" || item.status == "Request")
+                if(item.status == "Close" || item.status == "Open")
                     return true; // true 반환하면 disabled 시킴
                 return false;                    
             }
@@ -193,6 +193,8 @@ $(document).ready(function(){
     
     //셀 클릭 핸들러 바인딩
     AUIGrid.bind(adjMGridID, "cellClick", auiCellClikcHandler);
+    
+    $("#appvStus").multipleSelect("checkAll");
        
 });
 
@@ -410,6 +412,43 @@ function fn_budgetApproval(){
 function fn_goBudgetPlan(){
 	location.replace("/eAccounting/budget/monthlyBudgetList.do");
 }
+
+function fn_budgetDelete() {
+	 
+    // 그리드 데이터에서 checkId 필드의 값이 Y 인 행 아이템 모두 반환
+    var activeItems = AUIGrid.getItemsByValue(adjMGridID, "checkId", "Y");
+    
+    if(activeItems.length == 0){
+    	alert('<spring:message code="budget.msg.delete" />');
+        return;
+    }
+    
+    if(Common.confirm("<spring:message code='sys.common.alert.delete'/>", function(){
+         
+         var gridData = GridCommon.getEditData(adjMGridID);
+            
+    Common.ajax("POST", "/eAccounting/budget/deleteBudgetAdjustment", {gridData:gridData} , function(result)    {
+          console.log("성공." + JSON.stringify(result));
+          console.log("data : " + result.data);
+          
+          fn_selectListAjax();
+    }
+    , function(jqXHR, textStatus, errorThrown){
+           try {
+               console.log("Fail Status : " + jqXHR.status);
+               console.log("code : "        + jqXHR.responseJSON.code);
+               console.log("message : "     + jqXHR.responseJSON.message);
+               console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+         }
+         catch (e)
+         {
+           console.log(e);
+         }
+         alert("Fail : " + jqXHR.responseJSON.message);
+          });
+    
+    }));
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -490,8 +529,8 @@ function fn_goBudgetPlan(){
 <tr>
 	<th scope="row"><spring:message code="budget.Status" /></th>
 	<td>
-	<select id="appvStus" name="appvStus" class="">
-		<option value=""><spring:message code="budget.All" /></option>
+	<select id="appvStus" name="appvStus" class="multy_select w100p" multiple="multiple">
+		<option value="T"><spring:message code="budget.TempSave" /></option>
 		<option value="O"><spring:message code="budget.Open" /></option>
 		<option value="C"><spring:message code="budget.Close" /></option>
 	</select>
@@ -521,7 +560,7 @@ function fn_goBudgetPlan(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" onclick=""><spring:message code="budget.Delete" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetDelete();"><spring:message code="budget.Delete" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentPop('pop');"><spring:message code="budget.Adjustment" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval();"><spring:message code="budget.Submit" /></a></p></li>
 </ul>

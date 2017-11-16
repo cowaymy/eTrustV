@@ -52,4 +52,6 @@ public interface BudgetMapper {
 	String selectBudgetCodeName(Map<String, Object> params);
 
 	String selectGlAccCodeName(Map<String, Object> params);
+	
+	void deleteAdjustmentDByDocNo(Map<String, Object> params) throws Exception;
 }

@@ -333,4 +333,52 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	public String selectGlAccCodeName(Map<String, Object> params) {
 		return budgetMapper.selectGlAccCodeName(params);
 	}
+
+	@Override
+	public EgovMap deleteAdjustmentInfo(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
+
+		EgovMap result = new EgovMap();
+		List resultList = new ArrayList();
+		
+		List<Object> updList = (List<Object>) gridData.get(AppConstants.AUIGRID_UPDATE);
+		
+		Object  budgetDocNo = null;
+		
+		int i = 0;
+		
+		Map deleteMap = new HashMap<String, Object>();
+
+		if(updList.size() > 0){
+			
+			Logger.debug(" >>>>> updateAdjustmentInfo ");
+			
+			for (Object obj : updList) 
+			{		
+				if(i == 0){
+					budgetDocNo = ((Map<String, Object>) obj).get("budgetDocNo");
+					resultList.add(budgetDocNo);
+					i++;
+				}else {				
+    				if(budgetDocNo.equals(((Map<String, Object>) obj).get("budgetDocNo"))){
+    					continue;
+    				}else{
+    					budgetDocNo = ((Map<String, Object>) obj).get("budgetDocNo");
+    					resultList.add(budgetDocNo);
+    				}
+				}
+				
+				deleteMap.put("budgetDocNo", budgetDocNo);
+				
+				budgetMapper.deleteAdjustmentM(deleteMap);
+				budgetMapper.deleteAdjustmentDByDocNo(deleteMap);
+			}
+		}
+		
+		result.put("totCnt", i);
+		result.put("resultList", resultList);
+		
+		return result ;
+	}
 }
