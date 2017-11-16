@@ -45,7 +45,7 @@
         }
     }, {
         dataField: "rgstUserNm",    //RGST_USER_NM
-        headerText: "Writer",
+        headerText: "<spring:message code='sys.title.writer'/>",
         width: 160,
         editable: false,
         visible: true
