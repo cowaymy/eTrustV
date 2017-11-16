@@ -97,7 +97,7 @@
         formData.append("password", $("#password").val());
         formData.append("ntceStartDt", $("#ntceStartDt").val());
         formData.append("ntceEndDt", $("#ntceEndDt").val());
-        formData.append("ntceCntnt", $("#ntceCntnt").text());
+        formData.append("ntceCntnt", $("#ntceCntnt").val());
 
 
         Common.ajaxFile("/notice/updateNotice.do", formData, function (result) {

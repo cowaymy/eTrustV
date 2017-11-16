@@ -22,7 +22,7 @@
         formData.append("password", $("#password").val());
         formData.append("ntceStartDt", $("#ntceStartDt").val());
         formData.append("ntceEndDt", $("#ntceEndDt").val());
-        formData.append("ntceCntnt", $("#ntceCntnt").text());
+        formData.append("ntceCntnt", $("#ntceCntnt").val());
 
         Common.ajaxFile("/notice/insertNotice.do", formData, function (result) {
             $("#popClose").click();
@@ -105,7 +105,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Writer</th>
+                    <th scope="row"><spring:message code='sys.title.writer'/></th>
                     <td colspan="3">
                         <input id="rgstUserNm" name="rgstUserNm" value="${userName}" type="text" title="" placeholder=""
                                class="readonly w100p" readonly="readonly"/>
