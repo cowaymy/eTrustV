@@ -19,12 +19,12 @@
 
 /* 그리드 오버 시 행 선택자 만들기 */
 .aui-grid-body-panel table tr:hover {
-    background:#D9E5FF;
-    color:#000;
+/*     background:#D9E5FF; */
+/*     color:#000; */
 }
 .aui-grid-main-panel .aui-grid-body-panel table tr td:hover {
-    background:#D9E5FF;
-    color:#000;
+/*     background:#D9E5FF; */
+/*     color:#000; */
 }
 
 
