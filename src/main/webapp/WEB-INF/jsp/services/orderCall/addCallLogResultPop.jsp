@@ -129,7 +129,7 @@ function callLogTranGrid() {
 
 function fn_doAllaction(){
     var ord_id = $("#salesOrdId").val();
-    var  vdte = '';
+    var  vdte   = $("#requestDate").val();
     Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte}, null , true , '_doAllactionDiv');
     
 
@@ -261,6 +261,8 @@ function fn_doAllaction(){
     <col style="width:*" />
     <col style="width:130px" />
     <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -276,9 +278,16 @@ function fn_doAllaction(){
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="recallDate" name="recallDate"/>
     </td>
+    
+    <th scope="row">Request Date</th>
+    <td>
+    <input type="text" title="Request Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="requestDate" name="requestDate" onchange="javascript:fn_doAllaction()"/>
+    </td>
+    
+    
     <th scope="row">Appointment Date</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="appDate" name="appDate" onchange="javascript:fn_doAllaction()"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY"  readonly="readonly"  class="readonly j_date w100p"  id="appDate" name="appDate" />
     </td>
 </tr>
 <tr>
@@ -290,9 +299,16 @@ function fn_doAllaction(){
    <!--  <select class="w100p" id="CTgroup"  name="CTgroup" >
         <option value="A">A</option>
         <option value="B">B</option>
-        <option value="C">C</option>
+        <option value="C">C</option>CT Code
     </select> -->
     </td>
+       <th scope="row">Appointment <br> Sessione </th>
+    <td>
+        <input type="text" title="" placeholder=""  readonly="readonly"    id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p"/>
+    </td>
+    
+    
+    
     <th scope="row">Feedback Code<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p"  id="feedBackCode" name="feedBackCode">
@@ -308,20 +324,20 @@ function fn_doAllaction(){
     <td>
 
     <div class="search_100p"><!-- search_100p start -->
-    <input type="text" title="" placeholder="" class="w100p" id="CTCode" name="CTCode"/>
-    <input type="text" placeholder="" class="w100p" id="CTID" name="CTID"/>
+    <input type="text" title="" placeholder=""  class="readonly w100p" readonly="readonly"   id="CTCode" name="CTCode"/>
+    <input type="hidden" placeholder="" class="w100p" id="CTID" name="CTID"/>
     <%-- <a href="#" class="search_btn" onclick="javascript:fn_doAllaction()"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> --%>
     </div><!-- search_100p end -->
 
     </td>
     <th scope="row">CT Name (NRIC)</th>
-    <td colspan="3">
+    <td colspan="5">
     <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="CTName" name="CTName"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="5">
+    <td colspan="7">
     <textarea cols="20" rows="5" placeholder="" id="remark" name="remark"></textarea>
     </td>
 </tr>
