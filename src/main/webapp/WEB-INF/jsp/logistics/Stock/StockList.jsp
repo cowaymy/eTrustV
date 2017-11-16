@@ -762,29 +762,35 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     function getSampleListAjax() {
 
         //$.blockUI({ message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' />" }); 
-        f_showModal();
-        var param = $('#searchForm').serialize();
+        //f_showModal();
 
-        $.ajax({
-            type : "POST",
-            url : "/stock/StockList.do?" + param,
-            //url : "/stock/StockList.do",
-            //data : param,
-            dataType : "json",
-            contentType : "application/json;charset=UTF-8",
-            success : function(data) {
-                var gridData = data;
+     var param = $('#searchForm').serialize();
 
-                AUIGrid.setGridData(myGridID, gridData.data);
-            },
-            error : function(jqXHR, textStatus, errorThrown) {
-                alert("실패하였습니다.");
-            },
-            complete : function() {
-                hideModal();
-                //$.unblockUI();
-            }
+        Common.ajax("POST" , "/stock/StockList.do" , param , function(data){
+        	var gridData = data;
+        	AUIGrid.setGridData(myGridID, gridData.data);
         });
+        
+//         $.ajax({
+//             type : "POST",
+//             url : "/stock/StockList.do?" + param,
+//             //url : "/stock/StockList.do",
+//             //data : param,
+//             dataType : "json",
+//             contentType : "application/json;charset=UTF-8",
+//             success : function(data) {
+//                 var gridData = data;
+
+//                 AUIGrid.setGridData(myGridID, gridData.data);
+//             },
+//             error : function(jqXHR, textStatus, errorThrown) {
+//                 alert("실패하였습니다.");
+//             },
+//             complete : function() {
+//                 hideModal();
+//                 //$.unblockUI();
+//             }
+//         });
     }
 
     function f_showModal() {
