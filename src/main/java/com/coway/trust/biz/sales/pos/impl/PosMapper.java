@@ -3,7 +3,9 @@ package com.coway.trust.biz.sales.pos.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.pos.vo.PosDetailVO;
 import com.coway.trust.biz.sales.pos.vo.PosMasterVO;
+import com.coway.trust.biz.sales.pos.vo.PosMemberVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -143,4 +145,10 @@ public interface PosMapper {
 	void updatePosDStatus(PosMasterVO pvo);
 	
 	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
+	
+	void updatePosDStatusByPosItmId(PosDetailVO pdvo);
+	
+	void updatePosMemStatus(PosMemberVO pmvo);
+	
+	/*EgovMap chkPosType(Map<String, Object> params);*/
 }

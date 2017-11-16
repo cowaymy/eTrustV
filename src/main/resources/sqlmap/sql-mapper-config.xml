@@ -100,6 +100,8 @@
         
         <!--Pos Status Update  -->
         <typeAlias alias="posMasterVO" type="com.coway.trust.biz.sales.pos.vo.PosMasterVO" />
+        <typeAlias alias="posDetailVO" type="com.coway.trust.biz.sales.pos.vo.PosDetailVO"/>
+        <typeAlias alias="posMemberVO" type="com.coway.trust.biz.sales.pos.vo.PosMemberVO"/>
     </typeAliases>
 
 

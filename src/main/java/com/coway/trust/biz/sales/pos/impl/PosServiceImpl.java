@@ -9,8 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.coway.trust.biz.sales.pos.PosService;
+import com.coway.trust.biz.sales.pos.vo.PosDetailVO;
 import com.coway.trust.biz.sales.pos.vo.PosGridVO;
 import com.coway.trust.biz.sales.pos.vo.PosMasterVO;
+import com.coway.trust.biz.sales.pos.vo.PosMemberVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.math.BigDecimal;
@@ -241,7 +243,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		posMap.put("posTaxes", rtnTax);
 		posMap.put("posDiscount", 0);    //TODO 확인 필요
 		//hidLocId  와 branch ID
-		if(params.get("hidLocId") == null ){
+		if(posMap.get("hidLocId") == null){
 			posMap.put("hidLocId", "0");
 		}
 		posMap.put("posMtchId", 0);
@@ -736,7 +738,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 					tempTxs = -1 * tempTxs;
 					revDetailMap.put("posDetailTaxs", tempTxs);
 					
-					revDetailMap.put("posRcvStusId", SalesConstants.POS_SALES_STATUS_NON_RECEIVE); //RCV_STUS_ID  == 96 (Non Receive)
+					revDetailMap.put("posRcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE); //RCV_STUS_ID  == 96 (Non Receive)
 					revDetailMap.put("userId", params.get("userId"));
 					
 					if(revDetailMap != null){
@@ -1038,15 +1040,116 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			
 			//Update Pos Master
 			posMapper.updatePosMStatus(pvo);
-			
+		
 			//Complete to Update Pos Detail  
 			if(pvo.getStusId() == SalesConstants.POS_SALES_STATUS_COMPLETE){  // to 4
 				pvo.setChangeStatus(SalesConstants.POS_DETAIL_RECEIVE); //to Detail Status  85
 				posMapper.updatePosDStatus(pvo);
 			}
 		}
-		
-		
 	}
 	
+	
+	@Override
+	@Transactional
+	public void updatePosDStatus(PosGridVO pgvo) throws Exception {
+		
+		GridDataSet<PosDetailVO> posDGridDataSetList = pgvo.getPosDetailStatusDataSetList();
+		
+		List<PosDetailVO> updateList = posDGridDataSetList.getUpdate();
+		
+		//Update Pos Detail by PosItemID
+		for(PosDetailVO pdvo : updateList){
+			
+			posMapper.updatePosDStatusByPosItmId(pdvo);
+			
+		}
+		
+		//Check Detail Status
+		if(updateList != null && updateList.size() > 0){
+			
+			int posId =  updateList.get(0).getPosId();  //posId
+			
+			Map<String, Object> getDetMap = new HashMap<String, Object>();
+			getDetMap.put("rePosId", posId);
+			
+			List<EgovMap> detailList = null;
+			detailList = posMapper.getPosDetailList(getDetMap);
+			
+			int cnt = 0;
+			
+			for (int idx = 0; idx < detailList.size(); idx++) {
+				EgovMap tempMap = detailList.get(idx);
+				LOGGER.info("#########################  tempMap.get(rcvStusId)  : ===  " + tempMap.get("rcvStusId"));
+				LOGGER.info("#########################  cccccccccccccccccccc   : ===  " + SalesConstants.POS_DETAIL_NON_RECEIVE);
+				if(Integer.parseInt(String.valueOf(tempMap.get("rcvStusId"))) == (SalesConstants.POS_DETAIL_NON_RECEIVE)){  //96
+					LOGGER.info("##################  NonReceive HAS!!!!@##########################");
+					cnt++;
+				}
+			}
+			
+			LOGGER.info("######################### cnt : " + cnt);
+			//Update Pos M Status to Complete
+			if(cnt == 0){
+				
+				PosMasterVO pvo = new PosMasterVO();
+				pvo.setPosId(posId);
+				pvo.setStusId(SalesConstants.POS_SALES_STATUS_COMPLETE);
+				
+				posMapper.updatePosMStatus(pvo);
+			}
+		}
+	}
+
+	@Override
+	public void updatePosMemStatus(PosGridVO pgvo) throws Exception {
+		
+		GridDataSet<PosMemberVO> posMemGridDataSetList = pgvo.getPosMemberStatusDataSetList();
+		
+		List<PosMemberVO> updateList = posMemGridDataSetList.getUpdate();
+		
+		//Update Pos Detail by PosItemID
+		for(PosMemberVO pdvo : updateList){
+			
+			posMapper.updatePosMemStatus(pdvo); //posId memId
+			
+		}
+		
+		//Check Detail Status
+		if(updateList != null && updateList.size() > 0){
+			
+			int posId =  updateList.get(0).getPosId();  //posId
+			
+			Map<String, Object> getDetMap = new HashMap<String, Object>();
+			getDetMap.put("rePosId", posId);
+			
+			List<EgovMap> detailList = null;
+			detailList = posMapper.getPosDetailList(getDetMap);
+			
+			int cnt = 0;
+			
+			for (int idx = 0; idx < detailList.size(); idx++) {
+				EgovMap tempMap = detailList.get(idx);
+				LOGGER.info("#########################  tempMap.get(rcvStusId)  : ===  " + tempMap.get("rcvStusId"));
+				LOGGER.info("#########################  cccccccccccccccccccc   : ===  " + SalesConstants.POS_DETAIL_NON_RECEIVE);
+				if(Integer.parseInt(String.valueOf(tempMap.get("rcvStusId"))) == (SalesConstants.POS_DETAIL_NON_RECEIVE)){  //96
+					LOGGER.info("##################  NonReceive HAS!!!!@##########################");
+					cnt++;
+				}
+			}
+			
+			LOGGER.info("######################### cnt : " + cnt);
+			//Update Pos M Status to Complete
+			if(cnt == 0){
+				
+				PosMasterVO pvo = new PosMasterVO();
+				pvo.setPosId(posId);
+				pvo.setStusId(SalesConstants.POS_SALES_STATUS_COMPLETE);
+				
+				posMapper.updatePosMStatus(pvo);
+			}
+		}
+		
+	}
+
 }

@@ -358,7 +358,10 @@ function getLocIdByBrnchId(tempVal) {
         Common.ajax('GET', "/sales/pos/selectWarehouse", paramObj,function(result){
             
             if(result != null){
-                $("#cmbWhIdPop").val(result.whLocDesc);
+                
+            	console.log("result.whLocId : " + result.whLocId);
+            	
+            	$("#cmbWhIdPop").val(result.whLocDesc);
                 $("#_hidLocId").val(result.whLocId); 
             }else{
                 $("#cmbWhIdPop").val('');

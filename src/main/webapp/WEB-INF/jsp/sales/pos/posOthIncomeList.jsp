@@ -234,26 +234,58 @@ $(document).ready(function() {
         
     	var PosGridVO = {posStatusDataSetList : GridCommon.getEditData(posGridID)}; // name Careful
     	
-    	var aa = GridCommon.getEditData(posGridID);
-    	
-    	console.log("aa : " +  JSON.stringify(aa));
-    	
 		Common.ajax("POST", "/sales/pos/updatePosMStatus", PosGridVO, function(result) {
 			
 			Common.alert(result.message);
+			AUIGrid.clearGridData(posItmDetailGridID);
 			fn_getPosListAjax();
 		});
 	});
     
- // 2) Pos Detail Update
+   // 2) Pos Detail Update
     $("#_itemStatusBtn").click(function() {
-        var editedCells = AUIGrid.getEditedRowItems(posItmDetailGridID);
         
-        /* for (var idx = 0; idx < editedCells.length; idx++) {
+    	var PosGridVO = {posDetailStatusDataSetList : GridCommon.getEditData(posItmDetailGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
+        
+        Common.ajax("POST", "/sales/pos/updatePosDStatus", PosGridVO, function(result) {
             
-            console.log(" 3 : " + editedCells[idx].rcvStusId);
-            console.log(" 4 : " + editedCells[idx].posItmId);
-        } */
+            Common.alert(result.message);
+            AUIGrid.clearGridData(posItmDetailGridID);  
+            fn_getPosListAjax();
+        });
+    });
+   
+    /***************  Pos Grid Status ********************/
+    //1) Master
+    AUIGrid.bind(posGridID, "cellEditBegin", function(event) {
+           //Reversal
+            if(event.item.posTypeId == 1361){
+                Common.alert("* Can not Change Status ");
+                return false;
+            }
+           // Active NonReceive Only
+            if(event.value != 1 && event.value != 96){
+               Common.alert("* Can not Change Status ");
+               return false;
+           }
+           
+           //Others
+           return true;
+   });
+    // 2) Detail
+    AUIGrid.bind(posItmDetailGridID, "cellEditBegin", function(event) {
+        
+        if(event.item.posTypeId == 1361){
+            Common.alert("* Reversal  can not Change  Status");
+            return false;
+        }
+        // Active NonReceive Only
+         if(event.value != 96){
+            Common.alert("* Can not Change Status ");
+            return false;
+        }
+        //Others
+        return true;
     });
 });//Doc ready Func End
 
@@ -265,34 +297,32 @@ function girdHide(){
 
 function createPosItmDetailGrid(){
     var posItmColumnLayout =  [ 
-                                {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
-                                {dataField : "stkDesc", headerText : "Item Description", width : '30%'},
-                                {dataField : "qty", headerText : "Qty", width : '10%'},
-                                {dataField : "amt", headerText : "Unit Price", width : '10%' , dataType : "numeric", formatString : "#,##0.00"}, 
-                                {dataField : "chrg", headerText : "Sub Total(Exclude GST)", width : '10%', dataType : "numeric", formatString : "#,##0.00"},
-                                {dataField : "txs", headerText : "GST(6%)", width : '10%', dataType : "numeric", formatString : "#,##0.00"},
-                                {dataField : "tot", headerText : "Total Amount", width : '10%', dataType : "numeric", formatString : "#,##0.00"},
-                                {
-                                    dataField : "rcvStusId",
-                                    headerText : "rcvStusId",
-                                    width : '10%',
+                                {dataField : "stkCode", headerText : "Item Code", width : '10%' , editable : false}, 
+                                {dataField : "stkDesc", headerText : "Item Description", width : '30%' , editable : false},
+                                {dataField : "qty", headerText : "Qty", width : '10%' , editable : false},
+                                {dataField : "amt", headerText : "Unit Price", width : '10%' , dataType : "numeric", formatString : "#,##0.00" , editable : false}, 
+                                {dataField : "chrg", headerText : "Sub Total(Exclude GST)", width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
+                                {dataField : "txs", headerText : "GST(6%)", width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
+                                {dataField : "tot", headerText : "Total Amount", width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
+                                { dataField : "rcvStusId",  headerText : "rcvStusId", width : '10%',
                                     labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
-                                        var retStr = "";
-                                        for(var i=0,len=arrItmStusCode.length; i<len; i++) {
-                                            if(arrItmStusCode[i]["codeId"] == value) {
-                                                retStr = arrItmStusCode[i]["codeName"];
-                                                break;
-                                            }
-                                        }
-                                                    return retStr == "" ? value : retStr;
+                                         var retStr = "";
+                                         for(var i=0,len=arrItmStusCode.length; i<len; i++) {
+                                             if(arrItmStusCode[i]["codeId"] == value) {
+                                                 retStr = arrItmStusCode[i]["codeName"];
+                                                 break;
+                                             }
+                                         }
+                                         return retStr == "" ? value : retStr;
+                                     },
+                                     editRenderer : { // 셀 자체에 드랍다운리스트 출력하고자 할 때
+                                            type : "DropDownListRenderer",
+                                            list : arrItmStusCode,
+                                            keyField   : "codeId", // key 에 해당되는 필드명
+                                            valueField : "codeName", // value 에 해당되는 필드명
+                                            easyMode : false
+                                      }
                                 },
-                                    renderer : { // 셀 자체에 드랍다운리스트 출력하고자 할 때
-                                           type : "DropDownListRenderer",
-                                           list : arrItmStusCode,
-                                           keyField   : "codeId", // key 에 해당되는 필드명
-                                           valueField : "codeName" // value 에 해당되는 필드명
-                                     }
-                               },
                                {dataField : "posItmStockId", visible : false}
                            ];
      //그리드 속성 설정
@@ -300,7 +330,6 @@ function createPosItmDetailGrid(){
             
             usePaging           : true,         //페이징 사용
             pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
             fixedColumnCount    : 1,            
             showStateColumn     : true,             
             displayTreeOpen     : false,            
@@ -469,20 +498,17 @@ function createAUIGrid(){
     
     
     var posColumnLayout =  [ 
-                            {dataField : "posNo", headerText : "POS No.", width : 80}, 
-                            {dataField : "posDt", headerText : "Sales Date", width : 80},
-                            {dataField : "userName", headerText : "Member ID", width : 80},
-                            {dataField : "codeName", headerText : "POS Type", width : 80},
-                            {dataField : "codeName1", headerText : "Sales Type", width : 80},
-                            {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : 80}, 
-                            {dataField : "name", headerText : "Customer Name", width : 100},
-                            {dataField : "whLocCode", headerText : "Branch", width : 80 , style : 'left_style'},
-                            {dataField : "whLocCode", headerText : "Warehouse", width : 80},
-                            {dataField : "posTotAmt", headerText : "Total Amount", width : 80},
-                            {
-                                dataField : "stusId",
-                                headerText : "Status",
-                                width : 80,
+                            {dataField : "posNo", headerText : "POS No.", width : '8%', editable : false}, 
+                            {dataField : "posDt", headerText : "Sales Date", width : '8%', editable : false},
+                            {dataField : "userName", headerText : "Member ID", width : '8%', editable : false},
+                            {dataField : "codeName", headerText : "POS Type", width : '8%', editable : false},
+                            {dataField : "codeName1", headerText : "Sales Type", width : '8%', editable : false},
+                            {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '18%', editable : false}, 
+                            {dataField : "name", headerText : "Customer Name", width : '8%', editable : false},
+                            {dataField : "whLocCode", headerText : "Branch", width : '8%' , style : 'left_style', editable : false},
+                            {dataField : "whLocCode", headerText : "Warehouse", width : '8%', editable : false},
+                            {dataField : "posTotAmt", headerText : "Total Amount", width : '8%', editable : false},
+                            {dataField : "stusId", headerText : "Status", width : '10%',
                                 labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                     var retStr = "";
                                     for(var i=0,len=arrPosStusCode.length; i<len; i++) {
@@ -491,15 +517,16 @@ function createAUIGrid(){
                                             break;
                                         }
                                     }
-                                                return retStr == "" ? value : retStr;
+                                    return retStr == "" ? value : retStr;
+                              },
+                              editRenderer : {
+                                     type : "DropDownListRenderer",
+                                     list : arrPosStusCode,
+                                     keyField   : "codeId", // key 에 해당되는 필드명
+                                     valueField : "codeName", // value 에 해당되는 필드명
+                                     easyMode : false
+                              }
                             },
-                                renderer : { // 셀 자체에 드랍다운리스트 출력하고자 할 때
-                                       type : "DropDownListRenderer",
-                                       list : arrPosStusCode,
-                                       keyField   : "codeId", // key 에 해당되는 필드명
-                                       valueField : "codeName" // value 에 해당되는 필드명
-                                 }
-                           },
                             {dataField : "posId", visible : false},
                             {dataField : "posModuleTypeId", visible : false},
                             {dataField : "posTypeId", visible : false}
@@ -510,7 +537,6 @@ function createAUIGrid(){
             
             usePaging           : true,         //페이징 사용
             pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
             fixedColumnCount    : 1,            
             showStateColumn     : true,             
             displayTreeOpen     : false,            

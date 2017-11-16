@@ -422,4 +422,38 @@ public class PosController {
     	return ResponseEntity.ok(message);
 	}
 	
+	
+	@RequestMapping(value= "/updatePosDStatus" , method = RequestMethod.POST)				 
+	public ResponseEntity<ReturnMessage> updatePosDStatus (@RequestBody PosGridVO pgvo) throws Exception{
+		
+		LOGGER.info("############################# pgvo : " + pgvo.toString());
+		
+		posService.updatePosDStatus(pgvo);
+		
+		//Return MSG
+    	ReturnMessage message = new ReturnMessage();
+    	
+        message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+    	return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value= "/updatePosMemStatus" , method = RequestMethod.POST)				 
+	public ResponseEntity<ReturnMessage> updatePosMemStatus (@RequestBody PosGridVO pgvo) throws Exception{
+		
+		LOGGER.info("############################# pgvo : " + pgvo.toString());
+		
+		posService.updatePosMemStatus(pgvo);
+		
+		//Return MSG
+    	ReturnMessage message = new ReturnMessage();
+    	
+        message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+    	return ResponseEntity.ok(message);
+	}
+
 }

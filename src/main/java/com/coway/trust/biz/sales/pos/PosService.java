@@ -53,4 +53,9 @@ public interface PosService {
 	
 	void  updatePosMStatus (PosGridVO pgvo) throws Exception;
 	
+	void  updatePosDStatus (PosGridVO pgvo) throws Exception;
+	
+	void updatePosMemStatus(PosGridVO pgvo) throws Exception;
+	
+	/*EgovMap chkPosType(Map<String, Object> params) throws Exception;*/
 }

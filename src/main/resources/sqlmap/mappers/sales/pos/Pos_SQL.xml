@@ -303,7 +303,7 @@
                         Project1.STK_TYPE_ID,
                         Project1.STK_CTGRY_ID,
                         <!-- NVL(Project1.QTY, 0 ) QTY, -->
-                        100 QTY,
+                        NVL(Project1.QTY, 0) QTY,
                         Project1.MOV_QTY,
                         NVL(Project1.AMT , 0) AMT,                     
                         (AMT * 100) / 106 SUB_CHANGES,
@@ -355,7 +355,7 @@
                               <foreach collection="stkId" item="item" open="(" separator="," close=")">
                                   #{item}
                               </foreach>
-                        </if> 
+                    </if> 
      </select>
      
      <select id="getMemCode" parameterType="Map" resultType="egovMap">
@@ -1051,7 +1051,9 @@
                 T1.POS_ITM_CHRG CHRG,
                 T1.POS_ITM_TXS TXS,
                 T1.MEM_ID,
-                T1.RCV_STUS_ID
+                T1.RCV_STUS_ID,
+                T3. POS_TYPE_ID,
+                T3.POS_MODULE_TYPE_ID
             FROM 
                 SAL0058D T1
                 LEFT JOIN SYS0026M T2 ON T2.STK_ID = T1.POS_ITM_STOCK_ID 
@@ -1061,6 +1063,7 @@
                 <!-- <if test=" null != itembankType and '' != itembankType">
                     LEFT JOIN LOG0026D T2 ON T2.ITM_ID = T1.POS_ITM_STOCK_ID
                 </if> -->
+                LEFT JOIN SAL0057D T3 ON T3.POS_ID = T1.POS_ID
             WHERE 
                T1.POS_ID = #{rePosId}
                <if test=" null != memId and '' != memId">
@@ -1964,4 +1967,23 @@
                 AND ROWNUM &lt;= 1 ) T
     </select>
 		    
+    <update id="updatePosDStatusByPosItmId"   parameterType="posDetailVO">
+       UPDATE 
+            SAL0058D
+       SET
+            RCV_STUS_ID = #{rcvStusId}
+       WHERE 
+            POS_ITM_ID = #{posItmId}
+    </update>
+    
+    <select id="updatePosMemStatus" parameterType="posMemberVO">
+        UPDATE 
+            SAL0058D
+       SET
+            RCV_STUS_ID = #{rcvStusId}
+       WHERE 
+            POS_ID = #{posId}
+       AND
+            MEM_ID = #{memId}
+    </select>
 </mapper>
