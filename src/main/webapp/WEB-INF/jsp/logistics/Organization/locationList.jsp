@@ -31,7 +31,7 @@
 #editWindow input.text { margin-bottom:10px; width:95%; padding: 0.1em;  }
 #editWindow fieldset { padding:0; border:0; margin-top:10px; }
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+<!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css"> -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 
@@ -204,6 +204,8 @@
         $("#clear").click(function(){
         	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
         	doDefCombo(comboData, '' ,'status', 'S', '');
+        	doDefCombo(stockgradecomboData, '' ,'locgrad', 'S', '');
+        	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'loctype', 'M','f_multiCombo');
         	$("#loccd").val('');
         	$("#locdesc").val('');
         });
@@ -570,7 +572,7 @@
 <h2>Location</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li> 
-    <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -718,17 +720,21 @@
 </tr>
 <tr>
     <th scope="row">Street search<span class="must">*</span></th>
+    
     <td colspan='3'>
+    <div class="search_100p"><!-- search_100p start -->
         <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="w100p" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </div>
     </td>    
+    
 </tr>
 <tr>
     <th scope="row">Address Detail</th>
     <td colspan="3"><input type="text" id="maddr1" name="maddr1" class="w100p"/></td>
 </tr>
 <tr>
-	<th scope="row" >Street</th>
-	<td colspan="3">
+	<th scope="row" colspan="4">Magic Address Street</th>
+	<!-- <td colspan="3"> -->
 </tr>
 <tr>
    <th scope="row">Area(4)<span class="must">*</span></th>
