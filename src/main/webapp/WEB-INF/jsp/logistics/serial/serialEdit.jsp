@@ -38,7 +38,6 @@
     color:#fff;
 }
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var myGridID;
@@ -169,10 +168,10 @@ var detailLayout = [
 
                             ];
 var popLayout = [
-							{dataField:"serialNoPop"  ,headerText:"Serial Number",width:200 ,height:30, editable:true},
-							{dataField:"matnrPop"     ,headerText:"Material Number",width:200 ,height:30 , editable:true},
+							{dataField:"serialNoPop"  ,headerText:"Serial Number",width:250 ,height:30, editable:true},
+							{dataField:"matnrPop"     ,headerText:"Material Number",width:250 ,height:30 , editable:true},
 							{dataField:"latransitPop" ,headerText:"Location",width:120 ,height:30 , editable:true, visible:false},
-							{dataField:"gltriPop"     ,headerText:"Product Finished Date in HQ",width:200 ,height:30 , editable:true,
+							{dataField:"gltriPop"     ,headerText:"Product Finished Date in HQ",width:206 ,height:30 , editable:true,
 								dataType : "date",
 							    formatString : "dd/mm/yyyy",
 							    editRenderer : {
@@ -370,6 +369,9 @@ $(document).ready(function(){
 			    searchAjax();
 			}
 		});
+	    $("#clear").click(function(){
+	        $("#searchForm")[0].reset();
+	    });	
 		$("#cancel").click(function(){
 			$("#popup_wrap").hide();
 		});
@@ -792,6 +794,7 @@ function f_multiCombo() {
     <li><p class="btn_blue"><a id="edit">Edit</a></p></li>
     <!-- <li><p class="btn_blue"><a id="view">View</a></p></li> -->
     <li><p class="btn_blue"><a id="search">Search</a></p></li>
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
