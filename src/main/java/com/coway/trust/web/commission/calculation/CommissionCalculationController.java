@@ -266,6 +266,7 @@ public class CommissionCalculationController {
 				prdBatchMap.put("taskId", String.valueOf(sTaskID));
 				prdBatchMap.put("loginId", lMap.get("loginId"));
 				prdBatchMap.put("calYM", (formMap.get("searchDt").toString()).replace("/", ""));
+				prdBatchMap.put("actionType", formMap.get("actionType").toString());
 				int cnt = commissionCalculationService.callCommPrdLogIns(prdBatchMap); 
 			}
 			
@@ -351,6 +352,7 @@ public class CommissionCalculationController {
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("loginId", loginId);
 		params.put("state",CommissionConstants.COMIS_RUNNING); //1:Running
+		params.put("actionType", params.get("actionType").toString());
 		
 		/*
 		 * call Procedure List
