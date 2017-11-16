@@ -101,6 +101,7 @@ public class CommissionExcelDownloadController {
 				map.put("codeGruop", CommissionConstants.COMIS_CD);
 				if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
+					map.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
 							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v24", "v25", "v26", "v27", "v32", "v33" };
@@ -116,6 +117,7 @@ public class CommissionExcelDownloadController {
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDN_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
+					map.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
 							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v24", "v25", "v26", "v27" };
@@ -289,6 +291,7 @@ public class CommissionExcelDownloadController {
 				map.put("codeGruop", CommissionConstants.COMIS_CD);
 				if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
+					map.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
 							"r4", "r5", "r6", "r7", "r8", "r10", "r11", "r28", "r29", "r30", "r34", "r35", "r36",
 							"r38", "r39", "r99" };
@@ -302,6 +305,7 @@ public class CommissionExcelDownloadController {
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDN_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
+					map.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
 							"r4", "r5", "r6", "r7", "r8", "r10", "r11", "r27", "r28", "r29", "r30", "r34", "r35", "r36",
 							"r38", "r39", "r99","r50" };
