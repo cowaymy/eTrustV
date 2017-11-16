@@ -345,7 +345,8 @@ function f_getTtype(g , v){
                 <tr>
                     <th scope="row">STO</th>
                     <td>
-                        <select class="w100p" id="streq" name="streq"></select>
+                        <!-- <select class="w100p" id="streq" name="streq"></select> -->
+                        <input type="text" class="w100p" id="streq" name="streq">
                     </td>
                     <th scope="row">Stock Transfer Type</th>
                     <td>
