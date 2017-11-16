@@ -325,6 +325,9 @@ $(function(){
     $('#search').click(function() {
     	SearchListAjax();
     });
+    $("#clear").click(function(){
+        $("#searchForm")[0].reset();
+    });   
     $("#sttype").change(function(){
     	
         paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
@@ -654,8 +657,8 @@ function fn_serialChck(rowindex , rowitem , str){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-           <!--  <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
         </ul>
 </aside><!-- title_line end -->
 
