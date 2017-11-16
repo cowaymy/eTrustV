@@ -2,7 +2,7 @@ package com.coway.trust.cmmn.exception;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class PreconditionException extends RuntimeException {
+public class FileDownException extends RuntimeException {
 
 	private final String code;
 
@@ -12,29 +12,31 @@ public class PreconditionException extends RuntimeException {
 
 	private final Exception exception;
 
-	public PreconditionException(String code, String message) {
+	public FileDownException(String code, String message) {
 		this(null, code, message, null);
 	}
 
-	public PreconditionException(Exception e) {
+	public FileDownException(Exception e) {
 		this(e, null, null, null);
 	}
 
-	public PreconditionException(Exception e, String code) {
+	public FileDownException(Exception e, String code) {
 		this(e, code, null, null);
 	}
 
-	public PreconditionException(Exception e, String code, String message) {
+	public FileDownException(Exception e, String code, String message) {
 		this(e, code, message, null);
 	}
 
-	public PreconditionException(Exception e, String code, String message, String detailMessage) {
+	public FileDownException(Exception e, String code, String message, String detailMessage) {
 		super();
 		this.exception = e;
 		this.code = code;
-		if (StringUtils.isEmpty(message) && e != null) {
+
+		if(StringUtils.isEmpty(message) && e != null){
 			message = e.getMessage();
 		}
+
 		this.message = message;
 		this.detailMessage = detailMessage;
 	}

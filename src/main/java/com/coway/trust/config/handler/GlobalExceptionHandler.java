@@ -3,7 +3,6 @@ package com.coway.trust.config.handler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.coway.trust.web.mobile.MobileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -24,11 +23,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.cmmn.exception.ApplicationException;
-import com.coway.trust.cmmn.exception.AuthException;
-import com.coway.trust.cmmn.exception.CallcenterException;
-import com.coway.trust.cmmn.exception.PreconditionException;
+import com.coway.trust.cmmn.exception.*;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.web.mobile.MobileConstants;
 
 /**
  * 
@@ -197,6 +194,29 @@ public class GlobalExceptionHandler {
 		}
 	}
 
+	@ExceptionHandler(FileDownException.class)
+	public Object fileDownException(HttpServletRequest request, HttpServletResponse response, FileDownException ex) {
+		LOGGER.error("[fileDownException]code : {}", ex.getCode());
+		LOGGER.error("[fileDownException]message : {}", ex.getMessage());
+		LOGGER.error("[fileDownException]ex : {}", ex);
+
+		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
+
+		if (isRest(request.getRequestURI(), contentType)) {
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(ex.getCode());
+			message.setMessage(ex.getMessage());
+			message.setDetailMessage(ex.getDetailMessage());
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			return new ResponseEntity<Object>(message, headers, HttpStatus.NO_CONTENT);
+		} else {
+			ModelAndView mav = new ModelAndView("error/nomenu/callcenterError");
+			mav.addObject("errorMessage", ex.getMessage());
+			return mav;
+		}
+	}
+
 	@ExceptionHandler(AuthException.class)
 	public Object authException(HttpServletRequest request, HttpServletResponse response, AuthException ex) {
 		LOGGER.error("[authException]message : {}", ex.getMessage());
@@ -213,7 +233,7 @@ public class GlobalExceptionHandler {
 		} else {
 			String redirect = AppConstants.REDIRECT_LOGIN;
 
-			if(request.getRequestURI().startsWith(MobileConstants.MOBILE_WEB + "/")){
+			if (request.getRequestURI().startsWith(MobileConstants.MOBILE_WEB + "/")) {
 				redirect = AppConstants.REDIRECT_MOBILE_LOGIN;
 			}
 
@@ -236,7 +256,7 @@ public class GlobalExceptionHandler {
 		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
-			//message.setMessage(ex.getMessage());
+			// message.setMessage(ex.getMessage());
 			message.setMessage(AppConstants.SERVER_ERROR);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);

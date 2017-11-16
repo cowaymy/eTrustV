@@ -7,6 +7,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.exception.FileDownException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -165,18 +168,20 @@ public class EgovFileDownloadController {
 			}
 
 		} else {
-			response.setContentType("application/x-msdownload");
-			response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
-			PrintWriter printwriter = response.getWriter();
 
-			printwriter.println("<html>");
-			printwriter.println("<br><br><br><h2>Could not get file name:<br>" + originalFileName + "</h2>");
-			printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
-			printwriter.println("<br><br><br>&copy; webAccess");
-			printwriter.println("</html>");
-
-			printwriter.flush();
-			printwriter.close();
+			throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
+//			response.setContentType("application/x-msdownload");
+//			response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
+//			PrintWriter printwriter = response.getWriter();
+//
+//			printwriter.println("<html>");
+//			printwriter.println("<br><br><br><h2>Could not get file name:<br>" + originalFileName + "</h2>");
+//			printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
+//			printwriter.println("<br><br><br>&copy; webAccess");
+//			printwriter.println("</html>");
+//
+//			printwriter.flush();
+//			printwriter.close();
 		}
 	}
 }

@@ -18,7 +18,7 @@
         <div class="error">
             <article class="error_contents">
                 <h2>Error :(</h2>
-                <p class="comment01">${errorMessage}</p>
+                <p class="comment01" id="errorMessage">${errorMessage}</p>
             </article>
         </div>
 

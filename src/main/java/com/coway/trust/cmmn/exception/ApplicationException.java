@@ -3,7 +3,6 @@ package com.coway.trust.cmmn.exception;
 import org.apache.commons.lang3.StringUtils;
 
 public class ApplicationException extends RuntimeException {
-	private static final long serialVersionUID = -6295850039169503104L;
 
 	private final String code;
 

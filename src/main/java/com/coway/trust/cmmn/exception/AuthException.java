@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
  *
  */
 public class AuthException extends RuntimeException {
-	private static final long serialVersionUID = -6295850039169503104L;
 
 	private final String message;
 

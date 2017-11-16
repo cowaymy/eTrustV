@@ -20,8 +20,12 @@
 
             $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
                 httpMethod: "POST",
+                contentType: "application/json;charset=UTF-8",
                 data: {
                     fileId: fileId
+                },
+                failCallback: function (responseHtml, url, error) {
+                    Common.alert($(responseHtml).find("#errorMessage").text());
                 }
             })
                 .done(function () {
@@ -30,7 +34,6 @@
                 })
                 .fail(function () {
                     Common.removeLoader();
-                    Common.alert('File download failed!');
                 });
             return false; //this is critical to stop the click event which will trigger a normal file download
         });
