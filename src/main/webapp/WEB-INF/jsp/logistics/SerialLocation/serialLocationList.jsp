@@ -77,90 +77,6 @@ var excelLayout = [
                             {dataField:"matnr" ,headerText:"Material_Code ",width:120 ,height:30},
                             ];
 
-var detailLayout = [
-                            {dataField:"rdcSerialNo" ,headerText:"rdcSerialNo",width:120 ,height:30},
-                            {dataField:"rdcMatnr" ,headerText:"rdcMatnr",width:120 ,height:30},
-                            {dataField:"rdcLatransit" ,headerText:"rdcLatransit",width:120 ,height:30},
-                            {dataField:"rdcGltri" ,headerText:"rdcGltri",width:120 ,height:30},
-                            {dataField:"rdcLvorm" ,headerText:"rdcLvorm",width:120 ,height:30},
-                            {dataField:"rdcCrtDt" ,headerText:"rdcCrtDt",width:120 ,height:30},
-                            {dataField:"rdcCrtUserId" ,headerText:"rdcCrtUserId",width:120 ,height:30},
-
-                            {dataField:"usedSerialNo" ,headerText:"usedSerialNo",width:120 ,height:30},
-                            {dataField:"usedDelvryNo" ,headerText:"usedDelvryNo",width:120 ,height:30},
-                            {dataField:"usedPdelvryNoItm" ,headerText:"usedPdelvryNoItm",width:120 ,height:30},
-                            {dataField:"usedTtype" ,headerText:"usedTtype",width:120 ,height:30},
-                            {dataField:"usedCrtDt" ,headerText:"usedCrtDt",width:120 ,height:30},
-                            {dataField:"usedCrtUserId" ,headerText:"usedCrtUserId",width:120 ,height:30},
-                            {dataField:"usedSerialNo2" ,headerText:"usedSerialNo2",width:120 ,height:30},
-                            {dataField:"usedMatnr" ,headerText:"usedMatnr",width:120 ,height:30},
-                            {dataField:"usedLocId" ,headerText:"usedLocId",width:120 ,height:30},
-                            {dataField:"usedGltri" ,headerText:"usedGltri",width:120 ,height:30},
-                            {dataField:"usedLwedt" ,headerText:"usedLwedt",width:120 ,height:30},
-                            {dataField:"usedSwaok" ,headerText:"usedSwaok",width:120 ,height:30},
-                            {dataField:"usedCrtDt2" ,headerText:"usedCrtDt2",width:120 ,height:30},
-                            {dataField:"usedCrtUserId2" ,headerText:"usedCrtUserId2",width:120 ,height:30},
-
-                            {dataField:"docMatrlDocNo" ,headerText:"docMatrlDocNo",width:120 ,height:30},
-                            {dataField:"docMatrlDocYear" ,headerText:"docMatrlDocYear",width:120 ,height:30},
-                            {dataField:"docTrnscTypeCode" ,headerText:"docTrnscTypeCode",width:120 ,height:30},
-                            {dataField:"docDocDt" ,headerText:"docDocDt",width:120 ,height:30},
-                            {dataField:"docUsnam" ,headerText:"docUsnam",width:120 ,height:30},
-                            {dataField:"docPgm" ,headerText:"docPgm",width:120 ,height:30},
-                            {dataField:"docRefDocNo" ,headerText:"docRefDocNo",width:120 ,height:30},
-                            {dataField:"docDocHderTxt" ,headerText:"docDocHderTxt",width:120 ,height:30},
-                            {dataField:"docMainSalesOrdNo" ,headerText:"docMainSalesOrdNo",width:120 ,height:30},
-                            {dataField:"docCrtUserId" ,headerText:"docCrtUserId",width:120 ,height:30},
-                            {dataField:"docCrtDt" ,headerText:"docCrtDt",width:120 ,height:30},
-                            {dataField:"docMatrlDocNo2" ,headerText:"docMatrlDocNo2",width:120 ,height:30},
-                            {dataField:"docMatrlDocYear2" ,headerText:"docMatrlDocYear2",width:120 ,height:30},
-                            {dataField:"docMatrlDocItm" ,headerText:"docMatrlDocItm",width:120 ,height:30},
-                            {dataField:"docUniqIdntfcDocLne" ,headerText:"docUniqIdntfcDocLne",width:120 ,height:30},
-                            {dataField:"docIdntfcImdatSupirLne" ,headerText:"docIdntfcImdatSupirLne",width:120 ,height:30},
-                            {dataField:"docInvntryMovType" ,headerText:"docInvntryMovType",width:120 ,height:30},
-                            {dataField:"docAutoCrtItm" ,headerText:"docAutoCrtItm",width:120 ,height:30},
-                            {dataField:"docDebtCrditIndict" ,headerText:"docDebtCrditIndict",width:120 ,height:30},
-                            {dataField:"docMatrlNo" ,headerText:"docMatrlNo",width:120 ,height:30},
-                            {dataField:"docStorgLoc" ,headerText:"docStorgLoc",width:120 ,height:30},
-                            {dataField:"docVendorAccNo" ,headerText:"docVendorAccNo",width:120 ,height:30},
-                            {dataField:"docCustAccNo" ,headerText:"docCustAccNo",width:120 ,height:30},
-                            {dataField:"docPurchsStckTrnsfrOrd" ,headerText:"docPurchsStckTrnsfrOrd",width:120 ,height:30},
-                            {dataField:"docPurchsStckTrnsfrOrdItm" ,headerText:"docPurchsStckTrnsfrOrdItm",width:120 ,height:30},
-                            {dataField:"docSalesOrdNo" ,headerText:"docSalesOrdNo",width:120 ,height:30},
-                            {dataField:"docSalesOrdInItm" ,headerText:"docSalesOrdInItm",width:120 ,height:30},
-                            {dataField:"docDelvryNo" ,headerText:"docDelvryNo",width:120 ,height:30},
-                            {dataField:"docDelvryItmNo" ,headerText:"docDelvryItmNo",width:120 ,height:30},
-                            {dataField:"docStckTrnsfrReq" ,headerText:"docStckTrnsfrReq",width:120 ,height:30},
-                            {dataField:"docStckTrnsfrReqItmNo" ,headerText:"docStckTrnsfrReqItmNo",width:120 ,height:30},
-                            {dataField:"docOtrGrReq" ,headerText:"docOtrGrReq",width:120 ,height:30},
-                            {dataField:"docOtrGrReqItm" ,headerText:"docOtrGrReqItm",width:120 ,height:30},
-                            {dataField:"docResvtnHndStckReqNo" ,headerText:"docResvtnHndStckReqNo",width:120 ,height:30},
-                            {dataField:"docResvtnHndStckReqNoItm" ,headerText:"docResvtnHndStckReqNoItm",width:120 ,height:30},
-                            {dataField:"docPhysiclInvntryDoc" ,headerText:"docPhysiclInvntryDoc",width:120 ,height:30},
-                            {dataField:"docPhysiclInvntryDocLneNo" ,headerText:"docPhysiclInvntryDocLneNo",width:120 ,height:30},
-                            {dataField:"docQty" ,headerText:"docQty",width:120 ,height:30},
-                            {dataField:"docMeasureBasUnit" ,headerText:"docMeasureBasUnit",width:120 ,height:30},
-                            {dataField:"docMatrlDocOrgnYear" ,headerText:"docMatrlDocOrgnYear",width:120 ,height:30},
-                            {dataField:"docMatrlDocNoOrgn" ,headerText:"docMatrlDocNoOrgn",width:120 ,height:30},
-                            {dataField:"docMatrlDocItmOrgn" ,headerText:"docMatrlDocItmOrgn",width:120 ,height:30},
-                            {dataField:"docItmTxt" ,headerText:"docItmTxt",width:120 ,height:30},
-                            {dataField:"docGoodsRciptShipToParty" ,headerText:"docGoodsRciptShipToParty",width:120 ,height:30},
-                            {dataField:"docRcivIssuMatrl" ,headerText:"docRcivIssuMatrl",width:120 ,height:30},
-                            {dataField:"docRcivIssuStorgLoc" ,headerText:"docRcivIssuStorgLoc",width:120 ,height:30},
-                            {dataField:"docTrnscEventType" ,headerText:"docTrnscEventType",width:120 ,height:30},
-                            {dataField:"docDocPostngDt" ,headerText:"docDocPostngDt",width:120 ,height:30},
-                            {dataField:"docRefDocNo2" ,headerText:"docRefDocNo2",width:120 ,height:30},
-                            {dataField:"docMainOrdNo" ,headerText:"docMainOrdNo",width:120 ,height:30},
-                            {dataField:"docTrnscCode" ,headerText:"docTrnscCode",width:120 ,height:30},
-                            {dataField:"docCostCentr" ,headerText:"docCostCentr",width:120 ,height:30},
-                            {dataField:"docPrjctNo" ,headerText:"docPrjctNo",width:120 ,height:30},
-                            {dataField:"docOrdNo" ,headerText:"docOrdNo",width:120 ,height:30},
-                            {dataField:"docMainAssetNo" ,headerText:"docMainAssetNo",width:120 ,height:30},
-                            {dataField:"docGlAccNo" ,headerText:"docGlAccNo",width:120 ,height:30},
-                            {dataField:"docCrtUserId2" ,headerText:"docCrtUserId2",width:120 ,height:30},
-                            {dataField:"docCrtDt2" ,headerText:"docCrtDt2",width:120 ,height:30}
-
-                            ];
 var popLayout = [
                             {dataField:"serialNoPop"  ,headerText:"Serial Number",width:200 ,height:30, editable:true},
                             {dataField:"matnrPop"     ,headerText:"Material Number",width:200 ,height:30 , editable:true},
@@ -205,16 +121,6 @@ var popLayout = [
                                 }
                             },
                             {dataField:"crtUserIdPop" ,headerText:"Create User",width:120 ,height:30 , editable:true, visible:false}
-                            /*
-                            {dataField:"usedSerialNoPop" ,headerText:"usedSerialNo",width:120 ,height:30 , editable:true},
-                            {dataField:"usedMatnrPop" ,headerText:"usedMatnr",width:120 ,height:30 , editable:true} ,
-                            {dataField:"usedLocIdPop" ,headerText:"usedLocId",width:120 ,height:30 , editable:true},
-                            {dataField:"usedGltriPop" ,headerText:"usedGltri",width:120 ,height:30 , editable:true},
-                            {dataField:"usedLwedtPop" ,headerText:"usedLwedt",width:120 ,height:30 , editable:true},
-                            {dataField:"usedSwaokPop" ,headerText:"usedSwaok",width:120 ,height:30 , editable:true},
-                            {dataField:"usedCrtDtPop" ,headerText:"usedCrtDt",width:120 ,height:30 , editable:true},
-                            {dataField:"usedCrtUserIdPop" ,headerText:"usedCrtUserId",width:120 ,height:30 , editable:true}
-                            */
                             ];
 
 //그리드 속성 설정
@@ -355,11 +261,11 @@ $(document).ready(function(){
                 }
             }
 
-            if ($("#location").val() == "" || $("#hiddenLoc").val() == "" ){
-               Common.alert('Please select a location by pressing Enter.');
-            }else{
+         //   if ($("#location").val() == "" || $("#hiddenLoc").val() == "" ){
+           //    Common.alert('Please select a location by pressing Enter.');
+           // }else{
                 searchAjax();
-           }
+          // }
         });
 
         $("#srchmaterial").keypress(function(event) {
@@ -387,12 +293,17 @@ $(document).ready(function(){
 
 function searchAjax() {
 
+	if($('#location').val() == "")
+	{
+		$('#hiddenLoc').val() == "";
+	}
+
     var url = "/logistics/SerialLocation/searchSerialLocationList.do";
     var param = $('#searchForm').serializeJSON();
 
     Common.ajax("POST" , url , param , function(data){
 
-        AUIGrid.setGridData(myGridID, data.dataList);
+    AUIGrid.setGridData(myGridID, data.dataList);
     });
 }
 
