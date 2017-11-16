@@ -52,7 +52,7 @@ public class SerialLocationController {
 	private SerialLocationService serialLocationService;
 
 	@RequestMapping(value = "/serialLocation.do")
-	public String SerialEdit(@RequestParam Map<String, Object> params) {
+	public String SerialLocation(@RequestParam Map<String, Object> params) {
 		return "logistics/SerialLocation/serialLocationList";
 	}
 
