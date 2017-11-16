@@ -268,7 +268,6 @@
         <ul class="center_btns">
             <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_modifyNotice();">Modify</a></p></li>
             <li><p class="btn_blue2 big"><a href="#" id="delete">Delete</a></p></li>
-            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_close();">List</a></p></li>
         </ul>
     </c:when>
     <c:otherwise>
