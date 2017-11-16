@@ -57,6 +57,8 @@ public class AppConstants {
 
 	public static final String FAIL = "99";
 
+	public static final String SERVER_ERROR= "SERVER_ERROR";
+
 	public static final String RETRY = "RETRY";
 
 	/**
