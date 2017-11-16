@@ -290,8 +290,10 @@ $(document).ready(function(){
     	
     	var rowCnt = AUIGrid.getRowCount(myGridID);
         for (var i = 0 ; i < rowCnt ; i++){
+            if(AUIGrid.getCellValue(myGridID , i , 'cntQty')>=0){
             var qty = AUIGrid.getCellValue(myGridID , i , 'cntQty') -AUIGrid.getCellValue(myGridID , i , 'sysQty');
             AUIGrid.setCellValue(myGridID, i, 'diffQty', qty);
+            }
         }
         AUIGrid.resetUpdatedItems(myGridID, "all");
     });

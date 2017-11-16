@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var resGrid;
@@ -503,10 +502,10 @@ function destory(gridNm) {
     <div id="req_grid_wrap" ></div>
 </article><!-- grid_wrap end -->
 
-<ul class="btns">
+<%-- <ul class="btns">
     <li><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
     <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li>
-</ul>
+</ul> --%>
 
 </div><!-- border_box end -->
 

@@ -60,6 +60,7 @@
                 AUTO_FLAG,
                 DEL_FLAG,
                 CRT_USER,
+                NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = CRT_USER),CRT_USER) USER_NAME,
                 TO_CHAR(CRT_DATE,'DD/MM/YYYY') CRT_DATE,
                 CTGRY_TYPE
             FROM  LOG0071M
@@ -243,7 +244,7 @@
 						       lg56m.STK_DESC,
 						       lg56m.STK_TYPE_ID,
 						       sy26m.SERIAL_CHK,
-						       lg56m.QTY,
+						       NVL(lg56m.QTY,0) QTY,
 						       NULL,
 						       lg56m.STK_CTGRY_ID
 			       FROM LOG0072M lg72m, LOG0056M lg56m, SYS0026M sy26m

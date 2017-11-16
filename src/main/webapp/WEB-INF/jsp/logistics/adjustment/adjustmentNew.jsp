@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var myGridID;
@@ -47,7 +46,8 @@ var columnLayout=[
                      {dataField:"ctgryType" ,headerText:"ctgryType",width:120 ,height:30, visible:false},
                      {dataField:"autoFlag" ,headerText:"autoFlag",width:120 ,height:30, visible:false},
                      {dataField:"delFlag" ,headerText:"Status",width:"20%" ,height:30},
-                     {dataField:"crtUser" ,headerText:"Create User",width:"20%" ,height:30},
+                     {dataField:"crtUser" ,headerText:"Create User",width:"20%" ,height:30, visible:false},
+                     {dataField:"userName" ,headerText:"Create User",width:"20%" ,height:30},
                      {dataField:"crtDate" ,headerText:"Create Date",width:"20%" ,height:30}
                     ];
 var rescolumnLayout=[
@@ -100,7 +100,8 @@ var rescolumnLayout=[
 
 var gridPros = {
         usePaging : false,               
-        editable : false,                
+        editable : false,      
+        showStateColumn : false,      
         noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",                
         groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />"           
 
@@ -182,7 +183,10 @@ $(function(){
     
     $('#search').click(function() {
         searchAjax();
-   
+    });
+    $('#clear').click(function() {
+    	$('#srch_adjno').val('');
+    	$('#srch_bsadjdate').val('');
     });
     $('#save').click(function() {
     	if(""==$('#eventtype').val() || null==$('#eventtype').val()){
@@ -545,11 +549,13 @@ function fn_subGrid(invntryNo){
     <li><p class="btn_blue"><a id="list">List</a></p></li> 
     <li><p class="btn_blue"><a id="view">View</a></p></li>  
     -->
-    <li><p class="btn_blue"><a id="close">Close</a></p></li>
-    <li><p class="btn_blue"><a id="detail">Detail</a></p></li>
-    <li><p class="btn_blue"><a id="approval">Approval</a></p></li>
-    <li><p class="btn_blue"><a id="create">Create</a></p></li>
-    <li><p class="btn_blue"><a id="search">Search</a></p></li>
+    <li  id="close"><p class="btn_blue"><a id="close">Close</a></p></li>
+    <li  id="detail"><p class="btn_blue"><a id="detail">Detail</a></p></li>
+    <li id="approval"><p class="btn_blue"><a id="approval">Approval</a></p></li>
+    <li id="create"><p class="btn_blue"><a id="create">Create</a></p></li>
+    <!-- <li><p class="btn_blue"><a id="search">Search</a></p></li> -->
+    <li  id="search"><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+    <li  id="clear"><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="searchForm" name="searchForm" method="post"  onsubmit="return false;">

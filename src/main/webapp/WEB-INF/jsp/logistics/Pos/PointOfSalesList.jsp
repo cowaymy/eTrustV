@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
@@ -99,7 +98,12 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                             {dataField:"codeName", headerText:"Uom" ,width:120    ,height:30},             
                ];                   
                                     
-var options = {usePaging : true,useGroupingPanel : false};
+var options = {
+		usePaging : true,
+		editable : false,
+		useGroupingPanel : false,
+		showStateColumn : false 
+		};
 var gridoptions = {
 		showStateColumn : false , 
 		editable : false, 
@@ -113,15 +117,15 @@ var subgridpros = {
         usePaging : true,                
         pageRowCount : 20,                
         editable : false,                
-        noDataMessage : "출력할 데이터가 없습니다.",
+        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />", 
         enableSorting : true,
         //selectionMode : "multipleRows",
         //selectionMode : "multipleCells",
         useGroupingPanel : true,
         // 체크박스 표시 설정
-        showRowCheckColumn : true,
+        //showRowCheckColumn : true,
         // 전체 체크박스 표시 설정
-        showRowAllCheckBox : true,
+        //showRowAllCheckBox : true,
         //softRemoveRowMode:false
         };
 var resop = {
@@ -216,6 +220,18 @@ $(function(){
         SearchListAjax();
     	//}
     });
+    $('#clear').click(function() {
+    	   $('#searchOthersReq1').val('');
+           $('#searchOthersReq2').val('');
+           $('#searchReqType').val('');
+           $('#tlocationnm').val('');
+           $('#searchStatus').val('');
+           $('#crtsdt').val('');
+           $('#crtedt').val('');
+           $('#reqsdt').val('');
+           $('#reqedt').val('');
+     
+    });
     $('#insert').click(function(){
          document.searchForm.action = '/logistics/pos/PosOfSalesIns.do';
          document.searchForm.submit();
@@ -259,7 +275,7 @@ $(function(){
         }else{
             for (var i = 0 ; i < checkedItems.length ; i++){
                 if(checkedItems[i].item.status == 'O'){
-                    Common.alert('Status cnanot Issue Cancel.');
+                    Common.alert('Status Cannot Issue Cancel.');
                     return false;
                     break;
                 }
@@ -430,7 +446,8 @@ function SearchMaterialDocListAjax( reqno ) {
     $("#mdc_grid").show(); 
     
     Common.ajax("GET" , url , param , function(data){
-        AUIGrid.resize(mdcGrid,1620,150); 
+        //AUIGrid.resize(mdcGrid,1620,150); 
+        AUIGrid.resize(mdcGrid); 
         AUIGrid.setGridData(mdcGrid, data.data2);        
     });
 }
@@ -483,8 +500,8 @@ function f_getTtype(g , v){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-    <!--   <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
     </ul>
 </aside><!-- title_line end -->
 
