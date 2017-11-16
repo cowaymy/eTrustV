@@ -477,6 +477,7 @@
             FROM CMM0007T T1 JOIN CMM0006T T2 
                     ON T1.SALES_EMPLY_ID = T2.EMPLY_ID
                     AND T1.TASK_ID=T2.COMM_TASK_ID
+                    AND T2.IS_EXCLUDE=0 
                 JOIN SYS0013M T3
                     ON T2.EMPLY_TYPE_ID = T3.CODE_ID
              WHERE T1.TASK_ID = #{taskId}  
@@ -516,6 +517,7 @@
 			FROM CMM0007T T1 JOIN CMM0006T T2 
 			        ON T1.SALES_EMPLY_ID = T2.EMPLY_ID
 			         AND T1.TASK_ID=T2.COMM_TASK_ID
+			         AND T2.IS_EXCLUDE=0 
 			    JOIN SYS0013M T3
 			        ON T2.EMPLY_TYPE_ID = T3.CODE_ID
 			 WHERE T1.TASK_ID = #{taskId}  
