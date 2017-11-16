@@ -512,15 +512,31 @@ public class ServiceApiController {
 				List<Map<String, Object>> paramsDetail = AfterServiceResultDetailForm.createMaps((List<AfterServiceResultDetailForm>) asTransLogs1.get(i).get("partList"));
 
 				Map<String , Object> paramsFilter = paramsDetail.get(i);
-				paramsDetail.get(i).put("filterType", paramsDetail.get(i).get("partsType"));
+				paramsDetail.get(i).put("filterType", String.valueOf(paramsDetail.get(i).get("partsType")));
 				paramsDetail.get(i).put("filterDesc", "aaaa-bbbb");
-				paramsDetail.get(i).put("filterExCode", paramsDetail.get(i).get("filterCode"));
-				paramsDetail.get(i).put("filterQty", paramsDetail.get(i).get("filterChangeQty"));
-				paramsDetail.get(i).put("filterPrice", paramsDetail.get(i).get("salesPrice"));
-				paramsDetail.get(i).put("filterTotal", "1");
+				
+				
+				if(paramsDetail.get(i).get("filterCode")==null){
+					paramsDetail.get(i).put("filterExCode", 0);
+				}else{
+					paramsDetail.get(i).put("filterExCode", paramsDetail.get(i).get("filterCode"));
+				}
+				
+				if(paramsDetail.get(i).get("filterChangeQty")==null){
+					paramsDetail.get(i).put("filterQty", 0);
+				}else{
+					paramsDetail.get(i).put("filterQty", String.valueOf(paramsDetail.get(i).get("filterChangeQty")));
+				}
+				
+				if(paramsDetail.get(i).get("salesPrice")==null){
+					paramsDetail.get(i).put("filterPrice", 0);
+				}else{
+					paramsDetail.get(i).put("filterPrice", paramsDetail.get(i).get("salesPrice"));
+				}
+				
 				paramsDetail.get(i).put("filterRemark", "1");
 				paramsDetail.get(i).put("filterID", "1");
-
+				paramsDetail.get(i).put("filterTotal", "1");
 				
 				
 				Map<String, Object> params = asTransLogs1.get(i);  
@@ -529,7 +545,7 @@ public class ServiceApiController {
 				
 				Map<String, Object> getAsBasic = MSvcLogApiService.getAsBasic(params);
 				
-				params.put("AS_ENTRY_ID", getAsBasic.get("asEntryId"));
+				params.put("AS_ENTRY_ID", getAsBasic.get("userId"));
 				params.put("AS_SO_ID", getAsBasic.get("asSoId"));
 				params.put("AS_CT_ID", getAsBasic.get("asCtId"));
 				params.put("AS_RESULT_STUS_ID", '4');
