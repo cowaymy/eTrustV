@@ -446,7 +446,7 @@
                         ,Extent7.AS_RESULT_ID
                         ,Extent7.AS_RESULT_NO
                         ,Extent7.AS_ENTRY_ID
-                        ,Extent7.AS_SO_ID
+                        ,Extent1.AS_SO_ID
                         ,Extent7.AS_CT_ID
                         ,Extent7.AS_SETL_DT
                         ,Extent7.AS_SETL_TM
@@ -469,9 +469,9 @@
                         ,Extent7.AS_DEFECT_DTL_RESN_ID
                         ,Extent7.AS_SLUTN_RESN_ID
                         ,Extent7.AS_WORKMNSH
-                        ,Extent7.AS_FILTER_AMT
-                        ,Extent7.AS_ACSRS_AMT
-                        ,Extent7.AS_TOT_AMT
+				        ,nvl(Extent7.AS_FILTER_AMT,0) as AS_FILTER_AMT
+				        ,nvl(Extent7.AS_ACSRS_AMT,0) as AS_ACSRS_AMT
+				        ,nvl(Extent7.AS_TOT_AMT,0) as AS_TOT_AMT
                         ,Extent7.AS_RESULT_IS_SYNCH
                         ,Extent7.AS_RCALL
                         ,Extent7.AS_RESULT_STOCK_USE
