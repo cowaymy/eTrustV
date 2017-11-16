@@ -4,16 +4,13 @@
 
     <!-- 공통코드 활용해서 SELECT하기 -->
     <select id="selectCodeList" parameterType="Map" resultType="egovMap">
-        SELECT CODE_ID,
-        CODE,
-        CODE_NAME
-        FROM SYS0013M
+       SELECT CODE_ID,
+              CODE_NAME
+         FROM SYS0013M
         WHERE DISAB = 0
-        <if test="groupCode != null and groupCode !=''">
-            AND CODE_MASTER_ID = #{groupCode}
-            AND CODE_ID IN (2563,2564,2565)
-        </if>
-    </select>
+          AND CODE_ID IN (2562,2563,2564,2565)
+
+   </select>
 
     <select id="checkPassword" resultType="int">
         SELECT COUNT(*) 
@@ -64,25 +61,38 @@
     </select>
 
     <select id="noticeList" parameterType="Map" resultType="egovMap">
-    <![CDATA[
-
-      SELECT
-             NTCE_NO,
-             NTCE_SUBJECT,
-             RGST_USER_NM,
-             READ_CNT,
-             CRT_DT,
-             SYSDATE,
-             CASE  
-                 WHEN SYSDATE - CRT_DT >= 1 THEN 'N' 
-                 ELSE 'Y' 
-             END IMG_FLAG 
-        FROM 
-             SYS0069M 
-       WHERE  STUS_FLAG = 'N'
-    ORDER BY EMGNCY_FLAG DESC, NTCE_NO DESC 
-
-        ]]>
+    
+	      SELECT
+	             NTCE_NO,
+	             NTCE_SUBJECT,
+	             RGST_USER_NM,
+	             READ_CNT,
+	             CRT_DT,
+	             SYSDATE,
+	             CASE  
+	                 WHEN SYSDATE - CRT_DT >= 1 THEN 'N' 
+	                 ELSE 'Y' 
+	             END IMG_FLAG 
+	        FROM 
+	             SYS0069M 
+	       WHERE STUS_FLAG = 'N'
+               <if test="noticeSearch == 2562 ">
+		        AND NTCE_SUBJECT LIKE '%' || #{keyword} || '%'
+		         OR NTCE_CNTNT LIKE '%' || #{keyword} || '%'
+		         OR RGST_USER_NM LIKE '%' || #{keyword} || '%'
+		        </if>
+		        <if test="noticeSearch == 2563 ">
+		        AND NTCE_SUBJECT LIKE '%' || #{keyword} || '%'
+		        </if>
+		        <if test="noticeSearch == 2564 ">
+		        AND NTCE_CNTNT LIKE '%' || #{keyword} || '%'
+		        </if>
+		        <if test="noticeSearch == 2565 ">
+		        AND RGST_USER_NM LIKE '%' || #{keyword} || '%'
+		        </if>
+	         AND EMGNCY_FLAG IS NOT NULL
+	    ORDER BY EMGNCY_FLAG DESC, NTCE_NO DESC
+      
     </select>
 
 
@@ -149,6 +159,5 @@
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
     </select>
-
-
+    
 </mapper>
