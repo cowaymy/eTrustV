@@ -32,18 +32,20 @@ var reqGrid;
 
 var rescolumnLayout=[{dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
                      {dataField:"stkid"     ,headerText:"ITEM CD"           ,width:120    ,height:30 ,visible:false},
-                     {dataField:"stkcd"     ,headerText:"ITEM CD"           ,width:120    ,height:30},
-                     {dataField:"stknm"     ,headerText:"ITEM NAME"         ,width:120    ,height:30},
+                     {dataField:"stkcd"     ,headerText:"ITEM CD"           ,width:120    ,height:30,editable:false},
+                     {dataField:"stknm"     ,headerText:"ITEM NAME"         ,width:120    ,height:30,editable:false},
                      {dataField:"typeid"    ,headerText:"Type Id"           ,width:120    ,height:30,visible:false},
-                     {dataField:"typenm"    ,headerText:"TYPE Name"         ,width:120    ,height:30},
+                     {dataField:"typenm"    ,headerText:"TYPE Name"         ,width:120    ,height:30,editable:false},
                      {dataField:"cateid"    ,headerText:"Cate Id"           ,width:120    ,height:30,visible:false},
-                     {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30},
-                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:true}
+                     {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30,editable:false},
+                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false}
                     ];
 var reqcolumnLayout;
 
-var resop = {showRowCheckColumn : true , usePaging : true,useGroupingPanel : false , Editable:false};
-var reqop = {showRowCheckColumn : true , usePaging : true,useGroupingPanel : false , Editable:true};
+// var resop = {showStateColumn : true , usePaging : true,useGroupingPanel : false , Editable:false};
+// var reqop = {showStateColumn : true , usePaging : true,useGroupingPanel : false , Editable:true};
+var resop = {showStateColumn : false , usePaging : true,useGroupingPanel : false , Editable:false};
+var reqop = {showStateColumn : false , usePaging : true,useGroupingPanel : false , Editable:false};
 
 var uomlist = f_getTtype('42' , '');
 var paramdata;
@@ -56,8 +58,6 @@ $(document).ready(function(){
     
     mainSearchFunc();
     
-    doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
-    doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); //청구처 리스트 조회
     $("#cancelTr").hide();
     /**********************************
      * Header Setting End
@@ -271,6 +271,8 @@ function headFunc(data){
 	$("#sttype").attr("disabled",true);
 	$("#smtype").attr("disabled",true);
 	$("#flocation").attr("disabled",true);
+	$("#reqcrtdate").attr("disabled",true);
+	$("#dochdertxt").attr("disabled",true);
 	//$("#dochdertxt").prop("class","readonly w100p");
 	$("#pridic").val(data.prifr);
 	
@@ -283,9 +285,9 @@ function requestList(data){
                      {dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
                      {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30 , editable:false},
                      {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30 , editable:false},
-                     {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
+                     {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30,editable:false},
                      {dataField:"delyqty"   ,headerText:"Delivery Qty"   ,width:120    ,height:30 , editable:false},
-                     {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
+                     {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30,editable:false
                          ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                              var retStr = "";
                              
@@ -391,22 +393,6 @@ function f_AddRow() {
     AUIGrid.addRow(reqGrid, item, rowPos);
 }
 
-function f_multiCombo() {
-    $(function() {
-        $('#cType').change(function() {
-
-        }).multipleSelect({
-            selectAll : true
-        });       
-    });
-    $(function() {
-        $('#catetype').change(function() {
-
-        }).multipleSelect({
-            selectAll : true
-        });       
-    });
-}
 </script>
 
 <section id="content"><!-- content start -->
@@ -497,44 +483,44 @@ function f_multiCombo() {
 </form>
 </section><!-- search_table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Item Info</h3>
-</aside><!-- title_line end -->
+<!-- <aside class="title_line">title_line start -->
+<!-- <h3>Item Info</h3> -->
+<!-- </aside>title_line end -->
 
-<section class="search_table"><!-- search_table start -->
-<form id="searchFrom" method="post">
-<input type="hidden" id="slocation">
+<!-- <section class="search_table">search_table start -->
+<!-- <form id="searchFrom" method="post"> -->
+<!-- <input type="hidden" id="slocation"> -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:100px" />
-    <col style="width:*" />
-    <col style="width:90px" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Category</th>
-    <td>
-        <select class="w100p" id="catetype" name="catetype"></select>
-    </td>
-    <th scope="row">Type</th>
-    <td >
-    <select class="w100p" id="cType" name="cType"></select>
-    </td>
-    <td>
-    <ul class="left_btns">
-        <li><p class="btn_blue2"><a id="search">Search</a></p></li>
-    </ul>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+<!-- <table class="type1">table start -->
+<!-- <caption>table</caption> -->
+<!-- <colgroup> -->
+<!--     <col style="width:140px" /> -->
+<!--     <col style="width:*" /> -->
+<!--     <col style="width:100px" /> -->
+<!--     <col style="width:*" /> -->
+<!--     <col style="width:90px" /> -->
+<!-- </colgroup> -->
+<!-- <tbody> -->
+<!-- <tr> -->
+<!--     <th scope="row">Category</th> -->
+<!--     <td> -->
+<!--         <select class="w100p" id="catetype" name="catetype"></select> -->
+<!--     </td> -->
+<!--     <th scope="row">Type</th> -->
+<!--     <td > -->
+<!--     <select class="w100p" id="cType" name="cType"></select> -->
+<!--     </td> -->
+<!--     <td> -->
+<!--     <ul class="left_btns"> -->
+<!--         <li><p class="btn_blue2"><a id="search">Search</a></p></li> -->
+<!--     </ul> -->
+<!--     </td> -->
+<!-- </tr> -->
+<!-- </tbody> -->
+<!-- </table>table end -->
 
-</form>
-</section><!-- search_table end -->
+<!-- </form> -->
+<!-- </section>search_table end -->
 
 <section class="search_result"><!-- search_result start -->
 
@@ -562,25 +548,15 @@ function f_multiCombo() {
 <h3>Request Item</h3>
 </aside><!-- title_line end -->
 
-<div class="border_box" style="height:340px;"><!-- border_box start -->
+<div class="border_box" style="height:340px;">
 
-<ul class="right_btns">
-<!--     <li><p class="btn_grid"><a id="delivery">Delivery</a></p></li> -->
-    <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li>
-    <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
-    <li><p class="btn_grid"><a id="reqsave">SAVE</a></p></li>
-</ul>
 
-<article class="grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap">
     <div id="req_grid_wrap" ></div>
-</article><!-- grid_wrap end -->
+</article>
 
-<ul class="btns">
-    <li><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
-    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li>
-</ul>
 
-</div><!-- border_box end -->
+</div>
 
 </div><!-- 50% end -->
 
