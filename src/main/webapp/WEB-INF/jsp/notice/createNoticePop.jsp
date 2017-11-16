@@ -86,7 +86,7 @@
 
     <section class="pop_body"><!-- pop_body start -->
 
-        <form id="insertNoticeForm" name="insertNoticeForm" method="post" enctype="multipart/form-data"><!--  -->
+        <form id="insertNoticeForm" name="insertNoticeForm" method="post" enctype="multipart/form-data">
             <input type="hidden" name="emgncyFlag" id="emgncyFlag" value="N">
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
@@ -175,7 +175,6 @@
         <ul class="center_btns">
             <li><p class="btn_blue2 big"><a onclick="javascript:fn_saveNewNotice();">Save</a></p></li>
             <li><p class="btn_blue2 big"><a onclick="javascript:fn_close();">Cancel</a></p></li>
-            <li><p class="btn_blue2 big"><a onclick="javascript:fn_close();">List</a></p></li>
         </ul>
 
     </section><!-- pop_body end -->
