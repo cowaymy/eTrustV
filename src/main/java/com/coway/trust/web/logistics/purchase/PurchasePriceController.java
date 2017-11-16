@@ -1,9 +1,12 @@
 package com.coway.trust.web.logistics.purchase;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +55,30 @@ public class PurchasePriceController {
 		return "logistics/purchase/purchasePrice";
 	}
 
-	@RequestMapping(value = "/purchasePriceList.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> purchasePriceList(@RequestBody Map<String, Object> params, Model model,
+	@RequestMapping(value = "/purchasePriceList.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> purchasePriceList(Model model, HttpServletRequest request, HttpServletResponse response,
 			SessionVO sessionVO) throws Exception {
-		List<EgovMap> list = purchasPriceService.purchasePriceList(params);
+		
+		String[] msttype = request.getParameterValues("msttype");
+		String vendercd = request.getParameter("vendercd");
+		String mstcd = request.getParameter("mstcd");
+		String purchasorg = request.getParameter("purchasorg");
+		String excludedelete = request.getParameter("excludedelete");
+		
+//		Logger.debug("msttype    값 : {}", msttype);
+//		Logger.debug("vendercd    값 : {}", vendercd);
+//		Logger.debug("mstcd    값 : {}", mstcd);
+//		Logger.debug("purchasorg    값 : {}", purchasorg);
+//		Logger.debug("excludedelete    값 : {}", excludedelete);
+		
+		Map<String, Object> smap = new HashMap();
+		smap.put("msttype", msttype);
+		smap.put("vendercd", vendercd);
+		smap.put("mstcd", mstcd);
+		smap.put("purchasorg", purchasorg);
+		smap.put("excludedelete", excludedelete);
+		
+		List<EgovMap> list = purchasPriceService.purchasePriceList(smap);
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
