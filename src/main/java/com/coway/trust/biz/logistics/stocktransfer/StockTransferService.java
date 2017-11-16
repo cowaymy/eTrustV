@@ -26,13 +26,13 @@ public interface StockTransferService {
 
 	void deliveryStockTransferItmDel(Map<String, Object> params);
 
-	void StocktransferReqDelivery(Map<String, Object> params);
+	String StocktransferReqDelivery(Map<String, Object> params);
 
 	List<EgovMap> StockTransferDeliveryIssue(Map<String, Object> params);
 
 	List<EgovMap> selectStockTransferMtrDocInfoList(Map<String, Object> params);
-	
+
 	void insertStockBooking(Map<String, Object> params);
-	
+
 	void StocktransferDeliveryDelete(Map<String, Object> params);
 }

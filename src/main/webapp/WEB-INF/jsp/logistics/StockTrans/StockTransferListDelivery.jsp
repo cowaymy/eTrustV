@@ -42,13 +42,6 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30                },
                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
                      {dataField:"reqitmno"     ,headerText:"STO Item"                    ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
-                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
-                     {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30                },
-                     {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
-                     {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30                },
                      {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
@@ -70,7 +63,15 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"serialchk"    ,headerText:"SERIAL CHECK"                ,width:120    ,height:30,visible:false },
                      {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30,visible:false},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
-                     {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
+                     {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
+                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
+                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
+                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
+                     {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30                },
+                     {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
+                     {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30                }
+                     ];
 var reqcolumnLayout;
 
 var serialcolumn       =[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 },
@@ -88,7 +89,7 @@ var resop = {
 		editable : true,
 		groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
-        fixedColumnCount : 9,
+        //fixedColumnCount : 9,
         showRowCheckColumn : true ,
         enableCellMerge : true,
         showStateColumn : false,
@@ -452,8 +453,7 @@ function giFunc(){
     data.form    = $("#giForm").serializeJSON();
     console.log(data);
     Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
-       
-            Common.alert(result.message , SearchListAjax);
+    	    Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
             AUIGrid.resetUpdatedItems(listGrid, "all");    
         $("#giopenwindow").hide();
         $('#search').click();

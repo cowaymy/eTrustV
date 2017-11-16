@@ -33,17 +33,8 @@ var mdcGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqstno"      ,headerText:"Stock Transfer Order"        ,width:120    ,height:30                },
+                     {dataField:"reqstno"      ,headerText:"STO"        ,width:120    ,height:30                },
                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
-                     {dataField:"reqitmno"     ,headerText:"STO Item"                    ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
-                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
-                     {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30                },
-                     {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
-                     {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30 ,visible:false},
-                     {dataField:"userName"      ,headerText:"User Name"       ,width:120    ,height:30 },
                      {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
@@ -58,7 +49,17 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"rciptqty"     ,headerText:"Good Issued Qty"             ,width:120    ,height:30 },
                      {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"          ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
-                     {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
+                     {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
+                     {dataField:"reqitmno"     ,headerText:"STO Item"                    ,width:120    ,height:30 , visible:false},
+                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
+                     {dataField:"ttext"        ,headerText:"Transaction Type"       ,width:120    ,height:30                },
+                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"mtext"        ,headerText:"Movement Type"               ,width:120    ,height:30                },
+                     {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30                },
+                     {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
+                     {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30 ,visible:false},
+                     {dataField:"userName"      ,headerText:"User Name"       ,width:120    ,height:30 }
+                     ];
                      
 var reqcolumnLayout = [{dataField:"delyno"     ,headerText:"Delivery No"                   ,width:120    ,height:30                },
                        {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
@@ -306,7 +307,7 @@ function f_getTtype(g , v){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Stock Transfer Order List</h2>
+<h2>STO List</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->

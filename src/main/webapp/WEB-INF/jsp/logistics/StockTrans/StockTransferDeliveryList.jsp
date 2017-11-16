@@ -30,7 +30,7 @@
 var listGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"delyno"       ,headerText:"Delivery No"                 ,width:120    ,height:30                },
+                     {dataField:"delyno"       ,headerText:"Delivery No"                 ,width:230    ,height:30                },
                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
                      {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
@@ -45,13 +45,13 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 },
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                     {dataField:"delyqty"      ,headerText:"Delivered Qty"               ,width:120    ,height:30 },
-                     {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"          ,width:120    ,height:30 , editalble:true},
+                     {dataField:"delyqty"      ,headerText:"Deliv. Qty"               ,width:120    ,height:30 },
+                     {dataField:"rciptqty"     ,headerText:"GI Qty"          ,width:120    ,height:30 , editalble:true},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
                      {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30},
                      {dataField:"gicmplt"      ,headerText:"GI COMPLET"                  ,width:120    ,height:30 , visible:true},
-                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:true}
+                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:false}
                      ];
                      
 var resop = {
@@ -259,7 +259,7 @@ $(function(){
         }
     });
     $("#deliverydelete").click(function(){
-        var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
         console.log(checkedItems);
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
