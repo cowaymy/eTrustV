@@ -1403,7 +1403,7 @@ var columnLayout = [
     <!-- title_line start -->
     <aside class="title_line">
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Other Payment</h2>
+		<h2>Normal Payment</h2>
 		<ul class="right_btns">
 		    <li><p class="btn_blue"><a href="#" onclick="fn_mapping();">Mapping</a></p></li>
 		    <li><p class="btn_blue"><a href="#" onclick="fn_searchList();"><span class="search"></span>Search</a></p></li>
@@ -1595,7 +1595,7 @@ var columnLayout = [
  <div id="page2" style="display:none;">
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Other Payment</h2>
+        <h2>Normal Payment</h2>
     </aside>
 <!-- grid_wrap start (Pending Amount)-->
         <article id="grid_wrap_pending" class="grid_wrap"></article>
