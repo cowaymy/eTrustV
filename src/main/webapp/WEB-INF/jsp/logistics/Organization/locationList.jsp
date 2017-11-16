@@ -842,7 +842,9 @@
 <tr>
     <th scope="row">Street search<span class="must">*</span></th>
     <td colspan='3'>
-        <input type="text" title="" id="isearchSt" name="isearchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch1()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+     <div class="search_100p"><!-- search_100p start -->
+        <input type="text" title="" id="isearchSt" name="isearchSt" placeholder="" class="w100p" /><a href="#" onclick="fn_addrSearch1()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+     </div>
     </td>    
 </tr>
 <tr>
