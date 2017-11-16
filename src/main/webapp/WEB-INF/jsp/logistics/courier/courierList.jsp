@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 
@@ -91,6 +90,17 @@
     $(function(){
         $("#search").click(function(){
             searchAjax();
+        });
+        $("#clear").click(function(){
+              $("#searchForm")[0].reset();
+//         	doGetComboAddr('/common/selectAddrSelCodeList.do', pdata ,'this.value','srchCntry', 'S', '');
+//             doDefCombo('', '' ,'curstateid', 'S', ''); 
+//             doDefCombo('', '' ,'curareaid', 'S', '');
+//             doDefCombo('', '' ,'curpostcod', 'S', '');   
+//             $("#srchCourierCd").val('');
+//             $("#srchCourierNm").val('');
+//             $("#srchRegNo").val('');
+//             $("#srchcontactNo").val('');
         });
         $("#view").click(function(){
         	div="V";
@@ -374,7 +384,7 @@
 <h2>Courier Search</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span><spring:message code='sys.btn.search' /></a></p></li>
-    <%-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span><spring:message code='sys.btn.clear' /></a></p></li> --%>
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span><spring:message code='sys.btn.clear' /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
