@@ -357,7 +357,7 @@ function fn_chgAppType(){
 	 $("#billSearchForm")[0].reset();
 	 
 	 //그리드 초기화
-	 resetRentalGrid()
+	 resetRentalGrid();
 	 resetOutGrid();
 	 resetSrvcGrid();
 	 resetBillGrid();
