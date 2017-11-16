@@ -61,7 +61,8 @@ var columnLayout = [
 // 							{dataField:"gltri" ,headerText:"gltri",width:120 ,height:30},
 // 							{dataField:"lvorm" ,headerText:"lvorm",width:120 ,height:30},
 							{dataField:"crtDt" ,headerText:"Create Date",width:120 ,height:30},
-							{dataField:"crtUserId" ,headerText:"Create User",width:120 ,height:30},
+//							{dataField:"crtUserId" ,headerText:"Create User",width:120 ,height:30},
+							{dataField:"crtUserName" ,headerText:"Create User",width:120 ,height:30},
 							{dataField:"usedSerialNo" ,headerText:"usedSerialNo",width:120 ,height:30, visible:false},
 							{dataField:"usedMatnr" ,headerText:"usedMatnr",width:120 ,height:30, visible:false},
 							{dataField:"usedLocId" ,headerText:"usedLocId",width:120 ,height:30, visible:false},
@@ -774,12 +775,12 @@ function f_multiCombo() {
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Logistics</li>
-    <li>EDIT-Serial Number</li>
+    <li>Serial Number</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>EDIT-Serial Number</h2>
+<h2>Serial Number</h2>
 </aside><!-- title_line end -->
 
 
