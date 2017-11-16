@@ -521,8 +521,9 @@ function fn_goBudgetPlan(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+	<li><p class="btn_grid"><a href="#" onclick=""><spring:message code="budget.Delete" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentPop('pop');"><spring:message code="budget.Adjustment" /></a></p></li>
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval();"><spring:message code="budget.Approval" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval();"><spring:message code="budget.Submit" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

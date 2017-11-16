@@ -163,11 +163,16 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 		
 		//approval table insert
 		approvalMap.put("budgetDocNo", budgetDocNo);
-		approvalMap.put("userId", params.get("userId"));			
-		approvalMap.put("appvStus", "O");							
+		approvalMap.put("userId", params.get("userId"));	
+		if(params.get("type").toString().equals("approval")) {
+			approvalMap.put("appvStus", "O");	
+		} else {
+			approvalMap.put("appvStus", "T");	
+		}
 		approvalMap.put("appvPrcssStus",  "R");	
 		approvalMap.put("atchFileGrpId", atchFileGrpId);	
 		
+		Logger.debug(" type : " + params.get("type").toString()  );
 		if(params.get("type").toString().equals("approval")){
 			
 			List<EgovMap> amtList = budgetMapper.selectAvailableAmtList(approvalMap);		

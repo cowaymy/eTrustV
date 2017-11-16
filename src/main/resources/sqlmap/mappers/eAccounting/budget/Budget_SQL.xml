@@ -250,7 +250,7 @@ FROM     (
   
   <select id="selectAdjustmentList" parameterType="Map" resultType="egovMap">
        <![CDATA[ 
-       SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' ELSE 'Open' END STATUS
+       SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' WHEN A.APPV_STUS = 'T' THEN 'Temp. Save' ELSE 'Open' END STATUS
 		         ,A.BUDGET_DOC_NO
 		         ,B.COST_CENTR
 		         ,BUDGET_DOC_SEQ		         
@@ -346,7 +346,7 @@ FROM     (
 		    (
 		        #{budgetDocNo}
 		       ,#{atchFileGrpId}
-		       ,'O'
+		       ,#{appvStus}
 		       ,SYSDATE
 		       ,#{userId}
 		       ,SYSDATE

@@ -267,6 +267,7 @@ $(document).ready(function(){
     } 
        
     $("#pBudgetDocNo").val("${budgetDocNo}");
+    $("#pAtchFileGrpId").val("${atchFileGrpId}");
     
     // cellClick event.
     AUIGrid.bind(adjPGridID, "cellClick", function( event )
@@ -804,8 +805,10 @@ function fn_uploadFile(str) {
 	        Common.ajaxFile("/eAccounting/budget/uploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
 	
 	            console.log(result);
-	          
-	            $("#pAtchFileGrpId").val(result.data);
+	        
+	            if(result.data) {
+	            	$("#pAtchFileGrpId").val(result.data);
+	            }
 	            
 	            if($("#pAtchFileGrpId").val() == ""){
 	            	 Common.alert("<spring:message code="budget.msg.fileRequir" />");

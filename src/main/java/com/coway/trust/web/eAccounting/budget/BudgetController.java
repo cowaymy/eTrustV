@@ -244,14 +244,16 @@ public class BudgetController {
 			
 			
 			if(!StringUtils.isEmpty(params.get("atchFileGrpId"))){
-				fileList= budgetService.selectFileList(params);	
+				fileList= budgetService.selectFileList(params);
+				LOGGER.debug("atchFileGrpId =======>>>" +  params.get("atchFileGrpId"));
+				model.addAttribute("atchFileGrpId", params.get("atchFileGrpId"));
 			}
 			
 			model.addAttribute("fileList", fileList);
 			model.addAttribute("adjustmentList", new Gson().toJson(adjustmentList));
 
 			model.addAttribute("budgetStatus", adjustmentList.get(0).get("status"));	
-			if(!adjustmentList.get(0).get("status").toString().equals("Open")){
+			if(!adjustmentList.get(0).get("status").toString().equals("Open") && !adjustmentList.get(0).get("status").toString().equals("Temp. Save")){
 				model.addAttribute("budgetStatus","N");
 			}else{
 				if(!CommonUtils.isEmpty(params.get("appvFlag")) && "Y".equals(params.get("appvFlag").toString())){					
