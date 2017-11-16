@@ -478,7 +478,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				map87mp.put("updator",svc0004dmap.get("updator"));
 				
 				int update_SAL0087D_cnt = ASManagementListMapper.update_SAL0087D(map87mp);
-				rtnValue = ASManagementListMapper.insert_stkCardLOG0014D(map) ;
+				/*rtnValue = ASManagementListMapper.insert_stkCardLOG0014D(map) ; xml에 없어서 임시주석*/
 				    
 			        
 			}
