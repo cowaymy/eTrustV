@@ -506,7 +506,7 @@
                     ,SVC0004D Extent7
                     ,SAL0001D Extent4
             where 1=1
-            and Extent1.AS_ID = Extent7.AS_ENTRY_ID
+            and Extent1.AS_ID = Extent7.AS_ENTRY_ID(+)
             and Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
             and Extent4.SALES_ORD_NO = #{salesOrderNo}
             and Extent1.as_no = #{serviceNo}
