@@ -1,5 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+
+<style type="text/css">
+
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+
 /* 커스컴 disable 스타일*/
 .mycustom-disable-color {
     color : #cccccc;
@@ -24,7 +32,7 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
 
  var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"reqstno"      ,headerText:"Others Request No"      ,width:120    ,height:30                },
+                      {dataField:"reqstno"      ,headerText:"Others Request No"      ,width:250    ,height:30                },
                       {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30 , visible:false              },
                       {dataField:"mtext"        ,headerText:"Request Type"               ,width:120    ,height:30                },
                       {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
@@ -40,10 +48,10 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                       {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                       {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                       {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30 ,visible:false               },
-                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:true},
-                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                      {dataField:"reqstqty"     ,headerText:"GI/GR REQ QTY"               ,width:120    ,height:30                },
-                      {dataField:"rmqty"        ,headerText:"Remain Qty"                  ,width:120    ,height:30                },
+                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:130    ,height:30 , visible:true},
+                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:450    ,height:30                },
+                      {dataField:"reqstqty"     ,headerText:"GI/GR REQ  QTY"                 ,width:120    ,height:30                },
+                      {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
                       {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30,  visible:false  },
@@ -53,13 +61,13 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                       
                       
      var mtrcolumnLayout = [
-                            {dataField:"matrlDocNo", headerText:"Matrl_Doc_No" ,width:120    ,height:30},
-                            {dataField:"matrlDocItm", headerText:"MatrlDocItm" ,width:120    ,height:30},
-                            {dataField:"invntryMovType", headerText:"Move_type" ,width:120    ,height:30},                     
+                            {dataField:"matrlDocNo", headerText:"Matrl_Doc_No" ,width:200    ,height:30},
+                            {dataField:"matrlDocItm", headerText:"MatrlDocItm" ,width:100    ,height:30},
+                            {dataField:"invntryMovType", headerText:"Move_type" ,width:100    ,height:30},                     
                             {dataField:"movtype", headerText:"Move_text" ,width:120    ,height:30},                            
                             {dataField:"reqStorgNm", headerText:"ReqLoc" ,width:150    ,height:30},
                             {dataField:"matrlNo", headerText:"Matrl_Code" ,width:120    ,height:30},
-                            {dataField:"stkDesc", headerText:"MatrlName" ,width:120    ,height:30},
+                            {dataField:"stkDesc", headerText:"MatrlName" ,width:300    ,height:30},
                             {dataField:"debtCrditIndict", headerText:"Debit/Credit" ,width:120    ,height:30
                               ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                                     
@@ -83,7 +91,7 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                                 }   
                           
                             },
-                            {dataField:"autoCrtItm", headerText:"" ,width:120    ,height:30},
+                            {dataField:"autoCrtItm", headerText:"" ,width:100    ,height:30},
                             {dataField:"qty", headerText:"Qty" ,width:120    ,height:30},
                             {dataField:"trantype", headerText:"tran_Type" ,width:120    ,height:30},
                             {dataField:"postingdate", headerText:"PostingDate" ,width:120    ,height:30},                            
@@ -91,35 +99,12 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                ];                   
                                     
 var options = {
-        usePaging : true,
+        usePaging : false,
         editable : false,
         useGroupingPanel : false,
         showStateColumn : false 
         };
-var gridoptions = {
-        showStateColumn : false , 
-        editable : false, 
-        pageRowCount : 30, 
-        usePaging : true, 
-        useGroupingPanel : false,
-        };
         
-var subgridpros = {
-        // 페이지 설정
-        usePaging : true,                
-        pageRowCount : 20,                
-        editable : false,                
-        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />", 
-        enableSorting : true,
-        //selectionMode : "multipleRows",
-        //selectionMode : "multipleCells",
-        useGroupingPanel : true,
-        // 체크박스 표시 설정
-        //showRowCheckColumn : true,
-        // 전체 체크박스 표시 설정
-        //showRowAllCheckBox : true,
-        //softRemoveRowMode:false
-        };
 var resop = {
         rowIdField : "rnum",            
         editable : false,
@@ -160,7 +145,7 @@ $(document).ready(function(){
 
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-        console.log('11');
+     
         $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
         document.searchForm.action = '/logistics/pos/PosView.do';
         document.searchForm.submit();
@@ -212,18 +197,7 @@ $(function(){
         SearchListAjax();
         //}
     });
-    $('#clear').click(function() {
-           $('#searchOthersReq1').val('');
-           $('#searchOthersReq2').val('');
-           $('#searchReqType').val('');
-           $('#tlocationnm').val('');
-           $('#searchStatus').val('');
-           $('#crtsdt').val('');
-           $('#crtedt').val('');
-           $('#reqsdt').val('');
-           $('#reqedt').val('');
-     
-    });
+ 
     $('#insert').click(function(){
          document.searchForm.action = '/logistics/pos/PosOfSalesIns.do';
          document.searchForm.submit();
@@ -509,11 +483,7 @@ function f_getTtype(g , v){
 <h3>Header Info</h3>
     <ul class="right_btns">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-<<<<<<< .mine
-      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-=======
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
->>>>>>> .r4448
     </ul>
 </aside><!-- title_line end -->
 
