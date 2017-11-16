@@ -13,6 +13,7 @@
 
 <script type="text/javaScript">
 	var myGridID_7002CDS;
+	var today = "${today}";
 	
 	$(document).ready(function() {
 		createAUIGrid();
@@ -184,7 +185,8 @@
            var cnt = result;
            if(cnt > 0){
                //excel down load name 형식 어떻게 할지?
-               var fileName = $("#fileName").val();
+               var fileName = $("#fileName").val() +"_"+today;
+                fileName=fileName+".xlsx";
                var searchDt = $("#7002CD_Dt").val();
                var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
                var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -216,7 +218,8 @@
        Common.ajax("GET", "/commission/calculation/cntData7002CD", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		       var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		       var searchDt = $("#7002CD_Dt").val();
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));

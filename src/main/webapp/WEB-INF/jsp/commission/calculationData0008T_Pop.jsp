@@ -14,6 +14,7 @@
 <script type="text/javaScript">
     var myGridID_08T;
     var gridDataLength = 0;
+    var today = "${today}";
     
     $(document).ready(function() {
         createAUIGrid();
@@ -60,31 +61,31 @@
         
         //Rule Book Item search
         $("#search_08T").click(function(){  
-        	/* var svcPersonCd = $("#svcPersonCd_08T").val();
+        	 var svcPersonCd = $("#svcPersonCd_08T").val();
         	
         	if(svcPersonCd == "" || svcPersonCd == null){
         		 Common.alert("<spring:message code='sys.msg.necessary' arguments='Svc Person Id' htmlEscape='false'/>");
                  return false;
-        	}else{ */
+        	}else{ 
 	            Common.ajax("GET", "/commission/calculation/selectDataCMM008T", $("#form_08T").serialize(), function(result) {
 	                console.log("성공.");
 	                console.log("data : " + result);
 	                AUIGrid.setGridData(myGridID_08T, result);
 	                //AUIGrid.addCheckedRowsByValue(myGridID_08T, "isExclude", "1");
 	            });
-        	//}
+        	}
         });
         
         $("#save_08T").click(function(){  
-            /* var svcPersonCd = $("#svcPersonCd_08T").val();
+             var svcPersonCd = $("#svcPersonCd_08T").val();
             
             if(svcPersonCd == "" || svcPersonCd == null){
             	 Common.alert("<spring:message code='sys.msg.necessary' arguments='Svc Person Id' htmlEscape='false'/>");
                  return false;
-            }else{ */
+            }else{ 
             	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
 	           
-            //}
+            }
         });
         
         $('#memBtn').click(function() {
@@ -160,24 +161,18 @@
     }];
     // 그리드 속성 설정
     var gridPros = {
-        
         // 페이징 사용       
         usePaging : true,
-        
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true,
-        
+        selectionMode : "singleRow",
         headerHeight : 40
-
     };
     myGridID_08T = AUIGrid.create("#grid_wrap_08T", columnLayout3,gridPros);
    }
@@ -205,14 +200,15 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0008T", $("#form_08T").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
-			   /* var svcPersonCd = $("#svcPersonCd_08T").val();
+			    var svcPersonCd = $("#svcPersonCd_08T").val();
 		       
 		       if(svcPersonCd == "" || svcPersonCd == null){
 		    	   Common.alert("<spring:message code='sys.msg.necessary' arguments='Svc Person Id' htmlEscape='false'/>");
 		           return false;
-		       }else{ */
+		       }else{ 
 			       //excel down load name 형식 어떻게 할지?
-			       var fileName = $("#fileName").val();
+			       var fileName = $("#fileName").val() +"_"+today;
+		           fileName=fileName+".xlsx"; 
 			       var searchDt = $("#CMM0008T_Dt").val();
 			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 			       var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -236,7 +232,7 @@
                        Common.alert('File download failed!');                
                        Common.removeLoader();            
                     });
-		       //}
+		       }
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
@@ -248,7 +244,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0008T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		      var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		      var searchDt = $("#CMM0008T_Dt").val();
 		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		      var month = searchDt.substr(0,searchDt.indexOf("/"));

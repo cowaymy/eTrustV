@@ -13,6 +13,7 @@
 
 <script type="text/javaScript">
     var myGridID_16T;
+    var today = "${today}";
     
     $(document).ready(function() {
         createAUIGrid();
@@ -27,100 +28,94 @@
                 console.log("성공.");
                 console.log("data : " + result);
                 AUIGrid.setGridData(myGridID_16T, result);
-                AUIGrid.addCheckedRowsByValue(myGridID_16T, "isExclude", "1");
             });
         });
         
     });
     
    function createAUIGrid() {
-    var columnLayout3 = [ {
-        dataField : "cmmsDt",
-        headerText : "CMMS_DT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "cMemId",
-        headerText : "C_MEM_ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "cMemLev",
-        headerText : "C_MEM_LEV",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "pMemId",
-        headerText : "P_MEM_ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "emplyCode",
-        headerText : "P MEM CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "pMemLev",
-        headerText : "P_MEM_LEV",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "tbbLev",
-        headerText : "TBB_LEV",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "cnsUnit",
-        headerText : "CNS_UNIT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "cnspvTot",
-        headerText : "CNSPV_TOT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "pnsUnit",
-        headerText : "PNS_UNIT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "tbbTot",
-        headerText : "TBB_TOT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "runId",
-        headerText : "RUN_ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    },{
-        dataField : "taskId",
-        headerText : "TASK ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    }];
-    // 그리드 속성 설정
-    var gridPros = {
-        
-        // 페이징 사용       
-        usePaging : true,
-        
-        // 한 화면에 출력되는 행 개수 20(기본값:20)
-        pageRowCount : 20,
-        
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : true,
-        
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true
-
-    };
+	    var columnLayout3 = [ {
+	        dataField : "cmmsDt",
+	        headerText : "CMMS DT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "cMemId",
+	        headerText : "C MEM ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "cMemLev",
+	        headerText : "C MEM LEV",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "pMemId",
+	        headerText : "P MEM ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "emplyCode",
+	        headerText : "P MEM CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "pMemLev",
+	        headerText : "P MEM LEV",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "tbbLev",
+	        headerText : "TBB LEV",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "cnsUnit",
+	        headerText : "CNS UNIT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "cnspvTot",
+	        headerText : "CNSPV TOT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "pnsUnit",
+	        headerText : "PNS UNIT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "tbbTot",
+	        headerText : "TBB TOT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "runId",
+	        headerText : "RUN ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    },{
+	        dataField : "taskId",
+	        headerText : "TASK ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    }];
+	    // 그리드 속성 설정
+	    var gridPros = {
+	        // 페이징 사용       
+	        usePaging : true,
+	        // 한 화면에 출력되는 행 개수 20(기본값:20)
+	        pageRowCount : 20,
+	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        skipReadonlyColumns : true,
+	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        wrapSelectionMove : true,
+	        // 줄번호 칼럼 렌더러 출력
+	        showRowNumColumn : true,
+	        selectionMode : "singleRow"
+	    };
     myGridID_16T = AUIGrid.create("#grid_wrap_16T", columnLayout3,gridPros);
    }
    
@@ -129,7 +124,8 @@
            var cnt = result;
            if(cnt > 0){
                //excel down load name 형식 어떻게 할지?
-               var fileName = $("#fileName").val();
+               var fileName = $("#fileName").val() +"_"+today;
+                fileName=fileName+".xlsx";
                var searchDt = $("#CMM0016T_Dt").val();
                var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
                var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -163,7 +159,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0016T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		       var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		       var searchDt = $("#CMM0016T_Dt").val();
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));

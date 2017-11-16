@@ -14,6 +14,7 @@
 <script type="text/javaScript">
     var myGridID_23T;
     var gridDataLength = 0;
+    var today = "${today}";
     
     $(document).ready(function() {
         createAUIGrid();
@@ -42,36 +43,16 @@
         
         //Rule Book Item search
         $("#search_23T").click(function(){
-        	/* var ordId = $("#ordId_23T").val();
-        	var memCode = $("#memCode_23T").val();
-            
-            if(ordId == "" || ordId == null){
-            	Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-                return false;
-            }else if(memCode == "" || memCode == null){
-            	Common.alert("<spring:message code='sys.msg.necessary' arguments='member code' htmlEscape='false'/>");
-                return false;
-            }else{ */
-	            Common.ajax("GET", "/commission/calculation/selectDataCMM023T", $("#form_23").serialize(), function(result) {
-	                console.log("성공.");
-	                console.log("data : " + result);
-	                AUIGrid.setGridData(myGridID_23T, result);
-	                //AUIGrid.addCheckedRowsByValue(myGridID_23T, "isExclude", "1");
-	            });
-            //}
+            Common.ajax("GET", "/commission/calculation/selectDataCMM023T", $("#form_23").serialize(), function(result) {
+                console.log("성공.");
+                console.log("data : " + result);
+                AUIGrid.setGridData(myGridID_23T, result);
+                //AUIGrid.addCheckedRowsByValue(myGridID_23T, "isExclude", "1");
+            });
         });
         
         $("#save_23T").click(function(){  
-        	/* if(ordId == "" || ordId == null){
-                Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-                return false;
-            }else if(memCode == "" || memCode == null){
-                Common.alert("<spring:message code='sys.msg.necessary' arguments='member code' htmlEscape='false'/>");
-                return false;
-            }else{ */
-            	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
-	        	
-            //}
+           	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
         });
         
         $('#memBtn').click(function() {
@@ -96,101 +77,95 @@
     }
     
    function createAUIGrid() {
-    var columnLayout3 = [  {
-        dataField : "isExclude",
-        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
-        width: 65,
-        renderer : {
-            type : "CheckBoxEditRenderer",
-            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-            checkValue : "1", // true, false 인 경우가 기본
-            unCheckValue : "0"
-        }
-    }, {
-        dataField : "ordId",
-        headerText : "ORD ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "trgetAmt",
-        headerText : "TRGET AMT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "colctAmt",
-        headerText : "COLCT_AMT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "memCode",
-        headerText : "MEM CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "hmCode",
-        headerText : "HM CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "smCode",
-        headerText : "SM CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "gmCode",
-        headerText : "GM CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "rcmYear",
-        headerText : "RCM YEAR",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "rcmMonth",
-        headerText : "RCM MONTH",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "srvCntrctId",
-        headerText : "SRV CNTRCT ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "runId",
-        headerText : "RUN ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    },{
-        dataField : "taskId",
-        headerText : "TASK ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    }];
-    // 그리드 속성 설정
-    var gridPros = {
-        
-        // 페이징 사용       
-        usePaging : true,
-        
-        // 한 화면에 출력되는 행 개수 20(기본값:20)
-        pageRowCount : 20,
-        
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : true,
-        
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
-        
-        headerHeight : 40
-
-    };
+	    var columnLayout3 = [  {
+	        dataField : "isExclude",
+	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        width: 65,
+	        renderer : {
+	            type : "CheckBoxEditRenderer",
+	            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+	            checkValue : "1", // true, false 인 경우가 기본
+	            unCheckValue : "0"
+	        }
+	    }, {
+	        dataField : "ordId",
+	        headerText : "ORD ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "trgetAmt",
+	        headerText : "TRGET AMT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "colctAmt",
+	        headerText : "COLCT_AMT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "memCode",
+	        headerText : "MEM CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "hmCode",
+	        headerText : "HM CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "smCode",
+	        headerText : "SM CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "gmCode",
+	        headerText : "GM CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "rcmYear",
+	        headerText : "RCM YEAR",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "rcmMonth",
+	        headerText : "RCM MONTH",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "srvCntrctId",
+	        headerText : "SRV CNTRCT ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "runId",
+	        headerText : "RUN ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    },{
+	        dataField : "taskId",
+	        headerText : "TASK ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    }];
+	    // 그리드 속성 설정
+	    var gridPros = {
+	        // 페이징 사용       
+	        usePaging : true,
+	        // 한 화면에 출력되는 행 개수 20(기본값:20)
+	        pageRowCount : 20,
+	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        skipReadonlyColumns : true,
+	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        wrapSelectionMove : true,
+	        // 줄번호 칼럼 렌더러 출력
+	        showRowNumColumn : true,
+	        selectionMode : "singleRow",        
+	        headerHeight : 40
+	    };
     myGridID_23T = AUIGrid.create("#grid_wrap_23T", columnLayout3,gridPros);
    }
    
@@ -198,39 +173,31 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0023T", $("#form_23").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
-			   /* if(ordId == "" || ordId == null){
-		           Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-		           return false;
-		       }else if(memCode == "" || memCode == null){
-		           Common.alert("<spring:message code='sys.msg.necessary' arguments='member code' htmlEscape='false'/>");
-		           return false;
-		       }else{ */
-			       //excel down load name 형식 어떻게 할지?
-			       var fileName = $("#fileName").val();
-			       var searchDt = $("#CMM0023T_Dt").val();
-			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-			       var month = searchDt.substr(0,searchDt.indexOf("/"));
-			       var code = $("#code_23T").val();
-			       
-			       var codeId= $("#orgGroup_23").val();
-			       var memCode = $("#memCode_23T").val();
-			       var ordId = $("#ordId_23T").val();
-			       var useYnCombo = $("#useYnCombo_23T").val();
-			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
-			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&memCode="+memCode+"&useYnCombo="+useYnCombo+"&codeId="+codeId+"'/>";
-			       
-			       Common.showLoader();
-	              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&memCode="+memCode+"&useYnCombo="+useYnCombo+"&codeId="+codeId)
-	              .done(function () {
-	                  Common.alert('File download a success!');                
-	                  Common.removeLoader();            
-	              })
-	              .fail(function () {
-	                  Common.alert('File download failed!');                
-	                  Common.removeLoader();            
-	               });
-		       //}
+		       var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
+		       var searchDt = $("#CMM0023T_Dt").val();
+		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		       var month = searchDt.substr(0,searchDt.indexOf("/"));
+		       var code = $("#code_23T").val();
+		       
+		       var codeId= $("#orgGroup_23").val();
+		       var memCode = $("#memCode_23T").val();
+		       var ordId = $("#ordId_23T").val();
+		       var useYnCombo = $("#useYnCombo_23T").val();
+		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
+		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
+		       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&memCode="+memCode+"&useYnCombo="+useYnCombo+"&codeId="+codeId+"'/>";
+		       
+		       Common.showLoader();
+              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&memCode="+memCode+"&useYnCombo="+useYnCombo+"&codeId="+codeId)
+              .done(function () {
+                  Common.alert('File download a success!');                
+                  Common.removeLoader();            
+              })
+              .fail(function () {
+                  Common.alert('File download failed!');                
+                  Common.removeLoader();            
+               });
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
@@ -242,7 +209,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0023T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		      var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		      var searchDt = $("#CMM0023T_Dt").val();
 		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		      var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -316,7 +284,7 @@
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>
                         </select></td>
-                        <th scope="row">Member CODE<span class="must">*</span></th>
+                        <th scope="row">Member CODE</th>
                         <td>
                               <input type="text" id="memCode_23T" name="memCode" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>

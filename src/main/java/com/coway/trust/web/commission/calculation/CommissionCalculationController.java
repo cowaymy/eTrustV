@@ -458,6 +458,12 @@ public class CommissionCalculationController {
 		model.addAttribute("searchDt_pop", params.get("searchDt"));
 		model.addAttribute("actionType", params.get("actionType"));
 		
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		
+		model.addAttribute("today", today);
+		
 		String popName= "";
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01)){
 			popName = "calculationData7001CTL_Pop";
@@ -870,6 +876,12 @@ public class CommissionCalculationController {
 		model.addAttribute("prdNm", params.get("prdNm"));
 		model.addAttribute("prdDec", params.get("prdDec"));
 		model.addAttribute("searchDt_pop", params.get("searchDt"));
+		
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		
+		model.addAttribute("today", today);
 		
 		String popName= "";
 		if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P01)){

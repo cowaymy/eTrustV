@@ -120,7 +120,7 @@ public class CommissionExcelDownloadController {
 							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v24", "v25", "v26", "v27" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "Credit Point",
-							"HappyCall Performance", "HappyCall Marks", "B/S Success Rate", "B/S Marks",
+							"HappyCall Performance", "HappyCall Marks", "HS Success Rate", "HS Marks",
 							"Rental Collection Rate", "Rental Collection Marks", "Net Sales Unit", "Net Sales Marks",
 							"Rental Collection Amount", "Dropped Rate", "Dropped Rate  Penalty Marks",
 							"Net Sales  Pv Total", "App Rate  By Total Pv", "sales price total", "Mem amount",
@@ -307,7 +307,7 @@ public class CommissionExcelDownloadController {
 							"r38", "r39", "r99","r50" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE",
 							"performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm",
-							"sales encouragement allowance", "rental collection Cmm", "Remove Phone Allowance",
+							"sales encouragement allowance", "rental collection Cmm", "PE ENCOURAGEMENT FUND",
 							"Healthy Family Fund", "newely entering allowance", "introduction fees", "Incentive",
 							"Incentive", "SHI Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
 							"COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment","W/S" };

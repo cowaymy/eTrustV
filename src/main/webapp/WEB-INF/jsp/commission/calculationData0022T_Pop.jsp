@@ -14,6 +14,7 @@
 <script type="text/javaScript">
 	var myGridID_22T;
 	var gridDataLength = 0;
+	var today = "${today}";
 	
 	$(document).ready(function() {
 		createAUIGrid();
@@ -42,31 +43,16 @@
 		 
 		//Rule Book Item search
 		$("#search_22T").click(function(){  
-		    /* var ordId = $("#ordId_22T").val();
-            
-            if(ordId == "" || ordId == null){
-            	Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-                return false;
-            }else{ */
-				Common.ajax("GET", "/commission/calculation/selectDataCMM022T", $("#form_22").serialize(), function(result) {
-					console.log("성공.");
-					console.log("data : " + result);
-					AUIGrid.setGridData(myGridID_22T, result);
-					//AUIGrid.addCheckedRowsByValue(myGridID_22T, "isExclude", "1");
-				});
-            //}
+			Common.ajax("GET", "/commission/calculation/selectDataCMM022T", $("#form_22").serialize(), function(result) {
+				console.log("성공.");
+				console.log("data : " + result);
+				AUIGrid.setGridData(myGridID_22T, result);
+				//AUIGrid.addCheckedRowsByValue(myGridID_22T, "isExclude", "1");
+			});
 		});
 		
 		$("#save_22T").click(function(){  
-		   /*  var ordId = $("#ordId_22T").val();
-            
-            if(ordId == "" || ordId == null){
-            	Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-                return false;
-            }else{ */
-            	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
-				
-            //}
+           	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
 		});
 		
 		$('#memBtn').click(function() {
@@ -91,96 +77,90 @@
 	}
 	
    function createAUIGrid() {
-	var columnLayout3 = [ {
-        dataField : "isExclude",
-        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
-        width: 65,
-        renderer : {
-            type : "CheckBoxEditRenderer",
-            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-            checkValue : "1", // true, false 인 경우가 기본
-            unCheckValue : "0"
-        }
-    }, {
-        dataField : "ordId",
-        headerText : "ORD ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "srvCntrctId",
-        headerText : " SRV CNTRCT ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "srvCntrctNo",
-        headerText : "SRV CNTRCT NO",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "salesPersonId",
-        headerText : "SALES PERSON ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "emplyCode",
-        headerText : "SALES PERSON CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "instlmt",
-        headerText : "INSTLMT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "pv",
-        headerText : "PV",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "prc",
-        headerText : "PRC",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "ordTypeId",
-        headerText : "ORD TYPE ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "runid",
-        headerText : "RUN ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    },{
-        dataField : "taskId",
-        headerText : "TASK ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    }];
-	// 그리드 속성 설정
-    var gridPros = {
-        
-        // 페이징 사용       
-        usePaging : true,
-        
-        // 한 화면에 출력되는 행 개수 20(기본값:20)
-        pageRowCount : 20,
-        
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : true,
-        
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
-        
-        headerHeight : 40
-
-    };
+		var columnLayout3 = [ {
+	        dataField : "isExclude",
+	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        width: 65,
+	        renderer : {
+	            type : "CheckBoxEditRenderer",
+	            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+	            checkValue : "1", // true, false 인 경우가 기본
+	            unCheckValue : "0"
+	        }
+	    }, {
+	        dataField : "ordId",
+	        headerText : "ORD ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "srvCntrctId",
+	        headerText : " SRV CNTRCT ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "srvCntrctNo",
+	        headerText : "SRV CNTRCT NO",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "salesPersonId",
+	        headerText : "SALES PERSON ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "emplyCode",
+	        headerText : "SALES PERSON CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "instlmt",
+	        headerText : "INSTLMT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "pv",
+	        headerText : "PV",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "prc",
+	        headerText : "PRC",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "ordTypeId",
+	        headerText : "ORD TYPE ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "runid",
+	        headerText : "RUN ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    },{
+	        dataField : "taskId",
+	        headerText : "TASK ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    }];
+		// 그리드 속성 설정
+	    var gridPros = {
+	        // 페이징 사용       
+	        usePaging : true,
+	        // 한 화면에 출력되는 행 개수 20(기본값:20)
+	        pageRowCount : 20,
+	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        skipReadonlyColumns : true,
+	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        wrapSelectionMove : true,
+	        // 줄번호 칼럼 렌더러 출력
+	        showRowNumColumn : true,
+	        selectionMode : "singleRow",
+	        headerHeight : 40
+	    };
 	myGridID_22T = AUIGrid.create("#grid_wrap3", columnLayout3,gridPros);
    }
 
@@ -207,38 +187,31 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0022T", $("#form_22").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
-			  /*  var ordId = $("#ordId_22T").val();
+		       var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
+		       var searchDt = $("#CMM0022T_Dt").val();
+		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		       var month = searchDt.substr(0,searchDt.indexOf("/"));
+		       var code = $("#code_22T").val();
 		       
-		       if(ordId == "" || ordId == null){
-		    	   Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-		           return false;
-		       }else{ */
-				   //excel down load name 형식 어떻게 할지?
-			       var fileName = $("#fileName").val();
-			       var searchDt = $("#CMM0022T_Dt").val();
-			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-			       var month = searchDt.substr(0,searchDt.indexOf("/"));
-			       var code = $("#code_22T").val();
-			       
-			       var codeId= $("#orgGroup_22").val();
-			       var salesPersonCd = $("#salesPersonCd_22T").val();
-			       var ordId = $("#ordId_22T").val();
-			       var useYnCombo = $("#useYnCombo_22T").val();
-			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
-			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&salesPersonCd="+salesPersonCd+"&useYnCombo="+useYnCombo+"&codeId="+codeId+"'/>";
-			       
-			       Common.showLoader();
-	              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&salesPersonCd="+salesPersonCd+"&useYnCombo="+useYnCombo+"&codeId="+codeId)
-	              .done(function () {
-	                  Common.alert('File download a success!');                
-	                  Common.removeLoader();            
-	              })
-	              .fail(function () {
-	                  Common.alert('File download failed!');                
-	                  Common.removeLoader();            
-	               });
-		      // }
+		       var codeId= $("#orgGroup_22").val();
+		       var salesPersonCd = $("#salesPersonCd_22T").val();
+		       var ordId = $("#ordId_22T").val();
+		       var useYnCombo = $("#useYnCombo_22T").val();
+		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
+		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
+		       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&salesPersonCd="+salesPersonCd+"&useYnCombo="+useYnCombo+"&codeId="+codeId+"'/>";
+		       
+		       Common.showLoader();
+              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&salesPersonCd="+salesPersonCd+"&useYnCombo="+useYnCombo+"&codeId="+codeId)
+              .done(function () {
+                  Common.alert('File download a success!');                
+                  Common.removeLoader();            
+              })
+              .fail(function () {
+                  Common.alert('File download failed!');                
+                  Common.removeLoader();            
+               });
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
@@ -250,7 +223,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0022T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		      var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		      var searchDt = $("#CMM0022T_Dt").val();
 		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		      var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -331,7 +305,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Order ID<span class="must">*</span></th>
+                        <th scope="row">Order ID</th>
                         <td>
                               <input type="text" id="ordId_22T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>

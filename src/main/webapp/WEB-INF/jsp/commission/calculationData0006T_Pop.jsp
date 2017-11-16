@@ -14,6 +14,7 @@
 <script type="text/javaScript">
     var myGridID_06T;
     var gridDataLength = 0;
+    var today = "${today}";
     
     $(document).ready(function() {
         createAUIGrid();
@@ -60,39 +61,14 @@
      
         //Rule Book Item search
         $("#search_06T").click(function(){
-        	/* var codeGroupId = $("#codeGroupId").val();
-        	var memberId = $("#memberId_06T").val();
-        	
-        	if(codeGroupId == "" || codeGroupId == null){
-        		Common.alert("<spring:message code='sys.msg.necessary' arguments='ORG Group' htmlEscape='false'/>");
-                return false;
-        	}else if(memberId == "" || memberId == null){
-        		Common.alert("<spring:message code='sys.msg.necessary' arguments='MEMBER ID' htmlEscape='false'/>");
-                return false;
-            }else{ */
-	            Common.ajax("GET", "/commission/calculation/selectDataCMM006T", $("#form_06T").serialize(), function(result) {
-	                console.log("성공.");
-	                //console.log("data : " + result);
-	                AUIGrid.setGridData(myGridID_06T, result);
-	                //AUIGrid.addCheckedRowsByValue(myGridID_06T, "isExclude", "1");
-	            });
-	        //}
+            Common.ajax("GET", "/commission/calculation/selectDataCMM006T", $("#form_06T").serialize(), function(result) {
+                console.log("성공.");
+                AUIGrid.setGridData(myGridID_06T, result);
+            });
         });
         
         $("#save_06T").click(function(){  
-        	/* var codeGroupId = $("#codeGroupId").val();
-            var memberId = $("#memberId_06T").val();
-            
-            if(codeGroupId == "" || codeGroupId == null){
-            	Common.alert("<spring:message code='sys.msg.necessary' arguments='ORG Group' htmlEscape='false'/>");
-                return false;
-            }else if(memberId == "" || memberId == null){
-            	Common.alert("<spring:message code='sys.msg.necessary' arguments='MEMBER ID' htmlEscape='false'/>");
-                return false;
-            }else{ */
-            	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
-	        	
-            //}
+           	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
         });
         
         $('#memBtn').click(function() {
@@ -218,22 +194,17 @@
     }*/] ;
     // 그리드 속성 설정
     var gridPros = {
-        
         // 페이징 사용       
         usePaging : true,
-        
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true,
-        
+        selectionMode : "singleRow",
         headerHeight : 40
     };
     
@@ -266,35 +237,28 @@
        Common.ajax("GET", "/commission/calculation/cntCMM0006T", $("#form_06T").serialize(), function(result) {
 	       var cnt = result;
 	       if(cnt > 0){
-		       /* if(codeGroupId == "" || codeGroupId == null){
-		    	   Common.alert("<spring:message code='sys.msg.necessary' arguments='ORG Group' htmlEscape='false'/>");
-		           return false;
-		       }else if(memberId == "" || memberId == null){
-		    	   Common.alert("<spring:message code='sys.msg.necessary' arguments='MEMBER ID' htmlEscape='false'/>");
-		           return false;
-		       }else{ */
-			       //excel down load name 형식 어떻게 할지?
-			       var fileName = $("#fileName").val();
-			       var searchDt = $("#CMM0006T_Dt").val();
-			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-			       var month = searchDt.substr(0,searchDt.indexOf("/"));
-			       var code = $("#code_06T").val();
-			       var codeId = $("#codeGroupId").val();
-			       var memberCd = $("#memberCd_06T").val();
-			       var useYnCombo = $("#useYnCombo_06T").val();
-			       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberCd="+memberCd+"&useYnCombo="+useYnCombo+"'/>";
-			       
-			       Common.showLoader();
-	               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberCd="+memberCd+"&useYnCombo="+useYnCombo)
-	               .done(function () {
-	                   Common.alert('File download a success!');                
-	                   Common.removeLoader();            
-	               })
-	               .fail(function () {
-	                   Common.alert('File download failed!');                
-	                   Common.removeLoader();            
-	                });
-		       //}
+		       //excel down load name 형식 어떻게 할지?
+		       var fileName = $("#fileName").val() +"_"+today;
+	           fileName=fileName+".xlsx";
+		       var searchDt = $("#CMM0006T_Dt").val();
+		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		       var month = searchDt.substr(0,searchDt.indexOf("/"));
+		       var code = $("#code_06T").val();
+		       var codeId = $("#codeGroupId").val();
+		       var memberCd = $("#memberCd_06T").val();
+		       var useYnCombo = $("#useYnCombo_06T").val();
+		       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberCd="+memberCd+"&useYnCombo="+useYnCombo+"'/>";
+		       
+		       Common.showLoader();
+               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberCd="+memberCd+"&useYnCombo="+useYnCombo)
+               .done(function () {
+                   Common.alert('File download a success!');                
+                   Common.removeLoader();            
+               })
+               .fail(function () {
+                   Common.alert('File download failed!');                
+                   Common.removeLoader();            
+                });
 	       }else{
 	    	   Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
 	       }
@@ -306,7 +270,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0006T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-			   var fileName = $("#fileName").val();
+			   var fileName = $("#fileName").val() +"_"+today;
+			   fileName=fileName+".xlsx";
 			   var searchDt = $("#CMM0006T_Dt").val();
 			   var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 			   var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -352,7 +317,7 @@
         </aside><!-- title_line end -->
         <form id="form_06T">
            <input type="hidden" name="code" id="code_06T" value="${code}"/>
-           <input type="hidden" id="fileName" name="fileName" value="organizationHierarchy.xlsx"/>
+           <input type="hidden" id="fileName" name="fileName" value="organizationHierarchy"/>
            <ul class="right_btns">
               <li><p class="btn_blue"><a href="#" id="search_06T"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>
@@ -379,7 +344,7 @@
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>
                         </select></td>
-                        <th scope="row">Member Code<span class="must">*</span></th>
+                        <th scope="row">Member Code</th>
                         <td>
                               <input type="text" id="memberCd_06T" name="memberCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>

@@ -14,6 +14,7 @@
 <script type="text/javaScript">
     var myGridID_20T;
     var gridDataLength = 0;
+    var today = "${today}";
     
     $(document).ready(function() {
         createAUIGrid();
@@ -76,91 +77,85 @@
         });
     }
    function createAUIGrid() {
-    var columnLayout3 = [{
-        dataField : "isExclude",
-        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
-        width: 65,
-        renderer : {
-            type : "CheckBoxEditRenderer",
-            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-            checkValue : "1", // true, false 인 경우가 기본
-            unCheckValue : "0"
-        }
-    }, {
-        dataField : "ordId",
-        headerText : "ORD ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "asEntryId",
-        headerText : " AS ENTRY ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "emplyCode",
-        headerText : "AS ENTRY CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "asrId",
-        headerText : "ASR ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "stockId",
-        headerText : "STOCK ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "appTypeId",
-        headerText : "APP TYPE ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "asPersonId",
-        headerText : "AS PERSON ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "prc",
-        headerText : "PRC",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "runId",
-        headerText : "RUN ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    },{
-        dataField : "taskId",
-        headerText : "TASK ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    }];
-    // 그리드 속성 설정
-    var gridPros = {
-        
-        // 페이징 사용       
-        usePaging : true,
-        
-        // 한 화면에 출력되는 행 개수 20(기본값:20)
-        pageRowCount : 20,
-        
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : true,
-        
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
-        
-        headerHeight : 40
-
-    };
+	    var columnLayout3 = [{
+	        dataField : "isExclude",
+	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        width: 65,
+	        renderer : {
+	            type : "CheckBoxEditRenderer",
+	            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+	            checkValue : "1", // true, false 인 경우가 기본
+	            unCheckValue : "0"
+	        }
+	    }, {
+	        dataField : "ordId",
+	        headerText : "ORD ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "asEntryId",
+	        headerText : " AS ENTRY ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "emplyCode",
+	        headerText : "AS ENTRY CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "asrId",
+	        headerText : "ASR ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "stockId",
+	        headerText : "STOCK ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "appTypeId",
+	        headerText : "APP TYPE ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "asPersonId",
+	        headerText : "AS PERSON ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "prc",
+	        headerText : "PRC",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "runId",
+	        headerText : "RUN ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    },{
+	        dataField : "taskId",
+	        headerText : "TASK ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    }];
+	    // 그리드 속성 설정
+	    var gridPros = {
+	        // 페이징 사용       
+	        usePaging : true,
+	        // 한 화면에 출력되는 행 개수 20(기본값:20)
+	        pageRowCount : 20,
+	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        skipReadonlyColumns : true,
+	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        wrapSelectionMove : true,
+	        // 줄번호 칼럼 렌더러 출력
+	        showRowNumColumn : true,
+	        selectionMode : "singleRow",
+	        headerHeight : 40
+	    };
     myGridID_20T = AUIGrid.create("#grid_wrap_20", columnLayout3,gridPros);
    }
    
@@ -187,7 +182,8 @@
            var cnt = result;
            if(cnt > 0){
                //excel down load name 형식 어떻게 할지?
-               var fileName = $("#fileName").val();
+               var fileName = $("#fileName").val() +"_"+today;
+                fileName=fileName+".xlsx";
                var searchDt = $("#CMM0020T_Dt").val();
                var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
                var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -222,7 +218,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0020T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		        var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		        var searchDt = $("#CMM0020T_Dt").val();
 		        var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		        var month = searchDt.substr(0,searchDt.indexOf("/"));

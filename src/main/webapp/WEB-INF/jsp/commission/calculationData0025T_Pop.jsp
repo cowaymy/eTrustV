@@ -13,6 +13,7 @@
 
 <script type="text/javaScript">
     var myGridID_25T;
+    var today = "${today}";
     
     $(document).ready(function() {
         createAUIGrid();
@@ -23,22 +24,11 @@
          
         //Rule Book Item search
         $("#search_25T").click(function(){  
-        	/* var emplyId = $("#emplyId_25T").val();
-        	var ordId = $("#ordId_25T").val();
-        	
-        	if(emplyId == "" || emplyId == null){
-        		 Common.alert("<spring:message code='sys.msg.necessary' arguments='emplyment Id' htmlEscape='false'/>");
-                 return false;
-        	}else if(ordId == "" || ordId == null){
-        		 Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-                 return false;
-        	}else{ */
-	            Common.ajax("GET", "/commission/calculation/selectDataCMM025T", $("#form_25").serialize(), function(result) {
-	                console.log("성공.");
-	                console.log("data : " + result);
-	                AUIGrid.setGridData(myGridID_25T, result);
-	            });
-        	//}
+            Common.ajax("GET", "/commission/calculation/selectDataCMM025T", $("#form_25").serialize(), function(result) {
+                console.log("성공.");
+                console.log("data : " + result);
+                AUIGrid.setGridData(myGridID_25T, result);
+            });
         });
         
         $('#memBtn').click(function() {
@@ -55,73 +45,68 @@
     }
     
    function createAUIGrid() {
-    var columnLayout3 = [ {
-        dataField : "emplyId",
-        headerText : "EMPLY ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "emplyCode",
-        headerText : "EMPLY CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "ordId",
-        headerText : "ORD ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "stockId",
-        headerText : "STOCK ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "promtId",
-        headerText : "PROMT ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "paidMonth",
-        headerText : "PAID MONTH",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "paidAmt",
-        headerText : "PAID AMT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "runId",
-        headerText : "RUN ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    },{
-        dataField : "taskId",
-        headerText : "TASK ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    }];
-    // 그리드 속성 설정
-    var gridPros = {
-        
-        // 페이징 사용       
-        usePaging : true,
-        
-        // 한 화면에 출력되는 행 개수 20(기본값:20)
-        pageRowCount : 20,
-        
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : true,
-        
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true
-
-    };
+	    var columnLayout3 = [ {
+	        dataField : "emplyId",
+	        headerText : "EMPLY ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "emplyCode",
+	        headerText : "EMPLY CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "ordId",
+	        headerText : "ORD ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "stockId",
+	        headerText : "STOCK ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "promtId",
+	        headerText : "PROMT ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "paidMonth",
+	        headerText : "PAID MONTH",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "paidAmt",
+	        headerText : "PAID AMT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "runId",
+	        headerText : "RUN ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    },{
+	        dataField : "taskId",
+	        headerText : "TASK ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    }];
+	    // 그리드 속성 설정
+	    var gridPros = {
+	        // 페이징 사용       
+	        usePaging : true,
+	        // 한 화면에 출력되는 행 개수 20(기본값:20)
+	        pageRowCount : 20,
+	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        skipReadonlyColumns : true,
+	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        wrapSelectionMove : true,
+	        // 줄번호 칼럼 렌더러 출력
+	        showRowNumColumn : true,
+	        selectionMode : "singleRow"
+	    };
     myGridID_25T = AUIGrid.create("#grid_wrap3", columnLayout3,gridPros);
    }
    
@@ -129,41 +114,30 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0025T", $("#form_25").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
-			   /* var emplyId = $("#emplyId_25T").val();
-		       var ordId = $("#ordId_25T").val();
+		       var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
+		       var searchDt = $("#CMM0025T_Dt").val();
+		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		       var month = searchDt.substr(0,searchDt.indexOf("/"));
+		       var code = $("#code_25T").val();
 		       
-		       if(emplyId == "" || emplyId == null){
-		           Common.alert("<spring:message code='sys.msg.necessary' arguments='emplyment Id' htmlEscape='false'/>");
-		           return false;
-		      }else if(ordId == "" || ordId == null){
-		           Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-		           return false;
-		       }else{ */
-			       //excel down load name 형식 어떻게 할지?
-			       var fileName = $("#fileName").val();
-			       var searchDt = $("#CMM0025T_Dt").val();
-			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-			       var month = searchDt.substr(0,searchDt.indexOf("/"));
-			       var code = $("#code_25T").val();
-			       
-			       var codeId= $("#orgGroup_25").val();
-			       var ordId = $("#ordId_25T").val();
-			       var emplyCd = $("#emplyCd_25T").val();
-			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
-			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd+"&codeId="+codeId+"'/>";
-			       
-			       Common.showLoader();
-	              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd+"&codeId="+codeId)
-	              .done(function () {
-	                  Common.alert('File download a success!');                
-	                  Common.removeLoader();            
-	              })
-	              .fail(function () {
-	                  Common.alert('File download failed!');                
-	                  Common.removeLoader();            
-	               });
-		       //}
+		       var codeId= $("#orgGroup_25").val();
+		       var ordId = $("#ordId_25T").val();
+		       var emplyCd = $("#emplyCd_25T").val();
+		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
+		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
+		       //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd+"&codeId="+codeId+"'/>";
+		       
+		       Common.showLoader();
+              $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd+"&codeId="+codeId)
+              .done(function () {
+                  Common.alert('File download a success!');                
+                  Common.removeLoader();            
+              })
+              .fail(function () {
+                  Common.alert('File download failed!');                
+                  Common.removeLoader();            
+               });
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
@@ -175,7 +149,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0025T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		       var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		       var searchDt = $("#CMM0025T_Dt").val();
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -249,13 +224,13 @@
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>
                         </select></td>
-                        <th scope="row">Order ID<span class="must">*</span></th>
+                        <th scope="row">Order ID</th>
                         <td>
                               <input type="text" id="ordId_25T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
                      </tr>
                      <tr>
-                        <th scope="row">Employed Code<span class="must">*</span></th>
+                        <th scope="row">Employed Code</th>
                         <td colspan=5>
                               <input type="text" id="emplyCd_25T" name="emplyCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>

@@ -13,6 +13,7 @@
 
 <script type="text/javaScript">
     var myGridID_24T;
+    var today = "${today}";
     
     $(document).ready(function() {
         createAUIGrid();
@@ -92,22 +93,17 @@
 	    }];
 	    // 그리드 속성 설정
 	    var gridPros = {
-	        
 	        // 페이징 사용       
 	        usePaging : true,
-	        
 	        // 한 화면에 출력되는 행 개수 20(기본값:20)
 	        pageRowCount : 20,
-	        
 	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        skipReadonlyColumns : true,
-	        
 	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	        wrapSelectionMove : true,
-	        
 	        // 줄번호 칼럼 렌더러 출력
-	        showRowNumColumn : true
-	        
+	        showRowNumColumn : true,
+	        selectionMode : "singleRow"
 	    };
 	    myGridID_24T = AUIGrid.create("#grid_wrap_24T", columnLayout3,gridPros);
    }
@@ -117,7 +113,8 @@
            var cnt = result;
            if(cnt > 0){
 		       //excel down load name 형식 어떻게 할지?
-		       var fileName = $("#fileName").val();
+		       var fileName = $("#fileName").val() +"_"+today;
+                fileName=fileName+".xlsx";
 		       var searchDt = $("#CMM0024T_Dt").val();
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -151,7 +148,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0024T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		      var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		      var searchDt = $("#CMM0024T_Dt").val();
 		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		      var month = searchDt.substr(0,searchDt.indexOf("/"));

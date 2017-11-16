@@ -14,6 +14,7 @@
 <script type="text/javaScript">
     var myGridID_12T;
     var gridDataLength = 0;
+    var today = "${today}";
     
     $(document).ready(function() {
         createAUIGrid();
@@ -42,31 +43,31 @@
         
         //Rule Book Item search
         $("#search_12T").click(function(){ 
-           /*  var ordId = $("#ordId_12T").val();
+            var clctrCd = $("#clctrCd_12T").val();
             
-            if(ordId == "" || ordId == null){
-            	Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
+            if(clctrCd == "" || clctrCd == null){
+            	Common.alert("<spring:message code='sys.msg.necessary' arguments='clctr Cd' htmlEscape='false'/>");
                 return false;
-            }else{ */
+            }else{ 
 	            Common.ajax("GET", "/commission/calculation/selectDataCMM012T", $("#form_12T").serialize(), function(result) {
 	                console.log("성공.");
 	                console.log("data : " + result);
 	                AUIGrid.setGridData(myGridID_12T, result);
 	                //AUIGrid.addCheckedRowsByValue(myGridID_12T, "isExclude", "1");
 	            });
-            //}
+            }
         });
         
         $("#save_12T").click(function(){  
-        	 /* var ordId = $("#ordId_12T").val();
-             
-             if(ordId == "" || ordId == null){
-            	 Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-                 return false;
-             }else{ */
+            var clctrCd = $("#clctrCd_12T").val();
+            
+            if(clctrCd == "" || clctrCd == null){
+            	Common.alert("<spring:message code='sys.msg.necessary' arguments='clctr Cd' htmlEscape='false'/>");
+                return false;
+            }else{ 
             	 Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
 	        	
-             //}
+             }
         });
         
         $('#memBtn').click(function() {
@@ -90,91 +91,85 @@
         });
     }
    function createAUIGrid() {
-    var columnLayout3 = [ {
-        dataField : "isExclude",
-        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
-        width: 65,
-        renderer : {
-            type : "CheckBoxEditRenderer",
-            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-            checkValue : "1", // true, false 인 경우가 기본
-            unCheckValue : "0"
-        }
-    }, {
-        dataField : "clctrId",
-        headerText : "CLCTR ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "emplyCode",
-        headerText : "CLCTR CODE",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "ordId",
-        headerText : "ORD ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "trgetAmt",
-        headerText : "TRGET AMT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "colctAmt",
-        headerText : "COLCT AMT",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "custRaceId",
-        headerText : "CUST RACE ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "rentPayModeId",
-        headerText : "RENT PAY MODE ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "custId",
-        headerText : "CUST ID",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "runId",
-        headerText : "RUN ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    },{
-        dataField : "taskId",
-        headerText : "TASK ID",
-        style : "my-column",
-        visible : false,
-        editable : false
-    }];
-    // 그리드 속성 설정
-    var gridPros = {
-        
-        // 페이징 사용       
-        usePaging : true,
-        
-        // 한 화면에 출력되는 행 개수 20(기본값:20)
-        pageRowCount : 20,
-        
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : true,
-        
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
-        
-        headerHeight : 40
-
-    };
+	    var columnLayout3 = [ {
+	        dataField : "isExclude",
+	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        width: 65,
+	        renderer : {
+	            type : "CheckBoxEditRenderer",
+	            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+	            checkValue : "1", // true, false 인 경우가 기본
+	            unCheckValue : "0"
+	        }
+	    }, {
+	        dataField : "clctrId",
+	        headerText : "CLCTR ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "emplyCode",
+	        headerText : "CLCTR CODE",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "ordId",
+	        headerText : "ORD ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "trgetAmt",
+	        headerText : "TRGET AMT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "colctAmt",
+	        headerText : "COLCT AMT",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "custRaceId",
+	        headerText : "CUST RACE ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "rentPayModeId",
+	        headerText : "RENT PAY MODE ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "custId",
+	        headerText : "CUST ID",
+	        style : "my-column",
+	        editable : false
+	    },{
+	        dataField : "runId",
+	        headerText : "RUN ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    },{
+	        dataField : "taskId",
+	        headerText : "TASK ID",
+	        style : "my-column",
+	        visible : false,
+	        editable : false
+	    }];
+	    // 그리드 속성 설정
+	    var gridPros = {
+	        // 페이징 사용       
+	        usePaging : true,
+	        // 한 화면에 출력되는 행 개수 20(기본값:20)
+	        pageRowCount : 20,
+	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        skipReadonlyColumns : true,
+	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        wrapSelectionMove : true,
+	        // 줄번호 칼럼 렌더러 출력
+	        showRowNumColumn : true,
+	        selectionMode : "singleRow",
+	        headerHeight : 40
+	    };
     myGridID_12T = AUIGrid.create("#grid_wrap_12T", columnLayout3,gridPros);
    }
    
@@ -198,17 +193,17 @@
    };
    
    function fn_downFile() {
-	   Common.ajax("GET", "/commission/calculation/cntCMM0012T", $("#form_12T").serialize(), function(result) {
-           var cnt = result;
-           if(cnt > 0){
-			   /* var ordId = $("#ordId_12T").val();
-		       
-		       if(ordId == "" || ordId == null){
-		    	   Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
-		           return false;
-		       }else{ */
-			       //excel down load name 형식 어떻게 할지?
-			       var fileName = $("#fileName").val();
+	   var clctrCd = $("#clctrCd_12T").val();
+       
+       if(clctrCd == "" || clctrCd == null){
+           Common.alert("<spring:message code='sys.msg.necessary' arguments='clctr Cd' htmlEscape='false'/>");
+           return false;
+       }else{ 
+		   Common.ajax("GET", "/commission/calculation/cntCMM0012T", $("#form_12T").serialize(), function(result) {
+	           var cnt = result;
+	           if(cnt > 0){
+			       var fileName = $("#fileName").val() +"_"+today;
+			       fileName=fileName+".xlsx";
 			       var searchDt = $("#CMM0012T_Dt").val();
 			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 			       var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -232,11 +227,11 @@
 	                    Common.alert('File download failed!');                
 	                    Common.removeLoader();            
 	                 });
-		       //}
-		   }else{
-	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
-	       }
-	   });
+			   }else{
+		           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+		       }
+		   });
+	    }
    }
    
    function fn_AlldownFile() {
@@ -244,7 +239,8 @@
 	   Common.ajax("GET", "/commission/calculation/cntCMM0012T", data, function(result) {
            var cnt = result;
            if(cnt > 0){
-		      var fileName = $("#fileName").val();
+        	   var fileName = $("#fileName").val() +"_"+today;
+               fileName=fileName+".xlsx";
 		      var searchDt = $("#CMM0012T_Dt").val();
 		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		      var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -319,14 +315,14 @@
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>
                         </select></td>
-                        <th scope="row">Collector CODE</th>
+                        <th scope="row">Collector CODE<span class="must">*</span></th>
                         <td>
                               <input type="text" id="clctrCd_12T" name="clctrCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Order ID<span class="must">*</span></th>
+                        <th scope="row">Order ID</th>
                         <td>
                               <input type="text" id="ordId_12T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
