@@ -1,3 +1,6 @@
+/**
+ * @author Adrian C.
+ **/
 package com.coway.trust.web.logistics.seriallocation;
 
 import java.util.List;
