@@ -4,7 +4,14 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+    	
+    	//Check Box
+        var emgncyFlag = $("#emgncyFlag").val() == 'Y' ? true : false;
 
+        if (emgncyFlag == true) {
+            $("#emgncyFlag").attr("checked", true);
+        }
+    	
         fn_selectNoticeListAjax();
 
         $("#delete").click(function () {
@@ -38,6 +45,15 @@
             return false; //this is critical to stop the click event which will trigger a normal file download
         });
     });
+    
+  //Check Box
+    function fn_checkbox() {
+        if ($("#emgncyFlag").is(":checked")) {
+            $("#emgncyFlag").val("Y");
+        } else {
+            $("#emgncyFlag").val("N");
+        }
+    }
 
     //common_pub.js 에서 파일 change 이벤트 발생시 호출됨...
     function fn_abstractChangeFile(thisfakeInput) {
@@ -84,6 +100,8 @@
             return false;
         }
 
+        fn_checkbox();
+        
         var formData = Common.getFormData("noticeForm");
 
         formData.append("ntceNo", $("#ntceNo").val());
@@ -120,14 +138,6 @@
             $("#popClose").click();
             fn_selectNoticeListAjax();
         });
-    }
-
-
-    //Check Box
-    var emgncyFlag = $("#emgncyFlag").val() == 'Y' ? true : false;
-
-    if (emgncyFlag == true) {
-        $("#emgncyFlag").attr("checked", true);
     }
 
 </script>
