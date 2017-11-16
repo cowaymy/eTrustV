@@ -26,4 +26,9 @@ public interface OrderCallListMapper {
 	String selectMaxId(Map<String, Object> params);
 	
 	List<EgovMap> selectCallLogTransaction(Map<String, Object> params);
+
+	List<EgovMap> getstateList();
+
+	List<EgovMap> getAreaList(Map<String, Object> params);
+
 }

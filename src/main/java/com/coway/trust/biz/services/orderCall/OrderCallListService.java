@@ -17,5 +17,11 @@ public interface OrderCallListService {
 	List<EgovMap> selectCallStatus();
 	
 	List<EgovMap> selectCallLogTransaction(Map<String, Object> params);
+
+	List<EgovMap> getstateList();
+
+	List<EgovMap> getAreaList(Map<String, Object> params);
+
+
 	      
 } 

@@ -83,6 +83,41 @@ public class AfterServiceResultForm {
 
 	@ApiModelProperty(value = "base64 Data")
 	private String signData;
+	
+	
+	
+	
+
+
+
+
+	public String getSignRegDate() {
+		return signRegDate;
+	}
+
+
+
+	public void setSignRegDate(String signRegDate) {
+		this.signRegDate = signRegDate;
+	}
+
+
+
+	public String getSignRegTime() {
+		return signRegTime;
+	}
+
+
+
+	public void setSignRegTime(String signRegTime) {
+		this.signRegTime = signRegTime;
+	}
+
+	private String signRegDate;
+	private String signRegTime;
+
+	
+	
 
 	@ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
 	private String transactionId;

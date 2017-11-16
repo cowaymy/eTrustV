@@ -304,4 +304,21 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		logger.debug("callMaster : {}", callMaster);
 		return callMaster;
 	}
+
+	@Override
+	public List<EgovMap> getstateList() {
+		// TODO Auto-generated method stub
+		return orderCallListMapper.getstateList();
+	}
+
+	@Override
+	public List<EgovMap> getAreaList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return orderCallListMapper.getAreaList(params);
+	}
+
+
+
+
+
 }

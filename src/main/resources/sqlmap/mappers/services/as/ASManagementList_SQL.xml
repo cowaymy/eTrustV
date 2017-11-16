@@ -2239,9 +2239,9 @@
 									#{hcCommentSid}, 
 									#{hcCommentDid}, 
 									#{crtUserId}, 
-									#{crtDt}, 
+								    SYSDATE, 
 									#{updUserId}, 
-									#{updDt}, 
+									SYSDATE, 
 									#{hcNoSvc}, 
 									#{hcLok}, 
 									#{hcClosId})

@@ -51,6 +51,24 @@ public class OrderCallListController {
 		// 호출될 화면
 		return "services/orderCall/orderCallList";
 	}
+	
+	
+	
+	
+	@RequestMapping(value = "/getstateList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getstateList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> stateList = orderCallListService.getstateList();
+		return ResponseEntity.ok(stateList);
+	}
+
+	
+	@RequestMapping(value = "/getAreaList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getAreaList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> areaList = orderCallListService.getAreaList(params);
+		return ResponseEntity.ok(areaList);
+	}
+	
+	
 	    
 	/**
 	 * Call Center - order Call List SEARCH

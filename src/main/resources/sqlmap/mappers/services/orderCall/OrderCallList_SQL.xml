@@ -514,4 +514,31 @@
 			  ORDER BY Project1.CALL_RESULT_ID ASC
              ]]>
           </select>
+          
+          
+          
+          
+        <select id="getstateList" parameterType="Map" resultType="egovMap">
+
+		        select *
+				from (
+				    select STATE as code_id, STATE as code_name
+				    from SYS0064M
+				    group by STATE
+				)
+				order by code_id
+
+	   </select>
+
+        <select id="getAreaList" parameterType="Map" resultType="egovMap">
+				
+		           select AREA as code_id, AREA as code_name
+				    from SYS0064M
+				    where state = #{groupCode}
+				    group by AREA
+
+	   </select>
+	         
+         
+         
  </mapper>

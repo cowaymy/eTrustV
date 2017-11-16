@@ -41,6 +41,25 @@ $(document).ready(function() {
  doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
  doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDSCCode', 'M', 'fn_multiCombo'); //Branch Code
  doGetProductCombo('/common/selectProductCodeList.do', '', '', 'product', 'S'); //Product Code
+ 
+ 
+  doGetCombo('/callCenter/getstateList.do', '', '','ordStatus', 'S' ,  '');
+     
+ 
+     $("#ordStatus").change(function() {
+        alert(11111111);
+        
+        $("#ordArea").find('option').each(function() {
+            $(this).remove();
+        });
+
+        
+        if ($(this).val().trim() == "") {
+            return;
+        }       
+        doGetCombo('/callCenter/getAreaList.do', $(this).val() , ''   , 'ordArea' , 'S', '');
+    });
+    
 });
 
     function fn_multiCombo(){
@@ -200,6 +219,7 @@ function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrap_callList", "xlsx", "Order Call Log Search");
 }
+
 </script>
 
 <section id="content"><!-- content start -->
