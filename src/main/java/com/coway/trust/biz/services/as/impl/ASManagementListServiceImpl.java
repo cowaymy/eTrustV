@@ -427,7 +427,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	 * @param params
 	 * @return
 	 */
-	public int insert_stkCardLOG0014D(List <EgovMap> addItemList , String AS_RESULT_ID  , String  UPDATOR   ,LinkedHashMap svc0004dmap ){
+//	public int insert_stkCardLOG0014D(List <EgovMap> addItemList , String AS_RESULT_ID  , String  UPDATOR   ,LinkedHashMap svc0004dmap ){	
+	public int insert_stkCardLOG0014D(List<EgovMap> addItemList , String AS_RESULT_ID  , String  UPDATOR   ,Map svc0004dmap ){//hash
 		
 		LOGGER.debug("							===> insert_stkCardLOG0014D  in ");
 		int rtnValue =-1;
@@ -891,7 +892,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		ArrayList<AsResultChargesViewVO>  vewList = new ArrayList<AsResultChargesViewVO>();
 		
 		List <EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
-		LinkedHashMap  svc0004dmap = (LinkedHashMap)  params.get("asResultM");
+		Map  svc0004dmap =   (Map) params.get("asResultM");//hash
 		
 		svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
 		svc0004dmap.put("AS_RESULT_NO", String.valueOf(eMap.get("asno")));
