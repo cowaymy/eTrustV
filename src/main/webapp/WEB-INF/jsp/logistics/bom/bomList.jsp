@@ -136,6 +136,11 @@
         $("#search").click(function(){
             searchAjax();
         });
+        $("#clear").click(function(){
+            $("#srchmtrcd").val('');
+            doGetCombo('/logistics/bom/selectCodeList', '15', '','srchcatagorytype', 'A' , '');
+            $("#srchValid").val('');      
+        });
        $("#material_info").click(function(){
                f_removeclass();
                
@@ -345,10 +350,10 @@
 						<a id="search"><span class="search"></span>
 						<spring:message code='sys.btn.search' /></a>
 					</p></li>
-<!-- 				<li><p class="btn_blue"> -->
-<!-- 						<a id="clear"><span class="clear"></span> -->
-<%-- 						<spring:message code='sys.btn.clear' /></a> --%>
-<!-- 					</p></li> -->
+				<li><p class="btn_blue">
+						<a id="clear"><span class="clear"></span>
+						<spring:message code='sys.btn.clear' /></a>
+					</p></li>
 			</ul>
 		</aside>
 		<!-- title_line end -->
