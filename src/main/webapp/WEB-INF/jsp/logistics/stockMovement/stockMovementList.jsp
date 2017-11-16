@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
@@ -160,11 +159,11 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-    	/*
+    	
         $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
         document.searchForm.action = '/logistics/stockMovement/StockMovementView.do';
         document.searchForm.submit();
-        */
+        
         
     });
     
@@ -180,6 +179,9 @@ function f_change(){
 $(function(){
     $('#search').click(function() {
         SearchListAjax();
+    });
+    $("#clear").click(function(){
+        $("#searchForm")[0].reset();
     });
     $("#sttype").change(function(){
         paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
@@ -314,8 +316,8 @@ function f_getTtype(g , v){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-      <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 
