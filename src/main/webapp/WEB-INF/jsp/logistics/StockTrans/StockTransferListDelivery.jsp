@@ -30,7 +30,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
@@ -251,6 +250,19 @@ function f_change(){
 $(function(){
     $('#search').click(function() {
     	SearchListAjax();
+    });
+    $('#clear').click(function() {
+        $('#streq').val('');
+        $('#tlocationnm').val('');
+        $('#flocationnm').val('');
+        $('#crtsdt').val('');
+        $('#crtedt').val('');
+        $('#reqsdt').val('');
+        $('#reqedt').val('');
+        $('#sstatus').val('');
+        $('#sam').val('');
+        paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+        doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $("#sttype").change(function(){
         paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val()};
@@ -581,8 +593,8 @@ function fn_serialChck(rowindex , rowitem , str){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-            <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+             <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
         </ul>
 </aside><!-- title_line end -->
 

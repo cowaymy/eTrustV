@@ -42,8 +42,8 @@ var rescolumnLayout=[{dataField:"locid"     ,headerText:"Location"          ,wid
                     ];
 var reqcolumnLayout;
 
-var resop = {showRowCheckColumn : true , usePaging : true,useGroupingPanel : false , Editable:false};
-var reqop = {showRowCheckColumn : true , usePaging : true,useGroupingPanel : false , Editable:true};
+var resop = {showStateColumn : false , usePaging : true,useGroupingPanel : false , Editable:false};
+var reqop = {showStateColumn : false , usePaging : true,useGroupingPanel : false , Editable:true};
 
 var uomlist = f_getTtype('42' , '');
 var paramdata;
@@ -250,7 +250,7 @@ function mainSearchFunc(){
     });
 }
 function headFunc(data){
-	
+	console.log(data);
 	$("#reqno").val(data.reqno);
 	$("#reqcrtdate").val(data.reqcrtdt);
 	
@@ -259,21 +259,19 @@ function headFunc(data){
     paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:data.trntype};
     doGetComboData('/common/selectCodeList.do', paramdata, data.trndtl,'smtype', 'S' , '');
     
-    doGetCombo('/common/selectStockLocationList.do', '', data.rcivcr,'tlocation', 'S' , '');
-    $("#tlocation").attr("disabled",true);
-    doGetCombo('/common/selectStockLocationList.do', '', data.reqcr,'flocation', 'S' , '');
+    var tloc= data.rcivcr;
+    var floc= data.reqcr;
+    doGetCombo('/common/selectStockLocationList.do', '', tloc,'tlocation', 'S' , '');
+    doGetCombo('/common/selectStockLocationList.do', '', floc,'flocation', 'S' , '');
     
 	$("#dochdertxt").val(data.doctxt);
-	//$("#dochdertxt").prop("readonly","readonly");
 	
-	//$("#reqcrtdate").attr("disabled",true);
 	$("#sttype").attr("disabled",true);
 	$("#smtype").attr("disabled",true);
 	$("#flocation").attr("disabled",true);
-	//$("#dochdertxt").prop("class","readonly w100p");
+    $("#tlocation").attr("disabled",true);
 	$("#pridic").val(data.prifr);
 	
-	//$("#reqcrtdate").prop("class","readonly w100p");//class="j_date"
 }
 
 function requestList(data){
@@ -437,7 +435,7 @@ function f_multiCombo() {
     <th scope="row">STO Number</th>
     <td><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Document Date</th>
-    <td><input id="reqcrtdate" name="reqcrtdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+    <td><input id="reqcrtdate" name="reqcrtdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY"readonly="readonly"/></td>
 </tr>
 <tr>
     <th scope="row">Transfer Type</th>
@@ -463,82 +461,7 @@ function f_multiCombo() {
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" /></td>
-</tr>
-<!-- <tr id="cancelTr">
-    <th scope="row">Defect Reason</th>
-    <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </td>
-    <th scope="row">CT/Cody</th>
-    <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </td>
-</tr> -->
-</tbody>
-</table><!-- table end -->
-
-</form>
-</section><!-- search_table end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h3>Item Info</h3>
-</aside><!-- title_line end -->
-
-<section class="search_table"><!-- search_table start -->
-<form id="searchFrom" method="post">
-<input type="hidden" id="slocation">
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:100px" />
-    <col style="width:*" />
-    <col style="width:90px" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Material Code</th>
-    <td>
-
-    <div class="date_set"><!-- date_set start -->
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    <span>~</span>
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    </div><!-- date_set end -->
-
-    </td>
-    <th scope="row">Type</th>
-    <td >
-    <select class="w100p" id="cType" name="cType"></select>
-    </td>
-    <td>
-    <ul class="left_btns">
-        <li><p class="btn_blue2"><a id="search">Search</a></p></li>
-    </ul>
-    </td>
+    <td colspan="3"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" readonly="readonly"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -574,21 +497,11 @@ function f_multiCombo() {
 
 <div class="border_box" style="height:340px;"><!-- border_box start -->
 
-<ul class="right_btns">
-<!--     <li><p class="btn_grid"><a id="delivery">Delivery</a></p></li> -->
-    <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li>
-    <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
-    <li><p class="btn_grid"><a id="reqsave">SAVE</a></p></li>
-</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="req_grid_wrap" ></div>
 </article><!-- grid_wrap end -->
 
-<ul class="btns">
-    <li><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
-    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li>
-</ul>
 
 </div><!-- border_box end -->
 

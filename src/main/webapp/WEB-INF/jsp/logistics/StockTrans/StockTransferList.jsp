@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
@@ -157,11 +156,11 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-    	/*
+    	
         $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
         document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
         document.searchForm.submit();
-        */
+        
     });
     
     AUIGrid.bind(listGrid, "ready", function(event) {
@@ -179,9 +178,20 @@ $(function(){
     $('#search').click(function() {
         SearchListAjax();
     });
-    $("#sttype").change(function(){
+    $('#clear').click(function() {
+        $('#streq').val('');
+        $('#tlocationnm').val('');
+        $('#flocationnm').val('');
+        $('#crtsdt').val('');
+        $('#crtedt').val('');
+        $('#reqsdt').val('');
+        $('#reqedt').val('');
+        $('#sstatus').val('');
+        $('#sam').val('');
     	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
+    });
+    $("#sttype").change(function(){
     });
     $('#insert').click(function(){
         document.searchForm.action = '/logistics/stocktransfer/StocktransferIns.do';
@@ -313,8 +323,8 @@ function f_getTtype(g , v){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-      <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 
