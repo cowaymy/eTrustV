@@ -53,6 +53,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 	/*By KV end Position */
 
+	/*By KV start ListReplacementCT */
+	public List<EgovMap> selectReplaceCTList(Map<String, Object> params) {
+		return memberListMapper.selectReplaceCTList(params);
+	}
+	/*By KV end ListReplacementCT */
+
 	public List<EgovMap> selectUserBranch() {
 		return memberListMapper.selectUserBranch();
 	}

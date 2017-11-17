@@ -18,6 +18,10 @@ public interface MemberListMapper {
 	List<EgovMap> selectPosition(Map<String, Object> params);
 	//By KV end - Position
 
+	//By KV start -ReplacementCT
+	List<EgovMap> selectReplaceCTList(Map<String, Object> params);
+	//By KV end - ReplacementCT
+
 	List<EgovMap> selectUserBranch();
 
 	List<EgovMap> selectUser();
