@@ -35,6 +35,9 @@
     // AUIGrid 생성 후 반환 ID
     var myGridID;
     var historyGrid;
+    var comboDatas = [{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}];
+    var comboData = [{"codeId": "2040","codeName": "MY-Local Pur.Org"},{"codeId": "2041","codeName": "MY-Import(EAST)"},{"codeId": "2042","codeName": "MY-Import(WEST)"}];
+
     
     var url;
     // AUIGrid 칼럼 설정                                                                            visible : false
@@ -58,9 +61,9 @@
 						{dataField:"condiPrcUnit" ,headerText:"Per",width:120 ,height:30,style :"aui-grid-user-custom-right"},
 						{dataField:"validStartDt" ,headerText:"Valid From",width:120 ,height:30},
 						{dataField:"validEndDt" ,headerText:"Valid To",width:120 ,height:30},
-	                    {dataField:"purchsOrg" ,headerText:"purchsOrg",width:120 ,height:30},
-	                    {dataField:"purchsOrgTxt" ,headerText:"purchsOrgTxt",width:120 ,height:30},
-	                    {dataField:"type" ,headerText:"type",width:120 ,height:30},
+	                    {dataField:"purchsOrg" ,headerText:"Pur.Org",width:120 ,height:30},
+	                    {dataField:"purchsOrgTxt" ,headerText:"Pur.OrgTxt",width:120 ,height:30},
+	                    {dataField:"type" ,headerText:"Material Type",width:120 ,height:30},
 						{dataField:"cur" ,headerText:"cur",width:120 ,height:30, visible:false},
 						{dataField:"condiUnit" ,headerText:"condiUnit",width:120 ,height:30, visible:false},
 						{dataField:"prcDterminDtCntrl" ,headerText:"prcDterminDtCntrl",width:120 ,height:30, visible:false},
@@ -149,8 +152,8 @@
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         historyGrid = GridCommon.createAUIGrid("history_grid", historyLayout,"", gridoptions);
         //doGetCombo('/common/selectCodeList.do', '15', '','msttype', 'S' , ''); //Type 리스트 조회
-        doGetCombo('/common/selectCodeList.do', '15', '', 'msttype', 'M','f_multiCombo'); //Type 리스트 조회
-  
+        doGetCombo('/common/selectCodeList.do', '15', '', 'msttype', 'M','f_multiCombo'); //Type 리스트 조회  
+        doDefCombo(comboDatas, 'Y' ,'excludedelete', 'S', '');
         AUIGrid.bind(myGridID, "cellClick", function( event )  
         {
         });
@@ -231,9 +234,13 @@
                 getListAjax();    
             });
             $("#clear").click(function(){
-           	$("#searchForm")[0].reset();         	
-//                 $("#vendercd").val('');
-//                 $("#mstcd").val('');
+//            	$("#searchForm")[0].reset();  
+
+                doDefCombo(comboData, '' ,'purchasorg', 'S', '');
+            	doDefCombo(comboDatas, 'Y' ,'excludedelete', 'S', '');
+            	doGetCombo('/common/selectCodeList.do', '15', '', 'msttype', 'M','f_multiCombo'); //Type 리스트 조회
+                $("#vendercd").val('');
+                $("#mstcd").val('');
             });
      
         }); 
@@ -356,8 +363,8 @@
     <th scope="row">Exclude Delete</th>
     <td>
     <select id="excludedelete" name="excludedelete" placeholder="" class="w100p" >
-    <option value="Y" selected="selected">Y</option>
-    <option value="N">N</option>
+<!--     <option value="Y" selected="selected">Y</option> -->
+<!--     <option value="N">N</option> -->
     </select>
     </td>
     <td colspan="2"></td>
@@ -417,11 +424,11 @@
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewmatrlmst" name="viewmatrlmst" readonly="readonly"/></td>     
 				    <td colspan="2"><input type="text" title="" placeholder=""  class="w100p" id="viewmatrltxt" name="viewmatrltxt" readonly="readonly"/></td>    
 				</tr>
-				<tr>
-				    <th scope="row">Address</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewaddress" name="viewaddress" readonly="readonly"/></td>
-				    <!-- <th colspan="4"></th>  --> 
-				</tr>
+<!-- 				<tr> -->
+<!-- 				    <th scope="row">Address</th> -->
+<!-- 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewaddress" name="viewaddress" readonly="readonly"/></td> -->
+<!-- 				    <th colspan="4"></th>   -->
+<!-- 				</tr> -->
 				<tr>
 				    <th scope="row">Purchasing Group</th>
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewpurchsgrp" name="viewpurchsgrp" readonly="readonly"/></td>
@@ -429,16 +436,16 @@
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewplandelvrytmday" name="viewplandelvrytmday" readonly="readonly"/></td>
 				    <!-- <th colspan="2"></th> -->  
 				</tr>
-				<tr>
-				    <th scope="row">E-Mail Address</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewemailaddress" name="viewemailaddress" readonly="readonly"/></td>
-				    <!-- <th colspan="4"></th>   -->
-				</tr>
+<!-- 				<tr> -->
+<!-- 				    <th scope="row">E-Mail Address</th> -->
+<!-- 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewemailaddress" name="viewemailaddress" readonly="readonly"/></td> -->
+<!-- 				    <th colspan="4"></th>   -->
+<!-- 				</tr> -->
 				<tr>
 				    <th scope="row">Tax Code</th>
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewtaxcode" name="viewtaxcode" readonly="readonly"/></td>
-				    <th scope="row">Price Determination (Pricing) Date Control</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewprcdtermindtcntrl" name="viewprcdtermindtcntrl" readonly="readonly"/></td>
+<!-- 				    <th scope="row">Price Determination (Pricing) Date Control</th> -->
+<!-- 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewprcdtermindtcntrl" name="viewprcdtermindtcntrl" readonly="readonly"/></td> -->
 				    <!-- <th colspan="2"></th> -->  
 				</tr>
 				<tr>
@@ -449,21 +456,21 @@
 			            <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcurname" name="viewcurname" readonly="readonly"  /></p>
 			            <span>/</span>
 			            <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcondiprcunit" name="viewcondiprcunit" readonly="readonly"/></p>
-			            <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcondiunitname" name="viewcondiunitname" readonly="readonly" /></p>
+			            <!-- <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcondiunitname" name="viewcondiunitname" readonly="readonly" /></p> -->
 			        </div>
 				    </td>
 				    <th scope="row">Validity end date</th>
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewvalidenddt" name="viewvalidenddt" readonly="readonly"/></td>
 				    <!-- <th colspan="2"></th>   -->
 				</tr>
-				<tr>
-				    <th scope="row">Transfer Cost</th>
-				    <td><input type="text"  title="" placeholder=""  class="w100p" id="viewtrnscost" name="viewtrnscost" readonly="readonly"/></td>     
-				    <th scope="row">Customs Cost</th>
-				    <td><input type="text"  title="" placeholder=""  class="w100p" id="viewcstmcost" name="viewcstmcost" readonly="readonly"/></td>     
-				    <th scope="row">Other Import Cost</th>
-				    <td><input type="text"  title="" placeholder=""  class="w100p" id="viewotherimprtcost" name="viewotherimprtcost" readonly="readonly"/></td>     
-				</tr>
+<!-- 				<tr> -->
+<!-- 				    <th scope="row">Transfer Cost</th> -->
+<!-- 				    <td><input type="text"  title="" placeholder=""  class="w100p" id="viewtrnscost" name="viewtrnscost" readonly="readonly"/></td>      -->
+<!-- 				    <th scope="row">Customs Cost</th> -->
+<!-- 				    <td><input type="text"  title="" placeholder=""  class="w100p" id="viewcstmcost" name="viewcstmcost" readonly="readonly"/></td>      -->
+<!-- 				    <th scope="row">Other Import Cost</th> -->
+<!-- 				    <td><input type="text"  title="" placeholder=""  class="w100p" id="viewotherimprtcost" name="viewotherimprtcost" readonly="readonly"/></td>      -->
+<!-- 				</tr> -->
 				</tbody>
 				</table>
         
