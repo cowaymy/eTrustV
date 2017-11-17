@@ -28,7 +28,7 @@ public interface CustomerService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	EgovMap selectCustomerViewBasicInfo(Map<String, Object> params)throws Exception;
+	EgovMap selectCustomerViewBasicInfo(Map<String, Object> params);
 	
 	
 	/**

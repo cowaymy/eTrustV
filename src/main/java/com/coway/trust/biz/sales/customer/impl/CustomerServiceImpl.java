@@ -59,7 +59,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 이석희 2017.07.20
 	 */
 	@Override
-	public EgovMap selectCustomerViewBasicInfo(Map<String, Object> params) throws Exception{
+	public EgovMap selectCustomerViewBasicInfo(Map<String, Object> params) {
 		
 		return customerMapper.selectCustomerViewBasicInfo(params);
 	}
