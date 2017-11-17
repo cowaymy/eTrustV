@@ -53,7 +53,7 @@
             ,PASSWORD
             ,NTCE_CNTNT
             ,ATCH_FILE_GRP_ID 
-            ,CRT_DT
+            ,TO_CHAR(CRT_DT, 'DD/MM/YYYY') AS CRT_DT
             ,CRT_USER_ID
         FROM SYS0069M
         WHERE NTCE_NO = #{ntceNo}   
@@ -69,6 +69,7 @@
 	             READ_CNT,
 	             CRT_DT,
 	             SYSDATE,
+	             ATCH_FILE_GRP_ID,
 	             CASE  
 	                 WHEN SYSDATE - CRT_DT >= 1 THEN 'N' 
 	                 ELSE 'Y' 
