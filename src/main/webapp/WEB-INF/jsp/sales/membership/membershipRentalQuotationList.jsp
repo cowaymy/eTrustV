@@ -76,6 +76,34 @@ function fn_selectListAjax() {
  
 function fn_goConvertSale(){
 
+   var selectedItems = AUIGrid.getSelectedItems(gridID);
+   
+   if(selectedItems ==""){
+       Common.alert("No quotation selected. ");
+       return ;
+   }
+   
+   var v_stus = selectedItems[0].item.c2;
+   var v_quotId = selectedItems[0].item.qotatId;
+   
+   if(v_stus !="ACT"){
+	   Common.alert("["+v_quotId + "] Convert this quotation to sales is disallowed.");
+	   return false;
+   }
+   // status = expired면 접근불가 alert
+   
+//   var v_stus = selectedItems[0].item.validStus;
+//   if(v_stus !="ACT" ){
+//       Common.alert ("<b>[" + selectedItems[0].item.quotId + "] " + fn_getStatusActionByCode(v_stus) + ".<br />Convert this quotation to sales is disallowed.</b>");
+//       return;
+       
+//   }else{
+//       $("#QUOT_ID").val(selectedItems[0].item.quotId);
+//       $("#ORD_ID").val(selectedItems[0].item.ordId);
+       
+       var pram  ="?QUOT_ID="+selectedItems[0].item.qotatId+"&ORD_ID="+selectedItems[0].item.qotatOrdId; 
+       Common.popupDiv("/sales/membershipRentalQut/mRentalQuotConvSalePop.do"+pram);
+//   }
  }
   
  
@@ -151,8 +179,6 @@ function fn_doPrint(){
 	<li><p class="btn_blue"><a href="#"  onclick="javascirpt:fn_clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
-
-
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id='listSForm' name='listSForm'>
