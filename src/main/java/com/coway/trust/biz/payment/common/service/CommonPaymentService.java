@@ -88,6 +88,13 @@ public interface CommonPaymentService{
    	 */
     void savePayment(Map<String, Object> paramMap, List<Object> paramList );
     
-    
+    /**
+   	 * Normal Payment - 등록 처리 
+   	 * @param params
+   	 * @param model
+   	 * @return
+   	 * 
+   	 */
+    public void saveNormalPayment(Map<String, Object>paramMap, List<Object>paramList);
 
 }
