@@ -748,6 +748,26 @@ function fn_validRequiredField_Save_ResultInfo(){
 
 
 
+
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
+
+
+
+
 function fn_doClear(){
 
     $("#ddlStatus").val(""); 
@@ -812,6 +832,7 @@ function fn_doClear(){
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
+<form id="resultASAllForm" method="post">
 <section class="pop_body"><!-- pop_body start -->
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
@@ -822,6 +843,7 @@ function fn_doClear(){
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1295,9 +1317,11 @@ function fn_doClear(){
 </article><!-- acodi_wrap end -->
 <ul class="center_btns mt20" id='btnSaveDiv'>
     <li><p class="btn_blue2 big"><a href="#"   onclick="fn_doSave()">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#"    onClick="fn_doClear()" >Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#"    onclick="javascript:$('#resultASAllForm').clearForm();" >Clear</a></p></li>
+    <!-- <li><p class="btn_blue2 big"><a href="#"    onClick="fn_doClear()" >Clear</a></p></li> -->
 </ul>
 
 </section><!-- content end -->
+</form>
 </section><!-- content end -->
 </div><!-- popup_wrap end -->
