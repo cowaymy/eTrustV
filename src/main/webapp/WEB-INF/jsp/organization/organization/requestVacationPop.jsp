@@ -27,19 +27,12 @@ $(document).ready(function() {
     // To show Type of Leave selection
     doGetCombo('/common/selectCodeList.do', '378', '','typeofleave', 'S' , '');
     // To show replacementCT of selection
-
-
-     var selectedItems = AUIGrid.getSelectedItems(myGridID);
-
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
     console.log(selectedItems);
-
-
     var a = selectedItems[0].item.brnchId;
     var b = selectedItems[0].item.memberid;
     var c = selectedItems[0].item.membercode;
-
     var parm = "?brnch_id="+a+"&mem_id="+b+"&mem_code="+c;
-
     doGetCombo('/organization/selectReplaceCTList.do'+parm,'' ,'','replacementCT' ,'S','');
 
 
