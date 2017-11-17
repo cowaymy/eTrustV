@@ -32,6 +32,9 @@
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_INST_ADR') {
 	        fn_loadInstallAddrInfoNew(custAddId);
 	    }
+	    else{
+	    	eval(${callPrgm}(custAddId));
+	    }
 	}
 	
     function createAUIGrid() {

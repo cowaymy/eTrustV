@@ -10,7 +10,9 @@
 	    //AUIGrid 그리드를 생성합니다.
 	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' 
 	    || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
-	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
+	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC'
+	    || $('#callPrgm').val() == 'fn_loadCntcPerson'
+	    || $('#callPrgm').val() == 'fn_loadInstallationCntcPerson') {
 	        createAUIGrid();
 	        fn_getCustomerContactAjax();
 
@@ -31,7 +33,7 @@
                 $('#custPopCloseBtn').click();
             });
 	    }
-	    
+
 	});
 	
 	function fn_setData(cntcId) {
@@ -46,6 +48,9 @@
 	    }
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
 	        fn_loadInstallCntcInfo(cntcId);
+	    }
+	    else{
+	    	eval(${callPrgm}(cntcId));
 	    }
 	}
 	

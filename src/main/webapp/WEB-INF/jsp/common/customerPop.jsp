@@ -45,7 +45,7 @@
 	    if($('#callPrgm').val() == 'ORD_REGISTER_CUST_CUST') {
 	        fn_loadCustomer(custId);
 	    }
-	    else if ($('#callPrgm').val() == 'ORD_REGISTER_PAY_3RD_PARTY') {
+	    else if ($('#callPrgm').val() == 'ORD_REGISTER_PAY_3RD_PARTY' || $('#callPrgm').val() == 'ORD_REQUEST_PAY') {
 	        fn_loadThirdParty(custId, 1)
 	    }
 	    else if ($('#callPrgm').val() == 'ORD_MODIFY_PAY_3RD_PARTY') {

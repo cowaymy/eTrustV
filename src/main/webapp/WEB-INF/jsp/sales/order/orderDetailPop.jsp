@@ -7,7 +7,7 @@
             Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
         });
         $('#btnLedger2').click(function() {
-            Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
+            Common.popupDiv("/sales/order/orderLedger2ViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
         });
         $('#btnOrdDtlClose').click(function() {
             $('#_divIdOrdDtl').remove();

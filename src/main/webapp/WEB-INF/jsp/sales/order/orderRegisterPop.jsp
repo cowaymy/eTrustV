@@ -725,7 +725,7 @@
             $('#salesOrderForm').clearForm();
 
             //CLEAR RENTAL PAY SETTING
-            $('#thrdParty').val('');
+            $('#thrdParty').prop("checked", false);
 
             fn_clearRentPayMode();
             fn_clearRentPay3thParty();

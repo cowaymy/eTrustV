@@ -209,8 +209,7 @@
                     }
                 });
             }
-        });
-        
+        });        
         $('#exTradeAexc').change(function() {
             
             $('#cmbPromotionAexc option').remove();
@@ -224,7 +223,497 @@
 
             fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val(), $('#srvPacIdAexc').val());
         });
+        $('#custIdOwnt').change(function(event) {
+            fn_selectCustInfo();
+        });
+        $('#custIdOwnt').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                fn_selectCustInfo();
+                return false;
+            }
+        });
+        $('#addCustBtn').click(function() {
+            Common.popupWin("searchFormOwnt", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
+            //Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true);
+        });
+        $('#custBtnOwnt').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+            Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_CUST_CUST"}, null, true);
+        });
+        $('#btnReqOwnTrans').click(function() {
+            if(!fn_isLockOrder('OTRN')) {
+                if(fn_validReqOwnt()) {
+                    fn_doSaveReqOwnt();
+                }
+            }
+        });
+        $('#btnAddAddress').click(function() {
+            Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true);
+        });
+        $('#btnSelectAddress').click(function() {
+            Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "fn_loadMailAddress"}, null, true);
+        });
+        $('#btnAddContact').click(function() {
+            Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId": $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true ,'_editDiv3New');
+        });
+        $('#btnSelectContact').click(function() {
+            Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "fn_loadCntcPerson"}, null, true);
+        });
+        $('#btnAddInstAddress').click(function() {
+            Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true);
+        });
+        $('#btnSelectInstAddress').click(function() {
+            Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "fn_loadInstAddress"}, null, true);
+        });
+        $('#btnAddInstContact').click(function() {
+            Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId": $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true ,'_editDiv3New');
+        });
+        $('#btnSelectInstContact').click(function() {
+            Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "fn_loadInstallationCntcPerson"}, null, true);
+        });
+        $('#btnThirdPartyOwnt').click(function(event) {
+
+            fn_clearRentPayMode();
+            fn_clearRentPay3thParty();
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+
+            if($('#btnThirdPartyOwnt').is(":checked")) {
+                $('#sctThrdParty').removeClass("blind");
+            }
+            else {
+                $('#sctThrdParty').addClass("blind");
+            }
+        });
+        $('#cmbRentPaymodeOwnt').change(function() {
+
+            console.log('cmbRentPaymodeOwnt click event');
+
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+
+            var rentPayModeIdx = $("#cmbRentPaymodeOwnt option:selected").index();
+            var rentPayModeVal = $("#cmbRentPaymodeOwnt").val();
+
+            if(rentPayModeIdx > 0) {
+                if(rentPayModeVal == '133' || rentPayModeVal == '134') {
+
+                    Common.alert('<b>Currently we are not provide ['+rentPayModeVal+'] service.</b>');
+                    fn_clearRentPayMode();
+                }
+                else {
+                    if(rentPayModeVal == '131') {
+                        if($('#btnThirdPartyOwnt').is(":checked") && FormUtil.isEmpty($('#txtHiddenThirdPartyIDOwnt').val())) {
+                            Common.alert('<b>Please select the third party first.</b>');
+                        }
+                        else {
+                            $('#sctCrCard').removeClass("blind");
+                        }
+                    }
+                    else if(rentPayModeVal == '132') {
+                        if($('#btnThirdPartyOwnt').is(":checked") && FormUtil.isEmpty($('#txtHiddenThirdPartyIDOwnt').val())) {
+                            Common.alert('<b>Please select the third party first.</b>');
+                        }
+                        else {
+                            $('#sctDirectDebit').removeClass("blind");
+                        }
+                    }
+                }
+            }
+        });
+        $('#txtThirdPartyIDOwnt').change(function(event) {
+            fn_loadThirdParty($('#txtThirdPartyIDOwnt').val().trim(), 2);
+        });
+        $('#txtThirdPartyIDOwnt').keydown(function(event) {
+            if(event.which === 13) {    //enter
+                fn_loadThirdParty($('#txtThirdPartyIDOwnt').val().trim(), 2);
+            }
+        });
+        $('#thrdPartyBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+            Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REQUEST_PAY"}, null, true);
+        });
+        $('#btnAddCRC').click(function() {
+            var vCustId = $('#btnThirdPartyOwnt').is(":checked") ? $('#txtHiddenThirdPartyIDOwnt').val() : $('#txtHiddenCustIDOwnt').val();
+            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId}, null, true);
+        });
+        $('#btnSelectCRC').click(function() {
+            var vCustId = $('#btnThirdPartyOwnt').is(":checked") ? $('#txtHiddenThirdPartyIDOwnt').val() : $('#txtHiddenCustIDOwnt').val();
+            Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : vCustId, callPrgm : "ORD_REQUEST_PAY"}, null, true);
+        });
+        $('#btnAddBankAccount').click(function() {
+            var vCustId = $('#thrdParty').is(":checked") ? $('#txtHiddenThirdPartyIDOwnt').val() : $('#txtHiddenCustIDOwnt').val();
+            Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : vCustId}, null, true);
+        });
+        $('#btnSelectBankAccount').click(function() {
+            var vCustId = $('#thrdParty').is(":checked") ? $('#txtHiddenThirdPartyIDOwnt').val() : $('#txtHiddenCustIDOwnt').val();
+            Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "ORD_REQUEST_PAY"});
+        });
+        $('#btnAddThirdParty').click(function() {
+            Common.popupWin("searchFormOwnt", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
+        });
+        $('[name="grpOpt"]').click(function() {
+            fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
+        });
+        $('#billGrpBtn').click(function() {
+            Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "ORD_REQUEST_BILLGRP"}, null, true);
+        });
     });
+    
+    function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
+        $('#txtHiddenBillGroupIDOwnt').removeClass("readonly").val(billGrpId);
+        $('#txtBillGroupOwnt').removeClass("readonly").val(custBillGrpNo);
+        $('#txtBillTypeOwnt').removeClass("readonly").val(billType);
+        $('#txtBillAddressOwnt').removeClass("readonly").val(billAddrFull);
+        $('#txtBillGroupRemarkOwnt').removeClass("readonly").val(custBillRem);
+
+        fn_loadMailAddress(custBillAddId);
+    }
+    
+    function fn_setBillGrp(grpOpt) {
+
+        if(grpOpt == 'new') {
+
+            $('#btnAddAddress').removeClass("blind");
+            $('#btnSelectAddress').removeClass("blind");
+        
+            fn_clearBillGroup();
+
+            $('#grpOpt1').prop("checked", true);
+        }
+        else if(grpOpt == 'exist') {
+
+            $('#btnAddAddress').removeClass("blind");
+            $('#btnSelectAddress').removeClass("blind");
+            
+            fn_clearBillGroup();
+
+            $('#grpOpt2').prop("checked", true);
+
+            $('#sctBillSel').removeClass("blind");
+
+            $('#txtBillGroupRemarkOwnt').prop("readonly", true);
+        }
+    }
+    
+    function fn_loadBankAccountPop(bankAccId) {
+        fn_clearRentPaySetDD();
+        fn_loadBankAccount(bankAccId);
+        
+        $('#sctDirectDebit').removeClass("blind");
+
+        if(!FormUtil.IsValidBankAccount($('#txtHiddenRentPayBankAccIDOwnt').val(), $('#txtRentPayBankAccNoOwnt').val())) {
+            fn_clearRentPaySetDD();
+            $('#sctDirectDebit').removeClass("blind");
+            Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
+        }
+    }
+    
+    function fn_loadBankAccount(bankAccId) {
+        console.log("fn_loadBankAccount START");
+        
+        Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
+
+            if(rsltInfo != null) {
+                console.log("fn_loadBankAccount Setting");
+                
+                $("#txtHiddenRentPayBankAccIDOwnt").val(rsltInfo.custAccId);
+                $("#txtRentPayBankAccNoOwnt").val(rsltInfo.custAccNo);
+                $("#hiddenRentPayEncryptBankAccNoOwnt").val(rsltInfo.custEncryptAccNo);
+                $("#txtRentPayBankAccTypeOwnt").val(rsltInfo.codeName);
+                $("#txtRentPayBankAccNameOwnt").val(rsltInfo.custAccOwner);
+                $("#txtRentPayBankAccBankBranchOwnt").val(rsltInfo.custAccBankBrnch);
+                $("#txtRentPayBankAccBankOwnt").val(rsltInfo.bankCode + ' - ' + rsltInfo.bankName);
+                $("#hiddenRentPayBankAccBankIDOwnt").val(rsltInfo.custAccBankId);
+            }
+        });
+    }
+    
+    function fn_loadCreditCard(crcId, custOriCrcNo, custCrcNo, custCrcType, custCrcName, custCrcExpr, custCRCBank, custCrcBankId, crcCardType) {
+        $('#txtHiddenRentPayCRCIDOwnt').val(crcId);
+        $('#txtRentPayCRCNoOwnt').val(custOriCrcNo);
+        $('#hiddenRentPayEncryptCRCNoOwnt').val(custCrcNo);
+        $('#txtRentPayCRCTypeOwnt').val(custCrcType);
+        $('#txtRentPayCRCNameOwnt').val(custCrcName);
+        $('#txtRentPayCRCExpiryOwnt').val(custCrcExpr);
+        $('#txtRentPayCRCBankOwnt').val(custCRCBank);
+        $('#hiddenRentPayCRCBankIDOwnt').val(custCrcBankId);
+        $('#rentPayCRCCardTypeOwnt').val(crcCardType);
+    }
+
+    function fn_loadThirdParty(custId, sMethd) {
+
+        fn_clearRentPayMode();
+        fn_clearRentPay3thParty();
+        fn_clearRentPaySetCRC();
+        fn_clearRentPaySetDD();
+
+        if(custId != $('#txtHiddenCustIDOwnt').val()) {
+            Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
+
+            if(result != null && result.length == 1) {
+
+                var custInfo = result[0];
+
+                $('#txtHiddenThirdPartyIDOwnt').val(custInfo.custId)
+                $('#txtThirdPartyIDOwnt').val(custInfo.custId)
+                $('#txtThirdPartyTypeOwnt').val(custInfo.codeName1)
+                $('#txtThirdPartyNameOwnt').val(custInfo.name)
+                $('#txtThirdPartyNRICOwnt').val(custInfo.nric)
+/*
+                $('#thrdPartyId').removeClass("readonly");
+                $('#thrdPartyType').removeClass("readonly");
+                $('#thrdPartyName').removeClass("readonly");
+                $('#thrdPartyNric').removeClass("readonly");
+*/
+            }
+            else {
+                if(sMethd == 2) {
+                    Common.alert('<b>Third party not found.<br />'
+                               + 'Your input third party ID : ' + custId + '</b>');
+                }
+            }
+        });
+        }
+        else {
+            Common.alert('<b>Third party and customer cannot be same person/company.<br />'
+                       + 'Your input third party ID : ' + custId + '</b>');
+        }
+
+        $('#sctThrdParty').removeClass("blind");
+    }
+    
+    //ClearControl_RentPaySet_ThirdParty
+    function fn_clearRentPayMode() {
+        $('#cmbRentPaymodeOwnt').val('');
+        $('#txtRentPayICOwnt').val('');
+    }
+    
+    //ClearControl_RentPaySet_ThirdParty
+    function fn_clearRentPay3thParty() {
+      //PanelThirdParty.Visible = false;
+        $('#txtThirdPartyIDOwnt').val('');
+        $('#txtHiddenThirdPartyIDOwnt').val('');
+        $('#txtThirdPartyTypeOwnt').val('');
+        $('#txtThirdPartyNameOwnt').val('');
+        $('#txtThirdPartyNRICOwnt').val('');
+    }
+    
+    //ClearControl_RentPaySet_CRC
+    function fn_clearRentPaySetCRC() {
+        $('#sctCrCard').addClass("blind");
+        $('#txtRentPayCRCNoOwnt').val('');
+        $('#txtHiddenRentPayCRCIDOwnt').val('');
+        $('#hiddenRentPayEncryptCRCNoOwnt').val('');
+        $('#txtRentPayCRCTypeOwnt').val('');
+        $('#txtRentPayCRCNameOwnt').val('');
+        $('#txtRentPayCRCExpiryOwnt').val('');
+        $('#txtRentPayCRCBankOwnt').val('');
+        $('#hiddenRentPayCRCBankIDOwnt').val('');
+    }
+    
+    //ClearControl_RentPaySet_DD
+    function fn_clearRentPaySetDD() {
+        $('#sctDirectDebit').addClass("blind");
+        $('#txtRentPayBankAccNoOwnt').val('');
+        $('#txtHiddenRentPayBankAccIDOwnt').val('');
+        $('#hiddenRentPayEncryptBankAccNoOwnt').val('');
+        $('#txtRentPayBankAccTypeOwnt').val('');
+        $('#txtRentPayBankAccNameOwnt').val('');
+        $('#txtRentPayBankAccBankBranchOwnt').val('');
+        $('#txtRentPayBankAccBankOwnt').val('');
+        $('#hiddenRentPayBankAccBankIDOwnt').val('');
+    }
+    
+    function fn_selectCustInfo() {
+        var strCustId = $('#custIdOwnt').val();
+
+        //CLEAR CUSTOMER
+        fn_clearCustomer();
+        fn_clearMailAddress();
+        fn_clearContactPerson();
+
+        //CLEAR RENTAL PAY SETTING
+        $('#btnThirdPartyOwnt').prop("checked", false);
+
+        fn_clearRentPayMode();
+        fn_clearRentPay3thParty();
+        fn_clearRentPaySetCRC();
+        fn_clearRentPaySetDD();
+
+        //CLEAR BILLING GROUP
+        fn_clearBillGroup();
+
+        //CLEAR INSTALLATION
+        fn_clearInstAddress();
+        fn_clearInstallationCntcPerson();
+
+        if(FormUtil.isNotEmpty(strCustId) && strCustId > 0) {            
+            if(CUST_ID == strCustId) {
+                $('#custIdOwnt').val('');
+                Common.alert("Invalid Customer ID" + DEFAULT_DELIMITER + "<b>This customer is already the owner of this order.</b>");
+            }
+            else {
+                fn_loadCustomer(strCustId);
+            }
+        }
+        else {
+            Common.alert('<b>Invalid customer ID.</b>');
+        }
+    }
+
+    //ClearControl_BillGroup
+    function fn_clearBillGroup() {
+
+        $('#grpOpt1').removeAttr("checked");
+        $('#grpOpt2').removeAttr("checked");
+
+        $('#sctBillSel').addClass("blind");
+        
+        $('#txtBillGroupOwnt').val('');
+        $('#txtHiddenBillGroupIDOwnt').val('');
+        $('#txtBillTypeOwnt').val('');
+        $('#txtBillAddressOwnt').val('');
+        $('#txtBillGroupRemarkOwnt').val('');
+        $('#installDur').removeAttr("readonly");
+    }
+    
+    //ClearControl_Installation_Address
+    function fn_clearInstAddress() {
+        $('#btnAddInstAddress').addClass("blind");
+        $('#btnSelectInstAddress').addClass("blind");
+        
+        $('#txtHiddenInstAddressIDOwnt').val('');
+        $('#txtInstAddrDtlOwnt').val('');
+        $('#txtInstStreetOwnt').val('');
+        $('#txtInstAreaOwnt').val('');
+        $('#txtInstCityOwnt').val('');
+        $('#txtInstPostcodeOwnt').val('');
+        $('#txtInstStateOwnt').val('');
+        $('#txtInstCountryOwnt').val('');
+    }
+    
+    function fn_clearMailAddress() {
+        
+        $('#btnAddAddress').addClass("blind");
+        $('#btnSelectAddress').addClass("blind");
+        
+        $('#txtHiddenAddressIDOwnt').val('');
+        $('#txtMailAddrDtlOwnt').val('');
+        $('#txtMailStreetOwnt').val('');
+        $('#txtMailAreaOwnt').val('');
+        $('#txtMailCityOwnt').val('');
+        $('#txtMailPostcodeOwnt').val('');
+        $('#txtMailStateOwnt').val('');
+        $('#txtMailCountryOwnt').val('');
+    }
+    
+    //ClearControl_Customer(Customer)
+    function fn_clearCustomer() {
+//      $('#custFormOwnt').clearForm();
+        
+        $('#custIdOwnt').clearForm();
+        $('#custTypeNmOwnt').clearForm();
+        $('#typeIdOwnt').clearForm();
+        $('#nameOwnt').clearForm();
+        $('#nricOwnt').clearForm();
+        $('#nationNmOwnt').clearForm();
+        $('#raceOwnt').clearForm();
+        $('#raceIdOwnt').clearForm();
+        $('#dobOwnt').clearForm();
+        $('#genderOwnt').clearForm();
+        $('#pasSportExprOwnt').clearForm();
+        $('#visaExprOwnt').clearForm();
+        $('#emailOwnt').clearForm();
+        $('#custRemOwnt').clearForm();
+        $('#empChkOwnt').clearForm();
+    }
+    
+    function fn_loadCustomer(custId){
+
+        $("#searchCustIdOwnt").val(custId);
+
+        Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
+
+            if(result != null && result.length == 1) {
+                
+                //fn_tabOnOffSet('BIL_DTL', 'SHOW');
+
+                var custInfo = result[0];
+
+                console.log("성공.");
+                console.log("custId : " + result[0].custId);
+                console.log("userName1 : " + result[0].name);
+
+                //
+                $("#txtHiddenCustIDOwnt").val(custInfo.custId); //Customer ID(Hidden)
+                $("#custIdOwnt").val(custInfo.custId); //Customer ID
+                $("#custTypeNmOwnt").val(custInfo.codeName1); //Customer Name
+                $("#typeIdOwnt").val(custInfo.typeId); //Type
+                $("#nameOwnt").val(custInfo.name); //Name
+                $("#nricOwnt").val(custInfo.nric); //NRIC/Company No
+                $("#nationNmOwnt").val(custInfo.name2); //Nationality
+                $("#raceIdOwnt").val(custInfo.raceId); //Nationality
+                $("#raceOwnt").val(custInfo.codeName2); //
+                $("#dobOwnt").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
+                $("#genderOwnt").val(custInfo.gender); //Gender
+                $("#pasSportExprOwnt").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
+                $("#visaExprOwnt").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
+                $("#emailOwnt").val(custInfo.email); //Email
+                $("#custRemOwnt").val(custInfo.rem); //Remark
+                $("#empChkOwnt").val('${orderDetail.basicInfo.empChk}'); //Employee
+//              $("#gstChk").val('0').prop("disabled", true);
+
+                if(custInfo.corpTypeId > 0) {
+                    $("#corpTypeNmOwnt").val(custInfo.codeName); //Industry Code
+                }
+                else {
+                    $("#corpTypeNmOwnt").val(""); //Industry Code
+                }
+
+                if(custInfo.custAddId > 0) {
+
+                    //----------------------------------------------------------
+                    // Mail Address SETTING
+                    //----------------------------------------------------------
+                    fn_clearMailAddress();
+                    fn_loadMailAddress(custInfo.custAddId);
+
+                    //----------------------------------------------------------
+                    // Installation Address SETTING
+                    //----------------------------------------------------------
+                    fn_clearInstAddress();
+                    fn_loadInstAddress(custInfo.custAddId);
+                }
+
+                if(custInfo.custCntcId > 0) {
+                    //----------------------------------------------------------
+                    // Contact Person
+                    //----------------------------------------------------------
+                    fn_clearContactPerson();
+                    fn_loadCntcPerson(custInfo.custCntcId);
+
+                    //----------------------------------------------------------
+                    // Installation Contact Person
+                    //----------------------------------------------------------
+                    fn_clearInstallationCntcPerson();
+                    fn_loadInstallationCntcPerson(custInfo.custCntcId);
+                }
+
+                $('#btnSelectAddress').removeClass("blind");
+                $('#btnAddAddress').removeClass("blind");
+                $('#btnSelectContact').removeClass("blind");
+                $('#btnAddContact').removeClass("blind");
+                $('#btnSelectInstAddress').removeClass("blind");
+                $('#btnAddInstAddress').removeClass("blind");
+                $('#btnSelectInstContact').removeClass("blind");
+                $('#btnAddInstContact').removeClass("blind");
+            }
+            else {
+                Common.alert('<b>Customer not found.<br>Your input customer ID :'+$("#searchCustId").val()+'</b>');
+            }
+        });
+    }
 
     function createSchemAUIGrid() {
         console.log('createModAUIGrid1() START');
@@ -254,8 +743,166 @@
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
+    }
+    
+    function fn_clearInstallationCntcPerson() {
+
+        $('#btnSelectInstContact').removeClass("blind");
+        $('#btnAddInstContact').removeClass("blind");
         
-        filterGridID = GridCommon.createAUIGrid("grid_filter_wrap", docColumnLayout, "", filterGridPros);
+        $('#txtHiddenInstContactIDOwnt').val('');
+        $('#txtInstContactNameOwnt').val('');
+        $('#txtInstContactInitialOwnt').val('');
+        $('#txtInstContactGenderOwnt').val('');
+        $('#txtInstContactICOwnt').val('');
+        $('#txtInstContactDOBOwnt').val('');
+        $('#txtInstContactRaceOwnt').val('');
+        $('#txtInstContactEmailOwnt').val('');
+        $('#txtInstContactDeptOwnt').val('');
+        $('#txtInstContactPostOwnt').val('');
+        $('#txtInstContactTelMobOwnt').val('');
+        $('#txtInstContactTelResOwnt').val('');
+        $('#txtInstContactTelOffOwnt').val('');
+        $('#txtInstContactTelFaxOwnt').val('');
+    }
+
+    function fn_loadInstallationCntcPerson(custCntcId){
+        console.log("fn_loadInstallationCntcPerson START :custCntcId:"+custCntcId);
+
+        $("#searchCustCntcId").val(custCntcId);
+
+        Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(rslt) {
+
+            if(rslt != null) {
+                $("#txtHiddenInstContactIDOwnt").val(rslt.custCntcId);
+                $("#txtInstContactNameOwnt").val(rslt.name1);
+                $("#txtInstContactInitialOwnt").val(rslt.code);
+                $("#txtInstContactGenderOwnt").val(rslt.gender);
+                $("#txtInstContactICOwnt").val(rslt.nric);
+                $("#txtInstContactDOBOwnt").val(rslt.dob);
+                $("#txtInstContactRaceOwnt").val(rslt.codeName);
+                $("#txtInstContactEmailOwnt").val(rslt.email);
+                $("#txtInstContactDeptOwnt").val(rslt.dept);
+                $("#txtInstContactPostOwnt").val(rslt.pos);
+                $("#txtInstContactTelMobOwnt").val(rslt.telM1);
+                $("#txtInstContactTelResOwnt").val(rslt.telR);
+                $("#txtInstContactTelOffOwnt").val(rslt.telO);
+                $("#txtInstContactTelFaxOwnt").val(rslt.telf);
+            }
+        });
+    }
+    
+    function fn_loadCntcPerson(custCntcId){
+        console.log("fn_loadCntcPerson START");
+
+        Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(rslt) {
+
+            if(rslt != null) {
+                $("#txtHiddenContactIDOwnt").val(rslt.custCntcId);
+                $("#txtContactNameOwnt").val(rslt.name1);
+                $("#txtContactInitialOwnt").val(rslt.code);
+                $("#txtContactGenderOwnt").val(rslt.gender);
+                $("#txtContactICOwnt").val(rslt.nric);
+                $("#txtContactDOBOwnt").val(rslt.dob);
+                $("#txtContactRaceOwnt").val(rslt.codeName);
+                $("#txtContactEmailOwnt").val(rslt.email);
+                $("#txtContactDeptOwnt").val(rslt.dept);
+                $("#txtContactPostOwnt").val(rslt.pos);
+                $("#txtContactTelMobOwnt").val(rslt.telM1);
+                $("#txtContactTelResOwnt").val(rslt.telR);
+                $("#txtContactTelOffOwnt").val(rslt.telO);
+                $("#txtContactTelFaxOwnt").val(rslt.telf);
+            }
+        });
+    }
+    
+    function fn_clearContactPerson() {
+        $('#btnAddContact').addClass("blind");
+        $('#btnSelectContact').addClass("blind");
+        
+        $('#txtHiddenContactIDOwnt').val('');
+        $('#txtContactNameOwnt').val('');
+        $('#txtContactInitialOwnt').val('');
+        $('#txtContactGenderOwnt').val('');
+        $('#txtContactICOwnt').val('');
+        $('#txtContactDOBOwnt').val('');
+        $('#txtContactRaceOwnt').val('');
+        $('#txtContactEmailOwnt').val('');
+        $('#txtContactDeptOwnt').val('');
+        $('#txtContactPostOwnt').val('');
+        $('#txtContactTelMobOwnt').val('');
+        $('#txtContactTelResOwnt').val('');
+        $('#txtContactTelOffOwnt').val('');
+        $('#txtContactTelFaxOwnt').val('');
+/*
+        btnAddContact.Visible = false;
+        btnSelectContact.Visible = false;
+
+        txtHiddenContactID.Text = "";
+        txtContactName.Text = "";
+        txtContactInitial.Text = "";
+        txtContactGender.Text = "";
+        txtContactIC.Text = "";
+        txtContactDOB.Text = "";
+        txtContactRace.Text = "";
+        txtContactEmail.Text = "";
+        txtContactDept.Text = "";
+        txtContactPost.Text = "";
+        txtContactTelMob.Text = "";
+        txtContactTelRes.Text = "";
+        txtContactTelOff.Text = "";
+        txtContactTelFax.Text = "";
+*/
+    }
+
+    function fn_loadMailAddress(custAddId){
+        console.log("fn_loadMailAddress START");
+
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(rslt) {
+
+            if(rslt != null) {
+
+                console.log("Success!!!!!!.");
+                console.log("hiddenBillAddId : " + rslt.custAddId);
+                console.log("rslt.addrDtl : " + rslt.addrDtl);
+
+                $("#txtHiddenAddressIDOwnt").val(rslt.custAddId); //Customer Address ID(Hidden)
+                $("#txtMailAddrDtlOwnt").val(rslt.addrDtl); //Address
+                $("#txtMailStreetOwnt").val(rslt.street); //Street
+                $("#txtMailAreaOwnt").val(rslt.area); //Area
+                $("#txtMailCityOwnt").val(rslt.city); //City
+                $("#txtMailPostcodeOwnt").val(rslt.postcode); //Post Code
+                $("#txtMailStateOwnt").val(rslt.state); //State
+                $("#txtMailCountryOwnt").val(rslt.country); //Country
+                
+              //$("#hiddenBillStreetId").val(rslt.custAddId); //Magic Address STREET_ID(Hidden)
+            }
+        });
+    }
+    
+    function fn_loadInstAddress(custAddId){
+        console.log("fn_loadMailAddress START");
+
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(rslt) {
+
+            if(rslt != null) {
+
+                console.log("Success!!!!!!.");
+                console.log("hiddenBillAddId : " + rslt.custAddId);
+                console.log("rslt.addrDtl : " + rslt.addrDtl);
+
+                $("#txtHiddenInstAddressIDOwnt").val(rslt.custAddId); //Customer Address ID(Hidden)
+                $("#txtInstAddrDtlOwnt").val(rslt.addrDtl); //Address
+                $("#txtInstStreetOwnt").val(rslt.street); //Street
+                $("#txtInstAreaOwnt").val(rslt.area); //Area
+                $("#txtInstCityOwnt").val(rslt.city); //City
+                $("#txtInstPostcodeOwnt").val(rslt.postcode); //Post Code
+                $("#txtInstStateOwnt").val(rslt.state); //State
+                $("#txtInstCountryOwnt").val(rslt.country); //Country
+                
+              //$("#hiddenBillStreetId").val(rslt.custAddId); //Magic Address STREET_ID(Hidden)
+            }
+        });
     }
     
     // 리스트 조회.
@@ -432,36 +1079,47 @@
     
     function fn_changeTab(tabNm) {
         
+        var userid = fn_getLoginInfo();
+        var todayDD = Number(TODAY_DD.substr(0, 2));
+
         if(tabNm == 'CANC') {
-            if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
-                var msg = "[" + ORD_NO + "] is under [" + ORD_STUS_CODE + "] status.<br/>"
-                        + "Order cancellation request is disallowed.";
-                        
-                Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
-                
-                return false;
+
+            if(fn_getCheckAccessRight(userid, 9)) {
+
+                if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
+                    var msg = "[" + ORD_NO + "] is under [" + ORD_STUS_CODE + "] status.<br/>"
+                            + "Order cancellation request is disallowed.";                            
+                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
+                    return false;
+                }
+
+                if(todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) {
+                    var msg = "Request for order cancellation is restricted on 26, 27, 1, 2 of every month";                            
+                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
+                    return false;
+                }
             }
-            
-            var todayDD = Number(TODAY_DD.substr(0, 2));
-            
-            console.log('todayDD:'+todayDD);
-            
-            if(todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) {
-                var msg = "Request for order cancellation is restricted on 26, 27, 1, 2 of every month";
-                        
-                Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
-                
+            else {
+                var msg = "Sorry. You have no access rights to request order cancellation.";                        
+                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                
                 return false;
             }
         }
         
         if(tabNm == 'PEXC') {
-            if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
-                var msg = "[" + ORD_NO + "] is under [" + ORD_STUS_CODE + "] status.<br/>"
-                        + "Produt exchange request is disallowed.";
-                        
-                Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+
+            if(fn_getCheckAccessRight(userid, 10)) {
                 
+                if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
+                    var msg = "[" + ORD_NO + "] is under [" + ORD_STUS_CODE + "] status.<br/>"
+                            + "Produt exchange request is disallowed.";                            
+                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
+                    return false;
+                }
+            }
+            else {
+                var msg = "Sorry. You have no access rights to request product exchange.";                        
+                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                
                 return false;
             }
         }
@@ -489,41 +1147,58 @@
             }
             
             if(!isValid) {
-                Common.confirm("Invalid Order No" + DEFAULT_DELIMITER + msg, fn_selfClose);
-                
+                Common.confirm("Invalid Order No" + DEFAULT_DELIMITER + msg, fn_selfClose);                
                 return false;
             }
         }
         
         if(tabNm == 'AEXC') {
-            
-            var userid = fn_getLoginInfo();
-            
+
             if(fn_getCheckAccessRight(userid, 11)) {
                 if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
                     var msg = "[" + ORD_NO + "] is under [" + ORD_STUS_CODE + "] status.<br/>"
-                            + "Application type exchange request is disallowed.";
-                            
-                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
-                    
+                            + "Application type exchange request is disallowed.";                            
+                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
                     return false;
                 }
                 else {
                     if(APP_TYPE_ID != '66' && APP_TYPE_ID != '67' && APP_TYPE_ID != '68') {
                         var msg = "[" + ORD_NO + "] is [" + APP_TYPE_DESC + "] order.<br/>"
-                                + "Only rental/outright/installment order is allow to request application type exchange.";
-                                
-                        Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
-                        
+                                + "Only rental/outright/installment order is allow to request application type exchange.";                                
+                        Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                        
                         return false;
                     }
                 }
             }
             else {
-                var msg = "Sorry. You have no access rights to request application type exchange.";
-                        
-                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+                var msg = "Sorry. You have no access rights to request application type exchange.";                        
+                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                
+                return false;
+            }
+        }
+        
+        if(tabNm == 'OTRN') {
+            
+            if(fn_getCheckAccessRight(userid, 12)) {
                 
+                if(ORD_STUS_ID != '4') {
+                    var msg = "[" + ORD_NO + "] is under [" + ORD_STUS_CODE + "] status.<br/>"
+                            + "Only complete order is allow to transfer ownership.";                            
+                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
+                    return false;
+                }
+
+                console.log('todayDD:'+todayDD);
+                
+                if(todayDD >= 26 || todayDD == 1) {
+                    var msg = "Ownership transfer is not allowed from 26 until 1 next month.";                            
+                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
+                    return false;
+                }
+            }
+            else {
+                var msg = "Sorry. You have no access rights to request ownership transfer.";                        
+                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                
                 return false;
             }
         }
@@ -582,6 +1257,18 @@
         } else {
             $('#scAE').addClass("blind");
         }
+        if(tabNm == 'OTRN') {
+            $('#scOT').removeClass("blind");
+            $('#aTabBI').click();
+            
+            fn_loadListOwnt();
+            
+            fn_loadOrderInfoOwnt();
+            
+            fn_isLockOrder(tabNm);
+        } else {
+            $('#scOT').addClass("blind");
+        }
 
     }
     
@@ -617,7 +1304,6 @@
         if('${orderDetail.logView.isLok}' == '1' && '${orderDetail.logView.prgrsId}' != 2) {
             isLock = true;
             msg = 'This order is under progress [' + '${orderDetail.logView.prgrs}' + '].<br />';
-
         }
 
         if(isLock) {            
@@ -632,6 +1318,10 @@
             else if(tabNm == 'AEXC') {
                 msg += 'Request application type exchange is disallowed.';
                 fn_disableControlAexc();
+            }
+            else if(tabNm == 'OTRN') {
+                msg += 'Transfer ownership is disallowed.';
+                //fn_disableControlAexc();
             }
             
             Common.alert("Order Locked" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -716,7 +1406,18 @@
             $('#cmbAppTypeAexc').append("<option value='67'>Outright</option>");
         }
     }
+    
+    function fn_loadOrderInfoOwnt() {
+        if(APP_TYPE_ID == '66') {
+            fn_tabOnOffSetOwnt('REN_PAY', 'SHOW');
+            fn_tabOnOffSetOwnt('BIL_GRP', 'SHOW');
+        }
         
+        $('#dpPreferInstDateOwnt').val('${orderDetail.installationInfo.preferInstDt}');
+        $('#tpPreferInstTimeOwnt').val('${orderDetail.installationInfo.preferInstTm}');
+        $('#txtInstSpecialInstructionOwnt').val('${orderDetail.installationInfo.instct}');
+    }
+            
     function fn_loadOrderInfoCanc() {
         if(ORD_STUS_ID == '4') {
             $('#spPrfRtnDt').removeClass("blind");
@@ -891,7 +1592,9 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    console.log("Error message : " + jqXHR.responseJSON.message);
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -911,7 +1614,9 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Failed to save" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Failed to save" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    console.log("Error message : " + jqXHR.responseJSON.message);
+                    Common.alert("Failed to save" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -929,7 +1634,9 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    console.log("Error message : " + jqXHR.responseJSON.message);
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -947,7 +1654,9 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    console.log("Error message : " + jqXHR.responseJSON.message);
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -956,6 +1665,202 @@
         );
     }
 
+    function fn_doSaveReqOwnt() {
+        console.log('!@# fn_doSaveReqCanc START');
+
+        Common.ajax("POST", "/sales/order/requestOwnershipTransfer.do", $('#frmReqOwnt').serializeJSON(), function(result) {
+                
+                Common.alert("Ownership Transfer Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_selfClose);
+            
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
+                }
+                catch(e) {
+                    console.log(e);
+                }
+            }
+        );
+    }
+
+    function fn_validReqOwnt() {
+        var msg = "";
+        
+        var todayDD = Number(TODAY_DD.substr(0, 2));
+        
+        if(todayDD >= 26 || todayDD == 1) {
+            msg = "Ownership transfer is not allowed from 26 until 1 next month.";                            
+            Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
+            return false;
+        }
+        else {
+            if(!fn_validReqOwntCustmer())      return false;
+            if(!fn_validReqOwntMailAddress())  return false;
+            if(!fn_validReqOwntContact())      return false;
+            if(!fn_validReqOwntRentPaySet())   return false;
+            if(!fn_validReqOwntBillGroup())    return false;
+            if(!fn_validReqOwntInstallation()) return false;
+        }
+        return true;
+    }
+    
+    function fn_validReqOwntInstallation() {
+        var isValid = true, msg = "";
+        
+        if(FormUtil.checkReqValue($('#txtHiddenInstAddressIDOwnt'))) {
+            isValid = false;
+            msg += "* Please select an installation address.<br>";
+        }
+        if(FormUtil.checkReqValue($('#txtHiddenInstContactIDOwnt'))) {
+            isValid = false;
+            msg += "* Please select an installation contact person.<br>";
+        }
+        if($("#cmbDSCBranchOwnt option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select the DSC branch.<br>";
+        }
+        if(FormUtil.checkReqValue($('#dpPreferInstDateOwnt'))) {
+            isValid = false;
+            msg += "* Please select prefer install date.<br>";
+        }
+        if(FormUtil.checkReqValue($('#tpPreferInstTimeOwnt'))) {
+            isValid = false;
+            msg += "* Please select prefer install time.<br>";
+        }
+        
+        if(!isValid) {
+            $('#tabIN').click();
+            Common.alert("Ownership Transfer Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        }
+        return isValid;
+    }
+    
+    function fn_validReqOwntBillGroup() {
+        var isValid = true, msg = "";
+        
+        if(APP_TYPE_ID == '66') {
+            if(!$('#grpOpt1').is(":checked") && !$('#grpOpt2').is(":checked")) {
+                isValid = false;
+                msg += "* Please select the group option.<br>";
+            }
+            else {
+                if($('#grpOpt2').is(":checked")) {
+                    if(FormUtil.checkReqValue($('#txtHiddenBillGroupIDOwnt'))) {
+                        isValid = false;
+                        msg += "* Please select a billing group.<br>";
+                    }
+                }
+            }
+        }
+        
+        if(!isValid) {
+            $('#tabBG').click();
+            Common.alert("Ownership Transfer Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        }
+        return isValid;
+    }
+    
+    function fn_validReqOwntRentPaySet() {
+        var isValid = true, msg = "";
+
+        if(APP_TYPE_ID == '66') {
+            if($('#btnThirdPartyOwnt').is(":checked")) {
+                if(FormUtil.checkReqValue($('#txtHiddenThirdPartyID'))) {
+                    isValid = false;
+                    msg += "* Please select the third party.<br>";
+                }
+            }
+            if($("#cmbRentPaymodeOwnt option:selected").index() <= 0) {
+                Common.ajaxSync("GET", "/sales/order/selectOderOutsInfo.do", {ORD_NO : ORD_ID}, function(result) {
+                    if(result != null) {
+                        if(result.lastBillMth != 60 || result.ordTotOtstnd != 0) {
+                            isValid = false;
+                            msg += "* Please select the rental paymode.<br>";
+                        }                        
+                    }
+                });
+            }
+            else {
+                if($("#cmbRentPaymodeOwnt").val() <= '131') { //CRC
+                    if(FormUtil.checkReqValue($('#txtHiddenRentPayCRCIDOwnt'))) {
+                        isValid = false;
+                        msg += "* Please select a credit card.<br>";
+                    }
+                    else {
+                        if(FormUtil.checkReqValue($('#hiddenRentPayCRCBankIDOwnt')) || $('#hiddenRentPayCRCBankIDOwnt').val() == '0') {
+                            isValid = false;
+                            msg += "* Invalid credit card issue bank.<br>";
+                        }
+                    }
+                }
+                else if($("#cmbRentPaymodeOwnt").val() <= '132') { //DD
+                    if(FormUtil.checkReqValue($('#txtHiddenRentPayBankAccIDOwnt'))) {
+                        isValid = false;
+                        msg += "* Please select a bank account.<br>";
+                    }
+                    else {
+                        if(FormUtil.checkReqValue($('#hiddenRentPayBankAccBankIDOwnt')) || $('#hiddenRentPayBankAccBankIDOwnt').val() == '0') {
+                            isValid = false;
+                            msg += "* Invalid bank account issue bank.<br>";
+                        }
+                    }
+                }
+            }
+        }
+        
+        if(!isValid) {
+            $('#tabRP').click();
+            Common.alert("Ownership Transfer Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        }
+        return isValid;
+    }
+    
+    function fn_validReqOwntContact() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.checkReqValue($('#txtHiddenContactIDOwnt'))) {
+            isValid = false;
+            msg += "* Please select a contact person.<br>";
+        }
+        
+        if(!isValid) {
+            $('#tabCP').click();
+            Common.alert("Ownership Transfer Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        }
+        return isValid;
+    }
+    
+    function fn_validReqOwntMailAddress() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.checkReqValue($('#txtHiddenAddressIDOwnt'))) {
+            isValid = false;
+            msg += "* Please select an address.<br>";
+        }
+        
+        if(!isValid) {
+            $('#tabMA').click();
+            Common.alert("Ownership Transfer Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        }
+        return isValid;
+    }
+    
+    function fn_validReqOwntCustmer() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.checkReqValue($('#txtHiddenCustIDOwnt'))) {
+            isValid = false;
+            msg += "* Please select a customer.<br>";
+        }
+        
+        if(!isValid) {
+            $('#tabCT').click();
+            Common.alert("Ownership Transfer Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        }
+        return isValid;
+    }
+    
     function fn_validReqPexc() {
         var isValid = true, msg = "";
 
@@ -1113,10 +2018,41 @@
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '287', stusCodeId:'1'}, '', 'cmbReasonAexc', 'S', ''); //Reason Code
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTpAexc', 'S'); //Discount period
     }
-    
+
     function fn_loadListCanc() {
         doGetComboOrder('/common/selectCodeList.do', '52',  'CODE_ID',  '', 'cmbRequestor', 'S', ''); //Common Code
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '536', stusCodeId:'1'}, '', 'cmbReason', 'S', 'fn_removeOpt'); //Reason Code
+    }
+    
+    function fn_loadListOwnt() {
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChkOwnt',  'S'); //EMP_CHK
+        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'cmbRentPaymodeOwnt', 'S', ''); //Common Code
+        doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '${orderDetail.installationInfo.dscId}', 'cmbDSCBranchOwnt',  'S', ''); //Branch Code
+    }
+    
+    function fn_tabOnOffSetOwnt(tabNm, opt) {
+        switch(tabNm) {
+            case 'REN_PAY' :
+                if(opt == 'SHOW') {
+                    if($('#tabRP').hasClass("blind")) $('#tabRP').removeClass("blind");
+                    if($('#atcRP').hasClass("blind")) $('#atcRP').removeClass("blind");
+                } else if(opt == 'HIDE') {
+                    if(!$('#tabRP').hasClass("blind")) $('#tabRP').addClass("blind");
+                    if(!$('#atcRP').hasClass("blind")) $('#atcRP').addClass("blind");
+                }
+                break;
+            case 'BIL_GRP' :
+                if(opt == 'SHOW') {
+                    if($('#tabBG').hasClass("blind")) $('#tabBG').removeClass("blind");
+                    if($('#atcBG').hasClass("blind")) $('#atcBG').removeClass("blind");
+                } else if(opt == 'HIDE') {
+                    if(!$('#tabBG').hasClass("blind")) $('#tabBG').addClass("blind");
+                    if(!$('#atcBG').hasClass("blind")) $('#atcBG').addClass("blind");
+                }
+                break;
+            default :
+                break;
+        }
     }
     
     function fn_removeOpt() {
@@ -1512,6 +2448,732 @@
 </section>
 <!------------------------------------------------------------------------------
     Application Type Exchange Request END
+------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    Ownership Transfer Request START
+------------------------------------------------------------------------------->
+<section id="scOT" class="blind">
+<form id="searchFormOwnt" name="searchForm" action="#" method="post">
+    <input id="searchCustIdOwnt" name="custId" type="hidden"/>
+</form>
+
+<form id="frmReqOwnt" name="frmReqOwnt" action="#" method="post">
+<input                                 name="salesOrdId"             type="hidden" value="${orderDetail.basicInfo.ordId}"/>
+<input                                 name="hiddenCurrentCustID"    type="hidden" value="${orderDetail.basicInfo.custId}"/>
+<input id="txtHiddenCustIDOwnt"        name="txtHiddenCustID"        type="hidden"/>
+<input id="hiddenCustTypeIDOwnt"       name="hiddenCustTypeID"       type="hidden"/>
+<input id="txtHiddenContactIDOwnt"     name="txtHiddenContactID"     type="hidden"/>
+<input id="txtHiddenAddressIDOwnt"     name="txtHiddenAddressID"     type="hidden"/>
+<input id="hiddenAppTypeIDOwnt"        name="hiddenAppTypeID"        type="hidden"/>
+<input id="txtHiddenInstAddressIDOwnt" name="txtHiddenInstAddressID" type="hidden"/>
+<input id="txtHiddenInstContactIDOwnt" name="txtHiddenInstContactID" type="hidden"/>
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Ownership Transfer Information</h3>
+</aside><!-- title_line end -->
+
+<section class="tap_wrap"><!-- tap_wrap start -->
+
+<ul class="tap_type1 num4">
+	<li id="tabCT"><a href="#" class="on">Customer</a></li>
+	<li id="tabMA"><a href="#">Mailing Address</a></li>
+	<li id="tabCP"><a href="#">Contact Person</a></li>
+	<li id="tabRP" class="blind"><a href="#">Rental Pay Setting</a></li>
+	<li id="tabBG" class="blind"><a href="#">Rental Billing Group</a></li>
+	<li id="tabIN"><a href="#">Installation</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
+
+<ul class="right_btns mb10">
+	<li><p class="btn_grid"><a id="addCustBtn" href="#">Add New Customer</a></p></li>
+</ul>
+
+<section class="search_table"><!-- search_table start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Customer ID<span class="must">*</span></th>
+    <td><input id="custIdOwnt" name="txtCustID" type="text" title="" placeholder="Customer ID" class="" /><a class="search_btn" id="custBtnOwnt"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row">Type</th>
+    <td><input id="custTypeNmOwnt" name="txtCustType" type="text" title="" placeholder="Customer Type" class="w100p" readonly/>
+        <input id="typeIdOwnt" name="hiddenCustTypeID" type="hidden"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Name</th>
+    <td><input id="nameOwnt" name="txtCustName" type="text" title="" placeholder="Customer Name" class="w100p" readonly/></td>
+    <th scope="row">NRIC/Company No</th>
+    <td><input id="nricOwnt" name="txtCustIC" type="text" title="" placeholder="NRIC/Company No" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Nationality</th>
+    <td><input id="nationNmOwnt" name="txtCustNationality" type="text" title="" placeholder="Nationality" class="w100p" readonly/></td>
+    <th scope="row">Race</th>
+    <td><input id="raceOwnt" name="txtCustRace" type="text" title="" placeholder="Race" class="w100p" readonly/>
+        <input id="raceIdOwnt" name="hiddenCustRaceID" type="hidden"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">DOB</th>
+    <td><input id="dobOwnt" name="txtCustDOB" type="text" title="" placeholder="DOB" class="w100p" readonly/></td>
+    <th scope="row">Gender</th>
+    <td><input id="genderOwnt" name="txtCustGender" type="text" title="" placeholder="Gender" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Passport Expiry</th>
+    <td><input id="pasSportExprOwnt" name="txtCustPassportExpiry" type="text" title="" placeholder="Passport Expiry" class="w100p" readonly/></td>
+    <th scope="row">Visa Expiry</th>
+    <td><input id="visaExprOwnt" name="txtCustVisaExpiry" type="text" title="" placeholder="Visa Expiry" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Email</th>
+    <td><input id="emailOwnt" name="txtCustEmail" type="text" title="" placeholder="Email Address" class="w100p" readonly/></td>
+    <th scope="row">Industry Code</th>
+    <td><input id="corpTypeNmOwnt" name="corpTypeNm" type="text" title="" placeholder="Industry Code" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Employee<span class="must">*</span></th>
+    <td colspan="3"><select id="empChkOwnt" name="empChk" class="w100p"></select></select></td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3"><textarea  id="custRemOwnt" name="txtCustRemark" cols="20" rows="5" placeholder="Remark" readonly></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="search_table"><!-- search_table start -->
+
+<ul class="right_btns mb10">
+    <li id="btnAddAddress" class="blind"><p class="btn_grid"><a id="billNewAddrBtn" href="#">Add New Address</a></p></li>
+    <li id="btnSelectAddress" class="blind"><p class="btn_grid"><a id="billSelAddrBtn" href="#">Select Another Address</a></p></li>
+</ul>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Address Detail<span class="must">*</span></th>
+    <td colspan="3">
+    <input id="txtMailAddrDtlOwnt" name="txtMailAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Street</th>
+    <td colspan="3">
+    <input id="txtMailStreetOwnt" name="txtMailStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Area<span class="must">*</span></th>
+    <td colspan="3">
+    <input id="txtMailAreaOwnt" name="txtMailArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">City<span class="must">*</span></th>
+    <td>
+    <input id="txtMailCityOwnt" name="txtMailCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
+    </td>
+    <th scope="row">PostCode<span class="must">*</span></th>
+    <td>
+    <input id="txtMailPostcodeOwnt" name="txtMailPostcode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">State<span class="must">*</span></th>
+    <td>
+    <input id="txtMailStateOwnt" name="txtMailState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    </td>
+    <th scope="row">Country<span class="must">*</span></th>
+    <td>
+    <input id="txtMailCountryOwnt" name="txtMailCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="search_table"><!-- search_table start -->
+<ul class="right_btns mb10">
+    <li id="btnAddContact" class="blind"><p class="btn_grid"><a id="mstCntcNewAddBtn" href="#">Add New Contact</a></p></li>
+    <li id="btnSelectContact" class="blind"><p class="btn_grid"><a id="mstCntcSelAddBtn" href="#">Select Another Contact</a></p></li>
+</ul>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Name<span class="must">*</span></th>
+	<td><input id="txtContactNameOwnt" name="txtContactName" type="text" title="" placeholder="Name" class="w100p readonly" readonly /></td>
+	<th scope="row">Initial</th>
+	<td><input id="txtContactInitialOwnt" name="txtContactInitial" type="text" title="" placeholder="Initial" class="w100p readonly" readonly /></td>
+	<th scope="row">Gender</th>
+	<td><input id="txtContactGenderOwnt" name="txtContactGender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+	<th scope="row">NRIC</th>
+	<td><input id="txtContactICOwnt" name="txtContactIC" type="text" title="" placeholder="NRIC" class="w100p readonly" readonly /></td>
+	<th scope="row">DOB</th>
+	<td><input id="txtContactDOBOwnt" name="txtContactDOB" type="text" title="" placeholder="DOB" class="w100p readonly" readonly /></td>
+	<th scope="row">Race</th>
+	<td><input id="txtContactRaceOwnt" name="txtContactRace" type="text" title="" placeholder="Race" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+	<th scope="row">Email</th>
+	<td><input id="txtContactEmailOwnt" name="txtContactEmail" type="text" title="" placeholder="Email" class="w100p readonly" readonly /></td>
+	<th scope="row">Department</th>
+	<td><input id="txtContactDeptOwnt" name="txtContactDept" type="text" title="" placeholder="Department" class="w100p readonly" readonly /></td>
+	<th scope="row">Post</th>
+	<td><input id="txtContactPostOwnt" name="txtContactPost" type="text" title="" placeholder="Post" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+	<th scope="row">Tel (Mobile)</th>
+	<td><input id="txtContactTelMobOwnt" name="txtContactTelMob" type="text" title="" placeholder="Telephone Number (Mobile)" class="w100p readonly" readonly /></td>
+	<th scope="row">Tel (Residence)</th>
+	<td><input id="txtContactTelResOwnt" name="txtContactTelRes" type="text" title="" placeholder="Telephone Number (Residence)" class="w100p readonly" readonly /></td>
+	<th scope="row">Tel (Office)</th>
+	<td><input id="txtContactTelOffOwnt" name="txtContactTelOff" type="text" title="" placeholder="Telephone Number (Office)" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+	<th scope="row">Tel (Fax)</th>
+	<td><input id="txtContactTelFaxOwnt" name="txtContactTelFax" type="text" title="" placeholder="Telephone Number (Fax)" class="w100p readonly" readonly /></td>
+	<th scope="row"></th>
+	<td></td>
+	<th scope="row"></th>
+	<td></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+<!--############################################################################
+    Rental Pay Set
+############################################################################-->
+<article id="atcRP" class="tap_area blind"><!-- tap_area start -->
+
+
+<section class="search_table"><!-- search_table start -->
+
+<table class="type1 mb1m"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Pay By Third Party</th>
+    <td colspan="3">
+    <label><input id="btnThirdPartyOwnt" name="btnThirdParty" type="checkbox" value="1"/><span></span></label>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<section id="sctThrdParty" class="blind">
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Third Party</h3>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a id="btnAddThirdParty" href="#">Add New Third Party</a></p></li>
+</ul>
+
+<!------------------------------------------------------------------------------
+    Third Party - Form ID(thrdPartyForm)
+------------------------------------------------------------------------------->
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Customer ID<span class="must">*</span></th>
+    <td><input id="txtThirdPartyIDOwnt" name="txtThirdPartyID" type="text" title="" placeholder="Third Party ID" class="" />
+        <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <input id="txtHiddenThirdPartyIDOwnt" name="txtHiddenThirdPartyID" type="hidden" /></td>
+    <th scope="row">Type</th>
+    <td><input id="txtThirdPartyTypeOwnt" name="txtThirdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Name</th>
+    <td><input id="txtThirdPartyNameOwnt" name="txtThirdPartyName" type="text" title="" placeholder="Customer Name" class="w100p readonly" readonly/></td>
+    <th scope="row">NRIC/Company No</th>
+    <td><input id="txtThirdPartyNRICOwnt" name="txtThirdPartyNRIC" type="text" title="" placeholder="NRIC/Company Number" class="w100p readonly" readonly/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</section>
+
+<!------------------------------------------------------------------------------
+    Rental Paymode - Form ID(rentPayModeForm)
+------------------------------------------------------------------------------->
+<section id="sctRentPayMode">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Rental Paymode<span class="must">*</span></th>
+    <td>
+    <select id="cmbRentPaymodeOwnt" name="cmbRentPaymode" class="w100p"></select>
+    </td>
+    <th scope="row">NRIC on DD/Passbook</th>
+    <td><input id="txtRentPayICOwnt" name="txtRentPayIC" type="text" title="" placeholder="NRIC appear on DD/Passbook" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section>
+
+<section id="sctCrCard" class="blind">
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Credit Card</h3>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a id="btnAddCRC" href="#">Add New Credit Card</a></p></li>
+    <li><p class="btn_grid"><a id="btnSelectCRC" href="#">Select Another Credit Card</a></p></li>
+</ul>
+<!------------------------------------------------------------------------------
+    Credit Card - Form ID(crcForm)
+------------------------------------------------------------------------------->
+
+<table class="type1 mb1m"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Credit Card Number<span class="must">*</span></th>
+    <td><input id="txtRentPayCRCNoOwnt" name="txtRentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p readonly" readonly/>
+        <input id="txtHiddenRentPayCRCIDOwnt" name="txtHiddenRentPayCRCID" type="hidden" />
+        <input id="hiddenRentPayEncryptCRCNoOwnt" name="hiddenRentPayEncryptCRCNo" type="hidden" /></td>
+    <th scope="row">Credit Card Type</th>
+    <td><input id="txtRentPayCRCTypeOwnt" name="txtRentPayCRCType" type="text" title="" placeholder="Credit Card Type" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Name On Card</th>
+    <td><input id="txtRentPayCRCNameOwnt" name="txtRentPayCRCName" type="text" title="" placeholder="Name On Card" class="w100p readonly" readonly/></td>
+    <th scope="row">Expiry</th>
+    <td><input id="txtRentPayCRCExpiryOwnt" name="txtRentPayCRCExpiry" type="text" title="" placeholder="Credit Card Expiry" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Issue Bank</th>
+    <td><input id="txtRentPayCRCBankOwnt" name="txtRentPayCRCBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
+        <input id="hiddenRentPayCRCBankIDOwnt" name="hiddenRentPayCRCBankID" type="hidden" title="" class="w100p" /></td>
+    <th scope="row">Card Type</th>
+    <td><input id="rentPayCRCCardTypeOwnt" name="rentPayCRCCardType" type="text" title="" placeholder="Card Type" class="w100p readonly" readonly/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue"><a name="ordSaveBtn" href="#">OK</a></p></li>
+</ul>
+</section>
+
+<section id="sctDirectDebit" class="blind">
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Direct Debit</h3>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a id="btnAddBankAccount" href="#">Add New Bank Account</a></p></li>
+    <li><p class="btn_grid"><a id="btnSelectBankAccount" href="#">Select Another Bank Account</a></p></li>
+</ul>
+<!------------------------------------------------------------------------------
+    Direct Debit - Form ID(ddForm)
+------------------------------------------------------------------------------->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Account Number<span class="must">*</span></th>
+    <td><input id="txtRentPayBankAccNoOwnt" name="txtRentPayBankAccNo" type="text" title="" placeholder="Account Number readonly" class="w100p readonly" readonly/>
+        <input id="txtHiddenRentPayBankAccIDOwnt" name="txtHiddenRentPayBankAccID" type="hidden" />
+        <input id="hiddenRentPayEncryptBankAccNoOwnt" name="hiddenRentPayEncryptBankAccNo" type="hidden" /></td>
+    <th scope="row">Account Type</th>
+    <td><input id="txtRentPayBankAccTypeOwnt" name="txtRentPayBankAccType" type="text" title="" placeholder="Account Type readonly" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Account Holder</th>
+    <td><input id="txtRentPayBankAccNameOwnt" name="txtRentPayBankAccName" type="text" title="" placeholder="Account Holder" class="w100p readonly" readonly/></td>
+    <th scope="row">Issue Bank Branch</th>
+    <td><input id="txtRentPayBankAccBankBranchOwnt" name="txtRentPayBankAccBankBranch" type="text" title="" placeholder="Issue Bank Branch" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Issue Bank</th>
+    <td colspan=3><input id="txtRentPayBankAccBankOwnt" name="txtRentPayBankAccBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
+        <input id="hiddenRentPayBankAccBankIDOwnt" name="hiddenRentPayBankAccBankID" type="hidden" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section>
+
+</section><!-- search_table end -->
+
+
+</article><!-- tap_area end -->
+<!--############################################################################
+    Billing Group
+############################################################################-->
+<article id="atcBG" class="tap_area blind"><!-- tap_area start -->
+    
+<!-- New Billing Group Type start -->
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Group Option<span class="must">*</span></th>
+    <td>
+    <label><input type="radio" id="grpOpt1" name="grpOpt" value="new"  /><span>New Billing Group</span></label>
+    <label><input type="radio" id="grpOpt2" name="grpOpt" value="exist"/><span>Existion Billing Group</span></label>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<!------------------------------------------------------------------------------
+    Billing Group Selection - Form ID(billPreferForm)
+------------------------------------------------------------------------------->
+<section id="sctBillSel" class="blind">
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Billing Group Selection</h3>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Billing Group<span class="must">*</span></th>
+    <td><input id="txtBillGroupOwnt" name="txtBillGroup" type="text" title="" placeholder="Billing Group" class="readonly" readonly/><a id="billGrpBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <input id="txtHiddenBillGroupIDOwnt" name="txtHiddenBillGroupID" type="hidden" /></td>
+    <th scope="row">Billing Type<span class="must">*</span></th>
+    <td><input id="txtBillTypeOwnt" name="txtBillType" type="text" title="" placeholder="Billing Type" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Billing Address</th>
+    <td colspan="3"><textarea id="txtBillAddressOwnt" name="txtBillAddress" cols="20" rows="5" readonly></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</section>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Remark</th>
+    <td><textarea id="txtBillGroupRemarkOwnt" name="txtBillGroupRemark" cols="20" rows="5" readonly></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+<!-- Existing Type end -->
+
+</article><!-- tap_area end -->
+<!--############################################################################
+    Installation
+############################################################################-->
+<article class="tap_area"><!-- tap_area start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Installation Address</h3>
+</aside><!-- title_line end -->
+
+<section class="search_table"><!-- search_table start -->
+
+<ul class="right_btns mb10">
+    <li id="btnAddInstAddress" class="blind"><p class="btn_grid"><a id="billNewAddrBtn" href="#">Add New Address</a></p></li>
+    <li id="btnSelectInstAddress" class="blind"><p class="btn_grid"><a id="billSelAddrBtn" href="#">Select Another Address</a></p></li>
+</ul>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Address Detail<span class="must">*</span></th>
+    <td colspan="3">
+    <input id="txtInstAddrDtlOwnt" name="txtInstAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Street</th>
+    <td colspan="3">
+    <input id="txtInstStreetOwnt" name="txtInstStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Area<span class="must">*</span></th>
+    <td colspan="3">
+    <input id="txtInstAreaOwnt" name="txtInstArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">City<span class="must">*</span></th>
+    <td>
+    <input id="txtInstCityOwnt" name="txtMailCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
+    </td>
+    <th scope="row">PostCode<span class="must">*</span></th>
+    <td>
+    <input id="txtInstPostcodeOwnt" name="txtMailPostcode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">State<span class="must">*</span></th>
+    <td>
+    <input id="txtInstStateOwnt" name="txtInstState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    </td>
+    <th scope="row">Country<span class="must">*</span></th>
+    <td>
+    <input id="txtInstCountryOwnt" name="txtInstCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Installation Contact Person</h3>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li id="btnAddInstContact" class="blind"><p class="btn_grid"><a id="mstCntcNewAddBtn" href="#">Add New Contact</a></p></li>
+    <li id="btnSelectInstContact" class="blind"><p class="btn_grid"><a id="mstCntcSelAddBtn" href="#">Select Another Contact</a></p></li>
+</ul>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Name<span class="must">*</span></th>
+	<td><input id="txtInstContactNameOwnt" name="txtInstContactName" type="text" title="" placeholder="Name" class="w100p readonly" readonly /></td>
+	<th scope="row">Initial</th>
+	<td><input id="txtInstContactInitialOwnt" name="txtInstContactInitial" type="text" title="" placeholder="Initial" class="w100p readonly" readonly /></td>
+	<th scope="row">Gender</th>
+	<td><input id="txtInstContactGenderOwnt" name="txtInstContactGender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+	<th scope="row">NRIC</th>
+	<td><input id="txtInstContactICOwnt" name="txtInstContactIC" type="text" title="" placeholder="NRIC" class="w100p readonly" readonly /></td>
+	<th scope="row">DOB</th>
+	<td><input id="txtInstContactDOBOwnt" name="txtInstContactDOB" type="text" title="" placeholder="DOB" class="w100p readonly" readonly /></td>
+	<th scope="row">Race</th>
+	<td><input id="txtInstContactRaceOwnt" name="txtInstContactRaceOwnt" type="text" title="" placeholder="Race" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+	<th scope="row">Email</th>
+	<td><input id="txtInstContactEmailOwnt" name="txtInstContactEmail" type="text" title="" placeholder="Email" class="w100p readonly" readonly /></td>
+	<th scope="row">Department</th>
+	<td><input id="txtInstContactDeptOwnt" name="txtInstContactDept" type="text" title="" placeholder="Department" class="w100p readonly" readonly /></td>
+	<th scope="row">Post</th>
+	<td><input id="txtInstContactPostOwnt" name="txtInstContactPost" type="text" title="" placeholder="Post" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+	<th scope="row">Tel (Mobile)</th>
+	<td><input id="txtInstContactTelMobOwnt" name="txtInstContactTelMob" type="text" title="" placeholder="Telephone Number (Mobile)" class="w100p readonly" readonly /></td>
+	<th scope="row">Tel (Residence)</th>
+	<td><input id="txtInstContactTelResOwnt" name="txtInstContactTelRes" type="text" title="" placeholder="Telephone Number (Residence)" class="w100p readonly" readonly /></td>
+	<th scope="row">Tel (Office)</th>
+	<td><input id="txtInstContactTelOffOwnt" name="txtInstContactTelOff" type="text" title="" placeholder="Telephone Number (Office)" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+	<th scope="row">Tel (Fax)</th>
+	<td><input id="txtInstContactTelFaxOwnt" name="txtInstContactTelFax" type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" /></td>
+	<th scope="row"></th>
+	<td></td>
+	<th scope="row"></th>
+	<td></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Installation Information</h3>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">DSC Branch<span class="must">*</span></th>
+	<td colspan="3">
+	<select id="cmbDSCBranchOwnt" name="cmbDSCBranch" class="w100p"></select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Prefer Install Date<span class="must">*</span></th>
+	<td><input id="dpPreferInstDateOwnt" name="dpPreferInstDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<th scope="row">Prefer Install Time<span class="must">*</span></th>
+	<td>
+	<div class="time_picker w100p"><!-- time_picker start -->
+	<input id="tpPreferInstTimeOwnt" name="tpPreferInstTime" type="text" title="" placeholder="" class="time_date w100p" />
+	<ul>
+		<li>Time Picker</li>
+		<li><a href="#">12:00 AM</a></li>
+		<li><a href="#">01:00 AM</a></li>
+		<li><a href="#">02:00 AM</a></li>
+		<li><a href="#">03:00 AM</a></li>
+		<li><a href="#">04:00 AM</a></li>
+		<li><a href="#">05:00 AM</a></li>
+		<li><a href="#">06:00 AM</a></li>
+		<li><a href="#">07:00 AM</a></li>
+		<li><a href="#">08:00 AM</a></li>
+		<li><a href="#">09:00 AM</a></li>
+		<li><a href="#">10:00 AM</a></li>
+		<li><a href="#">11:00 AM</a></li>
+		<li><a href="#">12:00 PM</a></li>
+		<li><a href="#">01:00 PM</a></li>
+		<li><a href="#">02:00 PM</a></li>
+		<li><a href="#">03:00 PM</a></li>
+		<li><a href="#">04:00 PM</a></li>
+		<li><a href="#">05:00 PM</a></li>
+		<li><a href="#">06:00 PM</a></li>
+		<li><a href="#">07:00 PM</a></li>
+		<li><a href="#">08:00 PM</a></li>
+		<li><a href="#">09:00 PM</a></li>
+		<li><a href="#">10:00 PM</a></li>
+		<li><a href="#">11:00 PM</a></li>
+	</ul>
+	</div><!-- time_picker end -->
+	</td>
+</tr>
+<tr>
+	<th scope="row">Special Instruction<span class="must">*</span></th>
+	<td colspan=3><textarea id="txtInstSpecialInstructionOwnt" name="txtInstSpecialInstruction" cols="20" rows="5"></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+</section><!-- tap_wrap end -->
+
+<section class="search_table mt20"><!-- search_table start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Reference No</th>
+	<td><input id="txtReferenceNoOwnt" name="txtReferenceNo" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section><!-- search_table end -->
+
+
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a id="btnReqOwnTrans" href="#">Transfer Ownership</a></p></li>
+</ul>
+</form>
+
+</section>
+<!------------------------------------------------------------------------------
+    Ownership Transfer Request END
 ------------------------------------------------------------------------------->
 </section><!-- pop_body end -->
 

@@ -29,13 +29,18 @@
 	});
 	
 	function fn_setData(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC' || $('#callPrgm').val() == 'ORD_REQUEST_PAY') {
 	        fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_PAY_CHAN') {
 	        console.log('callPrgm');
 	        fn_loadCreditCardPop(custCrcId);
 	    }
+	    else if($('#callPrgm').val() == 'ORD_REQUEST_PAY') {
+	        console.log('callPrgm');
+	        fn_loadCreditCardPop(custCrcId);
+	    }
+	    
 	    $('#custPopCloseBtn').click();
 	}
 	
