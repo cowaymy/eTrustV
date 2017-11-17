@@ -8,6 +8,7 @@
 					SELECT S.QOTAT_ID   ,
 						       S.QOTAT_REF_NO   ,
 						       S.SALES_ORD_NO   ,
+						       S.QOTAT_ORD_ID,
 						       S.NAME   ,
 						       S.QOTAT_VAL_ID_DT   ,
 						       S.SRV_CNTRCT_PAC_DESC   ,
@@ -18,6 +19,7 @@
 						       S.C2   
 					FROM ( SELECT E1.QOTAT_ID   ,
 						                E1.QOTAT_REF_NO   ,
+						                E1.QOTAT_ORD_ID,
 						                E1.QOTAT_CNTRCT_DUR   ,
 						                E1.QOTAT_VAL_ID_DT   ,
 						                E1.QOTAT_CRT_DT   ,
@@ -66,7 +68,7 @@
                                     
                                     
                                     <if test="STUS_ID != null and  STUS_ID != ''">
-                                                        AND  to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date(SYSDATE ,'yyyy/mm/dd')
+                                                        AND  E1.QOTAT_VAL_ID_DT<![CDATA[<]]>  SYSDATE
                                                         AND  E1.QOTAT_STUS_ID IN
                                                     <foreach item="item" collection="STUS_ID" index="index" open="(" separator="," close=")">
                                                        #{item}
@@ -609,5 +611,484 @@
 								  WHERE ROWNUM <= 1
 			 ]]>    
    </select>
+   
+   <select id="cnvrToSalesPackageInfo" parameterType="Map" resultType="egovMap">
+       SELECT Limit1.QOTAT_ID QOTAT_ID  ,
+                   Limit1.QOTAT_REF_NO   ,
+                   Limit1.QOTAT_ORD_ID   ,
+                   Limit1.QOTAT_CRT_DT   ,
+                   Limit1.QOTAT_CRT_USER_ID, 
+                   Limit1.USER_NAME   ,
+                   Limit1.QOTAT_VAL_ID_DT   ,
+                   Limit1.QOTAT_CNTRCT_DUR   ,
+                   Limit1.QOTAT_PCKG_ID   ,
+                   Limit1.SRV_CNTRCT_PAC_DESC   ,
+                   Limit1.QOTAT_TOTAL_AMT, 
+                   Limit1.QOTAT_RENTAL_AMT   ,
+                   Limit1.QOTAT_EXP_FILTER_AMT   ,
+                   Limit1.QOTAT_PAC_PROMO_ID   ,
+                   Limit1.MEM_ID,
+                   CASE 
+                        WHEN ( Limit1.PROMO_ID IS NOT NULL ) THEN Limit1.PROMO_DESC
+                   ELSE '-'
+                      END PACKAGE_PROMO_DESC  ,
+                   Limit1.QOTAT_FIL_PROMO_ID QOTAT_FIL_PROMO_ID  ,
+                   CASE 
+                        WHEN ( Limit1.PROMOID1 IS NOT NULL ) THEN Limit1.PROMODESC1
+                   ELSE '-'
+                      END FILTER_PROMO_DESC  ,
+                   Limit1.QOTAT_SALESMAN_ID QOTAT_SALESMAN_ID  ,
+                   CASE 
+                        WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEM_CODE
+                   ELSE ' '
+                      END MEM_CODE  ,
+                   CASE 
+                        WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME
+                   ELSE ' '
+                      END MEM_NAME  ,
+                   Limit1.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
+                   CASE 
+                        WHEN ( Limit1.QOTAT_VAL_ID_DT <![CDATA[<]]> '2017-11-08' ) THEN 82
+                        WHEN ( 4 = Limit1.QOTAT_STUS_ID ) THEN 81
+                   ELSE Limit1.QOTAT_STUS_ID
+                      END C5  ,
+                   CASE 
+                        WHEN ( Limit1.QOTAT_VAL_ID_DT <![CDATA[<]]> '2017-11-08' ) THEN 'EXP'
+                        WHEN ( 4 = Limit1.QOTAT_STUS_ID ) THEN 'CON'
+                        WHEN ( 1 = Limit1.QOTAT_STUS_ID ) THEN 'ACT'
+                        WHEN ( 8 = Limit1.QOTAT_STUS_ID ) THEN 'DEA'
+                   ELSE ' '
+                      END C6  ,
+                   CASE 
+                        WHEN ( Limit1.SRV_CNTRCT_FORM_NO IS NOT NULL ) THEN Limit1.SRV_CNTRCT_FORM_NO
+                   ELSE '-'
+                      END SRV_CNTRCT_FORM_NO  
+          FROM ( SELECT Extent1.QOTAT_ID QOTAT_ID  ,
+                                Extent1.QOTAT_REF_NO QOTAT_REF_NO  ,
+                                Extent1.QOTAT_ORD_ID QOTAT_ORD_ID  ,
+                                Extent1.QOTAT_STUS_ID QOTAT_STUS_ID  ,
+                                Extent1.QOTAT_PAC_PROMO_ID QOTAT_PAC_PROMO_ID  ,
+                                Extent1.QOTAT_FIL_PROMO_ID QOTAT_FIL_PROMO_ID  ,
+                                Extent1.QOTAT_PCKG_ID QOTAT_PCKG_ID  ,
+                                (Extent1.QOTAT_RENTAL_AMT + Extent1.QOTAT_EXP_FILTER_AMT) as QOTAT_TOTAL_AMT,
+                                Extent1.QOTAT_RENTAL_AMT QOTAT_RENTAL_AMT  ,
+                                Extent1.QOTAT_EXP_FILTER_AMT QOTAT_EXP_FILTER_AMT  ,
+                                Extent1.QOTAT_CNTRCT_DUR QOTAT_CNTRCT_DUR  ,
+                                Extent1.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
+                                Extent1.QOTAT_VAL_ID_DT QOTAT_VAL_ID_DT  ,
+                                Extent1.QOTAT_SALESMAN_ID QOTAT_SALESMAN_ID  ,
+                                Extent1.QOTAT_CRT_DT QOTAT_CRT_DT  ,
+                                Extent1.QOTAT_CRT_USER_ID, 
+                                Extent2.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+                                Extent3.USER_NAME USER_NAME  ,
+                                Extent4.MEM_ID MEM_ID  ,
+                                Extent4.MEM_CODE MEM_CODE  ,
+                                Extent4.NAME NAME  ,
+                                Extent5.PROMO_ID PROMO_ID  ,
+                                Extent5.PROMO_DESC PROMO_DESC  ,
+                                Extent6.PROMO_ID PROMOID1  ,
+                                Extent6.PROMO_DESC PROMODESC1  ,
+                                Extent7.SRV_CNTRCT_FORM_NO SRV_CNTRCT_FORM_NO  
+                       FROM SAL0083D Extent1
+                                JOIN SAL0081D Extent2   ON Extent2.SRV_CNTRCT_PAC_ID = Extent1.QOTAT_PCKG_ID
+                                JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.QOTAT_CRT_USER_ID
+                                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.QOTAT_SALESMAN_ID
+                                LEFT JOIN SAL0017D Extent5   ON Extent5.PROMO_ID = Extent1.QOTAT_PAC_PROMO_ID
+                                LEFT JOIN SAL0017D Extent6   ON Extent6.PROMO_ID = Extent1.QOTAT_FIL_PROMO_ID
+                                LEFT JOIN SAL0077D Extent7   ON Extent7.SRV_CNTRCT_QUOT_ID = Extent1.QOTAT_ID
+                      WHERE Extent1.QOTAT_ID = #{qotatId} 
+                          AND ROWNUM <![CDATA[<=]]> 1 ) Limit1
+    </select> 
+    
+    <select id="cnvrToSalesOrderInfo" parameterType="Map" resultType="egovMap">
+       SELECT vOrderBasicInfo.ORD_ID ORD_ID  ,
+                  vOrderBasicInfo.ORD_NO ORD_NO  ,
+                  vOrderBasicInfo.RENTAL_STUS RENTAL_STUS  ,
+                  vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID  ,
+                  vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE  ,
+                  vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME  ,
+                  vOrderBasicInfo.ORD_DT ORD_DT  ,
+                  vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD  ,
+                  vOrderBasicInfo.ORD_AMT ORD_AMT  ,
+                  vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
+                  vOrderBasicInfo.ORD_PV ORD_PV  ,
+                  vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH  ,
+                  vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR  ,
+                  vOrderBasicInfo.ORD_REF_NO ORD_REF_NO  ,
+                  vOrderBasicInfo.ORD_PO_NO ORD_PO_NO  ,
+                  vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE  ,
+                  vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE  ,
+                  vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE  ,
+                  vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
+                  vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT  ,
+                  vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID  ,
+                  vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE  ,
+                  vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC  ,
+                  vOrderBasicInfo.STOCK_ID STOCK_ID  ,
+                  vOrderBasicInfo.STOCK_CODE STOCK_CODE  ,
+                  vOrderBasicInfo.STOCK_DESC STOCK_DESC  ,
+                  vOrderBasicInfo.CUST_ID CUST_ID  ,
+                  vOrderBasicInfo.CUST_TYPE CUST_TYPE  ,
+                  vOrderBasicInfo.CUST_NAME CUST_NAME  ,
+                  vOrderBasicInfo.CUST_NRIC CUST_NRIC  ,
+                  vOrderBasicInfo.CUST_DOB CUST_DOB  ,
+                  vOrderBasicInfo.CUST_NATION CUST_NATION  ,
+                  vOrderBasicInfo.CUST_GENDER CUST_GENDER  ,
+                  vOrderBasicInfo.CUST_RACE CUST_RACE  ,
+                  vOrderBasicInfo.CUST_EMAIL CUST_EMAIL  ,
+                  vOrderBasicInfo.CUST_VA_NO CUST_VA_NO  ,
+                  vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR  ,
+                  vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR  ,
+                  vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID  ,
+                  vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE  ,
+                  vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC  ,
+                  vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID  ,
+                  vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE  ,
+                  vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME  ,
+                  vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC  ,
+                  vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID  ,
+                  vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE  ,
+                  vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME  ,
+                  vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD  ,
+                  vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+                  vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+                  vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+                  vOrderBasicInfo.ORD_REM ORD_REM  ,
+                  vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID  ,
+                  vOrderBasicInfo.ORD_HM_ID ORD_HM_ID  ,
+                  vOrderBasicInfo.ORD_SM_ID ORD_SM_ID  ,
+                  vOrderBasicInfo.ORD_GM_ID ORD_GM_ID  ,
+                  vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID  ,
+                  vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID  ,
+                  vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO  ,
+                  vOrderBasicInfo.UPD_DT UPD_DT  ,
+                  vOrderBasicInfo.UPD_USER_ID UPD_USER_ID  ,
+                  vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF  ,
+                  vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID  ,
+                  vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME  ,
+                  vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID  ,
+                  vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID  ,
+                  vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR  
+         FROM SAL1006V vOrderBasicInfo
+       WHERE vOrderBasicInfo.ORD_ID = #{ordId}
+    </select>  
+    
+    <select id="cnvrToSalesOrderInfo2nd" parameterType="Map" resultType="egovMap">
+       SELECT * 
+		  FROM ( SELECT Project1.SRV_CONFIG_ID   ,
+		                Project1.SRV_PRD_ID   ,
+		                Project1.SRV_PRD_EXPR_DT   ,
+		                Project1.SRV_CNTRCT_PAC_DESC   
+		  FROM ( SELECT Extent1.SRV_CONFIG_ID SRV_CONFIG_ID  ,
+		                Extent2.SRV_PRD_ID SRV_PRD_ID  ,
+		                Extent2.SRV_PRD_EXPR_DT SRV_PRD_EXPR_DT  ,
+		                CASE 
+		                     WHEN ( ( Extent3.SRV_MEM_ID IS NOT NULL )
+		                       AND ( Extent5.SRV_MEM_PAC_ID IS NOT NULL ) ) THEN Extent5.SRV_MEM_DESC
+		                     WHEN ( ( Extent4.SRV_CNTRCT_ID IS NOT NULL )
+		                       AND ( Extent6.SRV_CNTRCT_PAC_ID IS NOT NULL ) ) THEN Extent6.SRV_CNTRCT_PAC_DESC
+		                ELSE ' '
+		                   END SRV_CNTRCT_PAC_DESC  
+		         FROM SAL0090D Extent1
+		                JOIN SAL0088D Extent2   ON ( Extent2.SRV_CONFIG_ID = Extent1.SRV_CONFIG_ID )
+		                AND ( Extent2.SRV_PRD_EXPR_DT > to_date(#{exprDt},'dd/mm/yyyy' ))
+		                AND ( 1 = Extent2.SRV_PRD_STUS_ID )
+		                LEFT JOIN SAL0095D Extent3   ON ( Extent3.SRV_MEM_ID = Extent2.SRV_MBRSH_ID )
+		                AND ( 4 = Extent3.SRV_STUS_CODE_ID )
+		                LEFT JOIN SAL0077D Extent4   ON ( Extent4.SRV_CNTRCT_ID = Extent2.SRV_PRD_CNTRCT_ID )
+		                AND ( 4 = Extent4.SRV_CNTRCT_STUS_ID )
+		                LEFT JOIN SAL0091M Extent5   ON Extent5.SRV_MEM_PAC_ID = Extent3.SRV_MEM_PAC_ID
+		                LEFT JOIN SAL0081D Extent6   ON Extent6.SRV_CNTRCT_PAC_ID = Extent4.SRV_CNTRCT_PCKG_ID
+		          WHERE  ( Extent1.SRV_SO_ID = #{ordId} )
+		                   AND ( 1 = Extent1.SRV_STUS_ID ) ) Project1
+		  ORDER BY Project1.SRV_PRD_ID DESC )
+		  WHERE ROWNUM <![CDATA[<=]]> 1
+    </select> 
+    
+    <select id="cnvrToSalesAddrInfo" parameterType="Map" resultType="egovMap">
+       SELECT vOrderInstallationInfo.ORD_ID ORD_ID  ,
+                  vOrderInstallationInfo.INST_COUNTRY   ,
+                  vOrderInstallationInfo.INST_STATE   ,
+                  vOrderInstallationInfo.INST_AREA   ,
+                  vOrderInstallationInfo.INST_POSTCODE   ,
+                  vOrderInstallationInfo.INST_ADDR_DTL,
+                  vOrderInstallationInfo.INST_STREET,
+                  (vOrderInstallationInfo.INST_ADDR_DTL || ' ' || vOrderInstallationInfo.INST_STREET || ' ' || 
+		           vOrderInstallationInfo.INST_AREA || ' ' || vOrderInstallationInfo.INST_STATE || ' ' || 
+		           vOrderInstallationInfo.INST_POSTCODE || ' ' || vOrderInstallationInfo.INST_COUNTRY ) AS FULL_ADDR,
+                  vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME  ,
+                  vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC  ,
+                  vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL  ,
+                  vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M  ,
+                  vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O  ,
+                  vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R  ,
+                  vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F  ,
+                  vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER  ,
+                  vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO  ,
+                  vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE  ,
+                  vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME  ,
+                  vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT  ,
+                  vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM  ,
+                  vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO  ,
+                  vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO  ,
+                  vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO  ,
+                  vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE  ,
+                  vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME  ,
+                  vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT  ,
+                  vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM  ,
+                  vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO  ,
+                  vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO  ,
+                  vOrderInstallationInfo.DSC_ID DSC_ID  ,
+                  vOrderInstallationInfo.DSC_CODE DSC_CODE  ,
+                  vOrderInstallationInfo.DSC_NAME DSC_NAME  ,
+                  vOrderInstallationInfo.INSTCT INSTCT  ,
+                  vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT  ,
+                  vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM  ,
+                  vOrderInstallationInfo.INSTALL_ADDR_ID INSTALL_ADDR_ID  ,
+                  vOrderInstallationInfo.INSTALL_CNTC_ID INSTALL_CNTC_ID  ,
+                  vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT  ,
+                  vOrderInstallationInfo.INST_CNT_POST INST_CNT_POST  ,
+                  vOrderInstallationInfo.VRIFY_REM VRIFY_REM  
+         FROM SAL1010V vOrderInstallationInfo
+       WHERE vOrderInstallationInfo.ORD_ID = #{ordId}
+    </select>  
+    
+    <select id="cnvrToSalesCntcInfo" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.CUST_CNTC_ID CUST_CNTC_ID  ,
+                  Extent1.CUST_INITIAL  ,
+                  Extent2.CODE_NAME CODE_NAME  ,
+                  Extent1.NAME NAME  ,
+                  Extent1.DOB DOB  ,
+                  Extent1.GENDER GENDER  ,
+                  Extent1.RACE_ID RACE_ID  ,
+                  Extent3.CODE_NAME CODENAME1  ,
+                  Extent1.TEL_M1 TEL_M1  ,
+                  Extent1.TEL_M2 TEL_M2  ,
+                  Extent1.TEL_O TEL_O  ,
+                  Extent1.TEL_R TEL_R  ,
+                  Extent1.TELF TELF  ,
+                  Extent1.NRIC NRIC  ,
+                  Extent1.POS POS  ,
+                  Extent1.EMAIL EMAIL  ,
+                  Extent1.DEPT DEPT  ,
+                  Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                  Extent1.UPD_USER_ID UPD_USER_ID  ,
+                  Extent1.UPD_DT UPD_DT  ,
+                  Extent1.ID_OLD ID_OLD  ,
+                  Extent1.DCM DCM  ,
+                  Extent1.CRT_USER_ID CRT_USER_ID  ,
+                  Extent1.CRT_DT CRT_DT  
+         FROM SAL0027D Extent1
+                     LEFT JOIN SYS0013M Extent2   ON Extent1.CUST_INITIAL = Extent2.CODE_ID
+                     LEFT JOIN SYS0013M Extent3   ON UTILS.CONVERT_TO_NUMBER(Extent1.RACE_ID,10,0) = Extent3.CODE_ID
+             WHERE  Extent1.CUST_CNTC_ID = #{custCntcId}
+    </select>  
+    
+    <select id="cnvrToSalesfilterChgList" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.QOTAT_ID,
+                  Extent1.QOTAT_ITM_ID   ,
+                  Extent1.QOTAT_ITM_EXP_DT   ,
+                  Extent1.QOTAT_ITM_STK_ID   ,
+                  Extent1.QOTAT_ITM_CHRG   ,
+                  Extent1.QOTAT_ITM_TXS   ,
+                  Extent1.QOTAT_ITM_AMT   ,
+                  Extent2.STK_CODE   ,
+                  Extent2.STK_DESC   
+         FROM SAL0084D Extent1
+                JOIN SYS0026M Extent2   ON Extent2.STK_ID = Extent1.QOTAT_ITM_STK_ID
+       WHERE Extent1.QOTAT_ID = #{qotatId}
+        ORDER BY Extent1.QOTAT_ITM_ID ASC
+    </select> 
+    
+    <select id="cnvrToSalesThrdParty" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.RENT_PAY_ID   ,
+			      Extent1.SALES_ORD_ID   ,
+			      Extent1.MODE_ID   ,
+			      Extent1.CUST_CRC_ID   ,
+			      Extent1.BANK_ID   ,
+			      Extent1.CUST_ACC_ID   ,
+			      Extent1.DD_APPLY_DT   ,
+			      Extent1.DD_SUBMIT_DT   ,
+			      Extent1.DD_START_DT   ,
+			      Extent1.DD_REJCT_DT   ,
+			      Extent1.UPD_USER_ID   ,
+			      Extent1.UPD_DT   ,
+			      Extent1.STUS_CODE_ID   ,
+			      Extent1.IS_3RD_PARTY   ,
+			      Extent1.CUST_ID   ,
+			      Extent1.EDIT_TYPE_ID   ,
+			      Extent1.NRIC_OLD   ,
+			      Extent1.FAIL_RESN_ID   ,
+			      Extent1.ISSU_NRIC   ,
+			      Extent1.AEON_CNVR   ,
+			      Extent1.REM   ,
+			      Extent1.LAST_APPLY_USER   ,
+			      Extent1.PAY_TRM   ,
+			      Extent1.SVC_CNTRCT_ID   
+		 FROM SAL0074D Extent1
+	   WHERE Extent1.SALES_ORD_ID = #{ordId}
+           AND Extent1.SVC_CNTRCT_ID = #{svcCntrctId} 
+           AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <select id="getSrvCntrctIdSeq" resultType="Integer">
+        SELECT SAL0077D_SRV_CNTRCT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getCntrctIdSeq" resultType="Integer">
+        SELECT SAL0078D_CNTRCT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getCnfmIdSeq" resultType="Integer">
+        SELECT SAL0079D_CNFM_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSrvPaySchdulIdSeq" resultType="Integer">
+        SELECT SAL0085D_SRV_PAY_SCHDUL_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertSrvContract" parameterType="Map"   >
+        INSERT INTO SAL0077D
+                ( SRV_CNTRCT_ID, SRV_CNTRCT_REF_NO, SRV_CNTRCT_QUOT_ID, SRV_CNTRCT_ORD_ID
+                , SRV_CNTRCT_STUS_ID, SRV_CNTRCT_PCKG_ID, SRV_CNTRCT_REM, SRV_CNTRCT_NET_MONTH
+                , SRV_CNTRCT_NET_YEAR, SRV_CNTRCT_RENTAL, SRV_CNTRCT_EXP_FILTER, SRV_CNTRCT_BRNCH_ID
+                , SRV_CNTRCT_SALESMAN, SRV_CNTRCT_CRT_DT, SRV_CNTRCT_CRT_USER_ID, SRV_CNTRCT_UPD_DT
+                , SRV_CNTRCT_UPD_USER_ID, SRV_CNTRCT_PROMO_ID, SRV_CNTRCT_FORM_NO )
+        VALUES 
+                ( #{getSrvCntrctIdSeq}, #{srvCntrctRefNo}, #{srvCntrctQuotId}, #{srvCntrctOrdId}
+                , #{srvCntrctStusId}, #{srvCntrctPckgId}, #{srvCntrctRem}, #{srvCntrctNetMonth}
+                , #{srvCntrctNetYear}, #{srvCntrctRental}, #{srvCntrctExpFilter}, #{srvCntrctBrnchId}
+                , #{srvCntrctSalesman}, SYSDATE, #{userId}, SYSDATE, #{userId}, #{srvCntrcPromoId}, NULL )
+    </insert>
+    
+    <insert id="insertSrvContractSub" parameterType="Map"   >
+        INSERT INTO SAL0078D
+                ( CNTRCT_ID, SRV_CNTRCT_ID, CNTRCT_RENTAL_STUS, CNTRCT_REM, CNTRCT_UPD_DT, CNTRCT_UPD_USER_ID )
+        VALUES 
+                ( #{getCntrctIdSeq}, #{getSrvCntrctIdSeq}, #{cntrctRentalStus}, #{cntrctRem}, SYSDATE, #{userId} )
+    </insert>
+    
+    <select id="serviceCntractQotatCnt" resultType="Integer" parameterType="Map">
+        SELECT COUNT(0) CNT FROM SAL0083D
+        WHERE QOTAT_ID = #{srvCntrctQuotId}
+    </select>
+    
+    <update id="updateSAL0083D" parameterType="Map">
+        UPDATE SAL0083D
+			 SET QOTAT_STUS_ID = 4
+		 WHERE QOTAT_ID = #{srvCntrctQuotId}
+    </update>
+    
+    <insert id="insertSrvPaySchdul" parameterType="Map"   >
+        INSERT INTO SAL0085D
+			  ( SRV_PAY_SCHDUL_ID, SRV_PAY_CNTRCT_ID, SRV_PAY_SCHDUL_ORD_ID
+			  , SRV_PAY_SCHDUL_NO, SRV_PAY_SCHDUL_MONTH, SRV_PAY_SCHDUL_YEAR
+			  , SRV_PAY_SCHDUL_TYPE_ID, SRV_PAY_SCHDUL_AMT, SRV_PAY_SCHDUL_STUS_ID
+			  , SRV_PAY_SCHDUL_REM )
+		VALUES 
+		      ( SAL0085D_SRV_PAY_SCHDUL_ID_SEQ.NEXTVAL, #{srvPayCntrctId}, #{srvPaySchdulOrdId}
+		      , #{srvPaySchdulNo}, #{srvPaySchdulMonth}, #{srvPaySchdulYear}
+		      , #{srvPaySchdulTypeId}, #{srvPaySchdulAmt}, #{srvPaySchdulStusId}, #{srvPaySchdulRem} )
+    </insert>
+    
+    <select id="cnvrToSalesSrvConfigur" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.SRV_CONFIG_ID SRV_CONFIG_ID  ,
+			      Extent1.SRV_SO_ID SRV_SO_ID  ,
+			      Extent1.SRV_CODY_ID SRV_CODY_ID  ,
+			      Extent1.SRV_PREV_DT SRV_PREV_DT  ,
+			      Extent1.SRV_REM SRV_REM  ,
+			      Extent1.SRV_BS_GEN SRV_BS_GEN  ,
+			      Extent1.SRV_CRT_DT SRV_CRT_DT  ,
+			      Extent1.SRV_CRT_USER_ID SRV_CRT_USER_ID  ,
+			      Extent1.SRV_UPD_DT SRV_UPD_DT  ,
+			      Extent1.SRV_UPD_USER_ID SRV_UPD_USER_ID  ,
+			      Extent1.SRV_STUS_ID SRV_STUS_ID  ,
+			      Extent1.SRV_BS_WEEK SRV_BS_WEEK  
+		  FROM SAL0090D Extent1
+		WHERE Extent1.SRV_SO_ID = #{srvCntrctOrdId}
+            AND 1 = Extent1.SRV_STUS_ID
+    </select> 
+    
+    <update id="updateSAL0090D" parameterType="Map">
+        UPDATE SAL0090D
+             SET SRV_UPD_DT = SYSDATE,
+                   SRV_UPD_USER_ID = #{userId}
+         WHERE SRV_CONFIG_ID = #{srvConfigId}
+    </update>
+    
+    <select id="getSrvPrdIdSeq" resultType="Integer">
+        SELECT SAL0088D_SRV_PRD_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertSrvConfigPeriod" parameterType="Map"   >
+        INSERT INTO SAL0088D
+			  ( SRV_PRD_ID, SRV_CONFIG_ID, SRV_MBRSH_ID, SRV_PRD_START_DT, SRV_PRD_EXPR_DT
+			  , SRV_PRD_DUR, SRV_PRD_STUS_ID, SRV_PRD_REM, SRV_PRD_CRT_DT, SRV_PRD_CRT_USER_ID
+			  , SRV_PRD_UPD_DT, SRV_PRD_UPD_USER_ID, SRV_PRD_CNTRCT_ID )
+		VALUES 
+		      ( #{getSrvPrdIdSeq}, #{srvConfigId}, #{srvMbrshId}, TO_DATE(#{srvPrdStartDt}, 'YYYY-MM-DD'), TO_DATE(#{srvPrdExprDt}, 'YYYY-MM-DD')
+		      , #{srcPrdDur}, #{srcPrdStusId}, #{srcPrdRem}, SYSDATE, #{userId}, SYSDATE, #{userId}, #{srvPrdCntrctId} )
+    </insert>
+    
+    <insert id="insertSrvCntrctConfirm" parameterType="Map"   >
+        INSERT INTO SAL0079D
+			  ( CNFM_ID, CNFM_ORD_ID, CNFM_CNTRCT_ID, CNFM_CUST_TYPE_ID, CNFM_TYPE_ID
+			  , CNFM_STUS_ID, CNFM_FDBCK_ID, CNFM_REM, CNFM_PNC_REM, CNFM_UPD_USER_ID, CNFM_UPD_DT )
+		VALUES 
+		      ( SAL0079D_CNFM_ID_SEQ.NEXTVAL, #{cnfmOrdId}, #{cnfmCntrctId}, #{cnfmCustTypeId}, #{cnfmTypeId}
+		      , #{cnfmStusId}, #{cnfmFdbckId}, #{cnfmRem}, #{cnfmPncRem}, #{userId}, SYSDATE )
+    </insert>
+    
+    <insert id="insertAccInvoicePo" parameterType="Map"   >
+       INSERT INTO PAY0015D
+			  ( ID, PO_ORD_ID, PO_REF_NO, PO_START_INSTLMT, PO_END_INSTLMT
+			  , PO_REM, PO_STUS_ID, PO_CRT_USER_ID, PO_CRT_DT, PO_UPD_USER_ID
+			  , PO_UPD_DT, PO_CNTRCT_ID )
+	   VALUES 
+	          ( PAY0015D_ID_SEQ.NEXTVAL, #{poOrdId}, #{poRefNo}, #{poStartInstlmt}, #{poEndInstlmt}
+	          , #{poRem}, #{poStusId}, #{userId}, SYSDATE, #{userId}, SYSDATE, #{poCntrctId} )
+    </insert>
+    
+    <insert id="insertRentPaySet" parameterType="Map"   >
+       INSERT INTO SAL0074D
+			   ( RENT_PAY_ID, SALES_ORD_ID, MODE_ID, CUST_CRC_ID, BANK_ID, CUST_ACC_ID, DD_APPLY_DT
+			   , DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, UPD_USER_ID, UPD_DT, STUS_CODE_ID
+			   , IS_3RD_PARTY, CUST_ID, EDIT_TYPE_ID, NRIC_OLD, FAIL_RESN_ID, ISSU_NRIC, AEON_CNVR, REM
+			   , LAST_APPLY_USER, PAY_TRM, SVC_CNTRCT_ID )
+	   VALUES 
+	           ( SAL0074D_RENT_PAY_ID_SEQ.NEXTVAL, #{srvCntrctOrdId}, #{modeId}, #{custCrcId}, #{bankId}, #{custAccId}
+	           , SYSDATE, TO_DATE(#{ddSubmitDt}, 'DD/MM/YYYY'), TO_DATE(#{ddStartDt}, 'DD/MM/YYYY'), TO_DATE(#{ddRejctDt}, 'DD/MM/YYYY'), #{userId}, SYSDATE, #{stusCodeId}
+	           , #{is3rdParty}, #{custId}, #{editTypeId}, #{nricOld}, #{failResnId}, #{issuNric}, #{aeonCnvr}, #{rem}
+	           , #{userId}, #{payTrm}, #{svcCntrctId} )
+    </insert>
+    
+    <insert id="insertAccClaimAdt" parameterType="Map"   >
+       INSERT INTO PAY0008M
+			   ( ACC_CL_SO_ID, ACC_CL_SVC_CNTRCT_ID, ACC_CL_BILL_CLM_AMT, ACC_CL_CLM_AMT
+			   , ACC_CL_PROMO, ACC_CL_BANK_CODE, ACC_CL_BANK_ACC_NO, ACC_DEC_BANK_ACC_NO
+			   , ACC_CL_REQST_M_CODE, ACC_CL_APPLY_DT, ACC_CL_SUBMIT_DT, ACC_CL_APPV_DT
+			   , ACC_CL_REJCT_DT, ACC_CL_UPD_USER_ID, ACC_CL_UPD_DT, ACC_CL_STUS_ID
+			   , ACC_CL_PROMO_CHK_ID, ACC_CL_PROMO_START_DT, ACC_CL_REJCT_ID, ACC_CL_ACC_T_NAME
+			   , ACC_CL_ACC_NRIC, ACC_CL_SPL_CLM_AMT, ACC_CL_SO_NO, ACC_CL_USER_NAME
+			   , ACC_CL_PAY_MODE, ACC_CL_PAY_MODE_ID, ACC_CL_BANK_ID, ACC_CL_CLM_LIMIT
+			   , ACC_CL_BILL_DT, ACC_CL_INSERT_DT )
+	   VALUES 
+	           ( #{srvCntrctOrdId}, #{accClSrvCntrctId}, #{accClBillClmAmt}, #{accClClmAmt}
+	           , #{accClPromo}, #{accClBankCode}, #{accClBankAccNo}, #{accDecBankAccNo}
+	           , #{accClReqstMCode}, SYSDATE, TO_DATE(#{accClSubmitDt}, 'DD/MM/YYYY'), TO_DATE(#{accClAppvDt}, 'DD/MM/YYYY')
+	           , TO_DATE(#{accClRejctDt}, 'DD/MM/YYYY'), #{userId}, SYSDATE, #{accClStusId}
+	           , #{accClPromoChkId}, TO_DATE(#{accClPromoStartDt}, 'DD/MM/YYYY'), #{accClRejctId}, #{accClAccTName}
+	           , #{accClAccNric}, #{accClSplClmAmt}, #{accClSoNo}, #{accClUserName}
+	           , #{accClPayMode}, #{accClPayModeId}, #{accClBankId}, #{accClClmLimit}
+	           , #{accClBillDt}, SYSDATE )
+    </insert>
+    
+    <select id="spInstRscRentalBill"  statementType="CALLABLE"   parameterType="Map">
+       <![CDATA[ 
+            {
+                  call SP_INST_RSC_RENTAL_BILL ( #{srvCntrctQuotId} ,  #{qotatCrtUserId} )
+            }
+         ]]>
+    </select>
       
 </mapper>
