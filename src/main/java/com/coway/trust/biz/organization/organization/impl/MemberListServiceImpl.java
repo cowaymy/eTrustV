@@ -1090,6 +1090,75 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return resultValue;
 	}
 
+
+	/* BY KV start Do Save Vacation Request*/
+	@Override
+	public Map<String, Object> insertRequestVacation(Map<String, Object> params,SessionVO sessionVO) {
+		boolean success = false;
+		//Map<String, Object>  member = new HashMap<String, Object>();
+		Map<String, Object>  vacationEntry = new HashMap<String, Object>();
+		int userId = sessionVO.getUserId();
+		logger.debug("userId : {}",userId);
+		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
+
+		    vacationEntry.put("promoId", 0);
+			vacationEntry.put("requestNo", "");
+			vacationEntry.put("statusId", 60);
+			vacationEntry.put("memTypeId",params.get("memtype"));
+			vacationEntry.put("memberId", params.get("memberId"));
+			vacationEntry.put("created", new Date());
+			vacationEntry.put("creator", userId);
+			vacationEntry.put("updated", new Date());
+			vacationEntry.put("updator", userId);
+			vacationEntry.put("remark", params.get("remark").toString().trim());
+			vacationEntry.put("branchId",params.get("branchCode") != null && params.get("branchCode") != "" ? Integer.parseInt(params.get("branchCode").toString()) : 0);
+			vacationEntry.put("vactTypeId",params.get("typeofLeave")); // != null && params.get("typeofleave") != "" ? Integer.parseInt(params.get("typeofleave").toString()) : 0);
+			vacationEntry.put("vactStdDt", params.get("dtStart"));
+			vacationEntry.put("vactEndDt", params.get("dtEnd"));
+			vacationEntry.put("vactReplCt", params.get("replacementCT"));
+
+			logger.debug("vacationEntry : {}",vacationEntry);
+		//	EgovMap selectMemberOrgs = memberListMapper.selectMemberOrgs(params);
+
+		//	if(selectMemberOrgs != null)
+		//	{
+				//KV start -this is calculate REQST_NO in org0007d
+				EgovMap eventCode = null;
+				eventCode = getDocNo("66");
+				int ID = 66;
+				String nextDocNo = getNextDocNo("PMR", eventCode.get("docNo").toString());
+				eventCode.put("nextDocNo", nextDocNo);
+				logger.debug("eventCode : {}",eventCode);
+				if(Integer.parseInt(eventCode.get("docNoId").toString()) == ID){
+					logger.debug("update 문 탈 예정");
+					memberListMapper.updateDocNo(eventCode);
+				}
+				//KV end -this is calculate REQST_NO in org0007d
+
+				EgovMap selectOrganization = memberListMapper.selectOrganization(params);
+				logger.debug("selectOrganization : {}",selectOrganization);
+				EgovMap selectOrganization_new = memberListMapper.selectOrganization(params);
+				logger.debug("selectOrganization_new : {}",selectOrganization_new);
+				vacationEntry.put("requestNo", eventCode.get("docNo").toString());
+				logger.debug("promoEntry : {}",vacationEntry);
+
+				memberListMapper.insertVacationEntry(vacationEntry);
+
+				resultValue.put("message", "Promote request successfully saved.<br />"
+				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
+
+			//}
+		//	else
+		//	{
+		//		resultValue.put("message", "<b>Failed to save. Please try again later.</b>");
+
+			//}
+		success=true;
+		return resultValue;
+	}
+	/* BY KV end Do Save Vacation Request*/
+
+
 	@Override
 	public List<EgovMap>  selectSuperiorTeam(Map<String, Object> params) {
 		return memberListMapper.selectSuperiorTeam(params);
