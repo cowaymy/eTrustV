@@ -171,7 +171,7 @@ $(document).ready(function(){
     doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
-    //doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
+    doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
     $("#crtsdt").val('${searchVal.crtsdt}');
     $("#crtedt").val('${searchVal.crtedt}');
     $("#reqsdt").val('${searchVal.reqsdt}');
@@ -421,7 +421,7 @@ $(function(){
 
 
 function SearchListAjax() {
-	
+
 	   if ($("#flocationnm").val() == ""){
 	        $("#flocation").val('');
 	    }
@@ -735,7 +735,7 @@ function fn_serialChck(rowindex , rowitem , str){
                     </td>
                     <th scope="row">Auto / Manual</th>
                     <td>
-                        <!-- <select class="w100p" id="sam" name="sam"></select> -->
+                        <select class="w100p" id="sam" name="sam"></select>
                     </td>
                     <td colspan="2">&nbsp;</td>              
                 </tr>
