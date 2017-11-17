@@ -10,6 +10,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface AllocationMapper {
 
 	List<EgovMap> selectList(Map<String, Object> params);
-	List<EgovMap> selectDetailList(Map<String, Object> params);
+	List<EgovMap> selectDetailList(Map<String, Object> params); 
+	
+	
+	List<EgovMap> selectBaseList(Map<String, Object> params);
+	EgovMap  isSubGroupHoliDay(Map<String, Object> params);
+	EgovMap  selectVacationList(Map<String, Object> params);
+	EgovMap  makeViewList(Map<String, Object> params);
+
+	
+	
 	
 }

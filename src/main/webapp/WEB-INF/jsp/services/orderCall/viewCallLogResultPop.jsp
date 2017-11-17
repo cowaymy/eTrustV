@@ -130,7 +130,7 @@ function callLogTranGrid() {
 function fn_doAllaction(){
     var ord_id = $("#salesOrdId").val();
     var  vdte = '';
-    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte}, null , true , '_doAllactionDiv');
+    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte ,TYPE:'INS'}, null , true , '_doAllactionDiv');
     
 
 }

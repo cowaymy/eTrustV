@@ -587,12 +587,13 @@ function fn_excelDown(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+      <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditPop()"> AS Result  Edit </a></p></li>
         <!-- 171110 :: 선한이  -->
         <!-- <li><p class="link_btn"><a href="#" ondblclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li> -->
         <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li> -->
         <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultViewPop()"> AS Result  View</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditBasicPop()"> AS Result  Edit(Basic)</a></p></li>
+      
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_assginCTTransfer()"> AssginCTTransfer</a></p></li> -->
         
         

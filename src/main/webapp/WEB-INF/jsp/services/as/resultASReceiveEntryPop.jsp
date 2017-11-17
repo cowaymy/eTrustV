@@ -195,7 +195,7 @@ function fn_doAllaction(){
     
     console.log("========>");
     console.log(options);
-    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options }, null , true , '_doAllactionDiv');
+    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'AS'}, null , true , '_doAllactionDiv');
 }
 
 

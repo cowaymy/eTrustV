@@ -11,6 +11,15 @@
     font-weight:bold;
     color:#fff;
 }
+
+/* Capa가 Available*/
+.my-cell-style-capa {
+    background:#86E57F;
+    font-weight:bold;
+    color:#fff;
+}
+
+
 .my-row-style {
     background:#FFB2D9;
     font-weight:bold;
@@ -77,6 +86,8 @@ function changeRowStyleFunction() {
     	}else{
     		return "";
     	}
+    	
+    	
         
     });
     
@@ -188,8 +199,6 @@ function createDetailAllactionAUIGrid() {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         
-                                                    
                                                          
                                                     	 if(valArray[0] == valArray[1]  && valArray[1] >0 ) {
                                                     		 

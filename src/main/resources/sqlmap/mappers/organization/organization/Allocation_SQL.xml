@@ -51,29 +51,125 @@
     </select>
     
     
+    
+    
+    
+    <select id="selectBaseList" parameterType="Map" resultType="egovMap">
+              <![CDATA[ 
+              
+				  SELECT   MEM_ID CT, INS_DATE C_DATE , CT_SUB_GRP ,BRNCH_ID
+				    FROM   (SELECT   DISTINCT MEM_ID ,CT_SUB_GRP ,BRNCH_ID
+				              FROM   ORG0005D T
+				             WHERE   CT_SUB_GRP IN
+				                           (SELECT   F.CT_SUB_GRP
+				                              FROM   SAL0001D A,
+				                                     SAL0045D B,
+				                                     SAL0023D E,
+				                                     SYS0064M F
+				                             WHERE       1 = 1
+				                                     AND A.SALES_ORD_ID = #{ORD_ID}
+				                                     AND A.SALES_ORD_ID = B.SALES_ORD_ID
+				                                     AND B.ADD_ID = E.CUST_ADD_ID
+				                                     AND E.AREA_ID = F.AREA_ID)) C,
+				           (    SELECT   TO_CHAR ( (SYSDATE - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE
+				                  FROM   DUAL
+				            CONNECT BY   LEVEL <= 5) TB
+				ORDER BY   MEM_ID, INS_DATE ASC
+        ]]>
+        
+    </select>
+    
+    <select id="isSubGroupHoliDay" parameterType="Map" resultType="egovMap">
+              <![CDATA[ 
+					
+					SELECT 
+				        C.MEM_CODE  ,C.MEM_ID
+				    FROM SYS0081M A, ORG0020D B, ORG0001D C ,SYS0005M D  
+				    WHERE A.HOLIDAY = B.HOLIDAY 
+				    AND   B.HOLIDAY_TYPE = B.HOLIDAY_TYPE
+				    AND   A.HOLIDAY_SEQ  = B.HOLIDAY_SEQ
+				    AND   B.CT_MEM_ID     = C.MEM_ID
+				    AND   B.BRNCH_CODE   = D.CODE  
+				    AND   D.BRNCH_ID       =#{brnchId}
+				    AND   TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') = #{holiday}
+        ]]>
+        
+    </select>
+    
+    
+     <select id="selectVacationList" parameterType="Map" resultType="egovMap">
+              <![CDATA[ 
+					SELECT VACT_REPL_CT 
+					     FROM ORG0007D 
+					WHERE  1=1 
+					    AND   MEM_ID  =#{vactReplCt}
+					    AND TO_CHAR( TO_DATE(#{rDate},'YYYY-MM-DD'),'YYYY-MM-DD')  BETWEEN  TO_CHAR(VACT_STD_DT,'YYYY-MM-DD')   AND  TO_CHAR(VACT_END_DT,'YYYY-MM-DD') 
+		       ]]>
+    </select>
+    
+    
+     <select id="makeViewList" parameterType="Map" resultType="egovMap">
+            <![CDATA[ 
+					SELECT CT,
+					       MEM_CODE,
+					       C_DATE,
+					       D_DATE,
+					       ASCNT||'-'||SUMSESION_CNT ASCNT,
+					       INSCNT||'-'||SUMSESION_CNT INSCNT,
+					       0||'-'||SUMSESION_CNT RTNCNT
+					FROM(
+					SELECT #{ct} CT,
+					       #{cDate}    C_DATE,
+					       (SELECT MEM_CODE  FROM ORG0001D A  WHERE   #{ct}  =A.MEM_ID )  MEM_CODE,
+					       TO_CHAR (TO_DATE(#{cDate},'YYYY-MM-DD'),'DD/MM/YYYY')      D_DATE, 
+					       (SELECT COUNT (*) CNT  FROM  SAL0046D  AA
+					                                 WHERE  1=1
+					                                 AND  AA.CT_ID =#{ct}
+					                                 AND  AA.STUS_CODE_ID =1
+					                                 AND  TO_CHAR (AA.INSTALL_DT,'YYYY-MM-DD'  ) = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))INSCNT,
+					       (SELECT COUNT (*) CNT  FROM  SVC0001D  AA
+					                                 WHERE  1=1
+					                                 AND  AA.AS_MEM_ID =#{ct}
+					                                 AND  AA.AS_STUS_ID =1
+					                                 AND  TO_CHAR (AA.AS_APPNT_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))ASCNT,          
+					       NVL(( SELECT  SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = #{ct} ),0)SUMSESION_CNT
+					FROM DUAL    
+					)   
+		       ]]>
+		       
+     </select>
+    
+    
+    
+    
+    
+    
+    
+    
     <select id="selectDetailList" parameterType="Map" resultType="egovMap">
    
                 
                 SELECT MEM_ID,
-                       MEM_CODE ,
-                       SUM_AS_CNT   ||'-'|| NVL(AS_SESION_SUM,0)         sumAsCnt, 
-                       SUM_INS_CNT  ||'-'|| NVL(INS_SESION_SUM ,0)       sumInsCnt,
-                       SUM_RTN_CNT  ||'-'||NVL(RTN_SESION_SUM ,0)       sumRtnCnt,
-                       AS_M_CNT     ||'-'|| NVL(MORNG_SESION_SUM,0)      morAsCnt,
-                       INS_M_CNT    ||'-'|| NVL(MORNG_SESION_SUM,0)      morInsCnt,
-                       RTN_M_CNT    ||'-'||NVL(MORNG_SESION_SUM,0)      morRtnCnt,
-                       AS_A_CNT     ||'-'||NVL(AFTNON_SESION_SUM ,0)    aftAsCnt,
-                       INS_A_CNT    ||'-'||NVL(AFTNON_SESION_SUM ,0)    aftInsCnt,
-                       RTN_A_CNT    ||'-'||NVL(AFTNON_SESION_SUM ,0)    aftRtnCnt,
-                       AS_E_CNT     ||'-'||NVL(EVNG_SESION_SUM,0)       evnAsCnt,
-                       INS_E_CNT    ||'-'||NVL(EVNG_SESION_SUM ,0)      evnInsCnt, 
-                       RTN_E_CNT    ||'-'||NVL(EVNG_SESION_SUM,0)       evnRtnCnt,
-                       AS_O_CNT     ||'-'||NVL(EVNG_SESION_SUM ,0)      othAsCnt,
-                       INS_O_CNT    ||'-'||NVL(EVNG_SESION_SUM ,0)      othInsCnt,
-                       RTN_O_CNT    ||'-'||NVL(EVNG_SESION_SUM ,0)      othRtnCnt
+	                       MEM_CODE ,CT_SUB_GRP,
+	                       SUM_AS_CNT   ||'-'|| NVL(AS_SESION_SUM,0)         sumAsCnt, 
+	                       SUM_INS_CNT  ||'-'|| NVL(INS_SESION_SUM ,0)       sumInsCnt,
+	                       SUM_RTN_CNT  ||'-'||NVL(RTN_SESION_SUM ,0)       sumRtnCnt,
+	                       AS_M_CNT     ||'-'|| NVL(MORNG_SESION_SUM,0)      morAsCnt,
+	                       INS_M_CNT    ||'-'|| NVL(MORNG_SESION_SUM,0)      morInsCnt,
+	                       RTN_M_CNT    ||'-'||NVL(MORNG_SESION_SUM,0)      morRtnCnt,
+	                       AS_A_CNT     ||'-'||NVL(AFTNON_SESION_SUM ,0)    aftAsCnt,
+	                       INS_A_CNT    ||'-'||NVL(AFTNON_SESION_SUM ,0)    aftInsCnt,
+	                       RTN_A_CNT    ||'-'||NVL(AFTNON_SESION_SUM ,0)    aftRtnCnt,
+	                       AS_E_CNT     ||'-'||NVL(EVNG_SESION_SUM,0)       evnAsCnt,
+	                       INS_E_CNT    ||'-'||NVL(EVNG_SESION_SUM ,0)      evnInsCnt, 
+	                       RTN_E_CNT    ||'-'||NVL(EVNG_SESION_SUM,0)       evnRtnCnt,
+	                       AS_O_CNT     ||'-'||NVL(EVNG_SESION_SUM ,0)      othAsCnt,
+	                       INS_O_CNT    ||'-'||NVL(EVNG_SESION_SUM ,0)      othInsCnt,
+	                       RTN_O_CNT    ||'-'||NVL(EVNG_SESION_SUM ,0)      othRtnCnt
                 FROM(   
                         SELECT   #{CT_ID}  MEM_ID ,
                                 (SELECT MEM_CODE  FROM ORG0001D   where MEM_ID = #{CT_ID}) MEM_CODE ,
+                                (SELECT CT_SUB_GRP  FROM ORG0005D D5  WHERE D5.MEM_ID  =#{CT_ID}  ) CT_SUB_GRP ,
                                 (SELECT    nvl(MORNG_SESION_AS,0)+    
                                            nvl(AFTNON_SESION_AS,0)+     
                                            nvl(EVNG_SESION_AS,0) as  AS_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AS_SESION_SUM,

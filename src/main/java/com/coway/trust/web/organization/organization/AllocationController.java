@@ -72,6 +72,10 @@ public class AllocationController {
 		logger.debug(" in selectList ...");
 		logger.debug(" in selectList prams ["+params.toString()+"]");
 		List<EgovMap> resultList = allocationService.selectList(params);        
+		
+		if(null !=resultList){
+			logger.debug(" selectList ===> out ["+resultList.toString()+"]");   
+		}
 
 		return ResponseEntity.ok(resultList);
 	}
