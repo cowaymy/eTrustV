@@ -36,7 +36,7 @@ var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,wid
                      {dataField:"stknm"     ,headerText:"Material Name"         ,width:120    ,height:30,editable:false},
                      {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false},
                      {dataField:"typeid"    ,headerText:"Type Id"           ,width:120    ,height:30,visible:false},
-                     {dataField:"typenm"    ,headerText:"TYPE"         ,width:120    ,height:30,editable:false},
+                     {dataField:"typenm"    ,headerText:"Type"         ,width:120    ,height:30,editable:false},
                      {dataField:"cateid"    ,headerText:"Cate Id"           ,width:120    ,height:30,visible:false},
                      {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30,editable:false},
                      {dataField:"uom"       ,headerText:"UOM"               ,width:120    ,height:30, visible:false}
