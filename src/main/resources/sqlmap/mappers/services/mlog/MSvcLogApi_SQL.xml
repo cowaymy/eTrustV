@@ -212,9 +212,9 @@ and custadd.cust_add_id = i.add_id
 and custcnt.cust_cntc_id = i.cnt_id
 and som.cust_bill_id = cbm.cust_bill_id(+)
 and cust.cust_id = custCnt.cust_id
-                 AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
+                 AND   ae.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
                                                 AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
-                 and    ORG0001D.mem_code = #{userId}
+                 and    mb.mem_code = #{userId}
         )
          WHERE rn = 1
 
