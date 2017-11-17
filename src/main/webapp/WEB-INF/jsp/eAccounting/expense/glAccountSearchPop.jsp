@@ -64,7 +64,7 @@ function fn_selectGlListAjax() {
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_selectGlListAjax();"><spring:message code="expense.btn.Search" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_selectGlListAjax();"><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->

@@ -144,11 +144,11 @@
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
-        <col style="width:130px" />
+        <col style="width:180px" />
         <col style="width:*" />
-        <col style="width:130px" />
+        <col style="width:190px" />
         <col style="width:*" />
-        <col style="width:160px" />
+        <col style="width:220px" />
         <col style="width:*" />
     </colgroup>
     <tbody>
@@ -285,7 +285,7 @@
     <colgroup>
         <col style="width:150px" />
         <col style="width:*" />
-        <col style="width:150px" />
+        <col style="width:170px" />
         <col style="width:*" />
         <col style="width:150px" />
         <col style="width:*" />
@@ -630,7 +630,7 @@
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
-        <col style="width:130px" />
+        <col style="width:180px" />
         <col style="width:*" />
         <col style="width:130px" />
         <col style="width:*" />

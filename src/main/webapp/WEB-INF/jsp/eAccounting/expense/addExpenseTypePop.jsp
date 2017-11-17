@@ -345,7 +345,7 @@ function  fn_setBudgetData(){
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-	<li><p class="btn_blue2"><a href="#" onClick="javascript:fn_selectPopListAjax();"><spring:message code="expense.btn.Search" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" onClick="javascript:fn_selectPopListAjax();"><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
 </ul>    
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="popAddForm" name ="popAddForm">

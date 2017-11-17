@@ -213,7 +213,7 @@ function createAUIGrid() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="expense.title" /></h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"></span><spring:message code="expense.btn.Search" /></a></p></li>
+	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
