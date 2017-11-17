@@ -25,7 +25,6 @@
 
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var comboData = [{"codeId": "0","codeName": "New"},{"codeId": "61","codeName": "Verifying"},{"codeId": "5","codeName": "Approved"},{"codeId": "6","codeName": "Rejected"},{"codeId": "36","codeName": "Closed"}];

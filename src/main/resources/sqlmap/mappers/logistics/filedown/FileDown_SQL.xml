@@ -6,7 +6,7 @@
 <select id="fileDownloadList" parameterType="Map" resultType="egovMap">
 SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
        <!-- Project1.CRT_DT CRT_DT  , -->
-       TO_CHAR(Project1.CRT_DT, 'DD-MM-YYYY') CRT_DT,
+       TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') CRT_DT,
        Project1.CRT_USER_ID CRT_USER_ID  ,
        Project1.C1 C1  ,
        Project1.FILE_ET FILE_ET  ,

@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
@@ -32,10 +31,11 @@ var subGrid;
 var userCode;
 
                       
- var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"codeName"       ,headerText:"Type"                      ,width:120    ,height:30 },
-                      {dataField:"fileTypeLbl"      ,headerText:"Label"      ,width:200    ,height:30                },
-                      {dataField:"fileName"        ,headerText:"Filename"               ,width:285    ,height:30  },
+ var rescolumnLayout=[
+                      {dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"codeName"       ,headerText:"Type"                      ,width:200    ,height:30 },
+                      {dataField:"fileTypeLbl"      ,headerText:"Label"      ,width:400    ,height:30                },
+                      {dataField:"fileName"        ,headerText:"Filename"               ,width:600    ,height:30  },
                       {dataField:"isCody"      ,headerText:"Cody"                      ,width:60    ,height:30                
                    	   , renderer : 
                          {
@@ -68,7 +68,7 @@ var userCode;
                       },
                       {dataField:"c1"        ,headerText:"Creator"               ,width:110    ,height:30 },
                       {dataField:"crtDt"       ,headerText:"Create Date"               ,width:110    ,height:30},
-                      {dataField:"fileUrl"        ,headerText:"FILE_URL"         ,width:120    ,height:30               },
+                      {dataField:"fileUrl"        ,headerText:"FILE_URL"         ,width:120    ,height:30 , visible:false},
                       {
                           dataField : "",
                           headerText : "",
@@ -99,7 +99,7 @@ var subgridpros = {
         usePaging : true,                
         pageRowCount : 20,                
         editable : false,                
-        noDataMessage : "출력할 데이터가 없습니다.",
+        noDataMessage :  "<spring:message code='sys.info.grid.noDataMessage' />",
         enableSorting : true,
         //selectionMode : "multipleRows",
         //selectionMode : "multipleCells",
@@ -238,16 +238,18 @@ function fileSaveAjax(div) {
 
     if(div=="FS"){
     	param= $("#FileSpaceForm").serializeJSON();
-    }else if(div=="U"){
+       url="/logistics/file/insertFileSpace.do";    
+    }else if(div=="FU"){
         param= $("#masterForm").serializeJSON();
+       //url="/logistics/assetmng/motifyAssetMng.do";  ??
     }
-
+/*
    if(div=="FS"){
        url="/logistics/file/insertFileSpace.do";    
-   }else if(div=="U"){ //마스터 인서트
+   }else if(div=="FU"){ //마스터 인서트
        url="/logistics/assetmng/motifyAssetMng.do";
    }
-   
+*/   
    Common.ajax("POST",url,param,function(result){
        Common.alert(result.msg);
 
@@ -443,7 +445,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 
 <section class="pop_body"><!-- pop_body start -->
 
-<form id="FileSpaceForm" name="FileSpaceForm" >
+<form id="FileSpaceForm" name="FileSpaceForm"  enctype="multipart/form-data" >
 <input type="hidden" id="SirimLocTo" name="SirimLocTo"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -515,7 +517,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 
 <section class="pop_body"><!-- pop_body start -->
 
-<form id="FileSpaceForm" name="FileSpaceForm" >
+<form id="FileSpaceForm2" name="FileSpaceForm2" >
 <input type="hidden" id="SirimLocTo" name="SirimLocTo"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>

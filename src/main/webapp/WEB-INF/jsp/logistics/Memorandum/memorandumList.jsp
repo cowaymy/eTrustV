@@ -31,7 +31,6 @@
 #editWindow input.text { margin-bottom:10px; width:95%; padding: 0.1em;  }
 #editWindow fieldset { padding:0; border:0; margin-top:10px; }
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <!-- EDITOR -->
 <script type="text/javaScript" language="javascript">
     _editor_area = "editorArea";        //  -> 페이지에 웹에디터가 들어갈 위치에 넣은 textarea ID
