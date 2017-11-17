@@ -93,14 +93,10 @@
         });
         $("#clear").click(function(){
               $("#searchForm")[0].reset();
-//         	doGetComboAddr('/common/selectAddrSelCodeList.do', pdata ,'this.value','srchCntry', 'S', '');
-//             doDefCombo('', '' ,'curstateid', 'S', ''); 
-//             doDefCombo('', '' ,'curareaid', 'S', '');
-//             doDefCombo('', '' ,'curpostcod', 'S', '');   
-//             $("#srchCourierCd").val('');
-//             $("#srchCourierNm").val('');
-//             $("#srchRegNo").val('');
-//             $("#srchcontactNo").val('');
+              doDefCombo('', '' ,'srchState', 'S', ''); 
+              doDefCombo('', '' ,'srchArea', 'S', '');
+              doDefCombo('', '' ,'srchPstCd', 'S', '');   
+
         });
         $("#view").click(function(){
         	div="V";
