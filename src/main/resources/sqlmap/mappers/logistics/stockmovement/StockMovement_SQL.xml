@@ -82,6 +82,9 @@
            <if test="smvpath !=null and smvpath !=''">
               and l47.PRIDIC_FRQNCY = #{smvpath}
            </if>
+           <if test="sam !=null and sam !=''">
+              and l47.PRIDIC_FRQNCY = #{sam}
+           </if>
            <if test="crtsdt !=null and crtsdt !=''">
               and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
