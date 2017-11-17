@@ -457,5 +457,24 @@ public interface CommonPaymentMapper {
 	 */
 	int processPayment(Map<String, Object> params);
 	
+	/**
+	 * Normal Cash Payment 처리 프로시저 처리
+	 * @param params
+	 * @return
+	 */
+	int insertTmpNormalCashPaymentInfo(Map<String, Object>params);
 	
+	/**
+	 * Normal Cash Payment 처리 프로시저 처리
+	 * @param params
+	 * @return
+	 */
+	int insertTmpNormalChequePaymentInfo(Map<String, Object>params);
+	
+	/**
+	 * Normal Cash Payment 처리 프로시저 처리
+	 * @param params
+	 * @return
+	 */
+	int insertTmpNormalOnlinePaymentInfo(Map<String, Object>params);
 }
