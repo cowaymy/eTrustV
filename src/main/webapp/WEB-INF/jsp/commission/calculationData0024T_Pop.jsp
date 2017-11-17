@@ -217,7 +217,7 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0024T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">Employed CODE</th>
+                        <th scope="row">Member Code</th>
                         <td>
                               <input type="text" id="emplyCd_24T" name="emplyCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>

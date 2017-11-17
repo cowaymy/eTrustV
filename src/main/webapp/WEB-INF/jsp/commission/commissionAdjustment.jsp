@@ -43,10 +43,7 @@
 	}
 	
 	function clearForm(){
-		$("#memCode").val("");
-		$("#ordNo").val("");
-		$("#adjustmentAmt").val("");
-		$("#adjustmentDesc").val("");
+		$("#searchForm")[0].reset();
 	}
 	
 	function floatCh(obj){

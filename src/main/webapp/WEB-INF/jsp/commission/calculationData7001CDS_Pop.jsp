@@ -99,12 +99,14 @@
         dataField : "v8",
         headerText : "V8",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v9",
         headerText : "net sales marks",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v10",
         headerText : "group sales productivity",
@@ -124,12 +126,14 @@
         dataField : "v13",
         headerText : "V13",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v14",
         headerText : "v14",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v16",
         headerText : "CollectionAmt",
@@ -144,32 +148,38 @@
         dataField : "v18",
         headerText : "v18",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v19",
         headerText : "v19",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v20",
         headerText : "v20",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v21",
         headerText : "v21",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v22",
         headerText : "v22",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v23",
         headerText : "v23",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v24",
         headerText : "SHI rental collection rate",
@@ -204,7 +214,8 @@
         dataField : "v31",
         headerText : "v31",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     }];
 	// 그리드 속성 설정
     var gridPros = {

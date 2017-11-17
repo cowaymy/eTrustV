@@ -230,7 +230,7 @@
                         </td>
                      </tr>
                      <tr>
-                        <th scope="row">Employed Code</th>
+                        <th scope="row">Member Code</th>
                         <td colspan=5>
                               <input type="text" id="emplyCd_25T" name="emplyCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>

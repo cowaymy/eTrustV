@@ -99,12 +99,14 @@
         dataField : "v8",
         headerText : "V8",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v9",
         headerText : "net sales marks",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v10",
         headerText : "Grp Sales Product",
@@ -129,7 +131,8 @@
         dataField : "v14",
         headerText : "v14",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v16",
         headerText : "rental collection<br>amount",
@@ -139,7 +142,8 @@
         dataField : "v17",
         headerText : "v17",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     },{
         dataField : "v18",
         headerText : "completed<br>BS count",
@@ -204,7 +208,8 @@
         dataField : "v31",
         headerText : "v31",
         style : "my-column",
-        editable : false
+        editable : false,
+        visible : false
     }];
 	// 그리드 속성 설정
     var gridPros = {

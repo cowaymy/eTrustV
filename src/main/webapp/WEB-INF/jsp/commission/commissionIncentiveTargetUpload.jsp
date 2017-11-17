@@ -193,11 +193,10 @@
 
 	//clear button
 	function fn_clearSearchForm(){
-		$("#uploadId").val("");
-		$("#actionDate").val("");
-		$("#uploadDateFr").val("");
-		$("#uploadDateTo").val("");
-		$("#creator").val("");
+		$("#myForm")[0].reset();
+		mam_multiCombo();
+		status_multiCombo();
+		type_multiCombo();
 	}
 </script>
 <section id="content">

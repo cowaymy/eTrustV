@@ -55,8 +55,8 @@ var cdGridID;
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false
-            
+            showRowNumColumn : false,
+            selectionMode : "singleRow",
         };
         
         hpGridID = AUIGrid.create("#grid_wrap_hp", columnLayout,gridPros);
@@ -87,15 +87,15 @@ var cdGridID;
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false
-            
+            showRowNumColumn : false,
+            selectionMode : "singleRow",
         };
         
         cdGridID = AUIGrid.create("#grid_wrap_cd", columnLayout,gridPros);
    }
 </script>
 
-<div id="popup_wrap2" class="popup_wrap size_mid"><!-- popup_wrap start -->
+<div id="popup_wrap2" class="popup_wrap size_big"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>INCENTIVE/TARGET UPLOAD - REF CODE SAMPLE</h1>
@@ -108,7 +108,7 @@ var cdGridID;
 
 <div class="divine_auto"><!-- divine_auto start -->
 
-	<div style="width:49%">
+	<div style="width:50%">
 		<aside class="title_line"><!-- title_line start -->
 		<h2>Health Planner (HP)</h2>
 		</aside><!-- title_line end -->
