@@ -122,9 +122,104 @@
 
     <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
 
+<!-- cyc 2017 nov 17 -->
+                    select *
+        from (
+          SELECT ROW_NUMBER() OVER(PARTITION BY scp.SRV_config_ID ORDER BY srv_prd_expr_dt DESC) rn,
+                            scp.srv_prd_expr_dt,
+                                   som.SALES_ORD_NO AS sales_Order_No,
+                                   ae.AS_NO AS service_No,
+                                    cust.NAME AS cust_Name,
+                                    ae.AS_STUS_ID AS job_Status,
+                                    to_char(ae.AS_APPNT_DT,'YYYYMMDD') AS appointment_Date,
+                                    replace(substr(ae.AS_APPNT_TM, 0,5 ),':')  AS appointment_Time,
+                                    TO_CHAR (ae.AS_APPNT_DT, 'YYYY') as   plan_Year,
+                                    TO_CHAR (ae.AS_APPNT_DT, 'MM') as plan_Month,
+                                    ae.AS_SESION_CODE AS job_Session,
+                                    cust.TYPE_ID as customer_Type,
+                                    som.CUST_ID AS customer_Id,
+                                    custAdd.ADDR_DTL AS install_Address,
+                                    custCnt.TEL_M1 AS handphone_Tel,
+                                    custCnt.TEL_R AS home_Tel,
+                                    custCnt.TEL_O AS office_Tel,
+                                    cust.EMAIL AS mail_Address,
+                                     cust.CUST_VA_NO AS customer_Va_No,
+                                    cbm.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
+                                    '' AS image_Url,
+                                    stk.STK_DESC AS product_Name,
+                                    stk.STK_CODE AS product_Code,
+                                    FN_GET_COMMCD(10, som.APP_TYPE_ID) as app_Type,
+                                    (select PROMO_DESC
+                                       from SAL0017D
+                                       where 1=1
+                                       and promo_id =  som.PROMO_ID)  AS sales_Promotion,
+                                    FN_GET_COMMCD(24, ae.AS_REQSTER_TYPE_ID) as requestor,
+                                    ae.AS_REM_REQSTER_CNTC AS requestor_Contact,
+                                    scp.SRV_prd_DUR AS contract_Duration,
+                                    som.MTH_RENT_AMT AS monthly_Rental_Fees,
+                                    som.TOT_AMT AS registration_Fees,
+                                    to_char(scp.SRV_prd_EXPR_DT,'YYYYMMDD') AS Membership_Contract_Expiry,
+                                    rs.STUS_CODE_ID AS rental_Status,
+                                    brch.CODE AS dsc_Code,
+                                    arm.AS_WORKMNSH AS labour_Charge,
+                                    arm.AS_DEFECT_TYPE_ID AS defect_Type_Id,
+                                    arm.AS_DEFECT_GRP_ID AS defect_Group_Id,
+                                    arm.AS_DEFECT_ID AS defect_Id,
+                                    arm.AS_DEFECT_PART_GRP_ID AS defect_Part_Group_Id,
+                                    arm.AS_DEFECT_PART_ID AS defect_Part_Id,
+                                    arm.AS_DEFECT_DTL_RESN_ID AS defect_Detail_Reason_Id,
+                                    arm.AS_SLUTN_RESN_ID AS solution_Reason_Id,
+                                     arm.AS_RESULT_REM AS result_Remark,
+                                    cust.NAME AS result_Cust_Name,
+                                    arm.AS_RESULT_MOBILE_ID AS resultIc_Mobile_No,
+                                    arm.AS_MALFUNC_ID AS malfunction_Code,
+                                    arm.AS_MALFUNC_RESN_ID AS malfunction_Reason_Code,
+                                    arm.AS_FAIL_RESN_ID AS failReason_Code,
+                                    mb.MEM_CODE AS settled_By,
+                                    to_char(arm.AS_SETL_DT,'YYYYMMDD') AS settled_Date,
+                                    REPLACE (SUBSTR (arm.AS_SETL_TM, 0, 5), ':') AS settled_Time,
+                                    arm.AS_REN_COLCT_ID AS ren_Collection_Id,
+                                    arm.AS_RESULT_NO AS asr_No,
+                                    arm.AS_FILTER_AMT AS filter_Amount,
+                                    arm.AS_ACSRS_AMT AS accessories_Amount,
+                                    arm.AS_TOT_AMT AS total_Amount
+from SVC0001D ae,
+SVC0004D arm,
+SAL0001D  som,
+SAL0002D sod,
+SAL0045D i,
+SAL0071D rs,
+SAL0090D sc,
+SAL0088D scp,
+ORG0001D mb,
+SYS0005M brch,
+SYS0026M stk,
+SAL0023D custAdd,
+SAL0027D custCnt,
+SAL0024D cbm,
+SAL0029D cust
+where ae.as_id =arm.as_entry_id
+and ae.as_so_id = som.sales_ord_id
+and som.sales_ord_id = sod.sales_ord_id
+and i.sales_ord_id = som.sales_ord_id
+and som.sales_ord_id =rs.sales_ord_id (+)
+and sc.srv_so_id= som.sales_ord_id
+and scp.srv_config_id = sc.srv_config_id
+and mb.mem_id = ae.as_mem_id
+and brch.brnch_id = ae.as_brnch_id
+and stk.stk_id = sod.itm_stk_id
+and custadd.cust_add_id = i.add_id
+and custcnt.cust_cntc_id = i.cnt_id
+and som.cust_bill_id = cbm.cust_bill_id(+)
+and cust.cust_id = custCnt.cust_id
+                 AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
+                                                AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
+                 and    ORG0001D.mem_code = #{userId}
+        )
+         WHERE rn = 1
 
 
-		select *
+		<!-- select *
 		from (
 		  SELECT ROW_NUMBER() OVER(PARTITION BY SRV_SALES_ORD_ID ORDER BY srv_expr_dt DESC) rn,
 		                    SAL0095D.srv_expr_dt,
@@ -219,7 +314,7 @@
 		         and    ORG0001D.mem_code = #{userId}
 		)
 		 WHERE rn = 1
-
+ -->
 
 
   <!--                    SELECT SAL0001D.SALES_ORD_NO AS sales_Order_No,
