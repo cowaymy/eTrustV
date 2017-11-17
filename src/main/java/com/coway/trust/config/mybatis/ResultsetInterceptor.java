@@ -15,21 +15,14 @@ public class ResultsetInterceptor implements Interceptor {
 
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
-
 		Object[] args = invocation.getArgs();
-
 		Statement statement = (Statement) args[0];
-
 		ResultSet rs = statement.getResultSet();
-		// ResultSetMetaData rsmd = rs.getMetaData();
 
-		if (rs != null && rs.getType() == ResultSet.TYPE_SCROLL_INSENSITIVE && rs.last()) {
-			int rowCount = rs.getRow();
-
-			if (rowCount > AppConstants.RECORD_MAX_SIZE) {
+		if (rs != null && rs.getType() == ResultSet.TYPE_SCROLL_INSENSITIVE) {
+			if (rs.absolute(AppConstants.RECORD_MAX_SIZE + 1)) {
 				throw new ApplicationException(AppConstants.FAIL, "Too many rows...Please add search condition....");
 			}
-
 			rs.beforeFirst();
 		}
 

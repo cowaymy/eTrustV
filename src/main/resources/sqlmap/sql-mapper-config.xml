@@ -5,6 +5,7 @@
 
     <settings>
         <setting name="jdbcTypeForNull" value="NULL"/>
+        <setting name="defaultFetchSize" value="50"/>
     </settings>
 
     <typeAliases>
