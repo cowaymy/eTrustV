@@ -411,25 +411,20 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StocktransferGoodIssue.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model,
+	public ResponseEntity<ReturnMessage> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVo) throws Exception {
 		int userId = sessionVo.getUserId();
 
 		params.put("userId", userId);
-		List<EgovMap> list = stock.StockTransferDeliveryIssue(params);
-
-		Map<String, Object> rmap = new HashMap();
-
-		rmap.put("data", list);
+		String reVal = stock.StockTransferDeliveryIssue(params);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
+		message.setData(reVal);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-		rmap.put("message", message);
-
-		return ResponseEntity.ok(rmap);
+		return ResponseEntity.ok(message);
 	}
 
 	@RequestMapping(value = "/StocktransferDeliveryDelete.do", method = RequestMethod.POST)

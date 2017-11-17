@@ -250,12 +250,15 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public List<EgovMap> StockTransferDeliveryIssue(Map<String, Object> params) {
+	public String StockTransferDeliveryIssue(Map<String, Object> params) {
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		String reVal = "";
+
 		int iCnt = 0;
 		String tmpdelCd = "";
 		String delyCd = "";
+
 		if (checklist.size() > 0) {
 			for (int i = 0; i < checklist.size(); i++) {
 				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
@@ -286,16 +289,14 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("salesorder", "");
 
 		if ("RC".equals(formMap.get("gtype"))) {
-
 			stocktran.StockTransferCancelIssue(formMap);
+			reVal = (String) formMap.get("rdata");
 		} else {
-
 			stocktran.StockTransferiSsue(formMap);
+			reVal = (String) formMap.get("rdata");
 		}
-
-		List<EgovMap> list = null;
-
-		return list;
+		String returnValue[] = reVal.split("∈");
+		return returnValue[1];
 	}
 
 	@Override

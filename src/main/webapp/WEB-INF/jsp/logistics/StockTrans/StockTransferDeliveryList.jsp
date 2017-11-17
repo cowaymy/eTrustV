@@ -51,7 +51,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30},
                      {dataField:"reqitmno"     ,headerText:"STOITMNO"                    ,width:120    ,height:30 , visible:true},
                      {dataField:"gicmplt"      ,headerText:"GI COMPLET"                  ,width:120    ,height:30 , visible:true},
-                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:false}
+                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:true}
                      ];
                      
 var resop = {
@@ -378,7 +378,7 @@ function giFunc(){
 	
 	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
         
-        Common.alert(result.message.message);
+		 Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
 //         AUIGrid.setGridData(listGrid, result.data);
         $("#giptdate").val("");
         $("#gipfdate").val("");
