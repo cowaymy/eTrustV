@@ -1,18 +1,23 @@
 package com.coway.trust.web.sales.order;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.order.OrderLedgerService;
@@ -75,9 +80,10 @@ public class OrderLedgerController {
 	public String orderLedger2ViewPop(@RequestParam Map<String, Object>params, ModelMap model){
 		
 		logger.debug("params ======================================>>> " + params);
-		
-		params.put("ordId", 134619);//TODO TEST 
-		params.put("CutOffDate", "01/01/1900");//TODO TEST 
+
+		if(CommonUtils.isEmpty(params.get("CutOffDate"))){
+			params.put("CutOffDate", "01/01/1900");
+		}
 		
 		EgovMap orderInfo = orderLedgerService.selectOrderLedgerView(params);
 		model.addAttribute("orderInfo", orderInfo);
@@ -107,5 +113,33 @@ public class OrderLedgerController {
 		
 		return "sales/order/orderLedger2Pop";
 	}
+	
+	@RequestMapping(value = "/orderLedgerDetailPop.do") 
+	public String orderLedgerDetail(@RequestParam Map<String, Object>params, ModelMap model){
+
+		logger.debug("in  orderLedgerDetail ");
+
+		logger.debug("param ===================>>  " + params);
+		List<EgovMap> ordLdgDetailInfoList  = new ArrayList<>();
+
+			if(!params.get("docNo").toString().equals("-")){
+				
+				logger.debug("" + params.get("docTypeId"));
+				
+				if(params.get("docTypeId")== "155"||params.get("docTypeId") == "157"){
+					
+					ordLdgDetailInfoList  = orderLedgerService.selectPaymentDetailViewCndn(params);
+				}else{
+
+					ordLdgDetailInfoList  = orderLedgerService.selectPaymentDetailView(params);
+				}	
+				
+			}
+			
+			model.addAttribute("ordLdgDetailInfoList", new Gson().toJson(ordLdgDetailInfoList ));
+
+			return "sales/order/orderLedger2DetailPop";
+	}
+	
 	
 }

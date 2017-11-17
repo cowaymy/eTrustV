@@ -61,5 +61,13 @@ public class OrderLedgerServiceImpl  extends EgovAbstractServiceImpl implements 
 	public List<EgovMap> selectAgreInfo(Map<String, Object> params) {
 		return orderLedgerMapper.selectAgreInfo(params);		
 	}
+	@Override
+	public List<EgovMap> selectPaymentDetailViewCndn(Map<String, Object> param) {
+		return orderLedgerMapper.selectPaymentDetailViewCndn(param);
+	}
+	@Override
+	public List<EgovMap> selectPaymentDetailView(Map<String, Object> param) {
+		return orderLedgerMapper.selectPaymentDetailView(param);
+	}
 	
 }

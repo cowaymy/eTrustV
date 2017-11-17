@@ -35,21 +35,22 @@
           {   dataField : "docdate",  headerText : 'Date',         width : 150 }
          ,{   dataField : "instNo",     headerText : 'Inst No',     width : 150 }
          ,{   dataField : "doctype",  headerText : 'Type',         width : 150 }
-         ,{   dataField : "docNo",    headerText : 'Doc No',        width : 150 }
-         ,{   dataField : "adjreason", headerText : 'Adj Reason',   width : 150 }
-         ,{   dataField : "payMode",  headerText : 'Paymode',     width : 150  }
-         ,{   dataField : "refDt",       headerText : 'Ref Date',      width : 150 }
-         ,{  dataField : "refNo",        headerText : 'Ref No',        width : 150 }
-         ,{  dataField : "accCode",    headerText : 'Acc Code',    width : 150 }
-         ,{  dataField : "debitamt",   headerText : 'Debit',      width : 150, dataType : "numeric", formatString : "#,##0.00" }
-         ,{  dataField : "creditamt",  headerText : 'Credit',   width : 150, dataType : "numeric", formatString : "#,##0.00"}
-         ,{  dataField : "balanceamt", headerText : 'Balance', width : 150, dataType : "numeric", formatString : "#,##0.00"}
+         ,{   dataField : "docNo",     headerText : 'Doc No',        width : 150 }
+         ,{   dataField : "docTypeId",     headerText : '',        width : 150, visible:false }
+         ,{   dataField : "chqNo",     headerText : 'Chq No',   width : 150 }
+         ,{   dataField : "refDt",      headerText : 'Ref Date',     width : 150  }
+         ,{   dataField : "remark",        headerText : 'Ref No/TR/EFT',      width : 150 }
+         ,{   dataField : "payMode",        headerText : 'Paymode',        width : 150 }
+         ,{   dataField : "debitamt",   headerText : 'Debit',      width : 150, dataType : "numeric", formatString : "#,##0.00" }
+         ,{   dataField : "creditamt",  headerText : 'Credit',   width : 150, dataType : "numeric", formatString : "#,##0.00"}
+         ,{   dataField : "balanceamt", headerText : 'Balance', width : 150, dataType : "numeric", formatString : "#,##0.00"}
+        	
         ];
 
      //그리드 속성 설정
      var ordLedgerGridPros = {
-         usePaging           : true,             //페이징 사용
-         pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+         usePaging           : false,             //페이징 사용
+         pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
          editable                : false,        
          showStateColumn     : false,         
          showRowNumColumn    : false,  
@@ -57,6 +58,18 @@
      };
      
      ordLedgerGridID = GridCommon.createAUIGrid("ord_ledger_grid", ordLedgerLayout, "", ordLedgerGridPros);
+     
+     // 셀 더블클릭 이벤트 바인딩
+     AUIGrid.bind(ordLedgerGridID, "cellDoubleClick", function(event){
+         
+          $("#docNo").val(AUIGrid.getCellValue(ordLedgerGridID , event.rowIndex , "docNo"));
+          $("#payMode").val( AUIGrid.getCellValue(ordLedgerGridID , event.rowIndex , "payMode"));
+          $("#docTypeId").val( AUIGrid.getCellValue(ordLedgerGridID , event.rowIndex , "docTypeId"));
+         
+          Common.popupDiv("/sales/order/orderLedgerDetailPop.do",$("#listSForm").serializeJSON(), null, true, "orderLedgerDetailPop");
+          
+     });
+     
      
      if(orderLdgrList != '' ){
          AUIGrid.setGridData(ordLedgerGridID, orderLdgrList);
@@ -105,6 +118,12 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>${orderInfo.custName}</h2>
 </aside><!-- title_line end -->
+
+<form action="#" method="post" id="listSForm" name="listSForm">
+<input type="hidden" id ="docNo" name="docNo">
+<input type="hidden" id ="payMode" name="payMode">
+<input type="hidden" id ="docTypeId" name="docTypeId">
+</form>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -165,19 +184,19 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="ord_ledger_grid" style="width:100%; height:200px; margin:0 auto;"></div>
+    <div id="ord_ledger_grid" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:100px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:100px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:100px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:100px" />
+    <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -212,6 +231,3 @@
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
-</body>
-</html>
