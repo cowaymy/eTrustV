@@ -142,11 +142,11 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 			saveParam.put("susId", params.get("susId"));
 			orderSuspensionMapper.updateSAL0096DSuspend(saveParam);
 			
-		}if(saveStatus == 30){	// 28번은 Regular. 프로시저 오류로 일단 막아둠.
+		}if(saveStatus == 28){	// 28번은 Regular. 프로시저 오류로 일단 막아둠.
 			// getOderOutsInfo 프로시저 현재 오류.. 수정되면 적용해야함.
 			saveRagularParam.put("ORD_ID", params.get("ordId"));
-			EgovMap getOderOutsInfo = membershipQuotationMapper.getOderOutsInfo(saveRagularParam);
-			
+			membershipQuotationMapper.getOderOutsInfo(saveRagularParam);
+			EgovMap spOrdInfo = (EgovMap) saveRagularParam.get("p1");
 			EgovMap newSuspendSearch1 = orderSuspensionMapper.newSuspendSearch1(params);
 			int getCallResultIdMaxSeq = orderExchangeMapper.getCallResultIdMaxSeq();
 			saveRagularParam.put("getCallResultIdMaxSeq", getCallResultIdMaxSeq);
@@ -180,11 +180,11 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 			orderInvestMapper.updateSAL0071D(saveRagularParam);
 			
 			saveRagularParam.put("susId", params.get("susId"));
-			saveRagularParam.put("rafAmt", getOderOutsInfo.get("ordUnbillAmt"));
+			saveRagularParam.put("rafAmt", spOrdInfo.get("ordUnbillAmt"));
 			saveRagularParam.put("billMonth", params.get("susId"));
 			saveRagularParam.put("billYear", params.get("susId"));
-			saveRagularParam.put("lastBillInstNo", getOderOutsInfo.get("lastBillMth"));
-			saveRagularParam.put("currBillInstNo", getOderOutsInfo.get("currBillMth"));
+			saveRagularParam.put("lastBillInstNo", spOrdInfo.get("lastBillMth"));
+			saveRagularParam.put("currBillInstNo", spOrdInfo.get("currBillMth"));
 			orderSuspensionMapper.updateAmtSAL0096D(saveRagularParam);
 			
 			saveRagularParam.put("salesOrdId", params.get("ordId"));
