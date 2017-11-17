@@ -324,17 +324,17 @@
     <th scope="row">Branch</th>
     <td>
 
-     <select id="cmbbranchId" name="cmbbranchId" class="w100p" >
+     <select id="cmbbranchId" name="cmbbranchId" class="w100p" style='text-align:left' >
         <option value="">Choose One</option>
          <c:forEach var="list" items="${dscBranchList }">
-            <option value="${list.brnchId }">${list.brnchName }</option>
+            <option value="${list.brnchId }" style='text-align:left'>${list.brnchName }</option>
          </c:forEach>
      </select>
 
     </td>
     <th scope="row">CT Code</th>
     <td>
-    <select id="cmbctId" name="cmbctId" class="w100p" >
+    <select id="cmbctId" name="cmbctId" class="w100p" style='text-align:left'>
         <%-- <option value="">Choose One</option>
          <c:forEach var="list" items="${ssCapacityCtList2 }">
             <option value="${list.memId }">${list.memCode }</option>

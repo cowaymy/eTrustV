@@ -139,6 +139,7 @@ public class TerritoryManagementController {
 
 		String[] branchTypeList = request.getParameterValues("comBranchType");
 		params.put("branchTypeList", branchTypeList);
+		logger.debug("branchTypeList {}", branchTypeList);
 		List<EgovMap> territoryList = territoryManagementService.selectTerritory(params);
 		logger.debug("territoryList {}", territoryList);
 		return ResponseEntity.ok(territoryList);

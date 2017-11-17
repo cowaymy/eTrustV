@@ -217,7 +217,7 @@ function fn_Cancel(){
 	<th scope="row">Branch Type<span class="must">*</span></th>
 	<td>
 		<select class="w100p"  id="comBranchType" name="comBranchType">
-		   <option value="">Choose One</option>
+		   <option value="11">Choose One</option>
 		   <option value="42">Cody Branch</option>
           <option value="43">Dream Service Center</option>
 		</select>

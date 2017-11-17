@@ -93,17 +93,29 @@
                END  CNFM_STUS_NAME
              FROM ORG0019M INNER JOIN ORG0001D B ON REQST_USER_ID  = B.MEM_ID ) A
              WHERE 1=1
+            
+          
              <if test="branchTypeList != null and branchTypeList != '' ">
                  AND A.BRNCH_TYPE IN
+                <choose>
+                <!-- 전체조회 -->
+                  <when test ="branchTypeList[0].equals('11') ">
+                   ( '42', '43')
+                   </when>
+                <otherwise>
                  <foreach item="item" collection="branchTypeList" index="index" open="(" separator="," close=")">
-                 #{item}
+                    #{item}               
                  </foreach>
+                 </otherwise>
+              </choose>
               </if>
+           
+                 
               <if test="requestNo != null and requestNo != ''">
-                  AND A.REQST_NO = LOWER(#{requestNo})
+                  AND LOWER ( A.REQST_NO ) = LOWER( #{requestNo} )
               </if>
               <if test="requestUserId != null and requestUserId != ''">
-                  AND A.FULL_NAME = LOWER(#{requestUserId})
+                  AND LOWER ( A.FULL_NAME ) = LOWER(#{requestUserId})
               </if>
               <if test="requestDt != null and requestDt != ''">
                  <![CDATA[ AND  TO_DATE (A.REQST_DT, 'YYYY-MM-DD') =  TO_DATE(#{requestDt},'DD/MM/YYYY') ]]>
