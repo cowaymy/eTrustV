@@ -545,7 +545,6 @@ public class ServiceApiController {
 				
 				Map<String, Object> getAsBasic = MSvcLogApiService.getAsBasic(params);
 				
-				params.put("AS_ENTRY_ID", String.valueOf(getAsBasic.get("asEntryId")));  
 				params.put("AS_SO_ID", getAsBasic.get("asSoId"));
 				params.put("AS_CT_ID", getAsBasic.get("asCtId"));
 				params.put("AS_RESULT_STUS_ID", '4');
@@ -580,6 +579,7 @@ public class ServiceApiController {
 				params.put("HC_REM", " ");
 				
 				//004
+				params.put("AS_ENTRY_ID", getAsBasic.get("asId"));//asTransLogs
 				params.put("AS_NO", asTransLogs1.get(i).get("serviceNo"));//asTransLogs
 				params.put("AS_DEFECT_TYPE_ID",  asTransLogs1.get(i).get("defectTypeId")); //asTransLogs
 				params.put("AS_DEFECT_ID", asTransLogs1.get(i).get("defectId")); //asTransLogs
