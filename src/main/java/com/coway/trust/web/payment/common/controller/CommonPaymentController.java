@@ -253,4 +253,51 @@ public class CommonPaymentController {
         return ResponseEntity.ok(msg);
 	}
 	
+	/**
+	 * Payment 처리
+	 * @param Map
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/saveNormalPayment", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveNormalPayment(
+			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
+		String message = "";
+		
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+    	
+    	Map<String, Object> formInfo = new HashMap<String, Object> ();
+    	if(formList.size() > 0){
+    		for(Object obj : formList){
+    			Map<String, Object> map = (Map<String, Object>) obj;
+    			formInfo.put((String)map.get("name"), map.get("value"));
+    		}
+    	}
+    	
+    	//User ID 세팅
+    	formInfo.put("userid", sessionVO.getUserId());
+    	
+    	if(formInfo.get("chargeAmount") == null || formInfo.get("chargeAmount").equals("")){
+    		formInfo.put("chargeAmount", 0);
+    	}
+		formInfo.put("payItemIsLock", false);
+		formInfo.put("payItemIsThirdParty", false);
+		formInfo.put("payItemStatusId", 1);
+		formInfo.put("isFundTransfer", false);
+		formInfo.put("skipRecon", false);
+		formInfo.put("payItemCardTypeId", 0);
+
+		commonPaymentService.saveNormalPayment(formInfo, gridList);
+    	
+		// 저장
+		//commonPaymentService.savePayment(formInfo,gridList);
+		
+		// 결과 만들기.
+    	ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	msg.setMessage(message);
+        return ResponseEntity.ok(msg);
+	}
 }
