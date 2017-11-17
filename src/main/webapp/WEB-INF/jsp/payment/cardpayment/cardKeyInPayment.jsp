@@ -19,6 +19,9 @@
 
 var maxSeq = 0; //billing ADD 될 시퀀스
 
+//targetFinalBillGridID Grid에서 선택된 RowID
+var selectedGridValue = -1;
+
 var targetRenMstGridID;
 var targetRenDetGridID;
 var targetOutMstGridID;
@@ -51,8 +54,8 @@ var targetRenMstColumnLayout = [
     { dataField:"custNm" ,headerText:"Customer Name" ,editable : false , width : 250 },
     {
         dataField : "btnCheck",
-        headerText : " ",
-        width: 50,
+        headerText : "include",
+        width: 80,
         renderer : {
             type : "CheckBoxEditRenderer",            
             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -82,8 +85,8 @@ var targetRenDetColumnLayout = [
     { dataField:"stusCodeName" ,headerText:"Bill Status" ,editable : false , width : 100},
     {
         dataField : "btnCheck",
-        headerText : " ",
-        width: 50,
+        headerText : "include",
+        width: 80,
         renderer : {
             type : "CheckBoxEditRenderer",            
             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -126,8 +129,8 @@ var targetSrvcMstColumnLayout = [
     { dataField:"custName" ,headerText:"Customer Name" ,editable : false , width : 250 },
     {
         dataField : "btnCheck",
-        headerText : " ",
-        width: 50,
+        headerText : "include",
+        width: 80,
         renderer : {
             type : "CheckBoxEditRenderer",            
             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -153,8 +156,8 @@ var targetSrvcDetColumnLayout = [
     { dataField:"srvLdgrRefDt" ,headerText:"Bill Date" ,editable : false , width : 100},
     {
         dataField : "btnCheck",
-        headerText : " ",
-        width: 50,
+        headerText : "include",
+        width: 80,
         renderer : {
             type : "CheckBoxEditRenderer",            
             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -177,7 +180,7 @@ var targetBillMstColumnLayout = [
     { dataField:"billTypeId" ,headerText:"Bill Type ID" ,editable : false , width : 150 , visible : false },
     { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 100},  
     { dataField:"custNm" ,headerText:"Cust Name" ,editable : false , width : 250},      
-    { dataField:"nric" ,headerText:"Cust NRIC" ,editable : false , width : 120 },      
+    { dataField:"nric" ,headerText:"Cust NRIC" ,editable : false , width : 120 , visible : false },     
     { dataField:"billMemNm" ,headerText:"HP Name." ,editable : false , width : 250 , visible : false },
     { dataField:"billMemCode" ,headerText:"HP Code." ,editable : false , width : 100 , visible : false },
     { dataField:"ruleDesc" ,headerText:"Pay Type" ,editable : false , width : 200 },  
@@ -190,8 +193,8 @@ var targetBillMstColumnLayout = [
     { dataField:"stusNm" ,headerText:"Status" ,editable : false , width : 100 },
     {
         dataField : "btnCheck",
-        headerText : " ",
-        width: 50,
+        headerText : "include",
+        width: 80,
         renderer : {
             type : "CheckBoxEditRenderer",            
             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -237,9 +240,11 @@ var gridPros = {
 };
 
 //Grid Properties 설정 
-var targetGridPros = {                    
+var targetGridPros = {
+  headerHeight : 35,               // 기본 헤더 높이 지정
   pageRowCount : 5,              //페이지당 row 수
-  showStateColumn : false      // 상태 칼럼 사용
+  showStateColumn : false ,     // 상태 칼럼 사용
+  softRemoveRowMode:false
 };
 
 $(document).ready(function(){ 
@@ -249,7 +254,7 @@ $(document).ready(function(){
 	targetSrvcMstGridID = GridCommon.createAUIGrid("target_srvc_grid_wrap", targetSrvcMstColumnLayout,null,gridPros);
 	targetSrvcDetGridID = GridCommon.createAUIGrid("target_srvcD_grid_wrap", targetSrvcDetColumnLayout,null,gridPros);
 	targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros);
-	targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,gridPros);
+	targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,targetGridPros);
 	
 	//Rental Billing Grid 에서 체크/체크 해제시
 	AUIGrid.bind(targetRenDetGridID, "cellClick", function( event ){
@@ -354,6 +359,12 @@ $(document).ready(function(){
     //doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'bankAccount' , 'S', '');
     //doGetCombo('/common/getAccountList.do', 'CHQ' , ''   , 'bankAccount' , 'S', '');
     //doGetCombo('/common/getAccountList.do', 'ONLINE' , ''   , 'bankAccount' , 'S', '');
+    
+    // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(targetFinalBillGridID, "cellClick", function( event ){ 
+        selectedGridValue = event.rowIndex;
+    });
+    
 });
 
 function fn_chgAppType(){
@@ -400,6 +411,24 @@ function fn_chgAppType(){
 	 }
 }
 
+//**************************************************
+//**************************************************
+//Payment Key In 관련 Script 
+//**************************************************
+//**************************************************
+//Collector 조회 팝업
+function fn_searchUserIdPop() {
+    Common.popupDiv("/common/memberPop.do", { callPrgm : "PAYMENT_PROCESS" }, null, true);
+}
+
+//Collector 조회 팝업 결과값 세팅
+function fn_loadOrderSalesman(memId, memCode, memNm){
+	$("#keyInCollMemId").val(memId);
+	$("#keyInCollMemNm").val(memNm);
+}
+    
+  
+
 //크레딧 카드 입력시 Card Mode 변경에 따라 Issue Bank와 Merchant Bank Combo를 갱신한다.
 function fn_changeCrcMode(){
     var cardModeVal = $("#keyInCardMode").val();
@@ -430,6 +459,13 @@ function fn_changeCrcMode(){
             doGetCombo('/common/getAccountList.do', 'CRC2711' , ''   , 'keyInMerchantBank' , 'S', '');
         }
     }
+    
+    //Tenure Dialble 처리
+    if(cardModeVal == 2708 || cardModeVal == 2709){    	
+        $("#keyInTenure").attr("disabled", true); 
+    }else{
+    	$("#keyInTenure").attr("disabled", false);
+    }
 }
 
 //Merchant Bank 변경시 Tenure 다시 세팅한다. 
@@ -452,6 +488,143 @@ function fn_changeIsseBank(){
 }
 
 function savePayment(){
+	
+	//Validation Start !!!!!!
+	//금액 체크
+	if(FormUtil.checkReqValue($("#keyInAmount")) ||$("#keyInAmount").val() <= 0 ){
+        Common.alert('* No Amount ');
+        return;
+    }
+	
+	//카드번호 체크
+	if(FormUtil.checkReqValue($("#keyInCardNo1")) || 
+			FormUtil.checkReqValue($("#keyInCardNo2")) ||
+			FormUtil.checkReqValue($("#keyInCardNo3"))){
+        Common.alert('* No CRC No.');
+        return;
+    }else{
+    	var cardNo1Size = $("#keyInCardNo1").val().length;
+    	var cardNo2Size = $("#keyInCardNo2").val().length;
+    	var cardNo3Size = $("#keyInCardNo3").val().length;
+    	var cardNoAllSize = cardNo1Size  + cardNo2Size + cardNo3Size;
+    	
+    	if(cardNoAllSize != 16){
+    		Common.alert('* Invalid CRC No.');
+            return;
+    	}
+    }
+	
+	//Card Holder 체크
+	//금액 체크
+    if(FormUtil.checkReqValue($("#keyInHolderNm"))){
+        Common.alert('* No CRC Holder Name');
+        return;
+    }
+	
+	//카드 유효일자 체크
+    if(FormUtil.checkReqValue($("#keyInExpiryMonth")) || FormUtil.checkReqValue($("#keyInExpiryYear"))){
+        Common.alert('* No CRC Expiry Date');
+        return;
+    }else{
+        var expiry1Size = $("#keyInExpiryMonth").val().length;
+        var expiry2Size = $("#keyInExpiryYear").val().length;
+        
+        var expiryAllSize = expiry1Size  + expiry2Size;
+        
+        if(expiryAllSize != 4){
+            Common.alert('* Invalid CRC Expiry Date');
+            return;
+        }
+        
+        if(Number($("#keyInExpiryMonth").val()) > 12){
+        	Common.alert('* Invalid CRC Expiry Date');
+            return;
+        }
+    }
+	
+	//카드 브랜드 체크
+    if(FormUtil.checkReqValue($("#keyInCrcType option:selected"))){
+        Common.alert('* No CRC Brand');
+        return;
+    
+    }else{
+    	var crcType = $("#keyInCrcType").val();
+    	var cardNo1st1Val = $("#keyInCardNo1").val().substr(0,1);
+    	var cardNo1st2Val = $("#keyInCardNo1").val().substr(0,2);
+    	var cardNo1st4Val = $("#keyInCardNo1").val().substr(0,4);
+    	
+    	if(cardNo1st1Val == 4){    		
+    		if(crcType != 112){
+    			Common.alert('* Invalid credit card type');
+                return;
+    		}
+    	}
+    	
+    	if((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)){            
+            if(crcType != 111){
+                Common.alert('* Invalid credit card type');
+                return;
+            }
+        }
+    }
+	
+	//카드 모드 체크
+    if(FormUtil.checkReqValue($("#keyInCardMode option:selected"))){
+        Common.alert('* No CRC Mode');
+        return;
+    }
+	
+    //승인 번호 체크
+    if(FormUtil.checkReqValue($("#keyInApprovalNo"))){
+        Common.alert('* No Approval Number');
+        return;
+    }else{
+    	
+    	var appValSize = $("#keyInApprovalNo").val().length;        
+        
+        if(appValSize != 6){
+            Common.alert('* Invalid approval No length');
+            return;
+        }
+    }
+    
+    //Issue Bank 체크
+    if(FormUtil.checkReqValue($("#keyInIssueBank option:selected"))){
+        Common.alert('* No Issue Bank Selected');
+        return;
+    }
+    
+    //Merchant Bank 체크
+    if(FormUtil.checkReqValue($("#keyInMerchantBank option:selected"))){
+        Common.alert('* No Merchant Bank Selected');
+        return;
+    }
+    
+    //Transaction Date 체크
+    if(FormUtil.checkReqValue($("#keyInTrDate"))){
+        Common.alert('* Transaction Date is empty');
+        return;
+    }
+    
+    //TR No 체크
+    if(FormUtil.checkReqValue($("#keyInTrNo"))){
+        Common.alert('* TR No. is empty. Key in the value.');
+        return;
+    }
+    
+    //TR Issue Date 체크
+    if(FormUtil.checkReqValue($("#keyInTrIssueDate"))){
+        Common.alert('* TR Issue Date is empty. Key in the value.');
+        return;
+    }
+    
+    //Pay Date 체크
+    if(FormUtil.checkReqValue($("#keyInPayDate"))){
+        Common.alert('* Pay Date is empty. Key in the value.');
+        return;
+    }
+	
+    //Validation End !!!!!!
 	
 	//param data array
 	var data = {};
@@ -493,6 +666,42 @@ function recalculatePaymentTotalAmt(){
   }
 
   $("#paymentTotalAmtTxt").text("RM " + $.number(totalAmt,2));    
+}
+
+//카드번호 입력시 번호에 따라 Card Brand 선택
+function fn_changeCardNo1(){
+	
+	var cardNo1Size = $("#keyInCardNo1").val().length;
+	
+	if(cardNo1Size > 4){
+		var cardNo1st1Val = $("#keyInCardNo1").val().substr(0,1);
+        var cardNo1st2Val = $("#keyInCardNo1").val().substr(0,2);
+        var cardNo1st4Val = $("#keyInCardNo1").val().substr(0,4);
+        
+        if(cardNo1st1Val == 4){         
+        	$("#keyInCrcType").val(112);
+        }
+        
+        if((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)){            
+        	$("#keyInCrcType").val(111);
+        }
+	}
+}
+
+
+//추가된 최종 그리드 삭제
+function removeFromFinal(){
+    
+    if (selectedGridValue  > -1){
+        Common.confirm('Are you sure you want to remove the Selected Row?'
+        ,function (){
+            //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+            AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
+            selectedGridValue = -1;
+        });
+    }else{
+        Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
+    }
 }
 
 //**************************************************
@@ -1587,7 +1796,6 @@ function addBillToFinal(){
 }
 
 
-    
 </script>
 
 <section id="content">
@@ -1914,6 +2122,9 @@ function addBillToFinal(){
     <!-- title_line start -->
     <aside class="title_line">
         <h3 class="pt0">Payment Key-In</h3>
+        <ul class="right_btns mt10">
+           <li><p class="btn_grid"><a href="javascript:removeFromFinal();">DEL</a></p></li>
+        </ul>
     </aside>
     <!-- title_line end -->
     
@@ -1958,7 +2169,7 @@ function addBillToFinal(){
 				        </td>
 				    </tr>                    
 				    <tr>
-				        <th scope="row">Amount</th>
+				        <th scope="row">Amount<span class="must">*</span></th>
 				        <td>
 				            <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
 				        </td>
@@ -1968,60 +2179,55 @@ function addBillToFinal(){
 				        </td>
 				    </tr>
 				    <tr>
-				        <th scope="row">Card Type</th>
+				        <th scope="row">Card Type<span class="must">*</span></th>
 				        <td>
 				            <select id="keyCrcCardType" name="keyCrcCardType"  class="w100p">
 				                <option value="1241">Credit Card</option>
 				                <option value="1240">Debit Card</option>
 				            </select>
 				        </td>
-				        <th scope="row">Card Brand</th>
+				        <th scope="row">Card Brand<span class="must">*</span></th>
 				        <td>
 				            <select id="keyInCrcType" name="keyInCrcType"  class="w100p"></select>
 				        </td>
 				    </tr>
 				    <tr>
-				        <th scope="row">Card Mode</th>
+				        <th scope="row">Card Mode<span class="must">*</span></th>
 				        <td>
 				            <select id="keyInCardMode" name="keyInCardMode"  class="w100p" onChange="javascript:fn_changeCrcMode();">
-				                <option value="2708">POS</option>
-				                <option value="2709">MOTO</option>
-				                <option value="2710">MOTO IPP</option>
-				                <option value="2711">MPOS</option>
-				                <option value="2712">MPOS IPP</option>
 				            </select>
 				        </td>
-				        <th scope="row">Approval No.</th>
+				        <th scope="row">Approval No.<span class="must">*</span></th>
 				        <td>
 				            <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p"  />
 				        </td>                        
 				    </tr>
 				    <tr>
-				        <th scope="row">Card No</th>
+				        <th scope="row">Card No<span class="must">*</span></th>
 				        <td>
-				            <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="6" maxlength="6" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+				            <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="6" maxlength="6" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onChange="javascript:fn_changeCardNo1();"/></p>
 				            <span>-</span>
 				            <p class="short"><input type="password" id="keyInCardNo2" name="keyInCardNo2" size="6" maxlength="6" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
 				            <span>-</span>
 				            <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
 				        </td>
-				        <th scope="row">Credit Card Holder Name</th>
+				        <th scope="row">Credit Card Holder Name<span class="must">*</span></th>
 				        <td>
 				            <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p"  />
 				        </td>                        
 				    </tr>     
 				    <tr>
-                        <th scope="row">Issue Bank</th>
+                        <th scope="row">Issue Bank<span class="must">*</span></th>
                         <td>
                             <select id="keyInIssueBank" name="keyInIssueBank" class="w100p" onChange="javascript:fn_changeIsseBank();"></select>
                         </td>
-                        <th scope="row">Merchant Bank</th>
+                        <th scope="row">Merchant Bank<span class="must">*</span></th>
                         <td>
                             <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" ></select>
                         </td>                       
                     </tr>                  
 				    <tr>
-				        <th scope="row">Expiry Date(mm/yy)</th>
+				        <th scope="row">Expiry Date(mm/yy)<span class="must">*</span></th>
 				        <td>
 				            <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
 				            <span>/</span>
@@ -2038,7 +2244,7 @@ function addBillToFinal(){
 				        <td>
 				            <input id="keyInRunNo" name="keyInRunNo" type="text" title="" placeholder="" class="w100p"  />
 				        </td>
-				        <th scope="row">Transatcion Date</th>
+				        <th scope="row">Transatcion Date<span class="must">*</span></th>
 				        <td>
 				            <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 				        </td>
@@ -2051,11 +2257,11 @@ function addBillToFinal(){
 				        </td>                       
 				    </tr>
 				    <tr>
-				        <th scope="row">TR No.</th>
+				        <th scope="row">TR No.<span class="must">*</span></th>
 				        <td>
 				            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
 				        </td>
-				        <th scope="row">TR Issue Date</th>
+				        <th scope="row">TR Issue Date<span class="must">*</span></th>
 				        <td>
 				            <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 				        </td>
@@ -2063,9 +2269,13 @@ function addBillToFinal(){
 				    <tr>
 				        <th scope="row">Collector</th>
 				        <td>
-				            <input id="keyInCollMemId" name="keyInCollMemId" type="text" title="" placeholder="" class="w100p"  />
+				            <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />				            
+				            <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+				            <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+				                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                            </a>
 				        </td>
-				        <th scope="row">Pay Date</th>
+				        <th scope="row">Pay Date<span class="must">*</span></th>
 				        <td>
 				            <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 				        </td>
