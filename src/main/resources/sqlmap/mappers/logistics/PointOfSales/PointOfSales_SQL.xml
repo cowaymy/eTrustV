@@ -20,8 +20,8 @@ select ROWNUM rnum , l47.REQST_STUS     status
              , l47.trnsc_type_dtl mtype
              , trand.code_name    mtext
              , decode(l47.PRIDIC_FRQNCY , 'A' , 'Auto' , 'M' , 'Manual' ,l47.PRIDIC_FRQNCY) froncy
-             , to_char(l47.reqst_crt_dt , 'yyyy-mm-dd')     crtdt
-             , to_char(l47.reqst_require_dt , 'yyyy-mm-dd') reqdt
+             , to_char(l47.reqst_crt_dt , 'DD/MM/YYYY')     crtdt
+             , to_char(l47.reqst_require_dt , 'DD/MM/YYYY') reqdt
              , l47.REF_DOC_NO docno
              , l47.DOC_HDER_TXT headtitle
              , l47.GOODS_RCIPT grcipt
@@ -266,21 +266,21 @@ WHERE 1 = 1
   
   <insert id="insOtherReceiptHead" parameterType="Map" >
         INSERT INTO LOG0047M(
-	            REQST_NO,
-	            TRNSC_TYPE,
-	            TRNSC_TYPE_DTL,
-	            PRIDIC_FRQNCY,
-	            REQST_CRT_DT,
-	            REQST_REQUIRE_DT,
-	            REF_DOC_NO,
-	            DOC_HDER_TXT,
-	            REQST_CDC_RDC,
-	            REQST_STUS,
-	            CRT_USER_ID,
-	            CRT_DT,
-	            REQST_TYPE,
+                REQST_NO,
+                TRNSC_TYPE,
+                TRNSC_TYPE_DTL,
+                PRIDIC_FRQNCY,
+                REQST_CRT_DT,
+                REQST_REQUIRE_DT,
+                REF_DOC_NO,
+                DOC_HDER_TXT,
+                REQST_CDC_RDC,
+                REQST_STUS,
+                CRT_USER_ID,
+                CRT_DT,
+                REQST_TYPE,
                 REQST_TYPE_DTL
-	            )
+                )
         VALUES (  
                 #{reqno}
                 , #{trnscType}
@@ -309,14 +309,14 @@ WHERE 1 = 1
                     CRT_USER_ID, 
                     CRT_DT)
                 VALUES ( 
-	                #{reqno} , 
-	                (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno}),
-	                #{itmcode} , 
-	                #{itmdesc}, 
-	                #{rqty} ,
-	                #{itemuom} , 
-	                #{userId}, 
-	                SYSDATE)
+                    #{reqno} , 
+                    (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno}),
+                    #{itmcode} , 
+                    #{itmdesc}, 
+                    #{rqty} ,
+                    #{itemuom} , 
+                    #{userId}, 
+                    SYSDATE)
     </insert> 
     <insert id="insertSerial" parameterType="Map">
             INSERT INTO LOG0061D (
@@ -360,18 +360,18 @@ WHERE 1 = 1
      
       <select id="selectPosHead" parameterType="String" resultType="egovMap">
         SELECT 
-	       l47.REQST_NO REQNO,
-	       l47.TRNSC_TYPE TRNTYPE,
-	       l47.TRNSC_TYPE_DTL TRNDTL,
-	       l47.PRIDIC_FRQNCY PRIFR,
-	       TO_CHAR (l47.REQST_CRT_DT, 'DD/MM/YYYY') REQCRTDT,
-	       l47.DOC_HDER_TXT DOCTXT,
-	       l47.RCIV_CDC_RDC RCIVCR,
-	       l47.REQST_CDC_RDC REQCR,
-	       l47.REQST_STUS REQST,
-	       l47.REF_DOC_NO REFDOCNO,
-	       l47.CRT_USER_ID CRT_USER_ID,
-	       s47.USER_NAME USER_NAME
+           l47.REQST_NO REQNO,
+           l47.TRNSC_TYPE TRNTYPE,
+           l47.TRNSC_TYPE_DTL TRNDTL,
+           l47.PRIDIC_FRQNCY PRIFR,
+           TO_CHAR (l47.REQST_CRT_DT, 'DD/MM/YYYY') REQCRTDT,
+           l47.DOC_HDER_TXT DOCTXT,
+           l47.RCIV_CDC_RDC RCIVCR,
+           l47.REQST_CDC_RDC REQCR,
+           l47.REQST_STUS REQST,
+           l47.REF_DOC_NO REFDOCNO,
+           l47.CRT_USER_ID CRT_USER_ID,
+           s47.USER_NAME USER_NAME
         FROM LOG0047M l47,SYS0047M s47
          WHERE 1=1
          AND l47.CRT_USER_ID = s47.USER_ID
@@ -380,19 +380,19 @@ WHERE 1 = 1
      
        <select id="selectPosItem" parameterType="String" resultType="egovMap">
         SELECT 
-	         L48.REQST_NO_ITM RESNOITM ,
-	         L48.REQST_NO REQNO ,
-	         L48.ITM_CODE ITMCD, 
-	         L48.ITM_NAME ITMNAME, 
-	         L48.REQST_QTY RQTY , 
-	         S26.STK_ID ITMID,
-	         L48.UOM 
+             L48.REQST_NO_ITM RESNOITM ,
+             L48.REQST_NO REQNO ,
+             L48.ITM_CODE ITMCD, 
+             L48.ITM_NAME ITMNAME, 
+             L48.REQST_QTY RQTY , 
+             S26.STK_ID ITMID,
+             L48.UOM 
          FROM 
-	         LOG0048D L48,
-	         SYS0026M S26
+             LOG0048D L48,
+             SYS0026M S26
          WHERE
-	         L48.ITM_CODE = S26.STK_CODE 
-	         AND l48.REQST_NO = #{param}
+             L48.ITM_CODE = S26.STK_CODE 
+             AND l48.REQST_NO = #{param}
         </select>
      
      
