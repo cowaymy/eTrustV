@@ -498,11 +498,9 @@ function fn_selectRenewalHistory(){
 }
 
 function fn_selectPromote(){
-
     var jsonObj = {
             MemberID : $("#memberid").val(),
             MemberType : $("#memtype").val()
-
     };
 
 
