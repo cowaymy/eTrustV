@@ -85,17 +85,13 @@ public class MemberListController {
 
 	/*By KV start - ReplacementCT - selection in requestvacation*/
 	@RequestMapping(value = "/selectReplaceCTList.do", method = RequestMethod.GET)
-
 	public ResponseEntity<List<EgovMap>> selectReplaceCTList(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
-		logger.debug("groupCode : {}", params);
-
+		   logger.debug("groupCode : {}", params);
            params.put("brnch_id", params.get("brnch_id")  );
            params.put("mem_id",params.get("mem_id") );
            params.put("mem_code",params.get("mem_code") );
-
-
-		List<EgovMap> replacementCTList = memberListService.selectReplaceCTList(params);
-		return ResponseEntity.ok(replacementCTList);
+		   List<EgovMap> replacementCTList = memberListService.selectReplaceCTList(params);
+		   return ResponseEntity.ok(replacementCTList);
 	}
 	/*By KV end - ReplacementCT - selection in requestvacation*/
 
