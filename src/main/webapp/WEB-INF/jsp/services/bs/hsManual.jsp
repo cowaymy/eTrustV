@@ -846,7 +846,7 @@
                 <ul class="btns">
 
                 </ul> -->
-                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="hide" /></a></p>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
             </aside><!-- link_btns_wrap end -->
