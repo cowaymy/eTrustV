@@ -126,6 +126,25 @@ function fn_addSave(){
     });
 }
 
+
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+
+        $("#repState").val(""); 
+    });
+};
+
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -139,7 +158,7 @@ function fn_addSave(){
 <h2>In House Repair Progress Display</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_selInhouseList()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#inHoForm').clearForm();" ><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
