@@ -1195,7 +1195,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			logPram =new HashMap<String, Object>();
             logPram.put("ORD_ID",    params.get("hiddeninstallEntryNo") );
             logPram.put("RETYPE", "COMPLET");  
-            logPram.put("P_TYPE", "OD01");  
+            logPram.put("P_TYPE", "OD03");  
             logPram.put("P_PRGNM", "ASCOM");  
             logPram.put("USERID", String.valueOf(params.get("updator")));   
             
