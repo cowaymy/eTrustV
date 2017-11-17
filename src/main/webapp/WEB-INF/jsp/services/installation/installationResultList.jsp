@@ -215,7 +215,9 @@ function fn_assginCTTransfer(){
     Common.popupDiv("/services/assignCTTransferPop.do"  , null, null , true , '_assginCTTransferDiv');
 }
 
-
+function fn_installationNote(){
+	Common.popupDiv("/services/installationNotePop.do"  , null, null , true , '');
+}
 
 
 
@@ -352,8 +354,8 @@ function fn_assginCTTransfer(){
         <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
-        <!-- <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()">Installation Note</a></p></li>
+       <!-- <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
