@@ -32,7 +32,8 @@
 
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
-        Common.popupDiv("/sales/order/orderDetailPop.do", { salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") });
+        //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
+        Common.popupDiv("/sales/order/orderDetailPop.do", { salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") }, null, true, "_divIdOrdDtl");
     }
     
     // 리스트 조회.

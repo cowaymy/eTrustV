@@ -1,6 +1,20 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javaScript" language="javascript">
 
+    $(function(){
+        $('#btnLedger1').click(function() {
+            Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
+        });
+        $('#btnLedger2').click(function() {
+            Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
+        });
+        $('#btnOrdDtlClose').click(function() {
+            $('#_divIdOrdDtl').remove();
+        });
+    });
+    
+</script>
 <body>
 
 <div id="popup_wrap"><!-- popup_wrap start -->
@@ -8,9 +22,9 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Order View</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">Order Ledger(1)</a></p></li>
-	<li><p class="btn_blue2"><a href="#">Order Ledger(2)</a></p></li>
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="btnLedger1" href="#">Order Ledger(1)</a></p></li>
+	<li><p class="btn_blue2"><a id="btnLedger2" href="#">Order Ledger(2)</a></p></li>
+	<li><p class="btn_blue2"><a id="btnOrdDtlClose" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
