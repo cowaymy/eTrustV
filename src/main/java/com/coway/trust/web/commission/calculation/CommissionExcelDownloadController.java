@@ -102,7 +102,7 @@ public class CommissionExcelDownloadController {
 				if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					map.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank",
 							"v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v24", "v25", "v26", "v27", "v32", "v33" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", 
@@ -118,7 +118,7 @@ public class CommissionExcelDownloadController {
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDN_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					map.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank", "v1", "v2", "v3",
 							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v24", "v25", "v26", "v27" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "Credit Point",
@@ -133,7 +133,7 @@ public class CommissionExcelDownloadController {
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDM_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank", "v1", "v2", "v3",
 							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31" };
 					titles = new String[] { "TASK ID", "RUN ID", "MEM ID", "MEM CODE", "MEM RANK",
@@ -146,7 +146,7 @@ public class CommissionExcelDownloadController {
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDS_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", 
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank", 
 							"v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31" };
 					titles = new String[] { "TASK ID", "RUN ID", "MEM ID", "MEM CODE", "MEM RANK",
@@ -175,8 +175,8 @@ public class CommissionExcelDownloadController {
 				map.put("codeGruop", CommissionConstants.COMIS_HP);
 				if (codeNm.equals(CommissionConstants.COMIS_HPF_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v8", "v14",
-							"v15", "v19", "v20", "v21", "v24", "v25", "v26", "v27" };
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank",
+							"v1", "v8", "v14", "v15", "v19", "v20", "v21", "v24", "v25", "v26", "v27" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE",
 							"membership amount", "net sales unit pv total", "net sales unit pv tota",
 							"applicable rate by totalpv", "pv total", "price total", "net sales pv total",
@@ -292,7 +292,7 @@ public class CommissionExcelDownloadController {
 				if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					map.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank", "r1", "r2", "r3",
 							"r4", "r5", "r6", "r7", "r8", "r10", "r11", "r28", "r29", "r30", "r34", "r35", "r36",
 							"r38", "r39", "r99" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE",
@@ -306,7 +306,7 @@ public class CommissionExcelDownloadController {
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDN_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					map.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank", "r1", "r2", "r3",
 							"r4", "r5", "r6", "r7", "r8", "r10", "r11", "r28", "r29", "r30", "r34", "r35", "r36",
 							"r38", "r39", "r99","r50" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE",
@@ -319,7 +319,7 @@ public class CommissionExcelDownloadController {
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDM_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank", "r1", "r2", "r3",
 							"r4", "r20", "r21", "r22", "r23", "r24", "r26", "r27", "r28", "r29", "r31", "r34", "r39",
 							"r42", "r99" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE", "Per_Amt",
@@ -332,7 +332,7 @@ public class CommissionExcelDownloadController {
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDS_P02)) {
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "emplyCodeRank", "r1", "r2", "r3",
 							"r4", "r19", "r20", "r21", "r22", "r23", "r24", "r27", "r28", "r29", "r32", "r34", "r39",
 							"r41", "r42", "r99" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM RANK", "Per Amt",

@@ -264,7 +264,14 @@
     </select>
     <select id="selectCMM0028DCD" parameterType="Map" resultType="EgovMap">
         SELECT 
-          T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE ,T2.MEM_TYPE MEM_TYPE,
+          T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE,
+          case when t4.EMPLY_LEV =4 and EMPLY_BIZ_TYPE_ID = 1375 then 'CDN'
+          when t4.EMPLY_LEV =4 and EMPLY_BIZ_TYPE_ID = 1376  then 'CDC'
+            when t4.EMPLY_LEV =3 then 'CM'
+            when t4.EMPLY_LEV =2 then 'SCM'
+            when t4.EMPLY_LEV =1 then 'GCM'
+            end EMPLY_CODE_RANK,
+          T2.MEM_TYPE MEM_TYPE,
           nvl(V1,'0') v1,nvl(V2,'0') v2,nvl(V3,'0') v3,nvl(V4,'0') v4,nvl(V5,'0') v5,
           nvl(V6,'0') v6,nvl(V7,'0') v7,nvl(V8,'0') v8,nvl(V9,'0') v9,nvl(V10,'0') v10,
           nvl(V11,'0') v11,nvl(V12,'0') v12,nvl(V13,'0') v13,nvl(V14,'0') v14,nvl(V15,'0') v15,
