@@ -390,5 +390,19 @@ public class InstallationResultListController {
 		
 	}
 	
+	/**
+	 * organization transfer page  
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/installationNotePop.do")
+	public String installationNotePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/installation/installationNotePop";
+	}
+	
 	
 }
