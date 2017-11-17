@@ -1044,12 +1044,11 @@ function fn_winClose(){
 
     <th scope="row">Start Date</th>
     <td>
-    <input type="text" title="Create Start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtT/R" name="dtT/R"/>
+    <input type="text" title="Create Start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStart" name="dtStart"/>
     </td>
     <th scope="row">End Date</th>
     <td>
-    <!-- Name cant same by KV change it tmr 16-11-2017 -->
-    <input type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date" id="dtT/R" name="dtT/R"/>
+     <input type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date" id="dtEnd" name="dtEnd"/>
     </td>
 </tr>
 <tr>
@@ -1070,7 +1069,7 @@ function fn_winClose(){
 
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big "><a href="#" onclick="javascript:fn_vacationrequestSave()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big "><a href="#" onclick="javascript:fn_vacationRequestSave()">SAVE</a></p></li>
 </ul>
 </form>
 </div>
