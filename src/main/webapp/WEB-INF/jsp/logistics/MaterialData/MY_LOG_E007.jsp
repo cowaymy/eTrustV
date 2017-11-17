@@ -616,6 +616,7 @@
             complete: function(){
             }
         });
+        console.log(param);
         Common.ajax("POST" , url , param , function(data){
         	
             
@@ -753,11 +754,11 @@
     <td><input type="text" id="svalue" name="svalue" class="w100p"/><p id='sname'></td>
     <th scope="row">Key Product Group</th>
     <td>
-    <select class="w100p" id="spgroup"></select>
+    <select class="w100p" id="spgroup" name="spgroup"></select>
     </td>
     <th scope="row">Used</th>
     <td>
-    <select class="w100p" id="sused"></select>
+    <select class="w100p" id="sused" name="sused"></select>
     </td>
 </tr>
 </tbody>
