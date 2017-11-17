@@ -1729,7 +1729,7 @@
 <article class="tap_area" >
 
 <ul class="right_btns"  id="ViewTrnsBtn">
-    <li><p class="btn_blue"><a id="ViewMoveTrns"><span class="search"></span>View Movement Transaction</a></p></li>
+    <li><p class="btn_blue"><a id="ViewMoveTrns">View Movement Transaction</a></p></li>
 </ul>
 <form id="masterForm" name="masterForm" method="POST">
 <table class="type1"><!-- table start -->

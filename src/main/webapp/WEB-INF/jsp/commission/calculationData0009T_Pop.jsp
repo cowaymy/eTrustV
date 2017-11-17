@@ -344,10 +344,10 @@
             <!-- search_result start -->
             <ul class="right_btns">
                 <li><p class="btn_grid">
-                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                    <a href="javascript:fn_AlldownFile()" id="addRow">ALL Excel</a>
                 </p></li>
                 <li><p class="btn_grid">
-                    <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
+                    <a href="javascript:fn_downFile()" id="addRow"><spring:message code='sys.btn.excel.dw' /></a>
                 </p></li>
                 <li><p class="btn_grid">
                     <a href="#" id="save_09T"><spring:message code='sys.btn.save'/></a>

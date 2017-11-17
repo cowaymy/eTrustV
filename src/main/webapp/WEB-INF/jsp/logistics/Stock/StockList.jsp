@@ -1337,8 +1337,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li> -->
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
-            <li><p class="btn_grid"><a id="stockIns"><span class="search"></span>INS</a></p></li>
-<!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()"><span class="search"></span>ADD</a></p></li> -->
+            <li><p class="btn_grid"><a id="stockIns">INS</a></p></li>
+<!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()">Add</p></li> -->
         </ul>
 
         <div id="grid_wrap" class="mt10" style="height:350px"></div>

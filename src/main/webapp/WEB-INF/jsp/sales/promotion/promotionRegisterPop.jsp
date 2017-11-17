@@ -575,14 +575,6 @@
 
 <section class="pop_body"><!-- pop_body start -->
 
-<ul class="right_btns">
-<!--
-    <li><p class="btn_blue2"><a href="#">Product</a></p></li>
-    <li><p class="btn_blue2"><a href="#">From Gift</a></p></li>
--->
-    <li><p class="btn_blue"><a id="btnPromoSave" href="#">Save</a></p></li>
-</ul>
-
 <aside class="title_line"><!-- title_line start -->
 <h2>Promotion Information</h2>
 </aside><!-- title_line end -->
@@ -749,6 +741,14 @@
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="pop_gift_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
+
+<ul class="center_btns">
+<!--
+    <li><p class="btn_blue2"><a href="#">Product</a></p></li>
+    <li><p class="btn_blue2"><a href="#">From Gift</a></p></li>
+-->
+    <li><p class="btn_blue"><a id="btnPromoSave" href="#">Save</a></p></li>
+</ul>
 
 </section><!-- pop_body end -->
 

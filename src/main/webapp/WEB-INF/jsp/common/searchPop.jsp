@@ -228,7 +228,7 @@ function f_multuComboLoc(){
 <h2>Search Help</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a id="transfer"><span class="search"></span>transfer</a></p></li>
+    <li><p class="btn_blue"><a id="transfer">transfer</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

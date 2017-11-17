@@ -123,8 +123,8 @@ function fn_genDocument(docVal){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Payment Listing</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_genDocument('PDF');"><span class="search"></span>Generate To PDF</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_genDocument('EXCEL');"><span class="search"></span>Generate To Excel</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_genDocument('PDF');">Generate To PDF</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_genDocument('EXCEL');">Generate To Excel</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

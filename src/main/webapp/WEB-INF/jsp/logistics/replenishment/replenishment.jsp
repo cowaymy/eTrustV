@@ -466,9 +466,9 @@ function SearchListAjax() {
     <section class="search_result"><!-- search_result start -->
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="add"><span class="search"></span>Add</a></p></li>
-            <li><p class="btn_grid"><a id="save"><span class="search"></span>SAVE</a></p></li>
-            <li><p class="btn_grid"><a id="upload"><span class="search"></span>ExcelUpload</a></p></li>
+            <li><p class="btn_grid"><a id="add">Add</a></p></li>
+            <li><p class="btn_grid"><a id="save">SAVE</a></p></li>
+            <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:430px"></div>

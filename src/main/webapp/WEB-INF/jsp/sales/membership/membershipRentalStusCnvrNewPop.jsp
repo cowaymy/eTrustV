@@ -236,9 +236,6 @@ function fn_saveNewCnvr(){
 </header><!-- pop_header end -->
 
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_saveNewCnvr();"></span><spring:message code="sales.SAVE" /></a></p></li>
-</ul>
 <form action="#" method="post" id="newCnvrForm" name="newCnvrForm">
 
 <table class="type1"><!-- table start -->
@@ -286,6 +283,10 @@ function fn_saveNewCnvr(){
     <div id="uploadGrid" style="width:100%; height:350px; margin:0 auto;"></div>
     <div id="cnvrListGrid" style="width:100%; height:350px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_saveNewCnvr();"></span><spring:message code="sales.SAVE" /></a></p></li>
+</ul>
 
 </section><!-- pop_body end -->
 

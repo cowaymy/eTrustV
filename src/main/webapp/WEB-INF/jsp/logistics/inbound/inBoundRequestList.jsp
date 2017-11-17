@@ -371,7 +371,7 @@ function searchSMO(index){
     </section><!-- search_table end -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="insert"><span class="search"></span>Create SMO</a></p></li>            
+            <li><p class="btn_grid"><a id="insert">Create SMO</a></p></li>            
         </ul>
 
     <!-- data body start -->

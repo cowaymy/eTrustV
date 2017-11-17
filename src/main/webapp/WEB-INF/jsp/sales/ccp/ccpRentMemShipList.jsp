@@ -160,11 +160,11 @@
 			<h2>Rental Membership Confirmation List</h2>
 			<ul class="right_btns">
 				<li><p class="btn_blue">
-						<a href="#" id="_btnSearch"><span class="search"></span>Search</a>
-					</p></li>
-				<li><p class="btn_blue">
-                       <a href="#" id="_confirmBtn"><span class="search"></span>Confirm Result</a> 
+                       <a href="#" id="_confirmBtn">Confirm Result</a> 
                    </p></li>
+                <li><p class="btn_blue">
+                        <a href="#" id="_btnSearch"><span class="search"></span>Search</a>
+                    </p></li>
 				<li><p class="btn_blue">
 						<a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a>
 					</p></li>

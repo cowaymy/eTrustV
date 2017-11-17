@@ -1058,7 +1058,7 @@
 		<!-- search_result start -->
 		<ul class="right_btns">
 			<li><p class="btn_grid">
-					<a href="#" id="addRow"><span class="search"></span><spring:message code='sys.btn.add'/></a>
+					<a href="#" id="addRow"><spring:message code='sys.btn.add'/></a>
 				</p></li>
 			<li><p class="btn_grid">
                     <a href="#" id="save"><spring:message code='sys.btn.save'/></a>

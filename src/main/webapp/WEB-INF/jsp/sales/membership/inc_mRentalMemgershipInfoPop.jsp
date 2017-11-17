@@ -2,7 +2,7 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10" >
-    <li><p class="btn_blue2" id ='viewLederLay'><a href="#" onclick="javascript:fn_goLedgerPopOut()" ><span class="search"></span>View Ledger</a></p></li>
+    <li><p class="btn_blue2" id ='viewLederLay'><a href="#" onclick="javascript:fn_goLedgerPopOut()" >View Ledger</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->

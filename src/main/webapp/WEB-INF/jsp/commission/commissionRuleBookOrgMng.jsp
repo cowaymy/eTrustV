@@ -496,13 +496,13 @@
 	<section class="search_result">
 		<!-- search_result start -->
 		<ul class="right_btns">
-			<!--   <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li> -->
+			<!--   <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
+    <li><p class="btn_grid"><a href="#">INS</a></p></li> -->
 			<li>
     			<p class="btn_grid">
-					<a href="javascript:addRow();"><span class="search"></span><spring:message code='sys.btn.add'/></a>
+					<a href="javascript:addRow();"><spring:message code='sys.btn.add'/></a>
 				</p>
 			</li>
 			<li>

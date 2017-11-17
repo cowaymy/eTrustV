@@ -161,7 +161,7 @@
 
 		<ul class="right_btns">
 		<li><p class="btn_grid">    
-                    <a href="#"  id="logSearch" ><span class="search"></span>LOG Data</a>
+                    <a href="#"  id="logSearch" >LOG Data</a>
                 </p></li>
 			<li><p class="btn_blue">	
 					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>

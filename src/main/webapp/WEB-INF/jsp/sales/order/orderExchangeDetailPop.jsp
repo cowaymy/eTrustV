@@ -69,7 +69,7 @@
 <h2>Exchange Information</h2>
 <c:if test="${exchgStus eq 1}">
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" id="btnCancel" onclick="fn_cancelReq()"><span class="clear"></span>Cancel Request</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="btnCancel" onclick="fn_cancelReq()">Cancel Request</a></p></li>
 </ul>
 </c:if>
 </aside><!-- title_line end -->

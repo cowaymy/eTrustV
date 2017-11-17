@@ -1763,7 +1763,7 @@ var addOrderLayout = [
 								<aside class="title_line"><!-- title_line start -->
 								<h3 class="pt0">Order In Group</h3>
 								<ul class="right_btns top0">
-								    <li><p class="btn_grid"><a href="javascript:fn_addOrder();"><span class="search"></span>Add Order</a></p></li>
+								    <li><p class="btn_grid"><a href="javascript:fn_addOrder();">Add Order</a></p></li>
 								</ul>
 								</aside><!-- title_line end -->
 								<!-- grid_wrap start -->

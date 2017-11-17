@@ -278,7 +278,7 @@
 <section class="search_result"><!-- search_result start -->
 
 <!-- <ul class="right_btns">
-    <li><p class="btn_grid"><a id="hSConfiguration"><span class="search"></span>HS Order Create</a></p></li>
+    <li><p class="btn_grid"><a id="hSConfiguration">HS Order Create</a></p></li>
 </ul> -->
 <!-- <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" " onclick="javascript:fn_getHSConfAjax();">HS Configuration</a></p></li>

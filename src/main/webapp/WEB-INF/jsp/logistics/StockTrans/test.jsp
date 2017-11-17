@@ -407,8 +407,8 @@ function grFunc(){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="gissue"><span class="search"></span>Good Receipt</a></p></li>
-            <li><p class="btn_grid"><a id="receiptcancel"><span class="search"></span>Receipt Cancel</a></p></li>
+            <li><p class="btn_grid"><a id="gissue">Good Receipt</a></p></li>
+            <li><p class="btn_grid"><a id="receiptcancel">Receipt Cancel</a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:350px"></div>

@@ -165,7 +165,7 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Conversion List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onClick="fn_newConvert()"><span class="search"></span>New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_newConvert()">New</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>

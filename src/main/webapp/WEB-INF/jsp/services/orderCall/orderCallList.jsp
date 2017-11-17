@@ -233,7 +233,7 @@ function fn_excelDown(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order Call Log Search</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onClick="fn_openAddCall()"><span class="search"></span>Add Call Log Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_openAddCall()">Add Call Log Result</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_orderCallList()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -353,7 +353,7 @@ function fn_excelDown(){
 </tr>
 <tr>
     <th scope="row">Sort By</th>
-    <td>
+    <td colspan="5">
     <select class="w100p" id="sortBy" name="sortBy">
         <option value="0" selected>No Sorting</option>
         <option value="1">Order Number</option>

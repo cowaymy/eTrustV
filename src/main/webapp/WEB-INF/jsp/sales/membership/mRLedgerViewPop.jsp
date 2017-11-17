@@ -211,7 +211,7 @@ function fn_getmRLedgerProcessGridAjax (v){
 
      <li>Transaction Date</li>
      <li><input type="text" title="Create start Date" placeholder="MM/YYYY"  onchange="vChange(this)" class="j_date2 w100p mtz-monthpicker-widgetcontainer"  id="vsalesDate" name="vsalesDate" /></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_goLedgerPopOut()"><span class="search"></span>DO Print</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_goLedgerPopOut()">DO Print</a></p></li>
 </ul> 
 
 <article class="grid_wrap"><!-- grid_wrap start -->

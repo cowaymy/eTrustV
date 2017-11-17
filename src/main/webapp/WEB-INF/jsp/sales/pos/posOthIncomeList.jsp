@@ -657,7 +657,7 @@ function fn_getDateGap(sdate, edate){
     <th scope="row">Branch / Warehouse</th>
     <td colspan="3">
         <select  id="cmbWhBrnchId"  disabled="disabled" class="disabled" name="brnchId"></select>
-        <input type="text" disabled="disabled" id="cmbWhId" >
+        <input type="text" disabled="disabled" id="cmbWhId" class="ml5" >
     </td>
     <th scope="row">Customer Name</th>
     <td>

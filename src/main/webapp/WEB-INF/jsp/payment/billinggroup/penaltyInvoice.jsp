@@ -56,7 +56,7 @@ function fn_generateStatement(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Penalty Invoice</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_generateStatement();"><span class="search"></span>Generate</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_generateStatement();">Generate</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

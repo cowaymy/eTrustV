@@ -41,7 +41,7 @@ function fn_genDocument(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Late Submission Raw</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_genDocument();"><span class="search"></span>Generate</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_genDocument();">Generate</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

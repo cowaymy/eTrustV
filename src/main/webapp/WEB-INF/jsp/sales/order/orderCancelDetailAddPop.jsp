@@ -492,8 +492,8 @@
 
     <article class="tap_area"><!-- tap_area start -->
     <ul class="right_btns">
-        <li><p class="btn_blue"><a href="#"><span class="search"></span>View Ledger (1)</a></p></li>
-        <li><p class="btn_blue"><a href="#"><span class="search"></span>View Ledger (2)</a></p></li>
+        <li><p class="btn_blue"><a href="#">View Ledger (1)</a></p></li>
+        <li><p class="btn_blue"><a href="#">View Ledger (2)</a></p></li>
     </ul>
 
     <table class="type1 mt10"><!-- table start -->

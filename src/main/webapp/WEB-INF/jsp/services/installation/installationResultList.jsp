@@ -231,7 +231,7 @@ function fn_assginCTTransfer(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Installation Result List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onClick="javascript:fn_assginCTTransfer()"><span class="search"></span>AssginCTTransfer</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="javascript:fn_assginCTTransfer()">AssginCTTransfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>

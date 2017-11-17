@@ -288,10 +288,10 @@ function fn_clear(){
 <h2>Membership Management(Outright) </h2>
 <ul class="right_btns">
       <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
-               <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMOutSPay();"><span class="search"></span>Outstanding Payment</a></p></li>
+               <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMOutSPay();">Outstanding Payment</a></p></li>
      </c:if>
      
-    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMFree();"><span class="search"></span>Free Membership</a></p></li>
+    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMFree();">Free Membership</a></p></li>
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>

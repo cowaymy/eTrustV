@@ -358,11 +358,11 @@ function fn_testCallStoredProcedure(){
         <!-- link_btns_wrap end -->
         <!--  
         <ul class="right_btns">
-		    <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li>
-		    <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li>
-		    <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li>
-		    <li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li>
-		    <li><p class="btn_grid"><a href="#"><span class="search"></span>ADD</a></p></li>
+		    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+		    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+		    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
+		    <li><p class="btn_grid"><a href="#">INS</a></p></li>
+		    <li><p class="btn_grid"><a href="#">Add</p></li>
         </ul>
         -->
         <!-- grid_wrap start -->

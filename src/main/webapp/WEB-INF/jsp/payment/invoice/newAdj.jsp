@@ -248,7 +248,7 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Adjustment Management - New CN/DN Request</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_saveAdjustmentInfo();"><span class="search"></span>Save</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_saveAdjustmentInfo();">SAVE</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

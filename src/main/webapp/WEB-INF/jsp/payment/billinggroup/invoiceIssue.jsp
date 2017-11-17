@@ -61,7 +61,7 @@ function fn_goSelectedPage() {
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Invoice Issue</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_goSelectedPage();"><span class="search"></span>go</a></p></li>            
+            <li><p class="btn_blue"><a href="javascript:fn_goSelectedPage();">go</a></p></li>            
         </ul>    
     </aside>
     <!-- title_line end -->

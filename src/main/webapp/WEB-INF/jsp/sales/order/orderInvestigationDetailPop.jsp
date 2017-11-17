@@ -253,7 +253,7 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>Particular Information</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#"><span class="search"></span>View Rent Ledger</a></p></li>
+    <li><p class="btn_blue"><a href="#">View Rent Ledger</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

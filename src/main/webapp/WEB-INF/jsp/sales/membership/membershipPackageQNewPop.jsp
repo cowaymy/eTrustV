@@ -524,10 +524,10 @@ function fn_filterNewAjax() {
 </tr>
 <tr>
 	<th scope="row">Package Description<span class="must">*</span></th>
-	<td><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc'  class="" /></td>
+	<td><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc'  class="w100p" /></td>
 	<th scope="row">Package Type<span class="must">*</span></th>
     <td>
-    <select class=""  id='pacType' name ='pacType' >
+    <select class="w100p"  id='pacType' name ='pacType' >
     </select>
     </td>
 </tr>
@@ -559,7 +559,7 @@ function fn_filterNewAjax() {
     <select class=""  id='packcode' name ='packcode' >
     </select>
     
-    <p class="btn_sky"><a href="#" onclick="javascript:fn_addRow()">Add Details</a></p></td>
+    <p class="btn_sky ml5"><a href="#" onclick="javascript:fn_addRow()">Add Details</a></p></td>
 </tr>
 
 

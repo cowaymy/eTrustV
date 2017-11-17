@@ -55,7 +55,7 @@ function fn_generateClick(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Monthly Bill Raw Data</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_generateClick();"><span class="search"></span>Generate</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_generateClick();">Generate</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

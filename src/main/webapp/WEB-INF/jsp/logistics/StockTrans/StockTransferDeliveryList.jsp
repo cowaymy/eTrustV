@@ -493,9 +493,9 @@ function giFunc(){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="deliverydelete"><span class="search"></span>Delete Delivery</a></p></li>
-            <li><p class="btn_grid"><a id="gissue"><span class="search"></span>Good Issue</a></p></li>
-            <li><p class="btn_grid"><a id="gcissue"><span class="search"></span>Issue Cancel</a></p></li>
+            <li><p class="btn_grid"><a id="deliverydelete">Delete Delivery</a></p></li>
+            <li><p class="btn_grid"><a id="gissue">Good Issue</a></p></li>
+            <li><p class="btn_grid"><a id="gcissue">Issue Cancel</a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:430px"></div>

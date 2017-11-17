@@ -174,8 +174,8 @@ function popup(location){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Government Agreement List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span>New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
