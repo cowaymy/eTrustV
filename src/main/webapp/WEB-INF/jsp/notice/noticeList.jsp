@@ -32,12 +32,9 @@
             type: "IconRenderer",
             iconPosition: "right",  // 아이콘 위치       aisleLeft
             iconFunction: function (rowIndex, columnIndex, value, item) {
-                console.log(item.imgFlag);
 
-                if (item.imgFlag == 'Y') {
+                if(item.imgFlag == 'Y') {
                     return "${pageContext.request.contextPath}/resources/images/common/status_new.gif";
-                } else {
-                    return null;
                 }
             },
             iconWidth: 24,
