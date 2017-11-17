@@ -98,35 +98,51 @@ $(document).ready(function(){
     });
     
 	var strAcc = '<select id="bankAcc" name="bankAcc" class="w100p" disabled></select>';
-	 $("#cash_cheque").show();
-	 $("#cash_cheque").find("#acc").html(strAcc);
+	 $("#cash").show();
+	 $("#cash").find("#acc").html(strAcc);
+	 $("#cash").find("#payType").val($('#payMode').val());
 	 doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
 	 
 	 $('#payMode').change(function() {
-		 
+		
          //alert($('#payMode').val());
 		 //cash일때, online<div>감추고 Cash에 대한 Bank Acc불러옴
 		 if($('#payMode').val() == '105'){
 			 $("#online").hide();
-             $("#cash_cheque").show();
+			 $("#cheque").hide();
+			 $("#cash").hide();
+             $("#cash").show();
              
-             $('#cash_cheque').find('#acc').html("");
+             $("#cash").find("#payType").val($('#payMode').val());
+             
+             $('#cash').find('#acc').html("");
+             $('#cheque').find('#acc').html("");
              $('#online').find('#acc').html("");
-             $('#cash_cheque').find('#acc').html(strAcc);
+             $('#cash').find('#acc').html(strAcc);
              doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
 	     }else if($('#payMode').val() == '106'){//cheque
 	    	 $("#online").hide();
-	         $("#cash_cheque").show();
+             $("#cheque").hide();
+             $("#cash").hide();
+	         $("#cheque").show();
 	         
-	         $('#cash_cheque').find('#acc').html("");
+	         $("#cheque").find("#payType").val($('#payMode').val());
+	         
+	         $('#cash').find('#acc').html("");
+             $('#cheque').find('#acc').html("");
              $('#online').find('#acc').html("");
-             $('#cash_cheque').find('#acc').html(strAcc);
+             $('#cheque').find('#acc').html(strAcc);
 	         doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
 	     }else if($('#payMode').val() == '108'){//online
-	    	 $("#cash_cheque").hide(); 
+	    	 $("#online").hide();
+             $("#cheque").hide();
+             $("#cash").hide(); 
              $("#online").show();
              
-             $('#cash_cheque').find('#acc').html("");
+             $("#online").find("#payType").val($('#payMode').val());
+             
+             $('#cash').find('#acc').html("");
+             $('#cheque').find('#acc').html("");
              $('#online').find('#acc').html("");
              $('#online').find('#acc').html(strAcc);
              doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
@@ -145,16 +161,27 @@ $(document).ready(function(){
 		 }
 	 });
 	 
-	 $('#cash_cheque').find('#bankType').change(function(){
+	 $('#cash').find('#bankType').change(function(){
 		 //alert("cash_cheque : " + $('#cash_cheque').find('#bankType').val());
-		 if($('#cash_cheque').find('#bankType').val() == 'VA'){
-             $('#cash_cheque').find('#bankAcc').prop("disabled", true);
-             $('#cash_cheque').find('#va').prop("disabled", false);
+		 if($('#cash').find('#bankType').val() == 'VA'){
+             $('#cash').find('#bankAcc').prop("disabled", true);
+             $('#cash').find('#va').prop("disabled", false);
          }else{
-             $('#cash_cheque').find('#bankAcc').prop("disabled", false);
-             $('#cash_cheque').find('#va').prop("disabled", true); 
+             $('#cash').find('#bankAcc').prop("disabled", false);
+             $('#cash').find('#va').prop("disabled", true); 
          }
 	 });
+	 
+	 $('#cheque').find('#bankType').change(function(){
+         //alert("cash_cheque : " + $('#cash_cheque').find('#bankType').val());
+         if($('#cheque').find('#bankType').val() == 'VA'){
+             $('#cheque').find('#bankAcc').prop("disabled", true);
+             $('#cheque').find('#va').prop("disabled", false);
+         }else{
+             $('#cheque').find('#bankAcc').prop("disabled", false);
+             $('#cheque').find('#va').prop("disabled", true); 
+         }
+     });
 	 
 	 //page2
 	//Rental Billing Grid 에서 체크/체크 해제시
@@ -220,6 +247,14 @@ $(document).ready(function(){
 	            recalculateSrvcTotalAmt();
 	        }
 	    });
+	  
+	    //Bill Payment 체크박스 선택시 금액 계산
+	    AUIGrid.bind(targetBillMstGridID, "cellClick", function(event) {
+	        if(event.dataField == "btnCheck"){
+	            recalculateBillTotalAmt();
+	        }
+	    });
+	    
 });
 
 var columnPending=[
@@ -424,6 +459,7 @@ var columnLayout = [
 	
 	//AUIGrid 칼럼 설정 : targetOutMstGridID
 	var targetOutMstColumnLayout = [
+	    { dataField:"appTypeNm" ,headerText:"AppTypeNm" ,editable : false , width : 100, visible : false },
 	    { dataField:"salesOrdId" ,headerText:"Order ID" ,editable : false , width : 100, visible : false },
 	    { dataField:"salesOrdNo" ,headerText:"Order Number" ,editable : false , width : 120 },
 	    { dataField:"custNm" ,headerText:"Customer Name" ,editable : false , width : 180},      
@@ -439,7 +475,7 @@ var columnLayout = [
 	var targetSrvcMstColumnLayout = [
 	   { dataField:"srvCntrctId" ,headerText:"SrvContractID" ,editable : false , width : 100, visible : false },
 	   { dataField:"salesOrdId" ,headerText:"Sales Order ID" ,editable : false , width : 100, visible : false },
-
+	   { dataField:"salesOrdNo" ,headerText:"Sales Order No" ,editable : false , width : 100, visible : false },
 	    { dataField:"custBillId" ,headerText:"Billing Group" ,editable : false , width : 100},
 	    { dataField:"srvCntrctRefNo" ,headerText:"Ref No." ,editable : false , width : 100},
 	    { dataField:"cntrctRentalStus" ,headerText:"Rental Status" ,editable : false , width : 100 },
@@ -467,7 +503,7 @@ var columnLayout = [
 	
 	//AUIGrid 칼럼 설정 : targetSrvcDetGridID
 	var targetSrvcDetColumnLayout = [
-	    
+	    { dataField:"srvLdgrCntrctId" ,headerText:"Srv Ldgr Cntrct ID" ,editable : false , width : 150  , visible : false },
 	    { dataField:"srvLdgrRefNo" ,headerText:"Bill No" ,editable : false , width : 120},
 	    { dataField:"srvCntrctRefNo" ,headerText:"SCS No." ,editable : false , width : 100},
 	    { dataField:"srvCntrctOrdId" ,headerText:"Order ID" ,editable : false , width : 150  , visible : false },
@@ -478,7 +514,7 @@ var columnLayout = [
 	    { dataField:"srvLdgrAmt" ,headerText:"Bill No." ,editable : false , width : 100 },
 	    { dataField:"paidTotal" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
 	    { dataField:"targetAmt" ,headerText:"Target Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},    
-	    { dataField:"srvLdgrRefDt" ,headerText:"Bill Date" ,editable : false , width : 100 , dataType : "date", formatString : "yyyy-mm-dd"},
+	    { dataField:"srvLdgrRefDt" ,headerText:"Bill Date" ,editable : false , width : 100},
 	    {
 	        dataField : "btnCheck",
 	        headerText : " ",
@@ -494,33 +530,40 @@ var columnLayout = [
 	
 	//AUIGrid 칼럼 설정 : targetFinalBillGridID
 	var targetFinalBillColumnLayout = [
-	    { dataField:"procSeq" ,headerText:"Process Seq" ,editable : false , width : 120},
-	    { dataField:"appType" ,headerText:"AppType" ,editable : false , width : 120},
-	    { dataField:"advMonth" ,headerText:"AdvanceMonth" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
+	    { dataField:"procSeq" ,headerText:"Process Seq" ,editable : false , width : 120 , visible : false },
+	    { dataField:"appType" ,headerText:"AppType" ,editable : false , width : 120 , visible : false },
+	    { dataField:"advMonth" ,headerText:"AdvanceMonth" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
 	    { dataField:"billGrpId" ,headerText:"Bill Group ID" ,editable : false , width : 120},
-	    { dataField:"billId" ,headerText:"Bill ID" ,editable : false , width : 100},
-	    { dataField:"ordId" ,headerText:"Order ID" ,editable : false , width : 100 },
-	    { dataField:"mstRpf" ,headerText:"Master RPF" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.##"},
-	    { dataField:"mstRpfPaid" ,headerText:"Master RPF Paid" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.##"},
+	    { dataField:"billId" ,headerText:"Bill ID" ,editable : false , width : 100, visible : false },
+	    { dataField:"ordId" ,headerText:"Order ID" ,editable : false , width : 100  , visible : false },
+	    { dataField:"mstRpf" ,headerText:"Master RPF" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.##" , visible : false },
+	    { dataField:"mstRpfPaid" ,headerText:"Master RPF Paid" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.##" , visible : false },
 	    { dataField:"billNo" ,headerText:"Bill No" ,editable : false , width : 150 },      
 	    { dataField:"ordNo" ,headerText:"Order No" ,editable : false , width : 100 },
-	    { dataField:"billTypeId" ,headerText:"Bill TypeID" ,editable : false , width : 100 },
+	    { dataField:"billTypeId" ,headerText:"Bill TypeID" ,editable : false , width : 100 , visible : false },
 	    { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 180 },      
 	    { dataField:"installment" ,headerText:"Installment" ,editable : false , width : 100 },      
 	    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
 	    { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-	    { dataField:"targetAmt" ,headerText:"Target Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
+	    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
 	    { dataField:"billDt" ,headerText:"Bill Date" ,editable : false , width : 100 },
-	    { dataField:"assignAmt" ,headerText:"assignAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-	    { dataField:"billStatus" ,headerText:"billStatus" ,editable : false , width : 100},
-	    { dataField:"custNm" ,headerText:"custNm" ,editable : false , width : 100},
-	    { dataField:"discountAmt" ,headerText:"discountAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"}
+	    { dataField:"assignAmt" ,headerText:"assignAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
+	    { dataField:"billStatus" ,headerText:"billStatus" ,editable : false , width : 100 , visible : false },
+	    { dataField:"custNm" ,headerText:"custNm" ,editable : false , width : 300},
+	    { dataField:"srvcContractID" ,headerText:"SrvcContractID" ,editable : false , width : 100 , visible : false },
+	    { dataField:"billAsId" ,headerText:"Bill AS Id" ,editable : false , width : 150 , visible : false },
+	    { dataField:"discountAmt" ,headerText:"discountAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
 	];
 	
 	//AUIGrid 칼럼 설정 : targetBillMstGridID
 	var targetBillMstColumnLayout = [
+	    { dataField:"appType" ,headerText:"appType" ,editable : false , width : 150 , visible : false },
+	    { dataField:"billSoId" ,headerText:"Bill Sales Order ID" ,editable : false , width : 150 , visible : false },
+	    { dataField:"salesOrdNo" ,headerText:"Sales Order No" ,editable : false , width : 150 , visible : false },
+	    { dataField:"billAsId" ,headerText:"Bill AS Id" ,editable : false , width : 150 , visible : false },
 	    
-	    { dataField:"billId" ,headerText:"Bill ID" ,editable : false , width : 120, visible : false },
+	    
+	    { dataField:"billId" ,headerText:"Bill ID" ,editable : false , width : 120 },
 	    { dataField:"billNo" ,headerText:"Bill No" ,editable : false , width : 100},
 	    { dataField:"billTypeId" ,headerText:"Bill Type ID" ,editable : false , width : 150 , visible : false },
 	    { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 100},  
@@ -529,7 +572,7 @@ var columnLayout = [
 	    { dataField:"billMemNm" ,headerText:"HP Name." ,editable : false , width : 250 , visible : false },
 	    { dataField:"billMemCode" ,headerText:"HP Code." ,editable : false , width : 100 , visible : false },
 	    { dataField:"ruleDesc" ,headerText:"Pay Type" ,editable : false , width : 200 },  
-	    { dataField:"billDt" ,headerText:"Date" ,editable : false , width : 100 , dataType : "date", formatString : "yyyy-mm-dd"},  
+	    { dataField:"billDt" ,headerText:"Date" ,editable : false , width : 100 },  
 	    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
 	    { dataField:"paidAmt" ,headerText:"Paid Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
 	    { dataField:"billRem" ,headerText:"Remark" ,editable : false , width : 100 },
@@ -604,6 +647,23 @@ var columnLayout = [
 	    //선납금 할인을 적용한 금액 표시    
 	    recalculateRentalTotalAmtWidthAdv(discountValue,originalprice,discountrate);
 	}
+	
+	//전체 Payment Amount 계산
+	function recalculatePaymentTotalAmt(){
+	  var rowCnt = AUIGrid.getRowCount(targetFinalBillGridID);
+	  var totalAmt = 0;
+
+	  if(rowCnt > 0){
+	      for(var i = 0; i < rowCnt; i++){
+	          totalAmt += AUIGrid.getCellValue(targetFinalBillGridID, i ,"targetAmt");
+	      }
+	  }
+
+	  $("#paymentTotalAmtTxt").text("RM " + $.number(totalAmt,2)); 
+	  var tempPendingAmt = parseInt(AUIGrid.getCellValue(pendingGridID,1,"pendingAmount"));
+	  var tempTot = tempPendingAmt - totalAmt;
+	  AUIGrid.updateRow(pendingGridID, { "pendingAmount" : tempTot }, 0);
+	}
 
 	//Rental Amount 선납금 할인을 적용한 금액 표시
 	function recalculateRentalTotalAmtWidthAdv(discountValue, originalPrice, discountrate) {
@@ -613,29 +673,32 @@ var columnLayout = [
 
 	    if(mstRowCnt > 0){
 	        for(var i = 0; i < mstRowCnt; i++){
-	            
+	        	mstBtnCheck = AUIGrid.getCellValue(targetRenMstGridID,i,"btnCheck"); 
 	            mstOrdNo = AUIGrid.getCellValue(targetRenMstGridID,i,"salesOrdNo");     //마스터 그리드에서 orderNo
 	            rpf = AUIGrid.getCellValue(targetRenMstGridID,i,"rpf");
 	            rpfPaid = AUIGrid.getCellValue(targetRenMstGridID,i,"rpfPaid");
 	            balance = AUIGrid.getCellValue(targetRenMstGridID,i,"balance");
 
-	            var rpfTarget = 0;
-
-	            if (rpf > rpfPaid) rpfTarget = rpf - rpfPaid;
-
-	            if(balance >= 0){
-	                tot += rpfTarget;
-
-	                //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다. 
-	                var rows = AUIGrid.getRowsByValue(targetRenDetGridID, "ordNo", mstOrdNo);
-
-	                for(var j = 0; j < rows.length; j++){
-	                    var obj = rows[j];
-	                    
-	                    if(obj.btnCheck == 1){
-	                        tot += obj.targetAmt; 
+	            if(mstBtnCheck == 1){
+	                var rpfTarget = 0;
+	    
+	                if (rpf > rpfPaid) rpfTarget = rpf - rpfPaid;
+	    
+	                if(balance >= 0){
+	                    tot += rpfTarget;
+	    
+	                    //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다. 
+	                    var rows = AUIGrid.getRowsByValue(targetRenDetGridID, "ordNo", mstOrdNo);
+	    
+	                    for(var j = 0; j < rows.length; j++){
+	                        var obj = rows[j];
+	                        
+	                        if(obj.btnCheck == 1){
+	                            tot += obj.targetAmt; 
+	                        }
 	                    }
 	                }
+	                
 	            }
 	        }
 	    }
@@ -672,12 +735,15 @@ var columnLayout = [
 
 	    if(rowCnt > 0){
 	        for(var i = 0; i < rowCnt; i++){
-	            totalAmt += AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt");
+	            if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+	                totalAmt += AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
+	            }
 	        }
 	    }
 
 	    $("#billTotalAmtTxt").text("RM " + $.number(totalAmt,2));    
 	}
+
 
 	function resetBillGrid(){
 	    AUIGrid.clearGridData(targetBillMstGridID);
@@ -700,17 +766,42 @@ var columnLayout = [
 	//Rental Amount 계산
 	function recalculateRentalTotalAmt(){
 	    var advMonth = $("#rentalTxtAdvMonth").val();
+	    var mstRowCnt = AUIGrid.getRowCount(targetRenMstGridID);
+	    var totalAmt = Number(0.00);
 	    
 	    if(advMonth != '' && advMonth > 0){     //advMonth가 입력되어 있는 경우
 	        rentalDiscountValue();
-	    } else{                                             //advMonth가 입력되어 있지 않은 경우
-	        var rowCnt = AUIGrid.getRowCount(targetRenDetGridID);
-	        var totalAmt = Number(0.00);
+	    } else{                                             //advMonth가 입력되어 있지 않은 경우       
+	        
+	        if(mstRowCnt > 0){
+	            for(var i = 0; i < mstRowCnt; i++){
+	                  
+	                mstBtnCheck = AUIGrid.getCellValue(targetRenMstGridID,i,"btnCheck");     //마스터 그리드에서 orderNo
+	                mstOrdNo = AUIGrid.getCellValue(targetRenMstGridID,i,"salesOrdNo");     //마스터 그리드에서 orderNo
+	                rpf = AUIGrid.getCellValue(targetRenMstGridID,i,"rpf");
+	                rpfPaid = AUIGrid.getCellValue(targetRenMstGridID,i,"rpfPaid");
+	                balance = AUIGrid.getCellValue(targetRenMstGridID,i,"balance");
+	                
+	                if(mstBtnCheck == 1){
 
-	        if(rowCnt > 0){
-	            for(var i = 0; i < rowCnt; i++){
-	                if(AUIGrid.getCellValue(targetRenDetGridID, i ,"btnCheck") == 1){
-	                    totalAmt += AUIGrid.getCellValue(targetRenDetGridID, i ,"targetAmt");
+	                    var rpfTarget = 0;
+
+	                    if (rpf > rpfPaid) rpfTarget = rpf - rpfPaid;
+
+	                    if(balance >= 0){
+	                           totalAmt += rpfTarget;
+
+	                            //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다. 
+	                            var rows = AUIGrid.getRowsByValue(targetRenDetGridID, "ordNo", mstOrdNo);
+
+	                            for(var j = 0; j < rows.length; j++){
+	                                var obj = rows[j];
+	                        
+	                                if(obj.btnCheck == 1){
+	                                    totalAmt += obj.targetAmt; 
+	                                }
+	                           }
+	                     }
 	                }
 	            }
 	        }
@@ -718,311 +809,435 @@ var columnLayout = [
 	        $("#rentalTotalAmtTxt").text("RM " + $.number(totalAmt,2));        
 	    }
 	}
+
+	//Rental Membership Amount 선납금 할인을 적용한 금액 표시
+	function recalculateSrvcTotalAmtWidthAdv(discountValue, originalPrice, discountrate) {
+	    
+	    var mstRowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
+	    var tot = Number(0.00);
+	    
+	    var srvCntrctRefNo = 0;
+	    var filterCharge = 0;
+	    var filterChargePaid = 0;
+	    var penaltyCharges = 0;
+	    var penaltyChargesPaid = 0;    
+
+	    if(mstRowCnt > 0){
+	        for(var i = 0; i < mstRowCnt; i++){
+	            if(AUIGrid.getCellValue(targetSrvcMstGridID, i ,"btnCheck") == 1){
+
+	                srvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID,i,"srvCntrctRefNo");     //마스터 그리드에서 Service Contract Reference No
+	                filterCharge = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterCharges");
+	                filterChargePaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterChargesPaid");                 
+
+	                if(filterCharge > filterChargePaid){
+	                    tot += filterCharge - filterChargePaid;
+	                }
+
+	                penaltyCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyCharges");
+	                penaltyChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyChargesPaid");
+
+	                if(penaltyCharges > penaltyChargesPaid){
+	                    tot += penaltyCharges - penaltyChargesPaid;
+	                } 
+
+	                //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다.
+	                var rows = AUIGrid.getRowsByValue(targetSrvcDetGridID, "srvCntrctRefNo", srvCntrctRefNo);
+
+	                for(var j = 0; j < rows.length; j++){
+	                    var obj = rows[j];
+	                    if(obj.btnCheck == 1){
+	                        tot += obj.targetAmt; 
+	                    }
+	                }
+	            }
+	        }
+	    }
+
+	    var grandtotal = tot + discountValue;    
+	    $("#srvcAdvAmt").val(discountValue);
+	    
+	    if (tot > 0) {
+	        $("#srvcTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
+	    } else {
+	        $("#srvcTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
+	    }
+	}
 	
+	function addRentalToFinal(){
+	    var rowCnt = AUIGrid.getRowCount(targetRenMstGridID);
+	    maxSeq = maxSeq + 1;
+
+	    if(rowCnt > 0){
+	        for(i = 0 ; i < rowCnt ; i++){
+
+	            var mstChkVal = AUIGrid.getCellValue(targetRenMstGridID, i ,"btnCheck");
+	            var mstSalesOrdNo = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdNo");            
+	            var mstRpf = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpf");
+	            var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");            
+
+	            if(mstChkVal == 1){
+	                if(mstRpf - mstRpfPaid > 0){
+	                     var item = new Object();
+	                     
+	                     item.procSeq = maxSeq;
+	                     item.appType = "RENTAL";
+	                     item.advMonth =$("#rentalTxtAdvMonth").val();
+	                     item.mstRpf = mstRpf;
+	                     item.mstRpfPaid = mstRpfPaid;
+	                     
+	                     item.assignAmt = 0;
+	                     item.billAmt   = mstRpf;
+	                     item.billDt   = "1900-01-01";
+	                     item.billGrpId = 0;
+	                     item.billId = 0;
+	                     item.billNo = "0";
+	                     item.billStatus = "DUMMY";
+	                     item.billTypeId = 161;
+	                     item.billTypeNm   = "RPF";
+	                     item.custNm   = "DUMMY";
+	                     item.discountAmt = 0;
+	                     item.installment  = 0;
+	                     item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
+	                     item.ordNo = mstSalesOrdNo;
+	                     item.paidAmt     = mstRpfPaid;
+	                     item.targetAmt   = mstRpf - mstRpfPaid;
+	                     item.srvcContractID   = 0;
+	                     item.billAsId    = 0;
+	                     
+	                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	                    
+	                }
+	                
+	                var detailRowCnt = AUIGrid.getRowCount(targetRenDetGridID);
+	                for(j = 0 ; j < detailRowCnt ; j++){
+	                    var detChkVal = AUIGrid.getCellValue(targetRenDetGridID, j ,"btnCheck");
+	                    var detSalesOrdNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordNo");
+
+	                    if(mstSalesOrdNo == detSalesOrdNo && detChkVal == 1){
+	                        var item = new Object();
+	                        
+	                        item.procSeq = maxSeq;
+	                        item.appType = "RENTAL";
+	                        item.advMonth =$("#rentalTxtAdvMonth").val();
+	                        item.mstRpf = mstRpf;
+	                        item.mstRpfPaid = mstRpfPaid;
+	                        
+	                        item.assignAmt = 0;
+	                        item.billAmt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"billAmt");
+	                        item.billDt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"billDt");
+	                        item.billGrpId = AUIGrid.getCellValue(targetRenDetGridID, j ,"billGrpId");
+	                        item.billId = AUIGrid.getCellValue(targetRenDetGridID, j ,"billId");
+	                        item.billNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"billNo");                        
+	                        item.billStatus = AUIGrid.getCellValue(targetRenDetGridID, j ,"stusCode");   
+	                        item.billTypeId = AUIGrid.getCellValue(targetRenDetGridID, j ,"billTypeId");   
+	                        item.billTypeNm   = AUIGrid.getCellValue(targetRenDetGridID, j ,"billTypeNm");
+	                        item.custNm   = AUIGrid.getCellValue(targetRenDetGridID, j ,"custNm");
+	                        item.discountAmt = 0;
+	                        item.installment  = AUIGrid.getCellValue(targetRenDetGridID, j ,"installment");                        
+	                        item.ordId = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordId");
+	                        item.ordNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordNo");
+	                        item.paidAmt     = AUIGrid.getCellValue(targetRenDetGridID, j ,"paidAmt");
+	                        item.targetAmt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"targetAmt");
+	                        item.srvcContractID   = 0;
+	                        item.billAsId    = 0;
+
+	                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	                    }
+	                }
+	                
+	                //Advance Month 
+	                if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
+	                    var item = new Object();
+	                    
+	                    item.procSeq = maxSeq;
+	                    item.appType = "RENTAL";
+	                    item.advMonth =$("#rentalTxtAdvMonth").val();
+	                    item.mstRpf = mstRpf;
+	                    item.mstRpfPaid = mstRpfPaid;
+	                    
+	                    item.assignAmt = 0;
+	                    item.billAmt   = $("#rentalAdvAmt").val();
+	                    item.billDt   = "1900-01-01";
+	                    item.billGrpId = 0;
+	                    item.billId = 0;
+	                    item.billNo = "0";
+	                    item.billStatus = "DUMMY";
+	                    item.billTypeId = 1032;
+	                    item.billTypeNm   = "General Advanced For Rental";
+	                    item.custNm   = "DUMMY";
+	                    item.discountAmt = 0;
+	                    item.installment  = 0;
+	                    item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
+	                    item.ordNo = mstSalesOrdNo;
+	                    item.paidAmt     = 0;
+	                    item.targetAmt   = $("#rentalAdvAmt").val();
+	                    item.srvcContractID   = 0;
+	                    item.billAsId    = 0;
+	                    
+	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	                   
+	               }
+	            }
+	        }
+	    }
+	    recalculatePaymentTotalAmt();
+	}
+
+	function addOutToFinal(){
+	    var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);
+	    
+	    maxSeq = maxSeq + 1;
+
+	    if(rowCnt > 0){
+	        for(i = 0 ; i < rowCnt ; i++){
+	            
+	            var targetAmt = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
+	            
+	            if(targetAmt > 0){
+	                var item = new Object();
+	                
+	                item.procSeq = maxSeq;
+	                item.appType = "OUT";
+	                item.advMonth = 0;
+	                item.mstRpf = 0;
+	                item.mstRpfPaid = 0;
+	                
+	                item.assignAmt = 0;
+	                item.billAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"productPrice");
+	                item.billDt   = "1900-01-01";
+	                item.billGrpId = 0;
+	                item.billId = 0;
+	                item.billNo = 0;                        
+	                item.billStatus = "";   
+	                item.billTypeId = "";   
+	                item.billTypeNm   = AUIGrid.getCellValue(targetOutMstGridID, i ,"appTypeNm"); 
+	                item.custNm   = AUIGrid.getCellValue(targetOutMstGridID, i ,"custNm");
+	                item.discountAmt = 0;
+	                item.installment  = 0;                        
+	                item.ordId = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId");
+	                item.ordNo = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdNo");
+	                item.paidAmt     = AUIGrid.getCellValue(targetOutMstGridID, i ,"totalPaid");
+	                item.targetAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
+	                item.srvcContractID   = 0;
+	                item.billAsId    = 0;
+	                
+	                AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	            }
+	        }
+	    } 
+	    recalculatePaymentTotalAmt();
+	}
     
-    function addRentalToFinal(){
-        var rowCnt = AUIGrid.getRowCount(targetRenMstGridID);
-        maxSeq = maxSeq + 1;
+	function addSrvcToFinal(){
 
-        if(rowCnt > 0){
-            for(i = 0 ; i < rowCnt ; i++){
+	    var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
+	    maxSeq = maxSeq + 1;
+	    
+	    if(rowCnt > 0){
+	        for(i = 0 ; i < rowCnt ; i++){
 
-                var mstChkVal = AUIGrid.getCellValue(targetRenMstGridID, i ,"btnCheck");
-                var mstSalesOrdNo = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdNo");
-                
-                var mstRpf = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpf");
-                var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");
-                
+	            var mstChkVal = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"btnCheck");
+	            var mstSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
+	            var mstFilterCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterCharges");
+	            var mstFilterChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterChargesPaid");            
+	            var mstPenaltyCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyCharges");
+	            var mstPenaltyChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyChargesPaid");            
+	            var custBillId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"custBillId");
+	            var custNm = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"custName");
+	            
+	            if(mstChkVal == 1){
+	                if(mstFilterCharges - mstFilterChargesPaid > 0){
+	                     var item = new Object();
+	                     
+	                     item.procSeq = maxSeq;
+	                     item.appType = "MEMBERSHIP";
+	                     item.advMonth =$("#srvcTxtAdvMonth").val();
+	                     item.mstRpf = 0;
+	                     item.mstRpfPaid = 0;
+	                     
+	                     item.assignAmt = 0;
+	                     item.billAmt   = mstFilterCharges;
+	                     item.billDt   = "1900-01-01";
+	                     item.billGrpId = custBillId;
+	                     item.billId = 0;
+	                     item.billNo = ""; 
+	                     item.billStatus = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"cntrctRentalStus");
+	                     item.billTypeId = 1307;
+	                     item.billTypeNm   = "Service Contract BS";
+	                     item.custNm   = custNm;
+	                     item.discountAmt = 0;
+	                     item.installment  = 0;
+	                     item.ordId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdId");
+	                     item.ordNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdNo");
+	                     item.paidAmt     = mstFilterChargesPaid;
+	                     item.targetAmt   = mstFilterCharges - mstFilterChargesPaid;
+	                     item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
+	                     item.billAsId    = 0;
+	                     
+	                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	                }
+	                
+	                if(mstPenaltyCharges - mstPenaltyChargesPaid > 0){
+	                    var item = new Object();
+	                    
+	                    item.procSeq = maxSeq;
+	                    item.appType = "MEMBERSHIP";
+	                    item.advMonth =$("#srvcTxtAdvMonth").val();
+	                    item.mstRpf = 0;
+	                    item.mstRpfPaid = 0;
+	                    
+	                    item.assignAmt = 0;
+	                    item.billAmt   = mstPenaltyCharges;
+	                    item.billDt   = "1900-01-01";
+	                    item.billGrpId = custBillId;
+	                    item.billId = 0;
+	                    item.billNo = "";
+	                    item.billStatus = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"cntrctRentalStus");
+	                    item.billTypeId = 1306;
+	                    item.billTypeNm   = "Service Contract Penalty";
+	                    item.custNm   = custNm;
+	                    item.discountAmt = 0;
+	                    item.installment  = 0;
+	                    item.ordId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdId");
+	                    item.ordNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdNo");
+	                    item.paidAmt     = mstPenaltyChargesPaid;
+	                    item.targetAmt   = mstPenaltyCharges - mstPenaltyChargesPaid;
+	                    item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
+	                    item.billAsId    = 0;
+	                    
+	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	               }
+	                
+	                //Advance Month 
+	                if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
+	                    var item = new Object();
+	                    
+	                    item.procSeq = maxSeq;
+	                    item.appType = "MEMBERSHIP";
+	                    item.advMonth =$("#srvcTxtAdvMonth").val();
+	                    item.mstRpf = 0;
+	                    item.mstRpfPaid = 0;
+	                    
+	                    item.assignAmt = 0;
+	                    item.billAmt   = $("#srvcAdvAmt").val();
+	                    item.billDt   = "1900-01-01";
+	                    item.billGrpId = custBillId;
+	                    item.billId = 0;
+	                    item.billNo = "";
+	                    item.billStatus = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"cntrctRentalStus");
+	                    item.billTypeId = 154;
+	                    item.billTypeNm   = "Advanced";
+	                    item.custNm   = custNm;
+	                    item.discountAmt = 0;
+	                    item.installment  = 0;
+	                    item.ordId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdId");
+	                    item.ordNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdNo");
+	                    item.paidAmt     = 0;
+	                    item.targetAmt   = $("#srvcAdvAmt").val();
+	                    item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
+	                    item.billAsId    = 0;
+	                    
+	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	                   
+	               }
+	                
+	                var detailRowCnt = AUIGrid.getRowCount(targetSrvcDetGridID);
+	                for(j = 0 ; j < detailRowCnt ; j++){
+	                    var detChkVal = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"btnCheck");
+	                    var detSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctRefNo");
 
-                if(mstChkVal == 1){
-                    
-                    
-                    if(mstRpf - mstRpfPaid > 0){
-                         var item = new Object();
-                         
-                         item.procSeq = maxSeq;
-                         item.appType = "RENTAL";
-                         item.advMonth =$("#rentalTxtAdvMonth").val();
-                         item.mstRpf = mstRpf;
-                         item.mstRpfPaid = mstRpfPaid;
-                         
-                         item.assignAmt = 0;
-                         item.billAmt   = mstRpf;
-                         item.billDt   = "";
-                         item.billGrpId = 0;
-                         item.billId = 0;
-                         item.billNo = "0";
-                         item.billStatus = "DUMMY";
-                         item.billTypeId = 161;
-                         item.billTypeNm   = "RPF";
-                         item.custNm   = "DUMMY";
-                         item.discountAmt = 0;
-                         item.installment  = 0;
-                         item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
-                         item.ordNo = mstSalesOrdNo;
-                         item.paidAmt     = mstRpfPaid;
-                         item.targetAmt   = mstRpf - mstRpfPaid;
-                         
-                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
-                        
-                    }
-                    
-                    var detailRowCnt = AUIGrid.getRowCount(targetRenDetGridID);
-                    for(j = 0 ; j < detailRowCnt ; j++){
-                        var detChkVal = AUIGrid.getCellValue(targetRenDetGridID, j ,"btnCheck");
-                        var detSalesOrdNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordNo");
+	                    if(mstSrvCntrctRefNo == detSrvCntrctRefNo && detChkVal == 1){
+	                        var item = new Object();
+	                        
+	                        item.procSeq = maxSeq;
+	                        item.appType = "MEMBERSHIP";
+	                        item.advMonth =$("#srvcTxtAdvMonth").val();
+	                        item.mstRpf = 0;
+	                        item.mstRpfPaid = 0;
+	                        
+	                        item.assignAmt = 0;
+	                        item.billAmt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrAmt");
+	                        item.billDt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrRefDt");
+	                        item.billGrpId = custBillId;
+	                        item.billId = 0;
+	                        item.billNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrRefNo");                        
+	                        //item.billStatus = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"stusCode");   
+	                        item.billTypeId = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrTypeId");   
+	                        item.billTypeNm   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrTypeNm");
+	                        item.custNm   = custNm;
+	                        item.discountAmt = 0;
+	                        item.installment  = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvPaySchdulNo");                        
+	                        item.ordId = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctOrdId");
+	                        item.ordNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"salesOrdNo");
+	                        item.paidAmt     = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"paidTotal");
+	                        item.targetAmt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"targetAmt");
+	                        item.srvcContractID   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrCntrctId");
+	                        item.billAsId    = 0;
 
-                        if(mstSalesOrdNo == detSalesOrdNo && detChkVal == 1){
-                            var item = new Object();
-                            
-                            item.procSeq = maxSeq;
-                            item.appType = "RENTAL";
-                            item.advMonth =$("#rentalTxtAdvMonth").val();
-                            item.mstRpf = mstRpf;
-                            item.mstRpfPaid = mstRpfPaid;
-                            
-                            item.assignAmt = 0;
-                            item.billAmt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"billAmt");
-                            item.billDt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"billDt");
-                            item.billGrpId = AUIGrid.getCellValue(targetRenDetGridID, j ,"billGrpId");
-                            item.billId = AUIGrid.getCellValue(targetRenDetGridID, j ,"billId");
-                            item.billNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"billNo");                        
-                            item.billStatus = AUIGrid.getCellValue(targetRenDetGridID, j ,"stusCode");   
-                            item.billTypeId = AUIGrid.getCellValue(targetRenDetGridID, j ,"billTypeId");   
-                            item.billTypeNm   = AUIGrid.getCellValue(targetRenDetGridID, j ,"billTypeNm");
-                            item.custNm   = AUIGrid.getCellValue(targetRenDetGridID, j ,"custNm");
-                            item.discountAmt = 0;
-                            item.installment  = AUIGrid.getCellValue(targetRenDetGridID, j ,"installment");                        
-                            item.ordId = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordId");
-                            item.ordNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordNo");
-                            item.paidAmt     = AUIGrid.getCellValue(targetRenDetGridID, j ,"paidAmt");
-                            item.targetAmt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"targetAmt");                        
-
-                            AUIGrid.addRow(targetFinalBillGridID, item, "last");
-                        }
-                    }
-                    
-                    //Advance Month 
-                    if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
-                        var item = new Object();
-                        
-                        item.procSeq = maxSeq;
-                        item.appType = "RENTAL";
-                        item.advMonth =$("#rentalTxtAdvMonth").val();
-                        item.mstRpf = mstRpf;
-                        item.mstRpfPaid = mstRpfPaid;
-                        
-                        item.assignAmt = 0;
-                        item.billAmt   = $("#rentalAdvAmt").val();
-                        item.billDt   = "";
-                        item.billGrpId = 0;
-                        item.billId = 0;
-                        item.billNo = "0";
-                        item.billStatus = "DUMMY";
-                        item.billTypeId = 1032;
-                        item.billTypeNm   = "General Advanced For Rental";
-                        item.custNm   = "DUMMY";
-                        item.discountAmt = 0;
-                        item.installment  = 0;
-                        item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
-                        item.ordNo = mstSalesOrdNo;
-                        item.paidAmt     = 0;
-                        item.targetAmt   = $("#rentalAdvAmt").val();
-                        
-                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
-                       
-                   }
-                }
-            }
-        }   
-    }
+	                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    recalculatePaymentTotalAmt();  
+	}
     
-    function addOutToFinal(){
-        var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);
-        
-        maxSeq = maxSeq + 1;
+	function addBillToFinal(){
 
-        if(rowCnt > 0){
-            for(i = 0 ; i < rowCnt ; i++){
-                var item = new Object();
-                
-                item.procSeq = maxSeq;
-                item.appType = "OUT";
-                item.advMonth = 0;
-                item.mstRpf = 0;
-                item.mstRpfPaid = 0;
-                
-                item.assignAmt = 0;
-                item.billAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"productPrice");
-                item.billDt   = "";
-                item.billGrpId = 0;
-                item.billId = 0;
-                item.billNo = 0;                        
-                item.billStatus = "";   
-                item.billTypeId = "";   
-                item.billTypeNm   = "";
-                item.custNm   = AUIGrid.getCellValue(targetOutMstGridID, i ,"custNm");
-                item.discountAmt = 0;
-                item.installment  = 0;                        
-                item.ordId = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId");
-                item.ordNo = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdNo");
-                item.paidAmt     = AUIGrid.getCellValue(targetOutMstGridID, i ,"totalPaid");
-                item.targetAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
-                
-                AUIGrid.addRow(targetFinalBillGridID, item, "last");
-            }
-        }   
-    }
-    
-    function addSrvcToFinal(){
+	    var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
 
-        var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
-        maxSeq = maxSeq + 1;
-        
-        if(rowCnt > 0){
-            for(i = 0 ; i < rowCnt ; i++){
+	    if(checkArray.length > 1){
+	        Common.alert("Bill Payment is allowed for only one bill. Exclude other bills excepting target one bill.");
+	        return;     
+	    }else{      
+	        var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);      
+	        maxSeq = maxSeq + 1;
 
-                var mstChkVal = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"btnCheck");
-                var mstSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
-                var mstFilterCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterCharges");
-                var mstFilterChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterChargesPaid");
-                
-                var mstPenaltyCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyCharges");
-                var mstPenaltyChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyChargesPaid");
-                
-                if(mstChkVal == 1){
-                    if(mstFilterCharges - mstFilterChargesPaid > 0){
-                         var item = new Object();
-                         
-                         item.procSeq = maxSeq;
-                         item.appType = "MEMBERSHIP";
-                         item.advMonth =$("#srvcTxtAdvMonth").val();
-                         item.mstRpf = 0;
-                         item.mstRpfPaid = 0;
-                         
-                         item.assignAmt = 0;
-                         item.billAmt   = mstFilterCharges;
-                         item.billDt   = "";
-                         item.billGrpId = 0;
-                         item.billId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"custBillId");
-                         item.billNo = "0";
-                         item.billStatus = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"cntrctRentalStus");
-                         item.billTypeId = 1307;
-                         item.billTypeNm   = "Service Contract BS";
-                         item.custNm   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"custName");
-                         item.discountAmt = 0;
-                         item.installment  = 0;
-                         item.ordId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdId");
-                         item.ordNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
-                         item.paidAmt     = mstFilterChargesPaid;
-                         item.targetAmt   = mstFilterCharges - mstFilterChargesPaid;
-                         
-                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
-                        
-                    }
-                    
-                    if(mstPenaltyCharges - mstPenaltyChargesPaid > 0){
-                        var item = new Object();
-                        
-                        item.procSeq = maxSeq;
-                        item.appType = "MEMBERSHIP";
-                        item.advMonth =$("#srvcTxtAdvMonth").val();
-                        item.mstRpf = 0;
-                        item.mstRpfPaid = 0;
-                        
-                        item.assignAmt = 0;
-                        item.billAmt   = mstPenaltyCharges;
-                        item.billDt   = "";
-                        item.billGrpId = 0;
-                        item.billId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"custBillId");
-                        item.billNo = "0";
-                        item.billStatus = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"cntrctRentalStus");
-                        item.billTypeId = 1307;
-                        item.billTypeNm   = "Service Contract BS";
-                        item.custNm   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"custName");
-                        item.discountAmt = 0;
-                        item.installment  = 0;
-                        item.ordId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdId");
-                        item.ordNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
-                        item.paidAmt     = mstFilterChargesPaid;
-                        item.targetAmt   = mstFilterCharges - mstFilterChargesPaid;
-                        
-                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
-                       
-                   }
-                    
-                    //Advance Month 
-                    if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
-                        var item = new Object();
-                        
-                        item.procSeq = maxSeq;
-                        item.appType = "MEMBERSHIP";
-                        item.advMonth =$("#srvcTxtAdvMonth").val();
-                        item.mstRpf = 0;
-                        item.mstRpfPaid = 0;
-                        
-                        item.assignAmt = 0;
-                        item.billAmt   = $("#srvcAdvAmt").val();
-                        item.billDt   = "";
-                        item.billGrpId = 0;
-                        item.billId = 0;
-                        item.billNo = "0";
-                        item.billStatus = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"cntrctRentalStus");
-                        item.billTypeId = 154;
-                        item.billTypeNm   = "Advanced";
-                        item.custNm   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"custName");
-                        item.discountAmt = 0;
-                        item.installment  = 0;
-                        item.ordId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdId");
-                        item.ordNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
-                        item.paidAmt     = 0;
-                        item.targetAmt   = $("#srvcAdvAmt").val();
-                        
-                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
-                       
-                   }
-                    
-                    var detailRowCnt = AUIGrid.getRowCount(targetSrvcDetGridID);
-                    for(j = 0 ; j < detailRowCnt ; j++){
-                        var detChkVal = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"btnCheck");
-                        var detSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctRefNo");
+	        if(rowCnt > 0){
+	            for(i = 0 ; i < rowCnt ; i++){
+	                if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+	                    var targetAmt = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
 
-                        if(mstSrvCntrctRefNo == detSrvCntrctRefNo && detChkVal == 1){
-                            var item = new Object();
-                            
-                            item.procSeq = maxSeq;
-                            item.appType = "MEMBERSHIP";
-                            item.advMonth =$("#srvcTxtAdvMonth").val();
-                            item.mstRpf = 0;
-                            item.mstRpfPaid = 0;
-                            
-                            item.assignAmt = 0;
-                            item.billAmt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrAmt");
-                            item.billDt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrRefDt");
-                            //item.billGrpId = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"billGrpId");
-                            //item.billId = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"billId");
-                            //item.billNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"billNo");                        
-                            //item.billStatus = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"stusCode");   
-                            item.billTypeId = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrTypeId");   
-                            item.billTypeNm   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrTypeNm");
-                            //item.custNm   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"custNm");
-                            item.discountAmt = 0;
-                            item.installment  = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvPaySchdulNo");                        
-                            item.ordId = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctOrdId");
-                            item.ordNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"salesOrdNo");
-                            item.paidAmt     = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"paidTotal");
-                            item.targetAmt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"targetAmt");                        
+	                    if(targetAmt > 0){
+	                        var item = new Object();
 
-                            AUIGrid.addRow(targetFinalBillGridID, item, "last");
-                        }
-                    }
-                    
-                    
-                }
-            }
-        }   
-    }
-    
+	                        item.procSeq = maxSeq;
+	                        item.appType = AUIGrid.getCellValue(targetBillMstGridID, i ,"appType");
+	                        item.advMonth = 0;
+	                        item.mstRpf = 0;
+	                        item.mstRpfPaid = 0;
+
+	                        item.assignAmt = 0;
+	                        item.billAmt   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt");
+	                        item.billDt   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billDt");
+	                        item.billGrpId = 0;
+	                        item.billId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billId");
+	                        item.billNo = AUIGrid.getCellValue(targetBillMstGridID, i ,"billNo");                      
+	                        item.billStatus = AUIGrid.getCellValue(targetBillMstGridID, i ,"stusNm");   
+	                        item.billTypeId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billTypeId");    
+	                        item.billTypeNm   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billTypeNm"); 
+	                        item.custNm   = AUIGrid.getCellValue(targetBillMstGridID, i ,"custNm");
+	                        item.discountAmt = 0;
+	                        item.installment  = 0;                        
+	                        item.ordId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billSoId");
+	                        item.ordNo = AUIGrid.getCellValue(targetBillMstGridID, i ,"salesOrdNo");
+	                        item.paidAmt     = AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
+	                        item.targetAmt   = targetAmt;
+	                        item.srvcContractID   = 0;
+	                        item.billAsId    = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAsId");
+
+	                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	                    }
+	                }
+	            }   
+	        }
+	        
+	        recalculatePaymentTotalAmt();
+	    }
+	}
+	
   //Outright Amount 계산
     function recalculateOutTotalAmt(){
         var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);
@@ -1051,12 +1266,11 @@ var columnLayout = [
     }
     
     function fn_mapping(){
-    	var data = {};
+    	var item = new Object();
     	if(isMapped == 'Mapped'){
     		Common.alert("This item has already been confirmed payment.");
     	}else{
-    		var item = new Object();
-            
+
             item.bank = AUIGrid.getCellValue(myGridID,rowId,"bank");
             item.bankAccount = AUIGrid.getCellValue(myGridID,rowId,"bankAccName");
             item.date = AUIGrid.getCellValue(myGridID,rowId,"trnscDt");
@@ -1065,10 +1279,14 @@ var columnLayout = [
             item.trId = AUIGrid.getCellValue(myGridID,rowId,"ref3");
             item.amount = AUIGrid.getCellValue(myGridID,rowId,"crdit");
     		
-    		if($('#payMode').val() == '105' || $('#payMode').val() == '106'){
-    			item.pendingAmount = $("#cash_cheque").find("#amount").val();
+    		if($('#payMode').val() == '105'){
+    			item.pendingAmount = $("#cash").find("#amount").val();
     			AUIGrid.addRow(pendingGridID, item, "last");
-    		}else if($('#payMode').val() == '108'){
+    		}else if($('#payMode').val() == '106'){
+    			item.pendingAmount = $("#cheque").find("#amount").val();
+                AUIGrid.addRow(pendingGridID, item, "last");
+    		}
+    		   else if($('#payMode').val() == '108'){
     			var amt = 0;
     			var chgAmt = 0;
     			amt = parseInt($("#online").find("#amount").val());
@@ -1114,7 +1332,7 @@ var columnLayout = [
   
     function fn_chgAppType(){
         var appType = $("#appType").val();
-        AUIGrid.clearGridData(targetFinalBillGridID);
+        //AUIGrid.clearGridData(targetFinalBillGridID);
         
         //div all hide
         $("#rentalSearch").hide();
@@ -1306,24 +1524,54 @@ var columnLayout = [
   
 //Rental Membership Amount 계산
   function recalculateSrvcTotalAmt(){
-    var advMonth = $("#srvcTxtAdvMonth").val();
-    
-    if(advMonth != '' && advMonth > 0){     //advMonth가 입력되어 있는 경우
-        srvcDiscountValue();
-    } else{                                             //advMonth가 입력되어 있지 않은 경우
-        var rowCnt = AUIGrid.getRowCount(targetSrvcDetGridID);
-        var totalAmt = Number(0.00);
+      var advMonth = $("#srvcTxtAdvMonth").val();
+      var totalAmt = Number(0.00);
+      var srvCntrctRefNo = 0;
+      var filterCharge = 0;
+      var filterChargePaid = 0;
+      var penaltyCharges = 0;
+      var penaltyChargesPaid = 0;
 
-        if(rowCnt > 0){
-            for(var i = 0; i < rowCnt; i++){
-                if(AUIGrid.getCellValue(targetSrvcDetGridID, i ,"btnCheck") == 1){
-                    totalAmt += AUIGrid.getCellValue(targetSrvcDetGridID, i ,"targetAmt");
-                }
-            }
-        }
-    
-        $("#srvcTotalAmtTxt").text("RM " + $.number(totalAmt,2));        
-    }
+      if(advMonth != '' && advMonth > 0){     //advMonth가 입력되어 있는 경우
+          srvcDiscountValue();
+      } else{                                             //advMonth가 입력되어 있지 않은 경우
+
+          var mstRowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
+
+          if(mstRowCnt > 0){
+              for(var i = 0; i < mstRowCnt; i++){
+                  if(AUIGrid.getCellValue(targetSrvcMstGridID, i ,"btnCheck") == 1){
+
+                      srvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID,i,"srvCntrctRefNo");     //마스터 그리드에서 Service Contract Reference No
+                      filterCharge = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterCharges");
+                      filterChargePaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterChargesPaid");                 
+
+                      if(filterCharge > filterChargePaid){
+                          totalAmt += filterCharge - filterChargePaid;
+                      }
+
+                      penaltyCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyCharges");
+                      penaltyChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyChargesPaid");
+
+                      if(penaltyCharges > penaltyChargesPaid){
+                          totalAmt += penaltyCharges - penaltyChargesPaid;
+                      } 
+
+                      //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다.
+                      var rows = AUIGrid.getRowsByValue(targetSrvcDetGridID, "srvCntrctRefNo", srvCntrctRefNo);
+
+                      for(var j = 0; j < rows.length; j++){
+                          var obj = rows[j];
+                          if(obj.btnCheck == 1){
+                              totalAmt += obj.targetAmt; 
+                          }
+                      }
+                  }
+              }
+          }
+
+          $("#srvcTotalAmtTxt").text("RM " + $.number(totalAmt,2));        
+      }
   }
 
 //**************************************************
@@ -1390,6 +1638,44 @@ var columnLayout = [
           recalculateRentalTotalAmt(); 
       }
   }
+  
+  function savePayment(){
+	    
+	    //param data array
+	    var data = {};
+	    
+	    var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터
+	    
+	    var mode = $('#payMode').val() ;
+	    var formList;//폼 데이터
+	    if(mode == '105' ){
+	    	formList = $("#cashForm").serializeArray();
+	    }else if(mode == '106'){
+	    	formList = $("#chequeForm").serializeArray();
+	    }
+	    else if(mode == '108'){
+	    	formList = $("#onlineForm").serializeArray();
+	    }     
+	    //array에 담기
+	    if(gridList.length > 0) {
+	        data.all = gridList;
+	    }  else {
+	        Common.alert("There is no Payment Key-In Row Data");
+	        return;
+	    }
+	        
+	    if(formList.length > 0) data.form = formList;
+	    else data.form = [];
+	    
+	    //Bill Payment : Order 정보 조회
+	    Common.ajax("POST", "/payment/common/saveNormalPayment.do", data, function(result) {
+	        Common.alert("Success Payment Process", function(){
+	              document.location.href = '/payment/initOtherPayment.do';
+	            
+	        });
+	        
+	    });
+	}
 </script>
 <!-- content start -->
 
@@ -1470,7 +1756,7 @@ var columnLayout = [
                 <th scope="row">Payment Mode</th>
                 <td>
                     <select id="payMode" name="payMode" class="w100p">
-                        <option value="105">Cash</option>
+                        <option value="105" selected>Cash</option>
                         <option value="106">Cheque</option>
                         <option value="108">On-line</option>
                     </select>
@@ -1481,6 +1767,7 @@ var columnLayout = [
        
 <div id="online" style="display:none;">
     <form id="onlineForm" name="onlineForm">
+    <input type="hidden" id="payType" name="payType" />
     <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>
@@ -1498,6 +1785,16 @@ var columnLayout = [
                 <th scope="row">Bank Charge Amount</th>
                 <td>
                    <input type="text" id="chargeAmount" name="chargeAmount" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
+                <th>PayerName</th>
+                <td>
+                   <input type="text" id="payerName" name="payerName" class="w100p"  />
+                </td>
+                <th>Ref Details/Jompay Ref</th>
+                <td>
+                   <input type="text" id="jomPay" name="jomPay" class="w100p"  />
                 </td>
             </tr>
             <tr>
@@ -1536,8 +1833,9 @@ var columnLayout = [
     </table>
     </form>
 </div>
-<div id="cash_cheque" style="display:none;">
-    <form id="cash_chequeForm" name="cash_chequeForm">
+<div id="cash" style="display:none;">
+    <form id="cashForm" name="cashForm">
+    <input type="hidden" id="payType" name="payType" />
     <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>
@@ -1556,7 +1854,17 @@ var columnLayout = [
             <tr>
                 <th scope="row">Slip No.</th>
                 <td colspan="3">
-                   <input type="text" id="slipNo" name="spliNo" class="w100p"  />
+                   <input type="text" id="slipNo" name="slipNo" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
+                <th>PayerName</th>
+                <td>
+                   <input type="text" id="payerName" name="payerName" class="w100p"  />
+                </td>
+                <th>Ref Details/Jompay Ref</th>
+                <td>
+                   <input type="text" id="jomPay" name="jomPay" class="w100p"  />
                 </td>
             </tr>
             <tr>
@@ -1591,7 +1899,73 @@ var columnLayout = [
     </table>
     </form>
     </div>
- </div>
+ <div id="cheque" style="display:none;">
+    <form id="chequeForm" name="chequeForm">
+    <input type="hidden" id="payType" name="payType" />
+    <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:170px" />
+            <col style="width:*" />
+            <col style="width:230px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+            <tr>
+                <th scope="row">Amount</th>
+                <td colspan="3">
+                   <input type="text" id="amount" name="amount" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Slip No.</th>
+                <td colspan="3">
+                   <input type="text" id="slipNo" name="slipNo" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
+                <th>PayerName</th>
+                <td>
+                   <input type="text" id="payerName" name="payerName" class="w100p"  />
+                </td>
+                <th>Ref Details/Jompay Ref</th>
+                <td>
+                   <input type="text" id="jomPay" name="jomPay" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Bank Type</th>
+                <td colspan="3">
+                    <select id="bankType" name="bankType" class="w100p" >
+                        <option value="">Choose One</option>
+                        <option value="JomPay">JomPay</option>
+                        <option value="MBBCDM">MBB CDM</option>
+                        <option value="VA">VA</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                   <th>Bank Account</th>
+                   <td id="acc"></td>
+                   <th>VA Account</th>
+                   <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
+            </tr>
+            <tr>
+                   <th>Transaction Date</th>
+                   <td colspan="3">
+                        <input type="text" id="trDate" name="trDate" placeholder="DD/MM/YYYY" />
+                   </td>
+            </tr>
+            <tr>
+                   <th>Remark</th>
+                   <td colspan="3"><input type="text" name="remark" id="remark" class="w100p"/></td>
+            </tr>
+        </tbody>
+    </table>
+    </form>
+    </div>
+</div>
  <div id="page2" style="display:none;">
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
@@ -1885,6 +2259,10 @@ var columnLayout = [
         </section>
         <!-- search_table end -->
         
+         <ul class="right_btns">
+           <li><p class="btn_grid"><a href="javascript:addBillToFinal();">ADD</a></p></li>
+        </ul>
+        
         <!-- grid_wrap start -->
         <article class="grid_wrap">
             <div id="target_bill_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
@@ -1912,11 +2290,16 @@ var columnLayout = [
     
     <!-- grid_wrap start -->
     <article class="grid_wrap mt10" >
-        <div id="target_finalBill_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+        <div id="target_finalBill_grid_wrap" style="width: 100%; height: 220px; margin: 0 auto;"></div>
     </article>
     <!-- grid_wrap end -->
     
     <ul class="right_btns">
+            <li><p class="amountTotalSttl">Amount Total :</p></li>
+            <li><strong id="paymentTotalAmtTxt">RM 0.00</strong></li>
+        </ul>
+    
+    <ul class="right_btns mt10">
        <li><p class="btn_grid"><a href="javascript:savePayment();">SAVE</a></p></li>
     </ul>
 
