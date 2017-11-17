@@ -44,6 +44,28 @@
        <!-- By KV start - Position -->
 
 
+       <!-- By KV start ReplacementCT-->
+        <select id="selectReplaceCTList" parameterType="Map" resultType="egovMap">
+            select a.mem_id  as code_Id, a.mem_code as code_Name, a.name,a.stus, c.name, a.mem_type, b.code, d.mem_lvl, e.mem_org_desc,d.brnch_id, f.name, d.ct_sub_grp
+            FROM   ORG0001D a ,   /*Member eg.get mem_type eg HP, CODY, CT*/
+                        SYS0013M b,  /*CodeDetail eg.HP, CODY, CT full desc*/
+                        SYS0038M c,  /*StatusCode    eg.active, not active*/
+                        ORG0005D d,  /*MemberOrganization eg.get mem_LVL*/
+                        ORG0012D e,  /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
+                        SYS0005M f   /*Branch*/
+             WHERE a.MEM_TYPE = b.CODE_ID
+             AND  a.STUS = c.STUS_CODE_ID
+             AND d.MEM_ID = a.MEM_ID
+             AND  e.MEM_TYPE_ID =  a.MEM_TYPE
+             AND e.MEM_ORG_LVL =  d.MEM_LVL
+             AND  f.brnch_id = d.brnch_id
+             AND a.stus = 1                          /* fixed*/
+             AND d.mem_lvl = 4                     /* fixed*/
+             AND d.brnch_id =#{brnch_id}                    /*dynamid get from parameter*/
+             AND d.ct_sub_grp = (select  ct_sub_grp from ORG0005D where mem_id =#{mem_id})    /*dynamid get from parameter*/
+             AND a.mem_code != #{mem_code}   /*dynamid get from parameter*/
+          </select>
+       <!-- By KV start - ReplacementCT -->
 
     <select id="selectUserBranch" parameterType="Map" resultType="egovMap">
         SELECT
@@ -110,6 +132,8 @@
 
             /*By KV*/
 			Project1.position_name,
+	        Project1.brnch_id,
+	        Project1.ct_sub_grp,
 
 
 			Project1.C1 C1
@@ -127,6 +151,8 @@
 
 			         /*By KV*/
 			         Project1.position_name,
+			         Project1.brnch_id,
+                    Project1.ct_sub_grp,
 
 			         row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
@@ -141,6 +167,8 @@
 			        Extent1.UPD_DT UPD_DT,
 			        Extent2.CODE_NAME CODE_NAME,
 			        Extent3.NAME as status_name,
+			        Extent5.brnch_id,
+			        Extent5.ct_sub_grp,
 
 			        /*By KV*/
 			        Extend6.MEM_ORG_DESC position_name
@@ -793,9 +821,11 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
 	                CASE
 	                     WHEN ( Extent4.TOT_AMT IS NOT NULL ) THEN Extent4.TOT_AMT
-	                ELSE 0
+	                ELSE
 	                   END C2  ,
-	                TO_CHAR(TO_DATE(Extent4.CRT_DT,'YYYY-MM-DD'),'DD-MM-YYYY') C3  ,
+	                  <!-- By KV start change  date format in correct way -->
+	                TO_CHAR(Extent4.CRT_DT,'DD-MM-YYYY') C3  ,
+	                  <!-- By KV start change  date format in correct way -->
 	                CASE
 	                     WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
 	                ELSE ''
