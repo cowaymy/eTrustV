@@ -431,44 +431,61 @@ public class MemberListController {
 	}
 
 	/**
-	 * Request Vacation Pop open
+	 * Request Vacation Pop open List
 	 * By KV
 	 * @param request
 	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
-	/* By KV start - requestVacationPop */
 	@RequestMapping(value = "/requestVacationPop.do")
-	public String requestVacationPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String selectRequestVacation(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
-
 		List<EgovMap> vact_type_id = commonService.getDetailCommonCodeList(params);
-
 		/*EgovMap PAExpired = memberListService.selectCodyPAExpired(params);*/
 		/*logger.debug("PAExpired : {}", PAExpired);*/
 		logger.debug("selectMemberListView : {}", selectMemberListView);
 		logger.debug("issuedBank : {}", selectIssuedBank);
 		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
-
 		logger.debug("vact_type_id    " + vact_type_id);
-
-
 		/*model.addAttribute("PAExpired", PAExpired);*/
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
 		model.addAttribute("memberView", selectMemberListView);
 		model.addAttribute("issuedBank", selectIssuedBank);
 		model.addAttribute("codeValue", params.get("codeValue"));
-
 		/* By Goo - get type of leave */
 		model.addAttribute("vact_type_id", vact_type_id);
-
 		return "organization/organization/requestVacationPop";
 	}
-	/* By KV end - requestVacationPop */
+
+	/**
+	 * Save Request Vacation function
+	 * By KV
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/requestVacationSave.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertRequestVacation(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		if(sessionVO != null){
+			logger.debug("params : {}", params);
+			logger.debug("sessionVO : {}", sessionVO.getUserId());
+			boolean success = false;
+
+	    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
+	    		params.put("MemberID", memberId);
+	    		resultValue = memberListService.insertRequestVacation(params,sessionVO);
+	    		message.setMessage(resultValue.get("message").toString());
+
+		}
+		return ResponseEntity.ok(message);
+	}
 
 	/**
 	 * Search rule book management list
