@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderSuspensionService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -32,6 +33,10 @@ public class OrderSuspensionController {
 	
 	@Resource(name = "orderSuspensionService")
 	private OrderSuspensionService orderSuspensionService;
+	
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
+	
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -68,7 +73,19 @@ public class OrderSuspensionController {
 	
 	
 	@RequestMapping(value = "/orderSuspensionDetailPop.do")
-	public String orderSuspensionDetailPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+	public String orderSuspensionDetailPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		// order detail start
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+	
+		params.put("salesOrderId", params.get("salesOrdId"));
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		// order detail end
 		
 		EgovMap suspensionInfo = orderSuspensionService.orderSuspendInfo(params);
 		
