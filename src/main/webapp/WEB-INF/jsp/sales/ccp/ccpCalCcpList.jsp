@@ -79,12 +79,6 @@ $(document).ready(function() {
         Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv6');
     });
 	
-	
-	/*** RPT ***/
-	$("#_rptPerFoBtn").click(function() {
-		Common.popupDiv("/sales/ccp/goCcpPerformancePop.do", '', null , true , '_rtpPerformance');
-	});
-	
 });//Doc Ready Func End
 
 $.fn.clearForm = function() {
@@ -173,6 +167,18 @@ function f_multiCombo(){
 function fn_underDevelop(){
     Common.alert('The program is under development.');
 }
+
+function popup(location){
+    if(location == "listing"){
+        Common.popupDiv("/sales/ccp/ccpCalListingPop.do", $("#_searchForm").serializeJSON(), null, true); 
+    }else if(location == 'rawData'){
+    	Common.popupDiv("/sales/ccp/ccpCalRawDataPop.do", $("#_searchForm").serializeJSON(), null, true); 
+    }else if(location == 'performance'){
+    	Common.popupDiv("/sales/ccp/ccpCalPerformancePop.do", $("#_searchForm").serializeJSON(), null, true);
+    }
+    
+}
+
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -301,9 +307,9 @@ function fn_underDevelop(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">Listing</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">RAW Data</a></p></li>
-        <li><p class="link_btn"><a  id="_rptPerFoBtn">Performance</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : popup('listing')">Listing</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : popup('rawData')">RAW Data</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : popup('performance')">Performance</a></p></li>
     </ul>
     <ul class="btns">
     </ul>
