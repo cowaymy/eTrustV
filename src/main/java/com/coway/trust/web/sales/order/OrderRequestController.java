@@ -108,6 +108,14 @@ public class OrderRequestController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/requestOwnershipTransfer.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> requestOwnershipTransfer(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		ReturnMessage message = orderRequestService.requestOwnershipTransfer(params, sessionVO);
+
+		return ResponseEntity.ok(message);
+	}
+	
     @RequestMapping(value = "/selectCompleteASIDByOrderIDSolutionReason.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> selectCompleteASIDByOrderIDSolutionReason(@RequestParam Map<String, Object> params)    {
     	EgovMap rslt = orderRequestService.selectCompleteASIDByOrderIDSolutionReason(params);
@@ -150,6 +158,12 @@ public class OrderRequestController {
     @RequestMapping(value = "/selectValidateInfo.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> selectValidateInfo(@RequestParam Map<String, Object> params)    {
     	EgovMap rslt = orderRequestService.selectValidateInfo(params);
+    	return ResponseEntity.ok(rslt);
+    }
+	
+    @RequestMapping(value = "/selectOderOutsInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectOderOutsInfo(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.selectOderOutsInfo(params);
     	return ResponseEntity.ok(rslt);
     }
 }

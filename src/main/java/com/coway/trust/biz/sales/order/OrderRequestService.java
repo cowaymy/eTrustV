@@ -41,4 +41,8 @@ public interface OrderRequestService {
 
 	ReturnMessage requestApplicationExchange(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+	ReturnMessage requestOwnershipTransfer(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	EgovMap selectOderOutsInfo(Map<String, Object> params);
+
 }

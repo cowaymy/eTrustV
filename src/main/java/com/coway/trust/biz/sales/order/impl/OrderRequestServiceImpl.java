@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.billing.service.impl.ProductLostBillingMapper;
+import com.coway.trust.biz.payment.billinggroup.service.impl.BillingGroupMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipQuotationMapper;
@@ -32,9 +33,12 @@ import com.coway.trust.biz.sales.order.vo.AccTradeLedgerVO;
 import com.coway.trust.biz.sales.order.vo.CallEntryVO;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
 import com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO;
+import com.coway.trust.biz.sales.order.vo.CustBillMasterVO;
 import com.coway.trust.biz.sales.order.vo.DiscountEntryVO;
 import com.coway.trust.biz.sales.order.vo.InstallResultVO;
+import com.coway.trust.biz.sales.order.vo.InstallationVO;
 import com.coway.trust.biz.sales.order.vo.InvStkMovementVO;
+import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderDVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvConfigVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvFilterVO;
@@ -90,6 +94,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 	
 	@Resource(name = "orderDetailMapper")
 	private OrderDetailMapper orderDetailMapper;
+	
+	@Resource(name = "billingGroupMapper")
+	private BillingGroupMapper billingGroupMapper;
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -177,6 +184,42 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 			salesOrderExchangeVO.setSoExchgUnderFreeAsId(0);
 			salesOrderExchangeVO.setSoExchgOldCustId(0);
 			salesOrderExchangeVO.setSoExchgNwCustId(0);
+		}
+		else if(SalesConstants.ORDER_REQ_TYPE_CD_OTRN.equals(ordReqType)) {
+
+			salesOrderExchangeVO.setSoExchgTypeId(284);
+			salesOrderExchangeVO.setSoExchgStusId(SalesConstants.STATUS_COMPLETED);
+			salesOrderExchangeVO.setSoExchgResnId(0);
+			salesOrderExchangeVO.setSoCurStusId(25);
+			salesOrderExchangeVO.setInstallEntryId(0);
+			salesOrderExchangeVO.setSoExchgOldAppTypeId(0);
+			salesOrderExchangeVO.setSoExchgNwAppTypeId(0);
+			salesOrderExchangeVO.setSoExchgOldStkId(0);
+			salesOrderExchangeVO.setSoExchgNwStkId(0);
+			salesOrderExchangeVO.setSoExchgOldPrcId(0);
+	        salesOrderExchangeVO.setSoExchgNwPrcId(0);
+			salesOrderExchangeVO.setSoExchgOldPrc(BigDecimal.ZERO);
+			salesOrderExchangeVO.setSoExchgNwPrc(BigDecimal.ZERO);
+			salesOrderExchangeVO.setSoExchgOldPv(BigDecimal.ZERO);
+			salesOrderExchangeVO.setSoExchgNwPv(BigDecimal.ZERO);
+			salesOrderExchangeVO.setSoExchgOldRentAmt(BigDecimal.ZERO);
+			salesOrderExchangeVO.setSoExchgNwRentAmt(BigDecimal.ZERO);
+			salesOrderExchangeVO.setSoExchgOldPromoId(0);
+			salesOrderExchangeVO.setSoExchgNwPromoId(0);
+			salesOrderExchangeVO.setSoExchgCrtUserId(sessionVO.getUserId());
+			salesOrderExchangeVO.setSoExchgUpdUserId(sessionVO.getUserId());
+			salesOrderExchangeVO.setSoExchgOldSrvConfigId(0);
+			salesOrderExchangeVO.setSoExchgNwSrvConfigId(0);
+			salesOrderExchangeVO.setSoExchgOldCallEntryId(0);
+			salesOrderExchangeVO.setSoExchgNwCallEntryId(0);
+			salesOrderExchangeVO.setSoExchgStkRetMovId(0);
+			salesOrderExchangeVO.setSoExchgRem("");
+			salesOrderExchangeVO.setSoExchgOldDefRentAmt(BigDecimal.ZERO);
+			salesOrderExchangeVO.setSoExchgNwDefRentAmt(BigDecimal.ZERO);
+			salesOrderExchangeVO.setSoExchgUnderFreeAsId(0);
+			salesOrderExchangeVO.setSoExchgOldCustId(CommonUtils.intNvl(params.get("hiddenCurrentCustID")));
+			salesOrderExchangeVO.setSoExchgNwCustId(CommonUtils.intNvl(params.get("txtHiddenCustID")));
+			salesOrderExchangeVO.setSoExchgFormNo((String)params.get("txtReferenceNo"));
 		}
 	}
 	
@@ -314,6 +357,56 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     		salesOrderMVO.setSalesOrdIdOld(0);
     		salesOrderMVO.setEditTypeId(0);
     		salesOrderMVO.setCustBillId(0);
+    		salesOrderMVO.setMthRentAmt(BigDecimal.ZERO);
+    		salesOrderMVO.setLok(SalesConstants.IS_FALSE);
+    		salesOrderMVO.setAeonStusId(0);
+    		salesOrderMVO.setCommDt(SalesConstants.DEFAULT_DATE2);
+    		salesOrderMVO.setCrtUserId(sessionVO.getUserId());
+    		salesOrderMVO.setPayComDt(SalesConstants.DEFAULT_DATE2);
+    		salesOrderMVO.setDefRentAmt(BigDecimal.ZERO);
+    		salesOrderMVO.setRefDocId(0);
+    		salesOrderMVO.setRentPromoId(0);
+    		salesOrderMVO.setSalesHmId(0);
+    		salesOrderMVO.setSalesSmId(0);
+    		salesOrderMVO.setSalesGmId(0);
+    	}
+    	else if(SalesConstants.ORDER_REQ_TYPE_CD_OTRN.equals(ordReqType)) {
+    		
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    		Date defaultDate = sdf.parse(SalesConstants.DEFAULT_DATE2);
+    		
+    		salesOrderMVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
+    		salesOrderMVO.setSalesOrdNo("");    		
+    		salesOrderMVO.setRefNo("");    		
+    	  //salesOrderMVO.setSalesDt(defaultDate); //DateTime.Now;
+    		salesOrderMVO.setCustId(CommonUtils.intNvl((String)params.get("txtHiddenCustID")));
+    		salesOrderMVO.setCustCntId(CommonUtils.intNvl((String)params.get("txtHiddenContactID")));
+    		salesOrderMVO.setCustAddId(CommonUtils.intNvl((String)params.get("txtHiddenAddressID")));
+    		salesOrderMVO.setMemId(0);
+    		salesOrderMVO.setBrnchId(0);
+    		salesOrderMVO.setAppTypeId(CommonUtils.intNvl((String)params.get("hiddenAppTypeID")));
+    		salesOrderMVO.setDscntAmt(BigDecimal.ZERO);
+    		salesOrderMVO.setTaxAmt(BigDecimal.ZERO);
+    		salesOrderMVO.setTotAmt(BigDecimal.ZERO);
+    		salesOrderMVO.setPromoId(0);    		
+    		salesOrderMVO.setBindingNo("");    		
+    		salesOrderMVO.setCcPromoId(0);    		
+    		salesOrderMVO.setRem("");
+    		salesOrderMVO.setPvMonth(0);
+    		salesOrderMVO.setPvYear(0);    		
+    		salesOrderMVO.setStusCodeId(SalesConstants.STATUS_ACTIVE);    		
+    		salesOrderMVO.setUpdUserId(sessionVO.getUserId());
+    		salesOrderMVO.setSyncChk(SalesConstants.IS_FALSE);    		
+    		salesOrderMVO.setCustPoNo("");
+    		salesOrderMVO.setRenChkId(0);
+    		salesOrderMVO.setInstPriod(0);
+    		salesOrderMVO.setDoNo("");
+    		salesOrderMVO.setDeptCode("");;
+    		salesOrderMVO.setGrpCode("");
+    		salesOrderMVO.setOrgCode("");
+    		salesOrderMVO.setSalesOrdIdOld(0);
+    		salesOrderMVO.setEditTypeId(0);
+    		salesOrderMVO.setCustBillId(CommonUtils.intNvl(params.get("hiddenAppTypeID")) == SalesConstants.APP_TYPE_CODE_ID_RENTAL ? "new".equals((String)params.get("btnBillGroup")) ? 0 : CommonUtils.intNvl(params.get("txtHiddenBillGroupID")) : 0);
     		salesOrderMVO.setMthRentAmt(BigDecimal.ZERO);
     		salesOrderMVO.setLok(SalesConstants.IS_FALSE);
     		salesOrderMVO.setAeonStusId(0);
@@ -496,6 +589,94 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     	som.setRem("Scheme Conversion - " + (String)params.get("cmbSchemeSchmText"));
     	som.setCnvrSchemeId(CommonUtils.intNvl((String)params.get("cmbScheme")));
     }
+    
+    private void preprocInstallation(InstallationVO installationVO, Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+    	String PreInstDate = (String)params.get("dpPreferInstDate");
+    	
+    	installationVO.setInstallId(0);
+    	installationVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
+    	installationVO.setAddId(CommonUtils.intNvl((String)params.get("txtHiddenInstAddressID")));
+    	installationVO.setCntId(CommonUtils.intNvl((String)params.get("txtHiddenInstContactID")));
+    	installationVO.setPreCallDt(CommonUtils.getAddDay(PreInstDate, -1, SalesConstants.DEFAULT_DATE_FORMAT1));
+    	installationVO.setPreDt(PreInstDate);
+    	installationVO.setPreTm(this.convert24Tm((String)params.get("tpPreferInstTime")));
+    	installationVO.setActDt(SalesConstants.DEFAULT_DATE);
+    	installationVO.setActTm(SalesConstants.DEFAULT_TM);
+    	installationVO.setStusCodeId(SalesConstants.STATUS_ACTIVE);
+    	installationVO.setInstct((String)params.get("txtInstSpecialInstruction"));
+    	installationVO.setUpdUserId(sessionVO.getUserId());
+    	installationVO.setBrnchId(CommonUtils.intNvl((String)params.get("cmbDSCBranch")));
+    	installationVO.setEditTypeId(0);
+    	installationVO.setIsTradeIn(SalesConstants.IS_FALSE);
+    }
+    
+    private void preprocRentPaySet(RentPaySetVO rentPaySetVO, Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+    	int rentPaymode = CommonUtils.intNvl(params.get("cmbRentPaymode"));
+    	
+    	rentPaySetVO.setRentPayId(0);
+    	rentPaySetVO.setSalesOrdId(CommonUtils.intNvl(params.get("salesOrdId")));
+    	rentPaySetVO.setModeId(rentPaymode);
+    	rentPaySetVO.setCustCrcId(rentPaymode == 131 ? CommonUtils.intNvl(params.get("txtHiddenRentPayCRCID"))     : 0);
+    	rentPaySetVO.setCustAccId(rentPaymode == 132 ? CommonUtils.intNvl(params.get("txtHiddenRentPayBankAccID")) : 0);
+    	rentPaySetVO.setBankId(rentPaymode == 131 ? CommonUtils.intNvl(params.get("hiddenRentPayCRCBankID")) : rentPaymode == 132 ? CommonUtils.intNvl(params.get("hiddenRentPayBankAccBankID")) : 0);
+      //rentPaySetMaster.DDApplyDate = DateTime.Now;
+    	rentPaySetVO.setDdSubmitDt(SalesConstants.DEFAULT_DATE);
+    	rentPaySetVO.setDdStartDt(SalesConstants.DEFAULT_DATE);
+    	rentPaySetVO.setDdRejctDt(SalesConstants.DEFAULT_DATE);
+    	rentPaySetVO.setFailResnId(0);
+    	rentPaySetVO.setUpdUserId(sessionVO.getUserId());
+    	rentPaySetVO.setStusCodeId(SalesConstants.STATUS_ACTIVE);
+    	rentPaySetVO.setIs3rdParty("Y".equals((String)params.get("btnThirdParty")) ? SalesConstants.IS_TRUE : SalesConstants.IS_FALSE);
+    	rentPaySetVO.setCustId("Y".equals((String)params.get("btnThirdParty")) ? CommonUtils.intNvl(params.get("txtHiddenThirdPartyID")) : CommonUtils.intNvl(params.get("txtHiddenCustID")));
+    	rentPaySetVO.setEditTypeId(0);
+    	rentPaySetVO.setNricOld((String)params.get("txtRentPayIC"));
+    	rentPaySetVO.setIssuNric(CommonUtils.isNotEmpty(params.get("txtRentPayIC")) ? (String)params.get("txtRentPayIC") : "Y".equals((String)params.get("btnThirdParty")) ? (String)params.get("txtThirdPartyNRIC") : (String)params.get("txtCustIC"));
+    	rentPaySetVO.setAeonCnvr(SalesConstants.IS_FALSE);
+    	rentPaySetVO.setRem("");
+    	rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
+    }
+    
+    private void preprocCustBillMaster(CustBillMasterVO custBillMasterVO, Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+    	custBillMasterVO.setCustBillId(0);
+    	custBillMasterVO.setCustBillSoId(CommonUtils.intNvl(params.get("salesOrdId")));
+    	custBillMasterVO.setCustBillCustId(CommonUtils.intNvl(params.get("txtHiddenCustID")));
+    	custBillMasterVO.setCustBillCntId(CommonUtils.intNvl(params.get("txtHiddenContactID")));
+    	custBillMasterVO.setCustBillAddId(CommonUtils.intNvl(params.get("txtHiddenAddressID")));
+    	custBillMasterVO.setCustBillStusId(SalesConstants.STATUS_ACTIVE);
+    	custBillMasterVO.setCustBillRem((String)params.get("txtBillGroupRemark"));
+      //customerBillMaster.CustBillUpdateAt = DateTime.Now;
+    	custBillMasterVO.setCustBillUpdUserId(sessionVO.getUserId());
+    	custBillMasterVO.setCustBillGrpNo("");
+      //customerBillMaster.CustBillCreateAt = DateTime.Now;
+    	custBillMasterVO.setCustBillCrtUserId(sessionVO.getUserId());
+    	custBillMasterVO.setCustBillPayTrm(0);
+    	custBillMasterVO.setCustBillInchgMemId(0);
+    	custBillMasterVO.setCustBillEmail("");
+    	custBillMasterVO.setCustBillIsEstm(SalesConstants.IS_FALSE);
+    	custBillMasterVO.setCustBillIsSms(CommonUtils.intNvl(params.get("txtHiddenThirdPartyID")) == SalesConstants.CUST_TYPE_CODE_ID_IND ? SalesConstants.IS_TRUE : SalesConstants.IS_FALSE);
+    	custBillMasterVO.setCustBillIsPost(CommonUtils.intNvl(params.get("txtHiddenThirdPartyID")) != SalesConstants.CUST_TYPE_CODE_ID_IND ? SalesConstants.IS_TRUE : SalesConstants.IS_FALSE);
+    }
+    
+	private String convert24Tm(String TM) {
+		String ampm = "", HH = "", MI = "", cvtTM = "";
+		
+		if(CommonUtils.isNotEmpty(TM)) {
+			ampm = CommonUtils.right(TM, 2);
+			HH = CommonUtils.left(TM, 2);
+			MI = TM.substring(3, 5);
+			
+			if("PM".equals(ampm)) {
+				cvtTM = String.valueOf(Integer.parseInt(HH) + 12) + ":" + MI + ":00";
+			}
+			else  {
+				cvtTM = HH + ":" + MI + ":00";
+			}
+		}
+		return cvtTM;
+	}
 /*
     @Override
 	public ReturnMessage requestSchmConv(Map<String, Object> params, SessionVO sessionVO) throws Exception {
@@ -646,6 +827,181 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         return message;
 	}
     
+	@Override
+	public ReturnMessage requestOwnershipTransfer(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+        //GET ORDER
+		EgovMap somMap = orderRegisterMapper.selectSalesOrderM(params);
+
+		int stusCodeId = CommonUtils.intNvl(somMap.get("stusCodeId"));
+		int appTypeId  = CommonUtils.intNvl(somMap.get("appTypeId"));
+		
+		//SALES ORDER MASTER
+		SalesOrderMVO salesOrderMVO =  new SalesOrderMVO();
+		this.preprocSalesOrderM(salesOrderMVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_OTRN);
+		
+		//INSTALLATION MASTER
+		InstallationVO installationVO = new InstallationVO();
+		this.preprocInstallation(installationVO, params, sessionVO);
+		
+		//RENT PAY SET | CUSTOMER BILL MASTER |
+		RentPaySetVO rentPaySetVO = new RentPaySetVO();
+		CustBillMasterVO custBillMasterVO = new CustBillMasterVO();
+		
+		if(appTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+			this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
+			
+			if("new".equals((String)params.get("btnBillGroup"))) {
+				this.preprocCustBillMaster(custBillMasterVO, params, sessionVO);
+			}
+		}
+		
+		//ORDER EXCHANGE
+		SalesOrderExchangeVO salesOrderExchangeVO = new SalesOrderExchangeVO();		
+		this.preprocSalesOrderExchange(salesOrderExchangeVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_OTRN);
+		
+		//ORDER LOG LIST
+        SalesOrderLogVO salesOrderLogVO = new SalesOrderLogVO();
+        this.preprocSalesOrderLog(salesOrderLogVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_OTRN);
+		
+        int CurrentCustBillID = CommonUtils.intNvl(somMap.get("custBillId"));
+        
+        //UPDATE ORDER MASTER
+        orderRequestMapper.updateSalesOrderMOtran(salesOrderMVO);
+        
+        //UPDATE INSTALLATION
+        orderRequestMapper.updateInstallationOtran(installationVO);
+        
+        //IF ORDER == RENTAL
+        if(appTypeId == 66) {
+        	//UPDATE RENTAL PAYMENT SETTING
+        	orderRequestMapper.updateRentPaySetOtran(rentPaySetVO);
+        	
+        	//INSERT CUSTOMER BILL MASTER (NEW*)
+        	String nextDocNo_BillGroup = orderRegisterMapper.selectDocNo(DocTypeConstants.BILLGROUP_NO);
+        	
+        	custBillMasterVO.setCustBillGrpNo(nextDocNo_BillGroup);
+        	
+        	orderRegisterMapper.insertCustBillMaster(custBillMasterVO);
+        	
+        	salesOrderMVO.setCustBillId(custBillMasterVO.getCustBillId());
+        	
+        	orderRegisterMapper.updateCustBillId(salesOrderMVO);
+        	
+        	//Check current CustBillMaster
+        	
+        	params.put("custBillId", CurrentCustBillID);
+        	
+        	EgovMap bilMap = billingGroupMapper.selectCustBillMaster(params);
+        	
+        	if(bilMap != null) {
+        		if(CommonUtils.intNvl(bilMap.get("custBillSoId")) == CommonUtils.intNvl(somMap.get("salesOrdId"))) {
+        			// ---> Is Main Order in old group
+        			params.put("custBillId", CommonUtils.intNvl(bilMap.get("custBillId")));
+        			params.put("custId", CommonUtils.intNvl(bilMap.get("custBillCustId")));
+        			params.put("stusCodeId", 4);
+        			
+        			EgovMap somMap2 = orderRequestMapper.selectSalesOrderMOtran(params);
+        			
+        			if(somMap2 != null) {
+        				// Min Complete Order : Set as main
+        				CustBillMasterVO tempVO2 = new CustBillMasterVO();
+        				
+        				tempVO2.setCustBillId(CommonUtils.intNvl(bilMap.get("custBillId")));
+        				tempVO2.setCustBillSoId(CommonUtils.intNvl(somMap2.get("salesOrdId")));
+        				tempVO2.setCustBillUpdUserId(sessionVO.getUserId());
+        				
+        				orderRequestMapper.updateCustBillMasterOtran(tempVO2);
+        			}
+        			else {
+        				// Min Active Order : Set as main
+            			params.put("custBillId", CommonUtils.intNvl(bilMap.get("custBillId")));
+            			params.put("custId", CommonUtils.intNvl(bilMap.get("custBillCustId")));
+            			params.put("stusCodeId", 1);
+            			
+            			EgovMap somMap3 = orderRequestMapper.selectSalesOrderMOtran(params);
+        				
+            			if(somMap3 != null) {
+            				CustBillMasterVO tempVO3 = new CustBillMasterVO();
+    
+            				tempVO3.setCustBillId(CommonUtils.intNvl(bilMap.get("custBillId")));
+            				tempVO3.setCustBillSoId(CommonUtils.intNvl(somMap2.get("salesOrdId")));
+            				tempVO3.setCustBillUpdUserId(sessionVO.getUserId());
+            				
+            				orderRequestMapper.updateCustBillMasterOtran(tempVO3);
+            			}
+        			}
+        		}
+        	}
+        }
+        
+        EgovMap sodMap = orderRequestMapper.selectSalesOrderD(params);
+        
+        salesOrderExchangeVO.setSoExchgOldAppTypeId(CommonUtils.intNvl(somMap.get("appTypeId")));
+        salesOrderExchangeVO.setSoExchgNwAppTypeId(CommonUtils.intNvl(somMap.get("appTypeId")));
+        salesOrderExchangeVO.setSoExchgOldStkId(CommonUtils.intNvl(sodMap.get("itmStkId")));
+        salesOrderExchangeVO.setSoExchgNwStkId(CommonUtils.intNvl(sodMap.get("itmStkId")));
+        salesOrderExchangeVO.setSoExchgOldPrcId(CommonUtils.intNvl(sodMap.get("itmPrcId")));
+        salesOrderExchangeVO.setSoExchgNwPrcId(CommonUtils.intNvl(sodMap.get("itmPrcId")));
+        salesOrderExchangeVO.setSoExchgOldPrc(CommonUtils.isNotEmpty(somMap.get("totAmt")) ? (BigDecimal)somMap.get("totAmt") : BigDecimal.ZERO);
+        salesOrderExchangeVO.setSoExchgNwPrc(CommonUtils.isNotEmpty(somMap.get("totAmt")) ? (BigDecimal)somMap.get("totAmt") : BigDecimal.ZERO);
+        salesOrderExchangeVO.setSoExchgOldPv(CommonUtils.isNotEmpty(somMap.get("totPv")) ? (BigDecimal)somMap.get("totPv") : BigDecimal.ZERO);
+        salesOrderExchangeVO.setSoExchgNwPv(CommonUtils.isNotEmpty(somMap.get("totPv")) ? (BigDecimal)somMap.get("totPv") : BigDecimal.ZERO);
+        salesOrderExchangeVO.setSoExchgOldRentAmt(CommonUtils.isNotEmpty(somMap.get("mthRentAmt")) ? (BigDecimal)somMap.get("mthRentAmt") : BigDecimal.ZERO);
+        salesOrderExchangeVO.setSoExchgNwRentAmt(CommonUtils.isNotEmpty(somMap.get("mthRentAmt")) ? (BigDecimal)somMap.get("mthRentAmt") : BigDecimal.ZERO);
+        salesOrderExchangeVO.setSoExchgOldPromoId(CommonUtils.intNvl(somMap.get("promoId")));
+        salesOrderExchangeVO.setSoExchgNwPromoId(CommonUtils.intNvl(somMap.get("promoId")));
+        salesOrderExchangeVO.setSoExchgOldSrvConfigId(0);
+        salesOrderExchangeVO.setSoExchgNwSrvConfigId(0);
+        salesOrderExchangeVO.setSoExchgOldCallEntryId(0);
+        salesOrderExchangeVO.setSoExchgNwCallEntryId(0);
+        salesOrderExchangeVO.setSoExchgStkRetMovId(0);
+        salesOrderExchangeVO.setSoExchgRem("");
+        salesOrderExchangeVO.setSoExchgOldDefRentAmt(CommonUtils.isNotEmpty(somMap.get("defRentAmt")) ? (BigDecimal)somMap.get("defRentAmt") : BigDecimal.ZERO);
+        salesOrderExchangeVO.setSoExchgNwDefRentAmt(CommonUtils.isNotEmpty(somMap.get("defRentAmt")) ? (BigDecimal)somMap.get("defRentAmt") : BigDecimal.ZERO);
+        salesOrderExchangeVO.setSoExchgUnderFreeAsId(0);
+        
+        orderRequestMapper.insertSalesOrderExchange(salesOrderExchangeVO);
+        
+    	//INSERT ORDER LOG >> OWNERSHIP TRANSFER REQUEST
+    	if(salesOrderLogVO != null) {
+    		salesOrderLogVO.setRefId(salesOrderExchangeVO.getSoExchgId());
+    		
+    		orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
+    	}
+    	
+    	//INSERT ORDER LOG >> CUSTOMER IN-USE
+        EgovMap lv = new EgovMap();
+        EgovMap logMap = new EgovMap();
+        
+    	logMap.put("salesOrderId", CommonUtils.intNvl(params.get("salesOrdId")));
+    	logMap.put("prgrsId", 5);
+    	
+        lv = orderDetailMapper.selectLatestOrderLogByOrderID(logMap);
+
+        SalesOrderLogVO OrderLog = new SalesOrderLogVO();
+        
+        OrderLog.setLogId(0);
+        OrderLog.setSalesOrdId(salesOrderExchangeVO.getSoId());
+        OrderLog.setPrgrsId(5);
+      //OrderLog.LogDate = DateTime.Now;
+        OrderLog.setRefId(lv != null ? CommonUtils.intNvl(lv.get("refId")) : 0);
+        OrderLog.setIsLok(SalesConstants.IS_FALSE);
+        OrderLog.setLogCrtUserId(salesOrderExchangeVO.getSoExchgCrtUserId());
+      //OrderLog.LogCreated = DateTime.Now;
+        
+        orderRegisterMapper.insertSalesOrderLog(OrderLog);
+
+		String msg = "Order Number : " + (String)somMap.get("salesOrdNo") + "<br/>Ownership successfully transferred.";
+        
+		ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        //message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        message.setMessage(msg);
+        
+        return message;
+	}
+	
 	@Override
 	public ReturnMessage requestApplicationExchange(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
@@ -1412,29 +1768,24 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 	
 	private void preprocSalesOrderLog(SalesOrderLogVO salesOrderLogVO, Map<String, Object> params, SessionVO sessionVO, String ordReqType) {
 		
+		salesOrderLogVO.setLogId(0);
+		salesOrderLogVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
+		salesOrderLogVO.setPrgrsId(11);
+		salesOrderLogVO.setRefId(0);
+		salesOrderLogVO.setIsLok(SalesConstants.IS_TRUE);
+		salesOrderLogVO.setLogCrtUserId(sessionVO.getUserId());
+
 		if(SalesConstants.ORDER_REQ_TYPE_CD_CANC.equals(ordReqType)) {
-    		salesOrderLogVO.setLogId(0);
-    		salesOrderLogVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
     		salesOrderLogVO.setPrgrsId(11);
-    		salesOrderLogVO.setRefId(0);
-    		salesOrderLogVO.setIsLok(SalesConstants.IS_TRUE);
-    		salesOrderLogVO.setLogCrtUserId(sessionVO.getUserId());
 		}
 		else if(SalesConstants.ORDER_REQ_TYPE_CD_PEXC.equals(ordReqType)) {
-    		salesOrderLogVO.setLogId(0);
-    		salesOrderLogVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
     		salesOrderLogVO.setPrgrsId(3);
-    		salesOrderLogVO.setRefId(0);
-    		salesOrderLogVO.setIsLok(SalesConstants.IS_TRUE);
-    		salesOrderLogVO.setLogCrtUserId(sessionVO.getUserId());
 		}
 		else if(SalesConstants.ORDER_REQ_TYPE_CD_AEXC.equals(ordReqType)) {
-    		salesOrderLogVO.setLogId(0);
-    		salesOrderLogVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
     		salesOrderLogVO.setPrgrsId(6);
-    		salesOrderLogVO.setRefId(0);
-    		salesOrderLogVO.setIsLok(SalesConstants.IS_TRUE);
-    		salesOrderLogVO.setLogCrtUserId(sessionVO.getUserId());
+		}
+		else if(SalesConstants.ORDER_REQ_TYPE_CD_OTRN.equals(ordReqType)) {
+    		salesOrderLogVO.setPrgrsId(7);
 		}
 	}
 	
@@ -1640,6 +1991,12 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 	@Override
 	public EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params) {
 		EgovMap view = this.selectOrderSimulatorViewByOrderNo(params);
+		return view;
+	}
+	
+	@Override
+	public EgovMap selectOderOutsInfo(Map<String, Object> params) {
+		EgovMap view = (EgovMap)params.get("p1");
 		return view;
 	}
 	

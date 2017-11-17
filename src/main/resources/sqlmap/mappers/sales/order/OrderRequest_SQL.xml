@@ -335,6 +335,17 @@
          WHERE SALES_ORD_ID   = #{salesOrdId}
     </update>
     
+    <update id="updateSalesOrderMOtran" parameterType="salesOrderMVO">
+		UPDATE SAL0001D
+		   SET CUST_ID      = #{custId}
+		     , CUST_CNT_ID  = #{custCntId}
+		     , CUST_ADD_ID  = #{custAddId}
+		     , UPD_DT       = SYSDATE
+		     , UPD_USER_ID  = #{updUserId}
+		     , CUST_BILL_ID = #{custBillId}
+		 WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
     <update id="updateSalesOrderD" parameterType="salesOrderDVO">
         UPDATE SAL0002D
            SET ITM_STK_ID   = #{itmStkId}
@@ -1740,16 +1751,133 @@
     </insert>
     
     <select id="selectInstallationAddress" parameterType="Map" resultType="egovMap">
-		SELECT T2.AREA_ID
-		     , T2.ADDR_DTL
-		     , T2.STREET
-		  FROM SAL0045D T1
-		     , SAL0023D T2
-		 WHERE T1.ADD_ID = T2.CUST_ADD_ID
-		   AND T1.SALES_ORD_ID = #{salesOrdId}
-		   AND T1.STUS_CODE_ID != 8
-		   AND ROWNUM &lt;= 1
+        SELECT T2.AREA_ID
+             , T2.ADDR_DTL
+             , T2.STREET
+          FROM SAL0045D T1
+             , SAL0023D T2
+         WHERE T1.ADD_ID = T2.CUST_ADD_ID
+           AND T1.SALES_ORD_ID = #{salesOrdId}
+           AND T1.STUS_CODE_ID != 8
+           AND ROWNUM &lt;= 1
     </select>
     
+    <update id="updateInstallationOtran" parameterType="installationVO">
+        UPDATE SAL0045D
+           SET ADD_ID       = #{addId}
+             , CNT_ID       = #{cntId}
+             , PRE_CALL_DT  = TO_DATE(#{preCallDt}, 'DD/MM/YYYY')
+             , PRE_DT       = TO_DATE(#{preDt}, 'DD/MM/YYYY')
+             , PRE_TM       = #{preTm}
+             , INSTCT       = #{instct}
+             , UPD_DT       = SYSDATE
+             , UPD_USER_ID  = #{updUserId}
+             , BRNCH_ID     = #{brnchId}
+         WHERE INSTALL_ID   = (SELECT T1.INSTALL_ID
+                                 FROM SAL0045D T1
+                                WHERE SALES_ORD_ID = #{salesOrdId}
+                                  AND ROWNUM &lt;= 1)
+    </update>
+
+    <update id="updateRentPaySetOtran" parameterType="rentPaySetVO">
+		UPDATE SAL0074D
+		   SET MODE_ID         = #{modeId}
+		     , CUST_CRC_ID     = #{custCrcId}
+		     , BANK_ID         = #{bankId}
+		     , CUST_ACC_ID     = #{custAccId}
+		     , DD_APPLY_DT     = SYSDATE
+		     , DD_SUBMIT_DT    = TO_DATE(#{ddSubmitDt}, 'DD/MM/YYYY')
+		     , DD_START_DT     = TO_DATE(#{ddStartDt}, 'DD/MM/YYYY')
+		     , DD_REJCT_DT     = TO_DATE(#{ddRejctDt}, 'DD/MM/YYYY')
+		     , UPD_USER_ID     = #{updUserId}
+		     , UPD_DT          = SYSDATE
+		     , IS_3RD_PARTY    = #{is3rdParty}
+		     , CUST_ID         = #{custId}
+		     , NRIC_OLD        = #{nricOld}
+		     , FAIL_RESN_ID    = #{failResnId}
+		     , ISSU_NRIC       = #{issuNric}
+		     , LAST_APPLY_USER = #{lastApplyUser}
+		 WHERE RENT_PAY_ID     = (SELECT T1.RENT_PAY_ID
+                                    FROM SAL0074D T1
+                                   WHERE T1.SALES_ORD_ID = #{salesOrdId}
+                                     AND ROWNUM = 1)
+    </update>
     
+    <select id="selectSalesOrderMOtran" parameterType="Map" resultType="egovMap">
+        SELECT T1.SALES_ORD_ID
+		     , T1.SALES_ORD_NO
+		     , T1.REF_NO
+		     , T1.SALES_DT
+		     , T1.CUST_ID
+		     , T1.CUST_CNT_ID
+		     , T1.CUST_ADD_ID
+		     , T1.MEM_ID
+		     , T1.BRNCH_ID
+		     , T1.APP_TYPE_ID
+		     , T1.TOT_AMT
+		     , T1.PROMO_ID
+		     , T1.BINDING_NO
+		     , T1.CC_PROMO_ID
+		     , T1.TOT_PV
+		     , T1.REM
+		     , T1.PV_MONTH
+		     , T1.PV_YEAR
+		     , T1.STUS_CODE_ID
+		     , T1.UPD_DT
+		     , T1.UPD_USER_ID
+		     , T1.SYNC_CHK
+		     , T1.CUST_PO_NO
+		     , T1.REN_CHK_ID
+		     , T1.INST_PRIOD
+		     , T1.DO_NO
+		     , T1.DEPT_CODE
+		     , T1.GRP_CODE
+		     , T1.ORG_CODE
+		     , T1.SALES_ORD_ID_OLD
+		     , T1.EDIT_TYPE_ID
+		     , T1.CUST_BILL_ID
+		     , T1.MTH_RENT_AMT
+		     , T1.LOK
+		     , T1.AEON_STUS_ID
+		     , T1.COMM_DT
+		     , T1.CRT_USER_ID
+		     , T1.CRT_DT
+		     , T1.PAY_COM_DT
+		     , T1.DEF_RENT_AMT
+		     , T1.REF_DOC_ID
+		     , T1.SALES_HM_ID
+		     , T1.SALES_SM_ID
+		     , T1.SALES_GM_ID
+		     , T1.ADV_BILL
+		     , T1.CNVR_SCHEME_ID
+		     , T1.CUST_CARE_CNT_ID
+		     , T1.EMP_CHK
+		     , T1.EX_TRADE
+		     , T1.ECASH
+		     , T1.PROMO_DISC_PERIOD_TP
+		     , T1.PROMO_DISC_PERIOD
+		     , T1.NOR_AMT
+		     , T1.NOR_RNT_FEE
+		     , T1.DISC_RNT_FEE
+		     , T1.GST_CHK
+		     , T1.SRV_PAC_ID
+		     , T1.SALES_RESUBMIT
+		     , T1.SALES_TRADE_IN_MODEL
+		     , T1.SALES_TRADE_IN_USE_YEAR
+		  FROM SAL0001D T1
+		 WHERE T1.CUST_BILL_ID = #{custBillId}
+		   AND T1.STUS_CODE_ID = #{stusCodeId}
+		   AND T1.APP_TYPE_ID = 66
+		   AND T1.CUST_ID = #{custId}
+           AND ROWNUM &lt;= 1
+    </select>
+    
+    <update id="updateCustBillMasterOtran" parameterType="custBillMasterVO">
+		UPDATE SAL0024D
+		   SET CUST_BILL_SO_ID       = #{custBillSoId}
+		     , CUST_BILL_UPD_USER_ID = #{custBillUpdUserId}
+		     , CUST_BILL_UPD_DT      = SYSDATE
+		 WHERE CUST_BILL_ID          = #{custBillId}
+	</update>
+	
 </mapper>

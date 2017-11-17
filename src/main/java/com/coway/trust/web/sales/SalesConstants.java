@@ -202,6 +202,7 @@ public class SalesConstants {
 	public static final String ORDER_REQ_TYPE_CD_PEXC = "PEXC"; //Product Exchange
 	public static final String ORDER_REQ_TYPE_CD_AEXC = "AEXC"; //Application Exchange
 	public static final String ORDER_REQ_TYPE_CD_SCHM = "SCHM"; //Scheme Conversion
+	public static final String ORDER_REQ_TYPE_CD_OTRN = "OTRN"; //Ownership Transfer
 	
 	
 	//POS

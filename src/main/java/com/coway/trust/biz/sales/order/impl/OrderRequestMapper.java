@@ -12,9 +12,11 @@ import com.coway.trust.biz.sales.order.vo.AccTaxInvoiceOutright_SubVO;
 import com.coway.trust.biz.sales.order.vo.AccTradeLedgerVO;
 import com.coway.trust.biz.sales.order.vo.CallEntryVO;
 import com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO;
+import com.coway.trust.biz.sales.order.vo.CustBillMasterVO;
 import com.coway.trust.biz.sales.order.vo.DiscountEntryVO;
 import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
 import com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO;
+import com.coway.trust.biz.sales.order.vo.InstallationVO;
 import com.coway.trust.biz.sales.order.vo.InvStkMovementVO;
 import com.coway.trust.biz.sales.order.vo.ReferralVO;
 import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
@@ -71,6 +73,8 @@ public interface OrderRequestMapper {
 	void updateSalesOrderM(SalesOrderMVO salesOrderMVO);
 	
 	void updateSalesOrderMSchem(SalesOrderMVO salesOrderMVO);
+	
+	void updateSalesOrderMOtran(SalesOrderMVO salesOrderMVO);
 	
 	void updateSalesOrderD(SalesOrderDVO salesOrderDVO);
 	
@@ -179,5 +183,13 @@ public interface OrderRequestMapper {
 	void insertAccTaxInvoiceOutright_Sub(AccTaxInvoiceOutright_SubVO accTaxInvoiceOutright_SubVO);
 
 	EgovMap selectInstallationAddress(Map<String, Object> params);
+	
+	void updateInstallationOtran(InstallationVO installationVO);
+	
+	void updateRentPaySetOtran(RentPaySetVO rentPaySetVO);
+	
+	EgovMap selectSalesOrderMOtran(Map<String, Object> params);
+	
+	void updateCustBillMasterOtran(CustBillMasterVO custBillMasterVO);
 	
 }
