@@ -42,6 +42,18 @@ function fn_TerminateResign(val){
 	}
 }
 
+/*By KV start - requestVacationPop*/
+function fn_requestVacationPop(){
+	 var jsonObj = {
+             MemberID :memberid,
+            MemberType : memberType
+    };
+	 console.log("MemberID="+memberid+"&MemberType="+memberType);
+    Common.popupDiv("/organization/requestVacationPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
+}
+/*By KV end - requestVacationPop*/
+
+
 
 //Start AUIGrid --start Load Page- user 1st click Member
 $(document).ready(function() {
@@ -121,7 +133,23 @@ function createAUIGrid() {
             dataField : "membertype",
             headerText : "Member Type",
             width : 0
-		}];
+		}/* this is for put EDIT button in grid ,
+        {
+            dataField : "undefined",
+            headerText : "Edit",
+            width : 170,
+            renderer : {
+                  type : "ButtonRenderer",
+                  labelText : "Edit",
+                  onclick : function(rowIndex, columnIndex, value, item) {
+                       //pupupWin
+                      $("#_custId").val(item.custId);
+                      $("#_custAddId").val(item.custAddId);
+                      $("#_custCntcId").val(item.custCntcId);
+                      Common.popupDiv("/sales/customer/updateCustomerBasicInfoPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv1');
+                      }
+             }
+        } */];
 
 
 		 // 그리드 속성 설정
@@ -225,6 +253,10 @@ function fn_searchPosition(selectedData){
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="javascript:fn_memberListNew();">New</a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_memberListSearch();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_memberEditPop()">Member Edit</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_requestVacationPop()">Request Vacation </a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -362,36 +394,6 @@ function fn_searchPosition(selectedData){
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-    <dt>Link</dt>
-    <dd>
-    <ul class="btns">
-        <li><p class="link_btn"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
-        <li><p class="link_btn"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
-        <li><p class="link_btn"><a href="javascript:fn_memberEditPop()">Member Edit</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="Common.alert('The program is under development')">Request Vacation </a></p></li>
-<!--         <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
-    </ul>
-    <ul class="btns">
-        <!-- <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
-    </ul>
-    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-    </dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->

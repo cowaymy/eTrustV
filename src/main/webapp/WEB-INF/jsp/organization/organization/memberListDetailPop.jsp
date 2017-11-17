@@ -17,12 +17,12 @@ $(document).ready(function() {
     createAUIGrid1();
     createAUIGrid2();
     createAUIGrid3();
-  
+
     fn_selectPromote();
     fn_selectDocSubmission();
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
-    
+
     //cody 를 제외하고 Pa Renewal History 와 Cody PA Expired 안보이기 숨긴다
     if($("#memtype").val() != 2){
     	$("#hideContent").hide();
@@ -30,8 +30,8 @@ $(document).ready(function() {
     }
 
     var bankId = $("#bank").val();
-    $("#bankSelect option[value="+bankId +"]").attr("selected", true);   
-   
+    $('#bankSelect option[value="'+bankId+'"]').attr('selected', 'selected');
+
     if( $("#hsptlz").val() == 1){
         $('input:checkbox[id="hsptlzCheck"]').attr("checked", true);
     }
@@ -56,35 +56,35 @@ $(document).ready(function() {
         	 $("#action1").append('<option value=747>Promote</option>');
          }
     }
-    
+
         $('#action1').change(function (){
     	var memberId = $("#memberid").val() != null ? $("#memberid").val() : 0;
     	$('#cmbSuperior').empty();
     	$('#branchCode').empty();
-    	
+
     	if($('#action1').val() > -1){
     		   var positionTo = "";
     		   var lvlTo = 0;
     		   var superiorLvl = 0;
     		   var currentLvl = $("#memberLvl").val();
     		   var memberTypeId = $("#memtype").val();
-    		   
+
     		   if($('#action1').val() == "747"){
     			   console.log("promote");
     			   //Promote
     			  lvlTo = currentLvl - 1;
                   superiorLvl = currentLvl - 2;
                   //$("select[name=cmbSuperior]").removeAttr('disabled');
-    			   //desc = 
+    			   //desc =
     		   }else{
     			   console.log("demote");
     			   lvlTo = currentLvl + 1;
                    superiorLvl = currentLvl;
-                   //desc = 
+                   //desc =
     		   }
     		   $("#lvlTo").val(lvlTo);
     		   //글씨 붙이기
-    		   
+
     		   if(superiorLvl >= 0 && superiorLvl < 4)
     		   {
     			   var jsonObj = {
@@ -96,16 +96,16 @@ $(document).ready(function() {
                            kind : 4,
                            separator : ":"
                    };
-    		         
+
     		        doGetCombo("/organization/selectSuperiorTeam", jsonObj , ''   , 'cmbSuperior' , 'S', '');
     		        doGetComboSepa("/common/selectBranchCodeList.do",4 , ':',''   , 'branchCode' , 'S', '');
-    		        
+
                 }
     		  // if(lvlTo == 3 && memberTypeID == 2) $("select[name=branchCode]").removeAttr('disabled')
-    		   
+
 	   }
-	}); 
-}); 
+	});
+});
 function createAUIGrid4() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -143,13 +143,13 @@ function createAUIGrid4() {
         headerText : "Remark",
         editable : false,
         width : 180
-        
+
     }, {
         dataField : "userName",
         headerText : "Creator",
         editable : false,
         width : 130
-        
+
     }, {
         dataField : "crtDt",
         headerText : "Create Date",
@@ -157,69 +157,69 @@ function createAUIGrid4() {
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : true,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID4 = AUIGrid.create("#grid_wrap4", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false,
-    
+
 };
 
 function createAUIGrid1() {
@@ -237,69 +237,69 @@ function createAUIGrid1() {
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : true,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID1 = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false,
-    
+
 };
 
 function createAUIGrid2() {
@@ -337,69 +337,69 @@ function createAUIGrid2() {
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : true,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false,
-    
+
 };
 
 function createAUIGrid3() {
@@ -432,145 +432,145 @@ function createAUIGrid3() {
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : true,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID3 = AUIGrid.create("#grid_wrap3", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false,
-    
+
 };
 
 function fn_selectDocSubmission(){
-    
+
     var jsonObj = {
             MemberID : $("#memberid").val(),
             MemberType : $("#memtype").val()
-           
+
     };
 
-    
+
     Common.ajax("GET", "/organization/selectDocSubmission",jsonObj, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID1, result);
-        AUIGrid.resize(myGridID1,1000,400); 
-        
+        AUIGrid.resize(myGridID1,1000,400);
+
     });
 }
 
 function fn_selectPaymentHistory(){
-    
+
     var jsonObj = {
             MemberID : $("#memberid").val(),
             MemberType : $("#memtype").val()
-           
+
     };
 
-    
+
     Common.ajax("GET", "/organization/selectPaymentHistory",jsonObj, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID2, result);
-        AUIGrid.resize(myGridID2,1000,400); 
-        
+        AUIGrid.resize(myGridID2,1000,400);
+
     });
 }
 
 function fn_selectRenewalHistory(){
-    
+
     var jsonObj = {
             MemberID : $("#memberid").val(),
             MemberType : $("#memtype").val()
-           
+
     };
 
-    
+
     Common.ajax("GET", "/organization/selectRenewalHistory",jsonObj, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID3, result);
-        AUIGrid.resize(myGridID3,1000,400); 
-        
+        AUIGrid.resize(myGridID3,1000,400);
+
     });
 }
 
 function fn_selectPromote(){
-    
+
     var jsonObj = {
             MemberID : $("#memberid").val(),
             MemberType : $("#memtype").val()
-           
+
     };
 
-    
+
     Common.ajax("GET", "/organization/selectPromote",jsonObj, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID4, result);
-        AUIGrid.resize(myGridID4,1000,400); 
-        
+        AUIGrid.resize(myGridID4,1000,400);
+
     });
 }
 
 function fn_tabSize(){
-	AUIGrid.resize(myGridID,1000,400); 
+	AUIGrid.resize(myGridID,1000,400);
 }
 
 function fn_requestTermiReSave(val){
@@ -579,9 +579,9 @@ function fn_requestTermiReSave(val){
 		console.log("성공.");
 		console.log("data : " + result);
 		Common.alert(result.message,fn_winClose);
-		
+
 	});
-	
+
 	}else{//Request Promote/Demote
 		   Common.ajax("POST", "/organization/terminateResignSave.do",  $("#requestProDeForm").serializeJSON(), function(result) {
 	        console.log("성공.");
@@ -593,7 +593,7 @@ function fn_requestTermiReSave(val){
 }
 
 function fn_winClose(){
-    
+
     this.close();
 }
 </script>
@@ -682,7 +682,7 @@ function fn_winClose(){
 <tr>
     <th scope="row">NRIC </th>
     <td>
-     <span><c:out value="${memberView.nric}"/></span> 
+     <span><c:out value="${memberView.nric}"/></span>
     </td>
     <th scope="row">Date of Birth</th>
     <td>
@@ -710,7 +710,7 @@ function fn_winClose(){
 <tr>
     <th scope="row">Branch</th>
     <td colspan="3">
-     <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span> 
+     <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>
     </td>
     <th scope="row">Email</th>
     <td>
@@ -720,7 +720,7 @@ function fn_winClose(){
 <tr>
     <th scope="row">Member Group</th>
     <td colspan="3">
-     <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span> 
+     <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span>
     </td>
     <th scope="row">Transport</th>
     <td>
@@ -764,7 +764,7 @@ function fn_winClose(){
     <td>
     <span><c:out value="${memberView.country}"/></span>
     </td>
-  
+
 </tr>
 <tr>
     <td colspan="3">
@@ -976,7 +976,7 @@ function fn_winClose(){
     </td>
     <th scope="row">Date of Birth</th>
     <td>
-    <span><c:out value="${memberView.c58}"/></span> 
+    <span><c:out value="${memberView.c58}"/></span>
     </td>
     <th scope="row">Contact No.</th>
     <td>
