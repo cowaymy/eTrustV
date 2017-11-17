@@ -48,7 +48,9 @@
                 CASE 
                      WHEN ( Extent1.PRODUCT_ID IS NOT NULL ) THEN Extent1.PRODUCT_ID
                 ELSE 0
-                   END C4  
+                   END C4   ,
+                STATE,
+                area
          FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID  ,
                        vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID  ,
                        vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE  ,
@@ -87,7 +89,9 @@
                          N.CODE,
                        M.CT_BRNCH_CODE,
                        D.AREA_ID,
-                       N.BRNCH_ID
+                       N.BRNCH_ID,
+                       m.STATE,
+                       m.area
                   FROM SYS0005M N
                   INNER JOIN SYS0064M M
                           ON N.CODE = M.CT_BRNCH_CODE
@@ -157,6 +161,12 @@
                    </if>
                    <if test="callStrDate != '' and callEndDate != '' ">
                             <![CDATA[  AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')    between TO_DATE(#{callStrDate},  'DD/MM/YYYY') and  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+                   </if>
+                   <if test="ordStatus != '' and ordStatus != '' ">
+                     and Extent1.STATE = #{ordStatus}
+                   </if>
+                   <if test="ordArea != '' and ordArea != '' ">
+                     and Extent1.area = #{ordArea}
                    </if>
                     <if test="sortBy != null and sortBy != '' and sortBy == 1 " >
                      ORDER BY Extent1.SALES_ORD_NO ASC 
