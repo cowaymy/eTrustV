@@ -510,8 +510,8 @@ function fn_tabSize(){
     AUIGrid.resize(myGridID,1000,400);
 }
 
-function fn_requestTermiReSave(val){//Request Terminate/Resign
-        Common.ajax("POST", "/organization/requestVacationPop.do",  $("#requestVacationForm").serializeJSON(), function(result) {
+ function fn_vacationRequestSave(){//Request Terminate/Resign
+        Common.ajax("POST", "/organization/requestVacationSave.do",  $("#requestVacationForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
         Common.alert(result.message,fn_winClose);
@@ -1017,7 +1017,7 @@ function fn_winClose(){
 
 <!-- =============================================================== -->
 
-<div id="requestVacation" style="">
+<div id="requestVacationPop" style="">
 <form  id="requestVacationForm" method="post">
 <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="requestMemberId" name="requestMemberId"/>
 <%-- <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue" name="codeValue"/>
@@ -1070,7 +1070,7 @@ function fn_winClose(){
 
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_requestTermiReSave(1)">SAVE</a></p></li>
+    <li><p class="btn_blue2 big "><a href="#" onclick="javascript:fn_vacationrequestSave()">SAVE</a></p></li>
 </ul>
 </form>
 </div>
