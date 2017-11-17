@@ -99,7 +99,7 @@ public class AdvPaymentController {
     	
     	//Online
     	if("108".equals(String.valueOf(formInfo.get("keyInPayOnlineType")))){
-    		formInfo.put("keyInPayType", 106);
+    		formInfo.put("keyInPayType", 108);
     		formInfo.put("keyInTransDate", String.valueOf(formInfo.get("onlineTransDate")));
         	formInfo.put("keyInAmount",  String.valueOf(formInfo.get("onlineAmount")));
     		formInfo.put("keyInBankAcc",  String.valueOf(formInfo.get("onlineBankAcc")));
