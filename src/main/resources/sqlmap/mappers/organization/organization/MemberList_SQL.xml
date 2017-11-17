@@ -803,42 +803,42 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
 
     <select id="selectPaymentHistory" parameterType="Map" resultType="egovMap">
-           SELECT Project1.MEM_ID MEM_ID  ,
-			       Project1.OR_NO OR_NO  ,
-			       Project1.C1 C1  ,
-			       Project1.BILL_NO BILL_NO  ,
-			       Project1.CODE_NAME CODE_NAME  ,
-			       Project1.C2 C2  ,
-			       Project1.C3 C3  ,
-			       Project1.C4 C4
-				  FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
-	                Extent2.BILL_NO BILL_NO  ,
-	                Extent3.CODE_NAME CODE_NAME  ,
-	                Extent4.OR_NO OR_NO  ,
-	                 <!-- By KV start change  date format in correct way -->
-	               TO_CHAR(Extent4.PAY_DATA,'DD-MM-YYYY') C1  ,
-	                 <!-- By KV end change  date format in correct way -->
+            SELECT Project1.MEM_ID MEM_ID  ,
+                   Project1.OR_NO OR_NO  ,
+                   Project1.C1 C1  ,
+                   Project1.BILL_NO BILL_NO  ,
+                   Project1.CODE_NAME CODE_NAME  ,
+                   Project1.C2 C2  ,
+                   Project1.C3 C3  ,
+                   Project1.C4 C4
+                  FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                    Extent2.BILL_NO BILL_NO  ,
+                    Extent3.CODE_NAME CODE_NAME  ,
+                    Extent4.OR_NO OR_NO  ,
+                     /* By KV start change  date format in correct way */
+                   TO_CHAR(Extent4.PAY_DATA,'DD-MM-YYYY') C1  ,
+                     /* By KV end change  date format in correct way */
 
-	                CASE
-	                     WHEN ( Extent4.TOT_AMT IS NOT NULL ) THEN Extent4.TOT_AMT
-	                ELSE
-	                   END C2  ,
-	                  <!-- By KV start change  date format in correct way -->
-	                TO_CHAR(Extent4.CRT_DT,'DD-MM-YYYY') C3  ,
-	                  <!-- By KV start change  date format in correct way -->
-	                CASE
-	                     WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
-	                ELSE ''
-	                   END C4
-	         FROM ORG0001D Extent1
-	                JOIN PAY0007D Extent2   ON Extent2.BILL_MEM_ID = Extent1.MEM_ID
-	                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent2.BILL_PAY_TYPE_ID
-	                JOIN PAY0064D Extent4   ON ( Extent4.BILL_ID = Extent2.BILL_ID )
-	                AND ( Extent4.TYPE_ID IN ( 102,224,225,226 )
-	               )
-	                LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent4.CRT_USER_ID
-	          WHERE  Extent1.MEM_ID = #{MemberID}) Project1
-	           ORDER BY Project1.C1 ASC
+                    CASE
+                         WHEN ( Extent4.TOT_AMT IS NOT NULL ) THEN Extent4.TOT_AMT
+                    ELSE 0
+                       END C2  ,
+                      /* By KV start change  date format in correct way */
+                    TO_CHAR(Extent4.CRT_DT,'DD-MM-YYYY') C3  ,
+                      /* By KV start change  date format in correct way */
+                    CASE
+                         WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
+                    ELSE ''
+                       END C4
+             FROM ORG0001D Extent1
+                    JOIN PAY0007D Extent2   ON Extent2.BILL_MEM_ID = Extent1.MEM_ID
+                    JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent2.BILL_PAY_TYPE_ID
+                    JOIN PAY0064D Extent4   ON ( Extent4.BILL_ID = Extent2.BILL_ID )
+                    AND ( Extent4.TYPE_ID IN ( 102,224,225,226 )
+                   )
+                    LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent4.CRT_USER_ID
+              WHERE  Extent1.MEM_ID = #{MemberID}) Project1
+               ORDER BY Project1.C1 ASC
     </select>
 
 
