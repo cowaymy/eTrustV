@@ -4,6 +4,9 @@
 package com.coway.trust.biz.sales.mambership.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +18,11 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.mambership.MembershipRentalQuotationService;
+import com.coway.trust.biz.sales.order.impl.OrderInvestMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -33,6 +39,8 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 	@Resource(name = "membershipRentalQuotationMapper")
 	private MembershipRentalQuotationMapper membershipRentalQuotationMapper;
 	
+	@Resource(name = "orderInvestMapper")
+	private OrderInvestMapper orderInvestMapper;
 	
 
 	@Override
@@ -251,6 +259,238 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		return membershipRentalQuotationMapper.selectSrchMembershipQuotationPop(params);
 	}
 	
+	@Override
+	public EgovMap cnvrToSalesPackageInfo(Map<String, Object> params) {
+		 return  membershipRentalQuotationMapper.cnvrToSalesPackageInfo(params); 
+	}
+	
+	@Override
+	public EgovMap cnvrToSalesOrderInfo(Map<String, Object> params) {
+		 return  membershipRentalQuotationMapper.cnvrToSalesOrderInfo(params); 
+	}
+	
+	@Override
+	public EgovMap cnvrToSalesThrdParty(Map<String, Object> params) {
+		 return  membershipRentalQuotationMapper.cnvrToSalesThrdParty(params); 
+	}
+	
+	@Override
+	public EgovMap cnvrToSalesAddrInfo(Map<String, Object> params) {
+		 return  membershipRentalQuotationMapper.cnvrToSalesAddrInfo(params); 
+	}
+	
+	@Override
+	public EgovMap cnvrToSalesCntcInfo(Map<String, Object> params) {
+		 return  membershipRentalQuotationMapper.cnvrToSalesCntcInfo(params); 
+	}
+	
+	@Override
+	public List<EgovMap> cnvrToSalesfilterChgList(Map<String, Object> params) {
+		return membershipRentalQuotationMapper.cnvrToSalesfilterChgList(params);
+	}
+	
+	@Override
+	public EgovMap cnvrToSalesOrderInfo2nd(Map<String, Object> params) {
+		 return  membershipRentalQuotationMapper.cnvrToSalesOrderInfo2nd(params); 
+	}
+	
+	@Override
+	public EgovMap    insertCnvrToSale(Map<String, Object> params) {
+		
+		
+		EgovMap  trnMap = new  EgovMap();
+		
+		Map<String, Object> saveParam = new HashMap<String, Object>();
+		saveParam.put("userId", params.get("userId"));
+		
+		saveParam.put("docNoId", 140);
+		String getDocId = orderInvestMapper.getDocNo(saveParam);
+		int getSrvCntrctIdSeq = membershipRentalQuotationMapper.getSrvCntrctIdSeq();
+		int getCntrctIdSeq = membershipRentalQuotationMapper.getCntrctIdSeq();
+		saveParam.put("getSrvCntrctIdSeq", getSrvCntrctIdSeq);
+		saveParam.put("getCntrctIdSeq", getCntrctIdSeq);
+		
+		saveParam.put("srvCntrctRefNo", getDocId);
+		saveParam.put("srvCntrctQuotId", params.get("srvCntrctQuotId"));
+		saveParam.put("srvCntrctOrdId", params.get("hiddenOrdId"));
+		saveParam.put("srvCntrctStusId", 1);
+		saveParam.put("srvCntrctPckgId", params.get("hiddenQotatPckgId"));
+		saveParam.put("srvCntrctRem", "");
+		saveParam.put("srvCntrctNetMonth", 0);
+		saveParam.put("srvCntrctNetYear", 0);
+		saveParam.put("srvCntrctRental", params.get("rentalAmt"));
+		saveParam.put("srvCntrctExpFilter", params.get("filterAmt"));
+		saveParam.put("srvCntrctBrnchId", params.get("branchId"));
+		saveParam.put("srvCntrctSalesman", params.get("qotatSalesmanId"));
+		saveParam.put("srvCntrcPromoId", params.get("qotatPacPromoId"));
+		membershipRentalQuotationMapper.insertSrvContract(saveParam);
+		
+		saveParam.put("cntrctRentalStus", "ACT");
+		saveParam.put("cntrctRem", "");
+		membershipRentalQuotationMapper.insertSrvContractSub(saveParam);
+		
+		int serviceCntractQotatCnt = membershipRentalQuotationMapper.serviceCntractQotatCnt(saveParam);
+		if(serviceCntractQotatCnt > 0){
+			membershipRentalQuotationMapper.updateSAL0083D(saveParam);
+		}
+		
+		Map<String, Object> saveSchdule = new HashMap<String, Object>();
+//		int getSrvPaySchdulIdSeq = membershipRentalQuotationMapper.getSrvPaySchdulIdSeq();
+		
+		Calendar oCalendar = Calendar.getInstance( );
+		Date curdate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		
+		int yyyy = oCalendar.get(oCalendar.YEAR);
+		int k = 1;
+		int mm =oCalendar.get(oCalendar.MONTH) + 1;
+		for (int i = 0; i < 24; i++){
+			
+			saveSchdule.put("srvPayCntrctId", getSrvCntrctIdSeq);
+			saveSchdule.put("srvPaySchdulOrdId", params.get("hiddenOrdId"));
+			saveSchdule.put("srvPaySchdulNo", i+1);
+			
+			saveSchdule.put("srvPaySchdulTypeId", 0);
+			saveSchdule.put("srvPaySchdulAmt", params.get("rentalAmt"));
+			saveSchdule.put("srvPaySchdulStusId", 1);
+			saveSchdule.put("srvPaySchdulRem", "");
+			
+			
+			if(mm > 12){
+				//oCalendar.set(oCalendar.YEAR , oCalendar.get(oCalendar.YEAR)+k);
+				
+				if(mm % 12 == 1){					
+					yyyy ++;
+				}
+			}
+			
+			int realMm = 0;
+			if(mm % 12 == 0){
+				realMm = 12;
+			}else{
+				realMm= mm % 12;
+			}
+
+			saveSchdule.put("srvPaySchdulMonth", realMm);
+			saveSchdule.put("srvPaySchdulYear", yyyy);
+			mm++;
+			membershipRentalQuotationMapper.insertSrvPaySchdul(saveSchdule);
+		}
+		
+		EgovMap cnvrToSalesSrvConfigur = membershipRentalQuotationMapper.cnvrToSalesSrvConfigur(saveParam);
+		saveParam.put("srvConfigId", cnvrToSalesSrvConfigur.get("srvConfigId"));
+		membershipRentalQuotationMapper.updateSAL0083D(saveParam);
+
+		int getSrvPrdIdSeq = membershipRentalQuotationMapper.getSrvPrdIdSeq();
+		
+		saveParam.put("getSrvPrdIdSeq", getSrvPrdIdSeq);
+		//saveParam.put("srvConfigId", getSrvPrdIdSeq); 위에
+		saveParam.put("srvMbrshId", 0);
+		saveParam.put("srvPrdStartDt", SalesConstants.DEFAULT_DATE2);
+		saveParam.put("srvPrdExprDt", SalesConstants.DEFAULT_DATE2);
+		saveParam.put("srcPrdDur", 24);
+		saveParam.put("srcPrdStusId", 1);
+		saveParam.put("srcPrdRem","");
+		saveParam.put("srvPrdCntrctId", getSrvCntrctIdSeq);
+		membershipRentalQuotationMapper.insertSrvConfigPeriod(saveParam);
+		
+		saveParam.put("cnfmOrdId", params.get("hiddenOrdId"));
+		saveParam.put("cnfmCntrctId", getSrvCntrctIdSeq);
+		saveParam.put("cnfmCustTypeId",0);
+		saveParam.put("cnfmTypeId", 0);
+		saveParam.put("cnfmStusId", 1);
+		saveParam.put("cnfmFdbckId", 0);
+		saveParam.put("cnfmRem", "");
+		saveParam.put("cnfmPncRem", "");
+		membershipRentalQuotationMapper.insertSrvCntrctConfirm(saveParam);
+		
+		saveParam.put("poOrdId", params.get("hiddenOrdId"));
+		saveParam.put("poRefNo", params.get("poNo") != null ? params.get("poNo") : "");
+		saveParam.put("poStartInstlmt", 1);
+		saveParam.put("poEndInstlmt", 24);
+		saveParam.put("poRem", "Default Purchase Order");
+		saveParam.put("poStusId", 1);
+		saveParam.put("poCntrctId", getSrvCntrctIdSeq);
+		membershipRentalQuotationMapper.insertAccInvoicePo(saveParam);
+		
+		int rentMode = Integer.parseInt((String)params.get("cmbRentPaymode"));	// recall, calcel, reversal cancel
+		int chkBoxThrdParty = Integer.parseInt((String)params.get("chkBoxThrdParty"));	// recall, calcel, reversal cancel
+		
+		saveParam.put("srvCntrctOrdId", params.get("hiddenOrdId"));
+		saveParam.put("modeId", rentMode);
+		saveParam.put("custCrcId", rentMode == 131 ? params.get("hiddenRentPayCRCId") : 0);
+		saveParam.put("bankId", rentMode == 131 ? params.get("hiddenRentPayCRCBankId") : rentMode == 132 ? params.get("hiddenAccBankId") : 0);
+		saveParam.put("custAccId", rentMode == 132 ? params.get("hiddenRentPayBankAccID") : 0);
+		saveParam.put("ddSubmitDt", SalesConstants.DEFAULT_DATE);
+		saveParam.put("ddStartDt", SalesConstants.DEFAULT_DATE);
+		saveParam.put("ddRejctDt", SalesConstants.DEFAULT_DATE);
+		saveParam.put("stusCodeId", 1);
+		saveParam.put("is3rdParty", chkBoxThrdParty);
+		saveParam.put("custId", chkBoxThrdParty == 1 ? params.get("hiddenThrdPartyId") : params.get("thrdPartyId"));
+		saveParam.put("editTypeId", 0);
+		saveParam.put("nricOld", params.get("rentPayIc") != null ? params.get("rentPayIc") : "");
+		saveParam.put("failResnId", 0);
+		saveParam.put("issuNric", params.get("rentPayIc") != null ? params.get("rentPayIc") : params.get("thrdPartyNric"));
+		saveParam.put("aeonCnvr", 0);
+		saveParam.put("rem", "");
+		saveParam.put("lastApplyUser", 1);
+		saveParam.put("payTrm", 0);
+		saveParam.put("svcCntrctId", getSrvCntrctIdSeq);
+		membershipRentalQuotationMapper.insertRentPaySet(saveParam);
+		
+		String AdtPayMode = "REG";
+        int IssueBankID = 0;
+        String BankAccName = "";
+        String BankAccNo = "";
+                
+        if(rentMode == 130){
+        	AdtPayMode = "REG";
+        }else if(rentMode == 131){
+        	AdtPayMode = "CRC";
+            IssueBankID = Integer.parseInt((String)params.get("hiddenRentPayCRCBankId"));
+            BankAccName = (String)params.get("rentPayCRCName");
+            BankAccNo = (String)params.get("hiddenRentPayEncryptCRCNoId");
+        }else if(rentMode == 132){
+        	AdtPayMode = "DD";
+            IssueBankID = Integer.parseInt((String)params.get("hiddenRentPayBankAccID"));
+            BankAccName = (String)params.get("accName");
+            BankAccNo = (String)params.get("rentPayBankAccNo");
+        }else if(rentMode == 133){
+        	AdtPayMode = "AEON";
+        }else if(rentMode == 134){
+        	AdtPayMode = "FPX";
+        }
+		saveParam.put("accClSrvCntrctId", getSrvCntrctIdSeq);
+		saveParam.put("accClBillClmAmt", params.get("rentalAmt"));
+		saveParam.put("accClClmAmt", params.get("rentalAmt"));
+		saveParam.put("accClPromo", 0);
+		saveParam.put("accClBankCode", 0);//////////////////
+		saveParam.put("accClBankAccNo", BankAccNo);
+		saveParam.put("accDecBankAccNo", "");
+		saveParam.put("accClReqstMCode", "");
+		saveParam.put("accClSubmitDt", SalesConstants.DEFAULT_DATE);
+		saveParam.put("accClAppvDt", SalesConstants.DEFAULT_DATE);
+		saveParam.put("accClRejctDt", SalesConstants.DEFAULT_DATE);
+		saveParam.put("accClStusId", "ACT");
+		saveParam.put("accClPromoChkId", 0);
+		saveParam.put("accClPromoStartDt", SalesConstants.DEFAULT_DATE);
+		saveParam.put("accClRejctId", "");
+		saveParam.put("accClAccTName", BankAccName);
+		saveParam.put("accClAccNric", params.get("rentPayIc") != null ? params.get("rentPayIc") : chkBoxThrdParty == 1 ? params.get("hiddenThrdPartyId") : params.get("thrdPartyId"));
+		saveParam.put("accClSplClmAmt", 0);
+		saveParam.put("accClSoNo", params.get("hiddenOrdNo"));
+		saveParam.put("accClUserName", params.get("userName"));
+		saveParam.put("accClPayMode", AdtPayMode);
+		saveParam.put("accClPayModeId", rentMode);
+		saveParam.put("accClBankId", IssueBankID);
+		saveParam.put("accClClmLimit", 0);
+		saveParam.put("accClBillDt", 5);
+		membershipRentalQuotationMapper.insertAccClaimAdt(saveParam);
+		
+		saveParam.put("qotatCrtUserId", params.get("qotatCrtUserId"));
+		membershipRentalQuotationMapper.spInstRscRentalBill(saveParam);
+		return trnMap;
+	}
 	
 }
 

@@ -55,10 +55,21 @@ public interface MembershipRentalQuotationService {
 	
 	List<EgovMap>   selectSrchMembershipQuotationPop(Map<String, Object> params);
 	
+	EgovMap cnvrToSalesOrderInfo(Map<String, Object> params);
 	
+	EgovMap cnvrToSalesAddrInfo(Map<String, Object> params);
 	
+	EgovMap cnvrToSalesCntcInfo(Map<String, Object> params);
 	
+	List<EgovMap> cnvrToSalesfilterChgList(Map<String, Object> params);
 	
+	EgovMap cnvrToSalesPackageInfo(Map<String, Object> params);
+	
+	EgovMap cnvrToSalesOrderInfo2nd(Map<String, Object> params);
+	
+	EgovMap cnvrToSalesThrdParty(Map<String, Object> params);
+
+	EgovMap insertCnvrToSale(Map<String, Object> params) ;
 
 	
 }

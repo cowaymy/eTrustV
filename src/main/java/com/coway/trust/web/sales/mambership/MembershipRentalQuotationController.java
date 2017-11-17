@@ -26,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.mambership.MembershipRentalQuotationService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -48,6 +50,8 @@ public class  MembershipRentalQuotationController {
 	@Resource(name = "membershipRentalQuotationService")
 	private MembershipRentalQuotationService membershipRentalQuotationService;      
 	
+	@Resource(name = "customerService")
+	private CustomerService customerService;
   
 	
 	@RequestMapping(value = "/membershipRentalQuotationList.do")
@@ -532,6 +536,96 @@ public class  MembershipRentalQuotationController {
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultList);
 	}
+	
+	
+	/**
+	 * Membership Rental Quotation Covert To Sales Pop-up 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/mRentalQuotConvSalePop.do")
+	public String mRentalQuotConvSalePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("		==================>			" + params.toString());
+		EgovMap basicinfo = null;
+		
+		params.put("qotatId", params.get("QUOT_ID"));
+
+//		params.put("custCntcId", params.get("QUOT_ID"));
+//		params.put("qotatId", params.get("QUOT_ID"));
+		
+		EgovMap packageInfo = membershipRentalQuotationService.cnvrToSalesPackageInfo(params);
+		params.put("ordId", packageInfo.get("qotatOrdId"));
+		params.put("exprDt", SalesConstants.DEFAULT_DATE);
+		EgovMap orderInfo = membershipRentalQuotationService.cnvrToSalesOrderInfo(params);
+		params.put("custCntcId", orderInfo.get("ordCntcId"));
+		EgovMap orderInfo2nd = membershipRentalQuotationService.cnvrToSalesOrderInfo2nd(params);
+		EgovMap addrInfo = membershipRentalQuotationService.cnvrToSalesAddrInfo(params);
+		EgovMap cntcInfo = membershipRentalQuotationService.cnvrToSalesCntcInfo(params);
+		
+		params.put("svcCntrctId", 0);
+		EgovMap thrdPartyInfo = membershipRentalQuotationService.cnvrToSalesThrdParty(params);
+		
+		
+		if(thrdPartyInfo != null){
+			params.put("custId", thrdPartyInfo.get("custId"));
+			basicinfo = customerService.selectCustomerViewBasicInfo(params);
+			model.addAttribute("custId",thrdPartyInfo.get("custId")); 
+		}else{
+			params.put("custId", 0);
+			model.addAttribute("custId",0); 
+			basicinfo = null;
+		}
+		model.addAttribute("packageInfo",packageInfo); 
+		model.addAttribute("orderInfo",orderInfo);
+		model.addAttribute("orderInfo2nd",orderInfo2nd);
+		model.addAttribute("addrInfo",addrInfo); 
+		model.addAttribute("cntcInfo",cntcInfo);
+		model.addAttribute("thrdPartyInfo",thrdPartyInfo); 
+		model.addAttribute("basicinfo",basicinfo); 
+		model.addAttribute("qotatId",params.get("QUOT_ID")); 
+		
+		return "sales/membership/mRentalQuotConvSalePop";
+	}
+	
+	@RequestMapping(value = "/cnvrToSalesfilterChgJsonList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> cnvrToSalesfilterChgJsonList(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 조회.
+		List<EgovMap> filterList = membershipRentalQuotationService.cnvrToSalesfilterChgList(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(filterList);
+	}
+	
+	@RequestMapping(value = "/saveCnvrToSale.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> saveCnvrToSale(@RequestParam Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  saveCnvrToSale ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+//		logger.debug("			saveData		" + (Map)params.get("saveData"));
+//		logger.debug("			pram set end  ");  
+		
+		params.put("userId", sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		params.put("branchId", sessionVO.getUserBranchId() != 0 ? sessionVO.getUserBranchId() : 0);
+
+		EgovMap   trnMmap =membershipRentalQuotationService.insertCnvrToSale(params);  
+		
+		ReturnMessage message = new ReturnMessage();
+		
+//		if(! trnMmap.get("qotatId").equals(""))  {
+			message.setData(trnMmap);
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+//		}else{
+//			message.setCode(AppConstants.FAIL);
+//			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	//	}
+		return ResponseEntity.ok(message);  
+	}
+	
 	
 	
 }

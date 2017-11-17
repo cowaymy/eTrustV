@@ -76,4 +76,53 @@ public interface MembershipRentalQuotationMapper {
 	
 	List<EgovMap>   selectSrchMembershipQuotationPop(Map<String, Object> params);
 	
+	EgovMap cnvrToSalesOrderInfo(Map<String, Object> params);
+	
+	EgovMap cnvrToSalesAddrInfo(Map<String, Object> params);
+	
+	EgovMap cnvrToSalesCntcInfo(Map<String, Object> params);
+	
+	List<EgovMap> cnvrToSalesfilterChgList(Map<String, Object> params);
+	
+	EgovMap cnvrToSalesPackageInfo(Map<String, Object> params);
+	
+	EgovMap cnvrToSalesOrderInfo2nd(Map<String, Object> params);
+	
+	EgovMap cnvrToSalesThrdParty(Map<String, Object> params);
+	
+	int getSrvCntrctIdSeq();
+	
+	int getCntrctIdSeq();
+	
+	int getCnfmIdSeq();
+	
+	int getSrvPaySchdulIdSeq();
+	
+	int getSrvPrdIdSeq();
+	
+	void insertSrvContract(Map<String, Object> params);
+	
+	void insertSrvContractSub(Map<String, Object> params);
+	
+	int serviceCntractQotatCnt(Map<String, Object> params);
+	
+	void updateSAL0083D(Map<String, Object> params);
+	
+	void insertSrvPaySchdul(Map<String, Object> params);
+	
+	EgovMap cnvrToSalesSrvConfigur(Map<String, Object> params);
+	
+	void insertSrvConfigPeriod(Map<String, Object> params);
+	
+	void insertSrvCntrctConfirm(Map<String, Object> params);
+	
+	void insertAccInvoicePo(Map<String, Object> params);
+	
+	void insertRentPaySet(Map<String, Object> params);
+	
+	void insertAccClaimAdt(Map<String, Object> params);
+	
+	void updateSAL0090D(Map<String, Object> params);
+	
+	void spInstRscRentalBill(Map<String, Object> params);
 }
