@@ -37,7 +37,11 @@ public class OrderLedgerController {
 	public String orderLedgerViewPop(@RequestParam Map<String, Object>params, ModelMap model){
 		
 		logger.debug("params ======================================>>> " + params);
-				
+		
+		if(CommonUtils.isEmpty(params.get("CutOffDate"))){
+			params.put("CutOffDate", "01/01/1900");
+		}
+		
 		EgovMap orderInfo = orderLedgerService.selectOrderLedgerView(params);
 		model.addAttribute("orderInfo", orderInfo);
 		
