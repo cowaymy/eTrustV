@@ -145,7 +145,7 @@
 		                            SAL0027D.TEL_O AS office_Tel,
 		                            SAL0029D.EMAIL AS mail_Address,
 		                             SAL0029D.CUST_VA_NO AS customer_Va_No,
-		                            SAL0024D.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,  
+		                            SAL0024D.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
 		                            '' AS image_Url,
 		                            SYS0026M.STK_DESC AS product_Name,
 		                            SYS0026M.STK_CODE AS product_Code,
@@ -212,15 +212,15 @@
 		         AND SVC0001D.AS_SO_ID = SAL0045D.SALES_ORD_ID
 		         AND SAL0002D.ITM_STK_ID = SYS0026M.STK_ID
 		         AND SAL0071D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-		         AND   ORG0001D.MEM_ID       = SVC0001D.as_mem_id 
+		         AND   ORG0001D.MEM_ID       = SVC0001D.as_mem_id
 		         AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
                  AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
                                                 AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
 		         and    ORG0001D.mem_code = #{userId}
 		)
 		 WHERE rn = 1
-		
-		 
+
+
 
   <!--                    SELECT SAL0001D.SALES_ORD_NO AS sales_Order_No,
                             SVC0001D.AS_NO AS service_No,
@@ -247,7 +247,7 @@
                                and promo_id =  SAL0001D.PROMO_ID)  AS sales_Promotion,
                             FN_GET_COMMCD(24, SVC0001D.AS_REQSTER_TYPE_ID) as requestor,
                             SVC0001D.AS_REM_REQSTER_CNTC AS requestor_Contact,
-                            SAL0095D.SRV_DUR AS contract_Duration, 
+                            SAL0095D.SRV_DUR AS contract_Duration,
                           SAL0001D.MTH_RENT_AMT AS monthly_Rental_Fees,
                                SAL0001D.TOT_AMT AS registration_Fees,
                             SAL0022D.CUST_ACC_BANK_ID AS bank_Code,
@@ -255,7 +255,7 @@
                             SAL0047D.SIRIM_NO AS sirim_No,
                             SAL0047D.SERIAL_NO AS serial_No,
                             to_char(SAL0095D.SRV_EXPR_DT,'YYYYMMDD') AS Membership_Contract_Expiry,
-                            SAL0071D.STUS_CODE_ID AS rental_Status, 
+                            SAL0071D.STUS_CODE_ID AS rental_Status,
                             SYS0005M.CODE AS dsc_Code,
                             to_char(SAL0047D.INSTALL_DT,'YYYYMMDD') AS installation_Date,
                             SVC0004D.AS_WORKMNSH AS labour_Charge,
@@ -263,12 +263,12 @@
                             SVC0004D.AS_DEFECT_GRP_ID AS defect_Group_Id,
                             SVC0004D.AS_DEFECT_ID AS defect_Id,
                             SVC0004D.AS_DEFECT_PART_GRP_ID AS defect_Part_Group_Id,
-                            SVC0004D.AS_DEFECT_PART_ID AS defect_Part_Id, 
+                            SVC0004D.AS_DEFECT_PART_ID AS defect_Part_Id,
                             SVC0004D.AS_DEFECT_DTL_RESN_ID AS defect_Detail_Reason_Id,
                             SVC0004D.AS_SLUTN_RESN_ID AS solution_Reason_Id,
                             SVC0004D.AS_RESULT_REM AS result_Remark,
                             SAL0029D.NAME AS result_Cust_Name,
-                            SVC0004D.AS_RESULT_MOBILE_ID AS resultIc_Mobile_No, 
+                            SVC0004D.AS_RESULT_MOBILE_ID AS resultIc_Mobile_No,
                             SVC0004D.AS_MALFUNC_ID AS malfunction_Code,
                             SVC0004D.AS_MALFUNC_RESN_ID AS malfunction_Reason_Code,
                             SVC0004D.AS_FAIL_RESN_ID AS failReason_Code,
@@ -369,9 +369,9 @@
 				            SVC0004D.AS_DEFECT_GRP_ID AS defect_Group_Id,
 				            SVC0004D.AS_DEFECT_ID AS defect_Id,
 				            SVC0004D.AS_DEFECT_PART_GRP_ID AS defect_Part_Group_Id,
-				            SVC0004D.AS_DEFECT_PART_ID AS defect_Part_Id, 
-				            
-				            
+				            SVC0004D.AS_DEFECT_PART_ID AS defect_Part_Id,
+
+
 				            SVC0004D.AS_DEFECT_DTL_RESN_ID AS defect_Detail_Reason_Id,
 				            SVC0004D.AS_SLUTN_RESN_ID AS solution_Reason_Id,
  				            SVC0004D.AS_RESULT_REM AS result_Remark,
@@ -511,24 +511,24 @@
             and Extent4.SALES_ORD_NO = #{salesOrderNo}
             and Extent1.as_no = #{serviceNo}
             and rownum = 1
-    
-    
-    
-    
-    
+
+
+
+
+
     </select>
-    
-    
-    
+
+
+
 
     <select id="getInstallationJobList" parameterType="Map" resultType="egovMap">
-    
+
     SELECT
             SAL0001D.SALES_ORD_NO           AS sales_Order_No,
             SAL0046D.INSTALL_ENTRY_NO       AS service_No,
             SAL0029D.NAME                   AS cust_Name,
             SAL0046D.STUS_CODE_ID           AS job_Status,
-            TO_CHAR(SAL0047D.APPNT_DT,'YYYYMMDD')               AS appointment_Date,
+            TO_CHAR (SAL0046D.INSTALL_DT, 'YYYYMMDD') AS appointment_Date,
             replace(substr(SAL0047D.APPNT_TM, 0,5 ),':')               AS appointment_Time,
             TO_CHAR (SAL0047D.APPNT_DT, 'YYYY') as   plan_Year,
             TO_CHAR (SAL0047D.APPNT_DT, 'MM') as plan_Month,
@@ -586,7 +586,7 @@
             SYS0027M,
             SYS0064M
             WHERE SAL0001D.CUST_ID          = SAL0022D.CUST_ID(+)
-            AND   SAL0001D.SALES_ORD_ID     = SAL0002D.SALES_ORD_ID   
+            AND   SAL0001D.SALES_ORD_ID     = SAL0002D.SALES_ORD_ID
             AND   SAL0001D.CUST_ADD_ID      = SAL0023D.CUST_ADD_ID
             AND   SAL0001D.CUST_BILL_ID     = SAL0024D.CUST_BILL_ID(+)
             AND   SAL0001D.CUST_ID          = SAL0027D.CUST_ID
@@ -595,9 +595,9 @@
             AND   SAL0001D.SALES_ORD_ID     = SAL0095D.SRV_SALES_ORD_ID(+)
             AND   SAL0002D.ITM_STK_ID       = SYS0026M.STK_ID
             AND   SYS0026M.STK_ID           = SYS0027M.STK_ID
-            AND   SAL0001D.SALES_ORD_ID     = SAL0046D.SALES_ORD_ID            
+            AND   SAL0001D.SALES_ORD_ID     = SAL0046D.SALES_ORD_ID
             AND   ORG0001D.MEM_ID           = SAL0046D.CT_ID
-            AND   SAL0001D.SALES_ORD_ID     = SAL0045D.SALES_ORD_ID(+)            
+            AND   SAL0001D.SALES_ORD_ID     = SAL0045D.SALES_ORD_ID(+)
             AND   SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
             AND   ORG0001DA.MEM_ID          = SAL0001D.MEM_ID
             AND   ORG0005D.MEM_ID           = SAL0001D.MEM_ID
@@ -607,9 +607,8 @@
             AND   SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
                                                  AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
             AND ORG0001D.mem_code = #{userId}
-   
-    
-   <!--           SELECT
+
+            <!--  SELECT
             SAL0001D.SALES_ORD_NO           AS sales_Order_No,
             SAL0046D.INSTALL_ENTRY_NO       AS service_No,
             SAL0029D.NAME                   AS cust_Name,
@@ -691,10 +690,9 @@
             AND   SAL0045D.BRNCH_ID         = SYS0005M.BRNCH_ID
             AND   SAL0023D.AREA_ID          = SYS0064M.AREA_ID(+)
             AND TO_CHAR(SAL0047D.INSTALL_DT,'YYYYMM') = #{requestDate}
-            AND ORG0001D.mem_code = #{userId}  -->
-            
-            
-            
+            AND ORG0001D.mem_code = #{userId} -->
+
+
      </select>
 
 
@@ -1451,9 +1449,9 @@ AND   O1DA.MEM_CODE = #{userId}
 		                   WHERE 1 = 1 AND d.mem_id = S.AS_CT_ID)
 		                    action_Member,
 		                 'AS' job_Type,
-                        (SELECT Extent1.RESN_DESC 
+                        (SELECT Extent1.RESN_DESC
                               FROM SYS0032M Extent1
-                             WHERE   Extent1.RESN_TYPE_ID = '166' 
+                             WHERE   Extent1.RESN_TYPE_ID = '166'
                                       AND Extent1.STUS_CODE_ID =1
                                       and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason,
 	<!-- 	                 FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason, -->
@@ -1470,7 +1468,7 @@ AND   O1DA.MEM_CODE = #{userId}
 		                 '' part_Name,
 		                 '' part_Change_Qty,
 		                 c.AS_RESULT_ID
-                FROM  SVC0004D S , 
+                FROM  SVC0004D S ,
                                SAL0001D B ,
                                SVC0005D C ,
                                SAL0087D E
@@ -1478,7 +1476,7 @@ AND   O1DA.MEM_CODE = #{userId}
                AND B.SALES_ORD_NO = #{salesOrderNo}
                AND S.AS_RESULT_ID = C.AS_RESULT_ID(+)
                AND C.ASR_ITM_PART_ID =SRV_FILTER_ID(+)
-              <![CDATA[  AND ROWNUM < 4]]> 
+              <![CDATA[  AND ROWNUM < 4]]>
                ORDER BY S.AS_RESULT_ID ASC
                )
             union all
@@ -1489,14 +1487,14 @@ AND   O1DA.MEM_CODE = #{userId}
                                 ,'Hsr' AS hsr_Asr_No
                                 ,MEM_CODE as action_Member
                                 ,'HS' as job_Type
-                                ,(SELECT Extent1.RESN_DESC 
+                                ,(SELECT Extent1.RESN_DESC
 		                              FROM SYS0032M Extent1
-		                             WHERE   Extent1.RESN_TYPE_ID = '167' 
+		                             WHERE   Extent1.RESN_TYPE_ID = '167'
 		                                      AND Extent1.STUS_CODE_ID =1
 		                                      and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
 <!--                                 ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason -->
                                 ,REN_COLCT_ID as collection_Code
-                                ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name                    
+                                ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
                                 ,RESULT_REM as result_Remark
                                 ,BS_RESULT_PART_ID as filter_Code
                                 ,BS_RESULT_PART_DESC as filter_Name
@@ -1546,7 +1544,7 @@ AND   O1DA.MEM_CODE = #{userId}
                         and c.sales_ord_no = #{salesOrderNo}
                         order by SETL_DT desc ) x
                   where 1=1
-                               <![CDATA[  AND ROWNUM < 4]]> 
+                               <![CDATA[  AND ROWNUM < 4]]>
 
            </select>
 
@@ -1583,9 +1581,9 @@ AND   O1DA.MEM_CODE = #{userId}
                    WHERE 1 = 1 AND d.mem_id = S.AS_CT_ID)
                     action_Member,
                  'AS' job_Type,
-                (SELECT Extent1.RESN_DESC 
+                (SELECT Extent1.RESN_DESC
 	              FROM SYS0032M Extent1
-	              WHERE   Extent1.RESN_TYPE_ID = '166' 
+	              WHERE   Extent1.RESN_TYPE_ID = '166'
 	                          AND Extent1.STUS_CODE_ID =1
 	                          and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason,
 <!--                  FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason, -->
@@ -1651,9 +1649,9 @@ AND   O1DA.MEM_CODE = #{userId}
 						                   WHERE 1 = 1 AND d.mem_id = S.AS_CT_ID)
 						                    action_Member,
 						                 'AS' job_Type,
-                                    (SELECT Extent1.RESN_DESC 
+                                    (SELECT Extent1.RESN_DESC
 		                              FROM SYS0032M Extent1
-		                             WHERE   Extent1.RESN_TYPE_ID = '166' 
+		                             WHERE   Extent1.RESN_TYPE_ID = '166'
 		                                      AND Extent1.STUS_CODE_ID =1
 		                                      and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason,
 				<!-- 		                 FN_GET_COMMCD (167, S.AS_FAIL_RESN_ID) AS fail_Reason, -->
@@ -1693,9 +1691,9 @@ AND   O1DA.MEM_CODE = #{userId}
                                 ,no as hsr_Asr_No
                                 ,MEM_CODE as action_Member
                                 ,'HS' as job_Type
-                                ,(SELECT Extent1.RESN_DESC 
+                                ,(SELECT Extent1.RESN_DESC
                                       FROM SYS0032M Extent1
-                                     WHERE   Extent1.RESN_TYPE_ID = '167' 
+                                     WHERE   Extent1.RESN_TYPE_ID = '167'
                                               AND Extent1.STUS_CODE_ID =1
                                               and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
                                 <!-- ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason -->
@@ -1763,9 +1761,9 @@ AND   O1DA.MEM_CODE = #{userId}
                                 ,no as hsr_Asr_No
                                 ,MEM_CODE as action_Member
                                 ,'HS' as job_Type
-                                ,(SELECT Extent1.RESN_DESC 
+                                ,(SELECT Extent1.RESN_DESC
                                       FROM SYS0032M Extent1
-                                     WHERE   Extent1.RESN_TYPE_ID = '167' 
+                                     WHERE   Extent1.RESN_TYPE_ID = '167'
                                               AND Extent1.STUS_CODE_ID =1
                                               and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
       <!--                           ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason -->
