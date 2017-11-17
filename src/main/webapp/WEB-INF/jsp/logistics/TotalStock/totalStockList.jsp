@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
@@ -133,6 +132,17 @@ $(function(){
             SearchListAjax();
         }
     });
+    $('#clear').click(function() {
+    	$('#searchLocNm').val('');
+    	//$('#searchlocgb').val('');
+    	$('#searchMatCode').val('');
+    	$('#searchMatName').val('');
+    	//$('#searchCtgry').val('');
+    	//$('#searchType').val('');
+    	  doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiCombo');
+    	    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
+    	    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
+    });
     $('#searchLocNm').keypress(function(event) {
     	$('#searchLoc').val('');
         if (event.which == '13') {
@@ -239,8 +249,8 @@ function fn_itempopList(data){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-     <!--  <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>  
     </ul>
 </aside><!-- title_line end -->
 

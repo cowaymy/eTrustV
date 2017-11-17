@@ -25,7 +25,6 @@
 
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 
@@ -372,10 +371,33 @@
                 getAssetListAjax();    
             });
             $("#clear").click(function(){
-              /*   doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','id', 'S' , ''); //청구처 리스트 조회
-                doDefCombo(comboData, '' ,'status', 'S', '');
-                $("#loccd").val('');
-                $("#locdesc").val(''); */
+                $("#searchassetid").val('');
+                $("#searchbrand").val('');
+                $("#searchmodelname").val('');
+                $("#searchpurchasedate1").val('');
+                $("#searchpurchasedate2").val('');
+                $("#searchrefno").val('');
+                $("#searchinvoiceno").val('');
+                $("#searchserialno").val('');
+                $("#searchwarrantyno").val('');
+                $("#searchimeino").val('');
+                $("#searchmacaddress").val('');
+                $("#searchcreator").val('');
+                $("#searchcreatedate1").val('');
+                $("#searchcreatedate2").val('');
+                doDefCombo(comboData, 1 ,'searchstatus', 'M', 'f_multiCombo');
+               doGetCombo('/logistics/assetmng/selectTypeList.do', '1199', 'all','searchtype', 'M' , 'f_TypeMultiCombo'); //Type 리스트 조회
+                     
+                doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','searchdealer', 'S' , '');//dealer 
+                doGetCombo('/common/selectCodeList.do', '112', '','searchcolor', 'S' , ''); //Color 리스트 조회
+                doGetCombo('/common/selectCodeList.do', '112', '','mastercolor', 'S' , ''); //Color 리스트 조회
+                doGetCombo('/common/selectCodeList.do', '111', '','mastertype', 'S' , ''); //Type 리스트 조회
+                doGetCombo('/common/selectCodeList.do', '108', '','searchcategory', 'S' , ''); //category 리스트 조회
+                doGetCombo('/common/selectCodeList.do', '108', '','mastercategory', 'S' , ''); //category 리스트 조회  
+                doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 리스트 조회
+                doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand 리스트 조회
+                doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','searchbranchid', 'S' , ''); //청구처 리스트 조회
+                doDefCombo('', '' ,'searchdepartment', 'M', 'f_deptmultiCombo');
             });
                
          $("#insert").click(function(){
@@ -1500,7 +1522,7 @@
 <h2>Asset Management</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-    <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

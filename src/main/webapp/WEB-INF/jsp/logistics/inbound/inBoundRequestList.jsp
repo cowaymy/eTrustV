@@ -24,7 +24,6 @@
 }
 
 </style>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
@@ -201,6 +200,15 @@ $(function(){
            }
         SearchListAjax();
     });
+    $('#clear').click(function() {
+       $('#invno').val('');
+       $('#blno').val('');
+       $('#location').val('');
+       $('#grsdt').val('');
+       $('#gredt').val('');
+       $('#blsdt').val('');
+       $('#bledt').val('');
+    });
     $('#insert').click(function(){
     	var  status = true;
     	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid)
@@ -293,7 +301,7 @@ function searchSMO(index){
 <h3></h3>
     <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-<!--     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
     </ul>
 </aside><!-- title_line end -->
 
