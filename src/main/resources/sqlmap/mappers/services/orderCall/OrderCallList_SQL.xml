@@ -376,6 +376,7 @@
 		  , UPD_DT
 		  , UPD_USER_ID
 		  , REV_ID
+		  , APPNT_DT
 		   )
 		  VALUES ( 
 		   SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL
@@ -395,6 +396,7 @@
 		  , SYSDATE
 		  , #{updator}
 		  , #{revId}
+		  , TO_DATE(#{appDate},'dd-mm-yyyy')
 		  )
         </insert>
         <select id="selectCallStatus" parameterType="Map" resultType="egovMap">
