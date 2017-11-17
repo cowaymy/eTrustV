@@ -83,6 +83,21 @@ public class MemberListController {
 	}
 	/*By KV end - Position - This is for Position link for Position is list in selection*/
 
+	/*By KV start - ReplacementCT - selection in requestvacation*/
+	@RequestMapping(value = "/selectReplaceCTList.do", method = RequestMethod.GET)
+
+	public ResponseEntity<List<EgovMap>> selectReplaceCTList(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
+		logger.debug("groupCode : {}", params);
+
+           params.put("brnch_id", params.get("brnch_id")  );
+           params.put("mem_id",params.get("mem_id") );
+           params.put("mem_code",params.get("mem_code") );
+
+
+		List<EgovMap> replacementCTList = memberListService.selectReplaceCTList(params);
+		return ResponseEntity.ok(replacementCTList);
+	}
+	/*By KV end - ReplacementCT - selection in requestvacation*/
 
 	/**
 	 * Search rule book management list
@@ -418,6 +433,46 @@ public class MemberListController {
 		}
 		return ResponseEntity.ok(message);
 	}
+
+	/**
+	 * Request Vacation Pop open
+	 * By KV
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	/* By KV start - requestVacationPop */
+	@RequestMapping(value = "/requestVacationPop.do")
+	public String requestVacationPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
+
+		List<EgovMap> vact_type_id = commonService.getDetailCommonCodeList(params);
+
+		/*EgovMap PAExpired = memberListService.selectCodyPAExpired(params);*/
+		/*logger.debug("PAExpired : {}", PAExpired);*/
+		logger.debug("selectMemberListView : {}", selectMemberListView);
+		logger.debug("issuedBank : {}", selectIssuedBank);
+		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+
+		logger.debug("vact_type_id    " + vact_type_id);
+
+
+		/*model.addAttribute("PAExpired", PAExpired);*/
+		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
+		model.addAttribute("memberView", selectMemberListView);
+		model.addAttribute("issuedBank", selectIssuedBank);
+		model.addAttribute("codeValue", params.get("codeValue"));
+
+		/* By Goo - get type of leave */
+		model.addAttribute("vact_type_id", vact_type_id);
+
+		return "organization/organization/requestVacationPop";
+	}
+	/* By KV end - requestVacationPop */
 
 	/**
 	 * Search rule book management list
