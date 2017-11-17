@@ -198,7 +198,7 @@
                     //$('#liMstCntcNewAddr2').addClass("blind");
                     //$('#liMstCntcSelAddr2').addClass("blind");
 
-                    fn_loadCntcPerson(custInfo.custCntcId)
+                    fn_loadCntcPerson(custInfo.custCntcId);
                     fn_loadSrvCntcPerson(custInfo.custCareCntId);
 
                     //----------------------------------------------------------
@@ -711,6 +711,11 @@
         });
         $('#thrdPartyId').change(function(event) {
             fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
+        });
+        $('#thrdPartyId').keydown(function(event) {
+            if(event.which === 13) {    //enter
+                fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
+            }
         });
         $('#appType').change(function() {
 
