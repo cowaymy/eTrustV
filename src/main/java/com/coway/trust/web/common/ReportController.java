@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.crystaldecisions.sdk.occa.report.data.FieldValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -334,8 +335,17 @@ public class ReportController {
 				if (index >= 0) {
 					if(((Field)fields.get(index)).getType() == com.crystaldecisions.sdk.occa.report.data.FieldValueType.dateField){
 						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD",  Locale.getDefault());
-						Date d = null;
+						Date d;
 						  try {
+							d = format.parse(String.valueOf(v));
+						} catch (Exception e) {
+							throw new ApplicationException(e, e.getMessage());
+						}
+						paramController.setCurrentValue("", k, d);
+					}else if(((Field)fields.get(index)).getType() == FieldValueType.dateTimeField){
+						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss",  Locale.getDefault());
+						Date d;
+						try {
 							d = format.parse(String.valueOf(v));
 						} catch (Exception e) {
 							throw new ApplicationException(e, e.getMessage());
