@@ -4,6 +4,31 @@
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
+<style>
+/* 드랍 리스트 왼쪽 정렬 재정의*/                      
+.aui-grid-drop-list-ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+    text-align:left;
+}
+.aui-grid-drop-list-content {
+    display: inline-block;
+    border-radius: 0px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    font-size: 1em;
+    line-height: 2em;
+    vertical-align: top;
+    text-align: left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+</style>
 
     <script type="text/javaScript" language="javascript">
     
@@ -34,26 +59,32 @@
 					    dataField : "code",
 					    headerText : "Branch",
 					    width: 280,
-					    renderer : {
+					    editenderer : {
 					        type : "DropDownListRenderer",
+					        showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
 					        descendants : [ "memCode" ], // 자손 필드들
 					        descendantDefaultValues : [ "-" ], // 변경 시 자손들에게 기본값 지정
 					        list : branchList,
 					        keyField   : "codeId", //key 에 해당되는 필드명
 		                    valueField : "codeName"        //value 에 해당되는 필드명
-					    }
+					    },
+					    style : "aui-grid-user-custom-left",
+                        editable : false
 					}, {
 					    dataField : "memCode",
 					    headerText : "CT",
 					    width: 280,
-					    renderer : {
+					    editenderer : {
 					        type : "DropDownListRenderer",
+					        showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
 					        listFunction : function(rowIndex, columnIndex, item, dataField) {
 					        	return ctCodeList;
 				            },
 							keyField   : "memId", //key 에 해당되는 필드명
 		                    valueField : "memCode"        //value 에 해당되는 필드명
-					    }
+					    },
+					    style : "aui-grid-user-custom-left",
+                        editable : false
 					},
 			        {
 			            	dataField : "codeId",
@@ -212,6 +243,17 @@
 		var bobj = new Object();
 		
 		function addRow() {
+			
+			if($("#cmbbranchId").val() == ''){
+                Common.alert("Please Select Branch Type");
+                return false;
+            }
+			
+			if($("#cmbctId").val() == ''){
+                Common.alert("Please Select CT Code");
+                return false;
+            }
+			
 	         var item = new Object();
 	         item.brnchId1="";
 	         item.ctId1="";
@@ -233,9 +275,13 @@
 	         if($("#cmbbranchId option:selected").val() == ''){
 	        	 //fn_getCtCodeSearch1();
 	         }else{
-	        	 item.code =  $("#cmbbranchId option:selected").val();
+	        	 item.code =  $("#cmbbranchId option:selected").text();
+	        	 item.brnchId1 = $("#cmbbranchId option:selected").val();
+	        	 item.codeId = $("#cmbbranchId option:selected").val();
 	        	 if($("#cmbctId option:selected").val() != ''){
 	            	 item.memCode =  $("#cmbctId option:selected").text();
+	            	 item.ctId1 =  $("#cmbctId option:selected").val();
+	            	 item.memId =  $("#cmbctId option:selected").val();
 	             }
 		        
 	        } 
