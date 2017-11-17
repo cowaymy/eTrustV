@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper;
+import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.organization.organization.MemberEventListController;
@@ -41,6 +42,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 	@Resource(name = "hsManualMapper")
 	private HsManualMapper hsManualMapper;
+	
+	
+	@Resource(name = "servicesLogisticsPFCMapper")
+	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -503,8 +508,43 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 		}
 
+		//물류 호출   add by hgham
+        Map<String, Object>  logPram = null ;
+		if(Integer.parseInt(params.get("cmbStatusType").toString()) == 4 ){
+		    
+			/////////////////////////물류 호출//////////////////////
+			logPram =new HashMap<String, Object>();
+            logPram.put("ORD_ID",    schdulId );
+            logPram.put("RETYPE", "COMPLET");  
+            logPram.put("P_TYPE", "OD05");  
+            logPram.put("P_PRGNM", "HSCOM");  
+            logPram.put("USERID", sessionVO.getUserId());   
+            
+            logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram.toString());
+            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            logger.debug("ORDERCALL 물류 호출 결과 ===>");  
+            /////////////////////////물류 호출 END //////////////////////   			
+        			
+      }else if(Integer.parseInt(params.get("cmbStatusType").toString()) == 21){
+          
+    	  /////////////////////////물류 호출//////////////////////
+    		logPram =new HashMap<String, Object>();  
+            logPram.put("ORD_ID",    params.get("hiddeninstallEntryNo") );
+            logPram.put("RETYPE", "SVO");  
+            logPram.put("P_TYPE", "OD06");  
+            logPram.put("P_PRGNM", "HSCAN");  
+            logPram.put("USERID", sessionVO.getUserId());   
+            
+            logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+            /////////////////////////물류 호출 END //////////////////////   			
+      }
 
-
+		
+		
+		
+		
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue.put("resultId",  params.get("hidSalesOrdCd"));
 		return resultValue;
