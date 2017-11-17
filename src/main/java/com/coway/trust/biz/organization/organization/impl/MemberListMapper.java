@@ -102,6 +102,10 @@ public interface MemberListMapper {
 
 	void insertPromoEntry(Map<String, Object> params);
 
+	/*by KV start  insert request vacation */
+	void insertVacationEntry(Map<String, Object> params);
+	/*by KV end  insert request vacation */
+
 	void updateMember(Map<String, Object> params);
 
 	EgovMap selectUserName(Map<String, Object> params);
