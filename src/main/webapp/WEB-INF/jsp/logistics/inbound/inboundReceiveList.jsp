@@ -423,7 +423,7 @@ function fn_itempopList_T(data){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>InBound's SMO Receipt</h2>
+<h2>InBound SMO Receipt</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
