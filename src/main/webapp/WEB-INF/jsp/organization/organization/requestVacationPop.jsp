@@ -1063,7 +1063,6 @@ function fn_winClose(){
     <th scope="row">Replacement CT</th>
     <td>
        <select class="w100p" id="replacementCT" name="replacementCT">
-
        </select>
     </td>
 </tr>
