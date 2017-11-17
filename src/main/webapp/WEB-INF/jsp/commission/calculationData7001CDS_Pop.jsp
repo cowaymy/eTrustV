@@ -67,32 +67,32 @@
         editable : false
     },{
         dataField : "v2",
-        headerText : "V2",
+        headerText : "HappyCall Rate",
         style : "my-column",
         editable : false
     },{
         dataField : "v3",
-        headerText : "V3",
+        headerText : "HappyCall Mark",
         style : "my-column",
         editable : false
     },{
         dataField : "v4",
-        headerText : "V4",
+        headerText : "HS Rate",
         style : "my-column",
         editable : false
     },{
         dataField : "v5",
-        headerText : "V5",
+        headerText : "HS Mark",
         style : "my-column",
         editable : false
     },{
         dataField : "v6",
-        headerText : "V6",
+        headerText : "RC Rate",
         style : "my-column",
         editable : false
     },{
         dataField : "v7",
-        headerText : "V7",
+        headerText : "RC Mark",
         style : "my-column",
         editable : false
     },{
@@ -112,12 +112,12 @@
         editable : false
     },{
         dataField : "v11",
-        headerText : "V11",
+        headerText : "Grp Sales Product Mark",
         style : "my-column",
         editable : false
     },{
         dataField : "v12",
-        headerText : "dropped rate",
+        headerText : "Drop Rate PenaltyMark",
         style : "my-column",
         editable : false
     },{
@@ -132,7 +132,7 @@
         editable : false
     },{
         dataField : "v16",
-        headerText : "rental collection rate",
+        headerText : "CollectionAmt",
         style : "my-column",
         editable : false
     },{
@@ -177,27 +177,27 @@
         editable : false
     },{
         dataField : "v25",
-        headerText : "v25",
+        headerText : "SHI Index",
         style : "my-column",
         editable : false
     },{
         dataField : "v26",
-        headerText : "SHI rental membership collection rate",
+        headerText : "SHI rental membership<BR>collection rate",
         style : "my-column",
         editable : false
     },{
         dataField : "v27",
-        headerText : "v27",
+        headerText : "SHI RentMembership Index",
         style : "my-column",
         editable : false
     },{
         dataField : "v29",
-        headerText : "v29",
+        headerText : "HS Productivity",
         style : "my-column",
         editable : false
     },{
         dataField : "v30",
-        headerText : "v30",
+        headerText : "HS Productivity Mark",
         style : "my-column",
         editable : false
     },{

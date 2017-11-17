@@ -77,12 +77,12 @@
         editable : false
     },{
         dataField : "v4",
-        headerText : "B/S Success Rate",
+        headerText : "HS Success Rate",
         style : "my-column",
         editable : false
     },{
         dataField : "v5",
-        headerText : "B/S Marks",
+        headerText : "HS Marks",
         style : "my-column",
         editable : false
     },{

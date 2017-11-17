@@ -102,11 +102,11 @@ public class CommissionExcelDownloadController {
 				if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					map.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
-							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType",
+							"v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v24", "v25", "v26", "v27", "v32", "v33" };
-					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "Credit Point",
-							"HappyCall Performance", "HappyCall Marks", "B/S Success Rate", "B/S Marks",
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", 
+							"Credit Point", "HappyCall Performance", "HappyCall Marks", "B/S Success Rate", "B/S Marks",
 							"Rental Collection Rate", "Rental Collection Marks", "Net Sales Unit", "Net Sales Marks",
 							"Rental Collection Amount", "Dropped Rate", "Dropped Rate  Penalty Marks",
 							"Net Sales  Pv Total", "App Rate  By Total Pv", "sales price total", "Mem amount",
@@ -136,22 +136,22 @@ public class CommissionExcelDownloadController {
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
 							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31" };
-					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE",
-							"performance index", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "net sales marks",
-							"rental collection amount", "v11", "v12", "v13", "v14", "rental collection amount", "v17",
+					titles = new String[] { "TASK ID", "RUN ID", "MEM ID", "MEM CODE", "MEM RANK",
+							"performance index", "Happy Call Rate", "HappyCall Mark", "HS Rate", "HS Mark", "RC Rate", "RC Mark", "v8", "net sales marks",
+							"Grp Sales Product", "Grp SalesProduct Mark", "Drop Rate", "Drop Rate PenaltyMark", "v14", "rental collection amount", "v17",
 							"completed BS count", "v19", "price total", "v21", "credit point", "credit point",
-							"SHI rental collection rate", "v25", "SHI rental Mem collection rate", "v27",
-							"group BS  productivity", "group sales productivity marks", "v31" };
+							"SHI rental collection rate", "v25", "SHI rental Mem collection rate", "SHI RentMembership Index",
+							"HS Productivity", "HS Productivity Mark", "v31" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
 				} else if (codeNm.equals(CommissionConstants.COMIS_CDS_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
-					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
-							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v16", "v17", "v18",
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", 
+							"v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v16", "v17", "v18",
 							"v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31" };
 					titles = new String[] { "TASK ID", "RUN ID", "MEM ID", "MEM CODE", "MEM RANK",
 							"performance index", "HappyCall Rate", "HappyCall Mark", "HS Rate", "HS Mark", "RC Rate", "RC Mark", "v8", "net sales marks",
-							"group sales productivity", "GrpSalesProduct Mark", "Drop Rate PenaltyMark", "v13", "v14", "CollectionAmt",
+							"group sales productivity", "Grp Sales Product Mark", "Drop Rate PenaltyMark", "v13", "v14", "CollectionAmt",
 							"Membership Sales Amount total", "v18", "v19", "v20", "v21", "v22", "v23",
 							"SHI rental collection rate", "SHI Index", "SHI rental membership collection rate", "SHI RentMembership Index", "HS Productivity",
 							"HS Productivity Mark", "v31" };
@@ -307,13 +307,13 @@ public class CommissionExcelDownloadController {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					map.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "r1", "r2", "r3",
-							"r4", "r5", "r6", "r7", "r8", "r10", "r11", "r27", "r28", "r29", "r30", "r34", "r35", "r36",
+							"r4", "r5", "r6", "r7", "r8", "r10", "r11", "r28", "r29", "r30", "r34", "r35", "r36",
 							"r38", "r39", "r99","r50" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE",
 							"performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm",
 							"sales encouragement allowance", "rental collection Cmm", "PE ENCOURAGEMENT FUND",
 							"Healthy Family Fund", "newely entering allowance", "introduction fees", "Incentive",
-							"Incentive", "SHI Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
+							"SHI Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
 							"COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment","W/S" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 

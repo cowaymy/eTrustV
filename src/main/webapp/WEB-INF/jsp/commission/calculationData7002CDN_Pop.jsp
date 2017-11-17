@@ -87,7 +87,7 @@
         editable : false
     },{
         dataField : "r7",
-        headerText : "Remove Phone<br>Allowance",
+        headerText : "PE Encouragement Fund",
         style : "my-column",
         editable : false
     },{
