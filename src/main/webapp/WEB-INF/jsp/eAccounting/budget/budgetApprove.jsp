@@ -306,7 +306,7 @@ function fn_budgetApproval(value){
     var activeItems = AUIGrid.getItemsByValue(appMGridID, "checkId", "Y");
     
     if(activeItems.length == 0){
-        alert("<spring:message code="budget.msg.select" />");
+    	Common.alert("<spring:message code='budget.msg.select' />");
         return;
     }   
 	
@@ -315,7 +315,7 @@ function fn_budgetApproval(value){
         $("#appvStus").val("C"); // adjustment Close
         $("#appvPrcssStus").val("A"); //Approval 
         $("#rejectMsg").val("");
-        fn_saveApprove();
+        fn_saveApprove(value);
     }else{  //reject 처리
     	        
         var option = {
@@ -328,16 +328,16 @@ function fn_budgetApproval(value){
          Common.prompt("<spring:message code="budget.msg.reject" /> ", "", function(){
             
              $("#rejectMsg").val($("#promptText").val());
-             fn_saveApprove();
+             fn_saveApprove(value);
          }, null, option);
             
-        $("#appvStus").val("O"); // adjustment Close
+        $("#appvStus").val("T"); // adjustment Close
         $("#appvPrcssStus").val("J"); //Approval 
     }
 
 }
 
-function fn_saveApprove(){
+function fn_saveApprove(value){
     
     if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
 
@@ -353,7 +353,12 @@ function fn_saveApprove(){
             var idx = arryList.length;
             
             fn_selectListAjax();
-            alert("<spring:message code="sales.msg.ApprovedComplete" />");          
+            if(value == "approval"){ //approval 처리
+            	Common.alert("<spring:message code='sales.msg.ApprovedComplete' />");
+            } else {
+            	Common.alert("<spring:message code='budget.msg.rejected' />");
+            }
+                      
       }
       , function(jqXHR, textStatus, errorThrown){
              try {
@@ -366,7 +371,7 @@ function fn_saveApprove(){
            {
              console.log(e);
            }
-           alert("Fail : " + jqXHR.responseJSON.message);
+           Common.alert("Fail : " + jqXHR.responseJSON.message);
      });
     }));
 }

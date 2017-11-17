@@ -331,7 +331,7 @@ function fn_budgetApproval(){
     var activeItems = AUIGrid.getItemsByValue(adjMGridID, "checkId", "Y");
     
     if(activeItems.length == 0){
-        alert("<spring:message code="budget.msg.select" />");
+    	Common.alert("<spring:message code='budget.msg.select' />");
         return;
     }
     
@@ -402,7 +402,7 @@ function fn_budgetApproval(){
          {
            console.log(e);
          }
-         alert("Fail : " + jqXHR.responseJSON.message);
+         Common.alert("Fail : " + jqXHR.responseJSON.message);
           });
     
     }));
@@ -419,7 +419,7 @@ function fn_budgetDelete() {
     var activeItems = AUIGrid.getItemsByValue(adjMGridID, "checkId", "Y");
     
     if(activeItems.length == 0){
-    	alert('<spring:message code="budget.msg.delete" />');
+    	Common.alert('<spring:message code="budget.msg.delete" />');
         return;
     }
     
@@ -444,7 +444,7 @@ function fn_budgetDelete() {
          {
            console.log(e);
          }
-         alert("Fail : " + jqXHR.responseJSON.message);
+         Common.alert("Fail : " + jqXHR.responseJSON.message);
           });
     
     }));

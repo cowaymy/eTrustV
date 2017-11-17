@@ -104,7 +104,7 @@ $(document).ready(function(){
         }
         
        	if(str2[0].length > 11){
-               alert("<spring:message code="budget.msg.inputAmount" />");
+       		Common.alert("<spring:message code='budget.msg.inputAmount' />");
                str = "";
         }else{               
             str = str2[0].substr(0, 11)+"."+str2[1] + "00".substring(str2[1].length, 2);   
@@ -792,7 +792,7 @@ function fn_uploadFile(str) {
     var idx = AUIGrid.getRowCount(adjPGridID);
     
     if(idx == 0){
-    	alert("<spring:message code="budget.msg.noData" />");
+    	Common.alert("<spring:message code='budget.msg.noData' />");
     	return;
     }
         
@@ -884,7 +884,7 @@ function fn_saveAdjustement(){
                      // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
                      AUIGrid.update(adjPGridID);
                   
-                      alert("<spring:message code="budget.exceeded" />"); 
+                     Common.alert("<spring:message code='budget.exceeded' />"); 
                  });
            		 
                 }else{                	 
@@ -911,7 +911,7 @@ function fn_saveAdjustement(){
              {
                console.log(e);
              }
-             alert("Fail : " + jqXHR.responseJSON.message);
+             Common.alert("Fail : " + jqXHR.responseJSON.message);
        });
 }
 
