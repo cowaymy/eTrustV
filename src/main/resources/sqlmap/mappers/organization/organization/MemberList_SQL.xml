@@ -1963,6 +1963,48 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		    )
 	 </insert>
 
+
+<!-- by KV start  insert Request Vacation -->
+     <insert id="insertVacationEntry" parameterType="Map">
+       INSERT INTO ORG0007D (
+             PROMO_ID
+           , REQST_NO
+           , STUS_ID
+           , MEM_TYPE_ID
+           , MEM_ID
+           , CRT_DT
+           , CRT_USER_ID
+           , UPD_DT
+           , UPD_USER_ID
+           , REM
+           , BRNCH_ID
+           , VACT_TYPE_ID
+           , VACT_STD_DT
+           , VACT_END_DT
+           , VACT_REPL_CT
+            )
+          VALUES (
+          (SELECT MAX(PROMO_ID)+1 FROM ORG0007D )
+           , #{requestNo}
+           , #{statusId}
+           , #{memTypeId}
+           , #{memberId}
+           , SYSDATE
+           , 52366
+           , SYSDATE
+           , 52366
+           , #{remark}
+           , #{branchId}
+           , #{vactTypeId}
+           , #{vactStdDt}
+           , #{vactEndDt}
+           , #{vactReplCt}
+            )
+     </insert>
+<!-- by KV end  insert Request Vacation  -->
+
+
+
 	 <update id="updateMember" parameterType="Map">
 	   UPDATE ORG0001D
 	   SET RESIGN_DT = to_date(#{resignDate},'dd-mm-yyyy'),
