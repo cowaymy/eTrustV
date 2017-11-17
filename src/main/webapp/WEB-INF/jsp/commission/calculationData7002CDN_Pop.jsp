@@ -87,7 +87,7 @@
         editable : false
     },{
         dataField : "r7",
-        headerText : "PE Encouragement Fund",
+        headerText : "PE Encouragement",
         style : "my-column",
         editable : false
     },{

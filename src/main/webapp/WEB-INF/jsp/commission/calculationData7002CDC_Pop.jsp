@@ -92,7 +92,7 @@
         editable : false
     },{
         dataField : "r7",
-        headerText : "Remove Phone<br>Allowance",
+        headerText : "PE Encouragement",
         style : "my-column",
         editable : false
     },{

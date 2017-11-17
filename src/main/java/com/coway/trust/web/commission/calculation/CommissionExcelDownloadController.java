@@ -311,7 +311,7 @@ public class CommissionExcelDownloadController {
 							"r38", "r39", "r99","r50" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE",
 							"performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm",
-							"sales encouragement allowance", "rental collection Cmm", "PE ENCOURAGEMENT FUND",
+							"sales encouragement allowance", "rental collection Cmm", "PE Encouragement",
 							"Healthy Family Fund", "newely entering allowance", "introduction fees", "Incentive",
 							"SHI Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
 							"COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment","W/S" };
