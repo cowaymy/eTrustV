@@ -371,6 +371,8 @@ $(document).ready(function(){
 		});
 	    $("#clear").click(function(){
 	        $("#searchForm")[0].reset();
+	        doGetCombo('/common/selectCodeList.do', '11', '','srchcatagorytype', 'M' , 'f_multiCombo'); 
+	        doGetCombo('/common/selectCodeList.do', '15', '','materialtype', 'M' , 'f_multiCombo');
 	    });	
 		$("#cancel").click(function(){
 			$("#popup_wrap").hide();
@@ -793,7 +795,7 @@ function f_multiCombo() {
     <li><p class="btn_blue"><a id="create">Create</a></p></li>
     <li><p class="btn_blue"><a id="edit">Edit</a></p></li>
     <!-- <li><p class="btn_blue"><a id="view">View</a></p></li> -->
-    <li><p class="btn_blue"><a id="search">Search</a></p></li>
+    <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
