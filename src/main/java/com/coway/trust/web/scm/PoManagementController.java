@@ -1,5 +1,6 @@
 package com.coway.trust.web.scm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -12,12 +13,16 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.PoMngementService;
 import com.coway.trust.biz.scm.SalesPlanMngementService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -92,6 +97,65 @@ public class PoManagementController {
 		return ResponseEntity.ok(map);
 		
 	}	
+	
+	   /**************************************/
+	   /************* PO Approval*************/
+	   /**************************************/
+	
+	@RequestMapping(value = "/poApproval.do")
+	public String poApprovalManager(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
+	{
+		//model.addAttribute("languages", loginService.getLanguages());
+		return "/scm/poApproval";  	
+	}  
+	
+	// search btn
+	@RequestMapping(value = "/selectPoApprovalSearchBtn.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectPoApprovalSearchBtn(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectPoApprovalSearchBtn_Input : {}", params.toString());
+		
+		List<EgovMap> selectPoApprovalSummaryList = poMngementService.selectPoApprovalSummary(params);
+		List<EgovMap> selectPoApprovalSummaryHiddenList = poMngementService.selectPoApprovalSummaryHidden(params);
+		List<EgovMap> selectPoApprovalMainListList = poMngementService.selectPoApprovalMainList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectPoApprovalSummaryList", selectPoApprovalSummaryList);
+		map.put("selectPoApprovalSummaryHiddenList", selectPoApprovalSummaryHiddenList);
+		map.put("selectPoApprovalMainListList", selectPoApprovalMainListList);
+
+		return ResponseEntity.ok(map);
+		
+	}
+	
+	@RequestMapping(value = "/updatePoApprovalDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updatePoApprovalDetail(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
+	{
+		List<Object> checkList = params.get(AppConstants.AUIGRID_CHECK);
+
+		int tmpCnt = 0;
+		int totCnt = 0;
+
+		if (checkList.size() > 0) {
+			tmpCnt = poMngementService.updatePoApprovalDetail(checkList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+
+		// 콘솔로 찍어보기
+		LOGGER.info("updatePoApprovalDetail_수정 : {}", checkList.toString());
+		LOGGER.info("updatePoApprovalDetail_카운트 : {}", totCnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
 	
 	
    /**************************************/

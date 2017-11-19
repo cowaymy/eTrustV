@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.PoMngementService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -63,6 +64,66 @@ public class PoMngementServiceImpl implements PoMngementService {
 		return poMngementMapper.selectInterfaceLastState(params);
 	}
 	
+	// PO Management - PO Approval
+	@Override
+	public List<EgovMap> selectPoApprovalSummary(Map<String, Object> params) {
+		return poMngementMapper.selectPoApprovalSummary(params);
+	}
+	@Override
+	public List<EgovMap> selectPoApprovalSummaryHidden(Map<String, Object> params) {
+		return poMngementMapper.selectPoApprovalSummaryHidden(params);
+	}
+	@Override
+	public List<EgovMap> selectPoApprovalMainList(Map<String, Object> params) {
+		return poMngementMapper.selectPoApprovalMainList(params);
+	}	
+	
+	//
+	/*
+	 	@Override
+	public void returnPartsUpdate(Map<String, Object> params,int loginId) {
+
+		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+
+		for (int i = 0; i < checkList.size(); i++) {
+			logger.debug("checkList    값 : {}", checkList.get(i));
+		}
+
+		if (checkList.size() > 0) {
+			for (int i = 0; i < checkList.size(); i++) {
+				Map<String, Object> insMap = (Map<String, Object>) checkList.get(i);
+				insMap.put("userId", loginId);
+
+				returnUsedPartsMapper.upReturnParts(insMap);
+			}
+		}
+
+	} 
+	 * */
+	@Override
+	public int updatePoApprovalDetail(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : addList) 
+		{
+			//((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			//((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug(" >>>>> updatePoApprovalDetail ");
+			LOGGER.debug(" paramList : {}", addList.toString() );
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			
+			saveCnt++;
+			
+			poMngementMapper.updatePoApprovalDetail((Map<String, Object>) obj);
+		}
+		
+		return saveCnt;
+	}
+		
 	
 	// PO Management - PO Issue
 	
@@ -105,7 +166,6 @@ public class PoMngementServiceImpl implements PoMngementService {
 		
 		return saveCnt;
 	}
-	
 	
 
 }
