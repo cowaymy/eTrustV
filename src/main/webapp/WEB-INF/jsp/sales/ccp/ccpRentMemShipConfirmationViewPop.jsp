@@ -37,7 +37,7 @@
     	                     {dataField : "orNo", headerText : "Receipt No", width : "10%" , editable : false},
     	                     {dataField : "payOrNo", headerText : "Reverse For", width : "10%" , editable : false},
     	                     {dataField : "payData", headerText : "Payment Date", width : "10%" , editable : false},
-    	                     {dataField : "codeName", headerText : "Payment Type", width : "20%" , editable : false},
+    	                     {dataField : "codeName", headerText : "Payment Type", width : "10%" , editable : false},
     	                     {dataField : "accCode", headerText : "Debtor Acc", width : "10%" , editable : false},
     	                     {dataField : "code", headerText : "Key-In Branch (Code)", width : "15%" , editable : false},
     	                     {dataField : "name1", headerText : "Key-In Branch (Name)", width : "15%" , editable : false},
@@ -123,7 +123,7 @@
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Address Edit.html</h1>
+<h1>CCP RentalMembership View</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>

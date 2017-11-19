@@ -112,7 +112,7 @@
                        //그리드 속성 설정
                        var gridPros = {
                                usePaging           : true,         //페이징 사용
-                               pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                               pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)            
                                editable            : false,            
                                fixedColumnCount    : 0,            
                                showStateColumn     : false,             
@@ -149,7 +149,7 @@
     <input type="hidden" name="cnfmCntrctId" value="${cnfmCntrctId}">
 </form>
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Address Edit.html</h1>
+<h1>CCP RentalMembership Comfirm Result</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -187,7 +187,7 @@
     </ul> -->
 
     <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="call_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="call_grid_wrap" style="width:100%; height:150px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
 
     </dd>
