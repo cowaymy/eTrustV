@@ -210,9 +210,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		installResult.put("updated", new Date());
 		installResult.put("updator", usrId);
 		installResult.put("adjAmount", 0);
+		installResult.put("statusCodeId", 4);
 		
 		resultValue.put("value", "Completed");
 		resultValue.put("installEntryNo", installResult.get("installEntryId"));
+
 
 		params.put("installStatus",4);
 		
