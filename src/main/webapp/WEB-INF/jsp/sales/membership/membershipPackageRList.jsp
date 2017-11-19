@@ -75,7 +75,7 @@ function createAUIGrid() {
        //var typeKeyValueList = [{"code":"0", "value":"Starter Package"}, {"code":"1", "value":"Membership Package"}];
         
         var columnLayout = [
-                            { dataField : "srvCntrPacId",     headerText  : "" ,editable       : false ,visible : false } ,
+                            { dataField : "srvCntrctPacId",      headerText  : "Package Id" ,width : 100, editable       : false } ,
                             { dataField : "srvCntrctPacCode", headerText  : "Package Code",    width : 200 ,editable : true, style :"my-left-style" },
                             { dataField : "srvCntrctPacDesc", headerText  : "Package Description",width : 200 ,editable       : true, style :"my-left-style" },
                             { dataField : "code",   headerText  : "Status",  width          : 80,   editable       : true

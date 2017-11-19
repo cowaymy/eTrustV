@@ -74,8 +74,8 @@ function createAUIGrid() {
        //var typeKeyValueList = [{"code":"0", "value":"Starter Package"}, {"code":"1", "value":"Membership Package"}];
         
         var columnLayout = [
-                            {dataField : "srvMemPacId",     headerText  : "Package ID" , editable       : false  } ,
-                            { dataField : "srvMemCode", headerText  : "Package Code",    width : 150 ,editable : true, style:"my-left-style",
+                            {dataField : "srvMemPacId",     headerText  : "Package Id" ,width : 100,  editable       : false  } ,
+                            { dataField : "srvMemCode", headerText  : "Package Code",    width : 120 ,editable : true, style:"my-left-style",
 								
                                 editRenderer : { 
 								      type : "InputEditRenderer", 
@@ -135,7 +135,7 @@ function createAUIGrid() {
                           
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true};  
         
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
         
