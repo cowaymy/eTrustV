@@ -3,7 +3,6 @@ package com.coway.trust.biz.services.mlog.impl;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +10,12 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
-import com.coway.trust.AppConstants;
+
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.logistics.returnusedparts.impl.ReturnUsedPartsMapper;
 import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
+import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -46,6 +44,8 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	private ASManagementListMapper ASManagementListMapper;
 	
 	
+	@Resource(name = "servicesLogisticsPFCMapper")
+	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
 	
 	
 	@Override
@@ -214,10 +214,30 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		resultValue.put("value", "Completed");
 		resultValue.put("installEntryNo", installResult.get("installEntryId"));
 
+		params.put("installStatus",4);
 		
 		try {
 			insertInstallation(statusId,installResult,callEntry,callResult,orderLog);
-		} catch (ParseException e) {
+			
+			//물류 호출   add by hgham
+	        Map<String, Object>  logPram = null ;
+			if(Integer.parseInt(params.get("installStatus").toString()) == 4 ){
+	    
+				/////////////////////////물류 호출//////////////////////
+				logPram =new HashMap<String, Object>();
+	            logPram.put("ORD_ID",    installResult.get("installEntryId") );
+	            logPram.put("RETYPE", "COMPLET");  
+	            logPram.put("P_TYPE", "OD01");  
+	            logPram.put("P_PRGNM", "INSCOM");  
+	            logPram.put("USERID", usrId);   
+	            
+	            logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+	            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+	            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+	            /////////////////////////물류 호출 END //////////////////////   	
+	            
+			} 
+		}	catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
