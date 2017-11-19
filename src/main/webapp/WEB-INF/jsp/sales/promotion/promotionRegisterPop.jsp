@@ -15,8 +15,8 @@
         doGetCombo('/common/selectCodeList.do', '76',  '', 'promoTypeId',       'S'); //Promo Type
         doGetCombo('/common/selectCodeList.do', '8',   '', 'promoCustType',     'S', 'fn_addOption'); //Customer Type
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '', 'exTrade',              'S'); //EX_Trade
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '', 'empChk',               'S'); //EMP_CHK
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '0', 'exTrade',              'S'); //EX_Trade
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '0', 'empChk',               'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'promoDiscType',        'S'); //Discount Type
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         
@@ -489,7 +489,7 @@
         }
         
         //Promo Application <> Expired Filter & Customer = Individual
-        if(promoAppVal != '2290' && promoCustVal == '964') {
+        if(promoAppVal != '2290' && (promoCustVal == '964' || promoCustVal == '')) {
             $('#empChk').removeAttr("disabled");
         }
         else {
