@@ -679,32 +679,46 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
-	public ResponseEntity<InstallationResultDto> installationResult(@RequestBody InstallationResultForm installationResultForm)
+	public ResponseEntity<InstallationResultDto> installationResult(@RequestBody List<InstallationResultForm> installationResultForms)
 			throws Exception {		
 		String transactionId = "";
-
-		Map<String, Object> params = InstallationResultForm.createMaps(installationResultForm);
+		List<Map<String, Object>> insTransLogs = null;
 		
-		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-			MSvcLogApiService.saveInstallServiceLogs(params);
+		
+		insTransLogs = new ArrayList<>();
+		for (InstallationResultForm insService : installationResultForms) {
+			insTransLogs.addAll(insService.createMaps(insService));
 		}
 		
 		
-//		// business service....
-//		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertInstallationResult(params);		
+		for(int i=0 ; i < insTransLogs.size() ; i++ ){
+			
+			LOGGER.debug("asTransLogs11111 값 : {}", insTransLogs.get(i));
+			Map<String, Object> params = insTransLogs.get(i);  
+			
+			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+				MSvcLogApiService.saveInstallServiceLogs(params);
+				
+			}
 
+			// business service....
+//			// TODO : installResult 구현 필요.....
+			MSvcLogApiService.insertInstallationResult(params);	
 		
-		// TODO : 리턴할 dto 구현.
-		transactionId = installationResultForm.getTransactionId();
-		
-		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-		}
-		
+			// TODO : 리턴할 dto 구현.
+//			transactionId = installationResultForms.getTransactionId();
+			transactionId = (String) params.get("transactionId");
+			
+			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+				MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+			}
+			
+		}	
+	
 		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 
 	}
+	
 	
 	
 	@ApiOperation(value = "Display RC List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
