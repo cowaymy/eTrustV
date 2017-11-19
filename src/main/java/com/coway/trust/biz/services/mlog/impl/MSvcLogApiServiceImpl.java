@@ -227,7 +227,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	    
 				/////////////////////////물류 호출//////////////////////
 				logPram =new HashMap<String, Object>();
-	            logPram.put("ORD_ID",    installResult.get("installEntryId") );
+	            logPram.put("ORD_ID",    installResult.get("installEntryNo") );      // edit 2017-11-19 by hgham
 	            logPram.put("RETYPE", "COMPLET");  
 	            logPram.put("P_TYPE", "OD01");  
 	            logPram.put("P_PRGNM", "INSCOM");  
