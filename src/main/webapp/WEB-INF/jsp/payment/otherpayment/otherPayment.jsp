@@ -367,25 +367,35 @@ var columnLayout = [
         dataField : "crdit",
         headerText : "Crdit",
         editable : false
-    },{
+    },
+    {
         dataField : "stus",
         headerText : "Status",
         editable : false,
+        visible : false
+    },
+    {
+        dataField : "status",
+        headerText : " ",
+        editable : false,
+        width : 80,
         renderer : {
             type : "IconRenderer",
-            iconPosition:"aisle",
             iconWidth : 15, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
             iconHeight : 15,
             iconFunction : function(rowIndex, columnIndex, value, item) {
-                switch(value) {
-                case "Mapped":
-                	return"${pageContext.request.contextPath}/resources/images/common/path_home.gif";
-                default : 
-                    return null;
-                }
+            	var selValue = AUIGrid.getCellValue(myGridID, rowIndex, "stus");
+            	
+            	switch(selValue){
+            	case "Mapped":
+            		return "${pageContext.request.contextPath}/resources/images/common/path_home.gif";
+            	default :
+            		return null;
+            	}
             }
         }
-    },{
+    }
+    ,{
         dataField : "othKeyInMappingDt",
         headerText : "Mapped Date",
         editable : false,
@@ -536,8 +546,15 @@ var columnLayout = [
 	
 	//AUIGrid 칼럼 설정 : targetFinalBillGridID
 	var targetFinalBillColumnLayout = [
-	    { dataField:"trNo", headerText:"TR No.", editable:false, width:120},
-	    { dataField:"trIssueDate", headerText:"TR Issue Date", editable:false, width:120},
+	    { dataField:"trNo", headerText:"TR No.", editable:true, width:120},
+	    { dataField:"trIssueDate", headerText:"TR Issue Date", width:120, dataType : "date", formatString:"dd-mm-yyyy",
+	       editRenderer:{
+	    	   type: "CalendarRenderer",
+	    	   showEditorBtnOver : true,
+	    	   onlyCalendar : true,
+	    	   showExtraDays : true
+	       }
+	    },
 	    { dataField:"collectorId", headerText:"", editable:false, visible:false},
 	    { dataField:"collector", headerText:"Collector", editable:false, width:120,
 	    	renderer : {
