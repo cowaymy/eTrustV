@@ -1,11 +1,13 @@
 package com.coway.trust.biz.organization.organization.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource; 
+import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,8 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 		
 		List<EgovMap>   baseList 			   =  null;
 		List<EgovMap>   rtnList   				   =  null;
+		List<EgovMap>   fList   				   =  null;
+
 		List<EgovMap>   mergeHolidayList  =  null;
 		List<EgovMap>   mergeVacationList=  null;
 
@@ -51,7 +55,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 					 EgovMap   holiDayAddMap =  new EgovMap();
     				 EgovMap e = iterator.next();
     				 
-    				logger.debug(e.toString());
+    				 logger.debug(e.toString());
     			
     				 holiDayAddMap.put("ct",     CommonUtils.nvl(e.get("ct")));
     				 holiDayAddMap.put("cDate", (String)e.get("cDate"));
@@ -134,17 +138,32 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 		
 		//level 5  setViewList 
 		rtnList = new ArrayList<EgovMap>();
+		fList= new ArrayList<EgovMap>();
 		if(null !=mergeVacationList){
 			if(mergeVacationList.size()>0){  
 				for (Iterator<EgovMap> iterator = mergeVacationList.iterator(); iterator.hasNext();) {
 					
 						EgovMap    viewdMap =  new EgovMap();
 						EgovMap    v = iterator.next();
+						
+						if("true".equals((String)v.get("isVact"))  ||  "true".equals((String)v.get("isHoliDay"))){
+							v.put("repla","true");
+						}
+						
 						EgovMap   eM=	allocationMapper.makeViewList(v);
 						
-						rtnList.add(eM);
+						fList.add(eM);
 				}
 			}
+		}
+		
+		
+		//level5  중복 제거 
+		HashSet<EgovMap> hs = new HashSet<EgovMap>(fList); 
+		Iterator it = hs.iterator(); 
+		
+		while(it.hasNext()){
+			rtnList.add((EgovMap)it.next());
 		}
 		
 		

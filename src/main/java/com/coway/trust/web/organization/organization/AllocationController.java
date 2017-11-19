@@ -58,6 +58,7 @@ public class AllocationController {
 		logger.debug(params.toString());
 		model.addAttribute("ORD_ID",params.get("ORD_ID"));
 		model.addAttribute("S_DATE",params.get("S_DATE"));    
+		model.addAttribute("TYPE",params.get("TYPE"));    
 		    
 		// 호출될 화면  
 		return "organization/organization/allocationListPop";

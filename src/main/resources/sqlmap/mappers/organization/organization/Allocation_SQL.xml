@@ -111,12 +111,13 @@
      <select id="makeViewList" parameterType="Map" resultType="egovMap">
             <![CDATA[ 
 					SELECT CT,
+                           DECODE (#{repla}, 'true', MEM_CODE||'(REP)' , MEM_CODE) as RE_MEM_CODE,
 					       MEM_CODE,
 					       C_DATE,
 					       D_DATE,
 					       ASCNT||'-'||SUMSESION_CNT ASCNT,
 					       INSCNT||'-'||SUMSESION_CNT INSCNT,
-					       0||'-'||SUMSESION_CNT RTNCNT
+					       0||'-'||SUMSESION_CNT RTNCNT ,AS_SUM_CNT,INS_SUM_CNT
 					FROM(
 					SELECT #{ct} CT,
 					       #{cDate}    C_DATE,
@@ -127,11 +128,19 @@
 					                                 AND  AA.CT_ID =#{ct}
 					                                 AND  AA.STUS_CODE_ID =1
 					                                 AND  TO_CHAR (AA.INSTALL_DT,'YYYY-MM-DD'  ) = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))INSCNT,
+					        (SELECT COUNT (*) CNT  FROM  SAL0046D  AA
+                                                     WHERE  1=1
+                                                     AND  AA.CT_ID =#{ct}
+                                                     AND  AA.STUS_CODE_ID =1 )INS_SUM_CNT,
 					       (SELECT COUNT (*) CNT  FROM  SVC0001D  AA
 					                                 WHERE  1=1
 					                                 AND  AA.AS_MEM_ID =#{ct}
 					                                 AND  AA.AS_STUS_ID =1
-					                                 AND  TO_CHAR (AA.AS_APPNT_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))ASCNT,          
+					                                 AND  TO_CHAR (AA.AS_APPNT_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))ASCNT,     
+		                    (SELECT COUNT (*) CNT  FROM  SVC0001D  AA
+                                                  WHERE  1=1
+                                                  AND  AA.AS_MEM_ID =#{ct}
+                                                  AND  AA.AS_STUS_ID =1)AS_SUM_CNT,    
 					       NVL(( SELECT  SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = #{ct} ),0)SUMSESION_CNT
 					FROM DUAL    
 					)   

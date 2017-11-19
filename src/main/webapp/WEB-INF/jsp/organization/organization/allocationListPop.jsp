@@ -7,13 +7,13 @@
 
 /* 커스텀 셀 스타일 */
 .my-cell-style {
-    background:#FF007F;
+    background:#FFB2D9;
     font-weight:bold;
     color:#fff;
 }
 
-/* Capa가 Available*/
-.my-cell-style-capa {
+
+.my-cell-style-sel {
     background:#86E57F;
     font-weight:bold;
     color:#fff;
@@ -26,6 +26,15 @@
     color:#22741C;
 }
 
+
+.my-row-style-Available{
+    background:#86E57F;
+    font-weight:bold;
+    color:#22741C;
+}
+
+
+
 </style>
 
 
@@ -33,6 +42,10 @@
 
 var  mAgrid;
 var  dAgrid;
+
+
+var detailSelRowIndex ;
+var detailSelCellIndex ;
 
 function fn_doBack(){
 	$("#_doAllactionDiv").remove();
@@ -52,21 +65,87 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(dAgrid, "cellDoubleClick", function(event) {
-        console.log(event.rowIndex);
-        fn_AllocationConfirm();
+        console.log(event);
+      
+        if(event.headerText != '${TYPE}'){ 
+        	return ;
+        }
+        
+        
+        detailSelRowIndex = event.rowIndex;
+        detailSelCellIndex  = event.columnIndex;
+        
+        setDetailEvent();
+      
     });
     
    AUIGrid.bind(dAgrid, "cellClick", function( event ) {
-      
         AUIGrid.setRendererProp( dAgrid, event.columnIndex , { styleFunction : "my-cell-style" } );
    });
 
+   
+   // 그룹핑  이벤트  바인딩
+   AUIGrid.bind(mAgrid, "grouping", function(event) {
+       // 보관된 소팅 정보로 그룹핑 후 소팅 실시함
+       if(typeof sortingInfo != "undefined") {
+           AUIGrid.setSorting(mAgrid, sortingInfo);
+       }
+   });
+   
+
+   // 그리드 ready 이벤트 바인딩
+  AUIGrid.bind(mAgrid, "ready", function(event) {
+       // 최초에 정렬된 채로 그리드 출력 시킴.
+       AUIGrid.setSorting(mAgrid, { dataField : "cDate", sortType : 1 });
+  });
+
+     // 정렬 이벤트 바인딩
+  AUIGrid.bind(mAgrid, "sorting", function(event) {
+
+         // 소팅 정보 보관.
+         sortingInfo = event.sortingFields;
+  });
+  
     
     fn_selectAllactionSelectListAjax();
 });
 
 
 
+function setDetailEvent(){
+	    
+	  var selectedItems = AUIGrid.getSelectedItems(mAgrid);
+	  
+	  if(selectedItems.length <= 0 ){
+	        Common.alert("There Are No selected Items.");
+	        return ; 
+	  }
+	  
+	  console.log(selectedItems[0]);
+	  
+	  var v_ctId    =selectedItems[0].item.ct;
+	  var v_sDate =selectedItems[0].item.cDate;
+	  
+	  Common.ajax("GET", "/organization/allocation/selectDetailList", { CT_ID: v_ctId , S_DATE:v_sDate  ,P_DATE :v_sDate }, function(result) {
+	           
+	    console.log(result);
+	    AUIGrid.setGridData(dAgrid, result);
+	    
+	    item = {};
+	    item.memCode =selectedItems[0].item.memCode;
+	    item.ct=selectedItems[0].item.ct;
+	    AUIGrid.updateRow(dAgrid, item,0);
+	    
+
+        var valArray  =new Array();
+	    var selectedValue = AUIGrid.getCellValue(dAgrid, detailSelRowIndex, detailSelCellIndex);
+	    valArray = selectedValue.split("-");
+	    AUIGrid.setCellValue(dAgrid, detailSelRowIndex ,      detailSelCellIndex , (Number(valArray[0])+1)  +"-"+  Number(valArray[1]) );
+	    AUIGrid.setSelectionByIndex(dAgrid, detailSelRowIndex,detailSelCellIndex);
+	       
+	  });
+    
+}
 
 
 function changeRowStyleFunction() {
@@ -74,20 +153,50 @@ function changeRowStyleFunction() {
     // row Styling 함수를 다른 함수로 변경
     AUIGrid.setProp(mAgrid, "rowStyleFunction", function(rowIndex, item) {
         
-        var isrow =false;
-         
-        if(item.dDate == '${S_DATE}')  isrow =true; 
-       // isrow =true;
-       
-       console.log( item.dDate +"=="+ '${S_DATE}');
-       console.log( isrow);
-    	if(isrow ){
-            return "my-row-style";
-    	}else{
-    		return "";
-    	}
-    	
-    	
+        
+        if(item.dDate == '${S_DATE}')  {
+           
+            if('AS'== '${TYPE}'){
+            	
+                  var valArray  =new Array();
+                  valArray = item.ascnt.split("-");
+                  
+                  if(valArray[0] == valArray[1]   ||  valArray[0] > 0 ) {
+                	  return "my-row-style";
+                  }else {
+                	  return "my-row-style-Available";
+                  }
+                  
+              
+        	  }else if('INS'== '${TYPE}'){
+        		  
+        		  var valArray  =new Array();
+                  valArray = item.inscnt.split("-");
+                  console.log(valArray);
+                  
+               
+                  if(valArray[0] == valArray[1]  ||  valArray[0] > 0 ) {
+                	   console.log("my-row-style======>");
+                	   
+                      return "my-row-style";
+                  }else {
+                	  
+                	   console.log("my-row-style-Available======>");
+                      return "my-row-style-Available";
+                  }
+                  
+                  
+            	  
+              }else if('RTN'== '${TYPE}'){
+            	  var valArray  =new Array();
+                  valArray = item.rtncnt.split("-");
+                  if(valArray[0] == valArray[1]  ||  valArray[0] > 0 ) {
+                      return "my-row-style";
+                  }else {  
+                      return "my-row-style-Available";
+                  }
+              }
+        }
         
     });
     
@@ -152,7 +261,7 @@ function  fn_selectAllactionDetailListAjax () {
 function createAllactionAUIGrid() {
    
     var columnLayout = [
-                          { dataField : "memCode", headerText   : "CT",    width : 150 ,editable : false    , cellMerge : true},
+                          { dataField : "reMemCode", headerText   : "CT",    width : 150 ,editable : false    , cellMerge : true},
                           { dataField : "cDate", headerText  : "Date",width : 150 ,editable       : false },
                           {
                               headerText : "Summary",
@@ -166,19 +275,18 @@ function createAllactionAUIGrid() {
 				                                  headerText : "INS",
 				                                  width : 200 ,editable : false 
 				                                 }, 
-                                                {
+                                          {
                                                   dataField : "rtncnt",
                                                   headerText : "RTN",
                                                   width : 200 ,editable : false 
-                                                 }
+                                                   }
 							  ]
                           }
        ];
-
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,   showRowNumColumn : true};  
-        
-        mAgrid = GridCommon.createAUIGrid("mAgrid_grid_wrap", columnLayout  ,"" ,gridPros);
-    }
+    var gridPros = { usePaging : true,  editable: false, fixedColumnCount : 1,  showRowNumColumn : true};  
+      
+    mAgrid = GridCommon.createAUIGrid("mAgrid_grid_wrap", columnLayout  ,"" ,gridPros);
+  }
     
     
     
@@ -258,12 +366,21 @@ function createDetailAllactionAUIGrid() {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
+                                                         
                                                          if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
                                                              return "my-cell-style";
                                                          }
+                                                         
                                                          if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
+                                                         
+                                                         
+                                                         if('AS'== '${TYPE}'){
+                                                        	 return "my-cell-style-sel";
+                                                         }
+                                                         
+                                                         
                                                          return null;
                                                      }
                                                   }, 
@@ -281,6 +398,13 @@ function createDetailAllactionAUIGrid() {
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                        
+                                                        
+                                                        if('INS'== '${TYPE}'){
+                                                            return "my-cell-style-sel";
+                                                        }
+                                                       
+                                                        
                                                         return null;
                                                     }
                                                    }, 
@@ -298,6 +422,13 @@ function createDetailAllactionAUIGrid() {
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                        
+                                                        
+                                                        if('RTN'== '${TYPE}'){
+                                                            return "my-cell-style-sel";
+                                                        }
+                                                       
+                                                        
                                                         return null;
                                                     }
                                                    }
@@ -320,6 +451,15 @@ function createDetailAllactionAUIGrid() {
                                                          if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
+                                                         
+
+                                                         
+                                                         if('AS'== '${TYPE}'){
+                                                             return "my-cell-style-sel";
+                                                         }
+                                                        
+                                                         
+                                                         
                                                          return null;
                                                      }
                                                   }, 
@@ -337,6 +477,14 @@ function createDetailAllactionAUIGrid() {
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                        
+                                                        
+
+                                                        if('INS'== '${TYPE}'){
+                                                            return "my-cell-style-sel";
+                                                        }
+                                                        
+                                                        
                                                         return null;
                                                     }
                                                    }, 
@@ -354,6 +502,12 @@ function createDetailAllactionAUIGrid() {
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                        
+                                                        if('RTN'== '${TYPE}'){
+                                                            return "my-cell-style-sel";
+                                                        }
+                                                        
+                                                        
                                                         return null;
                                                     }
                                                    }
@@ -376,6 +530,14 @@ function createDetailAllactionAUIGrid() {
                                                          if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
+                                                         
+                                                         
+                                                         if('AS'== '${TYPE}'){
+                                                             return "my-cell-style-sel";
+                                                         }
+                                                         
+                                                         
+                                                         
                                                          return null;
                                                      }
                                                   }, 
@@ -393,6 +555,11 @@ function createDetailAllactionAUIGrid() {
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                        
+                                                        if('INS'== '${TYPE}'){
+                                                            return "my-cell-style-sel";
+                                                        }
+                                                        
                                                         return null;
                                                     }
                                                    }, 
@@ -409,6 +576,11 @@ function createDetailAllactionAUIGrid() {
                                                         }
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
+                                                        }
+                                                        
+
+                                                        if('RTN'== '${TYPE}'){
+                                                            return "my-cell-style-sel";
                                                         }
                                                         return null;
                                                     }
@@ -432,6 +604,11 @@ function createDetailAllactionAUIGrid() {
                                                          if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
+                                                         
+                                                         if('AS'== '${TYPE}'){
+                                                             return "my-cell-style-sel";
+                                                         }
+                                                         
                                                          return null;
                                                      }
                                                   }, 
@@ -449,6 +626,12 @@ function createDetailAllactionAUIGrid() {
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                        
+                                                        
+                                                        if('INS'== '${TYPE}'){
+                                                            return "my-cell-style-sel";
+                                                        }
+                                                        
                                                         return null;
                                                     }
                                                    }, 
@@ -466,6 +649,12 @@ function createDetailAllactionAUIGrid() {
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                        
+
+                                                        if('RTN'== '${TYPE}'){
+                                                            return "my-cell-style-sel";
+                                                        }
+                                                        
                                                         return null;
                                                     }
                                                    }
@@ -478,6 +667,8 @@ function createDetailAllactionAUIGrid() {
         var gridPros = { usePaging : true,  editable: false, fixedColumnCount : 1,  showRowNumColumn : true};  
         
         dAgrid = GridCommon.createAUIGrid("dAgrid_grid_wrap", columnLayout  ,"" ,gridPros);
+        
+        AUIGrid.bind(dAgrid, ["cellEditEnd", "cellEditCancel"], auiCellEditingHandler);
     }
     
 
@@ -485,9 +676,10 @@ function createDetailAllactionAUIGrid() {
 function fn_AllocationConfirm(){
 	
 	var selectedItemsMain = AUIGrid.getSelectedItems(mAgrid);
-	
-	
     var selectedItems = AUIGrid.getSelectedItems(dAgrid);
+    
+    
+    console.log(selectedItems);
     
     if(selectedItems.length <= 0 ){
           Common.alert("There Are No selected Items.");
@@ -554,8 +746,6 @@ function fn_AllocationConfirm(){
     $("#CTgroup").val(selectedItems[0].item.ctSubGrp); 
     $("#appDate").val(selectedItemsMain[0].item.dDate); 
     
-    
-    
     $("#_doAllactionDiv").remove();
     
 }
@@ -567,6 +757,13 @@ function fn_doAllocationResult(){
 	
 }
 
+
+function auiCellEditingHandler(event) {
+	
+    
+
+  
+}
 </script>
 
 
@@ -592,7 +789,7 @@ function fn_doAllocationResult(){
 	</aside><!-- title_line end -->
 	
 	<article class="grid_wrap"><!-- grid_wrap start -->
-	      <div id="mAgrid_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
+	      <div id="mAgrid_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 	</article><!-- grid_wrap end -->
 	
 	<aside class="title_line"><!-- title_line start -->
@@ -604,6 +801,8 @@ function fn_doAllocationResult(){
 	</article><!-- grid_wrap end -->
 </section><!-- search_result end -->
 
+
+<input type ='text'  value='${TYPE}'/> 
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_AllocationConfirm()">Allocation Confirm</a></p></li>
