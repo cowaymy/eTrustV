@@ -18,7 +18,7 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '', 'exTrade',              'S'); //EX_Trade
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '', 'empChk',               'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'promoDiscType',        'S'); //Discount Type
-        doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
+      //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         
     });
 
@@ -94,7 +94,7 @@
                 promoRpfDiscAmt         : $('#promoRpfDiscAmt').val(),
                 promoDiscPeriodTp       : $('#promoDiscPeriodTp').val(),
                 promoDiscPeriod         : $('#promoDiscPeriod').val().trim(),
-                promoFreesvcPeriodTp    : $('#promoFreesvcPeriodTp').val(),
+              //promoFreesvcPeriodTp    : $('#promoFreesvcPeriodTp').val(),
                 promoAddDiscPrc         : $('#promoAddDiscPrc').val().trim(),
                 promoAddDiscPv          : $('#promoAddDiscPv').val().trim(),
                 exTrade                 : $('#exTrade').val(),
@@ -119,7 +119,8 @@
                 console.log("message : " + jqXHR.responseJSON.message);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save promotion.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save promotion.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save promotion.</b>");
             }
             catch (e) {
                 console.log(e);
@@ -398,10 +399,12 @@
             isValid = false;
             msg += "* Please key in the discount period.<br />";
         }
+/*
         if(!$('#promoFreesvcPeriodTp').is(":disabled") && FormUtil.checkReqValue($('#promoFreesvcPeriodTp'))) {
             isValid = false;
             msg += "* Please select the free svc period.<br />";
         }
+*/
         if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.checkReqValue($('#promoSrvMemPacId'))) {
             isValid = false;
             msg += "* Please select the membership package.<br />";
@@ -475,7 +478,7 @@
             $('#promoRpfDiscAmt').removeAttr("disabled");
             $('#promoDiscPeriodTp').removeAttr("disabled");
             $('#promoDiscPeriod').removeAttr("disabled");
-            $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
+//          $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
 //          $('#promoSrvMemPacId').val('').prop("disabled", true);
@@ -491,7 +494,7 @@
             $('#promoRpfDiscAmt').val('').prop("disabled", true);
             $('#promoDiscPeriodTp').val('').prop("disabled", true);
             $('#promoDiscPeriod').val('').prop("disabled", true);
-            $('#promoFreesvcPeriodTp').removeAttr("disabled");
+//          $('#promoFreesvcPeriodTp').removeAttr("disabled");
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').removeAttr("disabled");
 //          $('#promoSrvMemPacId').val('').prop("disabled", true);
@@ -507,7 +510,7 @@
             $('#promoRpfDiscAmt').val('').prop("disabled", true);
             $('#promoDiscPeriodTp').val('').prop("disabled", true);
             $('#promoDiscPeriod').val('').prop("disabled", true);
-            $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
+//          $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').val('').prop("disabled", true);
 //          $('#promoSrvMemPacId').removeAttr("disabled");
@@ -523,7 +526,7 @@
             $('#promoRpfDiscAmt').val('').prop("disabled", true);
             $('#promoDiscPeriodTp').val('').prop("disabled", true);
             $('#promoDiscPeriod').val('').prop("disabled", true);
-            $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
+//          $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
  //         $('#promoSrvMemPacId').val('').prop("disabled", true);
@@ -539,7 +542,7 @@
             $('#promoRpfDiscAmt').val('').prop("disabled", true);
             $('#promoDiscPeriodTp').val('').prop("disabled", true);
             $('#promoDiscPeriod').val('').prop("disabled", true);
-            $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
+//          $('#promoFreesvcPeriodTp').val('').prop("disabled", true);
             $('#promoAddDiscPrc').val('').prop("disabled", true);
             $('#promoAddDiscPv').val('').prop("disabled", true);
 //          $('#promoSrvMemPacId').val('').prop("disabled", true);
@@ -554,7 +557,7 @@
             $('#promoRpfDiscAmt').removeAttr("disabled");
             $('#promoDiscPeriodTp').removeAttr("disabled");
             $('#promoDiscPeriod').removeAttr("disabled");
-            $('#promoFreesvcPeriodTp').removeAttr("disabled");
+//          $('#promoFreesvcPeriodTp').removeAttr("disabled");
             $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').removeAttr("disabled");
 //          $('#promoSrvMemPacId').removeAttr("disabled");
@@ -690,12 +693,17 @@
     <p>
     <input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder=""  class="w100p" />   
     </p>
-    </div> 
-    
+    </div>    
     </td>
+<!--
     <th scope="row">Free SVC Period<span class="must">*</span></th>
     <td>
     <select id="promoFreesvcPeriodTp" name="promoFreesvcPeriodTp" class="w100p"></select>
+    </td>
+-->
+    <th scope="row">Service Package<span class="must">*</span></th>
+    <td>
+    <select id="promoSrvMemPacId" name="promoSrvMemPacId" class="w100p"></select>
     </td>
 </tr>
 <tr>
@@ -704,14 +712,16 @@
     <th scope="row">Additional Discount (PV)</th>
     <td><input id="promoAddDiscPv" name="promoAddDiscPv" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
+<!--
 <tr>
-    <th scope="row">Membership Package<span class="must">*</span></th>
+    <th scope="row">Service Package<span class="must">*</span></th>
     <td>
     <select id="promoSrvMemPacId" name="promoSrvMemPacId" class="w100p"></select>
     </td>
     <th scope="row"></th>
     <td></td>
 </tr>
+-->
 </tbody>
 </table><!-- table end -->
 </section>
