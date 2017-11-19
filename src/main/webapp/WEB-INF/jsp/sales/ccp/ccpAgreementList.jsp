@@ -5,7 +5,7 @@
 //AUIGrid 생성 후 반환 ID
 var ccpGridID;
 var ordGridID;
-
+var timerId = null;
 
 $(document).ready(function() {
 	
@@ -28,7 +28,7 @@ $(document).ready(function() {
     	self.location.href= "/sales/ccp/insertCcpAgreementSearch.do";
 	});
 	
-    // 셀 클릭 이벤트 바인딩
+    /* // 셀 클릭 이벤트 바인딩
     AUIGrid.bind(ccpGridID, "cellClick", function(event) {
     	
     	//Grid 데이터 가져오기
@@ -38,9 +38,37 @@ $(document).ready(function() {
          });
     	//Gird 보여주기
     	$("#ord_grid_wrap").css("display" , "");
-    });
+    }); */
+    
+    // 셀 클릭 이벤트 바인딩
+    AUIGrid.bind(ccpGridID, "selectionChange", auiGridSelectionChangeHandler);
 	 
 });//Doc Ready Func End
+
+function auiGridSelectionChangeHandler(event) { 
+    
+    // 200ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
+    if(timerId) {
+        clearTimeout(timerId);
+    }
+    
+    timerId = setTimeout(function() {
+        var selectedItems = event.selectedItems;
+        if(selectedItems.length <= 0)
+            return;
+        
+        var rowItem = selectedItems[0].item; // 행 아이템들
+        var govAgId = rowItem.govAgId; // 선택한 행의 고객 ID 값
+        
+        $("#_ordAgId").val(govAgId);
+        
+        Common.ajax("GET", "/sales/ccp/selectListOrdersAjax",  $("#ordGridForm").serialize(), function(result) {
+            AUIGrid.setGridData(ordGridID, result);
+        });
+        $("#ord_grid_wrap").css("display" , "");
+        
+    }, 200);  // 현재 200ms 민감도....환경에 맞게 조절하세요.
+};
 
 //TODO 미개발
 function fn_underDevelop(){
@@ -112,11 +140,15 @@ function createOrdAUIGrid(){
 	
 	var orderColumnLayout = [
                              
-                             {dataField : "salesOrdNo" , headerText : "Order No" , width : "20%"},  
-                             {dataField : "name" , headerText : "Customer" , width : "40%"},
-                             {dataField : "govAgItmInstResult" , headerText : "Install Result" , width : "20%"},    
-                             {dataField : "govAgItmRentResult" , headerText : "Rental Status" , width : "20%"}
-                            
+                             {dataField : "salesOrdNo" , headerText : "Order No" , width : "15%"},  
+                             {dataField : "codeName" , headerText : "Status" , width : "15%"},
+                             {dataField : "govAgItmStartDt" , headerText : "Start Date" , width : "10%"},
+                             {dataField : "govAgItmExprDt" , headerText : "Expiry Date" , width : "10%"},
+                             {dataField : "name" , headerText : "Customer" , width : "10%"},
+                             {dataField : "govAgItmInstResult" , headerText : "Install Result" , width : "10%"},    
+                             {dataField : "govAgItmRentResult" , headerText : "Rental Status" , width : "10%"},
+                             {dataField : "userFullName" , headerText : "Creator" , width : "10%"}, 
+                             {dataField : "govAgItmCrtDt" , headerText : "Created" , width : "10%"}
        ];
       
        //그리드 속성 설정
@@ -281,13 +313,13 @@ function popup(location){
 
 <section class="search_result"><!-- search_result start -->
 
-<ul class="right_btns">
+<!-- <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
+</ul> -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="ccp_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

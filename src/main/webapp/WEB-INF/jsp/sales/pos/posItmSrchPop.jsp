@@ -81,11 +81,15 @@ $(document).ready(function() {
     	}
     	
     	//Check Duplication of Basket , ItemList 
-    	var basketCodeArray = AUIGrid.getColumnValues(basketGridID, 'stkCode');
+    	var basketCodeArray = AUIGrid.getColumnValues(basketGridID, 'stkId');
     	var values = $("#_purcItems").val();
     	var msg = '';
     	for (var idx = 0; idx < basketCodeArray.length; idx++) {
     		for (var i = 0; i < values.length; i++) {
+    			
+    			console.log("basketCodeArray[idx] : " + basketCodeArray[idx]);
+    			console.log("values[i] : " + values[i]);
+    			
     			if(basketCodeArray[idx] == values[i]){
     				msg += $("#_purcItems").find("option[value='"+values[i]+"']").text();
     				Common.alert("* " + msg +" is exist in list.");

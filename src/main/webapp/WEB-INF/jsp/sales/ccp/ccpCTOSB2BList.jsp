@@ -134,18 +134,19 @@ function createCtosGrid(){
 
 function createCtosDetailGrid(){
 	var  columnLayout = [
-                         {dataField : "batchId", headerText : "Batch No", width : "10%" , editable : false},
-                         {dataField : "ordNo", headerText : "Order No", width : "10%" , editable : false},
+                         {dataField : "batchId", headerText : "Batch No", width : "9%" , editable : false},
+                         {dataField : "ordNo", headerText : "Order No", width : "9%" , editable : false},
                          {dataField : "custIc", headerText : "Customer IC", width : "10%" , editable : false},
-                         {dataField : "custName", headerText : "Customer Name", width : "10%" , editable : false},
-                         {dataField : "prcss", headerText : "Status", width : "10%" , editable : false},
-                         {dataField : "ficoScre", headerText : "Score", width : "10%" , editable : false},
-                         {dataField : "ctosDt", headerText : "Update Time", width : "10%" , editable : false},
-                         {dataField : "updUserId", headerText : "Update User", width : "10%" , editable : false},
+                         {dataField : "custName", headerText : "Customer Name", width : "9%" , editable : false},
+                         {dataField : "prcss", headerText : "Status", width : "9%" , editable : false},
+                         {dataField : "ficoScre", headerText : "Score", width : "9%" , editable : false},
+                         {dataField : "codeName", headerText : "Bankrupt", width : "9%" , editable : false},
+                         {dataField : "ctosDt", headerText : "Update Time", width : "9%" , editable : false},
+                         {dataField : "updUserId", headerText : "Update User", width : "9%" , editable : false},
                          {
                              dataField : "undefined", 
                              headerText : "Fico Report", 
-                             width : '10%',
+                             width : '9%',
                              renderer : {
                                       type : "ButtonRenderer", 
                                       labelText : "View", 
@@ -159,7 +160,7 @@ function createCtosDetailGrid(){
                          {
                              dataField : "undefined", 
                              headerText : "CTOS Report", 
-                             width : '10%',
+                             width : '9%',
                              renderer : {
                                       type : "ButtonRenderer", 
                                       labelText : "View", 
@@ -249,7 +250,7 @@ function fn_detailComplete() {
 
 </script>
 
-<div id="wrap"><!-- wrap start -->
+
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -259,7 +260,7 @@ function fn_detailComplete() {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Rental Membership Confirmation List</h2>
+<h2>CTOS(B2B) Result</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="_search"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
@@ -336,4 +337,3 @@ function fn_detailComplete() {
 
 </section><!-- content end -->
 
-</div><!-- wrap end -->

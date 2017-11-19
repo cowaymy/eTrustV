@@ -157,7 +157,9 @@
                 <if test="deducMemNric != null and deducMemNric != '' ">
                     AND Extent1.POS_MODULE_TYPE_ID = 2391
                     AND Extent8.NRIC = #{deducMemNric}
-                </if>  
+                </if>
+                
+                ORDER BY Extent1.POS_NO DESC  
     </select>
     
     <select id="selectPosTypeList" parameterType="Map" resultType="egovMap"> 
@@ -258,8 +260,8 @@
                         AND
                             Project1.STK_CTGRY_ID = #{itemType}
                      </if>
-                     
-             </if>
+                  </if>
+                  ORDER BY Project1.STK_CODE ASC
      </select>
      
      <!-- <select id="selectPIItmList" parameterType="Map" resultType="egovMap">
