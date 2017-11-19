@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "InstallationResultDto", description = "InstallationResultDto")
 public class InstallationResultDto {
 
-	@ApiModelProperty(value = "결과값")
-	private String result;
 
 	@ApiModelProperty(value = "결과값")
 	private String transactionId;
@@ -22,13 +20,6 @@ public class InstallationResultDto {
 		this.transactionId = transactionId;
 	}
 
-	public String getResult() {
-		return result;
-	}
-
-	public void setResult(String result) {
-		this.result = result;
-	}
 	
 	
 	
