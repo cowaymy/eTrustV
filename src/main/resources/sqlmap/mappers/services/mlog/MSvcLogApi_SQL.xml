@@ -1432,6 +1432,7 @@ AND   O1DA.MEM_CODE = #{userId}
 		        WHERE  1=1
                     and Extent3.SALES_ORD_NO = #{salesOrderNo}
                     and Extent1.INSTALL_ENTRY_NO = #{serviceNo}
+                    and rownum =1
 
     </select>
 

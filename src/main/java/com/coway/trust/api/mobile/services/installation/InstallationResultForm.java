@@ -1,14 +1,11 @@
 package com.coway.trust.api.mobile.services.installation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import org.apache.commons.codec.binary.Base64;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
-
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
-import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -59,6 +56,28 @@ public class InstallationResultForm {
 
 	@ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
 	private String transactionId;
+
+	
+	private String signRegDate;
+	
+	private String signRegTime;
+	
+	public String getSignRegDate() {
+		return signRegDate;
+	}
+
+	public void setSignRegDate(String signRegDate) {
+		this.signRegDate = signRegDate;
+	}
+
+	public String getSignRegTime() {
+		return signRegTime;
+	}
+
+	public void setSignRegTime(String signRegTime) {
+		this.signRegTime = signRegTime;
+	}
+
 
 	public String getUserId() {
 		return userId;
@@ -211,17 +230,22 @@ public class InstallationResultForm {
 
 
 	
-	public static Map<String, Object> createMaps(InstallationResultForm installationResultForm) {
+	public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
 		
 		List<Map<String, Object>> list = new ArrayList<>();
-
 			Map<String, Object> map;
 			
-			
-				map = BeanConverter.toMap(installationResultForm, "signData", "partList");
-//				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+//			for(InstallationResultForm form : installationResultForm){
+////				map = BeanConverter.toMap(installationResultForm, "signData");
+////				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+//				
+//				list.add(map);
+//			}
+				map = BeanConverter.toMap(installationResultForm, "signData");
+				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
 
 				// install Result
+				
 				map.put("userId", installationResultForm.getUserId());
 				map.put("salesOrderNo", installationResultForm.getSalesOrderNo());
 				map.put("serviceNo", installationResultForm.getServiceNo());
@@ -237,10 +261,12 @@ public class InstallationResultForm {
 				map.put("resultAcceptanceName", installationResultForm.getResultAcceptanceName());
 				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
 				map.put("transactionId", installationResultForm.getTransactionId());				
+				map.put("signRegDate", installationResultForm.getSignRegDate());
+				map.put("signRegTime", installationResultForm.getSignRegTime());				
 
-//				list.add(map);
+				list.add(map);
 				
-				return map;
+				return list;
 	}
 	
 	
