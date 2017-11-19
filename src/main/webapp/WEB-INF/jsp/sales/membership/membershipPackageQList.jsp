@@ -74,7 +74,7 @@ function createAUIGrid() {
        //var typeKeyValueList = [{"code":"0", "value":"Starter Package"}, {"code":"1", "value":"Membership Package"}];
         
         var columnLayout = [
-                            {dataField : "srvMemPacId",     headerText  : "" ,editable       : false ,visible : false } ,
+                            {dataField : "srvMemPacId",     headerText  : "Package ID" , editable       : false  } ,
                             { dataField : "srvMemCode", headerText  : "Package Code",    width : 150 ,editable : true, style:"my-left-style",
 								
                                 editRenderer : { 
@@ -103,7 +103,7 @@ function createAUIGrid() {
 					                                     return retStr == "" ? value : retStr;
 					                 }
 					               , editRenderer : {
-					                     type       : "ComboBoxDropDownListRendererRenderer",
+					                     type       : "DropDownListRenderer",
 					                     list       : keyValueList, //key-value Object 로 구성된 리스트
 					                     keyField   : "code", // key 에 해당되는 필드명
 					                     valueField : "value" // value 에 해당되는 필드명
