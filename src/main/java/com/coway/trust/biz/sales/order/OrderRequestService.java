@@ -45,4 +45,6 @@ public interface OrderRequestService {
 
 	EgovMap selectOderOutsInfo(Map<String, Object> params);
 
+	EgovMap selectValidateInfoSimul(Map<String, Object> params);
+
 }

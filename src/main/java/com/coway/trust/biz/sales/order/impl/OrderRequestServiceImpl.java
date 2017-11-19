@@ -60,6 +60,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
 import com.coway.trust.web.sales.SalesConstants;
+import com.googlecode.mp4parser.h264.Debug;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -1990,8 +1991,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 	
 	@Override
 	public EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params) {
-		EgovMap view = this.selectOrderSimulatorViewByOrderNo(params);
-		return view;
+		return this.selectOrderSimulatorViewByOrderNo2(params);
 	}
 	
 	@Override
@@ -1999,17 +1999,10 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		EgovMap view = (EgovMap)params.get("p1");
 		return view;
 	}
-	
+
 	private EgovMap selectOrderSimulatorViewByOrderNo2(Map<String, Object> params) {
 		
 		EgovMap view = orderRequestMapper.selectOrderSimulatorViewByOrderNo(params);
-		
-		int salesOrdId = Integer.parseInt(String.valueOf(view.get("salesOrdId")));
-		int appTypeId = Integer.parseInt(String.valueOf(view.get("appTypeId")));
-		int orderStatusID = Integer.parseInt(String.valueOf(view.get("stusCodeId")));
-		String rentalStatus = String.valueOf(view.get("stusCodeId1"));
-		
-		params.put("salesOrdId", salesOrdId);
 		
 		int CurrentBillMth = 0;
 		int LastBillMth = 0;
@@ -2025,6 +2018,13 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		
 		
 		if(view != null) {
+			int salesOrdId = Integer.parseInt(String.valueOf(view.get("salesOrdId")));
+			int appTypeId = Integer.parseInt(String.valueOf(view.get("appTypeId")));
+			int orderStatusID = Integer.parseInt(String.valueOf(view.get("stusCodeId")));
+			String rentalStatus = String.valueOf(view.get("stusCodeId1"));
+			
+			params.put("salesOrdId", salesOrdId);
+			
 			if(appTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL && orderStatusID == SalesConstants.STATUS_COMPLETED) {
 
 				//Get first install date
@@ -2125,11 +2125,18 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 				}
 			}
 		}
-		
+
 		view.put("currentbillmth", CurrentBillMth);
 		view.put("lastbillmth", LastBillMth);
 		view.put("installdate", installDate);
 		view.put("totaloutstanding", TotalOutstanding);
+		view.put("outrightprice", OutrightPrice);
+		view.put("totalbillamt", TotalBillAmt);
+		view.put("totalbillrpf", TotalBillRPF);
+		view.put("totaldnbill", TotalDNBill);
+		view.put("totalcnbill", TotalCNBill);
+		view.put("totaldnrpf", TotalDNRPF);
+		view.put("totalcnrpf", TotalCNRPF);
 		
 		return view;
 	}
@@ -2208,6 +2215,95 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 						msg  = "This order has outstanding.";
 						isInValid = "isInValid";
 					}
+				}
+			}
+		}
+		
+        RESULT.put("IS_IN_VALID", isInValid);
+        RESULT.put("MSG_T", msgT);
+        RESULT.put("MSG", msg);
+        
+		return RESULT;
+	}
+	
+	@Override
+	public EgovMap selectValidateInfoSimul(Map<String, Object> params) {
+		
+		String isInValid = "Valid", msgT = "", msg = "";
+				
+		EgovMap view = this.selectOrderSimulatorViewByOrderNo2(params);
+		EgovMap RESULT = new EgovMap();
+		
+		int salesOrdId = CommonUtils.intNvl(view.get("salesOrdId"));
+		int appTypeId = CommonUtils.intNvl(view.get("appTypeId"));
+		int orderStatusID = CommonUtils.intNvl(view.get("stusCodeId"));
+		String rentalStatus = String.valueOf(view.get("stusCodeId1"));
+		
+		int CurrentBillMth = 0;
+		int LastBillMth = 0;
+		String installDate = "";
+		BigDecimal TotalOutstanding = BigDecimal.ZERO;
+		BigDecimal OutrightPrice = BigDecimal.ZERO;
+		
+		if(view != null) {
+			logger.debug("CurrentBillMth:"+(int) view.get("currentbillmth"));
+			CurrentBillMth = (int) view.get("currentbillmth");
+			LastBillMth = (int) view.get("lastbillmth");
+			installDate = (String) view.get("installdate");
+			TotalOutstanding = (BigDecimal) view.get("totaloutstanding");
+			OutrightPrice = (BigDecimal) view.get("outrightprice");
+		}
+		
+		if(view == null || salesOrdId == 0) {
+			msgT = "Invalid Order";
+			msg  = "Invalid order number.";
+			isInValid = "isInValid";
+		}
+		else {
+			if(appTypeId != SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+				msgT = "Non-Rental Order";
+				msg  = "This is non-rental sales order.";
+				isInValid = "isInValid";
+			}
+			else {
+				if(orderStatusID != 4) {
+					msgT = "Non-Complete Order";
+					msg  = "This is non-complete sales order.";
+					isInValid = "isInValid";
+				}
+				else {
+    				if(SalesConstants.RENTAL_STATUS_SUS.equals(rentalStatus)
+    						|| SalesConstants.RENTAL_STATUS_TER.equals(rentalStatus)
+    						|| SalesConstants.RENTAL_STATUS_RET.equals(rentalStatus)
+    						|| SalesConstants.RENTAL_STATUS_WOF.equals(rentalStatus)) {
+    					msgT = "Contact CRT";
+    					msg  = "This order is under SUS/TER/RET/WOF. Contact CRT.";
+    					isInValid = "isInValid";
+    				}
+    				else {
+    					logger.debug("CurrentBillMth"+CurrentBillMth);
+    					logger.debug("LastBillMth"+LastBillMth);
+    					if(CurrentBillMth > LastBillMth) {
+    						msgT = "Unbill Amount Exist";
+    						msg  = "This order come with un-bill amount. Contact CRT.";
+    						isInValid = "isInValid";
+    					}
+    					else if(LastBillMth >= 48) {
+    						msgT = "Exceed 48 Billing Month";
+    						msg  = "This order exceeded 48th billing month.";
+    						isInValid = "isInValid";
+    					}
+    					else if(OutrightPrice.compareTo(BigDecimal.ZERO) == 0) {
+    						msgT = "Outright Price Missing";
+    						msg  = "Unable to retrieve outright price.";
+    						isInValid = "isInValid";
+    					}
+    					else if(Integer.parseInt(installDate) <= 19000101) {
+    						msgT = "Invalid Install Date";
+    						msg  = "Invalid install date.";
+    						isInValid = "isInValid";
+    					}
+    				}
 				}
 			}
 		}

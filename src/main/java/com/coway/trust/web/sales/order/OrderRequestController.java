@@ -161,6 +161,18 @@ public class OrderRequestController {
     	return ResponseEntity.ok(rslt);
     }
 	
+    @RequestMapping(value = "/selectValidateInfoSimul.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectValidateInfoSimul(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.selectValidateInfoSimul(params);
+    	return ResponseEntity.ok(rslt);
+    }
+	
+    @RequestMapping(value = "/selectOrderSimulatorViewByOrderNo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectOrderSimulatorViewByOrderNo(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.selectOrderSimulatorViewByOrderNo(params);
+    	return ResponseEntity.ok(rslt);
+    }
+	
     @RequestMapping(value = "/selectOderOutsInfo.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> selectOderOutsInfo(@RequestParam Map<String, Object> params)    {
     	EgovMap rslt = orderRequestService.selectOderOutsInfo(params);

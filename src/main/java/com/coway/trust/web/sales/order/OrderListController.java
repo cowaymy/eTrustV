@@ -89,4 +89,13 @@ public class OrderListController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(orderList);
 	}
+	
+	@RequestMapping(value = "/orderRentToOutrSimulPop.do")
+	public String orderRentToOutrSimulPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		model.put("ordNo", params.get("ordNo"));
+		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3));
+		
+		return "sales/order/orderRentToOutrSimulPop";
+	}
 }
