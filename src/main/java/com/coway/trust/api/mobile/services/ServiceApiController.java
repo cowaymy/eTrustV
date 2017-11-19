@@ -798,7 +798,7 @@ public class ServiceApiController {
 		// TODO : 리턴할 dto 구현.
 //		transactionId = hSReAppointmtRequestForm.getTransactionId();
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//		if (RegistrationConstants.IS_INSERT_HSRE_LOG) {
 //			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
 //		}
 		
@@ -808,7 +808,7 @@ public class ServiceApiController {
 	
 
 	
-	
+	//20171119 hash
 	@ApiOperation(value = "After Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/aSReAppointmentRequest", method = RequestMethod.POST)
 	public ResponseEntity<ASReAppointmentRequestDto> aSReAppointmentRequest(@RequestBody ASReAppointmentRequestForm aSReAppointmentRequestForm)
@@ -817,21 +817,21 @@ public class ServiceApiController {
 
 		Map<String, Object> params = ASReAppointmentRequestForm.createMaps(aSReAppointmentRequestForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
+			MSvcLogApiService.saveAsReServiceLogs(params);
+		}
 		
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
+//		MSvcLogApiService.insertProductReturnResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
-//		transactionId = productReturnResultForm.getTransactionId();
-		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+//		transactionId = aSReAppointmentRequestForm.getTransactionId();
+//		
+//		if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
+//			MSvcLogApiService.updateSuccessAsReStatus(transactionId);
 //		}
 		
 		return ResponseEntity.ok(ASReAppointmentRequestDto.create(transactionId));
@@ -862,7 +862,7 @@ public class ServiceApiController {
 		// TODO : 리턴할 dto 구현.
 //		transactionId = installReAppointmentRequestForm.getTransactionId();
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//		if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
 //			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
 //		}
 		

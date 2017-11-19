@@ -384,6 +384,34 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.selectOutstandingResultDetailList(params);
 	}
+
+	
+	
+	@Override
+	public void saveAsReServiceLogs(Map<String, Object> params) {
+		MSvcLogApiMapper.insertAsReServiceLog(params);			
+	}
+
+
+	
+	
+	@Override
+	public void updateSuccessAsReStatus(String transactionId) {
+		MSvcLogApiMapper.insertAsReServiceLog(transactionId);		
+		
+	}
+
+	@Override
+	public void updateSuccessHsReStatus(String transactionId) {
+		MSvcLogApiMapper.insertHsReServiceLog(transactionId);		
+		
+	}
+
+	@Override
+	public void updateSuccessInsReStatus(String transactionId) {
+		MSvcLogApiMapper.insertInsReServiceLog(transactionId);		
+		
+	}
 	
 
 /*	@Override

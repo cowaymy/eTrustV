@@ -27,6 +27,20 @@ public class ASReAppointmentRequestForm {
 
 	@ApiModelProperty(value = "작업 변경 시간(HHMM)")
 	private String appointmentTime;
+	
+	
+	private String transactionId;
+	
+	
+	
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
 
 	public String getUserId() {
 		return userId;
@@ -74,20 +88,20 @@ public class ASReAppointmentRequestForm {
 	
 	public static Map<String, Object> createMaps(ASReAppointmentRequestForm aSReAppointmentRequestForm) {
 		
-		List<Map<String, Object>> list = new ArrayList<>();
-
-			Map<String, Object> map=null;
-			
+			List<Map<String, Object>> list = new ArrayList<>();
+			Map<String, Object> map;
 			
 //				map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
 //				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-
+				
+				map = BeanConverter.toMap(aSReAppointmentRequestForm);
+				
 				// install Result
-				map.put("userId", aSReAppointmentRequestForm.getUserId());
-				map.put("salesOrderNo", aSReAppointmentRequestForm.getSalesOrderNo());
-				map.put("serviceNo", aSReAppointmentRequestForm.getServiceNo());
-				map.put("appointmentDate", aSReAppointmentRequestForm.getAppointmentDate());
-				map.put("appointmentTime", aSReAppointmentRequestForm.getAppointmentTime());
+//				map.put("userId", aSReAppointmentRequestForm.getUserId());
+//				map.put("salesOrderNo", aSReAppointmentRequestForm.getSalesOrderNo());
+//				map.put("serviceNo", aSReAppointmentRequestForm.getServiceNo());
+//				map.put("appointmentDate", aSReAppointmentRequestForm.getAppointmentDate());
+//				map.put("appointmentTime", aSReAppointmentRequestForm.getAppointmentTime());
 
 //				list.add(map);
 				

@@ -83,5 +83,13 @@ public interface MSvcLogApiMapper {
 	List<EgovMap> selectOutstandingResultDetailList(Map<String, Object> params);
 
 	Map<String, Object> getAsBasic(Map<String, Object> params);
+
+	void insertAsReServiceLog(Map<String, Object> params);
+
+	void insertAsReServiceLog(String transactionId);
+
+	void insertHsReServiceLog(String transactionId);
+
+	void insertInsReServiceLog(String transactionId);
 	
 }

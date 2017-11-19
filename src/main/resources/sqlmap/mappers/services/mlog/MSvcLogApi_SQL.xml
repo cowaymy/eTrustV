@@ -1137,7 +1137,21 @@ AND   O1DA.MEM_CODE = #{userId}
        </update>
 
 
+       <update id="updateSuccessHsReStatus" parameterType="string">
+          UPDATE SVC0036T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+       </update>
+       
 
+       <update id="updateSuccessAsReStatus" parameterType="string">
+          UPDATE SVC0037T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+       </update>
+       
+       
+       <update id="updateSuccessInsReStatus" parameterType="string">
+          UPDATE SVC0038T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+       </update>
+
+       
 
         <select id="getNextSvc006dSeq"  resultType="int">
              select GBSLCVD.SVC0006D_RESULT_ID_SEQ.NEXTVAL
@@ -1997,5 +2011,79 @@ AND   O1DA.MEM_CODE = #{userId}
 			                                              ) A
 			GROUP BY A.CODE_NAME, A.RENT_DOC_NO, A.RENT_INST_DT
          </select>
+         
+         
+         
+         
+         
+                   <insert id="insertHsReServiceLog" parameterType="Map">
+                            INSERT INTO SVC0036T (
+                               RESULT_SEQ
+                                ,CRT_USER_ID
+                                ,SALES_ORD_ID
+                                ,SVC_NO
+                                ,AS_APPNT_DT
+                                ,AS_APPNT_TM
+<!--                                ,TRNSC_ID -->
+                                ,TRAN_STUS_CD
+                            ) VALUES (
+                               SVC0036T_ID_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{serviceNo}
+                               , #{appointmentDate}
+                               , #{appointmentTime}
+                               , 'N'
+                            )
+                    </insert>
+        
+                 
+         
+                    <insert id="insertAsReServiceLog" parameterType="Map">
+				            INSERT INTO SVC0037T (
+				               RESULT_SEQ
+								,CRT_USER_ID
+								,SALES_ORD_ID
+								,SVC_NO
+								,AS_APPNT_DT
+								,AS_APPNT_TM
+<!-- 								,TRNSC_ID -->
+								,TRAN_STUS_CD
+				            ) VALUES (
+				               SVC0037T_ID_SEQ.NEXTVAL
+				               , #{userId}
+				               , #{salesOrderNo}
+				               , #{serviceNo}
+				               ,  to_date(#{appointmentDate},'YYYYMMDD')
+				               , #{appointmentTime}
+				               , 'N'
+				            )
+                    </insert>
+        
+        
+        
+                <insert id="insertInsReServiceLog" parameterType="Map">
+                            INSERT INTO SVC0038T (
+                               RESULT_SEQ
+                                ,CRT_USER_ID
+                                ,SALES_ORD_ID
+                                ,SVC_NO
+                                ,AS_APPNT_DT
+                                ,AS_APPNT_TM
+<!--                                ,TRNSC_ID -->
+                                ,TRAN_STUS_CD
+                            ) VALUES (
+                               SVC0038T_ID_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{serviceNo}
+                               , #{appointmentDate}
+                               , #{appointmentTime}
+                               , 'N'
+                            )
+                </insert>
+        
+        
+        
 
 </mapper>

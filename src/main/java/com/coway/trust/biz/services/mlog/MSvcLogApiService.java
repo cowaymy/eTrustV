@@ -59,6 +59,14 @@ public interface MSvcLogApiService {
 	List<EgovMap> selectOutstandingResultDetailList(Map<String, Object> params);
 	
 	Map<String, Object> getAsBasic(Map<String, Object> params);
+
+	void saveAsReServiceLogs(Map<String, Object> params);
+
+	void updateSuccessAsReStatus(String transactionId);
+	
+	void updateSuccessHsReStatus(String transactionId);
+	
+	void updateSuccessInsReStatus(String transactionId);
 	
 	
 
