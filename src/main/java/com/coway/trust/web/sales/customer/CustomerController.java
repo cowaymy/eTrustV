@@ -679,13 +679,13 @@ public class CustomerController {
 	 * @author 
 	 * */
 	@RequestMapping(value = "/nricDupChk.do", method = RequestMethod.POST)
-	public int nricDupChk(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<EgovMap> nricDupChk(@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
 		LOGGER.debug("NRIC  :::::::::::::::::::::::::::::::::::::::::::::: {}", params.get("nric"));
-		int dup = 0;
+		EgovMap dupMap = null;
 		
-		dup = customerService.nricDupChk(params);
+		dupMap = customerService.nricDupChk(params);
 		
-		return dup;
+		return ResponseEntity.ok(dupMap);
 	}
 	
 	

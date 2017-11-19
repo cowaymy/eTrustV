@@ -3,24 +3,24 @@
 
 <script type="text/javaScript">
 
-	//AUIGrid 생성 후 반환 ID
-	var myGridID;
-	
-	// popup 크기
-	var option = {
+    //AUIGrid 생성 후 반환 ID
+    var custGridID;
+    
+    // popup 크기
+    var option = {
             width : "1200px",   // 창 가로 크기
             height : "500px"    // 창 세로 크기
     };
-	
-	$(document).ready(function(){
-	    
+    
+    $(document).ready(function(){
+        
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
-        AUIGrid.setSelectionMode(myGridID, "singleRow");
+        AUIGrid.setSelectionMode(custGridID, "singleRow");
         
         // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
+        AUIGrid.bind(custGridID, "cellDoubleClick", function(event){
             $("#_custId").val(event.item.custId);
             $("#_custAddId").val(event.item.custAddId);
             $("#_custCntcId").val(event.item.custCntcId);
@@ -30,25 +30,41 @@
     
         //TODO 미개발
         $("#_custVALetterBtn").click(function() {
-			Common.alert('The program is under development.');
-		});
+            
+            //Param Set
+            var gridObj = AUIGrid.getSelectedItems(custGridID);
+            
+            
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert("* No Customer Selected. ");
+                return;
+            }
+            
+            var custID = gridObj[0].item.custId;
+            $("#_repCustId").val(custID);
+            console.log("custID : " + $("#_repCustId").val()); 
+            
+            fn_report();
+            //Common.alert('The program is under development.');
+        });
         
         //Search
         $("#_listSearchBtn").click(function() {
-			
-        	//Validation
-        	//custId ,  nric , name
-        	if((null == $("#custId").val() || '' == $("#custId").val()) && 
-        	   (null == $("#nric").val() || '' == $("#nric").val())  && 
-        	   (null == $("#name").val() || '' == $("#name").val())){
-        		Common.alert("* Please Key in at least one of the 'Customer ID' , 'NRIC/Company No' , 'Customer Name'. ");
-        		return;
-        	}
-        	
-        	fn_selectPstRequestDOListAjax();
-		});
+            
+            //Validation
+            //custId ,  nric , name
+            if((null == $("#custId").val() || '' == $("#custId").val()) && 
+               (null == $("#_nric").val() || '' == $("#_nric").val())  && 
+               (null == $("#name").val() || '' == $("#name").val())){
+                Common.alert("* Please Key in at least one of the 'Customer ID' , 'NRIC/Company No' , 'Customer Name'. ");
+                return;
+            }
+            
+            fn_selectPstRequestDOListAjax();
+        });
+        
     });
-	
+    
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
         
@@ -79,11 +95,11 @@
                 width : 170,
                 editable : false
             },{
-            	dataField : "custAddId",
-            	visible : false
+                dataField : "custAddId",
+                visible : false
             },{
-            	dataField : "custCntcId",
-            	visible : false
+                dataField : "custCntcId",
+                visible : false
             },{
                 dataField : "undefined",
                 headerText : "Edit",
@@ -137,14 +153,14 @@
             groupingMessage : "Here groupping"
         };
         
-        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+        //custGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+        custGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
     }
-	
+    
     // 리스트 조회.
     function fn_selectPstRequestDOListAjax() {        
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", $("#searchForm").serialize(), function(result) {
-            AUIGrid.setGridData(myGridID, result);
+            AUIGrid.setGridData(custGridID, result);
         }
         );
     }
@@ -174,9 +190,18 @@
     }
     
     function fn_insert(){
-        Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", option);
+     //   Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", option);
+        Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true, '_insDiv');
+    }
+    
+    function fn_report() {
+        var option = {
+            isProcedure : false 
+        };
+        Common.report("dataForm", option);
     }
 </script>
+
 <form id="popForm" method="post">
     <input type="hidden" name="custId"  id="_custId"/>  <!-- Cust Id  -->
     <input type="hidden" name="custAddId"   id="_custAddId"/><!-- Address Id  -->
@@ -192,14 +217,22 @@
     <input type="hidden" name="editCustBankId" id="_editCustBankId">
     <input type="hidden" name="editCustCardId" id="_editCustCardId">
 </form>
-
+<!-- report Form -->
+<form id="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CustVALetter.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
+    
+    <!-- params -->
+    <input type="hidden" id="_repCustId" name="@CustID" />
+</form>
 
 <section id="content"><!-- content start -->
 <ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Customer</li>
-	<li>Customer</li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Sales</li>
+    <li>Customer</li>
+    <li>Customer</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -208,85 +241,85 @@
 
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insert()"><span class="new"></span>NEW</a></p></li>
-	<li><p class="btn_blue"><a href="#" id="_listSearchBtn"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_listSearchBtn"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
-	<form id="searchForm" name="searchForm" action="#" method="post">
-	<table class="type1"><!-- table start -->
-	<caption>table</caption>
-	<colgroup>
-		<col style="width:140px" />
-		<col style="width:*" />
-		<col style="width:130px" />
-		<col style="width:*" />
-		<col style="width:170px" />
-		<col style="width:*" />
-	</colgroup>
-	<tbody>
-	<tr>
-		<th scope="row">Customer Type</th>
-		<td>
-		<select id="cmbTypeId" name="cmbTypeId" class="multy_select w100p" multiple="multiple">
-		</select>
-		</td>
-		<th scope="row">Customer ID</th>
-		<td>
-		<input type="text" title="Customer ID" id="custId" name="custId" placeholder="Customer ID (Number Only)" class="w100p" />
-		</td>
-		<th scope="row">NRIC/Company No</th>
-		<td>
-		<input type="text" title="NRIC/Company No" id="nric" name="nric" placeholder="NRIC / Company Number" class="w100p" />
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">Customer Name</th>
-		<td>
-		  <input type="text" title="Customer Name" id="name" name="name" placeholder="Customer Name" class="w100p" />
-		</td>
-		<th scope="row">Nationality</th>
-		<td>
-		  <select  id="nation" name="nation" class="w100p"></select>
-		</td>
-		<th scope="row">DOB</th>
-		<td>
-		<input type="text" title="DOB" id="dob" name="dob" placeholder="DD/MM/YYYY" class="j_date" />
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">V.A Number</th>
-		<td>
-		  <input type="text" title="V.A Number" id="custVaNo" name="custVaNo" placeholder="Virtual Account (VA) Number" class="w100p" />
-		</td>
-		<th scope="row">Company Type</th>
-		<td>
-		  <select id="cmbCorpTypeId" name="cmbCorpTypeId" class="multy_select w100p" multiple="multiple">
-		</select>
-		</td>
-		<th scope="row"></th>
-		<td></td>
-	</tr>
-	</tbody>
-	</table><!-- table end -->
-	
-	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-	<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-	<dl class="link_list">
-		<dt>Link</dt>
-		<dd>
-		<ul class="btns">
-			<li><p class="link_btn"><a href="#" id="_custVALetterBtn">Customer VA Letter</a></p></li>
-		</ul>
-		<ul class="btns">
-		</ul>
-		<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-		</dd>
-	</dl>
-	</aside><!-- link_btns_wrap end -->
-	
-	</form>
+    <form id="searchForm" name="searchForm" action="#" method="post">
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:140px" />
+        <col style="width:*" />
+        <col style="width:130px" />
+        <col style="width:*" />
+        <col style="width:170px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Customer Type</th>
+        <td>
+        <select id="cmbTypeId" name="cmbTypeId" class="multy_select w100p" multiple="multiple">
+        </select>
+        </td>
+        <th scope="row">Customer ID</th>
+        <td>
+        <input type="text" title="Customer ID" id="custId" name="custId" placeholder="Customer ID (Number Only)" class="w100p" />
+        </td>
+        <th scope="row">NRIC/Company No</th>
+        <td>
+        <input type="text" title="NRIC/Company No" id="_nric" name="nric" placeholder="NRIC / Company Number" class="w100p" " />
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Customer Name</th>
+        <td>
+          <input type="text" title="Customer Name" id="name" name="name" placeholder="Customer Name" class="w100p" />
+        </td>
+        <th scope="row">Nationality</th>
+        <td>
+          <select  id="nation" name="nation" class="w100p"></select>
+        </td>
+        <th scope="row">DOB</th>
+        <td>
+        <input type="text" title="DOB" id="_dob" name="dob" placeholder="DD/MM/YYYY" class="j_date" />
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">V.A Number</th>
+        <td>
+          <input type="text" title="V.A Number" id="custVaNo" name="custVaNo" placeholder="Virtual Account (VA) Number" class="w100p" />
+        </td>
+        <th scope="row">Company Type</th>
+        <td>
+          <select id="cmbCorpTypeId" name="cmbCorpTypeId" class="multy_select w100p" multiple="multiple">
+        </select>
+        </td>
+        <th scope="row"></th>
+        <td></td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
+    
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <ul class="btns">
+            <li><p class="link_btn"><a href="#" id="_custVALetterBtn">Customer VA Letter</a></p></li>
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
+    
+    </form>
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->

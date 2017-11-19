@@ -214,7 +214,7 @@ public interface CustomerMapper {
 	 * @return
 	 * @exception Exception
 	 */
-	int nricDupChk(Map<String, Object> params);
+	EgovMap nricDupChk(Map<String, Object> params);
 	
 	
 	/**

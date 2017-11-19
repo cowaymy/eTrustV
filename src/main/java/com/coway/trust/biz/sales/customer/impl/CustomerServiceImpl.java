@@ -276,9 +276,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @exception Exception
 	 * @author 
 	 */
-	public int nricDupChk(Map<String, Object> params){
-		int nricDupChk = customerMapper.nricDupChk(params);
-		return nricDupChk;
+	public EgovMap nricDupChk(Map<String, Object> params){
+		return customerMapper.nricDupChk(params);
 	}
 	
 	

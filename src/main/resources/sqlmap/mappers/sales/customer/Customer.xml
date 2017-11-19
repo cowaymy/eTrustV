@@ -1487,11 +1487,21 @@
 		               )
     </insert>
     
-    <select id="nricDupChk" parameterType="Map" resultType="Integer">
-      SELECT COUNT(0) AS nricDupChk 
-		  FROM SAL0029D 
-		 WHERE  TYPE_ID = #{cmbTypeId}
-		    AND NRIC = #{nric}
+    <select id="nricDupChk" parameterType="Map" resultType="egovMap">
+		      SELECT 
+		        CUST_ID 
+			  FROM 
+			    SAL0029D 
+			  WHERE  
+			     1 = 1
+			  <if test=" null != cmbTypeId and '' != cmbTypeId">
+			     AND 
+			         TYPE_ID = #{cmbTypeId}
+			  </if>   
+			  AND NRIC = #{nric}
+			  <![CDATA[
+			  AND ROWNUM <= 1
+			  ]]>
     </select>
     
     <select id="selectIssueBank" parameterType="Map" resultType="egovMap">
