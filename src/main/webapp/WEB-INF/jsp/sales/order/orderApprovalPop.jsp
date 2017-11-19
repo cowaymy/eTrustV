@@ -14,7 +14,7 @@
             }  
         });
         $('#txtApprovalCode').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+            if (event.which === 13) {    //enter
                 fn_onClickBtnSaveApproval();
                 return false;
             }  

@@ -83,7 +83,9 @@
 	    console.log('isInValid :'+isInValid);
 	    
 	    if(isInValid == 'InValid') {
-            Common.popupDiv("/sales/order/orderApprovalPop.do");
+	        //2017.11.19 결제확인 팝업 주석처리. Confirm메세지로 대체
+            //Common.popupDiv("/sales/order/orderApprovalPop.do");
+            Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + "<b>It is order that needs approval</b>", fn_popOrderDetail);
 	    }
 	    else {
             fn_popOrderDetail();

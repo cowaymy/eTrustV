@@ -696,7 +696,9 @@
                 var promoIdVal = $("#ordPromo").val();
                 
                 fn_loadProductPrice(appTypeVal, stkIdVal);
-                fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                if(FormUtil.isNotEmpty(promoIdVal)) {
+                    fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                }
             }
         });
         $('#salesmanCd').keydown(function (event) {  
@@ -954,7 +956,9 @@
             msg += 'Promotion        : '+newRentalGST+'<br>';
             msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]';
             
-            Common.confirm('Confirm To Save' + DEFAULT_DELIMITER + '<b>'+msg+'</b>', fn_excludeGstAmt, fn_includeGstAmt);
+            fn_excludeGstAmt();
+            
+            Common.alert('GST Amount' + DEFAULT_DELIMITER + '<b>'+msg+'</b>');
         });
         $('#ordPromo').change(function() {
 
@@ -1108,6 +1112,8 @@
         $('#orgOrdRentalFees').val(oldRentalGST);
         $('#ordRentalFees').val(newRentalGST);
         $('#ordPv').val(newPv);
+        
+        $('#pBtnCal').addClass("blind");
 	}
 	
 	function fn_includeGstAmt() {
@@ -1166,13 +1172,12 @@
         
         if($("#ordPromo option:selected").index() > 0) {
 
-            //For Test 2017.11.15
-            //if($("#exTrade").val() == 1) {
-            //    Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
-            //}
-            //else {
+            if($("#exTrade").val() == 1) {
+                Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+            }
+            else {
                 Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-            //}
+            }
         }
         else {
             Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
@@ -1184,6 +1189,7 @@
         
 //      $("#gstChk").removeAttr("disabled");
         $("#promoDiscPeriodTp").removeAttr("disabled");
+        $("#dscBrnchId").removeAttr("disabled");
         
         //----------------------------------------------------------------------
         // salesOrderMVO
@@ -1369,7 +1375,8 @@
                 console.log("message : " + jqXHR.responseJSON.message);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
             }
             catch (e) {
                 console.log(e);
@@ -1654,6 +1661,11 @@
             msg += "* Please select prefer install time.<br>";
         }
 
+        if(!$('#pBtnCal').hasClass("blind")) {
+            isValid = false;
+            msg += "* Please press the Calculation button<br>";
+        }
+            
         if(!isValid) Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
@@ -2057,6 +2069,19 @@
             default :
                 break;
         };
+        /*
+        if(tabNm != 'ins') {
+            if(!$('#pBtnCal').hasClass("blind")) {                
+                //$('#aTabIN').click();
+                Common.alert('<b>Please press the Calculation button</b>', fn_goInstallTab);
+                return false;
+            }
+        }
+        */
+    }
+    
+    function fn_goInstallTab() {
+        $('#aTabIN').click();
     }
     
     function fn_getDocChkCount() {
@@ -2099,14 +2124,14 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
-    <li id="tabCS"><a id="aTabCS" href="#" class="on">Customer</a></li>
-    <li id="tabMC"><a id="aTabMS" href="#">Master Contact</a></li>
-    <li id="tabSO"><a id="aTabSO" href="#">Sales Order</a></li>
-    <li id="tabPC"><a id="aTabPC" href="#">Payment Channel</a></li>
-    <li id="tabBD"><a id="aTabBD" href="#">Billing Detail</a></li>
-    <li id="tabIN"><a id="aTabIN" href="#">Installation</a></li>
+    <li id="tabCS"><a id="aTabCS" href="#" onClick="javascript:chgTab('cst');" class="on">Customer</a></li>
+    <li id="tabMC"><a id="aTabMS" href="#" onClick="javascript:chgTab('cnt');">Master Contact</a></li>
+    <li id="tabSO"><a id="aTabSO" href="#" onClick="javascript:chgTab('sal');">Sales Order</a></li>
+    <li id="tabPC"><a id="aTabPC" href="#" onClick="javascript:chgTab('pay');">Payment Channel</a></li>
+    <li id="tabBD"><a id="aTabBD" href="#" onClick="javascript:chgTab('bil');">Billing Detail</a></li>
+    <li id="tabIN"><a id="aTabIN" href="#" onClick="javascript:chgTab('ins');">Installation</a></li>
     <li id="tabDC"><a id="aTabDC" href="#" onClick="javascript:chgTab('doc');">Documents</a></li>
-    <li id="tabRC"><a id="aTabRC" href="#">Relief Certificate</a></li>
+    <li id="tabRC"><a id="aTabRC" href="#" onClick="javascript:chgTab('rlf');">Relief Certificate</a></li>
 </ul>
 
 <!--****************************************************************************
@@ -3063,7 +3088,7 @@
     </td>
     <th scope="row">DSC Branch<span class="must">*</span></th>
     <td>
-    <select id="dscBrnchId" name="dscBrnchId" class="w100p"></select>
+    <select id="dscBrnchId" name="dscBrnchId" class="w100p" disabled></select>
     </td>
 </tr>
 <tr>
