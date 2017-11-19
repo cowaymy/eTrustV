@@ -378,14 +378,51 @@ function addUncheckedRowsByValue(selValue)
 //적용 버턴 클릭 핸들러
 function fnExportPDF(index, flag) 
 {
-  Common.alert(" Test PDF RowIndex: "+ index + " PoNo_" + flag );
+  $("#viewType").val("PDF");
+  $("#reportDownFileName").val(flag);
+  $("#V_PO_NO").val(flag);
+  $("#reportFileName").val("/scm/PO_management.rpt");
+
+  console.log( "Export to PDF RowIndex: "+ index + " /PoNo: " + flag 
+		          +" /viewType: " + $("#viewType").val()
+		          +" /reportDownFileName: " + $("#reportDownFileName").val()
+		          +" /V_PO_NO: " + $("#V_PO_NO").val()
+             );
+  
+  Common.report("reportDataForm");
+  
 };
 
 //팝업 버턴 클릭 핸들러
 function fnExportExcel(index, value) 
 {
-  Common.alert("Test Excel RowIndex: "+ index + " PoNo_"+value);
-};
+  $("#viewType").val("EXCEL_FULL");
+  $("#reportDownFileName").val(value);
+  $("#V_PO_NO").val(value);
+  $("#reportFileName").val("/scm/PO_management.rpt");
+
+  console.log( "Export to Excel RowIndex: "+ index + " /PoNo: " + value 
+		          +" /viewType: " + $("#viewType").val()
+		          +" /reportDownFileName: " + $("#reportDownFileName").val()
+		          +" /V_PO_NO: " + $("#V_PO_NO").val()
+             );
+
+  Common.report("reportDataForm");
+  
+}
+
+function CreatePO()
+{
+//	FOBAmount 의미없음
+/* 	CREATE view [dbo].[SCMPrePOView2]
+	as
+	select t0.*,t1.StkDesc, t2.FOBPrice as UnitPrice, cast(0 as decimal(18,2)) as FOBAmount
+	from SCMPrePOItem t0
+	  left join InvStock t1 on t1.StkCode=t0.PreStockCode
+	  left join SCMFOBPrice t2 on t2.StockCode=t0.PreStockCode
+
+	GO */
+}
 
 
 /*************************************
@@ -567,38 +604,39 @@ function fnSearchBtnSCMPrePOView()
 	           , $("#MainForm").serialize()
 	           , function(result) 
 	           {
-	              console.log("성공 fnSearchBtnList: " + result.selectScmPoViewList.length);
+	              console.log("성공 selectScmPoViewList: " + result.selectScmPoViewList.length);
+	              console.log("성공 selectScmPoStatusCntList: " + result.selectScmPoStatusCntList.length);
 	              console.log("성공 prePoitemCnt:    " + result.selectScmPoStatusCntList[0].prePoitemCnt);
 	              console.log("성공 scmpomasterCnt:  " + result.selectScmPoStatusCntList[0].scmpomasterCnt);
 	              AUIGrid.setGridData(myGridID, result.selectScmPrePoItemViewList);
 	              //AUIGrid.setGridData(myGridID2, result.selectScmPrePoItemViewList);
 	              AUIGrid.setGridData(SCMPOViewGridID, result.selectScmPoViewList);
 	              	              
-	              if(result != null)
-	              {
-	                  if(result.selectScmPoStatusCntList.length > 0 )
-	                  {
+	               if(result != null)
+	              { 
+	            	    if (result.selectScmPoViewList.length == 0
+	    	             && result.selectScmPoStatusCntList[0].prePoitemCnt == 0 
+		            	   && result.selectScmPoStatusCntList[0].scmpomasterCnt == 0 )
+		            	  {
+	                     $("#po_issue").attr('class','circle circle_grey');
+	                     $("#appRoval").attr('class','circle circle_grey');
+			            	} 
+	            	    else  
+	                  {  // 2016 11 KL
 	                	  if (result.selectScmPoStatusCntList[0].prePoitemCnt < 1)  //notIssue
                 		    $("#po_issue").attr('class','circle circle_blue');
 		                  else
-		                	  ("#po_issue").attr('class','circle circle_red');
+		                	  $("#po_issue").attr('class','circle circle_red');
 		                  
 	                	  if (result.selectScmPoStatusCntList[0].scmpomasterCnt < 1)  //pomaster
 	                		   $("#appRoval").attr('class','circle circle_blue');
 	                	  else
 	                		   $("#appRoval").attr('class','circle circle_red');
 	                  }
-	                  else
-		                {
-	                    $("#po_issue").attr('class','circle circle_grey');
-	                    $("#appRoval").attr('class','circle circle_grey');
-			              }
-	              }
-	              else
-		            {
-	            	  $("#po_issue").attr('class','circle circle_grey');
-	            	  $("#appRoval").attr('class','circle circle_grey');
-			          }
+	                  
+	              
+	               }
+	            
 	           });	  
 }
 
@@ -779,7 +817,13 @@ $(document).ready(function()
 </ul>
 </aside><!-- title_line end -->
 
-
+<form id="reportDataForm" action="">
+  <input type ="hidden" id="reportFileName" name="reportFileName" value=""/>
+  <input type ="hidden" id="viewType" name="viewType" value=""/>
+  <input type ="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+  <input type ="hidden" id="V_PO_NO" name="V_PO_NO" value="" />
+</form>      
+ 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="post" action="">
 
@@ -935,6 +979,7 @@ $(document).ready(function()
 </aside><!-- link_btns_wrap end -->
 
 </form>
+
 </section><!-- search_table end -->
 
 </section><!-- content end -->
