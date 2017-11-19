@@ -216,7 +216,7 @@
 				             AND PRE_WEEK_TH = #{scmPeriodCbBox}  
 				             AND PRE_CDC     = #{cdcCbBox}
 				             AND (PRE_QTY - PO_QTY) <![CDATA[ > ]]> 0
-				         ) PRE_POITEM_CNT
+				        ) PRE_POITEM_CNT
 				       ,(
 				           SELECT COUNT(1) 
 				             FROM SCM0009M 
@@ -228,6 +228,129 @@
 				   FROM DUAL   
 
   </select>
+ 
+  <select id="selectReportPDFExcel_Temp" parameterType="Map" resultType="egovMap">
+          SELECT T0.PO_NO
+					     , T0.PO_ISSU_DT 
+					     , T1.STOCK_CODE ITEM_CODE_KOR
+					     , T4.STOCK_CODE ITEM_CODE_MAL
+					     , '' AS MATERIAL
+					     , T2.STK_DESC AS DESCRIPTION
+					     , NVL(T3.FOB_PRC,0) AS UNITPRICE
+					     , T1.QTY
+					     , (NVL(T3.FOB_PRC,0)*NVL(T1.QTY,0)) AS AMOUNT
+					     , '' AS REMARK
+					  FROM SCM0009M T0
+					       LEFT JOIN SCM0010D T1 ON T1.PO_NO      = T0.PO_NO
+					       LEFT JOIN SYS0026M T2 ON T2.STK_CODE   = T1.STOCK_CODE
+					       LEFT JOIN SCM0020M T3 ON T3.STOCK_CODE = T1.STOCK_CODE
+					       LEFT JOIN SCM0024M T4 ON T4.STOCK_CODE = T1.STOCK_CODE
+					WHERE T0.PO_NO= '{?V_PO_NO}'   
+  </select>
+ 
+<select id="selectPoApprovalSummary" parameterType="Map" resultType="egovMap">
+WITH PO_APPROVAL_SUMMARY
+  AS
+   (
+      SELECT 
+             NVL(STOCK_CTGRY,'ZZ_SUM') STOCK_CTGRY
+           , NVL(CDC,'ALL_SUM') CDC
+           , SUM(QTY) QTY
+           , SUM(FOB_AMT) FOB_AMT
+       FROM SCM0043V
+      WHERE BAS_YEAR = #{scmYearCbBox} 
+        AND EST_WEEK = #{scmPeriodCbBox} 
+        <if test="scmStockType != null and scmStockType !=''"> 
+        AND STK_TYPE_ID = #{scmStockType}
+        </if>    
+      GROUP BY ROLLUP (STOCK_CTGRY,CDC)
+    )
+    SELECT STOCK_CTGRY
+          ,JB_QTY
+          ,JB_FOB_AMT
+          ,KC_QTY
+          ,KC_FOB_AMT
+          ,KK_QTY
+          ,KK_FOB_AMT
+          ,KL_QTY
+          ,KL_FOB_AMT
+          ,PN_QTY
+          ,PN_FOB_AMT
+          ,ALL_SUM_QTY
+          ,ALL_SUM_FOB_AMT
+      FROM PO_APPROVAL_SUMMARY
+      PIVOT
+           ( SUM (QTY) QTY ,SUM(FOB_AMT) FOB_AMT FOR CDC IN ('KC' AS KC ,'KK' AS KK ,'KL' AS KL ,'JB' AS JB ,'PN' AS PN ,'ALL_SUM' AS ALL_SUM ) )
+     WHERE STOCK_CTGRY <![CDATA[ <> ]]> 'ZZ_SUM'
+     ORDER BY STOCK_CTGRY
+</select>
+ 
+<select id="selectPoApprovalSummaryHidden" parameterType="Map" resultType="egovMap">
+  SELECT CODE
+    FROM SYS0013M 
+   WHERE CODE_MASTER_ID = 349
+   MINUS
+ SELECT CDC 
+   FROM SCM0043V 
+  WHERE BAS_YEAR = #{scmYearCbBox}
+    AND EST_WEEK = #{scmPeriodCbBox}   
+  <if test="scmStockType != null and scmStockType !=''"> 
+    AND STK_TYPE_ID = #{scmStockType}
+  </if>    
+  GROUP BY CDC
+</select>
+ 
+<select id="selectPoApprovalMainList" parameterType="Map" resultType="egovMap">
+SELECT 
+       PO_ITM_APPV_STUS  
+     , STK_TYPE_ID 
+     , PO_NO 
+     , PO_ITM_NO  
+     , GR_WEEK    
+     , TO_CHAR(PO_ISSU_DT,'DD-MM-YYYY') PO_ISSU_DT
+     , STOCK_CTGRY   
+     , STOCK_CODE       
+     , STK_DESC   
+     , QTY   
+     , FOB_AMT       
+     , CDC     
+     , TO_CHAR(IF_DT ,'DD-MM-YYYY') IF_DT
+              
+     , PRE_SCM_YEAR   
+     , PRE_EST_WEEK   
+     , PRE_CDC   
+     , PRE_STOCK_CODE   
+     , PRE_STOCK_DESC   
+     , PRE_QTY   
+     , PRE_FOB_PRC   
+     , PO_ID             
+     , BAS_YEAR   
+     , EST_WEEK   
+     , RTPGR_WEEK   
+     , PO_STUS   
+     , CRT_DT   
+     , CRT_USER_ID   
+     , UPD_DT   
+     , UPD_USER_ID   
+     , SN   
+     , STOCK_ID   
+     , PO_APPV_STUS 
+  FROM SCM0043V 
+ WHERE BAS_YEAR = #{scmYearCbBox} 
+   AND EST_WEEK = #{scmPeriodCbBox} 
+ <if test="scmStockType != null and scmStockType !=''"> 
+   AND STK_TYPE_ID = #{scmStockType}
+ </if>   
+   AND PO_NO IS NOT NULL
+</select>
+
+<update id="updatePoApprovalDetail" parameterType="Map">
+   UPDATE SCM0010D
+      SET PO_ITM_APPV_STUS = 5
+    WHERE PO_NO      = #{poNo}    
+      AND PO_ITM_NO  = #{poItmNo}
+      AND STOCK_CODE = #{stockCode}
+</update>
  
   
 </mapper>
