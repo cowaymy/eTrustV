@@ -64,6 +64,9 @@
         $('#btnReq').click(function() {
             fn_orderRequestPop();
         });
+        $('#btnSimul').click(function() {
+            fn_orderSimulPop();
+        });
         $('#btnSrch').click(function() {
         	if(fn_validSearchList()) fn_selectListAjax();
         });
@@ -133,6 +136,16 @@
         }
         else {
             Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+        }
+    }
+    
+    function fn_orderSimulPop() {
+        var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        if(selIdx > -1) {
+            Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+        }
+        else {
+            Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordId : '' }, null, true);
         }
     }
     
@@ -249,7 +262,7 @@
     <li><p class="btn_blue"><a id="btnNewNcv" href="#" >New (NCV)</a></p></li>
     <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
     <li><p class="btn_blue"><a id="btnReq" href="#">Request</a></p></li>
-    <li><p class="btn_blue"><a id="btnSim" href="#">Simulator</a></p></li>
+    <li><p class="btn_blue"><a id="btnSimul" href="#">Simulator</a></p></li>
 	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>

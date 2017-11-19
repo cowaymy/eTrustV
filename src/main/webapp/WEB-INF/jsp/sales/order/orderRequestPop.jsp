@@ -1285,8 +1285,8 @@
             }
         });
 
-//      if(valid == 'isInValid') {
-        if(valid != 'isInValid') { //TEST
+      if(valid == 'isInValid') {
+//      if(valid != 'isInValid') { //TEST
 //          Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_selfClose);
             Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
             fn_disableControlAexc();
