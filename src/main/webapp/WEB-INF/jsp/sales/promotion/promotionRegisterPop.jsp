@@ -421,23 +421,50 @@
         var vGrid = gubun == "stocklist" ? stckGridID : giftGridID;
         
         var lastPos = AUIGrid.getRowCount(stckGridID);
+        var aIdx = 0;
+        var isExist;
         
         for (var i = 0 ; i < data.length ; i++){
+
+            isExist = false;
+                
             if(gubun == "stocklist") {
-                rowList[i] = {
-                    promoItmStkId      : data[i].item.itemid,
-                    itmcd              : data[i].item.itemcode,
-                    itmname            : data[i].item.itemname,
-                    amt                : 0,
-                    prcRpf             : 0,
-                    prcPv              : 0
+                
+                for(var j = 0; j < AUIGrid.getRowCount(stckGridID) ; j++) {                    
+                    if(data[i].item.itemid == AUIGrid.getCellValue(stckGridID, j, "promoItmStkId")) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                
+                if(!isExist) {                
+                    rowList[aIdx] = {
+                        promoItmStkId      : data[i].item.itemid,
+                        itmcd              : data[i].item.itemcode,
+                        itmname            : data[i].item.itemname,
+                        amt                : 0,
+                        prcRpf             : 0,
+                        prcPv              : 0
+                    }
+                    aIdx++;
                 }
             } else {
-                rowList[i] = {
-                    promoFreeGiftStkId : data[i].item.itemid,
-                    itmcd              : data[i].item.itemcode,
-                    itmname            : data[i].item.itemname,
-                    promoFreeGiftQty   : 1
+                
+                for(var k = 0; k < AUIGrid.getRowCount(giftGridID) ; k++) {                    
+                    if(data[i].item.itemid == AUIGrid.getCellValue(giftGridID, k, "promoFreeGiftStkId")) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                
+                if(!isExist) { 
+                    rowList[aIdx] = {
+                        promoFreeGiftStkId : data[i].item.itemid,
+                        itmcd              : data[i].item.itemcode,
+                        itmname            : data[i].item.itemname,
+                        promoFreeGiftQty   : 1
+                    }
+                    aIdx++;
                 }
             }
         }
