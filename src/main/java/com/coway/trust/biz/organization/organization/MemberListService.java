@@ -61,5 +61,7 @@ public interface MemberListService {
 
 	List<EgovMap> selectCourse();
 
+	Map<String, Object> insertRequestVacation(Map<String, Object> params, SessionVO sessionVO);
+
 
 }
