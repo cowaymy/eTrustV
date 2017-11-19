@@ -19,9 +19,10 @@
 
 //page1, 그리드 데이터
 var myGridID;
-var pendingGridID;
 
 //page2, 그리드 데이터
+var pendingGridID;
+
 var targetRenMstGridID;
 var targetRenDetGridID;
 var targetOutMstGridID;
@@ -34,7 +35,14 @@ var maxSeq = 0; //billing ADD 될 시퀀스
 
 var isMapped;
 var selectedItem;
+//myGridID에서 선택된 RowID
 var rowId;
+
+//targetFinalBillGridID Grid에서 선택된 RowID
+var selectedGridValue = -1;
+
+//FinalBillGrid에서 선택된 RowID
+var finalBillRowId;
 
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
@@ -62,6 +70,14 @@ var gridPros3 = {
 		  showStateColumn : false      // 상태 칼럼 사용  
 };
 
+//Grid Properties 설정 
+var targetGridPros = {
+  headerHeight : 35,               // 기본 헤더 높이 지정
+  pageRowCount : 5,              //페이지당 row 수
+  showStateColumn : false ,     // 상태 칼럼 사용
+  softRemoveRowMode:false
+};
+
 $(document).ready(function(){
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	pendingGridID = GridCommon.createAUIGrid("grid_wrap_pending", columnPending,null,gridPros2);
@@ -73,22 +89,12 @@ $(document).ready(function(){
     targetSrvcMstGridID = GridCommon.createAUIGrid("target_srvc_grid_wrap", targetSrvcMstColumnLayout,null,gridPros3);
     targetSrvcDetGridID = GridCommon.createAUIGrid("target_srvcD_grid_wrap", targetSrvcDetColumnLayout,null,gridPros3);
     targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros);
-    targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,gridPros3);
-	/*AUIGrid.bind(myGridID, "cellClick", function(event) {
-        var item = event.item;
-        var rowIdField;
-        var rowId;
-        
-        rowIdField = AUIGrid.getProp(event.pid, "rowField"); // rowIdField 얻기
-        rowId = item[rowIdField];
-        
-        alert(event.pid + ", " + rowId);
-        AUIGrid.addCheckedRowsByIds(event.pid, rowId);
-        //AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
-    });*/
+    targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,targetGridPros);
     
-    
-    //doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'bankType' , 'S', '');
+    // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(targetFinalBillGridID, "cellClick", function( event ){ 
+        selectedGridValue = event.rowIndex;
+    });
     
     AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
         //alert("rowIndex : " + event.rowIndex + ", id : " + event.item.stus + ", name : " + event.item.name + ", checked : " + event.checked);
@@ -415,8 +421,8 @@ var columnLayout = [
 	    { dataField:"custNm" ,headerText:"Customer Name" ,editable : false , width : 250 },
 	    {
 	        dataField : "btnCheck",
-	        headerText : " ",
-	        width: 50,
+	        headerText : "include",
+	        width: 80,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",            
 	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -446,8 +452,8 @@ var columnLayout = [
 	    { dataField:"stusCodeName" ,headerText:"Bill Status" ,editable : false , width : 100},
 	    {
 	        dataField : "btnCheck",
-	        headerText : " ",
-	        width: 50,
+	        headerText : "include",
+	        width: 80,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",            
 	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -490,8 +496,8 @@ var columnLayout = [
 	    { dataField:"custName" ,headerText:"Customer Name" ,editable : false , width : 250 },
 	    {
 	        dataField : "btnCheck",
-	        headerText : " ",
-	        width: 50,
+	        headerText : "include",
+	        width: 80,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",            
 	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -517,8 +523,8 @@ var columnLayout = [
 	    { dataField:"srvLdgrRefDt" ,headerText:"Bill Date" ,editable : false , width : 100},
 	    {
 	        dataField : "btnCheck",
-	        headerText : " ",
-	        width: 50,
+	        headerText : "include",
+	        width: 80,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",            
 	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -530,6 +536,23 @@ var columnLayout = [
 	
 	//AUIGrid 칼럼 설정 : targetFinalBillGridID
 	var targetFinalBillColumnLayout = [
+	    { dataField:"trNo", headerText:"TR No.", editable:false, width:120},
+	    { dataField:"trIssueDate", headerText:"TR Issue Date", editable:false, width:120},
+	    { dataField:"collectorId", headerText:"", editable:false, visible:false},
+	    { dataField:"collector", headerText:"Collector", editable:false, width:120,
+	    	renderer : {
+                type:"IconRenderer",
+                iconPosition:"aisleRight",
+                iconTableRef:{
+                    "default" : "${pageContext.request.contextPath}/resources/images/common/icon_id_search.gif"
+                },
+                onclick:function(rowIndex, columnIndex, value, item){
+                	//alert("rowIndex : " + rowIndex + ", value : " + value);
+                	finalBillRowId = rowIndex;
+                    fn_searchUserIdPop();
+                }
+            }	
+	    },
 	    { dataField:"procSeq" ,headerText:"Process Seq" ,editable : false , width : 120 , visible : false },
 	    { dataField:"appType" ,headerText:"AppType" ,editable : false , width : 120 , visible : false },
 	    { dataField:"advMonth" ,headerText:"AdvanceMonth" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
@@ -568,7 +591,7 @@ var columnLayout = [
 	    { dataField:"billTypeId" ,headerText:"Bill Type ID" ,editable : false , width : 150 , visible : false },
 	    { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 100},  
 	    { dataField:"custNm" ,headerText:"Cust Name" ,editable : false , width : 250},      
-	    { dataField:"nric" ,headerText:"Cust NRIC" ,editable : false , width : 120 },      
+	    { dataField:"nric" ,headerText:"Cust NRIC" ,editable : false , width : 120 , visible : false },     
 	    { dataField:"billMemNm" ,headerText:"HP Name." ,editable : false , width : 250 , visible : false },
 	    { dataField:"billMemCode" ,headerText:"HP Code." ,editable : false , width : 100 , visible : false },
 	    { dataField:"ruleDesc" ,headerText:"Pay Type" ,editable : false , width : 200 },  
@@ -581,8 +604,8 @@ var columnLayout = [
 	    { dataField:"stusNm" ,headerText:"Status" ,editable : false , width : 100 },
 	    {
 	        dataField : "btnCheck",
-	        headerText : " ",
-	        width: 50,
+	        headerText : "include",
+	        width: 80,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",            
 	            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -1676,6 +1699,35 @@ var columnLayout = [
 	        
 	    });
 	}
+  
+//추가된 최종 그리드 삭제
+  function removeFromFinal(){
+      
+      if (selectedGridValue  > -1){
+          Common.confirm('Are you sure you want to remove the Selected Row?'
+          ,function (){
+              //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+              AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
+              selectedGridValue = -1;
+          });
+      }else{
+          Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
+      }
+  }
+//Collector 조회 팝업
+  function fn_searchUserIdPop() {
+      Common.popupDiv("/common/memberPop.do", { callPrgm : "PAYMENT_PROCESS" }, null, true);
+  }
+
+  //Collector 조회 팝업 결과값 세팅
+  function fn_loadOrderSalesman(memId, memCode, memNm){
+      //$("#keyInCollMemId").val(memId);
+      //$("#keyInCollMemNm").val(memNm);
+      //alert("targetFinal : " + AUIGrid.getSelectedIndex(targetFinalBillGridID));
+      var selectedValue = AUIGrid.getSelectedIndex(targetFinalBillGridID);
+      AUIGrid.updateRow(targetFinalBillGridID, { "collector" : memNm }, selectedValue[0]);
+      AUIGrid.updateRow(targetFinalBillGridID, { "collectorId" : memId }, selectedValue[0]);
+  }
 </script>
 <!-- content start -->
 
@@ -1802,10 +1854,10 @@ var columnLayout = [
                 <td colspan="3">
                     <select id="bankType" name="bankType" class="w100p" >
                         <option value="">Choose One</option>
-                        <option value="JomPay">JomPay</option>
-                        <option value="MBBCDM">MBB CDM</option>
-                        <option value="VA">VA</option>
-                        <option value="Others">Others</option>
+                        <option value="2728">JomPay</option>
+                        <option value="2729">MBB CDM</option>
+                        <option value="2730">VA</option>
+                        <option value="2731">Others</option>
                     </select>
                 </td>
             </tr>
@@ -1872,10 +1924,10 @@ var columnLayout = [
                 <td colspan="3">
                     <select id="bankType" name="bankType" class="w100p" >
                         <option value="">Choose One</option>
-                        <option value="JomPay">JomPay</option>
-                        <option value="MBBCDM">MBB CDM</option>
-                        <option value="VA">VA</option>
-                        <option value="Others">Others</option>
+                        <option value="2728">JomPay</option>
+                        <option value="2729">MBB CDM</option>
+                        <option value="2730">VA</option>
+                        <option value="2731">Others</option>
                     </select>
                 </td>
             </tr>
@@ -1938,10 +1990,10 @@ var columnLayout = [
                 <td colspan="3">
                     <select id="bankType" name="bankType" class="w100p" >
                         <option value="">Choose One</option>
-                        <option value="JomPay">JomPay</option>
-                        <option value="MBBCDM">MBB CDM</option>
-                        <option value="VA">VA</option>
-                        <option value="Others">Others</option>
+                        <option value="2728">JomPay</option>
+                        <option value="2729">MBB CDM</option>
+                        <option value="2730">VA</option>
+                        <option value="2731">Others</option>
                     </select>
                 </td>
             </tr>
@@ -2285,6 +2337,9 @@ var columnLayout = [
 <!-- title_line start -->
     <aside class="title_line">
         <h3 class="pt0">Payment Key-In</h3>
+        <ul class="right_btns mt10">
+           <li><p class="btn_grid"><a href="javascript:removeFromFinal();">DEL</a></p></li>
+        </ul>
     </aside>
     <!-- title_line end -->
     
