@@ -661,7 +661,7 @@ function f_multiCombo(){
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="_basketAdd">Add</p></li>
+    <li><p class="btn_blue"><a id="_basketAdd">Add</a></p></li>
 </ul>
 
 <form id="_itemSrcForm">
