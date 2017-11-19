@@ -46,11 +46,33 @@
 			Common.alert("The program is under development.");
 		});
     	
+    	
+    	/*
+    	    this.txtSMSMsg.Text = "ORDER : " + this.hiddenOrderNo.Value + "\r\n" +
+                      "NAME : " + this.hiddenCustName.Value + "\r\n" +
+                      "M/SHIP STATUS : " + "PENDING" + "\r\n";
+    	*/
+    	
+    	//_updSmsMsg
+    	fn_setSMSmsg();
+    	
     }); //Document Ready Func End
+    
+    
+    function fn_setSMSmsg(){
+        var msg = '';
+        var ordNo = '${orderInfoMap.ordNo}';
+        var custNm = '${custBasicMap.name}';
+        var stus = '${confirmResultMap.name }';
+        msg += "ORDER : " + ordNo + "\r\n";
+        msg += "NAME : " + custNm + "\r\n";
+        msg += "M/SHIP STATUS : " + stus;
+        $("#_updSmsMsg").val(msg);  
+    }
     
     //Msg Check Change Func
     function  fn_smsChkFunc(){
-    	
+    	Common.alert("The program is under development.");
     	if($("#_updSmsChk").is(":checked") == true){
             $("#_updMsgIsChk").val("1");
         }else{
@@ -187,7 +209,7 @@
     </ul> -->
 
     <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="call_grid_wrap" style="width:100%; height:150px; margin:0 auto;"></div>
+    <div id="call_grid_wrap" style="width:100%; height:180px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
 
     </dd>
@@ -322,7 +344,14 @@
     </tr>
     <tr>
         <th scope="row">Credit Card No.</th>
-        <td><span>${payMap.custCrcNo}(추후 수정)</span></td>
+        <td><span>
+        <c:if test="${empty payMap.custCrcNo }">
+            -
+        </c:if>
+        <c:if test="${not empty payMap.custCrcNo }">
+            ${payMap.custCrcNo}
+        </c:if>
+        </span></td>
         <th scope="row">Card Type</th>
         <td><span>
          <c:if test="${empty payMap.codeName1}">
@@ -527,11 +556,11 @@
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><textarea cols="20" rows="5" name="updRemark">${confirmResultMap.cnfmRem }</textarea></td>
+    <td colspan="3"><textarea cols="20" rows="5" name="updRemark" placeholder="remark">${confirmResultMap.cnfmRem }</textarea></td>
 </tr>
 <tr>
     <th scope="row">P &amp; C Remark</th>
-    <td colspan="3"><textarea cols="20" rows="5" name="updPncRemark">${confirmResultMap.cnfmPncRem }</textarea></td> 
+    <td colspan="3"><textarea cols="20" rows="5" name="updPncRemark" placeholder="P & C Remark">${confirmResultMap.cnfmPncRem }</textarea></td> 
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -549,7 +578,7 @@
 <tbody>
 <tr>
     <th scope="row">Call Message<span class="must">*</span></th>
-    <td><textarea cols="20" rows="5" id="_cfCallMessage" name="updCallMsg"></textarea></td>
+    <td><textarea cols="20" rows="5" id="_cfCallMessage" name="updCallMsg" placeholder="Call Message"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -572,9 +601,11 @@
 </tr>
 <tr>
     <th scope="row">SMS Message</th>
-    <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg"></textarea></td>
+    <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg" placeholder="SMS Message" readonly="readonly" class="readonly"></textarea></td>
 </tr>
+ <tr>   
     <td colspan="2"><span>Total Character(s) : 75</span></td>
+ </tr>
 </tbody>
 </table><!-- table end -->
 

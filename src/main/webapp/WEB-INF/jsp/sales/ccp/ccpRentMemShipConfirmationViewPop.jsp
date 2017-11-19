@@ -334,7 +334,14 @@
 </tr>
 <tr>
     <th scope="row">Credit Card No.</th>
-    <td>${payMap.custCrcNo}(추후 수정)</td>
+    <td>
+        <c:if test="${empty payMap.custCrcNo }">
+            -
+        </c:if>
+        <c:if test="${not empty payMap.custCrcNo }">
+            ${payMap.custCrcNo}
+        </c:if>
+     </td>
     <th scope="row">Card Type</th>
     <td><span>
     <c:if test="${empty payMap.codeName1}">
