@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.biz.sales.order.OrderCancelVO;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
@@ -34,6 +35,9 @@ public class OrderCancelController {
 	
 	@Resource(name = "orderCancelService")
 	private OrderCancelService orderCancelService;
+	
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -107,7 +111,20 @@ public class OrderCancelController {
 	 * 화면 호출. - Cancellation Request Information
 	 */
 	@RequestMapping(value = "/cancelReqInfoPop.do")
-	public String cancelReqInfoPop(@RequestParam Map<String, Object>params, ModelMap model) {
+	public String cancelReqInfoPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO ) throws Exception {
+		
+		logger.info("##### salesOrdId #####" +params.get("salesOrdId"));
+		// order detail start
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+	
+		params.put("salesOrderId", params.get("salesOrdId"));
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		// order detail end
 		
 		String paramTypeId = (String)params.get("typeId");
 		String paramDocId = (String)params.get("docId");
