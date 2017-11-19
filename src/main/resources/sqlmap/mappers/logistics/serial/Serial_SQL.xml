@@ -13,7 +13,7 @@
                 lg62m.LVORM,
                 TO_CHAR(lg62m.CRT_DT , 'DD/MM/YYYY') CRT_DT,
                 lg62m.CRT_USER_ID,
-                NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = lg62m.CRT_USER_ID),lg62m.CRT_USER_ID) CRT_USER_NAME,
+                NVL ( S47.USER_NAME , lg62m.CRT_USER_ID ) CRT_USER_NAME,
                 lg63d.SERIAL_NO   AS  used_SERIAL_NO,       
                 lg63d.MATNR       AS  used_MATNR,     
                 lg63d.LOC_ID      AS  used_LOC_ID,    
@@ -22,9 +22,10 @@
                 lg63d.SWAOK       AS  used_SWAOK,     
                 TO_CHAR(lg63d.CRT_DT, 'DD/MM/YYYY')      AS  used_CRT_DT,    
                 lg63d.CRT_USER_ID AS  used_CRT_USER_ID
-        FROM LOG0062M lg62m, LOG0063D lg63d , SYS0026M sy26m 
+        FROM LOG0062M lg62m, LOG0063D lg63d , SYS0026M sy26m , SYS0047M S47
         WHERE lg62m.SERIAL_NO    = lg63d.SERIAL_NO (+)
-              AND sy26m.STk_CODE = lg62m.MATNR      
+              AND sy26m.STk_CODE = lg62m.MATNR
+              AND DECODE(LG62M.CRT_USER_ID , 'ITF0161M' , 999999999 , LG62M.CRT_USER_ID) = S47.USER_ID(+)      
 	       <if test="srchmaterial !=null and srchmaterial !=''">
 	          AND lg62m.MATNR  LIKE #{srchmaterial} || '%'
 		</if>     
