@@ -89,7 +89,7 @@
                 msg += "(Outstanding fee, below 57th months (rental) and different customer),<br>";
                 msg += "a pop up window which require the information of Report For Decision.";
                 
-            Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + "<b>It is order that needs approval</b>", fn_popOrderDetail);
+            Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_popOrderDetail);
 	    }
 	    else {
             fn_popOrderDetail();
