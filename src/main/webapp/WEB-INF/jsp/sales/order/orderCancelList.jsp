@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
@@ -17,7 +18,7 @@
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
             $("#reqId").val(event.item.reqId);
             $("#callEntryId").val(event.item.callEntryId);
-            $("#salesOrdId").val(event.item.salesOrdId);
+            $("#salesOrdId").val(event.item.ordId);
             $("#typeId").val(event.item.typeId);
             $("#docId").val(event.item.docId);
             $("#refId").val(event.item.refId);
@@ -31,7 +32,7 @@
         AUIGrid.bind(myGridID, "cellClick", function(event) {
         	$("#reqId").val(event.item.reqId);
             $("#callEntryId").val(event.item.callEntryId);
-            $("#salesOrdId").val(event.item.salesOrdId);
+            $("#salesOrdId").val(event.item.ordId);
             $("#typeId").val(event.item.typeId);
             $("#docId").val(event.item.docId);
             $("#refId").val(event.item.refId);
