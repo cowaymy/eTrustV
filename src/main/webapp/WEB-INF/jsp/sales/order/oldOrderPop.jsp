@@ -85,6 +85,10 @@
 	    if(isInValid == 'InValid') {
 	        //2017.11.19 결제확인 팝업 주석처리. Confirm메세지로 대체
             //Common.popupDiv("/sales/order/orderApprovalPop.do");
+            var msg  = "For Ex-trade sales key-in, if the order doesn’t meet the 3 conditions (Outstanding fee, below 57th months (rental) and different customer),";
+                msg += "(Outstanding fee, below 57th months (rental) and different customer),<br>";
+                msg += "a pop up window which require the information of Report For Decision.";
+                
             Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + "<b>It is order that needs approval</b>", fn_popOrderDetail);
 	    }
 	    else {
