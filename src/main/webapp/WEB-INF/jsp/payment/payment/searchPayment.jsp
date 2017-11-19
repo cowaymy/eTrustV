@@ -318,11 +318,10 @@ function fn_openDivPop(val){
 	if(val == "VIEW"){
 		if(selectedGridValue !=  undefined){
 	        
-	        popGridID = GridCommon.createAUIGrid("popList_wrap", popColumnLayout, null, gridPros_popList);
-	        popSlaveGridID = GridCommon.createAUIGrid("popSlaveList_wrap", popSlaveColumnLayout, null, gridPros_popList);
-	        
 	        Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
 	        	$("#popup_wrap").show();
+	        	popGridID = GridCommon.createAUIGrid("popList_wrap", popColumnLayout, null, gridPros_popList);
+	            popSlaveGridID = GridCommon.createAUIGrid("popSlaveList_wrap", popSlaveColumnLayout, null, gridPros_popList);
 	            
 	            //Payment Information
 	            $('#txtORNo').text(result.viewMaster.orNo);$("#txtORNo").css("color","red");
@@ -378,11 +377,10 @@ function fn_openDivPop(val){
 	}else if(val == "EDIT"){
 		if(selectedGridValue !=  undefined){
             
-            editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popEditColumnLayout, null, gridPros_popList);
-            
             Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
             	$("#popup_wrap2").show();
-                
+            	editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popEditColumnLayout, null, gridPros_popList);
+            	
                 //Payment Information
                 $('#edit_txtORNo').text(result.viewMaster.orNo);$("#edit_txtORNo").css("color","red");
                 $('#edit_txtLastUpdator').text(result.viewMaster.lastUpdUserName);$("#edit_txtLastUpdator").css("color","red");
