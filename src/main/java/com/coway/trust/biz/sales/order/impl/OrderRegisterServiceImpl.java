@@ -1461,7 +1461,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         }
         
         //CALL ENTRY MASTER
-        if(callEntryVO != null && CommonUtils.isNotEmpty(callEntryVO.getStusCodeId())) {
+        if(callEntryVO != null && (int)callEntryVO.getStusCodeId() > 0) {
         	callEntryVO.setSalesOrdId(salesOrdId);
         	callEntryVO.setDocId(salesOrdId);
         	orderRegisterMapper.insertCallEntry(callEntryVO);
@@ -1543,7 +1543,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         			salesOrderLogVO.setRefId(ccpDecisionMVO.getCcpId());
         		}
         		else if(salesOrderLogVO.getPrgrsId() == 2) {
-        			salesOrderLogVO.setRefId(callEntryVO.getCallEntryId());
+        			if(callEntryVO != null) {
+        				salesOrderLogVO.setRefId(CommonUtils.intNvl(callEntryVO.getCallEntryId()));
+        			}
+        			else {
+        				salesOrderLogVO.setRefId(0);
+        			}
         		}
         		else if(salesOrderLogVO.getPrgrsId() == 5) {
         			salesOrderLogVO.setRefId(installEntryVO.getInstallEntryId());
