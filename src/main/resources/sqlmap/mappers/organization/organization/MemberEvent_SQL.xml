@@ -315,7 +315,8 @@
 					       Limit1.C6 C6  ,
 					       Limit1.C7 C7  ,
 					       Limit1.C8 C8  ,
-					       Limit1.C9 C9  
+					       Limit1.C9 C9  ,
+					       to_char(Limit1.EVT_APPLY_DT,'dd/MM/yyyy') EVT_APPLY_DT
 					  FROM ( SELECT Extent1.PROMO_ID PROMO_ID  ,
 					                Extent1.REQST_NO REQST_NO  ,
 					                Extent1.STUS_ID STUS_ID  ,
@@ -370,7 +371,8 @@
 					                CASE 
 					                     WHEN ( Extent12.BRNCH_ID IS NOT NULL ) THEN Extent12.NAME
 					                ELSE '1900-01-01 00:00:00'
-					                   END C9  
+					                   END C9  ,
+					                 Extent1.EVT_APPLY_DT
 					         FROM ORG0007D Extent1
 					                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
 					                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PROMO_TYPE_ID
@@ -737,7 +739,8 @@
 					       UPD_DT = SYSDATE,
 					       UPD_USER_ID = #{updUserId},
 					       DEPT_CODE_TO = #{deptCode},
-					       BRNCH_ID = #{branchId}
+					       BRNCH_ID        = #{branchId},
+					       EVT_APPLY_DT = TO_DATE(#{evtApplyDate},'dd/mm/yyyy' )
 					 WHERE  ( PROMO_ID = #{promoId} )           
         </update>
         
