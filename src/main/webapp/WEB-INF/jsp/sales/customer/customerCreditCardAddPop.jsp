@@ -119,6 +119,11 @@
                 
                 Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
+                if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC') {
+        	        fn_loadCreditCard2(result.data);
+        	        $('#addCrcCloseBtn').click();
+        	    }
+
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
@@ -136,7 +141,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Add Credit Card</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="addCrcCloseBtn" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

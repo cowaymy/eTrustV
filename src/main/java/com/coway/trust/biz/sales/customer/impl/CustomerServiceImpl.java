@@ -560,7 +560,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	}
 	
 	@Override
-	public void insertBankAccountInfo2(Map<String, Object> params, SessionVO sessionVO) {
+	public int insertBankAccountInfo2(Map<String, Object> params, SessionVO sessionVO) {
 		
 		CustAccVO custAccVO = new CustAccVO();
 		
@@ -581,11 +581,13 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		custAccVO.setCustHlbbId(0);
 		custAccVO.setCustAccCrtUserId(sessionVO.getUserId());
 		
-		customerMapper.insertBankAccountInfo2(custAccVO);		
+		customerMapper.insertBankAccountInfo2(custAccVO);
+		
+		return custAccVO.getCustAccId();
 	}
 	
 	@Override
-	public void insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO) {
+	public int insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO) {
 		
 		String expDate = (String) params.get("expDate");
 		
@@ -610,7 +612,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		custCrcVO.setCustCrcCrtUserId(sessionVO.getUserId());
 		custCrcVO.setCardTypeId(Integer.parseInt((String) params.get("cardType")));
 		
-		customerMapper.insertCreditCardInfo2(custCrcVO);		
+		customerMapper.insertCreditCardInfo2(custCrcVO);
+
+		return custCrcVO.getCustCrcId();
 	}
 	
 	

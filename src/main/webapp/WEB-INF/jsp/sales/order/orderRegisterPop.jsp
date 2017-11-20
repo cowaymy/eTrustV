@@ -590,7 +590,7 @@
         });
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId}, null, true);
+            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
         });
         $('#selCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
@@ -600,7 +600,7 @@
         //Payment Channel - Add New Bank Account
         $('#btnAddBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : vCustId}, null, true);
+            Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_BANK_ACC"}, null, true);
         });
         //Payment Channel - Select Another Bank Account
         $('#btnSelBankAccount').click(function() {
@@ -1793,6 +1793,24 @@
         $('#rentPayCRCBank').val(custCRCBank);
         $('#hiddenRentPayCRCBankId').val(custCrcBankId);
         $('#rentPayCRCCardType').val(crcCardType);
+    }
+
+    function fn_loadCreditCard2(custCrcId) {
+        console.log("fn_loadCreditCard START");
+
+        Common.ajax("GET", "/sales/order/selectCustomerCreditCardDetailView.do", {getparam : custCrcId}, function(rsltInfo) {
+            if(rsltInfo != null) {
+                $("#hiddenRentPayCRCId").val(rsltInfo.custCrcId);
+                $("#rentPayCRCNo").val(rsltInfo.decryptCRCNoShow);
+                $("#hiddenRentPayEncryptCRCNoId").val(rsltInfo.custCrcNo);
+                $("#rentPayCRCType").val(rsltInfo.code);
+                $("#rentPayCRCName").val(rsltInfo.custCrcOwner);
+                $("#rentPayCRCExpiry").val(rsltInfo.custCrcExpr);
+                $("#rentPayCRCBank").val(rsltInfo.bankCode + ' - ' + rsltInfo.bankId);
+                $("#hiddenRentPayCRCBankId").val(rsltInfo.custCrcBankId);
+                $("#rentPayCRCCardType").val(rsltInfo.codeName);
+            }
+        });
     }
 
     function fn_loadOrderSalesman(memId, memCode) {

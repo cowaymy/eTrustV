@@ -81,7 +81,11 @@
         Common.ajax("POST", "/sales/customer/insertBankAccountInfo2.do", $('#frmBankAcc').serializeJSON(), function(result) {
                 
                 Common.alert("Bank Account Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
-            
+
+        	    if('${callPrgm}' == 'ORD_REGISTER_BANK_ACC') {
+        	        fn_loadBankAccountPop(result.data);
+        	        $('#addDdCloseBtn').click();
+        	    }
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     Common.alert("Failed To Add" + DEFAULT_DELIMITER + "<b>Failed to add new bank account. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
@@ -99,7 +103,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Add Bank Account</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="addDdCloseBtn" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

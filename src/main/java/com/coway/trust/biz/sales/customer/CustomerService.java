@@ -508,9 +508,9 @@ public interface CustomerService {
 	 */
 	List<EgovMap> getNationList (Map<String, Object> params) throws Exception;
 	
-	void insertBankAccountInfo2(Map<String, Object> params, SessionVO sessionVO);
+	int insertBankAccountInfo2(Map<String, Object> params, SessionVO sessionVO);
 
-	void insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO);
+	int insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO);
 	
 	void updateLimitBasicInfo(Map<String, Object> params) throws Exception;
 	

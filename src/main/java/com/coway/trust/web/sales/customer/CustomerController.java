@@ -149,6 +149,7 @@ public class CustomerController {
 	public String customerBankAccountAddPop(@RequestParam Map<String, Object> params, ModelMap model){
 		
 		model.put("custId", params.get("custId"));
+		model.put("callPrgm", params.get("callPrgm"));
 		
 		return "sales/customer/customerBankAccountAddPop"	;
 	}
@@ -157,6 +158,7 @@ public class CustomerController {
 	public String customerCreditCardAddPop(@RequestParam Map<String, Object> params, ModelMap model){
 		
 		model.put("custId", params.get("custId"));
+		model.put("callPrgm", params.get("callPrgm"));
 		
 		return "sales/customer/customerCreditCardAddPop"	;
 	}
@@ -164,27 +166,29 @@ public class CustomerController {
 	@RequestMapping(value = "/insertBankAccountInfo2.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertBankAccountInfo2(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
 		
-		customerService.insertBankAccountInfo2(params, sessionVO);
+		int custAccId = customerService.insertBankAccountInfo2(params, sessionVO);
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setMessage("New bank account added.");
-
+		message.setData(custAccId);
+		
 		return ResponseEntity.ok(message);
 	}
 	
 	@RequestMapping(value = "/insertCreditCardInfo2.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertCreditCardInfo2(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
 		
-		customerService.insertCreditCardInfo2(params, sessionVO);;
+		int custCrcId = customerService.insertCreditCardInfo2(params, sessionVO);;
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setMessage("New credit card added.");
+		message.setData(custCrcId);
 
 		return ResponseEntity.ok(message);
 	}
