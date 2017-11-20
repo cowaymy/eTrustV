@@ -55,13 +55,16 @@ public interface MemberListService {
 
 	Map<String, Object> insertTerminateResign(Map<String, Object> params,SessionVO sessionVO);
 
+	/* BY KV start Do Save Vacation Request*/
+	Map<String, Object> insertRequestVacation(Map<String, Object> params, SessionVO sessionVO);
+	/* BY KV end Do Save Vacation Request*/
+
 	List<EgovMap> selectSuperiorTeam(Map<String, Object> params);
 
 	List<EgovMap> selectDeptCode(Map<String, Object> params);
 
 	List<EgovMap> selectCourse();
 
-	Map<String, Object> insertRequestVacation(Map<String, Object> params, SessionVO sessionVO);
 
 
 }
