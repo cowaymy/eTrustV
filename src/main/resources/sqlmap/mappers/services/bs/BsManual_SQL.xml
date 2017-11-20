@@ -124,7 +124,9 @@
 
           <select id="selectHsManualList" parameterType="Map" resultType="egovMap">
 
-                            SELECT   distinct C.CUST_ID CUST_ID
+<!-- CYC 20 NOV 2017 -->
+
+  SELECT   distinct C.CUST_ID CUST_ID
                                         , C.NAME Name
                                          ,SOM.SALES_ORD_NO SALES_ORD_NO
                                          ,HSM.MONTH
@@ -134,8 +136,71 @@
                                          ,HSM.CODY_ID
                                          ,HSM.STUS_CODE_ID STUS_CODE_ID
                                          ,EXTENT2.CODE CODE
-<!--                                          ,sys064.CODY_BRNCH_CODE AS BRNCH_ID -->
                                          ,SAL023.area_id,
+                                           sys064.area_id,
+                                           sys064.CODY_BRNCH_CODE,
+                                           sys064.CODY_MANGR_USER_ID,
+                                          (select  MEM_CODE
+                                                from ORG0001D ME
+                                                where 1=1
+                                                and ME.MEM_ID = HSM.cody_ID )AS c5,
+                                           HSM.STUS_CODE_ID STUS_CODE_ID,
+                                            sys064.CT_BRNCH_CODE,
+                                          SOM.SALES_ORD_ID AS SALES_ORD_ID,
+                                            sys064.CODY_MANGR_USER_ID,
+                                            som.BRNCH_ID as brnch_id
+                                            ,sal023.ADDR_DTL as address
+                                            ,stk.STK_DESC
+                                            ,SCP.SRV_PRD_DUR HS_FREQ
+                                            ,(CASE WHEN (EXTRACT(month from lAST_brm.SETL_DT)= extract(month from ADD_MONTHS(sysdate,-1)) and EXTRACT(YEAR FROM lAST_brm.SETL_DT) = extract(YEAR from ADD_MONTHS(sysdate,-1))) THEN STUS.CODE ELSE 'x' END) PREV_MTH_HS_STATUS
+                                          ,STUS1.CODE CODY_STATUS
+                                FROM    SAL0001D SOM
+                                        ,SAL0029D C
+                                        ,SYS0013M CORPTYPE
+                                        ,SVC0008D HSM
+                                        ,SYS0038M EXTENT2
+                                        ,SYS0064M sys064
+                                        ,SAL0002D sod
+                                        ,SYS0026M stk
+                                        ,SAL0045D i
+                                        ,sal0023d sal023
+                                        ,SVC0006D lAST_brm
+                                        ,SAL0090D SC
+                                        ,SAL0088D SCP
+                                        ,SYS0038M STUS
+                                        ,ORG0001D MEM
+                                        ,SYS0038M STUS1
+                                WHERE 1=1
+                                AND SOM.CUST_ID = C.CUST_ID
+                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
+                                AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
+                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
+                                AND i.ADD_ID = sal023.CUST_ADD_ID
+                                and sal023.area_id = sys064.area_id
+                                and sod.SALES_ORD_ID = SOM.SALES_ORD_ID
+                                and stk.stk_id = sod.ITM_STK_ID
+                                and i.SALES_ORD_ID = SOM.SALES_ORD_ID
+                                and lAST_brm.SCHDUL_ID(+) = HSM.SCHDUL_ID
+                                and lAST_brm.result_ID = (select Max(result_ID) from SVC0006D where HSM.SCHDUL_ID= SCHDUL_ID and result_stus_code_id = 4 )
+                                AND SC.SRV_SO_ID = SOM.SALES_ORD_ID
+                                AND SC.SRV_CONFIG_ID =SCP.SRV_CONFIG_ID
+                                AND SCP.SRV_PRD_ID = (SELECT MAX(SRV_PRD_ID) FROM SAL0088D WHERE SRV_CONFIG_ID = SC.SRV_CONFIG_ID AND SCP.SRV_PRD_STUS_ID = 1)
+                                AND STUS.STUS_CODE_ID(+) = LAST_BRM.RESULT_STUS_CODE_ID
+                               and mem.mem_id(+) = HSM.CODY_ID
+                               and Stus1.STUS_CODE_ID = mem.stus
+
+                      <!--      SELECT   distinct C.CUST_ID CUST_ID
+                                        , C.NAME Name
+                                         ,SOM.SALES_ORD_NO SALES_ORD_NO
+                                         ,HSM.MONTH
+                                         ,HSM.YEAR YEAR
+                                         ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
+                                         ,HSM.NO
+                                         ,HSM.CODY_ID
+                                         ,HSM.STUS_CODE_ID STUS_CODE_ID
+                                         ,EXTENT2.CODE CODE -->
+<!--                                          ,sys064.CODY_BRNCH_CODE AS BRNCH_ID -->
+                                       <!--   ,SAL023.area_id,
                                            sys064.area_id,
                                            sys064.CODY_BRNCH_CODE,
                                            sys064.CODY_MANGR_USER_ID,
@@ -151,21 +216,21 @@
                                             som.BRNCH_ID as brnch_id
                                 FROM SAL0001D SOM
                                         ,SAL0029D C
-                                        ,SYS0013M CORPTYPE
+                                        ,SYS0013M CORPTYPE -->
 <!--                                         ,SAL0002D SOD -->
-                                        ,SVC0008D HSM
+                                   <!--       ,SVC0008D HSM
                                         ,SYS0038M EXTENT2
                                         ,sal0023d sal023
                                         ,SYS0064M sys064
                                 WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
-                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
+                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)-->
                                 <!-- AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID  -->
-                                AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
-                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
+                              <!--  AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
+                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)-->
 <!--                                 and som.cust_id = sal023.cust_id -->
-                                AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
-                                and sal023.area_id = sys064.area_id
+                               <!--  AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
+                                and sal023.area_id = sys064.area_id -->
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8
                                 and rownum  < 500 ]]>
 			                 <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
@@ -2166,7 +2231,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 							                         Extent2.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
 							                         Extent2.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
 							                         Extent3.STK_CODE STK_CODE  ,
-							                         Extent3.STK_DESC STK_DESC 
+							                         Extent3.STK_DESC STK_DESC
 							         FROM SAL0090D Extent1
 							                JOIN SAL0087D Extent2   ON Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID
 							                LEFT JOIN SYS0026M Extent3   ON Extent2.SRV_FILTER_STK_ID = Extent3.STK_ID
@@ -2203,7 +2268,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 								                         Extent3.SRV_FILTER_STK_ID SRV_FILTER_STK_ID  ,
 								                         Extent3.SRV_FILTER_PRIOD SRV_FILTER_PRIOD  ,
 								                         Extent3.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
-								                         Extent3.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID , 
+								                         Extent3.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID ,
 								                         Extent3.SRV_FILTER_LAST_SERIAL SRV_FILTER_LAST_SERIAL,
                                                          Extent3.SRV_FILTER_PREV_SERIAL SRV_FILTER_PREV_SERIAL,
 								                         Extent4.STK_CODE STK_CODE  ,
