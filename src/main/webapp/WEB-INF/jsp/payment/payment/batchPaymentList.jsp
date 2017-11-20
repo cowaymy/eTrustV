@@ -599,9 +599,9 @@ var batchInfoLayout = [
 				<colgroup>
 				    <col style="width:170px" />
 				    <col style="width:*" />
-				    <col style="width:230px" />
+				    <col style="width:170px" />
 				    <col style="width:*" />
-				    <col style="width:160px" />
+				    <col style="width:170px" />
 				    <col style="width:*" />
 				</colgroup>
 				<tbody>
@@ -948,7 +948,7 @@ var batchInfoLayout = [
 		</form>
 		<ul class="center_btns mt20">
 		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
-            <li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/payment/BatchPaymentFormat.csv">Download CSV Format</a></p></li>
+            <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/BatchPaymentFormat.csv">Download CSV Format</a></p></li>
 		</ul>
 	</section>
 	<!-- pop_body end -->
