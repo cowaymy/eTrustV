@@ -2031,7 +2031,7 @@ AND   O1DA.MEM_CODE = #{userId}
                                , #{userId}
                                , #{salesOrderNo}
                                , #{serviceNo}
-                               , #{appointmentDate}
+                               ,  to_date(#{appointmentDate},'YYYYMMDD')
                                , #{appointmentTime}
                                , 'N'
                             )
@@ -2077,7 +2077,7 @@ AND   O1DA.MEM_CODE = #{userId}
                                , #{userId}
                                , #{salesOrderNo}
                                , #{serviceNo}
-                               , #{appointmentDate}
+                               ,  to_date(#{appointmentDate},'YYYYMMDD')
                                , #{appointmentTime}
                                , 'N'
                             )
@@ -2099,7 +2099,7 @@ AND   O1DA.MEM_CODE = #{userId}
                                , #{userId}
                                , #{salesOrderNo}
                                , #{serviceNo}
-                               , #{appointmentDate}
+                               ,  to_date(#{appointmentDate},'YYYYMMDD')
                                , #{appointmentTime}
                                , 'N'
                             )

@@ -72,12 +72,13 @@ public class HeartServiceResultDetailForm {
 	}
 
 	
-	public static List<Map<String, Object>>  createMaps(List<HeartServiceResultDetailForm> heartServiceResultDetailForm) {
+	public static List<Map<String, Object>>  createMaps(List<HeartServiceResultDetailForm> heartServiceResultDetailForms) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 		Map<String, Object> map;
 	
-		for(HeartServiceResultDetailForm form : heartServiceResultDetailForm){
+		
+		for(HeartServiceResultDetailForm form : heartServiceResultDetailForms){
 			map = BeanConverter.toMap(form);
 			list.add(map);
 		}
@@ -85,4 +86,24 @@ public class HeartServiceResultDetailForm {
 	}
 	
 
+	
+	public static List<Object>  createMaps1(List<HeartServiceResultDetailForm> heartServiceResultDetailForms) {
+
+		List<Object> list = new ArrayList<>();
+		Map<String, Object> map;
+	
+		
+		for(HeartServiceResultDetailForm form : heartServiceResultDetailForms){
+			map = BeanConverter.toMap(form);
+			map.put("stkId", map.get("filterCode"));
+			map.put("exchangeId", map.get("exchangeId"));
+			map.put("name", map.get("filterChangeQty"));
+			map.put("filterBarcdSerialNo", map.get("filterBarcdSerialNo"));
+			
+			list.add(map);
+		}
+		return list;
+	}
+	
+	
 }

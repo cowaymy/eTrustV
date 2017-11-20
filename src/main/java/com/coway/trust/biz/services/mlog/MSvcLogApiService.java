@@ -85,6 +85,8 @@ public interface MSvcLogApiService {
 	void saveInsReServiceLogs(Map<String, Object> params);
 
 	void saveHsReServiceLogs(Map<String, Object> params);
+
+	Map<String, Object> getHsBasic(Map<String, Object> params);
 	
 	
 
