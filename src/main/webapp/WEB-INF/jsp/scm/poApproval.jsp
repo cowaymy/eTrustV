@@ -528,7 +528,7 @@ var SummaryGridLayout =
                               headerText : "<spring:message code='sys.scm.poApproval.sumOfQty'/>",
                               style : "aui-grid-right-column",
                               dataType : "numeric",
-                              formatString : "#,##0",
+                              formatString : "#,##0.00",
                               editable : false,
                           }
                         , {  
@@ -659,72 +659,84 @@ var SummaryGridFooterLayout =
            dataField : "klQty",
            positionField : "klQty",
            operation : "SUM",
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "klFobAmt",
            positionField : "klFobAmt",
            operation : "SUM",
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "kkQty",
            positionField : "kkQty",
            operation : "SUM",
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "kkFobAmt",
            positionField : "kkFobAmt",
            operation : "SUM", 
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "jbQty",
            positionField : "jbQty",
            operation : "SUM",
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "jbFobAmt",
            positionField : "jbFobAmt",
            operation : "SUM",
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "pnQty",
            positionField : "pnQty",
            operation : "SUM",
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "pnFobAmt",
            positionField : "pnFobAmt",
            operation : "SUM", 
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "kcQty",
-           positionField : "pnQty",
+           positionField : "kcQty",
            operation : "SUM",
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "kcFobAmt",
            positionField : "kcFobAmt",
            operation : "SUM", 
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {      
            dataField : "allSumQty",
            positionField : "allSumQty",
            operation : "SUM",
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
       , {  
            dataField : "allSumFobAmt",
            positionField : "allSumFobAmt",
            operation : "SUM", 
+           style : "aui-grid-right-column",
            formatString : "#,##0"
         }
            
