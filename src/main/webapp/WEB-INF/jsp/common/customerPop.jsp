@@ -46,10 +46,10 @@
 	        fn_loadCustomer(custId);
 	    }
 	    else if ($('#callPrgm').val() == 'ORD_REGISTER_PAY_3RD_PARTY' || $('#callPrgm').val() == 'ORD_REQUEST_PAY') {
-	        fn_loadThirdParty(custId, 1)
+	        fn_loadThirdParty(custId, 1);
 	    }
 	    else if ($('#callPrgm').val() == 'ORD_MODIFY_PAY_3RD_PARTY') {
-	        fn_loadThirdPartyPop(custId)
+	        fn_loadThirdPartyPop(custId);
 	    }
 	    else{   //edit by hgham 2017-09-21    callback function (item) 추가  
 	    	eval(${callPrgm}(item));

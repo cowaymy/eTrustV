@@ -55,9 +55,6 @@
             //Common.popupDiv("/sales/order/orderRegisterPop.do", $("#listSearchForm").serializeJSON());
             Common.popupDiv("/sales/order/orderRegisterPop.do");
         });
-        $('#btnNewNcv').click(function() {
-            Common.alert('<b>The program is under development.</b>');
-        });
         $('#btnEdit').click(function() {
             fn_orderModifyPop();
         });
@@ -259,10 +256,9 @@
     <li><p class="btn_blue"><a id="btnCopy" href="#" >Copy(Change)</a></p></li>
     <li><p class="btn_blue"><a id="btnCopyBulk" href="#" >Copy(Bulk)</a></p></li>
     <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
-    <li><p class="btn_blue"><a id="btnNewNcv" href="#" >New (NCV)</a></p></li>
     <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
     <li><p class="btn_blue"><a id="btnReq" href="#">Request</a></p></li>
-    <li><p class="btn_blue"><a id="btnSimul" href="#">Simulator</a></p></li>
+    <li><p class="btn_blue"><a id="btnSimul" href="#">Rent To Outright Simulator</a></p></li>
 	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
