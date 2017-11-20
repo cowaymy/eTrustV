@@ -189,7 +189,9 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mQryMemOrg.put("lastGrpCode", deptCode.get("lastGrpCode"));
 			mQryMemOrg.put("lastOrgCode", deptCode.get("lastOrgCode"));
 			
-			memberEventMapper.updateMemberOrganizations(mQryMemOrg);
+			
+			//2017 -11 -20    hgham edit   전위원 요청 배치로 변경 한다고 함. (업데이트도 오류 있음.)
+			//memberEventMapper.updateMemberOrganizations(mQryMemOrg);
 			
 			Map<String, Object> updateValue = new HashMap<String, Object>(); // ORG0001D BRNCH_ID UPDATE
 			updateValue.put("brnchId", deptCode.get("brnchId"));
