@@ -79,19 +79,9 @@ public class InstallReAppointmentRequestForm {
 			Map<String, Object> map=null;
 			
 			
-//				map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
-//				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+			map = BeanConverter.toMap(installReAppointmentRequestForm);
 
-				// install Result
-				map.put("userId", installReAppointmentRequestForm.getUserId());
-				map.put("salesOrderNo", installReAppointmentRequestForm.getSalesOrderNo());
-				map.put("serviceNo", installReAppointmentRequestForm.getServiceNo());
-				map.put("appointmentDate", installReAppointmentRequestForm.getAppointmentDate());
-				map.put("appointmentTime", installReAppointmentRequestForm.getAppointmentTime());
-
-//				list.add(map);
-				
-				return map;
+			return map;
 	}
 	
 }
