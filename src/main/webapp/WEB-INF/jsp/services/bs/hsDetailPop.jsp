@@ -51,7 +51,11 @@
 			            max : 50,
 			            step : 1,
 			            textEditable : false
-			        }                            
+			        }
+                }, {                        
+                    dataField : "SerialNo",
+                    headerText : "SerialNo",
+                    width : 240	                            
             }];
             // 그리드 속성 설정
             var gridPros = {
@@ -60,7 +64,7 @@
                 // 한 화면에 출력되는 행 개수 20(기본값:20)
                 //pageRowCount : 20,
                 
-                editable : false,
+                editable : true,
                 
                 //showStateColumn : true, 
                 

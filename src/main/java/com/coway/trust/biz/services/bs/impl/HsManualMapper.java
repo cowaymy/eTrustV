@@ -110,6 +110,12 @@ public interface HsManualMapper {
 
 	void updateHsSVC0006D(Map<String, Object> sal0090);
 
+	void updateHsFilterSiriNo(Map<String, Object> docSub);
+
+	String select0087DFilter(Map<String, Object> docSub);
+
+	void updateHs009d(Map<String, Object> params);
+
 
 
 

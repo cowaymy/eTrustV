@@ -335,8 +335,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			
 			//logs(물류) call
 			/////////////////////////물류 호출//////////////////////
-			String str = params.get("serviceNo").toString();
-			returnUsedPartsService.returnPartsInsert(str);
+//			String str = params.get("serviceNo").toString();
+//			returnUsedPartsService.returnPartsInsert(str);
 			/////////////////////////물류 호출 end /////////////////
 			
 			
@@ -447,8 +447,25 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 
 	            hsManualMapper.insertHsResultD(docSub);
-
+	            
+	            
+	            String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
+	            
+	            if("".equals(filterLastserial)){
+	            	docSub.put("prvSerialNo", filterLastserial);
+	            }else {
+	            	docSub.put("lastSerialNo", docSub.get("SerialNo"));
+	            }
+	            
+                docSub.put("settleDate", params.get("settleDate"));
+                docSub.put("hidCodyId", params.get("hidCodyId"));
+                   
+	            hsManualMapper.updateHsFilterSiriNo(docSub);
+	            
 			}
+			
+			hsManualMapper.updateHs009d(params);
+			
 		}
 
 
@@ -532,7 +549,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             logPram.put("USERID", sessionVO.getUserId());   
             
             logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram.toString());
-            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+//            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");  
             /////////////////////////물류 호출 END //////////////////////   			
         			
@@ -547,7 +564,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             logPram.put("USERID", sessionVO.getUserId());   
             
             logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+//            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////   			
       }
