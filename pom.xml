@@ -542,20 +542,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>LATEST</version>
-				<configuration>
-					<linkXref>true</linkXref>
-					<rulesets>
-						<ruleset>${project.basedir}/src/src/main/resources/pmd/EgovInspectionRules_kor-3.5.xml</ruleset>
-					</rulesets>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
 </project>
