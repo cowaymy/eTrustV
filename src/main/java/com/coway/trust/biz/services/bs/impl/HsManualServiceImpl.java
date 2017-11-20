@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
+import com.coway.trust.biz.logistics.returnusedparts.ReturnUsedPartsService;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.bs.HsManualService;
@@ -43,6 +44,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	@Resource(name = "hsManualMapper")
 	private HsManualMapper hsManualMapper;
 	
+	@Resource(name = "returnUsedPartsService")
+	private ReturnUsedPartsService returnUsedPartsService;
 	
 	@Resource(name = "servicesLogisticsPFCMapper")
 	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
@@ -329,6 +332,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			resultValue = SaveResult(true,params,docType,sessionVO);
 
+			
+			//logs(물류) call
+			/////////////////////////물류 호출//////////////////////
+			String str = params.get("serviceNo").toString();
+			returnUsedPartsService.returnPartsInsert(str);
+			/////////////////////////물류 호출 end /////////////////
+			
+			
 		return resultValue;
 	}
 
