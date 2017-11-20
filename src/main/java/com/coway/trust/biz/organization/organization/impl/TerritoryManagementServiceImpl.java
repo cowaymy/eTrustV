@@ -70,7 +70,7 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 			   q.put("branch",vo.get(i).getBranch());
 			   q.put("extBranch", vo.get(i).getExtBranch());
 			   q.put("brnchId", Integer.parseInt(bType.toString()));
-			   q.put("reqstNo", requestNo.get("docNo"));
+			   q.put("reqstNo",  requestNo.get("docNo"));
 			   q.put("requester", sessionVO.getUserId());
 			   if("42".equals(bType)){  //Cody Branch
 				   
