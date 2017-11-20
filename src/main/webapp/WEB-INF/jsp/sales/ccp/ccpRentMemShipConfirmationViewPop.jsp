@@ -82,7 +82,7 @@
                        //그리드 속성 설정
                        var gridPros = {
                                usePaging           : true,         //페이징 사용
-                               pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                               pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)            
                                editable            : false,            
                                fixedColumnCount    : 0,            
                                showStateColumn     : false,             
