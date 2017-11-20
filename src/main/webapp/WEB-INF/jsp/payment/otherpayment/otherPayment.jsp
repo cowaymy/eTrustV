@@ -370,13 +370,13 @@ var columnLayout = [
     },
     {
         dataField : "stus",
-        headerText : "Status",
+        headerText : "stus",
         editable : false,
         visible : false
     },
     {
         dataField : "status",
-        headerText : " ",
+        headerText : "Status",
         editable : false,
         width : 80,
         renderer : {
