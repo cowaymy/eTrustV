@@ -495,11 +495,11 @@ POP-UP (UPLOAD)
                     <tr>
                         <th scope="row">B/S No.</th>
                         <td>
-                            <input type="text"  id="uploadBsNo" name="uploadBsNo" title="" placeholder="" class="readonly" readonly="readonly" />
+                            <input type="text"  id="uploadBsNo" name="uploadBsNo" title="" placeholder="" class="w100p readonly" readonly="readonly" />
                         </td>
                         <th scope="row">Transaction Date</th>
                         <td>
-                            <input type="text" id="uploadTranDt" name="uploadTranDt" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date" />
+                            <input type="text" id="uploadTranDt" name="uploadTranDt" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
                         </td>
                     </tr>
                     <tr>
@@ -517,7 +517,7 @@ POP-UP (UPLOAD)
                         <td colspan="3">
                             <!-- auto_file start -->
                             <div class="auto_file">
-                                <input type="file" id="fileSelector" title="file add" accept=".csv" />
+                                <input type="file" id="fileSelector" title="file add" accept=".csv"/>
                             </div>
                             <!-- auto_file end -->
                         </td>                        
