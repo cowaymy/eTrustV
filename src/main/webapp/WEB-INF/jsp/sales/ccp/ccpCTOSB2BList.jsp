@@ -50,8 +50,26 @@ $(document).ready(function() {
 	//Order Search
 	$("#_ordSrchBtn").click(function() {
 		
+		$("#_filterChange").val("0");
+		clearDetailFilterAll();
+		
+		if( null == $("#_ordNo").val() || '' == $("#_ordNo").val()){
+            Common.alert("* Please key in order number. ");
+            return;
+        }
+		
+		var options = {
+		        direction : true, // 검색 방향  (true : 다음, false : 이전 검색)
+		        caseSensitive : false, // 대소문자 구분 여부 (true : 대소문자 구별, false :  무시)
+		        wholeWord : true, // 온전한 단어 여부
+		        wrapSearch : true, // 끝에서 되돌리기 여부
+		};
+		
+		AUIGrid.search(ctosDetailGridID, "ordNo", $("#_ordNo").val() , options);
+		
+		
 		//Validation
-		if(AUIGrid.getGridData(ctosListGridID) <= 0 || AUIGrid.getGridData(ctosDetailGridID) <= 0 ){
+		/* if(AUIGrid.getGridData(ctosListGridID) <= 0 || AUIGrid.getGridData(ctosDetailGridID) <= 0 ){
 			Common.alert("* Please search first.");
 			return;
 		}
@@ -66,7 +84,7 @@ $(document).ready(function() {
 		var ordParam = {batchId : batchId , ordNo : $("#_ordNo").val()};
 		Common.ajax("GET", "/sales/ccp/getCTOSDetailByOrdNo", ordParam , function(result){
 			AUIGrid.setGridData(ctosDetailGridID, result);
-		});
+		}); */
 		
 	});
 	
