@@ -226,7 +226,7 @@ var columnLayout = [
     { dataField:"stusCode" ,headerText:"Status",width: 100 ,editable : false },
     { dataField:"ctrlIsCrcName" ,headerText:"Type",width: 100 ,editable : false },
     { dataField:"bankCode" ,headerText:"Issue Bank",width: 100 ,editable : false },
-    { dataField:"ctrlBatchDt" ,headerText:"Debit Date",width: 120 ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"ctrlBatchDt" ,headerText:"Debit Date",width: 120 ,editable : false},
     { dataField:"ctrlTotItm" ,headerText:"Total Item",width: 120 ,editable : false },
     { dataField:"ctrlBillAmt" ,headerText:"Target Amt",width: 120 ,editable : false , dataType : "numeric", formatString : "#,##0.00"},
     { dataField:"ctrlBillPayAmt" ,headerText:"Receive Amt",width: 120 ,editable : false , dataType : "numeric", formatString : "#,##0.00"},

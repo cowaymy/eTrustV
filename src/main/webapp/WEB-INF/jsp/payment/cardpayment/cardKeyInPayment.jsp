@@ -222,7 +222,7 @@ var targetFinalBillColumnLayout = [
     { dataField:"installment" ,headerText:"Installment" ,editable : false , width : 100 },      
     { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
     { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
+    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : true , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
     { dataField:"billDt" ,headerText:"Bill Date" ,editable : false , width : 100 },
     { dataField:"assignAmt" ,headerText:"assignAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
     { dataField:"billStatus" ,headerText:"billStatus" ,editable : false , width : 100 , visible : false },
@@ -346,6 +346,20 @@ $(document).ready(function(){
         if(event.dataField == "btnCheck"){
         	recalculateBillTotalAmt();
         }
+    });
+    
+    //Cell Edit Event : 최종 Final 금액 변경시 금액 재 계산
+    AUIGrid.bind(targetFinalBillGridID, "cellEditEnd", function( event ) {        
+        var billAmt = AUIGrid.getCellValue(targetFinalBillGridID, event.rowIndex, "billAmt"); //invoice charge
+        var paidAmt = AUIGrid.getCellValue(targetFinalBillGridID, event.rowIndex, "paidAmt"); //transfer amount
+        var targetAmt = AUIGrid.getCellValue(targetFinalBillGridID, event.rowIndex, "targetAmt"); //transfer amount
+
+        if(targetAmt > billAmt - paidAmt){
+            AUIGrid.setCellValue(targetFinalBillGridID, event.rowIndex, 'targetAmt', billAmt - paidAmt);
+        }
+
+        //그리드에서 수정된 총 금액 계산
+        recalculatePaymentTotalAmt();
     });
     
     //Credit Card Type 생성
@@ -1121,6 +1135,16 @@ function addRentalToFinal(){
     recalculatePaymentTotalAmt();
 }
 
+function viewRentalLedger(){
+	if($("#rentalOrdId").val() != ''){
+		Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#rentalOrdId").val()});
+    }else{
+    	Common.alert('<b>Please Select a Order Info first</b>');
+    	return;
+    }
+		
+}
+
 //**************************************************
 //**************************************************
 //Outright 관련 Script 
@@ -1682,6 +1706,17 @@ function addSrvcToFinal(){
     recalculatePaymentTotalAmt();  
 }
 
+
+function viewSrvcLedger(){
+    if($("#srvcOrdId").val() != ''){
+        Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#srvcOrdId").val()});
+    }else{
+        Common.alert('<b>Please Select a Order Info first</b>');
+        return;
+    }
+        
+}
+
 //**************************************************
 //**************************************************
 //Bill Payment  관련 Script 
@@ -1803,7 +1838,7 @@ function addBillToFinal(){
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Credit Card Payment</li>
-        <li>Credit Card Key-In (from Admin)</li>
+        <li>Credit Card Key-In</li>
     </ul>
 
     <!-- title_line start -->
@@ -1873,7 +1908,7 @@ function addBillToFinal(){
 	                                    <a href="javascript:fn_rentalOrderSearchPop();" id="search">Search</a>
 	                                </p>
 	                                <p class="btn_sky">
-	                                    <a href="" id="viewLedger">View Ledger</a>
+	                                    <a href="javascript:viewRentalLedger();" id="viewLedger">View Ledger</a>
 	                                </p>
 	                                <label><input type="checkbox" id="isRentalBillGroup" name="isRentalBillGroup" onClick="javascript:rentalCheckBillGroup();" /><span>include all orders' bills with same billing group </span></label>
 	                        </td>
@@ -2006,7 +2041,7 @@ function addBillToFinal(){
 	                                    <a href="javascript:fn_srvcOrderSearchPop();" id="search">Search</a>
 	                                </p>
 	                                <p class="btn_sky">
-	                                    <a href="" id="viewLedger">View Ledger</a>
+	                                       <a href="javascript:viewSrvcLedger();" id="viewLedger">View Ledger</a>
 	                                </p>
 	                                <label><input type="checkbox" id="isSrvcBillGroup" name="isSrvcBillGroup" onClick="javascript:srvcCheckBillGroup();" /><span>include all service contacts' bills with same billing group </span></label>
 	                        </td>

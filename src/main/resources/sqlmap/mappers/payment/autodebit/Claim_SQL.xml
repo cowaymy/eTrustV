@@ -8,7 +8,7 @@
             Extent1.CTRL_ID,
             Extent1.CTRL_BATCH_NO,
             Extent1.CTRL_BANK_ID,
-            NVL(TO_CHAR(Extent1.CTRL_BATCH_DT,'DD-MM-YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS CTRL_BATCH_DT,
+            NVL(TO_CHAR(Extent1.CTRL_BATCH_DT,'DD/MM/YYYY'),'01/01/1900') AS CTRL_BATCH_DT,
             NVL(Extent1.CTRL_BILL_AMT,0) AS CTRL_BILL_AMT,
             NVL(Extent1.CTRL_BILL_PAY_AMT,0) AS CTRL_BILL_PAY_AMT,
             NVL(Extent1.CTRL_IS_CLOS,0) AS CTRL_IS_CLOS,
