@@ -62,7 +62,6 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 
 	@Transactional
 	public boolean updJournalPassEntry(Map<String, Object> params, SessionVO sessionVO) {
-		logger.debug("★☆★☆★☆★☆AccountReconciliationServiceImpl.updJournalPassEntry★☆★☆★☆★☆");
 		Map<String, Object> route = new HashMap<String, Object>();
 		int routeResult = 0;
 		int route2Result = 0;
@@ -135,8 +134,6 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 
 	@Override
 	public boolean updJournalExclude(Map<String, Object> params, SessionVO sessionVO) {
-		
-		logger.debug("★☆★☆★☆★☆AccountReconciliationServiceImp.updJournalExclude★☆★☆★☆★☆");
 		int transResult = 0;
 		
 		Map<String, Object> transMap = new HashMap<String, Object>();
