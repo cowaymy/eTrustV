@@ -186,7 +186,7 @@
                 CRT_DT, 
                 CRT_USER_ID, 
                 MSG, 
-                REJCT_CODE_ID, 
+                INPUT_REJCT_CODE, 
                 SVC_CNTRCT_ID
             )
             VALUES(
