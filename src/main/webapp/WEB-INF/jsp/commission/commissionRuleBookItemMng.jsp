@@ -1248,7 +1248,7 @@
   <td><input type="text" title="" placeholder="Rule Name" class="w100p" id="ruleNm" name="ruleNm" /></td>
   <th scope="row">USE (Y/N)</th>
   <td>
-  <select class="w10p" id="useYn" name="useYn">
+  <select class="w100p" id="useYn" name="useYn">
     <option value="Y">Y</option>
     <option value="N">N</option>
   </select>
@@ -1266,7 +1266,7 @@
 </tr>
 <tr>
   <th scope="row">Range Value Type<span class="must">*</span></th>
-  <td><select id="valueType" name="valueType">   
+  <td><select class="w100p" id="valueType" name="valueType">   
   </select></td>
   <th scope="row">Range Value Type Name<span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Range Value Type Name" class="w100p" id="valueTypeNm" name="valueTypeNm" readonly="readonly" /></td>
