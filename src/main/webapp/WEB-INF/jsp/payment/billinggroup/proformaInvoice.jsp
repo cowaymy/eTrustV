@@ -263,9 +263,9 @@ hideViewPopup=function(val){
                         <th scope="row">Order Date</th>
                         <td>
                            <div class="date_set w100p"><!-- date_set start -->
-                           <p><input type="text" name="orderDt1" placeholder="dd/MM/yyyy" class="j_date" readonly/></p>
+                           <p><input type="text" name="orderDt1" placeholder="DD/MM/YYYY" class="j_date" readonly/></p>
                            <span>To</span>
-                           <p><input type="text" name="orderDt2" placeholder="dd/MM/yyyy" class="j_date" readonly/></p>
+                           <p><input type="text" name="orderDt2" placeholder="DD/MM/YYYY" class="j_date" readonly/></p>
                            </div><!-- date_set end -->
                         </td>
                     </tr>
