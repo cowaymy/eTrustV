@@ -468,6 +468,12 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	public void saveAsReServiceLogs(Map<String, Object> params) {
 		MSvcLogApiMapper.insertAsReServiceLog(params);			
 	}
+
+	@Override
+	public Map<String, Object> getHsBasic(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getHsBasic(params);
+	}
 	
 	
 	
