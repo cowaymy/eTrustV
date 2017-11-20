@@ -86,7 +86,7 @@
 				Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
 	                $("#search").trigger("click");
 				   }, function(jqXHR, textStatus, errorThrown) {
-				          alert("실패하였습니다.");
+				   
 				            console.log("실패하였습니다.");
 				            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);				            
 				       
