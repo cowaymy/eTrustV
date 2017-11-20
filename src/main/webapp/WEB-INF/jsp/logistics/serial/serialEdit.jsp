@@ -281,7 +281,7 @@ $(document).ready(function(){
 	   myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridPros);
 	   myGridIDExcelHide = GridCommon.createAUIGrid("grid_wrap_hide", excelLayout ,"", gridPros);
 	   //detailGridID = GridCommon.createAUIGrid("grid_wrap_2nd", detailLayout,"", gridPros);
-	   popGridId  = GridCommon.createAUIGrid("popup_wrap_div", popLayout,"", subgridPros);
+	  popGridId  = GridCommon.createAUIGrid("popup_wrap_div", popLayout,"", subgridPros);
 	   $("#popup_wrap").hide();
 // 	   $("#grid_wrap_2nd_art").hide();
 	
@@ -317,10 +317,10 @@ $(document).ready(function(){
 		$("#create").click(function(){
 	        AUIGrid.clearGridData(popGridId);
 	         //popGridId  = GridCommon.createAUIGrid("popup_wrap_div", popLayout,"", subgridPros);
-	        AUIGrid.resize(popGridId,980,150); 
 			$("#popup_title").text("Create Serial Number");
 			$("#popup_wrap").show();
 			$("#add").show();
+	        AUIGrid.resize(popGridId); 
 		});
 		$("#edit").click(function(){
 			AUIGrid.destroy(popGridId)
