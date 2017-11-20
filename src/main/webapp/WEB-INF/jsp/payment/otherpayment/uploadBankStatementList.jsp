@@ -184,9 +184,9 @@
     	$("#uploadForm")[0].reset();
     	
     	//그리드 초기화
-    	AUIGrid.clearGridData(myGridID);
-    	AUIGrid.clearGridData(myDetailGridID);
-    	AUIGrid.clearGridData(myUploadGridID);
+    	//AUIGrid.clearGridData(myGridID);
+    	//AUIGrid.clearGridData(myDetailGridID);
+    	//AUIGrid.clearGridData(myUploadGridID);
     	
     	//팝업내 컬럼 초기화
     	$("#pop_bsNo").text("");        
@@ -198,7 +198,7 @@
         $("#uploadForm")[0].reset();
         
         //그리드 초기화
-        AUIGrid.clearGridData(myUploadGridID);        
+        //AUIGrid.clearGridData(myUploadGridID);        
     }
     
   //Layer close

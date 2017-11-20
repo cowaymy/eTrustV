@@ -176,9 +176,9 @@
         $("#uploadForm")[0].reset();
         
         //그리드 초기화
-        AUIGrid.clearGridData(myGridID);
-        AUIGrid.clearGridData(myDetailGridID);
-        AUIGrid.clearGridData(myUploadGridID);       
+        //AUIGrid.clearGridData(myGridID);
+        //AUIGrid.clearGridData(myDetailGridID);
+        //AUIGrid.clearGridData(myUploadGridID);       
     }
     
     // upload 화면 초기화
@@ -187,7 +187,7 @@
         $("#uploadForm")[0].reset();
         
         //그리드 초기화
-        AUIGrid.clearGridData(myUploadGridID);        
+        //AUIGrid.clearGridData(myUploadGridID);        
     }
     
   //Layer close
