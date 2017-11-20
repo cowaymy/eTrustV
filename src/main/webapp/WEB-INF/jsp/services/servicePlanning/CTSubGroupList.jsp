@@ -46,12 +46,12 @@ function CTSubgGroupGrid() {
         width : 130
     }, {
         dataField : "memId",
-        headerText : "",
+        headerText : "memId",
         editable : false,
         width : 0
     }, {
         dataField : "ctSubGrp",
-        headerText : "CTSubGroup",
+        headerText : "CT Sub Group",
         width : 120,
         editRenderer : {
             type : "ComboBoxRenderer",
@@ -182,9 +182,9 @@ function CTSubAreaGroupGrid() {
         editRenderer : {
             type : "CalendarRenderer",
             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-            onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
             showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
           },
+        onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
         width : 130
     }, {
         dataField : "priodTo",
@@ -193,9 +193,9 @@ function CTSubAreaGroupGrid() {
         editRenderer : {
             type : "CalendarRenderer",
             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-            onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
             showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
           },
+        onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
         width : 130
     }];
      // 그리드 속성 설정
@@ -296,6 +296,47 @@ $(document).ready(function() {
 	 
 
 	    
+	    // 파일 선택하기
+	    $('#fileSelector').on('change', function(evt) {
+	        if (!checkHTML5Brower()) {
+	            alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
+	            return;
+	        } else {
+	            var data = null;
+	            var file = evt.target.files[0];
+	            if (typeof file == "undefined") {
+	                alert("파일 선택 시 오류 발생!!");
+	                return;
+	            }
+	            var reader = new FileReader();
+	
+	            reader.onload = function(e) {
+	                var data = e.target.result;
+	
+	                /* 엑셀 바이너리 읽기 */
+	                
+	                var workbook;
+	
+	                if(rABS) { // 일반적인 바이너리 지원하는 경우
+	                    workbook = XLSX.read(data, {type: 'binary'});
+	                } else { // IE 10, 11인 경우
+	                    var arr = fixdata(data);
+	                    workbook = XLSX.read(btoa(arr), {type: 'base64'});
+	                }
+	
+	                var jsonObj = process_wb(workbook);
+	
+	                //console.log(JSON.stringify(jsonObj.Sheet1, 2, 2));
+	                
+	                createAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
+	            };
+	
+	            if(rABS) reader.readAsBinaryString(file);
+	            else reader.readAsArrayBuffer(file);
+	            
+	        }
+	    });
+	    
 	
 });
 
@@ -330,12 +371,6 @@ function fn_CTSubGroupSave(){
 	
 }
 
-// 171115 :: 선한이
-//엑셀 내보내기(Export);
-function fn_exportTo() {
-	GridCommon.exportTo("grid_wrap_ctSubGroup", 'xlsx', "Service Group");
-};
-
 function fn_openAreaMain(){
     Common.popupDiv("/services/serviceGroup/openAreaMainPop.do?isPop=true","" );
 }
@@ -350,6 +385,57 @@ function fn_radioButton(val){
 	}
 }
 
+// 171115 :: 선한이
+// 엑셀 내보내기(Export);
+function fn_exportTo() {
+    var radioVal = $("input:radio[name='name']:checked").val();
+    
+    if (radioVal == 1 ){
+        GridCommon.exportTo("grid_wrap_ctSubGroup", 'xlsx', "Service Group_ctSubGroup");
+    } else {
+        GridCommon.exportTo("grid_wrap_ctaAreaSubGroup", 'xlsx', "Service Group_ctaAreaSubGroup");
+    }
+};
+
+// 171117 :: 선한이
+function fn_uploadFile() 
+{
+   var formData = new FormData();
+   console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
+   formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+   
+   var radioVal = $("input:radio[name='name']:checked").val();
+   formData.append("radioVal", radioVal );
+
+   //alert('read');
+   
+   if( radioVal == 1 ){
+	   Common.ajaxFile("/services/serviceGroup/excel/updateCTSubGroupByExcel.do"
+               , formData
+               , function (result) 
+                {
+                     //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                     if(result.code == "99"){
+                         Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
+                     }else{
+                         Common.alert(result.message);
+                     }
+            });
+   } else {
+	   Common.ajaxFile("/services/serviceGroup/excel/updateCTAreaByExcel.do"
+               , formData
+               , function (result) 
+                {
+                    //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                	if(result.code == "99"){
+                        Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
+                    }else{
+                        Common.alert(result.message);
+                    }
+            });
+   }
+
+}
 
 function fn_Clear(){
     
@@ -378,6 +464,15 @@ function fn_Clear(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Service Group</h2>
 <ul class="right_btns">
+	
+    <li>
+    <div class="auto_file"><!-- auto_file start -->
+    <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
+    </div><!-- auto_file end -->
+    </li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile();">Update Request</a></p></li>
+
+    <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTSubGroupUpdateRequest()">Update Request</a></p></li> -->
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTSubGroupSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -509,8 +604,8 @@ function fn_Clear(){
 <tbody>
 <tr>
     <td>
-    <label><input type="radio" name="name" checked="checked" onclick="fn_radioButton(1)" /><span>CT Sub Group Display</span></label>
-    <label><input type="radio" name="name" onclick="fn_radioButton(2)"/><span>Sub Group – Area Display</span></label>
+    <label><input type="radio" name="name" value="1" checked="checked" onclick="fn_radioButton(1)" /><span>CT Sub Group Display</span></label>
+    <label><input type="radio" name="name" value="2" onclick="fn_radioButton(2)"/><span>Sub Group – Area Display</span></label>
     </td>
 </tr>
 </tbody>
