@@ -290,11 +290,16 @@
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
-        <p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="javascript:void(0);" class="click_add_on">System</a></p>
         <h2>GST Zero Rate Location Search</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:void(0);" id="btnSearch"><span class="search"></span>Search</a>
-            </p></li>
+            <li>
+                <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                <p class="btn_blue">
+                <a href="javascript:void(0);" id="btnSearch"><span class="search"></span><spring:message code='sys.btn.search'/></a>
+                </p>
+                </c:if>
+            </li>
             <!-- <li><p class="btn_blue"><a href="javascript:void(0);" id="btnClear"><span class="clear"></span>Clear</a></p>
             </li> -->
         </ul>

@@ -27,7 +27,7 @@
 
 	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 		var option = {
-            isProcedure : false // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
 		};
 
         Common.report("dataForm", option);
@@ -81,8 +81,17 @@
 			<!-- <input type="" id="reportFileName" name="reportFileName" value="/sales/POSReceipt_New.rpt" />-->
 			<!-- <input type="text" id="reportFileName" name="reportFileName" value="/sample/CustOwnOrderList.rpt" /><br /> -->
 
+			<!--
 
-			<input type="text" id="reportFileName" name="reportFileName" value="/scm/PO_management.rpt" /><br />
+			2017-11-17 17:31:01,105 DEBUG [com.coway.trust.web.common.ReportController]  k : reportFileName, V : /sales/CCPSummary_CcpAdminProductivity.rpt
+2017-11-17 17:31:01,105 DEBUG [com.coway.trust.web.common.ReportController]  k : viewType, V : PDF
+2017-11-17 17:31:01,105 DEBUG [com.coway.trust.web.common.ReportController]  k : reportDownFileName, V : CCPDailyProductivity_17112017
+2017-11-17 17:31:01,105 DEBUG [com.coway.trust.web.common.ReportController]  k : V_ORDERDATEFR, V : 2017-11-06 00:00:00
+2017-11-17 17:31:01,105 ERROR [com.coway.trust.web.common.ReportController] com.coway.trust.cmmn.exception.ApplicationException: 매개 변수 필드 형식과 매개 변수 필드 현재 값 형식이 호환되지 않습니다.
+	at com.coway.trust.web.common.ReportController.lambda$4(ReportController.java:349)
+			-->
+
+			<input type="text" id="reportFileName" name="reportFileName" value="/sales/CCPSummary_CcpAdminProductivity.rpt" /><br />
 
 
 			<!-- view type
@@ -107,8 +116,9 @@
 			<!-- 리포트에서 사용할 파라미터 start-->
 			리포트 파일에 전달될 파라미터 설정 : <br/>
 
-			<input type="text" id="V_WHERESQL" name="V_WHERESQL" value="AND ArgM.GOV_AG_BATCH_NO = 'AGM0001691'" /><br />
-			<input type="text" id="V_PO_NO" name="V_PO_NO" value="MYKL170112A011" /><br />
+			<input type="text" id="V_WHERESQL" name="V_WHERESQL" value="AND ROWNUM <= 10" /><br />
+			<input type="text" id="V_ORDERDATEFR" name="V_ORDERDATEFR" value="2017-10-01 00:00:00" /><br />
+			<input type="text" id="V_ORDERDATETO" name="V_ORDERDATETO" value="2017-10-30 00:00:00" /><br />
 
 			<!--
 			<input type="text" id="V_REFNO" name="V_REFNO" value="1111111" /><br />
