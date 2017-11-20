@@ -365,7 +365,7 @@ function chgTab(tabNm) {
 </script>
 <div id="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order View</h1>
+<h1>CCP Calculation View</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
 </ul>

@@ -4,17 +4,17 @@
 <script type="text/javaScript">
 
 
-    doGetCombo('/common/selectCodeList.do', '21', '','cmbCreditCardType', 'S' , '');           // Add Card Type Combo Box
-    doGetCombo('/common/selectCodeList.do', '115', '','cmbCardType', 'S' , '');           // Add Card Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '21', '','_insCmbCreditCardType', 'S' , '');           // Add Card Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '115', '','_cmbCardType_', 'S' , '');           // Add Card Type Combo Box
     
     // card number에 따라 card type 변경
     function fn_selectCreditCardType(){
-    	if($("#cardNo").val().substr(0,1) == '4'){
-    		$("#cmbCreditCardType").val('112');
-    	}else if($("#cardNo").val().substr(0,1) == '5'){
-    		$("#cmbCreditCardType").val('111');
+    	if($("#_cardNo_").val().substr(0,1) == '4'){
+    		$("#_insCmbCreditCardType").val('112');
+    	}else if($("#_cardNo_").val().substr(0,1) == '5'){
+    		$("#_insCmbCreditCardType").val('111');
     	}else{
-    		$("#cmbCreditCardType").val('');
+    		$("#_insCmbCreditCardType").val('');
     	}
     }
     
@@ -40,13 +40,13 @@
             return false;
         }else{
         	// number Check
-            if(FormUtil.checkNum($("#cardNo"))){ 
+            if(FormUtil.checkNum($("#_cardNo_"))){ 
                 Common.alert("* Invalid credit card number.");
                 return false;
             }
             
             //digit 16
-            if(16 != $("#cardNo").val().length){
+            if(16 != $("#_cardNo_").val().length){
                 Common.alert("* Credit card number must in 16 digits.");
                 return false;
             }
@@ -64,11 +64,20 @@
             return false;
         }
 
-		opener.fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,bankRem);
-		self.close();
+        //insert
+		fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,bankRem);
+		//close
+		$("#_cardPopCloseBtn").click();
 	}
 </script>
 
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>Customer New Credit Card</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a id="_cardPopCloseBtn">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 <form action="" id="insCardForm" name="insCardForm" method="GET">
 	<table class="type1"><!-- table start -->
@@ -83,12 +92,12 @@
 			<tr>
 			    <th scope="row">Type<span class="must">*</span></th>
 			    <td>
-				    <select class="w100p disabled" id="cmbCreditCardType" name="cmbCreditCardType" disabled="disabled">
+				    <select class="w100p disabled" id="_insCmbCreditCardType" name="cmbCreditCardType" disabled="disabled">
 				    </select>
 			    </td>
 			    <th scope="row">Issue Bank<span class="must">*</span></th>
 			    <td>
-				    <select class="w100p" id="issueBank" name="issueBank">
+				    <select class="w100p" id="_issueBank_" name="issueBank">
 				       <option value="">Choose One</option>
 				       <c:forEach var="list" items="${bankList }">
 			               <option value="${list.bankId}">${list.code} - ${list.codeName}</option>
@@ -99,28 +108,28 @@
 			<tr>
 			    <th scope="row">Credit Card No<span class="must">*</span></th>
 			    <td>
-			    <input type="text" title="" id="cardNo" name="cardNo" maxlength="16" placeholder="Credit Card No" onBlur="fn_selectCreditCardType()" class="w100p" />
+			    <input type="text" title="" id="_cardNo_" name="cardNo" maxlength="16" placeholder="Credit Card No" onBlur="fn_selectCreditCardType()" class="w100p" />
 			    </td>
 			    <th scope="row">Expiry Date<span class="must">*</span></th>
 			    <td>
-			    <input type="text" title="Create start Date" id="expDate" name="expDate" placeholder="MM/YYYY" class="j_date2" />
+			    <input type="text" title="Create start Date" id="_expDate_" name="expDate" placeholder="MM/YYYY" class="j_date2" />
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Name On Card<span class="must">*</span></th>
 			    <td>
-			    <input type="text" title="" id="nameCard" name="nameCard" placeholder="Name On Card" class="w100p" />
+			    <input type="text" title="" id="_nameCard_" name="nameCard" placeholder="Name On Card" class="w100p" />
 			    </td>
 			    <th scope="row">Card Type<span class="must">*</span></th>
 			    <td>
-                    <select class="w100p" id="cmbCardType" name="cmbCardType">
+                    <select class="w100p" id="_cmbCardType_" name="cmbCardType">
                     </select>
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Remarks</th>
 			    <td colspan="3">
-			    <textarea cols="20" rows="5" id="bankRem" name="bankRem" placeholder="Remark"></textarea>
+			    <textarea cols="20" rows="5" id="_bankRem_" name="bankRem" placeholder="Remark"></textarea>
 			    </td>
 			</tr>
 		</tbody>
@@ -130,3 +139,4 @@
 	    <li><p class="btn_blue2 big"><a href="#" onclick="fn_addCreditCard()">Add Credit Card</a></p></li>
 	</ul>
 </section><!-- pop_body end -->
+</div>

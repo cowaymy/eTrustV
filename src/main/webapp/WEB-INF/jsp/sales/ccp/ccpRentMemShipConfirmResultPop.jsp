@@ -2,6 +2,17 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
     
+$(function() {
+    $('#_updSmsMsg').keyup(function (e){
+        
+        var content = $(this).val();
+        
+       // $(this).height(((content.split('\n').length + 1) * 2) + 'em');
+        
+        $('#_charCounter').html('Total Character(s) : '+content.length);
+    });
+    $('#_updSmsMsg').keyup();
+});
     //생성 후 반환 Grid Id
     var callGrid;
     $(document).ready(function() {
@@ -41,20 +52,19 @@
 		});
     	
     	
-    	//TODO 미개발
-    	$("#_updSmsMsg").click(function() {
-			Common.alert("The program is under development.");
-		});
-    	
-    	
-    	/*
-    	    this.txtSMSMsg.Text = "ORDER : " + this.hiddenOrderNo.Value + "\r\n" +
-                      "NAME : " + this.hiddenCustName.Value + "\r\n" +
-                      "M/SHIP STATUS : " + "PENDING" + "\r\n";
-    	*/
-    	
-    	//_updSmsMsg
-    	fn_setSMSmsg();
+    	 $("#_updSmsChk").change(function() {
+    		   
+    		 $("#_updSmsMsg").val('');
+    	     $("#_updSmsMsg").attr("disabled" , "disabled");
+    		 
+    	     if($("#_updSmsChk").is(":checked") == true){
+	             $("#_updSmsMsg").attr("disabled" , false);
+	             $("#_updMsgIsChk").val("1");
+	             fn_setSMSmsg();
+    	      }else{
+    	    	  $("#_updMsgIsChk").val("0");
+    	      }
+    	 });
     	
     }); //Document Ready Func End
     
@@ -68,18 +78,19 @@
         msg += "NAME : " + custNm + "\r\n";
         msg += "M/SHIP STATUS : " + stus;
         $("#_updSmsMsg").val(msg);  
+        $('#_charCounter').html('Total Character(s) : '+ msg.length);
     }
     
     //Msg Check Change Func
-    function  fn_smsChkFunc(){
-    	Common.alert("The program is under development.");
+/*     function  fn_smsChkFunc(){
+    	
     	if($("#_updSmsChk").is(":checked") == true){
             $("#_updMsgIsChk").val("1");
         }else{
             $("#_updMsgIsChk").val("0");
         }
     	
-    }
+    } */
     
     //Save
     function fn_confirmResultSaveFunc(){
@@ -596,15 +607,15 @@
 <tbody>
 <tr>
     <td colspan="2">
-    <label><input type="checkbox"  id="_updSmsChk"  onclick="javascript : fn_smsChkFunc()"/><span>Send SMS ?</span></label>
+    <label><input type="checkbox"  id="_updSmsChk" /><span>Send SMS ?</span></label>
     </td>
 </tr>
 <tr>
     <th scope="row">SMS Message</th>
-    <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg" placeholder="SMS Message" readonly="readonly" class="readonly"></textarea></td>
+    <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg" placeholder="SMS Message" disabled="disabled" ></textarea></td>
 </tr>
  <tr>   
-    <td colspan="2"><span>Total Character(s) : 75</span></td>
+    <td colspan="2"><span id="_charCounter">Total Character(s) :</span></td>
  </tr>
 </tbody>
 </table><!-- table end -->

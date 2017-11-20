@@ -310,12 +310,14 @@
         
     }
     
-    function fn_addCreditCard(){
-        Common.popupWin("insBasicForm", "/sales/customer/customerAddCreditCardPop.do", option);
+    function fn_addCreditCardPop(){
+       // Common.popupWin("insBasicForm", "/sales/customer/customerAddCreditCardPop.do", option);
+        Common.popupDiv("/sales/customer/customerAddCreditCardPop.do", $("#insBasicForm").serializeJSON(), null, true, '_cardDiv');
     }
     
-    function fn_addBankAccount(){
-        Common.popupWin("insBasicForm", "/sales/customer/customerAddBankAccountPop.do", option);
+    function fn_addBankAccountPop(){
+       // Common.popupWin("insBasicForm", "/sales/customer/customerAddBankAccountPop.do", option);
+       Common.popupDiv("/sales/customer/customerAddBankAccountPop.do", $("#insBasicForm").serializeJSON(), null, true, '_bankDiv');
     }
     
     
@@ -514,7 +516,9 @@
         
         console.log("11.  cust name check");
         if($("#_asCustName_").val() == ''){
-            Common.alert("Please key in customer name.");
+            $("#_contactTab").click();
+            
+        	Common.alert("Please key in customer contact name.", fn_focusToCustName);
             return false;
         }
         console.log("12.  contact check");
@@ -528,6 +532,10 @@
 //        }
         return true;
     }
+    
+    function fn_focusToCustName(){
+    	$("#_asCustName_").focus();	
+    } 
     
     function fn_copyCustInfo(){
         $("#_asCustName_").val($("#_custName_").val());
@@ -820,7 +828,7 @@
 <ul class="tap_type1">
     <li><a href="#" class="on">Basic Info</a></li>
     <li><a href="#">Install Address</a></li>
-    <li><a href="#">Additional Service Contact</a></li>
+    <li><a href="#" id="_contactTab">Additional Service Contact</a></li>
     <li><a href="#" onclick="javascript:chgTab('card');">Credit Card</a></li>
     <li><a href="#" onclick="javascript:chgTab('account');">Bank Account</a></li>
 </ul>
@@ -1092,7 +1100,7 @@
 
 <article class="tap_area"><!-- tap_area start -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onclick="fn_addCreditCard()">ADD CREDIT CARD</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_addCreditCardPop()">ADD CREDIT CARD</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -1106,7 +1114,7 @@
 
 <article class="tap_area"><!-- tap_area start -->
 <ul class="right_btns" >
-    <li><p class="btn_grid"><a href="#" onclick="fn_addBankAccount()">ADD BANK ACCOUNT</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_addBankAccountPop()">ADD BANK ACCOUNT</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

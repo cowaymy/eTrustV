@@ -6,14 +6,14 @@
 
 var selCodeAccBankId = $("#accBank").val();
 
-doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                              // Add Bank Type Combo Box
-doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'cmbAccBank', 'S', '') //Issue Bank)
+doGetCombo('/common/selectCodeList.do', '20', '','_insCmbBankType', 'S' , '');                              // Add Bank Type Combo Box
+doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAccBank', 'S', '') //Issue Bank)
 
 	
 	function fn_addBankAccount(){
         var accType = document.insAccountForm.cmbBankType.value;
  //       var accBank = document.insAccountForm.cmbAccBank.value;
-        var accBank = $("#cmbAccBank").val();
+        var accBank = $("#_insCmbAccBank").val();
         var accNo = document.insAccountForm.accNo.value;
         var bankBranch = document.insAccountForm.bankBranch.value;
         var accOwner = document.insAccountForm.accOwner.value;
@@ -32,7 +32,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'cmbAccBank
             return false;
         }else{
         	//number check
-            if(FormUtil.checkNum($("#accNo"))){
+            if(FormUtil.checkNum($("#_insAccNo"))){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Number'/>");
                 return false;
             }
@@ -59,9 +59,11 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'cmbAccBank
             Common.alert("Please key in the bank account owner name");
             return false;
         }
-
-        opener.fn_addBankAccountInfo(accType,accBank,accNo,bankBranch,accOwner,accRem);
-        self.close();
+        
+        //insert
+        fn_addBankAccountInfo(accType,accBank,accNo,bankBranch,accOwner,accRem);
+        //close
+        $("#_bankInsCloseBtn").click();
     }
 	
 	/* ########## length Check Start ##########*/
@@ -240,12 +242,11 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'cmbAccBank
     /*########## availability Check End ##########*/
 </script>
 
-<!--<div id="popup_wrap"> popup_wrap start --
-
-<header class="pop_header">-- pop_header start --
-<h1>Add Bank Account</h1>
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>Customer New Bank Account</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_bankInsCloseBtn">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -263,35 +264,35 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'cmbAccBank
 			<tr>
 			    <th scope="row">Type<span class="must">*</span></th>
 			    <td>
-				    <select class="w100p disabled" id="cmbBankType" name="cmbBankType">
+				    <select class="w100p" id="_insCmbBankType" name="cmbBankType">
 				    </select>
 			    </td>
 			    <th scope="row">Issue Bank<span class="must">*</span></th>
 			    <td>
-				    <select class="w100p" id="cmbAccBank" name="cmbAccBank">
+				    <select class="w100p" id="_insCmbAccBank" name="cmbAccBank">
 				    </select>
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Account No<span class="must">*</span></th>
 			    <td>
-			        <input type="text" id="accNo" name="accNo" title="" placeholder="Account No" class="w100p" />
+			        <input type="text" id="_insAccNo" name="accNo" title="" placeholder="Account No" class="w100p" />
 			    </td>
 			    <th scope="row">Bank Branch</th>
 			    <td>
-			        <input type="text" id="bankBranch" name="bankBranch" title="" placeholder="Bank Branch" class="w100p" />
+			        <input type="text" id="_insBankBranch" name="bankBranch" title="" placeholder="Bank Branch" class="w100p" />
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Account Owner<span class="must">*</span></th>
 			    <td colspan="3">
-			        <input type="text" id="accOwner" name="accOwner" title="" placeholder="Account Owner" class="w100p" />
+			        <input type="text" id="_insAccOwner" name="accOwner" title="" placeholder="Account Owner" class="w100p" />
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Remarks</th>
 			    <td colspan="3">
-			        <textarea cols="20" rows="5" id="accRem" name="accRem" placeholder="Remark"></textarea>
+			        <textarea cols="20" rows="5" id="_insAccRem" name="accRem" placeholder="Remark"></textarea>
 			    </td>
 			</tr>
 		</tbody>
@@ -303,4 +304,4 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'cmbAccBank
 </form>
 </section><!-- pop_body end -->
 
-<!--</div> popup_wrap end -->
+</div>

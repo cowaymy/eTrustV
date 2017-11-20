@@ -131,6 +131,7 @@ public class CustomerController {
 	 */
 	@RequestMapping(value = "/customerAddBankAccountPop.do")
 	public String customerAddBankAccountPop(@RequestParam Map<String, Object> params, ModelMap model){
+		
 		List<EgovMap> accBankList = customerService.selectAccBank(params);
 		model.addAttribute("accBankList", accBankList);
 		
