@@ -31,28 +31,29 @@
     function createAUIGrid(){
         //AUIGrid 칼럼 설정
         var ordLedgerLayout = [
-          {   dataField : "docdate",  headerText : 'Date',         width : 90 }
-         ,{   dataField : "instNo",     headerText : 'Inst No',     width : 70 }
+          {   dataField : "docdate",  headerText : 'Date',         width : 85 }
+         ,{   dataField : "instNo",     headerText : 'Inst</br> No',     width : 45 }
          ,{   dataField : "doctype",  headerText : 'Type',         width : 110 }
-         ,{   dataField : "docNo",     headerText : 'Doc No',        width : 110 }
+         ,{   dataField : "docNo",     headerText : 'Doc No',        width : 95 }
          ,{   dataField : "docTypeId",     headerText : '',        width : 150, visible:false }
          ,{   dataField : "chqNo",     headerText : 'Chq No',   width : 100 }
-         ,{   dataField : "refDt",      headerText : 'Ref Date',     width : 100  }
+         ,{   dataField : "refDt",      headerText : 'Ref Date',     width : 85  }
          ,{   dataField : "remark",        headerText : 'Ref No/TR/EFT',      width : 150 }
-         ,{   dataField : "payMode",        headerText : 'Paymode',        width : 70 }
-         ,{   dataField : "debitamt",   headerText : 'Debit',      width : 90, dataType : "numeric", formatString : "#,##0.00" }
-         ,{   dataField : "creditamt",  headerText : 'Credit',   width : 90, dataType : "numeric", formatString : "#,##0.00"}
-         ,{   dataField : "balanceamt", headerText : 'Balance', width : 90, dataType : "numeric", formatString : "#,##0.00"}
+         ,{   dataField : "payMode",        headerText : 'Pay</br>mode',        width : 50 }
+         ,{   dataField : "debitamt",   headerText : 'Debit',      width : 75, dataType : "numeric", formatString : "#,##0.00" }
+         ,{   dataField : "creditamt",  headerText : 'Credit',   width : 75, dataType : "numeric", formatString : "#,##0.00"}
+         ,{   dataField : "balanceamt", headerText : 'Balance', width : 75, dataType : "numeric", formatString : "#,##0.00"}
         	
         ];
 
      //그리드 속성 설정
      var ordLedgerGridPros = {
-         usePaging           : false,             //페이징 사용
-         pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+         usePaging           : true,             //페이징 사용
+         pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
          editable                : false,        
          showStateColumn     : false,         
-         showRowNumColumn    : false,  
+         showRowNumColumn    : false, 
+         headerHeight : 30,
          selectionMode       : "singleRow"  //"multipleCells",   
      };
      
@@ -102,7 +103,7 @@
          AUIGrid.setGridData(agreGridID, agreList);
      } else{
 
-         $("#agre_grid").hide();
+         $("#agreDiv").hide();
      }
  }   
 </script>    
@@ -130,9 +131,9 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:150px" />
+	<col style="width:140px" />
 	<col style="width:*" />
-	<col style="width:130px" />
+	<col style="width:140px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -179,26 +180,16 @@
 </tbody>
 </table><!-- table end -->
 
-<ul class="right_btns mt20">
-	<li><p>Transaction Date</p></li>
-	<li><input type="text" title="기준년월" class="j_date2" /></li>
-	<li><p class="btn_blue"><a href="#">Print</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="ord_ledger_grid" style="width:100%; height:300px; margin:0 auto;"></div>
-</article><!-- grid_wrap end -->
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:140px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:130px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:140px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:130px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -223,10 +214,27 @@
     <td><span>${ordOutInfo.totPnaltyBal}</span></td>
 </tr>
 </tbody>
-</table>    
+</table>   
+
+<ul class="right_btns mt20">
+	<li><p>Transaction Date</p></li>
+	<li><input type="text" title="기준년월" class="j_date2" /></li>
+	<li><p class="btn_blue"><a href="#">Print</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+    <div id="ord_ledger_grid" style="width:100%; height:330px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+ 
 
 <article class="grid_wrap mt20"><!-- grid_wrap start -->
+<div id ="agreDiv" >
+    <aside class="title_line">
+        <h2> Agreement Info</h2>
+    </aside>
     <div id="agre_grid" style="width:100%; height:200px; margin:0 auto;"></div>
+</div>
 </article><!-- grid_wrap end -->
 
 
