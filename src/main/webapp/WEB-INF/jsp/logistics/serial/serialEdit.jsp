@@ -264,7 +264,7 @@ var subgridPros = {
 	};
 
 $(document).ready(function(){
-	createInitGrid();
+	//createInitGrid();
     
     // IE10, 11은 readAsBinaryString 지원을 안함. 따라서 체크함.
     var rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
@@ -387,6 +387,7 @@ $(document).ready(function(){
 	       
 	        AUIGrid.clearGridData(myGridIDExcel);
 	        $("#popup_wrap_excel_up").show();
+	        createInitGrid();
 	    });
 	    $('#excelDown').click(function() {
 	        // 그리드의 숨겨진 칼럼이 있는 경우, 내보내기 하면 엑셀에 아예 포함시키지 않습니다.
@@ -493,11 +494,12 @@ function fn_editSerial(index){
 	var url = "/logistics/serial/selectSerialOne.do";
     var param = "serialNo="+serialNo ;
     Common.ajax("GET" , url , param , function(data){
-        AUIGrid.resize(popGridId,980,150); 
         AUIGrid.setGridData(popGridId, data.dataList);
         $("#popup_title").text("Edit Serial Number");
         $("#popup_wrap").show();
         $("#add").hide();
+//        AUIGrid.resize(popGridId,980,150); 
+        AUIGrid.resize(popGridId); 
     });
 };
 
@@ -756,7 +758,8 @@ function createInitGrid() {
     
     // 그리드 최초에 빈 데이터 넣음.
     AUIGrid.setGridData(myGridIDExcel, []);
-    AUIGrid.resize(myGridIDExcel,1203);
+   // AUIGrid.resize(myGridIDExcel,1203);
+    AUIGrid.resize(myGridIDExcel);
 }
 
 function f_multiCombo() {
@@ -913,7 +916,7 @@ function f_multiCombo() {
 </form>
 </div><!-- popup_wrap end -->
 
-<div id="popup_wrap_excel_up" class="size_big popup_wrap" style="display:none"><!-- popup_wrap start -->
+<div id="popup_wrap_excel_up" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1 id="popup_title">Serial Number Excel Upload</h1>
