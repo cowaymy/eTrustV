@@ -1939,11 +1939,11 @@ var columnLayout = [
                  <td colspan="3"><input type="text" name="eft" id="eft" class="w100p"/></td>
             </tr>
             <tr>
-                 <th scope="row">TR No.<span class="must">*</span></th>
+                 <th scope="row">TR No.</th>
                  <td>
                      <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
                  </td>
-                 <th scope="row">TR Issue Date<span class="must">*</span></th>
+                 <th scope="row">TR Issue Date</th>
                  <td>
                      <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                  </td>
@@ -2031,11 +2031,11 @@ var columnLayout = [
                    </td>
             </tr>
             <tr>
-                   <th scope="row">TR No.<span class="must">*</span></th>
+                   <th scope="row">TR No.</th>
                    <td>
                        <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
                    </td>
-                   <th scope="row">TR Issue Date<span class="must">*</span></th>
+                   <th scope="row">TR Issue Date</th>
                    <td>
                        <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                    </td>
@@ -2123,11 +2123,11 @@ var columnLayout = [
                    </td>
             </tr>
             <tr>
-                  <th scope="row">TR No.<span class="must">*</span></th>
+                  <th scope="row">TR No.</th>
                   <td>
                       <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
                   </td>
-                  <th scope="row">TR Issue Date<span class="must">*</span></th>
+                  <th scope="row">TR Issue Date</th>
                   <td>
                       <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                   </td>
