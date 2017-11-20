@@ -282,7 +282,7 @@ function resetUpdatedItems() {
                         </td>
                         <th scope="row">Create Date</th>
                         <td>
-                            <div class="date_set"><!-- date_set start -->
+                            <div class="date_set w100p"><!-- date_set start -->
                             <p><input type="text"  name="createDate1" id="createDate1" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             <span>To</span>
                             <p><input type="text"  name="createDate2" id="createDate2" title="Create Date To" placeholder="DD/MM/YYYY" class="j_date" /></p>
