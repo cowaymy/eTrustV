@@ -212,16 +212,6 @@ $(document).ready(function(){
 
 // AUIGrid 칼럼 설정
 var columnLayout = [
-    { dataField:"ctrlStusId" ,headerText:"Status ID",width: 120 ,visible : false, editable : false },
-    { dataField:"stusName" ,headerText:"Status Name",width: 120 ,visible : false, editable : false },
-    { dataField:"crtUserName" ,headerText:"Creator Name",width: 120 ,visible : false, editable : false },
-    { dataField:"bankName" ,headerText:"Bank Name",width: 120 ,visible : false, editable : false },
-    { dataField:"updDt" ,headerText:"Update Date",width: 120 ,visible : false, editable : false },
-    { dataField:"ctrlTotSucces" ,headerText:"Success",width: 120 ,visible : false, editable : false },
-    { dataField:"ctrlTotFail" ,headerText:"Fail",width: 120 ,visible : false, editable : false },
-    { dataField:"ctrlIsCrc" ,headerText:"ctrlIsCrc",width: 120 ,visible : false, editable : false },
-    { dataField:"bankId" ,headerText:"bankId",width: 120 ,visible : false, editable : false },
-    
     { dataField:"ctrlId" ,headerText:"Batch Id",width: 120 ,editable : false },
     { dataField:"stusCode" ,headerText:"Status",width: 100 ,editable : false },
     { dataField:"ctrlIsCrcName" ,headerText:"Type",width: 100 ,editable : false },
@@ -250,7 +240,16 @@ var columnLayout = [
             checkValue : "1",
             unCheckValue : "0"
         }    
-    }
+    },
+    { dataField:"ctrlStusId" ,headerText:"Status ID",width: 120 ,visible : false, editable : false },
+    { dataField:"stusName" ,headerText:"Status Name",width: 120 ,visible : false, editable : false },
+    { dataField:"crtUserName" ,headerText:"Creator Name",width: 120 ,visible : false, editable : false },
+    { dataField:"bankName" ,headerText:"Bank Name",width: 120 ,visible : false, editable : false },
+    { dataField:"updDt" ,headerText:"Update Date",width: 120 ,visible : false, editable : false },
+    { dataField:"ctrlTotSucces" ,headerText:"Success",width: 120 ,visible : false, editable : false },
+    { dataField:"ctrlTotFail" ,headerText:"Fail",width: 120 ,visible : false, editable : false },
+    { dataField:"ctrlIsCrc" ,headerText:"ctrlIsCrc",width: 120 ,visible : false, editable : false },
+    { dataField:"bankId" ,headerText:"bankId",width: 120 ,visible : false, editable : false },
     ];
     
 var updResultColLayout = [ 
