@@ -140,15 +140,15 @@ var columnLayout = [
                 <tbody>
                     <tr>
                         <th scope="row">Org Code</th>
-                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" /></td>
+                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" /></td>
                         <th scope="row">Grp Code</th>
-                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code"/></td>
+                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p"/></td>
                     </tr>
                     <tr>
                         <th scope="row">Dept Code</th>
-                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code"/></td>
+                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
                         <th scope="row">Member Code</th>
-                        <td><input type="text" title="memCode" id="memCode" name="memCode"  placeholder="Member Code"/></td>
+                        <td><input type="text" title="memCode" id="memCode" name="memCode"  placeholder="Member Code" class="w100p"/></td>
                     </tr>
                 </tbody>
             </table>
