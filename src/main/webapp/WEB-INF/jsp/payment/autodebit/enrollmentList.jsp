@@ -308,9 +308,9 @@ var columnLayout2 = [
                     <tbody>
                         <tr>
                             <th scope="row">Enroll ID</th>
-                            <td><input type="text" title="orgCode" id="enrollID" name="enrollID" placeholder="Enroll ID" /></td>
+                            <td><input type="text" title="orgCode" id="enrollID" name="enrollID" placeholder="Enroll ID" class="w100p"/></td>
                             <th scope="row">Creator</th>
-                            <td><input type="text" title="grpCode" id="creator" name="creator"  placeholder="Creator (Username)"/></td>
+                            <td><input type="text" title="grpCode" id="creator" name="creator"  placeholder="Creator (Username)" class="w100p"/></td>
                         </tr>
                         <tr>
                             <th scope="row">Create Date</th>
