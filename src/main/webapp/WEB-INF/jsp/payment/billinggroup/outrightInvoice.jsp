@@ -150,7 +150,7 @@ hideViewPopup=function(val){
                     <tr>
                         <th scope="row">Application Type</th>
                         <td>
-                            <select id="appType" name="appType" class="multy_select" multiple="multiple">
+                            <select id="appType" name="appType" class="multy_select w100p" multiple="multiple">
                                 <option value="67">Outright</option>
                                 <option value="68">Installment</option>
                             </select>
