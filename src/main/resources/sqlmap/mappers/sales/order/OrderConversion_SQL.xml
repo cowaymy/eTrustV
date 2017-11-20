@@ -114,10 +114,10 @@
                      AND UPPER(Filter1.USERNAME3) LIKE '%' || UPPER(#{crtUserName}) || '%'
                  </if>
 		         <if test="stConvConfDt != null and stConvConfDt != ''">
-                     AND Filter1.RS_CNVR_CNFM_DT <![CDATA[>=]]> #{stConvConfDt}
+                     AND Filter1.RS_CNVR_CNFM_DT <![CDATA[>=]]> TO_DATE(#{stConvConfDt}, 'DD/MM/YYYY')
                  </if>
                  <if test="endConvConfDt != null and endConvConfDt != ''">
-                     AND Filter1.RS_CNVR_CNFM_DT <![CDATA[<=]]> #{endConvConfDt}
+                     AND Filter1.RS_CNVR_CNFM_DT <![CDATA[<=]]> TO_DATE(#{endConvConfDt}, 'DD/MM/YYYY')
                  </if>
                  <if test="convRem != null and convRem != ''">
                      AND UPPER(Filter1.RS_CNVR_REM) LIKE '%' || UPPER(#{convRem}) || '%'

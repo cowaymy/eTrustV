@@ -513,12 +513,12 @@
 		      </if>
 		      <if test="startCrtDt != null and startCrtDt != ''">
 		      <![CDATA[
-	          AND Filter1.INV_CRT_DT >= #{startCrtDt}
+	          AND Filter1.INV_CRT_DT >= TO_DATE(#{startCrtDt} , 'DD/MM/YYYY')
 	          ]]>
 	          </if>
 	          <if test="endCrtDt != null and endCrtDt != ''">
 	          <![CDATA[
-	          AND Filter1.INV_CRT_DT <= #{endCrtDt}
+	          AND Filter1.INV_CRT_DT <= TO_DATE(#{endCrtDt} , 'DD/MM/YYYY')
 	          ]]>
 	          </if>
 	          <if test="salesOrdNo != null and salesOrdNo != ''">
@@ -1099,5 +1099,112 @@
 		VALUES ( #{seqSVC0007D}, #{bsResultId}, #{bsResultPartId}, #{bsResultPartDesc}, #{bsResultPartQty}, #{bsResultRem}
 		      , SYSDATE, #{userId}, #{bsResultFilterClm} )
     </insert>
+    
+    <select id="getSusIdSeq"  resultType="Integer">
+        SELECT SAL0096D_SUS_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertSusSAL0096D" parameterType="Map">
+        INSERT INTO SAL0096D
+			  ( SUS_ID, SALES_ORD_ID, SUS_STUS_ID, INV_ID, CALL_ENTRY_ID, RAF_AMT, SUS_CRT_DT, SUS_CRT_USER_ID
+			  , SUS_UPD_DT, SUS_UPD_USER_ID, SUS_NO, SUS_LAST_BILL_MONTH, SUS_LAST_BILL_YEAR
+			  , SUS_LAST_BILL_INST_NO, SUS_CURR_BILL_INST_NO, SUS_FROM_FB, FB_REF_NO )
+	    VALUES ( #{getSusIdSeq}, #{salesOrdId}, #{susStusId}, #{callResultInvId}, #{susCallEntryId}, #{refAmt}, SYSDATE, #{userId}
+	          , SYSDATE, #{userId}, #{susNo}, #{susLastBillMonth}, #{susLastBillYear}, #{susLastBillNo}, #{susCurrBillInstNo}, #{susFromFb}, NULL )
+    </insert>
+    
+    <select id="getSusInPersonIdSeq"  resultType="Integer">
+        SELECT SAL0097D_SUS_IN_PERSON_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertSusSAL0097D" parameterType="Map">
+        INSERT INTO SAL0097D
+			  ( SUS_IN_PERSON_ID, SUS_ID, USER_ID, SUS_IN_PERSON_STUS_ID, SUS_IN_PERSON_CRT_DT
+			  , SUS_IN_PERSON_CRT_USER_ID, SUS_IN_PERSON_UPD_DT, SUS_IN_PERSON_UPD_USER_ID )
+		VALUES 
+		      ( #{getSusInPersonIdSeq}, #{getSusIdSeq}, #{susUserId}, #{susInPersonStusId}, SYSDATE, #{userId}, SYSDATE, #{userId} )
+    </insert>
+    
+    <select id="callResultSearchCCR0006D" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.TYPE_ID TYPE_ID  ,
+			       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+			       Extent1.RESULT_ID RESULT_ID  ,
+			       Extent1.DOC_ID DOC_ID  ,
+			       Extent1.CRT_USER_ID CRT_USER_ID  ,
+			       Extent1.CRT_DT CRT_DT  ,
+			       Extent1.CALL_DT CALL_DT  ,
+			       Extent1.IS_WAIT_FOR_CANCL IS_WAIT_FOR_CANCL  ,
+			       Extent1.HAPY_CALLER_ID HAPY_CALLER_ID  ,
+			       Extent1.UPD_DT UPD_DT  ,
+			       Extent1.UPD_USER_ID UPD_USER_ID  ,
+			       Extent1.ORI_CALL_DT ORI_CALL_DT  
+			  FROM CCR0006D Extent1
+			 WHERE Extent1.DOC_ID = #{docId} 
+                 AND ROWNUM <![CDATA[<= ]]>1 
+            
+    </select>
+    
+    <update id="updateEntIdSAL0096D" parameterType="Map">
+        UPDATE SAL0096D
+             SET CALL_ENTRY_ID = #{infoCallEntryId}
+         WHERE SUS_ID = #{susId} 
+    </update> 
+    
+    <select id="callResultSearchCCTicket" parameterType="Map" resultType="egovMap">
+        SELECT * 
+		  FROM ( SELECT Project1.CC_TIC_ID   ,
+				                Project1.CC_TIC_CNT_INITIAL_ID   ,
+				                Project1.CC_TIC_CNT_NAME   ,
+				                Project1.CC_TIC_RGS_NAME   ,
+				                Project1.CC_TIC_TEL1   ,
+				                Project1.CC_TIC_TEL2   ,
+				                Project1.CC_TIC_EMAIL   ,
+				                Project1.CC_TIC_CUST_ID   ,
+				                Project1.CC_TIC_SO_ID   ,
+				                Project1.CC_TIC_MEM_ID   ,
+				                Project1.CC_TIC_REF_NO   ,
+				                Project1.CC_TIC_ENQUIRY_TYPE_ID   ,
+				                Project1.CC_TIC_ENQUIRY_DESC   ,
+				                Project1.CALL_ENTRY_ID   ,
+				                Project1.CC_TIC_STUS_ID   ,
+				                Project1.CC_TIC_CRT_USER_ID   ,
+				                Project1.CC_TIC_CRT_DT   ,
+				                Project1.CC_TIC_UPD_USER_ID   ,
+				                Project1.CC_TIC_UPD_DT   ,
+				                Project1.CC_TIC_PRIO_LVL   ,
+				                Project1.CC_TIC_ENQUIRY_CAT_ID   ,
+				                Project1.CC_TIC_CNT_NRIC   ,
+				                Project1.CC_TIC_PASS_MEM_TYPE_ID   
+		               FROM ( SELECT Extent1.CC_TIC_ID   ,
+							                Extent1.CC_TIC_CNT_INITIAL_ID   ,
+							                Extent1.CC_TIC_CNT_NAME   ,
+							                Extent1.CC_TIC_RGS_NAME   ,
+							                Extent1.CC_TIC_TEL1   ,
+							                Extent1.CC_TIC_TEL2   ,
+							                Extent1.CC_TIC_EMAIL   ,
+							                Extent1.CC_TIC_CUST_ID   ,
+							                Extent1.CC_TIC_SO_ID   ,
+							                Extent1.CC_TIC_MEM_ID   ,
+							                Extent1.CC_TIC_REF_NO   ,
+							                Extent1.CC_TIC_ENQUIRY_TYPE_ID   ,
+							                Extent1.CC_TIC_ENQUIRY_DESC   ,
+							                Extent1.CALL_ENTRY_ID   ,
+							                Extent1.CC_TIC_STUS_ID   ,
+							                Extent1.CC_TIC_CRT_USER_ID   ,
+							                Extent1.CC_TIC_CRT_DT   ,
+							                Extent1.CC_TIC_UPD_USER_ID   ,
+							                Extent1.CC_TIC_UPD_DT   ,
+							                Extent1.CC_TIC_PRIO_LVL   ,
+							                Extent1.CC_TIC_ENQUIRY_CAT_ID   ,
+							                Extent1.CC_TIC_CNT_NRIC   ,
+							                Extent1.CC_TIC_PASS_MEM_TYPE_ID   
+							        FROM CCR0010M Extent1
+							      WHERE Extent1.CC_TIC_SO_ID = #{salesOrdId}
+							          AND 501 = Extent1.CC_TIC_ENQUIRY_TYPE_ID ) Project1
+		  ORDER BY Project1.CC_TIC_ID DESC ) 
+         WHERE ROWNUM <![CDATA[<= ]]>1 
+    </select>
     
 </mapper>

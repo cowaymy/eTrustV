@@ -76,7 +76,7 @@
 			            ELSE '' END PROMOCODE2  ,
 			       CASE WHEN ( Filter1.PROMOID2 IS NOT NULL ) THEN Filter1.PROMODESC2
 			            ELSE '' END PROMODESC2  ,
-			       TO_CHAR(Filter1.SALES_DT,'dd/MM/YYYY') SALES_DT,
+			       Filter1.SALES_DT,
 			       CASE WHEN ( Filter1.SO_EXCHG_REM IS NOT NULL ) THEN Filter1.SO_EXCHG_REM
 			            ELSE '' END SO_EXCHG_REM  ,
 			       CASE WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
