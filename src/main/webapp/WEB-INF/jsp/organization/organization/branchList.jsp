@@ -169,8 +169,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Branch Management</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newBranch();"><span class="search"></span>New</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_branchEditPop();"><span class="search"></span>Edit</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newBranch();">New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_branchEditPop();">Edit</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBranchListAjax();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>

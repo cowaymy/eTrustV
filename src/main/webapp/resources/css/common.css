@@ -694,3 +694,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .error h2{font-size:60px;font-weight: bold;color:#25527c;font-family: 'Verdana'}
 .error .comment01{font-size:24px;color:#25527c;font-family: 'Verdana';margin-top: 40px}
 .error .comment02{font-size:18px;color:#ced5dd;font-family: 'Verdana';margin: 20px 0 30px}
+
+/* 파일첨부 */
+.attach_fileNm{position: relative;font-size:11px;}
+.attach_fileNm .remove{position: relative;color:#a1a1a1;}
