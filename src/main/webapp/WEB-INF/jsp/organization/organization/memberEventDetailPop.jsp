@@ -358,7 +358,7 @@
     </select>
     </td>
     
-     <th scope="row">APPLY_DATE</th>
+     <th scope="row">Event Apply Date</th>
     <td>
         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="evtApplyDate"  name="evtApplyDate" value="${promoInfo.evtApplyDt}" /> 
     </td>
@@ -367,7 +367,7 @@
 </tbody>
 </table><!-- table end -->
 
-<!-- <aside class="title_line">
+<!-- <aside class="title_line"> 
 <!-- title_line start 
 <h2>Current Downline</h2>
 </aside> --> <!-- title_line end --> 
