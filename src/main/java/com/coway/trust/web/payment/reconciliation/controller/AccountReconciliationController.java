@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.reconciliation.service.AccountReconciliationService;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -143,11 +145,11 @@ public class AccountReconciliationController {
 	 */
 	@RequestMapping(value = "/updJournalPassEntry.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> updJournalPassEntry(@RequestParam Map<String, Object> params, ModelMap model, 
-			HttpServletRequest request) {
+			HttpServletRequest request, SessionVO sessionVO) {
 		
 		ReturnMessage message = new ReturnMessage();
 		
-		boolean isSuccess = accountReconciliationService.updJournalPassEntry(params);
+		boolean isSuccess = accountReconciliationService.updJournalPassEntry(params, sessionVO);
 		
 		if(isSuccess){
 			message.setMessage("* Update Success");
@@ -169,11 +171,11 @@ public class AccountReconciliationController {
 	 */
 	@RequestMapping(value = "/updJournalExclude.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> updJournalExclude(@RequestParam Map<String, Object> params, ModelMap model, 
-			HttpServletRequest request) {
+			HttpServletRequest request, SessionVO sessionVO) {
 		
 		ReturnMessage message = new ReturnMessage();
 		
-		boolean isSuccess = accountReconciliationService.updJournalExclude(params);
+		boolean isSuccess = accountReconciliationService.updJournalExclude(params, sessionVO);
 		
 		if(isSuccess){
 			message.setMessage("* Update Success");

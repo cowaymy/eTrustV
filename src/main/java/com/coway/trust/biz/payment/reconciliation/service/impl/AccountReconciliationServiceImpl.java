@@ -61,9 +61,8 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 	}
 
 	@Transactional
-	public boolean updJournalPassEntry(Map<String, Object> params) {
+	public boolean updJournalPassEntry(Map<String, Object> params, SessionVO sessionVO) {
 		logger.debug("★☆★☆★☆★☆AccountReconciliationServiceImpl.updJournalPassEntry★☆★☆★☆★☆");
-		SessionVO sessionVO =  new SessionVO();
 		Map<String, Object> route = new HashMap<String, Object>();
 		int routeResult = 0;
 		int route2Result = 0;
@@ -120,8 +119,6 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 		route2.put("glConversionStatus", "N");
 		route2Result = accountReconciliationMapper.insAccGLRoutes(route2);
 		
-		//EgovMap journalTrans = accountReconciliationMapper.selectReconJournalTransactions(params);
-		
 		Map<String, Object> transMap = new HashMap<String, Object>();
 		transMap.put("fTransactionId", String.valueOf(params.get("fTrnscId")));
 		transMap.put("fTransactionInstruction", String.valueOf(params.get("fRemark")).trim());
@@ -137,10 +134,9 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 	}
 
 	@Override
-	public boolean updJournalExclude(Map<String, Object> params) {
+	public boolean updJournalExclude(Map<String, Object> params, SessionVO sessionVO) {
 		
 		logger.debug("★☆★☆★☆★☆AccountReconciliationServiceImp.updJournalExclude★☆★☆★☆★☆");
-		SessionVO sessionVO =  new SessionVO();
 		int transResult = 0;
 		
 		Map<String, Object> transMap = new HashMap<String, Object>();
