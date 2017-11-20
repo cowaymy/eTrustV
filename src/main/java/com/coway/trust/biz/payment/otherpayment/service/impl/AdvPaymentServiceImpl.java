@@ -48,7 +48,7 @@ public class AdvPaymentServiceImpl extends EgovAbstractServiceImpl implements Ad
     	}
     	
     	//payment 처리 프로시저 호출
-    	//commonPaymentMapper.processPayment(paramMap);
+    	commonPaymentMapper.processPayment(paramMap);
 	}
 	
 }

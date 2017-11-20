@@ -13,6 +13,10 @@
             <!-- 신규필드 생성시 추가할 자리
              -->
             ITM_REM,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID,
+            PAY_DT,
             IS_LOCK,
             IS_3PARTY,
             STUS_ID,
@@ -29,6 +33,12 @@
             <!-- #{keyInPayName},
             #{keyInRefDetails}, 신규필드생성시 추가하자-->
             #{keyInRemark},
+            
+            #{keyInTrNo},
+            TO_DATE(#{keyInTrIssueDate},'DD/MM/YYYY'),
+            #{keyInCollMemId},
+            TO_DATE(#{keyInPayDate},'DD/MM/YYYY'),
+            
             #{keyInIsLock},
             #{keyInIsThirdParty},
             #{keyInStatusId},
