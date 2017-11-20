@@ -98,9 +98,9 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
 				        <th scope="row">Create Date</th>
 					    <td>
 					       <div class="date_set w100p">
-					       <p><input name="date1" id="date1" type="text" placeholder="dd/MM/yyyy" class="j_date" /></p> 
+					       <p><input name="date1" id="date1" type="text" placeholder="DD/MM/YYYY" class="j_date" /></p> 
 					       <span>~</span>
-					       <p><input name="date2" id="date2" type="text"placeholder="dd/MM/yyyy" class="j_date" /></p>
+					       <p><input name="date2" id="date2" type="text"placeholder="DD/MM/YYYY" class="j_date" /></p>
 					       </div>
 					    </td>
 					    <td></td>
