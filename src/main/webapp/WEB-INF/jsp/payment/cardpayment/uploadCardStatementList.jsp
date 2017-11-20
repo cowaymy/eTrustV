@@ -461,7 +461,7 @@ POP-UP (UPLOAD)
                     <tr>
                         <th scope="row">Transaction Date</th>
                         <td>
-                            <input type="text" id="uploadTranDt" name="uploadTranDt" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date" />
+                            <input type="text" id="uploadTranDt" name="uploadTranDt" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
                         </td>
                          <th scope="row">Bank Account</th>
                         <td>  
