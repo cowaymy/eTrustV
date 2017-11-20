@@ -317,11 +317,15 @@ function grFunc(){
 	
 	data.form    = $("#grForm").serializeJSON();
 	Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-		
-		if (result.rdata == '000'){
+		var reparam = (result.rdata).split("∈");
+		console.log(reparam.length);
+		console.log(result.rdata);
+		//if (result.rdata == '000'){
+		console.log(reparam[0]);
+		if(reparam[0].trim() == '000'){
 			if ($('#grForm #gtype').val() == "RC"){
 				Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-	                Common.alert(result.message.message);
+	                Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
 	            },  function(jqXHR, textStatus, errorThrown) {
 	                try {
 	                } catch (e) {
@@ -329,7 +333,8 @@ function grFunc(){
 	                Common.alert("Fail : " + jqXHR.responseJSON.message);
 	            });
 			}else{
-				Common.alert(result.message.message);
+				//Common.alert(result.message.message);
+				Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
 			}
 	        
 		}else{
