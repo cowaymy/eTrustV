@@ -92,6 +92,9 @@ function fn_generateInvoice(){
   }
 }
 
+function fn_Clear(){
+    $("#searchForm")[0].reset();
+}
 </script>
 
 <!-- content start -->
@@ -110,6 +113,7 @@ function fn_generateInvoice(){
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getTaxInvoiceListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_Clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

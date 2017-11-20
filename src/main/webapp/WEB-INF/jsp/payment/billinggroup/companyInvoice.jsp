@@ -191,6 +191,10 @@ function fn_sendEInvoice(){
 hideViewPopup=function(val){
     $(val).hide();
 }
+
+function fn_Clear(){
+    $("#searchForm")[0].reset();
+}
 </script>
 <!-- content start -->
 <section id="content">
@@ -207,6 +211,7 @@ hideViewPopup=function(val){
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getCompanyInvoiceListtAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_Clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->
