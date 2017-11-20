@@ -14,6 +14,24 @@
     font-weight:bold;
     color:#22741C;
 }
+
+.my_div_text_box {
+    display: inline-block;
+    border: 1px solid #aaa;
+    text-align: left;
+    width: 140px;
+    padding: 4px;
+}
+
+.my_div_btn {
+    color: #fff !important;
+    background: #a1c4d7;
+    font-weight: bold;
+    margin: 2px 4px;
+    padding : 2px 4px;
+    line-height:2em;
+    cursor: pointer;
+}
 </style>
 <script type="text/javaScript">
 
@@ -77,7 +95,7 @@ var targetRenDetColumnLayout = [
     { dataField:"installment" ,headerText:"Installment" ,editable : false , width : 100 },      
     { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
     { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
+    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : true , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
     { dataField:"billDt" ,headerText:"Bill Date" ,editable : false , width : 100},
     { dataField:"stusCodeName" ,headerText:"Bill Status" ,editable : false , width : 100},
     {
@@ -204,53 +222,7 @@ var targetBillMstColumnLayout = [
 
 //AUIGrid 칼럼 설정 : targetFinalBillGridID
 var targetFinalBillColumnLayout = [
-    { dataField:"trNo" ,headerText:"TR No" ,editable : true , width : 150,
-    	editRenderer : {
-    	    type : "InputEditRenderer",
-    	    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-    	    //onlyNumeric : true, // 0~9만 입력가능
-    	    //allowPoint : true, // 소수점( . ) 도 허용할지 여부
-    	    //allowNegative : true, // 마이너스 부호(-) 허용 여부
-    	    //textAlign : "right", // 오른쪽 정렬로 입력되도록 설정
-    	    //autoThousandSeparator : true // 천단위 구분자 삽입 여부
-    	}
-    },         
-    { dataField:"trIssueDate" ,headerText:"TR Issue Date" ,editable : true , width : 150, dataType : "date", formatString : "dd/mm/yyyy", 
-    	editRenderer : {
-            type : "CalendarRenderer",
-            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-            onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-            showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
-            validator : function(oldValue, newValue, rowItem) { // 에디팅 유효성 검사
-                
-                /* if(rowItem.fDepItmIsMtch == "0"){
-                    var date, isValid = true;
-                    if(isNaN(Number(newValue)) ) { //20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
-                        if(isNaN(Date.parse(newValue))) { // 그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
-                            isValid = false;
-                        } else {
-                            isValid = true;
-                        }
-                    }
-                    // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                    return { "validate" : isValid, "message"  : "" };
-                } */
-                
-          }
-
-          }},      
-    { dataField:"collector" ,headerText:"Collector" ,editable : true , width : 150,
-        	    editRenderer : {
-                  type : "InputEditRenderer",
-                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                  //onlyNumeric : true, // 0~9만 입력가능
-                  //allowPoint : true, // 소수점( . ) 도 허용할지 여부
-                  //allowNegative : true, // 마이너스 부호(-) 허용 여부
-                  //textAlign : "right", // 오른쪽 정렬로 입력되도록 설정
-                  //autoThousandSeparator : true // 천단위 구분자 삽입 여부
-              }
-    },         
-    { dataField:"procSeq" ,headerText:"Process Seq" ,editable : false , width : 120 , visible : false },
+    { dataField:"procSeq" ,headerText:"Process Seq" , editable : false , width : 120 , visible : false },
     { dataField:"appType" ,headerText:"AppType" ,editable : false , width : 120 , visible : false },
     { dataField:"advMonth" ,headerText:"AdvanceMonth" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
     { dataField:"billGrpId" ,headerText:"Bill Group ID" ,editable : false , width : 120},
@@ -387,6 +359,20 @@ $(document).ready(function(){
         if(event.dataField == "btnCheck"){
             recalculateBillTotalAmt();
         }
+    });
+    
+    //Cell Edit Event : 최종 Final 금액 변경시 금액 재 계산
+    AUIGrid.bind(targetFinalBillGridID, "cellEditEnd", function( event ) {        
+        var billAmt = AUIGrid.getCellValue(targetFinalBillGridID, event.rowIndex, "billAmt"); //invoice charge
+        var paidAmt = AUIGrid.getCellValue(targetFinalBillGridID, event.rowIndex, "paidAmt"); //transfer amount
+        var targetAmt = AUIGrid.getCellValue(targetFinalBillGridID, event.rowIndex, "targetAmt"); //transfer amount
+
+        if(targetAmt > billAmt - paidAmt){
+            AUIGrid.setCellValue(targetFinalBillGridID, event.rowIndex, 'targetAmt', billAmt - paidAmt);
+        }
+
+        //그리드에서 수정된 총 금액 계산
+        recalculatePaymentTotalAmt();
     });
     
     //Credit Card Type 생성
@@ -955,6 +941,16 @@ function addRentalToFinal(){
     recalculatePaymentTotalAmt();
 }
 
+function viewRentalLedger(){
+    if($("#rentalOrdId").val() != ''){
+        Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#rentalOrdId").val()});
+    }else{
+        Common.alert('<b>Please Select a Order Info first</b>');
+        return;
+    }
+        
+}
+
 //**************************************************
 //**************************************************
 //Outright 관련 Script 
@@ -1516,6 +1512,16 @@ function addSrvcToFinal(){
     recalculatePaymentTotalAmt();  
 }
 
+function viewSrvcLedger(){
+    if($("#srvcOrdId").val() != ''){
+        Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#srvcOrdId").val()});
+    }else{
+        Common.alert('<b>Please Select a Order Info first</b>');
+        return;
+    }
+        
+}
+
 //**************************************************
 //**************************************************
 //Bill Payment  관련 Script 
@@ -1697,21 +1703,41 @@ function fn_bankChange(bankVal){
         }
     }
 }
+
+//Collector 조회 팝업
+function fn_searchUserIdPop(){
+    Common.popupDiv("/common/memberPop.do", { callPrgm : "PAYMENT_PROCESS" }, null, true);
+}
+
+//Collector 조회 팝업 결과값 세팅
+function fn_loadOrderSalesman(memId, memCode, memNm){
+	var keyInPayType = $("#keyInPayType").val();
+	
+	if(keyInPayType == "105"){//Cash
+		$("#cashCollMemId").val(memId);
+	    $("#cashCollMemNm").val(memNm);
+	}else if(keyInPayType == "106"){//Cheque
+		$("#chequeCollMemId").val(memId);
+	    $("#chequeCollMemNm").val(memNm);
+	}else if(keyInPayType == "108"){//Online
+		$("#onlineCollMemId").val(memId);
+        $("#onlineCollMemNm").val(memNm);
+	}
     
+}
 </script>
 
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
-        <li>Credit Card Payment</li>
-        <li>Credit Card Key-In (from Admin)</li>
+        <li>Advance Payment</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Credit Card Key-In (from Admin)</h2>
+        <h2>Advance Payment</h2>
     </aside>
     <!-- title_line end -->
 
@@ -1775,7 +1801,7 @@ function fn_bankChange(bankVal){
                                         <a href="javascript:fn_rentalOrderSearchPop();" id="search">Search</a>
                                     </p>
                                     <p class="btn_sky">
-                                        <a href="" id="viewLedger">View Ledger</a>
+                                        <a href="javascript:viewRentalLedger();" id="viewLedger">View Ledger</a>
                                     </p>
                                     <label><input type="checkbox" id="isRentalBillGroup" name="isRentalBillGroup" onClick="javascript:rentalCheckBillGroup();" /><span>include all orders' bills with same billing group </span></label>
                             </td>
@@ -1908,7 +1934,7 @@ function fn_bankChange(bankVal){
                                         <a href="javascript:fn_srvcOrderSearchPop();" id="search">Search</a>
                                     </p>
                                     <p class="btn_sky">
-                                        <a href="" id="viewLedger">View Ledger</a>
+                                        <a href="javascript:viewSrvcLedger();" id="viewLedger">View Ledger</a>
                                     </p>
                                     <label><input type="checkbox" id="isSrvcBillGroup" name="isSrvcBillGroup" onClick="javascript:srvcCheckBillGroup();" /><span>include all service contacts' bills with same billing group </span></label>
                             </td>
@@ -1921,7 +1947,7 @@ function fn_bankChange(bankVal){
                                     <option value="99">Specific Advance</option>
                                     <option value="12">1 Year</option>
                                     <option value="24">2 Years</option>
-                                </select>
+                                </select> 
                                 <input type="text" id="srvcTxtAdvMonth" name="srvcTxtAdvMonth" title="Rental Membership Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_srvcAdvMonthChangeTxt();"/>
                             </td>
                         </tr>
@@ -2114,7 +2140,7 @@ function fn_bankChange(bankVal){
                             </td>
                             <th scope="row">VA Account</th>
                             <td>
-                                <p class="short"><input type="text" id="cashVAAccount" name="cashVAAccount" size="23" maxlength="16" class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                                <p class="short"><input type="text" id="cashVAAccount" name="cashVAAccount" size="16" maxlength="16" class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
                             </td>
                         </tr>
                         <tr>
@@ -2142,6 +2168,30 @@ function fn_bankChange(bankVal){
                             <td colspan="3">
                                 <textarea id="cashRemark" name="cashRemark"  cols="20" rows="5" placeholder=""></textarea>
                             </td>                       
+                        </tr>
+                        <tr>
+                            <th scope="row">TR No.<span class="must">*</span></th>
+                            <td>
+                                <input id="cashTrNo" name="cashTrNo" type="text" title="" placeholder="" class="w100p"  />
+                            </td>
+                            <th scope="row">TR Issue Date<span class="must">*</span></th>
+                            <td>
+                                <input id="cashTrIssueDate" name="cashTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Collector</th>
+                            <td>
+                                <input id="cashCollMemId" name="cashCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />                            
+                                <input id="cashCollMemNm" name="cashCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <a id="btnCashSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                </a>
+                            </td>
+                            <th scope="row">Pay Date<span class="must">*</span></th>
+                            <td>
+                                <input id="cashPayDate" name="cashPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -2195,7 +2245,7 @@ function fn_bankChange(bankVal){
                             </td>
                             <th scope="row">VA Account</th>
                             <td>
-                                <p class="short"><input type="text" id="chequeVAAccount" name="chequeVAAccount" size="23" maxlength="16"  class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                                <p class="short"><input type="text" id="chequeVAAccount" name="chequeVAAccount" size="16" maxlength="16"  class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
                             </td>
                         </tr>
                         <tr>
@@ -2223,6 +2273,30 @@ function fn_bankChange(bankVal){
                             <td colspan="3">
                                 <textarea id="chequeRemark" name="chequeRemark"  cols="20" rows="5" placeholder=""></textarea>
                             </td>                       
+                        </tr>
+                        <tr>
+                            <th scope="row">TR No.<span class="must">*</span></th>
+                            <td>
+                                <input id="chequeTrNo" name="chequeTrNo" type="text" title="" placeholder="" class="w100p"  />
+                            </td>
+                            <th scope="row">TR Issue Date<span class="must">*</span></th>
+                            <td>
+                                <input id="chequeTrIssueDate" name="chequeTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Collector</th>
+                            <td>
+                                <input id="chequeCollMemId" name="chequeCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />                            
+                                <input id="chequeCollMemNm" name="chequeCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <a id="btnChequeSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                </a>
+                            </td>
+                            <th scope="row">Pay Date<span class="must">*</span></th>
+                            <td>
+                                <input id="chequePayDate" name="chequePayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -2276,7 +2350,7 @@ function fn_bankChange(bankVal){
                             </td>
                             <th scope="row">VA Account</th>
                             <td>
-                                <p class="short"><input type="text" id="onlineVAAccount" name="onlineVAAccount" size="23" maxlength="16"  class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                                <p class="short"><input type="text" id="onlineVAAccount" name="onlineVAAccount" size="16" maxlength="16"  class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
                             </td>
                         </tr>
                         <tr>
@@ -2315,6 +2389,30 @@ function fn_bankChange(bankVal){
                                 <textarea id="onlineRemark" name="onlineRemark"  cols="20" rows="5" placeholder=""></textarea>
                             </td>                       
                         </tr>
+                        <tr>
+	                        <th scope="row">TR No.<span class="must">*</span></th>
+	                        <td>
+	                            <input id="onlineTrNo" name="onlineTrNo" type="text" title="" placeholder="" class="w100p"  />
+	                        </td>
+	                        <th scope="row">TR Issue Date<span class="must">*</span></th>
+	                        <td>
+	                            <input id="onlineTrIssueDate" name="onlineTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Collector</th>
+	                        <td>
+	                            <input id="onlineCollMemId" name="onlineCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />                            
+	                            <input id="onlineCollMemNm" name="onlineCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+	                            <a id="btnOnlineSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+	                                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+	                            </a>
+	                        </td>
+	                        <th scope="row">Pay Date<span class="must">*</span></th>
+	                        <td>
+	                            <input id="onlinePayDate" name="onlinePayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+	                        </td>
+	                    </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
