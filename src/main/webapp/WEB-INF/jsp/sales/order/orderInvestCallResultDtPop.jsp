@@ -98,7 +98,14 @@
   
     function fn_callResultSaveOK(){
     	Common.ajax("GET", "/sales/order/saveCallResultOk.do", $("#saveForm").serializeJSON(), function(result) {
-            Common.alert(result.msg);
+            if(result.resultStatus == 29){
+            	Common.alert("INV success", fn_success);
+            }else if(result.resultStatus == 28){
+            	Common.alert("REG success", fn_success);
+            }else {
+            	Common.alert("SUS success", fn_success);
+            }
+    		Common.alert(result.msg);
         }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     console.log("status : " + jqXHR.status);
@@ -116,9 +123,16 @@
         });
     }
     function fn_callResultSave(){
-    	var msg = "";
-        msg += "Order Number : " + ${investCallResultCust.salesOrdNo }+"<br>";
-        msg += "Are you sure want to remain this order to Investigate status ?";
+
+    	var invmsg = "";
+        invmsg += "Order Number : " + ${investCallResultCust.salesOrdNo }+"<br>";
+        invmsg += "Are you sure want to remain this order to Investigate status ?";
+        
+        var susmsg = "";
+        susmsg += "Order number : " + ${investCallResultCust.salesOrdNo }+"<br>";
+        susmsg += "This month is BS month for this order.</br>";
+        susmsg += "Ticket of BS request will be send to cody divison automatically by system.</br>";
+        susmsg += "Are you sure want to remain this order to status regular  ?";
         
     	if(saveForm.callResultRem.value == ""){
     		Common.alert("Please Enter callResultRem Remark !");
@@ -127,7 +141,8 @@
     	// REG 저장일때 BSMonth를 비교하여 ticket 라디오박스 confirm을 위한 체크 
         if(saveForm.callResultStus.value == "28"){
             Common.ajax("GET", "/sales/order/bsMonthCheck.do", $("#saveForm").serializeJSON(), function(result) {
-                if(result.regSaveMsg == "1"){
+                alert(result.regSaveMsg);
+            	if(result.regSaveMsg == "1"){
                 	Common.popupDiv("/sales/order/bsMonthCheckOKPop.do", $("#saveForm").serializeJSON(), null, true, 'savePop');
                 }else{
                 	Common.popupDiv("/sales/order/bsMonthCheckNoPop.do", $("#saveForm").serializeJSON(), null, true, 'savePop');
@@ -148,7 +163,15 @@
                     alert("Fail : " + jqXHR.responseJSON.message);
             });
         }else{
-        	Common.confirm(msg,fn_callResultSaveOK);
+        	if(saveForm.callResultStus.value == "29"){
+        		Common.confirm(invmsg,fn_callResultSaveOK);
+        	}else if(saveForm.callResultStus.value == "2"){
+        		Common.confirm(susmsg,fn_callResultSaveOK);
+        	}else{
+        		Common.alert("Please try again");
+        		return false;
+        	}
+        	
         }
     	
     }
@@ -222,6 +245,11 @@
     		$(".inchargeDiv").hide();
     	}
     }
+    
+    function fn_success(){
+    	fn_investCallResultListAjax();
+    	$("#_saveClose").click();
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -229,7 +257,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Order Investigation Request Details - Officer</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_saveClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -481,7 +509,9 @@
 
 <form id="saveForm" name="saveForm" method="GET">
 	<input type="hidden" id="callResultInvId" name="callResultInvId" value="${investCallResultInfo.invId }">
+	<input type="hidden" id="invCallEntryId" name="invCallEntryId" value="${investCallResultInfo.invCallEntryId }">
 	<input type="hidden" id="saveSalesOrdNo" name="saveSalesOrdNo" value="${investCallResultCust.salesOrdNo }">
+	<input type="hidden" id="saveSalesOrdId" name="saveSalesOrdId" value="${investCallResultInfo.salesOrdId }">
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
