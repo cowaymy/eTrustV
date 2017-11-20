@@ -99,6 +99,9 @@ function fn_openWinPop(val){
 	}
 }
 
+function fn_Clear(){
+    $("#searchForm")[0].reset();
+}
 </script>
 
 <!-- content start -->
@@ -116,6 +119,7 @@ function fn_openWinPop(val){
         <h2>Invoice Adjustment (CN / DN)</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_Clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
