@@ -96,7 +96,7 @@
 				            console.log("code : " + jqXHR.responseJSON.code);
 				            console.log("message : " + jqXHR.responseJSON.message);
 				            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-				            if(jqXHR.status=503){
+				            if(jqXHR.status==503){
                                 Common.alert("Running... Please wait about 20 minutes ");
                                 $("#search").trigger("click");
                              }
@@ -240,7 +240,7 @@
 		                          console.log("message : " + jqXHR.responseJSON.message);
 		                          console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 		                          
-		                          if(jqXHR.status=503){
+		                          if(jqXHR.status==503){
 		                        	   Common.alert("Running... Please wait about 20 minutes ");
 		                        	   $("#search").trigger("click");
 		                          }
