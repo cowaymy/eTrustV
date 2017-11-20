@@ -60,6 +60,24 @@ public class OrderLedgerController {
 		model.addAttribute("salesInfo", salesInfo);
 		
 		List<EgovMap> orderLdgrList = orderLedgerService.getOderLdgr(params);
+		
+		double balance = 0;
+		for(int i = 0; i < orderLdgrList.size(); i++){
+			EgovMap result = orderLdgrList.get(i);
+			
+			 if (result.get("docType") == "B/F")
+             {
+					balance = Double.parseDouble(result.get("balanceamt").toString());
+             }
+             else
+             {
+                 balance = balance + Double.parseDouble(result.get("debitamt").toString()) + Double.parseDouble(result.get("creditamt").toString());
+             }
+
+			 result.put("balanceamt", balance);
+			
+		}
+		
 		model.addAttribute("orderLdgrList", new Gson().toJson(orderLdgrList));
 		
 		List<EgovMap> agreList = orderLedgerService.selectAgreInfo(params);
@@ -98,6 +116,25 @@ public class OrderLedgerController {
 		model.addAttribute("salesInfo", salesInfo);
 		
 		List<EgovMap> orderLdgrList = orderLedgerService.getOderLdgr2(params);
+		
+		
+		double balance = 0;
+		for(int i = 0; i < orderLdgrList.size(); i++){
+			EgovMap result = orderLdgrList.get(i);
+			
+			 if (result.get("docType") == "B/F")
+             {
+					balance = Double.parseDouble(result.get("balanceamt").toString());
+             }
+             else
+             {
+                 balance = balance + Double.parseDouble(result.get("debitamt").toString()) + Double.parseDouble(result.get("creditamt").toString());
+             }
+
+			 result.put("balanceamt", balance);
+			
+		}
+		
 		model.addAttribute("orderLdgrList", new Gson().toJson(orderLdgrList));
 		
 		List<EgovMap> agreList = orderLedgerService.selectAgreInfo(params);

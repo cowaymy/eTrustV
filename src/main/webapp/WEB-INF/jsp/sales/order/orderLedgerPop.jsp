@@ -18,7 +18,6 @@
        }   
        
        if('${agreList}'=='' || '${agreList}' == null){
-    	   $("#agreGridID").hide();
        }else{
     	   agreList = JSON.parse('${agreList}');           
        }   
@@ -32,18 +31,18 @@
     function createAUIGrid(){
         //AUIGrid 칼럼 설정
         var ordLedgerLayout = [
-          {   dataField : "docdate",  headerText : 'Date',         width : 150 }
-         ,{   dataField : "instNo",     headerText : 'Inst No',     width : 150 }
-         ,{   dataField : "doctype",  headerText : 'Type',         width : 150 }
-         ,{   dataField : "docNo",    headerText : 'Doc No',        width : 150 }
-         ,{   dataField : "adjreason", headerText : 'Adj Reason',   width : 150 }
-         ,{   dataField : "payMode",  headerText : 'Paymode',     width : 150  }
-         ,{   dataField : "refDt",       headerText : 'Ref Date',      width : 150 }
-         ,{  dataField : "refNo",        headerText : 'Ref No',        width : 150 }
-         ,{  dataField : "accCode",    headerText : 'Acc Code',    width : 150 }
-         ,{  dataField : "debitamt",   headerText : 'Debit',      width : 150, dataType : "numeric", formatString : "#,##0.00" }
-         ,{  dataField : "creditamt",  headerText : 'Credit',   width : 150, dataType : "numeric", formatString : "#,##0.00"}
-         ,{  dataField : "balanceamt", headerText : 'Balance', width : 150, dataType : "numeric", formatString : "#,##0.00"}
+          {   dataField : "docdate",  headerText : 'Date',         width : 90 }
+         ,{   dataField : "instNo",     headerText : 'Inst No',     width : 60 }
+         ,{   dataField : "doctype",  headerText : 'Type',         width : 110 }
+         ,{   dataField : "docNo",    headerText : 'Doc No',        width : 100 }
+         ,{   dataField : "adjreason", headerText : 'Adj Reason',   width : 100 }
+         ,{   dataField : "payMode",  headerText : 'Paymode',     width : 70  }
+         ,{   dataField : "refDt",       headerText : 'Ref Date',      width : 90 }
+         ,{  dataField : "refNo",        headerText : 'Ref No',        width : 100}
+         ,{  dataField : "accCode",    headerText : 'Acc Code',    width : 80 }
+         ,{  dataField : "debitamt",   headerText : 'Debit',      width : 80, dataType : "numeric", formatString : "#,##0.00" }
+         ,{  dataField : "creditamt",  headerText : 'Credit',   width : 80, dataType : "numeric", formatString : "#,##0.00"}
+         ,{  dataField : "balanceamt", headerText : 'Balance', width : 80, dataType : "numeric", formatString : "#,##0.00"}
         ];
 
      //그리드 속성 설정
@@ -88,7 +87,10 @@
      
      if(agreList != '' ){
          AUIGrid.setGridData(agreGridID, agreList);
-     } 
+     } else{
+
+         $("#agre_grid").hide();
+     }
  }   
 </script>    
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -171,13 +173,13 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:100px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:100px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:100px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:100px" />
+    <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
 <tbody>

@@ -25,20 +25,20 @@
         //AUIGrid 칼럼 설정
         var ordLdgDLayout = [
            {   dataField : "orNo",  headerText : 'Doc No',         width : 150, visible:false }
-          ,{   dataField : "itmModeCode",  headerText : 'Paymode',         width : 150 }
-          ,{   dataField : "payItmRefNo",  headerText : 'RefNo',         width : 150 }
-          ,{   dataField : "itmCcTypeName",  headerText : 'CCType',         width : 150 }
-          ,{   dataField : "payItmCcHolderName",  headerText : 'CCHolder',         width : 150 }
-          ,{   dataField : "payItmCcExprDt",  headerText : 'CCExpiryDate',         width : 150 }
-          ,{   dataField : "payItmChqNo",  headerText : 'ChequeNo',         width : 150 }
-          ,{   dataField : "itmIssuBankName",  headerText : 'IssueBank',         width : 150 }
-          ,{   dataField : "payItmAmt",  headerText : 'Amount',         width : 150 , dataType : "numeric", formatString : "#,##0.00" }
-          ,{   dataField : "payItmIsOnline",  headerText : 'CRCMode',         width : 150 }
-          ,{   dataField : "itmBankAccCode",  headerText : 'Account Code',         width : 150 }
-          ,{   dataField : "payItmRefDt",  headerText : 'RefDate',         width : 150 }
-          ,{   dataField : "payItmAppvNo",  headerText : 'ApprNo',         width : 150 }
-          ,{   dataField : "payItmRem",  headerText : 'Remark',         width : 150 }
-          ,{   dataField : "payItmBankChrgAmt",  headerText : 'BankCharge',         width : 150 ,dataType : "numeric", formatString : "#,##0.00" }
+          ,{   dataField : "itmModeCode",  headerText : 'Paymode',         width : 70 }
+          ,{   dataField : "payItmRefNo",  headerText : 'RefNo',         width : 110 }
+          ,{   dataField : "itmCcTypeName",  headerText : 'CCType',         width : 100 }
+          ,{   dataField : "payItmCcHolderName",  headerText : 'CCHolder',         width : 100 }
+          ,{   dataField : "payItmCcExprDt",  headerText : 'CCExpiryDate',         width : 100 }
+          ,{   dataField : "payItmChqNo",  headerText : 'ChequeNo',         width : 100 }
+          ,{   dataField : "itmIssuBankName",  headerText : 'IssueBank',         width : 110 }
+          ,{   dataField : "payItmAmt",  headerText : 'Amount',         width : 100 , dataType : "numeric", formatString : "#,##0.00" }
+          ,{   dataField : "payItmIsOnline",  headerText : 'CRCMode',         width : 80 }
+          ,{   dataField : "itmBankAccCode",  headerText : 'Account Code',         width : 110 }
+          ,{   dataField : "payItmRefDt",  headerText : 'RefDate',         width : 100 }
+          ,{   dataField : "payItmAppvNo",  headerText : 'ApprNo',         width : 100 }
+          ,{   dataField : "payItmRem",  headerText : 'Remark',         width : 100 }
+          ,{   dataField : "payItmBankChrgAmt",  headerText : 'BankCharge',         width : 100 ,dataType : "numeric", formatString : "#,##0.00" }
         	
         ];
 

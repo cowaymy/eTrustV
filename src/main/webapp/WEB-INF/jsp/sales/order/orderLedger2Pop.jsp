@@ -18,7 +18,6 @@
        }   
        
        if('${agreList}'=='' || '${agreList}' == null){
-    	   $("#agreGridID").hide();
        }else{
     	   agreList = JSON.parse('${agreList}');           
        }   
@@ -32,18 +31,18 @@
     function createAUIGrid(){
         //AUIGrid 칼럼 설정
         var ordLedgerLayout = [
-          {   dataField : "docdate",  headerText : 'Date',         width : 150 }
-         ,{   dataField : "instNo",     headerText : 'Inst No',     width : 150 }
-         ,{   dataField : "doctype",  headerText : 'Type',         width : 150 }
-         ,{   dataField : "docNo",     headerText : 'Doc No',        width : 150 }
+          {   dataField : "docdate",  headerText : 'Date',         width : 90 }
+         ,{   dataField : "instNo",     headerText : 'Inst No',     width : 70 }
+         ,{   dataField : "doctype",  headerText : 'Type',         width : 110 }
+         ,{   dataField : "docNo",     headerText : 'Doc No',        width : 110 }
          ,{   dataField : "docTypeId",     headerText : '',        width : 150, visible:false }
-         ,{   dataField : "chqNo",     headerText : 'Chq No',   width : 150 }
-         ,{   dataField : "refDt",      headerText : 'Ref Date',     width : 150  }
+         ,{   dataField : "chqNo",     headerText : 'Chq No',   width : 100 }
+         ,{   dataField : "refDt",      headerText : 'Ref Date',     width : 100  }
          ,{   dataField : "remark",        headerText : 'Ref No/TR/EFT',      width : 150 }
-         ,{   dataField : "payMode",        headerText : 'Paymode',        width : 150 }
-         ,{   dataField : "debitamt",   headerText : 'Debit',      width : 150, dataType : "numeric", formatString : "#,##0.00" }
-         ,{   dataField : "creditamt",  headerText : 'Credit',   width : 150, dataType : "numeric", formatString : "#,##0.00"}
-         ,{   dataField : "balanceamt", headerText : 'Balance', width : 150, dataType : "numeric", formatString : "#,##0.00"}
+         ,{   dataField : "payMode",        headerText : 'Paymode',        width : 70 }
+         ,{   dataField : "debitamt",   headerText : 'Debit',      width : 90, dataType : "numeric", formatString : "#,##0.00" }
+         ,{   dataField : "creditamt",  headerText : 'Credit',   width : 90, dataType : "numeric", formatString : "#,##0.00"}
+         ,{   dataField : "balanceamt", headerText : 'Balance', width : 90, dataType : "numeric", formatString : "#,##0.00"}
         	
         ];
 
@@ -101,7 +100,10 @@
      
      if(agreList != '' ){
          AUIGrid.setGridData(agreGridID, agreList);
-     } 
+     } else{
+
+         $("#agre_grid").hide();
+     }
  }   
 </script>    
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
