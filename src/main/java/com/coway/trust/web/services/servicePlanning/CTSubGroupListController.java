@@ -127,7 +127,6 @@ public class CTSubGroupListController {
 		return ResponseEntity.ok(message);
 	}
 	
-	
 	/**
 	 * Services - Service Planning - open CT Sub Group - Area ID Maintenance
 	 *
@@ -189,6 +188,13 @@ public class CTSubGroupListController {
 		List<EgovMap> selectCTSubGrb = CTSubGroupListService.selectCTSubGrb(params);
 		logger.debug("selectCTSubGroupDscList {}", selectCTSubGrb);
 		return ResponseEntity.ok(selectCTSubGrb);
+	}
+	
+	@RequestMapping(value = "/openUpdateRequestPop.do")
+	public String initUpdateRequest(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		// 호출될 화면
+		return "services/servicePlanning/updateRequestPop";
 	}
 	
 }

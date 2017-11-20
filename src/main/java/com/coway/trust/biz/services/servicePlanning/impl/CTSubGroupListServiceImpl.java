@@ -52,10 +52,39 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 		}
 	}
 	
+	// 171120 :: 선한이
+	@Override
+	public void updateCTSubGroupByExcel(List<Map<String, Object>> updateList) {
+		for(int i=0; i< updateList.size(); i++){
+			Map<String, Object>  insertValue = (Map<String, Object>) updateList.get(i);
+			logger.debug("insertValue {}", insertValue);
+			CTSubGroupListMapper.insertCTSubGroup(insertValue);
+		}
+	}
+	
 	@Override
 	public void insertCTSubAreaGroup(List<Object> params) {
 		for(int i=0; i< params.size(); i++){
 			Map<String, Object>  insertValue = (Map<String, Object>) params.get(i);
+			if(insertValue.get("locType").toString().equals("Local")){
+				insertValue.put("locType", "L");
+				insertValue.put("serviceWeek", 0);
+			}else{
+				insertValue.put("locType", "O");
+				if(insertValue.get("svcWeek") != null){
+					insertValue.put("serviceWeek", Integer.parseInt(insertValue.get("svcWeek").toString()));
+				}
+			}
+			logger.debug("insertValue {}", insertValue);
+			CTSubGroupListMapper.insertCTSubAreaGroup(insertValue);
+		}
+	}
+	
+	// 171120 :: 선한이
+	@Override
+	public void updateCTAreaByExcel(List<Map<String, Object>> updateList) {
+		for(int i=0; i< updateList.size(); i++){
+			Map<String, Object>  insertValue = (Map<String, Object>) updateList.get(i);
 			if(insertValue.get("locType").toString().equals("Local")){
 				insertValue.put("locType", "L");
 				insertValue.put("serviceWeek", 0);

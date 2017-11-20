@@ -32,6 +32,12 @@
     WHERE MEM_ID = #{memId}
 </update>
 
+<update id="updateCTSubGroupByExcel" parameterType="Map">
+    UPDATE ORG0005D SET 
+    CT_SUB_GRP = #{ctSubGrp}
+    WHERE MEM_ID = #{memId}
+</update>
+
 <select id="selectCTAreaSubGroupList" parameterType="Map" resultType="egovMap">
      SELECT A.AREA_ID,
          B.AREA,
