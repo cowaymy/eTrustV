@@ -152,7 +152,6 @@ function fn_clickDeactivate(){
 
 function fn_Clear(){
 	$("#searchForm")[0].reset();
-	AUIGrid.clearGridData(myGridID);
 }
 
 </script>
