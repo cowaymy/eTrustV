@@ -41,8 +41,7 @@ var rowId;
 //targetFinalBillGridID Grid에서 선택된 RowID
 var selectedGridValue = -1;
 
-//FinalBillGrid에서 선택된 RowID
-var finalBillRowId;
+var payTypeIndicator;
 
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
@@ -158,7 +157,7 @@ $(document).ready(function(){
      
 	 $('#online').find('#bankType').change(function(){
 		 //alert("online : " + $('#online').find('#bankType').val());
-		 if($('#online').find('#bankType').val() == 'VA'){
+		 if($('#online').find('#bankType').val() == '2730'){//VA
 			 $('#online').find('#bankAcc').prop("disabled", true);
 			 $('#online').find('#va').prop("disabled", false);
 		 }else{
@@ -169,7 +168,7 @@ $(document).ready(function(){
 	 
 	 $('#cash').find('#bankType').change(function(){
 		 //alert("cash_cheque : " + $('#cash_cheque').find('#bankType').val());
-		 if($('#cash').find('#bankType').val() == 'VA'){
+		 if($('#cash').find('#bankType').val() == '2730'){//VA
              $('#cash').find('#bankAcc').prop("disabled", true);
              $('#cash').find('#va').prop("disabled", false);
          }else{
@@ -180,7 +179,7 @@ $(document).ready(function(){
 	 
 	 $('#cheque').find('#bankType').change(function(){
          //alert("cash_cheque : " + $('#cash_cheque').find('#bankType').val());
-         if($('#cheque').find('#bankType').val() == 'VA'){
+         if($('#cheque').find('#bankType').val() == '2730'){//VA
              $('#cheque').find('#bankAcc').prop("disabled", true);
              $('#cheque').find('#va').prop("disabled", false);
          }else{
@@ -560,7 +559,7 @@ var columnLayout = [
 	
 	//AUIGrid 칼럼 설정 : targetFinalBillGridID
 	var targetFinalBillColumnLayout = [
-	    { dataField:"trNo", headerText:"TR No.", editable:true, width:120},
+	    /*{ dataField:"trNo", headerText:"TR No.", editable:true, width:120},
 	    { dataField:"trIssueDate", headerText:"TR Issue Date", width:120, dataType : "date", formatString:"dd-mm-yyyy",
 	       editRenderer:{
 	    	   type: "CalendarRenderer",
@@ -583,7 +582,7 @@ var columnLayout = [
                     fn_searchUserIdPop();
                 }
             }	
-	    },
+	    },*/
 	    { dataField:"procSeq" ,headerText:"Process Seq" ,editable : false , width : 120 , visible : false },
 	    { dataField:"appType" ,headerText:"AppType" ,editable : false , width : 120 , visible : false },
 	    { dataField:"advMonth" ,headerText:"AdvanceMonth" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
@@ -1766,18 +1765,23 @@ var columnLayout = [
       }
   }
 //Collector 조회 팝업
-  function fn_searchUserIdPop() {
+  function fn_searchUserIdPop(param) {
       Common.popupDiv("/common/memberPop.do", { callPrgm : "PAYMENT_PROCESS" }, null, true);
+      console.log(param);
+      payTypeIndicator = param;
   }
 
   //Collector 조회 팝업 결과값 세팅
   function fn_loadOrderSalesman(memId, memCode, memNm){
-      //$("#keyInCollMemId").val(memId);
-      //$("#keyInCollMemNm").val(memNm);
+	  if(payTypeIndicator != undefined){
+	      payTypeIndicator.find('#keyInCollMemId').val(memId);
+	      payTypeIndicator.find('#keyInCollMemNm').val(memNm);
+	  }
       //alert("targetFinal : " + AUIGrid.getSelectedIndex(targetFinalBillGridID));
-      var selectedValue = AUIGrid.getSelectedIndex(targetFinalBillGridID);
-      AUIGrid.updateRow(targetFinalBillGridID, { "collector" : memNm }, selectedValue[0]);
-      AUIGrid.updateRow(targetFinalBillGridID, { "collectorId" : memId }, selectedValue[0]);
+     // var selectedValue = AUIGrid.getSelectedIndex(targetFinalBillGridID);
+    //  AUIGrid.updateRow(targetFinalBillGridID, { "collector" : memNm }, selectedValue[0]);
+      //AUIGrid.updateRow(targetFinalBillGridID, { "collectorId" : memId }, selectedValue[0]);
+      
   }
 </script>
 <!-- content start -->
@@ -1881,7 +1885,7 @@ var columnLayout = [
         </colgroup>
         <tbody>
             <tr>
-                <th scope="row">Amount</th>
+                <th scope="row">Amount<span class="must">*</span></th>
                 <td>
                    <input type="text" id="amount" name="amount" class="w100p"  />
                 </td>
@@ -1926,12 +1930,38 @@ var columnLayout = [
             </tr>
             <tr>
                    <th>Remark</th>
-                   <td colspan="3"><input type="text" name="remark" id="remark" class="w100p"/></td>
+                   <td colspan="3">
+                        <textarea name="remark" id="remark" cols="20" rows="5" placeholder=""></textarea>
+                   </td>
             </tr>
             <tr>
                  <th>EFT</th>
                  <td colspan="3"><input type="text" name="eft" id="eft" class="w100p"/></td>
             </tr>
+            <tr>
+                 <th scope="row">TR No.<span class="must">*</span></th>
+                 <td>
+                     <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
+                 </td>
+                 <th scope="row">TR Issue Date<span class="must">*</span></th>
+                 <td>
+                     <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                 </td>
+             </tr>
+             <tr>
+                 <th scope="row">Collector</th>
+                 <td>
+                     <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />                            
+                     <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                     <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop($('#online'));" class="search_btn">
+                         <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                     </a>
+                 </td>
+                 <th scope="row">Pay Date<span class="must">*</span></th>
+                 <td>
+                     <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                 </td>
+             </tr>
         </tbody>
     </table>
     </form>
@@ -1949,7 +1979,7 @@ var columnLayout = [
         </colgroup>
         <tbody>
             <tr>
-                <th scope="row">Amount</th>
+                <th scope="row">Amount<span class="must">*</span></th>
                 <td colspan="3">
                    <input type="text" id="amount" name="amount" class="w100p"  />
                 </td>
@@ -1996,8 +2026,34 @@ var columnLayout = [
             </tr>
             <tr>
                    <th>Remark</th>
-                   <td colspan="3"><input type="text" name="remark" id="remark" class="w100p"/></td>
+                   <td colspan="3">
+                        <textarea name="remark" id="remark" cols="20" rows="5" placeholder=""></textarea>
+                   </td>
             </tr>
+            <tr>
+                   <th scope="row">TR No.<span class="must">*</span></th>
+                   <td>
+                       <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
+                   </td>
+                   <th scope="row">TR Issue Date<span class="must">*</span></th>
+                   <td>
+                       <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                   </td>
+               </tr>
+               <tr>
+                   <th scope="row">Collector</th>
+                   <td>
+                       <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />                            
+                       <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                       <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop($('#cash'));" class="search_btn">
+                           <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                       </a>
+                   </td>
+                   <th scope="row">Pay Date<span class="must">*</span></th>
+                   <td>
+                       <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                   </td>
+               </tr>
         </tbody>
     </table>
     </form>
@@ -2015,7 +2071,7 @@ var columnLayout = [
         </colgroup>
         <tbody>
             <tr>
-                <th scope="row">Amount</th>
+                <th scope="row">Amount<span class="must">*</span></th>
                 <td colspan="3">
                    <input type="text" id="amount" name="amount" class="w100p"  />
                 </td>
@@ -2062,8 +2118,34 @@ var columnLayout = [
             </tr>
             <tr>
                    <th>Remark</th>
-                   <td colspan="3"><input type="text" name="remark" id="remark" class="w100p"/></td>
+                   <td colspan="3">
+                        <textarea name="remark" id="remark" cols="20" rows="5" placeholder=""></textarea>
+                   </td>
             </tr>
+            <tr>
+                  <th scope="row">TR No.<span class="must">*</span></th>
+                  <td>
+                      <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
+                  </td>
+                  <th scope="row">TR Issue Date<span class="must">*</span></th>
+                  <td>
+                      <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                  </td>
+              </tr>
+              <tr>
+                  <th scope="row">Collector</th>
+                  <td>
+                      <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />                            
+                      <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop($('#cheque'));" class="search_btn">
+                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                      </a>
+                  </td>
+                  <th scope="row">Pay Date<span class="must">*</span></th>
+                  <td>
+                      <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                  </td>
+              </tr>
         </tbody>
     </table>
     </form>

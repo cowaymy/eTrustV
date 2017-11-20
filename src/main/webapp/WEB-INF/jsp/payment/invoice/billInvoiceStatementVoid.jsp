@@ -168,8 +168,8 @@ var detailListLayout = [
 					<tr>
 					    <th scope="row">Invoice/Statement No</th>
 					    <td><input type="text" title="" placeholder="" class="" id="statementNo" name="statementNo" />
-					         <p class="btn_sky"><a href="javascript:searchList();" id="btnSearch">Search</a></p>
-					         <p class="btn_sky"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none">Reselect</a></p>
+					         <p class="btn_blue"><a href="javascript:searchList();" id="btnSearch"><span class="search"></span>Search</a></p>
+					         <p class="btn_blue"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none"><span class="search"></span>Reselect</a></p>
 					    </td>
 					</tr>
 					</tbody>
