@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
@@ -42,6 +45,9 @@ public class CcpCalculateController {
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+	@Autowired
+	private AdaptorService adaptorService;
 	
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -376,12 +382,34 @@ public class CcpCalculateController {
 		
 		//Service
 		ccpCalculateService.calSave(params);
-		
+		//Send SMS
+		int chkSms =  Integer.parseInt(String.valueOf(params.get("isChkSms")));
+		String smsResultMSg = "";
+		if(chkSms > 0){
+			SmsVO sms = new SmsVO();
+			
+			LOGGER.info(" Message Contents : " + (String)params.get("updSmsMsg"));
+			LOGGER.info(" Mobile Phone Number : " + (String)params.get("editSalesManTelMobile"));
+			
+			sms.setMessage((String) params.get("updSmsMsg"));
+			sms.setMobiles((String) params.get("editSalesManTelMobile"));  
+			SmsResult smsResult = adaptorService.sendSMS(sms);
+			
+			smsResultMSg += "Total Send Message : " + smsResult.getReqCount() + "</br>";
+			smsResultMSg += "Success Count : " + smsResult.getSuccessCount() + "</br>";
+			smsResultMSg += "Fail Count : " + smsResult.getFailCount() + "</br>";
+			smsResultMSg += "Error Count : " + smsResult.getErrorCount() + "</br>";
+			
+			if(smsResult.getFailCount() > 0){
+				smsResultMSg += "Fail Reason : " + smsResult.getFailReason() + "</br>";
+			}
+			
+		}
 		//Return MSG
 		ReturnMessage message = new ReturnMessage();
 		
 	    message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage(messageAccessor.getMessage(smsResultMSg));
 		
 		return ResponseEntity.ok(message); 
 		

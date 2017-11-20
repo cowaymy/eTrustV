@@ -1455,7 +1455,8 @@
     </insert>
     
     <insert id="insertCareContactInfo" parameterType="Map">
-		INSERT INTO SAL0026D (CUST_CARE_CNT_ID, CUST_ID,
+		INSERT INTO SAL0026D (CUST_CARE_CNT_ID, 
+		                                  CUST_ID,
 					                      NAME,
 					                      CUST_INITIAL,
 					                      TEL_M,
@@ -1470,7 +1471,7 @@
 					                      UPD_DT,
 					                      TELF)
 		  VALUES   (#{getCustCareCntId},
-		                #{getCustId},
+		                #{custSeq},
 			            #{asCustName},
 			            #{custInitial},
 			            #{asTelM},

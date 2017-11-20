@@ -91,49 +91,34 @@ $(document).ready(function() {
 	
     	//Validation
     	if( null == $("#_statusEdit").val() || '' == $("#_statusEdit").val()){
-    		
     		 Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Status'/>");
     		 return;
     	}else{
-    	
     		if( '6' == $("#_statusEdit").val()){
-            
     			if(null == $("#_rejectStatusEdit").val() || '' == $("#_rejectStatusEdit").val()){
     				Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Reject Status'/>");
     				return;
     			}
             }
-    		
     		if( '6' == $("#_statusEdit").val() || '1' == $("#_statusEdit").val()){
-    		
     			if(null == $("#_reasonCodeEdit").val() || '' == $("#_reasonCodeEdit").val()){
-    				
     				Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Feedback Code'/>");
     				return;
     			}
     		}
-    		
     	}
-    	
     	if( null == $("#_incomeRangeEdit").val() || '' == $("#_incomeRangeEdit").val()){
-    		
     		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Income Range'/>");
     		return;
-    		
     	}
-    	
     	if( null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()){
-    		
     		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
     		return;
     	}else{
-    		
     		if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300 && $("#_ficoScore").val() !=  0){
-    			
     			Common.alert("* Please key in FICO score range between 300 to 850 points.");
     			return;
     		}
-    		
     	}
     	
     	//Validation (Call Entry Count)
@@ -170,6 +155,12 @@ $(document).ready(function() {
        }else{
            $("#_onHoldCcp").val("0");
        }
+       //SMS
+       if($("#_updSmsChk").is(":checked") == true){
+    	   $("#_isChkSms").val("1");
+       }else{
+    	   $("#_isChkSms").val("0");
+       }
        calSave();
     	
 	});//Save End
@@ -191,7 +182,12 @@ function calSave(){
 	
 	Common.ajax("POST", "/sales/ccp/calSave", $("#calSaveForm").serializeJSON() , function(result) {
 		
-        Common.alert(result.message);
+		var msg = "";
+		
+		msg += "success <br/>";
+		msg += result.message; //SMS Result
+		
+        Common.alert(msg);
         //Btn Disabled
         $("#_calBtnSave").css("display" , "none");
         
@@ -616,7 +612,7 @@ function chgTab(tabNm) {
     <input type="hidden" id="_editCustNation" value="${orderDetail.basicInfo.custNation}">
     <!-- from SalesMan (HP/CODY) -->
     <input type="hidden" name="editSalesMemTypeId" id="_editSalesMemTypeId" value="${salesMan.memType}">
-    <input type="hidden" id="_editSalesManTelMobile" value="${salesMan.telMobile}"> 
+    <input type="hidden" id="_editSalesManTelMobile" name="editSalesManTelMobile"  value="${salesMan.telMobile}"> 
     
     <!-- from GSTCertInfo -->
     <input type="hidden" name="editEurcFilePathName" value="${orderDetail.gstCertInfo.eurcFilePathName}">
@@ -795,6 +791,9 @@ function chgTab(tabNm) {
 <input type="hidden" name="saveCustUnit"  id="_saveCustUnit" >
 <input type="hidden" name="saveCustCount"  value="${fieldMap.custUnitCount}">
 <input type="hidden" name="saveCustPoint"  value="${fieldMap.custUnitPoint}">
+
+<!-- check box(sms) -->
+<input type="hidden" name="isChkSms" id="_isChkSms"> 
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

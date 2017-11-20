@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -802,6 +803,6 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	 			LOGGER.info("_________________________________________________________________________________________");
  			
  		}
-		
+		 
 	}//Impl End
 }
