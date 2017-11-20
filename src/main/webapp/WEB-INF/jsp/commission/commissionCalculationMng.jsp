@@ -88,14 +88,8 @@
 				   }, function(jqXHR, textStatus, errorThrown) {
 				   
 				            console.log("실패하였습니다.");
-				            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);				            
-				       
-				            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-				          
-				            console.log("status : " + jqXHR.status);
-				            console.log("code : " + jqXHR.responseJSON.code);
-				            console.log("message : " + jqXHR.responseJSON.message);
-				            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+				            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);	
+				        
 				            if(jqXHR.status==503){
                                 Common.alert("Running... Please wait about 20 minutes ");
                                 $("#search").trigger("click");
@@ -230,16 +224,9 @@
 		            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
 		            		$("#search").trigger("click");
 		            	 }, function(jqXHR, textStatus, errorThrown) {		                       
-		                          console.log("실패하였습니다.");
-		                          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-		                         
-		                          console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-		                        
-		                          console.log("status : " + jqXHR.status);
-		                          console.log("code : " + jqXHR.responseJSON.code);
-		                          console.log("message : " + jqXHR.responseJSON.message);
-		                          console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-		                          
+		                     
+		                          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);		             
+		                 
 		                          if(jqXHR.status==503){
 		                        	   Common.alert("Running... Please wait about 20 minutes ");
 		                        	   $("#search").trigger("click");
