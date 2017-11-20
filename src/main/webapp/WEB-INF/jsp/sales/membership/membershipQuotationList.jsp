@@ -192,7 +192,7 @@ function fn_doPrint(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Membership Management - Quotation(Outright) </h2>
+<h2>Outright Membership - Quotation List </h2>
 
 
 <ul class="right_btns">
