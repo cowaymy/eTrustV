@@ -628,6 +628,9 @@ function fn_createFile(){
 	
 }
 
+function fn_clear(){
+    $("#searchForm")[0].reset();
+}
 
 </script>
 
@@ -646,6 +649,7 @@ function fn_createFile(){
         <h2>Claim List</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_getClaimListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

@@ -104,6 +104,10 @@ var columnLayout = [
     		AUIGrid.setGridData(myGridID, result);
     	});
     }
+    
+    function fn_clear(){
+        $("#searchForm")[0].reset();
+    }
 </script>
 
 <!-- content start -->
@@ -121,6 +125,7 @@ var columnLayout = [
         <h2>RC by BS</h2>   
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

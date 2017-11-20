@@ -267,11 +267,14 @@ var columnLayout2 = [
         $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
         $("#rdpCreateDateTo2").attr("disabled",false).attr("readonly",false);
     }
+    
+    function fn_clear(){
+        $("#searchForm")[0].reset();
+    }
 </script>
 
 <!-- content start -->
-<form name="searchForm" id="searchForm">
-    <section id="content">
+<section id="content">
         <ul class="path">
             <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
             <li>Payment</li>
@@ -285,55 +288,57 @@ var columnLayout2 = [
             <h2>Enrollment</h2>   
             <ul class="right_btns">
                 <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
+                <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
             </ul>    
         </aside>
         <!-- title_line end -->
 
         <!-- search_table start -->
         <section class="search_table">
-
-            <!-- table start -->
-            <table class="type1">
-                <caption>search table</caption>
-                <colgroup>
-                    <col style="width:144px" />
-                    <col style="width:*" />
-                    <col style="width:144px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Enroll ID</th>
-                        <td><input type="text" title="orgCode" id="enrollID" name="enrollID" placeholder="Enroll ID" /></td>
-                        <th scope="row">Creator</th>
-                        <td><input type="text" title="grpCode" id="creator" name="creator"  placeholder="Creator (Username)"/></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Create Date</th>
-                        <td>
-                            <div class="date_set w100p"><!-- date_set start -->
-                            <p><input id="rdpCreateDateFr" name="rdpCreateDateFr" type="text" title="rdpCreateDateFr" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
-                            <span>~</span>
-                            <p><input id="rdpCreateDateTo" name="rdpCreateDateTo"  type="text" title="rdpCreateDateTo" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
-                            </div><!-- date_set end -->
-                        </td>
-                        <th scope="row">Issue Bank</th>
-                        <td>
-                            <select id="cmbIssueBank" name="cmbIssueBank" class="w100p">
-                                <option value="" selected="selected">Issue Bank</option>
-                                <option value="2">Alliance Bank</option>
-                                <!-- <option value="3">CIMB Bank</option>
-                                <option value="5">Hong Leong Bank</option> -->
-                                <option value="21">Maybank</option>
-                                <!-- <option value="6">Public Bank</option> -->
-                                <option value="7">RHB Bank</option>
-                                <option value="9">BSN Bank</option>
-                            </select>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- table end -->
+            <form name="searchForm" id="searchForm"  method="post">
+                <!-- table start -->
+                <table class="type1">
+                    <caption>search table</caption>
+                    <colgroup>
+                        <col style="width:144px" />
+                        <col style="width:*" />
+                        <col style="width:144px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Enroll ID</th>
+                            <td><input type="text" title="orgCode" id="enrollID" name="enrollID" placeholder="Enroll ID" /></td>
+                            <th scope="row">Creator</th>
+                            <td><input type="text" title="grpCode" id="creator" name="creator"  placeholder="Creator (Username)"/></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Create Date</th>
+                            <td>
+                                <div class="date_set w100p"><!-- date_set start -->
+                                <p><input id="rdpCreateDateFr" name="rdpCreateDateFr" type="text" title="rdpCreateDateFr" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
+                                <span>~</span>
+                                <p><input id="rdpCreateDateTo" name="rdpCreateDateTo"  type="text" title="rdpCreateDateTo" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
+                                </div><!-- date_set end -->
+                            </td>
+                            <th scope="row">Issue Bank</th>
+                            <td>
+                                <select id="cmbIssueBank" name="cmbIssueBank" class="w100p">
+                                    <option value="" selected="selected">Issue Bank</option>
+                                    <option value="2">Alliance Bank</option>
+                                    <!-- <option value="3">CIMB Bank</option>
+                                    <option value="5">Hong Leong Bank</option> -->
+                                    <option value="21">Maybank</option>
+                                    <!-- <option value="6">Public Bank</option> -->
+                                    <option value="7">RHB Bank</option>
+                                    <option value="9">BSN Bank</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- table end -->
+            </form>
         </section>
         <!-- search_table end -->
 
@@ -478,4 +483,3 @@ var columnLayout2 = [
         <!-- pop_body end -->
     </div>
     <!-- popup_wrap end -->
-</form>

@@ -106,6 +106,10 @@ function fn_genDocument(docVal){
    });
 	
 }
+
+function fn_clear(){
+    $("#searchForm")[0].reset();
+}
    
 </script>
 
@@ -125,6 +129,7 @@ function fn_genDocument(docVal){
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_genDocument('PDF');">Generate To PDF</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_genDocument('EXCEL');">Generate To Excel</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

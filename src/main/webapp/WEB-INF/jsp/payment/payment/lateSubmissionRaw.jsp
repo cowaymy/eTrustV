@@ -24,7 +24,11 @@ function fn_genDocument(){
     Common.report("searchForm", option);    
 	
 }
-   
+
+function fn_clear(){
+    $("#searchForm")[0].reset();
+}
+
 </script>
 
 <!-- content start -->
@@ -42,6 +46,7 @@ function fn_genDocument(){
         <h2>Late Submission Raw</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_genDocument();">Generate</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

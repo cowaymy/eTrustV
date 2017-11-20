@@ -41,6 +41,10 @@ function fn_getOrderListAjax() {
         AUIGrid.setGridData(myGridID, result);
     });
 }
+
+function fn_clear(){
+    $("#salesForm")[0].reset();
+}
 </script>
 
 <!-- content start -->
@@ -58,6 +62,7 @@ function fn_getOrderListAjax() {
         <h2>RC By Sales</h2>   
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->
