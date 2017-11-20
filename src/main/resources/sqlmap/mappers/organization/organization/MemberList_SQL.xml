@@ -1930,6 +1930,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		   , LAST_ORG_CODE
 		   , PR_MEM_ID
 		   , BRNCH_ID
+		   , EVT_APPLY_DT
             )
 		  VALUES (
 		  (SELECT MAX(PROMO_ID)+1 FROM ORG0007D )
@@ -1960,6 +1961,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		   , #{lastOrgCode}
 		   , #{PRmemId}
 		   , #{branchId}
+		   , #{evtApplyDt}
 		    )
 	 </insert>
 

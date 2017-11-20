@@ -924,6 +924,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			promoEntry.put("lastOrgCode", "");
 			promoEntry.put("PRmemId",0);
 			promoEntry.put("branchId",params.get("branchCode") != null && params.get("branchCode") != "" ? Integer.parseInt(params.get("branchCode").toString()) : 0);
+			/* By KV -add promodemote date*/
+			promoEntry.put("evtApplyDt", params.get("dtProDemote"));
+
 			logger.debug("promoEntry : {}",promoEntry);
 			EgovMap selectMemberOrgs = memberListMapper.selectMemberOrgs(params);
 

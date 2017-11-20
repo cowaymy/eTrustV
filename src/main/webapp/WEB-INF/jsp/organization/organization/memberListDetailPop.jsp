@@ -41,7 +41,7 @@ $(document).ready(function() {
     }
     if($("#codeValue").val() == 2){//Request Promote/Demote
     	$("#requestPromoteDemote").show();
-    	
+
     	 if($("#memberLvl").val() == 0){
     		 $("#action1").append('<option value=748>Demote</option>');
     	 }else if($("#memberLvl").val() == 1){
@@ -1149,13 +1149,21 @@ function fn_winClose(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="2">Action</th>
-    <td rowspan="2">
+    <th scope="row" rowspan="3">Action</th>
+    <td rowspan="3">
     <select class="w100p" id="action1" name="action1">
     <option value="">Action</option>
     </select>
     </td>
-    <th scope="row">Superior Team</th>
+ <th scope="row">Branch Code</th>
+    <td>
+    <select class="w100p" id="branchCode" name="branchCode">
+        <option value="">Branch Code</option>
+    </select>
+    </td>
+</tr>
+<tr>
+<th scope="row">Superior Team</th>
     <td>
     <select class="w100p"  id="cmbSuperior" name="cmbSuperior">
         <option value="">Superior Team</option>
@@ -1163,14 +1171,12 @@ function fn_winClose(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch Code</th>
+<th scope="row">Promo/Demote Date</th>
     <td>
-    <select class="w100p" id="branchCode" name="branchCode">
-        <option value="">Branch Code</option>
-
-    </select>
+     <input type="text" title="Promo/Demote Date" placeholder="DD/MM/YYYY" class="j_date" id="dtProDemote" name="dtProDemote"/>
     </td>
 </tr>
+
 <tr>
     <th scope="row">Remark</th>
     <td colspan="3">
