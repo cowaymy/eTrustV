@@ -18,26 +18,32 @@
             {
                 dataField: "jobName",
                 headerText: "JOB_NAME",
+                editable : false,
                 width: "10%"
             },
             {
                 dataField: "startTime",
                 headerText: "START_TIME",
+                editable : false,
                 width: "13%"
             }, {
                 dataField: "endTime",
                 headerText: "END_TIME",
+                editable : false,
                 width: "13%"
             }, {
                 dataField: "status",
                 headerText: "STATUS",
+                editable : false,
                 width: "10%"
             }, {
                 dataField: "exitCode",
                 headerText: "EXIT_CODE",
+                editable : false,
                 width: "10%"
             }, {
                 dataField: "exitMessage",
+                editable : false,
                 headerText: "EXIT_MESSAGE"
             }, {
                 dataField: "stepName",
