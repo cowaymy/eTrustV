@@ -3,6 +3,7 @@ package com.coway.trust.biz.common.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import com.coway.trust.biz.common.FileGroupVO;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 
 @Service("fileService")
@@ -36,6 +38,9 @@ public class FileServiceImpl implements FileService {
 
 	@Autowired
 	private FileMapper fileMapper;
+
+	@Autowired
+	private LoginMapper loginMapper;
 
 	@Override
 	public int insertFiles(List<FileVO> fileVOList, FileType type, int userId) {
@@ -82,7 +87,7 @@ public class FileServiceImpl implements FileService {
 						new File(baseDir + fileVO.getFileSubPath() + File.separator + fileVO.getPhysiclFileName()));
 			} catch (IOException e) {
 				LOGGER.error("deleteFile Fail : {}", e.getMessage());
-				//throw new ApplicationException(e);
+				// throw new ApplicationException(e);
 			}
 		});
 
@@ -119,11 +124,11 @@ public class FileServiceImpl implements FileService {
 		FileVO fileVO = this.getFile(fileId);
 
 		try {
-			FileUtils.forceDelete(
-					new File(baseDir + File.separator+ fileVO.getFileSubPath() + File.separator + fileVO.getPhysiclFileName()));
+			FileUtils.forceDelete(new File(
+					baseDir + File.separator + fileVO.getFileSubPath() + File.separator + fileVO.getPhysiclFileName()));
 		} catch (IOException e) {
 			LOGGER.error("deleteFile Fail : {}", e.getMessage());
-			//throw new ApplicationException(e);
+			// throw new ApplicationException(e);
 		}
 
 		fileMapper.deleteFileByFileId(fileId);
@@ -134,5 +139,15 @@ public class FileServiceImpl implements FileService {
 	public void changeFile(int fileGroupId, int preFileId, FileVO fileVO, FileType type, int userId) {
 		this.removeFileByFileId(type, preFileId);
 		this.insertFile(fileGroupId, fileVO, type, userId);
+	}
+
+	@Override
+	public int getUserIdByUserName(String userName) {
+		int userId = 0;
+		Map<String, Object> user = loginMapper.selectUserByUserName(userName);
+		if (user != null) {
+			userId = Integer.parseInt(String.valueOf(user.get("userId")));
+		}
+		return userId;
 	}
 }

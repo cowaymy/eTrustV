@@ -7,13 +7,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.notice.NoticeService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 
 /**
@@ -28,6 +31,7 @@ import com.coway.trust.util.CommonUtils;
 public class FileApplicationImpl implements FileApplication {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl.class);
+	private static final String USER_ID = "userId";
 
 	@Autowired
 	private FileService fileService;
@@ -35,10 +39,13 @@ public class FileApplicationImpl implements FileApplication {
 	@Autowired
 	private NoticeService noticeService;
 
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+
 	@Override
 	public void businessAttach(FileType type, List<FileVO> list, Map<String, Object> params) {
 
-		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get(USER_ID));
 		params.put("fileGroupKey", fileGroupKey);
 
 		// fileGroupKey 를 가지고 업무 처리..
@@ -47,15 +54,30 @@ public class FileApplicationImpl implements FileApplication {
 	}
 
 	@Override
-	public int commonAttach(FileType type, List<FileVO> list, Map<String, Object> params) {
-		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
+	public int commonAttachByUserId(FileType type, List<FileVO> list, Map<String, Object> params) {
+		LOGGER.debug("user id(int) : {}", params.get(USER_ID));
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get(USER_ID));
+		params.put("fileGroupKey", fileGroupKey);
+		return fileGroupKey;
+	}
+
+	@Override
+	public int commonAttachByUserName(FileType type, List<FileVO> list, Map<String, Object> params) {
+		LOGGER.debug("user id(String) : {}", params.get(USER_ID));
+		int userId = fileService.getUserIdByUserName((String) params.get(USER_ID));
+		if (userId == 0) {
+			throw new ApplicationException(AppConstants.FAIL,
+					messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "userId(String)" }));
+		}
+		params.put(USER_ID, userId);
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get(USER_ID));
 		params.put("fileGroupKey", fileGroupKey);
 		return fileGroupKey;
 	}
 
 	@Override
 	public void noticeAttach(FileType type, List<FileVO> list, Map<String, Object> params) {
-		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get(USER_ID));
 		params.put("atchFileGrpId", fileGroupKey);
 		noticeService.insertNotice(params);
 	}
@@ -66,7 +88,7 @@ public class FileApplicationImpl implements FileApplication {
 		String updateFileIds = (String) params.get("updateFileIds");
 		String deleteFileIds = (String) params.get("deleteFileIds");
 		String fileGroupId = (String) params.get("fileGroupId");
-		int userId = (int) params.get("userId");
+		int userId = (int) params.get(USER_ID);
 		String[] updateFileId = null;
 		String[] deleteFileId = null;
 
@@ -104,7 +126,7 @@ public class FileApplicationImpl implements FileApplication {
 				fileCnt++;
 			}
 		} else {
-			if(fileVOS.size() > 0){
+			if (fileVOS.size() > 0) {
 				newFileGroupId = fileService.insertFiles(fileVOS, FileType.WEB, userId);
 				params.put("atchFileGrpId", newFileGroupId);
 			}

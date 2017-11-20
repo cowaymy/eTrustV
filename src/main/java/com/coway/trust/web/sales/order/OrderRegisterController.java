@@ -254,7 +254,7 @@ public class OrderRegisterController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		//serivce 에서 파일정보를 가지고, DB 처리.
-		int fileGroupKey = fileApplication.commonAttach(FileType.WEB, FileVO.createList(list), params);
+		int fileGroupKey = fileApplication.commonAttachByUserId(FileType.WEB, FileVO.createList(list), params);
 		FileDto fileDto = FileDto.create(list, fileGroupKey);
 		
 		return ResponseEntity.ok(fileDto);

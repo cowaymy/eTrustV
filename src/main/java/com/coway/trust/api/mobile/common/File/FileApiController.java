@@ -1,9 +1,8 @@
-package com.coway.trust.api.callcenter.common;
+package com.coway.trust.api.mobile.common.File;
 
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.biz.common.type.FileType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.util.EgovFormBasedFileVo;
 
@@ -26,19 +26,19 @@ import io.swagger.annotations.ApiParam;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "파일관리", description = "file api")
-@RestController(value = "CallcenterFileApiController")
-@RequestMapping(AppConstants.CALL_CENTER_API_BASE_URI + "/file")
+@RestController(value = "MobileFileApiController")
+@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/file")
 public class FileApiController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileApiController.class);
 
-	@Value("${com.file.callcenter.upload.path}")
+	@Value("${com.file.mobile.upload.path}")
 	private String uploadDir;
 
 	@Autowired
-	private FileApplication fileApplication;
+	private FileService fileService;
 
 	@Autowired
-	private FileService fileService;
+	private FileApplication fileApplication;
 
 	// 공통 파일 테이블에서 관리하는 api 입니다.
 	@ApiOperation(value = "파일업로드", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -53,7 +53,7 @@ public class FileApiController {
 		LOGGER.debug("param01 : {}", params.get(""));
 		LOGGER.debug("list.size : {}", list.size());
 
-		int fileGroupKey = fileApplication.commonAttachByUserId(FileType.CALL_CENTER, FileVO.createList(list), params);
+		int fileGroupKey = fileApplication.commonAttachByUserName(FileType.MOBILE, FileVO.createList(list), params);
 		FileDto fileDto = FileDto.create(list, fileGroupKey);
 		return ResponseEntity.ok(fileDto);
 	}

@@ -1,6 +1,7 @@
 package com.coway.trust.biz.common;
 
 import java.util.List;
+import java.util.Map;
 
 import com.coway.trust.biz.common.type.FileType;
 
@@ -28,4 +29,6 @@ public interface FileService {
 	void removeFileByFileId(FileType type, int fileId);
 
 	void changeFile(int fileGroupId, int preFileId, FileVO fileVO, FileType type, int userId);
+
+	int getUserIdByUserName(String userName);
 }
