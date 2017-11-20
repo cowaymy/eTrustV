@@ -500,10 +500,8 @@ var batchInfoLayout = [
         
         searchList();
     }
-    function fn_close(){
+    function fn_clear(){
         $("#searchForm")[0].reset();
-        AUIGrid.clearGridData(myGridID);
-        
         $("#payMode").multipleSelect("checkAll");
         $("#confirmStatus").multipleSelect("setSelects", [44]);
         $("#batchStatus").multipleSelect("setSelects", [1]);
@@ -522,7 +520,7 @@ var batchInfoLayout = [
         <h2>Internal Staff Payment</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="#" onclick="fn_close();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="#" onclick="fn_clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside><!-- title_line end -->
     <!-- search_table start -->
