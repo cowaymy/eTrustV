@@ -179,7 +179,7 @@
 
 			         /* By KV - add Position*/
 			        INNER JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
-			        INNER JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
+			        LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
 
 			        CROSS JOIN  (SELECT
 			            COUNT(1) A1
