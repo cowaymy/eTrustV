@@ -565,7 +565,6 @@ var batchInfoLayout = [
     }
     function fn_clear(){
     	$("#searchForm")[0].reset();
-    	AUIGrid.clearGridData(myGridID);
     	
     	$("#payMode").multipleSelect("checkAll");
         $("#confirmStatus").multipleSelect("setSelects", [44]);
