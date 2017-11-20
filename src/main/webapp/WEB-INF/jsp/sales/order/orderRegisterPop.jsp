@@ -539,12 +539,12 @@
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
         $('#addCustBtn').click(function() {
-            Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
-            //Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true);
+            //Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
+            Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true);
         });
         $('#thrdPartyAddCustBtn').click(function() {
-            Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "630x"});
-            //Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true);
+            //Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "630x"});
+            Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true);
         });
         $('#mstCntcNewAddBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
