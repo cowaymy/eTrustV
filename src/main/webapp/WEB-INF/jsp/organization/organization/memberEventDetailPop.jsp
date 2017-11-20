@@ -53,7 +53,7 @@
         
         var jsonObj = {
           PromoID : $("#promoId").val(),
-         memCode : $("#memCode").val()
+          memCode : $("#memCode").val()
        
         };
     
@@ -344,6 +344,8 @@
 <colgroup>
     <col style="width:150px" />
     <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -355,6 +357,12 @@
          <option value="10">Cancel this event</option>
     </select>
     </td>
+    
+     <th scope="row">APPLY_DATE</th>
+    <td>
+        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="evtApplyDate"  name="evtApplyDate" value="${promoInfo.evtApplyDt}" /> 
+    </td>
+    
 </tr>
 </tbody>
 </table><!-- table end -->
