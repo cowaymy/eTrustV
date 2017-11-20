@@ -11,39 +11,39 @@
 
         var StatusTypeData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
        var gradioVal = $("input:radio[name='searchDivCd']:checked").val();
-       
+
         // AUIGrid 생성 후 반환 ID
         var myGridID;
         var gridValue;
-        
+
         var option = {
                 width : "1000px", // 창 가로 크기
                 height : "600px" // 창 세로 크기
             };
-    
-    
+
+
                 // 그리드 속성 설정
 /*                 var gridPros = {
-                    // 페이징 사용       
+                    // 페이징 사용
                     usePaging : true,
                     // 한 화면에 출력되는 행 개수 20(기본값:20)
                     pageRowCount : 20,
-                    
+
                     editable : false,
-                    
-                    //showStateColumn : true, 
-                    
+
+                    //showStateColumn : true,
+
                     displayTreeOpen : true,
-                    
-                    
+
+
                     headerHeight : 30,
-                    
+
                     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                     skipReadonlyColumns : true,
-                    
+
                     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
                     wrapSelectionMove : true,
-                    
+
                     // 줄번호 칼럼 렌더러 출력
                     showRowNumColumn : true
 
@@ -51,14 +51,14 @@
 //                    showRowCheckColumn : true,
                     // 전체 체크박스 표시 설정
    //                 showRowAllCheckBox : true
-            
+
                 };     */
-    
-    
+
+
         function fn_close(){
             window.close();
         }
-        
+
 
        var columnManualLayout = [ {
                             dataField:"rnum",
@@ -67,14 +67,14 @@
                             height:30
                             ,
                             visible:false
-                              }, {                        
+                              }, {
                             dataField : "custId",
                             headerText : "Customer",
                             width : 120
                         }, {
                             dataField : "name",
                             headerText : "Customer Name",
-                            width : 120                            
+                            width : 120
                        }, {
                             dataField : "salesOrdNo",
                             headerText : "Sales Order",
@@ -82,54 +82,70 @@
                         }, {
                             dataField : "hsDate",
                             headerText : "HS Date",
-                            width : 120                             ,                             
-                            visible:false   
-                        }, {                        
+                            width : 120                             ,
+                            visible:false
+                        }, {
                             dataField : "no",
                             headerText : "HS Order",
                             width : 120
                         }, {
                             dataField : "c5",
                             headerText : "Assign Cody",
-                            width : 120              
+                            width : 120
                         }, {
-                            dataField : "code",
+                            dataField : "codyStatus",
                             headerText : "Cody Status",
                             width : 120
                         }, {
-                            dataField : "code1",
+                            dataField : "code",
                             headerText : "HS Status",
-                            width : 120             
+                            width : 120
                         }, {
                             dataField : "month",
                             headerText : "Complete Cody",
-                            width : 120                             ,                             
-                            visible:false   
+                            width : 120                             ,
+                            visible:false
                         }, {
                             dataField : "brnchId",
                             headerText : "Branch",
-                            width : 120    
-                             ,                             
-                            visible:false   
+                            width : 120
+                             ,
+                            visible:false
                         }, {
                             dataField : "schdulId",
                             headerText : "schdulId",
-                            width : 120                                 ,                             
-                            visible:false   
-                          /*     ,                             
+                            width : 120                                 ,
+                            visible:false
+                          /*     ,
                             visible:false      */
                         }, {
                             dataField : "salesOrdId",
                             headerText : "salesOrdId",
                             width : 120
-                            ,                             
-                            visible:false                   
+                            ,
+                            visible:false
                         }, {
                             dataField : "codyBrnchCode",
                             headerText : "Branch Code",
                             width : 120
-                    }];
-                            
+                    }, {
+                        dataField : "address",
+                        headerText : "Installation Address",
+                        width : 120}
+                    , {
+                            dataField : "stkDesc",
+                            headerText : "Stock Name",
+                            width : 120}
+                    , {
+                                dataField : "hsFreq",
+                                headerText : "HS Frequency",
+                                width : 120}
+                    , {
+                        dataField : "prevMthHsStatus",
+                        headerText : "Previous Month Hs Result",
+                        width : 120}
+                    ];
+
 
             var columnAssiinLayout = [ {
                         dataField:"rnum",
@@ -138,14 +154,14 @@
                         height:30
                         ,
                         visible:false
-                          }, {                        
+                          }, {
                         dataField : "custId",
                         headerText : "Customer",
                         width : 120
                     }, {
                         dataField : "name",
                         headerText : "Customer Name",
-                        width : 120                            
+                        width : 120
                    }, {
                         dataField : "salesOrdNo",
                         headerText : "Sales Order",
@@ -154,18 +170,18 @@
                         dataField : "hsDate",
                         headerText : "HS Period",
                         width : 120
-                    }, {                        
+                    }, {
                         dataField : "no",
                         headerText : "HS Order",
                         width : 120
                     }, {
                         dataField : "c5",
                         headerText : "Assign Cody",
-                        width : 120              
+                        width : 120
                     }, {
                         dataField : "actnMemId",
                         headerText : "Complete Cody",
-                        width : 120                        
+                        width : 120
                     }, {
                         dataField : "codyStatusNm",
                         headerText : "Cody Status",
@@ -173,69 +189,69 @@
                     }, {
                         dataField : "code",
                         headerText : "HS Status",
-                        width : 120           
+                        width : 120
                     }, {
                         dataField : "branchCd",
                         headerText : "Branch CD",
-                        width : 120           
+                        width : 120
                      }, {
                         dataField : "codyMangrUserId",
                         headerText : "Cody Manager",
-                        width : 120           
+                        width : 120
                     }, {
                         dataField : "stusCodeId",
                         headerText : "HS Statuscd",
-                        width : 120 ,                             
-                        visible:false     
+                        width : 120 ,
+                        visible:false
                     }, {
                         dataField : "brnchId",
                         headerText : "Branch",
                         width : 120
-                        ,                             
-                        visible:false        
+                        ,
+                        visible:false
                     }, {
                         dataField : "schdulId",
                         headerText : "schdulId",
-                        width : 120    
-                           ,                             
-                        visible:false      
+                        width : 120
+                           ,
+                        visible:false
                     }, {
                         dataField : "salesOrdId",
                         headerText : "salesOrdId",
-                        width : 120,                             
+                        width : 120,
                         visible:false
                      },{
                         dataField : "result",
                         headerText : "result",
                         width : 120
-                         ,                             
+                         ,
                         visible:false
-                     },{                     
+                     },{
                         dataField : "undefined",
                         headerText : "Edit",
                         width : 170,
                         renderer : {
                               type : "ButtonRenderer",
                               labelText : "Edit",
-                              onclick : function(rowIndex, columnIndex, value, item) {               
-                                   
+                              onclick : function(rowIndex, columnIndex, value, item) {
+
                                    if(item.result == "" || item.result == undefined) {
-                                        Common.alert('Not able to EDIT for the HS order status in Active.');    
+                                        Common.alert('Not able to EDIT for the HS order status in Active.');
                                         return false;
                                    }
-                                   
+
                                   $("#_schdulId").val(item.schdulId);
                                   $("#_salesOrdId").val(item.salesOrdId);
                                   $("#_openGb").val("edit");
                                   $("#_brnchId").val(item.brnchId);
-                                  
+
                                   Common.popupDiv("/services/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
                   }
-           }                            
+           }
                 }];
-                        
-        
-        
+
+
+
         function createAUIGrid(){
                 // AUIGrid 칼럼 설정
 
@@ -243,9 +259,9 @@
                             //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
                         //myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
             }
-    
-    
-    
+
+
+
 /*         //전체 체크/해제 하기
         var allChecked = false;
         function setAllCheckedRows() {
@@ -253,41 +269,41 @@
             AUIGrid.setAllCheckedRows(myGridID, allChecked);
         }; */
 
-    
+
 
          // 리스트 조회.
-        function fn_getBSListAjax() {        
-        
-                var radioVal = $("input:radio[name='searchDivCd']:checked").val();                           
-            
+        function fn_getBSListAjax() {
+
+                var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+
                 if (radioVal == 1 ){ //hs_no  Create before
                         Common.ajax("GET", "/services/bs/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
-                            
+
                             console.log("성공.");
                             console.log("data : " + result);
                             AUIGrid.setGridData(myGridID, result);
                          });
                 }else {//hs_no  Create after
-                
+
                         Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val()}, function(result) {
-                            
+
                             console.log("성공.");
                             console.log("data : " + result);
                             AUIGrid.setGridData(myGridID, result);
                         });
                 }
-     
+
           }
-        
-        
-        
+
+
+
 
 
 
 			function fn_getHSAddListAjax(){
 //	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
                 var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-                
+
 	            if(checkedItems.length <= 0) {
 	                Common.alert('No data selected.');
 	                return;
@@ -299,40 +315,40 @@
 	                var saleOrdList = "";
 	                var list = "";
 	                var brnchCnt = "";
-	                
+
 	                //var saleOrdList = [];
 	                var saleOrd = {
 	                     salesOrdNo : ""
 	                };
-	                
-	
-	                
+
+
+
 	                for(var i=0, len = checkedItems.length; i<len; i++) {
 	                    rowItem = checkedItems[i];
 	                    hsStuscd = rowItem.stusCodeId;
 	                    schdulId = rowItem.schdulId;
 	                    salesOrdId = rowItem.salesOrdId;
-	                    
+
 		                 if(hsStuscd == 4) {
 		                    Common.alert("already has result. Result entry is disallowed.");
 		                    return;
 		                 }
 	                }
                 }
-                
-                
-                
-                
-                
+
+
+
+
+
 /*                 alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId"));
                 alert(hsStuscd);
-                
+
                  if(hsStuscd == 4) {
                     Common.alert("already has result. Result entry is disallowed.");
                     return;
                  } */
 
-	           Common.popupDiv("/services/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_hsDetailPopDiv');  
+	           Common.popupDiv("/services/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_hsDetailPopDiv');
                 //Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '_editDiv');
 			}
 
@@ -341,9 +357,9 @@
         $(function(){
            $("#codyChange").click(function(){
            $("#_openGb").val("codyChange");
-           
+
             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-            
+
             if(checkedItems.length <= 0) {
                 Common.alert('No data selected.');
                 return false;
@@ -356,19 +372,19 @@
                 var list = "";
                 var brnchCnt = 0;
                 var ctBrnchCodeOld = "";
-                
+
                 //var saleOrdList = [];
                 var saleOrd = {
                      salesOrdNo : ""
                 };
-                
 
-                
-                
+
+
+
                 for(var i=0, len = checkedItems.length; i<len; i++) {
                     rowItem = checkedItems[i];
                     saleOrdList += rowItem.salesOrdNo;
-                    
+
                     if(i  != len -1){
                         saleOrdList += ",";
                     }
@@ -380,23 +396,23 @@
                         }
                     }
                     ctBrnchCodeOld = rowItem.codyBrnchCode;
-                    
+
                     if(i==0){
                          brnchId = rowItem.branchCd;
                     }
-                                        
+
                     //상태 com은 수정 못하도록
                      if(rowItem.stusCodeId == "4"){
                         Common.alert('Not Allow to Cody Transfer for Complete HS Order');
                         return ;
                      }
-                    
-                    
-                    
 
-                    
+
+
+
+
                 }
-                
+
                 var jsonObj = {
                          "SaleOrdList" : saleOrdList,
                          "BrnchId": brnchId,
@@ -404,23 +420,23 @@
                          "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val()
                 };
 
-                
-                  Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
+
+                  Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  );
 
             }
-            
+
         });
     });
-    
-    
-    
-    
+
+
+
+
         $(function(){
            $("#hSConfiguration").click(function(){
            $("#_openGb").val("hsConfig");
-           
+
             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-            
+
             if(checkedItems.length <= 0) {
                 Common.alert('No data selected.');
                 return false;
@@ -433,27 +449,27 @@
                 var list = "";
                 var brnchCnt = 0;
                 var ctBrnchCodeOld = "";
-                
+
                 //var saleOrdList = [];
                 var saleOrd = {
                      salesOrdNo : ""
                 };
-                
 
-                
+
+
                 for(var i=0, len = checkedItems.length; i<len; i++) {
                     rowItem = checkedItems[i];
                     saleOrdList += rowItem.salesOrdNo;
-                    
-                    
+
+
                     var hsStutus = rowItem.code;
 		            if( hsStutus == "COM") {
 		                Common.alert("<b>  do no has result COM..");
 		                return ;
 		            }
-                    
-                    
-                    
+
+
+
                     if(i  != len -1){
                         saleOrdList += ",";
                     }
@@ -463,25 +479,25 @@
 	                        brnchCnt += 1 ;
 	                    }
                     }
-                    
+
                     ctBrnchCodeOld = rowItem.codyBrnchCode;
-                    
-                    
+
+
                     if(i==0){
                          brnchId = rowItem.brnchId;
                     }
-                    
-                    
-                }
-                
-                
 
-                
+
+                }
+
+
+
+
                 if(brnchCnt > 0 ){
                     Common.alert("Not Avaialable to Create HS Order With Several CDB in Single Time.");
                     return;
                 }
-                
+
                 var jsonObj = {
                          "SaleOrdList" : saleOrdList,
                          "BrnchId": brnchId,
@@ -490,29 +506,29 @@
                 };
 
 
-                
-                  Common.popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
+
+                  Common.popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  );
 
             }
-            
+
         });
     });
 
-    
-    
+
+
 /*           AUIGrid.bind(myGridID, "cellClick", function(event) {
                 custId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "custId");
             });  */
-            
-    
+
+
         //Start AUIGrid
         $(document).ready(function() {
-                 
+
 	          doDefCombo(StatusTypeData, '' ,'cmbStatusType', 'S', '');
-	            
+
 	          $('#myBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
 	          $('#ManuaMyBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
-                 
+
                 // AUIGrid 그리드를 생성합니다.
 //                createAUIGrid();
 //                AUIGrid.setSelectionMode(myGridID, "singleRow");
@@ -524,14 +540,14 @@
              $("#cmdcodyCode").find('option').each(function() {
                 $(this).remove();
             });
-            
+
             if ($(this).val().trim() == "") {
                 return;
-            }       
+            }
             doGetCombo('/services/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager' , 'S', '');
-        });    
+        });
 
-                            
+
 
              $("#cmdCdManager").change(function() {
                 $("#cmdcodyCode").find('option').each(function() {
@@ -539,14 +555,14 @@
                 });
                 if ($(this).val().trim() == "") {
                     return;
-                }       
+                }
                doGetCombo('/services/bs/getCdList.do', $(this).val() , ''   , 'cmdcodyCode' , 'S', '');
-            });   
-        
-                
+            });
+
+
                 fn_checkRadioButton();
-                
-                
+
+
             AUIGrid.bind(myGridID, "cellClick", function(event) {
 			      //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
 			      schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
@@ -554,13 +570,13 @@
 			      hsStuscd = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId");
                   result =     AUIGrid.getCellValue(myGridID, event.rowIndex, "result");
                     //Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
-			  }); 
+			  });
 
-                
+
                  // 셀 더블클릭 이벤트 바인딩
                 AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
                    var radioVal = $("input:radio[name='searchDivCd']:checked").val();
-                   
+
                     if(radioVal == 1 ){
 /*                           _schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
 		                  _salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
@@ -572,30 +588,30 @@
                         $("#_brnchId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"));
 		                $("#_openGb").val("view");
 		                $("#_manuaMyBSMonth").val($("#ManuaMyBSMonth").val());
-                         
+
 /*                          alert("_schdulId::"+  $("#_schdulId").val() +  $("#_salesOrdId").val()+  $("#_brnchId").val()); */
 
                          Common.popupDiv("/services/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
-                    }                   
+                    }
                 });
-        
+
         });
-    
+
         function fn_checkRadioButton(objName){
-    
+
             if( document.searchForm.elements['searchDivCd'][0].checked == true ) {
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="none";
                         $('#hSConfiguration').attr('disabled',true); //hSConfiguration 버튼 비활성화
-                        
+
                         var divhsManagementObj = document.querySelector("#hsManagement");
                         divhsManagementObj.style.display="block";
-                                             
+
 
 
 						//$('#hSConfiguration').attr('disabled',true); //hash
-//						$('#hSConfiguration').attr('disabled',false);  //SMS버튼 활성화 
-//                       
+//						$('#hSConfiguration').attr('disabled',false);  //SMS버튼 활성화
+//
 
                         //2번영역 데이터 클리어
                         //fn_checkboxChangeHandler();
@@ -604,43 +620,43 @@
                         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnAssiinLayout ,gridProsAssiin);
                         //createAssinAUIGrid(columnAssiinLayout);
             }else{
-            
+
                         var divhsManagementObj = document.querySelector("#hsManagement");
                         divhsManagementObj.style.display="none";
                         $('#hSConfiguration').attr('disabled',false); //hSConfiguration 버튼 활성화
 
                         var divhsManuaObj = document.querySelector("#hsManua");
                         divhsManuaObj.style.display="block";
-                        
+
                         $("#addResult").attr("disabled",true);
-                         
+
                         //1번영역 데이터 클리어
                         $("#ManuaSalesOrder").val('');
 //                        $("#ManuaMyBSMonth").val('');
                         $("#manualCustomer").val('');
-                        
+
 //                      fn_checkboxChangeHandler();
                         fn_destroyGridM();
-                  
+
                         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnManualLayout ,gridProsManual);
-                      
+
 
             }
         }
-    
-    
+
+
             var gridProsAssiin = {
-          // 페이징 사용       
+          // 페이징 사용
              usePaging : true,
           // 한 화면에 출력되는 행 개수 20(기본값:20)
              pageRowCount : 20,
              editable :  false,
              showRowCheckColumn : true
              };
-    
+
            var gridProsManual = {
                  showRowCheckColumn : true,
-                 // 페이징 사용       
+                 // 페이징 사용
                  usePaging : true,
                  // 한 화면에 출력되는 행 개수 20(기본값:20)
                  pageRowCount : 20,
@@ -648,60 +664,60 @@
                  showRowAllCheckBox : true,
                  editable :  false
                  }
-                     
+
 		// AUIGrid 를 생성합니다.
 		function createAssinAUIGrid(columnAssiinLayout) {
-		    
+
           // 그리드 속성 설정
 		    // 실제로 #grid_wrap 에 그리드 생성
 		      myGridID = AUIGrid.create("#grid_wrap", columnAssiinLayout, gridProsAssiin);
 		}
-    
-    
+
+
         // AUIGrid 를 생성합니다.
         function createManualAUIGrid(columnManualLayout) {
-            
+
 	         // 그리드 속성 설정
 
-                
+
             // 실제로 #grid_wrap 에 그리드 생성
               myGridID = AUIGrid.create("#grid_wrap", columnManualLayout, gridProsManual);
         }
-            
-    
-    
+
+
+
         function fn_destroyGridA() {
             myGridID = null;
-            
+
             AUIGrid.setProp(myGridID, gridProsAssiin );
             AUIGrid.destroy("#grid_wrap");
             createAssinAUIGrid(columnAssiinLayout);
-            
-          
+
+
         }
-        
-        
+
+
          function fn_destroyGridM() {
-           
+
             myGridID = null;
-            
+
             AUIGrid.setProp(myGridID, gridProsManual );
             AUIGrid.destroy("#grid_wrap");
             createManualAUIGrid(columnManualLayout);
-            
-       
+
+
         }
-        
+
 /*         function fn_destroyAssiinGrid() {
             AUIGrid.destroy("#grid_wrap");
             myAssiinlGridID = null;
         } */
-        
-        
+
+
         function fn_checkboxChangeHandler(event) {
 
             var radioVal = $("input:radio[name='searchDivCd']:checked").val();
-            
+
             if(radioVal == 1 ){
                 fn_destroyGrid();
                 myGridID = GridCommon.createAUIGrid("grid_wrap", columnAssiinLayout ,gridProsAssiin);
@@ -710,8 +726,8 @@
                 myGridID = GridCommon.createAUIGrid("grid_wrap", columnManualLayout ,gridProsManual);
             }
         }
-    
-    
+
+
     </script>
 
 
@@ -733,7 +749,7 @@
     <input type="hidden" name="brnchId"  id="_brnchIdView"/>  <!-- salesOrdId  -->
 </form> --%>
 
-<form id="searchForm" name="searchForm">    
+<form id="searchForm" name="searchForm">
 
 
 <section id="content"><!-- content start -->
@@ -763,7 +779,7 @@
 
             <section class="search_table"><!-- search_table start -->
             <form action="#" method="post">
-            
+
             <table class="type1"><!-- table start -->
             <caption>table</caption>
             <colgroup>
@@ -806,7 +822,7 @@
                 <td>
                     <input id="txtCustomer" name="txtCustomer"  type="text" title="" placeholder="Customer" class="w100p" />
                 </td>
-                
+
             </tr>
             <tr>
                 <th scope="row">Sales Order</th>
@@ -823,13 +839,13 @@
                              <option value="">HS Status</option>
                 </td>
             </tr>
-            
+
             </tbody>
             </table><!-- table end -->
-            
+
             <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
             <!-- <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p> -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>           
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
@@ -850,7 +866,7 @@
                 </dd>
             </dl>
             </aside><!-- link_btns_wrap end -->
-            
+
             </form>
             </section><!-- search_table end -->
 </form>
@@ -863,7 +879,7 @@
 
             <section class="search_table"><!-- search_table start -->
             <form action="#" method="post">
-            
+
             <table class="type1"><!-- table start -->
             <caption>table</caption>
             <colgroup>
@@ -886,11 +902,11 @@
                 <td>
                     <input id="manualCustomer" name="manualCustomer"  type="text" title="" placeholder="Customer" class="w100p" />
                 </td>
-                
+
             </tr>
             </tbody>
             </table><!-- table end -->
-            
+
             <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <%--             <p class="show_btn"><a href="#"><br><br><br><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
             <%-- <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
@@ -911,14 +927,14 @@
             </section><!-- search_table end -->
 </form>
 </div>
-            
+
                 <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
                 <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label><br><br>
 
     <ul class="right_btns">
 
 
-    </ul>     
+    </ul>
 
 <section class="search_result"><!-- search_result start -->
 
@@ -955,80 +971,80 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>BS Management</h2>
         </aside><!-- title_line end -->
-        
+
         <div class="divine_auto"><!-- divine_auto start -->
-        
+
         <div style="width:20%;">
-        
+
         <aside class="title_line"><!-- title_line start -->
         <h3>Cody List</h3>
         </aside><!-- title_line end -->
-        
+
         <div class="border_box" style="height:400px"><!-- border_box start -->
-        
+
         <ul class="right_btns">
 <!--             <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
             <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->
         </ul>
-        
+
         <article class="grid_wrap"><!-- grid_wrap start -->
         </article><!-- grid_wrap end -->
-        
+
         </div><!-- border_box end -->
-        
+
         </div>
-        
+
         <div style="width:50%;">
-        
+
         <aside class="title_line"><!-- title_line start -->
         <h3>HS Order List</h3>
         </aside><!-- title_line end -->
-        
+
         <div class="border_box" style="height:400px"><!-- border_box start -->
-        
+
         <ul class="right_btns">
 <!--             <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
             <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->
         </ul>
-        
+
         <article class="grid_wrap"><!-- grid_wrap start -->
         </article><!-- grid_wrap end -->
-        
+
         <ul class="center_btns">
 <!--             <li><p class="btn_blue2"><a href="#">Assign Cody Change</a></p></li>
             <li><p class="btn_blue2"><a href="#">Cody Assign</a></p></li>
             <li><p class="btn_blue2"><a href="#">HS Transfer</a></p></li> -->
         </ul>
-        
+
         </div><!-- border_box end -->
-        
+
         </div>
-        
+
         <div style="width:30%;">
-        
+
         <aside class="title_line"><!-- title_line start -->
         <h3>Cody – HS Order</h3>
         </aside><!-- title_line end -->
-        
+
         <div class="border_box" style="height:400px"><!-- border_box start -->
-        
+
         <ul class="right_btns">
 <!--             <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
             <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->
         </ul>
-        
+
         <article class="grid_wrap"><!-- grid_wrap start -->
         </article><!-- grid_wrap end -->
-        
+
         <ul class="center_btns">
             <li><p class="btn_blue2"><a href="#">Confirm</a></p></li>
         </ul>
-        
+
         </div><!-- border_box end -->
-        
+
         </div>
-        
+
         </div><!-- divine_auto end -->
-        
-        </section><!-- content end -->    
+
+        </section><!-- content end -->
     </div>
