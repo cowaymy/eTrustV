@@ -2082,6 +2082,28 @@ AND   O1DA.MEM_CODE = #{userId}
                                , 'N'
                             )
                 </insert>
+                
+                
+                <insert id="insertPrReServiceLog" parameterType="Map">
+                            INSERT INTO SVC0039T (
+                               RESULT_SEQ
+                                ,CRT_USER_ID
+                                ,SALES_ORD_ID
+                                ,SVC_NO
+                                ,AS_APPNT_DT
+                                ,AS_APPNT_TM
+<!--                                ,TRNSC_ID -->
+                                ,TRAN_STUS_CD
+                            ) VALUES (
+                               SVC0039T_ID_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{serviceNo}
+                               , #{appointmentDate}
+                               , #{appointmentTime}
+                               , 'N'
+                            )
+                </insert>                
         
         
         

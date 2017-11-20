@@ -67,6 +67,24 @@ public interface MSvcLogApiService {
 	void updateSuccessHsReStatus(String transactionId);
 	
 	void updateSuccessInsReStatus(String transactionId);
+
+	EgovMap getInstallResultByInstallEntryID(Map<String, Object> params);
+
+	String getUseridToMemid(Map<String, Object> params);
+
+	void savePrFailServiceLogs(Map<String, Object> params);
+
+	void saveInsFailServiceLogs(Map<String, Object> params);
+
+	void saveAsFailServiceLogs(Map<String, Object> params);
+
+	void saveHsFailServiceLogs(Map<String, Object> params);
+
+	void savePrReServiceLogs(Map<String, Object> params);
+
+	void saveInsReServiceLogs(Map<String, Object> params);
+
+	void saveHsReServiceLogs(Map<String, Object> params);
 	
 	
 

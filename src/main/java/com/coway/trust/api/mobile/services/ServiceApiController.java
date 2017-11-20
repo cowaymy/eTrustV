@@ -69,7 +69,9 @@ import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -88,6 +90,10 @@ public class ServiceApiController {
 
 	@Resource(name = "ASManagementListService")
 	private ASManagementListService ASManagementListService;
+
+	@Resource(name = "installationResultListService")
+	private InstallationResultListService installationResultListService;
+	
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -718,7 +724,96 @@ public class ServiceApiController {
 		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 
 	}
+
+
 	
+	
+	
+	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/installationResult_new", method = RequestMethod.POST)
+	public ResponseEntity<InstallationResultDto> installationResult_new(@RequestBody List<InstallationResultForm> installationResultForms)
+			throws Exception {		
+		String transactionId = "";
+		
+		Calendar cal = Calendar.getInstance();
+		 
+		//현재 년도, 월, 일
+		int year = cal.get ( cal.YEAR );
+		int month = cal.get ( cal.MONTH ) + 1 ;
+		int date = cal.get ( cal.DATE ) ;
+		String todate2 = (String.valueOf(date) +String.valueOf(month) + String.valueOf(year));
+		
+		
+		List<Map<String, Object>> insTransLogs = null;
+		SessionVO sessionVO1 = new SessionVO();
+		
+		insTransLogs = new ArrayList<>();
+		for (InstallationResultForm insService : installationResultForms) {
+			insTransLogs.addAll(insService.createMaps(insService));
+		}
+		
+		
+		for(int i=0 ; i < insTransLogs.size() ; i++ ){
+			
+			LOGGER.debug("asTransLogs11111 값 : {}", insTransLogs.get(i));
+			Map<String, Object> insApiresult = insTransLogs.get(i);  
+			
+			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+				MSvcLogApiService.saveInstallServiceLogs(insApiresult);
+			}
+
+			
+			// business service....
+//			// TODO : installResult 구현 필요.....
+
+			Map<String, Object> params = insTransLogs.get(i);  
+			//api setting 
+			String statusId = "4"; //installStatus
+			
+			EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
+			String userId = MSvcLogApiService.getUseridToMemid(params);
+			
+			sessionVO1.setUserId(Integer.parseInt(userId));
+			
+			params.put("installStatus",statusId);//4
+			params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
+			params.put("hidEntryId",installResult.get("installEntryId"));
+			params.put("hidCustomerId",installResult.get("custId"));
+			params.put("hidSalesOrderId",installResult.get("salesOrdId"));
+			params.put("hidStockIsSirim",installResult.get("isSirim"));
+			params.put("hidStockGrade",installResult.get("stkGrad"));
+			params.put("hidSirimTypeId",installResult.get("stkCtgryId"));
+			params.put("hiddeninstallEntryNo",installResult.get("installEntryNo"));
+			params.put("CTID",userId);
+			params.put("installDate",todate2);
+			params.put("updator", userId); 
+			params.put("nextCallDate","01-01-1999"); 
+			params.put("refNo1","0"); 
+			params.put("refNo2","0"); 
+
+			
+			//API in
+			params.put("hidSirimNo",insTransLogs.get(i).get("sirimNo"));
+			params.put("hidSerialNo",insTransLogs.get(i).get("serialNo"));
+			params.put("remark",insTransLogs.get(i).get("resultRemark"));
+			
+			LOGGER.debug("params11111 값 : {}", params);
+			installationResultListService.insertInstallationResult(params,sessionVO1 );	
+
+			
+			// TODO : 리턴할 dto 구현.
+//			transactionId = installationResultForms.getTransactionId();
+			transactionId = (String) params.get("transactionId");
+			
+			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+				MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+			}
+			
+		}	
+	
+		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+
+	}
 	
 	
 	@ApiOperation(value = "Display RC List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -785,9 +880,9 @@ public class ServiceApiController {
 
 		Map<String, Object> params = HSReAppointmtRequestForm.createMaps(hSReAppointmtRequestForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		if (RegistrationConstants.IS_INSERT_HSRE_LOG) {
+			MSvcLogApiService.saveHsReServiceLogs(params);
+		}
 		
 		
 //		// business service....
@@ -849,9 +944,9 @@ public class ServiceApiController {
 
 		Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
+			MSvcLogApiService.saveInsReServiceLogs(params);
+		}
 		
 		
 //		// business service....
@@ -880,9 +975,9 @@ public class ServiceApiController {
 
 		Map<String, Object> params = ProductReturnResultForm.createMaps(productReturnResultForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		if (RegistrationConstants.IS_INSERT_PRRE_LOG) {
+			MSvcLogApiService.savePrReServiceLogs(params);
+		}
 		
 		
 //		// business service....
@@ -904,7 +999,6 @@ public class ServiceApiController {
 	
 	
 	
-	////
 	
 	
 	
@@ -916,9 +1010,9 @@ public class ServiceApiController {
 
 		Map<String, Object> params = HSFailJobRequestForm.createMaps(hSFailJobRequestForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		if (RegistrationConstants.IS_INSERT_HSFAIL_LOG) {
+			MSvcLogApiService.saveHsFailServiceLogs(params);
+		}
 		
 		
 //		// business service....
@@ -947,9 +1041,9 @@ public class ServiceApiController {
 
 		Map<String, Object> params = ASFailJobRequestForm.createMaps(aSFailJobRequestForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		if (RegistrationConstants.IS_INSERT_ASFAIL_LOG) {
+			MSvcLogApiService.saveAsFailServiceLogs(params);
+		}
 		
 		
 //		// business service....
@@ -978,9 +1072,9 @@ public class ServiceApiController {
 
 		Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
+			MSvcLogApiService.saveInsFailServiceLogs(params);
+		}
 		
 		
 //		// business service....
@@ -1009,9 +1103,9 @@ public class ServiceApiController {
 
 		Map<String, Object> params = PRFailJobRequestForm.createMaps(pRFailJobRequestForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
+			MSvcLogApiService.savePrFailServiceLogs(params);
+		}
 		
 		
 //		// business service....

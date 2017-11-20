@@ -75,23 +75,11 @@ public class HSReAppointmtRequestForm {
 	public static Map<String, Object> createMaps(HSReAppointmtRequestForm hSReAppointmtRequestForm) {
 		
 		List<Map<String, Object>> list = new ArrayList<>();
-
-			Map<String, Object> map=null;
+		Map<String, Object> map=null;
 			
-			
-//				map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
-//				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-
-				// install Result
-				map.put("userId", hSReAppointmtRequestForm.getUserId());
-				map.put("salesOrderNo", hSReAppointmtRequestForm.getSalesOrderNo());
-				map.put("serviceNo", hSReAppointmtRequestForm.getServiceNo());
-				map.put("appointmentDate", hSReAppointmtRequestForm.getAppointmentDate());
-				map.put("appointmentTime", hSReAppointmtRequestForm.getAppointmentTime());
-
-//				list.add(map);
+		map = BeanConverter.toMap(hSReAppointmtRequestForm);
 				
-				return map;
+		return map;
 	}
 	
 }

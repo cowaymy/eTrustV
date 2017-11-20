@@ -91,5 +91,11 @@ public interface MSvcLogApiMapper {
 	void insertHsReServiceLog(String transactionId);
 
 	void insertInsReServiceLog(String transactionId);
+
+	void insertHsReServiceLog(Map<String, Object> params);
+
+	void insertInsReServiceLog(Map<String, Object> params);
+
+	void insertPrReServiceLog(Map<String, Object> params);
 	
 }

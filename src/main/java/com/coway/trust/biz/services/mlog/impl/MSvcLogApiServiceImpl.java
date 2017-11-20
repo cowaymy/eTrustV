@@ -387,13 +387,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
 	
 	
-	@Override
-	public void saveAsReServiceLogs(Map<String, Object> params) {
-		MSvcLogApiMapper.insertAsReServiceLog(params);			
-	}
 
-
-	
 	
 	@Override
 	public void updateSuccessAsReStatus(String transactionId) {
@@ -413,7 +407,74 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		
 	}
 	
+	@Override
+	public EgovMap getInstallResultByInstallEntryID(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getInstallResultByInstallEntryID(params);
+	}
 
+	@Override
+	public String getUseridToMemid(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getUseridToMemid(params);
+	}
+
+	@Override
+	public void savePrFailServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void saveInsFailServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void saveAsFailServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void saveHsFailServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void savePrReServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertPrReServiceLog(params);	
+	}
+
+	@Override
+	public void saveInsReServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertInsReServiceLog(params);		
+	}
+
+
+
+	@Override
+	public void saveHsReServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertHsReServiceLog(params);			
+	}
+	
+	
+	@Override
+	public void saveAsReServiceLogs(Map<String, Object> params) {
+		MSvcLogApiMapper.insertAsReServiceLog(params);			
+	}
+	
+	
+	
+	
+	
+	
+	
 /*	@Override
 	public void aSresultRegistration(List<Map<String, Object>> asTransLogs) {
 		// TODO Auto-generated method stub
