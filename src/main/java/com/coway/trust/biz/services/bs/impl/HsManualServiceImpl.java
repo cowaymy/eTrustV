@@ -459,6 +459,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	            
                 docSub.put("settleDate", params.get("settleDate"));
                 docSub.put("hidCodyId", params.get("hidCodyId"));
+                params.put("srvConfigId", docSub.get("srvConfigId"));
                    
 	            hsManualMapper.updateHsFilterSiriNo(docSub);
 	            
