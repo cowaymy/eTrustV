@@ -617,7 +617,7 @@ $(document).ready(function()
 	<th scope="row">Create Date</th>
 	<td>
 
-	<div class="date_set"><!-- date_set start -->
+	<div class="date_set w100p"><!-- date_set start -->
 	<p><input type="text" id="crtDtFrom" name="crtDtFrom" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>   
 	<span>To</span>
 	<p><input type="text" id="crtDtTo" name="crtDtTo" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
