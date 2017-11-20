@@ -679,9 +679,9 @@ function fn_createFile(){
                         <td>
                             <!-- date_set start -->
                             <div class="date_set w100p">
-                                <p><input id="createDt1" name="createDt1" type="text" title="Create Date From" placeholder="dd/MM/yyyy" class="j_date" readonly /></p>
+                                <p><input id="createDt1" name="createDt1" type="text" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
                                 <span>~</span>
-                                <p><input id="createDt2" name="createDt2" type="text" title="Create Date To" placeholder="dd/MM/yyyy" class="j_date" readonly /></p>
+                                <p><input id="createDt2" name="createDt2" type="text" title="Create Date To" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
                             </div>
                             <!-- date_set end -->
                         </td>
@@ -699,9 +699,9 @@ function fn_createFile(){
                         <td>
                            <!-- date_set start -->
                             <div class="date_set w100p">
-                                <p><input id="debitDt1" name="debitDt1" type="text" title="Debit Date From" placeholder="dd/MM/yyyy" class="j_date" readonly /></p>
+                                <p><input id="debitDt1" name="debitDt1" type="text" title="Debit Date From" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
                                 <span>~</span>
-                                <p><input id="debitDt2" name="debitDt2" type="text" title="Debit Date To" placeholder="dd/MM/yyyy" class="j_date" readonly /></p>
+                                <p><input id="debitDt2" name="debitDt2" type="text" title="Debit Date To" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
                             </div>
                             <!-- date_set end -->
                         </td>
