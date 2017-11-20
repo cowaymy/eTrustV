@@ -1116,7 +1116,7 @@
                       ,RESULT_IS_ADJ
                        )
 			    VALUES ( #{resultId}, #{docNo} , #{typeId},#{schdulId} ,#{salesOrdId} ,#{codyId}
-			                 ,TO_DATE(#{setlDt},'DD-MM-YYYY'),#{resultStusCodeId},#{failResnId} ,#{renColctId},#{whId}
+			                 ,TO_DATE(#{setlDt},'DD-MM-YYYY'),#{resultStusCodeId},#{failResnId} ,NVL(#{renColctId},0),#{whId}
 			                ,#{resultRem} ,SYSDATE,#{resultCrtUserId},SYSDATE ,#{resultUpdUserId}
 			                ,#{resultIsSync},#{resultIsEdit},#{resultStockUse},#{resultIsCurr},#{resultMtchId}
 			                ,#{resultIsAdj}
