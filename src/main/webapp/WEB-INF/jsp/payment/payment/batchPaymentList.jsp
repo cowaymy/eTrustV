@@ -565,7 +565,6 @@ var batchInfoLayout = [
     }
     function fn_clear(){
     	$("#searchForm")[0].reset();
-    	
     	$("#payMode").multipleSelect("checkAll");
         $("#confirmStatus").multipleSelect("setSelects", [44]);
         $("#batchStatus").multipleSelect("setSelects", [1]);
