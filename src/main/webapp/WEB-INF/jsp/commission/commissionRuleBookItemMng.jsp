@@ -1193,7 +1193,7 @@
 		<!-- <li><p class="btn_grid"><a href="#">저장</a></p></li> -->
 		</ul>
 		
-		<article class="grid_wrap2"><!-- grid_wrap start -->
+		<article class="grid_wrap2 mt10"><!-- grid_wrap start -->
 		<!-- grid_wrap start -->
 		<div id="grid_wrap2" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 		</article><!-- grid_wrap end -->
