@@ -81,7 +81,6 @@
     }];
 
     $(function () {
-
         roleGridId = GridCommon.createAUIGrid("roleGridId", gridRoleColumnLayout, "", "");
 
         // cellClick event.
@@ -563,16 +562,18 @@
 <section id="content"><!-- content start -->
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home"/></li>
-        <li>Sales</li>
-        <li>Order list</li>
+        <li>System</li>
+        <li>Role Management</li>
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="javascript:void(0);" class="click_add_on">System</a></p>
         <h2>Role Management</h2>
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:void (0);" id="btnSearch"><span class="search"></span><spring:message code='sys.btn.search'/></a></p>
             </li>
+</c:if>
             <li><p class="btn_blue"><a href="javascript:void (0);" id="btnClear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p>
             </li>
         </ul>
@@ -645,9 +646,13 @@
     <section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_grid"><a href="javascript:void(0);" id="btnViewPop"><spring:message code='sys.btn.view'/></a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a href="javascript:void(0);" id="btnUpdatePop"><spring:message code='sys.btn.edit'/></a></p></li>
             <li><p class="btn_grid"><a href="javascript:void(0);" id="btnAddPop"><spring:message code='sys.btn.add'/></a></p></li>
+</c:if>
         </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
