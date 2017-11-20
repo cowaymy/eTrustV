@@ -342,9 +342,9 @@ function commitFormSubmit() {
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Upload Bank Statement</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:showUploadPop();">New Upload</a></p></li>            
+            <li><p class="btn_blue"><a href="javascript:showUploadPop();">New Upload</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>     
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span>Clear</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
