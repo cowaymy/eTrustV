@@ -55,19 +55,19 @@
         
         //Magic Address
         fn_initAddress(); //init
-        CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
+        CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
          //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-        doGetCombo('/common/selectCodeList.do', '8', '','_cmbTypeId', 'S' , '');                              // Customer Type Combo Box
-        doGetCombo('/sales/customer/getNationList', '338' , '' ,'cmbNation' , 'S');        // Nationality Combo Box
-        doGetCombo('/common/selectCodeList.do', '95', '','_cmbCorpTypeId', 'S' , '');                      // Company Type Combo Box 
-        doGetCombo('/common/selectCodeList.do', '17', '','cmbInitials', 'S' , '');                             // Initials Combo Box
-        doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');                                 // Race Combo Box
+        doGetCombo('/common/selectCodeList.do', '8', '','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
+        doGetCombo('/sales/customer/getNationList', '338' , '' ,'_cmbNation_' , 'S');        // Nationality Combo Box
+        doGetCombo('/common/selectCodeList.do', '95', '','_cmbCorpTypeId_', 'S' , '');                      // Company Type Combo Box 
+        doGetCombo('/common/selectCodeList.do', '17', '','_cmbInitials_', 'S' , '');                             // Initials Combo Box
+        doGetCombo('/common/selectCodeList.do', '2', '','_cmbRace_', 'S' , '');                                 // Race Combo Box
     //    doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                         // Add Bank Type Combo Box
        // getAddrRelay('mstate' , '1' , 'state', '');
         
     
         //Enter Event
-        $('#searchSt').keydown(function (event) {  
+        $('#_searchSt_').keydown(function (event) {  
             if (event.which === 13) {    //enter  
                 fn_addrSearch();
             }  
@@ -77,17 +77,17 @@
  
     function fn_initAddress(){
         
-           $('#mCity').append($('<option>', { value: '', text: '2. City' }));
-           $('#mCity').val('');
-           $("#mCity").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+           $('#_mCity_').append($('<option>', { value: '', text: '2. City' }));
+           $('#_mCity_').val('');
+           $("#_mCity_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
            
-           $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
-           $('#mPostCd').val('');
-           $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+           $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
+           $('#_mPostCd_').val('');
+           $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
            
-           $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-           $('#mArea').val('');
-           $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+           $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+           $('#_mArea_').val('');
+           $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
            
     }
     
@@ -102,19 +102,19 @@
             
         }else{
             
-            $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mCity_").attr({"disabled" : false  , "class" : "w100p"});
             
-            $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
-            $('#mPostCd').val('');
-            $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
+            $('#_mPostCd_').val('');
+            $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
             
-            $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-            $('#mArea').val('');
-            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+            $('#_mArea_').val('');
+            $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
             
             //Call ajax
             var cityJson = {state : tempVal}; //Condition
-            CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
+            CommonCombo.make('_mCity_', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
         }
         
     }
@@ -125,25 +125,25 @@
         
         if('' == selVal || null == selVal){
            
-             $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
-             $('#mPostCd').val('');
-             $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+             $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
+             $('#_mPostCd_').val('');
+             $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
             
-             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-             $('#mArea').val('');
-             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+             $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+             $('#_mArea_').val('');
+             $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
             
         }else{
             
-            $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mPostCd_").attr({"disabled" : false  , "class" : "w100p"});
             
-            $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-            $('#mArea').val('');
-            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+            $('#_mArea_').val('');
+            $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
             
             //Call ajax
-            var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
-            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
+            var postCodeJson = {state : $("#_mState_").val() , city : tempVal}; //Condition
+            CommonCombo.make('_mPostCd_', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
         }
         
     }
@@ -155,17 +155,17 @@
         
         if('' == selVal || null == selVal){
            
-            $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-            $('#mArea').val('');
-            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+            $('#_mArea_').val('');
+            $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
             
         }else{
             
-            $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mArea_").attr({"disabled" : false  , "class" : "w100p"});
             
             //Call ajax
-            var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
-            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
+            var areaJson = {state : $("#_mState_").val(), city : $("#_mCity_").val() , postcode : tempVal}; //Condition
+            CommonCombo.make('_mArea_', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
         }
         
     }
@@ -254,7 +254,7 @@
     // 조회조건 combo box
 //    function f_multiCombo(){
 //        $(function() {
-//            $('#_cmbTypeId').change(function() {
+//            $('#_cmbTypeId_').change(function() {
 //            
 //            }).multipleSelect({
 //                selectAll: true, // 전체선택 
@@ -273,27 +273,27 @@
     // Customer Type 선택시 Company Type 변경 (Basic Info)
     function onChangeCompanyType(val){
 
-        if($("#_cmbTypeId").val() == '965'){
+        if($("#_cmbTypeId_").val() == '965'){
             $("select[name=cmbCorpTypeId]").removeAttr("disabled");
             $("select[name=cmbCorpTypeId]").removeClass("w100p disabled");
             $("select[name=cmbCorpTypeId]").addClass("w100p");
-            $("#_cmbCorpTypeId").val('1173');
-            $("#cmbNation").val('');
+            $("#_cmbCorpTypeId_").val('1173');
+            $("#_cmbNation_").val('');
             $("select[name=cmbNation]").addClass("w100p disabled");
             $("select[name=cmbNation]").attr('disabled', 'disabled');
-            $("#cmbRace").val('');
+            $("#_cmbRace_").val('');
             $("select[name=cmbRace]").addClass("w100p disabled");
             $("select[name=cmbRace]").attr('disabled', 'disabled');
-            $("#dob").val('');
+            $("#_dob_").val('');
 //            $("select[name=dob]").attr('readonly','readonly');
-            $("#dob").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'}); 
+            $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'}); 
             $("#genderForm").attr('disabled',true);
             $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
             $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
             $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
         }else{
-            $("#_cmbCorpTypeId").val('');
+            $("#_cmbCorpTypeId_").val('');
             $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
             $("select[name=cmbCorpTypeId]").addClass("w100p disabled");
             $("select[name=cmbNation]").removeClass("w100p disabled");
@@ -302,7 +302,7 @@
             $("select[name=cmbRace]").removeClass("w100p disabled");
             $("select[name=cmbRace]").addClass("w100p");
             $("select[name=cmbRace]").removeAttr("disabled");
-            $("#dob").attr({'disabled' : false , 'class' : 'j_date3 w100p'}); 
+            $("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'}); 
 //            $("select[name=dob]").removeAttr("readonly");
             $("#genderForm").removeAttr('disabled');
             $("input:radio[name='gender']").attr("disabled" , false);
@@ -396,129 +396,129 @@
     // Validation Check
     function fn_saveValidationCheck(){
     	console.log("1.  type Check");
-    	if($("#_cmbTypeId").val() == ''){
+    	if($("#_cmbTypeId_").val() == ''){
             Common.alert("Please select costomer type");
             return false;
         }
     	console.log("2.  nric Check");
-        if($("#nric").val() == ''){
+        if($("#_nric_").val() == ''){
             Common.alert("Please key in NRIC/Company number");
             return false;
-        }else if($("#nric").length > 12){
+        }else if($("#_nric_").length > 12){
             Common.alert("IC length More than 12 digit. </br> Are you sure you want to Save?");
         }else{
-            if(FormUtil.checkNum($("#nric"))){
+            if(FormUtil.checkNum($("#_nric_"))){
                 Common.alert("* Invalid nric number.");
                 return false;
             }
         }
         console.log("3.  name check");
-        if($("#custName").val() == ''){
+        if($("#_custName_").val() == ''){
             Common.alert("Please key in customer name");
             return false;
         }
         console.log("4.  tel check");
-        if($("#telM1").val() == '' && $("#telR").val() == '' && $("#telF").val() == '' && $("#telO").val() == '' ){
+        if($("#_telM1_").val() == '' && $("#_telR_").val() == '' && $("#_telF_").val() == '' && $("#_telO_").val() == '' ){
             Common.alert("Please key in at least one contact number");
             return false;
         }else{
-            if($("#telM1").val() != ''){
-                if(FormUtil.checkNum($("#telM1"))){
+            if($("#_telM1_").val() != ''){
+                if(FormUtil.checkNum($("#_telM1_"))){
                     Common.alert("* Invalid telephone number (Mobile).");
                     return false;
                 }
-                if($("#telM1").length > 20){
+                if($("#_telM1_").length > 20){
                     Common.alert("* Telephone number (Mobile) exceed length of 20.");
                     return false;
                 }
             }
-            if($("#telO").val() != ''){
+            if($("#_telO_").val() != ''){
 
-                   if(FormUtil.checkNum($("#telO"))){
+                   if(FormUtil.checkNum($("#_telO_"))){
                        Common.alert("* Invalid telephone number (Office).");
                        return false;
                    }
-                   if($("#telO").length > 20){
+                   if($("#_telO_").length > 20){
                        Common.alert("* Telephone number (Office) exceed length of 20.");
                        return false;
                    }
                }
-            if($("#telR").val() != ''){
-                   if(FormUtil.checkNum($("#telR"))){
+            if($("#_telR_").val() != ''){
+                   if(FormUtil.checkNum($("#_telR_"))){
                        Common.alert("* Invalid telephone number (Resistance).");
                    }
-                   if($("#telR").length > 20){
+                   if($("#_telR_").length > 20){
                        Common.alert("* Telephone number (Resistance) exceed length of 20.");
                        return false;
                    }
                }
-            if($("#telF").val() != ''){
-                   if(FormUtil.checkNum($("#telF"))){
+            if($("#_telF_").val() != ''){
+                   if(FormUtil.checkNum($("#_telF_"))){
                        Common.alert("* Invalid telephone number (Fax).");
                    }
-                   if($("#telF").length > 20){
+                   if($("#_telF_").length > 20){
                        Common.alert("* Telephone number (Fax) exceed length of 20.");
                        return false;
                    }
                }
         }
         console.log("5.  cmb type check");
-        if($("#_cmbTypeId").val() == '964'){
-            if($("#cmbNation").val() == ''){
+        if($("#_cmbTypeId_").val() == '964'){
+            if($("#_cmbNation_").val() == ''){
                 Common.alert("* Please select nationality.");
                 return false;
             }
-            if($("#dob").val() == ''){
+            if($("#_dob_").val() == ''){
                 Common.alert("* Please key in customer DOB.");
                    return false;
             }
             // Gender validation check (해야함.) * Customer is exist.
-            if($("#cmbRace").val() == ''){
+            if($("#_cmbRace_").val() == ''){
                 Common.alert("* Please select customer race.");
                    return false;
             }
-            if($("#cmbInitials").val() == ''){
+            if($("#_cmbInitials_").val() == ''){
                 Common.alert("* Please select contact person initial.");
                    return false;
             }
         }
         console.log("6.  detail addr check");
-        if($("#addrDtl").val() == ''){
+        if($("#_addrDtl_").val() == ''){
             Common.alert("Please key in the address.");
             return false;
         }
         
         console.log("7.  area check");
-        if($("#mArea").val() == ''){
+        if($("#_mArea_").val() == ''){
                 Common.alert("Please key in the area.");
                 return false;
         }
         
         console.log("8.  city check");
-        if($("#mCity").val() == ''){
+        if($("#_mCity_").val() == ''){
             Common.alert("Please key in the city.");
             return false;
         }
         
         console.log("9.  postcode check");
-        if($("#mPostCd").val() == ''){
+        if($("#_mPostCd_").val() == ''){
             Common.alert("Please key in the postcode.");
             return false;
         }
         
         console.log("10.  state check");
-        if($("#mState").val() == ''){
+        if($("#_mState_").val() == ''){
             Common.alert("Please key in the state.");
             return false;
         }
         
         console.log("11.  cust name check");
-        if($("#asCustName").val() == ''){
+        if($("#_asCustName_").val() == ''){
             Common.alert("Please key in customer name.");
             return false;
         }
         console.log("12.  contact check");
-        if($("#asTelM").val() == '' && $("#asTelR").val() == '' && $("#asTelF").val() == '' && $("#asTelO").val() == '' ){
+        if($("#_asTelM_").val() == '' && $("#_asTelR_").val() == '' && $("#_asTelF_").val() == '' && $("#_asTelO_").val() == '' ){
             Common.alert("Please key in at least one contact number");
             return false;
         }
@@ -530,13 +530,13 @@
     }
     
     function fn_copyCustInfo(){
-        $("#asCustName").val($("#custName").val());
-        $("#asTelM").val($("#telM1").val());
-        $("#asTelR").val($("#telR").val());
-        $("#asTelO").val($("#telO").val());
-        $("#asTelF").val($("#telF").val());
-        $("#asExt").val($("#ext").val());
-        $("#asEmail").val($("#email").val());
+        $("#_asCustName_").val($("#_custName_").val());
+        $("#_asTelM_").val($("#_telM1_").val());
+        $("#_asTelR_").val($("#_telR_").val());
+        $("#_asTelO_").val($("#_telO_").val());
+        $("#_asTelF_").val($("#_telF_").val());
+        $("#_asExt_").val($("#_ext_").val());
+        $("#_asEmail_").val($("#email").val());
     }
     
     function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem){
@@ -574,24 +574,24 @@
         
         if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
             
-            $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
-            $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
-            $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
-            $("#mState").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mArea_").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mCity_").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mPostCd_").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mState_").attr({"disabled" : false  , "class" : "w100p"});
             
             //Call Ajax
            
-            CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
+            CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
             
             var cityJson = {state : mstate}; //Condition
-            CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
+            CommonCombo.make('_mCity_', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
             
             var postCodeJson = {state : mstate , city : mcity}; //Condition
-            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
+            CommonCombo.make('_mPostCd_', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
             
             var areaJson = {groupCode : mpostcode};
             var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
-            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
+            CommonCombo.make('_mArea_', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
             
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();
@@ -603,10 +603,10 @@
     //Get Area Id
     function fn_getAreaId(){
         
-        var statValue = $("#mState").val();
-        var cityValue = $("#mCity").val();
-        var postCodeValue = $("#mPostCd").val();
-        var areaValue = $("#mArea").val();
+        var statValue = $("#_mState_").val();
+        var cityValue = $("#_mCity_").val();
+        var postCodeValue = $("#_mPostCd_").val();
+        var areaValue = $("#_mArea_").val();
         
         
         
@@ -663,14 +663,14 @@
 //    }
     
     function emailCheck(){
-        if($("#email").val() == ""){
+        if($("#_email_").val() == ""){
             return
         }else{
-            if(FormUtil.checkEmail($("#email").val())){
+            if(FormUtil.checkEmail($("#_email_").val())){
 //              $("input[name='email']").focus();
                 Common.alert("Invalid email address.");
                 
-                $("#email").val('');
+                $("#_email_").val('');
                 
                 return false;
             }
@@ -678,9 +678,9 @@
     }
     
     function asEmailCheck(){
-        if(FormUtil.checkEmail($("#asEmail").val())){
+        if(FormUtil.checkEmail($("#_asEmail_").val())){
             Common.alert("Invalid email address.");
-            $("#asEmail").val('');
+            $("#_asEmail_").val('');
 //            $("#asEmail").focus();
             return false;
         }
@@ -698,7 +698,7 @@
     }
     
     function fn_addrSearch(){
-        if($("#searchSt").val() == ''){
+        if($("#_searchSt_").val() == ''){
             Common.alert("Please search.");
             return false;
         }
@@ -709,7 +709,7 @@
         
     	//Dup Check
     	//Init Field
-    	var nricObj = {cmbTypeId : $("#_cmbTypeId").val() , nric : $("#nric").val()};
+    	var nricObj = {cmbTypeId : $("#_cmbTypeId_").val() , nric : $("#_nric_").val()};
     	
     	var ajaOtp = {
     			async : false
@@ -724,17 +724,17 @@
     		}
     	}, '', ajaOtp);
     	if(isDup == true){
-    		$("#nric").val('');
+    		$("#_nric_").val('');
     		Common.alert(msg);
     		return;
     	}
         /****** Validation ********/
         //Init Filed
-        $("#dob").val('');
+        $("#_dob_").val('');
         console.log("inputVal : " + inputVal);
         var rtnVal = "";
         //1.number check
-        if(FormUtil.checkNum($("#nric")) == true){
+        if(FormUtil.checkNum($("#_nric_")) == true){
             console.log("Not Numberic.");
             return;
         }
@@ -785,7 +785,7 @@
         }
         rtnVal = day + "/" + month + "/" + year;
         console.log(" create dob : " + rtnVal);
-        $("#dob").val(rtnVal);
+        $("#_dob_").val(rtnVal);
         
         
         /***** GENDER ******/
@@ -839,54 +839,54 @@
         <tr>
             <th scope="row">Customer Type<span class="must">*</span></th>
             <td>
-                <select class="w100p"  id="_cmbTypeId" name="cmbTypeId" onchange="onChangeCompanyType(this.value)">
+                <select class="w100p"  id="_cmbTypeId_" name="cmbTypeId" onchange="onChangeCompanyType(this.value)">
                 </select>
             </td>
             <th scope="row">Company Type</th>
             <td id="corpTypeForm">
-                <select class="w100p disabled" id="_cmbCorpTypeId" name="cmbCorpTypeId" disabled="disabled">
+                <select class="w100p disabled" id="_cmbCorpTypeId_" name="cmbCorpTypeId" disabled="disabled">
                 </select>
             </td>
         </tr>
         <tr>
             <th scope="row">Initials<span class="must">*</span></th>
             <td>
-                <select class="w100p" id="cmbInitials" name="cmbInitials"></select>
+                <select class="w100p" id="_cmbInitials_" name="cmbInitials"></select>
             </td>
             <th scope="row">Customer Name<span class="must">*</span></th>
             <td>
-                <input type="text" title="" id="custName" name="custName" placeholder="Customer Name" class="w100p" />
+                <input type="text" title="" id="_custName_" name="custName" placeholder="Customer Name" class="w100p" />
             </td>
         </tr>
         <tr>
             <th scope="row">NRIC/Company No<span class="must">*</span></th>
             <td>
-                <input type="text" title="" id="nric" name="nric" maxlength="18"  placeholder="NRIC/Company No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
+                <input type="text" title="" id="_nric_" name="nric" maxlength="18"  placeholder="NRIC/Company No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
             </td>
             <th scope="row">GST Registration No</th>
             <td>
-                <input type="text" title="" id="gstRgistNo" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
+                <input type="text" title="" id="_gstRgistNo_" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
             </td>
         </tr>
         <tr>
             <th scope="row">Nationality <span class="brown_text">#</span></th>
             <td>
-                <select class="w100p disabled" id="cmbNation" name="cmbNation" disabled="disabled">
+                <select class="w100p disabled" id="_cmbNation_" name="cmbNation" disabled="disabled">
                 </select>
             </td>
             <th scope="row">Passport Expire</th>
             <td>
-                <input type="text" title="Create start Date" id="pasSportExpr" name="pasSportExpr" placeholder="DD/MM/YYYY" class="j_date" />
+                <input type="text" title="Create start Date" id="_pasSportExpr_" name="pasSportExpr" placeholder="DD/MM/YYYY" class="j_date" />
             </td>
         </tr>
         <tr>
             <th scope="row">DOB <span class="brown_text">#</span></th>
             <td>
-                <input type="text" id="dob" name="dob" title="Create start Date" placeholder="Date Of Brith" class="j_date3 w100p"  disabled="disabled"/>
+                <input type="text" id="_dob_" name="dob" title="Create start Date" placeholder="Date Of Brith" class="j_date3 w100p"  disabled="disabled"/>
             </td>
             <th scope="row">Visa Expire</th>
             <td>
-                <input type="text" id="visaExpr" name="visaExpr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+                <input type="text" id="_visaExpr_" name="visaExpr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
             </td>
         </tr>
         <tr>
@@ -899,44 +899,44 @@
             </td>
             <th scope="row">Email(1)</th>
             <td>
-              <input type="text" id="email" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" />
+              <input type="text" id="_email_" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" />
             </td>
         </tr>
         <tr>
             <th scope="row">Race <span class="brown_text">#</span></th>
             <td>
-                <select class="w100p disabled" id="cmbRace" name="cmbRace" disabled="disabled">
+                <select class="w100p disabled" id="_cmbRace_" name="cmbRace" disabled="disabled">
                 </select>
             </td>
             <th scope="row">Tel(Mobile)(1)<span class="must">*</span></th>
             <td>
-                <input type="text" id="telM1" name="telM1" maxlength="20" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
+                <input type="text" id="_telM1_" name="telM1" maxlength="20" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
             </td>
         </tr>
         <tr>
             <th scope="row">Tel(Residence)(1)<span class="must">*</span></th>
             <td>
-            <input type="text" id="telR" name="telR" maxlength="20" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+            <input type="text" id="_telR_" name="telR" maxlength="20" title="" placeholder="Telephone Number (Residence)" class="w100p" />
             </td>
             <th scope="row">Tel(Fax)(1)<span class="must">*</span></th>
             <td>
-            <input type="text" id="telF" name="telF" maxlength="20" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+            <input type="text" id="_telF_" name="telF" maxlength="20" title="" placeholder="Telephone Number (Fax)" class="w100p" />
             </td>
         </tr>
         <tr>
             <th scope="row">Tel(Office)(1)<span class="must">*</span></th>
             <td>
-            <input type="text" id="telO" name="telO" maxlength="20" title="" placeholder="Telephone Number (Office)" class="w100p" />
+            <input type="text" id="_telO_" name="telO" maxlength="20" title="" placeholder="Telephone Number (Office)" class="w100p" />
             </td>
             <th scope="row">Ext No.</th>
             <td>
-            <input type="text" id="ext" name="ext" title="" placeholder="Extension Number" class="w100p" />
+            <input type="text" id="_ext_" name="ext" title="" placeholder="Extension Number" class="w100p" />
             </td>
         </tr>
         <tr>
             <th scope="row">Remark</th>
             <td colspan="3">
-            <textarea cols="20" rows="5" id="rem" name="rem" placeholder="Remark"></textarea>
+            <textarea cols="20" rows="5" id="_rem_" name="rem" placeholder="Remark"></textarea>
             </td>
         </tr>
     </tbody>
@@ -970,51 +970,51 @@
             <tr>
                 <th scope="row">Area search<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <input type="text" title="" id="_searchSt_" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 </td>
             </tr>
             <tr>
                 <th scope="row" >Address Detail<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="_addrDtl_" name="addrDtl" placeholder="Detail Address" class="w100p"  />
                 </td>
             </tr>
             <tr>
                 <th scope="row" >Street</th>
                 <td colspan="3">
-                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="_streetDtl_" name="streetDtl" placeholder="Detail Address" class="w100p"  />
                 </td>
             </tr>
             <tr>
                <th scope="row">Area(4)<span class="must">*</span></th>
                 <td colspan="3">
-                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+                <select class="w100p" id="_mArea_"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
                 </td>
             </tr>
             <tr>
                  <th scope="row">City(2)<span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+                <select class="w100p" id="_mCity_"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
                 </td>
                 <th scope="row">PostCode(3)<span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                <select class="w100p" id="_mPostCd_"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
                 </td>
             </tr>
             <tr>
                 <th scope="row">State(1)<span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+                <select class="w100p" id="_mState_"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
                 </td>
                 <th scope="row">Country<span class="must">*</span></th>
                 <td>
-                <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+                <input type="text" title="" id="_mCountry_" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
                 </td>
             </tr>
             <tr>
                 <th scope="row">Remarks</th>
                 <td colspan="3">
-                <textarea cols="20" rows="5" id="addrRem" name="addrRem" placeholder="Remark"></textarea>
+                <textarea cols="20" rows="5" id="_addrRem_" name="addrRem" placeholder="Remark"></textarea>
                 </td>
             </tr>
         </tbody>
@@ -1048,37 +1048,37 @@
 <tr>
     <th scope="row">Name<span class="must">*</span></th>
     <td colspan="3">
-    <input type="text" id="asCustName" name="asCustName" title="" placeholder="Name" class="w100p" />
+    <input type="text" id="_asCustName_" name="asCustName" title="" placeholder="Name" class="w100p" />
     </td>
 </tr>
 <tr>
     <th scope="row">Tel(Mobile)(2)<span class="must">*</span></th>
     <td>
-    <input type="text" id="asTelM" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
+    <input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
     </td>
     <th scope="row">Tel(Residence)(2)<span class="must">*</span></th>
     <td>
-    <input type="text" id="asTelR" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+    <input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" />
     </td>
 </tr>
 <tr>
     <th scope="row">Tel(Office)(2)<span class="must">*</span></th>
     <td>
-    <input type="text" id="asTelO" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" />
+    <input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" />
     </td>
     <th scope="row">Ext</th>
     <td>
-    <input type="text" id="asExt" name="asExt" title="" placeholder="Extension Number" class="w100p" />
+    <input type="text" id="_asExt_" name="asExt" title="" placeholder="Extension Number" class="w100p" />
     </td>
 </tr>
 <tr>
     <th scope="row">Tel(Fax)(2)<span class="must">*</span></th>
     <td>
-    <input type="text" id="asTelF" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+    <input type="text" id="_asTelF_" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" />
     </td>
     <th scope="row">Email(2)</th>
     <td>
-    <input type="text" id="asEmail" name="asEmail" title="" onBlur="javascript:asEmailCheck()" placeholder="Email" class="w100p" />
+    <input type="text" id="_asEmail_" name="asEmail" title="" onBlur="javascript:asEmailCheck()" placeholder="Email" class="w100p" />
     </td>
 </tr>
 </tbody>
