@@ -168,7 +168,10 @@ $(document).ready(function() {
             }else{
                Common.alert(result.message, fn_parentReload);
             }
-            
+            if('${callParam}' == 'ORD_REGISTER_CNTC_OWN') {
+                fn_loadCntcPerson(result.data);
+                $("#_close1").click();
+            }
         });
     }
     

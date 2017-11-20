@@ -102,7 +102,12 @@
 
    function fn_customerContactInfoAddAjax(){
         Common.ajax("GET", "/sales/customer/insertCareContactInfo.do",$("#addForm").serialize(), function(result) {
-            Common.alert(result.message);	
+            Common.alert(result.message);
+            
+            if('${callParam}' == 'ORD_REGISTER_CNTC_ADD') {
+                fn_loadSrvCntcPerson(result.data);
+                $("#_close1").click();
+            }
         });
    }
 </script>

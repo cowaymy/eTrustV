@@ -377,6 +377,11 @@
                 
                 Common.alert("<spring:message code='sys.msg.success'/><br/>" + " Customer ID : " + result , fn_winClose);
 
+                if('${callPrgm}' == 'ORD_REGISTER') {
+                    alert(result);
+                    $('#custId').val(result);
+                    fn_selectCustInfo();
+                }           
             }, function(jqXHR, textStatus, errorThrown) {
                 Common.alert("실패하였습니다.");
                 console.log("실패하였습니다.");

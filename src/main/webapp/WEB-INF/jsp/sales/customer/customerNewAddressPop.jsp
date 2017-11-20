@@ -235,6 +235,14 @@
         	}else{
         		Common.alert(result.message, fn_parentReload);
         	}
+            if('${callParam}' == 'ORD_REGISTER_BILL_MTH') {
+                fn_loadMailAddr(result.data);
+                $("#_close1").click();
+            }
+            if('${callParam}' == 'ORD_REGISTER_INST_ADD') {
+                fn_loadInstallAddr(result.data);
+                $("#_close1").click();
+            }
         });
     }
 	 
