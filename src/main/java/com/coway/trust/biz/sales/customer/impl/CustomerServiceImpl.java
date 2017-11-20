@@ -639,9 +639,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @exception Exception
 	 */
 	@Override
-	public void insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception {
-		
+	public int insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception {		
 		customerMapper.insertCustomerAddressInfoAf(params);
+		return (int) params.get("custAddId");
 	}
 	
 	
@@ -653,9 +653,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @exception Exception
 	 */
 	@Override
-	public void insertCustomerContactAddAf(Map<String, Object> params) throws Exception {
+	public int insertCustomerContactAddAf(Map<String, Object> params) throws Exception {
 		customerMapper.insertCustomerContactAddAf(params);
-		
+		return (int) params.get("custCntcId");
 	}
 
 

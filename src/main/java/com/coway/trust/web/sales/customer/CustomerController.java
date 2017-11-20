@@ -100,8 +100,9 @@ public class CustomerController {
 	 * @return
 	 */
 	@RequestMapping(value = "/customerRegistPop.do")
-	public String insertPop(ModelMap model){
+	public String insertPop(@RequestParam Map<String, Object> params, ModelMap model){
 		LOGGER.info("##### customerRegist START #####");
+		model.put("callPrgm", params.get("callPrgm"));
 		return "sales/customer/customerRegistPop";
 	}
 	
@@ -1382,12 +1383,13 @@ public class CustomerController {
 			
 			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 			params.put("userId", sessionVO.getUserId());
-			customerService.insertCustomerAddressInfoAf(params	);
+			int custAddId = customerService.insertCustomerAddressInfoAf(params	);
 			
 			// 결과 만들기 예.
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.SUCCESS);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(custAddId);
 			
 			return ResponseEntity.ok(message);
 		}
@@ -1403,12 +1405,13 @@ public class CustomerController {
 			
 			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 			params.put("userId", sessionVO.getUserId());
-			customerService.insertCustomerContactAddAf(params	);
+			int custCntcId = customerService.insertCustomerContactAddAf(params);
 			
 			// 결과 만들기 예.
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.SUCCESS);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(custCntcId);
 			
 			return ResponseEntity.ok(message);
 		}
@@ -1446,6 +1449,7 @@ public class CustomerController {
 			message.setCode(AppConstants.SUCCESS);
 //			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 			message.setMessage("New contact successfully saved.");
+			message.setData(custCareCntId);
 			
 			return ResponseEntity.ok(message);
 		}

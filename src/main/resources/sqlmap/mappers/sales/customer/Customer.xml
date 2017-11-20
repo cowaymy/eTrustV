@@ -1948,6 +1948,9 @@
 			                        #{addrDtl},
 			                        #{streetDtl}
 			                        )
+      <selectKey keyProperty="custAddId" resultType="Integer" order="AFTER">
+        SELECT SAL0023D_CUST_ADD_ID_SEQ.CURRVAL FROM DUAL
+      </selectKey>
     </insert>
     
     <insert id="insertCustomerContactAddAf" parameterType="Map">
@@ -1999,6 +2002,9 @@
                                            SYSDATE ,
                                            #{userId} , <!--SESSION  -->
                                            #{cntcExpno} )
+      <selectKey keyProperty="custCntcId" resultType="Integer" order="AFTER">
+        SELECT SAL0027D_CUST_CNTC_ID_SEQ.CURRVAL FROM DUAL
+      </selectKey>
     </insert>
     
     <insert id="insertCustomerBankAddAf" parameterType="Map">

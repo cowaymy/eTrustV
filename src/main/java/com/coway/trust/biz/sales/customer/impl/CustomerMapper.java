@@ -505,7 +505,7 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author
 	 */
-	void insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
+	int insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
 	
 	
 	/**
@@ -514,7 +514,7 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author
 	 */
-	void insertCustomerContactAddAf(Map<String, Object> params) throws Exception;
+	int insertCustomerContactAddAf(Map<String, Object> params) throws Exception;
 	
 
 
