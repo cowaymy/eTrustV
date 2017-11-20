@@ -69,6 +69,7 @@ import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -94,6 +95,9 @@ public class ServiceApiController {
 	@Resource(name = "installationResultListService")
 	private InstallationResultListService installationResultListService;
 	
+	
+	@Resource(name = "hsManualService")
+	private HsManualService hsManualService;
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -291,6 +295,19 @@ public class ServiceApiController {
 		String transactionId = "";
 		List<Map<String, Object>> heartLogs = null;
 		List<Map<String, Object>> hsTransLogs1 = null;
+		SessionVO sessionVO = new SessionVO();
+		
+		Calendar cal = Calendar.getInstance();
+		 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String strToday = sdf.format(cal.getTime());
+        
+		//현재 년도, 월, 일
+		int year = cal.get ( cal.YEAR );
+		int month = cal.get ( cal.MONTH ) + 1 ;
+		int date = cal.get ( cal.DATE ) ;
+		
+		String todate2 = (String.valueOf(date) +String.valueOf(month) + String.valueOf(year));
 		
 		// mobile 에서 받은 데이터를 로그 테이블에 insert......
 		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
@@ -323,100 +340,60 @@ public class ServiceApiController {
 				
 				Map<String, Object>   hfterServiceDetail = null;
 				List<Map<String, Object>> paramsDetail = HeartServiceResultDetailForm.createMaps((List<HeartServiceResultDetailForm>) hsTransLogs1.get(i).get("heartDtails"));
+				List<Object> paramsDetailList =                   HeartServiceResultDetailForm.createMaps1((List<HeartServiceResultDetailForm>) hsTransLogs1.get(i).get("heartDtails"));
+				
+				List<Object> paramsDetailObj = (List<Object>) hsTransLogs1.get(i).get("heartDtails");
 
-
-				
-				
-				Map<String , Object> paramsFilter = paramsDetail.get(i);
-				paramsDetail.get(i).put("filterCode", paramsDetail.get(i).get("partsType"));
-				paramsDetail.get(i).put("exchangeId", "aaaa-bbbb");
-				paramsDetail.get(i).put("filterChangeQty", paramsDetail.get(i).get("filterCode"));
-				paramsDetail.get(i).put("filterBarcdSerialNo", paramsDetail.get(i).get("filterChangeQty"));
-
-
-				
-				
-				
 				Map<String, Object> params = hsTransLogs1.get(i);  
-//				Map<String, Object> servasMasterMap = asTransLogs.get(i);
+				params.put("updList", paramsDetail);
 				
 				
-				Map<String, Object> getAsBasic = MSvcLogApiService.getAsBasic(params);
+				String userId = MSvcLogApiService.getUseridToMemid(params);
+				sessionVO.setUserId(Integer.parseInt(userId));
 				
-				params.put("AS_ENTRY_ID", getAsBasic.get("asEntryId"));
-				params.put("AS_SO_ID", getAsBasic.get("asSoId"));
-				params.put("AS_CT_ID", getAsBasic.get("asCtId"));
-				params.put("AS_RESULT_STUS_ID", '4');
-				params.put("AS_FAIL_RESN_ID", getAsBasic.get("as_failResnId"));
-				params.put("AS_REN_COLCT_ID", 0);
-				params.put("AS_CMMS", getAsBasic.get("asCmms"));
-				params.put("AS_BRNCH_ID", getAsBasic.get("asBrnchId"));
-				params.put("AS_WH_ID", getAsBasic.get("asWhId"));
-				params.put("AS_RESULT_REM", getAsBasic.get("resultRemark"));
-				params.put("AS_MALFUNC_ID", getAsBasic.get("asMalfuncId"));
-				params.put("AS_MALFUNC_RESN_ID", getAsBasic.get("asMalfuncResnId"));
-				params.put("AS_DEFECT_GRP_ID", 0);
-				params.put("AS_DEFECT_PART_GRP_ID", 0);
-				params.put("AS_WORKMNSH", getAsBasic.get("asWorkmnsh"));
-				params.put("AS_FILTER_AMT", getAsBasic.get("asFilterAmt"));
-				params.put("AS_ACSRS_AMT", 0);
-				params.put("AS_TOT_AMT", String.valueOf(getAsBasic.get("asTotAmt")));
-				params.put("AS_RESULT_IS_SYNCH", 0);
-				params.put("AS_RCALL", 0);
-				params.put("AS_RESULT_STOCK_USE", getAsBasic.get("asResultStockUse"));
-				params.put("AS_RESULT_TYPE_ID", 457);
-				params.put("AS_RESULT_IS_CURR", 1);
-				params.put("AS_RESULT_MTCH_ID", 0);
-				params.put("AS_RESULT_NO_ERR", "");
-				params.put("AS_ENTRY_POINT", 0);
-				params.put("AS_WORKMNSH_TAX_CODE_ID", 0);
-				params.put("AS_WORKMNSH_TXS", 0);
-				params.put("AS_RESULT_MOBILE_ID", 0);
-				params.put("AS_RESULT_NO", getAsBasic.get("asResultNo"));
-				params.put("AS_RESULT_ID", getAsBasic.get("asResultId"));
-				params.put("AS_NO", getAsBasic.get("asno"));
-				params.put("HC_REM", " ");
 				
-				//004
-				params.put("AS_NO", hsTransLogs1.get(i).get("serviceNo"));//asTransLogs
-				params.put("AS_DEFECT_TYPE_ID",  hsTransLogs1.get(i).get("defectTypeId")); //asTransLogs
-				params.put("AS_DEFECT_ID", hsTransLogs1.get(i).get("defectId")); //asTransLogs
-				params.put("AS_DEFECT_PART_ID", hsTransLogs1.get(i).get("defectPartId")); //asTransLogs
-				params.put("AS_DEFECT_DTL_RESN_ID", hsTransLogs1.get(i).get("defectDetailReasonId"));//asTransLogs
-				params.put("AS_SLUTN_RESN_ID", hsTransLogs1.get(i).get("solutionReasonId"));//asTransLogs
-//				params.put("AS_SETL_DT", todate2);
-//				params.put("AS_SETL_TM", curTime);
+				Map<String, Object> getHsBasic = MSvcLogApiService.getHsBasic(params);
+				//api setting
+				params.put("hidschdulId", getHsBasic.get("schdulId"));
+				params.put("hidSalesOrdId", getHsBasic.get("salesOrdId"));
+				params.put("hidCodyId", userId);
+				params.put("settleDate", todate2);
+				params.put("resultIsSync", '0');
+				params.put("resultIsEdit", '0');
+				params.put("resultStockUse", '1');
+				params.put("resultIsCurr", '1');
+				params.put("resultMtchId", '0');
+				params.put("resultIsAdj", '0');
+				params.put("cmbStatusType","4");
+				params.put("renColctId", "0");
 
-				//
-				params.put("IN_HUSE_REPAIR_REM", hsTransLogs1.get(i).get("inHouseRepairRemark"));//asTransLogs
-				params.put("IN_HUSE_REPAIR_REPLACE_YN", hsTransLogs1.get(i).get("inHouseRepairReplacementYN"));//asTransLogs
-				params.put("IN_HUSE_REPAIR_PROMIS_DT", hsTransLogs1.get(i).get("inHouseRepairPromisedDate"));//asTransLogs
-				params.put("IN_HUSE_REPAIR_GRP_CODE", hsTransLogs1.get(i).get("inHouseRepairProductGroupCode"));//asTransLogs
-				params.put("IN_HUSE_REPAIR_PRODUCT_CODE", hsTransLogs1.get(i).get("inHouseRepairProductCode"));//asTransLogs
-				params.put("IN_HUSE_REPAIR_SERIAL_NO", hsTransLogs1.get(i).get("inHouseRepairSerialNo"));//asTransLogs
-				params.put("RESULT_CUST_NAME", hsTransLogs1.get(i).get("resultCustName"));//asTransLogs
-				params.put("RESULT_MOBILE_NO", hsTransLogs1.get(i).get("resultIcMobileNo"));//asTransLogs
-				params.put("RESULT_REP_EMAIL_NO", hsTransLogs1.get(i).get("resultReportEmailNo"));//asTransLogs
-				params.put("RESULT_ACEPT_NAME", hsTransLogs1.get(i).get("resultAcceptanceName"));//asTransLogs
-				params.put("SGN_DT", hsTransLogs1.get(i).get("signData"));//asTransLogs
+				//			api 넘어온거				
+				params.put("remark",hsTransLogs1.get(i).get("resultRemark"));
+				
+/*				api 추가된거	
+				params.put("temperateSetng",hsTransLogs1.get(i).get("temperatureSetting"));
+				params.put("nextAppntDt",hsTransLogs1.get(i).get("nextAppointmentDate"));
+				params.put("remark",hsTransLogs1.get(i).get("nextAppointmentTime"));
+				params.put("ownerCode",hsTransLogs1.get(i).get("ownerCode"));
+				params.put("resultCustName",hsTransLogs1.get(i).get("resultCustName"));
+				params.put("resultMobileNo",hsTransLogs1.get(i).get("resultIcMobileNo"));
+				params.put("resultRptEmailNo",hsTransLogs1.get(i).get("resultReportEmailNo"));
+				params.put("resultAceptName",hsTransLogs1.get(i).get("resultAcceptanceName"));
+				params.put("sgnDt",hsTransLogs1.get(i).get("signData"));
+//				params.put("remark",hsTransLogs1.get(i).get("signRegDate"));
+//				params.put("remark",hsTransLogs1.get(i).get("signRegTime"));
+				params.put("remark",hsTransLogs1.get(i).get("transactionId"));
+*/				
+				
 				
 				LOGGER.debug("params22222 값 : {}", params);
-				
-				
 
 				
-				
-				
-				
+// service to value setting				
 				Map<String, Object>   asResultInsert = new HashMap();
+				LOGGER.debug("hsResultInsert1111111111 값 : {}", asResultInsert);
 				
-				asResultInsert.put("asResultM", params);
-				asResultInsert.put("updator",getAsBasic.get("userId"));
-				asResultInsert.put("add", paramsDetail);				 
-				
-				LOGGER.debug("asResultInsert1111111111 값 : {}", asResultInsert);
-				
-				ASManagementListService.asResult_insert(asResultInsert);
+				hsManualService.addIHsResult(params,paramsDetailList,sessionVO);
 				
 
 				
@@ -424,11 +401,8 @@ public class ServiceApiController {
 		}   		
 		
 		
-
-		
 		
 //***************///
-		
 		
 		
 		
@@ -887,7 +861,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
+//		MSvcLogApiService.insertProductReturnResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
@@ -951,7 +925,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
+//		MSvcLogApiService.insertProductReturnResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
@@ -982,7 +956,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
+//		MSvcLogApiService.insertProductReturnResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
