@@ -278,10 +278,10 @@ public class AdaptorServiceImpl implements AdaptorService {
 		returnValue = returnValue.replaceAll("$", "%24");
 		returnValue = returnValue.replaceAll("^", "%5E");
 		returnValue = returnValue.replaceAll("_", "%5F");
-		returnValue = returnValue.replaceAll("{", "%7B");
+		returnValue = returnValue.replaceAll("\\{", "%7B");
 		returnValue = returnValue.replaceAll("}", "%7D");
 		returnValue = returnValue.replaceAll("|", "%7C");
-		returnValue = returnValue.replaceAll("[", "%5B");
+		returnValue = returnValue.replaceAll("\\[", "%5B");
 		returnValue = returnValue.replaceAll("]", "%5D");
 		return returnValue;
 	}

@@ -158,6 +158,13 @@ $(document).ready(function() {
        //SMS
        if($("#_updSmsChk").is(":checked") == true){
     	   $("#_isChkSms").val("1");
+    	   
+    	   //msg setting
+    	   var realMsg =   $("#_updSmsMsg").val();
+    	   $("#_hiddenUpdSmsMsg").val(realMsg); //msg contents
+    	   var salesmanPhNum = $("#_editSalesManTelMobile").val();
+    	   $("#_hiddenSalesMobile").val(salesmanPhNum);
+    	   
        }else{
     	   $("#_isChkSms").val("0");
        }
@@ -794,7 +801,8 @@ function chgTab(tabNm) {
 
 <!-- check box(sms) -->
 <input type="hidden" name="isChkSms" id="_isChkSms"> 
-
+<input type="hidden" name="hiddenUpdSmsMsg" id="_hiddenUpdSmsMsg">
+<input type="hidden" name="hiddenSalesMobile" id="_hiddenSalesMobile">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

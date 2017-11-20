@@ -1,6 +1,7 @@
 package com.coway.trust.web.sales.ccp;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -385,14 +386,19 @@ public class CcpCalculateController {
 		//Send SMS
 		int chkSms =  Integer.parseInt(String.valueOf(params.get("isChkSms")));
 		String smsResultMSg = "";
+		List<String> mobileNumList = new ArrayList<String>();
 		if(chkSms > 0){
 			SmsVO sms = new SmsVO();
 			
-			LOGGER.info(" Message Contents : " + (String)params.get("updSmsMsg"));
-			LOGGER.info(" Mobile Phone Number : " + (String)params.get("editSalesManTelMobile"));
+			LOGGER.info(" Message Contents : " + (String)params.get("hiddenUpdSmsMsg"));
+			LOGGER.info(" Mobile Phone Number : " + (String)params.get("hiddenSalesMobile"));
+			//mobileNumList.add((String) params.get("hiddenSalesMobile"));
+			//TODO Test Phone Number (주석해제)
+			mobileNumList.add("11111111");  
 			
-			sms.setMessage((String) params.get("updSmsMsg"));
-			sms.setMobiles((String) params.get("editSalesManTelMobile"));  
+			sms.setMessage((String) params.get("hiddenUpdSmsMsg"));
+			sms.setMobiles(mobileNumList);  
+			//send SMS
 			SmsResult smsResult = adaptorService.sendSMS(sms);
 			
 			smsResultMSg += "Total Send Message : " + smsResult.getReqCount() + "</br>";
