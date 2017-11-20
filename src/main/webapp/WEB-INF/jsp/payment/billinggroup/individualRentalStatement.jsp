@@ -215,7 +215,7 @@ hideViewPopup=function(val){
                         </td>
                         <th scope="row">Statement Period</th>
                         <td>
-                           <input type="text" name="period" title="기준년월" class="j_date2 w100p" />
+                           <input type="text" name="period" title="기준년월" class="j_date2 w100p" placeholder="MM/YYYY"/>
                         </td>
                     </tr>
                     <tr>

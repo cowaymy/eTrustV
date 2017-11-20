@@ -171,7 +171,7 @@ function fn_generateInvoice(){
                        </td>                       
                        <th scope="row">Invoice Period</th>
                        <td>
-                            <input type="text" id="invoicePeriod" name="invoicePeriod"  title="Invoice Period" placeholder="Invoice Period" class="j_date2 w100p" />
+                            <input type="text" id="invoicePeriod" name="invoicePeriod"  title="Invoice Period" placeholder="Invoice Period" class="j_date2 w100p" placeholder="MM/YYYY"/>
                        </td>                                       
                     </tr>
                     <tr>
