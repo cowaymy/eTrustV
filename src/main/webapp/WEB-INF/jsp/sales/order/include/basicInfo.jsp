@@ -46,15 +46,23 @@
 <tr>
     <th scope="row">PV</th>
     <td>${orderDetail.basicInfo.ordPv}</td>
+    <th scope="row">Normal Price/RPF</th>
+    <td>${orderDetail.basicInfo.norAmt}</td>
     <th scope="row">Price/RPF</th>
     <td>${orderDetail.basicInfo.ordAmt}</td>
-    <th scope="row">Rental Fees</th>
+</tr>
+<tr>
+    <th scope="row">Discount Period</th>
+    <td>${orderDetail.basicInfo.pormoPeriodType}</td>
+    <th scope="row">Normal<br>Rental Fees</th>
+    <td>${orderDetail.basicInfo.norRntFee}</td>
+    <th scope="row">Promotion Rental Fees</th>
     <td>${orderDetail.basicInfo.mthRentalFees}</td>
 </tr>
 <tr>
     <th scope="row">Installment Duration</th>
     <td>${orderDetail.basicInfo.installmentDuration}</td>
-    <th scope="row">PV Month(Month/Year)</th>
+    <th scope="row">PV Month</br>(Month/Year)</th>
     <td>${orderDetail.basicInfo.ordPvMonth}/${orderDetail.basicInfo.ordPvYear}</td>
     <th scope="row">Rental Status</th>
     <td>${orderDetail.basicInfo.rentalStatus}</td>

@@ -364,7 +364,18 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		basicInfo.put("mthRentalFees",       mthRentalFees);
 		basicInfo.put("installmentDuration", installmentDuration);
 		basicInfo.put("rentalStatus",        rentalStatus);
-		basicInfo.put("obligtYear", 		 Integer.valueOf(obligationYear)+ " " + "mth");		
+		basicInfo.put("obligtYear", 		 Integer.valueOf(obligationYear)+ " " + "mth");
+		
+		if(SalesConstants.PROMO_DISC_TYPE_EQUAL == CommonUtils.intNvl(basicInfo.get("promoDiscPeriodTp"))) {
+			basicInfo.put("PORMO_PERIOD_TYPE", basicInfo.get("promoDiscPeriodTpNm"));
+		}
+		else if(SalesConstants.PROMO_DISC_TYPE_EARLY == CommonUtils.intNvl(basicInfo.get("promoDiscPeriodTp"))
+				|| SalesConstants.PROMO_DISC_TYPE_LATE == CommonUtils.intNvl(basicInfo.get("promoDiscPeriodTp"))) {
+			basicInfo.put("PORMO_PERIOD_TYPE", (String)basicInfo.get("promoDiscPeriodTpNm") + "(" + basicInfo.get("promoDiscPeriodTp") + ")" );
+		}
+		else {
+			basicInfo.put("PORMO_PERIOD_TYPE", "-");
+		}
 	}
 	
 	private String convert12Tm(String TM) {

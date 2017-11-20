@@ -86,6 +86,12 @@ public class SalesConstants {
     public static final int PROMO_APP_TYPE_CODE_ID_RSVM   = 2289; //Rental SVM
     public static final int PROMO_APP_TYPE_CODE_ID_FIL    = 2290; //Expired Filter
     
+    //Promotion Period Type
+    public static final int PROMO_DISC_TYPE_EQUAL = 2293; //EQUAL
+    public static final int PROMO_DISC_TYPE_EARLY = 2294; //EARLY
+    public static final int PROMO_DISC_TYPE_LATE = 2295; //LATE
+    
+    
 	//STATUS CODE
 	public static final int STATUS_CODE_ID_ACT = 1; //ACT
 	public static final String STATUS_CODE_NAME_ACT = "ACT"; //ACT
