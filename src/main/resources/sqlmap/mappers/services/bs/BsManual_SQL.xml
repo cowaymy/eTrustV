@@ -2166,7 +2166,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 							                         Extent2.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
 							                         Extent2.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
 							                         Extent3.STK_CODE STK_CODE  ,
-							                         Extent3.STK_DESC STK_DESC
+							                         Extent3.STK_DESC STK_DESC 
 							         FROM SAL0090D Extent1
 							                JOIN SAL0087D Extent2   ON Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID
 							                LEFT JOIN SYS0026M Extent3   ON Extent2.SRV_FILTER_STK_ID = Extent3.STK_ID
@@ -2193,7 +2193,9 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 								       Distinct1.C3 C3  ,
 								       Distinct1.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
 								       Distinct1.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
-								       Distinct1.SRV_FILTER_PRIOD SRV_FILTER_PRIOD  ,
+								       Distinct1.SRV_FILTER_PRIOD SRV_FILTER_PRIOD ,
+								       Distinct1.SRV_FILTER_LAST_SERIAL SRV_FILTER_LAST_SERIAL ,
+                                       Distinct1.SRV_FILTER_PREV_SERIAL SRV_FILTER_PREV_SERIAL ,
 								       Distinct1.C4 C4  ,
 								       Distinct1.C5 C5  ,
 								       Distinct1.C6 C6
@@ -2201,7 +2203,9 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 								                         Extent3.SRV_FILTER_STK_ID SRV_FILTER_STK_ID  ,
 								                         Extent3.SRV_FILTER_PRIOD SRV_FILTER_PRIOD  ,
 								                         Extent3.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
-								                         Extent3.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
+								                         Extent3.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID , 
+								                         Extent3.SRV_FILTER_LAST_SERIAL SRV_FILTER_LAST_SERIAL,
+                                                         Extent3.SRV_FILTER_PREV_SERIAL SRV_FILTER_PREV_SERIAL,
 								                         Extent4.STK_CODE STK_CODE  ,
 								                         Extent4.STK_DESC STK_DESC  ,
 								                         1 C1  ,

@@ -565,7 +565,7 @@ public class HsManualController {
 			List<EgovMap>  orderActiveFilter = hsManualService.selectOrderActiveFilter(params);
 
 			model.put("orderActiveFilter", orderActiveFilter);
-
+			logger.debug("111111111111111 : {}", orderActiveFilter);
 			return ResponseEntity.ok(orderActiveFilter);
 		}
 

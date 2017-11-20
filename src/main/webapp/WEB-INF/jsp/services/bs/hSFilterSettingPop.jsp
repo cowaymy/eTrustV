@@ -118,7 +118,18 @@
                     dataField : "c3",
                     headerText : "CreateBy",
                     width : 180                                                                                
-            }];
+	                },{                        
+	                dataField : "srvFilterLastSerial",
+	                headerText : "Last Serial",
+	                width : 180                                                                                
+	                },{                        
+		            dataField : "srvFilterPrevSerial",
+		            headerText : "Prev Serial",
+		            width : 180                                                                                
+	              }
+                
+                
+                ];
             // 그리드 속성 설정
             var gridPros = {
                 // 페이징 사용       

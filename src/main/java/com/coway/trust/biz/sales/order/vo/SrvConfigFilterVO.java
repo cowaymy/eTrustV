@@ -34,6 +34,28 @@ public class SrvConfigFilterVO implements Serializable {
 	private String srvFilterUpdDt;
 
 	private int srvFilterUpdUserId;
+	
+	private int srvFilterLastSerial;
+	
+	private int srvFilterPrevSerial;
+	
+	public int getSrvFilterLastSerial() {
+		return srvFilterLastSerial;
+	}
+
+	public void setSrvFilterLastSerial(int srvFilterLastSerial) {
+		this.srvFilterLastSerial = srvFilterLastSerial;
+	}
+
+	public int getSrvFilterPrevSerial() {
+		return srvFilterPrevSerial;
+	}
+
+	public void setSrvFilterPrevSerial(int srvFilterPrevSerial) {
+		this.srvFilterPrevSerial = srvFilterPrevSerial;
+	}
+
+
 
 	public SrvConfigFilterVO() {
 	}
