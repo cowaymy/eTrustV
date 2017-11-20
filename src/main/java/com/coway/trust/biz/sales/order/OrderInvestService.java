@@ -210,7 +210,7 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
-	String bsMonthCheck(Map<String, Object> params);
+	int bsMonthCheck(Map<String, Object> params);
 	
 	void saveInvest(Map<String, Object> params);
 }

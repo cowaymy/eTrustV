@@ -353,21 +353,16 @@ public class OrderInvestController {
 		
 		String retMsg = AppConstants.MSG_SUCCESS;
 		
+		logger.debug("!@###### :::::::::::::::::::: : "+params.toString());
+		
 		Map<String, Object> map = new HashMap();
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 		
-		try{
-
-			orderInvestService.saveCallResultOk(params);
-			
-		}catch(Exception ex){
-			retMsg = AppConstants.MSG_FAIL;
-		}finally{
-			map.put("msg", retMsg);
-		}
-		
+		orderInvestService.saveCallResultOk(params);
+		logger.debug("!@###### :::::::::::::::::::: : "+params.get("callResultStus"));
+		map.put("resultStatus", params.get("callResultStus"));
 		return ResponseEntity.ok(map);
 	}
 	
@@ -378,9 +373,9 @@ public class OrderInvestController {
 		
 		Map<String, Object> saveOkMap = new HashMap();
 		
-//		String regSaveMsg = orderInvestService.bsMonthCheck(params);
-		String regSaveMsg = "0";
-		
+		int regSaveMsg = orderInvestService.bsMonthCheck(params);
+//		String regSaveMsg = "0";
+		logger.debug("!@###### :::::::::::::::::::: : "+regSaveMsg);
 		saveOkMap.put("regSaveMsg", regSaveMsg);
 		
 		
@@ -390,14 +385,25 @@ public class OrderInvestController {
 	
 	@RequestMapping(value = "/bsMonthCheckOKPop.do")
 	public String bsMonthCheckOKPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.addAttribute("salesOrdNo", params.get("saveSalesOrdNo"));
+		model.addAttribute("saveSalesOrdNo", params.get("saveSalesOrdNo"));
+		model.addAttribute("callResultInvId", params.get("callResultInvId"));
+		model.addAttribute("invCallEntryId", params.get("invCallEntryId"));
+		model.addAttribute("saveSalesOrdId", params.get("saveSalesOrdId"));
+		model.addAttribute("callResultStus", params.get("callResultStus"));
+		model.addAttribute("callResultRem", params.get("callResultRem"));
+		
 		return "sales/order/orderInvestCallResultRegSavePop";
 	}
 	
 	
 	@RequestMapping(value = "/bsMonthCheckNoPop.do")
 	public String bsMonthCheckNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.addAttribute("salesOrdNo", params.get("saveSalesOrdNo"));
+		model.addAttribute("saveSalesOrdNo", params.get("saveSalesOrdNo"));
+		model.addAttribute("callResultInvId", params.get("callResultInvId"));
+		model.addAttribute("invCallEntryId", params.get("invCallEntryId"));
+		model.addAttribute("saveSalesOrdId", params.get("saveSalesOrdId"));
+		model.addAttribute("callResultStus", params.get("callResultStus"));
+		model.addAttribute("callResultRem", params.get("callResultRem"));
 		return "sales/order/orderInvestCallResultRegSave2Pop";
 	}
 	

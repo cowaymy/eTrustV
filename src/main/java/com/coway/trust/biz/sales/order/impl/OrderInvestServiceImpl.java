@@ -1,6 +1,7 @@
 package com.coway.trust.biz.sales.order.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -273,56 +274,148 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	@Override
 	public void saveCallResultOk(Map<String, Object> params){
 		
-		EgovMap getInvId = orderInvestMapper.saveCallResultSearchFirst(params);
-		params.put("salesOrdId", getInvId.get("salesOrdId"));
+		Map<String, Object> saveParam = new HashMap<String, Object>();
+		saveParam.put("salesOrdId", params.get("saveSalesOrdId"));
+		saveParam.put("userId", params.get("userId"));
+		// INV : 29, REG : 28, SUS : 2
+		int callResultStus = Integer.parseInt((String)params.get("callResultStus"));	
 		
-		// parameter setting (investigationM)
-		params.put("callEntryId", getInvId.get("invCallEntryId"));
-		params.put("callStusId", 1);
-		params.put("callFdbckId", 0);
-		params.put("callCtId", 0);
-		params.put("callRem", params.get("callResultSusRem"));
-		//params.put("callCrtUserId", params.get("userId"));
-		params.put("callCrtUserId", 999999);
-		params.put("callCrtUserIdDept", 0);
-		params.put("callHcId", 0);
-		params.put("callRosAmt", 0);
-		params.put("callSms", 0);
-		params.put("callSmsRem", " ");
-		//params.put("updUserId", params.get("userId"));
-		params.put("updUserId", 999999);
-		
-		orderSuspensionMapper.insertCCR0007DSuspend(params);
-		
-		EgovMap callEntry = orderInvestMapper.saveCallResultSearchSecond(params);
-		
-		EgovMap callResult = orderInvestMapper.saveCallResultSearchThird(params);
-		params.put("resultId", callResult.get("callResultId"));
-		
-		orderExchangeMapper.updateCCR0006D(params);
-		
-		if(params.get("callResultStus") == "28"){
-			EgovMap rentalSchemeInfo = orderInvestMapper.saveCallResultSearchFourth(params);
-			params.put("renSchId", rentalSchemeInfo.get("renSchId"));
-			params.put("rentalSchemeStusId", "REG");
-			orderInvestMapper.updateSAL0071D(params);
+		//INV, REG, SUS 공통
+			int getCallResultIdMaxSeq = orderExchangeMapper.getCallResultIdMaxSeq();
+			saveParam.put("getCallResultIdMaxSeq", getCallResultIdMaxSeq);
+			saveParam.put("callEntryId", params.get("invCallEntryId"));
+			saveParam.put("callStusId", 1);
+			saveParam.put("callDt", SalesConstants.DEFAULT_DATE);
+			saveParam.put("callActnDt", SalesConstants.DEFAULT_DATE);
+			saveParam.put("callFdbckId", 0);
+			saveParam.put("callCtId", 0);
+			saveParam.put("callRem", params.get("callResultSusRem"));
+			saveParam.put("callCrtUserId", params.get("userId"));
+			saveParam.put("callCrtUserIdDept", 0);
+			saveParam.put("callHcId", 0);
+			saveParam.put("callRosAmt", 0);
+			saveParam.put("callSms", 0);
+			saveParam.put("callSmsRem", " ");
+			saveParam.put("updUserId", params.get("userId"));
+			orderExchangeMapper.insertCCR0007D(saveParam);	// Call Result
 			
-			EgovMap investigateInfo = orderInvestMapper.saveCallResultSearchFifth(params);
+			EgovMap callEntry = orderInvestMapper.saveCallResultSearchSecond(saveParam);
+			
+			EgovMap callResult = orderInvestMapper.saveCallResultSearchThird(saveParam);
+			saveParam.put("resultId", callResult.get("callResultId"));
+			
+			saveParam.put("soExchgUpdUserId", params.get("userId"));
+			saveParam.put("soExchgNwCallEntryId", params.get("invCallEntryId"));
+			orderExchangeMapper.updateCCR0006D(saveParam);	//Call Entry
+		//INV, REG, SUS 공통
+		
+		if(callResultStus == 2){//SUS
+			EgovMap rentalSchemeInfo = orderInvestMapper.saveCallResultSearchFourth(saveParam);
+			saveParam.put("renSchId", rentalSchemeInfo.get("renSchId"));
+			saveParam.put("rentalSchemeStusId", "SUS");
+			orderInvestMapper.updateSAL0071D(saveParam);	//RentalScheme
+			
+			saveParam.put("callResultInvId", params.get("callResultInvId"));
+			EgovMap investigateInfo = orderInvestMapper.saveCallResultSearchFifth(saveParam);
+			saveParam.put("callResultStus", callResultStus);
 			orderInvestMapper.updateSAL0049D(params);
 			
+			saveParam.put("docNoId", 77);
+			String getDocId = orderInvestMapper.getDocNo(saveParam);
 			
-			params.put("prgrsId", 5);
-			params.put("refId", 0);
-			params.put("isLok", 0);
-			orderInvestMapper.insertSalesOrdLog(params);
+			int getSusIdSeq = orderInvestMapper.getSusIdSeq();
+			
+			saveParam.put("getSusIdSeq", getSusIdSeq);
+			saveParam.put("susStusId", 33);
+			saveParam.put("susCallEntryId", 0);
+			saveParam.put("refAmt", 0);
+			saveParam.put("susNo", getDocId);
+			saveParam.put("susLastBillMonth", 0);
+			saveParam.put("susLastBillYear", 0);
+			saveParam.put("susLastBillNo", 0);
+			saveParam.put("susCurrBillInstNo", 0);
+			saveParam.put("susFromFb", 0);
+			orderInvestMapper.insertSusSAL0096D(saveParam);
+			
+			int getSusInPersonIdSeq = orderInvestMapper.getSusInPersonIdSeq();
+			saveParam.put("getSusInPersonIdSeq", getSusInPersonIdSeq);
+			saveParam.put("susInPersonStusId", 1);
+			saveParam.put("susUserId", params.get("inchargeNm"));
+			orderInvestMapper.insertSusSAL0097D(saveParam);
+			
+			int getCallEntryIdMaxSeq = orderExchangeMapper.getCallEntryIdMaxSeq();
+			saveParam.put("getCallEntryIdMaxSeq", getCallEntryIdMaxSeq);
+			saveParam.put("typeId", 767);
+			saveParam.put("stusCodeId", 33);
+			saveParam.put("resultId", 0);
+			saveParam.put("docId", getSusIdSeq);
+			saveParam.put("isWaitForCancl", 0);
+			saveParam.put("hapyCallerId", null);
+			saveParam.put("callDt", SalesConstants.DEFAULT_DATE);
+			saveParam.put("callActnDt", SalesConstants.DEFAULT_DATE);
+			saveParam.put("callCrtUserId", params.get("userId"));
+			orderCancelMapper.insertCancelCCR0006D(saveParam);
+			
+			EgovMap CCR0006DInfo = orderInvestMapper.callResultSearchCCR0006D(saveParam);
+			saveParam.put("infoCallEntryId", CCR0006DInfo.get("callEntryId"));
+			orderInvestMapper.updateEntIdSAL0096D(saveParam);
+			
+			
+			int getCallResultIdMaxSeq2 = orderExchangeMapper.getCallResultIdMaxSeq();
+			saveParam.put("getCallResultIdMaxSeq", getCallResultIdMaxSeq2);
+			saveParam.put("callEntryId", CCR0006DInfo.get("callEntryId"));
+			saveParam.put("callStusId", 33);
+			saveParam.put("callDt", SalesConstants.DEFAULT_DATE);
+			saveParam.put("callActnDt", SalesConstants.DEFAULT_DATE);
+			saveParam.put("callFdbckId", 0);
+			saveParam.put("callCtId", 0);
+			saveParam.put("callRem", params.get("callResultSusRem"));
+			saveParam.put("callCrtUserId", params.get("userId"));
+			saveParam.put("callCrtUserIdDept", 0);
+			saveParam.put("callHcId", 0);
+			saveParam.put("callRosAmt", 0);
+			saveParam.put("callSms", 0);
+			saveParam.put("callSmsRem", " ");
+			saveParam.put("updUserId", params.get("userId"));
+			orderExchangeMapper.insertCCR0007D(saveParam);
+			
+			saveParam.put("prgrsId", 10);
+			saveParam.put("refId", 0);
+			saveParam.put("isLok", 1);
+			orderInvestMapper.insertSalesOrdLog(saveParam);
+		}else if(callResultStus == 28){//REG
+			EgovMap rentalSchemeInfo = orderInvestMapper.saveCallResultSearchFourth(saveParam);
+			saveParam.put("renSchId", rentalSchemeInfo.get("renSchId"));
+			saveParam.put("rentalSchemeStusId", "REG");
+			orderInvestMapper.updateSAL0071D(saveParam);	//RentalScheme
+			
+			//ticket null이 아니면 해야하는 로직이 있는것 같음. null인 데이터만 있어서 못함.
+			//EgovMap ticketInfo = orderInvestMapper.callResultSearchCCTicket(saveParam);
+			
+			saveParam.put("callResultInvId", params.get("callResultInvId"));
+			EgovMap investigateInfo = orderInvestMapper.saveCallResultSearchFifth(saveParam);
+			saveParam.put("callResultStus", callResultStus);
+			orderInvestMapper.updateSAL0049D(params);
+			
+			saveParam.put("prgrsId", 5);
+			saveParam.put("refId", 0);
+			saveParam.put("isLok", 0);
+			orderInvestMapper.insertSalesOrdLog(saveParam);
 		}
+		
+		
 	}
 	
 	@Override
-	public String bsMonthCheck(Map<String, Object> params) {
+	public int bsMonthCheck(Map<String, Object> params) {
 		int BSStatusID = 0;
         int BSFailReasonID = 0;
-        String hidIsBSMonth = null;
+        int hidIsBSMonth = 0;
+        
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat transFormatYY = new SimpleDateFormat("yyyymmdd");
+        String ddMMCurDate =  transFormatYY.format(new Date());
+        
 		
         EgovMap getInvId = orderInvestMapper.saveCallResultSearchFirst(params);
         
@@ -338,11 +431,11 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 			}
 			
 			if (BSStatusID == 1 || BSStatusID == 4 || BSStatusID == 21) {
-				hidIsBSMonth = "0";
+				hidIsBSMonth = 0;
             } else if (BSStatusID == 10 && BSFailReasonID == 1770) {
-            	hidIsBSMonth = "1";
+            	hidIsBSMonth = 1;
             } else if (BSStatusID == 10 && BSFailReasonID != 1770) {
-            	hidIsBSMonth = "0";
+            	hidIsBSMonth = 0;
             } else {
             	EgovMap getBSScheduleStusCodeId = orderInvestMapper.getBSScheduleStusCodeId(params);
             	if(getBSScheduleStusCodeId != null){
@@ -350,18 +443,39 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
             		int CheckExistLastBSStatusID = (int)getBSScheduleStusCodeId.get("stusCodeId");
             		
             		if(CheckExistLastBSStatusID == 21){
-            			hidIsBSMonth = "1";
+            			hidIsBSMonth = 1;
             		}else if(CheckExistLastBSStatusID == 0){
             			EgovMap monthYearChk = orderInvestMapper.monthYearChk(params);
+            			String srvStartDt = (String)monthYearChk.get("srvStartDt");
+            			String srvExprDt = (String)monthYearChk.get("srvExprDt");
+            			if(srvStartDt != null && srvExprDt != null){
+            				String srvStartDtre = srvStartDt.substring(1,4) + srvStartDt.substring(6, 7) + srvStartDt.substring(9, 10);
+            				String srvExprDtre = srvExprDt.substring(1,4) + srvExprDt.substring(6, 7) + srvExprDt.substring(9, 10);
+            				if((Integer.parseInt(srvStartDtre) <= Integer.parseInt(ddMMCurDate))&&(Integer.parseInt(srvExprDtre) >= Integer.parseInt(ddMMCurDate))){
+            					hidIsBSMonth = 1;
+            				}
+            			}
+            		}else{
+            			EgovMap monthYearChk = orderInvestMapper.monthYearChk(params);
+            			String srvStartDt = (String)monthYearChk.get("srvStartDt");
+            			String srvExprDt = (String)monthYearChk.get("srvExprDt");
+            			String srvFreq = (String)monthYearChk.get("srvFreq");
+            			String year = (String)monthYearChk.get("year");
+            			String month = (String)monthYearChk.get("month");
+            			
             			params.put("EX_YYYY", monthYearChk.get("year"));
             			params.put("EX_MM", monthYearChk.get("month"));
+
             			int monthBetweenCnt = orderInvestMapper.monthBetween(params);
             			
-            			// Visual Studio -- module.GetServiceViewByOrderID 로직하기.
-            			
-            			String todayYY = new SimpleDateFormat("yyyy").format(new Date());
-            			String todayMM = new SimpleDateFormat("mm").format(new Date());
-            			
+            			if(srvStartDt != null && srvExprDt != null){
+            				String srvStartDtre = srvStartDt.substring(1,4) + srvStartDt.substring(6, 7) + srvStartDt.substring(9, 10);
+            				String srvExprDtre = srvExprDt.substring(1,4) + srvExprDt.substring(6, 7) + srvExprDt.substring(9, 10);
+            				String srvFreqre = srvFreq.substring(1,4) + srvFreq.substring(6, 7) + srvFreq.substring(9, 10);
+            				if((Integer.parseInt(srvStartDtre) <= Integer.parseInt(ddMMCurDate))&&(Integer.parseInt(srvExprDtre) >= Integer.parseInt(ddMMCurDate)) && (Integer.parseInt(srvFreqre) >= (Integer.parseInt(year)+ Integer.parseInt(month)+01)) ){
+            					hidIsBSMonth = 1;
+            				}
+            			}
             		}
             		
             	}

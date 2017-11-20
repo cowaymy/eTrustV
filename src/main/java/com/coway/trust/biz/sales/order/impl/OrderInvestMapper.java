@@ -277,4 +277,18 @@ public interface OrderInvestMapper {
 	
 	int monthBetween(Map<String, Object> params);
 	
+	int getSusIdSeq();
+	
+	void insertSusSAL0096D(Map<String, Object> params);
+	
+	int getSusInPersonIdSeq();
+	
+	void insertSusSAL0097D(Map<String, Object> params);
+	
+	EgovMap callResultSearchCCR0006D(Map<String, Object> params) ;
+	
+	void updateEntIdSAL0096D(Map<String, Object> params);
+	
+	EgovMap callResultSearchCCTicket(Map<String, Object> params) ;
+	
 }
