@@ -114,10 +114,10 @@ public class CcpAgreementController {
 	}
 	
 	
-	@RequestMapping(value = "/insertCcpAgreementSearch.do") 
-	public String insertCcpAgreementSearch (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	@RequestMapping(value = "/newCcpAgreementSearchPop.do") 
+	public String newCcpAgreementSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
-		return "sales/ccp/ccpAgreementNewSearch";
+		return "sales/ccp/ccpAgreementNewSearchPop";
 	}
 	
 	
@@ -132,8 +132,8 @@ public class CcpAgreementController {
 	}
 	
 	
-	@RequestMapping(value = "/getOrderDetailInfo.do", method = RequestMethod.POST)
-	public String getOrderDetailInfo (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+	@RequestMapping(value = "/newCcpAgreementSearchResultPop.do", method = RequestMethod.POST)
+	public String newCcpAgreementSearchResultPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
 		int prgrsId = 0;
 		EgovMap orderDetail = null;
@@ -144,7 +144,7 @@ public class CcpAgreementController {
 		model.put("orderDetail", orderDetail);
 		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
 		
-		return "sales/ccp/ccpAgreementNewSearchResult";
+		return "sales/ccp/ccpAgreementNewSearchResultPop";
 	}
 	
 	
