@@ -163,7 +163,7 @@ function f_multiCombo() {
     </td>
     <th scope="row">Create Date</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"   id="dpCreateDate" name="dpCreateDate" />
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"   id="dpCreateDate" name="dpCreateDate" />
     </td>
 </tr>
 <tr>
@@ -185,13 +185,11 @@ function f_multiCombo() {
 </tr>
 <tr>
     <th scope="row">Status</th>
-    <td colspan="5">
-    <select class="multy_select" multiple="multiple" id="ddlBookStatus" name="ddlBookStatus[]">
-<!--         <option value="1">Active</option>
-        <option value="36">Close</option>
-        <option value="67">Lost</option> -->
+    <td>
+    <select class="w100p" multiple="multiple" id="ddlBookStatus" name="ddlBookStatus[]">
     </select>
     </td>
+    <td colspan="4"></td>
 </tr>
 </tbody>
 </table><!-- table end -->
