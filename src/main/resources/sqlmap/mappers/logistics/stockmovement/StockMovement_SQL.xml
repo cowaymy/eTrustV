@@ -153,8 +153,8 @@
                                     , SYSDATE
                                     , to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
                                     , #{dochdertxt}
-                                    , #{flocation}
                                     , #{tlocation}
+                                    , #{flocation}
                                     , 'O'
                                     , #{userId}
 					                , SYSDATE

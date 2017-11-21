@@ -31,27 +31,26 @@ var serialGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyno"       ,headerText:"Delivery No"                 ,width:120    ,height:30                },
-                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
-                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
+                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 },
                      {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
                      {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                      {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
-                     {dataField:"delydt"       ,headerText:"Delivery Date"               ,width:120    ,height:30 },
-                     {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
+                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
+                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
+                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
+                     {dataField:"delydt"       ,headerText:"Delivery Date"               ,width:120    ,height:30 },
+                     {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
                      {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
                      {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"             ,width:120    ,height:30 , editalble:true},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
-                     {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30},
-                     //{dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:false}
-                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 }
+                     {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30}
                      ];
                      
                      

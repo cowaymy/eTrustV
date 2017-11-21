@@ -57,7 +57,7 @@ public class StockListController {
 		return "logistics/Stock/StockList";
 	}
 
-	@RequestMapping(value = "/StockList.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/StockList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectStockList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String[] cate = request.getParameterValues("cmbCategory");
@@ -65,6 +65,8 @@ public class StockListController {
 		String[] status = request.getParameterValues("cmbStatus");
 		String stkNm = request.getParameter("stkNm");
 		String stkCd = request.getParameter("stkCd");
+		
+		System.out.println("69Line ::::: " + stkCd);
 
 		Map<String, Object> smap = new HashMap();
 		smap.put("cateList", cate);

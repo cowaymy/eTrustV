@@ -93,11 +93,13 @@ public class TotalStockController {
 		public ResponseEntity<Map> PosItemList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String searchMatCode = request.getParameter("searchMatCode");
-		String searchLoc = request.getParameter("searchLoc");
+		//String searchLoc = request.getParameter("searchLoc");
 		String[] searchType = request.getParameterValues("searchType");
 		String[] searchCtgry = request.getParameterValues("searchCtgry");
 		String[] searchlocgb = request.getParameterValues("searchlocgb");
+		String[] searchLoc = request.getParameterValues("searchLoc");
 		String LocCode = request.getParameter("LocCode");
+		String searchlocgrade = request.getParameter("searchlocgrade");
 		
 		String slocnm   = request.getParameter("searchLocNm");
 		String sstocknm = request.getParameter("searchMatName");
@@ -109,6 +111,7 @@ public class TotalStockController {
 		smap.put("searchType", searchType);
 		smap.put("searchCtgry", searchCtgry);
 		smap.put("searchlocgb", searchlocgb);
+		smap.put("searchlocgrade", searchlocgrade);
 		smap.put("slocnm", slocnm);
 		smap.put("sstocknm", sstocknm);
 		

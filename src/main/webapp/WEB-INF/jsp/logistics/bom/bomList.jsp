@@ -6,10 +6,12 @@
 /* 커스텀 칼럼 스타일 정의 */
 .aui-grid-user-custom-left {
     text-align:left;
+    background:#fff;
 }
 /* 커스텀 칼럼 스타일 정의 */
 .aui-grid-user-custom-right{
     text-align:right;
+    background:#fff;
 }
 
 /* 커스컴 disable 스타일*/
@@ -27,6 +29,13 @@
 /*     color:#000; */
 }
 
+</style>
+<style type="text/css">
+
+    /* 커스텀 셀 스타일 */
+    .my-min-style {
+        background:#fff;
+    }
 
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
@@ -44,49 +53,50 @@
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
      var columnLayout = [
 								//{dataField:"bom",headerText:"Material Cdoe",width:"10%", cellMerge : true,visible:true},
-								{dataField:"bom",headerText:"Material Cdoe",width:100,visible:false},
-								{dataField:"altrtivBom",headerText:"",width:100,visible:false},
+								{dataField:"bom",headerText:"Material Cdoe",width:100,style: "my-min-style",visible:false},
+								{dataField:"altrtivBom",headerText:"",width:100,style: "my-min-style",visible:false},
 								//{dataField:"plant",headerText:"Material Code Name",width:"10%",visible:true,style :"aui-grid-user-custom-left"
 								//	,cellMerge : true,
 							    //    mergeRef : "bom", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
 							    //    mergePolicy : "restrict"},
-								{dataField:"matrlNo",headerText:"Material Cdoe",width:"10%",visible:true, cellMerge : true},
-								{dataField:"matrlNm",headerText:"Material Code Name",width:"10%",visible:true,
+								{dataField:"matrlNo",headerText:"Material Cdoe",width:"10%",style: "my-min-style",visible:true, cellMerge : true},
+								{dataField:"stkdesc",headerText:"Material Name",width:"10%",style: "my-min-style",visible:true, cellMerge : true},
+								{dataField:"matrlNm",headerText:"Material Category",width:"10%",visible:true,
 								    style :"aui-grid-user-custom-left",
 		                            cellMerge : true,
 		                            mergeRef : "matrlNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
 		                            mergePolicy : "restrict"},
-								{dataField:"",headerText:"Base Qty",width:"5%",visible:false},
-								{dataField:"bomUse",headerText:"",width:100,visible:false},
+								{dataField:"",headerText:"Base Qty",width:"5%",style: "my-min-style",visible:false},
+								{dataField:"bomUse",headerText:"",width:100,style: "my-min-style",visible:false},
 								{dataField:"bomItmNodeNo",headerText:"Component No.",width:"3%",visible:true,style :"aui-grid-user-custom-right"},
-								{dataField:"bomCtgry",headerText:"",width:100,visible:false},
-								{dataField:"intnlCntr",headerText:"",width:100,visible:false},
-								{dataField:"itmCtgry",headerText:"",width:100,visible:false},
-								{dataField:"bomItmNo",headerText:"",width:100,visible:false},
-								{dataField:"sortString",headerText:"",width:100,visible:false},
-								{dataField:"bomCompnt",headerText:"Component",width:"10%",visible:true},
+								{dataField:"bomCtgry",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"intnlCntr",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"itmCtgry",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"bomItmNo",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"sortString",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"bomCompnt",headerText:"Component",width:"10%",style: "my-min-style",visible:true},
 								{dataField:"stkDesc",headerText:"Component Name",width:"28%",visible:true,style :"aui-grid-user-custom-left"},
-								{dataField:"categoryid",headerText:"",width:100,visible:false},
+								{dataField:"categoryid",headerText:"",width:100,style: "my-min-style",visible:false},
 								{dataField:"category",headerText:"Category",width:"7%",visible:true,style :"aui-grid-user-custom-left"},
 								{dataField:"compntQty",headerText:"Qty",width:"5%",visible:true,style :"aui-grid-user-custom-right"},
-								{dataField:"compntUnitOfMeasure",headerText:"",width:100,visible:false},
-								{dataField:"validFromDt",headerText:"Valid From",width:"8%",visible:true},
-								{dataField:"validToDt",headerText:"Valid To",width:"8%",visible:true},
-								{dataField:"leadTmOffset",headerText:"Filter Changing Period",width:100,visible:true},
-								{dataField:"alterItmGrp",headerText:"Alternative Item by group",width:100,visible:true},
-								{dataField:"alterItmRankOrd",headerText:"Priority of alternative item",width:100,visible:true},
-								{dataField:"useProbabiltiy",headerText:"Use Probabiltiy",width:100,visible:true},
-								{dataField:"chngNo",headerText:"",width:100,visible:false},
-								{dataField:"delIndict",headerText:"",width:100,visible:false},
-								{dataField:"dtRcordCrtOn",headerText:"",width:100,visible:false},
-								{dataField:"userWhoCrtRcord",headerText:"",width:100,visible:false},
-								{dataField:"chngOn",headerText:"",width:100,visible:false},
-								{dataField:"namePersonWhoChgObj ",headerText:"",width:100,visible:false}
+								{dataField:"compntUnitOfMeasure",headerText:""  ,width:100 ,style: "my-min-style",visible:false},
+								{dataField:"validFromDt",headerText:"Valid From",width:"8%",style: "my-min-style",visible:true},
+								{dataField:"validToDt",headerText:"Valid To",width:"8%",style: "my-min-style",visible:true},
+								{dataField:"leadTmOffset",headerText:"Filter Changing Period",width:100,style: "my-min-style",visible:true},
+								{dataField:"alterItmGrp",headerText:"Alternative Item by group",width:100,style: "my-min-style",visible:true},
+								{dataField:"alterItmRankOrd",headerText:"Priority of alternative item",width:100,style: "my-min-style",visible:true},
+								{dataField:"useProbabiltiy",headerText:"Use Probabiltiy",width:100,style: "my-min-style",visible:true},
+								{dataField:"chngNo",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"delIndict",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"dtRcordCrtOn",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"userWhoCrtRcord",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"chngOn",headerText:"",width:100,style: "my-min-style",visible:false},
+								{dataField:"namePersonWhoChgObj ",headerText:"",width:100,style: "my-min-style",visible:false}
                          ];
     
     
     var gridoptions = {
-    		showStateColumn : false , 
+    		showStateColumn : true , 
     		editable : false, 
     		pageRowCount : 30,
     		usePaging : false, /* NOTE: true 설정시 셀병합 실행 안됨*/

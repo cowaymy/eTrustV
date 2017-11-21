@@ -166,25 +166,25 @@
         	//AUIGrid.destroy(historyGrid);
         	$("#tap_area_01").show();
         	$("#viewseqno").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'seqNo'));
-        	$("#viewinforcordno").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'infoRcordNo'));
-        	$("#viewvendor").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'vendor'));
-        	$("#viewmatrlmst").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'matrlMst'));
+        	$("#viewinforcordno").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'infoRcordNo'));
+        	$("#viewvendor").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'vendor'));
+        	$("#viewmatrlmst").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'matrlMst'));
         	$("#viewpurchsinforcordctgry").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsInfoRcordCtgry'));
-        	$("#viewpurchsorg").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsOrg'));
+        	$("#viewpurchsorg").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsOrg'));
         	$("#viewpurchsorgtxt").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsOrgTxt'));
         	$("#viewvendortxt").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'vendorTxt'));
-        	$("#viewmatrltxt").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'matrlTxt'));
-        	$("#viewpurchsgrp").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsGrp'));
+        	$("#viewmatrltxt").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'matrlTxt'));
+        	$("#viewpurchsgrp").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsGrp'));
         	$("#viewpurchsgrptxt").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsGrpTxt'));
-        	$("#viewmarkdel").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'markDel'));
-        	$("#viewplandelvrytmday").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'planDelvryTmDay'));
-        	$("#viewtaxcode").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'taxCode')+" : "+AUIGrid.getCellValue(myGridID ,event.rowIndex,'taxCodeTxt'));
+        	$("#viewmarkdel").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'markDel'));
+        	$("#viewplandelvrytmday").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'planDelvryTmDay'));
+        	$("#viewtaxcode").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'taxCode')+" : "+AUIGrid.getCellValue(myGridID ,event.rowIndex,'taxCodeTxt'));
         	$("#viewtaxcodetxt").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'taxCodeTxt'));
         	$("#viewvalidstartdt").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'validStartDt'));
-        	$("#viewvalidenddt").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'validEndDt'));
-        	$("#viewpurchsprc").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsPrc'));
+        	$("#viewvalidenddt").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'validEndDt'));
+        	$("#viewpurchsprc").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'purchsPrc'));
         	$("#viewcur").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'cur'));
-        	$("#viewcondiprcunit").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'condiPrcUnit'));
+        	$("#viewcondiprcunit").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'condiPrcUnit'));
         	$("#viewcondiunit").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'condiUnit'));
         	$("#viewprcdtermindtcntrl").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'prcDterminDtCntrl'));
         	$("#viewstkid").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'stkId'));
@@ -219,7 +219,7 @@
         	$("#viewserialchk").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'serialChk'));
         	$("#viewuom").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'uom'));
         	
-        	$("#viewcurname").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'curname'));
+        	$("#viewcurname").text(AUIGrid.getCellValue(myGridID ,event.rowIndex,'curname'));
             //추후 수정 필요
         	$("#viewaddress").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'address'));
         	$("#viewemailaddress").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'emailaddress'));
@@ -417,22 +417,22 @@
 				<tbody>
 				<tr> 
 				    <th scope="row">Delete</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewmarkdel" name="viewmarkdel" readonly="readonly"/></td>
-                    <td colspan="4"></td>
+				    <td id="viewmarkdel"></td>
+				    <td colspan="4"></td>
 				</tr>
 				<tr>
 				    <th scope="row">Info Record No.</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewinforcordno" name="viewinforcordno" readonly="readonly"/></td>
+				    <td id="viewinforcordno"></td>
 				    <th scope="row">Purchase ORG</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewpurchsorg" name="viewpurchsorg" readonly="readonly"/></td>   
+				    <td id="viewpurchsorg"></td>   
                     <td colspan="2"></td>
          		 </tr>
 				<tr>
 				    <th scope="row">Vendor</th>
-				    <td ><input type="text" title="" placeholder=""  class="w100p" id="viewvendor" name="viewvendor" readonly="readonly"/></td>     
+				    <td  id="viewvendor"></td>     
 				    <th scope="row">Master Code</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewmatrlmst" name="viewmatrlmst" readonly="readonly"/></td>     
-				    <td colspan="2"><input type="text" title="" placeholder=""  class="w100p" id="viewmatrltxt" name="viewmatrltxt" readonly="readonly"/></td>    
+				    <td id="viewmatrlmst"><input type="text" title="" placeholder=""  class="w100p" name="viewmatrlmst" readonly="readonly"/></td>     
+				    <td colspan="2"  id="viewmatrltxt"></td>    
 				</tr>
 <!-- 				<tr> -->
 <!-- 				    <th scope="row">Address</th> -->
@@ -441,9 +441,9 @@
 <!-- 				</tr> -->
 				<tr>
 				    <th scope="row">Purchasing Group</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewpurchsgrp" name="viewpurchsgrp" readonly="readonly"/></td>
+				    <td id="viewpurchsgrp"></td>
 				    <th scope="row">Planned Delivery Time in Days</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewplandelvrytmday" name="viewplandelvrytmday" readonly="readonly"/></td>
+				    <td id="viewplandelvrytmday"></td>
                     <td colspan="2"></td>
 				</tr>
 <!-- 				<tr> -->
@@ -453,7 +453,7 @@
 <!-- 				</tr> -->
 				<tr>
 				    <th scope="row">Tax Code</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewtaxcode" name="viewtaxcode" readonly="readonly"/></td>
+				    <td id="viewtaxcode"></td>
 <!-- 				    <th scope="row">Price Determination (Pricing) Date Control</th> -->
 <!-- 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewprcdtermindtcntrl" name="viewprcdtermindtcntrl" readonly="readonly"/></td> -->
                         <td colspan="4"></td>
@@ -462,15 +462,15 @@
 				    <th scope="row">Net Price</th>
 				    <td>
 				    <div class="itemPriceDate w100p">
-			            <p><input type="text" title="" placeholder="" class="w100p"  id="viewpurchsprc" name="viewpurchsprc" readonly="readonly"/></p>
-			            <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcurname" name="viewcurname" readonly="readonly"  /></p>
+			            <p  id="viewpurchsprc"></p>
+			            <p class="short" id="viewcurname"></p>
 			            <span>/</span>
-			            <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcondiprcunit" name="viewcondiprcunit" readonly="readonly"/></p>
+			            <p class="short" id="viewcondiprcunit"></p>
 			            <!-- <p class="short"><input type="text" title="" placeholder="" class="w100p" id="viewcondiunitname" name="viewcondiunitname" readonly="readonly" /></p> -->
 			        </div>
 				    </td>
 				    <th scope="row">Validity end date</th>
-				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewvalidenddt" name="viewvalidenddt" readonly="readonly"/></td>
+				    <td id="viewvalidenddt"><input type="text" title="" placeholder=""  class="w100p" name="viewvalidenddt" readonly="readonly"/></td>
 				    <td colspan="2"></td>
 				    
 				</tr>

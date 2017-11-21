@@ -104,7 +104,8 @@ var reqcolumnLayout;
 	        //showBranchOnGrouping : false
 	        };
  
- var uomlist = f_getTtype('42' , '');
+ //var uomlist = f_getTtype('42' , '');
+ var uomlist = [{code: "EA", codeId: 71, codeName: "Each"},{code: "PCS", codeId: 72, codeName: "Piece"},{code: "OTH", codeId: 75, codeName: "Others"},{code: "SET", codeId: 74, codeName: "Set"},{code: "PKT", codeId: 73, codeName: "Packet"}];
 // var paramdata;
 
 
@@ -131,7 +132,7 @@ var LocData2 = {brnch : UserBranchId};
 //     /**********************************
 //      * Header Setting End
 //      ***********************************/
-    
+    console.log(uomlist);
     reqcolumnLayout=[{dataField:"itmrnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
                       {dataField:"itmcode"     ,headerText:"Code"        ,width:120    ,height:30 , editable:false},
                       {dataField:"itmdesc"     ,headerText:"Text"        ,width:120    ,height:30 , editable:false},
@@ -148,7 +149,6 @@ var LocData2 = {brnch : UserBranchId};
                       {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30,editable:false
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
-                              
                               for(var i=0,len=uomlist.length; i<len; i++) {
                                   if(uomlist[i]["codeId"] == value) {
                                       retStr = uomlist[i]["codeName"];

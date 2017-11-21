@@ -1184,6 +1184,9 @@
            <if test="brnch != null and brnch != ''">
               AND S28M.WH_LOC_BRNCH_ID = #{brnch}
            </if>
+           <if test="searchlocgb != null and searchlocgb != ''">
+              AND S28M.WH_LOC_GB = #{locgb}
+           </if>
            <if test="locgb != null and locgb != ''">
               <choose>
                   <when test='locgb !=null and locgb == "01"'>

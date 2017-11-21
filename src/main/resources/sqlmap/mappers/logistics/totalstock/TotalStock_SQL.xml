@@ -45,9 +45,15 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
     <if test="searchMatCode != null and searchMatCode !=''">
       AND S26.STK_CODE = #{searchMatCode}
     </if>
-    <if test="searchLoc != null and searchLoc !=''">
-      AND L56.LOC_ID = #{searchLoc}
+    <if test="searchlocgrade != null and searchlocgrade !=''">
+      AND S28.WH_LOC_STK_GRAD = #{searchlocgrade}
     </if>
+    <if test="searchLoc != null and searchLoc !=''">
+        and L56.LOC_ID in
+        <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+         #{item}
+         </foreach>
+     </if>
     <if test="sstocknm != null and sstocknm !=''">
       AND (UPPER(S26.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(S26.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
     </if>

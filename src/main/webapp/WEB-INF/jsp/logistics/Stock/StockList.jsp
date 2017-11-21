@@ -692,8 +692,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         //f_showModal();
 
      var param = $('#searchForm').serialize();
-
-        Common.ajax("POST" , "/stock/StockList.do" , param , function(data){
+        console.log(param);
+        Common.ajax("GET" , "/stock/StockList.do" , param , function(data){
         	var gridData = data;
         	AUIGrid.setGridData(myGridID, gridData.data);
         });
@@ -1264,6 +1264,12 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         }
     	return true;
     }
+    
+    function fn_itempopList(data){
+    	console.log(data);
+        $("#stkCd").val(data[0].item.itemcode);
+        $("#stkNm").val(data[0].item.itemname);
+    }
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv">
@@ -1317,7 +1323,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <tr>
                     <th scope="row">Material Code</th>
                     <td>
-                        <input type=text name="stkCd" id="stkCd" class="w100p numberAmt" value=""/>
+                        <input type=text name="stkCd" id="stkCd" class="w100p" value=""/>
                     </td>
                     <th scope="row">Material Name</th>
                     <td colspan='3'>

@@ -49,6 +49,7 @@
             m.ALTRTIV_BOM  altrtiv_bom ,
             m.PLANT  plant ,
             m.MATRL_NO  matrl_no ,
+            (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = m.MATRL_NO) stkdesc,
             (SELECT CODE_NAME
                   FROM SYS0013M
                  WHERE CODE_ID = m2.STK_CTGRY_ID) matrl_nm,

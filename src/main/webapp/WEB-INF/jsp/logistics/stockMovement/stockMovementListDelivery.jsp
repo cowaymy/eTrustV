@@ -44,13 +44,6 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30                },
                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
                      {dataField:"reqitmno"     ,headerText:"Stock Movement Request Item" ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
-                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
-                     {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30                },
-                     {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
-                     {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30                },
                      {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
@@ -64,16 +57,24 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"indelyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 , editable:true 
-                    	 ,dataType : "numeric" ,editRenderer : {
+                         ,dataType : "numeric" ,editRenderer : {
                              type : "InputEditRenderer",
                              onlyNumeric : true, // 0~9 까지만 허용
                              allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                        }
                      },
-                     {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30                },
                      {dataField:"serialchk"    ,headerText:"SERIAL CHECK"                ,width:120    ,height:30 , visible:false},
+                     {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30              },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
-                     {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
+                     {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
+                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
+                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
+                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
+                     {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30                },
+                     {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
+                     {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30                },
+                     ];
 var reqcolumnLayout;
 var serialcolumnLayout =[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                          {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
@@ -578,6 +579,8 @@ function fn_serialChck(rowindex , rowitem , str){
 	var schk = true;
 	var ichk = true;
 	var slocid = '';//session.locid;
+	var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+	console.log(checkdata);
     var data = { serial : str , locid : slocid};
     Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
     	if (result.data[0] == null){

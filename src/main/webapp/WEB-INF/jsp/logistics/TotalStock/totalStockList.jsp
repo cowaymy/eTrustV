@@ -98,7 +98,10 @@ $(document).ready(function(){
     //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
-    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
+    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo'); 
+    doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
+    //
+    
     /**********************************
      * Header Setting End
      ***********************************/
@@ -133,7 +136,6 @@ $(function(){
         }
     });
     $('#clear').click(function() {
-    	$('#searchLocNm').val('');
     	//$('#searchlocgb').val('');
     	$('#searchMatCode').val('');
     	$('#searchMatName').val('');
@@ -143,16 +145,7 @@ $(function(){
     	    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
     	    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
     });
-    $('#searchLocNm').keypress(function(event) {
-    	$('#searchLoc').val('');
-        if (event.which == '13') {
-        	$("#stype").val('location');
-        	$("#svalue").val($('#searchLocNm').val());
-            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
-
-            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
-        }
-    });
+    
     $('#searchMatName').keypress(function(event) {
     	$('#searchMatCode').val('');
         if (event.which == '13') {
@@ -161,6 +154,10 @@ $(function(){
         	$("#sUrl").val("/logistics/material/materialcdsearch.do");
             Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
         }
+    });
+    $('#searchlocgrade').change(function(){
+    	var param = {searchlocgb:$('#searchlocgb').val() , grade:$('#searchlocgrade').val()}
+    	doGetComboData('/common/selectStockLocationList.do', param , '', 'searchloc', 'M','f_multiCombo');
     });
 
 });
@@ -186,10 +183,10 @@ function SearchListAjax() {
 
 function f_validatation(v){
              
-            if ($("#searchLocNm").val() == null || $("#searchLocNm").val() == undefined || $("#searchLocNm").val() == ""){
-                Common.alert("Please Select Location.");
-                return false;
-            }
+//             if ($("#searchLocNm").val() == null || $("#searchLocNm").val() == undefined || $("#searchLocNm").val() == ""){
+//                 Common.alert("Please Select Location.");
+//                 return false;
+//             }
             return true;
 }
 
@@ -200,6 +197,10 @@ function f_multiCombo() {
             selectAll : true
         });  /* .multipleSelect("checkAll"); */
         $('#searchlocgb').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        });
+        $('#searchloc').change(function() {
         }).multipleSelect({
             selectAll : true
         });
@@ -223,11 +224,15 @@ function fn_itempopList(data){
         $("#searchMatName").val(rtnVal.itemname);
     }else{
     	$("#searchLoc").val(rtnVal.locid);
-        $("#searchLocNm").val(rtnVal.locdesc);
+        
     }
     
     $("#svalue").val();
 } 
+
+function searchlocationFunc(){
+	console.log('111');
+}
 
 
 </script>
@@ -274,14 +279,18 @@ function fn_itempopList(data){
                 <tr>
                    <th scope="row">Location</th>
                    <td>
-                        <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc">
-                        <INPUT type="text"   class="w100p" id="searchLocNm" name="searchLocNm">
+                        <select id="searchlocgb" class="w100p" name="searchlocgb"></select>                        
+<!--                         <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc"> -->
+<!--                         <INPUT type="text"   class="w100p" id="searchLocNm" name="searchLocNm"> -->
                    </td> 
                    <th scope="row">Location Grade</th>
                    <td>
-                        <select class="w100p" id="searchlocgb" name="searchlocgb"></select>
+                        <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
                    </td>
-                   <td colspan='2'></td> 
+                   <th scope="row">Location Grade</th>
+                   <td>
+                        <select class="w100p" id="searchLoc" name="searchLoc"></select>
+                   </td> 
                 </tr>
                 <tr>
                    <th scope="row">Material Code</th>
