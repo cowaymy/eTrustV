@@ -54,6 +54,16 @@ function fn_requestVacationPop(){
 /*By KV end - requestVacationPop*/
 
 
+/*By KV start - traineeToMemberRegistPop*/
+ function fn_confirmMemRegisPop(){
+     var jsonObj = {
+             MemberID :memberid,
+            MemberType : memberType
+    };
+     console.log("MemberID="+memberid+"&MemberType="+memberType);
+    Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
+}
+/*By KV start - traineeToMemberRegistPop*/
 
 //Start AUIGrid --start Load Page- user 1st click Member
 $(document).ready(function() {
@@ -257,6 +267,7 @@ function fn_searchPosition(selectedData){
     <li><p class="btn_blue"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_memberEditPop()">Member Edit</a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_requestVacationPop()">Request Vacation </a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_confirmMemRegisPop()">Confirm Member Registration </a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
