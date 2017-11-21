@@ -481,17 +481,54 @@ function saveAdvPayment(){
     
 	var keyInPayType = $("#keyInPayType").val();
 	
+	
 	if(keyInPayType == "105"){
+		var cashBankType = $("#cashBankType").val();
+		var cashVAAccount = $("#cashVAAccount").val();
+		var cashBankAcc = $("#cashBankAcc").val();
 		
 		if(FormUtil.checkReqValue($("#cashAmount")) ||$("#cashAmount").val() <= 0 ){
 	        Common.alert('* No Amount ');
 	        return;
 	    }
 		
+		if(cashBankType == "2730"){
+			if(cashVAAccount.length != 16 || cashVAAccount == "" ){
+				Common.alert('* No VA Account ');
+				return;
+			}
+			
+		}else{
+			if(FormUtil.checkReqValue($("#cashVAAccount"))){
+				Common.alert('* No Bank Account ');
+                return;
+			}
+		}
+		
+		if(FormUtil.checkReqValue($("#cashTransDate"))){
+	        Common.alert('* Transaction Date is empty');
+	        return;
+	    }
+		
+		if(FormUtil.checkReqValue($("#cashSlipNo"))){
+            Common.alert('* No Slip No');
+            return;
+        }
+		
+		if(FormUtil.checkReqValue($("#cashPayName"))){
+            Common.alert('* No PayerName');
+            return;
+        }   
+        
+		if(FormUtil.checkReqValue($("#cashRefDetails"))){
+            Common.alert('* No Ref Details/Jornpay Ref ');
+            return;
+        }   
+		
 		if( FormUtil.byteLength($("#cashRemark").val()) > 3000 ){
 	        Common.alert('* Please input the Remark below or less than 3000 bytes.');
 	        return;
-	    }   
+	    }
 		
 	}else if(keyInPayType == "106"){
 		
