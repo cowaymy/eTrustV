@@ -115,7 +115,7 @@
                   AND LOWER ( A.REQST_NO ) = LOWER( #{requestNo} )
               </if>
               <if test="requestUserId != null and requestUserId != ''">
-                  AND LOWER ( A.FULL_NAME ) = LOWER(#{requestUserId})
+                  AND LOWER ( A.FULL_NAME ) like '%' || LOWER(#{requestUserId}) || '%'
               </if>
               <if test="requestDt != null and requestDt != ''">
                  <![CDATA[ AND  TO_DATE (A.REQST_DT, 'YYYY-MM-DD') =  TO_DATE(#{requestDt},'DD/MM/YYYY') ]]>
