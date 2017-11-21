@@ -60,9 +60,24 @@ public class CcpAgreementController {
 		return "sales/ccp/ccpAgreementSummaryReportPop";
 	}
 	
-	@RequestMapping(value="/ccpAgreementConsignmentCourierListingPop")
+	@RequestMapping(value="/ccpAgreementConsignmentCourierListingPop.do")
 	public String ccpAgreementConsignmentCourierListingPop(@RequestParam Map<String, Object> params) throws Exception{
 		return "sales/ccp/ccpAgreementConsignmentCourierListingPop";
+	}
+	
+	@RequestMapping(value="/ccpCalListingPop.do")
+	public String ccpSearchListingPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/ccp/ccpCalListingPop";
+	}
+	
+	@RequestMapping(value="/ccpCalRawDataPop.do")
+	public String ccpSearchRawDataPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/ccp/ccpCalRawDataPop";
+	}
+	
+	@RequestMapping(value="/ccpCalPerformancePop")
+	public String ccpSearchPerformancePop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/ccp/ccpCalPerformancePop";
 	}
 	
 	@Autowired
