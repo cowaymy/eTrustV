@@ -9,6 +9,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("ccpCalculateMapper")
 public interface CcpCalculateMapper {
 
+	List<EgovMap> getRegionCodeList(Map<String, Object> params) throws Exception;
+	
 	List<EgovMap> selectDscCodeList() throws Exception;
 	
 	List<EgovMap> selectReasonCodeFbList() throws Exception;
