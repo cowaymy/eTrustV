@@ -676,7 +676,7 @@ $(document).ready(function()
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a onclick="addRow();">Add</p></li>
+	<li><p class="btn_grid"><a onclick="addRow();">Add</a></p></li>
 	<li><p class="btn_grid"><a onclick="fnSaveGridMap();">Save</a></p></li>
 </ul>
 
@@ -696,7 +696,7 @@ $(document).ready(function()
 	</select>	
 	</li>
 	<li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>FILTER</a></p></li>
-	<li><p class="btn_grid"><a onclick="addRowDetail();">Add</p></li>   
+	<li><p class="btn_grid"><a onclick="addRowDetail();">Add</a></p></li>   
 	<li><p class="btn_grid"><a onclick="fnSaveDetailGridMap();">Save</a></p></li>
 </ul>
 

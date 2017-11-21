@@ -1827,6 +1827,10 @@
 </tr> -->
 </tbody>
 </table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Copy/Duplicate Informaton</h2>
+</aside><!-- title_line end -->
     <table class="type1" id="CopyAssetInfo">
         <colgroup>
         <col style="width:300px" />
@@ -1835,9 +1839,6 @@
         <col style="width:*" /> 
         </colgroup>
         <tbody>
-        <tr>
-            <th scope="row" colspan="4">Copy/Duplicate Informaton</th>
-        </tr>
         <tr>
             <th scope="row">Copy/Duplicate Quantity</th>
             <td><input type="number" title="" placeholder=""  class="w100p" id="copyquantity" name="copyquantity"/>
