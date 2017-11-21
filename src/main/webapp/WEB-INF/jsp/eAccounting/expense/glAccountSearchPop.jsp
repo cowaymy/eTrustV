@@ -43,7 +43,7 @@ $(document).ready(function() {
 
 //리스트 조회.
 function fn_selectGlListAjax() {        
-    Common.ajax("GET", "/eAccounting/expense/selectGlCodeList", $("#glSForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/expense/selectGlCodeList?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
         
          console.log("성공.");
          console.log( result);

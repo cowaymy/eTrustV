@@ -172,7 +172,7 @@ function auiRemoveRowHandler(event)
 }
 
 function fn_selectPopListAjax(){
-	Common.ajax("GET", "/eAccounting/expense/selectExpenseList", $("#popAddForm").serialize(), function(result) {
+	Common.ajax("GET", "/eAccounting/expense/selectExpenseList?_cacheId=" + Math.random(), $("#popAddForm").serialize(), function(result) {
         
         console.log("성공.");
         console.log( result);

@@ -73,7 +73,7 @@ function fn_reload(){
 // 리스트 조회.
 function fn_selectListAjax() {        
 	
-    Common.ajax("GET", "/eAccounting/expense/selectExpenseList", $("#listSForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/expense/selectExpenseList?_cacheId=" + Math.random(), $("#listSForm").serialize(), function(result) {
         
          console.log("성공.");
          console.log( result);

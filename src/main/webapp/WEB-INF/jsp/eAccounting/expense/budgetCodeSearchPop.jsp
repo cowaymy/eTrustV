@@ -72,7 +72,7 @@ $(document).ready(function() {
 
 //리스트 조회.
 function fn_selectBudgetListAjax() {        
-    Common.ajax("GET", "/eAccounting/expense/selectBudgetCodeList", $("#bgSForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/expense/selectBudgetCodeList?_cacheId=" + Math.random(), $("#bgSForm").serialize(), function(result) {
         
          console.log("성공.");
          console.log( result);

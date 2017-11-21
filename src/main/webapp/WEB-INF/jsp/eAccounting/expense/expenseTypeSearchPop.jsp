@@ -89,7 +89,7 @@ $(document).ready(function() {
 function fn_selectExpensePopListAjax() {        
 	$("#popClaimType").attr("disabled", false);
 	
-    Common.ajax("GET", "/eAccounting/expense/selectExpenseList", $("#expPopSForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/expense/selectExpenseList?_cacheId=" + Math.random(), $("#expPopSForm").serialize(), function(result) {
         
          console.log("성공.");
          console.log( result);
