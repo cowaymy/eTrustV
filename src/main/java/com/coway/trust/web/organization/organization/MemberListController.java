@@ -615,4 +615,28 @@ public class MemberListController {
 		return "organization/organization/memberListEditPop";
 	}
 
+	
+
+	@RequestMapping(value = "/traineeUpdate.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage>  traineeUpdate(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		
+		ReturnMessage message = new ReturnMessage();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		
+		logger.debug("in...... traineeUpdate");
+		logger.debug("params : {}", params);
+		
+		
+		resultValue = memberListService.traineeUpdate(params,sessionVO);
+		
+		if(null != resultValue){
+			message.setMessage((String)resultValue.get("memCode"));
+		}	
+		
+		
+		return ResponseEntity.ok(message);
+	}
+
+
+
 }
