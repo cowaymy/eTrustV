@@ -959,7 +959,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("promoEntry : {}",promoEntry);
 
 				memberListMapper.insertPromoEntry(promoEntry);
-				if(params.get("action1").toString() == "747"){
+				if(params.get("action1").toString().equals("747") ){
     				resultValue.put("message", "Promote request successfully saved.<br />"
     				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
 				}else{
