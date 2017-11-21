@@ -59,8 +59,8 @@ function fn_selectListQAjax() {
 	    	  $("#pacType").val(packageInfo.pacType);
 	    	  
 	    	  if($("#pacType").val() != "1"){
-	    	        $("#srvPacItmSvcFreq").prop("readonly", true);
-	    	        $("#srvPacItmSvcFreq").attr("class", "readonly");
+	    	        $("#srvPacItmRental").prop("readonly", true);
+	    	        $("#srvPacItmRental").attr("class", "readonly");
 	    	  }
               
 	    	  if(packageInfo.discontinue == "1"){
@@ -72,9 +72,9 @@ function fn_selectListQAjax() {
 	        	$("#pacType").val(packType);
                 
                 if($("#pacType").val() != "1"){
-                    $("#srvPacItmSvcFreq").prop("readonly", true);
-                    $("#srvPacItmSvcFreq").attr("class", "readonly");
-                    $("#srvPacItmSvcFreq").val("0");
+                    $("#srvPacItmRental").prop("readonly", true);
+                    $("#srvPacItmRental").attr("class", "readonly");
+                    $("#srvPacItmRental").val("0");
               }
 	    }
 	       
