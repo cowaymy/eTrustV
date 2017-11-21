@@ -60,6 +60,17 @@ public class CcpCalculateController {
 	}
 	
 	
+	@RequestMapping(value="/getRegionCodeList")
+	public ResponseEntity<List<EgovMap>> getRegionCodeList(@RequestParam Map<String, Object> params) throws Exception{
+	
+		List<EgovMap> regionCodeList = null;
+		regionCodeList = ccpCalculateService.getRegionCodeList(params);
+		
+		return ResponseEntity.ok(regionCodeList);
+		
+	}
+	
+	
 	@RequestMapping(value = "/selectDscCodeList")
 	public ResponseEntity<List<EgovMap>> selectDscCodeList()throws Exception{
 		
