@@ -11,7 +11,7 @@ SELECT Extent1.WH_LOC_ID CODE_ID  ,
  WHERE  ( 1 = Extent1.WH_LOC_STUS_ID )
           AND ( 'A' = Extent1.WH_LOC_STK_GRAD )
           AND ( 277 = Extent1.WH_LOC_TYPE_ID )
-          AND ( Extent1.WH_LOC_BRNCH_ID = #{groupCode} )
+          <!-- AND ( Extent1.WH_LOC_BRNCH_ID = #{groupCode} ) -->
 </select>  
    
    
