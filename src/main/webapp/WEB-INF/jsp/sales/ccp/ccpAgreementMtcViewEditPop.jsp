@@ -145,8 +145,46 @@
     	                           {dataField : "govAgRoleDesc" , headerText : "Department" , width : "10%"},
     	                           {dataField : "govAgMsg" , headerText : "Message" , width : "30%"},
     	                           {dataField : "govAgMsgHasAttach" , headerText : "Attachement" , width : "10%"},
-    	                           {dataField : "" , headerText : "Download" , width : "10%"}
-    	 ];
+    	                           {dataField : "govAgMsgAttachFileName" , headerText : "Download" , width : "10%",
+    	                        	   renderer : {
+    	                                   type : "ButtonRenderer",
+    	                                   labelText : "Edit",
+    	                                   onclick : function(rowIndex, columnIndex, value, item) {
+    	                                        
+    	                                	   var url = getContextPath()+value;
+    	                                        var result = '';
+    	                                        result = chkIsFile(url);
+    	                                        
+    	                                        if(result == 'Y'){
+    	                                        	 Common.showLoader();
+    	                                             var $this = $(this);
+    	                                             var fileId = $this.attr("data-id");
+    	                                             $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
+    	                                                 httpMethod: "POST",
+    	                                                 contentType: "application/json;charset=UTF-8",
+    	                                                 data: {
+    	                                                     fileId: fileId
+    	                                                 },
+    	                                                 failCallback: function (responseHtml, url, error) {
+    	                                                     Common.alert($(responseHtml).find("#errorMessage").text());
+    	                                                 }
+    	                                             })
+    	                                                 .done(function () {
+    	                                                     Common.removeLoader();
+    	                                                     console.log('File download a success!');
+    	                                                 })
+    	                                                 .fail(function () {
+    	                                                     Common.removeLoader();
+    	                                                 });
+    	                                        }else if(result == 'N'){
+    	                                        	Common.alert("The file might be deleted or changed location.");
+    	                                        }else{
+    	                                        	Common.alert("Please try again next time.");
+    	                                        }
+    	                                        
+    	                                    }
+    	                                 }
+    	                            }];
     	
     	 //그리드 속성 설정
         var gridPros = {
@@ -388,6 +426,26 @@
     	$("#_agrPeriodEnd").val('');
     	$("#_resultRemark").val('');
     	
+    }
+    
+    
+    function chkIsFile(url){
+    	
+    	var result = '';
+    	$.ajax({
+            url:_url,
+            type:'HEAD',
+            error: function()
+            {
+                result = 'N';
+            },
+            success: function()
+            {
+                result 'Y';
+            }
+        });
+    	
+    	return result;
     }
 </script>
 

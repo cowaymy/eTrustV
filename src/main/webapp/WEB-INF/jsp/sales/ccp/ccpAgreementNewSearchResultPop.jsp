@@ -50,7 +50,8 @@
         
         //Reselect(Whole)
         $("#_reSelect").click(function() {
-            self.location.href = getContextPath()+"/sales/ccp/insertCcpAgreementSearch.do";
+            //self.location.href = getContextPath()+"/sales/ccp/insertCcpAgreementSearch.do";
+            $("#_ccpResultPopCloseBtn").click();
         });
         
         //Member Search Pop
@@ -663,7 +664,7 @@ function createAUIGrid11() {
 <header class="pop_header"><!-- pop_header start -->
 <h1>CCP Agreement New Search</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_ccpResultPopCloseBtn">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->

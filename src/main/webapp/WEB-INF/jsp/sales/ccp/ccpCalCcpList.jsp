@@ -100,20 +100,20 @@ $.fn.clearForm = function() {
 function createCalGrid(){
 	
 	var  columnLayout = [
-	                     {dataField : "salesOrdNo", headerText : "Order No", width : "5%" , editable : false},
-	                     {dataField : "ccpIsHold", headerText : "Hold", width : "5%" , editable : false,
+	                     {dataField : "salesOrdNo", headerText : "Order<br/>No", width : "7%" , editable : false},
+	                     {dataField : "ccpIsHold", headerText : "Hold", width : "4%" , editable : false,
 	                       renderer : {type : "CheckBoxEditRenderer", editable : false , checkValue : true , unCheckValue : false}
 	                     },
-	                     {dataField : "refNo", headerText : "Order Ref No", width : "10%" , editable : false},
-	                     {dataField : "name1", headerText : "Branch", width : "5%" , editable : false},
-	                     {dataField : "keyAt", headerText : "Key At(By)", width : "10%" , editable : false},
-	                     {dataField : "name", headerText : "Customer Name", width : "5%" , editable : false},
-	                     {dataField : "ccpTotScrePoint", headerText : "Total Point", width : "5%" , editable : false},
-	                     {dataField : "ccpStatus", headerText : "CCP Status", width : "10%" , editable : false},
-	                     {dataField : "name2", headerText : "CCP Reject Status", width : "10%" , editable : false},
-	                     {dataField : "ccpRem", headerText : "CCP Remark", width : "15%" , editable : false},
-	                     {dataField : "resnDesc", headerText : "Special Remark", width : "10%" , editable : false},
-	                     {dataField : "updAt", headerText : "Last Update At(By)", width : "10%" , editable : false},
+	                     {dataField : "refNo", headerText : "Order<br/>Ref No", width : "7%" , editable : false},
+	                     {dataField : "name1", headerText : "Branch", width : "7%" , editable : false},
+	                     {dataField : "keyAt", headerText : "Key At<br/>(By)", width : "10%" , editable : false},
+	                     {dataField : "name", headerText : "Customer<br/> Name", width : "9%" , editable : false},
+	                     {dataField : "ccpTotScrePoint", headerText : "Total<br/> Point", width : "7%" , editable : false},
+	                     {dataField : "ccpStatus", headerText : "CCP<br/>Status", width : "7%" , editable : false},
+	                     {dataField : "name2", headerText : "CCP<br/> Reject<br/> Status", width : "7%" , editable : false},
+	                     {dataField : "ccpRem", headerText : "CCP<br/> Remark", width : "15%" , editable : false},
+	                     {dataField : "resnDesc", headerText : "Special <br/>Remark", width : "10%" , editable : false},
+	                     {dataField : "updAt", headerText : "Last<br/> Update At <br/>(By)", width : "10%" , editable : false},
 	                     {dataField : "ccpId", visible : false},
 	                     {dataField : "salesOrdId", visible : false},
 	                     {dataField : "ccpStusId", visible : false}, 
@@ -128,16 +128,17 @@ function createCalGrid(){
             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
             editable            : false,            
             fixedColumnCount    : 1,            
-            showStateColumn     : true,             
+            showStateColumn     : false,             
             displayTreeOpen     : false,            
             selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            headerHeight        : 60,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
             noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            groupingMessage     : "Here groupping",
+            wordWrap :  true
         };
 	
 	calGrid = GridCommon.createAUIGrid("cal_grid_wrap", columnLayout,'', gridPros);
