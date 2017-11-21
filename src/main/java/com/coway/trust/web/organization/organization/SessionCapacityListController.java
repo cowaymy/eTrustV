@@ -159,15 +159,15 @@ public class SessionCapacityListController {
 		boolean delSuccess = false;
 		EgovMap rtm = new EgovMap();
 		
-		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
 		
 		logger.debug("addList {}", addList);
 		if(addList != null){
 			sessionCapacityListService.insertCapacity(addList,sessionVO);
 		}
-		if(addList != null){
+		if(udtList != null){
 			sessionCapacityListService.updateCapacity(udtList,sessionVO);
 		}
 		if(delList != null){

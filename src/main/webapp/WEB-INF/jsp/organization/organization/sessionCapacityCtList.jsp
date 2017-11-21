@@ -389,13 +389,19 @@
     </td>
     <th scope="row">Status</th>
     <td>
-    
-    <div class="search_100p"><!-- search_100p start -->
+        <select id="status" name="status" class="w100p" style='text-align:left' >
+            <option value="">Choose One</option>
+            <option value="Active">Active</option>
+            <option value="Complete">Complete</option>
+        </select>
+    </td>
+    <!-- <td>
+    <div class="search_100p">search_100p start
     <input type="text" title="" placeholder="" class="w100p"/>
     <a href="#" class="search_btn"></a>
-    </div><!-- search_100p end -->
+    </div>search_100p end
 
-    </td>
+    </td> -->
 </tr>
 </tbody>
 </table><!-- table end -->
