@@ -134,20 +134,21 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
                 	   f_removeclass();  
                      dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
                        
-                     $("#ViewPopUp_wrap").show();  
+                     $("#ViewPopUp_wrap").show();
+                     $("#insertDataChange").hide();
+                     fn_setVisiable();
                         //getDetailInfoListAjax(dcfreqentryid,div);
-                   
+                        
                         fn_DataChangeDetail(selectedItem[0]);
                         CompulsoryFieldGridID = GridCommon.createAUIGrid("CompulsoryFieldGrid_wrap", compulsoryLayout,"", gridoptions); 
                         ChangeItemGridID = GridCommon.createAUIGrid("ChangeItemGrid_wrap", changeitemLayout,"", gridoptions); 
                         RespondLogGridID = GridCommon.createAUIGrid("RespondLogGrid_wrap", respondlogLayout,"", gridoptions);    
-                     
+                       
                    //$("#AddApporovalBtn").show();  
                    }else{
                    Common.alert('Choice Data please..');
                    }
             
-                
             });
            
             /* 팝업 드래그 start */
@@ -162,18 +163,26 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
              $("#search").click(function(){
                  getDataChangeListAjax();  
               });  
-             
-             $("#insert").click(function(){
+             $("#clear").click(function(){
+                 $("#SearchForm")[0].reset();
+                 doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','searchRequestBranch', 'M' , 'f_multiCombo'); //Branch 리스트 조회
+                 doGetCombo('/logistics/assetmng/selectDepartmentList.do', '42', '','searchRequestDepartment', 'M' , 'f_DepartmentList'); //Department 리스트 조회
+                 doDefCombo(comboData, '' ,'searchApprovalStatus', 'M', 'f_ApprovalStatusList'); //Approval Status 리스트 조회
+             });
+    
+             $("#approval").click(function(){
                  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                  if (selectedItem[0] > -1){
+                   $("#AddApprovalForm")[0].reset();
                    dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
                    fn_DataChangeDetail(selectedItem[0]);
                    $("#ViewPopUp_wrap").show();
                    $("#insertDataChange").show();
                    $("#AddApporovalBtn").show();
+                   fn_setVisiable();
                    doDefCombo(cmbStatusCombo, '' ,'insApprovalStatus', 'S', ''); //Approval Status 리스트 조회
                    doGetCombo('/logistics/helpdesk/selectReasonList.do', '', '','insReason', 'S' , '');//Reason  리스트 조회
-           
+                   
                    CompulsoryFieldGridID = GridCommon.createAUIGrid("CompulsoryFieldGrid_wrap", compulsoryLayout,"", gridoptions); 
                    ChangeItemGridID = GridCommon.createAUIGrid("ChangeItemGrid_wrap", changeitemLayout,"", gridoptions); 
                    RespondLogGridID = GridCommon.createAUIGrid("RespondLogGrid_wrap", respondlogLayout,"", gridoptions);    
@@ -193,38 +202,46 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
                  getDetailInfoListAjax(dcfreqentryid,div);
             }); 
             $("#Compulsory_info").click(function(){
+            	//AUIGrid.clearGridData(CompulsoryFieldGridID);
                 div="Compulsory";
-                destory(CompulsoryFieldGridID);
-                
+                //destory(CompulsoryFieldGridID);
+                AUIGrid.destroy(CompulsoryFieldGridID)
                 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                 dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
-                getDetailInfoListAjax(dcfreqentryid,div);
                 CompulsoryFieldGridID = GridCommon.createAUIGrid("CompulsoryFieldGrid_wrap", compulsoryLayout,"", gridoptions);
+                getDetailInfoListAjax(dcfreqentryid,div);
                 AUIGrid.resize(CompulsoryFieldGridID,div); 
             });
             $("#ChangeItem_info").click(function(){
+            	//AUIGrid.clearGridData(ChangeItemGridID);
                 div="ChangeItem";
-                destory(ChangeItemGridID);
+                //destory(ChangeItemGridID);
+               AUIGrid.destroy(ChangeItemGridID)
                 
                 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                 dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
-                getDetailInfoListAjax(dcfreqentryid,div);
                 ChangeItemGridID = GridCommon.createAUIGrid("ChangeItemGrid_wrap", changeitemLayout,"", gridoptions);
+                getDetailInfoListAjax(dcfreqentryid,div);
                 AUIGrid.resize(ChangeItemGridID,div); 
             });
             $("#RespondLog_info").click(function(){
+            	//AUIGrid.clearGridData(RespondLogGridID);
                 div="RespondLog";
-                destory(RespondLogGridID);
-                
+                //destory(RespondLogGridID);
+                AUIGrid.destroy(RespondLogGridID)
                 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                 dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
-                getDetailInfoListAjax(dcfreqentryid,div);
                 RespondLogGridID = GridCommon.createAUIGrid("RespondLogGrid_wrap", respondlogLayout,"", gridoptions);
+                getDetailInfoListAjax(dcfreqentryid,div);
                 AUIGrid.resize(RespondLogGridID); 
             });
-         
-     
             
+            $("#close").click(function(){
+            	AUIGrid.destroy(CompulsoryFieldGridID)
+            	AUIGrid.destroy(ChangeItemGridID)
+            	AUIGrid.destroy(RespondLogGridID)
+            });
+             
     });
     
     function getDataChangeListAjax() {
@@ -254,12 +271,21 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
          $("#viewApproveBy").val(result.data4[0].c2);
          $("#viewApproverVerified").val(result.data4[0].c3);
          $("#viewApprovalRemark").val(result.data4[0].dcfReqAppvRem);
+         
+         if(div =='Compulsory' ){
          AUIGrid.setGridData(CompulsoryFieldGridID, gridData.data1);
-         AUIGrid.setGridData(ChangeItemGridID, gridData.data2);
-         AUIGrid.setGridData(RespondLogGridID, gridData.data3);   
          AUIGrid.resize(CompulsoryFieldGridID);
+        	 
+         }else if(div =='ChangeItem'){
+         AUIGrid.setGridData(ChangeItemGridID, gridData.data2);
          AUIGrid.resize(ChangeItemGridID);
+        	 
+         }else if(div =='RespondLog'){
+         AUIGrid.setGridData(RespondLogGridID, gridData.data3);   
          AUIGrid.resize(RespondLogGridID);
+        	 
+         }
+         
           
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
@@ -369,10 +395,41 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
         AUIGrid.destroy(gridNm);
     }
     
+    function fn_setVisiable() {
+            //DCF Info
+            $("#viewDCFNumber").prop('readonly', true);
+            $("#viewRequestStatus").prop('readonly', true); 
+            $("#viewRequestDate").prop('readonly', true);
+            $("#viewType").prop('readonly', true);
+            $("#viewProgressStatus").prop('readonly', true);
+            $("#viewRequestBy").prop('readonly', true);  
+            $("#viewCategory").prop('readonly', true);
+            $("#viewSettleDate").prop('readonly', true);
+            $("#viewPriorityLevel").prop('readonly', true);
+            $("#viewSubject").prop('readonly', true);
+            $("#viewRequestBranch").prop('readonly', true);
+            $("#viewRequestDepartment").prop('readonly', true);
+            $("#viewRequestOnBehalf").prop('readonly', true);
+            $("#viewReason").prop('readonly', true);
+            $("#viewDescription").prop('readonly', true);
+            $("#viewRemark").prop('readonly', true);
+ 
+          //Approval Info
+            $("#viewApprovalStatus").prop('readonly', true);
+            $("#viewApproveAt").prop('readonly', true);
+            $("#viewApproveBy").prop('readonly', true);
+            $("#viewApproverVerified").prop('readonly', true);
+            $("#viewApprovalRemark").prop('readonly', true);
+       
+    }
+    
+    
+    
+    
+    
     
     /*----------------------------------------   셀렉트박스 이벤트 시작 ---------------------------------------------------- */
     function getComboRelays(obj, value, tag, selvalue) {
-        alert("value :    "+value);
         var robj = '#' + obj;
        if (value == "36") {
             $(robj).attr("disabled", false);
@@ -403,7 +460,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 <h2>Data Change Form List (* Only TR Book Lost)</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-<!--     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -487,6 +544,27 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 </tbody>
 </table><!-- table end -->
 
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+<!--         <li><p class="link_btn"><a id="close">Close</a></p></li> -->
+<!--         <li><p class="link_btn"><a id="detail">Detail</a></p></li> -->
+        <li><p class="link_btn"><a id="approval">Add Approval Result</a></p></li>
+    </ul>
+<!--     <ul class="btns"> -->
+<!--        <li><p class="link_btn type2"><a id="create">Create</a></p></li>  -->
+        
+<!--         <li><p class="link_btn type2"><a id="view">View</a></p></li>  -->
+
+<!--     </ul> -->
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
 
 </form>
 </section><!-- search_table end -->
@@ -497,7 +575,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 <!--     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li> -->
 <!--     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li> -->
 <!--     <li><p class="btn_grid"><a href="#">DEL</a></p></li> -->
-    <li><p class="btn_grid"><a id="insert">INS</a></p></li>
+<!--     <li><p class="btn_grid"><a id="insert">INS</a></p></li> -->
 <!--     <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
 </ul>
 
@@ -513,7 +591,6 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 
 
         
-</section><!-- container end -->
 <hr />
 
 <div id="ViewPopUp_wrap" class="popup_wrap" style="display: none;"><!-- popup_wrap start -->
@@ -521,7 +598,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 <header class="pop_header"><!-- pop_header start -->
 <h1>Data Change Form - View</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="close">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
