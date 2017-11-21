@@ -137,7 +137,8 @@
                            S.CODE   ,
                            S.SRV_PAC_ITM_UPD_DT   ,
                            S.USER_NAME ,
-                           S.SRV_PAC_ITM_REM  
+                           S.SRV_PAC_ITM_REM ,
+                           S.DISCONTINUE 
                       FROM ( SELECT D.SRV_PAC_ITM_ID   ,
                                     D.SRV_CNTRCT_PAC_ID   ,
                                     D.SRV_PAC_ITM_PRODUCT_ID   ,
@@ -150,7 +151,8 @@
                                     E.STK_DESC   ,
                                     Extent3.CODE_NAME   ,
                                     Extent4.CODE   ,
-                                    Extent5.USER_NAME   
+                                    Extent5.USER_NAME   ,
+                                    D.DISCONTINUE
                              FROM SAL0082D D
                                     JOIN SYS0026M E   ON ( E.STK_ID = D.SRV_PAC_ITM_PRODUCT_ID )
                                     AND ( 1 = E.STUS_CODE_ID )
@@ -178,7 +180,8 @@
 		             Extent4.CODE   ,
 		             E.SRV_PAC_ITM_UPD_DT   ,
 		             U.USER_NAME,   
-		             A.PAC_TYPE
+		             A.PAC_TYPE,
+		             E.DISCONTINUE
              FROM SAL0082D E 
                 JOIN SAL0081D  A ON E.SRV_CNTRCT_PAC_ID = A.SRV_CNTRCT_PAC_ID 
                 JOIN SYS0026M S   ON ( S.STK_ID = E.SRV_PAC_ITM_PRODUCT_ID )
@@ -252,10 +255,10 @@
                                SRV_PAC_ITM_ID, SRV_CNTRCT_PAC_ID, SRV_PAC_ITM_PRODUCT_ID, 
                                SRV_PAC_ITM_SVC_FREQ, SRV_PAC_ITM_RENTAL, SRV_PAC_ITM_PV, 
                                SRV_PAC_ITM_REM, SRV_PAC_ITM_STUS_ID, SRV_PAC_ITM_UPD_DT, 
-                               SRV_PAC_ITM_UPD_USER_ID) 
+                               SRV_PAC_ITM_UPD_USER_ID, DISCONTINUE) 
             VALUES (   SAL0082D_SRV_PAC_ITM_ID_SEQ.NEXTVAL , #{srvContractPacID} ,  #{srvPacItemProductID},
                            #{srvPacItemServiceFreq} , #{srvPacItemRental} , 0,
-                           #{srvPacItemRemark} , #{srvPacItemStatusID} ,sysdate, #{updator}
+                           #{srvPacItemRemark} , #{srvPacItemStatusID} ,sysdate, #{updator}, #{discontinue}
                        )
    </insert>
    
@@ -271,7 +274,8 @@
                        SRV_PAC_ITM_REM         = #{srvPacItemRemark},
                        SRV_PAC_ITM_STUS_ID     = #{srvPacItemStatusID},
                        SRV_PAC_ITM_UPD_DT      = SYSDATE,
-                       SRV_PAC_ITM_UPD_USER_ID =  #{updator}
+                       SRV_PAC_ITM_UPD_USER_ID =  #{updator},
+                       DISCONTINUE = #{discontinue}
             WHERE  SRV_PAC_ITM_ID          = #{srvPacItemID}
    </insert>
    

@@ -93,6 +93,7 @@ public class MembershipPackageMServiceImpl extends EgovAbstractServiceImpl imple
 				        iMap.put("srvPacItemRemark", updateMap.get("remark"));
 				        iMap.put("srvPacItemStatusID", updateMap.get("code"));
 				        iMap.put("updator",params.get("updator") );
+				        iMap.put("discontinue",updateMap.get("discontinue") );
 				        
 						r = membershipPackageMMapper.SAL0082D_insert(iMap) ;
 						

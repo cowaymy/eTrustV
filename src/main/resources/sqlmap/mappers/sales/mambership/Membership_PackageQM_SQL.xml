@@ -94,7 +94,8 @@
                                S.SRV_MEM_ITM_PRIOD   ,
                                S.SRV_MEM_ITM_REM   ,
                                S.SRV_MEM_ITM_STUS_ID   ,
-                               S.CODE CODE  
+                               S.CODE CODE  ,
+                               S.DISCONTINUE
                           FROM ( SELECT Extent1.SRV_MEM_PAC_ID   ,
                                         Extent1.PAC_TYPE   ,
                                         Extent2.SRV_MEM_ITM_PRIOD   ,
@@ -106,7 +107,8 @@
                                         Extent4.CODE_NAME   ,
                                         Extent5.CODE_NAME CODENAME1  ,
                                         Extent6.CODE CODE  ,
-                                        UTILS.CONVERT_TO_FLOAT(Extent2.SRV_MEM_ITM_PRC,24) C1  
+                                        UTILS.CONVERT_TO_FLOAT(Extent2.SRV_MEM_ITM_PRC,24) C1,
+                                        Extent2.DISCONTINUE  
                                  FROM SAL0091M Extent1
                                         JOIN SAL0092M Extent2   ON Extent2.SRV_MEM_PAC_ID = Extent1.SRV_MEM_PAC_ID
                                         JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent2.SRV_MEM_ITM_STK_ID
@@ -133,7 +135,8 @@
                         S.SRV_MEM_ITM_PRIOD   ,
                         S.SRV_MEM_ITM_REM   ,
                         S.SRV_MEM_ITM_STUS_ID   ,
-                        S.CODE CODE  
+                        S.CODE CODE  ,
+                        S.DISCONTINUE
                    FROM ( SELECT Extent1.SRV_MEM_PAC_ID   ,
                                  Extent1.PAC_TYPE   ,
                                  Extent2.SRV_MEM_ITM_PRIOD   ,
@@ -145,7 +148,8 @@
                                  Extent4.CODE_NAME   ,
                                  Extent5.CODE_NAME CODENAME1  ,
                                  Extent6.CODE   ,
-                                 UTILS.CONVERT_TO_FLOAT(Extent2.SRV_MEM_ITM_PRC,24) C1  
+                                 UTILS.CONVERT_TO_FLOAT(Extent2.SRV_MEM_ITM_PRC,24) C1, 
+                                 Extent2.DISCONTINUE 
                           FROM SAL0091M Extent1
                                  JOIN SAL0092M Extent2   ON Extent2.SRV_MEM_PAC_ID = Extent1.SRV_MEM_PAC_ID
                                  JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent2.SRV_MEM_ITM_STK_ID
@@ -184,11 +188,11 @@
 								   SRV_MEM_PAC_ID, SRV_MEM_ITM_STK_ID, SRV_MEM_ITM_PRC, 
 								   SRV_MEM_ITM_PV, SRV_MEM_ITM_PRIOD, SRV_MEM_ITM_STUS_ID, 
 								   SRV_MEM_ITM_REM, SRV_MEM_ITM_CRT_DT, SRV_MEM_ITM_CRT_USER_ID, 
-								   SRV_MEM_ITM_UPD_DT, SRV_MEM_ITM_UPD_USER_ID) 
+								   SRV_MEM_ITM_UPD_DT, SRV_MEM_ITM_UPD_USER_ID, DISCONTINUE) 
 				VALUES (  #{SRV_MEM_PAC_ID},  #{SRV_MEM_ITM_STK_ID} , #{SRV_MEM_ITM_PRC},
 							        #{SRV_MEM_ITM_PV},${SRV_MEM_ITM_PRIOD} , #{SRV_MEM_ITM_STUS_ID},
 							        #{SRV_MEM_ITM_REM},SYSDATE , #{updator},
-							        SYSDATE  ,#{updator} )
+							        SYSDATE  ,#{updator}, #{discontinue} )
    </insert>
    
    <insert id="SAL0092M_update" parameterType="Map" >
@@ -198,7 +202,8 @@
 						       SRV_MEM_ITM_PRIOD = #{SRV_MEM_ITM_PRIOD},
 						       SRV_MEM_ITM_REM = #{SRV_MEM_ITM_REM},
 						       SRV_MEM_ITM_UPD_DT  = SYSDATE,
-						       SRV_MEM_ITM_UPD_USER_ID = #{updator}
+						       SRV_MEM_ITM_UPD_USER_ID = #{updator},
+						       DISCONTINUE = #{discontinue}
 						WHERE  SRV_MEM_PAC_ID  = #{SRV_MEM_PAC_ID}
 						    AND  SRV_MEM_ITM_STK_ID = #{SRV_MEM_ITM_STK_ID} 
 

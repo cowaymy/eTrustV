@@ -64,7 +64,7 @@ function fn_selectListQAjax() {
 	    	  }
 	    	  
 	    	  
-	        }else{
+	    }else{
 	        	$("#pacType").val(packType);
                 
                 if($("#pacType").val() != "1"){
@@ -72,7 +72,12 @@ function fn_selectListQAjax() {
                     $("#srvPacItmSvcFreq").attr("class", "readonly");
                     $("#srvPacItmSvcFreq").val("0");
               }
-	        }
+	    }
+	       
+          if($("#pacType").val() != "0"){
+            $("#discontinue").attr( "disabled", "disabled" );
+          }
+
 	});
 }
 
@@ -116,6 +121,7 @@ function fn_save(){
     	     SRV_MEM_ITM_PRC        : $("#srvPacItmRental").val(),
     	     SRV_MEM_ITM_PV          : 0,
     	     SRV_MEM_ITM_REM        : $("#remark").val().trim(),
+             discontinue :  $("#discontinue").val(),
     	     SRV_MEM_ITM_STUS_ID  : 1
     };
 
@@ -234,8 +240,6 @@ Common.ajax("GET", "/sales/mPackages/selectCodel", $("#sForm").serialize(), func
 }
 
 
-
-
 function fn_DisableField(){
 	
     $("#packcode").attr("disabled" ,"disabled");
@@ -244,6 +248,16 @@ function fn_DisableField(){
     $("#remark").attr("disabled" ,"disabled");
     $("#savebt").attr("style" ,"display:none");
 }
+
+
+function fn_chk(){
+    if($("input:checkbox[id='discontinue']").is(":checked")){
+        $("#discontinue").val("1");
+    }else{
+        $("#discontinue").val("0");
+    }
+}
+
 
 
 </script>
@@ -307,6 +321,10 @@ function fn_DisableField(){
     <select class="w40p disabled"  id='pacType' name ='pacType'  disabled ="disabled" >
     </select>
     </td> 
+</tr>
+<tr>
+    <th scope="row">DISCONTINUE<span class="must"></span></th>
+    <td colspan="3"><input type="checkbox"  id="discontinue"  name="discontinue"  onclick="fn_chk()"/></td>
 </tr>
 <tr>
     <th scope="row">Remark </th>

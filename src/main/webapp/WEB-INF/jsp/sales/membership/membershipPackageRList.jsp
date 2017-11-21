@@ -150,7 +150,7 @@ function createAUIGrid() {
                           
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, headerHeight : 30};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true,  selectionMode : "singleRow",  showRowNumColumn : true, headerHeight : 30};  
         
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
         
@@ -218,10 +218,19 @@ function createDetailAUIGrid() {
                             { dataField : "srvPacItmProductId", headerText  : "Product id",    width : 100,  editable : false, visible : false },
                             { dataField : "stkCode", headerText  : "Product Code",    width : 100,  editable : false, style :"my-left-style"},
                             { dataField : "stkDesc", headerText  : "Product Name",width : 150,  editable: false, style :"my-left-style" },
-                            { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : false},
+                            { dataField : "code",   headerText  : "Status",  width          : 70,   editable       : false},
+                            { dataField : "discontinue",   headerText  : "DISCONTINUE",  width          : 100,   editable       : false,
+                            	renderer : {            
+                                    type : "CheckBoxEditRenderer",
+                                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                    editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                                    checkValue : "1", // true, false 인 경우가 기본
+                                    unCheckValue : "0"
+                              } 
+                            },
                             { dataField : "srvPacItmRental", headerText  : "price ",  width          : 100, editable       : false   ,dataType:"numeric", formatString : "#,##0.00"},
-                            { dataField : "srvPacItmSvcFreq",headerText  : "Period",  width          : 100,   editable       : false },
-                            { dataField : "srvPacItmRem",         headerText  : "Remark",   width          : 300,     editable       : false  }
+                            { dataField : "srvPacItmSvcFreq",headerText  : "Period",  width          : 70,   editable       : false },
+                            { dataField : "srvPacItmRem",         headerText  : "Remark",   width          : 300,     editable       : false, style:"my-left-style"   }
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true};  
@@ -416,6 +425,7 @@ function fn_selectDetailListAjax(statecd) {
 	}
 	
 	console.log(selectedItems[0]);
+
 	
 	var  vcd  = statecd;
 	var srvCntrPacId = selectedItems[0].item.srvCntrctPacId;
@@ -429,6 +439,13 @@ function fn_selectDetailListAjax(statecd) {
 
       AUIGrid.clearGridData(filterGridID);   
    });
+	   
+    if(selectedItems[0].item.pacType == "0") {
+        AUIGrid.showColumnByDataField(detailGridID, "discontinue");
+    } else {
+        AUIGrid.hideColumnByDataField(detailGridID, "discontinue");
+    }
+
 	 
 }
 

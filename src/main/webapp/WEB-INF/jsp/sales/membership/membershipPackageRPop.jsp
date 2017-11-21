@@ -57,12 +57,17 @@ function fn_selectListAjax() {
 	    	  $("#remark").val(packageInfo.srvPacItemRemark);
 	    	  $("#pacType").val(packageInfo.pacType);
 	    	  
+	    	  if(packageInfo.discontinue == "1"){
+	    		  $("#discontinue").val(packageInfo.discontinue);
+	    		  $("#discontinue").attr("checked","checked");
+	    	  }
+	    	  	    	  
 	    	  if($("#pacType").val() != "1"){
                   $("#srvPacItmRental").prop("readonly", true);
                   $("#srvPacItmRental").attr("class", "readonly");
-            }
+             }
 	    	  
-	        }else{
+	   }else{
 	        	$("#pacType").val(packType);
 	            
 	            if($("#pacType").val() != '1'){
@@ -70,11 +75,23 @@ function fn_selectListAjax() {
 	                $("#srvPacItmRental").attr("class", "readonly");
                     $("#srvPacItmRental").val("0");
 	          }
-	        }
+	    }
+	      
+	      if($("#pacType").val() != "0"){
+	        $("#discontinue").attr( "disabled", "disabled" );
+	      }
+
 	});
 }
 
 
+function fn_chk(){
+	if($("input:checkbox[id='discontinue']").is(":checked")){
+		$("#discontinue").val("1");
+	}else{
+        $("#discontinue").val("0");
+	}
+}
 
 
 
@@ -114,6 +131,7 @@ function fn_save(){
     	     srvPacItemRental :  $("#srvPacItmRental").val(),
     	     srvPacItemPV :  0,
     	     srvPacItemRemark :  $("#remark").val().trim(),
+    	     discontinue :  $("#discontinue").val(),
     	     srvPacItemStatusID : 1
 
     };
@@ -296,6 +314,10 @@ function fn_DisableField(){
     <select class="w40p disabled"  id='pacType' name ='pacType'  disabled ="disabled" >
     </select>
     </td> 
+</tr>
+<tr>
+	<th scope="row">DISCONTINUE<span class="must"></span></th>
+	<td colspan="3"><input type="checkbox"  id="discontinue"  name="discontinue" onclick="fn_chk()"/></td>
 </tr>
 <tr>
     <th scope="row">Remark </th>

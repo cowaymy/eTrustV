@@ -135,6 +135,7 @@ function fn_addRow() {
 	 item.stockID =$('select[name="packcode"]').val() ;
 	 item.stockDesc =$('select[name="packcode"] :selected').text();
 	 item.code =1;	 
+	 item.discontinue =0;	 
 
      item.rentalFee =0;
      item.serviceFreq =0;
@@ -199,7 +200,7 @@ function createAUIGrid() {
                             {dataField : "bom",     headerText  : "" ,editable       : false ,visible : false } ,
                             {dataField : "stockID",     headerText  : "ID" ,editable       : false ,visible : true, editable : false } ,
                             { dataField : "stockDesc", headerText  : "Product Name",    width : 200 ,editable : false},
-                            { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
+                            { dataField : "code",   headerText  : "Status",  width          : 80,   editable       : true
 			                                , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
 			                                 var retStr = "";
 			                                 for(var i=0,len=keyValueList.length; i<len; i++) {
@@ -216,8 +217,18 @@ function createAUIGrid() {
 			                             keyField   : "code", // key 에 해당되는 필드명
 			                             valueField : "value" // value 에 해당되는 필드명
 			                         }
-			                },
-                            
+			                }, {
+			                    dataField : "discontinue",
+			                    headerText : 'DISCONTINUE',
+			                    width : 120,
+			                    renderer : {            
+			                        type : "CheckBoxEditRenderer",
+			                        showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+			                        editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+			                        checkValue : "1", // true, false 인 경우가 기본
+			                        unCheckValue : "0"
+			                  } 
+			                },                            
                             { dataField : "rentalFee", headerText  : "Monthly Rental",width : 100 ,editable       : true ,dataType:"numeric", formatString : "#,##0.00",
                             	editRenderer : {
                                     type : "InputEditRenderer",
@@ -232,7 +243,7 @@ function createAUIGrid() {
                                     autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
                                 }
                             },
-                            { dataField : "remark",     headerText  : "Remark",  width          :300,    editable       : true}
+                            { dataField : "remark",     headerText  : "Remark",  width          :200,    editable       : true}
        ];
 
         var gridPros = { usePaging : false,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, softRemovePolicy : "exceptNew"};  
@@ -272,6 +283,20 @@ function createAUIGrid() {
      
 }
 
+
+function fn_chnPacType() {
+	if($("#pacType").val() == "0") {
+        AUIGrid.showColumnByDataField(newGridID, "discontinue");
+    } else {
+        AUIGrid.hideColumnByDataField(newGridID, "discontinue");
+        
+        var idx = AUIGrid.getRowCount(newGridID); 
+        
+        for(var i = 0; i < idx; i++){
+             AUIGrid.setCellValue(newGridID, i, "discontinue", '0');
+         } 
+    }	
+}
 
 //AUIGrid 메소드
 function auiCellEditignHandler(event)
@@ -515,6 +540,8 @@ function fn_filterNewAjax() {
          
      });
 }
+
+
     
 </script>
 
@@ -564,7 +591,7 @@ function fn_filterNewAjax() {
 	<td><input type="text" title="" placeholder="Package Description" id='SRV_CNTRCT_PAC_DESC_POP' name='SRV_CNTRCT_PAC_DESC_POP'  class="" /></td>
 	<th scope="row">Package Type </br>/ Obligation Period<span class="must">*</span></th>
     <td>
-    <select style="width: 150px" id='pacType' name ='pacType' >
+    <select style="width: 150px" id='pacType' name ='pacType'  onchange="javascript:fn_chnPacType();">
     </select>
     <input type="text" title="" onkeydown="javascript:fn_keyDown(this.event);" placeholder="Obligation Period" id='OBLIGT_PRIOD' name='OBLIGT_PRIOD' style="width: 120px;     margin-left: 4px"  />
     </td>

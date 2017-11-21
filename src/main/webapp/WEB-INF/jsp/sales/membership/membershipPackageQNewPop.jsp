@@ -122,6 +122,7 @@ function fn_addRow() {
 	 item.stkId =$('select[name="packcode"]').val() ;
 	 item.stkDesc =$('select[name="packcode"] :selected').text();
 	 item.code =1;
+     item.discontinue =0;   
 	 item.srvItemPrice =0;
 	 item.srvItemPeriod =0;
 	 item.rowId ="new";
@@ -202,7 +203,18 @@ function createAUIGrid() {
 			                             keyField   : "code", // key 에 해당되는 필드명
 			                             valueField : "value" // value 에 해당되는 필드명
 			                         }
-			                },
+			                }, {
+                                dataField : "discontinue",
+                                headerText : 'DISCONTINUE',
+                                width : 120,
+                                renderer : {            
+                                    type : "CheckBoxEditRenderer",
+                                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                    editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                    checkValue : "1", // true, false 인 경우가 기본
+                                    unCheckValue : "0"
+                              } 
+                            },   
                             
                             { dataField : "srvItemPrice", headerText  : "Item Price",width : 100 ,editable       : true , dataType:"numeric", formatString : "#,##0.00",
                             	editRenderer : {
@@ -265,6 +277,21 @@ function createAUIGrid() {
         AUIGrid.bind(newGridID, "removeRow", auiRemoveRowHandler);
 }
     
+
+function fn_chnPacType() {
+	
+    if($("#pacType").val() == "0") {
+        AUIGrid.showColumnByDataField(newGridID, "discontinue");
+    } else {
+        AUIGrid.hideColumnByDataField(newGridID, "discontinue");
+        
+        var idx = AUIGrid.getRowCount(newGridID); 
+        
+        for(var i = 0; i < idx; i++){
+             AUIGrid.setCellValue(newGridID, i, "discontinue", '0');
+         } 
+    }   
+}    
 
 //AUIGrid 메소드
 function auiCellEditignHandler(event)
@@ -527,7 +554,7 @@ function fn_filterNewAjax() {
 	<td><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc'  class="w100p" /></td>
 	<th scope="row">Package Type<span class="must">*</span></th>
     <td>
-    <select class="w100p"  id='pacType' name ='pacType' >
+    <select class="w100p"  id='pacType' name ='pacType'  onchange="javascript:fn_chnPacType();">
     </select>
     </td>
 </tr>

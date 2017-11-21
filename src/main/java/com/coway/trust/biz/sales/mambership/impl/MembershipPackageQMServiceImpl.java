@@ -137,6 +137,7 @@ public class MembershipPackageQMServiceImpl extends EgovAbstractServiceImpl impl
 				        iMap.put("SRV_MEM_ITM_REM", updateMap.get("srvRemark"));
 				        iMap.put("SRV_MEM_ITM_STUS_ID", updateMap.get("code")  );
 				        iMap.put("updator",params.get("updator") );
+				        iMap.put("discontinue",updateMap.get("discontinue") );
 				        
 						r = membershipPackageQMMapper.SAL0092M_insert(iMap) ;
 					}
