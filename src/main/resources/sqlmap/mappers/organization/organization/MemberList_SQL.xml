@@ -3,6 +3,10 @@
 <mapper
 	namespace="com.coway.trust.biz.organization.organization.impl.MemberListMapper">
 
+	<select id="getDocNo" parameterType="Map" resultType="egovMap">
+        select FN_GET_DOCNO(#{docNo})  doc_No  , 1 as doc_No_Id FROM DUAL
+	</select>
+
 	<!-- searchOrganization Gruop List -->
 	<select id="nationality" parameterType="Map" resultType="egovMap">
 		SELECT
@@ -1010,6 +1014,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , AREA_ID
         , ADDR_DTL
         , STREET
+        ,TRAINEE_TYPE
         )
             VALUES (
              (SELECT MAX(MEM_ID)+1 FROM ORG0001D )
@@ -1067,6 +1072,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{areaId}
             , #{streetDtl}
             , #{addrDtl}
+             , #{traineeType}
              )
     </insert>
 
@@ -1474,7 +1480,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
          )
          VALUES (
            (SELECT MAX(USER_ID)+1 FROM SYS0047M)
-          , #{userName}
+          ,  #{userName}
           , #{password}
           , #{userFullName}
           , #{userEmail}
