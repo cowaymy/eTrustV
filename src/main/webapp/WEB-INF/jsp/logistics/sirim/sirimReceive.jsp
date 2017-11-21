@@ -628,7 +628,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 <!--     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li> -->
-    <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.ins' /></a></p></li>
+<%--     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="receive">Receive</a></p></li>
 </ul>
 
