@@ -151,6 +151,8 @@
             
             newPrcVal = Math.floor(newPrcVal);
             
+            if(newPrcVal < 0) newPrcVal = 0;
+            
             AUIGrid.setCellValue(stckGridID, i, "promoAmt", newPrcVal);
         }
     }
@@ -171,6 +173,8 @@
             else {
                 newRpfVal = orgRpfVal - dscRpfVal;
             }
+            
+            if(newRpfVal < 0) newRpfVal = 0;
             
             AUIGrid.setCellValue(stckGridID, i, "promoPrcRpf", newRpfVal);
         }
@@ -208,6 +212,9 @@
             
             console.log('dscPvVal   :'+dscPvVal);
             console.log('dscPvValGST:'+Math.floor(dscPvVal*(1/1.06)));
+            
+            if(newPvVal < 0) newPvVal = 0;
+            if(gstPvVal < 0) gstPvVal = 0;
             
             AUIGrid.setCellValue(stckGridID, i, "promoItmPv", newPvVal);
             AUIGrid.setCellValue(stckGridID, i, "promoItmPvGst", gstPvVal);
@@ -590,6 +597,14 @@
 //          $('#promoSrvMemPacId').removeAttr("disabled");
             
             $('#sctPromoDetail').removeClass("blind");
+        }
+        
+        //Promo Application = Rental
+        if(promoAppVal == '2284') {
+            $('#promoDiscPeriodTp').val('2293');
+        }
+        else {
+            $('#promoDiscPeriodTp').val('');
         }
     }
 </script>

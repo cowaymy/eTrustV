@@ -2079,14 +2079,17 @@
     }
 
     function chgTab(tabNm) {
+        console.log('tabNm:'+tabNm);
+        
         switch(tabNm) {
             case 'doc' :
-                AUIGrid.resize(docGridID, 900, 380);
+                AUIGrid.resize(docGridID, 980, 380);
+//              AUIGrid.resize(docGridID);
                 if(docDefaultChk == false) fn_checkDocList(true);
                 break;
             default :
                 break;
-        };
+        }
         /*
         if(tabNm != 'ins') {
             if(!$('#pBtnCal').hasClass("blind")) {                

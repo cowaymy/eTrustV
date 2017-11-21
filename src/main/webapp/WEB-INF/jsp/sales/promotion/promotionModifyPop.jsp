@@ -175,6 +175,8 @@
             
             newPrcVal = Math.floor(newPrcVal);
             
+            if(newPrcVal < 0) newPrcVal = 0;
+            
             AUIGrid.setCellValue(stckGridID, i, "promoAmt", newPrcVal);
         }
     }
@@ -195,6 +197,8 @@
             else {
                 newRpfVal = orgRpfVal - dscRpfVal;
             }
+            
+            if(newRpfVal < 0) newRpfVal = 0;
             
             AUIGrid.setCellValue(stckGridID, i, "promoPrcRpf", newRpfVal);
         }
@@ -229,6 +233,9 @@
             newPvVal = Math.round(orgPvVal - dscPvVal - addPvVal);
             
             gstPvVal = Math.round(orgPvVal - Math.floor(dscPvVal*(1/1.06)) - addPvVal);
+            
+            if(newPvVal < 0) newPvVal = 0;
+            if(gstPvVal < 0) gstPvVal = 0;
             
             AUIGrid.setCellValue(stckGridID, i, "promoItmPv", newPvVal);
             AUIGrid.setCellValue(stckGridID, i, "promoItmPvGst", gstPvVal);
@@ -668,6 +675,7 @@
             
             $('#sctPromoDetail').removeClass("blind");
         }
+        
     }
 
 </script>
