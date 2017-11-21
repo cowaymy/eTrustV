@@ -9,6 +9,8 @@ var packageInfo={};
 $(document).ready(function(){
     fn_selectCodel();
     
+    $("#discontinue").val("0");
+    
     CommonCombo.make("pacType", "/common/selectCodeList.do", {groupCode:'366', orderValue:'CODE'}, "", {
         id: "code",
         name: "codeName"
