@@ -8,27 +8,27 @@
     var optionCity = {chooseMessage: "2. City"};
     var optionPostCode = {chooseMessage: "3. Post Code"};
     var optionArea = {chooseMessage: "4. Area"};
-        
+
     var option = {
                 width : "1000px", // 창 가로 크기
                 height : "600px" // 창 세로 크기
             };
-        
+
         function fn_close(){
             window.close();
         }
 
-            
-           
+
+
         //doGetCombo('/common/selectCodeList.do', '45', '','branchType', 'S' , ''); //branchType
-         
+
         //Start AUIGrid
         $(document).ready(function() {
 
                var branchId = "${branchDetail.typeId}";
                    console.log("branchId : " + branchId);
                    /* $("#branchType option[value="+ branchId +"]").attr("selected", true); */
-/*                 $("#branchType option[value='41']").attr("selected", true); */
+                   /* $("#branchType option[value='41']").attr("selected", true); */
 
 
             doGetCombo('/common/selectCodeList.do', '49', '','cmRegion', 'S' , ''); //region
@@ -36,37 +36,36 @@
                  if ($("#nation").val()== 1){
                     doGetCombo('/organization/getStateList.do', $(this).val() , ''   , 'state' , 'S', '');
                 }
-                
+
             });
-            
-            
+
+
             $('#state').change(function (){
                     doGetCombo('/organization/getAreaList.do', $(this).val() , ''   , 'area' , 'S', '');
             });
-            
-            
+
+
             $('#area').change(function (){
                     doGetCombo('/organization/getPostcodeList.do', $(this).val() , ''   , 'postcode' , 'S', '');
             });
-            
+
         });
-        
-        
-        
+
+
+
         //Update
         function fn_branchSave() {
 
             if (validRequiredField()){
-                Common.ajax("GET","/organization/branchListUpdate.do", $("#branchForm").serialize(), function(result){
+                Common.ajax("GET","/organization/branchListUpdate", $("#branchForm").serialize(), function(result){
                     console.log(result);
                     Common.alert("Branch Save successfully .",fn_close);
                 });
-            
+
             }
 
         }
-        
-        
+
         function fn_close(){
             $("#popup_wrap").remove();
             fn_getBranchListAjax();
@@ -87,27 +86,27 @@
             Common.alert("Please key  in Region");
             return false;
         }
-    	
+
     	if($("#addrDtl").val() == ''){
             Common.alert("Please key in the address.");
             return false;
         }
-        
+
         if($("#mArea").val() == ''){
                 Common.alert("Please key in the area.");
                 return false;
         }
-        
+
         if($("#mCity").val() == ''){
             Common.alert("Please key in the city.");
             return false;
         }
-        
+
         if($("#mPostCd").val() == ''){
             Common.alert("Please key in the postcode.");
             return false;
         }
-        
+
         if($("#mState").val() == ''){
             Common.alert("Please key in the state.");
             return false;
@@ -115,8 +114,8 @@
         return true;
     }
 
-    
-    
+
+
     function fn_addrSearch(){
         if($("#searchSt").val() == ''){
             Common.alert("Please search.");
@@ -125,28 +124,28 @@
         Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#branchForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
     }
     function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
-        
+
         if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
-            
+
             $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
             $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
             $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
             $("#mState").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             //Call Ajax
-           
+
             CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
-            
+
             var cityJson = {state : mstate}; //Condition
             CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
-            
+
             var postCodeJson = {state : mstate , city : mcity}; //Condition
             CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
-            
+
             var areaJson = {groupCode : mpostcode};
             var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
             CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
-            
+
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();
         }else{
@@ -155,111 +154,111 @@
     }
     //Get Area Id
     function fn_getAreaId(){
-        
+
         var statValue = $("#mState").val();
         var cityValue = $("#mCity").val();
         var postCodeValue = $("#mPostCd").val();
         var areaValue = $("#mArea").val();
-        
-        
-        
+
+
+
         if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
-            
+
             var jsonObj = { statValue : statValue ,
                                   cityValue : cityValue,
                                   postCodeValue : postCodeValue,
                                   areaValue : areaValue
                                 };
             Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
-                
+
                  $("#areaId").val(result.areaId);
-                
+
             });
-            
+
         }
-        
+
     }
 
     function fn_selectCity(selVal){
-        
+
         var tempVal = selVal;
-        
+
         if('' == selVal || null == selVal){
-           
+
              $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
              $('#mPostCd').val('');
              $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
              $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
              $('#mArea').val('');
              $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
         }else{
-            
+
             $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
             $('#mArea').val('');
             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
             //Call ajax
             var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
             CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
         }
-        
+
     }
 
     function fn_selectPostCode(selVal){
-        
+
         var tempVal = selVal;
-        
+
         if('' == selVal || null == selVal){
-           
+
             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
             $('#mArea').val('');
             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
         }else{
-            
+
             $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             //Call ajax
             var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
             CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
         }
-        
+
     }
 
     function fn_selectState(selVal){
-        
+
         var tempVal = selVal;
-        
+
         if('' == selVal || null == selVal){
             //전체 초기화
-            fn_initAddress();   
-            
+            fn_initAddress();
+
         }else{
-            
+
             $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
             $('#mPostCd').val('');
             $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
             $('#mArea').val('');
             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
             //Call ajax
             var cityJson = {state : tempVal}; //Condition
             CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
         }
-        
+
     }
 
     </script>
-    
-    
+
+
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -272,7 +271,7 @@
 
 <section class="pop_body"><!-- pop_body start -->
 
-<form id="branchForm" name="branchForm">    
+<form id="branchForm" name="branchForm">
 <input type="hidden" id ="areaId" name="areaId"/>
 <input type="hidden" id ="branchNo" name="branchNo"  value= "${branchDetail.brnchId}"/>
 <table class="type1"><!-- table start -->
@@ -296,7 +295,7 @@
     </td>
     <th scope="row">Branch Code<span class="must">*</span></th>
     <td>
-    <input id="branchCd" name="branchCd" type="text" title="" placeholder="Branch Type" class="w100p"  value= "${branchDetail.code}"/>
+    <input id="branchCd" name="branchCd" type="text" title="" placeholder="Branch Code" class="w100p"  value= "${branchDetail.code}"/>
     </td>
 </tr>
 <tr>
@@ -331,13 +330,13 @@
 <tr>
    <th scope="row">Area(4)<span class="must">*</span></th>
     <td colspan="3">
-    <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+    <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
     </td>
 </tr>
 <tr>
      <th scope="row">City(2)<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+    <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
     </td>
     <th scope="row">PostCode(3)<span class="must">*</span></th>
     <td>
@@ -374,6 +373,14 @@
     <input id="txtTel2" name="txtTel2" type="text" title="" placeholder="Tel (2)" class="w100p"  value= "${branchDetail.c15}" />
     </td>
 </tr>
+
+<tr>
+    <th scope="row">Start From Date</th>
+    <td>
+     <input type="text" title="Start From Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartOperate" name="dtStartOperate"/>
+    </td>
+</tr>
+
 </tbody>
 </table><!-- table end -->
 </form>
