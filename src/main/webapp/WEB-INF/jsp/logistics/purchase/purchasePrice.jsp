@@ -138,19 +138,20 @@
     
     var subgridpros = {
             // 페이지 설정
-            usePaging : true,                
-            pageRowCount : 10,                
-            editable : true,                
-            noDataMessage : "<spring:message code='sys.info.grid.noDataMessage'/>",
-            enableSorting : true,
-            softRemoveRowMode:false
+            showStateColumn : false ,
+            usePaging : false,                
+            //pageRowCount : 10,                
+            editable : false,                
+            noDataMessage : "<spring:message code='sys.info.grid.noDataMessage'/>"
+            //enableSorting : true,
+           // softRemoveRowMode:false
             };
     
 
     $(document).ready(function(){
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
-        historyGrid = GridCommon.createAUIGrid("history_grid", historyLayout,"", gridoptions);
+        historyGrid = GridCommon.createAUIGrid("history_grid", historyLayout,"", subgridpros);
         //doGetCombo('/common/selectCodeList.do', '15', '','msttype', 'S' , ''); //Type 리스트 조회
         doGetCombo('/common/selectCodeList.do', '15', '', 'msttype', 'M','f_multiCombo'); //Type 리스트 조회  
         doDefCombo(comboDatas, 'Y' ,'excludedelete', 'S', '');
@@ -161,8 +162,9 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
         {
-        	$("#tap_area_01").hide();
-        	//f_removeclass();
+        	f_removeclass();
+        	//AUIGrid.destroy(historyGrid);
+        	$("#tap_area_01").show();
         	$("#viewseqno").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'seqNo'));
         	$("#viewinforcordno").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'infoRcordNo'));
         	$("#viewvendor").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'vendor'));
@@ -226,12 +228,22 @@
         	$("#viewotherimprtcost").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'otherimprtcost'));
         	$("#viewcondiunitname").val(AUIGrid.getCellValue(myGridID ,event.rowIndex,'condiunitname'));
             
-        	getHistoryAjax(AUIGrid.getCellValue(myGridID ,event.rowIndex,'matrlMst'));
+        	//getHistoryAjax(AUIGrid.getCellValue(myGridID ,event.rowIndex,'matrlMst'));
         });
 
         $(function(){
             $("#search").click(function(){
                 getListAjax();    
+            });
+            $("#history").click(function(){
+            	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+                if(selectedItem[0] < 0 ){
+                    Common.alert('Please select data.');
+                    return false;
+                }else{
+	                var matrlMst = AUIGrid.getCellValue(myGridID,  selectedItem[0], "matrlMst");
+                	getHistoryAjax(matrlMst);
+                } 
             });
             $("#clear").click(function(){
 //            	$("#searchForm")[0].reset();  
@@ -251,7 +263,6 @@
         console.log(param);
         Common.ajax("GET" , url , param , function(data){
             var list= data.dataList
-	        console.log(list);
             AUIGrid.setGridData(myGridID, list);
         });
     }
@@ -266,10 +277,9 @@
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
                      var list= data.dataList
+                      AUIGrid.clearGridData(historyGrid);
                      AUIGrid.setGridData(historyGrid, list);      
-                     AUIGrid.resize(historyGrid,1856,299);
-                     $("#tap_area_01").show();
-                     f_removeclass();
+                     AUIGrid.resize(historyGrid); 
                      
             },
             error : function(jqXHR, textStatus, errorThrown) {
@@ -408,15 +418,15 @@
 				<tr> 
 				    <th scope="row">Delete</th>
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewmarkdel" name="viewmarkdel" readonly="readonly"/></td>
-                    <!-- <th colspan="4"></th> -->
+                    <td colspan="4"></td>
 				</tr>
 				<tr>
 				    <th scope="row">Info Record No.</th>
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewinforcordno" name="viewinforcordno" readonly="readonly"/></td>
 				    <th scope="row">Purchase ORG</th>
-				    <td ><input type="text" title="" placeholder=""  class="w100p" id="viewpurchsorg" name="viewpurchsorg" readonly="readonly"/></td>   
-				    <!-- <th colspan="2"></th>   -->
-				</tr>
+				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewpurchsorg" name="viewpurchsorg" readonly="readonly"/></td>   
+                    <td colspan="2"></td>
+         		 </tr>
 				<tr>
 				    <th scope="row">Vendor</th>
 				    <td ><input type="text" title="" placeholder=""  class="w100p" id="viewvendor" name="viewvendor" readonly="readonly"/></td>     
@@ -434,7 +444,7 @@
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewpurchsgrp" name="viewpurchsgrp" readonly="readonly"/></td>
 				    <th scope="row">Planned Delivery Time in Days</th>
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewplandelvrytmday" name="viewplandelvrytmday" readonly="readonly"/></td>
-				    <!-- <th colspan="2"></th> -->  
+                    <td colspan="2"></td>
 				</tr>
 <!-- 				<tr> -->
 <!-- 				    <th scope="row">E-Mail Address</th> -->
@@ -446,7 +456,7 @@
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewtaxcode" name="viewtaxcode" readonly="readonly"/></td>
 <!-- 				    <th scope="row">Price Determination (Pricing) Date Control</th> -->
 <!-- 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewprcdtermindtcntrl" name="viewprcdtermindtcntrl" readonly="readonly"/></td> -->
-				    <!-- <th colspan="2"></th> -->  
+                        <td colspan="4"></td>
 				</tr>
 				<tr>
 				    <th scope="row">Net Price</th>
@@ -461,7 +471,8 @@
 				    </td>
 				    <th scope="row">Validity end date</th>
 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewvalidenddt" name="viewvalidenddt" readonly="readonly"/></td>
-				    <!-- <th colspan="2"></th>   -->
+				    <td colspan="2"></td>
+				    
 				</tr>
 <!-- 				<tr> -->
 <!-- 				    <th scope="row">Transfer Cost</th> -->
@@ -471,6 +482,7 @@
 <!-- 				    <th scope="row">Other Import Cost</th> -->
 <!-- 				    <td><input type="text"  title="" placeholder=""  class="w100p" id="viewotherimprtcost" name="viewotherimprtcost" readonly="readonly"/></td>      -->
 <!-- 				</tr> -->
+                 
 				</tbody>
 				</table>
         
