@@ -6,10 +6,10 @@
 
 var packageInfo={};
 
-$(document).ready(function(){
-    fn_selectCodel();
-    
+$(document).ready(function(){    
     $("#discontinue").val("0");
+    
+    fn_selectCodel();
     
     CommonCombo.make("pacType", "/common/selectCodeList.do", {groupCode:'366', orderValue:'CODE'}, "", {
         id: "code",
