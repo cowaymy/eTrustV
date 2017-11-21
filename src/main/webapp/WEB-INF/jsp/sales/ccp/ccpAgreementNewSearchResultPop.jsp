@@ -862,10 +862,10 @@ function createAUIGrid11() {
 <caption>table</caption>
 <colgroup>
     <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
+    <col style="width:260px" />
     <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:140px" />
     <col style="width:*" />
 </colgroup>
 <tbody> 
@@ -962,7 +962,7 @@ function createAUIGrid11() {
     <col style="width:*" />
     <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:80px" />
+    <col style="width:195px" />
     <col style="width:*" />
 </colgroup>
 <tbody>

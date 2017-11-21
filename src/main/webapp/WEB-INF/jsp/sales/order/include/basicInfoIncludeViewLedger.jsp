@@ -14,9 +14,9 @@ function fn_underDevelop(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:130px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:130px" />
+    <col style="width:160px" />
     <col style="width:*" />
     <col style="width:110px" />
     <col style="width:*" />
