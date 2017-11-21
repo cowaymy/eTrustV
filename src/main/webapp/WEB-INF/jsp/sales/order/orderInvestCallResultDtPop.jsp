@@ -49,7 +49,7 @@
 	            dataField : "callCrtDt",
 	            headerText : "Create At",
 	            dataType : "date", 
-                formatString : "yyyy-mm-dd hh:MM:ss",
+                formatString : "mm-dd-yyyy hh:24MI:ss",
 	            width : 130,
 	            editable : false
 	        }, {

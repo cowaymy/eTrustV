@@ -13,9 +13,10 @@ $(document).ready(function(){
     
      // 셀 더블클릭 이벤트 바인딩 - contact 수정
      AUIGrid.bind(contactGridID, "cellDoubleClick", function(event){
-         $("#_editCustId").val(event.item.custId);
-         $("#_editCustCntcId").val(event.item.custCntcId);
-//         Common.popupDiv("/sales/customer/updateCustomerContactInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv3Pop');
+    	 $("#_editDealerId").val(event.item.dealerId);
+         $("#_editDealerCntId").val(event.item.dealerCntId);
+         $("#requestdo").val('R');
+         Common.popupDiv("/sales/pst/dealerEditCntUpdPop.do", $("#contForm").serializeJSON(), null , true, '_editDiv3Pop');
      });
     
     
@@ -159,6 +160,8 @@ $(document).ready(function(){
     <input type="hidden" id="dealerId" name="dealerId" value="${dealerId}">
     <input type="hidden" id="tempDealerId" name="tempDealerId">
     <input type="hidden" id="tempDealerCntId" name="tempDealerCntId">
+    <input type="hidden" name="editDealerCntId"   id="_editDealerCntId"> <!--Contact Id  -->
+    <input type="hidden" name="requestdo"   id="requestdo"> <!--Contact Id  -->
 </form>
 <table class="type1"><!-- table start -->
 <caption>table</caption>

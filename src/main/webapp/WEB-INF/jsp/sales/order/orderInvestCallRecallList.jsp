@@ -32,24 +32,24 @@
 	        }, {
 	            dataField : "name",
 	            headerText : "Investigate Status",
-	            width : 230,
+	            width : 200,
 	            editable : false
 	        }, {
 	            dataField : "salesOrdNo",
 	            headerText : "Order No.",
-	            width : 230,
+	            width : 200,
 	            editable : false
 	        }, {
 	            dataField : "userName",
 	            headerText : "Investigate By",
-	            width : 230,
+	            width : 200,
 	            editable : false
 	        }, {
 	            dataField : "invCrtDt",
 	            headerText : "Investigate At",
 	            dataType : "date",
                 formatString : "dd-mm-yyyy" ,
-	            width : 230,
+	            width : 200,
 	            editable : false
 	        }, {
                 dataField : "invId",
@@ -91,6 +91,25 @@
         }
         );
     }
+	
+    $.fn.clearForm = function() {
+        return this.each(function() {
+            var type = this.type, tag = this.tagName.toLowerCase();
+            if (tag === 'form'){
+                return $(':input',this).clearForm();
+            }
+            if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+                this.value = '';
+                this.text='';
+            }else if (type === 'checkbox' || type === 'radio'){
+                this.checked = false;
+                this.text='';
+            }else if (tag === 'select'){
+                this.selectedIndex = -1;
+                this.text='';
+            }
+        });
+    };
 </script>
 
 <section id="content"><!-- content start -->
@@ -104,9 +123,9 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order Investigation Call/Result Search</h2>
 <ul class="right_opt">
-    <li><p class="btn_blue"><a href="#">Call/Result Detail</a></p></li>
+    <!-- <li><p class="btn_blue"><a href="#">Call/Result Detail</a></p></li> -->
     <li><p class="btn_blue"><a href="#" onClick="fn_investCallResultListAjax()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

@@ -124,7 +124,7 @@
    }
 </script>
 
-<div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>DEALER CONTACT - ADD/EDIT</h1>

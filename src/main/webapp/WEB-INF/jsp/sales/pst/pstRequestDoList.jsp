@@ -128,6 +128,22 @@
     function fn_pstReport(){
         Common.alert('The program is under development.');
     }
+    
+    $.fn.clearForm = function() {
+        return this.each(function() {
+            var type = this.type, tag = this.tagName.toLowerCase();
+            if (tag === 'form'){
+                return $(':input',this).clearForm();
+            }
+            if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+                this.value = '';
+            }else if (type === 'checkbox' || type === 'radio'){
+                this.checked = false;
+            }else if (tag === 'select'){
+                this.selectedIndex = -1;
+            }
+        });
+    };
 </script>
 
 <section id="content"><!-- content start -->
@@ -143,7 +159,7 @@
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDO()">NEW</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
-    <!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
