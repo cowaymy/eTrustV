@@ -487,6 +487,37 @@ public class MemberListController {
 		return ResponseEntity.ok(message);
 	}
 
+
+	/**
+	 * Request Trainee To Member Pop open List
+	 * By KV
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/confirmMemRegisPop.do")
+	public String selectRequestTraineeToMem(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
+		/*EgovMap PAExpired = memberListService.selectCodyPAExpired(params);*/
+		/*logger.debug("PAExpired : {}", PAExpired);*/
+		logger.debug("selectMemberListView : {}", selectMemberListView);
+		logger.debug("issuedBank : {}", selectIssuedBank);
+		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		/*logger.debug("vact_type_id    " + vact_type_id);*/
+		/*model.addAttribute("PAExpired", PAExpired);*/
+		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
+		model.addAttribute("memberView", selectMemberListView);
+		model.addAttribute("issuedBank", selectIssuedBank);
+		model.addAttribute("codeValue", params.get("codeValue"));
+		return "organization/organization/confirmMemRegisPop";
+	}
+
+
+
 	/**
 	 * Search rule book management list
 	 *
