@@ -1201,6 +1201,45 @@
         )
     </insert>  
     
+    <insert id="insertTmpNormalPaymentInfo" parameterType="Map">
+        INSERT INTO PAY0240T
+        (
+            SEQ,
+            AMT,
+            BANK_CHRG_AMT,
+            BANK_SLIP_NO,
+            PAYER_NM,
+            REF_DTL,
+            BANK_TYPE_ID,
+            BANK_ACC_ID,
+            VA_ACC_NO,
+            TRNSC_DT,
+            ITM_REM,
+            EFT_NO,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID
+        )
+        VALUES
+        (
+            #{seq},
+            #{amount},
+            #{chargeAmount},
+            #{slipNo},
+            #{payerName},
+            #{jomPay},
+            #{bankType},
+            #{bankAcc},
+            #{va},
+            TO_DATE(#{trDate}, 'DD/MM/YYYY'),
+            #{remark},
+            #{eft},
+            #{keyInTrNo},
+            TO_DATE(#{keyInTrIssueDate}, 'DD/MM/YYYY'),
+            #{keyIncollMemId}
+        )
+    </insert>
+    
     <insert id="insertTmpNormalCashPaymentInfo" parameterType="Map">
         INSERT INTO PAY0240T (
             SEQ,

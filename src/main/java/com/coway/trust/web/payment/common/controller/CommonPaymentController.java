@@ -268,6 +268,10 @@ public class CommonPaymentController {
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
+    	System.out.println("params : " + params);
+    	List<Object> key = params.get("key");
+    	System.out.println("key : " + key.get(0));
+    	//System.out.println("key : " + key);
     	Map<String, Object> formInfo = new HashMap<String, Object> ();
     	if(formList.size() > 0){
     		for(Object obj : formList){
@@ -282,6 +286,10 @@ public class CommonPaymentController {
     	if(formInfo.get("chargeAmount") == null || formInfo.get("chargeAmount").equals("")){
     		formInfo.put("chargeAmount", 0);
     	}
+    	
+    	if(formInfo.get("bankAcc") == null || formInfo.get("bankAcc").equals("")){
+    		formInfo.put("bankAcc", 0);
+    	}
 		formInfo.put("payItemIsLock", false);
 		formInfo.put("payItemIsThirdParty", false);
 		formInfo.put("payItemStatusId", 1);
@@ -290,9 +298,6 @@ public class CommonPaymentController {
 		formInfo.put("payItemCardTypeId", 0);
 
 		commonPaymentService.saveNormalPayment(formInfo, gridList);
-    	
-		// 저장
-		//commonPaymentService.savePayment(formInfo,gridList);
 		
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();

@@ -1142,27 +1142,23 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	//payment 임시정보 등록
     	paramMap.put("seq", seq);
     	
-    	System.out.println("#####paramMap : " + paramMap);
-    	
-    	if("105".equals(String.valueOf(paramMap.get("payType")))){
+    	/*if("105".equals(String.valueOf(paramMap.get("payType")))){
     		commonPaymentMapper.insertTmpNormalCashPaymentInfo(paramMap);
     	}else if("106".equals(String.valueOf(paramMap.get("payType")))){
     		commonPaymentMapper.insertTmpNormalChequePaymentInfo(paramMap);
     	}else if("108".equals(String.valueOf(paramMap.get("payType")))){
     		commonPaymentMapper.insertTmpNormalOnlinePaymentInfo(paramMap);
-    	}
-		
-		//billing 임시정보 등록
-    	/*if (paramList.size() > 0) {    		
+    	}*/
+    	commonPaymentMapper.insertTmpNormalPaymentInfo(paramMap);
+    	
+    	//billing 임시정보 등록
+    	if (paramList.size() > 0) {    		
     		Map<String, Object> hm = null;    		
     		for (Object map : paramList) {
     			hm = (HashMap<String, Object>) map;  
     			hm.put("seq", seq);
     			commonPaymentMapper.insertTmpBillingInfo(hm);    			
     		}
-    	}*/
-    	
-    	//payment 처리 프로시저 호출
-    	//commonPaymentMapper.processPayment(paramMap);
+    	}
     }
 }

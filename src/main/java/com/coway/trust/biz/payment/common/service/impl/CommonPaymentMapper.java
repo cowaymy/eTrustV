@@ -477,4 +477,11 @@ public interface CommonPaymentMapper {
 	 * @return
 	 */
 	int insertTmpNormalOnlinePaymentInfo(Map<String, Object>params);
+	
+	/**
+	 * Normal Payment TMP테이블에 저장
+	 * @param params
+	 * @return
+	 */
+	int insertTmpNormalPaymentInfo(Map<String, Object>params);
 }
