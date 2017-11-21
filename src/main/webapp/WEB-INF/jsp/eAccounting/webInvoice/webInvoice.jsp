@@ -320,7 +320,7 @@ function fn_selectWebInvoiceItemList(clmNo) {
     var obj = {
             clmNo : clmNo
     };
-    Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceItemList.do", obj, function(result) {
+    Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceItemList.do?_cacheId=" + Math.random(), obj, function(result) {
         console.log(result);
         AUIGrid.setGridData(newGridID, result);
     });
