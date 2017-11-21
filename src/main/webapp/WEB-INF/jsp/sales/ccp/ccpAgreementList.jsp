@@ -12,7 +12,7 @@ $(document).ready(function() {
 	createCcpAUIGrid();
 	createOrdAUIGrid();
 	
-	AUIGrid.resize(ordGridID, null, 300);
+//	AUIGrid.resize(ordGridID);
 	
 	//hidding OrdGrid
 	$("#ord_grid_wrap").css("display" , "none");
