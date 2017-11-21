@@ -24,9 +24,12 @@ $(document).ready(function() {
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
 
-    // To show Type of Leave selection
-    doGetCombo('/common/selectCodeList.do', '378', '','typeofleave', 'S' , '');
-    // To show replacementCT of selection
+    /* By KV - for get Superior Team and BranchCode List - not yet done
+    doGetCombo("/organization/selectSuperiorTeam", jsonObj , ''   , 'cmbSuperior' , 'S', '');
+    doGetComboSepa("/common/selectBranchCodeList.do",4 , ':',''   , 'branchCode' , 'S', '');
+*/
+
+
     var selectedItems = AUIGrid.getSelectedItems(myGridID);
     console.log(selectedItems);
     var a = selectedItems[0].item.brnchId;
@@ -510,18 +513,24 @@ function fn_tabSize(){
     AUIGrid.resize(myGridID,1000,400);
 }
 
- function fn_vacationRequestSave(){//Request Terminate/Resign
-        Common.ajax("POST", "/organization/requestVacationSave.do",  $("#requestVacationForm").serializeJSON(), function(result) {
+/*  By KV - change code for  Save Trainee to Member - no yet done
+ function fn_confirmMemberSave(){
+        Common.ajax("POST", "/organization/confirmMemRegisSave.do",  $("#confirmMemRegisForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
         Common.alert(result.message,fn_winClose);
     });
 }
+*/
+
+
 
 function fn_winClose(){
 
     this.close();
 }
+
+
 </script>
 
 
@@ -1040,12 +1049,14 @@ function fn_winClose(){
     <td rowspan="3">
     <select class="w100p" id="action1" name="action1">
     <option value="">Action</option>
+     <option value="800">Confirmation Member </option>
     </select>
     </td>
  <th scope="row">Branch Code</th>
     <td>
     <select class="w100p" id="branchCode" name="branchCode">
         <option value="">Branch Code</option>
+        <option value="">CDB-31: CODY BRANCH - TAWAU </option>
     </select>
     </td>
 </tr>
@@ -1054,6 +1065,7 @@ function fn_winClose(){
     <td>
     <select class="w100p"  id="cmbSuperior" name="cmbSuperior">
         <option value="">Superior Team</option>
+        <option value="">CCS2060 - TAN SWEE SIONG </option>
     </select>
     </td>
 </tr>
@@ -1061,7 +1073,7 @@ function fn_winClose(){
 <th scope="row">Confirmation Date</th>
     <td>
      <input type="text" title="Promo/Demote Date" placeholder="DD/MM/YYYY" class="j_date" id="dtConDemote" name="dtConDemote"/>
-    </td>
+         </td>
 </tr>
 
 <tr>
@@ -1075,7 +1087,7 @@ function fn_winClose(){
 
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big "><a href="#" onclick="javascript:fn_vacationRequestSave()">Confirm</a></p></li>
+    <li><p class="btn_blue2 big "><a href="#" onclick="javascript:fn_confirmMemberSave()">Confirm</a></p></li>
 </ul>
 </form>
 </div>
