@@ -580,7 +580,7 @@ function fn_serialChck(rowindex , rowitem , str){
 	var ichk = true;
 	var slocid = '';//session.locid;
 	var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
-	console.log(checkdata);
+	
     var data = { serial : str , locid : slocid};
     Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
     	if (result.data[0] == null){
@@ -600,7 +600,7 @@ function fn_serialChck(rowindex , rowitem , str){
 	         AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
 	         AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
 	         
-	         if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
+	         if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0){//} || result.data[0].L63CNT > 0){
 	        	 schk = false;
 	         }else{
 	        	 schk = true;
