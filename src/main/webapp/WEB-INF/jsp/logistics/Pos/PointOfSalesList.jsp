@@ -51,7 +51,7 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                       {dataField:"itmcd"        ,headerText:"Material Code"               ,width:130    ,height:30 , visible:true},
                       {dataField:"itmname"      ,headerText:"Material Name"               ,width:450    ,height:30                },
                       {dataField:"reqstqty"     ,headerText:"GI/GR REQ  QTY"                 ,width:120    ,height:30                },
-                      {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
+                      {dataField:"rciptqty"     ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
                       {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30,  visible:false  },
