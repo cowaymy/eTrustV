@@ -518,7 +518,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
-					<version>3.1</version>
+					<!-- <version>3.1</version> -->
+					<configuration>
+						<rulesets>
+							<ruleset>${project.basedir}/src/main/resources/pmd/EgovInspectionRules_kor-3.5.xml</ruleset>
+						</rulesets>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -542,19 +547,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<configuration>
-					<rulesets>
-						<ruleset>/resources/pmd/EgovInspectionRules_kor-3.5.xml</ruleset>
-					</rulesets>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
 
 </project>
