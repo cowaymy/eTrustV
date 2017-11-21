@@ -108,7 +108,23 @@ $(document).ready(function() {
 			fn_scoreLT();
 		}
 	});
+	
+	// Search Not Found Binding Event
+    AUIGrid.bind(ctosDetailGridID, "notFound", searchNotFoundHandler);
+	
 });//Document Ready Func End
+
+
+function searchNotFoundHandler(event) {
+    var term = event.term; 
+    var wrapFound = event.wrapFound; 
+    
+    if(wrapFound) {
+        Common.alert("Not Found.  <br/> Order No : " + term);
+    } else {
+    	Common.alert("Not Found.  <br/> Order No : " + term);
+    }
+};
 
 function createCtosGrid(){
 	var  columnLayout = [
