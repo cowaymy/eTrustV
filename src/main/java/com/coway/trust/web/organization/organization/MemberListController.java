@@ -516,6 +516,37 @@ public class MemberListController {
 		return "organization/organization/confirmMemRegisPop";
 	}
 
+	/**
+	 * Save Trainee To Member function - no yet done
+	 * By KV
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	/*
+	@RequestMapping(value = "/confirmMemRegisSave.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertRequestVacation(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		if(sessionVO != null){
+			logger.debug("params : {}", params);
+			logger.debug("sessionVO : {}", sessionVO.getUserId());
+			boolean success = false;
+
+	    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
+	    		params.put("MemberID", memberId);
+	    		resultValue = memberListService.insertRequestVacation(params,sessionVO);
+	    		message.setMessage(resultValue.get("message").toString());
+
+		}
+		return ResponseEntity.ok(message);
+	}
+	*/
+
+
+
+
 
 
 	/**
