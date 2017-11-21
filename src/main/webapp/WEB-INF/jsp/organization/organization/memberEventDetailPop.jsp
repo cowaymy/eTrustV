@@ -71,6 +71,22 @@
     
     } */
 
+    
+    function fn_Available_child() {
+    	
+    	var  isAv=false;
+        
+    	Common.ajaxSync("GET", "/organization/getAvailableChild.do" , {  REQST_NO: '${promoInfo.reqstNo}'  } , function(result) {
+          
+    		   if(null != result){
+    			    if(result.asCnt  == result.tobeCnt )  isAv =true;
+        	    }
+        });
+        
+    	if(isAv ==false)       Common.alert("Need to make a transfer request confirmation for Cody under the CM before promote confirmation");
+    	
+    	return isAv;
+    }
 
      function fn_saveEventMap(){
         
@@ -102,6 +118,9 @@
              //Complete
              if (vPromoTypeId == 747) {
       
+            	 
+            	   if(! fn_Available_child()) return ;
+            	   
                    if (fn_confirmMemberEventPromote(vPromoId))  {
 
                    }  else  {
@@ -311,13 +330,14 @@
     <th scope="row">Member Name</th>
     <td colspan="3"><span><c:out value="${promoInfo.name}"/></span></td>
     <th scope="row">Team Code</th>
-    <%-- <td><span><c:out value="${promoInfo.deptCodeFrom} +"To" + ${promoInfo.deptCodeTo}"/></span></td> --%>
+    <td></td> 
 </tr>
 <tr>
     <th scope="row">Branch(To)</th>
-    <td colspan="5"> <span><c:out value="${promoInfo.c7} "/></span> </td>
+    <td colspan="5"> <span><c:out value="${promoInfo.brdesc} "/></span> </td>
 </tr>
-<tr>
+<tr> 
+    
     <th scope="row">Remark</th>
     <td colspan="5"><span><c:out value="${promoInfo.rem}"/></span></td>
 </tr>

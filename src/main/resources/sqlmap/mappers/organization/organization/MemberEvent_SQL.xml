@@ -316,7 +316,8 @@
 					       Limit1.C7 C7  ,
 					       Limit1.C8 C8  ,
 					       Limit1.C9 C9  ,
-					       to_char(Limit1.EVT_APPLY_DT,'dd/MM/yyyy') EVT_APPLY_DT
+					       to_char(Limit1.EVT_APPLY_DT,'dd/MM/yyyy') EVT_APPLY_DT,
+					      Limit1.BRDESC
 					  FROM ( SELECT Extent1.PROMO_ID PROMO_ID  ,
 					                Extent1.REQST_NO REQST_NO  ,
 					                Extent1.STUS_ID STUS_ID  ,
@@ -372,7 +373,8 @@
 					                     WHEN ( Extent12.BRNCH_ID IS NOT NULL ) THEN Extent12.NAME
 					                ELSE '1900-01-01 00:00:00'
 					                   END C9  ,
-					                 Extent1.EVT_APPLY_DT
+					                 Extent1.EVT_APPLY_DT ,
+					                 Extent12.CODE||'-'|| Extent12.NAME   BRDESC 
 					         FROM ORG0007D Extent1
 					                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
 					                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PROMO_TYPE_ID
@@ -755,4 +757,49 @@
         <update id="updateMemberBranch" parameterType="Map">
             UPDATE ORG0001D SET BRNCH = #{brnchId} WHERE MEM_ID=#{memId}
         </update>
+        
+        
+        
+       <select id="getAvailableChild" parameterType="Map" resultType="egovMap">	    
+          
+			SELECT   (SELECT   COUNT (A.MEM_ID) AS as_Cnt
+			            FROM   ORG0005D A, ORG0001D B
+			           WHERE       1 = 1 
+			                   AND A.MEM_ID = B.MEM_ID
+			                   AND B.STUS = '1'
+			                   AND MEM_LVL = '4'
+			                   AND A.MEM_UP_ID = (SELECT   MEM_ID
+			                                        FROM   ORG0007D
+			                                       WHERE   REQST_NO =#{REQST_NO} ))
+			            as_Cnt,
+			         (SELECT   COUNT (PROMO_ID) AS tobe_Cnt
+			            FROM   ORG0007D
+			           WHERE       PROMO_TYPE_ID = 749
+			                   AND MEM_LVL_FROM = '4'
+			                   AND STUS_ID = '4'
+			                   AND DEPT_CODE_FROM = (SELECT   DEPT_CODE_FROM
+			                                           FROM   ORG0007D
+			                                          WHERE   REQST_NO = #{REQST_NO} )
+			                   AND PARENT_ID_FROM = (SELECT   MEM_ID
+			                                           FROM   ORG0007D
+			                                          WHERE   REQST_NO =#{REQST_NO} )
+			                   AND MEM_ID IN
+			                            (SELECT   A.MEM_ID
+			                               FROM   ORG0005D A, ORG0001D B
+			                              WHERE       1 = 1
+			                                      AND A.MEM_ID = B.MEM_ID
+			                                      AND B.STUS = '1'
+			                                      AND MEM_LVL = '4'
+			                                      AND A.MEM_UP_ID =
+			                                            (SELECT   MEM_ID
+			                                               FROM   ORG0007D
+			                                              WHERE   REQST_NO =  #{REQST_NO} )))
+			            tobe_Cnt
+			  FROM   DUAL
+       </select>
+ 
+ 
+ 
+ 
+ 
 </mapper>

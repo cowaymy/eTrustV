@@ -180,6 +180,25 @@ public class MemberEventListController {
 	}
 	
 	
+
+	
+	
+
+	@RequestMapping(value = "/getAvailableChild.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> getAvailableChild(@RequestParam Map<String, Object>params) {
+      
+
+		logger.debug(" in getAvailableChild ...");
+		logger.debug(" in getAvailableChild prams ["+params.toString()+"]");
+		
+		EgovMap  resultList = memberEventService.getAvailableChild(params);        
+
+		return ResponseEntity.ok(resultList);
+	}
+	
+	
+	
+	
 		
 	
 	

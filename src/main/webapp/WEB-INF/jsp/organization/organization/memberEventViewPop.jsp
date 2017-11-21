@@ -192,7 +192,12 @@
 </tr>
 <tr>
     <th scope="row">Branch(To)</th>
-    <td colspan="5"> <%-- <span><c:out value="${promoInfo.nric} + "-" + ${promoInfo.nric} "/></span> --%></td>
+    <td colspan="3">  <span><c:out value="${promoInfo.brdesc}"/></span> </td>
+    
+     <th scope="row">Event Apply Date</th>  
+     <td><span><c:out value="${promoInfo.evtApplyDt}"/></span>  </td>
+    
+    
 </tr>
 <tr>
     <th scope="row">Remark</th>

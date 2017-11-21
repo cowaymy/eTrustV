@@ -143,9 +143,9 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			}
 			
 			//MemberOrganization			
-			EgovMap mQryMemOrg    = memberEventMapper.getMemberOrganizationsMemId(formList.get("memId").toString());
+			EgovMap mQryMemOrg     = memberEventMapper.getMemberOrganizationsMemId(formList.get("memId").toString());
             EgovMap mQryMemUpOrg = memberEventMapper.getMemberOrganizationsMemUpId(mQryMemOrg.get("memUpId").toString());
-            EgovMap mQryMemPrOrg = memberEventMapper.getMemberOrganizationsMemPrId(formList.get("prMemId").toString());
+            EgovMap mQryMemPrOrg  = memberEventMapper.getMemberOrganizationsMemPrId(formList.get("prMemId").toString());
 
             logger.debug("mQryMemOrg : {}",mQryMemOrg);
             logger.debug("mQryMemUpOrg : {}",mQryMemUpOrg);
@@ -284,12 +284,8 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 	}
 
 
-	
-	
-	
-	
-	
-	
-	
+	public EgovMap getAvailableChild(Map<String, Object> params) {
+		return memberEventMapper.getAvailableChild(params);
+	}
 	
 }

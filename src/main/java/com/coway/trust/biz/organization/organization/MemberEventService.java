@@ -27,4 +27,7 @@ public interface MemberEventService {
 	
 	boolean selectMemberPromoEntries(Map<String, Object> params);
 	
+	EgovMap getAvailableChild(Map<String, Object> params);
+
+	
 }

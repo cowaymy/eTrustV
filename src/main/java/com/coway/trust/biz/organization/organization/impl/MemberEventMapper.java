@@ -64,5 +64,6 @@ public interface MemberEventMapper {
 	
 	void updateMemberBranch(Map<String, Object> params);
 	
+	EgovMap  getAvailableChild(Map<String, Object> params);
 	
 }	
