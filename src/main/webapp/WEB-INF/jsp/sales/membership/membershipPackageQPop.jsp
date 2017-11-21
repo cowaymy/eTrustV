@@ -62,7 +62,11 @@ function fn_selectListQAjax() {
 	    	        $("#srvPacItmSvcFreq").prop("readonly", true);
 	    	        $("#srvPacItmSvcFreq").attr("class", "readonly");
 	    	  }
-	    	  
+              
+	    	  if(packageInfo.discontinue == "1"){
+                  $("#discontinue").val(packageInfo.discontinue);
+                  $("#discontinue").attr("checked","checked");
+              }
 	    	  
 	    }else{
 	        	$("#pacType").val(packType);
@@ -311,11 +315,11 @@ function fn_chk(){
      </c:if>
     </td>
 	<th scope="row">Item Price <span class="must">*</span></th>
-	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Item Price" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Item Price" class="" id="srvPacItmRental"  name="srvPacItmRental" /></td>
 </tr>
 <tr>
 	<th scope="row">Service Frequency <span class="must">*</span></th>
-	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title=""  placeholder="Service Frequency" class="w100p" id="srvPacItmRental"  name="srvPacItmRental"/></td>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title=""  placeholder="Service Frequency" class="w100p" id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
 	<th scope="row">Package Type <span class="must">*</span></th>
     <td>    
     <select class="w40p disabled"  id='pacType' name ='pacType'  disabled ="disabled" >
