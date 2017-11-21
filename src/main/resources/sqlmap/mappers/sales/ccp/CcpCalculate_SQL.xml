@@ -2,6 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper">
 
+<select id="getRegionCodeList" parameterType="Map" resultType="egovMap">
+SELECT Extent1.CODE_ID CODE_ID ,
+  Extent1.CODE_MASTER_ID CODE_MASTER_ID ,
+  Extent1.CODE CODE ,
+  Extent1.CODE_NAME CODE_NAME ,
+  Extent1.DISAB DISAB ,
+  Extent1.CRT_DT CRT_DT ,
+  Extent1.CRT_USER_ID CRT_USER_ID ,
+  Extent1.UPD_DT UPD_DT ,
+  Extent1.UPD_USER_ID UPD_USER_ID ,
+  Extent1.OLD_CODE_ID OLD_CODE_ID
+FROM SYS0013M Extent1
+WHERE ( 0 = Extent1.DISAB )
+AND ( Extent1.CODE_MASTER_ID = #{codeId} )
+ORDER BY Extent1.CODE_ID ASC
+</select>
+
+
 <select id="selectDscCodeList"  resultType="egovMap">
 SELECT Project1.BRNCH_ID ,
        Project1.CODE_NAME 
