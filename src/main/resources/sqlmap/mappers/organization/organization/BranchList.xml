@@ -436,7 +436,7 @@
                                          , #{areaId}
                                          , #{addrDtl}
                                          , #{streetDtl}
-                                         ,#{dtStartFromDt}
+                                         ,to_date(#{dtStartFromDt},'dd/mm/yyyy' )
                                          )
 
 
