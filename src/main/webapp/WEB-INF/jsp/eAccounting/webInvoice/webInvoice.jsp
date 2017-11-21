@@ -183,10 +183,6 @@ function fn_newWebInvoicePop() {
     Common.popupDiv("/eAccounting/webInvoice/newWebInvoicePop.do", {callType:'new'}, null, true, "newWebInvoicePop");
 }
 
-function fn_expenseTypeSearchPop() {
-    Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J1'}, null, true, "expenseTypeSearchPop");
-}
-
 function fn_selectWebInvoiceList() {
     Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceList.do?_cacheId=" + Math.random(), $("#form_webInvoice").serialize(), function(result) {
     	console.log(result);
@@ -304,11 +300,6 @@ function fn_checkEmpty() {
 	    var length = AUIGrid.getGridData(newGridID).length;
 	    if(length > 0) {
 	    	for(var i = 0; i < length; i++) {
-	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "expTypeName"))) {
-	                Common.alert('<spring:message code="webInvoice.expType.msg" />' + (i +1) + ".");
-	                checkResult = false;
-	                return checkResult;
-	            }
 	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "taxCode"))) {
 	                Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
 	                checkResult = false;
@@ -333,6 +324,39 @@ function fn_selectWebInvoiceItemList(clmNo) {
         console.log(result);
         AUIGrid.setGridData(newGridID, result);
     });
+}
+
+//Budget Code Pop 호출
+function fn_budgetCodePop(rowIndex){
+    if(!FormUtil.isEmpty($("#newCostCenterText").val())){
+    	var data = {
+    			rowIndex : rowIndex
+    			,costCentr : $("#newCostCenter").val()
+    			,costCentrName : $("#newCostCenterText").val()
+    	};
+           Common.popupDiv("/eAccounting/webInvoice/budgetCodeSearchPop.do", data, null, true, "budgetCodeSearchPop");
+    } else {
+    	Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
+    }
+}  
+
+//Gl Account Pop 호출
+function fn_glAccountSearchPop(rowIndex){
+    
+    var myValue = AUIGrid.getCellValue(newGridID, rowIndex, "budgetCode");
+    
+    if(!FormUtil.isEmpty(myValue)){
+    	var data = {
+                rowIndex : rowIndex
+                ,costCentr : $("#newCostCenter").val()
+                ,costCentrName : $("#newCostCenterText").val()
+                ,budgetCode : AUIGrid.getCellValue(newGridID, rowIndex, "budgetCode")
+                ,budgetCodeName : AUIGrid.getCellValue(newGridID, rowIndex, "budgetCodeName")
+        };
+           Common.popupDiv("/eAccounting/webInvoice/glAccountSearchPop.do", data, null, true, "glAccountSearchPop");
+    } else {
+    	Common.alert('<spring:message code="webInvoice.budgetCode.msg" />');
+    }
 }
 </script>
 

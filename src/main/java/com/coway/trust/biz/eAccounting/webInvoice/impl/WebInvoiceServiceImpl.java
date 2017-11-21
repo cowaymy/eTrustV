@@ -417,7 +417,18 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		webInvoiceMapper.updateWebInvoiceInfoTotAmt(params);
 	}
-	
+
+	@Override
+	public List<EgovMap> selectBudgetCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectBudgetCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectGlCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectGlCodeList(params);
+	}
 	
 	
 	

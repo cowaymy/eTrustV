@@ -124,7 +124,7 @@ SELECT   T.CLM_NO
 <select id="selectTaxCodeWebInvoiceFlag" resultType="egovMap">
 /* webInvoiceMapper.selectTaxCodeWebInvoiceFlag */
     SELECT TAX_CODE ,
-                TAX_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME 
+                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME 
     FROM FCM0007C
     WHERE WEB_INVC_FLAG = 'X'
 </select>
@@ -277,7 +277,7 @@ SELECT   T.CLM_NO
                    ,T.BUDGET_CODE
                    ,T.BUDGET_CODE_NAME
                    ,T.TAX_CODE
-                   ,TT.TAX_CODE||' '||'('||TT.TAX_NAME||')' AS TAX_NAME
+                   ,TT.INDUSTRY_CODE||' '||'('||TT.TAX_NAME||')' AS TAX_NAME
                    ,'MYR' AS CUR
                    ,T.NET_AMT
                    ,T.TAX_AMT
@@ -708,7 +708,9 @@ SELECT T.APPV_PRCSS_NO
                       ,T3.BUDGET_CODE
                       ,T3.BUDGET_CODE_NAME
                       ,T3.TAX_CODE
-                      ,NVL2(T3.TAX_CODE, T3.TAX_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '') AS TAX_NAME
+                      ,(CASE SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2)
+                      WHEN 'J1' THEN NVL2(T3.TAX_CODE, T5.INDUSTRY_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '')
+                      ELSE NVL2(T3.TAX_CODE, T3.TAX_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '') END)  AS TAX_NAME
                       ,'MYR'                                               AS CUR
                       ,T3.NET_AMT
                       ,T3.TAX_AMT
@@ -906,5 +908,33 @@ SELECT T.APPV_PRCSS_NO
 /* webInvoiceMapper.updateWebInvoiceInfoTotAmt */
    UPDATE FCM0002M SET TOT_AMT = #{totAmt} WHERE CLM_NO = #{clmNo}
 </update>
+
+<select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
+        SELECT T1.BUDGET_CODE 
+                  ,T2.BUDGET_CODE_TEXT
+         FROM FCM0104D T1 
+         LEFT JOIN FCM0010M T2 
+         ON T1.BUDGET_CODE = T2.BUDGET_CODE
+         WHERE 1=1
+        <!-- <![CDATA[ 
+             AND START_DT <= SYSDATE
+             AND END_DT  >= SYSDATE
+        ]]> -->
+        AND T1.COST_CENTR = #{costCentr}
+        <if test="budgetCodeText != null and budgetCodeText != ''">
+           AND T2.BUDGET_CODE_TEXT LIKE '%'|| #{budgetCodeText} || '%'
+        </if>
+</select>
+  
+<select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
+      SELECT T1.GL_ACC_CODE
+                ,T2.GL_ACC_DESC
+        FROM   FCM0104D T1
+        LEFT JOIN FCM0009M T2 
+        ON T1.GL_ACC_CODE = T2.GL_ACC_CODE
+         WHERE 1=1
+         AND T1.COST_CENTR = #{costCentr}
+         AND T1.BUDGET_CODE = #{budgetCode}
+</select>
 
 </mapper>

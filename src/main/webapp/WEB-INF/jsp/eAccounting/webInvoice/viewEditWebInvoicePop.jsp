@@ -62,13 +62,9 @@ attachmentList.push(obj);
 var myColumnLayout = [ {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-},{
-    dataField : "expType",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-},{
-    dataField : "expTypeName",
-    headerText : '<spring:message code="expense.ExpenseType" />',
-    style : "aui-grid-user-custom-left",
+}, {
+    dataField : "budgetCode",
+    headerText : '<spring:message code="expense.Activity" />',
     editable : false,
     colSpan : 2
 }, {
@@ -84,27 +80,40 @@ var myColumnLayout = [ {
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
-            fn_expenseTypeSearchPop();
+            fn_budgetCodePop(rowIndex);
             }
         },
     colSpan : -1
-},{
-    dataField : "glAccCode",
-    headerText : '<spring:message code="expense.GLAccount" />',
-    editable : false
-
-}, {
-    dataField : "glAccCodeName",
-    headerText : '<spring:message code="newWebInvoice.glAccountName" />',
-    style : "aui-grid-user-custom-left",
-    editable : false
-}, {
-    dataField : "budgetCode",
-    headerText : '<spring:message code="expense.Activity" />',
-    editable : false
 }, {
     dataField : "budgetCodeName",
     headerText : '<spring:message code="newWebInvoice.activityName" />',
+    style : "aui-grid-user-custom-left",
+    editable : false
+},{
+    dataField : "glAccCode",
+    headerText : '<spring:message code="expense.GLAccount" />',
+    editable : false,
+    colSpan : 2
+}, {
+    dataField : "",
+    headerText : '',
+    width: 30,
+    editable : false,
+    renderer : {
+        type : "IconRenderer",
+        iconTableRef :  {
+            "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
+        },         
+        iconWidth : 24,
+        iconHeight : 24,
+        onclick : function(rowIndex, columnIndex, value, item) {
+            fn_glAccountSearchPop(rowIndex);
+            }
+        },
+    colSpan : -1
+}, {
+    dataField : "glAccCodeName",
+    headerText : '<spring:message code="newWebInvoice.glAccountName" />',
     style : "aui-grid-user-custom-left",
     editable : false
 }, {
@@ -172,10 +181,14 @@ var myColumnLayout = [ {
 }
 ];
 var approvalColumnLayout = [ {
-    dataField : "expTypeName",
-    headerText : '<spring:message code="expense.ExpenseType" />',
+    dataField : "budgetCode",
+    headerText : '<spring:message code="expense.Activity" />',
+    editable : false
+}, {
+    dataField : "budgetCodeName",
+    headerText : '<spring:message code="newWebInvoice.activityName" />',
     style : "aui-grid-user-custom-left",
-    editable : false,
+    editable : false
 }, {
     dataField : "glAccCode",
     headerText : '<spring:message code="expense.GLAccount" />',
@@ -184,15 +197,6 @@ var approvalColumnLayout = [ {
 }, {
     dataField : "glAccCodeName",
     headerText : '<spring:message code="newWebInvoice.glAccountName" />',
-    style : "aui-grid-user-custom-left",
-    editable : false
-}, {
-    dataField : "budgetCode",
-    headerText : '<spring:message code="expense.Activity" />',
-    editable : false
-}, {
-    dataField : "budgetCodeName",
-    headerText : '<spring:message code="newWebInvoice.activityName" />',
     style : "aui-grid-user-custom-left",
     editable : false
 }, {

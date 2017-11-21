@@ -49,4 +49,8 @@ public interface WebInvoiceService {
 	
 	void updateWebInvoiceInfoTotAmt(Map<String, Object> params);
 	
+	List<EgovMap> selectBudgetCodeList(Map<String, Object> params);
+	
+	List<EgovMap> selectGlCodeList(Map<String, Object> params);
+	
 }

@@ -424,4 +424,56 @@ public class WebInvoiceController {
 		
 		return ResponseEntity.ok(itemList);
 	}
+	
+	@RequestMapping(value = "/budgetCodeSearchPop.do")
+	public String budgetCodeSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{	
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		model.addAttribute("pop", params.get("pop"));
+		model.addAttribute("rowIndex", params.get("rowIndex"));
+		model.addAttribute("costCentr", params.get("costCentr"));
+		model.addAttribute("costCentrName", params.get("costCentrName"));
+		return "eAccounting/webInvoice/budgetCodeSearch_webInvoicePop";
+	}
+	
+	@RequestMapping(value = "/glAccountSearchPop.do")
+	public String glAccountSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		model.addAttribute("pop", params.get("pop"));
+		model.addAttribute("rowIndex", params.get("rowIndex"));
+		model.addAttribute("costCentr", params.get("costCentr"));
+		model.addAttribute("costCentrName", params.get("costCentrName"));
+		model.addAttribute("budgetCode", params.get("budgetCode"));
+		model.addAttribute("budgetCodeName", params.get("budgetCodeName"));
+		return "eAccounting/webInvoice/glAccountSearch_webInvoicePop";
+	}
+	
+	@RequestMapping(value = "/selectBudgetCodeList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectBudgetCodeList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+		
+		List<EgovMap> budgetCodeList = null; 
+		
+		LOGGER.debug("Params =====================================>>  " + params);
+		
+		budgetCodeList = webInvoiceService.selectBudgetCodeList(params);
+		
+		return ResponseEntity.ok(budgetCodeList);
+		
+	}
+	
+	@RequestMapping(value = "/selectGlCodeList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectGlCodeList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+		
+		List<EgovMap> glCodeList = null; 
+		
+		LOGGER.debug("Params =====================================>>  " + params);
+		
+		glCodeList = webInvoiceService.selectGlCodeList(params);
+		
+		return ResponseEntity.ok(glCodeList);
+		
+	}
 }
