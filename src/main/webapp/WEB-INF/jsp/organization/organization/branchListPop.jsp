@@ -377,7 +377,7 @@
 <tr>
     <th scope="row">Start From Date</th>
     <td>
-     <input type="text" title="Start From Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartOperate" name="dtStartOperate"/>
+     <input type="text" title="Start From Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartFromDt" name="dtStartFromDt"/>
     </td>
 </tr>
 
