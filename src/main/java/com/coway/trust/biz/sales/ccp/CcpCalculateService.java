@@ -3,9 +3,13 @@ package com.coway.trust.biz.sales.ccp;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface CcpCalculateService {
+	
+	List<EgovMap> getRegionCodeList(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectDscCodeList() throws Exception;
 	
