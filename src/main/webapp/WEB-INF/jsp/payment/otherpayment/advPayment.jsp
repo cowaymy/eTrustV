@@ -548,8 +548,7 @@ function saveAdvPayment(){
     
     Common.ajax("POST", "/payment/saveAdvPayment.do", data, function(result) {
         Common.alert("Success Payment Process", function(){
-              //document.location.href = '/payment/initCardKeyInPayment.do';
-            
+        	document.location.href = '/payment/initAdvPayment.do';
         });
         
     });
