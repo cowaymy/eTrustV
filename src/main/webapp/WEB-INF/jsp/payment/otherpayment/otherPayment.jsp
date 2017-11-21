@@ -18,7 +18,7 @@
 <script type="text/javaScript">
 
 //page1, 그리드 데이터
-var myGridID;
+var bankGridID;
 
 //page2, 그리드 데이터
 var pendingGridID;
@@ -35,7 +35,7 @@ var maxSeq = 0; //billing ADD 될 시퀀스
 
 var isMapped;
 var selectedItem;
-//myGridID에서 선택된 RowID
+//에서 선택된 RowID
 var rowId;
 
 //targetFinalBillGridID Grid에서 선택된 RowID
@@ -78,7 +78,7 @@ var targetGridPros = {
 };
 
 $(document).ready(function(){
-	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+	bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	pendingGridID = GridCommon.createAUIGrid("grid_wrap_pending", columnPending,null,gridPros2);
 	
 	//page2
@@ -95,7 +95,7 @@ $(document).ready(function(){
         selectedGridValue = event.rowIndex;
     });
     
-    AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
+    AUIGrid.bind(bankGridID, "rowCheckClick", function( event ) {
         //alert("rowIndex : " + event.rowIndex + ", id : " + event.item.stus + ", name : " + event.item.name + ", checked : " + event.checked);
         selectedItem = event.item.id;
         isMapped = event.item.stus;
@@ -403,13 +403,13 @@ var columnLayout = [
             iconWidth : 15, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
             iconHeight : 15,
             iconFunction : function(rowIndex, columnIndex, value, item) {
-            	var selValue = AUIGrid.getCellValue(myGridID, rowIndex, "stus");
+            	var selValue = AUIGrid.getCellValue(bankGridID, rowIndex, "stus");
             	
             	switch(selValue){
             	case "Mapped":
-            		return "${pageContext.request.contextPath}/resources/images/common/icon_grid_detail.png";
+            		return "${pageContext.request.contextPath}/resources/images/common/status_on.gif";
             	default :
-            		return "${pageContext.request.contextPath}/resources/images/common/btn_down.gif";
+            		return "${pageContext.request.contextPath}/resources/images/common/status_off.gif";
             	}
             }
         }
@@ -933,7 +933,10 @@ var columnLayout = [
 	            var mstChkVal = AUIGrid.getCellValue(targetRenMstGridID, i ,"btnCheck");
 	            var mstSalesOrdNo = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdNo");            
 	            var mstRpf = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpf");
-	            var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");            
+	            var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");
+	            
+	            var mstCustNm = AUIGrid.getCellValue(targetRenMstGridID, i ,"custNm");
+	            var mstCustBillId = AUIGrid.getCellValue(targetRenMstGridID, i ,"custBillId");
 
 	            if(mstChkVal == 1){
 	                if(mstRpf - mstRpfPaid > 0){
@@ -948,13 +951,13 @@ var columnLayout = [
 	                     item.assignAmt = 0;
 	                     item.billAmt   = mstRpf;
 	                     item.billDt   = "1900-01-01";
-	                     item.billGrpId = 0;
+	                     item.billGrpId = mstCustBillId;
 	                     item.billId = 0;
 	                     item.billNo = "0";
-	                     item.billStatus = "DUMMY";
+	                     item.billStatus = "";
 	                     item.billTypeId = 161;
 	                     item.billTypeNm   = "RPF";
-	                     item.custNm   = "DUMMY";
+	                     item.custNm   = mstCustNm;
 	                     item.discountAmt = 0;
 	                     item.installment  = 0;
 	                     item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
@@ -1018,13 +1021,13 @@ var columnLayout = [
 	                    item.assignAmt = 0;
 	                    item.billAmt   = $("#rentalAdvAmt").val();
 	                    item.billDt   = "1900-01-01";
-	                    item.billGrpId = 0;
+	                    item.billGrpId = mstCustBillId;
 	                    item.billId = 0;
 	                    item.billNo = "0";
-	                    item.billStatus = "DUMMY";
+	                    item.billStatus = "";
 	                    item.billTypeId = 1032;
 	                    item.billTypeNm   = "General Advanced For Rental";
-	                    item.custNm   = "DUMMY";
+	                    item.custNm   = mstCustNm;
 	                    item.discountAmt = 0;
 	                    item.installment  = 0;
 	                    item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
@@ -1333,30 +1336,35 @@ var columnLayout = [
     
     function fn_clear(){
     	$("#searchForm")[0].reset();
-    	AUIGrid.clearGridData(myGridID);
+    	AUIGrid.clearGridData();
     }
     
     function fn_searchList(){
     	if($("#bankDateFr").val() != '' && $("#bankDateTo").val() != ''){
 	    	Common.ajax("GET","/payment/selectBankStatementList.do",$("#searchForm").serializeJSON(), function(result){         
-	            AUIGrid.setGridData(myGridID, result);
+	            AUIGrid.setGridData(bankGridID, result);
 	        });
 	    }//else{Common.alert("key in Bank In Date..");}
     }
     
     function fn_mapping(){
-    	var item = new Object();
+    	
     	if(isMapped == 'Mapped'){
     		Common.alert("This item has already been confirmed payment.");
     	}else{
 
-            item.bank = AUIGrid.getCellValue(myGridID,rowId,"bank");
-            item.bankAccount = AUIGrid.getCellValue(myGridID,rowId,"bankAccName");
-            item.date = AUIGrid.getCellValue(myGridID,rowId,"trnscDt");
-            item.refChequeNo = AUIGrid.getCellValue(myGridID,rowId,"chqNo");
-            item.mode = AUIGrid.getCellValue(myGridID,rowId,"type");
-            item.trId = AUIGrid.getCellValue(myGridID,rowId,"ref3");
-            item.amount = AUIGrid.getCellValue(myGridID,rowId,"crdit");
+    		var item = new Object();
+    		//var rowId = AUIGrid.getSelectedIndex();
+    		
+            item.bank = AUIGrid.getCellValue(bankGridID,rowId,"bank");
+            item.bankAccount = AUIGrid.getCellValue(bankGridID,rowId,"bankAccName");
+            item.date = AUIGrid.getCellValue(bankGridID,rowId,"trnscDt");
+            item.refChequeNo = AUIGrid.getCellValue(bankGridID,rowId,"chqNo");
+            item.mode = AUIGrid.getCellValue(bankGridID,rowId,"type");
+            item.trId = AUIGrid.getCellValue(bankGridID,rowId,"ref3");
+            item.amount = AUIGrid.getCellValue(bankGridID,rowId,"crdit");
+            
+            console.log(item);
     		
     		if($('#payMode').val() == '105'){
     			item.pendingAmount = $("#cash").find("#amount").val();
@@ -1746,6 +1754,9 @@ var columnLayout = [
 	    if(formList.length > 0) data.form = formList;
 	    else data.form = [];
 	    
+	    
+	    data.key = [AUIGrid.getCellValue(bankGridID, rowId, "id")]; //id값
+	    
 	    //Bill Payment : Order 정보 조회
 	    Common.ajax("POST", "/payment/common/saveNormalPayment.do", data, function(result) {
 	        Common.alert("Success Payment Process", function(){
@@ -1765,6 +1776,7 @@ var columnLayout = [
               //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
               AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
               selectedGridValue = -1;
+              recalculatePaymentTotalAmt();
           });
       }else{
           Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
@@ -1778,7 +1790,7 @@ var columnLayout = [
   }
 
   //Collector 조회 팝업 결과값 세팅
-  function fn_loadOrderSalesman(memId, memCode, memNm){
+  function fn_loadOrderSalesman(memId, memCode, memNm){	  
 	  if(payTypeIndicator != undefined){
 	      payTypeIndicator.find('#keyInCollMemId').val(memId);
 	      payTypeIndicator.find('#keyInCollMemNm').val(memNm);
@@ -1893,11 +1905,11 @@ var columnLayout = [
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
                 <td>
-                   <input type="text" id="amount" name="amount" class="w100p"  />
+                    <input type="text" id="amount" name="amount" class="w100p"  maxlength="10" onkeydown='return FormUtil.onlyNumber(event)'/>
                 </td>
                 <th scope="row">Bank Charge Amount</th>
                 <td>
-                   <input type="text" id="chargeAmount" name="chargeAmount" class="w100p"  />
+                   <input type="text" id="chargeAmount" name="chargeAmount" class="w100p"  maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                 </td>
             </tr>
             <tr>
@@ -1931,7 +1943,7 @@ var columnLayout = [
             <tr>
                    <th>Transaction Date</th>
                    <td colspan="3">
-                        <input type="text" id="trDate" name="trDate" placeholder="DD/MM/YYYY" />
+                        <input type="text" id="trDateOnline" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
                    </td>
             </tr>
             <tr>
@@ -1946,12 +1958,12 @@ var columnLayout = [
             </tr>
             <tr>
                  <th scope="row">TR No.</th>
+                        <td>
+                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+                        <th scope="row">TR Issue Date</th>
                  <td>
-                     <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
-                 </td>
-                 <th scope="row">TR Issue Date</th>
-                 <td>
-                     <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                     <input id="keyInTrIssueDateOnline" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                  </td>
              </tr>
              <tr>
@@ -1963,10 +1975,9 @@ var columnLayout = [
                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                      </a>
                  </td>
-                 <th scope="row">Pay Date<span class="must">*</span></th>
-                 <td>
-                     <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
-                 </td>
+                 <td scope="row"></td>
+                  <td>
+                  </td>
              </tr>
         </tbody>
     </table>
@@ -1987,7 +1998,7 @@ var columnLayout = [
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
                 <td colspan="3">
-                   <input type="text" id="amount" name="amount" class="w100p"  />
+                   <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                 </td>
             </tr>
             <tr>
@@ -2027,7 +2038,7 @@ var columnLayout = [
             <tr>
                    <th>Transaction Date</th>
                    <td colspan="3">
-                        <input type="text" id="trDate" name="trDate" placeholder="DD/MM/YYYY" />
+                        <input type="text" id="trDateCash" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
                    </td>
             </tr>
             <tr>
@@ -2038,12 +2049,12 @@ var columnLayout = [
             </tr>
             <tr>
                    <th scope="row">TR No.</th>
+                        <td>
+                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+                        <th scope="row">TR Issue Date</th>
                    <td>
-                       <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
-                   </td>
-                   <th scope="row">TR Issue Date</th>
-                   <td>
-                       <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                       <input id="keyInTrIssueDateCash" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                    </td>
                </tr>
                <tr>
@@ -2055,10 +2066,9 @@ var columnLayout = [
                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                        </a>
                    </td>
-                   <th scope="row">Pay Date<span class="must">*</span></th>
-                   <td>
-                       <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
-                   </td>
+                   <td scope="row"></td>
+                  <td>
+                  </td>
                </tr>
         </tbody>
     </table>
@@ -2079,7 +2089,7 @@ var columnLayout = [
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
                 <td colspan="3">
-                   <input type="text" id="amount" name="amount" class="w100p"  />
+                   <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                 </td>
             </tr>
             <tr>
@@ -2119,7 +2129,7 @@ var columnLayout = [
             <tr>
                    <th>Transaction Date</th>
                    <td colspan="3">
-                        <input type="text" id="trDate" name="trDate" placeholder="DD/MM/YYYY" />
+                        <input type="text" id="trDateCheque" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
                    </td>
             </tr>
             <tr>
@@ -2130,12 +2140,12 @@ var columnLayout = [
             </tr>
             <tr>
                   <th scope="row">TR No.</th>
+                        <td>
+                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+                        <th scope="row">TR Issue Date</th>
                   <td>
-                      <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
-                  </td>
-                  <th scope="row">TR Issue Date</th>
-                  <td>
-                      <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                      <input id="keyInTrIssueDateCheque" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                   </td>
               </tr>
               <tr>
@@ -2147,9 +2157,8 @@ var columnLayout = [
                           <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                       </a>
                   </td>
-                  <th scope="row">Pay Date<span class="must">*</span></th>
+                  <td scope="row"></td>
                   <td>
-                      <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                   </td>
               </tr>
         </tbody>
