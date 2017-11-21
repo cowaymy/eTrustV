@@ -2161,7 +2161,7 @@ AND   O1DA.MEM_CODE = #{userId}
                 
                 
                 <insert id="insertPrReServiceLog" parameterType="Map">
-                            INSERT INTO SVC0039T (
+                            INSERT INTO SVC0040T (
                                RESULT_SEQ
                                 ,CRT_USER_ID
                                 ,SALES_ORD_ID
@@ -2171,7 +2171,7 @@ AND   O1DA.MEM_CODE = #{userId}
 <!--                                ,TRNSC_ID -->
                                 ,TRAN_STUS_CD
                             ) VALUES (
-                               SVC0039T_ID_SEQ.NEXTVAL
+                               SVC0040T_RESULT_SEQ.NEXTVAL
                                , #{userId}
                                , #{salesOrderNo}
                                , #{serviceNo}
@@ -2182,6 +2182,113 @@ AND   O1DA.MEM_CODE = #{userId}
                 </insert>                
         
         
+        
+                <insert id="insertHsFailServiceLog" parameterType="Map">
+                            INSERT INTO SVC0041T (
+                               RESULT_SEQ
+								,CRT_USER_ID
+								,SALES_ORD_ID
+								,SVC_NO
+								,FAIL_RESN_CODE
+						<!-- 		,TRNSC_ID -->
+								,TRAN_STUS_CD
+                            ) VALUES (
+                               SVC0041T_RESULT_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{serviceNo}
+                               , #{failReasonCode}
+                               , 'N'
+                            )
+                </insert>      
+                
+                      
+                <insert id="insertAsFailServiceLog" parameterType="Map">
+                            INSERT INTO SVC0042T (
+                               RESULT_SEQ
+								,CRT_USER_ID
+								,SALES_ORD_ID
+								,SVC_NO
+								,FAIL_RESN_CODE
+						<!-- 		,TRNSC_ID -->
+								,TRAN_STUS_CD
+                            ) VALUES (
+                               SVC0042T_RESULT_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{serviceNo}
+                               , #{failReasonCode}
+                               , 'N'
+                            )
+                </insert>            
+
+
+
+                <insert id="insertInsFailServiceLog" parameterType="Map">
+                            INSERT INTO SVC0043T (
+                               RESULT_SEQ
+								,CRT_USER_ID
+								,SALES_ORD_ID
+								,SVC_NO
+								,FAIL_RESN_CODE
+						<!-- 		,TRNSC_ID -->
+								,TRAN_STUS_CD
+                            ) VALUES (
+                               SVC0043T_RESULT_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{serviceNo}
+                               , #{failReasonCode}
+                               , 'N'
+                            )
+                </insert>            
+
+
+                <insert id="insertPrFailServiceLog" parameterType="Map">
+                            INSERT INTO SVC0044T (
+                               RESULT_SEQ
+								,CRT_USER_ID
+								,SALES_ORD_ID
+								,SVC_NO
+								,FAIL_RESN_CODE
+						<!-- 		,TRNSC_ID -->
+								,TRAN_STUS_CD
+                            ) VALUES (
+                               SVC0044T_RESULT_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{serviceNo}
+                               , #{failReasonCode}
+                               , 'N'
+                            )
+                </insert>            
+
+
+
+
+
+                <insert id="insertCanSMSServiceLog" parameterType="Map">
+                            INSERT INTO SVC0045T (
+                                RESULT_SEQ
+								,CRT_USER_ID
+								,SALES_ORD_ID
+								,SVC_NO
+								,SENDER_TEL_NO
+								,RCIVER_TEL_NO
+								<!-- ,TRNSC_ID -->
+								,TRAN_STUS_CD
+                            ) VALUES (
+                               SVC0045T_RESULT_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{serviceNo}
+                               , #{senderTelNo}
+                               , #{receiverTelNo}
+                               , 'N'
+                            )
+                </insert>        
+
+ 
         
 
 </mapper>

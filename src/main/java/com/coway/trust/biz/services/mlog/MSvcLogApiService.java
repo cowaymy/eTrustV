@@ -87,6 +87,8 @@ public interface MSvcLogApiService {
 	void saveHsReServiceLogs(Map<String, Object> params);
 
 	Map<String, Object> getHsBasic(Map<String, Object> params);
+
+	void saveCanSMSServiceLogs(Map<String, Object> params);
 	
 	
 

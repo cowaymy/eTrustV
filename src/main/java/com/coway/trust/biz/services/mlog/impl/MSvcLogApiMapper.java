@@ -99,5 +99,16 @@ public interface MSvcLogApiMapper {
 	void insertPrReServiceLog(Map<String, Object> params);
 
 	Map<String, Object> getHsBasic(Map<String, Object> params);
+
+	void insertPrFailServiceLog(Map<String, Object> params);
+
+	void insertInssFailServiceLog(Map<String, Object> params);
+
+	void insertAsFailServiceLog(Map<String, Object> params);
+
+	void insertHsFailServiceLog(Map<String, Object> params);
+
+	void insertCanSMSServiceLog(Map<String, Object> params);
+
 	
 }

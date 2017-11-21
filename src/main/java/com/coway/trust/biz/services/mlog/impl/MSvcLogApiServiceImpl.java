@@ -421,31 +421,30 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
 	@Override
 	public void savePrFailServiceLogs(Map<String, Object> params) {
-		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertPrFailServiceLog(params);	
 		
 	}
 
 	@Override
 	public void saveInsFailServiceLogs(Map<String, Object> params) {
-		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertInssFailServiceLog(params);	
 		
 	}
 
 	@Override
 	public void saveAsFailServiceLogs(Map<String, Object> params) {
-		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertAsFailServiceLog(params);	
 		
 	}
 
 	@Override
 	public void saveHsFailServiceLogs(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		
+		MSvcLogApiMapper.insertHsFailServiceLog(params);	
 	}
 
 	@Override
 	public void savePrReServiceLogs(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		MSvcLogApiMapper.insertPrReServiceLog(params);	
 	}
 
@@ -473,6 +472,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	public Map<String, Object> getHsBasic(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.getHsBasic(params);
+	}
+
+	@Override
+	public void saveCanSMSServiceLogs(Map<String, Object> params) {
+		MSvcLogApiMapper.insertCanSMSServiceLog(params);
 	}
 	
 	

@@ -34,6 +34,8 @@ import com.coway.trust.api.mobile.services.as.AfterServicePartsForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
+import com.coway.trust.api.mobile.services.cancelSms.CanCelDto;
+import com.coway.trust.api.mobile.services.cancelSms.CanCelSmsForm;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestDto;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestForm;
 import com.coway.trust.api.mobile.services.heartService.HSReAppointmtRequestDto;
@@ -1095,6 +1097,39 @@ public class ServiceApiController {
 //		}
 		
 		return ResponseEntity.ok(PRFailJobRequestDto.create(transactionId));
+
+	}
+	
+	
+	
+	
+
+	@ApiOperation(value = "Cancel SMS Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/canSMSRequestRequest", method = RequestMethod.POST)
+	public ResponseEntity<CanCelDto> canSMSRequestRequest(@RequestBody CanCelSmsForm canCelSmsForm)
+			throws Exception {		
+		String transactionId = "";
+
+		Map<String, Object> params = CanCelSmsForm.createMap(canCelSmsForm);
+		
+		if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
+			MSvcLogApiService.saveCanSMSServiceLogs(params);
+		}
+		
+		
+//		// business service....
+//		// TODO : installResult 구현 필요.....
+		MSvcLogApiService.insertProductReturnResult(params);		
+
+		
+		// TODO : 리턴할 dto 구현.
+//		transactionId = productReturnResultForm.getTransactionId();
+		
+//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+//		}
+		
+		return ResponseEntity.ok(CanCelDto.create(transactionId));
 
 	}
 	

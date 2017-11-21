@@ -64,11 +64,8 @@ public class InstallFailJobRequestForm {
 //				map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
 //				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
 
-				// install Result
-				map.put("userId", installFailJobRequestForm.getUserId());
-				map.put("salesOrderNo", installFailJobRequestForm.getSalesOrderNo());
-				map.put("serviceNo", installFailJobRequestForm.getServiceNo());
-
+			
+			map = BeanConverter.toMap(installFailJobRequestForm);
 
 //				list.add(map);
 				
