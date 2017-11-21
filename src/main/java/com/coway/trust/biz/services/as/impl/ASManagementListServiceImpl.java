@@ -361,6 +361,56 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		LOGGER.debug("					insertSVC0004D {} ",params);
 		
 		int a=  ASManagementListMapper.insertSVC0004D(params);
+		
+		//in house 구분  물류 처리 한다. 
+		if(a>0){
+			
+			//
+			 if (params.get("IN_HUSE_REPAIR_REPLACE_YN").equals("1")){
+				 
+				 	//차감 요청 
+				 if( params.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length( ) >0){
+					 
+					 	//이관 요청 
+						//물류 호출   add by hgham
+				        Map<String, Object>  logPram = null ;
+						/////////////////////////물류 호출//////////////////////
+						logPram =new HashMap<String, Object>();
+			            logPram.put("ORD_ID",    params.get("") );
+			            logPram.put("RETYPE", "");  
+			            logPram.put("P_TYPE", "");  
+			            logPram.put("P_PRGNM", "INHOUS");  
+			            logPram.put("USERID", String.valueOf(params.get("updator")));   
+			            
+			            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+			            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+			            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
+			            /////////////////////////물류 호출 END //////////////////////   	
+			            
+					 
+				 }else{  
+					 
+					 	//이관 요청 
+						//물류 호출   add by hgham
+				        Map<String, Object>  logPram = null ;
+						/////////////////////////물류 호출//////////////////////
+						logPram =new HashMap<String, Object>();
+			            logPram.put("ORD_ID",    params.get("") );
+			            logPram.put("RETYPE", "");  
+			            logPram.put("P_TYPE", "");  
+			            logPram.put("P_PRGNM", "INHOUS");  
+			            logPram.put("USERID", String.valueOf(params.get("updator")));   
+			            
+			            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+			            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+			            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
+			            /////////////////////////물류 호출 END //////////////////////   	
+			            
+				 }
+			 }
+		}
+	
+		
 		LOGGER.debug(" insertSVC0004D  결과 {}",a);
 		LOGGER.debug("							===> insertSVC0004D  out ");
 		

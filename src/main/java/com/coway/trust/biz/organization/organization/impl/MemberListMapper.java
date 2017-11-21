@@ -117,4 +117,11 @@ public interface MemberListMapper {
 	List<EgovMap> selectDeptCode(Map<String, Object> params);
 
 	List<EgovMap> selectCourse();
+	
+	int traineeUpdate(Map<String, Object> params);
+	EgovMap afterSelTrainee(Map<String, Object> params);
+
+	
+	
+
 }

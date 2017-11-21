@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.as.InHouseRepairService;
 import com.coway.trust.biz.services.servicePlanning.CTSubGroupListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -42,6 +43,10 @@ public class ASManagementListController {
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+	
+	@Resource(name = "InHouseRepairService")
+	private InHouseRepairService inHouseRepairService;
 	
 
 	@Autowired
@@ -80,6 +85,27 @@ public class ASManagementListController {
 				
 		return "services/as/inc_asResultEditPop";
 	}
+	
+	
+	   
+
+	
+	@RequestMapping(value = "/asInHouseEntryPop.do")
+	public String asInHouseEntryPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		
+		logger.debug("===================>"+params.toString());
+
+		
+		model.put("ORD_ID",(String) params.get("ord_Id"));   
+		model.put("ORD_NO",(String) params.get("ord_No"));
+		model.put("AS_ID", (String)params.get("as_Id"));   
+		model.put("AS_NO", (String)params.get("as_No")); 
+		
+				
+		return "services/as/asInHouseEntryPop";
+	}
+	
 	
 	
 	
@@ -849,5 +875,64 @@ public class ASManagementListController {
 		logger.debug("selectCTSubGroupDscList {}", selectCTSubGroupDscList);
 		return ResponseEntity.ok(selectCTSubGroupDscList);
 	}
+	
+	
+	
+	
+	@RequestMapping(value = "/inHouseGetProductMasters.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> inHouseGetProductMasters( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> getProductMasters = inHouseRepairService.getProductMasters(params);
+		logger.debug("GetProductMasters {}", getProductMasters);
+		return ResponseEntity.ok(getProductMasters);
+	}
+	
+	@RequestMapping(value = "/inHouseGetProductDetails.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> inHouseGetProductDetails( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+	
+		logger.debug("params {}", params);
+		List<EgovMap> getProductDetails = inHouseRepairService.getProductDetails(params);
+		logger.debug("getProductDetails {}", getProductDetails);
+		return ResponseEntity.ok(getProductDetails);
+	}
+	
+	
+	@RequestMapping(value = "/inHouseIsAbStck.do", method = RequestMethod.GET)
+	public ResponseEntity <EgovMap> inHouseIsAbStck( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("params {}", params);
+		EgovMap  isAbStck = inHouseRepairService.isAbStck(params); 
+		logger.debug("isAbStck {}", isAbStck);
+		return ResponseEntity.ok(isAbStck);
+	}
+	
+	
+
+	@RequestMapping(value = "/newASInHouseAdd.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> newASInHouseAdd(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  newASInHouseAdd ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("updator", sessionVO.getUserId());    
+		
+		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+	    message.setData(rtnValue.get("AS_NO"));  
+		message.setMessage("");
+				
+		return ResponseEntity.ok(message);  
+		
+	}
+	
+	
+	
+	
+	
+	
 	
 }

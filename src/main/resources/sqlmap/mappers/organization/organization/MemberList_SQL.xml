@@ -2101,4 +2101,18 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           </select>
 
 
+    <insert id="traineeUpdate" parameterType="Map" >
+		    
+		 UPDATE ORG0001D
+		  SET   MEM_CODE = DECODE ( #{memberType} , '7' , FN_GET_DOCNO(7) , '5' ,FN_GET_DOCNO(6) ) ,
+		          MEM_TYPE = TRAINEE_TYPE,
+		          UPD_DT     = SYSDATE
+		 WHERE  MEM_ID   = #{memberId} 
+    </insert>
+    
+   <select id="afterSelTrainee" resultType="egovMap">
+        SELECT MEM_CODE  FROM ORG0001D  WHERE MEM_ID =#{memberId}  
+  </select>
+    
+
 </mapper>

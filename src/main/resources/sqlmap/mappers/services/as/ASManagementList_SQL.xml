@@ -669,7 +669,9 @@
      
      <select id="getASEntryId" parameterType="Map" resultType="egovMap">
        <![CDATA[ 
-                SELECT SVC0001D_AS_ID_SEQ.NEXTVAL seq FROM DUAL
+                
+                 SELECT  MAX(AS_ID)+1   seq FROM SVC0001D
+       
         ]]> 
      </select>
      
@@ -681,7 +683,7 @@
      
      
      
-     
+      
      <insert id="insertSVC0001D" parameterType="Map" >
        <![CDATA[ 
        INSERT INTO SVC0001D (
@@ -1222,7 +1224,7 @@
                         CODE   code_Id,  
                         RESN_DESC ,
                         CODE||'-'||RESN_DESC  code_Name
-               from SYS0032M  where RESN_TYPE_ID = #{RESN_TYPE_ID}   and  CODE = #{CODE}
+               from SYS0032M  where RESN_TYPE_ID = #{RESN_TYPE_ID}   and  CODE =  UPPER(#{CODE})
                 order by RESN_DESC desc
                 )
  </select>
@@ -1374,7 +1376,22 @@
 									   AS_ENTRY_POINT, 
 									   AS_WORKMNSH_TAX_CODE_ID, 
 									   AS_WORKMNSH_TXS, 
-									   AS_RESULT_MOBILE_ID) 
+									   AS_RESULT_MOBILE_ID,
+									   APPNT_DT,                   
+										APPNT_TM,                   
+										IN_HUSE_REPAIR_REM,         
+										IN_HUSE_REPAIR_REPLACE_YN,  
+										IN_HUSE_REPAIR_PROMIS_DT,   
+										IN_HUSE_REPAIR_GRP_CODE,        
+										IN_HUSE_REPAIR_PRODUCT_CODE,    
+										IN_HUSE_REPAIR_SERIAL_NO,   
+										RESULT_CUST_NAME,           
+										RESULT_MOBILE_NO,           
+										RESULT_REP_EMAIL_NO,            
+										RESULT_ACEPT_NAME,          
+										SGN_DT,                     
+										TRNSC_ID
+									 ) 
 									VALUES (
 									   #{AS_RESULT_ID}, 
 									   #{AS_RESULT_NO}, 
@@ -1417,7 +1434,21 @@
 									   NVL(#{AS_ENTRY_POINT},0), 
 									   NVL(#{AS_WORKMNSH_TAX_CODE_ID},0), 
 									   NVL(#{AS_WORKMNSH_TXS},0), 
-									   #{AS_RESULT_MOBILE_ID}
+									   #{AS_RESULT_MOBILE_ID},
+										to_date(#{APPNT_DT},'dd/mm/yyyy'),                    
+										#{APPNT_TM},                    
+										#{IN_HUSE_REPAIR_REM},          
+										#{IN_HUSE_REPAIR_REPLACE_YN},   
+										to_date(#{IN_HUSE_REPAIR_PROMIS_DT},'dd/mm/yyyy'),    
+										#{IN_HUSE_REPAIR_GRP_CODE},     
+										#{IN_HUSE_REPAIR_PRODUCT_CODE}, 
+										#{IN_HUSE_REPAIR_SERIAL_NO},    
+										#{RESULT_CUST_NAME},            
+										#{RESULT_MOBILE_NO},            
+										#{RESULT_REP_EMAIL_NO},         
+										#{RESULT_ACEPT_NAME},           
+										#{SGN_DT},                      
+										#{TRNSC_ID}
 									)
         </insert>
         

@@ -64,7 +64,11 @@ public interface MemberListService {
 	List<EgovMap> selectDeptCode(Map<String, Object> params);
 
 	List<EgovMap> selectCourse();
+	
+	Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO);
 
+	
+	
 
 
 }

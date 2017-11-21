@@ -1175,4 +1175,19 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public List<EgovMap>  selectCourse() {
 		return memberListMapper.selectCourse();
 	}
+	
+	@Override
+	public Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO) {
+		boolean success = false;
+		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
+
+		int a =memberListMapper.traineeUpdate(params);
+		
+		if(a> 0){
+			resultValue =	memberListMapper.afterSelTrainee(params);
+		}
+		
+		return resultValue;
+	}
+	
 }

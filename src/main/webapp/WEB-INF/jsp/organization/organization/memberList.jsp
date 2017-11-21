@@ -7,7 +7,7 @@ var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
 function fn_memberListNew(){
-	 Common.popupDiv("/organization/selectMemberListNewPop.do?isPop=true", "searchForm");
+	 Common.popupDiv("/organization/selectMemberListNewPop.do?isPop=true", "searchForm"  ,null , true  ,'fn_memberListNew');
 }
 
 function fn_memberListSearch(){
@@ -31,14 +31,14 @@ function fn_TerminateResign(val){
 		            MemberType : memberType
 		    };
 		console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1");
-		Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1",'');
+		Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1", null ,null , true  ,'_fn_TerminateResignDiv');
 	}else{
 		 var jsonObj = {
                  MemberID :memberid,
                 MemberType : memberType
         };
 		 console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2");
-    Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2",'');
+    Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2" , null ,null , true  ,'_fn_TerminateResignDiv');
 	}
 }
 
@@ -49,7 +49,7 @@ function fn_requestVacationPop(){
             MemberType : memberType
     };
 	 console.log("MemberID="+memberid+"&MemberType="+memberType);
-    Common.popupDiv("/organization/requestVacationPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
+    Common.popupDiv("/organization/requestVacationPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType ,  null ,null , true  ,'_fn_requestVacationPopDiv');
 }
 /*By KV end - requestVacationPop*/
 
@@ -60,10 +60,22 @@ function fn_requestVacationPop(){
              MemberID :memberid,
             MemberType : memberType
     };
-     console.log("MemberID="+memberid+"&MemberType="+memberType);
-    Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
+    //Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
+    
+     Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType }, function(result) {
+         console.log("성공.");
+         console.log( result);
+         
+         if(result !="" ){
+             Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
+        	  fn_memberListSearch();
+         }
+     });
+     
 }
 /*By KV start - traineeToMemberRegistPop*/
+
+
 
 //Start AUIGrid --start Load Page- user 1st click Member
 $(document).ready(function() {
@@ -83,6 +95,7 @@ $(document).ready(function() {
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
     	memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
         memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
+        membercode = AUIGrid.getCellValue(myGridID, event.rowIndex, "membercode");
     	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 

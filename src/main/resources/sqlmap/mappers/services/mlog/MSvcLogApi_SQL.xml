@@ -9,113 +9,146 @@
 
 
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
-
                                 /* By KV -mobile- get job list */
-                        SELECT OR1.MEM_CODE AS settled_By,
-                               S01.SALES_ORD_NO AS sales_Order_No,
-                               S01.APP_TYPE_ID AS app_Type,
-                               S17.PROMO_ID AS sales_Promotion,
-                               S22.CUST_ACC_BANK_ID AS bank_Code,
-                               S22.CUST_ACC_NO AS card_Account_No,
-                               S27.TEL_M1 AS handphone_Tel,
-                               S27.TEL_O AS home_Tel,
-                               S27.TEL_R AS office_Tel,
-                               S27.EMAIL AS mail_Address,
-                               S27.NRIC AS resultIc_Mobile_No,
-                               S29.NAME AS cust_Name,
-                               S29.corp_type_id AS customer_Type,
-                               S29.cust_id AS customer_Id,
-                               S45.BRNCH_ID AS dsc_Code,
-                               S47.SIRIM_NO AS sirim_No,
-                               S47.SERIAL_NO AS serial_No,
-                               SV6.REN_COLCT_ID AS rc_Code,
-                               SV6.FAIL_RESN_ID AS fail_Reason_Code,
-                               SV8.NO AS service_No,
-                               SV8.STUS_CODE_ID AS job_Status,
-<!--                                SV8.YEAR AS plan_Year,
-                               SV8.MONTH AS plan_Month, -->
-                               SYS.STK_DESC AS product_Name,
-                               SYS.STK_CODE AS product_Code,
-                               SV8.APPNT_DT as appointment_Date,
-                               SV8.APPNT_TM as appointment_Time,
-				               TO_CHAR (SV8.APPNT_DT, 'YYYY') as   plan_Year,
-				               TO_CHAR (SV8.APPNT_DT, 'MM') as plan_Month
-                               ,
-                                 '1' as job_Type
-<!--                                 , '1'  as appointment_Date
-                                , '1' as appointment_Time -->
-                                , '1' as job_Session
-                                , '1' as checkIn_Date
-                                , '1' as checkIn_Time
-                                , '1' as checkIn_Gps
-                                , '1' as service_State
-                                , '1' as customer_Gps
-                                , '1' as install_Address
-                                , '1' as postcode
-                                , '1' as customer_Va_No
-                                , '1' as customer_Jom_Pay_Ref_No
-                                , '1' as image_Url
-                                , '1' as instruction
-                                , '1' as contract_Duration
-                                , '1' as monthly_RentalFees
-                                , '1' as registrationFees
-                                , '1' as payment_Mode
-                                , '1' as payment_ModeName
-                                , '1' as bank_Name
-                                , '1' as outstanding
-                                , '1' as warranty
-                                , '1' as Membership_Contract_Expiry
-                                , '1' as rental_Status
-                                , '1' as last_Payment_Date
-                                , '1' as temperature_Setting
-                                , '1' as result_Remark
-                                , '1' as owner_Code
-                                , '1' as owner_Code_Nm
-                                , '1' as result_Cust_Name
-                                , '1' as result_Report_Email_No
-                                , '1' as result_Acceptance_Name
-                                , '1' as fail_Reason_Name
-                                , '1' as settled_Date
-                                , '1' as settled_Time
-                                , '1' as ren_Collection_Id
-                                , '1' as bsr_No
-                                , '1' as need_Filter
-                                , '1' as nextAppointment_Date
-                                , '1' as nextAppointment_Time
-                                , '1' as appType
-                                , '1' as salesPromotion
-                                , '1' as bank_Code
-                                , '1' as dsc_Code
-                                , '1' as rc_Code
-                                , '1' as failReason_Code
-                          FROM SVC0008D SV8
-                               INNER JOIN SAL0001D S01
-                                  ON S01.SALES_ORD_ID = SV8.SALES_ORD_ID
-                               INNER JOIN SAL0002D S02
-                                  ON S02.SALES_ORD_ID = S01.SALES_ORD_ID
-                               INNER JOIN SAL0017D S17
-                                  ON S17.PROMO_ID = S01.PROMO_ID
-                               LEFT OUTER JOIN SAL0022D S22
-                                  ON S22.CUST_ID = S01.CUST_ID
-                               INNER JOIN SAL0027D S27
-                                  ON S27.CUST_ID = S01.CUST_ID
-                               INNER JOIN SAL0029D S29
-                                  ON S29.CUST_ID = S01.CUST_ID
-                               INNER JOIN SAL0045D S45
-                                  ON S45.SALES_ORD_ID = S01.SALES_ORD_ID
-                               INNER JOIN SAL0046D S46
-                                  ON S46.SALES_ORD_ID = S01.SALES_ORD_ID
-                               INNER JOIN SAL0047D S47
-                                  ON S47.ENTRY_ID = S46.INSTALL_ENTRY_ID
-                               LEFT OUTER JOIN SVC0006D SV6
-                                  ON SV8.SCHDUL_ID = SV6.SCHDUL_ID
-                               INNER JOIN ORG0001D OR1
-                                  ON OR1.MEM_ID = SV8.CODY_ID
-                               INNER JOIN SYS0026M SYS
-                                  ON SYS.STK_ID = S02.ITM_STK_ID
-                                 AND SV8.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
-                                 AND SV8.MONTH = TO_CHAR(to_date(#{requestDate} ,'YYYY/MM'),'MM')
-                                 AND OR1.MEM_CODE = #{userId}
+						SELECT
+						  B.SALES_ORD_NO AS sales_Order_No
+						  , B.APP_TYPE_ID AS app_Type
+						  , D.PROMO_ID AS sales_Promotion
+						  , E.CUST_ACC_BANK_ID AS bank_Code
+						  , E.CUST_ACC_NO AS card_Account_No
+						  , F.TEL_M1 AS handphone_Tel
+						  , F.TEL_O AS home_Tel
+						  , F.TEL_R AS office_Tel
+						  , F.EMAIL AS mail_Address
+						  , F.NRIC AS resultIc_Mobile_No
+						  , G.NAME AS cust_Name
+						  , G.TYPE_ID AS customer_Type
+						  , G.cust_id AS customer_Id
+						  , H.BRNCH_ID AS dsc_Code
+						  , J.SIRIM_NO AS sirim_No
+						  , J.SERIAL_NO AS serial_N
+						  , K.REN_COLCT_ID AS rc_Code
+						  , K.FAIL_RESN_ID AS fail_Reason_Code
+						  , A.NO AS service_No
+						  , A.STUS_CODE_ID AS job_Status
+						  , A.APPNT_DT as appointment_Date
+						  , A.APPNT_TM as appointment_Time
+						  , A.YEAR as   plan_Year
+						  , A.MONTH as plan_Month
+						  , M.STK_DESC AS product_Name
+						  , M.STK_CODE AS product_Code
+						  , L.MEM_CODE AS settled_By
+						  , N.CUST_BILL_PAY_REF_NO1 as customer_Jom_Pay_Ref_No
+						  , G.CUST_VA_NO as customer_Va_No
+						  , J.RESULT_CUST_NAME as result_Cust_Name
+						  , J.RESULT_REP_EMAIL_NO as result_Report_Email_No
+						  , J.RESULT_ACEPT_NAME as result_Acceptance_Name
+						  , P.CODE_ID as payment_Mode
+						  , P.CODE_NAME as payment_ModeName
+						  , Q.ADDR_DTL as install_Address
+						  , R.SRV_DUR as contract_Duration
+						  , to_char(R.SRV_EXPR_DT,'YYYYMMDD') as Membership_Contract_Expiry
+						  , S.STUS_CODE_ID as rental_Status
+						  , A.REM as result_Remark
+						  , K.REN_COLCT_ID as rc_Code
+						  , 'AS' as job_Type
+						  , '1' as job_Session
+						  , '1' as checkIn_Date
+						  , '1' as checkIn_Time
+						  , '1' as checkIn_Gps
+						  , '1' as service_State
+						  , '1' as customer_Gps
+						  , '1' as postcode
+						  , '1' as image_Url
+						  , '1' as instruction
+						  , '1' as monthly_RentalFees
+						  , '1' as registrationFees
+						  , '1' as bank_Name
+						  , '1' as outstanding
+						  , '1' as warranty
+						  , '1' as last_Payment_Date
+						  , '1' as temperature_Setting
+						  , '1' as owner_Code
+						  , '1' as owner_Code_Nm
+						  , '1' as fail_Reason_Name
+						  , '1' as settled_Date
+						  , '1' as settled_Time
+						  , '1' as ren_Collection_Id
+						  , '1' as bsr_No
+						  , '1' as need_Filter
+						  , '1' as nextAppointment_Date
+						  , '1' as nextAppointment_Time
+						  , '1' as appType
+						  , '1' as salesPromotion
+						  , '1' as bank_Code
+						  , '1' as dsc_Code
+						  , '1' as failReason_Code
+						FROM 
+						  SVC0008D A
+						  , SAL0001D B
+						  , SAL0002D C
+						  , SAL0017D D
+						  , (SELECT * FROM
+						      (
+						        SELECT CUST_ID, CUST_ACC_BANK_ID, CUST_ACC_NO,
+						              ROW_NUMBER() OVER(PARTITION BY CUST_ID ORDER BY CUST_ACC_UPD_DT DESC) AS DUM_SEQ
+						        FROM SAL0022D 
+						      ) SAL22D 
+						      WHERE DUM_SEQ = 1 ) E
+						  , (SELECT * FROM
+						      (
+						        SELECT CUST_ID, TEL_M1, TEL_O, TEL_R, EMAIL, NRIC,
+						              ROW_NUMBER() OVER(PARTITION BY CUST_ID ORDER BY UPD_DT DESC) AS DUM_SEQ
+						        FROM SAL0027D 
+						      ) SAL27D 
+						      WHERE DUM_SEQ = 1 ) F
+						  , SAL0029D G
+						  , SAL0045D H
+						  , (SELECT * FROM
+						      (
+						        SELECT SALES_ORD_ID, INSTALL_ENTRY_ID,
+						              ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY CRT_DT DESC) AS DUM_SEQ
+						        FROM SAL0046D 
+						      ) SAL46D 
+						      WHERE DUM_SEQ = 1 ) I
+						  , SAL0047D J
+						  , SVC0006D K
+						  , ORG0001D L
+						  , SYS0026M M
+						  , SAL0024D N
+						  , SAL0074D O
+						  , SYS0013M P
+						  , SAL0023D Q
+						  , (SELECT * FROM
+						      (
+						        SELECT SRV_SALES_ORD_ID, SRV_DUR, SRV_EXPR_DT,
+						              ROW_NUMBER() OVER(PARTITION BY SRV_SALES_ORD_ID ORDER BY SRV_EXPR_DT DESC) AS DUM_SEQ
+						        FROM SAL0095D 
+						      ) SAL95D 
+						      WHERE DUM_SEQ = 1 ) R
+						  , SAL0071D S
+						WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+						  AND B.SALES_ORD_ID = C.SALES_ORD_ID
+						  AND B.PROMO_ID = D.PROMO_ID(+)
+						  AND B.CUST_ID = E.CUST_ID(+)
+						  AND B.CUST_ID = F.CUST_ID(+)
+						  AND B.CUST_ID = G.CUST_ID(+)
+						  AND B.SALES_ORD_ID = H.SALES_ORD_ID
+						  AND B.SALES_ORD_ID = I.SALES_ORD_ID
+						  AND I.INSTALL_ENTRY_ID = J.ENTRY_ID
+						  AND A.SCHDUL_ID = K.SCHDUL_ID(+)
+						  AND A.CODY_ID = L.MEM_ID
+						  AND C.ITM_STK_ID = M.STK_ID
+						  AND B.CUST_BILL_ID = N.CUST_BILL_ID(+)
+						  AND B.SALES_ORD_ID = O.SALES_ORD_ID(+)
+						  AND O.MODE_ID = P.CODE_ID(+)
+						  AND B.CUST_ADD_ID = Q.CUST_ADD_ID
+						  AND B.SALES_ORD_ID = R.SRV_SALES_ORD_ID
+						  AND B.SALES_ORD_ID = S.SALES_ORD_ID(+)
+						  AND L.MEM_CODE = #{userId}
+						  AND A.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
+						  AND A.MONTH = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'MM')
+						  ORDER BY A.NO
      </select>
 
 
