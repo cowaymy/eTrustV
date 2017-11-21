@@ -2,16 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.organization.organization.impl.BranchListMapper">
 
-    <!-- 
+    <!--
         CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
          <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
           resultMap="clobMap" 을 사용해야 함.
     -->
     <resultMap id="clobMap" type="EgovMap">
         <result property="typeDesc" column="type_Desc" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>    
-    
-    
+    </resultMap>
+
+
         <select id="selectBranchList" parameterType="Map" resultType="egovMap">
 		    SELECT Project1.BRNCH_ID BRNCH_ID  ,
                        Project1.C1 C1  ,
@@ -49,63 +49,63 @@
                                 Extent2.CODE CODE1  ,
                                 Extent2.NAME NAME1  ,
                                 Extent3.CODE_NAME CODE_NAME  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
                                 ELSE ''
                                    END C1  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN Extent1.ADDR_DTL
                                 ELSE ''
                                    END C2  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.STREET IS NOT NULL ) THEN Extent1.STREET
                                 ELSE ''
                                    END C3  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
                                 ELSE ''
                                    END C4  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.CNTC IS NOT NULL ) THEN Extent1.CNTC
                                 ELSE ''
                                    END C6  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
                                 ELSE 0
                                    END C7  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
                                 ELSE 0
                                    END C9  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME
                                 ELSE ''
                                    END C11  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.STATE_CODE_ID IS NOT NULL ) THEN Extent1.STATE_CODE_ID
                                 ELSE 0
                                    END C12  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.TEL1 IS NOT NULL ) THEN Extent1.TEL1
                                 ELSE''
                                    END C14  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.TEL2 IS NOT NULL ) THEN Extent1.TEL2
                                 ELSE ''
                                    END C15  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.FAX IS NOT NULL ) THEN Extent1.FAX
                                 ELSE ''
                                    END C16  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.UPD_DT IS NOT NULL ) THEN (Extent1.UPD_DT)
                                 ELSE  to_date('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
                                    END C17  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID
                                 ELSE 0
                                    END C18  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
                                 ELSE ''
                                    END C19 ,
@@ -160,7 +160,7 @@
 				  ORDER BY Project1.CODE ASC
 
 
-             
+
         </select>
 
 
@@ -168,7 +168,7 @@
 
 
         <select id="getBranchDetailPop" parameterType="Map" resultType="egovMap">
-        
+
             <![CDATA[
                     SELECT Limit1.BRNCH_ID BRNCH_ID  ,
 						       Limit1.C1 C1  ,
@@ -192,7 +192,7 @@
 						       Limit1.CODE_NAME CODE_NAME  ,
 						       Limit1.C17 C17  ,
 						       Limit1.C18 C18  ,
-						       Limit1.C19 C19  
+						       Limit1.C19 C19
 						  FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
                                 Extent1.CODE CODE  ,
                                 Extent1.NAME NAME  ,
@@ -202,66 +202,66 @@
                                 Extent2.CODE CODE1  ,
                                 Extent2.NAME NAME1  ,
                                 Extent3.CODE_NAME CODE_NAME  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
                                 ELSE ''
                                    END C1  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN Extent1.ADDR_DTL
                                 ELSE ''
                                    END C2  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.STREET IS NOT NULL ) THEN Extent1.STREET
                                 ELSE ''
                                    END C3  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
                                 ELSE ''
                                    END C4  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.CNTC IS NOT NULL ) THEN Extent1.CNTC
                                 ELSE ''
                                    END C6  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
                                 ELSE 0
                                    END C7  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
                                 ELSE 0
                                    END C9  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME
                                 ELSE ''
                                    END C11  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.STATE_CODE_ID IS NOT NULL ) THEN Extent1.STATE_CODE_ID
                                 ELSE 0
                                    END C12  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.TEL1 IS NOT NULL ) THEN Extent1.TEL1
                                 ELSE''
                                    END C14  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.TEL2 IS NOT NULL ) THEN Extent1.TEL2
                                 ELSE ''
                                    END C15  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.FAX IS NOT NULL ) THEN Extent1.FAX
                                 ELSE ''
                                    END C16  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.UPD_DT IS NOT NULL ) THEN (Extent1.UPD_DT)
                                 ELSE  to_date('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
                                    END C17  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID
                                 ELSE 0
                                    END C18  ,
-                                CASE 
+                                CASE
                                      WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
                                 ELSE ''
-                                   END C19  
+                                   END C19
 						         FROM SYS0005M Extent1
 						                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
 						                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.TYPE_ID
@@ -273,8 +273,8 @@
 						                LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.UPD_USER_ID
 						          WHERE  Extent1.BRNCH_ID = #{brnchId}
 						          AND ROWNUM <= 1 ) Limit1
-            
-           ]]>   
+
+           ]]>
         </select>
 
 	    <select id="getBranchType" parameterType="Map" resultType="egovMap">
@@ -286,10 +286,10 @@
 			   WHERE DISAB = 0 AND CODE_MASTER_ID = 45
 			ORDER BY CODE_NAME
 	    </select>
-    
-    
-    
-    
+
+
+
+
             <select id="getStateList" parameterType="Map" resultType="egovMap">
 					SELECT Project1.STATE_ID CODE_ID  ,
 					       Project1.CODE CODE  ,
@@ -299,7 +299,7 @@
 					       Project1.CRT_DT CRT_DT  ,
 					       Project1.CRT_USER_ID CRT_USER_ID  ,
 					       Project1.UPD_DT UPD_DT  ,
-					       Project1.UPD_USER_ID UPD_USER_ID  
+					       Project1.UPD_USER_ID UPD_USER_ID
 					  FROM ( SELECT Extent1.STATE_ID STATE_ID  ,
 					                Extent1.CODE CODE  ,
 					                Extent1.NAME NAME  ,
@@ -308,15 +308,15 @@
 					                Extent1.CRT_DT CRT_DT  ,
 					                Extent1.CRT_USER_ID CRT_USER_ID  ,
 					                Extent1.UPD_DT UPD_DT  ,
-					                Extent1.UPD_USER_ID UPD_USER_ID  
+					                Extent1.UPD_USER_ID UPD_USER_ID
 					         FROM SYS0035M Extent1
 					          WHERE  ( Extent1.CNTY_ID = 1 )
 					                   AND ( 1 = Extent1.STUS_CODE_ID ) ) Project1
 					  ORDER BY Project1.NAME ASC
         </select>
-        
-        
-        
+
+
+
         <select id="getAreaList" parameterType="Map" resultType="egovMap">
 					SELECT Project1.AREA_ID CODE_ID  ,
 					       Project1.AREA_NAME CODE_NAME  ,
@@ -325,7 +325,7 @@
 					       Project1.AREA_STUS_ID AREA_STUS_ID  ,
 					       Project1.CRT_DT CRT_DT  ,
 					       Project1.UPD_DT UPD_DT  ,
-					       Project1.UPD_USER_ID UPD_USER_ID  
+					       Project1.UPD_USER_ID UPD_USER_ID
 					  FROM ( SELECT Extent1.AREA_ID AREA_ID  ,
 					                Extent1.AREA_NAME AREA_NAME  ,
 					                Extent1.AREA_STATE_ID AREA_STATE_ID  ,
@@ -333,16 +333,16 @@
 					                Extent1.AREA_STUS_ID AREA_STUS_ID  ,
 					                Extent1.CRT_DT CRT_DT  ,
 					                Extent1.UPD_DT UPD_DT  ,
-					                Extent1.UPD_USER_ID UPD_USER_ID  
+					                Extent1.UPD_USER_ID UPD_USER_ID
 					         FROM SYS0039M Extent1
 					          WHERE  ( 1 = Extent1.AREA_STUS_ID )
 					                   AND ( Extent1.AREA_STATE_ID = #{groupCode} ) ) Project1
 					  ORDER BY Project1.AREA_NAME ASC
         </select>
-        
-        
-        
-        
+
+
+
+
                 <select id="getPostcodeList" parameterType="Map" resultType="egovMap">
 						SELECT Project1.POST_CODE_ID CODE_ID  ,
 						       Project1.POST_CODE CODE_NAME  ,
@@ -352,7 +352,7 @@
 						       Project1.CRT_DT CRT_DT  ,
 						       Project1.CRT_USER_ID CRT_USER_ID  ,
 						       Project1.UPD_DT UPD_DT  ,
-						       Project1.UPD_USER_ID UPD_USER_ID  
+						       Project1.UPD_USER_ID UPD_USER_ID
 						  FROM ( SELECT Extent1.POST_CODE_ID POST_CODE_ID  ,
 						                Extent1.POST_CODE POST_CODE  ,
 						                Extent1.AREA_ID AREA_ID  ,
@@ -361,27 +361,27 @@
 						                Extent1.CRT_DT CRT_DT  ,
 						                Extent1.CRT_USER_ID CRT_USER_ID  ,
 						                Extent1.UPD_DT UPD_DT  ,
-						                Extent1.UPD_USER_ID UPD_USER_ID  
+						                Extent1.UPD_USER_ID UPD_USER_ID
 						         FROM SYS0030C Extent1
 						          WHERE  ( 1 = Extent1.STUS_CODE_ID )
 						                   AND ( Extent1.AREA_ID = #{groupCode} ) ) Project1
 						  ORDER BY Project1.POST_CODE ASC
 
         </select>
-        
-        
-        
-        
-        
-        
-        
-        
-    
-    
+
+
+
+
+
+
+
+
+
+
        <insert id="branchListUpdate" parameterType="Map" >
 
             UPDATE SYS0005M
-               SET CODE = #{branchCd} 
+               SET CODE = #{branchCd}
 					,NAME = #{branchName}
 					,AREA_ID = #{areaId}
 					,ADDR_DTL = #{addrDtl}
@@ -394,13 +394,13 @@
 					,UPD_USER_ID = #{user_id}
 					,UPD_DT = sysdate
 					,REGN_ID = #{cmRegion}
-             WHERE BRNCH_ID = #{branchNo}  
-                
+             WHERE BRNCH_ID = #{branchNo}
+
    </insert>
-   
-   
-   
-   
+
+
+
+
    <insert id="branchListInsert" parameterType="Map" >
             INSERT INTO SYS0005M (BRNCH_ID
 												,CODE
@@ -415,17 +415,19 @@
 												,REGN_ID
 												,IS_SYNC
 												,STUS_ID
-												,AREA_ID 
-												,ADDR_DTL 
-												,STREET 
+												,AREA_ID
+												,ADDR_DTL
+												,STREET
+												, START_FROM_DT
+
                 ) VALUES ( SYS0005M_BRNCH_ID_SEQ.NEXTVAL
                                          ,    #{branchCd}
                                          ,    #{branchName}
-                                         ,    #{txtTel1}   
+                                         ,    #{txtTel1}
                                          ,    #{txtTel2}
                                          ,    #{txtFax}
                                          ,    #{contact}
-                                         ,    #{branchType} 
+                                         ,    #{branchType}
                                          ,    #{user_id}
                                          ,    sysdate
                                          ,    #{cmRegion}
@@ -434,12 +436,13 @@
                                          , #{areaId}
                                          , #{addrDtl}
                                          , #{streetDtl}
-                  ) 
-                                         
+                                         ,#{dtStartFromDt}
+                                         )
 
-                                                      
-   </insert>   
+
+
+   </insert>
    <select id="getBranchAddrDetail" parameterType="Map" resultType="egovMap">
         SELECT * FROM SYS0064M WHERE AREA_ID = #{c1}
     </select>
-</mapper>        
+</mapper>
