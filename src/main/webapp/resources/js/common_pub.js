@@ -362,7 +362,7 @@ $(document).on(//인풋파일 삭제
 /* 인풋 파일(멀티) end */
 
 /* 팝업 드래그 start */
-$("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header",containment: "html"});
+$(".popup_wrap").draggable({handle: ".pop_header",containment: "html"});
 /* 팝업 드래그 end */
 
 /* 팝업 닫기 start */
@@ -376,7 +376,7 @@ $("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header",containment: "htm
 		// manual close...
 	}else{
 
-       var thisPopupWrap=$(this).closest("#popup_wrap, .popup_wrap");
+       var thisPopupWrap=$(this).closest(".popup_wrap");
         thisPopupWrap.fadeOut();
 	}
 	return false;

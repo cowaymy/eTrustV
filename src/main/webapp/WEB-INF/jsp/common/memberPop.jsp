@@ -99,6 +99,13 @@
 
 <section class="pop_body"><!-- pop_body start -->
 
+<aside class="title_line"><!-- title_line start -->
+<ul class="right_btns">
+    <li><p class="btn_blue"><a id="searchBtn" href="#"><span class="search"></span>SEARCH</a></p></li>
+    <li><p class="btn_blue"><a href="#"><span class="clear"></span>CLEAR</a></p></li>
+</ul>
+</aside><!-- title_line end -->
+
 <section class="search_table"><!-- search_table start -->
 <form id="searchMemberFormPop" name="searchMemberFormPop" action="#" method="post">
 
@@ -135,11 +142,6 @@
 </table><!-- table end -->
 
 <section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-	<li><p class="btn_grid"><a id="searchBtn" href="#">SEARCH</a></p></li>
-	<li><p class="btn_grid"><a href="#">CLEAR</a></p></li>
-</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_mem_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
