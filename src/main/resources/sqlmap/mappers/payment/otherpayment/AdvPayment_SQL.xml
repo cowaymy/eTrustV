@@ -10,8 +10,6 @@
             AMT,
             BANK_ACC_ID,
             BANK_SLIP_NO,
-            <!-- 신규필드 생성시 추가할 자리
-             -->
             ITM_REM,
             TR_NO,
             TR_ISSU_DT,
@@ -22,7 +20,11 @@
             STUS_ID,
             IS_FUND_TRNSF,
             SKIP_RECON,
-            PAY_ITM_CARD_TYPE
+            PAY_ITM_CARD_TYPE ,
+            PAYER_NM ,
+			REF_DTL ,
+			BANK_TYPE_ID ,
+			VA_ACC_NO
         ) VALUES (
             #{seq},
             #{keyInPayType},
@@ -30,21 +32,21 @@
             #{keyInAmount},
             #{keyInBankAcc},
             #{keyInSlipNo},
-            <!-- #{keyInPayName},
-            #{keyInRefDetails}, 신규필드생성시 추가하자-->
             #{keyInRemark},
-            
             #{keyInTrNo},
             TO_DATE(#{keyInTrIssueDate},'DD/MM/YYYY'),
             #{keyInCollMemId},
             TO_DATE(#{keyInPayDate},'DD/MM/YYYY'),
-            
             #{keyInIsLock},
             #{keyInIsThirdParty},
             #{keyInStatusId},
             #{keyInIsFundTransfer},
             #{keyInSkipRecon},
-            #{keyInPayItmCardType}
+            #{keyInPayItmCardType},
+            #{keyInPayerNm},
+            #{keyInRefDtl},
+            #{keyInBankType}, 
+            #{keyInVaAccNo}
         )
     </insert>
     
@@ -55,32 +57,46 @@
             TRNSC_DT,
             AMT,
             BANK_ACC_ID,
-            BANK_SLIP_NO,
             BANK_CHRG_AMT,
             EFT_NO,
             ITM_REM,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID,
+            PAY_DT,
             IS_LOCK,
             IS_3PARTY,
             STUS_ID,
             IS_FUND_TRNSF,
             SKIP_RECON,
-            PAY_ITM_CARD_TYPE
+            PAY_ITM_CARD_TYPE,
+            PAYER_NM ,
+            REF_DTL ,
+            BANK_TYPE_ID ,
+            VA_ACC_NO
         ) VALUES (
             #{seq},
             #{keyInPayType},
             TO_DATE(#{keyInTransDate},'DD/MM/YYYY'),
             #{keyInAmount},
             #{keyInBankAcc},
-            #{keyInSlipNo},
             #{keyInBankChrgAmt},
             #{keyInEftNo},
             #{keyInRemark},
+            #{keyInTrNo},
+            TO_DATE(#{keyInTrIssueDate},'DD/MM/YYYY'),
+            #{keyInCollMemId},
+            TO_DATE(#{keyInPayDate},'DD/MM/YYYY'),
             #{keyInIsLock},
             #{keyInIsThirdParty},
             #{keyInStatusId},
             #{keyInIsFundTransfer},
             #{keyInSkipRecon},
-            #{keyInPayItmCardType}
+            #{keyInPayItmCardType},
+            #{keyInPayerNm},
+            #{keyInRefDtl},
+            #{keyInBankType}, 
+            #{keyInVaAccNo}
         )
     </insert>  
     
@@ -111,9 +127,6 @@
             DSCNT_AMT,
             SRV_LDGR_CNTRCT_ID,
             BILL_AS_ID
-            <!-- 
-                TR 친구들 필드 자리
-             -->
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
             #{seq},
@@ -140,14 +153,7 @@
             #{discountAmt},
             #{srvcContractID},
             #{billAsId}
-            <!-- #{keyInTrNo}, TR친구들 추가예정
-            #{keyInTrIssueDate},
-            #{keyInCollector} -->
         )
     </insert>
-    
-    <!-- <update id="processPayment" statementType="CALLABLE" parameterType="Map">
-        {call SP_INST_PAYMENT(#{seq},#{userid} )}
-    </update> -->
     
 </mapper>

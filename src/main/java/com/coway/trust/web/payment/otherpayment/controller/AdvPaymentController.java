@@ -78,40 +78,42 @@ public class AdvPaymentController {
     		formInfo.put("keyInPayType", 105);
     		formInfo.put("keyInTransDate", String.valueOf(formInfo.get("cashTransDate")));
         	formInfo.put("keyInAmount",  String.valueOf(formInfo.get("cashAmount")));
-    		formInfo.put("keyInBankAcc",  String.valueOf(formInfo.get("cashBankAcc")));
+    		formInfo.put("keyInBankAcc",  formInfo.get("cashBankAcc") != null ? String.valueOf(formInfo.get("cashBankAcc")) : 0);
     		formInfo.put("keyInSlipNo",  String.valueOf(formInfo.get("cashSlipNo")));
     		formInfo.put("keyInRemark",  String.valueOf(formInfo.get("cashRemark")));
     		formInfo.put("keyInTrNo",  String.valueOf(formInfo.get("cashTrNo")));
     		formInfo.put("keyInTrIssueDate",  String.valueOf(formInfo.get("cashTrIssueDate")));
     		formInfo.put("keyInCollMemId",  String.valueOf(formInfo.get("cashCollMemId")));
     		formInfo.put("keyInPayDate",  String.valueOf(formInfo.get("cashPayDate")));
-    		//formInfo.put("keyInBankType",  String.valueOf(formInfo.get("cashBankType")));
-    		//formInfo.put("keyVAAccount",  String.valueOf(formInfo.get("cashVAAccount")));
-    	}
-    	
-    	//Cheque
-    	if("106".equals(String.valueOf(formInfo.get("keyInPayChequeType")))){
+    		formInfo.put("keyInPayerNm",  String.valueOf(formInfo.get("cashPayName")));
+    		formInfo.put("keyInRefDtl",  String.valueOf(formInfo.get("cashRefDetails")));
+    		formInfo.put("keyInBankType",  String.valueOf(formInfo.get("cashBankType")));
+    		formInfo.put("keyInVaAccNo",  String.valueOf(formInfo.get("cashVAAccount")));
+    		
+    	}//Cheque
+    	else if("106".equals(String.valueOf(formInfo.get("keyInPayChequeType")))){
     		formInfo.put("keyInPayType", 106);
     		formInfo.put("keyInTransDate", String.valueOf(formInfo.get("chequeTransDate")));
         	formInfo.put("keyInAmount",  String.valueOf(formInfo.get("chequeAmount")));
-    		formInfo.put("keyInBankAcc",  String.valueOf(formInfo.get("chequeBankAcc")));
+    		formInfo.put("keyInBankAcc",  formInfo.get("chequeBankAcc") != null ? String.valueOf(formInfo.get("chequeBankAcc")) : 0);
     		formInfo.put("keyInSlipNo",  String.valueOf(formInfo.get("chequeSlipNo")));
     		formInfo.put("keyInRemark",  String.valueOf(formInfo.get("chequeRemark")));
     		formInfo.put("keyInTrNo",  String.valueOf(formInfo.get("chequeTrNo")));
     		formInfo.put("keyInTrIssueDate",  String.valueOf(formInfo.get("chequeTrIssueDate")));
     		formInfo.put("keyInCollMemId",  String.valueOf(formInfo.get("chequeCollMemId")));
     		formInfo.put("keyInPayDate",  String.valueOf(formInfo.get("chequePayDate")));
-    		//formInfo.put("keyInBankType",  String.valueOf(formInfo.get("chequeBankType")));
-    		//formInfo.put("keyVAAccount",  String.valueOf(formInfo.get("chequeVAAccount")));
-    	}
-    	
-    	//Online
-    	if("108".equals(String.valueOf(formInfo.get("keyInPayOnlineType")))){
+    		formInfo.put("keyInPayerNm",  String.valueOf(formInfo.get("chequePayName")));
+    		formInfo.put("keyInRefDtl",  String.valueOf(formInfo.get("chequeRefDetails")));
+    		formInfo.put("keyInBankType",  String.valueOf(formInfo.get("chequeBankType")));
+    		formInfo.put("keyInVaAccNo",  String.valueOf(formInfo.get("chequeVAAccount")));
+    		
+    	}//Online
+    	else if("108".equals(String.valueOf(formInfo.get("keyInPayOnlineType")))){
     		formInfo.put("keyInPayType", 108);
     		formInfo.put("keyInTransDate", String.valueOf(formInfo.get("onlineTransDate")));
         	formInfo.put("keyInAmount",  String.valueOf(formInfo.get("onlineAmount")));
-    		formInfo.put("keyInBankAcc",  String.valueOf(formInfo.get("onlineBankAcc")));
-    		formInfo.put("keyInSlipNo",  String.valueOf(formInfo.get("onlineSlipNo")));
+    		formInfo.put("keyInBankAcc",  formInfo.get("onlineBankAcc") != null ? String.valueOf(formInfo.get("onlineBankAcc")) : 0);
+    		//formInfo.put("keyInSlipNo",  String.valueOf(formInfo.get("onlineSlipNo")));
     		formInfo.put("keyInRemark",  String.valueOf(formInfo.get("onlineRemark")));
     		formInfo.put("keyInTrNo",  String.valueOf(formInfo.get("onlineTrNo")));
     		formInfo.put("keyInTrIssueDate",  String.valueOf(formInfo.get("onlineTrIssueDate")));
@@ -119,8 +121,10 @@ public class AdvPaymentController {
     		formInfo.put("keyInPayDate",  String.valueOf(formInfo.get("onlinePayDate")));
     		formInfo.put("keyInBankChrgAmt",  formInfo.get("onlineBankChgAmt") != null ? String.valueOf(formInfo.get("onlineBankChgAmt")) : 0);
     		formInfo.put("keyInEftNo",  String.valueOf(formInfo.get("onlineEft")));
-    		//formInfo.put("keyInBankType",  String.valueOf(formInfo.get("onlineBankType")));
-    		//formInfo.put("keyVAAccount",  String.valueOf(formInfo.get("onlineVAAccount")));
+    		formInfo.put("keyInPayerNm",  String.valueOf(formInfo.get("onlinePayName")));
+    		formInfo.put("keyInRefDtl",  String.valueOf(formInfo.get("onlineRefDetails")));
+    		formInfo.put("keyInBankType",  String.valueOf(formInfo.get("onlineBankType")));
+    		formInfo.put("keyInVaAccNo",  String.valueOf(formInfo.get("onlineVAAccount")));
     	}
 		
 		// 저장

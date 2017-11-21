@@ -37,6 +37,9 @@
 
 var maxSeq = 0; //billing ADD 될 시퀀스
 
+//targetFinalBillGridID Grid에서 선택된 RowID
+var selectedGridValue = -1;
+
 var targetRenMstGridID;
 var targetRenDetGridID;
 var targetOutMstGridID;
@@ -387,6 +390,11 @@ $(document).ready(function(){
     //doGetCombo('/common/getAccountList.do', 'CHQ' , ''   , 'bankAccount' , 'S', '');
     //doGetCombo('/common/getAccountList.do', 'ONLINE' , ''   , 'bankAccount' , 'S', '');
     
+    // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(targetFinalBillGridID, "cellClick", function( event ){ 
+        selectedGridValue = event.rowIndex;
+    });
+    
     doGetCombo('/common/getAccountList.do', 'CASH','', 'cashBankAcc', 'S', '' );
     doGetCombo('/common/getAccountList.do', 'CHQ','', 'chequeBankAcc', 'S', '' );
     doGetCombo('/common/getAccountList.do', 'ONLINE','', 'onlineBankAcc', 'S', '' );
@@ -471,12 +479,50 @@ function fn_changeCrcMode(){
 
 function saveAdvPayment(){
     
+	var keyInPayType = $("#keyInPayType").val();
+	
+	if(keyInPayType == "105"){
+		
+		if(FormUtil.checkReqValue($("#cashAmount")) ||$("#cashAmount").val() <= 0 ){
+	        Common.alert('* No Amount ');
+	        return;
+	    }
+		
+		if( FormUtil.byteLength($("#cashRemark").val()) > 3000 ){
+	        Common.alert('* Please input the Remark below or less than 3000 bytes.');
+	        return;
+	    }   
+		
+	}else if(keyInPayType == "106"){
+		
+		if(FormUtil.checkReqValue($("#chequeAmount")) ||$("#chequeAmount").val() <= 0 ){
+            Common.alert('* No Amount ');
+            return;
+        }
+		
+		if( FormUtil.byteLength($("#chequeRemark").val()) > 3000 ){
+            Common.alert('* Please input the Remark below or less than 3000 bytes.');
+            return;
+        }   
+		
+	}else if(keyInPayType == "108"){
+		
+		if(FormUtil.checkReqValue($("#onlineAmount")) ||$("#onlineAmount").val() <= 0 ){
+            Common.alert('* No Amount ');
+            return;
+        }
+		
+		if( FormUtil.byteLength($("#onlineRemark").val()) > 3000 ){
+            Common.alert('* Please input the Remark below or less than 3000 bytes.');
+            return;
+        }   
+		
+	}
+	
     //param data array
     var data = {};
-    
     var gridList = AUIGrid.getGridData(targetFinalBillGridID);
     var formList = "";
-    var keyInPayType = $("#keyInPayType").val();
     
     if(keyInPayType == "105"){
     	$("#keyInPayCashType").val(keyInPayType);
@@ -522,6 +568,23 @@ function recalculatePaymentTotalAmt(){
   }
 
   $("#paymentTotalAmtTxt").text("RM " + $.number(totalAmt,2));    
+}
+
+//추가된 최종 그리드 삭제
+function removeFromFinal(){
+    
+    if (selectedGridValue  > -1){
+        Common.confirm('Are you sure you want to remove the Selected Row?'
+        ,function (){
+            //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+            AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
+            selectedGridValue = -1;
+            
+            recalculatePaymentTotalAmt();
+        });
+    }else{
+        Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
+    }
 }
 
 //**************************************************
@@ -831,7 +894,10 @@ function addRentalToFinal(){
             var mstChkVal = AUIGrid.getCellValue(targetRenMstGridID, i ,"btnCheck");
             var mstSalesOrdNo = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdNo");            
             var mstRpf = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpf");
-            var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");            
+            var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");
+            
+            var mstCustNm = AUIGrid.getCellValue(targetRenMstGridID, i ,"custNm");
+            var mstCustBillId = AUIGrid.getCellValue(targetRenMstGridID, i ,"custBillId");
 
             if(mstChkVal == 1){
                 if(mstRpf - mstRpfPaid > 0){
@@ -846,13 +912,13 @@ function addRentalToFinal(){
                      item.assignAmt = 0;
                      item.billAmt   = mstRpf;
                      item.billDt   = "1900-01-01";
-                     item.billGrpId = 0;
+                     item.billGrpId = mstCustBillId;
                      item.billId = 0;
                      item.billNo = "0";
-                     item.billStatus = "DUMMY";
+                     item.billStatus = "";
                      item.billTypeId = 161;
                      item.billTypeNm   = "RPF";
-                     item.custNm   = "DUMMY";
+                     item.custNm   = mstCustNm;
                      item.discountAmt = 0;
                      item.installment  = 0;
                      item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
@@ -916,13 +982,13 @@ function addRentalToFinal(){
                     item.assignAmt = 0;
                     item.billAmt   = $("#rentalAdvAmt").val();
                     item.billDt   = "1900-01-01";
-                    item.billGrpId = 0;
+                    item.billGrpId = mstCustBillId;
                     item.billId = 0;
                     item.billNo = "0";
-                    item.billStatus = "DUMMY";
+                    item.billStatus = "";
                     item.billTypeId = 1032;
                     item.billTypeNm   = "General Advanced For Rental";
-                    item.custNm   = "DUMMY";
+                    item.custNm   = mstCustNm;
                     item.discountAmt = 0;
                     item.installment  = 0;
                     item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
@@ -2050,6 +2116,9 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
     <!-- title_line start -->
     <aside class="title_line">
         <h3 class="pt0">Payment Key-In</h3>
+        <ul class="right_btns mt10">
+           <li><p class="btn_grid"><a href="javascript:removeFromFinal();">DEL</a></p></li>
+        </ul>
     </aside>
     <!-- title_line end -->
     
@@ -2069,7 +2138,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
     </ul>
 
     <!-- search_table start -->
-    <section class="search_table">
+    <section class="search_table mt10">
         <!-- search_table start -->
         <form id="paymentForm" action="#" method="post">    
             <table class="type1">
@@ -2118,11 +2187,11 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                     </colgroup>
                     <tbody>
                         <tr>
-                            <th scope="row">Amount</th>
+                            <th scope="row">Amount<span class="must">*</span></th>
                             <td>
-                                <input type="text" id="cashAmount" name="cashAmount" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
+                                <input type="text" id="cashAmount" name="cashAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
-                            <th scope="row">Bank Type</th>
+                            <th scope="row">Bank Type<span class="must">*</span></th>
                             <td>
                                 <select id="cashBankType" name="cashBankType"  class="w100p" onchange="fn_bankChange('CASH');">
                                     <option value="2728">JornPay</option>
@@ -2133,32 +2202,32 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Bank Account</th>
+                            <th scope="row">Bank Account<span class="must">*</span></th>
                             <td>
                                 <select id="cashBankAcc" name="cashBankAcc"  class="w100p">
                                 </select>
                             </td>
-                            <th scope="row">VA Account</th>
+                            <th scope="row">VA Account<span class="must">*</span></th>
                             <td>
-                                <p class="short"><input type="text" id="cashVAAccount" name="cashVAAccount" size="16" maxlength="16" class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                                <input type="text" id="cashVAAccount" name="cashVAAccount" size="22" maxlength="16" class="w100p readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
                         </tr>
                         <tr>
-                           <th scope="row">Transaction Date</th>
+                           <th scope="row">Transaction Date<span class="must">*</span></th>
                             <td>
                                 <input id="cashTransDate" name="cashTransDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
-                            <th scope="row">Slip No.</th>
+                            <th scope="row">Slip No.<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="cashSlipNo" name="cashSlipNo" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
                         </tr>
                         <tr>
-                           <th scope="row">Payer Name</th>
+                           <th scope="row">Payer Name<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="cashPayName" name="cashPayName" class="w100p" />
                             </td>
-                            <th scope="row">Ref Details/Jornpay Ref</th>
+                            <th scope="row">Ref Details/Jornpay Ref<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="cashRefDetails" name="cashRefDetails" class="w100p" />
                             </td>
@@ -2167,14 +2236,14 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <th scope="row">Remark</th>
                             <td colspan="3">
                                 <textarea id="cashRemark" name="cashRemark"  cols="20" rows="5" placeholder=""></textarea>
-                            </td>                       
+                            </td>
                         </tr>
                         <tr>
-                            <th scope="row">TR No.<span class="must">*</span></th>
+                            <th scope="row">TR No.</th>
                             <td>
                                 <input id="cashTrNo" name="cashTrNo" type="text" title="" placeholder="" class="w100p"  />
                             </td>
-                            <th scope="row">TR Issue Date<span class="must">*</span></th>
+                            <th scope="row">TR Issue Date</th>
                             <td>
                                 <input id="cashTrIssueDate" name="cashTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
@@ -2188,7 +2257,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
                             </td>
-                            <th scope="row">Pay Date<span class="must">*</span></th>
+                            <th scope="row">Pay Date</th>
                             <td>
                                 <input id="cashPayDate" name="cashPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
@@ -2223,11 +2292,11 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                     </colgroup>
                     <tbody>
                         <tr>
-                            <th scope="row">Amount</th>
+                            <th scope="row">Amount<span class="must">*</span></th>
                             <td>
-                                <input type="text" id="chequeAmount" name="chequeAmount" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
+                                <input type="text" id="chequeAmount" name="chequeAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
-                            <th scope="row">Bank Type</th>
+                            <th scope="row">Bank Type<span class="must">*</span></th>
                             <td>
                                 <select id="chequeBankType" name="chequeBankType"  class="w100p" onchange="fn_bankChange('CHQ');">
                                     <option value="2728">JornPay</option>
@@ -2238,32 +2307,32 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Bank Account</th>
+                            <th scope="row">Bank Account<span class="must">*</span></th>
                             <td>
                                 <select id="chequeBankAcc" name="chequeBankAcc"  class="w100p">
                                 </select>
                             </td>
-                            <th scope="row">VA Account</th>
+                            <th scope="row">VA Account<span class="must">*</span></th>
                             <td>
-                                <p class="short"><input type="text" id="chequeVAAccount" name="chequeVAAccount" size="16" maxlength="16"  class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                                <input type="text" id="chequeVAAccount" name="chequeVAAccount" maxlength="16"  class="w100p readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
                         </tr>
                         <tr>
-                           <th scope="row">Transaction Date</th>
+                           <th scope="row">Transaction Date<span class="must">*</span></th>
                             <td>
                                 <input id="chequeTransDate" name="chequeTransDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
-                            <th scope="row">Slip No.</th>
+                            <th scope="row">Slip No.<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="chequeSlipNo" name="chequeSlipNo" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
                         </tr>
                         <tr>
-                           <th scope="row">Payer Name</th>
+                           <th scope="row">Payer Name<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="chequePayName" name="chequePayName" class="w100p" />
                             </td>
-                            <th scope="row">Ref Details/Jornpay Ref</th>
+                            <th scope="row">Ref Details/Jornpay Ref<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="chequeRefDetails" name="chequeRefDetails" class="w100p" />
                             </td>
@@ -2275,11 +2344,11 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             </td>                       
                         </tr>
                         <tr>
-                            <th scope="row">TR No.<span class="must">*</span></th>
+                            <th scope="row">TR No.</th>
                             <td>
                                 <input id="chequeTrNo" name="chequeTrNo" type="text" title="" placeholder="" class="w100p"  />
                             </td>
-                            <th scope="row">TR Issue Date<span class="must">*</span></th>
+                            <th scope="row">TR Issue Date</th>
                             <td>
                                 <input id="chequeTrIssueDate" name="chequeTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
@@ -2293,7 +2362,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
                             </td>
-                            <th scope="row">Pay Date<span class="must">*</span></th>
+                            <th scope="row">Pay Date</th>
                             <td>
                                 <input id="chequePayDate" name="chequePayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
@@ -2328,11 +2397,37 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                     </colgroup>
                     <tbody>
                         <tr>
-                            <th scope="row">Amount</th>
+                            <th scope="row">Amount<span class="must">*</span></th>
                             <td>
-                                <input type="text" id="onlineAmount" name="onlineAmount" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
+                                <input type="text" id="onlineAmount" name="onlineAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
-                            <th scope="row">Bank Type</th>
+                            <th scope="row">Bank Charge Amount<span class="must">*</span></th>
+                            <td>
+                                <input type="text" id="onlineBankChgAmt" name="onlineBankChgAmt" class="w100p" maxlength="10"  onkeydown='return FormUtil.onlyNumber(event)' />
+                            </td>
+                        </tr>
+                        <tr>
+                           <th scope="row">Transaction Date<span class="must">*</span></th>
+                            <td>
+                                <input id="onlineTransDate" name="onlineTransDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                            </td>
+                            <th scope="row">EFT<span class="must">*</span></th>
+                            <td>
+                                <input type="text" id="onlineEft" name="onlineEft" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
+                            </td>
+                        </tr>
+                        <tr>
+                           <th scope="row">Payer Name<span class="must">*</span></th>
+                            <td>
+                                <input type="text" id="onlinePayName" name="onlinePayName" class="w100p" />
+                            </td>
+                            <th scope="row">Ref Details/Jornpay Ref<span class="must">*</span></th>
+                            <td>
+                                <input type="text" id="onlineRefDetails" name="onlineRefDetails" class="w100p" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Bank Type<span class="must">*</span></th>
                             <td>
                                 <select id="onlineBankType" name="onlineBankType"  class="w100p" onchange="fn_bankChange('ONL');">
                                     <option value="2728">JornPay</option>
@@ -2341,46 +2436,19 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                                     <option value="2731">Others</option>
                                 </select>
                             </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Bank Account</th>
+                            <th scope="row">Bank Account<span class="must">*</span></th>
                             <td>
                                 <select id="onlineBankAcc" name="onlineBankAcc"  class="w100p">
                                 </select>
                             </td>
-                            <th scope="row">VA Account</th>
-                            <td>
-                                <p class="short"><input type="text" id="onlineVAAccount" name="onlineVAAccount" size="16" maxlength="16"  class="readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-                            </td>
                         </tr>
                         <tr>
-                           <th scope="row">Transaction Date</th>
-                            <td>
-                                <input id="onlineTransDate" name="onlineTransDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                            <th scope="row">VA Account<span class="must">*</span></th>
+                            <td >
+                                <input type="text" id="onlineVAAccount" name="onlineVAAccount"  maxlength="16"  class="w100p readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
-                            <th scope="row">Slip No.</th>
+                            <th scope="row"></th>
                             <td>
-                                <input type="text" id="onlineSlipNo" name="onlineSlipNo" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
-                            </td>
-                        </tr>
-                        <tr>
-                           <th scope="row">Bank Charge Amount</th>
-                            <td>
-                                <input type="text" id="onlineBankChgAmt" name="onlineBankChgAmt" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
-                            </td>
-                            <th scope="row">EFT</th>
-                            <td>
-                                <input type="text" id="onlineEft" name="onlineEft" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
-                            </td>
-                        </tr>
-                        <tr>
-                           <th scope="row">Payer Name</th>
-                            <td>
-                                <input type="text" id="onlinePayName" name="onlinePayName" class="w100p" />
-                            </td>
-                            <th scope="row">Ref Details/Jornpay Ref</th>
-                            <td>
-                                <input type="text" id="onlineRefDetails" name="onlineRefDetails" class="w100p" />
                             </td>
                         </tr>
                         <tr>
@@ -2390,11 +2458,11 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             </td>                       
                         </tr>
                         <tr>
-	                        <th scope="row">TR No.<span class="must">*</span></th>
+	                        <th scope="row">TR No.</th>
 	                        <td>
 	                            <input id="onlineTrNo" name="onlineTrNo" type="text" title="" placeholder="" class="w100p"  />
 	                        </td>
-	                        <th scope="row">TR Issue Date<span class="must">*</span></th>
+	                        <th scope="row">TR Issue Date</th>
 	                        <td>
 	                            <input id="onlineTrIssueDate" name="onlineTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 	                        </td>
@@ -2408,7 +2476,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
 	                                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
 	                            </a>
 	                        </td>
-	                        <th scope="row">Pay Date<span class="must">*</span></th>
+	                        <th scope="row">Pay Date</th>
 	                        <td>
 	                            <input id="onlinePayDate" name="onlinePayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 	                        </td>
