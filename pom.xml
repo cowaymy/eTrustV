@@ -518,11 +518,20 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
-					<!-- <version>3.1</version> -->
+					<version>3.8</version>
 					<configuration>
 						<rulesets>
 							<ruleset>${project.basedir}/src/main/resources/pmd/EgovInspectionRules_kor-3.5.xml</ruleset>
 						</rulesets>
+						<sourceEncoding>utf-8</sourceEncoding>
+						<includeTests>false</includeTests>
+						<excludes>
+							<exclude>**/com/coway/trust/cmmn/**/*.java</exclude>
+							<exclude>**/com/coway/trust/config/**/*.java</exclude>
+							<exclude>**/com/coway/trust/util/**/*.java</exclude>
+							<exclude>**/com/coway/trust/api/config/**/*.java</exclude>
+							<exclude>**/com/coway/trust/**/sample/**/*.java</exclude>
+						</excludes>
 					</configuration>
 				</plugin>
 			</plugins>
