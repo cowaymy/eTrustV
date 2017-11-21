@@ -11,6 +11,7 @@ var myGridID_Doc;
 function fn_memberSave(){
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
+	            $("#traineeType").val(($("#traineeType").value));
 			    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
@@ -32,7 +33,7 @@ function fn_docSubmission(){
 		console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID_Doc, result);
-        AUIGrid.resize(myGridID_Doc,1000,400); 
+        AUIGrid.resize(myGridID_Doc,1000,400);
     });
 }
 
@@ -58,7 +59,7 @@ function fn_departmentCode(value){
         };
            doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
-           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 	   case "3" :
            var jsonObj = {
@@ -67,9 +68,9 @@ function fn_departmentCode(value){
         };
            doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
-           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
-           
+
 	   case "4" :
            var jsonObj = {
                 memberLvl : 100,
@@ -77,7 +78,7 @@ function fn_departmentCode(value){
         };
            doGetComboSepa("/common/selectBranchCodeList.do",100 , '-',''   , 'branch' , 'S', '');
            break;
-           
+
 	   case "5" :
            var jsonObj = {
                 memberLvl : 3,
@@ -85,42 +86,42 @@ function fn_departmentCode(value){
         };
            doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
-           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 	}
 }
 $(document).ready(function() {
-  
+
 	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
-	  
+
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
-    
-    doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S'); 
-    doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S'); 
-     
-    doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , ''); 
+
+    doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S');
+    doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S');
+
+    doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '4', '','marrital', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
     doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
-    
+
     $("#deptCd").change(function (){
     	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
 	createAUIGridDoc();
 	fn_docSubmission();
 	fn_departmentCode();
-	
+
 	$("#state").change(function (){
 		var state = $("#state").val();
-		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');  
+		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');
 	});
 	$("#area").change(function (){
         var area = $("#area").val();
-        doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');  
+        doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
     });
-	
+
 	$("#memberType").change(function (){
         var memberType = $("#memberType").val();
         fn_departmentCode(memberType);
@@ -147,17 +148,17 @@ function createAUIGridDoc() {
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
             	if(item.c1 == 1){
-	            	AUIGrid.updateRow(myGridID_Doc, { 
-	            		  "c1" : "0" 
-	            		}, rowIndex); 
+	            	AUIGrid.updateRow(myGridID_Doc, {
+	            		  "c1" : "0"
+	            		}, rowIndex);
             	}else{
-            		AUIGrid.updateRow(myGridID_Doc, { 
-                        "c1" : "1" 
-                      }, rowIndex); 
+            		AUIGrid.updateRow(myGridID_Doc, {
+                        "c1" : "1"
+                      }, rowIndex);
             	}
                 return true;
             }
-            
+
         }
     }, {
         dataField : "c1",
@@ -167,69 +168,69 @@ function createAUIGridDoc() {
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : true,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : false,
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_Doc = AUIGrid.create("#grid_wrap_doc", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false,
-    
+
 };
 
 //Validation Check
@@ -238,7 +239,7 @@ function fn_saveValidation(){
         Common.alert("Please key  in Member Name");
         return false;
     }
-	
+
 	if($("#joinDate").val() == ''){
         Common.alert("Please select Joined Date");
         return false;
@@ -248,37 +249,37 @@ function fn_saveValidation(){
 		  Common.alert("Please select Gender");
 	        return false;
 	}
-	
+
     /* if(!$("#gender").is(":radio")){
-      
+
     } */
-    
+
 	if($("#Birth").val() == ''){
         Common.alert("Please select Date of Birth");
         return false;
     }
-	
+
 	if($("#cmbRace").val() == ''){
         Common.alert("Please select race");
         return false;
     }
-	
+
 	if($("#national").val() == ''){
         Common.alert("Please select Nationality");
         return false;
     }
-	
+
 	if($("#nric").val() == ''){
         Common.alert("Please key  in NRIC");
         return false;
     }
-	
-	
+
+
 	if($("#marrital").val() == ''){
         Common.alert("Please select marrital");
         return false;
     }
-	
+
 	if($("#issuedBank").val() == ''){
         Common.alert("Please select the issued bank");
         return false;
@@ -292,32 +293,32 @@ function fn_saveValidation(){
         Common.alert("Please select the department code");
         return false;
     }
-	
+
 	if($("#addrDtl").val() == ''){
         Common.alert("Please key in the address.");
         return false;
     }
-    
+
     if($("#mArea").val() == ''){
             Common.alert("Please key in the area.");
             return false;
     }
-    
+
     if($("#mCity").val() == ''){
         Common.alert("Please key in the city.");
         return false;
     }
-    
+
     if($("#mPostCd").val() == ''){
         Common.alert("Please key in the postcode.");
         return false;
     }
-    
+
     if($("#mState").val() == ''){
         Common.alert("Please key in the state.");
         return false;
     }
-    
+
 	return true;
 }
 
@@ -329,28 +330,28 @@ function fn_addrSearch(){
     Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
 }
 function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
-    
+
     if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
-        
+
         $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
         $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
         $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
         $("#mState").attr({"disabled" : false  , "class" : "w100p"});
-        
+
         //Call Ajax
-       
+
         CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
-        
+
         var cityJson = {state : mstate}; //Condition
         CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
-        
+
         var postCodeJson = {state : mstate , city : mcity}; //Condition
         CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
-        
+
         var areaJson = {groupCode : mpostcode};
         var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
         CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
-        
+
         $("#areaId").val(areaid);
         $("#_searchDiv").remove();
     }else{
@@ -359,106 +360,106 @@ function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
 }
 //Get Area Id
 function fn_getAreaId(){
-    
+
     var statValue = $("#mState").val();
     var cityValue = $("#mCity").val();
     var postCodeValue = $("#mPostCd").val();
     var areaValue = $("#mArea").val();
-    
-    
-    
+
+
+
     if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
-        
+
         var jsonObj = { statValue : statValue ,
                               cityValue : cityValue,
                               postCodeValue : postCodeValue,
                               areaValue : areaValue
                             };
         Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
-            
+
              $("#areaId").val(result.areaId);
-            
+
         });
-        
+
     }
-    
+
 }
 
 function fn_selectCity(selVal){
-    
+
     var tempVal = selVal;
-    
+
     if('' == selVal || null == selVal){
-       
+
          $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
          $('#mPostCd').val('');
          $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
          $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
          $('#mArea').val('');
          $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
     }else{
-        
+
         $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
-        
+
         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
         $('#mArea').val('');
         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         //Call ajax
         var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
         CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
     }
-    
+
 }
 
 function fn_selectPostCode(selVal){
-    
+
     var tempVal = selVal;
-    
+
     if('' == selVal || null == selVal){
-       
+
         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
         $('#mArea').val('');
         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
     }else{
-        
+
         $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
-        
+
         //Call ajax
         var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
         CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
     }
-    
+
 }
 
 function fn_selectState(selVal){
-    
+
     var tempVal = selVal;
-    
+
     if('' == selVal || null == selVal){
         //전체 초기화
-        fn_initAddress();   
-        
+        fn_initAddress();
+
     }else{
-        
+
         $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
-        
+
         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
         $('#mPostCd').val('');
         $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
         $('#mArea').val('');
         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         //Call ajax
         var cityJson = {state : tempVal}; //Condition
         CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
     }
-    
+
 }
 </script>
 
@@ -476,6 +477,7 @@ function fn_selectState(selVal){
 <input type="hidden" id="areaId" name="areaId">
 <input type="hidden" id="streetDtl1" name="streetDtl">
 <input type="hidden" id="addrDtl1" name="addrDtl">
+<input type="hidden" id="traineeType" name="traineeType">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -489,8 +491,8 @@ function fn_selectState(selVal){
     <td>
     <select class="w100p" id="memberType" name="memberType">
         <option value="1">Health Planner (HP)</option>
-        <option value="2">Coway Lady (Cody)</option>
-        <option value="3">Coway Technician (CT)</option>
+     <%--    <option value="2">Coway Lady (Cody)</option>
+        <option value="3">Coway Technician (CT)</option>--%>
         <option value="4">Coway Staff (Staff)</option>
         <option value="5">Trainee</option>
     </select>
@@ -598,7 +600,7 @@ function fn_selectState(selVal){
     <th scope="row">Area<span class="must">*</span></th>
     <td>
     <select class="w100p" id="area" name="area">
-        
+
     </select>
     </td>
 </tr>
@@ -718,6 +720,14 @@ function fn_selectState(selVal){
     <input type="text" title="" placeholder="Remain Vacation" class="w100p" />
     </td>
 </tr>
+<tr>
+    <th scope="row">Trainee Type </th>
+    <td colspan="2">
+        <select class= "w100p" id="traineeType" name="traineeType">
+        <option value= "2">Cody</option>
+        <option value = "3">CT</option>
+    </select>
+    </tr>
 </tbody>
 </table><!-- table end -->
 
@@ -809,7 +819,7 @@ function fn_selectState(selVal){
 <tbody>
 <tr>
     <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
-    <td  class="hideContent"> 
+    <td  class="hideContent">
     <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"/>
     </td>
 </tr>
@@ -892,7 +902,7 @@ function fn_selectState(selVal){
 </aside><!-- title_line end -->
 
 <form id="insAddressForm" name="insAddressForm" method="POST">
-    
+
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -923,13 +933,13 @@ function fn_selectState(selVal){
             <tr>
                <th scope="row">Area(4)<span class="must">*</span></th>
                 <td colspan="3">
-                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
                 </td>
             </tr>
             <tr>
                  <th scope="row">City(2)<span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
                 </td>
                 <th scope="row">PostCode(3)<span class="must">*</span></th>
                 <td>
