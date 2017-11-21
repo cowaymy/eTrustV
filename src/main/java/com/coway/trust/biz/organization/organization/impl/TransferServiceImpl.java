@@ -22,13 +22,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("transferService")
 public class TransferServiceImpl extends EgovAbstractServiceImpl implements TransferService{
 	private static final Logger logger = LoggerFactory.getLogger(TransferController.class);
-	
+
 	@Resource(name = "transferMapper")
 	private TransferMapper transferMapper;
-	
+
 	@Resource(name = "memberListMapper")
 	private MemberListMapper memberListMapper;
-	
+
 	@Override
 	public List<EgovMap> selectMemberLevel(Map<String, Object> params) {
 		return transferMapper.selectMemberLevel(params);
@@ -37,30 +37,31 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 	public List<EgovMap> selectFromTransfer(Map<String, Object> params) {
 		return transferMapper.selectFromTransfer(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectTransferList(Map<String, Object> params) {
 		return transferMapper.selectTransferList(params);
 	}
-	
+
 	@Override
 	public boolean insertTransferMember(Map<String, Object> params,SessionVO sessionVo) {
 		boolean success = false;
 		String nextDocNo = "";
 		String[] memCode = params.get("selectValue").toString().split(",");
+		String transferDate = params.get("transferDate").toString();
 		for(int i=0; i< memCode.length; i++){
-			
+
 			EgovMap memberModel = transferMapper.selectMemberModel(memCode[i]);
 			logger.debug("memberModel : {}", memberModel);
 			int formMemberId = Integer.parseInt(memberModel.get("memberupid1").toString());
 			EgovMap parentFrom = transferMapper.selectDepartment(formMemberId);
-			
+
 			int toMemberId = Integer.parseInt(params.get("toTransfer").toString());
 			EgovMap parentTo = transferMapper.selectDepartment(formMemberId);
-			
+
 			Map<String, Object> memberPromoEntry = new HashMap<String, Object>();
 			EgovMap runningNo = getDocNo("66");
-			
+
 			//BranchId value
 			EgovMap deptCode = transferMapper.selectDeptCode(toMemberId);
 			logger.debug("deptCode : {}", deptCode);
@@ -95,11 +96,11 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			memberPromoEntry.put("lastDeptCode",deptCode.get("lastDeptCode") );
 			memberPromoEntry.put("lastGrpCode", deptCode.get("lastGrpCode"));
 			memberPromoEntry.put("lastOrgCode", deptCode.get("lastOrgCode"));
+			memberPromoEntry.put("evtApplyDt", transferDate);
 
-			
 			logger.debug("memberPromoEntry : {}",memberPromoEntry);
 			String returnPromoId = updatePromoEntry(memberPromoEntry);
-			
+
 			success = true;
 		}
 		return success;
@@ -107,47 +108,47 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 	@Transactional
 	public String updatePromoEntry(Map<String, Object> memberPromoEntry){
 		String promoId = "";
-		
+
 		if(memberPromoEntry.get("promoTypeId").toString().equals("749")){
 			EgovMap singleDept = transferMapper.selectMemberOrg(Integer.parseInt(memberPromoEntry.get("memberID").toString()));
-			
+
 			singleDept.put("prevDeptCode",singleDept.get("deptCode"));
 			singleDept.put("prevMemberUpID",Integer.parseInt(singleDept.get("memUpId").toString()));
 			singleDept.put("prevMemberLvl",singleDept.get("memLvl"));
-			
+
 			singleDept.put("prevGroupCode", memberPromoEntry.get("parentDeptCodeFrom"));
-			
+
 			if(Integer.parseInt(memberPromoEntry.get("memberLvlFrom").toString()) == 4){
 				singleDept.put("deptCode", memberPromoEntry.get("deptCodeTo"));
 			}
-			
+
 			singleDept.put("memberUpID", memberPromoEntry.get("toMemberId"));
 			singleDept.put("orgUpdateAt", new Date());
 			singleDept.put("orgUpdateBy", memberPromoEntry.get("updator"));
-			
+
 			//Member Organization update
 			//transferMapper.updateTransfrrOrganization(singleDept);
-			
+
 		}
 		logger.debug("memberPromoEntry : {}",memberPromoEntry);
-		
+
 		//promotion insert
 		transferMapper.insertTransferPromoEntry(memberPromoEntry);
-		
+
 		promoId = transferMapper.selectPromoId();
 		logger.debug("promoId : {}",promoId);
 		return promoId;
 	}
-	
+
 	public EgovMap getDocNo(String docNoId){
 		int tmp = Integer.parseInt(docNoId);
 		String docNo = "";
 		EgovMap selectDocNo = memberListMapper.selectDocNo(docNoId);
 		logger.debug("selectDocNo : {}",selectDocNo);
 		String prefix = "";
-		
+
 		if(Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
-			
+
 			if(selectDocNo.get("c2") != null){
 				prefix = (String) selectDocNo.get("c2");
 			}else{
@@ -161,7 +162,7 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 		}
 		return selectDocNo;
 	}
-	
+
 	public String getNextDocNo(String prefixNo,String docNo){
 		String nextDocNo = "";
 		int docNoLength=0;
@@ -174,16 +175,16 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			System.out.println("들어와얗ㅁ");
 			docNoLength = docNo.length();
 		}
-		
+
 		int nextNo = Integer.parseInt(docNo) + 1;
 		nextDocNo = String.format("%0"+docNoLength+"d", nextNo);
 		logger.debug("nextDocNo : {}",nextDocNo);
 		return nextDocNo;
 	}
-	
+
 	@Override
 	public String selectBranchId(int codeId) {
 		return transferMapper.selectBranchId(codeId);
 	}
-	
+
 }
