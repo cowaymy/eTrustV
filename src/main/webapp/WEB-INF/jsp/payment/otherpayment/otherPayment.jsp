@@ -158,6 +158,8 @@ $(document).ready(function(){
 	 $('#online').find('#bankType').change(function(){
 		 //alert("online : " + $('#online').find('#bankType').val());
 		 if($('#online').find('#bankType').val() == '2730'){//VA
+			//select초기화(BankAccount)
+			 $('#online').find('#bankAcc').find('option:first').attr('selected', 'selected');
 			 $('#online').find('#bankAcc').prop("disabled", true);
 			 $('#online').find('#va').prop("disabled", false);
 		 }else{
@@ -169,7 +171,9 @@ $(document).ready(function(){
 	 $('#cash').find('#bankType').change(function(){
 		 //alert("cash_cheque : " + $('#cash_cheque').find('#bankType').val());
 		 if($('#cash').find('#bankType').val() == '2730'){//VA
-             $('#cash').find('#bankAcc').prop("disabled", true);
+			//select초기화(BankAccount)
+			 $('#cash').find('#bankAcc').find('option:first').attr('selected', 'selected');
+			 $('#cash').find('#bankAcc').prop("disabled", true);
              $('#cash').find('#va').prop("disabled", false);
          }else{
              $('#cash').find('#bankAcc').prop("disabled", false);
@@ -180,7 +184,9 @@ $(document).ready(function(){
 	 $('#cheque').find('#bankType').change(function(){
          //alert("cash_cheque : " + $('#cash_cheque').find('#bankType').val());
          if($('#cheque').find('#bankType').val() == '2730'){//VA
-             $('#cheque').find('#bankAcc').prop("disabled", true);
+        	//select초기화(BankAccount)
+             $('#cheque').find('#bankAcc').find('option:first').attr('selected', 'selected');
+        	 $('#cheque').find('#bankAcc').prop("disabled", true);
              $('#cheque').find('#va').prop("disabled", false);
          }else{
              $('#cheque').find('#bankAcc').prop("disabled", false);
@@ -401,9 +407,9 @@ var columnLayout = [
             	
             	switch(selValue){
             	case "Mapped":
-            		return "${pageContext.request.contextPath}/resources/images/common/path_home.gif";
+            		return "${pageContext.request.contextPath}/resources/images/common/icon_grid_detail.png";
             	default :
-            		return null;
+            		return "${pageContext.request.contextPath}/resources/images/common/btn_down.gif";
             	}
             }
         }
