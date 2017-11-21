@@ -16,11 +16,25 @@
             if(!fn_validCreditCard()) return false;
             fn_doSaveCreditCard();
         });
+        $('#cardNo').change(function() {
+            var vCardNo = $('#cardNo').val();
+            if(vCardNo.indexOf('5') == 0) {
+                $('#cmbCreditCardType').val('111');
+            }
+            else if(vCardNo.indexOf('4') == 0) {
+                $('#cmbCreditCardType').val('112');
+            }
+            else {
+                $('#cmbCreditCardType').val('');
+            }
+        });
     });
     
     function fn_validCreditCard() {
         var isValid = true, msg = "";
 
+        $('#cmbCreditCardType').removeAttr("disabled");
+        
         if($("#cmbCreditCardType option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select credit card type.<br/>";
@@ -94,7 +108,10 @@
             msg += "* Please select the card type.<br/>";
         }
         
-        if(!isValid) Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) {
+            Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+            $('#cmbCreditCardType').prop("disabled", true);
+        }
 
         return isValid;
     }
@@ -161,7 +178,7 @@
 <tr>
 	<th scope="row">Type<span class="must">*</span></th>
 	<td>
-	    <select class="w100p" id="cmbCreditCardType" name="creditCardType" ></select>
+	    <select class="w100p" id="cmbCreditCardType" name="creditCardType" disabled></select>
 	</td>
 	<th scope="row">Issue Bank<span class="must">*</span></th>
 	<td>

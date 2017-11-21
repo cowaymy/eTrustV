@@ -1618,7 +1618,7 @@
                                     msg += "* Invalid email address.<br>";
                                 }
                             }
-                            if(FormUtil.checkReqValue($('#billMthdEmailTxt2')) && !FormUtil.checkEmail($('#billMthdEmailTxt2').val())) {
+                            if(!FormUtil.checkReqValue($('#billMthdEmailTxt2')) && FormUtil.checkEmail($('#billMthdEmailTxt2').val())) {
                                 isValid = false;
                                 msg += "* Invalid email address.<br>";
                             }

@@ -153,7 +153,8 @@
                     valueField : "name"        //value 에 해당되는 필드명
                 }
             }
-          , { headerText : "ContactNo", dataField : "refCntc",    editable : true,  width : 110 }
+          , { headerText : "ContactNo", dataField : "refCntc",    editable : true,  width : 110, editRenderer : { type : "InputEditRenderer", 
+                                                                                                                  onlyNumeric : true}}
           , { headerText : "Remark",    dataField : "refRem",     editable : true}
           , { headerText : "Created",   dataField : "crtDt",      editable : false, width : 120 }
           , { headerText : "Creator",   dataField : "userName",   editable : false, width : 100 }
@@ -1657,7 +1658,8 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -1675,7 +1677,8 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -1693,7 +1696,8 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -1711,7 +1715,8 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Failed To Saved" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Failed To Saved" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Failed To Saved" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -1729,7 +1734,8 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -1747,7 +1753,8 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -1770,7 +1777,8 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
                 }
                 catch (e) {
                     console.log(e);
@@ -1797,7 +1805,8 @@
                 console.log("message : " + jqXHR.responseJSON.message);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save new member. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save new member. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save new member. Please try again later.</b>");
             }
             catch (e) {
                 console.log(e);
@@ -1831,7 +1840,8 @@
                 console.log("message : " + jqXHR.responseJSON.message);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
-                Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//              Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
             }
             catch (e) {
                 console.log(e);
@@ -1864,7 +1874,8 @@
                 console.log("message : " + jqXHR.responseJSON.message);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+//              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.</b>");
             }
             catch (e) {
                 console.log(e);
