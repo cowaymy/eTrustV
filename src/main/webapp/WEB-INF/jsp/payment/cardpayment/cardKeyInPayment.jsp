@@ -1854,7 +1854,7 @@ function addBillToFinal(){
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Credit Card Key-In (from Admin)</h2>
+        <h2>Credit Card Key-In</h2>
     </aside>
     <!-- title_line end -->
 

@@ -47,4 +47,22 @@ public interface CardStatementMapper {
 	 */
 	void insertCardStatementDetail(Map<String, Object> params);
 	
+	/**
+	 * Credit Statement Confirm Master List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	List<EgovMap> selectCRCConfirmMasterList(Map<String, Object> params);
+	
+	/**
+	 * Credit Card Statement Master Posting 처리
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	void postCardStatement(Map<String, Object> params);
+	
 }

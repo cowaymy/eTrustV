@@ -67,4 +67,28 @@ public class CardStatementServiceImpl extends EgovAbstractServiceImpl implements
     	}    	
 	}
 	
+	/**
+	 * Credit Statement Confirm Master List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	@Override
+	public List<EgovMap> selectCRCConfirmMasterList(Map<String, Object> params) {
+		return cardStatementMapper.selectCRCConfirmMasterList(params);
+	}
+	
+	 /**
+	 * Credit Card Statement Master Posting 처리
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+    public void postCardStatement(Map<String, Object> param){
+		cardStatementMapper.postCardStatement(param);
+	}
+	
 }

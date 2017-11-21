@@ -165,4 +165,61 @@
         )
     </insert>
     
+    <select id="selectCRCConfirmMasterList" parameterType="Map" resultType="egovMap">
+        SELECT 
+            A.CRC_STATE_ID,  
+            B.CRC_TRNSC_DT,
+            A.CRC_STATE_UPLOAD_DT,
+            A.CRC_STATE_REM,
+            A.CRC_STATE_UPLOAD_USER_ID,
+            D.USER_NAME AS CRC_STATE_UPLOAD_USER_NM,
+            A.CRC_POSTNG_DT,
+            COUNT(B.CRC_STATE_ID) AS CRC_ITM_CNT,            
+            SUM(CRC_GROS_AMT) AS CRC_GROS_AMT,
+            SUM(CASE WHEN CRC_TOT_BC_AMT IS NOT NULL THEN CRC_TOT_BC_AMT ELSE CRC_BC_AMT END) AS BC_AMT,
+            SUM(CASE WHEN CRC_TOT_GST_AMT IS NOT NULL THEN CRC_TOT_GST_AMT ELSE CRC_GST_AMT END) AS GST_AMT,
+            SUM(CASE WHEN CRC_TOT_NET_AMT IS NOT NULL THEN CRC_TOT_NET_AMT ELSE CRC_NET_AMT END) AS NET_AMT
+        FROM 
+            PAY0075D A 
+            JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+            LEFT JOIN SYS0047M D ON A.CRC_STATE_UPLOAD_USER_ID = D.USER_ID
+        WHERE 
+            1=1
+            <if test="crcStateId != null and crcStateId != '' ">
+            AND A.CRC_STATE_ID = #{crcStateId}
+            </if>
+            <if test="status != null and status != '' ">
+            AND A.CRC_BC_STUS_ID = #{status}
+            </if>
+            <if test="bankAccount != null and bankAccount != '' ">
+            AND A.CRC_STATE_ACC_ID = #{bankAccount}
+            </if>
+            <if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
+            AND A.CRC_STATE_REF_DT BETWEEN TO_DATE(#{tranDateFr} ,'DD/MM/YYYY') AND TO_DATE(#{tranDateTo} ,'DD/MM/YYYY')
+            </if>
+            <if test="uploadDateFr != null and uploadDateFr != '' and uploadDateTo != null and uploadDateTo != '' ">
+            AND A.CRC_STATE_UPLOAD_DT <![CDATA[  >= ]]> TO_DATE(#{uploadDateFr} ,'DD/MM/YYYY') 
+            AND A.CRC_STATE_UPLOAD_DT <![CDATA[  < ]]> TO_DATE(#{uploadDateTo} ,'DD/MM/YYYY') + 1
+            </if>
+        GROUP BY 
+            A.CRC_STATE_ID,  
+            B.CRC_TRNSC_DT,
+            A.CRC_STATE_UPLOAD_DT,
+            A.CRC_STATE_REM,
+            A.CRC_STATE_UPLOAD_USER_ID,
+            D.USER_NAME,
+            A.CRC_POSTNG_DT
+    </select>
+    
+    <!--Credit Card Statement Master Posting 처리 -->
+    <update id="postCardStatement" parameterType="Map" >
+        UPDATE PAY0075D SET 
+            CRC_BC_STUS_ID = 4
+            , CRC_POSTNG_DT = SYSDATE
+            , CRC_MAPPING_USER_ID = #{userId}
+        WHERE
+            CRC_STATE_ID = #{crcStateId}     
+    </update>
+            
+    
 </mapper>

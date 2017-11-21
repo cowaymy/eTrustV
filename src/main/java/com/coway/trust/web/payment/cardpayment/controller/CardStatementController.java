@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -139,5 +140,62 @@ public class CardStatementController {
 		
     	return ResponseEntity.ok(message);
 	}
+	
+	/******************************************************
+	 *  Credit Card Statement Confirm 
+	 *****************************************************/	
+	/**
+	 *  Credit Card Statement Confirm 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initConfirmCardStatementList.do")
+	public String initConfirmCardStatementList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/cardpayment/confirmCardStatementList";
+	}
+	
+	/**
+	 * Credit Card Statement Master List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	@RequestMapping(value = "/selectCRCConfirmMasterList.do", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovMap>> selectCRCConfirmMasterList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
+				, @RequestBody Map<String, Object> params, ModelMap model) {
+
+		LOGGER.debug("params : {} ", params);
+        // 조회.
+        List<EgovMap> resultList = cardStatementService.selectCRCConfirmMasterList(params);		
+        
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * Credit Card Statement Master Posting 처리
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/postCardStatement.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> updateDeactivate(@RequestParam Map<String, Object> params,
+    		Model model, SessionVO sessionVO) {
+		
+		params.put("userId", sessionVO.getUserId());
+    	// 처리.
+		cardStatementService.postCardStatement(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);    	
+    	message.setMessage("Saved Successfully");
+    	
+    	return ResponseEntity.ok(message);
+		
+    }
 	
 }
