@@ -802,7 +802,7 @@ function auiCellEditingHandler(event) {
 </section><!-- search_result end -->
 
 
-<input type ='text'  value='${TYPE}'/> 
+<input type ='hidden'  value='${TYPE}'/> 
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_AllocationConfirm()">Allocation Confirm</a></p></li>

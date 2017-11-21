@@ -615,8 +615,6 @@ public class MemberListController {
 		return "organization/organization/memberListEditPop";
 	}
 
-	
-
 	@RequestMapping(value = "/traineeUpdate.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage>  traineeUpdate(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		

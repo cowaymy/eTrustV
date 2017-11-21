@@ -96,8 +96,8 @@ $(document).ready(function() {
 
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
 
-    doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S');
-    doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S');
+    //doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S', '' );
+    doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S' , '');
 
     doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '4', '','marrital', 'S' , '');

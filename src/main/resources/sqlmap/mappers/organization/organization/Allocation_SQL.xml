@@ -57,10 +57,12 @@
     <select id="selectBaseList" parameterType="Map" resultType="egovMap">
               <![CDATA[ 
               
-				  SELECT   MEM_ID CT, INS_DATE C_DATE , CT_SUB_GRP ,BRNCH_ID
-				    FROM   (SELECT   DISTINCT MEM_ID ,CT_SUB_GRP ,BRNCH_ID
-				              FROM   ORG0005D T
-				             WHERE   CT_SUB_GRP IN
+				  SELECT   MEM_ID CT, INS_DATE C_DATE , CT_SUB_GRP , BRNCH_ID
+				    FROM   (SELECT    DISTINCT T.MEM_ID ,T.CT_SUB_GRP ,  TT.BRNCH AS BRNCH_ID 
+				              FROM   ORG0005D T ,  ORG0001D TT 
+				             WHERE  1=1
+				             AND T.MEM_ID =TT.MEM_ID
+				             AND CT_SUB_GRP IN
 				                           (SELECT   F.CT_SUB_GRP
 				                              FROM   SAL0001D A,
 				                                     SAL0045D B,
@@ -90,7 +92,7 @@
 				    AND   A.HOLIDAY_SEQ  = B.HOLIDAY_SEQ
 				    AND   B.CT_MEM_ID     = C.MEM_ID
 				    AND   B.BRNCH_CODE   = D.CODE  
-				    AND   D.BRNCH_ID       =#{brnchId}
+				    AND   C.BRNCH      =#{brnchId}
 				    AND   TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') = #{holiday}
         ]]>
         
