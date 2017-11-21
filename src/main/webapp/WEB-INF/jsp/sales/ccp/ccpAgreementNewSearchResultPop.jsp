@@ -46,7 +46,7 @@
         fn_selectOrderJsonList();
         
         //resize
-        fn_allGridResize();
+    //    fn_allGridResize();
         
         //Reselect(Whole)
         $("#_reSelect").click(function() {
@@ -187,43 +187,43 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [{
                 dataField   : "asNo",      headerText  : "AS No",
-                width       : 100,               editable    : false,
+                width       : '10%',               editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "asResultNo",        headerText  : "ASR No",
-                width       : 180,               editable    : false,
+                width       : '10%',               editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "code", headerText  : "Status",
-                width       : 120,               editable    : false,
+                width       : '10%',               editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "asReqstDt",  headerText  : "Request Date",
-                width       : 120,               editable    : false,
+                width       : '10%',               editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "asSetlDt",    headerText  : "Settle Date",
-                width       : 120,               editable    : false,
+                width       : '10%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "resnDesc",             headerText  : "Error Code",
-                                                 editable    : false,
+                width       : '10%',                               editable    : false,
                 style       : 'left_style'
             },{
                 dataField   : "resnDesc1",             headerText  : "Error Desc",
-                editable    : false,
+                width       : '10%', editable    : false,
                 style       : 'left_style'
             },{
                 dataField   : "memCode",             headerText  : "CT Code",
-                editable    : false,
+                width       : '10%', editable    : false,
                 style       : 'left_style'
             },{
                 dataField   : "resnDesc2",             headerText  : "Solution",
-                editable    : false,
+                width       : '10%',  editable    : false,
                 style       : 'left_style'
             },{
                 dataField   : "asTotAmt",             headerText  : "Amount",
-                editable    : false,
+                width       : '10%', editable    : false,
                 style       : 'left_style'
             }];
 
@@ -237,39 +237,39 @@
             //AUIGrid 칼럼 설정
             var columnLayout = [{
                     dataField   : "no",      headerText  : "BS No",
-                    width       : 100,               editable    : false,
+                    width       : '10%',               editable    : false,
                     style       : 'left_style'
                 }, {
                     dataField   : "bsMonth",        headerText  : "BS Month",
-                    width       : 180,               editable    : false,
+                    width       : '10%',              editable    : false,
                     style       : 'left_style'
                 }, {
                     dataField   : "code", headerText  : "Type",
-                    width       : 120,               editable    : false,
+                    width       : '10%',             editable    : false,
                     style       : 'left_style'
                 }, {
                     dataField   : "code1",  headerText  : "Status",
-                    width       : 120,               editable    : false,
+                    width       : '10%',            editable    : false,
                     style       : 'left_style'
                 }, {
                     dataField   : "no1",    headerText  : "BSR No",
-                    width       : 120,               editable    : false,
+                    width       : '10%',              editable    : false,
                     style       : 'left_style'
                 }, {
                     dataField   : "setlDt",             headerText  : "Settle Date",
-                                                     editable    : false,
+                    width       : '20%',                                editable    : false,
                     style       : 'left_style'
                 },{
                     dataField   : "memCode",             headerText  : "Cody Code",
-                    editable    : false,
+                    width       : '10%', editable    : false,
                     style       : 'left_style'
                  },{
                      dataField   : "code3",             headerText  : "Fail Reason",
-                     editable    : false,
+                     width       : '10%',  editable    : false,
                      style       : 'left_style'
                   },{
                       dataField   : "code2",             headerText  : "Collection Reason",
-                      editable    : false,
+                      width       : '10%', editable    : false,
                       style       : 'left_style'
                    }];
 
@@ -353,52 +353,52 @@ function createAUIGrid11() {
     function chgGridTab(tabNm) {
         switch(tabNm) {
             case 'custInfo' :
-                AUIGrid.resize(custInfoGridID, 1550, 380);
+                AUIGrid.resize(custInfoGridID, 920, 300);
                 break;
             case 'memInfo' :
-                AUIGrid.resize(memInfoGridID, 1550, 380);
+                AUIGrid.resize(memInfoGridID, 920, 300);
                 break;
             case 'docInfo' :
-                AUIGrid.resize(docGridID, 1550, 380);
+                AUIGrid.resize(docGridID, 920, 300);
                 if(AUIGrid.getRowCount(docGridID) <= 0) {
                     fn_selectDocumentList();
                 }
                 break;
             case 'callLogInfo' :
-                AUIGrid.resize(callLogGridID, 1550, 380);
+                AUIGrid.resize(callLogGridID, 920, 300);
                 if(AUIGrid.getRowCount(callLogGridID) <= 0) {
                     fn_selectCallLogList();
                 }
                 break;
             case 'payInfo' :
-                AUIGrid.resize(payGridID, 1550, 380);
+                AUIGrid.resize(payGridID, 920, 300);
                 if(AUIGrid.getRowCount(payGridID) <= 0) {
                     fn_selectPaymentList();
                 }
                 break;
             case 'transInfo' :
-                AUIGrid.resize(transGridID, 1550, 380);
+                AUIGrid.resize(transGridID, 920, 300);
                 if(AUIGrid.getRowCount(transGridID) <= 0) {
                     fn_selectTransList();
                 }
                 break;
             case 'autoDebitInfo' :
-                AUIGrid.resize(autoDebitGridID, 1550, 380);
+                AUIGrid.resize(autoDebitGridID, 920, 300);
                 if(AUIGrid.getRowCount(autoDebitGridID) <= 0) {
                     fn_selectAutoDebitList();
                 }
                 break;
             case 'discountInfo' :
-                AUIGrid.resize(discountGridID, 1550, 380);
+                AUIGrid.resize(discountGridID, 920, 300);
                 if(AUIGrid.getRowCount(discountGridID) <= 0) {
                     fn_selectDiscountList();
                 }
                 break;
             case 'afterList' :
-                AUIGrid.resize(afterServceGridID, 1600, 380);
+                AUIGrid.resize(afterServceGridID, 940, 300);
                 break;
             case 'beforeList' :
-                AUIGrid.resize(beforeServceGridID, 1600, 380);
+                AUIGrid.resize(beforeServceGridID, 940, 300);
                 break;    
                 
         };
@@ -408,16 +408,16 @@ function createAUIGrid11() {
     
     
     function fn_allGridResize(){
-        AUIGrid.resize(custInfoGridID, 1550, 380);
-        AUIGrid.resize(memInfoGridID, 1550, 380);
-        AUIGrid.resize(docGridID, 1550, 380);
-        AUIGrid.resize(callLogGridID, 1550, 380);
-        AUIGrid.resize(payGridID, 1550, 380);
-        AUIGrid.resize(transGridID, 1550, 380);
-        AUIGrid.resize(autoDebitGridID, 1550, 380);
-        AUIGrid.resize(discountGridID, 1550, 380);
-        AUIGrid.resize(afterServceGridID, 1600, 380);
-        AUIGrid.resize(beforeServceGridID, 1600, 380);
+        AUIGrid.resize(custInfoGridID, 920, 300);
+        AUIGrid.resize(memInfoGridID, 920, 300);
+        AUIGrid.resize(docGridID, 920, 300);
+        AUIGrid.resize(callLogGridID, 920, 300);
+        AUIGrid.resize(payGridID, 920, 300);
+        AUIGrid.resize(transGridID, 920, 300);
+        AUIGrid.resize(autoDebitGridID, 920, 300);
+        AUIGrid.resize(discountGridID, 920, 300);
+        AUIGrid.resize(afterServceGridID, 940, 300);
+        AUIGrid.resize(beforeServceGridID, 940, 300);
     }
     
     
@@ -658,17 +658,20 @@ function createAUIGrid11() {
         
     }
 </script>
-<section id="content"> <!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
-</ul>
 
-<aside class="title_line"><!-- title_line start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>CCP Agreement New Search</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->
+
+<!-- <aside class="title_line">title_line start
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>New Government Agreement</h2>
-</aside><!-- title_line end -->
+</aside>title_line end -->
 
 <section class="search_table"><!-- search_table start -->
 <form id="_newOrderAddForm">
@@ -1018,7 +1021,7 @@ function createAUIGrid11() {
 </table>
 
 <article class="grid_wrap"><!-- grid_wrap start --> 
-<div id="grid_orderList_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+<div id="grid_orderList_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
@@ -1029,3 +1032,5 @@ function createAUIGrid11() {
 </section><!-- search_result end -->
 
 </section><!-- content end -->
+
+</div>

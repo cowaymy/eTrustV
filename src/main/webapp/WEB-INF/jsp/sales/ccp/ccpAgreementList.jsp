@@ -25,7 +25,8 @@ $(document).ready(function() {
 	 
 	 //Move to Insert Page
     $("#_goToAddWindow").click(function() {
-    	self.location.href= "/sales/ccp/insertCcpAgreementSearch.do";
+    	//self.location.href= "/sales/ccp/insertCcpAgreementSearch.do";
+    	Common.popupDiv("/sales/ccp/newCcpAgreementSearchPop.do", $("#popForm").serializeJSON(), null , true , '_newDiv');
 	});
 	
     /* // 셀 클릭 이벤트 바인딩

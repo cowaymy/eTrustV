@@ -3,24 +3,34 @@
 <script type="text/javascript">
 //get Order Id
 $(document).ready(function() {
-	
+    
     //confirm click
     $("#_confirm").click(function() {
-    	
-    	Common.showLoader();
+        
+     //   Common.showLoader();
         var inputNum = $("#_salesOrderNo").val();
-        fn_getOrderId(inputNum);
+      //  fn_getOrderId(inputNum);
+        var ordParam = {salesOrderNo : inputNum};
+        var ajaxOpt = {
+        		async : false
+        };
+        Common.ajax("GET", "/sales/ccp/getOrderId", ordParam, function(result){
+            var ordId = result.ordId;
+            $("#salesOrderId").val(ordId);
+        },'',ajaxOpt);
+        
+        Common.popupDiv("/sales/ccp/newCcpAgreementSearchResultPop.do", $("#_searchForm_").serializeJSON(), null , true , '_newInsDiv');
         
     });
     
     //Order No Search
     $("#_ordSearch").click(function() {
-		Common.popupDiv('/sales/ccp/searchOrderNoPop.do' , $('#_searchForm').serializeJSON(), null , true, '_searchDiv');
-	});
-	
+        Common.popupDiv('/sales/ccp/searchOrderNoPop.do' , $('#_searchForm_').serializeJSON(), null , true, '_searchDiv');
+    });
+    
 });
 
-function fn_getOrderId(ordNum){
+/* function fn_getOrderId(ordNum){
     
     $.ajax({
         
@@ -35,11 +45,14 @@ function fn_getOrderId(ordNum){
             var ordId = data.ordId;
             
             $("#salesOrderId").val(ordId);
-            $("#_searchForm").attr({"target": "_self" , "action" : getContextPath()+"/sales/ccp/getOrderDetailInfo.do" }).submit();
+            
+            //$("#_searchForm_").attr({"target": "_self" , "action" : getContextPath()+"/sales/ccp/getOrderDetailInfo.do" }).submit();
+            
+            
             
         },
         error : function (data) {
-        	Common.removeLoader();
+            Common.removeLoader();
             if(data == null){               //error
                 Common.alert("fail to Load DB");
             }else{                            // No data
@@ -49,26 +62,25 @@ function fn_getOrderId(ordNum){
             
         }
     });
-}
+} */
 </script>
-<div id="wrap"><!-- wrap start -->
-<hr />
-        
 
-<section id="content"><!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>CCP Agreement New Search</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
+</header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->
 
-<aside class="title_line"><!-- title_line start -->
+<!-- <aside class="title_line">title_line start
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>New Government Agreement</h2>
-</aside><!-- title_line end -->
+</aside>title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="_searchForm">
+<form action="#" method="post" id="_searchForm_">
 <input id="salesOrderId" name="salesOrderId" type="hidden" >
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -121,4 +133,4 @@ function fn_getOrderId(ordNum){
 
 <hr />
 
-</div><!-- wrap end -->
+</div><!-- popup_wrap end -->

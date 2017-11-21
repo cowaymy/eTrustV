@@ -186,7 +186,7 @@
         var gridPros = {
                 
                 usePaging           : true,         //페이징 사용
-                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
                 editable            : false,            
                 fixedColumnCount    : 1,            
                 showStateColumn     : true,             
@@ -229,13 +229,13 @@
     function fn_resizeFun(value){
     	
     	if(value == 'agrInfo'){
-    		 AUIGrid.resize(consignGridID, 900, 380);
-    		 AUIGrid.resize(msgGridID, 900, 380);
+    		 AUIGrid.resize(consignGridID, 940, 250);
+    		 AUIGrid.resize(msgGridID, 940, 250);
     		 
     	}
     	
     	if(value == 'order'){
-    		AUIGrid.resize(orderGridID, 900, 380);
+    		AUIGrid.resize(orderGridID, 940, 250);
     	}
     }
     
@@ -511,7 +511,7 @@
 </ul> -->
 
 <article class="grid_wrap"><!-- grid_wrap start --> 
-<div id="order_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="order_grid_wrap" style="width:100%; height:250px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -532,7 +532,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="consign_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="consign_grid_wrap" style="width:100%; height:250px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -548,7 +548,7 @@
 </ul> -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="msgLog_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="msgLog_grid_wrap" style="width:100%; height:250px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 
@@ -628,7 +628,7 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
@@ -656,7 +656,7 @@
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end -->
+</aside><!-- link_btns_wrap end --> --%>
 
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" id="_btnSave">Save</a></p></li>
