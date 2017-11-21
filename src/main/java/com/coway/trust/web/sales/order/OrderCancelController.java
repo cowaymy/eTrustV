@@ -233,8 +233,20 @@ public class OrderCancelController {
 	 * 화면 호출. - New Cancellation Log Result
 	 */
 	@RequestMapping(value = "/cancelNewLogResultPop.do")
-	public String cancelNewLogResultPop(@RequestParam Map<String, Object>params, ModelMap model) {
+	public String cancelNewLogResultPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		
+		// order detail start
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+	
+		params.put("salesOrderId", params.get("salesOrdId"));
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		// order detail end
+				
 		String paramTypeId = (String)params.get("typeId");
 		String paramDocId = (String)params.get("docId");
 		String paramRefId = (String)params.get("refId");
