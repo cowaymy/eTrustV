@@ -15,6 +15,7 @@ function fn_transferSave(){
 	$("#transferToBox > option").attr("selected", "selected")
 	$("#selectValue").val(($("#transferToBox").val()));
 	$("#selectText").val(($("#transferToBox").text()));
+	$("#selectDate").val(($("#transferDate").text()));
 	Common.ajax("POST", "/organization/insertTransfer.do", $("#transferForm").serializeJSON() , function(result) {
 		Common.alert(result.message);
 	});
@@ -25,7 +26,7 @@ function fn_ValidationCheck(){
         Common.alert("Please select TO Transfer");
         return false;
     }
-	
+
 	if($("#transferDate").val() == ''){
         Common.alert("Please select Planned Transfer Date");
         return false;
@@ -35,8 +36,8 @@ function fn_ValidationCheck(){
 
 
 $(document).ready(function(){
-    doDefCombo(memberTypeData, '' ,'memberType', 'S', '');   
-    
+    doDefCombo(memberTypeData, '' ,'memberType', 'S', '');
+
     $("#memberType").change(function(){
     	doGetCombo('/organization/selectMemberLevel.do', $("#memberType").val() , ''   , 'memberLvl' , 'S', '');
     });
@@ -48,7 +49,7 @@ $(document).ready(function(){
     	doGetCombo('/organization/selectFromTransfer.do', jsonObj , ''   , 'fromTransfer' , 'S', '');
     	doGetCombo('/organization/selectFromTransfer.do', jsonObj , ''   , 'toTransfer' , 'S', '');
     });
-    
+
     $("#fromTransfer").change(function(){
         var jsonObj = {
                 memberType : $("#memberType").val(),
@@ -56,8 +57,8 @@ $(document).ready(function(){
         };
         doGetCombo('/organization/selectTransferList.do', jsonObj , ''   , 'transferFromBox' , 'S', '');
     });
-    
-    
+
+
    //Button Transfer
     $('#btnRight').click(function (e) {
       var selectedOpts = $('#transferFromBox option:selected');
@@ -100,10 +101,10 @@ $(document).ready(function(){
       e.preventDefault();
   });
 
-    
-    
-    
-   
+
+
+
+
 });
 </script>
 <section id="content"><!-- content start -->
@@ -124,6 +125,7 @@ $(document).ready(function(){
 <form action="#" method="post" id="transferForm">
 <input type="hidden" id="selectValue" name="selectValue">
 <input type="hidden" id="selectText" name="selectText">
+<input type="hidden" id="selectDate" name="selectDate">
 <section class="search_table"><!-- search_table start -->
 
 <table class="type1"><!-- table start -->
@@ -139,13 +141,13 @@ $(document).ready(function(){
     <th scope="row">Member Type</th>
     <td>
     <select class="w100p" id="memberType" name="memberType">
-        
+
     </select>
     </td>
     <th scope="row">Member Level</th>
     <td>
     <select class="w100p" id="memberLvl" name="memberLvl">
-        
+
     </select>
     </td>
 </tr>
@@ -153,13 +155,13 @@ $(document).ready(function(){
     <th scope="row">From Transfer</th>
     <td>
     <select class="w100p" id="fromTransfer" name="fromTransfer">
-       
+
     </select>
     </td>
     <th scope="row">To Transfer</th>
     <td>
     <select class="w100p" id="toTransfer" name="toTransfer">
-        
+
     </select>
     </td>
 </tr>
@@ -175,7 +177,7 @@ $(document).ready(function(){
     <td>
     <input type="text" title="Manual Search" placeholder="" class="" /><p class="btn_sky"><a href="#">Confirm</a></p>
     </td> -->
-    
+
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -185,8 +187,8 @@ $(document).ready(function(){
 
 <div class="tran_list"><!-- tran_list start -->
 <select multiple="multiple" id="transferFromBox" name="transferFromBox" style="height:300px; width:100%">
-   
-</select> 
+
+</select>
 </div><!-- tran_list end -->
 
 <ul class="btns">
@@ -198,14 +200,14 @@ $(document).ready(function(){
 
 <div class="tran_list"><!-- tran_list start -->
 <select multiple="multiple" id="transferToBox" name="transferToBox" style="height:300px; width:100%">
-    
-</select> 
+
+</select>
 </div><!-- tran_list end -->
 
 <%-- <div class="tran_list" ><!-- tran_list start -->
 <select multiple="multiple" id="transferFromBox" name="transferFromBox">
-   
-</select> 
+
+</select>
 </div><!-- tran_list end -->
 
 <ul class="btns">
@@ -217,8 +219,8 @@ $(document).ready(function(){
 
 <div class="tran_list" ><!-- tran_list start -->
 <select multiple="multiple" id="transferToBox" name="transferToBox" >
-    
-</select> 
+
+</select>
 </div><!-- tran_list end --> --%>
 
 </section><!-- transfer_wrap end -->
