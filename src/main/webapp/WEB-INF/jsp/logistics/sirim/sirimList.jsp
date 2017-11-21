@@ -97,10 +97,16 @@
    	    $("#search").click(function(){
             getSirimListAjax();   
          });   
+   	    
+        $("#clear").click(function(){
+        	$("#searchSirimNo").val('');
+            doGetCombo('/common/selectCodeList.do', '11', '','searchCategory', 'S' , ''); //Type 리스트 조회
+            doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','searchWarehouse', 'S' , ''); //Warehouse 리스트 조회
+        });
     	    
    	    $("#insert").click(function(){
    	       $("#newSirimWindow").show();
-   	       doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','addWarehouse', 'S' , 'f_WarehouseCombo'); //Warehouse 리스트 조회      
+   	       doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','addWarehouse', 'S' , ''); //Warehouse 리스트 조회      
    	       doGetCombo('/common/selectCodeList.do', '11', '','addTypeSirim', 'S' , ''); //Type 리스트 조회
    	       }); 
    	    
@@ -333,13 +339,13 @@
     };
     
     
-    function f_WarehouseCombo() {
-        $(function() {
-              $("#addWarehouse").val("CDB-HQ").prop("selected", true);
+//     function f_WarehouseCombo() {
+//         $(function() {
+//               $("#addWarehouse").val("CDB-HQ").prop("selected", true);
               
    
-          });       
-    }
+//           });       
+//     }
     
 
 </script>
@@ -358,7 +364,7 @@
 <h2>Sirim Management </h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-   <!--  <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -441,7 +447,7 @@
 <tr>
     <th scope="row">Warehouse<span class="must">*</span></th>
     <td>
-     <select id="addWarehouse" name="addWarehouse" onchange=""  placeholder=""  class="w100p" disabled=true></select> 
+     <select id="addWarehouse" name="addWarehouse" onchange=""  placeholder=""  class="w100p"></select> 
     </td>
     <th scope="row">Type of Sirim<span class="must">*</span></th>
     <td>
