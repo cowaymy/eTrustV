@@ -512,7 +512,7 @@
                      , #{lastOrgCode}
                      , NULL
                      , #{branchId}
-                     , #{evtApplyDt}
+                     , to_date(#{evtApplyDt} ,'dd/MM/yyyy')
                       )
           </insert>
           <update id="updateTransfrrOrganization" parameterType="Map">
