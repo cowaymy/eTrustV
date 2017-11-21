@@ -621,22 +621,27 @@ function savePayment(){
     }
     
     //TR No 체크
-    if(FormUtil.checkReqValue($("#keyInTrNo"))){
-        Common.alert('* TR No. is empty. Key in the value.');
-        return;
-    }
+    //if(FormUtil.checkReqValue($("#keyInTrNo"))){
+    //    Common.alert('* TR No. is empty. Key in the value.');
+    //    return;
+    //}
     
     //TR Issue Date 체크
-    if(FormUtil.checkReqValue($("#keyInTrIssueDate"))){
-        Common.alert('* TR Issue Date is empty. Key in the value.');
-        return;
-    }
+    //if(FormUtil.checkReqValue($("#keyInTrIssueDate"))){
+    //    Common.alert('* TR Issue Date is empty. Key in the value.');
+    //    return;
+    //}
     
     //Pay Date 체크
-    if(FormUtil.checkReqValue($("#keyInPayDate"))){
-        Common.alert('* Pay Date is empty. Key in the value.');
-        return;
-    }
+    //if(FormUtil.checkReqValue($("#keyInPayDate"))){
+    //    Common.alert('* Pay Date is empty. Key in the value.');
+    //    return;
+    //}
+    
+    if( FormUtil.byteLength($("#keyInRemark").val()) > 3000 ){
+    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+    	return;
+    }	  
 	
     //Validation End !!!!!!
 	
@@ -712,6 +717,8 @@ function removeFromFinal(){
             //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
             AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
             selectedGridValue = -1;
+            
+            recalculatePaymentTotalAmt();
         });
     }else{
         Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
@@ -1025,7 +1032,10 @@ function addRentalToFinal(){
             var mstChkVal = AUIGrid.getCellValue(targetRenMstGridID, i ,"btnCheck");
             var mstSalesOrdNo = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdNo");            
             var mstRpf = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpf");
-            var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");            
+            var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");
+            
+            var mstCustNm = AUIGrid.getCellValue(targetRenMstGridID, i ,"custNm");
+            var mstCustBillId = AUIGrid.getCellValue(targetRenMstGridID, i ,"custBillId");
 
             if(mstChkVal == 1){
             	if(mstRpf - mstRpfPaid > 0){
@@ -1040,13 +1050,13 @@ function addRentalToFinal(){
                      item.assignAmt = 0;
                      item.billAmt   = mstRpf;
                      item.billDt   = "1900-01-01";
-                     item.billGrpId = 0;
+                     item.billGrpId = mstCustBillId;
                      item.billId = 0;
                      item.billNo = "0";
-                     item.billStatus = "DUMMY";
+                     item.billStatus = "";
                      item.billTypeId = 161;
                      item.billTypeNm   = "RPF";
-                     item.custNm   = "DUMMY";
+                     item.custNm   = mstCustNm;
                      item.discountAmt = 0;
                      item.installment  = 0;
                      item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
@@ -1110,13 +1120,13 @@ function addRentalToFinal(){
                     item.assignAmt = 0;
                     item.billAmt   = $("#rentalAdvAmt").val();
                     item.billDt   = "1900-01-01";
-                    item.billGrpId = 0;
+                    item.billGrpId = mstCustBillId;
                     item.billId = 0;
                     item.billNo = "0";
-                    item.billStatus = "DUMMY";
+                    item.billStatus = "";
                     item.billTypeId = 1032;
                     item.billTypeNm   = "General Advanced For Rental";
-                    item.custNm   = "DUMMY";
+                    item.custNm   = mstCustNm;
                     item.discountAmt = 0;
                     item.installment  = 0;
                     item.ordId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
@@ -2200,17 +2210,17 @@ function addBillToFinal(){
 				        </td>
 				        <th scope="row">Ref No</th>
 				        <td>
-				            <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" />
+				            <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" maxlength="30" />
 				        </td>
 				    </tr>                    
 				    <tr>
 				        <th scope="row">Amount<span class="must">*</span></th>
 				        <td>
-				            <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
+				            <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
 				        </td>
 				        <th scope="row">Bank Charge Amount</th>
 				        <td>
-				            <input type="text" id="keyInBankChrgAmount" name="keyInBankChrgAmount" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
+				            <input type="text" id="keyInBankChrgAmount" name="keyInBankChrgAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
 				        </td>
 				    </tr>
 				    <tr>
@@ -2234,7 +2244,7 @@ function addBillToFinal(){
 				        </td>
 				        <th scope="row">Approval No.<span class="must">*</span></th>
 				        <td>
-				            <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p"  />
+				            <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p"  maxlength="6" />
 				        </td>                        
 				    </tr>
 				    <tr>
@@ -2277,7 +2287,7 @@ function addBillToFinal(){
 				    <tr>
 				        <th scope="row">Running Number</th>
 				        <td>
-				            <input id="keyInRunNo" name="keyInRunNo" type="text" title="" placeholder="" class="w100p"  />
+				            <input id="keyInRunNo" name="keyInRunNo" type="text" title="" placeholder="" class="w100p" maxlength="50" />
 				        </td>
 				        <th scope="row">Transatcion Date<span class="must">*</span></th>
 				        <td>
@@ -2292,11 +2302,11 @@ function addBillToFinal(){
 				        </td>                       
 				    </tr>
 				    <tr>
-				        <th scope="row">TR No.<span class="must">*</span></th>
+				        <th scope="row">TR No.</th>
 				        <td>
-				            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p"  />
+				            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
 				        </td>
-				        <th scope="row">TR Issue Date<span class="must">*</span></th>
+				        <th scope="row">TR Issue Date</th>
 				        <td>
 				            <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 				        </td>
@@ -2310,7 +2320,7 @@ function addBillToFinal(){
 				                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                             </a>
 				        </td>
-				        <th scope="row">Pay Date<span class="must">*</span></th>
+				        <th scope="row">Pay Date</th>
 				        <td>
 				            <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 				        </td>
