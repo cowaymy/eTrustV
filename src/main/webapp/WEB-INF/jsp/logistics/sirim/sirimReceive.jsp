@@ -132,7 +132,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
         doDefCombo(comboData, '' ,'searchTransitStatus', 'S', ''); //Transit Status 리스트 조회
-        doGetCombos('/logistics/sirim/receiveWarehouseList.do', '42', '','searchWarehouse', 'S' , 'f_reWarehouseCombo'); //Receive Warehouse 리스트 조회
+        doGetCombos('/logistics/sirim/receiveWarehouseList.do', '', '','searchWarehouse', 'S' , ''); //Receive Warehouse 리스트 조회
         
         
         $("#popup_wrap").hide();
@@ -176,7 +176,11 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         $("#search").click(function(){
         	getReceiveSirimListAjax();	
          });   
-            
+        
+        $("#clear").click(function(){
+            $("#SearchForm")[0].reset();
+        });
+        
         $("#receive").click(function(){
         	destory(PendingGridID);
           div="Pending";
@@ -498,13 +502,13 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         }
     };     
     
-    function f_reWarehouseCombo() {
-        $(function() {
-              $("#searchWarehouse").val("CDB-HQ").prop("selected", true);
+//     function f_reWarehouseCombo() {
+//         $(function() {
+//               $("#searchWarehouse").val("CDB-HQ").prop("selected", true);
               
    
-          });       
-    }
+//           });       
+//     }
     
     function destory(gridNm) {
         AUIGrid.destroy(gridNm);
@@ -576,7 +580,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 <h2>Sirim Receive</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-    <!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
