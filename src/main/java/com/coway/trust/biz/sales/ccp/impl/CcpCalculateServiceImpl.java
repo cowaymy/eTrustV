@@ -25,7 +25,14 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	@Resource(name = "ccpCalculateMapper")
 	private CcpCalculateMapper ccpCalculateMapper;
 
+
+	@Override
+	public List<EgovMap> getRegionCodeList(Map<String, Object> params) throws Exception {
 	
+		return ccpCalculateMapper.getRegionCodeList(params);
+	}
+
+
 	@Override
 	public List<EgovMap> selectDscCodeList() throws Exception {
 		
@@ -803,6 +810,6 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	 			LOGGER.info("_________________________________________________________________________________________");
  			
  		}
-		 
+		
 	}//Impl End
 }
