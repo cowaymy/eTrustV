@@ -478,6 +478,17 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	public void saveCanSMSServiceLogs(Map<String, Object> params) {
 		MSvcLogApiMapper.insertCanSMSServiceLog(params);
 	}
+
+	@Override
+	public void updateReApointResult(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.updateReApointResult(params);
+	}
+
+	@Override
+	public EgovMap selectAsBasicInfo(Map<String, Object> params) {
+		return MSvcLogApiMapper.selectAsBasicInfo(params);
+	}
 	
 	
 	

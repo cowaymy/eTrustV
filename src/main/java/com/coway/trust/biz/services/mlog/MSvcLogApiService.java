@@ -89,6 +89,10 @@ public interface MSvcLogApiService {
 	Map<String, Object> getHsBasic(Map<String, Object> params);
 
 	void saveCanSMSServiceLogs(Map<String, Object> params);
+
+	void updateReApointResult(Map<String, Object> params);
+
+	EgovMap selectAsBasicInfo(Map<String, Object> params);
 	
 	
 

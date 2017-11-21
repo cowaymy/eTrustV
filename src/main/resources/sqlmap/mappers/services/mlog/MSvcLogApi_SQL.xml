@@ -683,13 +683,63 @@ and cust.cust_id = custCnt.cust_id
             and Extent1.as_no = #{serviceNo}
             and rownum = 1
 
-
-
-
-
     </select>
 
 
+
+
+   <select id="selectAsBasicInfo" parameterType="Map" resultType="egovMap">
+               select   AS_ID
+						,AS_NO
+						,AS_SO_ID
+						,AS_MEM_ID
+						,AS_MEM_GRP
+						,AS_REQST_DT
+						,AS_REQST_TM
+<!-- 						,AS_APPNT_DT
+						,AS_APPNT_TM      -->
+ 						,AS_BRNCH_ID
+						,AS_MALFUNC_ID
+						,AS_MALFUNC_RESN_ID
+						,AS_REM_REQSTER
+						,AS_REM_REQSTER_CNTC
+						,AS_CALLLOG_ID
+						,AS_STUS_ID
+						,AS_SMS
+						,AS_CRT_USER_ID
+						,AS_CRT_DT
+						,AS_UPD_USER_ID
+						,AS_UPD_DT
+						,AS_ENTRY_IS_SYNCH
+						,AS_ENTRY_IS_EDIT
+						,AS_TYPE_ID
+						,AS_REQSTER_TYPE_ID
+						,AS_IS_BS_WITHIN_30DAYS
+						,AS_ALLOW_COMM
+						,AS_PREV_MEM_ID
+						,AS_REM_ADD_CNTC
+						,AS_REM_REQSTER_CNTC_SMS
+						,AS_REM_ADD_CNTC_SMS
+						,AS_SESION_CODE
+						,CALL_MEM
+						,REF_REQST
+						,PREV_COMP_SVC
+						,NEXT_COMP_SVC
+						,SIGN_DT_TIME
+						,COMP_DT_SEQ
+						,DISTANCE
+						,FIRST
+						,LAST
+						,HOME
+						,AS_MOBILE_REQST_ID
+						,AS_RQST_REM  
+            from SVC0001D 
+            where 1=1
+            and as_no = #{serviceNo}
+            and rownum = 1
+
+    </select>
+    
 
 
     <select id="getInstallationJobList" parameterType="Map" resultType="egovMap">
@@ -2289,6 +2339,8 @@ AND   O1DA.MEM_CODE = #{userId}
                 </insert>        
 
  
+        
+        
         
 
 </mapper>

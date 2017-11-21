@@ -75,6 +75,7 @@ import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -885,6 +886,14 @@ public class ServiceApiController {
 	public ResponseEntity<ASReAppointmentRequestDto> aSReAppointmentRequest(@RequestBody ASReAppointmentRequestForm aSReAppointmentRequestForm)
 			throws Exception {		
 		String transactionId = "";
+		SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat transFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
+		DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+		
+		SimpleDateFormat timeFormatOrg = new SimpleDateFormat("HHmmss");
+		SimpleDateFormat timeFormatNew = new SimpleDateFormat("HH:mm:ss.SSS");
+
 
 		Map<String, Object> params = ASReAppointmentRequestForm.createMaps(aSReAppointmentRequestForm);
 		
@@ -893,10 +902,46 @@ public class ServiceApiController {
 		}
 		
 		
-//		// business service....
+//		 business service STAT....
 //		// TODO : installResult 구현 필요.....
-//		MSvcLogApiService.insertProductReturnResult(params);		
+		
+		params.put("orderNo", params.get("salesOrderNo"));
+		EgovMap as_ord_basicInfo = MSvcLogApiService.selectAsBasicInfo(params);		
+		String userId = MSvcLogApiService.getUseridToMemid(params);
+		String  AS_REQST_DT = transFormat.format(as_ord_basicInfo.get("asReqstDt"));
+		String  AS_REQST_DT1  = sdFormat.format(transFormat.parse(AS_REQST_DT));
+		
+		params.put("AS_ID", as_ord_basicInfo.get("asId"));
+		params.put("AS_MEM_ID", userId);
+		params.put("AS_MEM_GRP", as_ord_basicInfo.get("asMemGrp"));
+//		params.put("AS_REQST_DT", sdFormat.format(transFormat.parse(as_ord_basicInfo.get("asReqstDt").toString())));
+		params.put("AS_REQST_DT", AS_REQST_DT1);
+		params.put("AS_REQST_TM", as_ord_basicInfo.get("asReqstTm"));
+		params.put("AS_APPNT_DT", sdFormat.format(transFormat.parse(params.get("appointmentDate").toString())));
+		params.put("AS_APPNT_TM", timeFormatNew.format(timeFormatOrg.parse(params.get("appointmentTime").toString())));
+		params.put("AS_BRNCH_ID", as_ord_basicInfo.get("asBrnchId"));
+		params.put("AS_MALFUNC_ID", as_ord_basicInfo.get("asMalfuncId"));
+		params.put("AS_MALFUNC_RESN_ID", as_ord_basicInfo.get("asMalfuncResnId"));
+		params.put("AS_REM_REQSTER", as_ord_basicInfo.get("asRemReqster"));
+		params.put("AS_REM_REQSTER_CNTC", as_ord_basicInfo.get("asRemReqsterCntc"));
+		params.put("AS_REQSTER_TYPE_ID", as_ord_basicInfo.get("asReqsterTypeId"));
+		params.put("AS_IS_BS_WITHIN_30DAYS", as_ord_basicInfo.get("asIsBsWithin30days"));
+		params.put("AS_ALLOW_COMM", as_ord_basicInfo.get("asAllowComm"));
+		params.put("AS_REM_ADD_CNTC", as_ord_basicInfo.get("asRemAddCntc"));
+		params.put("AS_REM_REQSTER_CNTC_SMS", as_ord_basicInfo.get("asRemReqsterCntcSms"));
+		params.put("AS_REM_ADD_CNTC_SMS", as_ord_basicInfo.get("asRemAddCntcSms"));
+		params.put("AS_SESION_CODE", as_ord_basicInfo.get("asSesionCode"));
+		params.put("CALL_MEMBER", as_ord_basicInfo.get("callMember"));
+		params.put("REF_REQUEST", as_ord_basicInfo.get("refRequest"));
 
+		
+		LOGGER.debug("params :"+ params.toString());
+		ASManagementListService.updateASEntry(params);
+		
+//		MSvcLogApiService.updateReApointResult(params);		
+
+//		 business service END ....
+		
 		
 		// TODO : 리턴할 dto 구현.
 //		transactionId = aSReAppointmentRequestForm.getTransactionId();

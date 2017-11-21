@@ -110,5 +110,9 @@ public interface MSvcLogApiMapper {
 
 	void insertCanSMSServiceLog(Map<String, Object> params);
 
+	void updateReApointResult(Map<String, Object> params);
+
+	EgovMap selectAsBasicInfo(Map<String, Object> params);
+
 	
 }
