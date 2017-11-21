@@ -1224,11 +1224,11 @@ $(document).ready(function()
 	<col style="width:*" />
 	<col style="width:90px" />
 	<col style="width:*" /> -->
-	<col style="width:160px" />
+	<col style="width:140px" />
   <col style="width:*" />
-  <col style="width:90px" />
+  <col style="width:70px" />
   <col style="width:*" />
-  <col style="width:120px" />
+  <col style="width:100px" />
   <col style="width:*" />
 </colgroup>
 <tbody>
@@ -1339,9 +1339,9 @@ $(document).ready(function()
 	<col style="width:60px" />
 	<col style="width:*" />
 	<col style="width:120px" />
-	<col style="width:*" />
+	<col style="width:90px" />
 	<col style="width:160px" />
-	<col style="width:*" />
+	<col style="width:150px" />
 </colgroup>
 <tbody>
 <tr>

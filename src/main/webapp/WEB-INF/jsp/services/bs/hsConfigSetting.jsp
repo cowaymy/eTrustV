@@ -206,7 +206,7 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBasicListAjax();">Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBasicListAjax();"><span class="search"></span>Search</a></p></li>
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
