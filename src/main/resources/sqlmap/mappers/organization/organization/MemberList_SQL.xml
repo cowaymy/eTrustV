@@ -1961,7 +1961,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		   , #{lastOrgCode}
 		   , #{PRmemId}
 		   , #{branchId}
-		   , #{evtApplyDt}
+		   ,  to_date(#{evtApplyDt} ,'dd/mm/yyyy')
 		    )
 	 </insert>
 
