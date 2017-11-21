@@ -61,7 +61,7 @@
                         {dataField:"trnsitstuscd"  ,headerText:"Status"             ,width:"14%" ,height:30 , visible:false},
                         {dataField:"trnsitstusnm"  ,headerText:"Status"             ,width:"14%" ,height:30 , visible:true},
                         {dataField:"crtuserid"     ,headerText:"Create By"          ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"crtusernm"     ,headerText:"Create By"          ,width:"14%" ,height:30 , visible:true},
+                        {dataField:"crtusernm"     ,headerText:"Create By"          ,width:"16%" ,height:30 , visible:true},
                         {dataField:"trnsitcdt"     ,headerText:"Colse Dt"           ,width:"14%" ,height:30 , visible:false},
                         {dataField:"totitm"        ,headerText:"Total Transfer"     ,width:"16%" ,height:30 , visible:true},
                         {dataField:"totcnt"        ,headerText:"Total Count"        ,width:"14%" ,height:30 , visible:false}
@@ -196,6 +196,9 @@
         });
         $("#search").click(function(){
         	getListAjax();
+        });
+        $("#clear").click(function(){
+        	$("#searchForm")[0].reset();
         });
         $("#showall > a").click(function(){
         	var param = "trnsitid="+$("#trnsitno").text();
@@ -473,7 +476,7 @@
 <h2>Sirim Transfer</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-   <!--  <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
