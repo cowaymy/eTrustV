@@ -131,6 +131,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
             {
                  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                    if (selectedItem[0] > -1){
+                	   f_removeclass();  
                      dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
                        
                      $("#ViewPopUp_wrap").show();  
@@ -379,7 +380,13 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
             $("#insReason").prop('disabled', true);
         }
     }
-    
+    function f_removeclass(){
+        var lisize = $(".tap_wrap > ul > li").size();
+        for (var i = 0 ; i < lisize ; i++){
+            $(".tap_wrap > ul > li").eq(i).find("a").removeAttr("class");
+        }
+        $("#default_tap").click();
+    }
       
 </script>
 <body>
@@ -523,7 +530,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 <section class="tap_wrap"><!-- tap_wrap start -->
 
 <ul class="tap_type1">
-    <li id="DCF_info" class="on"><a href="#">DCF Info</a></li>
+    <li id="DCF_info" ><a href="#" class="on" id="default_tap">DCF Info</a></li>
     <li id="Approval_info"><a href="#">Approval Info</a></li>
     <li id="Compulsory_info"><a href="#">Compulsory Field</a></li>
     <li id="ChangeItem_info"><a href="#">Change Item(s)</a></li>
