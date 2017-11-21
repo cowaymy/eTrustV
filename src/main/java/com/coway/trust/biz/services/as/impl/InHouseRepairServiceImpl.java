@@ -45,5 +45,22 @@ public class  InHouseRepairServiceImpl  extends EgovAbstractServiceImpl implemen
 		return inHouseRepairMapper.getCallLog(params);
 	}
 	
+
+	@Override 
+	public List<EgovMap> getProductDetails(Map<String, Object> params) {
+		return inHouseRepairMapper.getProductDetails(params);
+	}
+	
+ 
+	@Override 
+	public List<EgovMap> getProductMasters(Map<String, Object> params) {
+		return inHouseRepairMapper.getProductMasters(params);
+	}
+	
+	
+	@Override 
+	public  EgovMap  isAbStck(Map<String, Object> params) {
+		return inHouseRepairMapper.isAbStck(params);
+	}
 	
 }

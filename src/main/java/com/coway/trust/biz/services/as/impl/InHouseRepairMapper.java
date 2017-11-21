@@ -13,6 +13,13 @@ public interface InHouseRepairMapper {
 	
 	List<EgovMap> selInhouseDetailList(Map<String, Object> params);
 	
-	 List<EgovMap> getCallLog(Map<String, Object> params);
+	List<EgovMap> getCallLog(Map<String, Object> params);
+
+	List<EgovMap> getProductMasters(Map<String, Object> params);
+	
+	List<EgovMap> getProductDetails(Map<String, Object> params);
+	
+	EgovMap  isAbStck(Map<String, Object> params);
+	
 
 }
