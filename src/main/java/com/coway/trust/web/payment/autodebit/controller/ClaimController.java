@@ -369,12 +369,12 @@ public class ClaimController {
         		returnMap = (Map<String, Object>)resultMapList.get(0);
         		
         		// Calim Master 및 Detail 조회
-    			EgovMap claimMasterMap = claimService.selectClaimById(returnMap);
-    			List<EgovMap> claimDetailList = claimService.selectClaimDetailById(returnMap);
+    			//EgovMap claimMasterMap = claimService.selectClaimById(returnMap);
+    			//List<EgovMap> claimDetailList = claimService.selectClaimDetailById(returnMap);
     			
         		try{
         			// 파일 생성하기
-        			this.createClaimFileMain(claimMasterMap,claimDetailList);
+        			//this.createClaimFileMain(claimMasterMap,claimDetailList);
         			returnCode = "FILE_OK";
         		}catch (Exception e){
         			returnCode = "FILE_FAIL";
