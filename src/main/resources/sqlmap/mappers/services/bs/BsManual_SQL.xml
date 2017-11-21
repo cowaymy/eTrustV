@@ -2322,7 +2322,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                  
                  
                  
-                    <select id="select0087DFilter" parameterType="Map" resultType="egovMap">
+                    <select id="select0087DFilter" parameterType="Map" resultType="String">
                              select SRV_FILTER_LAST_SERIAL
                              from SAL0087D
                               WHERE 1=1
@@ -2339,7 +2339,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                            SET SRV_REM = #{remark},
                                SRV_PREV_DT = to_date(#{settleDate}, 'DD/MM/YYYY'),
                                SRV_BS_WEEK = #{srvBsWeek},
-                               SRV_CRT_USER_ID #{hidCodyId},
+                               SRV_CRT_USER_ID = #{hidCodyId},
                                SRV_UPD_DT = sysdate
                          WHERE   SRV_CONFIG_ID = #{srvConfigId}
 
