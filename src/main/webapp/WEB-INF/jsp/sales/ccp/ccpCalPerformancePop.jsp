@@ -79,119 +79,101 @@ function fn_report_1(){
 	$("#reportFileName").val("");
 	$("#reportDownFileName").val("");
 	
-	//.rpt파일들의 테이블들이 두개씩있는경우라서 ..
+	//.rpt파일들의 테이블들이 두개씩있는경우라서 .. 추후 진행 필요
+	//CCPPerformanceReportByBranch_PDF.rpt
+	//CCPPerformanceReportByServiceBranch.rpt
+	
 }
 
-function fn_report_2(){ ///////////error
+function fn_report_2(){ // 완성
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
     
 	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATEFR" name="V_ORDERDATEFR" value="" />');
-	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />');
+	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />'); 
 	$("#reportParameter").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />');
 	
-	
-
-//    alert($("#V_ORDERDATEFR").val());
- //   alert($("#V_ORDERDATETO").val());
-//    alert($("#V_WHERESQL").val());
-
-    
-	
-	
-	var orderDateFrom = "";
-	var orderDateTo = "";
 	var whereSQL = "";
-	$("#V_ORDERDATEFR").val("");
-    $("#V_ORDERDATETO").val("");
-    $("#V_WHERESQL").val("");
-    
 	
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
     }
-	
     
-    var fromDt = $("#dpDateFr").val();
-    var toDt = $("#dpDateTo").val();
+    var dpDateFr = $("#dpDateFr").val();
+    var frArr = dpDateFr.split("/");
+    var yyyy = frArr[2];
+    var mm = frArr[1];
+    var dd = frArr[0];
+    dpDateFr = yyyy+"-"+mm+"-"+dd+" 00:00:00";
+    var dpDateTo = $("#dpDateTo").val();
+    var toArr = dpDateTo.split("/");
+    dpDateTo = toArr[2]+"-"+toArr[1]+"-"+toArr[0]+" 00:00:00";
     
-    whereSQL += " AND som.SALES_DT >= TO_DATE("+fromDt+" || '00:00:00', 'dd/MM/YYYY HH24:MI:SS')";
-    whereSQL += " AND som.SALES_DT <= TO_DATE("+toDt+" || '23:59:59', 'dd/MM/YYYY HH24:MI:SS')";
-    
-//	if(!($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0)){	
-	//	orderDateFrom = $("#dpDateFr").val();
+    // "yyyy-mm-dd hh:mm:ss" 형식
+    if(!(dpDateFr == null || dpDateFr.length == 0)){
+    	whereSQL += " AND som.SALES_DT >= TO_DATE('"+dpDateFr+"', 'yyyy-MM-DD HH24:MI:SS')";
+    }
+    if(!(dpDateTo == null || dpDateTo.length == 0)){
+    	whereSQL += " AND som.SALES_DT <= TO_DATE('"+dpDateTo+"', 'yyyy-MM-DD HH24:MI:SS')";
+    }
+    if($("#cmbType :selected").val() == "3"){
+    	$("#reportDownFileName").val("CCPDailyProductivity_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportFileName").val("/sales/CCPSummary_CcpAdminProductivity.rpt");
+        
+    }else if($("#cmbType :selected").val() == "4"){
+    	$("#reportDownFileName").val("CCPSummary_ByRegion_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportFileName").val("/sales/CCPSummary_ByRegion.rpt");
+        
+    }
 
+    $("#V_ORDERDATEFR").val(dpDateFr);
+    $("#V_ORDERDATETO").val(dpDateTo);
+    $("#V_WHERESQL").val(whereSQL);
 	
-	//yyyy-mm-dd hh:mm:ss
    
-	
-	//    orderDateFrom = $("#dpDateFr").val().substring(6, 10)+"-"+$("#dpDateFr").val().substring(3, 5)+"-"+$("#dpDateFr").val().substring(0, 2)+" 00:00:00";
-		//whereSQL += " AND som.SALES_DT >= TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy')";
-	//   alert(typeof orderDateFrom);
-	//	whereSQL += " AND som.SALES_DT >= TO_DATE("+fromDt+" || '00:00:00', 'dd/MM/YYYY HH24:MI:SS')";
-//	}
-//	if(!($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
-	//	orderDateTo = $("#dpDateTo").val();
-    //   orderDateTo = $("#dpDateTo").val().substring(6, 10)+"-"+$("#dpDateTo").val().substring(3, 5)+"-"+$("#dpDateTo").val().substring(0, 2)+" 00:00:00";
-	//	whereSQL += " AND som.SALES_DT <= TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yyyy')";
-	//	whereSQL += " AND som.SALES_DT <= TO_DATE("++" || '23:59:59', 'dd/MM/YYYY HH24:MI:SS')";
-//	}
-	if($("#cmbType :selected").val() == "3"){
-		$("#reportDownFileName").val("CCPDailyProductivity_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-		$("#reportFileName").val("/sales/CCPSummary_CcpAdminProductivity.rpt");
-	}else if($("#cmbType :selected").val() == "4"){
-		$("#reportDownFileName").val("CCPSummary_ByRegion_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-		$("#reportFileName").val("/sales/CCPSummary_ByRegion.rpt");
-	}
-	
-	$("#V_ORDERDATEFR").val(fromDt);
-	$("#V_ORDERDATETO").val(toDt);
-	$("#V_WHERESQL").val(whereSQL);
-
-
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
-    var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
-    };
-
-	//alert($("#V_ORDERDATEFR").val());
-	//alert($("#V_ORDERDATETO").val());
-	//alert($("#V_WHERESQL").val());
-    var date1 = new Date('2017-11-11');//yyyy/mm/dd
-    var date2 = new Date('2017-11-13');
-    console.log("date1 : " + date1);
-	$("#V_ORDERDATEFR").val(date1);
-	$("#V_ORDERDATETO").val(date2);
+	var option = {
+	        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+	};
+	
     Common.report("form", option);
 }
 
 
-function fn_report_3(){  //=> hidden들
+function fn_report_3(){  // 완성
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
 	
 	$("#reportParameter").append('<input type="hidden" id="V_PASSDATE" name="V_PASSDATE" value="" />');
-    //YYYY-MM-DD"형식으로 
-
+    //YYYY-MM-DD"형식 
+    var passDate = "";
+    
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
     }
     
 	if($("#cmbType :selected").val() == "5"){
-	//	$("#V_PASSDATE").val($("#dpOrderMonth").val()); => 수정 필요
+	   
+	    passDate = $("#dpOrderMonth").val();
+	    passDate = passDate.substring(3, 7)+"-"+passDate.substring(0,2)+"-01";
+	
         $("#reportDownFileName").val("CCPSummary_ByNationwide_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPSummary_ByNationwide.rpt");
     }else if($("#cmbType :selected").val() == "6"){
-    //	$("#V_PASSDATE").val($("#dpDateFr").val()); => 수정 필요
+        
+        passDate = $("#dpDateFr").val();
+        passDate = passDate.substring(6,10)+"-"+passDate.substring(3,5)+"-"+passDate.substring(0,2);
+    
         $("#reportDownFileName").val("CCPSummary_ByKeyInTime_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPSummary_ByDayTime.rpt");
     }
     
-    
+	$("#V_PASSDATE").val(passDate);
+	
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
@@ -205,6 +187,7 @@ function fn_report_4(){ //완성
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
+    var passDate = "";
     
     $("#reportParameter").append('<input type="hidden" id="V_PASSDATE" name="V_PASSDATE" value="" />');
 
@@ -213,7 +196,7 @@ function fn_report_4(){ //완성
         date = "0" + date;
     }
 
-    var passDate = $("#dpOrderMonth").val();
+    passDate = $("#dpOrderMonth").val();
     passDate = passDate.substring(3, 7)+"-"+passDate.substring(0,2)+"-01";
 
     $("#V_PASSDATE").val(passDate);
@@ -227,6 +210,127 @@ function fn_report_4(){ //완성
 
     Common.report("form", option);
 	
+	
+}
+
+function fn_report_5(){ // 완성
+	
+	$("#reportFileName").val("");
+    $("#reportDownFileName").val("");
+    var passDate = "";
+    
+    $("#reportParameter").append('<input type="hidden" id="V_PASSDATE" name="V_PASSDATE" value="" />');
+
+    
+    passDate = $("#dpDateTo").val();
+    passDate = passDate.substring(6,10)+"-"+passDate.substring(3,5)+"-"+passDate.substring(0,2);
+	
+    var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
+    }
+    $("#V_PASSDATE").val(passDate);
+    $("#reportDownFileName").val("CCP3_Days_Summary_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    $("#reportFileName").val("/sales/RptCCPCurrentStatus.rpt");
+	
+	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+    var option = {
+        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+    };
+
+    Common.report("form", option);
+    
+}
+
+function fn_report_6(){ // 완성
+	
+	$("#reportFileName").val("");
+    $("#reportDownFileName").val("");
+    
+    var dpDateTo = $("#dpDateTo").val();
+    var cmbTypeVal = $("#cmbType :selected").val();
+    
+    var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var strdate = dpDateTo.substring(6,10)+"-"+month[parseInt(dpDateTo.substring(3,5))-1]+"-"+dpDateTo.substring(0,2);
+	var date1 = dpDateTo.substring(6,10)+"-"+dpDateTo.substring(3,5)+"-"+dpDateTo.substring(0,2);
+
+	var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
+    }
+	
+	if(cmbTypeVal == "9"){
+		
+		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
+		$("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
+
+		$("#V_INPUTDATE").val(date1);
+		$("#V_DATESTRING").val(strdate);
+		
+		$("#reportDownFileName").val("CCP_Turn_Around_Time_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	    $("#reportFileName").val("/sales/RptCCPPerformance_ByHours.rpt");
+		
+	}else if(cmbTypeVal == "10"){
+		
+		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
+        $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
+
+        $("#V_INPUTDATE").val(date1);
+        $("#V_DATESTRING").val(strdate);
+		
+		$("#reportDownFileName").val("CCP_DailyRentalSales_Summary_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	    $("#reportFileName").val("/sales/RptCCPSummary_ByMonth.rpt");
+		
+	}else if(cmbTypeVal == "11"){
+        
+		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
+        $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
+
+        $("#V_INPUTDATE").val(date1);
+        $("#V_DATESTRING").val(strdate);
+		
+		$("#reportDownFileName").val("CCP_ScoringPerformance_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	    $("#reportFileName").val("/sales/RptCCPSummary_ByDay.rpt");
+		
+    }else if(cmbTypeVal == "12"){
+        
+    	var dpDateFr = $("#dpDateFr").val();
+    	var strdate2 = dpDateFr.substring(6,10)+"-"+month[parseInt(dpDateFr.substring(3,5))-1]+"-"+dpDateFr.substring(0,2);
+    	var date2 = dpDateFr.substring(6,10)+"-"+dpDateFr.substring(3,5)+"-"+dpDateFr.substring(0,2);
+    	
+    	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATEFROMSQL" name="V_ORDERDATEFROMSQL" value="" />');
+        $("#reportParameter").append('<input type="hidden" id="V_ORDERDATETOSQL" name="V_ORDERDATETOSQL" value="" />');
+        $("#reportParameter").append('<input type="hidden" id="V_STRFROMDATE" name="V_STRFROMDATE" value="" />');
+        $("#reportParameter").append('<input type="hidden" id="V_STRTODATE" name="V_STRTODATE" value="" />');
+
+        $("#V_ORDERDATEFROMSQL").val(date2);
+        $("#V_ORDERDATETOSQL").val(date1);
+        $("#V_STRFROMDATE").val(strdate2);
+        $("#V_STRTODATE").val(strdate);
+    	
+    	$("#reportDownFileName").val("CCP_Active_Installation_Status_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportFileName").val("/sales/RptCCPDSCAchiveStatus_ByProduct.rpt");
+    	
+    }else if(cmbTypeVal == "13"){
+        
+    	$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
+        $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
+
+        $("#V_INPUTDATE").val(date1);
+        $("#V_DATESTRING").val(strdate);
+    	
+    	$("#reportDownFileName").val("Monthly_CCP_Active_by_DSC_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportFileName").val("/sales/RptCCPDSCDailyUpdate.rpt");
+    	
+    }
+	
+	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+    var option = {
+        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+    };
+
+    Common.report("form", option);
+    
 	
 }
 
@@ -251,7 +355,6 @@ function fn_report_4(){ //완성
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form">
 <!-- report1 -->
-<input type="hidden">
 
 
 <!-- report2 -->
