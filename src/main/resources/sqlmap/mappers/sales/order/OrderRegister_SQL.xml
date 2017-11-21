@@ -1768,7 +1768,7 @@
     </insert>
     
     <insert id="insertSalesOrderContract" parameterType="salesOrderContractVO">
-      <selectKey keyProperty="callResultId" resultType="Integer" order="BEFORE">
+      <selectKey keyProperty="cntrctId" resultType="Integer" order="BEFORE">
         SELECT SAL0003D_CNTRCT_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
 		INSERT
@@ -1907,6 +1907,22 @@
             </if>
              )
          ORDER BY CODE_NAME ASC, STK_ID ASC
+    </select>
+    
+    <select id="selectServiceContractPackage" parameterType="Map" resultType="egovMap">
+		SELECT T1.SRV_CNTRCT_PAC_ID
+		     , T1.SRV_CNTRCT_PAC_CODE
+		     , T1.SRV_CNTRCT_PAC_DESC
+		     , T1.SRV_CNTRCT_PAC_DUR
+		     , T1.SRV_CNTRCT_PAC_STUS_ID
+		     , T1.SRV_CNTRCT_PAC_CRT_DT
+		     , T1.SRV_CNTRCT_PAC_CRT_USER_ID
+		     , T1.SRV_CNTRCT_PAC_START_DT
+		     , T1.SRV_CNTRCT_PAC_END_DT
+		     , T1.PAC_TYPE
+		     , T1.OBLIGT_PRIOD
+		  FROM SAL0081D T1
+		 WHERE T1.SRV_CNTRCT_PAC_ID = #{srvCntrctPacId}
     </select>
     
 </mapper>

@@ -733,15 +733,23 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 */
 	}
 	
-	private void preprocSalesOrderContract(SalesOrderContractVO salesOrderContractVO, SessionVO sessionVO) {
+	private void preprocSalesOrderContract(SalesOrderContractVO salesOrderContractVO, SalesOrderMVO salesOrderMVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocSalesOrderContract START ");
+		
+		EgovMap inMap = new EgovMap();
+		
+		inMap.put("srvCntrctPacId", salesOrderMVO.getSrvPacId());
+		
+		EgovMap outMap = orderRegisterMapper.selectServiceContractPackage(inMap);
 
         salesOrderContractVO.setCntrctId(0);
         salesOrderContractVO.setCntrctSalesOrdId(0);
-        salesOrderContractVO.setCntrctRentalPriod(60);
-        salesOrderContractVO.setCntrctObligtPriod(36);
-        salesOrderContractVO.setCntrctStusId(1);
+//      salesOrderContractVO.setCntrctRentalPriod(60);
+//      salesOrderContractVO.setCntrctObligtPriod(36);
+        salesOrderContractVO.setCntrctRentalPriod(CommonUtils.intNvl(outMap.get("srvCntrctPacDur")));
+        salesOrderContractVO.setCntrctObligtPriod(CommonUtils.intNvl(outMap.get("obligtPriod")));
+        salesOrderContractVO.setCntrctStusId(SalesConstants.STATUS_ACTIVE);
         salesOrderContractVO.setCntrctRem("");
         salesOrderContractVO.setCntrctCrtUserId(sessionVO.getUserId());
         salesOrderContractVO.setCntrctUpdUserId(sessionVO.getUserId());
@@ -1279,7 +1287,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			
 			//SALES ORDER CONTRACT
 			SalesOrderContractVO salesOrderContractVO = new SalesOrderContractVO();
-			this.preprocSalesOrderContract(salesOrderContractVO, sessionVO);
+			this.preprocSalesOrderContract(salesOrderContractVO, salesOrderMVO, sessionVO);
 			regOrderVO.setSalesOrderContractVO(salesOrderContractVO);
 		}
 		
@@ -1370,6 +1378,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		List<SrvConfigFilterVO>  srvConfigFilterVOList 	= orderVO.getSrvConfigFilterVOList();
 		List<SalesOrderLogVO> 	 salesOrderLogVOList 	= orderVO.getSalesOrderLogVOList();
 		GSTEURCertificateVO 	 gSTEURCertificateVO 	= orderVO.getgSTEURCertificateVO();
+		SalesOrderContractVO     salesOrderContractVO   = orderVO.getSalesOrderContractVO();
 		
 		int orderAppType = orderVO.getOrderAppType();
 		
@@ -1449,6 +1458,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	if(ccpDecisionMVO != null && ccpDecisionMVO.getCcpStusId() > 0) {
         		ccpDecisionMVO.setCcpSalesOrdId(salesOrdId);
         		orderRegisterMapper.insertCcpDecisionM(ccpDecisionMVO);
+        	}
+        	
+        	//SALES ORDER CONTRACT
+        	if(salesOrderContractVO != null && salesOrderContractVO.getCntrctStusId() > 0) {
+        		salesOrderContractVO.setCntrctSalesOrdId(salesOrdId);
+        		orderRegisterMapper.insertSalesOrderContract(salesOrderContractVO);
         	}
         }
         
