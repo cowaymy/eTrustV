@@ -28,7 +28,7 @@
     
     // 리스트 조회.
     function fn_selectOrderSameRentalGroupOrderList() {        
-        Common.ajax("GET", "/sales/order/selectSameRentalGrpOrderJsonList.do", $("#searchForm").serialize(), function(result) {
+        Common.ajax("GET", "/sales/order/selectSameRentalGrpOrderJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
             AUIGrid.setGridData(custInfoGridID, result);
         });
     }
