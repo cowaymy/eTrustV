@@ -41,7 +41,7 @@ public class LoginDto {
 		dto.setCompanyAddress(loginVO.getBranchAddr());
 		dto.setCompanyTelNo1(loginVO.getBranchTel1());
 		dto.setCompanyTelNo2(loginVO.getBranchTel2());
-		dto.setManagerYn("-");
+		dto.setManagerYn(loginVO.getMgrYn());
 		dto.setUserGroupId(loginVO.getUserTypeId());
 		dto.setUserPassWord(loginVO.getUserPassWord());
 		

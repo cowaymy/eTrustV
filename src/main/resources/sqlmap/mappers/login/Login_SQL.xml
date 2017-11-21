@@ -37,11 +37,29 @@
 	       ,BRANCH.TEL2 AS branchTel2
 	       ,SUPDEPT.DEPT_NAME AS deptName
 	       ,(TRUNC(SYSDATE,'dd') - TRUNC(USR.USER_PASSWD_LAST_UPD_DT,'dd')) diffDay
+	       ,  CASE WHEN (SELECT COUNT (1) CNT
+                                      FROM (SELECT     A.ROLE_ID
+                                                      ,B.USER_ID
+                                                  FROM SYS0044M A
+                                                      , (SELECT B.ROLE_ID
+                                                               ,B.USER_ID
+                                                           FROM SYS0045M B, SYS0047M C
+                                                          WHERE B.USER_ID = C.USER_ID
+                                                            AND B.USER_ID = (SELECT USER_ID
+                                                                               FROM SYS0047M USR
+                                                                              WHERE USER_NAME = #{userId} /* userId => user_name 임.*/
+                                                                                AND ROWNUM = 1) ) B
+                                                 WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                            START WITH A.ROLE_ID = B.ROLE_ID
+                                            CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) TBL
+                                          ,SYS0054M D
+                                     WHERE TBL.ROLE_ID = D.ROLE_ID
+                                       AND D.AUTH_CODE = 'MGR') > 0 THEN 'Y' ELSE 'N' END AS mgrYn
 	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
 	       LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = USR.USER_BRNCH_ID
 	       LEFT OUTER JOIN SYS0040M SUPDEPT ON SUPDEPT.DEPT_ID = USR.USER_DEPT_ID
 	 WHERE 1 = 1
-	   AND USR.USER_NAME = #{userId}
+	   AND USR.USER_NAME = #{userId} /* userId => user_name 임.*/
 	   AND USR.USER_PASSWD = #{password}
 	   AND USR.USER_STUS_ID = 1
 	   AND 'T' = CASE WHEN #{userMobileNo} IS NULL OR USR.USER_MOBILE_NO = #{userMobileNo} THEN 'T'

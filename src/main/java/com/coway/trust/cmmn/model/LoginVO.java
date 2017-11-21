@@ -34,8 +34,7 @@ public class LoginVO {
 	private String userPassWord;
 	private String userNric;
 	private String userWorkNo;
-	
-	
+	private String mgrYn;
 
 	public String getUserNric() {
 		return userNric;
@@ -272,5 +271,13 @@ public class LoginVO {
 
 	public void setLoginSubAuthVOList(List<LoginSubAuthVO> loginSubAuthVOList) {
 		this.loginSubAuthVOList = loginSubAuthVOList;
+	}
+
+	public String getMgrYn() {
+		return mgrYn;
+	}
+
+	public void setMgrYn(String mgrYn) {
+		this.mgrYn = mgrYn;
 	}
 }

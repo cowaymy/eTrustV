@@ -18,7 +18,7 @@ public class AppConstants {
 
 	public static final int RECORD_COUNT_PER_PAGE = 10;
 
-	public static final int RECORD_MAX_SIZE = 50000;
+	public static final int RECORD_MAX_SIZE = 100000;
 
 
 	public static final String CALLCENTER_TOKEN_KEY = "_TOKEN";

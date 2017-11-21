@@ -26,8 +26,10 @@ public class SessionVO implements Serializable {
 	private String branchName;
 	private String deptName;
 	private String userPassWord;
+	private String mgrYn;
 
-	private String menuCode; // 메뉴에 등록된 uri 에 대한 menuCode....  등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음. (AuthenticInterceptor.java 에서 등록)
+	private String menuCode; // 메뉴에 등록된 uri 에 대한 menuCode.... 등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음.
+							 // (AuthenticInterceptor.java 에서 등록)
 
 	private List<LoginSubAuthVO> loginSubAuthVOList;
 
@@ -185,13 +187,21 @@ public class SessionVO implements Serializable {
 	public void setLoginSubAuthVOList(List<LoginSubAuthVO> loginSubAuthVOList) {
 		this.loginSubAuthVOList = loginSubAuthVOList;
 	}
-	
+
 	public String getUserPassWord() {
 		return userPassWord;
 	}
 
 	public void setUserPassWord(String userPassWord) {
 		this.userPassWord = userPassWord;
+	}
+
+	public String getMgrYn() {
+		return mgrYn;
+	}
+
+	public void setMgrYn(String mgrYn) {
+		this.mgrYn = mgrYn;
 	}
 
 	public static SessionVO create(LoginVO loginVO) {
@@ -217,6 +227,7 @@ public class SessionVO implements Serializable {
 			sessionVO.setUserBranchId(loginVO.getUserBranchId());
 			sessionVO.setDeptName(loginVO.getDeptName());
 			sessionVO.setUserPassWord(loginVO.getUserPassWord());
+			sessionVO.setMgrYn(loginVO.getMgrYn());
 
 			sessionVO.setLoginSubAuthVOList(loginVO.getLoginSubAuthVOList());
 		}
