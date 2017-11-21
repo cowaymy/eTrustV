@@ -21,14 +21,14 @@ public class BranchListServiceImpl extends EgovAbstractServiceImpl implements Br
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(MemberEventServiceImpl.class);
-	
+
 	@Resource(name = "branchListMapper")
 	private BranchListMapper branchListMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
-	
-	
+
+
 	@Override
 	public List<EgovMap> selectBranchList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -51,9 +51,9 @@ public class BranchListServiceImpl extends EgovAbstractServiceImpl implements Br
 
 	@Override
 	public  int    branchListUpdate(Map<String, Object> params) {
-		
-		
-		
+
+
+
 		return branchListMapper.branchListUpdate(params);
 	}
 
@@ -61,10 +61,9 @@ public class BranchListServiceImpl extends EgovAbstractServiceImpl implements Br
 	@Override
 	public int branchListInsert(Map<String, Object> params) {
 
-		
+
 		return branchListMapper.branchListInsert(params);
 	}
-
 
 	@Override
 	public List<EgovMap> getStateList(Map<String, Object> params) {
@@ -85,13 +84,13 @@ public class BranchListServiceImpl extends EgovAbstractServiceImpl implements Br
 		// TODO Auto-generated method stub
 		return branchListMapper.getPostcodeList(params);
 	}
-	
+
 	@Override
 	public EgovMap getBranchAddrDetail(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return branchListMapper.getBranchAddrDetail(params);
 	}
-	
-	
-	
+
+
+
 }
