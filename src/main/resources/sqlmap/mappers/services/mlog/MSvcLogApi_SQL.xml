@@ -112,7 +112,13 @@
 						      ) SAL46D 
 						      WHERE DUM_SEQ = 1 ) I
 						  , SAL0047D J
-						  , SVC0006D K
+						  , (SELECT * FROM
+						      (
+						        SELECT SCHDUL_ID, REN_COLCT_ID, SALES_ORD_ID, FAIL_RESN_ID,
+						              ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY SCHDUL_ID DESC) AS DUM_SEQ
+						        FROM SVC0006D 
+						      ) SAL06D 
+						      WHERE DUM_SEQ = 1 ) K
 						  , ORG0001D L
 						  , SYS0026M M
 						  , SAL0024D N
