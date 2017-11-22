@@ -6,9 +6,12 @@ var myGridID;
 
 //Grid에서 선택된 RowID
 var selectedGridValue;
+var typeData = [];
+typeData = [{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Installment"}];
 
 $(document).ready(function(){
-
+    
+	doDefCombo(typeData, '' ,'appType', 'M', 'f_multiCombo');
 	setTimeout(function() { 
 		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	    
@@ -17,14 +20,13 @@ $(document).ready(function(){
 	        selectedGridValue = event.rowIndex;
 	    });  
 	}, 100);
-	
-    
 });
 
 var gridPros = {
+		showRowNumColumn : false,
         editable: false,
         showStateColumn: false,
-        pageRowCount : 25
+        usePaging : false
 };
 
 var columnLayout=[             
@@ -36,15 +38,42 @@ var columnLayout=[
     {dataField:"name", headerText:"CustomerName"}
 ];
 
-function fn_getOutrightInvoiceListAjax() {     
+function fn_getOutrightInvoiceListAjax(goPage) {     
+    //페이징 변수 세팅
+    $("#pageNo").val(goPage);  
     
-    console.log("appType : " + $("#appType").val());
-    console.log($("searchForm").serialize());
     Common.ajax("GET", "/payment/selectOutrightInvoiceList.do", $("#searchForm").serialize(), function(result) {
-        AUIGrid.setGridData(myGridID, result);
+        AUIGrid.setGridData(myGridID, result.list);
+        
+        //전체건수 세팅
+        _totalRowCount = result.totalRowCount;
+        
+        //페이징 처리를 위한 옵션 설정
+        var pagingPros = {
+                // 1페이지에서 보여줄 행의 수
+                rowCount : $("#rowCount").val()
+        };
+        
+        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
     });
 }
 
+//페이지 이동
+function moveToPage(goPage){
+  //페이징 변수 세팅
+  $("#pageNo").val(goPage);
+  Common.ajax("GET", "/payment/selectOutrightInvoiceList.do", $("#searchForm").serialize(), function(result) {
+      AUIGrid.setGridData(myGridID, result.list);
+      
+      //페이징 처리를 위한 옵션 설정
+      var pagingPros = {
+              // 1페이지에서 보여줄 행의 수
+              rowCount : $("#rowCount").val()
+      };
+      
+      GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);        
+  });    
+}
 
 //크리스탈 레포트
 function fn_generateStatement(){
@@ -101,6 +130,15 @@ function fn_sendEInvoice(){
 hideViewPopup=function(val){
     $(val).hide();
 }
+
+function f_multiCombo() {
+    $(function() {
+        $('#appType').multipleSelect({
+            //selectAll : true, // 전체선택 
+            width : '100%'
+        })
+    });
+}
 </script>   
 
 <div id="popup_wrap" class="popup_wrap size_large"><!-- popup_wrap start -->
@@ -115,12 +153,14 @@ hideViewPopup=function(val){
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_getOutrightInvoiceListAjax();">Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getOutrightInvoiceListAjax(1);">Search</a></p></li>
         </ul> 
         
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
+            <input type="hidden" name="rowCount" id="rowCount" value="25" />
+            <input type="hidden" name="pageNo" id="pageNo" />
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
@@ -139,10 +179,7 @@ hideViewPopup=function(val){
                     <tr>
                         <th scope="row">Application Type</th>
                         <td>
-                            <select id="appType" name="appType" class="multy_select" multiple="multiple">
-                                <option value="67">Outright</option>
-                                <option value="68">Installment</option>
-                            </select>
+                            <select id="appType" name="appType" class="multy_select w100p"></select>
                         </td>
                         <th scope="row">Customer Name</th>
                         <td>
@@ -157,6 +194,7 @@ hideViewPopup=function(val){
         <section class="search_result">     
             <!-- grid_wrap start -->
             <article id="grid_wrap" class="grid_wrap"></article>
+            <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
             <!-- grid_wrap end -->
         </section>
 </section>

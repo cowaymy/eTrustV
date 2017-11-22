@@ -1,16 +1,12 @@
 package com.coway.trust.web.payment.billinggroup.controller;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.coway.trust.biz.payment.billinggroup.service.BillingInvoiceService;
 import com.coway.trust.biz.payment.billinggroup.service.impl.ProformaSearchVO;
-import com.coway.trust.biz.payment.billinggroup.service.impl.SearchVO;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -194,32 +188,31 @@ public class BillingInvoiceController {
 	 * @param model
 	 * @return
 	 */
-	
 	@RequestMapping(value = "/initOutrightInvoicePop.do")
 	public String initOutrightInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
 	
 		return "payment/billinggroup/outrightInvoicePop";
 	}
-	
+
+	/**
+	 * Outright Invoice조회  
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/selectOutrightInvoiceList.do")
-	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")SearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<Map<String, Object>> searchOutrightInvoiceList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {	
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		List<EgovMap> list = null;
+		String[] appType = request.getParameterValues("appType");
+		params.put("appType", appType);
+		list = invoiceService.selectOutrightInvoiceList(params);
+		int totalRowCount = invoiceService.selectOutrightInvoiceListCount(params);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		resultMap.put("list", list);
+		resultMap.put("totalRowCount", totalRowCount);
 		
-		map.put("orcCode","");
-		map.put("grpCode", "");
-		map.put("deptCode", "");
-		map.put("memberId", 0);
-		map.put("memberLvl", 0);
-		map.put("memberTypeId",0);
-		map.put("orderNo", searchVO.getOrderNo());
-		map.put("custName", searchVO.getCustName());
-		map.put("appType", searchVO.getAppType());
-		
-		list = invoiceService.selectOutrightInvoiceList(map);
-		
-		return ResponseEntity.ok(list);
+		return ResponseEntity.ok(resultMap);
 	}
 	
 	/******************************************************
