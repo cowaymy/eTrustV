@@ -489,9 +489,26 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	public EgovMap selectAsBasicInfo(Map<String, Object> params) {
 		return MSvcLogApiMapper.selectAsBasicInfo(params);
 	}
-	
-	
-	
+
+	@Override
+	public void updateInsReAppointmentReturnResult(Map<String, Object> params) {
+		 MSvcLogApiMapper.updateInsReAppointmentReturnResult(params);
+		
+	}
+
+	@Override
+	public void updateHsReAppointmentReturnResult(Map<String, Object> params) {
+		 MSvcLogApiMapper.updateHsReAppointmentReturnResult(params);
+		
+	}
+
+	@Override
+	public void updatePrReAppointmentReturnResult(Map<String, Object> params) {
+		 MSvcLogApiMapper.updatePrReAppointmentReturnResult(params);
+		
+	}
+
+
 	
 	
 	

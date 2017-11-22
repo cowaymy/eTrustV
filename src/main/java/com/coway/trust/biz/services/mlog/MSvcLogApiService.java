@@ -93,6 +93,12 @@ public interface MSvcLogApiService {
 	void updateReApointResult(Map<String, Object> params);
 
 	EgovMap selectAsBasicInfo(Map<String, Object> params);
+
+	void updateInsReAppointmentReturnResult(Map<String, Object> params);
+
+	void updateHsReAppointmentReturnResult(Map<String, Object> params);
+	
+	void updatePrReAppointmentReturnResult(Map<String, Object> params);
 	
 	
 

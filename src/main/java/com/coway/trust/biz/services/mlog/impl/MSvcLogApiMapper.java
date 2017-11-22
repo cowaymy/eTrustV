@@ -114,5 +114,12 @@ public interface MSvcLogApiMapper {
 
 	EgovMap selectAsBasicInfo(Map<String, Object> params);
 
+	void updateInsReAppointmentReturnResult(Map<String, Object> params);
+
+	void updateHsReAppointmentReturnResult(Map<String, Object> params);
+
+	void updatePrReAppointmentReturnResult(Map<String, Object> params);
+
+
 	
 }
