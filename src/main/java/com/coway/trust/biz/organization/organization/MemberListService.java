@@ -28,6 +28,8 @@ public interface MemberListService {
 
 	List<EgovMap> selectMemberList(Map<String, Object> params);
 
+	String selectLastGroupCode(Map<String, Object> params);
+
 	EgovMap selectMemberListView(Map<String, Object> params);
 
 	//<EgovMap> selectMemberTab(Map<String, Object> params);
