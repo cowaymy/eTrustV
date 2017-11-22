@@ -158,23 +158,23 @@
         
          $("#_saveBtn").css("display" , "none");
          $("#_clearBtn").css("display" , "none");
-         $("#_inputMemCode").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputMemCode").attr({"disabled" : "disabled"});
          $("#_memConfirm").css("display" , "none");
          $("#_memSearch").css("display" , "none");
          $("#_memReSelected").css("display" , "none");
-         $("#_inputDocQty").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_inputAgreementType").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_inputPeriodStart").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_inputPeriodEnd").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_agreementMsg").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_agreementAgmRemark").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_consignment").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("input[name='inputCourier']").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_inputConsignmentNo").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_inputCourierSelect").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_inputAgmReq").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_consignmentReciveDt").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
-         $("#_inputConfirmNewOrder").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputDocQty").attr({"disabled" : "disabled"});
+         $("#_inputAgreementType").attr({"disabled" : "disabled"});
+         $("#_inputPeriodStart").attr({"disabled" : "disabled"});
+         $("#_inputPeriodEnd").attr({"disabled" : "disabled"});
+         $("#_agreementMsg").attr({"disabled" : "disabled"});
+         $("#_agreementAgmRemark").attr({"disabled" : "disabled"});
+         $("#_consignment").attr({"disabled" : "disabled"});
+         $("input[name='inputCourier']").attr({"disabled" : "disabled"});
+         $("#_inputConsignmentNo").attr({"disabled" : "disabled"});
+         $("#_inputCourierSelect").attr({"disabled" : "disabled"});
+         $("#_inputAgmReq").attr({"disabled" : "disabled"});
+         $("#_consignmentReciveDt").attr({"disabled" : "disabled"});
+         $("#_inputConfirmNewOrder").attr({"disabled" : "disabled"});
          $("#_inputConfirmNewOrder").val("");
          $("#_newOrderConfirm").css("display" , "none");
          

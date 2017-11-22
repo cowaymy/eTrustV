@@ -4,6 +4,11 @@
 //AUIGrid 생성 후 반환  ID
 var calGrid;
 
+//Window Option
+var option = {
+        width: "1000px", // 창 가로 크기
+        height: "520px" // 창 세로 크기
+         }
 $(document).ready(function() {
 	
 	createCalGrid();   
@@ -31,13 +36,17 @@ $(document).ready(function() {
     		$("#_ccpId").val(event.item.ccpId);
             $("#_salesOrdId").val(event.item.salesOrdId);
             $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
-            Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
+            //Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
+           
+            Common.popupWin('_detailForm', "/sales/ccp/selectCalCcpViewEditPop.do", option);
             
     	}else{
     		$("#_ccpId").val(event.item.ccpId);
             $("#_salesOrdId").val(event.item.salesOrdId);
             $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
-            Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
+            //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
+            
+            Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
     	}
     });
 	

@@ -9,7 +9,8 @@ $(document).ready(function() {
     
 	//to List
     $("#_btnList").click(function() {
-        $("#_btnClose").click();
+        //$("#_btnClose").click();
+        window.close();
     });
     //Init
     var mst = getMstId();
@@ -27,7 +28,9 @@ $(document).ready(function() {
     var ccpStus = $("#_ccpStusId").val();
     CommonCombo.make("_statusEdit", "/sales/ccp/getCcpStusCodeList", '', ccpStus , optionUnit); //Status
     
-    CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', '' , optionUnitCh); //Status 
+    var rejSelVal = '${ccpInfoMap.ccpRjStusId}'; //CCP_RJ_STUS_ID
+    console.log("rejSelVal : " + rejSelVal);
+    CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', rejSelVal , optionUnitCh); //Status 
      
     var selReasonCode = $("#_ccpResnId").val();
     CommonCombo.make("_reasonCodeEdit", "/sales/ccp/selectReasonCodeFbList", '', selReasonCode ,optionUnit ); //Status
@@ -363,15 +366,9 @@ function chgTab(tabNm) {
 }
 
 </script>
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-<header class="pop_header"><!-- pop_header start -->
-<h1>CCP Calculation View</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
+<section id="content"><!-- content start -->
 
-<section class="pop_body"><!-- pop_body start -->
+
 <form id="_editForm">
     <input type="hidden" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
     
@@ -617,5 +614,5 @@ function chgTab(tabNm) {
 </ul>
 
 
-</section>
-</div>
+
+</section><!-- pop_body end -->

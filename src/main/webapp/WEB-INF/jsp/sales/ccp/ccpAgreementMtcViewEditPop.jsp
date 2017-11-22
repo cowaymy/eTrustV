@@ -1,11 +1,21 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<style type="text/css">
+
+/* gride 동적 버튼 */
+.edit-column {
+    visibility:hidden;
+}
+</style>
 <script type="text/javascript">
     
     //AUIGrid 생성 후 반환 ID
     var consignGridID;
     var msgGridID;
     var orderGridID; 
+    
+    //isFile
+    var fileResult;
     
     $(document).ready(function() {
         
@@ -119,7 +129,7 @@
                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
                 editable            : false,            
                 fixedColumnCount    : 1,            
-                showStateColumn     : true,             
+                showStateColumn     : false,             
                 displayTreeOpen     : false,            
                 selectionMode       : "singleRow",  //"multipleCells",            
                 headerHeight        : 30,       
@@ -135,7 +145,7 @@
     }
     
     function createMsgGrid(){
-        
+        //govAgMsgAttachFileName
         var msgColumnLayout = [
                                    
                                    {dataField : "userName" , headerText : "Creator" , width : "10%"},
@@ -145,8 +155,26 @@
                                    {dataField : "govAgRoleDesc" , headerText : "Department" , width : "10%"},
                                    {dataField : "govAgMsg" , headerText : "Message" , width : "30%"},
                                    {dataField : "govAgMsgHasAttach" , headerText : "Attachement" , width : "10%"},
-                                   {dataField : "" , headerText : "Download" , width : "10%"}
-         ];
+                                   {dataField : "govAgMsgAttachFileName",  headerText : "download", width : '10%', styleFunction : cellStyleFunction,
+                                         renderer : {
+                                           type : "ButtonRenderer",
+                                           labelText : "Download",
+                                           onclick : function(rowIndex, columnIndex, value, item) {
+                                                
+                                        	   //isFile Check
+                                        	    chkIsFile(value);
+                                        	   
+                                                if(fileResult == true){
+                                                	
+                                                	//file download
+                                                	
+                                                }else{
+                                                	Common.alert("The file might be deleted or changed location.");
+                                                }
+                                                
+                                           }
+                                         }
+                                     }];
         
          //그리드 속성 설정
         var gridPros = {
@@ -155,7 +183,7 @@
                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
                 editable            : false,            
                 fixedColumnCount    : 1,            
-                showStateColumn     : true,             
+                showStateColumn     : false,             
                 displayTreeOpen     : false,            
                 selectionMode       : "singleRow",  //"multipleCells",            
                 headerHeight        : 30,       
@@ -388,6 +416,46 @@
         $("#_agrPeriodEnd").val('');
         $("#_resultRemark").val('');
         
+    }
+    
+     function chkIsFile(_url){
+        
+      /*   var result = '';
+        $.ajax({
+            url: url,
+            type:'HEAD',
+            error: function(){
+                result = 'N';
+            },
+            success: function(){
+                result 'Y';
+            }
+        });
+        
+        return result; */
+        
+    	 $.ajax({
+    	     url: getContextPath()+_url,
+    	     type: 'HEAD',
+    	     async : false,
+    	     success: function () {
+    	    	 fileResult = true;
+    	     },
+    	     error: function () {
+    	    	 fileResult = false;
+    	     }
+    	});
+    } 
+    
+    
+  //addcolum button hidden
+    function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField){
+
+        if(item.govAgMsgHasAttach == 'Yes'){
+            return '';
+        }else{
+            return "edit-column";
+        }
     }
 </script>
 

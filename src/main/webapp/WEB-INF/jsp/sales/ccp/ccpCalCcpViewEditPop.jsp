@@ -21,7 +21,8 @@ $(document).ready(function() {
     
 	//to List
 	$("#_btnList").click(function() {
-		$("#_btnClose").click();
+		//$("#_btnClose").click();
+		window.close();
 	});
 	
 	//Init
@@ -38,7 +39,7 @@ $(document).ready(function() {
    
     //Income Range ComboBox
     var ccpId = $("#_editCcpId").val();
-    
+   // console.log('ccpId : ' + ccpId);
     var rentPayModeId = $("#_rentPayModeId").val();
     var applicantTypeId = $("#_applicantTypeId").val();
     var selVal = '';
@@ -49,12 +50,22 @@ $(document).ready(function() {
         	selVal = '22';
         }
     }
-    doGetCombo('/sales/ccp/getLoadIncomeRange', ccpId , selVal ,'_incomeRangeEdit', 'S');
+    var rangeParam = {editCcpId : ccpId};
+    var optionModule = {
+            type: "S",                  
+            isShowChoose: false  
+    };
+    //doGetCombo('/sales/ccp/getLoadIncomeRange', ccpId , selVal ,'_incomeRangeEdit', 'S');
+    //console.log("rentPayModeId(131) : " + rentPayModeId + " , applicantTypeId(964)  : " + applicantTypeId + " , selVal : " + selVal );
+    CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange', rangeParam, selVal, optionModule);
+    
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
     doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S'); 
     //Reject
-    doGetCombo('/sales/ccp/getCcpRejectCodeList', '', '','_rejectStatusEdit', 'S'); //Status
+    var rejSelVal = '${ccpInfoMap.ccpRjStusId}'; //CCP_RJ_STUS_ID
+    console.log("rejSelVal : " + rejSelVal);
+    doGetCombo('/sales/ccp/getCcpRejectCodeList', '', rejSelVal,'_rejectStatusEdit', 'S'); //Status
     //Feedback
     var selReasonCode = $("#_ccpResnId").val();
     doGetCombo('/sales/ccp/selectReasonCodeFbList', '', selReasonCode,'_reasonCodeEdit', 'S'); //Reason
@@ -597,15 +608,9 @@ function chgTab(tabNm) {
 }
 
 </script>
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-<header class="pop_header"><!-- pop_header start -->
-<h1>CCP Calculation Edit</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
+<section id="content"><!-- content start -->
 
-<section class="pop_body"><!-- pop_body start -->
+
 <form id="_editForm">
     <input type="hidden" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
     
@@ -883,4 +888,3 @@ function chgTab(tabNm) {
 </ul>
 
 </section>
-</div>

@@ -468,6 +468,9 @@
 		     , CCP_CTOS_BATCH_NO
 		  FROM SAL0102D T1
 		 WHERE T1.CCP_SALES_ORD_ID = #{salesOrderId}
+		 <![CDATA[
+		 AND ROWNUM <= 1
+		 ]]>
     </select>
     
     <select id="selectOrderSalesmanViewByOrderID" parameterType="Map" resultType="egovMap">
