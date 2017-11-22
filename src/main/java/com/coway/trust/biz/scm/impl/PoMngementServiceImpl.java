@@ -15,9 +15,11 @@
  */
 package com.coway.trust.biz.scm.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.PoMngementService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -79,27 +82,6 @@ public class PoMngementServiceImpl implements PoMngementService {
 	}	
 	
 	//
-	/*
-	 	@Override
-	public void returnPartsUpdate(Map<String, Object> params,int loginId) {
-
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-
-		for (int i = 0; i < checkList.size(); i++) {
-			logger.debug("checkList    값 : {}", checkList.get(i));
-		}
-
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> insMap = (Map<String, Object>) checkList.get(i);
-				insMap.put("userId", loginId);
-
-				returnUsedPartsMapper.upReturnParts(insMap);
-			}
-		}
-
-	} 
-	 * */
 	@Override
 	public int updatePoApprovalDetail(List<Object> addList, Integer crtUserId) 
 	{
@@ -107,14 +89,7 @@ public class PoMngementServiceImpl implements PoMngementService {
 		
 		for (Object obj : addList) 
 		{
-			//((Map<String, Object>) obj).put("crtUserId", crtUserId);
-			//((Map<String, Object>) obj).put("updUserId", crtUserId);
-			
-			LOGGER.debug(" >>>>> updatePoApprovalDetail ");
-			LOGGER.debug(" paramList : {}", addList.toString() );
-			
-			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
-			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			LOGGER.debug(">>>>> updatePoApprovalDetail paramList : {}", addList.toString() );
 			
 			saveCnt++;
 			
@@ -142,26 +117,81 @@ public class PoMngementServiceImpl implements PoMngementService {
 		return poMngementMapper.selectScmPoStatusCnt(params);
 	}
 	
-	//
 	@Override
-	public int updatePoManagement(List<Object> addList, Integer crtUserId) 
+	public EgovMap selectPOIssueNewPoNo(Map<String, Object> params) {
+		return poMngementMapper.selectPOIssueNewPoNo(params);
+	}
+	
+	// update SCMPrePOItem && Insert SCMPODetail
+	@Override
+	public int updatePOIssuItem(List<Map<String, Object>> addList, Integer crtUserId) 
 	{
 		int saveCnt = 0;
+		int poItemNo = 0;
 		
-		for (Object obj : addList) 
+		LOGGER.debug(" updatePOIssuItem_IMPLE {} ", addList.toString() );
+		
+		String preCdc = "";
+		String preYear = "";
+		
+		if(addList != null && addList.size() > 0)
 		{
-			((Map<String, Object>) obj).put("crtUserId", crtUserId);
-			((Map<String, Object>) obj).put("updUserId", crtUserId);
+		  preCdc =  (String) addList.get(0).get("preCdc");
+		  preYear = (String) addList.get(0).get("preYear");
+		}
+		
+		if(StringUtils.isEmpty(preCdc) || StringUtils.isEmpty(preYear)){
+			throw new ApplicationException(AppConstants.FAIL, "필수값 오류 입니다.");
+		}
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("preCdc", preCdc);
+		params.put("preYear", preYear);
+		EgovMap newPonoMap =  selectPOIssueNewPoNo( params );
+		String selectNewPoNo = (String)newPonoMap.get("newPono");
+		
+		for (Map<String, Object> obj : addList) 
+		{
+			poItemNo++;
 			
-			LOGGER.debug(" >>>>> updateSCMPlanMaster ");
-			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
-			
-			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
-			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			obj.put("crtUserId", crtUserId);
+			obj.put("updUserId", crtUserId);
+			obj.put("poItemNo", poItemNo);
+			obj.put("newPono", selectNewPoNo);
 			
 			saveCnt++;
 			
-			//salesPlanMngementMapper.updateScmPlanMaster((Map<String, Object>) obj);
+			LOGGER.debug(" >>>>> PO_Issue_Input_Params {} ", obj);
+			
+			//update SCMPrePOItem 
+			poMngementMapper.updatePOIssuItem(obj);
+			// Insert SCMPODetail
+			poMngementMapper.insertPOIssueDetail(obj);
+		}
+		
+		return saveCnt;
+	}
+	
+	// Insert SCMPODetail
+	@Override
+	public int insertPOIssueDetail(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		int poItemNo = 0;
+		
+		for (Object obj : addList) 
+		{
+			LOGGER.debug(" >>>>> InsertPOIssueDetail ");
+
+			poItemNo++;
+			
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			((Map<String, Object>) obj).put("poItemNo", poItemNo);
+			
+			saveCnt++;
+			
+			poMngementMapper.insertPOIssueDetail((Map<String, Object>) obj);
 		}
 		
 		return saveCnt;

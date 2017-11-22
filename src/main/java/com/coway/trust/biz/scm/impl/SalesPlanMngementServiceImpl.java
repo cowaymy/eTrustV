@@ -171,5 +171,9 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	public List<EgovMap> selectRemainWeekTh(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectRemainWeekTh(params);
 	}
+	@Override
+	public List<EgovMap> selectMonthCombo(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectMonthCombo(params);
+	}
 
 }

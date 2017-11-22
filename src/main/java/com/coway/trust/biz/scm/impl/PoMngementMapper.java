@@ -26,10 +26,12 @@ public interface PoMngementMapper
 	int updatePoApprovalDetail(Map<String, Object> params);
 	
 	
-	/* PO Management */
+	/* PO Management - PO Issue */
 	List<EgovMap> selectScmPrePoItemView(Map<String, Object> params);
 	List<EgovMap> selectScmPoView(Map<String, Object> params);
-	List<EgovMap> selectScmPoStatusCnt(Map<String, Object> params);
+	List<EgovMap> selectScmPoStatusCnt(Map<String, Object> params); 
+	EgovMap selectPOIssueNewPoNo(Map<String, Object> params); 
 	
-	void updatePoManagement(Map<String, Object> params);
+	int updatePOIssuItem(Map<String, Object> params);
+	int insertPOIssueDetail(Map<String, Object> params);
 }

@@ -34,6 +34,7 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectSeperation(Map<String, Object> params);
 	List<EgovMap> selectChildField(Map<String, Object> params);
 	List<EgovMap> selectRemainWeekTh(Map<String, Object> params);
+	List<EgovMap> selectMonthCombo(Map<String, Object> params);
 	
 	
 	List<EgovMap> selectStockCtgrySummary(Map<String, Object> params);	 

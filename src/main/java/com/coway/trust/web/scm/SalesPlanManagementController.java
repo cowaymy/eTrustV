@@ -182,6 +182,15 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(selectPeriodByYearList);
 	}
 	
+	@RequestMapping(value = "/selectMonthCombo.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMonthCombo(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectMonthComboList : {}", params.toString());
+		
+		List<EgovMap> selectMonthCombo = salesPlanMngementService.selectMonthCombo(params);
+		return ResponseEntity.ok(selectMonthCombo);
+	}
+	
 	@RequestMapping(value = "/selectScmTeamCode.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScmTeamCodeList(@RequestParam Map<String, Object> params) {
 		Precondition.checkNotNull(params.get("codeMasterId"),

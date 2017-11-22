@@ -98,6 +98,35 @@ public class PoManagementController {
 		
 	}	
 	
+	@RequestMapping(value = "/savePOIssuItem.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updatePOIssuItem(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO)
+	{
+		List<Map<String, Object>> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		LOGGER.info("InsUpdPoIssueItem_수정 >> Add_Size: {}, params: {}", addList.size(), params.toString());
+		
+		if (addList.size() > 0) 
+		{
+			// Step1. Update SCMPrePOItem   Step2. Insert SCMPODetail
+			tmpCnt = poMngementService.updatePOIssuItem(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+
+		// 콘솔로 찍어보기
+		LOGGER.info("InsUpdPoIssueItem_카운트 : {}", totCnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}	
+	
 	   /**************************************/
 	   /************* PO Approval*************/
 	   /**************************************/
