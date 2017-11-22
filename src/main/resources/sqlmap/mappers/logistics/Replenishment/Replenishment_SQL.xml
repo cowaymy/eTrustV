@@ -130,7 +130,7 @@
 			      AND SY26.STK_TYPE_ID = #{sttype}
 			     </when>
 			     <otherwise>
-			     AND SY26.STK_TYPE_ID IN(62,63)
+			     AND SY26.STK_TYPE_ID IN (62,63)
 			     </otherwise>
 			</choose>
 		   <if test="slocgb != null and slocgb !=''">
@@ -203,4 +203,28 @@
             </choose>
     </select>
     
+    <select id="PopCheck" parameterType="Map" resultType="EgovMap">
+    SELECT MAX (CNT1) LOCCHCK
+              ,MAX (CNT2) ITMCHCK
+      FROM (SELECT COUNT (WH_LOC_CODE) CNT1
+                          ,0 CNT2
+                  FROM SYS0028M
+                WHERE WH_LOC_CODE = #{loccd}
+                    AND WH_LOC_GB IN
+                    <choose>
+		                 <when test="chckLoc  eq 'RDC'.toString()">
+		                  ('02', '05')
+		                 </when>
+		                 <otherwise>
+		                  ('03', '04')
+		                 </otherwise>
+		            </choose>
+               UNION
+               SELECT 0 CNT1
+                           ,COUNT (STK_CODE) CNT2
+                 FROM SYS0026M
+               WHERE STK_CODE = #{itmcd}
+                   AND STK_TYPE_ID IN (62, 63) 
+                   )
+    </select>
 </mapper>

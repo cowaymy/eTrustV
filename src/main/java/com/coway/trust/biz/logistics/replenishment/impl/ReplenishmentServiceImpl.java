@@ -78,10 +78,16 @@ public class ReplenishmentServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return replenishment.searchListRdc(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> searchAutoCTList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return replenishment.searchAutoCTList(params);
+	}
+
+	@Override
+	public List<EgovMap> PopCheck(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return replenishment.PopCheck(params);
 	}
 }

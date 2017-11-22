@@ -118,7 +118,8 @@ $(function(){
         SearchListAjax();
     });
     $("#clear").click(function(){
-    	$("#searchForm")[0].reset();
+    	//$("#searchForm")[0].reset();
+    	searchFormReset();
     });
     $("#sttype").change(function(){
        
@@ -134,7 +135,9 @@ $(function(){
     $('#save').click(function(){
     	var dat = GridCommon.getEditData(listGrid);
         Common.ajax("POST", "/logistics/replenishment/relenishmentSave.do", dat, function(result) {
-            Common.alert(result.message , SearchListAjax2);
+            //Common.alert(result.message , SearchListAjax2);
+            Common.alert(result.message);
+            SearchListAjax2("M");
         },  function(jqXHR, textStatus, errorThrown) {
             try {
             } catch (e) {
@@ -144,20 +147,54 @@ $(function(){
         });
     });
     $('#popsave').click(function(){
-    	
-        var param = $('#popForm').serializeJSON();
+
+    	var param = $('#popForm').serializeJSON();
         
         if (validationchk()){
-	        Common.ajax("POST", "/logistics/replenishment/relenishmentPopSave.do", param, function(result) {
-	        	Common.alert(result.message , SearchListAjax2);
-	        	$("#giopenwindow").hide();
-	        },  function(jqXHR, textStatus, errorThrown) {
-	            try {
-	            } catch (e) {
-	            }
-	
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	        });
+        	var valChck=true;
+        	var str="";
+        	$.extend(param,{'chckLoc':'RDC'});//강제세팅함 
+        	 Common.ajax("POST", "/logistics/replenishment/PopCheck.do", param, function(result) {
+                 //Common.alert(result.message , SearchListAjax2);
+                 console.log(result);
+                 var data = result.data;
+                 if(0==data[0].itmchck & 0==data[0].locchck){
+                	 valChck=false;
+                	 str +=" RDC at Location, filter or spare-part in Meterial .";
+                 }else if(1==data[0].itmchck & 0==data[0].locchck){
+                	 str +=" RDC at Location. ";
+                	 valChck=false;
+                 }else if(0==data[0].itmchck & 1==data[0].locchck){
+                	 str +=" filter or spare-part in Meterial. ";
+                	 valChck=false;
+                 }
+                 
+                 if(valChck){
+			        Common.ajax("POST", "/logistics/replenishment/relenishmentPopSave.do", param, function(result) {
+			        	//Common.alert(result.message , SearchListAjax2);
+			            Common.alert(result.message);
+			            SearchListAjax2("P");
+			        	$("#giopenwindow").hide();
+			        },  function(jqXHR, textStatus, errorThrown) {
+			            try {
+			            } catch (e) {
+			            }
+			
+			            Common.alert("Fail : " + jqXHR.responseJSON.message);
+			        });  
+                	 
+                 }else{
+                	 Common.alert("Please Input "+str);
+                 }
+             },  function(jqXHR, textStatus, errorThrown) {
+                 try {
+                 } catch (e) {
+                 }
+     
+                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+             });
+        	
+        	
         }else{
         	return false;
         }
@@ -405,7 +442,8 @@ function fn_detail(data){
                     maxqty   : data.MAXQTY,
                     reordqty : data.REORDQTY,
                     sftyqty  : data.SFTYQTY,
-                    avrqty   : 0
+                    avrqty   : 0,
+                    planqty   : data.PlANNEDQTY // rdc 용 추가함
 		        }
 				iCnt++;
 			}
@@ -425,8 +463,12 @@ function SearchListAjax() {
         
     });
 }
-function SearchListAjax2() {
-	   
+function SearchListAjax2(str) {
+	if("P"==str){
+		$("#searchForm")[0].reset();
+		$("#speriod").val($("#period").val());
+	} 
+	
     var url = "/logistics/replenishment/searchListRdc.do";
     var param = $('#searchForm').serializeJSON();
     console.log(param);
@@ -434,6 +476,10 @@ function SearchListAjax2() {
         AUIGrid.setGridData(listGrid, data.data);
         
     });
+}
+
+function searchFormReset(){
+	$("#searchForm")[0].reset();
 }
 
 </script>
