@@ -158,17 +158,16 @@
 //    }
 </script>
 
-<section id="content"><!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
-</ul>
+<div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Order Investigation Request</h2>
-</aside><!-- title_line end -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>Order Investigation Request</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" method="GET">
@@ -271,4 +270,7 @@
     <li><p class="btn_blue"><a href="#" onClick="fn_reqInvest()">Request Investigate</a></p></li>
 </ul>
 </div>
-</section><!-- content end -->
+
+</section><!-- container end -->
+
+</div><!-- popup_wrap end -->
