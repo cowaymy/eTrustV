@@ -484,4 +484,11 @@ public interface CommonPaymentMapper {
 	 * @return
 	 */
 	int insertTmpNormalPaymentInfo(Map<String, Object>params);
+	
+	/**
+	 * NormalPayment 처리 프로시저 처리
+	 * @param params
+	 * @return
+	 */
+	int processNormalPayment(Map<String, Object> params);
 }

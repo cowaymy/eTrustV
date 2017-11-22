@@ -1134,7 +1134,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
   	 * @return
   	 * 
   	 */
-    public void saveNormalPayment(Map<String, Object>paramMap, List<Object>paramList){
+    public void saveNormalPayment(Map<String, Object>paramMap, List<Object>paramList, int key){
     	
     	//시퀀스 조회
     	Integer seq = commonPaymentMapper.getPayTempSEQ();
@@ -1160,5 +1160,12 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     			commonPaymentMapper.insertTmpBillingInfo(hm);    			
     		}
     	}
+    	
+    	Map<String, Object> procedureInfo = new HashMap<String, Object>();
+    	procedureInfo.put("seq", seq);
+    	procedureInfo.put("userid", paramMap.get("userid"));
+    	procedureInfo.put("key", key);
+    	
+    	commonPaymentMapper.processNormalPayment(procedureInfo);
     }
 }

@@ -297,8 +297,8 @@ public class CommonPaymentController {
 		formInfo.put("isFundTransfer", false);
 		formInfo.put("skipRecon", false);
 		formInfo.put("payItemCardTypeId", 0);
-
-		commonPaymentService.saveNormalPayment(formInfo, gridList);
+		
+		commonPaymentService.saveNormalPayment(formInfo, gridList, key);
 		
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();
