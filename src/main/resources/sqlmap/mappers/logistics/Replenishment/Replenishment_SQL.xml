@@ -139,4 +139,63 @@
            </if>
 			   ORDER BY LG77.LOC_CODE    
     </select>
+    
+    <select id="searchAutoCTList" parameterType="Map" resultType="egovMap">
+                select ROWNUM          AS rnum
+                 , to_char(to_date(L77.PERIOD , 'yyyymm') , 'mm/yyyy')      AS period  
+                 , S28.WH_LOC_ID      AS locid
+                 , L77.LOC_CODE    AS loccd
+                 , S28.WH_LOC_DESC AS locnm
+                 , L77.STK_CODE    AS itmcd
+                 , S26.STK_DESC    AS itmnm
+                 , S13.CODE        AS locgb
+                 , L77.MAX_QTY     AS maxqty
+                 , L77.REORD_QTY   AS reordqty
+                 , L77.SFTY_QTY    AS sftyqty
+                 ,nvl(T1.AverageQty,0) AS avgqty
+                ,O01.MEM_CODE AS ct_No
+                ,O01.NAME AS ct_Name
+                , (SELECT CODE_NAME
+                           FROM SYS0013M
+                          WHERE CODE_ID = S26.STK_TYPE_ID) STK_TYPE_NAME
+              from LOG0077M L77 ,
+                   SYS0028M S28 , 
+                   SYS0026M S26 ,
+                   ORG0001D O01,
+                   (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 339) S13,
+                   (SELECT STORG_LOC , MATRL_NO ,  MAX(BB) + MAX(AA) AS AverageQty
+                      FROM (
+                        SELECT L60.STORG_LOC , L60.MATRL_NO ,  L60.DEBT_CRDIT_INDICT  , SUM(L60.QTY) QTY,
+                               NVL(DECODE( L60.DEBT_CRDIT_INDICT , 'H' , NVL(SUM(L60.QTY) , 0)*-1),0) AA , NVL(DECODE( L60.DEBT_CRDIT_INDICT , 'S' , NVL(SUM(L60.QTY),0)*1),0) BB
+                          FROM LOG0059M L59 , LOG0060D L60 
+                         WHERE TO_DATE(L59.DOC_DT,'YYYYMMDD') BETWEEN ADD_MONTHS(TO_DATE(to_char(to_date(#{searchperiod},'mm/yyyy') , 'yyyymm'),'YYYYMM') , -3) AND (TO_DATE(to_char(to_date(#{searchperiod},'mm/yyyy') , 'yyyymm'),'YYYYMM') -1)
+                           AND L59.MATRL_DOC_NO = L60.MATRL_DOC_NO
+                           AND L59.TRNSC_TYPE_CODE = 'OD'
+                        GROUP BY L60.STORG_LOC , L60.MATRL_NO , L60.DEBT_CRDIT_INDICT
+                    )
+                 GROUP BY STORG_LOC , MATRL_NO
+                ORDER BY STORG_LOC , MATRL_NO)T1              
+             WHERE 1 = 1
+               AND S28.WH_LOC_GB = S13.CODE
+               AND L77.LOC_CODE = S28.WH_LOC_CODE
+               AND L77.STK_CODE = S26.STK_CODE
+               AND L77.STK_CODE = T1.MATRL_NO(+)
+               AND L77.LOC_CODE=T1.STORG_LOC(+) 
+              AND S28.WH_LOC_CODE =O01.MEM_CODE
+           <if test="searchCtNo != null and searchCtNo !=''">
+              AND L77.LOC_CODE = #{searchCtNo}
+           </if>
+           <if test="searchMatCode != null and searchMatCode !=''">
+              AND L77.STK_CODE = #{searchMatCode}
+           </if>
+            <choose>
+                 <when test="searchType != null and searchType !=''">
+                  AND S26.STK_TYPE_ID = #{searchType}
+                 </when>
+                 <otherwise>
+                 AND S26.STK_TYPE_ID IN(62,63)
+                 </otherwise>
+            </choose>
+    </select>
+    
 </mapper>
