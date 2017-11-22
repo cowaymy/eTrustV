@@ -319,6 +319,16 @@
 			SELECT TO_CHAR(SYSDATE,'YYYY') YEAR FROM DUAL
     </select>
 
+    <select id="selectMonthCombo" parameterType="Map" resultType="egovMap">
+      SELECT 
+             SCM_MONTH  
+        FROM SCM0018M 
+       WHERE SCM_YEAR = #{scmYearCbBox}
+         AND WEEK_TH  = #{scmPeriodCbBox} 
+         AND WEEK_TH_SN = 1
+         AND NVL(USE_YN,'Y')='Y'
+    </select>
+
     <select id="selectPeriodByYear" parameterType="Map" resultType="egovMap">
 			SELECT SCM_YEAR   
 			     , WEEK_TH ||'-'|| WEEK_TH_SN ||decode(length(WEEK_TH),1,'  [','[')||TO_CHAR(WEEK_TH_SN_START,'YYYY-MM-DD') || ' ~ ' ||  WEEK_TH_SN_END ||']' SCM_PERIOD  
