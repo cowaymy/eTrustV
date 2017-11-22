@@ -72,6 +72,11 @@ function f_multiCombo() {
             width : '80%'
         });
         
+        $('#rentalStatus').multipleSelect({
+            //selectAll : true, // 전체선택 
+            width : '80%'
+        })
+        
     });
 }
 
