@@ -161,7 +161,7 @@ function changeRowStyleFunction() {
                   var valArray  =new Array();
                   valArray = item.ascnt.split("-");
                   
-                  if(valArray[0] == valArray[1]   ||  valArray[0] > 0 ) {
+                  if(valArray[0] == valArray[1]   ||  valArray[0]  >=  valArray[1]  ) {
                 	  return "my-row-style";
                   }else {
                 	  return "my-row-style-Available";
@@ -175,7 +175,7 @@ function changeRowStyleFunction() {
                   console.log(valArray);
                   
                
-                  if(valArray[0] == valArray[1]  ||  valArray[0] > 0 ) {
+                  if(valArray[0] == valArray[1]  ||  valArray[0]  >=  valArray[1]  ) {
                 	   console.log("my-row-style======>");
                 	   
                       return "my-row-style";
@@ -190,7 +190,7 @@ function changeRowStyleFunction() {
               }else if('RTN'== '${TYPE}'){
             	  var valArray  =new Array();
                   valArray = item.rtncnt.split("-");
-                  if(valArray[0] == valArray[1]  ||  valArray[0] > 0 ) {
+                  if(valArray[0] == valArray[1]  ||  valArray[0]  >=  valArray[1]   ) {
                       return "my-row-style";
                   }else {  
                       return "my-row-style-Available";
