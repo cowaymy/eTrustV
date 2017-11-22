@@ -98,4 +98,35 @@ public class OrderListController {
 		
 		return "sales/order/orderRentToOutrSimulPop";
 	}
+	
+	@RequestMapping(value="/orderRentalPaySettingUpdateListPop.do")
+	public String orderRentalPaySettingUpdateListPop(){
+		
+		return "sales/order/orderRentalPaySettingUpdateListPop";
+	}
+	
+	@RequestMapping(value="/orderSOFListPop.do")
+	public String orderSOFListPop(){
+		
+		return "sales/order/orderSOFListPop";
+	}
+	
+	@RequestMapping(value="/getApplicationTypeList")
+	public ResponseEntity<List<EgovMap>> getApplicationTypeList(@RequestParam Map<String, Object> params) throws Exception{
+	
+		List<EgovMap> applicationTypeList = null;
+		applicationTypeList = orderListService.getApplicationTypeList(params);
+		
+		return ResponseEntity.ok(applicationTypeList);	
+	}
+	
+	@RequestMapping(value="/getUserCodeList")
+	public ResponseEntity<List<EgovMap>> getUserCodeList() throws Exception{
+	
+		List<EgovMap> userCodeList = null;
+		userCodeList = orderListService.getUserCodeList();
+		
+		return ResponseEntity.ok(userCodeList);
+	}
+	
 }
