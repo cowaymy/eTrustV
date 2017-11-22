@@ -248,51 +248,51 @@ public class ServiceApiController {
 	
 	
 	
+//	@ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/heartServiceResult", method = RequestMethod.POST)
+//	public ResponseEntity<HeartServiceResultDto> hsRegistration (@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
+//
+//		String transactionId = "";
+//		List<Map<String, Object>> heartLogs = null;
+//		
+//		// mobile 에서 받은 데이터를 로그 테이블에 insert......
+//		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
+//		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
+//		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+//
+//			heartLogs = new ArrayList<>();
+//			for (HeartServiceResultForm heart : heartForms) {
+//				heartLogs.addAll(heart.createMaps(heart));
+//			}
+//
+//			// List<Map<String, Object>> heartLogs = heartForms.stream().flatMap(r -> r.createMaps(r))
+//			// .collect(Collectors.toList());
+//			MSvcLogApiService.saveHearLogs(heartLogs);
+//
+//			transactionId = heartForms.get(0).getTransactionId();
+//		}
+//
+//		// business service....
+//		// TODO : heartService.xxxx 구현 필요.....
+//		
+//		MSvcLogApiService.resultRegistration(heartLogs);
+//		
+//		// TODO : 리턴할 dto 구현.
+//
+//		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+//			MSvcLogApiService.updateSuccessStatus(transactionId);
+//		}
+//
+//		return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
+//	}
+//	
+	
+	
+	
+	
+	
 	@ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceResult", method = RequestMethod.POST)
-	public ResponseEntity<HeartServiceResultDto> hsRegistration (@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
-
-		String transactionId = "";
-		List<Map<String, Object>> heartLogs = null;
-		
-		// mobile 에서 받은 데이터를 로그 테이블에 insert......
-		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
-		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
-		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-
-			heartLogs = new ArrayList<>();
-			for (HeartServiceResultForm heart : heartForms) {
-				heartLogs.addAll(heart.createMaps(heart));
-			}
-
-			// List<Map<String, Object>> heartLogs = heartForms.stream().flatMap(r -> r.createMaps(r))
-			// .collect(Collectors.toList());
-			MSvcLogApiService.saveHearLogs(heartLogs);
-
-			transactionId = heartForms.get(0).getTransactionId();
-		}
-
-		// business service....
-		// TODO : heartService.xxxx 구현 필요.....
-		
-		MSvcLogApiService.resultRegistration(heartLogs);
-		
-		// TODO : 리턴할 dto 구현.
-
-		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-			MSvcLogApiService.updateSuccessStatus(transactionId);
-		}
-
-		return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
-	}
-	
-	
-	
-	
-	
-	
-	@ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/heartServiceResult_new", method = RequestMethod.POST)
 	public ResponseEntity<HeartServiceResultDto> hsRegistration_new (@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
 
 		String transactionId = "";
@@ -972,7 +972,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-//		MSvcLogApiService.insertProductReturnResult(params);		
+		MSvcLogApiService.updateInsReAppointmentReturnResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
