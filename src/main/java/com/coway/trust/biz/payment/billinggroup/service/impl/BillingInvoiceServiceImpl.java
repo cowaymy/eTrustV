@@ -58,4 +58,10 @@ public class BillingInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectPenaltyBillDate(params);
 	}
+	
+	@Override
+	public int selectOutrightInvoiceListCount(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.selectOutrightInvoiceListCount(params);
+	}
 }

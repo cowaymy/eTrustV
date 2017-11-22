@@ -70,4 +70,11 @@ public interface BillingInvoiceMapper {
 	 * @return 
 	 */
 	List<EgovMap> selectPenaltyBillDate(Map<String, Object> params);
+	
+	/**
+	 * Outright Invoice List Count 조회
+	 * @param params
+	 * @return 
+	 */
+	int selectOutrightInvoiceListCount(Map<String, Object> params);
 }

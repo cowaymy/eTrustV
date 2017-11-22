@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.billinggroup.service.impl.BillingInvoiceMapper">
-
+    
+    <sql id="pagingStart">
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (  
+    </sql>
+    <sql id="pagingEnd">
+         ) Z
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </sql>
+    
     <!-- Reconciliation 리스트 조회 -->
     <select id="selectCompanyInvoiceList" parameterType="Map" resultType="egovMap">
        <![CDATA[
@@ -176,7 +188,8 @@
         ORDER BY Extent4.SALES_ORD_ID DESC 
     </select>
     
-    <select id="selectOutrightInvoiceList" parameterType="Map" resultType="egovMap">        
+    <select id="selectOutrightInvoiceList" parameterType="Map" resultType="egovMap">
+    <include refid="pagingStart" />    
       SELECT 
             DISTINCT Filter1.SALES_ORD_ID SALES_ORD_ID , 
             Filter1.SALES_ORD_NO SALES_ORD_NO , 
@@ -234,10 +247,10 @@
            LEFT JOIN SYS0013M Extent5 ON Filter1.APP_TYPE_ID = Extent5.CODE_ID 
         WHERE 
             1=1 
-            <if test="orderNo != '' " > 
+            <if test="orderNo != '' and orderNo != null" > 
             AND Filter1.SALES_ORD_NO = #{orderNo} 
             </if> 
-            <if test="custName != '' "> 
+            <if test="custName != '' and custName != null"> 
             AND Filter1.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~' 
             </if>
             <if test="appType != '' and appType != null">
@@ -248,8 +261,36 @@
                 )
             </if> 
         ORDER BY Filter1.SALES_ORD_ID DESC
-              
+        <include refid="pagingEnd" />  
     </select>
+    
+    <select id="selectOutrightInvoiceListCount" parameterType="Map" resultType="int">
+        SELECT 
+            COUNT(*)
+            FROM
+                SAL0001D Extent1 
+                JOIN SAL0029D Extent2 ON Extent1.CUST_ID = Extent2.CUST_ID 
+                LEFT JOIN ORG0001D Extent3 ON Extent1.MEM_ID = Extent3.MEM_ID 
+                LEFT JOIN ORG1001V  Extent4 ON Extent3.MEM_ID = Extent4.MEM_ID 
+                        LEFT JOIN SYS0013M Extent5 ON Extent1.APP_TYPE_ID = Extent5.CODE_ID 
+                WHERE 
+                    Extent1.APP_TYPE_ID IN (67,68)
+                    AND  Extent1.STUS_CODE_ID = 4
+                    <if test="orderNo != '' " > 
+		              AND Extent1.SALES_ORD_NO = #{orderNo} 
+		            </if> 
+		            <if test="custName != '' "> 
+		              AND Extent2.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~' 
+		            </if>
+		            <if test="appType != '' and appType != null">
+		              AND Extent1.APP_TYPE_ID IN (
+		                <foreach collection="appType" index="index" separator=",">
+		                    '${appType[index]}'
+		                </foreach>
+		                )
+		            </if> 
+    </select>
+    
     <select id="selectCompanyStatementList" parameterType="Map" resultType="egovMap">
         <![CDATA[
             SELECT DISTINCT Extent1.BILL_ID BILL_ID  ,
