@@ -34,10 +34,12 @@ function fn_generateStatement(){
                 Common.report("reportPDFForm", option);
             
             }else{
-                location.href = "/payment/initTaxInvoiceMiscellaneous.do";              
+            	$("#popup_wrap").remove();
+            	Common.popupDiv("/payment/initTaxInvoiceMiscellaneousPop.do", null, null, true);            
             }
         }else{
-            location.href = "/payment/initTaxInvoiceMiscellaneous.do";
+        	$("#popup_wrap").remove();
+        	Common.popupDiv("/payment/initTaxInvoiceMiscellaneousPop.do", null, null, true);
         }               
         
     });
