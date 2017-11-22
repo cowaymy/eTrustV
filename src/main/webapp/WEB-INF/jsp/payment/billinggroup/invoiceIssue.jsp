@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 
 <script type="text/javaScript">
 
@@ -21,29 +23,29 @@ function fn_makeStatementList(type){
 	//alert(type);
 	if(type == 1 ){
 		$("#statementList option").remove();
-		$("#statementList").append("<option value='initCompanyStatement.do'>CompanyStatement</option>");
-		$("#statementList").append("<option value='initCompanyInvoice.do'>CompanyInvoice</option>");
-		$("#statementList").append("<option value='initIndividualRentalStatement.do'>IndivisualStatement</option>");
-		$("#statementList").append("<option value='initProformaInvoice.do'>ProformaInvoice</option>");
-		$("#statementList").append("<option value='initOutrightInvoice.do'>OutrightInvoice</option>");
-		$("#statementList").append("<option value='initPenaltyInvoice.do'>PenaltyInvoice</option>");
-		$("#statementList").append("<option value='initMembershipInvoice.do'>MembershipInvoice</option>");
+		$("#statementList").append("<option value='initCompanyStatementPop.do'>CompanyStatement</option>");
+		$("#statementList").append("<option value='initCompanyInvoicePop.do'>CompanyInvoice</option>");
+		$("#statementList").append("<option value='initIndividualRentalStatementPop.do'>IndivisualStatement</option>");
+		$("#statementList").append("<option value='initProformaInvoicePop.do'>ProformaInvoice</option>");
+		$("#statementList").append("<option value='initOutrightInvoicePop.do'>OutrightInvoice</option>");
+		$("#statementList").append("<option value='initPenaltyInvoicePop.do'>PenaltyInvoice</option>");
+		$("#statementList").append("<option value='initMembershipInvoicePop.do'>MembershipInvoice</option>");
 	}else if(type==2){
 		$("#statementList option").remove();
-		$("#statementList").append("<option value='initTaxInvoiceRental.do'>TaxInvoice(Rental)</option>");
-		$("#statementList").append("<option value='initTaxInvoiceOutright.do'>TaxInvoice(Outright)</option>");
-		$("#statementList").append("<option value='initTaxInvoiceMembership.do'>TaxInvoice(Membership)</option>");
-		$("#statementList").append("<option value='initTaxInvoiceRenMembership.do'>TaxInvoice(Rental Membership)</option>");
-		$("#statementList").append("<option value='initTaxInvoiceMiscellaneous.do'>TaxInvoice(Miscellaneous)</option>");
-		$("#statementList").append("<option value='initStatementCompanyRental.do'>Statement Company(Rental)</option>");
+		$("#statementList").append("<option value='initTaxInvoiceRentalPop.do'>TaxInvoice(Rental)</option>");
+		$("#statementList").append("<option value='initTaxInvoiceOutrightPop.do'>TaxInvoice(Outright)</option>");
+		$("#statementList").append("<option value='initTaxInvoiceMembershipPop.do'>TaxInvoice(Membership)</option>");
+		$("#statementList").append("<option value='initTaxInvoiceRenMembershipPop.do'>TaxInvoice(Rental Membership)</option>");
+		$("#statementList").append("<option value='initTaxInvoiceMiscellaneousPop.do'>TaxInvoice(Miscellaneous)</option>");
+		$("#statementList").append("<option value='initStatementCompanyRentalPop.do'>Statement Company(Rental)</option>");
 	}
 }
 
 function fn_goSelectedPage() {        
+	var url = "/payment/" + $('#statementList').val();
+    Common.popupDiv(url, null, null, true,"");
 	
-	location.href='/payment/' + $("#statementList").val();
 }
-
 
 </script>
 
@@ -61,7 +63,7 @@ function fn_goSelectedPage() {
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Invoice Issue</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_goSelectedPage();">go</a></p></li>            
+            <li><p class="btn_blue"><a href="#" onclick ="javascript:fn_goSelectedPage()">Go</a></p></li>            
         </ul>    
     </aside>
     <!-- title_line end -->
@@ -79,7 +81,7 @@ function fn_goSelectedPage() {
                 </colgroup>
                 <tbody>
                 <tr>
-                    <th>TexType</th>
+                    <th>Type</th>
                     <td>
 				        <label><input type="radio" name="gstType" id="gstType1" value="1" /><span>Before GST</span></label>
 				        <label><input type="radio" name="gstType" id="gstType2" value="2" /><span>After GST</span></label>

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,7 @@ import com.coway.trust.biz.eAccounting.budget.BudgetService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.google.gson.Gson;
@@ -60,6 +62,83 @@ public class BudgetController {
 	@Autowired
 	private FileService fileService;
 
+	@Autowired
+	private SessionHandler sessionHandler;
+
+
+	@RequestMapping(value = "/budgetControlMaster.do")
+	public String selectBudgetControlList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		return "eAccounting/budget/budgetControlMaster";
+	}
+	
+	@RequestMapping(value = "/selectBudgetControlList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectBudgetControlList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		List<EgovMap> budgetControlList = null;
+		budgetControlList = budgetService.selectBudgetControlList(params);
+		return ResponseEntity.ok(budgetControlList);
+	}
+	
+	@RequestMapping(value = "/budgetSystemMaintenance.do")
+	public String selectBudgetSysList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		return "eAccounting/budget/budgetSystemMaintenance";
+	}
+	
+	@RequestMapping(value = "/selectBudgetSysMaintenanceList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectBudgetSysList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		List<EgovMap> selectBudgetSysMaintenanceList = null; 
+		selectBudgetSysMaintenanceList = budgetService.selectBudgetSysMaintenanceList(params);
+		
+		return ResponseEntity.ok(selectBudgetSysMaintenanceList);
+	}
+	
+	@RequestMapping(value = "/selectBudgetMonth", method = RequestMethod.GET)
+	public ResponseEntity<String> selectBudgetMonth(@RequestParam Map<Integer, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		int month = 0;
+		month = budgetService.selectBudgetMonth(params);
+		String message = Integer.toString(month);
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/saveBudgetSysMaintGrid.do", method = RequestMethod.POST)
+	public  ResponseEntity<ReturnMessage>  saveBudgetSysMaintGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+
+		String dt = CommonUtils.getNowDate();	
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="1000000000";			
+		}else{
+			loginId=String.valueOf(sessionVO.getUserId());
+		}
+		
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		
+		int cnt = 0;
+		
+		if (addList.size() > 0) {			
+			cnt = budgetService.addBudgetSysMaintGrid(addList, loginId);
+		}
+		if (udtList.size() > 0) {
+			cnt = budgetService.udtBudgetSysMaintGrid(udtList,loginId);
+		}
+		
+		model.addAttribute("searchDt", dt);
+		//model.addAttribute("year",  Integer.parseInt(dt.substring(3)));
+		//model.addAttribute("month", Integer.parseInt(dt.substring(0,2)));
+		
+		//logger.info("수정 : {}", udtList.toString());
+		//logger.info("추가 : {}", addList.toString());
+		//logger.info("삭제 : {}", delList.toString());
+		//logger.info("카운트 : {}", cnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
 	
 	@RequestMapping(value = "/monthlyBudgetList.do")
 	public String monthlyBudgetList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{

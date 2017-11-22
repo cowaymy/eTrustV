@@ -8,7 +8,17 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("budgetMapper")
 public interface BudgetMapper {
-
+	
+	List<EgovMap> selectBudgetControlList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectBudgetSysMaintenanceList(Map<String, Object> params) throws Exception;
+	
+	int selectBudgetMonth(Map<Integer, Object> params) throws Exception;
+	
+	int addBudgetSysMaintGrid(Map<String, Object> params);
+	
+	int udtBudgetSysMaintGrid(Map<String, Object> params);
+	
 	List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception;
 	
 	EgovMap selectAvailableBudgetAmt( Map<String, Object> params) throws Exception;

@@ -41,9 +41,9 @@ public class BillingTaxInvoiceController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initTaxInvoiceRental.do")
+	@RequestMapping(value = "/initTaxInvoiceRentalPop.do")
 	public String initTaxInvoiceRental(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/billinggroup/taxInvoiceRental";
+		return "payment/billinggroup/taxInvoiceRentalPop";
 	}
 	
 	/**
@@ -79,9 +79,9 @@ public class BillingTaxInvoiceController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initTaxInvoiceOutright.do")
+	@RequestMapping(value = "/initTaxInvoiceOutrightPop.do")
 	public String initTaxInvoiceOutright(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/billinggroup/taxInvoiceOutright";
+		return "payment/billinggroup/taxInvoiceOutrightPop";
 	}
 	
 	/**
@@ -112,9 +112,9 @@ public class BillingTaxInvoiceController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initTaxInvoiceMembership.do")
+	@RequestMapping(value = "/initTaxInvoiceMembershipPop.do")
 	public String initTaxInvoiceMembership(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/billinggroup/taxInvoiceMembership";
+		return "payment/billinggroup/taxInvoiceMembershipPop";
 	}
 	
 	/**
@@ -145,9 +145,9 @@ public class BillingTaxInvoiceController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initTaxInvoiceRenMembership.do")
+	@RequestMapping(value = "/initTaxInvoiceRenMembershipPop.do")
 	public String initTaxInvoiceRenMembership(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/billinggroup/taxInvoiceRenMembership";
+		return "payment/billinggroup/taxInvoiceRenMembershipPop";
 	}
 	
 	/**
@@ -182,9 +182,9 @@ public class BillingTaxInvoiceController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initTaxInvoiceMiscellaneous.do")
+	@RequestMapping(value = "/initTaxInvoiceMiscellaneousPop.do")
 	public String initTaxInvoiceMiscellaneous(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/billinggroup/taxInvoiceMiscellaneous";
+		return "payment/billinggroup/taxInvoiceMiscellaneousPop";
 	}
 	
 	/**
@@ -215,9 +215,9 @@ public class BillingTaxInvoiceController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initStatementCompanyRental.do")
+	@RequestMapping(value = "/initStatementCompanyRentalPop.do")
 	public String initStatementCompanyRental(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/billinggroup/statementCompanyRental";
+		return "payment/billinggroup/statementCompanyRentalPop";
 	}
 	
 	/**

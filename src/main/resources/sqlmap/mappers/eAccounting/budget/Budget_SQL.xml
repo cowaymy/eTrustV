@@ -2,6 +2,148 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.eAccounting.budget.impl.BudgetMapper">
 <!--                  ,(select user_name from SYS0047M where user_id = CRT_USER_ID)   -->
+
+<select id="selectBudgetControlList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+SELECT COST_CENTR
+      ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = FCM0104D.COST_CENTR AND END_DT > (SELECT SYSDATE FROM DUAL))COST_CENTER_TEXT
+      ,BUDGET_CODE
+      ,(SELECT BUDGET_CODE_TEXT FROM FCM0010M B WHERE B.BUDGET_CODE = FCM0104D.BUDGET_CODE AND END_DT > (SELECT SYSDATE FROM DUAL))BUDGET_CODE_TEXT
+      ,GL_ACC_CODE
+      ,(SELECT GL_ACC_DESC FROM FCM0009M C WHERE C.GL_ACC_CODE = FCM0104D.GL_ACC_CODE)GL_ACC_DESC
+      ,(CASE
+      WHEN CNTRL_TYPE='Y' THEN 'Budget Control'
+      WHEN CNTRL_TYPE='N' THEN 'Budget Not Control'
+      END)CNTRL_TYPE
+FROM FCM0104D
+WHERE 1=1
+]]>
+<if test="costCentr != null and costCentr != '' ">
+AND COST_CENTR = #{costCentr}
+</if>
+</select>
+
+<select id="selectBudgetSysMaintenanceList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+SELECT BUDGET_YEAR
+      ,(CASE
+      WHEN BUDGET_MONTH=1 THEN 'JAN'
+      WHEN BUDGET_MONTH=2 THEN 'FAB'
+      WHEN BUDGET_MONTH=3 THEN 'MAR'
+      WHEN BUDGET_MONTH=4 THEN 'APR'
+      WHEN BUDGET_MONTH=5 THEN 'MAY'
+      WHEN BUDGET_MONTH=6 THEN 'JUN'
+      WHEN BUDGET_MONTH=7 THEN 'JUL'
+      WHEN BUDGET_MONTH=8 THEN 'AUG'
+      WHEN BUDGET_MONTH=9 THEN 'SEP'
+      WHEN BUDGET_MONTH=10 THEN 'OCP'
+      WHEN BUDGET_MONTH=11 THEN 'NOV'
+      WHEN BUDGET_MONTH=12 THEN 'DEC'
+      END)BUDGET_MONTH
+      ,(CASE
+      WHEN BUDGET_STUS='Y' THEN 'Locked'
+      WHEN BUDGET_STUS='N' THEN 'Open'
+      END)BUDGET_STUS
+FROM FCM0106M
+WHERE 1=1
+]]>
+<if test="searchDt != null and searchDt != '' ">
+AND BUDGET_YEAR = #{searchDt}
+</if>
+</select>
+
+<select id="selectBudgetMonth" parameterType = "Map" resultType = "int">
+SELECT MAX(BUDGET_MONTH)
+FROM FCM0106M
+WHERE BUDGET_YEAR = #{searchDt}
+</select>
+
+
+<insert id="addBudgetSysMaintGrid" parameterType="Map">
+INSERT INTO FCM0106M (
+ BUDGET_YEAR,
+ BUDGET_MONTH,
+ BUDGET_STUS,
+ CRT_DT,
+ CRT_USER_ID,
+ UPD_DT,
+ UPD_USER_ID
+)
+VALUES (
+ #{budgetYear},
+ <if test="budgetMonth == 'JAN'">
+ 1,
+ </if>
+ <if test="budgetMonth == 'FEB'">
+ 2,
+ </if>
+ <if test="budgetMonth == 'MAR'">
+ 3,
+ </if>
+ <if test="budgetMonth == 'APR'">
+ 4,
+ </if>
+ <if test="budgetMonth == 'MAY'">
+ 5,
+ </if>
+ <if test="budgetMonth == 'JUN'">
+ 6,
+ </if>
+ <if test="budgetMonth == 'JUL'">
+ 7,
+ </if>
+ <if test="budgetMonth == 'AUG'">
+ 8,
+ </if>
+ <if test="budgetMonth == 'SEP'">
+ 9,
+ </if>
+ <if test="budgetMonth == 'OCT'">
+ 10,
+ </if>
+ <if test="budgetMonth == 'NOV'">
+ 11,
+ </if>
+ <if test="budgetMonth == 'DEC'">
+ 12,
+ </if>
+ #{budgetStus},
+SYSDATE,
+#{crtUserId},
+SYSDATE,
+#{crtUserId}
+)
+</insert>
+ <update id="udtBudgetSysMaintGrid">  
+MERGE INTO FCM0106M F0
+USING DUAL
+ ON (F0.BUDGET_YEAR = #{budgetYear} AND F0.BUDGET_MONTH = #{budgetMonth})
+WHEN MATCHED THEN
+  UPDATE
+  SET BUDGET_STUS = #{budgetStus}
+      , UPD_DT = SYSDATE
+      , UPD_USER_ID = #{crtUserId}
+WHEN NOT MATCHED THEN
+  INSERT (
+      BUDGET_YEAR,
+      BUDGET_MONTH,
+      BUDGET_STUS,
+      CRT_DT,
+      CRT_USER_ID,
+      UPD_DT,
+      UPD_USER_ID
+  )
+  VALUES (
+      #{budgetYear},
+      #{budgetMonth},
+      #{budgetStus},
+      SYSDATE,
+      #{crtUserId},
+      SYSDATE,
+      #{crtUserId}
+  )
+</update>
+
  <select id="selectMonthlyBudgetList" parameterType="Map" resultType="egovMap">
 SELECT   BUDGET_PLAN_YEAR , 
          COST_CENTR , 
