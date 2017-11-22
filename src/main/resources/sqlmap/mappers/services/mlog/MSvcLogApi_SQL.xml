@@ -31,7 +31,7 @@
 						  , K.FAIL_RESN_ID AS fail_Reason_Code
 						  , A.NO AS service_No
 						  , A.STUS_CODE_ID AS job_Status
-						  , A.APPNT_DT as appointment_Date
+				     	  , A.APPNT_DT as appointment_Date
 						  , A.APPNT_TM as appointment_Time
 						  , A.YEAR as   plan_Year
 						  , A.MONTH as plan_Month
@@ -43,15 +43,15 @@
 						  , J.RESULT_CUST_NAME as result_Cust_Name
 						  , J.RESULT_REP_EMAIL_NO as result_Report_Email_No
 						  , J.RESULT_ACEPT_NAME as result_Acceptance_Name
-						  , P.CODE_ID as payment_Mode
+						  , to_char(P.CODE_ID) as payment_Mode
 						  , P.CODE_NAME as payment_ModeName
 						  , Q.ADDR_DTL as install_Address
-						  , R.SRV_DUR as contract_Duration
+						  , to_char(R.SRV_DUR) as contract_Duration
 						  , to_char(R.SRV_EXPR_DT,'YYYYMMDD') as Membership_Contract_Expiry
 						  , S.STUS_CODE_ID as rental_Status
 						  , A.REM as result_Remark
 						  , K.REN_COLCT_ID as rc_Code
-						  , 'AS' as job_Type
+						  , 'AS' as job_Type 
 						  , '1' as job_Session
 						  , '1' as checkIn_Date
 						  , '1' as checkIn_Time
