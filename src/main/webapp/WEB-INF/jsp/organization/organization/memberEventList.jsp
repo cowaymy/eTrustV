@@ -260,9 +260,9 @@ function f_info(data , v){
         <option value="749">Group Transfer</option>
         <option value="757">Terminate</option>
         <option value="758">Resign</option>
-        <!--By KV - add 2 type request Type  -->
+        <!--By KV - add 1 type request Type  -->
         <option value="2740">Vacation</option>
-        <option value="2741"> Confirmation Member</option>
+
 
      </select>
     </td>
