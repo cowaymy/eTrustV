@@ -157,7 +157,7 @@ $(function(){
     });
     $('#searchlocgrade').change(function(){
     	var searchlocgb = $('#searchlocgb').val();
-    	console.log(searchlocgb.length);
+    	
     	var locgbparam = "";
     	for (var i = 0 ; i < searchlocgb.length ; i++){
     		if (locgbparam == ""){
@@ -166,10 +166,27 @@ $(function(){
     			locgbparam = locgbparam +"∈"+searchlocgb[i]; 
     		}
     	}
-    	console.log(locgbparam);
+    	
     	var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
     	doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiCombo');
-    });    
+    });
+    $('#searchlocgb').change(function(){
+        if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
+        	var searchlocgb = $('#searchlocgb').val();
+            
+            var locgbparam = "";
+            for (var i = 0 ; i < searchlocgb.length ; i++){
+                if (locgbparam == ""){
+                    locgbparam = searchlocgb[i];
+                }else{
+                    locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                }
+            }
+            
+            var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+            doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiCombo');
+        }
+    });
 });
 
 function SearchSessionAjax() {
