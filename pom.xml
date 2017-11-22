@@ -18,6 +18,8 @@
 		<jackson.library>2.7.5</jackson.library>
 		<swagger.version>2.2.2</swagger.version>
 		<webinf-lib>${project.basedir}/src/main/webapp/WEB-INF/lib</webinf-lib>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<repositories> 
@@ -523,7 +525,7 @@
 						<rulesets>
 							<ruleset>${project.basedir}/src/main/resources/pmd/EgovInspectionRules_kor-3.5.xml</ruleset>
 						</rulesets>
-						<sourceEncoding>utf-8</sourceEncoding>
+						<sourceEncoding>UTF-8</sourceEncoding>
 						<includeTests>false</includeTests>
 						<excludes>
 							<exclude>**/com/coway/trust/cmmn/**/*.java</exclude>
