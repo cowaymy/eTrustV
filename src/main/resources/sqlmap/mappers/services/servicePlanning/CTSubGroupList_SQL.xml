@@ -4,7 +4,7 @@
 
 <select id="selectCTSubGroupList" parameterType="Map" resultType="egovMap">
 	SELECT 
-        A.CODE, B.NAME, E.MEM_CODE, E.MEM_ID,D.CT_SUB_GRP, D.LAST_GRP_CODE
+        A.CODE, B.NAME, E.MEM_CODE || ' - ' || E.NAME MEM_CODE, E.MEM_ID,D.CT_SUB_GRP, D.LAST_GRP_CODE
         FROM SYS0005M A
         INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
         INNER JOIN ORG0005D C ON C.MEM_ID = B.MEM_ID AND C.MEM_LVL = '2'

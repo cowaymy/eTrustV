@@ -43,7 +43,7 @@ function CTSubgGroupGrid() {
         dataField : "memCode",
         headerText : "CT",
         editable : false,
-        width : 130
+        width : 280
     }, {
         dataField : "memId",
         headerText : "memId",
