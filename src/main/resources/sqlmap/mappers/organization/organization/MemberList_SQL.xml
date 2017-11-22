@@ -1122,6 +1122,26 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        </if>
     </select>
 
+<select id="selectLastGroupCode" parameterType="Map" resultType="String">
+
+     <!--   <choose>
+	    <when test="divParam == 1">
+	       SELECT distinct Dept_code FROM ORG0001D mem
+           join ORG0005D memorg on memorg.MEM_ID = MEM.MEM_ID
+           where MEMORG.mem_up_id = #{memberUpId}
+	    </when>
+	    SELECT distinct Dept_code FROM ORG0001D mem
+           join ORG0005D memorg on memorg.MEM_ID = MEM.MEM_ID
+           where MEMORG.Dept_code = #{memberUpId} and MEMORG.MEM_LVL = 3
+	    <when>
+	    </when>
+	    <otherwise>
+	       SELECT distinct Dept_code FROM ORG0001D mem
+	       join ORG0005D memorg on memorg.MEM_ID = MEM.MEM_ID
+	       where MEMORG.Dept_code = #{memberUpId} and MEMORG.MEM_LVL = 3
+	    </otherwise>
+	  </choose>-->
+    </select>
 
     <select id="selectHpDocSubmission" parameterType="Map" resultType="egovMap">
       <![CDATA[
