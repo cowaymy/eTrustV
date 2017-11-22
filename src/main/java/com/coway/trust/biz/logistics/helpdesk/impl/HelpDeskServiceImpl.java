@@ -74,8 +74,14 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 
 		int insApprovalStatus = Integer.parseInt((String) RespondMap.get("insApprovalStatus"));
 		String defaultDate = "19000101";
+		int DCFReqStatusID = insApprovalStatus == 6 ? 10 : insApprovalStatus == 36 ? 34 : 0;	
+		int DCFReqProStatusID = insApprovalStatus != 61 ? insApprovalStatus : 0;
+		
 		String todate = insApprovalStatus != 61 ? CommonUtils.getNowDate() : defaultDate;
-
+		
+		Logger.debug("DCFReqStatusID  ????       : {}", DCFReqStatusID);
+		Logger.debug("DCFReqProStatusID  ????       : {}", DCFReqProStatusID);
+		
 		int dcfReqStusId = 0;
 		int dcfReqProStusId = 0;
 		String dcfReqNo = "";
@@ -100,6 +106,8 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 			updateDcfRequestMap.put("crtuser_id", loginId);
 			updateDcfRequestMap.put("upuser_id", loginId);
 			updateDcfRequestMap.put("dcfReqAppvRem", RespondMap.get("insApprovalRemark"));
+			updateDcfRequestMap.put("DCFReqStatusID", DCFReqStatusID);
+			updateDcfRequestMap.put("DCFReqProStatusID", DCFReqProStatusID);
 			updateDcfRequestMap.put("insApprovalStatus", insApprovalStatus);
 			updateDcfRequestMap.put("insReason", RespondMap.get("insReason"));
 			updateDcfRequestMap.put("reqId", RespondMap.get("reqId"));
