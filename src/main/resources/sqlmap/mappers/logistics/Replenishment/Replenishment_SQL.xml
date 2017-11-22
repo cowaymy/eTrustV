@@ -163,6 +163,7 @@
                 , (SELECT CODE_NAME
                            FROM SYS0013M
                           WHERE CODE_ID = S26.STK_TYPE_ID) STK_TYPE_NAME
+                ,TO_CHAR(L77.CRT_DT,'DD/MM/YYYY') CRT_DT
               from LOG0077M L77 ,
                    SYS0028M S28 , 
                    SYS0026M S26 ,
@@ -192,6 +193,9 @@
            </if>
            <if test="searchMatCode != null and searchMatCode !=''">
               AND L77.STK_CODE = #{searchMatCode}
+           </if>
+           <if test="searchperiod != null and searchperiod !=''">
+              AND L77.PERIOD = to_char(to_date(#{searchperiod},'mm/yyyy') , 'yyyymm')
            </if>
             <choose>
                  <when test="searchType != null and searchType !=''">
