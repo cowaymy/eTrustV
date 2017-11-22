@@ -116,7 +116,7 @@ $(function(){
     	var dat = GridCommon.getEditData(listGrid);
 
        if(updCnt <= 0) {
-    		 Common.alert('No Enter Data.');
+    		 Common.alert('Please Enter Maximum Qty or Reorder Qty Data.');
        }else{
         Common.ajax("POST", "/logistics/replenishment/relenishmentSave.do", dat, function(result) {
             Common.alert(result.message , SearchListAjax);
