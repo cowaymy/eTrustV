@@ -269,8 +269,9 @@ public class CommonPaymentController {
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
     	System.out.println("params : " + params);
-    	List<Object> key = params.get("key");
-    	System.out.println("key : " + key.get(0));
+    	List<Object> tmpKey = params.get("key");
+    	int key = Integer.parseInt(String.valueOf(tmpKey.get(0)));
+    	System.out.println("key : " + key);
     	//System.out.println("key : " + key);
     	Map<String, Object> formInfo = new HashMap<String, Object> ();
     	if(formList.size() > 0){
