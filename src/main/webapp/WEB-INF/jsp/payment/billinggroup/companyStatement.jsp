@@ -150,7 +150,7 @@ function fn_Clear(){
     $("#searchForm")[0].reset();
 }
 </script>
-<!-- content start -->  
+<!-- content start -->
 <section id="content">
     <ul class="path">
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -158,7 +158,7 @@ function fn_Clear(){
         <li>Billing Group</li>
         <li>Company Statement</li>
     </ul>
-    <!-- title_line start --> 
+    <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Company Statement</h2>   
@@ -241,7 +241,7 @@ function fn_Clear(){
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
 <div class="popup_wrap" id="einvoice_wrap" style="display:none;">
-    <!-- pop_header start 
+    <!-- pop_header start -->
     <header class="pop_header" id="einvoice_pop_header">
         <h1>COMPANY INVOICE - E-INVOICE</h1>
         <ul class="right_opt">
