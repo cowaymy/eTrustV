@@ -131,9 +131,9 @@ public class DataChangeFormController {
 	public ResponseEntity<Map<String, Object>> insertDataChangeList(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 
-//		logger.debug("insApprovalStatus  : {}", params.get("insApprovalStatus"));
-//		logger.debug("insReason  : {}", params.get("insReason"));
-//		logger.debug("insApprovalRemark  : {}", params.get("insApprovalRemark"));
+		logger.debug("insApprovalStatus ???????       : {}", params.get("insApprovalStatus"));
+		logger.debug("insReason  : {}", params.get("insReason"));
+		logger.debug("insApprovalRemark  : {}", params.get("insApprovalRemark"));
 //		logger.debug("reqId  : {}", params.get("reqId"));
 //		logger.debug("DcfReqStatusId : {}", params.get("DcfReqStatusId"));
 //		logger.debug("receiveInfoTransitBy  : {}", InsertReceiveMap.get("receiveInfoTransitBy"));
