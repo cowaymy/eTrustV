@@ -446,22 +446,26 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	            docSub.put("bsResultFilterClm",docSub.get("name"));
 
 
-	            hsManualMapper.insertHsResultD(docSub);
+	  	      	String vstkId = (String) docSub.get("stkId");
 	            
-	            
-	            String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
-	            
-	            if("".equals(filterLastserial)){
-	            	docSub.put("prvSerialNo", filterLastserial);
-	            }else {
-	            	docSub.put("lastSerialNo", docSub.get("SerialNo"));
-	            }
-	            
-                docSub.put("settleDate", params.get("settleDate"));
-                docSub.put("hidCodyId", params.get("hidCodyId"));
-                params.put("srvConfigId", docSub.get("srvConfigId"));
-                   
-	            hsManualMapper.updateHsFilterSiriNo(docSub);
+  				if( !"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null ) {
+  					hsManualMapper.insertHsResultD(docSub);
+  					
+  					String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
+  		            
+  		            if("".equals(filterLastserial)){
+  		            	docSub.put("prvSerialNo", filterLastserial);
+  		            }else {
+  		            	docSub.put("lastSerialNo", docSub.get("SerialNo"));
+  		            }
+  		            
+  	                docSub.put("settleDate", params.get("settleDate"));
+  	                docSub.put("hidCodyId", params.get("hidCodyId"));
+  	                params.put("srvConfigId", docSub.get("srvConfigId"));
+  	                   
+  		            hsManualMapper.updateHsFilterSiriNo(docSub);
+  				}
+
 	            
 			}
 			
