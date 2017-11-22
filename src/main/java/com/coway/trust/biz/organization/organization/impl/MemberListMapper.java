@@ -58,6 +58,8 @@ public interface MemberListMapper {
 
 	String selectMemberId( Map<String, Object> params);
 
+	String selectLastGroupCode(Map<String, Object> params);
+
 	void insertOrganization(Map<String, Object> params);
 
 	void insertAccBill(Map<String, Object> params);
@@ -117,6 +119,11 @@ public interface MemberListMapper {
 	List<EgovMap> selectDeptCode(Map<String, Object> params);
 
 	List<EgovMap> selectCourse();
+
+
+	EgovMap getDocNo(Map<String, Object> params);
+
+
 	
 	int traineeUpdate(Map<String, Object> params);
 	EgovMap afterSelTrainee(Map<String, Object> params);
