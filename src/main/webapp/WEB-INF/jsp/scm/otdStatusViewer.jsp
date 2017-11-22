@@ -9,17 +9,6 @@
   text-align:right;
 }
 
-/* 커스텀 칼럼 스타일 정의 */
-.my-column {  
-    text-align:right;
-    margin-top:-20px;
-}
-
-.my-backColumn0 {
-  background:#73EAA8; 
-  color:#000;
-}
-
 /* HTML 템플릿에서 사용할 스타일 정의*/
 .closeDiv span{
   color: red; 
@@ -38,19 +27,9 @@
 
 $(function() 
 {
-  //fnSelectTargetDateComboList('351');
-  //fnSelectInterFaceTypeComboList('352');
-
-    //stock type
-	  fnSelectStockTypeComboList('15');   
-	  
+	//stock type
+  fnSelectStockTypeComboList('15');
 });
-
-function fnClick()
-{
-  $('#btn11').removeClass("btn_disabled");
-  //$('#btn11').addClass("btn_disabled");
-}
 
 function fnCallInterface()
 {
@@ -91,10 +70,10 @@ function fnSelectInterFaceTypeComboList(codeId)
   CommonCombo.initById("intfTypeCbBox");  // reset...
 
    // Call Back
-    var fnSelectIntfTypeCallback = function () 
-        {
-         $("#intfTypeCbBox>option:eq(1)").prop("selected",true);
-        }
+  var fnSelectIntfTypeCallback = function () 
+      {
+       $("#intfTypeCbBox>option:eq(1)").prop("selected",true);
+      }
   
   CommonCombo.make("intfTypeCbBox"
             , "/scm/selectComboInterfaceDate.do"  
@@ -106,6 +85,42 @@ function fnSelectInterFaceTypeComboList(codeId)
                 chooseMessage: "Select Interface Type"
                }
             , fnSelectIntfTypeCallback);     
+}
+
+function fnSetInitDatePicker()
+{
+  /* Input에 초기값(today) 출력*/
+    var d = new Date();
+    var month = d.getMonth()+1;
+    var day = d.getDate();
+
+    var output = (day<10 ? '0' : '') + day + '/' +
+        (month<10 ? '0' : '') + month + '/' +
+        d.getFullYear() ;
+    $(".j_date").val(output);
+}
+
+function fnGetDateGap(val1, val2)
+{
+    var FORMAT = "\/";
+
+    if (val1.length != 10 || val2.length != 10)
+        return null;
+
+    if (val1.indexOf(FORMAT) < 0 || val2.indexOf(FORMAT) < 0)
+        return null;
+
+    var start_dt = val1.split(FORMAT);
+    var end_dt = val2.split(FORMAT);
+
+    // Number()를 이용하여 10진수(08,09)로 인식하게 함.
+    start_dt[1] = (Number(start_dt[1]) - 1) + "";
+    end_dt[1] = (Number(end_dt[1]) - 1) + "";
+
+    var from_dt = new Date(start_dt[2], start_dt[1], start_dt[0] );
+    var to_dt   = new Date(end_dt[2]  , end_dt[1]  , end_dt[0]);
+
+    return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 }
 
 function getTimeStamp() 
@@ -139,9 +154,18 @@ function fnExcelExport(fileNm)
 // search
 function fnSearchBtnList()
 {
-
    console.log( "selectBox: " + $("#statusSelBox").val() 
 		   + " // Index: " + $("#statusSelBox option").index($("#statusSelBox option:selected")));
+
+   
+   var startDT = $("#startDate").val();
+   var endDT = $("#endDate").val();
+
+   if (fnGetDateGap(startDT ,endDT) < 0 )
+	 {
+	   Common.alert("<spring:message code='sys.msg.limitMore' arguments='FROM DATE ; TO DATE.' htmlEscape='false' argumentSeparator=';'/>");
+	   return false;
+	 }
 
    Common.ajax("GET"
              , "/scm/selectOtdStatusViewSearch.do"
@@ -177,43 +201,16 @@ function auiCellEditignHandler(event)
 {
     if(event.type == "cellEditBegin") 
     {
-        console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+      console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     } 
     else if(event.type == "cellEditEnd") 
     {
-        console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-
-        if (event.columnIndex == 2 && event.headerText == "SEQ NO") // SEQ NO
-        {
-          if (parseInt(event.value) < 1)
-          {
-            //Common.alert("Menu Level is not more than 4. ");
-                Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
-                AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
-                return false;
-          }  
-        }
-
-        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
-        {
-          if (parseInt(event.value) < 1)
-          {
-             Common.alert("<spring:message code='sys.msg.necessary' arguments='CATEGORY NAME' htmlEscape='false'/>");
-             AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "stusCtgryName"] );
-             return false;
-          }
-          else
-          {
-            AUIGrid.setCellValue(myGridID, event.rowIndex, 2, AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCtgryName"));
-          }  
-        }
-        
+      console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     } 
     else if(event.type == "cellEditCancel") 
     {
-        console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+      console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     }
-  
 }
 
 //행 추가 이벤트 핸들러
@@ -259,25 +256,26 @@ var OTDViewerLayout =
                          {
                             dataField : "poNo",
                             headerText : "<spring:message code='sys.scm.pomngment.rowNo'/>",
+                            width : "8%",
                             cellMerge: true,
                          }
                         ,{
-                            dataField : "issueDate",
+                            dataField : "poIssueDt",
                             headerText : "<spring:message code='sys.scm.otdview.IssueDate'/>",
                             cellMerge: true,
                          }
                         ,{
-                            dataField : "stkCode",
+                            dataField : "stockCode",
                             headerText : "<spring:message code='sys.scm.otdview.StkCode'/>",
                             cellMerge: true,
                          }
                         ,{
-                            dataField : "stkTypeId",
+                            dataField : "stockType",
                             headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
                             cellMerge: true,
                          }
                         ,{
-                            dataField : "stkDesc",
+                            dataField : "stockDesc",
                             headerText : "<spring:message code='sys.scm.otdview.StkDesc'/>",
                             cellMerge: true,
                          }
@@ -290,6 +288,9 @@ var OTDViewerLayout =
                             dataField : "poQty",
                             headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
                             cellMerge: true,
+                            dataType : "numeric",
+                            style : "aui-grid-right-column",         
+                            formatString : "#,##0"
                          }
                         ,{
                             dataField : "poStus",
@@ -302,7 +303,7 @@ var OTDViewerLayout =
                               labelFunction : function (rowIndex, columnIndex, value, headerText, item ) 
                               { // HTML 템플릿 작성
                             	  //console.log("Renderer: ( " + rowIndex + ", " + columnIndex + " ) " + "item.poStus: " + item.poStus + " /value: " + value);
-                            	  if (item.poStus == "Approved" )
+                            	  if (item.poStus == "Approved" )  // Completed == 1
                                 {
 	                                var template = "<div class='closeDiv'>";
 	                                template += "<span id='closeSpan'>";
@@ -310,7 +311,7 @@ var OTDViewerLayout =
 	                                template += "</span>";
 	                                return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
                                 }
-                            	  else if (item.poStus == "Active" )
+                            	  else if (item.poStus == "Active" )  // == 0
                                 {
                             		  var template = "<div class='openDiv'>";
                                       template += "<span id='openDiv'>";
@@ -333,6 +334,9 @@ var OTDViewerLayout =
                               dataField : "soQty",
                               headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
                               cellMerge: true,
+                              dataType : "numeric",
+                              style : "aui-grid-right-column",         
+                              formatString : "#,##0"
                            }
                           ,{
                               dataField : "soDt",
@@ -346,22 +350,28 @@ var OTDViewerLayout =
           headerText : "<spring:message code='sys.scm.otdview.PP'/>",
           children   : [ 
                            {
-                              dataField : "ppQtyPlan",
+                              dataField : "ppPlanQty",
                               headerText : "<spring:message code='sys.scm.otdview.planQty'/>",
                               cellMerge: true,
+                              dataType : "numeric",
+                              style : "aui-grid-right-column",         
+                              formatString : "#,##0"
                            }
                           ,{
-                              dataField : "ppQtyResult",
+                              dataField : "ppProdQty",
                               headerText : "<spring:message code='sys.scm.otdview.prodQty'/>",
                               cellMerge: true,
+                              dataType : "numeric",
+                              style : "aui-grid-right-column",         
+                              formatString : "#,##0"
                            }
                           ,{
-                              dataField : "ppDtProductStart",
+                              dataField : "ppProdStartDt",
                               headerText : "<spring:message code='sys.scm.otdview.prodStart'/>",
                               cellMerge: true,
                            }
                           ,{
-                              dataField : "ppDtProductEnd",
+                              dataField : "ppProdEndDt",
                               headerText : "<spring:message code='sys.scm.otdview.prodEnd'/>",
                               cellMerge: true,
                            }
@@ -375,6 +385,9 @@ var OTDViewerLayout =
                               dataField : "giQty",
                               headerText : "<spring:message code='sys.scm.otdview.QTY'/>",
                               cellMerge: true,
+                              dataType : "numeric",
+                              style : "aui-grid-right-column",         
+                              formatString : "#,##0"
                            }
                           ,{
                                dataField : "giDt",
@@ -391,16 +404,25 @@ var OTDViewerLayout =
                               dataField : "sboPoQty",
                               headerText : "<spring:message code='sys.scm.otdview.poQty'/>",
                               cellMerge: true,
+                              dataType : "numeric",
+                              style : "aui-grid-right-column",         
+                              formatString : "#,##0"
                            }
                           ,{
-                              dataField : "apQty",
+                              dataField : "sboApQty",
                               headerText : "<spring:message code='sys.scm.otdview.apQty'/>",
                               cellMerge: true,
+                              dataType : "numeric",
+                              style : "aui-grid-right-column",         
+                              formatString : "#,##0"
                            }
                           ,{
-                              dataField : "grQty",
+                              dataField : "sboGrQty",
                               headerText : "<spring:message code='sys.scm.otdview.gr'/>",
                               cellMerge: true,
+                              dataType : "numeric",
+                              style : "aui-grid-right-column",         
+                              formatString : "#,##0"
                            }
                           
                        ]
@@ -413,7 +435,6 @@ var myGridID
 
 $(document).ready(function()
 {
-
   var otdViewerLayoutOptions = {
             usePaging : true,
             useGroupingPanel : false,
@@ -507,10 +528,10 @@ $(document).ready(function()
 
   <div class="date_set w100p"><!-- date_set start -->
   <p>
-   <input type="text" id="startDate" name="startDate" title="Create start Date" placeholder="MM/DD/YYYY" class="j_date" /></p>
+   <input type="text" id="startDate" name="startDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
   <span>To</span>
   <p>
-   <input type="text" id="endDate" name="endDate" title="Create end Date" placeholder="MM/DD/YYYY" class="j_date" /></p>
+   <input type="text" id="endDate" name="endDate" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
   </div><!-- date_set end -->
 
   </td>
@@ -518,8 +539,8 @@ $(document).ready(function()
   <td>
   <select id="statusSelBox" name="statusSelBox" class="w100p">
     <option value="" selected>All</option>
-    <option value="Active">OPEN</option>
-    <option value="Approved">CLOSED</option>
+    <option value="0">OPEN</option>   <!-- active -->
+    <option value="1">CLOSED</option> <!-- approved -->
   </select>
                             
   </td>
@@ -541,7 +562,9 @@ $(document).ready(function()
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn">
+  <%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+</p>
 <dl class="link_list">
   <dt>Link</dt>
   <dd>
@@ -576,8 +599,8 @@ $(document).ready(function()
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-  <li><input id="inputTxtPoNo" name="inputTxtPoNo" type="text" title="" placeholder="Enter PO Number" disabled /><li>
-  <li class="ml10"><p class="btn_blue3 btn_disabled"><a href="javascript:void(0);">Update OTD Status</a></p></li>
+  <!-- <li><input id="inputTxtPoNo" name="inputTxtPoNo" type="text" title="" placeholder="Enter PO Number" disabled /><li>
+  <li class="ml10"><p class="btn_blue3 btn_disabled"><a href="javascript:void(0);">Update OTD Status</a></p></li> -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

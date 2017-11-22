@@ -9,29 +9,6 @@
   text-align:right;
 }
 
-/* 커스텀 칼럼 스타일 정의 */
-.my-column {  
-    text-align:right;
-    margin-top:-20px;
-}
-
-.my-backColumn0 {
-  background:#73EAA8; 
-  color:#000;
-}
-
-/* HTML 템플릿에서 사용할 스타일 정의*/
-.closeDiv span{
-  color: red; 
-  vertical-align:middle;
-  font-size: 12pt;
-}
-.openDiv span{
-  color: blue; 
-  vertical-align:middle;
-  font-size: 12pt;
-}
-
 </style>
 
 <script type="text/javaScript">
@@ -48,12 +25,6 @@ $(function()
     //stock type
 	  fnSelectStockTypeComboList('15');  	  
 });
-
-function fnClick()
-{
-  $('#btn11').removeClass("btn_disabled");
-  //$('#btn11').addClass("btn_disabled");
-}
 
 function fnCallInterface()
 {
@@ -930,7 +901,11 @@ $(document).ready(function()
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn">
+<%--   <a href="javascript:void(0);">
+    <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" />
+  </a> --%>
+</p>
 <dl class="link_list">
 	<dt>Link</dt>
 	<dd>

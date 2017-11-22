@@ -56,7 +56,17 @@ function fnSelectOTDDetailPopData(flag)
                     		            usePaging : false,
 				                            useGroupingPanel : false,
 				                            editable : false,
-				                            showRowNumColumn : false  // 그리드 넘버링
+				                            showRowNumColumn : false,  // 그리드 넘버링
+				                            // 그룹핑 후 셀 병함 실행
+				                            enableCellMerge : true, 
+				                            // 그룹핑, 셀머지 사용 시 브랜치에 해당되는 행 표시 안함.
+				                            showBranchOnGrouping : false, 
+				                            // 그룹핑 패널 사용
+				                            useGroupingPanel : false,
+				                            
+				                            // 차례로 country, product, 순으로 그룹핑을 합니다.
+				                            // 즉, 각 나라별, 각 제품으로 그룹핑
+				                            groupingFields : ["poNo","stockCode","stockDesc","stockType","poQty"],
                                   };
 
                     otdSOGILayout = 
@@ -70,9 +80,13 @@ function fnSelectOTDDetailPopData(flag)
                                 headerText : "<spring:message code='sys.scm.otdview.StkCode' />",
                                 width : "10%",
                             },{
-                                dataField : "stkDesc",
+                                dataField : "stockDesc",
                                 headerText : "<spring:message code='sys.scm.otdview.StkDesc' />",
                                 width : "15%",
+                            },{
+                                dataField : "stockType",
+                                headerText : "<spring:message code='sys.scm.inventory.stockType' />",
+                                width : "7%",
                             },{
                                 dataField : "poQty",
                                 headerText :"<spring:message code='sys.scm.otdview.poQty' />",
@@ -89,13 +103,13 @@ function fnSelectOTDDetailPopData(flag)
                                 dataField : "soDate",
                                 headerText :"<spring:message code='sys.scm.otdview.soDate' />",
                                 dataType : "date",
-                                formatString : "yyyy-mm-dd",
+                                formatString : "dd-mm-yyyy",
                                 width : "15%"
                             },{
                                 dataField : "giDate",
                                 headerText :"<spring:message code='sys.scm.otdview.giDate' />",
                                 dataType : "date",
-                                formatString : "yyyy-mm-dd",
+                                formatString : "dd-mm-yyyy",
                                 width : "15%"
                             }
                         ];  
@@ -134,7 +148,17 @@ function fnSelectOTDDetailPopData(flag)
                                     usePaging : false,
                                     useGroupingPanel : false,
                                     editable : false,
-                                    showRowNumColumn : false  // 그리드 넘버링
+                                    showRowNumColumn : false,  // 그리드 넘버링
+                                    // 그룹핑 후 셀 병함 실행
+                                    enableCellMerge : true, 
+                                    // 그룹핑, 셀머지 사용 시 브랜치에 해당되는 행 표시 안함.
+                                    showBranchOnGrouping : false, 
+                                    // 그룹핑 패널 사용
+                                    useGroupingPanel : false,
+                                    
+                                    // 차례로 country, product, 순으로 그룹핑을 합니다.
+                                    // 즉, 각 나라별, 각 제품으로 그룹핑
+                                    groupingFields : ["poNo","stockCode","stockDesc","stockType","poQty","soNo","soQty"],
                                   };	                       
 		
 		                otdSOPPLayout = 
@@ -148,9 +172,13 @@ function fnSelectOTDDetailPopData(flag)
 		                              headerText : "<spring:message code='sys.scm.otdview.StkCode' />",
 		                              width : "10%",
 		                          },{
-		                              dataField : "stkDesc",
+		                              dataField : "stockDesc",
 		                              headerText : "<spring:message code='sys.scm.otdview.StkDesc' />",
-		                              width : "10%",
+		                              width : "15%",
+		                          },{
+		                                dataField : "stockType",
+		                                headerText : "<spring:message code='sys.scm.inventory.stockType' />",
+		                                width : "7%",
 		                          },{
 		                              dataField : "poQty",
 		                              headerText :"<spring:message code='sys.scm.otdview.poQty' />",
@@ -168,20 +196,20 @@ function fnSelectOTDDetailPopData(flag)
 		                              headerText :"<spring:message code='sys.scm.otdview.planQty' />",
 		                              width : "10%",
 		                          },{
-		                              dataField : "planDate",
+		                              dataField : "planDt",
 		                              headerText :"<spring:message code='sys.scm.otdview.planDate' />",
 		                              dataType : "date",
-		                              formatString : "yyyy-mm-dd",
+		                              formatString : "dd-mm-yyyy",
 		                              width : "10%",
 		                          },{
 		                              dataField : "resultQty",
 		                              headerText :"<spring:message code='sys.scm.otdview.resultQty' />",
 		                              width : "10%",
 		                          },{
-		                              dataField : "resultDate",
+		                              dataField : "resultDt",
 		                              headerText :"<spring:message code='sys.scm.otdview.resultDate' />",
 		                              dataType : "date",
-		                              formatString : "yyyy-mm-dd",
+		                              formatString : "dd-mm-yyyy",
 		                              width : "10%",
 		                          }
 		                      ];    

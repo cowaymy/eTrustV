@@ -116,10 +116,10 @@ function fnQtMonthlyGridVisible()
     }
     else if ($("#paramScmQuarter").val() == "3")
     {
-        AUIGrid.hideColumnByDataField(gQuarterGridID, arrayQT1 );
-        AUIGrid.hideColumnByDataField(gQuarterGridID, arrayQT2 );
-        AUIGrid.hideColumnByDataField(gQuarterGridID, arrayQT4 );
-        AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT3 );
+      AUIGrid.hideColumnByDataField(gQuarterGridID, arrayQT1 );
+      AUIGrid.hideColumnByDataField(gQuarterGridID, arrayQT2 );
+      AUIGrid.hideColumnByDataField(gQuarterGridID, arrayQT4 );
+      AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT3 );
     }
     else if ($("#paramScmQuarter").val() == "2")
     {
@@ -137,10 +137,10 @@ function fnQtMonthlyGridVisible()
     }
     else
     {
-       AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT1 );
-       AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT2 );
-       AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT3 );
-       AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT4 );        
+      AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT1 );
+      AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT2 );
+      AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT3 );
+      AUIGrid.showColumnByDataField(gQuarterGridID, arrayQT4 );        
     }
 }
 
@@ -2480,7 +2480,9 @@ $(document).ready(function()
 </section><!-- tap_wrap end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn">
+  <%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+</p>
 <dl class="link_list">
   <dt>Link</dt>
   <dd>

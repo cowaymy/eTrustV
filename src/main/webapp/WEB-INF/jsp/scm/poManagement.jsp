@@ -12,52 +12,16 @@
     margin-top:-20px;
 }
 
-.my-backColumn0 {
-  background:#73EAA8; 
-  color:#000;
-}
-
-.my-backColumn1 {
-  background:#1E9E9E; 
-  color:#000;
-}
-
-.my-backColumn2 {
-  background:#818284;
-  color:#000;
-}
-
-.my-backColumn3 {
-  background:#a1a2a3;
-  color:#000;
-}
-
-.my-header {
-  background:#828282;
-  color:#000;
-}
-
 .my_div_btn {
     color: #fff !important;
     background-color: #2a2d33;
     line-height:2em;
-   /* 
-   font-weight: bold;
-    margin: 2px 4px;
-    padding : 2px 4px;
-   */
     cursor: pointer;
 }
 .my_div_btn2 {
     color: #fff !important;
     background-color: #ee5315;
-     line-height:2em;
-    /*
-    font-weight: bold;
-    margin: 2px 4px;
-    padding : 2px 4px;
-    */
-    
+    line-height:2em;   
     cursor: pointer;
 }
 
@@ -65,7 +29,10 @@
 
 <script type="text/javaScript">
 
+var gMyGridSelRowIdx ="";
 var gWeekThValue ="";
+var gScmMonth = 0; 
+var gSumAmount = 0; 
 
 $(function() 
 {
@@ -182,6 +149,77 @@ function fnChangeEventPeriod(object)
 {
   gWeekThValue = object.value;
   //fnSelectCDC( $("#scmYearCbBox").val() , object.value);
+
+  Common.ajax("GET", "/scm/selectMonthCombo.do"
+	       , $("#MainForm").serialize()
+	       , function(result) 
+	       {
+			     console.log("성공." + JSON.stringify(result));
+			     gScmMonth = 0;
+		       if(result != null && result.length > 0)
+           {
+        	   console.log("data : " + result[0].scmMonth);
+        	   gScmMonth = result[0].scmMonth;
+	         }
+	       });
+
+  
+}
+
+function fnClearDataSet()
+{
+	gSumAmount = 0;	
+  AUIGrid.clearGridData(myGridID2);
+}
+
+function fnUpdSaveCall() 
+{
+	Common.ajax( "POST"
+			       , "/scm/savePOIssuItem.do"
+	           , GridCommon.getEditData(myGridID2)
+	           , function(result) 
+	             {
+			    	      AUIGrid.clearGridData(myGridID);
+			    	      AUIGrid.clearGridData(myGridID2);
+			    	      AUIGrid.clearGridData(SCMPOViewGridID);
+			    	      gSumAmount = 0;
+			    	      gMyGridSelRowIdx = "";
+		              fnSearchBtnSCMPrePOView() ; 
+	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	             } 
+
+	           , function(jqXHR, textStatus, errorThrown) 
+	             {
+	                try 
+	                {
+	                  console.log("Fail Status : " + jqXHR.status);
+	                  console.log("code : "        + jqXHR.responseJSON.code);
+	                  console.log("message : "     + jqXHR.responseJSON.message);
+	                  console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                } 
+	                catch (e) 
+	                {
+	                  console.log(e);
+	                }
+	             
+	                Common.alert("Fail : " + jqXHR.responseJSON.message);
+	             }); 
+  
+}
+
+function fnCreatePO()
+{
+  var rowCount = AUIGrid.getRowCount(myGridID2);
+
+	for(var i=0; i<rowCount; i++) 
+	  AUIGrid.updateRow(myGridID2, { "checkFlag" : 1 }, i);
+
+  var addList = AUIGrid.getAddedRowItems(myGridID2);
+
+	console.log("addList: " + addList.length );
+
+	if (addList.length > 0)
+		fnUpdSaveCall();
 }
 
 function fnSetStockComboBox()
@@ -198,6 +236,7 @@ function fnSetStockComboBox()
                      }
                    , "");
 }
+
 function getTimeStamp() 
 {
   function leadingZeros(n, digits) {
@@ -226,22 +265,6 @@ function fnExcelExport(fileNm)
     GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileNm+'_'+getTimeStamp() ); 
 }
 
-// search
-function fnSearchBtnList()
-{
-   Common.ajax("GET", "/scm/selectSupplyPlanCDCSearch.do"
-           , $("#MainForm").serialize()
-           , function(result) 
-           {
-              console.log("성공 fnSearchBtnList: " + result.length);
-              AUIGrid.setGridData(myGridID, result.selectSupplyPlanCDCList);
-              if(result != null && result.length > 0)
-              {
-              }
-           });
-   
-}
-
 function auiCellEditignHandler(event) 
 {
     if(event.type == "cellEditBegin") 
@@ -251,38 +274,99 @@ function auiCellEditignHandler(event)
     else if(event.type == "cellEditEnd") 
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-
-        if (event.columnIndex == 2 && event.headerText == "SEQ NO") // SEQ NO
-        {
-          if (parseInt(event.value) < 1)
-          {
-            //Common.alert("Menu Level is not more than 4. ");
-                Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
-                AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
-                return false;
-          }  
-        }
-
-        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
-        {
-          if (parseInt(event.value) < 1)
-          {
-             Common.alert("<spring:message code='sys.msg.necessary' arguments='CATEGORY NAME' htmlEscape='false'/>");
-             AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "stusCtgryName"] );
-             return false;
-          }
-          else
-          {
-            AUIGrid.setCellValue(myGridID, event.rowIndex, 2, AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCtgryName"));
-          }  
-        }
-        
     } 
     else if(event.type == "cellEditCancel") 
     {
         console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     }
+}
+
+function fnMoveRight()
+{
+	if (gMyGridSelRowIdx.length == 0)
+	{
+    Common.alert("<spring:message code='expense.msg.NoData'/> ");
+	  return false;
+	}
+
+	if ( (parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobPrice")) <= 0)
+		|| (parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty")) <= parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty"))) )
+	{
+		Common.alert("<spring:message code='sys.scm.poIssue.AllPlannedQty'/> ");
+    return false;  
+	}
+
+  var selFieldObj = new Object();
   
+  selFieldObj.stockCode = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode");
+  selFieldObj.stockName = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockName");
+  selFieldObj.stkTypeId = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId");
+  selFieldObj.poQty     = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty");
+  selFieldObj.planQty   = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty");
+  selFieldObj.unitPrice = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobPrice");
+  selFieldObj.fobAmount = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobAmount");
+
+  var maxQty = parseInt(parseFloat((499999 - gSumAmount) / ( selFieldObj.unitPrice)) );
+  var availableQty = parseInt(selFieldObj.planQty - selFieldObj.poQty);
+  var moq = parseInt(selFieldObj.poQty);
+	var qty = 0;
+	  
+  if (availableQty <= maxQty)
+	  qty = availableQty;
+  else
+	  qty = maxQty;
+
+  //qty를 다시 moq 단위로 자름
+  if(qty > moq)
+  {
+    var tmpQty = (qty % moq);
+    qty = qty - tmpQty;
+  }
+
+  selFieldObj.poQty = qty;
+  selFieldObj.fobAmount = (qty * parseInt(selFieldObj.unitPrice)).toFixed(4);
+
+  gSumAmount = (gSumAmount + parseInt(selFieldObj.fobAmount ));
+
+  if (gSumAmount >= 500000 )
+  {
+     Common.alert("<spring:message code='sys.scm.poIssue.totalAmountExceed'/> ");
+     gSumAmount = gSumAmount - parseInt(selFieldObj.fobAmount );
+     return false;  
+  }
+
+	addRow(selFieldObj);
+}
+
+//MstGrid 행 추가, 삽입
+function addRow(selFieldObj) 
+{
+  var newFieldObj = new Object();
+
+    newFieldObj.checkFlag  = 0;
+    newFieldObj.stockCode  = selFieldObj.stockCode;
+    newFieldObj.stockName  = selFieldObj.stockName;
+    newFieldObj.stkTypeId  = selFieldObj.stkTypeId;
+    newFieldObj.poQty      = selFieldObj.poQty;  
+    newFieldObj.fobPrice   = selFieldObj.unitPrice;
+    newFieldObj.fobAmount  = selFieldObj.fobAmount;
+    // add Parameters
+    newFieldObj.planQty    = selFieldObj.planQty;
+    newFieldObj.preYear    = $("#scmYearCbBox").val();
+    newFieldObj.preMonth   = gScmMonth;
+    newFieldObj.preWeekTh  = gWeekThValue;
+    newFieldObj.preCdc     = $("#cdcCbBox").val();
+
+    console.log ("stockCode: " + newFieldObj.stockCode + " /planQty: " + newFieldObj.planQty+ " /preYear: " + newFieldObj.preYear
+    	         + " /preMonth: " + newFieldObj.preMonth + " /preWeekTh: " + newFieldObj.preWeekTh+ " /preCdc: " + newFieldObj.preCdc);
+    
+    // fieldObj : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+    AUIGrid.addRow(myGridID2, newFieldObj, "last");
+    //AUIGrid.setSorting(myGridID, [{ dataField : "TYPE", sortType : 1 }]);
+    
+    $('#clearBtn').removeClass("btn_disabled");
+    $('#createPoBtn').removeClass("btn_disabled");
 }
 
 //행 추가 이벤트 핸들러
@@ -295,84 +379,6 @@ function auiAddRowHandler(event)
 function auiRemoveRowHandler(event) 
 {
     console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
-}
-
-//그리드 헤더 클릭 핸들러
-function headerClickHandler(event) 
-{
-  // checkFlag 칼럼 클릭 한 경우
-  if(event.dataField == "checkFlag") 
-  {
-    if(event.orgEvent.target.id == "allCheckbox") 
-    { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
-      var  isChecked = document.getElementById("allCheckbox").checked;
-      checkAll(isChecked);
-    }
-    return false;
-  }
-}
-
-//전체 체크 설정, 전체 체크 해제 하기
-function checkAll(isChecked) 
-{
-  var rowCount = AUIGrid.getRowCount(myGridID);
-
-  if(isChecked)   // checked == true == 1
-  {
-    for(var i=0; i<rowCount; i++) 
-    {
-       AUIGrid.updateRow(myGridID, { "checkFlag" : 1 }, i);
-    }
-  } 
-  else   // unchecked == false == 0
-  {
-    for(var i=0; i<rowCount; i++) 
-    {
-       AUIGrid.updateRow(myGridID, { "checkFlag" : 0 }, i);
-    }
-  }
-  
-  // 헤더 체크 박스 일치시킴.
-  document.getElementById("allCheckbox").checked = isChecked;
-
-  getItemsByCheckedField(myGridID);
-  
-}
-
-function getItemsByCheckedField(selectedGrid) 
-{
-  // 체크된 item 반환
-  var activeItems = AUIGrid.getItemsByValue(selectedGrid, "checkFlag", true);
-  var checkedRowItem = [];
-  var str = "";
-  
-  for(var i=0, len = activeItems.length; i<len; i++) 
-  {
-      checkedRowItem = activeItems[i];
-      str += "chkRowIdx : " + checkedRowItem.rowIndex ;//+ ", chkId :" + checkedRowItem.stusCodeId + ", chkName : " + checkedRowItem.codeName  + "\n";
-  }
-
-  //alert("checked items: " + str);
-  
-}
-
-//특정 칼럼 값으로 체크하기 (기존 더하기)
-function addCheckedRowsByValue(selValue) 
-{
-  console.log("grouping Checked: " + selValue);
-  // rowIdField 와 상관없이 행 아이템의 특정 값에 체크함
-  // 행아이템의 code 필드 중 데이타가 selValue 인 것 모두 체크.
-  AUIGrid.addCheckedRowsByValue(myGridID, "code", selValue);
-  
-  // 만약 복수 값(Emma, Steve) 체크 하고자 한다면 다음과 같이 배열로 삽입
-  //AUIGrid.addCheckedRowsByValue(myGridID, "name", ["Emma", "Steve"]);
-}
-//특정 칼럼 값으로 체크 해제 하기
-function addUncheckedRowsByValue(selValue) 
-{
-  console.log("grouping UnChecked: " + selValue);
-  // 행아이템의 code 필드 중 데이타가 selValue인 것 모두 체크 해제함
-  AUIGrid.addUncheckedRowsByValue(myGridID, "code", selValue);
 }
 
 //적용 버턴 클릭 핸들러
@@ -411,20 +417,6 @@ function fnExportExcel(index, value)
   
 }
 
-function CreatePO()
-{
-//	FOBAmount 의미없음
-/* 	CREATE view [dbo].[SCMPrePOView2]
-	as
-	select t0.*,t1.StkDesc, t2.FOBPrice as UnitPrice, cast(0 as decimal(18,2)) as FOBAmount
-	from SCMPrePOItem t0
-	  left join InvStock t1 on t1.StkCode=t0.PreStockCode
-	  left join SCMFOBPrice t2 on t2.StockCode=t0.PreStockCode
-
-	GO */
-}
-
-
 /*************************************
  **********  Grid-LayOut  ************
  *************************************/
@@ -442,6 +434,7 @@ var SCMPrePOViewLayout =
         }, {
             dataField : "stkTypeId",
             headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+            visible  : false,
             width : "10%"
         }, {
             dataField : "planQty",
@@ -454,6 +447,12 @@ var SCMPrePOViewLayout =
             style : "aui-grid-right-column",
             //width : "15%",
             editable : false
+        }, {
+            dataField : "fobPrice",
+            headerText : "Unit Price",
+            style : "aui-grid-right-column",
+            visible  : false,
+            editable : false
         }
     ];
 
@@ -461,6 +460,30 @@ var SCMPrePOViewLayout =
 var SCMPrePOViewLayout2 = 
     [  
         {
+          dataField : "checkFlag",
+          headerText : '<input type="checkbox" id="allCheckbox" name="allCheckbox" style="width:0px;height:0px;">',
+          width : "5%",
+          editable : false,
+          visible  : false,
+          renderer : 
+          {
+              type : "CheckBoxEditRenderer",
+              showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+              editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+              checkValue : 1, // true, false 인 경우가 기본
+              unCheckValue : 0,
+              // 체크박스 Visible 함수
+              visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+               {
+                 if(item.checkFlag == 1)  // 1 이면
+                 {
+                  return true; // checkbox visible
+                 }
+
+                 return true;
+               }
+          }  //renderer
+      },{
             dataField : "stockCode",
             headerText : "<spring:message code='sys.scm.pomngment.stockCode' />",
             width : "22%",
@@ -473,6 +496,7 @@ var SCMPrePOViewLayout2 =
         }, {
             dataField : "stkTypeId",
             headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+            visible  : false,
             width : "10%"
         },{
             dataField : "poQty",
@@ -493,8 +517,50 @@ var SCMPrePOViewLayout2 =
             //width : "20%",
             editable : false
         }
+        // for Save temporaryDataField
+        , {
+            dataField : "planQty",
+            headerText : "<spring:message code='sys.scm.pomngment.planQty'/>",
+            style : "aui-grid-right-column",
+            visible  : false,
+            width : 10
+        }, {
+            dataField : "preYear",
+            headerText : "YEAR",
+            visible  : false,
+            width : 10
+        }, {
+            dataField : "preMonth",
+            headerText : "MONTH",
+            visible  : false,
+            width : 10
+        }, {
+            dataField : "preWeekTh",
+            headerText : "WEEK_TH",
+            visible  : false,
+            width : 10
+        },{
+            dataField : "preCdc",
+            headerText : "CDC",
+            visible  : false,
+            width : 10
+        },
 
     ];
+
+//footer
+var SCMPrePOViewFooterLayout = 
+                              [ {
+                                   labelText : "SUM:",
+                                   positionField : "fobPrice" 
+                                 }
+                               , {  
+                                   dataField : "fobAmount",
+                                   positionField : "fobAmount",
+                                   operation : "SUM",
+                                   formatString : "#,##0.0000"
+                                 }
+                               ];
     
 var SCMPOViewLayout = 
     [ 
@@ -600,43 +666,45 @@ function fnSearchBtnSCMPrePOView()
 	    return false;
 	  }
 
-	   Common.ajax("GET", "/scm/selectScmPrePoItemView.do"
-	           , $("#MainForm").serialize()
-	           , function(result) 
-	           {
-	              console.log("성공 selectScmPoViewList: " + result.selectScmPoViewList.length);
-	              console.log("성공 selectScmPoStatusCntList: " + result.selectScmPoStatusCntList.length);
-	              console.log("성공 prePoitemCnt:    " + result.selectScmPoStatusCntList[0].prePoitemCnt);
-	              console.log("성공 scmpomasterCnt:  " + result.selectScmPoStatusCntList[0].scmpomasterCnt);
-	              AUIGrid.setGridData(myGridID, result.selectScmPrePoItemViewList);
-	              //AUIGrid.setGridData(myGridID2, result.selectScmPrePoItemViewList);
-	              AUIGrid.setGridData(SCMPOViewGridID, result.selectScmPoViewList);
-	              	              
-	               if(result != null)
-	              { 
-	            	    if (result.selectScmPoViewList.length == 0
-	    	             && result.selectScmPoStatusCntList[0].prePoitemCnt == 0 
-		            	   && result.selectScmPoStatusCntList[0].scmpomasterCnt == 0 )
-		            	  {
-	                     $("#po_issue").attr('class','circle circle_grey');
-	                     $("#appRoval").attr('class','circle circle_grey');
-			            	} 
-	            	    else  
-	                  {  // 2016 11 KL
-	                	  if (result.selectScmPoStatusCntList[0].prePoitemCnt < 1)  //notIssue
-                		    $("#po_issue").attr('class','circle circle_blue');
-		                  else
-		                	  $("#po_issue").attr('class','circle circle_red');
-		                  
-	                	  if (result.selectScmPoStatusCntList[0].scmpomasterCnt < 1)  //pomaster
-	                		   $("#appRoval").attr('class','circle circle_blue');
-	                	  else
-	                		   $("#appRoval").attr('class','circle circle_red');
-	                  }
-	                  
-	              
-	               }
-	            
+	  AUIGrid.clearGridData(myGridID);
+	  AUIGrid.clearGridData(myGridID2);
+	  AUIGrid.clearGridData(SCMPOViewGridID);
+	  gSumAmount = 0;
+	  gMyGridSelRowIdx = "";
+	  
+	  Common.ajax("GET", "/scm/selectScmPrePoItemView.do"
+	          , $("#MainForm").serialize()
+	          , function(result) 
+	          {
+              console.log("성공 selectScmPoViewList: " + result.selectScmPoViewList.length);
+              console.log("성공 prePoitemCnt:    " + result.selectScmPoStatusCntList[0].prePoitemCnt);
+
+              AUIGrid.setGridData(myGridID, result.selectScmPrePoItemViewList);
+              AUIGrid.setGridData(SCMPOViewGridID, result.selectScmPoViewList);
+              	              
+              if(result != null)
+              { 
+           	    if (result.selectScmPoViewList.length == 0
+   	             && result.selectScmPoStatusCntList[0].prePoitemCnt == 0 
+            	   && result.selectScmPoStatusCntList[0].scmpomasterCnt == 0 )
+             	   {
+	                 $("#po_issue").attr('class','circle circle_grey');
+	                 $("#appRoval").attr('class','circle circle_grey');
+			           } 
+	            	 else  
+	               {  // 2016 11 KL
+               	   if (result.selectScmPoStatusCntList[0].prePoitemCnt < 1)  //notIssue
+              		   $("#po_issue").attr('class','circle circle_blue');
+                   else
+                	   $("#po_issue").attr('class','circle circle_red');
+                  
+               	   if (result.selectScmPoStatusCntList[0].scmpomasterCnt < 1)  //pomaster
+               		   $("#appRoval").attr('class','circle circle_blue');
+               	   else
+               		   $("#appRoval").attr('class','circle circle_red');
+           		   
+	                }
+	             }
 	           });	  
 }
 
@@ -652,8 +720,11 @@ $(document).ready(function()
             showRowNumColumn : false,  // 그리드 넘버링
             showStateColumn : false, // 행 상태 칼럼 보이기
             enableRestore : true,
+            editable : false,
+            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            wrapSelectionMove : true,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-           // selectionMode : "multipleRows",
+            selectionMode : "singleRow"  //"multipleRows",
           };
 
 	// masterGrid 그리드를 생성합니다.
@@ -681,7 +752,7 @@ $(document).ready(function()
 	// cellClick event.
 	AUIGrid.bind(myGridID, "cellClick", function( event ) 
 	{
-	  gSelRowIdx = event.rowIndex;
+		gMyGridSelRowIdx = event.rowIndex;
 	
 	  console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
 	  console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
@@ -693,19 +764,22 @@ $(document).ready(function()
 	  console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 	});  
 
-
-	
 	/*******************************
 	  SCMPrePOViewGridDiv2
 	*******************************/  
 
 	var SCMPrePOViewLayoutOptions2 = {
+			      showFooter : true, 
             usePaging : false,
             useGroupingPanel : false,
             showRowNumColumn : false,  // 그리드 넘버링
+            showStateColumn : false, // 행 상태 칼럼 보이기
             enableRestore : true,
+            editable : false,
+            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            wrapSelectionMove : true,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-           // selectionMode : "multipleRows",
+            selectionMode : "singleRow"  //"multipleRows",
           };
 
   // masterGrid 그리드를 생성합니다.
@@ -713,7 +787,7 @@ $(document).ready(function()
   // AUIGrid 그리드를 생성합니다.
   
   // 푸터 객체 세팅
-  //AUIGrid.setFooter(myGridID2, footerObject);
+  AUIGrid.setFooter(myGridID2, SCMPrePOViewFooterLayout);
   
   // 에디팅 시작 이벤트 바인딩
   AUIGrid.bind(myGridID2, "cellEditBegin", auiCellEditignHandler);
@@ -730,14 +804,11 @@ $(document).ready(function()
   // 행 삭제 이벤트 바인딩 
   AUIGrid.bind(myGridID2, "removeRow", auiRemoveRowHandler);
   
-  
   // cellClick event.
   AUIGrid.bind(myGridID2, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
-  
-    console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID2,AUIGrid.getCellValue(myGridID2, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex );        
+    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + ", value : " + event.value);  
   });
   
   // 셀 더블클릭 이벤트 바인딩
@@ -756,6 +827,7 @@ $(document).ready(function()
             showRowNumColumn : true,  // 그리드 넘버링
             showStateColumn : false, // 행 상태 칼럼 보이기
             enableRestore : true,
+            editable : false,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
            // selectionMode : "multipleRows",
           };
@@ -781,7 +853,6 @@ $(document).ready(function()
   
   // 행 삭제 이벤트 바인딩 
   AUIGrid.bind(SCMPOViewGridID, "removeRow", auiRemoveRowHandler);
-  
   
    // cellClick event.
   AUIGrid.bind(SCMPOViewGridID, "cellClick", function( event ) 
@@ -911,20 +982,18 @@ $(document).ready(function()
 	    </article><!-- grid_wrap end -->
 	  
 			<ul class="btns">
-				<li><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right.gif" alt="right" /></a></li>
+				<li><a onclick="fnMoveRight();"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right.gif" alt="right" /></a></li>
 			</ul>
 			
 			  <ul class="center_btns">
 				 <li>
-				   <p class="btn_blue">
-			     <!-- 	 <a href="javascript:void(0);">Clear</a> -->
-			      <input type='button' id='Clear' value='Clear' disabled />
+				   <p id="clearBtn" class="btn_blue btn_disabled">
+			      	 <a onclick="fnClearDataSet();">Clear</a> 
 				   </p>
 				 </li>
 				 <li>
-				   <p class="btn_blue">
-				    <!-- <a href="javascript:void(0);">Create PO</a> -->
-				     <input type='button' id='Create PO' value='Create PO' disabled />
+				   <p id="createPoBtn" class="btn_blue btn_disabled">
+				     <a onclick="fnCreatePO();">Create PO</a>
 				  </p>
 				 </li>
 			  </ul>
@@ -949,7 +1018,9 @@ $(document).ready(function()
 </ul>
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn">
+  <%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+</p>
 <dl class="link_list">                            
 	<dt>Link</dt>
 	<dd>

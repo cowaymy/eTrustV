@@ -39,12 +39,6 @@ $(function()
 	  fnSearchBtnList();
 });
 
-function fnClick()
-{
-  $('#btn11').removeClass("btn_disabled");
-  //$('#btn11').addClass("btn_disabled");
-}
-
 function fnOnchanged(obj)
 {
   fnSearchBtnList();
