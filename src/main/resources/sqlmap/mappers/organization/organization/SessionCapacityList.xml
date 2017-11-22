@@ -14,95 +14,110 @@
     
         <select id="selectSsCapacityBrList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-                     SELECT F.BRNCH_ID CODE_ID
-                        ,    E.MEM_ID
-                        ,    D.MORNG_SESION_AS
-                        ,    D.MORNG_SESION_INS
-                        ,    D.MORNG_SESION_RTN
-                        ,    D.AFTNON_SESION_AS
-                        ,    D.AFTNON_SESION_INS
-                        ,    D.AFTNON_SESION_RTN
-                        ,    D.EVNG_SESION_AS
-                        ,    D.EVNG_SESION_INS
-                        ,    D.EVNG_SESION_RTN
-                        ,    D.STUS
-                        ,    D.CRT_DT
-                        ,    D.CRT_USER_ID
-                        ,    D.UPD_DT
-                        ,   D. UPD_USER_ID
-                        ,   G.CODE || ' - ' || G.NAME CODE 
-                        ,   E.MEM_CODE || ' - ' || E.NAME MEM_CODE
-                FROM (
-                     SELECT   A.BRNCH_ID CODE_ID
-                    ,    A.CT_ID MEM_ID
-                    ,    A.MORNG_SESION_AS
-                    ,    A.MORNG_SESION_INS
-                    ,    A.MORNG_SESION_RTN
-                    ,    A.AFTNON_SESION_AS
-                    ,    A.AFTNON_SESION_INS
-                    ,    A.AFTNON_SESION_RTN
-                    ,    A.EVNG_SESION_AS
-                    ,    A.EVNG_SESION_INS
-                    ,    A.EVNG_SESION_RTN
-                    ,    A.STUS
-                    ,    A.CRT_DT
-                    ,    A.CRT_USER_ID
-                    ,    A.UPD_DT
-                    ,   A. UPD_USER_ID
-                    ,   B.CODE || ' - ' || B.NAME CODE 
-                    ,   C.MEM_CODE || ' - ' || C.NAME MEM_CODE
-                    FROM ORG0015M A 
-                    INNER JOIN SYS0005M B ON A.BRNCH_ID = B.BRNCH_ID
-                    INNER JOIN  ORG0001D C ON C.MEM_ID = A.CT_ID
-                    WHERE 1=1
-                     ]]>    
-                     <if test="cmbbranchId != null and cmbbranchId != '' ">
-                        AND B.BRNCH_ID = #{cmbbranchId}
-                     </if> 
-                     <if test="cmbctId != null and cmbctId != '' ">
-                        AND C.MEM_ID =  #{cmbctId}
-                     </if>
-                                         ) D
+                    SELECT F.brnch_id CODE_ID, 
+						       E.mem_id, 
+						       D.morng_sesion_as, 
+						       D.morng_sesion_ins, 
+						       D.morng_sesion_rtn, 
+						       D.aftnon_sesion_as, 
+						       D.aftnon_sesion_ins, 
+						       D.aftnon_sesion_rtn, 
+						       D.evng_sesion_as, 
+						       D.evng_sesion_ins, 
+						       D.evng_sesion_rtn, 
+						       D.stus, 
+						       D.crt_dt, 
+						       D.crt_user_id, 
+						       D.upd_dt, 
+						       D. upd_user_id, 
+						       F.code 
+						       || ' - ' 
+						       || F.NAME  CODE, 
+						       E.mem_code 
+						       || ' - ' 
+						       || E.NAME  MEM_CODE 
+						FROM   (SELECT A.brnch_id CODE_ID, 
+						               A.ct_id    MEM_ID, 
+						               A.morng_sesion_as, 
+						               A.morng_sesion_ins, 
+						               A.morng_sesion_rtn, 
+						               A.aftnon_sesion_as, 
+						               A.aftnon_sesion_ins, 
+						               A.aftnon_sesion_rtn, 
+						               A.evng_sesion_as, 
+						               A.evng_sesion_ins, 
+						               A.evng_sesion_rtn, 
+						               A.stus, 
+						               A.crt_dt, 
+						               A.crt_user_id, 
+						               A.upd_dt, 
+						               A. upd_user_id, 
+						               B.code 
+						               || ' - ' 
+						               || B.NAME  CODE, 
+						               C.mem_code 
+						               || ' - ' 
+						               || C.NAME  MEM_CODE 
+						        FROM   org0015m A 
+						               INNER JOIN sys0005m B 
+						                       ON A.brnch_id = B.brnch_id 
+						               INNER JOIN org0001d C 
+						                       ON C.mem_id = A.ct_id 
+						        WHERE  1 = 1 
+						        ]]>
+						        <if test="cmbbranchId != null and cmbbranchId != '' ">
+						               AND B.brnch_id = #{cmbbranchId} 
+				                </if>
+				                <if test="cmbctId != null and cmbctId != '' ">
+			                           AND C.MEM_ID =  #{cmbctId}
+			                    </if>
+                                                              ) D 
                     <choose>
                         <when test="status == 'Active' ">
-                            RIGHT JOIN ORG0001D E ON D.MEM_ID = E.MEM_ID
-                            INNER JOIN ORG0005D F ON F.MEM_ID = E.MEM_ID
-                            INNER JOIN SYS0005M G ON G.BRNCH_ID = F.BRNCH_ID
-                            WHERE 1=1
-                            AND D.MEM_ID IS NULL
-                            <if test="cmbbranchId != null and cmbbranchId != '' ">
-                                AND F.BRNCH_ID = #{cmbbranchId}
-                             </if> 
-                             <if test="cmbctId != null and cmbctId != '' ">
-                                AND E.MEM_ID =  #{cmbctId}
-                             </if>
-                            ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                            RIGHT JOIN org0001d E 
+					               ON D.mem_id = E.mem_id 
+					       INNER JOIN sys0005m F 
+					               ON F.brnch_id = E.brnch  
+	                   WHERE  1 = 1 
+				       AND D.mem_id IS NULL 
+				       <if test="cmbbranchId != null and cmbbranchId != '' ">
+				       AND E.brnch = #{cmbbranchId}
+				       </if>
+				       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+				       AND E.STUS  = '1'
+					   ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
                         </when>
                         <when test="status == 'Complete' ">
-                            INNER JOIN ORG0001D E ON D.MEM_ID = E.MEM_ID
-                            INNER JOIN ORG0005D F ON F.MEM_ID = E.MEM_ID
-                            INNER JOIN SYS0005M G ON G.BRNCH_ID = F.BRNCH_ID
-                            WHERE 1=1
-                            <if test="cmbbranchId != null and cmbbranchId != '' ">
-                                AND F.BRNCH_ID = #{cmbbranchId}
-                            </if> 
-                            <if test="cmbctId != null and cmbctId != '' ">
-                                AND E.MEM_ID =  #{cmbctId}
-                            </if>
-                            ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                            INNER JOIN org0001d E 
+					               ON D.mem_id = E.mem_id 
+					       INNER JOIN sys0005m F 
+					               ON F.brnch_id = E.brnch 
+		               WHERE  1 = 1 
+		               <if test="cmbbranchId != null and cmbbranchId != '' ">
+                       AND E.brnch = #{cmbbranchId}
+                       </if>
+                       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+				       AND E.STUS  = '1'
+				       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
                         </when>
                         <otherwise>
-                            FULL OUTER JOIN ORG0001D E ON D.MEM_ID = E.MEM_ID
-                            INNER JOIN ORG0005D F ON F.MEM_ID = E.MEM_ID
-                            INNER JOIN SYS0005M G ON G.BRNCH_ID = F.BRNCH_ID
-                            WHERE 1=1
-                            <if test="cmbbranchId != null and cmbbranchId != '' ">
-                                AND F.BRNCH_ID = #{cmbbranchId}
-                            </if> 
-                            <if test="cmbctId != null and cmbctId != '' ">
-                                AND E.MEM_ID =  #{cmbctId}
-                            </if>
-                            ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                            FULL OUTER JOIN org0001d E 
+					               ON D.mem_id = E.mem_id 
+					       INNER JOIN sys0005m F 
+					               ON F.brnch_id = E.brnch 
+		               WHERE  1 = 1 
+		               <if test="cmbbranchId != null and cmbbranchId != '' ">
+                       AND E.brnch = #{cmbbranchId}
+                       </if>
+                       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+				       AND E.STUS  = '1'
+				       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
                         </otherwise>
                     </choose>
         </select>
