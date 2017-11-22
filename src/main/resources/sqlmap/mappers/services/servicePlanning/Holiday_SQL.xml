@@ -188,8 +188,8 @@
             #{item}
           </foreach>
        </if>
-       <if test="holidayDesc !=null and holidayDesc !=''  ">
-            B.HOLIDAY_DESC =#{holidayDesc}
+       <if test="holidayDesc1 !=null and holidayDesc1 !=''  ">
+           AND B.HOLIDAY_DESC =#{holidayDesc1}
        </if>
     </select>
     <insert id="insertCTAssign" parameterType="Map">
