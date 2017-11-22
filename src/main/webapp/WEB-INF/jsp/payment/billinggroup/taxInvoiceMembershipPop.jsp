@@ -25,7 +25,17 @@ $(document).ready(function(){
             showFooter: false
     };
     
-    setTimeout(function() {
+ // AUIGrid 칼럼 설정
+ var columnLayout = [
+     { dataField:"taxInvcType" ,headerText:"Tax Invoice Type",width: 100 , editable : false ,visible : false},
+     { dataField:"taxInvcRefNo" ,headerText:"Invoice No.",width: 180 , editable : false },
+     { dataField:"taxInvcSvcNo" ,headerText:"Service No.",width: 180 , editable : false },
+     { dataField:"invcItmOrdNo" ,headerText:"Order No.",width: 200, editable : false },
+     { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },
+     { dataField:"taxInvcRefDt" ,headerText:"Invoice Date",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+     { dataField:"invcItmAmtDue" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"}
+     ];
+    
     	// Order 정보 (Master Grid) 그리드 생성
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
         
@@ -33,21 +43,9 @@ $(document).ready(function(){
         AUIGrid.bind(myGridID, "cellClick", function( event ){ 
             selectedGridValue = event.rowIndex;
         });	
-    },100);
       
 });
 
-
-// AUIGrid 칼럼 설정
-var columnLayout = [
-    { dataField:"taxInvcType" ,headerText:"Tax Invoice Type",width: 100 , editable : false ,visible : false},
-    { dataField:"taxInvcRefNo" ,headerText:"Invoice No.",width: 180 , editable : false },
-    { dataField:"taxInvcSvcNo" ,headerText:"Service No.",width: 180 , editable : false },
-    { dataField:"invcItmOrdNo" ,headerText:"Order No.",width: 200, editable : false },
-    { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },
-    { dataField:"taxInvcRefDt" ,headerText:"Invoice Date",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"invcItmAmtDue" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"}
-    ];
 
 // 리스트 조회.
 function fn_getTaxInvoiceListAjax() {   

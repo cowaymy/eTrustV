@@ -7,12 +7,29 @@ var myGridID;
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
+var gridPros = {
+        editable: false,
+        showStateColumn: false,
+        pageRowCount : 25
+};
+
+var columnLayout=[
+    {dataField:"orderid", headerText:"Order ID",visible : false},
+    {dataField:"email", headerText:"Email",visible : false},
+    {dataField:"orderno", headerText:"Order No"},
+    {dataField:"orderstatuscode", headerText:"Status"},
+    {dataField:"apptypecode", headerText:"App Type"},
+    {dataField:"orderdate", headerText:"Order Date"},
+    {dataField:"stockdesc", headerText:"Product"},
+    {dataField:"customername", headerText:"Customer Name"},
+    {dataField:"customeric", headerText:"NRIC/Company No"},
+    {dataField:"creator", headerText:"Creator"}
+];
+
 $(document).ready(function(){
     
-	setTimeout(function(){
 		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 		
-
 	    doGetCombo('/common/selectCodeList.do', '10' , ''   , 'appType' , 'M', 'f_multiCombo');//Application Type 생성
 	    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'' , 'keyBranch' , 'M', 'f_multiCombo'); //key-in Branch 생성
 	    doGetComboSepa('/common/selectBranchCodeList.do', '2' , ' - '  ,'' , 'dscBranch' , 'M', 'f_multiCombo');//Branch생성
@@ -23,8 +40,6 @@ $(document).ready(function(){
 	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
 	        selectedGridValue = event.rowIndex;
 	    });  
-
-	}, 100);
      
     $("#custId").keyup(function() {
          var str = $("#custId").val();
@@ -60,24 +75,6 @@ function f_multiCombo() {
     });
 }
 
-var gridPros = {
-        editable: false,
-        showStateColumn: false,
-        pageRowCount : 25
-};
-
-var columnLayout=[
-    {dataField:"orderid", headerText:"Order ID",visible : false},
-    {dataField:"email", headerText:"Email",visible : false},
-    {dataField:"orderno", headerText:"Order No"},
-    {dataField:"orderstatuscode", headerText:"Status"},
-    {dataField:"apptypecode", headerText:"App Type"},
-    {dataField:"orderdate", headerText:"Order Date"},
-    {dataField:"stockdesc", headerText:"Product"},
-    {dataField:"customername", headerText:"Customer Name"},
-    {dataField:"customeric", headerText:"NRIC/Company No"},
-    {dataField:"creator", headerText:"Creator"}
-];
 
 function fn_getProformaInvoiceListAjax() {        
     var valid = ValidRequiredField();

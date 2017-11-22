@@ -7,17 +7,6 @@ var myGridID;
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
-$(document).ready(function(){
-    
-	setTimeout(function(){
-		   myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    
-	    // Master Grid 셀 클릭시 이벤트
-	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
-	        selectedGridValue = event.rowIndex;
-	    });  
-	}, 100); 
-});
 
 var gridPros = {
         editable: false,
@@ -38,6 +27,17 @@ var columnLayout=[
     {dataField:"rentAmt", headerText:"Invoice Amount"},
     {dataField:"rentInstNo", headerText:"Installment No"}
 ];
+
+$(document).ready(function(){
+    
+		   myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    
+	    // Master Grid 셀 클릭시 이벤트
+	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+	        selectedGridValue = event.rowIndex;
+	    });  
+});
+
 
 function fn_getIndividualStatementListAjax() {        
     var valid = ValidRequiredField();

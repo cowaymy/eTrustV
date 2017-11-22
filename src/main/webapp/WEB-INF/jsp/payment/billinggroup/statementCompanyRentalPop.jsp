@@ -17,7 +17,17 @@ $(document).ready(function(){
             editable : false,                 // 편집 가능 여부 (기본값 : false)
             showStateColumn : false     // 상태 칼럼 사용
     };
-    
+
+ // AUIGrid 칼럼 설정
+ var columnLayout = [
+     { dataField:"stateId" ,headerText:"StatementId",width: 100 , editable : false ,visible : false},
+     { dataField:"year" ,headerText:"Year",width: 100 , editable : false },
+     { dataField:"month" ,headerText:"Month",width: 80  , editable : false },
+     { dataField:"stateItmRefNo" ,headerText:"Bill No.",width: 200  , editable : false },
+     { dataField:"stateItmOrdNo" ,headerText:"Order No.",width: 200  , editable : false },
+     { dataField:"stateCustName" ,headerText:"Customer Name" , editable : false }
+     ];
+ 
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     
@@ -27,16 +37,6 @@ $(document).ready(function(){
     });  
 });
 
-
-// AUIGrid 칼럼 설정
-var columnLayout = [
-    { dataField:"stateId" ,headerText:"StatementId",width: 100 , editable : false ,visible : false},
-    { dataField:"year" ,headerText:"Year",width: 100 , editable : false },
-    { dataField:"month" ,headerText:"Month",width: 80  , editable : false },
-    { dataField:"stateItmRefNo" ,headerText:"Bill No.",width: 200  , editable : false },
-    { dataField:"stateItmOrdNo" ,headerText:"Order No.",width: 200  , editable : false },
-    { dataField:"stateCustName" ,headerText:"Customer Name" , editable : false }
-    ];
                 
 // 리스트 조회.
 function fn_getTaxInvoiceListAjax() {   

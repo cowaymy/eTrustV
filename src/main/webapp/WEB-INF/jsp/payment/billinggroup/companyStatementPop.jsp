@@ -4,25 +4,6 @@
 <script type="text/javaScript">
 var myGridID;
 
-//Grid에서 선택된 RowID
-var selectedGridValue;
-
-$(document).ready(function(){
-	
-	setTimeout(function(){
-	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-		    $('input:radio[name=printMethod]').is(':checked');
-		    
-		     // Master Grid 셀 클릭시 이벤트
-		    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
-		        selectedGridValue = event.rowIndex;
-		    });
-		     
-		    //AUIGrid.resize(myGridID);
-	}, 100);   
- 
-});
-
 var gridPros = {
         editable: false,
         showStateColumn: false,
@@ -39,6 +20,25 @@ var columnLayout=[
     {dataField:"soNo", headerText:"Order No",width: 250 , editable : false },
     {dataField:"custName", headerText:"Customer Name"}
 ];
+
+//Grid에서 선택된 RowID
+var selectedGridValue;
+
+$(document).ready(function(){
+	
+	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+		    $('input:radio[name=printMethod]').is(':checked');
+		    
+		     // Master Grid 셀 클릭시 이벤트
+		    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+		        selectedGridValue = event.rowIndex;
+		    });
+		     
+		    //AUIGrid.resize(myGridID);
+	
+});
+
+
 
 function fn_getCompanyStatementListAjax() {        
     var valid = ValidRequiredField();
