@@ -28,14 +28,13 @@ var columnLayout=[
 $(document).ready(function(){
     
 	doDefCombo(typeData, '' ,'appType', 'M', 'f_multiCombo');
-	setTimeout(function() { 
+	 
 		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	    
 	    // Master Grid 셀 클릭시 이벤트
 	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
 	        selectedGridValue = event.rowIndex;
 	    });  
-	}, 100);
 });
 
 
