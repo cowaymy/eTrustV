@@ -112,7 +112,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
         $(document).ready(function(){
             // masterGrid 그리드를 생성합니다.
             myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
-             
+            
             
             doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','searchRequestBranch', 'M' , 'f_multiCombo'); //Branch 리스트 조회
             doGetCombo('/logistics/assetmng/selectDepartmentList.do', '42', '','searchRequestDepartment', 'M' , 'f_DepartmentList'); //Department 리스트 조회
@@ -129,6 +129,8 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
             // 셀 더블클릭 이벤트 바인딩
             AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
             {
+            	$("#htitle1").show();
+            	$("#htitle2").hide();
                  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                    if (selectedItem[0] > -1){
                 	   f_removeclass();  
@@ -179,6 +181,8 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
                    $("#ViewPopUp_wrap").show();
                    $("#insertDataChange").show();
                    $("#AddApporovalBtn").show();
+                   $("#htitle2").show();
+                   $("#htitle1").hide();
                    fn_setVisiable();
                    doDefCombo(cmbStatusCombo, '' ,'insApprovalStatus', 'S', ''); //Approval Status 리스트 조회
                    doGetCombo('/logistics/helpdesk/selectReasonList.do', '', '','insReason', 'S' , '');//Reason  리스트 조회
@@ -596,7 +600,8 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 <div id="ViewPopUp_wrap" class="popup_wrap" style="display: none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Data Change Form - View</h1>
+<h1 id="htitle1">Data Change Form - View</h1>
+<h1 id="htitle2">Data Change Form - Add Approval Result</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="close">CLOSE</a></p></li>
 </ul>
