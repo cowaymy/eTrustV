@@ -219,8 +219,25 @@ function fn_installationNote(){
 	Common.popupDiv("/services/installationNotePop.do"  , null, null , true , '');
 }
 
+function fn_doActiveList(){
+	Common.popupDiv("/services/doActiveListPop.do"  , null, null , true , '');
+}
 
+function fn_installRawData(){
+	Common.popupDiv("/services/installationRawDataPop.do"  , null, null , true , '');
+}
 
+function fn_installBookListing(){
+	Common.popupDiv("/services/installationLogBookPop.do"  , null, null , true , '');
+}
+
+function fn_dailyDscReport(){
+    Common.popupDiv("/services/dailyDscReportPop.do"  , null, null , true , '');
+}
+
+function fn_installNoteListing(){
+    Common.popupDiv("/services/installationNoteListingPop.do"  , null, null , true , '');
+}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -354,13 +371,14 @@ function fn_installationNote(){
         <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
-         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()">Installation Note</a></p></li>
-       <!-- <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+    <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li>
+        <!--  <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()">Installation Note</a></p></li>
+       <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()">DO Active List</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installRawData()"> Installation Raw Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installBookListing()">Installation Log Book Listing</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()">Daily DSC Report</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()">Installation Note Listing</a></p></li> -->
+        <!--<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
