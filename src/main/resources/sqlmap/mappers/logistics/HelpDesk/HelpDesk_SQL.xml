@@ -270,20 +270,30 @@ SELECT DTAB.DCFReqEntryID AS DCFReqEntryID,
                          AND L64.DCF_REQ_SUB_ID = L653.DCF_SUP_TYPE_ID
                          AND L64.DCF_REQ_RCIPT_GRP_ID = L66.DCF_RCIPT_GRP_ID
                          AND L64.DCF_REQ_STUS_ID = S38.STUS_CODE_ID
-                         AND (   NVL (L64.DCF_REQ_APPV_STUS_ID, 0) = 0
-                              OR NVL (L64.DCF_REQ_APPV_STUS_ID, 0) = 61)
+                     <choose>
+		             <when test="searchApprovalStatus != null and searchApprovalStatus !=''">
+		                  AND NVL(L64.DCF_REQ_APPV_STUS_ID , 0) in
+		            <foreach item="item" collection="searchApprovalStatus" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>        
+		             </when>
+		              <otherwise>
+		                 AND L64.DCF_REQ_APPV_STUS_ID=0
+		              </otherwise>
+                      </choose>
+                         <!-- AND (   NVL (L64.DCF_REQ_APPV_STUS_ID, 0) = 0 OR NVL (L64.DCF_REQ_APPV_STUS_ID, 0) = 61) -->
                     <if test="searchDcfNo != null and searchDcfNo !=''">
                      AND L64.DCF_REQ_NO = #{searchDcfNo}
                     </if>
                     <if test="searchRequestor != null and searchRequestor !=''">
                      AND S472.USER_NAME = #{searchRequestor}
                     </if>
-                   <if test="searchApprovalStatus != null and searchApprovalStatus != ''">
-                    AND NVL(L64.DCF_REQ_APPV_STUS_ID , 0) in
-                    <foreach item="item" collection="searchApprovalStatus" index="index" open="(" separator="," close=")">
-                    #{item}
-                    </foreach>
-                    </if>           
+<!--                    <if test="searchApprovalStatus != null and searchApprovalStatus != ''"> -->
+<!--                     AND NVL(L64.DCF_REQ_APPV_STUS_ID , 0) in -->
+<!--                     <foreach item="item" collection="searchApprovalStatus" index="index" open="(" separator="," close=")"> -->
+<!--                     #{item} -->
+<!--                     </foreach> -->
+<!--                     </if>            -->
                     <if test="searchRequestBranch != null and searchRequestBranch != ''">
                     AND L64.DCF_REQ_BRNCH_ID in 
 		            <foreach item="item" collection="searchRequestBranch" index="index" open="(" separator="," close=")">
@@ -811,12 +821,14 @@ SELECT Project1.DCF_REQ_COM_FILD_ID DCF_REQ_COM_FILD_ID  ,
 <update id="updateDcfRequestM" parameterType="Map">
      UPDATE LOG0064M  
 		   SET 
+		       DCF_REQ_STUS_ID =#{DCFReqStatusID},
 		       DCF_REQ_UPD_DT =  SYSDATE,
 		       DCF_REQ_UPD_USER_ID = #{upuser_id} ,
 		       DCF_REQ_APPV_USER_ID = #{crtuser_id} ,
 		       DCF_REQ_APPV_DT =  SYSDATE,
 		       DCF_REQ_APPV_REM = #{dcfReqAppvRem} ,
 		       DCF_REQ_APPV_STUS_ID = #{insApprovalStatus},
+		       DCF_REQ_PRO_STUS_ID = #{DCFReqProStatusID},
 		       DCF_REQ_APPV_REQ_RESN_ID=#{insReason}       
 		   WHERE  ( DCF_REQ_ENTRY_ID = #{reqId})
 </update>  
