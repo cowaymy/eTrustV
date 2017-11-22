@@ -235,10 +235,12 @@ var contPersonLayout = [
                     $('#officeNumber').text();
                     $('#residenceNumber').text(result.data.contactInfo.telR);
                     $('#faxNumber').text(result.data.contactInfo.telf);
-                }
+                }else{
+                    Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
+                } 
             	
             }else{
-            	Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
+            	Common.alert("Order not found.");
             } 
         });
     }
