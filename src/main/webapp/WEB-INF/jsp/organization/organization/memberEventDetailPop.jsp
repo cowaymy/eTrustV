@@ -79,7 +79,7 @@
     	Common.ajaxSync("GET", "/organization/getAvailableChild.do" , {  REQST_NO: '${promoInfo.reqstNo}'  } , function(result) {
           
     		   if(null != result){
-    			    if(result.asCnt  == result.tobeCnt )  isAv =true;
+    			    if(Nember(result.asCnt)  >=  Nember(result.tobeCnt) )  isAv =true;
         	    }
         });
         
@@ -257,7 +257,7 @@
 
 </script>
 
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Member Promote/Demote Confirmation</h1>
