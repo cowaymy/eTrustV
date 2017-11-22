@@ -234,7 +234,7 @@
         WHERE T1.TASK_ID = #{taskId}
           AND T3.CODE = #{codeGruop}
           AND T4.EMPLY_LEV = #{emplyLev}
-          <if test="emplyLev == 4 and codeGruop == 'CD' ">
+          <if test=" bizType != null and emplyLev == 4 and codeGruop == 'CD' ">
               AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
           </if>
           <if test="memberCd != null and memberCd != ''">
@@ -289,7 +289,7 @@
         WHERE T1.TASK_ID = #{taskId}
           AND T3.CODE = #{codeGruop}
           AND T4.EMPLY_LEV = #{emplyLev}
-          <if test="emplyLev == 4 ">
+          <if test="emplyLev == 4 and bizType != null">
               AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
           </if>
           <if test="memberCd != null and memberCd != ''">
@@ -334,7 +334,7 @@
         WHERE T1.TASK_ID = #{taskId}
             AND T3.CODE = #{codeGruop}
             AND T4.EMPLY_LEV = #{emplyLev}
-            <if test="emplyLev == 4 and codeGruop == 'CD' ">
+            <if test=" bizType != null and emplyLev == 4 and codeGruop == 'CD' ">
                 AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
             </if>
             <if test="memberCd != null and memberCd != ''">
@@ -356,9 +356,6 @@
 		WHERE T1.TASK_ID = #{taskId}
 		    AND T3.CODE = #{codeGruop}
 		    AND T4.EMPLY_LEV = #{emplyLev}
-		    <if test="emplyLev == 4 ">
-                AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
-            </if>
 		    <if test="memberCd != null and memberCd != ''">
               AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
           </if>
@@ -383,7 +380,7 @@
         WHERE T1.TASK_ID = #{taskId}
             AND T3.CODE = #{codeGruop}
             AND T4.EMPLY_LEV = #{emplyLev}
-            <if test="emplyLev == 4 ">
+            <if test=" bizType != null and emplyLev == 4 ">
                 AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
             </if>
 			<if test="memberCd != null and memberCd != ''">
