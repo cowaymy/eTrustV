@@ -80,10 +80,10 @@
             Common.alert('<b>The program is under development.</b>');
         });
         $('#btnRentalPaySet').click(function() {
-        	Common.alert('<b>The program is under development.</b>');
+        	Common.popupDiv("/sales/order/orderRentalPaySettingUpdateListPop.do", null, null, true);
         });
         $('#btnSof').click(function() {
-        	Common.alert('<b>The program is under development.</b>');
+        	Common.popupDiv("/sales/order/orderSOFListPop.do", null, null, true);
         });
         $('#btnDdCrc').click(function() {
         	Common.alert('<b>The program is under development.</b>');
