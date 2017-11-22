@@ -25,4 +25,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface OrderListMapper {
 
 	List<EgovMap> selectOrderList(Map<String, Object> params); //Referral Info
+	
+	List<EgovMap> getApplicationTypeList(Map<String, Object> params);
+	
+	List<EgovMap> getUserCodeList();
 }
