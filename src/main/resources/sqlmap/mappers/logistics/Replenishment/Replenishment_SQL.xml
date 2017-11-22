@@ -6,6 +6,7 @@
 		       #{materialcode} as ITMCD , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{materialcode}) as ITMNM,
 		       #{maximumqty} as MAXQTY, #{reorderqty} as REORDQTY
 		       ,nvl(#{safetyqty} , 0) as SFTYQTY
+		       ,#{plannedqty} AS PlANNEDQTY <!-- RDC 용 세팅  -->
 		  FROM SYS0028M WHERE WH_LOC_CODE = #{locationcode}
     </select>
     
@@ -118,8 +119,12 @@
 			   AND LG77.STK_CODE = SY26.STK_CODE
 			   AND LG77.LOC_CODE = AV.STORG_LOC(+)
 			   AND LG77.STK_CODE = AV.MATRL_NO(+)
+			   AND SY28.WH_LOC_GB IN ('02','05')
 			    ]]>
 			    <!-- 데이터 안나와서 아우터 함 -->
+		    <if test="speriod != null and speriod !=''">
+              AND LG77.PERIOD = TO_CHAR(TO_DATE(#{speriod},'MM/YYYY') , 'YYYYMM')
+            </if>
 			<choose>
 			     <when test="sttype != null and sttype !=''">
 			      AND SY26.STK_TYPE_ID = #{sttype}
