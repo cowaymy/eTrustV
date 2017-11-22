@@ -170,4 +170,40 @@
            ORDER BY T.ORD_NO ASC
     </select>
 
+    <select id="getApplicationTypeList" parameterType="Map" resultType="egovMap">
+		    SELECT Project1.CODE_ID CODE_ID ,
+					  Project1.CODE_MASTER_ID CODE_MASTER_ID ,
+					  Project1.CODE CODE ,
+					  Project1.CODE_NAME CODE_NAME ,
+					  Project1.DISAB DISAB ,
+					  Project1.CRT_DT CRT_DT ,
+					  Project1.CRT_USER_ID CRT_USER_ID ,
+					  Project1.UPD_DT UPD_DT ,
+					  Project1.UPD_USER_ID UPD_USER_ID ,
+					  Project1.OLD_CODE_ID OLD_CODE_ID
+					FROM
+					  (SELECT Extent1.CODE_ID CODE_ID ,
+					    Extent1.CODE_MASTER_ID CODE_MASTER_ID ,
+					    Extent1.CODE CODE ,
+					    Extent1.CODE_NAME CODE_NAME ,
+					    Extent1.DISAB DISAB ,
+					    Extent1.CRT_DT CRT_DT ,
+					    Extent1.CRT_USER_ID CRT_USER_ID ,
+					    Extent1.UPD_DT UPD_DT ,
+					    Extent1.UPD_USER_ID UPD_USER_ID ,
+					    Extent1.OLD_CODE_ID OLD_CODE_ID
+					  FROM SYS0013M Extent1
+					  WHERE ( Extent1.CODE_MASTER_ID = #{codeId} )  
+					  AND ( 0 = Extent1.DISAB )
+					  ) Project1
+		   ORDER BY Project1.CODE_NAME ASC
+    </select>
+    
+    <select id="getUserCodeList" resultType="egovMap">
+        SELECT USER_ID CODE_ID, USER_NAME CODE_NAME
+		FROM SYS0047M
+		WHERE USER_STUS_ID = 1 AND USER_TYPE_ID != 1 AND USER_TYPE_ID != 2 AND USER_TYPE_ID != 3
+		ORDER BY USER_NAME 
+    </select>
+
 </mapper>
