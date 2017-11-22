@@ -15,4 +15,6 @@ public interface ReplenishmentMapper {
 	List<EgovMap> selectSearchList(Map<String, Object> params);
 
 	List<EgovMap> searchListRdc(Map<String, Object> params);
+	
+	List<EgovMap> searchAutoCTList(Map<String, Object> params);
 }
