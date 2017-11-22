@@ -280,7 +280,7 @@
 		              AND Extent1.SALES_ORD_NO = #{orderNo} 
 		            </if> 
 		            <if test="custName != '' "> 
-		              AND Extent2.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~' 
+		              AND Extent2.NAME LIKE '%' || #{custName} || '%' ESCAPE '~' 
 		            </if>
 		            <if test="appType != '' and appType != null">
 		              AND Extent1.APP_TYPE_ID IN (
