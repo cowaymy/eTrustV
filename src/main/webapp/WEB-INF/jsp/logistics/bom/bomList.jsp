@@ -393,20 +393,17 @@
 							</td>
 						    <th scope="row">Category Type</th>
 						    <td>
-						    <select  id="srchcatagorytype" name="srchcatagorytype"  /></select>
+						    <select  id="srchcatagorytype" name="srchcatagorytype" class="w100p" /></select>
 						    <!-- <select class="multy_select" multiple="multiple" id="catagorytype" name="catagorytype[]" /></select> -->
 						    </td>
 <!-- 							<th scope="row">CDC</th>
 							<td><select class="w100p" id="srchcdc" name="srchcdc">
 							</td> -->
 							<th scope="row">Valid From Date</th>
-							<td><div class="date_set">
-									<!-- date_set start -->
-									<p>
+							<td>
 										<input type="text" title="Create start Date"
-											class="j_date" id="srchValid" name="srchValid" placeholder="DD/MM/YYYY"/>
-									</p>
-								</div></td>
+											class="j_date w100p" id="srchValid" name="srchValid" placeholder="DD/MM/YYYY"/>
+						</td>
 						</tr>
 					</tbody>
 				</table>

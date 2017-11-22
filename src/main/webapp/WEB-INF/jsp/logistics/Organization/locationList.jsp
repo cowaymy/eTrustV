@@ -670,11 +670,11 @@
 <tbody>
 <tr>
     <th scope="row">Status</th>
-    <td colspan="3"><span  id="mstatus"></span></td>
+    <td colspan="3"><span  id="mstatus"  class="w100p"></span></td>
 </tr>
 <tr>
     <th scope="row">Location Code</th>
-    <td><input type="text" name="mwarecd" id="mwarecd"/></td>    
+    <td><input type="text" name="mwarecd" id="mwarecd"  class="w100p"/></td>    
     <th scope="row">Serial Check</th>
     <td>
         <label><input type="checkbox" id="pdchk" name="pdchk"/><span>Product</span></label>
@@ -700,13 +700,13 @@
 </tr>
 <tr>
     <th scope="row">Branch</th>
-    <td colspan='3'><select id="mwarebranch1"></select><select id="mwarebranch2"></select><select id="mwarebranch3"></select></td>
+    <td colspan='3'><select id="mwarebranch1" style="width: 273px!important"  ></select><select id="mwarebranch2" style="width: 273px!important" class="ml5"></select><select id="mwarebranch3" style="width: 273px!important" class="ml5"></select></td>
 </tr>
 <tr>
     <th scope="row">Contact No (1)</th>
-    <td><input type="text" name="mcontact1" id="mcontact1"/></td>
+    <td><input type="text" name="mcontact1" id="mcontact1"  class="w100p"/></td>
     <th scope="row">Contact No (2)</th>
-    <td><input type="text" name="mcontact2" id="mcontact2"/></td>
+    <td><input type="text" name="mcontact2" id="mcontact2"  class="w100p"/></td>
 </tr>
 <tr>
     <th scope="row">Plant in ECC</th>
@@ -797,7 +797,7 @@
 <tbody>
 <tr>
     <th scope="row">Location Code</th>
-    <td colspan="3"><input type="text" name="inwarecd" id="inwarecd" maxlength="10"/></td>    
+    <td colspan="3"><input type="text" name="inwarecd" id="inwarecd" maxlength="10" class="w100p" /></td>    
 </tr>
 <tr>
     <th scope="row">Location Name</th>
@@ -805,15 +805,15 @@
 </tr>
 <tr>
     <th scope="row">CDC_CODE</th>
-    <td><select id="icdccode" name="icdccode" ></select></td>
+    <td><select id="icdccode" name="icdccode" class="w100p"></select></td>
     <th scope="row">RDC_CODE</th>
-    <td><select id="irdccode" name="irdccode"></select></td>
+    <td><select id="irdccode" name="irdccode" class="w100p"></select></td>
 </tr>
 <tr>
     <th scope="row">Location Type</th>
     <td><select id="ilocationtype" name="ilocationtype"  class="w100p" onchange="fn_plantchk(this.id , 'i')"></select></td>
     <th scope="row">Location Grade</th>
-    <td><select id="instockgrade" name="instockgrade" ></select></td>
+    <td><select id="instockgrade" name="instockgrade" class="w100p"></select></td>
 </tr>
 <tr>
     <th scope="row">Plant in ECC</th>
@@ -828,7 +828,7 @@
 <tr> 
     <th scope="row">Branch</th>
     <td colspan="3">
-        <select id="inwarebranch1" name="inwarebranch1" ></select> <select id="inwarebranch2" name="inwarebranch2" ></select> <select id="inwarebranch3" name="inwarebranch3" ></select>
+        <select id="inwarebranch1" name="inwarebranch1" style="width: 273px!important" ></select> <select id="inwarebranch2" name="inwarebranch2"  style="width: 273px!important" class="ml5"></select> <select id="inwarebranch3" name="inwarebranch3" style="width: 273px!important" class="ml5"></select>
     </td>
 </tr>
 <tr> 
@@ -871,9 +871,9 @@
 </tr>  
 <tr>
     <th scope="row">Contact No (1)</th>
-    <td><input type="text" name="incontact1" id="incontact1"/></td>
+    <td><input type="text" name="incontact1" id="incontact1" class="w100p" /></td>
     <th scope="row">Contact No (2)</th>
-    <td><input type="text" name="incontact2" id="incontact2"/></td>
+    <td><input type="text" name="incontact2" id="incontact2" class="w100p" /></td>
 </tr> 
 </tbody>
 </table>

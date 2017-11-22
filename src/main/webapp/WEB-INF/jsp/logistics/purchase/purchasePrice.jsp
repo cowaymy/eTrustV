@@ -134,7 +134,10 @@
   enableSorting : true,
   showRowCheckColumn : true,
   */
-    var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false };
+    var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false,
+		  noDataMessage : "<spring:message code='sys.info.grid.noDataMessage'/>"	  
+  
+  };
     
     var subgridpros = {
             // 페이지 설정
@@ -453,10 +456,10 @@
 <!-- 				</tr> -->
 				<tr>
 				    <th scope="row">Tax Code</th>
-				    <td id="viewtaxcode"></td>
+				    <td id="viewtaxcode" colspan="2"></td>
 <!-- 				    <th scope="row">Price Determination (Pricing) Date Control</th> -->
 <!-- 				    <td><input type="text" title="" placeholder=""  class="w100p" id="viewprcdtermindtcntrl" name="viewprcdtermindtcntrl" readonly="readonly"/></td> -->
-                        <td colspan="4"></td>
+                        <td colspan="3"></td>
 				</tr>
 				<tr>
 				    <th scope="row">Net Price</th>
