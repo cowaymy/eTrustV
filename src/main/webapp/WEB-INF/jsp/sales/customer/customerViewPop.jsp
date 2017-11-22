@@ -401,7 +401,7 @@
         Common.alert('The program is under development.');
     }
 </script>
-<div id="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <!-- Pop up Form -->
 <form id="detailForm">
     <input type="hidden"  id="getparam" name="getparam"/>

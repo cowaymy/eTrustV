@@ -369,7 +369,7 @@ var columnLayout2 = [
     </section>
 
     <!-- content end -->
-    <div id="popup_wrap" style="display:none;">
+    <div id="popup_wrap" class="popup_wrap" style="display:none;">
         <!-- popup_wrap start -->
         <header class="pop_header">
             <!-- pop_header start -->

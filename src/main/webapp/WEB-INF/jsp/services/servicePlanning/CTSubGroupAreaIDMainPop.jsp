@@ -3,7 +3,7 @@
 
 <script type="text/javaScript">
 </script>
-<div id="popup_wrap">
+<div id="popup_wrap" class="popup_wrap">
 <section id="content"><!-- content start -->
 <!-- <ul class="path">
     <li><img src="../images/common/path_home.gif" alt="Home" /></li>

@@ -597,7 +597,7 @@ function chgTab(tabNm) {
 }
 
 </script>
-<div id="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
 <h1>CCP Calculation Edit</h1>
 <ul class="right_opt">

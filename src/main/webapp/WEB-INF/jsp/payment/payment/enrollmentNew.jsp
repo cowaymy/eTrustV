@@ -2,7 +2,7 @@
 </script>
 
 <!-- <div id="popup_wrap" style="display:none;"> -->
-<div id="popup_wrap">
+<div id="popup_wrap" class="popup_wrap">
     <header class="pop_header">
         <h1>Enrollment Result Update</h1>
 		<ul class="right_opt">

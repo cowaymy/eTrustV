@@ -135,7 +135,7 @@ function fn_selectASDataInfo(){
 
 
 
-<div id="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <section id="content"><!-- content start -->
 
 
