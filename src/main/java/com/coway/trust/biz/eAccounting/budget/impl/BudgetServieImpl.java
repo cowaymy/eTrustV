@@ -33,6 +33,49 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	private WebInvoiceMapper webInvoiceMapper;
 
 	@Override
+	public List<EgovMap> selectBudgetControlList(Map<String, Object> params) throws Exception {
+		return budgetMapper.selectBudgetControlList(params);
+	}
+	
+	@Override 
+	public List<EgovMap> selectBudgetSysMaintenanceList(Map<String, Object> params) throws Exception {
+		return budgetMapper.selectBudgetSysMaintenanceList(params);
+	}
+
+	@Override
+	public int selectBudgetMonth(Map<Integer, Object> params) throws Exception{
+		return budgetMapper.selectBudgetMonth(params);
+	}
+	
+	@Override
+	public int addBudgetSysMaintGrid(List<Object> addList,String loginId) {	
+		
+		int cnt=0;
+		
+		for (Object obj : addList) {
+
+			((Map<String, Object>) obj).put("crtUserId", loginId);
+			((Map<String, Object>) obj).put("updUserId", loginId);
+			
+			cnt=cnt+budgetMapper.addBudgetSysMaintGrid((Map<String, Object>) obj);
+		}
+		return cnt;
+	}
+	
+	@Override
+	public int udtBudgetSysMaintGrid(List<Object> udtList,String loginId) {
+		
+		int cnt=0;
+		for (Object obj : udtList) {		
+			((Map<String, Object>) obj).put("crtUserId", loginId);
+			((Map<String, Object>) obj).put("updUserId", loginId);
+
+			cnt=cnt+budgetMapper.udtBudgetSysMaintGrid((Map<String, Object>) obj);
+		}
+		return cnt;
+	}
+	
+	@Override
 	public List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception {
 		return budgetMapper.selectMonthlyBudgetList(params);
 	}

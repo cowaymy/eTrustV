@@ -6,6 +6,16 @@ import java.util.Map;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface BudgetService {
+	
+	List<EgovMap> selectBudgetControlList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectBudgetSysMaintenanceList(Map<String, Object> params) throws Exception;
+	
+	int selectBudgetMonth(Map<Integer, Object> params) throws Exception;
+	
+    int addBudgetSysMaintGrid(List<Object> updateList , String loginId);
+
+    int udtBudgetSysMaintGrid(List<Object> addList, String loginId);
 
 	List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception; 
 	
