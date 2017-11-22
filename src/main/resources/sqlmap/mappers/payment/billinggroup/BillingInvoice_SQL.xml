@@ -272,22 +272,22 @@
                 JOIN SAL0029D Extent2 ON Extent1.CUST_ID = Extent2.CUST_ID 
                 LEFT JOIN ORG0001D Extent3 ON Extent1.MEM_ID = Extent3.MEM_ID 
                 LEFT JOIN ORG1001V  Extent4 ON Extent3.MEM_ID = Extent4.MEM_ID 
-                        LEFT JOIN SYS0013M Extent5 ON Extent1.APP_TYPE_ID = Extent5.CODE_ID 
-                WHERE 1=1
-                    AND  Extent1.STUS_CODE_ID = 4
-                    <if test="orderNo != '' " > 
-		              AND Extent1.SALES_ORD_NO = #{orderNo} 
-		            </if> 
-		            <if test="custName != '' "> 
-		              AND Extent2.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~' 
-		            </if>
-		            <if test="appType != '' and appType != null">
-		              AND Extent1.APP_TYPE_ID IN (
-		                <foreach collection="appType" index="index" separator=",">
-		                    '${appType[index]}'
-		                </foreach>
-		                )
-		            </if> 
+                LEFT JOIN SYS0013M Extent5 ON Extent1.APP_TYPE_ID = Extent5.CODE_ID 
+             WHERE 1=1
+             AND  Extent1.STUS_CODE_ID = 4
+             <if test="orderNo != '' " > 
+                AND Extent1.SALES_ORD_NO = #{orderNo} 
+            </if> 
+            <if test="custName != '' "> 
+                AND Extent2.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~' 
+            </if>
+            <if test="appType != '' and appType != null">
+                AND Extent1.APP_TYPE_ID IN (
+                <foreach collection="appType" index="index" separator=",">
+                     '${appType[index]}'
+                </foreach>
+                )
+            </if> 
     </select>
     
     <select id="selectCompanyStatementList" parameterType="Map" resultType="egovMap">
