@@ -65,4 +65,11 @@ public interface CardStatementMapper {
 	 */
 	void postCardStatement(Map<String, Object> params);
 	
+	/**
+	 * Credit Card Statement Interface 데이터 등록
+	 * @param params
+	 * @return
+	 */
+	void insertCrcStatementITF(Map<String, Object> params);
+	
 }

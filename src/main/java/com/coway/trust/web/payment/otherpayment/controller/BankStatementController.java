@@ -121,7 +121,8 @@ public class BankStatementController {
 				itemMap.put("fTrnscRef4", String.valueOf(gridMap.get("9")));	//J
 				itemMap.put("fTrnscNewChqNo", String.valueOf(gridMap.get("10")));		//E
 				itemMap.put("fTrnscRefVaNo", String.valueOf(gridMap.get("11")));	//B
-				itemMap.put("userNm", sessionVO.getUserName());	//J	
+				itemMap.put("userNm", sessionVO.getUserName());	//J
+				itemMap.put("userId", sessionVO.getUserId());	
 				
 				itemList.add(itemMap);
 			}

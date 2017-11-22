@@ -42,7 +42,8 @@
         {dataField : "bcAmt",headerText : "B/C<br>(RM)",width : 120 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "gstAmt",headerText : "GST<br>(RM)",width : 120 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "crcPostngDt",headerText : "Posting<br>Date",width : 150 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-        {dataField : "crcStateUploadUserNm",headerText : "User Name",width : 150 , editable : false}
+        {dataField : "crcStateUploadUserNm",headerText : "User Name",width : 150 , editable : false},
+        {dataField : "crcBcStusId",headerText : "Status ID",width : 150 , editable : false}
         ];
     
         
@@ -143,20 +144,26 @@
 
 	    if (selectedItem[0] > -1){
 	        var crcStateId = AUIGrid.getCellValue(myGridID, selectedGridValue, "crcStateId");
-
-	        Common.confirm("Are you sure you want to save this Expenses form?",
-	            function(){
-	                Common.ajax("GET","/payment/postCardStatement.do", {"crcStateId" : crcStateId}, 
-	                    function(result){
-	                        Common.alert("This Expenses form has successfully been saved.", 
-	                            function (){
-	                                searchList();  
+	        var crcBcStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "crcBcStusId");
+	        
+	        if(crcBcStusId != 1){
+	        	Common.alert("<b>Only Active Status is allowed to post CRC Statement.</b>");
+	        }else{
+	        	Common.confirm("Are you sure you want to save this Expenses form?",
+	                    function(){
+	                        Common.ajax("GET","/payment/postCardStatement.do", {"crcStateId" : crcStateId}, 
+	                            function(result){
+	                                Common.alert("This Expenses form has successfully been saved.", 
+	                                    function (){
+	                                        searchList();  
+	                                    }
+	                                );
 	                            }
 	                        );
 	                    }
-	                );
-	            }
-	        );
+	        	   );
+	        }
+	        
 	    }else{
 	        Common.alert('No record selected.');
 	    }
@@ -186,13 +193,13 @@
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Credit Card Payment</li>
-        <li>Bank Charge & GST List</li>
+        <li>Confirm Bank Charge & GST</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Bank Charge & GST List</h2>
+        <h2>Confirm Bank Charge & GST</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:postStatement();">Posting</a></p></li>
             <li><p class="btn_blue"><a href="javascript:detailStatement();">Detailed</a></p></li>

@@ -182,7 +182,7 @@ public class CardStatementController {
 	 * @return
 	 */
 	@RequestMapping(value = "/postCardStatement.do", method = RequestMethod.GET)
-    public ResponseEntity<ReturnMessage> updateDeactivate(@RequestParam Map<String, Object> params,
+    public ResponseEntity<ReturnMessage> postCardStatement(@RequestParam Map<String, Object> params,
     		Model model, SessionVO sessionVO) {
 		
 		params.put("userId", sessionVO.getUserId());

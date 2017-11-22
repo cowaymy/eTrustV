@@ -173,7 +173,7 @@
             '10',       
             TO_CHAR(SYSDATE,'YYYYMMDD'),
             TO_CHAR(SYSDATE,'HHMMSS'),
-            #{userNm},            
+            #{userId},            
             #{fBankJrnlId},
             #{fTrnscId},
             #{uploadIssueBank},

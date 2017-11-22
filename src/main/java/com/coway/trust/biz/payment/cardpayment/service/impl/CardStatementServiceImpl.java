@@ -89,6 +89,9 @@ public class CardStatementServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
     public void postCardStatement(Map<String, Object> param){
 		cardStatementMapper.postCardStatement(param);
+		
+		//Interface Table Insert
+		cardStatementMapper.insertCrcStatementITF(param);
 	}
 	
 }

@@ -174,6 +174,7 @@
             A.CRC_STATE_UPLOAD_USER_ID,
             D.USER_NAME AS CRC_STATE_UPLOAD_USER_NM,
             A.CRC_POSTNG_DT,
+            A.CRC_BC_STUS_ID,
             COUNT(B.CRC_STATE_ID) AS CRC_ITM_CNT,            
             SUM(CRC_GROS_AMT) AS CRC_GROS_AMT,
             SUM(CASE WHEN CRC_TOT_BC_AMT IS NOT NULL THEN CRC_TOT_BC_AMT ELSE CRC_BC_AMT END) AS BC_AMT,
@@ -208,7 +209,8 @@
             A.CRC_STATE_REM,
             A.CRC_STATE_UPLOAD_USER_ID,
             D.USER_NAME,
-            A.CRC_POSTNG_DT
+            A.CRC_POSTNG_DT,
+            A.CRC_BC_STUS_ID
     </select>
     
     <!--Credit Card Statement Master Posting 처리 -->
@@ -220,6 +222,54 @@
         WHERE
             CRC_STATE_ID = #{crcStateId}     
     </update>
+    
+    <insert id="insertCrcStatementITF" parameterType="Map">
+        INSERT INTO ITF0920M (
+            IF_KEY,
+			SEQ,
+			IF_TYPE,
+			TRAN_STATUS_CD,
+			RGST_DT,
+			RGST_TM,
+			RGST_ID,
+			CRCNO,			
+			CRCCOM,
+			TRANDATE,
+			UPLODATE,
+			ZCOUNT,
+			REMARK,
+			GROSS,
+			BANCG,
+			BANCGGST
+        )
+        SELECT 
+            FN_CRT_IFKEY('920'),
+            1,
+            '920',
+            '10',       
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),  
+            #{userId},          
+            A.CRC_STATE_ID,
+            MAX(B.CRDIT_CARD) AS CRDIT_CARD,
+            TO_CHAR(B.CRC_TRNSC_DT,'YYYYMMDD'),
+            TO_CHAR(A.CRC_STATE_UPLOAD_DT,'YYYYMMDD'),
+            COUNT(B.CRC_STATE_ID) AS CRC_ITM_CNT,
+            A.CRC_STATE_REM,
+            SUM(CRC_GROS_AMT) AS CRC_GROS_AMT,
+            SUM(CASE WHEN CRC_TOT_BC_AMT IS NOT NULL THEN CRC_TOT_BC_AMT ELSE CRC_BC_AMT END) AS BC_AMT,
+            SUM(CASE WHEN CRC_TOT_GST_AMT IS NOT NULL THEN CRC_TOT_GST_AMT ELSE CRC_GST_AMT END) AS GST_AMT
+        FROM 
+            PAY0075D A 
+            JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+        WHERE
+            A.CRC_STATE_ID = #{crcStateId}
+        GROUP BY 
+            A.CRC_STATE_ID,
+            TO_CHAR(B.CRC_TRNSC_DT,'YYYYMMDD'),
+            TO_CHAR(A.CRC_STATE_UPLOAD_DT,'YYYYMMDD'),
+            A.CRC_STATE_REM
+    </insert>
             
     
 </mapper>
