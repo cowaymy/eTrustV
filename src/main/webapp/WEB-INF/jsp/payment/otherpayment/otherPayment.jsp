@@ -1368,10 +1368,8 @@ var columnLayout = [
     		
     		if($('#payMode').val() == '105'){
     			item.pendingAmount = $("#cash").find("#amount").val();
-    			AUIGrid.addRow(pendingGridID, item, "last");
     		}else if($('#payMode').val() == '106'){
     			item.pendingAmount = $("#cheque").find("#amount").val();
-                AUIGrid.addRow(pendingGridID, item, "last");
     		}
     		   else if($('#payMode').val() == '108'){
     			var amt = 0;
@@ -1379,11 +1377,10 @@ var columnLayout = [
     			amt = parseInt($("#online").find("#amount").val());
     			chgAmt = parseInt($("#online").find("#chargeAmount").val());
     			var tot = amt+chgAmt;
-    			
     			item.pendingAmount = tot;
-                AUIGrid.addRow(pendingGridID, item, "last");
-
             }
+    		
+    		AUIGrid.addRow(pendingGridID, item, "last");
     		
     		$("#page1").hide();
     		$("#page2").show();
