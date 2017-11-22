@@ -9,21 +9,8 @@ var selectedGridValue;
 var typeData = [];
 typeData = [{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Installment"}];
 
-$(document).ready(function(){
-    
-	doDefCombo(typeData, '' ,'appType', 'M', 'f_multiCombo');
-	setTimeout(function() { 
-		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	    
-	    // Master Grid 셀 클릭시 이벤트
-	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
-	        selectedGridValue = event.rowIndex;
-	    });  
-	}, 100);
-});
-
 var gridPros = {
-		showRowNumColumn : false,
+        showRowNumColumn : false,
         editable: false,
         showStateColumn: false,
         usePaging : false
@@ -37,6 +24,20 @@ var columnLayout=[
     {dataField:"salesDt", headerText:"Order Date"},
     {dataField:"name", headerText:"CustomerName"}
 ];
+
+$(document).ready(function(){
+    
+	doDefCombo(typeData, '' ,'appType', 'M', 'f_multiCombo');
+	setTimeout(function() { 
+		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+	    
+	    // Master Grid 셀 클릭시 이벤트
+	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+	        selectedGridValue = event.rowIndex;
+	    });  
+	}, 100);
+});
+
 
 function fn_getOutrightInvoiceListAjax(goPage) {     
     //페이징 변수 세팅
