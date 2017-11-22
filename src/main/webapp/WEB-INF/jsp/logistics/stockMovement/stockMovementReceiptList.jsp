@@ -434,14 +434,14 @@ function fn_ViewSerial(str){
                     <th scope="row">From Location</th>
                     <td>
                         <!-- <select class="w100p" id="tlocation" name="tlocation"></select> -->
-                        <input type="hidden"  id="tlocation" name="tlocation">
-                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
+                        <input type="hidden"  id="flocation" name="flocation">
+                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
                     </td>
                     <th scope="row">To Location</th>
                     <td >
                         <!-- <select class="w100p" id="flocation" name="flocation"></select> -->
-                        <input type="hidden"  id="flocation" name="flocation">
-                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
+                        <input type="hidden"  id="tlocation" name="tlocation">
+                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
                     <th scope="row">Auto / Manual</th>
                     <td>
