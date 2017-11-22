@@ -3,8 +3,8 @@ package com.coway.trust.web.services.servicePlanning.excel;
 import static com.coway.trust.config.excel.ExcelReadComponent.getValue;
 
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.velocity.runtime.directive.Parse;
 
 public class CTSubGroupAreaExcelUploaderDataVO {
 
@@ -31,14 +31,14 @@ public class CTSubGroupAreaExcelUploaderDataVO {
 		vo.setPostalCode(getValue(row.getCell(4)));
 		vo.setState(getValue(row.getCell(5)));
 		vo.setLocalType(getValue(row.getCell(6)));
-		//vo.setServiceWeek(getValue(row.getCell(7)));
 		if (row.getCell(7).getCellTypeEnum() == CellType.NUMERIC)
 			vo.setServiceWeek(String.valueOf((int)row.getCell(7).getNumericCellValue()));
 		else if (row.getCell(7).getCellTypeEnum() == CellType.STRING)
 			vo.setServiceWeek(getValue(row.getCell(7)));
 		vo.setSubGroup(getValue(row.getCell(8)));
-		vo.setPriodFrom(getValue(row.getCell(9)));
-		vo.setPriodTo(getValue(row.getCell(10)));
+		DataFormatter df = new DataFormatter();
+		vo.setPriodFrom(df.formatCellValue(row.getCell(9)));
+		vo.setPriodTo(df.formatCellValue(row.getCell(10)));
 
 		return vo;
 	}

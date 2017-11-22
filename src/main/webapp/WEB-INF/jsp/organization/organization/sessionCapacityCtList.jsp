@@ -445,9 +445,9 @@
 <h3>CT Capacity Configuration</h3>
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="removeRow()">DEL</a></p></li>
+    <!-- <li><p class="btn_grid"><a href="#" onclick="removeRow()">DEL</a></p></li> -->
     <li><p class="btn_grid"><a href="#" onclick="fn_save()">SAVE</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="addRow()">ADD</a></p></li>
+    <!-- <li><p class="btn_grid"><a href="#" onclick="addRow()">ADD</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
