@@ -240,7 +240,8 @@
                              vMemberOrg.LVL1_UP_ID LVL1_UP_ID , 
                              vMemberOrg.LVL0_UP_ID LVL0_UP_ID 
                         FROM ORG1001V vMemberOrg ) Extent4 ON Extent3.MEM_ID = Extent4.MEM_ID 
-                WHERE 1=1
+                WHERE 
+                    Extent1.APP_TYPE_ID IN (67,68)
                     AND  Extent1.STUS_CODE_ID = 4 
                ) Filter1 
            LEFT JOIN SYS0013M Extent5 ON Filter1.APP_TYPE_ID = Extent5.CODE_ID 
