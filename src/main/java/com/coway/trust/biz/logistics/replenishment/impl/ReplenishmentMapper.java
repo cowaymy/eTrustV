@@ -8,9 +8,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("ReplenishmentMapper")
 public interface ReplenishmentMapper {
-	Map<String, Object> excelDataSearch( Map<String, Object> params);
-	
-	void relenishmentSave( Map<String, Object> params);
-	
+	Map<String, Object> excelDataSearch(Map<String, Object> params);
+
+	void relenishmentSave(Map<String, Object> params);
+
 	List<EgovMap> selectSearchList(Map<String, Object> params);
+
+	List<EgovMap> searchListRdc(Map<String, Object> params);
 }
