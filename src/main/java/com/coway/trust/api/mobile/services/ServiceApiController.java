@@ -293,7 +293,7 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceResult", method = RequestMethod.POST)
-	public ResponseEntity<HeartServiceResultDto> hsRegistration_new (@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
+	public ResponseEntity<HeartServiceResultDto> hsRegistration (@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
 
 		String transactionId = "";
 		List<Map<String, Object>> heartLogs = null;
