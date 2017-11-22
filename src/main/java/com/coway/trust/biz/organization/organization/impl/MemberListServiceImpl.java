@@ -71,6 +71,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memberListMapper.selectMemberList(params);
 	}
 
+	public String selectLastGroupCode(Map<String,Object> params){
+		return memberListMapper.selectLastGroupCode(params);
+	}
 	@Override
 	public EgovMap selectMemberListView(Map<String, Object> params) {
 		return memberListMapper.selectMemberListView(params);
@@ -185,6 +188,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("streetDtl",params.get("streetDtl").toString());
 			MemApp.put("addrDtl",params.get("addrDtl").toString());
 
+
 			logger.debug("MemApp : {}",MemApp);
 
 			EgovMap appNo = getDocNo("145");
@@ -257,6 +261,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("Hospitalization",false);
 		params.put("deptCode",params.get("deptCd")!=null ? params.get("deptCd").toString().trim() : "");
 		params.put("codyPaExpr",params.get("codyPaExpr")!=null ? params.get("codyPaExpr").toString().trim() : "");
+		params.put("traineeType",Integer.parseInt(params.get("traineeType").toString()));
 
 		//addr 가져오기
 		params.put("areaId",params.get("areaId").toString());
@@ -478,13 +483,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 			case 5:
 				logger.debug("코디로 insert");
-        		selectMemberCode = getDocNo("155");
+
+				Map  p = new HashMap();
+				p.put("docNo", "155");
+				ID=155;
+        		selectMemberCode =   memberListMapper.getDocNo(p);
         		memberCode = selectMemberCode.get("docNo").toString();
         		params.put("memberCode", memberCode);
-        		ID=6;
-        		nextDocNo = getNextDocNo("TR",selectMemberCode.get("docNo").toString());
-        		logger.debug("nextDocNo : {}",nextDocNo);
-        		selectMemberCode.put("nextDocNo", nextDocNo);
+
         		break;
 			}
 
@@ -505,12 +511,22 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			EgovMap selectOrganization = null;
 			selectOrganization = memberListMapper.selectOranization(params);//deptCode 가져가서 select
 			logger.debug("selectOrganization : {}",selectOrganization);
-			String deptParentID="";
+			String deptParentID="", lastGroupCode="", lastOrgCode = "";
 					if(params.get("deptCode").toString() == null){
 						deptParentID = params.get("deptCode").toString();
 					}else
 						if(selectOrganization.get("memLvl").toString().equals("3") && selectOrganization.get("deptCode").toString().equals(params.get("deptCode").toString())){
 							deptParentID = selectOrganization.get("memId").toString();
+							//Map<String, Object> groupMap = new HashMap<String, Object>();
+
+							//groupMap.put("memberUpId", deptParentID);
+
+							//groupMap.put("divParam", "1");
+							//lastGroupCode = memberListMapper.selectLastGroupCode(groupMap);//select Last_group_code
+
+							//groupMap.put("memberUpId", lastGroupCode);
+							//groupMap.put("divParam", "2");
+							//lastOrgCode = memberListMapper.selectLastGroupCode(groupMap);//select Last_org_code
 						}
 			Map<String, Object> memOrg = new HashMap<String, Object>();
 			CodeMap.put("code", "mem");
@@ -533,9 +549,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memOrg.put("prMemberId",0);
 				memOrg.put("grandPrCode","");
 				memOrg.put("grandPrMemberId",0);
-				memOrg.put("lastDeptCode","");
-				memOrg.put("lastGrpCode","");
-				memOrg.put("lastOrgCode","");
+				memOrg.put("lastDeptCode",params.get("deptCode"));
+				memOrg.put("lastGrpCode",lastGroupCode);
+				memOrg.put("lastOrgCode",lastOrgCode);
 				memOrg.put("lastTopOrgCode","");
 				memOrg.put("branchId",0);
 
