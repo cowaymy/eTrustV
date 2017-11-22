@@ -415,7 +415,7 @@ var columnLayout = [
         }
     }
     ,{
-        dataField : "othKeyInMappingDt",
+        dataField : "othKeyinMappingDt",
         headerText : "Mapped Date",
         editable : false,
         dataType:"date",
