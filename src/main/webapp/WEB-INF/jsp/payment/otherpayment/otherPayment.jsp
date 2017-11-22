@@ -441,11 +441,11 @@ var columnLayout = [
 	    { dataField:"custBillId" ,headerText:"Billing Group" ,editable : false , width : 100},
 	    { dataField:"salesOrdId" ,headerText:"Order ID" ,editable : false , width : 100, visible : false },
 	    { dataField:"salesOrdNo" ,headerText:"Order No" ,editable : false , width : 100 },
-	    { dataField:"rpf" ,headerText:"RPF" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"rpfPaid" ,headerText:"RPF Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"mthRentAmt" ,headerText:"Monthly RF" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"balance" ,headerText:"Balance" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"unBilledAmount" ,headerText:"UnBill" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
+	    { dataField:"rpf" ,headerText:"RPF" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"rpfPaid" ,headerText:"RPF Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"mthRentAmt" ,headerText:"Monthly RF" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"balance" ,headerText:"Balance" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"unBilledAmount" ,headerText:"UnBill" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},  
 	    { dataField:"lastPayment" ,headerText:"Last Payment" ,editable : false , width : 120 , dataType : "date", formatString : "yyyy-mm-dd"},
 	    { dataField:"custNm" ,headerText:"Customer Name" ,editable : false , width : 250 },
 	    {
@@ -474,9 +474,9 @@ var columnLayout = [
 	    { dataField:"ordNo" ,headerText:"Order No" ,editable : false , width : 100 },      
 	    { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 180 },      
 	    { dataField:"installment" ,headerText:"Installment" ,editable : false , width : 100 },      
-	    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
-	    { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-	    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
+	    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},  
+	    { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},
+	    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},
 	    { dataField:"billDt" ,headerText:"Bill Date" ,editable : false , width : 100},
 	    { dataField:"stusCodeName" ,headerText:"Bill Status" ,editable : false , width : 100},
 	    {
@@ -498,10 +498,10 @@ var columnLayout = [
 	    { dataField:"salesOrdId" ,headerText:"Order ID" ,editable : false , width : 100, visible : false },
 	    { dataField:"salesOrdNo" ,headerText:"Order Number" ,editable : false , width : 120 },
 	    { dataField:"custNm" ,headerText:"Customer Name" ,editable : false , width : 180},      
-	    { dataField:"productPrice" ,headerText:"Product Price" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"totalPaid" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"balance" ,headerText:"Balance<br>(-:Overpaid, +:Outstanding)" ,editable : false , width : 200 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"reverseAmount" ,headerText:"Reversed" ,editable : false , width : 100 },
+	    { dataField:"productPrice" ,headerText:"Product Price" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"totalPaid" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"balance" ,headerText:"Balance<br>(-:Overpaid, +:Outstanding)" ,editable : false , width : 200 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"reverseAmount" ,headerText:"Reversed" ,editable : false , width : 100, dataType : "numeric", formatString : "#,##0.00" },
 	    { dataField:"lastPayment" ,headerText:"Last Payment" ,editable : false , width : 120 , dataType : "date", formatString : "yyyy-mm-dd"},
 	    { dataField:"userName" ,headerText:"Creator Name" ,editable : false , width : 200 }
 	];
@@ -514,13 +514,13 @@ var columnLayout = [
 	    { dataField:"custBillId" ,headerText:"Billing Group" ,editable : false , width : 100},
 	    { dataField:"srvCntrctRefNo" ,headerText:"Ref No." ,editable : false , width : 100},
 	    { dataField:"cntrctRentalStus" ,headerText:"Rental Status" ,editable : false , width : 100 },
-	    { dataField:"filterCharges" ,headerText:"Filter Charges" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"filterChargesPaid" ,headerText:"Filter Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"penaltyCharges" ,headerText:"Penalty Charges" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"penaltyChargesPaid" ,headerText:"Penalty Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-	    { dataField:"srvCntrctRental" ,headerText:"Monthly Fees" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
-	    { dataField:"balance" ,headerText:"Balance" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
-	    { dataField:"unBillAmount" ,headerText:"Unbill" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
+	    { dataField:"filterCharges" ,headerText:"Filter Charges" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"filterChargesPaid" ,headerText:"Filter Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"penaltyCharges" ,headerText:"Penalty Charges" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"penaltyChargesPaid" ,headerText:"Penalty Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},      
+	    { dataField:"srvCntrctRental" ,headerText:"Monthly Fees" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},  
+	    { dataField:"balance" ,headerText:"Balance" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.00"},
+	    { dataField:"unBillAmount" ,headerText:"Unbill" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.00"},
 	    { dataField:"lastPayment" ,headerText:"Last Payment" ,editable : false , width : 120 , dataType : "date", formatString : "yyyy-mm-dd"},
 	    { dataField:"custName" ,headerText:"Customer Name" ,editable : false , width : 250 },
 	    {
@@ -546,9 +546,9 @@ var columnLayout = [
 	    { dataField:"srvLdgrTypeId" ,headerText:"Bill Type ID" ,editable : false , width : 100  , visible : false },      
 	    { dataField:"srvLdgrTypeNm" ,headerText:"Bill Type" ,editable : false , width : 180 },      
 	    { dataField:"srvPaySchdulNo" ,headerText:"Schedule No." ,editable : false , width : 100 },
-	    { dataField:"srvLdgrAmt" ,headerText:"Bill No." ,editable : false , width : 100 },
-	    { dataField:"paidTotal" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
-	    { dataField:"targetAmt" ,headerText:"Target Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},    
+	    { dataField:"srvLdgrAmt" ,headerText:"Bill No." ,editable : false , width : 100, dataType : "numeric", formatString : "#,##0.00" },
+	    { dataField:"paidTotal" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},  
+	    { dataField:"targetAmt" ,headerText:"Target Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},    
 	    { dataField:"srvLdgrRefDt" ,headerText:"Bill Date" ,editable : false , width : 100},
 	    {
 	        dataField : "btnCheck",
@@ -591,27 +591,27 @@ var columnLayout = [
 	    },*/
 	    { dataField:"procSeq" ,headerText:"Process Seq" ,editable : false , width : 120 , visible : false },
 	    { dataField:"appType" ,headerText:"AppType" ,editable : false , width : 120 , visible : false },
-	    { dataField:"advMonth" ,headerText:"AdvanceMonth" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
+	    { dataField:"advMonth" ,headerText:"AdvanceMonth" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.00" , visible : false },
 	    { dataField:"billGrpId" ,headerText:"Bill Group ID" ,editable : false , width : 120},
 	    { dataField:"billId" ,headerText:"Bill ID" ,editable : false , width : 100, visible : false },
 	    { dataField:"ordId" ,headerText:"Order ID" ,editable : false , width : 100  , visible : false },
-	    { dataField:"mstRpf" ,headerText:"Master RPF" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.##" , visible : false },
-	    { dataField:"mstRpfPaid" ,headerText:"Master RPF Paid" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.##" , visible : false },
+	    { dataField:"mstRpf" ,headerText:"Master RPF" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.00" , visible : false },
+	    { dataField:"mstRpfPaid" ,headerText:"Master RPF Paid" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.00" , visible : false },
 	    { dataField:"billNo" ,headerText:"Bill No" ,editable : false , width : 150 },      
 	    { dataField:"ordNo" ,headerText:"Order No" ,editable : false , width : 100 },
 	    { dataField:"billTypeId" ,headerText:"Bill TypeID" ,editable : false , width : 100 , visible : false },
 	    { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 180 },      
 	    { dataField:"installment" ,headerText:"Installment" ,editable : false , width : 100 },      
-	    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},  
-	    { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-	    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : true , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
+	    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},  
+	    { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},
+	    { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : true , width : 100 , dataType : "numeric", formatString : "#,##0.00"},
 	    { dataField:"billDt" ,headerText:"Bill Date" ,editable : false , width : 100 },
-	    { dataField:"assignAmt" ,headerText:"assignAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
+	    { dataField:"assignAmt" ,headerText:"assignAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00" , visible : false },
 	    { dataField:"billStatus" ,headerText:"billStatus" ,editable : false , width : 100 , visible : false },
 	    { dataField:"custNm" ,headerText:"custNm" ,editable : false , width : 300},
 	    { dataField:"srvcContractID" ,headerText:"SrvcContractID" ,editable : false , width : 100 , visible : false },
 	    { dataField:"billAsId" ,headerText:"Bill AS Id" ,editable : false , width : 150 , visible : false },
-	    { dataField:"discountAmt" ,headerText:"discountAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
+	    { dataField:"discountAmt" ,headerText:"discountAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00" , visible : false },
 	];
 	
 	//AUIGrid 칼럼 설정 : targetBillMstGridID
@@ -632,8 +632,8 @@ var columnLayout = [
 	    { dataField:"billMemCode" ,headerText:"HP Code." ,editable : false , width : 100 , visible : false },
 	    { dataField:"ruleDesc" ,headerText:"Pay Type" ,editable : false , width : 200 },  
 	    { dataField:"billDt" ,headerText:"Date" ,editable : false , width : 100 },  
-	    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-	    { dataField:"paidAmt" ,headerText:"Paid Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
+	    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},
+	    { dataField:"paidAmt" ,headerText:"Paid Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},
 	    { dataField:"billRem" ,headerText:"Remark" ,editable : false , width : 100 },
 	    { dataField:"billIsPaid" ,headerText:"Paid?" ,editable : false , width : 100 },
 	    { dataField:"billIsComm" ,headerText:"Commission?" ,editable : false , width : 100 },
@@ -1368,8 +1368,41 @@ var columnLayout = [
     		
     		if($('#payMode').val() == '105'){
     			item.pendingAmount = $("#cash").find("#amount").val();
+    			
+    			//Transaction Date 체크
+                if(FormUtil.checkReqValue($("#trDateCash"))){
+                    Common.alert('* Transaction Date is empty');
+                    return;
+                }
+    			
+                if(FormUtil.checkReqValue($("#cash").find("#amount")) ||$("#cash").find("#amount").val() <= 0 ){
+                    Common.alert('* No Amount ');
+                    return;
+                }
+                
+                if(FormUtil.checkReqValue($("#cash").find("#bankAcc option:selected"))){
+                    Common.alert('* No Issue Bank Selected');
+                    return;
+                }
+    			
     		}else if($('#payMode').val() == '106'){
     			item.pendingAmount = $("#cheque").find("#amount").val();
+    			
+    			//Transaction Date 체크
+                if(FormUtil.checkReqValue($("#trDateCheque"))){
+                    Common.alert('* Transaction Date is empty');
+                    return;
+                }
+    			
+                if(FormUtil.checkReqValue($("#cheque").find("#amount")) ||$("#cheque").find("#amount").val() <= 0 ){
+                    Common.alert('* No Amount ');
+                    return;
+                }
+                
+                if(FormUtil.checkReqValue($("#cheque").find("#bankAcc option:selected"))){
+                    Common.alert('* No Issue Bank Selected');
+                    return;
+                }
     		}
     		   else if($('#payMode').val() == '108'){
     			var amt = 0;
@@ -1378,6 +1411,22 @@ var columnLayout = [
     			chgAmt = parseInt($("#online").find("#chargeAmount").val());
     			var tot = amt+chgAmt;
     			item.pendingAmount = tot;
+    			
+    			//Transaction Date 체크
+                if(FormUtil.checkReqValue($("trDateOnline"))){
+                    Common.alert('* Transaction Date is empty');
+                    return;
+                }
+    			
+                if(FormUtil.checkReqValue($("#online").find("#amount")) ||$("#online").find("#amount").val() <= 0 ){
+                    Common.alert('* No Amount ');
+                    return;
+                }
+                
+                if(FormUtil.checkReqValue($("#online").find("#bankAcc option:selected"))){
+                    Common.alert('* No Issue Bank Selected');
+                    return;
+                }
             }
     		
     		AUIGrid.addRow(pendingGridID, item, "last");
@@ -1391,6 +1440,8 @@ var columnLayout = [
             AUIGrid.resize(targetRenDetGridID); 
             
             AUIGrid.resize(targetFinalBillGridID);
+            
+            
     	}
     }
     
@@ -1932,13 +1983,13 @@ var columnLayout = [
                 </td>
             </tr>
             <tr>
-                   <th>Bank Account</th>
+                   <th>Bank Account<span class="must">*</span></th>
                    <td id="acc"></td>
                    <th>VA Account</th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
             </tr>
             <tr>
-                   <th>Transaction Date</th>
+                   <th>Transaction Date<span class="must">*</span></th>
                    <td colspan="3">
                         <input type="text" id="trDateOnline" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
                    </td>
@@ -2027,13 +2078,13 @@ var columnLayout = [
                 </td>
             </tr>
             <tr>
-                   <th>Bank Account</th>
+                   <th>Bank Account<span class="must">*</span></th>
                    <td id="acc"></td>
                    <th>VA Account</th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
             </tr>
             <tr>
-                   <th>Transaction Date</th>
+                   <th>Transaction Date<span class="must">*</span></th>
                    <td colspan="3">
                         <input type="text" id="trDateCash" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
                    </td>
@@ -2118,13 +2169,13 @@ var columnLayout = [
                 </td>
             </tr>
             <tr>
-                   <th>Bank Account</th>
+                   <th>Bank Account<span class="must">*</span></th>
                    <td id="acc"></td>
                    <th>VA Account</th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
             </tr>
             <tr>
-                   <th>Transaction Date</th>
+                   <th>Transaction Date<span class="must">*</span></th>
                    <td colspan="3">
                         <input type="text" id="trDateCheque" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
                    </td>

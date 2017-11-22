@@ -2289,7 +2289,7 @@ function addBillToFinal(){
 				        <td>
 				            <input id="keyInRunNo" name="keyInRunNo" type="text" title="" placeholder="" class="w100p" maxlength="50" />
 				        </td>
-				        <th scope="row">Transatcion Date<span class="must">*</span></th>
+				        <th scope="row">Transaction Date<span class="must">*</span></th>
 				        <td>
 				            <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 				        </td>
