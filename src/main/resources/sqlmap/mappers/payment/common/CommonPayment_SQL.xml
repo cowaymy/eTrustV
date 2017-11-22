@@ -1219,7 +1219,13 @@
             EFT_NO,
             TR_NO,
             TR_ISSU_DT,
-            COLL_MEM_ID
+            COLL_MEM_ID,
+            IS_LOCK,
+            IS_3PARTY,
+            STUS_ID,
+            IS_FUND_TRNSF,
+            SKIP_RECON,
+            PAY_ITM_CARD_TYPE
         )
         VALUES
         (
@@ -1238,7 +1244,13 @@
             #{eft},
             #{keyInTrNo},
             TO_DATE(#{keyInTrIssueDate}, 'DD/MM/YYYY'),
-            #{keyIncollMemId}
+            #{keyInCollMemId},
+            #{payItemIsLock},
+            #{payItemISThirdParty},
+            #{payItemStatusId},
+            #{isFundTransfer},
+            #{skipRecon},
+            #{payItemCardTypeId}
         )
     </insert>
     
