@@ -29,10 +29,9 @@
              , (l48.reqst_qty - l55.delvry_qty) AS remqty
              , (CASE WHEN l54.delvry_gi_cmplt = 'Y' THEN l55.delvry_qty ELSE 0 END) AS giqty
              , (CASE WHEN l54.delvry_gr_cmplt = 'Y' THEN l55.delvry_qty ELSE 0 END) AS grqty
-             , (CASE WHEN l60.debt_crdit_indict = 'S' THEN l60.Qty
-                          WHEN l60.debt_crdit_indict = 'H' THEN (l60.Qty * -1)
-                          ELSE 0 END) AS otherqty
-             , (l48.reqst_qty - l60.Qty) AS otherremqty
+              ,  NVL(l60.GR, 0) AS othergrqty
+              , (NVL(l60.GI, 0) * -1) othergiqty
+             , (l48.reqst_qty - (NVL(l60.GR, 0) + NVL(l60.GI, 0))) AS otherremqty
              , NVL(l54.delvry_gi_cmplt , 'N') AS gicom
              , NVL(l54.delvry_gr_cmplt , 'N') AS grcom
           FROM log0047m l47
@@ -41,8 +40,16 @@
              , log0054m l54
              , (SELECT reqst_no, delvry_no_itm, delvry_no, itm_code, itm_name, SUM(NVL(delvry_qty, 0)) DELVRY_QTY
                 FROM log0055d GROUP BY reqst_no, delvry_no_itm, delvry_no, itm_code, itm_name)l55
-             , (SELECT stock_trnsfr_reqst, stock_trnsfr_reqst_itm_no, debt_crdit_indict, SUM(NVL(qty, 0)) QTY
-                FROM log0060d GROUP BY stock_trnsfr_reqst, stock_trnsfr_reqst_itm_no, debt_crdit_indict)l60
+             , (SELECT * FROM
+                   (
+                    SELECT delvry_no, delvry_itm_no, debt_crdit_indict, NVL(qty, 0) QTY
+                    FROM log0060d WHERE auto_crt_itm != 'A'
+                    )
+	                PIVOT
+	                (SUM(QTY)
+			         FOR debt_crdit_indict IN('S' AS "GR", 'H' AS "GI"))
+		        )l60
+
              , (SELECT * FROM sys0013m WHERE code_master_id = 306) tran
              , (SELECT * FROM sys0013m WHERE code_master_id = 308) trand
              , (SELECT * FROM sys0013m WHERE code_master_id = 42) uomt
@@ -58,8 +65,8 @@
            AND l48.reqst_no_itm = l55.delvry_no_itm
            AND l54.delvry_no = l55.delvry_no
            AND l47.reqst_no = l48.reqst_no
-           AND l48.reqst_no = l60.stock_trnsfr_reqst
-           AND l48.reqst_no_itm = l60.stock_trnsfr_reqst_itm_no
+           AND l55.delvry_no = l60.delvry_no
+           AND l55.delvry_no_itm = l60.delvry_itm_no
            <if test="reqstno != null and reqstno != ''">
                AND l47.reqst_no = #{reqstno}
            </if>
