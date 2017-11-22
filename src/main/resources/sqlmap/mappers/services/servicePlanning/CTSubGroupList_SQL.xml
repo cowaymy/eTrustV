@@ -84,22 +84,12 @@
 		PRIOD_FROM =TO_DATE(#{priodFrom},'YYYY/MM/DD'),
 		PRIOD_TO = TO_DATE(#{priodTo},'YYYY/MM/DD'),
 		LOC_TYPE = #{locType},
-		SVC_WEEK = #{serviceWeek}
+		SVC_WEEK = #{serviceWeek},
+		UPD_DT = SYSDATE
 	WHERE AREA_ID = #{areaId} 
 	AND BRNCH_TYPE = 43
 	AND AVAIL_FLAG = 'Y'
 </update>
-<!-- 171122 :: 선한이 -->
-<update id="updateCTSubAreaGroupByExcel" parameterType="Map">
-    UPDATE ORG0019M SET
-        PRIOD_FROM =TO_DATE(#{priodFrom},'mm/dd/YY'),
-        PRIOD_TO = TO_DATE(#{priodTo},'mm/dd/YY'),
-        LOC_TYPE = #{locType},
-        SVC_WEEK = #{serviceWeek}
-    WHERE AREA_ID = #{areaId} 
-    AND BRNCH_TYPE = 43
-    AND AVAIL_FLAG = 'Y'
-</update> 
 <select id="selectCTSubGroupDscList" parameterType="Map" resultType="egovMap">
         SELECT DISTINCT CT_SUB_GRP CODE_ID, CT_SUB_GRP CODE_NAME
 		  FROM SYS0064M

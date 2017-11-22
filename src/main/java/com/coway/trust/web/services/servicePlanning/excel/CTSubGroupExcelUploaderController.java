@@ -60,7 +60,7 @@ public class CTSubGroupExcelUploaderController {
 
 		for (CTSubGroupAreaExcelUploaderDataVO vo : vos) 
 		{
-			LOGGER.debug("DETAIL >>>> AreaID : {}, svcWeek : {}, priodFrom : {}", vo.getAreaID(), vo.getServiceWeek(), vo.getPriodFrom());
+			LOGGER.debug("DETAIL >>>> AreaID : {}, svcWeek : {}, priodFrom : {}, priodTo : {}", vo.getAreaID(), vo.getServiceWeek(), vo.getPriodFrom(), vo.getPriodTo());
 			
 			HashMap<String, Object> updateMap = new HashMap<String, Object>();
 			

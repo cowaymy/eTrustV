@@ -95,7 +95,7 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 				}
 			}
 			logger.debug("insertValue {}", insertValue);
-			CTSubGroupListMapper.updateCTSubAreaGroupByExcel(insertValue);
+			CTSubGroupListMapper.insertCTSubAreaGroup(insertValue);
 		}
 	}
 

@@ -17,8 +17,6 @@ public interface CTSubGroupListMapper {
 	
 	void insertCTSubAreaGroup(Map<String, Object> params);
 	
-	void updateCTSubAreaGroupByExcel(Map<String, Object> insertValue);
-	
 	List<EgovMap> selectCTSubGroupDscList(Map<String, Object> params);
 	
 	List<EgovMap> selectCTM(Map<String, Object> params);

@@ -3,8 +3,9 @@ package com.coway.trust.web.services.servicePlanning.excel;
 import static com.coway.trust.config.excel.ExcelReadComponent.getValue;
 
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
+
+import com.ibm.icu.text.SimpleDateFormat;
 
 public class CTSubGroupAreaExcelUploaderDataVO {
 
@@ -36,9 +37,21 @@ public class CTSubGroupAreaExcelUploaderDataVO {
 		else if (row.getCell(7).getCellTypeEnum() == CellType.STRING)
 			vo.setServiceWeek(getValue(row.getCell(7)));
 		vo.setSubGroup(getValue(row.getCell(8)));
-		DataFormatter df = new DataFormatter();
-		vo.setPriodFrom(df.formatCellValue(row.getCell(9)));
-		vo.setPriodTo(df.formatCellValue(row.getCell(10)));
+//		DataFormatter df = new DataFormatter();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		vo.setPriodFrom(df.formatCellValue(row.getCell(9)));
+		if (row.getCell(9).getCellTypeEnum() == CellType.NUMERIC) {
+			vo.setPriodFrom(sdf.format(row.getCell(9).getDateCellValue()));
+		} else if (row.getCell(9).getCellTypeEnum() == CellType.STRING) {
+			vo.setPriodFrom(getValue(row.getCell(9)));
+		}
+//		vo.setPriodTo(df.formatCellValue(row.getCell(10)));
+		if (row.getCell(10).getCellTypeEnum() == CellType.NUMERIC) {
+			vo.setPriodTo(sdf.format(row.getCell(10).getDateCellValue()));
+		} else if (row.getCell(10).getCellTypeEnum() == CellType.STRING) {
+			vo.setPriodTo(getValue(row.getCell(10)));
+		}
+//		vo.setPriodFrom(sdf.format(row.getCell(10).getDateCellValue()));
 
 		return vo;
 	}
