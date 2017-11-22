@@ -71,7 +71,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
                             {dataField:"dcfReqDetNwData"      ,headerText:"To"    ,width:"15%" ,height:30 , visible:true},
                             {dataField:"c3"      ,headerText:"Status"           ,width:"15%"  ,height:30 , visible:true},
                             {dataField:"c4"      ,headerText:"Settle Date"           ,width:"15%" ,height:30 , visible:true},
-                            {dataField:"dcfReqDetRem"      ,headerText:"Remark"    ,width:"20%" ,height:30 , visible:true},      
+                            {dataField:"dcfReqDetRem"      ,headerText:"Remark"    ,width:"25%" ,height:30 , visible:true},      
                          ];
         var respondlogLayout = [{dataField:"c2"      ,headerText:"Creator"           ,width:"30%"  ,height:30 , visible:true},
                             {dataField:"c1"      ,headerText:"Date"           ,width:"30%" ,height:30 , visible:true},
