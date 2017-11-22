@@ -550,7 +550,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             logPram.put("USERID", sessionVO.getUserId());   
             
             logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram.toString());
-//            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");  
             /////////////////////////물류 호출 END //////////////////////   			
         			
@@ -558,14 +558,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           
     	  /////////////////////////물류 호출//////////////////////
     		logPram =new HashMap<String, Object>();  
-            logPram.put("ORD_ID",    params.get("hiddeninstallEntryNo") );
+            logPram.put("ORD_ID",    schdulId);
             logPram.put("RETYPE", "SVO");  
             logPram.put("P_TYPE", "OD06");  
             logPram.put("P_PRGNM", "HSCAN");  
             logPram.put("USERID", sessionVO.getUserId());   
             
             logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-//            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+          servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////   			
       }
