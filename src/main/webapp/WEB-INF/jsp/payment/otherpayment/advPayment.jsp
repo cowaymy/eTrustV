@@ -481,7 +481,6 @@ function saveAdvPayment(){
     
 	var keyInPayType = $("#keyInPayType").val();
 	
-	
 	if(keyInPayType == "105"){
 		var cashBankType = $("#cashBankType").val();
 		var cashVAAccount = $("#cashVAAccount").val();
@@ -499,7 +498,7 @@ function saveAdvPayment(){
 			}
 			
 		}else{
-			if(FormUtil.checkReqValue($("#cashVAAccount"))){
+			if(FormUtil.checkReqValue($("#cashBankAcc"))){
 				Common.alert('* No Bank Account ');
                 return;
 			}
@@ -532,8 +531,45 @@ function saveAdvPayment(){
 		
 	}else if(keyInPayType == "106"){
 		
+		var chequeBankType = $("#chequeBankType").val();
+        var chequeVAAccount = $("#chequeVAAccount").val();
+        var chequeBankAcc = $("#chequeBankAcc").val();
+		
 		if(FormUtil.checkReqValue($("#chequeAmount")) ||$("#chequeAmount").val() <= 0 ){
             Common.alert('* No Amount ');
+            return;
+        }
+		
+		if(chequeBankType == "2730"){
+            if(chequeVAAccount.length != 16 || chequeVAAccount == "" ){
+                Common.alert('* No VA Account ');
+                return;
+            }
+            
+        }else{
+            if(FormUtil.checkReqValue($("#chequeBankAcc"))){
+                Common.alert('* No Bank Account ');
+                return;
+            }
+        }
+        
+        if(FormUtil.checkReqValue($("#chequeTransDate"))){
+            Common.alert('* Transaction Date is empty');
+            return;
+        }
+        
+        if(FormUtil.checkReqValue($("#chequeSlipNo"))){
+            Common.alert('* No Slip No');
+            return;
+        }
+        
+        if(FormUtil.checkReqValue($("#chequePayName"))){
+            Common.alert('* No PayerName');
+            return;
+        }   
+        
+        if(FormUtil.checkReqValue($("#chequeRefDetails"))){
+            Common.alert('* No Ref Details/Jornpay Ref ');
             return;
         }
 		
@@ -544,10 +580,52 @@ function saveAdvPayment(){
 		
 	}else if(keyInPayType == "108"){
 		
+		var onlineBankType = $("#onlineBankType").val();
+        var onlineVAAccount = $("#onlineVAAccount").val();
+        var onlineBankAcc = $("#onlineBankAcc").val();
+		
 		if(FormUtil.checkReqValue($("#onlineAmount")) ||$("#onlineAmount").val() <= 0 ){
             Common.alert('* No Amount ');
             return;
         }
+		
+		if(FormUtil.checkReqValue($("#onlineBankChgAmt")) ||$("#onlineBankChgAmt").val() <= 0 ){
+            Common.alert('* No Bank Charge Amount ');
+            return;
+        }
+		
+		 if(FormUtil.checkReqValue($("#onlineTransDate"))){
+			    Common.alert('* Transaction Date is empty');
+	            return;
+	     }
+	     
+		 if(FormUtil.checkReqValue($("#onlineEft"))){
+             Common.alert('* No EFT No');
+             return;
+         }
+         
+         if(FormUtil.checkReqValue($("#onlinePayName"))){
+             Common.alert('* No PayerName');
+             return;
+         }   
+         
+         if(FormUtil.checkReqValue($("#onlineRefDetails"))){
+             Common.alert('* No Ref Details/Jornpay Ref ');
+             return;
+         }
+         
+         if(onlineBankType == "2730"){
+             if(onlineVAAccount.length != 16 || onlineVAAccount == "" ){
+                 Common.alert('* No VA Account ');
+                 return;
+             }
+             
+         }else{
+             if(FormUtil.checkReqValue($("#onlineBankAcc"))){
+                 Common.alert('* No Bank Account ');
+                 return;
+             }
+         }
 		
 		if( FormUtil.byteLength($("#onlineRemark").val()) > 3000 ){
             Common.alert('* Please input the Remark below or less than 3000 bytes.');
