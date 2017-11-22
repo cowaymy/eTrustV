@@ -111,25 +111,23 @@ $(function(){
     	$("#giopenwindow").show();
     	$("#popForm")[0].reset();
     });
-    $('#save').click(function(){	
-    	result='E';
+    $('#edit').click(function(){
+    	var updCnt = GridCommon.getEditData(listGrid).update.length;
     	var dat = GridCommon.getEditData(listGrid);
-        if (validationchk(result)){
+
+       if(updCnt <= 0) {
+    		 Common.alert('No Enter Data.');
+       }else{
         Common.ajax("POST", "/logistics/replenishment/relenishmentSave.do", dat, function(result) {
             Common.alert(result.message , SearchListAjax);
         },  function(jqXHR, textStatus, errorThrown) {
             try {
             } catch (e) {
             }
-
             Common.alert("Fail : " + jqXHR.responseJSON.message);
-        });
-        }else{
-        return false;
-    }
+        });  
+        }
     });
-    
-    
     
     $('#popsave').click(function(){
     	result='A';
@@ -150,15 +148,7 @@ $(function(){
         	return false;
         }
     });
-//     $('#slocgb').change(function(){
-//     	var paramdata ={"locgb":$('#slocgb').val()};
-//     	doGetComboData('/common/selectStockLocationList.do', paramdata, '','sloccode', 'S' , '');
-//     	if ($('#slocgb').val() == '03' || $('#slocgb').val() == '04'){
-//     		AUIGrid.hideColumnByDataField(listGrid, "sftyqty");
-//     	}else{
-//     		AUIGrid.showColumnByDataField(listGrid, "sftyqty");
-//     	}
-//     });
+
     $('#sloccode').change(function(){
     });
    
@@ -219,17 +209,6 @@ function validationchk(result){
     }
   }   
 	
-// 	   if(result=='E'){
-// 	        if ($("#searchperiod").val() == ''){
-// 	                Common.alert('Please enter a period.');
-// 	                return false;
-// 	        }
-// 	        if ($("#searchperiod").val() == ''){
-//                 Common.alert('Please enter a period.');
-//                 return false;
-//             }
-// 	    }
-
     return true;
 }
 
@@ -262,30 +241,6 @@ function checkHTML5Brower() {
     }
     return isCompatible;
 }
-
-/* function createInitGrid() {
-    
-    var columnLayout = [];
-    
-    for(var i=0; i<10; i++) {
-        columnLayout.push({
-            dataField : "f" + i,
-            headerText : String.fromCharCode(65 + i),
-            width : 80
-        });
-    }
-    
-    // 그리드 속성 설정
-    var gridPros = {
-        noDataMessage : "로컬 PC의 엑셀 파일을 선택하십시오."
-    };
-
-    // 실제로 #grid_wrap 에 그리드 생성
-    subGrid = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-    
-    // 그리드 최초에 빈 데이터 넣음.
-    AUIGrid.setGridData(subGrid, []);
-} */
 
 function fn_detail(data){
 	var period;
@@ -394,7 +349,7 @@ function SearchListAjax() {
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
             <li><p class="btn_grid"><a id="add">Add</a></p></li>
-            <li><p class="btn_grid"><a id="save">Edit</a></p></li>
+            <li><p class="btn_grid"><a id="edit">Edit</a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
