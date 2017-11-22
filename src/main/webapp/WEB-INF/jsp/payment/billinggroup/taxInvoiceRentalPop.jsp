@@ -23,14 +23,17 @@ $(document).ready(function(){
             showStateColumn : false     // 상태 칼럼 사용
     };
     
-    // Order 정보 (Master Grid) 그리드 생성
-    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    
-    // Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
-        selectedGridValue = event.rowIndex;
-    });  
-});
+   
+    setTimeout(function() {
+    	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+        
+        // Master Grid 셀 클릭시 이벤트
+        AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+            selectedGridValue = event.rowIndex;
+        });  
+   	
+    }, 100);// Order 정보 (Master Grid) 그리드 생성
+ });
 
 
 // AUIGrid 칼럼 설정
