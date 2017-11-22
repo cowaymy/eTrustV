@@ -79,7 +79,7 @@
     	Common.ajaxSync("GET", "/organization/getAvailableChild.do" , {  REQST_NO: '${promoInfo.reqstNo}'  } , function(result) {
           
     		   if(null != result){
-    			    if(  Number(result.asCnt)  >=  Number(result.tobeCnt) )  isAv =true;
+    			    if(  Number(result.asCnt)  <=  Number(result.tobeCnt) )  isAv =true;
         	    }
         });
         
