@@ -1,7 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
 
 <script type="text/javaScript">
 
@@ -55,13 +53,13 @@ function fn_goSelectedPage() {
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Billing</li>
         <li>Billing Group</li>
-        <li>InvoiceIssue</li>
+        <li>Invoice Generate</li>
     </ul>
     
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Invoice Issue</h2>   
+        <h2>Invoice Generate</h2>   
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onclick ="javascript:fn_goSelectedPage()">Go</a></p></li>            
         </ul>    
@@ -81,7 +79,7 @@ function fn_goSelectedPage() {
                 </colgroup>
                 <tbody>
                 <tr>
-                    <th>Type</th>
+                    <th>TexType</th>
                     <td>
 				        <label><input type="radio" name="gstType" id="gstType1" value="1" /><span>Before GST</span></label>
 				        <label><input type="radio" name="gstType" id="gstType2" value="2" /><span>After GST</span></label>
