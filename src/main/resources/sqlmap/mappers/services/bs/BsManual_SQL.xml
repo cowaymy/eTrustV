@@ -170,7 +170,7 @@
                                         ,SYS0038M STUS
                                         ,ORG0001D MEM
                                         ,SYS0038M STUS1
-                                WHERE 1=1
+                                 WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
                                 AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
                                 AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
@@ -181,13 +181,13 @@
                                 and stk.stk_id = sod.ITM_STK_ID
                                 and i.SALES_ORD_ID = SOM.SALES_ORD_ID
                                 and lAST_brm.SCHDUL_ID(+) = HSM.SCHDUL_ID
-                                and lAST_brm.result_ID = (select Max(result_ID) from SVC0006D where HSM.SCHDUL_ID= SCHDUL_ID and result_stus_code_id = 4 )
+                                and (lAST_brm.result_ID IS NULL OR lAST_brm.result_ID = (select Max(result_ID) from SVC0006D where HSM.SCHDUL_ID = SCHDUL_ID and result_stus_code_id = 4))
                                 AND SC.SRV_SO_ID = SOM.SALES_ORD_ID
                                 AND SC.SRV_CONFIG_ID =SCP.SRV_CONFIG_ID
                                 AND SCP.SRV_PRD_ID = (SELECT MAX(SRV_PRD_ID) FROM SAL0088D WHERE SRV_CONFIG_ID = SC.SRV_CONFIG_ID AND SCP.SRV_PRD_STUS_ID = 1)
                                 AND STUS.STUS_CODE_ID(+) = LAST_BRM.RESULT_STUS_CODE_ID
                                and mem.mem_id(+) = HSM.CODY_ID
-                               and Stus1.STUS_CODE_ID = mem.stus
+                               and Stus1.STUS_CODE_ID(+) = mem.stus
 
                       <!--      SELECT   distinct C.CUST_ID CUST_ID
                                         , C.NAME Name
