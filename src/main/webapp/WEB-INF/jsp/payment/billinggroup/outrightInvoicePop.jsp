@@ -135,7 +135,7 @@ function f_multiCombo() {
     $(function() {
         $('#appType').multipleSelect({
             //selectAll : true, // 전체선택 
-            width : '100%'
+            width : '80%'
         })
     });
 }
