@@ -118,6 +118,7 @@ public class HolidayController {
 		String[] branchList = request.getParameterValues("branchId");
 		params.put("stateList", stateList);
 		params.put("branchList", branchList);
+		logger.debug("params22222222222222 {}", params);
 		List<EgovMap> holidayList = holidayService.selectHolidayList(params);
 		logger.debug("holidayList {}", holidayList);
 		return ResponseEntity.ok(holidayList);
@@ -178,6 +179,7 @@ public class HolidayController {
 		params.put("stateTypeList", stateTypeList);
 		params.put("stateList", stateList);
 		params.put("branchList", branchList);
+		logger.debug("params111111111111111111 {}", params);
 		List<EgovMap> assignList = holidayService.selectCTAssignList(params);
 		logger.debug("assignList {}", assignList);
 		return ResponseEntity.ok(assignList);
@@ -238,15 +240,15 @@ public class HolidayController {
 	 * @param model
 	 * @return
 	 * @throws Exception
-	 *//*
+	 *//* */
 	@RequestMapping(value = "/selectAssignCTList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectAssignCTList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
 		List<EgovMap> assignCTList = holidayService.selectAssignCTList(params);
-		assignCTList.add
+		
 		logger.debug("assignCTList {}", assignCTList);
 		return ResponseEntity.ok(assignCTList);
-	}*/
+	}
 	
 	/**
 	 * Search rule book management list

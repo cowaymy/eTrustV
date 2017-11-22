@@ -154,23 +154,42 @@
           #{item}
           </foreach>
        </if>
-       <if test="stateList != null and stateList != '' ">
-          AND B.STATE IN 
-          <foreach item="item" collection="stateList" index="index" open="(" separator="," close=")">
-          #{item}
-          </foreach>
-       </if>
-      <if test="type != null and type != ''">
-        AND B.HOLIDAY_TYPE =  #{type}
-      </if>
-      <if test="holidayDt != null and holidayDt != ''">
-        AND B.HOLIDAY =  TO_CHAR(TO_DATE (#{holidayDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
-      </if>
+       <choose>
+	       <when test="state1 !=null and state1 !='' ">
+	           AND B.STATE =#{state1}
+	       </when>
+	       <when test="stateList != null and stateList != '' ">
+	          AND B.STATE IN 
+	          <foreach item="item" collection="stateList" index="index" open="(" separator="," close=")">
+	           #{item}
+	          </foreach>
+	       </when>
+       </choose>
+       <choose>
+	      <when test="type1 != null and type1 != ''"> 
+	               AND B.HOLIDAY_TYPE = #{type1}
+	          </when>
+	      <when test = "type != null and type != ''" >
+	      <!-- 마우스 선택시 검색조건 -->
+	            AND B.HOLIDAY_TYPE =  #{type}
+	      </when>
+      </choose>
+      <choose>
+	      <when test="holidayDt != null and holidayDt != ''">
+	        AND B.HOLIDAY =  TO_CHAR(TO_DATE (#{holidayDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+	      </when>
+	      <when test="holiday1 != null and holiday1 != ''">
+            AND B.HOLIDAY =  #{holiday1}
+          </when>
+      </choose>
      <if test="branchList != null and branchList != '' ">
           AND B.CT_BRNCH_CODE IN 
           <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
-          #{item}
+            #{item}
           </foreach>
+       </if>
+       <if test="holidayDesc !=null and holidayDesc !=''  ">
+            B.HOLIDAY_DESC =#{holidayDesc}
        </if>
     </select>
     <insert id="insertCTAssign" parameterType="Map">
@@ -196,7 +215,9 @@
     <select id="selectAssignCTList"  parameterType="Map" resultType="egovMap">
         SELECT B.MEM_CODE, B.NAME, B.MEM_ID,COUNT(A.CT_MEM_ID) AS total_assign_date
         FROM ORG0020D A INNER JOIN ORG0001D B ON A.CT_MEM_ID = B.MEM_ID
-        WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND B.BRNCH = #{branchId}
+        WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') 
+         AND HOLIDAY_TYPE = #{holidayType}
+         AND B.BRNCH = #{branchId}
         GROUP BY B.MEM_CODE, B.NAME, B.MEM_ID
     </select>
     <delete id="deleteCTAssign" parameterType="Map">

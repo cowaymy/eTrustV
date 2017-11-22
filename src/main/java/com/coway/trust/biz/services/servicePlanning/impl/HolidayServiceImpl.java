@@ -121,6 +121,8 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 	
 	@Override
 	public List<EgovMap> selectAssignCTList(Map<String, Object> params) {
+		params.put("holidayType",(params.get("holidayType").toString()).substring(0, 1));	
+		logger.debug("insertValue {}",params);
 		return holidayMapper.selectAssignCTList(params);
 	}
 	
@@ -128,7 +130,7 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		Map<String, Object>  delValue = null;
 		for(int i=0; i< delList.size(); i++){
 			delValue = (Map<String, Object>) delList.get(i);
-			delValue.put("holidayType", formMap.get("holidayType"));
+			delValue.put("holidayType", (formMap.get("holidayType").toString()).substring(0, 1));
 			delValue.put("holiday", formMap.get("holiday"));
 			delValue.put("branchName", formMap.get("branchName"));
 			delValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );

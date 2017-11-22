@@ -4,6 +4,11 @@
 <script type="text/javaScript">
 var gridID;
 var gridID1;
+var type1;
+var holidayDesc1;
+var holiday1;
+var state1;
+var holidaySeq1;
 var grpOrgList= new Array();
 var rData = new Array();
 function holidayCTassignGrid() {
@@ -134,6 +139,19 @@ $(document).ready(function(){
 	 AUIGrid.bind(gridID, "addRow", auiAddRowHandler);
 	 AUIGrid.bind(gridID, "removeRow", auiRemoveRowHandler);
 	 
+	 AUIGrid.bind(gridID, "cellClick", function(event) {
+         console.log(event.rowIndex);
+         type1= AUIGrid.getCellValue(gridID, event.rowIndex, "holidayType");
+         holidayDesc1 = AUIGrid.getCellValue(gridID, event.rowIndex, "holidayDesc");
+         holiday1 = AUIGrid.getCellValue(gridID, event.rowIndex, "holiday");
+         state1 = AUIGrid.getCellValue(gridID, event.rowIndex, "state");
+         holidaySeq1 = AUIGrid.getCellValue(gridID, event.rowIndex, "holidaySeq");
+         
+         console.log(type1 + "      " + holidayDesc1 + "    " + holiday1 + "   "  + holidaySeq1 + state1);
+         
+     });
+	 
+	 
 	 AUIGrid.bind(gridID1, "cellClick", function(event) {
 	        console.log(event.rowIndex);
 	        type= AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayType");
@@ -147,6 +165,8 @@ $(document).ready(function(){
 	        console.log(type + "      "+branchName + "     " + holidayDesc + "    " + holiday + "   " + branchId + "    " + holidaySeq + state);
 	        
 	    });
+	 
+	
 	 doGetCombo('/services/holiday/selectState.do', '' , '', 'cmbState' , 'S', '');
 });
 
@@ -298,11 +318,27 @@ $(document).ready(function(){
             AUIGrid.setGridData(gridID, result);
     	   });
     	   
-    	   Common.ajax("GET", "/services/holiday/searchCTAssignList.do",$("#holidayForm").serialize(), function(result) {
+    	 
+    	  
+    	  $("#type1").val(type1.substr(0,1));
+    	  $("#holidayDesc1").val(holidayDesc1);
+    	  $("#holiday1").val( holiday1);
+    	  $("#holidaySeq1").val(holidaySeq1);
+    	  $("#state1").val(state1);
+    	   console.log(type1 + "      " + holidayDesc1 + "    " + holiday1 + "   "  + holidaySeq1 + state1);
+    	   Common.ajax("GET", "/services/holiday/searchCTAssignList.do", $("#holidayForm").serialize(), function(result) {
                console.log("성공.");
                console.log("data : " + result);
                AUIGrid.setGridData(gridID1, result);
               });
+    	   
+    	  
+    	   type1 = "";
+    	   holidayDesc1="";
+    	   holiday1="";
+    	   state1="";
+    	   holidaySeq1="";
+    	   console.log(type1 + "      " + holidayDesc1 + "    " + holiday1 + "   "  + holidaySeq1 + state1);
     }
     
     function fn_radioBtn(val){
@@ -316,6 +352,8 @@ $(document).ready(function(){
             $("#hiddenBtn3").show();
             AUIGrid.resize(holiday_grid_wap,1000,400);
         }else{
+        	
+        	   fn_holidayListSearch();  	
               $("#holiday_CTassign_grid_wap").show();
               $("#holiday_grid_wap").hide();
               $("#hiddenBtn").show();
@@ -364,7 +402,11 @@ $(document).ready(function(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="holidayForm">
-
+<input type ="hidden" id="type1" name="type1">
+<input type ="hidden" id="holidayDesc1" name="holidayDesc1">
+<input type ="hidden" id="holiday1" name="holiday1">
+<input type ="hidden" id="holidaySeq1" name="holidaySeq1">
+<input type ="hidden" id="state1" name="state1">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
