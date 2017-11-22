@@ -38,4 +38,16 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 	public List<EgovMap> selectOrderList(Map<String, Object> params) {
 		return orderListMapper.selectOrderList(params);
 	}
+
+	@Override
+	public List<EgovMap> getApplicationTypeList(Map<String, Object> params) {
+		return orderListMapper.getApplicationTypeList(params);
+	}
+
+	@Override
+	public List<EgovMap> getUserCodeList() {
+		return orderListMapper.getUserCodeList();
+	}
+	
+	
 }
