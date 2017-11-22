@@ -794,7 +794,7 @@ and cust.cust_id = custCnt.cust_id
             TO_CHAR (SAL0046D.INSTALL_DT, 'MM') as plan_Month,
             SAL0046D.SESION_CODE            AS job_Session,
             TO_CHAR(SAL0095D.SRV_EXPR_DT,'YYYYMMDD')            AS expiry_Date,
-            FN_GET_COMMCD(8,SAL0029D.TYPE_ID)               AS customer_Type,
+            to_char(SAL0029D.TYPE_ID)       AS customer_Type,
             SAL0001D.CUST_ID                AS customer_Id,
             SYS0064M.POSTCODE               AS postcode,
             SYS0064M.STATE                  AS serviceState,
