@@ -65,7 +65,13 @@ public class ReplenishmentController {
 
 		return "logistics/replenishment/replenishmentRdc";
 	}
+	
+	@RequestMapping(value = "/replenishmentct.do")
+	public String ctlist(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		return "logistics/replenishment/replenishmentCT";
+	}
+	
 	@RequestMapping(value = "/exceldata.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> excelDataSearch(@RequestParam Map<String, Object> params, Model model) throws Exception {
 
@@ -131,4 +137,18 @@ public class ReplenishmentController {
 		message.setData(list);
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/searchAutoCTList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> searchAutoCTList(@RequestBody Map<String, Object> params, Model model)
+			throws Exception {
+		
+		logger.debug(":: {}", params);
+
+		List<EgovMap> list = replenishment.searchAutoCTList(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}	
 }
