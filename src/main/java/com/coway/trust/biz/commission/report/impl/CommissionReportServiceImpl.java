@@ -127,5 +127,15 @@ public class CommissionReportServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> selectCodyRawData(Map<String, Object> params) {
 		return commissionReportMapper.selectCodyRawData(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectHPRawData(Map<String, Object> params) {
+		return commissionReportMapper.selectHPRawData(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectCTRawData(Map<String, Object> params) {
+		return commissionReportMapper.selectCTRawData(params);
+	}
 
 }

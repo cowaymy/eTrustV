@@ -37,40 +37,41 @@ public class CommissionConstants {
 	public static final String COMIS_MANAGER_MEM_LEV = "3";				//Manager(Leader)
 	public static final String COMIS_NORMAL_MEM_LEV = "4";					//Normal
 	
-	public static final String COMIS_HP_SGM_LEV = "0";				//Normal
-	public static final String COMIS_HP_GM_LEV = "1";				//Normal
-	public static final String COMIS_HP_SM_LEV = "2";					//Normal
-	public static final String COMIS_HP_HM_LEV = "3";				//Normal
-	public static final String COMIS_HP_HP_LEV = "4";					//Normal
+	//**COMMISSION ORG MEMBER LEVEL**//
+	public static final String COMIS_HP_SGM_LEV = "0";				//SGM
+	public static final String COMIS_HP_GM_LEV = "1";				//GM
+	public static final String COMIS_HP_SM_LEV = "2";					//SM
+	public static final String COMIS_HP_HM_LEV = "3";				//HM
+	public static final String COMIS_HP_HP_LEV = "4";					//HPP, HPF
 	
-	public static final String COMIS_CD_GCM_LEV = "1";				//Normal
-	public static final String COMIS_CD_SCM_LEV = "2";				//Normal
-	public static final String COMIS_CD_CM_LEV = "3";				//Normal
-	public static final String COMIS_CD_CD_LEV = "4";					//Normal	
+	public static final String COMIS_CD_GCM_LEV = "1";				//CDG
+	public static final String COMIS_CD_SCM_LEV = "2";				//CDS
+	public static final String COMIS_CD_CM_LEV = "3";				//CM
+	public static final String COMIS_CD_CD_LEV = "4";					//CD, CDC	
 		
-	public static final String COMIS_CT_CTM_LEV = "2";				//Normal
-	public static final String COMIS_CT_CTL_LEV = "3";				//Normal
-	public static final String COMIS_CT_CT_LEV = "4";					//Normal	
+	public static final String COMIS_CT_CTM_LEV = "2";				//CTM
+	public static final String COMIS_CT_CTL_LEV = "3";				//CTL
+	public static final String COMIS_CT_CT_LEV = "4";					//CT, CTE, CTN	
 	
 	
-	public static final String COMIS_HP_SGM_CD = "HPT";			//Normal
-	public static final String COMIS_HP_GM_CD = "HPG";				//Normal
-	public static final String COMIS_HP_SM_CD = "HPS";				//Normal
-	public static final String COMIS_HP_HM_CD = "HPM";			//Normal
-	public static final String COMIS_HP_HPP_CD = "HPP";				//Normal
-	public static final String COMIS_HP_HPF_CD = "HPF";				//Normal
+	public static final String COMIS_HP_SGM_CD = "HPT";			
+	public static final String COMIS_HP_GM_CD = "HPG";				
+	public static final String COMIS_HP_SM_CD = "HPS";				
+	public static final String COMIS_HP_HM_CD = "HPM";				
+	public static final String COMIS_HP_HPP_CD = "HPP";				
+	public static final String COMIS_HP_HPF_CD = "HPF";				
 	
-	public static final String COMIS_CD_GCM_CD = "CDG";			//Normal
-	public static final String COMIS_CD_SCM_CD = "CDS";			//Normal
-	public static final String COMIS_CD_CM_CD = "CDM";				//Normal
-	public static final String COMIS_CD_CDC_CD = "CDC";			//Normal	
-	public static final String COMIS_CD_CDN_CD = "CDN";			//Normal	
+	public static final String COMIS_CD_GCM_CD = "CDG";			
+	public static final String COMIS_CD_SCM_CD = "CDS";			
+	public static final String COMIS_CD_CM_CD = "CDM";				
+	public static final String COMIS_CD_CDC_CD = "CDC";				
+	public static final String COMIS_CD_CDN_CD = "CDN";				
 		
-	public static final String COMIS_CT_CTM_CD = "CTM";			//Normal
-	public static final String COMIS_CT_CTL_CD = "CTL";				//Normal
-	public static final String COMIS_CT_CTN_CD = "CTN";				//Normal
-	public static final String COMIS_CT_CTR_CD = "CTR";				//Normal
-	public static final String COMIS_CT_CTE_CD = "CTE";				//Normal
+	public static final String COMIS_CT_CTM_CD = "CTM";			
+	public static final String COMIS_CT_CTL_CD = "CTL";				
+	public static final String COMIS_CT_CTN_CD = "CTN";				
+	public static final String COMIS_CT_CTR_CD = "CTR";				
+	public static final String COMIS_CT_CTE_CD = "CTE";				
 	
 	public static final String COMIS_CD_CDN_BIZTYPE = "1375";					//CD-N
 	public static final String COMIS_CD_CDC_BIZTYPE = "1376";					//CD-C

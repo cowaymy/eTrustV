@@ -492,69 +492,6 @@ public class CommissionReportController {
 		return ResponseEntity.ok(list);
 	}
 	
-	/**
-	 *  Organization Ajax Search 
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/selectOrgCdListAll", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrgCdListAll(@RequestParam Map<String, Object> params, ModelMap model) {		
-		
-		// 조회.
-		String dt = String.valueOf(params.get("searchDt"));
-		dt = dt.substring(dt.indexOf("/")+1,dt.length())+dt.substring(0,dt.indexOf("/"));
-		
-		params.put("searchDt", dt);
-		List<EgovMap> orgList = commissionReportService.selectOrgCdListAll(params);
-
-		// 데이터 리턴.
-		return ResponseEntity.ok(orgList);
-	}
-	
-	@RequestMapping(value = "/commissionCodyResultIndex.do")
-	public String commissionResultIndex(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
-		List<EgovMap> orgGrList = commissionReportService.selectOrgGrList(params);
-		params.put("mstId", CommissionConstants.COMIS_CD_CD);
-		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
-		String dt = CommonUtils.getNowDate().substring(0, 6);
-		dt = dt.substring(4) + "/" + dt.substring(0, 4);
-
-		model.addAttribute("searchDt", dt);
-		model.addAttribute("orgGrList", orgGrList);
-		model.addAttribute("orgList", orgList);
-		
-		// 호출될 화면
-		return "commission/commissionCodyResultIndex";
-	}
-	
-	@RequestMapping(value = "/selectCodyRawData", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCMRawData(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		String dt = String.valueOf(params.get("searchDt"));
-		int pvMonth = Integer.parseInt(dt.substring(0,2));
-		int pvYear = Integer.parseInt(dt.substring(3));		
-		
-		int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
-		
-		params.put("taskId", sTaskID);
-		
-		List<EgovMap> rawList = null;
-		
-		if("2003".equals(params.get("orgCombo").toString()) ){
-			// 조회.
-			rawList = commissionReportService.selectCMRawData(params);
-		}else{
-			rawList = commissionReportService.selectCodyRawData(params);
-		}
-		System.out.println(rawList);
-		// 데이터 리턴.
-		return ResponseEntity.ok(rawList);
-	}
 	
 	/**
 	 * Call Finance commission report 
@@ -600,6 +537,227 @@ public class CommissionReportController {
 		model.addAttribute("cmmDt", dt);
 		// 호출될 화면
 		return "commission/commissionRentalToOutrightReport";
+	}
+	
+	/**
+	 *  Organization Ajax Search 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectOrgCdListAll", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrgCdListAll(@RequestParam Map<String, Object> params, ModelMap model) {		
+		
+		// 조회.
+		if(params.get("searchDt") != null){
+			String dt = String.valueOf(params.get("searchDt"));
+			dt = dt.substring(dt.indexOf("/")+1,dt.length())+dt.substring(0,dt.indexOf("/"));
+			
+			params.put("searchDt", dt);
+		}
+		List<EgovMap> orgList = commissionReportService.selectOrgCdListAll(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(orgList);
+	}
+	
+	@RequestMapping(value = "/commissionCDResultIndex.do")
+	public String commissionCodyResultIndex(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
+		List<EgovMap> orgGrList = commissionReportService.selectOrgGrList(params);
+		params.put("mstId", CommissionConstants.COMIS_CD_CD);
+		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
+		String dt = CommonUtils.getNowDate().substring(0, 6);
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("orgGrList", orgGrList);
+		model.addAttribute("orgList", orgList);
+		
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		
+		model.addAttribute("today", today);
+		
+		// 호출될 화면
+		return "commission/commissionCodyResultIndex";
+	}
+	
+	@RequestMapping(value = "/selectCodyRawData", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCMRawData(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		String dt = String.valueOf(params.get("searchDt"));
+		int pvMonth = Integer.parseInt(dt.substring(0,2));
+		int pvYear = Integer.parseInt(dt.substring(3));		
+		
+		int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
+		
+		params.put("taskId", sTaskID);
+		
+		List<EgovMap> rawList = null;
+		
+		/**
+		 * TO-DO
+		 * codeid로 하고있는 것들을 code로 변경하고 쿼리고 code가져와서 분기시키기.
+		 * level constants 이용하기.
+		 */
+		if((CommissionConstants.COMIS_CD_CM_CD).equals(params.get("orgCombo").toString()) ){
+			// 조회.
+			rawList = commissionReportService.selectCMRawData(params);
+		}else{
+			String level = "0";
+			if((CommissionConstants.COMIS_CD_CDN_CD).equals(params.get("orgCombo").toString()) ){
+				level = CommissionConstants.COMIS_CD_CD_LEV;
+				params.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
+				
+			}else if((CommissionConstants.COMIS_CD_CDC_CD).equals(params.get("orgCombo").toString())){
+				level = CommissionConstants.COMIS_CD_CD_LEV;
+				params.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
+				
+			}else if((CommissionConstants.COMIS_CD_SCM_CD).equals(params.get("orgCombo").toString())){
+				level = CommissionConstants.COMIS_CD_SCM_LEV;
+				
+			}else if((CommissionConstants.COMIS_CD_GCM_CD).equals(params.get("orgCombo").toString())){
+				level = CommissionConstants.COMIS_CD_GCM_LEV;
+			}
+			
+			params.put("level",level);
+			rawList = commissionReportService.selectCodyRawData(params);
+		}
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(rawList);
+	}
+
+	@RequestMapping(value = "/commissionHpResultIndex.do")
+	public String commissionHpResultIndex(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
+		List<EgovMap> orgGrList = commissionReportService.selectOrgGrList(params);
+		params.put("mstId", CommissionConstants.COMIS_HP_CD);
+		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
+		String dt = CommonUtils.getNowDate().substring(0, 6);
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("orgGrList", orgGrList);
+		model.addAttribute("orgList", orgList);
+		
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		
+		model.addAttribute("today", today);
+		
+		// 호출될 화면
+		return "commission/commissionHpResultIndex";
+	}
+	
+	@RequestMapping(value = "/selectHPRawData", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHPRawData(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		String dt = String.valueOf(params.get("searchDt"));
+		int pvMonth = Integer.parseInt(dt.substring(0,2));
+		int pvYear = Integer.parseInt(dt.substring(3));		
+		
+		int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
+		
+		params.put("taskId", sTaskID);
+		
+		List<EgovMap> rawList = null;
+		
+		String level = "0";
+		if((CommissionConstants.COMIS_HP_HPP_CD).equals(params.get("orgCombo").toString()) ){
+			level = CommissionConstants.COMIS_HP_HP_LEV;
+			params.put("empType", CommissionConstants.COMIS_HP_HPP_EMPTYPE);
+			
+		}else if((CommissionConstants.COMIS_HP_HPF_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_HP_HP_LEV;
+			params.put("empType", CommissionConstants.COMIS_HP_HPF_EMPTYPE);
+			
+		}else if((CommissionConstants.COMIS_HP_HM_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_HP_HM_LEV;
+			
+		}else if((CommissionConstants.COMIS_HP_SM_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_HP_SM_LEV;
+			
+		}else if((CommissionConstants.COMIS_HP_GM_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_HP_GM_LEV;
+			
+		}else if((CommissionConstants.COMIS_HP_SGM_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_HP_SGM_LEV;
+		}
+		
+		params.put("level",level);
+		rawList = commissionReportService.selectHPRawData(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(rawList);
+	}
+	
+	@RequestMapping(value = "/commissionCTResultIndex.do")
+	public String commissionCtResultIndex(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
+		List<EgovMap> orgGrList = commissionReportService.selectOrgGrList(params);
+		params.put("mstId", CommissionConstants.COMIS_CT_CD);
+		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
+		String dt = CommonUtils.getNowDate().substring(0, 6);
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("orgGrList", orgGrList);
+		model.addAttribute("orgList", orgList);
+		
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		
+		model.addAttribute("today", today);
+		
+		// 호출될 화면
+		return "commission/commissionCTResultIndex";
+	}
+	
+	@RequestMapping(value = "/selectCTRawData", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTRawData(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		String dt = String.valueOf(params.get("searchDt"));
+		int pvMonth = Integer.parseInt(dt.substring(0,2));
+		int pvYear = Integer.parseInt(dt.substring(3));		
+		
+		int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
+		
+		params.put("taskId", sTaskID);
+		
+		List<EgovMap> rawList = null;
+		
+		String level = "0";
+		if((CommissionConstants.COMIS_CT_CTN_CD).equals(params.get("orgCombo").toString()) ){
+			level = CommissionConstants.COMIS_CT_CT_LEV;
+			
+		}else if((CommissionConstants.COMIS_CT_CTE_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_CT_CT_LEV;
+			
+		}else if((CommissionConstants.COMIS_CT_CTR_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_CT_CT_LEV;
+			
+		}else if((CommissionConstants.COMIS_CT_CTL_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_CT_CTL_LEV;
+			
+		}else if((CommissionConstants.COMIS_CT_CTM_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_CT_CTM_LEV;
+		}
+		
+		params.put("level",level);
+		rawList = commissionReportService.selectCTRawData(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(rawList);
 	}
 	
 }

@@ -58,4 +58,6 @@ public interface CommissionReportMapper {
 	
 	List<EgovMap>selectCodyRawData(Map<String, Object> params);
 	List<EgovMap>selectCMRawData(Map<String, Object> params);
+	List<EgovMap>selectHPRawData(Map<String, Object> params);
+	List<EgovMap>selectCTRawData(Map<String, Object> params);
 }

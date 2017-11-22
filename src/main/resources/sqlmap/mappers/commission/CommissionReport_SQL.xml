@@ -19,8 +19,8 @@
 			AND MEM_CODE = #{salesPersonCd}		
 		</if>
 		<if test="memType != null and memType != ''">
-      AND MEM_TYPE = #{memType}   
-    </if>
+	      AND MEM_TYPE = #{memType}   
+	    </if>
 		
 	</select>
 	
@@ -166,41 +166,141 @@
     
     <select id="selectCodyRawData" parameterType="Map" resultType="EgovMap">
       <![CDATA[   
-        select 
-            t2.MEM_CODE as A_MEM_CODE , 
-            t2.NAME as A_MEM_NAME , 
-            (case when t1.EMPLY_LEV=4 then 'CD'
-            when t1.EMPLY_LEV=3 then 'CM'
-            when t1.EMPLY_LEV=2 then 'SCM'
-            else 'GCM' 
-            end) AS A_RANK ,
-            t2.NRIC as A_NRIC ,
-            (t0.R20 + t0.R1) as A_PER_AMT,
-            (t0.R2 + t0.R3 +t0.R18 + t0.R19 + t0.R21+ t0.R22) as A_SALES_AMT,
-            t0.R4 as A_BONUS_AMT,
-            t0.R6 as A_COLLECT_AMT,
-            t0.R13 as A_MEMBERSHIP_AMT,
-            0 as A_HP_AMT,
-            0 as A_TRANSPORT_AMT,
-            t0.R23 as A_NEWCODY_AMT,
-            0 as A_INTRODUCTION_FEES,
-            0 as A_STAFF_PURCHASE,
-            0 as A_TELEPHONE_DEDUCT,
-            t0.R28 as A_INCENTIVE,
-            t0.R99 as A_ADJ,
-            t0.R29 as A_SHI_AMT,
-            t0.R34 as A_RENTALMEMBERSHIP_AMT,
-            t0.R35 as A_SHI_RENTALMEMBERSHIP_AMT
-        from CMM0029D t0 
-            join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID
-            join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
-            left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
-        where t1.EMPLY_TYPE_CODE = 'CD' and t1.EMPLY_LEV < 4 
-            and t3.F_MEM_ID is null and t1.EMPLY_STUS_ID<>3  and 
-                (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
-                +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25)>0
-            and t1.EMPLY_TYPE_ID=2 and t0.TASK_ID=48
+        SELECT 
+			t1.A_MEM_CODE,
+			t1.A_MEM_NAME,
+			t1.A_RANK,
+			t1.A_NRIC,
+			t1.A_PER_AMT,
+			t1.A_SALES_AMT,
+			t1.A_BONUS_AMT,
+			t1.A_COLLECT_AMT,
+			t1.A_MEMBERSHIP_AMT,
+			t1.A_HP_AMT,
+			t1.A_TRANSPORT_AMT,
+			t1.A_NEWCODY_AMT,
+			t1.A_INTRODUCTION_FEES,
+			t1.A_STAFF_PURCHASE,
+			t1.A_TELEPHONE_DEDUCT,
+			t1.A_INCENTIVE,
+			t1.A_ADJ,
+			t1.A_SHI_AMT,
+			t1.A_RENTALMEMBERSHIP_AMT,
+			t1.A_SHI_RENTALMEMBERSHIP_AMT,
+			t2.S_MEM_CODE,
+			t2.S_MEM_NAME,
+			t2.S_RANK,
+			t2.S_NRIC,
+			t2.S_PER_AMT,
+			t2.S_SALES_AMT,
+			t2.S_BONUS_AMT,
+			t2.S_COLLECT_AMT,
+			t2.S_MEMBERSHIP_AMT,
+			t2.S_HP_AMT,
+			t2.S_NEWCODY_AMT,
+			t2.S_TRANSPORT_AMT,
+			t2.S_INTRODUCTION_FEES,
+			t2.S_STAFF_PURCHASE,
+			t2.S_TELEPHONE_DEDUCT,
+			t2.S_INCENTIVE,
+			t2.S_ADJ,
+			t2.S_SHI_AMT,
+			t2.S_RENTALMEMBERSHIP_AMT,
+			t2.S_SHI_RENTALMEMBERSHIP_AMT
+		FROM
+			    (select DISTINCT t2.MEM_CODE as A_MEM_CODE , 
+			        t2.NAME as A_MEM_NAME , 
+			        (case when t1.EMPLY_LEV=4 then 'CD'
+			        when t1.EMPLY_LEV=3 then 'CM'
+			        when t1.EMPLY_LEV=2 then 'SCM'
+			        else 'GCM' 
+			        end) AS A_RANK ,
+			        t2.NRIC as A_NRIC ,
+			        t0.R1 as A_PER_AMT,
+			        (t0.R2 + t0.R3+t0.R18 + t0.R19 + t0.R21 + t0.R22) as A_SALES_AMT,
+			        t0.R4 as A_BONUS_AMT,
+			        t0.R6 as A_COLLECT_AMT,
+			        t0.R13 as A_MEMBERSHIP_AMT,
+			        t0.R7 as A_HP_AMT,
+			        t0.R8 as A_TRANSPORT_AMT,
+			        t0.R10 as A_NEWCODY_AMT,
+			        t0.R11 as A_INTRODUCTION_FEES,
+			        t0.R27 as A_STAFF_PURCHASE,
+			        t0.R26 as A_TELEPHONE_DEDUCT,
+			        (t0.R28 + t0.R5) as A_INCENTIVE,
+			        t0.R99 as A_ADJ,
+			        t0.R29 as A_SHI_AMT,
+			        t0.R34 as A_RENTALMEMBERSHIP_AMT,
+			        t0.R35 as A_SHI_RENTALMEMBERSHIP_AMT,
+			        t0.TASK_ID as A_TASK_ID,
+			        t1.EMPLY_BIZ_TYPE_ID
         ]]>
+			    from CMM0029D t0 
+			        join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  AND T1.COMM_TASK_ID=#{taskId}
+			        join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
+			        left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
+			    where t1.EMPLY_TYPE_CODE = 'CD' 
+				    and t1.EMPLY_LEV = #{level}
+        <![CDATA[   
+				    and t1.EMPLY_STUS_ID<>3
+			        and t3.F_MEM_ID is null and 
+			            (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+			            +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R34)>0
+			        and t1.EMPLY_TYPE_ID= 2 
+        ]]>
+			        and t0.TASK_ID=#{taskId}) t1 
+		<![CDATA[   	        
+			        LEFT JOIN(SELECT DISTINCT t2.MEM_CODE as S_MEM_CODE , 
+				        t2.NAME as S_MEM_NAME , 
+				        (case when t1.EMPLY_LEV=4 then 'CD'
+				        when t1.EMPLY_LEV=3 then 'CM'
+				        when t1.EMPLY_LEV=2 then 'SCM'
+				        else 'GCM' 
+				        end) AS S_RANK ,
+				        t2.NRIC as S_NRIC ,
+				        t0.R1 as S_PER_AMT,
+				        (t0.R2 + t0.R3+t0.R18 + t0.R19 + t0.R21 + t0.R22) as S_SALES_AMT,
+				        t0.R4 as S_BONUS_AMT,
+				        t0.R6 as S_COLLECT_AMT,
+				        t0.R13 as S_MEMBERSHIP_AMT,
+				        t0.R7 as S_HP_AMT,
+				        t0.R8 as S_TRANSPORT_AMT,
+				        t0.R10 as S_NEWCODY_AMT,
+				        t0.R11 as S_INTRODUCTION_FEES,
+				        t0.R27 as S_STAFF_PURCHASE,
+				        t0.R26 as S_TELEPHONE_DEDUCT,
+				        (t0.R28 + t0.R5) as S_INCENTIVE,
+				        t0.R99 as S_ADJ,
+				        t0.R29 as S_SHI_AMT,
+				        t0.R34 as S_RENTALMEMBERSHIP_AMT,
+				        t0.R35 as S_SHI_RENTALMEMBERSHIP_AMT,
+				        t0.TASK_ID as S_TASK_ID,
+				        t1.EMPLY_BIZ_TYPE_ID
+        ]]>
+				    FROM CMM0029T t0 
+				        join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  AND T1.COMM_TASK_ID=#{taskId}
+				        join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
+				        left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
+				    WHERE t1.EMPLY_TYPE_CODE = 'CD' 
+				        AND t1.EMPLY_LEV = #{level}
+        <![CDATA[   
+				        AND t1.EMPLY_STUS_ID<>3
+				        AND t3.F_MEM_ID is null and 
+				            (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+				            +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R34)>0
+				        AND t1.EMPLY_TYPE_ID= 2 
+        ]]>
+				        and t0.TASK_ID=#{taskId}) t2
+                ON T1.A_TASK_ID = T2.S_TASK_ID
+	                AND T1.A_MEM_CODE = T2.S_MEM_CODE
+	                AND T1.EMPLY_BIZ_TYPE_ID = T2.EMPLY_BIZ_TYPE_ID
+			WHERE 1=1
+			    <if test="memCode != null and memCode != ''">
+	                AND t1.A_MEM_CODE LIKE '%'||#{memCode}||'%'
+	            </if>
+	            <if test="bizType != null and bizType != ''">
+	               AND t1.EMPLY_BIZ_TYPE_ID = #{bizType}
+	            </if>
   </select>
   <select id="selectCMRawData" parameterType="Map" resultType="EgovMap">
       <![CDATA[   
@@ -258,29 +358,344 @@
                     join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID
                     join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
                     left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
-                where t1.EMPLY_TYPE_CODE = 'CD' and t1.EMPLY_LEV < 4 
-                    and t3.F_MEM_ID is null and t1.EMPLY_STUS_ID<>3  and 
-                        (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+                where t1.EMPLY_TYPE_CODE = 'CD' 
+                    and t1.EMPLY_LEV < 4 
+                    and t3.F_MEM_ID is null 
+                    and t1.EMPLY_STUS_ID<>3  
+                    and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
                         +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25)>0
-                    and t1.EMPLY_TYPE_ID=2 and t0.TASK_ID=48 ) t1, 
-                (
-                select  *
+                    and t1.EMPLY_TYPE_ID=2 
+        ]]>
+                    and t0.TASK_ID=#{taskId} ) t1
+        <![CDATA[   
+                left join(select  *
                 from CMM0029T t0 
                     join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID
                     join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
                     left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
-                where t1.EMPLY_TYPE_CODE = 'CD' and t1.EMPLY_LEV < 4 
-                    and t3.F_MEM_ID is null and t1.EMPLY_STUS_ID<>3  and 
-                        (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+                where t1.EMPLY_TYPE_CODE = 'CD' 
+                    and t1.EMPLY_LEV < 4 
+                    and t3.F_MEM_ID is null 
+                    and t1.EMPLY_STUS_ID<>3  
+                    and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
                         +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25)>0
-                    and t1.EMPLY_TYPE_ID=2 and t0.TASK_ID=48) t2
+                    and t1.EMPLY_TYPE_ID=2 
         ]]>
-        WHERE t1.TASK_ID = T2.TASK_ID 
-            AND T1.MEM_CODE = T2.MEM_CODE
-            AND T1.MEM_TYPE = T2.MEM_TYPE
-            AND t1.TASK_ID = #{taskId}
+                    and t0.TASK_ID=#{taskId}) t2
+            ON t1.TASK_ID = T2.TASK_ID
+                AND T1.MEM_CODE = T2.MEM_CODE
+                AND T1.MEM_TYPE = T2.MEM_TYPE
+        WHERE 1=1
             <if test="memCode != null and memCode != ''">
                 AND t1.MEM_CODE LIKE '%'||#{memCode}||'%'
             </if>
   </select>
+    <select id="selectHPRawData" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+		SELECT 
+			t1.A_M_CODE,
+			t1.A_MEMBER_NAME,
+			t1.A_RANK,
+			t1.A_NRIC,
+			t1.A_PI,
+			t1.A_PA,
+			t1.A_SGM_AMT,
+			t1.A_MGR_AMT,
+			t1.A_OUTINS_AMT,
+			t1.A_BONUS,
+			t1.A_RENMGR_AMT,
+			t1.A_RENTAL_AMT,
+			t1.A_OUTPLS_AMT,
+			t1.A_MEMBERSHIP_AMT,
+			t1.A_TBB_AMT,
+			t1.A_ADJUST_AMT,
+			t1.A_INCENTIVE,
+			t1.A_SHI_AMT,
+			t1.A_RENTALMEMBERSHIP_AMT,
+			t1.A_RENTALMEMBERSHIP_SHI_AMT,
+			t2.S_M_CODE,
+			t2.S_MEMBER_NAME,
+			t2.S_RANK,
+			t2.S_NRIC,
+			t2.S_PI,
+			t2.S_PA,
+			t2.S_SGM_AMT,
+			t2.S_MGR_AMT,
+			t2.S_OUTINS_AMT,
+			t2.S_BONUS,
+			t2.S_RENMGR_AMT,
+			t2.S_RENTAL_AMT,
+			t2.S_OUTPLS_AMT,
+			t2.S_MEMBERSHIP_AMT,
+			t2.S_TBB_AMT,
+			t2.S_ADJUST_AMT,
+			t2.S_INCENTIVE,
+			t2.S_SHI_AMT,
+			t2.S_RENTALMEMBERSHIP_AMT,
+			t2.S_RENTALMEMBERSHIP_SHI_AMT
+		FROM
+		    (select 
+		        t2.MEM_CODE as A_M_CODE , 
+		        t2.NAME as A_MEMBER_NAME , 
+		        (case when EMPLY_LEV=4 then 'HP'
+		            when EMPLY_LEV=3 then 'HM'
+		            when EMPLY_LEV=2 then 'SM'
+		            when EMPLY_LEV=1 then 'GM'
+		            else 'SGM' end) AS A_RANK ,
+		        t2.NRIC as A_NRIC ,
+		        t0.R1 as A_PI,
+		        t0.R5 as A_PA,
+		        (case when EMPLY_LEV = 0 then t0.R21 + t0.R33
+		            else 0 end) as A_SGM_AMT,
+		        (case when EMPLY_LEV = 0 then 0
+		             else t0.R21 end) as A_MGR_AMT,
+		        TRUNC(t0.R2,2)  as A_OUTINS_AMT,
+		        t0.R4 as A_BONUS,
+		        ((t0.R18 + t0.R19 + t0.R22) - (t0.R40 + t0.R41 + t0.R42) ) as A_RENMGR_AMT,
+		        (TRUNC(t0.R3,2) -  TRUNC(t0.R39,2))  as A_RENTAL_AMT,                                    
+		        (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as A_OUTPLS_AMT, 
+		        t0.R13 as A_MEMBERSHIP_AMT,
+		        t0.R25 AS A_TBB_AMT,         
+		        t0.R99 as A_ADJUST_AMT,
+		        t0.R28 as A_INCENTIVE,
+		        t0.R29 as A_SHI_AMT,
+		        t0.R34 as A_RENTALMEMBERSHIP_AMT,
+		        t0.R35 as A_RENTALMEMBERSHIP_SHI_AMT,
+		        t0.TASK_ID
+		    from CMM0029D t0 join CMM0006T t1 
+		            on t0.EMPLY_ID  = t1.EMPLY_ID 
+		                and t1.COMM_TASK_ID=t0.TASK_ID
+    ]]>
+		                AND t1.EMPLY_LEV = #{level}
+		                <if test="empType != null and empType != ''">
+		                AND T1.EMPLY_LEV_RANK = #{empType}
+		                </if>
+    <![CDATA[
+		            join ORG0001D t2 
+		                on t2.MEM_ID = t1.EMPLY_ID 
+		            left join CMM0038T t3 
+		                on t3.F_MEM_ID =  t1.EMPLY_ID 
+		    where t1.EMPLY_TYPE_CODE in ('HP','ST') 
+		        and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+		        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R34)>0
+		         and t3.F_MEM_ID is null 
+		         and t1.EMPLY_STUS_ID<>3) t1
+		    left join (select 
+		        t2.MEM_CODE as S_M_CODE , 
+		        t2.NAME as S_MEMBER_NAME , 
+		        (case when EMPLY_LEV=4 then 'HP'
+		            when EMPLY_LEV=3 then 'HM'
+		            when EMPLY_LEV=2 then 'SM'
+		            when EMPLY_LEV=1 then 'GM'
+		            else 'SGM' end) AS S_RANK ,
+		        t2.NRIC as S_NRIC ,
+		        t0.R1 as S_PI,
+		        t0.R5 as S_PA,
+		        (case when EMPLY_LEV = 0 then t0.R21 + t0.R33
+		            else 0 end) as S_SGM_AMT,
+		        (case when EMPLY_LEV = 0 then 0
+		             else t0.R21 end) as S_MGR_AMT,
+		        TRUNC(t0.R2,2)  as S_OUTINS_AMT,
+		        t0.R4 as S_BONUS,
+		        ((t0.R18 + t0.R19 + t0.R22) - (t0.R40 + t0.R41 + t0.R42) ) as S_RENMGR_AMT,
+		        (TRUNC(t0.R3,2) -  TRUNC(t0.R39,2))  as S_RENTAL_AMT,                                    
+		        (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as S_OUTPLS_AMT, 
+		        t0.R13 as S_MEMBERSHIP_AMT,
+		        t0.R25 AS S_TBB_AMT,         
+		        t0.R99 as S_ADJUST_AMT,
+		        t0.R28 as S_INCENTIVE,
+		        t0.R29 as S_SHI_AMT,
+		        t0.R34 as S_RENTALMEMBERSHIP_AMT,
+		        t0.R35 as S_RENTALMEMBERSHIP_SHI_AMT,
+		        t0.TASK_ID
+		    from CMM0029T t0 join CMM0006T t1 
+		            on t0.EMPLY_ID  = t1.EMPLY_ID 
+		                and t1.COMM_TASK_ID=t0.TASK_ID
+    ]]>
+		                AND t1.EMPLY_LEV = #{level}
+		                <if test="empType != null and empType != ''">
+		                AND T1.EMPLY_LEV_RANK = #{empType}
+		                </if>
+    <![CDATA[
+		            join ORG0001D t2 
+		                on t2.MEM_ID = t1.EMPLY_ID 
+		            left join CMM0038T t3 
+		                on t3.F_MEM_ID =  t1.EMPLY_ID 
+		    where t1.EMPLY_TYPE_CODE in ('HP','ST') 
+		        and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
+		        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R34)>0
+		         and t3.F_MEM_ID is null 
+		         and t1.EMPLY_STUS_ID<>3)t2
+    ]]>
+            ON T1.TASK_ID = T2.TASK_ID
+                AND T1.A_M_CODE = T2.S_M_CODE
+		WHERE T1.TASK_ID=#{taskId}
+		    <if test="memCode != null and memCode != ''">
+		    AND T1.A_M_CODE=#{memCode}
+		    </if>
+    </select>
+    
+    <select id="selectCTRawData" parameterType="Map" resultType="EgovMap">
+		SELECT 
+            t1.TASK_ID as TASK_ID ,  
+            t1.M_CODE as M_CODE ,
+            t1.CT_NAME as CT_NAME ,
+            t1.NRIC as NRIC ,
+            t1.JOIN_DATE as JOIN_DATE,
+            t1.SERVICE_MONTHS  as SERVICE_MONTHS,
+            t1.CT_RANK as CT_RANK ,
+            t1.STATUS  as  STATUS,
+            t1.BRNCH as BRNCH ,
+		      
+		    t1.AS_COUNT AS A_AS_COUNT, 
+		    t1.AS_SUM_CP AS A_AS_SUM_CP, 
+		    t1.BS_COUNT AS A_BS_COUNT, 
+		    t1.BS_SUM_CP AS A_BS_SUM_CP, 
+		    t1.INS_COUNT AS A_INS_COUNT, 
+		    t1.INS_SUM_CP AS A_INS_SUM_CP,
+		    t1.PR_COUNT AS A_PR_COUNT,     
+		    t1.PR_SUM_CP AS A_PR_SUM_CP,  
+		    t1.TOTAL_POINT AS A_TOTAL_POINT,   
+		    t1.PRO_PERCENT AS A_PRO_PERCENT,
+		    t1.PER_PERCENT AS A_PER_PERCENT, 
+		    t1.PRO_FACTOR_30 AS A_PRO_FACTOR_30,
+		    t1.PER_FACTOR_70 AS A_PER_FACTOR_70, 
+		    t1.SUM_FACTOR AS A_SUM_FACTOR,  
+		    t1.GROSS_COMM AS A_GROSS_COMM,
+		    t1.RENTAL_COMM AS A_RENTAL_COMM,
+		    t1.SRV_MEM_COMM AS A_SRV_MEM_COMM,
+		    t1.BASIC_AND_ALLOWANCE AS A_BASIC_AND_ALLOWANCE,
+		    t1.PERFORMANCE_INCENTIVE AS A_PERFORMANCE_INCENTIVE,
+		    t1.ADJUSTMENT AS A_ADJUSTMENT,  
+		    t1.CFF_REWARD AS A_CFF_REWARD,  
+		    t1.SENIORITY AS A_SENIORITY,    
+		    t1.GRAND_TOTAL AS A_GRAND_TOTAL,
+		    
+		    t2.AS_COUNT AS S_AS_COUNT, 
+		    t2.AS_SUM_CP AS S_AS_SUM_CP, 
+		    t2.BS_COUNT AS S_BS_COUNT, 
+		    t2.BS_SUM_CP AS S_BS_SUM_CP, 
+		    t2.INS_COUNT AS S_INS_COUNT, 
+		    t2.INS_SUM_CP AS S_INS_SUM_CP,
+		    t2.PR_COUNT AS S_PR_COUNT,     
+		    t2.PR_SUM_CP AS S_PR_SUM_CP,  
+		    t2.TOTAL_POINT AS S_TOTAL_POINT,   
+		    t2.PRO_PERCENT AS S_PRO_PERCENT,
+		    t2.PER_PERCENT AS S_PER_PERCENT, 
+		    t2.PRO_FACTOR_30 AS S_PRO_FACTOR_30,
+		    t2.PER_FACTOR_70 AS S_PER_FACTOR_70, 
+		    t2.SUM_FACTOR AS S_SUM_FACTOR,  
+		    t2.GROSS_COMM AS S_GROSS_COMM,
+		    t2.RENTAL_COMM AS S_RENTAL_COMM,
+		    t2.SRV_MEM_COMM AS S_SRV_MEM_COMM,
+		    t2.BASIC_AND_ALLOWANCE AS S_BASIC_AND_ALLOWANCE,
+		    t2.PERFORMANCE_INCENTIVE AS S_PERFORMANCE_INCENTIVE,
+		    t2.ADJUSTMENT AS S_ADJUSTMENT,  
+		    t2.CFF_REWARD AS S_CFF_REWARD,  
+		    t2.SENIORITY AS S_SENIORITY,    
+		    t2.GRAND_TOTAL AS S_GRAND_TOTAL
+		FROM 
+		    (
+		        SELECT t1.COMM_TASK_ID as TASK_ID ,  
+		            t1.EMPLY_CODE as M_CODE ,
+		            t2.NAME as CT_NAME ,
+		            t2.NRIC as NRIC ,
+		            t2.JOIN_DT as JOIN_DATE,
+		            t1.WORKING_MONTH  as SERVICE_MONTHS,
+		            t1.EMPLY_LEV as CT_RANK ,
+		            t3.NAME  as  STATUS,
+		            t6.CODE as BRNCH ,
+		            t4.V1 as AS_COUNT ,
+		            t4.V2 as AS_SUM_CP ,
+		            t4.V3 as BS_COUNT ,
+		            t4.V4 as BS_SUM_CP ,
+		            t4.V5 as INS_COUNT ,
+		            t4.V6 as INS_SUM_CP ,
+		            t4.V7 as PR_COUNT ,
+		            t4.V8 as PR_SUM_CP , 
+		            t4.V9 as TOTAL_POINT ,
+		            t4.V10 as PRO_PERCENT ,
+		            t4.V11 as PER_PERCENT  ,
+		            t4.V12 as PRO_FACTOR_30 ,
+		            t4.V13 as PER_FACTOR_70  ,    
+		            t4.V14 as SUM_FACTOR  ,
+		            t5.R1 as  GROSS_COMM,
+		            t5.R2 as  RENTAL_COMM,
+		            t5.R3 as  SRV_MEM_COMM,
+		            t5.R4 as  BASIC_AND_ALLOWANCE,
+		            t5.R5 as  PERFORMANCE_INCENTIVE,
+		            t5.R6 as  ADJUSTMENT,
+		            t5.R7 as  CFF_REWARD,
+		            t5.R8 as  SENIORITY,
+		            t5.R1 + t5.R2 + t5.R3 +t5.R4 +t5.R5 +t5.R6 +t5.R7 +t5.R8 as GRAND_TOTAL        
+		        FROM CMM0006T t1
+		            join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
+		            join SYS0038M t3 on t2.STUS = t3.STUS_CODE_ID
+		            join CMM0028D t4 on t4.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t4.EMPLY_ID
+		            join CMM0029D t5 on t5.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t5.EMPLY_ID
+		            join SYS0005M t6 on t6.BRNCH_ID = t2.BRNCH 
+		        WHERE t1.EMPLY_TYPE_CODE = 'CT'
+		          AND t1.COMM_TASK_ID =#{taskId}
+		          AND (t5.R1 + t5.R2 + t5.R3 +t5.R4 +t5.R5 +t5.R6 +t5.R7 +t5.R8) > 0
+		    ) t1
+		    LEFT JOIN (
+		        SELECT t1.COMM_TASK_ID as TASK_ID ,  
+		            t1.EMPLY_CODE as M_CODE ,
+		            t2.NAME as CT_NAME ,
+		            t2.NRIC as NRIC ,
+		            t2.JOIN_DT as JOIN_DATE,
+		            t1.WORKING_MONTH  as SERVICE_MONTHS,
+		            t1.EMPLY_LEV as CT_RANK ,
+		            t3.NAME  as  STATUS,
+		            t6.CODE as BRNCH ,
+		            t4.V1 as AS_COUNT ,
+		            t4.V2 as AS_SUM_CP ,
+		            t4.V3 as BS_COUNT ,
+		            t4.V4 as BS_SUM_CP ,
+		            t4.V5 as INS_COUNT ,
+		            t4.V6 as INS_SUM_CP ,
+		            t4.V7 as PR_COUNT ,
+		            t4.V8 as PR_SUM_CP , 
+		            t4.V9 as TOTAL_POINT ,
+		            t4.V10 as PRO_PERCENT ,
+		            t4.V11 as PER_PERCENT  ,
+		            t4.V12 as PRO_FACTOR_30 ,
+		            t4.V13 as PER_FACTOR_70  ,    
+		            t4.V14 as SUM_FACTOR  ,
+		            t5.R1 as  GROSS_COMM,
+		            t5.R2 as  RENTAL_COMM,
+		            t5.R3 as  SRV_MEM_COMM,
+		            t5.R4 as  BASIC_AND_ALLOWANCE,
+		            t5.R5 as  PERFORMANCE_INCENTIVE,
+		            t5.R6 as  ADJUSTMENT,
+		            t5.R7 as  CFF_REWARD,
+		            t5.R8 as  SENIORITY,
+		            t5.R1 + t5.R2 + t5.R3 +t5.R4 +t5.R5 +t5.R6 +t5.R7 +t5.R8 as GRAND_TOTAL       
+		        FROM CMM0006T t1
+		            join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
+		            join SYS0038M t3 on t2.STUS = t3.STUS_CODE_ID
+		            join CMM0028T t4 on t4.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t4.EMPLY_ID
+		            join CMM0029T t5 on t5.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t5.EMPLY_ID
+		            join SYS0005M t6 on t6.BRNCH_ID = t2.BRNCH 
+		         WHERE t1.EMPLY_TYPE_CODE = 'CT'
+		          AND t1.COMM_TASK_ID =#{taskId}
+		          AND (t5.R1 + t5.R2 + t5.R3 +t5.R4 +t5.R5 +t5.R6 +t5.R7 +t5.R8) > 0
+		    ) t2
+		ON t1.TASK_ID = t2.TASK_ID
+		    AND t1.M_CODE = t2.M_CODE
+		    AND t1.BRNCH = t2.BRNCH
+		WHERE t1.CT_RANK = #{level}
+		    AND t1.M_CODE = #{memCode}
+		    <if test =" level == 4 and orgCombo == 'CTE' ">
+		          AND t1.BRNCH IN ('DSC-12' , 'DSC-14' , 'DSC-17', 'DSC-18' ,'DSC-19' )
+		          AND t1.SERVICE_MONTHS >= 3
+		    </if>
+		    <if test =" level == 4 and orgCombo == 'CTR' ">
+                  AND t1.BRNCH NOT IN ('DSC-12' , 'DSC-14' , 'DSC-17', 'DSC-18' ,'DSC-19' )
+                  AND t1.SERVICE_MONTHS >= 3
+            </if>
+            <if test =" level == 4 and orgCombo == 'CTN' ">
+                  AND t1.SERVICE_MONTHS = 2
+            </if>
+    </select>
 </mapper>
