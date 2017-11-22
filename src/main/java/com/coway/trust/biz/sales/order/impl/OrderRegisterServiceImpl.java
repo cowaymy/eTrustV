@@ -1285,10 +1285,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			this.preprocCcpMaster(ccpDecisionMVO, custTypeId, custRaceId, sessionVO);
 			regOrderVO.setCcpDecisionMVO(ccpDecisionMVO);
 			
-			//SALES ORDER CONTRACT
-			SalesOrderContractVO salesOrderContractVO = new SalesOrderContractVO();
-			this.preprocSalesOrderContract(salesOrderContractVO, salesOrderMVO, sessionVO);
-			regOrderVO.setSalesOrderContractVO(salesOrderContractVO);
+			if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+    			//SALES ORDER CONTRACT
+    			SalesOrderContractVO salesOrderContractVO = new SalesOrderContractVO();
+    			this.preprocSalesOrderContract(salesOrderContractVO, salesOrderMVO, sessionVO);
+    			regOrderVO.setSalesOrderContractVO(salesOrderContractVO);
+			}
 		}
 		
 		this.preprocDocumentList(docSubVOList, sessionVO);

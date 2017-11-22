@@ -1923,6 +1923,7 @@
 		     , T1.OBLIGT_PRIOD
 		  FROM SAL0081D T1
 		 WHERE T1.SRV_CNTRCT_PAC_ID = #{srvCntrctPacId}
+		   AND T1.SRV_CNTRCT_PAC_STUS_ID = 1
     </select>
     
 </mapper>
