@@ -23,4 +23,7 @@ public interface ReplenishmentService {
 	List<EgovMap> searchList(Map<String, Object> params);
 
 	List<EgovMap> searchListRdc(Map<String, Object> params);
+	
+	List<EgovMap> searchAutoCTList( Map<String, Object> params);
+	
 }
