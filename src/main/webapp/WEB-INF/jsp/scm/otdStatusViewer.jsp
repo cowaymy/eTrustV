@@ -21,6 +21,15 @@
   font-size: 12pt;
 }
 
+/* 커스텀 칼럼 스타일 정의*/
+.myLinkStyle {
+    text-decoration: underline;
+    color:#4374D9;
+}
+.myLinkStyle :hover{
+  color:#FF0000;
+}
+
 </style>
 
 <script type="text/javaScript">
@@ -256,6 +265,7 @@ var OTDViewerLayout =
                          {
                             dataField : "poNo",
                             headerText : "<spring:message code='sys.scm.pomngment.rowNo'/>",
+                            style : "myLinkStyle",
                             width : "8%",
                             cellMerge: true,
                          }
