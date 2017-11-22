@@ -150,14 +150,22 @@ var detailListLayout = [
 				    <li>Invoice/Statement</li>
 		            <li>Billing Void Mgmt</li>
 				</ul>
+				
 				<aside class="title_line"><!-- title_line start -->
 				<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 				<h2>Billing Void Mgmt</h2>
 				</aside><!-- title_line end -->
+				
 				<section class="search_table"><!-- search_table start -->
 				<aside class="title_line"><!-- title_line start -->
 		            <h3>Invoice/Statement Search For Void</h3>
 		        </aside><!-- title_line end -->
+		        
+		        <ul class="right_btns mb10">
+                    <li><p class="btn_blue"><a href="javascript:searchList();" id="btnSearch"><span class="search"></span>Search</a></p></li>
+                    <li><p class="btn_blue"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none"><span class="search"></span>Reselect</a></p></li>
+                </ul>
+		        
 				<table class="type1"><!-- table start -->
 					<caption>table</caption>
 					<colgroup>
@@ -168,8 +176,9 @@ var detailListLayout = [
 					<tr>
 					    <th scope="row">Invoice/Statement No</th>
 					    <td><input type="text" title="" placeholder="" class="" id="statementNo" name="statementNo" />
-					         <p class="btn_blue"><a href="javascript:searchList();" id="btnSearch"><span class="search"></span>Search</a></p>
+					         <!-- <p class="btn_blue"><a href="javascript:searchList();" id="btnSearch"><span class="search"></span>Search</a></p>
 					         <p class="btn_blue"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none"><span class="search"></span>Reselect</a></p>
+					           -->
 					    </td>
 					</tr>
 					</tbody>

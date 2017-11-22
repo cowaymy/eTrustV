@@ -71,6 +71,8 @@ function fn_getInvoiceList(){
 	        AUIGrid.setGridData(myGridID, result);
 	        selectedGridValue = undefined;
 	    });
+	}else{
+		Common.alert("select issueYear and issueMonth first.");
 	}
 }
 

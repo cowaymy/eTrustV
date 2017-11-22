@@ -270,13 +270,13 @@ var discountLayout = [
 					    <th scope="row">Order Number</th>
 					    <td>
 					        <input type="text" name="orderNo" id="orderNo" title="" placeholder=""  class="readonly"/>
+					         <p class="btn_sky">
+                                <a href="javascript:fn_orderSearch();" id="search">Search</a>
+                            </p>
 					     </td>
 					     <th scope="row">Customer Name</th>
 					     <td colspan="2">
 					        <input type="text" name="custName" id="custName" title="" placeholder="" style="width:60%"  class="readonly"/>
-					        <p class="btn_blue">
-					            <a href="javascript:fn_orderSearch();" id="search"><span class="search"></span>Search</a>
-					        </p>
 					     </td>
 					</tr>
 				</tbody>
