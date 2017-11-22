@@ -324,7 +324,7 @@ function SearchListAjax() {
                     <td >
                        <input type="text" class="w100p" id="searchCtNo" name="searchCtNo">
                     </td>
-                    <th scope="row">Period</th>
+                    <th scope="row">Period<span style="color:red">*</span></th>
                     <td>
                         <input id="searchperiod" name="searchperiod" type="text" title="period" placeholder="MM/YYYY" class="j_date2 w100p" readonly />
                     </td>
