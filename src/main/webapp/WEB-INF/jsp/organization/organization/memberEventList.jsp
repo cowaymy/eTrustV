@@ -14,43 +14,43 @@
     		 Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + promoId, "");
            }else{
                Common.alert("Only event [In Progress] status is allowed.");
-           }  
+           }
     }
-    
+
  // AUIGrid 생성 후 반환 ID
     var myGridID;
-    
+
     var gridValue;
-    
+
     var option = {
         width : "1000px", // 창 가로 크기
         height : "600px" // 창 세로 크기
     };
-    
+
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
-        
+
 	    // AUIGrid 그리드를 생성합니다.
 	    createAUIGrid();
-	    
+
 	    AUIGrid.setSelectionMode(myGridID, "singleRow");
-        
-	    
+
+
 	    AUIGrid.bind(myGridID, "cellClick", function(event) {
 	        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
 	        promoId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId");
 	        stusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusId");
-	        
+
 	        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-	    }); 
-        
+	    });
+
 	    // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-        	 
+
         	//alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"));
         	Common.popupDiv("/organization/getMemberEventViewPop.do?isPop=true&promoId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"), "");
-        	
+
         });
 
     });
@@ -114,35 +114,35 @@
                     dataField : "stusId",
                     headerText : "",
                     width : 0
-	                
-	                
+
+
 		    }];
 		    // 그리드 속성 설정
 		    var gridPros = {
-		        
+
 		    		 usePaging           : true,         //페이징 사용
-	                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-	                 editable            : false,            
-	                 fixedColumnCount    : 1,            
-	                 showStateColumn     : false,             
-	                 displayTreeOpen     : false,            
-	                 selectionMode       : "singleRow",  //"multipleCells",            
-	                 headerHeight        : 30,       
+	                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	                 editable            : false,
+	                 fixedColumnCount    : 1,
+	                 showStateColumn     : false,
+	                 displayTreeOpen     : false,
+	                 selectionMode       : "singleRow",  //"multipleCells",
+	                 headerHeight        : 30,
 	                 useGroupingPanel    : false,        //그룹핑 패널 사용
 	                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	                 showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-		
+	                 showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+
 		    };
 		            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
 		        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
     }
 
-    
+
 // 리스트 조회.
-function fn_getOrgEventListAjax() {        
+function fn_getOrgEventListAjax() {
     Common.ajax("GET", "/organization/selectMemberEventList", $("#searchForm").serialize(), function(result) {
-        
+
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID, result);
@@ -154,8 +154,8 @@ function fn_getOrgEventListAjax() {
 function resetUpdatedItems() {
      AUIGrid.resetUpdatedItems(myGridID, "a");
  }
- 
- 
+
+
 function f_info(data , v){
 
 
@@ -166,23 +166,23 @@ function f_info(data , v){
     function f_multiCombo(){
         $(function() {
             $('#requestStatus').change(function() {
-            
+
             }).multipleSelect({
-                selectAll: true, // 전체선택 
+                selectAll: true, // 전체선택
                 width: '80%'
             });
             $('#requestType').change(function() {
-            
+
             }).multipleSelect({
                 selectAll: true,
                 width: '80%'
             });
              $('#memberType').change(function() {
-            
+
             }).multipleSelect({
                 selectAll: true,
                 width: '80%'
-            });                  
+            });
         });
     }
 
@@ -190,7 +190,7 @@ function f_info(data , v){
 //    doGetCombo('/common/selectCodeList.do', '18', '','requestPerson', 'M' , 'f_multiCombo'); //Request Person
     //doGetCombo('/common/selectCodeList.do', '18', '','requestType', 'M' , 'f_multiCombo'); //Request Type
     //doGetCombo('/common/selectCodeList.do', '1', '','memberType', 'M' , 'f_multiCombo'); //MemberType
-    
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -254,12 +254,16 @@ function f_info(data , v){
     </td>
     <th scope="row">Request Type</th>
     <td>
-    <select  id="requestType" name="requestType" class="multy_select w100p" multiple="multiple">   
+    <select  id="requestType" name="requestType" class="multy_select w100p" multiple="multiple">
         <option value="747">Promote</option>
         <option value="748">Demote</option>
         <option value="749">Group Transfer</option>
         <option value="757">Terminate</option>
         <option value="758">Resign</option>
+        <!--By KV - add 2 type request Type  -->
+        <option value="2740">Vacation</option>
+        <option value="2741"> Confirmation Member</option>
+
      </select>
     </td>
     <th scope="row">Request Person</th>
@@ -278,7 +282,7 @@ function f_info(data , v){
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select id="memberType" name="memberType"  class="multy_select w100p" multiple="multiple">    
+    <select id="memberType" name="memberType"  class="multy_select w100p" multiple="multiple">
          <option value="1">Health Planner</option>
          <option value="2">Coway Lady</option>
     </select>
@@ -325,7 +329,7 @@ function f_info(data , v){
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end --> 
+</aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
