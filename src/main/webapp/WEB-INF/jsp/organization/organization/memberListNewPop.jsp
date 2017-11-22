@@ -43,6 +43,11 @@ function fn_departmentCode(value){
 	    }else{
 	    	$("#hideContent").show();
 	    }
+	 if($("#memberType").val() == 5){
+		  $("#trTrainee").show();
+     }else{
+        $("#trTrainee").hide();
+     }
 	var action = value;
 	switch(action){
 	   case "1" :
@@ -250,6 +255,12 @@ function fn_saveValidation(){
 	        return false;
 	}
 
+/*	if($("#memberType").val() == 5){
+		if($("#traineeType").val() == 0){
+			  common.alert("Please select Trainee Type");
+			  return false;
+		}
+	}*/
     /* if(!$("#gender").is(":radio")){
 
     } */
@@ -720,10 +731,11 @@ function fn_selectState(selVal){
     <input type="text" title="" placeholder="Remain Vacation" class="w100p" />
     </td>
 </tr>
-<tr>
+<tr id = "trTrainee" >
     <th scope="row">Trainee Type </th>
     <td colspan="2">
         <select class= "w100p" id="traineeType" name="traineeType">
+        <option value= "0">Please select ...</option>
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
     </select>
