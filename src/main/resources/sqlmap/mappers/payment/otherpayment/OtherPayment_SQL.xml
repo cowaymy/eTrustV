@@ -20,7 +20,7 @@
                        A.F_TRNSC_CRDIT_AMT CRDIT,
                        <!--(CASE WHEN B.F_BANK_JRNL_STUS_ID = 1  THEN 'Mapped' ELSE 'UnMapped' END) STUS
                         B.POSTNG_DT MTCH_DT,-->
-                       (CASE WHEN A.OTH_KEYIN_STUS_ID = 1 THEN 'Mapped' ELSE 'UnMapped' END) STUS,
+                       (CASE WHEN A.OTH_KEYIN_STUS_ID = 4 THEN 'Mapped' ELSE 'UnMapped' END) STUS,
                        A.OTH_KEYIN_MAPPING_DT,
                        A.F_TRNSC_TELLER_ID,
                        A.F_TRNSC_NEW_CHQ_NO

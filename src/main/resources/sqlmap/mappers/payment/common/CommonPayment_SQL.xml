@@ -1205,6 +1205,7 @@
         INSERT INTO PAY0240T
         (
             SEQ,
+            PAY_TYPE,
             AMT,
             BANK_CHRG_AMT,
             BANK_SLIP_NO,
@@ -1223,6 +1224,7 @@
         VALUES
         (
             #{seq},
+            #{payType},
             #{amount},
             #{chargeAmount},
             #{slipNo},
@@ -1406,6 +1408,8 @@
         {call SP_INST_PAYMENT(#{seq},#{userid} )}
     </update>
     
-    
+    <update id="processNormalPayment" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_NORMAL_PAYMENT(#{seq}, #{userid}, #{key})}
+    </update>
     
 </mapper>
