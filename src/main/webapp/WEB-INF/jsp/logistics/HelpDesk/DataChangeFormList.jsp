@@ -138,6 +138,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
                        
                      $("#ViewPopUp_wrap").show();
                      $("#insertDataChange").hide();
+                     $("#AddApporovalBtn").hide();
                      fn_setVisiable();
                         //getDetailInfoListAjax(dcfreqentryid,div);
                         
