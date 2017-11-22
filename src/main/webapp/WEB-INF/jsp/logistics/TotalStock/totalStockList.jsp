@@ -156,10 +156,20 @@ $(function(){
         }
     });
     $('#searchlocgrade').change(function(){
-    	var param = {searchlocgb:$('#searchlocgb').val() , grade:$('#searchlocgrade').val()}
-    	doGetComboData('/common/selectStockLocationList.do', param , '', 'searchloc', 'M','f_multiCombo');
-    });
-
+    	var searchlocgb = $('#searchlocgb').val();
+    	console.log(searchlocgb.length);
+    	var locgbparam = "";
+    	for (var i = 0 ; i < searchlocgb.length ; i++){
+    		if (locgbparam == ""){
+    			locgbparam = searchlocgb[i];
+    		}else{
+    			locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+    		}
+    	}
+    	console.log(locgbparam);
+    	var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+    	doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiCombo');
+    });    
 });
 
 function SearchSessionAjax() {
@@ -200,7 +210,7 @@ function f_multiCombo() {
         }).multipleSelect({
             selectAll : true
         });
-        $('#searchloc').change(function() {
+        $('#searchLoc').change(function() {
         }).multipleSelect({
             selectAll : true
         });
@@ -298,7 +308,7 @@ function searchlocationFunc(){
                       <input type="hidden" title="" placeholder=""  class="w100p" id="searchMatCode" name="searchMatCode"/>
                       <input type="text"   title="" placeholder=""  class="w100p" id="searchMatName" name="searchMatName"/>
                    </td> 
-                   <th scope="row">Category</th>
+                    <th scope="row">Category</th>
                    <td>
                        <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
                    </td>

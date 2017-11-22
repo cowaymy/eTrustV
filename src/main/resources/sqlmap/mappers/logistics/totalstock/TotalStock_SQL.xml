@@ -49,7 +49,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
       AND S28.WH_LOC_STK_GRAD = #{searchlocgrade}
     </if>
     <if test="searchLoc != null and searchLoc !=''">
-        and L56.LOC_ID in
+        and S28.WH_LOC_CODE in
         <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
          #{item}
          </foreach>

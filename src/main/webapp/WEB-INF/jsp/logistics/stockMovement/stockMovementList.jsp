@@ -130,7 +130,7 @@ $(document).ready(function(){
     //doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-    doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
+    //doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
     //doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');        
@@ -343,7 +343,7 @@ function f_getTtype(g , v){
                 <tr>
                     <th scope="row">Stock Movement Request</th>
                     <td>
-                        <select class="w100p" id="streq" name="streq"></select>
+                        <input type="text" class="w100p" id="streq" name="streq">
                     </td>
                     <th scope="row">Transaction Type</th>
                     <td>

@@ -200,7 +200,8 @@ $(function(){
     		doDefCombo([], '' ,'tlocation', 'S', '');
     		doDefCombo([], '' ,'flocation', 'S', '');
     	}else{
-	    	var paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:$("#movpath").val()}; // session 정보 등록 
+	    	//var paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:$("#movpath").val()}; // session 정보 등록
+	    	var paramdata = { locgb:$("#movpath").val()}; // session 정보 등록
 	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 	        doDefCombo([], '' ,'flocation', 'S', '');
     	}

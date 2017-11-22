@@ -169,7 +169,7 @@ $(document).ready(function(){
     //doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-    doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
+    //doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
     doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
@@ -558,8 +558,8 @@ function giFunc(){
     data.form    = $("#giForm").serializeJSON();
     
     Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
-       
-            Common.alert(result.message , SearchListAjax);
+            var msg = result.message + "<br>MDN NO : "+result.data[1];
+    	    Common.alert(msg , SearchListAjax);
             AUIGrid.resetUpdatedItems(listGrid, "all");    
         $("#giopenwindow").hide();
         $('#search').click();
@@ -684,7 +684,7 @@ function fn_serialChck(rowindex , rowitem , str){
                 <tr>
                     <th scope="row">Stock Movement Request</th>
                     <td>
-                        <select class="w100p" id="streq" name="streq"></select>
+                        <input type="text" class="w100p" id="streq" name="streq">
                     </td>
                     <th scope="row">Stock Movement Type</th>
                     <td>

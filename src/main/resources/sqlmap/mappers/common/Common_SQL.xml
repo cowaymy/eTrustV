@@ -1184,8 +1184,11 @@
            <if test="brnch != null and brnch != ''">
               AND S28M.WH_LOC_BRNCH_ID = #{brnch}
            </if>
-           <if test="searchlocgb != null and searchlocgb != ''">
-              AND S28M.WH_LOC_GB = #{locgb}
+           <if test="searchlocgb != null and searchlocgb !=''">
+              AND S28M.WH_LOC_GB IN
+              <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
            </if>
            <if test="locgb != null and locgb != ''">
               <choose>
@@ -1212,7 +1215,7 @@
            <if test="groupCode != null and groupCode == 'CODY'">
               AND S28M.WH_LOC_BRNCH_ID IN (SELECT BRNCH_ID FROM SYS0005M WHERE (CASE WHEN (TYPE_ID IS NOT NULL) THEN TYPE_ID ELSE 0 END) = 42)
            </if>
-         ORDER BY CODE_ID
+         ORDER BY WH_LOC_GB , CODE_NAME
     </select>
 
     <select id="selectBrnchIdByPostCode" parameterType="Map" resultType="egovMap">

@@ -167,7 +167,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public void stockMovementReqDelivery(Map<String, Object> params) {
+	public Map<String, Object> stockMovementReqDelivery(Map<String, Object> params) {
 		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
@@ -219,6 +219,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("salesorder", "");
 
 		stockMoveMapper.StockMovementIssue(formMap);
+		
+		return formMap;
 
 	}
 

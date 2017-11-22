@@ -200,6 +200,24 @@ public class CommonController {
 	@RequestMapping(value = "/selectStockLocationList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectStockLocationList(@RequestParam Map<String, Object> params,
 			ModelMap model) {
+		
+		LOGGER.info("selectStockLocationList: {}", params);
+
+		List<EgovMap> codeList = commonService.selectStockLocationList(params);
+		LOGGER.info("selectStockLocationList: {}", codeList.toString());
+		return ResponseEntity.ok(codeList);
+	}
+	@RequestMapping(value = "/selectStockLocationList2.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStockLocationList2(@RequestParam Map<String, Object> params,
+			ModelMap model) {
+		
+		LOGGER.info("selectStockLocationList: {}", params);
+		
+		String searchgb = (String)params.get("searchlocgb");
+		String[] searchgbvalue = searchgb.split("∈");
+		System.out.println(" :::: " + searchgbvalue.length);
+		
+		params.put("searchlocgb", searchgbvalue);
 
 		List<EgovMap> codeList = commonService.selectStockLocationList(params);
 		LOGGER.info("selectStockLocationList: {}", codeList.toString());

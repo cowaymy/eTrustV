@@ -346,11 +346,21 @@ public class StockMovementController {
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);
 
-		stockMovementService.stockMovementReqDelivery(params);
+		Map<String , Object> map = stockMovementService.stockMovementReqDelivery(params);
+		
+		logger.debug(" :::: {}" , map);
+		
+		String reVal = (String)map.get("rdata");		
+		String returnValue[] = reVal.split("∈");
+		
+		for (int i = 0 ; i < returnValue.length ; i++){
+			returnValue[i] = returnValue[i].replaceAll(" ", "");
+		}
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
+		message.setData(returnValue);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
