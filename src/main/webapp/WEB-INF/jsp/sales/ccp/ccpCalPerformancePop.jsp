@@ -76,16 +76,80 @@ function fn_report(){
 }
 
 function fn_report_1(){
+	
 	$("#reportFileName").val("");
 	$("#reportDownFileName").val("");
 	
-	//.rpt파일들의 테이블들이 두개씩있는경우라서 .. 추후 진행 필요
-	//CCPPerformanceReportByBranch_PDF.rpt
-	//CCPPerformanceReportByServiceBranch.rpt
+	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATEFROM" name="V_ORDERDATEFROM" value="" />');
+    $("#reportParameter").append('<input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />'); 
+    $("#reportParameter").append('<input type="hidden" id="V_BRANCHREGION" name="V_BRANCHREGION" value="" />');
+    $("#reportParameter").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />');
+    $("#reportParameter").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />'); 
+    $("#reportParameter").append('<input type="hidden" id="V_REGIONWHERESQL" name="V_REGIONWHERESQL" value="" />');
+    $("#reportParameter").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" />');
+    $("#reportParameter").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />'); 
+
+    var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
+    }
+    
+    var dpDateFr = $("#dpDateFr").val();
+    var dpDateTo = $("#dpDateTo").val();
+    var frArr = dpDateFr.split("/");
+    var toArr = dpDateTo.split("/");
+    
+    var orderDateFrom = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
+    var orderDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
+    var branchRegion = "-";
+    var orderDateToSQL = "";
+    var selectSQL = "";
+    var whereSQL = "";
+    var extraWhereSQL = "";
+    var orderSQL = "";
+    var fullSQL = "";
+    
+	if(!(dpDateFr == null || dpDateFr.length == 0) && !(dpDateTo == null || dpDateTo.length == 0)){
+		
+		orderDateFrom = frArr[0]+"/"+frArr[1]+"/"+frArr[2]; // dd/MM/yyyy
+		orderDateTo = toArr[0]+"/"+toArr[1]+"/"+toArr[2];
+		
+		dpDateFr = frArr[2]+"/"+frArr[1]+"/"+frArr[0]; // yyyy/MM/dd
+        dpDateTo = toArr[2]+"/"+toArr[1]+"/"+toArr[0];
+        whereSQL += " AND (som.SALES_DT BETWEEN '"+dpDateFr+"' AND '"+dpDateTo+"')";
+		
+	}
 	
+	if($("#cmbType :selected").val() == "1"){
+		$("#reportDownFileName").val("CCPPerformance_KeyInBranch_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportFileName").val("/sales/CCPPerformanceReportByBranch_PDF.rpt");
+        
+	}else if($("#cmbType :selected").val() == "2"){
+		$("#reportDownFileName").val("CCPPerformance_ServiceBranch_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportFileName").val("/sales/CCPPerformanceReportByServiceBranch.rpt");
+        
+	}
+
+	$("#V_ORDERDATEFROM").val(orderDateFrom);
+    $("#V_ORDERDATETO").val(orderDateTo);
+    $("#V_BRANCHREGION").val(branchRegion);
+    $("#V_SELECTSQL").val("");
+    $("#V_WHERESQL").val(whereSQL);
+    $("#V_REGIONWHERESQL").val("");
+    $("#V_ORDERBYSQL").val("");
+    $("#V_FULLSQL").val("");
+    
+   
+    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+    var option = {
+            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+    };
+    
+    Common.report("form", option);
+    
 }
 
-function fn_report_2(){ // 완성
+function fn_report_2(){ 
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -142,7 +206,7 @@ function fn_report_2(){ // 완성
 }
 
 
-function fn_report_3(){  // 완성
+function fn_report_3(){  
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -183,7 +247,7 @@ function fn_report_3(){  // 완성
 }
 
 
-function fn_report_4(){ //완성
+function fn_report_4(){ 
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -213,7 +277,7 @@ function fn_report_4(){ //완성
 	
 }
 
-function fn_report_5(){ // 완성
+function fn_report_5(){ 
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -242,7 +306,7 @@ function fn_report_5(){ // 완성
     
 }
 
-function fn_report_6(){ // 완성
+function fn_report_6(){ 
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -354,11 +418,6 @@ function fn_report_6(){ // 완성
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form">
-<!-- report1 -->
-
-
-<!-- report2 -->
-
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
