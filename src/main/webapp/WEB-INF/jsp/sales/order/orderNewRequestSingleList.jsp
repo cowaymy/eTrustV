@@ -12,6 +12,17 @@
 	    $("#searchOrd").val('');
 	}
 	
+	function fn_orderNoExist3(){
+        $("#searchOrdDt").hide();
+        $("#searchOrd").val($("#salesOrdId").val());
+        $("#viewForm").attr({
+            "target" : "_self",
+            "action" : getContextPath() + "/sales/order/orderInvestList.do"
+        }).submit();
+//        fn_orderInvestigationListAjax();
+        Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#viewForm").serializeJSON(), null, true, 'dtPop');
+    }
+	
     $(document).ready(function(){
         
         $("input[name=searchOrd]").removeAttr("disabled");
@@ -118,9 +129,10 @@
               console.log("Order Investigation Request successfully saved.");
               console.log("data : " + result);
 
-              Common.alert("",fn_orderNoExist2 );
+              $("#invReqId").val(result.invReqId);
+              Common.alert("Order Investigation Request successfully saved.",fn_orderNoExist3 );
               
-              $("#invReqId").html(result.invReqId);
+              
 //              Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#viewForm").serializeJSON());
           },  function(jqXHR, textStatus, errorThrown) {
               try {
@@ -190,7 +202,7 @@
 </aside><!-- title_line end -->
 
 <form id="viewForm" name="viewForm">
-<input type="hidden" id="invReqId" name="invReqId">
+<input type="text" id="invReqId" name="invReqId">
 <input type="hidden" id="salesOrdId" name="salesOrdId">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -234,11 +246,11 @@
 </tr>
 <tr>
     <th scope="row">Called Date</th>
-    <td colspan="3"><input type="text" id="insCallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+    <td colspan="3"><input type="text" id="insCallDt" name="insCallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
     <th scope="row">Visitation Date</th>
-    <td colspan="3"><input type="text" id="insVisitDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+    <td colspan="3"><input type="text" id="insVisitDt" name="insVisitDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
     <th scope="row">Attachement</th>
