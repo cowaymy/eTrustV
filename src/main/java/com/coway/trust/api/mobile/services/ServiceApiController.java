@@ -372,6 +372,7 @@ public class ServiceApiController {
 
 				//			api 넘어온거				
 				params.put("remark",hsTransLogs1.get(i).get("resultRemark"));
+				params.put("cmbCollectType",hsTransLogs1.get(i).get("rcCode"));
 				
 /*				api 추가된거	
 				params.put("temperateSetng",hsTransLogs1.get(i).get("temperatureSetting"));
@@ -660,7 +661,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+/*	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
 	public ResponseEntity<InstallationResultDto> installationResult(@RequestBody List<InstallationResultForm> installationResultForms)
 			throws Exception {		
@@ -700,15 +701,15 @@ public class ServiceApiController {
 	
 		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 
-	}
+	}*/
 
 
 	
 	
 	
 	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/installationResult_new", method = RequestMethod.POST)
-	public ResponseEntity<InstallationResultDto> installationResult_new(@RequestBody List<InstallationResultForm> installationResultForms)
+	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
+	public ResponseEntity<InstallationResultDto> installationResult(@RequestBody List<InstallationResultForm> installationResultForms)
 			throws Exception {		
 		String transactionId = "";
 		
