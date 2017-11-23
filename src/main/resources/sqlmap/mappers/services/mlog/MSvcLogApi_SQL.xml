@@ -50,7 +50,7 @@
 						  , to_char(R.SRV_EXPR_DT,'YYYYMMDD') as Membership_Contract_Expiry
 						  , S.STUS_CODE_ID as rental_Status
 						  , A.REM as result_Remark
-                          , K.REN_COLCT_ID AS rc_Code,
+                          , K.REN_COLCT_ID AS rc_Code
 						  , 'HS' as job_Type 
 						  , '1' as job_Session
 						  , '1' as checkIn_Date
