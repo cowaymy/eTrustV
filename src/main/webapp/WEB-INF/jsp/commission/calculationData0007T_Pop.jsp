@@ -111,6 +111,16 @@
         style : "my-column",
         editable : false
     },{
+        dataField : "salesOrdNo",
+        headerText : "SALES ORD NO",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "stkDesc",
+        headerText : "STK DESC",
+        style : "my-column",
+        editable : false
+    },{
         dataField : "memId",
         headerText : " MEM ID",
         style : "my-column",

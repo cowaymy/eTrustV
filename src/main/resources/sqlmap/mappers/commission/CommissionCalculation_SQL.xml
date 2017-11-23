@@ -522,17 +522,28 @@
 			nvl(RUN_ID,'0') RUN_ID,
 			nvl(TASK_ID,'0') TASK_ID,
 			nvl(IS_EXCLUDE,'0') IS_EXCLUDE,
-			nvl(EMPLY_CODE,'0') MEM_CODE
+			nvl(EMPLY_CODE,'0') MEM_CODE,
+			nvl(SALES_ORD_NO ,'0') SALES_ORD_NO,
+            nvl(STK_DESC ,'0') STK_DESC   
          FROM(
             SELECT 
 	            T1.ORD_ID, T2.EMPLY_ID,T3.CODE,  T1.ORD_TYPE_ID, T1.PRODUCT_ID, T1.UNIT_VALU,
-	            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, T1.IS_EXCLUDE, T2.EMPLY_CODE
+	            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, T1.IS_EXCLUDE, T2.EMPLY_CODE,
+	            T4.SALES_ORD_NO, T4.STK_DESC
 			FROM CMM0007T T1 JOIN CMM0006T T2 
 			        ON T1.SALES_EMPLY_ID = T2.EMPLY_ID
 			         AND T1.TASK_ID=T2.COMM_TASK_ID
 			         AND T2.IS_EXCLUDE=0 
 			    JOIN SYS0013M T3
 			        ON T2.EMPLY_TYPE_ID = T3.CODE_ID
+			    LEFT OUTER JOIN 
+	                ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC  FROM SAL0001D T1 
+	                     JOIN SAL0002D T2
+	                        ON T1.SALES_ORD_ID = T2.SALES_ORD_ID            
+	                     LEFT OUTER JOIN SYS0026M T3
+	                        ON T2.ITM_STK_ID=T3.STK_ID
+	                     GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+	                )T4 ON T1.ORD_ID=T4.SALES_ORD_ID
 			 WHERE T1.TASK_ID = #{taskId}  
 			     <if test="codeId != null and codeId != ''">
 	              AND T3.CODE_ID= #{codeId}
@@ -769,7 +780,9 @@
 		    nvl(T1.ORD_TYPE_ID, '0') ORD_TYPE_ID,
 		    nvl(T1.BILL_RUN_ID,'0') runId, 
 		    nvl(T1.TASK_ID, '0') TASK_ID,
-		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE,
+		    nvl(T3.SALES_ORD_NO ,'0') SALES_ORD_NO,
+            nvl(T3.STK_DESC ,'0') STK_DESC   
 		FROM CMM0011T T1 JOIN (
 		        SELECT s1.RCORD_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
 		        FROM CMM0011T s1 JOIN CMM0006T s2 
@@ -787,6 +800,14 @@
                   AND s2.EMPLY_TYPE_ID = #{codeId}
                 </if>
 		    )T2 ON t1.RCORD_ID=t2.RCORD_ID 
+		    LEFT OUTER JOIN 
+			    ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC  FROM SAL0001D T1 
+			         JOIN SAL0002D T2
+			            ON T1.SALES_ORD_ID = T2.SALES_ORD_ID            
+			         LEFT OUTER JOIN SYS0026M T3
+			            ON T2.ITM_STK_ID=T3.STK_ID
+			         GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+			    )T3 ON T1.ORD_ID=T3.SALES_ORD_ID
          WHERE T1.TASK_ID = #{taskId} 
         <if test="useYnCombo != null and useYnCombo != ''">
           AND T2.IS_EXCLUDE = #{useYnCombo}

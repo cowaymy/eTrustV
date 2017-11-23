@@ -93,11 +93,21 @@
 	        style : "my-column",
 	        editable : false
 	    },{
-	        dataField : "ordId",
-	        headerText : "ORD ID",
-	        style : "my-column",
-	        editable : false
-	    },{
+            dataField : "ordId",
+            headerText : "ORD ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "salesOrdNo",
+            headerText : "SALES ORD NO",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "stkDesc",
+            headerText : "STK DESC",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "salesPersonId",
 	        headerText : "SALES PERSON ID",
 	        style : "my-column",

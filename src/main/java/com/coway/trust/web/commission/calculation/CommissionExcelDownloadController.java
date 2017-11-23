@@ -461,9 +461,9 @@ public class CommissionExcelDownloadController {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "ordId", "memId", "memCode", "code", "ordTypeId", "productId", "unitValu", "prc",
+				columns = new String[] { "ordId","salesOrdNo","stkDesc", "memId", "memCode", "code", "ordTypeId", "productId", "unitValu", "prc",
 						"pvValu", "runId", "taskId", "isExclude" };
-				titles = new String[] { "ORD ID", "MEM ID", "MEM CODE", "CODE", "ORD TYPE ID", "PRODUCT ID", "UNIT VALU", "PRC",
+				titles = new String[] { "ORD ID","SALES ORD NO","STK DESC", "MEM ID", "MEM CODE", "CODE", "ORD TYPE ID", "PRODUCT ID", "UNIT VALU", "PRC",
 						"PV VALU", "RUN ID", "TASK ID", "IS EXCLUDE" };
 
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
@@ -513,9 +513,9 @@ public class CommissionExcelDownloadController {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "rcordId", "ordId", "salesPersonId", "emplyCode", "instlmt", "pv", "prc",
+				columns = new String[] { "rcordId", "ordId","salesOrdNo","stkDesc", "salesPersonId", "emplyCode", "instlmt", "pv", "prc",
 						"ordTypeId", "runid", "taskId", "isExclude" };
-				titles = new String[] { "RCORD ID", "ORD ID", "SALES PERSON ID", "EMPLY CODE", "INSTLMT", "PV", "PRC",
+				titles = new String[] { "RCORD ID", "ORD ID","SALES ORD NO","STK DESC", "SALES PERSON ID", "EMPLY CODE", "INSTLMT", "PV", "PRC",
 						"ORD TYPE ID", "RUN ID", "TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad11T(map, downloadHandler);
