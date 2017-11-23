@@ -9,7 +9,7 @@
             TRNSC_DT,
             AMT,
             BANK_ACC_ID,
-            BANK_SLIP_NO,
+            CHQ_NO,
             ITM_REM,
             TR_NO,
             TR_ISSU_DT,
