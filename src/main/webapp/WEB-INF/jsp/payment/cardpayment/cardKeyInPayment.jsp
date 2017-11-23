@@ -664,9 +664,17 @@ function savePayment(){
     
     //Bill Payment : Order 정보 조회
     Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) {
-    	Common.alert("Success Payment Process", function(){
+    	
+    	var message = "<b>Success Payment Process<br><br></b>";
+    	
+    	if(result != null && result.length > 0){
+    		for(i=0 ; i < result.length ; i++){
+    			message += "<font color='red'>" + result[i].orNo + "</font><br>";
+    		}
+    	}
+    	
+    	Common.alert(message, function(){
     	      document.location.href = '/payment/initCardKeyInPayment.do';
-    		
     	});
         
     });
