@@ -499,7 +499,7 @@ function saveAdvPayment(){
 			
 		}else{
 			if(FormUtil.checkReqValue($("#cashBankAcc"))){
-				Common.alert('* No Bank Account ');
+				Common.alert('* No Bank Account Selected');
                 return;
 			}
 		}
@@ -558,7 +558,7 @@ function saveAdvPayment(){
             return;
         }
         
-        if(FormUtil.checkReqValue($("#chequeSlipNo"))){
+        if(FormUtil.checkReqValue($("#chequeChqNo"))){
             Common.alert('* No Slip No');
             return;
         }
@@ -2432,7 +2432,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             </td>
                             <th scope="row">Slip No.<span class="must">*</span></th>
                             <td>
-                                <input type="text" id="chequeSlipNo" name="chequeSlipNo" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
+                                <input type="text" id="chequeChqNo" name="chequeChqNo" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
                         </tr>
                         <tr>
