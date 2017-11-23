@@ -5,5 +5,5 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface OrderCustomerApiService {
 
-	EgovMap orderCustomerInfo(Map<String, Object> params);
+	EgovMap orderCustInfo(Map<String, Object> params);
 }

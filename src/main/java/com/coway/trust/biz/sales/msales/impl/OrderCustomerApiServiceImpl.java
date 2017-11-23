@@ -21,8 +21,8 @@ public class OrderCustomerApiServiceImpl extends EgovAbstractServiceImpl impleme
 	private OrderCustomerApiMapper orderCustomerApiMapper;
 	
 	@Override
-	public EgovMap orderCustomerInfo(Map<String, Object> params) {
+	public EgovMap orderCustInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return orderCustomerApiMapper.orderCustomerInfo(params);
+		return orderCustomerApiMapper.orderCustInfo(params);
 	}
 }

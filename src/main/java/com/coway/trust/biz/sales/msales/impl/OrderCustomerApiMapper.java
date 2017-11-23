@@ -8,6 +8,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("OrderCustomerApiMapper")
 public interface OrderCustomerApiMapper {
 
-	EgovMap orderCustomerInfo(Map<String, Object> params);
+	EgovMap orderCustInfo(Map<String, Object> params);
 	
 }
