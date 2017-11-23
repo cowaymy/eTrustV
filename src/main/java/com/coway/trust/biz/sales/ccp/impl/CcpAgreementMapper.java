@@ -117,4 +117,7 @@ public interface CcpAgreementMapper {
 	
 	void updateAgreement(Map<String, Object> params) throws Exception;
 	
+	void updateCcpAgreementMessageFile(Map<String, Object> parmas) throws Exception;
+	
+	void updateCcpLatMessageId(Map<String, Object> params);    
 }

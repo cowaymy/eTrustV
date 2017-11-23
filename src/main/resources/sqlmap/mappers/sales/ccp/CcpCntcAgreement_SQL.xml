@@ -976,29 +976,32 @@
     <select id="selectMessageLogAjax" parameterType="Map" resultType="egovMap">
 					<![CDATA[ 
 					SELECT Extent1.GOV_AG_ID   ,
-					       Extent1.GOV_AG_BATCH_NO   ,
-					       Extent2.GOV_AG_MSG_ID   ,
-					       Extent2.GOV_AG_MSG   ,
-					       TO_CHAR(Extent2.GOV_AG_MSG_CRT_DT, 'DD-MM-YYYY')  GOV_AG_MSG_CRT_DT ,
-					       Extent4.USER_NAME   ,
-					       CASE WHEN ( UTILS.CONVERT_TO_NUMBER(0,1,0) <> Extent2.GOV_AG_MSG_HAS_ATTACH ) THEN 'Yes' ELSE 'No' END GOV_AG_MSG_HAS_ATTACH  ,
-					       CASE WHEN ( Extent2.GOV_AG_MSG_ATTACH_FILE_NAME IS NOT NULL ) THEN Extent2.GOV_AG_MSG_ATTACH_FILE_NAME ELSE ' ' END GOV_AG_MSG_ATTACH_FILE_NAME  ,
-					       Extent3.NAME   ,
-					       Extent5.GOV_AG_PRGRS_NAME   ,
-					       Extent7.GOV_AG_ROLE_DESC   
-					FROM SAL0033D Extent1
-					       JOIN SAL0036D Extent2   ON Extent1.GOV_AG_ID = Extent2.GOV_AG_ID
-					       LEFT JOIN SYS0038M Extent3   ON Extent2.GOV_AG_MSG_STUS_ID = Extent3.STUS_CODE_ID
-					       JOIN SYS0047M Extent4   ON Extent2.GOV_AG_MSG_CRT_USER_ID = Extent4.USER_ID
-					       LEFT JOIN SAL0037C Extent5   ON Extent2.GOV_AG_MSG_PROG_STUS_ID = Extent5.GOV_AG_PRGRS_ID
-					       LEFT JOIN ( SELECT GovAgreementUserRole.GOV_AG_USER_ID   ,
-					                          GovAgreementUserRole.GOV_AG_ROLE_ID   ,
-					                          GovAgreementUserRole.GOV_AG_USER_DEPT_ID   ,
-					                          GovAgreementUserRole.GOV_AG_USER_STUS_ID   ,
-					                          GovAgreementUserRole.GOV_AG_USER_UPD_USER_ID   ,
-					                          GovAgreementUserRole.GOV_AG_USER_UPD_DT   
-					                   FROM SAL0040D GovAgreementUserRole ) Extent6   ON Extent2.GOV_AG_MSG_UPD_USER_ID = Extent6.GOV_AG_USER_ID
-					       LEFT JOIN SAL0039M Extent7   ON Extent6.GOV_AG_ROLE_ID = Extent7.GOV_AG_ROLE_ID
+                           Extent1.GOV_AG_BATCH_NO   ,
+                           Extent2.GOV_AG_MSG_ID   ,
+                           Extent2.GOV_AG_MSG   ,
+                           TO_CHAR(Extent2.GOV_AG_MSG_CRT_DT, 'DD-MM-YYYY')  GOV_AG_MSG_CRT_DT ,
+                           Extent4.USER_NAME   ,
+                           CASE WHEN ( UTILS.CONVERT_TO_NUMBER(0,1,0) <> Extent2.GOV_AG_MSG_HAS_ATTACH ) THEN 'Yes' ELSE 'No' END GOV_AG_MSG_HAS_ATTACH  ,
+                           CASE WHEN ( Extent2.GOV_AG_MSG_ATTACH_FILE_NAME IS NOT NULL ) THEN Extent2.GOV_AG_MSG_ATTACH_FILE_NAME ELSE ' ' END GOV_AG_MSG_ATTACH_FILE_NAME  ,
+                           Extent3.NAME   ,
+                           Extent5.GOV_AG_PRGRS_NAME   ,
+                           Extent7.GOV_AG_ROLE_DESC,
+                           Extent9.ATCH_FILE_ID
+                    FROM SAL0033D Extent1
+                           JOIN SAL0036D Extent2   ON Extent1.GOV_AG_ID = Extent2.GOV_AG_ID
+                           LEFT JOIN SYS0038M Extent3   ON Extent2.GOV_AG_MSG_STUS_ID = Extent3.STUS_CODE_ID
+                           JOIN SYS0047M Extent4   ON Extent2.GOV_AG_MSG_CRT_USER_ID = Extent4.USER_ID
+                           LEFT JOIN SAL0037C Extent5   ON Extent2.GOV_AG_MSG_PROG_STUS_ID = Extent5.GOV_AG_PRGRS_ID
+                           LEFT JOIN ( SELECT GovAgreementUserRole.GOV_AG_USER_ID   ,
+                                              GovAgreementUserRole.GOV_AG_ROLE_ID   ,
+                                              GovAgreementUserRole.GOV_AG_USER_DEPT_ID   ,
+                                              GovAgreementUserRole.GOV_AG_USER_STUS_ID   ,
+                                              GovAgreementUserRole.GOV_AG_USER_UPD_USER_ID   ,
+                                              GovAgreementUserRole.GOV_AG_USER_UPD_DT   
+                                       FROM SAL0040D GovAgreementUserRole ) Extent6   ON Extent2.GOV_AG_MSG_UPD_USER_ID = Extent6.GOV_AG_USER_ID
+                           LEFT JOIN SAL0039M Extent7   ON Extent6.GOV_AG_ROLE_ID = Extent7.GOV_AG_ROLE_ID
+                           LEFT JOIN SYS0070M Extent8   ON Extent8.ATCH_FILE_GRP_ID = Extent2.ATCH_FILE_GRP_ID
+                           LEFT JOIN SYS0071D Extent9   ON Extent9.ATCH_FILE_ID = Extent8.ATCH_FILE_ID
 					WHERE  Extent1.GOV_AG_ID = #{govAgId} 
 					ORDER BY Extent1.GOV_AG_ID DESC
 					]]>
@@ -1440,5 +1443,32 @@ SET RESULT_ID = #{resultId},
 			       </if>
 			       GOV_AG_UPD_DT = SYSDATE
 			 WHERE   GOV_AG_ID = #{updAgrId}
+</update>
+
+
+<update id="updateCcpAgreementMessageFile" parameterType="Map">
+                    UPDATE 
+                        SAL0036D
+                    SET
+                        ATCH_FILE_GRP_ID = #{fileGroupKey},
+                        GOV_AG_MSG_HAS_ATTACH = 1
+                    WHERE
+                        GOV_AG_MSG_ID = #{updMsgId}
+</update>
+
+<update id="updateCcpLatMessageId" parameterType="Map">  
+    UPDATE 
+        SAL0033D
+    SET 
+       GOV_AG_PRE_UPD_USER_ID = #{govAgPreUpdator} ,
+       GOV_AG_STUS_ID = #{govAgrStatusId},
+       GOV_AG_PRGRS_ID = #{govAgrProgressId},
+       GOV_AG_UPD_USER_ID = #{govAgrUpdator},
+       GOV_AG_UPD_DT = SYSDATE
+       <if test=" isChangeDate != null and '' != isChangeDate">
+            , GOV_AG_START_DT = TO_DATE(#{govAgrStartDate}, 'DD/MM/YYYY'),
+            GOV_AG_END_DT = TO_DATE(#{govAgrEndDate}, 'DD/MM/YYYY')
+       </if>
+    WHERE GOV_AG_ID = #{govAgrId}
 </update>
 </mapper>

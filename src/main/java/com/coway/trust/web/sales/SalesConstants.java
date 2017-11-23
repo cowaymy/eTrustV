@@ -112,6 +112,8 @@ public class SalesConstants {
 	public static final String CCP_DOC_SUB_CODE_NM_ICS = "CCPDOC"; //CCP Document Submission
 	
 	//CCP
+	public static final String CCP_AGREEMENT_SUB_PATH = "sales/ccp/agreement";
+	
 	public static final String  AGREEMENT_CODEID = "51"; // Agreement
 	public static final String  RENT_MEM_CODEID = "146"; // Rent Membership
 	public static final String  AGREEMENT_TRUE = "true";

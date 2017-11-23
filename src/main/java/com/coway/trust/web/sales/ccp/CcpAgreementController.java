@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.ccp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.apache.tiles.request.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,12 +20,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.FileService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.CcpAgreementService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.EgovFormBasedFileUtil;
+import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.web.sales.SalesConstants;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -38,6 +50,12 @@ public class CcpAgreementController {
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+	@Value("${com.file.upload.path}")
+	private String uploadDir;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@RequestMapping(value = "/selectCcpAgreementList.do")
 	public String selectCcpAgreementList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
@@ -458,9 +476,13 @@ public class CcpAgreementController {
 		
 	}
 
-	//TODO 추후 Upload 구현
+	
 	@RequestMapping(value = "/openFileUploadPop.do")
-	public String openFileUploadPop(@RequestParam Map<String, Object> params) throws Exception{
+	public String openFileUploadPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		model.addAttribute("msgId", params.get("msgId"));
+		
+		LOGGER.info("######################## move msgId  :   " + params.get("msgId"));
 		
 		return "sales/ccp/ccpAgreementMtxViewEditUploadPop";
 		
@@ -471,6 +493,51 @@ public class CcpAgreementController {
 	public String	searchOrderNoByEditPop (@RequestParam Map<String, Object> params) throws Exception{
 		
 		return "sales/ccp/ccpAgreementSearchOrderNoByEditPop";
+	}
+	
+	
+	@RequestMapping(value = "/uploadCcpFile.do")
+	public ResponseEntity<ReturnMessage> uploadCcpFile(MultipartHttpServletRequest request, @RequestParam Map<String, Object>  params, ModelMap model, SessionVO sessionVO) throws Exception{
+		
+		List<EgovFormBasedFileVo> files  = EgovFileUploadUtil.uploadFiles(request, uploadDir, SalesConstants.CCP_AGREEMENT_SUB_PATH, AppConstants.UPLOAD_MAX_FILE_SIZE);
+		
+		params.put("userId", sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		
+		//MSG ID
+		
+		List<EgovFormBasedFileVo> newFiles = new ArrayList<EgovFormBasedFileVo>();
+		
+		for (int idx = 0; idx < files.size(); idx++) {
+			
+			EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
+			
+			vo.setContentType(files.get(idx).getContentType());
+			vo.setExtension(files.get(idx).getExtension());
+			vo.setPhysicalName(files.get(idx).getPhysicalName());
+			vo.setServerPath(files.get(idx).getServerPath());
+			vo.setServerSubPath(files.get(idx).getServerSubPath());
+			vo.setSize(files.get(idx).getSize());
+			
+			vo.setFileName(String.valueOf(params.get("updMsgId")));
+			
+			newFiles.add(vo);
+			
+		}
+		
+		int fileGroupKey = fileService.insertFiles(FileVO.createList(newFiles), FileType.WEB, (Integer) params.get("userId"));
+		
+		params.put("fileGroupKey", fileGroupKey);
+		
+		LOGGER.info("#################### upload after params : "  + params.toString());
+		ccpAgreementService.uploadCcpFile(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
 	}
 }
 

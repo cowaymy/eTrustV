@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.CcpAgreementService;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.web.sales.SalesConstants;
@@ -283,6 +285,9 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		returnMap.put("msgId", govMsgIdSeq);
 		returnMap.put("docNo", docNo);
+		
+		LOGGER.info("####################### Return Map : " + returnMap.toString());
+		
 		
 		return returnMap;
 	}
@@ -643,7 +648,24 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
     	editAfList = ccpAgreementMapper.selectEditAfAgreementList(params);
     	if(editAfList != null && editAfList.size() > 0){
     		
+    		Map<String, Object> updParam = new HashMap<String, Object>();
     		
+    		updParam.put("govAgrId", editAfList.get(0).get("govAgId")); //where govAgId
+    		
+    		updParam.put("govAgPreUpdator",  params.get("updAgrId"));
+    		updParam.put("govAgrStatusId", params.get("govAgrStatusId"));
+    		updParam.put("govAgrProgressId", params.get("govAgrPrgId"));
+    		updParam.put("govAgrUpdator", params.get("userId"));
+    		
+    		if( ("5").equals(String.valueOf(params.get("hiddenUpdMsgStatus"))) || ("44").equals(String.valueOf(params.get("hiddenUpdMsgStatus")))){
+    			//sepa Params
+    			updParam.put("isChangeDate", "1");
+    			
+    			updParam.put("govAgrStartDate", params.get("updPeriodStart"));
+        		updParam.put("govAgrEndDate", params.get("updPeriodEnd"));
+    		}
+    		
+    		ccpAgreementMapper.updateCcpLatMessageId(updParam);
     		
     	}
     	//TODO  GovAgreement.First().GovAgrPreUpdator = Agreement.GovAgrID;  :: ASIS Source Need Confirm(CCP.cs)
@@ -772,6 +794,15 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		boolean isSuccess = adaptorService.sendEmail(email, false);
 		
 		return isSuccess;
+	}
+
+	
+	
+
+	@Override
+	public void uploadCcpFile(Map<String, Object> params) throws Exception {
+		
+			ccpAgreementMapper.updateCcpAgreementMessageFile(params);
 	}
 
 

@@ -50,7 +50,10 @@
             $("#_hiddenUpdMsgStatus").val($("#_msgStatus").val());
             
             Common.ajax("GET", "/sales/ccp/updateAgreementMtcEdit.do", $("#_saveForm").serialize() , function(result){  
-                //Save Btn Disable
+                //msg
+                //result.msgLogSeq
+            	$("#_upMsgId").val(result.msgLogSeq);   
+            	//Save Btn Disable
                 $("#_btnSave").css("display" , "none");
                 //List Reload
                 fn_selectCcpAgreementListAjax();
@@ -78,7 +81,10 @@
     //추후 구현 필요
     function fn_fileUpload(){
         
-        Common.popupDiv("/sales/ccp/openFileUploadPop.do", $("#_saveForm").serializeJSON(), null , true , '_uploadDiv');
+        var uploadParam = {msgId : $("#_upMsgId").val()};
+        console.log("edit upload Params  : " + JSON.stringify(uploadParam));
+        Common.popupDiv("/sales/ccp/openFileUploadPop.do", uploadParam , null , true , '_uploadDiv');
+       
     }
     
     
@@ -155,22 +161,33 @@
                                    {dataField : "govAgRoleDesc" , headerText : "Department" , width : "10%"},
                                    {dataField : "govAgMsg" , headerText : "Message" , width : "30%"},
                                    {dataField : "govAgMsgHasAttach" , headerText : "Attachement" , width : "10%"},
-                                   {dataField : "govAgMsgAttachFileName",  headerText : "download", width : '10%', styleFunction : cellStyleFunction,
+                                   {dataField : "atchFileGrpId" , visible : false},
+                                   {dataField : "atchFileId",  headerText : "download", width : '10%', styleFunction : cellStyleFunction,  
                                          renderer : {
                                            type : "ButtonRenderer",
                                            labelText : "Download",
                                            onclick : function(rowIndex, columnIndex, value, item) {
                                                 
-                                        	   //isFile Check
-                                        	    chkIsFile(value);
-                                        	   
-                                                if(fileResult == true){
-                                                	
-                                                	//file download
-                                                	
-                                                }else{
-                                                	Common.alert("The file might be deleted or changed location.");
-                                                }
+                                        	   Common.showLoader();
+                                                var fileId = value;
+                                        	  $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
+                                                   httpMethod: "POST",
+                                                   contentType: "application/json;charset=UTF-8",
+                                                   data: {
+                                                       fileId: fileId
+                                                   },
+                                                   failCallback: function (responseHtml, url, error) {
+                                                       Common.alert($(responseHtml).find("#errorMessage").text());
+                                                   }
+                                               }).done(function () {
+                                                       Common.removeLoader();
+                                                       console.log('File download a success!');
+                                               }).fail(function () {
+                                            	       Common.alert("The file might be deleted or changed location.");
+                                            	       Common.removeLoader();
+                                               });
+                                                
+                                                
                                                 
                                            }
                                          }
@@ -380,7 +397,6 @@
                     Common.alert("* Agreement Type is required.");
                     return false;
                 }
-                
             }
         }
         
@@ -418,36 +434,6 @@
         
     }
     
-     function chkIsFile(_url){
-        
-      /*   var result = '';
-        $.ajax({
-            url: url,
-            type:'HEAD',
-            error: function(){
-                result = 'N';
-            },
-            success: function(){
-                result 'Y';
-            }
-        });
-        
-        return result; */
-        
-    	 $.ajax({
-    	     url: getContextPath()+_url,
-    	     type: 'HEAD',
-    	     async : false,
-    	     success: function () {
-    	    	 fileResult = true;
-    	     },
-    	     error: function () {
-    	    	 fileResult = false;
-    	     }
-    	});
-    } 
-    
-    
   //addcolum button hidden
     function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField){
 
@@ -475,6 +461,8 @@
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
+<!--msg Hidden  -->
+<input type="hidden" id="_upMsgId"  >
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on" onclick="javascript: fn_resizeFun('agrInfo')">Agreement Info</a></li>

@@ -212,7 +212,7 @@
                 SYS0026M T1
                 LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
             WHERE 
-                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '700002' = STK_CODE  )) Project1  
+                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '600052' = STK_CODE  )) Project1  
                 
             <!-- Filter / Parts -->
             <if test=" null != posSal and '' != posSal">

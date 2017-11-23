@@ -132,7 +132,11 @@
                 
                 Common.ajax("POST", "/sales/ccp/insertAgreement.do", data, function(result){
                     
-                    Common.confirm("Contract agreement successfully saved. Are you sure want to upload attachment(s) for this agreement ?", "", ""); //callback missing, confirm missing
+                	//result.msgId
+                	$("#_upMsgId").val(result.msgId);
+                	console.log("result.msgId(fileName) : " + result.msgId);
+                	
+                    Common.confirm("Contract agreement successfully saved. Are you sure want to upload attachment(s) for this agreement ?", fn_fileUpload , ""); //callback missing, confirm missing
                     if($("#_inputAgreementType").val() == '949'){
                         Common.ajax("GET", "/sales/ccp/sendSuccessEmail.do", result, function(result){
                              console.log(result.message);
@@ -658,6 +662,13 @@ function createAUIGrid11() {
         }
         
     }
+    
+    function fn_fileUpload(){
+        
+    	var uploadParam = {msgId : $("#_upMsgId").val()};
+    	
+        Common.popupDiv("/sales/ccp/openFileUploadPop.do", uploadParam , null , true , '_uploadDiv');
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -668,7 +679,8 @@ function createAUIGrid11() {
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
-
+<!-- Upload Message Id -->
+<input type="hidden" id="_upMsgId"  >
 <!-- <aside class="title_line">title_line start
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>New Government Agreement</h2>
