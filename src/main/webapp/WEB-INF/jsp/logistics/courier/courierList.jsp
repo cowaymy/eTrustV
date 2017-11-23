@@ -415,11 +415,11 @@
     <th>Country</th>
     <td><select id="srchCntry" name="srchCntry" class="w100p" onchange="getAddrRelay2('srchState' ,'search', 'state','')"></select></td>
     <th>State</th>
-    <td><select  id="srchState" name="srchState" class="w100p" onchange="getAddrRelay2('srchArea'  ,'search', 'area' ,'')"></select></td>
+    <td><select  id="srchState" name="srchState" class="w100p" onchange="getAddrRelay2('srchArea'  ,'search', 'area' ,'')"><option>Choose One</option></select></td>
     <th>Area</th>
-    <td><select  id="srchArea" name="srchArea"  class="w100p" onchange="getAddrRelay2('srchPstCd' ,'search', 'post' ,'')"></select></td>
+    <td><select  id="srchArea" name="srchArea"  class="w100p" onchange="getAddrRelay2('srchPstCd' ,'search', 'post' ,'')"><option>Choose One</option></select></td>
     <th>PostCode</th>
-    <td><select  id="srchPstCd" name="srchPstCd" class="w100p"></select></td>
+    <td><select  id="srchPstCd" name="srchPstCd" class="w100p"><option>Choose One</option></select></td>
 </tr>
 </tbody>
 </table><!-- table end -->
