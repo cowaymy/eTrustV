@@ -252,6 +252,12 @@
 		                            #{item}
 		                            </foreach>
 		                        </if>
+		                        <if test="cmdBranchCode1 != null and cmdBranchCode1 != ''">
+                                     AND sys064.CODY_BRNCH_CODE = SUBSTR(#{cmdBranchCode1},1,6)
+                               </if>
+                                <if test="cmdCdManager1 != null and cmdCdManager1 != ''">
+                                     AND sys064.CODY_MANGR_USER_ID = #{cmdCdManager1}
+                               </if>
 
 
           </select>
@@ -2248,7 +2254,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                                                      Extent2.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
                                                      Extent2.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
                                                      Extent3.STK_CODE STK_CODE  ,
-                                                     Extent3.STK_DESC STK_DESC 
+                                                     Extent3.STK_DESC STK_DESC
                                      FROM SAL0090D Extent1
                                             JOIN SAL0087D Extent2   ON Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID
                                             LEFT JOIN SYS0026M Extent3   ON Extent2.SRV_FILTER_STK_ID = Extent3.STK_ID
@@ -2317,8 +2323,8 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 								                   AND ( 1 = Extent3.SRV_FILTER_STUS_ID )
 								                   AND ( Extent1.SRV_SO_ID = #{salesOrdId} ) ) Distinct1
                    </select>
-                   
-                   
+
+
                  <update id="updateHsFilterSiriNo" parameterType="Map">
                             UPDATE SAL0087D
                                SET SRV_FILTER_LAST_SERIAL= #{lastSerialNo}
@@ -2328,22 +2334,22 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                                   ,SRV_FILTER_UPD_DT= sysdate
                              WHERE 1=1
                              and SRV_FILTER_ID = #{srvFilterId}
-                 </update>                   
-                 
-                 
-                 
-                 
+                 </update>
+
+
+
+
                     <select id="select0087DFilter" parameterType="Map" resultType="String">
                              select SRV_FILTER_LAST_SERIAL
                              from SAL0087D
                               WHERE 1=1
                              and SRV_FILTER_ID = #{srvFilterId}
-                             
-                     </select>                     
-                     
-                     
-                     
-                     
+
+                     </select>
+
+
+
+
                   <update id="updateHs009d" parameterType="Map">
 
                        UPDATE SAL0090D
@@ -2354,6 +2360,6 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                                SRV_UPD_DT = sysdate
                          WHERE   SRV_CONFIG_ID = #{srvConfigId}
 
-                     </update>                     
+                     </update>
 
 </mapper>
