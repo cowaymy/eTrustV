@@ -71,7 +71,7 @@ function mileageCalSchemaList() {
     }
     
     function save(){
-    	if(vaildationCheck())
+    	
     	Common.ajax("POST", "/services/mileageCileage/saveSchemaMgmt.do", GridCommon.getEditData(gridID1), function(result) {
             console.log("성공.");
             console.log("data : " + result);
