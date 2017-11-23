@@ -124,9 +124,9 @@ public class PointOfSalesController {
 			UserCode = "T010";
 		}
 
-		logger.debug("UserName    값 : {}", UserName);
-		logger.debug("UserCode    값 : {}", UserCode);
-		logger.debug("UserBranchId    값 : {}", UserBranchId);
+//		logger.debug("UserName    값 : {}", UserName);
+//		logger.debug("UserCode    값 : {}", UserCode);
+//		logger.debug("UserBranchId    값 : {}", UserBranchId);
 
 		Map<String, Object> map = new HashMap();
 		map.put("UserName", UserName);
@@ -139,16 +139,16 @@ public class PointOfSalesController {
 	@RequestMapping(value = "/PosSearchList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> PosSearchList(@RequestBody Map<String, Object> params, Model model) throws Exception {
 
-		logger.debug("searchOthersReq1    값 : {}", params.get("searchOthersReq1"));
-		logger.debug("searchOthersReq2    값 : {}", params.get("searchOthersReq2"));
-		logger.debug("searchReqType    값 : {}", params.get("searchReqType"));
-		/*logger.debug("searchLoc    값 : {}", params.get("searchLoc"));*/
-		logger.debug("tlocation    값 : {}", params.get("tlocation"));
-		logger.debug("searchStatus    값 : {}", params.get("searchStatus"));
-		logger.debug("crtsdt    값 : {}", params.get("crtsdt"));
-		logger.debug("crtedt    값 : {}", params.get("crtedt"));
-		logger.debug("reqsdt    값 : {}", params.get("reqsdt"));
-		logger.debug("reqedt    값 : {}", params.get("reqedt"));
+//		logger.debug("searchOthersReq1    값 : {}", params.get("searchOthersReq1"));
+//		logger.debug("searchOthersReq2    값 : {}", params.get("searchOthersReq2"));
+//		logger.debug("searchReqType    값 : {}", params.get("searchReqType"));
+//		/*logger.debug("searchLoc    값 : {}", params.get("searchLoc"));*/
+//		logger.debug("tlocation    값 : {}", params.get("tlocation"));
+//		logger.debug("searchStatus    값 : {}", params.get("searchStatus"));
+//		logger.debug("crtsdt    값 : {}", params.get("crtsdt"));
+//		logger.debug("crtedt    값 : {}", params.get("crtedt"));
+//		logger.debug("reqsdt    값 : {}", params.get("reqsdt"));
+//		logger.debug("reqedt    값 : {}", params.get("reqedt"));
 
 		String Status = (String) params.get("searchStatus");
 		params.put("searchStatus", Status);
@@ -181,7 +181,7 @@ public class PointOfSalesController {
 		String[] catetype = request.getParameterValues("catetype");
 		String reqLoc = request.getParameter("reqLoc");
 
-		logger.debug("reqLoc    값 : {}", reqLoc);
+//		logger.debug("reqLoc    값 : {}", reqLoc);
 
 		// for (int i = 0; i < PosItemType.length; i++) {
 		// logger.debug("PosItemType 값 : {}", PosItemType[i]);
@@ -280,7 +280,7 @@ public class PointOfSalesController {
 	@RequestMapping(value = "/selectPosReqNo.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
 
-		logger.debug("selectPosReqNo : {}", params.get("groupCode"));
+//		logger.debug("selectPosReqNo : {}", params.get("groupCode"));
 
 		List<EgovMap> codeList = PointOfSalesService.selectPosReqNoList(params);
 		return ResponseEntity.ok(codeList);
@@ -302,8 +302,8 @@ public class PointOfSalesController {
 
 		String reqno = request.getParameter("reqno");
 		String itmcd = request.getParameter("itmcd");
-		logger.debug("reqno@@@@@: {}", reqno);
-		logger.debug("itmcd@@@@@: {}", itmcd);
+//		logger.debug("reqno@@@@@: {}", reqno);
+//		logger.debug("itmcd@@@@@: {}", itmcd);
 
 		Map<String, Object> serialmap = new HashMap();
 		serialmap.put("reqno", reqno);
@@ -321,13 +321,13 @@ public class PointOfSalesController {
 	public ResponseEntity<Map> selectStockMovementRequestDeliveryList(@RequestParam Map<String, Object> params,
 			Model model) throws Exception {
 
-		logger.debug("reqstno@@@@@: {}", params.get("reqstno"));
+//		logger.debug("reqstno@@@@@: {}", params.get("reqstno"));
 
 		List<EgovMap> mtrList = PointOfSalesService.selectMaterialDocList(params);
 
-		for (int i = 0; i < mtrList.size(); i++) {
-			logger.debug("MaterialDocumentList@@@@@: {}", mtrList.get(i));
-		}
+//		for (int i = 0; i < mtrList.size(); i++) {
+//			logger.debug("MaterialDocumentList@@@@@: {}", mtrList.get(i));
+//		}
 
 		Map<String, Object> map = new HashMap();
 

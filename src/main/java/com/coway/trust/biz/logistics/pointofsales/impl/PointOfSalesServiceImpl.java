@@ -50,23 +50,19 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 
-		for (int i = 0; i < checkList.size(); i++) {
-			logger.debug("checkList    값 : {}", checkList.get(i));
-		}
-
-		if (serialList.size() > 0) {
-			for (int i = 0; i < serialList.size(); i++) {
-				logger.debug("serialList    값 : {}", serialList.get(i));
-			}
-		}
+//		for (int i = 0; i < checkList.size(); i++) {
+//			logger.debug("checkList    값 : {}", checkList.get(i));
+//		}
+//
+//		if (serialList.size() > 0) {
+//			for (int i = 0; i < serialList.size(); i++) {
+//				logger.debug("serialList    값 : {}", serialList.get(i));
+//			}
+//		}
 
 		formMap.put("reqno", formMap.get("headtitle") + seq);
 		formMap.put("userId", params.get("userId"));
 		String posSeq = formMap.get("headtitle") + seq;
-
-		logger.debug("posSeq    값 : {}", posSeq);
-		logger.debug("trnscType    값 : {}", formMap.get("trnscType"));
-		logger.debug("insReqLoc    값 : {}", formMap.get("insReqLoc"));
 
 		PointOfSalesMapper.insOtherReceiptHead(formMap);
 
@@ -86,8 +82,6 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 				serialMap.put("reqno", posSeq);
 				serialMap.put("ttype", formMap.get("trnscType"));
 				serialMap.put("userId", params.get("userId"));
-
-				logger.debug("ttype??????    값 : {}", formMap.get("ttype"));
 
 				PointOfSalesMapper.insertSerial(serialMap);
 			}
@@ -147,13 +141,9 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 			reVal = (String)GiMap.get("rdata");
 		} else {
 			PointOfSalesMapper.GIRequestIssue(GiMap);
-			logger.debug("149Line ::::: {}" , GiMap);
-			logger.debug("150Line ::::: " + (String)GiMap.get("rdata"));
 			reVal = (String)GiMap.get("rdata");
 		}
-		logger.debug("154Line :::: " + reVal);
 		String returnValue[] = reVal.split("∈"); 
-		logger.debug("155Line :::: " + returnValue.length);
 		return returnValue[1];
 	}
 

@@ -152,7 +152,6 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
-        console.log('22');
         
         $("#mdc_grid").hide(); 
 
@@ -344,7 +343,7 @@ function GiSaveAjax() {
     data.form = $("#giForm").serializeJSON();
 
     Common.ajaxSync("POST", "/logistics/pos/PosGiSave.do", data, function(result) {
-        console.log(result);
+        
         Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
 
         // AUIGrid.resetUpdatedItems(listGrid, "all");
