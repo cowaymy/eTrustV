@@ -62,8 +62,6 @@
 
 	var paramdataTransaction;
 	var paramdataMovement;
-	var amdata = [{"codeId" : "A", "codeName" : "Auto"}, {"codeId" : "M", "codeName" : "Manaual"}];
-	var uomlist  = f_getTtype('42', '');
 
 	$(document).ready(function() {
 
@@ -172,36 +170,6 @@
 	    });
 	}
 
-	function f_getTtype(g, v) {
-
-	    var rData = new Array();
-
-	    $.ajax( {
-	           type : "GET",
-	           url : "/common/selectCodeList.do",
-	           data : {groupCode : g, orderValue : 'CRT_DT', likeValue : v},
-	           dataType : "json",
-	           contentType : "application/json;charset=UTF-8",
-	           async : false,
-	           success : function(data) {
-	              $.each(data, function(index, value) {
-	                  var list = new Object();
-	                  list.code = data[index].code;
-	                  list.codeId = data[index].codeId;
-	                  list.codeName = data[index].codeName;
-	                  rData.push(list);
-	                });
-	           },
-	           error: function(jqXHR, textStatus, errorThrown) {
-	               alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
-	           },
-	           complete: function() {
-	           }
-	       });
-
-	    return rData;
-	}
-
 	function f_multiCombo() {
 	    $(function() {
 	        $('#sttype').change(function() {
@@ -282,13 +250,14 @@
                 <tr>
                     <th scope="row">From Location</th>
                     <td colspan="2">
-                        <input type="hidden"  id="tlocation" name="tlocation">
-                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
+                        <input type="hidden"  id="flocation" name="flocation">
+                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
+
                     </td>
                     <th scope="row">To Location</th>
                     <td colspan="2">
-                        <input type="hidden"  id="flocation" name="flocation">
-                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
+                        <input type="hidden"  id="tlocation" name="tlocation">
+                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
                 </tr>
 
