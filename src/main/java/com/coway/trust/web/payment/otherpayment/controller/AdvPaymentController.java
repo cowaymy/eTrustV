@@ -96,7 +96,7 @@ public class AdvPaymentController {
     		formInfo.put("keyInTransDate", String.valueOf(formInfo.get("chequeTransDate")));
         	formInfo.put("keyInAmount",  String.valueOf(formInfo.get("chequeAmount")));
     		formInfo.put("keyInBankAcc",  formInfo.get("chequeBankAcc") != null ? String.valueOf(formInfo.get("chequeBankAcc")) : 0);
-    		formInfo.put("keyInSlipNo",  String.valueOf(formInfo.get("chequeSlipNo")));
+    		formInfo.put("keyInChequeNo",  String.valueOf(formInfo.get("chequeChqNo")));
     		formInfo.put("keyInRemark",  String.valueOf(formInfo.get("chequeRemark")));
     		formInfo.put("keyInTrNo",  String.valueOf(formInfo.get("chequeTrNo")));
     		formInfo.put("keyInTrIssueDate",  String.valueOf(formInfo.get("chequeTrIssueDate")));
