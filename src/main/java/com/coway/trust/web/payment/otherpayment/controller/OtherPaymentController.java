@@ -54,9 +54,6 @@ public class OtherPaymentController {
 	 */
 	@RequestMapping(value = "/initOtherPayment.do")
 	public String CommissionDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		System.out.println("initPage !! ");
-		
 		return "payment/otherpayment/otherPayment";
 	}
 	
