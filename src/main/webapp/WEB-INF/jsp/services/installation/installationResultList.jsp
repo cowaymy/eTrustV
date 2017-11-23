@@ -371,13 +371,13 @@ function fn_installNoteListing(){
         <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
-    <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li>
-        <!--  <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()">Installation Note</a></p></li>
-       <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()">DO Active List</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installRawData()"> Installation Raw Data</a></p></li>
+        <!-- <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li> -->
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()">DO Active List</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()">Installation Note Listing</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()">Installation Note</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installBookListing()">Installation Log Book Listing</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()">Daily DSC Report</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()">Installation Note Listing</a></p></li> -->
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installRawData()"> Installation Raw Data</a></p></li>
+        <!-- <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()">Daily DSC Report</a></p></li> -->
         <!--<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
     </ul>
