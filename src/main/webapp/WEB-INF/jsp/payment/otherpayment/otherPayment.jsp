@@ -139,6 +139,7 @@ $(document).ready(function(){
              $('#cheque').find('#acc').html(strAcc);
 	         doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
 	     }else if($('#payMode').val() == '108'){//online
+	    	 alert("108");
 	    	 $("#online").hide();
              $("#cheque").hide();
              $("#cash").hide(); 
@@ -1379,11 +1380,6 @@ var columnLayout = [
                     Common.alert('* No Amount ');
                     return;
                 }
-                
-                if(FormUtil.checkReqValue($("#cash").find("#bankAcc option:selected"))){
-                    Common.alert('* No Issue Bank Selected');
-                    return;
-                }
     			
     		}else if($('#payMode').val() == '106'){
     			item.pendingAmount = $("#cheque").find("#amount").val();
@@ -1399,10 +1395,6 @@ var columnLayout = [
                     return;
                 }
                 
-                if(FormUtil.checkReqValue($("#cheque").find("#bankAcc option:selected"))){
-                    Common.alert('* No Issue Bank Selected');
-                    return;
-                }
     		}
     		   else if($('#payMode').val() == '108'){
     			var amt = 0;
@@ -1423,10 +1415,6 @@ var columnLayout = [
                     return;
                 }
                 
-                if(FormUtil.checkReqValue($("#online").find("#bankAcc option:selected"))){
-                    Common.alert('* No Issue Bank Selected');
-                    return;
-                }
             }
     		
     		AUIGrid.addRow(pendingGridID, item, "last");
@@ -1877,6 +1865,8 @@ var columnLayout = [
 				<colgroup>
 				    <col style="width:170px" />
 				    <col style="width:*" />
+				    <col style="width:170px" />
+                    <col style="width:*" />
 				</colgroup>
 				<tbody>
                     <tr>
@@ -1889,6 +1879,14 @@ var columnLayout = [
 		                            <p><input type="text" id="bankDateTo" name="bankDateTo" title="Bank In End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	                            </div>
 	                            <!-- date_set end -->
+                           </td>
+                           <th>Type</th>
+                           <td>
+                                <select id="searchPayType" name="searchPayType" class="multy_select w100p" multiple="multiple" >
+	                                <option value="CSH">Cash</option>
+	                                <option value="CHQ">Cheque</option>
+	                                <option value="ONL">Online</option>
+                                </select>
                            </td>
                     </tr>
 				</tbody>
@@ -1946,6 +1944,14 @@ var columnLayout = [
                 </td>
             </tr>
             <tr>
+                <th>Transaction Date<span class="must">*</span></th>
+                   <td>
+                        <input type="text" id="trDateOnline" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
+                  </td>
+                  <th>EFT</th>
+                  <td><input type="text" name="eft" id="eft" class="w100p"/></td>
+            </tr>
+            <tr>
                 <th>PayerName</th>
                 <td>
                    <input type="text" id="payerName" name="payerName" class="w100p"  />
@@ -1957,7 +1963,7 @@ var columnLayout = [
             </tr>
             <tr>
                 <th scope="row">Bank Type</th>
-                <td colspan="3">
+                <td>
                     <select id="bankType" name="bankType" class="w100p" >
                         <option value="">Choose One</option>
                         <option value="2728">JomPay</option>
@@ -1966,28 +1972,20 @@ var columnLayout = [
                         <option value="2731">Others</option>
                     </select>
                 </td>
+                <th>Bank Account</th>
+                <td id="acc"></td>
             </tr>
             <tr>
-                   <th>Bank Account<span class="must">*</span></th>
-                   <td id="acc"></td>
                    <th>VA Account</th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
-            </tr>
-            <tr>
-                   <th>Transaction Date<span class="must">*</span></th>
-                   <td colspan="3">
-                        <input type="text" id="trDateOnline" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
-                   </td>
+                   <th></th>
+                   <td></td>
             </tr>
             <tr>
                    <th>Remark</th>
                    <td colspan="3">
                         <textarea name="remark" id="remark" cols="20" rows="5" placeholder=""></textarea>
                    </td>
-            </tr>
-            <tr>
-                 <th>EFT</th>
-                 <td colspan="3"><input type="text" name="eft" id="eft" class="w100p"/></td>
             </tr>
             <tr>
                  <th scope="row">TR No.</th>
@@ -2008,9 +2006,10 @@ var columnLayout = [
                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                      </a>
                  </td>
-                 <td scope="row"></td>
-                  <td>
-                  </td>
+                 <td scope="row">Pay Date</td>
+                 <td>
+                    <input id="keyInPayDateOnline" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                 </td>
              </tr>
         </tbody>
     </table>
@@ -2030,13 +2029,33 @@ var columnLayout = [
         <tbody>
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
-                <td colspan="3">
+                <td>
                    <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+                </td>
+                <th scope="row">Bank Type</th>
+                <td>
+                    <select id="bankType" name="bankType" class="w100p" >
+                        <option value="">Choose One</option>
+                        <option value="2728">JomPay</option>
+                        <option value="2729">MBB CDM</option>
+                        <option value="2730">VA</option>
+                        <option value="2731">Others</option>
+                    </select>
                 </td>
             </tr>
             <tr>
+                   <th>Bank Account</th>
+                   <td id="acc"></td>
+                   <th>VA Account</th>
+                   <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
+            </tr>
+            <tr>
+                <th>Transaction Date<span class="must">*</span></th>
+                   <td>
+                        <input type="text" id="trDateCash" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
+                   </td>
                 <th scope="row">Slip No.</th>
-                <td colspan="3">
+                <td>
                    <input type="text" id="slipNo" name="slipNo" class="w100p"  />
                 </td>
             </tr>
@@ -2049,30 +2068,6 @@ var columnLayout = [
                 <td>
                    <input type="text" id="jomPay" name="jomPay" class="w100p"  />
                 </td>
-            </tr>
-            <tr>
-                <th scope="row">Bank Type</th>
-                <td colspan="3">
-                    <select id="bankType" name="bankType" class="w100p" >
-                        <option value="">Choose One</option>
-                        <option value="2728">JomPay</option>
-                        <option value="2729">MBB CDM</option>
-                        <option value="2730">VA</option>
-                        <option value="2731">Others</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                   <th>Bank Account<span class="must">*</span></th>
-                   <td id="acc"></td>
-                   <th>VA Account</th>
-                   <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
-            </tr>
-            <tr>
-                   <th>Transaction Date<span class="must">*</span></th>
-                   <td colspan="3">
-                        <input type="text" id="trDateCash" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
-                   </td>
             </tr>
             <tr>
                    <th>Remark</th>
@@ -2099,8 +2094,9 @@ var columnLayout = [
                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                        </a>
                    </td>
-                   <td scope="row"></td>
+                   <th scope="row">Pay Date</th>
                   <td>
+                       <input id="keyInPayDateCash" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                   </td>
                </tr>
         </tbody>
@@ -2121,14 +2117,34 @@ var columnLayout = [
         <tbody>
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
-                <td colspan="3">
+                <td>
                    <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+                </td>
+                <th scope="row">Bank Type</th>
+                <td>
+                    <select id="bankType" name="bankType" class="w100p" >
+                        <option value="">Choose One</option>
+                        <option value="2728">JomPay</option>
+                        <option value="2729">MBB CDM</option>
+                        <option value="2730">VA</option>
+                        <option value="2731">Others</option>
+                    </select>
                 </td>
             </tr>
             <tr>
+                   <th>Bank Account</th>
+                   <td id="acc"></td>
+                   <th>VA Account</th>
+                   <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
+            </tr>
+            <tr>
+                <th>Transaction Date<span class="must">*</span></th>
+                   <td>
+                        <input type="text" id="trDateCheque" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
+                   </td>
                 <th scope="row">Slip No.</th>
-                <td colspan="3">
-                   <input type="text" id="slipNo" name="slipNo" class="w100p"  />
+                <td>
+                   <input type="text" id="chqNo" name="chqNo" class="w100p"  />
                 </td>
             </tr>
             <tr>
@@ -2140,30 +2156,6 @@ var columnLayout = [
                 <td>
                    <input type="text" id="jomPay" name="jomPay" class="w100p"  />
                 </td>
-            </tr>
-            <tr>
-                <th scope="row">Bank Type</th>
-                <td colspan="3">
-                    <select id="bankType" name="bankType" class="w100p" >
-                        <option value="">Choose One</option>
-                        <option value="2728">JomPay</option>
-                        <option value="2729">MBB CDM</option>
-                        <option value="2730">VA</option>
-                        <option value="2731">Others</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                   <th>Bank Account<span class="must">*</span></th>
-                   <td id="acc"></td>
-                   <th>VA Account</th>
-                   <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
-            </tr>
-            <tr>
-                   <th>Transaction Date<span class="must">*</span></th>
-                   <td colspan="3">
-                        <input type="text" id="trDateCheque" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
-                   </td>
             </tr>
             <tr>
                    <th>Remark</th>
@@ -2192,6 +2184,7 @@ var columnLayout = [
                   </td>
                   <td scope="row"></td>
                   <td>
+                        <input id="keyInPayDateCheque" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly /> 
                   </td>
               </tr>
         </tbody>
