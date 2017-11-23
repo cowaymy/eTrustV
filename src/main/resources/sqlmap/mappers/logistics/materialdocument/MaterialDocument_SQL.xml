@@ -56,11 +56,10 @@
 		, (select * from sys0013m where code_master_id = 42) ut
 		where 1 = 1
 		and l60.matrl_no = s26.STK_CODE(+)
-		and l60.matrl_no = s26.STK_CODE(+)
 		and l60.measure_bas_unit = ut.code_id(+)
 		and l59.trnsc_type_code = tt.code
 		and l60.INVNTRY_MOV_TYPE = mt.code
-		AND l60.rciv_issu_storg_loc = t28.wh_loc_id
+		AND l60.rciv_issu_storg_loc = t28.wh_loc_id (+)
         AND l60.storg_loc = f28.wh_loc_id 
 		
 		<if test="frlocgrade !=null and frlocgrade !=''">
