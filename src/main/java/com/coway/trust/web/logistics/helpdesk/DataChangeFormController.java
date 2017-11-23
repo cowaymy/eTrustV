@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.helpdesk.HelpDeskService;
 import com.coway.trust.biz.logistics.sirim.SirimReceiveService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
@@ -128,7 +129,7 @@ public class DataChangeFormController {
 	}
 	
 	@RequestMapping(value = "/insertDataChangeList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> insertDataChangeList(@RequestBody Map<String, Object> params, ModelMap mode)
+	public ResponseEntity<ReturnMessage> insertDataChangeList(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 
 		logger.debug("insApprovalStatus ???????       : {}", params.get("insApprovalStatus"));
@@ -157,15 +158,21 @@ public class DataChangeFormController {
 
 		Map<String, Object> map = new HashMap();
 
-		try {
-			HelpDeskService.insertDataChangeList(params,loginId);
-		} catch (Exception ex) {
-			retMsg = AppConstants.MSG_FAIL;
-		} finally {
-			map.put("msg", retMsg);
-		}
+		HelpDeskService.insertDataChangeList(params,loginId);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));	
+		
+//		try {
+//		} catch (Exception ex) {
+//			retMsg = AppConstants.MSG_FAIL;
+//		} finally {
+//			map.put("msg", retMsg);
+//		}
 
-		return ResponseEntity.ok(map);
+		return ResponseEntity.ok(message);
 	}
 	
 	
