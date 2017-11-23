@@ -971,11 +971,46 @@ function fnSettiingHeader()
 
 function fnSaveScmSalesPlan() 
 {
-/*   if (fnValidationCheck() == false)
+  /* if (fnValidationCheck() == false)
   {
     return false;
   } */
-  
+
+  // Team으로 Master정보 조회
+  if ($("#scmTeamCbBox").val().length != 0)
+	{  
+	  fnCheckPlanMsterInfoByTeam();
+
+	  if (gPlanId == null )  // 생성일정이 없다면 
+		{  
+		  /*   테스트할 수 있는 데이타 필요.
+        int mid = this.CreateSalesPlan(year, week, team, month);
+	      spc.UpdateDetailSummaries(mid);
+	      spc.UpdateInstallSummary(mid);
+	      spc.UpdatePreM3AvgOrder(mid);
+	      spc.UpdateM0Data(mid); */
+	    Common.alert( "<spring:message code='sys.scm.salesplanMnge.notSaveExistsTeam'/>");
+		  return false;
+		}
+	  else
+		{
+		  if (gPlanId == "4" || $("#scmYearCbBox").val().length == 0 || $("#scmPeriodCbBox").val().length == "0" 
+			    || $("#scmTeamCbBox").val().length != 0)  
+			{
+	           //ConfirmButton.Enabled = false;
+	           //UnconfirmButton.Enabled = false;
+		      Common.alert( "<spring:message code='sys.scm.salesplanMnge.cannotupdateconfirm'/>");
+		      return false;
+			}
+
+		}
+  }
+  else
+	{
+	  Common.alert( "<spring:message code='sys.scm.salesplanMnge.notSaveExistsTeam'/>");
+	  return false;
+	}
+
   Common.ajax("POST", "/scm/saveScmSalesPlan.do"
         , GridCommon.getEditData(myGridID)
         , function(result) 
@@ -1086,7 +1121,7 @@ String.prototype.fnTrim = function()
     return this.replace(/(^\s*)|(\s*$)/gi, "");
 }
 
-function fnSearchPlanId()
+function fnCheckPlanMsterInfoByTeam()
 {
    Common.ajax("GET", "/scm/selectPlanId.do"
            , $("#MainForm").serialize()
