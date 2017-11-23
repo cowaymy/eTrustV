@@ -33,7 +33,7 @@ var columnLayout=[
     {dataField:"name", headerText:"Customer Name", width : 250},
     {dataField:"taskBillInstNo", headerText:"Installment", width : 100},
     {dataField:"taskBillAmt", headerText:"Amount", width : 100},
-    {dataField:"taskRefDtTm", headerText:"Issued" , width : 160, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
+    {dataField:"taskRefDtTm", headerText:"Issued" , width : 160, dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"}
 ];
 
 function fn_initData(){

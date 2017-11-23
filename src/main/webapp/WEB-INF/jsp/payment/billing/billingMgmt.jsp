@@ -38,8 +38,8 @@ var columnLayout=[
     {dataField:"billingMonth", headerText:"Month"},
     {dataField:"totCnt", headerText:"Bills"},
     {dataField:"totAmt", headerText:"Amount"},
-    {dataField:"startDt", headerText:"Started", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}, 
-    {dataField:"endDt", headerText:"Ended", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
+    {dataField:"startDt", headerText:"Started", dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"}, 
+    {dataField:"endDt", headerText:"Ended", dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"},
     {dataField:"stus", headerText:"Status"},
     {dataField:"isCnfm", headerText:"Confirmed",
         renderer:{
