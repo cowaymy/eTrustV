@@ -892,8 +892,8 @@ public class ServiceApiController {
 		DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
 		DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 		
-		SimpleDateFormat timeFormatOrg = new SimpleDateFormat("HHmmss");
-		SimpleDateFormat timeFormatNew = new SimpleDateFormat("HH:mm:ss.SSS");
+		DateFormat timeFormatOrg = new SimpleDateFormat("HHmm");
+		DateFormat timeFormatNew = new SimpleDateFormat("HH:mm:ss.SSS");
 
 
 		Map<String, Object> params = ASReAppointmentRequestForm.createMaps(aSReAppointmentRequestForm);
@@ -903,7 +903,7 @@ public class ServiceApiController {
 		}
 		
 		
-//		 business service STAT....
+//		 business service STAT....18:22
 //		// TODO : installResult 구현 필요.....
 		
 		params.put("orderNo", params.get("salesOrderNo"));
@@ -912,14 +912,21 @@ public class ServiceApiController {
 		String  AS_REQST_DT = transFormat.format(as_ord_basicInfo.get("asReqstDt"));
 		String  AS_REQST_DT1  = sdFormat.format(transFormat.parse(AS_REQST_DT));
 		
+
+		Date appointmentTime = timeFormatOrg.parse((String) params.get("appointmentTime"));
+		String appointmentTime1 = timeFormatNew.format(appointmentTime);
+		
+//		Date appointmentTime = timeFormatOrg.parse(String.valueOf(params.get("appointmentTime")));
+//		String appointmentTime1 = timeFormatNew.format(appointmentTime);
+		
 		params.put("AS_ID", as_ord_basicInfo.get("asId"));
 		params.put("AS_MEM_ID", userId);
 		params.put("AS_MEM_GRP", as_ord_basicInfo.get("asMemGrp"));
 //		params.put("AS_REQST_DT", sdFormat.format(transFormat.parse(as_ord_basicInfo.get("asReqstDt").toString())));
 		params.put("AS_REQST_DT", AS_REQST_DT1);
 		params.put("AS_REQST_TM", as_ord_basicInfo.get("asReqstTm"));
-		params.put("AS_APPNT_DT", sdFormat.format(transFormat.parse(params.get("appointmentDate").toString())));
-		params.put("AS_APPNT_TM", timeFormatNew.format(timeFormatOrg.parse(params.get("appointmentTime").toString())));
+		params.put("AS_APPNT_DT", sdFormat.format(transFormat.parse((String) params.get("appointmentDate"))));
+		params.put("AS_APPNT_TM", String.valueOf(appointmentTime1));
 		params.put("AS_BRNCH_ID", as_ord_basicInfo.get("asBrnchId"));
 		params.put("AS_MALFUNC_ID", as_ord_basicInfo.get("asMalfuncId"));
 		params.put("AS_MALFUNC_RESN_ID", as_ord_basicInfo.get("asMalfuncResnId"));
