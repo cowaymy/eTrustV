@@ -1,16 +1,30 @@
 <script type="text/javascript">
 //TODO 미개발
-function fn_underDevelop(){
-    Common.alert('The program is under development.');
+    // popup 크기
+    var option = {
+            winName : "popup",
+            width : "950px",   // 창 가로 크기
+            height : "700px",    // 창 세로 크기
+            resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+            scrollbars : "yes" // 스크롤바. (yes/no)(default : yes)
+    };
+    
+function fn_goLedger1(){
+    Common.popupWin('legderParam', "/sales/order/orderLedgerViewPop.do", option);
+}
+function fn_goLedger2(){
+    Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
 }
 </script>
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-        <li><p class="btn_blue2"><a href="#" onclick="javascript : fn_underDevelop()">View Ledger (1)</a></p></li>
-        <li><p class="btn_blue2"><a href="#" onclick="javascript : fn_underDevelop()">View Ledger (2)</a></p></li>
+        <li><p class="btn_blue2"><a href="#" onclick="javascript : fn_goLedger1()">View Ledger (1)</a></p></li>
+        <li><p class="btn_blue2"><a href="#" onclick="javascript : fn_goLedger2()">View Ledger (2)</a></p></li>
 </ul>
-
+<form id="legderParam" name="legderParam" method="POST">
+    <input type="hidden" id="ordId" name="ordId" value="${orderDetail.basicInfo.ordId }">
+</form>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
