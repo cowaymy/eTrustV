@@ -35,6 +35,8 @@ var rescolumnLayout=[
                      
                      {dataField:"rnum" ,headerText:"rownum",width:120 ,height:30, editable:false , visible:false},
                      {dataField:"period" ,headerText:"Period",width:120 ,height:30, editable:false},
+                     {dataField:"rdc" ,headerText:"RDC",width:120 ,height:30, editable:false  , visible:false},
+                     {dataField:"rdcname" ,headerText:"RDC",width:240 ,height:30, editable:false},
                      {dataField:"loccd" ,headerText:"Location",width:120 ,height:30, editable:false},
                      {dataField:"itmcd" ,headerText:"Material Code",width:120 ,height:30, editable:false},
                      {dataField:"itmnm" ,headerText:"Material Code Text",width:240 ,height:30, editable:false},
@@ -153,16 +155,16 @@ $(function(){
         if (validationchk()){
         	var valChck=true;
         	var str="";
-        	$.extend(param,{'chckLoc':'RDC'});//강제세팅함 
+        	$.extend(param,{'chckLoc':'CTCODY'});//강제세팅함 
         	 Common.ajax("POST", "/logistics/replenishment/PopCheck.do", param, function(result) {
                  //Common.alert(result.message , SearchListAjax2);
                  console.log(result);
                  var data = result.data;
                  if(0==data[0].itmchck & 0==data[0].locchck){
                 	 valChck=false;
-                	 str +=" RDC at Location, filter or spare-part in Meterial .";
+                	 str +=" CT or Cody at Location, filter or spare-part in Meterial .";
                  }else if(1==data[0].itmchck & 0==data[0].locchck){
-                	 str +=" RDC at Location. ";
+                	 str +=" CT or Cody at Location. ";
                 	 valChck=false;
                  }else if(0==data[0].itmchck & 1==data[0].locchck){
                 	 str +=" filter or spare-part in Meterial. ";

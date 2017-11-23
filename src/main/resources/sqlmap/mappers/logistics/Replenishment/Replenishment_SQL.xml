@@ -69,6 +69,8 @@
 			SELECT
 			       ROWNUM                                                                         AS rnum
 			      ,TO_CHAR (TO_DATE (LG77.PERIOD, 'YYYYMM'), 'MM/YYYY')      AS period
+			      ,SY28.RDC_CODE RDC
+                  ,(SELECT WH_LOC_DESC FROM  SYS0028M WHERE WH_LOC_CODE=SY28.RDC_CODE) RDCNAME
 			      ,LG77.LOC_CODE                                                                AS loccd
 			      ,NVL ( (SELECT USER_NAME
 			                FROM SYS0047M
@@ -119,7 +121,7 @@
 			   AND LG77.STK_CODE = SY26.STK_CODE
 			   AND LG77.LOC_CODE = AV.STORG_LOC(+)
 			   AND LG77.STK_CODE = AV.MATRL_NO(+)
-			   AND SY28.WH_LOC_GB IN ('02','05')
+			   AND SY28.WH_LOC_GB NOT IN ('02','05')
 			    ]]>
 			    <!-- 데이터 안나와서 아우터 함 -->
 		    <if test="speriod != null and speriod !=''">
@@ -142,7 +144,7 @@
            <if test="scate != null and scate !=''">
               AND SY26.STK_CTGRY_ID = #{scate}
            </if>
-			   ORDER BY LG77.LOC_CODE    
+			   ORDER BY SY28.RDC_CODE,LG77.LOC_CODE,LG77.STK_CODE
     </select>
     
     <select id="searchAutoCTList" parameterType="Map" resultType="egovMap">
