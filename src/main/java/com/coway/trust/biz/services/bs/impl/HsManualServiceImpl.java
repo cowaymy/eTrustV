@@ -458,7 +458,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	            docSub.put("bsResultFilterClm",docSub.get("name"));
 
 
-	  	      	String vstkId = (String) docSub.get("stkId");
+	  	      	String vstkId = String.valueOf( docSub.get("stkId"));
 	            
   				if( !"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null ) {
   					hsManualMapper.insertHsResultD(docSub);
