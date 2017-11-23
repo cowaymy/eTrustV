@@ -26,7 +26,7 @@ public class AfterServicePartsDto {
 	private String partName;
 	
 	@ApiModelProperty(value = "필요수량")
-	private int quanity;
+	private Integer quanity;
 	
 	@ApiModelProperty(value = "교체수량")
 	private String chgQty;
@@ -113,11 +113,11 @@ public class AfterServicePartsDto {
 		this.partName = partName;
 	}
 
-	public int getQuanity() {
+	public Integer getQuanity() {
 		return quanity;
 	}
 
-	public void setQuanity(int quanity) {
+	public void setQuanity(Integer quanity) {
 		this.quanity = quanity;
 	}
 
