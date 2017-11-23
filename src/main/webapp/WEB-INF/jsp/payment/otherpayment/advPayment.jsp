@@ -103,7 +103,7 @@ var targetRenDetColumnLayout = [
     { dataField:"stusCodeName" ,headerText:"Bill Status" ,editable : false , width : 100},
     {
         dataField : "btnCheck",
-        headerText : " ",
+        headerText : "Include",
         width: 50,
         renderer : {
             type : "CheckBoxEditRenderer",            
