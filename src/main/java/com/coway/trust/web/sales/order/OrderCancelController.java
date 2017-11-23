@@ -24,6 +24,8 @@ import com.coway.trust.biz.sales.order.OrderCancelVO;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -55,6 +57,12 @@ public class OrderCancelController {
 	@RequestMapping(value = "/orderCancelList.do")
 	public String orderCancelList(@ModelAttribute("orderCancelVO") OrderCancelVO orderCancelVO,
 			@RequestParam Map<String, Object>params, ModelMap model){
+		
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
 		
 		List<EgovMap> dscBranchList = orderCancelService.dscBranch(params);
 		model.addAttribute("dscBranchList", dscBranchList);

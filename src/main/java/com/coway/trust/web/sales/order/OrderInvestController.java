@@ -75,6 +75,7 @@ public class OrderInvestController {
 		EgovMap orderInvestInfo = null;
 		EgovMap orderCustomerInfo = null;
 		logger.info("##### orderInvestInfoPop START #####");
+		logger.info("#orderInvestInfoPop # : " + params.toString());
 		
 		orderInvestInfo = orderInvestService.orderInvestInfo(params);
 		orderCustomerInfo = orderInvestService.orderCustomerInfo(params);
@@ -128,9 +129,9 @@ public class OrderInvestController {
 	}
 	
 	
-	@RequestMapping(value = "/orderNewRequestSingleList.do")
+	@RequestMapping(value = "/orderNewRequestSingleListPop.do")
 	public String singleInvestList(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "sales/order/orderNewRequestSingleList";
+		return "sales/order/orderNewRequestSingleListPop";
 	}
 	
 	
@@ -210,10 +211,12 @@ public class OrderInvestController {
 
 //			EgovMap singleInvestView = orderInvestService.singleInvestView(params);
 
+			int seqSAL0050D = orderInvestService.seqSAL0050D();
+			params.put("seqSAL0050D", seqSAL0050D);
 			orderInvestService.insertNewRequestSingleOk(params);
 //			EgovMap orderNoInfo = orderInvestService.orderNoInfo(params);
 			
-//			map.put("invReqId", orderNoInfo.get("invReqId"));
+			map.put("invReqId", seqSAL0050D);
 			
 
 			map.put("msg", retMsg);

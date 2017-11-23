@@ -122,8 +122,20 @@ public class OrderSuspensionController {
 	
 	
 	@RequestMapping(value = "/orderSuspendNewResultPop.do")
-	public String orderSuspendNewResultPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+	public String orderSuspendNewResultPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		
+		// order detail start
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+	
+		params.put("salesOrderId", params.get("salesOrdId"));
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		// order detail end
+				
 		EgovMap suspensionInfo = orderSuspensionService.orderSuspendInfo(params);
 		
 		model.addAttribute("suspensionInfo", suspensionInfo);

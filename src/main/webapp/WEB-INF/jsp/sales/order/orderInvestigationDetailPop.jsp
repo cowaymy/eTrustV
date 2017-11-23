@@ -4,6 +4,15 @@
 	//AUIGrid 생성 후 반환 ID
 	var detailGridID;
 	
+	// popup 크기
+    var option = {
+            winName : "popup",
+            width : "950px",   // 창 가로 크기
+            height : "700px",    // 창 세로 크기
+            resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+            scrollbars : "yes" // 스크롤바. (yes/no)(default : yes)
+    };
+	
     $(document).ready(function(){
         
         // AUIGrid 그리드를 생성합니다.
@@ -211,9 +220,8 @@
     	
     	Common.ajax("GET", "/sales/order/saveInvest.do", $("#statusForm").serializeJSON(), function(result) {
             //$("#existChkCnt").html(result.existChkCnt);
-            Common.alert(result.msg);
+            Common.alert(result.msg, fn_orderInvestigationListAjax);
             $("#_close").click();
-            fn_orderInvestigationListAjax();
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -229,6 +237,10 @@
             }
             alert("Fail : " + jqXHR.responseJSON.message);
         });
+    }
+    
+    function fn_goLedger(){
+    	Common.popupWin('gridParam', "/sales/order/orderLedgerViewPop.do", option);
     }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -253,13 +265,14 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>Particular Information</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#">View Rent Ledger</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="fn_goLedger()">View Rent Ledger</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 <form id="gridParam" name="gridParam" method="POST">
     <input type="hidden" id="gridInvReqId" name="gridInvReqId" value="${orderInvestInfo.invReqId }">
     <input type="hidden" id="invReqStusParam" name="invReqStusParam" value="${orderInvestInfo.invReqStusId }">
+    <input type="hidden" id="ordId" name="ordId" value="${orderCustomerInfo.soId }">
 </form>
 <table class="type1"><!-- table start -->
 <caption>table</caption>

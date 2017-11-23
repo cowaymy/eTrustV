@@ -412,7 +412,7 @@
 			       Extent2.ITM_STK_ID ITM_STK_ID  ,
 			       Extent4.STK_CODE STK_CODE  ,
 			       Extent4.STK_DESC STK_DESC  ,
-			       Extent1.SALES_DT SALES_DT  ,
+			       TO_CHAR(Extent1.SALES_DT, 'dd/mm/yyyy') SALES_DT, 
 			       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
 			       Extent5.CODE CODE  ,
 			       Extent5.CODE_NAME CODE_NAME  ,
@@ -448,6 +448,10 @@
         SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
     </select>
     
+    <select id="seqSAL0050D"  resultType="Integer">
+        SELECT SAL0050D_INV_REQ_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
     <insert id="insertInvestReqM" parameterType="Map">
         INSERT INTO SAL0050D
 			  ( 
@@ -455,7 +459,7 @@
 				  , INV_REQ_UPD_DT, INV_REQ_UPD_USER_ID, INV_REQ_USER_ID_AUTO, INV_REQ_CALL_DT, INV_REQ_VISIT_DT, INV_REQ_TYPE_ID
 				  , INV_REQ_HAS_ATTACH, INV_REQ_ATTACH_FILE, INV_REQ_REJCT_RESN_ID 
 			  )
-        VALUES ( SAL0050D_INV_REQ_ID_SEQ.NEXTVAL, #{invReqNo}, #{soId}, #{invReqStusId}, #{invReqPartyId}, #{invReqRem}, SYSDATE, #{userId}
+        VALUES ( #{seqSAL0050D}, #{invReqNo}, #{soId}, #{invReqStusId}, #{invReqPartyId}, #{invReqRem}, SYSDATE, #{userId}
                     , SYSDATE, #{userId}, #{invReqUserIdAuto}, TO_DATE(#{insCallDt}, 'DD/MM/YYYY'), TO_DATE(#{insVisitDt}, 'DD/MM/YYYY'), #{invReqTypeId}
                     , #{invReqHasAttach}, #{invReqAttachFile}, #{invReqRejctResnId} )
     </insert>
@@ -980,6 +984,9 @@
                    INV_DT_AUTO   
            FROM SAL0049D 
          WHERE INV_REQ_ID = #{invReqId}
+              <![CDATA[
+              AND ROWNUM <= 1
+              ]]>
     </select>
     
     <select id="saveSearchCCR0006DdocId" parameterType="Map" resultType="egovMap">

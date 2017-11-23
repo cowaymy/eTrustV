@@ -114,10 +114,11 @@
 	}
 
 	function fn_goSingle() {
-		$("#searchForm").attr({
-			"target" : "_self",
-			"action" : getContextPath() + "/sales/order/orderNewRequestSingleList.do"
-		}).submit();
+//		$("#searchForm").attr({
+//			"target" : "_self",
+//			"action" : getContextPath() + "/sales/order/orderNewRequestSingleList.do"
+//		}).submit();
+		Common.popupDiv("/sales/order/orderNewRequestSingleListPop.do", $("#popForm").serializeJSON(), null, true, 'singlePop');
 	}
 
 	function fn_goBatch() {

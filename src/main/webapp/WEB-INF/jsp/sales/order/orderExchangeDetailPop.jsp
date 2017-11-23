@@ -45,6 +45,70 @@
     	Common.popupDiv("/sales/order/orderExchangeRemPop.do", $("#initForm").serializeJSON(), null , true, '_exchgDiv');
     }
     
+    //그리드 속성 설정
+    var gridPros = {
+        usePaging           : true,         //페이징 사용
+        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+        editable            : false,            
+        fixedColumnCount    : 0,            
+        showStateColumn     : true,             
+        displayTreeOpen     : false,            
+        selectionMode       : "singleRow",  //"multipleCells",            
+        headerHeight        : 30,       
+        useGroupingPanel    : false,        //그룹핑 패널 사용
+        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+        noDataMessage       : "No order found.",
+        groupingMessage     : "Here groupping"
+    };
+        
+    function chgGridTab(tabNm) {
+        switch(tabNm) {
+            case 'custInfo' :
+                AUIGrid.resize(custInfoGridID, 942, 380);
+                break;
+            case 'memInfo' :
+                AUIGrid.resize(memInfoGridID, 942, 380);
+                break;
+            case 'docInfo' :
+                AUIGrid.resize(docGridID, 942, 380);
+                if(AUIGrid.getRowCount(docGridID) <= 0) {
+                    fn_selectDocumentList();
+                }
+                break;
+            case 'callLogInfo' :
+                AUIGrid.resize(callLogGridID, 942, 380);
+                if(AUIGrid.getRowCount(callLogGridID) <= 0) {
+                    fn_selectCallLogList();
+                }
+                break;
+            case 'payInfo' :
+                AUIGrid.resize(payGridID, 942, 380);
+                if(AUIGrid.getRowCount(payGridID) <= 0) {
+                    fn_selectPaymentList();
+                }
+                break;
+            case 'transInfo' :
+                AUIGrid.resize(transGridID, 942, 380);
+                if(AUIGrid.getRowCount(transGridID) <= 0) {
+                    fn_selectTransList();
+                }
+                break;
+            case 'autoDebitInfo' :
+                AUIGrid.resize(autoDebitGridID, 942, 380);
+                if(AUIGrid.getRowCount(autoDebitGridID) <= 0) {
+                    fn_selectAutoDebitList();
+                }
+                break;
+            case 'discountInfo' :
+                AUIGrid.resize(discountGridID, 942, 380);
+                if(AUIGrid.getRowCount(discountGridID) <= 0) {
+                    fn_selectDiscountList();
+                }
+                break;
+        };
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -96,7 +160,7 @@
     <td>${exchangeDetailInfo.soExchgCrtUserName }
     </td>
     <th scope="row">Creator Date</th>
-    <td>${exchangeDetailInfo.soExchgCrtDt }
+    <td>${fn:substring(exchangeDetailInfo.soExchgCrtDt, 8, 10)}/${fn:substring(exchangeDetailInfo.soExchgCrtDt, 5, 7)}/${fn:substring(exchangeDetailInfo.soExchgCrtDt, 0, 4)}
     </td>
 </tr>
 <tr>
@@ -204,7 +268,7 @@
     <td>${exchangeDetailInfo.soExchgCrtUserName }
     </td>
     <th scope="row">Creator Date</th>
-    <td>${exchangeDetailInfo.soExchgCrtDt }
+    <td>${fn:substring(exchangeDetailInfo.soExchgCrtDt, 8, 10)}/${fn:substring(exchangeDetailInfo.soExchgCrtDt, 5, 7)}/${fn:substring(exchangeDetailInfo.soExchgCrtDt, 0, 4)}
     </td>
 </tr>
 <tr>
@@ -300,7 +364,7 @@
     <td>${exchangeDetailInfo.soExchgCrtUserName }
     </td>
     <th scope="row">Creator Date</th>
-    <td>${exchangeDetailInfo.soExchgCrtDt }
+    <td>${fn:substring(exchangeDetailInfo.soExchgCrtDt, 8, 10)}/${fn:substring(exchangeDetailInfo.soExchgCrtDt, 5, 7)}/${fn:substring(exchangeDetailInfo.soExchgCrtDt, 0, 4)}
     </td>
 </tr>
 <tr>
@@ -385,16 +449,16 @@
     <span>${exchangeInfoOwnershipFr.email }</span>
     </td>
     <th scope="row">DOB</th>
-    <td>${exchangeInfoOwnershipFr.dob }
+    <td>${fn:substring(exchangeInfoOwnershipFr.dob, 8, 10)}/${fn:substring(exchangeInfoOwnershipFr.dob, 5, 7)}/${fn:substring(exchangeInfoOwnershipFr.dob, 0, 4)}
     </td>
 </tr>
 <tr>
     <th scope="row">Passport Expire</th>
     <td>
-    <span>${exchangeInfoOwnershipFr.pasSportExpr }</span>
+    <span>${fn:substring(exchangeInfoOwnershipFr.pasSportExpr, 8, 10)}/${fn:substring(exchangeInfoOwnershipFr.pasSportExpr, 5, 7)}/${fn:substring(exchangeInfoOwnershipFr.pasSportExpr, 0, 4)}</span>
     </td>
     <th scope="row">Visa Expire</th>
-    <td colspan="3">${exchangeInfoOwnershipFr.visaExpr }
+    <td colspan="3">${fn:substring(exchangeInfoOwnershipFr.visaExpr, 8, 10)}/${fn:substring(exchangeInfoOwnershipFr.visaExpr, 5, 7)}/${fn:substring(exchangeInfoOwnershipFr.visaExpr, 0, 4)}
     </td>
 </tr>
 <tr>
@@ -423,7 +487,7 @@
 <tr>
     <th scope="row">Customer ID</th>
     <td>
-    <span>${exchangeInfoOwnershipTo.codeName }</span>
+    <span>${exchangeInfoOwnershipTo.custId }</span>
     </td>
     <th scope="row">Customer Type</th>
     <td>${exchangeInfoOwnershipTo.codeName }
@@ -456,16 +520,16 @@
     <span>${exchangeInfoOwnershipTo.email }</span>
     </td>
     <th scope="row">DOB</th>
-    <td>${exchangeInfoOwnershipTo.dob }
+    <td>${fn:substring(exchangeInfoOwnershipTo.dob, 8, 10)}/${fn:substring(exchangeInfoOwnershipTo.dob, 5, 7)}/${fn:substring(exchangeInfoOwnershipTo.dob, 0, 4)}
     </td>
 </tr>
 <tr>
     <th scope="row">Passport Expire</th>
     <td>
-    <span>${exchangeInfoOwnershipTo.pasSportExpr }</span>
+    <span>${fn:substring(exchangeInfoOwnershipTo.pasSportExpr, 8, 10)}/${fn:substring(exchangeInfoOwnershipTo.pasSportExpr, 5, 7)}/${fn:substring(exchangeInfoOwnershipTo.pasSportExpr, 0, 4)}</span>
     </td>
     <th scope="row">Visa Expire</th>
-    <td colspan="3">${exchangeInfoOwnershipTo.visaExpr }
+    <td colspan="3">${fn:substring(exchangeInfoOwnershipTo.visaExpr, 8, 10)}/${fn:substring(exchangeInfoOwnershipFr.visaExpr, 5, 7)}/${fn:substring(exchangeInfoOwnershipTo.visaExpr, 0, 4)}
     </td>
 </tr>
 <tr>
@@ -487,32 +551,97 @@
 </aside><!-- title_line end -->
 
 <section class="tap_wrap mt0"><!-- tap_wrap start -->
-<ul class="tap_type1 num4">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">HP / Cody</a></li>
-    <li><a href="#" onClick="javascript:chgTab('custInfo');">Customer Info</a></li>
-    <li><a href="#">Installation Info</a></li>
-    <li><a href="#">Mailling Info</a></li>
-<!--<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}"> -->
-    <li><a href="#">Payment Channel</a></li>
-<!--</c:if> -->
-    <li><a href="#" onClick="javascript:chgTab('memInfo');">Membership Info</a></li>
-    <li><a href="#" onClick="javascript:chgTab('docInfo');">Document Submission</a></li>
-    <li><a href="#" onClick="javascript:chgTab('callLogInfo');">Call Log</a></li>
-    <!-- 
-<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
- -->
-    <li><a href="#">Quarantee Info</a></li>
-    <!-- 
-</c:if> -->
-    <li><a href="#" onClick="javascript:chgTab('payInfo');">Payment Listing</a></li>
-    <li><a href="#" onClick="javascript:chgTab('transInfo');">Last 6 Months Transaction</a></li>
-    <li><a href="#">Order Configuration</a></li>
-    <li><a href="#" onClick="javascript:chgTab('autoDebitInfo');">Auto Debit Result</a></li>
-    <li><a href="#">Relief Certificate</a></li>
-    <li><a href="#" onClick="javascript:chgTab('discountInfo');">Discount</a></li>
-</ul>
+    <ul class="tap_type1 num4">
+        <li><a href="#" class="on">Basic Info</a></li>
+        <li><a href="#">HP / Cody</a></li>
+        <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');">Customer Info</a></li>
+        <li><a href="#">Installation Info</a></li>
+        <li><a id="aTabMA" href="#">Mailling Info</a></li>
+    <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
+        <li><a href="#">Payment Channel</a></li>
+    </c:if>
+        <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');">Membership Info</a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('docInfo');">Document Submission</a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');">Call Log</a></li>
+    <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
+        <li><a href="#">Quarantee Info</a></li>
+    </c:if>
+        <li><a href="#" onClick="javascript:chgGridTab('payInfo');">Payment Listing</a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('transInfo');">Last 6 Months Transaction</a></li>
+        <li><a href="#">Order Configuration</a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');">Auto Debit Result</a></li>
+        <li><a href="#">Relief Certificate</a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('discountInfo');">Discount</a></li>
+    </ul>
 
+    <!------------------------------------------------------------------------------
+    Basic Info
+------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/basicInfoIncludeViewLedger.jsp" %>
+	<!------------------------------------------------------------------------------
+	    HP / Cody
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/hpCody.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Customer Info
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/custInfo.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Installation Info
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/installInfo.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Mailling Info
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/mailInfo.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Payment Channel
+	------------------------------------------------------------------------------->
+	<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
+	<%@ include file="/WEB-INF/jsp/sales/order/include/payChannel.jsp" %>
+	</c:if>
+	<!------------------------------------------------------------------------------
+	    Membership Info
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/membershipInfo.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Document Submission
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/docSubmission.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Call Log
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/callLog.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Quarantee Info
+	------------------------------------------------------------------------------->
+	<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
+	<%@ include file="/WEB-INF/jsp/sales/order/include/qrntInfo.jsp" %>
+	</c:if>
+	<!------------------------------------------------------------------------------
+	    Payment Listing
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/payList.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Last 6 Months Transaction
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/last6Month.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Order Configuration
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/orderConfig.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Auto Debit Result
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/autoDebit.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Relief Certificate
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/rliefCrtfcat.jsp" %>
+	<!------------------------------------------------------------------------------
+	    Discount
+	------------------------------------------------------------------------------->
+	<%@ include file="/WEB-INF/jsp/sales/order/include/discountList.jsp" %>
 
 </section><!-- tap_wrap end -->
 

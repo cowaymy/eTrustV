@@ -213,4 +213,6 @@ public interface OrderInvestService {
 	int bsMonthCheck(Map<String, Object> params);
 	
 	void saveInvest(Map<String, Object> params);
+	
+	int seqSAL0050D();
 }

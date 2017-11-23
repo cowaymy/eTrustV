@@ -183,9 +183,9 @@
   //resize func (tab click)
     function fn_resizefunc(gridName){ //
         if(gridName == '#callResult_grid_wrap'){
-        	AUIGrid.resize(gridName, 900, 200);
+        	AUIGrid.resize(gridName, 950, 200);
         }else{
-        	AUIGrid.resize(gridName, 900, 300);
+        	AUIGrid.resize(gridName, 950, 300);
         }
    }
   
@@ -234,6 +234,70 @@
 	    $("#_close").click();
 	}
 	
+	//그리드 속성 설정
+    var gridPros = {
+        usePaging           : true,         //페이징 사용
+        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+        editable            : false,            
+        fixedColumnCount    : 0,            
+        showStateColumn     : true,             
+        displayTreeOpen     : false,            
+        selectionMode       : "singleRow",  //"multipleCells",            
+        headerHeight        : 30,       
+        useGroupingPanel    : false,        //그룹핑 패널 사용
+        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+        noDataMessage       : "No order found.",
+        groupingMessage     : "Here groupping"
+    };
+        
+    function chgGridTab(tabNm) {
+        switch(tabNm) {
+            case 'custInfo' :
+                AUIGrid.resize(custInfoGridID, 942, 380);
+                break;
+            case 'memInfo' :
+                AUIGrid.resize(memInfoGridID, 942, 380);
+                break;
+            case 'docInfo' :
+                AUIGrid.resize(docGridID, 942, 380);
+                if(AUIGrid.getRowCount(docGridID) <= 0) {
+                    fn_selectDocumentList();
+                }
+                break;
+            case 'callLogInfo' :
+                AUIGrid.resize(callLogGridID, 942, 380);
+                if(AUIGrid.getRowCount(callLogGridID) <= 0) {
+                    fn_selectCallLogList();
+                }
+                break;
+            case 'payInfo' :
+                AUIGrid.resize(payGridID, 942, 380);
+                if(AUIGrid.getRowCount(payGridID) <= 0) {
+                    fn_selectPaymentList();
+                }
+                break;
+            case 'transInfo' :
+                AUIGrid.resize(transGridID, 942, 380);
+                if(AUIGrid.getRowCount(transGridID) <= 0) {
+                    fn_selectTransList();
+                }
+                break;
+            case 'autoDebitInfo' :
+                AUIGrid.resize(autoDebitGridID, 942, 380);
+                if(AUIGrid.getRowCount(autoDebitGridID) <= 0) {
+                    fn_selectAutoDebitList();
+                }
+                break;
+            case 'discountInfo' :
+                AUIGrid.resize(discountGridID, 942, 380);
+                if(AUIGrid.getRowCount(discountGridID) <= 0) {
+                    fn_selectDiscountList();
+                }
+                break;
+        };
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -331,808 +395,96 @@
 <ul class="tap_type1 num4">
     <li><a href="#" class="on">Basic Info</a></li>
     <li><a href="#">HP / Cody</a></li>
-    <li><a href="#">Customer Info</a></li>
+    <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');">Customer Info</a></li>
     <li><a href="#">Installation Info</a></li>
-    <li><a href="#">Mailling Info</a></li>
+    <li><a id="aTabMA" href="#">Mailling Info</a></li>
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
     <li><a href="#">Payment Channel</a></li>
-    <li><a href="#">Membership Info</a></li>
-    <li><a href="#">Document Submission</a></li>
-    <li><a href="#">Call Log</a></li>
-    <li><a href="#">Guarantee Info</a></li>
-    <li><a href="#">Payment Listing</a></li>
-    <li><a href="#">Last 6 Months Transaction</a></li>
+</c:if>
+    <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');">Membership Info</a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('docInfo');">Document Submission</a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');">Call Log</a></li>
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
+    <li><a href="#">Quarantee Info</a></li>
+</c:if>
+    <li><a href="#" onClick="javascript:chgGridTab('payInfo');">Payment Listing</a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('transInfo');">Last 6 Months Transaction</a></li>
     <li><a href="#">Order Configuration</a></li>
-    <li><a href="#">Auto Debit Result</a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');">Auto Debit Result</a></li>
     <li><a href="#">Relief Certificate</a></li>
-    <li><a href="#">Discount</a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('discountInfo');">Discount</a></li>
 </ul>
 
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-    <col style="width:110px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Progress Status</th>
-    <td><span>text</span></td>
-    <th scope="row">Agreement No</th>
-    <td><span>text</span></td>
-    <th scope="row">Agreement Expiry</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Order No</th>
-    <td></td>
-    <th scope="row">Order Date</th>
-    <td></td>
-    <th scope="row">Status</th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">Application Type</th>
-    <td></td>
-    <th scope="row">Reference No</th>
-    <td></td>
-    <th scope="row">Key At(By)</th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">Product</th>
-    <td></td>
-    <th scope="row">PO Number</th>
-    <td></td>
-    <th scope="row">Key-inBranch</th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">PV</th>
-    <td></td>
-    <th scope="row">Price/RPF</th>
-    <td></td>
-    <th scope="row">Rental Fees</th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">Installment Duration</th>
-    <td></td>
-    <th scope="row">PV Month(Month/Year)</th>
-    <td></td>
-    <th scope="row">Rental Status</th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">Promotion</th>
-    <td colspan="3"></td>
-    <th scope="row">Related No</th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">Serial Number</th>
-    <td></td>
-    <th scope="row">Sirim Number</th>
-    <td></td>
-    <th scope="row">Update At(By)</th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">Obligation Period</th>
-    <td colspan="5"></td>
-</tr>
-<tr>
-    <th scope="row">Remark</th>
-    <td colspan="5"></td>
-</tr>
-<tr>
-    <th scope="row">CCP Feedback Code</th>
-    <td colspan="5"></td>
-</tr>
-<tr>
-    <th scope="row">CCP Remark</th>
-    <td colspan="5"></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<section class="divine2"><!-- divine3 start -->
-
-<article>
-<h2>Salesman Info</h2>
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th rowspan="3" scope="row">Order Made By</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Salesman Code</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Salesman Name</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Salesman NRIC</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Mobile No</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Office No</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">House No</th>
-    <td><span>text</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-</article>
-
-<article>
-<h2>Cody Info</h2>
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th rowspan="3" scope="row">Service By</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Cody Code</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Cody Name</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Cody NRIC</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Mobile No</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Office No</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">House No</th>
-    <td><span>text</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-</article>
-
-</section><!-- divine2 start -->
-
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:140px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Customer ID</th>
-    <td><span>text</span></td>
-    <th scope="row">Customer Name</th>
-    <td colspan="3"><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Customer Type</th>
-    <td><span>text</span></td>
-    <th scope="row">NRIC/Company No</th>
-    <td><span>text</span></td>
-    <th scope="row">JomPay Ref-1</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Nationality</th>
-    <td><span>text</span></td>
-    <th scope="row">Gender</th>
-    <td><span>text</span></td>
-    <th scope="row">Race</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">VA Number</th>
-    <td><span>text</span></td>
-    <th scope="row">Passport Exprire</th>
-    <td><span>text</span></td>
-    <th scope="row">Visa Exprire</th>
-    <td><span>text</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h2>Same Rental Group Order(s)</h2>
-</aside><!-- title_line end -->
-
-<section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-    <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</section><!-- search_result end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:140px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th rowspan="3" scope="row">Installation Address</th>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">Country</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">State</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">Area</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Prefer Install Date</th>
-    <td><span>text</span></td>
-    <th scope="row">Prefer Install Time</th>
-    <td><span>text</span></td>
-    <th scope="row">Postcode</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Instruction</th>
-    <td colspan="5"><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">DSC Verification Remark</th>
-    <td colspan="5"><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">DSC Branch</th>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">Installed Date</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">CT Code</th>
-    <td><span>text</span></td>
-    <th scope="row">CT Name</th>
-    <td colspan="3"><span>text</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<table class="type1 mt40"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:140px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Contact Name</th>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">Gender</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Contact NRIC</th>
-    <td><span>text</span></td>
-    <th scope="row">Email</th>
-    <td><span>text</span></td>
-    <th scope="row">Fax No</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Mobile No</th>
-    <td><span>text</span></td>
-    <th scope="row">Office No</th>
-    <td><span>text</span></td>
-    <th scope="row">House No</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Post</th>
-    <td><span>text</span></td>
-    <th scope="row">Department</th>
-    <td><span>text</span></td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:100px" />
-    <col style="width:*" />
-    <col style="width:120px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th rowspan="3" scope="row">Mailing Address</th>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">Country</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">State</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">Area</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Billing Group</th>
-    <td><span>text</span></td>
-    <th scope="row">Billing Type</th>
-    <td>
-    <label><input type="checkbox" /><span>SMS</span></label>
-    <label><input type="checkbox" /><span>Post</span></label>
-    <label><input type="checkbox" /><span>E-statement</span></label>
-    </td>
-    <th scope="row">Postcode</th>
-    <td><span>text</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<table class="type1 mt40"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:110px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Contact Name</th>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">Gender</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Contact NRIC</th>
-    <td><span>text</span></td>
-    <th scope="row">Email</th>
-    <td><span>text</span></td>
-    <th scope="row">Fax No</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Mobile No</th>
-    <td><span>text</span></td>
-    <th scope="row">Office No</th>
-    <td><span>text</span></td>
-    <th scope="row">House No</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Post</th>
-    <td><span>text</span></td>
-    <th scope="row">Departiment</th>
-    <td><span>text</span></td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Rental Paymode</th>
-    <td><span>text</span></td>
-    <th scope="row">Direct Debit Mode</th>
-    <td><span>text</span></td>
-    <th scope="row">Auto Debit Limit</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Issue Bank</th>
-    <td><span>text</span></td>
-    <th scope="row">Card Type</th>
-    <td><span>text</span></td>
-    <th scope="row">Claim Bill Date</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Credit Card No</th>
-    <td><span>text</span></td>
-    <th scope="row">Name On Card</th>
-    <td><span>text</span></td>
-    <th scope="row">Expiry Date</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Bank Account No</th>
-    <td><span>text</span></td>
-    <th scope="row">Account Name</th>
-    <td><span>text</span></td>
-    <th scope="row">Issure NRIC</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Apply Date</th>
-    <td><span>text</span></td>
-    <th scope="row">Submit Date</th>
-    <td><span>text</span></td>
-    <th scope="row">Start Date</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Reject Date</th>
-    <td><span>text</span></td>
-    <th scope="row">Reject Code</th>
-    <td><span>text</span></td>
-    <th scope="row">Payment Team</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Pay By Third Party</th>
-    <td><span>text</span></td>
-    <th scope="row">Third Party ID</th>
-    <td><span>text</span></td>
-    <th scope="row">Third Party Type</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Third Party Name</th>
-    <td colspan="3"><span>text</span></td>
-    <th scope="row">Third Party NRIC</th>
-    <td><span>text</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Guarantee Status</th>
-    <td colspan="3"><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">HP Code</th>
-    <td><span>text</span></td>
-    <th scope="row">HP Name(NRIC)</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">HM Code</th>
-    <td><span>text</span></td>
-    <th scope="row">HM Name(NRIC)</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">SM Code</th>
-    <td><span>text</span></td>
-    <th scope="row">SM Name(NRIC)</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">GM Code</th>
-    <td><span>text</span></td>
-    <th scope="row">GM Name(NRIC)</th>
-    <td><span>text</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:120px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">BS Availability</th>
-    <td><span>text</span></td>
-    <th scope="row">BS Frequency</th>
-    <td><span>text</span></td>
-    <th scope="row">Last BS Date</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">BS Cody Code</th>
-    <td colspan="5"><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Config Remark</th>
-    <td colspan="5"><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Happy Call Service</th>
-    <td colspan="5">
-    <label><input type="checkbox" /><span>Installation Type</span></label>
-    <label><input type="checkbox" /><span>BS Type</span></label>
-    <label><input type="checkbox" /><span>AS Type</span></label>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Prefer BS Week</th>
-    <td colspan="5">
-    <label><input type="radio" name="week" /><span>None</span></label>
-    <label><input type="radio" name="week" /><span>Week1</span></label>
-    <label><input type="radio" name="week" /><span>Week2</span></label>
-    <label><input type="radio" name="week" /><span>Week3</span></label>
-    <label><input type="radio" name="week" /><span>Week4</span></label>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Reference No</th>
-    <td><span>text</span></td>
-    <th scope="row">Certificate Date</th>
-    <td><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">GST Registration No</th>
-    <td colspan="3"><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Remark</th>
-    <td colspan="3"><span>text</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</article><!-- tap_area end -->
-
-</section><!-- tap_wrap end -->
+<!------------------------------------------------------------------------------
+    Basic Info
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/basicInfoIncludeViewLedger.jsp" %>
+<!------------------------------------------------------------------------------
+    HP / Cody
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/hpCody.jsp" %>
+<!------------------------------------------------------------------------------
+    Customer Info
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/custInfo.jsp" %>
+<!------------------------------------------------------------------------------
+    Installation Info
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/installInfo.jsp" %>
+<!------------------------------------------------------------------------------
+    Mailling Info
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/mailInfo.jsp" %>
+<!------------------------------------------------------------------------------
+    Payment Channel
+------------------------------------------------------------------------------->
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
+<%@ include file="/WEB-INF/jsp/sales/order/include/payChannel.jsp" %>
+</c:if>
+<!------------------------------------------------------------------------------
+    Membership Info
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/membershipInfo.jsp" %>
+<!------------------------------------------------------------------------------
+    Document Submission
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/docSubmission.jsp" %>
+<!------------------------------------------------------------------------------
+    Call Log
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/callLog.jsp" %>
+<!------------------------------------------------------------------------------
+    Quarantee Info
+------------------------------------------------------------------------------->
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
+<%@ include file="/WEB-INF/jsp/sales/order/include/qrntInfo.jsp" %>
+</c:if>
+<!------------------------------------------------------------------------------
+    Payment Listing
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/payList.jsp" %>
+<!------------------------------------------------------------------------------
+    Last 6 Months Transaction
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/last6Month.jsp" %>
+<!------------------------------------------------------------------------------
+    Order Configuration
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/orderConfig.jsp" %>
+<!------------------------------------------------------------------------------
+    Auto Debit Result
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/autoDebit.jsp" %>
+<!------------------------------------------------------------------------------
+    Relief Certificate
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/rliefCrtfcat.jsp" %>
+<!------------------------------------------------------------------------------
+    Discount
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/discountList.jsp" %>
+
+    </section><!-- tap_wrap end --> 
 
 </article><!-- tap_area end -->
 
@@ -1149,7 +501,7 @@
 </ul>
 -->
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="callLog_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="callLog_grid_wrap" style="width:100%; height:280px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->

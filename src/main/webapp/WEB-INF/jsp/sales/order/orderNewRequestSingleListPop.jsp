@@ -3,26 +3,27 @@
 
 <script type="text/javaScript">
 
-	function fn_orderNoExist(){
-		$("#searchOrdDt").show();
-	}
-	
-	function fn_orderNoExist2(){
-	    $("#searchOrdDt").hide();
-	    $("#searchOrd").val('');
-	}
-	
-	function fn_orderNoExist3(){
+    function fn_orderNoExist(){
+        $("#searchOrdDt").show();
+    }
+    
+    function fn_orderNoExist2(){
+        $("#searchOrdDt").hide();
+        $("#searchOrd").val('');
+    }
+    
+    function fn_orderNoExist3(){
         $("#searchOrdDt").hide();
         $("#searchOrd").val($("#salesOrdId").val());
+        $("#singleClose").click();
 //        $("#viewForm").attr({
 //            "target" : "_self",
 //            "action" : getContextPath() + "/sales/order/orderInvestList.do"
 //        }).submit();
         fn_orderInvestigationListAjax();
-        Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#viewForm").serializeJSON(), null, true, 'dtPop');
+        Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#popForm").serializeJSON(), null, true, 'dtPop');
     }
-	
+    
     $(document).ready(function(){
         
         $("input[name=searchOrd]").removeAttr("disabled");
@@ -30,17 +31,17 @@
     
     });
     
-	//f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
+    //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
     doGetCombo('/common/selectCodeList.do', '57', '','cmbInvType', 'S' , '');    // Exchange Type Combo Box
-	
-	function fn_getNewReq(){
-		var searchOrd = searchForm.searchOrd.value;
+    
+    function fn_getNewReq(){
+        var searchOrd = singleForm.searchOrd.value;
 
-		if(searchOrd == ""){
-			Common.alert("Please Key in the Order Number.");
-			return false;
-		}
-	    $.ajax({
+        if(searchOrd == ""){
+            Common.alert("Please Key in the Order Number.");
+            return false;
+        }
+        $.ajax({
             
             type : "GET",
             url : getContextPath() + "/sales/order/orderNewRequestSingleChk",
@@ -49,10 +50,9 @@
             data: {salesOrdNo : searchOrd},
             dataType: "json",
             success : function (result) {
-//            	alert(result.msg);
-            	if(result.msg == "OK"){
-            		var prod = result.stkCode + ' - ' + result.stkDesc;
-            		$("#salesOrdId").val(result.salesOrdId);
+                if(result.msg == "OK"){
+                    var prod = result.stkCode + ' - ' + result.stkDesc;
+                    $("#salesOrdId").val(result.salesOrdId);
                     $("#ordNo").html(result.salesOrdNo);
                     $("#salesDt").html(result.salesDt);
                     $("#orderStus").html(result.name);
@@ -61,16 +61,17 @@
                     $("#prod").html(prod);
                     $("#custName").html(result.name1);
                     $("#nric").html(result.nric);
-            		$("#searchOrdDt").show();
-            	}else if(result.msg == "Err"){
-            		Common.alert("* No such sales order found. Only Rental order is allow to request for investigation.");
-            		$("#searchOrdDt").hide();
-            	}else if(result.msg == "NO"){
+                    $("#searchOrdDt").show();
+                }else if(result.msg == "Err"){
+                    Common.alert("* No such sales order found. Only Rental order is allow to request for investigation.");
+                    $("#searchOrdDt").hide();
+                }
+                else if(result.msg == "NO"){
                     Common.alert("Investigation Request for Current Month Was Closed!");
                     $("input[name=searchOrd]").attr('disabled', 'disabled');
                     $("#searchBtn").attr('disabled', 'disabled');
                     $("#searchOrdDt").hide();
-            	}
+                }
                 
             },
             error : function (data) {
@@ -84,26 +85,26 @@
                 
             }
         });
-	}
+    }
     
     function fn_reqInvest(){
-    	var today = new Date();
-    	var todayMm = today.getMonth()+1;
-    	var todayDd = today.getDate();
-    	var todayYMD = today.getFullYear() +""+ (todayMm<10 ? '0' + todayMm : todayMm) +""+ (todayDd<10 ? '0' + todayDd : todayDd);
-    	var callDay = document.viewForm.insCallDt.value;
-    	
-    	var callDayValue = callDay.substr(6) + callDay.substr(3,2) + callDay.substr(0,2);
+        var today = new Date();
+        var todayMm = today.getMonth()+1;
+        var todayDd = today.getDate();
+        var todayYMD = today.getFullYear() +""+ (todayMm<10 ? '0' + todayMm : todayMm) +""+ (todayDd<10 ? '0' + todayDd : todayDd);
+        var callDay = document.viewForm.insCallDt.value;
+        
+        var callDayValue = callDay.substr(6) + callDay.substr(3,2) + callDay.substr(0,2);
 
-    	if(document.viewForm.cmbInvType.value == ""){
+        if(document.viewForm.cmbInvType.value == ""){
             Common.alert("Please select an Investigation Request Type.");
             return false;
         }
-    	if(callDay == ""){
-    		Common.alert("Call Date Cannot be Empty!");
-    		return false;
-    	}
-    	if(parseInt(callDayValue) > parseInt(todayYMD)){        // 현재날짜와 비교 callDay > now
+        if(callDay == ""){
+            Common.alert("Call Date Cannot be Empty!");
+            return false;
+        }
+        if(parseInt(callDayValue) > parseInt(todayYMD)){        // 현재날짜와 비교 callDay > now
             Common.alert("* Called Date cannot be future date.");
             return false;
         }
@@ -115,20 +116,20 @@
 //            Common.alert("* This order has ACTIVE investigation request. Request number : IRN0145325 By KRHQ9001 - KRHQ9001 on 2017-08-31 오전 10:37:08.");
 //            return false;
 //        }
-    	if(document.viewForm.insVisitDt.value == ""){
+        if(document.viewForm.insVisitDt.value == ""){
             Common.alert("Visitation Date Cannot be Empty!");
             return false;
         }
-    	if(document.viewForm.invReqRem.value == ""){
+        if(document.viewForm.invReqRem.value == ""){
             Common.alert("Please enter request remark!!");
             return false;
         }
-    	
-    	Common.ajax("GET", "/sales/order/orderNewRequestSingleOk", $("#viewForm").serializeJSON(), function(result) {
+        
+        Common.ajax("GET", "/sales/order/orderNewRequestSingleOk", $("#viewForm").serializeJSON(), function(result) {
 
               console.log("Order Investigation Request successfully saved.");
               console.log("data : " + result);
-
+alert(result.invReqId);
               $("#invReqId").val(result.invReqId);
               Common.alert("Order Investigation Request successfully saved.",fn_orderNoExist3 );
               
@@ -152,8 +153,8 @@
     }
     
 //    function fn_viewSingle(salesOrdNoVal){
-//    	document.searchForm.salesOrdNo.value = salesOrdNoVal;
-//    	document.searchForm.action = '/sales/order/orderNewRequestSingleView';
+//      document.searchForm.salesOrdNo.value = salesOrdNoVal;
+//      document.searchForm.action = '/sales/order/orderNewRequestSingleView';
 //        document.searchForm.submit();
 //    }
 </script>
@@ -170,7 +171,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="searchForm" name="searchForm" method="GET">
+<form id="singleForm" name="singleForm" method="GET">
     <input type="hidden" id="salesOrdNo" name="salesOrdNo">
 <table class="type1"><!-- table start -->
 <caption>table</caption>

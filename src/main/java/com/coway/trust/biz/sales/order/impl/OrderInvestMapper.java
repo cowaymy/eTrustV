@@ -291,4 +291,6 @@ public interface OrderInvestMapper {
 	
 	EgovMap callResultSearchCCTicket(Map<String, Object> params) ;
 	
+	int seqSAL0050D();
+	
 }

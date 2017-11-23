@@ -315,9 +315,9 @@
     <td>
 
         <div class="date_set w100p"><!-- date_set start -->
-            <p><input type="text" id="startCrtDt" name="startCrtDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+            <p><input type="text" id="startCrtDt" name="startCrtDt" title="Create start Date" value="${bfDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
         <span>To</span>
-            <p><input type="text" id="endCrtDt" name="endCrtDt" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+            <p><input type="text" id="endCrtDt" name="endCrtDt" title="Create end Date" value="${toDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
         </div><!-- date_set end -->
 
     </td>

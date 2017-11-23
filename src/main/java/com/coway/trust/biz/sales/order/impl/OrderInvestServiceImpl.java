@@ -173,11 +173,15 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 		String docNo = "";
 		docNo = orderInvestMapper.getDocNo(insertMap);
 		
+//		int invReqId = orderInvestMapper.seqSAL0050D();
+				
+		
 		logger.debug("##### callDt #####" +params.toString());
 		
 		// parameter setting (investigationM)
 		String targetFolder = "~/WebShare/Investigation/";
 		String filename = "InvesNo_" + docNo + ".zip";
+//		params.put("seqSAL0050D", invReqId);
 		params.put("invReqNo", docNo);
 		params.put("soId", params.get("salesOrdId"));
 		params.put("invReqStusId", 1);
@@ -648,4 +652,10 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 		
 	}
+	
+	
+	public int seqSAL0050D(){
+		int seqSAL0050D = orderInvestMapper.seqSAL0050D();
+		return seqSAL0050D;
+	};
 }

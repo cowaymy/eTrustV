@@ -223,7 +223,7 @@
  
     //resize func (tab click)
     function fn_resizefunc(gridName){ // 
-        AUIGrid.resize(gridName, 900, 300);
+        AUIGrid.resize(gridName, 950, 300);
    }
     
   //그리드 속성 설정
@@ -500,7 +500,7 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="callLog_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="callLog_grid_wrap" style="width:100%; height:280px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->

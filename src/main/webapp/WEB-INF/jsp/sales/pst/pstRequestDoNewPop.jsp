@@ -355,26 +355,26 @@
 <tbody>
 <tr>
     <th scope="row" rowspan="2">Mailing Address<span class="must">*</span></th>
-    <td colspan="3"><input type="text" id="newMailaddrDtl" name="newMailaddrDtl" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input type="text" id="newMailaddrDtl" name="newMailaddrDtl" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <td colspan="3"><input type="text" id="newMailstreet" name="newMailstreet" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input type="text" id="newMailstreet" name="newMailstreet" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">Area</th>
-    <td colspan="3"><input type="text" id="newMailarea" name="newMailarea" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input type="text" id="newMailarea" name="newMailarea" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">City</th>
-    <td><span><input type="text" id="newMailcity" name="newMailcity" title="" placeholder="" class="w100p" /></span></td>
+    <td><span><input type="text" id="newMailcity" name="newMailcity" title="" placeholder="" readonly class="w100p readonly" /></span></td>
     <th scope="row">Postcode</th>
-    <td><span><input type="text" id="newMailpostcode" name="newMailpostcode" title="" placeholder="" class="w100p" /></span></td>
+    <td><span><input type="text" id="newMailpostcode" name="newMailpostcode" title="" placeholder="" readonly class="w100p readonly" /></span></td>
 </tr>
 <tr>
     <th scope="row">State</th>
-    <td><input type="text" title="" id="newMailstate" name="newMailstate" placeholder="" class="w100p" /></td>
+    <td><input type="text" title="" id="newMailstate" name="newMailstate" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Country</th>
-    <td><input type="text" title="" id="newMailcountry" name="newMailcountry" placeholder="" class="w100p" /></td>
+    <td><input type="text" title="" id="newMailcountry" name="newMailcountry" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -400,26 +400,26 @@
 <tbody>
 <tr>
     <th scope="row" rowspan="2">Delivery Address<span class="must">*</span></th>
-    <td colspan="3"><input type="text" id="newDelvryaddrDtl" name="newDelvryaddrDtl" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input type="text" id="newDelvryaddrDtl" name="newDelvryaddrDtl" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <td colspan="3"><input type="text" id="newDelvrystreet" name="newDelvrystreet" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input type="text" id="newDelvrystreet" name="newDelvrystreet" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">Area</th>
-    <td colspan="3"><input type="text" id="newDelvryarea" name="newDelvryarea" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input type="text" id="newDelvryarea" name="newDelvryarea" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">City</th>
-    <td><span><input type="text" id="newDelvrycity" name="newDelvrycity" title="" placeholder="" class="w100p" /></span></td>
+    <td><span><input type="text" id="newDelvrycity" name="newDelvrycity" title="" placeholder="" readonly class="w100p readonly" /></span></td>
     <th scope="row">Postcode</th>
-    <td><span><input type="text" id="newDelvrypostcode" name="newDelvrypostcode" title="" placeholder="" class="w100p" /></span></td>
+    <td><span><input type="text" id="newDelvrypostcode" name="newDelvrypostcode" title="" placeholder="" readonly class="w100p readonly" /></span></td>
 </tr>
 <tr>
     <th scope="row">State</th>
-    <td><input type="text" id="newDelvrystate" name="newDelvrystate" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvrystate" name="newDelvrystate" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Country</th>
-    <td><input type="text" id="newDelvrycountry" name="newDelvrycountry" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvrycountry" name="newDelvrycountry" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -446,31 +446,31 @@
 <tbody>
 <tr>
     <th scope="row">Name<span class="must">*</span></th>
-    <td><input type="text" id="newMailContCntName" name="newMailContCntName" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContCntName" name="newMailContCntName" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Initial</th>
-    <td><input type="text" id="newMailContDealerIniCd" name="newMailContDealerIniCd" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContDealerIniCd" name="newMailContDealerIniCd" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Gender</th>
-    <td><input type="text" id="newMailContGender" name="newMailContGender" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContGender" name="newMailContGender" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">NRIC</th>
-    <td><input type="text" id="newMailContNric" name="newMailContNric" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContNric" name="newMailContNric" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Race</th>
-    <td><input type="text" id="newMailContRaceName" name="newMailContRaceName" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContRaceName" name="newMailContRaceName" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row"></th>
     <td></td>
 </tr>
 <tr>
     <th scope="row">Tel (Mobile)</th>
-    <td><input type="text" id="newMailContTelM1" name="newMailContTelM1" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContTelM1" name="newMailContTelM1" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Tel (Residence)</th>
-    <td><input type="text" id="newMailContTelR" name="newMailContTelR" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContTelR" name="newMailContTelR" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Tel (Office)</th>
-    <td><input type="text" id="newMailContTelO" name="newMailContTelO" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContTelO" name="newMailContTelO" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">Tel (Fax)</th>
-    <td><input type="text" id="newMailContTelF" name="newMailContTelF" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newMailContTelF" name="newMailContTelF" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row"></th>
     <td></td>
     <th scope="row"></th>
@@ -501,31 +501,31 @@
 <tbody>
 <tr>
     <th scope="row">Name<span class="must">*</span></th>
-    <td><input type="text" id="newDelvryContCntName" name="newDelvryContCntName" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContCntName" name="newDelvryContCntName" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Initial</th>
-    <td><input type="text" id="newDelvryContDealerIniCd" name="newDelvryContDealerIniCd" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContDealerIniCd" name="newDelvryContDealerIniCd" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Gender</th>
-    <td><input type="text" id="newDelvryContGender" name="newDelvryContGender" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContGender" name="newDelvryContGender" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">NRIC</th>
-    <td><input type="text" id="newDelvryContNric" name="newDelvryContNric" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContNric" name="newDelvryContNric" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Race</th>
-    <td><input type="text" id="newDelvryContRaceName" name="newDelvryContRaceName" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContRaceName" name="newDelvryContRaceName" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row"></th>
     <td></td>
 </tr>
 <tr>
     <th scope="row">Tel (Mobile)</th>
-    <td><input type="text" id="newDelvryContTelM1" name="newDelvryContTelM1" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContTelM1" name="newDelvryContTelM1" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Tel (Residence)</th>
-    <td><input type="text" id="newDelvryContTelR" name="newDelvryContTelR" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContTelR" name="newDelvryContTelR" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row">Tel (Office)</th>
-    <td><input type="text" id="newDelvryContTelO" name="newDelvryContTelO" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContTelO" name="newDelvryContTelO" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">Tel (Fax)</th>
-    <td><input type="text" id="newDelvryContTelF" name="newDelvryContTelF" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="newDelvryContTelF" name="newDelvryContTelF" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row"></th>
     <td></td>
     <th scope="row"></th>

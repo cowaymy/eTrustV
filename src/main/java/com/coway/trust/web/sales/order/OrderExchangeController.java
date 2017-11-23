@@ -24,6 +24,8 @@ import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderExchangeService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -53,7 +55,11 @@ public class OrderExchangeController {
 	 */
 	@RequestMapping(value = "/orderExchangeList.do")
 	public String orderExchangeList(@RequestParam Map<String, Object> params, ModelMap model) {
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 		
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
 		return "sales/order/orderExchangeList";
 	}
 	
@@ -82,7 +88,20 @@ public class OrderExchangeController {
 	 * Exchange Information. - Product Exchange Type
 	 */
 	@RequestMapping(value = "/orderExchangeDetailPop.do")
-	public String orderExchangeDetailPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+	public String orderExchangeDetailPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO ) throws Exception {
+		
+		// order detail start
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+	
+		params.put("salesOrderId", params.get("salesOrderId"));
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		// order detail end
+		
 		logger.info("##### cmbExcType #####" +params.get("exchgType"));
 		logger.info("##### exchgStus #####" +params.get("exchgStus"));
 		EgovMap exchangeDetailInfo = orderExchangeService.exchangeInfoProduct(params);
