@@ -1998,6 +1998,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              PROMO_ID
            , REQST_NO
            , STUS_ID
+           , PROMO_TYPE_ID
            , MEM_TYPE_ID
            , MEM_ID
            , CRT_DT
@@ -2015,6 +2016,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           (SELECT MAX(PROMO_ID)+1 FROM ORG0007D )
            , #{requestNo}
            , #{statusId}
+           , 2740
            , #{memTypeId}
            , #{memberId}
            , SYSDATE
