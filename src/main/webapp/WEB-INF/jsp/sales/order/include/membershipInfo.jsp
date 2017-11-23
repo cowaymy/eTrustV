@@ -16,12 +16,12 @@
         var columnLayout = [
             { headerText : "Membership<br>No",    dataField : "mbrshNo",       width   : 120   }
           , { headerText : "Bill No",             dataField : "mbrshBillNo",   width   : 100   }
-          , { headerText : "Date",                dataField : "mbrshCrtDt",    width   : 70    }
+          , { headerText : "Date",                dataField : "mbrshCrtDt",    width   : 90    }
           , { headerText : "Status",              dataField : "mbrshStusCode", width   : 70    }
           , { headerText : "Package",             dataField : "pacName"                        }
-          , { headerText : "Start",               dataField : "mbrshStartDt",  width   : 70    }
-          , { headerText : "End",                 dataField : "mbrshExprDt",   width   : 70    }
-          , { headerText : "Duration<br>(month)", dataField : "mbrshDur",      width   : 100   }
+          , { headerText : "Start",               dataField : "mbrshStartDt",  width   : 90    }
+          , { headerText : "End",                 dataField : "mbrshExprDt",   width   : 90    }
+          , { headerText : "Duration<br>(month)", dataField : "mbrshDur",      width   : 80   }
           , { headerText : "salesOrdId",          dataField : "salesOrdId",    visible : false }
           ];
 

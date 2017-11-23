@@ -29,9 +29,9 @@
 </tr>
 <tr>
     <th scope="row">Application Type</th>
-    <td>${orderDetail.basicInfo.appTypeName}</td>
+    <td>${orderDetail.basicInfo.appTypeDesc}</td>
     <th scope="row">Reference No</th>
-    <td>${orderDetail.basicInfo.refNo}</td>
+    <td>${orderDetail.basicInfo.ordRefNo}</td>
     <th scope="row">Key At(By)</th>
     <td>${orderDetail.basicInfo.ordCrtUserId}</td>
 </tr>
