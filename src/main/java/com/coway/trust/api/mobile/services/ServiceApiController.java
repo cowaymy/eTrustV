@@ -374,10 +374,10 @@ public class ServiceApiController {
 				params.put("remark",hsTransLogs1.get(i).get("resultRemark"));
 				params.put("cmbCollectType",hsTransLogs1.get(i).get("rcCode"));
 				
-/*				api 추가된거	
+//				api 추가된거	
 				params.put("temperateSetng",hsTransLogs1.get(i).get("temperatureSetting"));
 				params.put("nextAppntDt",hsTransLogs1.get(i).get("nextAppointmentDate"));
-				params.put("remark",hsTransLogs1.get(i).get("nextAppointmentTime"));
+				params.put("nextAppointmentTime",hsTransLogs1.get(i).get("nextAppointmentTime"));
 				params.put("ownerCode",hsTransLogs1.get(i).get("ownerCode"));
 				params.put("resultCustName",hsTransLogs1.get(i).get("resultCustName"));
 				params.put("resultMobileNo",hsTransLogs1.get(i).get("resultIcMobileNo"));
@@ -386,8 +386,8 @@ public class ServiceApiController {
 				params.put("sgnDt",hsTransLogs1.get(i).get("signData"));
 //				params.put("remark",hsTransLogs1.get(i).get("signRegDate"));
 //				params.put("remark",hsTransLogs1.get(i).get("signRegTime"));
-				params.put("remark",hsTransLogs1.get(i).get("transactionId"));
-*/				
+//				params.put("remark",hsTransLogs1.get(i).get("transactionId"));
+				
 				
 				
 				LOGGER.debug("params22222 값 : {}", params);
