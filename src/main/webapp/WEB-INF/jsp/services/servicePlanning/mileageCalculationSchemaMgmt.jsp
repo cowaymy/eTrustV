@@ -71,6 +71,7 @@ function mileageCalSchemaList() {
     }
     
     function save(){
+    	if(vaildationCheck())
     	Common.ajax("POST", "/services/mileageCileage/saveSchemaMgmt.do", GridCommon.getEditData(gridID1), function(result) {
             console.log("성공.");
             console.log("data : " + result);
@@ -87,6 +88,20 @@ function mileageCalSchemaList() {
     function removeRow(){
         AUIGrid.removeRow(gridID1, "selectedIndex");
         AUIGrid.removeSoftRows(gridID1);
+    }
+    
+    function vaildationCheck(){
+    	 var result = true;
+         var addList = AUIGrid.getAddedRowItems(gridID1);
+         var delList = AUIGrid.getRemovedItems(gridID1);
+         
+         
+         if (addList.length == 0 && delList.length == 0) 
+         {
+           Common.alert("No Change");
+           return false;
+         }
+    	
     }
 </script>
 <section id="content"><!-- content start -->

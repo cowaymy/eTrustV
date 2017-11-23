@@ -179,7 +179,7 @@ public class HolidayController {
 		params.put("stateTypeList", stateTypeList);
 		params.put("stateList", stateList);
 		params.put("branchList", branchList);
-		logger.debug("params111111111111111111 {}", params);
+		logger.debug("params {}", params);
 		List<EgovMap> assignList = holidayService.selectCTAssignList(params);
 		logger.debug("assignList {}", assignList);
 		return ResponseEntity.ok(assignList);

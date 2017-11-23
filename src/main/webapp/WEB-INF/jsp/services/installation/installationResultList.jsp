@@ -3,7 +3,7 @@
 
 <script type="text/javaScript">
 $(document).ready(function() {
-	doGetComboSepa("/common/selectBranchCodeList.do",1 , '-',''   , 'dscCode' , 'S', '');
+	doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'dscCode' , 'S', '');
 
 	//grid 생성
 	createInstallationListAUIGrid();
