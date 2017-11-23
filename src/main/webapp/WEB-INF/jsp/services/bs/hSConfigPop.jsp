@@ -397,7 +397,6 @@
             //$('#grid_wrapCust') .attr("disabled", true);
         } */
 
-        console.log("성공 data : " + $("#searchFormPop"));
 
         createAUIGridCd();
         createAUIGridCust();

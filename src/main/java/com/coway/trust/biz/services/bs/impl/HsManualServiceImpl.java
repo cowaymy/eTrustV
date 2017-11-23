@@ -559,7 +559,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		    
 			/////////////////////////물류 호출//////////////////////
 			logPram =new HashMap<String, Object>();
-            logPram.put("ORD_ID",    schdulId );
+            logPram.put("ORD_ID",      params.get("hidSalesOrdCd")   );
             logPram.put("RETYPE", "COMPLET");  
             logPram.put("P_TYPE", "OD05");  
             logPram.put("P_PRGNM", "HSCOM");  
@@ -574,7 +574,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           
     	  /////////////////////////물류 호출//////////////////////
     		logPram =new HashMap<String, Object>();  
-            logPram.put("ORD_ID",    schdulId);
+            logPram.put("ORD_ID",     params.get("hidSalesOrdCd"));
             logPram.put("RETYPE", "SVO");  
             logPram.put("P_TYPE", "OD06");  
             logPram.put("P_PRGNM", "HSCAN");  

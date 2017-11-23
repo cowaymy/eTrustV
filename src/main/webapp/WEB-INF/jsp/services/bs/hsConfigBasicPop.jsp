@@ -6,8 +6,8 @@
 
     
 	    $(document).ready(function() {
-	    
-           doGetCombo('/services/bs/getHSCody.do?&brnchId='+brnchId, '', '','entry_cmbServiceMem', 'S' , '');    
+	    	
+           doGetCombo('/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', '', '','entry_cmbServiceMem', 'S' , '');    
 	       fn_getHSConfigBasicInfo();
 	    
 	    

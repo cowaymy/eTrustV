@@ -263,6 +263,7 @@
                                         , C.NAME Name
                                          ,SOM.SALES_ORD_NO SALES_ORD_NO
                                           ,SOM.SALES_ORD_ID AS SALES_ORD_ID
+                                         , som.BRNCH_ID as brnch_id
                                          <!-- ,HSM.MONTH
                                          ,HSM.YEAR YEAR
                                          ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
@@ -1429,15 +1430,13 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 
 
                     <select id="serMemList" parameterType="Map" resultType="egovMap">
-		                    SELECT Extent1.MEM_ID CODE_ID  ,
-								       Extent1.MEM_CODE   || '-' ||  Extent1.NAME as CODE_NAME,
-								       Extent1.MEM_CODE MEM_CODE  ,
-								       Extent1.NAME NAME
-								  FROM ORG0001D Extent1
-								 WHERE   Extent1.MEM_TYPE IN ( 2,3 )
-								          AND  Extent1.STUS = 1
-                                         and  Extent1.brnch = #{brnchId}
-								  ORDER BY Extent1.MEM_CODE ASC
+		                  	SELECT   SRV_CODY_ID  CODE_ID 
+								        ,MEM_CODE||'-'||NAME   CODE_NAME
+								FROM SAL0090D A , SAL0001D B , ORG0001D C
+								WHERE A.SRV_SO_ID = B.SALES_ORD_ID
+								AND  A.SRV_CODY_ID = C.MEM_ID
+								AND B.SALES_ORD_NO =#{SRV_SO_ID}
+								 ORDER BY MEM_CODE ASC
 				    </select>
 
 
@@ -2316,7 +2315,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                  <update id="updateHsFilterSiriNo" parameterType="Map">
                             UPDATE SAL0087D
                                SET SRV_FILTER_LAST_SERIAL= #{lastSerialNo}
-                                  ,SRV_FILTER_PREV_SERIAL = #{prvSerialNo}
+                                  ,SRV_FILTER_PREV_SERIAL = (select SRV_FILTER_LAST_SERIAL FROM  SAL0087D  WHERE   SRV_FILTER_ID =#{srvFilterId})
                                   ,SRV_FILTER_PRV_CHG_DT= to_date(#{settleDate}, 'DD/MM/YYYY')
                                   ,SRV_FILTER_UPD_USER_ID= #{hidCodyId}
                                   ,SRV_FILTER_UPD_DT= sysdate
