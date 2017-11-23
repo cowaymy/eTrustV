@@ -671,13 +671,16 @@ SELECT T.APPV_PRCSS_NO
 
 <select id="selectAppvLineInfo" parameterType="String" resultType="egovMap">
 /* webInvoiceMapper.selectAppvLineInfo */
-          SELECT APPV_LINE_SEQ
-                    ,APPV_LINE_USER_ID
-                    ,TO_CHAR(APPV_DT, 'DD/MM/YYYY') AS APPV_DT
-                    ,APPV_STUS
-          FROM FCM0005D
-          WHERE APPV_PRCSS_NO = #{appvPrcssNo}
-          ORDER BY APPV_LINE_SEQ  
+SELECT T1.APPV_LINE_SEQ, 
+       T1.APPV_LINE_USER_ID, 
+       T2.NAME AS APPV_LINE_USER_NAME, 
+       TO_CHAR(T1.APPV_DT, 'DD/MM/YYYY') AS APPV_DT, 
+       T1.APPV_STUS 
+FROM   FCM0005D T1 
+       LEFT JOIN ORG0001D T2 
+              ON T1.APPV_LINE_USER_ID = T2.MEM_CODE 
+WHERE  T1.APPV_PRCSS_NO = #{appvPrcssNo} 
+ORDER  BY T1.APPV_LINE_SEQ 
 </select>
 
 <select id="selectAppvInfoAndItems" parameterType="String" resultType="egovMap">
@@ -824,20 +827,20 @@ SELECT T.APPV_PRCSS_NO
        ,#{seq}
        ,'700'
        ,'10'
-       ,TO_CHAR(SYSDATE, 'YYYYDDMM')
+       ,TO_CHAR(SYSDATE, 'YYYYMMDD')
        ,TO_CHAR(SYSDATE, 'HH24MISS')
        ,#{userId}
        ,#{appvPrcssNo}
        ,SUBSTR (#{clmNo}, 1, 2)
-       ,TO_CHAR(TO_DATE(#{reqstDt}, 'DD/MM/YYYY'), 'YYYYDDMM')
+       ,TO_CHAR(TO_DATE(#{reqstDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
        ,#{reqstUserId}
        ,#{costCentrName}
-       ,TO_CHAR(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), 'YYYYDDMM')
+       ,TO_CHAR(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
        ,#{memAccId}
        ,#{appvItmSeq}
        ,#{invcNo}
        ,#{clmNo}
-       ,TO_CHAR(TO_DATE(#{payDueDt}, 'DD/MM/YYYY'), 'YYYYDDMM')
+       ,TO_CHAR(TO_DATE(#{payDueDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
        ,#{expDesc}
        ,#{glAccCode}
        ,#{glAccCodeName}
@@ -891,12 +894,12 @@ SELECT T.APPV_PRCSS_NO
        ,#{seq}
        ,'961'
        ,'10'
-       ,TO_CHAR(SYSDATE, 'YYYYDDMM')
+       ,TO_CHAR(SYSDATE, 'YYYYMMDD')
        ,TO_CHAR(SYSDATE, 'HH24MISS')
        ,#{userId}
        ,#{appvPrcssNo}
        ,'R1'
-       ,TO_CHAR(TO_DATE(#{reqstDt}, 'DD/MM/YYYY'), 'YYYYDDMM')
+       ,TO_CHAR(TO_DATE(#{reqstDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
        ,#{memAccName}
        ,#{costCentr}
        ,#{costCentrName}

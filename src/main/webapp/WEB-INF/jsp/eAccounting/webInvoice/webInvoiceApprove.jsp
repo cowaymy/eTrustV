@@ -158,9 +158,7 @@ var invoAprveGridColLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "appvPrcssDt",
-    headerText : '<spring:message code="invoiceApprove.appvBrDt" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
+    headerText : '<spring:message code="invoiceApprove.appvBrDt" />'
 }
 ];
 

@@ -217,6 +217,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm.put("costCentr", params.get("costCentr"));
 				hm.put("costCentrName", params.get("costCentrName"));
 				hm.put("atchFileGrpId", params.get("atchFileGrpId"));
+				hm.put("userId", params.get("userId"));
 				hm.put("userName", params.get("userName"));
 				LOGGER.debug("insertApproveItems =====================================>>  " + hm);
 				// TODO appvLineItemsTable Insert
@@ -289,13 +290,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 						webInvoiceMapper.insertReqstInterface(invoAppvItems);
 					}
 				}
-				
-				
-				
-				
-				
-					
-				
 			}
 		}
 	}
@@ -391,20 +385,22 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		if(appvLinePrcssCnt == 0) {
 			// order by appvLineSeq
 			EgovMap lineInfo = appvLineInfo.get(0);
-			String appvLineUserId = (String) lineInfo.get("appvLineUserId");
-			appvPrcssStus += "<br> - Pending By " + appvLineUserId;
+//			String appvLineUserId = (String) lineInfo.get("appvLineUserId");
+			String appvLineUserName = (String) lineInfo.get("appvLineUserName");
+			appvPrcssStus += "<br> - Pending By " + appvLineUserName;
 		} else {
 			for(int i = 0; i < appvLineInfo.size(); i++) {
 				EgovMap appvLine = appvLineInfo.get(i);
 				String appvStus = (String) appvLine.get("appvStus");
-				String appvLineUserId = (String) appvLine.get("appvLineUserId");
+//				String appvLineUserId = (String) appvLine.get("appvLineUserId");
+				String appvLineUserName = (String) appvLine.get("appvLineUserName");
 				String appvDt = (String) appvLine.get("appvDt");
 				if("R".equals(appvStus)) {
-					appvPrcssStus += "<br> - Pending By " + appvLineUserId;
+					appvPrcssStus += "<br> - Pending By " + appvLineUserName;
 				} else if ("A".equals(appvStus)) {
-					appvPrcssStus += "<br> - Approval By " + appvLineUserId + " [" + appvDt + "]";
+					appvPrcssStus += "<br> - Approval By " + appvLineUserName + " [" + appvDt + "]";
 				} else if ("J".equals(appvStus)) {
-					appvPrcssStus += "<br> - Reject By " + appvLineUserId + " [" + appvDt + "]";
+					appvPrcssStus += "<br> - Reject By " + appvLineUserName + " [" + appvDt + "]";
 				}
 			}
 		}
