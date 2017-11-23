@@ -107,16 +107,16 @@
      }
  }   
 </script>    
-<!-- <div id="popup_wrap" class="popup_wrap">popup_wrap start
+<div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 
-<header class="pop_header">pop_header start
+<header class="pop_header"><!-- pop_header start -->
 <h1>Order Ledger</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#" onclick="window.close()">CLOSE</a></p></li>
 </ul>
-</header>pop_header end -->
+</header><!-- pop_header end -->
 
-<section id="content"><!-- pop_body start -->
+<section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h2>${orderInfo.custName}</h2>
@@ -240,4 +240,4 @@
 
 </section><!-- pop_body end -->
 
-<!-- </div>popup_wrap end -->
+</div><!-- popup_wrap end -->
