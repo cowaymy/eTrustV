@@ -3,6 +3,8 @@ package com.coway.trust.biz.payment.otherpayment.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
 public interface AdvPaymentService
 {
 
@@ -13,6 +15,6 @@ public interface AdvPaymentService
    	 * @return
    	 * 
    	 */
-    void saveAdvPayment(Map<String, Object> paramMap, List<Object> paramList );
+	List<EgovMap> saveAdvPayment(Map<String, Object> paramMap, List<Object> paramList );
     
 }

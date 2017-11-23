@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper;
 import com.coway.trust.biz.payment.otherpayment.service.AdvPaymentService;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("advPaymentService")
 public class AdvPaymentServiceImpl extends EgovAbstractServiceImpl implements AdvPaymentService {
@@ -24,7 +25,7 @@ public class AdvPaymentServiceImpl extends EgovAbstractServiceImpl implements Ad
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdvPaymentServiceImpl.class);
 	
 	@Transactional
-	public void saveAdvPayment(Map<String, Object> paramMap, List<Object> paramList) {
+	public List<EgovMap> saveAdvPayment(Map<String, Object> paramMap, List<Object> paramList) {
 		//시퀀스 조회
     	Integer seq = commonPaymentMapper.getPayTempSEQ();
     	
@@ -49,6 +50,9 @@ public class AdvPaymentServiceImpl extends EgovAbstractServiceImpl implements Ad
     	
     	//payment 처리 프로시저 호출
     	commonPaymentMapper.processPayment(paramMap);
+    	
+    	//WOR 번호 조회
+    	return commonPaymentMapper.selectProcessPaymentResult(paramMap);
 	}
 	
 }

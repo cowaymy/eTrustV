@@ -19,6 +19,8 @@ import com.coway.trust.biz.payment.otherpayment.service.AdvPaymentService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
 @Controller
 @RequestMapping(value = "/payment")
 public class AdvPaymentController {
@@ -50,10 +52,9 @@ public class AdvPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveAdvPayment.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> savePayment(
+	public ResponseEntity<List<EgovMap>> savePayment(
 			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
-		String message = "";
-		LOGGER.debug("params {}"+params);
+
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
@@ -128,13 +129,10 @@ public class AdvPaymentController {
     	}
 		
 		// 저장
-    	advPaymentService.saveAdvPayment(formInfo,gridList);
+    	List<EgovMap> resultList = advPaymentService.saveAdvPayment(formInfo,gridList);
 		
-		// 결과 만들기.
-    	ReturnMessage msg = new ReturnMessage();
-    	msg.setCode(AppConstants.SUCCESS);
-    	msg.setMessage(message);
-        return ResponseEntity.ok(msg);
+		// 조회 결과 리턴.
+    	return ResponseEntity.ok(resultList);
 	}
 	
 }
