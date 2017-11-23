@@ -418,6 +418,18 @@
     <input id="txtTel2" name="txtTel2" type="text" title="" placeholder="Tel (2)" class="w100p"  value= "${branchDetail.c15}" />
     </td>
 </tr>
+<tr>
+  <th scope="row">Closing Date</th>
+    <td>
+     <input id="closingDate" name="closingDate" placeholder="DD/MM/YYYY" class="j_date" type="text" title="" />
+    </td>
+    <th scope="row">Cost Center</th>
+    <td>
+     <input id="costCenter" name="costCenter" type="text" title="" placeholder="Cost Center" class="w100p"  value= "${branchDetail.costCenter}" />
+    </td>
+
+</tr>
+
 </tbody>
 </table><!-- table end -->
 </form>

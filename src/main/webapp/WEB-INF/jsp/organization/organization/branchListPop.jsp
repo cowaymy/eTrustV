@@ -131,7 +131,7 @@
             $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
             $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
             $("#mState").attr({"disabled" : false  , "class" : "w100p"});
-
+            
             //Call Ajax
 
             CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
@@ -377,7 +377,11 @@
 <tr>
     <th scope="row">Start From Date</th>
     <td>
-     <input type="text" title="Start From Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartFromDt" name="dtStartFromDt"/>
+        <input type="text" title="Start From Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartFromDt" name="dtStartFromDt"/>
+    </td>
+      <th scope="row">Cost Center</th>
+    <td>
+         <input type="text" title="Cost Center" placeholder="Cost Center"  id="costCenter" name="costCenter" value= "${branchDetail.c20}"/>
     </td>
 </tr>
 

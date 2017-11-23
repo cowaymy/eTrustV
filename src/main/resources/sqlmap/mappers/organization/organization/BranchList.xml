@@ -37,6 +37,7 @@
                        Project1.C17 C17  ,
                        Project1.C18 C18  ,
                        Project1.C19 C19  ,
+                       Project1.C20 C20  ,
                        Project1.STATE STATE,
                        Project1.POST_CODE POST_CODE,
                        Project1.COUNTRY
@@ -109,6 +110,10 @@
                                      WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
                                 ELSE ''
                                    END C19 ,
+                                CASE
+                                  WHEN (EXTENT1.COST_CENTR IS NOT NULL ) THEN EXTENT1.COST_CENTR
+                                ELSE ''
+                                  END C20,
                                     Extent10.POSTCODE POST_CODE,
                                    Extent10.STATE STATE,
                                    Extent10.COUNTRY COUNTRY
@@ -394,6 +399,8 @@
 					,UPD_USER_ID = #{user_id}
 					,UPD_DT = sysdate
 					,REGN_ID = #{cmRegion}
+					,END_TO_DT = to_date(#{closingDate},'dd/mm/yyyy' )
+					,COST_CENTR=#{costCenter}
              WHERE BRNCH_ID = #{branchNo}
 
    </insert>
@@ -419,7 +426,7 @@
 												,ADDR_DTL
 												,STREET
 												, START_FROM_DT
-
+                                                ,COST_CENTR
                 ) VALUES ( SYS0005M_BRNCH_ID_SEQ.NEXTVAL
                                          ,    #{branchCd}
                                          ,    #{branchName}
@@ -437,6 +444,7 @@
                                          , #{addrDtl}
                                          , #{streetDtl}
                                          ,to_date(#{dtStartFromDt},'dd/mm/yyyy' )
+                                         ,#{costCenter}
                                          )
 
 
