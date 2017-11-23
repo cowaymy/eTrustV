@@ -223,9 +223,10 @@
         
     function fn_getPrdPriceInfo() {
          
-        var promotionVO = {            
+        var promotionVO = {
             salesPromoMVO : {
-                promoAppTypeId         : $('#promoAppTypeId').val()
+                promoAppTypeId         : $('#promoAppTypeId').val(),
+                promoSrvMemPacId       : $('#promoSrvMemPacId').val()
             },
             salesPromoDGridDataSetList : GridCommon.getGridData(stckGridID)
         };

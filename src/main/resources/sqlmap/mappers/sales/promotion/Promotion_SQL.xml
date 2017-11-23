@@ -133,6 +133,46 @@
           FROM SAL0016M T1
          WHERE T1.STK_ID = #{stkId}
            AND T1.APP_TYPE_ID = #{appTypeId}
+           AND T1.STUS_CODE_ID = 1
+    </select>
+    
+    <select id="selectRentMemPriceInfo" parameterType="Map" resultType="egovMap">
+        SELECT T1.SRV_PAC_ITM_ID
+             , T1.SRV_CNTRCT_PAC_ID
+             , T1.SRV_PAC_ITM_PRODUCT_ID
+             , T1.SRV_PAC_ITM_SVC_FREQ
+             , T1.SRV_PAC_ITM_RENTAL AS AMT
+             , 0                     AS PRC_RPF
+             , T1.SRV_PAC_ITM_PV     AS PRC_PV
+             , T1.SRV_PAC_ITM_REM
+             , T1.SRV_PAC_ITM_STUS_ID
+             , T1.SRV_PAC_ITM_UPD_DT
+             , T1.SRV_PAC_ITM_UPD_USER_ID
+             , T1.DISCONTINUE
+          FROM SAL0082D T1
+         WHERE T1.SRV_CNTRCT_PAC_ID = #{promoSrvMemPacId}
+           AND T1.SRV_PAC_ITM_PRODUCT_ID = #{stkId}
+           AND T1.SRV_PAC_ITM_STUS_ID = 1
+    </select>
+
+    <select id="selectOutMemPriceInfo" parameterType="Map" resultType="egovMap">
+		SELECT T1.SRV_MEM_PAC_ID
+		     , T1.SRV_MEM_ITM_STK_ID
+		     , T1.SRV_MEM_ITM_PRC    AS AMT
+		     , 0                     AS PRC_RPF
+		     , T1.SRV_MEM_ITM_PV     AS PRC_PV
+		     , T1.SRV_MEM_ITM_PRIOD
+		     , T1.SRV_MEM_ITM_STUS_ID
+		     , T1.SRV_MEM_ITM_REM
+		     , T1.SRV_MEM_ITM_CRT_DT
+		     , T1.SRV_MEM_ITM_CRT_USER_ID
+		     , T1.SRV_MEM_ITM_UPD_DT
+		     , T1.SRV_MEM_ITM_UPD_USER_ID
+		     , T1.DISCONTINUE
+		  FROM SAL0092M T1
+		 WHERE T1.SRV_MEM_PAC_ID = #{promoSrvMemPacId}
+		   AND T1.SRV_MEM_ITM_STK_ID = #{stkId}
+		   AND T1.SRV_MEM_ITM_STUS_ID = 1
     </select>
     
     <insert id="insertSalesPromoM" parameterType="salesPromoMVO">

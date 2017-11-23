@@ -276,14 +276,25 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		
 		Map<String, Object> params = null;
 		
+		EgovMap priceMap = null;
+				
 		for(SalesPromoDVO dvo: salesPromoDVOList) {
 			
 			params = new HashMap<String, Object>();
 			
 			params.put("stkId", dvo.getPromoItmStkId());
 			params.put("appTypeId", appTypeId);
+			params.put("promoSrvMemPacId", promotionVO.getSalesPromoMVO().getPromoSrvMemPacId());
 			
-			EgovMap priceMap = promotionMapper.selectPriceInfo(params);
+			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_RSVM == promotionVO.getSalesPromoMVO().getPromoAppTypeId()) {
+				priceMap = promotionMapper.selectRentMemPriceInfo(params);
+			}
+			else if(SalesConstants.PROMO_APP_TYPE_CODE_ID_OSVM == promotionVO.getSalesPromoMVO().getPromoAppTypeId()) {
+				priceMap = promotionMapper.selectOutMemPriceInfo(params);
+			}
+			else {
+				priceMap = promotionMapper.selectPriceInfo(params);
+			}
 			
 			if(priceMap != null) {
     			dvo.setAmt((BigDecimal)priceMap.get("amt"));

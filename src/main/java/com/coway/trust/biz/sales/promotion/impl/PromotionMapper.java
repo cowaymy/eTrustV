@@ -21,6 +21,10 @@ public interface PromotionMapper {
 	
 	EgovMap selectPriceInfo(Map<String, Object> params);
 	
+	EgovMap selectRentMemPriceInfo(Map<String, Object> params);
+	
+	EgovMap selectOutMemPriceInfo(Map<String, Object> params);
+	
 	void insertSalesPromoM(SalesPromoMVO salesPromoMVO);
 
 	void insertSalesPromoD(SalesPromoDVO salesPromoDVO);
