@@ -34,12 +34,12 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
                      {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
-                     {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
-                     {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
+                     {dataField:"reqloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"reqlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"reqlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
+                     {dataField:"rcvloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
+                     {dataField:"rcvlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
+                     {dataField:"rcvlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
                      {dataField:"delydt"       ,headerText:"Delivery Date"               ,width:120    ,height:30 },
                      {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 },
@@ -453,13 +453,13 @@ function giFunc(){
                 <tr>
                     <th scope="row">From Location</th>
                     <td>
-                        <input type="hidden"  id="flocation" name="flocation">
-                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
+                        <input type="hidden"  id="tlocation" name="tlocation">
+                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
                     <th scope="row">To Location</th>
                     <td >
-                        <input type="hidden"  id="tlocation" name="tlocation">
-                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
+                        <input type="hidden"  id="flocation" name="flocation">
+                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
                     </td>
                     <td colspan="2">&nbsp;</td>                
                 </tr>

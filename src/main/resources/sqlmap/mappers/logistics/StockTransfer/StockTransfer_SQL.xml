@@ -64,10 +64,10 @@
               and l47.trnsc_type = #{sttype}
            </if>
            <if test="flocation !=null and flocation !=''">
-              and (l47.rciv_cdc_rdc = #{flocation} or s28c.wh_loc_desc like '%'||#{flocationnm}||'%')
+              and (l47.reqst_cdc_rdc = #{flocation} or s28c.wh_loc_desc like '%'||#{flocationnm}||'%')
            </if>
            <if test="tlocation !=null and tlocation !=''">
-              and (l47.reqst_cdc_rdc = #{tlocation} or s28c.wh_loc_desc like '%'||#{tlocationnm}||'%' 
+              and (l47.rciv_cdc_rdc = #{tlocation} or s28c.wh_loc_desc like '%'||#{tlocationnm}||'%')
            </if>
            <if test="sam !=null and sam !=''">
               and l47.PRIDIC_FRQNCY = #{sam}
@@ -436,7 +436,7 @@
         INSERT INTO LOG0075M (REQST_NO, SEQ, LOC_ID, TRNSC_TYPE_DTL, ITM_CODE, REQST_QTY, REQST_CRT_DT, CRT_DT)
 					SELECT L47.REQST_NO
 					     , L48.REQST_NO_ITM
-					     , L47.REQST_CDC_RDC 
+					     , L47.RCIV_CDC_RDC 
 					     , L47.TRNSC_TYPE_DTL 
 					     , L48.ITM_CODE 
 					     , L48.REQST_QTY 
