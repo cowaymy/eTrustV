@@ -310,8 +310,10 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
         Common.ajax("POST", "/logistics/helpdesk/insertDataChangeList.do", param, function(result) {
           var gridData = result;  
           $("#AddApprovalForm")[0].reset(); 
+          Common.alert(result.message);
+          
         // 공통 메세지 영역에 메세지 표시.
-        Common.setMsg("<spring:message code='sys.msg.success'/>");
+        //Common.setMsg("<spring:message code='sys.msg.success'/>");
         //searchList();
         }, function(jqXHR, textStatus, errorThrown) {
             Common.alert("실패하였습니다.");
@@ -436,6 +438,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
     /*----------------------------------------   셀렉트박스 이벤트 시작 ---------------------------------------------------- */
     function getComboRelays(obj, value, tag, selvalue) {
         var robj = '#' + obj;
+        doGetCombo('/logistics/helpdesk/selectReasonList.do', '', '','insReason', 'S' , '');//Reason  리스트 조회
        if (value == "36") {
             $(robj).attr("disabled", false);
         }else{
@@ -811,12 +814,12 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 <tr>
     <th scope="row">Approval Status<span class="must">*</span></th>
     <td>
-   <select id="insApprovalStatus"  name="insApprovalStatus" onchange="getComboRelays('insReason' , this.value , '', '')" >
+   <select class="w100p" id="insApprovalStatus"  name="insApprovalStatus" onchange="getComboRelays('insReason' , this.value , '', '')" >
     </select>
     </td>
     <th scope="row">Reason </th>
     <td>
-    <select id="insReason"  name="insReason"  disabled="disabled">
+    <select class="w100p" id="insReason"  name="insReason"  disabled="disabled">
     </select>
     </td>
 </tr>
