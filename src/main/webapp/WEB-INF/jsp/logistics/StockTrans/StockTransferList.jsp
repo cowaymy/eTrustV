@@ -384,7 +384,7 @@ function f_getTtype(g , v){
                 <tr>
                     <th scope="row">Create Date</th>
                     <td>
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
@@ -392,7 +392,7 @@ function f_getTtype(g , v){
                     </td>
                     <th scope="row">Required Date</th>
                     <td >
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date" value="${searchVal.reqsdt}" placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date" value="${searchVal.reqedt}" placeholder="DD/MM/YYYY" class="j_date"></p>
