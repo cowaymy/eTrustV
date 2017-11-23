@@ -4,10 +4,12 @@
 
     $(function(){
         $('#btnLedger1').click(function() {
-            Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
+            //Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
+            Common.popupWin("frmLedger", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         });
         $('#btnLedger2').click(function() {
-            Common.popupDiv("/sales/order/orderLedger2ViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
+            //Common.popupDiv("/sales/order/orderLedger2ViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
+            Common.popupWin("frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         });
         $('#btnOrdDtlClose').click(function() {
             $('#_divIdOrdDtl').remove();
@@ -29,6 +31,10 @@
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
+
+<form id="frmLedger" name="frmLedger" action="#" method="post">
+    <input id="ordId" name="ordId" type="hidden" value="${orderDetail.basicInfo.ordId}" />
+</form>
 <!------------------------------------------------------------------------------
     Order Detail Page Include START
 ------------------------------------------------------------------------------->
