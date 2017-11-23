@@ -141,7 +141,7 @@ $(function(){
     	$('#searchMatName').val('');
     	//$('#searchCtgry').val('');
     	//$('#searchType').val('');
-    	  doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiCombo');
+    	  doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
     	    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
     	    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
     });
@@ -168,24 +168,7 @@ $(function(){
     	}
     	
     	var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
-    	doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiCombo');
-    });
-    $('#searchlocgb').change(function(){
-        if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
-        	var searchlocgb = $('#searchlocgb').val();
-            
-            var locgbparam = "";
-            for (var i = 0 ; i < searchlocgb.length ; i++){
-                if (locgbparam == ""){
-                    locgbparam = searchlocgb[i];
-                }else{
-                    locgbparam = locgbparam +"∈"+searchlocgb[i]; 
-                }
-            }
-            
-            var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
-            doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiCombo');
-        }
+    	doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
 });
 
@@ -219,14 +202,34 @@ function f_validatation(v){
 
 function f_multiCombo() {
     $(function() {
+        $('#searchlocgb').change(function() {
+        	console.log('1');
+        	if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
+        	     var searchlocgb = $('#searchlocgb').val();
+        	        
+        	        var locgbparam = "";
+        	        for (var i = 0 ; i < searchlocgb.length ; i++){
+        	            if (locgbparam == ""){
+        	                locgbparam = searchlocgb[i];
+        	            }else{
+        	                locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+        	            }
+        	        }
+        	        
+        	        var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+        	        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+        	  }
+        }).multipleSelect({
+            selectAll : true
+        });        
+    });
+}
+function f_multiComboType() {
+    $(function() {
         $('#searchType').change(function() {
         }).multipleSelect({
             selectAll : true
         });  /* .multipleSelect("checkAll"); */
-        $('#searchlocgb').change(function() {
-        }).multipleSelect({
-            selectAll : true
-        });
         $('#searchLoc').change(function() {
         }).multipleSelect({
             selectAll : true
@@ -306,7 +309,7 @@ function searchlocationFunc(){
                 <tr>
                    <th scope="row">Location</th>
                    <td>
-                        <select id="searchlocgb" class="w100p" name="searchlocgb"></select>                        
+                        <select id="searchlocgb" name="searchlocgb" class="multy_select w100p"multiple="multiple"></select>                        
 <!--                         <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc"> -->
 <!--                         <INPUT type="text"   class="w100p" id="searchLocNm" name="searchLocNm"> -->
                    </td> 
@@ -314,7 +317,7 @@ function searchlocationFunc(){
                    <td>
                         <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
                    </td>
-                   <th scope="row">Location Grade</th>
+                   <th scope="row">Location</th>
                    <td>
                         <select class="w100p" id="searchLoc" name="searchLoc"></select>
                    </td> 

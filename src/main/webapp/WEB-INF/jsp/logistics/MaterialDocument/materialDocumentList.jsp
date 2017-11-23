@@ -81,8 +81,50 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-    doGetComboData('/common/selectCodeList.do', paramdata, '','searchTrcType', 'S' , 'f_change');
-    doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','sstatus', 'S' , ''); 
+    
+    CommonCombo.make("searchTrcType", "/common/selectCodeList.do", { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''}, "", {
+        id: "code",
+        name: "codeName",
+        type:"M"
+    });
+    CommonCombo.make("searchMoveType", "/common/selectCodeList.do", { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:''}, "", {
+        id: "code",
+        name: "codeName",
+        type:"M"
+    });
+    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'sfrLoctype', 'M','f_frloctype');
+    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'stoLoctype', 'M','f_toloctype');
+    
+    doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'sfrLocgrade', 'A','');
+    doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'stoLocgrade', 'A','');
+    
+    doGetCombo('/common/selectCodeList.do', '15', '', 'smattype', 'M' ,'f_multiCombos');
+    doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
+    
+//     CommonCombo.make("sfrLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
+//         id: "code",
+//         name: "codeName",
+//         type:"M"
+//     });
+//     CommonCombo.make("stoLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
+//         id: "code",
+//         name: "codeName",
+//         type:"M",
+//         isEnable:false
+//     });
+//     CommonCombo.make("sfrLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
+//         id: "code",
+//         name: "codeName",
+//         type:"M"
+//     });
+//     CommonCombo.make("stoLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
+//         id: "code",
+//         name: "codeName",
+//         type:"M"
+//     });
+    
+    //doGetComboData('/common/selectCodeList.do', paramdata, '','searchTrcType', 'S' , '');
+    //doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','sstatus', 'S' , ''); 
 //     doGetCombo('/common/selectStockLocationList.do', '', '','searchFromLoc', 'S' , 'SearchListAjax');//From Location 조회
 //     doGetCombo('/common/selectStockLocationList.do', '', '','searchToLoc', 'S' , '');//To Location 조회
 
@@ -108,91 +150,152 @@ $(function(){
         SearchListAjax();
     });
     $("#clear").click(function() {
-    	$('#searchCdc').val('');
-    	$('#searchRdc').val('');
     	
-    	$('#tlocationnm').val('');
-    	$('#flocationnm').val('');
-    	$('#searchMaterialCode').val('');
-    	$('#searchTrcType').val('');
-    	$('#searchMoveType').val('');
-    	$('#PostingDt1').val('');
-    	$('#PostingDt2').val('');
-    	$('#CreateDt1').val('');
-    	$('#CreateDt2').val('');
-    	$('#searchCustomer').val('');
-    	$('#searchVendor').val('');
-    	$('#searchBatch').val('');
-    	$('#searchUserNm').val('');
     });
     
     $("#searchTrcType").change(function(){
-        paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#searchTrcType").val()};
-        doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','searchMoveType', 'S' , '');
+    	
+    	CommonCombo.make("searchMoveType", "/logistics/materialDoc/selectTrntype.do", $("#searchForm").serialize(), "", {
+            id: "code",
+            name: "codeName",
+            type:"M"
+        });
     });
-    
-    $("#tlocationnm").keypress(function(event) {
-        $('#tlocation').val('');
+    $("#searchMaterialCode").keypress(function(event) {
         if (event.which == '13') {
-            $("#stype").val('tlocation');
-            $("#svalue").val($('#tlocationnm').val());
-            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
-
-            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+            $("#stype").val('stock');
+            $("#svalue").val($('#searchMaterialCode').val());
+            $("#sUrl").val("/logistics/material/materialcdsearch.do");
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
         }
     });
-    $("#flocationnm").keypress(function(event) {
-        $('#flocation').val('');
-        if (event.which == '13') {
-            $("#stype").val('flocation');
-            $("#svalue").val($('#flocationnm').val());
-            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
-
-            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+    $('#sfrLocgrade').change(function(){
+    	var searchlocgb = $('#sfrLoctype').val();
+        
+        var locgbparam = "";
+        for (var i = 0 ; i < searchlocgb.length ; i++){
+            if (locgbparam == ""){
+                locgbparam = searchlocgb[i];
+            }else{
+                locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+            }
         }
+        
+        var param = {searchlocgb:locgbparam , grade:$('#sfrLocgrade').val()}
+        
+        doGetComboData('/common/selectStockLocationList2.do', param , '', 'sfrLoc', 'M','f_multiComboType');
     });
-    
+    $('#stoLocgrade').change(function(){
+        var searchlocgb = $('#stoLoctype').val();
+        
+        var locgbparam = "";
+        for (var i = 0 ; i < searchlocgb.length ; i++){
+            if (locgbparam == ""){
+                locgbparam = searchlocgb[i];
+            }else{
+                locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+            }
+        }
+        
+        var param = {searchlocgb:locgbparam , grade:$('#stoLocgrade').val()}
+        
+        doGetComboData('/common/selectStockLocationList2.do', param , '', 'stoLoc', 'M','f_multiComboType');
+    });
 });
+
+function f_frloctype() {
+    $(function() {
+        $('#sfrLoctype').change(function() {
+            if ($('#sfrLoctype').val() != null && $('#sfrLoctype').val() != "" ){
+                 var searchlocgb = $('#sfrLoctype').val();
+                    
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                        }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                        }
+                    }
+                    
+                    var param = {searchlocgb:locgbparam , grade:$('#sfrLocgrade').val()}
+                    
+                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'sfrLoc', 'M','f_multiComboType');
+              }
+        }).multipleSelect({
+            selectAll : true
+        });        
+    });
+}
+
+function f_toloctype() {
+    $(function() {
+        $('#stoLoctype').change(function() {
+            
+            if ($('#stoLoctype').val() != null && $('#stoLoctype').val() != "" ){
+                 var searchlocgb = $('#stoLoctype').val();
+                    
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                        }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                        }
+                    }
+                    
+                    var param = {searchlocgb:locgbparam , grade:$('#stoLocgrade').val()}
+                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'stoLoc', 'M','f_multiComboType');
+              }
+        }).multipleSelect({
+            selectAll : true
+        });        
+    });
+}
+
+
+function f_multiComboType() {
+    $(function() {
+        $('#sfrLoc').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        });  /* .multipleSelect("checkAll"); */
+        $('#stoLoc').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        });
+    });
+}
+
+function f_multiCombos() {
+    $(function() {
+        $('#smattype').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        }); /* .multipleSelect("checkAll"); */ 
+        $('#smatcate').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        }); /* .multipleSelect("checkAll"); */ 
+    });
+}
 
 
 	function fn_itempopList(data) {
 
 		var rtnVal = data[0].item;
-
-		if ($("#stype").val() == "flocation") {
-			$("#flocation").val(rtnVal.locid);
-			$("#flocationnm").val(rtnVal.locdesc);
-		} else {
-			$("#tlocation").val(rtnVal.locid);
-			$("#tlocationnm").val(rtnVal.locdesc);
-		}
-
-		$("#svalue").val();
-	}
-
-	function f_change() {
-		$("#searchTrcType").change();
+		
+		$("#searchMaterialCode").val(rtnVal.itemcode);
+		
+		$("#svalue").val('');
 	}
 
 	function SearchListAjax() {
 		
-		  if ($("#flocationnm").val() == ""){
-		        $("#flocation").val('');
-		    }
-		    if ($("#tlocationnm").val() == ""){
-		        $("#tlocation").val('');
-		    }
-		    
-		    if ($("#flocation").val() == ""){
-		        $("#flocation").val($("#flocationnm").val());
-		    }
-		    if ($("#tlocation").val() == ""){
-		        $("#tlocation").val($("#tlocationnm").val());
-		    }
-
 		var url = "/logistics/materialDoc/MaterialDocSearchList.do";
-		var param = $('#searchForm').serializeJSON();
-		Common.ajax("POST", url, param, function(data) {
+		var param = $('#searchForm').serialize();
+		
+		Common.ajax("GET", url, param, function(data) {
 			AUIGrid.setGridData(myGridID, data.data);
 
 		});
@@ -238,45 +341,16 @@ $(function(){
             </colgroup>
             <tbody>
              <tr>
-                    <th scope="row">CDC</th>
+                    <th scope="row">Transaction Type</th>
                     <td>
-                        <select class="w100p" id="searchCdc" name="searchCdc"></select>
-                    </td>
-                    <th scope="row">RDC</th>
-                    <td>
-                        <select class="w100p" id="searchRdc" name="searchRdc"></select>
-                    </td>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-                <tr>
-                    <th scope="row">From Location</th>
-                    <td>
-                        <!-- <select class="w100p" id="searchFromLoc" name="searchFromLoc"></select> -->
-                        <input type="hidden"  id="tlocation" name="tlocation">
-                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
-                    </td>
-                    <th scope="row">To Location</th>
-                    <td>
-                        <!-- <select class="w100p" id="searchToLoc" name="searchToLoc"></select> -->
-                        <input type="hidden"  id="flocation" name="flocation">
-                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
-                    </td>
-                     <td colspan="2">&nbsp;</td>
-                </tr> 
-                <tr>
-                    <th scope="row">Material Code</th>
-                    <td>
-                        <input type="text" id="searchMaterialCode" name="searchMaterialCode" title="" placeholder="Material Code" class="w100p" />
-                    </td>
-                    <th scope="row">Stock Transaction Type</th>
-                    <td>
-                        <select class="w100p" id="searchTrcType" name="searchTrcType"></select>
+                        <select id="searchTrcType" name="searchTrcType" class="multy_select w100p" multiple="multiple"></select>
                     </td>
                     <th scope="row">Movement Type</th>
                     <td>
-                        <select class="w100p" id="searchMoveType" name="searchMoveType"><option value=''>Choose One</option></select>
+                        <select id="searchMoveType" name="searchMoveType" class="multy_select w100p" multiple="multiple"></select>
                     </td>
-                </tr>             
+                    <td colspan="2">&nbsp;</td>
+                </tr>
                 <tr>
                     <th scope="row">Posting Date</th>
                     <td>
@@ -294,25 +368,64 @@ $(function(){
                         <p><input id="CreateDt2" name="CreateDt2" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>
-                    <th scope="row">Customer</th>
-                    <td >
-                        <input type="text" id="searchCustomer" name="searchCustomer" title="" placeholder="Customer" class="w100p" />
-                    </td>              
+                    <td colspan='2'></td>              
                 </tr>
-                 <tr>
-                    <th scope="row">Vendor</th>
+                <tr>
+                    <th scope="row">From Location Type</th>
                     <td>
-                        <input type="text" id="searchVendor" name="searchVendor" title="" placeholder="Vendor" class="w100p" />
+                        <select id="sfrLoctype" name="sfrLoctype" class="multy_select w100p" multiple="multiple"></select>
                     </td>
-                    <th scope="row">Batch</th>
+                    <th scope="row">From Location Grade</th>
                     <td>
-                        <input type="text" id="searchBatch" name="searchBatch" title="" placeholder="Batch" class="w100p" />
+                        <select id="sfrLocgrade" name="sfrLocgrade" class="select w100p"></select>
                     </td>
-                    <th scope="row">User Name</th>
-                     <td>
-                        <input type="text" id="searchUserNm" name="searchUserNm" title="" placeholder="User Name" class="w100p" />
+                    <th scope="row">From Location</th>
+                    <td>
+                        <select id="sfrLoc" name="sfrLoc" class="multy_select w100p" multiple="multiple"><option>Choose Type OR Grade</option></select>
                     </td>
-                </tr>      
+                </tr> 
+                <tr>
+                    <th scope="row">To Location Type</th>
+                    <td>
+                        <select id="stoLoctype" name="stoLoctype" class="multy_select w100p" multiple="multiple"></select>
+                    </td>
+                    <th scope="row">To Location Grade</th>
+                    <td>
+                        <select id="stoLocgrade" name="stoLocgrade" class="select w100p"></select>
+                    </td>
+                    <th scope="row">To Location</th>
+                    <td>
+                        <select id="stoLoc" name="stoLoc" class="multy_select w100p" multiple="multiple"></select>
+                    </td>
+                </tr> 
+                <tr>
+                    <th scope="row">Material Code</th>
+                    <td>
+                        <input type="text" id="searchMaterialCode" name="searchMaterialCode" title="" placeholder="Material Code" class="w100p" />
+                    </td>
+                    <th scope="row">Material Type</th>
+                    <td>
+                        <select id="smattype" name="smattype" class="multy_select w100p" multiple="multiple"></select>
+                    </td>
+                    <th scope="row">Material Category</th>
+                    <td>
+                        <select id="smatcate" name="smatcate" class="multy_select w100p" multiple="multiple"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Ref.Doc No</th>
+                    <td>
+                        <input type="text" id="sdocno" name="sdocno" title="" placeholder="Material Document No" class="w100p" />
+                    </td>
+                    <th scope="row">Request No</th>
+                    <td>
+                        <input type="text" id="sreqstno" name="sreqstno" title="" placeholder="Request No" class="w100p" />
+                    </td>
+                    <th scope="row">Delivery No</th>
+                    <td>
+                        <input type="text" id="sdelvno" name="sdelvno" title="" placeholder="Delivery No" class="w100p" />
+                    </td>
+                </tr>       
             </tbody>
         </table><!-- table end -->
     </form>
@@ -325,7 +438,7 @@ $(function(){
             <!-- <li><p class="btn_grid"><a id="insert">INS</a></p></li> -->            
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:400px"></div>
         
     <!--    <div id="sub_grid_wrap" class="mt10" style="height:350px"></div>  -->
 

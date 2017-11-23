@@ -35,6 +35,12 @@ public class MaterialDocumentServiceImpl extends EgovAbstractServiceImpl impleme
 		return MaterialDocumentMapper.MaterialDocSearchList(params);
 	}
 
+	@Override
+	public List<EgovMap> MaterialDocMovementType(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MaterialDocumentMapper.MaterialDocMovementType(params);
+	}
+
 	
 	
 	

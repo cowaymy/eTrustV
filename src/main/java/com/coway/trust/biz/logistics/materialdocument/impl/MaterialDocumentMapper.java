@@ -13,6 +13,6 @@ public interface MaterialDocumentMapper {
 
 	List<EgovMap> MaterialDocSearchList(Map<String, Object> params);
 
-	
+	List<EgovMap> MaterialDocMovementType(Map<String, Object> params);
 
 }

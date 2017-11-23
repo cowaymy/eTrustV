@@ -49,6 +49,8 @@
 		from log0059m l59
 		, log0060d l60
 		, sys0026m s26
+		, sys0028m f28
+        , sys0028m t28
 		, (select * from sys0013m where code_master_id = 306) tt
 		, (select * from sys0013m where code_master_id = 308) mt
 		, (select * from sys0013m where code_master_id = 42) ut
@@ -57,38 +59,108 @@
 		and l60.matrl_no = s26.STK_CODE(+)
 		and l60.measure_bas_unit = ut.code_id(+)
 		and l59.trnsc_type_code = tt.code
-		and l60.INVNTRY_MOV_TYPE = mt.code <!-- 밑에서부터 where조건 시작 -->
-<!-- 		<if test="searchFromLoc !=null and searchFromLoc !=''"> -->
-<!-- 			and l60.rciv_issu_storg_loc = #{searchFromLoc} -->
-<!-- 		</if> -->
-<!-- 		<if test="searchToLoc !=null and searchToLoc !=''"> -->
-<!-- 			and l60.storg_loc = #{searchToLoc} -->
-<!-- 		</if> -->
-		<if test="tlocation !=null and tlocation !=''">
-            and l60.rciv_issu_storg_loc = #{tlocation}
+		and l60.INVNTRY_MOV_TYPE = mt.code
+		AND l60.rciv_issu_storg_loc = t28.wh_loc_id
+        AND l60.storg_loc = f28.wh_loc_id 
+		
+		<if test="frlocgrade !=null and frlocgrade !=''">
+            and f28.WH_LOC_STK_GRAD = #{frlocgrade}
         </if>
-        <if test="flocation !=null and flocation !=''">
-            and l60.storg_loc = #{flocation}
+        <if test="tolocgrade !=null and tolocgrade !=''">
+            and t28.WH_LOC_STK_GRAD = #{tolocgrade}
         </if>
-		<if test="searchMaterialCode !=null and searchMaterialCode !=''">
-			and l60.matrl_no = #{searchMaterialCode}
+        
+		<if test="toloctype !=null and toloctype !=''">
+            and t28.wh_loc_gb in
+             <foreach item="item" collection="toloctype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="frloctype !=null and frloctype !=''">
+            and f28.wh_loc_gb in
+             <foreach item="item" collection="frloctype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        
+        <if test="toloc !=null and toloc !=''">
+            and t28.wh_loc_code in
+             <foreach item="item" collection="toloc" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="frloc !=null and frloc !=''">
+            and f28.wh_loc_code in
+             <foreach item="item" collection="frloc" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        
+		<if test="materialcode !=null and materialcode !=''">
+			and l60.matrl_no = #{materialcode}
 		</if>
-		<if test="searchTrcType !=null and searchTrcType !=''">
-			and l59.trnsc_type_code = #{searchTrcType}
+		<if test="smattype !=null and smattype !=''">
+            and s26.STK_TYPE_ID in 
+            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="smatcate !=null and smatcate !=''">
+            and s26.STK_CTGRY_ID in 
+            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        
+		<if test="trantype !=null and trantype !=''">
+		    and l59.trnsc_type_code in 
+		    <foreach item="item" collection="trantype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
 		</if>
-		<if test="searchMoveType !=null and searchMoveType !=''">
-			and l60.INVNTRY_MOV_TYPE = #{searchMoveType}
-		</if>
-	  <if test="PostingDt1 != null and PostingDt2 != null and PostingDt1 != '' and PostingDt2 != ''" > 
-         <![CDATA[  AND to_char(to_date(l59.USNAM , 'yyyymmdd') ,'yyyy-MM-DD')   >= TO_CHAR(TO_DATE(#{PostingDt1},'DD/MM/YYYY'),'YYYY-MM-DD') 
-          AND to_char(to_date(l59.USNAM , 'yyyymmdd') ,'yyyy-MM-DD')   <   TO_CHAR(TO_DATE(#{PostingDt2},'DD/MM/YYYY')+1,'YYYY-MM-DD') ]]>
-       </if> 
-         <if test="CreateDt1 != null and CreateDt2 != null and CreateDt1 != '' and CreateDt2 != ''" > 
-         <![CDATA[  AND l59.CRT_DT   >= TO_DATE(TO_CHAR(TO_DATE(#{CreateDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') 
-          AND l59.CRT_DT   <   TO_DATE(TO_CHAR(TO_DATE(#{CreateDt2},'DD/MM/YYYY')+1,'YYYYMMDD') || '000000','yyyymmddhh24miss') ]]>
-       </if> 
+		<if test="movetype !=null and movetype !=''">
+            and l60.INVNTRY_MOV_TYPE in 
+            <foreach item="item" collection="movetype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+		<if test="posdatefr != null and posdateto != null and posdatefr != '' and posdateto != ''" > 
+           AND l59.USNAM   between TO_CHAR(TO_DATE(#{posdatefr},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{posdateto},'DD/MM/YYYY')+1,'YYYYMMDD')
+        </if> 
+         <if test="crtdatefr != null and crtdateto != null and crtdatefr != '' and crtdateto != ''" > 
+           AND l59.CRT_DT between TO_DATE(TO_CHAR(TO_DATE(#{crtdatefr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') 
+                              AND TO_DATE(TO_CHAR(TO_DATE(#{crtdateto},'DD/MM/YYYY'),'YYYYMMDD') || '235959','yyyymmddhh24miss')
+       </if>
 		and l59.matrl_doc_no = l60.matrl_doc_no
+		<if test="sdocno !=null and sdocno !=''">
+            and l59.matrl_doc_no = #{sdocno}
+        </if>
+        <if test="sreqstno !=null and sreqstno !=''">
+            and l60.STOCK_TRNSFR_REQST = #{sreqstno}
+        </if>
+        <if test="sdelvno !=null and sdelvno !=''">
+            and l60.DELVRY_NO = #{sdelvno}
+        </if>
 		order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
+	</select>
+	
+	<select id="MaterialDocMovementType" parameterType="Map" resultType="egovMap">
+	   SELECT S8.CODE , S8.CODE_NAME
+	     FROM (SELECT *
+	             FROM SYS0013M
+	            WHERE CODE_MASTER_ID = '308') S8,
+	          (SELECT *
+	             FROM SYS0013M
+	            WHERE CODE_MASTER_ID = '306'
+	            <if test="strctype != null and strctype !=''">
+	              AND CODE IN
+	              <foreach item="item" collection="strctype" index="index" open="(" separator="," close=")">
+	               #{item}
+	               </foreach>
+	           </if>
+	           ) S6
+	    WHERE S8.CODE LIKE S6.CODE || '%'
+	 ORDER BY S8.CODE
 	</select>
 
 

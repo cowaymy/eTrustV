@@ -16,6 +16,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -68,25 +69,48 @@ public class MaterialdocumentController {
 	
 	
 
-	@RequestMapping(value = "/MaterialDocSearchList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> MaterialDocSearchList(@RequestBody Map<String, Object> params, Model model)
-			throws Exception {
+	@RequestMapping(value = "/MaterialDocSearchList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> MaterialDocSearchList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+		String[] trantype      = request.getParameterValues("searchTrcType");
+		String[] movetype      = request.getParameterValues("searchMoveType");
+		String   posdatefr     = request.getParameter("PostingDt1");
+		String   posdateto     = request.getParameter("PostingDt2");
+		String   crtdatefr     = request.getParameter("CreateDt1");
+		String   crtdateto     = request.getParameter("CreateDt2");
+		String[] frloctype     = request.getParameterValues("sfrLoctype");
+		String[] toloctype     = request.getParameterValues("stoLoctype");
+		String   frlocgrade    = request.getParameter("sfrLocgrade");
+		String   tolocgrade    = request.getParameter("stoLocgrade");
+		String[] frloc         = request.getParameterValues("sfrLoc");
+		String[] toloc         = request.getParameterValues("stoLoc");
+		String   materialcode  = request.getParameter("searchMaterialCode");
+		String[] smattype      = request.getParameterValues("smattype");
+		String[] smatcate      = request.getParameterValues("smatcate");
+		String   sdocno        = request.getParameter("sdocno");
+		String   sreqstno      = request.getParameter("sreqstno");
+		String   sdelvno       = request.getParameter("sdelvno");
 		
-//		logger.debug("searchFromLoc       : {}",params.get("searchFromLoc"));
-//		logger.debug("searchToLoc       : {}",params.get("searchToLoc"));
-		logger.debug("tlocation       : {}",params.get("tlocation"));
-		logger.debug("flocation       : {}",params.get("flocation"));
-		logger.debug("searchMaterialCode       : {}",params.get("searchMaterialCode"));
-		logger.debug("searchTrcType       : {}",params.get("searchTrcType"));
-		logger.debug("searchMoveType       : {}",params.get("searchMoveType"));
-		logger.debug("searchMaterialCode       : {}",params.get("searchMaterialCode"));
-		logger.debug("PostingDt1       : {}",params.get("PostingDt1"));
-		logger.debug("PostingDt2       : {}",params.get("PostingDt2"));
-		logger.debug("CreateDt1       : {}",params.get("CreateDt1"));
-		logger.debug("CreateDt2       : {}",params.get("CreateDt2"));
-
+		Map<String, Object> pmap = new HashMap();
+		pmap.put("trantype"      , trantype    );
+		pmap.put("movetype"      , movetype    );
+		pmap.put("posdatefr"     , posdatefr   );
+		pmap.put("posdateto"     , posdateto   );
+		pmap.put("crtdatefr"     , crtdatefr   );
+		pmap.put("crtdateto"     , crtdateto   );
+		pmap.put("frloctype"     , frloctype   );
+		pmap.put("toloctype"     , toloctype   );
+		pmap.put("frlocgrade"    , frlocgrade  );
+		pmap.put("tolocgrade"    , tolocgrade  );
+		pmap.put("frloc"         , frloc       );
+		pmap.put("toloc"         , toloc       );
+		pmap.put("materialcode"  , materialcode);
+		pmap.put("smattype"      , smattype    );
+		pmap.put("smatcate"      , smatcate    );
+		pmap.put("sdocno"        , sdocno      );
+		pmap.put("sreqstno"      , sreqstno    );
+		pmap.put("sdelvno"       , sdelvno     );
 		
-		List<EgovMap> list = MaterialDocumentService.MaterialDocSearchList(params);
+		List<EgovMap> list = MaterialDocumentService.MaterialDocSearchList(pmap);
 		
 //		for (int i = 0; i < list.size(); i++) {
 //		logger.debug("MaterialDocSearchList       : {}", list.get(i));
@@ -96,6 +120,18 @@ public class MaterialdocumentController {
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/selectTrntype.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTrntype(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+		List<EgovMap> result = null; 
+		String codematerid = request.getParameter("masterid");
+		String[] searchTrcType = request.getParameterValues("searchTrcType");
+		logger.debug("106Line :::: " + params);
+		Map<String, Object> map = new HashMap();
+		map.put("strctype", searchTrcType);
+		result = MaterialDocumentService.MaterialDocMovementType(map);
+		
+		return ResponseEntity.ok(result);
 	}
 
 	
