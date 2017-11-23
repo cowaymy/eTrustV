@@ -589,11 +589,6 @@ function saveAdvPayment(){
             return;
         }
 		
-		if(FormUtil.checkReqValue($("#onlineBankChgAmt")) ||$("#onlineBankChgAmt").val() <= 0 ){
-            Common.alert('* No Bank Charge Amount ');
-            return;
-        }
-		
 		 if(FormUtil.checkReqValue($("#onlineTransDate"))){
 			    Common.alert('* Transaction Date is empty');
 	            return;
@@ -631,7 +626,6 @@ function saveAdvPayment(){
             Common.alert('* Please input the Remark below or less than 3000 bytes.');
             return;
         }   
-		
 	}
 	
     //param data array
@@ -2515,7 +2509,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <td>
                                 <input type="text" id="onlineAmount" name="onlineAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
-                            <th scope="row">Bank Charge Amount<span class="must">*</span></th>
+                            <th scope="row">Bank Charge Amount</th>
                             <td>
                                 <input type="text" id="onlineBankChgAmt" name="onlineBankChgAmt" class="w100p" maxlength="10"  onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
