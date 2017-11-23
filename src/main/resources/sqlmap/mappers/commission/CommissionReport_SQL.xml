@@ -531,7 +531,7 @@
                 AND T1.A_M_CODE = T2.S_M_CODE
 		WHERE T1.TASK_ID=#{taskId}
 		    <if test="memCode != null and memCode != ''">
-		    AND T1.A_M_CODE=#{memCode}
+		    AND T1.A_M_CODE LIKE '%'||#{memCode}||'%'
 		    </if>
     </select>
     
@@ -685,7 +685,9 @@
 		    AND t1.M_CODE = t2.M_CODE
 		    AND t1.BRNCH = t2.BRNCH
 		WHERE t1.CT_RANK = #{level}
-		    AND t1.M_CODE = #{memCode}
+		    <if test =" memCode != null and memCode != '' ">
+		      AND t1.M_CODE LIKE '%'||#{memCode}||'%'
+		    </if>
 		    <if test =" level == 4 and orgCombo == 'CTE' ">
 		          AND t1.BRNCH IN ('DSC-12' , 'DSC-14' , 'DSC-17', 'DSC-18' ,'DSC-19' )
 		          AND t1.SERVICE_MONTHS >= 3

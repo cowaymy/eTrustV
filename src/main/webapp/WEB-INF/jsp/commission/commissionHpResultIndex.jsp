@@ -49,18 +49,10 @@
         
         $('#search').click(function(){
         	if($("#memCode").val() != null && $("#memCode").val() != ""){
-	        	var data = {"memType" : $("#orgGrCombo").val(), "salesPersonCd" : $("#memCode").val()}
-	        	Common.ajax("GET", "/commission/report/selectMemberCount", data , function(result) {
-	        		if(result > 0){
-			        	Common.ajax("GET", "/commission/report/selectHPRawData", $("#myForm").serializeJSON() , function(result) {
-			        		AUIGrid.setGridData(aGridID, result);
-			        		AUIGrid.setGridData(sGridID, result);
-			        		AUIGrid.setGridData(cGridID, result);
-			        	});
-	        		}else{
-	        			Common.alert("Unable to find [" + $("#memCode").val() + "] in  Cody Code .<br />Please ensure you key in the correct member code.");
-	        			$("#memCode").val("")
-	        		}
+	        	Common.ajax("GET", "/commission/report/selectHPRawData", $("#myForm").serializeJSON() , function(result) {
+	        		AUIGrid.setGridData(aGridID, result);
+	        		AUIGrid.setGridData(sGridID, result);
+	        		AUIGrid.setGridData(cGridID, result);
 	        	});
         	}else{
         		Common.alert("Please select the member code.");
@@ -117,10 +109,10 @@
 	
 	function createHPActualAUIGrid() {
 		var columnLayout1 = [
-			{dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false },
-			{dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false },
+			{dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+			{dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
 			{dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-			{dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false },
+			{dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 			{dataField : "aPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
 			{dataField : "aPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
 			{dataField : "aSgmAmt",            headerText : "SGM Amt",           style : "my-column", editable : false },
@@ -145,18 +137,17 @@
 		    skipReadonlyColumns : true,// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 		    wrapSelectionMove : true,// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 		    showRowNumColumn : true,// 줄번호 칼럼 렌더러 출력
-		    selectionMode : "singleRow",
-		    headerHeight : 40 
+		    selectionMode : "singleRow"
 		};
 		aGridID = AUIGrid.create("#grid_wrap_a", columnLayout1,gridPros1);
 	}
 	
 	function createHPSimulAUIGrid() {
         var columnLayout2 = [
-            {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false },
-            {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false },
+            {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+            {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
             {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-            {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false },
+            {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
             {dataField : "sPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
             {dataField : "sPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
             {dataField : "sSgmAmt",            headerText : "SGM Amt",           style : "my-column", editable : false },
@@ -181,50 +172,37 @@
             skipReadonlyColumns : true,// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove : true,// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn : true,// 줄번호 칼럼 렌더러 출력
-            selectionMode : "singleRow",
-            headerHeight : 40
+            selectionMode : "singleRow"
         };
         sGridID = AUIGrid.create("#grid_wrap_s", columnLayout2,gridPros2);
     }
 	
 	function createHPCompareAUIGrid() {
         var columnLayout3 = [
-            {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false },
-            {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false },
+            {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+            {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
             {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-            {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false },
-            {dataField : "aPi",                    headerText : "A<BR>PI Amt",               style : "my-column", editable : false },
-            {dataField : "sPi",                    headerText : "S<BR>PI Amt",               style : "my-column", editable : false },
-            {dataField : "aPa",                   headerText : "A<BR>PA Amt",              style : "my-column", editable : false },
-            {dataField : "sPa",                   headerText : "S<BR>PA Amt",              style : "my-column", editable : false },
-            {dataField : "aSgmAmt",            headerText : "A<BR>SGM Amt",           style : "my-column", editable : false },
-            {dataField : "sSgmAmt",            headerText : "S<BR>SGM Amt",           style : "my-column", editable : false },
-            {dataField : "aMgrAmt",             headerText : "A<BR>MGR Amt",           style : "my-column", editable : false },
-            {dataField : "sMgrAmt",             headerText : "S<BR>MGR Amt",           style : "my-column", editable : false },
-            {dataField : "aOutinsAmt",         headerText : "A<BR>Outins Amt",        style : "my-column", editable : false},
-            {dataField : "sOutinsAmt",         headerText : "S<BR>Outins Amt",        style : "my-column", editable : false},
-            {dataField : "aBonus",               headerText : "A<BR>Bonus",               style : "my-column", editable : false},
-            {dataField : "sBonus",               headerText : "S<BR>Bonus",               style : "my-column", editable : false},
-            {dataField : "aRenmgrAmt",        headerText : "A<BR>Renmgr Amt",       style : "my-column", editable : false},
-            {dataField : "sRenmgrAmt",        headerText : "S<BR>Renmgr Amt",       style : "my-column", editable : false},
-            {dataField : "aRentalAmt",          headerText : "A<BR>Rental Amt",        style : "my-column", editable : false},
-            {dataField : "sRentalAmt",          headerText : "S<BR>Rental Amt",        style : "my-column", editable : false},
-            {dataField : "aOutplsAmt",          headerText : "A<BR>Outpls Amt",       style : "my-column", editable : false},
-            {dataField : "sOutplsAmt",          headerText : "S<BR>Outpls Amt",       style : "my-column", editable : false},
-            {dataField : "aMembershipAmt",   headerText : "A<BR>Membership Amt", style : "my-column", editable : false},
-            {dataField : "sMembershipAmt",   headerText : "S<BR>Membership Amt", style : "my-column", editable : false},
-            {dataField : "aTbbAmt",             headerText : "A<BR>TBB Amt",           style : "my-column", editable : false},
-            {dataField : "sTbbAmt",             headerText : "S<BR>TBB Amt",           style : "my-column", editable : false},
-            {dataField : "aAdjustAmt",          headerText : "A<BR>Adjust",             style : "my-column", editable : false},
-            {dataField : "sAdjustAmt",          headerText : "S<BR>Adjust",             style : "my-column", editable : false},
-            {dataField : "aIncentive",           headerText : "A<BR>Incentive",          style : "my-column", editable : false},
-            {dataField : "sIncentive",           headerText : "S<BR>Incentive",          style : "my-column", editable : false},
-            {dataField : "aShiAmt",              headerText : "A<BR>Shi Amt",            style : "my-column", editable : false},
-            {dataField : "sShiAmt",              headerText : "S<BR>Shi Amt",            style : "my-column", editable : false},
-            {dataField : "aRentalmembershipAmt",     headerText : "A<BR>Rentalmembership Amt",       style : "my-column", editable : false},
-            {dataField : "sRentalmembershipAmt",     headerText : "S<BR>Rentalmembership Amt",       style : "my-column", editable : false},
-            {dataField : "aRentalmembershipShiAmt", headerText : "A<BR>Shi Rentalmembership Amt",   style : "my-column", editable : false},
-            {dataField : "sRentalmembershipShiAmt", headerText : "S<BR>Shi Rentalmembership Amt",   style : "my-column", editable : false}
+            {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+            
+            {headerText : "PI Amt",            children: [{dataField: "aPi", headerText: "A", editable : false}, {dataField: "sPi", headerText: "S", editable : false}]},
+            {headerText : "PA Amt",           children: [{dataField: "aPa", headerText: "A", editable : false}, {dataField: "sPa", headerText: "S", editable : false}]},
+            {headerText : "SGM Amt",         children: [{dataField: "aSgmAmt", headerText: "A", editable : false}, {dataField: "sSgmAmt", headerText: "S", editable : false }]},
+            {headerText : "MGR Amt",         children: [{dataField: "aMgrAmt", headerText: "A", editable : false}, {dataField: "sMgrAmt", headerText: "S", editable : false}]},
+            {headerText : "Outins Amt",      children: [{dataField: "aOutinsAmt", headerText: "A", editable : false}, {dataField: "sOutinsAmt", headerText: "S", editable : false}]},
+            
+            {headerText : "Bonus",                children: [{dataField: "aBonus", headerText: "A", editable : false}, {dataField: "sBonus", headerText: "S", editable : false}]},
+            {headerText : "Renmgr Amt",        children: [{dataField: "aRenmgrAmt", headerText: "A", editable : false}, {dataField: "sRenmgrAmt", headerText: "S", editable : false}]},
+            {headerText : "Rental Amt",         children: [{dataField: "aRentalAmt", headerText: "A", editable : false}, {dataField: "sRentalAmt", headerText: "S", editable : false}]},
+            {headerText : "Outpls Amt",         children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
+            {headerText : "Membership Amt",  children: [{dataField: "aMembershipAmt", headerText: "A", editable : false}, {dataField: "sMembershipAmt", headerText: "S", editable : false}]},
+            
+            {headerText : "TBB Amt",                     children: [{dataField: "aTbbAmt", headerText: "A", editable : false}, {dataField: "sTbbAmt", headerText: "S", editable : false}]},
+            {headerText : "Adjust",                        children: [{dataField: "aAdjustAmt", headerText: "A", editable : false}, {dataField: "sAdjustAmt", headerText: "S", editable : false}]},
+            {headerText : "Incentive",                    children: [{dataField: "aIncentive", headerText: "A", editable : false,}, {dataField: "sIncentive", headerText: "S", editable : false}]},
+            {headerText : "Shi Amt",                      children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
+            {headerText : "Rentalmembership Amt",  children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
+            
+            {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]},
         ];
         // 그리드 속성 설정
         var gridPros3 = {
@@ -233,8 +211,7 @@
             skipReadonlyColumns : true,// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove : true,// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn : true,// 줄번호 칼럼 렌더러 출력
-            selectionMode : "singleRow",
-            headerHeight : 40
+            selectionMode : "singleRow"
         };
         cGridID = AUIGrid.create("#grid_wrap_c", columnLayout3,gridPros3);
     }

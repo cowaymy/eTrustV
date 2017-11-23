@@ -49,18 +49,10 @@
         
         $('#search').click(function(){
         	if($("#memCode").val() != null && $("#memCode").val() != ""){
-	        	var data = {"memType" : $("#orgGrCombo").val(), "salesPersonCd" : $("#memCode").val()}
-	        	Common.ajax("GET", "/commission/report/selectMemberCount", data , function(result) {
-	        		if(result > 0){
-			        	Common.ajax("GET", "/commission/report/selectCTRawData", $("#myForm").serializeJSON() , function(result) {
-			        		AUIGrid.setGridData(aGridID, result);
-			        		AUIGrid.setGridData(sGridID, result);
-			        		AUIGrid.setGridData(cGridID, result);
-			        	});
-	        		}else{
-	        			Common.alert("Unable to find [" + $("#memCode").val() + "] in  Cody Code .<br />Please ensure you key in the correct member code.");
-	        			$("#memCode").val("")
-	        		}
+	        	Common.ajax("GET", "/commission/report/selectCTRawData", $("#myForm").serializeJSON() , function(result) {
+	        		AUIGrid.setGridData(aGridID, result);
+	        		AUIGrid.setGridData(sGridID, result);
+	        		AUIGrid.setGridData(cGridID, result);
 	        	});
         	}else{
         		Common.alert("Please select the member code.");
@@ -117,13 +109,12 @@
 	
 	function createCTActualAUIGrid() {
 		var columnLayout1 = [
-			{dataField : "taskId",               headerText : "Task Id",             style : "my-column", editable : false },
-			{dataField : "mCode",              headerText : "Member Code",     style : "my-column", editable : false },
-			{dataField : "ctName",             headerText : "CT Name",           style : "my-column", editable : false },
-			{dataField : "nric",                  headerText : "Nric",                  style : "my-column", editable : false },
+			{dataField : "mCode",              headerText : "Member Code",     style : "my-column", editable : false, width : 80 },
+			{dataField : "ctName",             headerText : "CT Name",           style : "my-column", editable : false, width : 260 },
+			{dataField : "ctRank",              headerText : "CT Rank",             style : "my-column", editable : false },
+			{dataField : "nric",                  headerText : "Nric",                  style : "my-column", editable : false, width : 110 },
 			{dataField : "joinDate",            headerText : "Join Date",           style : "my-column", editable : false },
 			{dataField : "serviceMonths",    headerText : "Service Months",   style : "my-column", editable : false },
-			{dataField : "ctRank",              headerText : "CT Rank",             style : "my-column", editable : false },
 			{dataField : "status",               headerText : "Status",               style : "my-column", editable : false },
 			{dataField : "brnch",                headerText : "Branch",              style : "my-column", editable : false},
 			
@@ -158,21 +149,19 @@
 		    skipReadonlyColumns : true,// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 		    wrapSelectionMove : true,// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 		    showRowNumColumn : true,// 줄번호 칼럼 렌더러 출력
-		    selectionMode : "singleRow",
-		    headerHeight : 40 
+		    selectionMode : "singleRow"
 		};
 		aGridID = AUIGrid.create("#grid_wrap_a", columnLayout1,gridPros1);
 	}
 	
 	function createCTSimulAUIGrid() {
         var columnLayout2 = [
-            {dataField : "taskId",               headerText : "Task Id",             style : "my-column", editable : false },
-            {dataField : "mCode",              headerText : "Member Code",     style : "my-column", editable : false },
-            {dataField : "ctName",             headerText : "CT Name",           style : "my-column", editable : false },
-            {dataField : "nric",                  headerText : "Nric",                  style : "my-column", editable : false },
+            {dataField : "mCode",              headerText : "Member Code",     style : "my-column", editable : false, width : 80 },
+            {dataField : "ctName",             headerText : "CT Name",           style : "my-column", editable : false, width : 260 },
+            {dataField : "ctRank",              headerText : "CT Rank",             style : "my-column", editable : false },
+            {dataField : "nric",                  headerText : "Nric",                  style : "my-column", editable : false, width : 110 },
             {dataField : "joinDate",            headerText : "Join Date",           style : "my-column", editable : false },
             {dataField : "serviceMonths",    headerText : "Service Months",   style : "my-column", editable : false },
-            {dataField : "ctRank",              headerText : "CT Rank",             style : "my-column", editable : false },
             {dataField : "status",               headerText : "Status",               style : "my-column", editable : false },
             {dataField : "brnch",                headerText : "Branch",              style : "my-column", editable : false},
             
@@ -207,70 +196,49 @@
             skipReadonlyColumns : true,// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove : true,// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn : true,// 줄번호 칼럼 렌더러 출력
-            selectionMode : "singleRow",
-            headerHeight : 40
+            selectionMode : "singleRow"
         };
         sGridID = AUIGrid.create("#grid_wrap_s", columnLayout2,gridPros2);
     }
 	
 	function createCTCompareAUIGrid() {
         var columnLayout3 = [
-            {dataField : "taskId",               headerText : "Task Id",             style : "my-column", editable : false },
-            {dataField : "mCode",              headerText : "Member Code",     style : "my-column", editable : false },
-            {dataField : "ctName",             headerText : "CT Name",           style : "my-column", editable : false },
-            {dataField : "nric",                  headerText : "Nric",                  style : "my-column", editable : false },
+            {dataField : "mCode",              headerText : "Member Code",     style : "my-column", editable : false, width : 80 },
+            {dataField : "ctName",             headerText : "CT Name",           style : "my-column", editable : false, width : 260 },
+            {dataField : "ctRank",              headerText : "CT Rank",             style : "my-column", editable : false },
+            {dataField : "nric",                  headerText : "Nric",                  style : "my-column", editable : false, width : 110 },
             {dataField : "joinDate",            headerText : "Join Date",           style : "my-column", editable : false },
             {dataField : "serviceMonths",    headerText : "Service Months",   style : "my-column", editable : false },
-            {dataField : "ctRank",              headerText : "CT Rank",             style : "my-column", editable : false },
             {dataField : "status",               headerText : "Status",               style : "my-column", editable : false },
             {dataField : "brnch",                headerText : "Branch",              style : "my-column", editable : false},
             
-            {dataField : "aAsCount",           headerText : "A<BR>AS Count",           style : "my-column", editable : false},
-            {dataField : "sAsCount",           headerText : "S<BR>AS Count",           style : "my-column", editable : false},
-            {dataField : "aAsSumCp",          headerText : "A<BR>AS Sum Cp",         style : "my-column", editable : false},
-            {dataField : "sAsSumCp",          headerText : "S<BR>AS Sum Cp",         style : "my-column", editable : false},
-            {dataField : "aBsCount",           headerText : "A<BR>BS Count",            style : "my-column", editable : false},
-            {dataField : "sBsCount",           headerText : "S<BR>BS Count",            style : "my-column", editable : false},
-            {dataField : "aBsSumCp",          headerText : "A<BR>BS Sum Cp",          style : "my-column", editable : false},
-            {dataField : "sBsSumCp",          headerText : "S<BR>BS Sum Cp",          style : "my-column", editable : false},
-            {dataField : "aInsCount",          headerText : "A<BR>Ins Count",            style : "my-column", editable : false},
-            {dataField : "sInsCount",          headerText : "S<BR>Ins Count",            style : "my-column", editable : false},
-            {dataField : "aInsSumCp",         headerText : "A<BR>Ins Sum Cp",          style : "my-column", editable : false},
-            {dataField : "sInsSumCp",         headerText : "S<BR>Ins Sum Cp",          style : "my-column", editable : false},
-            {dataField : "aPrCount",            headerText : "A<BR>Pr Count",             style : "my-column", editable : false},
-            {dataField : "sPrCount",            headerText : "S<BR>Pr Count",             style : "my-column", editable : false},
-            {dataField : "aPrSumCp",           headerText : "A<BR>Pr Sum Cp",           style : "my-column", editable : false},
-            {dataField : "sPrSumCp",           headerText : "S<BR>Pr Sum Cp",           style : "my-column", editable : false},
-            {dataField : "aTotalPoint",         headerText : "A<BR>Total Point",           style : "my-column", editable : false},
-            {dataField : "sTotalPoint",         headerText : "S<BR>Total Point",           style : "my-column", editable : false},
-            {dataField : "aProPercent",        headerText : "A<BR>Pro Percent",          style : "my-column", editable : false},
-            {dataField : "sProPercent",        headerText : "S<BR>Pro Percent",          style : "my-column", editable : false},
-            {dataField : "aPerPercent",        headerText : "A<BR>Per Percent",          style : "my-column", editable : false},
-            {dataField : "sPerPercent",        headerText : "S<BR>Per Percent",          style : "my-column", editable : false},
-            {dataField : "aProFactor30",       headerText : "A<BR>Pro Factor(30%)",    style : "my-column", editable : false},
-            {dataField : "sProFactor30",       headerText : "S<BR>Pro Factor(30%)",    style : "my-column", editable : false},
-            {dataField : "aPerFactor70",       headerText : "A<BR>Per Factor(70%)",    style : "my-column", editable : false},
-            {dataField : "sPerFactor70",       headerText : "S<BR>Per Factor(70%)",    style : "my-column", editable : false},
-            {dataField : "aSumFactor",         headerText : "A<BR>Sum Factor",           style : "my-column", editable : false},
-            {dataField : "sSumFactor",         headerText : "S<BR>Sum Factor",           style : "my-column", editable : false},
-            {dataField : "aGrossComm",        headerText : "A<BR>Gross Comm",          style : "my-column", editable : false},
-            {dataField : "sGrossComm",        headerText : "S<BR>Gross Comm",          style : "my-column", editable : false},
-            {dataField : "aRentalComm",       headerText : "A<BR>Rental Comm",         style : "my-column", editable : false},
-            {dataField : "sRentalComm",       headerText : "S<BR>Rental Comm",         style : "my-column", editable : false},
-            {dataField : "aSrvMemComm",     headerText : "A<BR>Srv Mem Comm",      style : "my-column", editable : false},
-            {dataField : "sSrvMemComm",     headerText : "S<BR>Srv Mem Comm",      style : "my-column", editable : false},
-            {dataField : "aBasicAndAllowance",       headerText : "A<BR>Basic And Allowance",     style : "my-column", editable : false},
-            {dataField : "sBasicAndAllowance",       headerText : "S<BR>Basic And Allowance",     style : "my-column", editable : false},
-            {dataField : "aPerformanceIncentive",   headerText : "A<BR>Performance Incentive",  style : "my-column", editable : false},
-            {dataField : "sPerformanceIncentive",   headerText : "S<BR>Performance Incentive",  style : "my-column", editable : false},
-            {dataField : "aAdjustment",                 headerText : "A<BR>Adjustment",                 style : "my-column", editable : false},
-            {dataField : "sAdjustment",                 headerText : "S<BR>Adjustment",                 style : "my-column", editable : false},
-            {dataField : "aCffReward",                   headerText : "A<BR>CFF REWARD",               style : "my-column", editable : false},
-            {dataField : "sCffReward",                   headerText : "S<BR>CFF REWARD",               style : "my-column", editable : false},
-            {dataField : "aSeniority",                     headerText : "A<BR>Seniority",                    style : "my-column", editable : false},
-            {dataField : "sSeniority",                     headerText : "S<BR>Seniority",                    style : "my-column", editable : false},
-            {dataField : "aGrandTotal",                  headerText : "A<BR>Grand Total",                 style : "my-column", editable : false},
-            {dataField : "sGrandTotal",                  headerText : "S<BR>Grand Total",                 style : "my-column", editable : false}
+            {headerText : "AS Count",            children: [{dataField: "aAsCount", headerText: "A", editable : false}, {dataField: "sAsCount", headerText: "S", editable : false}]},
+            {headerText : "AS Sum Cp",          children: [{dataField: "aAsSumCp", headerText: "A", editable : false}, {dataField: "sAsSumCp", headerText: "S", editable : false}]},
+            {headerText : "BS Count",            children: [{dataField: "aBsCount", headerText: "A", editable : false}, {dataField: "sBsCount", headerText: "S", editable : false}]},
+            {headerText : "BS Sum Cp",          children: [{dataField: "aBsSumCp", headerText: "A", editable : false}, {dataField: "sBsSumCp", headerText: "S", editable : false}]},
+            {headerText : "Ins Count",            children: [{dataField: "aInsCount", headerText: "A", editable : false}, {dataField: "sInsCount", headerText: "S", editable : false}]},
+            
+            {headerText : "Ins Sum Cp",         children: [{dataField: "aInsSumCp", headerText: "A", editable : false}, {dataField: "sInsSumCp", headerText: "S", editable : false}]},
+            {headerText : "Pr Count",             children: [{dataField: "aPrCount", headerText: "A", editable : false}, {dataField: "sPrCount", headerText: "S", editable : false}]},
+            {headerText : "Pr Sum Cp",           children: [{dataField: "aPrSumCp", headerText: "A", editable : false}, {dataField: "sPrSumCp", headerText: "S", editable : false}]},
+            {headerText : "Total Point",          children: [{dataField: "aTotalPoint", headerText: "A", editable : false}, {dataField: "sTotalPoint", headerText: "S", editable : false}]},
+            {headerText : "Pro Percent",         children: [{dataField: "aProPercent", headerText: "A", editable : false}, {dataField: "sProPercent", headerText: "S", editable : false}]},
+            
+            {headerText : "Per Percent",          children: [{dataField: "aPerPercent", headerText: "A", editable : false}, {dataField: "sPerPercent", headerText: "S", editable : false}]},
+            {headerText : "Pro Factor(30%)",    children: [{dataField: "aProFactor30", headerText: "A", editable : false}, {dataField: "sProFactor30", headerText: "S", editable : false}]},
+            {headerText : "Per Factor(70%)",    children: [{dataField: "aPerFactor70", headerText: "A", editable : false}, {dataField: "sPerFactor70", headerText: "S", editable : false}]},
+            {headerText : "Sum Factor",           children: [{dataField: "aSumFactor", headerText: "A", editable : false}, {dataField: "sSumFactor", headerText: "S", editable : false}]},
+            {headerText : "Gross Comm",          children: [{dataField: "aGrossComm", headerText: "A", editable : false}, {dataField: "sGrossComm", headerText: "S", editable : false}]},
+            
+            {headerText : "Rental Comm",                children: [{dataField: "aRentalComm", headerText: "A", editable : false}, {dataField: "sRentalComm", headerText: "S", editable : false}]},
+            {headerText : "Srv Mem Comm",             children: [{dataField: "aSrvMemComm", headerText: "A", editable : false}, {dataField: "sSrvMemComm", headerText: "S", editable : false}]},
+            {headerText : "Basic And Allowance",      children: [{dataField: "aBasicAndAllowance", headerText: "A", editable : false}, {dataField: "sBasicAndAllowance", headerText: "S", editable : false}]},
+            {headerText : "Performance Incentive",   children: [{dataField: "aPerformanceIncentive", headerText: "A", editable : false}, {dataField: "sPerformanceIncentive", headerText: "S", editable : false}]},
+            {headerText : "Adjustment",                  children: [{dataField: "aAdjustment", headerText: "A", editable : false}, {dataField: "sAdjustment", headerText: "S", editable : false}]},
+            
+            {headerText : "CFF REWARD",       children: [{dataField: "aCffReward", headerText: "A", editable : false}, {dataField: "sCffReward", headerText: "S", editable : false}]},
+            {headerText : "Seniority",            children: [{dataField: "aSeniority", headerText: "A", editable : false}, {dataField: "sSeniority", headerText: "S", editable : false}]},
+            {headerText : "Grand Total",        children: [{dataField: "aGrandTotal", headerText: "A", editable : false}, {dataField: "sGrandTotal", headerText: "S", editable : false}]}
         ];
         // 그리드 속성 설정
         var gridPros3 = {
@@ -279,8 +247,7 @@
             skipReadonlyColumns : true,// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove : true,// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn : true,// 줄번호 칼럼 렌더러 출력
-            selectionMode : "singleRow",
-            headerHeight : 40
+            selectionMode : "singleRow"
         };
         cGridID = AUIGrid.create("#grid_wrap_c", columnLayout3,gridPros3);
     }
