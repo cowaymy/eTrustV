@@ -341,7 +341,7 @@ function searchSMO(index){
                 <tr>
                     <th scope="row">GR Date</th>
                     <td>
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="grsdt" name="grsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="gredt" name="gredt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
@@ -349,7 +349,7 @@ function searchSMO(index){
                     </td>
                     <th scope="row">B/L Date</th>
                     <td >
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="blsdt" name="blsdt" type="text" title="Create start Date"   placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="bledt" name="bledt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>

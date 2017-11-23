@@ -576,7 +576,7 @@ function fn_subGrid(invntryNo){
     <td><input id="srch_adjno" name="srch_adjno" type="text" title=""  class="w100p" /></td>
     <th scope="row">Stock Audit Date</th>
     <td>
-    <input id="srch_bsadjdate" name="srch_bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input id="srch_bsadjdate" name="srch_bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
     </td>
     <!-- <th scope="row">Location Type</th>
     <td>
@@ -680,23 +680,23 @@ function fn_subGrid(invntryNo){
 <tr>
     <th scope="row">Location Type</th>
     <td>
-    <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select>
+    <select class="multy_select w100p" multiple="multiple" id="eventtype" name="eventtype[]" /></select>
     </td>
     <!-- <th scope="row">Document Date</th>
     <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td> -->
     <th scope="row">Category Type</th>
     <td>
-    <select class="multy_select" multiple="multiple" id="catagorytype" name="catagorytype[]" /></select>
+    <select class="multy_select w100p" multiple="multiple" id="catagorytype" name="catagorytype[]" /></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Items Type</th>
     <td>
-    <select class="multy_select" multiple="multiple" id="itemtype" name="itemtype[]" /></select>
+    <select class="multy_select w100p" multiple="multiple" id="itemtype" name="itemtype[]" /></select>
     </td>
     <th scope="row">Stock Audit Date</th>
     <td>
-    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
     </td>
     </tr>
     <tr>    

@@ -808,7 +808,7 @@ function locationList(){
 <tr>
     <th scope="row">Request Date</th>
     <td>
-    <input id="insReqDate" name="insReqDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input id="insReqDate" name="insReqDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
     </td>
     <th scope="row"></th>
     <td>
