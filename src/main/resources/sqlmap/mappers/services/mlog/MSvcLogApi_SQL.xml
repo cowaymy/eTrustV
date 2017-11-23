@@ -380,6 +380,8 @@ and cust.cust_id = custCnt.cust_id
                             SVC0001D.AS_STUS_ID AS job_Status,
                             to_char(SVC0001D.AS_APPNT_DT,'YYYYMMDD') AS appointment_Date,
                             replace(substr(SVC0001D.AS_APPNT_TM, 0,5 ),':')  AS appointment_Time,
+                            to_char(SVC0001D.AS_APPNT_DT,'YYYY') AS plan_Year,
+                            to_char(SVC0001D.AS_APPNT_DT,'MM') AS plan_Month,
                             SVC0001D.AS_SESION_CODE AS job_Session,
                             SAL0001D.CUST_ID AS customer_Id,
                             SAL0023D.ADDR_DTL AS install_Address,
