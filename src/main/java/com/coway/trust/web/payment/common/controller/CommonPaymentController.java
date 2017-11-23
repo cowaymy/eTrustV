@@ -212,10 +212,8 @@ public class CommonPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/savePayment", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> savePayment(
+	public ResponseEntity<List<EgovMap>> savePayment(
 			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
-		String message = "";
-		
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
@@ -244,13 +242,11 @@ public class CommonPaymentController {
     	}	
 		
 		// 저장
-		commonPaymentService.savePayment(formInfo,gridList);
+    	List<EgovMap> resultList = commonPaymentService.savePayment(formInfo,gridList);
 		
-		// 결과 만들기.
-    	ReturnMessage msg = new ReturnMessage();
-    	msg.setCode(AppConstants.SUCCESS);
-    	msg.setMessage(message);
-        return ResponseEntity.ok(msg);
+		// 조회 결과 리턴.
+    	return ResponseEntity.ok(resultList);
+    	
 	}
 	
 	/**

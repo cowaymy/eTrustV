@@ -491,4 +491,13 @@ public interface CommonPaymentMapper {
 	 * @return
 	 */
 	int processNormalPayment(Map<String, Object> params);
+	
+	/**
+	 * Payment - Key In 처리후 WOR 번호 조회하기 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	List<EgovMap> selectProcessPaymentResult(Map<String, Object> params);
 }

@@ -1426,4 +1426,14 @@
         {call SP_INST_NORMAL_PAYMENT(#{seq}, #{userid}, #{key})}
     </update>
     
+    <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">
+        SELECT
+            PAY_ID,
+            OR_NO
+        FROM 
+            PAY0252T
+        WHERE 
+            SEQ =  #{seq}            
+    </select>
+    
 </mapper>

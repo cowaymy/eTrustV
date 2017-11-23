@@ -1104,7 +1104,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	 * @return
 	 * 
 	 */
-    public void  savePayment(Map<String, Object> paramMap, List<Object> paramList ) {
+    public List<EgovMap>  savePayment(Map<String, Object> paramMap, List<Object> paramList ) {
     	
     	//시퀀스 조회
     	Integer seq = commonPaymentMapper.getPayTempSEQ();
@@ -1125,6 +1125,9 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	
     	//payment 처리 프로시저 호출
     	commonPaymentMapper.processPayment(paramMap);
+    	
+    	//WOR 번호 조회
+    	return commonPaymentMapper.selectProcessPaymentResult(paramMap);
     }
 	
     /**

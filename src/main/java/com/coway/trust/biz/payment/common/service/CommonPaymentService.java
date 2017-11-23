@@ -86,7 +86,7 @@ public interface CommonPaymentService{
    	 * @return
    	 * 
    	 */
-    void savePayment(Map<String, Object> paramMap, List<Object> paramList );
+    List<EgovMap> savePayment(Map<String, Object> paramMap, List<Object> paramList );
     
     /**
    	 * Payment - 등록 처리 
