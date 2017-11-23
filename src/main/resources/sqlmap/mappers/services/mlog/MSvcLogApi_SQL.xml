@@ -1093,7 +1093,7 @@ and cust.cust_id = custCnt.cust_id
 					AND   SYS0026M2.STK_ID       = SAL0087D.SRV_FILTER_STK_ID
 					AND   LOG0043M.MATRL_NO      = SYS0026M1.STK_CODE
 					AND   LOG0044D.BOM           = LOG0043M.BOM
-					AND   LOG0044D.BOM_COMPNT    = SYS0026M2.STK_CODE
+<!-- 					AND   LOG0044D.BOM_COMPNT    = SYS0026M2.STK_CODE -->
 					AND   SAL0001D.SALES_ORD_ID  = SVC0001D.AS_SO_ID
 					AND   SVC0001D.AS_MEM_ID     = (SELECT MEM_ID
 					                                                        FROM ORG0001D
@@ -1764,7 +1764,7 @@ and cust.cust_id = custCnt.cust_id
 		                              FROM SYS0032M Extent1
 		                             WHERE   Extent1.RESN_TYPE_ID = '167'
 		                                      AND Extent1.STUS_CODE_ID =1
-		                                      and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
+		                                      and RESN_ID = FAIL_RESN_ID)  as fail_Reason
 <!--                                 ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason -->
                                 ,REN_COLCT_ID as collection_Code
                                 ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
@@ -1780,7 +1780,6 @@ and cust.cust_id = custCnt.cust_id
                                 ,part_Change_Qty
                                  ,BS_RESULT_ID
                     from (  SELECT ROWNUM,
-                                   c.sales_ord_no,
                                     b.STUS_CODE_ID,
                                     b.SCHDUL_ID,
                                     b.SALES_ORD_ID,
@@ -1968,7 +1967,7 @@ and cust.cust_id = custCnt.cust_id
                                       FROM SYS0032M Extent1
                                      WHERE   Extent1.RESN_TYPE_ID = '167'
                                               AND Extent1.STUS_CODE_ID =1
-                                              and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
+                                              and RESN_ID = FAIL_RESN_ID)  as fail_Reason
                                 <!-- ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason -->
                                 ,REN_COLCT_ID as collection_Code
                                 ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
@@ -2038,7 +2037,7 @@ and cust.cust_id = custCnt.cust_id
                                       FROM SYS0032M Extent1
                                      WHERE   Extent1.RESN_TYPE_ID = '167'
                                               AND Extent1.STUS_CODE_ID =1
-                                              and RESN_ID = S.AS_FAIL_RESN_ID)  as fail_Reason
+                                              and RESN_ID = FAIL_RESN_ID)  as fail_Reason
       <!--                           ,FN_GET_COMMCD(82, FAIL_RESN_ID) as fail_Reason -->
                                 ,REN_COLCT_ID as collection_Code
                                 ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
@@ -2375,9 +2374,35 @@ and cust.cust_id = custCnt.cust_id
                             )
                 </insert>        
 
+
+
+
+                  <update id="updateInsReAppointmentReturnResult" parameterType="Map">
+							update SAL0046D 
+							set APPNT_DT = #{appointmentDate},
+							    APPNT_TM = #{appointmentTime},
+							    UPD_DT = sysdate,
+                                UPD_USER_ID = #{userId}
+							where 1=1
+							  and SAL0046D.INSTALL_ENTRY_NO = #{serviceNo}
+							  and SAL0046D.SALES_ORD_ID = (select sales_ord_id
+		                                                     from sal0001d
+		                                                     where sales_ord_no =  #{salesOrderNo})
+                    </update>
+                    
  
         
         
         
+                   <update id="updateHsReAppointmentReturnResult" parameterType="Map">
+						        update SVC0008D 
+						set APPNT_DT = #{appointmentDate},
+						    APPNT_TM = #{appointmentTime}
+						where 1=1
+						  and SVC0008D.NO = #{serviceNo}
+						  and SVC0008D.SALES_ORD_ID = (select sales_ord_id
+                                                      from sal0001d
+                                                      where sales_ord_no =  #{salesOrderNo})
+                    </update>
 
 </mapper>
