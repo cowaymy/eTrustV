@@ -391,10 +391,10 @@
 <tr>
     <th scope="row">Current BSR No</th>
     <td><span><c:out value="${basicinfo.c1}"/></span></td>
-    <th scope="row"></th>
-    <td><span></span></td>
-    <th scope="row"></th>
-    <td><span></span></td>
+    <th scope="row">Prev HS Area</th>
+    <td><span><c:out value="${basicinfo.prevSvcArea}"/></span></td>
+    <th scope="row">Next HS Area</th>
+    <td><span><c:out value="${basicinfo.nextSvcArea}"/></span></td>
         
 </tr>
 
