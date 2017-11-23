@@ -354,7 +354,7 @@ function f_multiCombos() {
                 <tr>
                     <th scope="row">Posting Date</th>
                     <td>
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="PostingDt1" name="PostingDt1" type="text" title="Posting start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="PostingDt2" name="PostingDt2" type="text" title="Posting End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
@@ -362,7 +362,7 @@ function f_multiCombos() {
                     </td>
                     <th scope="row">Create Date</th>
                     <td >
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="CreateDt1" name="CreateDt1" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="CreateDt2" name="CreateDt2" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
