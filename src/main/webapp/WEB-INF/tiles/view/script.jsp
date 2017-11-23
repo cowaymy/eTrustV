@@ -7,9 +7,10 @@
     <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
     <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
     <link href="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid_style.css" rel="stylesheet">
-    
+    <link href="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid_custom_style.css" rel="stylesheet"> <!--  aui grid 관련 재정의 클래스. -->
 
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>    
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
     <!-- <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>  -->
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.ui.core.min.js"></script>

@@ -1,4 +1,4 @@
-package com.coway.trust.api.mobile.common.File;
+package com.coway.trust.api.mobile.common.files;
 
 import java.util.List;
 import java.util.stream.Collectors;
