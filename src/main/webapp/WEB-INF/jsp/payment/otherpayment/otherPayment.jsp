@@ -96,7 +96,6 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(bankGridID, "rowCheckClick", function( event ) {
-        //alert("rowIndex : " + event.rowIndex + ", id : " + event.item.stus + ", name : " + event.item.name + ", checked : " + event.checked);
         selectedItem = event.item.id;
         isMapped = event.item.stus;
         rowId = event.rowIndex;
@@ -110,7 +109,6 @@ $(document).ready(function(){
 	 
 	 $('#payMode').change(function() {
 		
-         //alert($('#payMode').val());
 		 //cash일때, online<div>감추고 Cash에 대한 Bank Acc불러옴
 		 if($('#payMode').val() == '105'){
 			 $("#online").hide();
@@ -139,7 +137,6 @@ $(document).ready(function(){
              $('#cheque').find('#acc').html(strAcc);
 	         doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
 	     }else if($('#payMode').val() == '108'){//online
-	    	 alert("108");
 	    	 $("#online").hide();
              $("#cheque").hide();
              $("#cash").hide(); 
@@ -157,7 +154,6 @@ $(document).ready(function(){
 	 });
      
 	 $('#online').find('#bankType').change(function(){
-		 //alert("online : " + $('#online').find('#bankType').val());
 		 if($('#online').find('#bankType').val() == '2730'){//VA
 			//select초기화(BankAccount)
 			 $('#online').find('#bankAcc').find('option:first').attr('selected', 'selected');
@@ -170,7 +166,6 @@ $(document).ready(function(){
 	 });
 	 
 	 $('#cash').find('#bankType').change(function(){
-		 //alert("cash_cheque : " + $('#cash_cheque').find('#bankType').val());
 		 if($('#cash').find('#bankType').val() == '2730'){//VA
 			//select초기화(BankAccount)
 			 $('#cash').find('#bankAcc').find('option:first').attr('selected', 'selected');
@@ -183,7 +178,6 @@ $(document).ready(function(){
 	 });
 	 
 	 $('#cheque').find('#bankType').change(function(){
-         //alert("cash_cheque : " + $('#cash_cheque').find('#bankType').val());
          if($('#cheque').find('#bankType').val() == '2730'){//VA
         	//select초기화(BankAccount)
              $('#cheque').find('#bankAcc').find('option:first').attr('selected', 'selected');
@@ -2007,7 +2001,7 @@ var columnLayout = [
                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                      </a>
                  </td>
-                 <td scope="row">Pay Date</td>
+                 <th>Pay Date</th>
                  <td>
                     <input id="keyInPayDateOnline" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                  </td>
@@ -2095,7 +2089,7 @@ var columnLayout = [
                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                        </a>
                    </td>
-                   <th scope="row">Pay Date</th>
+                   <th>Pay Date</th>
                   <td>
                        <input id="keyInPayDateCash" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                   </td>
@@ -2183,7 +2177,7 @@ var columnLayout = [
                           <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                       </a>
                   </td>
-                  <td scope="row"></td>
+                  <th>Pay Date</th>
                   <td>
                         <input id="keyInPayDateCheque" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly /> 
                   </td>
