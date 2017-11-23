@@ -1520,7 +1520,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                     , #{bsResultId}
                     , #{bsResultPartId}
                     , #{bsResultPartDesc}
-                    , nvl(#{bsResultPartQty},0)
+                    , nvl(#{bsResultPartQty},1)
                     , #{bsResultRem}
                     , sysdate
                     , #{bsResultCrtUserId}
