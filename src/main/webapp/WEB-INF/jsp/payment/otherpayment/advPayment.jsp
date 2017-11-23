@@ -72,7 +72,7 @@ var targetRenMstColumnLayout = [
     { dataField:"custNm" ,headerText:"Customer Name" ,editable : false , width : 250 },
     {
         dataField : "btnCheck",
-        headerText : " ",
+        headerText : "Include",
         width: 50,
         renderer : {
             type : "CheckBoxEditRenderer",            
@@ -509,7 +509,7 @@ function saveAdvPayment(){
 	        return;
 	    }
 		
-		if(FormUtil.checkReqValue($("#cashSlipNo"))){
+		/* if(FormUtil.checkReqValue($("#cashSlipNo"))){
             Common.alert('* No Slip No');
             return;
         }
@@ -522,7 +522,7 @@ function saveAdvPayment(){
 		if(FormUtil.checkReqValue($("#cashRefDetails"))){
             Common.alert('* No Ref Details/Jompay Ref ');
             return;
-        }   
+        } */   
 		
 		if( FormUtil.byteLength($("#cashRemark").val()) > 3000 ){
 	        Common.alert('* Please input the Remark below or less than 3000 bytes.');
@@ -563,7 +563,7 @@ function saveAdvPayment(){
             return;
         }
         
-        if(FormUtil.checkReqValue($("#chequePayName"))){
+        /* if(FormUtil.checkReqValue($("#chequePayName"))){
             Common.alert('* No PayerName');
             return;
         }   
@@ -571,7 +571,7 @@ function saveAdvPayment(){
         if(FormUtil.checkReqValue($("#chequeRefDetails"))){
             Common.alert('* No Ref Details/Jompay Ref ');
             return;
-        }
+        } */
 		
 		if( FormUtil.byteLength($("#chequeRemark").val()) > 3000 ){
             Common.alert('* Please input the Remark below or less than 3000 bytes.');
@@ -594,7 +594,7 @@ function saveAdvPayment(){
 	            return;
 	     }
 	     
-		 if(FormUtil.checkReqValue($("#onlineEft"))){
+		 /* if(FormUtil.checkReqValue($("#onlineEft"))){
              Common.alert('* No EFT No');
              return;
          }
@@ -607,7 +607,7 @@ function saveAdvPayment(){
          if(FormUtil.checkReqValue($("#onlineRefDetails"))){
              Common.alert('* No Ref Details/Jompay Ref ');
              return;
-         }
+         } */
          
          if(onlineBankType == "2730"){
              if(onlineVAAccount.length != 16 || onlineVAAccount == "" ){
@@ -656,8 +656,17 @@ function saveAdvPayment(){
     else data.form = [];
     
     Common.ajax("POST", "/payment/saveAdvPayment.do", data, function(result) {
-        Common.alert("Success Payment Process", function(){
-        	document.location.href = '/payment/initAdvPayment.do';
+        
+        var message = "<b>Success Payment Process<br><br></b>";
+        
+        if(result != null && result.length > 0){
+            for(i=0 ; i < result.length ; i++){
+                message += "<font color='red'>" + result[i].orNo + "</font><br>";
+            }
+        }
+        
+        Common.alert(message, function(){
+              document.location.href = '/payment/initAdvPayment.do';
         });
         
     });
