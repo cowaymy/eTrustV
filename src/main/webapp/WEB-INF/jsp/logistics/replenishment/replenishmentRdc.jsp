@@ -538,7 +538,7 @@ function searchFormReset(){
                         <select class="w100p" id="sttype" name="sttype"></select>
                     </td>
                     <th></th>
-                    <td></td>
+                    <td ></td>
                    <!--  <th scope="row">Material Category</th>
                     <td>
                         <select class="w100p" id="scate" name="scate"></select>
