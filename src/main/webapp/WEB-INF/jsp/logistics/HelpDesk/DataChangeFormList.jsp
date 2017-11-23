@@ -58,6 +58,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
                                   {dataField:"c7"      ,headerText:"Approval Status"           ,width:"15%"  ,height:30 , visible:false},
                                   {dataField:"c2"      ,headerText:"Approve At"           ,width:"15%"  ,height:30 , visible:false},
                                   {dataField:"dcfreqstatusid"      ,headerText:"DCF_REQ_STUS_ID"           ,width:"15%"  ,height:30 , visible:false},
+                                  {dataField:"dcfreqapprovereqreasonid"      ,headerText:"ApproveReqReasonID"           ,width:"15%"  ,height:30 , visible:false},
                                                                       
                                ];
     
@@ -176,6 +177,12 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
              $("#approval").click(function(){
                  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                  if (selectedItem[0] > -1){
+                 var ReqStatusID = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqstatusid');
+                 var ReqStatusCode = AUIGrid.getCellValue(myGridID ,selectedItem[0],'code');
+                 $("#DCFReqReqReasonId").val(AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqapprovereqreasonid'));
+                 if(ReqStatusID != 33 && ReqStatusID != 60){
+                	 Common.alert('<b>This DCF is under [ '+ ReqStatusCode +' ] status. Add approval result is disallowed.</b>');
+                 }else{
                    $("#AddApprovalForm")[0].reset();
                    dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
                    fn_DataChangeDetail(selectedItem[0]);
@@ -187,12 +194,10 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
                    fn_setVisiable();
                    doDefCombo(cmbStatusCombo, '' ,'insApprovalStatus', 'S', ''); //Approval Status 리스트 조회
                    doGetCombo('/logistics/helpdesk/selectReasonList.do', '', '','insReason', 'S' , '');//Reason  리스트 조회
-                   
                    CompulsoryFieldGridID = GridCommon.createAUIGrid("CompulsoryFieldGrid_wrap", compulsoryLayout,"", gridoptions); 
                    ChangeItemGridID = GridCommon.createAUIGrid("ChangeItemGrid_wrap", changeitemLayout,"", gridoptions); 
-                   RespondLogGridID = GridCommon.createAUIGrid("RespondLogGrid_wrap", respondlogLayout,"", gridoptions);    
-                   
-                 
+                   RespondLogGridID = GridCommon.createAUIGrid("RespondLogGrid_wrap", respondlogLayout,"", gridoptions);     
+                 }
                  }else{
                  Common.alert('Choice Data please..');
                  }
@@ -308,6 +313,8 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
         param=$('#AddApprovalForm').serializeJSON();
         
         Common.ajax("POST", "/logistics/helpdesk/insertDataChangeList.do", param, function(result) {
+          $("#AddApporovalBtn").hide();
+          $("#insertDataChange").hide();
           var gridData = result;  
           $("#AddApprovalForm")[0].reset(); 
           Common.alert(result.message);
@@ -811,6 +818,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 <tbody>
 <input type="hidden" id="reqId" name="reqId"/>
 <input type="hidden" id="DcfReqStatusId" name="DcfReqStatusId"/>
+<input type="hidden" id="DCFReqReqReasonId" name="DCFReqReqReasonId"/>
 <tr>
     <th scope="row">Approval Status<span class="must">*</span></th>
     <td>
