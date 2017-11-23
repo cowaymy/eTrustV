@@ -3535,7 +3535,9 @@
 						      UPD_USER_ID = #{updator}
 						  WHERE RESULT_ID = #{resultId}
      </insert>
-		  
-		  
+     <resultMap id="installationNoteListing" type="egovMap" /> 
+        <select id="selectInstallationNoteListing" parameterType="Map" resultType="egovMap" statementType="CALLABLE" >      
+        call  SP_CR_GEN_INS_NOTE_LIST(#{V_DSCCODE},#{V_APPDATE},#{V_ORDERDATE},#{V_WHERESQL},#{V_ORDERBYSQL},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=installationNoteListing})
+        </select>
 		  
     </mapper>
