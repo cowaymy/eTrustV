@@ -543,7 +543,10 @@
             t1.NRIC as NRIC ,
             t1.JOIN_DATE as JOIN_DATE,
             t1.SERVICE_MONTHS  as SERVICE_MONTHS,
-            t1.CT_RANK as CT_RANK ,
+            (case when t1.CT_RANK = 4 then 'CT'
+                when t1.CT_RANK = 3 then 'CTL'
+                when t1.CT_RANK = 2 then 'CTM'
+                end) as CT_RANK ,
             t1.STATUS  as  STATUS,
             t1.BRNCH as BRNCH ,
 		      
