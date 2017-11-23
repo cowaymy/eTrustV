@@ -404,5 +404,107 @@ public class InstallationResultListController {
 		return "services/installation/installationNotePop";
 	}
 	
+	/**
+	 * Installation Report Do Active List  
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/doActiveListPop.do")
+	public String doActiveListPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/installation/doActiveListPop";
+	}
+	
+	/**
+	 * Installation Report Do Active List  
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/dailyDscReportPop.do")
+	public String dailyDscReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/installation/dailyDscReportPop";
+	}
+	
+	/**
+	 * Installation Report Installation Raw Data 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/installationRawDataPop.do")
+	public String installationRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/installation/installationRawDataPop";
+	}
+	
+	/**
+	 * Installation Report Installation Log Book Listing 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/installationLogBookPop.do")
+	public String installationLogBookPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/installation/installationLogBookListingPop";
+	}
+	
+	/**
+	 * Installation Report Installation Note Listing
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/installationNoteListingPop.do")
+	public String installationNoteListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/installation/installationNoteListingPop";
+	}
+	
+	/**
+	 * Installation Report Installation Note Listing Search
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws ParseException 
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectInstallationNoteListing.do")
+	public  ResponseEntity<List<EgovMap>> selectInstallationNoteListing(@RequestParam Map<String, Object> params,SessionVO sessionVO) throws ParseException {
+		logger.debug("params : {}", params);
+		  installationResultListService.selectInstallationNoteListing(params);
+		  
+		  List<EgovMap>  list =  (List<EgovMap>)params.get("cv_1");
+		  logger.debug("list : {}", list);
+		return ResponseEntity.ok(list);  
+	}
+	
+	/**
+	 * Installation Report Installation Free Gift List
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/installationFreeGiftListPop.do")
+	public String installationFreeGiftListPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/installation/installationFreeGiftListPop";
+	}
 	
 }
