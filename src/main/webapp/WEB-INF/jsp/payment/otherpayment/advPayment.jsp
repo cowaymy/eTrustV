@@ -73,7 +73,7 @@ var targetRenMstColumnLayout = [
     {
         dataField : "btnCheck",
         headerText : "Include",
-        width: 50,
+        width: 80,
         renderer : {
             type : "CheckBoxEditRenderer",            
             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -104,7 +104,7 @@ var targetRenDetColumnLayout = [
     {
         dataField : "btnCheck",
         headerText : "Include",
-        width: 50,
+        width: 80,
         renderer : {
             type : "CheckBoxEditRenderer",            
             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
