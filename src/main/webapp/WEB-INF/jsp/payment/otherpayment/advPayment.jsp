@@ -520,7 +520,7 @@ function saveAdvPayment(){
         }   
         
 		if(FormUtil.checkReqValue($("#cashRefDetails"))){
-            Common.alert('* No Ref Details/Jornpay Ref ');
+            Common.alert('* No Ref Details/Jompay Ref ');
             return;
         }   
 		
@@ -569,7 +569,7 @@ function saveAdvPayment(){
         }   
         
         if(FormUtil.checkReqValue($("#chequeRefDetails"))){
-            Common.alert('* No Ref Details/Jornpay Ref ');
+            Common.alert('* No Ref Details/Jompay Ref ');
             return;
         }
 		
@@ -610,7 +610,7 @@ function saveAdvPayment(){
          }   
          
          if(FormUtil.checkReqValue($("#onlineRefDetails"))){
-             Common.alert('* No Ref Details/Jornpay Ref ');
+             Common.alert('* No Ref Details/Jompay Ref ');
              return;
          }
          
@@ -2308,7 +2308,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <th scope="row">Bank Type<span class="must">*</span></th>
                             <td>
                                 <select id="cashBankType" name="cashBankType"  class="w100p" onchange="fn_bankChange('CASH');">
-                                    <option value="2728">JornPay</option>
+                                    <option value="2728">JomPay</option>
                                     <option value="2729">MBB CDM</option>
                                     <option value="2730">VA</option>
                                     <option value="2731">Others</option>
@@ -2341,7 +2341,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <td>
                                 <input type="text" id="cashPayName" name="cashPayName" class="w100p" />
                             </td>
-                            <th scope="row">Ref Details/Jornpay Ref<span class="must">*</span></th>
+                            <th scope="row">Ref Details/Jompay Ref<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="cashRefDetails" name="cashRefDetails" class="w100p" />
                             </td>
@@ -2413,7 +2413,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <th scope="row">Bank Type<span class="must">*</span></th>
                             <td>
                                 <select id="chequeBankType" name="chequeBankType"  class="w100p" onchange="fn_bankChange('CHQ');">
-                                    <option value="2728">JornPay</option>
+                                    <option value="2728">JomPay</option>
                                     <option value="2729">MBB CDM</option>
                                     <option value="2730">VA</option>
                                     <option value="2731">Others</option>
@@ -2446,7 +2446,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <td>
                                 <input type="text" id="chequePayName" name="chequePayName" class="w100p" />
                             </td>
-                            <th scope="row">Ref Details/Jornpay Ref<span class="must">*</span></th>
+                            <th scope="row">Ref Details/Jompay Ref<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="chequeRefDetails" name="chequeRefDetails" class="w100p" />
                             </td>
@@ -2535,7 +2535,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <td>
                                 <input type="text" id="onlinePayName" name="onlinePayName" class="w100p" />
                             </td>
-                            <th scope="row">Ref Details/Jornpay Ref<span class="must">*</span></th>
+                            <th scope="row">Ref Details/Jompay Ref<span class="must">*</span></th>
                             <td>
                                 <input type="text" id="onlineRefDetails" name="onlineRefDetails" class="w100p" />
                             </td>
@@ -2544,7 +2544,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <th scope="row">Bank Type<span class="must">*</span></th>
                             <td>
                                 <select id="onlineBankType" name="onlineBankType"  class="w100p" onchange="fn_bankChange('ONL');">
-                                    <option value="2728">JornPay</option>
+                                    <option value="2728">JomPay</option>
                                     <option value="2729">MBB CDM</option>
                                     <option value="2730">VA</option>
                                     <option value="2731">Others</option>
