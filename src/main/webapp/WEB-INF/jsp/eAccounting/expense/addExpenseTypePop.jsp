@@ -24,13 +24,11 @@ $(document).ready(function(){
      },{
          dataField : "expType",
          headerText : '<spring:message code="expense.ExpenseType" />',
-         width : 100,
          editable : false
      },{
          dataField : "expTypeName",
          headerText : '<spring:message code="expense.ExpenseTypeName" />',
          style : "aui-grid-user-custom-left",
-         width : 230,
          editable : true
      }, {
          dataField : "budgetCode",
@@ -41,7 +39,6 @@ $(document).ready(function(){
          dataField : "budgetCodeName",
          headerText : '<spring:message code="expense.ActivityName" />',
          style : "aui-grid-user-custom-left",
-         width : 230,
          editable : false,
          colSpan : 2
      }, {
@@ -70,7 +67,6 @@ $(document).ready(function(){
          dataField : "glAccCodeName",
          headerText : '<spring:message code="expense.GLAccountName" />',
          style : "aui-grid-user-custom-left",
-         width : 230,
          editable : false,
          colSpan : 2
      }, {
