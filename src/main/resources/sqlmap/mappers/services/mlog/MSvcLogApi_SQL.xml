@@ -466,7 +466,7 @@ and cust.cust_id = custCnt.cust_id
                 AND   SAL0045D.INSTALL_ID   = SAL0047D.ENTRY_ID
                 AND   SAL0002D.ITM_STK_ID   = SYS0026M.STK_ID
                 AND   SAL0071D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-                AND   ORG0001D.MEM_ID       = SAL0047D.CT_ID
+             <!--    AND   ORG0001D.MEM_ID       = SAL0047D.CT_ID -->
                 AND   ORG0001D.BRNCH        = SYS0005M.BRNCH_ID
                 AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
                                                                  AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
