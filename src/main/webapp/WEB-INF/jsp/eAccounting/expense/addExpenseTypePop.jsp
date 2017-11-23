@@ -207,7 +207,7 @@ function fn_AddRow()
           // parameter
           // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
           // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-          AUIGrid.addRow(expPopGridID, item, 'last');                    
+          AUIGrid.addRow(expPopGridID, item, 'first');                    
 }  
 
 //Budget Code Pop 호출
