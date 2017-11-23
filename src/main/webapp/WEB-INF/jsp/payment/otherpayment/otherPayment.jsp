@@ -1882,7 +1882,8 @@ var columnLayout = [
                            </td>
                            <th>Type</th>
                            <td>
-                                <select id="searchPayType" name="searchPayType" class="multy_select w100p" multiple="multiple" >
+                                <select id="searchPayType" name="searchPayType" class="w100p" >
+	                                <option value="ALL">All</option>
 	                                <option value="CSH">Cash</option>
 	                                <option value="CHQ">Cheque</option>
 	                                <option value="ONL">Online</option>
