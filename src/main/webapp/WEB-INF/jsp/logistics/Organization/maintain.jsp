@@ -516,9 +516,9 @@ function f_getTtype(g , v){
 <tbody>
 <tr>
     <th scope="row">Transaction Type</th>
-    <td><select id="sttype" name="sttype" style="width:250px"></select></td>
+    <td><select id="sttype" name="sttype" style="width:250px" class="w100p"></select></td>
     <th scope="row">Movement Type</th>
-    <td><select id="smtype" name="smtype" style="width:250px"></select><p id='mtypenm'></p></td>
+    <td><select id="smtype" name="smtype" style="width:250px" class="w100p"></select><p id='mtypenm'></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
