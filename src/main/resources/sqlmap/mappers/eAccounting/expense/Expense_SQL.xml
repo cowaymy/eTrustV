@@ -29,6 +29,9 @@
 		 <if test="popClaimType != null and popClaimType != ''">
            AND CLM_TYPE = #{popClaimType}
          </if>
+		 <if test="claimTypeCombo != null and claimTypeCombo != ''">
+           AND CLM_TYPE = #{claimTypeCombo}
+         </if>
 		 <if test="expType != null and expType != ''">
            AND EXP_TYPE IN
          <foreach item="item" collection="expType" index="index" open="(" separator="," close=")">
