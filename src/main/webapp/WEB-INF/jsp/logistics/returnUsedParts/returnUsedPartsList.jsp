@@ -402,15 +402,15 @@ $(document).ready(function(){
                 <tr>
                     <th scope="row">Service date</th>
                     <td>
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="servicesdt" name="servicesdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
-                        <p><input id="serviceedt" name="serviceedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <p><input id="serviceedt" name="serviceedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date "></p>
                         </div><!-- date_set end -->                        
                     </td>
                     <th scope="row">Return Date</th>
                     <td >
-                        <div class="date_set"><!-- date_set start -->
+                        <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="returnsdt" name="returnsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="returnedt" name="returnedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
