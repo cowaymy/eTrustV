@@ -428,6 +428,18 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			insertHsResultfinal.put("resultIsAdj", '0');
 
+			//api추가
+			insertHsResultfinal.put("temperateSetng", params.get("temperateSetng"));
+			insertHsResultfinal.put("nextAppntDt", params.get("nextAppntDt"));
+			insertHsResultfinal.put("nextAppointmentTime", params.get("nextAppointmentTime"));
+			insertHsResultfinal.put("ownerCode", params.get("ownerCode"));
+			insertHsResultfinal.put("resultCustName", params.get("resultCustName"));
+			insertHsResultfinal.put("resultMobileNo", params.get("resultMobileNo"));
+			insertHsResultfinal.put("resultRptEmailNo", params.get("resultRptEmailNo"));
+			insertHsResultfinal.put("resultAceptName", params.get("resultAceptName"));
+			insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
+			//api추가 end
+			
 			hsManualMapper.insertHsResultfinal(insertHsResultfinal);
 
 
