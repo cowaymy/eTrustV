@@ -23,7 +23,6 @@ import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.installation.InstallationResultListController;
-import com.ibm.icu.util.BytesTrie.Entry;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -1298,6 +1297,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		
 		return resultValue;
 	}
+	
 	private Map<String, Object> Save(boolean isfreepromo,Map<String, Object> params,SessionVO sessionVO) throws ParseException{
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		Map<String, Object> callEntry = new HashMap<String, Object>();
@@ -1510,5 +1510,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		return rtnValue;
 	} 
 	
-	
+	@Override
+	public List<EgovMap> selectInstallationNoteListing(Map<String, Object> params) throws ParseException{
+		
+		return installationResultListMapper.selectInstallationNoteListing(params);
+	}
 }

@@ -64,6 +64,8 @@ public interface InstallationResultListService {
 	int updateAssignCT (Map<String, Object> params);
 	List<EgovMap> assignCtOrderList(Map<String, Object> params);
 	List<EgovMap> assignCtList(Map<String, Object> params);
+	
+	List<EgovMap> selectInstallationNoteListing(Map<String, Object> params) throws ParseException;
 		
 		
 }
