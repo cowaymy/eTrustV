@@ -46,6 +46,19 @@ $(document).on(//일반년월일달력 실행
 	$(this).datepicker(pickerOpts);
 });
 
+/* Input에 초기값(today) 출력
+$(document).ready(function(){
+	var d = new Date();
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+
+	var output = (day<10 ? '0' : '') + day + '/' +
+	    (month<10 ? '0' : '') + month + '/' +
+	    d.getFullYear() ;
+	$(".j_date").val(output);
+})
+*/
+
 var monthOptions = {//년월달력 세팅
 	pattern: 'mm/yyyy',
 	selectedYear: 2017,
@@ -55,7 +68,11 @@ var monthOptions = {//년월달력 세팅
 
 $(document).on(//년월달력 실행
 	"focus", ".j_date2", function(){
-	$(this).monthpicker(monthOptions);
+	$(this).monthpicker(monthOptions).bind('monthpicker-show',function(e){
+		if($(".ui-datepicker").offset().left < $(this).offset().left){
+			$(".ui-datepicker").css('left',$(this).offset().left-$(".ui-datepicker").width()/2)
+		}
+	});
 });
 
 var pickerOpts2 = {//생년월일달력 세팅
