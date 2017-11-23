@@ -500,7 +500,7 @@ public class ServiceApiController {
 				paramsDetail.get(i).put("filterDesc", "aaaa-bbbb");
 				
 				
-				if(paramsDetail.get(i).get("filterCode")==null){
+				if(paramsDetail.get(i).get("filterCode")== null || "".equals(paramsDetail.get(i).get("filterCode"))){
 					paramsDetail.get(i).put("filterExCode", 0);
 				}else{
 					paramsDetail.get(i).put("filterExCode", paramsDetail.get(i).get("filterCode"));
