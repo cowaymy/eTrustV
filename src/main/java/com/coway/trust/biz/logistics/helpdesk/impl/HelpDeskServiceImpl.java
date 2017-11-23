@@ -71,16 +71,20 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 	public void insertDataChangeList(Map<String, Object> RespondMap, int loginId) {
 		int respnsIdCreateSeq = HelpDeskMapper.respnsIdCreateSeq();
 		int trRcordIdCreateSeq = HelpDeskMapper.trRcordIdCreateSeq();
-
-		int insApprovalStatus = Integer.parseInt((String) RespondMap.get("insApprovalStatus"));
+		int insReason =0;
+		if(RespondMap.get("insReason") != null){
+			insReason =Integer.parseInt((String) RespondMap.get("insReason"));
+		}
+		
+		int insApprovalStatus = Integer.parseInt((String) RespondMap.get("insApprovalStatus"));	
 		String defaultDate = "19000101";
 		int DCFReqStatusID = insApprovalStatus == 6 ? 10 : insApprovalStatus == 36 ? 34 : 0;	
 		int DCFReqProStatusID = insApprovalStatus != 61 ? insApprovalStatus : 0;
-		
 		String todate = insApprovalStatus != 61 ? CommonUtils.getNowDate() : defaultDate;
-		
-		Logger.debug("DCFReqStatusID  ????       : {}", DCFReqStatusID);
-		Logger.debug("DCFReqProStatusID  ????       : {}", DCFReqProStatusID);
+	
+//		Logger.debug("DCFReqStatusID  ????       : {}", DCFReqStatusID);
+//		Logger.debug("DCFReqProStatusID  ????       : {}", DCFReqProStatusID);
+//		Logger.debug("insReason  ????       : {}", insReason);
 		
 		int dcfReqStusId = 0;
 		int dcfReqProStusId = 0;
@@ -109,7 +113,7 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 			updateDcfRequestMap.put("DCFReqStatusID", DCFReqStatusID);
 			updateDcfRequestMap.put("DCFReqProStatusID", DCFReqProStatusID);
 			updateDcfRequestMap.put("insApprovalStatus", insApprovalStatus);
-			updateDcfRequestMap.put("insReason", RespondMap.get("insReason"));
+			updateDcfRequestMap.put("insReason", insReason);
 			updateDcfRequestMap.put("reqId", RespondMap.get("reqId"));
 			HelpDeskMapper.updateDcfRequestM(updateDcfRequestMap);
 
