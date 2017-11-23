@@ -245,7 +245,7 @@
                                   $("#_openGb").val("edit");
                                   $("#_brnchId").val(item.brnchId);
 
-                                  Common.popupDiv("/services/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
+                                  Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
                   }
            }
                 }];
@@ -591,7 +591,11 @@
 
 /*                          alert("_schdulId::"+  $("#_schdulId").val() +  $("#_salesOrdId").val()+  $("#_brnchId").val()); */
 
-                         Common.popupDiv("/services/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
+                         var stid =AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId");
+                         
+                         if(stid !=1 ){
+                             Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=VIEW", $("#popEditForm").serializeJSON(), null , true , '');
+                         }
                     }
                 });
 

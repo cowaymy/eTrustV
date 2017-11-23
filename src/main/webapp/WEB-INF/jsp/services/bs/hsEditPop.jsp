@@ -265,6 +265,16 @@
                     $("#btnSave").hide();
             }                 
     
+             
+             
+            if('${MOD}' =="VIEW"){
+               $("#stitle").text("HS - Result View")	;
+               $("#addHsForm").find("input, textarea, button, select").attr("disabled",true);
+               
+               
+            }else {
+                $("#stitle").text("HS - Result EDIT")  ;
+            }
     
     });
 
@@ -335,7 +345,7 @@
  
 <header class="pop_header"><!-- pop_header start -->
 
-<h1>HS - Result Edit</h1>
+<h1>  <spin id='stitle'>  </spin></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"  id="btnSave" name="btnSave" onclick="fn_UpdateHsResult()">SAVE</a></p></li>
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>

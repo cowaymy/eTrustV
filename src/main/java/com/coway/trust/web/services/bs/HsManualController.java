@@ -348,6 +348,7 @@ public class HsManualController {
 		model.addAttribute("orderDetail", orderDetail);
 		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
 		model.addAttribute("failReasonList", failReasonList);
+		model.addAttribute("MOD", params.get("MOD"));
 		//model.addAttribute("serMemList", serMemList);
 
 		return "services/bs/hsEditPop";
