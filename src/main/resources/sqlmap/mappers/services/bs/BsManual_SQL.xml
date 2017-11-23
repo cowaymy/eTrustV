@@ -481,7 +481,7 @@
 						                        (select code
 						                           from SYS0038M
 						                           where 1=1
-						                           and stus_code_id = cu.STUS_CODE_ID ) as cody_status_nm,
+						                           and stus_code_id = CD.STUS ) as cody_status_nm,
 									               SO.BRNCH_ID as BRNCH_ID,
 									               HS.SCHDUL_ID SCHDUL_ID  ,
 									                SO.SALES_ORD_ID,
