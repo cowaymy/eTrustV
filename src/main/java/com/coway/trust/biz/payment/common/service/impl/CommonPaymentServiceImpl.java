@@ -1137,7 +1137,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
   	 * @return
   	 * 
   	 */
-    public void saveNormalPayment(Map<String, Object>paramMap, List<Object>paramList, int key){
+    public List<EgovMap> saveNormalPayment(Map<String, Object>paramMap, List<Object>paramList, int key){
     	
     	//시퀀스 조회
     	Integer seq = commonPaymentMapper.getPayTempSEQ();
@@ -1145,13 +1145,6 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	//payment 임시정보 등록
     	paramMap.put("seq", seq);
     	
-    	/*if("105".equals(String.valueOf(paramMap.get("payType")))){
-    		commonPaymentMapper.insertTmpNormalCashPaymentInfo(paramMap);
-    	}else if("106".equals(String.valueOf(paramMap.get("payType")))){
-    		commonPaymentMapper.insertTmpNormalChequePaymentInfo(paramMap);
-    	}else if("108".equals(String.valueOf(paramMap.get("payType")))){
-    		commonPaymentMapper.insertTmpNormalOnlinePaymentInfo(paramMap);
-    	}*/
     	commonPaymentMapper.insertTmpNormalPaymentInfo(paramMap);
     	
     	//billing 임시정보 등록
@@ -1170,5 +1163,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	procedureInfo.put("key", key);
     	
     	commonPaymentMapper.processNormalPayment(procedureInfo);
+    	
+    	return commonPaymentMapper.selectProcessPaymentResult(procedureInfo);
     }
 }

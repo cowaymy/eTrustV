@@ -95,6 +95,6 @@ public interface CommonPaymentService{
    	 * @return
    	 * 
    	 */
-    void saveNormalPayment(Map<String, Object> paramMap, List<Object> paramList, int key );
+    List<EgovMap> saveNormalPayment(Map<String, Object> paramMap, List<Object> paramList, int key );
     
 }

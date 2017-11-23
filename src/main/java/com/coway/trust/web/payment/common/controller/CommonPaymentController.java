@@ -257,7 +257,7 @@ public class CommonPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveNormalPayment", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveNormalPayment(
+	public ResponseEntity<List<EgovMap>> saveNormalPayment(
 			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
 		String message = "";
 		
@@ -293,12 +293,13 @@ public class CommonPaymentController {
 		formInfo.put("skipRecon", false);
 		formInfo.put("payItemCardTypeId", 0);
 		
-		commonPaymentService.saveNormalPayment(formInfo, gridList, key);
+		// 저장
+    	List<EgovMap> resultList = commonPaymentService.saveNormalPayment(formInfo, gridList, key);
 		
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
     	msg.setMessage(message);
-        return ResponseEntity.ok(msg);
+        return ResponseEntity.ok(resultList);
 	}
 }
