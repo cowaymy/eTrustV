@@ -548,7 +548,7 @@ function saveAdvPayment(){
             
         }else{
             if(FormUtil.checkReqValue($("#chequeBankAcc"))){
-                Common.alert('* No Bank Account ');
+            	Common.alert('* No Bank Account Selected');
                 return;
             }
         }
@@ -559,7 +559,7 @@ function saveAdvPayment(){
         }
         
         if(FormUtil.checkReqValue($("#chequeChqNo"))){
-            Common.alert('* No Slip No');
+            Common.alert('* No Slip Number');
             return;
         }
         
@@ -617,7 +617,7 @@ function saveAdvPayment(){
              
          }else{
              if(FormUtil.checkReqValue($("#onlineBankAcc"))){
-                 Common.alert('* No Bank Account ');
+            	 Common.alert('* No Bank Account Selected');
                  return;
              }
          }
@@ -2340,11 +2340,11 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             </td>
                         </tr>
                         <tr>
-                           <th scope="row">Payer Name<span class="must">*</span></th>
+                           <th scope="row">Payer Name</th>
                             <td>
                                 <input type="text" id="cashPayName" name="cashPayName" class="w100p" />
                             </td>
-                            <th scope="row">Ref Details/Jompay Ref<span class="must">*</span></th>
+                            <th scope="row">Ref Details/Jompay Ref</th>
                             <td>
                                 <input type="text" id="cashRefDetails" name="cashRefDetails" class="w100p" />
                             </td>
@@ -2445,7 +2445,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             </td>
                         </tr>
                         <tr>
-                           <th scope="row">Payer Name<span class="must">*</span></th>
+                           <th scope="row">Payer Name</th>
                             <td>
                                 <input type="text" id="chequePayName" name="chequePayName" class="w100p" />
                             </td>
@@ -2528,17 +2528,17 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <td>
                                 <input id="onlineTransDate" name="onlineTransDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
-                            <th scope="row">EFT<span class="must">*</span></th>
+                            <th scope="row">EFT</th>
                             <td>
                                 <input type="text" id="onlineEft" name="onlineEft" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
                         </tr>
                         <tr>
-                           <th scope="row">Payer Name<span class="must">*</span></th>
+                           <th scope="row">Payer Name</th>
                             <td>
                                 <input type="text" id="onlinePayName" name="onlinePayName" class="w100p" />
                             </td>
-                            <th scope="row">Ref Details/Jompay Ref<span class="must">*</span></th>
+                            <th scope="row">Ref Details/Jompay Ref</th>
                             <td>
                                 <input type="text" id="onlineRefDetails" name="onlineRefDetails" class="w100p" />
                             </td>
