@@ -1,3 +1,5 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 $(document).ready(function(){
 	 $('.multy_select').on("change", function() {
@@ -8,59 +10,100 @@ $(document).ready(function(){
 	 doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S', '');
 });
 
+function fn_validation(){
+	 if($("#instalType option:selected").length < 1)
+	    {
+		    Common.alert("<spring:message code='sys.common.alert.validation' arguments='installation type' htmlEscape='false'/>");
+	        return false;
+	    }
+	if($("#orderNoFrom").val() != '' || $("#orderNoTo").val() != ''){
+        if($("#orderNoFrom").val() == '' || $("#orderNoTo").val() == ''){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='order number (From & To)' htmlEscape='false'/>");
+            return false;
+        }
+    }
+	if($("#instalNoFrom").val() != '' || $("#instalNoTo").val() != ''){
+        if($("#instalNoFrom").val() == '' || $("#instalNoTo").val() == ''){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='installation number (From & To)' htmlEscape='false'/>");
+            return false;
+        }
+    }
+	if($("#instalDtFrom").val() != '' || $("#instalDtTo").val() != ''){
+        if($("#instalDtFrom").val() == '' || $("#instalDtTo").val() == ''){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='install date (From & To)' htmlEscape='false'/>");
+            return false;
+        }
+    }
+	if($("#CTCodeFrom").val() != '' || $("#CTCodeTo").val() != ''){
+        if($("#CTCodeFrom").val() == '' || $("#CTCodeTo").val() == ''){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='CT code (From & To)' htmlEscape='false'/>");
+            return false;
+        }
+    }
+	 if($("#instalStatus option:selected").length < 1)
+     {
+         Common.alert("<spring:message code='sys.common.alert.validation' arguments='install status' htmlEscape='false'/>");
+         return false;
+     }
+	 
+	return true;
+}
 function fn_openReport(){
-	var date = new Date();
-	var installStatus = $("#instalStatus").val();
-	var SelectSql = "";
-	var whereSeq = "";
-	var orderBySql = "";
-	var FullSql = "";
-	var month = date.getMonth()+1;
-	if($("#instalStatus").val() != ''){
-		whereSeq += "AND ientry.stus_code_id = " + $("#instalStatus").val() + "  ";
+	if(fn_validation()){
+		var date = new Date();
+	    var installStatus = $("#instalStatus").val();
+	    var SelectSql = "";
+	    var whereSeq = "";
+	    var orderBySql = "";
+	    var FullSql = "";
+	    var month = date.getMonth()+1;
+	    if($("#instalStatus").val() != ''){
+	        whereSeq += "AND ientry.stus_code_id = " + $("#instalStatus").val() + "  ";
+	    }
+	    if($("#orderNoFrom").val() != '' && $("#orderNoTo").val() != ''){
+	        whereSeq += "AND (som.Sales_Ord_No between '" + $("#orderNoFrom").val() + "' AND '" + $("#orderNoTo").val() + "') ";
+	    }
+	    if($("#instalDtFrom").val() != '' && $("#instalDtTo").val() != ''){
+	        whereSeq +="AND (ientry.Install_Dt between  to_date('"  + $("#instalDtFrom").val() + "' , 'DD/MM/YYYY') AND to_date('" +$("#instalDtTo").val()  + "', 'DD/MM/YYYY') ) ";
+	    }
+	    if($("#appliType").val() != '' ){
+	        whereSeq += "AND som.App_Type_ID = " + $("#appliType").val() + "  ";
+	    }
+	    if($("#branch").val() != '' ){
+	        whereSeq += "AND install.brnch_ID = " + $("#branch").val() + "  ";
+	    }
+	    if($("#instalNoFrom").val() != '' && $("#instalNoTo").val() != ''){
+	        whereSeq += "AND (ientry.Install_Entry_No between '" + $("#instalNoFrom").val() + "' AND '" + $("#instalNoTo").val() + "') ";
+	    }
+	    if($("#CTCodeFrom").val() != '' && $("#CTCodeTo").val() != ''){
+	        whereSeq += "AND (CTMem.mem_Code between '" + $("#CTCodeFrom").val() + "' AND '" + $("#CTCodeTo").val() + "') ";
+	    }
+	    if($("#instalType").val() != ''){
+	        whereSeq += "AND ce.Type_ID In (" + $("#instalType").val() + ") ";
+	    }
+	    
+	    if($("#sortType").val() == "2"){
+	        orderBySql = "ORDER BY CTMem.mem_Code ";
+	    }else{
+	        orderBySql = "ORDER BY ientry.Install_Entry_ID ";
+	    }
+	     $("#installationNoteForm #V_WHERESQL").val(whereSeq);
+	     $("#installationNoteForm #V_INSTALLSTATUS").val(installStatus);
+	     $("#installationNoteForm #V_ORDERBYSQL").val(orderBySql);
+	     $("#installationNoteForm #V_SELECTSQL").val(SelectSql);
+	     $("#installationNoteForm #V_FULLSQL").val(FullSql);
+	     $("#installationNoteForm #reportFileName").val('/services/InstallationNote_WithOldOrderNo.rpt');
+	     $("#installationNoteForm #viewType").val("PDF");
+	     $("#installationNoteForm #reportDownFileName").val("InstallationNote_"+date.getDate()+month+date.getFullYear());
+	  
+	   //report 호출
+	     var option = {
+	             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+	     };
+	     
+	     Common.report("installationNoteForm", option);
 	}
-	if($("#orderNoFrom").val() != '' && $("#orderNoTo").val() != ''){
-		whereSeq += "AND (som.Sales_Ord_No between '" + $("#orderNoFrom").val() + "' AND '" + $("#orderNoTo").val() + "') ";
-	}
-	if($("#instalDtFrom").val() != '' && $("#instalDtTo").val() != ''){
-		whereSeq +="AND (ientry.Install_Dt between '"  + $("#instalDtFrom").val() + "' AND '" +$("#instalDtTo").val()  + "') ";
-	}
-	if($("#appliType").val() != '' ){
-		whereSeq += "AND som.App_Type_ID = " + $("#appliType").val() + "  ";
-	}
-	if($("#branch").val() != '' ){
-        whereSeq += "AND install.brnch_ID = " + $("#branch").val() + "  ";
-    }
-	if($("#instalNoFrom").val() != '' && $("#instalNoTo").val() != ''){
-        whereSeq += "AND (ientry.Install_Entry_No between '" + $("#instalNoFrom").val() + "' AND '" + $("#instalNoTo").val() + "') ";
-    }
-	if($("#CTCodeFrom").val() != '' && $("#CTCodeTo").val() != ''){
-        whereSeq += "AND (CTMem.mem_Code between '" + $("#CTCodeFrom").val() + "' AND '" + $("#CTCodeTo").val() + "') ";
-    }
-	if($("#instalType").val() != ''){
-        whereSeq += "AND ce.Type_ID In (" + $("#instalType").val() + ") ";
-    }
 	
-	if($("#sortType").val() == "2"){
-		orderBySql = "ORDER BY CTMem.mem_Code ";
-	}else{
-		orderBySql = "ORDER BY ientry.Install_Entry_ID ";
-	}
-	 $("#installationNoteForm #V_WHERESQL").val(whereSeq);
-     $("#installationNoteForm #V_INSTALLSTATUS").val(installStatus);
-     $("#installationNoteForm #V_ORDERBYSQL").val(orderBySql);
-     $("#installationNoteForm #V_SELECTSQL").val(SelectSql);
-     $("#installationNoteForm #V_FULLSQL").val(FullSql);
-     $("#installationNoteForm #reportFileName").val('/services/InstallationNote_WithOldOrderNo.rpt');
-     $("#installationNoteForm #viewType").val("PDF");
-     $("#installationNoteForm #reportDownFileName").val("InstallationNote_"+date.getDate()+month+date.getFullYear());
-  
-   //report 호출
-     var option = {
-             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-     };
-     
-     Common.report("installationNoteForm", option);
 }
 
 function fn_clear(){
