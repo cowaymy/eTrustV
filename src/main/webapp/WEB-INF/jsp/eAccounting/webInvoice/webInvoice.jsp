@@ -68,9 +68,7 @@ var webInvoiceColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvPrcssDt",
-    headerText : '<spring:message code="webInvoice.approvedDate" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
+    headerText : '<spring:message code="webInvoice.approvedDate" />'
 }
 ];
 
