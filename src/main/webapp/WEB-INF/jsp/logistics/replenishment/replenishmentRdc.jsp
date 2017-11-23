@@ -34,10 +34,11 @@ var rescolumnLayout=[
                      
                      
                      {dataField:"rnum" ,headerText:"rownum",width:120 ,height:30, editable:false , visible:false},
-                     {dataField:"period" ,headerText:"Period",width:120 ,height:30, editable:false},
+                     {dataField:"period" ,headerText:"Period",width:100 ,height:30, editable:false},
                      {dataField:"rdc" ,headerText:"RDC",width:120 ,height:30, editable:false  , visible:false},
                      {dataField:"rdcname" ,headerText:"RDC",width:240 ,height:30, editable:false},
                      {dataField:"loccd" ,headerText:"Location",width:120 ,height:30, editable:false},
+                     {dataField:"ctName" ,headerText:"Location Name",width:140 ,height:30, editable:false},
                      {dataField:"itmcd" ,headerText:"Material Code",width:120 ,height:30, editable:false},
                      {dataField:"itmnm" ,headerText:"Material Code Text",width:240 ,height:30, editable:false},
                      {dataField:"stkTypeId" ,headerText:"Material Type",width:120 ,height:30, editable:false},
@@ -53,8 +54,7 @@ var rescolumnLayout=[
                      {dataField:"reordqty" ,headerText:"Reorder Qty",width:120 ,height:30, editable:true},
                      {dataField:"avgQty" ,headerText:"Average Qty",width:120 ,height:30, editable:false},
                      {dataField:"crtDt" ,headerText:"crtDt",width:120 ,height:30, editable:false , visible:false},
-                     {dataField:"crtUser" ,headerText:"crtUser",width:120 ,height:30, editable:false , visible:false},
-                     {dataField:"ctName" ,headerText:"ctName",width:120 ,height:30, editable:false , visible:false}
+                     {dataField:"crtUser" ,headerText:"crtUser",width:120 ,height:30, editable:false , visible:false}
 
                      
                      ];
@@ -95,7 +95,7 @@ $(document).ready(function(){
     
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     
-    AUIGrid.bind(listGrid, "cellClick", function( event ) {
+    AUIGrid.bind(listGrid, "cellClick", function(event) {
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
@@ -128,10 +128,6 @@ $(function(){
     });
     $('#add').click(function(){
     	$("#popForm")[0].reset();
-    	
-    	
-    	
-    	
     	$("#giopenwindow").show();
     });
     $('#save').click(function(){
@@ -452,7 +448,7 @@ function fn_detail(data){
 		});
 	}
 
-	AUIGrid.addRow(listGrid, rowList, "last");
+	AUIGrid.addRow(subGrid, rowList, "last");
 }
 
 function SearchListAjax() {
@@ -461,6 +457,7 @@ function SearchListAjax() {
     var param = $('#searchForm').serializeJSON();
     console.log(param);
     Common.ajax("POST" , url , param , function(data){
+    	console.log(data);
         AUIGrid.setGridData(listGrid, data.data);
         
     });
@@ -562,7 +559,7 @@ function searchFormReset(){
 
         <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
         
-        <div id="grid_wrap" class="mt10" style="display:none;"></div>
+         <div id="grid_wrap" class="mt10" style="display:none;"></div> 
     </section><!-- search_result end -->
    <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->

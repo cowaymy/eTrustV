@@ -72,9 +72,7 @@
 			      ,SY28.RDC_CODE RDC
                   ,(SELECT WH_LOC_DESC FROM  SYS0028M WHERE WH_LOC_CODE=SY28.RDC_CODE) RDCNAME
 			      ,LG77.LOC_CODE                                                                AS loccd
-			      ,NVL ( (SELECT USER_NAME
-			                FROM SYS0047M
-			               WHERE USER_ID = SY28.WH_LOC_ID), SY28.WH_LOC_ID) CT_NAME
+			      ,SY28.WH_LOC_DESC                                                           CT_NAME
 			      ,LG77.STK_CODE                                                                 AS itmcd
 			      ,SY26.STK_DESC                                                                 AS itmnm
 			      ,SY26.STK_CTGRY_ID
