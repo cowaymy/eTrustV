@@ -112,9 +112,7 @@ public class MaterialdocumentController {
 		
 		List<EgovMap> list = MaterialDocumentService.MaterialDocSearchList(pmap);
 		
-//		for (int i = 0; i < list.size(); i++) {
-//		logger.debug("MaterialDocSearchList       : {}", list.get(i));
-//	}
+
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -126,7 +124,6 @@ public class MaterialdocumentController {
 		List<EgovMap> result = null; 
 		String codematerid = request.getParameter("masterid");
 		String[] searchTrcType = request.getParameterValues("searchTrcType");
-		logger.debug("106Line :::: " + params);
 		Map<String, Object> map = new HashMap();
 		map.put("strctype", searchTrcType);
 		result = MaterialDocumentService.MaterialDocMovementType(map);
