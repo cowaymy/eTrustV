@@ -177,9 +177,21 @@ public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServi
 	
 		if (partList != null && partList.size() > 0) {
 			Map<String, Object> map;
+			map = BeanConverter.toMap(afterServiceResultForm, "signData");
+			map.put("signData", Base64.decodeBase64(afterServiceResultForm.getSignData()));
+			
 			for (AfterServiceResultDetailForm obj : partList) {
-				map = BeanConverter.toMap(afterServiceResultForm, "AfterServiceResultForm");	
+//				map = BeanConverter.toMap(afterServiceResultForm, "AfterServiceResultForm");	
 //				map.put("serialNo", obj.getSerialNo());
+				// as Dtails
+				map.put("filterCode", obj.getFilterCode());
+				map.put("chargesFoc", obj.getChargesFoc());
+				map.put("exchangeId", obj.getExchangeId());
+				map.put("salesPrice", obj.getSalesPrice());
+				map.put("filterChangeQty", obj.getFilterChangeQty());
+				map.put("partsType", obj.getPartsType());
+				map.put("filterBarcdSerialNo", obj.getFilterBarcdSerialNo());
+				
 				list.add(map);
 			}
 		}
