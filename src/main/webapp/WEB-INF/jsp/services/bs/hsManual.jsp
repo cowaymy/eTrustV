@@ -274,6 +274,7 @@
          // 리스트 조회.
         function fn_getBSListAjax() {
 
+
                 var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
                 if (radioVal == 1 ){ //hs_no  Create before
@@ -284,8 +285,11 @@
                             AUIGrid.setGridData(myGridID, result);
                          });
                 }else {//hs_no  Create after
+                    debugger;
+                	$("#brnchId1").val($("#cmdBranchCode1 option:selected").text());
+                	$("#memId1").val($("#cmdCdManager1").val());
 
-                        Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val()}, function(result) {
+                        Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
 
                             console.log("성공.");
                             console.log("data : " + result);
@@ -548,6 +552,20 @@
         });
 
 
+         $("#cmdBranchCode1").change(function() {
+             $("#cmdCdManager1").find('option').each(function() {
+                 $(this).remove();
+             });
+              $("#cmdcodyCode").find('option').each(function() {
+                 $(this).remove();
+             });
+
+             if ($(this).val().trim() == "") {
+                 return;
+             }
+             doGetCombo('/services/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager1' , 'S', '');
+         });
+
 
              $("#cmdCdManager").change(function() {
                 $("#cmdcodyCode").find('option').each(function() {
@@ -571,7 +589,6 @@
                   result =     AUIGrid.getCellValue(myGridID, event.rowIndex, "result");
                     //Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
 			  });
-
 
                  // 셀 더블클릭 이벤트 바인딩
                 AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -743,7 +760,8 @@
     <input type="hidden" name="openGb"  id="_openGb"/>  <!--   salesOrdId  -->
     <input type="hidden" name="brnchId"  id="_brnchId"/>  <!-- salesOrdId  -->
     <input type="hidden" name="manuaMyBSMonth"  id="_manuaMyBSMonth"/>  <!-- salesOrdId  -->
-
+    <input type="hidden" id="brnchId1" name="brnchId1"> <!-- Manual branch -->
+     <input type="hidden" id="memId1" name="memId1"> <!-- Manual branch -->
 </form>
 
 <%-- <form id="popEditViewForm" method="post">
@@ -891,6 +909,8 @@
                 <col style="width:*" />
                 <col style="width:100px" />
                 <col style="width:*" />
+                <col style="width:100px" />
+                <col style="width:*" />
             </colgroup>
             <tbody>
             <tr>
@@ -907,6 +927,21 @@
                     <input id="manualCustomer" name="manualCustomer"  type="text" title="" placeholder="Customer" class="w100p" />
                 </td>
 
+            </tr>
+            <tr>
+            <th scope="row">Branch</th>
+            <td>
+            <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p">
+                       <option value="">Choose One</option>
+                       <c:forEach var="list" items="${branchList }" varStatus="status">
+                       <option value="${list.codeId}">${list.codeName}</option>
+                       </c:forEach>
+                </select>
+            </td>
+            <th scope="row">Cody Manager</th>
+            <td colspan="3">
+            <select id="cmdCdManager1" name="cmdCdManager1" class="">
+            </td>
             </tr>
             </tbody>
             </table><!-- table end -->
