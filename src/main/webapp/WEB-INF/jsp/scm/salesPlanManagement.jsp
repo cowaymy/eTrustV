@@ -1348,7 +1348,7 @@ $(document).ready(function()
 <ul class="right_btns">
 	<li><p class="btn_grid">
 	<!-- <a href="javascript:void(0);">Create Plan</a> -->
-	<input type='button' id='UpdateBtn' value='Update M0 Data' disabled />
+	<!-- <input type='button' id='UpdateBtn' value='Update M0 Data' disabled /> -->
 	</p></li>
 	<li><p class="btn_grid">
 	<!-- <a href="javascript:void(0);">Confirm</a> -->
@@ -1360,8 +1360,9 @@ $(document).ready(function()
 	</p></li>
 	<li><p class="btn_grid">
 	<!-- <a href="javascript:void(0);">Update M0 Data</a> -->
-<!-- 	<input type='button' id='CreatePlanBtn' value='Create Plan' disabled /> -->
+    <!-- 	<input type='button' id='CreatePlanBtn' value='Create Plan' disabled /> -->
 	</p></li>
+    <li><p class="btn_grid btn_disabled"><a>Update M0 Data</a></p></li>
 </ul>
 
 <table class="type1 mt10"><!-- table start -->
@@ -1413,34 +1414,18 @@ $(document).ready(function()
  <div id="dynamic_SummaryGrid_wrap" style="height:230px;"></div>
 </article><!-- grid_wrap end -->
 <div class="side_btns">
-  <ul class="left_btns">
-    <li><p class="btn_blue2"><a onclick="fnSaveScmSalesPlan();">Save</a></p></li>
-    <li>
-      <p class="btn_blue2">
-        <!-- <a>Cancel</a> -->
-         <input type='button' id='CancelBtn' value='Cancel' disabled />
-      </p>
-    </li>
-   
-  </ul>
   <ul class="right_btns">
-    <li>
-      <p class="btn_blue2">
-      <!-- <a>Refresh</a> -->
-       <input type='button' id='RefreshBtn' value='Refresh' disabled />
-      </p>
-    </li>
-    <li>
-      <p class="btn_blue2">
-        <a onclick="fnExcelExport('SalesPlanManagement');">Download</a>
-      </p>
+    <li><p class="btn_grid"><a onclick="fnSaveScmSalesPlan();">Save</a></p></li>
+    <li><p class="btn_grid btn_disabled"><a>Cancel</a></p></li>
+    <li><p class="btn_grid btn_disabled"><a>Refresh</a></p></li>
+    <li><p class="btn_grid"><a onclick="fnExcelExport('SalesPlanManagement');">Download</a></p>
     </li>
   </ul>
 </div>
 
 <br/>
 
-<article class="grid_wrap mt10"><!-- grid_wrap start -->
+<article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 2-->
  <div id="dynamic_DetailGrid_wrap" style="height:280px;"></div> 
 </article><!-- grid_wrap end -->
