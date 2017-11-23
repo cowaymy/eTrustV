@@ -1185,13 +1185,21 @@
                       ,RESULT_REM,RESULT_CRT_DT,RESULT_CRT_USER_ID,RESULT_UPD_DT,RESULT_UPD_USER_ID
                       ,RESULT_IS_SYNC,RESULT_IS_EDIT,RESULT_STOCK_USE,RESULT_IS_CURR,RESULT_MTCH_ID
                       ,RESULT_IS_ADJ
+                      ,TEMPERATE_SETNG,NEXT_APPNT_DT,NEXT_APPNT_TM
+					  ,OWNER_CODE,RESULT_CUST_NAME,RESULT_MOBILE_NO
+				      ,RESULT_RPT_EMAIL_NO,RESULT_ACEPT_NAME,SGN_DT
                        )
 			    VALUES ( #{resultId}, #{docNo} , #{typeId},#{schdulId} ,#{salesOrdId} ,#{codyId}
-			                 ,TO_DATE(#{setlDt},'DD-MM-YYYY'),#{resultStusCodeId},#{failResnId} ,NVL(#{renColctId},0),#{whId}
+			                ,TO_DATE(#{setlDt},'DD-MM-YYYY'),#{resultStusCodeId},#{failResnId} ,NVL(#{renColctId},0),#{whId}
 			                ,#{resultRem} ,SYSDATE,#{resultCrtUserId},SYSDATE ,#{resultUpdUserId}
 			                ,#{resultIsSync},#{resultIsEdit},#{resultStockUse},#{resultIsCurr},#{resultMtchId}
 			                ,#{resultIsAdj}
+			                ,#{temperateSetng},#{nextAppntDt},#{nextAppointmentTime}
+			                ,#{ownerCode},#{resultCustName},#{resultMobileNo}
+			                ,#{resultRptEmailNo},#{resultAceptName},#{sgnDt}
 			     )
+			     
+            
              </insert>
 
 
