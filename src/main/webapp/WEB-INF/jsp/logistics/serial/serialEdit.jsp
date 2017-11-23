@@ -827,7 +827,7 @@ function f_multiCombo() {
     </td>
         <th scope="row">Create Date</th>
     <td>
-	    <div class="date_set"><!-- date_set start -->
+	    <div class="date_set w100p"><!-- date_set start -->
 		    <p>
 		      <input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
 		    </p>
@@ -841,11 +841,11 @@ function f_multiCombo() {
 <tr>
     <th scope="row">Category Type</th>
     <td>
-        <select class="multy_select" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" class="w100p" /></select>
+        <select class="multy_select w100p" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" /></select>
     </td>
     <th scope="row">Material Type</th>
     <td>
-        <select class="multy_select" multiple="multiple" id="materialtype" name="materialtype[]"  class="w100p" /></select>
+        <select class="multy_select w100p" multiple="multiple" id="materialtype" name="materialtype[]"  /></select>
     </td>
     <th scope="row">Deletion Flag</th>
     <td>
