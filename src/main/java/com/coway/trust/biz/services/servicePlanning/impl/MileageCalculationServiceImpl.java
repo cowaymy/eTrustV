@@ -78,6 +78,47 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
 	}
 	
 	@Override
+	public void updateDCPMasterByExcel(List<Map<String, Object>> params, SessionVO sessionVO) {
+		if(params.size() > 0){
+    		for(int i=0; i< params.size(); i++){
+    			Map<String, Object>  updateValue = (Map<String, Object>) params.get(i);
+    			if(updateValue.get("memType").equals("CODY")){
+    				updateValue.put("memType", 2);
+    			}else{
+    				updateValue.put("memType", 3);//CT
+    			}
+    			updateValue.put("distance", Integer.parseInt(updateValue.get("distance").toString()));
+    			updateValue.put("userId", sessionVO.getUserId());
+    			
+    			// 변경된 값 insert
+				if(updateValue.get("memType1") == null && updateValue.get("brnchCode1") == null 
+						&& updateValue.get("dcpFrom1") == null && updateValue.get("dcpTo1") == null 
+						&& updateValue.get("distance1") == null) {
+					
+					logger.debug("insertValue {}", updateValue);
+	    			mileageCalculationMapper.insertDCPMaster(updateValue);
+	    			
+	    		// 수정된 값 update
+				} else {
+					
+					if(!(  (Integer.parseInt(updateValue.get("memType").toString())
+    						== Integer.parseInt(updateValue.get("memType1").toString()))
+					&& updateValue.get("brnchCode").equals(updateValue.get("brnchCode1"))
+					&& updateValue.get("dcpFrom").equals(updateValue.get("dcpFrom1"))
+					&& updateValue.get("dcpTo").equals(updateValue.get("dcpTo1"))
+					&& (Integer.parseInt(updateValue.get("distance").toString())
+						== Integer.parseInt(updateValue.get("distance1").toString())) )) {
+					
+					logger.debug("updateValue {}", updateValue);
+					mileageCalculationMapper.updatetDCPMaster(updateValue);
+					}
+					
+				}
+    		}
+		}
+	}
+	
+	@Override
 	public List<EgovMap> selectDCPMaster(Map<String, Object> params) {
 		return mileageCalculationMapper.selectDCPMaster(params);
 	}
@@ -173,5 +214,5 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
     		}
 		}
 	}
-	
+
 }

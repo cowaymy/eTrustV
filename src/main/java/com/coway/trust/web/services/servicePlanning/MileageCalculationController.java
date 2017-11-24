@@ -92,7 +92,6 @@ public class MileageCalculationController {
 		if(addList != null){
 			 mileageCalculationService.insertDCPMaster(addList,sessionVO);
 		}
-		
 		if(addList != null){
 			 mileageCalculationService.updateDCPMaster(udtList,sessionVO);
 		}

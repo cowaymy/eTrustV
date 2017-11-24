@@ -25,6 +25,9 @@ public interface MileageCalculationService {
 	
 	void deleteSchemaMgmt(List<Object> params, SessionVO sessionVO);
 	
+	// 171123 :: 선한이
+	void updateDCPMasterByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO);
+	
 	List<EgovMap> selectSchemaMgmt(Map<String, Object> params);
 	
 	List<EgovMap> selectSchemaResultMgmt(Map<String, Object> params);
@@ -32,6 +35,4 @@ public interface MileageCalculationService {
 	List<EgovMap> selectBranch(Map<String, Object> params);
 	
 	List<EgovMap> selectMemberCode(Map<String, Object> params);
-
-	
 }

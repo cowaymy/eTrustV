@@ -618,8 +618,8 @@ function fn_Clear(){
 
 <ul class="right_btns">
    <!--  <li><p class="btn_grid"><a href="#">Edit</a></p></li> -->
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">Excel Download</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubGroupSave()">Save</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubGroupSave()">SAVE</a></p></li>
 <!--     <li><p class="btn_grid"><a href="#">Outstation Schedule Maintenance</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_openAreaMain()">CT Sub Group – Area ID Maintenance</a></p></li> -->
 </ul>

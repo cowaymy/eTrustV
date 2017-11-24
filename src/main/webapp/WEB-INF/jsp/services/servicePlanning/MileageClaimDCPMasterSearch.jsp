@@ -22,7 +22,7 @@ $(document).ready(function(){
         }
      });
     
-   // doGetCombo('/services/mileageCileage/selectArea', '', '','mcpFrom', 'M' ,  'f_multiCombo');
+    //doGetCombo('/services/mileageCileage/selectArea', '', '','mcpFrom', 'M' ,  'f_multiCombo');
     //doGetCombo('/services/mileageCileage/selectArea', '', '','mcpTo', 'M' ,  'f_multiCombo');
 });
 
@@ -114,11 +114,11 @@ function DCPMasterGrid() {
                                               keyField : "id1"
                                           }},
                           { dataField : "distance",       headerText  : "Distance",  width  :100},
-                          { dataField : "memType1",       headerText  : "",  width  : 0},
-                          { dataField : "brnchCode1",       headerText  : "",  width  : 0},
-                          { dataField : "dcpFrom1",       headerText  : "",  width  : 0},
-                          { dataField : "dcpTo1",       headerText  : "",  width  : 0},
-                          { dataField : "distance1",       headerText  : "",  width  : 0},
+                          { dataField : "memType1",       headerText  : "memType1",  width  : 0},
+                          { dataField : "brnchCode1",       headerText  : "brnchCode1",  width  : 0},
+                          { dataField : "dcpFrom1",       headerText  : "dcpFrom1",  width  : 0},
+                          { dataField : "dcpTo1",       headerText  : "dcpTo1",  width  : 0},
+                          { dataField : "distance1",       headerText  : "distance1",  width  : 0},
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
@@ -163,6 +163,31 @@ function DCPMasterGrid() {
         AUIGrid.removeRow(gridID1, "selectedIndex");
         AUIGrid.removeSoftRows(gridID1);
     }
+    
+	 // 171123 :: 선한이
+	 // 엑셀 내보내기(Export);
+	 function fn_exportTo() {
+		 GridCommon.exportTo("calculation_DCPMaster_grid_wap", 'xlsx', "Mileage Claim Master");
+	 };
+	 
+	 // 엑셀 업로드
+	 function fn_uploadFile() {
+		 var formData = new FormData();
+		   console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
+		   formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+		 
+		 Common.ajaxFile("/services/mileageCileage/excel/saveDCPMasterByExcel.do"
+	               , formData
+	               , function (result) 
+	                {
+	                     //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                     if(result.code == "99"){
+	                         Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
+	                     }else{
+	                         Common.alert(result.message);
+	                     }
+	            });
+     };
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -175,6 +200,15 @@ function DCPMasterGrid() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Mileage Claim Master</h2>
 <ul class="right_btns">
+
+    <!-- 171123 :: 선한이 -->
+    <li>
+    <div class="auto_file"><!-- auto_file start -->
+    <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
+    </div><!-- auto_file end -->
+    </li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">Update Request</a></p></li>
+
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_DCPMasterSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -244,6 +278,7 @@ function DCPMasterGrid() {
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li> -->
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:save()">SAVE</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
