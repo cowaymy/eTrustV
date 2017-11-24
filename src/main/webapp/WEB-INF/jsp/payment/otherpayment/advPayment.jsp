@@ -1002,6 +1002,7 @@ function fn_rentalAdvMonthChangeTxt(){
 
 
 function addRentalToFinal(){
+	var addedCount = 0;
     var rowCnt = AUIGrid.getRowCount(targetRenMstGridID);
     maxSeq = maxSeq + 1;
 
@@ -1046,6 +1047,8 @@ function addRentalToFinal(){
                      item.billAsId    = 0;
                      
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                     
+                     addedCount++;
                     
                 }
                 
@@ -1083,6 +1086,8 @@ function addRentalToFinal(){
                         item.billAsId    = 0;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                        
+                        addedCount++;
                     }
                 }
                 
@@ -1116,11 +1121,18 @@ function addRentalToFinal(){
                     item.billAsId    = 0;
                     
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                    
+                    addedCount++;
                    
                }
             }
         }
     }
+    
+    if(addedCount == 0){
+        Common.alert("There is no billing data and can not be selected.");
+    }
+    
     recalculatePaymentTotalAmt();
 }
 
@@ -1214,8 +1226,8 @@ function resetOutGrid(){
 
 
 function addOutToFinal(){
-    var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);
-    
+	var addedCount = 0;
+    var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);    
     maxSeq = maxSeq + 1;
 
     if(rowCnt > 0){
@@ -1252,9 +1264,16 @@ function addOutToFinal(){
                 item.billAsId    = 0;
                 
                 AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                
+                addedCount++;
             }
         }
     } 
+    
+    if(addedCount == 0){
+        Common.alert("There is no billing data and can not be selected.");
+    }
+    
     recalculatePaymentTotalAmt();
 }
 
@@ -1541,7 +1560,7 @@ function recalculateSrvcTotalAmtWidthAdv(discountValue, originalPrice, discountr
 
 
 function addSrvcToFinal(){
-
+	var addedCount = 0;
     var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
     maxSeq = maxSeq + 1;
     
@@ -1587,6 +1606,8 @@ function addSrvcToFinal(){
                      item.billAsId    = 0;
                      
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                     
+                     addedCount++;
                 }
                 
                 if(mstPenaltyCharges - mstPenaltyChargesPaid > 0){
@@ -1618,6 +1639,8 @@ function addSrvcToFinal(){
                     item.billAsId    = 0;
                     
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                    
+                    addedCount++;
                }
                 
                 //Advance Month 
@@ -1650,6 +1673,8 @@ function addSrvcToFinal(){
                     item.billAsId    = 0;
                     
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                    
+                    addedCount++;
                    
                }
                 
@@ -1687,11 +1712,18 @@ function addSrvcToFinal(){
                         item.billAsId    = 0;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                        
+                        addedCount++;
                     }
                 }
             }
         }
     }
+    
+    if(addedCount == 0){
+        Common.alert("There is no billing data and can not be selected.");
+    }
+    
     recalculatePaymentTotalAmt();  
 }
 
@@ -1765,7 +1797,7 @@ function resetBillGrid(){
 }
 
 function addBillToFinal(){
-
+	var addedCount = 0;
     var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
 
     if(checkArray.length > 1){
@@ -1809,9 +1841,15 @@ function addBillToFinal(){
                         item.billAsId    = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAsId");
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                        
+                        addedCount++;
                     }
                 }
             }   
+        }
+        
+        if(addedCount == 0){
+            Common.alert("There is no billing data and can not be selected.");
         }
         
         recalculatePaymentTotalAmt();
