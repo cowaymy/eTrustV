@@ -459,7 +459,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				iMap.put("ASR_ITM_TAX_CODE_ID",    "0" ); 
 				iMap.put("ASR_ITM_TXS_AMT" , 			"0" ); 
 				
-				//iMap.put("SRV_FILTER_LAST_SERIAL" , updateMap.get("srvFilterLastSerial")); 
+				iMap.put("FILTER_BARCD_SERIAL_NO" , updateMap.get("srvFilterLastSerial")); 
 				
 
 				LOGGER.debug("					insertSVC0005D {} ",iMap);
