@@ -120,6 +120,10 @@ public interface MSvcLogApiMapper {
 
 	void updatePrReAppointmentReturnResult(Map<String, Object> params);
 
+	void insertASRequestRegistrationLogs(Map<String, Object> params);
+
+	void updateSuccessRequestRegiStatus(String transactionId);
+
 
 	
 }

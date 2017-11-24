@@ -99,6 +99,10 @@ public interface MSvcLogApiService {
 	void updateHsReAppointmentReturnResult(Map<String, Object> params);
 	
 	void updatePrReAppointmentReturnResult(Map<String, Object> params);
+
+	void saveASRequestRegistrationLogs(Map<String, Object> params);
+
+	void updateSuccessRequestRegiStatus(String transactionId);
 	
 	
 
