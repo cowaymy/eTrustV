@@ -75,12 +75,14 @@ var columnLayout = [
 var excelLayout2 = [
 		                   {dataField:"serialNo" ,headerText:"Serial Number",width:500 ,height:30},
 		                   {dataField:"matnr" ,headerText:"Material Code ",width:120 ,height:30},
+		                   {dataField:"gltri" ,headerText:"Producted Date ",width:120 ,height:30},
 		                   {dataField:"exist" ,headerText:"Exist Y/N ",width:120 ,height:30}
 		                   ];
 
 var excelLayout = [
 							{dataField:"serialNo" ,headerText:"Serial_Number",width:500 ,height:30},
 							{dataField:"matnr" ,headerText:"Material_Code ",width:120 ,height:30},
+		                    {dataField:"gltri" ,headerText:"Producted_Date ",width:120 ,height:30}
                             ];
                             
 var detailLayout = [
@@ -384,15 +386,15 @@ $(document).ready(function(){
             fn_newSerialCopy();
       });
 	    $('#excelUp').click(function() {
-	       
-	        AUIGrid.clearGridData(myGridIDExcel);
+	        //AUIGrid.clearGridData(myGridIDExcel);
+	    	AUIGrid.destroy(myGridIDExcel)
+	    	myGridIDExcelHide = GridCommon.createAUIGrid("grid_wrap_hide", excelLayout ,"", gridPros);
 	        $("#popup_wrap_excel_up").show();
 	        createInitGrid();
 	    });
 	    $('#excelDown').click(function() {
 	        // 그리드의 숨겨진 칼럼이 있는 경우, 내보내기 하면 엑셀에 아예 포함시키지 않습니다.
 	        // 다음처럼 excelProps 에서 exceptColumnFields 을 지정하십시오.
-	        
 	        var excelProps = {
 	                
 	            fileName     : "Sereial Excel Upload(Mass)",
@@ -695,13 +697,14 @@ function createAUIGrid(jsonData) {
      for(var i = 0; i<jsonData.length; i++){
     	var serialChck = jsonData[i].Serial_Number;
     	var matrChck = jsonData[i].Material_Code;
-    	fn_serialExist(serialChck,matrChck);
+    	var glChck = jsonData[i].Producted_Date;
+    	fn_serialExist(serialChck,matrChck,glChck);
     	
     	
     }
 
 };
-function fn_serialExist(serialChck,matrChck){
+function fn_serialExist(serialChck,matrChck,glChck){
 	var sortingInfo = [];
     // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
     sortingInfo[0] = { dataField : "serialNo", sortType : 1 }; // 오름차순 1
@@ -719,7 +722,8 @@ function fn_serialExist(serialChck,matrChck){
 	               var data = result.dataList;
 	               rowList ={
 	            		   serialNo    : serialChck,
-	            		   matnr     : matrChck
+	            		   matnr       : matrChck,
+	            		   gltri         : glChck
 	              
 	               }
 				            if(data.length==0){

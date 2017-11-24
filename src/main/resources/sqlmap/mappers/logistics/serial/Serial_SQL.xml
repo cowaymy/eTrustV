@@ -25,7 +25,7 @@
         FROM LOG0062M lg62m, LOG0063D lg63d , SYS0026M sy26m , SYS0047M S47
         WHERE lg62m.SERIAL_NO    = lg63d.SERIAL_NO (+)
               AND sy26m.STk_CODE = lg62m.MATNR
-              AND DECODE(LG62M.CRT_USER_ID , 'ITF0161M' , 999999999 , LG62M.CRT_USER_ID) = S47.USER_ID(+)      
+              AND DECODE (NVL(LG62M.CRT_USER_ID , 9999999999), 'ITF0161M', 999999999, 'DEAN', 999999999, LG62M.CRT_USER_ID) = S47.USER_ID(+)    
 	       <if test="srchmaterial !=null and srchmaterial !=''">
 	          AND lg62m.MATNR  LIKE #{srchmaterial} || '%'
 		</if>     
@@ -211,17 +211,16 @@
         SELECT 
                 SERIAL_NO,MATNR, COUNT(SERIAL_NO) CNT
         FROM LOG0062M
+        WHERE SERIAL_NO = #{serialChck}
+		    AND MATNR       = #{matrChck}
 				GROUP BY SERIAL_NO, MATNR
-				HAVING 
-				    SERIAL_NO = #{serialChck}
-				<!-- AND 
-				    MATNR       = #{matrChck} -->
     </select>
     <insert id="insertExcelSerial" parameterType="Map">
           INSERT INTO LOG0062M
                 (
                 SERIAL_NO,
                 MATNR,
+                GLTRI, 
                 CRT_DT,
                 CRT_USER_ID               
                 )        
@@ -229,6 +228,7 @@
                 (
                 #{serialNo},
                 #{matnr},
+                  TO_CHAR(TO_DATE(#{gltri},'DD/MM/YYYY'), 'YYYYMMDD'), 
                 SYSDATE,
                 #{loginId} 
                 )    

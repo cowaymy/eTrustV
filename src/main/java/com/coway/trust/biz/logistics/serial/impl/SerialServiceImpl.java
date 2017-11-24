@@ -92,6 +92,7 @@ public class SerialServiceImpl implements SerialService {
 		for (Object obj : addList) {
 			param.put("serialNo", ((Map<String, Object>) obj).get("serialNo"));
 			param.put("matnr", ((Map<String, Object>) obj).get("matnr"));
+			param.put("gltri", ((Map<String, Object>) obj).get("gltri"));
 			param.put("loginId", loginId);
 			serialMapper.insertExcelSerial(param);
 		}
