@@ -27,6 +27,8 @@ import com.coway.trust.api.mobile.services.as.ASFailJobRequestDto;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestForm;
 import com.coway.trust.api.mobile.services.as.ASReAppointmentRequestDto;
 import com.coway.trust.api.mobile.services.as.ASReAppointmentRequestForm;
+import com.coway.trust.api.mobile.services.as.ASRequestRegistDto;
+import com.coway.trust.api.mobile.services.as.ASRequestRegistForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
@@ -1304,6 +1306,41 @@ public class ServiceApiController {
 
 	}
 	
+	
+	
+	
+	
+	//20171119 hash
+	@ApiOperation(value = "AS Request Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/aSRequestRegistration", method = RequestMethod.POST)
+	public ResponseEntity<ASRequestRegistDto> aSRequestRegistration(@RequestBody ASRequestRegistForm aSRequestRegistForm)
+			throws Exception {		
+
+		String transactionId = "";
+		Map<String, Object> params = ASRequestRegistForm.createMaps(aSRequestRegistForm);
+		
+		if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
+			MSvcLogApiService.saveASRequestRegistrationLogs(params);
+		}
+		
+		
+//		 business service STAT....18:22
+//		// TODO : installResult 구현 필요.....
+		LOGGER.debug("params :"+ params.toString());
+		ASManagementListService.updateASEntry(params);
+//		 business service END ....
+		
+		
+		// TODO : 리턴할 dto 구현.
+		transactionId = aSRequestRegistForm.getTransactionId();
+		
+		if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
+			MSvcLogApiService.updateSuccessRequestRegiStatus(transactionId);
+		}
+		
+		return ResponseEntity.ok(ASRequestRegistDto.create(transactionId));
+
+	}
 	
 	
 	
