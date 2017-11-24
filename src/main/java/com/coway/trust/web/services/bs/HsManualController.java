@@ -250,7 +250,14 @@ public class HsManualController {
 
 		return ResponseEntity.ok(resultList);
 	}
+	//HS manual
+	@RequestMapping(value = "/getCdDeptList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getCdDeptList(@RequestParam Map<String, Object>params) {
+        // Member Type 에 따른 Organization 조회.
+		List<EgovMap> resultList = hsManualService.getCdDeptList(params);
 
+		return ResponseEntity.ok(resultList);
+	}
 
 
 	@RequestMapping(value = "/getCdList.do", method = RequestMethod.GET)
