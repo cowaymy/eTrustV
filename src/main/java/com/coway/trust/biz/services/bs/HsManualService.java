@@ -24,6 +24,8 @@ public interface HsManualService {
 
 	List<EgovMap> getCdUpMemList(Map<String, Object> params);
 
+	List<EgovMap> getCdDeptList(Map<String, Object> params);
+
 	List<EgovMap> getCdList_1(Map<String, Object> params);
 
 	List<EgovMap> selectHsManualListPop(Map<String, Object> params);
