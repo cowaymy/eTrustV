@@ -30,6 +30,7 @@
 							       S.C5   ,
 							       S.AS_RESULT_ID ,
 							       S.AS_BRNCH_ID ,
+							       S.AS_MEM_ID,
 							       (SELECT  CODE  FROM  SYS0005M  H WHERE   H.BRNCH_ID =AS_BRNCH_ID) BRNCH_CODE
 						  FROM ( SELECT DISTINCT E.AS_ID AS_ID  ,
 						                         E.AS_NO AS_NO  ,
@@ -61,7 +62,8 @@
 						                         ELSE UTILS.CONVERT_TO_FLOAT(0,53)
 						                            END C5  ,
 						                         E.AS_RESULT_ID ,
-						                         E.AS_BRNCH_ID
+						                         E.AS_BRNCH_ID,
+						                         E.AS_MEM_ID
 						         FROM ( SELECT Extent1.AS_ID AS_ID  ,
 						                       Extent1.AS_NO AS_NO  ,
 						                       Extent1.AS_SO_ID ASSOID1  ,
@@ -78,7 +80,8 @@
 						                       Extent7.AS_RESULT_ID AS_RESULT_ID  ,
 						                       Extent7.AS_RESULT_NO AS_RESULT_NO  ,
 						                       Extent7.AS_TOT_AMT AS_TOT_AMT ,
-						                       Extent1.AS_BRNCH_ID
+						                       Extent1.AS_BRNCH_ID,
+						                       Extent1.AS_MEM_ID
 						                FROM SVC0001D Extent1
 						                       JOIN SYS0013M Extent2   ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
 						                       JOIN SYS0038M Extent3   ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
@@ -3385,10 +3388,12 @@
    <insert id="update_SAL0087D" parameterType="Map" > 
 			UPDATE  SAL0087D
 			    SET SRV_FILTER_PRV_CHG_DT =  TO_DATE(#{SRV_FILTER_PRV_CHG_DT},'dd/mm/yyyy'),
-			        SRV_FILTER_UPD_DT =SYSDATE,
-			        SRV_FILTER_UPD_USER_ID =#{updator}
+			          SRV_FILTER_LAST_SERIAL = #{SRV_FILTER_LAST_SERIAL} ,
+			          SRV_FILTER_PREV_SERIAL  =  SRV_FILTER_LAST_SERIAL,
+			          SRV_FILTER_UPD_DT =SYSDATE,
+			          SRV_FILTER_UPD_USER_ID =#{updator}
 			where SRV_CONFIG_ID =(
-					                        select SRV_CONFIG_ID 
+					                        select SRV_CONFIG_ID    
 					                        from SAL0090D  
 					                        where 1=1 
 					                        and SRV_SO_ID =#{SRV_SO_ID}
@@ -3397,5 +3402,30 @@
 			and SRV_FILTER_STUS_ID =1
 			and SRV_FILTER_STK_ID = #{SRV_FILTER_STK_ID} 
    </insert>
+   
+   
+   
+      <insert id="update_Filter_SAL0087D" parameterType="Map" > 
+		UPDATE 
+        (
+            SELECT D.AS_NO, D.AS_SO_ID, B.SRV_SO_ID, F.ASR_ITM_PART_ID, A.SRV_FILTER_STK_ID, 
+            A.SRV_FILTER_PRV_CHG_DT, A.SRV_FILTER_LAST_SERIAL, A.SRV_FILTER_PREV_SERIAL
+            FROM SAL0087D A, SAL0090D B, SVC0004D C, SVC0001D D, SVC0005D F
+            WHERE A.SRV_CONFIG_ID = B.SRV_CONFIG_ID
+            AND   B.SRV_SO_ID = D.AS_SO_ID
+            AND   D.AS_ID = C.AS_ENTRY_ID
+            AND   C.AS_RESULT_ID = F.AS_RESULT_ID
+            AND   A.SRV_FILTER_STK_ID = F.ASR_ITM_PART_ID
+            AND   D.AS_ID= #{AS_RESULT_ID}
+        )S
+        SET SRV_FILTER_LAST_SERIAL  = #{SRV_FILTER_LAST_SERIAL},
+            SRV_FILTER_PREV_SERIAL  =  S.SRV_FILTER_LAST_SERIAL,
+            SRV_FILTER_PRV_CHG_DT   =  SYSDATE
+                  
+		          
+   </insert>
+   
+   
+   
    
 </mapper>

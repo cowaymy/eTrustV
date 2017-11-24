@@ -119,7 +119,8 @@
 					       D_DATE,
 					       ASCNT||'-'||SUMSESION_CNT ASCNT,
 					       INSCNT||'-'||SUMSESION_CNT INSCNT,
-					       0||'-'||SUMSESION_CNT RTNCNT ,AS_SUM_CNT,INS_SUM_CNT
+					       0||'-'||SUMSESION_CNT RTNCNT ,AS_SUM_CNT,INS_SUM_CNT,
+					       #{brnchId}  AS BRNCH_ID
 					FROM(
 					SELECT #{ct} CT,
 					       #{cDate}    C_DATE,

@@ -52,6 +52,8 @@ public interface ASManagementListMapper {
 	 
 	 EgovMap  asResult_insert(Map<String, Object> params);
 	 
+	 int 	update_Filter_SAL0087D(Map<String, Object> params);
+	 
 	 int   insertSVC0004D(Map<String, Object> params);
 	 int   updateSVC0004D(Map<String, Object> params);  
 	 int   updateBasicSVC0004D(Map<String, Object> params);

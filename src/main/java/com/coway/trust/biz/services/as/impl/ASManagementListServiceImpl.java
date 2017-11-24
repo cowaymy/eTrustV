@@ -365,8 +365,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		//in house 구분  물류 처리 한다. 
 		if(a>0){
 			
-			//
-			 if (params.get("IN_HUSE_REPAIR_REPLACE_YN").equals("1")){
+			//AS_SLUTN_RESN_ID
+			 if (params.get("AS_SLUTN_RESN_ID").equals("454")){
 				 
 				 	//차감 요청 
 				 if( params.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length( ) >0){
@@ -459,9 +459,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				iMap.put("ASR_ITM_TAX_CODE_ID",    "0" ); 
 				iMap.put("ASR_ITM_TXS_AMT" , 			"0" ); 
 				
+				iMap.put("SRV_FILTER_LAST_SERIAL" , updateMap.get("srvFilterLastSerial")); 
+				
 
 				LOGGER.debug("					insertSVC0005D {} ",iMap);
 				rtnValue = ASManagementListMapper.insertSVC0005D(iMap) ;
+			
+				
 			}
 		}
 	   
@@ -524,8 +528,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				Map<String, Object> map87mp = new HashMap();
 				map87mp.put("SRV_FILTER_PRV_CHG_DT",  svc0004dmap.get("AS_SETL_DT") );
 				map87mp.put("SRV_FILTER_STK_ID",updateMap.get("filterID"));
+				map87mp.put("SRV_FILTER_LAST_SERIAL",updateMap.get("srvFilterLastSerial"));
 				map87mp.put("SRV_SO_ID",svc0004dmap.get("AS_SO_ID"));
 				map87mp.put("updator",svc0004dmap.get("updator"));
+				
+				
+				
 				
 				int update_SAL0087D_cnt = ASManagementListMapper.update_SAL0087D(map87mp);
 				/*rtnValue = ASManagementListMapper.insert_stkCardLOG0014D(map) ; xml에 없어서 임시주석*/
@@ -1233,7 +1241,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		
 	    svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID") );
 	    svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")) );
-		this.updateStateSVC0001D(svc0004dmap);
+	      
+	    
+		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454")){
+			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() > 0  ){
+				  
+					 this.updateStateSVC0001D(svc0004dmap);
+			  }
+		  }else{
+				 this.updateStateSVC0001D(svc0004dmap);
+		  }
+
 		
 		
 		

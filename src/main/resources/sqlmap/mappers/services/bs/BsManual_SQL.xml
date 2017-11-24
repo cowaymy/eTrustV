@@ -295,18 +295,16 @@
                                 FROM SAL0001D SOM
                                         ,SAL0029D C
                                         ,SYS0013M CORPTYPE
-<!--                                         ,SAL0002D SOD -->
                                         ,SVC0008D HSM
                                         ,SYS0038M EXTENT2
                                         ,sal0023d sal023
-                                        ,SYS0064M sys064
+                                        ,SYS0064M sys064 
+                                        ,SAL0045D  sal45
                                 WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
                                 AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
-                                <!-- AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID  -->
                                 AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
                                 AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
-<!--                                 and som.cust_id = sal023.cust_id -->
                                 AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
                                 and sal023.area_id = sys064.area_id
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8
