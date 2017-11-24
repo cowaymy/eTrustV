@@ -89,7 +89,7 @@
 <select id="selectArea"  parameterType="Map" resultType="egovMap">
 	            SELECT DISTINCT AREA CODE_ID,
                    AREA CODE_NAME
-        FROM SYS0064M 
+        FROM SYS0064M
 </select>
 
 <insert id="insertSchemaMgmt" parameterType="Map">
@@ -169,56 +169,77 @@
            <![CDATA[  AND PERIOD_TO <=  TO_DATE(#{applyTo}, 'DD/MM/YYYY') ]]>
         </if>
 </select>
+
 <select id="selectSchemaResultMgmt"  parameterType="Map" resultType="egovMap">
+
+SELECT
+MEM_TYPE,
+CODE,
+MEM_CODE,
+SERVICE_DATE,
+DISTANCE,
 <![CDATA[
-        SELECT A.MEM_TYPE,
-                   A.CODE AS branch_id,
-                   A.MEM_CODE,
-                   TO_CHAR(UPD_DT,'YYYY-MM-DD')  service_date,
-                 DISTANCE,
-                (SELECT MILEAGE_AMT
-                FROM SVC0033M 
-                WHERE MEM_TYPE = '2' 
-                AND PERIOD_FROM <= UPD_DT
-                AND PERIOD_TO >= UPD_DT
-                AND RANGE_FROM <= DISTANCE
-                AND RANGE_TO > DISTANCE) AS MILEAGE
-                FROM (
-                SELECT A.MEM_TYPE, C.CODE, A.MEM_CODE, TO_DATE(B.UPD_DT, 'DD-MM-YYYY') AS UPD_DT, SUM(B.DISTANCE) AS DISTANCE
-          FROM ORG0001D A
-                  INNER JOIN SVC0008D B ON A.MEM_ID = B.CODY_ID
-            INNER JOIN SYS0005M C ON C.BRNCH_ID = A.BRNCH
-            WHERE 1=1
-                AND A.MEM_ID = B.CODY_ID
-                AND A.BRNCH = C.BRNCH_ID
-                AND B.MONTH =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)  /* SUBSTR(  :month ,0,2)*/
-                AND B.YEAR =  REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)     /* SUBSTR(:month,3,4) */
-                ]]>
+(SELECT MILEAGE_AMT
+  FROM SVC0033M
+  WHERE /* MEM_TYPE   = '2' */
+  PERIOD_FROM <= UPD_DT
+  AND PERIOD_TO     >= UPD_DT
+  AND RANGE_FROM  <= DISTANCE
+  AND RANGE_TO       > DISTANCE
+  ) AS MILEAGE
+                  ]]>
+FROM
+  (SELECT MEM_TYPE,
+  CODE,
+  MEM_CODE,
+  SERVICE_DATE,
+  SUM(DISTANCE) AS DISTANCE
+  FROM
+    (SELECT B.MEM_TYPE,
+     C.CODE,
+    B.MEM_CODE,
+    TO_CHAR(A.CRT_DT, 'YYYY/MM/DD') AS SERVICE_DATE,
+    A.DISTANCE
+    FROM SVC0008D A,
+      ORG0001D B,
+      SYS0005M C
+    WHERE A.CODY_ID                 = B.MEM_ID
+    AND B.BRNCH                        = C.BRNCH_ID
+
                 <if test="memTypeList != null and memTypeList != '' ">
-	               AND MEM_TYPE IN
-	               <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
-	               #{item}
-	               </foreach>
+                   AND MEM_TYPE IN
+                   <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
                 </if>
                 <if test="memCodeList != null and memCodeList != '' ">
-	               AND A.MEM_CODE
-	               <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
-	               #{item}
-	               </foreach>
+                   AND B.MEM_CODE IN
+                   <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
                 </if>
                 <if test="branchList != null and branchList != '' ">
-	               AND  C.CODE
-	               <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
-	               #{item}
-	               </foreach>
+                   AND  C.CODE IN
+                   <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
                 </if>
-                <![CDATA[
-                 GROUP BY A.MEM_TYPE,
-                        C.CODE,
-                        A.MEM_CODE,
-                        B.UPD_DT) A
-                ]]>
-		 
+/*     AND B.MEM_CODE                  = {memCode} */                                         /*'CD102098'*/
+/*    AND C.code                          = {branch}    */                                          /*'CDB-21'*/
+    AND A.YEAR                          = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)    /* 2017 SUBSTR(:month,0,2)*/
+    AND A.MONTH                       = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)    /*  11 SUBSTR(:month,3,4) */
+    /*AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') = '20171123' FOR DAILY MILEAGE CLAIM */
+    ) A
+  GROUP BY MEM_TYPE,
+  CODE,
+  MEM_CODE,
+    SERVICE_DATE
+  )
+
+
+
+
+
 </select>
     <select id="selectBranch"  parameterType="Map" resultType="egovMap">
         SELECT CODE CODE_ID,
