@@ -1089,46 +1089,44 @@ and cust.cust_id = custCnt.cust_id
         <select id="afterServiceParts" parameterType="Map" resultType="egovMap">
 
 
-				SELECT to_char(G.CUST_ID) as CUST_ID ,
-				        to_char(G.SALES_ORD_ID) AS sales_Order_id,
-				        to_char(G.SALES_ORD_NO) AS sales_Order_No,
-				        to_char(A.AS_NO) AS service_No,
-				       (SELECT  to_char(STK_CODE) 
-				          FROM SYS0026M
-				         WHERE STK_ID = H.ITM_STK_ID)  AS product_Code,
-				        to_char(D.STK_CODE) AS part_Code,
-				        to_char(D.STK_ID) AS part_Id,
-				        to_char(D.STK_DESC) AS part_Name,
-				       (SELECT  to_char(COMPNT_QTY)
-				          FROM LOG0044D
-				         WHERE BOM = E.BOM AND BOM_COMPNT = E.MATRL_NO)
-				          AS quanity,
-				        to_char(C.SRV_FILTER_PRIOD) AS parts_Period,
-				        to_char(D.SERIAL_CHK) AS filter_Barcd_Chk_YN,
-				        to_char(C.SRV_FILTER_LAST_SERIAL) AS filter_Barcd_Serial_No,
-				       TO_CHAR (C.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS last_Chg_Date,
-				       TO_CHAR (C.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS last_Chg_Time,
-				       TO_CHAR (C.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS last_Chg_Date_Origin,
-				       TO_CHAR (C.SRV_FILTER_EXPR_DT, 'HHMM') AS last_ChgTime_Origin,
-				        to_char(D.STK_TYPE_ID) AS part_Type
-				FROM
-				    SVC0001D A
-				    , SAL0090D B
-				    , SAL0087D C
-				    , SYS0026M D
-				    , LOG0043M E
-				    , SAL0001D G
-				    , SAL0002D H
-				WHERE A.AS_SO_ID = B.SRV_SO_ID
-				AND B.SRV_CONFIG_ID = C.SRV_CONFIG_ID
-				AND C.SRV_FILTER_STK_ID = D.STK_ID
-				AND D.STK_CODE = E.MATRL_NO(+)
-				AND A.AS_SO_ID = G.SALES_ORD_ID
-				AND G.SALES_ORD_ID = H.SALES_ORD_ID
-				AND A.AS_MEM_ID = ( SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{userId})
-				AND A.AS_APPNT_DT BETWEEN ADD_MONTHS( LAST_DAY( to_date(#{requestDate}, 'YYYYMM' )) + 1, - 1 ) 
-				                                AND LAST_DAY( TO_DATE( #{requestDate}, 'YYYYMM' ))
-				ORDER BY A.AS_NO ASC
+				SELECT MST.*, to_char(BOM_DTL.COMPNT_QTY) AS quanity
+				  FROM (SELECT to_char (G.CUST_ID) as CUST_ID,
+				               to_char (G.SALES_ORD_ID) AS sales_Orderid,
+				               to_char (G.SALES_ORD_NO) AS sales_Order_No,
+				               to_char (A.AS_NO) AS service_No,
+				               (SELECT to_char (STK_CODE)
+				                  FROM SYS0026M
+				                 WHERE STK_ID = H.ITM_STK_ID) AS product_Code,
+				               to_char (D.STK_CODE) AS part_Code,
+				               to_char (D.STK_ID) AS part_Id,
+				               to_char (D.STK_DESC) AS part_Name,
+				               to_char (C.SRV_FILTER_PRIOD) AS partsPeriod,
+				               to_char (D.SERIAL_CHK) AS filterBarcdChkYN,
+				               to_char (C.SRV_FILTER_LAST_SERIAL) AS filterBarcdSerialNo,
+				               TO_CHAR (C.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS lastChgDate,
+				               TO_CHAR (C.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS lastChgTime,
+				               TO_CHAR (C.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS lastChgDateOrigin,
+				               TO_CHAR (C.SRV_FILTER_EXPR_DT, 'HHMM') AS lastChgTimeOrigin,
+				               to_char (D.STK_TYPE_ID) AS partType
+				          FROM SVC0001D A,
+				               SAL0090D B,
+				               SAL0087D C,
+				               SYS0026M D,
+				               SAL0001D G,
+				               SAL0002D H
+				         WHERE     A.AS_SO_ID = B.SRV_SO_ID
+				               AND B.SRV_CONFIG_ID = C.SRV_CONFIG_ID
+				               AND C.SRV_FILTER_STK_ID = D.STK_ID
+				               AND A.AS_SO_ID = G.SALES_ORD_ID
+				               AND G.SALES_ORD_ID = H.SALES_ORD_ID
+				               AND A.AS_MEM_ID = (SELECT MEM_ID
+				                                    FROM ORG0001D
+				                                   WHERE MEM_CODE = #{userId})
+				              AND A.AS_APPNT_DT BETWEEN ADD_MONTHS( LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' )) + 1, - 1 ) 
+				                                        AND LAST_DAY( TO_DATE( #{requestDate}, 'YYYYMM' )) ORDER BY A.AS_NO ASC ) MST 
+				 , ( SELECT LOG43.MATRL_NO , LOG44.* FROM LOG0043M LOG43 , LOG0044D LOG44 WHERE LOG43.BOM = LOG44.BOM ) BOM_DTL 
+				 WHERE MST.PRODUCT_CODE = BOM_DTL.MATRL_NO AND MST.PART_CODE = BOM_DTL.BOM_COMPNT
+
 
 
 <!-- 					SELECT
