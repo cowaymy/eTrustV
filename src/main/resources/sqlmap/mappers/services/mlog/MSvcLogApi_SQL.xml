@@ -374,7 +374,8 @@ and cust.cust_id = custCnt.cust_id
  -->
 
 
-                    SELECT SAL0001D.SALES_ORD_NO AS sales_Order_No,
+                    SELECT  ROW_NUMBER() OVER(PARTITION BY SAL0001D.SALES_ORD_NO ,SVC0001D.AS_NO  ORDER BY SVC0004D.AS_RESULT_ID DESC) rn,
+                            SAL0001D.SALES_ORD_NO AS sales_Order_No,
                             SVC0001D.AS_NO AS service_No,
                             SAL0029D.NAME AS cust_Name,
                             SVC0001D.AS_STUS_ID AS job_Status,
@@ -1384,6 +1385,10 @@ and cust.cust_id = custCnt.cust_id
           UPDATE SVC0038T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
        </update>
 
+       
+       <update id="updateSuccessRequestRegiStatus" parameterType="string">
+          UPDATE SVC0049T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+       </update>
        
 
         <select id="getNextSvc006dSeq"  resultType="int">
@@ -2444,6 +2449,33 @@ and cust.cust_id = custCnt.cust_id
                             )
                 </insert>        
 
+
+
+                <insert id="insertASRequestRegistrationLogs" parameterType="Map">
+                            INSERT INTO SVC0049T (
+                                RESULT_SEQ
+								,USER_ID
+								,SALES_ORD_NO
+								,CUST_ID
+								,PRODUCT_CODE
+								,DEFECT_CODE_ID
+								,RESULT_REM
+							<!-- 	,TRNSC_ID -->
+								,TRAN_STUS_CD
+
+                            ) VALUES (
+                               SVC0049T_RESULT_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{customerId}
+                               , #{productCode}
+                               , #{defectCodeId}
+                               , #{resultRemark}
+                               , 'N'
+                            )
+                            
+                </insert>        
+                
 
 
 
