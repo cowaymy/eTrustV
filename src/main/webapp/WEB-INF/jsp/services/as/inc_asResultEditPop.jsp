@@ -18,6 +18,9 @@ $(document).ready(function(){
    doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
    doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
    
+      
+   doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
+   
  
 });
 
@@ -149,7 +152,15 @@ function  fn_setSVC0004dInfo(result){
    }else{
        $('#txtFilterCharge').val (tFilterAmt+".00");
    }
-    
+   
+   //INHOUSE 
+   $('#replacement') .val(result[0].inHuseRepairRem);
+   $('#productGroup') .val(result[0].inHuseRepairReplaceYn);
+   $('#productCode') .val(result[0].inHuseRepairGrpCode);
+   $('#serialNo') .val(result[0].inHuseRepairProductCode);
+   $('#inHouseRemark') .val(result[0].inHuseRepairSerialNo);
+   $('#promisedDate') .val(result[0].inHuseRepairPromisDt);
+   
 }
 
 
@@ -602,6 +613,19 @@ function fn_validRequiredField_Save_ResultInfo(){
 
 
 
+function fn_productGroup_SelectedIndexChanged(){
+    
+    var STK_CTGRY_ID = $("#productGroup").val();
+    
+     $("#serialNo").val("");
+     $("#productCode option").remove();
+    
+     doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='+STK_CTGRY_ID, '', '','productCode', 'S' , '');            
+}
+
+
+
+
 function  fn_setSaveFormData(){
 
     //추가된 행 아이템들(배열)
@@ -661,7 +685,13 @@ function  fn_setSaveFormData(){
                    TAX_INVOICE_CONT_PERS:$("#txtContactPerson").text(),
                    productCode  :  aSOrderInfo.stockCode,
                    productName  : aSOrderInfo.stockDesc,
-                   serialNo :   aSOrderInfo.lastInstallSerialNo
+                   serialNo :   aSOrderInfo.lastInstallSerialNo,
+                   IN_HUSE_REPAIR_REM: $("#inHouseRemark").val(),
+                   IN_HUSE_REPAIR_REPLACE_YN:$("#replacement").val(),
+                   IN_HUSE_REPAIR_PROMIS_DT: $("#promisedDate").val(),
+                   IN_HUSE_REPAIR_GRP_CODE: $("#productGroup").val(),
+                   IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
+                   IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val()
     }
     
     var inhouse ={
@@ -749,7 +779,7 @@ function  fn_setSaveFormData(){
 
 
 <form  id="asDataForm" method="post">
-    <div style='display:inline'>
+    <div style='display:none'>
                <input type="text"   id= 'asData_AS_ID' name='asData_AS_ID'/> 
                <input type="text"   id= 'asData_AS_SO_ID' name='asData_AS_SO_ID'/> 
                <input type="text"   id= 'asData_AS_RESULT_ID' name='asData_AS_RESULT_ID'/> 
@@ -1070,6 +1100,63 @@ function  fn_setSaveFormData(){
           <div id="asfilter_grid_wrap" style="width:100%; height:220px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
+    
+    
+    <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+    <dt class="click_add_on"><a href="#">In-House Repair Entry</a></dt>
+    <dd  id='inHouseRepair_div' >
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:170px" />
+        <col style="width:*" />
+        <col style="width:140px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Replacement </th>
+        <td>
+        <label> 
+                  <input type="radio"   id='replacement' name='replacement'  value='1'  /> Y
+                  <input type="radio"   id='replacement' name='replacement'  value='0'  /> N
+        </label>
+        
+        </td>
+        <th scope="row">PromisedDate </th>
+        <td> <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="promisedDate"  name="promisedDate"/> </td>
+    </tr>
+   
+    <tr>
+        <th scope="row">ProductGroup </th>
+        <td>
+            <select  id='productGroup' name='productGroup'  onChange="fn_productGroup_SelectedIndexChanged()"> </select>
+        </td>
+        <th scope="row">ProductCode</th>
+        <td> 
+                <select  id='productCode' name='productCode'  ></select>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">SerialNo</th>
+        <td  colspan="3"><input type="text"  id='serialNo' name='serialNo'  onChange="fn_chSeriaNo()"  />
+        </td>
+    </tr>
+    
+    <tr>
+        <th scope="row">Remark</th>
+        <td colspan="3">
+        <textarea cols="20" rows="5" placeholder=""  id='inHouseRemark' name='inHouseRemark'></textarea>
+        </td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
+    </dd>
+      <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+    
+    
+    
+    
 </dl>
 </article><!-- acodi_wrap end -->
 
