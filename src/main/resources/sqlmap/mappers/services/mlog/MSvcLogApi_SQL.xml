@@ -1098,7 +1098,7 @@ and cust.cust_id = custCnt.cust_id
 
 
 				SELECT MST.*, to_char(BOM_DTL.COMPNT_QTY) AS quanity
-				  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY G.SALES_ORD_ID, A.AS_NO ,D.STK_CODE ORDER BY C.SRV_FILTER_PRV_CHG_DT DESC) rn,
+				  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY G.SALES_ORD_ID, A.AS_NO ,D.STK_ID ,D.STK_CODE ORDER BY C.SRV_FILTER_PRV_CHG_DT DESC) rn,
 				               to_char (G.CUST_ID) as CUST_ID,
 				               to_char (G.SALES_ORD_ID) AS sales_Orderid,
 				               to_char (G.SALES_ORD_NO) AS sales_Order_No,
