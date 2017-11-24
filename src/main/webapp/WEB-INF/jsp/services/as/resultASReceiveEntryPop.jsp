@@ -608,12 +608,12 @@ function fn_validRequiredField_Save(){
         rtnValue =false; 
     }
     
-
+    /*
     if($("#CTGroup").val() == ""){
         rtnMsg += "* Please select the CTGroup. <br />";
         rtnValue =false; 
     }
-    
+    */
     if($("#CTCode").val() == ""){
         rtnMsg += "* Please select the CTCode. <br />";
         rtnValue =false; 
@@ -957,13 +957,13 @@ function fn_addRemark(){
     
     <th scope="row">Appointment Date<span class="must">*</span></th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="appDate" name="appDate" />
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p readonly"  readonly="readonly"   id="appDate" name="appDate" />
     </td>
     
     
     <th scope="row">Appointment <br> Sessione <span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="w100p"/>
+    <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p"    readonly="readonly"  />
     <div class="time_picker w100p" style="display:none"><!-- time_picker start -->
       <input type="text" title="" placeholder="" class="time_date w100p" id="requestTime" name="requestTime"/>
     <ul>
@@ -1037,23 +1037,24 @@ function fn_addRemark(){
     <th scope="row">Error Code<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="errorCode" name="errorCode"> 
-            <option value="1">err code 정의 </option>
+            <option value="1">err code  </option>
     </select>
     </td>
     <th scope="row">Error Description<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="errorDesc" name="errorDesc">
-             <option value="1">err code desc </option>
+             <option value="1">Error code definition is required </option>
     </select>
     </td>
 </tr>
 <tr>
     <th scope="row">DSC Branch<span class="must">*</span></th>
     <td colspan="3">
-    <select class="w100p" id="branchDSC" name="branchDSC">
-    </select>
+       <!--  <input type="text" title="" placeholder="" class="w100p" id="branchDSC" name="branchDSC"  disabled="disabled" /> -->
+     <select class="w100p" id="branchDSC" name="branchDSC"  class="readonly"  readonly="readonly" disabled="disabled">
+    </select> 
     </td>
-    <th scope="row">CT Group<span class="must">*</span></th>
+    <th scope="row">CT Group </th>
     <td>  <input type="text" title="" placeholder="" class="w100p" id="CTGroup" name="CTGroup"/>
     </td>
     <th scope="row">BS Within 30 Days</th>
@@ -1064,7 +1065,7 @@ function fn_addRemark(){
 <tr>
     <th scope="row">Assign CT<span class="must">*</span></th>
     <td colspan="3">  
-           <input type="text" title="" placeholder="" id="CTCode" name="CTCode"  onchange="fn_changeCTCode(this)"/>
+           <input type="text" title="" placeholder="" id="CTCode" name="CTCode"   class="readonly"  readonly="readonly"   onchange="fn_changeCTCode(this)"/>
     </td>
     <th scope="row">Mobile No</th>
     <td>

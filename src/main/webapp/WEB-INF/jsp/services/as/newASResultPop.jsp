@@ -20,16 +20,15 @@ $(document).ready(function(){
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
     
-    doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
+    doGetCombo('/services/as/getASFilterInfo.do?AS_ID='+'${AS_ID}', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
-
-    
-    
-    
     
     doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');    
     doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
+    
+    doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
+    
     
     
 	fn_getASOrderInfo();
@@ -39,7 +38,7 @@ $(document).ready(function(){
 	fn_DisablePageControl();
     $("#ddlStatus").attr("disabled", false); 
 
-	
+    AUIGrid.resize(myFltGrd10, 950,200);
 });
 
 
@@ -86,6 +85,7 @@ function createCFilterAUIGrid() {
                             { dataField : "filterPrice",       headerText  : "Price",  width  : 100 },
                             { dataField : "filterTotal",     headerText  : "Total",  width          :150},
                             { dataField : "filterRemark",     headerText  : "Remark",  width          :150,    editable       : false },
+                            { dataField : "srvFilterLastSerial",     headerText  : "Serial No",  width          :200,    editable       : true },
                             {
                                 dataField : "undefined",
                                 headerText : " ",
@@ -99,7 +99,7 @@ function createCFilterAUIGrid() {
                                 }
                             },
                             { dataField : "filterID",     headerText  : "filterID",  width          :150,   visible:false}
-
+                            
                             
                             
      ];   
@@ -143,8 +143,6 @@ function fn_getASOrderInfo(){
             $("#txtInstruction").text(result[0].instct);
             $("#txtMembership").text(result[0].c5);
             $("#txtExpiredDate").text(result[0].c6);
-            
-            
         });
 }
 
@@ -198,7 +196,36 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
         if(result.length >0 ){
             $("#"+_tobj+"_text").val((result[0].resnDesc.trim()).trim());
             $("#"+_tobj+"_id").val(result[0].resnId);
+            
+            
+	            if('337' == _v){
+	                if(  result[0].codeId.trim()   =='B8' ) {  //Solution Code  B8인 경우만 가능함 .
+	
+	                    $("#replacement").attr("disabled", false); 
+	                    $("#promisedDate").attr("disabled", false); 
+	                    $("#productGroup").attr("disabled", false); 
+	                    $("#productCode").attr("disabled", false); 
+	                    $("#serialNo").attr("disabled", false); 
+	                    $("#inHouseRemark").attr("disabled", false); 
+	                    
+	                    $("#inHouseRepair_div").attr("style","display:inline");
+	                    
+	                    
+	                }else{
+	
+	                    $("#replacement").val("").attr("disabled", true); 
+	                    $("#promisedDate").val("").attr("disabled", true); 
+	                    $("#productGroup").val("").attr("disabled", true); 
+	                    $("#productCode").val("").attr("disabled", true); 
+	                    $("#serialNo").val("").attr("disabled", true); 
+	                    $("#inHouseRemark").val("").attr("disabled", true); 
+	                    
+	                    $("#inHouseRepair_div").attr("style","display:none");
+	                    
+	                }
+	             }
         }else{
+        	
         	   $("#"+_tobj+"_text").val("* No such detail of defect found.");
         }
     });
@@ -267,6 +294,7 @@ function fn_filterAdd(){
 	    fitem.filterRemark =$("#txtFilterRemark").val();    
 	    fitem.filterID =$("#ddlFilterCode").val(); 
 	    //fitem.filterCODE =$("#ddlFilterCode").va();
+	   fitem.srvFilterLastSerial  =$("#ddSrvFilterLastSerial").val();  
 	    
 	    var chargePrice =0;
 	    if (fitem.filterType  == "CHG") {
@@ -351,6 +379,10 @@ function fn_ddlStatus_SelectedIndexChanged(){
         case "4":
             //COMPLETE
             fn_openField_Complete();
+            var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+			$("#ddlCTCode").val(selectedItems[0].item.asMemId);
+			$("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
+				
             break;
         case "10":
             //CANCEL
@@ -394,8 +426,8 @@ function fn_openField_Complete(){
      
     
     $("#txtFilterCharge").attr("disabled", false); 
-     $("#txtLabourCharge").attr("disabled", false); 
-     $("#cmbLabourChargeAmt").attr("disabled", false); 
+    $("#txtLabourCharge").attr("disabled", false); 
+    $("#cmbLabourChargeAmt").attr("disabled", false); 
     $("#ddlFilterCode").attr("disabled", false); 
     $("#ddlFilterQty").attr("disabled", false); 
     $("#ddlFilterPayType").attr("disabled", false); 
@@ -547,7 +579,13 @@ function  fn_setSaveFormData(){
 				   AS_ENTRY_POINT:  0,
 				   AS_WORKMNSH_TAX_CODE_ID: 0,
 				   AS_WORKMNSH_TXS: 0,
-				   AS_RESULT_MOBILE_ID: 0
+				   AS_RESULT_MOBILE_ID: 0,
+				   IN_HUSE_REPAIR_REM: $("#inHouseRemark").val(),
+	               IN_HUSE_REPAIR_REPLACE_YN:$("#replacement").val(),
+	               IN_HUSE_REPAIR_PROMIS_DT: $("#promisedDate").val(),
+	               IN_HUSE_REPAIR_GRP_CODE: $("#productGroup").val(),
+	               IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
+	               IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val()
 	}
 	
 	var  saveForm ={
@@ -559,13 +597,13 @@ function  fn_setSaveFormData(){
 	
 	
 
-    Common.ajax("POST", "/services/as/newResultAdd.do", saveForm, function(result) {
-        console.log("newResultAdd.");
+    Common.ajax("POST", "/services/as/newASInHouseAdd.do", saveForm, function(result) {
+        console.log("newASInHouseAdd.");
         console.log( result);       
         
         if(result.asNo !=""){
             Common.alert("<b>AS result successfully saved.</b>");
-            fn_DisablePageControl();
+           // fn_DisablePageControl();
         }
         
     });
@@ -808,6 +846,46 @@ function fn_doClear(){
 
 
 
+function fn_chSeriaNo(){
+    
+    if($("#productGroup option:selected").val() ==""){
+        Common.alert("Please select the productGroup.<br/>");
+        return ;
+    }
+
+    if($("#productCode option:selected").val() ==""){
+        Common.alert("Please select the productCode.<br/>");      
+        return ;
+    }
+    
+    
+    Common.ajax("GET", "/services/as/inHouseIsAbStck.do", {PARTS_SERIAL_NO: $("#serialNo").val()  ,CT_CODE:$("#ddlCTCode").val() } , function(result) {
+        console.log("inHouseIsAbStck.");
+        console.log( result);
+       // var is =false;
+         var is =true;
+        
+        if(result != null){
+            //var is =true;
+            if(result.isStk  != "0"){
+                is= true;
+            }
+        }
+        if(is ==false )   $("#btnSaveDiv").attr("style","display:none");
+    });
+}
+
+
+function fn_productGroup_SelectedIndexChanged(){
+    
+    var STK_CTGRY_ID = $("#productGroup").val();
+    
+     $("#serialNo").val("");
+     $("#productCode option").remove();
+    
+     doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='+STK_CTGRY_ID, '', '','productCode', 'S' , '');            
+}
+
 
 </script>
 
@@ -820,7 +898,7 @@ function fn_doClear(){
 <form id="resultASForm" method="post">
     <div  style="display:none">
         <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
-        <input type="text" name="ORD_NO"   id="AS_NO"  value="${ORD_NO}"/>
+        <input type="text" name="ORD_NO"   id="ORD_NO"  value="${ORD_NO}"/>
         <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
         <input type="text" name="AS_ID"   id="AS_ID"  value="${AS_ID}"/>
     </div>
@@ -1113,7 +1191,7 @@ function fn_doClear(){
         <th scope="row">Error Code</th>
         <td>
         <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">에러코드</option>
+                     <option value="9999">ErrorCode</option>
          </select>
         </td>
         <th scope="row">CT Code</th>
@@ -1129,7 +1207,7 @@ function fn_doClear(){
         <th scope="row">Error Description</th>
         <td>
         <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">에러코드 신규정의 필요 </option>
+             <option value="9999">Error code definition is required </option>
         </select>
         </td>
         <th scope="row">Warehouse</th>
@@ -1293,12 +1371,23 @@ function fn_doClear(){
         </select>
         </td>
     </tr>
+    
+    <tr>
+        <th scope="row">Serial No</th>
+        <td colspan="3">
+          <input type="text"  id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial'  />
+        </td>
+    </tr>
+    
     <tr>
         <th scope="row">Remark</th>
         <td colspan="3">
         <textarea cols="20" rows="5" placeholder=""  id='txtFilterRemark' name='txtFilterRemark'></textarea>
         </td>
     </tr>
+    
+    
+    
     </tbody>
     </table><!-- table end -->
 
@@ -1313,6 +1402,63 @@ function fn_doClear(){
     </article><!-- grid_wrap end -->
 
     </dd>
+    
+    
+    <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+    <dt class="click_add_on"><a href="#">In-House Repair Entry</a></dt>
+    <dd  id='inHouseRepair_div' style="display:none">
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:170px" />
+        <col style="width:*" />
+        <col style="width:140px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Replacement </th>
+        <td>
+        <label> 
+                  <input type="radio"   id='replacement' name='replacement'  value='1'  /> Y
+                  <input type="radio"   id='replacement' name='replacement'  value='0'  /> N
+        </label>
+        
+        </td>
+        <th scope="row">PromisedDate </th>
+        <td> <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="promisedDate"  name="promisedDate"/> </td>
+    </tr>
+   
+    <tr>
+        <th scope="row">ProductGroup </th>
+        <td>
+            <select  id='productGroup' name='productGroup'  onChange="fn_productGroup_SelectedIndexChanged()"> </select>
+        </td>
+        <th scope="row">ProductCode</th>
+        <td> 
+                <select  id='productCode' name='productCode'  ></select>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">SerialNo</th>
+        <td  colspan="3"><input type="text"  id='serialNo' name='serialNo'  onChange="fn_chSeriaNo()"  />
+        </td>
+    </tr>
+    
+    <tr>
+        <th scope="row">Remark</th>
+        <td colspan="3">
+        <textarea cols="20" rows="5" placeholder=""  id='inHouseRemark' name='inHouseRemark'></textarea>
+        </td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
+    </dd>
+      <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+    
+    
+    
+    
 </dl>
 </article><!-- acodi_wrap end -->
 <ul class="center_btns mt20" id='btnSaveDiv'>
@@ -1325,3 +1471,11 @@ function fn_doClear(){
 </form>
 </section><!-- content end -->
 </div><!-- popup_wrap end -->
+
+<script type="text/javaScript">
+
+
+</script>
+
+
+                                
