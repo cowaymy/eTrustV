@@ -162,7 +162,7 @@
     
 		function fn_getActivefilterInfo(){
 		    
-		    Common.ajax("GET", "/services/bs/getActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordNo}'}, function(result) {
+		    Common.ajax("GET", "/services/bs/getActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
 		        console.log("getActivefilterInfo.");
 		        console.log( result);
 		        AUIGrid.setGridData(myDetailGridIDActive, result);         //getActivefilterInfo
