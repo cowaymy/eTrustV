@@ -154,11 +154,11 @@ function  fn_setSVC0004dInfo(result){
    }
    
    //INHOUSE 
-   $('#replacement') .val(result[0].inHuseRepairRem);
-   $('#productGroup') .val(result[0].inHuseRepairReplaceYn);
-   $('#productCode') .val(result[0].inHuseRepairGrpCode);
-   $('#serialNo') .val(result[0].inHuseRepairProductCode);
-   $('#inHouseRemark') .val(result[0].inHuseRepairSerialNo);
+   $('#replacement') .val(result[0].inHuseRepairReplaceYn);
+   $('#productGroup') .val(result[0].inHuseRepairGrpCode);
+   $('#productCode') .val(result[0].inHuseRepairProductCode);
+   $('#serialNo') .val(result[0].inHuseRepairSerialNo);
+   $('#inHouseRemark') .val(result[0].inHuseRepairRem);
    $('#promisedDate') .val(result[0].inHuseRepairPromisDt);
    
 }
