@@ -147,7 +147,7 @@ var targetSrvcMstColumnLayout = [
     { dataField:"custName" ,headerText:"Customer Name" ,editable : false , width : 250 },
     {
         dataField : "btnCheck",
-        headerText : " ",
+        headerText : "Include",
         width: 50,
         renderer : {
             type : "CheckBoxEditRenderer",            
@@ -174,7 +174,7 @@ var targetSrvcDetColumnLayout = [
     { dataField:"srvLdgrRefDt" ,headerText:"Bill Date" ,editable : false , width : 100},
     {
         dataField : "btnCheck",
-        headerText : " ",
+        headerText : "Include",
         width: 50,
         renderer : {
             type : "CheckBoxEditRenderer",            
@@ -211,7 +211,7 @@ var targetBillMstColumnLayout = [
     { dataField:"stusNm" ,headerText:"Status" ,editable : false , width : 100 },
     {
         dataField : "btnCheck",
-        headerText : " ",
+        headerText : "Include",
         width: 50,
         renderer : {
             type : "CheckBoxEditRenderer",            
