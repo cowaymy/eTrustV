@@ -1388,16 +1388,16 @@ public class ServiceApiController {
 //		 business service STAT....18:22
 //		// TODO : installResult 구현 필요.....
 		LOGGER.debug("params :"+ params.toString());
-		MSvcLogApiService.insertASRequestRegist(params);
+		//MSvcLogApiService.insertASRequestRegist(params);
 //		 business service END ....
 		
 		
 		// TODO : 리턴할 dto 구현.
-		transactionId = aSRequestRegistForm.getTransactionId();
-		
-		if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
-			MSvcLogApiService.updateSuccessRequestRegiStatus(transactionId);
-		}
+//		transactionId = aSRequestRegistForm.getTransactionId();
+//		
+//		if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
+//			MSvcLogApiService.updateSuccessRequestRegiStatus(transactionId);
+//		}
 		
 		return ResponseEntity.ok(ASRequestRegistDto.create(transactionId));
 
