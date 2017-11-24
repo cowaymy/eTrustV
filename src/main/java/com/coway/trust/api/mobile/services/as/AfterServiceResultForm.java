@@ -49,13 +49,13 @@ public class AfterServiceResultForm {
 	private String inHouseRepairRemark;
 
 	@ApiModelProperty(value = "")
-	private String inHouseRepairReplacementYN;
+	private String inHouseRepairReplacementYn;
 
 	@ApiModelProperty(value = "")
 	private String inHouseRepairPromisedDate;
 
 	@ApiModelProperty(value = "")
-	private String inHouseRepairProductGroupCode;
+	private String inhouserepairproductgroupcode;
 
 	@ApiModelProperty(value = "")
 	private String inHouseRepairProductCode;
@@ -318,13 +318,7 @@ public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServi
 		this.inHouseRepairRemark = inHouseRepairRemark;
 	}
 
-	public String getInHouseRepairReplacementYN() {
-		return inHouseRepairReplacementYN;
-	}
 
-	public void setInHouseRepairReplacementYN(String inHouseRepairReplacementYN) {
-		this.inHouseRepairReplacementYN = inHouseRepairReplacementYN;
-	}
 
 	public String getInHouseRepairPromisedDate() {
 		return inHouseRepairPromisedDate;
@@ -334,13 +328,31 @@ public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServi
 		this.inHouseRepairPromisedDate = inHouseRepairPromisedDate;
 	}
 
-	public String getInHouseRepairProductGroupCode() {
-		return inHouseRepairProductGroupCode;
+
+
+	public String getInHouseRepairReplacementYn() {
+		return inHouseRepairReplacementYn;
 	}
 
-	public void setInHouseRepairProductGroupCode(String inHouseRepairProductGroupCode) {
-		this.inHouseRepairProductGroupCode = inHouseRepairProductGroupCode;
+
+
+	public void setInHouseRepairReplacementYn(String inHouseRepairReplacementYn) {
+		this.inHouseRepairReplacementYn = inHouseRepairReplacementYn;
 	}
+
+
+
+	public String getInhouserepairproductgroupcode() {
+		return inhouserepairproductgroupcode;
+	}
+
+
+
+	public void setInhouserepairproductgroupcode(String inhouserepairproductgroupcode) {
+		this.inhouserepairproductgroupcode = inhouserepairproductgroupcode;
+	}
+
+
 
 	public String getInHouseRepairProductCode() {
 		return inHouseRepairProductCode;
