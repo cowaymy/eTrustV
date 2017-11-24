@@ -79,6 +79,10 @@
 			var month = Number(cmmDt.substring(0, 2));
 			var year = Number(cmmDt.substring(3));
 			var taskID = month + (year * 12) - 24157; //taskId
+			
+			var option = {
+			        isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+			      };
 
 			if (type == "1") {
 				var confirmChk = $("#searchForm [name=confirmChk]").val();
@@ -92,6 +96,9 @@
 
 				if(salesPersonCd=="503581"){//GCM 
 					reportFileName = "/commission/SGMComm_PDF.rpt"; //reportFileName
+				 	option = {
+				              isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+				            };
 				}else{
 					reportFileName = "/commission/HPComm_PDF.rpt"; //reportFileName
 				}				
@@ -99,10 +106,10 @@
 				reportViewType = "PDF"; //viewType
 
 				//set parameters
-				$($reportForm).append('<input type="hidden" id="Memcode" name="Memcode" value="" /> ');
-				$($reportForm).append('<input type="hidden" id="Month" name="Month" value="" /> ');
-				$($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-				$($reportForm).append('<input type="hidden" id="Year" name="Year" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+				$($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
 
 				$("#reportForm #Memcode").val(salesPersonCd);
 				$("#reportForm #Month").val(month);
@@ -169,9 +176,7 @@
 			$("#reportForm #viewType").val(reportViewType);
 
 			//  report 호출
-			var option = {
-				isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
-			};
+			
 			Common.report("reportForm", option);
 			$("#searchForm #confirmChk").val("N");
 			  
