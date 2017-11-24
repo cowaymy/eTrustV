@@ -526,6 +526,24 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		MSvcLogApiMapper.insertASRequestRegist(params);
 	}
 
+	@Override
+	public void insertHsFailJobResult(Map<String, Object> params) {
+		MSvcLogApiMapper.insertHsFailJobResult(params);
+		
+	}
+
+	@Override
+	public void insertAsFailJobResult(Map<String, Object> params) {
+		MSvcLogApiMapper.insertAsFailJobResult(params);
+		
+	}
+
+	@Override
+	public void insertInstallFailJobResult(Map<String, Object> params) {
+		MSvcLogApiMapper.insertInstallFailJobResult(params);
+		
+	}
+
 
 	
 	

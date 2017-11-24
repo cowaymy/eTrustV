@@ -105,6 +105,12 @@ public interface MSvcLogApiService {
 	void updateSuccessRequestRegiStatus(String transactionId);
 
 	void insertASRequestRegist(Map<String, Object> params);
+
+	void insertHsFailJobResult(Map<String, Object> params);
+
+	void insertAsFailJobResult(Map<String, Object> params);
+
+	void insertInstallFailJobResult(Map<String, Object> params);
 	
 	
 
