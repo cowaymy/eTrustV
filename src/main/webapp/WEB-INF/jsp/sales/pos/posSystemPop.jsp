@@ -188,11 +188,8 @@ $(document).ready(function() {
                 //창고 parameter
             //  $("#_cmbWhBrnchIdPop").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
                 Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
-    		
-    		
     		}
     	}
-    	
 	});
     
     
@@ -556,6 +553,8 @@ function fn_calculateAmt(amt, qty) {
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
+    <li><p class="btn_blue2"><a id="_purchBtn">Purchase Items</a></p></li>
+    <li><p class="btn_blue2" ><a id="_purchMemBtn" style="display: none;">Member List</a></p></li>
     <li><p class="btn_blue2"><a id="_posReqSaveBtn">Save</a></p></li>
 </ul>
 
@@ -636,8 +635,8 @@ function fn_calculateAmt(amt, qty) {
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="_purchBtn">Purchase Items</a></p></li>
-    <li><p class="btn_grid" ><a id="_purchMemBtn" style="display: none;">Member List</a></p></li>
+    <!-- <li><p class="btn_grid"><a id="_purchBtn">Purchase Items</a></p></li>
+    <li><p class="btn_grid" ><a id="_purchMemBtn" style="display: none;">Member List</a></p></li> -->
     <li><p class="btn_grid"><a id="_purcDelBtn">DEL</a></p></li>
 </ul>
 

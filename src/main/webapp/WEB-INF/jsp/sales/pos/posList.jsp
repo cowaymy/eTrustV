@@ -259,7 +259,20 @@ $(document).ready(function() { //***********************************************
     /***************** Status Change  *****************/
     // 1) Pos Master Update
     $("#_headerSaveBtn").click(function() {
-		
+    	
+    	var rowCnt = AUIGrid.getRowCount(posGridID);
+        if(rowCnt <= 0 ){
+            Common.alert("* please Search First.");
+            return;
+        }
+    	var updateList = AUIGrid.getEditedRowItems(posGridID);
+    	console.log("updateList(type) : " + $.type(updateList));
+    	
+    	if(updateList == null || updateList.length <= 0 ){
+    		Common.alert("* No data Change.");
+    		return;
+    	}
+    	
         var PosGridVO = {posStatusDataSetList : GridCommon.getEditData(posGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
         
          Common.ajax("POST", "/sales/pos/updatePosMStatus", PosGridVO, function(result) {
@@ -275,6 +288,19 @@ $(document).ready(function() { //***********************************************
     // 2) Pos Member Update
     $("#_deducSaveBtn").click(function() {
         
+    	var rowCnt = AUIGrid.getRowCount(deductionCmGridID);
+        if(rowCnt <= 0 ){
+            Common.alert("* please Search Member(s).");
+            return;
+        }
+        var updateList = AUIGrid.getEditedRowItems(deductionCmGridID);
+        console.log("updateList(type) : " + $.type(updateList));
+        
+        if(updateList == null || updateList.length <= 0 ){
+            Common.alert("* No data Change.");
+            return;
+        }
+    	
         var PosGridVO = {posMemberStatusDataSetList : GridCommon.getEditData(deductionCmGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
         
         Common.ajax("POST", "/sales/pos/updatePosMemStatus", PosGridVO, function(result) {
@@ -291,6 +317,19 @@ $(document).ready(function() { //***********************************************
     // 3) Pos Detail Update
     $("#_itemSaveBtn").click(function() {
          
+    	var rowCnt = AUIGrid.getRowCount(posItmDetailGridID);
+        if(rowCnt <= 0 ){
+            Common.alert("* please Search Item(s).");
+            return;
+        }
+        var updateList = AUIGrid.getEditedRowItems(posItmDetailGridID);
+        console.log("updateList(type) : " + $.type(updateList));
+        
+        if(updateList == null || updateList.length <= 0 ){
+            Common.alert("* No data Change.");
+            return;
+        }
+    	
         var PosGridVO = {posDetailStatusDataSetList : GridCommon.getEditData(posItmDetailGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
         
         Common.ajax("POST", "/sales/pos/updatePosDStatus", PosGridVO, function(result) {
@@ -432,7 +471,6 @@ function createPosItmDetailGrid(){
     };
     
     posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap", posItmColumnLayout,'', itmGridPros);  // address list
-    AUIGrid.resize(posItmDetailGridID , 1660, 300);
 }
 
 function createDeductionGrid () {
@@ -488,7 +526,6 @@ function createDeductionGrid () {
 	    };
 	    
 	    deductionCmGridID = GridCommon.createAUIGrid("#deduc_grid_wrap", posDeducColumnLayout,'', memGridPros);  // address list
-	    AUIGrid.resize(deductionCmGridID , 1660, 300);
 }
 
 
@@ -633,8 +670,6 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
                
                 $('#salesmanCd').removeClass("readonly");
         	}
-        	
-          
         }
     });
 }
@@ -697,7 +732,6 @@ function createAUIGrid(){
     };
     
     posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,'', gridPros);  // address list
-    AUIGrid.resize(posGridID , 1660, 300);
 }
 
 function fn_getPosListAjax(){
@@ -724,6 +758,8 @@ function fn_getPosListAjax(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>POS Listing</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" id="_systemBtn">POS System</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_reversalBtn">POS Reversal</a></p></li>
     <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -823,10 +859,10 @@ function fn_getPosListAjax(){
 
 <section class="search_result"><!-- search_result start -->
 
-<ul class="right_btns">
+<!-- <ul class="right_btns">
     <li><p class="btn_grid"><a  id="_systemBtn">POS System</a></p></li>
     <li><p class="btn_grid"><a  id="_reversalBtn">POS Reversal</a></p></li>
-</ul>
+</ul> -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Result List</h3>

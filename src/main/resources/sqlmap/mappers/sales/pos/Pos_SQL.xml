@@ -309,7 +309,8 @@
                         Project1.MOV_QTY,
                         NVL(Project1.AMT , 0) AMT,                     
                         (AMT * 100) / 106 SUB_CHANGES,
-                        AMT - ((AMT * 100) / 106) TAXES
+                        AMT - ((AMT * 100) / 106) TAXES,
+                        Project1.SERIAL_CHK
                     FROM ( 
                             SELECT 
                                 NVL(Extent2.LOC_ID, 0) LOC_ID,
@@ -320,7 +321,8 @@
                                 Extent1.STK_CTGRY_ID,
                                 (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
                                 Extent2.MOV_QTY,
-                                NVL(Extent3.AMT, 0) AMT
+                                NVL(Extent3.AMT, 0) AMT,
+                                Extent1.SERIAL_CHK
                             FROM                     
                                 SYS0026M Extent1 
                             LEFT JOIN 
@@ -1988,4 +1990,14 @@
        AND
             MEM_ID = #{memId}
     </select>
+    
+    <resultMap type="egovMap" id="bookMap"/>
+    
+    <select id="posBookingCallSP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+       <![CDATA[  
+            {
+                  call SP_LOGISTIC_REQUEST ( #{psno}, #{retype} ,#{pType} ,#{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=bookMap})
+            }
+         ]]>
+      </select> 
 </mapper>

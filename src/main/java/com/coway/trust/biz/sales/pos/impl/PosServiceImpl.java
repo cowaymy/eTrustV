@@ -565,19 +565,219 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
                  	
             	 }
          	}// end 8
+        
+           //  *********************   PAYMENT LOGIC START *********************   //
+            // When   'POS SALES' Case 
+/*            if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2390 -- POS SALES
+            	
+            	int trxNo = int.Parse(this.GetDOCNumberOnlyNumber(23)); //TRX No.
+                this.UpdateDOCNumber(23);
+                orNo = this.GetDOCNumber(3); //WOR No.
+                this.UpdateDOCNumber(3);
+
+                #region Data.PayTrx
+                entity.PayTrxes.Add(paytrx);
+                entity.SaveChanges();
+                #endregion
+
+                #region Data.PayM || Data.PayD || Data.AccGLRoute
+                payM.ORNo = orNo;
+                payM.BillID = accbilling.BillID;
+                payM.TrxID = paytrx.TrxID;
+                payM.AccBillID = accorderbill.AccBillID;
+                payM.TaxInvoiceRefNo = InvoiceNum;
+                payM.TaxInvoiceRefDate = InvMiscMaster.TaxInvoiceRefDate;
+
+                entity.PayMs.Add(payM);
+                entity.SaveChanges();
+            	
+            	//9.  ********************************************************************************************************* PAY X
+            	Map<String, Object> payXMap = new HashMap<String, Object>();
+            	
+            	//PayTrx Params Setting
+            	 paytrx.TrxDate = this.dpSalesDate.SelectedDate;
+                paytrx.TrxType = 577;
+                paytrx.TrxAmount = Convert.ToDouble(totalpay);
+                paytrx.TrxMatchNo = "";
+            	
+            	//Doc No (23)
+            	//Doc No (3)
+            	
+            	//SAVE
+            	
+            	
+            	//10.  ********************************************************************************************************* PAY D (LOOP)
+            	
+            	//PAYMENT GRID 가져옴
+            	
+            	Data.PayD payD = new Data.PayD();
+                payD.PayItemID = 0;
+                payD.PayID = 0; //update later
+                payD.PayItemModeID = int.Parse(itm["PaymodeID"].Text);
+                payD.PayItemRefNo = itm["RefNo"].Text.ToUpper().Replace("&NBSP;", "");
+                payD.PayItemCCNo = string.IsNullOrEmpty(itm["CCNo"].Text.Trim()) ? null : EncryptionProvider.Encrypt(itm["CCNo"].Text);
+                payD.PayItemIssuedBankID = int.Parse(itm["IssueBankID"].Text);
+                payD.PayItemAmt = double.Parse(itm["PayAmount"].Text);
+                payD.PayItemIsOnline = itm["CRCMode"].Text == "ONLINE" ? true : false;
+                payD.PayItemBankAccID = int.Parse(itm["BankAccID"].Text);
+                if (itm["RefDate"].Text == "&nbsp;" || string.IsNullOrEmpty(itm["RefDate"].Text))
+                {
+                   
+                    payD.PayItemRefDate = defaultDate;
+                }
+                else
+                {
+                    
+                    string strrefdate = itm["RefDate"].Text;
+                    
+                    DateTime refdate = DateTime.ParseExact(strrefdate, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                    // DateTime refdate = DateTime.ParseExact(strrefdate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    
+                    payD.PayItemRefDate = refdate;
+                    
+                }
+               
+                payD.PayItemAppvNo = itm["ApproveNo"].Text.Replace("&nbsp;", "");
+                payD.PayitemRemark = itm["Remark"].Text.Replace("&nbsp;", "");
+                payD.PayItemCCTypeID = int.Parse(itm["CRCTypeID"].Text);
+                payD.PayItemStatusID = 1;
+                payD.PayItemOriCCNo = itm["CCNo"].Text.Replace("&nbsp;", "");
+                payD.IsFundTransfer = false;
+                payD.SkipRecon = false;
+                
+                payDList.Add(payD);
+                }
+                return payDList;
+            	
+            	//그리드 사이즈 만큼의 리스트 생성
+            	
+            	
+            	//LOOP SIZE > PAYD`S SIZE (위에서 생성된 리스트만큼 INSERT)
+            	
+            	pd.PayID = payM.PayID;
+                entity.PayDs.Add(pd);
+                entity.SaveChanges();
+            	
+            	
+            	// SUSPENDACCID 와  SETTLEACCID 세팅
+            	 int SuspendAccID = 0;
+                 int SettleAccID = 0;
+            	
+
+                if (pd.PayItemModeID == 105) //Cash
+                {
+                    SuspendAccID = 531;
+                    SettleAccID = (int)pd.PayItemBankAccID;
+                }
+                else if (pd.PayItemModeID == 107) //Credit Card
+                {
+                    SuspendAccID = (int)pd.PayItemBankAccID;
+
+                    switch ((int)pd.PayItemBankAccID)
+                    {
+                        case 99:
+                            SettleAccID = 83;
+                            break;
+                        case 100:
+                            SettleAccID = 90;
+                            break;
+                        case 101:
+                            SettleAccID = 84;
+                            break;
+                        case 103:
+                            SettleAccID = 83;
+                            break;
+                        case 104:
+                            SettleAccID = 86;
+                            break;
+                        case 105:
+                            SettleAccID = 85;
+                            break;
+                        case 106:
+                            SettleAccID = 84;
+                            break;
+                        case 107:
+                            SettleAccID = 88;
+                            break;
+                        case 110:
+                            SettleAccID = 89;
+                            break;
+                        case 497:
+                            SettleAccID = 497;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (pd.PayItemModeID == 108) //Online
+                {
+                    SuspendAccID = 533;
+                    SettleAccID = (int)pd.PayItemBankAccID;
+                }
+            	// SETTING AND
+            	
+            	
+            	//11.  ********************************************************************************************************* ACCGLROUTE (LOOP)
+            	 Data.AccGLRoute glroute = new Data.AccGLRoute();
+                 glroute.ID = 0;
+                 glroute.GLPostingDate = DateTime.Now;
+                 glroute.GLFiscalDate = DateTime.Parse(string.Format("{0:dd/MM/yyyy}", "1900-01-01"));
+                 glroute.GLBatchNo = paytrx.TrxID.ToString(); 
+                 glroute.GLBatchTypeDesc = "";
+                 glroute.GLBatchTotal = (double)payM.TotalAmt;
+                 glroute.GLReceiptNo = orNo; 
+                 glroute.GLReceiptTypeID = 577;
+                 glroute.GLReceiptBranchID = (int)payM.BranchID;
+                 glroute.GLReceiptSettleAccID = SettleAccID;
+                 glroute.GLReceiptAccountID = SuspendAccID;
+                 glroute.GLReceiptItemID = pd.PayItemID; 
+                 glroute.GLReceiptItemModeID = (int)pd.PayItemModeID;
+                 glroute.GLReverseReceiptItemID = 0;
+                 glroute.GLReceiptItemAmount = (double)pd.PayItemAmt;
+                 glroute.GLReceiptItemCharges = 0;
+                 glroute.GLReceiptItemRCLStatus = "N";
+                 glroute.GLConversionStatus = "Y";
+                 entity.AccGLRoutes.Add(glroute);
+                 entity.SaveChanges();
+            	
+            	//SAVE
+            	
+            	
+            }*/
             
-            LOGGER.info("##################### POS Request Success!!! ######################################");
-            LOGGER.info("##################### POS Request Success!!! ######################################");
-            LOGGER.info("##################### POS Request Success!!! ######################################");
-           //  *********************   PAYMENT LOGIC START *********************   //  
-           //9.  ********************************************************************************************************* PAY X  
+            
            //  *********************   PAYMENT LOGIC END *********************   //
             
+            
+            
+          	//10.  ********************************************************************************************************* BOOKING 
+
+        
+    		Map<String, Object>  logPram = new HashMap<String, Object>();
+    		
+    		logPram.put("psno", docNoPsn);
+    		logPram.put("retype", "POS");  
+    		logPram.put("pType", "PS01");   // PS02 - cancel
+    		logPram.put("pPrgNm", "PSR");  
+    		logPram.put("userId", Integer.parseInt(String.valueOf(params.get("userId"))));   
+    		
+    		LOGGER.info("############### 10. POS BOOKING  START  ################");
+    		LOGGER.info("#########  call Procedure Params : " + logPram.toString());
+    		posMapper.posBookingCallSP_LOGISTIC_REQUEST(logPram);
+    		LOGGER.debug("############ Procedure Result  ");
+    		LOGGER.info("############### 10. POS BOOKING  END  ################");
+            
+            
             LOGGER.info("################################## return value(docNoPsn): "  + docNoPsn);
+            
             
             //retrun Map
             Map<String, Object> rtnMap = new HashMap<String, Object>();
             rtnMap.put("reqDocNo", docNoPsn);
+            
+            LOGGER.info("##################### POS Request Success!!! ######################################");
+            LOGGER.info("##################### POS Request Success!!! ######################################");
+            LOGGER.info("##################### POS Request Success!!! ######################################");
 		return rtnMap;
 	}
 
@@ -1014,7 +1214,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 					}
       			}
       		}
-		
+      		
       	EgovMap rtnMap = new EgovMap();
       	rtnMap.put("posRefNo", posRefNo);
       	

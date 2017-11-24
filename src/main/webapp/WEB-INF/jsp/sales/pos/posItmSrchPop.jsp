@@ -121,7 +121,6 @@ $(document).ready(function() {
     	}
     	
     	// 2. item bank
-    	//TODO  Table 미확정으로 임시 로직 구현
     	if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
     		//id="chkStockList"
     		
@@ -470,7 +469,12 @@ function fn_reasonFieldContorl() {
 function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField){
 
 	if(item.stkTypeId == '62'){
-		return '';
+		//SERIAL_CHK
+		if(item.serialChk != null &&  item.serialChk == 'Y'){
+			return '';	
+		}else{
+			return "edit-column";
+		}
 	}else{
 		return "edit-column";
 	}

@@ -485,6 +485,7 @@ function fn_calculateAmt(amt, qty) {
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
+     <li><p class="btn_blue2"><a id="_purchBtn">Purchase Items</a></p></li>
     <li><p class="btn_blue2"><a id="_posReqSaveBtn">Save</a></p></li>
 </ul>
 
@@ -645,7 +646,6 @@ function fn_calculateAmt(amt, qty) {
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="_purchBtn">Purchase Items</a></p></li>
     <li><p class="btn_grid"><a id="_purcDelBtn">DEL</a></p></li>
 </ul>
 

@@ -137,7 +137,7 @@ $(document).ready(function() {
         var startDate = $('#_sDate').val();
         var endDate = $('#_eDate').val();
         
-        if( fn_getDateGap(startDate , endDate) > 7){
+        if( fn_getDateGap(startDate , endDate) > 31){
             Common.alert("Start date can not be more than 31 days before the end date.");
             return;
         }
@@ -232,6 +232,20 @@ $(document).ready(function() {
     // 1) Pos Master Update
     $("#_posStatusBtn").click(function() {
         
+    	
+    	var rowCnt = AUIGrid.getRowCount(posGridID);
+        if(rowCnt <= 0 ){
+            Common.alert("* please Search First.");
+            return;
+        }
+        var updateList = AUIGrid.getEditedRowItems(posGridID);
+        console.log("updateList(type) : " + $.type(updateList));
+        
+        if(updateList == null || updateList.length <= 0 ){
+            Common.alert("* No data Change.");
+            return;
+        }
+        
     	var PosGridVO = {posStatusDataSetList : GridCommon.getEditData(posGridID)}; // name Careful
     	
 		Common.ajax("POST", "/sales/pos/updatePosMStatus", PosGridVO, function(result) {
@@ -244,6 +258,19 @@ $(document).ready(function() {
     
    // 2) Pos Detail Update
     $("#_itemStatusBtn").click(function() {
+        
+    	var rowCnt = AUIGrid.getRowCount(posItmDetailGridID);
+        if(rowCnt <= 0 ){
+            Common.alert("* please Search Item(s).");
+            return;
+        }
+        var updateList = AUIGrid.getEditedRowItems(posItmDetailGridID);
+        console.log("updateList(type) : " + $.type(updateList));
+        
+        if(updateList == null || updateList.length <= 0 ){
+            Common.alert("* No data Change.");
+            return;
+        }
         
     	var PosGridVO = {posDetailStatusDataSetList : GridCommon.getEditData(posItmDetailGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
         
@@ -344,7 +371,6 @@ function createPosItmDetailGrid(){
     };
     
     posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap", posItmColumnLayout,'', itmGridPros);  // address list
-    //AUIGrid.resize(posItmDetailGridID , 1660, 300);
 }
 
 
@@ -551,7 +577,6 @@ function createAUIGrid(){
     };
     
     posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,'', gridPros);  // address list
-   // AUIGrid.resize(posGridID , 1660, 300);
 }
 
 function fn_getPosListAjax(){
@@ -598,6 +623,8 @@ function fn_getDateGap(sdate, edate){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>POS Other income Listing</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" id="_systemBtn">POS System</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_reversalBtn">POS Reversal</a></p></li>
     <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_underDevelop()"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -689,10 +716,10 @@ function fn_getDateGap(sdate, edate){
 
 <section class="search_result"><!-- search_result start -->
 
-<ul class="right_btns">
+<!-- <ul class="right_btns">
     <li><p class="btn_grid"><a  id="_systemBtn">POS System</a></p></li>
     <li><p class="btn_grid"><a  id="_reversalBtn">POS Reversal</a></p></li>
-</ul>
+</ul> -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Result List</h3>

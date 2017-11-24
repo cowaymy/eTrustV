@@ -151,4 +151,9 @@ public interface PosMapper {
 	void updatePosMemStatus(PosMemberVO pmvo);
 	
 	/*EgovMap chkPosType(Map<String, Object> params);*/
+	
+	/**** call procedure ****/
+	
+	 Map<String, Object> posBookingCallSP_LOGISTIC_REQUEST(Map<String, Object> param);
+	
 }
