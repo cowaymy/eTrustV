@@ -11,7 +11,7 @@ function mileageCalSchemaResList() {
                           { dataField : "memCode", headerText  : "Member Code",    width : 100 },
                           { dataField : "serviceDate", headerText  : "Service Date",    width : 100 },
                           { dataField : "totalDistance", headerText  : "Total Distance",    width : 100 },
-                          { dataField : "mileage Amount",       headerText  : "Mileage Amount",  width  : 200},
+                          { dataField : "mileage",       headerText  : "Mileage Amount",  width  : 200},
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
@@ -21,7 +21,7 @@ function mileageCalSchemaResList() {
 
 function f_multiCombo() {
     $(function() {
-       
+
         $('#branch').change(function() {
         }).multipleSelect({
             selectAll : true,
@@ -32,13 +32,13 @@ function f_multiCombo() {
             selectAll : true,
             width : '80%'
         });
-        
+
 
     });
 }
 $(document).ready(function(){
 	mileageCalSchemaResList();
-	
+
 	$("#memType").change(function (){
 		var memType = $("#memType").val();
 		if(memType == 2){
