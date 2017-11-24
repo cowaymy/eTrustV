@@ -55,7 +55,7 @@ public class AfterServiceResultForm {
 	private String inHouseRepairPromisedDate;
 
 	@ApiModelProperty(value = "")
-	private String inhouserepairproductgroupcode;
+	private String inHouseRepairProductGroupCode;
 
 	@ApiModelProperty(value = "")
 	private String inHouseRepairProductCode;
@@ -345,14 +345,18 @@ public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServi
 
 
 
-	public String getInhouserepairproductgroupcode() {
-		return inhouserepairproductgroupcode;
+
+
+
+
+	public String getInHouseRepairProductGroupCode() {
+		return inHouseRepairProductGroupCode;
 	}
 
 
 
-	public void setInhouserepairproductgroupcode(String inhouserepairproductgroupcode) {
-		this.inhouserepairproductgroupcode = inhouserepairproductgroupcode;
+	public void setInHouseRepairProductGroupCode(String inHouseRepairProductGroupCode) {
+		this.inHouseRepairProductGroupCode = inHouseRepairProductGroupCode;
 	}
 
 
