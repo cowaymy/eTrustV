@@ -12,7 +12,7 @@ var myGridID;
 function fn_searchASManagement(){
         Common.ajax("GET", "/services/as/searchASManagementList.do", $("#ASForm").serialize(), function(result) {
             console.log("성공.");
-            console.log("data : " + result);
+            console.log( result);
             AUIGrid.setGridData(myGridID, result);
         });
 }
@@ -235,8 +235,12 @@ function fn_asResultEditPop(){
     var asResultId  =selectedItems[0].item.asResultId;
     
     if(asStusId  =="ACT"){
-        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-        return ;
+    	if(selectedItems[0].item.asSlutnResnId =='454' ){
+    		
+    	}else{
+            Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
+            return ;
+    	}
    }
     console.log(selectedItems[0].item);
     
@@ -622,7 +626,7 @@ function fn_excelDown(){
     <dd>
     <ul class="btns">
       <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditPop()"> AS Result  Edit </a></p></li>
-      <li><p class="link_btn"><a href="#" onclick="javascript:fn_asInhouseEntryPop()"> New AS In-House </a></p></li>
+      
         <!-- 171110 :: 선한이  -->
         <!-- <li><p class="link_btn"><a href="#" ondblclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li> -->
         <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li> -->

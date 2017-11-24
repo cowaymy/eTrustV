@@ -376,14 +376,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				        Map<String, Object>  logPram = null ;
 						/////////////////////////물류 호출//////////////////////
 						logPram =new HashMap<String, Object>();
-			            logPram.put("ORD_ID",    params.get("") );
+			            logPram.put("ORD_ID",    params.get("AS_ID") );
 			            logPram.put("RETYPE", "");  
 			            logPram.put("P_TYPE", "");  
 			            logPram.put("P_PRGNM", "INHOUS");  
 			            logPram.put("USERID", String.valueOf(params.get("updator")));   
 			            
 			            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-			            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+			           // servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
 			            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
 			            /////////////////////////물류 호출 END //////////////////////   	
 			            
@@ -395,14 +395,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				        Map<String, Object>  logPram = null ;
 						/////////////////////////물류 호출//////////////////////
 						logPram =new HashMap<String, Object>();
-			            logPram.put("ORD_ID",    params.get("") );
+			            logPram.put("ORD_ID",    params.get("AS_ID") );
 			            logPram.put("RETYPE", "");  
 			            logPram.put("P_TYPE", "");  
 			            logPram.put("P_PRGNM", "INHOUS");  
 			            logPram.put("USERID", String.valueOf(params.get("updator")));   
 			            
 			            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-			            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+			           // servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
 			            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
 			            /////////////////////////물류 호출 END //////////////////////   	
 			            
@@ -459,7 +459,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				iMap.put("ASR_ITM_TAX_CODE_ID",    "0" ); 
 				iMap.put("ASR_ITM_TXS_AMT" , 			"0" ); 
 				
-				iMap.put("SRV_FILTER_LAST_SERIAL" , updateMap.get("srvFilterLastSerial")); 
+				//iMap.put("SRV_FILTER_LAST_SERIAL" , updateMap.get("srvFilterLastSerial")); 
 				
 
 				LOGGER.debug("					insertSVC0005D {} ",iMap);
@@ -495,7 +495,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				map.put("locId","0"); 
 				map.put("stockId",updateMap.get("filterID")); 
 				map.put("entryDt",new Date()); 
-				map.put("typeId","461"); 
+				map.put("typeId","461");  
 				map.put("refNo",svc0004dmap.get("AS_NO")); 
 			    map.put("salesOrdId",svc0004dmap.get("AS_SO_ID"));
 			    map.put("itmNo", (i+1) ); 

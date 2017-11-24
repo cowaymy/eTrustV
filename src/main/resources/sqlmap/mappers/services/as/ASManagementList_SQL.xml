@@ -31,7 +31,9 @@
 							       S.AS_RESULT_ID ,
 							       S.AS_BRNCH_ID ,
 							       S.AS_MEM_ID,
-							       (SELECT  CODE  FROM  SYS0005M  H WHERE   H.BRNCH_ID =AS_BRNCH_ID) BRNCH_CODE
+							       (SELECT  CODE  FROM  SYS0005M  H WHERE   H.BRNCH_ID =AS_BRNCH_ID) BRNCH_CODE,
+                                   S.AS_SLUTN_RESN_ID,
+                                   S.IN_HUSE_REPAIR_REPLACE_YN
 						  FROM ( SELECT DISTINCT E.AS_ID AS_ID  ,
 						                         E.AS_NO AS_NO  ,
 						                         E.ASSOID1 AS_SO_ID  ,
@@ -63,7 +65,9 @@
 						                            END C5  ,
 						                         E.AS_RESULT_ID ,
 						                         E.AS_BRNCH_ID,
-						                         E.AS_MEM_ID
+						                         E.AS_MEM_ID,
+                                                E.AS_SLUTN_RESN_ID,
+                                                E.IN_HUSE_REPAIR_REPLACE_YN
 						         FROM ( SELECT Extent1.AS_ID AS_ID  ,
 						                       Extent1.AS_NO AS_NO  ,
 						                       Extent1.AS_SO_ID ASSOID1  ,
@@ -81,7 +85,9 @@
 						                       Extent7.AS_RESULT_NO AS_RESULT_NO  ,
 						                       Extent7.AS_TOT_AMT AS_TOT_AMT ,
 						                       Extent1.AS_BRNCH_ID,
-						                       Extent1.AS_MEM_ID
+						                       Extent1.AS_MEM_ID ,
+						                       Extent7.AS_SLUTN_RESN_ID,
+						                       Extent7.IN_HUSE_REPAIR_REPLACE_YN
 						                FROM SVC0001D Extent1
 						                       JOIN SYS0013M Extent2   ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
 						                       JOIN SYS0038M Extent3   ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
@@ -1677,7 +1683,13 @@
 							            WHEN ( S.USER_ID IS NOT NULL ) THEN S.USER_NAME
 							       ELSE ' '
 							          END C28  ,
-							       to_char(S.AS_RESULT_CRT_DT,'dd/mm/yyyy') AS_RESULT_CRT_DT   
+							       to_char(S.AS_RESULT_CRT_DT,'dd/mm/yyyy') AS_RESULT_CRT_DT  ,
+							       S.IN_HUSE_REPAIR_REM, 
+								   S.IN_HUSE_REPAIR_REPLACE_YN, 
+                                   to_char(S.IN_HUSE_REPAIR_PROMIS_DT,'dd/mm/yyyy') IN_HUSE_REPAIR_PROMIS_DT  ,
+								   S.IN_HUSE_REPAIR_GRP_CODE, 
+								   S.IN_HUSE_REPAIR_PRODUCT_CODE, 
+								   S.IN_HUSE_REPAIR_SERIAL_NO
 							  FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID  ,
 							                E.AS_RESULT_NO AS_RESULT_NO  ,
 							                E.AS_CT_ID AS_CT_ID  ,
@@ -1736,7 +1748,13 @@
 							                E3.CODE CODE9  ,
 							                E3.RESN_DESC REASONDESC7  ,
 							                E4.USER_ID USER_ID  ,
-							                E4.USER_NAME USER_NAME  
+							                E4.USER_NAME USER_NAME  ,
+							                E.IN_HUSE_REPAIR_REM, 
+										    E.IN_HUSE_REPAIR_REPLACE_YN, 
+										    E.IN_HUSE_REPAIR_PROMIS_DT, 
+										    E.IN_HUSE_REPAIR_GRP_CODE, 
+										    E.IN_HUSE_REPAIR_PRODUCT_CODE, 
+										    E.IN_HUSE_REPAIR_SERIAL_NO
 							         FROM SVC0004D E
 							                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
 							                LEFT JOIN SYS0032M Extent3   ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID

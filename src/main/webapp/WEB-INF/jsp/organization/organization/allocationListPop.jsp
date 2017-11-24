@@ -708,16 +708,12 @@ function fn_AllocationConfirm(){
         }
         
         
-       if(valArray[0] == valArray[1] ){
+       if(valArray[0] > valArray[1] ){
             Common.alert("선택된 세션는 이미 완료 되었습니다. 다른 세션을 선택하세요 ");
             return ;
        }
         
 
-        if(valArray[0] >  valArray[1]){
-            Common.alert("선택된 세션는 이미 초과된 상태입니다. 다른 세션을 선택하세요 ");
-            return ;
-        }
     }
     
     
