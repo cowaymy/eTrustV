@@ -319,7 +319,7 @@ function searchlocationFunc(){
                    </td>
                    <th scope="row">Location</th>
                    <td>
-                        <select class="w100p" id="searchLoc" name="searchLoc"><option>Choose One</option></select>
+                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select>
                    </td> 
                 </tr>
                 <tr>
