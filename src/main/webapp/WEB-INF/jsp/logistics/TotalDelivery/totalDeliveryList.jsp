@@ -191,12 +191,12 @@
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	    <li>Logistics</li>
 	    <li>Report</li>
-	    <li>Total Delivery No. Report</li>
+	    <li>Total Delivery No.</li>
 	</ul>
 
 <aside class="title_line"><!-- title_line start -->
     <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-    <h2>Total Delivery No. Report</h2>
+    <h2>Total Delivery No.</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -231,11 +231,13 @@
                 <tr>
                     <th scope="row">Delivery Number</th>
                     <td colspan="2">
-                        <select class="w100p" id="seldelno" name="seldelno"></select>
+                       <input type="text" class="w100p"  id="seldelno" name="seldelno">
                     </td>
-                    <td colspan="3">&nbsp;</td>
+                    <th scope="row">Stock Request Number</th>
+                    <td colspan="2">
+                       <input type="text" class="w100p"  id="stkreqstno" name="stkreqstno">
+                    </td>
                 </tr>
-
                 <tr>
                     <th scope="row">Stock Activity Type</th>
                     <td colspan="2">
