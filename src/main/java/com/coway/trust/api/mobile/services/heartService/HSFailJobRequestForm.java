@@ -22,7 +22,15 @@ public class HSFailJobRequestForm {
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
 
+	private String failReasonCode; 
 
+	public String getFailReasonCode() {
+		return failReasonCode;
+	}
+
+	public void setFailReasonCode(String failReasonCode) {
+		this.failReasonCode = failReasonCode;
+	}
 
 	public String getUserId() {
 		return userId;
