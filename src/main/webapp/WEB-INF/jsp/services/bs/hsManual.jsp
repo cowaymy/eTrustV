@@ -287,10 +287,19 @@
                 }else {//hs_no  Create after
                     debugger;
                 	$("#brnchId1").val($("#cmdBranchCode1 option:selected").text());
-                	$("#memId1").val($("#cmdCdManager1").val());
+                	var HsCdBranch = $('#brnchId1').val();
+                	if($('#brnchId1').val().substring(0,3) != "CDB" ){
+                		HsCdBranch = "";
+                	}
 
-                        Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
+                	$("#memId1").val($("#cmdCdManager1 option:selected").text());
+                	var memId = $("#memId1").val();
+                	if ($("#memId1").val().substring(0,3) != "CCS"){
+                		memId = "";
+                	}
 
+                       // Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
+                        Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:HsCdBranch,cmdCdManager1:memId}, function(result) {
                             console.log("성공.");
                             console.log("data : " + result);
                             AUIGrid.setGridData(myGridID, result);
@@ -563,7 +572,7 @@
              if ($(this).val().trim() == "") {
                  return;
              }
-             doGetCombo('/services/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager1' , 'S', '');
+             doGetCombo('/services/bs/getCdDeptList.do', $(this).val() , ''   , 'cmdCdManager1' , 'S', '');
          });
 
 
@@ -609,7 +618,7 @@
 /*                          alert("_schdulId::"+  $("#_schdulId").val() +  $("#_salesOrdId").val()+  $("#_brnchId").val()); */
 
                          var stid =AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId");
-                         
+
                          if(stid !=1 ){
                              Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=VIEW", $("#popEditForm").serializeJSON(), null , true , '');
                          }
