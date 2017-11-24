@@ -216,7 +216,7 @@ public class AfterServiceJobDto {
 	private String inHouseRepairRemark;
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 Replacement 여부_170906 추가")
-	private String inHouseRepairReplacementYN;
+	private String inHouseRepairReplacementYn;
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 약속일자_170906 추가")
 	private String inHouseRepairPromisedDate;
@@ -842,12 +842,14 @@ public class AfterServiceJobDto {
 		this.inHouseRepairRemark = inHouseRepairRemark;
 	}
 
-	public String getInHouseRepairReplacementYN() {
-		return inHouseRepairReplacementYN;
+
+
+	public String getInHouseRepairReplacementYn() {
+		return inHouseRepairReplacementYn;
 	}
 
-	public void setInHouseRepairReplacementYN(String inHouseRepairReplacementYN) {
-		this.inHouseRepairReplacementYN = inHouseRepairReplacementYN;
+	public void setInHouseRepairReplacementYn(String inHouseRepairReplacementYn) {
+		this.inHouseRepairReplacementYn = inHouseRepairReplacementYn;
 	}
 
 	public String getInHouseRepairPromisedDate() {
