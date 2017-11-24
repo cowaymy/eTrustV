@@ -188,6 +188,42 @@
 			ORDER BY USER_NAME
     </select>
     
+    <select id="reAssignIncharge" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.SUS_IN_PERSON_ID   ,
+			       Extent1.SUS_ID   ,
+			       Extent1.USER_ID   ,
+			       Extent1.SUS_IN_PERSON_STUS_ID   ,
+			       Extent1.SUS_IN_PERSON_CRT_DT   ,
+			       Extent1.SUS_IN_PERSON_CRT_USER_ID   ,
+			       Extent1.SUS_IN_PERSON_UPD_DT   ,
+			       Extent1.SUS_IN_PERSON_UPD_USER_ID   
+		  FROM SAL0097D Extent1
+		WHERE Extent1.SUS_ID = #{susId}
+			AND 1 = Extent1.SUS_IN_PERSON_STUS_ID
+    </select>
+    
+    <update id="updateSusInchargePerson" parameterType="Map">
+        UPDATE SAL0097D
+			 SET SUS_IN_PERSON_STUS_ID = #{susInPersonStusId},
+			       SUS_IN_PERSON_UPD_DT = SYSDATE
+		 WHERE SUS_IN_PERSON_ID = #{susInPersonId}
+    </update>
+    
+    <select id="reAssignSusUserId" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.SUS_IN_PERSON_ID   ,
+			       Extent1.SUS_ID   ,
+			       Extent1.USER_ID   ,
+			       Extent1.SUS_IN_PERSON_STUS_ID   ,
+			       Extent1.SUS_IN_PERSON_CRT_DT   ,
+			       Extent1.SUS_IN_PERSON_CRT_USER_ID   ,
+			       Extent1.SUS_IN_PERSON_UPD_DT   ,
+			       Extent1.SUS_IN_PERSON_UPD_USER_ID   
+		  FROM SAL0097D Extent1
+		WHERE Extent1.SUS_ID = #{susId}
+			AND Extent1.USER_ID = #{susUserId}
+			AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
     <resultMap id="callLogClobMap" type="egovMap">
         <result property="callRem" column="CALL_REM" jdbcType="CLOB" javaType="string"/>
     </resultMap>

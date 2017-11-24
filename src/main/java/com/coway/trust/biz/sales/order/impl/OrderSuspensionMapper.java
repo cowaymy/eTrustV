@@ -15,6 +15,12 @@ public interface OrderSuspensionMapper {
 	
 	List<EgovMap> suspendInchargePerson(Map<String, Object> params);
 	
+	EgovMap reAssignIncharge(Map<String, Object> params);
+	
+	void updateSusInchargePerson(Map<String, Object> params);
+	
+	EgovMap reAssignSusUserId(Map<String, Object> params);
+	
 	List<EgovMap> suspendCallResult(Map<String, Object> params);
 	
 	List<EgovMap> callResultLog(Map<String, Object> params);

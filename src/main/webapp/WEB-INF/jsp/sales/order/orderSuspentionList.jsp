@@ -128,18 +128,18 @@
 	}
 	
 	function fn_assignIncharge(){
-		Common.alert('The program is under development.');
-//		if(detailForm.susId.value == ""){
-//            Common.alert("No suspend record selected.");
-//            return false;
-//        }else{
-//        	if(searchForm.susStusId.value == "33" || searchForm.susStusId.value == "2"){
-//        		Common.popupDiv("/sales/order/inchargePersonPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
-//        	}else{
-//        		Common.alert("Reassign incharge person is disallowed.");
-//        		return false;
-//        	}
-//        }
+//		Common.alert('The program is under development.');
+		if(detailForm.susId.value == ""){
+            Common.alert("No suspend record selected.");
+            return false;
+        }else{
+        	if(searchForm.susStusId.value == "33" || searchForm.susStusId.value == "2"){
+        		Common.popupDiv("/sales/order/inchargePersonPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
+        	}else{
+        		Common.alert("Reassign incharge person is disallowed.");
+        		return false;
+          	}
+        }
 	}
 </script>
 

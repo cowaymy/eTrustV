@@ -78,6 +78,24 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 		return orderSuspensionMapper.suspendInchargePerson(params);
 	}
 	
+	@Override
+	public void saveReAssign(Map<String, Object> params) {
+		
+		EgovMap reAssignIncharge = orderSuspensionMapper.reAssignIncharge(params);
+		params.put("susInPersonId", reAssignIncharge.get("susInPersonId"));
+		params.put("susInPersonStusId", 8);
+		orderSuspensionMapper.updateSusInchargePerson(params);
+		
+		params.put("susUserId", params.get("inchargeNm"));
+		EgovMap reAssignSusUserId = orderSuspensionMapper.reAssignSusUserId(params);
+		
+		int getSusInPersonIdSeq = orderInvestMapper.getSusInPersonIdSeq();
+		params.put("getSusInPersonIdSeq", getSusInPersonIdSeq);
+		params.put("getSusIdSeq", params.get("susId"));
+		params.put("susInPersonStusId", 1);
+		orderInvestMapper.insertSusSAL0097D(params);
+	}
+	
 	
 	/**
 	 * 글 목록을 조회한다.

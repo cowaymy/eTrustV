@@ -38,6 +38,8 @@ public interface OrderSuspensionService {
 	 */
 	List<EgovMap> suspendInchargePerson(Map<String, Object> params);
 	
+	void saveReAssign(Map<String, Object> params); 
+	
 	
 	/**
 	 * 글 목록을 조회한다.

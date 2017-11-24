@@ -63,6 +63,91 @@
             AUIGrid.setGridData(inchargeGridID, result);
         });
     }
+    
+    function fn_inCharge(obj , value , tag , selvalue){
+    	
+        var robj= '#'+obj;
+        $(robj).attr("disabled",false);
+        if(value == 56){
+            getCmbChargeNm('/sales/order/inchargeJsonList.do', '56' , value , selvalue,obj, 'S', '');
+        }else if(value == 133){
+            getCmbChargeNm('/sales/order/inchargeJsonList.do', '133' , value , selvalue,obj, 'S', '');
+        }else{
+             $("#inchargeNm").find("option").remove();
+        }
+    }
+    
+    function getCmbChargeNm(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
+        $.ajax({
+            type : "GET",
+            url : url,
+            data : { roleId : groupCd},
+            dataType : "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(data) {
+               var rData = data;
+               doDefNmCombo(rData, selCode, obj , type,  callbackFn)
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+            },
+            complete: function(){
+            }
+        });
+    }
+    
+    function doDefNmCombo(data, selCode, obj , type, callbackFn){
+        var targetObj = document.getElementById(obj);
+        var custom = "";
+
+        for(var i=targetObj.length-1; i>=0; i--) {
+            targetObj.remove( i );
+        }
+        obj= '#'+obj;
+
+        $.each(data, function(index,value) {
+            //CODEID , CODE , CODENAME ,,description
+            if(selCode==data[index].userId){
+                $('<option />', {value : data[index].userId, text:data[index].userFullNm}).appendTo(obj).attr("selected", "true");
+            }else{
+                $('<option />', {value : data[index].userId, text:data[index].userFullNm}).appendTo(obj);
+            }
+        });
+
+
+        if(callbackFn){
+            var strCallback = callbackFn+"()";
+            eval(strCallback);
+        }
+    }
+    
+    function fn_saveReAssign(){
+    	Common.ajax("GET", "/sales/order/saveReAssign.do", $("#getParamForm").serialize(), function(result){
+            //result alert and reload
+            Common.alert("New incharge person saved.", fn_success);
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+    
+                //Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                Common.alert("Failed to save. Please try again later.");
+                }
+            catch (e) {
+                console.log(e);
+                alert("Failed to save. Please try again later.");
+            }
+            alert("Fail : " + jqXHR.responseJSON.message);
+            });
+    }
+    
+    function fn_success(){
+    	fn_searchListAjax();
+        
+        $("#reAssignClose").click();
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -70,7 +155,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Suspend incharge person Maintenance</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="reAssignClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -99,13 +184,12 @@
 		<tr>
 		    <th scope="row">New incharge person</th>
 		    <td>
-		    <select>
+		    <select  id="incharge" name="incharge" onchange="fn_inCharge('inchargeNm', this.value, '', '')">
 		        <option value="">Incharge Person Type</option>
 		        <option value="56">Credit Recovery Team</option>
 		        <option value="133">Credit Recovery 3rd Party</option>
 		    </select>
-		    <select class="ml10">
-		        <option value=""></option>
+		    <select class="ml10" id="inchargeNm" name="inchargeNm">
 		    </select>
 		    </td>
 		</tr>
@@ -114,7 +198,7 @@
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveReAssign()">Save</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

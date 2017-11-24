@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderSuspensionService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
@@ -175,6 +176,26 @@ public class OrderSuspensionController {
 		model.addAttribute("salesOrdId", params.get("salesOrdId"));
 		
 		return "sales/order/orderAssignInchargePop";
+	}
+	
+	
+	@RequestMapping(value = "/saveReAssign.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> saveReAssign(@RequestParam Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		logger.info("##### paramssssssssssss ##### " +params.toString());
+		
+		orderSuspensionService.saveReAssign(params);
+		
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
 	}
 	
 }
