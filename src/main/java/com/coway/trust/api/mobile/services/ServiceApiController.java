@@ -925,6 +925,22 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
+		
+		String appTime = String.valueOf(params.get("appointmentTime"));
+		int hour = Integer.parseInt(appTime.substring(0,2));
+
+		if(hour >= 00 && hour <= 10){
+			params.put("sesionCode","M");
+		}else if(hour >= 10 && hour <= 14){
+			params.put("sesionCode","A");
+		}else if(hour >= 14 && hour <= 19){
+			params.put("sesionCode","E");
+		}else {
+			params.put("sesionCode","O");
+		}
+
+		LOGGER.debug("sesionCode    값 >>>>>: {}", hour ,">>>>>", params.get("sesionCode"));
+		
 		MSvcLogApiService.updateInsReAppointmentReturnResult(params);		
 
 		
@@ -1007,6 +1023,21 @@ public class ServiceApiController {
 		Date appointmentTime = timeFormatOrg.parse((String) params.get("appointmentTime"));
 		String appointmentTime1 = timeFormatNew.format(appointmentTime);
 		
+		
+		String appTime = String.valueOf(params.get("appointmentTime"));
+		int hour = Integer.parseInt(appTime.substring(0,2));
+
+		if(hour >= 00 && hour <= 10){
+			params.put("sesionCode","M");
+		}else if(hour >= 10 && hour <= 14){
+			params.put("sesionCode","A");
+		}else if(hour >= 14 && hour <= 19){
+			params.put("sesionCode","E");
+		}else {
+			params.put("sesionCode","O");
+		}
+		
+		
 //		Date appointmentTime = timeFormatOrg.parse(String.valueOf(params.get("appointmentTime")));
 //		String appointmentTime1 = timeFormatNew.format(appointmentTime);
 		
@@ -1029,7 +1060,8 @@ public class ServiceApiController {
 		params.put("AS_REM_ADD_CNTC", as_ord_basicInfo.get("asRemAddCntc"));
 		params.put("AS_REM_REQSTER_CNTC_SMS", as_ord_basicInfo.get("asRemReqsterCntcSms"));
 		params.put("AS_REM_ADD_CNTC_SMS", as_ord_basicInfo.get("asRemAddCntcSms"));
-		params.put("AS_SESION_CODE", as_ord_basicInfo.get("asSesionCode"));
+		params.put("AS_SESION_CODE", params.get("sesionCode"));
+//		params.put("AS_SESION_CODE", as_ord_basicInfo.get("asSesionCode"));
 		params.put("CALL_MEMBER", as_ord_basicInfo.get("callMember"));
 		params.put("REF_REQUEST", as_ord_basicInfo.get("refRequest"));
 
@@ -1079,7 +1111,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
+		MSvcLogApiService.insertHsFailJobResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
@@ -1110,7 +1142,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
+		MSvcLogApiService.insertAsFailJobResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
@@ -1141,7 +1173,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
+		MSvcLogApiService.insertInstallFailJobResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
