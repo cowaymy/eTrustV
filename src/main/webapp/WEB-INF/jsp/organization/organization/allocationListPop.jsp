@@ -738,13 +738,14 @@ function fn_AllocationConfirm(){
         sessionCode ="A";
     }
     
-    console.log("sessionCode===> "+sessionCode);
     
     $("#CTSSessionCode").val(sessionCode);
     $("#CTCode").val(selectedItems[0].item.memCode);    
     $("#CTID").val(selectedItems[0].item.ct);  
     $("#CTgroup").val(selectedItems[0].item.ctSubGrp); 
     $("#appDate").val(selectedItemsMain[0].item.dDate); 
+    $("#branchDSC").val(selectedItemsMain[0].item.brnchId); 
+    
     
     $("#_doAllactionDiv").remove();
     

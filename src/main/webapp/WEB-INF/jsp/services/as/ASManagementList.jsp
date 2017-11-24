@@ -52,7 +52,7 @@ function fn_viewASResultPop(){
           return ;
     }
     
-	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId="+ordId+"&ordNo="+ordno+"&AS_NO="+AS_NO  ,null, null , true , '_viewEntryPopDiv1');
+	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId="+ordId+"&ordNo="+ordno+"&AS_NO="+AS_NO+'&AS_ID='+AS_ID  ,null, null , true , '_viewEntryPopDiv1');
     
 }
 
@@ -174,6 +174,40 @@ function fn_asResultViewPop(){
 }
 
 
+
+function fn_asInhouseEntryPop(){
+	
+
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No AS selected.</b>");
+        return ;
+    }
+    
+
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
+    
+    console.log(selectedItems);
+    var asid =    selectedItems[0].item.asId;
+    var asNo =    selectedItems[0].item.asNo;
+    
+    var asStusId     = selectedItems[0].item.code1;
+    var salesOrdNo  = selectedItems[0].item.salesOrdNo;
+    var salesOrdId  =selectedItems[0].item.asSoId;
+    
+    if(asStusId  !="ACT"){
+        Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
+        return ;
+  }
+  
+    var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
+     Common.popupDiv("/services/as/asInHouseEntryPop.do"+param ,null, null , true , '_newInHouseEntryDiv1');
+  
+}
 
 
 function fn_asResultEditPop(){
@@ -588,6 +622,7 @@ function fn_excelDown(){
     <dd>
     <ul class="btns">
       <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditPop()"> AS Result  Edit </a></p></li>
+      <li><p class="link_btn"><a href="#" onclick="javascript:fn_asInhouseEntryPop()"> New AS In-House </a></p></li>
         <!-- 171110 :: 선한이  -->
         <!-- <li><p class="link_btn"><a href="#" ondblclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li> -->
         <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li> -->
