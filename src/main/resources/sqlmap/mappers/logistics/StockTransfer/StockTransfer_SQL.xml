@@ -64,7 +64,7 @@
               and l47.trnsc_type = #{sttype}
            </if>
            <if test="flocation !=null and flocation !=''">
-              and (l47.reqst_cdc_rdc = #{flocation} or s28c.wh_loc_desc like '%'||#{flocationnm}||'%')
+              and (l47.reqst_cdc_rdc = #{flocation} or s28q.wh_loc_desc like '%'||#{flocationnm}||'%')
            </if>
            <if test="tlocation !=null and tlocation !=''">
               and (l47.rciv_cdc_rdc = #{tlocation} or s28c.wh_loc_desc like '%'||#{tlocationnm}||'%')
