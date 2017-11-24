@@ -445,7 +445,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			insertHsResultfinal.put("resultAceptName", params.get("resultAceptName"));
 			insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
 			//api추가 end
-			
+
 			hsManualMapper.insertHsResultfinal(insertHsResultfinal);
 
 
@@ -468,7 +468,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 
 
-	            String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
+	      /*      String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
 
 	            if("".equals(filterLastserial)){
 	            	docSub.put("prvSerialNo", filterLastserial);
@@ -480,24 +480,24 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                 docSub.put("hidCodyId", params.get("hidCodyId"));
                 params.put("srvConfigId", docSub.get("srvConfigId"));
 
-	            hsManualMapper.updateHsFilterSiriNo(docSub);
+	            hsManualMapper.updateHsFilterSiriNo(docSub);*/
 
-	            
+
   				if( !"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null ) {
   					hsManualMapper.insertHsResultD(docSub);
-  					
+
   					String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
-  		            
+
   		            if("".equals(filterLastserial)){
   		            	docSub.put("prvSerialNo", filterLastserial);
   		            }else {
   		            	docSub.put("lastSerialNo", docSub.get("SerialNo"));
   		            }
-  		            
+
   	                docSub.put("settleDate", params.get("settleDate"));
   	                docSub.put("hidCodyId", params.get("hidCodyId"));
   	                params.put("srvConfigId", docSub.get("srvConfigId"));
-  	                   
+
   		            hsManualMapper.updateHsFilterSiriNo(docSub);
   				}
 
