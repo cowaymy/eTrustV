@@ -894,7 +894,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-//		MSvcLogApiService.insertProductReturnResult(params);		
+		MSvcLogApiService.updateHsReAppointmentReturnResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
@@ -909,6 +909,68 @@ public class ServiceApiController {
 	}
 	
 
+	
+	@ApiOperation(value = "Installation Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/installReAppointmentRequest", method = RequestMethod.POST)
+	public ResponseEntity<InstallReAppointmentRequestDto> installReAppointmentRequest(@RequestBody InstallReAppointmentRequestForm installReAppointmentRequestForm)
+			throws Exception {		
+		String transactionId = "";
+
+		Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
+		
+		if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
+			MSvcLogApiService.saveInsReServiceLogs(params);
+		}
+		
+		
+//		// business service....
+//		// TODO : installResult 구현 필요.....
+		MSvcLogApiService.updateInsReAppointmentReturnResult(params);		
+
+		
+		// TODO : 리턴할 dto 구현.
+//		transactionId = installReAppointmentRequestForm.getTransactionId();
+		
+//		if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
+//			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+//		}
+		
+		return ResponseEntity.ok(InstallReAppointmentRequestDto.create(transactionId));
+
+	}
+	
+	
+	
+	@ApiOperation(value = "Product Return Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/pRReAppointmentRequest", method = RequestMethod.POST)
+	public ResponseEntity<PRReAppointmentRequestDto> pRReAppointmentRequest(@RequestBody ProductReturnResultForm productReturnResultForm)
+			throws Exception {		
+		String transactionId = "";
+
+		Map<String, Object> params = ProductReturnResultForm.createMaps(productReturnResultForm);
+		
+		if (RegistrationConstants.IS_INSERT_PRRE_LOG) {
+			MSvcLogApiService.savePrReServiceLogs(params);
+		}
+		
+		
+//		// business service....
+//		// TODO : installResult 구현 필요.....
+//		MSvcLogApiService.insertProductReturnResult(params);		
+
+		
+		// TODO : 리턴할 dto 구현.
+		transactionId = productReturnResultForm.getTransactionId();
+		
+//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+//		}
+		
+		return ResponseEntity.ok(PRReAppointmentRequestDto.create(transactionId));
+
+	}
+	
+	
 	
 	//20171119 hash
 	@ApiOperation(value = "After Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -994,65 +1056,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "Installation Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/installReAppointmentRequest", method = RequestMethod.POST)
-	public ResponseEntity<InstallReAppointmentRequestDto> installReAppointmentRequest(@RequestBody InstallReAppointmentRequestForm installReAppointmentRequestForm)
-			throws Exception {		
-		String transactionId = "";
 
-		Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
-		
-		if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
-			MSvcLogApiService.saveInsReServiceLogs(params);
-		}
-		
-		
-//		// business service....
-//		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.updateInsReAppointmentReturnResult(params);		
-
-		
-		// TODO : 리턴할 dto 구현.
-//		transactionId = installReAppointmentRequestForm.getTransactionId();
-		
-//		if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
-//			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-//		}
-		
-		return ResponseEntity.ok(InstallReAppointmentRequestDto.create(transactionId));
-
-	}
-	
-	
-	
-	@ApiOperation(value = "Product Return Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/pRReAppointmentRequest", method = RequestMethod.POST)
-	public ResponseEntity<PRReAppointmentRequestDto> pRReAppointmentRequest(@RequestBody ProductReturnResultForm productReturnResultForm)
-			throws Exception {		
-		String transactionId = "";
-
-		Map<String, Object> params = ProductReturnResultForm.createMaps(productReturnResultForm);
-		
-		if (RegistrationConstants.IS_INSERT_PRRE_LOG) {
-			MSvcLogApiService.savePrReServiceLogs(params);
-		}
-		
-		
-//		// business service....
-//		// TODO : installResult 구현 필요.....
-//		MSvcLogApiService.insertProductReturnResult(params);		
-
-		
-		// TODO : 리턴할 dto 구현.
-		transactionId = productReturnResultForm.getTransactionId();
-		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-//		}
-		
-		return ResponseEntity.ok(PRReAppointmentRequestDto.create(transactionId));
-
-	}
 	
 	
 	
