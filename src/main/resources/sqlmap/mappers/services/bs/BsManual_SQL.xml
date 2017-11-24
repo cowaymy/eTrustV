@@ -58,6 +58,28 @@
 
 
 
+        <select id="getCdDeptList" parameterType="Map" resultType="egovMap">
+          SELECT A.MEM_ID AS CODE_ID
+                    ,A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
+            FROM ORG0005D A
+                    ,ORG0001D B
+                    ,SYS0005M C
+            WHERE A.MEM_ID = B.MEM_ID
+                AND A.BRNCH_ID = C.BRNCH_ID
+                AND A.DEPT_CODE IS NOT NULL
+                AND B.STUS IN (1,8)
+                AND B.MEM_TYPE = 2
+            <if test="memLvl == '3'.toString()">
+                AND A.MEM_LVL = #{memLvl}
+                AND A.BRNCH_ID = #{groupCode}
+            </if>
+            <if test="memLvl == '4'.toString()">
+                AND A.MEM_LVL = #{memLvl}
+                AND A.MEM_UP_ID = #{groupCode}
+            </if>
+            ORDER BY b.MEM_CODE
+       </select>
+
            <select id="getCdList_1" parameterType="Map" resultType="egovMap">
 
 <!--                 select b.mem_code as CODY_ID
@@ -182,9 +204,9 @@
                                 and i.SALES_ORD_ID = SOM.SALES_ORD_ID
                                 and lAST_brm.SCHDUL_ID(+) = HSM.SCHDUL_ID
                                 and (lAST_brm.result_ID IS NULL OR lAST_brm.result_ID = (select Max(result_ID) from SVC0006D where HSM.SCHDUL_ID = SCHDUL_ID and result_stus_code_id = 4))
-                                AND SC.SRV_SO_ID = SOM.SALES_ORD_ID
-                                AND SC.SRV_CONFIG_ID =SCP.SRV_CONFIG_ID
-                                AND SCP.SRV_PRD_ID = (SELECT MAX(SRV_PRD_ID) FROM SAL0088D WHERE SRV_CONFIG_ID = SC.SRV_CONFIG_ID AND SCP.SRV_PRD_STUS_ID = 1)
+                                AND SC.SRV_SO_ID(+) = SOM.SALES_ORD_ID
+                                AND SC.SRV_CONFIG_ID =SCP.SRV_CONFIG_ID(+)
+                                AND( scp.srv_prd_id is null or scp.srv_prd_id = (SELECT MAX(srv_prd_id)FROM sal0088d WHERE srv_config_id = sc.srv_config_id AND scp.srv_prd_stus_id = 1))
                                 AND STUS.STUS_CODE_ID(+) = LAST_BRM.RESULT_STUS_CODE_ID
                                and mem.mem_id(+) = HSM.CODY_ID
                                and Stus1.STUS_CODE_ID(+) = mem.stus
@@ -256,7 +278,7 @@
                                      AND sys064.CODY_BRNCH_CODE = SUBSTR(#{cmdBranchCode1},1,6)
                                </if>
                                 <if test="cmdCdManager1 != null and cmdCdManager1 != ''">
-                                     AND sys064.CODY_MANGR_USER_ID = #{cmdCdManager1}
+                                     AND sys064.CODY_MANGR_USER_ID = SUBSTR(#{cmdCdManager1},1,7)
                                </if>
 
 
@@ -493,31 +515,31 @@
 									               BR.CODE as branch_cd,
 									               MG.CODY_MANGR_USER_ID
 						                      FROM SVC0008D HS
-						                         INNER JOIN sal0001d SO 
-										                      ON SO.sales_ord_id = HS. sales_ord_id 
+						                         INNER JOIN sal0001d SO
+										                      ON SO.sales_ord_id = HS. sales_ord_id
 										              INNER JOIN SAL0045D INS
-										                      ON SO.SALES_ORD_ID = HS.SALES_ORD_ID              
-										              INNER JOIN sal0023d AD 
-										                      ON AD.cust_add_id = INS.ADD_ID   
+										                      ON SO.SALES_ORD_ID = HS.SALES_ORD_ID
+										              INNER JOIN sal0023d AD
+										                      ON AD.cust_add_id = INS.ADD_ID
 										                     AND AD.CUST_ID     = SO.CUST_ID
-										              INNER JOIN sys0064m MG 
-										                      ON MG.area_id = AD.area_id 
-										              LEFT JOIN svc0006d HR 
-										                     ON HR.schdul_id = HS.schdul_id 
-										              INNER JOIN sys0038m ST 
-										                      ON ST.stus_code_id = HS.stus_code_id 
-										              INNER JOIN sys0013m AP 
-										                      ON AP.code_id = SO.app_type_id 
-										              INNER JOIN sal0029d CU 
-										                      ON CU.cust_id = SO.cust_id 
-										              INNER JOIN org0001d CD 
-										                      ON CD.mem_id = HS.cody_id 
-										              LEFT JOIN org0001d AC 
-										                     ON AC.mem_id = HS. actn_mem_id 
-										              LEFT JOIN sys0005m BR 
-										                     ON BR.code = MG.cody_brnch_code 
-										              LEFT JOIN org0005d OG 
-										                     ON OG.dept_code = MG.cody_mangr_user_id 
+										              INNER JOIN sys0064m MG
+										                      ON MG.area_id = AD.area_id
+										              LEFT JOIN svc0006d HR
+										                     ON HR.schdul_id = HS.schdul_id
+										              INNER JOIN sys0038m ST
+										                      ON ST.stus_code_id = HS.stus_code_id
+										              INNER JOIN sys0013m AP
+										                      ON AP.code_id = SO.app_type_id
+										              INNER JOIN sal0029d CU
+										                      ON CU.cust_id = SO.cust_id
+										              INNER JOIN org0001d CD
+										                      ON CD.mem_id = HS.cody_id
+										              LEFT JOIN org0001d AC
+										                     ON AC.mem_id = HS. actn_mem_id
+										              LEFT JOIN sys0005m BR
+										                     ON BR.code = MG.cody_brnch_code
+										              LEFT JOIN org0005d OG
+										                     ON OG.dept_code = MG.cody_mangr_user_id
 						                     WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
 						                         AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
                                            <if test="cmdcodyCode != null and cmdcodyCode != ''">
@@ -1200,8 +1222,8 @@
 			                ,#{ownerCode},#{resultCustName},#{resultMobileNo}
 			                ,#{resultRptEmailNo},#{resultAceptName},#{sgnDt}
 			     )
-			     
-            
+
+
              </insert>
 
 
@@ -1434,7 +1456,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 
 
                     <select id="serMemList" parameterType="Map" resultType="egovMap">
-		                  	SELECT   SRV_CODY_ID  CODE_ID 
+		                  	SELECT   SRV_CODY_ID  CODE_ID
 								        ,MEM_CODE||'-'||NAME   CODE_NAME
 								FROM SAL0090D A , SAL0001D B , ORG0001D C
 								WHERE A.SRV_SO_ID = B.SALES_ORD_ID
@@ -1613,7 +1635,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 					                AND ( 1 = Extent11.RESULT_IS_CURR )
 					                 JOIN SAL0023D B ON B.CUST_ADD_ID  = Extent10.ADD_ID
                                      AND  Extent4.CUST_ID = B.CUST_ID
-                                     JOIN SYS0064M C ON C.AREA_ID = B.AREA_ID 
+                                     JOIN SYS0064M C ON C.AREA_ID = B.AREA_ID
 					               WHERE  Extent1.SCHDUL_ID = #{schdulId}
 					               <![CDATA[            AND ROWNUM <= 1 ) Limit1 ]]>
 
