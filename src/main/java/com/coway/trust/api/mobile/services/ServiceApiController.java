@@ -449,7 +449,10 @@ public class ServiceApiController {
 		SimpleDateFormat transFormat = new SimpleDateFormat("dd-mm-yyyy");
 		SimpleDateFormat transFormatYY = new SimpleDateFormat("yyyymmdd");
 		SimpleDateFormat transFormatHH = new SimpleDateFormat("HHmmss");
-
+		DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
+		DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+		
+		
 		String ddMMCurDate =  transFormat.format(new Date());
 		String curDate = transFormatYY.format(new Date());
 		String curTime = transFormatHH.format(new Date());
@@ -580,7 +583,23 @@ public class ServiceApiController {
 				//
 				params.put("IN_HUSE_REPAIR_REM", asTransLogs1.get(i).get("inHouseRepairRemark"));//asTransLogs
 				params.put("IN_HUSE_REPAIR_REPLACE_YN", asTransLogs1.get(i).get("inHouseRepairReplacementYN"));//asTransLogs
-				params.put("IN_HUSE_REPAIR_PROMIS_DT", asTransLogs1.get(i).get("inHouseRepairPromisedDate"));//asTransLogs
+				
+				
+/*				SimpleDateFormat transFormat = new SimpleDateFormat("dd-mm-yyyy");
+				SimpleDateFormat transFormatYY = new SimpleDateFormat("yyyymmdd");
+				SimpleDateFormat transFormatHH = new SimpleDateFormat("HHmmss");
+				DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
+				DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");*/
+				
+				
+				
+				Date  inHouseRepairPromisedDate = transFormatYY.parse((String) asTransLogs1.get(i).get("inHouseRepairPromisedDate"));
+				String inHouseRepairPromisedDate1 = sdFormat1.format(inHouseRepairPromisedDate);
+				
+				
+/*				params.put("IN_HUSE_REPAIR_PROMIS_DT", asTransLogs1.get(i).get("inHouseRepairPromisedDate"));//asTransLogs	*/
+				
+				params.put("IN_HUSE_REPAIR_PROMIS_DT", inHouseRepairPromisedDate1);//asTransLogs
 				params.put("IN_HUSE_REPAIR_GRP_CODE", asTransLogs1.get(i).get("inHouseRepairProductGroupCode"));//asTransLogs
 				params.put("IN_HUSE_REPAIR_PRODUCT_CODE", asTransLogs1.get(i).get("inHouseRepairProductCode"));//asTransLogs
 				params.put("IN_HUSE_REPAIR_SERIAL_NO", asTransLogs1.get(i).get("inHouseRepairSerialNo"));//asTransLogs
@@ -1327,7 +1346,7 @@ public class ServiceApiController {
 //		 business service STAT....18:22
 //		// TODO : installResult 구현 필요.....
 		LOGGER.debug("params :"+ params.toString());
-		ASManagementListService.updateASEntry(params);
+		MSvcLogApiService.insertASRequestRegist(params);
 //		 business service END ....
 		
 		
