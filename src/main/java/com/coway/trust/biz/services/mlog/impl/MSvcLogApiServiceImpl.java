@@ -508,6 +508,18 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		
 	}
 
+	@Override
+	public void saveASRequestRegistrationLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertASRequestRegistrationLogs(params);
+	}
+
+	@Override
+	public void updateSuccessRequestRegiStatus(String transactionId) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.updateSuccessRequestRegiStatus(transactionId);
+	}
+
 
 	
 	
