@@ -135,7 +135,7 @@ var serialcolumn       =[{dataField:"itmcd"        ,headerText:"Material Code"  
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
 		rowIdField : "rnum",
-		fixedColumnCount : 9,
+		fixedColumnCount : 11,
 		editable : true,
 		groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
@@ -344,6 +344,7 @@ $(function(){
             var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
             var str = "";
             var rowItem;
+            var serialchk;
             for(var i=0, len = checkedItems.length; i<len; i++) {
                 rowItem = checkedItems[i];
                 if(rowItem.item.indelyqty==0){
@@ -372,8 +373,10 @@ $(function(){
 	            if (serialchk){
 	            	//fn_itempopListSerial(checkedItems);
 	                fn_itempopList_T(checkedItems);
+	            	$("#serial_grid_wrap_div").show();
+	            	AUIGrid.resize(serialGrid);
 	            }else{
-	            	$("#serial_grid_wrap").hide();
+	            	$("#serial_grid_wrap_div").hide();
 	            }
 	            
             }
@@ -505,7 +508,6 @@ function fn_itempopListSerial(data){
 }
 
 function fn_itempopList_T(data){
-	
 	var itm_temp = "";
 	var itm_qty  = 0;
 	var itmdata = [];
@@ -800,7 +802,7 @@ function fn_serialChck(rowindex , rowitem , str){
             <tbody id="dBody">
             </tbody>
             </table>
-            <article class="grid_wrap"><!-- grid_wrap start -->
+            <article class="grid_wrap"  id="serial_grid_wrap_div"><!-- grid_wrap start -->
 			<div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
 			</article><!-- grid_wrap end -->
             <ul class="center_btns">

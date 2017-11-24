@@ -27,7 +27,10 @@
              , s28q.wh_loc_code  reqlocnm
              , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
              , l48.itm_code      itmcd
-             , (select SERIAL_CHK from sys0026m where stk_code = l48.itm_code) serialchk
+             , case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pd_chk = 'Y' then 'Y' else 'N' end
+                      when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_ft_chk = 'Y'  then 'Y' else 'N' end
+                      when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pt_chk = 'Y' then 'Y' else 'N' end
+                      else 'N' end serialchk
              , l48.itm_name      itmname
              , l48.reqst_qty     reqstqty
              , NVL (l55.DELVRY_QTY, 0) AS delyqty
@@ -44,6 +47,7 @@
              , sys0028m s28c
              , sys0028m s28q
              , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d group by reqst_no , itm_code )l55
+             , sys0026m s26
          where 1 =1 
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)
@@ -51,6 +55,7 @@
            and l47.rciv_cdc_rdc   = s28c.wh_loc_id(+)
            and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
            and l48.uom            = uomt.code_id
+            and l48.itm_code = s26.stk_code 
            AND l48.reqst_no       = l55.reqst_no(+)
            AND l48.itm_code       = l55.itm_code(+)
            and l47.reqst_stus     = reqs.code(+)
