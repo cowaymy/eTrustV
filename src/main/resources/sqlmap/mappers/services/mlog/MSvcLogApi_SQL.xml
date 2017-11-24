@@ -379,7 +379,11 @@ and cust.cust_id = custCnt.cust_id
                             SAL0029D.NAME AS cust_Name,
                             SVC0001D.AS_STUS_ID AS job_Status,
                             to_char(SVC0001D.AS_APPNT_DT,'YYYYMMDD') AS appointment_Date,
-                            replace(substr(SVC0001D.AS_APPNT_TM, 0,5 ),':')  AS appointment_Time,
+                            <!-- replace(substr(SVC0001D.AS_APPNT_TM, 0,5 ),':')  AS appointment_Time, -->
+                           case when SVC0001D.AS_APPNT_TM is null
+			                    then decode(SVC0001D.AS_SESION_CODE, 'M', '1000','A','1400','E','1900','O','2000')
+			                    else  to_char(REPLACE (SUBSTR (SVC0001D.AS_APPNT_TM, 0, 5), ':'))
+			                 end appointment_Time,
                             to_char(SVC0001D.AS_APPNT_DT,'YYYY') AS plan_Year,
                             to_char(SVC0001D.AS_APPNT_DT,'MM') AS plan_Month,
                             SVC0001D.AS_SESION_CODE AS job_Session,
@@ -809,7 +813,11 @@ and cust.cust_id = custCnt.cust_id
             SAL0029D.NAME                   AS cust_Name,
             SAL0046D.STUS_CODE_ID           AS job_Status,
             TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
-            replace(substr(SAL0046D.APPNT_TM, 0,5 ),':')               AS appointment_Time,
+	       case when SAL0046D.APPNT_TM is null
+	              then decode(SAL0046D.SESION_CODE, 'M', '1000','A','1400','E','1900','O','2000')
+	             else  to_char(REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':'))
+	       end appointment_Time,            
+ <!--            replace(substr(SAL0046D.APPNT_TM, 0,5 ),':')               AS appointment_Time, -->
             TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY') as   plan_Year,
             TO_CHAR (SAL0046D.INSTALL_DT, 'MM') as plan_Month,
             SAL0046D.SESION_CODE            AS job_Session,
@@ -1090,7 +1098,8 @@ and cust.cust_id = custCnt.cust_id
 
 
 				SELECT MST.*, to_char(BOM_DTL.COMPNT_QTY) AS quanity
-				  FROM (SELECT to_char (G.CUST_ID) as CUST_ID,
+				  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY G.SALES_ORD_ID, A.AS_NO ORDER BY C.SRV_FILTER_PRV_CHG_DT DESC) rn,
+				               to_char (G.CUST_ID) as CUST_ID,
 				               to_char (G.SALES_ORD_ID) AS sales_Orderid,
 				               to_char (G.SALES_ORD_NO) AS sales_Order_No,
 				               to_char (A.AS_NO) AS service_No,
@@ -1100,14 +1109,14 @@ and cust.cust_id = custCnt.cust_id
 				               to_char (D.STK_CODE) AS part_Code,
 				               to_char (D.STK_ID) AS part_Id,
 				               to_char (D.STK_DESC) AS part_Name,
-				               to_char (C.SRV_FILTER_PRIOD) AS partsPeriod,
-				               to_char (D.SERIAL_CHK) AS filterBarcdChkYN,
-				               to_char (C.SRV_FILTER_LAST_SERIAL) AS filterBarcdSerialNo,
-				               TO_CHAR (C.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS lastChgDate,
-				               TO_CHAR (C.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS lastChgTime,
-				               TO_CHAR (C.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS lastChgDateOrigin,
-				               TO_CHAR (C.SRV_FILTER_EXPR_DT, 'HHMM') AS lastChgTimeOrigin,
-				               to_char (D.STK_TYPE_ID) AS partType
+				               to_char (C.SRV_FILTER_PRIOD) AS parts_Period,
+				               to_char (D.SERIAL_CHK) AS filter_Barcd_Chk_YN,
+				               to_char (C.SRV_FILTER_LAST_SERIAL) AS filter_Barcd_Serial_No,
+				               TO_CHAR (C.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS last_Chg_Date,
+				               TO_CHAR (C.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS last_Chg_Time,
+				               TO_CHAR (C.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS last_Chg_Date_Origin,
+				               TO_CHAR (C.SRV_FILTER_EXPR_DT, 'HHMM') AS last_Chg_Time_Origin,
+				               to_char (D.STK_TYPE_ID) AS part_Type
 				          FROM SVC0001D A,
 				               SAL0090D B,
 				               SAL0087D C,
@@ -1125,7 +1134,7 @@ and cust.cust_id = custCnt.cust_id
 				              AND A.AS_APPNT_DT BETWEEN ADD_MONTHS( LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' )) + 1, - 1 ) 
 				                                        AND LAST_DAY( TO_DATE( #{requestDate}, 'YYYYMM' )) ORDER BY A.AS_NO ASC ) MST 
 				 , ( SELECT LOG43.MATRL_NO , LOG44.* FROM LOG0043M LOG43 , LOG0044D LOG44 WHERE LOG43.BOM = LOG44.BOM ) BOM_DTL 
-				 WHERE MST.PRODUCT_CODE = BOM_DTL.MATRL_NO AND MST.PART_CODE = BOM_DTL.BOM_COMPNT
+				 WHERE MST.PRODUCT_CODE = BOM_DTL.MATRL_NO AND MST.PART_CODE = BOM_DTL.BOM_COMPNT and  rn = 1
 
 
 
