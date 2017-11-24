@@ -149,7 +149,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 						if("true".equals((String)v.get("isVact"))  ||  "true".equals((String)v.get("isHoliDay"))){
 							v.put("repla","true");
 						}
-						
+					
 						EgovMap   eM=	allocationMapper.makeViewList(v);
 						
 						fList.add(eM);

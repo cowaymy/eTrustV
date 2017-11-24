@@ -60,7 +60,7 @@ public class InHouseRepairController {
 		
 		model.put("mode", (String)params.get("mode"));   
 		// 호출될 화면
-		return "services/as/inhouseNewRepairPop";
+		return "services/as/inHouseNewRepairPop"; 
 	}
 	
 	

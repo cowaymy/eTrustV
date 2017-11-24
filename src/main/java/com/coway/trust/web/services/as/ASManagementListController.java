@@ -205,6 +205,7 @@ public class ASManagementListController {
 		model.put("orderDetail", orderDetail);   
 		model.put("as_ord_basicInfo", as_ord_basicInfo); 
 		model.put("AS_NO", (String)params.get("AS_NO"));     
+		model.put("AS_ID", (String)params.get("AS_ID")); 
 		model.put("MOD", (String)params.get("mod"));   
    
 		/*
