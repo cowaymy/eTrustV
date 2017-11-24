@@ -2015,7 +2015,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           VALUES (
           (SELECT MAX(PROMO_ID)+1 FROM ORG0007D )
            , #{requestNo}
-           , #{statusId}
+           , 4
            , 2740
            , #{memTypeId}
            , #{memberId}
