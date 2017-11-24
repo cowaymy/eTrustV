@@ -509,12 +509,12 @@ function saveAdvPayment(){
 	        return;
 	    }
 		
-		/* if(FormUtil.checkReqValue($("#cashSlipNo"))){
+		if(FormUtil.checkReqValue($("#cashSlipNo"))){
             Common.alert('* No Slip No');
             return;
         }
 		
-		if(FormUtil.checkReqValue($("#cashPayName"))){
+		/* if(FormUtil.checkReqValue($("#cashPayName"))){
             Common.alert('* No PayerName');
             return;
         }   
