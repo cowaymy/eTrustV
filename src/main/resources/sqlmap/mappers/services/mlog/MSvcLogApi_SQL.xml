@@ -373,7 +373,8 @@ and cust.cust_id = custCnt.cust_id
 		 WHERE rn = 1
  -->
 
-
+				select  *
+				from (
                     SELECT  ROW_NUMBER() OVER(PARTITION BY SAL0001D.SALES_ORD_NO ,SVC0001D.AS_NO  ORDER BY SVC0004D.AS_RESULT_ID DESC) rn,
                             SAL0001D.SALES_ORD_NO AS sales_Order_No,
                             SVC0001D.AS_NO AS service_No,
@@ -476,7 +477,9 @@ and cust.cust_id = custCnt.cust_id
                 AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
                                                                  AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
                 and    ORG0001D.mem_code = #{userId} 
-
+			       )
+			where 1=1
+			and rn = 1
 
 
 
