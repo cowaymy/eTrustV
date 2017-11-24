@@ -373,8 +373,7 @@
             </p>
 
             <ul class="login_opt">
-                <li><a href="javascript:fnRestPassPopUp();"><spring:message code='sys.btn.id.search'/></a></li>
-                <li><a href="javascript:fnRestPassPopUp();"><spring:message code='sys.btn.password.search'/></a></li>
+                <li><a href="javascript:fnRestPassPopUp();"><spring:message code='sys.btn.id.search'/> & <spring:message code='sys.btn.password.search'/></a></li>
             </ul>
 
         </form>
