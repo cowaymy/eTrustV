@@ -2175,9 +2175,15 @@ public class CommissionCalculationController {
 		params.put("loginId", loginId);
 
 		commissionCalculationService.callIncentiveConfirm(params);
+		
+		String msg = null;
+		if(params.get("v_sqlcode") != null)
+			msg = "("+ params.get("v_sqlcode") +")"+ params.get("v_sqlcont");
+		System.out.println("##msg : "+msg);
 		Map detail = commissionCalculationService.incentiveMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
 		
 		message.setData(detail);
+		message.setMessage(msg);
 		return ResponseEntity.ok(message);
 	}
 	

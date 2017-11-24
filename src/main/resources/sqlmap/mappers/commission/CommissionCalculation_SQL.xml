@@ -2257,9 +2257,9 @@
 		WHERE UPLOAD_ID = #{uploadId}
     </update>
     
-    <select id="callIncentiveConfirm" parameterType="Map">
+    <select id="callIncentiveConfirm"  parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
         {
-        call  SP_INCNTIV_TRGET_UP_CNFM(#{uploadId},#{loginId})
+        call  SP_INCNTIV_TRGET_UP_CNFM(#{uploadId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
         }
     </select>
     

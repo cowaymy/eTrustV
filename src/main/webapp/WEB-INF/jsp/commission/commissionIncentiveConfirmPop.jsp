@@ -150,8 +150,12 @@ var itemGridID;
 		}else{
 			Common.ajax("GET", "/commission/calculation/incentiveConfirm", $("#conForm").serializeJSON() , function(result) {
 				//Common.alert('<spring:message code="commission.alert.incentive.confirm.success"/>');
-				Common.alert("This upload batch has been confirmed and saved.");
-				$("#clearComfirm").click();
+				if(result.message != null){
+					Common.alert("Please contact IT center : "+result.message);
+				}else{
+					Common.alert("This upload batch has been confirmed and saved.");
+					$("#clearComfirm").click();
+				}
 				//$("#search").click(); //TODO close 시점으로 바꿔야함
 				//$("#popup_wrap").remove();
 			});
