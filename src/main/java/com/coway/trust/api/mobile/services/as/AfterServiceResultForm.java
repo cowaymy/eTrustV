@@ -49,7 +49,7 @@ public class AfterServiceResultForm {
 	private String inHouseRepairRemark;
 
 	@ApiModelProperty(value = "")
-	private String inHouseRepairReplacementYn;
+	private String inHouseRepairReplacementYN;
 
 	@ApiModelProperty(value = "")
 	private String inHouseRepairPromisedDate;
@@ -330,14 +330,17 @@ public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServi
 
 
 
-	public String getInHouseRepairReplacementYn() {
-		return inHouseRepairReplacementYn;
+
+
+
+	public String getInHouseRepairReplacementYN() {
+		return inHouseRepairReplacementYN;
 	}
 
 
 
-	public void setInHouseRepairReplacementYn(String inHouseRepairReplacementYn) {
-		this.inHouseRepairReplacementYn = inHouseRepairReplacementYn;
+	public void setInHouseRepairReplacementYN(String inHouseRepairReplacementYN) {
+		this.inHouseRepairReplacementYN = inHouseRepairReplacementYN;
 	}
 
 
