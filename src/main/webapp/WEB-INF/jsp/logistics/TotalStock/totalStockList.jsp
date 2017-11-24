@@ -96,7 +96,7 @@ $(document).ready(function(){
     **********************************/
     var LocData = {sLoc : userCode};
     //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
-    doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiCombo');
+    doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
     doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo'); 
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
