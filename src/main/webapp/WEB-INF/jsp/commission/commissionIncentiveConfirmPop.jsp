@@ -83,7 +83,7 @@ var itemGridID;
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true,
-            height : 300
+            height : 280
             
         };
         
@@ -232,7 +232,7 @@ var itemGridID;
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap_confirm" style="width: 100%; height: 300px; margin: 0 auto;"></div>
+    <div id="grid_wrap_confirm" style="width: 100%; height: 280px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
