@@ -151,7 +151,7 @@ var itemGridID;
 			Common.ajax("GET", "/commission/calculation/incentiveConfirm", $("#conForm").serializeJSON() , function(result) {
 				//Common.alert('<spring:message code="commission.alert.incentive.confirm.success"/>');
 				if(result.message != null){
-					Common.alert("Please contact IT center : "+result.message);
+					Common.alert("No valid in this batch </br> "+result.message);
 				}else{
 					Common.alert("This upload batch has been confirmed and saved.");
 					$("#clearComfirm").click();
