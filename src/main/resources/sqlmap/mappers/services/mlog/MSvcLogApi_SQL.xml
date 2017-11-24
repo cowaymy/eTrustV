@@ -2491,16 +2491,19 @@ and cust.cust_id = custCnt.cust_id
 
 
                   <update id="updateInsReAppointmentReturnResult" parameterType="Map">
-							update SAL0047D 
-							set APPNT_DT = #{appointmentDate},
-							    APPNT_TM = #{appointmentTime},
-							    UPD_DT = sysdate,
-                                UPD_USER_ID = #{userId}
-							where 1=1
-							  and SAL0046D.INSTALL_ENTRY_NO = #{serviceNo}
-							  and SAL0046D.SALES_ORD_ID = (select sales_ord_id
-		                                                     from sal0001d
-		                                                     where sales_ord_no =  #{salesOrderNo})
+                         update SAL0046D 
+                            set APPNT_DT = to_date(#{appointmentDate},'YYYYMMDD'),
+                                APPNT_TM = #{appointmentTime},
+                                UPD_DT = sysdate,
+                                UPD_USER_ID = (select mem_id
+                                                            from org0001d
+                                                            where mem_code = #{userId})
+                            where 1=1
+                              and SAL0046D.INSTALL_ENTRY_NO = #{serviceNo}
+                              and SAL0046D.SALES_ORD_ID = (select sales_ord_id
+                                                                                 from sal0001d
+                                                                                 where sales_ord_no =  #{salesOrderNo})
+		                                                     
                     </update>
                     
  
@@ -2508,14 +2511,18 @@ and cust.cust_id = custCnt.cust_id
         
         
                    <update id="updateHsReAppointmentReturnResult" parameterType="Map">
-						        update SVC0008D 
-						set APPNT_DT = #{appointmentDate},
-						    APPNT_TM = #{appointmentTime}
-						where 1=1
-						  and SVC0008D.NO = #{serviceNo}
-						  and SVC0008D.SALES_ORD_ID = (select sales_ord_id
-                                                      from sal0001d
-                                                      where sales_ord_no =  #{salesOrderNo})
+                        update SVC0008D 
+                            set APPNT_DT = to_date(#{appointmentDate},'YYYYMMDD'),
+                                APPNT_TM = #{appointmentTime},
+                                UPD_DT = sysdate,
+                                UPD_USER_ID = (select mem_id
+                                               from org0001d
+                                               where mem_code = #{userId})
+                            where 1=1
+                              and SVC0008D.NO = #{serviceNo}
+                              and SVC0008D.SALES_ORD_ID = (select sales_ord_id
+                                                           from sal0001d
+                                                           where sales_ord_no =  #{salesOrderNo})
                     </update>
 
 </mapper>
