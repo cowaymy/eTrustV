@@ -49,7 +49,7 @@
 
     $(document).ready(function() {
 
-        paramdataMovement = { groupCode : '308', orderValue : 'CODE_NAME', likeValue : 'U' };
+        paramdataMovement = { groupCode : '308', orderValue : 'CODE_NAME', likeValue : '' };
         doGetComboData('/common/selectCodeList.do', paramdataMovement, '', 'smtype', 'M', 'f_multiCombo');
 
         myGridID = AUIGrid.create("#main_grid_wrap", columnLayout, gridPros);
@@ -62,8 +62,7 @@
 
     $(function() {
 
-        doGetCombo('/common/selectCodeList.do', '11', '','srchcatagorytype', 'M' , 'f_multiCombo');
-        doGetCombo('/common/selectCodeList.do', '15', '','materialtype', 'M' , 'f_multiCombo');
+        doDefCombo([{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}], '' ,'status', 'S', '');
 
         $("#search").click(function() {
 
@@ -193,12 +192,12 @@
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	    <li>Logistics</li>
 	    <li>Report</li>
-	    <li>Booking Status Report</li>
+	    <li>Booking Status</li>
 	</ul>
 
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Booking Status Report</h2>
+		<h2>Booking Status</h2>
 	</aside><!-- title_line end -->
 
 	<aside class="title_line"><!-- title_line start -->
@@ -231,17 +230,35 @@
 				<tbody>
 					<tr>
 					    <th scope="row">Material Code</th>
-					    <td colspan="2">
+					    <td colspan="3">
 					        <input type="hidden"  id="itmCode" name="itmCode">
 					        <input type="text" placeholder="Press 'Enter' to Search" id="srchmaterial" name="srchmaterial"  class="w100p" />
 					    </td>
 
-	                    <th scope="row">Stock Activity Type</th>
-	                    <td colspan="2">
-	                        <select class="multy_select" multiple="multiple" id="smtype" name="smtype[]" class="w100p" /></select>
-	                    </td>
+                        <th scope="row">Stock Request No.</th>
+                        <td colspan="3">
+                            <input type="text" id="stkreqstno" name="stkreqstno"  class="w100p" />
+                        </td>
 					</tr>
+                    <tr>
+                        <th scope="row">From Location</th>
+                        <td colspan="3">
+                            <input type="hidden"  id="flocation" name="flocation">
+                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="flocationnm" name="flocationnm">
+                        </td>
+
+                        <th scope="row">To Location</th>
+                        <td colspan="3">
+                            <input type="hidden"  id="tlocation" name="tlocation">
+                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="tlocationnm" name="tlocationnm">
+                        </td>
+                    </tr>
 					<tr>
+					    <th scope="row">Stock Activity Type</th>
+                        <td colspan="2">
+                            <select class="multy_select" multiple="multiple" id="smtype" name="smtype[]" class="w100p" /></select>
+                        </td>
+
                         <th scope="row">Request Date</th>
                         <td colspan="2">
                             <div class="date_set"><!-- date_set start -->
@@ -254,30 +271,12 @@
                                 </p>
                             </div><!-- date_set end -->
                         </td>
+
                         <th scope="row">Completion Status</th>
                         <td>
-                            <select  id="status" class="w100p" >
-                                <option value= " "> None </option>
-                                <option value= "Y"> Yes </option>
-                                <option value= "N OR IS NULL"> No </option>
-                            </select>
+                            <select  id="status" name="status" class="w100p" ></select>
                         </td>
 				    </tr>
-					<tr>
-	                    <th scope="row">From Location</th>
-	                    <td colspan="2">
-                            <input type="hidden"  id="flocation" name="flocation">
-                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="flocationnm" name="flocationnm">
-	                    </td>
-
-	                    <th scope="row">To Location</th>
-	                    <td colspan="2">
-                            <input type="hidden"  id="tlocation" name="tlocation">
-                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="tlocationnm" name="tlocationnm">
-
-	                    </td>
-                    </tr>
-
 			    </tbody>
 
 			</table><!-- table end -->
