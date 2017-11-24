@@ -2537,9 +2537,9 @@ and cust.cust_id = custCnt.cust_id
                    <update id="insertHsFailJobResult" parameterType="Map">
 						 update SVC0006D 
 						    set  FAIL_RESN_ID = #{failReasonCode},
-						          RESULT_STUS_CODE_ID = '21'
-						        UPD_DT = sysdate,
-						        UPD_USER_ID = (select mem_id
+						          RESULT_STUS_CODE_ID = '21',
+						        RESULT_UPD_DT = sysdate,
+						        RESULT_UPD_USER_ID = (select mem_id
 						                                   from org0001d
 						                                   where mem_code = #{userId})
 						    where 1=1
@@ -2564,8 +2564,8 @@ and cust.cust_id = custCnt.cust_id
 						update SVC0004D
 						 set  FAIL_RESN_ID = #{failReasonCode},
 						               STUS_CODE_ID = '21',
-						              UPD_DT = sysdate,
-						              UPD_USER_ID = (select mem_id
+						              AS_RESULT_UPD_DT = sysdate,
+						              AS_RESULT_UPD_USER_ID = (select mem_id
 						                                       from org0001d
 						                                       where mem_code = #{userId})
 						  where AS_ENTRY_ID = (        
