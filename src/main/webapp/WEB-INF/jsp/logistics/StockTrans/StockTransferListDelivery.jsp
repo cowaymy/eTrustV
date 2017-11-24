@@ -43,10 +43,10 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqitmno"     ,headerText:"STO Item"                    ,width:120    ,height:30 , visible:false},
                      {dataField:"reqloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"reqlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
+                     {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
                      {dataField:"rcvloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                     {dataField:"rcvlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
+                     {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 },
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"reqstqty"     ,headerText:"Requested Qty"                 ,width:120    ,height:30                },
@@ -631,20 +631,32 @@ function fn_serialChck(rowindex , rowitem , str){
                         <select class="w100p" id="smtype" name="smtype"><option value=''>Choose One</option></select>
                     </td>
                 </tr>
+<!--                 <tr> -->
+<!--                     <th scope="row">From Location</th> -->
+<!--                     <td> -->
+<!--                         <input type="hidden"  id="flocation" name="flocation"> -->
+<!--                         <input type="text" class="w100p" id="flocationnm" name="flocationnm"> -->
+<!--                     </td> -->
+<!--                     <th scope="row">To Location</th> -->
+<!--                     <td > -->
+<!--                         <input type="hidden"  id="tlocation" name="tlocation"> -->
+<!--                         <input type="text" class="w100p" id="tlocationnm" name="tlocationnm"> -->
+<!--                     </td> -->
+<!--                     <td colspan="2">&nbsp;</td>                 -->
+<!--                 </tr> -->
                 <tr>
                     <th scope="row">From Location</th>
                     <td>
-                        <input type="hidden"  id="flocation" name="flocation">
-                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
-                    </td>
-                    <th scope="row">To Location</th>
-                    <td >
                         <input type="hidden"  id="tlocation" name="tlocation">
                         <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
+                    <th scope="row">To Location</th>
+                    <td >
+                        <input type="hidden"  id="flocation" name="flocation">
+                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
+                    </td>
                     <td colspan="2">&nbsp;</td>                
                 </tr>
-                
                 <tr>
                     <th scope="row">Create Date</th>
                     <td>
