@@ -43,10 +43,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 	@Resource(name = "hsManualMapper")
 	private HsManualMapper hsManualMapper;
-	
+
 	@Resource(name = "returnUsedPartsService")
 	private ReturnUsedPartsService returnUsedPartsService;
-	
+
 	@Resource(name = "servicesLogisticsPFCMapper")
 	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
 
@@ -149,6 +149,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		return hsManualMapper.getCdUpMemList(params);
 	}
 
+	@Override
+	public List<EgovMap> getCdDeptList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		params.put("memLvl", 3);
+		return hsManualMapper.getCdDeptList(params);
+	}
 
 	@Override
 	public List<EgovMap> getCdList(Map<String, Object> params) {
@@ -332,14 +338,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			resultValue = SaveResult(true,params,docType,sessionVO);
 
-			
+
 			//logs(물류) call
 			/////////////////////////물류 호출//////////////////////
 //			String str = params.get("serviceNo").toString();
 //			returnUsedPartsService.returnPartsInsert(str);
 			/////////////////////////물류 호출 end /////////////////
-			
-			
+
+
 		return resultValue;
 	}
 
@@ -459,6 +465,23 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 
 	  	      	String vstkId = String.valueOf( docSub.get("stkId"));
+
+
+
+	            String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
+
+	            if("".equals(filterLastserial)){
+	            	docSub.put("prvSerialNo", filterLastserial);
+	            }else {
+	            	docSub.put("lastSerialNo", docSub.get("SerialNo"));
+	            }
+
+                docSub.put("settleDate", params.get("settleDate"));
+                docSub.put("hidCodyId", params.get("hidCodyId"));
+                params.put("srvConfigId", docSub.get("srvConfigId"));
+
+	            hsManualMapper.updateHsFilterSiriNo(docSub);
+
 	            
   				if( !"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null ) {
   					hsManualMapper.insertHsResultD(docSub);
@@ -478,11 +501,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   		            hsManualMapper.updateHsFilterSiriNo(docSub);
   				}
 
-	            
+
+
 			}
-			
+
 			hsManualMapper.updateHs009d(params);
-			
+
 		}
 
 
@@ -556,40 +580,40 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		//물류 호출   add by hgham
         Map<String, Object>  logPram = null ;
 		if(Integer.parseInt(params.get("cmbStatusType").toString()) == 4 ){
-		    
+
 			/////////////////////////물류 호출//////////////////////
 			logPram =new HashMap<String, Object>();
             logPram.put("ORD_ID",      params.get("hidSalesOrdCd")   );
-            logPram.put("RETYPE", "COMPLET");  
-            logPram.put("P_TYPE", "OD05");  
-            logPram.put("P_PRGNM", "HSCOM");  
-            logPram.put("USERID", sessionVO.getUserId());   
-            
+            logPram.put("RETYPE", "COMPLET");
+            logPram.put("P_TYPE", "OD05");
+            logPram.put("P_PRGNM", "HSCOM");
+            logPram.put("USERID", sessionVO.getUserId());
+
             logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram.toString());
             servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
-            logger.debug("ORDERCALL 물류 호출 결과 ===>");  
-            /////////////////////////물류 호출 END //////////////////////   			
-        			
+            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+            /////////////////////////물류 호출 END //////////////////////
+
       }else if(Integer.parseInt(params.get("cmbStatusType").toString()) == 21){
-          
+
     	  /////////////////////////물류 호출//////////////////////
-    		logPram =new HashMap<String, Object>();  
+    		logPram =new HashMap<String, Object>();
             logPram.put("ORD_ID",     params.get("hidSalesOrdCd"));
-            logPram.put("RETYPE", "SVO");  
-            logPram.put("P_TYPE", "OD06");  
-            logPram.put("P_PRGNM", "HSCAN");  
-            logPram.put("USERID", sessionVO.getUserId());   
-            
+            logPram.put("RETYPE", "SVO");
+            logPram.put("P_TYPE", "OD06");
+            logPram.put("P_PRGNM", "HSCAN");
+            logPram.put("USERID", sessionVO.getUserId());
+
             logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
           servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");
-            /////////////////////////물류 호출 END //////////////////////   			
+            /////////////////////////물류 호출 END //////////////////////
       }
 
-		
-		
-		
-		
+
+
+
+
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue.put("resultId",  params.get("hidSalesOrdCd"));
 		return resultValue;
