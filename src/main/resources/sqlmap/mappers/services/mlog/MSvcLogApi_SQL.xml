@@ -443,7 +443,7 @@ and cust.cust_id = custCnt.cust_id
 			               to_char(SVC0004D.IN_HUSE_REPAIR_REM) AS in_House_Repair_Remark,
 			               to_char(SVC0004D.IN_HUSE_REPAIR_REPLACE_YN)  AS in_House_Repair_Replacement_YN,
 			               to_char(SVC0004D.IN_HUSE_REPAIR_PROMIS_DT)  AS in_House_Repair_Promised_Date,
-			<!--                SVC0004D.IN_HUSE_REPAIR_GRP_CODE AS in_House_Repair_Product_Group_Code, -->
+			               SVC0004D.IN_HUSE_REPAIR_GRP_CODE AS inHouseRepairProductGroupCode,
 			               to_char(SVC0004D.IN_HUSE_REPAIR_PRODUCT_CODE) AS in_House_Repair_Product_Code,
 			               to_char(SVC0004D.IN_HUSE_REPAIR_SERIAL_NO) AS in_House_Repair_Serial_No  ,
 			               to_char(SVC0004D.RESULT_REP_EMAIL_NO) AS result_Report_Email_No,
