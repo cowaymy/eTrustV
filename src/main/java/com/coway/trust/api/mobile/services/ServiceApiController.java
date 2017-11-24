@@ -448,9 +448,12 @@ public class ServiceApiController {
 		
 		SimpleDateFormat transFormat = new SimpleDateFormat("dd-mm-yyyy");
 		SimpleDateFormat transFormatYY = new SimpleDateFormat("yyyymmdd");
+		SimpleDateFormat transFormat1 = new SimpleDateFormat("ddmmyyyy");
 		SimpleDateFormat transFormatHH = new SimpleDateFormat("HHmmss");
+
 		DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
 		DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+		DateFormat sdFormat2 = new SimpleDateFormat("yyyymmdd");
 		
 		
 		String ddMMCurDate =  transFormat.format(new Date());
@@ -589,17 +592,26 @@ public class ServiceApiController {
 				SimpleDateFormat transFormatYY = new SimpleDateFormat("yyyymmdd");
 				SimpleDateFormat transFormatHH = new SimpleDateFormat("HHmmss");
 				DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
-				DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");*/
+				DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+				DateFormat sdFormat2 = new SimpleDateFormat("yyyymmdd");*/
 				
 				
+				Date aaa = transFormatYY.parse(String.valueOf(asTransLogs1.get(i).get("inHouseRepairPromisedDate")));
+				String bbb = transFormat1.format(aaa);
 				
-				Date  inHouseRepairPromisedDate = transFormatYY.parse((String) asTransLogs1.get(i).get("inHouseRepairPromisedDate"));
-				String inHouseRepairPromisedDate1 = sdFormat1.format(inHouseRepairPromisedDate);
+//				sdFormat2.format(date)();
+//				
+//				String aaa = sdFormat2.format(asTransLogs1.get(i).get("inHouseRepairPromisedDate"));
+//				Date bbb  = sdFormat1.parse(aaa);
+//				String ccc = sdFormat1.format(bbb);
 				
+//				Date inHouseRepairPromisedDate = sdFormat2.parse(sdFormat2.format(asTransLogs1.get(i).get("inHouseRepairPromisedDate")));
+////				Date inHouseRepairPromisedDate1 = sdFormat.parse(inHouseRepairPromisedDate);
+//				String inHouseRepairPromisedDate2 = sdFormat.format(inHouseRepairPromisedDate);
 				
 /*				params.put("IN_HUSE_REPAIR_PROMIS_DT", asTransLogs1.get(i).get("inHouseRepairPromisedDate"));//asTransLogs	*/
 				
-				params.put("IN_HUSE_REPAIR_PROMIS_DT", inHouseRepairPromisedDate1);//asTransLogs
+				params.put("IN_HUSE_REPAIR_PROMIS_DT", bbb);//asTransLogs
 				params.put("IN_HUSE_REPAIR_GRP_CODE", asTransLogs1.get(i).get("inHouseRepairProductGroupCode"));//asTransLogs
 				params.put("IN_HUSE_REPAIR_PRODUCT_CODE", asTransLogs1.get(i).get("inHouseRepairProductCode"));//asTransLogs
 				params.put("IN_HUSE_REPAIR_SERIAL_NO", asTransLogs1.get(i).get("inHouseRepairSerialNo"));//asTransLogs
@@ -610,12 +622,6 @@ public class ServiceApiController {
 				params.put("SGN_DT", asTransLogs1.get(i).get("signData"));//asTransLogs
 				
 				LOGGER.debug("params22222 값 : {}", params);
-				
-				
-
-				
-				
-				
 				
 				Map<String, Object>   asResultInsert = new HashMap();
 				
