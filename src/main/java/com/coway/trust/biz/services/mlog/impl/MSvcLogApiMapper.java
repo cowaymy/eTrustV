@@ -124,6 +124,8 @@ public interface MSvcLogApiMapper {
 
 	void updateSuccessRequestRegiStatus(String transactionId);
 
+	void insertASRequestRegist(Map<String, Object> params);
+
 
 	
 }

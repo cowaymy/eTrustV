@@ -103,6 +103,8 @@ public interface MSvcLogApiService {
 	void saveASRequestRegistrationLogs(Map<String, Object> params);
 
 	void updateSuccessRequestRegiStatus(String transactionId);
+
+	void insertASRequestRegist(Map<String, Object> params);
 	
 	
 

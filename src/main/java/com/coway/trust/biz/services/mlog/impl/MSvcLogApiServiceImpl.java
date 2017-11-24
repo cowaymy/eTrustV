@@ -520,6 +520,12 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		MSvcLogApiMapper.updateSuccessRequestRegiStatus(transactionId);
 	}
 
+	@Override
+	public void insertASRequestRegist(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertASRequestRegist(params);
+	}
+
 
 	
 	
