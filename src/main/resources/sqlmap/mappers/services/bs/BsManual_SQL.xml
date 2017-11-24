@@ -1635,7 +1635,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 					                AND ( 1 = Extent11.RESULT_IS_CURR )
 					                 JOIN SAL0023D B ON B.CUST_ADD_ID  = Extent10.ADD_ID
                                      AND  Extent4.CUST_ID = B.CUST_ID
-                                     JOIN SYS0064M C ON C.AREA_ID = B.AREA_ID
+                                    LEFT JOIN SYS0064M C ON C.AREA_ID = B.AREA_ID
 					               WHERE  Extent1.SCHDUL_ID = #{schdulId}
 					               <![CDATA[            AND ROWNUM <= 1 ) Limit1 ]]>
 
