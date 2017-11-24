@@ -16,26 +16,24 @@
 	        , l48.itm_name AS itmname
 	        , NVL(l75.reqst_qty, 0) AS reqstqty
 	        , NVL(l75.final_cmplt, 'N') AS status
-	    FROM log0075m l75
-	            , log0047m l47
-	            , log0048d l48
-	            , (SELECT * FROM sys0013m WHERE code_master_id = 308) trand
-	            , sys0028m s28c
-	            , sys0028m s28q
-	    WHERE 1 = 1
-	           AND l75.trnsc_type_dtl = trand.code
-	           AND l47.rciv_cdc_rdc = s28c.wh_loc_id
-	           AND l47.reqst_cdc_rdc = s28q.wh_loc_id
-	           AND l47.reqst_no = l75.reqst_no
-	           AND l48.reqst_no = l75.reqst_no
-	           AND l48.reqst_no_itm = l75.seq
+		FROM LOG0075M l75
+		LEFT JOIN log0047m l47 ON l47.reqst_no = l75.reqst_no
+		LEFT JOIN log0048d l48 ON l75.reqst_no = l48.reqst_no AND l48.reqst_no_itm = l75.seq
+		LEFT JOIN sys0028m s28c ON l47.rciv_cdc_rdc = s28c.wh_loc_id
+		LEFT JOIN sys0028m s28q ON l47.reqst_cdc_rdc = s28q.wh_loc_id
+		, (SELECT * FROM sys0013m WHERE code_master_id = 308) trand
+		WHERE 1=1
+		AND l75.trnsc_type_dtl = trand.code
+
+        <if test="stkreqstno !=null and stkreqstno !=''">
+            AND l47.reqst_no = #{stkreqstno}
+        </if>
 
 	    <if test="itmCode !=null and itmCode !=''">
 	        AND l75.itm_code = #{itmCode}
 	    </if>
 
 	    <if test="smtype != null">
-
 	        AND l47.trnsc_type_dtl IN
 	        <foreach item="item" collection="smList" index="index" open="(" separator="," close=")">
 	            #{item}
@@ -48,7 +46,7 @@
 	                 AND TO_CHAR(TO_DATE(#{srchcrtdtto}, 'DD/MM/YYYY'), 'YYYYMMDD')
 	    </if>
 
-	    <if test="status != null">
+	    <if test="status != null and status !=''">
 	        AND l75.final_cmplt = #{status}
 	    </if>
 
