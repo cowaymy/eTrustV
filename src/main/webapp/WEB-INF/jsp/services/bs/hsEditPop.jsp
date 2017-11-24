@@ -249,17 +249,17 @@
           
            fn_getHsViewfilterInfoAjax();
            
-           var statusCd = ${basicinfo.stusCodeId};
-           $("#cmbStatusType2 option[value="+ statusCd +"]").attr("selected", true); 
+           var statusCd = "${basicinfo.stusCodeId}";
+           $("#cmbStatusType2 option[value='"+ statusCd +"']").attr("selected", true);
 
-           var failResnCd = ${basicinfo.failResnId}
-           $("#failReason option[value="+failResnCd +"]").attr("selected", true);   
+           var failResnCd = "${basicinfo.failResnId}";
+           $("#failReason option[value='"+failResnCd +"']").attr("selected", true);
       
-           var codyIdCd = ${basicinfo.codyId}
-           $("#cmbServiceMem option[value="+codyIdCd +"]").attr("selected", true);   
+           var codyIdCd = "${basicinfo.codyId}";
+           $("#cmbServiceMem option[value='"+codyIdCd +"']").attr("selected", true);
 
-           var renColctCd = ${basicinfo.renColctId}
-           $("#cmbCollectType option[value="+renColctCd +"]").attr("selected", true);                       
+           var renColctCd = "${basicinfo.renColctId}";
+           $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
 
              if($("#_openGb").val() == "view"){
                     $("#btnSave").hide();
