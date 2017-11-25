@@ -464,30 +464,32 @@ and cust.cust_id = custCnt.cust_id
                             ORG0001D,
                             SYS0005M,
                             SYS0026M
-                WHERE SAL0001D.CUST_ID      = SAL0022D.CUST_ID
-                AND   SAL0001D.CUST_ADD_ID  = SAL0023D.CUST_ADD_ID
-                AND   SAL0022D.CUST_ID      = SAL0023D.CUST_ID
-                AND   SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID
-                AND   SAL0001D.CUST_ID      = SAL0024D.CUST_BILL_CUST_ID
-                AND   SAL0001D.CUST_ID      = SAL0027D.CUST_ID
-                AND   SAL0001D.CUST_CNT_ID  = SAL0027D.CUST_CNTC_ID
-                AND   SAL0001D.CUST_ID      = SAL0029D.CUST_ID
-                AND   SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID
-                AND   SVC0001D.AS_ID        = SVC0004D.AS_ENTRY_ID(+)
-                AND   SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID
-                AND   SAL0001D.SALES_ORD_ID = SVC0001D.AS_SO_ID
-                AND   SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID
-                AND   SAL0045D.INSTALL_ID   = SAL0047D.ENTRY_ID
-                AND   SAL0002D.ITM_STK_ID   = SYS0026M.STK_ID
-                AND   SAL0071D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-                AND   ORG0001D.MEM_ID       = SAL0047D.CT_ID
-                AND   ORG0001D.BRNCH        = SYS0005M.BRNCH_ID
-                AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
-                                                                 AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
-                and    ORG0001D.mem_code = #{userId} 
-			       )
-			where 1=1
-			and rn = 1
+				  WHERE SVC0001D.AS_MEM_ID = ORG0001D.MEM_ID
+					AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID
+					AND SAL0001D.SALES_ORD_ID = SVC0001D.AS_SO_ID
+					AND ORG0001D.MEM_CODE = #{userId} 
+					AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID
+					and SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
+					AND SAL0001D.CUST_ADD_ID = SAL0023D.CUST_ADD_ID
+					AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
+					AND SAL0001D.CUST_ID = SAL0024D.CUST_BILL_CUST_ID(+)
+					AND SAL0001D.CUST_ID = SAL0027D.CUST_ID
+					AND SAL0001D.CUST_CNT_ID = SAL0027D.CUST_CNTC_ID
+					AND SAL0001D.CUST_ID = SAL0029D.CUST_ID
+					AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID
+					AND SAL0045D.INSTALL_ID = SAL0047D.ENTRY_ID(+)
+					<!-- AND ORG0001D.MEM_ID = SAL0047D.CT_ID -->
+					AND SAL0071D.SALES_ORD_ID(+) = SAL0001D.SALES_ORD_ID
+					AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID
+					AND SAL0095D.SRV_MEM_SALES_MEM_ID=0<!-- MUST CHECK -->
+					AND SVC0001D.AS_ID = SVC0004D.AS_ENTRY_ID(+)
+					AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
+					AND SAL0002D.ITM_STK_ID = SYS0026M.STK_ID
+				    AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
+				                                                     AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
+				       )
+				where 1=1
+				and rn = 1
 
 
 
@@ -1062,7 +1064,7 @@ and cust.cust_id = custCnt.cust_id
 										S87A.SRV_FILTER_STK_ID as part_Id,
 										L44A.BOM_COMPNT,
 										L44A.COMPNT_QTY as quanity,
-										--S07A.EXCH_REASON_ID,
+<!-- 										S07A.EXCH_REASON_ID, -->
 										to_char(S87A.SRV_FILTER_PRV_CHG_DT,'YYYYMMDD') as last_Chg_Date,
 										S87A.SRV_FILTER_PRIOD as parts_Period,
 										NVL2(L44A.ALTER_ITM_GRP, 'N', 'Y') AS alternative_YN,
@@ -2599,5 +2601,53 @@ and cust.cust_id = custCnt.cust_id
 			                                                                        and sales_ord_no = #{salesOrderNo})
 					                                           and INSTALL_ENTRY_NO = #{serviceNo})                                                                
                     </update>                    
+
+
+
+<!--        <select id="getASRequestResultList" parameterType="Map" resultType="egovMap">
+
+					SELECT to_char(D.NAME) AS cust_Name
+					        ,to_char(B.SALES_ORD_NO) AS sales_Order_No
+					        ,to_char(D.CUST_ID) AS customer_Id
+					        ,to_char(A.AS_NO) AS AS_Request_No
+					        ,to_char(A.AS_REQST_DT) AS as_Request_Date
+					        ,to_char(A.AS_STUS_ID) AS as_Request_Status
+					        ,to_char(F.STK_CODE) AS product_Code
+					        ,to_char(F.STK_DESC) AS   product_Name
+					        ,to_char(A.AS_MEM_ID)
+					FROM SVC0001D A
+					        , SAL0001D B
+					        , SAL0002D C
+					        ,SAL0029D D
+					        ,LOG0001M E
+					        ,SYS0026M F
+					WHERE 1=1
+					AND A.AS_SO_ID = B.SALES_ORD_ID
+					AND B.SALES_ORD_ID = C.SALES_ORD_ID         
+					AND B.CUST_ID = D.CUST_ID
+					AND C.ITM_STK_ID = E.BOM_STK_ID
+					AND E.BOM_PART_ID = F.STK_ID
+					and a.AS_REQST_DT BETWEEN to_date(#{searchFromDate},'yyyymmdd') AND  to_date(#{searchToDate},'yyyymmdd')
+					AND A.AS_MEM_ID = (SELECT MEM_ID
+	                                    FROM ORG0001D
+	                                    WHERE 1=1
+	                                    AND MEM_CODE = #{userId})
+
+         </select> -->
+
+
+
+
+
+
+     
+ 
+
+
+
+
+
+
+
 
 </mapper>
