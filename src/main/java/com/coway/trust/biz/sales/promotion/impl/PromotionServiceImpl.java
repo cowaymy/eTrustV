@@ -65,11 +65,23 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		
 		int appTypeId = Integer.parseInt((String) params.get("promoAppTypeId"));
 		
-		appTypeId = this.getAppTypeId(appTypeId);
+		List<EgovMap> priceMap = null;
 		
-		params.put("appTypeId", appTypeId);
+		if(SalesConstants.PROMO_APP_TYPE_CODE_ID_RSVM == appTypeId) {
+			params.put("appTypeId", appTypeId);
+			priceMap = promotionMapper.selectRentMemPromotionPrdWithPriceList(params);
+		}
+		else if(SalesConstants.PROMO_APP_TYPE_CODE_ID_OSVM == appTypeId) {
+			params.put("appTypeId", appTypeId);
+			priceMap = promotionMapper.selectOutMemPromotionPrdWithPriceList(params);
+		}
+		else {
+			appTypeId = this.getAppTypeId(appTypeId);			
+			params.put("appTypeId", appTypeId);
+			priceMap = promotionMapper.selectPromotionPrdWithPriceList(params);
+		}
 		
-		return promotionMapper.selectPromotionPrdWithPriceList(params);
+		return priceMap;
 	}
 	
 	@Override

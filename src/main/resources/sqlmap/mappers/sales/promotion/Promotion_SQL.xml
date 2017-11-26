@@ -389,6 +389,66 @@
          ORDER BY PROMO_ITM_ID ASC
     </select>
 
+    <select id="selectRentMemPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.SRV_PAC_ITM_RENTAL AS AMT
+             , 0                     AS PRC_RPF
+             , T4.SRV_PAC_ITM_PV     AS PRC_PV
+             , FLOOR(T4.SRV_PAC_ITM_RENTAL - DECODE(T3.PROMO_DISC_TYPE, 0, T4.SRV_PAC_ITM_RENTAL*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
+             , 0                     AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0082D T4
+            ON T4.SRV_PAC_ITM_PRODUCT_ID = T1.PROMO_ITM_STK_ID
+           AND T4.SRV_CNTRCT_PAC_ID = T3.PROMO_SRV_MEM_PAC_ID
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+         ORDER BY PROMO_ITM_ID ASC
+    </select>
+    
+    <select id="selectOutMemPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.SRV_MEM_ITM_PRC AS AMT
+             , 0                  AS PRC_RPF
+             , T4.SRV_MEM_ITM_PV  AS PRC_PV
+             , FLOOR(T4.SRV_MEM_ITM_PRC - DECODE(T3.PROMO_DISC_TYPE, 0, T4.SRV_MEM_ITM_PRC*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
+             , 0 AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0092M T4
+            ON T4.SRV_MEM_ITM_STK_ID = T1.PROMO_ITM_STK_ID
+           AND T4.SRV_MEM_PAC_ID = T3.PROMO_SRV_MEM_PAC_ID
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+         ORDER BY PROMO_ITM_ID ASC
+    </select>
+
     <select id="selectPromotionFreeGiftList" parameterType="Map" resultType="egovMap">
         SELECT T1.PROMO_FREE_GIFT_ID
              , T1.PROMO_FREE_GIFT_PROMO_ID

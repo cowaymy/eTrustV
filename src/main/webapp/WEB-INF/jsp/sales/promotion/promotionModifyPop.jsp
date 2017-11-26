@@ -573,7 +573,8 @@
         }
         
         //Promo Application <> Expired Filter & Customer = Individual
-        if(promoAppVal != '2290' && (promoCustVal == '964' || promoCustVal == '')) {
+//      if(promoAppVal != '2290' && (promoCustVal == '964' || promoCustVal == '')) {
+        if(promoCustVal == '964' || promoCustVal == '') {
             $('#empChk').removeAttr("disabled");
         }
         else {
