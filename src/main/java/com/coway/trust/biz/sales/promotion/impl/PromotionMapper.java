@@ -25,6 +25,8 @@ public interface PromotionMapper {
 	
 	EgovMap selectOutMemPriceInfo(Map<String, Object> params);
 	
+	EgovMap selectFilterPriceInfo(Map<String, Object> params);
+	
 	void insertSalesPromoM(SalesPromoMVO salesPromoMVO);
 
 	void insertSalesPromoD(SalesPromoDVO salesPromoDVO);
@@ -40,6 +42,8 @@ public interface PromotionMapper {
 	List<EgovMap> selectRentMemPromotionPrdWithPriceList(Map<String, Object> params);
 	
 	List<EgovMap> selectOutMemPromotionPrdWithPriceList(Map<String, Object> params);
+	
+	List<EgovMap> selectFilterPromotionPrdWithPriceList(Map<String, Object> params);
 	
 	List<EgovMap> selectPromotionFreeGiftList(Map<String, Object> params);
 

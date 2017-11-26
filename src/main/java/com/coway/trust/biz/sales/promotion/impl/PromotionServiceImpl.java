@@ -75,6 +75,10 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			params.put("appTypeId", appTypeId);
 			priceMap = promotionMapper.selectOutMemPromotionPrdWithPriceList(params);
 		}
+		else if(SalesConstants.PROMO_APP_TYPE_CODE_ID_FIL == appTypeId) {
+			params.put("appTypeId", appTypeId);
+			priceMap = promotionMapper.selectFilterPromotionPrdWithPriceList(params);
+		}
 		else {
 			appTypeId = this.getAppTypeId(appTypeId);			
 			params.put("appTypeId", appTypeId);
@@ -306,6 +310,9 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			}
 			else if(SalesConstants.PROMO_APP_TYPE_CODE_ID_OSVM == promotionVO.getSalesPromoMVO().getPromoAppTypeId()) {
 				priceMap = promotionMapper.selectOutMemPriceInfo(params);
+			}
+			else if(SalesConstants.PROMO_APP_TYPE_CODE_ID_FIL == promotionVO.getSalesPromoMVO().getPromoAppTypeId()) {
+				priceMap = promotionMapper.selectFilterPriceInfo(params);
 			}
 			else {
 				priceMap = promotionMapper.selectPriceInfo(params);

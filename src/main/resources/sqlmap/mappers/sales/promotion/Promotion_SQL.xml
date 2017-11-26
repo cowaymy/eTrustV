@@ -175,6 +175,35 @@
 		   AND T1.SRV_MEM_ITM_STUS_ID = 1
     </select>
     
+    <select id="selectFilterPriceInfo" parameterType="Map" resultType="egovMap">
+        SELECT T1.PRC_ID
+             , T1.MEM_PAC_ID
+             , T1.STK_ID
+             , T1.AMT
+             , T1.UOM_ID
+             , T1.UOM_CONV
+             , T1.START_DT
+             , T1.END_DT
+             , T1.CNTY_ID
+             , T1.APP_TYPE_ID
+             , T1.PRIOD
+             , 0 AS PRC_RPF
+             , 0 AS PRC_PV
+             , T1.TRADE_IN_PV
+             , T1.CRT_USER_ID
+             , T1.CRT_DT
+             , T1.UPD_USER_ID
+             , T1.UPD_DT
+             , T1.PRC_CHRG
+             , T1.PRC_COSTING
+             , T1.STUS_CODE_ID
+          FROM SAL0016M T1
+         WHERE T1.STK_ID       = #{stkId}
+           AND T1.MEM_PAC_ID   = 0
+           AND T1.APP_TYPE_ID  = 67
+           AND T1.STUS_CODE_ID = 1
+    </select>
+    
     <insert id="insertSalesPromoM" parameterType="salesPromoMVO">
       <selectKey keyProperty="promoId" resultType="Integer" order="BEFORE">
         SELECT SAL0017D_PROMO_ID_SEQ.NEXTVAL FROM DUAL
@@ -444,6 +473,38 @@
           JOIN SAL0092M T4
             ON T4.SRV_MEM_ITM_STK_ID = T1.PROMO_ITM_STK_ID
            AND T4.SRV_MEM_PAC_ID = T3.PROMO_SRV_MEM_PAC_ID
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+         ORDER BY PROMO_ITM_ID ASC
+    </select>
+    
+    <select id="selectFilterPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.AMT
+             , T4.PRC_RPF
+             , T4.PRC_PV
+             , FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
+             , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0016M T4
+            ON T4.STK_ID = T1.PROMO_ITM_STK_ID
+           AND T4.MEM_PAC_ID   = 0
+           AND T4.APP_TYPE_ID  = 67
+           AND T4.STUS_CODE_ID = 1
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STUS_ID = 1
          ORDER BY PROMO_ITM_ID ASC
