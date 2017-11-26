@@ -31,7 +31,7 @@
 						  , K.FAIL_RESN_ID AS fail_Reason_Code
 						  , A.NO AS service_No
 						  , A.STUS_CODE_ID AS job_Status
-				     	  , A.APPNT_DT as appointment_Date
+				     	  , TO_CHAR(A.APPNT_DT, 'YYYYMMDD') as appointment_Date
 						  , A.APPNT_TM as appointment_Time
 						  , A.YEAR as   plan_Year
 						  , A.MONTH as plan_Month
@@ -52,7 +52,7 @@
 						  , K.RESULT_REM as result_Remark
                           , K.REN_COLCT_ID AS rc_Code
 					      , k.TEMPERATE_SETNG as temperatureSetting
-					      , k.NEXT_APPNT_DT as nextAppointmentDate
+					      , TO_CHAR(k.NEXT_APPNT_DT, 'YYYYMMDD') as nextAppointmentDate
 					      , k.NEXT_APPNT_TM as nextAppointmentTime
 					      , k.OWNER_CODE as ownerCode
 					      , k.RESULT_CUST_NAME as resultCustName
