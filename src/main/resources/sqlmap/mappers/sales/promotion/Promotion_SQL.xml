@@ -511,6 +511,32 @@
                   AND 1 = T2.SRV_MEM_ITM_STUS_ID
                   AND T2.SRV_MEM_PAC_ID = #{srvPacId}
             </if>
+            <if test='stkType != null and stkType == "3"'>
+               SELECT T1.STK_ID       itemid
+                    , T1.STK_CODE     itemcode
+                    , T1.STK_DESC     itemname
+                    , T1.STK_CTGRY_ID cateid
+                    , T1.STK_TYPE_ID  typeid
+                    , T1.STUS_CODE_ID stateid
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_TYPE_ID)
+                         typename
+                    , (SELECT SYS0038M.NAME
+                         FROM SYS0038M
+                        WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+                 FROM SYS0026M T1
+                    , SAL0203D T2
+                    , SYS0013M T3
+                WHERE T1.STK_CODE = T2.BOM_COMPNT
+                  AND T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND T1.STK_TYPE_ID = 62
+                  AND T1.STUS_CODE_ID = 1
+                  AND T2.SRV_PAC_ID = #{srvPacId}
+            </if>
              )
          WHERE 1 = 1
        <if test="scode != null and scode !=''">

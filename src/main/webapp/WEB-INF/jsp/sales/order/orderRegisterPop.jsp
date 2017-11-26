@@ -852,6 +852,21 @@
             
             if(FormUtil.isEmpty($('#ordProudct').val())) {
                 $('#ordPromo option').remove();
+                
+                $("#ordPrice").val('');
+                $("#ordPv").val('');
+                $("#ordPvGST").val('');
+                $("#ordRentalFees").val('');
+                $("#ordPriceId").val('');
+
+                $("#orgOrdPrice").val('');
+                $("#orgOrdPv").val('');
+                $("#orgOrdRentalFees").val('');
+                $("#orgOrdPriceId").val('');
+                
+                $("#promoDiscPeriodTp").val('');
+                $("#promoDiscPeriod").val('');
+                
                 return;
             }
                 

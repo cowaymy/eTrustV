@@ -253,6 +253,9 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN || promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_RSVM) {
 			selType = "1";
 		}
+		if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_FIL) {
+			selType = "3";
+		}
 		else {
 			selType = "2";
 		}
