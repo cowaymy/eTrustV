@@ -218,8 +218,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
 		params.put("installStatus",4);
 
+		insertInstallation(statusId,installResult,callEntry,callResult,orderLog);
+
+		/*
 		try {
-			insertInstallation(statusId,installResult,callEntry,callResult,orderLog);
+
 
 			//물류 호출   add by hgham
 	        Map<String, Object>  logPram = null ;
@@ -243,12 +246,13 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 
 	}
 
 
 
-	private boolean insertInstallation(int statusId,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog) throws ParseException{
+	private boolean insertInstallation(int statusId,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog) {
 
 		String maxId = "";  //각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
 		EgovMap maxIdValue = new EgovMap();
