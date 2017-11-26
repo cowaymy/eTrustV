@@ -25,6 +25,8 @@ $(document).ready(function(){
     $("#confirmbt").attr("style" ,"display:inline");
     $("#searchbt").attr("style" ,"display:inline");
     $("#resetbt").attr("style" ,"display:none");
+    
+    AUIGrid.resize(trGridID, 1000,300)
 });
 
 
@@ -73,6 +75,8 @@ function  fn_goAddNewTr(){
 
 
 
+var packageInfo  ={};
+
 //getPackageInfo 
 function fn_getPackageInfo (){ 
     
@@ -89,6 +93,8 @@ Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT
              fn_doQuotInfoClear();
          
              if(result.length > 0){
+            	 
+            	   packageInfo=  result[0];
                  
                    $("#convt_quotNo").html(result[0].quotNo);
                    $("#convt_cretDt").html(result[0].crtDt);
@@ -419,6 +425,35 @@ function fn_doSalesResult(item){
     }
 }
 
+
+
+
+
+function fn_Sale_processing(){
+	
+    
+	var mSaveForm={
+    		                      totalPrice     :packageInfo.totAmt ,    
+    				              packagePrice:packageInfo.pacAmt,
+    				              filterPrice     :packageInfo.filterAmt,
+    				              quotNo        :packageInfo.quotNo,
+    				              cntName      :$("#inc_cntName").text(),
+    				              custName     :'${orderInfoTab.custName}',
+    				              ordId           :$("#ORD_ID").val(),
+    				              lastMbrshId   :$("#LAST_MBRSH_ID").val()
+    				             
+	}
+   
+	
+	console.log(mSaveForm);
+	//Common.ajax("POST", "/sales/membership/mQuotConvSaleSave", mSaveForm,  function(result) {
+       // console.log( result);
+         
+  // });
+	
+	
+	
+}
 </script>
 
 
@@ -442,7 +477,7 @@ function fn_doSalesResult(item){
 <!-- get param Form  -->
 <form id="getParamForm" method="get">
 
-<div  style="display:inline">
+<div  style="display:none">
  ORD_ID:     <input type="text" name="ORD_ID"  id="ORD_ID"  value="${ORD_ID}"/>
  PAY_LAST_MBRSH_ID:     <input type="text" name="LAST_MBRSH_ID"  id="LAST_MBRSH_ID"  />
  
@@ -517,7 +552,7 @@ function fn_doSalesResult(item){
 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_orderInfo.do?ORD_ID=${ORD_ID}'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_orderInfo.do?ORD_ID=${ORD_ID}'/> 
 <!-- oder info tab  end...-->
 
 
@@ -552,8 +587,63 @@ function fn_doSalesResult(item){
 </form>
 </section><!-- search_table end -->
  --%>
+ 
+ 
+ 
+ 
+ 
 
+<aside class="title_line"><!-- title_line start -->
+<h3>Payment Item</h3>
+</aside><!-- title_line end -->
 
+<section class="search_table mt20"><!-- search_table start -->
+<form action="#" method="post" id="paymentKeyInForm" name="paymentKeyInForm">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+       <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">TR Type</th>
+    <td>
+	     <select class="w100p"  id="trType" name="trType" >
+	        <option value="1"> 1. Membership Package </option>
+	        <option value="2">2. Filter (1st BS) </option>
+	        <option value="3">3. Membership Package & Filter(1st BS)</option>
+	    </select>
+    </td>
+    <th scope="row">Pay Mode</th>
+    <td>       
+    
+        <select class="w100p"  id="payMode" name="payMode" >
+          <option value="1"> CRC</option>
+          <option value="2">Normal </option>
+          <option value="3">Advance</option>
+      </select>
+    
+    </td>
+    
+    <th scope="row">Processing</th>
+    <td>       
+        <p class="btn_sky"  id="sale_processing" ><a href="#" onclick="javascript:fn_Sale_processing()">Processing</a></p>    
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+</section><!-- search_table end -->
+ 
+ 
+ <div  id='payments_old' style='display:none'> 
+ 
 
 
 <aside class="title_line"><!-- title_line start -->
@@ -663,13 +753,11 @@ function fn_doSalesResult(item){
 </form>
 </section><!-- search_table end -->
 
+
+
  ---------------------   add on for Payment Item -----------------------------
  
- 
-<aside class="title_line"><!-- title_line start -->
-<h3>Payment Item </h3>
-</aside><!-- title_line end -->
- 
+ </div>
  
  
 </section><!-- pop_body end -->
