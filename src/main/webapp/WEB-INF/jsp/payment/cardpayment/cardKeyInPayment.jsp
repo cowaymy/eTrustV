@@ -1163,7 +1163,10 @@ function addRentalToFinal(){
 
 function viewRentalLedger(){
 	if($("#rentalOrdId").val() != ''){
-		Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#rentalOrdId").val()});
+		
+		$("#ledgerForm #ordId").val($("#rentalOrdId").val());
+        Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+        
     }else{
     	Common.alert('<b>Please Select a Order Info first</b>');
     	return;
@@ -1754,7 +1757,8 @@ function addSrvcToFinal(){
 
 function viewSrvcLedger(){
     if($("#srvcOrdId").val() != ''){
-        Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#srvcOrdId").val()});
+        $("#ledgerForm #ordId").val($("#srvcOrdId").val());
+        Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     }else{
         Common.alert('<b>Please Select a Order Info first</b>');
         return;
@@ -2231,7 +2235,9 @@ function addBillToFinal(){
     <!-- search_table start -->
     <section class="search_table mt10">
         <!-- search_table start -->
-        <form id="paymentForm" action="#" method="post">    
+        <form id="paymentForm" action="#" method="post">
+            <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
+            <input type="hidden" name="keyInScrn" id="keyInScrn" value="CRC" />    
             <table class="type1">
                 <caption>table</caption>
                 <colgroup>  
@@ -2374,3 +2380,7 @@ function addBillToFinal(){
 
 </section>
 <!-- content end -->
+
+<form id="ledgerForm" action="#" method="post">
+    <input type="hidden" id="ordId" name="ordId" />
+</form>

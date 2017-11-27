@@ -1314,7 +1314,7 @@
     </insert>
     
     <update id="processPayment" statementType="CALLABLE" parameterType="Map">
-        {call SP_INST_PAYMENT(#{seq},#{userid} )}
+        {call SP_INST_PAYMENT(#{seq},#{userid},#{keyInPayRoute}, #{keyInScrn} )}
     </update>
     
     <update id="processNormalPayment" statementType="CALLABLE" parameterType="Map">
@@ -1322,13 +1322,12 @@
     </update>
     
     <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">
-        SELECT
-            PAY_ID,
-            OR_NO
+         SELECT
+            DISTINCT B.OR_NO
         FROM 
-            PAY0252T
+            PAY0252T A JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
         WHERE 
-            SEQ =  #{seq}            
+            A.GROUP_SEQ =   #{seq}      
     </select>
     
 </mapper>

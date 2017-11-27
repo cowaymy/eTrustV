@@ -238,7 +238,6 @@ public class CommonPaymentController {
     		formInfo.put("keyInSkipRecon",  0);
     		formInfo.put("keyInPayItmCardType",  formInfo.get("keyCrcCardType"));
     		formInfo.put("keyInPayItmCardMode",  formInfo.get("keyInCardMode"));
-    		
     	}	
 		
 		// 저장
