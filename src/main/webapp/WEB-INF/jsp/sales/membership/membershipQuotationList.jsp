@@ -57,8 +57,9 @@
            return ;
        }
        
+       $("#MBRSH_ID").val(selectedItems[0].item.memId);
        $("#QUOT_ID").val(selectedItems[0].item.quotId);
-       var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId+"&CNT_ID="+selectedItems[0].item.cntId ; 
+       var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId+"&CNT_ID="+selectedItems[0].item.cntId +"&MBRSH_ID="+selectedItems[0].item.memId; 
        Common.popupDiv("/sales/membership/mViewQuotation.do"+pram ,null, null , true , '_ViewQuotDiv1');
  }
    

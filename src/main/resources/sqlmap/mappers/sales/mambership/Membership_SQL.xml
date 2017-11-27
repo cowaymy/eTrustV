@@ -582,7 +582,7 @@
 						       sList.STK_PRIOD   ,
 						       sList.STK_FILTER_PRC   ,
 						       sList.STK_CHRG_PRC   ,
-						       to_char(  to_date (sList.STK_LAST_CHNG_DT ,'yyyy-mm-dd'),'dd-mm-yyyy')  STK_LAST_CHNG_DT
+						       sList.STK_LAST_CHNG_DT STK_LAST_CHNG_DT
 						  FROM ( SELECT Extent1.SRV_MEM_QUOT_FILTER_ID   ,
 						                Extent1.STK_ID   ,
 						                Extent1.STK_PRIOD   ,

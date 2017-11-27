@@ -72,6 +72,12 @@ public class  MembershipQuotationController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		
+
+	    model.addAttribute("QUOT_ID",params.get("QUOT_ID"));		
+		model.addAttribute("ORD_ID",params.get("ORD_ID"));
+		model.addAttribute("CNT_ID",params.get("CNT_ID"));
+		model.addAttribute("MBRSH_ID",params.get("MBRSH_ID"));
+		
 		return "sales/membership/mViewQuotationPop";
 	}
 	
@@ -85,6 +91,7 @@ public class  MembershipQuotationController {
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
+		
 		
 		return "sales/membership/mNewQuotationPop";
 	}

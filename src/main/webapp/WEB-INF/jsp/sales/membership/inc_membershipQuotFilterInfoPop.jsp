@@ -23,8 +23,9 @@ function createFilterGrid(){
          {dataField : "stkPriod", headerText : "Change Period", width :100},
          {dataField : "stkFilterPrc", headerText : "Filter Price", width :100},
          {dataField : "stkChrgPrc", headerText : "Charge Price", width :100},
-         {dataField : "stkLastChngDt", headerText : "Last Change Date",width :120}
-   ];
+         {dataField : "stkLastChngDt", headerText : "Last Change Date",width :120 ,dataType : "date", formatString : "dd-mm-yyyy" }
+
+         ];
     
     membershipQuotInfoFilterGridID = GridCommon.createAUIGrid("#filter_grid_wrap", membershipQuotInfoFilterLayout,''); 
 }

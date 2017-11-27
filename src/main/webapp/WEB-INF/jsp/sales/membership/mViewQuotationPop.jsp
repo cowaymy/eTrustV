@@ -7,13 +7,24 @@
 </script>
 
 
-<!-- get param Form  -->
-<form id="getParamForm" method="get">
-    <input type="hidden" name="QUOT_ID"  id="QUOT_ID" value="${membershipInfoTab.quotId}"/>
-</form>
+
 
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<!-- get param Form  -->
+<form id="getParamForm" method="get">
+
+ <div style="display:none"> 
+     <input type="text" name="QUOT_ID"       id="QUOT_ID" value="${QUOT_ID}"/>
+     <input type="text" name="inc_ORD_ID"    id="inc_ORD_ID" value="${ORD_ID}"/>
+     <input type="text" name="inc_CNT_ID"    id="inc_QUOT_ID" value="${CNT_ID}"/>
+          <input type="text" name="inc_MBRSH_ID"    id="inc_MBRSH_ID" value="${MBRSH_ID}"/>
+     
+ </div>
+    
+</form>
+
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Membership Management - Quotation</h1>
@@ -44,7 +55,7 @@
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_contactPersonInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_contactPersonInfo.do?MBRSH_ID=${MBRSH_ID}'/> 
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
@@ -71,7 +82,7 @@
     
     if(quot >0){ 
          fn_getMembershipQuotInfoAjax(); 
-         fn_getMembershipQuotInfoFilterAjax();
+         fn_getMembershipQuotInfoFilterAjax(quot);
     }
 </script>
 

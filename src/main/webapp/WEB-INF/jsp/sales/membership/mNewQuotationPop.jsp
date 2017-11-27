@@ -205,7 +205,8 @@ function  fn_goCustSearch(){
 
 
 function fn_doReset() {
-    $("#sForm").attr({"target" :"_self" , "action" : "/sales/membership/mNewQuotation.do" }).submit();
+    $("#_NewQuotDiv1").remove();
+    fn_goNewQuotation();
 }
 
 
@@ -387,6 +388,7 @@ function fn_cYear_onChageEvent(){
     
     fn_getFilterPromotionAmt();
     
+    
 }
  
  
@@ -546,6 +548,9 @@ function   fn_getMembershipPackageFilterInfo(){
     $("#cPromo").removeAttr("disabled");
     $("#cPromoCombox").removeAttr("disabled");
    
+    
+    $('#cPromo option').remove();
+    
     var SRV_MEM_PAC_ID = $("#cTPackage").val();
     doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID='+SRV_MEM_PAC_ID+"&E_YN="+ $("#cEmplo").val(), '', '','cPromo', 'S' , '');            // Customer Type Combo Box
 
@@ -1703,7 +1708,7 @@ function createAUIGridOList() {
 		    
 		      <th scope="row">Employee </th>
 	            <td>
-	            <select  style="width:80px"  id="cEmplo" >
+	            <select  style="width:80px"  id="cEmplo"   onChange="fn_cYear_onChageEvent()">
 	                 <option value="">Choose One</option>
 	                <option value="1">Y</option>
 	                <option value="0">N</option>
@@ -1715,8 +1720,12 @@ function createAUIGridOList() {
 		<tr>
 		    <th scope="row">Package Promotion</th>
 		    <td>
-		    <label><input type="checkbox" disabled="disabled"  id="packpro"   name="packpro" onclick="fn_doPackagePro(this)" /><span></span></label>
-		            <select class="disabled" disabled="disabled"  id="cPromotionpac" name="cPromotionpac"  onChange="fn_onChange_cPromotionpac()"> </select>
+		  
+		             <div  style='display:none'>
+		               <label>
+		                <input type="checkbox" disabled="disabled"  id="packpro"   name="packpro" onclick="fn_doPackagePro(this)" /><span></span></label>
+		             </div>
+		            <select   id="cPromotionpac" name="cPromotionpac"  onChange="fn_onChange_cPromotionpac()"> </select>
 		    </td>
 		    <th scope="row">Package Price</th>
 		    <td  colspan="3"><span id='txtPackagePrice'></span></td>
@@ -1724,8 +1733,10 @@ function createAUIGridOList() {
 		<tr>
 		    <th scope="row">Filter Promotion</th>
 		    <td>
+		  <div  style='display:none'>
 		    <label><input type="checkbox" disabled="disabled"  id="cPromoCombox"   name="cPromoCombox" onclick="fn_doPromoCombox(this)" /><span></span></label>
-		    <select class="disabled " disabled="disabled" id="cPromo" name='cPromo'  onchange="fn_getFilterChargeList()"></select>
+		  </div>
+		    <select  id="cPromo" name='cPromo'  onchange="fn_getFilterChargeList()"></select>
 		    </td>
 		    <th scope="row">Filter Price</th>  
 		    <td colspan="2">
