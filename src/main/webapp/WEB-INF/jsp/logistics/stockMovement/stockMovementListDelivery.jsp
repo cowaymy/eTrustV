@@ -344,7 +344,6 @@ $(function(){
             var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
             var str = "";
             var rowItem;
-            var serialchk;
             for(var i=0, len = checkedItems.length; i<len; i++) {
                 rowItem = checkedItems[i];
                 if(rowItem.item.indelyqty==0){
@@ -353,7 +352,10 @@ $(function(){
                 }
                 if (rowItem.item.serialchk =='Y'){
                 	serialchk = true;
+                }else{
+                	serialchk = false;
                 }
+                
             }
             if(checkDelqty){
             	var option = {
