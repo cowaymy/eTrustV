@@ -1221,6 +1221,7 @@
             TR_NO,
             TR_ISSU_DT,
             COLL_MEM_ID,
+            PAY_DT,
             IS_LOCK,
             IS_3PARTY,
             STUS_ID,
@@ -1247,8 +1248,9 @@
             #{keyInTrNo},
             TO_DATE(#{keyInTrIssueDate}, 'DD/MM/YYYY'),
             #{keyInCollMemId},
+            TO_DATE(#{keyInPayDate}, 'DD/MM/YYYY'),
             #{payItemIsLock},
-            #{payItemISThirdParty},
+            #{payItemIsThirdParty},
             #{payItemStatusId},
             #{isFundTransfer},
             #{skipRecon},
@@ -1318,7 +1320,7 @@
     </update>
     
     <update id="processNormalPayment" statementType="CALLABLE" parameterType="Map">
-        {call SP_INST_NORMAL_PAYMENT(#{seq}, #{userid}, #{key})}
+        {call SP_INST_NORMAL_PAYMENT(#{seq}, #{userid}, #{key}, #{keyInPayRoute}, #{keyInScrn})}
     </update>
     
     <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">
