@@ -112,6 +112,8 @@ public interface MSvcLogApiService {
 
 	void insertInstallFailJobResult(Map<String, Object> params);
 	
-	
+	List<EgovMap> getASRequestResultList(Map<String, Object> map);
+
+	List<EgovMap> getASRequestCustList(Map<String, Object> map);
 
 }
