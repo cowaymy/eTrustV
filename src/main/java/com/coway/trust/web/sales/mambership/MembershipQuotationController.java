@@ -406,4 +406,54 @@ public class  MembershipQuotationController {
 	}
 	
 	
+	
+	@RequestMapping(value = "/getFilterPromotionAmt.do" ,method = RequestMethod.GET)
+	public ResponseEntity< EgovMap>  getFilterPromotionAmt(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+		
+		logger.debug("in  getFilterPromotionAmt ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		 EgovMap  list = membershipQuotationService.getFilterPromotionAmt(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
+
+	@RequestMapping(value = "/getFilterChargeList.do" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  getFilterChargeList(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+		
+		logger.debug("in  getFilterChargeList ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipQuotationService.getFilterChargeList(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	@RequestMapping(value = "/getFilterChargeListSum.do" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  getFilterChargeListSum(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+		
+		logger.debug("in  getFilterChargeListSum ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipQuotationService.getFilterChargeListSum(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
+	
+	
+	
 }

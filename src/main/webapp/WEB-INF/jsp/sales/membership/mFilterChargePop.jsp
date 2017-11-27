@@ -12,9 +12,13 @@
     
     // 리스트 조회.
    function fn_filterSelectListAjax() {
-       Common.ajax("GET", "/sales/membership/getFilterCharge", $("#getDataForm").serialize(), function(result) {
+       Common.ajax("GET", "/sales/membership/getFilterChargeList.do",{
+    	   SALES_ORD_NO : $("#ORD_NO").val(),
+    	   PROMO_ID: $('#cPromo').val() ,
+    	   SRV_PAC_ID :$('#cTPackage').val() 
+       }, function(result) {
             console.log( result);
-            AUIGrid.setGridData(gridFilterID, result.outSuts);
+            AUIGrid.setGridData(gridFilterID, result);
             
        });
    }
@@ -28,12 +32,12 @@
 
 	    
 	   var columnLayout = [ 
-	                       {dataField :"filterCode",  headerText : "Code",      width: 150 ,editable : false },
-	                       {dataField :"filterDesc",  headerText : "Descrption",    width: 250, editable : false },
-	                       {dataField :"lifePriod", headerText : "LifePeriod",   width: 150, editable : false },
-	                       {dataField :"lastChngDt", headerText : "LastChangeDate", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
-	                       {dataField :"oriPrc", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0.00"},
-	                       {dataField :"prc", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0.00"}
+	                       {dataField :"bomCompnt",  headerText : "Code",      width: 150 ,editable : false },
+	                       {dataField :"bomCompntDesc",  headerText : "Descrption",    width: 250, editable : false },
+	                       {dataField :"srvFilterPriod", headerText : "LifePeriod",   width: 150, editable : false },
+	                       {dataField :"srvFilterPrvChgDt", headerText : "LastChangeDate", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
+	                       {dataField :"amt", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0.00"},
+	                       {dataField :"disamt", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0.00"}
 	   ];
 	   
 
@@ -55,21 +59,21 @@
 	     var footerObject = [ 
 	                             {
 	                                 labelText : "COUNT :",
-	                                 positionField : "filterDesc"
+	                                 positionField : "bomCompntDesc"
 	                             },
 	                           {
-	                                dataField : "lifePriod",
-	                                positionField : "lifePriod",
+	                                dataField : "srvFilterPriod",
+	                                positionField : "srvFilterPriod",
 	                                operation : "COUNT",
 	                                formatString : "#,##0"
 	                           },
 	                           {
 	                        	   labelText : "Total :",
-                                   positionField : "oriPrc"
+                                   positionField : "amt"
                               },
 	                           {
-	                               dataField : "prc",
-	                               positionField : "prc",
+	                               dataField : "disamt",
+	                               positionField : "disamt",
 	                               operation : "SUM",
 	                               formatString : "#,##0.00"
 	                           }

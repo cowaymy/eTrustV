@@ -162,7 +162,7 @@ function setText(result){
                             result.installation.instState +" "+ 
                             result.installation. instCnty;
                         
-    $("#address").html(address);
+    //$("#address").html();
     
     $("#installNo").html(result.installation.lastInstallNo);
     $("#installDate").html(result.installation.lastInstallDt);
@@ -349,102 +349,132 @@ function fn_getDatabsOList (){
  
 
 function setPackgCombo(){
-    doGetCombo('/sales/membership/getSrvMemCode', '', '','cTPackage', 'S' , 'f_multiCombo');            // Customer Type Combo Box
+    doGetCombo('/sales/membership/getSrvMemCode?SALES_ORD_ID='+$("#ORD_ID").val(), '', '','cTPackage', 'S' , '');            // Customer Type Combo Box
 }
 
 
 
-function f_multiCombo(){
+function  fn_cTPackage_onchangeEvt(){
 	
-	 $(function() {
-	 
-	         $('#cTPackage').change(function() {
-	        	 $("#cYear").removeAttr("disabled");
-	         });
-	         
-	        $('#cYear').change(function() {
-	        	
-	        	 //set clear 
-	        	 fn_SubscriptionYear_initEvt();
-	            
-	        	 $("#SELPACKAGE_ID").val($('#cTPackage').val());
-	             $("#DUR").val($(this).val().trim());
-	             
-	             //set getMembershipPackageInfo
-                 fn_getMembershipPackageInfo($(this).val().trim());
-	             
-	           
-	             // set Filter Price
-	             // fn_getFilterCharge();
-	             
-	            
-	             
-	            
-	             
-	         });
-     });
+    $("#cYear").removeAttr("disabled");
+    $("#cYear").val("");
+    $("#txtPackagePrice").html("");  
+    $("#txtFilterCharge").html("");    
+    $('#cPromotionpac option').remove();
+    $('#cPromo option').remove();
+
+    $("#packpro").attr("checked",false);
+    $("#cPromoCombox").attr("checked",false);
+
+
+    
+    
+}
+ 
+ 
+function fn_cYear_onChageEvent(){
 	
+    //set clear 
+    fn_SubscriptionYear_initEvt();
+   
+    $("#SELPACKAGE_ID").val($('#cTPackage').val());
+    $("#DUR").val($("#cYear").val().trim());
+    
+    //set getMembershipPackageInfo
+    fn_getMembershipPackageInfo($("#cYear").val().trim());
+    
+    fn_getMembershipPackageFilterInfo();
+    
+    fn_getFilterPromotionAmt();
+    
+}
+ 
+ 
+function fn_getFilterPromotionAmt(){
+
+    Common.ajax("GET", "/sales/membership/getFilterPromotionAmt.do", {SALES_ORD_NO: resultBasicObject.ordNo ,SRV_PAC_ID :$('#cTPackage').val() }, function(result) {
+         console.log( result);
+         
+         if(null != result){
+        	 $("#txtFilterCharge").html(result.normaAmt );  
+        	 
+         }
+         
+    });
 }
 
-
-function f_multiCombo2(){
-     $(function() {
-    	 
-                $('#cPromotionpac').change(function() {
-                	
-                	$('#txtPackagePrice').html($('#hiddenPacOriPrice').val());
-                	
-                	if($(this).val().trim() >0)  {
-                		
-	                		var isProc  =true;
-	                		
-	                		if($(this).val() == 542){
-	                			
-	                			  var CVT_LAST_SRV_MEM_EXPR_DATE  =  parseInt(resultSrvconfigObject.cvtLastSrvMemExprDate,10);  
-	                              var CVT_NOW_DATE  =  parseInt(resultSrvconfigObject.cvtNowDate ,10);
-	                              
-	                              if (CVT_LAST_SRV_MEM_EXPR_DATE >= CVT_NOW_DATE){
-	                            	  
-	                            	  isProc =true;
-	                            	  
-	                              }else{
-	                            	  isProc =false;
-	                              }
-	                		}
-	                		
-	                		
-	                		if(isProc){
-	                			
-	                			 var  cPromotion =0;
-	                		     if(null == $(this).val().trim() || ""== $(this).val().trim() ) {
-	                		         cPromotion =0;
-	                		     } else {cPromotion = $(this).val().trim();}
-	                		     
-	                		     $("#PROMO_ID").val($(this).val().trim());
-	                		     
-	                			  Common.ajax("GET", "/sales/membership/getPromoPricePercent", $("#getDataForm").serialize(), function(result) {
-	                                 console.log( result);
-	                                 
-	                                 if(result.length>0){
-	                                        var oriprice      =   parseInt($("#hiddenPacOriPrice").val(),10) ;
-	                                        var promoPrcPrcnt =   parseInt(result[0].promoPrcPrcnt,10) ;
-	                                        $("#txtPackagePrice").html( Math.floor( (oriprice * ((100 - promoPrcPrcnt) / 100)) ));
-	                                 }
-	                            });
-	                			
-	                		}else {
-	                			Common.alert(   "Promotion Not Entitled"+DEFAULT_DELIMITER+" This order is not entitled in this promotion.");
-	                		}
-                	}
-                	
-                	
-                    // set Filter Price
-                	//fn_getFilterCharge();
-         });
-     });
+function fn_onChange_cPromotionpac(o){
+	
+	   $('#txtPackagePrice').html($('#hiddenPacOriPrice').val());
+	   
+	    if($("#cPromotionpac").val().trim() >0)  {
+            
+            var isProc  =true;
+            
+            if($("#cPromotionpac").val() == 542){
+                
+                  var CVT_LAST_SRV_MEM_EXPR_DATE  =  parseInt(resultSrvconfigObject.cvtLastSrvMemExprDate,10);  
+                  var CVT_NOW_DATE  =  parseInt(resultSrvconfigObject.cvtNowDate ,10);
+                  
+                  if (CVT_LAST_SRV_MEM_EXPR_DATE >= CVT_NOW_DATE){
+                      
+                      isProc =true;
+                      
+                  }else{
+                      isProc =false;
+                  }
+            }
+            
+            
+            if(isProc){
+                
+                 var  cPromotion =0;
+                 if(null == $("#cPromotionpac").val().trim() || ""== $("#cPromotionpac").val().trim() ) {
+                     cPromotion =0;
+                 } else {cPromotion = $("#cPromotionpac").val().trim();}
+                 
+                 $("#PROMO_ID").val($("#cPromotionpac").val().trim());
+                 
+                  Common.ajax("GET", "/sales/membership/getPromoPricePercent", $("#getDataForm").serialize(), function(result) {
+                     console.log( result);
+                     
+                     if(result.length>0){
+                        
+                         var oriprice                = Number($("#hiddenPacOriPrice").val()) ;
+                         var promoPrcPrcnt     = Number( result[0]. promoPrcPrcnt) ;
+                         var promoAddDiscPrc = Number( result[0]. promoAddDiscPrc) ;
+                         
+                         
+                         
+                         if(result[0].promoDiscType =="0"){       //% 
+                        	 
+                        	 $("#txtPackagePrice").html("");
+                             // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );    
+                             
+                             
+                               var t1=    oriprice -( oriprice * ( promoPrcPrcnt /100 ) );
+                               var t2=    t1 -  promoAddDiscPrc;
+                               var t3 = Math.floor( t2);
+                               $("#txtPackagePrice").html(t3); 
+                              
+                         }else if(result[0].promoDiscType =="1"){  //amt 
+                             $("#txtPackagePrice").html(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  )); 
+                         
+                         }else{
+                             alert('promoDiscType err ');
+                             return ;
+                         }
+                     }
+                });
+                
+            }else {
+                Common.alert(   "Promotion Not Entitled"+DEFAULT_DELIMITER+" This order is not entitled in this promotion.");
+            }
+    }
+    
+	    
+	   
 }
-
-
 
 
 
@@ -489,12 +519,12 @@ function fn_getMembershipPackageInfo(_id){
          
          if ( $("#HiddenHasFilterCharge") .val() == "1") {
         	 
-        	 fn_getFilterCharge(_id);
+        	// fn_getFilterCharge(_id);
         	 fn_LoadMembershipPromotion();
              $("#btnViewFilterCharge").attr("style" ,"display:inline");
         	 
          } else{
-        	 $("#txtFilterCharge").html("0.00");
+        	  // $("#txtFilterCharge").html("0.00");
          }
          
          $("#packpro").removeAttr("disabled");
@@ -505,6 +535,24 @@ function fn_getMembershipPackageInfo(_id){
          
     });
  }
+ 
+ 
+ 
+function   fn_getMembershipPackageFilterInfo(){
+	
+	$('#txtFilterCharge').html("");
+    $("#cPromoCombox").attr("checked",false);
+    
+    $("#cPromo").removeAttr("disabled");
+    $("#cPromoCombox").removeAttr("disabled");
+   
+    var SRV_MEM_PAC_ID = $("#cTPackage").val();
+    doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID='+SRV_MEM_PAC_ID+"&E_YN="+ $("#cEmplo").val(), '', '','cPromo', 'S' , '');            // Customer Type Combo Box
+
+    
+	
+}
+ 
  
  
  
@@ -537,7 +585,15 @@ function  fn_PacPromotionCode(){
 	
 	$('#cPromotionpac option').remove();
 	
-	doGetCombo('/sales/membership/getPromotionCode', '', '','cPromotionpac', 'S' , 'f_multiCombo2');          
+	var SALES_ORD_ID = $("#ORD_ID").val() ;
+	var SRV_MEM_PAC_ID = $("#cTPackage").val();
+	var E_YN = $("#cEmplo").val();
+	
+	var pram = "?SALES_ORD_ID="+SALES_ORD_ID+"&SRV_MEM_PAC_ID="+SRV_MEM_PAC_ID+"&E_YN="+E_YN;
+	
+	doGetCombo('/sales/membership/getPromotionCode'+pram,'', '','cPromotionpac', 'S' , '');       
+	
+	
 	$("#cPromotionpac").removeAttr("disabled");
 	
 	var  _valid  = true ;
@@ -558,7 +614,6 @@ function  fn_PacPromotionCode(){
 function fn_LoadMembershipPromotion(){
 
     $('#cPromo option').remove();
-	doGetCombo('/sales/membership/getFilterPromotionCode', '', '','cPromo', 'S' , 'f_multiCombo3');            // Customer Type Combo Box
 	$("#cPromo").removeAttr("disabled");
 	
 	
@@ -593,6 +648,25 @@ private void LoadMembershipPromotion(int PackageID,int StkID)
 
 
  
+function fn_getFilterChargeList(){
+	
+    $("#txtFilterCharge").text("");
+    
+	 Common.ajax("GET", "/sales/membership/getFilterChargeListSum.do",{
+         SALES_ORD_NO : $("#ORD_NO").val(),
+         PROMO_ID: $('#cPromo').val() ,
+         SRV_PAC_ID :$('#cTPackage').val() 
+     }, function(result) {
+          console.log( result);
+          
+         if(null != result){
+        	 if(result[0] !=null){
+        		 $("#txtFilterCharge").text( result[0].disamt);
+        	 }
+         }
+     });
+}
+
  
  function   fn_LoadMembershipFilter(_cPromotion){
 	 
@@ -629,7 +703,7 @@ function fn_getFilterCharge(_cPromotion){
     
     $("#PROMO_ID").val(cPromotion);
     
-   Common.ajax("GET", "/sales/membership/getFilterCharge", $("#getDataForm").serialize(), function(result) {
+   Common.ajax("GET", "/sales/membership/getFilterChargeList.do", $("#getDataForm").serialize(), function(result) {
 	   console.log( "======fn_getFilterCharge========>"); 
 	   console.log( result);
 
@@ -641,10 +715,11 @@ function fn_getFilterCharge(_cPromotion){
                  }
                  
                 console.log(prc);
-        	    $("#txtFilterCharge").html(prc);
+        	   $("#txtFilterCharge").html(prc);
+        	   
         	   
            }else{
-        	   $("#txtFilterCharge").html("0.00");
+        	   //$("#txtFilterCharge").html("0.00");
            }
         
            if( $("#cPromotionpac").val() > 0){
@@ -817,7 +892,7 @@ function    fn_SubscriptionYear_initEvt(){
 	 $("#txtPackagePrice").html("-");
 	 $("#hiddenPacOriPrice").val("");
 	 $("#txtFilterCharge").val("");
-	 $("#btnViewFilterCharge").attr("style" ,"display:none");
+	 //$("#btnViewFilterCharge").attr("style" ,"display:none");
 	
 }
 
@@ -1616,21 +1691,20 @@ function createAUIGridOList() {
 		<tr>
 		    <th scope="row">Type of Package</th>
 		    <td>
-		    <select class="w100p" id='cTPackage' name='cTPackage'></select>
+		    <select class="w100p" id='cTPackage' name='cTPackage'   onChange="fn_cTPackage_onchangeEvt()"></select>
 		    </td>
 		    <th scope="row">Subscription Year</th>
 		    <td width='80px'>
-		    <select  id="cYear"   style="width:80px"  disabled="disabled"  >
+		    <select  id="cYear"   name= "cYear" style="width:80px"  disabled="disabled"  onChange="fn_cYear_onChageEvent()" >
+		        <option value="" >Choose One</option>
 		        <option value="12" >1</option>
-		        <option value="24">2</option>
-		        <option value="36">3</option>
-		        <option value="48">4</option>
 		    </select>
 		    </td>
 		    
 		      <th scope="row">Employee </th>
 	            <td>
 	            <select  style="width:80px"  id="cEmplo" >
+	                 <option value="">Choose One</option>
 	                <option value="1">Y</option>
 	                <option value="0">N</option>
 	            </select>
@@ -1642,7 +1716,7 @@ function createAUIGridOList() {
 		    <th scope="row">Package Promotion</th>
 		    <td>
 		    <label><input type="checkbox" disabled="disabled"  id="packpro"   name="packpro" onclick="fn_doPackagePro(this)" /><span></span></label>
-		            <select class="disabled" disabled="disabled"  id="cPromotionpac" name="cPromotionpac" > </select>
+		            <select class="disabled" disabled="disabled"  id="cPromotionpac" name="cPromotionpac"  onChange="fn_onChange_cPromotionpac()"> </select>
 		    </td>
 		    <th scope="row">Package Price</th>
 		    <td  colspan="3"><span id='txtPackagePrice'></span></td>
@@ -1651,14 +1725,14 @@ function createAUIGridOList() {
 		    <th scope="row">Filter Promotion</th>
 		    <td>
 		    <label><input type="checkbox" disabled="disabled"  id="cPromoCombox"   name="cPromoCombox" onclick="fn_doPromoCombox(this)" /><span></span></label>
-		    <select class="disabled " disabled="disabled" id="cPromo" name='cPromo'></select>
+		    <select class="disabled " disabled="disabled" id="cPromo" name='cPromo'  onchange="fn_getFilterChargeList()"></select>
 		    </td>
-		    <th scope="row">Filter Price</th>
+		    <th scope="row">Filter Price</th>  
 		    <td colspan="2">
 		          <span id="txtFilterCharge"></span>
 		     </td>
 		    <td>
-                  <div  id="btnViewFilterCharge" class="right_btns"  style="display:none" >  
+                  <div  id="btnViewFilterCharge" class="right_btns"  style="display:inline" >  
                         <p class="btn_sky"><a href="#" onclick="javascript:fn_LoadMembershipFilter()">Detail</a></p>
                    </div>
 		</tr>

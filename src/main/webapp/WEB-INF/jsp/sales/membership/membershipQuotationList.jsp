@@ -14,8 +14,6 @@
         
     	createAUIGrid();
 
-        AUIGrid.bind(gridID, "cellDoubleClick", function(event) { });
-        
     });
     
     

@@ -85,10 +85,28 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	
 	@Override
+	public EgovMap  getFilterPromotionAmt(Map<String, Object> params) {
+		return membershipQuotationMapper.getFilterPromotionAmt(params);
+	}
+	 
+	
+	
+	
+	@Override
 	public List<EgovMap> getPromoPricePercent(Map<String, Object> params) {
 		return membershipQuotationMapper.getPromoPricePercent(params);
 	}
+	@Override
+	public List<EgovMap> getFilterChargeList(Map<String, Object> params) {
+		return membershipQuotationMapper.getFilterChargeList(params);
+	}
 	
+	@Override
+	public List<EgovMap> getFilterChargeListSum(Map<String, Object> params) {
+		return membershipQuotationMapper.getFilterChargeListSum(params); 
+	}
+	
+	   
 	
 	@Override
 	public List<EgovMap> getOrderCurrentBillMonth(Map<String, Object> params) {

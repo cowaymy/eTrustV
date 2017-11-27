@@ -7,19 +7,27 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.mambership.MembershipConvSaleService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
 import com.coway.trust.biz.sales.mambership.impl.MembershipMapper;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -82,6 +90,37 @@ public class  MembershipConvSaleController {
 	}
 	
 		
+	
+	
+
+
+	@RequestMapping(value = "/mQuotConvSaleSave.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> mQuotConvSaleSave(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  mQuotConvSaleSave ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("updator", sessionVO.getUserId());
+		params.put("userId", sessionVO.getUserId());
+		
+		
+		
+		//int rtnValue = membershipPackageMService.SAL0081D_insert(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		//message.setData(rtnValue);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+				
+		return ResponseEntity.ok(message);  
+		
+	}
+	
+	
+	
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;

@@ -24,7 +24,17 @@ public interface MembershipQuotationService {
 	
 	EgovMap		newGetExpDate(Map<String, Object> params);
 	
+	EgovMap		getFilterPromotionAmt(Map<String, Object> params);
+	
+	
 	List<EgovMap>   getSrvMemCode(Map<String, Object> params);
+	
+	List<EgovMap>   getFilterChargeList(Map<String, Object> params);
+
+	List<EgovMap>   getFilterChargeListSum(Map<String, Object> params);
+
+	
+	
 	
 	EgovMap		mPackageInfo(Map<String, Object> params);
 	

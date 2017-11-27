@@ -52,7 +52,6 @@ function fn_getMembershipQuotInfoFilterAjax (_QUOT_ID){
 	  
 	  if(_QUOT_ID !=""){
 		   v_QUOT_ID = _QUOT_ID;
-		   
 	  }
 	  
       Common.ajax("GET", "/sales/membership/selectMembershipQuotFilter",{QUOT_ID:v_QUOT_ID }, function(result) {
