@@ -2494,6 +2494,34 @@ and cust.cust_id = custCnt.cust_id
                             
                 </insert>        
                 
+                
+                
+               <insert id="insertASRequestRegist" parameterType="Map">
+                            INSERT INTO SVC0049T (
+                                RESULT_SEQ
+                                ,USER_ID
+                                ,SALES_ORD_NO
+                                ,CUST_ID
+                                ,PRODUCT_CODE
+                                ,DEFECT_CODE_ID
+                                ,RESULT_REM
+                                ,TRAN_STUS_CD
+
+                            ) VALUES (
+                               SVC0049T_RESULT_SEQ.NEXTVAL
+                               , #{userId}
+                               , #{salesOrderNo}
+                               , #{customerId}
+                               , #{productCode}
+                               , #{defectCodeId}
+                               , #{resultRemark}
+                               , 'N'
+                            )
+                            
+                </insert>       
+
+                
+                
 
 
 
@@ -2540,7 +2568,7 @@ and cust.cust_id = custCnt.cust_id
 						 update SVC0006D 
 						    set  FAIL_RESN_ID = #{failReasonCode},
 						          RESULT_STUS_CODE_ID = '21',
-						        RESULT_UPD_DT = sysdate,
+						        RESULT_UPD_DT = sysdate,  
 						        RESULT_UPD_USER_ID = (select mem_id
 						                                   from org0001d
 						                                   where mem_code = #{userId})
@@ -2562,10 +2590,27 @@ and cust.cust_id = custCnt.cust_id
                     
                     
                     
+                   <update id="upDateHsFailJobResultM" parameterType="Map">
+							 update SVC0008D
+							    set STUS_CODE_ID = '21',
+							        CRT_DT = sysdate,  
+							        CRT_USER_ID = (select mem_id
+							                                   from org0001d
+							                                   where mem_code = #{userId})
+							where 1=1
+							and NO = #{serviceNo}
+							and SALES_ORD_ID =  (select sales_ord_id
+							                                   from sal0001d
+							                                   where sales_ord_no =  #{salesOrderNo}      )                 
+                    </update>
+                    
+                    
+                    
+                    
                     <update id="insertAsFailJobResult" parameterType="Map">
 						update SVC0004D
-						 set  FAIL_RESN_ID = #{failReasonCode},
-						               STUS_CODE_ID = '21',
+						 set  AS_FAIL_RESN_ID = #{failReasonCode},
+						               AS_RESULT_STUS_ID = '21',
 						              AS_RESULT_UPD_DT = sysdate,
 						              AS_RESULT_UPD_USER_ID = (select mem_id
 						                                       from org0001d
@@ -2582,12 +2627,29 @@ and cust.cust_id = custCnt.cust_id
 
                     </update>
                     
+
+                   <update id="upDatetAsFailJobResultM" parameterType="Map">
+						 update SVC0001D
+						        set AS_STUS_ID = '21',
+						            AS_UPD_DT = sysdate,  
+						            AS_UPD_USER_ID = (select mem_id
+						                                       from org0001d
+						                                       where mem_code = #{userId})
+						    where 1=1
+						    and AS_NO = #{serviceNo}
+						    and AS_SO_ID =  (select sales_ord_id
+						                                       from sal0001d
+						                                       where sales_ord_no =  #{salesOrderNo} )          
+						                                                    
+                    </update>
+                                        
                     
                     
                     <update id="insertInstallFailJobResult" parameterType="Map">
 					        update SAL0047D
-					        set  FAIL_RESN_ID = #{failReasonCode},
+					        set  FAIL_ID = #{failReasonCode},
 					              STUS_CODE_ID = '21',
+                                  SERIAL_NO = #{serialNo},
 					              UPD_DT = sysdate,
 					              UPD_USER_ID = (select mem_id
 					                                       from org0001d
@@ -2603,6 +2665,24 @@ and cust.cust_id = custCnt.cust_id
                     </update>                    
 
 
+
+                   <update id="upDateInstallFailJobResultM" parameterType="Map">
+						 update SAL0046D
+						        set STUS_CODE_ID = '21',
+						            UPD_DT = sysdate,  
+						            UPD_USER_ID = (select mem_id
+						                                       from org0001d
+						                                       where mem_code = #{userId})
+						    where 1=1
+						    and INSTALL_ENTRY_NO = #{serviceNo}
+						    and SALES_ORD_ID =  (select sales_ord_id
+						                                       from sal0001d
+						                                       where sales_ord_no =  #{salesOrderNo}  )                   
+                    </update>
+                    
+                    
+                    
+                    
 
        <select id="getASRequestResultList" parameterType="Map" resultType="egovMap">
 
