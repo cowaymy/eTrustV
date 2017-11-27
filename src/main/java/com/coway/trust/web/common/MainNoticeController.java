@@ -26,9 +26,6 @@ public class MainNoticeController {
 	@Autowired
 	private MainNoticeService mainNoticeService;
 
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
-
 	@RequestMapping(value = "/selectDailyCount.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDailyCount(@RequestParam Map<String, Object> params) {
 		List<EgovMap> selectDailyCountList = mainNoticeService.selectDailyCount(params);
