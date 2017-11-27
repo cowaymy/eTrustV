@@ -2497,26 +2497,19 @@ and cust.cust_id = custCnt.cust_id
                 
                 
                <insert id="insertASRequestRegist" parameterType="Map">
-                            INSERT INTO SVC0049T (
-                                RESULT_SEQ
-                                ,USER_ID
-                                ,SALES_ORD_NO
-                                ,CUST_ID
-                                ,PRODUCT_CODE
-                                ,DEFECT_CODE_ID
-                                ,RESULT_REM
-                                ,TRAN_STUS_CD
-
-                            ) VALUES (
-                               SVC0049T_RESULT_SEQ.NEXTVAL
-                               , #{userId}
-                               , #{salesOrderNo}
-                               , #{customerId}
-                               , #{productCode}
-                               , #{defectCodeId}
-                               , #{resultRemark}
-                               , 'N'
-                            )
+					insert into SVC0001D (
+					                AS_ID,AS_NO,AS_SO_ID
+					                ,AS_MEM_ID,AS_REQST_DT,AS_RQST_REM
+					                ,AS_MALFUNC_ID,AS_MALFUNC_RESN_ID,AS_TYPE_ID
+					                ,AS_CRT_USER_ID,AS_CRT_DT ,AS_UPD_USER_ID
+					                ,AS_UPD_DT
+					)
+					values(select SVC0001D_AS_ID_SEQ.nextval from dual,SELECT FN_GET_DOCNO(#{DOCNO})  asno  FROM DUAL,#{salesOrderNo}
+					            ,select mem_id from org0001d where mem_code = #{userId},  sysdate, #{resultRemark}
+					            ,#{errReasonId}, #{errTypeId}, '2703'
+					            ,select mem_id from org0001d where mem_code = #{userId},sysdate,select mem_id from org0001d where mem_code = #{userId}
+					            ,sysdate
+                            )					            
                             
                 </insert>       
 
@@ -2711,7 +2704,7 @@ and cust.cust_id = custCnt.cust_id
 					AND C.CUST_ID = F.CUST_ID
 					AND A.AS_TYPE_ID = '2703'  
 					AND B.MEM_CODE = #{userId}
-					AND A.AS_REQST_DT to_date(#{searchFromDate},'yyyymmdd') AND  to_date(#{searchToDate},'yyyymmdd')
+					AND A.AS_REQST_DT between  to_date(#{searchFromDate},'yyyymmdd') AND  to_date(#{searchToDate},'yyyymmdd')
 					
 
 <!-- 					SELECT to_char(D.NAME) AS cust_Name
@@ -2745,7 +2738,74 @@ and cust.cust_id = custCnt.cust_id
 
 
 
+       <select id="getASRequestCustList" parameterType="Map" resultType="egovMap">
 
+
+				SELECT
+				   C.MEM_CODE AS USER_ID
+				   , E.NAME AS cust_Name
+				   , E.CUST_ID AS customer_Id
+				   , CASE WHEN E.TYPE_ID = 964 THEN E.NRIC
+				     ELSE ''
+				     END AS cust_Nric_No
+				   , CASE WHEN E.TYPE_ID = 965 THEN E.NRIC
+				     ELSE ''
+				     END AS cust_Company_No
+				   , TO_CHAR(E.TYPE_ID) AS customer_Type
+				   , A.SALES_ORD_NO AS sales_Ord_No
+				   , D.STK_CODE AS product_Code
+				   , D.STK_ID AS product_Id
+				   , D.STK_DESC AS product_Name
+				   , UPPER(J.SERIAL_NO) AS serial_No
+				FROM
+				 SAL0001D A
+				 , SAL0002D B
+				 , ORG0001D C
+				 , SYS0026M D
+				 , SAL0029D E
+				 , (SELECT * FROM
+				  (
+				   SELECT SALES_ORD_ID, INSTALL_ENTRY_ID,
+				    ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY CRT_DT DESC) AS DUM_SEQ
+				   FROM SAL0046D 
+				  ) SAL46D 
+				 WHERE DUM_SEQ = 1 ) F
+				 , (SELECT * FROM
+				  (
+				   SELECT ENTRY_ID, SERIAL_NO,
+				    ROW_NUMBER() OVER(PARTITION BY ENTRY_ID ORDER BY CRT_DT DESC) AS DUM_SEQ
+				   FROM SAL0047D 
+				  ) SAL47D 
+				 WHERE DUM_SEQ = 1 ) J
+				WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+				AND A.MEM_ID = C.MEM_ID
+				AND B.ITM_STK_ID = D.STK_ID
+				AND A.CUST_ID = E.CUST_ID
+				AND B.SALES_ORD_ID = F.SALES_ORD_ID(+)
+				AND F.INSTALL_ENTRY_ID = J.ENTRY_ID(+)
+				AND C.MEM_ID = (SELECT MEM_ID
+                                        FROM ORG0001D
+                                        WHERE 1=1
+                                        AND MEM_CODE = #{userId}) 
+		       <if test="searchType != null and searchType != '' ">
+		            <if  test="searchType == '1' " >
+		               AND A.SALES_ORD_NO LIKE #{searchKeyword}
+		            </if>
+		            <if test="searchType == '2' ">
+		               AND E.NAME LIKE #{searchKeyword}
+		            </if>
+                    <if test="searchType == '3' ">
+                       AND E.NRIC LIKE #{searchKeyword}
+                    </if>
+               </if>
+				
+				
+
+                    
+
+
+
+         </select>
 
 
      
