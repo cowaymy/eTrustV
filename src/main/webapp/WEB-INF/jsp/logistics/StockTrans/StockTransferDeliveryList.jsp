@@ -302,6 +302,7 @@ $(function(){
              doSysdate(0 , 'giptdate');
              doSysdate(0 , 'gipfdate');
              $("#giopenwindow").show();
+             $("#serial_grid_wrap").show();
              AUIGrid.clearGridData(serialGrid);
              AUIGrid.resize(serialGrid);
              fn_itempopList_T(checkedItems);   
@@ -462,7 +463,7 @@ function giFunc(){
 	var check     = AUIGrid.getCheckedRowItems(listGrid);
     var serials   = AUIGrid.getAddedRowItems(serialGrid);
     
-	    if (serialchk){
+	 if (check[0].item.serialchk == 'Y'){
 	        for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
 	            if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
 	                Common.alert("Please check the serial.")
