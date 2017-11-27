@@ -1116,7 +1116,7 @@ public class ServiceApiController {
 //		// business service....
 //		// TODO : installResult 구현 필요.....
 		MSvcLogApiService.insertHsFailJobResult(params);		
-
+		MSvcLogApiService.upDateHsFailJobResultM(params);
 		
 		// TODO : 리턴할 dto 구현.
 //		transactionId = productReturnResultForm.getTransactionId();
@@ -1147,6 +1147,7 @@ public class ServiceApiController {
 //		// business service....
 //		// TODO : installResult 구현 필요.....
 		MSvcLogApiService.insertAsFailJobResult(params);		
+		MSvcLogApiService.upDatetAsFailJobResultM(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
@@ -1178,6 +1179,7 @@ public class ServiceApiController {
 //		// business service....
 //		// TODO : installResult 구현 필요.....
 		MSvcLogApiService.insertInstallFailJobResult(params);		
+		MSvcLogApiService.upDateInstallFailJobResultM(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
