@@ -275,9 +275,9 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public String StockTransferDeliveryIssue(Map<String, Object> params) {
-		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		List<Object> checklist      = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		List<Object> serialList = (List<Object>) params.get("add");
+		List<Object> serialList     = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		String reVal = "";
 
 		int iCnt = 0;
@@ -289,8 +289,6 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		if (checklist.size() > 0) {
 			for (int i = 0; i < checklist.size(); i++) {
 				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
-				
-				logger.info(" map:::!!! ??: {}", map);
 				
 				Map<String, Object> imap = new HashMap();
 				imap = (Map<String, Object>) map.get("item");
@@ -311,31 +309,30 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 		
-	if (serialList.size() > 0) {
-
-		for (int j = 0; j < serialList.size(); j++) {
-
-			Map<String, Object> insSerial = null;
-
-			insSerial = (Map<String, Object>) serialList.get(j);
-
-			insSerial.put("delno", delno);
-			insSerial.put("reqstno", formMap.get("reqstno"));
-			insSerial.put("userId", params.get("userId"));
+    	if (serialList != null  && serialList.size() > 0) {
+    
+    		for (int j = 0; j < serialList.size(); j++) {
+    
+    			Map<String, Object> insSerial = null;
+    
+    			insSerial = (Map<String, Object>) serialList.get(j);
+    
+    			insSerial.put("delno", delno);
+    			insSerial.put("reqstno", formMap.get("reqstno"));
+    			insSerial.put("userId", params.get("userId"));
+    			
+    			stocktran.insertTransferSerial(insSerial);
+    		}
+    	}
 			
-			logger.info(" insSerial ??: {}", insSerial);
-			
-			stocktran.insertTransferSerial(insSerial);
-		}
-	}
-			
-
-		String[] delvcd = delyCd.split("∈");
+	    String[] delvcd = delyCd.split("∈");
 		formMap.put("parray", delvcd);
 		formMap.put("userId", params.get("userId"));
 		// formMap.put("prgnm", params.get("prgnm"));
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
+		
+		logger.info(" map:::!!! ??: {}", formMap);
 
 		if ("RC".equals(formMap.get("gtype"))) {
 			stocktran.StockTransferCancelIssue(formMap);

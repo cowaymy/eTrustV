@@ -223,6 +223,8 @@ $(function(){
         	}
         	document.grForm.gtype.value="GR";
         	$("#dataTitle").text("Good Receipt Posting Data");
+        	doSysdate(0 , 'giptdate');
+            doSysdate(0 , 'gipfdate');
         	$("#gropenwindow").show();
         }
     });
@@ -342,7 +344,8 @@ function grFunc(){
 	
 	data.form    = $("#grForm").serializeJSON();
 	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
-        Common.alert(result.message.message);
+		console.log(result);
+        Common.alert(result.message + "<br/>MDN NO : " + result.data );
 //         AUIGrid.setGridData(listGrid, result.data);
         
        	$("#giptdate").val("");
