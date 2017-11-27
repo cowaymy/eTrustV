@@ -81,31 +81,31 @@ public class SampleController {
 	@Autowired
 	private AdaptorService adaptorService;
 
-	@RequestMapping(value = "/barcode.do")
-	public void barcode(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		try {
-
-			String data = request.getParameter("DATA");
-			String type = request.getParameter("TYPE");
-
-			Code128 barcode = new Code128();
-			barcode.setData(data);
-
-			ServletOutputStream servletoutputstream = response.getOutputStream();
-
-			response.setContentType("image/jpeg");
-			response.setHeader("Pragma", "no-cache");
-			response.setHeader("Cache-Control", "no-cache");
-			response.setDateHeader("Expires", 0);
-
-			// Generate Code-128 barcode & output to ServletOutputStream
-			barcode.drawBarcode(servletoutputstream);
-
-		} catch (Exception e) {
-			throw new ApplicationException(e);
-		}
-	}
+//	@RequestMapping(value = "/barcode.do")
+//	public void barcode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//
+//		try {
+//
+//			String data = request.getParameter("DATA");
+//			String type = request.getParameter("TYPE");
+//
+//			Code128 barcode = new Code128();
+//			barcode.setData(data);
+//
+//			ServletOutputStream servletoutputstream = response.getOutputStream();
+//
+//			response.setContentType("image/jpeg");
+//			response.setHeader("Pragma", "no-cache");
+//			response.setHeader("Cache-Control", "no-cache");
+//			response.setDateHeader("Expires", 0);
+//
+//			// Generate Code-128 barcode & output to ServletOutputStream
+//			barcode.drawBarcode(servletoutputstream);
+//
+//		} catch (Exception e) {
+//			throw new ApplicationException(e);
+//		}
+//	}
 
 	/**
 	 * batch excute sample.....
