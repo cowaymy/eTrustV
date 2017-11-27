@@ -1138,7 +1138,8 @@ function addRentalToFinal(){
 
 function viewRentalLedger(){
     if($("#rentalOrdId").val() != ''){
-        Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#rentalOrdId").val()});
+    	$("#ledgerForm #ordId").val($("#rentalOrdId").val());
+        Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     }else{
         Common.alert('<b>Please Select a Order Info first</b>');
         return;
@@ -1729,7 +1730,8 @@ function addSrvcToFinal(){
 
 function viewSrvcLedger(){
     if($("#srvcOrdId").val() != ''){
-        Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#srvcOrdId").val()});
+    	$("#ledgerForm #ordId").val($("#srvcOrdId").val());
+        Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     }else{
         Common.alert('<b>Please Select a Order Info first</b>');
         return;
@@ -2333,7 +2335,8 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
             <!-- search_table start -->
             <form id="cashSearchForm" action="#" method="post">
                 <input type="hidden" name="keyInPayCashType" id="keyInPayCashType" />
-                
+                <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
+                <input type="hidden" name="keyInScrn" id="keyInScrn" value="ADV" />   
                 <table class="type1">
                     <caption>table</caption>
                     <colgroup>
@@ -2438,7 +2441,8 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
             <!-- search_table start -->
             <form id="chequeSearchForm" action="#" method="post">
                 <input type="hidden" name="keyInPayChequeType" id="keyInPayChequeType" />
-                
+                <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
+                <input type="hidden" name="keyInScrn" id="keyInScrn" value="ADV" />
                 <table class="type1">
                     <caption>table</caption>
                     <colgroup>
@@ -2487,7 +2491,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
                             <td>
                                 <input type="text" id="chequePayName" name="chequePayName" class="w100p" />
                             </td>
-                            <th scope="row">Ref Details/Jompay Ref<span class="must">*</span></th>
+                            <th scope="row">Ref Details/Jompay Ref</th>
                             <td>
                                 <input type="text" id="chequeRefDetails" name="chequeRefDetails" class="w100p" />
                             </td>
@@ -2543,7 +2547,8 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
             <!-- search_table start -->
             <form id="onlineSearchForm" action="#" method="post">
                 <input type="hidden" name="keyInPayOnlineType" id="keyInPayOnlineType" />
-                
+                <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
+                <input type="hidden" name="keyInScrn" id="keyInScrn" value="ADV" />
                 <table class="type1">
                     <caption>table</caption>
                     <colgroup>
@@ -2646,3 +2651,6 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
 
 </section>
 <!-- content end -->
+<form id="ledgerForm" action="#" method="post">
+    <input type="hidden" id="ordId" name="ordId" />
+</form>
