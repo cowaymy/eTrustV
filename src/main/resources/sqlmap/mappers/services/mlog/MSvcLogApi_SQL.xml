@@ -820,7 +820,6 @@ and cust.cust_id = custCnt.cust_id
 
 
     <select id="getInstallationJobList" parameterType="Map" resultType="egovMap">
-
     SELECT
             SAL0001D.SALES_ORD_NO           AS sales_Order_No,
             SAL0046D.INSTALL_ENTRY_NO       AS service_No,
@@ -831,7 +830,6 @@ and cust.cust_id = custCnt.cust_id
 	              then decode(SAL0046D.SESION_CODE, 'M', '1000','A','1400','E','1900','O','2000')
 	             else  to_char(REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':'))
 	       end appointment_Time,            
- <!--            replace(substr(SAL0046D.APPNT_TM, 0,5 ),':')               AS appointment_Time, -->
             TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY') as   plan_Year,
             TO_CHAR (SAL0046D.INSTALL_DT, 'MM') as plan_Month,
             SAL0046D.SESION_CODE            AS job_Session,
@@ -847,7 +845,7 @@ and cust.cust_id = custCnt.cust_id
             SAL0029D.EMAIL                  AS mail_Address,
             SAL0029D.CUST_VA_NO             AS customer_Va_No,
             SAL0024D.CUST_BILL_PAY_REF_NO1  AS customer_Jom_Pay_Ref_No,
-            SYS0027M.IMG_URL                AS image_Url,
+--            SYS0027M.IMG_URL                AS image_Url,
             SYS0026M.STK_DESC               AS product_Name,
             SYS0026M.STK_CODE               AS product_Code,
             FN_GET_COMMCD(10,SAL0001D.APP_TYPE_ID)            AS app_Type,
@@ -885,7 +883,7 @@ and cust.cust_id = custCnt.cust_id
             SAL0095D,
             SYS0005M,
             SYS0026M,
-            SYS0027M,
+--            SYS0027M,
             SYS0064M
             WHERE SAL0001D.CUST_ID          = SAL0022D.CUST_ID(+)
             AND   SAL0001D.SALES_ORD_ID     = SAL0002D.SALES_ORD_ID
@@ -896,7 +894,7 @@ and cust.cust_id = custCnt.cust_id
             AND   SAL0001D.CUST_ID          = SAL0029D.CUST_ID
             AND   SAL0001D.SALES_ORD_ID     = SAL0095D.SRV_SALES_ORD_ID(+)
             AND   SAL0002D.ITM_STK_ID       = SYS0026M.STK_ID
-            AND   SYS0026M.STK_ID           = SYS0027M.STK_ID
+--            AND   SYS0026M.STK_ID           = SYS0027M.STK_ID
             AND   SAL0001D.SALES_ORD_ID     = SAL0046D.SALES_ORD_ID
             AND   ORG0001D.MEM_ID           = SAL0046D.CT_ID
             AND   SAL0001D.SALES_ORD_ID     = SAL0045D.SALES_ORD_ID(+)
