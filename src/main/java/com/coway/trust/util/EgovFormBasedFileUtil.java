@@ -258,7 +258,7 @@ public class EgovFormBasedFileUtil {
 	 * @param where
 	 * @param serverSubPath
 	 * @param physicalName
-	 * @param mimeType
+	 * @param mimeTypeParam
 	 * @throws Exception
 	 */
 	public static void viewFile(HttpServletResponse response, String where, String serverSubPath, String physicalName,
