@@ -9,10 +9,10 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.coway.trust.cmmn.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +38,8 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
-import com.coway.trust.cmmn.model.EmailVO;
-import com.coway.trust.cmmn.model.GridDataSet;
-import com.coway.trust.cmmn.model.ReturnMessage;
-import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.*;
-import com.onbarcode.barcode.Code128;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -81,31 +75,31 @@ public class SampleController {
 	@Autowired
 	private AdaptorService adaptorService;
 
-//	@RequestMapping(value = "/barcode.do")
-//	public void barcode(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//
-//		try {
-//
-//			String data = request.getParameter("DATA");
-//			String type = request.getParameter("TYPE");
-//
-//			Code128 barcode = new Code128();
-//			barcode.setData(data);
-//
-//			ServletOutputStream servletoutputstream = response.getOutputStream();
-//
-//			response.setContentType("image/jpeg");
-//			response.setHeader("Pragma", "no-cache");
-//			response.setHeader("Cache-Control", "no-cache");
-//			response.setDateHeader("Expires", 0);
-//
-//			// Generate Code-128 barcode & output to ServletOutputStream
-//			barcode.drawBarcode(servletoutputstream);
-//
-//		} catch (Exception e) {
-//			throw new ApplicationException(e);
-//		}
-//	}
+	// @RequestMapping(value = "/barcode.do")
+	// public void barcode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	//
+	// try {
+	//
+	// String data = request.getParameter("DATA");
+	// String type = request.getParameter("TYPE");
+	//
+	// Code128 barcode = new Code128();
+	// barcode.setData(data);
+	//
+	// ServletOutputStream servletoutputstream = response.getOutputStream();
+	//
+	// response.setContentType("image/jpeg");
+	// response.setHeader("Pragma", "no-cache");
+	// response.setHeader("Cache-Control", "no-cache");
+	// response.setDateHeader("Expires", 0);
+	//
+	// // Generate Code-128 barcode & output to ServletOutputStream
+	// barcode.drawBarcode(servletoutputstream);
+	//
+	// } catch (Exception e) {
+	// throw new ApplicationException(e);
+	// }
+	// }
 
 	/**
 	 * batch excute sample.....
@@ -237,8 +231,8 @@ public class SampleController {
 	}
 
 	@RequestMapping(value = "/genSuite/sendSMS.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> genSuiteSendSMS(@RequestParam Map<String, Object> params, Model model)
-			throws Exception {
+	public ResponseEntity<ReturnMessage> genSuiteSendSMS(@RequestParam Map<String, Object> params, Model model,
+			SessionVO sessionVO) throws Exception {
 
 		ReturnMessage retMsg = new ReturnMessage();
 
@@ -257,22 +251,31 @@ public class SampleController {
 		String message = "RM0.00" + "test message";
 		String mobileNo = "01133681677";// 말레이시아 번호이어야 함. 01133681677, 0165420960
 
-		String smsUrl = "http://" + hostName + hostPath + "?" + "ClientID=" + strClientID + "&Username=" + strUserName
-				+ "&Password=" + strPassword + "&Type=" + strType + "&Message=" + message + "&SenderID=" + strSenderID
-				+ "&Phone=" + countryCode + mobileNo + "&MsgID=" + strMsgID;
+		params.put("userId", sessionVO.getUserId());
+		params.put("mobileNo", mobileNo);
+		params.put("smsMessage", message);
 
-		ResponseEntity<String> res = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
+		SmsResult smsResult = sampleApplication.sendSmsAndProcess(params);
+		retMsg.setMessage("Success count : " + smsResult.getSuccessCount() + " ### getFailReason : " + smsResult.getFailReason());
 
-		LOGGER.debug("getStatusCode : {}", res.getStatusCode());
-		LOGGER.debug("getBody : {}", res.getBody());
-
-		retMsg.setMessage("getStatusCode : " + res.getStatusCode() + " :: getBody : " + res.getBody());
+		// String smsUrl = "http://" + hostName + hostPath + "?" + "ClientID=" + strClientID + "&Username=" +
+		// strUserName
+		// + "&Password=" + strPassword + "&Type=" + strType + "&Message=" + message + "&SenderID=" + strSenderID
+		// + "&Phone=" + countryCode + mobileNo + "&MsgID=" + strMsgID;
+		//
+		// ResponseEntity<String> res = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
+		//
+		// LOGGER.debug("getStatusCode : {}", res.getStatusCode());
+		// LOGGER.debug("getBody : {}", res.getBody());
+		//
+		// retMsg.setMessage("getStatusCode : " + res.getStatusCode() + " :: getBody : " + res.getBody());
 
 		return ResponseEntity.ok(retMsg);
 	}
 
 	@RequestMapping(value = "/mvgate/sendSMS.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> mvgateSendSMS(@RequestParam Map<String, Object> params, Model model)
+	public ResponseEntity<ReturnMessage> mvgateSendSMS(@RequestParam Map<String, Object> params, Model model,
+													   SessionVO sessionVO)
 			throws Exception {
 
 		ReturnMessage retMsg = new ReturnMessage();
@@ -284,26 +287,33 @@ public class SampleController {
 		String msg = "test message by MVGate...";
 		String trId = UUIDGenerator.get();
 
-		String smsUrl = "http://103.246.204.24/bulksms/v4/api/mt?to=6" + toMobile + "&token=" + token + "&username="
-				+ userName + "&password=" + password + "&code=coway&mt_from=63660&text=" + msg + "&lang=0&trid=" + trId;
+		BulkSmsVO bulkSmsVO = new BulkSmsVO(sessionVO.getUserId(), 976);
+		bulkSmsVO.setMobile(toMobile);
+		bulkSmsVO.setMessage(msg);
 
-		ResponseEntity<String> res = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
+		SmsResult smsResult = adaptorService.sendSMSByBulk(bulkSmsVO);
+		retMsg.setMessage("Success count : " + smsResult.getSuccessCount() + " ### getFailReason : " + smsResult.getFailReason());
 
-		LOGGER.debug("getStatusCode : {}", res.getStatusCode());
-		LOGGER.debug("getBody : {}", res.getBody());
+//		String smsUrl = "http://103.246.204.24/bulksms/v4/api/mt?to=6" + toMobile + "&token=" + token + "&username="
+//				+ userName + "&password=" + password + "&code=coway&mt_from=63660&text=" + msg + "&lang=0&trid=" + trId;
+//
+//		ResponseEntity<String> res = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
+//
+//		LOGGER.debug("getStatusCode : {}", res.getStatusCode());
+//		LOGGER.debug("getBody : {}", res.getBody());
 
 		// 2017-09-29 13:10:03,431 DEBUG [com.coway.trust.common.SysTest] getStatusCode : 200
 		// 2017-09-29 13:10:03,431 DEBUG [com.coway.trust.common.SysTest] getBody :
 		// 000,812472eedc1be64e8d7b1e880932,f9c125f3ca8146ac9d4efac2c45daf63
 
-		String response = res.getBody();
-		String[] resArray = response.split(",");
-
-		String status = resArray[0];
-		String resMsgId = resArray[1];
-		String restrId = resArray[2];
-
-		retMsg.setMessage("getStatusCode : " + res.getStatusCode() + " :: getBody : " + res.getBody());
+//		String response = res.getBody();
+//		String[] resArray = response.split(",");
+//
+//		String status = resArray[0];
+//		String resMsgId = resArray[1];
+//		String restrId = resArray[2];
+//
+//		retMsg.setMessage("getStatusCode : " + res.getStatusCode() + " :: getBody : " + res.getBody());
 
 		return ResponseEntity.ok(retMsg);
 	}

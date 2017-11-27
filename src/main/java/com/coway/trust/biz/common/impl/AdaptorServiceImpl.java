@@ -27,6 +27,7 @@ import com.coway.trust.cmmn.model.BulkSmsVO;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.RestTemplateFactory;
 import com.coway.trust.util.UUIDGenerator;
 
@@ -93,6 +94,9 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 	@Autowired
 	private VelocityEngine velocityEngine;
+
+	@Autowired
+	private SmsMapper smsMapper;
 
 	@Override
 	public boolean sendEmail(EmailVO email, boolean isTransactional) {
@@ -168,6 +172,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 		}
 
 		String msgID = "";
+		int vendorId = 2;
 		smsVO.getMobiles().forEach(mobileNo -> {
 			String smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId
 					+ "&Username=" + gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType
@@ -181,14 +186,22 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 			if (response.getStatusCode() == HttpStatus.OK) {
 				String body = response.getBody();
+				int statusId;
+
 				if (GENSUITE_SUCCESS.equals(body)) {
+					statusId = 4;
 					result.setSuccessCount(result.getSuccessCount() + 1);
 				} else {
+					statusId = 21;
 					result.setFailCount(result.getFailCount() + 1);
 					reason.clear();
 					reason.put(mobileNo, body);
 					result.addFailReason(reason);
 				}
+
+				insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), 1, 1, 975, "", statusId, 0, body,
+						response.getBody(), msgID, vendorId);
+
 			} else {
 				result.setErrorCount(result.getErrorCount() + 1);
 			}
@@ -199,19 +212,11 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 	/**
 	 * ------------------------ MVGate Error Code ------------------------
-	 * 100 Unauthorized Access
-	 * 101 Unknown Target Receiver
-	 * 102 Invalid Parameter Format
-	 * 103 Text is required
-	 * 104 Unknown MT From
-	 * 105 Invalid Company Code
-	 * 106 Invalid Username or Password
-	 * 107 Account is not activated yet
-	 * 108 Insufficient Balance
-	 * 109 Credit Expired
-	 * 110 Insufficient Balance + Credit Expired
-	 * 111 DB Error
-	 * ----------------------------------------------------------------------------
+	 * --------------------------------------------------------------------------------------------------------------
+	 * 100 Unauthorized Access 101 Unknown Target Receiver 102 Invalid Parameter Format 103 Text is required 104 Unknown
+	 * MT From 105 Invalid Company Code 106 Invalid Username or Password 107 Account is not activated yet 108
+	 * Insufficient Balance 109 Credit Expired 110 Insufficient Balance + Credit Expired 111 DB Error
+	 * --------------------------------------------------------------------------------------------------------------
 	 */
 	@Override
 	public SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO) {
@@ -230,6 +235,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 		}
 
 		String trId = UUIDGenerator.get();
+		int vendorId = 1;
 
 		String smsUrl = "http://" + mvgateHost + mvgatePath + "?to=" + mvgateCountryCode + bulkSmsVO.getMobile()
 				+ "&token=" + mvgateToken + "&username=" + mvgateUserName + "&password=" + mvgatePassword + "&code="
@@ -241,17 +247,25 @@ public class AdaptorServiceImpl implements AdaptorService {
 		LOGGER.debug("[sendSMSByBulk]getBody : {}", response.getBody());
 
 		if (response.getStatusCode() == HttpStatus.OK) {
+			int statusId;
 			String body = response.getBody();
 			String[] resArray = body.split(","); // <SUCCESS CODE>,<MSG ID>,<TRID>
 
 			if (MVGATE_SUCCESS.equals(resArray[0])) {
+				statusId = 4;
 				result.setSuccessCount(result.getSuccessCount() + 1);
 			} else {
+				statusId = 21;
 				result.setFailCount(result.getFailCount() + 1);
 				reason.clear();
 				reason.put(bulkSmsVO.getMobile(), body);
 				result.addFailReason(reason);
 			}
+
+			insertSMS(bulkSmsVO.getMobile(), bulkSmsVO.getMessage(), bulkSmsVO.getUserId(), bulkSmsVO.getPriority(),
+					bulkSmsVO.getExpireDayAdd(), bulkSmsVO.getSmsType(), bulkSmsVO.getRemark(), statusId,
+					bulkSmsVO.getRetryNo(), resArray[0], body, trId, vendorId);
+
 		} else {
 			result.setErrorCount(result.getErrorCount() + 1);
 		}
@@ -284,5 +298,37 @@ public class AdaptorServiceImpl implements AdaptorService {
 		returnValue = returnValue.replaceAll("\\[", "%5B");
 		returnValue = returnValue.replaceAll("]", "%5D");
 		return returnValue;
+	}
+
+	private void insertSMS(String mobileNo, String message, int senderUserId, int priority, int expireDayAdd,
+			int smsType, String remark, int statusId, int retryNo, String replyCode, String replyRemark,
+			String replyFeedbackId, int vendorId) {
+
+		Map<String, Object> params = new HashMap<>();
+
+		// smsEntry
+		params.put("smsMsg", message);
+		params.put("smsMsisdn", mobileNo);
+		params.put("smsTypeId", smsType);
+		params.put("smsPrio", priority);
+		params.put("smsRefNo", "");
+		params.put("smsBatchUploadId", 0);
+		params.put("smsRem", remark);
+		params.put("smsStartDt", CommonUtils.getNowDate());
+		params.put("smsExprDt", CommonUtils.getCalDate(expireDayAdd));
+		params.put("smsStusId", statusId);
+		params.put("smsRetry", retryNo);
+		params.put("userId", senderUserId);
+		params.put("smsVendorId", vendorId);
+
+		smsMapper.insertSmsEntry(params);
+
+		// GatewayReply
+		params.put("replyCode", replyCode);
+		params.put("replyRem", replyRemark);
+		params.put("userId", senderUserId);
+		params.put("replyFdbckId", replyFeedbackId);
+
+		smsMapper.insertGatewayReply(params);
 	}
 }

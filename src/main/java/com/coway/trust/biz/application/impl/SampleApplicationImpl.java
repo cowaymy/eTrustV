@@ -88,9 +88,9 @@ public class SampleApplicationImpl extends EgovAbstractServiceImpl implements Sa
 		// sampleService.insertClobData(params);
 
 		// 2. sms 처리.
-		SmsVO sms = new SmsVO();
+		SmsVO sms = new SmsVO((Integer) params.get("userId"), 975);
 		sms.setMessage((String) params.get("smsMessage"));
-		sms.setMobiles("0101112222"); // 말레이시아 번호이어야 함.
+		sms.setMobiles((String) params.get("mobileNo")); // 말레이시아 번호이어야 함.
 
 		/**
 		 * isTransactional == true : 메일 전송 실패시 rollback 처리고 ApplicationException 발생. isTransactional == false : 메일 전송

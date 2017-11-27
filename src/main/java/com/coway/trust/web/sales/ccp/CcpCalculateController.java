@@ -399,7 +399,7 @@ public class CcpCalculateController {
 		String smsResultMSg = "";
 		List<String> mobileNumList = new ArrayList<String>();
 		if(chkSms > 0){
-			SmsVO sms = new SmsVO();
+			SmsVO sms = new SmsVO(session.getUserId(), 975);
 			
 			LOGGER.info(" Message Contents : " + (String)params.get("hiddenUpdSmsMsg"));
 			LOGGER.info(" Mobile Phone Number : " + (String)params.get("hiddenSalesMobile"));
