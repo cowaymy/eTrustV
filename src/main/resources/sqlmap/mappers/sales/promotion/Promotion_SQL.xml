@@ -134,6 +134,7 @@
          WHERE T1.STK_ID = #{stkId}
            AND T1.APP_TYPE_ID = #{appTypeId}
            AND T1.STUS_CODE_ID = 1
+           AND ROWNUM = 1
     </select>
     
     <select id="selectRentMemPriceInfo" parameterType="Map" resultType="egovMap">
@@ -153,6 +154,7 @@
          WHERE T1.SRV_CNTRCT_PAC_ID = #{promoSrvMemPacId}
            AND T1.SRV_PAC_ITM_PRODUCT_ID = #{stkId}
            AND T1.SRV_PAC_ITM_STUS_ID = 1
+           AND ROWNUM = 1
     </select>
 
     <select id="selectOutMemPriceInfo" parameterType="Map" resultType="egovMap">
@@ -173,6 +175,7 @@
 		 WHERE T1.SRV_MEM_PAC_ID = #{promoSrvMemPacId}
 		   AND T1.SRV_MEM_ITM_STK_ID = #{stkId}
 		   AND T1.SRV_MEM_ITM_STUS_ID = 1
+		   AND ROWNUM = 1
     </select>
     
     <select id="selectFilterPriceInfo" parameterType="Map" resultType="egovMap">
@@ -202,6 +205,7 @@
            AND T1.MEM_PAC_ID   = 0
            AND T1.APP_TYPE_ID  = 67
            AND T1.STUS_CODE_ID = 1
+           AND ROWNUM = 1
     </select>
     
     <insert id="insertSalesPromoM" parameterType="salesPromoMVO">
