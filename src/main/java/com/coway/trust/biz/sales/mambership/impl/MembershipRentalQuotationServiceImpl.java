@@ -353,7 +353,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 			saveSchdule.put("srvPaySchdulTypeId", 0);
 			saveSchdule.put("srvPaySchdulAmt", params.get("rentalAmt"));
 			saveSchdule.put("srvPaySchdulStusId", 1);
-			saveSchdule.put("srvPaySchdulRem", "");
+			saveSchdule.put("srvPaySchdulRem", " ");
 			
 			
 			if(mm > 12){
@@ -390,7 +390,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		saveParam.put("srvPrdExprDt", SalesConstants.DEFAULT_DATE2);
 		saveParam.put("srcPrdDur", 24);
 		saveParam.put("srcPrdStusId", 1);
-		saveParam.put("srcPrdRem","");
+		saveParam.put("srcPrdRem"," ");
 		saveParam.put("srvPrdCntrctId", getSrvCntrctIdSeq);
 		membershipRentalQuotationMapper.insertSrvConfigPeriod(saveParam);
 		
@@ -400,8 +400,8 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		saveParam.put("cnfmTypeId", 0);
 		saveParam.put("cnfmStusId", 1);
 		saveParam.put("cnfmFdbckId", 0);
-		saveParam.put("cnfmRem", "");
-		saveParam.put("cnfmPncRem", "");
+		saveParam.put("cnfmRem", " ");
+		saveParam.put("cnfmPncRem", " ");
 		membershipRentalQuotationMapper.insertSrvCntrctConfirm(saveParam);
 		
 		saveParam.put("poOrdId", params.get("hiddenOrdId"));
@@ -428,7 +428,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		saveParam.put("is3rdParty", chkBoxThrdParty);
 		saveParam.put("custId", chkBoxThrdParty == 1 ? params.get("hiddenThrdPartyId") : params.get("thrdPartyId"));
 		saveParam.put("editTypeId", 0);
-		saveParam.put("nricOld", params.get("rentPayIc") != null ? params.get("rentPayIc") : "");
+		saveParam.put("nricOld", params.get("rentPayIc") != null ? params.get("rentPayIc") : " ");
 		saveParam.put("failResnId", 0);
 		saveParam.put("issuNric", params.get("rentPayIc") != null ? params.get("rentPayIc") : params.get("thrdPartyNric"));
 		saveParam.put("aeonCnvr", 0);
