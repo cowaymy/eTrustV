@@ -567,6 +567,9 @@ public class BudgetController {
 		
 		int send = 0;
 		int recv = 0;
+
+		result.put("send", "N");
+		result.put("recv", "N");
 		
 		sendParam.put("costCenter", params.get("sendCostCenter"));
 		sendParam.put("glAccCode", params.get("sendGlAccCode"));
@@ -574,6 +577,9 @@ public class BudgetController {
 		
 		send = budgetService.selectPlanMaster(sendParam);
 		
+		if(send > 0){
+			result.put("send", "Y");
+		}
 		
 		if(!StringUtils.isEmpty(params.get("recvCostCenter"))){
 
@@ -582,19 +588,11 @@ public class BudgetController {
 			recvParam.put("budgetCode", params.get("recvBudgetCode"));			
 
 			recv = budgetService.selectPlanMaster(recvParam);
-		}
-
-		result.put("send", "N");
-		result.put("recv", "N");
-		
-		if(send > 0){
-			result.put("send", "Y");
-		}else{
+			
 			if(recv > 0){
 				result.put("recv", "Y");
 			}
 		}
-		
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
