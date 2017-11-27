@@ -6,12 +6,20 @@ import java.util.Map;
 
 import com.coway.trust.util.BeanConverter;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ASRequestCustForm {
 
 
 
 	private String userId;
+	
+	
+	@ApiModelProperty(value = "searchType (salesOrderNo:1 / customername:2 / Nric:3)")
 	private String searchType;
+	
+	
+	@ApiModelProperty(value = "(예:1029)")
 	private String searchKeyword;
 	
 	public String getUserId() {

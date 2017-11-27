@@ -1243,7 +1243,7 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
+//		MSvcLogApiService.insertProductReturnResult(params);		
 
 		
 		// TODO : 리턴할 dto 구현.
@@ -1443,7 +1443,7 @@ public class ServiceApiController {
 //		 business service STAT....18:22
 //		// TODO : installResult 구현 필요.....
 		LOGGER.debug("params :"+ params.toString());
-		//MSvcLogApiService.insertASRequestRegist(params);
+		MSvcLogApiService.insertASRequestRegist(params);
 //		 business service END ....
 		
 		

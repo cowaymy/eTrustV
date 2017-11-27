@@ -12,6 +12,37 @@ public class ASRequestCustDto {
 	private String productCode;
 	private String productName;
 	private String serialNo;
+	private String productId;
+	private String custNricNo;
+	private String custCompanyNo;
+	private String customerType;
+
+	
+	
+	public String getProductId() {
+		return productId;
+	}
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+	public String getCustNricNo() {
+		return custNricNo;
+	}
+	public void setCustNricNo(String custNricNo) {
+		this.custNricNo = custNricNo;
+	}
+	public String getCustCompanyNo() {
+		return custCompanyNo;
+	}
+	public void setCustCompanyNo(String custCompanyNo) {
+		this.custCompanyNo = custCompanyNo;
+	}
+	public String getCustomerType() {
+		return customerType;
+	}
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
 	public String getCustName() {
 		return custName;
 	}

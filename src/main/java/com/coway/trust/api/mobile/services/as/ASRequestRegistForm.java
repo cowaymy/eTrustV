@@ -8,12 +8,12 @@ import com.coway.trust.util.BeanConverter;
 
 public class ASRequestRegistForm {
 	
-	
 	private String userId;
 	private String salesOrderNo;
 	private String customerId;
 	private String productCode;
-	private String defectCodeId;
+	private String errTypeId;
+	private String errReasonId;
 	private String resultRemark;
 	private String transactionId;
 	
@@ -41,11 +41,18 @@ public class ASRequestRegistForm {
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
-	public String getDefectCodeId() {
-		return defectCodeId;
+
+	public String getErrTypeId() {
+		return errTypeId;
 	}
-	public void setDefectCodeId(String defectCodeId) {
-		this.defectCodeId = defectCodeId;
+	public void setErrTypeId(String errTypeId) {
+		this.errTypeId = errTypeId;
+	}
+	public String getErrReasonId() {
+		return errReasonId;
+	}
+	public void setErrReasonId(String errReasonId) {
+		this.errReasonId = errReasonId;
 	}
 	public String getResultRemark() {
 		return resultRemark;
