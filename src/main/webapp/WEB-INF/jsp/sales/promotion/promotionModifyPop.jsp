@@ -630,7 +630,7 @@
             $('#sctPromoDetail').removeClass("blind");
         }
         //Promo Application = Expired Filter & Promotion Type = Discount
-        else if(promoAppVal == '2290' && promoTypVal == '2282') {
+        else if((promoAppVal == '2290' || promoAppVal == '2744') && promoTypVal == '2282') {
             console.log('Promo Application = Expired Filter & Promotion Type = Discount');
             
             $('#promoDiscType').removeAttr("disabled");

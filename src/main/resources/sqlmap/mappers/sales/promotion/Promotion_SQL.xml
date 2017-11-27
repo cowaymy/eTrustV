@@ -650,13 +650,12 @@
                          FROM SYS0038M
                         WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
                  FROM SYS0026M T1
-                    , SAL0203D T2
+                    , (SELECT BOM_COMPNT FROM SAL0203D WHERE SRV_PAC_ID = #{srvPacId} GROUP BY BOM_COMPNT) T2
                     , SYS0013M T3
                 WHERE T1.STK_CODE = T2.BOM_COMPNT
                   AND T1.STK_CTGRY_ID = T3.CODE_ID
                   AND T1.STK_TYPE_ID = 62
                   AND T1.STUS_CODE_ID = 1
-                  AND T2.SRV_PAC_ID = #{srvPacId}
             </if>
              )
          WHERE 1 = 1

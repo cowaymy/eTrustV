@@ -84,7 +84,8 @@ public class SalesConstants {
     public static final int PROMO_APP_TYPE_CODE_ID_OUTPLS = 2287; //Outright Plus
     public static final int PROMO_APP_TYPE_CODE_ID_OSVM   = 2288; //Outright SVM
     public static final int PROMO_APP_TYPE_CODE_ID_RSVM   = 2289; //Rental SVM
-    public static final int PROMO_APP_TYPE_CODE_ID_FIL    = 2290; //Expired Filter
+    public static final int PROMO_APP_TYPE_CODE_ID_FIL_OSVM    = 2290; //Expired Filter (Outright SVM)
+    public static final int PROMO_APP_TYPE_CODE_ID_FIL_RSVM    = 2744; //Expired Filter (Rental SVM)
     
     //Promotion Period Type
     public static final int PROMO_DISC_TYPE_EQUAL = 2293; //EQUAL
@@ -212,6 +213,9 @@ public class SalesConstants {
 	public static final String ORDER_REQ_TYPE_CD_SCHM = "SCHM"; //Scheme Conversion
 	public static final String ORDER_REQ_TYPE_CD_OTRN = "OTRN"; //Ownership Transfer
 	
+	//Pre-Order Channel
+	public static final int PRE_ORDER_CHANNEL_MOB = 0;
+	public static final int PRE_ORDER_CHANNEL_WEB = 1;
 	
 	//POS
 	public static final int POS_DETAIL_NON_RECEIVE = 96;   //96 == nonReceive
