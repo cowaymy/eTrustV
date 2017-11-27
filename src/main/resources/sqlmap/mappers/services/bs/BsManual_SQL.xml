@@ -320,15 +320,22 @@
                                         ,SVC0008D HSM
                                         ,SYS0038M EXTENT2
                                         ,sal0023d sal023
-                                        ,SYS0064M sys064 
+                                        ,SYS0064M sys064
                                         ,SAL0045D  sal45
                                 WHERE 1=1
-                                AND SOM.CUST_ID = C.CUST_ID
-                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
+                            AND SOM.CUST_ID = C.CUST_ID
+                                 /*  AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
                                 AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
                                 AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
                                 AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
-                                and sal023.area_id = sys064.area_id
+                                and sal023.area_id = sys064.area_id*/
+                                AND SOM.CUST_ID = SAL023.CUST_ID
+                                AND SOM.SALES_ORD_ID = SAL45.SALES_ORD_ID
+                                AND SAL023.CUST_ADD_ID = SAL45.ADD_ID
+                                AND SAL023.AREA_ID = SYS064.AREA_ID
+                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
+                                AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
+                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8
                                 and rownum  < 500 ]]>
                              <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
