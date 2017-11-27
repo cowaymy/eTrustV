@@ -48,6 +48,16 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 	public List<EgovMap> getUserCodeList() {
 		return orderListMapper.getUserCodeList();
 	}
+
+	@Override
+	public List<EgovMap> getOrgCodeList(Map<String, Object> params) {
+		return orderListMapper.getOrgCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> getGrpCodeList(Map<String, Object> params) {
+		return orderListMapper.getGrpCodeList(params);
+	}
 	
 	
 }
