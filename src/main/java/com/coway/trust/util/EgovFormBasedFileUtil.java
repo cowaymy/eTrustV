@@ -104,6 +104,7 @@ public class EgovFormBasedFileUtil {
 		parentFile.setWritable(true, false);
 
 		if (!parentFile.exists()) {
+			LOGGER.debug("make dir...");
 			parentFile.mkdirs();
 		}
 
