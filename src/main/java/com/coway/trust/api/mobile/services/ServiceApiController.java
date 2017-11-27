@@ -27,8 +27,12 @@ import com.coway.trust.api.mobile.services.as.ASFailJobRequestDto;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestForm;
 import com.coway.trust.api.mobile.services.as.ASReAppointmentRequestDto;
 import com.coway.trust.api.mobile.services.as.ASReAppointmentRequestForm;
+import com.coway.trust.api.mobile.services.as.ASRequestCustDto;
+import com.coway.trust.api.mobile.services.as.ASRequestCustForm;
 import com.coway.trust.api.mobile.services.as.ASRequestRegistDto;
 import com.coway.trust.api.mobile.services.as.ASRequestRegistForm;
+import com.coway.trust.api.mobile.services.as.ASRequestResultDto;
+import com.coway.trust.api.mobile.services.as.ASRequestResultForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
@@ -1367,6 +1371,55 @@ public class ServiceApiController {
 
 	}
 	
+	
+	
+	
+	@ApiOperation(value = "AS Request Result List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/aSRequestResultList", method = RequestMethod.POST)
+	public ResponseEntity<List<ASRequestResultDto>> aSRequestResultList(@RequestBody ASRequestResultForm aSRequestResultForm)
+			throws Exception {		
+		String transactionId = "";
+		
+		Map<String, Object> map = new HashMap();
+		
+		
+		map.put("userId" , (String)aSRequestResultForm.getUserId());
+		map.put("searchFromDate" , (String)aSRequestResultForm.getSearchFromDate());
+		map.put("searchToDate" , (String)aSRequestResultForm.getSearchToDate());
+		
+		List<EgovMap> rcList = MSvcLogApiService.getASRequestResultList(map);
+		
+		List<ASRequestResultDto> list = rcList.stream().map(r -> ASRequestResultDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+
+	}
+	
+
+
+	
+	
+	@ApiOperation(value = "AS Request Customer Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/aSRequestCust", method = RequestMethod.POST)
+	public ResponseEntity<List<ASRequestCustDto>> aSRequestCust(@RequestBody ASRequestCustForm aSRequestCustForm)
+			throws Exception {		
+		String transactionId = "";
+		
+		Map<String, Object> map = new HashMap();
+		
+		map.put("userId" , (String)aSRequestCustForm.getUserId());
+		map.put("searchType" , (String)aSRequestCustForm.getSearchType());
+		map.put("searchKeyword" , (String)aSRequestCustForm.getSearchKeyword());
+		
+		List<EgovMap> rcList = MSvcLogApiService.getASRequestCustList(map);
+		
+		List<ASRequestCustDto> list = rcList.stream().map(r -> ASRequestCustDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+
+	}
 	
 	
 	
