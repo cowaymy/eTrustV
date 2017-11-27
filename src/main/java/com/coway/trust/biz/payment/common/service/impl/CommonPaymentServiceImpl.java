@@ -1109,6 +1109,8 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	//시퀀스 조회
     	Integer seq = commonPaymentMapper.getPayTempSEQ();
     	
+    	System.out.println("0240T : " + paramMap);
+    	
     	//payment 임시정보 등록
     	paramMap.put("seq", seq);
     	commonPaymentMapper.insertTmpPaymentInfo(paramMap);
@@ -1161,6 +1163,8 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	procedureInfo.put("seq", seq);
     	procedureInfo.put("userid", paramMap.get("userid"));
     	procedureInfo.put("key", key);
+    	procedureInfo.put("keyInPayRoute", paramMap.get("keyInPayRoute"));
+    	procedureInfo.put("keyInScrn", paramMap.get("keyInScrn"));
     	
     	commonPaymentMapper.processNormalPayment(procedureInfo);
     	
