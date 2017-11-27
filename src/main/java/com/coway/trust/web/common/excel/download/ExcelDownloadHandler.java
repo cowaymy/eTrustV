@@ -25,10 +25,10 @@ public class ExcelDownloadHandler implements ResultHandler<Map<String, Object>> 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelDownloadHandler.class);
 
 	static private final int TITLE_ROWS = 2;
-	private HttpServletResponse response;
-	private ExcelDownloadVO excelVo;
-	private SXSSFWorkbook workbook;
-	private SXSSFSheet sheet;
+	private final HttpServletResponse response;
+	private final ExcelDownloadVO excelVo;
+	private final SXSSFWorkbook workbook;
+	private final SXSSFSheet sheet;
 	private boolean isStarted = false;
 	private int currentRows = 0;
 

@@ -31,9 +31,6 @@ public class CommonApiController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
-
 	@ApiOperation(value = "공통코드 전체 목록 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/codes", method = RequestMethod.GET)
 	public ResponseEntity<List<CommonCodeAllDto>> getAllCommonCodes(@ModelAttribute CommonCodeAllForm commonCodeAllForm)

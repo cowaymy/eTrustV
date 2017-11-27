@@ -1,11 +1,6 @@
 package com.coway.trust.web.common;
 
-import static com.coway.trust.AppConstants.FAIL;
-import static com.coway.trust.AppConstants.MSG_NECESSARY;
-import static com.coway.trust.AppConstants.REPORT_CLIENT_DOCUMENT;
-import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
-import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
-import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
+import static com.coway.trust.AppConstants.*;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -18,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.crystaldecisions.sdk.occa.report.data.FieldValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +21,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.config.handler.SessionHandler;
@@ -46,6 +36,7 @@ import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.Field;
 import com.crystaldecisions.sdk.occa.report.data.FieldDisplayNameType;
+import com.crystaldecisions.sdk.occa.report.data.FieldValueType;
 import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.exportoptions.ExportOptions;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKException;
@@ -89,7 +80,7 @@ public class ReportController {
 
 	@RequestMapping(value = "/view-proc-submit.do", method = RequestMethod.POST)
 	public void viewProcPostSubmit(HttpServletRequest request, HttpServletResponse response,
-							@RequestParam Map<String, Object> params) {
+			@RequestParam Map<String, Object> params) {
 		this.viewProcedure(request, response, params);
 	}
 
@@ -199,7 +190,8 @@ public class ReportController {
 			Fields fields = clientDoc.getDataDefinition().getParameterFields();
 			this.setReportParameter(params, paramController, fields);
 			{
-				this.viewHandle(request, response, viewType, clientDoc, this.getCrystalReportViewer(reportSource), params);
+				this.viewHandle(request, response, viewType, clientDoc, this.getCrystalReportViewer(reportSource),
+						params);
 			}
 		} catch (ReportSDKExceptionBase ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
@@ -257,7 +249,7 @@ public class ReportController {
 		case MAIL_CSV:
 		case MAIL_PDF:
 		case MAIL_EXCEL:
-			sendMail(request, response, clientDoc, viewType, params);
+			sendMail(clientDoc, viewType, params);
 			break;
 		default:
 			viewWindow(request, response, crystalReportViewer);
@@ -265,8 +257,8 @@ public class ReportController {
 		}
 	}
 
-	private void sendMail(HttpServletRequest request, HttpServletResponse response, ReportClientDocument clientDoc,
-			ViewType viewType, Map<String, Object> params) throws IOException, ReportSDKExceptionBase {
+	private void sendMail(ReportClientDocument clientDoc, ViewType viewType, Map<String, Object> params)
+			throws IOException, ReportSDKExceptionBase {
 
 		ExportOptions exportOptions;
 		String extension;
@@ -292,8 +284,8 @@ public class ReportController {
 	}
 
 	private void viewEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
-		this.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper
-				.exportExcel(clientDoc, response, true, downFileName), response, clientDoc, downFileName);
+		this.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper.exportExcel(clientDoc,
+				response, true, downFileName), response, clientDoc, downFileName);
 	}
 
 	private void viewDataEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
@@ -333,17 +325,9 @@ public class ReportController {
 				LOGGER.debug(" k : {}, V : {}", k, v);
 				int index = fields.find(k, FieldDisplayNameType.fieldName, Locale.getDefault());
 				if (index >= 0) {
-					if(((Field)fields.get(index)).getType() == com.crystaldecisions.sdk.occa.report.data.FieldValueType.dateField){
-						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD",  Locale.getDefault());
-						Date d;
-						  try {
-							d = format.parse(String.valueOf(v));
-						} catch (Exception e) {
-							throw new ApplicationException(e, e.getMessage());
-						}
-						paramController.setCurrentValue("", k, d);
-					}else if(((Field)fields.get(index)).getType() == FieldValueType.dateTimeField){
-						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss",  Locale.getDefault());
+					if (((Field) fields.get(index))
+							.getType() == com.crystaldecisions.sdk.occa.report.data.FieldValueType.dateField) {
+						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD", Locale.getDefault());
 						Date d;
 						try {
 							d = format.parse(String.valueOf(v));
@@ -351,8 +335,17 @@ public class ReportController {
 							throw new ApplicationException(e, e.getMessage());
 						}
 						paramController.setCurrentValue("", k, d);
-					}else{
-						paramController.setCurrentValue("", k, v);						
+					} else if (((Field) fields.get(index)).getType() == FieldValueType.dateTimeField) {
+						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss", Locale.getDefault());
+						Date d;
+						try {
+							d = format.parse(String.valueOf(v));
+						} catch (Exception e) {
+							throw new ApplicationException(e, e.getMessage());
+						}
+						paramController.setCurrentValue("", k, d);
+					} else {
+						paramController.setCurrentValue("", k, v);
 					}
 				}
 			} catch (ReportSDKException e) {

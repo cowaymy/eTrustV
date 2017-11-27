@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,11 +31,9 @@ public class LoginController {
 	@Autowired
 	private SessionHandler sessionHandler;
 
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
-
 	@RequestMapping(value = "/login.do")
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		LOGGER.debug("mobile login");
 		model.addAttribute("languages", loginService.getLanguages());
 		model.addAttribute("exception", params.get("exception"));
 		return "mobile/login";

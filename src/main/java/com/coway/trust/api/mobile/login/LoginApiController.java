@@ -48,6 +48,7 @@ public class LoginApiController {
 	@ApiOperation(value = "Login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<LoginDto> login(@RequestBody LoginForm loginForm) throws Exception {
+		LOGGER.debug("login");
 
 		Map<String, Object> params = loginForm.createMap(loginForm);
 
@@ -76,6 +77,7 @@ public class LoginApiController {
 	@ApiOperation(value = "Logout", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public void logout() throws Exception {
+		LOGGER.debug("logout");
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
 		if (sessionVO.getUserId() > 0) {

@@ -36,9 +36,6 @@ public class NoticeController {
 
 	private static final String NOTICE_SUB_PATH = "notice";
 
-	@Value("${app.name}")
-	private String appName;
-
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
 

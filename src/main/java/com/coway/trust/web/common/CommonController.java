@@ -215,7 +215,7 @@ public class CommonController {
 		
 		String searchgb = (String)params.get("searchlocgb");
 		String[] searchgbvalue = searchgb.split("∈");
-		System.out.println(" :::: " + searchgbvalue.length);
+		LOGGER.debug(" :::: {}", searchgbvalue.length);
 		
 		params.put("searchlocgb", searchgbvalue);
 
@@ -251,8 +251,6 @@ public class CommonController {
 	public ResponseEntity<List<EgovMap>> selectAppTypeList(@RequestParam Map<String, Object> params)
 	{
 		List<EgovMap> codeList = commonService.selectProductList();
-		for(EgovMap em : codeList)
-			System.out.println(em);
 		return ResponseEntity.ok(codeList);
 	}
 	

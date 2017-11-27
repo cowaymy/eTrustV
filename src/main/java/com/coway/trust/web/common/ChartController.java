@@ -31,11 +31,13 @@ public class ChartController {
 
 	@RequestMapping(value = "/salesKeyInAnalysisPop.do")
 	public String salesKeyInAnalysisPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		LOGGER.debug("salesKeyInAnalysisPop");
 		return "chart/salesKeyInAnalysisPop";
 	}
 
 	@RequestMapping(value = "/netSalesChartPop.do")
 	public String netSalesChartPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		LOGGER.debug("netSalesChartPop");
 		return "chart/netSalesChartPop";
 	}
 
