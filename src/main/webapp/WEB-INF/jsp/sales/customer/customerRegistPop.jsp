@@ -381,6 +381,9 @@
                     $('#custId').val(result);
                     fn_selectCustInfo();
                 }           
+                if('${callPrgm}' == 'PRE_ORD') {
+                    fn_loadCustomer(result, null);
+                }           
                 if('${callPrgm}' == 'ORD_REGISTER_3PARTY') {
                     fn_loadThirdParty(result, 1);
                 }           

@@ -1001,7 +1001,7 @@
     }
     
     //LoadProductPromotion
-    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
+    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, srvPacId) {
         console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
         console.log('fn_loadProductPromotion --> stkId:'+stkId);
         console.log('fn_loadProductPromotion --> empChk:'+empChk);
@@ -1009,7 +1009,7 @@
 
         $('#cmbPromotion').removeAttr("disabled");
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade}, '', 'cmbPromotion', 'S', ''); //Common Code
+        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId}, '', 'cmbPromotion', 'S', ''); //Common Code
     }
 
     //LoadProductPrice

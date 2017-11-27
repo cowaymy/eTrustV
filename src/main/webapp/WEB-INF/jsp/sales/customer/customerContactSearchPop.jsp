@@ -12,7 +12,8 @@
 	    || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
 	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC'
 	    || $('#callPrgm').val() == 'fn_loadCntcPerson'
-	    || $('#callPrgm').val() == 'fn_loadInstallationCntcPerson') {
+	    || $('#callPrgm').val() == 'fn_loadInstallationCntcPerson'
+	    || $('#callPrgm').val() == 'PRE_ORD_CNTC') {
 	        createAUIGrid();
 	        fn_getCustomerContactAjax();
 
@@ -37,7 +38,7 @@
 	});
 	
 	function fn_setData(cntcId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN' || $('#callPrgm').val() == 'PRE_ORD_CNTC') {
 	        fn_loadCntcPerson(cntcId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {

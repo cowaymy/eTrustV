@@ -239,7 +239,7 @@
                 fn_loadMailAddr(result.data);
                 $("#_close1").click();
             }
-            if('${callParam}' == 'ORD_REGISTER_INST_ADD') {
+            if('${callParam}' == 'ORD_REGISTER_INST_ADD' || '${callParam}' == 'PRE_ORD_INST_ADD') {
                 fn_loadInstallAddr(result.data);
                 $("#_close1").click();
             }

@@ -94,6 +94,7 @@ public class OrderModifyController {
 		model.put("toDay", 		  CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 		model.put("promoCode",    basicInfo.get("ordPromoCode"));
 		model.put("promoDesc",    basicInfo.get("ordPromoDesc"));
+		model.put("srvPacId",     basicInfo.get("srvPacId"));
 		 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
