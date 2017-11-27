@@ -487,6 +487,6 @@
         delete from LOG0061D WHERE DELVRY_NO = #{delyno}
      </delete>
      <delete id="updateRequestTransferStus" parameterType="Map">
-        update LOG0047M set REQST_STUS = 'O' where REQST_NO = #{reqstno}; 
+        update LOG0047M set REQST_STUS = 'O' where REQST_NO = #{reqstno} 
      </delete>
 </mapper>
