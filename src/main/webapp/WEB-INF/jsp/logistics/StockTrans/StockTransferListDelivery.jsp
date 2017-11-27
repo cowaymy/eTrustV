@@ -73,14 +73,14 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      ];
 var reqcolumnLayout;
 
-var serialcolumn       =[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 },
-                         {dataField:"itmname"      ,headerText:"Material Name"               ,width:"25%"    ,height:30 },
-                         {dataField:"serial"       ,headerText:"Serial"                      ,width:"30%"    ,height:30,editable:true },
-                         {dataField:"cnt61"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                         {dataField:"cnt62"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                         {dataField:"cnt63"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                         {dataField:"statustype"   ,headerText:"status"                      ,width:"30%"    ,height:30,visible:false }
-                        ]; 
+// var serialcolumn       =[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 },
+//                          {dataField:"itmname"      ,headerText:"Material Name"               ,width:"25%"    ,height:30 },
+//                          {dataField:"serial"       ,headerText:"Serial"                      ,width:"30%"    ,height:30,editable:true },
+//                          {dataField:"cnt61"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+//                          {dataField:"cnt62"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+//                          {dataField:"cnt63"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+//                          {dataField:"statustype"   ,headerText:"status"                      ,width:"30%"    ,height:30,visible:false }
+//                         ]; 
 
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
@@ -95,15 +95,9 @@ var resop = {
         showBranchOnGrouping : false
         };
                 
-var serialop = {
-        //rowIdField : "rnum",          
-        editable : true
-        //displayTreeOpen : true,
-        //showRowCheckColumn : true ,
-        //enableCellMerge : true,
-        //showStateColumn : false,
-        //showBranchOnGrouping : false
-        };        
+// var serialop = {
+//         editable : true
+//         };        
 
 var paramdata;
 
@@ -133,7 +127,7 @@ $(document).ready(function(){
     
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
-    serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
+    //serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
     
@@ -268,82 +262,139 @@ $(function(){
         paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
-    $('#delivery').click(function(){
-    	var checkDelqty= false; 
-    	var serialChkfalg;
-    	var chkfalg; 
-    	var rowItem;
-//    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);   
+//     $('#delivery').click(function(){
+//     	var checkDelqty= false; 
+//     	var serialChkfalg;
+//     	var chkfalg; 
+//     	var rowItem;
+// //    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+//     	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);   
     	
-    	if(checkedItems.length <= 0) {
-    		Common.alert('No data selected.');
-    		return false;
-    	}else{	
+//     	if(checkedItems.length <= 0) {
+//     		Common.alert('No data selected.');
+//     		return false;
+//     	}else{	
     		
-    	for(var i=0, len = checkedItems.length; i<len; i++) {
-    		rowItem = checkedItems[i];
-    	  if (rowItem.item.delyqty > 0 ){
+//     	for(var i=0, len = checkedItems.length; i<len; i++) {
+//     		rowItem = checkedItems[i];
+//     	  if (rowItem.item.delyqty > 0 ){
+//                   chkfalg="Y";
+//                   break;
+//                 }else{
+//                    chkfalg="N";
+//                 } 
+//     	  }
+    	
+//     if(chkfalg=="Y"){
+    	
+//        for (var i = 0 ; i < checkedItems.length ; i++){
+//     	   rowItem = checkedItems[i];
+//            if (rowItem.item.serialchk == 'Y'){
+//            	serialChkfalg="Y";
+//                break;
+//           }else{
+//        	   serialChkfalg ="N";
+//           } 
+          
+//         } 
+       
+//        if (serialChkfalg == 'Y'){
+//     	   serialchk=true;   
+//        var str = "";
+//        var rowItem;
+//        for(var i=0, len = checkedItems.length; i<len; i++) {
+//            rowItem = checkedItems[i];
+//            if(rowItem.item.delyqty==0){
+//             str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
+//             checkDelqty= true;
+//           }
+//        }
+//        if(checkDelqty){
+//            var option = {
+//                content : str,
+//                isBig:true
+//            };
+//            Common.alertBase(option); 
+//        }else{
+// 	        $("#giopenwindow").show();
+// 	        $("#giptdate").val("");
+// 	        $("#gipfdate").val("");
+// 	        $("#doctext").val("");
+// 	        doSysdate(0 , 'giptdate');
+// 	        doSysdate(0 , 'gipfdate');
+// 	        AUIGrid.clearGridData(serialGrid);
+// 	        AUIGrid.resize(serialGrid);
+// 	        fn_itempopList_T(checkedItems);     
+//        } 
+       
+//        }else{
+//     	   giFunc();
+//     	   $("#serial_grid_wrap").hide();
+//        }
+                
+//     }else{
+//     	Common.alert('Please Enter Delivered Qty');
+//      }    
+    		
+//     	}
+//     });
+
+    $('#delivery').click(function(){
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);     
+//      if(checkedItems.length <= 0) {
+//             return false;
+//         }else{
+//             var data = {};
+//             data.checked = checkedItems; 
+//             Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
+//                 Common.alert(result.message);
+//                 AUIGrid.resetUpdatedItems(listGrid, "all");            
+//             },  function(jqXHR, textStatus, errorThrown) {
+//                 try {
+//                 } catch (e) {
+//                 }  
+//                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+//             });
+//             for (var i = 0 ; i < checkedItems.length ; i++){
+//                 AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
+//             }
+//         }    
+        var chkfalg; 
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else{  
+            
+        for(var i=0, len = checkedItems.length; i<len; i++) {
+          if (checkedItems[i].delyqty > 0 ){
                   chkfalg="Y";
-                  break;
                 }else{
                    chkfalg="N";
                 } 
-    	  }
-    	
-    if(chkfalg=="Y"){
-    	
-       for (var i = 0 ; i < checkedItems.length ; i++){
-    	   rowItem = checkedItems[i];
-           if (rowItem.item.serialchk == 'Y'){
-           	serialChkfalg="Y";
-               break;
-          }else{
-       	   serialChkfalg ="N";
-          } 
-          
-        } 
-       
-       if (serialChkfalg == 'Y'){
-    	   serialchk=true;   
-       var str = "";
-       var rowItem;
-       for(var i=0, len = checkedItems.length; i<len; i++) {
-           rowItem = checkedItems[i];
-           if(rowItem.item.delyqty==0){
-            str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
-            checkDelqty= true;
           }
-       }
-       if(checkDelqty){
-           var option = {
-               content : str,
-               isBig:true
-           };
-           Common.alertBase(option); 
-       }else{
-	        $("#giopenwindow").show();
-	        $("#giptdate").val("");
-	        $("#gipfdate").val("");
-	        $("#doctext").val("");
-	        doSysdate(0 , 'giptdate');
-	        doSysdate(0 , 'gipfdate');
-	        AUIGrid.clearGridData(serialGrid);
-	        AUIGrid.resize(serialGrid);
-	        fn_itempopList_T(checkedItems);     
-       } 
-       
-       }else{
-    	   giFunc();
-    	   $("#serial_grid_wrap").hide();
-       }
-                
-    }else{
-    	Common.alert('Please Enter Delivered Qty');
-     }    
-    		
-    	}
+        if(chkfalg=="Y"){
+            var data = {};
+            data.checked = checkedItems; 
+            console.log(data);
+            Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
+            	Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
+              //  Common.alert(result.message , SearchListAjax);
+                AUIGrid.resetUpdatedItems(listGrid, "all");            
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }  
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+            for (var i = 0 ; i < checkedItems.length ; i++){
+                AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
+            }   
+          } else{
+              Common.alert('Please Enter Delivered Qty');
+          }                 
+        }
     });
+
     
     $("#tlocationnm").keypress(function(event) {
         $('#tlocation').val('');
@@ -435,51 +486,51 @@ function f_getTtype(g , v){
     return rData;
 }
 
-function giFunc(){
-    var data = {};
-    var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
-    var checkedItems     = AUIGrid.getCheckedRowItems(listGrid);
-    var serials   = AUIGrid.getAddedRowItems(serialGrid);
+// function giFunc(){
+//     var data = {};
+//     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+//     var checkedItems     = AUIGrid.getCheckedRowItems(listGrid);
+// //    var serials   = AUIGrid.getAddedRowItems(serialGrid);
     
-    if (serialchk){
-        for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-            if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
-                Common.alert("Please check the serial.")
-                return false;
-            }
+// //     if (serialchk){
+// //         for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+// //             if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+// //                 Common.alert("Please check the serial.")
+// //                 return false;
+// //             }
             
-            if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
-                Common.alert("Please check the serial.")
-                return false;
-            }
-        }
+// //             if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+// //                 Common.alert("Please check the serial.")
+// //                 return false;
+// //             }
+// //         }
         
-        if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
-            Common.alert("Please check the serial.")
-            return false;
-        }
-    }
+// //         if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+// //             Common.alert("Please check the serial.")
+// //             return false;
+// //         }
+// //     }
     
-    data.checked = checkedItems;
-    data.add = serials;
-    data.form    = $("#giForm").serializeJSON();
-    console.log(data);
-    Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
-    	    Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
-            AUIGrid.resetUpdatedItems(listGrid, "all");    
-        $("#giopenwindow").hide();
-        $('#search').click();
+//     data.checked = checkedItems;
+// //    data.add = serials;
+//     data.form    = $("#giForm").serializeJSON();
+//     console.log(data);
+//     Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
+//     	    Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
+//             AUIGrid.resetUpdatedItems(listGrid, "all");    
+//         $("#giopenwindow").hide();
+//         $('#search').click();
 
-    },  function(jqXHR, textStatus, errorThrown) {
-        try {
-        } catch (e) {
-        }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);
-    });
-        for (var i = 0 ; i < checkdata.length ; i++){
-            AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
-        }
-}
+//     },  function(jqXHR, textStatus, errorThrown) {
+//         try {
+//         } catch (e) {
+//         }
+//         Common.alert("Fail : " + jqXHR.responseJSON.message);
+//     });
+//         for (var i = 0 ; i < checkdata.length ; i++){
+//             AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
+//         }
+// }
 
 function fn_itempopList_T(data){
     
@@ -510,71 +561,71 @@ function f_addrow(){
 }
 
 
-function fn_serialChck(rowindex , rowitem , str){
-    var schk = true;
-    var ichk = true;
-    var slocid = '';//session.locid;
-    var data = { serial : str , locid : slocid};
-    Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
-        if (result.data[0] == null){
-            AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
-            AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
-            AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
-            AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
-            AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
+// function fn_serialChck(rowindex , rowitem , str){
+//     var schk = true;
+//     var ichk = true;
+//     var slocid = '';//session.locid;
+//     var data = { serial : str , locid : slocid};
+//     Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
+//         if (result.data[0] == null){
+//             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
+//             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
+//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
+//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
+//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
             
-            schk = false;
-            ichk = false;
+//             schk = false;
+//             ichk = false;
             
-        }else{
-             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
-             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
-             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
-             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
-             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
+//         }else{
+//              AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
+//              AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
+//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
+//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
+//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
              
-             if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
-                 schk = false;
-             }else{
-                 schk = true;
-             }
+//              if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
+//                  schk = false;
+//              }else{
+//                  schk = true;
+//              }
              
-             var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+//              var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
              
-             for (var i = 0 ; i < checkedItems.length ; i++){
-                 if (result.data[0].STKCODE == checkedItems[i].itmcd){
-                     //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
-                     ichk = true;
-                     break;
-                 }else{
-                     ichk = false;
-                 }
-             }
-        }
+//              for (var i = 0 ; i < checkedItems.length ; i++){
+//                  if (result.data[0].STKCODE == checkedItems[i].itmcd){
+//                      //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+//                      ichk = true;
+//                      break;
+//                  }else{
+//                      ichk = false;
+//                  }
+//              }
+//         }
          
-         if (schk && ichk){
-             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
-         }else{
-             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
-         }
+//          if (schk && ichk){
+//              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+//          }else{
+//              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
+//          }
           
-          //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
-          AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+//           //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
+//           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
               
-              if (item.statustype  == 'N'){
-                  return "my-row-style";
-              }
-          });
-          AUIGrid.update(serialGrid);
+//               if (item.statustype  == 'N'){
+//                   return "my-row-style";
+//               }
+//           });
+//           AUIGrid.update(serialGrid);
              
-    },  function(jqXHR, textStatus, errorThrown) {
-        try {
-        } catch (e) {
-        }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);
+//     },  function(jqXHR, textStatus, errorThrown) {
+//         try {
+//         } catch (e) {
+//         }
+//         Common.alert("Fail : " + jqXHR.responseJSON.message);
        
-    });
-}
+//     });
+// }
 
 </script>
 
@@ -704,58 +755,58 @@ function fn_serialChck(rowindex , rowitem , str){
 
     </section><!-- search_result end -->
     
-    <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
-        <header class="pop_header"><!-- pop_header start -->
-            <h1>Serial Check</h1>
-            <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-            </ul>
-        </header><!-- pop_header end -->
+<!--     <div class="popup_wrap" id="giopenwindow" style="display:none">popup_wrap start -->
+<!--         <header class="pop_header">pop_header start -->
+<!--             <h1>Serial Check</h1> -->
+<!--             <ul class="right_opt"> -->
+<!--                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li> -->
+<!--             </ul> -->
+<!--         </header>pop_header end -->
         
-        <section class="pop_body"><!-- pop_body start -->
-            <form id="giForm" name="giForm" method="POST">
-            <input type="hidden" name="gtype" id="gtype" value="GI"/>
-            <input type="hidden" name="serialqty" id="serialqty"/>
-            <input type="hidden" name="reqstno" id="reqstno"/>
-            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>  
-            <table class="type1">
-            <caption>search table</caption>
-            <colgroup>
-                <col style="width:150px" />
-                <col style="width:*" />
-                <col style="width:150px" />
-                <col style="width:*" />
-            </colgroup>
-            <tbody>
-                <tr>
-                    <th scope="row">GI Posting Date</th>
-                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td>    
-                    <th scope="row">GI Doc Date</th>
-                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
-                </tr>
-                <tr>    
-                    <th scope="row">Header Text</th>
-                    <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
-                </tr>
-            </tbody>
-            </table>
-            <table class="type1">
-            <caption>search table</caption>
-            <colgroup id="serialcolgroup">
-            </colgroup>
-            <tbody id="dBody">
-            </tbody>
-            </table>
-            <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
-            </article><!-- grid_wrap end -->
-            <ul class="center_btns">
-                <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>
-            </ul>
-            </form>
+<!--         <section class="pop_body">pop_body start -->
+<!--             <form id="giForm" name="giForm" method="POST"> -->
+<!--             <input type="hidden" name="gtype" id="gtype" value="GI"/> -->
+<!--             <input type="hidden" name="serialqty" id="serialqty"/> -->
+<!--             <input type="hidden" name="reqstno" id="reqstno"/> -->
+<%--             <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>   --%>
+<!--             <table class="type1"> -->
+<!--             <caption>search table</caption> -->
+<!--             <colgroup> -->
+<!--                 <col style="width:150px" /> -->
+<!--                 <col style="width:*" /> -->
+<!--                 <col style="width:150px" /> -->
+<!--                 <col style="width:*" /> -->
+<!--             </colgroup> -->
+<!--             <tbody> -->
+<!--                 <tr> -->
+<!--                     <th scope="row">GI Posting Date</th> -->
+<!--                     <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td>     -->
+<!--                     <th scope="row">GI Doc Date</th> -->
+<!--                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>     -->
+<!--                 </tr> -->
+<!--                 <tr>     -->
+<!--                     <th scope="row">Header Text</th> -->
+<!--                     <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td> -->
+<!--                 </tr> -->
+<!--             </tbody> -->
+<!--             </table> -->
+<!--             <table class="type1"> -->
+<!--             <caption>search table</caption> -->
+<!--             <colgroup id="serialcolgroup"> -->
+<!--             </colgroup> -->
+<!--             <tbody id="dBody"> -->
+<!--             </tbody> -->
+<!--             </table> -->
+<!--             <article class="grid_wrap">grid_wrap start -->
+<!--             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div> -->
+<!--             </article>grid_wrap end -->
+<!--             <ul class="center_btns"> -->
+<!--                 <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li> -->
+<!--             </ul> -->
+<!--             </form> -->
         
-        </section>
-    </div>
+<!--         </section> -->
+<!--     </div> -->
 
 </section>
 
