@@ -11,12 +11,11 @@ import io.swagger.annotations.ApiModelProperty;
 public class ASRequestResultForm {
 	
 	
-	
-	@ApiModelProperty(value = "userId (예: CT100695)")
+	@ApiModelProperty(value = "userId [default : '' 전체] 예) CT100695)")
 	private String userId;
-	@ApiModelProperty(value = "searchFromDate (예:20171104)")
+	@ApiModelProperty(value = "searchFromDate [default : '' 전체] 예) 20171104)")
 	private String searchFromDate;
-	@ApiModelProperty(value = "searchToDate (예:20171105)")
+	@ApiModelProperty(value = "searchToDate [default : '' 전체] 예) 20171104)")
 	private String searchToDate;
 
 
