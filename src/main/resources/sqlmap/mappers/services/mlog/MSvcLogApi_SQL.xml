@@ -2499,10 +2499,10 @@ and cust.cust_id = custCnt.cust_id
 					                ,AS_CRT_USER_ID,AS_CRT_DT ,AS_UPD_USER_ID
 					                ,AS_UPD_DT
 					)
-					values(select SVC0001D_AS_ID_SEQ.nextval from dual,SELECT FN_GET_DOCNO(#{DOCNO})  asno  FROM DUAL,#{salesOrderNo}
-					            ,select mem_id from org0001d where mem_code = #{userId},  sysdate, #{resultRemark}
+					values( SVC0001D_AS_ID_SEQ.nextval ,(SELECT FN_GET_DOCNO(17)  asno  FROM DUAL) ,#{salesOrderNo}
+					            ,(select mem_id from org0001d where mem_code = #{userId}),  sysdate, #{resultRemark}
 					            ,#{errReasonId}, #{errTypeId}, '2703'
-					            ,select mem_id from org0001d where mem_code = #{userId},sysdate,select mem_id from org0001d where mem_code = #{userId}
+					            ,(select mem_id from org0001d where mem_code = #{userId}),sysdate,(select mem_id from org0001d where mem_code = #{userId})
 					            ,sysdate
                             )					            
                             
