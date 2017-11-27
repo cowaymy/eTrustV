@@ -306,6 +306,10 @@
 		     , nvl(l55.rcipt_qty , 0) rciptqty
 		     , NVL (L54.DELVRY_GR_CMPLT , 'N') grcmplt
 		     , NVL (L54.DELVRY_GI_CMPLT , 'N') gicmplt
+		     , case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pd_chk = 'Y' then 'Y' else 'N' end
+               when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_ft_chk = 'Y'  then 'Y' else 'N' end
+               when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pt_chk = 'Y' then 'Y' else 'N' end
+               else 'N' end serialchk
 		  from log0047m l47
 		     , log0048d l48
 		     , log0054m l54
@@ -315,7 +319,9 @@
 		     , (select * from sys0013m where code_master_id = 42) uomt
 		     , sys0028m s28c
 		     , sys0028m s28q
+		     , sys0026m s26
 		 where 1 = 1
+		   AND l48.itm_code = s26.stk_code(+)   
 		   and l47.trnsc_type     = tran.code
 		   and l47.trnsc_type_dtl = trand.code
 		   and l47.rciv_cdc_rdc   = s28c.wh_loc_id
