@@ -34,7 +34,7 @@ public class FileDownloadImpl extends EgovAbstractServiceImpl implements FileDow
 	}
 
 	@Override
-	public void insertFileSpace(Map<String, Object> params) {
+	public int insertFileSpace(Map<String, Object> params) {
 
 		int fileUpId = FileDownloadMapper.fileUpCreateSeq();
 		String FileExtension = ".zip";
@@ -49,6 +49,19 @@ public class FileDownloadImpl extends EgovAbstractServiceImpl implements FileDow
 		params.put("FileExtension", FileExtension);
 
 		FileDownloadMapper.insertFileSpace(params);
+
+		return fileUpId;
+	}
+
+	@Override
+	public void updateFileGroupKey(Map<String, Object> fileGroupKey) {
+		// TODO Auto-generated method stub
+		FileDownloadMapper.updateFileGroupKey(fileGroupKey);
+	}
+
+	@Override
+	public void deleteFileSpace(Map<String, Object> params) {
+		FileDownloadMapper.deleteFileSpace(params);
 
 	}
 

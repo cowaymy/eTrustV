@@ -32,7 +32,8 @@ var userCode;
 
                       
  var rescolumnLayout=[
-                      {dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"fileUploadId"         ,headerText:"fileUploadId"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"fileTypeId"         ,headerText:"fileTypeId"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"codeName"       ,headerText:"Type"                      ,width:200    ,height:30 },
                       {dataField:"fileTypeLbl"      ,headerText:"Label"      ,width:400    ,height:30                },
                       {dataField:"fileName"        ,headerText:"Filename"               ,width:600    ,height:30  },
@@ -76,13 +77,16 @@ var userCode;
                               type : "ButtonRenderer",
                               labelText : "Download",
                               onclick : function(rowIndex, columnIndex, value, item) {
-                                  //gridNm = filterGrid;
-                                 // chkNum =1;
                                 // removeRow(rowIndex, gridNm,chkNum);
+                                fileDown(rowIndex);
                               }
                           }
                       , editable : false
-                      }
+                      },
+/*                       {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30 , visible:false} */
+                      {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30},
+                      {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30}
                       ];                     
                                     
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
@@ -129,36 +133,15 @@ var paramdata;
 
 $(document).ready(function(){
 	
-// 	SearchSessionAjax();
-//     /**********************************
-//     * Header Setting
-//     **********************************/
 
 doGetCombo('/common/selectCodeList.do', '70', '','searchFileType', 'M' , 'f_multiCombo'); //File Type 리스트 조회
-$("#fileSpace").val("You required to upload your file after save file space.");
-$("#uploadFileText").val("Only allow .zip file || Max file size : 5MB || File will be overwrite if you re-upload");   
+//$("#fileSpace").val("You required to upload your file after save file space.");
+//$("#uploadFileText").val("Only allow .zip file || Max file size : 5MB || File will be overwrite if you re-upload");   
 
-//     /**********************************
-//      * Header Setting End
-//      ***********************************/
-    
-     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, gridoptions);    
-    
-    
-//     $("#sub_grid_wrap").hide(); 
 
+    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, gridoptions);    
     
-//     AUIGrid.bind(listGrid, "cellClick", function( event ) {
-
-//     });
     
-//     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-
-//     });
-    
-//     AUIGrid.bind(listGrid, "ready", function(event) {
-//     });
-     
     
     
 });
@@ -167,14 +150,61 @@ $("#uploadFileText").val("Only allow .zip file || Max file size : 5MB || File wi
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-
         SearchListAjax();
-
+    });
+    $('#clear').click(function() {
+    	$("#searchForm")[0].reset();
+    	doGetCombo('/common/selectCodeList.do', '70', '','searchFileType', 'M' , 'f_multiCombo'); //File Type 리스트 조회
     });
     
     $('#newUpFile').click(function() {
+    	
+    	$("#pop_title").text("Save New File Space");
     	$("#ReceivePopUp_wrap").show();
+    	$("#fileSpace_tr").show();
+    	$("#newbtn").show();
+    	$("#editbtn").hide();
+    	$("#delbtn").hide();
     	doGetCombo('/common/selectCodeList.do', '70', '','insType', 'S' , ''); //Save Type 리스트 조회
+    	//getComboRelayss('' ,'' , '', '1');
+    	 $("#insTypeLabel1").attr("checked", false);
+    	 $("#insTypeLabel2").attr("checked", false);
+    	 $("input[name='insTypeLabel']").prop('disabled', true);
+    	 
+    	 $("#insNewLabel").val('');
+    	 doGetComboSelBox('/logistics/file/selectLabelList.do', '' , '' , '','insExistingLabel', 'S', '');
+    	 $("#ExistingLabel").show();
+    	 $("#NewLabel").hide();
+    	 $("#thLabel").text("Existing Label"); 
+    	 $("#insFileNm").val('');
+    	 $("#insStaff").prop("checked", true);
+    	 $("#insCody").prop("checked", true);
+    	 $("#insHP").prop("checked", true);
+    });
+    $('#editFile').click(function() {
+    	 var selectedItem = AUIGrid.getSelectedIndex(listGrid);
+    	 
+         if(selectedItem[0] < 0 ){
+             Common.alert('Please select Row.');
+             return false;
+         }else{
+	    	$("#pop_title").text("Edit File Space");
+	    	$("#ReceivePopUp_wrap").show();
+	    	$("#fileSpace_tr").hide();
+	    	$("#newbtn").hide();
+	    	$("#editbtn").show();
+	    	$("#delbtn").show();
+	    	fn_dataSet();
+         }
+    });
+    $('#reUpFile').click(function() {
+    	 var selectedItem = AUIGrid.getSelectedIndex(listGrid);
+         if(selectedItem[0] < 0 ){
+             Common.alert('Please select Row.');
+             return false;
+         }else{
+        	 
+         }
     });
     
     $("input:radio[name=insTypeLabel]").click(function(){
@@ -223,41 +253,39 @@ function SearchListAjax() {
 
 function fn_insertFileSpace(flag){
 	if(flag =="S"){
-	  div="FS"  
+	  //div="FS"  
+	 fileSpaceSaveAjax();
 	}else{
-      div="FU"  	
+      //div="FU"  	
+	 fileSaveAjax();
 	}
-	fileSaveAjax(div);
    
 }
 
 
-function fileSaveAjax(div) {
+function fileSpaceSaveAjax() {
     var url;
     var param;
 
-    if(div=="FS"){
-    	param= $("#FileSpaceForm").serializeJSON();
+       param= $("#FileSpaceForm").serializeJSON();
        url="/logistics/file/insertFileSpace.do";    
-    }else if(div=="FU"){
-        param= $("#masterForm").serializeJSON();
-       //url="/logistics/assetmng/motifyAssetMng.do";  ??
-    }
-/*
-   if(div=="FS"){
-       url="/logistics/file/insertFileSpace.do";    
-   }else if(div=="FU"){ //마스터 인서트
-       url="/logistics/assetmng/motifyAssetMng.do";
-   }
-*/   
    Common.ajax("POST",url,param,function(result){
+	   console.log(result);
        Common.alert(result.msg);
-
+       $("#upId").val(result.data);
         $("#UploadFilePopUp_wrap").show();              
-
-       
-      // $("#search").trigger("click");
-      
+   });
+} 
+function fileSaveAjax() {
+    var url;
+    var formData = new FormData();
+        url="/logistics/file/insertFile.do";    
+         formData.append("excelFile", $("input[name=zipUpload]")[0].files[0]);
+         formData.append("upId", $("#upId").val());
+   Common.ajaxFile(url,formData,function(result){
+	   $("#UploadFilePopUp_wrap").hide();
+	   $("#ReceivePopUp_wrap").hide();
+	   SearchListAjax();
    });
 } 
 
@@ -329,7 +357,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 
     $.each(data, function(index, value) {
         //CODEID , CODE , CODENAME ,,description
-        if (selCode == data[index].codeId) {
+        if (selCode == data[index].codeName) {
             $('<option />', {
                 value : data[index].codeName,
                 text : data[index].codeName
@@ -348,7 +376,68 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
     }
 };
 
+function fileDown(rowIndex){
+      var subPath = AUIGrid.getCellValue(listGrid,  rowIndex, "subpath");
+      var fileName = AUIGrid.getCellValue(listGrid,  rowIndex, "filename");
+      var orignlFileNm = AUIGrid.getCellValue(listGrid,  rowIndex, "fileName")+".zip";
 
+    window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
+            + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
+            + "'/>");
+}
+
+function fn_modifyileSpace(str){
+	var selectedItem = AUIGrid.getSelectedIndex(listGrid);
+	var fileUploadId = AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileUploadId");
+	var url;
+    var param;
+	if(str=="M"){
+       url="/logistics/file/insertFileSpace.do";    
+	}else{
+       url="/logistics/file/deleteFileSpace.do";    
+	}
+       param= $("#FileSpaceForm").serializeJSON();
+       $.extend(param,{ fileUploadId:fileUploadId });
+       console.log(param);
+   Common.ajax("POST",url,param,function(result){
+       Common.alert(result.message);
+       //$("#upId").val(result.data);
+        $("#ReceivePopUp_wrap").hide();         
+        SearchListAjax();
+
+   });
+}
+
+function fn_dataSet(){
+	   var selectedItem = AUIGrid.getSelectedIndex(listGrid);
+	  doGetCombo('/common/selectCodeList.do', '70',AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileTypeId"),'insType', 'S' , '');
+        $("#insTypeLabel1").prop("disabled", false);
+        $("#insTypeLabel2").prop("disabled", false);
+        $("#insTypeLabel1").prop("checked", true);
+	    $("#insNewLabel").val(""); 
+	    $("#insExistingLabel").prop("disabled", false);
+	    $("#ExistingLabel").show(); 
+	    $("#NewLabel").hide(); 
+	    $("#thLabel").text("Existing Label"); 
+	    doGetComboSelBox('/logistics/file/selectLabelList.do', '' ,AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileTypeId") ,AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileTypeLbl"),'insExistingLabel', 'S', '');
+	    $("#insFileNm").val(AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileName")); 
+	    
+	    if(1==AUIGrid.getCellValue(listGrid,  selectedItem[0], "isStaff")){
+	        $("#insStaff").prop("checked", true);
+	    }else{
+	        $("#insStaff").prop("checked", false);
+	    }
+	    if(1==AUIGrid.getCellValue(listGrid,  selectedItem[0], "isCody")){
+	        $("#insCody").prop("checked", true);
+	    }else{
+	        $("#insCody").prop("checked", false);
+	    }
+	    if(1==AUIGrid.getCellValue(listGrid,  selectedItem[0], "isHp")){
+	        $("#insHP").prop("checked", true);
+	    }else{
+	        $("#insHP").prop("checked", false);
+	    }
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -368,8 +457,8 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-      <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-<!--       <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a id="search"><span class="search"></span><spring:message code='sys.btn.search' /></a></p></li>
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span><spring:message code='sys.btn.clear' /></a></p></li>
     </ul>
 </aside><!-- title_line end -->
 
@@ -409,10 +498,10 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 		<dl class="link_list">
 		    <dt>Link</dt>
 		    <dd>
-<!-- 		    <ul class="btns"> --> <!-- 추후개발 -->
-<!-- 		        <li><p class="link_btn"><a id="editFile">Edit File Space</a></p></li> -->
-<!-- 		        <li><p class="link_btn"><a id="reUpFile">Re-Upload File</a></p></li> -->
-<!-- 		    </ul> -->
+ 		    <ul class="btns"> 
+ 		        <li><p class="link_btn"><a id="editFile">Edit File Space</a></p></li> 
+  		        <li><p class="link_btn"><a id="reUpFile">Re-Upload File</a></p></li> 
+  		    </ul> 
 		    <ul class="btns">
 		        <li><p class="link_btn type2"><a id="newUpFile">Upload New File</a></p></li>
 		    </ul>
@@ -437,7 +526,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 <div id="ReceivePopUp_wrap" class="popup_wrap" style="display: none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>SAVE NEW FILE SPACE</h1>
+<h1 id="pop_title">Save New File Space</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -445,8 +534,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 
 <section class="pop_body"><!-- pop_body start -->
 
-<form id="FileSpaceForm" name="FileSpaceForm"  enctype="multipart/form-data" >
-<input type="hidden" id="SirimLocTo" name="SirimLocTo"/>
+<form id="FileSpaceForm" name="FileSpaceForm">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -486,9 +574,9 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
         <label><input type="checkbox"  id="insHP" name="insHP"   checked="checked" /><span>HP</span></label>  
     </td>
 </tr>
-<tr>
+<tr id="fileSpace_tr">
     <td colspan="6" >
-    <input type="text" title="" placeholder=""  class="readonly w100p" readonly="readonly"  id="fileSpace" name="fileSpace"/>
+    <input type="text" title="" placeholder="You required to upload your file after save file space."  class="readonly w100p" readonly="readonly"  id="fileSpace" name="fileSpace"/>
     </td>
 </tr>
 
@@ -497,7 +585,9 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertFileSpace('S');">Save File Space</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertFileSpace('S');" id="newbtn">Save File Space</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_modifyileSpace('M');" id="editbtn">Edit File Space</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_modifyileSpace('D');" id="delbtn">Delete File Space</a></p></li>
 </ul>
 
 
@@ -509,7 +599,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 <div id="UploadFilePopUp_wrap" class="popup_wrap" style="display: none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>UPLOAD FILE</h1>
+<h1>Upload File</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -517,8 +607,8 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
 
 <section class="pop_body"><!-- pop_body start -->
 
-<form id="FileSpaceForm2" name="FileSpaceForm2" >
-<input type="hidden" id="SirimLocTo" name="SirimLocTo"/>
+<form id="FileSpaceForm2" name="FileSpaceForm2" enctype="multipart/form-data">
+<input type="hidden" id="upId" name="upId"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -532,7 +622,7 @@ function doDefCombos(data, selCode, obj, type, callbackFn) {
     <th scope="row">Select File</th>
     <td colspan="5" >
     <div class="auto_file"><!-- auto_file start -->
-            <input type="file" id="" title="file add" accept=".zip"/>
+            <input type="file" id="fileSelector" name="zipUpload" title="file add" accept=".zip"/>
     </div><!-- auto_file end -->
     </td>
 </tr>

@@ -11,6 +11,10 @@ public interface FileDownloadService {
 
 	List<EgovMap> selectLabelList(Map<String, Object> params);
 
-	void insertFileSpace(Map<String, Object> params);
+	int insertFileSpace(Map<String, Object> params);
+
+	void updateFileGroupKey(Map<String, Object> params);
+
+	void deleteFileSpace(Map<String, Object> params);
 
 }

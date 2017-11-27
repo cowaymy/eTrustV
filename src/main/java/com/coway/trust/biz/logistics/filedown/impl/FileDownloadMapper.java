@@ -8,13 +8,17 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("FileDownloadMapper")
 public interface FileDownloadMapper {
-	
+
 	List<EgovMap> fileDownloadList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectLabelList(Map<String, Object> params);
-	
+
 	void insertFileSpace(Map<String, Object> params);
-	
+
 	int fileUpCreateSeq();
+
+	void updateFileGroupKey(Map<String, Object> fileGroupKey);
+
+	void deleteFileSpace(Map<String, Object> params);
 
 }

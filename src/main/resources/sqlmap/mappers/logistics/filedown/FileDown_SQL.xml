@@ -21,7 +21,9 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
        Project1.CODE_NAME CODE_NAME  ,
        Project1.UPD_DT UPD_DT  ,
        Project1.UPD_USER_ID UPD_USER_ID  ,
-       Project1.C2 C2  
+       Project1.C2 C2
+       ,Project1.SUBPATH SUBPATH
+       ,Project1.FILENAME FILENAME       
   FROM ( SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                 Project1.FILE_TYPE_ID FILE_TYPE_ID  ,
                 Project1.FILE_NAME FILE_NAME  ,
@@ -39,7 +41,9 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                 Project1.CODE_NAME CODE_NAME  ,
                 Project1.C1 C1  ,
                 Project1.C2 C2  ,
-                ROW_NUMBER() OVER ( ORDER BY Project1.FILE_NAME ASC  ) ROW_NUMBER  
+                ROW_NUMBER() OVER ( ORDER BY Project1.FILE_NAME ASC  ) ROW_NUMBER
+                ,Project1.SUBPATH SUBPATH
+                ,Project1.FILENAME FILENAME     
          FROM ( SELECT Extent1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                        Extent1.FILE_TYPE_ID FILE_TYPE_ID  ,
                        Extent1.FILE_NAME FILE_NAME  ,
@@ -63,8 +67,16 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                             WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME
                        ELSE ''
                           END C2  
+                        ,EXTENT5.FILE_SUB_PATH SUBPATH
+                        ,EXTENT5.PHYSICL_FILE_NAME FILENAME 
                 FROM PAY0061D Extent1
                        JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.FILE_TYPE_ID
+                        LEFT JOIN (SELECT *
+                                          FROM SYS0070M  S70
+                                           JOIN SYS0071D S71 
+                                             ON S70.ATCH_FILE_ID = S71.ATCH_FILE_ID
+                                       ) EXTENT5 
+                               ON TO_CHAR(EXTENT5.ATCH_FILE_GRP_ID) = EXTENT1.FILE_URL  
                        LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
                        LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
                  WHERE  ( 1 = Extent1.STUS_CODE_ID )
@@ -101,7 +113,20 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
 </select> 
 
 <insert id="insertFileSpace" parameterType="Map">
-         INSERT INTO PAY0061D(
+        MERGE INTO PAY0061D S
+             USING DUAL ON (S.FILE_UPLOAD_ID=#{fileUploadId})
+         WHEN MATCHED THEN
+                   UPDATE SET 
+				             FILE_TYPE_ID = #{insType}, 
+				             FILE_NAME     =#{insFileNm}, 
+				             UPD_DT          = SYSDATE, 
+				             UPD_USER_ID  =#{upd_user_id}, 
+				             IS_HP             =#{insHP} , 
+				             IS_CODY         =#{insCody} , 
+				             FILE_TYPE_LBL  =#{TypeLabel} , 
+				             IS_STAFF         =#{insStaff} 
+        WHEN NOT MATCHED THEN  
+         INSERT (
              FILE_UPLOAD_ID,
              FILE_TYPE_ID, 
              FILE_NAME, 
@@ -138,5 +163,16 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
     <select id="fileUpCreateSeq"  resultType="Integer">
         SELECT NVL(MAX(FILE_UPLOAD_ID),0) + 1 from PAY0061D
     </select>
-
+    <update id="updateFileGroupKey" parameterType="Map">
+    UPDATE PAY0061D
+        SET FILE_URL = #{fileGroupKey}
+        WHERE FILE_UPLOAD_ID =#{upId}
+    </update>
+    <update id="deleteFileSpace" parameterType="Map">
+    UPDATE PAY0061D
+        SET STUS_CODE_ID = 8,
+        UPD_USER_ID=#{upd_user_id},
+        UPD_DT       = SYSDATE
+        WHERE FILE_UPLOAD_ID =#{fileUploadId}
+    </update>
 </mapper>
