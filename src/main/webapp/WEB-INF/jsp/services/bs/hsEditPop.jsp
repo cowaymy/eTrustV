@@ -386,7 +386,7 @@
     <th scope="row">HS Month</th>
     <td><span><c:out value="${basicinfo.monthy}"/></span></td>
     <th scope="row">HS Type</th>
-    <td><span><c:out value="${basicinfo.setlDt}"/></span></td>    
+    <td><span><c:out value="${basicinfo.codeName}"/></span></td>    
 </tr>
 <tr>
     <th scope="row">Current BSR No</th>

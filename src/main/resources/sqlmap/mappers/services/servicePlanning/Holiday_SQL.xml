@@ -166,11 +166,10 @@
 	       </when>
        </choose>
        <choose>
-	      <when test="type1 != null and type1 != ''"> 
+	      <when test="type1 != null and type1 != ''">   <!-- 마우스 선택시 검색조건 -->
 	               AND B.HOLIDAY_TYPE = #{type1}
 	          </when>
 	      <when test = "type != null and type != ''" >
-	      <!-- 마우스 선택시 검색조건 -->
 	            AND B.HOLIDAY_TYPE =  #{type}
 	      </when>
       </choose>
@@ -178,7 +177,7 @@
 	      <when test="holidayDt != null and holidayDt != ''">
 	        AND B.HOLIDAY =  TO_CHAR(TO_DATE (#{holidayDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
 	      </when>
-	      <when test="holiday1 != null and holiday1 != ''">
+	      <when test="holiday1 != null and holiday1 != ''">   <!-- 마우스 선택시 검색조건 -->
             AND B.HOLIDAY =  #{holiday1}
           </when>
       </choose>
@@ -188,8 +187,11 @@
             #{item}
           </foreach>
        </if>
-       <if test="holidayDesc1 !=null and holidayDesc1 !=''  ">
+       <if test="holidayDesc1 !=null and holidayDesc1 !=''  ">   <!-- 마우스 선택시 검색조건 -->
            AND B.HOLIDAY_DESC =#{holidayDesc1}
+       </if>
+       <if test="holidaySeq1 !=null and holidaySeq1 !=''  ">   <!-- 마우스 선택시 검색조건 -->
+           AND B.HOLIDAY_SEQ =#{holidaySeq1}
        </if>
     </select>
     <insert id="insertCTAssign" parameterType="Map">
