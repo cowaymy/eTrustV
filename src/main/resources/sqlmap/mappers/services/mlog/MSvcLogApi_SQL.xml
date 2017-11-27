@@ -992,7 +992,7 @@ and cust.cust_id = custCnt.cust_id
 				       SAL0095D.SRV_DUR AS contract_Duration,       
 				       <!--SAL0095D e-->
 				       SYS0064M.POSTCODE AS postcode,
-				       SYS0064M.STATE AS serviceState
+				       SYS0064M.STATE AS serviceState,
 				       SYS0026M.STK_DESC AS product_Name,
 				       SYS0026M.STK_CODE AS product_Code,
 				       SYS0005M.CODE AS dsc_Code
@@ -1028,7 +1028,7 @@ and cust.cust_id = custCnt.cust_id
 				AND SAL0023D.AREA_ID = SYS0064M.AREA_ID(+)
                 AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
                                                  AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
-                AND ORG0001D.mem_code = #{userId}
+                AND ORG0001D.mem_code = #{userId})
 
             <!--  SELECT
             SAL0001D.SALES_ORD_NO           AS sales_Order_No,
