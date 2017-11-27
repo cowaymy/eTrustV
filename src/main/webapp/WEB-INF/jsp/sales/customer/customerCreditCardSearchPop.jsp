@@ -28,7 +28,7 @@
 	    
 	});
 	
-	function fn_setData(custCrcId) {
+	function fn_setData(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName) {
 	    if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
 	        fn_loadCreditCard2(custCrcId);
 	    }
