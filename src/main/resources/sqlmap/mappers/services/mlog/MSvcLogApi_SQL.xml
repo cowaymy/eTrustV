@@ -2604,9 +2604,37 @@ and cust.cust_id = custCnt.cust_id
 
 
 
-<!--        <select id="getASRequestResultList" parameterType="Map" resultType="egovMap">
+       <select id="getASRequestResultList" parameterType="Map" resultType="egovMap">
 
-					SELECT to_char(D.NAME) AS cust_Name
+
+					SELECT
+					 to_char(B.MEM_CODE) as MEM_CODE
+					 , to_char(F.NAME) AS cust_Name
+					 , to_char(A.AS_NO) AS request_No
+					 , TO_CHAR(A.AS_REQST_DT, 'YYYYMMDD') AS request_Date
+					 , to_char(C.SALES_ORD_NO) AS sales_Order_No
+					 , decode(A.AS_STUS_ID, '1', 'Active', '4', 'Completed', '21', 'Failed', '10', 'Cancelled', A.AS_STUS_ID) AS job_Status
+					 , to_char(E.STK_DESC) AS product_Name
+					 , to_char(E.STK_CODE) AS product_Code
+					 , to_char(C.CUST_ID) AS cust_Id
+					FROM
+					 SVC0001D A
+					 , ORG0001D B
+					 , SAL0001D C
+					 , SAL0002D D
+					 , SYS0026M E
+					 , SAL0029D F
+					WHERE A.AS_MEM_ID = B.MEM_ID
+					AND A.AS_SO_ID = C.SALES_ORD_ID
+					AND C.SALES_ORD_ID = D.SALES_ORD_ID
+					AND D.ITM_STK_ID = E.STK_ID
+					AND C.CUST_ID = F.CUST_ID
+					AND A.AS_TYPE_ID = '2703'  
+					AND B.MEM_CODE = #{userId}
+					AND A.AS_REQST_DT to_date(#{searchFromDate},'yyyymmdd') AND  to_date(#{searchToDate},'yyyymmdd')
+					
+
+<!-- 					SELECT to_char(D.NAME) AS cust_Name
 					        ,to_char(B.SALES_ORD_NO) AS sales_Order_No
 					        ,to_char(D.CUST_ID) AS customer_Id
 					        ,to_char(A.AS_NO) AS AS_Request_No
@@ -2631,9 +2659,9 @@ and cust.cust_id = custCnt.cust_id
 					AND A.AS_MEM_ID = (SELECT MEM_ID
 	                                    FROM ORG0001D
 	                                    WHERE 1=1
-	                                    AND MEM_CODE = #{userId})
+	                                    AND MEM_CODE = #{userId}) -->
 
-         </select> -->
+         </select>
 
 
 
