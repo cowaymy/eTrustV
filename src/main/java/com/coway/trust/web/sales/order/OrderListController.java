@@ -116,7 +116,7 @@ public class OrderListController {
 	
 		List<EgovMap> applicationTypeList = null;
 		applicationTypeList = orderListService.getApplicationTypeList(params);
-		
+	
 		return ResponseEntity.ok(applicationTypeList);	
 	}
 	
@@ -129,4 +129,39 @@ public class OrderListController {
 		return ResponseEntity.ok(userCodeList);
 	}
 	
+	@RequestMapping(value="/orderDDCRCListPop.do")
+	public String orderDDCRCListPop(){
+		
+		return "sales/order/orderDDCRCListPop";
+	}
+	
+	@RequestMapping(value="/orderASOSalesReportPop.do")
+	public String orderASOSalesReportPop(){
+		
+		return "sales/order/orderASOSalesReportPop";
+	}
+	
+	@RequestMapping(value="/orderSalesYSListingPop.do")
+	public String orderSalesYSListingPop(){
+		
+		return "sales/order/orderSalesYSListingPop";
+	}
+	
+	@RequestMapping(value="/getOrgCodeList")
+	public ResponseEntity<List<EgovMap>> getOrgCodeList(@RequestParam Map<String, Object> params) throws Exception{
+	
+		List<EgovMap> orgCodeList = null;
+		orgCodeList = orderListService.getOrgCodeList(params);
+		
+		return ResponseEntity.ok(orgCodeList);
+	}
+	
+	@RequestMapping(value="/getGrpCodeList")
+	public ResponseEntity<List<EgovMap>> getGrpCodeList(@RequestParam Map<String, Object> params) throws Exception{
+	
+		List<EgovMap> grpCodeList = null;
+		grpCodeList = orderListService.getGrpCodeList(params);
+		
+		return ResponseEntity.ok(grpCodeList);
+	}
 }
