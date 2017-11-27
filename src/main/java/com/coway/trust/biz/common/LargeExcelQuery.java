@@ -25,15 +25,15 @@ public enum LargeExcelQuery {
 		return this.queryId;
 	}
 
-	private static final Map<String, LargeExcelQuery> lookup = new HashMap<>();
+	private static final Map<String, LargeExcelQuery> LOOKUP = new HashMap<>();
 
 	static {
 		for (LargeExcelQuery largeExcelQuery : LargeExcelQuery.values()) {
-			lookup.put(largeExcelQuery.getQueryId(), largeExcelQuery);
+			LOOKUP.put(largeExcelQuery.getQueryId(), largeExcelQuery);
 		}
 	}
 
 	public static LargeExcelQuery get(String queryId) {
-		return lookup.get(queryId);
+		return LOOKUP.get(queryId);
 	}
 }

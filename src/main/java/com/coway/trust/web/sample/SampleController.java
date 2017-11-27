@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,12 +38,14 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.*;
+import com.onbarcode.barcode.Code128;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -77,6 +80,32 @@ public class SampleController {
 
 	@Autowired
 	private AdaptorService adaptorService;
+
+	@RequestMapping(value = "/barcode.do")
+	public void barcode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		try {
+
+			String data = request.getParameter("DATA");
+			String type = request.getParameter("TYPE");
+
+			Code128 barcode = new Code128();
+			barcode.setData(data);
+
+			ServletOutputStream servletoutputstream = response.getOutputStream();
+
+			response.setContentType("image/jpeg");
+			response.setHeader("Pragma", "no-cache");
+			response.setHeader("Cache-Control", "no-cache");
+			response.setDateHeader("Expires", 0);
+
+			// Generate Code-128 barcode & output to ServletOutputStream
+			barcode.drawBarcode(servletoutputstream);
+
+		} catch (Exception e) {
+			throw new ApplicationException(e);
+		}
+	}
 
 	/**
 	 * batch excute sample.....

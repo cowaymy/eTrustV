@@ -107,6 +107,14 @@
 
 		<dependency>
 			<groupId>crystal</groupId>
+			<artifactId>barcode</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/barcode.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>crystal</groupId>
 			<artifactId>commons-collections-3.1</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
