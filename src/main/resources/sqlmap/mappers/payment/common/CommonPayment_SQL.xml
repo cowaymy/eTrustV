@@ -1166,7 +1166,7 @@
 			#{keyInCardMode},
 			#{keyInIssueBank},
 			TO_DATE(#{keyInTrDate},'DD/MM/YYYY'),
-			#{keyInCardNo1} || '-' || TRIM(LPAD(' ',LENGTH(#{keyInCardNo2}) + 1,'*')) || '-' || #{keyInCardNo3},
+			#{keyInCardNo1} || TRIM(LPAD(' ',LENGTH(#{keyInCardNo2}) + 1,'*')) || #{keyInCardNo3},
 			#{keyCrcCardType},
 			#{keyInCrcType},
 			#{keyInAmount},
