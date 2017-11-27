@@ -23,6 +23,13 @@
     color:#000;
 }
 
+.my-row-style {
+    background:#9FC93C;
+    font-weight:bold;
+    color:#22741C;
+}
+
+
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
@@ -36,10 +43,10 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
                      {dataField:"reqloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"reqlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
+                     {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
                      {dataField:"rcvloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                     {dataField:"rcvlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
+                     {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
                      {dataField:"delydt"       ,headerText:"Delivery Date"               ,width:120    ,height:30 },
                      {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 },
@@ -51,8 +58,18 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30},
                      {dataField:"reqitmno"     ,headerText:"STOITMNO"                    ,width:120    ,height:30 , visible:true},
                      {dataField:"gicmplt"      ,headerText:"GI COMPLET"                  ,width:120    ,height:30 , visible:true},
-                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:true}
+                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:true},
+                     {dataField:"serialchk"      ,headerText:"SERIAL CHECK"                  ,width:120    ,height:30 , visible:true}
                      ];
+                     
+var serialcolumn       =[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 },
+								 {dataField:"itmname"      ,headerText:"Material Name"               ,width:"25%"    ,height:30 },
+								 {dataField:"serial"       ,headerText:"Serial"                      ,width:"30%"    ,height:30,editable:true },
+								 {dataField:"cnt61"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+								 {dataField:"cnt62"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+								 {dataField:"cnt63"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+								 {dataField:"statustype"   ,headerText:"status"                      ,width:"30%"    ,height:30,visible:false }
+]; 
                      
 var resop = {
 		rowIdField : "rnum",			
@@ -65,6 +82,10 @@ var resop = {
         showStateColumn : false,
         showBranchOnGrouping : false
         };
+        
+var serialop = {
+     editable : true
+     };                
 
 var paramdata;
 
@@ -88,7 +109,7 @@ $(document).ready(function(){
     
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
-    
+    serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
     
@@ -163,6 +184,45 @@ $(document).ready(function(){
         	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }
     });
+    
+    AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
+        var tvalue = true;
+       var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
+       serial=serial.trim();
+       if(""==serial || null ==serial){
+          //alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
+          //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
+           Common.alert('Please input Serial Number.');
+           return false;
+       }else{
+           for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+               if (event.rowIndex != i){
+                   if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
+                       tvalue = false;
+                       break;
+                   }
+               }
+           }
+           
+           if (tvalue){
+               fn_serialChck(event.rowIndex ,event.item , serial)
+           }else{
+               AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
+               AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+                   if (item.statustype  == 'N'){
+                       return "my-row-style";
+                   }
+               });
+               AUIGrid.update(serialGrid);
+           }
+          
+          if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
+             f_addrow();      
+          }
+          
+       }
+    });
+    
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
@@ -212,23 +272,52 @@ $(function(){
     	}
     });
     $("#gissue").click(function(){
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+ //   	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+    	var serialChkfalg;
+    	
         if(checkedItems.length <= 0) {
         	Common.alert('No data selected.');
             return false;
         }else{
         	for (var i = 0 ; i < checkedItems.length ; i++){
-                if(checkedItems[i].gicmplt == 'Y'){
+                if(checkedItems[i].item.gicmplt == 'Y'){
                     Common.alert('Already processed.');
                     return false;
                     break;
                 }
             }
+        	
+         for (var i = 0 ; i < checkedItems.length ; i++){
+         rowItem = checkedItems[i];
+            if (rowItem.item.serialchk == 'Y'){
+              serialChkfalg="Y";
+                break;
+           }else{
+             serialChkfalg ="N";
+           }           
+         } 
+
+         if(serialChkfalg =="Y"){
+             doSysdate(0 , 'giptdate');
+             doSysdate(0 , 'gipfdate');
+             $("#giopenwindow").show();
+             AUIGrid.clearGridData(serialGrid);
+             AUIGrid.resize(serialGrid);
+             fn_itempopList_T(checkedItems);   
+         }else{
         	document.giForm.gtype.value="GI";
             $("#dataTitle").text("Good Issue Posting Data");
             doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
         	$("#giopenwindow").show();
+            $("#giptdate").val("");
+            $("#gipfdate").val("");
+            $("#doctext").val("");
+            $("#serial_grid_wrap").hide();
+            
+         }
+         
         }
     });
     $("#gcissue").click(function(){
@@ -371,9 +460,30 @@ function giFunc(){
 	var data = {};
 	var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
 	var check     = AUIGrid.getCheckedRowItems(listGrid);
+    var serials   = AUIGrid.getAddedRowItems(serialGrid);
+    
+// 	    if (serialchk){
+// 	        for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+// 	            if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+// 	                Common.alert("Please check the serial.")
+// 	                return false;
+// 	            }
+	            
+// 	            if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+// 	                Common.alert("Please check the serial.")
+// 	                return false;
+// 	            }
+// 	        }
+	        
+// 	        if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+// 	            Common.alert("Please check the serial.")
+// 	            return false;
+// 	        }
+// 	    }
 	
 	data.check   = check;
 	data.checked = check;
+	data.add = serials;
 	data.form    = $("#giForm").serializeJSON();
 	
 	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
@@ -394,6 +504,102 @@ function giFunc(){
         Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
 }
+
+function fn_itempopList_T(data){
+    
+    var itm_temp = "";
+    var itm_qty  = 0;
+    var itmdata = [];
+    var reqQty;
+    
+    for (var i = 0 ; i < data.length ; i++){
+         if (data[i].item.serialchk == 'Y'){
+             reqQty =data[i].item.delyqty;
+             itm_qty +=parseInt(reqQty);
+             $("#reqstno").val(data[i].item.reqstno)
+         }        
+    }
+    
+    $("#serialqty").val(itm_qty);
+    
+    
+    f_addrow();
+}
+
+function fn_serialChck(rowindex , rowitem , str){
+    var schk = true;
+    var ichk = true;
+    var slocid = '';//session.locid;
+    var data = { serial : str , locid : slocid};
+    Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
+        if (result.data[0] == null){
+            AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
+            AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
+            
+            schk = false;
+            ichk = false;
+            
+        }else{
+             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
+             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
+            
+             
+             if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
+                 schk = false;
+             }else{
+                 schk = true;
+             }
+             
+             var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+             
+             for (var i = 0 ; i < checkedItems.length ; i++){
+                 if (result.data[0].STKCODE == checkedItems[i].itmcd){
+                     //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+                     ichk = true;
+                     break;
+                 }else{
+                     ichk = false;
+                 }
+             }
+        }
+         
+         if (schk && ichk){
+             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+         }else{
+             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
+         }
+          
+          //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
+          AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+              
+              if (item.statustype  == 'N'){
+                  return "my-row-style";
+              }
+          });
+          AUIGrid.update(serialGrid);
+             
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+        } catch (e) {
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
+       
+    });
+}
+
+function f_addrow(){
+    var rowPos = "last";
+    var item = new Object();
+    AUIGrid.addRow(serialGrid, item, rowPos);
+    return false;
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -513,6 +719,8 @@ function giFunc(){
 		<section class="pop_body"><!-- pop_body start -->
 		    <form id="giForm" name="giForm" method="POST">
 		    <input type="hidden" name="gtype" id="gtype" value="GI">
+		    <input type="hidden" name="serialqty" id="serialqty"/>
+            <input type="hidden" name="reqstno" id="reqstno"/>
 		    <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>  
 		    <table class="type1">
 		    <caption>search table</caption>
@@ -535,7 +743,16 @@ function giFunc(){
 		        </tr>
 		    </tbody>
 		    </table>
-		
+		    <table class="type1">
+            <caption>search table</caption>
+            <colgroup id="serialcolgroup">
+            </colgroup>
+            <tbody id="dBody">
+            </tbody>
+            </table>
+            <article class="grid_wrap"><!-- grid_wrap start -->
+            <div id="serial_grid_wrap" class="mt10" style="width:100%;" ></div>
+            </article><!-- grid_wrap end  	  -->     
 		    <ul class="center_btns">
 		        <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li> 
 		    </ul>
