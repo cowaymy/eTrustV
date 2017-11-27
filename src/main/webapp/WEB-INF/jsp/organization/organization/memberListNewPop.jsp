@@ -11,7 +11,7 @@ var myGridID_Doc;
 function fn_memberSave(){
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
-	            $("#traineeType").val(($("#traineeType").value));
+	            $("#traineeType").val(($("#traineeType1").value));
 			    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
@@ -90,7 +90,17 @@ function fn_departmentCode(value){
                 flag :  "%CCS%"
         };
            doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-           doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+          
+           $("#traineeType1").change(function(){
+        	   var traineeType =  $("#traineeType1").val();
+        	   if( traineeType == '2'){
+        		    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
+        	   }
+        	   else if(traineeType == '3'){
+        		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
+        	   }
+           });
+         
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 	}
@@ -112,7 +122,7 @@ $(document).ready(function() {
     doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
 
     $("#deptCd").change(function (){
-    	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
+    	//doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
 	createAUIGridDoc();
 	fn_docSubmission();
@@ -734,7 +744,7 @@ function fn_selectState(selVal){
 <tr id = "trTrainee" >
     <th scope="row">Trainee Type </th>
     <td colspan="2">
-        <select class= "w100p" id="traineeType" name="traineeType">
+        <select class= "w100p" id="traineeType1" name="traineeType">
         <option value= "0">Please select ...</option>
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
