@@ -37,7 +37,7 @@
 		        AND A.F_TRNSC_REM = #{searchPayType}
 		 </if>
 		 <if test="searchBankAcc != null and searchBankAcc != '' ">
-		        AND D.ACC_ID = #{searchBankAcc}
+		        AND B.F_BANK_JRNL_ACC_ID = #{searchBankAcc}
 		 </if>
 		 <if test="searchVa != null and searchVa != '' ">
 		        AND A.F_TRNSC_REF_VA_NO = #{searchVa}
