@@ -101,93 +101,59 @@ $(document).ready(function(){
         rowId = event.rowIndex;
     });
     
-	var strAcc = '<select id="bankAcc" name="bankAcc" class="w100p" disabled></select>';
 	 $("#cash").show();
-	 $("#cash").find("#acc").html(strAcc);
 	 $("#cash").find("#payType").val($('#payMode').val());
-	 doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
-	 
+	 doGetCombo('/common/getAccountList.do', 'CASH','', 'searchBankAcc', 'S', '' );
+     
+	 //BankAccount와 VA Account disabled
+     $("#searchBankAcc").find('option:first').attr('selected', 'selected');
+     $('#searchBankAcc').prop("disabled", true);
+     $('#searchVa').prop("disabled", true);
+     
+     
+     
 	 $('#payMode').change(function() {
 		
 		 //cash일때, online<div>감추고 Cash에 대한 Bank Acc불러옴
 		 if($('#payMode').val() == '105'){
 			 $("#online").hide();
+			 $("#onlineForm")[0].reset();
 			 $("#cheque").hide();
+			 $("#chequeForm")[0].reset();
 			 $("#cash").hide();
+			 $("#cashForm")[0].reset();
              $("#cash").show();
              
              $("#cash").find("#payType").val($('#payMode').val());
              
-             $('#cash').find('#acc').html("");
-             $('#cheque').find('#acc').html("");
-             $('#online').find('#acc').html("");
-             $('#cash').find('#acc').html(strAcc);
-             doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
+             doGetCombo('/common/getAccountList.do', 'CASH','', 'searchBankAcc', 'S', '' );
 	     }else if($('#payMode').val() == '106'){//cheque
 	    	 $("#online").hide();
+             $("#onlineForm")[0].reset();
              $("#cheque").hide();
+             $("#chequeForm")[0].reset();
              $("#cash").hide();
+             $("#cashForm")[0].reset();
 	         $("#cheque").show();
 	         
 	         $("#cheque").find("#payType").val($('#payMode').val());
-	         
-	         $('#cash').find('#acc').html("");
-             $('#cheque').find('#acc').html("");
-             $('#online').find('#acc').html("");
-             $('#cheque').find('#acc').html(strAcc);
-	         doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
+
+	         doGetCombo('/common/getAccountList.do', 'CHQ','', 'searchBankAcc', 'S', '' );
 	     }else if($('#payMode').val() == '108'){//online
 	    	 $("#online").hide();
+             $("#onlineForm")[0].reset();
              $("#cheque").hide();
-             $("#cash").hide(); 
+             $("#chequeForm")[0].reset();
+             $("#cash").hide();
+             $("#cashForm")[0].reset(); 
              $("#online").show();
              
              $("#online").find("#payType").val($('#payMode').val());
-             
-             $('#cash').find('#acc').html("");
-             $('#cheque').find('#acc').html("");
-             $('#online').find('#acc').html("");
-             $('#online').find('#acc').html(strAcc);
-             doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
+
+             doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );
         }
 		 
 	 });
-     
-	 $('#online').find('#bankType').change(function(){
-		 if($('#online').find('#bankType').val() == '2730'){//VA
-			//select초기화(BankAccount)
-			 $('#online').find('#bankAcc').find('option:first').attr('selected', 'selected');
-			 $('#online').find('#bankAcc').prop("disabled", true);
-			 $('#online').find('#va').prop("disabled", false);
-		 }else{
-			 $('#online').find('#bankAcc').prop("disabled", false);
-             $('#online').find('#va').prop("disabled", true); 
-		 }
-	 });
-	 
-	 $('#cash').find('#bankType').change(function(){
-		 if($('#cash').find('#bankType').val() == '2730'){//VA
-			//select초기화(BankAccount)
-			 $('#cash').find('#bankAcc').find('option:first').attr('selected', 'selected');
-			 $('#cash').find('#bankAcc').prop("disabled", true);
-             $('#cash').find('#va').prop("disabled", false);
-         }else{
-             $('#cash').find('#bankAcc').prop("disabled", false);
-             $('#cash').find('#va').prop("disabled", true); 
-         }
-	 });
-	 
-	 $('#cheque').find('#bankType').change(function(){
-         if($('#cheque').find('#bankType').val() == '2730'){//VA
-        	//select초기화(BankAccount)
-             $('#cheque').find('#bankAcc').find('option:first').attr('selected', 'selected');
-        	 $('#cheque').find('#bankAcc').prop("disabled", true);
-             $('#cheque').find('#va').prop("disabled", false);
-         }else{
-             $('#cheque').find('#bankAcc').prop("disabled", false);
-             $('#cheque').find('#va').prop("disabled", true); 
-         }
-     });
 	 
 	 //page2
 	//Rental Billing Grid 에서 체크/체크 해제시
@@ -560,30 +526,6 @@ var columnLayout = [
 	
 	//AUIGrid 칼럼 설정 : targetFinalBillGridID
 	var targetFinalBillColumnLayout = [
-	    /*{ dataField:"trNo", headerText:"TR No.", editable:true, width:120},
-	    { dataField:"trIssueDate", headerText:"TR Issue Date", width:120, dataType : "date", formatString:"dd-mm-yyyy",
-	       editRenderer:{
-	    	   type: "CalendarRenderer",
-	    	   showEditorBtnOver : true,
-	    	   onlyCalendar : true,
-	    	   showExtraDays : true
-	       }
-	    },
-	    { dataField:"collectorId", headerText:"", editable:false, visible:false},
-	    { dataField:"collector", headerText:"Collector", editable:false, width:120,
-	    	renderer : {
-                type:"IconRenderer",
-                iconPosition:"aisleRight",
-                iconTableRef:{
-                    "default" : "${pageContext.request.contextPath}/resources/images/common/icon_id_search.gif"
-                },
-                onclick:function(rowIndex, columnIndex, value, item){
-                	//alert("rowIndex : " + rowIndex + ", value : " + value);
-                	finalBillRowId = rowIndex;
-                    fn_searchUserIdPop();
-                }
-            }	
-	    },*/
 	    { dataField:"procSeq" ,headerText:"Process Seq" ,editable : false , width : 120 , visible : false },
 	    { dataField:"appType" ,headerText:"AppType" ,editable : false , width : 120 , visible : false },
 	    { dataField:"advMonth" ,headerText:"AdvanceMonth" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.00" , visible : false },
@@ -1375,11 +1317,49 @@ var columnLayout = [
     }
     
     function fn_searchList(){
+    	
     	if($("#bankDateFr").val() != '' && $("#bankDateTo").val() != ''){
+    		var selBank = $("#searchBankType").val();
+    		if(selBank == ''){
+    			  Common.alert("select Bank Type.");
+    			  return;
+    		}
+    		
+    		if(selBank == '2730'){
+    			if($("#searchVa").val() == ''){
+    				Common.alert("key in VA Account.");
+    				return;
+    			}
+    		}else{
+    			if($("#searchBankAcc").val() == ''){
+    				Common.alert("select Bank Account.");
+    				return;
+    			}
+    		}
 	    	Common.ajax("GET","/payment/selectBankStatementList.do",$("#searchForm").serializeJSON(), function(result){         
 	            AUIGrid.setGridData(bankGridID, result);
+	            var selectedMode = $("#payMode").val();
+	            console.log(selectedMode);
+	           
+	            if(selectedMode == '105'){//cash
+	            	 doGetCombo('/common/getAccountList.do', 'CASH',$("#searchBankAcc").val(), 'bankAccCash', 'S', '' );
+	                 $("#cash").find("#bankType").val($("#searchBankType").val());
+	                 $("#cash").find("#va").val($("#searchVa").val());
+	             }else if(selectedMode == '106'){//cheque
+	            	 doGetCombo('/common/getAccountList.do', 'CHQ',$("#searchBankAcc").val(), 'bankAccCheque', 'S', '' );
+	                 $("#cheque").find("#bankType").val($("#searchBankType").val());
+	                 $("#bankAccCheque").val($("#searchBankAcc").val());
+	                 $("#cheque").find("#va").val($("#searchVa").val());
+	             }else if(selectedMode == '108'){//online
+	            	 doGetCombo('/common/getAccountList.do', 'ONLINE',$("#searchBankAcc").val(), 'bankAccOnline', 'S', '' );
+	                 $("#online").find("#bankType").val($("#searchBankType").val());
+	                 $("#bankAccOnline").val($("#searchBankAcc").val());
+	                 $("#online").find("#va").val($("#searchVa").val());
+	             }
 	        });
-	    }//else{Common.alert("key in Bank In Date..");}
+	    }else{
+	        Common.alert("select Bank In Date.");
+	    }
     }
     
     function fn_mapping(){
@@ -1415,6 +1395,25 @@ var columnLayout = [
                     return;
                 }
     			
+                var selBankType = $("#cash").find("#bankType").val();
+                if(selBankType != '' ){
+	                if(selBankType == '2730'){
+	                	if(FormUtil.checkReqValue($("#cash").find("#va"))){
+	                        Common.alert('* VA Account is empty');
+	                        return;
+	                    }
+	                }else{
+	                	$("#cash").find("#bankAcc").prop("disabled", false);
+	                	if(FormUtil.checkReqValue($("#bankAccCash option:selected"))){
+	                        Common.alert('* No Bank Account Selected');
+	                        return;
+	                    }
+	                }
+                }else{
+                    Common.alert("Select Bank Type");
+                    return;
+                }
+                
     		}else if($('#payMode').val() == '106'){
     			item.pendingAmount = $("#cheque").find("#amount").val();
     			
@@ -1429,6 +1428,25 @@ var columnLayout = [
                     return;
                 }
                 
+                var selBankType = $("#cheque").find("#bankType").val();
+                if(selBankType != '' ){
+                    if(selBankType == '2730'){
+                        if(FormUtil.checkReqValue($("#cheque").find("#va"))){
+                            Common.alert('* VA Account is empty');
+                            return;
+                        }
+                    }else{
+                    	console.log("mapping bankAccount");
+                        if(FormUtil.checkReqValue($("#bankAccCheque option:selected"))){
+                             Common.alert('* Bank Account is empty');
+                             return;
+                        }
+                    }
+                }else{
+                	Common.alert("Select Bank Type");
+                	return;
+                }
+                
     		}
     		   else if($('#payMode').val() == '108'){
     			var amt = 0;
@@ -1439,7 +1457,7 @@ var columnLayout = [
     			item.pendingAmount = tot;
     			
     			//Transaction Date 체크
-                if(FormUtil.checkReqValue($("trDateOnline"))){
+                if(FormUtil.checkReqValue($("#trDateOnline"))){
                     Common.alert('* Transaction Date is empty');
                     return;
                 }
@@ -1449,6 +1467,23 @@ var columnLayout = [
                     return;
                 }
                 
+                var selBankType = $("#online").find("#bankType").val();
+                if(selBankType != '' ){
+                    if(selBankType == '2730'){
+                        if(FormUtil.checkReqValue($("#online").find("#va"))){
+                            Common.alert('* VA Account is empty');
+                            return;
+                        }
+                    }else{
+                        if(FormUtil.checkReqValue($("#bankAccOnline option:selected"))){
+                             Common.alert('* Bank Account is empty');
+                             return;
+                        }
+                    }
+                }else{
+                    Common.alert("Select Bank Type");
+                    return;
+                }
             }
     		
     		AUIGrid.addRow(pendingGridID, item, "last");
@@ -1803,6 +1838,31 @@ var columnLayout = [
 	    
 	    var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터
 	    
+	    var selPayType=$("#payMode").val();
+	    if(selPayType == '105'){
+	    	$("#cash").find("#bankType").prop("disabled", false);
+		    if($("#cash").find("#bankType").val() == '2730'){
+		    	$("#cash").find("#va").prop("disabled", false);
+		    }else{
+		    	$("#cash").find("#bankAccCash").prop("disabled", false);
+		    }
+	    }else if(selPayType=='106'){
+	    	$("#cheque").find("#bankType").prop("disabled", false);
+	    	if($("#cheque").find("#bankType").val() == '2730'){
+	    		$("#cheque").find("#va").prop("disabled", false);
+	    	}else{
+	    		$("#cheque").find("#bankAccCheque").prop("disabled", false);
+	    	}
+	    }else if(selPayType == '108'){
+	    	$("#online").find("#bankType").prop("disabled", false);
+	    	if($("#cheque").find("#bankType").val() == '2730'){
+	    		$("#online").find("#va").prop("disabled", false);
+	    	}else{
+	    		$("#online").find("#bankAccOnline").prop("disabled", false);
+	    	}
+	    }
+	    
+	    
 	    var mode = $('#payMode').val() ;
 	    var formList;//폼 데이터
 	    if(mode == '105' ){
@@ -1874,11 +1934,28 @@ var columnLayout = [
 	      payTypeIndicator.find('#keyInCollMemId').val(memId);
 	      payTypeIndicator.find('#keyInCollMemNm').val(memNm);
 	  }
-      //alert("targetFinal : " + AUIGrid.getSelectedIndex(targetFinalBillGridID));
-     // var selectedValue = AUIGrid.getSelectedIndex(targetFinalBillGridID);
-    //  AUIGrid.updateRow(targetFinalBillGridID, { "collector" : memNm }, selectedValue[0]);
-      //AUIGrid.updateRow(targetFinalBillGridID, { "collectorId" : memId }, selectedValue[0]);
       
+  }
+  
+  function fn_chgBankType(){
+	  var selected = $("#searchBankType").val();
+	  if(selected != ''){
+		  if(selected == '2730'){
+			  //console.log(selected);
+			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
+			  $('#searchVa').val("");
+			  $('#searchBankAcc').prop("disabled", true);
+	          $('#searchVa').prop("disabled", false);
+		  }else{
+			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
+			  $('#searchVa').val("");
+			  $('#searchBankAcc').prop("disabled", false);
+	          $('#searchVa').prop("disabled", true);
+		  }
+	  }else{
+		  $('#searchBankAcc').prop("disabled", true);
+          $('#searchVa').prop("disabled", true);
+	  }
   }
 </script>
 <!-- content start -->
@@ -1902,6 +1979,27 @@ var columnLayout = [
 	</aside><!-- title_line end -->
     <!-- search_table start -->
     <section class="search_table"><!-- search_table start -->
+	    <!-- search_result end -->
+	    <table class="type1"><!-- table start -->
+	        <caption>table</caption>
+	        <colgroup>
+	            <col style="width:170px" />
+	            <col style="width:*" />
+	        </colgroup>
+	        <tbody>
+	            <tr>
+	                <th scope="row">Payment Mode</th>
+	                <td>
+	                    <select id="payMode" name="payMode" class="w100p">
+	                        <option value="105" selected>Cash</option>
+	                        <option value="106">Cheque</option>
+	                        <option value="108">On-line</option>
+	                    </select>
+	                </td>
+	            </tr>
+	        </tbody>
+	    </table>
+       
 		<form id="searchForm" action="#" method="post">
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
@@ -1933,6 +2031,28 @@ var columnLayout = [
                                 </select>
                            </td>
                     </tr>
+                    <tr>
+                        <th>Bank Type</th>
+                        <td colspan="3">
+                            <select id="searchBankType" name="searchBankType" class="w100p" onchange="fn_chgBankType();">
+		                        <option value="">Choose One</option>
+		                        <option value="2728">JomPay</option>
+		                        <option value="2729">MBB CDM</option>
+		                        <option value="2730">VA</option>
+		                        <option value="2731">Others</option>
+		                    </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Bank Account</th> 
+                        <td>
+                            <select id="searchBankAcc" name="searchBankAcc" class="w100p"></select>
+                        </td> 
+                        <th>VA Account</th>
+                        <td>
+                            <input type="text" id="searchVa" name="searchVa" class="w100p"/>
+                        </td>
+                    </tr>
 				</tbody>
 			</table>
 			<!-- table end -->
@@ -1944,30 +2064,12 @@ var columnLayout = [
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
     </section>
-    <!-- search_result end -->
-    <table class="type1"><!-- table start -->
-        <caption>table</caption>
-        <colgroup>
-            <col style="width:170px" />
-            <col style="width:*" />
-        </colgroup>
-        <tbody>
-            <tr>
-                <th scope="row">Payment Mode</th>
-                <td>
-                    <select id="payMode" name="payMode" class="w100p">
-                        <option value="105" selected>Cash</option>
-                        <option value="106">Cheque</option>
-                        <option value="108">On-line</option>
-                    </select>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-       
+    
 <div id="online" style="display:none;">
     <form id="onlineForm" name="onlineForm">
     <input type="hidden" id="payType" name="payType" />
+    <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
+    <input type="hidden" name="keyInScrn" id="keyInScrn" value="NOR" /> 
     <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>
@@ -2008,7 +2110,7 @@ var columnLayout = [
             <tr>
                 <th scope="row">Bank Type</th>
                 <td>
-                    <select id="bankType" name="bankType" class="w100p" >
+                    <select id="bankType" name="bankType" class="w100p" disabled>
                         <option value="">Choose One</option>
                         <option value="2728">JomPay</option>
                         <option value="2729">MBB CDM</option>
@@ -2017,7 +2119,7 @@ var columnLayout = [
                     </select>
                 </td>
                 <th>Bank Account</th>
-                <td id="acc"></td>
+                <td><select id="bankAccOnline" name="bankAcc" class="w100p" disabled></select></td>
             </tr>
             <tr>
                    <th>VA Account</th>
@@ -2062,6 +2164,8 @@ var columnLayout = [
 <div id="cash" style="display:none;">
     <form id="cashForm" name="cashForm">
     <input type="hidden" id="payType" name="payType" />
+    <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
+    <input type="hidden" name="keyInScrn" id="keyInScrn" value="NOR" /> 
     <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>
@@ -2078,7 +2182,7 @@ var columnLayout = [
                 </td>
                 <th scope="row">Bank Type</th>
                 <td>
-                    <select id="bankType" name="bankType" class="w100p" >
+                    <select id="bankType" name="bankType" class="w100p" disabled >
                         <option value="">Choose One</option>
                         <option value="2728">JomPay</option>
                         <option value="2729">MBB CDM</option>
@@ -2089,7 +2193,7 @@ var columnLayout = [
             </tr>
             <tr>
                    <th>Bank Account</th>
-                   <td id="acc"></td>
+                   <td><select id="bankAccCash" name="bankAcc" class="w100p" disabled></select></td>
                    <th>VA Account</th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
             </tr>
@@ -2150,6 +2254,8 @@ var columnLayout = [
  <div id="cheque" style="display:none;">
     <form id="chequeForm" name="chequeForm">
     <input type="hidden" id="payType" name="payType" />
+    <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
+    <input type="hidden" name="keyInScrn" id="keyInScrn" value="NOR" /> 
     <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>
@@ -2166,7 +2272,7 @@ var columnLayout = [
                 </td>
                 <th scope="row">Bank Type</th>
                 <td>
-                    <select id="bankType" name="bankType" class="w100p" >
+                    <select id="bankType" name="bankType" class="w100p" disabled >
                         <option value="">Choose One</option>
                         <option value="2728">JomPay</option>
                         <option value="2729">MBB CDM</option>
@@ -2177,7 +2283,7 @@ var columnLayout = [
             </tr>
             <tr>
                    <th>Bank Account</th>
-                   <td id="acc"></td>
+                   <td><select id="bankAccCheque" name="bankAcc" class="w100p" disabled></select></td>
                    <th>VA Account</th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
             </tr>
