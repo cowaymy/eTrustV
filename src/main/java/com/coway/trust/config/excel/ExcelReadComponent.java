@@ -82,9 +82,9 @@ public class ExcelReadComponent {
 		return fileName.endsWith(AppConstants.XLS);
 	}
 
-	private boolean isExcelXlsx(String fileName) {
-		return fileName.endsWith(AppConstants.XLSX);
-	}
+//	private boolean isExcelXlsx(String fileName) {
+//		return fileName.endsWith(AppConstants.XLSX);
+//	}
 
 	private Workbook multipartFileToWorkbook(MultipartFile multipartFile) throws IOException, InvalidFormatException {
 		if (isExcelXls(multipartFile.getOriginalFilename())) {
