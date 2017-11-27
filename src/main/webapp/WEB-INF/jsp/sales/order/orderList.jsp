@@ -86,13 +86,13 @@
         	Common.popupDiv("/sales/order/orderSOFListPop.do", null, null, true);
         });
         $('#btnDdCrc').click(function() {
-        	Common.alert('<b>The program is under development.</b>');
+        	Common.popupDiv("/sales/order/orderDDCRCListPop.do", null, null, true);
         });
         $('#btnAsoSales').click(function() {
-        	Common.alert('<b>The program is under development.</b>');
+        	Common.popupDiv("/sales/order/orderASOSalesReportPop.do", null, null, true);
         });
         $('#btnYsListing').click(function() {
-        	Common.alert('<b>The program is under development.</b>');
+        	Common.popupDiv("/sales/order/orderSalesYSListingPop.do", null, null, true);
         });
     });
     
