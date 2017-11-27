@@ -1546,6 +1546,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 						,BS_RESULT_CRT_DT
 						,BS_RESULT_CRT_USER_ID
 						,BS_RESULT_FILTER_CLM
+						,SERIAL_NO
                         )
                  values (
                       GBSLCVD.SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
@@ -1557,6 +1558,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                     , sysdate
                     , #{bsResultCrtUserId}
                     , #{bsResultFilterClm}
+                    , #{SerialNo}
             )
             </insert>
 
