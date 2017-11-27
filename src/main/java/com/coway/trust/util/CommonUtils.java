@@ -255,33 +255,37 @@ public final class CommonUtils {
 
 	// 문자열 앞에 특정한 문자를 채워서 리턴한다.
 	public static String getFillString(String strTemp, String fillString, int len, String option) {
-		if (strTemp == null)
+
+		String pStrTemp = strTemp;
+		String pOption = option;
+
+		if (pStrTemp == null)
 			return "";
 
-		if (strTemp.length() >= len)
-			return strTemp;
+		if (pStrTemp.length() >= len)
+			return pStrTemp;
 
 		// 데이터 String 이 null 인 경우 공백 처리
-		if (strTemp.equals("null"))
-			strTemp = "";
+		if (pStrTemp.equals("null"))
+			pStrTemp = "";
 
-		if (option == null)
-			option = "RIGHT";
+		if (pOption == null)
+			pOption = "RIGHT";
 
-		option = option.toUpperCase();
+		pOption = pOption.toUpperCase();
 		StringBuilder rtnValue = new StringBuilder();
 
-		if (option.equals("RIGHT")) {
+		if (pOption.equals("RIGHT")) {
 			// 앞에 문자열을 채워서 리턴한다.
-			len = len - strTemp.length();
-			for (int i = 0; i < len; i++) {
+			int pLen = len - pStrTemp.length();
+			for (int i = 0; i < pLen; i++) {
 				rtnValue.append(fillString);
 			}
-			rtnValue.append(strTemp);
+			rtnValue.append(pStrTemp);
 		} else {
 			// 뒤에 문자열을 채워서 리턴한다.
-			rtnValue.append(strTemp);
-			for (int i = strTemp.length(); i < len; i++) {
+			rtnValue.append(pStrTemp);
+			for (int i = pStrTemp.length(); i < len; i++) {
 				rtnValue.append(fillString);
 			}
 		}
@@ -965,14 +969,10 @@ public final class CommonUtils {
 	}
 
 	/*
-66	 --> 2284 REN	: Rental
-67	 --> 2285 OUT	: Outright
-68	 --> 2286 INS	: Installment
-1412 --> 2287 OUTPLS: Outright Plus
-1036 --> 2288 OSVM	: Outright SVM(X)
-1330 --> 2289 RSVM	: Rental SVM(X)
-1035 --> 2290 FIL	: Expired Filter(X)
- */
+	 * 66 --> 2284 REN : Rental 67 --> 2285 OUT : Outright 68 --> 2286 INS : Installment 1412 --> 2287 OUTPLS: Outright
+	 * Plus 1036 --> 2288 OSVM : Outright SVM(X) 1330 --> 2289 RSVM : Rental SVM(X) 1035 --> 2290 FIL : Expired
+	 * Filter(X)
+	 */
 	public static int changePromoAppTypeId(int iAppTypeId) {
 		int iPromoAppTypeId = 0;
 

@@ -536,8 +536,7 @@
 						<sourceEncoding>UTF-8</sourceEncoding>
 						<includeTests>false</includeTests>
 						<excludes>
-							<exclude>**/com/coway/trust/config/**/*.java</exclude>
-							<exclude>**/com/coway/trust/util/**/*.java</exclude>
+							<exclude>**/com/coway/trust/config/ctos/**/*.java</exclude> <!-- gernerate from soap xml -->
 							<exclude>**/com/coway/trust/**/sample/**/*.java</exclude>
 						</excludes>
 					</configuration>

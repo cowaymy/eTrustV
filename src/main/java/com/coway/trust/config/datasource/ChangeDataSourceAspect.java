@@ -23,40 +23,47 @@ import org.springframework.stereotype.Component;
 @Order(value = 1)
 public class ChangeDataSourceAspect implements InitializingBean {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeDataSourceAspect.class);
-	
 
 	/**
 	 * Payment - Select Retal Billing Info
 	 */
 	@Pointcut("execution(* com.coway.trust.biz.*..impl.CommonPaymentServiceImpl.*(..))")
 	public void paymentRentalBillingInfoServiceMethod() {
+		// aop pointcut
 	}
 
 	/**
-	 * Payment - Create Bill 
+	 * Payment - Create Bill
 	 */
 	@Pointcut("execution(* com.coway.trust.biz.*..impl.BillingMgmtServiceImpl.*(..))")
 	public void paymentBillingServiceMethod() {
-	}	
+		// aop pointcut
+	}
+
 	/**
-	 * Payment - Invoice 생성 
+	 * Payment - Invoice 생성
 	 */
 	@Pointcut("execution(* com.coway.trust.biz.*..impl.InvoiceServiceImpl.*(..))")
 	public void paymentInvoiceServiceMethod() {
-	}	
+		// aop pointcut
+	}
+
 	/**
 	 * Payment - Service Membership Invoice 생성
 	 */
 	@Pointcut("execution(* com.coway.trust.biz.*..impl.SrvMembershipBillingServiceImpl.*(..))")
 	public void paymentSrvMemBillingServiceMethod() {
+		// aop pointcut
 	}
 
 	@Pointcut("execution(* com.coway.trust.biz.*..impl.CommissionCalculationServiceImpl.*(..))")
 	public void commissionCalculationServiceMethod() {
+		// aop pointcut
 	}
 
 	@Pointcut("execution(* com.coway.trust.biz.*..impl.XxxxServiceImpl.*(..))")
 	public void xxxxServiceMethod() {
+		// sample aop pointcut
 	}
 
 	@Before("paymentRentalBillingInfoServiceMethod() || paymentBillingServiceMethod() || paymentInvoiceServiceMethod() || paymentSrvMemBillingServiceMethod() || commissionCalculationServiceMethod() || xxxxServiceMethod()")
@@ -85,6 +92,6 @@ public class ChangeDataSourceAspect implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-
+		// afterPropertiesSet
 	}
 }
