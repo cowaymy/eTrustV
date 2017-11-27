@@ -252,32 +252,36 @@ function createPurchaseGridID(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:160px" />
+    <col style="width:230px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
     <th scope="row">Member Code<span class="must">*</span></th>
-    <td>
+    <td colspan="2">
         <input type="text" title="" placeholder="" class="w100p disabled"  value="${revDetailMap.memCode}" disabled="disabled" /><!-- <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
     </td>
 </tr>
 <tr>
     <th scope="row">Branch / Warehouse<span class="must">*</span></th>
     <td>
-        <select  id="_reversalPosWhBrnchId" disabled="disabled" class="disabled"></select>
+        <select  id="_reversalPosWhBrnchId" disabled="disabled" class="disabled w100p"></select>
+    </td>
+    <td style="padding-left:0">
         <input type="text" disabled="disabled" id="_reversalPosWhDesc" >
     </td>
 </tr>
 <tr>
     <th scope="row">Receive Date<span class="must">*</span></th>
     <td>
-        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" value="${revDetailMap.posDt}" disabled="disabled"  id="_recevDateOri"/>
+        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" value="${revDetailMap.posDt}" disabled="disabled"  id="_recevDateOri"/>
     </td>
+    <td></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td>
+    <td colspan="2">
         <input type="text" title="" placeholder="" class="w100p disabled" value="${revDetailMap.posRem}" disabled="disabled"/>
     </td>
 </tr>

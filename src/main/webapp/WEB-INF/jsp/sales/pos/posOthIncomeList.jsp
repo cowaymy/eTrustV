@@ -638,11 +638,11 @@ function fn_getDateGap(sdate, edate){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:160px" />
+    <col style="width:130px" />
     <col style="width:*" />
-    <col style="width:170px" />
+    <col style="width:130px" />
     <col style="width:*" />
 </colgroup>
 <tbody> 
@@ -675,17 +675,19 @@ function fn_getDateGap(sdate, edate){
     </td>
     <th scope="row">Member Code</th>
     <td>
-        <input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class=""  style="width: 180px;"/>
-        <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
-        <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <div class="search_100p"><!-- search_100p start -->
+	        <input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="w100p" />
+	        <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
+	        <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        </div>
     </td>
 </tr>
 <tr>
     <th scope="row">Branch / Warehouse</th>
-    <td colspan="3">
-        <select  id="cmbWhBrnchId"  disabled="disabled" class="disabled" name="brnchId"></select>
-        <input type="text" disabled="disabled" id="cmbWhId" class="ml5" >
+    <td>
+        <select  id="cmbWhBrnchId"  disabled="disabled" class="disabled w100p" name="brnchId"></select>
     </td>
+    <td colspan="2" style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhId" class="w100p" ></td>
     <th scope="row">Customer Name</th>
     <td>
     <input type="text" title="" placeholder="Customer Name" class="w100p" name="posCustName" />

@@ -557,15 +557,9 @@ function fn_calculateAmt(amt, qty) {
     <li><p class="btn_blue2" ><a id="_purchMemBtn" style="display: none;">Member List</a></p></li>
     <li><p class="btn_blue2"><a id="_posReqSaveBtn">Save</a></p></li>
 </ul>
-
 <aside class="title_line"><!-- title_line start -->
-<h2>POS Information</h2>
+<h2>Please select POS Type</h2>
 </aside><!-- title_line end -->
-<form id="_sysForm">
-<!-- HIDDEN VALUES -->
-<input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId }">
-<input type="hidden" name="posReason" id="_posReason">  
-<input type="hidden" name="payResult" id="_payResult">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -589,41 +583,57 @@ function fn_calculateAmt(amt, qty) {
 </tbody>
 </table><!-- table end -->
 
+<section class="tap_wrap"><!-- tap_wrap start -->
+<ul class="tap_type1">
+    <li><a href="#" class="on">Purchase info</a></li>
+    <li><a href="#">Payment mode</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
+
 <aside class="title_line"><!-- title_line start -->
 <h2>Particular Information</h2>
 </aside><!-- title_line end -->
+
+<form id="_sysForm">
+<!-- HIDDEN VALUES -->
+<input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId }">
+<input type="hidden" name="posReason" id="_posReason">  
+<input type="hidden" name="payResult" id="_payResult">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:150px" />
+    <col style="width:230px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
     <th scope="row">Member Code</th>
     <td> 
-        <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class=""  value="${memCodeMap.memCode}"/>
-        <input id="hiddenSalesmanPopId" name="salesmanPopId" type="hidden"  value="${memCodeMap.memId}"/>
-        <a id="memBtnPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <div class="search_100p"><!-- search_100p start -->
+	        <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class="w100p"  value="${memCodeMap.memCode}"/>
+	        <input id="hiddenSalesmanPopId" name="salesmanPopId" type="hidden"  value="${memCodeMap.memId}"/>
+	        <a id="memBtnPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        </div>
     </td>
+    <td></td>
 </tr>
 <tr>
     <th scope="row">Branch / Warehouse</th>
-    <td>
-         <select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop"></select>
-        <input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}">
-    </td>
+    <td><select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop" class="w100p"></select></td>
+    <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}"></td>
 </tr>
 <tr>
     <th scope="row">Receive Date</th>
-    <td>
+    <td colspan="2">
         <input type="text" title="기준년월" class="j_date w100p" placeholder="MM/YYYY" readonly="readonly"  id="_recvDate" name="recvDate"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td>
+    <td colspan="2">
         <input type="text" title="" placeholder="" class="w100p" id="_posRemark" name="posRemark" />
     </td>
 </tr>
@@ -661,7 +671,131 @@ function fn_calculateAmt(amt, qty) {
 <div id="memTemp_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article>
 </div>
+</article><!-- tap_area end -->
 
+<article class="tap_area"><!-- tap_area start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Payment Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+<th>Total Charges</th>
+<td colspan="5"></td>
+</tr>
+<tr>
+<th>Branch Code</th>
+<td>
+    <select class="w100p disabled" disabled>
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+</td>
+<th>TR Ref No.</th>
+<td><input type="text" title="" placeholder="TR Ref No." class="w100p" /></td>
+<th>TR Issued Date</th>
+<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+</tr>
+<tr>
+<th>Payment Mode</th>
+<td>
+    <select class="w100p disabled">
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+</td>
+<th>Transaction Ref No.</th>
+<td><input type="text" title="" placeholder="Transaction Ref No." class="w100p" /></td>
+<th>Amount</th>
+<td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+<th>Credit Card No.</th>
+<td><input type="text" title="" placeholder="Credit Card No." class="w100p" /></td>
+<th>CRC Type</th>
+<td>
+    <select class="w100p disabled" disabled>
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+</td>
+<th>CRC Mode</th>
+<td>
+    <select class="w100p disabled" disabled>
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+</td>
+</tr>
+<tr>
+<th>Approval No.</th>
+<td><input type="text" title="" placeholder="Credit Card No." class="w100p" /></td>
+<th>Issue Bank</th>
+<td>
+    <select class="w100p disabled" disabled>
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+</td>
+<th>Bank Account</th>
+<td>
+    <select class="w100p">
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+</td>
+</tr>
+<tr>
+<th>Ref Date</th>
+<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+<th>Debtor Acc.</th>
+<td>
+    <select class="w100p" disabled>
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+</td>
+<th></th>
+<td></td>
+</tr>
+<tr>
+<th>Remark</th>
+<td colspan="5"><textarea cols="20" rows="5" placeholder=""></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="#">Add Payment Mode</a></p></li>
+    <li><p class="btn_grid"><a href="#">Clear All</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+<span class="bold_text mt10">Total Pay Amount : </span>
+
+</article><!-- tap_area end -->
+</section><!-- tap_wrap start -->
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
