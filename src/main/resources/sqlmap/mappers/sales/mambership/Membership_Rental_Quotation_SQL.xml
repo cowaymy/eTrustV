@@ -648,12 +648,12 @@
                       END MEM_NAME  ,
                    Limit1.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
                    CASE 
-                        WHEN ( Limit1.QOTAT_VAL_ID_DT <![CDATA[<]]> '2017-11-08' ) THEN 82
+                        WHEN ( to_date(Limit1.QOTAT_VAL_ID_DT,'yyyy/mm/dd') <![CDATA[<]]> to_date( SYSDATE ,'yyyy/mm/dd' ) ) THEN 82
                         WHEN ( 4 = Limit1.QOTAT_STUS_ID ) THEN 81
                    ELSE Limit1.QOTAT_STUS_ID
                       END C5  ,
                    CASE 
-                        WHEN ( Limit1.QOTAT_VAL_ID_DT <![CDATA[<]]> '2017-11-08' ) THEN 'EXP'
+                        WHEN ( to_date(Limit1.QOTAT_VAL_ID_DT,'yyyy/mm/dd') <![CDATA[<]]> to_date( SYSDATE ,'yyyy/mm/dd' ) ) THEN 'EXP'
                         WHEN ( 4 = Limit1.QOTAT_STUS_ID ) THEN 'CON'
                         WHEN ( 1 = Limit1.QOTAT_STUS_ID ) THEN 'ACT'
                         WHEN ( 8 = Limit1.QOTAT_STUS_ID ) THEN 'DEA'
