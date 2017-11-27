@@ -584,7 +584,6 @@ and cust.cust_id = custCnt.cust_id
 							               AND sal0045d.install_id = sal0047d.entry_id(+) 
 							               AND sal0071d.sales_ord_id(+) = sal0001d.sales_ord_id 
 							               AND sal0001d.sales_ord_id = sal0095d.srv_sales_ord_id 
-							               --AND sal0095d.srv_mem_sales_mem_id = 0 
 							               AND svc0001d.as_id = svc0004d.as_entry_id(+) 
 							               AND org0001d.brnch = sys0005m.brnch_id 
 							               AND sal0002d.itm_stk_id = sys0026m.stk_id 					
@@ -593,7 +592,7 @@ and cust.cust_id = custCnt.cust_id
 							                                                     AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
 							       )
 				where 1=1
-				and rn = 1
+				and rn = 1)
 
 
 
