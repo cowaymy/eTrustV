@@ -995,7 +995,7 @@ function fn_clear(){
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Details</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openWinPop('FUNDTRANS');">Fund Transfer</a></p></li>                                                                      
+                        <!-- <li><p class="link_btn"><a href="javascript:fn_openWinPop('FUNDTRANS');">Fund Transfer</a></p></li>  -->                                                                      
                     </ul>
                     <!-- 
                     <ul class="btns">
