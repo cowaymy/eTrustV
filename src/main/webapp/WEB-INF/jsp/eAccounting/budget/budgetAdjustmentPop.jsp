@@ -749,7 +749,7 @@ function fn_AddRow()
 	    Common.ajax("POST", "/eAccounting/budget/selectPlanMaster",  $("#pAdjForm").serializeJSON() , function(result)    {
 	    	console.log("성공." + JSON.stringify(result));
 	        console.log("data : " + result.data);
-	    		        
+	        
 	        if($("#pAdjustmentType").val() != '01' && $("#pAdjustmentType").val() != '02' && $("#pAdjustmentType").val() !=''){
 	        	
 	        	if(result.data.send == "N" && result.data.recv == "N"){ 
@@ -762,7 +762,10 @@ function fn_AddRow()
 	                AUIGrid.addRow(adjPGridID, item, 'last');                    
 	                AUIGrid.addRow(adjPGridID, item2, 'last'); 
 	            }
+	        	
+	        	
 	        }else{
+	        	
 	        	if(result.data.send == "N"){
 	        		Common.alert("<spring:message code="budget.msg.addMaster" />" );
 	        	}else{
@@ -770,7 +773,7 @@ function fn_AddRow()
 	            }
 	        }
 	    	
-	    });
+	    },"", {async: false});
  /* 
     }else{
 
