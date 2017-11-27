@@ -75,7 +75,7 @@
                 $("#sUrl").val("/logistics/material/materialcdsearch.do");
                 $("#searchtype").val("search");
 
-                Common.searchpopupWin("popupForm", "/common/searchPopList.do","stock");
+                Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
             }
         });
 
@@ -89,7 +89,7 @@
                 $("#svalue").val($('#location').val());
                 $("#sUrl").val("/logistics/organization/locationCdSearch.do");
 
-                Common.searchpopupWin("popupForm", "/common/searchPopList.do","location");
+                Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
             }
         });
 
