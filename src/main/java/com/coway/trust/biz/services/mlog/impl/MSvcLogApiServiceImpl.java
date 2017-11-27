@@ -544,20 +544,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 
 
-	@Override
-	public List<EgovMap> getASRequestResultList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return MSvcLogApiMapper.getASRequestResultList(params);
-	}
-
-	@Override
-	public List<EgovMap> getASRequestCustList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return MSvcLogApiMapper.getASRequestCustList(params);
-	}
 	
 	
-	
+	   
 /*	@Override
 	public void aSresultRegistration(List<Map<String, Object>> asTransLogs) {
 		// TODO Auto-generated method stub
