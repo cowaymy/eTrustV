@@ -84,7 +84,6 @@ var option = {
     });
     
     doGetCombo('/common/selectCodeList.do', '19', '','cmbRentPaymode', 'S' , '');   // cmbRentPaymode Combo Box
-//    doGetCombo('/common/selectCodeList.do', '1', '','cmbRentPaymode', 'S' , '');   // cmbRentPaymode Combo Box
     
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
