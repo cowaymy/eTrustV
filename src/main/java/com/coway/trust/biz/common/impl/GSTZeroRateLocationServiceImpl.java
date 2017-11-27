@@ -18,7 +18,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("gstZeroRateLocationService")
 public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationService {
 	
-	private static final Logger Logger = LoggerFactory.getLogger(CommonServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceImpl.class);
 
 	@Autowired
 	private GSTZeroRateLocationMapper gstZeroRateLocationMapper;
@@ -44,8 +44,8 @@ public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationServic
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			Logger.debug(" >>>>> deleteGSTExportation ");
-			Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			LOGGER.debug(" >>>>> deleteGSTExportation ");
+			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			
 			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
 			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
@@ -68,8 +68,8 @@ public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationServic
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			Logger.debug(" >>>>> updateGSTExportation ");
-			Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			LOGGER.debug(" >>>>> updateGSTExportation ");
+			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			
 			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
 			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
@@ -92,8 +92,8 @@ public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationServic
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			Logger.debug(" >>>>> insertGSTExportation ");
-			Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			LOGGER.debug(" >>>>> insertGSTExportation ");
+			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			
 			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
 			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );

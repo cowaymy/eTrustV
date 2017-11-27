@@ -17,20 +17,20 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("MainNoticeService")
 public class MainNoticeServiceImpl extends EgovAbstractServiceImpl implements MainNoticeService {
 
-	private static final Logger Logger = LoggerFactory.getLogger(MainNoticeServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainNoticeServiceImpl.class);
 
 	@Resource(name = "MainNoticeMapper")
 	private MainNoticeMapper mainNoticeMapper;
 
 	@Override
 	public List<EgovMap> selectDailyCount(Map<String, Object> params) {
-		Logger.debug("ServiceImple MainNotice Info");
+		LOGGER.debug("ServiceImple MainNotice Info");
 		return mainNoticeMapper.selectDailyCount(params);
 	}
 
 	@Override
 	public List<EgovMap> getMainNotice(Map<String, Object> params) {
-		Logger.debug("getMainNotice");
+		LOGGER.debug("getMainNotice");
 		return mainNoticeMapper.selectMainNotice(params);
 	}
 
