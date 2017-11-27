@@ -568,5 +568,18 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		return pstRequestDOMapper.getRate();
 	}
+	
+	
+	@Override
+	public List<EgovMap> pstTypeCmbList(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstTypeCmbList(params);
+	}
+	
+	@Override
+	public List<EgovMap> pstNewDealerInfo(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstNewDealerInfo(params);
+	}
     
 }

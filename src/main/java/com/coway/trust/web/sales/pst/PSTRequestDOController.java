@@ -82,6 +82,11 @@ public class PSTRequestDOController {
 		String[] pstStusList = request.getParameterValues("pstStusId");
 		params.put("pstStusList", pstStusList);
 		
+		if(request.getParameterValues("cmbPstType") != null){
+			String[] pstTypeList = request.getParameterValues("cmbPstType");
+			params.put("pstTypeList", pstTypeList);
+		}
+		
 		if(params != null && !"".equals(params.toString().trim())){
 			pstList = pstRequestDOService.selectPstRequestDOList(params);
 		}
@@ -228,13 +233,14 @@ public class PSTRequestDOController {
 	 */
 	@RequestMapping(value = "/insertPstRequestDOPop.do")
 	public String insertPstRequestDOPop(@RequestParam Map<String, Object>params, ModelMap model) {
-
-		// Dealer combo box
-		List<EgovMap> cmbDealerList = pstRequestDOService.pstNewCmbDealerList();
+		logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + params.toString());
+		// Dealer combo box - Dealer Type 입력 후 onchange로 인해 안씀.
+//		List<EgovMap> cmbDealerList = pstRequestDOService.pstNewCmbDealerList();
 		EgovMap getRate = pstRequestDOService.getRate();
 		
-		model.addAttribute("cmbDealerList", cmbDealerList);
+//		model.addAttribute("cmbDealerList", cmbDealerList);
 		model.addAttribute("getRate", getRate);
+		model.addAttribute("dealerTypeFlag", params.get("dealerTypeFlag"));
 		
 		return "sales/pst/pstRequestDoNewPop";
 	}
@@ -826,6 +832,45 @@ public class PSTRequestDOController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
+	}
+	
+	
+	/**
+	 * PST Type Combo Box 구하기
+	 */
+	@RequestMapping(value = "/pstTypeCmbJsonList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> pstTypeCmbJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		int dealerType = Integer.parseInt((String)params.get("groupCode"));	// recall, calcel, reversal cancel
+		
+		if(dealerType == 2575){
+			String[] pstTypeList = {"2577", "2578"};
+			params.put("pstTypeList", pstTypeList);
+		}else{
+			String[] pstTypeList = {"2579", "2580"};
+			params.put("pstTypeList", pstTypeList);
+		}
+		
+		List<EgovMap> pstTypeCmbList = pstRequestDOService.pstTypeCmbList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(pstTypeCmbList);
+	}
+	
+	
+	/**
+	 * Dealer Type에 따른 Dealer Combo Box 구하기
+	 */
+	@RequestMapping(value = "/pstNewDealerInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> pstNewDealerInfo(@RequestParam Map<String, Object>params, ModelMap model) {
+
+//		int dealerType = Integer.parseInt((String)params.get("groupCode"));	// recall, calcel, reversal cancel
+		
+		logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + params.toString());
+		List<EgovMap> dealerCmbList = pstRequestDOService.pstNewDealerInfo(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(dealerCmbList);
 	}
 
 }

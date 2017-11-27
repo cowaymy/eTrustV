@@ -343,4 +343,16 @@ public interface PSTRequestDOMapper {
 	 * @exception Exception
 	 */
 	EgovMap getRate();
+	
+	
+	/**
+	 * PST Type Combo Box 구하기
+	 * 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 */
+	List<EgovMap> pstTypeCmbList(Map<String, Object> params);
+	
+	List<EgovMap> pstNewDealerInfo(Map<String, Object> params);
 }

@@ -33,6 +33,11 @@
     function doDefNmCombo(data, selCode, obj , type, callbackFn){
         var targetObj = document.getElementById(obj);
 
+        if(data.length == 0){
+        	Common.alert("No item found.");
+        	return;
+        }
+        
         for(var i=targetObj.length-1; i>=0; i--) {
             targetObj.remove( i );
         }
@@ -67,9 +72,23 @@
             return false;
         }
         
+        if(item == ""){
+        	Common.alert("* Some required fields are empty.");
+            return false;
+        }
+        if(qty == ""){
+            Common.alert("* Some required fields are empty.");
+            return false;
+        }
+        if(price == ""){
+            Common.alert("* Some required fields are empty.");
+            return false;
+        }
+        
         fn_addStockItemInfo(type, category, item, qty, price, totPrice, stkId);
         $("#autoClose").click();
     }
+    
     
 </script>
 
@@ -112,19 +131,19 @@
             </td>
         </tr>
         <tr>
-            <th scope="row">Stock Item</th>
+            <th scope="row">Stock Item<span class="must">*</span></th>
             <td>
                 <select class="w100p" id="addStockItem" name="addStockItem">
                 </select>
                 </td>
         </tr>
         <tr>
-            <th scope="row">Quantity</th>
-            <td><input type="text" id="addStockQty" name="addStockQty" title="" placeholder="" class="" /></td>
+            <th scope="row">Quantity<span class="must">*</span></th>
+            <td><input type="number" id="addStockQty" name="addStockQty" title="" placeholder="" class="" /></td>
         </tr>
         <tr>
-            <th scope="row">Item Price</th>
-            <td><input type="text" id="addItemPrc" name="addItemPrc" title="" placeholder="" class="" /></td>
+            <th scope="row">Item Price<span class="must">*</span></th>
+            <td><input type="number" id="addItemPrc" name="addItemPrc" title="" placeholder="" class="" /></td>
         </tr>
     </tbody>
     </table><!-- table end -->

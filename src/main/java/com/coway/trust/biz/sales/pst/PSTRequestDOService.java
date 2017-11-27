@@ -250,4 +250,9 @@ public interface PSTRequestDOService {
 	 * @exception Exception
 	 */
 	EgovMap getRate();
+	
+	
+	List<EgovMap> pstTypeCmbList(Map<String, Object> params);
+	
+	List<EgovMap> pstNewDealerInfo(Map<String, Object> params);
 }

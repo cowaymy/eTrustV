@@ -3,6 +3,12 @@
 
 <script type="text/javaScript" language="javascript">
 
+var optionUnit = { 
+isShowChoose: false,
+type : 'M'
+};
+
+
     //AUIGrid 생성 후 반환 ID
     var myGridID;
     
@@ -34,7 +40,23 @@
 //        });
     
     });
- 
+    
+    doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
+    
+
+    // 조회조건 combo box
+    function f_multiCombo(){
+        $(function() {
+            $('#cmbDealerType').change(function() {
+            
+            }).multipleSelect({
+               selectAll: true, // 전체선택 
+                width: '80%'
+            });
+            $('#cmbDealerType').multipleSelect("checkAll");
+        });
+    }
+    
     function createAUIGrid() {
     	// AUIGrid 칼럼 설정
     	
@@ -117,12 +139,18 @@
         );
     }
     
-    function fn_goPstInfoEdit(){
-    	Common.popupWin("searchForm", "/sales/pst/getPstRequestDOEditPop.do?isPop=true&pstSalesOrdId=" + gridValue, option);
+//    function fn_goPstInfoEdit(){
+//    	Common.popupWin("searchForm", "/sales/pst/getPstRequestDOEditPop.do?isPop=true&pstSalesOrdId=" + gridValue, option);
+//    }
+    
+    function fn_insertPstRequestDOReq(){
+    	$("#dealerTypeFlag").val('REQ');
+    	Common.popupDiv("/sales/pst/insertPstRequestDOPop.do", $("#searchForm").serializeJSON(), null , true, '_newDiv');
     }
     
-    function fn_insertPstRequestDO(){
-    	Common.popupDiv("/sales/pst/insertPstRequestDOPop.do", $("#searchForm").serialize(), null , true, '_newDiv');
+    function fn_insertPstRequestDORet(){
+    	$("#dealerTypeFlag").val('RET');
+        Common.popupDiv("/sales/pst/insertPstRequestDOPop.do", $("#searchForm").serializeJSON(), null , true, '_newDiv');
     }
     
     function fn_pstReport(){
@@ -144,6 +172,17 @@
             }
         });
     };
+    
+    function fn_dealerToPst(){
+    	
+    	if(searchForm.cmbDealerType.value == 0){
+    		return false;
+    	}
+    	
+//    	doGetCombo('/common/selectCodeList.do', '358', $("#cmbDealerType").val(),'cmbPstType', 'M' , '');         // PST Type Combo Box
+//    	CommonCombo.make('cmbPstType', '/common/selectCodeList.do', {codeId : $("#cmbDealerType").val()} , '', {type: 'M'});
+    	CommonCombo.make("cmbPstType", "/sales/pst/pstTypeCmbJsonList", {groupCode : $("#cmbDealerType").val()} , '' , optionUnit); //Status
+    }
 </script>
 
 <section id="content"><!-- content start -->
@@ -157,7 +196,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>PST Request Do List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDO()">NEW</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDOReq()">NEW PST Request</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDORet()">NEW PST Return</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -170,13 +210,14 @@
     <input type="hidden" name="dealerAddId"   id="_dealerAddId"/><!-- Address Id  -->
     <input type="hidden" name="dealerCntId"   id="_dealerCntId"> <!--Contact Id  -->
 </form>
-<form id="searchForm" name="searchForm" action="#" method="post">
+<form id="searchForm" name="searchForm" action="#" method="get">
     <input type="hidden" id="pstSalesOrdIdParam" name="pstSalesOrdIdParam" >
     <input type="hidden" id="pstDealerDelvryCntId" name="pstDealerDelvryCntId" >
     <input type="hidden" id="pstDealerMailCntId" name="pstDealerMailCntId" >
     <input type="hidden" id="pstDealerDelvryAddId" name="pstDealerDelvryAddId" >
     <input type="hidden" id="pstDealerMailAddId" name="pstDealerMailAddId" >
     <input type="hidden" id="pstStusIdParam" name="pstStusIdParam" >
+    <input type="hidden" id="dealerTypeFlag" name="dealerTypeFlag" >
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -215,6 +256,18 @@
     <td><input type="text" title="" id="dealerName" name="dealerName" placeholder="Dealer Name" class="w100p" /></td>
     <th scope="row">NRIC/Company No</th>
     <td><input type="text" title="" id="pstNric" name="pstNric" placeholder="NRIC/Company Number" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Dealer Type</th>
+    <td>
+        <select class="select w100p" id="cmbDealerType" name="cmbDealerType" onchange="fn_dealerToPst()"></select>
+    </td>
+    <th scope="row">PST Type</th>
+    <td>
+        <select class="multy_select w100p" multiple="multiple" id="cmbPstType" name="cmbPstType" ></select>
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row">Customer PO</th>

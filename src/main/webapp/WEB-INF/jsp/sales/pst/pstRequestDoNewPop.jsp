@@ -2,6 +2,11 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 
+var optionUnit = { 
+isShowChoose: true,
+//type : 'M'
+};
+
     //AUIGrid 생성 후 반환 ID
     var myStkGridID;
     var totUnitVal = 0;
@@ -15,9 +20,11 @@
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         doGetCombo('/sales/pst/getInchargeList', '', '','cmbPstIncharge', 'S' , ''); //Incharge Person
-
+        doGetCombo('/common/selectCodeList.do', '357', '','cmbNewDealerType', 'S' , '');     // Dealer Type Combo Box
     });
 
+    
+    
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
         
@@ -187,7 +194,9 @@
                 dataSet     : GridCommon.getGridData(myStkGridID),
                 pstSalesMVO : {
                     // info
+//                    cmbNewDealerType : insertForm.cmbNewDealerType.value,
                     pstDealerId : insertForm.cmbDealer.value,
+                    pstType : insertForm.pstType.value,
 //                  dealerEmail : insertForm.dealerEmail.value,  //안씀
 //                  cmbPstBranch : insertForm.cmbPstBranch.value,
 //                  dealerNric : insertForm.dealerNric.value,
@@ -239,11 +248,27 @@
     }
     
     function fn_itemDel(){
-    	AUIGrid.removeCheckedRows(myStkGridID);
+    	var item = new Object();
+        
+    	item.pstItmStkId = stkId;
+        item.pstItmStkDesc = stkItem;
+//        item.bank = category;
+        item.pstItmPrc = price;
+        item.pstItmReqQty = qty;
+        item.pstItmTotPrc = totPrice;
+        
+        totUnitVal = totUnitVal - Number(qty);
+        totAmountVal = totAmountVal - Number(totPrice);
+        
+        $("#totUnit").val(totUnitVal);
+        $("#totAmount").val(totAmountVal);
+    	
+        AUIGrid.removeCheckedRows(myStkGridID);
     }
     
     function fn_success(){
     	$("#newPopClose").click();
+    	fn_selectPstRequestDOListAjax();
     }
     
     function fn_getRate() {
@@ -252,8 +277,41 @@
         }else if($("#curTypeCd").val() == 1150){
         	$("#curRate").val('1.00');
         }else if($("#curTypeCd").val() == 1149){
-        	$("#curRate").val('');
+        	$("#curRate").val('1.00');
         }
+    }
+    
+    function fn_dealerToDealer(){
+        if(insertForm.cmbNewDealerType.value == 0){
+//          $("input:select[name='cmbPstType']").prop("checked", false);
+//            $("input:select[name='cmbPstType']").attr("disabled" , "disabled");
+            return false;
+        }
+        if(insertForm.dealerTypeFlag.value == "REQ"){
+        	if(insertForm.cmbNewDealerType.value == 2575){
+        		insertForm.pstType.value = 2577;
+        	}else if(insertForm.cmbNewDealerType.value == 2576){
+        		insertForm.pstType.value = 2579;
+        	}else{
+        		Common.alert("Please check general code.");
+        	}
+        }else{
+        	if(insertForm.cmbNewDealerType.value == 2575){
+                insertForm.pstType.value = 2578;
+            }else if(insertForm.cmbNewDealerType.value == 2576){
+                insertForm.pstType.value = 2580;
+            }else{
+                Common.alert("Please check general code.");
+            }
+        }
+        
+//      doGetCombo('/common/selectCodeList.do', '358', $("#cmbDealerType").val(),'cmbPstType', 'M' , '');         // PST Type Combo Box
+//      CommonCombo.make('cmbPstType', '/common/selectCodeList.do', {codeId : $("#cmbDealerType").val()} , '', {type: 'M'});
+        CommonCombo.make("cmbDealer", "/sales/pst/pstNewDealerInfo.do", {cmbNewDealerType : $("#cmbNewDealerType").val()} , '' , optionUnit); //Status
+    }
+    
+    function chgTab() {
+        AUIGrid.resize(myStkGridID, 950, 300);
     }
 </script>
 
@@ -275,7 +333,7 @@
     <li><a href="#">Delivery Address</a></li>
     <li><a href="#">Mailing Contact Person</a></li>
     <li><a href="#">Delivery Contact Person</a></li>
-    <li><a href="#">Delivery Stock</a></li>
+    <li><a href="#" onclick="javascript:chgTab();">Delivery Stock</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -286,7 +344,8 @@
     <input type="hidden" id="dealerBrnchId" name="dealerBrnchId">
     <input type="hidden" id="brnchId" name="brnchId">
     <input type="hidden" id="insRate" name="insRate" value="${getRate.rate}">
-    
+    <input type="hidden" id="dealerTypeFlag" name="dealerTypeFlag" value="${dealerTypeFlag}">
+    <input type="hidden" id="pstType" name="pstType">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -297,17 +356,20 @@
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row">Dealer Type<span class="must">*</span></th>
+    <td>
+        <select class="select w100p" id="cmbNewDealerType" name="cmbNewDealerType" onchange="fn_dealerToDealer()"></select>
+    </td>
     <th scope="row">Dealer<span class="must">*</span></th>
     <td>
         <select class="w100p" id="cmbDealer" name="cmbDealer" onchange="fn_dealerInfo()">
-           <option value="">Dealer</option>
-           <c:forEach var="list" items="${cmbDealerList }">
+<!--             <option value="">Dealer</option>
+           <c:forEach var="list" items="${dealerCmbList }">
                <option value="${list.dealerId}">${list.dealerName}</option>
            </c:forEach>
+ -->
         </select>
     </td>
-    <th scope="row">Email</th>
-    <td><input type="text" id="dealerEmail" name="dealerEmail" title="" placeholder="Email Address" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Branch</th>
@@ -326,6 +388,10 @@
     </td>
     <th scope="row">Customer PO</th>
     <td><input type="text" id="pstNewCustPo" name="pstNewCustPo" title="" placeholder="Customer PO" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Email</th>
+    <td colspan="3"><input type="text" id="dealerEmail" name="dealerEmail" title="" placeholder="Email Address" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
@@ -569,11 +635,11 @@
 </tr>
 <tr>
     <th scope="row">Total Unit</th>
-    <td><input type="text" id="totUnit" name="totUnit"  title="" placeholder="" class="" /></td>
+    <td><input type="text" id="totUnit" name="totUnit"  title="" placeholder="" class="" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Total Amount</th>
-    <td><input type="text" id="totAmount" name="totAmount" title="" placeholder="" class="" /></td>
+    <td><input type="text" id="totAmount" name="totAmount" title="" placeholder="" class="" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
