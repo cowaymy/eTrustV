@@ -370,22 +370,43 @@ public class StocktransferController {
 		return ResponseEntity.ok(message);
 	}
 
+//	@RequestMapping(value = "/StocktransferReqDelivery.do", method = RequestMethod.POST)
+//	public ResponseEntity<ReturnMessage> StocktransferReqDelivery(@RequestBody Map<String, Object> params, Model mode,
+//			SessionVO sessionVo) {
+//		int userId = sessionVo.getUserId();
+//
+//		logger.debug("params : {}", params.toString());
+//		// List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+//
+//		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+//		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+//		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+//
+//		Map<String, Object> param = new HashMap();
+//		param.put("check", updList);
+//		param.put("add", serialList);
+//		param.put("formMap", formMap);
+//		param.put("userId", userId);
+//
+//		String data = stock.StocktransferReqDelivery(param);
+//
+//		// 결과 만들기 예.
+//		ReturnMessage message = new ReturnMessage();
+//		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+//		message.setData(data);
+//		return ResponseEntity.ok(message);
+//	}
+	
 	@RequestMapping(value = "/StocktransferReqDelivery.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> StocktransferReqDelivery(@RequestBody Map<String, Object> params, Model mode,
 			SessionVO sessionVo) {
 		int userId = sessionVo.getUserId();
 
-		logger.debug("params : {}", params.toString());
-		// List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-
-		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 
 		Map<String, Object> param = new HashMap();
-		param.put("check", updList);
-		param.put("add", serialList);
-		param.put("formMap", formMap);
+		param.put("check", list);
 		param.put("userId", userId);
 
 		String data = stock.StocktransferReqDelivery(param);
@@ -395,9 +416,10 @@ public class StocktransferController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setData(data);
+		
 		return ResponseEntity.ok(message);
 	}
-
+	
 	@RequestMapping(value = "/StocktransferSearchDeliveryList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> StocktransferSearchDeliveryList(@RequestBody Map<String, Object> params, Model model)
 			throws Exception {
@@ -414,8 +436,11 @@ public class StocktransferController {
 	public ResponseEntity<ReturnMessage> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVo) throws Exception {
 		int userId = sessionVo.getUserId();
-
+		
+		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		
 		params.put("userId", userId);
+		params.put("add", serialList);
 		String reVal = stock.StockTransferDeliveryIssue(params);
 
 		// 결과 만들기 예.
