@@ -136,6 +136,14 @@ public interface MSvcLogApiMapper {
 
 	List<EgovMap> getASRequestCustList(Map<String, Object> params);
 
+	void upDateHsFailJobResultM(Map<String, Object> params);
+
+	void upDatetAsFailJobResultM(Map<String, Object> params);
+
+	void upDateInstallFailJobResultM(Map<String, Object> params);
+
+	void insertInsFailServiceLog(Map<String, Object> params);
+
 
 	
 }

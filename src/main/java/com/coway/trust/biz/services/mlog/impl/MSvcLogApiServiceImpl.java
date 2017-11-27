@@ -426,7 +426,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
 	@Override
 	public void saveInsFailServiceLogs(Map<String, Object> params) {
-		MSvcLogApiMapper.insertInssFailServiceLog(params);	
+		MSvcLogApiMapper.insertInsFailServiceLog(params);	
 		
 	}
 
@@ -554,6 +554,24 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	public List<EgovMap> getASRequestCustList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.getASRequestCustList(params);
+	}
+
+	@Override
+	public void upDateHsFailJobResultM(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.upDateHsFailJobResultM(params);
+	}
+
+	@Override
+	public void upDatetAsFailJobResultM(Map<String, Object> params) {
+		MSvcLogApiMapper.upDatetAsFailJobResultM(params);
+		
+	}
+
+	@Override
+	public void upDateInstallFailJobResultM(Map<String, Object> params) {
+		MSvcLogApiMapper.upDateInstallFailJobResultM(params);
+		
 	}
 	
 	
