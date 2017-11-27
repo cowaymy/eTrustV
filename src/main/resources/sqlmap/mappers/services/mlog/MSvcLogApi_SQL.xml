@@ -68,7 +68,6 @@
 						  , '1' as service_State
 						  , '1' as customer_Gps
 						  , '1' as postcode
-						  , '1' as image_Url
 						  , '1' as instruction
 						  , '1' as monthly_RentalFees
 						  , '1' as registrationFees
@@ -373,121 +372,226 @@ and cust.cust_id = custCnt.cust_id
 		 WHERE rn = 1
  -->
 
-				select  *
-				from (
-                    SELECT  ROW_NUMBER() OVER(PARTITION BY SAL0001D.SALES_ORD_NO ,SVC0001D.AS_NO  ORDER BY SVC0004D.AS_RESULT_ID DESC) rn,
-                            SAL0001D.SALES_ORD_NO AS sales_Order_No,
-                            SVC0001D.AS_NO AS service_No,
-                            SAL0029D.NAME AS cust_Name,
-                            SVC0001D.AS_STUS_ID AS job_Status,
-                            to_char(SVC0001D.AS_APPNT_DT,'YYYYMMDD') AS appointment_Date,
-                            <!-- replace(substr(SVC0001D.AS_APPNT_TM, 0,5 ),':')  AS appointment_Time, -->
-                           case when SVC0001D.AS_APPNT_TM is null
-			                    then decode(SVC0001D.AS_SESION_CODE, 'M', '1000','A','1400','E','1900','O','2000')
-			                    else  to_char(REPLACE (SUBSTR (SVC0001D.AS_APPNT_TM, 0, 5), ':'))
-			                 end appointment_Time,
-                            to_char(SVC0001D.AS_APPNT_DT,'YYYY') AS plan_Year,
-                            to_char(SVC0001D.AS_APPNT_DT,'MM') AS plan_Month,
-                            SVC0001D.AS_SESION_CODE AS job_Session,
-                            SAL0001D.CUST_ID AS customer_Id,
-                            SAL0023D.ADDR_DTL AS install_Address,
-                            SAL0027D.TEL_M1 AS handphone_Tel,
-                            SAL0027D.TEL_R AS home_Tel,
-                            SAL0027D.TEL_O AS office_Tel,
-                            SAL0029D.EMAIL AS mail_Address,
-                            SAL0029D.CUST_VA_NO AS customer_Va_No,
-                            SAL0024D.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
-                            '' AS image_Url,
-                            SYS0026M.STK_DESC AS product_Name,
-                            SYS0026M.STK_CODE AS product_Code,
-                            FN_GET_COMMCD(10, SAL0001D.APP_TYPE_ID) as app_Type,
-                             (select PROMO_DESC
-                               from SAL0017D
-                               where 1=1
-                               and promo_id =  SAL0001D.PROMO_ID)  AS sales_Promotion,
-                            FN_GET_COMMCD(24, SVC0001D.AS_REQSTER_TYPE_ID) as requestor,
-                            SVC0001D.AS_REM_REQSTER_CNTC AS requestor_Contact,
-                            SAL0095D.SRV_DUR AS contract_Duration,
-                          SAL0001D.MTH_RENT_AMT AS monthly_Rental_Fees,
-                               SAL0001D.TOT_AMT AS registration_Fees,
-                            SAL0022D.CUST_ACC_BANK_ID AS bank_Code,
-                            SAL0022D.CUST_ACC_NO AS card_Account_No,
-                            SAL0047D.SIRIM_NO AS sirim_No,
-                            SAL0047D.SERIAL_NO AS serial_No,
-                            to_char(SAL0095D.SRV_EXPR_DT,'YYYYMMDD') AS Membership_Contract_Expiry,
-                            SAL0071D.STUS_CODE_ID AS rental_Status,
-                            SYS0005M.CODE AS dsc_Code,
-                            to_char(SAL0047D.INSTALL_DT,'YYYYMMDD') AS installation_Date,
-                            SVC0004D.AS_WORKMNSH AS labour_Charge,
-                            SVC0004D.AS_DEFECT_TYPE_ID AS defect_Type_Id,
-                            SVC0004D.AS_DEFECT_GRP_ID AS defect_Group_Id,
-                            SVC0004D.AS_DEFECT_ID AS defect_Id,
-                            SVC0004D.AS_DEFECT_PART_GRP_ID AS defect_Part_Group_Id,
-                            SVC0004D.AS_DEFECT_PART_ID AS defect_Part_Id,
-                            SVC0004D.AS_DEFECT_DTL_RESN_ID AS defect_Detail_Reason_Id,
-                            SVC0004D.AS_SLUTN_RESN_ID AS solution_Reason_Id,
-                            SVC0004D.AS_RESULT_REM AS result_Remark,
-                            SAL0029D.NAME AS result_Cust_Name,
-                            SVC0004D.AS_RESULT_MOBILE_ID AS resultIc_Mobile_No,
-                            SVC0004D.AS_MALFUNC_ID AS malfunction_Code,
-                            SVC0004D.AS_MALFUNC_RESN_ID AS malfunction_Reason_Code,
-                            SVC0004D.AS_FAIL_RESN_ID AS failReason_Code,
-                            ORG0001D.MEM_CODE AS settled_By,
-                            to_char(SVC0004D.AS_SETL_DT,'YYYYMMDD') AS settled_Date,
-                            REPLACE (SUBSTR (SVC0004D.AS_SETL_TM, 0, 5), ':') AS settled_Time,
-                            SVC0004D.AS_REN_COLCT_ID AS ren_Collection_Id,
-                            SVC0004D.AS_RESULT_NO AS asr_No,
-                            SVC0004D.AS_FILTER_AMT AS filter_Amount,
-                            SVC0004D.AS_ACSRS_AMT AS accessories_Amount,
-                            SVC0004D.AS_TOT_AMT AS total_Amount,
-			               to_char(SVC0004D.IN_HUSE_REPAIR_REM) AS in_House_Repair_Remark,
-			               to_char(SVC0004D.IN_HUSE_REPAIR_REPLACE_YN)  AS in_House_Repair_Replacement_YN,
-			               TO_CHAR(SVC0004D.IN_HUSE_REPAIR_PROMIS_DT, 'YYYYMMDD')   AS in_House_Repair_Promised_Date,
-			               SVC0004D.IN_HUSE_REPAIR_GRP_CODE AS inHouseRepairProductGroupCode,
-			               to_char(SVC0004D.IN_HUSE_REPAIR_PRODUCT_CODE) AS in_House_Repair_Product_Code,
-			               to_char(SVC0004D.IN_HUSE_REPAIR_SERIAL_NO) AS in_House_Repair_Serial_No  ,
-			               to_char(SVC0004D.RESULT_REP_EMAIL_NO) AS result_Report_Email_No,
-			               to_char(SVC0004D.RESULT_ACEPT_NAME) AS result_Acceptance_Name
-                FROM    SAL0001D,
-                            SAL0002D,
-                            SAL0022D,
-                            SAL0023D,
-                            SAL0024D,
-                            SAL0027D,
-                            SAL0029D,
-                            SAL0045D,
-                            SAL0047D,
-                            SAL0071D,
-                            SAL0095D,
-                            SVC0001D,
-                            SVC0004D,
-                            ORG0001D,
-                            SYS0005M,
-                            SYS0026M
-				  WHERE SVC0001D.AS_MEM_ID = ORG0001D.MEM_ID
-					AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID
-					AND SAL0001D.SALES_ORD_ID = SVC0001D.AS_SO_ID
-					AND ORG0001D.MEM_CODE = #{userId} 
-					AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID
-					and SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
-					AND SAL0001D.CUST_ADD_ID = SAL0023D.CUST_ADD_ID
-					AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
-					AND SAL0001D.CUST_ID = SAL0024D.CUST_BILL_CUST_ID(+)
-					AND SAL0001D.CUST_ID = SAL0027D.CUST_ID
-					AND SAL0001D.CUST_CNT_ID = SAL0027D.CUST_CNTC_ID
-					AND SAL0001D.CUST_ID = SAL0029D.CUST_ID
-					AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID
-					AND SAL0045D.INSTALL_ID = SAL0047D.ENTRY_ID(+)
-					<!-- AND ORG0001D.MEM_ID = SAL0047D.CT_ID -->
-					AND SAL0071D.SALES_ORD_ID(+) = SAL0001D.SALES_ORD_ID
-					AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID
-					AND SAL0095D.SRV_MEM_SALES_MEM_ID=0<!-- MUST CHECK -->
-					AND SVC0001D.AS_ID = SVC0004D.AS_ENTRY_ID(+)
-					AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
-					AND SAL0002D.ITM_STK_ID = SYS0026M.STK_ID
-				    AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
-				                                                     AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
-				       )
+				SELECT *
+				  FROM (
+							SELECT ROW_NUMBER() OVER(PARTITION BY sales_Order_No,service_No ORDER BY Membership_Contract_Expiry DESC) RNN
+							      ,sales_Order_No, customer_Id, app_Type,sales_Promotion, monthly_Rental_Fees,registration_Fees<!--sal0001d-->
+							      <!--sal0002d empty-->
+							      ,bank_Code, card_Account_No <!--sal0022d  -->
+							      , install_Address<!--sal0023d -->
+							      ,customer_Jom_Pay_Ref_No<!--sal0024d -->
+							      , handphone_Tel, home_Tel ,office_Tel<!--sal0027d -->
+							      , cust_Name,result_Cust_Name ,  mail_Address  , customer_Va_No<!-- sal0029d -->
+							      <!--sal0045d empty -->
+							      , sirim_No   , serial_No  , installation_Date<!--sal0047d -->
+							      , rental_Status <!--sal0071d -->
+							      , contract_Duration ,Membership_Contract_Expiry<!--sal0095d -->
+							      ,service_No, job_Status, appointment_Date      , appointment_Time      , plan_Year      , plan_Month      , job_Session, requestor_Contact, requestor<!--svc0001d -->
+							      ,settled_By <!--org0001d -->
+							      <!--svc0004d s -->
+							      , labour_Charge, defect_Type_Id,defect_Group_Id ,defect_Id ,defect_Part_Group_Id ,defect_Part_Id ,defect_Detail_Reason_Id ,solution_Reason_Id ,result_Remark
+							      , resultIc_Mobile_No ,malfunction_Code ,malfunction_Reason_Code ,failReason_Code
+							      ,settled_Date
+							      ,settled_Time
+							      ,ren_Collection_Id
+							      ,asr_No
+							      ,filter_Amount,accessories_Amount
+							      ,total_Amount
+							      ,in_House_Repair_Remark
+							      ,in_House_Repair_Replacement_YN
+							      ,in_House_Repair_Promised_Date
+							      ,inHouseRepairProductGroupCode
+							      ,in_House_Repair_Product_Code
+							      ,in_House_Repair_Serial_No
+							      ,result_Report_Email_No
+							      ,result_Acceptance_Name
+							      <!--svc0004d e -->     
+							      ,product_Name      , product_Code   , dsc_Code <!--sys-->
+							FROM   (SELECT Row_number() 
+							                 over( 
+							                   PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no 
+							                   ORDER BY svc0004d.as_result_id DESC)               rn, 
+							               sal0001d.sales_ord_no                                  AS 
+							               sales_Order_No 
+							                      , 
+							               svc0001d.as_no 
+							                      AS service_No, 
+							               sal0029d.name                                          AS 
+							               cust_Name, 
+							               svc0001d.as_stus_id                                    AS 
+							               job_Status, 
+							               To_char(svc0001d.as_appnt_dt, 'YYYYMMDD')              AS 
+							                      appointment_Date, 
+							               CASE 
+							                 WHEN svc0001d.as_appnt_tm IS NULL THEN 
+							                 Decode(svc0001d.as_sesion_code, 'M', '1000', 
+							                                                 'A', '1400', 
+							                                                 'E', '1900', 
+							                                                 'O', '2000') 
+							                 ELSE To_char(Replace (Substr (svc0001d.as_appnt_tm, 0, 5), ':') 
+							                      ) 
+							               END 
+							               appointment_Time, 
+							               To_char(svc0001d.as_appnt_dt, 'YYYY')                  AS 
+							               plan_Year, 
+							               To_char(svc0001d.as_appnt_dt, 'MM')                    AS 
+							               plan_Month, 
+							               svc0001d.as_sesion_code                                AS 
+							               job_Session, 
+							               sal0001d.cust_id                                       AS 
+							               customer_Id, 
+							               sal0023d.addr_dtl                                      AS 
+							                      install_Address, 
+							               sal0027d.tel_m1                                        AS 
+							               handphone_Tel, 
+							               sal0027d.tel_r                                         AS 
+							               home_Tel, 
+							               sal0027d.tel_o                                         AS 
+							               office_Tel, 
+							               sal0029d.email                                         AS 
+							               mail_Address, 
+							               sal0029d.cust_va_no                                    AS 
+							               customer_Va_No 
+							                      , 
+							               sal0024d.cust_bill_pay_ref_no1 
+							                      AS customer_Jom_Pay_Ref_No, 
+							               sys0026m.stk_desc                                      AS 
+							               product_Name, 
+							               sys0026m.stk_code                                      AS 
+							               product_Code, 
+							               Fn_get_commcd(10, sal0001d.app_type_id)                AS 
+							               app_Type, 
+							               (SELECT promo_desc 
+							                FROM   sal0017d 
+							                WHERE  1 = 1 
+							                       AND promo_id = sal0001d.promo_id)              AS 
+							                      sales_Promotion, 
+							               Fn_get_commcd(24, svc0001d.as_reqster_type_id)         AS 
+							               requestor, 
+							               svc0001d.as_rem_reqster_cntc                           AS 
+							                      requestor_Contact, 
+							               sal0095d.srv_dur                                       AS 
+							                      contract_Duration, 
+							               sal0001d.mth_rent_amt                                  AS 
+							                      monthly_Rental_Fees, 
+							               sal0001d.tot_amt                                       AS 
+							                      registration_Fees, 
+							               sal0022d.cust_acc_bank_id                              AS 
+							               bank_Code, 
+							               sal0022d.cust_acc_no                                   AS 
+							                      card_Account_No, 
+							               sal0047d.sirim_no                                      AS 
+							               sirim_No, 
+							               sal0047d.serial_no                                     AS 
+							               serial_No, 
+							               To_char(sal0095d.srv_expr_dt, 'YYYYMMDD')              AS 
+							                      Membership_Contract_Expiry, 
+							               sal0071d.stus_code_id                                  AS 
+							               rental_Status, 
+							               sys0005m.code                                          AS 
+							               dsc_Code, 
+							               To_char(sal0047d.install_dt, 'YYYYMMDD')               AS 
+							                      installation_Date, 
+							               svc0004d.as_workmnsh                                   AS 
+							               labour_Charge, 
+							               svc0004d.as_defect_type_id                             AS 
+							               defect_Type_Id 
+							                      , 
+							               svc0004d.as_defect_grp_id 
+							                      AS defect_Group_Id, 
+							               svc0004d.as_defect_id                                  AS 
+							               defect_Id, 
+							               svc0004d.as_defect_part_grp_id                         AS 
+							                      defect_Part_Group_Id, 
+							               svc0004d.as_defect_part_id                             AS 
+							               defect_Part_Id 
+							                      , 
+							               svc0004d.as_defect_dtl_resn_id 
+							                      AS defect_Detail_Reason_Id, 
+							               svc0004d.as_slutn_resn_id                              AS 
+							                      solution_Reason_Id, 
+							               svc0004d.as_result_rem                                 AS 
+							               result_Remark, 
+							               sal0029d.name                                          AS 
+							                      result_Cust_Name, 
+							               svc0004d.as_result_mobile_id                           AS 
+							                      resultIc_Mobile_No, 
+							               svc0004d.as_malfunc_id                                 AS 
+							                      malfunction_Code, 
+							               svc0004d.as_malfunc_resn_id                            AS 
+							                      malfunction_Reason_Code, 
+							               svc0004d.as_fail_resn_id                               AS 
+							                      failReason_Code, 
+							               org0001d.mem_code                                      AS 
+							               settled_By, 
+							               To_char(svc0004d.as_setl_dt, 'YYYYMMDD')               AS 
+							               settled_Date, 
+							               Replace (Substr (svc0004d.as_setl_tm, 0, 5), ':')      AS 
+							               settled_Time, 
+							               svc0004d.as_ren_colct_id                               AS 
+							                      ren_Collection_Id, 
+							               svc0004d.as_result_no                                  AS asr_No, 
+							               svc0004d.as_filter_amt                                 AS 
+							               filter_Amount, 
+							               svc0004d.as_acsrs_amt                                  AS 
+							                      accessories_Amount, 
+							               svc0004d.as_tot_amt                                    AS 
+							               total_Amount, 
+							               To_char(svc0004d.in_huse_repair_rem)                   AS 
+							                      in_House_Repair_Remark, 
+							               To_char(svc0004d.in_huse_repair_replace_yn)            AS 
+							                      in_House_Repair_Replacement_YN, 
+							               To_char(svc0004d.in_huse_repair_promis_dt, 'YYYYMMDD') AS 
+							               in_House_Repair_Promised_Date, 
+							               svc0004d.in_huse_repair_grp_code                       AS 
+							                      inHouseRepairProductGroupCode, 
+							               To_char(svc0004d.in_huse_repair_product_code)          AS 
+							                      in_House_Repair_Product_Code, 
+							               To_char(svc0004d.in_huse_repair_serial_no)             AS 
+							                      in_House_Repair_Serial_No, 
+							               To_char(svc0004d.result_rep_email_no)                  AS 
+							                      result_Report_Email_No, 
+							               To_char(svc0004d.result_acept_name)                    AS 
+							                      result_Acceptance_Name 
+							        FROM   sal0001d, 
+							               sal0002d, 
+							               sal0022d, 
+							               sal0023d, 
+							               sal0024d, 
+							               sal0027d, 
+							               sal0029d, 
+							               sal0045d, 
+							               sal0047d, 
+							               sal0071d, 
+							               sal0095d,                
+							               svc0001d, 
+							               svc0004d, 
+							               org0001d, 
+							               sys0005m, 
+							               sys0026m                
+							        WHERE  svc0001d.as_mem_id = org0001d.mem_id 
+							               AND sal0001d.sales_ord_id = sal0002d.sales_ord_id 
+							               AND sal0001d.sales_ord_id = svc0001d.as_so_id                 
+							               AND sal0001d.sales_ord_id = sal0002d.sales_ord_id 
+							               AND sal0001d.cust_id = sal0022d.cust_id(+) 
+							               AND sal0001d.cust_add_id = sal0023d.cust_add_id 
+							               AND sal0001d.cust_bill_id = sal0024d.cust_bill_id(+) 
+							               AND sal0001d.cust_id = sal0024d.cust_bill_cust_id(+) 
+							               AND sal0001d.cust_id = sal0027d.cust_id 
+							               AND sal0001d.cust_cnt_id = sal0027d.cust_cntc_id 
+							               AND sal0001d.cust_id = sal0029d.cust_id 
+							               AND sal0001d.sales_ord_id = sal0045d.sales_ord_id 
+							               AND sal0045d.install_id = sal0047d.entry_id(+) 
+							               AND sal0071d.sales_ord_id(+) = sal0001d.sales_ord_id 
+							               AND sal0001d.sales_ord_id = sal0095d.srv_sales_ord_id 
+							               --AND sal0095d.srv_mem_sales_mem_id = 0 
+							               AND svc0001d.as_id = svc0004d.as_entry_id(+) 
+							               AND org0001d.brnch = sys0005m.brnch_id 
+							               AND sal0002d.itm_stk_id = sys0026m.stk_id 					
+			                    AND ORG0001D.MEM_CODE = #{userId} 					
+							    AND   SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
+							                                                     AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
+							       )
 				where 1=1
 				and rn = 1
 
@@ -820,90 +924,112 @@ and cust.cust_id = custCnt.cust_id
 
 
     <select id="getInstallationJobList" parameterType="Map" resultType="egovMap">
-    SELECT
-            SAL0001D.SALES_ORD_NO           AS sales_Order_No,
-            SAL0046D.INSTALL_ENTRY_NO       AS service_No,
-            SAL0029D.NAME                   AS cust_Name,
-            SAL0046D.STUS_CODE_ID           AS job_Status,
-            TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
-	       case when SAL0046D.APPNT_TM is null
-	              then decode(SAL0046D.SESION_CODE, 'M', '1000','A','1400','E','1900','O','2000')
-	             else  to_char(REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':'))
-	       end appointment_Time,            
-            TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY') as   plan_Year,
-            TO_CHAR (SAL0046D.INSTALL_DT, 'MM') as plan_Month,
-            SAL0046D.SESION_CODE            AS job_Session,
-            TO_CHAR(SAL0095D.SRV_EXPR_DT,'YYYYMMDD')            AS expiry_Date,
-            to_char(SAL0029D.TYPE_ID)       AS customer_Type,
-            SAL0001D.CUST_ID                AS customer_Id,
-            SYS0064M.POSTCODE               AS postcode,
-            SYS0064M.STATE                  AS serviceState,
-            SAL0023D.ADDR_DTL               AS install_Address,
-            SAL0027D.TEL_M1                 AS handphone_Tel,
-            SAL0027D.TEL_R                  AS home_Tel,
-            SAL0027D.TEL_O                  AS office_Tel,
-            SAL0029D.EMAIL                  AS mail_Address,
-            SAL0029D.CUST_VA_NO             AS customer_Va_No,
-            SAL0024D.CUST_BILL_PAY_REF_NO1  AS customer_Jom_Pay_Ref_No,
-            SYS0026M.STK_DESC               AS product_Name,
-            SYS0026M.STK_CODE               AS product_Code,
-            FN_GET_COMMCD(10,SAL0001D.APP_TYPE_ID)            AS app_Type,
-            SAL0001D.PROMO_ID               AS sales_Promotion,
-            SAL0095D.SRV_DUR                AS contract_Duration,
-            SAL0001D.MTH_RENT_AMT           AS monthly_Rental_Fees,
-            SAL0001D.TOT_AMT                AS registration_Fees,
-            SAL0022D.CUST_ACC_BANK_ID       AS bank_Code,
-            SAL0022D.CUST_ACC_NO            AS card_Account_No,
-            SYS0005M.CODE                   AS dsc_Code,
-            SAL0047D.SIRIM_NO               AS sirim_No,
-            SAL0047D.SERIAL_NO              AS serial_No,
-           ORG0001DA.NAME                  AS hp_Name,
-           ORG0001DA.TEL_MOBILE            AS hp_Tel,
-            ORG0001DA.NAME                  AS smName,
-            ORG0001DA.TEL_MOBILE            AS smTel,
-            ORG0001DA.NAME                  AS hmName,
-           ORG0001DA.TEL_MOBILE           AS hmTel,
-            ORG0001D.MEM_CODE               AS settled_By,
-            TO_CHAR(SAL0047D.INSTALL_DT,'YYYYMMDD')             AS settled_Date
-            FROM
-           ORG0001D,
-           ORG0001D ORG0001DA,
-            ORG0005D,
-            SAL0001D,
-            SAL0002D,
-            SAL0022D,
-            SAL0023D,
-            SAL0024D,
-            SAL0027D,
-            SAL0029D,
-            SAL0045D,
-            SAL0046D,
-            SAL0047D,
-            SAL0095D,
-            SYS0005M,
-            SYS0026M,
-            SYS0064M
-            WHERE SAL0001D.CUST_ID          = SAL0022D.CUST_ID(+)
-            AND   SAL0001D.SALES_ORD_ID     = SAL0002D.SALES_ORD_ID
-            AND   SAL0001D.CUST_ADD_ID      = SAL0023D.CUST_ADD_ID
-            AND   SAL0001D.CUST_BILL_ID     = SAL0024D.CUST_BILL_ID(+)
-            AND   SAL0001D.CUST_ID          = SAL0027D.CUST_ID
-            AND   SAL0001D.CUST_CNT_ID      = SAL0027D.CUST_CNTC_ID
-            AND   SAL0001D.CUST_ID          = SAL0029D.CUST_ID
-            AND   SAL0001D.SALES_ORD_ID     = SAL0095D.SRV_SALES_ORD_ID(+)
-            AND   SAL0002D.ITM_STK_ID       = SYS0026M.STK_ID
-            AND   SAL0001D.SALES_ORD_ID     = SAL0046D.SALES_ORD_ID
-            AND   ORG0001D.MEM_ID           = SAL0046D.CT_ID
-            AND   SAL0001D.SALES_ORD_ID     = SAL0045D.SALES_ORD_ID(+)
-            AND   SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
-            AND   ORG0001DA.MEM_ID          = SAL0001D.MEM_ID
-            AND   ORG0005D.MEM_ID           = SAL0001D.MEM_ID
-            AND   ORG0005D.MEM_ID           = ORG0001DA.MEM_ID
-            AND   ORG0001D.BRNCH            = SYS0005M.BRNCH_ID
-            AND   SAL0023D.AREA_ID          = SYS0064M.AREA_ID(+)
-            AND   SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
+				SELECT * FROM (
+				SELECT ROW_NUMBER() OVER(PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT DESC) rnum,
+				        <!-- sal0046d s -->
+				       SAL0046D.INSTALL_ENTRY_NO AS service_No,       
+				       SAL0046D.STUS_CODE_ID AS job_Status,
+				       TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
+				       CASE
+				          WHEN SAL0046D.APPNT_TM IS NULL
+				          THEN
+				             DECODE (SAL0046D.SESION_CODE,
+				                     'M', '1000',
+				                     'A', '1400',
+				                     'E', '1900',
+				                     'O', '2000')
+				          ELSE
+				             TO_CHAR (REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':'))
+				       END
+				          appointment_Time,
+				       TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY') AS plan_Year,
+				       TO_CHAR (SAL0046D.INSTALL_DT, 'MM') AS plan_Month,
+				       SAL0046D.SESION_CODE AS job_Session,
+				       <!--sal0046d e-->
+				       <!--org0001d s-->
+				       ORG0001D.NAME AS hp_Name,
+				       ORG0001D.TEL_MOBILE AS hp_Tel,
+				       ORG0001D.NAME AS smName,
+				       ORG0001D.TEL_MOBILE AS smTel,
+				       ORG0001D.NAME AS hmName,
+				       ORG0001D.TEL_MOBILE AS hmTel,
+				       ORG0001D.MEM_CODE AS settled_By,
+				       <!--org0001d e-->
+				       <!--SAL0001D s-->
+				       SAL0001D.SALES_ORD_NO AS sales_Order_No,
+				       SAL0001D.CUST_ID AS customer_Id,
+				       FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
+				       SAL0001D.PROMO_ID AS sales_Promotion,
+				       SAL0001D.MTH_RENT_AMT AS monthly_Rental_Fees,
+				       SAL0001D.TOT_AMT AS registration_Fees,
+				       <!--SAL0001D e-->
+				       <!--ORG0005D empty-->
+				       <!--SAL0002D empty-->
+				       <!--SAL0022D d-->
+				       SAL0022D.CUST_ACC_BANK_ID AS bank_Code,
+				       SAL0022D.CUST_ACC_NO AS card_Account_No,
+				       <!--SAL0022D e-->
+				       SAL0023D.ADDR_DTL AS install_Address, --SAL0023D--
+				       SAL0024D.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No, --SAL0024D--
+				       <!--SAL0027D s-->
+				       SAL0027D.TEL_M1 AS handphone_Tel,
+				       SAL0027D.TEL_R AS home_Tel,
+				       SAL0027D.TEL_O AS office_Tel,
+				       <!--SAL0027D e-->
+				       <!--SAL0029D s-->
+				       SAL0029D.NAME AS cust_Name,
+				       TO_CHAR (SAL0029D.TYPE_ID) AS customer_Type,
+				       SAL0029D.EMAIL AS mail_Address,
+				       SAL0029D.CUST_VA_NO AS customer_Va_No,
+				       <!--SAL0029D e-->
+				       <!--SAL0045D empty-->
+				       <!--SAL0047D s-->
+				       SAL0047D.SIRIM_NO AS sirim_No,
+				       SAL0047D.SERIAL_NO AS serial_No,       
+				       TO_CHAR (SAL0047D.INSTALL_DT, 'YYYYMMDD') AS settled_Date,
+				       <!--SAL0047D e-->
+				       <!--SAL0095D s-->
+				       TO_CHAR (SAL0095D.SRV_EXPR_DT, 'YYYYMMDD') AS expiry_Date,
+				       SAL0095D.SRV_DUR AS contract_Duration,       
+				       <!--SAL0095D e-->
+				       SYS0064M.POSTCODE AS postcode,
+				       SYS0064M.STATE AS serviceState
+				       SYS0026M.STK_DESC AS product_Name,
+				       SYS0026M.STK_CODE AS product_Code,
+				       SYS0005M.CODE AS dsc_Code
+				FROM SAL0046D, ORG0001D,SAL0001D
+				    ,ORG0005D    
+				      ,SAL0002D
+				      ,SAL0022D
+				      ,SAL0023D
+				      ,SAL0024D
+				      ,SAL0027D
+				      ,SAL0029D
+				      ,SAL0045D      
+				      ,SAL0047D      
+				      ,SAL0095D
+				      ,SYS0005M
+				      ,SYS0026M
+				      ,SYS0064M      
+				WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
+				AND SAL0001D.SALES_ORD_ID = SAL0046D.SALES_ORD_ID
+				AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
+				AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID(+)
+				AND SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
+				AND SAL0001D.CUST_ADD_ID = SAL0023D.CUST_ADD_ID(+)
+				AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
+				AND SAL0001D.CUST_ID = SAL0027D.CUST_ID(+)
+				AND SAL0001D.CUST_CNT_ID = SAL0027D.CUST_CNTC_ID(+)
+				AND SAL0001D.CUST_ID = SAL0029D.CUST_ID(+)
+				AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID(+)
+				AND SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
+				AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID(+)
+				AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
+				AND SAL0002D.ITM_STK_ID = SYS0026M.STK_ID(+)
+				AND SAL0023D.AREA_ID = SYS0064M.AREA_ID(+)
+                AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
                                                  AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
-            AND ORG0001D.mem_code = #{userId}
+                AND ORG0001D.mem_code = #{userId}
 
             <!--  SELECT
             SAL0001D.SALES_ORD_NO           AS sales_Order_No,
@@ -1088,7 +1214,7 @@ and cust.cust_id = custCnt.cust_id
 										INNER JOIN SAL0087D S87A ON S87A.SRV_CONFIG_ID = S90A.SRV_CONFIG_ID
 										INNER JOIN SYS0026M S26B ON S26B.STK_ID = S87A.SRV_FILTER_STK_ID
 										INNER JOIN LOG0043M L43A ON L43A.MATRL_NO = S26A.STK_CODE
-										LEFT OUTER JOIN LOG0044D L44A ON L44A.BOM = L43A.BOM AND L44A.BOM_COMPNT = S26B.STK_CODE
+										LEFT OUTER JOIN LOG0044D L44A ON L44A.BOM = L43A.BOM <!-- AND L44A.BOM_COMPNT = S26B.STK_CODE -->
 										INNER JOIN SVC0008D S08A ON S08A.SALES_ORD_ID = S01A.SALES_ORD_ID
 										LEFT  JOIN SVC0006D S06A ON S06A.SCHDUL_ID = S08A.SCHDUL_ID
 										LEFT  JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID
@@ -2678,13 +2804,13 @@ and cust.cust_id = custCnt.cust_id
 					SELECT
 					 to_char(B.MEM_CODE) as MEM_CODE
 					 , to_char(F.NAME) AS cust_Name
-					 , to_char(A.AS_NO) AS request_No
-					 , TO_CHAR(A.AS_REQST_DT, 'YYYYMMDD') AS request_Date
+					 , to_char(A.AS_NO) AS as_request_No
+					 , TO_CHAR(A.AS_REQST_DT, 'YYYYMMDD') AS as_request_Date
 					 , to_char(C.SALES_ORD_NO) AS sales_Order_No
-					 , decode(A.AS_STUS_ID, '1', 'Active', '4', 'Completed', '21', 'Failed', '10', 'Cancelled', A.AS_STUS_ID) AS job_Status
+					 , decode(A.AS_STUS_ID, '1', 'Active', '4', 'Completed', '21', 'Failed', '10', 'Cancelled', A.AS_STUS_ID) AS as_Request_Status
 					 , to_char(E.STK_DESC) AS product_Name
 					 , to_char(E.STK_CODE) AS product_Code
-					 , to_char(C.CUST_ID) AS cust_Id
+					 , to_char(C.CUST_ID) AS customer_Id
 					FROM
 					 SVC0001D A
 					 , ORG0001D B
