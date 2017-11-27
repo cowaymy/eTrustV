@@ -845,7 +845,6 @@ and cust.cust_id = custCnt.cust_id
             SAL0029D.EMAIL                  AS mail_Address,
             SAL0029D.CUST_VA_NO             AS customer_Va_No,
             SAL0024D.CUST_BILL_PAY_REF_NO1  AS customer_Jom_Pay_Ref_No,
---            SYS0027M.IMG_URL                AS image_Url,
             SYS0026M.STK_DESC               AS product_Name,
             SYS0026M.STK_CODE               AS product_Code,
             FN_GET_COMMCD(10,SAL0001D.APP_TYPE_ID)            AS app_Type,
@@ -883,7 +882,6 @@ and cust.cust_id = custCnt.cust_id
             SAL0095D,
             SYS0005M,
             SYS0026M,
---            SYS0027M,
             SYS0064M
             WHERE SAL0001D.CUST_ID          = SAL0022D.CUST_ID(+)
             AND   SAL0001D.SALES_ORD_ID     = SAL0002D.SALES_ORD_ID
@@ -894,7 +892,6 @@ and cust.cust_id = custCnt.cust_id
             AND   SAL0001D.CUST_ID          = SAL0029D.CUST_ID
             AND   SAL0001D.SALES_ORD_ID     = SAL0095D.SRV_SALES_ORD_ID(+)
             AND   SAL0002D.ITM_STK_ID       = SYS0026M.STK_ID
---            AND   SYS0026M.STK_ID           = SYS0027M.STK_ID
             AND   SAL0001D.SALES_ORD_ID     = SAL0046D.SALES_ORD_ID
             AND   ORG0001D.MEM_ID           = SAL0046D.CT_ID
             AND   SAL0001D.SALES_ORD_ID     = SAL0045D.SALES_ORD_ID(+)
