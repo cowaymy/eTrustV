@@ -539,7 +539,6 @@
 							<exclude>**/com/coway/trust/cmmn/**/*.java</exclude>
 							<exclude>**/com/coway/trust/config/**/*.java</exclude>
 							<exclude>**/com/coway/trust/util/**/*.java</exclude>
-							<exclude>**/com/coway/trust/api/config/**/*.java</exclude>
 							<exclude>**/com/coway/trust/**/sample/**/*.java</exclude>
 						</excludes>
 					</configuration>

@@ -53,13 +53,13 @@ public class SwaggerConfig {
 		return apiInfo;
 	}
 
-	private Predicate<String> getCallcenterPaths() {
-		return or(containsPattern(SLASH + CALLCENTER + PATH_API + "/*"));
-	}
-
-	private Predicate<String> getMobilePaths() {
-		return or(containsPattern(SLASH + MOBILE + PATH_API + "/*"));
-	}
+//	private Predicate<String> getCallcenterPaths() {
+//		return or(containsPattern(SLASH + CALLCENTER + PATH_API + "/*"));
+//	}
+//
+//	private Predicate<String> getMobilePaths() {
+//		return or(containsPattern(SLASH + MOBILE + PATH_API + "/*"));
+//	}
 
 	private Predicate<String> excludePath(final String path) {
 		return new Predicate<String>() {
