@@ -2385,7 +2385,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                            SET SRV_REM = #{remark},
                                SRV_PREV_DT = to_date(#{settleDate}, 'DD/MM/YYYY'),
                                SRV_BS_WEEK = #{srvBsWeek},
-                               SRV_CRT_USER_ID = #{hidCodyId},
+                               SRV_CODY_ID = #{hidCodyId}, 
                                SRV_UPD_DT = sysdate
                          WHERE   SRV_CONFIG_ID = #{srvConfigId}
 
