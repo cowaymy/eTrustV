@@ -47,17 +47,20 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 
 	/**
 	 * 파일을 Upload 처리한다.
+	 * 
 	 * @param request
 	 * @param uploadPath
 	 * @param subPath
 	 * @param maxFileSize
-	 * @param addExtension : application-xxx.properties 의 web.resource.upload.file(resource 접근 가능 파일 경로) 를 참조한 경우 확장자가 있어야지만 바로 열 수 있다.
+	 * @param addExtension
+	 *            : application-xxx.properties 의 web.resource.upload.file(resource 접근 가능 파일 경로) 를 참조한 경우 확장자가 있어야지만 바로 열
+	 *            수 있다.
 	 * @return
 	 * @throws Exception
 	 */
 	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String uploadPath, String subPath,
 			final long maxFileSize, boolean addExtension) throws Exception {
-		List<EgovFormBasedFileVo> list = new ArrayList<EgovFormBasedFileVo>();
+		List<EgovFormBasedFileVo> list = new ArrayList<>();
 
 		MultipartHttpServletRequest mptRequest = (MultipartHttpServletRequest) request;
 		Iterator<?> fileIter = mptRequest.getFileNames();
@@ -80,17 +83,17 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 				tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
 			}
 
-			uploadPath = EgovWebUtil.filePathBlackList(uploadPath);
-			subPath = EgovWebUtil.filePathBlackList(subPath);
+			String blackUploadPath = EgovWebUtil.filePathBlackList(uploadPath);
+			String blackSubPath = EgovWebUtil.filePathBlackList(subPath);
 
 			vo.setFileName(tmp);
 			vo.setContentType(mFile.getContentType());
-			vo.setServerPath(uploadPath);
-			vo.setServerSubPath(subPath);
+			vo.setServerPath(blackUploadPath);
+			vo.setServerSubPath(blackSubPath);
 
 			String physicalName = getPhysicalFileName();
 
-			if(addExtension){
+			if (addExtension) {
 				physicalName = physicalName + "." + FilenameUtils.getExtension(tmp).toLowerCase();
 			}
 
