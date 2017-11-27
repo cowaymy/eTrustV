@@ -33,9 +33,10 @@ public class PreconditionException extends RuntimeException {
 		this.exception = e;
 		this.code = code;
 		if (StringUtils.isEmpty(message) && e != null) {
-			message = e.getMessage();
+			this.message = e.getMessage();
+		} else {
+			this.message = message;
 		}
-		this.message = message;
 		this.detailMessage = detailMessage;
 	}
 
