@@ -2742,21 +2742,21 @@ and cust.cust_id = custCnt.cust_id
 
 
 				SELECT
-				   C.MEM_CODE AS USER_ID
-				   , E.NAME AS cust_Name
-				   , E.CUST_ID AS customer_Id
-				   , CASE WHEN E.TYPE_ID = 964 THEN E.NRIC
+				   to_char(C.MEM_CODE) AS USER_ID
+				   , to_char(E.NAME) AS cust_Name
+				   , to_char(E.CUST_ID) AS customer_Id
+				   , CASE WHEN E.TYPE_ID = 964 THEN to_char(E.NRIC)
 				     ELSE ''
 				     END AS cust_Nric_No
-				   , CASE WHEN E.TYPE_ID = 965 THEN E.NRIC
+				   , CASE WHEN E.TYPE_ID = 965 THEN to_char(E.NRIC)
 				     ELSE ''
 				     END AS cust_Company_No
 				   , TO_CHAR(E.TYPE_ID) AS customer_Type
-				   , A.SALES_ORD_NO AS sales_Ord_No
-				   , D.STK_CODE AS product_Code
-				   , D.STK_ID AS product_Id
-				   , D.STK_DESC AS product_Name
-				   , UPPER(J.SERIAL_NO) AS serial_No
+				   , to_char(A.SALES_ORD_NO) AS sales_Ord_No
+				   , to_char(D.STK_CODE) AS product_Code
+				   , to_char(D.STK_ID) AS product_Id
+				   , to_char(D.STK_DESC) AS product_Name
+				   , UPPER(to_char(J.SERIAL_NO)) AS serial_No
 				FROM
 				 SAL0001D A
 				 , SAL0002D B
@@ -2787,19 +2787,38 @@ and cust.cust_id = custCnt.cust_id
                                         FROM ORG0001D
                                         WHERE 1=1
                                         AND MEM_CODE = #{userId}) 
-		       <if test="searchType != null and searchType != '' ">
-		            <if  test="searchType == '1' " >
-		               AND A.SALES_ORD_NO LIKE #{searchKeyword}
-		            </if>
-		            <if test="searchType == '2' ">
-		               AND E.NAME LIKE #{searchKeyword}
-		            </if>
-                    <if test="searchType == '3' ">
+                <choose>
+                   <when test= 'searchType == "1" and searchType != null and searchType != "" '>
+                        AND A.SALES_ORD_NO LIKE '%' ||  (#{searchKeyword})  || '%'
+                   </when>
+                   <when test ='searchType == "2" and searchType != null and searchType != "" '>
+                        AND E.NAME LIKE '%' || (#{searchKeyword}) || '%'
+                   </when>
+                   <when test ='searchType == "3" and searchType != null and searchType != "" '>
+                        AND E.NRIC LIKE '%' || (#{searchKeyword}) || '%'
+                   </when>
+                   <when test ='searchType == "4" and searchType != null and searchType != "" '>
+                        AND E.NAME LIKE '%' || (#{searchKeyword}) || '%'
+                   </when>
+                    <otherwise>
+				     
+				    </otherwise>
+<!--                    <if test="searchType != null and   searchType != '' and  "> 
+                       
+                   </if>
+                    <if test="searchType != null and   searchType != '' and searchType == '2' ">
+                       AND E.NAME LIKE #{searchKeyword}
+                    </if>
+                    <if test="searchType != null and   searchType != '' and searchType == '3' ">
                        AND E.NRIC LIKE #{searchKeyword}
                     </if>
-               </if>
-				
-				
+                    <if test="searchType != null and   searchType != '' and searchType == '4' ">
+                       AND E.NRIC LIKE #{searchKeyword}
+                    </if> -->
+                    
+                    
+                </choose>                                        
+
 
                     
 
