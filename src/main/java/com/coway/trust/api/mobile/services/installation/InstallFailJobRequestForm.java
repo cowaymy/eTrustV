@@ -23,6 +23,20 @@ public class InstallFailJobRequestForm {
 	private String serviceNo;
 	
 	private String failReasonCode; 
+	
+	
+	private String serialNo;
+
+	
+	
+
+	public String getSerialNo() {
+		return serialNo;
+	}
+
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
+	}
 
 	public String getFailReasonCode() {
 		return failReasonCode;
