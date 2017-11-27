@@ -29,4 +29,8 @@ public interface OrderListMapper {
 	List<EgovMap> getApplicationTypeList(Map<String, Object> params);
 	
 	List<EgovMap> getUserCodeList();
+
+	List<EgovMap> getOrgCodeList(Map<String, Object> params);
+	
+	List<EgovMap> getGrpCodeList(Map<String, Object> params);
 }
