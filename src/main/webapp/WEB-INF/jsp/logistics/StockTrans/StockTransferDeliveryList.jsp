@@ -462,24 +462,24 @@ function giFunc(){
 	var check     = AUIGrid.getCheckedRowItems(listGrid);
     var serials   = AUIGrid.getAddedRowItems(serialGrid);
     
-// 	    if (serialchk){
-// 	        for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-// 	            if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
-// 	                Common.alert("Please check the serial.")
-// 	                return false;
-// 	            }
+	    if (serialchk){
+	        for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+	            if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+	                Common.alert("Please check the serial.")
+	                return false;
+	            }
 	            
-// 	            if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
-// 	                Common.alert("Please check the serial.")
-// 	                return false;
-// 	            }
-// 	        }
+	            if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+	                Common.alert("Please check the serial.")
+	                return false;
+	            }
+	        }
 	        
-// 	        if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
-// 	            Common.alert("Please check the serial.")
-// 	            return false;
-// 	        }
-// 	    }
+	        if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+	            Common.alert("Please check the serial.")
+	            return false;
+	        }
+	    }
 	
 	data.check   = check;
 	data.checked = check;
@@ -550,7 +550,7 @@ function fn_serialChck(rowindex , rowitem , str){
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
             
              
-             if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
+             if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0){
                  schk = false;
              }else{
                  schk = true;
