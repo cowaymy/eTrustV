@@ -173,7 +173,7 @@
     </select>
     
     <select id="selectDeliveryNoList" parameterType="Map" resultType="egovMap">
-        SELECT DELVRY_NO CODE_ID , DELVRY_NO CODE_NAME FROM log0054m  where nvl(delvry_gi_cmplt , 'N') <![CDATA[<>]]> 'Y' ORDER BY CRT_DT DESC
+        SELECT DELVRY_NO CODE_ID , DELVRY_NO CODE_NAME FROM log0054m  where nvl(DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y' ORDER BY CRT_DT DESC
     </select>
     
     <select id="selectStockMovementHead" parameterType="String" resultType="egovMap">
