@@ -593,7 +593,7 @@ and cust.cust_id = custCnt.cust_id
 							       )
 				where 1=1
 				and rn = 1)
-
+       WHERE RNN = 1
 
 
 <!-- 20171115 전명환 선생 변경
@@ -1026,9 +1026,11 @@ and cust.cust_id = custCnt.cust_id
 				AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
 				AND SAL0002D.ITM_STK_ID = SYS0026M.STK_ID(+)
 				AND SAL0023D.AREA_ID = SYS0064M.AREA_ID(+)
+				AND ORG0001D.mem_code = #{userId}
                 AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS(LAST_DAY(to_date(#{requestDate},'YYYYMM'))+1,-1)
                                                  AND  LAST_DAY(TO_DATE(#{requestDate},'YYYYMM'))
-                AND ORG0001D.mem_code = #{userId})
+                )
+                WHERE rnum = 1
 
             <!--  SELECT
             SAL0001D.SALES_ORD_NO           AS sales_Order_No,
