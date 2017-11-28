@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -19,6 +21,8 @@ import javax.sql.DataSource;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,5 +224,15 @@ public class SysTest {
 	public void millisToMinutes() {
 		int m = 5;
 		LOGGER.debug("{} Minutes => {} millis", m, MINUTES.toMillis(m));
+	}
+
+	@Test
+	public void queryStringParseTest() throws URISyntaxException {
+		List<NameValuePair> params = URLEncodedUtils.parse(new URI("url?aaa=111&bbb=2222&ccc=333"), "UTF-8");
+
+		LOGGER.debug("size : {}", params.size());
+		for (NameValuePair nameValuePair : params) {
+			LOGGER.debug("{} : {}", nameValuePair.getName(), nameValuePair.getValue());
+		}
 	}
 }
