@@ -6,65 +6,76 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModelProperty;
 
 public class AfterServicePartsDto {
-	
+
 	@ApiModelProperty(value = "주문번호")
 	private String salesOrderNo;
-	
+
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
-	
+
 	@ApiModelProperty(value = "제품코드")
 	private String productCode;
-	
+
 	@ApiModelProperty(value = "필터코드")
 	private String partCode;
-	
+
 	@ApiModelProperty(value = "part id 값")
 	private String partId;
-	
+
 	@ApiModelProperty(value = "필터명")
 	private String partName;
-	
+
 	@ApiModelProperty(value = "필요수량")
 	private Integer quanity;
-	
+
 	@ApiModelProperty(value = "교체수량")
 	private String chgQty;
-	
+
 	@ApiModelProperty(value = "foc??")
 	private String chargesFoc;
-	
+
 	@ApiModelProperty(value = "chgid??")
 	private String exChgid;
-	
+
 	@ApiModelProperty(value = "filter price")
 	private String salesPrice;
-	
+
 	@ApiModelProperty(value = "교체여부")
 	private String chgYN;
-	
+
 	@ApiModelProperty(value = "마지막교체일_날짜(YYYYMMDD)")
 	private String lastChgDate;
-	
+
 	@ApiModelProperty(value = "마지막교체일_시간(HHMMSS)")
 	private String lastChgTime;
-	
+
 	@ApiModelProperty(value = "마지막교체일_날짜(YYYYMMDD)")
 	private String lastChgDateOrigin;
-	
+
 	@ApiModelProperty(value = "마지막교체일_시간(HHMMSS)")
 	private String lastChgTimeOrigin;
-	
+
 	@ApiModelProperty(value = "filter / sparepart / msc(Miscellaneous) 구분")
 	private String partType;
-	
+
 	@ApiModelProperty(value = "필터교체 주기")
 	private String partsPeriod;
-	
+
 	@ApiModelProperty(value = "모바일 전용 필드 (API 와 무관함)")
 	private String chargeYN;
 
-	
+	@ApiModelProperty(value = "Filter Barcode Check")
+	private String filterBarcdChkYn;
+
+
+	public String getFilterBarcdChkYn() {
+		return filterBarcdChkYn;
+	}
+
+	public void setFilterBarcdChkYn(String filterBarcdChkYN) {
+		this.filterBarcdChkYn = filterBarcdChkYN;
+	}
+
 	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
