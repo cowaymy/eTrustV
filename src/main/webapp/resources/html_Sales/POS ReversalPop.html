@@ -72,24 +72,27 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:150px" />
-	<col style="width:*" />
+	<col style="width:160px" />
+	<col style="width:250px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
 	<th scope="row">Member Code<span class="must">*</span></th>
-	<td>
+	<td colspan="2">
 		<input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a>
 	</td>
 </tr>
 <tr>
 	<th scope="row">Branch / Warehouse<span class="must">*</span></th>
 	<td>
-		<select class="multy_select" multiple="multiple">
-			<option value="1">11</option>
-			<option value="2">22</option>
-			<option value="3">33</option>
-		</select>
+        <select class="multy_select w100p" multiple="multiple">
+            <option value="1">11</option>
+            <option value="2">22</option>
+            <option value="3">33</option>
+        </select>
+	</td>
+	<td>
 		<select class="multy_select" multiple="multiple">
 			<option value="1">11</option>
 			<option value="2">22</option>
@@ -100,12 +103,13 @@
 <tr>
 	<th scope="row">Receive Date<span class="must">*</span></th>
 	<td>
-		<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+		<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
 	</td>
+	<td></td>
 </tr>
 <tr>
 	<th scope="row">Remark</th>
-	<td>
+	<td colspan="2">
 		<input type="text" title="" placeholder="" class="w100p" />
 	</td>
 </tr>
