@@ -100,15 +100,15 @@
 <aside class="title_line viewQuotLay"><!-- title_line start -->
 <h3>Quotation Information</h3>
 </aside><!-- title_line end -->
-
-<table class="type1 viewQuotLay"><!-- table start -->
+<div id ="viewQuotLay">
+<table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:120px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:120px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:120px" />
+    <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -122,6 +122,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+</div>
 </article><!-- tap_area end -->
 
 
@@ -151,9 +152,11 @@ function fn_setMRentalMembershipInfoData(_options ){
 		    	  }
 		    	  
 		    	  if(_options.showQuotationInfo){
-		    		  $(".viewQuotLay").attr("style","display:inline");
+//		    		  $(".viewQuotLay").attr("style","display:inline");
+		    		  $("#viewQuotLay").show();
 		    	  }else{
-		    		  $(".viewQuotLay").attr("style","display:none");
+		    		  //$(".viewQuotLay").attr("style","display:none");
+		    		  $("#viewQuotLay").hide();
 		    	  }
 	    	  
 		    	  if(_options.callbackFun !=""){
