@@ -23,13 +23,20 @@
     color:#000;
 }
 
+.my-row-style {
+    background:#9FC93C;
+    font-weight:bold;
+    color:#22741C;
+}
+
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
 var subGrid;
+var serialChkfalg;
 var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}];
-
+var otherType;
  var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"reqstno"      ,headerText:"Others Request No"      ,width:250    ,height:30                },
@@ -97,7 +104,18 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                             {dataField:"postingdate", headerText:"PostingDate" ,width:120    ,height:30},                            
                             {dataField:"codeName", headerText:"Uom" ,width:120    ,height:30},             
                ];                   
-                                    
+
+     var serialcolumn=[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 },
+                       {dataField:"itmname"      ,headerText:"Material Name"               ,width:"25%"    ,height:30 },
+                       {dataField:"serial"       ,headerText:"Serial"                      ,width:"30%"    ,height:30,editable:true },
+                       {dataField:"cnt61"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+                       {dataField:"cnt62"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+                       {dataField:"cnt63"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
+                       {dataField:"statustype"   ,headerText:"status"                      ,width:"30%"    ,height:30,visible:false }
+                      ];            
+     
+     
+     
 var options = {
         usePaging : false,
         editable : false,
@@ -118,6 +136,15 @@ var resop = {
         showBranchOnGrouping : false
         };
 
+var serialop = {
+        //rowIdField : "rnum",          
+        editable : true
+        //displayTreeOpen : true,
+        //showRowCheckColumn : true ,
+        //enableCellMerge : true,
+        //showStateColumn : false,
+        //showBranchOnGrouping : false
+        };
 
         
 var paramdata;
@@ -141,6 +168,7 @@ $(document).ready(function(){
     //listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, subgridpros);
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);    
     mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", mtrcolumnLayout ,"", options);
+    serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
     $("#mdc_grid").hide(); 
 
     
@@ -181,6 +209,50 @@ $(document).ready(function(){
             }
         }
     });  
+    
+	 AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
+		  var tvalue = true;
+		  var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
+		   serial=serial.trim();
+	if(""==serial || null ==serial){
+	   //alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
+	   //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
+	    Common.alert('Please input Serial Number.');
+	    return false;
+	}else{
+	    for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+	        if (event.rowIndex != i){
+	            if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
+	                tvalue = false;
+	                break;
+	            }
+	        }
+	    }
+	    
+	    if (tvalue){
+	        fn_serialChck(event.rowIndex ,event.item , serial)
+	    }else{
+	        AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
+	        AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+	            if (item.statustype  == 'N'){
+	                return "my-row-style";
+	            }
+	        });
+	        AUIGrid.update(serialGrid);
+	    }
+	   if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
+		   f_addrow(); 
+//	    var serialstus=$("#serialstus").val();      
+// 	   if($("#serialstus").val() =="Y"){
+// 	      f_addrow();                  
+// 	      }
+	   }
+	   
+	}
+	});
+    
+
+    
  });
     
 function f_onchange(obj, value, tag, selvalue){
@@ -209,9 +281,10 @@ $(function(){
             Common.alert('No data selected.');
             return false;
         }else{
+        	   otherType="GI";
               for (var i = 0 ; i < checkedItems.length ; i++){
                   if(checkedItems[i].item.status != 'O'){
-                      Common.alert('Please enter the Serial Number.');
+                      Common.alert('Already processed.');
                       return false;
                       break;
                   }else if(checkedItems[i].item.status == 'C'){
@@ -219,15 +292,54 @@ $(function(){
                        return false;
                        break;
                   }             
-              }             
-            document.giForm.gitype.value="GI";
+              }
+              
+         for (var i = 0 ; i < checkedItems.length ; i++){
+              
+	           if (checkedItems[i].item.serialChk == 'Y'){
+	        	   serialChkfalg="Y";
+	               break;
+	          }else{
+	        	  serialChkfalg ="N";
+	          } 
+  
+          } 
+              
+         
+         if(serialChkfalg =="Y"){
+        	   document.giForm.gitype.value="GI";
+               $("#dataTitle").text("Good Issue Posting Data");
+               $("#giptdate").val("");
+               $("#gipfdate").val("");
+               $("#doctext").val("");
+               doSysdate(0 , 'giptdate');
+               doSysdate(0 , 'gipfdate');
+               $("#giopenwindow").show();
+             $("#serial_grid_wrap").show();
+             AUIGrid.clearGridData(serialGrid);
+             AUIGrid.resize(serialGrid);
+             fn_itemSerialPopList(checkedItems);   
+         }else{
+        	 document.giForm.gitype.value="GI"
             $("#dataTitle").text("Good Issue Posting Data");
-            $("#giptdate").val("");
-            $("#gipfdate").val("");
-            $("#doctext").val("");
-            doSysdate(0 , 'giptdate');
-            doSysdate(0 , 'gipfdate');
-            $("#giopenwindow").show();
+             $("#giptdate").val("");
+             $("#gipfdate").val("");
+             $("#doctext").val("");
+             doSysdate(0 , 'giptdate');
+             doSysdate(0 , 'gipfdate');
+             $("#giopenwindow").show();
+            $("#serial_grid_wrap").hide();       
+         }
+               
+//             document.giForm.gitype.value="GI";
+//             $("#dataTitle").text("Good Issue Posting Data");
+//             $("#giptdate").val("");
+//             $("#gipfdate").val("");
+//             $("#doctext").val("");
+//             doSysdate(0 , 'giptdate');
+//             doSysdate(0 , 'gipfdate');
+//             $("#giopenwindow").show();
+            
         }
     });
 
@@ -238,6 +350,7 @@ $(function(){
             Common.alert('No data selected.');
             return false;
         }else{
+        	otherType="GC";
             for (var i = 0 ; i < checkedItems.length ; i++){
                 if(checkedItems[i].item.status == 'O'){
                     Common.alert('Status Cannot Issue Cancel.');
@@ -253,6 +366,9 @@ $(function(){
             doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
             $("#giopenwindow").show();
+            AUIGrid.clearGridData(serialGrid);
+            AUIGrid.resize(serialGrid);
+            $("#serial_grid_wrap").hide();
         }
     });
     
@@ -341,6 +457,29 @@ function GiSaveAjax() {
     var checkdata = AUIGrid.getCheckedRowItems(listGrid);
     data.checked = checkdata;
     data.form = $("#giForm").serializeJSON();
+    var serials   = AUIGrid.getAddedRowItems(serialGrid);
+    data.add = serials;
+     
+    if (serialChkfalg == 'Y' && otherType=='GI'){
+
+           for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+               if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+                   Common.alert("Please check the serial.")
+                   return false;
+               }
+               
+               if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+                   Common.alert("Please check the serial.")
+                   return false;
+               }
+           }
+           
+           if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+               Common.alert("Please check the serial.")
+               return false;
+           }
+       }
+
 
     Common.ajaxSync("POST", "/logistics/pos/PosGiSave.do", data, function(result) {
         
@@ -462,6 +601,112 @@ function f_getTtype(g , v){
 } 
 
 
+function fn_serialChck(rowindex , rowitem , str){
+    var schk = true;
+    var ichk = true;
+    var slocid = '';//session.locid;
+    var data = { serial : str , locid : slocid};
+    Common.ajaxSync("GET", "/logistics/pos/PointOfSalesSerialCheck.do", data, function(result) {
+        console.log(result);
+    	
+        if (result.data[0] == null){
+        
+            AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
+            AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
+            
+            schk = false;
+            ichk = false;
+            
+        }else{
+        	
+             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
+             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
+             
+             if (result.data[0].L62CNT == 0 ){//63제외
+                 schk = false;
+             }else{
+                 schk = true;
+             }
+             
+             var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+
+             for (var i = 0 ; i < checkedItems.length ; i++){
+                 if (result.data[0].STKCODE == checkedItems[i].itmcd){
+
+                     //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+                     ichk = true;
+                     break;
+                 }else{
+
+                     ichk = false;
+                 }
+             }       
+        }
+        
+         if (schk && ichk){
+             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+         }else{
+             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
+         }
+          
+          
+          AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+
+             $("#serialstus").val(item.statustype);
+              if (item.statustype  == 'N'){
+                  return "my-row-style";
+              }
+          });
+          AUIGrid.update(serialGrid);
+             
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+        } catch (e) {
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
+       
+    });
+}
+
+function fn_itemSerialPopList(data){
+    
+    //checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
+    
+    var rowPos = "first";
+    var rowList = [];
+    var reqQty;
+    var item = new Object();
+    var itm_qty  = 0;
+
+    for (var i = 0 ; i < data.length ; i++){
+        
+        if (data[i].item.serialChk == 'Y'){
+            reqQty =data[i].item.reqstqty;
+            itm_qty +=parseInt(reqQty);
+            $("#reqstno").val(data[i].item.reqstno)
+        }       
+    }
+    $("#serialqty").val(itm_qty);
+    
+    f_addrow();
+    
+}
+
+function f_addrow(){
+    var rowPos = "last";
+    var item = new Object();
+    AUIGrid.addRow(serialGrid, item, rowPos);
+    return false;
+}
+
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -579,8 +824,8 @@ function f_getTtype(g , v){
         <form id="giForm" name="giForm" method="POST">
             <input type="hidden" name="gitype" id="gitype" value="GI"/>
             <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/> 
-<!--             <input type="hidden" name="serialqty" id="serialqty"/> -->
-<!--             <input type="hidden" name="reqstno" id="reqstno"/> -->
+            <input type="hidden" name="serialqty" id="serialqty"/>
+            <input type="hidden" name="reqstno" id="reqstno"/>
             <table class="type1">
             <caption>search table</caption>
             <colgroup>
