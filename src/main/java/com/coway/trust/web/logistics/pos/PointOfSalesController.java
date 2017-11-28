@@ -206,7 +206,11 @@ public class PointOfSalesController {
 
 		List<EgovMap> list = PointOfSalesService.selectPointOfSalesSerial(params);
 		Map<String, Object> rmap = new HashMap();
-
+		
+		for (int i = 0; i < list.size(); i++) {
+			logger.debug("serialList@: {}", list.get(i));
+		}
+		
 		rmap.put("data", list);
 		return ResponseEntity.ok(rmap);
 	}
@@ -259,13 +263,12 @@ public class PointOfSalesController {
 	@RequestMapping(value = "/PosGiSave.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> PosGiSave(@RequestBody Map<String, Object> params, Model model) {
 
-		List<Object> GIList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> GIMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+//		List<Object> GIList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+//		Map<String, Object> GIMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);
-
 		String reVal = PointOfSalesService.insertGiInfo(params);
 
 		// 결과 만들기 예.
