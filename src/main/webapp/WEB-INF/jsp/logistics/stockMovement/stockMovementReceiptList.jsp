@@ -41,18 +41,19 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
                      {dataField:"delydt"       ,headerText:"Delivery Date"               ,width:120    ,height:30 },
                      {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
                      {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
                      {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"             ,width:120    ,height:30 , editalble:true},
+                     {dataField:"docno"        ,headerText:"Ref Doc.No"             ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
+                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
+                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
                      {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30}
                      ];
-                     
+
                      
 var serialcolumnLayout =[
                          {dataField:"delvryNo"           ,headerText:"Delivery No"      ,width:"20%"    ,height:30   ,cellMerge : true            },
@@ -162,9 +163,9 @@ $(document).ready(function(){
     });
     //SearchListAjax();
 });
-function f_change(){
-	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
-    doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
+function f_change(){  
+    paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(),codeIn:'UM03,UM93'};
+    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
 }
 //btn clickevent
 $(function(){
@@ -467,7 +468,8 @@ function fn_ViewSerial(str){
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>
-                    <td colspan="2">&nbsp;</td>                
+                    <th scope="row">Ref Doc.No</th>
+                     <td ><input type="text" class="w100p" id="sdocno" name="sdocno"></td>                    
                 </tr>                
                
             </tbody>
