@@ -34,10 +34,14 @@ select ROWNUM rnum , l47.REQST_STUS     status
              , l48.reqst_qty     reqstqty
              , NVL (l55.DELVRY_QTY, 0) AS delyqty
              , 0 AS indelyqty
-             , decode(l47.REQST_STUS , 'C' ,l48.reqst_qty , '0') rciptqty
+             , decode(l47.REQST_STUS , 'O' ,l48.reqst_qty , '0') rciptqty
              , l48.uom
              , uomt.code_name uomnm
-             , S26.SERIAL_CHK SERIAL_CHK
+             ,  case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pd_chk = 'Y' then 'Y' else 'N' end
+               when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_ft_chk = 'Y'  then 'Y' else 'N' end
+               when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pt_chk = 'Y' then 'Y' else 'N' end
+               else 'N' end SERIAL_CHK
+             <!-- , S26.SERIAL_CHK SERIAL_CHK -->
           from log0047m l47
              , log0048d l48
              , (select * from sys0013m where code_master_id = 306) tran
