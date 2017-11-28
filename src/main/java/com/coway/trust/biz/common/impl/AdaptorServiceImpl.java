@@ -185,9 +185,11 @@ public class AdaptorServiceImpl implements AdaptorService {
 			LOGGER.debug("[sendSMS]getStatusCode : {}", response.getStatusCode());
 			LOGGER.debug("[sendSMS]getBody : {}", response.getBody());
 
+			int statusId;
+			String body;
+
 			if (response.getStatusCode() == HttpStatus.OK) {
-				String body = response.getBody();
-				int statusId;
+				body = response.getBody();
 
 				if (GENSUITE_SUCCESS.equals(body)) {
 					statusId = 4;
@@ -200,12 +202,14 @@ public class AdaptorServiceImpl implements AdaptorService {
 					result.addFailReason(reason);
 				}
 
-				insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), 1, 1, 975, "", statusId, 0, body,
-						response.getBody(), msgId, vendorId);
-
 			} else {
+				statusId = 1;
+				body = response.getStatusCode().getReasonPhrase();
 				result.setErrorCount(result.getErrorCount() + 1);
 			}
+
+			insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), 1, 1, 975, "", statusId, 0, body,
+					response.getBody(), msgId, vendorId);
 		});
 
 		return result;
@@ -247,9 +251,12 @@ public class AdaptorServiceImpl implements AdaptorService {
 		LOGGER.debug("[sendSMSByBulk]getStatusCode : {}", response.getStatusCode());
 		LOGGER.debug("[sendSMSByBulk]getBody : {}", response.getBody());
 
+		int statusId;
+		String body;
+		String retCode;
 		if (response.getStatusCode() == HttpStatus.OK) {
-			int statusId;
-			String body = response.getBody();
+
+			body = response.getBody();
 			String[] resArray = body.split(","); // <SUCCESS CODE>,<MSG ID>,<TRID>
 
 			if (MVGATE_SUCCESS.equals(resArray[0])) {
@@ -263,13 +270,18 @@ public class AdaptorServiceImpl implements AdaptorService {
 				result.addFailReason(reason);
 			}
 
-			insertSMS(bulkSmsVO.getMobile(), bulkSmsVO.getMessage(), bulkSmsVO.getUserId(), bulkSmsVO.getPriority(),
-					bulkSmsVO.getExpireDayAdd(), bulkSmsVO.getSmsType(), bulkSmsVO.getRemark(), statusId,
-					bulkSmsVO.getRetryNo(), resArray[0], body, trId, vendorId);
+			retCode = resArray[0];
 
 		} else {
+			statusId = 1;
+			body = response.getStatusCode().getReasonPhrase();
+			retCode = response.getStatusCode().toString();
 			result.setErrorCount(result.getErrorCount() + 1);
 		}
+
+		insertSMS(bulkSmsVO.getMobile(), bulkSmsVO.getMessage(), bulkSmsVO.getUserId(), bulkSmsVO.getPriority(),
+				bulkSmsVO.getExpireDayAdd(), bulkSmsVO.getSmsType(), bulkSmsVO.getRemark(), statusId,
+				bulkSmsVO.getRetryNo(), retCode, body, trId, vendorId);
 
 		return result;
 	}
