@@ -836,7 +836,7 @@ public class ServiceApiController {
 		Map<String, Object> map = new HashMap();
 		
 		map.put("userId" , (String)rentalForm.getUserId());
-		map.put("searchType" , (String)rentalForm.getSerchType());
+		map.put("searchType" , (String)rentalForm.getSearchType());
 		map.put("searchKeyword" , (String)rentalForm.getSearchKeyword());
 		
 		List<EgovMap> rcList = MSvcLogApiService.getRentalCustomerList(map);
