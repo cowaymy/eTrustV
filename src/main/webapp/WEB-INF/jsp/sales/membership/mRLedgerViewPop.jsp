@@ -5,13 +5,6 @@
 
 <script type="text/javaScript" language="javascript">
 
-function fn_doback(){
-    
-	   $("#_LedgerDiv1").remove();
-}
-
-
-
 var mRLedgerGrid; 
 
 
@@ -28,7 +21,7 @@ $(document).ready(function(){
 
 
 
-function fn_goLedgerPopOut(){
+function fn_goLedgerPrint(){
 	alert('goPrint');
 }
 
@@ -155,9 +148,9 @@ function fn_getmRLedgerProcessGridAjax (v){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:220px" />
+	<col style="width:150px" />
 	<col style="width:*" />
-	<col style="width:140px" />
+	<col style="width:150px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -199,10 +192,46 @@ function fn_getmRLedgerProcessGridAjax (v){
 	<td ><span id='txtTelF'></span></td>
 </tr>
 <tr>
-	<th scope="row">CIMB Dedicated Bank Acc</th>
+	<th scope="row">CIMB Dedicated <br/>Bank Acc</th>
 	<td><span id='txtCustVano'  > </span></td>
 	<th scope="row"></th>
 	<td ><span></span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Total Outstanding</th>
+    <td><span  id='totOtstnd'></span></td>
+    <th scope="row">Outstanding Month</th>
+    <td><span id='otstndMonth'></span></td>
+    <th scope="row">Unbill Amount</th>
+    <td><span id='unbillAmt'></span></td>
+    <th scope="row"></th>
+    <td><span></span></td>
+</tr>
+<tr>
+    <th scope="row">Penalty Charges</th>
+    <td><span id='totPnaltyChrg'></span></td>
+    <th scope="row">Penalty Paid</th>
+    <td><span id='totPnaltyPaid'></span></td>
+    <th scope="row">Penalty Adjustment</th>
+    <td><span id='totPnaltyAdj'></span></td>
+    <th scope="row">Balance Penatly</th>
+    <td><span id='totPnaltyBal'></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -211,51 +240,12 @@ function fn_getmRLedgerProcessGridAjax (v){
 
      <li>Transaction Date</li>
      <li><input type="text" title="Create start Date" placeholder="MM/YYYY"  onchange="vChange(this)" class="j_date2 w100p mtz-monthpicker-widgetcontainer"  id="vsalesDate" name="vsalesDate" /></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_goLedgerPopOut()">DO Print</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_goLedgerPrint();">DO Print</a></p></li>
 </ul> 
 
 <article class="grid_wrap"><!-- grid_wrap start -->
    <div id="ledger_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>  
 </article><!-- grid_wrap end -->
-
-
- 
- 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
-	<col style="width:150px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Total Outstanding</th>
-	<td><span  id='totOtstnd'></span></td>
-	<th scope="row">Outstanding Month</th>
-	<td><span id='otstndMonth'></span></td>
-	<th scope="row">Unbill Amount</th>
-	<td><span id='unbillAmt'></span></td>
-	<th scope="row"></th>
-	<td><span></span></td>
-</tr>
-<tr>
-	<th scope="row">Penalty Charges</th>
-	<td><span id='totPnaltyChrg'></span></td>
-	<th scope="row">Penalty Paid</th>
-	<td><span id='totPnaltyPaid'></span></td>
-	<th scope="row">Penalty Adjustment</th>
-	<td><span id='totPnaltyAdj'></span></td>
-	<th scope="row">Balance Penatly</th>
-	<td><span id='totPnaltyBal'></span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
 
 </section><!-- pop_body end -->
 

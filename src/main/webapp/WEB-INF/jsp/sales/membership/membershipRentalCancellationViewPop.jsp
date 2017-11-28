@@ -76,10 +76,6 @@
 
 </section><!-- tap_wrap end -->
 
-<ul class="center_btns mt20">
-	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_doBack();"><spring:message code="sales.Back" /></a></p></li>
-</ul>
-
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
@@ -89,10 +85,6 @@
     fn_selectCancellationInfoAjax();
 });
 
-function fn_doBack(){
-    $("#_ViewQuotDiv1").remove();
-}
- 
 //리스트 조회.
 function fn_selectCancellationInfoAjax() {
    
@@ -114,7 +106,8 @@ function fn_selectCancellationInfoAjax() {
        
        var ord_id;
        var moption = {
-                 srvCntrctId :result.srvCntrctId,
+//                 srvCntrctId :result.srvCntrctId,
+                 srvCntrctId :result.trmnatCntrctId,
                  callbackFun : 'fn_setMRentalOrderInfoData(vmrMemResultObj.srvCntrctOrdId)',
                  showViewLeder : true,
                  showQuotationInfo:true

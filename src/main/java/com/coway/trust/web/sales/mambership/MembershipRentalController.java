@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -540,6 +541,25 @@ public class  MembershipRentalController {
 		
 		membershipRentalService.usp_SELECT_ServiceContract_Ledger(params);
 		List<EgovMap> list =(List<EgovMap>) params.get("p1");
+		
+		double balance = 0;
+		for(int i = 0; i < list.size(); i++){
+			EgovMap result = list.get(i);
+			
+			String bal = "";
+			
+			if(StringUtils.isEmpty( result.get("balanceamt")) ){
+				bal = "0";
+			}else{
+				bal =  result.get("balanceamt").toString();
+			}
+					
+			balance = balance + Double.parseDouble(bal);
+            
+			 result.put("balanceamt", balance);
+			
+		}
+		
 		
 		
 		membershipRentalService.usp_SELECT_ServiceContract_LedgerOutstanding(params);
