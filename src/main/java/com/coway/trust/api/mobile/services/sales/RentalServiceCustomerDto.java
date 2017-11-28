@@ -23,17 +23,19 @@ public class RentalServiceCustomerDto {
 	@ApiModelProperty(value = "실적금액") 
 	private int amount;
 
-	private int payment_Mode_Id;
+	private int paymentModeId;
 	
 	
 	
 	
-	public int getPayment_Mode_Id() {
-		return payment_Mode_Id;
+
+
+	public int getPaymentModeId() {
+		return paymentModeId;
 	}
 
-	public void setPayment_Mode_Id(int payment_Mode_Id) {
-		this.payment_Mode_Id = payment_Mode_Id;
+	public void setPaymentModeId(int paymentModeId) {
+		this.paymentModeId = paymentModeId;
 	}
 
 	public String getCustName() {
