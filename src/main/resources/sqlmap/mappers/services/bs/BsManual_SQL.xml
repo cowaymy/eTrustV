@@ -1276,58 +1276,86 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 
 
 
-             <insert id="insertHsResultCopy" parameterType="Map">
-		             INSERT INTO SVC0006D
-		                     (RESULT_ID
-		                     ,NO
-		                    ,TYPE_ID
-		                    ,SCHDUL_ID
-		                    ,SALES_ORD_ID
-		                    ,CODY_ID
-		                    ,SETL_DT
-		                    ,RESULT_STUS_CODE_ID
-		                    ,FAIL_RESN_ID
-		                    ,REN_COLCT_ID
-		                    ,WH_ID
-		                    ,RESULT_REM
-		                    ,RESULT_CRT_DT
-		                    ,RESULT_CRT_USER_ID
-		                    ,RESULT_UPD_DT
-		                    ,RESULT_UPD_USER_ID
-		                    ,RESULT_IS_SYNC
-		                    ,RESULT_IS_EDIT
-		                    ,RESULT_STOCK_USE
-		                    ,RESULT_IS_CURR
-		                    ,RESULT_MTCH_ID
-		                    ,RESULT_IS_ADJ
-		                    ,RESULT_ENTRY_POINT
-		                    ,RESULT_MOBILE_ID)
-		         select #{resultId} as RESULT_ID
-			                ,NO
-			                ,TYPE_ID
-			                ,SCHDUL_ID
-			                ,SALES_ORD_ID
-			                ,CODY_ID
-			                ,SETL_DT
-			                ,RESULT_STUS_CODE_ID
-			                ,FAIL_RESN_ID
-			                ,REN_COLCT_ID
-			                ,WH_ID
-			                ,RESULT_REM
-			                ,RESULT_CRT_DT
-			                ,RESULT_CRT_USER_ID
-			                ,RESULT_UPD_DT
-			                ,RESULT_UPD_USER_ID
-			                ,RESULT_IS_SYNC
-			                ,RESULT_IS_EDIT
-			                ,RESULT_STOCK_USE
-			                ,RESULT_IS_CURR
-			                ,RESULT_MTCH_ID
-			                ,RESULT_IS_ADJ
-			                ,RESULT_ENTRY_POINT
-			                ,RESULT_MOBILE_ID
-			         from SVC0006D a
-			         where a.SCHDUL_ID = #{hidschdulId}
+            <insert id="insertHsResultCopy" parameterType="Map">
+                     INSERT INTO SVC0006D
+                             (RESULT_ID
+                             ,NO
+                            ,TYPE_ID
+                            ,SCHDUL_ID
+                            ,SALES_ORD_ID
+                            ,CODY_ID
+                            ,SETL_DT
+                            ,RESULT_STUS_CODE_ID
+                            ,FAIL_RESN_ID
+                            ,REN_COLCT_ID
+                            ,WH_ID
+                            ,RESULT_REM
+                            ,RESULT_CRT_DT
+                            ,RESULT_CRT_USER_ID
+                            ,RESULT_UPD_DT
+                            ,RESULT_UPD_USER_ID
+                            ,RESULT_IS_SYNC
+                            ,RESULT_IS_EDIT
+                            ,RESULT_STOCK_USE
+                            ,RESULT_IS_CURR
+                            ,RESULT_MTCH_ID
+                            ,RESULT_IS_ADJ
+                            ,RESULT_ENTRY_POINT
+                            ,RESULT_MOBILE_ID)
+                 SELECT #{resultId} AS RESULT_ID,
+                          NO,
+                          TYPE_ID,
+                          SCHDUL_ID,
+                          SALES_ORD_ID,
+                          CODY_ID,
+                          SETL_DT,
+                          RESULT_STUS_CODE_ID,
+                          FAIL_RESN_ID,
+                          REN_COLCT_ID,
+                          WH_ID,
+                          RESULT_REM,
+                          RESULT_CRT_DT,
+                          RESULT_CRT_USER_ID,
+                          RESULT_UPD_DT,
+                          RESULT_UPD_USER_ID,
+                          RESULT_IS_SYNC,
+                          RESULT_IS_EDIT,
+                          RESULT_STOCK_USE,
+                          RESULT_IS_CURR,
+                          RESULT_MTCH_ID,
+                          RESULT_IS_ADJ,
+                          RESULT_ENTRY_POINT,
+                          RESULT_MOBILE_ID
+                   FROM(SELECT  RESULT_ID,
+                          NO,
+                          TYPE_ID,
+                          SCHDUL_ID,
+                          SALES_ORD_ID,
+                          CODY_ID,
+                          SETL_DT,
+                          RESULT_STUS_CODE_ID,
+                          FAIL_RESN_ID,
+                          REN_COLCT_ID,
+                          WH_ID,
+                          RESULT_REM,
+                          RESULT_CRT_DT,
+                          RESULT_CRT_USER_ID,
+                          RESULT_UPD_DT,
+                          RESULT_UPD_USER_ID,
+                          RESULT_IS_SYNC,
+                          RESULT_IS_EDIT,
+                          RESULT_STOCK_USE,
+                          RESULT_IS_CURR,
+                          RESULT_MTCH_ID,
+                          RESULT_IS_ADJ,
+                          RESULT_ENTRY_POINT,
+                          RESULT_MOBILE_ID
+                     FROM SVC0006D a
+                    WHERE a.SCHDUL_ID = #{hidschdulId}
+                    ORDER BY RESULT_ID DESC)
+                    WHERE ROWNUM = 1                            
+                            
+
             </insert>
 
 
