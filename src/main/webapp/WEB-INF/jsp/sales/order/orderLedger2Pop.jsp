@@ -48,7 +48,7 @@
 
      //그리드 속성 설정
      var ordLedgerGridPros = {
-         usePaging           : true,             //페이징 사용
+         usePaging           : false,             //페이징 사용
          pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
          editable                : false,        
          showStateColumn     : false,         

@@ -37,11 +37,11 @@ function createMRLedgerGrid(){
     
     var cLayout = [
          {dataField : "refDt",headerText : "Date", width : 80 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
-         {dataField : "instno", headerText : "Inst<br/> No", width : 40 ,editable : false},
+         {dataField : "instno", headerText : "Inst<br/> No", width : 38 ,editable : false},
          {dataField : "doctypename", headerText : "Type", width :130 ,editable : false},
          {dataField : "srvLdgrRefNo", headerText : "Doc No", width :110 ,editable : false},
          {dataField : "resnDesc", headerText : "Adj Reason", width :100 ,editable : false},
-         {dataField : "payMode", headerText : "Pay<br/>mode", width :50 ,editable : false},
+         {dataField : "payMode", headerText : "Pay<br/>mode", width :48 ,editable : false},
          {dataField : "payDt", headerText : "Ref Date", width :80 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
          {dataField : "chqrefno", headerText : "Ref No", width :100 ,editable : false},
          {dataField : "accCode", headerText : "Acc Code", width :80 ,editable : false},
@@ -52,7 +52,7 @@ function createMRLedgerGrid(){
    ];
     
     var gridPros = { 
-    		usePaging : true,  
+    		usePaging : false,  
     		pageRowCount: 10, 
     		editable: false, 
     		selectionMode : "singleRow",
