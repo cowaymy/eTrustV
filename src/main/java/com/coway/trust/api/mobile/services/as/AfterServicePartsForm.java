@@ -13,15 +13,16 @@ public class AfterServicePartsForm {
 	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 20170505", example = "1, 2, 3")
 	private String requestDate;
 
-	
+
+
 	public static Map<String, Object> createMap(AfterServicePartsForm afterServicePartsForm) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("userId", afterServicePartsForm.getUserId());
 		params.put("requestDate", afterServicePartsForm.getRequestDate());
 		return params;
 	}
-	
-	
+
+
 	public String getUserId() {
 		return userId;
 	}
@@ -37,8 +38,8 @@ public class AfterServicePartsForm {
 	public void setRequestDate(String requestDate) {
 		this.requestDate = requestDate;
 	}
-	
-	
-	
-	
+
+
+
+
 }
