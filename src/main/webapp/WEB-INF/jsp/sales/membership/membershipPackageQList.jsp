@@ -131,7 +131,7 @@ function createAUIGrid() {
                                  valueField : "codeName" // value 에 해당되는 필드명
                              }
                            },
-                            { dataField : "freeMemUse", headerText  : "Free Membership ",  width  : 150  
+                            { dataField : "freeMemUse", headerText  : "Free <br/>Membership ",  width  : 100  
                             	 , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                             		 var retStr = value;
                                      for(var i=0,len=freeKeyValueList.length; i<len; i++) {
@@ -149,12 +149,12 @@ function createAUIGrid() {
                                  valueField : "value" // value 에 해당되는 필드명
                              }
                            },
-                            { dataField : "srvMemCrtUserId",       headerText  : "Creator",  width  : 80 ,editable       : false },
-                            { dataField : "srvMemCrtDt",     headerText  : "Created",  width          :150,    editable       : false ,dataType : "date", formatString : "dd/mm/yyyy"}
+                            { dataField : "userName",       headerText  : "Creator",  width  : 80 ,editable       : false },
+                            { dataField : "srvMemCrtDt",     headerText  : "Created",  width          :100,    editable       : false ,dataType : "date", formatString : "dd/mm/yyyy"}
                           
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, headerHeight : 30,editable: true, selectionMode : "singleRow",  showRowNumColumn : true};  
         
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
         
