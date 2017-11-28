@@ -208,8 +208,9 @@ public class AdaptorServiceImpl implements AdaptorService {
 				result.setErrorCount(result.getErrorCount() + 1);
 			}
 
-			insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), 1, 1, 975, "", statusId, 0, body,
-					response.getBody(), msgId, vendorId);
+			insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), smsVO.getPriority(), smsVO.getExpireDayAdd(),
+					smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, response.getBody(),
+					msgId, vendorId);
 		});
 
 		return result;
