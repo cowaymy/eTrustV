@@ -124,6 +124,20 @@
 
 </select>
 
+<select id="selectCTMByDSC_ID" parameterType="Map" resultType="egovMap">
+    SELECT A.MEM_ID  CODE_ID
+         , A.MEM_CODE || '-' || A.NAME CODE_NAME
+    FROM ORG0001D A, ORG0005D B, SYS0005M C
+    WHERE  A.MEM_ID = B.MEM_ID
+    AND    A.BRNCH  =  C.BRNCH_ID
+    AND    B.MEM_LVL = '2'
+    AND    A.STUS = '1'
+    <if test="groupCode != null and groupCode !='' ">
+           AND    C.CODE = #{groupCode}
+    </if>
+
+</select>
+
 
 <select id="selectCTSubGrb" parameterType="Map" resultType="egovMap">
     SELECT DISTINCT CT_SUB_GRP CODE_ID

@@ -69,8 +69,10 @@ public interface HsManualService {
 	List<EgovMap> selectOrderActiveFilter(Map<String, Object> params);
 
 	String updateAssignCody(Map<String, Object> params);
-
-
+	
+	List<EgovMap> selectBranch_id(Map<String, Object> params);
+	
+	List<EgovMap> selectCTMByDSC_id(Map<String, Object> params);
 
 
 }

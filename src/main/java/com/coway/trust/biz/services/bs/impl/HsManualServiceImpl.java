@@ -933,8 +933,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		return rtnValue;
 	}
 
+	@Override
+	public List<EgovMap> selectBranch_id(Map<String, Object> params) {
+		return hsManualMapper.selectBranch_id(params);
+	}
 
-
-
+	@Override
+	public List<EgovMap> selectCTMByDSC_id(Map<String, Object> params) {
+		return hsManualMapper.selectCTMByDSC_id(params);
+	}
 
 }

@@ -626,6 +626,41 @@ public class HsManualController {
 		return ResponseEntity.ok(message);
 
 	}
+	
+	@RequestMapping(value = "/hsCountForecastListingPop.do")
+	public String hsCountForecastListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/bs/hsCountForecastListingPop";
+	}
+	
+	@RequestMapping(value = "/hsReportGroupPop.do")
+	public String hsReportGroupPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/bs/hsReportGroupPop";
+	}
+	
+	@RequestMapping(value = "/hsReportSinglePop.do")
+	public String hsReportSinglePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/bs/hsReportSinglePop";
+	}
+	
+	@RequestMapping(value = "/selectBranch_id", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBranch_id( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> branchList = hsManualService.selectBranch_id(params);
+		//model.addAttribute("branchList", branchList);
+		logger.debug("branchList {}", branchList);
+		return ResponseEntity.ok(branchList);
+	}
 
+	@RequestMapping(value = "/selectCTMByDSC_id", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTMByDSC_id( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> branchList = hsManualService.selectCTMByDSC_id(params);
+		//model.addAttribute("branchList", branchList);
+		logger.debug("branchList {}", branchList);
+		return ResponseEntity.ok(branchList);
+	}
 
 }

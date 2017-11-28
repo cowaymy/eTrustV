@@ -118,7 +118,8 @@ public interface HsManualMapper {
 
 	void updateHs009d(Map<String, Object> params);
 
-
-
+	List<EgovMap> selectBranch_id(Map<String, Object> params);
+	
+	List<EgovMap> selectCTMByDSC_id(Map<String, Object> params);
 
 }
