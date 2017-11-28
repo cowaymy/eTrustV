@@ -2328,10 +2328,10 @@ and cust.cust_id = custCnt.cust_id
                    AND F.MEM_CODE = #{userId}
                    <if test="searchKeyword != null and searchKeyword != ''">
                     <choose>
-                        <when test="searchType == 1">
+                        <when test="searchType == 2">
                             AND C.NAME LIKE  '%'||#{searchKeyword}||'%'
                         </when>
-                        <when test="searchType == 2">
+                        <when test="searchType == 1">
                             AND B.sales_ord_no = #{searchKeyword}
                         </when>
                         <otherwise>
