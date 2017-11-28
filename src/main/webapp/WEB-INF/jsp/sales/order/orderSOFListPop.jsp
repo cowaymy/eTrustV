@@ -3,6 +3,8 @@
 
 <script type="text/javascript">
 
+$("#dataForm").empty();
+
 var date = new Date().getDate();
 if(date.toString().length == 1){
     date = "0" + date;
@@ -198,6 +200,7 @@ function fn_report(viewType){
     $("#V_ORDERBYSQL").val(orderBySQL);
     $("#V_SELECTSQL").val("");
     $("#V_FULLSQL").val("");
+    
     
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {

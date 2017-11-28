@@ -71,10 +71,40 @@
         	$('#listSearchForm').clearForm();
         });
         $('#btnVaLetter').click(function() {
-            Common.alert('<b>The program is under development.</b>');
+
+        	$("#dataForm").show();
+        	//Param Set
+            var gridObj = AUIGrid.getSelectedItems(listMyGridID);
+            
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert("* No order Selected. ");
+                return;
+            }
+            
+            var custID = gridObj[0].item.custId;
+            $("#_repCustId").val(custID);
+            
+            var date = new Date().getDate();
+            if(date.toString().length == 1){
+                date = "0" + date;
+            } 
+            $("#downFileName").val("CustomerVALetter_"+custID+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+            
+            fn_letter_report();
+        	
         });
         $('#btnExport').click(function() {
-            Common.alert('<b>The program is under development.</b>');
+        	
+        	var grdLength = "0";
+        	grdLength = AUIGrid.getGridData(listMyGridID).length;
+        	
+        	if(Number(grdLength) > 0){
+        	    GridCommon.exportTo("#list_grid_wrap", "xlsx", "SalesSearchResultList");
+        		
+	        }else{
+	            Common.alert("* No record to export. ");
+	        }
+     
         });
         $('#btnSim').click(function() {
             Common.alert('<b>The program is under development.</b>');
@@ -95,6 +125,13 @@
         	Common.popupDiv("/sales/order/orderSalesYSListingPop.do", null, null, true);
         });
     });
+    
+    function fn_letter_report() {
+        var option = {
+            isProcedure : false 
+        };
+        Common.report("dataForm", option);
+    }
     
     function fn_validSearchList() {
         var isValid = true, msg = "";
@@ -265,6 +302,17 @@
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
+
+<!-- report Form -->
+<form id="dataForm">
+    <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
+    
+    <!-- params -->
+    <input type="hidden" id="_repCustId" name="@CustID" />
+</form>
+
 
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />

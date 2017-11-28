@@ -2,6 +2,9 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+
+$("#dataForm").empty();
+
 var date = new Date().getDate();
 if(date.toString().length == 1){
     date = "0" + date;

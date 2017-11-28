@@ -3,6 +3,8 @@
 
 <script type="text/javascript">
 
+$("#dataForm").empty();
+
 $("#mypSalesMonth").val(new Date().getMonth()+"/"+new Date().getFullYear());
 
 function btnGenerate_Click(){
