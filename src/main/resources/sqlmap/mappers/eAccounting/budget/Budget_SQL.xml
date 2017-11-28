@@ -292,7 +292,32 @@ FROM     (
                 ,NVL(PEND_APPV_AMT,0)  PEND_APPV_AMT
                 ,NVL(CONSUM_APPV_AMT,0) CONSUM_APPV_AMT
                 ,NVL(A.PLAN_AMT,0) + NVL(A.CHNG_AMT,0) + NVL(B.TOTAL,0) -NVL(C.APP_AMT_TOTAL ,0) AS AVAILABLE_AMT
-       FROM FCM0101M A
+       FROM (SELECT SUM(PLAN_AMT) PLAN_AMT
+						  , SUM(CHNG_AMT) CHNG_AMT
+						  , BUDGET_PLAN_YEAR
+						  , BUDGET_PLAN_MONTH
+						  , COST_CENTR
+						  , GL_ACC_CODE
+						  , BUDGET_CODE 
+				FROM (SELECT  PLAN_AMT
+							       , CHNG_AMT
+							       , BUDGET_PLAN_YEAR
+								   , BUDGET_PLAN_MONTH
+								   , COST_CENTR
+								   , GL_ACC_CODE
+								   , BUDGET_CODE
+						     FROM FCM0101M A 
+					      UNION ALL
+							SELECT 0 PLAN_AMT
+									  ,0 CHNG_AMT
+									  ,#{budgetPlanYear} BUDGET_PLAN_YEAR
+									  ,#{budgetPlanMonth} BUDGET_PLAN_MONTH
+									  ,#{costCentr} COST_CENTR
+									  ,#{glAccCode} GL_ACC_CODE
+									  ,#{budgetCode} BUDGET_CODE
+							  FROM DUAL ) A							  
+                            GROUP BY BUDGET_PLAN_YEAR, BUDGET_PLAN_MONTH, COST_CENTR, GL_ACC_CODE, BUDGET_CODE
+							) A
                LEFT OUTER JOIN ( SELECT SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT 
                               ,SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) AS MINUS_ADJ_AMT
                               ,SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL
@@ -712,7 +737,7 @@ FROM     (
   
   <select id="selectPlanMaster" parameterType="Map" resultType="int">
 	  SELECT COUNT(-1) CNT  
-	    FROM FCM0101M 
+	    FROM FCM0104D 
 	  WHERE COST_CENTR = #{costCenter} 
 		  AND GL_ACC_CODE = #{glAccCode}
 		  AND BUDGET_CODE= #{budgetCode}
