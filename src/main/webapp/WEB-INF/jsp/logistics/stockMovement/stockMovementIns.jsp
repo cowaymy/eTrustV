@@ -29,7 +29,7 @@
 var resGrid;
 var reqGrid;
 
-var movpathdata = [{"codeId": "02","codeName": "RDC to CT/Cody"},{"codeId": "CT","codeName": "CT/Cody to CT/Cody"}];
+var movpathdata = [{"codeId": "02","codeName": "RDC to CT/Cody"},{"codeId": "CT","codeName": "CT/Cody to CT/Cody"},{"codeId": "CTOR","codeName": "CT/Cody to RDC"}];
 
 var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
                      {dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
@@ -210,6 +210,9 @@ $(function(){
     	if ($("#movpath").val() == "CT"){
     		var paramdata = { ctloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록 
             doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
+    	}else if($("#movpath").val() == "CTOR"){
+            var paramdata = { locgb:'02'}; // session 정보 등록
+            doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
     	}else{
 	        var paramdata = { rdcloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록 
 	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
@@ -243,8 +246,10 @@ $(function(){
 });
 
 function transferTypeFunc(){
-    paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
-    doGetComboData('/common/selectCodeList.do', paramdata, 'UM03','smtype', 'S' , '');
+//     paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+//     doGetComboData('/common/selectCodeList.do', paramdata, 'UM03','smtype', 'S' , '');
+        paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(),codeIn:'UM03,UM93'};
+        doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
 }
 
 function locationList(){
