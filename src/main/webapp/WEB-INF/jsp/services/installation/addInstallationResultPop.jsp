@@ -4,10 +4,10 @@
 <script type="text/javaScript">
 $(document).ready(function() {
     var myGridID_view;
-    
+
     createInstallationViewAUIGrid();
     fn_viewInstallResultSearch();
-    
+
     var callType = "${callType.typeId}";
     console.log(callType);
     if(callType == 0){
@@ -16,29 +16,29 @@ $(document).ready(function() {
         if(callType == 258){
             //$(".tap_type1").li[1].text("Product Exchange Info");
         }else{
-            
+
         }
         if("${orderInfo.c9}" == 21){
             $(".red_text").text( "* This installation status is failed. Please do the call log process again.");
         }else if("${orderInfo.c9}" == 4){
             $(".red_text").text( "* This installation status is completed.<br />  To reverse this order installation result, please proceed to order installation result reverse.");
         }else{
-            
+
         }
     }
 
-    
+
     if("${stock}"  != null){
-    	
+
     	$("#hidActualCTMemCode").val("${stock.memCode}");
     	$("#hidActualCTId").val("${stock.movToLocId}");
     }else{
     	$("#hidActualCTMemCode").val("0");
         $("#hidActualCTId").val("0");
-    } 
-    
+    }
+
     if("${orderInfo}" != null){
-    	$("#hidCategoryId").val("${orderInfo.stkCtgryId}"); 
+    	$("#hidCategoryId").val("${orderInfo.stkCtgryId}");
     	if(callType == 258){
     		$("#hidPromotionId").val("${orderInfo.c8}");
     		$("#hidPriceId").val("${orderInfo.c11}");
@@ -46,14 +46,14 @@ $(document).ready(function() {
     		$("#hiddenOriPrice").val("${orderInfo.c12}");
     		$("#hiddenOriPV").val("${orderInfo.c13}");
     		$("#hiddenProductItem").val("${orderInfo.c7}");
-    		$("#hidPERentAmt").val("${orderInfo.c17}");   
-    		$("#hidPEDefRentAmt").val("${orderInfo.c18}");  
+    		$("#hidPERentAmt").val("${orderInfo.c17}");
+    		$("#hidPEDefRentAmt").val("${orderInfo.c18}");
     		$("#hidInstallStatusCodeId").val("${orderInfo.c19}");
     		$("#hidPEPreviousStatus").val("${orderInfo.c20}");
     		$("#hidDocId").val("${orderInfo.docId}");
     		$("#hidOldPrice").val("${orderInfo.c15}");
     		$("#hidExchangeAppTypeId").val("${orderInfo.c21}");
-    	}else{ 
+    	}else{
     		$("#hidPromotionId").val("${orderInfo.c2 }");
     		$("#hidPriceId").val("${orderInfo.itmPrcId}");
     		$("#hiddenOriPriceId").val("${orderInfo.itmPrcId}");
@@ -65,13 +65,13 @@ $(document).ready(function() {
     		$("#hidPEDefRentAmt").val("${orderInfo.c8}");
     		$("#hidInstallStatusCodeId").val("${orderInfo.c9}");
     	}
-    	  
+
     }
     $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
 /*     ("#hiddenPostCode").val("${customerAddress.typeId}");
     ("#hiddenStateName").val("${customerAddress.typeId}");
     ("#hiddenCountryName").val("${customerAddress.typeId}"); */
-    
+
     $("#installStatus").change(function (){
         console.log($("#installStatus").val());
         if($("#installStatus").val() == 4){
@@ -80,7 +80,7 @@ $(document).ready(function() {
             $("#completedHide2").show();
         }
     });
-    
+
 });
 
 function fn_saveInstall(){
@@ -91,7 +91,7 @@ function fn_saveInstall(){
     });
 }
 function fn_viewInstallResultSearch(){
-    var jsonObj = { 
+    var jsonObj = {
             installEntryId : $("#installEntryId").val()
        };
    Common.ajax("GET", "/services/viewInstallationSearch.do", jsonObj, function(result) {
@@ -99,7 +99,7 @@ function fn_viewInstallResultSearch(){
        console.log("data : " + result);
        AUIGrid.setGridData(myGridID_view, result);
    });
-   
+
 }
 
 function createInstallationViewAUIGrid() {
@@ -132,69 +132,69 @@ function createInstallationViewAUIGrid() {
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : true,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : false
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_view = AUIGrid.create("#grid_wrap_view", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false
-    
+
 };
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -631,7 +631,7 @@ var gridPros = {
 <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" />
 <input type="hidden" value="" id="hidPriceId" name="hidPriceId" />
 <input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" />
-<input type="hidden" value="" id="hiddenOriPrice" name="hiddenOriPrice" />
+<input type="hidden" value="${orderInfo.c5}" id="hiddenOriPrice" name="hiddenOriPrice" />
 <input type="hidden" value="" id="hiddenOriPV" name="hiddenOriPV" />
 <input type="hidden" value="" id="hiddenCatogory" name="hiddenCatogory" />
 <input type="hidden" value="" id="hiddenProductItem" name="hiddenProductItem" />
@@ -656,6 +656,16 @@ var gridPros = {
 <input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
 <input type="hidden" value="" id="hiddenInstallStateName" name="hiddenInstallStateName" />
 
+<input type="hidden" value="${customerInfo.name}" id="hidCustomerName" name="hidCustomerName"  />
+<input type="hidden" value="${customerContractInfo.telM1}" id="hidCustomerContact" name="hidCustomerContact"  />
+<input type="hidden" value="${installResult.salesOrdNo}" id="hidTaxInvDSalesOrderNo" name="hidTaxInvDSalesOrderNo"  />
+<input type="hidden" value="${installResult.installEntryNo}" id="hidTradeLedger_InstallNo" name="hidTradeLedger_InstallNo"  />
+ <c:if test="${installResult.codeid1  == '257' }">
+      <input type="hidden" value="${orderInfo.c5}" id = "hidOutright_Price" name = "hidOutright_Price" />
+ </c:if>
+ <c:if test="${installResult.codeid1  == '258' }">
+<input type="hidden" value=" ${orderInfo.c12}" id = "hidOutright_Price" name = "hidOutright_Price" />
+ </c:if>
 
 
 
