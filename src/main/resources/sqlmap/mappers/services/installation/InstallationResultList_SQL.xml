@@ -46,7 +46,7 @@
     <select id="installationResultList" parameterType="Map" resultType="egovMap">
         <![CDATA[
 		          SELECT DISTINCT
-                        CD1.CODE,--CE.TYPECODE
+                        CD1.CODE,
                         IE.INSTALL_ENTRY_NO,
                         SOM.SALES_ORD_NO,
                         IE.INSTALL_DT,
@@ -54,17 +54,16 @@
                         STK.STK_DESC,
                         MEM.NAME,
                         CD2.CODE as AppType,
-                        ST.CODE CODE1,--IE.STATUS
+                        ST.CODE CODE1,
                         IE.INSTALL_ENTRY_ID,
                         CE.CALL_ENTRY_ID,
-                        CD1.CODE_ID CODEID1,--CE.TYPE_ID
-                        CD1.CODE_NAME,--CE.TYPE_NAME
+                        CD1.CODE_ID CODEID1,
+                        CD1.CODE_NAME,
                         SOM.SALES_ORD_ID SALES_ORD_ID,
                         TO_CHAR (IE.INSTALL_DT, 'DD-MM-YYYY') C3,
                         CE.DOC_ID C1 ,
-                        I.BRNCH_ID ,--I.BRANCHID
+                        I.BRNCH_ID ,
                          BRANCH.CODE BRNCH_CODE
-
                         FROM SAL0001D som
                         join SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
                         JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -2532,7 +2531,11 @@
 		         <if test="value != null and value == 'callResultId' ">
 		            SELECT MAX(CALL_RESULT_ID) FROM CCR0007D
 		         </if>
+		         <if test = "value !=null and value =='taxInvoiceId'">
+		              SELECT MAX(TAX_INVC_ID) FROM PAY0029D
+		         </if>
 		 </select>
+
 		 <update id="updateInstallEntry" parameterType="Map">
 		 UPDATE SAL0046D
 		   SET STUS_CODE_ID = #{stusCodeId},
@@ -3348,6 +3351,244 @@
             , TO_DATE(#{oriCallDate},'dd-mm-yyyy')
             )
 		  </insert>
+
+
+        <!-- CYC 2017 NOV 24 -->
+		  <insert id = "insertTaxInvoiceCompany" parameterType="Map">
+		  INSERT INTO PAY0029D
+		  (
+		  TAX_INVC_ID
+		  ,TAX_INVC_REF_NO
+		  ,TAX_INVC_REF_DT
+		  ,TAX_INVC_GRP_ID
+		  ,TAX_INVC_GRP_NO
+		  ,TAX_INVC_CUST_NAME
+		  ,TAX_INVC_CNTC_PERSON
+		  ,TAX_INVC_ADDR1
+		  ,TAX_INVC_ADDR2
+		  ,TAX_INVC_ADDR3
+		  ,TAX_INVC_ADDR4
+		  ,TAX_INVC_POST_CODE
+		  ,TAX_INVC_STATE_NAME
+		  ,TAX_INVC_CNTY
+		  ,TAX_INVC_MONTH
+		  ,TAX_INVC_YEAR
+		  ,TAX_INVC_STUS_ID
+		  ,TAX_INVC_TASK_ID
+		  ,TAX_INVC_CRT_DT
+		  ,TAX_INVC_REM
+		  ,TAX_INVC_CHRG
+		  ,TAX_INVC_OVERDU
+		  ,TAX_INVC_AMT_DUE
+		  ,TAX_INVC_TYPE
+		  ,TAX_INVC_CRT_USER_ID
+		  ,TAX_INVC_PAY_REF_NO1
+		  ,TAX_INVC_PAY_REF_NO2
+		  ,TAX_INVC_BILL_TYPE
+		  ,TAX_INVC_GST_REM
+		  ,AREA_ID
+		  ,ADDR_DTL
+		  ,STREET
+		  )VALUES
+		  (
+		 PAY0029D_SEQ.nextval
+        ,#{TAX_INVC_REF_NO}
+        ,TO_DATE(#{TAX_INVC_REF_DT},'yyyy-mm-dd')
+        ,#{TAX_INVC_GRP_ID}
+        ,#{TAX_INVC_GRP_NO}
+        ,#{TAX_INVC_CUST_NAME}
+        ,#{TAX_INVC_CNTC_PERSON}
+        ,#{TAX_INVC_ADDR1}
+        ,#{TAX_INVC_ADDR2}
+        ,#{TAX_INVC_ADDR3}
+        ,#{TAX_INVC_ADDR4}
+        ,#{TAX_INVC_POST_CODE}
+        ,#{TAX_INVC_STATE_NAME}
+        ,#{TAX_INVC_CNTY}
+        ,#{TAX_INVC_MONTH}
+        ,#{TAX_INVC_YEAR}
+        ,#{TAX_INVC_STUS_ID}
+        ,#{TAX_INVC_TASK_ID}
+        ,TO_DATE(#{TAX_INVC_CRT_DT},'yyyymmdd')
+        ,#{TAX_INVC_REM}
+        ,#{TAX_INVC_CHRG}
+        ,#{TAX_INVC_OVERDU}
+        ,#{TAX_INVC_AMT_DUE}
+        ,#{TAX_INVC_TYPE}
+        ,#{TAX_INVC_CRT_USER_ID}
+        ,#{TAX_INVC_PAY_REF_NO1}
+        ,#{TAX_INVC_PAY_REF_NO2}
+        ,#{TAX_INVC_BILL_TYPE}
+        ,#{TAX_INVC_GST_REM}
+        ,#{AREA_ID}
+        ,#{ADDR_DTL}
+        ,#{STREET}
+		  )
+		  </insert>
+
+		  <insert id="insertTaxInvoiceCompanySub" parameterType = "Map">
+		  INSERT INTO PAY0030D
+		  (
+		  PAY0030D_SEQ.nextval
+        ,TAX_INVC_ID
+        ,INVC_ITM_ORD_NO
+        ,INVC_ITM_PO_NO
+        ,INVC_ITM_GST_RATE
+        ,INVC_ITM_GST_TXS
+        ,INVC_ITM_RENTAL_FEE
+        ,INVC_ITM_HNDL_FEE
+        ,INVC_ITM_HNDL_FEE_TXS
+        ,INVC_ITM_PRODUCT_CTGRY
+        ,INVC_ITM_PRODUCT_MODEL
+        ,INVC_ITM_PRODUCT_SERIAL_NO
+        ,INVC_ITM_ADD1
+        ,INVC_ITM_ADD2
+        ,INVC_ITM_ADD3
+        ,INVC_ITM_POST_CODE
+        ,INVC_ITM_STATE_NAME
+        ,INVC_ITM_CNTY
+        ,INVC_ITM_INSTALL_DT
+        ,INVC_ITM_INSTLMT_NO
+        ,INVC_ITM_INSTLMT_PRIOD
+        ,INVC_ITM_PAY_MODE
+        ,INVC_ITM_DESC1
+        ,INVC_ITM_DESC2
+        ,INVC_ITM_TYPE_ID
+        ,AREA_ID
+        ,ADDR_DTL
+        ,STREET
+		  )VALUES
+		  (
+		  #{INVC_ITM_ID}
+        ,#{TAX_INVC_ID}
+        ,#{INVC_ITM_ORD_NO}
+        ,#{INVC_ITM_PO_NO}
+        ,#{INVC_ITM_GST_RATE}
+        ,#{INVC_ITM_GST_TXS}
+        ,#{INVC_ITM_RENTAL_FEE}
+        ,#{INVC_ITM_HNDL_FEE}
+        ,#{INVC_ITM_HNDL_FEE_TXS}
+        ,#{INVC_ITM_PRODUCT_CTGRY}
+        ,#{INVC_ITM_PRODUCT_MODEL}
+        ,#{INVC_ITM_PRODUCT_SERIAL_NO}
+        ,#{INVC_ITM_ADD1}
+        ,#{INVC_ITM_ADD2}
+        ,#{INVC_ITM_ADD3}
+        ,#{INVC_ITM_POST_CODE}
+        ,#{INVC_ITM_STATE_NAME}
+        ,#{INVC_ITM_CNTY}
+        ,#{INVC_ITM_INSTALL_DT}
+        ,#{INVC_ITM_INSTLMT_NO}
+        ,#{INVC_ITM_INSTLMT_PRIOD}
+        ,#{INVC_ITM_PAY_MODE}
+        ,#{INVC_ITM_DESC1}
+        ,#{INVC_ITM_DESC2}
+        ,#{INVC_ITM_TYPE_ID}
+        ,#{AREA_ID}
+        ,#{ADDR_DTL}
+        ,#{STREET}
+		  )
+		  </insert>
+
+<insert id="insertAccTradeLedger" parameterType="Map">
+INSERT INTO PAY0035D(
+TRADE_RUN_ID
+,TRADE_ID
+,TRADE_SO_ID
+,TRADE_DOC_NO
+,TRADE_DOC_TYPE_ID
+,TRADE_DT_TM
+,TRADE_AMT
+,TRADE_BATCH_NO
+,TRADE_INST_NO
+,TRADE_UPD_USER_ID
+,TRADE_UPD_DT
+,TRADE_IS_SYNC
+,R01
+)
+VALUES
+(
+PAY0035D_SEQ.nextval
+,#{TRADE_ID}
+,#{TRADE_SO_ID}
+,#{TRADE_DOC_NO}
+,#{TRADE_DOC_TYPE_ID}
+,TO_DATE(#{TRADE_DT_TM},'yyyy-mm-dd')
+,#{TRADE_AMT}
+,#{TRADE_BATCH_NO}
+,#{TRADE_INST_NO}
+,#{TRADE_UPD_USER_ID}
+,TO_DATE(#{TRADE_UPD_DT},'yyyy-mm-dd')
+,#{TRADE_IS_SYNC}
+,#{R01}
+
+)
+</insert >
+
+<insert id="insertAccorderBill" parameterType="Map">
+INSERT INTO PAY0016D
+(
+    ACC_BILL_ID
+,ACC_BILL_TASK_ID
+,ACC_BILL_REF_DT
+,ACC_BILL_REF_NO
+,ACC_BILL_ORD_ID
+,ACC_BILL_ORD_NO
+,ACC_BILL_TYPE_ID
+,ACC_BILL_MODE_ID
+,ACC_BILL_SCHDUL_ID
+,ACC_BILL_SCHDUL_PRIOD
+,ACC_BILL_ADJ_ID
+,ACC_BILL_SCHDUL_AMT
+,ACC_BILL_ADJ_AMT
+,ACC_BILL_TXS_AMT
+,ACC_BILL_NET_AMT
+,ACC_BILL_STUS
+,ACC_BILL_REM
+,ACC_BILL_CRT_DT
+,ACC_BILL_CRT_USER_ID
+,ACC_BILL_GRP_ID
+,ACC_BILL_TAX_CODE_ID
+,ACC_BILL_TAX_RATE
+,ACC_BILL_ACCT_CNVR
+,ACC_BILL_CNTRCT_ID
+)
+VALUES
+(#{ACC_BILL_ID}
+,#{ACC_BILL_TASK_ID}
+,TO_DATE(#{ACC_BILL_REF_DT},'yyyy-mm-dd')
+,#{ACC_BILL_REF_NO}
+,#{ACC_BILL_ORD_ID}
+,#{ACC_BILL_ORD_NO}
+,#{ACC_BILL_TYPE_ID}
+,#{ACC_BILL_MODE_ID}
+,#{ACC_BILL_SCHDUL_ID}
+,#{ACC_BILL_SCHDUL_PRIOD}
+,#{ACC_BILL_ADJ_ID}
+,#{ACC_BILL_SCHDUL_AMT}
+,#{ACC_BILL_ADJ_AMT}
+,#{ACC_BILL_TXS_AMT}
+,#{ACC_BILL_NET_AMT}
+,#{ACC_BILL_STUS}
+,#{ACC_BILL_REM}
+,TO_DATE(#{ACC_BILL_CRT_DT},'yyyy-mm-dd')
+,#{ACC_BILL_CRT_USER_ID}
+,#{ACC_BILL_GRP_ID}
+,#{ACC_BILL_TAX_CODE_ID}
+,#{ACC_BILL_TAX_RATE}
+,#{ACC_BILL_ACCT_CNVR}
+,#{ACC_BILL_CNTRCT_ID}
+)
+</insert>
+
+<select id="getTradeAmount" parameterType="Map" resultType='Map'>
+SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =#{TRADE_SO_ID}  AND (TRADE_DOC_NO LIKE 'BR%' OR TRADE_DOC_NO LIKE 'DN%' OR TRADE_DOC_NO LIKE 'CN%')
+</select>
+
+ <select id="getInvoiceNum" parameterType="Map" resultType="java.lang.String">
+                SELECT FN_GET_DOCNO(#{DocNo}) InvoiceNo  FROM DUAL
+     </select>
+
 		  <insert id="insertCallResult" parameterType="Map">
 			  INSERT INTO CCR0007D (
 			       CALL_RESULT_ID
@@ -3533,8 +3774,8 @@
 						  WHERE RESULT_ID = #{resultId}
      </insert>
 
-<resultMap id="installationNoteListing" type="egovMap" /> 
-        <select id="selectInstallationNoteListing" parameterType="Map" resultType="egovMap" statementType="CALLABLE" >      
+<resultMap id="installationNoteListing" type="egovMap" />
+        <select id="selectInstallationNoteListing" parameterType="Map" resultType="egovMap" statementType="CALLABLE" >
         call  SP_CR_GEN_INS_NOTE_LIST(#{V_DSCCODE},#{V_APPDATE},#{V_ORDERDATE},#{V_WHERESQL},#{V_ORDERBYSQL},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=installationNoteListing})
         </select>
 
