@@ -96,8 +96,8 @@
         WHERE SMS.SMS_ID = RESULT.SMS_ID
               AND SMS.SMS_STUS_ID = 1
               AND RESULT.REPLY_FDBCK_ID  IN (
-                                        SELECT     REGEXP_SUBSTR (#{replyFdbckId}, '[^,]+', 1, LEVEL)
+                                        SELECT     REGEXP_SUBSTR (#{msgIds}, '[^,]+', 1, LEVEL)
                                         FROM DUAL
-                                        CONNECT BY REGEXP_SUBSTR (#{replyFdbckId}, '[^,]+', 1, LEVEL) IS NOT NULL)
+                                        CONNECT BY REGEXP_SUBSTR (#{msgIds}, '[^,]+', 1, LEVEL) IS NOT NULL)
     </select>
 </mapper>
