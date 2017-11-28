@@ -30,10 +30,6 @@ var listGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyno"       ,headerText:"Delivery No"                 ,width:200    ,height:30                },
-                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
-                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
                      {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
                      {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
@@ -46,9 +42,14 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"delyqty"      ,headerText:"Delivered Qty"               ,width:120    ,height:30 },
                      {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"          ,width:120    ,height:30 , editalble:true},
+                     {dataField:"docno"     ,headerText:"Ref Doc.No"          ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
                      {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30},
+                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
+                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
+                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
                      {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:false}
                      ];
                      
@@ -162,7 +163,7 @@ $(document).ready(function(){
     });
 });
 function f_change(){
-	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
     doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
 }
 //btn clickevent
@@ -180,11 +181,12 @@ $(function(){
         $('#reqedt').val('');
         $('#sstatus').val('');
         $('#sam').val('');
-        paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+        $('#refdocno').val('');
+        paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $("#sttype").change(function(){
-        paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+        paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
         doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
     });
     $('#delivery').click(function(){
@@ -406,7 +408,8 @@ function grFunc(){
                 <tr>
                     <th scope="row">Delivery Number</th>
                     <td>
-                        <select class="w100p" id="seldelno" name="seldelno"></select>
+                        <!-- <select class="w100p" id="seldelno" name="seldelno"></select> -->
+                         <input type="text" class="w100p" id="seldelno" name="seldelno">
                     </td>
                     <th scope="row">Transfer Type</th>
                     <td>
@@ -428,7 +431,10 @@ function grFunc(){
                         <input type="hidden"  id="flocation" name="flocation">
                         <input type="text" class="w100p" id="flocationnm" name="flocationnm">
                     </td>
-                    <td colspan="2">&nbsp;</td>                
+                    <th scope="row">Ref Doc.No </th>
+                    <td>
+                        <input type="text" class="w100p" id="refdocno" name="refdocno">
+                    </td>                   
                 </tr>
                 
                 <tr>

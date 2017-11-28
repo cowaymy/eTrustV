@@ -45,6 +45,8 @@ var columnLayout = [{dataField:"matrlNo"             ,headerText:"Material Code"
                     {dataField:"matrlDocItm"         ,headerText:"Item"                       ,width:120    ,height:30 , visible:true},
                     {dataField:"postingdate"         ,headerText:"Posting date"               ,width:120    ,height:30 , visible:true},
                     {dataField:"delvryNo"            ,headerText:"Delivery No"                ,width:120    ,height:30 , visible:true},
+                    {dataField:"refDocNo"            ,headerText:"Ref.Doc.No"                ,width:120    ,height:30 , visible:true},
+                    {dataField:"stockTrnsfrReqst"            ,headerText:"Request No"                ,width:120    ,height:30 , visible:true},
                     {dataField:"debtCrditIndict"     ,headerText:"Debit/Credit"               ,width:120    ,height:30 , visible:true},
                     {dataField:"autoCrtItm"          ,headerText:"Auto/Manual"                ,width:120    ,height:30 , visible:true},
                     {dataField:"codeName"            ,headerText:"Unit of Measure"            ,width:"15%"  ,height:30 , visible:true},
@@ -296,6 +298,7 @@ function f_multiCombos() {
 		var param = $('#searchForm').serialize();
 		
 		Common.ajax("GET", url, param, function(data) {
+			console.log(data);
 			AUIGrid.setGridData(myGridID, data.data);
 
 		});

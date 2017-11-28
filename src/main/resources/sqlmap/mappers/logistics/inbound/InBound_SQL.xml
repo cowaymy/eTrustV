@@ -57,10 +57,10 @@
 				     AND L84.ITM_SEQ = REQ.BL_ITM_SEQ(+)
 				     AND L84.MATRL_NO = REQ.ITM_CODE(+)
 				     <if test="invno != null and invno != ''">
-				     AND L83.BL_NO LIKE #{invno}||'%'
+				     AND L83.INV_NO LIKE #{invno}||'%'
                     </if>
 				     <if test="blno != null and blno != ''">
-				     AND L83.INV_NO LIKE #{invno}||'%'
+				     AND L83.BL_NO LIKE #{blno}||'%'
                     </if>
 				     <if test="location != null and location != ''">
 				     AND S28.WH_LOC_ID =  #{location} 

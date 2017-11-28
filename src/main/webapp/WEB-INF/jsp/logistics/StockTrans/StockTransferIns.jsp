@@ -35,6 +35,7 @@ var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,wid
                      {dataField:"stkcd"     ,headerText:"Mat.Code"           ,width:120    ,height:30,editable:false},
                      {dataField:"stknm"     ,headerText:"Material Name"         ,width:120    ,height:30,editable:false},
                      {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false},
+                     {dataField:"serialchck"       ,headerText:"Serial No Check "     ,width:120    ,height:30, editable:false},
                      {dataField:"typeid"    ,headerText:"Type Id"           ,width:120    ,height:30,visible:false},
                      {dataField:"typenm"    ,headerText:"Type"         ,width:120    ,height:30,editable:false},
                      {dataField:"cateid"    ,headerText:"Cate Id"           ,width:120    ,height:30,visible:false},
@@ -58,7 +59,9 @@ $(document).ready(function(){
     doSysdate(0 , 'reqcrtdate');
     paramdata = { groupCode : '306' ,Codeval: 'US' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, 'US','sttype', 'S' , 'transferTypeFunc');
-    paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'01'}; // session 정보 등록 
+    //paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'01'}; // session 정보 등록 
+   //2017-11-28 From Location : CDC , RDC, CDC & RDC 가 보일 수 있도록 처리 
+    paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'010205'}; // session 정보 등록 
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); 
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
@@ -139,7 +142,7 @@ function tlocationFunc(){
 }
 
 function transferTypeFunc(){
-	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(), codeIn:'US03,US93'};
     doGetComboData('/common/selectCodeList.do', paramdata, 'US03','smtype', 'S' , '');
 }
 //btn clickevent
@@ -182,7 +185,7 @@ $(function(){
     	}
     });
     $("#sttype").change(function(){
-    	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+    	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(), codeIn:'US03,US93'};
         doGetComboData('/common/selectCodeList.do', paramdata, 'US03','smtype', 'S' , '');
     });
     $("#smtype").change(function(){

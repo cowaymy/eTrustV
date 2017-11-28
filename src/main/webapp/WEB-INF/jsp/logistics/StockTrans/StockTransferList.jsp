@@ -47,6 +47,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"delyqty"      ,headerText:"Delivered Qty"               ,width:120    ,height:30 },
                      {dataField:"rciptqty"     ,headerText:"Good Issued Qty"             ,width:120    ,height:30 },
                      {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"          ,width:120    ,height:30                },
+                     {dataField:"docno"     ,headerText:"Ref Doc.No"          ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
                      {dataField:"reqitmno"     ,headerText:"STO Item"                    ,width:120    ,height:30 , visible:false},
@@ -170,7 +171,7 @@ $(document).ready(function(){
 });
 
 function f_change(){
-	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(), codeIn:'US03,US93'};
     doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
 }
 //btn clickevent
@@ -188,7 +189,8 @@ $(function(){
         $('#reqedt').val('');
         $('#sstatus').val('');
         $('#sam').val('');
-    	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+        $('#refdocno').val('');
+    	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(),codeIn:'US03,US93'};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $("#sttype").change(function(){
@@ -378,7 +380,10 @@ function f_getTtype(g , v){
                         <input type="hidden"  id="flocation" name="flocation">
                         <input type="text" class="w100p" id="flocationnm" name="flocationnm">
                     </td>
-                    <td colspan="2">&nbsp;</td>                
+                    <th scope="row">Ref Doc.No </th>
+                    <td>
+                        <input type="text" class="w100p" id="refdocno" name="refdocno">
+                    </td>             
                 </tr>
                 
                 <tr>

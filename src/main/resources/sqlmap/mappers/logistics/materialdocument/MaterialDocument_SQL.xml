@@ -20,6 +20,8 @@
 		, l59.trnsc_type_code
 		, l60.MATRL_DOC_ITM
 		, l60.delvry_no
+		, l59.REF_DOC_NO
+		, l60.STOCK_TRNSFR_REQST
 		, tt.code_name trantype
 		, l60.INVNTRY_MOV_TYPE
 		, mt.code_name movtype

@@ -7,6 +7,9 @@
 .aui-grid-user-custom-left {
     text-align:left;
 }
+.aui-grid-user-custom-right {
+    text-align:right;
+}
 
 /* 커스컴 disable 스타일*/
 .mycustom-disable-color {
@@ -44,16 +47,16 @@ var rescolumnLayout=[
 							 {dataField:"stkid" ,headerText:"stkid",width:120 ,height:30,editable:false, visible:false},
 							 {dataField:"matrlNo" ,headerText:"Material Cd.",width:120 ,height:30,editable:false},
 							 {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30,editable:false, visible:false},
-							 {dataField:"typename" ,headerText:"Type",width:120 ,height:30,editable:false},
-							 {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30,editable:false, visible:false},
-							 {dataField:"ctgryname" ,headerText:"Catagory",width:120 ,height:30,editable:false},
 							 {dataField:"stkdesc" ,headerText:"Material",width:250,height:30,editable:false},
 							 {dataField:"uom" ,headerText:"uom",width:120 ,height:30,editable:false, visible:false},
 							 {dataField:"uomnm" ,headerText:"UOM",width:120 ,height:30,editable:false},
-							 {dataField:"qty" ,headerText:"System Qty",width:120 ,height:30,editable:false},
-							 {dataField:"reqedQty" ,headerText:"Requested Qty",width:120 ,height:30,editable:false},
-							 {dataField:"avrqty" ,headerText:"Available Qty",width:120 ,height:30,editable:false},
-							 {dataField:"reqQty" ,headerText:"Req. Qty",width:120 ,height:30}
+							 {dataField:"typename" ,headerText:"Type",width:120 ,height:30,editable:false},
+							 {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30,editable:false, visible:false},
+							 {dataField:"ctgryname" ,headerText:"Catagory",width:120 ,height:30,editable:false},
+							 {dataField:"qty" ,headerText:"BL Qty",width:120 ,height:30,editable:false,dataType : "numeric",style:"aui-grid-user-custom-right"},
+							 {dataField:"avrqty" ,headerText:"Remain Qty",width:120 ,height:30,editable:false ,dataType : "numeric",style:"aui-grid-user-custom-right"},
+							 {dataField:"reqedQty" ,headerText:"Moved Qty",width:120 ,height:30,editable:false ,dataType : "numeric",style:"aui-grid-user-custom-right"},
+							 {dataField:"reqQty" ,headerText:"Req Qty",width:120 ,height:30,dataType : "numeric",style:"aui-grid-user-custom-right"}
 							];
 
 var smoLayout=[
@@ -217,7 +220,6 @@ $(function(){
             return false;
         }else{
         	   for (var i = 0 ; i < checkedItems.length ; i++){
-        		   console.log(checkedItems[i].reqQty);
                    if(null==checkedItems[i].reqQty || 0==checkedItems[i].reqQty){
                        Common.alert('Please Check Req Qty.');
                        status = false;
@@ -239,9 +241,7 @@ $(function(){
 function SearchListAjax() {
     var url = "/logistics/inbound/InBoundList.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
     Common.ajax("POST" , url , param , function(data){
-    	console.log(data);
         AUIGrid.setGridData(listGrid, data.dataList);
     });
 }
@@ -260,6 +260,8 @@ function createSMO(){
 	data.form    = $("#giForm").serializeJSON();
     var url = "/logistics/inbound/reqSMO.do";
     Common.ajax("POST" , url , data , function(data){
+    	console.log(data);
+    	Common.alert(data.message+"</br> Created : "+data.data.reqNo+"</br> Created : "+data.data.deliveryNo);
         $("#popup_wrap").hide();
         SearchListAjax();
     });
@@ -277,9 +279,7 @@ function searchSMO(index){
 			  itmSeq:itmSeq,
 			  };
     var url = "/logistics/inbound/searchSMO.do";
-    console.log(data);
     Common.ajax("POST" , url , data , function(data){
-    console.log(data);
     	 AUIGrid.setGridData(subGrid, data.dataList);
     });
 }

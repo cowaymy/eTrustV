@@ -55,7 +55,7 @@
            AND l48.itm_code       = l55.itm_code(+)
 		   and l47.reqst_stus     = reqs.code(+)
 		   <if test="streq !=null and streq !=''">
-		      and l47.reqst_no = #{streq}
+		      and l47.reqst_no LIKE #{streq}||'%'
 		   </if>
 		   <if test="smtype !=null and smtype !=''">
               and l47.trnsc_type_dtl = #{smtype}
@@ -68,6 +68,9 @@
            </if>
            <if test="tlocation !=null and tlocation !=''">
               and (l47.rciv_cdc_rdc = #{tlocation} or s28c.wh_loc_desc like '%'||#{tlocationnm}||'%')
+           </if>
+           <if test="refdocno !=null and refdocno !=''">
+              and l47.REF_DOC_NO LIKE #{refdocno}||'%'
            </if>
            <if test="sam !=null and sam !=''">
               and l47.PRIDIC_FRQNCY = #{sam}
@@ -185,7 +188,8 @@
              , l56.stk_type_id typeid , s15.code_name typenm
              , l56.stk_ctgry_id cateid , s11.code_name catenm
              , (l56.qty - nvl(l75.bookqty , 0)) as qty , s26.stk_id stkid
-                  ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM) uom
+             ,S26.SERIAL_CHK SERIALCHCK
+             ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM) uom
           from log0056m l56 , sys0026m s26
              ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
                 group by loc_id , itm_code ) l75
@@ -310,6 +314,7 @@
                when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_ft_chk = 'Y'  then 'Y' else 'N' end
                when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pt_chk = 'Y' then 'Y' else 'N' end
                else 'N' end serialchk
+              , l47.REF_DOC_NO docno 
 		  from log0047m l47
 		     , log0048d l48
 		     , log0054m l54
@@ -333,10 +338,10 @@
 		   and l47.reqst_no  = l48.reqst_no
 		   AND NVL(L54.DELVRY_GR_CMPLT,'N') <![CDATA[<>]]> 'Y'
 		   <if test="reqstno != null and reqstno != ''">
-		      and l47.reqst_no  = #{reqstno}
+		      and l47.reqst_no  LIKE #{reqstno}||'%'
 		   </if>
 		   <if test="seldelno != null and seldelno != ''">
-              and l54.delvry_no  = #{seldelno}
+              and l54.delvry_no   LIKE #{seldelno}||'%'
            </if>
 		   <if test="smtype !=null and smtype !=''">
               and l47.trnsc_type_dtl = #{smtype}
@@ -349,6 +354,9 @@
            </if>
            <if test="tlocation !=null and tlocation !=''">
               and (l47.rciv_cdc_rdc = #{tlocation} or s28c.wh_loc_desc like '%'||#{tlocationnm}||'%')
+           </if>
+           <if test="refdocno !=null and refdocno !=''">
+              and l47.REF_DOC_NO LIKE #{refdocno}||'%'
            </if>
            <if test="sam !=null and sam !=''">
               and l47.PRIDIC_FRQNCY = #{sam}
