@@ -65,8 +65,8 @@ public class HeartServicePartsDto {
 	@ApiModelProperty(value = "대체필터명")
 	private String alternativeFilterName;
 
-	@ApiModelProperty(value = "필터 바코드대상 여부(Y/N)")
-	private String filterBarcdChkYN;
+	@ApiModelProperty(value = "Filter Barcode Check")
+	private String filterBarcdChkYn;
 
 	@ApiModelProperty(value = "필터 바코드 Serial No")
 	private String filterBarcdSerialNo;
@@ -215,12 +215,13 @@ public class HeartServicePartsDto {
 		this.alternativeFilterName = alternativeFilterName;
 	}
 
+
 	public String getFilterBarcdChkYN() {
-		return filterBarcdChkYN;
+		return filterBarcdChkYn;
 	}
 
 	public void setFilterBarcdChkYN(String filterBarcdChkYN) {
-		this.filterBarcdChkYN = filterBarcdChkYN;
+		this.filterBarcdChkYn = filterBarcdChkYN;
 	}
 
 	public String getFilterBarcdSerialNo() {
