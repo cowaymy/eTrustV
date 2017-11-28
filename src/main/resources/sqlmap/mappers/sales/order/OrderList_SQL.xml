@@ -261,4 +261,12 @@
 	   AND ( Extent1.MEM_TYPE = #{memType} )
 	   AND ( Extent2.MEM_UP_ID = #{upperLineMemberID} )
     </select>
+    
+    <select id="getMemberOrgInfo" parameterType="Map" resultType="egovMap">
+        SELECT ORG_CODE, GRP_CODE, DEPT_CODE  
+        FROM ORG1001V
+        WHERE MEM_ID = #{cmbCode}
+    </select>
+    
+    
 </mapper>
