@@ -259,14 +259,14 @@ public class HsManualController {
 		return ResponseEntity.ok(resultList);
 	}
 
-
-	@RequestMapping(value = "/getCdList.do", method = RequestMethod.GET)
+    /* BY KV - Change to textBox -  txtcodyCode and below code no more used.*/
+	/*@RequestMapping(value = "/getCdList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getCdList(@RequestParam Map<String, Object>params) {
         // Member Type 에 따른 Organization 조회.
 		List<EgovMap> resultList = hsManualService.getCdList(params);
 
 		return ResponseEntity.ok(resultList);
-	}
+	}*/
 
 
 
@@ -626,25 +626,25 @@ public class HsManualController {
 		return ResponseEntity.ok(message);
 
 	}
-	
+
 	@RequestMapping(value = "/hsCountForecastListingPop.do")
 	public String hsCountForecastListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "services/bs/hsCountForecastListingPop";
 	}
-	
+
 	@RequestMapping(value = "/hsReportGroupPop.do")
 	public String hsReportGroupPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "services/bs/hsReportGroupPop";
 	}
-	
+
 	@RequestMapping(value = "/hsReportSinglePop.do")
 	public String hsReportSinglePop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "services/bs/hsReportSinglePop";
 	}
-	
+
 	@RequestMapping(value = "/selectBranch_id", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectBranch_id( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
