@@ -325,7 +325,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		Map<String, Object> receiveMap = new HashMap();
 		receiveMap.put("userId", confirmReceiveMForm.getUserId());
-
+		
 		// receiveMap.put("gipfdate", confirmReceiveMForm.getRequestDate());
 		// receiveMap.put("giptdate", confirmReceiveMForm.getRequestDate());
 		receiveMap.put("gtype", confirmReceiveMForm.getReqStatus());
@@ -340,6 +340,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// formMap.put("prgnm", params.get("prgnm"));
 		receiveMap.put("refdocno", "");
 		receiveMap.put("salesorder", "");
+		receiveMap.put("giptdate", MlogApiMapper.dateParsing(confirmReceiveMForm.getRequestDate()));
 		logger.debug("receiveMap : {}", receiveMap);
 
 		MlogApiMapper.StockMovementIssue(receiveMap);
