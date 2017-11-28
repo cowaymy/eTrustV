@@ -156,12 +156,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		return hsManualMapper.getCdDeptList(params);
 	}
 
+	/* BY KV - Change to textBox -  txtcodyCode and below code no more used.
 	@Override
 	public List<EgovMap> getCdList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		params.put("memLvl", 4);
 		return hsManualMapper.getCdUpMemList(params);
 	}
+	*/
 
 
 
