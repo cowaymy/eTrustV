@@ -14,7 +14,8 @@
                    S.SRV_MEM_CRT_DT,
                    S.SRV_MEM_CRT_USER_ID,
                    S.PAC_TYPE,
-                   S.FREE_MEM_USE
+                   S.FREE_MEM_USE,
+                   S.USER_NAME
               FROM ( SELECT X.SRV_MEM_PAC_ID   ,
                             X.SRV_MEM_CODE   ,
                             X.SRV_MEM_DESC   ,
@@ -26,8 +27,10 @@
                             X.PAC_TYPE,
                             X.FREE_MEM_USE,
                             CASE WHEN ( X.SRV_MEM_DUR IS NOT NULL ) THEN X.SRV_MEM_DUR                           ELSE 0
-                               END SRV_MEM_DUR  
-                     FROM SAL0091M X                            
+                               END SRV_MEM_DUR,  
+                             U.USER_NAME  
+                     FROM SAL0091M X 
+                     JOIN SYS0047M  U   ON U.USER_ID = X.SRV_MEM_CRT_USER_ID                           
                       WHERE  1=1 
                          <if test="SRV_CNTRCT_PAC_CODE != null and SRV_CNTRCT_PAC_CODE != ''">
                                AND ( X.SRV_MEM_CODE    LIKE '%'|| #{SRV_CNTRCT_PAC_CODE} ||'%'  )
