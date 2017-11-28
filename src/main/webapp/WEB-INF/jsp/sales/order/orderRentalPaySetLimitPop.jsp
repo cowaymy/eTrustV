@@ -2,8 +2,6 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 
-$("#dataForm").empty();
-
 $(document).ready(function() {
     $("#_termSave").click(function() {
         

@@ -3,6 +3,9 @@
 
 <script type="text/javascript">
 
+$("#dataForm").empty();
+
+
 /* 멀티셀렉트 플러그인 start */
 $('.multy_select').change(function() {
    //console.log($(this).val());
