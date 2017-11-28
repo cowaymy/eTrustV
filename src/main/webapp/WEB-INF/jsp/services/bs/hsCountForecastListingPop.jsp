@@ -50,12 +50,11 @@ function fn_openReport(){
 	    
 	    var tmpforecastMonth = $("#forecastMonth").val();
 	    var forecastMonth =tmpforecastMonth.substring(3,7)+"-"+tmpforecastMonth.substring(0,2)+"-01";
-	    alert(forecastMonth);
 	    var branchid = 0;
 	    branchid = Number($("#brnch option:selected").val());
 	    var cmid = 0;
 	    cmid = Number($("#memCode option:selected").val());
-	    alert(forecastMonth+","+branchid+","+cmid);
+	    $("#reportForm #viewType").val("PDF");
 	    if(cmid==0){
         	$("#reportForm #reportFileName").val('/services/BSCountForecastByBranch.rpt');
         	$("#reportForm #reportDownFileName").val("BSCountForecastByBranch_"+date.getDate()+month+date.getFullYear());
@@ -72,11 +71,11 @@ function fn_openReport(){
 	     */
 	     //$("#installationNoteForm #reportFileName").val('/services/InstallationNote_WithOldOrderNo.rpt');
 	     
-	     $("#reportForm #V_FORCECASTDATE").val(forecastMonth);
+	     $("#reportForm #V_FORECASTDATE").val(forecastMonth);
 	     $("#reportForm #V_BRANCHID").val(branchid);
 	     $("#reportForm #V_CMID").val(cmid);
 	     
-	     $("#reportForm #viewType").val("PDF");
+	     
 	     //$("#reportForm #reportDownFileName").val("InstallationNote_"+date.getDate()+month+date.getFullYear());
 	  
 	   //report 호출
@@ -110,7 +109,7 @@ function fn_clear(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="reportForm">
-<input type="hidden" id="V_FORCECASTDATE" name="V_FORCECASTDATE" />
+<input type="hidden" id="V_FORECASTDATE" name="V_FORECASTDATE" />
 <input type="hidden" id="V_BRANCHID" name="V_BRANCHID" />
 <input type="hidden" id="V_CMID" name="V_CMID" />
 <!--reportFileName,  viewType 모든 레포트 필수값 -->
