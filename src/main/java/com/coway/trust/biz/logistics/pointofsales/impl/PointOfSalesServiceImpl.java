@@ -48,7 +48,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+//		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 
 //		for (int i = 0; i < checkList.size(); i++) {
 //			logger.debug("checkList    값 : {}", checkList.get(i));
@@ -76,16 +76,16 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 		}
 
-		if (serialList.size() > 0) {
-			for (int i = 0; i < serialList.size(); i++) {
-				Map<String, Object> serialMap = (Map<String, Object>) serialList.get(i);
-				serialMap.put("reqno", posSeq);
-				serialMap.put("ttype", formMap.get("trnscType"));
-				serialMap.put("userId", params.get("userId"));
-
-				PointOfSalesMapper.insertSerial(serialMap);
-			}
-		}
+//		if (serialList.size() > 0) {
+//			for (int i = 0; i < serialList.size(); i++) {
+//				Map<String, Object> serialMap = (Map<String, Object>) serialList.get(i);
+//				serialMap.put("reqno", posSeq);
+//				serialMap.put("ttype", formMap.get("trnscType"));
+//				serialMap.put("userId", params.get("userId"));
+//
+//				PointOfSalesMapper.insertSerial(serialMap);
+//			}
+//		}
 
 		insertStockBooking(formMap);
 		return posSeq;
@@ -96,6 +96,8 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 		List<EgovMap> GIList = (List<EgovMap>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> GiMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> serialList     = (List<Object>) params.get(AppConstants.AUIGRID_ADD);	
+		
 		String reVal = "";
 
 		int iCnt = 0;
@@ -128,6 +130,25 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 			}
 		}
+		
+		logger.debug("reqstno ???    값 : {}", GiMap.get("reqstno"));
+		logger.debug("ttype ???    값 : {}", ttype);
+		
+    	if (serialList != null  && serialList.size() > 0) {
+    	    
+			for (int i = 0; i < serialList.size(); i++) {
+			Map<String, Object> serialMap = (Map<String, Object>) serialList.get(i);
+			
+			serialMap.put("reqno", GiMap.get("reqstno"));
+			serialMap.put("ttype", ttype);
+			serialMap.put("userId", params.get("userId"));
+
+			PointOfSalesMapper.insertSerial(serialMap);
+		}
+			
+    	}
+		
+
 		String[] delvcd = delyCd.split("∈");
 		GiMap.put("parray", delvcd);
 		GiMap.put("gtype", ttype);
