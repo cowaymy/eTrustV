@@ -9,8 +9,7 @@
                                S.SRV_CNTRCT_PAC_CODE   ,
                                S.SRV_CNTRCT_PAC_DESC   ,
                                S.SRV_CNTRCT_PAC_DUR   ,
-                               S.SRV_CNTRCT_PAC_STUS_ID   ,
-                               S.CODE   ,
+                               S.SRV_CNTRCT_PAC_STUS_ID  code ,
                                S.PAC_TYPE ,
                                S.OBLIGT_PRIOD ,
                                to_char(S.C1,'yyyy/mm/dd')  c1   ,
@@ -24,7 +23,6 @@
                                         F.SRV_CNTRCT_PAC_STUS_ID   ,
                                         F.SRV_CNTRCT_PAC_START_DT   ,
                                         F.SRV_CNTRCT_PAC_END_DT   ,
-                                        F.CODE   ,
                                         F.PAC_TYPE   ,
                                         F.OBLIGT_PRIOD   ,
                                         U.USER_NAME   ,
@@ -42,10 +40,8 @@
                                    D.SRV_CNTRCT_PAC_START_DT   ,
                                    D.SRV_CNTRCT_PAC_END_DT   ,
                                    D.PAC_TYPE,
-                                   D.OBLIGT_PRIOD,
-                                   Extent2.CODE   
+                                   D.OBLIGT_PRIOD
                             FROM SAL0081D D
-                                   JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = D.SRV_CNTRCT_PAC_STUS_ID
                              WHERE   1=1 
                                <if test="SRV_CNTRCT_PAC_STUS_ID != null and SRV_CNTRCT_PAC_STUS_ID != ''">
                                     AND D.SRV_CNTRCT_PAC_STUS_ID IN
@@ -204,7 +200,7 @@
                SRV_CNTRCT_PAC_CODE        = #{srvCntrctPacCode},
                SRV_CNTRCT_PAC_DESC        = #{srvCntrctPacDesc},
                SRV_CNTRCT_PAC_DUR          = #{srvCntrctPacDur}, 
-               SRV_CNTRCT_PAC_STUS_ID   =  decode(#{code},'ACT',1,'8') ,
+               SRV_CNTRCT_PAC_STUS_ID   =  decode(#{code},1,1,8) ,
                SRV_CNTRCT_PAC_START_DT = decode (INSTR(#{srvCntrctPacStartDt} , '/') ,5 , to_date(#{srvCntrctPacStartDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacStartDt},'dd/mm/yyyy')) , 
                SRV_CNTRCT_PAC_END_DT     = decode (INSTR(#{srvCntrctPacEndDt} , '/') ,5 , to_date(#{srvCntrctPacEndDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacEndDt},'dd/mm/yyyy')  ),
                PAC_TYPE                           = #{pacType} ,

@@ -282,8 +282,13 @@ function fn_chnPacType() {
 	
     if($("#pacType").val() == "0") {
         AUIGrid.showColumnByDataField(newGridID, "discontinue");
+        $("#freeMemUse").attr("disabled", false);
+        $("#freeMemUse").attr("class", "");
     } else {
         AUIGrid.hideColumnByDataField(newGridID, "discontinue");
+        $("#freeMemUse").attr("disabled", true);
+        $("#freeMemUse").attr("class", "disabled");
+        $("#freeMemUse").val("0");
         
         var idx = AUIGrid.getRowCount(newGridID); 
         
@@ -390,7 +395,9 @@ function fn_Save(){
     var removedRowItems = AUIGrid.getRemovedItems(newGridID);
     
     var filter = AUIGrid.getGridData(filterHiddenGridID); //     GridCommon.getGridData(filterHiddenGridID); 
-        
+    
+    $("#freeMemUse").attr("disabled", false);
+    
     //서버로 보낼 데이터 작성
     var saveForm = {
        "add" : addedRowItems,
@@ -401,7 +408,8 @@ function fn_Save(){
        "txtServCode" : $("#txtServCode").val()  ,
        "txtServDesc" : $("#txtServDesc").val() ,
        "txtDuration" :  $("#txtDuration").val() ,
-       "pacType" :  $("#pacType").val() 
+       "pacType" :  $("#pacType").val() ,
+       "freeMemUse" :  $("#freeMemUse").val() ,
     };
     
     Common.ajaxSync("POST", "/sales/mQPackages/newQPackageAdd.do", saveForm , function(result) {
@@ -551,10 +559,19 @@ function fn_filterNewAjax() {
 </tr>
 <tr>
 	<th scope="row">Package Description<span class="must">*</span></th>
-	<td><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc'  class="w100p" /></td>
-	<th scope="row">Package Type<span class="must">*</span></th>
+	<td colspan="3"><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc' style="width: 284px" /></td>
+</tr>
+<tr>
+<th scope="row">Package Type<span class="must">*</span></th>
     <td>
     <select class="w100p"  id='pacType' name ='pacType'  onchange="javascript:fn_chnPacType();">
+    </select>
+    </td>
+	<th scope="row">Free Membership</th>
+	<td >
+	<select class="w100p"  id='freeMemUse' name ='freeMemUse'  >
+	<option value="0" selected="selected">No</option>
+	<option value="1">Yes</option>
     </select>
     </td>
 </tr>

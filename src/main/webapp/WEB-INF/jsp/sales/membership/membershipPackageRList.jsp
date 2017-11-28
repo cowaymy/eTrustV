@@ -193,11 +193,20 @@ function createDetailAUIGrid() {
                             	renderer : {
                                     type : "IconRenderer",
                                     iconPosition : "aisleCenter",  // 아이콘 위치 
-                                    iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+                                   /*  iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
                                         "default" : "${pageContext.request.contextPath}/resources/AUIGrid/images/delete.png" // default
-                                    },
+                                    }, */
                                     onclick : function(rowIndex, columnIndex, value, item) {
                                         fn_delete();
+                                    },
+                                    iconFunction : function(rowIndex, columnIndex, value, item){
+                                        var delIcon = "${pageContext.request.contextPath}/resources/AUIGrid/images/delete.png";
+                                        var okIcon = "${pageContext.request.contextPath}/resources/AUIGrid/images/accept-ok.png";
+                                        
+                                        if(AUIGrid.getCellValue(detailGridID, rowIndex, "code") == "ACT")
+                                            return delIcon;
+                                        else
+                                            return okIcon;
                                     }
                                 }
                             },
@@ -484,7 +493,7 @@ function fn_delete(){
 			SRV_PAC_ITM_STUS_ID : srvPacItmStusId
    };
 
-    Common.confirm("<spring:message code='sys.common.alert.delete'/>",function(){
+//    Common.confirm("<spring:message code='sys.common.alert.delete'/>",function(){
     	Common.ajax("POST", "/sales/mPackages/deletePackage.do", deleteForm, function(result) {
     		Common.alert("PRODUCT ITEM DEACTIVATED  "+DEFAULT_DELIMITER + "The product item has been deactivated for this package.  ");
     	      fn_selectDetailListAjax('1');
@@ -496,7 +505,7 @@ function fn_delete(){
     	         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
     	         
    	     }); 
-   	});
+ //  	});
       
 }
 

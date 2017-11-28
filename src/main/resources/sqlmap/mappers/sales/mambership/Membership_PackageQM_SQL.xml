@@ -8,13 +8,13 @@
                    S.SRV_MEM_CODE   ,
                    S.SRV_MEM_DESC   ,
                    S.SRV_MEM_DUR   ,
-                   S.SRV_MEM_STUS_ID   ,
-                   S.CODE CODE  ,
+                   S.SRV_MEM_STUS_ID code  ,
                    S.SRV_MEM_LAB_CHRG,
                    S.SRV_MEM_PART_CHRG_TYPE_ID,
                    S.SRV_MEM_CRT_DT,
                    S.SRV_MEM_CRT_USER_ID,
-                   S.PAC_TYPE
+                   S.PAC_TYPE,
+                   S.FREE_MEM_USE
               FROM ( SELECT X.SRV_MEM_PAC_ID   ,
                             X.SRV_MEM_CODE   ,
                             X.SRV_MEM_DESC   ,
@@ -23,12 +23,11 @@
                             X.SRV_MEM_PART_CHRG_TYPE_ID,
                             X.SRV_MEM_CRT_DT,
                             X.SRV_MEM_CRT_USER_ID,
-                            E.CODE   ,
                             X.PAC_TYPE,
+                            X.FREE_MEM_USE,
                             CASE WHEN ( X.SRV_MEM_DUR IS NOT NULL ) THEN X.SRV_MEM_DUR                           ELSE 0
                                END SRV_MEM_DUR  
-                     FROM SAL0091M X
-                            JOIN SYS0038M E   ON E.STUS_CODE_ID = X.SRV_MEM_STUS_ID
+                     FROM SAL0091M X                            
                       WHERE  1=1 
                          <if test="SRV_CNTRCT_PAC_CODE != null and SRV_CNTRCT_PAC_CODE != ''">
                                AND ( X.SRV_MEM_CODE    LIKE '%'|| #{SRV_CNTRCT_PAC_CODE} ||'%'  )
@@ -173,8 +172,9 @@
                    SRV_MEM_DESC               = #{srvMemDesc},
                    SRV_MEM_DUR                 = #{srvMemDur},
                    SRV_MEM_LAB_CHRG         = #{srvMemLabChrg},
-                   SRV_MEM_STUS_ID           = decode(#{code} ,'ACT' ,'1' ,'8'),
-                   PAC_TYPE                        = #{pacType} 
+                   SRV_MEM_STUS_ID           = decode(#{code} ,1 ,1 ,8),
+                   PAC_TYPE                       = #{pacType} ,
+                   FREE_MEM_USE                = #{freeMemUse} 
             WHERE  SRV_MEM_PAC_ID         = #{srvMemPacId}
    
    </insert>
@@ -279,12 +279,12 @@
 					  ( SRV_MEM_PAC_ID , SRV_MEM_CODE, SRV_MEM_DESC, SRV_MEM_DUR, 
 					    SRV_MEM_PART_CHRG_TYPE_ID, SRV_MEM_LAB_CHRG, 
 					    SRV_MEM_STUS_ID, SRV_MEM_CRT_DT, SRV_MEM_CRT_USER_ID,
-					    PAC_TYPE
+					    PAC_TYPE, FREE_MEM_USE
 					  )
 		      VALUES ( #{SRV_MEM_PAC_ID} ,#{txtServCode}, #{txtServDesc}, #{txtDuration},
 					   1, CASE WHEN #{txtDuration} = 0 THEN 50 ELSE #{txtDuration} END, 
 					   1, sysdate, #{updator}
-					   ,#{pacType}
+					   ,#{pacType},#{freeMemUse}
 			   )
      </insert>
      

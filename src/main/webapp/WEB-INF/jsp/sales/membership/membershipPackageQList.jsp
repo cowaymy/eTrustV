@@ -71,6 +71,7 @@ function numberCheck(event){
 function createAUIGrid() {
 	
        var keyValueList = [{"code":"1", "value":"ACT"}, {"code":"8", "value":"IACT"}];
+       var freeKeyValueList = [{"code":"0", "value":"No"}, {"code":"1", "value":"Yes"}];
        //var typeKeyValueList = [{"code":"0", "value":"Starter Package"}, {"code":"1", "value":"Membership Package"}];
         
         var columnLayout = [
@@ -92,22 +93,22 @@ function createAUIGrid() {
                              },
                             { dataField : "srvMemDesc", headerText  : "Package Description",width : 200 ,editable       : true, style:"my-left-style"},
                             { dataField : "code",   headerText  : "Status",  width          : 80,   editable       : true
-                                            , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
-		                                     var retStr = "";
-		                                     for(var i=0,len=keyValueList.length; i<len; i++) {
-		                                         if(keyValueList[i]["code"] == value) {
-		                                             retStr = keyValueList[i]["value"];
-		                                             break;
-		                                         }
-		                                     }
-					                                     return retStr == "" ? value : retStr;
-					                 }
-					               , editRenderer : {
-					                     type       : "DropDownListRenderer",
-					                     list       : keyValueList, //key-value Object 로 구성된 리스트
-					                     keyField   : "code", // key 에 해당되는 필드명
-					                     valueField : "value" // value 에 해당되는 필드명
-					                 }
+                            	 , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                                     var retStr = value;
+                                     for(var i=0,len=keyValueList.length; i<len; i++) {
+                                         if(keyValueList[i]["code"] == value) {
+                                             retStr = keyValueList[i]["value"];
+                                             break;
+                                         }
+                                     }
+                                                 return retStr;
+                             }
+                           , editRenderer : {
+                                 type       : "DropDownListRenderer",
+                                 list       : keyValueList, //key-value Object 로 구성된 리스트
+                                 keyField   : "code", // key 에 해당되는 필드명
+                                 valueField : "value" // value 에 해당되는 필드명
+                             }
                             },
                             
                             { dataField : "srvMemDur", headerText  : "Package Duration ",  width  : 120 , dataType:"numeric", formatString : "#,##0.00"},
@@ -128,6 +129,24 @@ function createAUIGrid() {
                                  list       : typeKeyValueList, //key-value Object 로 구성된 리스트
                                  keyField   : "code", // key 에 해당되는 필드명
                                  valueField : "codeName" // value 에 해당되는 필드명
+                             }
+                           },
+                            { dataField : "freeMemUse", headerText  : "Free Membership ",  width  : 150 , editable       : true
+                            	 , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                            		 var retStr = value;
+                                     for(var i=0,len=freeKeyValueList.length; i<len; i++) {
+                                         if(freeKeyValueList[i]["code"] == value) {
+                                             retStr = freeKeyValueList[i]["value"];
+                                             break;
+                                         }
+                                     }
+                                                 return retStr;
+                             }
+                           , editRenderer : {
+                                 type       : "DropDownListRenderer",
+                                 list       : freeKeyValueList, //key-value Object 로 구성된 리스트
+                                 keyField   : "code", // key 에 해당되는 필드명
+                                 valueField : "value" // value 에 해당되는 필드명
                              }
                            },
                             { dataField : "srvMemCrtUserId",       headerText  : "Creator",  width  : 80 ,editable       : false },
@@ -156,11 +175,21 @@ function createDetailAUIGrid() {
                             	renderer : {
                                     type : "IconRenderer",
                                     iconPosition : "aisleCenter",  // 아이콘 위치 
-                                    iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-                                        "default" : "${pageContext.request.contextPath}/resources/AUIGrid/images/delete.png" // default
-                                    },
+                                    /* iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+                                        "ACT" : "${pageContext.request.contextPath}/resources/AUIGrid/images/delete.png" ,// default -- accept-ok.png
+                                        "IACT" : "${pageContext.request.contextPath}/resources/AUIGrid/images/accept-ok.png" // default -- accept-ok.png
+                                    }, */
                                     onclick : function(rowIndex, columnIndex, value, item) {
                                         fn_delete();
+                                    },
+                                    iconFunction : function(rowIndex, columnIndex, value, item){
+                                    	var delIcon = "${pageContext.request.contextPath}/resources/AUIGrid/images/delete.png";
+                                    	var okIcon = "${pageContext.request.contextPath}/resources/AUIGrid/images/accept-ok.png";
+                                    	
+                                    	if(AUIGrid.getCellValue(detailGridID, rowIndex, "code") == "ACT")
+                                    		return delIcon;
+                                    	else
+                                    		return okIcon;
                                     }
                                 }
                             },
@@ -259,7 +288,6 @@ function fn_gSave(){
             fn_selectListAjax();
             
         }, function(jqXHR, textStatus, errorThrown) {
-            Common.alert("실패하였습니다.");
             console.log("실패하였습니다.");
             console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
             
@@ -452,7 +480,7 @@ function fn_delete(){
             SRV_MEM_ITM_STK_ID :  selectedItems[0].item.stkId
    };
 
-    Common.confirm("<spring:message code='sys.common.alert.delete'/>",function(){
+//    Common.confirm("<spring:message code='sys.common.alert.delete'/>",function(){
     	Common.ajax("POST", "/sales/mQPackages/deletePackage.do", deleteForm, function(result) {
     		 Common.alert("PRODUCT ITEM DEACTIVATED  "+DEFAULT_DELIMITER + "The product item has been deactivated for this package.  ");
     	      fn_selectDetailListAjax('1');
@@ -464,7 +492,7 @@ function fn_delete(){
    	         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
    	         
    	     }); 
-    });
+ //   });
       
      
 }
