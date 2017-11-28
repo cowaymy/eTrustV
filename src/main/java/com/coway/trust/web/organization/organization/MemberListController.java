@@ -581,6 +581,8 @@ public class MemberListController {
 		logger.debug("params : {}", params);
 		params.put("memberLvl", params.get("groupCode[memberLvl]"));
 		params.put("flag", params.get("groupCode[flag]"));
+		params.put("branchVal", params.get("groupCode[branchVal]"));
+		logger.debug("params : {}", params);
 		List<EgovMap> deptCode = memberListService.selectDeptCode(params);
 		return ResponseEntity.ok(deptCode);
 	}

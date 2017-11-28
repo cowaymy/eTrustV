@@ -2114,6 +2114,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
          FROM ORG0005D Extent1
                 JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
           WHERE  ( Extent1.MEM_LVL = #{memberLvl} )
+                   AND (Extent1.BRNCH_ID = #{branchVal})
                    AND ( Extent1.DEPT_CODE LIKE #{flag})
                    AND ( 1 = Extent1.ORG_STUS_CODE_ID ) ) Distinct1
             </select>

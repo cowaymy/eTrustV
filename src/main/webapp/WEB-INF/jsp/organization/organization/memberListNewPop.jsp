@@ -85,11 +85,8 @@ function fn_departmentCode(value){
            break;
 
 	   case "5" :
-           var jsonObj = {
-                memberLvl : 3,
-                flag :  "%CCS%"
-        };
-           doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+        
+         
           
            $("#traineeType1").change(function(){
         	   var traineeType =  $("#traineeType1").val();
@@ -100,6 +97,17 @@ function fn_departmentCode(value){
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
         	   }
            });
+           
+           $("#branch").change(function(){
+        	   var jsonObj = {
+                       memberLvl : 3,
+                       flag :  "%CCS%",
+                       branchVal : $("#branch").val()
+               };
+        	   
+        	   doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+           });
+          
          
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
