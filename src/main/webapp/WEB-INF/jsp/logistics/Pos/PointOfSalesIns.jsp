@@ -23,11 +23,11 @@
     color:#000;
 }
 
-.my-row-style {
-    background:#9FC93C;
-    font-weight:bold;
-    color:#22741C;
-}
+/* .my-row-style { */
+/*     background:#9FC93C; */
+/*     font-weight:bold; */
+/*     color:#22741C; */
+/* } */
 
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
@@ -128,7 +128,7 @@ var LocData2 = {brnch : UserBranchId};
       doGetCombo('/common/selectCodeList.do', '15', '', 'PosItemType', 'M','f_multiCombo');
       doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombos'); 
       doSysdate(0 , 'insReqDate');
-      $("#giopenwindow").hide();
+//      $("#giopenwindow").hide();
 //     /**********************************
 //      * Header Setting End
 //      ***********************************/
@@ -169,7 +169,7 @@ var LocData2 = {brnch : UserBranchId};
   
      resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
      reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout,"", reqop);
-     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
+//     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
 
     
     AUIGrid.bind(resGrid, "cellEditEnd", function (event){});
@@ -221,45 +221,45 @@ var LocData2 = {brnch : UserBranchId};
     });
     
     
-    AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
-        var tvalue = true;
-       var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
-       serial=serial.trim();
-       if(""==serial || null ==serial){
-          //alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
-          //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
-           Common.alert('Please input Serial Number.');
-           return false;
-       }else{
-           for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-               if (event.rowIndex != i){
-                   if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
-                       tvalue = false;
-                       break;
-                   }
-               }
-           }
+//     AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
+//         var tvalue = true;
+//        var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
+//        serial=serial.trim();
+//        if(""==serial || null ==serial){
+//           //alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
+//           //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
+//            Common.alert('Please input Serial Number.');
+//            return false;
+//        }else{
+//            for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+//                if (event.rowIndex != i){
+//                    if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
+//                        tvalue = false;
+//                        break;
+//                    }
+//                }
+//            }
            
-           if (tvalue){
-               fn_serialChck(event.rowIndex ,event.item , serial)
-           }else{
-               AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
-               AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
-                   if (item.statustype  == 'N'){
-                       return "my-row-style";
-                   }
-               });
-               AUIGrid.update(serialGrid);
-           }
-          if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
-        	  var serialstus=$("#serialstus").val(); 	  
-          if($("#serialstus").val() =="Y"){
-             f_addrow();          		 
-             }
-          }
+//            if (tvalue){
+//                fn_serialChck(event.rowIndex ,event.item , serial)
+//            }else{
+//                AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
+//                AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+//                    if (item.statustype  == 'N'){
+//                        return "my-row-style";
+//                    }
+//                });
+//                AUIGrid.update(serialGrid);
+//            }
+//           if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
+//         	  var serialstus=$("#serialstus").val(); 	  
+//           if($("#serialstus").val() =="Y"){
+//              f_addrow();          		 
+//              }
+//           }
           
-       }
-    });
+//        }
+//     });
     
     
     
@@ -319,48 +319,48 @@ $(function(){
    var chkfalg;
    var checkDelqty= false; 
    var checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
-	 for (var i = 0 ; i < checkedItems.length ; i++){
+// 	 for (var i = 0 ; i < checkedItems.length ; i++){
 	       
-	       if (checkedItems[i].itemserialChk == 'Y'){
-	           chkfalg="Y";
-	           break;
-	      }else{
-	          chkfalg ="N";
-	      } 
+// 	       if (checkedItems[i].itemserialChk == 'Y'){
+// 	           chkfalg="Y";
+// 	           break;
+// 	      }else{
+// 	          chkfalg ="N";
+// 	      } 
 	      
-	   } 
+// 	   } 
    
-	 if(chkfalg =="Y") {   
+//	 if(chkfalg =="Y") {   
 
-         var checkedItems = AUIGrid.getCheckedRowItems(reqGrid);
-         var str = "";
-         var rowItem;
-         for(var i=0, len = checkedItems.length; i<len; i++) {
-             rowItem = checkedItems[i];
-             if(rowItem.item.rqty==0){
-             str += "Please Check Delivery Qty of  " + rowItem.item.itmcode   + ", " + rowItem.item.itmdesc + "<br />";
-             checkDelqty= true;
-             }
-         }
-         if(checkDelqty){
-             var option = {
-                 content : str,
-                 isBig:true
-             };
-             Common.alertBase(option); 
-         }else{
-          $("#giopenwindow").show();
-             AUIGrid.clearGridData(serialGrid);
-             AUIGrid.resize(serialGrid); 
-             fn_itemSerialPopList(checkedItems);
-             //fn_itempopList_T(checkedItems);
-         } 
+//          var checkedItems = AUIGrid.getCheckedRowItems(reqGrid);
+//          var str = "";
+//          var rowItem;
+//          for(var i=0, len = checkedItems.length; i<len; i++) {
+//              rowItem = checkedItems[i];
+//              if(rowItem.item.rqty==0){
+//              str += "Please Check Delivery Qty of  " + rowItem.item.itmcode   + ", " + rowItem.item.itmdesc + "<br />";
+//              checkDelqty= true;
+//              }
+//          }
+//          if(checkDelqty){
+//              var option = {
+//                  content : str,
+//                  isBig:true
+//              };
+//              Common.alertBase(option); 
+//          }else{
+//           $("#giopenwindow").show();
+//              AUIGrid.clearGridData(serialGrid);
+//              AUIGrid.resize(serialGrid); 
+//              fn_itemSerialPopList(checkedItems);
+//              //fn_itempopList_T(checkedItems);
+//          } 
          
-      }else{
+//      }else{
 	   if (f_validatation('save')){
 	    	  insPosInfo();           
 	     }      
-	   }	 
+//	   }	 
    });
 
  
@@ -545,35 +545,35 @@ function f_validatation(v){
     	 }
     }
     
-    if (v == 'saveSerial'){	
-    var serialRowCnt = AUIGrid.getRowCount(serialGrid);
-    var reqcheckedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
-    var serialcheckedItems = AUIGrid.getCheckedRowItemsAll(serialGrid);
+//     if (v == 'saveSerial'){	
+//     var serialRowCnt = AUIGrid.getRowCount(serialGrid);
+//     var reqcheckedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
+//     var serialcheckedItems = AUIGrid.getCheckedRowItemsAll(serialGrid);
     
     
-//     if(serialRowCnt != itm_qty){
-//     	Common.alert("The quantity is not equal Request Qty");
-//     	return false;
-//       }
-     for (var j = 0 ; j < reqcheckedItems.length ; j++){
-    	 var bool = false;
-    	 if (reqcheckedItems[j].itemserialChk == 'Y'){
-			 for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+// //     if(serialRowCnt != itm_qty){
+// //     	Common.alert("The quantity is not equal Request Qty");
+// //     	return false;
+// //       }
+//      for (var j = 0 ; j < reqcheckedItems.length ; j++){
+//     	 var bool = false;
+//     	 if (reqcheckedItems[j].itemserialChk == 'Y'){
+// 			 for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
 				    
-// 				    	alert(reqcheckedItems[i].itmcode);
+// // 				    	alert(reqcheckedItems[i].itmcode);
 
-				 if(reqcheckedItems[j].itmcode == AUIGrid.getCellValue(serialGrid , i , "itmcd")){
-					 bool = true;
-					 break;
-				 }
-			 }	
-			 if(!bool){
-                 Common.alert("The Material Code No Same");   
-                 return false;
-                }	  
-    	   }
-     } 
-  } 
+// 				 if(reqcheckedItems[j].itmcode == AUIGrid.getCellValue(serialGrid , i , "itmcd")){
+// 					 bool = true;
+// 					 break;
+// 				 }
+// 			 }	
+// 			 if(!bool){
+//                  Common.alert("The Material Code No Same");   
+//                  return false;
+//                 }	  
+//     	   }
+//      } 
+//   } 
 
     return true;  
 }
@@ -729,9 +729,9 @@ function insPosInfo(){
 	
         var data = {};
 		var checkdata = AUIGrid.getCheckedRowItemsAll(reqGrid);
-		var serials = AUIGrid.getAddedRowItems(serialGrid);
-		console.log(serials);
-	    data.add = serials;
+//		var serials = AUIGrid.getAddedRowItems(serialGrid);
+//		console.log(serials);
+//	    data.add = serials;
 		data.checked = checkdata;
 		data.form = $("#headForm").serializeJSON();
 
@@ -755,7 +755,8 @@ function insPosInfo(){
 	
 function saveSerialInfo(){
 
-	   if(f_validatation("save") && f_validatation("saveSerial")){
+	   //if(f_validatation("save") && f_validatation("saveSerial")){
+	   if(f_validatation("save")){	   
 		   insPosInfo();
 		}   
     $("#giopenwindow").hide();
@@ -962,9 +963,9 @@ function locationList(){
             <tbody id="dBody">
             </tbody>
             </table>
-            <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
-            </article><!-- grid_wrap end -->
+<!--             <article class="grid_wrap">grid_wrap start -->
+<!--             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div> -->
+<!--             </article>grid_wrap end -->
             <ul class="center_btns">
                 <li><p class="btn_blue2 big"><a onclick="javascript:saveSerialInfo();">SAVE</a></p></li>
             </ul>
