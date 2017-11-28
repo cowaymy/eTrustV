@@ -550,9 +550,11 @@
             $("#cmdCdManager").find('option').each(function() {
                 $(this).remove();
             });
-             $("#cmdcodyCode").find('option').each(function() {
+
+      /*  Change to textBox -  txtcodyCode
+      $("#cmdcodyCode").find('option').each(function() {
                 $(this).remove();
-            });
+            }); */
 
             if ($(this).val().trim() == "") {
                 return;
@@ -565,9 +567,10 @@
              $("#cmdCdManager1").find('option').each(function() {
                  $(this).remove();
              });
-              $("#cmdcodyCode").find('option').each(function() {
+      /*  HS Order Search used only and change to textBox
+      $("#cmdcodyCode").find('option').each(function() {
                  $(this).remove();
-             });
+             }); */
 
              if ($(this).val().trim() == "") {
                  return;
@@ -576,7 +579,8 @@
          });
 
 
-             $("#cmdCdManager").change(function() {
+            /*By KV -  Change to textBox -  txtcodyCode and below code no more used.
+           $("#cmdCdManager").change(function() {
                 $("#cmdcodyCode").find('option').each(function() {
                     $(this).remove();
                 });
@@ -584,8 +588,7 @@
                     return;
                 }
                doGetCombo('/services/bs/getCdList.do', $(this).val() , ''   , 'cmdcodyCode' , 'S', '');
-            });
-
+            });*/
 
                 fn_checkRadioButton();
 
@@ -756,15 +759,15 @@
                 myGridID = GridCommon.createAUIGrid("grid_wrap", columnManualLayout ,gridProsManual);
             }
         }
-        
+
         function fn_hsCountForecastListing(){
             Common.popupDiv("/services/bs/hsCountForecastListingPop.do"  , null, null , true , '');
         }
-        
+
         function fn_hsReportGroup(){
             Common.popupDiv("/services/bs/hsReportGroupPop.do"  , null, null , true , '');
         }
-        
+
         function fn_hsReportSingle(){
             Common.popupDiv("/services/bs/hsReportSinglePop.do"  , null, null , true , '');
         }
@@ -848,7 +851,8 @@
                 </td>
                     <th scope="row">Cody</th>
                 <td>
-                    <select class="w100p" id="cmdcodyCode" name="cmdcodyCode" >
+                   <input id="txtcodyCode" name="txtcodyCode"  type="text" title="" placeholder="Cody" class="w100p" />
+                <!--     <select class="w100p" id="cmdcodyCode" name="cmdcodyCode" > -->
                     <!-- <option value="">cody</option> -->
                 </td>
             </tr>
