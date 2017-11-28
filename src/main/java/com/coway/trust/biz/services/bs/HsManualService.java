@@ -20,7 +20,9 @@ public interface HsManualService {
 
 	List<EgovMap> selectCtList(Map<String, Object> params);
 
+	/* BY KV - Change to textBox -  txtcodyCode and below code no more used.
 	List<EgovMap> getCdList(Map<String, Object> params);
+	*/
 
 	List<EgovMap> getCdUpMemList(Map<String, Object> params);
 
@@ -69,9 +71,9 @@ public interface HsManualService {
 	List<EgovMap> selectOrderActiveFilter(Map<String, Object> params);
 
 	String updateAssignCody(Map<String, Object> params);
-	
+
 	List<EgovMap> selectBranch_id(Map<String, Object> params);
-	
+
 	List<EgovMap> selectCTMByDSC_id(Map<String, Object> params);
 
 
