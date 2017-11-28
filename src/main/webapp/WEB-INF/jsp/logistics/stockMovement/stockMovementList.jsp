@@ -46,6 +46,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
                      {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30              },
+                     {dataField:"docno"        ,headerText:"Ref Doc.No"             ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
                      {dataField:"reqitmno"     ,headerText:"Stock Movement Request Item" ,width:120    ,height:30 , visible:false},
@@ -172,7 +173,7 @@ $(document).ready(function(){
     //SearchListAjax();
 });
 function f_change(){
-	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+    paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(),codeIn:'UM03,UM93'};
     doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
 }
 //btn clickevent
@@ -367,7 +368,8 @@ function f_getTtype(g , v){
                         <input type="hidden"  id="tlocation" name="tlocation">
                         <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
-                    <td colspan="2">&nbsp;</td>                
+                     <th scope="row">Ref Doc.No</th>
+                     <td ><input type="text" class="w100p" id="sdocno" name="sdocno"></td>            
                 </tr>
                 
                 <tr>
