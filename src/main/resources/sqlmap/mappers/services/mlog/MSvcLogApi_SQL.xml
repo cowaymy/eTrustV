@@ -2826,7 +2826,7 @@ and cust.cust_id = custCnt.cust_id
 					AND C.CUST_ID = F.CUST_ID
 					AND A.AS_TYPE_ID = '2703'  
 					AND B.MEM_CODE = #{userId}
-					AND A.AS_REQST_DT between  to_date(#{searchFromDate},'yyyymmdd') AND  to_date(#{searchToDate},'yyyymmdd')
+					AND trunc(A.AS_REQST_DT) between  to_date(#{searchFromDate},'yyyymmdd') AND  to_date(#{searchToDate},'yyyymmdd')
 					
 
 <!-- 					SELECT to_char(D.NAME) AS cust_Name
