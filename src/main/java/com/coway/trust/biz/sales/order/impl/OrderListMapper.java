@@ -33,4 +33,6 @@ public interface OrderListMapper {
 	List<EgovMap> getOrgCodeList(Map<String, Object> params);
 	
 	List<EgovMap> getGrpCodeList(Map<String, Object> params);
+	
+	EgovMap getMemberOrgInfo(Map<String, Object> params);
 }
