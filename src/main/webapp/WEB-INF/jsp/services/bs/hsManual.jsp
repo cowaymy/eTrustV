@@ -285,7 +285,7 @@
                             AUIGrid.setGridData(myGridID, result);
                          });
                 }else {//hs_no  Create after
-                    debugger;
+
                 	$("#brnchId1").val($("#cmdBranchCode1 option:selected").text());
                 	var HsCdBranch = $('#brnchId1').val();
                 	if($('#brnchId1').val().substring(0,3) != "CDB" ){
@@ -849,11 +849,17 @@
                 <td>
                     <select id="cmdCdManager" name="cmdCdManager" class="w100p">
                 </td>
-                    <th scope="row">Cody</th>
+                    <th scope="row"> Assign Cody</th>
                 <td>
-                   <input id="txtcodyCode" name="txtcodyCode"  type="text" title="" placeholder="Cody" class="w100p" />
-                <!--     <select class="w100p" id="cmdcodyCode" name="cmdcodyCode" > -->
-                    <!-- <option value="">cody</option> -->
+                   <input id="txtAssigncodyCode" name="txtAssigncodyCode"  type="text" title="" placeholder="Cody" class="w100p" />
+
+                <!-- By Kv - Change cmbBox to text Box -->
+                <!-- <select class="w100p" id="cmdcodyCode" name="cmdcodyCode" > -->
+                <!-- <option value="">cody</option> -->
+                </td>
+                <th scope="row"> Complete Cody</th>
+                <td>
+                   <input id="txtComcodyCode" name="txtComcodyCode"  type="text" title="" placeholder="Cody" class="w100p" />
                 </td>
             </tr>
             <tr>
@@ -865,12 +871,16 @@
                 <td>
                     <input id="myBSMonth" name="myBSMonth" type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" readonly />
                 </td>
+                 <th scope="row">HS Status</th>
+                <td>
+                    <select class="w100p"  id="cmbStatusType" name="cmbStatusType">
+                 <option value="">HS Status</option>
+                </td>
                 <th scope="row">Customer</th>
                 <td>
                     <input id="txtCustomer" name="txtCustomer"  type="text" title="" placeholder="Customer" class="w100p" />
                 </td>
-
-            </tr>
+                </tr>
             <tr>
                 <th scope="row">Sales Order</th>
                 <td>
@@ -879,11 +889,6 @@
                 <th scope="row">Install Month</th>
                 <td>
                     <input id="myInstallMonth" name="myInstallMonth" type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p"  />
-                </td>
-                <th scope="row">HS Status</th>
-                <td>
-                    <select class="w100p"  id="cmbStatusType" name="cmbStatusType">
-                             <option value="">HS Status</option>
                 </td>
             </tr>
 
