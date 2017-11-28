@@ -36,7 +36,8 @@
 
       <select id="getCdUpMemList" parameterType="Map" resultType="egovMap">
             SELECT A.MEM_ID AS CODE_ID
-                    ,B.MEM_CODE || '-' || B.NAME AS CODE_NAME
+            ,A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
+                    /*,B.MEM_CODE || '-' || B.NAME AS CODE_NAME*/
             FROM ORG0005D A
                     ,ORG0001D B
                     ,SYS0005M C
@@ -2385,12 +2386,12 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                            SET SRV_REM = #{remark},
                                SRV_PREV_DT = to_date(#{settleDate}, 'DD/MM/YYYY'),
                                SRV_BS_WEEK = #{srvBsWeek},
-                               SRV_CODY_ID = #{hidCodyId}, 
+                               SRV_CODY_ID = #{hidCodyId},
                                SRV_UPD_DT = sysdate
                          WHERE   SRV_CONFIG_ID = #{srvConfigId}
 
                      </update>
-                     
+
                      <select id="selectBranch_id"  parameterType="Map" resultType="egovMap">
                         SELECT BRNCH_ID CODE_ID,
                                      CODE CODE_NAME
@@ -2401,7 +2402,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                          </if>
                         GROUP BY BRNCH_ID,CODE ORDER BY BRNCH_ID
                     </select>
-                    
+
                     <select id="selectCTMByDSC_id" parameterType="Map" resultType="egovMap">
                     SELECT A.MEM_ID CODE_ID
                          , A.MEM_CODE || '-' || A.NAME CODE_NAME
