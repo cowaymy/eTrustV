@@ -11,7 +11,7 @@ public class RentalServiceCustomerForm {
 	private String userId;
 	
 	@ApiModelProperty(value = "검색조건  (1 : customer name / 2 : order no)") 
-	private String serchType;
+	private String searchType;
 	
 	@ApiModelProperty(value = "검색내용") 
 	private String searchKeyword;
@@ -35,12 +35,14 @@ public class RentalServiceCustomerForm {
 		this.userId = userId;
 	}
 
-	public String getSerchType() {
-		return serchType;
+
+
+	public String getSearchType() {
+		return searchType;
 	}
 
-	public void setSerchType(String serchType) {
-		this.serchType = serchType;
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
 	}
 
 	public String getSearchKeyword() {
