@@ -469,12 +469,22 @@
 		<if test="notlike != null and notlike !=''">
            AND CODE NOT LIKE #{notlike}||'%'
         </if>
-        <if test="notin != null and notin !=''">
+        <if test="notin != null and notin !=''"> <!-- TODO : 파라미터는 notin 인데, 아래 쿼리는 in 이네요.... 왜 그럴까요??? -->
               AND CODE IN
               <foreach item="item" collection="notin" index="index" open="(" separator="," close=")">
                #{item}
                </foreach>
            </if>
+
+
+        <if test='codeIn !=null and codeIn != "" '> <!--  ex)  String codeIn = "11,22,33,44"-->
+            AND CODE IN (SELECT     REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL)
+                                    FROM DUAL
+                                    CONNECT BY REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL) IS NOT NULL)
+        </if>
+
+
+
 		<choose>
 		  <when test="orderValue !=null and orderValue !=''">
 		      ORDER BY ${orderValue}
