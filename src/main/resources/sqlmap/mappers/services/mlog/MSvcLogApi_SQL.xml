@@ -2874,7 +2874,7 @@ and cust.cust_id = custCnt.cust_id
 				     ELSE ''
 				     END AS cust_Company_No
 				   , TO_CHAR(E.TYPE_ID) AS customer_Type
-				   , to_char(A.SALES_ORD_NO) AS sales_Ord_No
+				   , to_char(A.SALES_ORD_NO) AS sales_Order_No
 				   , to_char(D.STK_CODE) AS product_Code
 				   , to_char(D.STK_ID) AS product_Id
 				   , to_char(D.STK_DESC) AS product_Name
