@@ -323,6 +323,7 @@
 							    AND A.PROMO_STUS_ID = '1'
 							    AND B.PROMO_ITM_STUS_ID = '1'
 							    AND A.PROMO_TYPE_ID = '2282'    
+							    AND A.PROMO_APP_TYPE_ID = '2288'
 							    AND A.PROMO_DT_FROM <= SYSDATE        
 							    AND A.PROMO_DT_END >= SYSDATE 
 							    AND B.PROMO_ITM_STK_ID = C.ITM_STK_ID
@@ -349,6 +350,7 @@
 						FROM SAL0017D  A 
 						WHERE  A.PROMO_SRV_MEM_PAC_ID = #{PROMO_SRV_MEM_PAC_ID}  
 						AND    A.PROMO_APP_TYPE_ID = '2290'   
+						AND    A.PROMO_APP_TYPE_ID = '2288'
 						AND    A.PROMO_DT_FROM< = SYSDATE
 						AND    A.PROMO_DT_END > = SYSDATE
 						AND    A.PROMO_STUS_ID  = '1'
@@ -640,12 +642,15 @@
 							            
      </insert>   
          
-   <resultMap id="mOTSTND_INFO" type="egovMap" ></resultMap>
-   
-    <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+         
+         
+    
+     <resultMap id="getOderOutsInfoMap" type="egovMap" ></resultMap>
+     
+    <select id="getOderOutsInfo"   parameterType="Map"  statementType="CALLABLE">
        <![CDATA[  
             {
-                  call SP_GET_ORD_OTSTND_INFO ( #{ORD_ID} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mOTSTND_INFO})
+                  call SP_GET_ORD_OTSTND_INFO ( #{ORD_ID} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=getOderOutsInfoMap})
             }
          ]]>
       </select>   

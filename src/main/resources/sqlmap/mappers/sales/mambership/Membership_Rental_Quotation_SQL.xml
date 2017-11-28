@@ -263,14 +263,19 @@
 		 
 		 
          <select id="getSrvMemCode" parameterType="Map" resultType="egovMap">
-         
-					         /* Formatted on 2017-10-11 오후 2:44:03 (QP5 v5.115.810.9015) */
-					  SELECT   SRV_CNTRCT_PAC_ID code_Id , SRV_CNTRCT_PAC_DESC code_Name
-					    FROM   SAL0081D
-					   WHERE   SRV_CNTRCT_PAC_STUS_ID = 1 
-					    AND PAC_TYPE = '1'
-					ORDER BY   SRV_CNTRCT_PAC_DESC DESC
-					
+                     SELECT     C.SRV_CNTRCT_PAC_ID      code_Id,   
+                           C.SRV_CNTRCT_PAC_DESC    code_Name 
+                    FROM SAL0002D A , 
+                                  SAL0082D B , 
+                                  SAL0081D C
+                    WHERE  1=1 
+                    AND   A.ITM_STK_ID =B.SRV_PAC_ITM_PRODUCT_ID 
+                    AND   B.SRV_CNTRCT_PAC_ID =C.SRV_CNTRCT_PAC_ID
+                    AND   B.SRV_PAC_ITM_STUS_ID = '1'
+                    AND   C.SRV_CNTRCT_PAC_STUS_ID  =1
+                    AND   C.PAC_TYPE = '1'
+                    AND   A.SALES_ORD_ID =#{SALES_ORD_ID}
+                    ORDER BY C. SRV_CNTRCT_PAC_CODE ASC
 
          </select>
     
@@ -300,50 +305,200 @@
          
          <select id="getPromotionCode" parameterType="Map" resultType="egovMap">
                    <![CDATA[
-									SELECT V.PROMO_ID   code_Id  ,
-										       V.PROMO_CODE   ,
-										       V.PROMO_CODE||'-'||V.PROMO_DESC  code_Name
-									  FROM ( SELECT E.PROMO_ID   ,
-									                E.PROMO_CODE   ,
-									                E.PROMO_DESC   
-									         FROM SAL0017D E
-									          WHERE  ( 1330 = E.PROMO_TYPE_ID )
-									                   AND ( 1 = E.PROMO_STUS_ID )
-									                   AND ( E.PROMO_DT_FROM <= sysdate )
-									                   AND ( E.PROMO_DT_END >= sysdate ) ) V
-	                      ]]>
+									   SELECT distinct A.PROMO_ID   code_Id ,
+		                                   A.PROMO_CODE||'-'||A.PROMO_DESC  code_Name,
+		                                   A.PROMO_DISC_TYPE, 
+		                                   A.PROMO_RPF_DISC_AMT
+		                                FROM SAL0017D A ,
+		                                     SAL0018D B ,
+		                                     SAL0002D C, 
+		                                     SAL0001D D, 
+		                                     SAL0029D  E
+		                            WHERE 1=1
+		                                AND A.PROMO_ID = B.PROMO_ID             
+		                                AND A.PROMO_STUS_ID = '1'
+		                                AND B.PROMO_ITM_STUS_ID = '1'
+		                                AND A.PROMO_TYPE_ID = '2282'    
+		                                AND A.PROMO_APP_TYPE_ID = '2289'              
+		                                AND A.PROMO_DT_FROM <= SYSDATE        
+		                                AND A.PROMO_DT_END >= SYSDATE 
+		                                AND B.PROMO_ITM_STK_ID = C.ITM_STK_ID
+		                                AND C.SALES_ORD_ID =  #{SALES_ORD_ID}
+		                                AND A.PROMO_SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID}       
+		                                AND D.CUST_ID = E.CUST_ID
+		                                AND (A.PROMO_CUST_TYPE = E.TYPE_ID    OR A.PROMO_CUST_TYPE  =0 )
+		                              ]]>
+		                                <if test="E_YN != null and E_YN != ''">
+		                                         AND A.EMP_CHK = #{E_YN}        
+		                                </if>
+		                          
          </select>
          
           <select id="getFilterPromotionCode" parameterType="Map" resultType="egovMap">
                    <![CDATA[
-                                    SELECT V.PROMO_ID   code_Id  ,
-                                               V.PROMO_CODE   ,
-                                               V.PROMO_DESC    code_Name
-                                      FROM ( SELECT E.PROMO_ID   ,
-                                                    E.PROMO_CODE   ,
-                                                    E.PROMO_DESC   
-                                             FROM SAL0017D E
-                                              WHERE  ( 0 = E.PROMO_TYPE_ID )
-                                                       AND ( 1 = E.PROMO_STUS_ID )
-                                                       AND ( E.PROMO_DT_FROM <= sysdate )
-                                                       AND ( E.PROMO_DT_END >= sysdate ) ) V
+                                    SELECT 
+			                                 distinct A.PROMO_ID code_Id,
+			                                 A.PROMO_CODE || '-' || A.PROMO_DESC code_Name
+			                        FROM SAL0017D  A 
+			                        WHERE  A.PROMO_SRV_MEM_PAC_ID = #{PROMO_SRV_MEM_PAC_ID}  
+			                        AND    A.PROMO_TYPE_ID = '2282'
+			                        AND    A.PROMO_APP_TYPE_ID = '2744'
+			                        AND    A.PROMO_DT_FROM< = SYSDATE
+			                        AND    A.PROMO_DT_END > = SYSDATE
+			                        AND    A.PROMO_STUS_ID  = '1'
+			                          ]]>
+			                          
+                                <if test="E_YN != null and E_YN != ''">
+                                         AND A.EMP_CHK = #{E_YN}        
+                                </if>
+            
+         </select>
+         
+         
+         
+           <select id="getFilterPromotionAmt" parameterType="Map" resultType="egovMap">
+                   <![CDATA[
+                                                     
+                                                          
+                                    SELECT  SUM( C.AMT)   NORMA_AMT            -- AMT = 팝업의 Normal Price
+                                    FROM SAL0203D A, SYS0026M B, SAL0016M C
+                                    WHERE A.SRV_PAC_ID =   #{SRV_PAC_ID}           --  SERVICE_PACKAGE ID (PROMOTOIN 아님)
+                                    AND A.SRV_PAC_TYPE =   0              -- 0 = RENTAL MEMEBERSHIP / 1 = OUTRIGHT MEMBERSHIP
+                                    AND A.SRV_ITM_STK_ID = (SELECT  B.ITM_STK_ID 
+                                                                FROM SAL0001D A , 
+                                                                     SAL0002D B  
+                                                            WHERE A.SALES_ORD_ID =B.SALES_ORD_ID
+                                                            AND A.SALES_ORD_NO =#{SALES_ORD_NO} )
+                                    AND A.BOM_COMPNT = B.STK_CODE
+                                    AND B.STK_ID = C.STK_ID
+                                    AND B.STUS_CODE_ID = '1'            -- FIXED VALUE
+                                    AND C.MEM_PAC_ID = '0'              -- FIXED VALUE
+                                    AND C.APP_TYPE_ID = '67'            -- FIXED VALUE
+                                    AND C.STUS_CODE_ID = '1'            -- FIXED VALUE
                           ]]>
          </select>
          
          
+         
+         
+          <select id="getFilterChargeList" parameterType="Map" resultType="egovMap">
+       <![CDATA[ 
+                        
+                SELECT BOM_COMPNT
+                       ,BOM_COMPNT_DESC
+                       ,SRV_FILTER_PRV_CHG_DT
+                       ,SRV_FILTER_PRIOD
+                       ,AMT
+                       ,AMT -  NVL(DISAMT,0)   AS DISAMT
+                 FROM(  
+                        SELECT  
+                            A.BOM_COMPNT,
+                            A.BOM_COMPNT_DESC,
+                            D.SRV_FILTER_PRV_CHG_DT,
+                            D.SRV_FILTER_PRIOD,
+                            C.AMT ,
+                            NVL( ( SELECT  DECODE (PROMO_DISC_TYPE  ,  '0',
+                                                                (C.AMT * (X.PROMO_PRC_PRCNT/100 )),
+                                                                '1',
+                                                                (X.PROMO_PRC_PRCNT) ,
+                                                                 X.PROMO_PRC_PRCNT
+                                                                ) 
+                            FROM  SAL0017D  X WHERE  PROMO_ID =#{PROMO_ID}) ,0)DISAMT 
+                        FROM SAL0203D A 
+                             ,SYS0026M B
+                             ,SAL0016M C 
+                             ,SAL0001D S1D   
+                             ,SAL0002D S2D 
+                             ,SAL0090D E  
+                             ,SAL0087D D
+                         WHERE A.SRV_PAC_ID         = #{SRV_PAC_ID}            --  SERVICE_PACKAGE ID (PROMOTOIN 아님)
+                            AND A.SRV_PAC_TYPE      =   0                            -- 0 = RENTAL MEMEBERSHIP / 1 = OUTRIGHT MEMBERSHIP
+                            AND A.SRV_ITM_STK_ID   = S2D.ITM_STK_ID 
+                            AND A.BOM_COMPNT        = B.STK_CODE
+                            AND B.STK_ID                 = C.STK_ID
+                            AND B.STUS_CODE_ID = '1'                                    -- FIXED VALUE
+                            AND C.MEM_PAC_ID   = '0'                                     -- FIXED VALUE
+                            AND C.APP_TYPE_ID  = '67'                                    -- FIXED VALUE
+                            AND C.STUS_CODE_ID = '1'                                    -- FIXED VALUE
+                            AND S1D.SALES_ORD_ID    = S2D.SALES_ORD_ID
+                            AND S1D.SALES_ORD_NO   =#{SALES_ORD_NO}
+                            AND S1D.SALES_ORD_ID    = E.SRV_SO_ID
+                            AND C.STK_ID                  = D.SRV_FILTER_STK_ID(+)
+                            AND D.SRV_CONFIG_ID       = E.SRV_CONFIG_ID(+)
+                )
+                
+         ]]>
+      </select>   
+      
+      
+      
+      
+ <select id="getFilterChargeListSum" parameterType="Map" resultType="egovMap">
+       <![CDATA[ 
+              SELECT         SUM(DISAMT) DISAMT FROM (
+                SELECT BOM_COMPNT
+                       ,BOM_COMPNT_DESC
+                       ,SRV_FILTER_PRV_CHG_DT
+                       ,SRV_FILTER_PRIOD
+                       ,AMT
+                       ,AMT - DISAMT AS DISAMT
+                 FROM(  
+                        SELECT  
+                            A.BOM_COMPNT,
+                            A.BOM_COMPNT_DESC,
+                            D.SRV_FILTER_PRV_CHG_DT,
+                            D.SRV_FILTER_PRIOD,
+                            C.AMT ,
+                            ( SELECT  DECODE (PROMO_DISC_TYPE  ,  '0',
+                                                                (C.AMT * (X.PROMO_PRC_PRCNT/100 )),
+                                                                '1',
+                                                                ( X.PROMO_PRC_PRCNT) ,
+                                                                 X.PROMO_PRC_PRCNT
+                                                                ) 
+                            FROM  SAL0017D  X WHERE  PROMO_ID =#{PROMO_ID}) DISAMT 
+                        FROM SAL0203D A 
+                             ,SYS0026M B
+                             ,SAL0016M C 
+                             ,SAL0001D S1D   
+                             ,SAL0002D S2D 
+                             ,SAL0090D E  
+                             ,SAL0087D D
+                         WHERE A.SRV_PAC_ID         = #{SRV_PAC_ID}            --  SERVICE_PACKAGE ID (PROMOTOIN 아님)
+                            AND A.SRV_PAC_TYPE      =   0                            -- 0 = RENTAL MEMEBERSHIP / 1 = OUTRIGHT MEMBERSHIP
+                            AND A.SRV_ITM_STK_ID   = S2D.ITM_STK_ID 
+                            AND A.BOM_COMPNT        = B.STK_CODE
+                            AND B.STK_ID                 = C.STK_ID
+                            AND B.STUS_CODE_ID = '1'                                    -- FIXED VALUE
+                            AND C.MEM_PAC_ID   = '0'                                     -- FIXED VALUE
+                            AND C.APP_TYPE_ID  = '67'                                    -- FIXED VALUE
+                            AND C.STUS_CODE_ID = '1'                                    -- FIXED VALUE
+                            AND S1D.SALES_ORD_ID    = S2D.SALES_ORD_ID
+                            AND S1D.SALES_ORD_NO   =#{SALES_ORD_NO}
+                            AND S1D.SALES_ORD_ID    = E.SRV_SO_ID
+                            AND C.STK_ID                  = D.SRV_FILTER_STK_ID(+)
+                            AND D.SRV_CONFIG_ID       = E.SRV_CONFIG_ID(+)
+                )
+                )
+         ]]>
+      </select>   
+      
+      
+      
+         
+         
          <select id="getPromoPricePercent" parameterType="Map" resultType="egovMap">
-					         SELECT S.PROMO_ID   ,
-								       S.PROMO_CODE   ,
-								       S.PROMO_DESC   ,
-								       S.PROMO_PRC_PRCNT   
-					  FROM SAL0017D S
-					 WHERE  S.PROMO_ID = #{PROMO_ID}
-                        AND ROWNUM   <![CDATA[<]]>= 1
+			  SELECT  PROMO_PRC_PRCNT , PROMO_DISC_TYPE ,PROMO_ADD_DISC_PRC
+                            FROM  SAL0017D   
+                    WHERE 1=1
+               AND PROMO_ID =#{PROMO_ID}
          </select>
+         
+         
+         
                   
        <resultMap id="mFCMap" type="egovMap" ></resultMap>
     
-    <select id="getFilterCharge"  statementType="CALLABLE"   parameterType="Map">
+      <select id="getFilterCharge"  statementType="CALLABLE"   parameterType="Map">
        <![CDATA[ 
             {
                   call SP_GET_ORD_MBRSH_FILTER_CHRG ( #{ORD_ID} ,  #{PROMO_ID} ,#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mFCMap})

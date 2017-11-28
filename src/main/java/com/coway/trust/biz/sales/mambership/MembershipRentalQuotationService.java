@@ -46,6 +46,12 @@ public interface MembershipRentalQuotationService {
 	
 	EgovMap	   getMembershipFilterChargeList(Map<String, Object> params);
 	
+	
+	List<EgovMap>   getFilterChargeList(Map<String, Object> params);
+	List<EgovMap>   getFilterChargeListSum(Map<String, Object> params);
+	
+	EgovMap		getFilterPromotionAmt(Map<String, Object> params);
+	
 	void 	insertSrvMembershipQuot_Filter(Map<String, Object> params) ;
 	
 	EgovMap   getSAL0083D_SEQ(Map<String, Object> params);

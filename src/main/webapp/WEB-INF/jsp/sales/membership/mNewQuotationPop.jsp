@@ -943,6 +943,8 @@ function fn_save(){
 	
 	 var billMonth = getOrderCurrentBillMonth();
 	 
+	 alert(billMonth);
+	 
 	 if(fn_CheckRentalOrder(billMonth)){
 		  if (fn_CheckSalesPersonCode()){
 			  fn_unconfirmSalesPerson();
@@ -1063,9 +1065,9 @@ function fn_CheckRentalOrder(billMonth){
 				    	Common.ajaxSync("GET", "/sales/membership/getOderOutsInfo", $("#getDataForm").serialize(), function(result) {
 		                    console.log( "==========3===");
 		                    console.log(result);
-		                    if(result.outsInfo.length >0 ){
-		                        if(result.outsInfo.Order_TotalOutstanding >0){
-		                             rtnMsg += "Not allow to choose 2 Years Advance Promotion (10% Discount) Promotion. <br>" ;
+		                    if(result.length >0 ){
+		                        if(result.ordTotOtstnd > 0){
+		                             rtnMsg += "Not allow to choose 2 Years Advance Promotion   Promotion. <br>" ;
 		                             rtnValue =false; 
 		                        }
 		                    }
@@ -1488,7 +1490,7 @@ function createAUIGridOList() {
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#"   id="sForm"  name="sForm" method="post">
+<form action="#"   id="sForm"  name="sForm" method="post" >
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1511,6 +1513,8 @@ function createAUIGridOList() {
 
 <section>
 <div  id="resultcontens"  style="display:none">
+
+<form action="#"   id="sForm"  name="saveForm" method="post"   onsubmit="return false;">
 
 		
 		<section class="tap_wrap"><!-- tap_wrap start -->
@@ -1776,6 +1780,7 @@ function createAUIGridOList() {
 		  
 		 <!--  <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_saveResultTrans()">test</a></p></li> -->
 		</ul>
+</form>		
 
 </div>
 </section>

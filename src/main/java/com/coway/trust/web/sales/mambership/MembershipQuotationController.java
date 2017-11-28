@@ -325,7 +325,7 @@ public class  MembershipQuotationController {
 	
 
 	@RequestMapping(value = "/getOderOutsInfo" ,method = RequestMethod.GET)
-	public ResponseEntity<Map> getOderOutsInfo(@RequestParam Map<String, Object> params, ModelMap model,
+	public ResponseEntity<EgovMap> getOderOutsInfo(@RequestParam Map<String, Object> params, ModelMap model,
 			HttpServletRequest request) {
 
 		logger.debug("in  getFilterCharge ");
@@ -333,15 +333,14 @@ public class  MembershipQuotationController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		
+		EgovMap  map =  new EgovMap();
+		map =membershipQuotationService.getOderOutsInfo(params);
 		
-	 	membershipQuotationService.getOderOutsInfo(params);
+		if(null !=map ){
+			logger.debug("		====>			" + map.toString());
+		}
 
-		logger.debug("		====>			" + params.toString());
 		
-		//logger.debug("v_result : {}", params.get("p1"));
-
-		Map<String, Object> map = new HashMap();
-		//map.put("outsInfo", params.get("p1"));
 
 		return ResponseEntity.ok(map);
 	}

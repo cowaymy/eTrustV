@@ -81,6 +81,8 @@ function fn_clear(){
 
 // 리스트 조회.
 function fn_selectListAjax() {        
+	
+
    Common.ajax("GET", "/sales/membershipRental/selectList", $("#listSForm").serialize(), function(result) {
        
 	   console.log(result);
@@ -279,6 +281,10 @@ function fn_goSVMDetails(){
 	<th scope="row">NRIC/Company No.</th>
 	<td><input type="text" title="" placeholder="NRIC/Company No." class="w100p" id="custNRIC"  name="custNRIC"  /></td>
 </tr>
+
+
+
+
 </tbody>
 </table><!-- table end -->
 

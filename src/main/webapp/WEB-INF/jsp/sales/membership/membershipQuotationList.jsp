@@ -19,6 +19,15 @@
     
     // 리스트 조회.
    function fn_selectListAjax() {        
+    	
+    	if( $("#QUOT_NO").val() ==""  &&  $("#L_ORD_NO").val() ==""  &&  $("#CRT_SDT").val() ==""  ){
+    	
+    	   Common.alert("You must key-in at least one of Membership number / Order number / Creation date");
+    		   
+    		return ;
+    	}
+    	
+    	
        Common.ajax("GET", "/sales/membership/quotationList", $("#listSForm").serialize(), function(result) {
             console.log( result);
 	        AUIGrid.setGridData(gridID, result);
@@ -218,15 +227,16 @@ function fn_doPrint(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Quotation No</th>
+	<th scope="row">Quotation No   <span class="must">*</span></th>
 	<td>
 	<input type="text" title="" placeholder="Quotation Number" class="w100p"  id="QUOT_NO"  name="QUOT_NO"  />
+
 	</td>
-	<th scope="row">Order No</th>
+	<th scope="row">Order No <span class="must">*</span> </th>
 	<td>
-	<input type="text" title="" placeholder="Order Number" class="w100p"   id="L_ORD_NO"  name="L_ORD_NO"/>
+	<input type="text" title="" placeholder="Order Number" class="w100p"   id="L_ORD_NO"  name="L_ORD_NO"/>   
 	</td>
-	<th scope="row">Create Date</th>
+	<th scope="row">Create Date <span class="must">*</span></th>
 	<td>
 
 	<div class="date_set w100p"><!-- date_set start -->
@@ -254,6 +264,11 @@ function fn_doPrint(){
 	<th scope="row"></th>
 	<td></td>
 </tr>
+
+<tr>
+    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Membership number / Order number / Creation date</span>  </th>
+</tr>
+
 </tbody>
 </table><!-- table end -->
 

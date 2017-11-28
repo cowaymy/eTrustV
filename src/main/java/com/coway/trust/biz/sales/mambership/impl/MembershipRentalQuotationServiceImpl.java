@@ -91,6 +91,17 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 	public List<EgovMap> getPromotionCode(Map<String, Object> params) {
 		return membershipRentalQuotationMapper.getPromotionCode(params);
 	}
+
+	@Override
+	public List<EgovMap> getFilterChargeList(Map<String, Object> params) {
+		return membershipRentalQuotationMapper.getFilterChargeList(params);
+	}
+   
+	@Override
+	public List<EgovMap> getFilterChargeListSum(Map<String, Object> params) {
+		return membershipRentalQuotationMapper.getFilterChargeListSum(params); 
+	}
+	
 	
 	
 	@Override
@@ -100,7 +111,12 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 	}
 	
 	
-	
+	 
+	@Override
+	public EgovMap  getFilterPromotionAmt(Map<String, Object> params) {
+		return membershipRentalQuotationMapper.getFilterPromotionAmt(params);
+	}
+	  
 	@Override
 	public List<EgovMap> getFilterPromotionCode(Map<String, Object> params) {
 		return membershipRentalQuotationMapper.getFilterPromotionCode(params);

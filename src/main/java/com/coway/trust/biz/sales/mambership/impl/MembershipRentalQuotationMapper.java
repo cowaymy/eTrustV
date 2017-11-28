@@ -60,8 +60,15 @@ public interface MembershipRentalQuotationMapper {
 	
 	List<EgovMap>   getOrderCurrentBillMonth(Map<String, Object> params);
 	
-	EgovMap  getOderOutsInfo(Map<String, Object> params);
+	EgovMap  getOderOutsInfo(Map<String, Object> params)	;
 	
+	List<EgovMap>   getFilterChargeList(Map<String, Object> params);
+	
+	List<EgovMap>   getFilterChargeListSum(Map<String, Object> params);
+	
+	EgovMap  getFilterPromotionAmt(Map<String, Object> params);
+	 
+	 
 	void  insertQuotationInfo(Map<String, Object> params);
 	 
 	EgovMap  getMembershipFilterChargeList(Map<String, Object> params);

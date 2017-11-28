@@ -117,9 +117,13 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	public EgovMap    getOderOutsInfo(Map<String, Object> params) {
-		   membershipQuotationMapper.getOderOutsInfo(params);  
+		
+		  membershipQuotationMapper.getOderOutsInfo(params)  ;
 		  
-		   return  (EgovMap)  params.get("p1");
+		  EgovMap   map =  (EgovMap)  ((ArrayList)params.get("p1")).get(0);
+ 		  logger.debug("map =============>" +map.toString());
+
+		return    map;   
 	}
 	
 	
