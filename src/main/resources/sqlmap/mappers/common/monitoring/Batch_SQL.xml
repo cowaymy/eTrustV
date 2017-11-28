@@ -42,7 +42,7 @@
         AND B.START_TIME >= TO_DATE(#{searchStartDt}, 'DD/MM/YYYY')
         AND B.START_TIME < TO_DATE(#{searchEndDt}, 'DD/MM/YYYY') + 1
         ]]>
-        ORDER BY A.JOB_INSTANCE_ID DESC
+        ORDER BY A.JOB_INSTANCE_ID DESC, B.JOB_EXECUTION_ID DESC
     </select>
 
 </mapper>
