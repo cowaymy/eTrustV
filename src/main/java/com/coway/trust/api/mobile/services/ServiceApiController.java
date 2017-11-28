@@ -555,7 +555,7 @@ public class ServiceApiController {
 				params.put("AS_DEFECT_GRP_ID", 0);
 				params.put("AS_DEFECT_PART_GRP_ID", 0);
 //				params.put("AS_WORKMNSH", getAsBasic.get("asWorkmnsh"));
-				params.put("AS_FILTER_AMT", getAsBasic.get("asFilterAmt"));
+				params.put("AS_FILTER_AMT", String.valueOf(getAsBasic.get("asFilterAmt")));
 				params.put("AS_ACSRS_AMT", 0);
 				params.put("AS_TOT_AMT", String.valueOf(getAsBasic.get("asTotAmt")));
 				params.put("AS_RESULT_IS_SYNCH", 0);
@@ -584,38 +584,22 @@ public class ServiceApiController {
 				params.put("AS_SLUTN_RESN_ID", asTransLogs1.get(i).get("solutionReasonId"));//asTransLogs
 				params.put("AS_SETL_DT", todate2);
 				params.put("AS_SETL_TM", curTime);
-				params.put("AS_WORKMNSH", asTransLogs1.get(i).get("labourCharge"));
+				params.put("AS_WORKMNSH", String.valueOf((asTransLogs1.get(i).get("labourCharge"))) );
 				params.put("AS_RESULT_REM", asTransLogs1.get(i).get("resultRemark"));
 				
 				//
 				params.put("IN_HUSE_REPAIR_REM", asTransLogs1.get(i).get("inHouseRepairRemark"));//asTransLogs
 				params.put("IN_HUSE_REPAIR_REPLACE_YN", asTransLogs1.get(i).get("inHouseRepairReplacementYN"));//asTransLogs
 				
+				Date inHouseRepairPromisedDate ;
+				String inHouseRepairPromisedDate1="";
 				
-/*				SimpleDateFormat transFormat = new SimpleDateFormat("dd-mm-yyyy");
-				SimpleDateFormat transFormatYY = new SimpleDateFormat("yyyymmdd");
-				SimpleDateFormat transFormatHH = new SimpleDateFormat("HHmmss");
-				DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
-				DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
-				DateFormat sdFormat2 = new SimpleDateFormat("yyyymmdd");*/
+				if(!"".equals(asTransLogs1.get(i).get("inHouseRepairPromisedDate"))){
+					inHouseRepairPromisedDate = transFormatYY.parse(String.valueOf(asTransLogs1.get(i).get("inHouseRepairPromisedDate")));
+					inHouseRepairPromisedDate1 = transFormat1.format(inHouseRepairPromisedDate);
+				}
 				
-				
-				Date aaa = transFormatYY.parse(String.valueOf(asTransLogs1.get(i).get("inHouseRepairPromisedDate")));
-				String bbb = transFormat1.format(aaa);
-				
-//				sdFormat2.format(date)();
-//				
-//				String aaa = sdFormat2.format(asTransLogs1.get(i).get("inHouseRepairPromisedDate"));
-//				Date bbb  = sdFormat1.parse(aaa);
-//				String ccc = sdFormat1.format(bbb);
-				
-//				Date inHouseRepairPromisedDate = sdFormat2.parse(sdFormat2.format(asTransLogs1.get(i).get("inHouseRepairPromisedDate")));
-////				Date inHouseRepairPromisedDate1 = sdFormat.parse(inHouseRepairPromisedDate);
-//				String inHouseRepairPromisedDate2 = sdFormat.format(inHouseRepairPromisedDate);
-				
-/*				params.put("IN_HUSE_REPAIR_PROMIS_DT", asTransLogs1.get(i).get("inHouseRepairPromisedDate"));//asTransLogs	*/
-				
-				params.put("IN_HUSE_REPAIR_PROMIS_DT", bbb);//asTransLogs
+				params.put("IN_HUSE_REPAIR_PROMIS_DT", inHouseRepairPromisedDate1);//asTransLogs
 				params.put("IN_HUSE_REPAIR_GRP_CODE", asTransLogs1.get(i).get("inHouseRepairProductGroupCode"));//asTransLogs
 				params.put("IN_HUSE_REPAIR_PRODUCT_CODE", asTransLogs1.get(i).get("inHouseRepairProductCode"));//asTransLogs
 				params.put("IN_HUSE_REPAIR_SERIAL_NO", asTransLogs1.get(i).get("inHouseRepairSerialNo"));//asTransLogs
