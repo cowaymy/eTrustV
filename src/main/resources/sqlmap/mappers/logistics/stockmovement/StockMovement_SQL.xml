@@ -105,6 +105,9 @@
            <if test="sstatus !=null and sstatus !=''">
               and l47.reqst_stus = #{sstatus}
            </if>
+           <if test="sdocno !=null and sdocno !=''">
+              and l47.ref_doc_no = #{sdocno}
+           </if>
            ORDER by l47.CRT_DT desc
     </select> 
   
@@ -391,6 +394,9 @@
            </if>
            <if test="gtype !=null and gtype =='receiptList'">
               and L54.DELVRY_GR_CMPLT <![CDATA[=]]> 'Y'
+           </if>
+            <if test="sdocno !=null and sdocno !=''">
+              and l47.ref_doc_no = #{sdocno}
            </if>
            ORDER BY l54.delvry_no desc
            ) T
