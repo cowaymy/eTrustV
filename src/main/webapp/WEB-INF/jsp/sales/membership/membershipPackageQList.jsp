@@ -131,7 +131,7 @@ function createAUIGrid() {
                                  valueField : "codeName" // value 에 해당되는 필드명
                              }
                            },
-                            { dataField : "freeMemUse", headerText  : "Free Membership ",  width  : 150 , editable       : true
+                            { dataField : "freeMemUse", headerText  : "Free Membership ",  width  : 150  
                             	 , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                             		 var retStr = value;
                                      for(var i=0,len=freeKeyValueList.length; i<len; i++) {
@@ -163,6 +163,9 @@ function createAUIGrid() {
             console.log(event.rowIndex);
             fn_selectDetailListAjax( '1');
         });
+
+        // 에디팅 시작 이벤트 바인딩
+        AUIGrid.bind(gridID, "cellEditBegin", auiCellEditignHandler);
     }
     
     
@@ -497,6 +500,25 @@ function fn_delete(){
      
 }
 
+//AUIGrid 메소드
+function auiCellEditignHandler(event)
+{
+    if(event.type == "cellEditBegin")
+    {
+        console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+        //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
+        
+        if(event.dataField == "freeMemUse")
+        {
+            // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
+            if(AUIGrid.getCellValue(gridID, event.rowIndex, "pacType")=='0'){  //추가된 Row
+                return true; 
+            } else {
+                return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
+            }
+        }
+    }
+}
 
 
 
