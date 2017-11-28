@@ -24,8 +24,10 @@ var option = {
         $("#chkDiv").hide();
         if($("#appTypeId").val() != 66  && $("#custBillId").val() == 0){
         	$("#groupDiv").show();
+        	$("#groupVal").val('1');   // Group Option 필수 Validation check값
         }else{
-            $("#groupDiv").hide();
+            $("#groupDiv").hide();    // Group Option 필수 Validation check값
+            $("#groupVal").val('0');
         }
         $("#radio1").hide();
         $("#radio2").hide();
@@ -60,7 +62,7 @@ var option = {
         $('#selCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             //Common.popupWin("searchForm", "/sales/customer/customerCreditCardSearchPop.do", {width : "1200px", height : "630x"});
-            Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
+            Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : vCustId, callPrgm : "ORD_REQUEST_PAY"}, null, true);
         });
         
         //Add New Bank Account
@@ -277,6 +279,7 @@ var option = {
     
     function fn_loadBankAccountPop(bankAccId) {
 //        fn_clearRentPaySetDD();
+
         fn_loadBankAccount(bankAccId);
         
         $('#sctDirectDebit').removeClass("blind");
@@ -369,6 +372,11 @@ var option = {
     		Common.alert("Please select Rental Paymode");
     		return false;
     	}
+    	
+    	if(mSaveForm.groupVal.value == "1"){
+            Common.alert("Please select Group Option");
+            return false;
+        }
     	
     	Common.ajax("GET", "/sales/membershipRentalQut/saveCnvrToSale.do", $("#mSaveForm").serialize(), function(result){
             //result alert and reload
@@ -616,6 +624,7 @@ var option = {
 <input type="hidden" id="chkBoxThrdParty" name="chkBoxThrdParty" >
 <input type="hidden" id="hiddenOrdNo" name="hiddenOrdNo" value="${orderInfo.ordNo }">
 <input type="hidden" id="qotatCrtUserId" name="qotatCrtUserId" value="${packageInfo.qotatCrtUserId }">
+<input type="hidden" id="groupVal" name="groupVal" >
 <section class="search_table mt20"><!-- search_table start -->
 
 <table class="type1"><!-- table start -->
@@ -814,7 +823,7 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Group Option<span class="must"></span></th>
+    <th scope="row">Group Option<span class="must">*</span></th>
     <td colspan="3">
     <label><input type="radio" id="billingGroup" name="billingGroup" value="N" onclick="fn_groupChg('N')"/><span>New Billing Group</span></label>
     <label><input type="radio" id="billingGroup" name="billingGroup" value="E" onclick="fn_groupChg('E')"/><span>Existing Billing Group</span></label>
@@ -898,7 +907,7 @@ var option = {
 <tbody>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><textarea id="billRem" name="billRem" cols="20" rows="5" readonly></textarea></td>
+    <td colspan="3"><textarea id="billRem" name="billRem" cols="20" rows="5" ></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
