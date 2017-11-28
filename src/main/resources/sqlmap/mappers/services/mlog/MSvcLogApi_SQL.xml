@@ -2313,7 +2313,7 @@ and cust.cust_id = custCnt.cust_id
                    E.CODE_NAME as payment_mode,
                    NVL(B.MTH_RENT_AMT , 0) as target_amount,
                    NVL(A.RENT_AMT , 0) as amount,
-                   E.CODE_ID  as payment_Mode_Id
+                   to_char(E.CODE_ID)  as payment_Mode_Id
               FROM PAY0022D A,
                    SAL0001D B,
                    SAL0029D C,
