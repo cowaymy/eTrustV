@@ -35,10 +35,13 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectChildField(Map<String, Object> params);
 	List<EgovMap> selectRemainWeekTh(Map<String, Object> params);
 	List<EgovMap> selectMonthCombo(Map<String, Object> params);
-	
+	List<EgovMap> selectPlanDetailIdSeq(Map<String, Object> params);
+	List<EgovMap> selectPlanMasterId(Map<String, Object> params);
+	List<EgovMap> selectStockIdByStCode(Map<String, Object> params);
 	
 	List<EgovMap> selectStockCtgrySummary(Map<String, Object> params);	 
 	
 	int updateSCMPlanMaster(List<Object> addList, Integer updUserId);
+	int insertSalesPlanDetail(List<Object> addList, Integer updUserId);
 	
 }

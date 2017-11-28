@@ -117,6 +117,11 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		return salesPlanMngementMapper.selectSalesPlanMngmentList(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectStockIdByStCode(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectStockIdByStCode(params);
+	}
+	
 	//
 	@Override
 	public int updateSCMPlanMaster(List<Object> addList, Integer crtUserId) 
@@ -137,6 +142,22 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			saveCnt++;
 			
 			salesPlanMngementMapper.updateScmPlanMaster((Map<String, Object>) obj);
+		}
+		
+		return saveCnt;
+	}
+	
+	// INSERT
+	@Override
+	public int insertSalesPlanDetail(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : addList) 
+		{
+			LOGGER.debug(" >>>>> insertSalesPlanDetail ");
+			saveCnt++;
+			salesPlanMngementMapper.insertSalesPlanDetail((Map<String, Object>) obj);
 		}
 		
 		return saveCnt;
@@ -174,6 +195,14 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	@Override
 	public List<EgovMap> selectMonthCombo(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectMonthCombo(params);
+	}
+	@Override
+	public List<EgovMap> selectPlanDetailIdSeq(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectPlanDetailIdSeq(params);
+	}
+	@Override
+	public List<EgovMap> selectPlanMasterId(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectPlanMasterId(params);
 	}
 
 }

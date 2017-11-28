@@ -82,6 +82,36 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(map);
 	}
 	
+	@RequestMapping(value = "/selectPlanMstIdDetailSeqForIns.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectPlanDetailIdSeq(@RequestParam Map<String, Object> params) 
+	{
+		LOGGER.debug("selectPlanMstIdDetailSeqForIns : {}", params.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		List<EgovMap> selectPlanDetailIdSeq = salesPlanMngementService.selectPlanDetailIdSeq(params);
+		List<EgovMap> selectPlanMasterId = salesPlanMngementService.selectPlanMasterId(params);
+		
+		map.put("selectPlanDetailIdSeq",selectPlanDetailIdSeq);
+		map.put("selectPlanMasterId",selectPlanMasterId);
+		
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/selectStockIdByStCode.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectStockIdByStCode(@RequestParam Map<String, Object> params) 
+	{
+		LOGGER.debug("selectStockIdByStCode : {}", params.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		List<EgovMap> selectStockIdByStCode = salesPlanMngementService.selectStockIdByStCode(params);
+		
+		map.put("selectStockIdByStCode",selectStockIdByStCode);
+		
+		return ResponseEntity.ok(map);
+	}
+	
 	@RequestMapping(value = "/selectPlanId.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPlanId(@RequestParam Map<String, Object> params) 
 	{
@@ -228,24 +258,28 @@ public class SalesPlanManagementController {
 		List<EgovMap> selectDefaultStockCode = salesPlanMngementService.selectDefaultStockCode(params);
 		return ResponseEntity.ok(selectDefaultStockCode);
 	}
-
-	// save 
+	
+	// update save 
 	@RequestMapping(value = "/saveScmSalesPlan.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
 	{
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
-		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
-
+		//List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		//List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
+		// 콘솔로 찍어보기
+		LOGGER.info("salesPlanMngementService_수정 : {}", udtList.toString());
+		//LOGGER.info("salesPlanMngementService_추가 : {}", addList.toString());
+		//LOGGER.info("salesPlanMngementService_삭제 : {}", delList.toString());
+		
+		
 		int tmpCnt = 0;
 		int totCnt = 0;
-	/*	
-		if (addList.size() > 0) {
-			tmpCnt = salesPlanMngementService.insertGSTExportation(addList, sessionVO.getUserId()); 
+	
+/*		if (addList.size() > 0) {
+			tmpCnt = salesPlanMngementService.insertSalesPlanDetail(addList, sessionVO.getUserId()); 
 			totCnt = totCnt + tmpCnt;
-		}
-*/
-		//{add=[], update=[{planDtlId=5621, planMasterId=248, team=DST, code=620001, preM3AvgOrded=102, preM3AvgIssu=65, m3AvgIssueOrder=65/102, m1Ord=120, m2Ord=93, m3Ord=93, m3=112, m2=106, m1=98, m0Plan=90, m0Ord=8, m0PlanOrder=90/8, m4=12, w00=20, w01=9999, w02=30, w03=10, w04=10, w05=20, w06=29, w07=29, w08=10, w09=0, w10=11, w11=21, w12=32, w13=42, w14=0, w15=11, w16=22, w17=34, w18=45, w19=0, w20=12, w21=0, w22=0, w23=0, w24=0, w25=0, w26=0, w27=0, w28=0, w29=0, w30=0, name=POE-14A (BAMBOO MINI), category=POE, _$uid=3B5C262A-C95E-C71C-96E7-A406B4975825, crtUserId=184, updUserId=184}], remove=[]}
+		}*/
+
 		if (udtList.size() > 0) {
 			tmpCnt = salesPlanMngementService.updateSCMPlanMaster(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
@@ -255,12 +289,8 @@ public class SalesPlanManagementController {
 			tmpCnt = salesPlanMngementService.deleteGSTExportation(delList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}*/
-
-		// 콘솔로 찍어보기
-		LOGGER.info("salesPlanMngementService_수정 : {}", udtList.toString());
-		LOGGER.info("salesPlanMngementService_추가 : {}", addList.toString());
-		LOGGER.info("salesPlanMngementService_삭제 : {}", delList.toString());
-		LOGGER.info("salesPlanMngementService_카운트 : {}", totCnt);
+		
+		LOGGER.info("salesPlan Saves카운트 : {}", totCnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -268,6 +298,32 @@ public class SalesPlanManagementController {
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/saveInsScmSalesPlan.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveInsScmSalesPlan(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
+	{
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		// 콘솔로 찍어보기
+		LOGGER.info("salesPlanMngementService_추가 : {}", addList.toString());
+		
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		if (addList.size() > 0) {
+			tmpCnt = salesPlanMngementService.insertSalesPlanDetail(addList, sessionVO.getUserId()); 
+			totCnt = totCnt + tmpCnt;
+		}
+		
+		LOGGER.info("salesPlan Saves카운트 : {}", totCnt);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
 		return ResponseEntity.ok(message);
 	}
 

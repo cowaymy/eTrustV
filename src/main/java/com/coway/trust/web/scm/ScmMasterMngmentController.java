@@ -113,6 +113,24 @@ public class ScmMasterMngmentController {
 		
 	}
 	
+	// PLAN_DETAIL_ID_SEQ 
+	@RequestMapping(value = "/selectPlanDetailIdSeq.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectPlanDetailIdSeq(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectPlanDetailIdSeq_Input : {}", params.toString());
+		
+		List<EgovMap> selectPlanDetailIdSeq = salesPlanMngementService.selectPlanDetailIdSeq(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectPlanDetailIdSeq", selectPlanDetailIdSeq);
+		
+		return ResponseEntity.ok(map);
+		
+	}
+	
 	// save 
 	@RequestMapping(value = "/saveScmMasterMngment.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)

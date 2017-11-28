@@ -37,6 +37,10 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectMonthCombo(Map<String, Object> params);
 	
 	List<EgovMap> selectStockCtgrySummary(Map<String, Object> params);
+	List<EgovMap> selectPlanDetailIdSeq(Map<String, Object> params);
+	List<EgovMap> selectPlanMasterId(Map<String, Object> params);
+	List<EgovMap> selectStockIdByStCode(Map<String, Object> params);
 	
 	void updateScmPlanMaster(Map<String, Object> params);
+	void insertSalesPlanDetail(Map<String, Object> params);
 }
