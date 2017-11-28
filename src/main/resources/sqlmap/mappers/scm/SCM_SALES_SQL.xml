@@ -425,7 +425,8 @@
     
     <select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
       SELECT 
-               team 
+               PLAN_MASTER_ID
+             , team 
              , STK_TYPE_ID  
              , category 
              , code  
@@ -687,5 +688,370 @@
          AND STOCK_CODE = #{code}  
          AND TEAM  = #{team} 
     </update>        
-    
+
+<select id="selectPlanDetailIdSeq" parameterType="Map" resultType="egovMap">
+SELECT SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL SCM0002D_PLAN_DTL_ID_SEQ
+  FROM DUAL
+</select>
+
+<select id="selectPlanMasterId" parameterType="Map" resultType="egovMap">
+SELECT PLAN_ID PLAN_MASTER_ID
+  FROM SCM0001M  
+ WHERE PLAN_YEAR = #{scmYearCbBox}
+   AND PLAN_WEEK = #{scmPeriodCbBox}
+   AND TEAM      = #{scmTeamCbBox}   
+</select>
+
+<select id="selectStockIdByStCode" parameterType="Map" resultType="egovMap">
+SELECT STK_ID  
+  FROM SYS0026M  
+ WHERE STK_CODE = #{newStockCode}
+   AND ROWNUM   =1 
+</select>
+
+<insert id="insertSalesPlanDetail" parameterType="Map">
+ <selectKey keyProperty="scm0002dPlanDtlIdSeq,getPlanMasterId" resultType="egovMap" order="BEFORE">
+   SELECT SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL AS SCM0002D_PLAN_DTL_ID_SEQ
+        ,(
+           SELECT PLAN_ID 
+						 FROM SCM0001M  
+						WHERE PLAN_YEAR = #{scmGrYear}
+						  AND PLAN_WEEK = #{scmGrWeek}
+						  AND TEAM      = #{team}     
+         ) GET_PLAN_MASTER_ID
+  FROM DUAL
+ </selectKey>
+                
+ INSERT INTO SCM0002D
+           (
+             PLAN_DTL_ID    
+            ,PLAN_MASTER_ID 
+            ,TEAM           
+            ,STOCK_CODE     
+            
+            <if test='preM3AvgOrded != null and preM3AvgOrded !="" '>
+            ,PRE_M3_AVG_ORDED 
+            </if>                
+            <if test='preM3AvgIssu != null and preM3AvgIssu !="" '>
+            ,PRE_M3_AVG_ISSU  
+            </if>   
+            <if test='m1Ord != null and m1Ord !="" '>
+            ,M1_ORD  
+            </if>   
+            <if test='m2Ord != null and m2Ord !="" '>
+            ,M2_ORD
+            </if>   
+            <if test='m3Ord != null and m3Ord !="" '>
+            ,M3_ORD
+            </if>               
+            <if test='m33 != null and m33 !="" '>
+            ,M_3      /*m33*/
+            </if>                 
+            <if test='m22 != null and m22 !="" '>
+            ,M_2      /*m22*/
+            </if>                
+            <if test='m11 != null and m11 !="" '>
+            ,M_1      /*m11*/
+            </if>                
+            <if test='m0Plan != null and m0Plan !="" '>
+            ,M0_PLAN 
+            </if>                
+            <if test='m0Ord != null and m0Ord !="" '>
+            ,M0_ORD 
+            </if>                
+          
+            <if test='m1 != null and m1 !="" '>
+            ,M1     
+            </if>              
+            <if test='m2 != null and m2 !="" '>
+            ,M2     
+            </if>              
+            <if test='m3 != null and m3 !="" '>
+            ,M3     
+            </if>              
+            <if test='m4 != null and m4 !="" '>
+            ,M4     
+            </if>
+
+            <if test='w00 != null and w00 !="" '>
+            ,W00
+            </if>              
+            <if test='w01 != null and w01 !="" '>
+            ,W01
+            </if>              
+            <if test='w02 != null and w02 !="" '>
+            ,W02
+            </if>              
+            <if test='w03 != null and w03 !="" '>
+            ,W03 
+            </if>              
+            <if test='w04 != null and w04 !="" '>
+            ,W04
+            </if>              
+            <if test='w05 != null and w05 !="" '>
+            ,W05 
+            </if>              
+            <if test='w06 != null and w06 !="" '>
+            ,W06
+            </if>              
+            <if test='w07 != null and w07 !="" '>
+            ,W07 
+            </if>              
+            <if test='w08 != null and w08 !="" '>
+            ,W08
+            </if>              
+            <if test='w09 != null and w09 !="" '>
+            ,W09
+            </if>    
+
+            <if test='w10 != null and w10 !="" '>
+            ,W10 
+            </if>            
+            <if test='w11 != null and w11 !="" '>
+            ,W11
+            </if>            
+            <if test='w12 != null and w12 !="" '>
+            ,W12 
+            </if>            
+            <if test='w13 != null and w13 !="" '>
+            ,W13 
+            </if>            
+            <if test='w14 != null and w14 !="" '>
+            ,W14
+            </if>            
+            <if test='w15 != null and w15 !="" '>
+            ,W15
+            </if>            
+            <if test='w16 != null and w16 !="" '>
+            ,W16 
+            </if>            
+            <if test='w17 != null and w17 !="" '>
+            ,W17 
+            </if>            
+            <if test='w18 != null and w18 !="" '>
+            ,W18 
+            </if>            
+            <if test='w19 != null and w19 !="" '>
+            ,W19 
+            </if>  
+            
+            <if test='w20 != null and w20 !="" '>
+            ,W20
+            </if> 
+            <if test='w21 != null and w21 !="" '>
+            ,W21 
+            </if>              
+            <if test='w22 != null and w22 !="" '>
+            ,W22 
+            </if>              
+            <if test='w23 != null and w23 !="" '>
+            ,W23  
+            </if>              
+            <if test='w24 != null and w24 !="" '>
+            ,W24  
+            </if>              
+            <if test='w25 != null and w25 !="" '>
+            ,W25  
+            </if>              
+            <if test='w26 != null and w26 !="" '>
+            ,W26 
+            </if>              
+            <if test='w27 != null and w27 !="" '>
+            ,W27  
+            </if>              
+            <if test='w28 != null and w28 !="" '>
+            ,W28  
+            </if>              
+            <if test='w29 != null and w29 !="" '>
+            ,W29  
+            </if>  
+            <if test='w30 != null and w30 !="" '>
+            ,W30
+            </if>              
+
+            <if test='ws1 != null and ws1 !="" '>
+            ,WS1 
+            </if>
+            <if test='ws2 != null and ws2 !="" '>
+            ,WS2 
+            </if>
+            <if test='ws3 != null and ws3 !="" '>
+            ,WS3 
+            </if>
+            <if test='ws4 != null and ws4 !="" '>
+            ,WS4 
+            </if>
+            <if test='ws5 != null and ws5 !="" '>
+            ,WS5 
+            </if>
+            )
+      VALUES
+           (
+             #{scm0002dPlanDtlIdSeq} 
+            ,#{getPlanMasterId} 
+            ,#{team}            
+            ,#{newStockCode}    
+            
+            <if test='preM3AvgOrded != null and preM3AvgOrded !="" '>
+            ,#{preM3AvgOrded}  
+            </if>                
+            <if test='preM3AvgIssu != null and preM3AvgIssu !="" '>
+            ,#{preM3AvgIssu}  
+            </if>                
+            
+            <if test='m1Ord != null and m1Ord !="" '>
+            ,#{m1Ord}  
+            </if>                
+            <if test='m2Ord != null and m2Ord !="" '>
+            ,#{m2Ord}  
+            </if>                
+            <if test='m3Ord != null and m3Ord !="" '>
+            ,#{m3Ord}  
+            </if>                
+            
+            <if test='m33 != null and m33 !="" '>
+            ,#{m33}  
+            </if>                
+            <if test='m22 != null and m22 !="" '>
+            ,#{m22}  
+            </if>                
+            <if test='m11 != null and m11 !="" '>
+            ,#{m11}  
+            </if>                
+            
+            <if test='m0Plan != null and m0Plan !="" '>
+            ,#{m0Plan}  
+            </if>                
+            <if test='m0Ord != null and m0Ord !="" '>
+            ,#{m0Ord}  
+            </if>                
+            
+            <if test='m1 != null and m1 !="" '>
+            ,#{m1}  
+            </if>              
+            <if test='m2 != null and m2 !="" '>
+            ,#{m2} 
+            </if>              
+            <if test='m3 != null and m3 !="" '>
+            ,#{m3} 
+            </if>              
+            <if test='m4 != null and m4 !="" '>
+            ,#{m4} 
+            </if>              
+            
+            <if test='w00 != null and w00 !="" '>
+            ,#{w00} 
+            </if>              
+            <if test='w01 != null and w01 !="" '>
+            ,#{w01} 
+            </if>              
+            <if test='w02 != null and w02 !="" '>
+            ,#{w02} 
+            </if>              
+            <if test='w03 != null and w03 !="" '>
+            ,#{w03} 
+            </if>              
+            <if test='w04 != null and w04 !="" '>
+            ,#{w04} 
+            </if>              
+            <if test='w05 != null and w05 !="" '>
+            ,#{w05} 
+            </if>              
+            <if test='w06 != null and w06 !="" '>
+            ,#{w06} 
+            </if>              
+            <if test='w07 != null and w07 !="" '>
+            ,#{w07} 
+            </if>              
+            <if test='w08 != null and w08 !="" '>
+            ,#{w08} 
+            </if>              
+            <if test='w09 != null and w09 !="" '>
+            ,#{w09} 
+            </if>    
+                      
+            <if test='w10 != null and w10 !="" '>
+            ,#{w10} 
+            </if>            
+            <if test='w11 != null and w11 !="" '>
+            ,#{w11} 
+            </if>            
+            <if test='w12 != null and w12 !="" '>
+            ,#{w12} 
+            </if>            
+            <if test='w13 != null and w13 !="" '>
+            ,#{w13} 
+            </if>            
+            <if test='w14 != null and w14 !="" '>
+            ,#{w14} 
+            </if>            
+            <if test='w15 != null and w15 !="" '>
+            ,#{w15} 
+            </if>            
+            <if test='w16 != null and w16 !="" '>
+            ,#{w16} 
+            </if>            
+            <if test='w17 != null and w17 !="" '>
+            ,#{w17} 
+            </if>            
+            <if test='w18 != null and w18 !="" '>
+            ,#{w18} 
+            </if>            
+            <if test='w19 != null and w19 !="" '>
+            ,#{w19} 
+            </if>            
+            <if test='w20 != null and w20 !="" '>
+            ,#{w20} 
+            </if>            
+            
+            <if test='w21 != null and w21 !="" '>
+            ,#{w21} 
+            </if>              
+            <if test='w22 != null and w22 !="" '>
+            ,#{w22}  
+            </if>              
+            <if test='w23 != null and w23 !="" '>
+            ,#{w23}  
+            </if>              
+            <if test='w24 != null and w24 !="" '>
+            ,#{w24}  
+            </if>              
+            <if test='w25 != null and w25 !="" '>
+            ,#{w25}  
+            </if>              
+            <if test='w26 != null and w26 !="" '>
+            ,#{w26}  
+            </if>              
+            <if test='w27 != null and w27 !="" '>
+            ,#{w27}  
+            </if>              
+            <if test='w28 != null and w28 !="" '>
+            ,#{w28}  
+            </if>              
+            <if test='w29 != null and w29 !="" '>
+            ,#{w29}  
+            </if>              
+            <if test='w30 != null and w30 !="" '>
+            ,#{w30}  
+            </if>              
+
+            <if test='ws1 != null and ws1 !="" '>
+            ,#{ws1}  
+            </if>
+            <if test='ws2 != null and ws2 !="" '>
+            ,#{ws2} 
+            </if>
+            <if test='ws3 != null and ws3 !="" '>
+           ,#{ws3} 
+            </if>
+            <if test='ws4 != null and ws4 !="" '>
+            ,#{ws4}  
+            </if>
+            <if test='ws5 != null and ws5 !="" '>
+            ,#{ws5} 
+            </if>
+           )
+
+</insert>  
+  
 </mapper>

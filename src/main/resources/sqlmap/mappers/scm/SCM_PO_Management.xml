@@ -332,7 +332,7 @@
                   )
 </insert>
   
-<insert id="insertPOIssueDetail_TMP" parameterType="Map">
+<insert id="insertPOIssueDetail_TEMP" parameterType="Map">
         <selectKey keyProperty="detailSeq,newPono" resultType="egovMap" order="BEFORE">
           SELECT SCM0010D_SN_SEQ.NEXTVAL AS DETAIL_SEQ
                ,(
