@@ -134,6 +134,8 @@ public class CommissionConstants {
 	public static final String COMIS_BSD_P014 = "BSD-P14";					//CMM0025T
 	public static final String COMIS_BSD_P015 = "BSD-P15";					//CMM0026T
 	public static final String COMIS_BSD_P016 = "BSD-P16";					//CMM0060T
+	public static final String COMIS_BSD_P017 = "BSD-P17";					//CMM0067T
+	public static final String COMIS_BSD_P018 = "BSD-P18";					//CMM0068T
 	public static final String COMIS_BSG_P01 = "BSG-P01";					//
 	
 	public static final String COMIS_NEO_TYPE = "NEOPRO";					//

@@ -216,8 +216,6 @@
          ]]>
     </select>
     
-    
-    
     <!-- ########################################################## -->
     <!--                                                   CMM0028D                                                     -->
     <!-- ########################################################## -->
@@ -1737,6 +1735,127 @@
 	    </if>
 		ORDER BY t1.M_RANK
     </select>
+    
+    <select id="cntCMM0067T" parameterType="Map" resultType="integer">
+        SELECT COUNT(*) 
+		FROM CMM0067T T1 JOIN (
+		    SELECT T1.RUN_ID , NVL(T1.IS_EXCLUDE,0) IS_EXCLUDE
+		    FROM CMM0067T T1 
+		        JOIN CMM0006T T2 ON T1.EMPLY_ID=T2.EMPLY_ID 
+		            AND T1.TASK_ID=T2.COMM_TASK_ID 
+		            AND T2.IS_EXCLUDE=0
+		    WHERE T1.TASK_ID=#{taskId}
+                <if test="codeId != null and codeId != ''">
+		        AND T2.EMPLY_TYPE_ID= #{codeId}
+		        </if>
+		        <if test="emplyCd != null and emplyCd != ''">
+		        AND T1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+		        </if>
+		    )T2 ON T1.RUN_ID=T2.RUN_ID
+		WHERE T1.TASK_ID=#{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+		    AND T2.IS_EXCLUDE= #{useYnCombo}
+		    </if>
+    </select>
+    <select id="selectCMM0067T" parameterType="Map" resultType="EgovMap">
+        SELECT 
+		    T1.TASK_ID,
+		    T1.GRP_NAME,
+		    T1.EMPLY_CODE,
+		    T1.EMPLY_ID,
+		    T1.NEO_CNT,
+		    T1.TOT,
+		    T1.OUTRGT,
+		    T1.INSTLMT,
+		    T1.RENTAL,
+		    T1.PV,
+		    T1.PV_YEAR,
+		    T1.PV_MONTH,
+		    T1.DEPT_CODE,
+		    T1.GRP_CODE,
+		    T1.ORG_CODE,
+		    T2.IS_EXCLUDE,
+		    T1.RUN_ID
+		FROM CMM0067T T1 JOIN (
+		    SELECT T1.RUN_ID , NVL(T1.IS_EXCLUDE,0) IS_EXCLUDE
+            FROM CMM0067T T1 
+                JOIN CMM0006T T2 ON T1.EMPLY_ID=T2.EMPLY_ID 
+                    AND T1.TASK_ID=T2.COMM_TASK_ID 
+                    AND T2.IS_EXCLUDE=0
+            WHERE T1.TASK_ID=#{taskId}
+                <if test="codeId != null and codeId != ''">
+                AND T2.EMPLY_TYPE_ID= #{codeId}
+                </if>
+                <if test="emplyCd != null and emplyCd != ''">
+                AND T1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+            )T2 ON T1.RUN_ID=T2.RUN_ID
+        WHERE T1.TASK_ID=#{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE= #{useYnCombo}
+            </if>
+		ORDER BY T1.EMPLY_CODE
+    </select>
+    
+    <select id="cntCMM0068T" parameterType="Map" resultType="integer">
+        SELECT COUNT(*) 
+		FROM CMM0068T T1 JOIN (
+		        SELECT T1.RUN_ID, NVL(T1.IS_EXCLUDE,0) IS_EXCLUDE
+		        FROM CMM0068T T1 
+		            JOIN CMM0006T T2 ON T1.EMPLY_ID=T2.EMPLY_ID 
+		                AND T1.TASK_ID=T2.COMM_TASK_ID
+		                AND T2.IS_EXCLUDE=0
+		        WHERE T1.TASK_ID = #{taskId}
+                    <if test="codeId != null and codeId != ''">
+		            AND T2.EMPLY_TYPE_ID = #{codeId}
+		            </if>
+		            <if test="emplyCd != null and emplyCd != ''">
+		            AND T1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+		            </if>
+		    )T2 ON T1.RUN_ID=T2.RUN_ID
+		WHERE T1.TASK_ID = #{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+		    AND T2.IS_EXCLUDE = #{useYnCombo}
+		    </if>
+    </select>
+    <select id="selectCMM0068T" parameterType="Map" resultType="EgovMap">
+        SELECT 
+		    T1.RUN_ID,
+		    T1.TASK_ID,
+		    T1.GRP_NAME,
+		    T1.EMPLY_CODE,
+		    T1.EMPLY_ID,
+		    T1.TOT,
+		    T1.OUTRGT,
+		    T1.INSTLMT,
+		    T1.RENTAL,
+		    T1.PV,
+		    T1.PV_YEAR,
+		    T1.PV_MONTH,
+		    T1.DEPT_CODE,
+		    T1.GRP_CODE,
+		    T1.ORG_CODE,
+		    T2.IS_EXCLUDE
+		FROM CMM0068T T1 JOIN (
+		        SELECT T1.RUN_ID, NVL(T1.IS_EXCLUDE,0) IS_EXCLUDE
+		        FROM CMM0068T T1 
+		            JOIN CMM0006T T2 ON T1.EMPLY_ID=T2.EMPLY_ID 
+		                AND T1.TASK_ID=T2.COMM_TASK_ID
+		                AND T2.IS_EXCLUDE=0
+		        WHERE T1.TASK_ID = #{taskId}
+                    <if test="codeId != null and codeId != ''">
+                    AND T2.EMPLY_TYPE_ID = #{codeId}
+                    </if>
+                    <if test="emplyCd != null and emplyCd != ''">
+                    AND T1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                    </if>
+            )T2 ON T1.RUN_ID=T2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+            </if>
+        ORDER BY T1.EMPLY_CODE
+    </select>
     <!-- ########################################################## -->
     <!-- 												Is Exclude Update													-->
     <!-- ########################################################## -->
@@ -1851,6 +1970,18 @@
     
     <update id="udtDataCMM0060T" parameterType="Map">
         UPDATE CMM0060M SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+    
+    <update id="udtDataCMM0067T" parameterType="Map">
+        UPDATE CMM0067T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+    
+    <update id="udtDataCMM0068T" parameterType="Map">
+        UPDATE CMM0068T SET IS_EXCLUDE = #{isExclude}
         WHERE TASK_ID= #{taskId}
         AND RUN_ID=#{runId}
     </update>

@@ -291,11 +291,15 @@ public class CommissionCalculationController {
 				prdMap.put("procedureNm", logList.get(0).get("calName"));
 				prdMap.put("startDt", logList.get(0).get("calStartTime"));
 				prdMap.put("codeId", logList.get(0).get("calCode"));
+				String callDt = formMap.get("searchDt").toString();
+				callDt = callDt.substring(3,7)+callDt.substring(0,2)+"01";
+				prdMap.put("searchDt",callDt);
 				
 				if(failCntTemp >0){
 					prdMap.put("state",CommissionConstants.COMIS_FAIL_NEXT); //8:FAIL
 					failCntTemp = commissionCalculationService.callCommFailNextPrdLog(prdMap);
 				}else{
+					/*System.out.println(formMap.get("searchDt")+"###################################################"+prdMap.get("searchDt"));*/
 					item = (EgovMap) commissionCalculationService.callCommProcedure(prdMap); // call proceduar
 					
     				if (CommissionConstants.COMIS_SUCCESS.equals(prdMap.get("v_result"))) {
@@ -346,9 +350,13 @@ public class CommissionCalculationController {
 		Calendar calendar = Calendar.getInstance();	
 		Date date = calendar.getTime();
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
+		
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());	
+		String callDt = params.get("searchDt").toString();
+		callDt = callDt.substring(3,7)+callDt.substring(0,2)+"01";
+		
 		params.put("calYM", (params.get("searchDt").toString()).replace("/", ""));
-		params.put("searchDt",df.format(date));
+		params.put("searchDt",callDt);
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("loginId", loginId);
 		params.put("state",CommissionConstants.COMIS_RUNNING); //1:Running
@@ -544,7 +552,11 @@ public class CommissionCalculationController {
 		}
 		
 		// 호출될 화면
-		return "commission/"+popName;
+		if(popName != null && !"".equals(popName)){
+			return "commission/"+popName;
+		}else{
+			return null;
+		}
 	}
 	
 	
@@ -918,8 +930,13 @@ public class CommissionCalculationController {
 			popName = "calculationData0026T_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P016)){
 			popName = "calculationData0060T_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P017)){
+			popName = "calculationData0067T_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P018)){
+			popName = "calculationData0068T_Pop";
+		}else{
+			return null;
 		}
-		
 		// 호출될 화면
 		return "commission/"+popName;
 	}
@@ -1082,6 +1099,22 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(cnt);
 	}	
 	
+	@RequestMapping(value = "/cntCMM0067T")
+	public ResponseEntity<Integer> cntCMM0067T(@RequestParam Map<String, Object> params, ModelMap model) {
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+		params.put("taskId", sTaskID);
+		int cnt = commissionCalculationService.cntCMM0067T(params);
+		return ResponseEntity.ok(cnt);
+	}	
+	
+	@RequestMapping(value = "/cntCMM0068T")
+	public ResponseEntity<Integer> cntCMM0068T(@RequestParam Map<String, Object> params, ModelMap model) {
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+		params.put("taskId", sTaskID);
+		int cnt = commissionCalculationService.cntCMM0068T(params);
+		return ResponseEntity.ok(cnt);
+	}	
+	
 	
 	
 	@RequestMapping(value = "/selectDataCMM006T")
@@ -1236,6 +1269,20 @@ public class CommissionCalculationController {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", String.valueOf(sTaskID));
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0060T(params);
+		return ResponseEntity.ok(dataList);
+	}
+	@RequestMapping(value = "/selectDataCMM067T")
+	public ResponseEntity<List<EgovMap>> selectDataCMM067T(@RequestParam Map<String, Object> params, ModelMap model) {
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+		params.put("taskId", String.valueOf(sTaskID));
+		List<EgovMap> dataList = commissionCalculationService.selectCMM0067T(params);
+		return ResponseEntity.ok(dataList);
+	}
+	@RequestMapping(value = "/selectDataCMM068T")
+	public ResponseEntity<List<EgovMap>> selectDataCMM068T(@RequestParam Map<String, Object> params, ModelMap model) {
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+		params.put("taskId", String.valueOf(sTaskID));
+		List<EgovMap> dataList = commissionCalculationService.selectCMM0068T(params);
 		return ResponseEntity.ok(dataList);
 	}
 	
@@ -1578,7 +1625,40 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+	@RequestMapping(value = "/updatePrdData_67T.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updatePrdData_67T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
+		
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			commissionCalculationService.udtDataCMM0067T(cMap);
+		}
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	@RequestMapping(value = "/updatePrdData_68T.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updatePrdData_68T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
+		
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			commissionCalculationService.udtDataCMM0068T(cMap);
+		}
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
 	
 	@RequestMapping(value = "/commAdjustment.do")
 	public String commAdjustment(@RequestParam Map<String, Object> params, ModelMap model) {

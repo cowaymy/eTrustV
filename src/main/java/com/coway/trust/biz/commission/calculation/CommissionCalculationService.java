@@ -157,6 +157,10 @@ public interface CommissionCalculationService
     List<EgovMap> selectCMM0026T(Map<String, Object> params);
     int cntCMM0060T(Map<String, Object> params);
     List<EgovMap> selectCMM0060T(Map<String, Object> params);
+    int cntCMM0067T(Map<String, Object> params);
+    List<EgovMap> selectCMM0067T(Map<String, Object> params);
+    int cntCMM0068T(Map<String, Object> params);
+    List<EgovMap> selectCMM0068T(Map<String, Object> params);
     
     /********************************************************
      *  Basic Data Exclude update
@@ -182,6 +186,8 @@ public interface CommissionCalculationService
     void udtDataCMM0023T(Map<String, Object> param);
     void udtDataCMM0026T(Map<String, Object> param);
     void udtDataCMM0060T(Map<String, Object> param);
+    void udtDataCMM0067T(Map<String, Object> param);
+    void udtDataCMM0068T(Map<String, Object> param);
     
     /**
      * Adjustment Code List
