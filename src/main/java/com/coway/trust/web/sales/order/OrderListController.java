@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.order.OrderListService;
+import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import com.crystaldecisions.jakarta.poi.util.StringUtil;
@@ -164,4 +165,12 @@ public class OrderListController {
 		
 		return ResponseEntity.ok(grpCodeList);
 	}
+
+	@RequestMapping(value = "/getMemberOrgInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> getMemberOrgInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+        EgovMap result = orderListService.getMemberOrgInfo(params);
+
+        return ResponseEntity.ok(result);
+    }
 }
