@@ -8,7 +8,7 @@ $(document).ready(function() {
 	//grid 생성
 	createInstallationListAUIGrid();
 	AUIGrid.setSelectionMode(myGridID, "singleRow");
-	
+
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
           //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId"));
@@ -30,53 +30,53 @@ $(document).ready(function() {
       docId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "c1");
       statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
       salesOrderId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-      
+
       //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-  }); 
-    
-    
-   
+  });
+
+
+
 });
 
 function fn_installationListSearch(){
 	Common.ajax("GET", "/services/installationListSearch.do", $("#searchForm").serialize(), function(result) {
         console.log("성공.");
-        console.log("data : " + result);
+        console.log( result);
         AUIGrid.setGridData(myGridID, result);
     });
 }
 
 function fn_addInstallation(codeid1){//active 일때만 열림
-	
-	
+
+
 	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-    
+
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No AS selected.</b>");
         return ;
     }
-    
+
 
     if(selectedItems.length  > 1) {
         Common.alert("<b>only select one row plz</b>");
         return ;
     }
-    
-      
+
+
 	var   installEntryId =   selectedItems[0].item.installEntryId;
-	var   codeid1 =  selectedItems[0].item.codeid1;   
-	var  orderId =   selectedItems[0].item.salesOrdId;    
-	var docId =  selectedItems[0].item.c1;   
-	var  statusCode =  selectedItems[0].item.code1; 
-	var  salesOrderId =  selectedItems[0].item.salesOrdId; 
-	
-    
+	var   codeid1 =  selectedItems[0].item.codeid1;
+	var  orderId =   selectedItems[0].item.salesOrdId;
+	var docId =  selectedItems[0].item.c1;
+	var  statusCode =  selectedItems[0].item.code1;
+	var  salesOrderId =  selectedItems[0].item.salesOrdId;
+
+
 	if(statusCode == "ACT"){
 		if(codeid1 == 257){
 	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
 	    }else{
 	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId+"&salesOrderId="+salesOrderId);
-	    }	
+	    }
 	}else{
 		Common.alert("Installation is no longer active. Add new installatio result is disallowed.");
 	}
@@ -123,7 +123,7 @@ function createInstallationListAUIGrid() {
         headerText : "App Type",
         editable : false,
         width : 150
-        
+
     }, {
         dataField : "brnchId",
         headerText : "App brnchId",
@@ -150,13 +150,13 @@ function createInstallationListAUIGrid() {
         headerText : "",
         width : 0
     }];
-  
-    
+
+
 
     // 그리드 속성 설정
    var gridPros = {
               showRowCheckColumn : true,
-              // 페이징 사용       
+              // 페이징 사용
               usePaging : true,
               // 한 화면에 출력되는 행 개수 20(기본값:20)
               pageRowCount : 20,
@@ -164,8 +164,8 @@ function createInstallationListAUIGrid() {
               showRowAllCheckBox : true,
               editable :  false
    };
-    
-    
+
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 }
@@ -179,39 +179,39 @@ function fn_excelDown(){
 
 
 function fn_assginCTTransfer(){
-    
+
     var selectedItems = AUIGrid.getCheckedRowItems (myGridID);
-    
+
 
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No AS selected.</b>");
         return ;
     }
-    
-    
+
+
     var brnchId = selectedItems[0].item.brnchId;
-    
+
     if( brnchId =="") {
     	 Common.alert("<b>[" + selectedItems[i].item.installEntryNo + "] do no has any result[brnch] yet. .</br> ");
     	return ;
     }
-    
-    
+
+
     for( var  i in selectedItems){
          console.log("===>"+ selectedItems[i].item.brnchId);
-         
+
          if("ACT" != selectedItems[i].item.code1 ){
              Common.alert("<b>[" + selectedItems[i].item.installEntryNo + "] do no has any result yet. .</br> Result view is disallowed.");
              return ;
          }
-         
+
          if(brnchId != selectedItems[i].item.brnchId ){
              Common.alert("<b>동일한 브랜치 코드만 선택 가능합니다.</b>");
              return ;
          }
     }
-    
-    
+
+
     Common.popupDiv("/services/assignCTTransferPop.do"  , null, null , true , '_assginCTTransferDiv');
 }
 
