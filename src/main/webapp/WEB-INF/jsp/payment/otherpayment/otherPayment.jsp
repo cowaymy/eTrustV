@@ -122,6 +122,7 @@ $(document).ready(function(){
 			 $("#chequeForm")[0].reset();
 			 $("#cash").hide();
 			 $("#cashForm")[0].reset();
+			 fn_clearRequiredType();
              $("#cash").show();
              
              $("#cash").find("#payType").val($('#payMode').val());
@@ -134,7 +135,9 @@ $(document).ready(function(){
              $("#chequeForm")[0].reset();
              $("#cash").hide();
              $("#cashForm")[0].reset();
-	         $("#cheque").show();
+             fn_clearRequiredType();
+             $("#cheque").show();
+	         
 	         
 	         $("#cheque").find("#payType").val($('#payMode').val());
 
@@ -146,6 +149,7 @@ $(document).ready(function(){
              $("#chequeForm")[0].reset();
              $("#cash").hide();
              $("#cashForm")[0].reset(); 
+             fn_clearRequiredType();
              $("#online").show();
              
              $("#online").find("#payType").val($('#payMode').val());
@@ -155,6 +159,7 @@ $(document).ready(function(){
 		 
 	 });
 	 
+	
 	 //page2
 	//Rental Billing Grid 에서 체크/체크 해제시
 	    AUIGrid.bind(targetRenDetGridID, "cellClick", function( event ){
@@ -1325,17 +1330,21 @@ var columnLayout = [
     			  return;
     		}
     		
-    		if(selBank == '2730'){
-    			if($("#searchVa").val() == ''){
-    				Common.alert("key in VA Account.");
-    				return;
-    			}
-    		}else{
-    			if($("#searchBankAcc").val() == ''){
-    				Common.alert("select Bank Account.");
-    				return;
-    			}
-    		}
+    		if(selBank != ''){
+	    		if(selBank == '2730'){
+	    			if($("#searchVa").val() == ''){
+	    				Common.alert("key in VA Account.");
+	    				return;
+	    			}
+	    		}else{
+	    			if($("#searchBankAcc").val() == ''){
+	    				Common.alert("select Bank Account.");
+	    				return;
+	    			}
+	    		}
+	    	}else{
+	    		Common.alert("select Bank Type first.");
+	    	}
 	    	Common.ajax("GET","/payment/selectBankStatementList.do",$("#searchForm").serializeJSON(), function(result){         
 	            AUIGrid.setGridData(bankGridID, result);
 	            var selectedMode = $("#payMode").val();
@@ -1344,17 +1353,51 @@ var columnLayout = [
 	            if(selectedMode == '105'){//cash
 	            	 doGetCombo('/common/getAccountList.do', 'CASH',$("#searchBankAcc").val(), 'bankAccCash', 'S', '' );
 	                 $("#cash").find("#bankType").val($("#searchBankType").val());
-	                 $("#cash").find("#va").val($("#searchVa").val());
+	                 $("#cash").find("#va").val($("#searchVa").val())
+	                 
+	                 //선택한 BankType에 따라 필수조건 표시
+	                 if($("#cash").find("#bankType").val() != ''){
+		                 if($("#cash").find("#bankType").val() == '2730'){
+		                	 fn_clearRequiredType();
+		                	 $("#cash").find("#spVa").text("*");
+		                 }else{
+		                	 fn_clearRequiredType();
+		                	 $("#cash").find("#spAcc").text("*");
+		                 }
+	                 }
 	             }else if(selectedMode == '106'){//cheque
 	            	 doGetCombo('/common/getAccountList.do', 'CHQ',$("#searchBankAcc").val(), 'bankAccCheque', 'S', '' );
 	                 $("#cheque").find("#bankType").val($("#searchBankType").val());
 	                 $("#bankAccCheque").val($("#searchBankAcc").val());
 	                 $("#cheque").find("#va").val($("#searchVa").val());
+	                 
+	               //선택한 BankType에 따라 필수조건 표시ㅍ
+	                 if($("#cheque").find("#bankType").val() != ''){
+                         if($("#cheque").find("#bankType").val() == '2730'){
+                        	 $("#cheque").find("#spAcc").text("");
+                             $("#cheque").find("#spVa").text("*");
+                         }else{
+                        	 $("#cheque").find("#spVa").text("");
+                             $("#cheque").find("#spAcc").text("*");
+                         }
+                     }
+	                 
 	             }else if(selectedMode == '108'){//online
 	            	 doGetCombo('/common/getAccountList.do', 'ONLINE',$("#searchBankAcc").val(), 'bankAccOnline', 'S', '' );
 	                 $("#online").find("#bankType").val($("#searchBankType").val());
 	                 $("#bankAccOnline").val($("#searchBankAcc").val());
 	                 $("#online").find("#va").val($("#searchVa").val());
+	                 
+	               //선택한 BankType에 따라 필수조건 표시
+	                 if($("#online").find("#bankType").val() != ''){
+                         if($("#online").find("#bankType").val() == '2730'){
+                        	 $("#online").find("#spAcc").text("");
+                        	 $("#online").find("#spVa").text("*");
+                         }else{
+                        	 $("#online").find("#spVa").text("");
+                             $("#online").find("#spAcc").text("*");
+                         }
+                     }
 	             }
 	        });
 	    }else{
@@ -1957,6 +2000,15 @@ var columnLayout = [
           $('#searchVa').prop("disabled", true);
 	  }
   }
+  
+  function fn_clearRequiredType(){
+      $("#cash").find("#spAcc").text("");
+      $("#cash").find("#spVa").text("");
+      $("#cheque").find("#spAcc").text("");
+      $("#cheque").find("#spVa").text("");
+      $("#online").find("#spAcc").text("");
+      $("#online").find("#spVa").text("");
+  }
 </script>
 <!-- content start -->
 
@@ -2108,9 +2160,9 @@ var columnLayout = [
                 </td>
             </tr>
             <tr>
-                <th scope="row">Bank Type</th>
+                <th scope="row">Bank Type<span class="must">*</span></th>
                 <td>
-                    <select id="bankType" name="bankType" class="w100p" disabled>
+                    <select id="bankType" name="bankType" class="w100p"  disabled>
                         <option value="">Choose One</option>
                         <option value="2728">JomPay</option>
                         <option value="2729">MBB CDM</option>
@@ -2118,11 +2170,11 @@ var columnLayout = [
                         <option value="2731">Others</option>
                     </select>
                 </td>
-                <th>Bank Account</th>
+                <th>Bank Account<span class="must" id="spAcc"></span></th>
                 <td><select id="bankAccOnline" name="bankAcc" class="w100p" disabled></select></td>
             </tr>
             <tr>
-                   <th>VA Account</th>
+                   <th>VA Account<span class="must" id="spVa"></span></th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
                    <th></th>
                    <td></td>
@@ -2176,11 +2228,11 @@ var columnLayout = [
         </colgroup>
         <tbody>
             <tr>
-                <th scope="row">Amount<span class="must">*</span></th>
+                <th scope="row">Amount<span class="must" >*</span></th>
                 <td>
                    <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                 </td>
-                <th scope="row">Bank Type</th>
+                <th scope="row">Bank Type<span class="must">*</span></th>
                 <td>
                     <select id="bankType" name="bankType" class="w100p" disabled >
                         <option value="">Choose One</option>
@@ -2192,9 +2244,9 @@ var columnLayout = [
                 </td>
             </tr>
             <tr>
-                   <th>Bank Account</th>
+                   <th>Bank Account<span class="must" id="spAcc"></span></th>
                    <td><select id="bankAccCash" name="bankAcc" class="w100p" disabled></select></td>
-                   <th>VA Account</th>
+                   <th>VA Account<span class="must" id="spVa"></span></th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
             </tr>
             <tr>
@@ -2270,7 +2322,7 @@ var columnLayout = [
                 <td>
                    <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
                 </td>
-                <th scope="row">Bank Type</th>
+                <th scope="row">Bank Type<span class="must">*</span></th>
                 <td>
                     <select id="bankType" name="bankType" class="w100p" disabled >
                         <option value="">Choose One</option>
@@ -2282,9 +2334,9 @@ var columnLayout = [
                 </td>
             </tr>
             <tr>
-                   <th>Bank Account</th>
+                   <th>Bank Account<span class="must" id="spAcc"></span></th>
                    <td><select id="bankAccCheque" name="bankAcc" class="w100p" disabled></select></td>
-                   <th>VA Account</th>
+                   <th>VA Account<span class="must" id="spVa"></span></th>
                    <td><input type="text" id="va" name="va" class="w100p" maxlength="16" disabled/></td>
             </tr>
             <tr>
