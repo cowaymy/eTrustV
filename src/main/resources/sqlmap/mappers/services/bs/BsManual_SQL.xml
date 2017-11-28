@@ -550,11 +550,16 @@
 										                     ON OG.dept_code = MG.cody_mangr_user_id
 						                     WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
 						                         AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
-                                           <if test="cmdcodyCode != null and cmdcodyCode != ''">
-      				                               AND  HS.CODY_ID = #{cmdcodyCode}
+						                         <!-- BY KV - change txtbox  -->
+                                           <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+                                              AND CD.MEM_CODE = #{txtAssigncodyCode}
 					                      </if>
+					                         <if test="txtComcodyCode != null and txtComcodyCode != ''">
+                                            AND   AC.MEM_CODE = #{txtComcodyCode}
+                                          </if>
+
                                            <if test="myInstallMonth != null and myInstallMonth != ''">
-                                              and  SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                                              AND  SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
                                            </if>
                                            <if test="myInstallMonth != null and myInstallMonth != ''">
                                              AND   SO.PV_YEAR  =  TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
