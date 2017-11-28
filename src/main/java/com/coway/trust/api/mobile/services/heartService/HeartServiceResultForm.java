@@ -242,16 +242,21 @@ public class HeartServiceResultForm {
 
 
 	
-	
 	public  List<Map<String, Object>>  createMaps1(HeartServiceResultForm heartServiceResultForm) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 	
 		if (heartDtails != null && heartDtails.size() > 0) {
 			Map<String, Object> map;
+			map = BeanConverter.toMap(heartServiceResultForm, "signData");
+			map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
+			
 			for (HeartServiceResultDetailForm obj : heartDtails) {
-				map = BeanConverter.toMap(heartServiceResultForm, "HeartServiceResultForm");	
-//				map.put("serialNo", obj.getSerialNo());
+				map.put("filterCode", obj.getFilterCode());
+				map.put("exchangeId", obj.getExchangeId());
+				map.put("filterChangeQty", obj.getFilterChangeQty());
+				map.put("filterBarcdSerialNo", obj.getFilterBarcdSerialNo());
+				
 				list.add(map);
 			}
 		}
