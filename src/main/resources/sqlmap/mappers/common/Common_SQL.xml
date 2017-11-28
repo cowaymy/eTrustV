@@ -1208,7 +1208,7 @@
                   <when test='locgb !=null and locgb == "010205"'>
                       AND S28M.WH_LOC_GB in ('01','02','05')
                   </when>
-                  <when test='locgb !=null and locgb == "CT"'>
+                  <when test='locgb !=null and locgb == "CT" or locgb =="CTOR"'>
                       AND S28M.WH_LOC_GB in ('03','04')
                   </when>
                   <otherwise>
