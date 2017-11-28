@@ -72,4 +72,32 @@
         ,#{replyFdbckId}
         )
     </insert>
+
+    <select id="selectFailList" parameterType="string" resultType="egovMap">
+        SELECT
+            SMS.SMS_ID
+            , SMS.SMS_MSG
+            , SMS.SMS_MSISDN
+            , SMS.SMS_TYPE_ID
+            , SMS.SMS_PRIO
+            , SMS.SMS_REF_NO
+            , SMS.SMS_BATCH_UPLOAD_ID
+            , SMS.SMS_REM
+            , SMS.SMS_START_DT
+            , SMS.SMS_EXPR_DT
+            , SMS.SMS_STUS_ID
+            , SMS.SMS_RETRY
+            , SMS.SMS_VENDOR_ID
+            , RESULT.REPLY_ID
+            , RESULT.REPLY_CODE
+            , RESULT.REPLY_REM
+            , RESULT.REPLY_FDBCK_ID
+        FROM MSC0015D SMS, MSC0017D RESULT
+        WHERE SMS.SMS_ID = RESULT.SMS_ID
+              AND SMS.SMS_STUS_ID = 1
+              AND RESULT.REPLY_FDBCK_ID  IN (
+                                        SELECT     REGEXP_SUBSTR (#{replyFdbckId}, '[^,]+', 1, LEVEL)
+                                        FROM DUAL
+                                        CONNECT BY REGEXP_SUBSTR (#{replyFdbckId}, '[^,]+', 1, LEVEL) IS NOT NULL)
+    </select>
 </mapper>

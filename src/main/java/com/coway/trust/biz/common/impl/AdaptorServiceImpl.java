@@ -1,6 +1,7 @@
 package com.coway.trust.biz.common.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
@@ -30,6 +31,8 @@ import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.RestTemplateFactory;
 import com.coway.trust.util.UUIDGenerator;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("adaptorService")
 public class AdaptorServiceImpl implements AdaptorService {
@@ -161,14 +164,14 @@ public class AdaptorServiceImpl implements AdaptorService {
 	}
 
 	@Override
-	public SmsResult sendSMS(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> params) {
+	public SmsResult sendSMS(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> templateParams) {
 
 		Map<String, String> reason = new HashMap<>();
 		SmsResult result = new SmsResult();
 		result.setReqCount(smsVO.getMobiles().size());
 
 		if (templateType != null) {
-			smsVO.setMessage(getSmsTextByTemplate(templateType, params));
+			smsVO.setMessage(getSmsTextByTemplate(templateType, templateParams));
 		}
 
 		String msgId = UUIDGenerator.get();
@@ -230,14 +233,15 @@ public class AdaptorServiceImpl implements AdaptorService {
 	}
 
 	@Override
-	public SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO, SMSTemplateType templateType, Map<String, Object> params) {
+	public SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO, SMSTemplateType templateType,
+			Map<String, Object> templateParams) {
 
 		SmsResult result = new SmsResult();
 		Map<String, String> reason = new HashMap<>();
 		result.setReqCount(1);
 
 		if (templateType != null) {
-			bulkSmsVO.setMessage(getSmsTextByTemplate(templateType, params));
+			bulkSmsVO.setMessage(getSmsTextByTemplate(templateType, templateParams));
 		}
 
 		String trId = UUIDGenerator.get();
@@ -287,6 +291,11 @@ public class AdaptorServiceImpl implements AdaptorService {
 		return result;
 	}
 
+	@Override
+	public List<EgovMap> getFailList(String msgIds) {
+		return smsMapper.selectFailList(msgIds);
+	}
+
 	/**
 	 * https://www.obkb.com/dcljr/charstxt.html 참조.
 	 * 
@@ -314,7 +323,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 		return returnValue;
 	}
 
-	private void insertSMS(String mobileNo, String message, int senderUserId, int priority, int expireDayAdd,
+	private int insertSMS(String mobileNo, String message, int senderUserId, int priority, int expireDayAdd,
 			int smsType, String remark, int statusId, int retryNo, String replyCode, String replyRemark,
 			String replyFeedbackId, int vendorId) {
 
@@ -344,5 +353,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 		params.put("replyFdbckId", replyFeedbackId);
 
 		smsMapper.insertGatewayReply(params);
+
+		return (int) params.get("smsId");
 	}
 }

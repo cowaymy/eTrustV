@@ -1,5 +1,6 @@
 package com.coway.trust.biz.common;
 
+import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.biz.common.type.EmailTemplateType;
@@ -8,6 +9,8 @@ import com.coway.trust.cmmn.model.BulkSmsVO;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface AdaptorService {
 	/**
@@ -47,6 +50,15 @@ public interface AdaptorService {
 	SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO);
 
 	SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO, SMSTemplateType templateType, Map<String, Object> params);
+
+	/**
+	 * SmsResult의 msgId 로 실피한 건에 대해 조회. (매개 변수가 다중 매개 변수이면 쉼표로 구분됩니다)
+	 *
+	 * @param msgIds
+	 *            If the parameter is a multi-parameter, it is separated by a comma. ( msgid01,msgid02,msgid03,msgid04)
+	 * @return
+	 */
+	List<EgovMap> getFailList(String msgIds);
 
 	/**
 	 * get template string
