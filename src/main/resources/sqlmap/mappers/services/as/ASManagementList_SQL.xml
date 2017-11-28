@@ -2249,11 +2249,11 @@
 						   BILL_IS_COMM, UPD_USER_ID, UPD_DT, 
 						   SYNC_CHK, COURS_ID, STUS_ID) 
 						VALUES ( 
-						   #{billId}, 
+						   PAY0007D_SEQ.NEXTVAL, 
 						   #{billTypeId}, 
 						   #{billSoId}, 
 						   #{billMemId}, 
-						   #{billAsId}, 
+						   #{billAsId},   
 						   #{billPayTypeId}, 
 						   #{billNo}, 
 						   #{billMemShipNo}, 

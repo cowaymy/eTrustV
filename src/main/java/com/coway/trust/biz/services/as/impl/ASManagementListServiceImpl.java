@@ -775,9 +775,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		   	  Map<String, Object>  pay0007dMap = new HashMap() ;
 		   	  
 		   	  //채번 
-	    	  int billId		 = posMapper.getSeqPay0007D();
+	    	 // int billId		 = posMapper.getSeqPay0007D();
 
-		      pay0007dMap.put("billId",Integer.toString(billId)); 
+		     // pay0007dMap.put("billId",Integer.toString(billId)); 
 		      pay0007dMap.put("billTypeId","238"); 
 		      pay0007dMap.put("billSoId",params.get("AS_SO_ID")); 
 		      pay0007dMap.put("billMemId","0"); 
