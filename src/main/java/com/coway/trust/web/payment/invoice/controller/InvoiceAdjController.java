@@ -377,6 +377,11 @@ public class InvoiceAdjController {
 				detailParamList = new ArrayList<Object>();
 				Map<String, Object> gridMap = (Map<String, Object>) gridList.get(i);
 				
+				//첫번째 값이 없으면 skip
+				if(gridMap.get("0") == null || String.valueOf(gridMap.get("0")).equals("") || String.valueOf(gridMap.get("0")).trim().length() < 1 ){					
+					continue;
+				}
+				
 				memoAdjustInvoiceNo = String.valueOf(gridMap.get("0"));									//Invoice No.
 				memoAdjustOrderNo = String.valueOf(gridMap.get("1"));										//Order No.
 				memoAdjustItemNo = String.valueOf(gridMap.get("2"));										//Invoice Item No.

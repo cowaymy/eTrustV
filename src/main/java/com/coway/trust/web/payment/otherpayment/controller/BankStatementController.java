@@ -105,22 +105,27 @@ public class BankStatementController {
 			
 			for (int i = 0; i < gridList.size(); i++) {
 				
-				gridMap = (Map<String, Object>) gridList.get(i);				
+				gridMap = (Map<String, Object>) gridList.get(i);
+				
+				//첫번째 값이 없으면 skip
+				if(gridMap.get("0") == null || String.valueOf(gridMap.get("0")).equals("") || String.valueOf(gridMap.get("0")).trim().length() < 1 ){					
+					continue;
+				}
 			
 				itemMap = new HashMap<String, Object>();
 				itemMap.put("fTrnscDt", formData.get("uploadTranDt"));			
-				itemMap.put("fTrnscTellerId", String.valueOf(gridMap.get("0")));	
-				itemMap.put("fTrnscRef3", String.valueOf(gridMap.get("1")));						
-				itemMap.put("fTrnscRefChqNo", String.valueOf(gridMap.get("2")));	
-				itemMap.put("fTrnscRef1", String.valueOf(gridMap.get("3")));		//D
-				itemMap.put("fTrnscRef2", String.valueOf(gridMap.get("4")));		//F
-				itemMap.put("fTrnscRef6", String.valueOf(gridMap.get("5")));		//G
-				itemMap.put("fTrnscRem", String.valueOf(gridMap.get("6")));		//H
-				itemMap.put("fTrnscDebtAmt", String.valueOf(gridMap.get("7")));	//I
-				itemMap.put("fTrnscCrditAmt", String.valueOf(gridMap.get("8")));	//J
-				itemMap.put("fTrnscRef4", String.valueOf(gridMap.get("9")));	//J
-				itemMap.put("fTrnscNewChqNo", String.valueOf(gridMap.get("10")));		//E
-				itemMap.put("fTrnscRefVaNo", String.valueOf(gridMap.get("11")));	//B
+				itemMap.put("fTrnscTellerId", String.valueOf(gridMap.get("0")));	// Teller ID
+				itemMap.put("fTrnscRef3", String.valueOf(gridMap.get("1")));		// Transaction Code
+				itemMap.put("fTrnscRefChqNo", String.valueOf(gridMap.get("2")));		//Ref/Cheq No
+				itemMap.put("fTrnscRef1", String.valueOf(gridMap.get("3")));		//Description
+				itemMap.put("fTrnscRef2", String.valueOf(gridMap.get("4")));		//ref6
+				itemMap.put("fTrnscRef6", String.valueOf(gridMap.get("5")));		//ref7
+				itemMap.put("fTrnscRem", String.valueOf(gridMap.get("6")));		//TYPE
+				itemMap.put("fTrnscDebtAmt", String.valueOf(gridMap.get("7")));	//DEBIT
+				itemMap.put("fTrnscCrditAmt", String.valueOf(gridMap.get("8")));	//CREDIT
+				itemMap.put("fTrnscRef4", String.valueOf(gridMap.get("9")));	//Deposit Slip No / EFT / MID
+				itemMap.put("fTrnscNewChqNo", String.valueOf(gridMap.get("10")));		// Chq No
+				itemMap.put("fTrnscRefVaNo", String.valueOf(gridMap.get("11")));	// VA number
 				itemMap.put("userNm", sessionVO.getUserName());	//J
 				itemMap.put("userId", sessionVO.getUserId());	
 				

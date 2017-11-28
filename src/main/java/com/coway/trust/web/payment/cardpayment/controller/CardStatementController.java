@@ -107,7 +107,12 @@ public class CardStatementController {
 			
 			for (int i = 0; i < gridList.size(); i++) {
 				
-				gridMap = (Map<String, Object>) gridList.get(i);				
+				gridMap = (Map<String, Object>) gridList.get(i);	
+				
+				//첫번째 값이 없으면 skip
+				if(gridMap.get("0") == null || String.valueOf(gridMap.get("0")).equals("") || String.valueOf(gridMap.get("0")).trim().length() < 1 ){					
+					continue;
+				}
 			
 				itemMap = new HashMap<String, Object>();
 				itemMap.put("crcTrnscDt", formData.get("uploadTranDt"));			

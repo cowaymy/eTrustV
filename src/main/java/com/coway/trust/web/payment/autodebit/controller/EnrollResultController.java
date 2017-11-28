@@ -114,6 +114,12 @@ public class EnrollResultController {
     			if(gridList.size() > 0){
     				for(int i=0; i<gridList.size(); i++){
                 		Map<String, Object> map = (Map<String, Object>) gridList.get(i);
+                		
+                		//첫번째 값이 없으면 skip
+        				if(map.get("0") == null || String.valueOf(map.get("0")).equals("") || String.valueOf(map.get("0")).trim().length() < 1 ){					
+        					continue;
+        				}
+        				
                 		try{
                     		if(CommonUtils.isNumCheck(map.get("1").toString()) && 
                     				CommonUtils.isNumCheck(map.get("2").toString())&&

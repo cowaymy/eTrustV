@@ -189,6 +189,12 @@ public class ClaimController {
     		for (Object map : gridList) {
     			hm = (HashMap<String, Object>) map;
     			
+    			
+				//첫번째 값이 없으면 skip
+				if(hm.get("0") == null || String.valueOf(hm.get("0")).equals("") || String.valueOf(hm.get("0")).trim().length() < 1 ){					
+					continue;
+				}
+    			
     			refNo = (String.valueOf(hm.get("0"))).trim().length() < 7 ? "0"+(String.valueOf(hm.get("0"))).trim() : (String.valueOf(hm.get("0"))).trim();                
                 
     			uploadMap = new HashMap<String, Object>();                
