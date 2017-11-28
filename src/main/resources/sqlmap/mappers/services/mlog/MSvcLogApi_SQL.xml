@@ -2332,7 +2332,7 @@ and cust.cust_id = custCnt.cust_id
                             AND C.NAME LIKE  '%'||#{searchKeyword}||'%'
                         </when>
                         <when test="searchType == 1">
-                            AND B.sales_ord_no = #{searchKeyword}
+                            AND B.sales_ord_no like '%'|| #{searchKeyword} ||'%'
                         </when>
                         <otherwise>
                           AND 1 = 1
