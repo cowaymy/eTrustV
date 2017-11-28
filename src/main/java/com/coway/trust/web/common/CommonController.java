@@ -69,8 +69,7 @@ public class CommonController {
 	}
 
 	@RequestMapping(value = "/exportGrid.do")
-	public void export(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, Object> params) throws IOException, URISyntaxException {
+	public void export(HttpServletRequest request, HttpServletResponse response) throws IOException, URISyntaxException {
 		// AUIGrid 가 xlsx, csv, xml 등의 형식을 작성하여 base64 로 인코딩하여 data 파라메터로 post 요청을 합니다.
 		// 해당 서버에서는 base64 로 인코딩 된 데이터를 디코드하여 다운로드 가능하도록 붙임으로 마무리합니다.
 		// 참고로 org.apache.commons.codec.binary.Base64 클래스 사용을 위해는 commons-codec-1.4.jar 파일이 필요합니다.
