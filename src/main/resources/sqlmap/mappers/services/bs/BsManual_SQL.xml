@@ -1226,7 +1226,7 @@
 			                ,#{resultRem} ,SYSDATE,#{resultCrtUserId},SYSDATE ,#{resultUpdUserId}
 			                ,#{resultIsSync},#{resultIsEdit},#{resultStockUse},#{resultIsCurr},#{resultMtchId}
 			                ,#{resultIsAdj}
-			                ,#{temperateSetng},#{nextAppntDt},#{nextAppointmentTime}
+			                ,#{temperateSetng},to_date(#{nextAppntDt},'yyyymmdd'),#{nextAppointmentTime}
 			                ,#{ownerCode},#{resultCustName},#{resultMobileNo}
 			                ,#{resultRptEmailNo},#{resultAceptName},#{sgnDt}
 			     )
