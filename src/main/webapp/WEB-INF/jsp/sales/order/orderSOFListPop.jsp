@@ -3,6 +3,13 @@
 
 <script type="text/javascript">
 
+var date = new Date().getDate();
+if(date.toString().length == 1){
+    date = "0" + date;
+} 
+$("#dpOrderDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+$("#dpOrderDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+
 /* 멀티셀렉트 플러그인 start */
 $('.multy_select').change(function() {
    //console.log($(this).val());
@@ -24,6 +31,9 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
+        $("#dpOrderDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+        $("#dpOrderDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+        $("#cmbSort").prop("selectedIndex", 2);
     });
 };
 

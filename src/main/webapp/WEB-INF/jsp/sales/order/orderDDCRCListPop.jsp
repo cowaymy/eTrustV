@@ -2,6 +2,12 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+var date = new Date().getDate();
+if(date.toString().length == 1){
+    date = "0" + date;
+} 
+$("#dpOrderDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+$("#dpOrderDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
 
 /* 멀티셀렉트 플러그인 start */
 $('.multy_select').change(function() {
@@ -24,6 +30,9 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
+        $("#dpOrderDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+        $("#dpOrderDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());       
+        $("#cmbSorting").prop("selectedIndex", 2);
     });
 };
 
@@ -74,8 +83,114 @@ function btnGenerate_Excel_Click(){
     }   
 }
 
-function fn_report(viewType){ //////////
+function fn_report(viewType){ 
 	
+	$("#reportFileName").val("");
+    $("#reportDownFileName").val("");
+    $("#viewType").val("");
+	
+	var orderNoFrom = "";
+	var orderNoTo = "";
+	var orderDateFrom = "";
+	var orderDateTo = "";
+	var branchRegion = "";
+	var keyInBranch = "";
+	var paymode = "";
+	var sortBy = "";
+	var whereSQL = "";
+	var extraWhereSQL = "";
+    var orderBySQL = "";
+    
+    var runNo = 0;
+    
+    if($('#cmbPaymode :selected').length > 0){
+    	whereSQL += " AND (";
+    	
+    	$('#cmbPaymode :selected').each(function(i, mul){ 
+            if(runNo > 0){
+                whereSQL += " OR r.MODE_ID = '"+$(mul).val()+"' ";
+                paymode += ", "+$(mul).text();
+            
+            }else{
+                whereSQL += " r.MODE_ID = '"+$(mul).val()+"' ";
+                paymode += $(mul).text();
+                
+            }
+            runNo += 1;
+        });
+        whereSQL += ") ";       
+    }
+    runNo = 0;
+    
+    if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
+    	orderDateFrom = $("#dpOrderDateFr").val();
+        orderDateTo = $("#dpOrderDateTo").val();
+        
+        whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+orderDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+orderDateTo+"', 'dd/MM/YY'))";
+    }
+    
+	if($("#cmbKeyBranch :selected").index() > 0){
+		keyInBranch = $("#cmbKeyBranch :selected").text();
+		whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
+	}
+	    
+	if(!($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) && !($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
+		orderNoFrom = $("#txtOrderNoFr").val().trim();
+		orderNoTo = $("#txtOrderNoTo").val().trim();
+		
+		whereSQL += " AND som.SALES_ORD_NO BETWEEN '"+orderNoFrom+"' AND '"+orderNoTo+"')";
+	}
+	
+	if($("#cmbUser :selected").index() > 0){
+		whereSQL += " AND som.CRT_USER_ID = '"+$("#cmbUser :selected").val()+"'";
+	}
+	
+	if($("#cmbSorting :selected").index() > -1){
+		sortBy = $("#cmbSorting :selected").text();
+		
+		if($("#cmbSorting :selected").val() == "1"){
+            orderBySQL = " ORDER BY t2.CODE_NAME, b.CODE, t.CODE_NAME, som.SALES_ORD_NO";
+        }else if($("#cmbSorting :selected").val() == "2"){
+            orderBySQL = " ORDER BY b.CODE, t.CODE_NAME, som.SALES_ORD_NO";
+        }else if($("#cmbSorting :selected").val() == "3"){
+            orderBySQL = " ORDER BY som.SALES_DT, t.CODE_NAME, som.SALES_ORD_NO";
+        }else if($("#cmbSorting :selected").val() == "4"){
+            orderBySQL = " ORDER BY som.SALES_ORD_NO, t.CODE_NAME";
+        }else if($("#cmbSorting :selected").val() == "5"){
+            orderBySQL = " ORDER BY Issued_Bank, som.SALES_ORD_NO";
+        }   
+	}
+
+    $("#reportDownFileName").val("OrderDDCRCList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+    if(viewType == "PDF"){
+        $("#viewType").val("PDF");
+        $("#reportFileName").val("/sales/OrderDDCRCList.rpt");
+    }else if(viewType == "EXCEL"){
+        $("#viewType").val("EXCEL");
+        $("#reportFileName").val("/sales/OrderDDCRCList_Excel.rpt");
+    }
+
+    $("#V_ORDERNOFROM").val(orderNoFrom);
+    $("#V_ORDERNOTO").val(orderNoTo);
+    $("#V_ORDERDATEFROM").val(orderDateFrom);
+    $("#V_ORDERDATETO").val(orderDateTo);
+    $("#V_BRANCHREGION").val(branchRegion);
+    $("#V_KEYINBRANCH").val(keyInBranch);
+    $("#V_PAYMODE").val(paymode);
+    $("#V_SORTBY").val(sortBy);
+    $("#V_SELECTSQL").val("");
+    $("#V_WHERESQL").val(whereSQL);
+    $("#V_EXTRAWHERESQL").val(extraWhereSQL);
+    $("#V_ORDERBYSQL").val(orderBySQL);
+    $("#V_FULLSQL").val("");
+     
+    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+    var option = {
+            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+    };
+    
+    Common.report("form", option);
 	
 }
 
@@ -168,6 +283,20 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />
 <input type="hidden" id="viewType" name="viewType" value="" />
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+<input type="hidden" id="V_ORDERNOFROM" name="V_ORDERNOFROM" value="" />
+<input type="hidden" id="V_ORDERNOTO" name="V_ORDERNOTO" value="" />
+<input type="hidden" id="V_ORDERDATEFROM" name="V_ORDERDATEFROM" value="" />
+<input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />
+<input type="hidden" id="V_BRANCHREGION" name="V_BRANCHREGION" value="" />
+<input type="hidden" id="V_KEYINBRANCH" name="V_KEYINBRANCH" value="" />
+<input type="hidden" id="V_PAYMODE" name="V_PAYMODE" value="" />
+<input type="hidden" id="V_SORTBY" name="V_SORTBY" value="" />
+<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />
+<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
+<input type="hidden" id="V_EXTRAWHERESQL" name="V_EXTRAWHERESQL" value="" />
+<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
+<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
 
 </form>
 

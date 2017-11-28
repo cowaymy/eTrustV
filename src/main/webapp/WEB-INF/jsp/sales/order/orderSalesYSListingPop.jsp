@@ -49,11 +49,16 @@ function validRequiredField(){
 }
 
 function cmbMemberType_SelectedIndexChanged(){
+
+	$("#cmbGrpCode").append("<option value='0' selected>All</option>");
+	$("#cmbDeptCode").append("<option value='0' selected>All</option>");
 	
 	$("#cmbGrpCode").prop("disabled", true);
 	$("#cmbDeptCode").prop("disabled", true);
 	
-	CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType : $("#cmbMemberType").val()} , '');
+	CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType : $("#cmbMemberType :selected").val()} , '');
+	
+	$("#cmbOrgCode").prop("disabled", false);
 }
 
 function cmbOrgCode_SelectedIndexChanged(){
@@ -72,10 +77,290 @@ function cmbGrpCode_SelectedIndexChanged(){
 	$("#cmbDeptCode").prop("disabled", false);
 }
 
+function btnGeneratePDF_Click(){
+	if(validRequiredField() == true){
+        
+		var memberType = "";
+		var installDate = "";
+		var orgCode = "";
+		var grpCode = "";
+		var deptCode = "";
+		var userName = $("#userName").val();
+		var whereSQL = "";
+		
+		$("#reportFileName").val("");
+	    $("#reportDownFileName").val("");
+	    $("#viewType").val("");
+        
+	     if($("#cmbMemberType :selected").val() > 0){
+	    	if($("#cmbMemberType :selected").val() != 0){
+	    		whereSQL += " AND mem.MEM_TYPE = '"+$("#cmbMemberType :selected").val()+"'";
+	    		memberType = $("#cmbMemberType :selected").text();
+	    	}else{
+	    		memberType = "All";
+	    	}
+	    }
+	    
+	    if(!($("#dpInstallDateFrom").val() == null || $("#dpInstallDateFrom").val().length == 0)){
+	    	whereSQL += " AND tos.INSTALL_DT >= TO_DATE('01/"+$("#dpInstallDateFrom").val()+"', 'dd/MM/YY')";
+	    	installDate = " FROM "+$("#dpInstallDateFrom").val();
+	    	
+	    }
+	    
+	    if(!($("#dpInstallDateTo").val() == null || $("#dpInstallDateTo").val().length == 0)){
+	    	var lastDate = new Date($("#dpInstallDateTo").val().substring(3,7), $("#dpInstallDateTo").val().substring(0,2), 0).getDate();
+	    	whereSQL += " AND tos.INSTALL_DT <= TO_DATE('"+lastDate+"/"+$("#dpInstallDateTo").val()+"', 'dd/MM/YY')";
+	    	installDate += " TO "+$("#dpInstallDateTo").val();
+	    	
+        }
+ 	    
+	    if($('#cmbYSAging :selected').length > 0){
+	    	whereSQL += " AND (";
+	    	var runNo = 0;
+	    	
+	    	$('#cmbYSAging :selected').each(function(i, mul){ 
+	    		if(runNo == 0){
+                    if($(mul).val() == "30"){
+                        whereSQL += " (SYSDATE - tos.INSTALL_DT) <= "+$(mul).val()+" ";
+                    }else{
+                        whereSQL += " (SYSDATE - tos.INSTALL_DT) >= "+$(mul).val()+" ";
+                    }
+                }else{
+                    if($(mul).val() == "30"){
+                        whereSQL += " OR (SYSDATE - tos.INSTALL_DT) <= "+$(mul).val()+" ";
+                    }else{
+                        whereSQL += " OR (SYSDATE - tos.INSTALL_DT) >= "+$(mul).val()+" ";
+                    }
+                }
+	            
+	            runNo += 1;
+	        });
+	        whereSQL += ") ";
+	    } 
+	    
+	    if($("#cmbOrgCode :selected").val() > 0){
+	    	var memOrgCode = "";
+	    	Common.ajax("GET", '/sales/order/getMemberOrgInfo.do', {cmbCode : $("#cmbOrgCode :selected").val()}, function(result){
+	    		memOrgCode = result.orgCode;
+	    	});
+	    	whereSQL += " AND som.ORG_CODE = '"+memOrgCode+"'";
+	    	orgCode = memOrgCode;
+	    	
+	    }else if($("#cmbOrgCode :selected").val() == 0){
+	    	orgCode = "All";
+	    	
+	    }
+	    
+	    if($("#cmbGrpCode :selected").val() > 0){
+	    	var memGrpCode = "";
+	    	Common.ajax("GET", '/sales/order/getMemberOrgInfo.do', {cmbCode : $("#cmbGrpCode :selected").val()}, function(result){
+	    		memGrpCode = result.grpCode;
+            });
+	    	whereSQL += " AND som.GRP_CODE = '"+memGrpCode+"'";
+	    	grpCode = memGrpCode;
+	    	
+	    }else if($("#cmbGrpCode :selected").val() == 0){
+	    	grpCode = "All";
+	    	
+	    }
+	    
+	    if($("#cmbDeptCode :selected").val() > 0){
+	    	var memDeptCode = "";
+	    	Common.ajax("GET", '/sales/order/getMemberOrgInfo.do', {cmbCode : $("#cmbDeptCode :selected").val()}, function(result){
+	    		memDeptCode = result.grpCode;
+            });
+	    	whereSQL += " AND som.DEPT_CODE = '"+memDeptCode+"'";
+	    	deptCode = memDeptCode;
+	    	
+	    }else if($("#cmbDeptCode :selected").val() == 0){
+	    	deptCode = "All";
+	    }
+	     
+	    var custTypeList = "";
+	    if($('#cmbCustType :selected').length > 0){
+	    	var runNo1 = 0;
+	    	$('#cmbCustType :selected').each(function(i, mul){
+	    		  if($(mul).val() != "0"){
+	    			  if(runNo1 > 0){
+	    				  custTypeList += ", '"+$(mul).val()+"'";
+	    			  }else{
+	    				  custTypeList += "'"+$(mul).val()+"'";
+	    			  }
+	    			  runNo1 += 1;
+	    		  }
+	    	});
+	    }
+
+	    if(!(custTypeList == null || custTypeList.length == 0)){
+	    	whereSQL += " AND cust.TYPE_ID IN ("+custTypeList+") ";
+	    }
+	    
+	    var date = new Date().getDate();
+	    if(date.toString().length == 1){
+	        date = "0" + date;
+	    } 
+	    $("#reportDownFileName").val("SalesYSListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	    $("#viewType").val("PDF");
+	    $("#reportFileName").val("/sales/SalesYSListing_PDF.rpt");
+	               
+	    $("#V_WHERESQL").val(whereSQL);
+	    $("#V_USERNAME").val(userName);
+	    $("#V_MEMBERTYPE").val(memberType);
+	    $("#V_ORGCODE").val(orgCode);
+	    $("#V_GRPCODE").val(grpCode);
+	    $("#V_DEPTCODE").val(deptCode);
+	    $("#V_DATE").val(installDate);
+	    
+	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+	    var option = {
+	            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+	    };
+	    
+	    Common.report("form", option);
+	    
+    }else{
+        return false;
+    }
+}
+
+function btnGenerateExcel_Click(){
+	
+    if(validRequiredField() == true){
+        
+        var memberType = "";
+        var installDate = "";
+        var orgCode = "";
+        var grpCode = "";
+        var deptCode = "";
+        var userName = $("#userName").val();
+        var whereSQL = "";
+        
+        $("#reportFileName").val("");
+        $("#reportDownFileName").val("");
+        $("#viewType").val("");
+        
+        if($("#cmbMemberType :selected").val() > 0){
+            whereSQL += " AND mem.MEM_TYPE = '"+$("#cmbMemberType :selected").val()+"'";
+            memberType = $("#cmbMemberType :selected").text();
+        }
+        
+        if(!($("#dpInstallDateFrom").val() == null || $("#dpInstallDateFrom").val().length == 0)){
+            whereSQL += " AND tos.INSTALL_DT >= TO_DATE('01/"+$("#dpInstallDateFrom").val()+"', 'dd/MM/YY')";
+            installDate = " FROM "+$("#dpInstallDateFrom").val();
+            
+        }
+        
+        if(!($("#dpInstallDateTo").val() == null || $("#dpInstallDateTo").val().length == 0)){
+            var lastDate = new Date($("#dpInstallDateTo").val().substring(3,7), $("#dpInstallDateTo").val().substring(0,2), 0).getDate();
+            whereSQL += " AND tos.INSTALL_DT <= TO_DATE('"+lastDate+"/"+$("#dpInstallDateTo").val()+"', 'dd/MM/YY')";
+            installDate += " TO "+$("#dpInstallDateTo").val();
+            
+        }
+        
+        if($('#cmbYSAging :selected').length > 0){
+            whereSQL += " AND (";
+            var runNo = 0;
+            
+            $('#cmbYSAging :selected').each(function(i, mul){ 
+                if(runNo == 0){
+                    if($(mul).val() == "30"){
+                        whereSQL += " (SYSDATE - tos.INSTALL_DT) <= "+$(mul).val()+" ";
+                    }else{
+                        whereSQL += " (SYSDATE - tos.INSTALL_DT) >= "+$(mul).val()+" ";
+                    }
+                }else{
+                    if($(mul).val() == "30"){
+                        whereSQL += " OR (SYSDATE - tos.INSTALL_DT) <= "+$(mul).val()+" ";
+                    }else{
+                        whereSQL += " OR (SYSDATE - tos.INSTALL_DT) >= "+$(mul).val()+" ";
+                    }
+                }
+                
+                runNo += 1;
+            });
+            whereSQL += ") ";
+        } 
+        
+        if($("#cmbOrgCode :selected").val() > 0){
+            var memOrgCode = "";
+            Common.ajax("GET", '/sales/order/getMemberOrgInfo.do', {cmbCode : $("#cmbOrgCode :selected").val()}, function(result){
+                memOrgCode = result.orgCode;
+            });
+            whereSQL += " AND som.ORG_CODE = '"+memOrgCode+"'";
+            orgCode = memOrgCode;
+            
+        }
+        
+        if($("#cmbGrpCode :selected").val() > 0){
+            var memGrpCode = "";
+            Common.ajax("GET", '/sales/order/getMemberOrgInfo.do', {cmbCode : $("#cmbGrpCode :selected").val()}, function(result){
+                memGrpCode = result.grpCode;
+            });
+            whereSQL += " AND som.GRP_CODE = '"+memGrpCode+"'";
+            grpCode = memGrpCode;
+            
+        }
+        
+        if($("#cmbDeptCode :selected").val() > 0){
+            var memDeptCode = "";
+            Common.ajax("GET", '/sales/order/getMemberOrgInfo.do', {cmbCode : $("#cmbDeptCode :selected").val()}, function(result){
+                memDeptCode = result.grpCode;
+            });
+            whereSQL += " AND som.DEPT_CODE = '"+memDeptCode+"'";
+            deptCode = memDeptCode;
+            
+        }
+        
+        var custTypeList = "";
+        if($('#cmbCustType :selected').length > 0){
+            var runNo1 = 0;
+            $('#cmbCustType :selected').each(function(i, mul){
+                  if($(mul).val() != "0"){
+                      if(runNo1 > 0){
+                          custTypeList += ", '"+$(mul).val()+"'";
+                      }else{
+                          custTypeList += "'"+$(mul).val()+"'";
+                      }
+                      runNo1 += 1;
+                  }
+            });
+        }
+
+        if(!(custTypeList == null || custTypeList.length == 0)){
+            whereSQL += " AND cust.TYPE_ID IN ("+custTypeList+") ";
+        }
+        
+        var date = new Date().getDate();
+        if(date.toString().length == 1){
+            date = "0" + date;
+        } 
+        $("#reportDownFileName").val("SalesYSListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#viewType").val("EXCEL");
+        $("#reportFileName").val("/sales/SalesYSListing_Excel.rpt");
+                   
+        $("#V_WHERESQL").val(whereSQL);
+        $("#V_USERNAME").val(userName);
+        $("#V_MEMBERTYPE").val(memberType);
+        $("#V_ORGCODE").val(orgCode);
+        $("#V_GRPCODE").val(grpCode);
+        $("#V_DEPTCODE").val(deptCode);
+        $("#V_DATE").val(installDate);
+        
+        // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+        var option = {
+                isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+        };
+        
+        Common.report("form", option);
+        
+	}else{
+	    return false;
+	}
+}
 
 $("#dpInstallDateFrom").val(new Date().getMonth()+1+"/"+new Date().getFullYear());
 $("#dpInstallDateTo").val(new Date().getMonth()+1+"/"+new Date().getFullYear());
-CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType : $("#cmbMemberType").val()} , '');
+CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType : $("#cmbMemberType :selected").val()} , '');
 
 </script>
 
@@ -173,14 +458,24 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#">Generate PDF</a></p></li>
-    <li><p class="btn_blue2"><a href="#">Generate Excel</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click()">Generate PDF</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerateExcel_Click()">Generate Excel</a></p></li>
     <li><p class="btn_blue2"><a href="#" onclick="javascript:$('#form').clearForm();">Clear</a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />
 <input type="hidden" id="viewType" name="viewType" value="" />
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
+<input type="hidden" id="V_USERNAME" name="V_USERNAME" value="" />
+<input type="hidden" id="V_MEMBERTYPE" name="V_MEMBERTYPE" value="" />
+<input type="hidden" id="V_ORGCODE" name="V_ORGCODE" value="" />
+<input type="hidden" id="V_GRPCODE" name="V_GRPCODE" value="" />
+<input type="hidden" id="V_DEPTCODE" name="V_DEPTCODE" value="" />
+<input type="hidden" id="V_DATE" name="V_DATE" value="" />
+
+<input type="hidden" id="userName" name="userName" value="${SESSION_INFO.userName}">
 
 </form>
 
