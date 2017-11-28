@@ -246,7 +246,8 @@
          
         var promotionVO = {            
             salesPromoMVO : {
-                promoAppTypeId         : $('#promoAppTypeId').val()
+                promoAppTypeId         : $('#promoAppTypeId').val(),
+                promoSrvMemPacId       : $('#promoSrvMemPacId').val()
             },
             salesPromoDGridDataSetList : GridCommon.getGridData(stckGridID)
         };
@@ -270,7 +271,7 @@
             
             fn_calcDiscountRPF();
             
-//          fn_calcDiscountPV();
+            fn_calcDiscountPV();
         });
     }
     
@@ -432,7 +433,7 @@
         }
         if(FormUtil.checkReqValue($('#promoTypeId'))) {
             isValid = false;
-            msg += "* Please select the application type.<br />";
+            msg += "* Please select the promotion type.<br />";
         }
         if(FormUtil.isEmpty($('#promoDtFrom').val()) || FormUtil.isEmpty($('#promoDtEnd').val())) {
             isValid = false;

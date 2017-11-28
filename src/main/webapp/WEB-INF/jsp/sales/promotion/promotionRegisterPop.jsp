@@ -368,7 +368,7 @@
         }
         if(FormUtil.checkReqValue($('#promoTypeId'))) {
             isValid = false;
-            msg += "* Please select the application type.<br />";
+            msg += "* Please select the promotion type.<br />";
         }
         if(FormUtil.isEmpty($('#promoDtFrom').val()) || FormUtil.isEmpty($('#promoDtEnd').val())) {
             isValid = false;
