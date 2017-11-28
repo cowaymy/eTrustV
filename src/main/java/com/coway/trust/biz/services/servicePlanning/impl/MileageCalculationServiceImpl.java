@@ -215,4 +215,14 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
 		}
 	}
 
+	@Override
+	public List<EgovMap> selectDCPFrom(Map<String, Object> params) {
+		return mileageCalculationMapper.selectDCPFrom(params);
+	}
+
+	@Override
+	public List<EgovMap> selectDCPTo(Map<String, Object> params) {
+		return mileageCalculationMapper.selectDCPTo(params);
+	}
+
 }

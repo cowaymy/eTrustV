@@ -10,30 +10,61 @@ $(document).ready(function(){
     AUIGrid.bind(gridID1, "removeRow", auiRemoveRowHandler);
     //fn_selectArea();
    
-    doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo');
+    //doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo');
     $("#memType").change(function (){
         var memType = $("#memType").val();
         if(memType == 2){
-             doGetCombo('/services/mileageCileage/selectBranch', 42, '','brnch', 'M' ,  'f_multiCombo');
+             doGetCombo('/services/mileageCileage/selectBranch', 42, '','brnch', 'M' ,  'f_multiCombo1');
         }else if(memType == 3){
-            doGetCombo('/services/mileageCileage/selectBranch', 43, '','brnch', 'M' ,  'f_multiCombo');
-        }else if(memType == ""){
-        	doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo');
+            doGetCombo('/services/mileageCileage/selectBranch', 43, '','brnch', 'M' ,  'f_multiCombo1');
+        }else{
+        	doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo1');
         }
      });
     
-    //doGetCombo('/services/mileageCileage/selectArea', '', '','mcpFrom', 'M' ,  'f_multiCombo');
-    //doGetCombo('/services/mileageCileage/selectArea', '', '','mcpTo', 'M' ,  'f_multiCombo');
+    /* $('#brnch').change(function() {
+        var brnch = $("#brnch").val();
+        alert("brnch : " + brnch);
+        doGetCombo('/services/mileageCileage/selectDCPFrom', brnch, '','mcpFrom', 'M' ,  'f_multiCombo2');
+        doGetCombo('/services/mileageCileage/selectDCPTo', brnch, '','mcpTo', 'M' ,  'f_multiCombo2');
+    }); */
+    
 });
 
-function f_multiCombo() {
+/* function f_getDCP() {
+	$(function() {
+		$('#brnch').change(function() {
+			var brnch = $("#brnch").val();
+	        alert("brnch : " + brnch);
+	        doGetCombo('/services/mileageCileage/selectDCPFrom', brnch, '','mcpFrom', 'M' ,  'f_multiCombo2');
+	        doGetCombo('/services/mileageCileage/selectDCPTo', brnch, '','mcpTo', 'M' ,  'f_multiCombo2');
+        });
+	});
+} */
+
+function f_multiCombo1() {
     $(function() {
        
         $('#brnch').change(function() {
+        	var brnch = $("#brnch").val();
+        	var brnchVal = '';
+        	$("#brnch option:selected").each(function() {
+        		brnchVal += $(this).text() + "', '";
+        	})
+        	brnchVal = brnchVal.substring(0, brnchVal.length-4);
+        	//alert("brnchVal : " + brnchVal);
+            doGetCombo('/services/mileageCileage/selectDCPFrom', String(brnchVal), '','mcpFrom', 'M' ,  'f_multiCombo2');
+            doGetCombo('/services/mileageCileage/selectDCPTo', String(brnchVal), '','mcpTo', 'M' ,  'f_multiCombo2');
         }).multipleSelect({
             selectAll : true,
             width : '80%'
         });
+    });
+}
+
+function f_multiCombo2() {
+    $(function() {
+       
         $('#mcpFrom').change(function() {
         }).multipleSelect({
             selectAll : true,
@@ -46,11 +77,37 @@ function f_multiCombo() {
         }); 
     });
 }
+
 function getTypeComboList() {
     //var list = [ {"codeId": "P","codeName": "PUBLIC"}, {"codeId": "S","codeName": "STATE"}];
-   var list = [ "CODY","CT"];
+    var list = [ "CODY","CT"];
     return list;
 }
+
+//편집 핸들러
+function auiCellEditingHandler(event) {
+   //document.getElementById("ellapse").innerHTML = event.type  + ": ( " + event.rowIndex  + ", " + event.columnIndex + ") : " + event.value;
+    
+     var item = new Object();
+        item.codeId="";
+        item.memId="";
+        
+    if(event.columnIndex  ==0){
+        fn_getCtCodeSearch(event.value);
+        AUIGrid.setCellValue(myGridID, event.rowIndex , "codeId", event.value);
+        AUIGrid.setCellValue(myGridID, event.rowIndex , "memId", "");
+        
+    }
+    
+    if(event.columnIndex  ==1){
+          AUIGrid.setCellValue(myGridID, event.rowIndex , "memId", event.value);
+          if(event.value == '0'){
+              //fn_getCtCodeSearch(AUIGrid.getCellValue(myGridID, event.rowIndex ,2));
+          }
+          //fn_getCtCodeSearch(AUIGrid.getCellValue(myGridID, event.rowIndex ,0));
+     }
+    console.log(event);
+};
 
 function fn_selectArea(){
 	Common.ajax("GET", "/services/mileageCileage/selectArea", '', function(result) {
@@ -133,6 +190,7 @@ function DCPMasterGrid() {
         item.dcpForm = "";
         item.dcpTo = "";
         item.distance = "";
+        
         // parameter
         // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
         // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -188,6 +246,29 @@ function DCPMasterGrid() {
 	                     }
 	            });
      };
+     
+     /* function fn_getbrnch(){
+    	 item.memType
+    	 
+         Common.ajax("GET", "/services/mileageCileage/selectBranch",{groupCode:'43'}, function(result) {
+        	 
+        	    $("#memType").change(function (){
+        	        var memType = $("#memType").val();
+        	        if(memType == 2){
+        	             doGetCombo('/services/mileageCileage/selectBranch', 42, '','brnch', 'M' ,  'f_multiCombo');
+        	        }else if(memType == 3){
+        	            doGetCombo('/services/mileageCileage/selectBranch', 43, '','brnch', 'M' ,  'f_multiCombo');
+        	        }else if(memType == ""){
+        	            doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo');
+        	        }
+        	     });
+        	 
+             for( i in result){
+                 console.log(result[i]);
+                 branchList.push(result[i]);
+             }
+         }, null, {async : false});
+     } */
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">

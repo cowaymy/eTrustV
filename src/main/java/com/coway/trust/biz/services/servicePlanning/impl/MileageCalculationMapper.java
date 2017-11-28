@@ -35,4 +35,10 @@ public interface MileageCalculationMapper {
 	List<EgovMap> selectBranch(Map<String, Object> params);
 	
 	List<EgovMap> selectMemberCode(Map<String, Object> params);
+
+	// 171127 :: 선한이
+	List<EgovMap> selectDCPFrom(Map<String, Object> params);
+	
+	List<EgovMap> selectDCPTo(Map<String, Object> params);
+	
 }

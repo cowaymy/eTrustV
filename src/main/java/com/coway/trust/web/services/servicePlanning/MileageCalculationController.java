@@ -265,4 +265,37 @@ public class MileageCalculationController {
 		logger.debug("memberCode {}", memberCode);
 		return ResponseEntity.ok(memberCode);
 	}
+	
+	// 171127 :: 선한이
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectDCPFrom", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDCPFrom( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap> selectDCPFrom = mileageCalculationService.selectDCPFrom(params);
+		logger.debug("selectDCPFrom {}", selectDCPFrom);
+		return ResponseEntity.ok(selectDCPFrom);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectDCPTo", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDCPTo( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap> selectDCPTo = mileageCalculationService.selectDCPTo(params);
+		logger.debug("selectDCPTo {}", selectDCPTo);
+		return ResponseEntity.ok(selectDCPTo);
+	}
 }

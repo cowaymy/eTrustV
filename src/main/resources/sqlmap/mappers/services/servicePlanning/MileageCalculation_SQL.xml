@@ -86,6 +86,30 @@
            </if>
 </select>
 
+<select id="selectDCPFrom"  parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT 
+			  DCP_FROM CODE_ID,
+			  DCP_FROM CODE_NAME
+         FROM SVC0034M
+         WHERE 1=1
+           <if test="groupCode != null and groupCode != '' ">
+              AND BRNCH_CODE  IN (#{groupCode})
+           </if>
+           ORDER BY DCP_FROM ASC
+</select>
+
+<select id="selectDCPTo"  parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT 
+              DCP_TO CODE_ID,
+              DCP_TO CODE_NAME
+         FROM SVC0034M
+         WHERE 1=1
+           <if test="groupCode != null and groupCode != '' ">
+              AND BRNCH_CODE  IN (#{groupCode})
+           </if>
+           ORDER BY DCP_TO ASC
+</select>
+
 <select id="selectArea"  parameterType="Map" resultType="egovMap">
 	            SELECT DISTINCT AREA CODE_ID,
                    AREA CODE_NAME
