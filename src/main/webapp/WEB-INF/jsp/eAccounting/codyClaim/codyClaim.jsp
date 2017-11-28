@@ -246,7 +246,7 @@ function fn_setEvent() {
 	}
 
 function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
+	Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM07"}, null, true, "supplierSearchPop");
 }
 
 function fn_setSupplier() {
@@ -255,7 +255,7 @@ function fn_setSupplier() {
 }
 
 function fn_popCostCenterSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop",accGrp:"VM07"}, null, true, "costCenterSearchPop");
 }
 
 function fn_setPopCostCenter() {
@@ -264,7 +264,7 @@ function fn_setPopCostCenter() {
 }
 
 function fn_popSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM07"}, null, true, "supplierSearchPop");
 }
 
 function fn_setPopSupplier() {
@@ -329,7 +329,7 @@ function fn_mileageAdd() {
 }
 
 function fn_popSubSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"sPop"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"sPop",accGrp:"VM07"}, null, true, "supplierSearchPop");
 }
 
 function fn_setPopSubSupplier() {
@@ -994,7 +994,7 @@ function fn_deleteStaffClaimExp() {
 	<th scope="row" ><spring:message code="webInvoice.status" /></th>
 	<td colspan="3">
 	<select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
-		<option value="T"><spring:message code="webInvoice.select.save" /></option>
+		<option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>
         <option value="A"><spring:message code="webInvoice.select.approved" /></option>

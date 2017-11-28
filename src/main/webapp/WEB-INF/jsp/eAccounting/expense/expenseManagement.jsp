@@ -41,7 +41,7 @@ $(document).ready(function(){
             type:"M"
         });
         
-        CommonCombo.make("claimType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
+        CommonCombo.make("claimType", "/eAccounting/expense/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
             id: "code",
             name: "codeName",
             type:"M"

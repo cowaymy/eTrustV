@@ -110,16 +110,20 @@ var pettyCashCustdnColumnLayout = [ {
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
-    dataField : "updDt",
-    headerText : '<spring:message code="pettyCashCustdn.lastUpdateDt" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
-}, {
     dataField : "crtUserId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "userName",
     headerText : '<spring:message code="pettyCashCustdn.creator" />',
+    style : "aui-grid-user-custom-left"
+}, {
+    dataField : "updDt",
+    headerText : '<spring:message code="pettyCashCustdn.lastUpdateDt" />',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
+}, {
+    dataField : "updUserName",
+    headerText : '<spring:message code="pettyCashCustdn.lastUpdUser" />',
     style : "aui-grid-user-custom-left"
 }
 ];
@@ -189,7 +193,7 @@ function fn_setGridData(gridId, data) {
 }
 
 function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM09"}, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
@@ -197,7 +201,7 @@ function fn_costCenterSearchPop() {
 }
 
 function fn_popSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM09"}, null, true, "supplierSearchPop");
 }
 
 function fn_popCostCenterSearchPop() {
@@ -373,7 +377,7 @@ function fn_deleteCustodianPop() {
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
+	<th scope="row"><spring:message code="pettyCashCustdn.lastUpdUser" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="createUser" name="crtUserId"/><a href="#" class="search_btn" id="search_createUser_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>

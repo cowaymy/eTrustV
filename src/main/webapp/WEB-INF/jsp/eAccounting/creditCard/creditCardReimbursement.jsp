@@ -218,7 +218,7 @@ function fn_setPopExpType() {
 }
 
 function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM09"}, null, true, "supplierSearchPop");
 }
 
 function fn_setSupplier() {
@@ -829,7 +829,7 @@ function fn_deleteReimbursement() {
 	<th scope="row"><spring:message code="webInvoice.status" /></th>
 	<td>
 	<select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
-		<option value="T"><spring:message code="webInvoice.select.save" /></option>
+		<option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>
         <option value="A"><spring:message code="webInvoice.select.approved" /></option>

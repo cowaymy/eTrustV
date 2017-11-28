@@ -18,7 +18,8 @@ SELECT T1.COST_CENTR
       ,T1.CRT_DT
       ,T1.UPD_DT
       ,T1.CRT_USER_ID
-      ,T5.USER_NAME
+      ,T5.USER_FULL_NAME AS USER_NAME
+      ,(SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = T1.UPD_USER_ID) AS UPD_USER_NAME
   FROM FCM0011M T1 LEFT JOIN FCM0008M T2 ON T1.COST_CENTR = T2.COST_CENTER
        LEFT JOIN FCM0006M T3 ON T1.CUSTDN = T3.MEM_ACC_ID
        LEFT JOIN
@@ -45,11 +46,11 @@ SELECT T1.COST_CENTR
              AND T1.UPD_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
         </if>          
-        <if test="memAccID != null and memAccID != ''">
-             AND T1.CUSTDN LIKE '%' || #{memAccID} || '%'
+        <if test="memAccId != null and memAccId != ''">
+             AND T1.CUSTDN LIKE '%' || #{memAccId} || '%'
         </if>          
-        <if test="costCenter != null and costCenter != ''">
-             AND T1.COST_CENTR LIKE '%' || #{costCenter} || '%'
+        <if test="costCentr != null and costCentr != ''">
+             AND T1.COST_CENTR LIKE '%' || #{costCentr} || '%'
         </if>     
         <if test="crtUserId != null and crtUserId != ''">
              AND T5.USER_NAME LIKE '%' || #{crtUserId} || '%'
@@ -119,7 +120,13 @@ SELECT T1.COST_CENTR
   FROM FCM0011M T1 LEFT JOIN FCM0008M T2 ON T1.COST_CENTR = T2.COST_CENTER
        LEFT JOIN FCM0006M T3 ON T1.CUSTDN = T3.MEM_ACC_ID
        LEFT JOIN SYS0047M T4 ON T1.CRT_USER_ID = T4.USER_ID
-  WHERE T1.COST_CENTR = #{costCentr}         
+  WHERE 1=1
+        <if test="memAccId != null and memAccId != ''">
+             AND T1.CUSTDN = #{memAccId}
+        </if>          
+        <if test="costCentr != null and costCentr != ''">
+             AND T1.COST_CENTR = #{costCentr}
+        </if>             
 </select>
 
 <update id="updateCustodian" parameterType="Map">

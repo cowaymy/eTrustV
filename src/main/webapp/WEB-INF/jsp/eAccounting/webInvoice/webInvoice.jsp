@@ -19,6 +19,11 @@
 </style>
 <script type="text/javascript">
 var webInvoiceColumnLayout = [ {
+    dataField : "invcDt",
+    headerText : '<spring:message code="webInvoice.postingDate" />',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
+}, {
     dataField : "clmNo",
     visible : false
 },{
@@ -26,24 +31,12 @@ var webInvoiceColumnLayout = [ {
     headerText : '<spring:message code="webInvoice.invoiceNo" />',
     width : 140
 }, {
-    dataField : "invcDt",
-    headerText : '<spring:message code="webInvoice.postingDate" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
-}, {
     dataField : "costCentr",
     headerText : '<spring:message code="webInvoice.cc" />'
 }, {
     dataField : "costCentrName",
     headerText : '<spring:message code="webInvoice.ccName" />',
     style : "aui-grid-user-custom-left"
-}, {
-    dataField : "invcType",
-    headerText : '<spring:message code="webInvoice.type" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "memAccId",
-    headerText : '<spring:message code="webInvoice.suppliers" />'
 }, {
     dataField : "memAccName",
     headerText : '<spring:message code="webInvoice.name" />',
@@ -154,7 +147,7 @@ function fn_setPayDueDtEvent() {
 }
 
 function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM01"}, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
@@ -162,7 +155,7 @@ function fn_costCenterSearchPop() {
 }
 
 function fn_popSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM01"}, null, true, "supplierSearchPop");
 }
 
 function fn_viewEditWebInvoicePop(clmNo) {
@@ -404,7 +397,7 @@ function fn_glAccountSearchPop(rowIndex){
     <th scope="row"><spring:message code="webInvoice.status" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
-        <option value="T"><spring:message code="webInvoice.select.save" /></option>
+        <option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>
         <option value="A"><spring:message code="webInvoice.select.approved" /></option>

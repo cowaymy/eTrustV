@@ -85,7 +85,7 @@ function fn_selectBudgetListAjax() {
 <div id="popup_wrap" class="popup_wrap size_mid2"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="expense.ActivityCodeSearch" /></h1>
+<h1><spring:message code="expense.BudgetCodeSearch" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>
 </ul>

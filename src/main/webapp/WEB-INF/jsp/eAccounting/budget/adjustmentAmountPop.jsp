@@ -42,7 +42,7 @@ $(document).ready(function(){
          visible : false
      },{
          dataField : "costCenterText",
-         headerText : '<spring:message code="budget.CostCenter" />',
+         headerText : '<spring:message code="budget.costCenterName" />',
          style : "aui-grid-user-custom-left",
          width : 150
      },{
@@ -56,7 +56,7 @@ $(document).ready(function(){
          width : 150
      },{
          dataField : "adjAmt",
-         headerText : '<spring:message code="budget.Change" /> <spring:message code="budget.Amount" />',
+         headerText : '<spring:message code="budget.AdjustmentAmount" />',
          width : 150,
          dataType : "numeric",
          formatString : "#,##0.00",

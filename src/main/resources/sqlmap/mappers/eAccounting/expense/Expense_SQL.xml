@@ -15,9 +15,9 @@
 		           ,TO_CHAR(DISAB_DT, 'dd-mm-yyyy') DISAB_DT
 		           ,DISAB_USER_ID
 		           ,TO_CHAR(CRT_DT, 'dd-mm-yyyy') CRT_DT
-		           ,CRT_USER_ID
+		           ,(SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = CRT_USER_ID) AS CRT_USER_ID
 		           ,TO_CHAR(UPD_DT, 'dd-mm-yyyy') UPD_DT
-		           ,UPD_USER_ID
+		           ,(SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = UPD_USER_ID) AS UPD_USER_ID
 		  FROM FCM0001M
 		 WHERE DISAB_FLAG is null		
 		 <if test="claimType != null and claimType != ''">
@@ -139,5 +139,41 @@
     WHERE  CLM_TYPE     = #{clmType}
       AND  EXP_TYPE       = #{expType}
 </update>
+
+<select id="selectCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0 AND CODE != 'J1'
+        <if test="groupCode != null and groupCode !=''">
+           AND CODE_MASTER_ID = #{groupCode}
+        </if>
+        <if test="Codeval != null and Codeval !=''">
+           AND CODE = #{Codeval}
+        </if>
+        <if test="likeValue != null and likeValue !=''">
+           AND CODE LIKE #{likeValue}||'%'
+        </if>
+        <if test="notlike != null and notlike !=''">
+           AND CODE NOT LIKE #{notlike}||'%'
+        </if>
+        <if test="notin != null and notin !=''">
+              AND CODE IN
+              <foreach item="item" collection="notin" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
+        <choose>
+          <when test="orderValue !=null and orderValue !=''">
+              ORDER BY ${orderValue}
+          </when>
+          <otherwise>
+              ORDER BY CODE_NAME
+          </otherwise>
+        </choose>
+    </select>
 
 </mapper>

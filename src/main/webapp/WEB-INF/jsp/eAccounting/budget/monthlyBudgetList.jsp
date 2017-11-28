@@ -198,7 +198,7 @@ function fn_makeGrid(){
                     visible : false
                 },{
                     dataField : "costCenterText",
-                    headerText : '<spring:message code="budget.Description" />',
+                    headerText : '<spring:message code="budget.costCenterName" />',
                     width : 100,
                     cellMerge : true 
                 },{
@@ -207,7 +207,7 @@ function fn_makeGrid(){
                     width : 100
                 },{
                     dataField : "budgetCodeText",
-                    headerText : '<spring:message code="budget.Description" />',
+                    headerText : '<spring:message code="budget.budgetName" />',
                     width : 100
                 },{
                     dataField : "glAccCode",

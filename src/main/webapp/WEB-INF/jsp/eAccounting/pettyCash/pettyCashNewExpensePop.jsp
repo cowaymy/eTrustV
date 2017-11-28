@@ -168,7 +168,6 @@ $(document).ready(function () {
     setInputFile2();
     
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
-    $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#expenseType_search_btn").click(fn_PopExpenseTypeSearchPop);
     $("#sSupplier_search_btn").click(fn_popSubSupplierSearchPop);
     $("#clear_btn").click(fn_clearData);
@@ -258,14 +257,14 @@ function fn_tempSave() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" /><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
+    <td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" /><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${userId}"/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" /><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCostCenterText" name="costCentrName" /></td>
     <th scope="row"><spring:message code="pettyCashNewCustdn.icNoPassNo" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric"/></td>
 </tr>

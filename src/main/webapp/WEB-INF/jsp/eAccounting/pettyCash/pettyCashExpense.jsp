@@ -208,7 +208,7 @@ $("#amt :text").keydown(function (event) {
 }
 
 function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM09"}, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
@@ -216,15 +216,11 @@ function fn_costCenterSearchPop() {
 }
 
 function fn_popSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM09"}, null, true, "supplierSearchPop");
 }
 
 function fn_popSubSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"sPop"}, null, true, "supplierSearchPop");
-}
-
-function fn_popCostCenterSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"sPop",accGrp:"VM09"}, null, true, "supplierSearchPop");
 }
 
 function fn_PopExpenseTypeSearchPop() {
@@ -241,7 +237,7 @@ function fn_setCostCenter() {
     $("#costCenterText").val($("#search_costCentrName").val());
 }
 
-function fn_setPopCostCenter() {
+/* function fn_setPopCostCenter() {
     $("#newCostCenter").val($("#search_costCentr").val());
     $("#newCostCenterText").val($("#search_costCentrName").val());
     
@@ -266,7 +262,7 @@ function fn_setPopCostCenter() {
             }
         });
     }
-}
+} */
 
 function fn_setPopSupplier() {
     $("#newMemAccId").val($("#search_memAccId").val());
@@ -279,7 +275,7 @@ function fn_setPopSupplier() {
         // Approved Cash Amount GET and CUSTDN_NRIC GET
         var data = {
                 memAccId : $("#newMemAccId").val(),
-                costCentr : $("#newCostCenter").val()
+                //costCentr : $("#newCostCenter").val()
         };
         console.log(data);
         Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
@@ -289,6 +285,8 @@ function fn_setPopSupplier() {
             if(FormUtil.isEmpty(result.data)) {
                 Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
             } else {
+            	$("#newCostCenter").val(result.data.costCentr);
+            	$("#newCostCenterText").val(result.data.costCentrName);
             	if(!FormUtil.isEmpty(result.data.custdnNric)) {
                     var custdnNric = result.data.custdnNric;
                     $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
@@ -318,11 +316,11 @@ function fn_setPopExpType() {
 
 function fn_checkForCustdnNric() {
     var checkResult = true;
-    if(FormUtil.isEmpty($("#newCostCenterText").val())) {
+    /* if(FormUtil.isEmpty($("#newCostCenterText").val())) {
         Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
         checkResult = false;
         return checkResult;
-    }
+    } */
     if(FormUtil.isEmpty($("#newMemAccName").val())) {
         Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
         checkResult = false;
@@ -763,7 +761,7 @@ function fn_deletePettyCashExp() {
     <th scope="row"><spring:message code="webInvoice.status" /></th>
     <td>
     <select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
-        <option value="T"><spring:message code="webInvoice.select.save" /></option>
+        <option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>
         <option value="A"><spring:message code="webInvoice.select.approved" /></option>

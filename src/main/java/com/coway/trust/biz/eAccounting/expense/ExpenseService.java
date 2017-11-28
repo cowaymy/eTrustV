@@ -16,4 +16,6 @@ public interface ExpenseService {
 	List<EgovMap> selectGlCodeList( Map<String, Object> params) throws Exception;
 
 	int updateExpenseInfo(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectCodeList( Map<String, Object> params) throws Exception;
 }

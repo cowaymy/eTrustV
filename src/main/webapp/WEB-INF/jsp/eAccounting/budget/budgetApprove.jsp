@@ -61,6 +61,10 @@ $(document).ready(function(){
         style :"aui-grid-pointer",
         width : 100
     },{
+        dataField : "reqstDt",
+        headerText : '<spring:message code="webInvoice.requestDate" />',
+        width : 100
+    },{
         dataField : "costCenterText",
         headerText : '<spring:message code="budget.CostCenter" />',
         style : "aui-grid-user-custom-left ",
@@ -468,8 +472,8 @@ function fn_saveApprove(value){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval('reject');"><spring:message code="budget.Reject" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval('approval');"><spring:message code="budget.Approval" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval('reject');"><spring:message code="budget.Reject" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

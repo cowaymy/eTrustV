@@ -179,6 +179,15 @@ public class ExpenseController {
     
     	return ResponseEntity.ok(message);
 		
-	}		
+	}
+	
+	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) throws Exception {
+	
+		LOGGER.debug("groupCode : {}", params);
+
+		List<EgovMap> codeList = expenseService.selectCodeList(params);
+		return ResponseEntity.ok(codeList);
+	}
 }
 

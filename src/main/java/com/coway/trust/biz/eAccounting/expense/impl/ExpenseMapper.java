@@ -21,4 +21,6 @@ public interface ExpenseMapper {
 	
 	int updateExpenseInfo (Map<String, Object> params) throws Exception;
 	
+	List<EgovMap> selectCodeList( Map<String, Object> params) throws Exception;
+	
 }

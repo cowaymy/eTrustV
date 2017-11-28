@@ -530,7 +530,7 @@ function fn_budgetDelete() {
 	<th scope="row"><spring:message code="budget.Status" /></th>
 	<td>
 	<select id="appvStus" name="appvStus" class="multy_select w100p" multiple="multiple">
-		<option value="T"><spring:message code="budget.TempSave" /></option>
+		<option value="T"><spring:message code="budget.Draft" /></option>
 		<option value="O"><spring:message code="budget.Open" /></option>
 		<option value="C"><spring:message code="budget.Close" /></option>
 	</select>
@@ -561,7 +561,7 @@ function fn_budgetDelete() {
 
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetDelete();"><spring:message code="budget.Delete" /></a></p></li>
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentPop('pop');"><spring:message code="budget.Adjustment" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentPop('pop');"><spring:message code="budget.NewAdjustment" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval();"><spring:message code="budget.Submit" /></a></p></li>
 </ul>
 

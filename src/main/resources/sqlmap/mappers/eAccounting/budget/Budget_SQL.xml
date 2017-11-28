@@ -12,8 +12,8 @@ SELECT COST_CENTR
       ,GL_ACC_CODE
       ,(SELECT GL_ACC_DESC FROM FCM0009M C WHERE C.GL_ACC_CODE = FCM0104D.GL_ACC_CODE)GL_ACC_DESC
       ,(CASE
-      WHEN CNTRL_TYPE='Y' THEN 'Budget Control'
-      WHEN CNTRL_TYPE='N' THEN 'Budget Not Control'
+      WHEN CNTRL_TYPE='Y' THEN 'Controlled'
+      WHEN CNTRL_TYPE='N' THEN 'Not controlled'
       END)CNTRL_TYPE
 FROM FCM0104D
 WHERE 1=1
@@ -682,6 +682,7 @@ FROM     (
        <![CDATA[ 
               SELECT A.BUDGET_DOC_NO
                  ,B.COST_CENTR
+                 ,TO_CHAR(C.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
                  ,BUDGET_DOC_SEQ                 
                  ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
                  ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH

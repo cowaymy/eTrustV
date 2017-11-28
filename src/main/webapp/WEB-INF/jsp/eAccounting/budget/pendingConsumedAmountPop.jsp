@@ -21,7 +21,7 @@ $(document).ready(function(){
          width : 150
      },{
          dataField : "costCentrName",
-         headerText : '<spring:message code="budget.CostCenter" />',
+         headerText : '<spring:message code="budget.costCenterName" />',
          width : 150
      },{
          dataField : "userName",
@@ -41,17 +41,17 @@ $(document).ready(function(){
          width : 100
      },{
          dataField : "memAccId",
-         headerText : '<spring:message code="budget.Supplier" />/<spring:message code="budget.Employee" />',
+         headerText : '<spring:message code="budget.SupplierID" />',
          width : 100
      },{
          dataField : "memAccName",
-         headerText : '<spring:message code="budget.Description" />',
+         headerText : '<spring:message code="budget.SupplierName" />',
          style : "aui-grid-user-custom-left",
          width : 150
      },{
          dataField : "netAmt",
          headerText : '<spring:message code="budget.Amount" />',
-         style : "aui-grid-user-custom-left",
+         style : "my-right-style",
          width : 150
      },{
          dataField : "expDesc",
@@ -98,7 +98,7 @@ function comma(str) {
 <h1><spring:message code="budget.Pending" /> <spring:message code="budget.Amount" /></h1>
 </c:if>
 <c:if test="${item.type == 'Consumed' }" >
-<h1><spring:message code="budget.Consumed" /> <spring:message code="budget.Amount" /></h1>
+<h1><spring:message code="budget.Utilised" /> <spring:message code="budget.Amount" /></h1>
 </c:if>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>

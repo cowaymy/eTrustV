@@ -663,7 +663,7 @@ function fn_AddRow()
         return false;
     }
     if ( $("#sendAmount").val() == "") {
-        var msg = '<spring:message code="budget.Send" /> <spring:message code="budget.Amount" />';
+        var msg = '<spring:message code="budget.Sender" /> <spring:message code="budget.Amount" />';
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>", function(){
 
             $("#sendAmount").focus();
@@ -724,7 +724,7 @@ function fn_AddRow()
             return false;
         }
         if ( $("#recvAmount").val() == "") {
-            var msg = '<spring:message code="budget.Send" /> <spring:message code="budget.Amount" />';
+            var msg = '<spring:message code="budget.Receiver" /> <spring:message code="budget.Amount" />';
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>", function(){
                 $("#recvAmount").focus();
             });
@@ -767,7 +767,7 @@ function fn_AddRow()
 	        }else{
 	        	
 	        	if(result.data.send == "N"){
-	        		Common.alert("<spring:message code="budget.msg.addMaster" />" );
+	        		Common.alert('<spring:message code="budget.msg.NoPlan" />');
 	        	}else{
 	                AUIGrid.addRow(adjPGridID, item, 'last');          
 	            }
@@ -1029,7 +1029,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 	</td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="budget.Send" /> <spring:message code="budget.Amount" /></th>
+	<th scope="row"><spring:message code="budget.Sender" /> <spring:message code="budget.Amount" /></th>
 	<td><input type="text" id="sendAmount" name="sendAmount" title="" placeholder="" class="al_right" /></td>
 </tr>
 </tbody>
@@ -1104,7 +1104,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="budget.REMARK" /></th>
+	<th scope="row"><spring:message code="budget.Remark" /></th>
 	<td><input type="text" id="remark" name="remark" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
@@ -1113,7 +1113,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
     <c:if test="${budgetStatus ==  'Y'}">
 <ul class="center_btns">
 		<li><p class="btn_blue2"><a href="#" id="btnAdd"><spring:message code="expense.Add" /></a></p></li>
-		<li><p class="btn_blue2"><a href="#" id="btnDel"><spring:message code="expense.Del" /></a></p></li>
+		<li><p class="btn_blue2"><a href="#" id="btnDel"><spring:message code="budget.Delete" /></a></p></li>
 		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_clearData();" id="btnClear"><spring:message code="budget.Clear" /></a></p></li>
 </ul>
     </c:if>
@@ -1159,7 +1159,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 
     <c:if test="${budgetStatus ==  'Y' }">
 <ul class="center_btns mt10">
-		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('temp');"><spring:message code="budget.Temp" /> <spring:message code="budget.Save" /></a></p></li>
+		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('temp');"><spring:message code="budget.TempSave" /></a></p></li>
 		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_uploadFile('approval');"><spring:message code="budget.Submit" /></a></p></li>
 </ul>
     </c:if> 
