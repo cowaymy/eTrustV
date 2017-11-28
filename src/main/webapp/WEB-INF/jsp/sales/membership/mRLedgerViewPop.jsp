@@ -13,7 +13,7 @@ $(document).ready(function(){
 	fn_getmRLedgerGridAjax ();
 	
 	createMRLedgerGrid();  
-    AUIGrid.resize(mRLedgerGrid, 940,200);
+    //AUIGrid.resize(mRLedgerGrid, 960,330);
     fn_getmRLedgerProcessGridAjax();
     
    
@@ -36,22 +36,30 @@ function vChange(obj){
 function createMRLedgerGrid(){
     
     var cLayout = [
-         {dataField : "refDt",headerText : "Date", width : 100 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
-         {dataField : "instno", headerText : "Inst No", width : 100 ,editable : false},
-         {dataField : "doctypename", headerText : "Type", width :120 ,editable : false},
-         {dataField : "srvLdgrRefNo", headerText : "Doc No", width :100 ,editable : false},
+         {dataField : "refDt",headerText : "Date", width : 80 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
+         {dataField : "instno", headerText : "Inst<br/> No", width : 40 ,editable : false},
+         {dataField : "doctypename", headerText : "Type", width :130 ,editable : false},
+         {dataField : "srvLdgrRefNo", headerText : "Doc No", width :110 ,editable : false},
          {dataField : "resnDesc", headerText : "Adj Reason", width :100 ,editable : false},
-         {dataField : "payMode", headerText : "Paymode", width :100 ,editable : false},
-         {dataField : "payDt", headerText : "Ref Date", width :100 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
+         {dataField : "payMode", headerText : "Pay<br/>mode", width :50 ,editable : false},
+         {dataField : "payDt", headerText : "Ref Date", width :80 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
          {dataField : "chqrefno", headerText : "Ref No", width :100 ,editable : false},
-         {dataField : "accCode", headerText : "Acc Code", width :100 ,editable : false},
-         {dataField : "debitamt", headerText : "Debit", width :100 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
-         {dataField : "creditamt", headerText : "Credit", width :100 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
-         {dataField : "balanceamt", headerText : "Balance", width :100 ,dataType : "number", formatString : "#,000.00"  ,editable : false}
+         {dataField : "accCode", headerText : "Acc Code", width :80 ,editable : false},
+         {dataField : "debitamt", headerText : "Debit", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
+         {dataField : "creditamt", headerText : "Credit", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
+         {dataField : "balanceamt", headerText : "Balance", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false}
          
    ];
     
-    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
+    var gridPros = { 
+    		usePaging : true,  
+    		pageRowCount: 10, 
+    		editable: false, 
+    		selectionMode : "singleRow",
+    		headerHeight : 30,  
+    		showRowNumColumn : false,    	       
+            showStateColumn     : false, 
+    		};  
     mRLedgerGrid = GridCommon.createAUIGrid("#ledger_grid_wrap", cLayout,'' ,gridPros); 
 }
 
@@ -244,7 +252,7 @@ function fn_getmRLedgerProcessGridAjax (v){
 </ul> 
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-   <div id="ledger_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>  
+   <div id="ledger_grid_wrap" style="width:100%; height:330px; margin:0 auto;"></div>  
 </article><!-- grid_wrap end -->
 
 </section><!-- pop_body end -->
