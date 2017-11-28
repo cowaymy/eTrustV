@@ -171,13 +171,14 @@ public class AdaptorServiceImpl implements AdaptorService {
 			smsVO.setMessage(getSmsTextByTemplate(templateType, params));
 		}
 
-		String msgID = "";
+		String msgId = UUIDGenerator.get();
+		result.setMsgId(msgId);
 		int vendorId = 2;
 		smsVO.getMobiles().forEach(mobileNo -> {
 			String smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId
 					+ "&Username=" + gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType
 					+ "&Message=" + changeToHex(smsVO.getMessage()) + "&SenderID=" + gensuiteSenderId + "&Phone="
-					+ gensuiteCountryCode + mobileNo + "&MsgID=" + msgID;
+					+ gensuiteCountryCode + mobileNo + "&MsgID=" + msgId;
 
 			ResponseEntity<String> response = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
 
@@ -200,7 +201,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 				}
 
 				insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), 1, 1, 975, "", statusId, 0, body,
-						response.getBody(), msgID, vendorId);
+						response.getBody(), msgId, vendorId);
 
 			} else {
 				result.setErrorCount(result.getErrorCount() + 1);
@@ -236,7 +237,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 		String trId = UUIDGenerator.get();
 		int vendorId = 1;
-
+		result.setMsgId(trId);
 		String smsUrl = "http://" + mvgateHost + mvgatePath + "?to=" + mvgateCountryCode + bulkSmsVO.getMobile()
 				+ "&token=" + mvgateToken + "&username=" + mvgateUserName + "&password=" + mvgatePassword + "&code="
 				+ mvgateCode + "&mt_from=" + mvgateMtFrom + "&text=" + bulkSmsVO.getMessage() + "&lang=0&trid=" + trId;

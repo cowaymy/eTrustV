@@ -9,6 +9,7 @@ public class SmsResult {
 	private int successCount;
 	private int failCount;
 	private int errorCount;
+	private String msgId;
 	private List<Map<String, String>> failReason = new ArrayList<>();
 
 	public int getReqCount() {
@@ -53,5 +54,13 @@ public class SmsResult {
 
 	public void addFailReason(Map<String, String> failReason) {
 		this.failReason.add(failReason);
+	}
+
+	public String getMsgId() {
+		return msgId;
+	}
+
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
 	}
 }
