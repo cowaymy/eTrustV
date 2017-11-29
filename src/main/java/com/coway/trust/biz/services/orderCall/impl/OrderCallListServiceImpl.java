@@ -318,6 +318,18 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		return orderCallListMapper.getAreaList(params);
 	}
 
+	@Override
+	public EgovMap selectCdcAvaiableStock(Map<String, Object> params) {
+		
+		return orderCallListMapper.selectCdcAvaiableStock(params);
+	}
+
+	@Override
+	public EgovMap selectRdcStock(Map<String, Object> params) {
+	
+		return orderCallListMapper.selectRdcStock(params);
+	}
+
 
 
 

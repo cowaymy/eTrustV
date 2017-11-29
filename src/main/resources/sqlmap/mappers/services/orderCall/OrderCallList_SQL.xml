@@ -549,6 +549,76 @@
 				    group by AREA
 
 	   </select>
+	   
+ <select id="selectCdcAvaiableStock" parameterType="Map" resultType="egovMap"> 
+		WITH CRDC AS (select s28.WH_LOC_CODE, s28.CDC_CODE, s28.RDC_CODE from sys0028m s28,sys0005m s05
+		              where 1 =1
+		              and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)  
+		  and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D 
+		                     WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
+                            AND B.CUST_ADD_ID = C.ADD_ID
+                            AND A.CUST_ID = B.CUST_ID
+                            AND B.AREA_ID = D.AREA_ID
+                            AND A.SALES_ORD_NO = #{salesOrdNo})
+		            ) 
+		SELECT QTY - NVL (BOOKQTY, 0) AVAIL_QTY
+		  FROM LOG0056M L56,
+		       SYS0028M S28,
+		       (  SELECT LOC_ID,
+		                 ITM_CODE,
+		                 SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY,
+		                 MOV_QTY
+		            FROM LOG0075M
+		   <![CDATA[        WHERE NVL (FINAL_CMPLT, 'N') <> 'Y' ]]>
+		        GROUP BY LOC_ID, ITM_CODE, MOV_QTY ) L75,
+		       CRDC
+		       WHERE     1 = 1
+		       AND L56.LOC_ID = L75.LOC_ID(+)
+		       AND L56.STK_CODE = L75.ITM_CODE(+)
+		       AND S28.WH_LOC_ID = L56.LOC_ID
+		       AND S28.wh_loc_stk_grad = 'A'
+		       AND L56.STK_CODE = #{productCode}
+		       AND S28.WH_LOC_CODE IN
+		              (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
+		       AND S28.WH_LOC_GB = '01'
+			   
+	   </select>
+	   
+	   
+	    <select id="selectRdcStock" parameterType="Map" resultType="egovMap"> 
+        WITH CRDC AS (select s28.WH_LOC_CODE, s28.CDC_CODE, s28.RDC_CODE from sys0028m s28,sys0005m s05
+                      where 1 =1
+                      and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)  
+          and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D 
+                             WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
+                            AND B.CUST_ADD_ID = C.ADD_ID
+                            AND A.CUST_ID = B.CUST_ID
+                            AND B.AREA_ID = D.AREA_ID
+                            AND A.SALES_ORD_NO = #{salesOrdNo})
+                    ) 
+        SELECT  QTY - NVL (BOOKQTY, 0) AVAIL_QTY, 
+                      NVL(L56.MOV_QTY,0) INTRANSIT_QTY  
+          FROM LOG0056M L56,
+               SYS0028M S28,
+               (  SELECT LOC_ID,
+                         ITM_CODE,
+                         SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY,
+                         MOV_QTY
+                    FROM LOG0075M
+           <![CDATA[        WHERE NVL (FINAL_CMPLT, 'N') <> 'Y' ]]>
+                GROUP BY LOC_ID, ITM_CODE, MOV_QTY ) L75,
+               CRDC
+               WHERE     1 = 1
+               AND L56.LOC_ID = L75.LOC_ID(+)
+               AND L56.STK_CODE = L75.ITM_CODE(+)
+               AND S28.WH_LOC_ID = L56.LOC_ID
+               AND S28.wh_loc_stk_grad = 'A'
+               AND L56.STK_CODE = #{productCode}
+               AND S28.WH_LOC_CODE IN
+                      (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
+               AND S28.WH_LOC_GB = '02'
+               
+       </select>
 
 
 

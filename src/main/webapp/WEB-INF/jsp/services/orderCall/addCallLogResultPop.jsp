@@ -169,6 +169,8 @@ function fn_doAllaction(){
         <td>
         <span><c:out value="${orderCall.crtDt}"/> </span>
         </td>
+         <th scope="row"> </th>
+        <td></td>
     </tr>
     <tr>
         <th scope="row">Wait For Cancel</th>
@@ -188,6 +190,8 @@ function fn_doAllaction(){
         <td>
         <span><c:out value="${orderCall.crtUserId}"/></span>
         </td>
+         <th scope="row"> </th>
+        <td></td>
     </tr>
     <tr>
         <th scope="row">Product To Install </th>
@@ -198,6 +202,33 @@ function fn_doAllaction(){
         <td>
            <span><c:out value="${orderCall.callStusCode}"/></span>
         </td>
+        <th scope="row"> </th>
+        <td></td>
+    </tr>
+      <tr>
+     
+        <th scope="row">RDC Available Qty </th>
+       <td>
+         <span><c:out value="${rdcStock.availQty}"/></span>
+       </td>
+       
+        
+        <th scope="row">In Transit Qty</th>
+        <td>
+        <span><c:out value="${rdcStock.intransitQty}"/></span>
+          
+        </td>
+        <th scope="row">CDC Available Qty </th>
+         <c:if test= "${cdcAvaiableStock.availQty  == null }" >
+        <td>
+        <span>0</span>
+        </td>
+        </c:if>
+        <c:if test= "${cdcAvaiableStock.availQty != null }" >
+        <td>
+        <span><c:out value="${cdcAvaiableStock.availQty}"/></span>
+        </td>
+        </c:if>
     </tr>
     </tbody>
     </table><!-- table end -->

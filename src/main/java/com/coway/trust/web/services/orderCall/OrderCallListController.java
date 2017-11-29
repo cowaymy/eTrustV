@@ -110,6 +110,14 @@ public class OrderCallListController {
 		EgovMap orderCall = orderCallListService.getOrderCall(params);
 		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
 		
+		String productCode = orderCall.get("productCode").toString();
+		params.put("productCode", productCode);
+		logger.debug("jinmu : {}", params);
+		EgovMap cdcAvaiableStock = orderCallListService.selectCdcAvaiableStock(params);
+		logger.debug("jinmu1 : {}", cdcAvaiableStock);
+		EgovMap  rdcStock = orderCallListService.selectRdcStock(params);
+		
+		
 		//Order Detail Tab
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVO);
 		logger.debug("orderCall : {}", orderCall);
@@ -118,6 +126,8 @@ public class OrderCallListController {
 		model.addAttribute("salesOrdId", params.get("salesOrdId"));
 		model.addAttribute("callEntryId", params.get("callEntryId"));
 		model.addAttribute("salesOrdNo", params.get("salesOrdNo"));
+		model.addAttribute("cdcAvaiableStock", cdcAvaiableStock);
+		model.addAttribute("rdcStock", rdcStock);
 		model.addAttribute("orderCall", orderCall);
 		model.addAttribute("callStatus", callStatus);
 		model.addAttribute("orderDetail", orderDetail);

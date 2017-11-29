@@ -22,6 +22,10 @@ public interface OrderCallListService {
 
 	List<EgovMap> getAreaList(Map<String, Object> params);
 
+	EgovMap selectCdcAvaiableStock(Map<String, Object> params);
+
+	EgovMap selectRdcStock(Map<String, Object> params);
+
 
 	      
 } 
