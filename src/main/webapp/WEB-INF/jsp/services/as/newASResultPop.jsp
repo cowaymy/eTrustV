@@ -120,7 +120,7 @@ function fn_getASOrderInfo(){
             console.log(result);
             
             $("#txtASNo").text($("#AS_NO").val());
-            $("#txtOrderNo").text(result[0].ordId);
+            $("#txtOrderNo").text(result[0].ordNo);
             $("#txtAppType").text(result[0].appTypeCode);
             $("#txtCustName").text(result[0].custName);
             $("#txtCustIC").text(result[0].custNric);
@@ -301,15 +301,15 @@ function fn_filterAdd(){
 	    	chargePrice  = getASStockPrice(fitem.filterID);        
 	    }
 	    
-	    fitem.filterPrice = parseInt(chargePrice,10);
+	    fitem.filterPrice = Number(chargePrice);
         
 	    var  chargeTotalPrice = 0;
 	    
-	    chargeTotalPrice =  parseInt($("#ddlFilterQty").val(),10)  *  parseInt( chargePrice,10);
-	    fitem.filterTotal =   parseInt(chargeTotalPrice,10);
+	    chargeTotalPrice =  Number($("#ddlFilterQty").val())  *  Number( chargePrice);
+	    fitem.filterTotal =   Number(chargeTotalPrice);
 	    
 	    
-	    var v =  parseInt(  $("#txtFilterCharge").val() ,10) + chargeTotalPrice;
+	    var v =  Number(  $("#txtFilterCharge").val() ) + chargeTotalPrice;
 	    $("#txtFilterCharge").val( v);
 	    
 	    
@@ -321,6 +321,21 @@ function fn_filterAdd(){
     }
     
     fn_calculateTotalCharges();
+}
+
+
+function fn_filterClear(){
+	
+	
+	  $("#ddlFilterCode").val("");
+	  $("#ddlFilterQty").val("1");
+	  $("#ddlFilterPayType").val("1");
+	  $("#ddlFilterExchangeCode").val("");
+	  $("#ddSrvFilterLastSerial").val("");
+	  $("#txtFilterRemark").val("");
+	
+	  //AUIGrid.clearGridData(myFltGrd10);
+		
 }
 
 
@@ -354,7 +369,7 @@ function fn_calculateTotalCharges(){
 	
     labourCharges =   $("#txtLabourCharge").val();
     filterCharges   =   $("#txtFilterCharge").val();  
-    totalCharges = parseInt( labourCharges ,10)+ parseInt( filterCharges,10);
+    totalCharges = Number( labourCharges ) + Number( filterCharges);
     
     $("#txtTotalCharge").val(totalCharges);  
     
@@ -436,8 +451,9 @@ function fn_openField_Complete(){
     fn_clearPanelField_ASChargesFees();
     
     
-    
-    
+
+    $("#ddlFilterQty").val("1"); 
+    $("#ddlFilterPayType").val("FOC"); 
     
 }
 
@@ -601,9 +617,11 @@ function  fn_setSaveFormData(){
         console.log("newASInHouseAdd.");
         console.log( result);       
         
-        if(result.asNo !=""){
-            Common.alert("<b>AS result successfully saved.</b>");
-           // fn_DisablePageControl();
+        if(result.data !=""){
+            Common.alert("<b>AS result successfully saved.</b>  New ResultNo["+result.data+"] </b>");
+              $("#txtResultNo").html( "<font size='3' color='red'> <b> " +result.data+ " </b></font>");  
+              fn_DisablePageControl();
+            
         }
         
     });
@@ -668,6 +686,9 @@ function fn_DisablePageControl(){
     $("#ddlFilterExchangeCode").attr("disabled", true); 
     $("#txtFilterRemark").attr("disabled", true); 
     fn_clearPanelField_ASChargesFees();
+    
+    
+    $("#btnSaveDiv").attr("style","display:none");
     
 }
 
@@ -1119,8 +1140,7 @@ function fn_productGroup_SelectedIndexChanged(){
     <tbody>
     <tr>
         <th scope="row">Result No</th>
-        <td>
-        <input type="text" title="" placeholder="" class=""  id='txtResultNo' name='txtResultNo'/>
+        <td><span  id='txtResultNo'></span> 
         </td>
         <th scope="row">Status</th>
         <td>
@@ -1290,6 +1310,7 @@ function fn_productGroup_SelectedIndexChanged(){
     </table><!-- table end -->
 
     </dd>
+    
     <dt class="click_add_on"><a href="#">AS Charges Fees</a></dt>
     <dd>
     <table class="type1"><!-- table start -->
@@ -1341,7 +1362,7 @@ function fn_productGroup_SelectedIndexChanged(){
         <th scope="row">Quantity</th>
         <td>
         <select  id='ddlFilterQty' name='ddlFilterQty'>
-            <option value="1">1</option>
+            <option value="1" selected>1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -1361,7 +1382,7 @@ function fn_productGroup_SelectedIndexChanged(){
         <th scope="row">Payment Type</th>
         <td>
         <select  id='ddlFilterPayType' name='ddlFilterPayType'>
-              <option value="FOC">Free of Charge</option>
+              <option value="FOC"  selected>Free of Charge</option>
               <option value="CHG">Charge</option>
         </select>
         </td>
@@ -1394,8 +1415,10 @@ function fn_productGroup_SelectedIndexChanged(){
     <ul class="center_btns">
         <li><p class="btn_blue2"><a href="#" onclick="fn_filterAdd()">Add Filter</a></p></li>
         
-        <li><p class="btn_blue2"><a href="#">Clear</a></p></li>
+        <li><p class="btn_blue2"><a href="#" onclick="fn_filterClear()">Clear</a></p></li>
     </ul>
+    
+    
     
     <article class="grid_wrap"><!-- grid_wrap start -->
           <div id="asfilter_grid_wrap" style="width:100%; height:250px; margin:0 auto;"></div>

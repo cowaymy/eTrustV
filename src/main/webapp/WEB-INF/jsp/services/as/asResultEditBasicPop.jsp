@@ -184,7 +184,7 @@ function fn_getASOrderInfo(){
             console.log(result);
             
             $("#txtASNo").text($("#AS_NO").val());
-            $("#txtOrderNo").text(result[0].ordId);
+            $("#txtOrderNo").text(result[0].ordNo);
             $("#txtAppType").text(result[0].appTypeCode);
             $("#txtCustName").text(result[0].custName);
             $("#txtCustIC").text(result[0].custNric);
