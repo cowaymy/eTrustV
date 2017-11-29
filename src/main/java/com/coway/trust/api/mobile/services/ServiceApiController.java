@@ -541,26 +541,87 @@ public class ServiceApiController {
 				
 				Map<String, Object> getAsBasic = MSvcLogApiService.getAsBasic(params);
 				
-				params.put("AS_SO_ID", String.valueOf(getAsBasic.get("asSoId")));
-				params.put("AS_CT_ID", String.valueOf(getAsBasic.get("asCtId")));
+				
+				if(getAsBasic.get("asSoId")!=null){
+					params.put("AS_SO_ID", String.valueOf(getAsBasic.get("asSoId")));
+				}else{
+					params.put("AS_SO_ID", "");
+				}
+				
+				
+				if(getAsBasic.get("asCtId")!=null){		
+					params.put("AS_CT_ID", String.valueOf(getAsBasic.get("asCtId")));
+				}else{
+					params.put("AS_CT_ID", "");
+				}
+				
 				params.put("AS_RESULT_STUS_ID", "4");
 //				params.put("AS_FAIL_RESN_ID", String.valueOf(getAsBasic.get("asfailResnId")));
 				params.put("AS_REN_COLCT_ID", "0");
-				params.put("AS_CMMS", String.valueOf(getAsBasic.get("asCmms")));
-				params.put("AS_BRNCH_ID", String.valueOf(getAsBasic.get("asBrnchId")));
-				params.put("AS_WH_ID", String.valueOf(getAsBasic.get("asWhId")));
+				
+				
+				
+				if(getAsBasic.get("asCmms")!=null){		
+					params.put("AS_CMMS", String.valueOf(getAsBasic.get("asCmms")));
+				}else{
+					params.put("AS_CMMS", "");
+				}
+				
+				if(getAsBasic.get("asBrnchId")!=null){		
+					params.put("AS_BRNCH_ID", String.valueOf(getAsBasic.get("asBrnchId")));
+				}else{
+					params.put("AS_BRNCH_ID", "");
+				}
+				
+				if(getAsBasic.get("asWhId")!=null){						
+					params.put("AS_WH_ID", String.valueOf(getAsBasic.get("asWhId")));
+				}else{
+					params.put("AS_WH_ID", "");
+				}
+				
 //				params.put("AS_RESULT_REM", getAsBasic.get("resultRemark"));
-				params.put("AS_MALFUNC_ID", String.valueOf(getAsBasic.get("asMalfuncId")));
-				params.put("AS_MALFUNC_RESN_ID", String.valueOf(getAsBasic.get("asMalfuncResnId")));
+				
+				
+				if(getAsBasic.get("asMalfuncId")!=null){						
+					params.put("AS_MALFUNC_ID", String.valueOf(getAsBasic.get("asMalfuncId")));
+				}else{
+					params.put("AS_MALFUNC_ID", "");
+				}
+				
+				if(getAsBasic.get("asMalfuncResnId")!=null){					
+					params.put("AS_MALFUNC_RESN_ID", String.valueOf(getAsBasic.get("asMalfuncResnId")));
+				}else{
+					params.put("AS_MALFUNC_RESN_ID", "");
+				}
+
 				params.put("AS_DEFECT_GRP_ID", "0");
 				params.put("AS_DEFECT_PART_GRP_ID", "0");
 //				params.put("AS_WORKMNSH", getAsBasic.get("asWorkmnsh"));
-				params.put("AS_FILTER_AMT", String.valueOf(getAsBasic.get("asFilterAmt")));
+				
+				
+				if(getAsBasic.get("asFilterAmt")!=null){						
+					params.put("AS_FILTER_AMT", String.valueOf(getAsBasic.get("asFilterAmt")));
+				}else{
+					params.put("AS_FILTER_AMT", "");
+				}
+				
 				params.put("AS_ACSRS_AMT", "0");
-				params.put("AS_TOT_AMT", String.valueOf(getAsBasic.get("asTotAmt")));
+				
+				
+				if(getAsBasic.get("asTotAmt")!=null){							
+					params.put("AS_FILTER_AMT", String.valueOf(getAsBasic.get("asTotAmt")));
+				}else{
+					params.put("AS_FILTER_AMT", "");
+				}
+
+				if(getAsBasic.get("asResultStockUse")!=null){							
+					params.put("AS_RESULT_STOCK_USE", String.valueOf(getAsBasic.get("asResultStockUse")));
+				}else{
+					params.put("AS_RESULT_STOCK_USE", "");
+				}
+
 				params.put("AS_RESULT_IS_SYNCH", "0");
 				params.put("AS_RCALL", "0");
-				params.put("AS_RESULT_STOCK_USE", String.valueOf(getAsBasic.get("asResultStockUse")));
 				params.put("AS_RESULT_TYPE_ID", "457");
 				params.put("AS_RESULT_IS_CURR", "1");
 				params.put("AS_RESULT_MTCH_ID", "0");
@@ -569,27 +630,101 @@ public class ServiceApiController {
 				params.put("AS_WORKMNSH_TAX_CODE_ID", "0");
 				params.put("AS_WORKMNSH_TXS", "0");
 				params.put("AS_RESULT_MOBILE_ID", "0");
-				params.put("AS_RESULT_NO", String.valueOf(getAsBasic.get("asResultNo")));
-				params.put("AS_RESULT_ID", String.valueOf(getAsBasic.get("asResultId")));
-				params.put("AS_NO", String.valueOf(getAsBasic.get("asno")));
+				
+				
+				if(!"".equals(getAsBasic.get("asResultStockUse"))){
+					params.put("AS_RESULT_NO", String.valueOf(getAsBasic.get("asResultNo")));
+				}else{
+					params.put("AS_RESULT_NO", "");
+				}
+				
+				if(getAsBasic.get("asResultId")!=null){						
+					params.put("AS_RESULT_ID", String.valueOf(getAsBasic.get("asResultId")));
+				}else{
+					params.put("AS_RESULT_ID", "");
+				}
+				
+				if(getAsBasic.get("asno")!=null){								
+					params.put("AS_NO", String.valueOf(getAsBasic.get("asno")));
+				}else{
+					params.put("AS_NO", "");
+				}
+				
 				params.put("HC_REM", " ");
 				
 				//004
-				params.put("AS_ENTRY_ID", String.valueOf(getAsBasic.get("asId")));//asTransLogs
-				params.put("AS_NO", String.valueOf(asTransLogs1.get(i).get("serviceNo")));//asTransLogs
-				params.put("AS_DEFECT_TYPE_ID",  String.valueOf(asTransLogs1.get(i).get("defectTypeId"))); //asTransLogs
-				params.put("AS_DEFECT_ID", String.valueOf(asTransLogs1.get(i).get("defectId"))); //asTransLogs
-				params.put("AS_DEFECT_PART_ID", String.valueOf(asTransLogs1.get(i).get("defectPartId"))); //asTransLogs
-				params.put("AS_DEFECT_DTL_RESN_ID", String.valueOf(asTransLogs1.get(i).get("defectDetailReasonId")));//asTransLogs
-				params.put("AS_SLUTN_RESN_ID", String.valueOf(asTransLogs1.get(i).get("solutionReasonId")));//asTransLogs
+				
+
+
+				
+				
+				if(getAsBasic.get("asId")!=null){								
+					params.put("AS_ENTRY_ID", String.valueOf(getAsBasic.get("asId")));
+				}else{
+					params.put("AS_ENTRY_ID", "");
+				}
+				
+				if(getAsBasic.get("serviceNo")!=null){								
+					params.put("AS_NO", String.valueOf(getAsBasic.get("serviceNo")));
+				}else{
+					params.put("AS_NO", "");
+				}
+				
+				if(getAsBasic.get("defectTypeId")!=null){								
+					params.put("AS_DEFECT_TYPE_ID", String.valueOf(getAsBasic.get("defectTypeId")));
+				}else{
+					params.put("AS_DEFECT_TYPE_ID", "");
+				}
+				
+				if(getAsBasic.get("defectId")!=null){						
+					params.put("AS_DEFECT_ID", String.valueOf(getAsBasic.get("defectId")));
+				}else{
+					params.put("AS_DEFECT_ID", "");
+				}
+				
+				if(getAsBasic.get("defectPartId")!=null){						
+					params.put("AS_DEFECT_PART_ID", String.valueOf(getAsBasic.get("defectPartId")));
+				}else{
+					params.put("AS_DEFECT_PART_ID", "");
+				}
+				
+				if(getAsBasic.get("defectDetailReasonId")!=null){						
+					params.put("AS_DEFECT_DTL_RESN_ID", String.valueOf(getAsBasic.get("defectDetailReasonId")));
+				}else{
+					params.put("AS_DEFECT_DTL_RESN_ID", "");
+				}
+				
+				if(getAsBasic.get("solutionReasonId")!=null){						
+					params.put("AS_SLUTN_RESN_ID", String.valueOf(getAsBasic.get("solutionReasonId")));
+				}else{
+					params.put("AS_SLUTN_RESN_ID", "");
+				}
+				
+
 				params.put("AS_SETL_DT", todate2);
 				params.put("AS_SETL_TM", curTime);
-				params.put("AS_WORKMNSH", String.valueOf((asTransLogs1.get(i).get("labourCharge"))) );
+				
+				if(getAsBasic.get("labourCharge")!=null){									
+					params.put("AS_WORKMNSH", String.valueOf(getAsBasic.get("labourCharge")));
+				}else{
+					params.put("AS_WORKMNSH", "");
+				}
+				
 				params.put("AS_RESULT_REM", asTransLogs1.get(i).get("resultRemark"));
 				
 				//
-				params.put("IN_HUSE_REPAIR_REM", String.valueOf(asTransLogs1.get(i).get("inHouseRepairRemark")));//asTransLogs
-				params.put("IN_HUSE_REPAIR_REPLACE_YN", asTransLogs1.get(i).get("inHouseRepairReplacementYN"));//asTransLogs
+				if(getAsBasic.get("inHouseRepairRemark")!=null){									
+					params.put("IN_HUSE_REPAIR_REM", String.valueOf(getAsBasic.get("inHouseRepairRemark")));
+				}else{
+					params.put("IN_HUSE_REPAIR_REM", "");
+				}
+				
+				if(getAsBasic.get("inHouseRepairReplacementYN")!=null){									
+					params.put("IN_HUSE_REPAIR_REPLACE_YN", String.valueOf(getAsBasic.get("inHouseRepairReplacementYN")));
+				}else{
+					params.put("IN_HUSE_REPAIR_REPLACE_YN", "");
+				}
+				
 				
 				Date inHouseRepairPromisedDate ;
 				String inHouseRepairPromisedDate1="";
@@ -602,12 +737,46 @@ public class ServiceApiController {
 				}
 				
 				
-				params.put("IN_HUSE_REPAIR_GRP_CODE", String.valueOf(asTransLogs1.get(i).get("inHouseRepairProductGroupCode")));//asTransLogs
-				params.put("IN_HUSE_REPAIR_PRODUCT_CODE", String.valueOf(asTransLogs1.get(i).get("inHouseRepairProductCode")));//asTransLogs
-				params.put("IN_HUSE_REPAIR_SERIAL_NO", String.valueOf(asTransLogs1.get(i).get("inHouseRepairSerialNo")));//asTransLogs
+				if(getAsBasic.get("inHouseRepairProductGroupCode")!=null){	
+					params.put("IN_HUSE_REPAIR_GRP_CODE", String.valueOf(getAsBasic.get("inHouseRepairProductGroupCode")));
+				}else{
+					params.put("IN_HUSE_REPAIR_GRP_CODE", "");
+				}
+				
+				if(getAsBasic.get("inHouseRepairProductCode")!=null){	
+					params.put("IN_HUSE_REPAIR_PRODUCT_CODE", String.valueOf(getAsBasic.get("inHouseRepairProductCode")));
+				}else{
+					params.put("IN_HUSE_REPAIR_PRODUCT_CODE", "");
+				}
+				
+				if(getAsBasic.get("inHouseRepairSerialNo")!=null){	
+					params.put("IN_HUSE_REPAIR_SERIAL_NO", String.valueOf(getAsBasic.get("inHouseRepairSerialNo")));
+				}else{
+					params.put("IN_HUSE_REPAIR_SERIAL_NO", "");
+				}
+				
 				params.put("RESULT_CUST_NAME", asTransLogs1.get(i).get("resultCustName"));//asTransLogs
-				params.put("RESULT_MOBILE_NO", String.valueOf(asTransLogs1.get(i).get("resultIcMobileNo")));//asTransLogs
-				params.put("RESULT_REP_EMAIL_NO", String.valueOf(asTransLogs1.get(i).get("resultReportEmailNo")));//asTransLogs
+				
+				if(getAsBasic.get("resultIcMobileNo")!=null){	
+					params.put("RESULT_MOBILE_NO", String.valueOf(getAsBasic.get("resultIcMobileNo")));
+				}else {
+					params.put("RESULT_MOBILE_NO", "");
+				}
+				
+				if(getAsBasic.get("resultReportEmailNo")!=null){	
+					params.put("RESULT_REP_EMAIL_NO", String.valueOf(getAsBasic.get("resultReportEmailNo")));
+				}else {
+					params.put("RESULT_REP_EMAIL_NO", "");
+				}
+				
+				if(getAsBasic.get("asTotAmt")!=null){	
+					params.put("AS_TOT_AMT", String.valueOf(getAsBasic.get("asTotAmt")));
+				}else {
+					params.put("AS_TOT_AMT", "");
+				}
+				
+				
+				
 				params.put("RESULT_ACEPT_NAME", asTransLogs1.get(i).get("resultAcceptanceName"));//asTransLogs
 				params.put("SGN_DT", asTransLogs1.get(i).get("signData"));//asTransLogs
 				
@@ -787,7 +956,7 @@ public class ServiceApiController {
 			params.put("nextCallDate","01-01-1999"); 
 			params.put("refNo1","0"); 
 			params.put("refNo2","0"); 
-
+			params.put("hidAppTypeId",installResult.get("code"));
 			
 			//API in
 			params.put("hidSirimNo",String.valueOf(insTransLogs.get(i).get("sirimNo")));
