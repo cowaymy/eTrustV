@@ -91,14 +91,6 @@ public class BudgetController {
 		return ResponseEntity.ok(selectBudgetSysMaintenanceList);
 	}
 	
-	@RequestMapping(value = "/selectBudgetMonth", method = RequestMethod.GET)
-	public ResponseEntity<String> selectBudgetMonth(@RequestParam Map<Integer, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
-		int month = 0;
-		month = budgetService.selectBudgetMonth(params);
-		String message = Integer.toString(month);
-		return ResponseEntity.ok(message);
-	}
-	
 	@RequestMapping(value = "/saveBudgetSysMaintGrid.do", method = RequestMethod.POST)
 	public  ResponseEntity<ReturnMessage>  saveBudgetSysMaintGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 

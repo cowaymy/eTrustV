@@ -52,13 +52,6 @@ AND BUDGET_YEAR = #{searchDt}
 </if>
 </select>
 
-<select id="selectBudgetMonth" parameterType = "Map" resultType = "int">
-SELECT MAX(BUDGET_MONTH)
-FROM FCM0106M
-WHERE BUDGET_YEAR = #{searchDt}
-</select>
-
-
 <insert id="addBudgetSysMaintGrid" parameterType="Map">
 INSERT INTO FCM0106M (
  BUDGET_YEAR,

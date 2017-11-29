@@ -43,11 +43,6 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	}
 
 	@Override
-	public int selectBudgetMonth(Map<Integer, Object> params) throws Exception{
-		return budgetMapper.selectBudgetMonth(params);
-	}
-	
-	@Override
 	public int addBudgetSysMaintGrid(List<Object> addList,String loginId) {	
 		
 		int cnt=0;

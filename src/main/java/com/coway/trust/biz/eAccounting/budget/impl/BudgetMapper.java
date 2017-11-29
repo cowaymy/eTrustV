@@ -12,9 +12,7 @@ public interface BudgetMapper {
 	List<EgovMap> selectBudgetControlList(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> selectBudgetSysMaintenanceList(Map<String, Object> params) throws Exception;
-	
-	int selectBudgetMonth(Map<Integer, Object> params) throws Exception;
-	
+		
 	int addBudgetSysMaintGrid(Map<String, Object> params);
 	
 	int udtBudgetSysMaintGrid(Map<String, Object> params);
