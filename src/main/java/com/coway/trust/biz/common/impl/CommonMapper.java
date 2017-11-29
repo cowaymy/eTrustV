@@ -180,18 +180,18 @@ public interface CommonMapper {
 	 * @return
 	 */
 	List<EgovMap> selectBankList(Map<String, Object> params);
-	
+
 	/**
-	*  IssuedBank 조회
-	 * @param String
-	 * @return String
+	 * IssuedBank 조회
+	 * @param param
+	 * @return
 	 */
 	String selectBankInfoById(String param);
-	
+
 	/**
-	 *  CodeDetail조회
-	 * @param int
-	 * @return String
+	 * CodeDetail조회
+	 * @param payItmCcTypeId
+	 * @return
 	 */
 	String codeNameById(int payItmCcTypeId);
 
@@ -209,6 +209,14 @@ public interface CommonMapper {
 	 * @return
 	 */
 	List<EgovMap> selectAdjReasonList(Map<String, Object> params);
-	
+
 	String SysdateCall(Map<String, Object> params);
+
+	/**
+	 * select Public holiday list
+	 * Data from last year to next year
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectPublicHolidayList(Map<String, Object> params);
 }

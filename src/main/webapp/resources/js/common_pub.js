@@ -5,25 +5,48 @@ var holidays = {//휴일 세팅 하기
     /*"0809":{type:0, title:"신정", year:"2017"}*/
 };
 
+var isLoadHoliday = false;
 
-var pickerOpts={//일반년월일달력 세팅
-	changeMonth:true,
-	changeYear:true,
+var pickerOpts = {//일반년월일달력 세팅
+	changeMonth: true,
+	changeYear: true,
 	dateFormat: "dd/mm/yy",
-		beforeShowDay: function(day) {
+	beforeShowDay: function (day) {
+
+        if (!isLoadHoliday) {
+
+            isLoadHoliday = true;
+
+            try{
+                // get holiday list
+                Common.ajaxSync("GET", "/common/getPublicHolidayList.do", {}, function (result) {
+                    for (var idx = 0; idx < result.length; idx++) {
+                        holidays[result[idx].mmdd] = {
+                            type: 0,
+                            title: result[idx].holidayDesc,
+                            year: result[idx].yyyy
+                        };
+                    }
+                });
+			}catch(e){
+                Common.removeLoader();
+            	console.log("common_pub.js => getHolidays fail : " + e);
+			}
+        }
+
 		var result;
 		// 포맷에 대해선 다음 참조(http://docs.jquery.com/UI/Datepicker/formatDate)
-		var holiday = holidays[$.datepicker.formatDate("mmdd",day )];
+		var holiday = holidays[$.datepicker.formatDate("mmdd", day)];
 		var thisYear = $.datepicker.formatDate("yy", day);
 
 		// exist holiday?
 		if (holiday) {
-			if(thisYear == holiday.year || holiday.year == "") {
-				result =  [true, "date-holiday", holiday.title];
+			if (thisYear == holiday.year || holiday.year == "") {
+				result = [true, "date-holiday", holiday.title];
 			}
 		}
 
-		if(!result) {
+		if (!result) {
 			switch (day.getDay()) {
 				case 0: // is sunday?
 					result = [true, "date-sunday"];
@@ -38,7 +61,7 @@ var pickerOpts={//일반년월일달력 세팅
 		}
 
 		return result;
-		}
+	}
 };
 
 $(document).on(//일반년월일달력 실행

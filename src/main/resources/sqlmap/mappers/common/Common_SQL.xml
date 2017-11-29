@@ -1367,4 +1367,15 @@
     <select id="SysdateCall" parameterType="String" resultType="String">
         SELECT TO_CHAR(SYSDATE + (${value}) , 'dd/mm/yyyy') FROM DUAL
     </select>
+
+    <select id="selectPublicHolidayList"  parameterType="Map" resultType="egovMap">
+        SELECT TO_CHAR (HOLIDAY, 'YYYYMMDD') HOLIDAY
+              ,TO_CHAR (HOLIDAY, 'YYYY') YYYY
+              ,TO_CHAR (HOLIDAY, 'MMDD') MMDD
+              ,HOLIDAY_DESC
+          FROM SYS0081M
+         WHERE HOLIDAY_TYPE = 'P'
+           AND HOLIDAY BETWEEN (TRUNC (SYSDATE, 'YYYY') - ( INTERVAL '1' YEAR) )
+                           AND (TRUNC (SYSDATE, 'YYYY') + ( INTERVAL '2' YEAR) )
+    </select>
 </mapper>

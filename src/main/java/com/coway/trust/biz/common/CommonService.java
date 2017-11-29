@@ -233,5 +233,5 @@ public interface CommonService {
 
 	List<EgovMap> selectReasonCodeList(Map<String, Object> params);
 
-
+	List<EgovMap> getPublicHolidayList(Map<String, Object> params);
 }

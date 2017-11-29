@@ -294,4 +294,10 @@ public class CommonController {
 		rmap.put("date", rvalue);
 		return ResponseEntity.ok(rmap);
 	}
+
+	@RequestMapping(value = "/getPublicHolidayList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getPublicHolidayList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> holidayList = commonService.getPublicHolidayList(params);
+		return ResponseEntity.ok(holidayList);
+	}
 }
