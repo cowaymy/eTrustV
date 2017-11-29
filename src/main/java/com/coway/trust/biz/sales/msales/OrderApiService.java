@@ -13,4 +13,6 @@ public interface OrderApiService {
 
 	EgovMap orderCostCalc(Map<String, Object> params);
 	
+	List<EgovMap> preOrderList(Map<String, Object> params);
+
 }

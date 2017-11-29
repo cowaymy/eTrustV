@@ -72,4 +72,9 @@ public class OrderApiServiceImpl extends EgovAbstractServiceImpl implements Orde
 	
 		return result;
 	}
+	
+	@Override
+	public List<EgovMap> preOrderList(Map<String, Object> params) {
+		return orderApiMapper.selectPreOrderList(params);
+	}
 }

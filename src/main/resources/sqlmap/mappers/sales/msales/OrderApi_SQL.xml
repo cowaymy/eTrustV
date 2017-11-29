@@ -147,4 +147,34 @@
            AND T1.PROMO_ITM_STK_ID = #{productCode}
            AND ROWNUM = 1
     </select>
+    
+    <select id="selectPreOrderList" parameterType="Map" resultType="egovMap">
+		SELECT T2.NAME AS CUST_NAME
+		     , T3.SALES_ORD_NO AS SALES_ORDER_NO
+		     , T4.CODE_NAME AS CUSTOMER_TYPE
+		     , T5.CODE_NAME AS APP_TYPE
+		     , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DATE
+		     , T6.NAME AS PRE_ORDER_STATUS
+		     , T1.SOF_NO
+		  FROM SAL0213M T1
+		  JOIN SAL0029D T2
+		    ON T1.CUST_ID = T2.CUST_ID
+		  LEFT OUTER
+		  JOIN SAL0001D T3
+		    ON T3.REF_NO = T1.SOF_NO
+		  LEFT OUTER
+		  JOIN SYS0013M T4
+		    ON T4.CODE_MASTER_ID = 8
+		   AND T2.TYPE_ID = T4.CODE_ID
+		  LEFT OUTER
+		  JOIN SYS0013M T5
+		    ON T5.CODE_ID = T1.APP_TYPE_ID
+		   AND T5.CODE_MASTER_ID = 10
+		  LEFT OUTER
+		  JOIN SYS0038M T6
+		    ON T6.STUS_CODE_ID = T1.STUS_ID
+		 WHERE T1.CUST_ID = #{userId}
+		   AND TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') = #{requestDate}
+    </select>
+    
 </mapper>
