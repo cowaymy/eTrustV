@@ -509,7 +509,7 @@ public class ServiceApiController {
 
 				Map<String , Object> paramsFilter = paramsDetail.get(i);
 				paramsDetail.get(i).put("filterType", String.valueOf(paramsDetail.get(i).get("partsType")));
-				paramsDetail.get(i).put("filterDesc", "aaaa-bbbb");
+				paramsDetail.get(i).put("filterDesc", "-");
 				
 				
 				if(paramsDetail.get(i).get("filterCode")== null || "".equals(paramsDetail.get(i).get("filterCode"))){
