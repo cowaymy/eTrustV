@@ -70,7 +70,13 @@ public class FileDownloadController {
 
 		return "logistics/FileDown/fileDownloadList";
 	}
+	
+	@RequestMapping(value = "/FileRawData.do")
+	public String filerawdata(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		return "logistics/FileDown/fileDownloadRowData";
+	}
+	
 	@RequestMapping(value = "/fileDownloadList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> fileDownloadList(Model model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
