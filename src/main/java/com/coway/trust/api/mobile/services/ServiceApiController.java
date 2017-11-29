@@ -1200,29 +1200,30 @@ public class ServiceApiController {
 //		Date appointmentTime = timeFormatOrg.parse(String.valueOf(params.get("appointmentTime")));
 //		String appointmentTime1 = timeFormatNew.format(appointmentTime);
 		
-		params.put("AS_ID", (String)as_ord_basicInfo.get("asId"));
-		params.put("AS_MEM_ID", (String)userId);
-		params.put("AS_MEM_GRP", (String)as_ord_basicInfo.get("asMemGrp"));
+		params.put("AS_ID", as_ord_basicInfo.get("asId"));
+		params.put("AS_MEM_ID", userId);
+		params.put("AS_MEM_GRP", as_ord_basicInfo.get("asMemGrp"));
 //		params.put("AS_REQST_DT", sdFormat.format(transFormat.parse(as_ord_basicInfo.get("asReqstDt").toString())));
 		params.put("AS_REQST_DT", AS_REQST_DT1);
-		params.put("AS_REQST_TM", (String)as_ord_basicInfo.get("asReqstTm"));
+		params.put("AS_REQST_TM", as_ord_basicInfo.get("asReqstTm"));
 		params.put("AS_APPNT_DT", sdFormat.format(transFormat.parse((String) params.get("appointmentDate"))));
 		params.put("AS_APPNT_TM", String.valueOf(appointmentTime1));
-		params.put("AS_BRNCH_ID", (String)as_ord_basicInfo.get("asBrnchId"));
-		params.put("AS_MALFUNC_ID", (String)as_ord_basicInfo.get("asMalfuncId"));
-		params.put("AS_MALFUNC_RESN_ID", (String)as_ord_basicInfo.get("asMalfuncResnId"));
-		params.put("AS_REM_REQSTER", (String)as_ord_basicInfo.get("asRemReqster"));
-		params.put("AS_REM_REQSTER_CNTC", (String)as_ord_basicInfo.get("asRemReqsterCntc"));
-		params.put("AS_REQSTER_TYPE_ID", (String)as_ord_basicInfo.get("asReqsterTypeId"));
-		params.put("AS_IS_BS_WITHIN_30DAYS", (String)as_ord_basicInfo.get("asIsBsWithin30days"));
+		params.put("AS_BRNCH_ID", as_ord_basicInfo.get("asBrnchId"));
+		params.put("AS_MALFUNC_ID", as_ord_basicInfo.get("asMalfuncId"));
+		params.put("AS_MALFUNC_RESN_ID", as_ord_basicInfo.get("asMalfuncResnId"));
+		params.put("AS_REM_REQSTER", as_ord_basicInfo.get("asRemReqster"));
+		params.put("AS_REM_REQSTER_CNTC", as_ord_basicInfo.get("asRemReqsterCntc"));
+		params.put("AS_REQSTER_TYPE_ID", as_ord_basicInfo.get("asReqsterTypeId"));
+		params.put("AS_IS_BS_WITHIN_30DAYS", as_ord_basicInfo.get("asIsBsWithin30days"));
 		params.put("AS_ALLOW_COMM", as_ord_basicInfo.get("asAllowComm"));
-		params.put("AS_REM_ADD_CNTC", (String)as_ord_basicInfo.get("asRemAddCntc"));
+		params.put("AS_REM_ADD_CNTC", as_ord_basicInfo.get("asRemAddCntc"));
 		params.put("AS_REM_REQSTER_CNTC_SMS", as_ord_basicInfo.get("asRemReqsterCntcSms"));
 		params.put("AS_REM_ADD_CNTC_SMS", as_ord_basicInfo.get("asRemAddCntcSms"));
-		params.put("AS_SESION_CODE", (String)params.get("sesionCode"));
+		params.put("AS_SESION_CODE", params.get("sesionCode"));
 //		params.put("AS_SESION_CODE", as_ord_basicInfo.get("asSesionCode"));
-		params.put("CALL_MEMBER", (String)as_ord_basicInfo.get("callMember"));
-		params.put("REF_REQUEST", (String)as_ord_basicInfo.get("refRequest"));
+		params.put("CALL_MEMBER", as_ord_basicInfo.get("callMember"));
+		params.put("REF_REQUEST", as_ord_basicInfo.get("refRequest"));
+
 
 		
 		LOGGER.debug("params :"+ params.toString());
