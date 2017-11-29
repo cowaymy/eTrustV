@@ -1622,7 +1622,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			resultValue.put("value", "Fail");
 		}
 		resultValue.put("installEntryNo", params.get("hiddeninstallEntryNo"));
-		insertInstallation(statusId,installResult,callEntry,callResult,orderLog, TaxinvoiceCompany,AccTradeLedger,AccOrderBill,taxInvoiceOutright,taxInvoiceOutrightSub);
+		insertInstallation(statusId,ApptypeID,installResult,callEntry,callResult,orderLog, TaxinvoiceCompany,AccTradeLedger,AccOrderBill,taxInvoiceOutright,taxInvoiceOutrightSub);
 
 
 		//물류 호출   add by hgham
@@ -1662,7 +1662,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		return resultValue;
 	}
 	@Transactional
-	private boolean insertInstallation(int statusId,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog, Map<String,Object> TaxinvoiceCompany,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill,Map<String,Object>taxInvoiceOutright,Map<String,Object>taxInvoiceOutrightSub) throws ParseException{
+	private boolean insertInstallation(int statusId,String ApptypeID,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog, Map<String,Object> TaxinvoiceCompany,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill,Map<String,Object>taxInvoiceOutright,Map<String,Object>taxInvoiceOutrightSub) throws ParseException{
     		//installEntry status가 1,21 이면 그 밑에 있는걸 ㅌ야된다(컴플릿이 되어도 다시 상태값 변경 가능하게 해야된다
     		String maxId = "";  //각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
     		EgovMap maxIdValue = new EgovMap();
@@ -1675,7 +1675,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		EgovMap maxtaxInvoiceID = new EgovMap();
     		maxtaxInvoiceID.put("value", "taxInvoiceId");
     		String maxTaxInvoiceID = installationResultListMapper.selectMaxId(maxtaxInvoiceID);
-    		String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
+    		//String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
 
 
     		if("67".equals(ApptypeID)  || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
