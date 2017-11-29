@@ -790,7 +790,8 @@ and cust.cust_id = custCnt.cust_id
 
 
     <select id="getAsBasic" parameterType="Map" resultType="egovMap">
-                    select    Extent4.SALES_ORD_NO
+        select *
+          from ( select    Extent4.SALES_ORD_NO
                         ,Extent4.sales_ord_id
                         ,Extent1.as_id
                         ,Extent1.as_no
@@ -861,7 +862,11 @@ and cust.cust_id = custCnt.cust_id
             and Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
             and Extent4.SALES_ORD_NO = #{salesOrderNo}
             and Extent1.as_no = #{serviceNo}
-            and rownum = 1
+        order by Extent7.AS_RESULT_ID desc
+       )
+       where  ROWNUM = 1
+        
+            
 
     </select>
 
