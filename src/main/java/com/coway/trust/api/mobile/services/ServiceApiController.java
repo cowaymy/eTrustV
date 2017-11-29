@@ -937,6 +937,9 @@ public class ServiceApiController {
 			String statusId = "4"; //installStatus
 			
 			EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
+			params.put("installEntryId", installResult.get("installEntryId"));
+			EgovMap orderInfo = installationResultListService.getOrderInfo(params);
+			
 			String userId = MSvcLogApiService.getUseridToMemid(params);
 			
 			sessionVO1.setUserId(Integer.parseInt(userId));
@@ -956,7 +959,10 @@ public class ServiceApiController {
 			params.put("nextCallDate","01-01-1999"); 
 			params.put("refNo1","0"); 
 			params.put("refNo2","0"); 
-			params.put("hidAppTypeId",installResult.get("code"));
+			params.put("codeId",String.valueOf(installResult.get("257")));
+			params.put("hidOutright_Price",String.valueOf(orderInfo.get("c5")));
+			params.put("hidAppTypeId",installResult.get("codeId"));
+			
 			
 			//API in
 			params.put("hidSirimNo",String.valueOf(insTransLogs.get(i).get("sirimNo")));
