@@ -82,7 +82,7 @@
                 
                 Common.alert("Bank Account Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
 
-        	    if('${callPrgm}' == 'ORD_REGISTER_BANK_ACC') {
+        	    if('${callPrgm}' == 'ORD_REGISTER_BANK_ACC' || '${callPrgm}' == 'PRE_ORD') {
         	        fn_loadBankAccountPop(result.data);
         	        $('#addDdCloseBtn').click();
         	    }

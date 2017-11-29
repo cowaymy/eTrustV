@@ -2483,7 +2483,7 @@
 </tr>
 <tr>
     <th scope="row">Advance Rental Payment<span class="must">*</span></th>
-    <td colspan="3"><sapn>Does customer make advance rental payment for 6 months and above?</sapn>
+    <td colspan="3"><span>Does customer make advance rental payment for 6 months and above?</span>
         <input id="advPayYes" name="advPay" type="radio" value="1" disabled/><span>Yes</span>
         <input id="advPayNo" name="advPay" type="radio" value="0" disabled/><span>No</span></td>
 </tr>

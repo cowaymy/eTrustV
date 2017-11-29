@@ -24,6 +24,7 @@
     var EMP_CHK       = '${orderDetail.basicInfo.empChk}';
     var EX_TRADE      = '${orderDetail.basicInfo.exTrade}';
     var TODAY_DD      = '${toDay}';
+    var SRV_PAC_ID    = '${orderDetail.basicInfo.srvPacId}';
 
     var filterGridID;
     
@@ -93,7 +94,7 @@
 
             if($("#cmbOrderProduct option:selected").index() > 0) {
                 fn_loadProductPrice(APP_TYPE_ID, stkIdVal);
-                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE);                
+                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);                
                 $('#btnCurrentPromo').removeAttr("disabled");
             }
         });
@@ -126,12 +127,12 @@
                 }
                 else {
                     fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val());
-                    fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE);
+                    fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
                 }
             }
             else {
                 fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val());
-                fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE);
+                fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
             }
         });
         $('#cmbAppTypeAexc').change(function() {
@@ -641,7 +642,7 @@
 
                 var custInfo = result[0];
 
-                console.log("º∫∞¯.");
+                console.log("ÏÑ±Í≥µ.");
                 console.log("custId : " + result[0].custId);
                 console.log("userName1 : " + result[0].name);
 
@@ -718,7 +719,7 @@
     function createSchemAUIGrid() {
         console.log('createModAUIGrid1() START');
         
-        //AUIGrid ƒÆ∑≥ º≥¡§
+        //AUIGrid ÏπºÎüº ÏÑ§Ï†ï
         var docColumnLayout = [
             { headerText : "Filter Code",   dataField : "stkCode",           width : 120 }
           , { headerText : "Name",          dataField : "stkDesc", }
@@ -726,20 +727,20 @@
           , { headerText : "Last Change",   dataField : "srvFilterPrvChgDt", width : 120 }
           ];
 
-        //±◊∏ÆµÂ º”º∫ º≥¡§
+        //Í∑∏Î¶¨Îìú ÏÜçÏÑ± ÏÑ§Ï†ï
         var filterGridPros = {
-            usePaging           : true,         //∆‰¿Ã¬° ªÁøÎ
-            pageRowCount        : 10,           //«— »≠∏Èø° √‚∑¬µ«¥¬ «‡ ∞≥ºˆ 20(±‚∫ª∞™:20)            
+            usePaging           : true,         //ÌéòÏù¥Ïßï ÏÇ¨Ïö©
+            pageRowCount        : 10,           //Ìïú ÌôîÎ©¥Ïóê Ï∂úÎ†•ÎêòÎäî Ìñâ Í∞úÏàò 20(Í∏∞Î≥∏Í∞í:20)            
             editable            : false,            
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
             displayTreeOpen     : false,            
             selectionMode       : "singleRow",  //"multipleCells",            
             headerHeight        : 30,       
-            useGroupingPanel    : false,        //±◊∑Ï«Œ ∆–≥Œ ªÁøÎ
-            skipReadonlyColumns : true,         //¿–±‚ ¿¸øÎ ºøø° ¥Î«ÿ ≈∞∫∏µÂ º±≈√¿Ã ∞«≥  ∂€¡ˆ ø©∫Œ
-            wrapSelectionMove   : true,         //ƒÆ∑≥ ≥°ø°º≠ ø¿∏•¬  ¿Ãµø Ω√ ¥Ÿ¿Ω «‡, √≥¿Ω ƒÆ∑≥¿∏∑Œ ¿Ãµø«“¡ˆ ø©∫Œ
-            showRowNumColumn    : true,         //¡Ÿπ¯»£ ƒÆ∑≥ ∑ª¥ı∑Ø √‚∑¬    
+            useGroupingPanel    : false,        //Í∑∏Î£πÌïë Ìå®ÎÑê ÏÇ¨Ïö©
+            skipReadonlyColumns : true,         //ÏùΩÍ∏∞ Ï†ÑÏö© ÏÖÄÏóê ÎåÄÌï¥ ÌÇ§Î≥¥Îìú ÏÑ†ÌÉùÏù¥ Í±¥ÎÑà Îõ∏ÏßÄ Ïó¨Î∂Ä
+            wrapSelectionMove   : true,         //ÏπºÎüº ÎÅùÏóêÏÑú Ïò§Î•∏Ï™Ω Ïù¥Îèô Ïãú Îã§Ïùå Ìñâ, Ï≤òÏùå ÏπºÎüºÏúºÎ°ú Ïù¥ÎèôÌï†ÏßÄ Ïó¨Î∂Ä
+            showRowNumColumn    : true,         //Ï§ÑÎ≤àÌò∏ ÏπºÎüº Î†åÎçîÎü¨ Ï∂úÎ†•    
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
@@ -905,7 +906,7 @@
         });
     }
     
-    // ∏ÆΩ∫∆Æ ¡∂»∏.
+    // Î¶¨Ïä§Ìä∏ Ï°∞Ìöå.
     function fn_selectOrderActiveFilterList() {
         Common.ajax("GET", "/sales/membership/selectMembershipFree_oList", {ORD_ID : ORD_ID}, function(result) {
             AUIGrid.setGridData(filterGridID, result);
@@ -1025,7 +1026,7 @@
 
             if(stkPriceInfo != null) {
 
-                console.log("º∫∞¯.");
+                console.log("ÏÑ±Í≥µ.");
 
                 $("#txtPriceAexc").val(stkPriceInfo.orderPrice);
                 $("#txtPVAexc").val(stkPriceInfo.orderPV);
@@ -1059,7 +1060,7 @@
 
             if(stkPriceInfo != null) {
 
-                console.log("º∫∞¯.");
+                console.log("ÏÑ±Í≥µ.");
 
                 $("#ordPrice").val(stkPriceInfo.orderPrice);
                 $("#ordPv").val(stkPriceInfo.orderPV);
@@ -2067,11 +2068,11 @@
         $('#btnCloseReq').click();
     }
     
-	function fn_reloadPage(){
-	    Common.popupDiv("/sales/order/orderRequestPop.do", { salesOrderId : ORD_ID, ordReqType : $('#ordReqType').val() }, null , true);
-	    $('#btnCloseReq').click();
-	}
-	
+    function fn_reloadPage(){
+        Common.popupDiv("/sales/order/orderRequestPop.do", { salesOrderId : ORD_ID, ordReqType : $('#ordReqType').val() }, null , true);
+        $('#btnCloseReq').click();
+    }
+    
     function fn_setDefaultSrvPacId() {
         if($('#srvPacIdAexc option').size() == 2) {
             $('#srvPacIdAexc option:eq(1)').attr('selected', 'selected');
@@ -2084,7 +2085,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1 id="hTitle">Order Request</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="btnCloseReq" href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnCloseReq" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -2097,16 +2098,16 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:110px" />
-	<col style="width:*" />
+    <col style="width:110px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Edit Type</th>
-	<td>
-	<select id="ordReqType" class="mr5"></select>
-	<p class="btn_sky"><a id="btnEditType" href="#">Confirm</a></p>
-	</td>
+    <th scope="row">Edit Type</th>
+    <td>
+    <select id="ordReqType" class="mr5"></select>
+    <p class="btn_sky"><a id="btnEditType" href="#">Confirm</a></p>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2138,31 +2139,31 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Requestor<span class="must">*</span></th>
-	<td>
-	<select id="cmbRequestor" name="cmbRequestor" class="w100p"></select>
-	</td>
-	<th scope="row">Call Log Date<span class="must">*</span></th>
-	<td><input id="dpCallLogDate" name="dpCallLogDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <th scope="row">Requestor<span class="must">*</span></th>
+    <td>
+    <select id="cmbRequestor" name="cmbRequestor" class="w100p"></select>
+    </td>
+    <th scope="row">Call Log Date<span class="must">*</span></th>
+    <td><input id="dpCallLogDate" name="dpCallLogDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">Reason<span class="must">*</span></th>
-	<td>
-	<select id="cmbReason" name="cmbReason" class="w100p"></select>
-	</td>
-	<th scope="row">Prefer Return Date<span id="spPrfRtnDt" class="must blind">*</span></th>
-	<td><input id="dpReturnDate" name="dpReturnDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled/></td>
+    <th scope="row">Reason<span class="must">*</span></th>
+    <td>
+    <select id="cmbReason" name="cmbReason" class="w100p"></select>
+    </td>
+    <th scope="row">Prefer Return Date<span id="spPrfRtnDt" class="must blind">*</span></th>
+    <td><input id="dpReturnDate" name="dpReturnDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled/></td>
 </tr>
 <tr>
-	<th scope="row">OCR Remark<span class="must">*</span></th>
-	<td colspan="3"><textarea id="txtRemark" name="txtRemark" cols="20" rows="5"></textarea></td>
+    <th scope="row">OCR Remark<span class="must">*</span></th>
+    <td colspan="3"><textarea id="txtRemark" name="txtRemark" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2176,36 +2177,36 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<td colspan="4"></td>
-	<th scope="row">Total Amount (RM)</th>
-	<td class="bg-black"><span id="spTotalAmount"></span>
-	<input id="txtTotalAmount" name="txtTotalAmount" type="hidden" />
-	</td>
+    <td colspan="4"></td>
+    <th scope="row">Total Amount (RM)</th>
+    <td class="bg-black"><span id="spTotalAmount"></span>
+    <input id="txtTotalAmount" name="txtTotalAmount" type="hidden" />
+    </td>
 </tr>
 <tr>
-	<th scope="row">Total Used Month</th>
-	<td><input id="txtTotalUseMth" name="txtTotalUseMth" type="text" class="w100p readonly" value="0" readonly></td>
-	<th scope="row">Obligation Period</th>
-	<td><input id="txtObPeriod" name="txtObPeriod" type="text" class="w100p readonly" value="24" readonly></td>
-	<th scope="row">Rental Fees</th>
-	<td><input id="txtRentalFees" name="txtRentalFees" type="text" class="w100p readonly" readonly></td>
+    <th scope="row">Total Used Month</th>
+    <td><input id="txtTotalUseMth" name="txtTotalUseMth" type="text" class="w100p readonly" value="0" readonly></td>
+    <th scope="row">Obligation Period</th>
+    <td><input id="txtObPeriod" name="txtObPeriod" type="text" class="w100p readonly" value="24" readonly></td>
+    <th scope="row">Rental Fees</th>
+    <td><input id="txtRentalFees" name="txtRentalFees" type="text" class="w100p readonly" readonly></td>
 </tr>
 <tr>
-	<th scope="row">Penalty Charge</th>
-	<td><input id="txtPenaltyCharge" name="txtPenaltyCharge" type="text" class="w100p readonly" readonly></td>
-	<th scope="row">Penalty Adjustment<span class="must">*</span></th>
-	<td><input id="txtPenaltyAdj" name="txtPenaltyAdj" type="text" title="" placeholder="Penalty Adjustment" class="w100p" value="0" /></td>
-	<th scope="row">Current Outstanding</th>
-	<td><input id="txtCurrentOutstanding" name="txtCurrentOutstanding" type="text" class="w100p readonly" readonly></td>
+    <th scope="row">Penalty Charge</th>
+    <td><input id="txtPenaltyCharge" name="txtPenaltyCharge" type="text" class="w100p readonly" readonly></td>
+    <th scope="row">Penalty Adjustment<span class="must">*</span></th>
+    <td><input id="txtPenaltyAdj" name="txtPenaltyAdj" type="text" title="" placeholder="Penalty Adjustment" class="w100p" value="0" /></td>
+    <th scope="row">Current Outstanding</th>
+    <td><input id="txtCurrentOutstanding" name="txtCurrentOutstanding" type="text" class="w100p readonly" readonly></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2217,7 +2218,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a id="btnReqCancOrder" href="#">Request Cancel Order</a></p></li>
+    <li><p class="btn_blue2"><a id="btnReqCancOrder" href="#">Request Cancel Order</a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2245,17 +2246,17 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
-	<col style="width:*" />
-	<col style="width:160px" />
-	<col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Product<span class="must">*</span></th>
-	<td>
-	<select id="cmbOrderProduct" name="cmbOrderProduct" class="w100p"></select>
-	</td>
+    <th scope="row">Product<span class="must">*</span></th>
+    <td>
+    <select id="cmbOrderProduct" name="cmbOrderProduct" class="w100p"></select>
+    </td>
     <th scope="row">Price/RPF (RM)</th>
     <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
@@ -2263,10 +2264,10 @@
         <input id="orgOrdPv"    name="orgOrdPv"    type="hidden" /></td>
 </tr>
 <tr>
-	<th scope="row">Promotion<span class="must">*</span></th>
-	<td>
-	<select id="cmbPromotion" name="cmbPromotion" class="w100p"></select>
-	</td>
+    <th scope="row">Promotion<span class="must">*</span></th>
+    <td>
+    <select id="cmbPromotion" name="cmbPromotion" class="w100p"></select>
+    </td>
     <th scope="row">Normal Rental Fees (RM)</th>
     <td><input id="orgOrdRentalFees" name="orgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
 </tr>
@@ -2279,20 +2280,20 @@
         <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
 </tr>
 <tr>
-	<th scope="row">Apply Current Promotion</th>
-	<td colspan="3"><input id="btnCurrentPromo" name="btnCurrentPromo" value="1" type="checkbox" disabled/></td>
+    <th scope="row">Apply Current Promotion</th>
+    <td colspan="3"><input id="btnCurrentPromo" name="btnCurrentPromo" value="1" type="checkbox" disabled/></td>
 </tr>
 <tr>
-	<th scope="row">Call Log Date<span class="must">*</span></th>
-	<td><input id="dpCallLogDateExch" name="dpCallLogDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
-	<th scope="row">Reason<span class="must">*</span></th>
-	<td>
-	<select id="cmbReasonExch" name="cmbReason" class="w100p"></select>
-	</td>
+    <th scope="row">Call Log Date<span class="must">*</span></th>
+    <td><input id="dpCallLogDateExch" name="dpCallLogDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <th scope="row">Reason<span class="must">*</span></th>
+    <td>
+    <select id="cmbReasonExch" name="cmbReason" class="w100p"></select>
+    </td>
 </tr>
 <tr>
-	<th scope="row">PEX Remark</th>
-	<td colspan="3"><textarea id="txtRemarkExch" name="txtRemark" cols="20" rows="5"></textarea></td>
+    <th scope="row">PEX Remark</th>
+    <td colspan="3"><textarea id="txtRemarkExch" name="txtRemark" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2301,7 +2302,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a id="btnReqPrdExch" href="#">Request Product Exchange</a></p></li>
+    <li><p class="btn_blue2"><a id="btnReqPrdExch" href="#">Request Product Exchange</a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2335,15 +2336,15 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Scheme<span class="must">*</span></th>
-	<td>
-	<select id="cmbSchemeSchm" name="cmbScheme" class="w100p"></select>
-	</td>
+    <th scope="row">Scheme<span class="must">*</span></th>
+    <td>
+    <select id="cmbSchemeSchm" name="cmbScheme" class="w100p"></select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
@@ -2356,7 +2357,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a id="btnReqSchmConv" href="#">Request Scheme Change</a></p></li>
+    <li><p class="btn_blue2"><a id="btnReqSchmConv" href="#">Request Scheme Change</a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2381,59 +2382,59 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:170px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Application Type<span class="must">*</span></th>
-	<td>
-	<p><select id="cmbAppTypeAexc" name="cmbAppType" class="w100p"></select></select></p>
+    <th scope="row">Application Type<span class="must">*</span></th>
+    <td>
+    <p><select id="cmbAppTypeAexc" name="cmbAppType" class="w100p"></select></select></p>
     <p><select id="srvPacIdAexc" name="srvPacId" class="w100p"></select></p>
-	</td>
-	<th scope="row">Ex-Trade<span id="spInstDur" class="must blind">*</span></th>
-	<td><p><select id="exTradeAexc" name="exTrade" class="w100p"></select></p>
-	    <p><input id="relatedNoAexc" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
+    </td>
+    <th scope="row">Ex-Trade<span id="spInstDur" class="must blind">*</span></th>
+    <td><p><select id="exTradeAexc" name="exTrade" class="w100p"></select></p>
+        <p><input id="relatedNoAexc" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
 </tr>
 <tr>
-	<th scope="row">Product<span class="must">*</span></th>
-	<td><span>${orderDetail.basicInfo.stockDesc}</span></td>
-	<th scope="row">Installment Duration<span id="spInstDur" class="must blind">*</span></th>
-	<td><input id="txtInstallmentDurationAexc" name="txtInstallmentDuration" type="text" title="" placeholder="Installmen Duration (1-36 months)" class="w100p" disabled/></td>
+    <th scope="row">Product<span class="must">*</span></th>
+    <td><span>${orderDetail.basicInfo.stockDesc}</span></td>
+    <th scope="row">Installment Duration<span id="spInstDur" class="must blind">*</span></th>
+    <td><input id="txtInstallmentDurationAexc" name="txtInstallmentDuration" type="text" title="" placeholder="Installmen Duration (1-36 months)" class="w100p" disabled/></td>
 </tr>
 <tr>
-	<th scope="row">Promotion<span class="must">*</span></th>
-	<td>
-	<select id="cmbPromotionAexc" name="cmbPromotion" class="w100p" disabled></select>
-	</td>
-	<th scope="row">Reason<span class="must">*</span></th>
-	<td>
-	<select id="cmbReasonAexc" name="cmbReason" class="w100p"></select>
-	</td>
+    <th scope="row">Promotion<span class="must">*</span></th>
+    <td>
+    <select id="cmbPromotionAexc" name="cmbPromotion" class="w100p" disabled></select>
+    </td>
+    <th scope="row">Reason<span class="must">*</span></th>
+    <td>
+    <select id="cmbReasonAexc" name="cmbReason" class="w100p"></select>
+    </td>
 </tr>
 <tr>
-	<th scope="row">Price/RPF<span id="spPrice" class="must blind">*</span></th>
-	<td><input id="txtPriceAexc" name="txtPrice" type="text" title="" placeholder="Price/RPF" class="w100p readonly" readonly/>
+    <th scope="row">Price/RPF<span id="spPrice" class="must blind">*</span></th>
+    <td><input id="txtPriceAexc" name="txtPrice" type="text" title="" placeholder="Price/RPF" class="w100p readonly" readonly/>
         <input id="orgOrdPriceAexc" name="orgOrdPrice" type="hidden" />
-	    <input id="ordPriceIdAexc"  name="ordPriceId"  type="hidden" />
+        <input id="ordPriceIdAexc"  name="ordPriceId"  type="hidden" />
         <input id="orgOrdPriceIdAexc" name="orgOrdPriceId"    type="hidden" />
         <input id="orgOrdPvAexc"    name="orgOrdPv"    type="hidden" /></td>
     <th scope="row">Normal Rental Fees (RM)</th>
     <td><input id="orgOrdRentalFeesAexc" name="orgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">PV<span id="spPV" class="must blind">*</span></th>
-	<td><input id="txtPVAexc" name="txtPV" type="text" title="" placeholder="PV" class="w100p readonly" readonly/></td>
-	<th scope="row">Discount Period/<br>Promotion Rental Fee</th>
+    <th scope="row">PV<span id="spPV" class="must blind">*</span></th>
+    <td><input id="txtPVAexc" name="txtPV" type="text" title="" placeholder="PV" class="w100p readonly" readonly/></td>
+    <th scope="row">Discount Period/<br>Promotion Rental Fee</th>
     <td><p><select id="promoDiscPeriodTpAexc" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriodAexc" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
         <p><input id="ordRentalFeesAexc" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
 </tr>
 <tr>
-	<th scope="row">Remark</th>
-	<td colspan="3"><textarea id="txtRemarkAexc" name="txtRemark" cols="20" rows="5"></textarea></td>
+    <th scope="row">Remark</th>
+    <td colspan="3"><textarea id="txtRemarkAexc" name="txtRemark" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2442,7 +2443,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a id="btnReqAppExch" href="#">Exchange Application Type</a></p></li>
+    <li><p class="btn_blue2"><a id="btnReqAppExch" href="#">Exchange Application Type</a></p></li>
 </ul>
 
 </section>
@@ -2475,18 +2476,18 @@
 <section class="tap_wrap"><!-- tap_wrap start -->
 
 <ul class="tap_type1 num4">
-	<li id="tabCT"><a href="#" class="on">Customer</a></li>
-	<li id="tabMA"><a href="#">Mailing Address</a></li>
-	<li id="tabCP"><a href="#">Contact Person</a></li>
-	<li id="tabRP" class="blind"><a href="#">Rental Pay Setting</a></li>
-	<li id="tabBG" class="blind"><a href="#">Rental Billing Group</a></li>
-	<li id="tabIN"><a href="#">Installation</a></li>
+    <li id="tabCT"><a href="#" class="on">Customer</a></li>
+    <li id="tabMA"><a href="#">Mailing Address</a></li>
+    <li id="tabCP"><a href="#">Contact Person</a></li>
+    <li id="tabRP" class="blind"><a href="#">Rental Pay Setting</a></li>
+    <li id="tabBG" class="blind"><a href="#">Rental Billing Group</a></li>
+    <li id="tabIN"><a href="#">Installation</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-	<li><p class="btn_grid"><a id="addCustBtn" href="#">Add New Customer</a></p></li>
+    <li><p class="btn_grid"><a id="addCustBtn" href="#">Add New Customer</a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -2494,10 +2495,10 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -2567,10 +2568,10 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -2629,53 +2630,53 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Name<span class="must">*</span></th>
-	<td><input id="txtContactNameOwnt" name="txtContactName" type="text" title="" placeholder="Name" class="w100p readonly" readonly /></td>
-	<th scope="row">Initial</th>
-	<td><input id="txtContactInitialOwnt" name="txtContactInitial" type="text" title="" placeholder="Initial" class="w100p readonly" readonly /></td>
-	<th scope="row">Gender</th>
-	<td><input id="txtContactGenderOwnt" name="txtContactGender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly /></td>
+    <th scope="row">Name<span class="must">*</span></th>
+    <td><input id="txtContactNameOwnt" name="txtContactName" type="text" title="" placeholder="Name" class="w100p readonly" readonly /></td>
+    <th scope="row">Initial</th>
+    <td><input id="txtContactInitialOwnt" name="txtContactInitial" type="text" title="" placeholder="Initial" class="w100p readonly" readonly /></td>
+    <th scope="row">Gender</th>
+    <td><input id="txtContactGenderOwnt" name="txtContactGender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">NRIC</th>
-	<td><input id="txtContactICOwnt" name="txtContactIC" type="text" title="" placeholder="NRIC" class="w100p readonly" readonly /></td>
-	<th scope="row">DOB</th>
-	<td><input id="txtContactDOBOwnt" name="txtContactDOB" type="text" title="" placeholder="DOB" class="w100p readonly" readonly /></td>
-	<th scope="row">Race</th>
-	<td><input id="txtContactRaceOwnt" name="txtContactRace" type="text" title="" placeholder="Race" class="w100p readonly" readonly /></td>
+    <th scope="row">NRIC</th>
+    <td><input id="txtContactICOwnt" name="txtContactIC" type="text" title="" placeholder="NRIC" class="w100p readonly" readonly /></td>
+    <th scope="row">DOB</th>
+    <td><input id="txtContactDOBOwnt" name="txtContactDOB" type="text" title="" placeholder="DOB" class="w100p readonly" readonly /></td>
+    <th scope="row">Race</th>
+    <td><input id="txtContactRaceOwnt" name="txtContactRace" type="text" title="" placeholder="Race" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">Email</th>
-	<td><input id="txtContactEmailOwnt" name="txtContactEmail" type="text" title="" placeholder="Email" class="w100p readonly" readonly /></td>
-	<th scope="row">Department</th>
-	<td><input id="txtContactDeptOwnt" name="txtContactDept" type="text" title="" placeholder="Department" class="w100p readonly" readonly /></td>
-	<th scope="row">Post</th>
-	<td><input id="txtContactPostOwnt" name="txtContactPost" type="text" title="" placeholder="Post" class="w100p readonly" readonly /></td>
+    <th scope="row">Email</th>
+    <td><input id="txtContactEmailOwnt" name="txtContactEmail" type="text" title="" placeholder="Email" class="w100p readonly" readonly /></td>
+    <th scope="row">Department</th>
+    <td><input id="txtContactDeptOwnt" name="txtContactDept" type="text" title="" placeholder="Department" class="w100p readonly" readonly /></td>
+    <th scope="row">Post</th>
+    <td><input id="txtContactPostOwnt" name="txtContactPost" type="text" title="" placeholder="Post" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Mobile)</th>
-	<td><input id="txtContactTelMobOwnt" name="txtContactTelMob" type="text" title="" placeholder="Telephone Number (Mobile)" class="w100p readonly" readonly /></td>
-	<th scope="row">Tel (Residence)</th>
-	<td><input id="txtContactTelResOwnt" name="txtContactTelRes" type="text" title="" placeholder="Telephone Number (Residence)" class="w100p readonly" readonly /></td>
-	<th scope="row">Tel (Office)</th>
-	<td><input id="txtContactTelOffOwnt" name="txtContactTelOff" type="text" title="" placeholder="Telephone Number (Office)" class="w100p readonly" readonly /></td>
+    <th scope="row">Tel (Mobile)</th>
+    <td><input id="txtContactTelMobOwnt" name="txtContactTelMob" type="text" title="" placeholder="Telephone Number (Mobile)" class="w100p readonly" readonly /></td>
+    <th scope="row">Tel (Residence)</th>
+    <td><input id="txtContactTelResOwnt" name="txtContactTelRes" type="text" title="" placeholder="Telephone Number (Residence)" class="w100p readonly" readonly /></td>
+    <th scope="row">Tel (Office)</th>
+    <td><input id="txtContactTelOffOwnt" name="txtContactTelOff" type="text" title="" placeholder="Telephone Number (Office)" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Fax)</th>
-	<td><input id="txtContactTelFaxOwnt" name="txtContactTelFax" type="text" title="" placeholder="Telephone Number (Fax)" class="w100p readonly" readonly /></td>
-	<th scope="row"></th>
-	<td></td>
-	<th scope="row"></th>
-	<td></td>
+    <th scope="row">Tel (Fax)</th>
+    <td><input id="txtContactTelFaxOwnt" name="txtContactTelFax" type="text" title="" placeholder="Telephone Number (Fax)" class="w100p readonly" readonly /></td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2968,10 +2969,10 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -3027,53 +3028,53 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Name<span class="must">*</span></th>
-	<td><input id="txtInstContactNameOwnt" name="txtInstContactName" type="text" title="" placeholder="Name" class="w100p readonly" readonly /></td>
-	<th scope="row">Initial</th>
-	<td><input id="txtInstContactInitialOwnt" name="txtInstContactInitial" type="text" title="" placeholder="Initial" class="w100p readonly" readonly /></td>
-	<th scope="row">Gender</th>
-	<td><input id="txtInstContactGenderOwnt" name="txtInstContactGender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly /></td>
+    <th scope="row">Name<span class="must">*</span></th>
+    <td><input id="txtInstContactNameOwnt" name="txtInstContactName" type="text" title="" placeholder="Name" class="w100p readonly" readonly /></td>
+    <th scope="row">Initial</th>
+    <td><input id="txtInstContactInitialOwnt" name="txtInstContactInitial" type="text" title="" placeholder="Initial" class="w100p readonly" readonly /></td>
+    <th scope="row">Gender</th>
+    <td><input id="txtInstContactGenderOwnt" name="txtInstContactGender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">NRIC</th>
-	<td><input id="txtInstContactICOwnt" name="txtInstContactIC" type="text" title="" placeholder="NRIC" class="w100p readonly" readonly /></td>
-	<th scope="row">DOB</th>
-	<td><input id="txtInstContactDOBOwnt" name="txtInstContactDOB" type="text" title="" placeholder="DOB" class="w100p readonly" readonly /></td>
-	<th scope="row">Race</th>
-	<td><input id="txtInstContactRaceOwnt" name="txtInstContactRaceOwnt" type="text" title="" placeholder="Race" class="w100p readonly" readonly /></td>
+    <th scope="row">NRIC</th>
+    <td><input id="txtInstContactICOwnt" name="txtInstContactIC" type="text" title="" placeholder="NRIC" class="w100p readonly" readonly /></td>
+    <th scope="row">DOB</th>
+    <td><input id="txtInstContactDOBOwnt" name="txtInstContactDOB" type="text" title="" placeholder="DOB" class="w100p readonly" readonly /></td>
+    <th scope="row">Race</th>
+    <td><input id="txtInstContactRaceOwnt" name="txtInstContactRaceOwnt" type="text" title="" placeholder="Race" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">Email</th>
-	<td><input id="txtInstContactEmailOwnt" name="txtInstContactEmail" type="text" title="" placeholder="Email" class="w100p readonly" readonly /></td>
-	<th scope="row">Department</th>
-	<td><input id="txtInstContactDeptOwnt" name="txtInstContactDept" type="text" title="" placeholder="Department" class="w100p readonly" readonly /></td>
-	<th scope="row">Post</th>
-	<td><input id="txtInstContactPostOwnt" name="txtInstContactPost" type="text" title="" placeholder="Post" class="w100p readonly" readonly /></td>
+    <th scope="row">Email</th>
+    <td><input id="txtInstContactEmailOwnt" name="txtInstContactEmail" type="text" title="" placeholder="Email" class="w100p readonly" readonly /></td>
+    <th scope="row">Department</th>
+    <td><input id="txtInstContactDeptOwnt" name="txtInstContactDept" type="text" title="" placeholder="Department" class="w100p readonly" readonly /></td>
+    <th scope="row">Post</th>
+    <td><input id="txtInstContactPostOwnt" name="txtInstContactPost" type="text" title="" placeholder="Post" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Mobile)</th>
-	<td><input id="txtInstContactTelMobOwnt" name="txtInstContactTelMob" type="text" title="" placeholder="Telephone Number (Mobile)" class="w100p readonly" readonly /></td>
-	<th scope="row">Tel (Residence)</th>
-	<td><input id="txtInstContactTelResOwnt" name="txtInstContactTelRes" type="text" title="" placeholder="Telephone Number (Residence)" class="w100p readonly" readonly /></td>
-	<th scope="row">Tel (Office)</th>
-	<td><input id="txtInstContactTelOffOwnt" name="txtInstContactTelOff" type="text" title="" placeholder="Telephone Number (Office)" class="w100p readonly" readonly /></td>
+    <th scope="row">Tel (Mobile)</th>
+    <td><input id="txtInstContactTelMobOwnt" name="txtInstContactTelMob" type="text" title="" placeholder="Telephone Number (Mobile)" class="w100p readonly" readonly /></td>
+    <th scope="row">Tel (Residence)</th>
+    <td><input id="txtInstContactTelResOwnt" name="txtInstContactTelRes" type="text" title="" placeholder="Telephone Number (Residence)" class="w100p readonly" readonly /></td>
+    <th scope="row">Tel (Office)</th>
+    <td><input id="txtInstContactTelOffOwnt" name="txtInstContactTelOff" type="text" title="" placeholder="Telephone Number (Office)" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Fax)</th>
-	<td><input id="txtInstContactTelFaxOwnt" name="txtInstContactTelFax" type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" /></td>
-	<th scope="row"></th>
-	<td></td>
-	<th scope="row"></th>
-	<td></td>
+    <th scope="row">Tel (Fax)</th>
+    <td><input id="txtInstContactTelFaxOwnt" name="txtInstContactTelFax" type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" /></td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -3085,58 +3086,58 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">DSC Branch<span class="must">*</span></th>
-	<td colspan="3">
-	<select id="cmbDSCBranchOwnt" name="cmbDSCBranch" class="w100p"></select>
-	</td>
+    <th scope="row">DSC Branch<span class="must">*</span></th>
+    <td colspan="3">
+    <select id="cmbDSCBranchOwnt" name="cmbDSCBranch" class="w100p"></select>
+    </td>
 </tr>
 <tr>
-	<th scope="row">Prefer Install Date<span class="must">*</span></th>
-	<td><input id="dpPreferInstDateOwnt" name="dpPreferInstDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
-	<th scope="row">Prefer Install Time<span class="must">*</span></th>
-	<td>
-	<div class="time_picker w100p"><!-- time_picker start -->
-	<input id="tpPreferInstTimeOwnt" name="tpPreferInstTime" type="text" title="" placeholder="" class="time_date w100p" />
-	<ul>
-		<li>Time Picker</li>
-		<li><a href="#">12:00 AM</a></li>
-		<li><a href="#">01:00 AM</a></li>
-		<li><a href="#">02:00 AM</a></li>
-		<li><a href="#">03:00 AM</a></li>
-		<li><a href="#">04:00 AM</a></li>
-		<li><a href="#">05:00 AM</a></li>
-		<li><a href="#">06:00 AM</a></li>
-		<li><a href="#">07:00 AM</a></li>
-		<li><a href="#">08:00 AM</a></li>
-		<li><a href="#">09:00 AM</a></li>
-		<li><a href="#">10:00 AM</a></li>
-		<li><a href="#">11:00 AM</a></li>
-		<li><a href="#">12:00 PM</a></li>
-		<li><a href="#">01:00 PM</a></li>
-		<li><a href="#">02:00 PM</a></li>
-		<li><a href="#">03:00 PM</a></li>
-		<li><a href="#">04:00 PM</a></li>
-		<li><a href="#">05:00 PM</a></li>
-		<li><a href="#">06:00 PM</a></li>
-		<li><a href="#">07:00 PM</a></li>
-		<li><a href="#">08:00 PM</a></li>
-		<li><a href="#">09:00 PM</a></li>
-		<li><a href="#">10:00 PM</a></li>
-		<li><a href="#">11:00 PM</a></li>
-	</ul>
-	</div><!-- time_picker end -->
-	</td>
+    <th scope="row">Prefer Install Date<span class="must">*</span></th>
+    <td><input id="dpPreferInstDateOwnt" name="dpPreferInstDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <th scope="row">Prefer Install Time<span class="must">*</span></th>
+    <td>
+    <div class="time_picker w100p"><!-- time_picker start -->
+    <input id="tpPreferInstTimeOwnt" name="tpPreferInstTime" type="text" title="" placeholder="" class="time_date w100p" />
+    <ul>
+        <li>Time Picker</li>
+        <li><a href="#">12:00 AM</a></li>
+        <li><a href="#">01:00 AM</a></li>
+        <li><a href="#">02:00 AM</a></li>
+        <li><a href="#">03:00 AM</a></li>
+        <li><a href="#">04:00 AM</a></li>
+        <li><a href="#">05:00 AM</a></li>
+        <li><a href="#">06:00 AM</a></li>
+        <li><a href="#">07:00 AM</a></li>
+        <li><a href="#">08:00 AM</a></li>
+        <li><a href="#">09:00 AM</a></li>
+        <li><a href="#">10:00 AM</a></li>
+        <li><a href="#">11:00 AM</a></li>
+        <li><a href="#">12:00 PM</a></li>
+        <li><a href="#">01:00 PM</a></li>
+        <li><a href="#">02:00 PM</a></li>
+        <li><a href="#">03:00 PM</a></li>
+        <li><a href="#">04:00 PM</a></li>
+        <li><a href="#">05:00 PM</a></li>
+        <li><a href="#">06:00 PM</a></li>
+        <li><a href="#">07:00 PM</a></li>
+        <li><a href="#">08:00 PM</a></li>
+        <li><a href="#">09:00 PM</a></li>
+        <li><a href="#">10:00 PM</a></li>
+        <li><a href="#">11:00 PM</a></li>
+    </ul>
+    </div><!-- time_picker end -->
+    </td>
 </tr>
 <tr>
-	<th scope="row">Special Instruction<span class="must">*</span></th>
-	<td colspan=3><textarea id="txtInstSpecialInstructionOwnt" name="txtInstSpecialInstruction" cols="20" rows="5"></textarea></td>
+    <th scope="row">Special Instruction<span class="must">*</span></th>
+    <td colspan=3><textarea id="txtInstSpecialInstructionOwnt" name="txtInstSpecialInstruction" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -3152,13 +3153,13 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:140px" />
-	<col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Reference No</th>
-	<td><input id="txtReferenceNoOwnt" name="txtReferenceNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Reference No</th>
+    <td><input id="txtReferenceNoOwnt" name="txtReferenceNo" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -3167,7 +3168,7 @@
 
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a id="btnReqOwnTrans" href="#">Transfer Ownership</a></p></li>
+    <li><p class="btn_blue2"><a id="btnReqOwnTrans" href="#">Transfer Ownership</a></p></li>
 </ul>
 </form>
 

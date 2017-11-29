@@ -25,7 +25,9 @@
 	});
     
 	function fn_setData(custBillId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_GRP' || $('#callPrgm').val() == 'ORD_REQUEST_BILLGRP') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_GRP' 
+	    || $('#callPrgm').val() == 'ORD_REQUEST_BILLGRP'
+	    || $('#callPrgm').val() == 'PRE_ORD_BILL_GRP') {
 	        fn_loadBillingGroup(custBillId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId);
 	    }
 	}

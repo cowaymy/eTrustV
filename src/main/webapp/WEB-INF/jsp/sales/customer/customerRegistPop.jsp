@@ -383,7 +383,10 @@
                 }           
                 if('${callPrgm}' == 'PRE_ORD') {
                     fn_loadCustomer(result, null);
-                }           
+                }
+                if('${callPrgm}' == 'PRE_ORD_3PARTY') {
+                    fn_loadThirdParty(result, 1);
+                }
                 if('${callPrgm}' == 'ORD_REGISTER_3PARTY') {
                     fn_loadThirdParty(result, 1);
                 }           

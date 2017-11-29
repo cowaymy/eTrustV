@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.PreOrderMapper">
+
+    <select id="selectPreOrderList" parameterType="Map" resultType="egovMap">
+		SELECT T2.CODE_NAME AS CHANNEL
+		     , T1.SOF_NO
+		     , T3.CODE_NAME AS APP_TYPE
+		     , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DT
+		     , T4.STK_DESC AS PRODUCT
+		     , T5.NAME AS CUST_NM
+		     , T6.CODE_NAME AS CUST_TYPE
+		     , T5.NRIC
+		     , T7.USER_NAME
+		     , T8.NAME AS STUS_NAME
+		     , T8.STUS_CODE_ID
+		     , T1.PRE_ORD_ID
+		  FROM SAL0213M T1
+		  LEFT OUTER
+		  JOIN SYS0013M T2
+		    ON T2.CODE = T1.CHNNL
+		   AND T2.CODE_MASTER_ID = 350
+		  LEFT OUTER
+		  JOIN SYS0013M T3
+		    ON T3.CODE_ID = T1.APP_TYPE_ID
+		   AND T3.CODE_MASTER_ID = 10
+		  LEFT OUTER
+		  JOIN SYS0026M T4
+		    ON T4.STK_ID = T1.ITM_STK_ID
+		  LEFT OUTER
+		  JOIN SAL0029D T5
+		    ON T5.CUST_ID = T1.CUST_ID
+		  LEFT OUTER
+		  JOIN SYS0013M T6
+		    ON T6.CODE_ID = T5.TYPE_ID
+		   AND T6.CODE_MASTER_ID = 8
+		  LEFT OUTER
+		  JOIN SYS0047M T7
+		    ON T7.USER_ID = T1.CRT_USER_ID
+		  LEFT OUTER
+		  JOIN SYS0038M T8
+		    ON T8.STUS_CODE_ID = T1.STUS_ID
+		 WHERE 1 = 1
+         <if test='_memCode != null and _memCode != ""'>
+		   AND T1.MEM_CODE = #{_memCode}
+		 </if>
+         <if test='arrAppType != null and arrAppType != ""'>
+           AND T1.APP_TYPE_ID IN
+	         <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+	           #{item}
+	         </foreach>
+         </if>
+         <if test='_reqstDt != null and _reqstDt != ""'>
+		   AND TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') = #{_reqstDt}
+         </if>
+         <if test='arrPreOrdStusId != null and arrPreOrdStusId != ""'>
+           AND T8.CODE IN
+             <foreach item="item" collection="arrPreOrdStusId" index="index" open="(" separator="," close=")">
+               #{item, jdbcType=VARCHAR}
+             </foreach>
+         </if>
+         <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+           AND T1.KEYIN_BRNCH_ID IN
+             <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
+         <if test='_nric != null and _nric != ""'>
+		   AND T5.NRIC = #{_nric}
+         </if>
+         <if test='_sofNo != null and _sofNo != ""'>
+		   AND T1.SOF_NO = #{_sofNo}
+         </if>
+         <if test='arrCustType != null and arrCustType != ""'>
+           AND T5.TYPE_ID IN
+             <foreach item="item" collection="arrCustType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
+         <if test='_name != null and _name != ""'>
+		   AND T5.NAME LIKE #{_name}||'%'
+         </if>
+         ORDER BY T1.PRE_ORD_ID ASC
+    </select>
+
+    <select id="selectExistSofNo" parameterType="Map" resultType="int">
+		SELECT SUM(CNT) AS CNT
+		  FROM
+		     ( SELECT COUNT(1) CNT
+		         FROM SAL0213M
+		        WHERE SOF_NO = #{sofNo}
+		          AND STUS_ID NOT IN (10, 98)
+		        UNION ALL
+		       SELECT COUNT(1) CNT
+		         FROM SAL0001D
+		        WHERE REF_NO = #{sofNo}
+		     )
+    </select>
+    
+    <insert id="insertPreOrder" parameterType="preOrderVO">
+      <selectKey keyProperty="preOrdId" resultType="Integer" order="BEFORE">
+        SELECT SAL0213M_PRE_ORD_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+		INSERT
+		  INTO SAL0213M
+		     ( PRE_ORD_ID
+		     , REQST_DT
+		     , CHNNL
+		     , STUS_ID
+		     , SOF_NO
+		     , CUST_PO_NO
+		     , APP_TYPE_ID
+		     , SRV_PAC_ID
+		     , INST_PRIOD
+		     , CUST_ID
+		     , EMP_CHK
+		     , GST_CHK
+		     , EURC_CUST_RGS_NO
+		     , ATCH_FILE_GRP_ID
+		     , CUST_CNT_ID
+		     , KEYIN_BRNCH_ID
+		     , INST_ADD_ID
+		     , DSC_BRNCH_ID
+		     , PRE_DT
+		     , PRE_TM
+		     , INSTCT
+		     , EX_TRADE
+		     , ITM_STK_ID
+		     , PROMO_ID
+		     , MTH_RENT_AMT
+		     , PROMO_DISC_PERIOD_TP
+		     , PROMO_DISC_PERIOD
+		     , TOT_AMT
+		     , NOR_AMT
+		     , NOR_RNT_FEE
+		     , DISC_RNT_FEE
+		     , TOT_PV
+		     , PRC_ID
+		     , MEM_CODE
+		     , ADV_BILL
+		     , CUST_CRC_ID
+		     , BANK_ID
+		     , CUST_ACC_ID
+		     , IS_3RD_PARTY
+		     , CUST_BILL_CUST_ID
+		     , CUST_BILL_CNT_ID
+		     , CUST_BILL_ADD_ID
+		     , CUST_BILL_REM
+		     , CUST_BILL_EMAIL
+		     , CUST_BILL_IS_SMS
+		     , CUST_BILL_IS_POST
+		     , CUST_BILL_EMAIL_ADD
+		     , CUST_BILL_IS_WEB_PORTAL
+		     , CUST_BILL_WEB_PORTAL_URL
+		     , CUST_BILL_IS_SMS2
+		     , CUST_BILL_CUST_CARE_CNT_ID
+		     , REM1
+		     , REM2
+		     , CRT_USER_ID
+		     , CRT_DT
+		     , UPD_USER_ID
+		     , UPD_DT
+		     )
+		VALUES
+		     ( #{preOrdId}
+		     , SYSDATE
+		     , #{chnnl}
+		     , #{stusId}
+		     , #{sofNo}
+		     , #{custPoNo}
+		     , #{appTypeId}
+		     , #{srvPacId}
+		     , #{instPriod}
+		     , #{custId}
+		     , #{empChk}
+		     , #{gstChk}
+		     , #{eurcCustRgsNo}
+		     , #{atchFileGrpId}
+		     , #{custCntId}
+		     , #{keyinBrnchId}
+		     , #{instAddId}
+		     , #{dscBrnchId}
+		     , TO_DATE(#{preDt}, 'DD/MM/YYYY')
+		     , #{preTm}
+		     , #{instct}
+		     , #{exTrade}
+		     , #{itmStkId}
+		     , #{promoId}
+		     , #{mthRentAmt}
+		     , #{promoDiscPeriodTp}
+		     , #{promoDiscPeriod}
+		     , #{totAmt}
+		     , #{norAmt}
+		     , #{norRntFee}
+		     , #{discRntFee}
+		     , #{totPv}
+		     , #{prcId}
+		     , #{memCode}
+		     , #{advBill}
+		     , #{custCrcId}
+		     , #{bankId}
+		     , #{custAccId}
+		     , #{is3RdParty}
+		     , #{custBillCustId}
+		     , #{custBillCntId}
+		     , #{custBillAddId}
+		     , #{custBillRem}
+		     , #{custBillEmail}
+		     , #{custBillIsSms}
+		     , #{custBillIsPost}
+		     , #{custBillEmailAdd}
+		     , #{custBillIsWebPortal}
+		     , #{custBillWebPortalUrl}
+		     , #{custBillIsSms2}
+		     , #{custBillCustCareCntId}
+		     , #{rem1}
+		     , #{rem2}
+		     , #{crtUserId}
+		     , SYSDATE
+		     , #{updUserId}
+		     , SYSDATE
+		     )
+    </insert>
+</mapper>

@@ -32,6 +32,9 @@
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_INST_ADR') {
 	        fn_loadInstallAddrInfoNew(custAddId);
 	    }
+	    else if($('#callPrgm').val() == 'PRE_ORD_BILL_ADD') {
+	        fn_loadBillAddr(custAddId);
+	    }
 	    else{
 	    	eval(${callPrgm}(custAddId));
 	    }

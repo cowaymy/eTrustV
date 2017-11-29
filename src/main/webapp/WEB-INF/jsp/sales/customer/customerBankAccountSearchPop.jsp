@@ -19,7 +19,7 @@
 	});
 	
 	function fn_setData(custAccId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_BANK_ACC' || $('#callPrgm').val() == 'ORD_REQUEST_PAY') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_BANK_ACC' || $('#callPrgm').val() == 'ORD_REQUEST_PAY' || $('#callPrgm').val() == 'PRE_ORD') {
 	        fn_loadBankAccountPop(custAccId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_BANK_ACC') {

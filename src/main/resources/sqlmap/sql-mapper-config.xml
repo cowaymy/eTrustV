@@ -92,6 +92,9 @@
         <typeAlias alias="accTaxInvoiceOutrightVO" type="com.coway.trust.biz.sales.order.vo.AccTaxInvoiceOutrightVO"/>
         <typeAlias alias="accTaxInvoiceOutright_SubVO" type="com.coway.trust.biz.sales.order.vo.AccTaxInvoiceOutright_SubVO"/>
         
+        <!-- Pre-Order -->
+        <typeAlias alias="preOrderVO" type="com.coway.trust.biz.sales.order.vo.PreOrderVO"/>
+        
         <!-- Enrollment Result Update -->
         <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />
         <typeAlias alias="EnrollmentUpdateDVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateDVO" />

@@ -136,7 +136,7 @@
                 
                 Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
-                if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC') {
+                if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
         	        fn_loadCreditCard2(result.data);
         	        $('#addCrcCloseBtn').click();
         	    }
