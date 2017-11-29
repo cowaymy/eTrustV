@@ -117,13 +117,9 @@ public class LogisticsApiController {
 
 		}
 
-		if (RDCStockList.isEmpty()) {
-			throw new PreconditionException(AppConstants.FAIL, "Not Found Data");
-		}
-
 		List<RdcStockListDto> list = RDCStockList.stream().map(r -> RdcStockListDto.create(r))
-				.collect(Collectors.toList());
-
+    				.collect(Collectors.toList());
+		
 		return ResponseEntity.ok(list);
 	}
 
