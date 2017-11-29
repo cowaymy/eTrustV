@@ -33,8 +33,35 @@
 		AND T3.STK_CODE = #{partsCode}
         AND S26.STK_ID=#{partsId}
 	</select>
-
-
+	
+	<select id="getInventoryStockByHolder" parameterType="Map" resultType="egovMap">
+	   SELECT ROWNUM RNUM , T.* FROM (
+		SELECT L56.LOC_ID , S28.WH_LOC_CODE , O01.NAME CT_CODY_NAME,O01.MEM_CODE CT_CODY_ID, BOM.BOM_COMPNT PARTS_CODE , BOM.STK_DESC PARTS_NAME
+		         ,  L56.QTY STOCK_QTY , L63.SERIAL_NO SERIAL_NO, BOM.STK_ID PARTS_ID
+		         , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = S28.RDC_CODE) RDCID
+		  FROM SYS0028M S28
+		       , LOG0056M L56
+		       , LOG0063D L63
+		       ,(SELECT L44.BOM_COMPNT ,  S26.STK_ID , S26.STK_DESC  FROM LOG0043M L43, LOG0044D L44 , SYS0026M S26 WHERE 1 =1 AND L44.BOM_COMPNT = S26.STK_CODE AND L43.BOM = L44.BOM GROUP BY  L44.BOM_COMPNT ,  S26.STK_ID , S26.STK_DESC ) BOM
+		       , ORG0001D O01
+		 WHERE 1 =1 
+		    AND S28.WH_LOC_CODE = O01.MEM_CODE
+		    AND L56.STK_CODE = L63.MATNR(+)
+		    AND L56.LOC_ID = L63.LOC_ID(+) 
+		    AND L56.STK_CODE = BOM.BOM_COMPNT
+		    AND S28.WH_LOC_ID = L56.LOC_ID 
+		    AND L56.STK_TYPE_ID IN (62, 63)
+		    AND S28.RDC_CODE = (SELECT RDC_CODE FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
+		   <if test="searchType == 1 "> 
+                AND BOM.BOM_COMPNT= #{searchKeyword} 
+           </if> 
+           <if test="searchType == 2 "> 
+                AND UPPER(BOM.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%' 
+            </if>    
+		    ORDER BY L56.LOC_ID 
+		    ) T
+	</select>
+	
 	<select id="getStockbyHolderList" parameterType="Map"
 		resultType="egovMap">
 	    SELECT
@@ -102,23 +129,13 @@
 			       AND S28.WH_LOC_GB <![CDATA[<>]]> '05'
      </select> 
 
-	<select id="getCt_CodyList" parameterType="Map" resultType="egovMap">
-		<!-- SELECT O01.NAME CT_CODY_NAME,
-		O01.MEM_CODE CT_CODY_ID,
-		(SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE= S28.RDC_CODE) RDC_CODE
-		FROM ORG0001D O01, SYS0028M S28
-		WHERE 1 = 1
-		AND O01.MEM_CODE = S28.WH_LOC_CODE
-		AND O01.BRNCH = (SELECT WH_LOC_BRNCH_ID
-		FROM SYS0028M
-		WHERE WH_LOC_CODE = #{userId})-->
-		
-		SELECT O01.NAME , O01.MEM_CODE
-		     , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = S28.RDC_CODE) RDC_CODE 
-		  FROM SYS0028M S28 , ORG0001D O01
-		 WHERE 1 = 1
-		    AND S28.WH_LOC_CODE = O01.MEM_CODE
-		    AND S28.RDC_CODE = (SELECT RDC_CODE FROM SYS0028M WHERE WH_LOC_CODE = #{userId}) 
+	<select id="getCt_CodyList" parameterType="Map" resultType="egovMap">      
+        SELECT O01.MEM_CODE CT_CODY_ID ,O01.NAME CT_CODY_NAME 
+            , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = S28.RDC_CODE) RDC_CODE 
+          FROM SYS0028M S28 , ORG0001D O01
+         WHERE 1 = 1
+            AND S28.WH_LOC_CODE = O01.MEM_CODE
+            AND S28.RDC_CODE = (SELECT RDC_CODE FROM SYS0028M WHERE WH_LOC_CODE = #{userId}) 
 	</select>
 
 
@@ -195,46 +212,46 @@
 	</select>
     
 
-	<select id="getInventoryStockByHolder" parameterType="Map"
-		resultType="egovMap">
-		SELECT
-		O01.NAME CT_CODY_NAME,O01.MEM_CODE CT_CODY_ID,
-		T1.BOM_COMPNT PARTS_CODE,T1.stk_desc PARTS_NAME ,T1.QTY STOCK_QTY ,T1.serial_no SERIAL_NO ,T1.LOC_ID,T1.STK_ID PARTS_ID,
-		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) rdc_code
-		FROM ORG0001D O01, SYS0028M S28,
-		(SELECT l43.bom,
-		l43.matrl_no,
-		l44.BOM_COMPNT,
-		NVL (l56.qty, 0) qty,
-		l56.serial_no,
-		l56.STK_CTGRY_ID,l56.STK_TYPE_ID,
-		l56.LOC_ID,
-		s26.stk_desc,
-		s26.STK_ID
-		FROM log0043m l43,
-		log0044d l44,
-		(SELECT log0056m.*, log0063d.serial_no
-		FROM log0056m, log0063d
-		WHERE 1 = 1
-		AND log0056m.stk_code = log0063d.MATNR(+))l56,
-		sys0026m s26
-		WHERE 1 = 1
-		AND l44.BOM_COMPNT = l56.stk_code(+)
-		AND l44.BOM_COMPNT = s26.stk_code
-		AND l43.bom = l44.bom
-		AND l56.STK_TYPE_ID in(62,63))T1
-		WHERE 1 = 1
-		AND O01.MEM_CODE=S28.WH_LOC_CODE
-		AND O01.BRNCH =(select USER_BRNCH_ID from sys0047m where
-		USER_NAME=#{userId})
-		AND S28.WH_LOC_ID=T1.LOC_ID
-		<if test="searchType == 1 ">
-            AND T1.BOM_COMPNT= #{searchKeyword}
-        </if>
-        <if test="searchType == 2 ">
-            AND UPPER(T1.stk_desc) LIKE UPPER(#{searchKeyword}) || '%'
-        </if>
-	</select>
+<!-- 	<select id="getInventoryStockByHolder" parameterType="Map" -->
+<!-- 		resultType="egovMap"> -->
+<!-- 		SELECT -->
+<!-- 		O01.NAME CT_CODY_NAME,O01.MEM_CODE CT_CODY_ID, -->
+<!-- 		T1.BOM_COMPNT PARTS_CODE,T1.stk_desc PARTS_NAME ,T1.QTY STOCK_QTY ,T1.serial_no SERIAL_NO ,T1.LOC_ID,T1.STK_ID PARTS_ID, -->
+<!-- 		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) rdc_code -->
+<!-- 		FROM ORG0001D O01, SYS0028M S28, -->
+<!-- 		(SELECT l43.bom, -->
+<!-- 		l43.matrl_no, -->
+<!-- 		l44.BOM_COMPNT, -->
+<!-- 		NVL (l56.qty, 0) qty, -->
+<!-- 		l56.serial_no, -->
+<!-- 		l56.STK_CTGRY_ID,l56.STK_TYPE_ID, -->
+<!-- 		l56.LOC_ID, -->
+<!-- 		s26.stk_desc, -->
+<!-- 		s26.STK_ID -->
+<!-- 		FROM log0043m l43, -->
+<!-- 		log0044d l44, -->
+<!-- 		(SELECT log0056m.*, log0063d.serial_no -->
+<!-- 		FROM log0056m, log0063d -->
+<!-- 		WHERE 1 = 1 -->
+<!-- 		AND log0056m.stk_code = log0063d.MATNR(+))l56, -->
+<!-- 		sys0026m s26 -->
+<!-- 		WHERE 1 = 1 -->
+<!-- 		AND l44.BOM_COMPNT = l56.stk_code(+) -->
+<!-- 		AND l44.BOM_COMPNT = s26.stk_code -->
+<!-- 		AND l43.bom = l44.bom -->
+<!-- 		AND l56.STK_TYPE_ID in(62,63))T1 -->
+<!-- 		WHERE 1 = 1 -->
+<!-- 		AND O01.MEM_CODE=S28.WH_LOC_CODE -->
+<!-- 		AND O01.BRNCH =(select USER_BRNCH_ID from sys0047m where -->
+<!-- 		USER_NAME=#{userId}) -->
+<!-- 		AND S28.WH_LOC_ID=T1.LOC_ID -->
+<!-- 		<if test="searchType == 1 "> -->
+<!--             AND T1.BOM_COMPNT= #{searchKeyword} -->
+<!--         </if> -->
+<!--         <if test="searchType == 2 "> -->
+<!--             AND UPPER(T1.stk_desc) LIKE UPPER(#{searchKeyword}) || '%' -->
+<!--         </if> -->
+<!-- 	</select> -->
 
 	<select id="StockReceiveList" parameterType="Map" resultType="egovMap">
 		SELECT 
