@@ -1308,6 +1308,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		Map<String, Object> taxInvoiceCompanySub = new HashMap<String, Object>();
 		Map<String, Object> AccTradeLedger = new HashMap<String, Object>();
 		Map<String, Object> AccOrderBill = new HashMap<String, Object>();
+		Map<String, Object> taxInvoiceOutright = new HashMap<String,Object>();
+		Map<String,Object> taxInvoiceOutrightSub = new HashMap<String,Object>();
 
 		int statusId =  Integer.parseInt(params.get("installStatus").toString());
 		String sirimNo = params.get("hidStockIsSirim").toString() != "0" ? params.get("hidStockIsSirim").toString().toUpperCase() : "";
@@ -1374,8 +1376,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     			if(ApptypeID.equals("1412"))
     			{}
     			else
-    			{
+    			{/*
     			TaxinvoiceCompany.put("ApptypeID", ApptypeID);	//api 추가
+
+    			//Insert TaxInvoice Rental
         		TaxinvoiceCompany.put("TAX_INVC_ID",0);
         		TaxinvoiceCompany.put("TAX_INVC_REF_NO",invoiceNo);
         		TaxinvoiceCompany.put("TAX_INVC_REF_DT","1900-01-01");
@@ -1439,8 +1443,78 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         		taxInvoiceCompanySub.put("AREA_ID","");
         		taxInvoiceCompanySub.put("ADDR_DTL","");
         		taxInvoiceCompanySub.put("STREET","");
-        		logger.debug("Prepared taxInvoiceCompanySub: ",taxInvoiceCompanySub);
+        		logger.debug("Prepared taxInvoiceCompanySub: ",taxInvoiceCompanySub);*/
 
+    				//Insert TaxinvoiceOutright
+    				taxInvoiceOutright.put("TAX_INVC_ID",0);
+    				taxInvoiceOutright.put("TAX_INVC_REF_NO",invoiceNo);
+    				taxInvoiceOutright.put("TAX_INVC_REF_DT",LocalDate.now());
+    				//taxInvoiceOutright.put("TAX_INVC_GRP_ID","1");
+    				//taxInvoiceOutright.put("TAX_INVC_GRP_NO","1");
+    				taxInvoiceOutright.put("TAX_INVC_CUST_NAME",params.get("hidCustomerName"));
+            		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON",params.get("hidInatallation_ContactPerson").toString());
+            		taxInvoiceOutright.put("TAX_INVC_ADDR1",0);
+            		taxInvoiceOutright.put("TAX_INVC_ADDR2",0);
+            		taxInvoiceOutright.put("TAX_INVC_ADDR3",0);
+            		taxInvoiceOutright.put("TAX_INVC_ADDR4",0);
+            		taxInvoiceOutright.put("TAX_INVC_POST_CODE",0);
+            		taxInvoiceOutright.put("TAX_INVC_STATE_NAME",0);
+            		taxInvoiceOutright.put("TAX_INVC_CNTY",0);
+            		taxInvoiceOutright.put("TAX_INVC_TASK_ID",0);
+            		//taxInvoiceOutright.put("TAX_INVC_MONTH", LocalDate.now().getMonthValue());
+            		//taxInvoiceOutright.put("TAX_INVC_YEAR",LocalDate.now().getYear());
+            		//taxInvoiceOutright.put("TAX_INVC_STUS_ID",1);
+            		taxInvoiceOutright.put("TAX_INVC_CRT_DT",CommonUtils.getNowDate());
+            		taxInvoiceOutright.put("TAX_INVC_REM",0);
+            		taxInvoiceOutright.put("TAX_INVC_CHRG",0);
+            		taxInvoiceOutright.put("TAX_INVC_OVERDU",0);
+            		taxInvoiceOutright.put("TAX_INVC_AMT_DUE",outrightBalance);
+            		taxInvoiceOutright.put("TAX_INVC_PO_NO","");
+            		//taxInvoiceOutright.put("TAX_INVC_TYPE",1267);
+            		//taxInvoiceOutright.put("TAX_INVC_CRT_USER_ID",sessionVO.getUserId());
+            		//taxInvoiceOutright.put("TAX_INVC_PAY_REF_NO1","");
+            		//taxInvoiceOutright.put("TAX_INVC_PAY_REF_NO2","");
+            		//taxInvoiceOutright.put("TAX_INVC_BILL_TYPE",133);
+            		//taxInvoiceOutright.put("TAX_INVC_GST_REM","");
+            		taxInvoiceOutright.put("AREA_ID",params.get("hidInstallation_AreaID").toString());
+            		taxInvoiceOutright.put("ADDR_DTL",params.get("hidInstallation_AddDtl").toString());
+            		taxInvoiceOutright.put("STREET","");
+            		logger.debug("Prepared TaxinvoiceOutright:{}",taxInvoiceOutright);
+
+            		taxInvoiceOutrightSub.put("INVC_ITM_ID",0);
+            		taxInvoiceOutrightSub.put("TAX_INVC_ID","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",params.get("hidTaxInvDSalesOrderNo").toString());
+            		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE","6");
+
+            		taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",0);
+            		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",0);
+            		//taxInvoiceOutrightSub.put("INVC_ITM_HNDL_FEE",0);
+            		//taxInvoiceOutrightSub.put("INVC_ITM_HNDL_FEE_TXS",0);
+            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",params.get("hidCategoryId").toString());
+            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",params.get("hidSerialNo").toString());
+            		taxInvoiceOutrightSub.put("INVC_ITM_ADD1","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_ADD3","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");
+            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS",0);
+            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE",0);
+            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",0);
+            		//taxInvoiceOutrightSub.put("INVC_ITM_INSTALL_DT",params.get("installDate"));
+            		//taxInvoiceOutrightSub.put("INVC_ITM_INSTLMT_NO",0);
+            		//taxInvoiceOutrightSub.put("INVC_ITM_INSTLMT_PRIOD",CommonUtils.getNowDate());
+            		//taxInvoiceOutrightSub.put("INVC_ITM_PAY_MODE","");
+            		//taxInvoiceOutrightSub.put("INVC_ITM_DESC1","");
+            		//taxInvoiceOutrightSub.put("INVC_ITM_DESC2","");
+            		//taxInvoiceOutrightSub.put("INVC_ITM_TYPE_ID","");
+            		taxInvoiceOutrightSub.put("AREA_ID",params.get("hidInstallation_AreaID").toString());
+            		taxInvoiceOutrightSub.put("ADDR_DTL",params.get("hidInstallation_AddDtl").toString());
+            		taxInvoiceOutrightSub.put("STREET","");
+            		logger.debug("Prepared taxInvoiceOutrightSub: ",taxInvoiceOutrightSub);
     			}
 
     			AccTradeLedger.put("TRADE_RUN_ID", 0);
@@ -1449,7 +1523,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     			AccTradeLedger.put("TRADE_DOC_NO",invoiceNo); //params.get("hidTradeLedger_InstallNo"));
     			AccTradeLedger.put("TRADE_DOC_TYPE_ID", 164);
     			AccTradeLedger.put("TRADE_DT_TM", CommonUtils.getNowDate());
-    			AccTradeLedger.put("TRADE_AMT", 0);
+    			AccTradeLedger.put("TRADE_AMT", outrightBalance);
     			AccTradeLedger.put("TRADE_BATCH_NO", "");
     			AccTradeLedger.put("TRADE_INST_NO", 0);
     			AccTradeLedger.put("TRADE_UPD_USER_ID", sessionVO.getUserId());
@@ -1548,7 +1622,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			resultValue.put("value", "Fail");
 		}
 		resultValue.put("installEntryNo", params.get("hiddeninstallEntryNo"));
-		insertInstallation(statusId,installResult,callEntry,callResult,orderLog, TaxinvoiceCompany,AccTradeLedger,AccOrderBill);
+		insertInstallation(statusId,installResult,callEntry,callResult,orderLog, TaxinvoiceCompany,AccTradeLedger,AccOrderBill,taxInvoiceOutright,taxInvoiceOutrightSub);
 
 
 		//물류 호출   add by hgham
@@ -1588,7 +1662,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		return resultValue;
 	}
 	@Transactional
-	private boolean insertInstallation(int statusId,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog, Map<String,Object> TaxinvoiceCompany,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill) throws ParseException{
+	private boolean insertInstallation(int statusId,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog, Map<String,Object> TaxinvoiceCompany,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill,Map<String,Object>taxInvoiceOutright,Map<String,Object>taxInvoiceOutrightSub) throws ParseException{
     		//installEntry status가 1,21 이면 그 밑에 있는걸 ㅌ야된다(컴플릿이 되어도 다시 상태값 변경 가능하게 해야된다
     		String maxId = "";  //각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
     		EgovMap maxIdValue = new EgovMap();
@@ -1606,13 +1680,18 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
     		if("67".equals(ApptypeID)  || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
 
-    			//insert taxinvoiceOutright
-    			installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
-        		//insert tradeLedger
-        		installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
-        		installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
-        		//insert Accorderbill
-        		installationResultListMapper.insertAccorderBill(AccOrderBill);
+
+    		//insert taxinvoiceRental
+    		//installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
+    		//insert taxinvoiceOutright
+    		installationResultListMapper.insertTaxInvoiceOutright(taxInvoiceOutright);
+    		//insert taxinvoiceOutright_Sub
+    		installationResultListMapper.insertTaxInvoiceOutrightSub(taxInvoiceOutrightSub);
+    		//insert tradeLedger
+    		installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
+    		//insert Accorderbill
+    		installationResultListMapper.insertAccorderBill(AccOrderBill);
+
 
 
 
