@@ -153,71 +153,137 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>TR Box Management</h2>
-<ul class="right_btns">
-	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
-</ul>
+<h2>Transit Receive View</h2>
 </aside><!-- title_line end -->
 
-
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Transit Information</h3>
+</aside><!-- title_line end -->
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:150px" />
+	<col style="width:160px" />
 	<col style="width:*" />
 	<col style="width:150px" />
 	<col style="width:*" />
-	<col style="width:150px" />
+	<col style="width:130px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Box Number</th>
+	<th scope="row">Transit No</th>
 	<td>
-	<input type="text" title="" placeholder="Box Number" class="w100p" />
+	<span>1111</span>
 	</td>
-	<th scope="row">Create Date</th>
+	<th scope="row">Transit Date</th>
 	<td>
-
-	<div class="date_set w100p"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	</div><!-- date_set end -->
-
 	</td>
-	<th scope="row">Creator</th>
+	<th scope="row">Transit Status </th>
 	<td>
-	<input type="text" title="" placeholder="Creator(User Name)" class="w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Box Status</th>
+	<th scope="row">Transit From</th>
 	<td>
-	<select class="multy_select w100p" multiple="multiple">
-		<option value="1">11</option>
-		<option value="2">22</option>
-		<option value="3">33</option>
-	</select>
-
+	<span>1111</span>
 	</td>
-	<th scope="row">Branch</th>
+	<th scope="row">Transit To</th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
 	</td>
-	<th scope="row"></th>
-	<td></td>
+	<th scope="row">Close Date</th>
+	<td>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Total Book</th>
+	<td>
+	<span>1111</span>
+	</td>
+	<th scope="row">Courier</th>
+	<td>
+	</td>
+	<th scope="row">Creator</th>
+	<td>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Total Pending</th>
+	<td>
+	<span>1111</span>
+	</td>
+	<th scope="row">Total Received</th>
+	<td>
+	</td>
+	<th scope="row">Total Not Received</th>
+	<td>
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
+
+</form>
+</section><!-- search_table end -->
+
+<section class="search_result"><!-- search_result start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Book Transit</h3>
+</aside><!-- title_line end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h4>All Transit Book List</h4>
+</aside><!-- title_line end -->
+
+
+<div class="divine_auto"><!-- divine_auto start -->
+
+<div style="width:50%;">
+
+<div class="border_box"><!-- border_box start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</div><!-- border_box end -->
+
+<ul class="left_btns mt10">
+	<li><p class="btn_blue2"><a href="#">All</a></p></li>
+	<li><p class="btn_blue2"><a href="#">Receive</a></p></li>
+	<li><p class="btn_blue2"><a href="#">Not Receive</a></p></li>
+</ul>
+</div>
+
+<div style="width:50%;">
+
+<div class="border_box"><!-- border_box start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</div><!-- border_box end -->
+
+<ul class="right_btns mt10">
+	<li><p>Pending</p></li>
+	<li><p class="green_text">Received</p></li>
+	<li><p class="red_text">Not Receive</p></li>
+</ul>
+</div>
+
+</div><!-- divine_auto end -->
+
+
+<ul class="center_btns mt20">
+	<li><p class="btn_blue2 big"><a href="#">Back</a></p></li>
+</ul>
+
+</section><!-- search_result end -->
+
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
@@ -248,25 +314,6 @@
 	</dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
-
-</form>
-</section><!-- search_table end -->
-
-<section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a href="#">INS</a></p></li>
-	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</section><!-- search_result end -->
 
 </section><!-- content end -->
 

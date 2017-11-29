@@ -153,7 +153,7 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>TR Box Management</h2>
+<h2>TR Book Transaction</h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
@@ -167,54 +167,41 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:150px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:150px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:150px" />
+	<col style="width:130px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Box Number</th>
+	<th scope="row">Book No</th>
 	<td>
-	<input type="text" title="" placeholder="Box Number" class="w100p" />
+	<input type="text" title="" placeholder="Book N" class="w100p" />
+	</td>
+	<th scope="row">TR No</th>
+	<td>
+	<input type="text" title="" placeholder="TR No" class="w100p" />
 	</td>
 	<th scope="row">Create Date</th>
 	<td>
-
-	<div class="date_set w100p"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	</div><!-- date_set end -->
-
-	</td>
-	<th scope="row">Creator</th>
-	<td>
-	<input type="text" title="" placeholder="Creator(User Name)" class="w100p" />
+	<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date 100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Box Status</th>
+	<th scope="row">Book Holder</th>
 	<td>
-	<select class="multy_select w100p" multiple="multiple">
-		<option value="1">11</option>
-		<option value="2">22</option>
-		<option value="3">33</option>
-	</select>
-
+	<input type="text" title="" placeholder="Book Holder" class="w100p" />
 	</td>
-	<th scope="row">Branch</th>
-	<td>
-	<select class="w100p">
+	<th scope="row">Holder Type</th>
+	<td colspan="3">
+	<select>
 		<option value="">11</option>
 		<option value="">22</option>
 		<option value="">33</option>
 	</select>
 	</td>
-	<th scope="row"></th>
-	<td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
