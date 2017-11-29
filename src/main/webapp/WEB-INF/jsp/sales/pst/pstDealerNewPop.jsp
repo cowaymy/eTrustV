@@ -12,7 +12,7 @@
 
     doGetCombo('/common/selectCodeList.do', '17', '', 'cmbInitialTypeId', 'S' , '');                     // Initial Type Combo Box
     doGetCombo('/common/selectCodeList.do', '2', '', 'cmbRaceTypeId', 'S' , '');                        // Race Type Combo Box
-    doGetCombo('/common/selectCodeList.do', '357', '','newDealerType', 'M' , 'f_multiCombo');    // Dealer Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '357', '','newDealerType', 'S' , '');    // Dealer Type Combo Box
     doGetCombo('/sales/pst/dealerBrnchJsonList', '','','dealerBranch', 'S' , '');                 // Branch Combo Box
     
     $(document).ready(function(){
@@ -196,6 +196,59 @@
 //	    }
 
     function fn_newDealerConfirm(){
+    	if(newForm.dealerName.value==""){
+    		Common.alert("* Please key in the dealer name.");
+    		return false;
+    	}
+    	if(newForm.newDealerType.value==""){
+            Common.alert("* Please key in the dealer name.");
+            return false;
+        }
+    	if(newForm.dealerNric.value==""){
+            Common.alert("* Please key in NRIC / company number.");
+            return false;
+        }
+    	if(newForm.dealerBranch.value==""){
+            Common.alert("Please select the branch.");
+            return false;
+        }
+    	if(newForm.addrDtl.value==""){
+            Common.alert("* Please key in the address.");
+            return false;
+        }
+    	if(newForm.mCountry.value==""){
+            Common.alert("* Please select the country.");
+            return false;
+        }
+    	if(newForm.cmbRaceTypeId.value==""){
+            Common.alert("* Please select contact person race.");
+            return false;
+        }
+    	if(newForm.cntcName.value==""){
+            Common.alert("* Please key in contact person name.");
+            return false;
+        }
+    	if(newForm.cmbInitialTypeId.value==""){
+            Common.alert("* Please select contact person initial.");
+            return false;
+        }
+    	if(newForm.cntcTelm1.value==""){
+            Common.alert("* Please key in at least one contact number.");
+            return false;
+        }
+    	if(newForm.userName.value==""){
+            Common.alert("* Please key in the username.");
+            return false;
+        }
+    	if(newForm.userPw.value==""){
+            Common.alert("* Please key in the password.");
+            return false;
+        }
+    	if(newForm.userRePw.value==""){
+            Common.alert("* Please key in the re-type password.");
+            return false;
+        }
+    	
     	Common.ajax("GET", "/sales/pst/newDealer.do", $("#newForm").serializeJSON(), function(result) {
             Common.alert("New dealer successfully saved." , fn_winClose);
 

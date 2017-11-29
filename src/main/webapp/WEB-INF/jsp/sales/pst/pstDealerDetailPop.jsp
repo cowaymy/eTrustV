@@ -312,7 +312,7 @@ function createCntGrid(){
     <th scope="row">Name</th>
     <td><span>${dealerCntTop.cntName}</span></td>
     <th scope="row">Initial</th>
-    <td><span>${dealerCntTop.dealerInitial}</span></td>
+    <td><span>${dealerCntTop.dealerInitialCode}</span></td>
     <th scope="row">Gender</th>
     <td><span>${dealerCntTop.gender}</span></td>
 </tr>
