@@ -147,6 +147,10 @@ public interface InstallationResultListMapper {
 
 	void insertTaxInvoiceCompanySub(Map<String, Object> params);
 
+	void insertTaxInvoiceOutright(Map<String,Object> params);
+
+	void insertTaxInvoiceOutrightSub(Map<String,Object> params);
+
 	EgovMap selectDO(Map<String, Object> params);
 
 	void insertMovement(Map<String, Object> params);
