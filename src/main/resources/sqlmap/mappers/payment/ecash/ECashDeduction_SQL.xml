@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.ecash.service.impl.ECashDeductionMapper">
+
+    <!--E-Cash - eCash List -->
+    <select id="selectECashDeductList" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.FILE_BATCH_ID,
+            Extent1.FILE_BATCH_NAME,
+            Extent1.FILE_BATCH_BANK_ID,
+            Extent3.CODE as BANK_CODE,
+            Extent3.NAME as BANK_NAME,
+            NVL(Extent1.FILE_BATCH_TOT_RCORD,0) AS FILE_BATCH_TOT_RCORD,
+            NVL(Extent1.FILE_BATCH_TOT_AMT,0) AS FILE_BATCH_TOT_AMT,
+            NVL(Extent1.FILE_BATCH_REJCT_RCORD,0) AS  FILE_BATCH_REJCT_RCORD,
+            NVL(Extent1.FILE_BATCH_APPV_RCORD,0) AS FILE_BATCH_APPV_RCORD,
+            NVL(Extent1.FILE_BATCH_APPV_AMT,0) AS FILE_BATCH_APPV_AMT,
+            Extent2.CODE AS STUS_CODE  ,
+            Extent2.NAME AS STUS_NAME  ,
+            NVL(Extent1.FILE_BATCH_STUS_ID,0) AS FILE_BATCH_STUS_ID,
+            Extent1.FILE_BATCH_REM,
+            Extent1.FILE_BATCH_CRT_USER_ID,
+            Extent4.USER_NAME as FILE_BATCH_CRT_USER_NAME,
+            NVL(TO_CHAR(Extent1.FILE_BATCH_CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS FILE_BATCH_CRT_DT,
+            Extent1.FILE_BATCH_UPD_USER_ID,
+            Extent5.USER_NAME as FILE_BATCH_UPD_USER_NAME,
+            NVL(TO_CHAR(Extent1.FILE_BATCH_UPD_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS FILE_BATCH_UPD_DT,
+             (CASE WHEN Extent1.FILE_BATCH_APPV_DT IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.FILE_BATCH_APPV_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_BATCH_APPV_DT
+         FROM
+            PAY0245M Extent1 <!-- eAutoDebitDedution -->
+            JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.FILE_BATCH_STUS_ID <!-- StatusCode -->
+            LEFT JOIN SYS0004M Extent3   ON Extent3.BANK_ID = Extent1.FILE_BATCH_BANK_ID <!-- bank -->
+            LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.FILE_BATCH_CRT_USER_ID <!-- user -->
+            LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.FILE_BATCH_UPD_USER_ID <!-- user -->
+        WHERE
+            1=1
+            <if test="batchId != null and batchId != ''">
+            AND Extent1.FILE_BATCH_ID = #{batchId}
+            </if>
+            <if test="creator != null and creator != ''">
+            AND EXTENT4.USER_NAME =#{creator}
+            </if>
+            <if test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
+                AND Extent1.FILE_BATCH_CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND Extent1.FILE_BATCH_CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+            </if>
+            <if test="status != null and status != ''">
+                AND Extent1.FILE_BATCH_STUS_ID = #{status}
+            </if>
+            <if test="deductDt1 != null and deductDt2 != null and deductDt1 != '' and deductDt2 != '' ">
+                AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   <= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+            </if>
+            <if test="issueBank != null and issueBank != ''">
+                AND Extent1.FILE_BATCH_BANK_ID = #{issueBank}
+            </if>
+            <if test="batchName != null and batchName != ''">
+                AND Extent1.FILE_BATCH_NAME = #{batchName}
+            </if>
+         ORDER BY Extent1.FILE_BATCH_ID
+    </select>
+
+    <!-- E-Cash - Deactivate e-AutoDebitDecution -->
+    <update id="deactivateEAutoDebitDeduction" parameterType="Map" >
+        UPDATE PAY0245M SET
+              FILE_BATCH_STUS_ID = 8
+            , FILE_BATCH_UPD_DT = SYSDATE
+            , FILE_BATCH_UPD_USER_ID = #{userId}
+        WHERE
+            FILE_BATCH_ID = #{fileBatchId}
+    </update>
+
+    <!-- E-Cash - Deactivate e-AutoDebitDecution_Sub -->
+    <update id="deactivateEAutoDebitDeductionSub" parameterType="Map" >
+        UPDATE SAL0152M SET
+              FILE_ITM_STUS_ID = 8
+            , FILE_ITM_UPD = SYSDATE
+            , FILE_ITM_UPD_USER_ID = #{userId}
+        WHERE
+            FILE_BATCH_ID = #{fileBatchId}
+    </update>
+
+    <resultMap id="resultECashDeductionMap" type="egovMap" />
+    <select id="createECashDeduction" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_INST_ECASH_GENDEDUCTION( #{new_issueBank},#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
+        }
+    </select>
+
+    <delete id="deleteECashResultItem" parameterType="Map" >
+        DELETE FROM SAL0211T WHERE ITM_ID = #{fileBatchId}
+    </delete>
+
+    <insert id="insertECashResultItem" parameterType="Map" >
+        INSERT INTO SAL0211T (ITM_CNT,ITM_ID,APPV_CODE,RESPNS_CODE) VALUES (#{itmCnt},#{itmId},#{appvCode},#{respnsCode})
+    </insert>
+
+    <update id="updateECashResult" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_UPD_ECASH_DEDUCTIONRESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
+        }
+    </update>
+</mapper>
