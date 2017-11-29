@@ -15,15 +15,7 @@ var claimTypeData = [{"codeId": "131","codeName": "Credit Card"}];
 //Status Combo Data
 var statusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "8","codeName": "Inactive"},{"codeId": "21","codeName": "Failed"}];
 
-var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
-                {"codeId": "3","codeName": "CIMB Bank"},
-                ];
-
-//SMS Combo Data
-var smsData = [{"codeId": "0","codeName": "No"}, {"codeId": "1","codeName": "Yes"}];
-
-//Claim Day  Data
-var claimDayData = [{"codeId": "5","codeName": "5"},{"codeId": "10","codeName": "10"}];
+var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},{"codeId": "3","codeName": "CIMB Bank"}];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
@@ -46,7 +38,6 @@ $(document).ready(function(){
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     updResultGridID = GridCommon.createAUIGrid("updResult_grid_wrap", updResultColLayout,null,gridPros);
-    smsGridID = GridCommon.createAUIGrid("sms_grid_wrap", smsColLayout,null,gridPros);
 
     // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){
@@ -77,7 +68,6 @@ $(document).ready(function(){
                 return;
             }
             var reader = new FileReader();
-            //reader.readAsText(file); // 파일 내용 읽기
             reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
             reader.onload = function(event) {
                 if (typeof event.target.result != "undefined") {
@@ -153,6 +143,10 @@ var columnLayout = [
     { dataField:"fileBatchAppvRcord" ,headerText:"Total Approved Item(s)",width: 70 ,editable : false },
     { dataField:"fileBatchCrtDt" ,headerText:"Create Date",width: 200 ,editable : false },
     { dataField:"fileBatchCrtUserName" ,headerText:"Creator",width: 120 , editable : false },
+    { dataField:"fileBatchAppvAmt" ,headerText:"Total Approved Amount",width: 120 , visible : false, editable : false },
+    { dataField:"fileBatchUpdUserName" ,headerText:"Updator",width: 120 , visible : false, editable : false },
+    { dataField:"fileBatchUpdDt" ,headerText:"Updated Date",width: 120 , visible : false, editable : false },
+    { dataField:"fileBatchBankId" ,headerText:"File Batch Bank Id",width: 120 , visible : false, editable : false },
     ];
 
 var updResultColLayout = [
@@ -183,7 +177,7 @@ var smsColLayout = [
 
 // 리스트 조회.
 function fn_getECashListAjax() {
-    Common.ajax("GET", "/payment/selectECashList", $("#searchForm").serialize(), function(result) {
+    Common.ajax("GET", "/payment/selectECashDeductList", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
 }
@@ -196,47 +190,46 @@ function fn_openDivPop(val){
 
 	    if (selectedItem[0] > -1){
 
-	    	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-	        var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlStusId");
+	    	var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
+	        var fileBatchStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchStusId");
 	        var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");
 	        var smsSend = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlFailSmsIsPump");
 
-	        if((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1){
-                Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
+	        if((val == "RESULT") && fileBatchStusId != 1){
+                Common.alert("<b>Batch [" + fileBatchId + "] is under status [" + stusName + "].<br />" +
                         "Only [Active] batch is allowed to update claim result.</b>");
-			}else if(val == "FILE" && ctrlStusId != 1){
-				Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
+			}else if(val == "FILE" && fileBatchStusId != 1){
+				Common.alert("<b>Batch [" + fileBatchId + "] is under status [" + stusName + "].<br />" +
 					    "Only [Active] batch is allowed to re-generate claim file.</b>");
-			}else if(val == "SMS" && ctrlStusId != 4){
-                Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
+			}else if(val == "SMS" && fileBatchStusId != 4){
+                Common.alert("<b>Batch [" + fileBatchId + "] is under status [" + stusName + "].<br />" +
                 "Only [Completed] batch is allowed to send failed deduction SMS.</b>");
             }else if(val == "SMS" && smsSend == 1){
-                Common.alert("<b>Failed deduction SMS process for batch [" + ctrlId + "] was completed.</b>");
+                Common.alert("<b>Failed deduction SMS process for batch [" + fileBatchId + "] was completed.</b>");
             }else{
 
             	$('#sms_grid_wrap').hide();
 
 
-            	Common.ajax("GET", "/payment/selectClaimMasterById.do", {"batchId":ctrlId}, function(result) {
+            	Common.ajax("GET", "/payment/selectECashById.do", {"batchId":fileBatchId}, function(result) {
             		$("#view_wrap").show();
                     $("#new_wrap").hide();
 
-                    $("#view_batchId").text(result.ctrlId);
+                    $("#view_batchId").text(result.fileBatchId);
                     $("#view_status").text(result.stusName);
-                    $("#view_type").text(result.ctrlIsCrcName);
-                    $("#view_creator").text(result.crtUserName);
+                    $("#view_deductDt").text(result.fileBatchAppvDt);
+                    $("#view_totalItem").text(result.fileBatchTotRcord);
                     $("#view_issueBank").text(result.bankCode + ' - ' + result.bankName);
-                    $("#view_createDt").text(result.crtDt);
-                    $("#view_totalItem").text(result.ctrlTotItm);
-                    $("#view_debitDate").text(result.ctrlBatchDt);
-                    $("#view_targetAmount").text(result.ctrlBillAmt);
-                    $("#view_updator").text(result.crtUserName);
-                    $("#view_receiveAmount").text(result.ctrlBillPayAmt);
-                    $("#view_updateDate").text(result.updDt);
-                    $("#view_totalSuccess").text(result.ctrlTotSucces);
-                    $("#view_totalFail").text(result.ctrlTotFail);
-            	});
+                    $("#view_totalApproved").text(result.fileBatchAppvRcord);
+                    $("#view_totalRejected").text(result.fileBatchRejctRcord);
+                    $("#view_totalAmount").text(result.fileBatchTotAmt.toFixed(2));
+                    $("#view_AppvAmt").text(result.fileBatchAppvAmt.toFixed(2));
+                    $("#view_creator").text(result.fileBatchCrtUserName);
+                    $("#view_createDate").text(result.fileBatchCrtDt);
+                    $("#view_updator").text(result.fileBatchUpdUserName);
+                    $("#view_updateDate").text(result.fileBatchUpdDt);
 
+            	});
 			}
 
 			//팝업 헤더 TEXT 및 버튼 설정
@@ -248,7 +241,7 @@ function fn_openDivPop(val){
 			    $('#center_btns4').hide();
 
 			}else if(val == "RESULT"){
-				$('#pop_header h1').text('CLAIM RESULT');
+				$('#pop_header h1').text('E-DEDUCTION BATCH DETAILS');
 				$('#center_btns1').show();
                 $('#center_btns2').hide();
                 $('#center_btns3').hide();
@@ -300,14 +293,14 @@ hideViewPopup=function(val){
 
 // Pop-UP 에서 Deactivate 처리
 function fn_deactivate(){
-	Common.confirm('<b>Are you sure want to deactivate this claim batch ?</b>',function (){
-	    var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	Common.confirm('<b>Are you sure want to deactivate this batch ?</b>',function (){
+	    var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
 
-	    Common.ajax("GET", "/payment/updateDeactivate.do", {"ctrlId":ctrlId}, function(result) {
-	    	Common.alert("<b>This claim batch has been deactivated.</b>","fn_openDivPop('VIEW')");
+	    Common.ajax("GET", "/payment/eCashDeactivate.do", {"fileBatchId":fileBatchId}, function(result) {
+	    	Common.alert("<b>This batch has been deactivated.</b>","fn_openDivPop('VIEW')");
 
 	    },function(result) {
-	        Common.alert("<b>Failed to deactivate this claim batch.<br />Please try again later.</b>");
+	        Common.alert("<b>Failed to deactivate this batch.<br />Please try again later.</b>");
 	    });
 	});
 }
@@ -338,9 +331,9 @@ function fn_updateResult(val){
 //Result Update Pop-UP 에서 Upload 버튼 클릭시 처리
 function fn_resultFileUp(){
 
-	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-	var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
-	var bankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankId");
+	var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
+	//var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
+	var fileBatchBankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchBankId");
 
     //param data array
     var data = {};
@@ -350,71 +343,53 @@ function fn_resultFileUp(){
     if(gridList.length > 0) {
         data.all = gridList;
     }  else {
-        alert('Select the CSV file on the loca PC');
+        alert('Select the CSV file on the local PC');
         return;
         //data.all = [];
     }
 
     //form객체 담기
-    data.form = [{"ctrlId":ctrlId,"ctrlIsCrc":ctrlIsCrc,"bankId":bankId}];
+    data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId}];
 
     //Ajax 호출
-    Common.ajax("POST", "/payment/updateClaimResultItem.do", data, function(result) {
+    Common.ajax("POST", "/payment/updateECashResultItem.do", data, function(result) {
     	resetUpdatedItems(); // 초기화
 
         var message = "";
-        message += "Batch ID : " + result.data.ctrlId + "<br />";
+        message += "Batch ID : " + result.data.fileBatchId + "<br />";
         message += "Total Result Item : " + result.data.totalItem + "<br />";
-        message += "Total Success : " + result.data.totalSuccess + "<br />";
-        message += "Total Failed : " + result.data.totalFail + "<br />";
+        message += "Total Approved : " + result.data.totalApproved + "<br />";
+        message += "Total Rejected : " + result.data.totalRejected + "<br />";
         message += "<br />Are you sure want to confirm this result ?<br />";
 
         Common.confirm(message,
-        		function (){
-        	         var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+        function (){
+            var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
+            var settleDate = result.data.settleDate;
+            var fileName = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '');
+            var data = {};
+            data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId,"settleDate":settleDate,"fileName":fileName}];
 
-        	         //param data array
-        	         var data = {};
-        	         data.form = [{"ctrlId":ctrlId, "ctrlIsCrc" : ctrlIsCrc , "bankId" : bankId}];
-
-        	         //CALIM RESULT UPDATE
-        	         if(updateResultItemKind == 'LIVE'){
-	        	         Common.ajax("POST", "/payment/updateClaimResultLive.do", data,
-	        	        		 function(result) {
-	        	        	          Common.alert("<b>Claim result successfully updated.</b>");
-	        	        	     },
-	        	        	     function(result) {
-	        	        	    	  Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
-	        	        	    });
-        	         }
-        	       //CALIM RESULT UPDATE NEXT DAY
-        	       if(updateResultItemKind == 'NEXT'){
-	                   Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data,
-	                           function(result) {
-	                	            var resultMsg = "";
-	                	            resultMsg += "<b>The result item have stored in our system.<br />";
-	                	            resultMsg += "Syncrhonization process will run on schedule plan.<br />";
-	                	            resultMsg += "Kindly check your claim result on next day.<br />Thank you.</b>";
-
-	                                Common.alert(resultMsg);
-	                           },
-	                           function(result) {
-	                                Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
-	                          });
-        	       }
-       });
-    },  function(jqXHR, textStatus, errorThrown) {
-        try {
-            console.log("status : " + jqXHR.status);
-            console.log("code : " + jqXHR.responseJSON.code);
-            console.log("message : " + jqXHR.responseJSON.message);
-            console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage);
-        } catch (e) {
-            console.log(e);
-        }
-        alert("Fail : " + jqXHR.responseJSON.message);
-    });
+            Common.ajax("POST", "/payment/updateECashResult.do", data,
+            	function(result) {
+                Common.alert("<b>Deduction results successfully updated.</b>");
+                },
+                function(result) {
+                    Common.alert("<b>Failed to update result.<br />Please try again later.</b>");
+                    });
+            });
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : "
+                	    + jqXHR.responseJSON.detailMessage);
+                } catch (e) {
+                    console.log(e);
+                    }
+                alert("Fail : " + jqXHR.responseJSON.message);
+                });
 }
 
 //그리드 초기화.
@@ -502,14 +477,14 @@ function fn_clear(){
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
-        <li>Auto Debit</li>
-        <li>Claim</li>
+        <li>Payment</li>
+        <li>eCash</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>eCash Auto Debit</h2>
+        <h2>eCash Deduction</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_getECashListAjax();"><span class="search"></span>Search</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
@@ -535,7 +510,7 @@ function fn_clear(){
                     <tr>
                         <th scope="row">Batch ID</th>
                         <td>
-                            <input id="batchId" name="batchId" type="text" title="BatchID" placeholder="Batch ID" class="w100p" />
+                            <input id="fileBatchId" name="fileBatchId" type="text" title="fileBatchId" placeholder="Batch ID" class="w100p" />
                         </td>
                         <th scope="row">Creator</th>
                         <td>
@@ -653,40 +628,39 @@ function fn_clear(){
 	                    <td id="view_status"></td>
 	                </tr>
 	                 <tr>
-	                    <th scope="row">Type</th>
-	                    <td id="view_type"></td>
+	                  <th scope="row">Deduction Date</th>
+                        <td id="view_deductDt"></td>
+	                    <th scope="row">Total Records</th>
+	                    <td id="view_totalItem"></td>
+	                </tr>
+	                 <tr>
+	                    <th scope="row" >Issue Bank</th>
+	                    <td colspan="3" id="view_issueBank"></td>
+
+	                </tr>
+	                <tr>
+	                    <th scope="row">Total Amount</th>
+	                    <td id="view_totalAmount"></td>
+	                    <th scope="row">Total Approved Amount</th>
+	                    <td id="view_AppvAmt"></td>
+	                </tr>
+	                <tr>
+	                    <th scope="row">Total Approved</th>
+	                    <td id="view_totalApproved"></td>
+	                    <th scope="row">Total Rejected</th>
+	                    <td id="view_totalRejected"></td>
+	                </tr>
+	                <tr>
+	                    <th scope="row">Created Date</th>
+	                    <td id="view_createDate"></td>
 	                    <th scope="row">Creator</th>
 	                    <td id="view_creator"></td>
 	                </tr>
-	                 <tr>
-	                    <th scope="row">Issue Bank</th>
-	                    <td id="view_issueBank"></td>
-	                    <th scope="row">Create Date</th>
-	                    <td id="view_createDt"></td>
-	                </tr>
 	                <tr>
-	                    <th scope="row">Total Item</th>
-	                    <td id="view_totalItem"></td>
-	                    <th scope="row">Debit Date</th>
-	                    <td id="view_debitDate"></td>
-	                </tr>
-	                <tr>
-	                    <th scope="row">Target Amount</th>
-	                    <td id="view_targetAmount"></td>
+	                    <th scope="row">Updated Date</th>
+	                    <td id="view_updateDate"></td>
 	                    <th scope="row">Updator</th>
 	                    <td id="view_updator"></td>
-	                </tr>
-	                <tr>
-	                    <th scope="row">Receive Amount</th>
-	                    <td id="view_receiveAmount"></td>
-	                    <th scope="row">Update Date</th>
-	                    <td id="view_updateDate"></td>
-	                </tr>
-	                <tr>
-	                    <th scope="row">Total Success</th>
-	                    <td id="view_totalSuccess"></td>
-	                    <th scope="row">Total Fail</th>
-	                    <td id="view_totalFail"></td>
 	                </tr>
                 </tbody>
             </table>
@@ -827,7 +801,7 @@ function fn_clear(){
 
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();">Upload</a></p></li>
-            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/ClaimResultUpdate_Format.csv">Download CSV Format</a></p></li>
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/eCashResultUpdate_Format.csv">Download CSV Format</a></p></li>
         </ul>
     </section>
     </form>

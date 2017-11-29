@@ -21,8 +21,8 @@ import java.util.Map;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-@Mapper("eCashMapper")
-public interface ECashMapper {
+@Mapper("eCashDeductionMapper")
+public interface ECashDeductionMapper {
 
 
 	/**
@@ -30,7 +30,7 @@ public interface ECashMapper {
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectECashList(Map<String, Object> params);
+	List<EgovMap> selectECashDeductList(Map<String, Object> params);
 
 	/**
      * E-Cash - Create new claim
@@ -39,66 +39,38 @@ public interface ECashMapper {
 	Map<String, Object> createECashDeduction(Map<String, Object> param);
 
 	/**
-	 * Auto Debit - Claim Result Deactivate 처리 : 아이템 삭제
+	 * E-Cash - Deactivate eAutoDebitDeduction
 	 * @param params
 	 * @return
 	 */
-	void deleteClaimResultItem(Map<String, Object> params);
+	void deactivateEAutoDebitDeduction(Map<String, Object> params);
 
 	/**
-	 * Auto Debit - Claim Result Update : 아이템 등록
+	 * E-Cash - Deactivate eAutoDebitDeduction_Sub
 	 * @param params
 	 * @return
 	 */
-	void insertClaimResultItem(Map<String, Object> params);
+	void deactivateEAutoDebitDeductionSub(Map<String, Object> params);
 
 	/**
-	 * Auto Debit - Claim Result Deactivate 처리 : 마스터 수정
+	 * E-Cash - Delete eCash Result Item
 	 * @param params
 	 * @return
 	 */
-	void updateClaimResultStatus(Map<String, Object> params);
+	void deleteECashResultItem(Map<String, Object> params);
 
 	/**
-	 * Auto Debit - Claim 조회
+	 * EE-Cash - Update eCash Result Item
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectClaimById(Map<String, Object> params);
+	void insertECashResultItem(Map<String, Object> params);
 
 	/**
-	 * Auto Debit - Claim 조회
+	 *  E-Cash - Update eCash Result
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectClaimDetailById(Map<String, Object> params);
-
-	/**
-	 * Auto Debit - Claim Result Update Live
-	 * @param params
-	 * @return
-	 */
-	void updateClaimResultLive(Map<String, Object> params);
-
-	/**
-	 * Auto Debit - Claim Result Update NEXT DAY
-	 * @param params
-	 * @return
-	 */
-	void updateClaimResultNextDay(Map<String, Object> params);
-
-	/**
-	 * Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회
-	 * @param params
-	 * @return
-	 */
-	List<EgovMap> selectFailClaimDetailList(Map<String, Object> params);
-
-	/**
-	 * Auto Debit - Fail Deduction SMS 재발송 처리
-	 * @param params
-	 * @return
-	 */
-	void sendFaileDeduction(Map<String, Object> params);
+	void updateECashResult(Map<String, Object> params);
 
 }
