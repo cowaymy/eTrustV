@@ -1375,7 +1375,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     			{}
     			else
     			{
-
+    			TaxinvoiceCompany.put("ApptypeID", ApptypeID);	//api 추가
         		TaxinvoiceCompany.put("TAX_INVC_ID",0);
         		TaxinvoiceCompany.put("TAX_INVC_REF_NO",invoiceNo);
         		TaxinvoiceCompany.put("TAX_INVC_REF_DT","1900-01-01");
@@ -1601,43 +1601,48 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		EgovMap maxtaxInvoiceID = new EgovMap();
     		maxtaxInvoiceID.put("value", "taxInvoiceId");
     		String maxTaxInvoiceID = installationResultListMapper.selectMaxId(maxtaxInvoiceID);
+    		String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
+
+
+    		if("67".equals(ApptypeID)  || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
+
+    			//insert taxinvoiceOutright
+    			installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
+        		//insert tradeLedger
+        		installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
+        		installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
+        		//insert Accorderbill
+        		installationResultListMapper.insertAccorderBill(AccOrderBill);
 
 
 
-    		//insert taxinvoiceOutright
-    		installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
-    		//insert tradeLedger
-    		installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
-    		//insert Accorderbill
-    		installationResultListMapper.insertAccorderBill(AccOrderBill);
+        		entry.put("installResultId", maxId);
+        		entry.put("stusCodeId", installResult.get("statusCodeId"));
+        		entry.put("updated",  installResult.get("created"));
+        		entry.put("updator",  installResult.get("creator"));
+        		installationResultListMapper.updateInstallEntry(entry);
+        		if(installResult.get("statusCodeId").toString().equals("21")){
+        			if(callEntry != null){
+        				installationResultListMapper.insertCallEntry(callEntry);
+        				//callEntry에 max 값 구해서 CallResult에 저장
+        				maxIdValue.put("value", "callEntryId");
+        				maxId = installationResultListMapper.selectMaxId(maxIdValue);
+        				callResult.put("callEntryId", maxId);
+        				installationResultListMapper.insertCallResult(callResult);
+        				//callresult에 max값 구해서 callEntry에 업데이트
+        				maxIdValue.put("value", "callResultId");
+        				maxId = installationResultListMapper.selectMaxId(maxIdValue);
+        				callEntry.put("resultId", maxId);
+        				maxIdValue.put("value", "resultId");
+        				maxId = installationResultListMapper.selectMaxId(maxIdValue);
+        				callEntry.put("callEntryId", maxId);
+        				installationResultListMapper.updateCallEntry(callEntry);
+        			}
 
-
-
-    		entry.put("installResultId", maxId);
-    		entry.put("stusCodeId", installResult.get("statusCodeId"));
-    		entry.put("updated",  installResult.get("created"));
-    		entry.put("updator",  installResult.get("creator"));
-    		installationResultListMapper.updateInstallEntry(entry);
-    		if(installResult.get("statusCodeId").toString().equals("21")){
-    			if(callEntry != null){
-    				installationResultListMapper.insertCallEntry(callEntry);
-    				//callEntry에 max 값 구해서 CallResult에 저장
-    				maxIdValue.put("value", "callEntryId");
-    				maxId = installationResultListMapper.selectMaxId(maxIdValue);
-    				callResult.put("callEntryId", maxId);
-    				installationResultListMapper.insertCallResult(callResult);
-    				//callresult에 max값 구해서 callEntry에 업데이트
-    				maxIdValue.put("value", "callResultId");
-    				maxId = installationResultListMapper.selectMaxId(maxIdValue);
-    				callEntry.put("resultId", maxId);
-    				maxIdValue.put("value", "resultId");
-    				maxId = installationResultListMapper.selectMaxId(maxIdValue);
-    				callEntry.put("callEntryId", maxId);
-    				installationResultListMapper.updateCallEntry(callEntry);
-    			}
-
-    			installationResultListMapper.insertOrderLog(orderLog);
+        			installationResultListMapper.insertOrderLog(orderLog);
+        		}
     		}
+
 		return true;
 	}
 
