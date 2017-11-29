@@ -1636,7 +1636,8 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 					       Limit1.result_rem result_rem  ,
 					       to_char (Limit1.setl_dt,'YYYYMMDD') AS setl_dt,
 					       Limit1.prev_svc_area prev_svc_area,
-                           Limit1.next_svc_area next_svc_area
+                           Limit1.next_svc_area next_svc_area,
+                           Limit1.distance distance
 					  FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
 					                Extent1.NO NO  ,
 					                Extent1.MONTH MONTH  ,
@@ -1662,7 +1663,8 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 					                extent11.result_rem result_rem  ,
 					                extent11.setl_dt setl_dt,
 					                Extent1.prev_svc_area prev_svc_area,
-                                    Extent1.next_svc_area next_svc_area
+                                    Extent1.next_svc_area next_svc_area,
+                                    Extent1.distance distance 
 					         FROM SVC0008D Extent1
 					                JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
 					                JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID

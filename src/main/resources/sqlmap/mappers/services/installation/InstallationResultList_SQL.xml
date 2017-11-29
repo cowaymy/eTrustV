@@ -407,6 +407,9 @@
     </select>
     <select id="getOrderInfo" parameterType="Map" resultType="egovMap">
 	    SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
+		   Extent1.DISTANCE,
+	       Extent1.PREV_SVC_AREA,
+	       Extent1.NEXT_SVC_AREA,
 	       Extent3.SALES_ORD_NO SALES_ORD_NO  ,
 	       Extent3.REF_NO REF_NO  ,
 	       Extent3.SALES_DT SALES_DT  ,
@@ -1355,6 +1358,9 @@
 		 </select>
 		 <select id="getOrderExchangeTypeByInstallEntryID" parameterType="Map" resultType="egovMap">
 		 SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
+			   Extent1.DISTANCE,
+		       Extent1.PREV_SVC_AREA,
+		       Extent1.NEXT_SVC_AREA,
 		       Extent4.SALES_ORD_NO SALES_ORD_NO  ,
 		       CASE
 		            WHEN ( Extent4.REF_NO IS NOT NULL ) THEN Extent4.REF_NO

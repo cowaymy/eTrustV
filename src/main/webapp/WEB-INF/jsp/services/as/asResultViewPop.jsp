@@ -85,6 +85,9 @@ function fn_getASEvntsInfo(){
         $("#txtASKeyBy").text(result[0].c1);
         $("#txtRequestorContact").text(result[0].asRemReqsterCntc); 
         $("#txtASKeyAt").text(result[0].asCrtDt);
+        $("#prevServiceArea").text(result[0].prevSvcArea);
+        $("#nextServiceArea").text(result[0].nextSvcArea);
+        $("#distance").text(result[0].distance)
     });
 }
 function fn_getCallLog(){
@@ -191,6 +194,14 @@ function fn_getCallLog(){
     <td colspan="3">   <span id="txtRequestorContact"></span>  </td>
     <th scope="row">AS Key At</th>
     <td>   <span id="txtASKeyAt">text</span>  </td>
+</tr>
+<tr>
+    <th scope="row">Prev Service Area</th>
+    <td>   <span id="prevServiceArea"></span>  </td>
+    <th scope="row">Next Service Area</th>
+    <td>   <span id="nextServiceArea"></span>  </td>
+    <th scope="row">Distance</th>
+    <td>   <span id="distance"></span>  </td>
 </tr>
 </tbody>
 </table><!-- table end -->

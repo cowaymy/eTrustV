@@ -268,6 +268,41 @@ var gridPros = {
     <td>
     </td>
 </tr>
+<tr>
+      <th scope="row">Prev Service Area</th>
+    <c:if test="${installResult.codeid1  == '257' }">
+        <td>
+        <span><c:out value="${orderInfo.prevSvcArea}"/></span>
+        </td>
+    </c:if>
+    <c:if test="${installResult.codeid1  == '258' }">
+        <td>
+        <span><c:out value="${orderInfo.prevSvcArea}"/></span>
+        </td>
+    </c:if>
+    <th scope="row">Next Service Area</th>
+    <c:if test="${installResult.codeid1  == '257' }">
+        <td>
+        <span><c:out value="${orderInfo.nextSvcArea}"/></span>
+        </td>
+    </c:if>
+    <c:if test="${installResult.codeid1  == '258' }">
+        <td>
+        <span><c:out value="${orderInfo.nextSvcArea}"/></span>
+        </td>
+    </c:if>
+   <th scope="row">Distance</th>
+    <c:if test="${installResult.codeid1  == '257' }">
+        <td>
+        <span><c:out value="${orderInfo.distance}"/></span>
+        </td>
+    </c:if>
+    <c:if test="${installResult.codeid1  == '258' }">
+        <td>
+        <span><c:out value="${orderInfo.distance}"/></span>
+        </td>
+    </c:if>
+</tr>
 </tbody>
 </table><!-- table end -->
 

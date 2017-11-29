@@ -71,11 +71,12 @@ function mileageCalSchemaList() {
     }
     
     function save(){
-    	
-    	Common.ajax("POST", "/services/mileageCileage/saveSchemaMgmt.do", GridCommon.getEditData(gridID1), function(result) {
-            console.log("성공.");
-            console.log("data : " + result);
-        });
+    	if(vaildationCheck()){
+	    	Common.ajax("POST", "/services/mileageCileage/saveSchemaMgmt.do", GridCommon.getEditData(gridID1), function(result) {
+	            console.log("성공.");
+	            console.log("data : " + result);
+	        });
+    	}
     }
     
     function fn_schemaSearch(){
@@ -101,6 +102,38 @@ function mileageCalSchemaList() {
            Common.alert("No Change");
            return false;
          }
+         
+
+         for (var i = 0; i < addList.length; i++) 
+         {
+             var memType  = addList[i].memType;
+             var applyFrom  = addList[i].applyFrom;
+             var applyTo = addList[i].applyTo;
+               if (memType == "" || memType.length == 0) {
+                 result = false;
+                 // {0} is required.
+                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Memver Type' htmlEscape='false'/>");
+                 break;
+               }
+               
+               if (applyFrom == "" || applyFrom.length == 0) {
+                     result = false;
+                     // {0} is required.
+                     Common.alert("<spring:message code='sys.msg.necessary' arguments='Apply From' htmlEscape='false'/>");
+                     break;
+                   }
+               
+               
+               if (applyTo == "" || applyTo.length == 0) {
+                 result = false;
+                 // {0} is required.
+                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Apply To' htmlEscape='false'/>");
+                 break;
+               }
+               
+         }
+         
+         return result;
     	
     }
 </script>

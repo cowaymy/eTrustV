@@ -1009,6 +1009,9 @@
 							       S.AS_REQST_TM AS_REQST_TM  ,
 							       S.AS_APPNT_DT AS_APPNT_DT  ,
 							       S.AS_APPNT_TM AS_APPNT_TM  ,
+							       S.DISTANCE DISTANCE ,
+                                   S.PREV_SVC_AREA PREV_SVC_AREA,
+                                   S.NEXT_SVC_AREA NEXT_SVC_AREA,
 							       CASE 
 							            WHEN ( S.AS_RESULT_ID IS NOT NULL ) THEN S.AS_RESULT_ID
 							       ELSE 0
@@ -1104,6 +1107,9 @@
 							                E.AS_REQSTER_TYPE_ID AS_REQSTER_TYPE_ID  ,
 							                E.AS_IS_BS_WITHIN_30DAYS AS_IS_BS_WITHIN_30DAYS  ,
 							                E.AS_ALLOW_COMM AS_ALLOW_COMM  ,
+							                E.DISTANCE DISTANCE ,
+                                            E.PREV_SVC_AREA PREV_SVC_AREA,
+                                            E.NEXT_SVC_AREA NEXT_SVC_AREA,
 							                Extent2.CODE CODE  ,
 							                Extent3.USER_ID USER_ID  ,
 							                Extent3.USER_NAME USER_NAME  ,

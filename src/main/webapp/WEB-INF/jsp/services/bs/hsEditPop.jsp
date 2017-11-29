@@ -386,7 +386,7 @@
     <th scope="row">HS Month</th>
     <td><span><c:out value="${basicinfo.monthy}"/></span></td>
     <th scope="row">HS Type</th>
-    <td><span><c:out value="${basicinfo.codeName}"/></span></td>    
+    <td colspan="2"><span><c:out value="${basicinfo.codeName}"/></span></td>    
 </tr>
 <tr>
     <th scope="row">Current BSR No</th>
@@ -395,7 +395,8 @@
     <td><span><c:out value="${basicinfo.prevSvcArea}"/></span></td>
     <th scope="row">Next HS Area</th>
     <td><span><c:out value="${basicinfo.nextSvcArea}"/></span></td>
-        
+     <th scope="row">Distance</th>
+    <td><span><c:out value="${basicinfo.distance}"/></span></td>
 </tr>
 
 </tbody>
