@@ -57,6 +57,7 @@
                    Project1.PST_DEALER_DELVRY_ADD_ID ,
                    Project1.PST_DEALER_DELVRY_CNT_ID ,
                    Project1.PST_DEALER_ID ,
+                   Project1.PST_TYPE ,
                    Project1.PIC   ,
                    Project1.PST_REF_NO ,
                    Project1.PST_REM ,
@@ -94,6 +95,7 @@
                                 Extent6.DEALER_NAME ,
                                 Extent6.DEALER_NRIC ,
                                 Extent1.CRT_DT ,
+                                Extent1.PST_TYPE ,
                                 NVL(Extent8.WH_LOC_ID, 0) AS WH_LOC_ID  
                        FROM SAL0062D Extent1
                             LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PST_CUR_TYPE_ID
@@ -136,6 +138,12 @@
                   <if test="pInCharge != null and pInCharge != ''">
                       AND Project1.USER_NAME = #{pInCharge}
                   </if>
+                  <if test="pstTypeList != null and pstTypeList != ''">
+                      AND Project1.PST_TYPE IN
+                     <foreach item="item" collection="pstTypeList" index="index" open="(" separator="," close=")">
+                         #{item}
+                     </foreach>
+                 </if>
          ORDER BY Project1.PST_SALES_ORD_ID ASC
     </select>
     
@@ -581,6 +589,24 @@
              AND ROWNUM <![CDATA[<=]]> 1
     </select>
     
+    <select id="pstNewDealerInfo" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_NAME AS CODE_NAME  ,
+                   Extent1.DEALER_ID AS CODE_ID  ,
+                   Extent1.DEALER_NRIC   ,
+                   Extent1.DEALER_EMAIL   ,
+                   Extent1.DEALER_BRNCH_ID   ,
+                   Extent1.DEALER_TYPE  ,
+                   Extent1.CRT_DT   ,
+                   Extent1.UPD_DT   ,
+                   Extent1.USER_ID   ,
+                   Extent2.USER_NAME CRT_USER_NAME  ,
+                   Extent3.USER_NAME UPD_USER_NAME  
+           FROM SAL0030D Extent1
+                 LEFT JOIN SYS0047M Extent2 ON Extent2.USER_ID = Extent1.CRT_USER_ID
+                 LEFT JOIN SYS0047M Extent3 ON Extent3.USER_ID = Extent1.UPD_USER_ID
+         WHERE Extent1.DEALER_TYPE = #{cmbNewDealerType} 
+    </select>
+    
     <select id="pstNewContactPop" parameterType="Map" resultType="egovMap">
         SELECT Extent1.DEALER_CNT_ID   ,
                    Extent1.DEALER_ID   ,
@@ -757,6 +783,7 @@
                       PST_SALES_ORD_ID,
                       PST_REF_NO,
                       PST_DEALER_ID,
+                      PST_TYPE,
                       PST_DEALER_MAIL_CNT_ID,
                       PST_DEALER_DELVRY_CNT_ID,
                       PST_DEALER_MAIL_ADD_ID,
@@ -773,6 +800,7 @@
           VALUES  (#{pstSalesOrdId},
                         #{pstRefNo},
                         #{pstDealerId},
+                        #{pstType},
                         #{pstDealerMailCntId},
                         #{pstDealerDelvryCntId},
                         #{pstDealerMailAddId},
@@ -921,6 +949,21 @@
 			         RATE
 		   FROM   PAY0197M
 		 WHERE   RATE_DT = TO_CHAR (SYSDATE, 'YYYY-MM-DD')   
+    </select>
+    
+    <select id="pstTypeCmbList" parameterType="Map" resultType="egovMap">
+        SELECT
+	              CODE_ID ,
+	              CODE ,
+	              CODE_NAME ,
+	              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+         FROM SYS0013M
+       WHERE DISAB = 0
+           AND CODE_ID IN
+              <foreach item="item" collection="pstTypeList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+              ORDER BY CODE
     </select>
     
 </mapper>
