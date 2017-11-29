@@ -219,6 +219,13 @@ function createPurchaseGridID(){
     <li><p class="btn_blue2"><a href="#">Save</a></p></li>
 </ul>
 
+<section class="tap_wrap"><!-- tap_wrap start -->
+<ul class="tap_type1">
+    <li><a href="#" class="on">purchase info</a></li>
+    <li><a href="#">payment mode</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
 <aside class="title_line"><!-- title_line start -->
 <h2>POS Information</h2>
 </aside><!-- title_line end -->
@@ -295,6 +302,51 @@ function createPurchaseGridID(){
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="item_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Payment Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Total Charges</th>
+    <td>Text</td>
+    <th scope="row">Receipt No</th>
+    <td>Text</td>
+    <th scope="row">Debtor Acc</th>
+    <td>Text</td>
+</tr>
+<tr>
+    <th scope="row">Branch Code</th>
+    <td>Text</td>
+    <th scope="row">TR Ref No</th>
+    <td>Text</td>
+    <th scope="row">TR Issued Date</th>
+    <td>Text</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+</section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Reversal Details</h2>
