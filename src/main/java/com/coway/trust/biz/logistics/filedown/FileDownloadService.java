@@ -17,4 +17,6 @@ public interface FileDownloadService {
 
 	void deleteFileSpace(Map<String, Object> params);
 
+	int existFileCheck(Map<String, Object> params);
+
 }

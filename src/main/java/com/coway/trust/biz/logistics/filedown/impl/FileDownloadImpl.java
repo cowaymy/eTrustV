@@ -65,4 +65,10 @@ public class FileDownloadImpl extends EgovAbstractServiceImpl implements FileDow
 
 	}
 
+	@Override
+	public int existFileCheck(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return FileDownloadMapper.existFileCheck(params);
+	}
+
 }

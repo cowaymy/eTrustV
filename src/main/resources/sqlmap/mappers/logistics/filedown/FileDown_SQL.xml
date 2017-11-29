@@ -175,4 +175,13 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
         UPD_DT       = SYSDATE
         WHERE FILE_UPLOAD_ID =#{fileUploadId}
     </update>
+    
+    <select id="existFileCheck" parameterType="Map" resultType="Integer">
+      SELECT COUNT(1) from PAY0061D
+      WHERE 1=1
+      AND     FILE_TYPE_ID      =  #{insType}
+      AND     FILE_TYPE_LBL   = #{insNewLabel}
+      AND     FILE_NAME         = #{insFileNm}
+    </select>
+    
 </mapper>

@@ -91,10 +91,6 @@ public class FileDownloadController {
 
 		List<EgovMap> list = FileDownloadService.fileDownloadList(smap);
 
-		for (int i = 0; i < list.size(); i++) {
-			logger.debug("fileDownloadList       값 : {}", list.get(i));
-		}
-
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
 
@@ -105,16 +101,14 @@ public class FileDownloadController {
 	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
 
 		List<EgovMap> LabelList = FileDownloadService.selectLabelList(params);
-		for (int i = 0; i < LabelList.size(); i++) {
-			logger.debug("%%%%%%%%LabelList%%%%%%%: {}", LabelList.get(i));
-		}
 		return ResponseEntity.ok(LabelList);
 	}
 
 	@RequestMapping(value = "/insertFileSpace.do", method = RequestMethod.POST)
 	// public ResponseEntity<ReturnMessage> insertFileSpace(MultipartHttpServletRequest request,
-	public ResponseEntity<ReturnMessage> insertFileSpace(@RequestBody Map<String, Object> params, ModelMap mode,
+	public ResponseEntity<Map<String, Object>> insertFileSpace(@RequestBody Map<String, Object> params, ModelMap mode,
 			SessionVO sessionVO) throws Exception {
+
 		int re = 0;
 		String TypeLabel = (String) params.get("insTypeLabel");
 
@@ -134,16 +128,17 @@ public class FileDownloadController {
 		params.put("crt_user_id", loginId);
 		params.put("upd_user_id", loginId);
 
+		int cnt = FileDownloadService.existFileCheck(params);
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		try {
+		if (1 > cnt) {
 			re = FileDownloadService.insertFileSpace(params);
-
-		} catch (Exception ex) {
-			message.setCode(AppConstants.FAIL);
+			message.setCode(AppConstants.SUCCESS);
 		}
-		message.setData(re);
-		return ResponseEntity.ok(message);
+		Map<String, Object> reVal = new HashMap();
+		reVal.put("re", re);
+		reVal.put("cnt", cnt);
+		reVal.put("msg", message);
+		return ResponseEntity.ok(reVal);
 	}
 
 	@RequestMapping(value = "/deleteFileSpace.do", method = RequestMethod.POST)
@@ -172,6 +167,7 @@ public class FileDownloadController {
 	@RequestMapping(value = "/insertFile.do", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovFormBasedFileVo>> insertFile(MultipartHttpServletRequest request,
 			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "FileUpload",
 				1024 * 1024 * 5);
 

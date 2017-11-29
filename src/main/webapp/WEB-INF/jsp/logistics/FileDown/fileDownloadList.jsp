@@ -30,7 +30,8 @@ var listGrid;
 var subGrid;
 var userCode;
 
-                      
+var userSession = ${SESSION_INFO.userId};
+                    
  var rescolumnLayout=[
                       {dataField:"fileUploadId"         ,headerText:"fileUploadId"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"fileTypeId"         ,headerText:"fileTypeId"                      ,width:120    ,height:30 , visible:false},
@@ -67,6 +68,7 @@ var userCode;
                               unCheckValue : 0
                           }                
                       },
+                      {dataField:"crtUserId"        ,headerText:"crtUserId"               ,width:110    ,height:30 , visible:false },
                       {dataField:"c1"        ,headerText:"Creator"               ,width:110    ,height:30 },
                       {dataField:"crtDt"       ,headerText:"Create Date"               ,width:110    ,height:30},
                       {dataField:"fileUrl"        ,headerText:"FILE_URL"         ,width:120    ,height:30 , visible:false},
@@ -85,8 +87,8 @@ var userCode;
                       },
 /*                       {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30 , visible:false} */
-                      {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30},
-                      {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30}
+                      {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30 , visible:false}
                       ];                     
                                     
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
@@ -183,11 +185,14 @@ $(function(){
     });
     $('#editFile').click(function() {
     	 var selectedItem = AUIGrid.getSelectedIndex(listGrid);
-    	 
          if(selectedItem[0] < 0 ){
              Common.alert('Please select Row.');
              return false;
          }else{
+          if(userSession !=AUIGrid.getCellValue(listGrid,  selectedItem[0], "crtUserId")){
+                Common.alert("You are not the owner of file space. Edit file space is disallowed. ");
+                  return false;
+           }
 	    	$("#pop_title").text("Edit File Space");
 	    	$("#ReceivePopUp_wrap").show();
 	    	$("#fileSpace_tr").hide();
@@ -198,12 +203,21 @@ $(function(){
          }
     });
     $('#reUpFile').click(function() {
+    	$("input[id=fileSelector]").val('');
+    	$(".auto_file input[type=text]").val('');
+    	$(".auto_file input[type=text]").text('');
     	 var selectedItem = AUIGrid.getSelectedIndex(listGrid);
          if(selectedItem[0] < 0 ){
              Common.alert('Please select Row.');
              return false;
          }else{
-        	 
+        	  if(userSession !=AUIGrid.getCellValue(listGrid,  selectedItem[0], "crtUserId")){
+        	         Common.alert("You are not the owner of file space. Re-upload is disallowed.");
+        	           return false;
+        	    }
+	    	$("#UploadFilePopUp_wrap").show();
+	    	$("#newUp").hide();
+	    	$("#reUp").show();
          }
     });
     
@@ -226,6 +240,27 @@ $(function(){
             }       
     }) 
     
+    $("input[id=fileSelector]").change(function(){
+        // 필드 채워지면
+        if($(this).val() != ""){
+            // 확장자 체크
+                var ext = $(this).val().split(".").pop().toLowerCase();
+                if($.inArray(ext, ["zip"]) == -1){
+                	Common.alert("Only allows .zip file.");
+                    $(this).val("");
+                    return false;
+                }
+                
+                // 용량 체크
+                var fileSize = this.files[0].size;
+                var maxSize = 1024 * 1024*5;
+                if(fileSize > maxSize){
+                	Common.alert("Only allows Max file size : 5MB");
+                    $(this).val("");
+                    return false;
+                }
+        }
+    });
 
    
    
@@ -244,7 +279,6 @@ function SearchListAjax() {
     var url = "/logistics/file/fileDownloadList.do";
     var param = $('#searchForm').serialize();
     Common.ajax("GET" , url , param , function(data){
-    	console.log(data);
         AUIGrid.setGridData(listGrid, data.data);
         
     });
@@ -256,9 +290,18 @@ function fn_insertFileSpace(flag){
 	  //div="FS"  
 	 fileSpaceSaveAjax();
 	}else{
-      //div="FU"  	
-	 fileSaveAjax();
-	}
+		   if(""==$("input[id=fileSelector]").val()){
+			   Common.alert("Please attach a file.");
+			   return false;
+		   }
+		if(flag =="U"){
+		 fileSaveAjax();
+		}else if(flag =="R"){
+	      fn_reUpFile();
+		}
+			
+	} 
+	
    
 }
 
@@ -266,14 +309,18 @@ function fn_insertFileSpace(flag){
 function fileSpaceSaveAjax() {
     var url;
     var param;
-
        param= $("#FileSpaceForm").serializeJSON();
        url="/logistics/file/insertFileSpace.do";    
    Common.ajax("POST",url,param,function(result){
-	   console.log(result);
-       Common.alert(result.msg);
-       $("#upId").val(result.data);
-        $("#UploadFilePopUp_wrap").show();              
+       if(result.cnt == 0){
+	        $("#upId").val(result.re);
+	        $("#UploadFilePopUp_wrap").show();
+	        $("#newUp").show();
+	        $("#reUp").hide();
+    	   
+       }else{
+    	   Common.alert("* Same file space is exist.");
+       }
    });
 } 
 function fileSaveAjax() {
@@ -283,6 +330,7 @@ function fileSaveAjax() {
          formData.append("excelFile", $("input[name=zipUpload]")[0].files[0]);
          formData.append("upId", $("#upId").val());
    Common.ajaxFile(url,formData,function(result){
+    	Common.alert("File successfully uploaded.");
 	   $("#UploadFilePopUp_wrap").hide();
 	   $("#ReceivePopUp_wrap").hide();
 	   SearchListAjax();
@@ -380,7 +428,10 @@ function fileDown(rowIndex){
       var subPath = AUIGrid.getCellValue(listGrid,  rowIndex, "subpath");
       var fileName = AUIGrid.getCellValue(listGrid,  rowIndex, "filename");
       var orignlFileNm = AUIGrid.getCellValue(listGrid,  rowIndex, "fileName")+".zip";
-
+   if(""==subPath || null==subPath ||""==fileName || null==fileName ){
+	   Common.alert("File is not exist.");
+	   return false;
+   }
     window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
             + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
             + "'/>");
@@ -391,17 +442,21 @@ function fn_modifyileSpace(str){
 	var fileUploadId = AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileUploadId");
 	var url;
     var param;
+    var msg="";
 	if(str=="M"){
-       url="/logistics/file/insertFileSpace.do";    
+       url="/logistics/file/insertFileSpace.do";  
+       msg="File space has successfully updated.";
 	}else{
        url="/logistics/file/deleteFileSpace.do";    
+       msg="File space has been deleted.";
 	}
        param= $("#FileSpaceForm").serializeJSON();
        $.extend(param,{ fileUploadId:fileUploadId });
-       console.log(param);
    Common.ajax("POST",url,param,function(result){
-       Common.alert(result.message);
-       //$("#upId").val(result.data);
+	   if(str=="M" & result.cnt>0){
+		   msg="* Same file space is exist.";
+	   }
+        Common.alert(msg);
         $("#ReceivePopUp_wrap").hide();         
         SearchListAjax();
 
@@ -437,6 +492,22 @@ function fn_dataSet(){
 	    }else{
 	        $("#insHP").prop("checked", false);
 	    }
+}
+
+function fn_reUpFile(){
+	var selectedItem = AUIGrid.getSelectedIndex(listGrid);
+    var url;
+    var formData = new FormData();
+        url="/logistics/file/insertFile.do";    
+         formData.append("excelFile", $("input[name=zipUpload]")[0].files[0]);
+         formData.append("upId",AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileUploadId"));
+         formData.append("insType",AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileTypeId"));
+         formData.append("insNewLabel",AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileTypeLbl"));
+         formData.append("insFileNm",AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileName"));
+   Common.ajaxFile(url,formData,function(result){
+       $("#UploadFilePopUp_wrap").hide();
+       SearchListAjax();
+   });
 }
 </script>
 
@@ -629,7 +700,7 @@ function fn_dataSet(){
 
 <tr>
     <td colspan="6" >
-    <input type="text" title="" placeholder=""  class="readonly w100p" readonly="readonly"  id="uploadFileText" name="uploadFileText"/>
+    <input type="text" title="" placeholder="Only allow .zip file || Max file size : 5MB || File will be overwrite if you re-upload"  class="readonly w100p" readonly="readonly"  id="uploadFileText" name="uploadFileText"/>
     </td>
 </tr>
 
@@ -638,7 +709,8 @@ function fn_dataSet(){
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertFileSpace('U');">Upload File</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertFileSpace('U');" id="newUp">Upload File</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertFileSpace('R');"id="reUp">Upload File</a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
