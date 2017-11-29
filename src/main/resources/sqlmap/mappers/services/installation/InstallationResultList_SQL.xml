@@ -753,8 +753,11 @@
 		       Extent1.BRNCH_ID BRNCH_ID  ,
 		       Extent1.EDIT_TYPE_ID EDIT_TYPE_ID  ,
 		       Extent1.IS_TRADE_IN IS_TRADE_IN  ,
-		       Extent1.VRIFY_REM VRIFY_REM
+		       Extent1.VRIFY_REM VRIFY_REM,
+		       CustAdd.ADDR_DTL Address,
+		       CustAdd.AREA_ID
 		  FROM SAL0045D Extent1
+		  join SAL0023D CustAdd on CustAdd.CUST_ADD_ID = Extent1.ADD_ID
 		 WHERE  Extent1.SALES_ORD_ID = #{salesOrdId}
      </select>
      <select id="getInstallContactByContactID" parameterType="Map" resultType="egovMap">
@@ -3435,7 +3438,7 @@
 		  <insert id="insertTaxInvoiceCompanySub" parameterType = "Map">
 		  INSERT INTO PAY0030D
 		  (
-		  PAY0030D_SEQ.nextval
+		  INVC_ITM_ID
         ,TAX_INVC_ID
         ,INVC_ITM_ORD_NO
         ,INVC_ITM_PO_NO
@@ -3465,7 +3468,7 @@
         ,STREET
 		  )VALUES
 		  (
-		  #{INVC_ITM_ID}
+		  PAY0030D_SEQ.nextval
         ,#{TAX_INVC_ID}
         ,#{INVC_ITM_ORD_NO}
         ,#{INVC_ITM_PO_NO}
@@ -3495,6 +3498,112 @@
         ,#{STREET}
 		  )
 		  </insert>
+
+          <insert id = "insertTaxInvoiceOutright" parameterType="Map">
+          INSERT INTO PAY0033D
+          (
+          TAX_INVC_ID
+          ,TAX_INVC_REF_NO
+          ,TAX_INVC_REF_DT
+          ,TAX_INVC_CUST_NAME
+          ,TAX_INVC_CNTC_PERSON
+          ,TAX_INVC_ADDR1
+          ,TAX_INVC_ADDR2
+          ,TAX_INVC_ADDR3
+          ,TAX_INVC_ADDR4
+          ,TAX_INVC_POST_CODE
+          ,TAX_INVC_STATE_NAME
+          ,TAX_INVC_CNTY
+          ,TAX_INVC_TASK_ID
+          ,TAX_INVC_CRT_DT
+          ,TAX_INVC_REM
+          ,TAX_INVC_CHRG
+          ,TAX_INVC_OVERDU
+          ,TAX_INVC_AMT_DUE
+          ,TAX_INVC_PO_NO
+          ,AREA_ID
+          ,ADDR_DTL
+          ,STREET
+          )VALUES
+          (
+         PAY0033D_TAX_INVC_ID_SEQ.nextval
+        ,#{TAX_INVC_REF_NO}
+        ,SYSDATE
+        ,#{TAX_INVC_CUST_NAME}
+        ,#{TAX_INVC_CNTC_PERSON}
+        ,#{TAX_INVC_ADDR1}
+        ,#{TAX_INVC_ADDR2}
+        ,#{TAX_INVC_ADDR3}
+        ,#{TAX_INVC_ADDR4}
+        ,#{TAX_INVC_POST_CODE}
+        ,#{TAX_INVC_STATE_NAME}
+        ,#{TAX_INVC_CNTY}
+        ,#{TAX_INVC_TASK_ID}
+        ,TO_DATE(#{TAX_INVC_CRT_DT},'yyyymmdd')
+        ,#{TAX_INVC_REM}
+        ,#{TAX_INVC_CHRG}
+        ,#{TAX_INVC_OVERDU}
+        ,#{TAX_INVC_AMT_DUE}
+        ,#{TAX_INVC_PO_NO}
+        ,#{AREA_ID}
+        ,#{ADDR_DTL}
+        ,#{STREET}
+          )
+          </insert>
+
+          <insert id="insertTaxInvoiceOutrightSub" parameterType = "Map">
+          INSERT INTO PAY0034D
+          (
+          INVC_ITM_ID
+        ,TAX_INVC_ID
+        ,INVC_ITM_ORD_NO
+        ,INVC_ITM_PO_NO
+        ,INVC_ITM_GST_RATE
+        ,INVC_ITM_GST_TXS
+        ,INVC_ITM_AMT_DUE
+        ,INVC_ITM_RENTAL_FEE
+        ,INVC_ITM_PRODUCT_CTGRY
+        ,INVC_ITM_PRODUCT_MODEL
+        ,INVC_ITM_PRODUCT_SERIAL_NO
+        ,INVC_ITM_ADD1
+        ,INVC_ITM_ADD2
+        ,INVC_ITM_ADD3
+        ,INVC_ITM_POST_CODE
+        ,INVC_ITM_STATE_NAME
+        ,INVC_ITM_CNTY
+        ,INVC_ITM_FEES_GST_TXS
+        ,INVC_ITM_FEES_AMT_DUE
+        ,INVC_ITM_FEES_CHRG
+        ,AREA_ID
+        ,ADDR_DTL
+        ,STREET
+          )VALUES
+          (
+          PAY0034D_INVC_ITM_ID_SEQ.nextval
+        ,#{TAX_INVC_ID}
+        ,#{INVC_ITM_ORD_NO}
+        ,#{INVC_ITM_PO_NO}
+        ,#{INVC_ITM_GST_RATE}
+        ,#{INVC_ITM_GST_TXS}
+        ,#{INVC_ITM_AMT_DUE}
+        ,#{INVC_ITM_RENTAL_FEE}
+        ,#{INVC_ITM_PRODUCT_CTGRY}
+        ,#{INVC_ITM_PRODUCT_MODEL}
+        ,#{INVC_ITM_PRODUCT_SERIAL_NO}
+        ,#{INVC_ITM_ADD1}
+        ,#{INVC_ITM_ADD2}
+        ,#{INVC_ITM_ADD3}
+        ,#{INVC_ITM_POST_CODE}
+        ,#{INVC_ITM_STATE_NAME}
+        ,#{INVC_ITM_CNTY}
+        ,#{INVC_ITM_FEES_GST_TXS}
+        ,#{INVC_ITM_FEES_AMT_DUE}
+        ,#{INVC_ITM_FEES_CHRG}
+        ,#{AREA_ID}
+        ,#{ADDR_DTL}
+        ,#{STREET}
+          )
+          </insert>
 
 <insert id="insertAccTradeLedger" parameterType="Map">
 INSERT INTO PAY0035D(
