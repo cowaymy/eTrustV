@@ -61,7 +61,7 @@ $(document).ready(function(){
     doGetComboData('/common/selectCodeList.do', paramdata, 'US','sttype', 'S' , 'transferTypeFunc');
     //paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'01'}; // session 정보 등록 
    //2017-11-28 From Location : CDC , RDC, CDC & RDC 가 보일 수 있도록 처리 
-    paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'010205'}; // session 정보 등록 
+    paramdata = {locgb:'010205'}; // session 정보 등록 
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); 
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
