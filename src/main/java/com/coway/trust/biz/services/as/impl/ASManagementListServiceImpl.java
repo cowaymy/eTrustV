@@ -242,6 +242,79 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		return em;
 	} 
 	
+	
+	
+	  
+		@Override
+		public EgovMap  saveASInHouseEntry(Map<String, Object> params) {
+
+			
+			Map  svc0004dmap =   (Map) params.get("asResultM");//hash
+			
+			String AS_NO ="";
+			
+			params.put("DOCNO", "17");
+			EgovMap  eMap = ASManagementListMapper.getASEntryDocNo(params); 
+			EgovMap  seqMap = ASManagementListMapper.getASEntryId(params); 
+
+			params.put("AS_ID",   String.valueOf( seqMap.get("seq")).trim() );
+			params.put("AS_NO",  String.valueOf( eMap.get("asno")).trim());
+			svc0004dmap.put("AS_ID", String.valueOf( seqMap.get("seq")).trim());
+			svc0004dmap.put("AS_NO", String.valueOf( eMap.get("asno")).trim());
+			
+
+			params.put("DOCNO", "21");
+			EgovMap  eMap_result = ASManagementListMapper.getASEntryDocNo(params); 		
+			EgovMap  seqMap_result   = ASManagementListMapper.getResultASEntryId(params); 
+			String     AS_RESULT_ID    = String.valueOf(seqMap_result.get("seq"));
+			String     AS_RESULT_NO   = String.valueOf(eMap_result.get("asno"));
+			
+			EgovMap	 ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params); 
+			params.put("AS_CALLLOG_ID",  String.valueOf( ccrSeqMap.get("seq")).trim());
+			svc0004dmap.put("AS_CALLLOG_ID",  String.valueOf( ccrSeqMap.get("seq")).trim());
+			
+			//서비스 마스터 
+			int  a = ASManagementListMapper.insertSVC0001D(svc0004dmap);
+			
+			//콜로그생성 
+			int  c6d  =ASManagementListMapper.insertCCR0006D(setCCR000Data(svc0004dmap));
+			int  c7d  =ASManagementListMapper.insertCCR0007D(setCCR000Data(svc0004dmap));
+			
+			
+			String PIC_NAME =String.valueOf(  svc0004dmap.get("PIC_NAME")) ;
+			String PIC_CNTC  =String.valueOf( svc0004dmap.get("PIC_CNTC")) ;
+			
+			int b = -1;
+			if(PIC_NAME.length()  > 0  ||  PIC_CNTC.length()  > 0  ){
+				  b = ASManagementListMapper.insertSVC0003D(svc0004dmap);
+			}
+			
+			
+		
+			svc0004dmap.put("AS_RESULT_ID",  AS_RESULT_ID);
+			svc0004dmap.put("AS_RESULT_NO", AS_RESULT_NO);
+			svc0004dmap.put("AS_ENTRY_ID"  ,   String.valueOf( seqMap.get("seq")).trim() );
+			svc0004dmap.put("updator"  ,   params.get("updator") ); 
+			   
+			
+			
+			///insert svc0004d 
+			int c=  this.insertInHouseSVC0004D(svc0004dmap);  
+			int callint =updateSTATE_CCR0006D(svc0004dmap);
+			
+			List <EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+		    this.insertSVC0005D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator"))); 
+			
+			
+			
+			EgovMap em = new EgovMap();
+			em.put("AS_NO", String.valueOf( eMap.get("asno")).trim());
+			em.put("AS_RESULT_NO", AS_RESULT_NO);
+			
+			return em;
+		} 
+		
+	
 	public Map<String, Object>  setCCR000Data(Map<String, Object> params){
 		
 		   Map em = new HashMap();
@@ -412,7 +485,81 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	
 		
 		LOGGER.debug(" insertSVC0004D  결과 {}",a);
-		LOGGER.debug("							===> insertSVC0004D  out ");
+		LOGGER.debug("		    ===> insertSVC0004D  out ");
+		
+		return a;
+	}
+	
+	
+	
+	/**
+	 * SVC0004D insert
+	 * @param params
+	 * @return
+	 */
+	public int insertInHouseSVC0004D(Map<String, Object> params){
+		LOGGER.debug("							===> insertInHouseSVC0004D  in");
+	    //SVC0004D insert  상태 업데이트 
+		LOGGER.debug("					insertInHouseSVC0004D {} ",params);
+		
+		int a=  ASManagementListMapper.insertSVC0004D(params);
+		
+		
+		
+		//in house 구분  물류 처리 한다. 
+		if(a>0 ){
+			
+			if(  params.get("AS_RESULT_STUS_ID").equals("04") ){
+			
+        			 //AS_SLUTN_RESN_ID
+        			 if (params.get("AS_SLUTN_RESN_ID").equals("454")){
+        				 
+        				 	//차감 요청 
+        				 if( params.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length( ) >0){
+        					 
+        					 	//이관 요청 
+        						//물류 호출   add by hgham
+        				        Map<String, Object>  logPram = null ;
+        						/////////////////////////물류 호출//////////////////////
+        						logPram =new HashMap<String, Object>();
+        			            logPram.put("ORD_ID",    params.get("AS_ID") );
+        			            logPram.put("RETYPE", "");  
+        			            logPram.put("P_TYPE", "");  
+        			            logPram.put("P_PRGNM", "INHOUS");  
+        			            logPram.put("USERID", String.valueOf(params.get("updator")));   
+        			            
+        			            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+        			           // servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+        			            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
+        			            /////////////////////////물류 호출 END //////////////////////   	
+        			            
+        					 
+        				 }else{  
+        					 
+        					 	//이관 요청 
+        						//물류 호출   add by hgham
+        				        Map<String, Object>  logPram = null ;
+        						/////////////////////////물류 호출//////////////////////
+        						logPram =new HashMap<String, Object>();
+        			            logPram.put("ORD_ID",    params.get("AS_ID") );
+        			            logPram.put("RETYPE", "");  
+        			            logPram.put("P_TYPE", "");  
+        			            logPram.put("P_PRGNM", "INHOUS");  
+        			            logPram.put("USERID", String.valueOf(params.get("updator")));   
+        			            
+        			            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+        			           // servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+        			            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
+        			            /////////////////////////물류 호출 END //////////////////////   	
+        			            
+        				 }
+        		 }
+			}
+		}
+	
+		
+		LOGGER.debug(" insertInHouseSVC0004D  결과 {}",a);
+		LOGGER.debug("		    ===> insertInHouseSVC0004D  out ");
 		
 		return a;
 	}
@@ -437,13 +584,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				if(! "".equals(updateMap.get("filterDesc") )){
 				
 					String temp =(String)updateMap.get("filterDesc");
-					String[] animals = temp.split("-"); 
 					
-					if(animals.length>0){
-						iMap.put("ASR_ITM_PART_DESC",   animals[1] );
-					}else{
-						iMap.put("ASR_ITM_PART_DESC",   "");
+					if(! temp.equals("API")){
+    					String[] animals = temp.split("-"); 
+    					
+    					if(animals.length>0){
+    						iMap.put("ASR_ITM_PART_DESC",   animals[1] );
+    					}else{
+    						iMap.put("ASR_ITM_PART_DESC",   "");
+    					}
 					}
+					
 				}
 				
 				iMap.put("AS_RESULT_ID",			 AS_RESULT_ID);
@@ -453,13 +604,22 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				iMap.put("ASR_ITM_CHRG_AMT",  updateMap.get("filterTotal") ); 
 				iMap.put("ASR_ITM_REM",   		 updateMap.get("filterRemark") ); 
 				iMap.put("ASR_ITM_CRT_USER_ID", UPDATOR );
-				iMap.put("ASR_ITM_CHRG_FOC",   (String)updateMap.get("filterType")=="FOC" ? "1": "0"); 
+				
+				if(updateMap.get("filterType").equals("FOC")){
+					iMap.put("ASR_ITM_CHRG_FOC",   "1"); 
+				}else{
+					iMap.put("ASR_ITM_CHRG_FOC",   "0"); 
+				}
+				
+				
 				iMap.put("ASR_ITM_EXCHG_ID",    updateMap.get("filterExCode") ); 
 				iMap.put("ASR_ITM_CLM",   		  		"0"); 
 				iMap.put("ASR_ITM_TAX_CODE_ID",    "0" ); 
 				iMap.put("ASR_ITM_TXS_AMT" , 			"0" ); 
 				
+				iMap.put("SERIAL_NO" , updateMap.get("srvFilterLastSerial")); 
 				iMap.put("FILTER_BARCD_SERIAL_NO" , updateMap.get("srvFilterLastSerial")); 
+				iMap.put("EXCHG_ID" , updateMap.get("filterExCode")); 
 				
 
 				LOGGER.debug("					insertSVC0005D {} ",iMap);

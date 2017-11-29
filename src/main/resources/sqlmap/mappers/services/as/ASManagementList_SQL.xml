@@ -1392,7 +1392,7 @@
 									   AS_WORKMNSH_TAX_CODE_ID, 
 									   AS_WORKMNSH_TXS, 
 									   AS_RESULT_MOBILE_ID,
-									   APPNT_DT,                   
+									    APPNT_DT,                   
 										APPNT_TM,                   
 										IN_HUSE_REPAIR_REM,         
 										IN_HUSE_REPAIR_REPLACE_YN,  
@@ -1483,12 +1483,16 @@
 							   ASR_ITM_EXCHG_ID, 
 							   ASR_ITM_CLM, 
 							   ASR_ITM_TAX_CODE_ID, 
-							   ASR_ITM_TXS_AMT) 
+							   ASR_ITM_TXS_AMT,
+							    SERIAL_NO,         
+							    EXCHN_ID,                 
+								FILTER_BARCD_SERIAL_NO
+							   ) 
 							VALUES ( 
 							   SVC0005D_ASR_ITM_ID_SEQ.nextval, 
 							   #{AS_RESULT_ID}, 
 							   #{ASR_ITM_PART_ID}, 
-							   #{ASR_ITM_PART_DESC}, 
+							   (SELECT STK_DESC FROM SYS0026M WHERE STK_ID =#{ASR_ITM_PART_ID}),
 							   #{ASR_ITM_PART_QTY}, 
 							   #{ASR_ITM_PART_PRC}, 
 							   #{ASR_ITM_CHRG_AMT}, 
@@ -1499,7 +1503,10 @@
 							   #{ASR_ITM_EXCHG_ID}, 
 							   #{ASR_ITM_CLM}, 
 							   #{ASR_ITM_TAX_CODE_ID}, 
-							   #{ASR_ITM_TXS_AMT}
+							   #{ASR_ITM_TXS_AMT},
+							   #{SERIAL_NO},         
+                               #{EXCHG_ID},              
+                               #{FILTER_BARCD_SERIAL_NO}
 							)
          </insert>
          

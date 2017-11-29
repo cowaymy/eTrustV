@@ -3,94 +3,136 @@
 <mapper namespace="com.coway.trust.biz.services.as.impl.InHouseRepairMapper">
 
     <select id="selInhouseList" parameterType="Map" resultType="egovMap">
-				SELECT 
-						       A.AS_BRNCH_ID                                  AS AS_BRNCH_ID,            
-						       F.CODE                                             AS AS_BRNCH_DESC,          
-						       B.AS_CT_ID                                       AS AS_CT_ID ,             
-						       AI.MEM_CODE                                    AS AS_MEM_CODE,            
-						       G.STK_CODE                                      AS AS_STK_CODE,            
-						       G.STK_DESC                                      AS AS_STK_DESC,
-						       B.AS_DEFECT_TYPE_ID                        AS AS_DF_TYPE,
-						       E.CODE                                             AS AS_DF_DESC,
-						       A.AS_STUS_ID                                   AS AS_STUS_ID ,
-						       DECODE( A.AS_STUS_ID ,'1' ,'ACT',
-						                                          '4','COM',
-						                                          '21','FAI',
-						                                          '10','CAN')      AS AS_STUS,
-						       B.AS_RESULT_CRT_DT                         AS AS_RET_DATE,             
-						       RI.MEM_CODE                                    AS RE_MEM_CODE,           
-						       RI.MEM_ID                                         AS RE_MEM_ID,               
-						       RAS.AS_CRT_DT                                 AS RE_STD_DATE,           
-						       RASR.AS_RESULT_CRT_DT                    AS RE_END_DATE,             
-						       RASR.APPNT_DT                                 AS RE_PROM_DATEM,        
-						       RAS.AS_STUS_ID                                AS RE_STUS_ID,
-						       DECODE( RAS.AS_STUS_ID ,'1' ,'ACT',
-						                                                 '4','COM',
-						                                                 '21','FAI',
-						                                                 '10','CAN') AS RAS_STUS,
-						       A.AS_ID                                             AS AS_ID ,  
-						       A.AS_NO                                            AS AS_NO ,  
-						       RAS.AS_NO                                         AS RAS_AS_NO ,  
-						       RAS.AS_ID                                          AS RAS_AS_ID                                         
-				FROM SVC0001D A  ,    
-					     SVC0004D B  ,     
-					     SAL0001D C  ,
-					     SAL0002D D  ,
-					     SYS0026M G  ,
-					     SYS0032M E  ,
-					     SYS0005M F  ,
-					     ORG0001D  AI,
-					     ORG0001D  RI,
-					     SVC0001D RAS ,
-					     SVC0004D RASR 
-				WHERE 1=1 
-				    AND A.AS_ID =B.AS_ENTRY_ID
-				    AND A.AS_SO_ID = C.SALES_ORD_ID
-				    AND C.SALES_ORD_ID = D.SALES_ORD_ID
-				    AND D.ITM_STK_ID   = G.STK_ID
-				    AND B.AS_CT_ID     = AI.MEM_ID
-				    AND A.AS_BRNCH_ID  = F.BRNCH_ID
-				    AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-				    AND A.AS_NO = RAS.REF_REQST(+)
-				    AND RAS.AS_ID =RASR.AS_ENTRY_ID(+)
-				    AND RASR.AS_CT_ID = RI.MEM_ID(+)
-                  <if test="asNo != null and asNo != ''">
-                          AND A.AS_NO=#{asNo}           
-                  </if>
-                  
-                  <if test="asBrnchId != null and asBrnchId != ''">
-                          AND F.CODE=#{asBrnchId}              
-                  </if>
-                  
-                  <if test="rePairCtCode != null and rePairCtCode != ''">
-                          AND RI.MEM_CODE=#{memCode}                 
-                  </if>
-                  
-                  <if test="regCtCode != null and  regCtCode != ''">
-                          AND AI.MEM_CODE =#{regCtCode}               
-                  </if>
-                  
-                  <if test="stkCode != null and  stkCode != ''">
-                          AND G.STK_CODE  =#{stkCode}                 
-                  </if>
-                
-                  <if test="inReProdCode != null and  inReProdCode != ''">
-                            AND RASR.IN_HUSE_REPAIR_PRODUCT_CODE = #{inReProdCode}  
-                  </if>
-                  
-                  <if test="defType != null and  defType != '' ">
-                            AND B.RESN_ID = #{defType}                
-                  </if>
-                  
-                  <if test="repStateList != null and repStateList != ''">
-                          AND A.AS_STUS_ID  IN
-                           <foreach item="item" collection="repStateList" index="index" open="(" separator="," close=")">
-                                     #{item}
-                           </foreach>
-                  </if>
-
-
-								
+SELECT   as_Entry.AS_ID,
+         as_Entry.AS_NO,
+         as_Entry.AS_MEM_ID,
+         as_Entry.AS_STUS_ID,
+         DECODE (as_Entry.AS_STUS_ID,
+                 '1',
+                 'ACT',
+                 '4',
+                 'COM',
+                 '21',
+                 'FAI',
+                 '10',
+                 'CAN')
+            AS AS_STUS,
+         as_Entry.AS_SO_ID,
+         as_Entry.AS_RESULT_NO,
+         as_Entry.AS_ENTRY_ID,
+         as_Entry.AS_CT_ID,
+         as_Entry.MEM_CODE,
+         as_Entry.AS_BRNCH_ID,
+         as_Entry.CODE AS_BRNCH_DESC,
+         as_Entry.AS_DF_DESC,
+         as_Entry.STK_CODE,
+         as_Entry.STK_DESC,
+         as_Entry.SALES_ORD_NO,
+         as_Entry.SALES_ORD_ID,
+         In_Entry.AS_ID AS IN_AS_ID,
+         In_Entry.AS_NO AS IN_AS_NO,
+         In_Entry.AS_MEM_ID AS IN_AS_MEM_ID,
+         In_Entry.AS_STUS_ID AS IN_AS_STUS_ID,
+         DECODE (In_Entry.AS_STUS_ID,
+                 '1',
+                 'ACT',
+                 '4',
+                 'COM',
+                 '21',
+                 'FAI',
+                 '10',
+                 'CAN')
+            AS IN_AS_STUS,
+         In_Entry.AS_SO_ID AS IN_AS_SO_ID,
+         In_Entry.AS_RESULT_NO AS IN_AS_RESULT_NO,
+         In_Entry.AS_ENTRY_ID AS IN_AS_ENTRY_ID,
+         In_Entry.AS_CT_ID AS IN_AS_CT_ID,
+         In_Entry.MEM_CODE AS IN_MEM_CODE,
+         In_Entry.AS_BRNCH_ID AS IN_AS_BRNCH_ID,
+         In_Entry.CODE AS IN_AS_BRNCH_DESC,
+         In_Entry.AS_DF_DESC AS IN_AS_DF_DESC,
+         In_Entry.STK_CODE AS IN_STK_CODE,
+         In_Entry.STK_DESC AS IN_STK_DESC,
+         In_Entry.IN_HUSE_REPAIR_PROMIS_DT,
+         In_Entry.APPNT_DT   AS IN_APPNT_DT,
+         In_Entry.AS_CRT_DT  AS IN_AS_CRT_DT
+  FROM   (SELECT   1 tKy, A.AS_ID,
+                   A.AS_NO,
+                   A.AS_MEM_ID,
+                   A.AS_STUS_ID,
+                   B.AS_SO_ID,
+                   B.AS_RESULT_NO,
+                   B.AS_ENTRY_ID,
+                   B.AS_CT_ID,
+                   B.AS_BRNCH_ID,
+                   F.CODE,
+                   E.CODE AS AS_DF_DESC,
+                   G.STK_CODE,
+                   G.STK_DESC,
+                   H.MEM_CODE,
+                   C.SALES_ORD_NO,
+                   C.SALES_ORD_ID
+            FROM   SVC0001D A,
+                   SVC0004D B,
+                   SAL0001D C,
+                   SAL0002D D,
+                   SYS0026M G,
+                   SYS0032M E,
+                   SYS0005M F,
+                   ORG0001D H
+           WHERE       1 = 1
+                   AND A.AS_ID = B.AS_ENTRY_ID
+                   AND A.AS_SO_ID = C.SALES_ORD_ID
+                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                   AND D.ITM_STK_ID = G.STK_ID
+                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
+                   AND A.AS_BRNCH_ID = F.BRNCH_ID
+                   AND B.AS_CT_ID = H.MEM_ID
+                   AND B.AS_SLUTN_RESN_ID = '454'
+                   AND A.AS_NO = #{asNo}  ) as_Entry,
+         (SELECT  1 tKy, 
+                   A.AS_ID,
+                   A.AS_NO,
+                   A.AS_MEM_ID,
+                   A.AS_STUS_ID,
+                   B.AS_SO_ID,
+                   B.AS_RESULT_NO,
+                   B.AS_ENTRY_ID,
+                   B.AS_CT_ID,
+                   B.AS_BRNCH_ID,
+                   B.IN_HUSE_REPAIR_PROMIS_DT,
+                   B.APPNT_DT,
+                   F.CODE,
+                   E.CODE AS AS_DF_DESC,
+                   G.STK_CODE,
+                   G.STK_DESC,
+                   H.MEM_CODE,
+                   A.AS_CRT_DT
+            FROM   SVC0001D A,
+                   SVC0004D B,
+                   SAL0001D C,
+                   SAL0002D D,
+                   SYS0026M G,
+                   SYS0032M E,
+                   SYS0005M F,
+                   ORG0001D H
+           WHERE       A.AS_ID = B.AS_ENTRY_ID
+                   AND A.AS_SO_ID = C.SALES_ORD_ID
+                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                   AND D.ITM_STK_ID = G.STK_ID
+                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
+                   AND A.AS_BRNCH_ID = F.BRNCH_ID
+                   AND B.AS_CT_ID = H.MEM_ID
+                   AND A.REF_REQST IN
+                            (SELECT   AS_ID
+                               FROM   SVC0001D A, SVC0004D B
+                              WHERE   AS_NO = #{asNo} AND A.AS_ID = B.AS_ENTRY_ID)
+                   AND A.AS_TYPE_ID = '2713') In_Entry
+ WHERE   as_Entry.tKy = In_Entry.tKy(+)
+ 
+ 
                           
           </select>
 

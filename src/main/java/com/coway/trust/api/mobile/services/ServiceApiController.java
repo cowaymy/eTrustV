@@ -81,6 +81,7 @@ import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -507,10 +508,81 @@ public class ServiceApiController {
 				
 				List<Map<String, Object>> paramsDetail = AfterServiceResultDetailForm.createMaps((List<AfterServiceResultDetailForm>) asTransLogs1.get(i).get("partList"));
 
+				
+				LOGGER.debug("asTransLogs11111 {}" +paramsDetail);
+				 
+				List<Map<String, Object>>    paramsDetailCvt =  new ArrayList<Map<String, Object>>() ;
+				
+				long  totPrc = 0;
+				
+				for(int x=0 ; x < paramsDetail.size(); x++){
+					  
+					Map<String, Object> map = new HashMap<String, Object>();
+					
+					map.put("filterDesc", "API"); 
+					if(paramsDetail.get(x).get("filterCode")== null || "".equals(paramsDetail.get(x).get("filterCode"))){
+						map.put("filterID", paramsDetail.get(x).get("filterCode") );
+					}else{
+						map.put("filterID", paramsDetail.get(x).get("filterCode") );
+					}
+					
+					
+					if(paramsDetail.get(x).get("exchangeId")==null){
+						map.put("filterExCode", 0);
+					}else{
+						map.put("filterExCode", paramsDetail.get(x).get("exchangeId"));
+					}
+					
+					if(paramsDetail.get(x).get("filterChangeQty")==null){
+						map.put("filterQty", 0);
+					}else{
+						map.put("filterQty", String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
+					}
+					
+					if(paramsDetail.get(x).get("salesPrice")==null){
+						map.put("filterPrice", 0);
+					}else{
+						map.put("filterPrice", paramsDetail.get(x).get("salesPrice"));
+					}
+					
+					
+					int foc =  CommonUtils.intNvl(paramsDetail.get(x).get("chargesFoc"));
+					
+					if(foc ==1){
+						map.put("filterType", "FOC");
+					}else{
+						map.put("filterType", String.valueOf(paramsDetail.get(x).get("chargesFoc")));
+					}
+					
+					
+					
+					if(paramsDetail.get(x).get("filterBarcdSerialNo")==null){
+						map.put("srvFilterLastSerial", "");
+					}else{
+						map.put("srvFilterLastSerial", paramsDetail.get(x).get("filterBarcdSerialNo"));
+					}
+					
+					
+					
+					int qty                 = Integer.parseInt(String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
+					long  filterPrice    = Long.parseLong(String.valueOf(paramsDetail.get(x).get("salesPrice")));
+					
+					long amt = qty * filterPrice;
+					
+					totPrc = totPrc +amt ;
+					map.put("filterRemark", "");
+					map.put("filterTotal",totPrc);
+					
+					
+					paramsDetailCvt.add(map);
+					
+				} 
+				
+				
+				/*
 				Map<String , Object> paramsFilter = paramsDetail.get(i);
 				paramsDetail.get(i).put("filterType", String.valueOf(paramsDetail.get(i).get("partsType")));
-				paramsDetail.get(i).put("filterDesc", "-");
-				
+				paramsDetail.get(i).put("filterDesc", "API"); 
 				
 				if(paramsDetail.get(i).get("filterCode")== null || "".equals(paramsDetail.get(i).get("filterCode"))){
 					paramsDetail.get(i).put("filterExCode", 0);
@@ -530,10 +602,10 @@ public class ServiceApiController {
 					paramsDetail.get(i).put("filterPrice", paramsDetail.get(i).get("salesPrice"));
 				}
 				
-				paramsDetail.get(i).put("filterRemark", "1");
-				paramsDetail.get(i).put("filterID", "1");
+				paramsDetail.get(i).put("filterRemark", "");
+				paramsDetail.get(i).put("filterID", paramsDetail.get(i).get("filterCode") );
 				paramsDetail.get(i).put("filterTotal", "1");
-				
+				*/
 				
 				Map<String, Object> params = asTransLogs1.get(i);  
 //				Map<String, Object> servasMasterMap = asTransLogs.get(i);
@@ -547,8 +619,8 @@ public class ServiceApiController {
 					params.put("AS_SO_ID", "");
 				}
 				
-				if(getAsBasic.get("asCtId")!=null){		
-					params.put("AS_CT_ID", String.valueOf(getAsBasic.get("asCtId")));
+				if(getAsBasic.get("userId") !=null){		
+					params.put("AS_CT_ID", String.valueOf(getAsBasic.get("userId")));
 				}else{
 					params.put("AS_CT_ID", "");
 				}
@@ -781,8 +853,8 @@ public class ServiceApiController {
 				
 				asResultInsert.put("asResultM", params);
 				asResultInsert.put("updator",getAsBasic.get("userId"));
-				asResultInsert.put("add", paramsDetail);				 
-				
+				asResultInsert.put("add", paramsDetailCvt);				 
+		
 				LOGGER.debug("asResultInsert1111111111 값 : {}", asResultInsert);
 				
 				ASManagementListService.asResult_insert(asResultInsert);

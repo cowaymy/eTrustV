@@ -247,6 +247,33 @@ public class ASManagementListController {
 	}
 	
 	
+	
+
+	/**
+	 * Services - AS  - saveASInHouseEntry in house 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/saveASInHouseEntry.do" , method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> saveASInHouseEntry(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		
+		
+		logger.debug("saveASEntry in...."); 
+		logger.debug("params :"+ params.toString());
+		params.put("updator", sessionVO.getUserId());
+		
+		EgovMap sm = ASManagementListService.saveASInHouseEntry(params);
+		
+		// 호출될 화면
+		return ResponseEntity.ok(sm);
+	}
+	
+	
+	
 	/**
 	 * Services - AS  - ASReceiveEntry Order No search
 	 *
@@ -923,7 +950,7 @@ public class ASManagementListController {
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-	    message.setData(rtnValue.get("AS_NO"));  
+	    message.setData(rtnValue.get("asNo"));  
 		message.setMessage("");
 				
 		return ResponseEntity.ok(message);  
