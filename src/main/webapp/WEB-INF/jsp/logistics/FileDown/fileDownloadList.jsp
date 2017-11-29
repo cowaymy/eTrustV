@@ -315,6 +315,9 @@ function fileSpaceSaveAjax() {
        if(result.cnt == 0){
 	        $("#upId").val(result.re);
 	        $("#UploadFilePopUp_wrap").show();
+	        $("input[id=fileSelector]").val('');
+	        $(".auto_file input[type=text]").val('');
+	        $(".auto_file input[type=text]").text('');
 	        $("#newUp").show();
 	        $("#reUp").hide();
     	   
