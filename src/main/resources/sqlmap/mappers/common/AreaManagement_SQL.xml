@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.AreaManagementMapper">
+
+<select id="selectAreaManagement" parameterType="Map" resultType="egovMap">
+<![CDATA[
+SELECT AREA_ID
+      ,AREA
+      ,POSTCODE
+      ,CITY
+      ,STATE
+      ,COUNTRY
+      ,(CASE
+      WHEN STATUS_ID=1 THEN 'Active'
+      WHEN STATUS_ID=2 THEN 'Inactive'
+      END)STATUS_ID
+      ,(CASE
+      WHEN GST_CHK=0 THEN 'Include GST'
+      WHEN GST_CHK=1 THEN 'Exclude GST'
+      END)GST_CHK
+      ,(CASE
+      WHEN ID IS NULL THEN 'Internal'
+      WHEN ID IS NOT NULL THEN 'External'
+      END)ID
+FROM SYS0064M
+WHERE 1=1
+]]>
+<if test="country != null and country != '' ">
+AND (ISO = #{country} OR COUNTRY = #{country})
+</if>
+<if test="postcode != null and postcode != '' ">
+AND POSTCODE = #{postcode}
+</if>
+<if test="areaName != null and areaName != '' ">
+AND AREA LIKE '%' ||#{areaName}|| '%'
+</if>
+ORDER BY STATE, CITY, POSTCODE, AREA, AREA_ID
+</select>
+
+
+<update id="udtAreaManagement"> 
+UPDATE SYS0064M
+SET 
+    <if test="statusId == 'Active'">
+        STATUS_ID = 1,
+    </if>
+    <if test="statusId == 'Inactive'">
+        STATUS_ID = 2,
+    </if>
+    <if test="gstChk == 'Include GST'">
+        GST_CHK =  0
+    </if>
+    <if test="gstChk == 'Exclude GST'">
+        GST_CHK = 1
+    </if>
+WHERE AREA_ID = #{areaId}
+</update>
+
+
+<insert id="addCopyAddressMaster" parameterType="Map">
+INSERT INTO SYS0064M (
+ AREA_ID,
+ ISO,
+ COUNTRY,
+ LANGUAGE,
+ REF_ID,
+ STATE,
+ CITY,
+ POSTCODE,
+ AREA,
+ UTC,
+ DST,
+ STATUS_ID,
+ CODY_BRNCH_CODE,
+ CODY_MANGR_USER_ID,
+ CT_BRNCH_CODE,
+ CT_SUB_GRP,
+ GST_CHK
+)
+VALUES (
+(SELECT #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode}),
+(SELECT DISTINCT(ISO) FROM SYS0064M WHERE COUNTRY= #{country}),
+#{country},
+'EN',
+(SELECT CASE 
+    WHEN (SELECT ID FROM SYS0064M WHERE AREA_ID=#{key}) IS NOT NULL
+    THEN (SELECT ID FROM SYS0064M WHERE AREA_ID=#{key})
+    ELSE (SELECT REF_ID FROM SYS0064M WHERE AREA_ID=#{key})
+    END
+ FROM SYS0064M
+ WHERE AREA_ID=#{key}),
+#{state},
+#{city},
+#{postcode},
+#{area},
+'+08:00',
+'+08:00',
+<if test="statusId == 'Active'">
+1,
+</if>
+<if test="statusId == 'Inactive'">
+2,
+</if>
+(SELECT CODY_BRNCH_CODE FROM SYS0064M WHERE AREA_ID= #{key}),
+(SELECT CODY_MANGR_USER_ID FROM SYS0064M WHERE AREA_ID= #{key}),
+(SELECT CT_BRNCH_CODE FROM SYS0064M WHERE AREA_ID= #{key}),
+(SELECT CT_SUB_GRP FROM SYS0064M WHERE AREA_ID= #{key}),
+(SELECT GST_CHK FROM SYS0064M WHERE AREA_ID= #{key})
+)
+</insert>
+
+<insert id="addCopyOtherAddressMaster" parameterType="Map">
+INSERT INTO SYS0064M (
+ AREA_ID,
+ ISO,
+ COUNTRY,
+ LANGUAGE,
+ REF_ID,
+ STATE,
+ CITY,
+ POSTCODE,
+ AREA,
+ UTC,
+ DST,
+ STATUS_ID,
+ CODY_BRNCH_CODE,
+ CODY_MANGR_USER_ID,
+ CT_BRNCH_CODE,
+ CT_SUB_GRP,
+ GST_CHK
+)
+VALUES (
+(SELECT SUBSTR(#{key},0,2)||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode}),
+(SELECT DISTINCT(ISO) FROM SYS0064M WHERE COUNTRY= #{country}),
+#{country},
+'EN',
+(SELECT CASE 
+    WHEN (SELECT ID FROM SYS0064M WHERE AREA_ID=#{key}) IS NOT NULL
+    THEN (SELECT ID FROM SYS0064M WHERE AREA_ID=#{key})
+    ELSE (SELECT REF_ID FROM SYS0064M WHERE AREA_ID=#{key})
+    END
+ FROM SYS0064M
+ WHERE AREA_ID=#{key}),
+#{state},
+#{city},
+#{postcode},
+#{area},
+'+08:00',
+'+08:00',
+<if test="statusId == 'Active'">
+1,
+</if>
+<if test="statusId == 'Inactive'">
+2,
+</if>
+(SELECT CODY_BRNCH_CODE FROM SYS0064M WHERE AREA_ID= #{key}),
+(SELECT CODY_MANGR_USER_ID FROM SYS0064M WHERE AREA_ID= #{key}),
+(SELECT CT_BRNCH_CODE FROM SYS0064M WHERE AREA_ID= #{key}),
+(SELECT CT_SUB_GRP FROM SYS0064M WHERE AREA_ID= #{key}),
+(SELECT GST_CHK FROM SYS0064M WHERE AREA_ID= #{key})
+)
+</insert>
+
+<insert id="addOtherAddressMaster" parameterType="Map">
+INSERT INTO SYS0064M (
+ AREA_ID,
+ ISO,
+ COUNTRY,
+ LANGUAGE,
+ STATE,
+ CITY,
+ POSTCODE,
+ AREA,
+ UTC,
+ DST,
+ STATUS_ID,
+ GST_CHK
+)
+VALUES (
+(SELECT DISTINCT(CASE 
+    WHEN (SELECT LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode}) IS NULL
+    THEN #{countrycode}||'-'||LPAD(0001,4,'0')
+    ELSE (SELECT #{countrycode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode})
+    END)
+ FROM SYS0064M),
+#{countrycode},
+#{country},
+'EN',
+#{state},
+#{city},
+#{postcode},
+#{area},
+'+08:00',
+'+08:00',
+<if test="statusId == 'Active'">
+1,
+</if>
+<if test="statusId == 'Inactive'">
+2,
+</if>
+0
+)
+</insert>
+
+
+<insert id="addMyAddressMaster" parameterType="Map">
+INSERT INTO SYS0064M (
+ AREA_ID,
+ ISO,
+ COUNTRY,
+ LANGUAGE,
+ STATE,
+ CITY,
+ POSTCODE,
+ AREA,
+ UTC,
+ DST,
+ STATUS_ID,
+ GST_CHK
+)
+VALUES (
+(SELECT DISTINCT(CASE 
+    WHEN (SELECT LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode}) IS NULL
+    THEN #{postcode}||'-'||LPAD(0001,4,'0')
+    ELSE (SELECT #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode})
+    END)
+ FROM SYS0064M),
+'MY',
+'Malaysia',
+'EN',
+#{state},
+#{city},
+#{postcode},
+#{area},
+'+08:00',
+'+08:00',
+<if test="statusId == 'Active'">
+1,
+</if>
+<if test="statusId == 'Inactive'">
+2,
+</if>
+0
+)
+</insert>
+
+
+<select id="selectMyPostcode" parameterType="Map" resultType="egovMap">
+<![CDATA[
+SELECT AREA_ID
+FROM SYS0064M
+WHERE 1=1
+]]>
+<if test="postcode_my != null and postcode_my != '' ">
+AND POSTCODE = #{postcode_my} AND ISO = 'MY' AND ROWNUM=1
+</if>
+</select>
+
+</mapper>
