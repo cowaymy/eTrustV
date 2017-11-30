@@ -30,21 +30,10 @@ var gridPros2 = {
         // 체크박스 대신 라디오버튼 출력함
         rowCheckToRadio : true,
         
-        softRemoveRowMode:false,
-
+        softRemoveRowMode:false
         
 };
 
-function test(rowIndex){
-	
-	
-	var checkedItems = AUIGrid.getCheckedRowItemsAll(crcKeyInGridId);
-	alert(checkedItems.length);
-	if(checkedItems.length > 1){
-		AUIGrid.addUncheckedRowsByIds(crcKeyInGridId, checkedItems[rowIndex].rnum);
-	}
-	
-}
 $(document).ready(function(){
 	
 	doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'bankAcc' , 'S', '');    
@@ -54,7 +43,6 @@ $(document).ready(function(){
 	crcStateGridId = GridCommon.createAUIGrid("crcState_grid_wrap", crcStateLayout,"",gridPros2);
 	
 });
-
 
 var mappingLayout = [ 
                        {
