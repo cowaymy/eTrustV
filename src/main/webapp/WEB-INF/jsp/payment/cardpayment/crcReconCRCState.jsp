@@ -299,9 +299,6 @@ var crcStateLayout = [
                             
                             <div class="border_box" style="height:350px;"><!-- border_box start -->
                                 <article id="crcKeyIn_grid_wrap" class="grid_wrap"></article>
-                                <!-- <ul class="left_btns">
-                                    <li><p class="btn_blue2"><a href="#" id="btnAddToBillTarget">Add to Billing Target</a></p></li>
-                                </ul> -->
                             </div><!-- border_box end -->
                         </div>
                         <div style="width:50%;">
@@ -314,51 +311,10 @@ var crcStateLayout = [
                                     <li><p class="btn_blue2"><a href="javascript:fn_mappingProc();" id="btnMapping">Mapping</a></p></li>
                                     <li><p class="btn_blue2"><a href="javascript:fn_mappingListKnockOff();" id="btnKnockOff">Knock-Off</a></p></li>
                                 </ul>
-                                <!-- <ul class="left_btns">
-                                    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnRemoveBillTarget">Remove From Billing Target</a></p></li>
-                                    <li><p class="btn_blue2"><a href="javascript:void(0);" id="createBills">Create Bills</a></p></li>
-                                </ul> -->
                             </div><!-- border_box end -->
                         </div>
                     </div><!-- divine_auto end -->
             </section><!-- content end -->
             <hr />
     </div><!-- wrap end -->
-        <%-- <div id="createBillsPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-            <header class="pop_header"><!-- pop_header start -->
-                <h1>Advance Bill Remark</h1>
-                <ul class="right_opt">
-                    <li><p class="btn_blue2"><a href="" onclick="fn_createBillsPopClose();">CLOSE</a></p></li>
-                </ul>
-            </header><!-- pop_header end -->
-            <section class="pop_body"><!-- pop_body start -->
-                <table class="type1"><!-- table start -->
-                    <caption>table</caption>
-                    <colgroup>
-                        <col style="width:140px" />
-                        <col style="width:*" />
-                        <col style="width:180px" />
-                        <col style="width:*" />
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Remark</th>
-                            <td colspan="3">
-                                <textarea cols="20" rows="5" placeholder="" id="remark"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Invoice Remark</th>
-                            <td colspan="3">
-                                <textarea cols="20" rows="5" placeholder="" id="invoiceRemark">
-                                </textarea>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table><!-- table end -->
-                <ul class="center_btns">
-                    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave" onclick="">SAVE</a></p></li>
-                </ul>
-            </section><!-- pop_body end -->
-        </div><!-- popup_wrap end --> --%>
 </body>
