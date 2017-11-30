@@ -173,4 +173,13 @@ public class OrderListController {
 
         return ResponseEntity.ok(result);
     }
+	
+	@RequestMapping(value="/getBankCodeList")
+	public ResponseEntity<List<EgovMap>> getBankCodeList(@RequestParam Map<String, Object> params) throws Exception{
+	
+		List<EgovMap> bankCodeList = null;
+		bankCodeList = orderListService.getBankCodeList(params);
+	
+		return ResponseEntity.ok(bankCodeList);
+	}
 }

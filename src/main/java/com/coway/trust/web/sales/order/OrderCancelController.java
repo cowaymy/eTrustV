@@ -306,4 +306,11 @@ public class OrderCancelController {
 
 		return "sales/order/orderCancelCTSearchPop";
 	}
+	
+	@RequestMapping(value="/orderCancelRequestRawDataPop.do")
+	public String orderCancelRequestRawDataPop(){
+		
+		return "sales/order/orderCancelRequestRawDataPop";
+	}
+	
 }

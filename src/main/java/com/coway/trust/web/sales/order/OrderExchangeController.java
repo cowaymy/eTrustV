@@ -162,4 +162,10 @@ public class OrderExchangeController {
 		return ResponseEntity.ok(map);
 	}
 	
+	@RequestMapping(value="/orderExchangeRawDataPop.do")
+	public String orderExchangeRawDataPop(){
+		
+		return "sales/order/orderExchangeRawDataPop";
+	}
+	
 }
