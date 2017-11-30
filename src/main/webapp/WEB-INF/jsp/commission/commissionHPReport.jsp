@@ -94,22 +94,26 @@
 					return;
 				}
 
+				  option = {
+	                      isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+	                    };
+				  
 				if(salesPersonCd=="503581"){//GCM 
-					reportFileName = "/commission/SGMComm_PDF.rpt"; //reportFileName
-				 	option = {
-				              isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-				            };
+					reportFileName = "/commission/SGMComm_PDF.rpt"; //reportFileName				
+				 	$($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
+			    $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
+			    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+			    $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
 				}else{
 					reportFileName = "/commission/HPComm_PDF.rpt"; //reportFileName
+					 //set parameters
+			     $($reportForm).append('<input type="hidden" id="Memcode" name="Memcode" value="" /> ');
+			     $($reportForm).append('<input type="hidden" id="Month" name="Month" value="" /> ');
+			     $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+			     $($reportForm).append('<input type="hidden" id="Year" name="Year" value="" /> ');
 				}				
 				reportDownFileName = "HPCommission_" + today; //report name			
-				reportViewType = "PDF"; //viewType
-
-				//set parameters
-				$($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
-				$($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
-				$($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
-				$($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
+				reportViewType = "PDF"; //viewType			
 
 				$("#reportForm #Memcode").val(salesPersonCd);
 				$("#reportForm #Month").val(month);
