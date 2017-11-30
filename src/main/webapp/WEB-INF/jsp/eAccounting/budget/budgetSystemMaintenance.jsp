@@ -39,10 +39,16 @@
     //Start AUIGrid
     $(document).ready(function() {
         
+    	 
         // AUIGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "");
         AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩 
             
+        var date = new Date();
+        var year = date.getFullYear();
+        
+       $("#searchDt").val(year);
+       
         //Rule Book Item search
         $("#search").click(function(){  
             var searchDt = $("#searchDt").val();
@@ -284,7 +290,7 @@
 <tr>
     <th scope="row"><spring:message code="budget.year" /></th>
     <td>
-    <input type="text" id="searchDt" name="searchDt" title="" placeholder="" class="fl_left" value="2017"/>
+    <input type="text" id="searchDt" name="searchDt" title="" placeholder="" class="fl_left" />
      <p class="btn_blue"><a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></span></a></p>
     </td>
 </tr>
