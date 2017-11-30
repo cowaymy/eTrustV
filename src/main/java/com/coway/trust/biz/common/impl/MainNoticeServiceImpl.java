@@ -34,4 +34,14 @@ public class MainNoticeServiceImpl extends EgovAbstractServiceImpl implements Ma
 		return mainNoticeMapper.selectMainNotice(params);
 	}
 
+	@Override
+	public List<EgovMap> getTagStatus(Map<String, Object> params) {
+		return mainNoticeMapper.selectTagStatus(params);
+	}
+
+	@Override
+	public List<EgovMap> getDailyPerformance(Map<String, Object> params) {
+		return mainNoticeMapper.selectDailyPerformance(params);
+	}
+
 }

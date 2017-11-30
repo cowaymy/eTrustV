@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.common.MainNoticeService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -39,6 +41,23 @@ public class MainNoticeController {
 	@RequestMapping(value = "/getMainNotice.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMainNotice(@RequestParam Map<String, Object> params) {
 		List<EgovMap> notice = mainNoticeService.getMainNotice(params);
+		return ResponseEntity.ok(notice);
+	}
+
+	@RequestMapping(value = "/getTagStatus.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getTagStatus(@RequestParam Map<String, Object> params) {
+		List<EgovMap> notice = mainNoticeService.getTagStatus(params);
+		return ResponseEntity.ok(notice);
+	}
+
+	@RequestMapping(value = "/openTagStatusPopup.do")
+	public String openTagStatusPopup(@RequestParam Map<String, Object> params, SessionVO sessionVO,ModelMap model) {
+		return "common/mainTagStatusPop";
+	}
+
+	@RequestMapping(value = "/getDailyPerformance.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getDailyPerformance(@RequestParam Map<String, Object> params) {
+		List<EgovMap> notice = mainNoticeService.getDailyPerformance(params);
 		return ResponseEntity.ok(notice);
 	}
 
