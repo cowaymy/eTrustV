@@ -48,6 +48,8 @@
 		}, {
 			dataField : "invReqUpdDt",
 			headerText : "Request At",
+			dataType : "date",
+            formatString : "dd/mm/yyyy" ,
 			width : 170,
 			editable : false
 		}, {
@@ -77,7 +79,7 @@
 			headerHeight : 30,
 
 			// 그룹핑 패널 사용
-			useGroupingPanel : true,
+			useGroupingPanel : false,
 
 			// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 			skipReadonlyColumns : true,
@@ -122,7 +124,7 @@
 	}
 
 	function fn_goBatch() {
-		Common.alert('The program is under development.');
+		Common.popupDiv("/sales/order/orderNewRequestBatchListPop.do", $("#popForm").serializeJSON(), null, true, 'batchPop');
 	}
 
 	function fn_rawData() {
@@ -218,7 +220,7 @@
 								<span>To</span>
 								<p>
 									<input type="text" id="endCrtDt" name="endCrtDt"
-										value="${toDay}" title="Create end Date"
+										title="Create end Date"
 										placeholder="DD/MM/YYYY" class="j_date" />
 								</p>
 							</div>
