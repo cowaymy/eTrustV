@@ -152,6 +152,8 @@
         var result = true;
         var country = $("#country").val();
         var postcode = $("#postcode").val();
+        
+        var lengthPostcode = postcode.length;
 
         if(country == '' || postcode == ''){
         	result = false;
@@ -160,13 +162,8 @@
 	        } else if (postcode == '') {
 	        	Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + aPostCode + "' htmlEscape='false'/>");
 	        }
-        }
-        
-        var lengthPostcode = postcode.length;
-
-        if(lengthPostcode != 5){
+        } else if(lengthPostcode != 5){
         	result = false;
-        	//Common.alert("Please enter Postcode within 5 characters.");
         	Common.alert("<spring:message code='sys.msg.limitCharacter' arguments='" + aPostCode +" ; 5' htmlEscape='false' argumentSeparator=';' />");
         }
         return result;
