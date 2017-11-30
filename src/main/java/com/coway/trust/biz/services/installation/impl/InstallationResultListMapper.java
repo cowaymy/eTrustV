@@ -145,6 +145,8 @@ public interface InstallationResultListMapper {
 
 	void insertAccorderBill(Map<String,Object> params);
 
+	void updateSalesOrderMStatus(Map<String,Object>params);
+
 	void insertTaxInvoiceCompanySub(Map<String, Object> params);
 
 	void insertTaxInvoiceOutright(Map<String,Object> params);
