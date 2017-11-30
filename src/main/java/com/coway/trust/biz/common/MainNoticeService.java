@@ -10,4 +10,8 @@ public interface MainNoticeService {
 	List<EgovMap> selectDailyCount(Map<String, Object> params);
 
 	List<EgovMap> getMainNotice(Map<String, Object> params);
+
+	List<EgovMap> getTagStatus(Map<String, Object> params);
+
+	List<EgovMap> getDailyPerformance(Map<String, Object> params);
 }

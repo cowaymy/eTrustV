@@ -11,4 +11,8 @@ public interface MainNoticeMapper {
 	List<EgovMap> selectDailyCount(Map<String, Object> params);
 
 	List<EgovMap> selectMainNotice(Map<String, Object> params);
+
+	List<EgovMap> selectTagStatus(Map<String, Object> params);
+
+	List<EgovMap> selectDailyPerformance(Map<String, Object> params);
 }
