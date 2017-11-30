@@ -10,6 +10,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface ServicesLogisticsPFCMapper {
   
-	 EgovMap  install_Active_SP_LOGISTIC_REQUEST(Map<String, Object> param);
+	 void install_Active_SP_LOGISTIC_REQUEST(Map<String, Object> param);
 	  
 }

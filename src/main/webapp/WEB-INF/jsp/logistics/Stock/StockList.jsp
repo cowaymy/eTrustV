@@ -46,8 +46,14 @@
                         {dataField:"netweight"         ,headerText:"Net Wgt"         ,width:100 ,height:30},
                         {dataField:"grossweight"       ,headerText:"Gross Wgt"       ,width:100 ,height:30},
                         {dataField:"measurementcbm"    ,headerText:"CBM"    ,width:100 ,height:30},
-                        {dataField:"stkgrade"          ,headerText:"Grade"        ,width:100 ,height:30
-                        }];
+                        {dataField:"stkgrade"          ,headerText:"Grade"        ,width:100 ,height:30},
+                        {dataField:"c6"                ,headerText:"STK_COMM_AS"        ,width:100 ,height:30},
+                        {dataField:"c7"                ,headerText:"STK_COMM_OS_AS"        ,width:100 ,height:30},
+                        {dataField:"c8"                ,headerText:"STK_COMM_BS"        ,width:100 ,height:30},
+                        {dataField:"c9"                ,headerText:"STK_COMM_OS_BS"        ,width:100 ,height:30},
+                        {dataField:"c10"               ,headerText:"STK_COMM_INS"        ,width:100 ,height:30},
+                        {dataField:"c11"               ,headerText:"STK_COMM_OS_INS"        ,width:100 ,height:30}
+                       ];
 
     var filtercolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
                         {dataField:"stockname"           ,headerText:"Description"   ,width:"50%", editable : false,style :"aui-grid-user-custom-left"},
@@ -330,6 +336,21 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             $("#service_info_edit").text("EDIT");
         });
         
+        $("#service_point").click(function(){
+            f_removeclass();
+            $("#service_point_div").show();
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            var item = selectedItems[0].item;
+            console.log(item);
+            $("#as").text(item.c6);
+            $("#osas").text(item.c7);
+            $("#hs").text(item.c8);
+            $("#oshs").text(item.c9);
+            $("#install").text(item.c10);
+            $("#osinstall").text(item.c11);
+            $(this).find("a").attr("class","on");
+        });
+        
         $("#stock_image").click(function(){
 
             if($("#stock_img_td").css("display") == "none"){
@@ -427,6 +448,23 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(serviceGrid),"service_info");  
             }
 
+        });
+        $("#service_point_edit").click(function(){
+        	
+        	var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            var item = selectedItems[0].item;
+            
+        	if($("#service_point_edit").text() == "EDIT"){
+        		$("#as").html        ("<input type='text' class='w100p' id='ias'        name='ias'        value='"+item.c6 +"'>");
+                $("#osas").html      ("<input type='text' class='w100p' id='iosas'      name='iosas'      value='"+item.c7 +"'>");
+                $("#hs").html        ("<input type='text' class='w100p' id='ihs'        name='ihs'        value='"+item.c8 +"'>");
+                $("#oshs").html      ("<input type='text' class='w100p' id='ioshs'      name='ioshs'      value='"+item.c9 +"'>");
+                $("#install").html   ("<input type='text' class='w100p' id='iinstall'   name='iinstall'   value='"+item.c10+"'>");
+                $("#osinstall").html ("<input type='text' class='w100p' id='iosinstall' name='iosinstall' value='"+item.c11+"'>");
+                $("#service_point_edit").text("SAVE");
+        	}else if ($("#service_point_edit").text() == "SAVE"){
+        		f_info_save("/stock/modifyServicePoint.do" , item.stkid ,"servicepoint","service_point");
+        	}
         });
         
         $("#stock_comm_edit").click(function(){
@@ -535,12 +573,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         } else {
             fdata = $("#" + v).serializeJSON();
         }
+        
+        console.log(" ::: " + fdata);
         var keys = Object.keys(fdata);
         
-//         for ( var i in keys) {
-//             //console.log("key=" + keys[i] + ",  data=" + fdata[keys[i]]);
-//             //+ ",  data="+ obj[keys[i]]);
-//         }
         if (v == "stockInfo") {
             if ($("#cbSirim").is(":checked") == true) {
                 $.extend(fdata, {
@@ -587,6 +623,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 $("#service_info_edit").text("EDIT");
                 colShowHide(serviceGrid,"",false);
                 $("#service_info").trigger("click");
+            }else if (v == "servicepoint") {
+                $("#service_point_edit").text("EDIT");
             }
             getMainListAjax(data);
         });
@@ -600,9 +638,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         for (i = 0; i < selectedItems.length; i++) {
             selcell = selectedItems[i].rowIndex;
         }
+        
+        console.log(_da);
 
         $.ajax({
-            type : "POST",
+            type : "GET",
             url : "/stock/StockList.do?" + param,
             //url : "/stock/StockList.do",
             //data : param,
@@ -654,6 +694,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     $("#price_info_div").hide();
                     $("#filter_info_div").hide();
                     $("#service_info_div").hide();
+                    $("#service_point_div").hide();
                     $("#stock_img_td").hide();
                     $("#stock_commisssion_div").hide();
                     $("#imgShow").html("");
@@ -1357,6 +1398,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <li id="filter_info"><a href="#"> Filter Info</a></li>
                 <li id="spare_info"><a href="#"> Spare Part Info</a></li>
                 <li id="service_info"><a href="#">Service Charge Info</a></li>
+                <li id="service_point"><a href="#">Service Point</a></li>
                 <li id="stock_image"><a href="#">Stock Image</a></li>
                 <li id="stock_commisssion"><a href="#">Stock Commission Setting</a></li>
             </ul>
@@ -1515,7 +1557,48 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 </ul>
                 </aside>
                 <div id="service_grid" style="width:100%;"></div>
-            </article>            
+            </article>
+            <!-- service_point -->
+            <article class="tap_area" id="service_point_div" style="display:none;">
+                <aside class="title_line"><!-- title_line start -->
+                <h3>Service Point</h3>
+                <ul class="left_opt">
+                    <li><p class="btn_blue"><a id="service_point_edit">EDIT</a></p></li>
+                </ul>
+                </aside>
+                <form id="servicepoint" name="servicepoint" method="post">
+                <table class="type1">
+                    <caption>search table</caption>
+                    <colgroup>
+                        <col style="width:200px" />
+                        <col style="width:*" />
+                        <col style="width:200px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row">A/S</th>
+                        <td ID="as"></td>
+                        <th scope="row">OS_A/S</th>
+                        <td ID="osas"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">H/S</th>
+                        <td ID="hs"></td>
+                        <th scope="row">OS_H/S</th>
+                        <td id="oshs"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">INSTALLATION</th>
+                        <td id="install"></td>
+                        <th scope="row">OS_INSTALLATION</th>
+                        <td ID="osinstall"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                </form>
+            </article>
+            <!-- service_point -->
             <article class="tap_area" id="stock_img_td" style="display:none;">
                 <table class="type1">
                     <caption>search table</caption>

@@ -82,7 +82,7 @@
 								{dataField:"compntUnitOfMeasure",headerText:""  ,width:100 ,style: "my-min-style",visible:false},
 								{dataField:"validFromDt",headerText:"Valid From",width:"8%",style: "my-min-style",visible:true},
 								{dataField:"validToDt",headerText:"Valid To",width:"8%",style: "my-min-style",visible:true},
-								{dataField:"leadTmOffset",headerText:"Filter Changing Period",width:100,style: "my-min-style",visible:true},
+								{dataField:"leadTmOffset",headerText:"FT Chg.PD ",width:100,style: "my-min-style",visible:true},
 								{dataField:"alterItmGrp",headerText:"Alternative Item by group",width:100,style: "my-min-style",visible:true},
 								{dataField:"alterItmRankOrd",headerText:"Priority of alternative item",width:100,style: "my-min-style",visible:true},
 								{dataField:"useProbabiltiy",headerText:"Use Probabiltiy",width:100,style: "my-min-style",visible:true},
@@ -97,7 +97,7 @@
     
     var gridoptions = {
     		showStateColumn : true , 
-    		editable : false, 
+    		editable : true, 
     		pageRowCount : 30,
     		usePaging : false, /* NOTE: true 설정시 셀병합 실행 안됨*/
     		useGroupingPanel : false , 
@@ -130,16 +130,33 @@
         {
         });
         
+        AUIGrid.bind(myGridID, "cellEditBegin", function(event) 
+        {
+        	return false;
+        });
+        
         AUIGrid.bind(myGridID, "ready", function(event) {
         });
         $("#subDiv").hide();
     });
     function filterAUIGrid(columnLayout) {
         filterGrid = AUIGrid.create("#filter_grid", columnLayout, gridoptions);
+        AUIGrid.bind(filterGrid, "cellEditBegin", function(event) 
+        {
+        	if (event.dataField == "leadTmOffset"){
+        		return true;
+        	}else{
+        		return false;
+        	}
+        });
     }
 
     function spareAUIGrid(columnLayout) {
         spareGrid = AUIGrid.create("#spare_grid", columnLayout, gridoptions);
+        AUIGrid.bind(spareGrid, "cellEditBegin", function(event) 
+        {
+            return false;
+        });
     }
 
     $(function(){
@@ -199,7 +216,20 @@
            $(this).find("a").attr("class","on");
            
        });
-        
+       $("#filterSave").click(function(){
+    	   console.log(GridCommon.getEditData(filterGrid));
+    	   Common.ajax("POST", "/logistics/bom/modifyLeadTmOffset.do", GridCommon.getEditData(filterGrid), function(result) {
+               Common.alert(result.message);
+               AUIGrid.resetUpdatedItems(myGridID, "all");
+               
+           },  function(jqXHR, textStatus, errorThrown) {
+               try {
+               } catch (e) {
+               }
+
+               Common.alert("Fail : " + jqXHR.responseJSON.message);
+           });
+       });
         
     });
     
@@ -485,6 +515,9 @@
                     <li><p class="btn_blue"><a id="filter_info_edit">EDIT</a></p></li>
                     </ul> -->
                 </aside>
+                <ul class="right_btns">
+		            <li><p class="btn_grid"><a id="filterSave">SAVE</a></p></li>
+		        </ul>
                 <div id="filter_grid" style="width:100%;">
                 </div>                
             </article>

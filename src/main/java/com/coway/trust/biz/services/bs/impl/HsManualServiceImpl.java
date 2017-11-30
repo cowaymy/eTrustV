@@ -593,7 +593,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
             logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram.toString());
             servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
-            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+            logger.debug("ORDERCALL 물류 호출 결과 ===> {}" , logPram);
             /////////////////////////물류 호출 END //////////////////////
 
       }else if(Integer.parseInt(params.get("cmbStatusType").toString()) == 21){

@@ -74,7 +74,7 @@
             d.USER_WHO_CRT_RCORD  user_who_crt_rcord ,
             d.CHNG_ON  chng_on ,
             d.NAME_PERSON_WHO_CHG_OBJ name_person_who_chg_obj,
-            d.LEAD_TM_OFFSET LEAD_TM_OFFSET,
+            d.LEAD_TM_OFFSET_N LEAD_TM_OFFSET,
             d.ALTER_ITM_GRP ALTER_ITM_GRP,
             d.ALTER_ITM_RANK_ORD ALTER_ITM_RANK_ORD,
             d.USE_PROBABILTIY USE_PROBABILTIY
@@ -164,4 +164,11 @@
 		   AND l44d.BOM_COMPNT = s26m.STK_CODE
 		   AND l44d.BOM_COMPNT=#{cmpntId}
      </select>
+     
+     <update id="modifyLeadTmOffset" parameterType="Map">
+        update log0044d 
+           set LEAD_TM_OFFSET_N = #{leadTmOffset}
+         where bom = #{bom}
+           and BOM_ITM_NODE_NO = #{bomItmNodeNo}
+     </update>
 </mapper>

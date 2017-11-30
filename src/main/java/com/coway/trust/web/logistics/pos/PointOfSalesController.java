@@ -218,28 +218,6 @@ public class PointOfSalesController {
 	@RequestMapping(value = "/insertPosInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertPosInfo(@RequestBody Map<String, Object> params, Model model) {
 
-		// List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		// List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-		// Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		// logger.debug("checkListSize : {}", checkList.size());
-		// for (int i = 0; i < checkList.size(); i++) {
-		// logger.debug("checkList! : {}", checkList.get(i));
-		// }
-
-		// if(serialList.size() > 0){
-		// for (int i = 0; i < serialList.size(); i++) {
-		// logger.debug("serialList@: {}", serialList.get(i));
-		// }
-		// }
-
-		// logger.debug("insOthersReq@: {}", formMap.get("insOthersReq"));
-		// logger.debug("insReqType@: {}", formMap.get("insReqType"));
-		// logger.debug("insReqDate@: {}", formMap.get("insReqDate"));
-		// logger.debug("insRequestor@: {}", formMap.get("insRequestor"));
-		// logger.debug("insReqLoc@: {}", formMap.get("insReqLoc"));
-		// logger.debug("insRemark@: {}", formMap.get("insRemark"));
-		// logger.debug("insSmo@: {}", formMap.get("insSmo"));
-
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);

@@ -382,12 +382,14 @@
            ORDER BY l54.delvry_no DESC
            ) T
     </select>
-    <resultMap id="STOPRCDATA" type="egovMap" />
-    <select id="StockTransferiSsue"  statementType="CALLABLE" parameterType="Map"> 
+    
+     <resultMap id="STOPRCDATA" type="egovMap" />
+     <select id="StockTransferiSsue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=STOPRCDATA} )
              } 
      </select>
+     
      <resultMap id="PRCCANCLEDATA" type="egovMap" />
      <select id="StockTransferCancelIssue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY_CANCEL

@@ -84,6 +84,12 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 			stockMapper.updateSalePriceUOM(params);
 		}
 	}
+	
+	@Override
+	public void modifyServicePoint(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		stockMapper.modifyServicePoint(params);
+	}
 
 	@Override
 	public void updatePriceInfo(Map<String, Object> params) {

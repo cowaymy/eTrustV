@@ -259,6 +259,40 @@ public class StockListController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/modifyServicePoint.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> modifyServicePoint(@RequestBody Map<String, Object> params, Model model) {
+		
+		String retMsg = AppConstants.MSG_SUCCESS;
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		int stockId = (int) params.get("stockId");
+		
+		logger.debug("stockId id : {}", params);
+		params.put("userid", loginId);
+
+		Map<String, Object> map = new HashMap();
+		map.put("revalue", params.get("revalue"));
+		map.put("stkid", params.get("stockId"));
+
+		try {
+			stock.modifyServicePoint(params);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+		
+	}
 
 	@SuppressWarnings({ "unchecked", "unused", "null" })
 	@RequestMapping(value = "/modifyFilterInfo.do", method = RequestMethod.POST)

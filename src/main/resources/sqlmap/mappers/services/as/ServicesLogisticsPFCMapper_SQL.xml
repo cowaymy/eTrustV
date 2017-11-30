@@ -3,10 +3,8 @@
 <mapper namespace="com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper">
 
     
-   <resultMap id="rtnCode" type="egovMap" />   
-      
+    <resultMap id="rtnCode" type="egovMap" />   
     <select id="install_Active_SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
-       <![CDATA[    
             {
                   call SP_LOGISTIC_REQUEST(   #{ORD_ID},
                                                            #{RETYPE},
@@ -15,7 +13,6 @@
                                                            #{USERID},
                                                            #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
             }
-         ]]>
      </select>     
       
       

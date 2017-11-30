@@ -124,7 +124,8 @@ var LocData = {sLoc : UserCode};
 var LocData2 = {brnch : UserBranchId};
      doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
      //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , 'f_LocMultiCombo');
-     doGetComboCodeId('/common/selectStockLocationList.do',LocData2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
+     //doGetComboCodeId('/common/selectStockLocationList.do',LocData2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
+     doGetComboCodeId('/common/selectStockLocationList.do','', '','insReqLoc', 'S' , 'f_LocMultiCombo');
       doGetCombo('/common/selectCodeList.do', '15', '', 'PosItemType', 'M','f_multiCombo');
       doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombos'); 
       doSysdate(0 , 'insReqDate');
@@ -132,7 +133,7 @@ var LocData2 = {brnch : UserBranchId};
 //     /**********************************
 //      * Header Setting End
 //      ***********************************/
-    console.log(uomlist);
+    
     reqcolumnLayout=[{dataField:"itmrnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
                       {dataField:"itmcode"     ,headerText:"Code"        ,width:120    ,height:30 , editable:false},
                       {dataField:"itmdesc"     ,headerText:"Text"        ,width:120    ,height:30 , editable:false},

@@ -58,4 +58,16 @@ public class BomServiceImpl extends EgovAbstractServiceImpl implements BomServic
 		return bomMapper.selectCodeList(params);
 	}
 
+	@Override
+	public void modifyLeadTmOffset(Map<String, Object> params) {
+		List<Object> updList = (List)params.get("upd");
+		
+		if (updList.size() > 0){
+			for (int i = 0 ; i < updList.size() ; i++){
+	    		Map<String, Object> updMap = (Map<String, Object>) updList.get(i);
+	    		bomMapper.modifyLeadTmOffset(updMap);
+			}
+		}
+	}
+
 }

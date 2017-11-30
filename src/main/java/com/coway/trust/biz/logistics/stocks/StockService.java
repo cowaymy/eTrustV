@@ -27,6 +27,8 @@ public interface StockService {
 	List<EgovMap> selectStockImgList(Map<String, Object> params);
 
 	void updateStockInfo(Map<String, Object> params);
+	
+	void modifyServicePoint(Map<String, Object> params);
 
 	void updatePriceInfo(Map<String, Object> params);
 

@@ -21,6 +21,8 @@ public interface StockMapper {
 	List<EgovMap> selectStockImgList(Map<String, Object> params);
 
 	void updateStockInfo(Map<String, Object> params);
+	
+	void modifyServicePoint(Map<String, Object> params);
 
 	void updateSalePriceUOM(Map<String, Object> params);
 

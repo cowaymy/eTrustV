@@ -849,5 +849,16 @@
             select count(1) cnt from sys0026m where stk_code = #{insStockCode}
          </select>
          
-         
+         <update id="modifyServicePoint" parameterType="Map">
+            UPDATE SYS0026M
+               SET STK_COMM_AS     = #{ias}
+                 , STK_COMM_OS_AS  = #{iosas}
+                 , STK_COMM_BS     = #{ihs}
+                 , STK_COMM_OS_BS  = #{ioshs}
+                 , STK_COMM_INS    = #{iinstall}
+                 , STK_COMM_OS_INS = #{iosinstall}
+                 , UPD_DT          = SYSDATE
+                 , UPD_USER_ID     = #{userid}
+            WHERE STK_ID           = #{stockId}
+        </update>
 </mapper>

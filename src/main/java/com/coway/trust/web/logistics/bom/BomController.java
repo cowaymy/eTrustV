@@ -1,5 +1,6 @@
 package com.coway.trust.web.logistics.bom;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,14 +16,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.logistics.bom.BomService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -130,5 +134,26 @@ public class BomController {
 		Map<String, Object> map = new HashMap();
 		map.put("data", info);
 		return ResponseEntity.ok(map);
+	}
+	
+		
+	@RequestMapping(value = "/modifyLeadTmOffset.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> modifyLeadTmOffset(@RequestBody Map<String, ArrayList<Object>> params,
+			Model model) {
+
+		List<Object> updList = params.get(AppConstants.AUIGRID_UPDATE);
+		
+		Map<String, Object> param = new HashMap();
+		param.put("upd", updList);
+		
+		bomService.modifyLeadTmOffset(param);
+		
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
 	}
 }
