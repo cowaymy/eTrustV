@@ -4,6 +4,10 @@
 <script type="text/javaScript">
 var branchList = new Array();
 var gridID1;
+
+//페이징에 사용될 변수
+var _totalRowCount;
+
 $(document).ready(function(){
 	DCPMasterGrid();
     AUIGrid.bind(gridID1, "addRow", auiAddRowHandler);
@@ -14,69 +18,21 @@ $(document).ready(function(){
     $("#memType").change(function (){
         var memType = $("#memType").val();
         if(memType == 2){
-             doGetCombo('/services/mileageCileage/selectBranch', 42, '','brnch', 'M' ,  'f_multiCombo1');
+             doGetCombo('/services/mileageCileage/selectBranch', 42, '','brnch', 'S' ,  '');
         }else if(memType == 3){
-            doGetCombo('/services/mileageCileage/selectBranch', 43, '','brnch', 'M' ,  'f_multiCombo1');
+            doGetCombo('/services/mileageCileage/selectBranch', 43, '','brnch', 'S' ,  '');
         }else{
-        	doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo1');
+        	doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'S' ,  '');
         }
      });
     
-    /* $('#brnch').change(function() {
+    $('#brnch').change(function() {
         var brnch = $("#brnch").val();
-        alert("brnch : " + brnch);
-        doGetCombo('/services/mileageCileage/selectDCPFrom', brnch, '','mcpFrom', 'M' ,  'f_multiCombo2');
-        doGetCombo('/services/mileageCileage/selectDCPTo', brnch, '','mcpTo', 'M' ,  'f_multiCombo2');
-    }); */
+        doGetCombo('/services/mileageCileage/selectDCPFrom', String(brnch), '','mcpFrom', 'S' ,  '');
+        doGetCombo('/services/mileageCileage/selectDCPTo', String(brnch), '','mcpTo', 'S' ,  '');
+    });
     
 });
-
-/* function f_getDCP() {
-	$(function() {
-		$('#brnch').change(function() {
-			var brnch = $("#brnch").val();
-	        alert("brnch : " + brnch);
-	        doGetCombo('/services/mileageCileage/selectDCPFrom', brnch, '','mcpFrom', 'M' ,  'f_multiCombo2');
-	        doGetCombo('/services/mileageCileage/selectDCPTo', brnch, '','mcpTo', 'M' ,  'f_multiCombo2');
-        });
-	});
-} */
-
-function f_multiCombo1() {
-    $(function() {
-       
-        $('#brnch').change(function() {
-        	var brnch = $("#brnch").val();
-        	var brnchVal = '';
-        	$("#brnch option:selected").each(function() {
-        		brnchVal += $(this).text() + "', '";
-        	})
-        	brnchVal = brnchVal.substring(0, brnchVal.length-4);
-        	//alert("brnchVal : " + brnchVal);
-            doGetCombo('/services/mileageCileage/selectDCPFrom', String(brnchVal), '','mcpFrom', 'M' ,  'f_multiCombo2');
-            doGetCombo('/services/mileageCileage/selectDCPTo', String(brnchVal), '','mcpTo', 'M' ,  'f_multiCombo2');
-        }).multipleSelect({
-            selectAll : true,
-            width : '80%'
-        });
-    });
-}
-
-function f_multiCombo2() {
-    $(function() {
-       
-        $('#mcpFrom').change(function() {
-        }).multipleSelect({
-            selectAll : true,
-            width : '80%'
-        }); 
-        $('#mcpTo').change(function() {
-        }).multipleSelect({
-            selectAll : true,
-            width : '80%'
-        }); 
-    });
-}
 
 function getTypeComboList() {
     //var list = [ {"codeId": "P","codeName": "PUBLIC"}, {"codeId": "S","codeName": "STATE"}];
@@ -128,14 +84,14 @@ function getAreaComboList(){
 function DCPMasterGrid() { 
     var columnLayout = [
                           { dataField : "memType", headerText  : "Member Type",    width : 100 ,
-                              editRenderer : {
-                                  type : "ComboBoxRenderer",
-                                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                                  listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                      var list = getTypeComboList();
-                                      return list;
-                                  },
-                                  keyField : "id1"
+	                              editRenderer : {
+	                                  type : "ComboBoxRenderer",
+	                                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+	                                  listFunction : function(rowIndex, columnIndex, item, dataField) {
+	                                      var list = getTypeComboList();
+	                                      return list;
+	                                  },
+	                                  keyField : "id1"
                               }},
                           { dataField : "brnchCode", headerText  : "Branch",width : 100,
                                   editRenderer : {
@@ -160,12 +116,32 @@ function DCPMasterGrid() {
                                           },
                                           keyField : "id1"
                                       }},
+                          { dataField : "dcpFromId", headerText  : "DCP From ID",  width  : 100,
+                                      editRenderer : {
+                                          type : "ComboBoxRenderer",
+                                          showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                          listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                              var list = getAreaComboList(); // 임의값
+                                              return list;
+                                          },
+                                          keyField : "id1"
+                                      }},
                           { dataField : "dcpTo",       headerText  : "DCP TO",  width  : 200,
                                           editRenderer : {
                                               type : "ComboBoxRenderer",
                                               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                               listFunction : function(rowIndex, columnIndex, item, dataField) {
                                                   var list = getAreaComboList();
+                                                  return list;
+                                              },
+                                              keyField : "id1"
+                                          }},
+                          { dataField : "dcpToId", headerText  : "DCP To ID",  width  : 100,
+                                          editRenderer : {
+                                              type : "ComboBoxRenderer",
+                                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                              listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                                  var list = getAreaComboList(); // 임의값
                                                   return list;
                                               },
                                               keyField : "id1"
@@ -178,7 +154,7 @@ function DCPMasterGrid() {
                           { dataField : "distance1",       headerText  : "distance1",  width  : 0},
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
+        var gridPros = { usePaging : false,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
         
         gridID1 = GridCommon.createAUIGrid("calculation_DCPMaster_grid_wap", columnLayout  ,"" ,gridPros);
     }
@@ -209,12 +185,66 @@ function DCPMasterGrid() {
         });
     }
     
-    function fn_DCPMasterSearch(){
+    // 171129 :: 선한이
+    // Search 결과 조회
+    // 마스터 그리드 리스트 조회.
+    function fn_DCPMasterSearch(goPage){
+    	if($('#memType').val() == '') {
+    		Common.alert("Please Select 'Member Type'");
+            return false;
+    	}
+    	
+    	if($('#Branch').val() == '') {
+            Common.alert("Please Select 'Branch'");
+            return false;
+        }
+    	
+    	if(($('#mcpFrom').val() == '') && ($('#mcpTo').val() == '')) {
+            Common.alert("Please write 'DCP From' or 'DCP To'");
+            return false;
+        }
+    	
+    	//페이징 변수 세팅
+        $("#pageNo").val(goPage);   
+    	
     	Common.ajax("GET", "/services/mileageCileage/selectDCPMaster.do", $("#DCPMasteForm").serialize(), function(result) {
             console.log("성공.");
             console.log("data : " + result);
-            AUIGrid.setGridData(gridID1, result);
+            AUIGrid.setGridData(gridID1, result.resultList);
+            
+            //전체건수 세팅
+            _totalRowCount = result.totalRowCount;
+
+            //페이징 처리를 위한 옵션 설정
+            var pagingPros = {
+                    // 1페이지에서 보여줄 행의 수
+                    rowCount : $("#rowCount").val()
+            };
+            
+            GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+            
         });
+    }
+    
+    //마스터 그리드 페이지 이동
+    function moveToPage(goPage){
+      //페이징 변수 세팅
+      $("#pageNo").val(goPage);
+      
+      // selectDCPMasterPaging.do 만드는 거부터 해야댐!!
+      Common.ajax("GET", "/services/mileageCileage/selectDCPMasterPaging.do", $("#DCPMasteForm").serialize(), function(result) {
+    	  console.log("성공.");
+          console.log("data : " + result);
+          AUIGrid.setGridData(gridID1, result.resultList);
+          
+          //페이징 처리를 위한 옵션 설정
+          var pagingPros = {
+                  // 1페이지에서 보여줄 행의 수
+                  rowCount : $("#rowCount").val()
+          };
+          
+          GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);        
+      });    
     }
     
     function removeRow(){
@@ -246,29 +276,6 @@ function DCPMasterGrid() {
 	                     }
 	            });
      };
-     
-     /* function fn_getbrnch(){
-    	 item.memType
-    	 
-         Common.ajax("GET", "/services/mileageCileage/selectBranch",{groupCode:'43'}, function(result) {
-        	 
-        	    $("#memType").change(function (){
-        	        var memType = $("#memType").val();
-        	        if(memType == 2){
-        	             doGetCombo('/services/mileageCileage/selectBranch', 42, '','brnch', 'M' ,  'f_multiCombo');
-        	        }else if(memType == 3){
-        	            doGetCombo('/services/mileageCileage/selectBranch', 43, '','brnch', 'M' ,  'f_multiCombo');
-        	        }else if(memType == ""){
-        	            doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo');
-        	        }
-        	     });
-        	 
-             for( i in result){
-                 console.log(result[i]);
-                 branchList.push(result[i]);
-             }
-         }, null, {async : false});
-     } */
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -290,7 +297,7 @@ function DCPMasterGrid() {
     </li>
     <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">Update Request</a></p></li>
 
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_DCPMasterSearch()"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_DCPMasterSearch(1)"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -298,6 +305,8 @@ function DCPMasterGrid() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="DCPMasteForm">
+<input type="hidden" name="rowCount" id="rowCount" value="20" />
+<input type="hidden" name="pageNo" id="pageNo" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -313,7 +322,8 @@ function DCPMasterGrid() {
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="memType" name="memType">
+    <select class="w100p" id="memType" name="memType">
+        <option value="">Choose One</option>
         <option value="2">CODY</option>
         <option value="3">CT</option>
     </select>
@@ -321,7 +331,7 @@ function DCPMasterGrid() {
    <th scope="row">Branch</th>
     <td>
         <div class="search_100p"><!-- search_100p start -->
-        <select class="multy_select w100p" multiple="multiple"id="brnch" name="brnch" >
+        <select class="w100p" id="brnch" name="brnch" >
        <%-- <c:forEach var="list" items="${branchList }">
              <option value="${list.codeId}">${list.codeName}</option>
          </c:forEach> --%>
@@ -334,19 +344,21 @@ function DCPMasterGrid() {
 <tr>
     <th scope="row">DCP From</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="mcpFrom" name="mcpFrom">
-            <%-- <c:forEach var="list" items="${selectArea}">
+        <input type="text" title="" placeholder="DCP From" class="w100p" id="mcpFrom" name="mcpFrom">
+        <%-- <select class="w100p" id="mcpFrom" name="mcpFrom">
+         <c:forEach var="list" items="${selectArea}">
              <option value="${list.codeId}">${list.codeName}</option>
-         </c:forEach> --%>
-        </select>
+         </c:forEach>
+        </select> --%>
     </td>
     <th scope="row">DCP To</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="mcpTo" name="mcpTo">
-           <%-- <c:forEach var="list" items="${selectArea}">
+        <input type="text" title="" placeholder="DCP To" class="w100p" id="mcpTo" name="mcpTo">
+        <%-- <select class="w100p" id="mcpTo" name="mcpTo">
+         <c:forEach var="list" items="${selectArea}">
              <option value="${list.codeId}">${list.codeName}</option>
-         </c:forEach> --%>
-        </select>
+         </c:forEach>
+        </select> --%>
     </td>
     <th scope="row"></th>
     <td></td>
@@ -365,9 +377,12 @@ function DCPMasterGrid() {
     <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
 </ul>
 
-<article class="grid_wrap"><!-- grid_wrap start -->
-<div id="calculation_DCPMaster_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
-</article><!-- grid_wrap end -->
+<!-- grid_wrap start -->
+<article class="grid_wrap">
+<div id="calculation_DCPMaster_grid_wap" class="grid_wrap" style="width:100%; height:400px; margin:0 auto;"></div>
+<div id="grid_paging" class="aui-grid-paging-panel"></div>
+</article>
+<!-- grid_wrap end -->
 
 </form>
 </section><!-- search_table end -->

@@ -40,5 +40,8 @@ public interface MileageCalculationMapper {
 	List<EgovMap> selectDCPFrom(Map<String, Object> params);
 	
 	List<EgovMap> selectDCPTo(Map<String, Object> params);
+
+	// 171130 :: 선한이
+	int selectDCPMasterCount(Map<String, Object> params);
 	
 }

@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.servicePlanning.impl.MileageCalculationMapper">
 
+<sql id="pagingStart">
+    SELECT *
+    FROM (SELECT ROWNUM AS RNUM
+                            ,Z.*
+                FROM (  
+</sql>
+<sql id="pagingEnd">
+     ) Z
+                WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+    WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+</sql>
+
 <insert id="insertDCPMaster" parameterType="Map">
     INSERT INTO SVC0034M(
       MEM_TYPE
@@ -45,45 +57,200 @@
          DELETE FROM SVC0034M
          WHERE  MEM_TYPE = #{memType1} AND BRNCH_CODE = #{brnchCode1}  AND DCP_FROM = #{dcpFrom1} AND DCP_TO = #{dcpTo1}
 </delete>
+
+<!-- 171129 :: 선한이 -->
 <select id="selectDCPMaster"  parameterType="Map" resultType="egovMap">
+<include refid="pagingStart" />
+    <if test="memType != null and memType == 2 ">
+		SELECT
+		  'CODY' MEM_TYPE, 
+		  C.CODY_BRNCH_CODE BRNCH_CODE, 
+		  C.DCP_FROM DCP_FROM,
+		  C.DCP_FROM_ID DCP_FROM_ID,
+		  C.DCP_TO DCP_TO,
+		  C.DCP_TO_ID DCP_TO_ID,
+		  A.DISTANCE DISTANCE,
+		  A.MEM_TYPE MEM_TYPE1,
+		  A.BRNCH_CODE BRNCH_CODE1,
+		  A.DCP_FROM DCP_FROM1,
+		  A.DCP_TO DCP_TO1,
+		  A.DISTANCE DISTANCE1
+		FROM SVC0034M A
+		FULL OUTER JOIN (SELECT AA.CODY_BRNCH_CODE, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+		                FROM SYS0064M AA, SYS0064M BB
+		                WHERE AA.CODY_BRNCH_CODE = BB.CODY_BRNCH_CODE
+<![CDATA[ 
+		                AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+		            ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+		                  AND A.MEM_TYPE IN (2)
+		                <if test="branchCodeList != null and branchCodeList != '' ">
+			              AND A.BRNCH_CODE IN 
+			              <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+			               #{item}
+			               </foreach>
+			           </if>
+			             )
+		WHERE 1=1
+		    <if test="branchCodeList != null and branchCodeList != '' ">
+               AND C.CODY_BRNCH_CODE IN 
+               <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+		    <if test="mcpFrom != null and mcpFrom != '' ">
+			   AND C.DCP_FROM  IN 
+			   <foreach item="item" collection="mcpFromList" index="index" open="(" separator="," close=")">
+			    #{item}
+			    </foreach>
+			</if>
+			<if test="mcpTo != null and mcpTo != '' ">
+			   AND C.DCP_TO  IN 
+			   <foreach item="item" collection="mcpToList" index="index" open="(" separator="," close=")">
+			    #{item}
+			    </foreach>
+			</if>
+		ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+	</if>
+	
+	<if test="memType != null and memType == 3 ">
         SELECT
-            CASE WHEN MEM_TYPE = 2 THEN 'CODY'
-             ELSE 'CT'  END MEM_TYPE,
-            BRNCH_CODE BRNCH_CODE,
-            DCP_FROM DCP_FROM,
-            DCP_TO DCP_TO,
-            DISTANCE DISTANCE,
-            MEM_TYPE MEM_TYPE1,
-            BRNCH_CODE BRNCH_CODE1,
-            DCP_FROM DCP_FROM1,
-            DCP_TO DCP_TO1,
-            DISTANCE DISTANCE1
-         FROM SVC0034M
-         WHERE 1=1
-         <if test="memTypeList != null and memTypeList != '' ">
-	          AND MEM_TYPE IN
-	          <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
-	          #{item}
-	          </foreach>
-           </if>
-           <if test="mcpFromList != null and mcpFromList != '' ">
-              AND DCP_FROM  IN
-              <foreach item="item" collection="mcpFromList" index="index" open="(" separator="," close=")">
-              #{item}
-              </foreach>
-           </if>
-           <if test="mcpToList != null and mcpToList != '' ">
-              AND DCP_TO  IN
-              <foreach item="item" collection="mcpToList" index="index" open="(" separator="," close=")">
-              #{item}
-              </foreach>
-           </if>
-           <if test="branchCodeList != null and branchCodeList != '' ">
-              AND BRNCH_CODE  IN
-              <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
-              #{item}
-              </foreach>
-           </if>
+          'CT' MEM_TYPE, 
+          C.CT_BRNCH_CODE BRNCH_CODE, 
+          C.DCP_FROM DCP_FROM,
+          C.DCP_FROM_ID DCP_FROM_ID,
+          C.DCP_TO DCP_TO,
+          C.DCP_TO_ID DCP_TO_ID,
+          A.DISTANCE DISTANCE,
+          A.MEM_TYPE MEM_TYPE1,
+          A.BRNCH_CODE BRNCH_CODE1,
+          A.DCP_FROM DCP_FROM1,
+          A.DCP_TO DCP_TO1,
+          A.DISTANCE DISTANCE1
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CT_BRNCH_CODE, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CT_BRNCH_CODE = BB.CT_BRNCH_CODE
+<![CDATA[ 
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                        AND A.MEM_TYPE IN (3)
+                        <if test="branchCodeList != null and branchCodeList != '' ">
+                          AND A.BRNCH_CODE IN 
+                          <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+                           #{item}
+                           </foreach>
+                       </if>
+                        )
+        WHERE 1=1
+            <if test="branchCodeList != null and branchCodeList != '' ">
+               AND C.CT_BRNCH_CODE IN 
+               <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="mcpFrom != null and mcpFrom != '' ">
+               AND LOWER( C.DCP_FROM ) LIKE '%' || LOWER(#{mcpFrom}) || '%'
+               <!-- <foreach item="item" collection="mcpFromList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach> -->
+            </if>
+            <if test="mcpTo != null and mcpTo != '' ">
+               AND LOWER( C.DCP_TO ) LIKE '%' || LOWER(#{mcpTo}) || '%'
+               <!-- <foreach item="item" collection="mcpToList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach> -->
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
+<include refid="pagingEnd" />
+</select>
+
+<!-- 171130 :: 선한이 -->
+<!-- selectDCPMaster 전체 건수 -->
+<select id="selectDCPMasterCount"  parameterType="Map" resultType="int">
+    <if test="memType != null and memType == 2 ">
+        SELECT
+          COUNT(1) AS CNT
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CODY_BRNCH_CODE, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CODY_BRNCH_CODE = BB.CODY_BRNCH_CODE
+<![CDATA[ 
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                          AND A.MEM_TYPE IN (2)
+                        <if test="branchCodeList != null and branchCodeList != '' ">
+                          AND A.BRNCH_CODE IN 
+                          <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+                           #{item}
+                           </foreach>
+                       </if>
+                         )
+        WHERE 1=1
+            <if test="branchCodeList != null and branchCodeList != '' ">
+               AND C.CODY_BRNCH_CODE IN 
+               <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="mcpFrom != null and mcpFrom != '' ">
+               AND C.DCP_FROM  IN 
+               <foreach item="item" collection="mcpFromList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="mcpTo != null and mcpTo != '' ">
+               AND C.DCP_TO  IN 
+               <foreach item="item" collection="mcpToList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
+    
+    <if test="memType != null and memType == 3 ">
+        SELECT
+          COUNT(1) AS CNT
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CT_BRNCH_CODE, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CT_BRNCH_CODE = BB.CT_BRNCH_CODE
+<![CDATA[ 
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                        AND A.MEM_TYPE IN (3)
+                        <if test="branchCodeList != null and branchCodeList != '' ">
+                          AND A.BRNCH_CODE IN 
+                          <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+                           #{item}
+                           </foreach>
+                       </if>
+                        )
+        WHERE 1=1
+            <if test="branchCodeList != null and branchCodeList != '' ">
+               AND C.CT_BRNCH_CODE IN 
+               <foreach item="item" collection="branchCodeList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="mcpFrom != null and mcpFrom != '' ">
+               AND LOWER( C.DCP_FROM ) LIKE '%' || LOWER(#{mcpFrom}) || '%'
+               <!-- <foreach item="item" collection="mcpFromList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach> -->
+            </if>
+            <if test="mcpTo != null and mcpTo != '' ">
+               AND LOWER( C.DCP_TO ) LIKE '%' || LOWER(#{mcpTo}) || '%'
+               <!-- <foreach item="item" collection="mcpToList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach> -->
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
 </select>
 
 <select id="selectDCPFrom"  parameterType="Map" resultType="egovMap">

@@ -1,6 +1,7 @@
 package com.coway.trust.web.services.servicePlanning;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +86,7 @@ public class MileageCalculationController {
 		EgovMap rtm = new EgovMap();
 		logger.debug("params {}", params);
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
+		logger.debug("udtList {}", udtList);
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
 		
@@ -92,7 +94,7 @@ public class MileageCalculationController {
 		if(addList != null){
 			 mileageCalculationService.insertDCPMaster(addList,sessionVO);
 		}
-		if(addList != null){
+		if(udtList != null){
 			 mileageCalculationService.updateDCPMaster(udtList,sessionVO);
 		}
 		if(delList != null){
@@ -111,7 +113,7 @@ public class MileageCalculationController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectDCPMaster.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectDCPMaster( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<Map<String, Object>> selectDCPMaster( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		String[] memTypeList = request.getParameterValues("memType");
 		String[] mcpFromList = request.getParameterValues("mcpFrom");
 		String[] mcpToList = request.getParameterValues("mcpTo");
@@ -120,9 +122,47 @@ public class MileageCalculationController {
 		params.put("mcpFromList", mcpFromList);
 		params.put("mcpToList", mcpToList);
 		params.put("branchCodeList", branchCodeList);
-		List<EgovMap> selectDCPMaster = mileageCalculationService.selectDCPMaster(params);
-		logger.debug("selectDCPMaster {}", selectDCPMaster);
-		return ResponseEntity.ok(selectDCPMaster);
+		
+		List<EgovMap> resultList = mileageCalculationService.selectDCPMaster(params);
+		int totalRowCount = mileageCalculationService.selectDCPMasterCount(params);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		result.put("resultList", resultList);
+		result.put("totalRowCount", totalRowCount);
+		
+		//logger.debug("resultList {}", resultList);
+		logger.debug("totalRowCount : " + totalRowCount);
+		return ResponseEntity.ok(result);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectDCPMasterPaging.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectDCPMasterPaging( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		String[] memTypeList = request.getParameterValues("memType");
+		String[] mcpFromList = request.getParameterValues("mcpFrom");
+		String[] mcpToList = request.getParameterValues("mcpTo");
+		String[] branchCodeList = request.getParameterValues("brnch");
+		params.put("memTypeList", memTypeList);
+		params.put("mcpFromList", mcpFromList);
+		params.put("mcpToList", mcpToList);
+		params.put("branchCodeList", branchCodeList);
+		
+		List<EgovMap> resultList = mileageCalculationService.selectDCPMaster(params);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		result.put("resultList", resultList);
+		
+		//logger.debug("resultList {}", resultList);
+		return ResponseEntity.ok(result);
 	}
 	
 	/**

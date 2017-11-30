@@ -124,6 +124,11 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
 	}
 	
 	@Override
+	public int selectDCPMasterCount(Map<String, Object> params) {
+		return mileageCalculationMapper.selectDCPMasterCount(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectArea(Map<String, Object> params) {
 		return mileageCalculationMapper.selectArea(params);
 	}
