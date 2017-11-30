@@ -464,6 +464,18 @@
                     , #{invReqHasAttach}, #{invReqAttachFile}, #{invReqRejctResnId} )
     </insert>
     
+    <insert id="insertFileInvestReqM" parameterType="Map">
+        INSERT INTO SAL0050D
+              ( 
+                  INV_REQ_ID, INV_REQ_NO, SO_ID, INV_REQ_STUS_ID, INV_REQ_PARTY_ID, INV_REQ_REM, INV_REQ_CRT_DT, INV_REQ_CRT_USER_ID
+                  , INV_REQ_UPD_DT, INV_REQ_UPD_USER_ID, INV_REQ_USER_ID_AUTO, INV_REQ_CALL_DT, INV_REQ_VISIT_DT, INV_REQ_TYPE_ID
+                  , INV_REQ_HAS_ATTACH, INV_REQ_ATTACH_FILE, INV_REQ_REJCT_RESN_ID 
+              )
+        VALUES ( #{seqSAL0050D}, #{invReqNo}, #{soId}, #{invReqStusId}, #{invReqPartyId}, #{invReqRem}, SYSDATE, #{userId}
+                    , SYSDATE, #{userId}, #{invReqUserIdAuto}, SYSDATE, SYSDATE, #{invReqTypeId}
+                    , #{invReqHasAttach}, #{invReqAttachFile}, #{invReqRejctResnId} )
+    </insert>
+    
     <insert id="insertSalesOrdLog" parameterType="Map">
         INSERT INTO SAL0009D
 			  ( LOG_ID, SALES_ORD_ID, PRGRS_ID, LOG_DT, REF_ID, IS_LOK, LOG_CRT_USER_ID, LOG_CRT_DT )
@@ -1212,6 +1224,79 @@
 							          AND 501 = Extent1.CC_TIC_ENQUIRY_TYPE_ID ) Project1
 		  ORDER BY Project1.CC_TIC_ID DESC ) 
          WHERE ROWNUM <![CDATA[<= ]]>1 
+    </select>
+    
+    <select id="fileOrderInfo" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.SALES_ORD_ID   ,
+			       Extent1.SALES_ORD_NO   ,
+			       Extent1.REF_NO   ,
+			       Extent1.SALES_DT   ,
+			       Extent1.CUST_ID   ,
+			       Extent1.CUST_CNT_ID   ,
+			       Extent1.CUST_ADD_ID   ,
+			       Extent1.MEM_ID   ,
+			       Extent1.BRNCH_ID   ,
+			       Extent1.APP_TYPE_ID   ,
+			       Extent1.TOT_AMT   ,
+			       Extent1.PROMO_ID   ,
+			       Extent1.BINDING_NO   ,
+			       Extent1.CC_PROMO_ID   ,
+			       Extent1.TOT_PV   ,
+			       Extent1.REM   ,
+			       Extent1.PV_MONTH   ,
+			       Extent1.PV_YEAR   ,
+			       Extent1.STUS_CODE_ID   ,
+			       Extent1.UPD_DT   ,
+			       Extent1.UPD_USER_ID   ,
+			       Extent1.SYNC_CHK   ,
+			       Extent1.CUST_PO_NO   ,
+			       Extent1.REN_CHK_ID   ,
+			       Extent1.INST_PRIOD   ,
+			       Extent1.DO_NO   ,
+			       Extent1.DEPT_CODE   ,
+			       Extent1.GRP_CODE   ,
+			       Extent1.ORG_CODE   ,
+			       Extent1.SALES_ORD_ID_OLD   ,
+			       Extent1.EDIT_TYPE_ID   ,
+			       Extent1.CUST_BILL_ID   ,
+			       Extent1.MTH_RENT_AMT   ,
+			       Extent1.LOK  ,
+			       Extent1.AEON_STUS_ID   ,
+			       Extent1.COMM_DT   ,
+			       Extent1.CRT_USER_ID   ,
+			       Extent1.CRT_DT   ,
+			       Extent1.PAY_COM_DT   ,
+			       Extent1.DEF_RENT_AMT   ,
+			       Extent1.REF_DOC_ID   ,
+			       Extent1.SALES_HM_ID   ,
+			       Extent1.SALES_SM_ID   ,
+			       Extent1.SALES_GM_ID   ,
+			       Extent1.ADV_BILL   ,
+			       Extent1.CNVR_SCHEME_ID   ,
+			       Extent1.CUST_CARE_CNT_ID   
+			  FROM SAL0001D Extent1
+			 WHERE  ( Extent1.SALES_ORD_NO = #{salesOrderNo} )
+			          AND ( 8 <![CDATA[<>]]> Extent1.STUS_CODE_ID )
+			          AND ( 66 = Extent1.APP_TYPE_ID )
+    </select>
+    
+    <select id="batchOrderREGChk" parameterType="Map" resultType="Integer">
+        SELECT COUNT(0) CNT  
+           FROM SAL0001D Extent1
+             JOIN SAL0071D Extent2   
+               ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
+          WHERE 66 = Extent1.APP_TYPE_ID
+              AND 'REG' = Extent2.STUS_CODE_ID
+              AND Extent1.SALES_ORD_NO = #{salesOrdNo}
+    </select>
+    
+    <select id="batchOrderExistChk" parameterType="Map" resultType="Integer">
+        SELECT COUNT(0) CNT 
+		   FROM SAL0001D Extent1
+			         JOIN SAL0050D Extent2   ON ( 1 = Extent2.INV_REQ_STUS_ID )
+			         AND ( Extent2.SO_ID = Extent1.SALES_ORD_ID )
+			         LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent2.INV_REQ_CRT_USER_ID
+		  WHERE Extent1.SALES_ORD_NO = #{salesOrdNo}
     </select>
     
 </mapper>
