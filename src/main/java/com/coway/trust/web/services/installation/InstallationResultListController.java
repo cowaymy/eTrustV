@@ -507,4 +507,17 @@ public class InstallationResultListController {
 		return "services/installation/installationFreeGiftListPop";
 	}
 	
+	/**
+	 * Installation Report Installation Free Gift List
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/installationDscReportPop.do")
+	public String installationDscReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/installation/dscReportDataPop";
+	}
 }
