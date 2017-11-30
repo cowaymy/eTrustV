@@ -55,93 +55,192 @@
         visible: false
     }];
 
+    var tagStatusColumnLayout =
+	[
+		{
+		    dataField: "customer",
+		    headerText: "Customer",
+		    width: "8%"
+		},
+		{
+		    dataField: "mainInquiry",
+		    headerText: "Main Inquiry",
+		    width: "13%"
+		},
+		{
+		    dataField: "subInquiry",
+		    headerText: "Sub Inquiry",
+		    style: "aui-grid-user-custom-left ",
+		    width: "13%"
+		},
+		{
+		    dataField: "salesOrder",
+		    headerText: "Sales Order",
+		    width: "10%"
+		},
+		{
+		    dataField: "mainDepartment",
+		    headerText: "Main Department",
+		    style: "aui-grid-user-custom-left ",
+		    width: "13%"
+		},
+		{
+		    dataField: "subDepartment",
+		    headerText: "Sub Department",
+		    style: "aui-grid-user-custom-left ",
+		    width: "15%"
+		},
+		{
+		    dataField: "claimNote",
+		    headerText: "Caim Note",
+		    style: "aui-grid-user-custom-left ",
+		    width: "18%"
+		},
+		{
+		    dataField: "status",
+		    headerText: "Status"
+		}
+	];
+
 
     var detailColumnLayout =
-        [
-            {
-                dataField: "stusCodeId",
-                headerText: "<spring:message code='sys.generalCode.grid1.CODE_ID'/>",
-                width: "15%"
-                , editable: false
-            }, {
+    [
+		{
+		    dataField: "codeName",
+		    headerText: "Div",
+		    width: "6%",
+		    editable: false
+		},
+		{
             dataField: "codeName",
-            headerText: "<spring:message code='sys.statuscode.grid1.CODE_NAME'/>",
-            width: "55%"
-            , editable: false
-        }, {
-            dataField: "seqNo",
-            headerText: "<spring:message code='sys.statusCdMngment.grid1.seqNo'/>",
-            width: "15%"
-            , editable: true
-        }, {
-            dataField: "codeDisab",
-            headerText: "<spring:message code='sys.generalCode.grid1.DISABLED'/>",
-            width: "15%",
-            visible: true,
-            editRenderer:
-                {
-                    type: "ComboBoxRenderer",
-                    showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-                    listFunction: function (rowIndex, columnIndex, item, dataField) {
-                        var list = getDisibledComboList();
-                        return list;
-                    },
-                    keyField: "id"
+            headerText: "Period",
+            width: "8%",
+            editable: false
+        },
+        {
+            dataField: "",
+            headerText: "Key-In Qty",
+            children:
+            [
+				{
+				    dataField: "keyInQtyToday",
+				    headerText: "Today",
+				    width: "8%",
+				    editable: false
+				},
+				{
+				    dataField: "keyInQtyAccum",
+				    headerText: "Accum.",
+				    width: "8%",
+				    editable: true
+				},
+				{
+                    dataField: "keyInQtyMonthEnd",
+                    headerText: "MonthEnd",
+                    width: "8%",
+                    editable: true
                 }
-        }
-
-        ];
-
-    var codeIDColumnLayout =
-        [
-            {
-                dataField: "checkFlag",
-                headerText: '<input type="checkbox" id="allCheckbox" name="allCheckbox" style="width:15px;height:15px;">',
-                width: "10%",
-                editable: false,
-                renderer:
-                    {
-                        type: "CheckBoxEditRenderer",
-                        showLabel: false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                        editable: true, // 체크박스 편집 활성화 여부(기본값 : false)
-                        checkValue: 1, // true, false 인 경우가 기본
-                        unCheckValue: 0,
-                        // 체크박스 Visible 함수
-                        visibleFunction: function (rowIndex, columnIndex, value, isChecked, item, dataField) {
-                            if (item.checkFlag == 1)  // 1 이면
-                            {
-                                return true; // checkbox visible
-                            }
-
-                            return true;
-                        }
-                    }  //renderer
-            }, {
-            dataField: "stusCodeId",
-            headerText: "<spring:message code='sys.generalCode.grid1.CODE_ID'/>",
-            width: "20%"
-        }, {
-            dataField: "codeName",
-            headerText: "<spring:message code='sys.statuscode.grid1.CODE_NAME'/>",
-            style: "aui-grid-left-column",
-            width: "50%"
-        }, {
-            dataField: "code",
-            headerText: "<spring:message code='sys.account.grid1.CODE'/>",
-            width: "20%"
-        }
-
-        ];
-
+            ],
+            width: "20%",
+            editable: false
+        },
+        {
+            dataField: "",
+            headerText: "By Product Category (Accum. Key-In Qty)",
+            children:
+            [
+                {
+                    dataField: "byPrdCtgrWpurifier",
+                    headerText: "WPurifier",
+                    width: "8%",
+                    editable: false
+                },
+                {
+                    dataField: "byPrdCtgrApurifier",
+                    headerText: "Apurifier",
+                    width: "8%",
+                    editable: true
+                },
+                {
+                    dataField: "byPrdCtgrBidet",
+                    headerText: "Bidet",
+                    width: "8%",
+                    editable: true
+                },
+                {
+                    dataField: "byPrdCtgrSoftner",
+                    headerText: "Softner",
+                    width: "8%",
+                    editable: true
+                }
+            ],
+            width: "20%",
+            editable: false
+        },
+        {
+            dataField: "",
+            headerText: "By Sales Category (Accum. Key-In Qty)",
+            children:
+            [
+                {
+                    dataField: "bySalCtryRental",
+                    headerText: "Rental",
+                    width: "8%",
+                    editable: false
+                },
+                {
+                    dataField: "bySalCtryOutIns",
+                    headerText: "Out/Ins",
+                    width: "8%",
+                    editable: true
+                },
+                {
+                    dataField: "bySalCtryMbrShip",
+                    headerText: "Mbr.ship",
+                    width: "8%",
+                    editable: true
+                },
+                {
+                    dataField: "bySalCtryExtrade",
+                    headerText: "Extrade",
+                    width: "8%",
+                    editable: true
+                }
+            ],
+            width: "20%",
+            editable: false
+        },
+        {
+            dataField: "",
+            headerText: "NetSales",
+            children:
+            [
+                {
+                    dataField: "netSalAccum",
+                    headerText: "Accum.",
+                    width: "8%",
+                    editable: false
+                },
+                {
+                    dataField: "netSalMonthEnd",
+                    headerText: "MonthEnd",
+                    width: "8%",
+                    editable: true
+                }
+            ],
+            editable: false
+        },
+    ];
     //AUIGrid 생성 후 반환 ID
     var noticeGridID, detailGridID, statusCodeGridID;
 
     var gridOption = {
-        showStateColumn : false
+        showStateColumn : false,
+        usePaging : false
     };
 
     $(document).ready(function () {
-
+    	$(".bottom_msg_box").attr("style","display:none");
         /***********************************************[ NOTICE GRID] ************************************************/
 
         noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
@@ -160,16 +259,15 @@
         /***********************************************[ DETAIL GRID] ************************************************/
 
         var dtailOptions =
-            {
-                usePaging: false,
-                showRowNumColumn: false, // 그리드 넘버링
-                useGroupingPanel: false,
-                editable: true,
-            };
+        {
+            usePaging: false,
+            showRowNumColumn: false, // 그리드 넘버링
+            useGroupingPanel: false,
+            editable: true,
+        };
 
         // detailGrid 생성
         detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout, "stusCodeId", dtailOptions);
-
 
         /***********************************************[ CODE_ID GRID] ************************************************/
 
@@ -177,13 +275,14 @@
             {
                 usePaging: false,
                 useGroupingPanel: false,
-                editable: true,
+                editable: false,
                 showRowNumColumn: false  // 그리드 넘버링
             };
 
         // detailGrid 생성
-        statusCodeGridID = GridCommon.createAUIGrid("codeIdGrid", codeIDColumnLayout, "stusCodeId", statusCodeOptions);
+        statusCodeGridID = GridCommon.createAUIGrid("tagStatusGrid", tagStatusColumnLayout, "", statusCodeOptions);
 
+        fn_selectTagStatusListAjax("Y");
     });   //$(document).ready
 
 
@@ -194,9 +293,46 @@
         });
     }
 
+    // Tag Status 리스트 조회.
+    function fn_selectTagStatusListAjax(_initYn) {
+        Common.ajax("GET", "/common/getTagStatus.do", {initYn:_initYn}, function (result) {
+            AUIGrid.setGridData(statusCodeGridID, result);
+        });
+    }
+
+    function fn_openPopup_tagStatus() {
+        var popUpObj = Common.popupDiv
+        (
+             "/common/openTagStatusPopup.do"
+             , ""
+             , null
+             , "false"
+             , "openTagStatusPopup"
+        );
+   }
+
+    function fn_openPopup_dailyPerformance() {
+        var popUpObj = Common.popupDiv
+        (
+             "/common/userManagement/userManagementNew.do"
+             , ""
+             , null
+             , "false"
+             , "userManagementNewPop"
+        );
+   }
+
 
 </script>
-
+<style type="text/css">
+	/* 커스텀 칼럼 스타일 정의 */
+	.aui-grid-user-custom-left {
+	    text-align:left;
+	}
+	.aui-grid-user-custom-right {
+	    text-align:right;
+	}
+</style>
 <section id="content"><!-- content start -->
 
     <aside class="title_line main_title"><!-- title_line start -->
@@ -210,27 +346,27 @@
 
         <article class="grid_wrap"><!-- grid_wrap start -->
             <!-- 그리드 영역1 -->
-            <div id="noticeGrid" style="height:200px;"></div>
+            <div id="noticeGrid" style="height:132px;"></div>
         </article><!-- grid_wrap end -->
 
-        <aside class="title_line main_title mt40"><!-- title_line start -->
-            <h2>Trust Ticket Status</h2>
-            <p class="more"><a href="javascript:;"><spring:message code='sys.label.more'/> ></a></p>
+        <aside class="title_line main_title mt30"><!-- title_line start -->
+            <h2>Tag Status</h2>
+            <p class="more"><a href="javascript:fn_openPopup_tagStatus();"><spring:message code='sys.label.more'/> ></a></p>
         </aside><!-- title_line end -->
 
         <article class="grid_wrap"><!-- grid_wrap start -->
             <!-- 그리드 영역2 -->
-            <div id="codeIdGrid" style="height:200px;"></div>
+            <div id="tagStatusGrid" style="height:132px;"></div>
         </article><!-- grid_wrap end -->
 
-        <aside class="title_line main_title mt40"><!-- title_line start -->
+        <aside class="title_line main_title mt30"><!-- title_line start -->
             <h2>Daily Performance</h2>
-            <p class="more"><a href="javascript:;"><spring:message code='sys.label.more'/> ></a></p>
+            <%-- <p class="more"><a href="javascript:;"><spring:message code='sys.label.more'/> ></a></p> --%>
         </aside><!-- title_line end -->
 
         <article class="grid_wrap"><!-- grid_wrap start -->
             <!-- 그리드 영역3 -->
-            <div id="detailGrid" style="height:200px;"></div>
+            <div id="detailGrid" style="height:195px;"></div>
         </article><!-- grid_wrap end -->
 
     </form>
