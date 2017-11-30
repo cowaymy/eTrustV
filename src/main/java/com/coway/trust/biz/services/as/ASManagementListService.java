@@ -38,8 +38,6 @@ public interface ASManagementListService {
 	 
 	EgovMap   spFilterClaimCheck(Map<String, Object> params);
 	
-
-	
 	EgovMap   updateASEntry(Map<String, Object> params);
 	
 	List<EgovMap> getASOrderInfo(Map<String, Object> params);
