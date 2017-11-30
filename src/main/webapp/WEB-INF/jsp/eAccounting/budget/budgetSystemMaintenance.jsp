@@ -5,16 +5,20 @@
 
     // Make AUIGrid 
     var myGridID;
+    
+    var bYear = "<spring:message code='budget.title.year' />";
+    var bMonth = "<spring:message code='budget.title.month' />";
+    var bStatus = "<spring:message code='budget.title.status' />";
 
     // AUIGrid 칼럼 설정
     var columnLayout = [{
         dataField : "budgetYear",
-        headerText : "Year",  
+        headerText : '<spring:message code="budget.title.year" />',
         width : 300
     }, {
         dataField : "budgetMonth",
-        headerText : "Month",
-        //dataType : "date",
+        headerText : '<spring:message code="budget.title.month" />',
+        dataType : "date",
         //formatString : "mmm",
         editRenderer : {
             type : "DropDownListRenderer",
@@ -24,7 +28,7 @@
         width : 300
     }, {
         dataField : "budgetStus",
-        headerText : "Status",
+        headerText : '<spring:message code="budget.title.status" />',
         dataType : "string",
         editRenderer : {
             type : "DropDownListRenderer",
@@ -46,29 +50,68 @@
             Common.ajax("GET", "/eAccounting/budget/selectBudgetSysMaintenanceList", $("#listSForm").serialize(), function(result) {
                 console.log("성공.");
                 console.log("data : " + result);
+                for(var i = 0; i < result.length; i++) {
+                    if(result[i].budgetMonth == 1) {
+                        result[i].budgetMonth = 'JAN';
+                    } 
+                    if(result[i].budgetMonth == 2) {
+                        result[i].budgetMonth = 'FEB';      
+                    }
+                    if(result[i].budgetMonth == 3) {
+                        result[i].budgetMonth = 'MAR';
+                    }
+                    if(result[i].budgetMonth == 4) {
+                        result[i].budgetMonth = 'APR';
+                    }
+                    if(result[i].budgetMonth == 5) {
+                        result[i].budgetMonth = 'MAY';
+                    }
+                    if(result[i].budgetMonth == 6) {
+                        result[i].budgetMonth = 'JUN';
+                    }
+                    if(result[i].budgetMonth == 7) {
+                        result[i].budgetMonth = 'JUL';
+                    }
+                    if(result[i].budgetMonth == 8) {
+                        result[i].budgetMonth = 'AUG';
+                    }
+                    if(result[i].budgetMonth == 9) {
+                        result[i].budgetMonth = 'SEP';
+                    }
+                    if(result[i].budgetMonth == 10) {
+                        result[i].budgetMonth = 'OCT';
+                    }
+                    if(result[i].budgetMonth == 11) {
+                        result[i].budgetMonth = 'NOV';
+                    }
+                    if(result[i].budgetMonth == 12) {
+                        result[i].budgetMonth = 'DEC';
+                    }
+                }
                 AUIGrid.setGridData(myGridID, result);
             });
        });
         
         //아이템 grid 행 추가
         $("#addRow").click(function() { 
-        	   var item = new Object();
-        	   var month_int = 0;
+               var item = new Object();
+               var month_int = 0;
                var month_val = "";
                var year_val ="";
                var monthRowCount = 0;
                var yearRowCount = 0;
                
-               if($("#searchDt").val() != "" || $("searchDt").val() != null) {
+               /*if($("#searchDt").val() != "" || $("searchDt").val() != null) {
                    item.budgetYear = $("#searchDt").val();
-               } else {
-	               yearRowCount = AUIGrid.getRowCount(myGridID);
-	               yearRowCount--;
-	               
-	               year_val = AUIGrid.getCellValue(myGridID, yearRowCount, "budgetYear");
-	               item.budgetYear = year_val;
+                   
+               } else {*/
+                   yearRowCount = AUIGrid.getRowCount(myGridID);
+                   yearRowCount--;
+                   
+                   year_val = AUIGrid.getCellValue(myGridID, yearRowCount, "budgetYear");
+                   item.budgetYear = year_val;
                
-                }
+                //}
                        var monthRowCount = AUIGrid.getRowCount(myGridID);
                        monthRowCount--;
                        
@@ -104,7 +147,7 @@
                        
                        var month_char = "";
                        if(month == 13) {
-                          item.budgetYear = parseInt($("#searchDt").val()) + 1;
+                          item.budgetYear = year_val + 1;
                        }
                        if(month == 1 || month == 13) {
                            month_char = 'JAN';
@@ -135,11 +178,11 @@
                        item.budgetMonth = month_char;
                        
                        AUIGrid.addRow(myGridID, item, "last");
-        		   });
+                   });
       //save
          $("#save").click(function() {
           if (validation()) {
-        	   Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData);
+               Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData);
             }
         }); 
       
@@ -197,15 +240,15 @@
                
                 if (budgetYear == "") {
                   result = false;
-                  Common.alert("<spring:message code='sys.common.alert.validation' arguments='Year' htmlEscape='false'/>");
+                  Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+bYear+"' htmlEscape='false'/>");
                   break;
                 } else if (budgetMonth == "") {
                   result = false;
-                  Common.alert("<spring:message code='sys.common.alert.validation' arguments='Month' htmlEscape='false'/>");
+                  Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+bMonth+"' htmlEscape='false'/>");
                   break;
                 } else if (budgetStus == "undefined" || budgetStus == "" || budgetStus == null) {
                   result = false;
-                  Common.alert("<spring:message code='sys.common.alert.validation' arguments='Status' htmlEscape='false'/>");
+                  Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+bStatus+"' htmlEscape='false'/>");
                   break;
                 }
                  

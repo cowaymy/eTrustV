@@ -26,20 +26,7 @@ AND COST_CENTR = #{costCentr}
 <select id="selectBudgetSysMaintenanceList" parameterType="Map" resultType="egovMap">
 <![CDATA[
 SELECT BUDGET_YEAR
-      ,(CASE
-      WHEN BUDGET_MONTH=1 THEN 'JAN'
-      WHEN BUDGET_MONTH=2 THEN 'FEB'
-      WHEN BUDGET_MONTH=3 THEN 'MAR'
-      WHEN BUDGET_MONTH=4 THEN 'APR'
-      WHEN BUDGET_MONTH=5 THEN 'MAY'
-      WHEN BUDGET_MONTH=6 THEN 'JUN'
-      WHEN BUDGET_MONTH=7 THEN 'JUL'
-      WHEN BUDGET_MONTH=8 THEN 'AUG'
-      WHEN BUDGET_MONTH=9 THEN 'SEP'
-      WHEN BUDGET_MONTH=10 THEN 'OCT'
-      WHEN BUDGET_MONTH=11 THEN 'NOV'
-      WHEN BUDGET_MONTH=12 THEN 'DEC'
-      END)BUDGET_MONTH
+      ,BUDGET_MONTH
       ,(CASE
       WHEN BUDGET_STUS='Y' THEN 'Locked'
       WHEN BUDGET_STUS='N' THEN 'Open'
@@ -50,6 +37,7 @@ WHERE 1=1
 <if test="searchDt != null and searchDt != '' ">
 AND BUDGET_YEAR = #{searchDt}
 </if>
+ORDER BY BUDGET_YEAR, BUDGET_MONTH
 </select>
 
 <insert id="addBudgetSysMaintGrid" parameterType="Map">
@@ -286,31 +274,31 @@ FROM     (
                 ,NVL(CONSUM_APPV_AMT,0) CONSUM_APPV_AMT
                 ,NVL(A.PLAN_AMT,0) + NVL(A.CHNG_AMT,0) + NVL(B.TOTAL,0) -NVL(C.APP_AMT_TOTAL ,0) AS AVAILABLE_AMT
        FROM (SELECT SUM(PLAN_AMT) PLAN_AMT
-						  , SUM(CHNG_AMT) CHNG_AMT
-						  , BUDGET_PLAN_YEAR
-						  , BUDGET_PLAN_MONTH
-						  , COST_CENTR
-						  , GL_ACC_CODE
-						  , BUDGET_CODE 
-				FROM (SELECT  PLAN_AMT
-							       , CHNG_AMT
-							       , BUDGET_PLAN_YEAR
-								   , BUDGET_PLAN_MONTH
-								   , COST_CENTR
-								   , GL_ACC_CODE
-								   , BUDGET_CODE
-						     FROM FCM0101M A 
-					      UNION ALL
-							SELECT 0 PLAN_AMT
-									  ,0 CHNG_AMT
-									  ,#{budgetPlanYear} BUDGET_PLAN_YEAR
-									  ,#{budgetPlanMonth} BUDGET_PLAN_MONTH
-									  ,#{costCentr} COST_CENTR
-									  ,#{glAccCode} GL_ACC_CODE
-									  ,#{budgetCode} BUDGET_CODE
-							  FROM DUAL ) A							  
+                          , SUM(CHNG_AMT) CHNG_AMT
+                          , BUDGET_PLAN_YEAR
+                          , BUDGET_PLAN_MONTH
+                          , COST_CENTR
+                          , GL_ACC_CODE
+                          , BUDGET_CODE 
+                FROM (SELECT  PLAN_AMT
+                                   , CHNG_AMT
+                                   , BUDGET_PLAN_YEAR
+                                   , BUDGET_PLAN_MONTH
+                                   , COST_CENTR
+                                   , GL_ACC_CODE
+                                   , BUDGET_CODE
+                             FROM FCM0101M A 
+                          UNION ALL
+                            SELECT 0 PLAN_AMT
+                                      ,0 CHNG_AMT
+                                      ,#{budgetPlanYear} BUDGET_PLAN_YEAR
+                                      ,#{budgetPlanMonth} BUDGET_PLAN_MONTH
+                                      ,#{costCentr} COST_CENTR
+                                      ,#{glAccCode} GL_ACC_CODE
+                                      ,#{budgetCode} BUDGET_CODE
+                              FROM DUAL ) A                           
                             GROUP BY BUDGET_PLAN_YEAR, BUDGET_PLAN_MONTH, COST_CENTR, GL_ACC_CODE, BUDGET_CODE
-							) A
+                            ) A
                LEFT OUTER JOIN ( SELECT SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT 
                               ,SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) AS MINUS_ADJ_AMT
                               ,SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL
@@ -359,20 +347,20 @@ FROM     (
   <select id="selectAdjustmentAmount" parameterType="Map" resultType="egovMap">
   <![CDATA[
       SELECT TO_CHAR(A.UPD_DT, 'dd-mm-yyyy hh24:mi') AS CONFIRM_DATE 
-		          ,B.BUDGET_ADJ_TYPE
-		          ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
-		          ,CASE WHEN B.SIGNAL ='+' THEN 'Receiver(+)' ELSE 'Sender(-)' END SIGNAL_TEXT
-		          ,B.BUDGET_ADJ_YEAR || '/' ||TO_CHAR(B.BUDGET_ADJ_MONTH, 'FM00') BUDGET_ADJ_MONTH
-		          ,B.COST_CENTR
-		          ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
-		          ,B.GL_ACC_CODE
-		          ,(SELECT GL_ACC_DESC FROM FCM0009M A WHERE A.GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
-		          ,B.SIGNAL 
-		          ,ADJ_AMT
-		          ,B.ADJ_REM    
-		 FROM FCM0102M  A,  FCM0103D B
-		WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-		    AND A.APPV_STUS = 'C' 
+                  ,B.BUDGET_ADJ_TYPE
+                  ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
+                  ,CASE WHEN B.SIGNAL ='+' THEN 'Receiver(+)' ELSE 'Sender(-)' END SIGNAL_TEXT
+                  ,B.BUDGET_ADJ_YEAR || '/' ||TO_CHAR(B.BUDGET_ADJ_MONTH, 'FM00') BUDGET_ADJ_MONTH
+                  ,B.COST_CENTR
+                  ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
+                  ,B.GL_ACC_CODE
+                  ,(SELECT GL_ACC_DESC FROM FCM0009M A WHERE A.GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
+                  ,B.SIGNAL 
+                  ,ADJ_AMT
+                  ,B.ADJ_REM    
+         FROM FCM0102M  A,  FCM0103D B
+        WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
+            AND A.APPV_STUS = 'C' 
                         ]]>
             AND B.BUDGET_ADJ_YEAR   = #{budgetPlanYear}
             AND B.BUDGET_ADJ_MONTH  = #{budgetPlanMonth}            
@@ -382,27 +370,27 @@ FROM     (
   </select>
   
   <select id="selectPenConAmount" parameterType="Map" resultType="egovMap">
-	  SELECT A.APPV_REQ_KEY_NO 
-	           ,B.COST_CENTR_NAME       
+      SELECT A.APPV_REQ_KEY_NO 
+               ,B.COST_CENTR_NAME       
                ,(SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME  
-	           ,A.CRT_USER_ID
-	           ,TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT 
-	           ,TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
-	           ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
-	           ,B.MEM_ACC_ID
-	           ,(SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
-	           ,B.NET_AMT
-	           ,B.EXP_DESC
-	   FROM FCM0004M A, FCM0015D B
-	 WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
-	 <if test='type == "Pending" '>
-	     AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' ) 
-	 </if>
-	 <if test='type == "Consumed" '>
-	     AND A.APPV_PRCSS_STUS =  'A'  
-	 </if>
-	     AND TO_CHAR(B.INVC_DT, 'yyyy')   = #{budgetPlanYear}
-	     AND TO_CHAR(B.INVC_DT, 'mm')   = #{budgetPlanMonth}          
+               ,A.CRT_USER_ID
+               ,TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT 
+               ,TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
+               ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
+               ,B.MEM_ACC_ID
+               ,(SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
+               ,B.NET_AMT
+               ,B.EXP_DESC
+       FROM FCM0004M A, FCM0015D B
+     WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
+     <if test='type == "Pending" '>
+         AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' ) 
+     </if>
+     <if test='type == "Consumed" '>
+         AND A.APPV_PRCSS_STUS =  'A'  
+     </if>
+         AND TO_CHAR(B.INVC_DT, 'yyyy')   = #{budgetPlanYear}
+         AND TO_CHAR(B.INVC_DT, 'mm')   = #{budgetPlanMonth}          
          AND B.COST_CENTR         = #{costCentr}
          AND B.BUDGET_CODE        = #{budgetCode}
          AND B.GL_ACC_CODE        = #{glAccCode}
@@ -411,20 +399,20 @@ FROM     (
   <select id="selectAdjustmentList" parameterType="Map" resultType="egovMap">
        <![CDATA[ 
        SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' WHEN A.APPV_STUS = 'T' THEN 'Temp. Save' ELSE 'Open' END STATUS
-		         ,A.BUDGET_DOC_NO
-		         ,B.COST_CENTR
-		         ,BUDGET_DOC_SEQ		         
-		         ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
-		         ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
-		         ,B.BUDGET_CODE
-		         ,(SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = B.BUDGET_CODE) BUDGET_CODE_TEXT
-		         ,B.GL_ACC_CODE
-		         ,(SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
-		         ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
-		         ,B.BUDGET_ADJ_TYPE
-		         ,B.ADJ_AMT
-		         ,B.ADJ_REM
-		         ,A.ATCH_FILE_GRP_ID
+                 ,A.BUDGET_DOC_NO
+                 ,B.COST_CENTR
+                 ,BUDGET_DOC_SEQ                 
+                 ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
+                 ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
+                 ,B.BUDGET_CODE
+                 ,(SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = B.BUDGET_CODE) BUDGET_CODE_TEXT
+                 ,B.GL_ACC_CODE
+                 ,(SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
+                 ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
+                 ,B.BUDGET_ADJ_TYPE
+                 ,B.ADJ_AMT
+                 ,B.ADJ_REM
+                 ,A.ATCH_FILE_GRP_ID
                  ,( SELECT CASE WHEN FD.FILE_SUB_PATH IS NOT NULL THEN REPLACE (FD.FILE_SUB_PATH,'\','/') ||'/'||PHYSICL_FILE_NAME  ELSE ' ' END
                        FROM SYS0070M FM
                       INNER JOIN SYS0071D FD
@@ -432,17 +420,17 @@ FROM     (
                        WHERE FM.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
                            AND rownum=1) AS FILE_PATH  
                  ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
-		         ,'N' AS CHECK_ID 
-		        /* ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT*/
-		         ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ		                               
-		FROM FCM0102M A
-	   INNER JOIN FCM0103D B 
-	       ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-	  WHERE  1=1
+                 ,'N' AS CHECK_ID 
+                /* ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT*/
+                 ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ                                       
+        FROM FCM0102M A
+       INNER JOIN FCM0103D B 
+           ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
+      WHERE  1=1
       ]]>     
         <if test="stYearMonth != null and stYearMonth != ''">
-	    AND TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}
-	     </if>
+        AND TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}
+         </if>
         <if test="costCentr != null and costCentr != ''">
           AND B.COST_CENTR    = #{costCentr}
           </if>
@@ -472,14 +460,14 @@ FROM     (
   
      <select id="selectFileList" parameterType="Map"  resultType="egovMap">
       SELECT FM.ATCH_FILE_GRP_ID
-		         ,FM.ATCH_FILE_ID
-		         ,FD.ATCH_FILE_NAME
-		         ,REPLACE (FD.FILE_SUB_PATH,'\','/') AS FILE_SUB_PATH
-		         ,FD.PHYSICL_FILE_NAME
-	      FROM SYS0070M FM
-	     INNER JOIN SYS0071D FD
-		     ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
-		WHERE FM.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+                 ,FM.ATCH_FILE_ID
+                 ,FD.ATCH_FILE_NAME
+                 ,REPLACE (FD.FILE_SUB_PATH,'\','/') AS FILE_SUB_PATH
+                 ,FD.PHYSICL_FILE_NAME
+          FROM SYS0070M FM
+         INNER JOIN SYS0071D FD
+             ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
+        WHERE FM.ATCH_FILE_GRP_ID = #{atchFileGrpId}
     </select>
     
      <!--  <select id="selectBudgetDocNo" parameterType="Map" resultType="String">
@@ -491,30 +479,30 @@ FROM     (
     <insert id="insertAdjustmentM" parameterType="Map">
         <selectKey keyProperty="budgetDocNo" resultType="String" order="BEFORE">
             SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') budgetDocNo 
-		       FROM FCM0102M
-		     WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%' 
+               FROM FCM0102M
+             WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%' 
         </selectKey>
         
-		   INSERT INTO FCM0102M
-		   (
-		        BUDGET_DOC_NO
-		       ,ATCH_FILE_GRP_ID
-		       ,APPV_STUS
-		       ,CRT_DT
-		       ,CRT_USER_ID
-		       ,UPD_DT
-		       ,UPD_USER_ID
-		   )
-		   VALUES
-		    (
-		        #{budgetDocNo}
-		       ,#{atchFileGrpId}
-		       ,'T'
-		       ,SYSDATE
-		       ,#{userId}
-		       ,SYSDATE
-		       ,#{userId}
-		    )
+           INSERT INTO FCM0102M
+           (
+                BUDGET_DOC_NO
+               ,ATCH_FILE_GRP_ID
+               ,APPV_STUS
+               ,CRT_DT
+               ,CRT_USER_ID
+               ,UPD_DT
+               ,UPD_USER_ID
+           )
+           VALUES
+            (
+                #{budgetDocNo}
+               ,#{atchFileGrpId}
+               ,'T'
+               ,SYSDATE
+               ,#{userId}
+               ,SYSDATE
+               ,#{userId}
+            )
     </insert>
     
     <insert id="insertAdjustmentD" parameterType="Map">
@@ -522,42 +510,42 @@ FROM     (
             SELECT NVL(MAX(BUDGET_DOC_SEQ) +1,1) FROM FCM0103D WHERE BUDGET_DOC_NO = #{budgetDocNo}
         </selectKey>
         
-		   INSERT INTO FCM0103D
-		   (
-		        BUDGET_DOC_NO
-		       ,BUDGET_DOC_SEQ
-		       ,BUDGET_ADJ_MONTH
+           INSERT INTO FCM0103D
+           (
+                BUDGET_DOC_NO
+               ,BUDGET_DOC_SEQ
+               ,BUDGET_ADJ_MONTH
                ,BUDGET_ADJ_YEAR
-		       ,BUDGET_ADJ_TYPE
-		       ,SIGNAL
-		       ,COST_CENTR
-		       ,BUDGET_CODE
-		       ,GL_ACC_CODE
-		       ,ADJ_AMT
+               ,BUDGET_ADJ_TYPE
+               ,SIGNAL
+               ,COST_CENTR
+               ,BUDGET_CODE
+               ,GL_ACC_CODE
+               ,ADJ_AMT
                ,ADJ_REM
-		       ,CRT_DT
-		       ,CRT_USER_ID
-		       ,UPD_DT
-		       ,UPD_USER_ID
-		   )
-		 VALUES
-		   (
-		        #{budgetDocNo}
-		       ,#{seq}
-		       ,TO_NUMBER(SUBSTR(#{adjYearMonth}, 0,2))
-		       ,SUBSTR(#{adjYearMonth}, 4,4)
-		       ,#{budgetAdjType}
-		       ,#{signal}
-		       ,#{costCentr}
-		       ,#{budgetCode}
-		       ,#{glAccCode}
-		       ,#{adjAmt}
+               ,CRT_DT
+               ,CRT_USER_ID
+               ,UPD_DT
+               ,UPD_USER_ID
+           )
+         VALUES
+           (
+                #{budgetDocNo}
+               ,#{seq}
+               ,TO_NUMBER(SUBSTR(#{adjYearMonth}, 0,2))
+               ,SUBSTR(#{adjYearMonth}, 4,4)
+               ,#{budgetAdjType}
+               ,#{signal}
+               ,#{costCentr}
+               ,#{budgetCode}
+               ,#{glAccCode}
+               ,#{adjAmt}
                ,#{adjRem} 
-		       ,SYSDATE
-		       ,#{userId}
-		       ,SYSDATE
-		       ,#{userId}
-		   )
+               ,SYSDATE
+               ,#{userId}
+               ,SYSDATE
+               ,#{userId}
+           )
     </insert>
 
   <update id="updateAdjustmentM" parameterType="Map">
@@ -730,23 +718,23 @@ FROM     (
   </select>
   
   <select id="selectPlanMaster" parameterType="Map" resultType="int">
-	  SELECT COUNT(-1) CNT  
-	    FROM FCM0104D 
-	  WHERE COST_CENTR = #{costCenter} 
-		  AND GL_ACC_CODE = #{glAccCode}
-		  AND BUDGET_CODE= #{budgetCode}
+      SELECT COUNT(-1) CNT  
+        FROM FCM0104D 
+      WHERE COST_CENTR = #{costCenter} 
+          AND GL_ACC_CODE = #{glAccCode}
+          AND BUDGET_CODE= #{budgetCode}
   </select>
   
   <select id="selectCostCenterName" parameterType="Map" resultType="String">
-	  SELECT COST_CENTER_TEXT FROM FCM0008M  WHERE COST_CENTER = #{code}
+      SELECT COST_CENTER_TEXT FROM FCM0008M  WHERE COST_CENTER = #{code}
   </select>
   
   <select id="selectBudgetCodeName" parameterType="Map" resultType="String">
-	  SELECT BUDGET_CODE_TEXT FROM FCM0010M  WHERE BUDGET_CODE = #{code}
+      SELECT BUDGET_CODE_TEXT FROM FCM0010M  WHERE BUDGET_CODE = #{code}
   </select>
   
   <select id="selectGlAccCodeName" parameterType="Map" resultType="String">
-	  SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{code}
+      SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{code}
   </select>
   
   <update id="deleteAdjustmentDByDocNo" parameterType="Map">

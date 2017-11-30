@@ -1,22 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<!-- <style>
-.my-right-style {
-    text-align:right;
-}
-.aui-grid-user-custom-left {
-    text-align:left;
-}
-.aui-grid-pointer {
-    cursor:pointer;
-}
-/* 커스텀 행 스타일 */
-.my-row-style {
-    background:#9FC93C;
-    font-weight:bold;
-    color:#22741C;
-}
-</style> -->
+
 <script  type="text/javascript">
 
 var budgetMGrid;
@@ -63,40 +47,34 @@ function fn_makeGrid(){
     monPop.push({
                     dataField : "costCenterText",
                     headerText : '<spring:message code="budget.costCenterName" />',
-                    width : 180
+                    width : 160,
+                    editable : false
                 },{
                     dataField : "budgetCode",
                     headerText : '<spring:message code="budget.BudgetCode" />',
-                    width : 150
+                    width : 100,
+                    editable : false
                 },{
                     dataField : "budgetCodeText",
-                    headerText : '<spring:message code="budget.budgetName" />'
+                    headerText : '<spring:message code="budget.budgetName" />',
+                    width : 220,
+                    editable : false
                 },{
                     dataField : "glAccCode",
                     headerText : '<spring:message code="budget.GLAccountCode" />',
-                    width : 150
+                    width : 140,
+                    editable : false
                 },{
                     dataField : "glAccDesc",
                     headerText : '<spring:message code="budget.GLAccountName" />',
-                    width : 180
+                    width : 180,
+                    editable : false
                 },{
                     dataField : "cntrlType",
-                    headerText : '<spring:message code="budget.controlType" />'
+                    headerText : '<spring:message code="budget.controlType" />',
+                    editable : false
                 });
       
-     /*var monFooter = [];
-        
-     monFooter[0] = {
-                labelText : "<spring:message code='budget.Total' />",
-                positionField : "glAccDesc"
-            }
- 
-     monFooter.push( {
-            dataField : "total", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
-            positionField : "total",
-            operation : "SUM",
-            formatString : "#,##0"
-        });*/
         
      var monOptions = {
             enableCellMerge : true,
@@ -110,10 +88,7 @@ function fn_makeGrid(){
       };
     
     budgetMGrid = GridCommon.createAUIGrid("#budgetMGrid", monPop, "", monOptions);
-    // 푸터 객체 세팅
-    //AUIGrid.setFooter(budgetMGrid, monFooter);
     
-    //AUIGrid.bind(budgetMGrid, "cellClick", auiCellClikcHandler);
 }
 </script>
 
@@ -165,7 +140,7 @@ function fn_makeGrid(){
     <dt><spring:message code="budget.Link" /></dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="monthlyBudgetList.do">Budget Plan</a></p></li>
+        <li><p class="link_btn"><a href="monthlyBudgetList.do"><spring:message code="budget.link.budgetplan" /></a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
