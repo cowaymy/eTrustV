@@ -403,13 +403,14 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 	@Override
 	public void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReqMForm) {
-
+		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String seq = MlogApiMapper.selectStockMovementSeq();
 		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
 		String headtitle = "SMO";
 		String gtype = "GI";
 		Map<String, Object> returnMap = new HashMap();
-		returnMap.put("reqno", headtitle + seq);
+		// returnMap.put("reqno", headtitle + seq);
+		returnMap.put("reqno", seq);
 		returnMap.put("userId", returnOnHandStockReqMForm.getUserId());
 		returnMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
 		returnMap.put("smType", returnOnHandStockReqMForm.getSmType());
@@ -429,7 +430,8 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 			form = list.get(i);
 
-			insMap.put("reqno", headtitle + seq);
+			// insMap.put("reqno", headtitle + seq);
+			insMap.put("reqno", seq);
 			insMap.put("partsCode", form.getPartsCode());
 			insMap.put("partsId", form.getPartsId());
 			insMap.put("requestQty", form.getRequestQty());
