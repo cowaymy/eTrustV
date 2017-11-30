@@ -1310,6 +1310,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		Map<String, Object> AccOrderBill = new HashMap<String, Object>();
 		Map<String, Object> taxInvoiceOutright = new HashMap<String,Object>();
 		Map<String,Object> taxInvoiceOutrightSub = new HashMap<String,Object>();
+		Map<String,Object> salesOrderM = new HashMap<String,Object>();
 
 		int statusId =  Integer.parseInt(params.get("installStatus").toString());
 		String sirimNo = params.get("hidStockIsSirim").toString() != "0" ? params.get("hidStockIsSirim").toString().toUpperCase() : "";
@@ -1324,6 +1325,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		String nextDateCall = (String) params.get("nextCallDate");
 		String ApptypeID = params.get("hidAppTypeId").toString();
 		String strOutrightTotalPrice = params.get("hidOutright_Price").toString();
+		String callTypeId = params.get("hidCallType").toString();
+
 
 		Map tradeamount= new HashMap();
 		tradeamount.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
@@ -1370,6 +1373,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		installResult.put("updator", sessionVO.getUserId());
     		installResult.put("adjAmount", 0);
     		logger.debug("installResult : {}", installResult);
+
+    		//update salesorderM status(SAL0001D)
+    		if (callTypeId.equals("258"))
+    		{
+
+    		}
+    		else
+    		{
+    			salesOrderM.put("salesOrdId", params.get("hidSalesOrderId").toString());
+    			salesOrderM.put("statusCodeId", params.get("installStatus").toString().equals("4") ? 4 : 1 );
+    		}
 
     		if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412"))
     		{
@@ -1622,7 +1636,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			resultValue.put("value", "Fail");
 		}
 		resultValue.put("installEntryNo", params.get("hiddeninstallEntryNo"));
-		insertInstallation(statusId,ApptypeID,installResult,callEntry,callResult,orderLog, TaxinvoiceCompany,AccTradeLedger,AccOrderBill,taxInvoiceOutright,taxInvoiceOutrightSub);
+		insertInstallation(statusId,ApptypeID,installResult,callEntry,callResult,orderLog, TaxinvoiceCompany,AccTradeLedger,AccOrderBill,taxInvoiceOutright,taxInvoiceOutrightSub
+				,salesOrderM);
 
 
 		//물류 호출   add by hgham
@@ -1662,7 +1677,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		return resultValue;
 	}
 	@Transactional
-	private boolean insertInstallation(int statusId,String ApptypeID,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog, Map<String,Object> TaxinvoiceCompany,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill,Map<String,Object>taxInvoiceOutright,Map<String,Object>taxInvoiceOutrightSub) throws ParseException{
+	private boolean insertInstallation(int statusId,String ApptypeID,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog, Map<String,Object> TaxinvoiceCompany,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill,Map<String,Object>taxInvoiceOutright,Map<String,Object>taxInvoiceOutrightSub
+													,Map<String,Object>salesOrderM) throws ParseException{
     		//installEntry status가 1,21 이면 그 밑에 있는걸 ㅌ야된다(컴플릿이 되어도 다시 상태값 변경 가능하게 해야된다
     		String maxId = "";  //각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
     		EgovMap maxIdValue = new EgovMap();
@@ -1677,6 +1693,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		String maxTaxInvoiceID = installationResultListMapper.selectMaxId(maxtaxInvoiceID);
     		//String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
 
+    		//update SalesM Status
+    		installationResultListMapper.updateSalesOrderMStatus(salesOrderM);
 
     		if("67".equals(ApptypeID)  || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
 
