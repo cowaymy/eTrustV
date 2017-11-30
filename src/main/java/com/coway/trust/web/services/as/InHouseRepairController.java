@@ -78,6 +78,30 @@ public class InHouseRepairController {
 	
 	
 	
+	@RequestMapping(value = "/inHouseAsResultEditBasicPop.do")
+	public String inHouseAsResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
+		
+		model.put("mode", (String)params.get("mode"));   
+		model.put("ORD_ID", (String)params.get("ORD_ID"));   
+		model.put("ORD_NO", (String)params.get("ORD_NO"));   
+		model.put("AS_NO", (String)params.get("AS_NO"));   
+		model.put("AS_ID", (String)params.get("AS_ID"));   
+		model.put("AS_RESULT_NO", (String)params.get("AS_RESULT_NO"));   
+		model.put("AS_RESULT_ID", (String)params.get("AS_RESULT_ID"));   
+		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_NAME", sessionVO.getUserName());
+
+		model.put("BRANCH_NAME", sessionVO.getBranchName());
+		model.put("BRANCH_ID", sessionVO.getUserBranchId());
+		
+		
+		
+		// 호출될 화면
+		return "services/as/inHouseAsResultEditBasicPop"; 
+	}
+	
+	
+	
 	
 	
 	@RequestMapping(value = "/selInhouseList.do", method = RequestMethod.GET)
