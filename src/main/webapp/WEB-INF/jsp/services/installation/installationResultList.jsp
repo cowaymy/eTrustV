@@ -238,6 +238,12 @@ function fn_dailyDscReport(){
 function fn_installNoteListing(){
     Common.popupDiv("/services/installationNoteListingPop.do"  , null, null , true , '');
 }
+function fn_installFreeGiftList(){
+    Common.popupDiv("/services/installationFreeGiftListPop.do"  , null, null , true , '');
+}
+function fn_DscReport(){
+    Common.popupDiv("/services/installationDscReportPop.do"  , null, null , true , '');
+}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -377,9 +383,9 @@ function fn_installNoteListing(){
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()">Installation Note</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installBookListing()">Installation Log Book Listing</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installRawData()"> Installation Raw Data</a></p></li>
-        <!-- <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()">Daily DSC Report</a></p></li> -->
-        <!--<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installFreeGiftList()">Installation Free Gift List</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()">Daily DSC Report</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_DscReport()">DSC Report</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
