@@ -3605,6 +3605,10 @@
           )
           </insert>
 
+        <update id ="updateSalesOrderMStatus" parameterType="Map">
+        UPDATE SAL0001D SET STUS_CODE_ID = #{statusCodeId} WHERE SALES_ORD_ID=#{salesOrdId}
+        </update>
+
 <insert id="insertAccTradeLedger" parameterType="Map">
 INSERT INTO PAY0035D(
 TRADE_RUN_ID
@@ -3639,6 +3643,7 @@ PAY0035D_SEQ.nextval
 
 )
 </insert >
+
 
 <insert id="insertAccorderBill" parameterType="Map">
 INSERT INTO PAY0016D
