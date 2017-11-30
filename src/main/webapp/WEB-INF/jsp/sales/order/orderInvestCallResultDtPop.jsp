@@ -141,7 +141,6 @@
     	// REG 저장일때 BSMonth를 비교하여 ticket 라디오박스 confirm을 위한 체크 
         if(saveForm.callResultStus.value == "28"){
             Common.ajax("GET", "/sales/order/bsMonthCheck.do", $("#saveForm").serializeJSON(), function(result) {
-                alert(result.regSaveMsg);
             	if(result.regSaveMsg == "1"){
                 	Common.popupDiv("/sales/order/bsMonthCheckOKPop.do", $("#saveForm").serializeJSON(), null, true, 'savePop');
                 }else{

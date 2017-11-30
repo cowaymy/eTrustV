@@ -31,7 +31,7 @@
 	function fn_successReg(){
         fn_investCallResultListAjax();
         $("#_saveClose").click();
-        $("#_regClose").click();
+        $("#_reg2Close").click();
     }
 </script>
 
@@ -39,7 +39,7 @@
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Investigation Result Confirmation</h1>
-<p class="pop_close"><a href="#">close</a></p>
+<p class="pop_close"><a href="#" id="_reg2Close">close</a></p>
 </header><!-- pop_header end -->
 
 <form id="regForm" name="regForm" method="GET">
