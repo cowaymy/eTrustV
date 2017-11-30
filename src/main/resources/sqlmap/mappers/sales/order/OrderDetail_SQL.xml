@@ -744,18 +744,33 @@
     </select>
     
     <select id="selectMembershipInfoList" parameterType="Map" resultType="egovMap">
-        SELECT V1.SALES_ORD_ID
-             , V1.MBRSH_ID
-             , V1.MBRSH_NO
-             , V1.MBRSH_BILL_NO
-             , V1.MBRSH_STUS_CODE
-             , V1.PAC_NAME
-             , V1.MBRSH_CRT_DT
-             , V1.MBRSH_START_DT
-             , V1.MBRSH_EXPR_DT
-             , V1.MBRSH_DUR
-          FROM SAL1003V V1
-         WHERE V1.SALES_ORD_ID = #{salesOrderId}
+        SELECT SORT_NO
+             , SALES_ORD_ID
+             , MBRSH_ID
+             , MBRSH_NO
+             , MBRSH_BILL_NO
+             , MBRSH_STUS_CODE
+             , PAC_NAME
+             , MBRSH_CRT_DT
+             , MBRSH_START_DT
+             , MBRSH_EXPR_DT
+             , MBRSH_DUR
+          FROM
+             ( SELECT DECODE(V1.MBRSH_START_DT, '01-JAN-00', 1, 0) AS SORT_NO
+                    , V1.SALES_ORD_ID
+                    , V1.MBRSH_ID
+                    , V1.MBRSH_NO
+                    , V1.MBRSH_BILL_NO
+                    , V1.MBRSH_STUS_CODE
+                    , V1.PAC_NAME
+                    , V1.MBRSH_CRT_DT
+                    , V1.MBRSH_START_DT
+                    , V1.MBRSH_EXPR_DT
+                    , V1.MBRSH_DUR
+                 FROM SAL1003V V1
+                WHERE V1.SALES_ORD_ID = #{salesOrderId}
+             )
+         ORDER BY SORT_NO, MBRSH_START_DT
     </select>
     
     <select id="selectDocumentList" parameterType="Map" resultType="egovMap">
