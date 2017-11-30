@@ -268,5 +268,13 @@
         WHERE MEM_ID = #{cmbCode}
     </select>
     
+    <select id="getBankCodeList" parameterType="Map" resultType="egovMap">
+        SELECT BANK_ID CODE_ID,
+		           CODE||' : '||NAME CODE_NAME
+		FROM SYS0004M
+		WHERE STUS_CODE_ID = 1
+		ORDER BY CODE
+    </select>
+    
     
 </mapper>
