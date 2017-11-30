@@ -337,6 +337,7 @@ var option = {
                 $('#hiddenThrdPartyId').val(custInfo.custId)
                 $('#thrdPartyId').val(custInfo.custId)
                 $('#thrdPartyType').val(custInfo.codeName1)
+                $('#thrdPartyTypeId').val(custInfo.typeId)
                 $('#thrdPartyName').val(custInfo.name)
                 $('#thrdPartyNric').val(custInfo.nric)
 
@@ -374,8 +375,21 @@ var option = {
     	}
     	
     	if(mSaveForm.groupVal.value == "1"){
-            Common.alert("Please select Group Option");
-            return false;
+    		if($('input:radio[id="billingGroup"]').is(":checked") == false){
+    			Common.alert("Please select Group Option");
+                return false;
+    		}else{
+    			if(!$("#btnBillGroupPost" ).is(":checked") && !$("#btnBillGroupSMS" ).is(":checked") && !$("#btnBillGroupEStatement" ).is(":checked")) {
+                    Common.alert("* Please select at least one billing method.<br>");
+                    return false;
+                }else{
+                	if($("#thrdPartyTypeId").val() == '965' && $("#btnBillGroupSMS" ).is(":checked")) {
+                		Common.alert("* SMS billing method is not allow for company type customer.<br>");
+                		return false;
+                    }
+                }
+    		}
+
         }
     	
     	Common.ajax("GET", "/sales/membershipRentalQut/saveCnvrToSale.do", $("#mSaveForm").serialize(), function(result){
@@ -669,7 +683,10 @@ var option = {
         <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" title="" placeholder="Third Party ID" class="" /></td>
     <th scope="row">Type</th>
-    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
+    <td>
+        <input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/>
+        <input type="hidden" id="thrdPartyTypeId" name="thrdPartyTypeId">
+    </td>
 </tr>
 <tr>
     <th scope="row">Name</th>
@@ -843,22 +860,22 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="3">Billing Method</th>
+    <th scope="row" rowspan="3">Billing Method<span class="must">*</span></th>
     <td colspan="3">
-        <label><input type="checkbox" /><span>Post</span></label><br>
+        <label><input type="checkbox" id="btnBillGroupPost"/><span>Post</span></label><br>
     </td>
 </tr>
 <tr>
     <td colspan="3">
-        <label><input type="checkbox" /><span>SMS</span></label><br>
+        <label><input type="checkbox" id="btnBillGroupSMS"/><span>SMS</span></label><br>
     </td>
 </tr>
 <tr>
     <td>
-        <label><input type="checkbox" /><span>E-Statement</span></label>
+        <label><input type="checkbox" id="btnBillGroupEStatement"/><span>E-Statement</span></label>
     </td>
     <th scope="row">Email</th>
-    <td><input type="text" title="" placeholder="Email Address" class="w100p" /></td>
+    <td><input type="text" title="" id="txtBillGroupEmail" placeholder="Email Address" class="w100p" /></td>
 </tr>
 </tbody>
 </table>
