@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +24,7 @@ import com.coway.trust.biz.sales.order.OrderInvestService;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -34,6 +37,9 @@ public class OrderInvestController {
 	
 	@Resource(name = "orderInvestService")
 	private OrderInvestService orderInvestService; 
+	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 	
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -408,6 +414,54 @@ public class OrderInvestController {
 		model.addAttribute("callResultStus", params.get("callResultStus"));
 		model.addAttribute("callResultRem", params.get("callResultRem"));
 		return "sales/order/orderInvestCallResultRegSave2Pop";
+	}
+	
+	
+	@RequestMapping(value = "/orderNewRequestBatchListPop.do")
+	public String batchInvestList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "sales/order/orderNewRequestBatchListPop";
+	}
+	
+	
+	@RequestMapping(value = "/chkNewFileList", method = RequestMethod.POST) 
+	public ResponseEntity <ReturnMessage>chkNewFileList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{
+		
+		logger.debug("in  chkNewFileList ");
+		
+		logger.debug("params =====================================>>  " + params);
+		params.put("userId", sessionVO.getUserId());
+		params.put("userFullname", sessionVO.getUserFullname());
+
+		
+		Map<String, Object> listMap = orderInvestService.chkNewFileList(params);
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(listMap);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+		logger.debug("===== =====================================>>  " + listMap.get("checkList"));
+		logger.debug("===== =====================================>>  " + listMap.get("existYN"));
+		
+    	return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/saveNewFileList", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> saveNewFileList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{
+		
+		logger.debug("params =====================================>>  " + params);
+		params.put("userId", sessionVO.getUserId());
+		
+		orderInvestService.saveNewFileList(params);
+		
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData("");
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    	return ResponseEntity.ok(message);
 	}
 	
 }
