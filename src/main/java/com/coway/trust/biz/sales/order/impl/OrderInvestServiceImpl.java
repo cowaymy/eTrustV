@@ -1,10 +1,12 @@
 package com.coway.trust.biz.sales.order.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -14,8 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.mambership.impl.MembershipRSMapper;
 import com.coway.trust.biz.sales.order.OrderInvestService;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -37,6 +43,9 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	
 	@Resource(name = "orderCancelMapper")
 	private OrderCancelMapper orderCancelMapper;
+	
+	@Resource(name = "membershipRSMapper")
+	private MembershipRSMapper membershipRSMapper;
 	
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -658,4 +667,113 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 		int seqSAL0050D = orderInvestMapper.seqSAL0050D();
 		return seqSAL0050D;
 	};
+	
+	
+	@Override
+	public Map<String, Object> chkNewFileList(Map<String, Object> params) {
+		
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+		Map<String, Object> formData =  (Map<String, Object>) params.get("form");
+		
+		EgovMap result = new EgovMap();
+		
+		String msg = null;
+
+		Map<String, Object> rtnmap =new HashMap<String, Object>();
+		
+		List<Object> checkList = new ArrayList<Object>();
+		
+		for (Object obj : list) 
+		{			
+			((Map<String, Object>) obj).put("userId", params.get("userId"));
+			((Map<String, Object>) obj).put("userFullname", params.get("userFullname"));
+			
+			logger.debug(" OrderNo : {}", ((Map<String, Object>) obj).get("0"));
+			params.put("salesOrdNo", ((Map<String, Object>) obj).get("0"));
+			
+			Date date = new Date();
+			
+			if(!StringUtils.isEmpty(params.get("salesOrdNo"))){
+				((Map<String, Object>) obj).put("salesOrdNo",  ((Map<String, Object>) obj).get("0"));
+				
+				int batchOrderREGChk = orderInvestMapper.batchOrderREGChk(params);
+				if(batchOrderREGChk == 0){
+					rtnmap.put("regMsg", "* Only REGULAR rental order is allow to request for investigation.  -  " + ((Map<String, Object>) obj).get("0"));
+					rtnmap.put("regYN", "Y");
+					break;
+				}else{
+					int batchOrderExistChk = orderInvestMapper.batchOrderExistChk(params);
+					if(batchOrderExistChk > 0){
+						rtnmap.put("existYN", "Y");
+						rtnmap.put("existMsg", "* This order has ACTIVE investigation request. Request number : " + ((Map<String, Object>) obj).get("0"));
+						break;
+					}else{
+						params.put("salesOrderNo",  ((Map<String, Object>) obj).get("0"));
+						
+						EgovMap info = orderInvestMapper.fileOrderInfo(params);
+						
+						((Map<String, Object>) obj).put("ordId", info.get("salesOrdId"));
+						((Map<String, Object>) obj).put("ordNo", info.get("salesOrdNo"));
+						((Map<String, Object>) obj).put("invReqRemark", "Batch Investigation Upload");
+						((Map<String, Object>) obj).put("invReqCreated", date);
+						((Map<String, Object>) obj).put("invReqCreatorId", params.get("userId"));
+						((Map<String, Object>) obj).put("invReqCreatorNm", params.get("userFullname"));
+						logger.debug("info ================>>  " + info.get("salesOrdNo"));
+						logger.debug("info ================>>  " + date);
+						logger.debug("info ================>>  " + info.get("salesOrdId"));
+						checkList.add(obj);
+						
+
+						logger.debug("fffffffffffff ================>>  " +checkList);
+					}
+				}
+				
+				continue;
+			}
+			
+		}
+		rtnmap.put("checkList", checkList);
+		logger.debug("checkList ================>>  " + checkList);
+		logger.debug("info ================>>  " + rtnmap.get("checkList"));
+		
+		return rtnmap;
+	}
+	
+	public void saveNewFileList(Map<String, Object> params) {
+		
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+		Map<String, Object> formData =  (Map<String, Object>) params.get("form");
+		
+		logger.debug("gridData ============>> " + list);
+		
+		for (Object obj : list) 
+		{
+    		params.put("docNoId", 73);
+    		String invReqNo = membershipRSMapper.getDocNo(params);
+    		
+    		int seqSAL0050D = orderInvestMapper.seqSAL0050D();
+    		
+    		params.put("seqSAL0050D", seqSAL0050D);
+    		params.put("invReqNo", invReqNo);
+    		params.put("soId", ((Map<String, Object>) obj).get("ordId"));
+    		params.put("invReqStusId", 1);
+    		params.put("invReqPartyId", 770);
+    		params.put("invReqRem", ((Map<String, Object>) obj).get("invReqRemark"));
+    		params.put("invReqUserIdAuto", 0);
+    		params.put("invReqTypeId", 933);
+    		params.put("invReqHasAttach", 0);
+    		params.put("invReqAttachFile", " ");
+    		params.put("invReqRejctResnId", 0);
+    		
+    		orderInvestMapper.insertFileInvestReqM(params);
+    		
+    		params.put("salesOrdId", ((Map<String, Object>) obj).get("ordId"));
+    		params.put("prgrsId", 8);
+    		params.put("refId", 0);
+    		params.put("isLok", 1);
+    		orderInvestMapper.insertSalesOrdLog(params);
+    		
+		}
+		
+	}
 }

@@ -215,4 +215,10 @@ public interface OrderInvestService {
 	void saveInvest(Map<String, Object> params);
 	
 	int seqSAL0050D();
+	
+	Map<String, Object> chkNewFileList(Map<String, Object> params);
+	
+//	EgovMap fileOrderInfo(Map<String, Object> params);
+	
+	void saveNewFileList(Map<String, Object> params);
 }

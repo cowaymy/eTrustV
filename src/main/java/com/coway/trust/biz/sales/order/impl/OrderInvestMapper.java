@@ -293,4 +293,12 @@ public interface OrderInvestMapper {
 	
 	int seqSAL0050D();
 	
+	EgovMap fileOrderInfo(Map<String, Object> params) ;
+	
+	int batchOrderREGChk(Map<String, Object> params);
+	
+	int batchOrderExistChk(Map<String, Object> params);
+	
+	void insertFileInvestReqM(Map<String, Object> params);
+	
 }
