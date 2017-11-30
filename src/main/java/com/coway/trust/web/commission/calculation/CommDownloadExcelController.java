@@ -1324,8 +1324,7 @@ public class CommDownloadExcelController {
 		head.add("WEEK_1");
 		head.add("WEEK_2");
 		head.add("WEEK_3");
-		head.add("WEEK_4");
-		head.add("WEEK_5");
+		head.add("WEEK_4");	
 		head.add("TOT_LV");
 		head.add("WEEKLY_LV");
 		head.add("MONTH_LV");
@@ -1347,8 +1346,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("week1").toString());
 			lst.add(dataList.get(i).get("week2").toString());
 			lst.add(dataList.get(i).get("week3").toString());
-			lst.add(dataList.get(i).get("week4").toString());
-			lst.add(dataList.get(i).get("week5").toString());
+			lst.add(dataList.get(i).get("week4").toString());	
 			lst.add(dataList.get(i).get("totLv").toString());
 			lst.add(dataList.get(i).get("weeklyLv").toString());
 			lst.add(dataList.get(i).get("monthLv").toString());
