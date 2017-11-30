@@ -21,7 +21,7 @@
 var reqInfoGrid;
 
 $(document).ready(function(){
-    creatGrid();
+    creatReqInfoGrid();
 
     $("#searchText").html("<spring:message code="sales.MembershipNo" />");
     
@@ -34,10 +34,19 @@ $(document).ready(function(){
         }
     });
     
+//    fn_keyEvent();
     
 });
 
-function creatGrid(){
+/* function fn_keyEvent(){
+	  $("#searchNo").keydown(function(key)  {
+		    if (key.keyCode == 13) {
+		    	fn_selectCancellReqInfoAjax();
+		    }
+	  });
+} */
+
+function creatReqInfoGrid(){
     
     var reqColLayout = [ {
         dataField : "srvCntrctId",
@@ -122,7 +131,7 @@ function fn_selectCancellReqInfoAjax() {
 
 //view 화면 호출.
 function fn_saveViewPop() {     
-    Common.popupDiv("/sales/membership/cancellationSaveViewPop.do", $("#reqForm").serializeJSON(), null, true, "_ViewSVMDetailsDiv1");
+    Common.popupDiv("/sales/membership/cancellationSaveViewPop.do", $("#reqForm").serializeJSON(), null, true, "cancellationSaveViewPop");
     
 }
 
@@ -166,6 +175,7 @@ function fn_saveViewPop() {
 	<th scope="row" id="searchText"></th>
 	<td>
 		<input type="text" id="searchNo" name="searchNo" title="" placeholder="" class="" />
+		<input type="text" style="display: none;" title="" placeholder="" class="" />
 		<p class="btn_sky"><a href="#" onclick="javascript:fn_selectCancellReqInfoAjax();"><spring:message code="sales.Search" /></a></p>
 		<%-- <p class="btn_sky"><a href="#"><spring:message code="sales.Clear" /></a></p> --%>
 	</td>
