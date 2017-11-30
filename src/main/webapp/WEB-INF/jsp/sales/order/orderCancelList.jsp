@@ -248,7 +248,7 @@
     }
     
     function fn_rawData(){
-    	Common.alert('The program is under development.');
+    	Common.popupDiv("/sales/order/orderCancelRequestRawDataPop.do", null, null, true);
     }
 </script>
 

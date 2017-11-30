@@ -134,7 +134,7 @@
     }
 	
 	function fn_rawData(){
-        Common.alert('The program is under development.');
+		Common.popupDiv("/sales/order/orderConversionRawDataPop.do", null, null, true);
     }
 
 	$.fn.clearForm = function() {
