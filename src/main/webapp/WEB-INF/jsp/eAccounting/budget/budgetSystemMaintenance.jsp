@@ -97,88 +97,86 @@
                var item = new Object();
                var month_int = 0;
                var month_val = "";
-               var year_val ="";
-               var monthRowCount = 0;
-               var yearRowCount = 0;
-               
-               /*if($("#searchDt").val() != "" || $("searchDt").val() != null) {
+               var year_val ="";               
+           	   var rowCount = 0;
+           	   
+           	   rowCount = AUIGrid.getRowCount(myGridID);
+           	   
+           	   if(rowCount == 0) {
                    item.budgetYear = $("#searchDt").val();
-                   
-               } else {*/
-                   yearRowCount = AUIGrid.getRowCount(myGridID);
-                   yearRowCount--;
-                   
-                   year_val = AUIGrid.getCellValue(myGridID, yearRowCount, "budgetYear");
-                   item.budgetYear = year_val;
-               
-                //}
-                       var monthRowCount = AUIGrid.getRowCount(myGridID);
-                       monthRowCount--;
+                   item.budgetMonth = "JAN";   
+           	   } else {
+                         rowCount--;
+                         
+                         year_val = AUIGrid.getCellValue(myGridID, rowCount, "budgetYear");
+                         item.budgetYear = year_val;
+                         
+                         month_val = AUIGrid.getCellValue(myGridID, rowCount, "budgetMonth");
+                         
+                         if(month_val == "JAN") {
+                             month_int = 1;
+                         } else if(month_val == "FEB") {
+                             month_int = 2;
+                         } else if(month_val == "MAR") {
+                             month_int = 3;
+                         } else if(month_val == "APR") {
+                             month_int = 4;
+                         } else if(month_val == "MAY") {
+                             month_int = 5;
+                         } else if(month_val == "JUN") {
+                             month_int = 6;
+                         } else if(month_val == "JUL") {
+                             month_int = 7;
+                         } else if(month_val == "AUG") {
+                             month_int = 8;
+                         } else if(month_val == "SEP") {
+                             month_int = 9;
+                         } else if(month_val == "OCT") {
+                             month_int = 10;
+                         } else if(month_val == "NOV") {
+                             month_int = 11;
+                         } else if(month_val == "DEC") {
+                             month_int = 12;
+                         }
+                         
+                         month = month_int + 1;
+                         
+                         var month_char = "";
+                         if(month == 13) {
+                            item.budgetYear = year_val + 1;
+                         }
+                         if(month == 1 || month == 13) {
+                             month_char = 'JAN';
+                         } else if(month == 2) {
+                             month_char = 'FEB';
+                         } else if(month == 3) {
+                             month_char = 'MAR';
+                         } else if(month == 4) {
+                             month_char = 'APR';
+                         } else if(month == 5) {
+                             month_char = 'MAY';
+                         } else if(month == 6) {
+                             month_char = 'JUN';
+                         } else if(month == 7) {
+                             month_char = 'JUL';
+                         } else if(month == 8) {
+                             month_char = 'AUG';
+                         } else if(month == 9) {
+                             month_char = 'SEP';
+                         } else if(month == 10) {
+                             month_char = 'OCT';
+                         } else if(month == 11) {
+                             month_char = 'NOV';
+                         } else if(month == 12) {
+                             month_char = 'DEC';
+                         }
                        
-                       month_val = AUIGrid.getCellValue(myGridID, monthRowCount, "budgetMonth");
-                       
-                       if(month_val == "JAN") {
-                           month_int = 1;
-                       } else if(month_val == "FEB") {
-                           month_int = 2;
-                       } else if(month_val == "MAR") {
-                           month_int = 3;
-                       } else if(month_val == "APR") {
-                           month_int = 4;
-                       } else if(month_val == "MAY") {
-                           month_int = 5;
-                       } else if(month_val == "JUN") {
-                           month_int = 6;
-                       } else if(month_val == "JUL") {
-                           month_int = 7;
-                       } else if(month_val == "AUG") {
-                           month_int = 8;
-                       } else if(month_val == "SEP") {
-                           month_int = 9;
-                       } else if(month_val == "OCT") {
-                           month_int = 10;
-                       } else if(month_val == "NOV") {
-                           month_int = 11;
-                       } else if(month_val == "DEC") {
-                           month_int = 12;
-                       }
-                       
-                       month = month_int + 1;
-                       
-                       var month_char = "";
-                       if(month == 13) {
-                          item.budgetYear = year_val + 1;
-                       }
-                       if(month == 1 || month == 13) {
-                           month_char = 'JAN';
-                       } else if(month == 2) {
-                           month_char = 'FEB';
-                       } else if(month == 3) {
-                           month_char = 'MAR';
-                       } else if(month == 4) {
-                           month_char = 'APR';
-                       } else if(month == 5) {
-                           month_char = 'MAY';
-                       } else if(month == 6) {
-                           month_char = 'JUN';
-                       } else if(month == 7) {
-                           month_char = 'JUL';
-                       } else if(month == 8) {
-                           month_char = 'AUG';
-                       } else if(month == 9) {
-                           month_char = 'SEP';
-                       } else if(month == 10) {
-                           month_char = 'OCT';
-                       } else if(month == 11) {
-                           month_char = 'NOV';
-                       } else if(month == 12) {
-                           month_char = 'DEC';
-                       }
-                     
-                       item.budgetMonth = month_char;
-                       
-                       AUIGrid.addRow(myGridID, item, "last");
-                   });
+                         item.budgetMonth = month_char;
+                 }
+           item.budgetStus = "Open";
+                  
+           AUIGrid.addRow(myGridID, item, "last");
+      });
       //save
          $("#save").click(function() {
           if (validation()) {
@@ -286,7 +284,7 @@
 <tr>
     <th scope="row"><spring:message code="budget.year" /></th>
     <td>
-    <input type="text" id="searchDt" name="searchDt" title="" placeholder="" class="fl_left" />
+    <input type="text" id="searchDt" name="searchDt" title="" placeholder="" class="fl_left" value="2017"/>
      <p class="btn_blue"><a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></span></a></p>
     </td>
 </tr>
@@ -300,8 +298,8 @@
 </ul>
 <section class="search_result"><!-- search_result start -->
     
-<article class="grid_wrap" onchange = "duplicationCheck();"><!-- grid_wrap start -->
-    <div id="grid_wrap" style="width:100%; height:380px; margin:0 auto;" onclick="duplicationCheck()"></div>
+<article class="grid_wrap"><!-- grid_wrap start -->
+    <div id="grid_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" id="save"><spring:message code='sys.btn.save'/></a></p></li>
