@@ -416,6 +416,12 @@ public class OrderInvestController {
 		return "sales/order/orderInvestCallResultRegSave2Pop";
 	}
 	
+	@RequestMapping(value="/orderInvestigationRequestRawDataPop.do")
+	public String orderInvestigationRequestRawDataPop(){
+		
+		return "sales/order/orderInvestigationRequestRawDataPop";
+	}
+	
 	
 	@RequestMapping(value = "/orderNewRequestBatchListPop.do")
 	public String batchInvestList(@RequestParam Map<String, Object> params, ModelMap model) {
