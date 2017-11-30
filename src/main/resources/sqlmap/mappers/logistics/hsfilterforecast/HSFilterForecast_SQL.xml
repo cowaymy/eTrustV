@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.hsfilterforecast.impl.HSFilterForecastMapper">
+
+<!-- @author Adrian C. -->
+
+    <select id="selectHSFilterForecastList" parameterType="Map"  resultType="EgovMap">
+		SELECT
+		s26.STK_CODE AS stkcode,
+		s26.STK_DESC AS stkdesc,
+
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = #{fcastDate})
+		        AND (s88.SRV_PRD_EXPR_DT > #{fcastDate})
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth1,
+
+        <if test="mth2 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 1))
+		        AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 1))
+		        THEN NVL(l44.COMPNT_QTY,0)
+		        ELSE 0 END) AS mth2,
+        </if>
+
+        <if test="mth3 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 2))
+		        AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 2))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth3,
+        </if>
+
+        <if test="mth4 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 3))
+		        AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 3))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth4,
+        </if>
+
+        <if test="mth5 != 0">
+ 		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 4))
+		        AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 4))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth5,
+        </if>
+
+        <if test="mth6 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 5))
+			    AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 5))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth6,
+        </if>
+
+        <if test="mth7 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 6))
+			    AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 6))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth7,
+        </if>
+
+        <if test="mth8 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 7))
+			    AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 7))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth8,
+        </if>
+
+        <if test="mth9 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 8))
+			    AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 8))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth9,
+        </if>
+
+        <if test="mth10 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 9))
+			    AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 9))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth10,
+        </if>
+
+        <if test="mth11 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 10))
+			    AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 10))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth11,
+        </if>
+
+        <if test="mth12 != 0">
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 11))
+			    AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 11))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth12,
+        </if>
+
+        s26.STK_ID
+		FROM SAL0087D s87
+		JOIN SYS0026M s26 ON s87.SRV_FILTER_STK_ID = s26.STK_ID
+		LEFT JOIN LOG0044D l44 ON s26.STK_CODE = l44.BOM_COMPNT
+		JOIN SAL0090D s90 ON s87.SRV_CONFIG_ID = s90.SRV_CONFIG_ID
+		JOIN SAL0088D s88 ON s90.SRV_CONFIG_ID = s88.SRV_CONFIG_ID
+		JOIN SAL0001D s1 ON s90.SRV_SO_ID = s1.SALES_ORD_ID
+        LEFT JOIN SAL0071D s71 ON s1.SALES_ORD_ID = s71.SALES_ORD_ID AND s1.APP_TYPE_ID = 66
+
+		WHERE s87.SRV_FILTER_STUS_ID = 1
+		            AND l44.COMPNT_QTY > 0
+			        AND s1.STUS_CODE_ID = 4
+			        AND ((s1.APP_TYPE_ID = 66 AND s71.STUS_CODE_ID = 'REG') OR s1.APP_TYPE_ID != 66)
+
+        <if test="itmCode !=null and itmCode !=''">
+            AND s26.STK_CODE = #{itmCode}
+        </if>
+
+         <if test="searchCtgry !=null and searchCtgry !=''">
+            AND s26.STK_CTGRY_ID = #{searchCtgry}
+        </if>
+
+        GROUP BY s26.STK_CODE, s26.STK_DESC, s26.STK_ID
+        ORDER BY s26.STK_CODE
+    </select>
+
+    <select id="selectForecastDetailsList" parameterType="Map"  resultType="EgovMap">
+        SELECT
+        s26.STK_CODE AS stkcode,
+        s26.STK_DESC AS stkdesc,
+        s1.SALES_ORD_NO AS orderno,
+        s5.CODE AS brnchcode,
+        s5.NAME AS brnchdesc,
+        NVL(l44.COMPNT_QTY,0) AS qty,
+        TO_CHAR(TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS filterexp
+
+        FROM SAL0087D s87
+        JOIN SYS0026M s26 ON s87.SRV_FILTER_STK_ID = s26.STK_ID
+        LEFT JOIN LOG0044D l44 ON s26.STK_CODE = l44.BOM_COMPNT
+        JOIN SAL0090D s90 ON s87.SRV_CONFIG_ID = s90.SRV_CONFIG_ID
+        JOIN SAL0088D s88 ON s90.SRV_CONFIG_ID = s88.SRV_CONFIG_ID
+        JOIN SAL0001D s1 ON s90.SRV_SO_ID = s1.SALES_ORD_ID
+        LEFT JOIN SAL0071D s71 ON s1.SALES_ORD_ID = s71.SALES_ORD_ID AND s1.APP_TYPE_ID = 66
+        JOIN SAL0023D s23 ON s1.CUST_ADD_ID = s23.CUST_ADD_ID
+        JOIN SYS0064M s64 ON s23.AREA_ID = s64.AREA_ID
+        JOIN SYS0005M s5 ON s64.CODY_BRNCH_CODE = s5.CODE
+        JOIN SYS0013M s13 ON s5.TYPE_ID = s13.CODE_ID
+
+        WHERE s87.SRV_FILTER_STUS_ID = 1
+                    AND s1.STUS_CODE_ID = 4
+                    AND ((s1.APP_TYPE_ID = 66 AND s71.STUS_CODE_ID = 'REG') OR s1.APP_TYPE_ID != 66)
+
+        <if test="selectedMth == 0">
+                AND ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = #{hiddenfcastDate}
+                AND s88.SRV_PRD_EXPR_DT > #{hiddenfcastDate}
+        </if>
+
+        <if test="selectedMth > 0">
+                AND ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{hiddenfcastDate}, #{selectedMth})
+                AND s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{hiddenfcastDate}, #{selectedMth})
+        </if>
+
+        <if test="detailStkCode != null and detailStkCode !=''">
+            AND s26.STK_CODE = #{detailStkCode}
+        </if>
+
+         <if test="loctype != null">
+            AND s13.CODE IN
+            <foreach item="item" collection="locList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+         <if test="brnch != null">
+            AND s5.BRNCH_ID IN
+            <foreach item="item" collection="brnchList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>
