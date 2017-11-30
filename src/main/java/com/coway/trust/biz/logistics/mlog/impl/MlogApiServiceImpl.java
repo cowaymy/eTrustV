@@ -122,7 +122,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getItemBankItemList();
 	}
-	
+
 	@Override
 	public List<EgovMap> getItemBankResultList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -205,39 +205,41 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 	@Override
 	public void saveInvenReqTransfer(InventoryReqTransferMForm inventoryReqTransferMForm) {
-
+		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
+		// String seq1 = MlogApiMapper.selectStockMovementSeq();
+		// String headtitle = "SMO";
 		String seq1 = MlogApiMapper.selectStockMovementSeq();
-		String headtitle = "SMO";
 		logger.debug("seq1    값 : {}", seq1);
-		Map<String, Object> insMap = new HashMap();	
+		Map<String, Object> insMap = new HashMap();
 		insMap.put("userId", inventoryReqTransferMForm.getUserId());
 		insMap.put("requestDate", inventoryReqTransferMForm.getRequestDate());
 		insMap.put("smType", inventoryReqTransferMForm.getSmType());
 		insMap.put("targetLocation", inventoryReqTransferMForm.getTargetLocation());
-		insMap.put("reqno", headtitle + seq1);
-		
+		// insMap.put("reqno", headtitle + seq1);
+		insMap.put("reqno", seq1);
+
 		logger.debug("insMap ?    값 : {}", insMap);
 
 		MlogApiMapper.insStockMovementHead(insMap);
-		
-		List<InventoryReqTransferDForm> list =inventoryReqTransferMForm.getInventoryReqTransferDetail();
-		InventoryReqTransferDForm form =null;
-		
+
+		List<InventoryReqTransferDForm> list = inventoryReqTransferMForm.getInventoryReqTransferDetail();
+		InventoryReqTransferDForm form = null;
+
 		for (int i = 0; i < list.size(); i++) {
-			form=list.get(i);
+			form = list.get(i);
 			insMap.put("partsCode", form.getPartsCode());
 			insMap.put("partsId", form.getPartsId());
 			insMap.put("requestQty", form.getRequestQty());
-			insMap.put("partsName", form.getPartsName());	
-			
-		    MlogApiMapper.insStockMovementDetail(insMap);
-			
+			insMap.put("partsName", form.getPartsName());
+
+			MlogApiMapper.insStockMovementDetail(insMap);
+
 		}
-		
+
 		MlogApiMapper.insertStockBooking(insMap);
 
 	}
-	
+
 	@Override
 	public Map<String, Object> selectStockMovementSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -246,7 +248,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 	@Override
 	public void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm) {
-
+		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
 		Map<String, Object> insMap = new HashMap();
 		// 2. insert ,54 , 55 , 61 ,56update start
@@ -325,7 +327,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		Map<String, Object> receiveMap = new HashMap();
 		receiveMap.put("userId", confirmReceiveMForm.getUserId());
-		
+
 		// receiveMap.put("gipfdate", confirmReceiveMForm.getRequestDate());
 		// receiveMap.put("giptdate", confirmReceiveMForm.getRequestDate());
 		receiveMap.put("gtype", confirmReceiveMForm.getReqStatus());
@@ -379,20 +381,20 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			setmap.put("countedQty", form.getCountedQty());
 
 			logger.debug("setmapS1111111 : {}", setmap);
-			
+
 			MlogApiMapper.updateBarcodeQty(setmap);
 
 			List<InputBarcodeListForm> serialList = form.getInputBarcodeListForm();
 			for (int j = 0; j < serialList.size(); j++) {
 				InputBarcodeListForm sForm = serialList.get(j);
-			//	Map<String, Object> setmapS = new HashMap();
-			//	setmap.put("userId", form.getUserId());
+				// Map<String, Object> setmapS = new HashMap();
+				// setmap.put("userId", form.getUserId());
 				setmap.put("serialNo", sForm.getSerialNo());
-			//	setmap.put("invenAdjustNoItem", form.getInvenAdjustNoItem());
-				
-			//	logger.debug("setmapS222222 : {}", setmapS);
-			//	logger.debug("getSerialNo????? : {}", sForm.getSerialNo());
-							
+				// setmap.put("invenAdjustNoItem", form.getInvenAdjustNoItem());
+
+				// logger.debug("setmapS222222 : {}", setmapS);
+				// logger.debug("getSerialNo????? : {}", sForm.getSerialNo());
+
 				MlogApiMapper.insertBarcode(setmap);
 			}
 
