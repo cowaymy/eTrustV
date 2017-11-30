@@ -63,6 +63,11 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 	public EgovMap getMemberOrgInfo(Map<String, Object> params) {
 		return orderListMapper.getMemberOrgInfo(params);
 	}
+
+	@Override
+	public List<EgovMap> getBankCodeList(Map<String, Object> params) {
+		return orderListMapper.getBankCodeList(params);
+	}
 	
 	
 	
