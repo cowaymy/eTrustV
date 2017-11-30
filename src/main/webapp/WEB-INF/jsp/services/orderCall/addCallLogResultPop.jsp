@@ -130,8 +130,15 @@ function callLogTranGrid() {
 function fn_doAllaction(){
     var ord_id = $("#salesOrdId").val();
     var  vdte   = $("#requestDate").val();
-    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte ,TYPE:'INS'}, null , true , '_doAllactionDiv');
+    var rdcStock = $("#rdcStock").text();
     
+   
+    if(rdcStock != '0'){
+        Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte ,TYPE:'INS'}, null , true , '_doAllactionDiv');
+    }
+    else{
+    	Common.alert('There is no available stock to make a appointment date, should entry for recall date');
+    }
 
 }
 </script>
@@ -208,16 +215,29 @@ function fn_doAllaction(){
       <tr>
      
         <th scope="row">RDC Available Qty </th>
+       <c:if test= "${rdcStock.availQty != null }" >
        <td>
-         <span><c:out value="${rdcStock.availQty}"/></span>
+         <span id='rdcStock'><c:out value="${rdcStock.availQty}"/></span>
        </td>
-       
+       </c:if>
+        <c:if test= "${rdcStock.availQty == null }" >
+       <td>
+         <span id='rdcStock'>0</span>
+       </td>
+       </c:if>
         
         <th scope="row">In Transit Qty</th>
+         <c:if test= "${rdcStock.intransitQty != null }" >
         <td>
         <span><c:out value="${rdcStock.intransitQty}"/></span>
-          
         </td>
+        </c:if>
+          <c:if test= "${rdcStock.intransitQty == null }" >
+        <td>
+        <span>0</span>
+        </td>
+        </c:if>
+        
         <th scope="row">CDC Available Qty </th>
          <c:if test= "${cdcAvaiableStock.availQty  == null }" >
         <td>
@@ -226,7 +246,7 @@ function fn_doAllaction(){
         </c:if>
         <c:if test= "${cdcAvaiableStock.availQty != null }" >
         <td>
-        <span><c:out value="${cdcAvaiableStock.availQty}"/></span>
+        <span ><c:out value="${cdcAvaiableStock.availQty}"/></span>
         </td>
         </c:if>
     </tr>
