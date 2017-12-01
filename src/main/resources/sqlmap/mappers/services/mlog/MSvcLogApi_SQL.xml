@@ -1998,7 +1998,10 @@ and cust.cust_id = custCnt.cust_id
 	                             and RESN_ID = FAIL_RESN_ID)  as fail_Reason
 <!--                                 ,FN_GET_COMMCD(167, FAIL_RESN_ID) as fail_Reason -->
                        ,REN_COLCT_ID as collection_Code
-                       ,decode(STUS_CODE_ID ,'4' ,'Completed','21','Failed','10','Cancelled',STUS_CODE_ID) as collection_Name
+                       ,(SELECT Extent1.RESN_DESC 
+                          FROM SYS0032M Extent1
+                         WHERE Extent1.resn_type_id = 174
+                                and resn_id = REN_COLCT_ID )   AS collection_Name
                        ,RESULT_REM as result_Remark
                        ,BS_RESULT_PART_ID as filter_Code
                        ,BS_RESULT_PART_DESC as filter_Name
@@ -2072,7 +2075,7 @@ and cust.cust_id = custCnt.cust_id
                     filter_Name,
                     last_Change_Date,
                     filter_Period,
-                    to_char(next_Change_Date)as next_Change_Date,
+                    TO_CHAR (next_Change_Date, 'yyyymmdd') AS next_Change_Date,
                     change_Qty
             FROM(
  SELECT          C.ASR_ITM_PART_ID filter_Code,
@@ -2080,7 +2083,7 @@ and cust.cust_id = custCnt.cust_id
                  to_char(E.SRV_FILTER_PRV_CHG_DT,'YYYYMMDD') as  last_Change_Date,
                  E.SRV_FILTER_PRIOD filter_Period,
                  C.ASR_ITM_PART_QTY change_Qty,
-                 '' next_Change_Date
+                 add_months(E.SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD)  AS next_Change_Date
                 FROM  SVC0004D S ,
                                SAL0001D B ,
                                SVC0005D C ,
@@ -2137,7 +2140,7 @@ and cust.cust_id = custCnt.cust_id
                                 ,BS_RESULT_PART_DESC as filter_Name
                                 ,BS_RESULT_CRT_DT as last_Change_Date
                                 ,SRV_FILTER_PRIOD as filter_Period
-                                ,to_char(next_Change_Date) next_Change_Date
+                                ,to_char(to_date(next_Change_Date,'yy/mm/dd'),'yyyymmdd') as next_Change_Date
                                 ,BS_RESULT_PART_QTY change_Qty
                     from (select distinct a.SETL_DT
                                 ,a.NO
@@ -2145,8 +2148,8 @@ and cust.cust_id = custCnt.cust_id
                                 ,e.BS_RESULT_PART_DESC
                                 ,to_char(e.BS_RESULT_CRT_DT,'YYYYMMDD')as BS_RESULT_CRT_DT
                                 ,F.SRV_FILTER_PRIOD
-                                ,E.BS_RESULT_PART_QTY,
-				                 '' next_Change_Date
+                                ,E.BS_RESULT_PART_QTY
+                                ,to_char(add_months(e.BS_RESULT_CRT_DT, SRV_FILTER_PRIOD))  AS next_Change_Date
                         from SVC0006D a
                                 ,SVC0008D b
                                 ,sal0001d c
@@ -2158,7 +2161,7 @@ and cust.cust_id = custCnt.cust_id
                         and a.sales_ord_id = c.sales_ord_id
                         and a.CODY_ID = d.mem_id
                         and a.RESULT_ID = e.BS_RESULT_ID
-                        AND e.BS_RESULT_ITM_ID =f.SRV_FILTER_ID(+)
+                        AND e.BS_RESULT_PART_ID =f.SRV_FILTER_ID(+)
                         and e.BS_RESULT_ID = #{bsResultId}
                         order by SETL_DT desc ) x
                   where 1=1
