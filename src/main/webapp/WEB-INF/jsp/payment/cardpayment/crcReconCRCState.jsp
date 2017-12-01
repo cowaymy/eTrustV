@@ -30,7 +30,9 @@ var gridPros2 = {
         // 체크박스 대신 라디오버튼 출력함
         rowCheckToRadio : true,
         
-        softRemoveRowMode:false
+        softRemoveRowMode:false,
+        // 상태 칼럼 사용
+        showStateColumn : false
         
 };
 
