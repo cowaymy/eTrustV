@@ -709,9 +709,9 @@ public class CommissionExcelDownloadController {
 				map.put("retPCd", request.getParameter("retPCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "ordId","ordNo", "retId", "retnNo","emplyCode", "stockId","stockDesc", "appTypeId", "retPersonId", "prc",
+				columns = new String[] { "ordId","ordNo", "retId", "retnNo","emplyCode", "stockId","stockDesc", "appTypeId","appDesc", "retPersonId", "prc",
 						"taskId", "runId", "isExclude" };
-				titles = new String[] { "ORD ID","ORD NO", "RET ID", "RETN NO","EMPLY CODE", "STOCK ID","STOCK DESC", "APP TYPE ID", "RET PERSON ID",
+				titles = new String[] { "ORD ID","ORD NO", "RET ID", "RETN NO","EMPLY CODE", "STOCK ID","STOCK DESC", "APP TYPE ID", "APP TYPE DESC","RET PERSON ID",
 						"PRC", "TASK ID", "RUN ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad21T(map, downloadHandler);

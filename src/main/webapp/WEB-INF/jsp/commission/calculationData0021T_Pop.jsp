@@ -123,6 +123,11 @@
             style : "my-column",
             editable : false
         },{
+            dataField : "appDesc",
+            headerText : "APP DESC",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "retPersonId",
 	        headerText : "RET PERSON ID",
 	        style : "my-column",

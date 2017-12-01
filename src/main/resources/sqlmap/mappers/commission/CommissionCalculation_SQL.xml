@@ -1378,6 +1378,7 @@
 			nvl(T1.STOCK_ID, '0') STOCK_ID,
 			nvl(T3.STK_DESC, '0') STOCK_DESC,
 			nvl(T1.APP_TYPE_ID, '0') APP_TYPE_ID,
+			nvl(T5.CODE_DESC,' ') APP_DESC,
 			nvl(T1.RET_PERSON_ID,'0') RET_PERSON_ID,
 		    nvl(T1.PRC,0) prc, 
 		    nvl(T1.TASK_ID, '0') TASK_ID,
@@ -1408,6 +1409,7 @@
 				     GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
 				)T3 ON T1.ORD_ID=T3.SALES_ORD_ID
             JOIN LOG0038D T4 ON T1.RET_ID = T4.STK_RETN_ID
+            JOIN SYS0013M T5 ON T1.APP_TYPE_ID=T5.CODE_ID
 		WHERE T1.TASK_ID = #{taskId}
 		<if test="useYnCombo != null and useYnCombo != ''">
             AND T2.IS_EXCLUDE = #{useYnCombo}
