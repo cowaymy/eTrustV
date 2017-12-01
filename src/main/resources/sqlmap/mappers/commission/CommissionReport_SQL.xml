@@ -608,7 +608,7 @@
 		                on t3.F_MEM_ID =  t1.EMPLY_ID 
 		    where t1.EMPLY_TYPE_CODE in ('HP','ST') 
 		        and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
-		        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R34)>0
+		        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R33+t0.R34)>0
 		         and t3.F_MEM_ID is null 
 		         and t1.EMPLY_STUS_ID<>3) t1
 		    left join (
@@ -659,7 +659,7 @@
 		                on t3.F_MEM_ID =  t1.EMPLY_ID 
 		    where t1.EMPLY_TYPE_CODE in ('HP','ST') 
 		        and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
-		        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R34)>0
+		        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R33+t0.R34)>0
 		         and t3.F_MEM_ID is null 
 		         and t1.EMPLY_STUS_ID<>3)t2
     ]]>
