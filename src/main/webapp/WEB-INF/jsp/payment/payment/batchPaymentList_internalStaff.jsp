@@ -874,7 +874,7 @@ var batchInfoLayout = [
 		</form>
 		<ul class="center_btns mt20">
 		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
-		    <li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/payment/batchPaymentList_internalStaffFormat.csv">Download CSV Format</a></p></li>
+		    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/batchPaymentList_internalStaffFormat.csv">Download CSV Format</a></p></li>
 		</ul>
 	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->

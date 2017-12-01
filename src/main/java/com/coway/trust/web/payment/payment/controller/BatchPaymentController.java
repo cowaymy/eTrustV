@@ -271,14 +271,14 @@ public class BatchPaymentController {
 			hm.put("sysAmount", 0);
 			hm.put("sysBankAccId", 0);
 			hm.put("sysIssBankId", 0);
-			hm.put("sysRefDate", "01/01/1900");
+			hm.put("sysRefDate", "1900/01/01");
 			hm.put("sysBCAmt", 0);
 			hm.put("sysBCAccId", 0);
 			
 			if(!vo.getTrDate().trim().equals("")){
 				hm.put("userTrDate", vo.getTrDate().trim());
 			}else{
-				hm.put("userTrDate", "01/01/1900");
+				hm.put("userTrDate", "1900/01/01");
 			}
 			
 			hm.put("userCollectorCode", vo.getCollectorCode().trim());
