@@ -820,22 +820,8 @@ function fnMainGridCreate()
             // 체크박스 표시 설정
             showRowCheckColumn : true,              
             // 전체 선택 체크박스가 독립적인 역할을 할지 여부
-            independentAllCheckBox : true,   
-        
-            // 엑스트라 체크박스 체커블 함수
-            // 이 함수는 사용자가 체크박스를 클릭 할 때 1번 호출됩니다.
-/*              rowCheckableFunction : function(rowIndex, isChecked, item) 
-            {
-              if(item.poItmAppvStus == "Approved") { // 이름이 Anna 인 경우 사용자 체크 못하게 함.
-                return false;
-              }
+            independentAllCheckBox : false,   
 
-              return true;
-            },  
-             */
-            // 엑스트라 체크박스 disabled 함수
-            // 이 함수는 렌더링 시 빈번히 호출됩니다. 무리한 DOM 작업 하지 마십시오. (성능에 영향을 미침)
-            // rowCheckDisabledFunction 이 아래와 같이 간단한 로직이라면, 실제로 rowCheckableFunction 정의가 필요 없습니다.
             // rowCheckDisabledFunction 으로 비활성화된 체크박스는 체크 반응이 일어나지 않습니다.(rowCheckableFunction 불필요)
             rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
               if(item.poItmAppvStus == "Approved") { // 이름이 Anna 인 경우 사용자 체크 못하게 함.
@@ -874,16 +860,18 @@ function fnMainGridCreate()
   // 전체 체크박스 클릭 이벤트 바인딩
   AUIGrid.bind(MainGridID, "rowAllChkClick", function( event ) 
   {
-    if(event.checked ) {
-      // name 의 값들 얻기  Active/Approved
+	  
+    if(event.checked ) {  // name 의 값들 얻기  Active(1)/Approved(5)
       var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "poItmAppvStus");
       // Anna 제거하기
-      uniqueValues.splice(uniqueValues.indexOf("Approved"),1);
-      console.log("V_uniqueValues: " + uniqueValues);  //Active
+      uniqueValues.splice(uniqueValues.indexOf("Approved"),1);   
+
+      console.log("uniqueValues: " + uniqueValues + " /length: " + uniqueValues.length );  
       AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus", uniqueValues);
     } else {
       AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus", []);
     }
+	  
   });
   
   

@@ -659,7 +659,7 @@ function fnSearchBtnSCMPrePOView()
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
 	    return false;
 	  }
-
+ 
 	  if ($("#cdcCbBox").val().length < 1) 
 	  {
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='CDC' htmlEscape='false'/>");

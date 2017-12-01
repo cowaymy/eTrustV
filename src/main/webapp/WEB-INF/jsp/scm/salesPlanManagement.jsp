@@ -60,8 +60,135 @@ $(function()
 	fnSetStockCategoryComboBox(); 
  //setting StockCode ComboBox	
 	fnSetStockComboBox(); 
-	
+
 });
+
+/*********************************/
+ var mstColumnLayout = 
+    [ 
+        {    
+            dataField : "codeMasterId",
+            headerText : "<spring:message code='sys.generalCode.grid1.MASTER_ID' />",
+            width : "8%",
+        }, {
+            dataField : "codeMasterName", 
+            headerText : "<spring:message code='sys.generalCode.grid1.MASTER_NAME' />",
+            style : "aui-grid-left-column",
+            width : "25%",
+        }, {
+            dataField : "codeDesc",
+            headerText : "<spring:message code='sys.generalCode.grid1.CODE_DESCRIPTION' />",
+            style : "aui-grid-left-column",
+            width : "30%",
+        }, {
+            dataField : "createName",
+            headerText : "<spring:message code='sys.generalCode.grid1.CREATOR' />",
+            style : "aui-grid-left-column",
+            width : "13%",
+        }, {
+            dataField : "crtDt",
+            headerText : "<spring:message code='sys.generalCode.grid1.CREATE_DATE' />",
+            dataType : "date",
+            formatString : "dd-mmm-yyyy HH:MM:ss",
+            width : "15%",
+        }, {
+            dataField : "disabled",
+            headerText : "<spring:message code='sys.generalCode.grid1.DISABLED' />",
+            width : "9%",
+            editRenderer : {
+                type : "ComboBoxRenderer",
+                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                   var list = getDisibledComboList();
+                   return list;                 
+                },
+                keyField : "id"
+            }
+        }
+    ];
+
+
+//
+function fnInsertGridCreate()
+{
+var options = {
+                  usePaging : true,
+                  useGroupingPanel : false,
+                  showRowNumColumn : false, // 순번 칼럼 숨김
+                };
+    
+    // masterGrid 그리드를 생성합니다.
+    gInsertGridID = GridCommon.createAUIGrid("insertGridDivID", mstColumnLayout,"codeMasterId", options);
+    // AUIGrid 그리드를 생성합니다.
+    
+
+    // 푸터 객체 세팅
+    //AUIGrid.setFooter(myGridID, footerObject);
+    
+    // 에디팅 시작 이벤트 바인딩
+    AUIGrid.bind(gInsertGridID, "cellEditBegin", auiCellEditignHandler);
+    
+    // 에디팅 정상 종료 이벤트 바인딩
+    AUIGrid.bind(gInsertGridID, "cellEditEnd", auiCellEditignHandler);
+    
+    // 에디팅 취소 이벤트 바인딩
+    AUIGrid.bind(gInsertGridID, "cellEditCancel", auiCellEditignHandler);
+    
+    // 행 추가 이벤트 바인딩 
+    AUIGrid.bind(gInsertGridID, "addRow", auiAddRowHandler);
+    
+    // 행 삭제 이벤트 바인딩 
+    AUIGrid.bind(gInsertGridID, "removeRow", auiRemoveRowHandler);
+
+
+    // cellClick event.
+    AUIGrid.bind(gInsertGridID, "cellClick", function( event ) 
+    {
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        gSelRowIdx = event.rowIndex;
+
+        if (AUIGrid.isAddedById(gInsertGridID,AUIGrid.getCellValue(gInsertGridID, event.rowIndex, 0)) == true
+                || String(event.value).length < 1)
+            {
+                    return false;
+            } 
+
+            $("#mstCdId").val( event.value);
+            
+            fn_getDetailCode(gInsertGridID, event.rowIndex);
+
+        
+    });
+
+ // 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(gInsertGridID, "cellDoubleClick", function(event) 
+    {
+        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
+
+    });   
+
+
+    /**********************/
+}
+
+function fnShowGrid()
+{
+    alert('show');
+  $("#dynamic_DetailGrid_wrap").hide();
+  fnInsertGridCreate();
+  $("#insertGridDivID").show();
+}
+function fnHideGrid()
+{
+  alert('hide');
+  if(AUIGrid.isCreated(gInsertGridID)){
+      AUIGrid.destroy(gInsertGridID);
+  }
+  $("#insertGridDivID").hide();
+  $("#dynamic_DetailGrid_wrap").show();
+}
+ 
+/********************************/
 
 function fnSelectPeriodReset()
 {
@@ -69,6 +196,8 @@ function fnSelectPeriodReset()
    var periodCheckBox = document.getElementById("scmPeriodCbBox");
        periodCheckBox.options[0] = new Option("Select a YEAR","");  
 }
+
+
 
 function fnNumberCheck(inputs)
 {
@@ -1612,7 +1741,10 @@ $(document).ready(function()
     {
       $(this).val($(this).val().toUpperCase());
     });
-    
+
+
+    /********************/
+
 });   //$(document).ready
 
 
@@ -1809,6 +1941,8 @@ $(document).ready(function()
 </article><!-- grid_wrap end -->
 <div class="side_btns">
   <ul class="right_btns">
+  <!--   <li><p id='show'   class="btn_grid "><a onclick="fnShowGrid();">show</a></p></li>
+    <li><p id='hide'   class="btn_grid "><a onclick="fnHideGrid();">hide</a></p></li> -->
     <li><p id='btnUpdate'   class="btn_grid btn_disabled"><a onclick="fnSaveScmSalesPlan(this);">Update</a></p></li>
     <li><p id='btnAddrow' class="btn_grid btn_disabled"><a onclick="fnInsertAddRow(this);">AddRow</a></p></li>
     <li><p id='btnInsert' class="btn_grid btn_disabled"><a onclick="fnInsertSave(this);">Insert</a></p></li>
@@ -1823,6 +1957,11 @@ $(document).ready(function()
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 2-->
  <div id="dynamic_DetailGrid_wrap" style="height:280px;"></div> 
+</article><!-- grid_wrap end -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<!-- 입력을위한 그리드 -->
+ <div id="insertGridDivID" style="height:280px;"></div> 
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
