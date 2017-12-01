@@ -13,19 +13,19 @@ public class RegPreOrderForm {
 	@ApiModelProperty(value = "userId [default : '' 전체] 예) 359 ", example = "359")
 	private int customerId;
 	
-	@ApiModelProperty(value = "productId [default : '' 전체] 예) 29/11/2017(DD/MM/YYYY) ", example = "29/11/2017")
+	@ApiModelProperty(value = "productId [default : '' 전체] 예) 5 ", example = "5")
 	private int productId;
 	
 	@ApiModelProperty(value = "salesType [default : '' 전체] 예) 66 ", example = "66")
 	private int salesType;
 	
-	@ApiModelProperty(value = "servicePeriod [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "servicePeriod [default : '' 전체] 예) 60 ", example = "60")
 	private int servicePeriod;
 	
-	@ApiModelProperty(value = "promotionCode [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "promotionCode [default : '' 전체] 예) 31620 ", example = "31620")
 	private String promotionCode;
 	
-	@ApiModelProperty(value = "reOrderYN [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "reOrderYN [default : '' 전체] 예) 0 ", example = "0")
 	private int reOrderYN;
 	
 	@ApiModelProperty(value = "gstYN [default : '' 전체] 예) 0 ", example = "0")
@@ -34,34 +34,34 @@ public class RegPreOrderForm {
 	@ApiModelProperty(value = "advPaymentYN [default : '' 전체] 예) 0 ", example = "0")
 	private int advPaymentYN;
 	
-	@ApiModelProperty(value = "normalPriceRpfAmt [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "normalPriceRpfAmt [default : 0 전체] 예) 200 ", example = "200")
 	private BigDecimal normalPriceRpfAmt;
 	
-	@ApiModelProperty(value = "finalPriceRpfAmt [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "finalPriceRpfAmt [default : 0 전체] 예) 60 ", example = "60")
 	private BigDecimal finalPriceRpfAmt;
 	
-	@ApiModelProperty(value = "normalRentalFeeAmt [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "normalRentalFeeAmt [default : 0전체] 예) 100 ", example = "100")
 	private BigDecimal normalRentalFeeAmt;
 	
-	@ApiModelProperty(value = "finalRentalFeeAmt [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "finalRentalFeeAmt [default : 0 전체] 예) 60 ", example = "60")
 	private BigDecimal finalRentalFeeAmt;
 	
-	@ApiModelProperty(value = "totalPv [default : '' 전체] 예) 2340 ", example = "2340")
+	@ApiModelProperty(value = "totalPv [default : 0 전체] 예) 2340 ", example = "2340")
 	private BigDecimal totalPv;
 	
-	@ApiModelProperty(value = "totalPvGst [default : '' 전체] 예) 2344 ", example = "2344")
+	@ApiModelProperty(value = "totalPvGst [default : 0 전체] 예) 2344 ", example = "2344")
 	private BigDecimal totalPvGst;
 	
-	@ApiModelProperty(value = "priceId [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "priceId [default : 0 전체] 예) 106 ", example = "106")
 	private int priceId;
 	
 	@ApiModelProperty(value = "memCode [default : '' 전체] 예) 100005 ", example = "100005")
 	private String memCode;
 	
-	@ApiModelProperty(value = "sofNo [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "sofNo [default : '' 전체] 예) AAA2825399 ", example = "AAA2825399")
 	private String sofNo;
 	
-	@ApiModelProperty(value = "installDate [default : '' 전체] 예) 01/12/2017 ", example = "01/12/2017")
+	@ApiModelProperty(value = "installDate [default : '' 전체] 예) 20171202 ", example = "20171202")
 	private String installDate;
 	
 	@ApiModelProperty(value = "installTime [default : '' 전체] 예) 12:01:01 ", example = "12:01:01")
@@ -70,7 +70,7 @@ public class RegPreOrderForm {
 	@ApiModelProperty(value = "etcMemo [default : '' 전체] 예) test ", example = "test")
 	private String etcMemo;
 	
-	@ApiModelProperty(value = "custAddrId [default : '' 전체] 예) 75417 ", example = "75417")
+	@ApiModelProperty(value = "custAddrId [default : 0 전체] 예) 75417 ", example = "75417")
 	private int custAddrId;
 
 	@ApiModelProperty(value = "areaId [default : '' 전체] 예) 80350-0097 ", example = "80350-0097")
@@ -82,16 +82,16 @@ public class RegPreOrderForm {
 	@ApiModelProperty(value = "addDetail [default : '' 전체] 예) addDetail ", example = "addDetail")
 	private String addDetail;
 	
-	@ApiModelProperty(value = "salesSubType [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "salesSubType [default : '' 전체] 예) 2 ", example = "2")
 	private int salesSubType;
 	
-	@ApiModelProperty(value = "atchFileGrpId [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "atchFileGrpId [default : '' 전체] 예) 111 ", example = "111")
 	private int atchFileGrpId;
 
 	@ApiModelProperty(value = "loginUserBranchId [default : '' 전체] 예) 77 ", example = "77")
 	private int loginUserBranchId;
 
-	@ApiModelProperty(value = "loginUserId [default : '' 전체] 예) 359 ", example = "359")
+	@ApiModelProperty(value = "loginUserId [default : '' 전체] 예) 184 ", example = "184")
 	private int loginUserId;
 
 	public static Map<String, Object> createMap(RegPreOrderForm preOrderForm){
