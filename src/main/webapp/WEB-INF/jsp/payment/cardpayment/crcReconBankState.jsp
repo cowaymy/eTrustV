@@ -40,12 +40,12 @@
     var columnMappedLayout = [ 
         {dataField : "codeId", headerText : "codeId.", editable : false, visible:false}, 
 		{dataField : "crcStateId", headerText : "crcId.", editable : false, visible:false}, 
-        {dataField : "fTrnscDt",headerText : "Transaction<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-        {dataField : "crcTrnscMid",headerText : "MID No",width : 300 , editable : false},
+        {dataField : "fTrnscDt",headerText : "Transaction<br>Date",width : 240 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+        {dataField : "crcTrnscMid",headerText : "MID No",width : 200, editable : false},
         //{dataField : "bnkAcc",headerText : "Bank<br>Account",width : 100 , editable : false},  
-        {dataField : "netAmt",headerText : "CRC Net<br>Amount",width : 100 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
-        {dataField : "fTrnscId",headerText : "Bank<br>Statement<br>ID",width : 240 , editable : false},
-        {dataField : "creditAmt",headerText : "Credit<br>Amount",width : 240 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "netAmt",headerText : "CRC Net<br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
+        {dataField : "fTrnscId",headerText : "Bank<br>Statement<br>ID",width : 200 , editable : false},
+        {dataField : "creditAmt",headerText : "Credit<br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "mappingDate",headerText : "Mapping<br>Date",width : 240 , editable : false, dataType:"date", formatString:"dd/mm/yyyy"},
    ];
     
@@ -164,15 +164,15 @@
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Credit Card Payment</li>
-        <li>Bank Reconciliation between Credit Card Statement & Bank Statement</li>
+        <li>Billing & Collection</li>
+        <li>Card Payment</li>
+        <li>Payment Matching Reconciliation</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Upload Credit Card Statement</h2>
+        <h2>Payment Matching Reconciliation</h2>
         <ul class="right_btns">           
             <li><p class="btn_blue"><a href="javascript:fn_searchList();"><span class="search"></span>Search</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
