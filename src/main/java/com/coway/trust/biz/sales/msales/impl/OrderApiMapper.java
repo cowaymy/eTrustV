@@ -17,4 +17,5 @@ public interface OrderApiMapper {
 
 	List<EgovMap> selectPreOrderList(Map<String, Object> params);
 
+	void insertPreOrder(Map<String, Object> params);
 }

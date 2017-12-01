@@ -1781,7 +1781,6 @@
     <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
         <input id="normalOrdPrice" name="normalOrdPrice" type="hidden" />
-        <input id="normalOrdPrice" name="normalOrdPrice" type="hidden" />
         <input id="normalOrdPv"    name="normalOrdPv"    type="hidden" /></td>
 	<th scope="row">Rental Fee<span class="must">*</span></th>
 	<td><p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p></td>

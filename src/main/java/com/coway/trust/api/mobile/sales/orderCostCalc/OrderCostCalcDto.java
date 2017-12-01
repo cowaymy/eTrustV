@@ -23,6 +23,12 @@ public class OrderCostCalcDto {
 	@ApiModelProperty(value = "finalRentalFeeAmt")
 	private BigDecimal finalRentalFeeAmt;
 
+	@ApiModelProperty(value = "totalPv")
+	private BigDecimal totalPv;
+
+	@ApiModelProperty(value = "totalPvGst")
+	private BigDecimal totalPvGst;
+
 	public BigDecimal getNormalPriceRpfAmt() {
 		return normalPriceRpfAmt;
 	}
@@ -54,6 +60,23 @@ public class OrderCostCalcDto {
 	public void setFinalRentalFeeAmt(BigDecimal finalRentalFeeAmt) {
 		this.finalRentalFeeAmt = finalRentalFeeAmt;
 	}
+		
+	public BigDecimal getTotalPv() {
+		return totalPv;
+	}
+
+	public void setTotalPv(BigDecimal totalPv) {
+		this.totalPv = totalPv;
+	}
+
+	public BigDecimal getTotalPvGst() {
+		return totalPvGst;
+	}
+
+	public void setTotalPvGst(BigDecimal totalPvGst) {
+		this.totalPvGst = totalPvGst;
+	}
+
 	public static OrderCostCalcDto create(EgovMap egvoMap) {
 		// TODO Auto-generated method stub
 		return BeanConverter.toBean(egvoMap, OrderCostCalcDto.class);

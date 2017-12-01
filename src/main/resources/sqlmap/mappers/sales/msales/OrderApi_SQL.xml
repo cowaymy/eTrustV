@@ -4,16 +4,28 @@
 
     <!--Product 정보 조회 -->
     <select id="orderProductList" parameterType="Map" resultType="egovMap">
-        SELECT STK_ID AS PRODUCT_CODE
-             , C1 AS PRODUCT_NAME
+        SELECT STK_ID   AS PRODUCT_ID
+             , STK_CODE AS PRODUCT_CODE
+             , STK_DESC AS PRODUCT_NAME
+             , PRC_ID   AS PRICE_ID
           FROM
              ( SELECT DISTINCT T1.STK_ID
-                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                    , T1.STK_CODE
+                    , T1.STK_DESC
                     , T3.CODE_NAME
+                    , T4.PRC_ID
                  FROM SYS0026M T1
                     , SAL0082D T2
                     , SYS0013M T3
-                    , SAL0016M T4
+                    , (SELECT STK_ID, PRC_ID
+                         FROM
+                            ( SELECT ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY PRC_ID) AS RNUM
+                                   , STK_ID
+                                   , PRC_ID
+                                FROM SAL0016M
+                               WHERE AMT > 0
+                               ORDER BY STK_ID)
+                         WHERE RNUM = 1) T4
                 WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
                   AND T1.STK_CTGRY_ID = T3.CODE_ID
                   AND 1 != T1.IS_NCV
@@ -21,7 +33,6 @@
                   AND 61 = T1.STK_TYPE_ID
                   AND T2.SRV_CNTRCT_PAC_ID = #{salesSubType}
                   AND T1.STK_ID = T4.STK_ID
-                  AND T4.AMT &gt; 0
                   AND 66 = #{salesType}
                 <if test='searchType != null and searchType == "CODE"'>
                   AND STK_CODE LIKE '%'||#{searchKeyword}||'%'
@@ -30,21 +41,30 @@
                   AND UPPER(STK_DESC) LIKE '%'||UPPER(#{searchKeyword})||'%'
                 </if>
                 UNION ALL
-                SELECT DISTINCT T1.STK_ID
-                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+               SELECT DISTINCT T1.STK_ID
+                    , T1.STK_CODE
+                    , T1.STK_DESC
                     , T3.CODE_NAME
+                    , T4.PRC_ID
                  FROM SYS0026M T1
                     , SAL0092M T2
                     , SYS0013M T3
-                    , SAL0016M T4
+                    , (SELECT STK_ID, PRC_ID
+                         FROM
+                            ( SELECT ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY PRC_ID) AS RNUM
+                                   , STK_ID
+                                   , PRC_ID
+                                FROM SAL0016M
+                               WHERE AMT > 0
+                               ORDER BY STK_ID)
+                         WHERE RNUM = 1) T4
                 WHERE T1.STK_ID = T2.SRV_MEM_ITM_STK_ID
                   AND T1.STK_CTGRY_ID = T3.CODE_ID
                   AND 1 != T1.IS_NCV
                   AND 1 = T2.SRV_MEM_ITM_STUS_ID
                   AND 61 = T1.STK_TYPE_ID
-                  AND T2.SRV_MEM_PAC_ID = #{srvPacId}
+                  AND T2.SRV_MEM_PAC_ID = #{salesSubType}
                   AND T1.STK_ID = T4.STK_ID
-                  AND T4.AMT &gt; 0
                   AND 66 != #{salesType}
                 <if test='searchType != null and searchType == "CODE"'>
                   AND STK_CODE LIKE '%'||#{searchKeyword}||'%'
@@ -176,5 +196,87 @@
 		 WHERE T1.CUST_ID = #{userId}
 		   AND TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') = #{requestDate}
     </select>
+
+    <insert id="insertPreOrder" parameterType="Map">
+        INSERT
+          INTO SAL0213M
+             ( PRE_ORD_ID
+             , REQST_DT
+             , CHNNL
+             , STUS_ID
+             , SOF_NO
+             , APP_TYPE_ID
+             , SRV_PAC_ID
+             , INST_PRIOD
+             , CUST_ID
+             , EMP_CHK
+             , GST_CHK
+             , ATCH_FILE_GRP_ID
+             , CUST_CNT_ID
+             , KEYIN_BRNCH_ID
+             , INST_ADD_ID
+             , DSC_BRNCH_ID
+             , PRE_DT
+             , PRE_TM
+             , EX_TRADE
+             , ITM_STK_ID
+             , PROMO_ID
+             , MTH_RENT_AMT
+             , PROMO_DISC_PERIOD_TP
+             , PROMO_DISC_PERIOD
+             , TOT_AMT
+             , NOR_AMT
+             , NOR_RNT_FEE
+             , DISC_RNT_FEE
+             , TOT_PV
+             , PRC_ID
+             , MEM_CODE
+             , ADV_BILL
+             , REM1
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             )
+        VALUES
+             ( SAL0213M_PRE_ORD_ID_SEQ.NEXTVAL
+             , SYSDATE
+             , 0
+             , 1
+             , #{sofNo}
+             , #{salesType}
+             , #{salesSubType}
+             , #{servicePeriod}
+             , #{customerId}
+             , 0
+             , #{gstYN}
+             , #{atchFileGrpId}
+             , (SELECT CUST_CNTC_ID FROM SAL0027D WHERE CUST_ID = #{customerId} AND STUS_CODE_ID = 9 AND ROWNUM = 1)
+             , #{loginUserBranchId} <!-- Session -->
+             , #{custAddrId}
+             , #{dscBrnchId} <!-- Session -->
+             , TO_DATE(#{installDate}, 'YYYYMMDD')
+             , #{installTime}
+             , #{reOrderYN}
+             , #{productId}
+             , #{promotionCode}
+             , #{finalRentalFeeAmt}
+             , #{promoDiscPeriodTp}
+             , #{promoDiscPeriod}
+             , #{finalPriceRpfAmt}
+             , #{normalPriceRpfAmt}
+             , #{normalRentalFeeAmt}
+             , #{finalRentalFeeAmt}
+             , #{totPv}
+             , #{prcId}
+             , #{memCode}
+             , #{advPaymentYN}
+             , #{etcMemo}
+             , #{loginUserId}
+             , SYSDATE
+             , #{loginUserId}
+             , SYSDATE
+             )
+    </insert>
     
 </mapper>

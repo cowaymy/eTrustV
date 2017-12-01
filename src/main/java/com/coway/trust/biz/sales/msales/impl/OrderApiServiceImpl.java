@@ -11,8 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.api.mobile.sales.registerPreOrder.RegPreOrderForm;
+import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.msales.OrderAddressApiService;
 import com.coway.trust.biz.sales.msales.OrderApiService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -25,6 +28,9 @@ public class OrderApiServiceImpl extends EgovAbstractServiceImpl implements Orde
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "OrderApiMapper")
 	private OrderApiMapper orderApiMapper;
+	
+	@Resource(name = "customerMapper")
+	private CustomerMapper customerMapper;
 	
 	@Override
 	public List<EgovMap> orderProductList(Map<String, Object> params) {
@@ -46,6 +52,7 @@ public class OrderApiServiceImpl extends EgovAbstractServiceImpl implements Orde
 
 		BigDecimal orderPrice = BigDecimal.ZERO, orderRentalFees = BigDecimal.ZERO;
 		BigDecimal orderPricePromo = BigDecimal.ZERO, orderRentalFeesPromo = BigDecimal.ZERO;
+		BigDecimal totalPv = BigDecimal.ZERO, totalPvGst = BigDecimal.ZERO;
 		
 		EgovMap priceInfo = orderApiMapper.selectOrderCostCalc(params);
 		EgovMap result  = new EgovMap();
@@ -56,18 +63,24 @@ public class OrderApiServiceImpl extends EgovAbstractServiceImpl implements Orde
 				orderRentalFees      = (BigDecimal)priceInfo.get("amt");
 				orderPricePromo      = (BigDecimal)priceInfo.get("promoPrcRpf");
 				orderRentalFeesPromo = (BigDecimal)priceInfo.get("promoAmt");
+				totalPv              = (BigDecimal)priceInfo.get("promoItmPv");
+				totalPvGst           = (BigDecimal)priceInfo.get("promoItmPvGst");
 			}
 			else {
 				orderPrice           = (BigDecimal)priceInfo.get("amt");
 				orderRentalFees      = BigDecimal.ZERO;
 				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
 				orderRentalFeesPromo = BigDecimal.ZERO;
+				totalPv              = (BigDecimal)priceInfo.get("promoItmPv");
+				totalPvGst           = (BigDecimal)priceInfo.get("promoItmPvGst");
 			}
 			
 			result.put("normalPriceRpfAmt", orderPrice);
 			result.put("normalRentalFeeAmt", orderRentalFees);
 			result.put("finalPriceRpfAmt", orderPricePromo);
 			result.put("finalRentalFeeAmt", orderRentalFeesPromo);
+			result.put("totalPv", totalPv);
+			result.put("totalPvGst", totalPvGst);
 		}
 	
 		return result;
@@ -76,5 +89,40 @@ public class OrderApiServiceImpl extends EgovAbstractServiceImpl implements Orde
 	@Override
 	public List<EgovMap> preOrderList(Map<String, Object> params) {
 		return orderApiMapper.selectPreOrderList(params);
+	}
+
+	@Override
+	public void insertPreOrder(RegPreOrderForm  regPreOrderForm) throws Exception {
+
+		Map<String, Object> params = RegPreOrderForm.createMap(regPreOrderForm);
+		
+		int custAddrId = CommonUtils.intNvl(regPreOrderForm.getCustAddrId());
+
+		if(custAddrId == 0) {
+			EgovMap map = new EgovMap();
+			
+			map.put("insCustId", regPreOrderForm.getCustomerId());
+			map.put("addrRem", "");
+			map.put("userId", regPreOrderForm.getLoginUserId());
+			map.put("areaId", regPreOrderForm.getAreaId());
+			map.put("addrDtl", regPreOrderForm.getAddDetail());
+			map.put("streetDtl", regPreOrderForm.getStreet());
+			
+			customerMapper.insertCustomerAddressInfoAf(map);
+			
+			custAddrId = (int) map.get("custAddId");
+			
+			logger.debug("custAddrId:"+custAddrId);
+			
+			params.put("custAddrId", custAddrId);
+		}
+		
+		params.put("custAddId", custAddrId);
+		
+		EgovMap addrMap = customerMapper.selectCustomerViewMainAddress(params);
+		
+		params.put("dscBrnchId", addrMap.get("brnchId"));
+		
+		orderApiMapper.insertPreOrder(params);
 	}
 }

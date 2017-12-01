@@ -94,6 +94,7 @@
 		       SELECT COUNT(1) CNT
 		         FROM SAL0001D
 		        WHERE REF_NO = #{sofNo}
+		          AND STUS_CODE_ID != 8
 		     )
     </select>
     

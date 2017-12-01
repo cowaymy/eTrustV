@@ -42,7 +42,7 @@ public class OrderCostCalcApiController {
 	
 	@ApiOperation(value = "Order Cost Caculation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/costcalc", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> orderAddressList(@ModelAttribute OrderCostCalcForm orderCostCalcForm) throws Exception {
+	public ResponseEntity<EgovMap> orderCostCalc(@ModelAttribute OrderCostCalcForm orderCostCalcForm) throws Exception {
 
 		Map<String, Object> params = OrderCostCalcForm.createMap(orderCostCalcForm);
 		EgovMap orderCost = orderApiService.orderCostCalc(params);

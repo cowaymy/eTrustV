@@ -13,8 +13,14 @@ public class OrderProductDto {
 	@ApiModelProperty(value = "productName")
 	private String productName;
 	
+	@ApiModelProperty(value = "productId")
+	private int productId;
+
 	@ApiModelProperty(value = "productCode")
-	private BigDecimal productCode;
+	private String productCode;
+
+	@ApiModelProperty(value = "priceId")
+	private int priceId;
 
 	public String getProductName() {
 		return productName;
@@ -24,14 +30,30 @@ public class OrderProductDto {
 		this.productName = productName;
 	}
 
-	public BigDecimal getProductCode() {
+	public String getProductCode() {
 		return productCode;
 	}
 
-	public void setProductCode(BigDecimal productCode) {
+	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
 	
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public int getPriceId() {
+		return priceId;
+	}
+
+	public void setPriceId(int priceId) {
+		this.priceId = priceId;
+	}
+
 	public static OrderProductDto create(EgovMap egvoMap) {
 		// TODO Auto-generated method stub
 		return BeanConverter.toBean(egvoMap, OrderProductDto.class);

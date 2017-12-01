@@ -9,10 +9,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "OrderCostCalcForm", description = "공통코드 Form")
 public class OrderCostCalcForm {
 
-	@ApiModelProperty(value = "productCode [default : '' 전체] 예) 4 ", example = "4, 298, 319, 538")
+	@ApiModelProperty(value = "productCode [default : '' 전체] 예) 218 ", example = "218, 298, 319, 538")
 	private String productCode;
 	
-	@ApiModelProperty(value = "promotionCode [default : '' 전체] 예) 31563 ", example = "31563")
+	@ApiModelProperty(value = "promotionCode [default : '' 전체] 예) 31620 ", example = "31620")
 	private String promotionCode;
 
 	public static Map<String, Object> createMap(OrderCostCalcForm orderPromotionForm){
