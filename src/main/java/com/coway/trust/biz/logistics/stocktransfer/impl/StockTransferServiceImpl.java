@@ -44,12 +44,13 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public String insertStockTransferInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
-
+		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String seq = stocktran.selectStockTransferSeq();
 
 		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
 
-		String reqNo = fMap.get("headtitle") + seq;
+		// String reqNo = fMap.get("headtitle") + seq;
+		String reqNo = seq;
 
 		fMap.put("reqno", reqNo);
 		// fMap.put("reqno", fMap.get("headtitle") + seq);
@@ -60,7 +61,8 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		if (insList.size() > 0) {
 			for (int i = 0; i < insList.size(); i++) {
 				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
-				insMap.put("reqno", fMap.get("headtitle") + seq);
+				// insMap.put("reqno", fMap.get("headtitle") + seq);
+				insMap.put("reqno", seq);
 				insMap.put("userId", params.get("userId"));
 				stocktran.insStockTransfer(insMap);
 			}
@@ -197,57 +199,57 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		}
 	}
 
-//	@Override
-//	public String StocktransferReqDelivery(Map<String, Object> params) {
-//
-//		List<Object> updList = (List<Object>) params.get("check");
-////		List<Object> serialList = (List<Object>) params.get("add");
-//		Map<String, Object> formMap = (Map<String, Object>) params.get("formMap");
-//
-//		// for (int i = 0; i < updList.size(); i++) {
-//		// logger.info(" updList.get(i) : {}", updList.get(i));
-//		// }
-//		// for (int i = 0; i < serialList.size(); i++) {
-//		// logger.info(" serialList.get(i) : {}", serialList.get(i));
-//		// }
-//		//
-//		// logger.info(" reqstno : {}", formMap.get("reqstno"));
-//
-//		String seq = stocktran.selectDeliveryStockTransferSeq();
-//
-//		if (updList.size() > 0) {
-//			Map<String, Object> imap = new HashMap();
-//			Map<String, Object> insMap = null;
-//			for (int i = 0; i < updList.size(); i++) {
-//
-//				logger.info(" updList.get(i) : {}", updList.get(i).toString());
-//				insMap = (Map<String, Object>) updList.get(i);
-//
-//				imap = (Map<String, Object>) insMap.get("item");
-//
-//				imap.put("delno", seq);
-//				imap.put("userId", params.get("userId"));
-//				stocktran.deliveryStockTransferDetailIns(imap);
-//			}
-//			stocktran.deliveryStockTransferIns(imap);
-//		}
-//
-////		if (serialList.size() > 0) {
-////
-////			for (int j = 0; j < serialList.size(); j++) {
-////
-////				Map<String, Object> insSerial = null;
-////
-////				insSerial = (Map<String, Object>) serialList.get(j);
-////
-////				insSerial.put("delno", seq);
-////				insSerial.put("reqstno", formMap.get("reqstno"));
-////				insSerial.put("userId", params.get("userId"));
-////				stocktran.insertTransferSerial(insSerial);
-////			}
-////		}
-//		return seq;
-//	}
+	// @Override
+	// public String StocktransferReqDelivery(Map<String, Object> params) {
+	//
+	// List<Object> updList = (List<Object>) params.get("check");
+	//// List<Object> serialList = (List<Object>) params.get("add");
+	// Map<String, Object> formMap = (Map<String, Object>) params.get("formMap");
+	//
+	// // for (int i = 0; i < updList.size(); i++) {
+	// // logger.info(" updList.get(i) : {}", updList.get(i));
+	// // }
+	// // for (int i = 0; i < serialList.size(); i++) {
+	// // logger.info(" serialList.get(i) : {}", serialList.get(i));
+	// // }
+	// //
+	// // logger.info(" reqstno : {}", formMap.get("reqstno"));
+	//
+	// String seq = stocktran.selectDeliveryStockTransferSeq();
+	//
+	// if (updList.size() > 0) {
+	// Map<String, Object> imap = new HashMap();
+	// Map<String, Object> insMap = null;
+	// for (int i = 0; i < updList.size(); i++) {
+	//
+	// logger.info(" updList.get(i) : {}", updList.get(i).toString());
+	// insMap = (Map<String, Object>) updList.get(i);
+	//
+	// imap = (Map<String, Object>) insMap.get("item");
+	//
+	// imap.put("delno", seq);
+	// imap.put("userId", params.get("userId"));
+	// stocktran.deliveryStockTransferDetailIns(imap);
+	// }
+	// stocktran.deliveryStockTransferIns(imap);
+	// }
+	//
+	//// if (serialList.size() > 0) {
+	////
+	//// for (int j = 0; j < serialList.size(); j++) {
+	////
+	//// Map<String, Object> insSerial = null;
+	////
+	//// insSerial = (Map<String, Object>) serialList.get(j);
+	////
+	//// insSerial.put("delno", seq);
+	//// insSerial.put("reqstno", formMap.get("reqstno"));
+	//// insSerial.put("userId", params.get("userId"));
+	//// stocktran.insertTransferSerial(insSerial);
+	//// }
+	//// }
+	// return seq;
+	// }
 
 	@Override
 	public String StocktransferReqDelivery(Map<String, Object> params) {
@@ -268,28 +270,27 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 			stocktran.deliveryStockTransferIns(insMap);
 		}
-		
+
 		return seq;
-		
+
 	}
 
 	@Override
 	public String StockTransferDeliveryIssue(Map<String, Object> params) {
-		List<Object> checklist      = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		List<Object> serialList     = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		String reVal = "";
 
 		int iCnt = 0;
 		String tmpdelCd = "";
 		String delyCd = "";
-		String delno="";
-		
-		
+		String delno = "";
+
 		if (checklist.size() > 0) {
 			for (int i = 0; i < checklist.size(); i++) {
 				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
-				
+
 				Map<String, Object> imap = new HashMap();
 				imap = (Map<String, Object>) map.get("item");
 
@@ -308,30 +309,30 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 				stocktran.updateRequestTransfer(reqstNo);
 			}
 		}
-		
-    	if (serialList != null  && serialList.size() > 0) {
-    
-    		for (int j = 0; j < serialList.size(); j++) {
-    
-    			Map<String, Object> insSerial = null;
-    
-    			insSerial = (Map<String, Object>) serialList.get(j);
-    
-    			insSerial.put("delno", delno);
-    			insSerial.put("reqstno", formMap.get("reqstno"));
-    			insSerial.put("userId", params.get("userId"));
-    			
-    			stocktran.insertTransferSerial(insSerial);
-    		}
-    	}
-			
-	    String[] delvcd = delyCd.split("∈");
+
+		if (serialList != null && serialList.size() > 0) {
+
+			for (int j = 0; j < serialList.size(); j++) {
+
+				Map<String, Object> insSerial = null;
+
+				insSerial = (Map<String, Object>) serialList.get(j);
+
+				insSerial.put("delno", delno);
+				insSerial.put("reqstno", formMap.get("reqstno"));
+				insSerial.put("userId", params.get("userId"));
+
+				stocktran.insertTransferSerial(insSerial);
+			}
+		}
+
+		String[] delvcd = delyCd.split("∈");
 		formMap.put("parray", delvcd);
 		formMap.put("userId", params.get("userId"));
 		// formMap.put("prgnm", params.get("prgnm"));
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
-		
+
 		logger.info(" map:::!!! ??: {}", formMap);
 
 		if ("RC".equals(formMap.get("gtype"))) {

@@ -53,8 +53,10 @@ public class InboundServiceImple extends EgovAbstractServiceImpl implements Inbo
 		// TODO Auto-generated method stub
 		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		String seq = inboundMapper.selectStockTransferSeq();
-		String reqNo = "SMO" + seq;
+		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
+		// String seq = inboundMapper.selectStockTransferSeq();
+		// String reqNo = "SMO" + seq;
+		String reqNo = inboundMapper.selectStockTransferSeq();
 
 		formMap.put("reqNo", reqNo);
 		formMap.put("userId", params.get("userId"));

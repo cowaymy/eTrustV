@@ -30,15 +30,16 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public String insertStockMovementInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
-
+		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String seq = stockMoveMapper.selectStockMovementSeq();
 
 		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
 
-		String reqNo= fMap.get("headtitle") + seq;
-		
+		// String reqNo = fMap.get("headtitle") + seq;
+		String reqNo = seq;
+
 		fMap.put("reqno", reqNo);
-		//fMap.put("reqno", fMap.get("headtitle") + seq);
+		// fMap.put("reqno", fMap.get("headtitle") + seq);
 		fMap.put("userId", params.get("userId"));
 
 		stockMoveMapper.insStockMovementHead(fMap);
@@ -46,16 +47,17 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		if (insList.size() > 0) {
 			for (int i = 0; i < insList.size(); i++) {
 				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
-				insMap.put("reqno", fMap.get("headtitle") + seq);
+				// insMap.put("reqno", fMap.get("headtitle") + seq);
+				insMap.put("reqno", seq);
 				insMap.put("userId", params.get("userId"));
 				stockMoveMapper.insStockMovement(insMap);
 			}
 		}
 
 		insertStockBooking(fMap);
-		
+
 		return reqNo;
-		
+
 	}
 
 	@Override
@@ -171,7 +173,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-
+		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
 
 		if (checkList.size() > 0) {
@@ -219,7 +221,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("salesorder", "");
 
 		stockMoveMapper.StockMovementIssue(formMap);
-		
+
 		return formMap;
 
 	}

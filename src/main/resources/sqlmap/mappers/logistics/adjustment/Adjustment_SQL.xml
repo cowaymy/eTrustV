@@ -171,9 +171,6 @@
               ORDER BY  sy28m.WH_LOC_ID
      </select>   
      
-<!--      <select id="">
-     SELECT TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF6') FROM DUAL
-     </select> -->
      <select id="selectAdjustmentNo" parameterType="Map" resultType="Integer">
       SELECT COUNT(1) 
                 FROM LOG0072M
