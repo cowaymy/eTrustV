@@ -9,12 +9,15 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.api.mobile.sales.registerPreOrder.RegPreOrderForm;
+import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.msales.OrderAddressApiService;
 import com.coway.trust.biz.sales.msales.OrderApiService;
+import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
@@ -32,6 +35,9 @@ public class OrderApiServiceImpl extends EgovAbstractServiceImpl implements Orde
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
 	
+	@Autowired
+	private LoginMapper loginMapper;
+
 	@Override
 	public List<EgovMap> orderProductList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -98,12 +104,16 @@ public class OrderApiServiceImpl extends EgovAbstractServiceImpl implements Orde
 		
 		int custAddrId = CommonUtils.intNvl(regPreOrderForm.getCustAddrId());
 
+		params.put("_USER_ID", regPreOrderForm.getLoginUserName());
+				
+		LoginVO loginVO = loginMapper.selectLoginInfoById(params);
+		
 		if(custAddrId == 0) {
 			EgovMap map = new EgovMap();
 			
 			map.put("insCustId", regPreOrderForm.getCustomerId());
 			map.put("addrRem", "");
-			map.put("userId", regPreOrderForm.getLoginUserId());
+			map.put("userId", loginVO.getUserId());
 			map.put("areaId", regPreOrderForm.getAreaId());
 			map.put("addrDtl", regPreOrderForm.getAddDetail());
 			map.put("streetDtl", regPreOrderForm.getStreet());
@@ -122,6 +132,8 @@ public class OrderApiServiceImpl extends EgovAbstractServiceImpl implements Orde
 		EgovMap addrMap = customerMapper.selectCustomerViewMainAddress(params);
 		
 		params.put("dscBrnchId", addrMap.get("brnchId"));
+		params.put("loginUserBranchId", loginVO.getUserBranchId());
+		params.put("loginUserId", loginVO.getUserId());
 		
 		orderApiMapper.insertPreOrder(params);
 	}

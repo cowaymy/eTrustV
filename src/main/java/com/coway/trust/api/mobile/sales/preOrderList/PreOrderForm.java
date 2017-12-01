@@ -9,27 +9,27 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "PreOrderForm", description = "공통코드 Form")
 public class PreOrderForm {
 	
-	@ApiModelProperty(value = "userId [default : '' 전체] 예) 359 ", example = "359")
-	private String userId;
+	@ApiModelProperty(value = "userName [default : '' 전체] 예) IVYLIM ", example = "IVYLIM")
+	private String userName;
 	
-	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 29/11/2017(DD/MM/YYYY) ", example = "29/11/2017")
+	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 201712(YYYYMM) ", example = "201712")
 	private String requestDate;
 
 	public static Map<String, Object> createMap(PreOrderForm preOrderForm){
 		Map<String, Object> params = new HashMap<>();
 		
-		params.put("userId", preOrderForm.getUserId());
+		params.put("userName", preOrderForm.getUserName());
 		params.put("requestDate", preOrderForm.getRequestDate());
 		
 		return params;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getRequestDate() {

@@ -97,7 +97,7 @@
                   AND T2.EMP_CHK = 0
                   AND T2.EX_TRADE = #{reOrderYN}
                   AND (T2.PROMO_CUST_TYPE = #{customerType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
-                WHERE T1.PROMO_ITM_STK_ID = #{productCode}
+                WHERE T1.PROMO_ITM_STK_ID = #{productId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
@@ -129,7 +129,7 @@
                   AND T4.SRV_MEM_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T4.SRV_MEM_STUS_ID = '1'
                   AND T4.PAC_TYPE = '2'
-                WHERE T1.PROMO_ITM_STK_ID = #{productCode}
+                WHERE T1.PROMO_ITM_STK_ID = #{productId}
                   AND T1.PROMO_ITM_STUS_ID = 1
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
@@ -171,7 +171,8 @@
     <select id="selectPreOrderList" parameterType="Map" resultType="egovMap">
 		SELECT T2.NAME AS CUST_NAME
 		     , T3.SALES_ORD_NO AS SALES_ORDER_NO
-		     , T4.CODE_NAME AS CUSTOMER_TYPE
+             , T4.CODE_NAME AS CUSTOMER_TYPE
+             , T2.TYPE_ID   AS CUSTOMER_TYPE_ID
 		     , T5.CODE_NAME AS APP_TYPE
 		     , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DATE
 		     , T6.NAME AS PRE_ORDER_STATUS
@@ -193,8 +194,11 @@
 		  LEFT OUTER
 		  JOIN SYS0038M T6
 		    ON T6.STUS_CODE_ID = T1.STUS_ID
-		 WHERE T1.CUST_ID = #{userId}
-		   AND TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') = #{requestDate}
+          JOIN SYS0047M T7
+            ON T7.USER_STUS_ID = 1
+           AND T7.USER_ID = T1.CRT_USER_ID
+           AND T7.USER_NAME = #{userName}
+		 WHERE TO_CHAR(T1.REQST_DT, 'YYYYMM') = #{requestDate}
     </select>
 
     <insert id="insertPreOrder" parameterType="Map">

@@ -88,11 +88,8 @@ public class RegPreOrderForm {
 	@ApiModelProperty(value = "atchFileGrpId [default : '' 전체] 예) 111 ", example = "111")
 	private int atchFileGrpId;
 
-	@ApiModelProperty(value = "loginUserBranchId [default : '' 전체] 예) 77 ", example = "77")
-	private int loginUserBranchId;
-
-	@ApiModelProperty(value = "loginUserId [default : '' 전체] 예) 184 ", example = "184")
-	private int loginUserId;
+	@ApiModelProperty(value = "loginUserName [default : '' 전체] 예) IVYLIM ", example = "IVYLIM")
+	private String loginUserName;
 
 	public static Map<String, Object> createMap(RegPreOrderForm preOrderForm){
 		Map<String, Object> params = new HashMap<>();
@@ -123,8 +120,7 @@ public class RegPreOrderForm {
 		params.put("addDetail", preOrderForm.getAddDetail());
 		params.put("salesSubType", preOrderForm.getSalesSubType());
 		params.put("atchFileGrpId", preOrderForm.getAtchFileGrpId());
-		params.put("loginUserBranchId", preOrderForm.getLoginUserBranchId());
-		params.put("loginUserId", preOrderForm.getLoginUserId());
+		params.put("loginUserName", preOrderForm.getLoginUserName());
 		
 		return params;
 	}
@@ -337,20 +333,12 @@ public class RegPreOrderForm {
 		this.atchFileGrpId = atchFileGrpId;
 	}
 
-	public int getLoginUserBranchId() {
-		return loginUserBranchId;
+	public String getLoginUserName() {
+		return loginUserName;
 	}
 
-	public void setLoginUserBranchId(int loginUserBranchId) {
-		this.loginUserBranchId = loginUserBranchId;
-	}
-
-	public int getLoginUserId() {
-		return loginUserId;
-	}
-
-	public void setLoginUserId(int loginUserId) {
-		this.loginUserId = loginUserId;
+	public void setLoginUserName(String loginUserName) {
+		this.loginUserName = loginUserName;
 	}
 
 }

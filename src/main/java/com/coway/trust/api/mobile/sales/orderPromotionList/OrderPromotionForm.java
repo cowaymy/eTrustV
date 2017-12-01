@@ -15,8 +15,8 @@ public class OrderPromotionForm {
 	@ApiModelProperty(value = "salesSubType [default : '' 전체] 예) 2 ", example = "2")
 	private String salesSubType;
 	
-	@ApiModelProperty(value = "productCode [default : '' 전체] 예) 4 ", example = "4, 298, 319, 538")
-	private String productCode;
+	@ApiModelProperty(value = "productId [default : '' 전체] 예) 4 ", example = "4, 298, 319, 538")
+	private String productId;
 	
 	@ApiModelProperty(value = "reOrderYN [default : '' 전체] 예) 0 ", example = "0, 1")
 	private String reOrderYN;
@@ -29,7 +29,7 @@ public class OrderPromotionForm {
 		
 		params.put("salesType",   orderPromotionForm.getSalesType());
 		params.put("salesSubType",   orderPromotionForm.getSalesSubType());
-		params.put("productCode", orderPromotionForm.getProductCode());
+		params.put("productId", orderPromotionForm.getProductId());
 		params.put("reOrderYN",   orderPromotionForm.getReOrderYN());
 		params.put("customerType",   orderPromotionForm.getCustomerType());
 		
@@ -52,12 +52,12 @@ public class OrderPromotionForm {
 		this.salesSubType = salesSubType;
 	}
 
-	public String getProductCode() {
-		return productCode;
+	public String getProductId() {
+		return productId;
 	}
 
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 
 	public String getReOrderYN() {

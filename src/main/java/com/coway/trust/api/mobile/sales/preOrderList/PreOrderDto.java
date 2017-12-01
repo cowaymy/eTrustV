@@ -17,6 +17,9 @@ public class PreOrderDto {
 	@ApiModelProperty(value = "customerType")
 	private String customerType;
 
+	@ApiModelProperty(value = "customerTypeId")
+	private int customerTypeId;
+
 	@ApiModelProperty(value = "appType")
 	private String appType;
 
@@ -44,6 +47,14 @@ public class PreOrderDto {
 
 	public String getCustomerType() {
 		return customerType;
+	}
+
+	public int getCustomerTypeId() {
+		return customerTypeId;
+	}
+
+	public void setCustomerTypeId(int customerTypeId) {
+		this.customerTypeId = customerTypeId;
 	}
 
 	public void setCustomerType(String customerType) {
