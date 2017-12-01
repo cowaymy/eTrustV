@@ -5,7 +5,12 @@
 
 
 <select id="selectPosSeq" resultType="String">
-    SELECT  TO_CHAR(SYSTIMESTAMP , 'YYYYMMDDHH24MISSFF') FROM DUAL
+   SELECT
+       'SOH' 
+       ||TO_CHAR (SYSDATE, 'YYMMDD')
+       || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
+  FROM LOG0047M
+  WHERE SUBSTR (REQST_NO, 1, 9) =  'SOH'||TO_CHAR (SYSDATE, 'YYMMDD') 
 </select>
 
 <select id="PosSearchList" parameterType="Map" resultType="egovMap">

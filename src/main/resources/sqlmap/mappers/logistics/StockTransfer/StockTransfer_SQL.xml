@@ -3,7 +3,12 @@
 <mapper namespace="com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper">
    
     <select id="selectStockTransferSeq" resultType="String">
-        SELECT  TO_CHAR(SYSTIMESTAMP , 'yyyymmddhh24missff') FROM  DUAL
+	 SELECT
+	       'STO' 
+	       ||TO_CHAR (SYSDATE, 'YYMMDD')
+	       || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
+	  FROM LOG0047M
+	   WHERE SUBSTR (REQST_NO, 1, 9) =  'STO'||TO_CHAR (SYSDATE, 'YYMMDD') 
     </select>
     <select id="selectStockTransferMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
@@ -229,7 +234,12 @@
     </select>
     
     <select id="selectDeliveryStockTransferSeq" resultType="String">
-        SELECT  'DVR'||TO_CHAR(SYSTIMESTAMP , 'YYYYMMDDHH24MISSFF') FROM  DUAL
+	SELECT
+	       'DVR' 
+	       ||TO_CHAR (SYSDATE, 'YYMMDD')
+	       || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO
+	  FROM LOG0054M
+	 WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
     </select>
     <insert id="deliveryStockTransferIns" parameterType="Map">
         MERGE INTO LOG0054M A
@@ -382,14 +392,12 @@
            ORDER BY l54.delvry_no DESC
            ) T
     </select>
-    
-     <resultMap id="STOPRCDATA" type="egovMap" />
-     <select id="StockTransferiSsue"  statementType="CALLABLE" parameterType="Map"> 
+    <resultMap id="STOPRCDATA" type="egovMap" />
+    <select id="StockTransferiSsue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=STOPRCDATA} )
              } 
      </select>
-     
      <resultMap id="PRCCANCLEDATA" type="egovMap" />
      <select id="StockTransferCancelIssue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY_CANCEL
