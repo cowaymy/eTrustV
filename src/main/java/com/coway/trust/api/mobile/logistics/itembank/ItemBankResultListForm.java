@@ -15,10 +15,10 @@ public class ItemBankResultListForm {
 	@ApiModelProperty(value = "검색 type (all / partCode / partName) [default : '' 전체] 예)PartsCode=1,PartsName=2,All=3  ", example = "1, 2, 3")
 	private int searchType;
 
-	@ApiModelProperty(value = "CT100006", example = "1, 2, 3")
+	@ApiModelProperty(value = "CT100528", example = "1, 2, 3")
 	private String searchLocation;
 
-	@ApiModelProperty(value = "검색 type (Premium Item / Premium Item / Bidet Sales Kit Item) [default : '' 전체] 예)Premium Item=853,Roadshow Item=854,Bidet Sales Kit Item=855", example = "1, 2, 3")
+	@ApiModelProperty(value = "검색 type (Kiosk Item=1345/Merchandise Item=1346 / Uniform=1347/Misc Item=1348/Finance Item=1349/Item Bank=1249/Product Display=1426/HR Item=1350) [default : '' 전체] 예)", example = "1, 2, 3")
 	private int searchItem;
 
 	@ApiModelProperty(value = "검색어 (all 일 경우에만 빈값으로 처리 예정) [default : '' 전체] 예) ", example = "1, 2, 3")
