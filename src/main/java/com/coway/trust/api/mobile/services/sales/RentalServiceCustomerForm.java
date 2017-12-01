@@ -10,7 +10,7 @@ public class RentalServiceCustomerForm {
 	@ApiModelProperty(value = "검색용 사용자 ID") 
 	private String userId;
 	
-	@ApiModelProperty(value = "검색조건  (1 : customer name / 2 : order no)") 
+	@ApiModelProperty(value = "검색조건  (1 : order no /2 : customer name  )") 
 	private String searchType;
 	
 	@ApiModelProperty(value = "검색내용") 
