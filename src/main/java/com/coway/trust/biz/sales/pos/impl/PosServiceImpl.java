@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.pos.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +133,11 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		List<Object> serialGrid = (List<Object>)params.get("serial");
 		//Grid3
 		List<Object> memGird = (List<Object>)params.get("mem");
+		//Grid4
+		List<Object> payGrid = (List<Object>)params.get("pay");
+		//pay Form
+		Map<String, Object> payFormMap = (Map<String, Object>)params.get("payform");
+		
 		
 		LOGGER.info("############### get DOC Number & Sequence & full Name & Amounts  ################");
 		/*############## get DOC Number & Sequence & full Name & Amounts ###########*/
@@ -153,6 +159,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		BigDecimal calHundred = new BigDecimal("100");
 		BigDecimal calGst = new BigDecimal(SalesConstants.POS_INV_ITM_GST_RATE);
 		BigDecimal tempCal = calHundred.add(calGst);
+		
+		BigDecimal deducSize = new BigDecimal(basketGrid.size()); // Deduction Size
 		LOGGER.info("########################## tempCal : " + tempCal);
 		for (int i = 0; i < basketGrid.size(); i++) {
 			Map<String, Object> amtMap  = null;
@@ -174,6 +182,13 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			tempTotalTax = tempTotalTax.add(tempCurTax);
 			tempTotalCharge = tempTotalCharge.add(tempCurCharge);
 			
+		}
+		
+		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
+			
+			tempTotalAmt = tempTotalAmt.multiply(deducSize);
+			tempTotalTax = tempTotalTax.multiply(deducSize);
+			tempTotalCharge = tempTotalCharge.multiply(deducSize);
 		}
 		
 
@@ -568,187 +583,253 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
         
            //  *********************   PAYMENT LOGIC START *********************   //
             // When   'POS SALES' Case 
-/*            if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2390 -- POS SALES
+            if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2390 -- POS SALES
             	
-            	int trxNo = int.Parse(this.GetDOCNumberOnlyNumber(23)); //TRX No.
-                this.UpdateDOCNumber(23);
-                orNo = this.GetDOCNumber(3); //WOR No.
-                this.UpdateDOCNumber(3);
-
-                #region Data.PayTrx
-                entity.PayTrxes.Add(paytrx);
-                entity.SaveChanges();
-                #endregion
-
-                #region Data.PayM || Data.PayD || Data.AccGLRoute
-                payM.ORNo = orNo;
-                payM.BillID = accbilling.BillID;
-                payM.TrxID = paytrx.TrxID;
-                payM.AccBillID = accorderbill.AccBillID;
-                payM.TaxInvoiceRefNo = InvoiceNum;
-                payM.TaxInvoiceRefDate = InvMiscMaster.TaxInvoiceRefDate;
-
-                entity.PayMs.Add(payM);
-                entity.SaveChanges();
+            	/* params Setting*/
+            	String trxNo = "";
+            	String worNo = "";
+            	int trxSeq = 0;
+            	
+            	Map<String, Object> trxMap = new HashMap<String, Object>();
+            	
+            	//DOC(23)
+            	//TODO 문서 채번 후 미사용 
+            	params.put("docNoId", SalesConstants.POS_DOC_NO_TRX_NO); //(23)
+            	trxNo = posMapper.getDocNo(params);
+            	
+            	//DOC(3)
+            	params.put("docNoId", SalesConstants.POS_DOC_NO_WOR_NO); //(3)
+            	worNo = posMapper.getDocNo(params);
+            	
+            	//Seq
+            	trxSeq = posMapper.getSeqPay0069D();
+            	
             	
             	//9.  ********************************************************************************************************* PAY X
-            	Map<String, Object> payXMap = new HashMap<String, Object>();
             	
-            	//PayTrx Params Setting
-            	 paytrx.TrxDate = this.dpSalesDate.SelectedDate;
-                paytrx.TrxType = 577;
-                paytrx.TrxAmount = Convert.ToDouble(totalpay);
-                paytrx.TrxMatchNo = "";
+            	trxMap.put("trxSeq", trxSeq);
+            	trxMap.put("trxType", SalesConstants.POS_TRX_TYPE_ID);
+            	trxMap.put("trxAmt", payFormMap.get("hidTotPayAmt"));
+            	//trxMap.put("trxNo", trxNo); //doc Number 미사용
+            	trxMap.put("trxMatchNo", "");
             	
-            	//Doc No (23)
-            	//Doc No (3)
-            	
-            	//SAVE
-            	
-            	
-            	//10.  ********************************************************************************************************* PAY D (LOOP)
-            	
-            	//PAYMENT GRID 가져옴
-            	
-            	Data.PayD payD = new Data.PayD();
-                payD.PayItemID = 0;
-                payD.PayID = 0; //update later
-                payD.PayItemModeID = int.Parse(itm["PaymodeID"].Text);
-                payD.PayItemRefNo = itm["RefNo"].Text.ToUpper().Replace("&NBSP;", "");
-                payD.PayItemCCNo = string.IsNullOrEmpty(itm["CCNo"].Text.Trim()) ? null : EncryptionProvider.Encrypt(itm["CCNo"].Text);
-                payD.PayItemIssuedBankID = int.Parse(itm["IssueBankID"].Text);
-                payD.PayItemAmt = double.Parse(itm["PayAmount"].Text);
-                payD.PayItemIsOnline = itm["CRCMode"].Text == "ONLINE" ? true : false;
-                payD.PayItemBankAccID = int.Parse(itm["BankAccID"].Text);
-                if (itm["RefDate"].Text == "&nbsp;" || string.IsNullOrEmpty(itm["RefDate"].Text))
-                {
-                   
-                    payD.PayItemRefDate = defaultDate;
-                }
-                else
-                {
-                    
-                    string strrefdate = itm["RefDate"].Text;
-                    
-                    DateTime refdate = DateTime.ParseExact(strrefdate, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                    // DateTime refdate = DateTime.ParseExact(strrefdate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    
-                    payD.PayItemRefDate = refdate;
-                    
-                }
-               
-                payD.PayItemAppvNo = itm["ApproveNo"].Text.Replace("&nbsp;", "");
-                payD.PayitemRemark = itm["Remark"].Text.Replace("&nbsp;", "");
-                payD.PayItemCCTypeID = int.Parse(itm["CRCTypeID"].Text);
-                payD.PayItemStatusID = 1;
-                payD.PayItemOriCCNo = itm["CCNo"].Text.Replace("&nbsp;", "");
-                payD.IsFundTransfer = false;
-                payD.SkipRecon = false;
-                
-                payDList.Add(payD);
-                }
-                return payDList;
-            	
-            	//그리드 사이즈 만큼의 리스트 생성
+            	LOGGER.info("############### 9. POS PAYX INSERT START  ################");
+        		LOGGER.info("############### 9. POS PAYX INSERT param : " + trxMap.toString());
+            	posMapper.insertPayTrx(trxMap);
+            	LOGGER.info("############### 9. POS PAYX END  ################");
             	
             	
-            	//LOOP SIZE > PAYD`S SIZE (위에서 생성된 리스트만큼 INSERT)
+            	//10.  ********************************************************************************************************* PAY M
             	
-            	pd.PayID = payM.PayID;
-                entity.PayDs.Add(pd);
-                entity.SaveChanges();
+            	Map<String, Object> paymMap = new HashMap<String, Object>();
             	
+            	int payMseq = posMapper.getSeqPay0064D();
             	
-            	// SUSPENDACCID 와  SETTLEACCID 세팅
-            	 int SuspendAccID = 0;
-                 int SettleAccID = 0;
+            	paymMap.put("payMseq", payMseq);
+            	paymMap.put("orNo", worNo); //doc
+            	paymMap.put("salesOrdId", SalesConstants.POS_TEMP_SALES_ORDER_ID); //0
+            	paymMap.put("billId", posBillSeq); //accbilling.billId  ( payM.BillID = accbilling.BillID;)
             	
-
-                if (pd.PayItemModeID == 105) //Cash
-                {
-                    SuspendAccID = 531;
-                    SettleAccID = (int)pd.PayItemBankAccID;
-                }
-                else if (pd.PayItemModeID == 107) //Credit Card
-                {
-                    SuspendAccID = (int)pd.PayItemBankAccID;
-
-                    switch ((int)pd.PayItemBankAccID)
-                    {
-                        case 99:
-                            SettleAccID = 83;
-                            break;
-                        case 100:
-                            SettleAccID = 90;
-                            break;
-                        case 101:
-                            SettleAccID = 84;
-                            break;
-                        case 103:
-                            SettleAccID = 83;
-                            break;
-                        case 104:
-                            SettleAccID = 86;
-                            break;
-                        case 105:
-                            SettleAccID = 85;
-                            break;
-                        case 106:
-                            SettleAccID = 84;
-                            break;
-                        case 107:
-                            SettleAccID = 88;
-                            break;
-                        case 110:
-                            SettleAccID = 89;
-                            break;
-                        case 497:
-                            SettleAccID = 497;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else if (pd.PayItemModeID == 108) //Online
-                {
-                    SuspendAccID = 533;
-                    SettleAccID = (int)pd.PayItemBankAccID;
-                }
-            	// SETTING AND
+            	//trno  = txtTrRefNo
+            	String trNo = "";
+            	if(payFormMap.get("payTrRefNo") != null){
+            		trNo = String.valueOf(payFormMap.get("payTrRefNo"));
+            		trNo = trNo.trim().toUpperCase();
+            	}else{
+            		trNo = " ";
+            	}
+            	paymMap.put("trNo", trNo);  //payM.TRNo = (!string.IsNullOrEmpty(this.txtTrRefNo.Text.Trim())) ? this.txtTrRefNo.Text.ToUpper() : "";
+            	paymMap.put("typeId", SalesConstants.POS_PAY_MASTER_TYPE_ID); // 577
+            	paymMap.put("bankChgAmt", SalesConstants.POS_BANK_CHARGE_AMOUNT);
+            	paymMap.put("bankChgAccId", SalesConstants.POS_BANK_CHARGE_ACCOUNT_ID);
+            	paymMap.put("collMemId", SalesConstants.POS_COLL_MEMBER_ID);
             	
+            	//brnchId
+            	paymMap.put("brnchId", payFormMap.get("payBrnchCode"));
             	
-            	//11.  ********************************************************************************************************* ACCGLROUTE (LOOP)
-            	 Data.AccGLRoute glroute = new Data.AccGLRoute();
-                 glroute.ID = 0;
-                 glroute.GLPostingDate = DateTime.Now;
-                 glroute.GLFiscalDate = DateTime.Parse(string.Format("{0:dd/MM/yyyy}", "1900-01-01"));
-                 glroute.GLBatchNo = paytrx.TrxID.ToString(); 
-                 glroute.GLBatchTypeDesc = "";
-                 glroute.GLBatchTotal = (double)payM.TotalAmt;
-                 glroute.GLReceiptNo = orNo; 
-                 glroute.GLReceiptTypeID = 577;
-                 glroute.GLReceiptBranchID = (int)payM.BranchID;
-                 glroute.GLReceiptSettleAccID = SettleAccID;
-                 glroute.GLReceiptAccountID = SuspendAccID;
-                 glroute.GLReceiptItemID = pd.PayItemID; 
-                 glroute.GLReceiptItemModeID = (int)pd.PayItemModeID;
-                 glroute.GLReverseReceiptItemID = 0;
-                 glroute.GLReceiptItemAmount = (double)pd.PayItemAmt;
-                 glroute.GLReceiptItemCharges = 0;
-                 glroute.GLReceiptItemRCLStatus = "N";
-                 glroute.GLConversionStatus = "Y";
-                 entity.AccGLRoutes.Add(glroute);
-                 entity.SaveChanges();
+            	//Debtor Acc. 
+            	paymMap.put("bankAccId", payFormMap.get("payDebtorAcc"));
             	
-            	//SAVE
+            	paymMap.put("allowComm", SalesConstants.POS_PAY_ALLOW_COMM);
+            	paymMap.put("stusCodeId", SalesConstants.POS_PAY_STATUS_ID);
+            	
+            	//userId
+            	paymMap.put("updUserId", params.get("userId"));
+            	
+            	paymMap.put("syncCheck", SalesConstants.POS_PAY_SYNC_CHECK);
+            	paymMap.put("thirdPartyCustId", SalesConstants.POS_THIRD_PARTY_CUST_ID);
+            	
+            	//total Amt
+            	paymMap.put("totAmt", payFormMap.get("hidTotPayAmt"));
+            	paymMap.put("matchId", SalesConstants.POS_MATCH_ID);
+            	
+            	//userId
+            	paymMap.put("crtUserId", params.get("userId"));
+            	paymMap.put("isAllowRevMulti", SalesConstants.POS_IS_ALLOW_REV_MULTY);
+            	paymMap.put("isGlPostClm", SalesConstants.POS_IS_GL_POST_CLAIM);
+            	paymMap.put("glPostClmDt", SalesConstants.DEFAULT_DATE);
+            	paymMap.put("trxSeq", trxSeq); //trxId
+            	paymMap.put("advMonth", SalesConstants.POS_ADV_MONTH);
+            	paymMap.put("orderBillId", accOrderBillSeq); //    payM.AccBillID = accorderbill.AccBillID;
+            	
+            	//TR Issued Date
+            	if(payFormMap.get("payTrIssueDate") != null){
+            		paymMap.put("trIssuDt", payFormMap.get("payTrIssueDate"));
+            	}else{
+            		paymMap.put("trIssuDt", SalesConstants.DEFAULT_DATE);
+            	}
+            	
+            	paymMap.put("payInvIsGen", SalesConstants.POS_TAX_INVOICE_GENERATED); 
+            	paymMap.put("taxInvcRefNo", docNoInvoice); //payM.TaxInvoiceRefNo = InvoiceNum;
+            	paymMap.put("svcCntrctId", SalesConstants.POS_SERVICE_CONTRACT_ID);
+            	paymMap.put("batchPayId", SalesConstants.POS_BATCH_PAYMEMNT_ID);
+            	
+            	LOGGER.info("############### 10. POS PAYM INSERT START  ################");
+        		LOGGER.info("############### 10. POS PAYM INSERT param : " + paymMap.toString());
+            	posMapper.insertPayMaster(paymMap);
+            	LOGGER.info("############### 10. POS PAYM END  ################");
             	
             	
-            }*/
+            	// Grid == payGrid
+           	//Grid Size 만큼 for문
+            	for (int idx = 0; idx < payGrid.size(); idx++) {
+            		Map<String, Object> paydMap = new HashMap<String, Object>();
+            		
+            		paydMap = (Map<String, Object>)payGrid.get(idx);
+            		
+            		//11.  ********************************************************************************************************* PAY D (LOOP)
+            		//setting
+            		int posDSeq = 0;
+            		posDSeq = posMapper.getSeqPay0065D();
+            		paydMap.put("payItemId", posDSeq);
+            		paydMap.put("payId", payMseq);
             
+            		if(paydMap.get("transactionRefNo") != null && "" != paydMap.get("transactionRefNo")){
+            			String payRefNo = "";
+            			payRefNo = String.valueOf(paydMap.get("transactionRefNo"));
+            			payRefNo = payRefNo.toUpperCase();
+            			paydMap.put("transactionRefNo", payRefNo);  
+            		}
+            		
+            		if(paydMap.get("payCrcMode") != null && "" != paydMap.get("payCrcMode")){
+            			String payCrcMode = "";
+            			payCrcMode = String.valueOf(paydMap.get("payCrcMode"));
+            			
+            			if(("ONLINE").equals(payCrcMode)){
+            				paydMap.put("payCrcMode", "1");
+            			}else{
+            				paydMap.put("payCrcMode", "0");
+            			}
+            		}else{
+            			paydMap.put("payCrcMode", "0");
+            		}
+            		
+            		if(paydMap.get("payRefDate") == null || paydMap.get("payRefDate") == "" ){
+            			paydMap.put("payRefDate", SalesConstants.DEFAULT_DATE);
+            		}
+            		
+            		paydMap.put("payItmStusId", SalesConstants.POS_PAY_STATUS_ID);
+            		
+            		paydMap.put("payItmIsLok", SalesConstants.POS_PAY_ITEM_IS_LOCK);
+            		paydMap.put("payItmIsThirdParty", SalesConstants.POS_PAY_ITEM_IS_THIRD_PARTY);
+            		paydMap.put("isFundTrnsfr", SalesConstants.POS_IS_FUND_TRANS_FR);
+            		paydMap.put("skipRecon", SalesConstants.POS_SKIP_RECON);
+            		
+            		
+            		LOGGER.info("############### 11 -["+idx+"]. POS PAYD INSERT START  ################");
+            		LOGGER.info("############### 11 -["+idx+"]. POS PAYD INSERT param : " + paydMap.toString());
+            		posMapper.insertPayDetail(paydMap);
+            		LOGGER.info("############### 11 -["+idx+"]. POS PAYD INSERT END  ################");
+            		
+            		
+            		//11.  ********************************************************************************************************* ACCGLROUTE (LOOP)
+            		// SUSPENDACCID 와  SETTLEACCID 세팅
+            		int suspendAccId = 0;
+                    int settleAccId = 0;	
+            		
+                    if(Integer.parseInt(String.valueOf(paydMap.get("payMode"))) == SalesConstants.POS_PAY_METHOD_CASH){  //105 Cash
+                    	suspendAccId = SalesConstants.POS_PAY_SUSPEND_CASH;  //531
+                    	settleAccId = Integer.parseInt(String.valueOf(paydMap.get("payBankAccount")));
+                    	
+                    }else if(Integer.parseInt(String.valueOf(paydMap.get("payMode"))) == SalesConstants.POS_PAY_METHOD_CARD){ //107 Card
+                    	suspendAccId = Integer.parseInt(String.valueOf(paydMap.get("payBankAccount")));
+                    	
+                    	switch (Integer.parseInt(String.valueOf(paydMap.get("payBankAccount")))) {
+						case SalesConstants.POS_ITE_BANK_ACC_99:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_83;
+							break;
+						case SalesConstants.POS_ITE_BANK_ACC_100:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_90;
+							break;
+						case SalesConstants.POS_ITE_BANK_ACC_101:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_84;
+							break;
+						case SalesConstants.POS_ITE_BANK_ACC_103:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_83;
+							break;
+						case SalesConstants.POS_ITE_BANK_ACC_104:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_86;
+							break;
+						case SalesConstants.POS_ITE_BANK_ACC_105:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_85;
+							break;
+						case SalesConstants.POS_ITE_BANK_ACC_106:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_84;
+							break;
+						case SalesConstants.POS_ITE_BANK_ACC_107:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_88;
+							break;
+						case SalesConstants.POS_ITE_BANK_ACC_497:
+							settleAccId = 	SalesConstants.POS_SET_SETTLE_ACC_497;
+							break;
+						default:
+							break;
+						}//switch end
+                    }else if(Integer.parseInt(String.valueOf(paydMap.get("payMode"))) == SalesConstants.POS_PAY_METHOD_COMMISSION){ //108 commission
+                    	
+                    	suspendAccId = SalesConstants.POS_PAY_SUSPEND_COMMISSION;  //533
+                    	settleAccId = Integer.parseInt(String.valueOf(paydMap.get("payBankAccount")));
+                    	
+                    }
+                 
+                    LOGGER.info("#########################  suspendAccId : " + suspendAccId);
+                    LOGGER.info("#########################  settleAccId : " + settleAccId);
+            		Map<String, Object> glrouteMap = new HashMap<String, Object>();
+            		
+            		//SEQ 생성
+            		int glSeq = posMapper.getSeqPay0009D();
+            	
+            		
+            		glrouteMap.put("glSeq", glSeq); // glroute.ID = 0;
+            		//SYSDATE //glroute.GLPostingDate = DateTime.Now;
+            		glrouteMap.put("glFisCalDate", SalesConstants.DEFAULT_DATE); // glroute.GLFiscalDate = DateTime.Parse(string.Format("{0:dd/MM/yyyy}", "1900-01-01"));
+            		glrouteMap.put("glBatchNo", trxSeq);  // glroute.GLBatchNo = paytrx.TrxID.ToString(); 
+            		glrouteMap.put("glBatchTypeDesc", ""); // glroute.GLBatchTypeDesc = "";
+            		glrouteMap.put("glBatchTotal", payFormMap.get("hidTotPayAmt")); //  glroute.GLBatchTotal = (double)payM.TotalAmt;
+            		glrouteMap.put("glReceiptNo", worNo); //glroute.GLReceiptNo = orNo;
+            		glrouteMap.put("glReceiptTypeId", SalesConstants.POS_RECEIPT_TYPE_ID); // glroute.GLReceiptTypeID = 577;
+            		glrouteMap.put("glReceiptBranchId", payFormMap.get("payBrnchCode")); //glroute.GLReceiptBranchID = (int)payM.BranchID;
+            		glrouteMap.put("glReceiptSettleAccId", settleAccId); //glroute.GLReceiptSettleAccID = SettleAccID;
+            		glrouteMap.put("glReceiptAccountId", suspendAccId); //glroute.GLReceiptAccountID = SuspendAccID;
+            		glrouteMap.put("glReceiptItemId", posDSeq); // glroute.GLReceiptItemID = pd.PayItemID; 
+            		glrouteMap.put("glReceiptItemModeId", paydMap.get("payMode")); //glroute.GLReceiptItemModeID = (int)pd.PayItemModeID;
+            		glrouteMap.put("glReverseReceiptItemId", SalesConstants.POS_GL_REVERSE_RECEIPT_ITEM_ID);  //glroute.GLReverseReceiptItemID = 0;
+            		glrouteMap.put("glReceiptItemAmount", paydMap.get("payAmt")); //glroute.GLReceiptItemAmount = (double)pd.PayItemAmt;
+            		glrouteMap.put("glReceiptItemCharges", SalesConstants.POS_GL_RECEIPT_ITEM_CHARGES); // glroute.GLReceiptItemCharges = 0;
+            		glrouteMap.put("glReceiptItemRclStatus", SalesConstants.POS_GL_RECEIPT_ITEM_RCL_STATUS); // glroute.GLReceiptItemRCLStatus = "N";
+            		glrouteMap.put("glConversionStatus", SalesConstants.POS_GL_CONVERSION_STATUS); // glroute.GLConversionStatus = "Y";
+                    
+            		
+            		LOGGER.info("############### 12 -["+idx+"]. POS ACCGLROUTE INSERT START  ################");
+            		LOGGER.info("############### 12 -["+idx+"]. POS ACCGLROUTE INSERT param : " + glrouteMap.toString());
+            		posMapper.insertAccGlRoute(glrouteMap);
+            		LOGGER.info("############### 12 -["+idx+"]. POS ACCGLROUTE INSERT END  ################");
+            		
+            	}//Loop End
+            	//PAYMENT GRID 가져옴
+            }
             
            //  *********************   PAYMENT LOGIC END *********************   //
-            
-            
             
           	//10.  ********************************************************************************************************* BOOKING 
 
@@ -1215,8 +1296,213 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       			}
       		}
       		
+      		//Old_POSPayID
+      		LOGGER.info("###################### IS PAYED ?(More Than '0' is Payed )  = " + params.get("rePayId"));
+      		String trxNo = "";
+  			String rorNo = "";
+      		if(Integer.parseInt(String.valueOf(params.get("rePayId"))) > 0){
+      			/***************** Params Setting  And Get Doc No ********************/
+      			params.put("docNoId", SalesConstants.POS_DOC_NO_TRX_NO);      			//DOC(23)
+      			trxNo = posMapper.getDocNo(params);  //23
+      			params.put("docNoId", SalesConstants.POS_DOC_ROR_NO);       			//DOC(82)
+      			rorNo = posMapper.getDocNo(params);
+      			
+      			//13.  ********************************************************************************************************* Reverse Pay M
+      			//Get Pay M Info
+      			EgovMap payInfoMap = null;
+      			int payMseq = 0;
+      			payInfoMap = posMapper.getPayInfoByPayId(params);
+      			
+      			if(payInfoMap != null){
+      			
+          			Map<String, Object> rePaymMap = new HashMap<String, Object>();
+          			payMseq = posMapper.getSeqPay0064D();
+          			rePaymMap.put("payMseq", payMseq);
+          			rePaymMap.put("orNo", rorNo); //doc(82)
+          			rePaymMap.put("salesOrdId", Integer.parseInt(String.valueOf(payInfoMap.get("salesOrdId"))));
+          			rePaymMap.put("billId", posBillSeq);
+          			rePaymMap.put("trNo", payInfoMap.get("trNo"));
+          			rePaymMap.put("typeId", SalesConstants.POS_PAY_REVERSE_TYPE);
+          			rePaymMap.put("bankChgAmt", Integer.parseInt(String.valueOf(payInfoMap.get("bankChgAmt"))));
+          			rePaymMap.put("bankChgAccId", Integer.parseInt(String.valueOf(payInfoMap.get("bankChgAccId"))));  
+          			rePaymMap.put("collMemId", Integer.parseInt(String.valueOf(payInfoMap.get("collMemId"))));
+          			rePaymMap.put("brnchId", Integer.parseInt(String.valueOf(payInfoMap.get("brnchId"))));
+          			rePaymMap.put("bankAccId", Integer.parseInt(String.valueOf(payInfoMap.get("bankAccId"))));
+          			rePaymMap.put("allowComm", Integer.parseInt(String.valueOf(payInfoMap.get("allowComm"))));
+          			rePaymMap.put("stusCodeId", Integer.parseInt(String.valueOf(payInfoMap.get("stusCodeId"))));
+          			rePaymMap.put("updUserId", params.get("userId"));
+          			rePaymMap.put("syncCheck", Integer.parseInt(String.valueOf(payInfoMap.get("syncHeck"))));
+          			rePaymMap.put("thirdPartyCustId", Integer.parseInt(String.valueOf(payInfoMap.get("custId3party"))));
+          			rePaymMap.put("totAmt", -1*Double.parseDouble(String.valueOf(payInfoMap.get("totAmt")))); 
+          			rePaymMap.put("matchId", Integer.parseInt(String.valueOf(payInfoMap.get("mtchId")))); 
+          			rePaymMap.put("crtUserId", params.get("userId"));
+          			rePaymMap.put("isAllowRevMulti", Integer.parseInt(String.valueOf(payInfoMap.get("isAllowRevMulti"))));
+          			rePaymMap.put("isGlPostClm",  Integer.parseInt(String.valueOf(payInfoMap.get("isGlPostClm"))));
+          			rePaymMap.put("glPostClmDt", String.valueOf(payInfoMap.get("glPostClmDt")));
+          			rePaymMap.put("trxSeq", Integer.parseInt(String.valueOf(payInfoMap.get("trxId"))));
+          			rePaymMap.put("advMonth", Integer.parseInt(String.valueOf(payInfoMap.get("advMonth"))));
+          			rePaymMap.put("orderBillId",  Integer.parseInt(String.valueOf(payInfoMap.get("accBillId"))));
+          			rePaymMap.put("trIssuDt", String.valueOf(payInfoMap.get("trIssuDt")));//
+          			rePaymMap.put("payInvIsGen", Integer.parseInt(String.valueOf(payInfoMap.get("taxInvcIsGen"))));
+          			rePaymMap.put("taxInvcRefNo", String.valueOf(payInfoMap.get("taxInvcRefNo")));
+          			rePaymMap.put("taxInvcRefDt", String.valueOf(payInfoMap.get("taxInvcRefDt")));// 
+          			rePaymMap.put("svcCntrctId", Integer.parseInt(String.valueOf(payInfoMap.get("svcCntrctId"))));
+          			rePaymMap.put("batchPayId", Integer.parseInt(String.valueOf(payInfoMap.get("batchPayId"))));
+          			
+          			LOGGER.info("############### 13. POS Reverse Pay M INSERT START  ################");
+          			LOGGER.info("############### 13. POS Reverse Pay M INSERT PARAM   : " + rePaymMap.toString());
+          			posMapper.insertRePayMaster(rePaymMap);
+          			LOGGER.info("############### 13. POS Reverse Pay M INSERT END  ################");
+      			
+      			}
+      			
+      			//14.  ********************************************************************************************************* Reverse Pay X
+      			params.put("trxId", payInfoMap.get("trxId"));
+      			
+      			EgovMap getTrxInfoMap = null;
+      			getTrxInfoMap = posMapper.getTrxInfo(params);
+      			
+      			Map<String, Object> rePayxMap = new HashMap<String, Object>();
+      			Map<String, Object> updPaymMap = new HashMap<String, Object>();
+      			
+      			int payXseq = posMapper.getSeqPay0069D();
+      			
+      			if(getTrxInfoMap != null){
+      				
+      				rePayxMap.put("trxSeq", payXseq);
+      				rePayxMap.put("trxType", SalesConstants.POS_TRX_REVERSE_TYPE); // paytrx.TrxType = 101;
+      				rePayxMap.put("trxAmt", -1*Double.parseDouble(String.valueOf(getTrxInfoMap.get("trxAmt")))); // paytrx.TrxAmount = -1 * paytrx.TrxAmount;
+      				rePayxMap.put("trxMatchNo", getTrxInfoMap.get("trxMtchNo"));
+      				
+      				LOGGER.info("############### 14. POS Reverse Pay X INSERT START  ################");
+          			LOGGER.info("############### 14. POS Reverse Pay X INSERT PARAM   : " + rePayxMap.toString());
+      				posMapper.insertRePayTrx(rePayxMap);
+      				LOGGER.info("############### 14. POS Reverse Pay X INSERT END  ################");
+      				
+      			    //15.  ********************************************************************************************************* Update Pay Master.trxId
+
+      				updPaymMap.put("payId", payMseq);
+      				updPaymMap.put("trxId", payXseq);
+      				
+      				LOGGER.info("############### 15. POS Update Pay Master.trxId UPDATE START  ################");
+          			LOGGER.info("############### 15. POS Update Pay Master.trxId UPDATE PARAM   : " + updPaymMap.toString());
+      				posMapper.updatePayMTrxId(updPaymMap);
+      				LOGGER.info("############### 15. POS Update Pay Master.trxId UPDATE END  ################");
+      			}
+      			
+      			/* Pay Detail And AccGLRoute*/
+      			//Detail List (Info)
+      			List<EgovMap> rePayDList = null;
+      			rePayDList = posMapper.getPayDetailListByPayId(params);
+      			
+      			if(rePayDList != null && rePayDList.size() > 0){
+      				
+      			    //LOOP Start
+      				for (int idx = 0; idx < rePayDList.size(); idx++) {
+      					
+      				//16.  ********************************************************************************************************* Reverse Pay D
+      					EgovMap rePayMap = rePayDList.get(idx); 
+      					/* Pay D*/
+      					Map<String, Object> paydMap = new HashMap<String, Object>();
+      					int payDseq = posMapper.getSeqPay0065D();
+      					
+      					paydMap.put("payItemId", payDseq);
+      					paydMap.put("payId", payMseq); //payd.PayID = payM.PayID;
+      					paydMap.put("payMode", Integer.parseInt(String.valueOf(rePayMap.get("payItmModeId"))));
+      					paydMap.put("transactionRefNo", rePayMap.get("payItmRefNo"));
+      					paydMap.put("payCreditCardNo", rePayMap.get("payItmCcNo"));
+      					paydMap.put("payCreditCardOriNo", rePayMap.get("payItmOriCcNo"));
+      					paydMap.put("payCreditCardEncryptNo", rePayMap.get("payItmEncryptCcNo"));
+      					paydMap.put("payCrcType", rePayMap.get("payItmCcTypeId"));
+      					paydMap.put("payItmChqNo", rePayMap.get("payItmChqNo"));
+      					paydMap.put("payIssueBank", rePayMap.get("payItmIssuBankId")); 
+      					paydMap.put("payAmt", -1*Double.parseDouble(String.valueOf(rePayMap.get("payItmAmt")))); //PAY_ITM_AMT, payd.PayItemAmt = -1 * payd.PayItemAmt;
+      					paydMap.put("payCrcMode", rePayMap.get("payItmIsOnline"));  
+      					paydMap.put("payBankAccount", rePayMap.get("payItmBankAccId")); 
+      					paydMap.put("payRefDate", rePayMap.get("payItmRefDt")); 
+      					paydMap.put("payApprovNo", rePayMap.get("payItmAppvNo")); 
+      					paydMap.put("payRem", SalesConstants.POS_PAY_ITEM_REMARK_REVERSAL + String.valueOf(params.get("rePosNo")));  //payd.PayitemRemark = "SOI Reversal - " + Old_POSNo;  
+      					paydMap.put("payItmStusId", rePayMap.get("payItmStusId")); 
+      					paydMap.put("payItmIsLok", rePayMap.get("payItmIsLok")); 
+      					paydMap.put("payItmCcHolderName", rePayMap.get("payItmCcHolderName")); 
+      					paydMap.put("payItmCcExprDt", rePayMap.get("payItmCcExprDt")); 
+      					paydMap.put("payItmBankChrgAmt", -1*Double.parseDouble(String.valueOf(rePayMap.get("payItmBankChrgAmt"))));  // payd.PayItemBankChargeAmt = -1 * payd.PayItemBankChargeAmt;
+      					paydMap.put("payItmIsThirdParty", rePayMap.get("payItmIsThrdParty"));
+      					paydMap.put("payItmThrdPartyIc", rePayMap.get("payItmThrdPartyIc"));
+      					paydMap.put("payItmBankBrnchId", rePayMap.get("payItmBankBrnchId"));
+      					paydMap.put("payItmBankInSlipNo", rePayMap.get("payItmBankInSlipNo")); 
+      					paydMap.put("payItmEftNo", rePayMap.get("payItmEftNo"));
+      					paydMap.put("payItmChqDepReciptNo", rePayMap.get("payItmChqDepReciptNo"));
+      					paydMap.put("etc1", rePayMap.get("etc1"));
+      					paydMap.put("etc2", rePayMap.get("etc2"));
+      					paydMap.put("etc3", rePayMap.get("etc3"));
+      					paydMap.put("payItmMid", rePayMap.get("payItmMid"));
+      					paydMap.put("payItmGrpId", rePayMap.get("payItmGrpId"));
+      					paydMap.put("payItmRefItmId", rePayMap.get("payItmId")); //   payd.PayItemRefItemID = payd.PayItemID;
+      					paydMap.put("payItmBankChrgAccId", rePayMap.get("payItmBankChrgAccId"));
+      					paydMap.put("payItmRunngNo", rePayMap.get("payItmRunngNo"));
+      					paydMap.put("updUserId", params.get("userId"));
+      					paydMap.put("isFundTrnsfr", rePayMap.get("isFundTrnsfr"));
+      					paydMap.put("skipRecon", rePayMap.get("skipRecon"));
+      					paydMap.put("payItmCardTypeId", rePayMap.get("payItmCardTypeId"));
+      					paydMap.put("payItmCardModeId", rePayMap.get("payItmCardModeId"));
+      					
+      					LOGGER.info("############### 16 -["+idx+"] POS Reverse Pay D INSERT START  ################");
+              			LOGGER.info("############### 16 -["+idx+"] POS Reverse Pay D INSERT PARAM   : " + paydMap.toString());
+      					posMapper.insertRePayDetail(paydMap);
+      					LOGGER.info("############### 16 -["+idx+"] POS Reverse Pay D INSERT END  ################");
+      					
+      				//17.  ********************************************************************************************************* Reverse AccGLRoute
+      					/* AccGlRoute*/
+      					EgovMap accGlRouteMap = null;
+      					Map<String, Object> accReMap = new HashMap<String, Object>();
+      					
+      					params.put("payItmRefItmId", rePayMap.get("payItmId"));
+      					accGlRouteMap = posMapper.getAccGLRoutesInfoByRcpItmId(params); //Basic
+      					
+      					int accGlRouteSeq = 0;
+      					accGlRouteSeq = posMapper.getSeqPay0009D();
+      					
+      					
+      					if(accGlRouteMap != null){
+      						
+      						
+      						accReMap.put("accGlRouteSeq", accGlRouteSeq);
+      						accReMap.put("glFiscalDt", SalesConstants.DEFAULT_DATE); //route.GLFiscalDate = DateTime.Parse(string.Format("{0:dd/MM/yyyy}", "1900-01-01"));
+      						accReMap.put("glBatchNo", payXseq); //route.GLBatchNo = paytrx.TrxID.ToString();
+      						accReMap.put("glBatchTypeDesc", ""); // route.GLBatchTypeDesc = "";
+      						accReMap.put("glBatchTot", -1 * Double.parseDouble(String.valueOf(accGlRouteMap.get("glBatchTot")))); //route.GLBatchTotal = -1 * route.GLBatchTotal;
+      						accReMap.put("glReciptNo", rorNo); //route.GLReceiptNo = payM.ORNo;
+      						accReMap.put("glReciptType", SalesConstants.POS_GL_RECEIPT_REVERSE_TYPE); //route.GLReceiptTypeID = 101;
+      						accReMap.put("glReciptBrnchId", accGlRouteMap.get("glReciptBrnchId")); //route.GLReceiptBranchID = route.GLReceiptBranchID;
+      						accReMap.put("glReciptSetlAccId", accGlRouteMap.get("glReciptSetlAccId")); //  route.GLReceiptSettleAccID = route.GLReceiptSettleAccID;
+      						accReMap.put("glReciptAccId", accGlRouteMap.get("glReciptAccId")); //route.GLReceiptAccountID = route.GLReceiptAccountID;
+      						accReMap.put("glReciptItmId", payDseq); //route.GLReceiptItemID = payd.PayItemID;
+      						accReMap.put("glReciptItmModeId", accGlRouteMap.get("glReciptItmModeId")); // route.GLReceiptItemModeID = route.GLReceiptItemModeID;
+      						accReMap.put("glRevrsReciptItmId", rePayMap.get("payItmId")); // route.GLReverseReceiptItemID = (int)payd.PayItemRefItemID;
+      						accReMap.put("glReciptItmAmt", -1 * Double.parseDouble(String.valueOf(accGlRouteMap.get("glReciptItmAmt")))); //route.GLReceiptItemAmount = -1 * route.GLReceiptItemAmount;
+      						accReMap.put("glReciptItmChrg", accGlRouteMap.get("glReciptItmChrg")); //route.GLReceiptItemCharges = route.GLReceiptItemCharges;
+      						accReMap.put("glReciptItmRclStus", SalesConstants.POS_GL_RECEIPT_ITEM_RCL_STATUS);
+      						accReMap.put("glJrnlNo", accGlRouteMap.get("glJrnlNo"));
+      						accReMap.put("glAuditRef", accGlRouteMap.get("glAuditRef"));
+      						accReMap.put("glCnvrStus", SalesConstants.POS_GL_CONVERSION_STATUS);
+      						accReMap.put("glCnvrDt", accGlRouteMap.get("glCnvrDt"));
+      						
+      						LOGGER.info("############### 17 -["+idx+"] POS Reverse AccGLRoute INSERT START  ################");
+                  			LOGGER.info("############### 17 -["+idx+"] POS Reverse AccGLRoute INSERT PARAM   : " + accReMap.toString());
+      						posMapper.insertReAccGlRoute(accReMap);
+      						LOGGER.info("############### 17 -["+idx+"] POS Reverse AccGLRoute INSERT END  ################");
+      					}
+					}
+      				//LOOP End
+      				
+      			}
+      		}// Pay Reverse
+      		
+      		
       	EgovMap rtnMap = new EgovMap();
       	rtnMap.put("posRefNo", posRefNo);
+      	rtnMap.put("posWorNo", rorNo);
       	
 		return rtnMap;
 	}
@@ -1352,4 +1638,58 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		
 	}
 
+	@Override
+	public List<EgovMap> getpayBranchList(Map<String, Object> params) throws Exception {
+		
+		return posMapper.getpayBranchList(params);
+	}
+
+	@Override
+	public List<EgovMap> getDebtorAccList(Map<String, Object> params) throws Exception {
+		
+		params.put("accCode", SalesConstants.POS_PAY_DEBTOR_ACC_CODE);
+		
+		return posMapper.getDebtorAccList(params);
+	}
+
+	@Override
+	public List<EgovMap> getBankAccountList(Map<String, Object> parmas) throws Exception {
+		
+		return posMapper.getBankAccountList(parmas);
+	}
+
+	@Override
+	public EgovMap selectAccountIdByBranchId(Map<String, Object> params) throws Exception {
+		
+		return posMapper.selectAccountIdByBranchId(params);
+	}
+
+	@Override
+	public boolean isPaymentKnowOffByPOSNo(Map<String, Object> params) throws Exception {
+		
+		 List<EgovMap> countPay = posMapper.isPaymentKnowOffByPOSNo(params);
+		
+		boolean isRtn = false;
+		
+		if(countPay != null){
+			if(countPay.size() >= 3){
+				isRtn = true;
+			}
+		}
+		
+		return isRtn;
+	}
+
+	@Override
+	public EgovMap posReversalPayDetail(Map<String, Object> params) throws Exception {
+		
+		return posMapper.posReversalPayDetail(params);
+	}
+
+	@Override
+	public List<EgovMap> getPayDetailList(Map<String, Object> params) throws Exception {
+		
+		return posMapper.getPayDetailList(params);
+	}
+	
 }

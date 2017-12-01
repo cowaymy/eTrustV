@@ -250,6 +250,10 @@ public class SalesConstants {
 	public static final int POS_DOC_NO_VOID_NO = 112;  //Void No.
 	public static final int POS_DOC_NO_RD_NO = 18;   //RD no.
 	public static final int POS_DOC_NO_CN_NEW_NO = 134; //CN-NEW no.
+	public static final int POS_DOC_NO_TRX_NO = 23; //TRX no.
+	public static final int POS_DOC_NO_WOR_NO = 3; //WOR no.
+	public static final int POS_DOC_ROR_NO = 82; // ROR no.
+	
 	public static final String POS_CUST_ID = "107205"; // ASIS  //posM.POSCustomerID
 	
 	public static final int POS_BILL_ID = 0;  //pos Bill Id
@@ -292,6 +296,76 @@ public class SalesConstants {
 	
 	public static final int POS_OTH_CHECK_PARAM = 1;// Other Income Check Parameter
 	
+	public static final int POS_TRX_TYPE_ID = 577; // POS pay Trx Type Id
+	public static final int POS_PAY_MASTER_TYPE_ID = 577;  //POS Pay Master Type Id
+	public static final int POS_RECEIPT_TYPE_ID = 577;
+	
+	public static final int POS_TEMP_SALES_ORDER_ID = 0;
+	
+	public static final int POS_BANK_CHARGE_AMOUNT = 0;
+	public static final int POS_BANK_CHARGE_ACCOUNT_ID = 0;
+	public static final int POS_COLL_MEMBER_ID = 0;
+	
+	public static final int POS_PAY_ALLOW_COMM = 0;
+	public static final int POS_PAY_STATUS_ID  = 1;
+	public static final int POS_PAY_SYNC_CHECK = 0;
+	
+	public static final int POS_THIRD_PARTY_CUST_ID = 0;
+	public static final int POS_MATCH_ID = 0;
+	
+	public static final int POS_IS_ALLOW_REV_MULTY = 0;
+	public static final int POS_IS_GL_POST_CLAIM = 0;
+	
+	public static final int POS_ADV_MONTH = 0;
+	public static final int POS_TAX_INVOICE_GENERATED = 1;
+	public static final int POS_SERVICE_CONTRACT_ID = 0;
+	public static final int POS_BATCH_PAYMEMNT_ID = 0;
+	
+	public static final String POS_PAY_DEBTOR_ACC_CODE = "2136/000";  
+	
+	public static final int POS_PAY_ITEM_IS_LOCK  = 0;
+	public static final int POS_PAY_ITEM_IS_THIRD_PARTY = 0;
+	public static final int POS_IS_FUND_TRANS_FR = 0;
+	public static final int POS_SKIP_RECON = 0 ;
+	
+	public static final int POS_PAY_METHOD_CASH = 105;
+	public static final int POS_PAY_METHOD_CARD = 107;
+	public static final int POS_PAY_METHOD_COMMISSION = 108; 
+	
+	public static final int POS_PAY_SUSPEND_CASH = 531;
+	public static final int POS_PAY_SUSPEND_COMMISSION = 533;
+	
+	public static final int POS_ITE_BANK_ACC_99 = 99;
+	public static final int POS_ITE_BANK_ACC_100 = 100;
+	public static final int POS_ITE_BANK_ACC_101 = 101;
+	public static final int POS_ITE_BANK_ACC_103 = 103;
+	public static final int POS_ITE_BANK_ACC_104 = 104;
+	public static final int POS_ITE_BANK_ACC_105 = 105;
+	public static final int POS_ITE_BANK_ACC_106 = 106;
+	public static final int POS_ITE_BANK_ACC_107 = 107;
+	public static final int POS_ITE_BANK_ACC_110 = 110;
+	public static final int POS_ITE_BANK_ACC_497 = 497;
+	
+	public static final int POS_SET_SETTLE_ACC_83 = 83;
+	public static final int POS_SET_SETTLE_ACC_90 = 90;
+	public static final int POS_SET_SETTLE_ACC_84 = 84;
+	public static final int POS_SET_SETTLE_ACC_86 = 86;
+	public static final int POS_SET_SETTLE_ACC_85 = 85;
+	public static final int POS_SET_SETTLE_ACC_88 = 88;
+	public static final int POS_SET_SETTLE_ACC_89 = 89;
+	public static final int POS_SET_SETTLE_ACC_497 = 497;
+	
+	public static final int POS_GL_REVERSE_RECEIPT_ITEM_ID = 0;
+	public static final int POS_GL_RECEIPT_ITEM_CHARGES = 0;
+	public static final String POS_GL_RECEIPT_ITEM_RCL_STATUS = "N";
+	public static final String POS_GL_CONVERSION_STATUS = "Y";
+	public static final int POS_PAY_REVERSE_TYPE = 101;
+	public static final String POS_PAY_ITEM_REMARK_REVERSAL = "SOI Reversal - ";
+	
+	public static final int POS_TRX_REVERSE_TYPE = 101;
+	public static final int POS_GL_RECEIPT_REVERSE_TYPE = 101;
+	 
+     
 	/**
 	 * 메세지 KEY
 	 */

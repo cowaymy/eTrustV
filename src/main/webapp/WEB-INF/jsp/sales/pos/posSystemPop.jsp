@@ -6,11 +6,16 @@ var purchaseGridID;
 var serialTempGridID;
 var memGridID;
 
+var paymentGridID;
+
 $(document).ready(function() {
+	
+	/******  INIT ********************/
 	
 	createPurchaseGridID();
 	createSerialTempGridID();
 	creatememGridID();
+	createPaymentGrid();
 	
 	//PosModuleTypeComboBox
 	var modulePopParam = {groupCode : 143, codeIn : [2390, 2391]};
@@ -22,8 +27,65 @@ $(document).ready(function() {
 	
     //branch List
     var selVal = $("#_memBrnch").val().trim();
-   // console.log('membrnch : [' + selVal+ ']');
-    CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhBrnchList", '' , selVal.trim(), '');
+    console.log('membrnch : [' + selVal+ ']');
+    CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhBrnchList", '' , selVal, '');
+    
+    //Payment
+    CommonCombo.make('_payBrnchCode', "/sales/pos/getpayBranchList", '', selVal, '');
+    
+    var debSelVal = "524";
+    CommonCombo.make("_payDebtorAcc", "/sales/pos/getDebtorAccList", '', debSelVal, optionModule);
+    $("#_payDebtorAcc").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    
+    fn_payModeAndBankAccControl(); //draw Combo 
+    
+    
+    /******  INIT ********************/
+    
+    $("#_payMode").change(function() {
+    	
+		var payMode = $(this).val();
+		
+		if(payMode == 105){  // 105 cash
+			
+			
+		    $("#_payCreditCardNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); //this.txtCreditCardNo.Enabled = false;
+		    $("#_payApprovNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.txtApprovalNo.Enabled = false;
+		    $("#_payCrcType").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); //   this.cmbCRCType.Enabled = false;
+		    $("#_payCrcMode").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbCRCMode.Enabled = false;
+		    $("#_payIssueBank").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbCRCMode.Enabled = false;
+		    
+		    fn_payModeAndBankAccControl();
+		    
+		}// End 105 Cash
+		
+		if(payMode == 108){  // 108 deduction
+			
+			var initBankParam = {isDeduc : "1"};
+		    CommonCombo.make("_payBankAccount", "/sales/pos/getBankAccountList", initBankParam, '59', optionModule);
+		    $("#_payBankAccount").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+		    
+		    $("#_payCreditCardNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"});  //this.txtCreditCardNo.Enabled = false;
+		    $("#_payApprovNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"});  // this.txtApprovalNo.Enabled = false;
+		    $("#_payCrcType").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); //   this.cmbCRCType.Enabled = false;
+		    $("#_payCrcMode").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbIssuedBank.Enabled = false;
+		    $("#_payIssueBank").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbCRCMode.Enabled = false;
+		}
+    	
+    	
+	    /* if(payMode == 107){  // 107 Credit Card
+            
+	    	$("#_payCreditCardNo").attr({"disabled" : true , "class" : "w100p disabled"}); 
+            $("#_payApprovNo").attr({"disabled" : true , "class" : "w100p disabled"}); 
+            $("#_payCrcType").attr({"disabled" : true , "class" : "w100p disabled"}); 
+            $("#_payCrcMode").attr({"disabled" : true , "class" : "w100p disabled"}); 
+            $("#_payIssueBank").attr({"disabled" : true , "class" : "w100p disabled"});
+            
+            //TODO not use
+            $("#_payIssueBank").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbCRCMode.Enabled = false;
+        } */
+	});
+    
     
     //Wh List
     $("#_cmbWhBrnchIdPop").change(function() {
@@ -33,6 +95,8 @@ $(document).ready(function() {
     //_insPosModuleType Change Func
     $("#_insPosModuleType").change(function() {
         
+    	fn_payFieldClear();
+    	
         var tempVal = $(this).val();
         
         if(tempVal == 2390){ //POS Sales
@@ -42,6 +106,10 @@ $(document).ready(function() {
             };
             var systemPopParam = {groupCode : 140 , codeIn : [1352, 1353]};
             CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
+            //PAYMENT TAB DISPLAY
+            $("#_purchaseTab").click();
+            $("#_payTab").css("display" , "");
+            
             //MEM GRID DISPLAY
             $("#_purchMemBtn").css("display" , "none");
             $("#_mainMemberGrid").css("display" , "none");
@@ -59,6 +127,10 @@ $(document).ready(function() {
              };
              var systemPopParam = {groupCode : 140 , codeIn : [1352, 1353]};
              CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
+             //PAYMENT TAB DISPLAY
+             $("#_purchaseTab").click();
+             $("#_payTab").css("display" , "none");
+             
              //MEM GRID DISPLAY
              $("#_purchMemBtn").css("display" , "");
              $("#_mainMemberGrid").css("display" , "");
@@ -96,6 +168,19 @@ $(document).ready(function() {
     	//
     	$("#_mainSerialGrid").css("display" , "none");
     	
+    	//Payment Mode
+    	//clear
+    	var targetObj = document.getElementById('_payMode');
+        for (var i = targetObj.length - 1; i >= 0; i--) {
+                targetObj.remove(i);
+        }
+    	//append Option
+    	if( $("#_insPosSystemType").val() == 1352){  //Filter
+    		$("#_payMode").append("<option value='105'>Cash</option>");
+    		$("#_payMode").append("<option value='108'>Deduct Commission</option>");
+    	}else{
+    		$("#_payMode").append("<option value='105'>Cash</option>");
+    	}
 	});
     
     //Member Search Popup
@@ -139,6 +224,17 @@ $(document).ready(function() {
         }
         //5. Remove Check Low 
         AUIGrid.removeCheckedRows(purchaseGridID);
+        
+        //PayTab Total Charge Text
+        var purTotAmt = 0;
+        purTotAmt = fn_calcuPurchaseAmt();
+        if(chkDelArray == null || chkDelArray.length <= 0){
+        	$("#_payTotCharges").html(' ');	
+        }else{
+        	$("#_payTotCharges").html('RM : ' + purTotAmt);
+        }
+        
+        
     });
     
     //Purchase Btn
@@ -160,11 +256,16 @@ $(document).ready(function() {
     			}
     			//창고 parameter
     		//	$("#_cmbWhBrnchIdPop").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    			// 
+    			$("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
+    			$("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
     			Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
     		} 
     	
     	    if($("#_insPosSystemType").val() == 1353){ // Pos Item Bank
     	    //	$("#_cmbWhBrnchIdPop").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    	    	$("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
+                $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
     	    	Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
     	    	
             }
@@ -187,6 +288,8 @@ $(document).ready(function() {
                 }
                 //창고 parameter
             //  $("#_cmbWhBrnchIdPop").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+                $("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
+                $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
                 Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
     		}
     	}
@@ -249,8 +352,49 @@ $(document).ready(function() {
     	/*###############  Payment Validation Part #################################*/
     	
     	if($("#_insPosModuleType").val() == 2390){   //POS SALES
-    		//Save
-            Common.confirm("Will you proceed with payment?", fn_payProceed, fn_payPass);
+    		/* //Save
+            Common.confirm("Will you proceed with payment?", fn_payProceed, fn_payPass); */
+            
+            
+            if(null == $("#_payTrIssueDate").val() || '' == $("#_payTrIssueDate").val()){
+            	Common.alert("* Pease select the TR issued date.");
+            	$("#_payTrIssueDate").focus();
+            	return;
+            }
+            //Dup Validation
+            /*   if (this.txtTotal.Text.Replace("RM", string.Empty) != "0")
+            {
+                if (string.IsNullOrEmpty(this.cmbPayBranch.SelectedValue))
+                {
+                    valid = false;
+                    message += "* Please select a branch.<br />";
+                }
+            } */
+            if( null == $("#_payBrnchCode").val() || '' == $("#_payBrnchCode").val()){
+            	Common.alert("* Please select a branch.");
+            	$("#_payBrnchCode").focus();
+            	return;
+            }
+            
+            
+            if(null == $("#_payDebtorAcc").val() ||  '' == $("#_payDebtorAcc").val()){
+            	Common.alert("* Please select a debtor account.");
+            	return;
+            }
+            
+            //Charge And Pay
+            //   
+            var payTotAmt = fn_calcuPayAmt();
+            var purchTotAmt = fn_calcuPurchaseAmt();
+            
+            if( payTotAmt == null || payTotAmt == 0 || purchTotAmt == null || purchTotAmt == 0 || (payTotAmt != purchTotAmt)){
+            	Common.alert("* Partial/Overpay Payment are prohibited.");
+            	return;
+            }
+            
+            //Save
+            fn_payProceed();
+            
     		
     	}else{ //Deduction , Other Income
     		//Save
@@ -270,11 +414,214 @@ $(document).ready(function() {
     		Common.alert("* Please select Warehouse first.");
     		return;
     	}
-    	
+    	$("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
+        $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
     	Common.popupDiv("/sales/pos/posMemUploadPop.do", $("#_sysForm").serializeJSON(), null , true , '_memDiv');
 	});
     
+    
+    //Resize By Tab Click
+    $("#_purchaseTab").click(function() {
+    	fn_reSizeAllGrid();
+    });
+    
+    $("#_paymentTab").click(function() {
+    	fn_reSizeAllGrid();
+    });
+    
+    
+    //Add Payment Mode
+    $("#_addPayMode").click(function() {
+    	
+    	//Validation
+    	if(null == $("#_payMode").val() || '' == $("#_payMode").val()){
+    		Common.alert("* Please select a payment mode.");
+    		return;
+    	}
+    	
+    	if(null == $("#_payAmt").val() || '' == $("#_payAmt").val()){
+    		Common.alert("* Amount cannot be empty.");
+    		return;
+    	}
+    	
+    	if(FormUtil.checkNum($("#_payAmt"))){
+    		Common.alert("* Please Key In Number.");
+    		return;
+    	}
+    	
+    	if(null == $("#_payBankAccount").val() || '' == $("#_payBankAccount").val()){
+    		Common.alert("* Please select a bank account.");
+    		return;
+    	}
+    	
+    	if($("#_payMode") == 107){  //Card Select
+    		
+    		if(null == $("#_payIssueBank").val() || '' == $("#_payIssueBank").val()){
+    			Common.alert("* Please select a issued bank.");
+    			return;
+    		}
+    	
+    		if(null == $("#_payCreditCardNo").val() || '' == $("#_payCreditCardNo").val()){
+    		    Common.alert("* Please key in CRC no.");
+    		    return;
+    		}else{
+    			var crcNo = $("#_payCreditCardNo").val();
+    			if(crcNo.length != 16){
+    				Common.alert("* Credit card number must be 16 digits.");
+    				return;
+    			}
+    		}
+    		
+    		if(null == $("#_payCrcType").val() || '' == $("#_payCrcType").val()){
+    		     Common.alert("* Please select a  CRC type. ");   		
+    		     return;
+    		}
+    		
+    		if (null == $("#_payCrcMode").val() || '' == $("#_payCrcMode").val()) {
+				Common.alert(" Please select a  CRC mode.");
+				return;
+			}
+    		
+    		if(null == $("#_payApprovNo").val() || '' == $("#_payApprovNo").val()){
+    			Common.alert("* Please key in approval no.");
+    			return;
+    		}else{
+    			var tempAppNo = $("#_payApprovNo").val();
+    			
+    			if(tempAppNo.length != 6){
+    				Common.alert("* Approval number must be 6 characters.");
+    				return;
+    			}
+    		}
+    	}
+    	
+    	//Grid Set Data
+    	var tempPayObj = {};
+    	
+    	tempPayObj['payMode']  = $("#_payMode").val();
+    	tempPayObj['payModeTxt']  = $("#_payMode :selected").text();
+ //   	tempPayObj['payTrRefNo'] = $("#_payTrRefNo").val();
+    	tempPayObj['transactionRefNo'] = $("#_transactionRefNo").val();
+    	tempPayObj['payAmt'] = $("#_payAmt").val();
+    	tempPayObj['payCreditCardNo'] = $("#_payCreditCardNo").val();
+    	tempPayObj['payApprovNo'] = $("#_payApprovNo").val();
+    	tempPayObj['payCrcMode'] = $("#_payCrcMode").val();
+    	tempPayObj['payIssueBank'] = $("#_payIssueBank").val();
+    	tempPayObj['payBankAccountTxt'] = $("#_payBankAccount :selected").text();
+    	tempPayObj['payBankAccount'] = $("#_payBankAccount").val();
+    	tempPayObj['payRefDate'] = $("#_payRefDate").val();
+    	tempPayObj['payRem'] = $("#_payRem").val();
+    	
+    	//not use  
+    	tempPayObj['payCrcType'] = $("#_payCrcType").val();
+    	tempPayObj['payIssueBank'] = $("#_payIssueBank").val();
+    		
+    	AUIGrid.addRow(paymentGridID, tempPayObj, 'last');	
+    
+    	var total = 0;
+    	total = fn_calcuPayAmt();
+    	//total
+    	$("#_totalPayAmount").html('Total Pay Amount : <b style="color: red;"> RM : '  + total + '</b>');
+	});
+    
+    //Clear Pay Grid
+    $("#_clearPayGrid").click(function() {
+		AUIGrid.clearGridData(paymentGridID);
+		var total = 0;
+        total = fn_calcuPayAmt();
+        //total
+        $("#_totalPayAmount").html('Total Pay Amount : <b style="color: red;"> RM : '  + total + '</b>');
+		
+	});
 });//Document Ready Func End
+
+//Pay Total Amount
+function fn_calcuPayAmt(){
+	
+	var totArr = [];
+    totArr = AUIGrid.getColumnValues(paymentGridID, 'payAmt');
+    
+	var totalAmount = 0;
+    if(totArr != null && totArr.length > 0){
+        for (var idx = 0; idx < totArr.length; idx++) {
+            totalAmount += totArr[idx];
+        }
+    }
+    totalAmount = parseFloat(totalAmount).toFixed(2);
+    
+    return totalAmount;
+}
+
+//Purchase Charge Amount
+function fn_calcuPurchaseAmt(){
+	
+	var totArr = [];
+    totArr = AUIGrid.getColumnValues(purchaseGridID, 'totalAmt');
+    
+    var totalAmount = 0;
+    if(totArr != null && totArr.length > 0){
+        for (var idx = 0; idx < totArr.length; idx++) {
+            totalAmount += totArr[idx];
+        }
+    }
+    totalAmount = parseFloat(totalAmount).toFixed(2);
+    
+    return totalAmount;
+}
+
+
+function fn_payModeAndBankAccControl(){
+	 var memBrnch = $("#_memBrnch").val();
+     if(memBrnch == null || memBrnch == ''){
+         $("#_payBankAccount").attr({"disabled" : false , "class" : "w100p"});
+         var initBankParam = {isCash : "1"};
+         CommonCombo.make("_payBankAccount", "/sales/pos/getBankAccountList", initBankParam, '', optionModule);
+     }else{
+         var accParams = {brnchId : memBrnch};
+         var ajaxOpt = { async : false};
+         var isResult = false;
+         var accResult = '';
+         Common.ajax("GET", "/sales/pos/selectAccountIdByBranchId", accParams, function(result){
+                 if(result == null || result == ''){
+                     isResult = false
+                 }else{
+                     isResult = true
+                     accResult = result.accId + '';
+                 }
+         }, '', ajaxOpt);    //Call Ajax end
+         
+         if(isResult == true){
+             $("#_payBankAccount").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+             var initBankParam = {isCash : "1"};
+             CommonCombo.make("_payBankAccount", "/sales/pos/getBankAccountList", initBankParam, accResult, optionModule);
+         }else{
+             $("#_payBankAccount").attr({"disabled" : false , "class" : "w100p"});
+             var initBankParam = {isCash : "1"};
+             CommonCombo.make("_payBankAccount", "/sales/pos/getBankAccountList", initBankParam, '', optionModule);
+         }
+     }
+}
+
+
+
+function fn_payFieldClear(){
+	//Filed Clear
+    $("#_payBrnchCode").val('');
+//    $("#_payTrRefNo").val('');
+ //   $("#_payTrIssueDate").val('');
+    $("#_payMode").val('');
+    $("#_transactionRefNo").val('');
+    $("#_payAmt").val('');
+    $("#_payCreditCardNo").val('');
+    $("#_payCrcType").val('');
+    $("#_payCrcMode").val('');
+    $("#_payApprovNo").val('');
+    $("#_payIssueBank").val('');
+    $("#_payBankAccount").val('');
+    $("#_payRefDate").val('');
+    $("#_payDebtorAcc").val('');
+    $("#_payRem").val('');
+}
 
 function fn_clearAllGrid(){
     
@@ -287,6 +634,15 @@ function fn_clearAllGrid(){
     AUIGrid.clearGridData(serialTempGridID);  //serial TempGridID
     AUIGrid.resize(serialTempGridID , 960, 300);
     
+    AUIGrid.clearGridData(paymentGridID);  //payment TempGridID
+    AUIGrid.resize(paymentGridID , 960, 200);
+}
+
+function fn_reSizeAllGrid(){
+	AUIGrid.resize(purchaseGridID , 960, 300);
+	AUIGrid.resize(memGridID , 960, 300);
+	AUIGrid.resize(serialTempGridID , 960, 300);
+	AUIGrid.resize(paymentGridID , 960, 200);
 }
 
 function fn_setMemberGirdData(paramObj){
@@ -307,6 +663,8 @@ function fn_payPass(){
      data.serial = serialParam;
      data.mem = memParam;
 	 $("#_payResult").val('-1'); //payment
+	 $("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
+     $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
      data.form = $("#_sysForm").serializeJSON();
 	 
      Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
@@ -320,12 +678,26 @@ function fn_payProceed(){
     var prchParam = AUIGrid.getGridData(purchaseGridID);
     var serialParam = AUIGrid.getGridData(serialTempGridID);
     var memParam = AUIGrid.getGridData(memGridID);
+    var payParam = AUIGrid.getGridData(paymentGridID);
     
     data.prch = prchParam;
     data.serial = serialParam;
     data.mem = memParam;
+    /* payment */
+    data.pay = payParam;
+    
     $("#_payResult").val('1');  //payment 
+    $("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
+    $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
     data.form = $("#_sysForm").serializeJSON();
+    
+    /* payment */
+    var totAmts = fn_calcuPayAmt();
+    $("#_hidTotPayAmt").val(totAmts);
+    $("#_hidPayBrnchCode").val($("#_payBrnchCode").val());
+    $("#_hidPayDebtorAcc").val($("#_payDebtorAcc").val());
+    
+    data.payform = $("#_payForm").serializeJSON();
     
     Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
     	
@@ -512,11 +884,80 @@ function creatememGridID(){
 	                                 ];
 	
 	memGridID = GridCommon.createAUIGrid("#memTemp_grid_wrap", memConfirmlColumnLayout,'', memGridPros);
+	AUIGrid.resize(memGridPros , 960, 300);
 }
 
+function createPaymentGrid(){
+   var payGridPros = {
+            
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            fixedColumnCount    : 1,            
+            showStateColumn     : false,             
+            displayTreeOpen     : false, 
+            editable : false,
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            softRemoveRowMode : false,
+            showRowCheckColumn : false, //checkBox
+            noDataMessage       : "No Item found.",
+            groupingMessage     : "Here groupping"
+    };
+   
+   var paymentColumnLayout =  [ 
+                                   {dataField : "payMode", visible : false},
+                                   {dataField : "payModeTxt" , headerText : "Mode", width : "10%",  editable : false },
+                                   {dataField : "payTrRefNo", visible : false},
+                                   {dataField : "transactionRefNo" , headerText : "Ref No", width : "10%",  editable : false },
+                                   {dataField : "payAmt" , headerText : "Amount", width : "10%",  editable : false, dataType : "numeric", formatString : "#,##0.00" },
+                                   {dataField : "payCreditCardNo" , headerText : "C.Card", width : "8%",  editable : false },
+                                   {dataField : "payApprovNo" , headerText : "Aproval No", width : "8%",  editable : false },
+                                   {dataField : "payCrcMode" , headerText : "CRC Mode", width : "8%",  editable : false },
+                                   {dataField : "payIssueBank" , headerText : "Issued Bank", width : "8%",  editable : false },
+                                   {dataField : "payBankAccountTxt" , headerText : "Bank Acc", width : "10%",  editable : false },
+                                   {dataField : "payBankAccount", visible : false},// 
+                                   {dataField : "payRefDate" , headerText : "Ref Date", width : "10%",  editable : false },
+                                   {dataField : "payRem" , headerText : "Remark", width : "10%",  editable : false },
+                                   {
+                                       dataField : "undefined", 
+                                       headerText : " ", 
+                                       width : '8%',
+                                       renderer : {
+                                                type : "ButtonRenderer", 
+                                                labelText : "Delete",
+                                                editable : false,
+                                                onclick : function(rowIndex, columnIndex, value, item) {
+                                                	AUIGrid.removeRow(paymentGridID, rowIndex);
+                                                	var total = 0;
+                                                    total = fn_calcuPayAmt();
+                                                    //total
+                                                    $("#_totalPayAmount").html('Total Pay Amount : <b style="color: red;"> RM : '  + total + '</b>');
+                                                }
+                                       }
+                                   },
+                                   //not used  
+                                   {dataField : "payCrcType", visible : false},
+                                   {dataField : "payIssueBank", visible : false},
+                                   
+                                   {dataField : "payIssueBank", visible : false}
+                                   
+                               ];
+   
+   paymentGridID = GridCommon.createAUIGrid("#payment_grid_wrap", paymentColumnLayout,'', payGridPros);
+   AUIGrid.resize(payGridPros , 960, 300);
+}
 //posItmSrchPop -> posSystemPop
 function getItemListFromSrchPop(itmList, serialList){
 	AUIGrid.setGridData(purchaseGridID, itmList);
+	
+	var purTotAmt = 0;
+	purTotAmt = fn_calcuPurchaseAmt();
+	$("#_payTotCharges").html('RM : ' + purTotAmt);
+	
 	AUIGrid.setGridData(serialTempGridID, serialList);
 }
 
@@ -536,6 +977,20 @@ function fn_calculateAmt(amt, qty) {
     
     return retObj;
     
+}
+
+var prev = "";
+var regexp = /^\d*(\.\d{0,2})?$/;
+
+function fn_inputAmt(obj){
+	
+	if(obj.value.search(regexp) == -1){
+		obj.value = prev;
+	}else{
+		prev = obj.value;
+	}
+	
+	
 }
 
 </script>
@@ -573,11 +1028,11 @@ function fn_calculateAmt(amt, qty) {
 <tr>
     <th scope="row">POS Type</th>
     <td>
-    <select class="w100p" id="_insPosModuleType" name="insPosModuleType"></select>
+    <select class="w100p" id="_insPosModuleType" ></select>
     </td>
     <th scope="row">POS Sales Type</th>
     <td>
-    <select class="w100p" id="_insPosSystemType" name="insPosSystemType"></select>
+    <select class="w100p" id="_insPosSystemType" ></select>
     </td>
 </tr>
 </tbody>
@@ -585,8 +1040,8 @@ function fn_calculateAmt(amt, qty) {
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Purchase info</a></li>
-    <li><a href="#">Payment mode</a></li>
+    <li><a href="#" class="on" id="_purchaseTab">Purchase info</a></li>
+    <li id="_payTab"><a id="_paymentTab">Payment mode</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -600,6 +1055,10 @@ function fn_calculateAmt(amt, qty) {
 <input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId }">
 <input type="hidden" name="posReason" id="_posReason">  
 <input type="hidden" name="payResult" id="_payResult">
+ 
+<!-- MODULE & SYSTEM -->
+<input type="hidden" name="insPosModuleType" id="_hidInsPosModuleType">
+<input type="hidden" name="insPosSystemType" id="_hidInsPosSystemType">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -679,6 +1138,12 @@ function fn_calculateAmt(amt, qty) {
 <h2>Payment Information</h2>
 </aside><!-- title_line end -->
 
+<form id="_payForm">
+<!-- pay Hidden Value  -->
+<input type="hidden" id="_hidTotPayAmt" name="hidTotPayAmt">
+<input type="hidden" id="_hidPayBrnchCode" name="payBrnchCode">
+<input type="hidden" id="_hidPayDebtorAcc" name="payDebtorAcc">
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -692,107 +1157,87 @@ function fn_calculateAmt(amt, qty) {
 <tbody>
 <tr>
 <th>Total Charges</th>
-<td colspan="5"></td>
+<td colspan="5" id="_payTotCharges"></td>
 </tr>
 <tr>
 <th>Branch Code</th>
 <td>
-    <select class="w100p disabled" disabled>
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p disabled" id="_payBrnchCode"  disabled="disabled"></select>
 </td>
 <th>TR Ref No.</th>
-<td><input type="text" title="" placeholder="TR Ref No." class="w100p" /></td>
+<td><input type="text" title="" placeholder="TR Ref No." class="w100p" id="_payTrRefNo" name="payTrRefNo"  maxlength="10"/></td>
 <th>TR Issued Date</th>
-<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_payTrIssueDate"  name="payTrIssueDate" readonly="readonly"/></td>
 </tr>
 <tr>
 <th>Payment Mode</th>
 <td>
-    <select class="w100p disabled">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
+    <select class="w100p" id="_payMode" name="payMode">
+        <option value="105">Cash</option>
+        <option value="108">Deduct Commission</option>
     </select>
 </td>
 <th>Transaction Ref No.</th>
-<td><input type="text" title="" placeholder="Transaction Ref No." class="w100p" /></td>
+<td><input type="text" title="" placeholder="Transaction Ref No." class="w100p" id="_transactionRefNo" name="transactionRefNo" /></td>
 <th>Amount</th>
-<td><input type="text" title="" placeholder="" class="w100p" /></td>
+<td><input type="text" title="" placeholder="" class="w100p" id="_payAmt" name="payAmt" onkeyup="fn_inputAmt(this)" /></td>
 </tr>
 <tr>
 <th>Credit Card No.</th>
-<td><input type="text" title="" placeholder="Credit Card No." class="w100p" /></td>
+<td><input type="text" title="" placeholder="Credit Card No." class="w100p disabled" id="_payCreditCardNo" name="payCreditCardNo" disabled="disabled"/></td>
 <th>CRC Type</th>
 <td>
-    <select class="w100p disabled" disabled>
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p disabled"  id="_payCrcType" name="payCrcType" disabled="disabled"></select>
 </td>
 <th>CRC Mode</th>
 <td>
-    <select class="w100p disabled" disabled>
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
+    <select class="w100p disabled" id="_payCrcMode" name="payCrcMode" disabled="disabled">
+        <option value="" disabled="disabled" selected="selected"></option>
+        <option value="1">ONLINE</option>
+        <option value="0">OFFLINE</option>
     </select>
 </td>
 </tr>
 <tr>
 <th>Approval No.</th>
-<td><input type="text" title="" placeholder="Credit Card No." class="w100p" /></td>
+<td><input type="text" title="" placeholder="Credit Card No." class="w100p disabled" id="_payApprovNo" name="payApprovNo" disabled="disabled"/></td>
 <th>Issue Bank</th>
 <td>
-    <select class="w100p disabled" disabled>
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p disabled" id="_payIssueBank" name="payIssueBank"  disabled="disabled"></select>
 </td>
 <th>Bank Account</th>
 <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p" id="_payBankAccount" name="payBankAccount"></select>
 </td>
 </tr>
 <tr>
 <th>Ref Date</th>
-<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_payRefDate" name="payRefDate"  readonly="readonly"/></td>
 <th>Debtor Acc.</th>
 <td>
-    <select class="w100p" disabled>
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p"  id="_payDebtorAcc"  disabled="disabled"></select>
 </td>
 <th></th>
 <td></td>
 </tr>
 <tr>
 <th>Remark</th>
-<td colspan="5"><textarea cols="20" rows="5" placeholder=""></textarea></td>
+<td colspan="5"><textarea cols="20" rows="5" placeholder="" id="_payRem" name="payRem"></textarea></td>
 </tr>
+
 </tbody>
 </table><!-- table end -->
-
+</form>
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">Add Payment Mode</a></p></li>
-    <li><p class="btn_grid"><a href="#">Clear All</a></p></li>
+    <li><p class="btn_grid"><a  id="_addPayMode">Add Payment Mode</a></p></li>
+    <li><p class="btn_grid"><a id="_clearPayGrid">Clear All</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="payment_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-<span class="bold_text mt10">Total Pay Amount : </span>
+<span class="bold_text mt10" id="_totalPayAmount">Total Pay Amount : </span>
 
 </article><!-- tap_area end -->
 </section><!-- tap_wrap start -->

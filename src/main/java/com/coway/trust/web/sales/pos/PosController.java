@@ -359,9 +359,29 @@ public class PosController {
 		//posId
 		LOGGER.info("######################################### posID : " + params.get("posId"));
 		EgovMap revDetailMap = null;
+		EgovMap payDetailMap = null;
+	
 		revDetailMap = posService.posReversalDetail(params);
+		params.put("posNo", revDetailMap.get("posNo"));
+		payDetailMap = posService.posReversalPayDetail(params);
+		
+		//exist Pay Check
+		String isPayed = "";
+		
+		if(payDetailMap != null){
+			if(Integer.parseInt(String.valueOf(payDetailMap.get("payId")))	 == 0){
+				isPayed = "0";
+			}else{
+				isPayed = "1";
+			}
+		}else{
+			isPayed = "0";
+		}
 		
 		model.addAttribute("revDetailMap", revDetailMap);
+		model.addAttribute("payDetailMap" , payDetailMap);
+		model.addAttribute("isPayed" , isPayed);
+		
 		return "sales/pos/posReversalPop";
 		
 	}
@@ -455,5 +475,76 @@ public class PosController {
     	
     	return ResponseEntity.ok(message);
 	}
+	
+	
+	@RequestMapping(value = "/getpayBranchList")
+	public ResponseEntity<List<EgovMap>> getpayBranchList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> payBrnchMap = null;
+		
+		payBrnchMap = posService.getpayBranchList(params);
+		
+		return ResponseEntity.ok(payBrnchMap);
+		
+	}
 
+	
+	@RequestMapping(value = "/getDebtorAccList")
+	public ResponseEntity<List<EgovMap>> getDebtorAccList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> debtorMap = null;
+		
+		debtorMap = posService.getDebtorAccList(params);
+		
+		return ResponseEntity.ok(debtorMap);
+		
+	}
+	
+	
+	@RequestMapping(value = "/getBankAccountList")
+	public ResponseEntity<List<EgovMap>> getBankAccountList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> bankAccList = null;
+		
+		bankAccList = posService.getBankAccountList(params);
+		
+		return ResponseEntity.ok(bankAccList);
+	}
+	
+	
+	@RequestMapping(value = "/selectAccountIdByBranchId")
+	public ResponseEntity<EgovMap> selectAccountIdByBranchId(@RequestParam Map<String, Object> params) throws Exception{
+		
+		EgovMap accMap = null;
+		
+		accMap = posService.selectAccountIdByBranchId(params);
+		
+		return ResponseEntity.ok(accMap);
+	}
+	
+	
+	@RequestMapping(value = "/isPaymentKnowOffByPOSNo")
+	public ResponseEntity<Boolean> isPaymentKnowOffByPOSNo(@RequestParam Map<String, Object> params) throws Exception{
+		
+		boolean isPay = false;
+		
+		isPay = posService.isPaymentKnowOffByPOSNo(params);
+		
+		LOGGER.info("########################### check Reversal Possible Check : " + isPay);
+		
+		return ResponseEntity.ok(isPay);
+		
+	}
+	
+	
+	@RequestMapping(value = "/getPayDetailList")
+	public ResponseEntity<List<EgovMap>> getPayDetailList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> payDList = null;
+		
+		payDList = posService.getPayDetailList(params);
+		
+		return ResponseEntity.ok(payDList);
+		
+	}
 }

@@ -486,6 +486,18 @@
         SELECT SAL0147M_POS_SERIAL_ID_SEQ.NEXTVAL FROM DUAL
     </select>
     
+    <select id="getSeqPay0064D" resultType="java.lang.Integer">
+        SELECT PAY0064D_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getSeqPay0065D" resultType="java.lang.Integer">
+        SELECT PAY0065D_SEQ.NEXTVAL  FROM DUAL
+    </select>
+     
+     <select id="getSeqPay0009D" resultType="java.lang.Integer">
+        SELECT PAY0009D_SEQ.NEXTVAL FROM DUAL
+     </select>   
+        
     <select id="getUserFullName" parameterType="Map" resultType="egovMap">
 		<!--  SELECT
 		    USER_NAME || ' - ' || USER_FULL_NAME NAME 
@@ -1999,5 +2011,859 @@
                   call SP_LOGISTIC_REQUEST ( #{psno}, #{retype} ,#{pType} ,#{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=bookMap})
             }
          ]]>
+      </select>
+
+
+    <!-- PAYMENT START -->
+    
+    <insert id="insertPayTrx" parameterType="Map">
+				INSERT INTO  PAY0069D
+				       (
+				        TRX_ID,
+				        TRX_DT, 
+				        TRX_TYPE,
+				        TRX_AMT,
+				        TRX_MTCH_NO
+				        )
+				VALUES ( 
+				         #{trxSeq},
+				         SYSDATE,
+				         #{trxType},
+				         #{trxAmt},
+				         #{trxMatchNo}
+				        )
+    </insert>
+    
+    <insert id="insertPayMaster" parameterType="Map">
+		     INSERT INTO PAY0064D
+		            ( PAY_ID,
+		              OR_NO,
+		              SALES_ORD_ID, 
+		              BILL_ID, 
+		              TR_NO,
+		              TYPE_ID,
+		              PAY_DATA,
+		              BANK_CHG_AMT,
+		              BANK_CHG_ACC_ID,
+		              COLL_MEM_ID,
+		              BRNCH_ID,
+		              BANK_ACC_ID, 
+		              ALLOW_COMM,
+		              STUS_CODE_ID,
+		              UPD_USER_ID, 
+		              UPD_DT,
+		              SYNC_HECK,
+		              CUST_ID_3PARTY, 
+		              TOT_AMT,
+		              MTCH_ID, 
+		              CRT_USER_ID,
+		              CRT_DT, 
+		              IS_ALLOW_REV_MULTI,
+		              IS_GL_POST_CLM,
+		              GL_POST_CLM_DT,
+		              TRX_ID, 
+		              ADV_MONTH,
+		              ACC_BILL_ID,
+		              TR_ISSU_DT, 
+		              TAX_INVC_IS_GEN,
+		              TAX_INVC_REF_NO, 
+		              TAX_INVC_REF_DT, 
+		              SVC_CNTRCT_ID,
+		              BATCH_PAY_ID )
+		  VALUES (  #{payMseq},
+			            #{orNo},
+			            #{salesOrdId},
+			            #{billId}, 
+			            #{trNo},
+			            #{typeId},
+			            SYSDATE,
+			            #{bankChgAmt},
+			            #{bankChgAccId},
+			            #{collMemId},
+			            #{brnchId},
+			            #{bankAccId},
+			            #{allowComm}, 
+			            #{stusCodeId},
+			            #{updUserId}, 
+			            SYSDATE,
+			            #{syncCheck},
+			            #{thirdPartyCustId}, 
+			            #{totAmt}, 
+			            #{matchId}, 
+			            #{crtUserId},
+			            SYSDATE,
+			            #{isAllowRevMulti},
+			            #{isGlPostClm},
+			            TO_DATE(#{glPostClmDt}, 'DD/MM/YYYY'),  
+			            #{trxSeq},
+			            #{advMonth},
+			            #{orderBillId},
+			            TO_DATE(#{trIssuDt}, 'DD/MM/YYYY'),
+			            #{payInvIsGen},
+			            #{taxInvcRefNo},
+			            SYSDATE,
+			            #{svcCntrctId},
+			            #{batchPayId})
+    </insert>
+     
+     <insert id="insertAccGlRoute" parameterType="Map"> 
+        INSERT INTO PAY0009D (  ID,
+					                        GL_POSTNG_DT,
+					                        GL_FISCAL_DT,
+					                        GL_BATCH_NO,
+					                        GL_BATCH_TYPE_DESC,
+					                        GL_BATCH_TOT,
+					                        GL_RECIPT_NO,
+					                        GL_RECIPT_TYPE_ID,
+					                        GL_RECIPT_BRNCH_ID,
+					                        GL_RECIPT_SETL_ACC_ID,
+					                        GL_RECIPT_ACC_ID,
+					                        GL_RECIPT_ITM_ID,
+					                        GL_RECIPT_ITM_MODE_ID,
+					                        GL_REVRS_RECIPT_ITM_ID,
+					                        GL_RECIPT_ITM_AMT,
+					                        GL_RECIPT_ITM_CHRG,
+					                        GL_RECIPT_ITM_RCL_STUS,
+					                        GL_JRNL_NO,
+					                        GL_AUDIT_REF,
+					                        GL_CNVR_STUS,
+					                        GL_CNVR_DT) 
+					       VALUES ( #{glSeq},
+								                SYSDATE,
+								                TO_DATE(#{glFisCalDate}, 'DD/MM/YYYY'),
+								                #{glBatchNo},
+								                #{glBatchTypeDesc},
+								                #{glBatchTotal},
+								                #{glReceiptNo},
+								                #{glReceiptTypeId},
+								                #{glReceiptBranchId},
+								                #{glReceiptSettleAccId},
+								                #{glReceiptAccountId},
+								                #{glReceiptItemId},
+								                #{glReceiptItemModeId},
+								                #{glReverseReceiptItemId},
+								                #{glReceiptItemAmount},
+								                #{glReceiptItemCharges},
+								                #{glReceiptItemRclStatus},
+								                NULL,
+								                NULL,
+								                #{glConversionStatus},
+								                NULL)
+     </insert>
+     <insert id="insertPayDetail" parameterType="Map">
+		 INSERT INTO PAY0065D
+		        ( PAY_ITM_ID,
+		          PAY_ID, 
+		          PAY_ITM_MODE_ID, 
+		          PAY_ITM_REF_NO, 
+		          PAY_ITM_CC_NO,
+		          PAY_ITM_ORI_CC_NO, 
+		          PAY_ITM_ENCRYPT_CC_NO,
+		          PAY_ITM_CC_TYPE_ID,
+		          PAY_ITM_CHQ_NO,
+		          PAY_ITM_ISSU_BANK_ID,
+		          PAY_ITM_AMT,
+		          PAY_ITM_IS_ONLINE, 
+		          PAY_ITM_BANK_ACC_ID,
+		          PAY_ITM_REF_DT,
+		          PAY_ITM_APPV_NO, 
+		          PAY_ITM_REM,
+		          PAY_ITM_STUS_ID,
+		          PAY_ITM_IS_LOK,
+		          PAY_ITM_CC_HOLDER_NAME, 
+		          PAY_ITM_CC_EXPR_DT,
+		          PAY_ITM_BANK_CHRG_AMT,
+		          PAY_ITM_IS_THRD_PARTY,
+		          PAY_ITM_THRD_PARTY_IC, 
+		          PAY_ITM_BANK_BRNCH_ID, 
+		          PAY_ITM_BANK_IN_SLIP_NO, 
+		          PAY_ITM_EFT_NO,
+		          PAY_ITM_CHQ_DEP_RECIPT_NO,
+		          ETC1,
+		          ETC2,
+		          ETC3,
+		          PAY_ITM_MID,
+		          PAY_ITM_GRP_ID,
+		          PAY_ITM_REF_ITM_ID,
+		          PAY_ITM_BANK_CHRG_ACC_ID, 
+		          PAY_ITM_RUNNG_NO, 
+		          UPD_USER_ID,
+		          UPD_DT,
+		          IS_FUND_TRNSFR,  
+		          SKIP_RECON, 
+		          PAY_ITM_CARD_TYPE_ID,
+		          PAY_ITM_CARD_MODE_ID )
+		  VALUES ( #{payItemId},
+		               #{payId},
+			           #{payMode}, 
+			           #{transactionRefNo},
+			           #{payCreditCardNo},
+			           #{payCreditCardNo},
+			           NULL,
+			           #{payCrcType},
+			           NULL,
+			           #{payIssueBank},
+			           #{payAmt},
+			           #{payCrcMode}, 
+			           #{payBankAccount}, 
+			           TO_DATE(#{payRefDate}, 'DD/MM/YYYY'),
+			           #{payApprovNo},
+			           #{payRem},
+			           #{payItmStusId},
+			           #{payItmIsLok},
+			           NULL,
+			           NULL,
+			           NULL,
+			           #{payItmIsThirdParty},
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL, 
+			           NULL, 
+			           NULL,
+			           NULL,
+			           #{isFundTrnsfr},
+			           #{skipRecon},
+			           NULL,
+			           NULL )
+     </insert>
+      
+      
+      <select id="getpayBranchList" resultType="egovMap">
+				SELECT 
+				           Project1.CODE_ID,
+				           Project1.CODE_NAME  
+				FROM ( SELECT 
+				                      Extent1.BRNCH_ID CODE_ID,
+				                      Extent1.CODE || '-' || Extent1.NAME CODE_NAME
+				             FROM 
+				                      SYS0005M Extent1
+				           WHERE  
+				                      1 = Extent1.STUS_ID ) Project1
+				ORDER BY 
+				           Project1.CODE_NAME ASC
       </select> 
+      
+      <select id="getDebtorAccList" parameterType="Map" resultType="egovMap">
+				  SELECT 
+				       Extent1.ACC_ID CODE_ID  ,
+				       Extent1.ACC_CODE || ' - ' || Extent1.ACC_DESC CODE_NAME  
+				  FROM
+				       SYS0001M Extent1
+				 WHERE 
+				      Extent1.ACC_CODE = #{accCode} 
+      </select>
+      
+      <select id="getBankAccountList" parameterType="Map" resultType="egovMap">
+				
+				   SELECT Project1.CODE_ID,
+				       Project1.CODE_NAME,
+				       Project1.ACC_DESC   
+				  FROM ( SELECT Extent1.ACC_ID CODE_ID  ,
+				                Extent1.ACC_CODE ACC_CODE  ,
+				                Extent1.ACC_DESC   ,
+				                Extent1.ACC_CODE || ' - ' || Extent1.ACC_DESC CODE_NAME  
+				         FROM SYS0001M Extent1
+				          WHERE
+				            1 = 1     
+				         <if test=" null != isCash and '' != isCash">          
+				                   <![CDATA[
+				                   AND ( 1 = Extent1.ACC_STUS_ID )
+				                   AND ( 1 = Extent1.IS_PAY_CASH )
+				                   AND ( '2221/000' <> Extent1.ACC_CODE )
+				                   AND ( '3220/000' <> Extent1.ACC_CODE )
+				                   AND ( '3221/001' <> Extent1.ACC_CODE )
+				                   AND ( '3221/006' <> Extent1.ACC_CODE )
+				                   AND ( '3221/009' <> Extent1.ACC_CODE )
+				                   AND ( '3233/000' <> Extent1.ACC_CODE )
+				                   AND ( '7090/000' <> Extent1.ACC_CODE )
+				                   AND ( '9020/003' <> Extent1.ACC_CODE )
+				                   AND ( '9048/003' <> Extent1.ACC_CODE )
+				                   AND ( '9049/000' <> Extent1.ACC_CODE )
+				                   AND ( '9101/001' <> Extent1.ACC_CODE )
+				                   AND ( '9301/000' <> Extent1.ACC_CODE )
+				                   AND ( '9326/000' <> Extent1.ACC_CODE )
+				                   AND ( '9999/999' <> Extent1.ACC_CODE )
+				                   ]]> 
+				          </if>
+				          
+				          <if test=" null != isDeduc and '' != isDeduc">
+				                    AND '2136/000' = Extent1.ACC_CODE
+				          </if>         
+				                   ) Project1
+				  ORDER BY Project1.ACC_CODE ASC
+				 
+      </select>
+      
+      <select id="selectAccountIdByBranchId"  parameterType="Map" resultType="egovMap">
+			 SELECT Extent2.ACC_ID   ,
+			       Extent2.SAP_ACC_CODE   ,
+			       Extent2.ACC_CODE   ,
+			       Extent2.ACC_DESC   ,
+			       Extent2.ACC_GRP   ,
+			       Extent2.ACC_TYPE   ,
+			       Extent2.ACC_CURR_ID   ,
+			       Extent2.ACC_LINK   ,
+			       Extent2.ACC_IS_MFG   ,
+			       Extent2.ACC_PAY_TYPE_ID   ,
+			       Extent2.ACC_ADDR1   ,
+			       Extent2.ACC_ADDR2   ,
+			       Extent2.ACC_ADDR3   ,
+			       Extent2.ACC_ADD_POST_CODE_ID   ,
+			       Extent2.ACC_ADD_AREA_ID   ,
+			       Extent2.ACC_ADD_STATE_ID   ,
+			       Extent2.ACC_ADD_CNTY_ID   ,
+			       Extent2.ACC_TEL_NO1   ,
+			       Extent2.ACC_TEL_NO2   ,
+			       Extent2.ACC_CRT_USER_ID   ,
+			       Extent2.ACC_CRT_DT   ,
+			       Extent2.ACC_UPD_USER_ID   ,
+			       Extent2.ACC_UPD_DT   ,
+			       Extent2.ACC_STUS_ID   ,
+			       Extent2.IS_PAY_CASH   ,
+			       Extent2.IS_PAY_ONLINE   ,
+			       Extent2.IS_PAY_CHQ   ,
+			       Extent2.IS_PAY_CRC   
+			  FROM SYS0006D Extent1
+			         JOIN SYS0001M Extent2   ON Extent1.BRNCH_BANK_CNTRL_ACC_ID = Extent2.ACC_ID
+			 WHERE  ( Extent1.BRNCH_BANK_CNTRL_BRNCH_ID = #{brnchId} )
+			          AND ( 1 = Extent1.BRNCH_BANK_CNTRL_STUS_ID )
+			          <![CDATA[
+			          AND ROWNUM <= 1
+			          ]]>
+      </select>
+      
+      <select id="isPaymentKnowOffByPOSNo" parameterType="Map" resultType="egovMap">
+			 SELECT Extent4.ID   ,
+			       Extent4.GL_POSTNG_DT   ,
+			       Extent4.GL_FISCAL_DT   ,
+			       Extent4.GL_BATCH_NO   ,
+			       Extent4.GL_BATCH_TYPE_DESC   ,
+			       Extent4.GL_BATCH_TOT   ,
+			       Extent4.GL_RECIPT_NO   ,
+			       Extent4.GL_RECIPT_TYPE_ID   ,
+			       Extent4.GL_RECIPT_BRNCH_ID   ,
+			       Extent4.GL_RECIPT_SETL_ACC_ID   ,
+			       Extent4.GL_RECIPT_ACC_ID   ,
+			       Extent4.GL_RECIPT_ITM_ID   ,
+			       Extent4.GL_RECIPT_ITM_MODE_ID   ,
+			       Extent4.GL_REVRS_RECIPT_ITM_ID   ,
+			       Extent4.GL_RECIPT_ITM_AMT   ,
+			       Extent4.GL_RECIPT_ITM_RCL_STUS   ,
+			       Extent4.GL_JRNL_NO   ,
+			       Extent4.GL_AUDIT_REF   ,
+			       Extent4.GL_CNVR_STUS   ,
+			       Extent4.GL_CNVR_DT   ,
+			       Extent4.GL_RECIPT_ITM_CHRG   
+			  FROM SAL0057D Extent1
+			         JOIN PAY0064D Extent2   ON Extent2.BILL_ID = Extent1.POS_BILL_ID
+			         JOIN PAY0065D Extent3   ON Extent3.PAY_ID = Extent2.PAY_ID
+			         JOIN PAY0009D Extent4   ON Extent4.GL_RECIPT_ITM_ID = Extent3.PAY_ITM_ID
+			 WHERE  Extent1.POS_NO = #{psnNo}
+      </select>
+      
+      <select id="posReversalPayDetail" parameterType="Map" resultType="egovMap">
+			  SELECT Limit1.POS_ID   ,
+			       Limit1.POS_NO   ,
+			       CASE WHEN ( Limit1.POSID1 IS NOT NULL ) THEN Limit1.POSNO1 ELSE ' ' END POSNO1  ,
+			       Limit1.POS_MODULE_TYPE_ID   ,
+			       Limit1.CODE_NAME   ,
+			       Limit1.POS_TYPE_ID   ,
+			       Limit1.CODENAME1   ,
+			       Limit1.POS_WH_ID   ,
+			       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_CODE ELSE ' ' END WH_LOC_CODE  ,
+			       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_DESC ELSE ' ' END WH_LOC_DESC  ,
+			       Limit1.POS_DT   ,
+			       Limit1.POS_CUST_NAME   ,
+			       Limit1.POS_MEM_ID   ,
+			       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEM_CODE ELSE ' ' END MEM_CODE  ,
+			       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME ELSE ' ' END NAME  ,
+			       Limit1.POS_REM   ,
+			       Limit1.POS_CRT_USER_ID   ,
+			       Limit1.USER_NAME   ,
+			       Limit1.USER_FULL_NAME   ,
+			       Limit1.CR_ACC_ID   ,
+			       Limit1.DR_ACC_ID   ,
+			       Limit1.POS_BILL_ID   ,
+			       Limit1.POS_TOT_AMT   ,
+			       Limit1.POS_TOT_CHRG   ,
+			       Limit1.POS_TOT_TXS   ,
+			       Limit1.POS_TOT_DSCNT   ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.PAY_ID ELSE 0 END PAY_ID  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.OR_NO ELSE ' ' END OR_NO  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BRNCH_ID ELSE 0 END BRNCH_ID  ,
+			       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.CODE ELSE ' ' END CODE  ,
+			       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.NAME1 ELSE ' ' END NAME1  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.TR_NO ELSE ' ' END TR_NO  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN TO_CHAR(Limit1.TR_ISSU_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END TR_ISSU_DT  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BANK_ACC_ID ELSE 0 END BANK_ACC_ID  ,
+			       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_CODE ELSE ' ' END ACC_CODE  ,
+			       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_DESC ELSE ' ' END ACC_DESC  ,
+			       Limit1.POS_RESN_ID   ,
+			       CASE WHEN ( Limit1.RESN_ID IS NOT NULL ) THEN Limit1.CODE1 || ' - ' || Limit1.RESN_DESC ELSE ' ' END RESN_DESC  
+			  FROM ( SELECT Extent1.POS_ID   ,
+			                Extent1.POS_NO   ,
+			                Extent1.POS_BILL_ID   ,
+			                Extent1.POS_CUST_NAME   ,
+			                Extent1.POS_DT   ,
+			                Extent1.POS_TYPE_ID   ,
+			                Extent1.POS_MODULE_TYPE_ID   ,
+			                Extent1.POS_TOT_AMT   ,
+			                Extent1.POS_TOT_CHRG   ,
+			                Extent1.POS_TOT_TXS   ,
+			                Extent1.POS_TOT_DSCNT   ,
+			                Extent1.POS_WH_ID   ,
+			                Extent1.POS_REM   ,
+			                Extent1.POS_MEM_ID   ,
+			                Extent1.POS_CRT_USER_ID   ,            
+			                Extent1.CR_ACC_ID   ,
+			                Extent1.DR_ACC_ID   ,
+			                Extent1.POS_RESN_ID   ,
+			                Extent2.CODE_NAME CODE_NAME  ,
+			                Extent3.CODE_NAME CODENAME1  ,
+			                Extent4.MEM_ID   ,
+			                Extent4.MEM_CODE   ,
+			                Extent4.NAME   ,
+			                Extent5.WH_LOC_ID   ,
+			                Extent5.WH_LOC_CODE   ,
+			                Extent5.WH_LOC_DESC   ,
+			                Extent6.USER_NAME   ,
+			                Extent6.USER_FULL_NAME   ,
+			                Extent7.PAY_ID   ,
+			                Extent7.OR_NO   ,
+			                Extent7.TR_NO   ,
+			                Extent7.BRNCH_ID   ,
+			                Extent7.BANK_ACC_ID   ,
+			                Extent7.TR_ISSU_DT   ,
+			                Extent8.BRNCH_ID BRANCHID1  ,
+			                Extent8.CODE   ,
+			                Extent8.NAME NAME1  ,
+			                Extent9.ACC_ID   ,
+			                Extent9.ACC_CODE   ,
+			                Extent9.ACC_DESC   ,
+			                Extent10.POS_ID POSID1  ,
+			                Extent10.POS_NO POSNO1  ,
+			                Extent11.RESN_ID   ,
+			                Extent11.CODE CODE1  ,
+			                Extent11.RESN_DESC   
+			         FROM SAL0057D Extent1
+			                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+			                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+			                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+			                LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+			                JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+			                LEFT JOIN PAY0064D Extent7   ON Extent7.BILL_ID = Extent1.POS_BILL_ID
+			                LEFT JOIN SYS0005M Extent8   ON Extent8.BRNCH_ID = Extent7.BRNCH_ID
+			                LEFT JOIN SYS0001M Extent9   ON Extent9.ACC_ID = Extent7.BANK_ACC_ID
+			                LEFT JOIN SAL0057D Extent10   ON Extent10.POS_ID = Extent1.POS_MTCH_ID
+			                LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent1.POS_RESN_ID
+			           <![CDATA[
+			          WHERE  Extent1.POS_NO = #{posNo} AND ROWNUM <= 1 ) Limit1
+			          ]]>
+      </select>
+      
+      <select id="getPayInfoByPayId" parameterType="Map" resultType="egovMap">
+				 SELECT Extent1.PAY_ID   ,
+				       Extent1.OR_NO   ,
+				       Extent1.SALES_ORD_ID   ,
+				       Extent1.BILL_ID   ,
+				       Extent1.TR_NO   ,
+				       Extent1.TYPE_ID   ,
+				       TO_CHAR(Extent1.PAY_DATA,  'DD/MM/YYYY' ) PAY_DATA ,
+				       NVL(Extent1.BANK_CHG_AMT, 0  ) BANK_CHG_AMT ,
+				       Extent1.BANK_CHG_ACC_ID   ,
+				       Extent1.COLL_MEM_ID   ,
+				       Extent1.BRNCH_ID   ,
+				       Extent1.BANK_ACC_ID   ,
+				       Extent1.ALLOW_COMM   ,
+				       Extent1.STUS_CODE_ID   ,
+				       Extent1.UPD_USER_ID   ,
+				       TO_CHAR(Extent1.UPD_DT, 'DD/MM/YYYY') UPD_DT ,
+				       Extent1.SYNC_HECK   ,
+				       Extent1.CUST_ID_3PARTY   ,
+				       NVL(Extent1.TOT_AMT, 0 ) TOT_AMT  ,
+				       Extent1.MTCH_ID   ,
+				       Extent1.CRT_USER_ID   ,
+				       TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') CRT_DT ,
+				       Extent1.IS_ALLOW_REV_MULTI   ,
+				       Extent1.IS_GL_POST_CLM   ,
+				       TO_CHAR(Extent1.GL_POST_CLM_DT, 'DD/MM/YYYY') GL_POST_CLM_DT  ,
+				       Extent1.TRX_ID   ,
+				       Extent1.ADV_MONTH   ,
+				       Extent1.ACC_BILL_ID   ,
+				       TO_CHAR(Extent1.TR_ISSU_DT, 'DD/MM/YYYY')  TR_ISSU_DT ,
+				       Extent1.TAX_INVC_IS_GEN   ,
+				       Extent1.TAX_INVC_REF_NO   ,
+				       TO_CHAR(Extent1.TAX_INVC_REF_DT, 'DD/MM/YYYY') TAX_INVC_REF_DT ,
+				       Extent1.SVC_CNTRCT_ID   ,
+				       Extent1.BATCH_PAY_ID   
+				  FROM PAY0064D Extent1
+				  <![CDATA[
+				 WHERE  Extent1.PAY_ID = #{rePayId} AND ROWNUM <= 1
+				  ]]>
+      </select>
+      
+      <insert id="insertRePayMaster" parameterType="Map">
+             INSERT INTO PAY0064D
+                    ( PAY_ID,
+                      OR_NO,
+                      SALES_ORD_ID, 
+                      BILL_ID, 
+                      TR_NO,
+                      TYPE_ID,
+                      PAY_DATA,
+                      BANK_CHG_AMT,
+                      BANK_CHG_ACC_ID,
+                      COLL_MEM_ID,
+                      BRNCH_ID,
+                      BANK_ACC_ID, 
+                      ALLOW_COMM,
+                      STUS_CODE_ID,
+                      UPD_USER_ID, 
+                      UPD_DT,
+                      SYNC_HECK,
+                      CUST_ID_3PARTY, 
+                      TOT_AMT,
+                      MTCH_ID, 
+                      CRT_USER_ID,
+                      CRT_DT, 
+                      IS_ALLOW_REV_MULTI,
+                      IS_GL_POST_CLM,
+                      GL_POST_CLM_DT,
+                      TRX_ID, 
+                      ADV_MONTH,
+                      ACC_BILL_ID,
+                      TR_ISSU_DT, 
+                      TAX_INVC_IS_GEN,
+                      TAX_INVC_REF_NO, 
+                      TAX_INVC_REF_DT, 
+                      SVC_CNTRCT_ID,
+                      BATCH_PAY_ID )
+          VALUES (  #{payMseq},
+                        #{orNo},
+                        #{salesOrdId},
+                        #{billId}, 
+                        #{trNo},
+                        #{typeId},
+                        SYSDATE,
+                        #{bankChgAmt},
+                        #{bankChgAccId},
+                        #{collMemId},
+                        #{brnchId},
+                        #{bankAccId},
+                        #{allowComm}, 
+                        #{stusCodeId},
+                        #{updUserId}, 
+                        SYSDATE,
+                        #{syncCheck},
+                        #{thirdPartyCustId}, 
+                        #{totAmt}, 
+                        #{matchId}, 
+                        #{crtUserId},
+                        SYSDATE,
+                        #{isAllowRevMulti},
+                        #{isGlPostClm},
+                        TO_DATE(#{glPostClmDt}, 'DD/MM/YYYY'),  
+                        #{trxSeq},
+                        #{advMonth},
+                        #{orderBillId},
+                        TO_DATE(#{trIssuDt}, 'DD/MM/YYYY'),
+                        #{payInvIsGen},
+                        #{taxInvcRefNo},
+                        TO_DATE(#{taxInvcRefDt} , 'DD/MM/YYYY'),
+                        #{svcCntrctId},
+                        #{batchPayId})
+    </insert>
+    
+    <select id="getTrxInfo" parameterType="Map" resultType="egovMap">
+			 SELECT 
+			       Extent1.TRX_ID   ,
+			       Extent1.TRX_AMT   ,
+			       Extent1.TRX_DT   ,
+			       Extent1.TRX_TYPE   ,
+			       Extent1.TRX_MTCH_NO   
+			  FROM 
+			       PAY0069D Extent1
+			  <![CDATA[
+			  WHERE  Extent1.TRX_ID = #{trxId} AND ROWNUM <= 1
+			  ]]>
+    </select>
+    
+    <insert id="insertRePayTrx"  parameterType="Map">
+                INSERT INTO  PAY0069D
+                       (
+                        TRX_ID,
+                        TRX_DT, 
+                        TRX_TYPE,
+                        TRX_AMT,
+                        TRX_MTCH_NO
+                        )
+                VALUES ( 
+                         #{trxSeq},
+                         SYSDATE,
+                         #{trxType},
+                         #{trxAmt},
+                         #{trxMatchNo}
+                        )
+    </insert>
+    
+    <update id="updatePayMTrxId" parameterType="Map">
+					UPDATE 
+					    PAY0064D
+					SET 
+					    TRX_ID = #{trxId}
+					WHERE 
+					     PAY_ID = #{payId} 
+    </update>
+    
+    <select id="getPayDetailListByPayId"  parameterType="Map" resultType="egovMap">
+			SELECT Extent1.PAY_ITM_ID   ,
+			       Extent1.PAY_ID   ,
+			       Extent1.PAY_ITM_MODE_ID   ,
+			       Extent1.PAY_ITM_REF_NO   ,
+			       Extent1.PAY_ITM_CC_NO   ,
+			       Extent1.PAY_ITM_ORI_CC_NO   ,
+			       Extent1.PAY_ITM_ENCRYPT_CC_NO   ,
+			       Extent1.PAY_ITM_CC_TYPE_ID   ,
+			       Extent1.PAY_ITM_CHQ_NO   ,
+			       Extent1.PAY_ITM_ISSU_BANK_ID   ,
+			       NVL(Extent1.PAY_ITM_AMT , 0 ) PAY_ITM_AMT  ,
+			       Extent1.PAY_ITM_IS_ONLINE   ,
+			       Extent1.PAY_ITM_BANK_ACC_ID   ,
+			       TO_CHAR(Extent1.PAY_ITM_REF_DT, 'DD/MM/YYYY')  PAY_ITM_REF_DT ,
+			       Extent1.PAY_ITM_APPV_NO   ,
+			       Extent1.PAY_ITM_REM   ,
+			       Extent1.PAY_ITM_STUS_ID   ,
+			       Extent1.PAY_ITM_IS_LOK   ,
+			       Extent1.PAY_ITM_CC_HOLDER_NAME   ,
+			       TO_CHAR(Extent1.PAY_ITM_CC_EXPR_DT, 'DD/MM/YYYY')  PAY_ITM_CC_EXPR_DT ,
+			       NVL(Extent1.PAY_ITM_BANK_CHRG_AMT , 0)  PAY_ITM_BANK_CHRG_AMT ,
+			       Extent1.PAY_ITM_IS_THRD_PARTY   ,
+			       Extent1.PAY_ITM_THRD_PARTY_IC   ,
+			       Extent1.PAY_ITM_BANK_BRNCH_ID   ,
+			       Extent1.PAY_ITM_BANK_IN_SLIP_NO   ,
+			       Extent1.PAY_ITM_EFT_NO   ,
+			       Extent1.PAY_ITM_CHQ_DEP_RECIPT_NO   ,
+			       Extent1.ETC1   ,
+			       Extent1.ETC2   ,
+			       Extent1.ETC3   ,
+			       Extent1.PAY_ITM_MID   ,
+			       Extent1.PAY_ITM_GRP_ID   ,
+			       Extent1.PAY_ITM_REF_ITM_ID   ,
+			       Extent1.PAY_ITM_BANK_CHRG_ACC_ID   ,
+			       Extent1.PAY_ITM_RUNNG_NO   ,
+			       Extent1.UPD_USER_ID   ,
+			       TO_CHAR(Extent1.UPD_DT, 'DD/MM/YYYY' ) UPD_DT ,
+			       Extent1.IS_FUND_TRNSFR   ,
+			       Extent1.SKIP_RECON   ,
+			       Extent1.PAY_ITM_CARD_TYPE_ID   ,
+			       Extent1.PAY_ITM_CARD_MODE_ID   
+			  FROM PAY0065D Extent1
+			 WHERE  Extent1.PAY_ID = #{rePayId}
+    </select>
+    
+    <insert id="insertRePayDetail" parameterType="Map">
+         INSERT INTO PAY0065D
+                ( PAY_ITM_ID,
+                  PAY_ID, 
+                  PAY_ITM_MODE_ID, 
+                  PAY_ITM_REF_NO, 
+                  PAY_ITM_CC_NO,
+                  PAY_ITM_ORI_CC_NO, 
+                  PAY_ITM_ENCRYPT_CC_NO,
+                  PAY_ITM_CC_TYPE_ID,
+                  PAY_ITM_CHQ_NO,
+                  PAY_ITM_ISSU_BANK_ID,
+                  PAY_ITM_AMT,
+                  PAY_ITM_IS_ONLINE, 
+                  PAY_ITM_BANK_ACC_ID,
+                  PAY_ITM_REF_DT,
+                  PAY_ITM_APPV_NO, 
+                  PAY_ITM_REM,
+                  PAY_ITM_STUS_ID,
+                  PAY_ITM_IS_LOK,
+                  PAY_ITM_CC_HOLDER_NAME, 
+                  PAY_ITM_CC_EXPR_DT,
+                  PAY_ITM_BANK_CHRG_AMT,
+                  PAY_ITM_IS_THRD_PARTY,
+                  PAY_ITM_THRD_PARTY_IC, 
+                  PAY_ITM_BANK_BRNCH_ID, 
+                  PAY_ITM_BANK_IN_SLIP_NO, 
+                  PAY_ITM_EFT_NO,
+                  PAY_ITM_CHQ_DEP_RECIPT_NO,
+                  ETC1,
+                  ETC2,
+                  ETC3,
+                  PAY_ITM_MID,
+                  PAY_ITM_GRP_ID,
+                  PAY_ITM_REF_ITM_ID,
+                  PAY_ITM_BANK_CHRG_ACC_ID, 
+                  PAY_ITM_RUNNG_NO, 
+                  UPD_USER_ID,
+                  UPD_DT,
+                  IS_FUND_TRNSFR,  
+                  SKIP_RECON, 
+                  PAY_ITM_CARD_TYPE_ID,
+                  PAY_ITM_CARD_MODE_ID )
+          VALUES ( #{payItemId},
+                       #{payId},
+                       #{payMode}, 
+                       #{transactionRefNo},
+                       #{payCreditCardNo},
+                       #{payCreditCardOriNo},
+                       #{payCreditCardEncryptNo},
+                       #{payCrcType},
+                       #{payItmChqNo},
+                       #{payIssueBank},
+                       #{payAmt},
+                       #{payCrcMode}, 
+                       #{payBankAccount}, 
+                       TO_DATE(#{payRefDate}, 'DD/MM/YYYY'),
+                       #{payApprovNo},
+                       #{payRem},
+                       #{payItmStusId},
+                       #{payItmIsLok},
+                       #{payItmCcHolderName},
+                       #{payItmCcExprDt},
+                       #{payItmBankChrgAmt},
+                       #{payItmIsThirdParty},
+                       #{payItmThrdPartyIc},
+                       #{payItmBankBrnchId},
+                       #{payItmBankInSlipNo},
+                       #{payItmEftNo},
+                       #{payItmChqDepReciptNo},
+                       #{etc1},
+                       #{etc2},
+                       #{etc3},
+                       #{payItmMid},
+                       #{payItmGrpId},
+                       #{payItmRefItmId}, 
+                       #{payItmBankChrgAccId}, 
+                       #{payItmRunngNo},
+                       #{updUserId},
+                       SYSDATE,
+                       #{isFundTrnsfr},
+                       #{skipRecon},
+                       #{payItmCardTypeId},
+                       #{payItmCardModeId} )
+     </insert>
+     
+     <select id="getAccGLRoutesInfoByRcpItmId" parameterType="Map" resultType="egovMap">
+				SELECT
+				       Extent1.ID   ,
+				       Extent1.GL_POSTNG_DT   ,
+				       Extent1.GL_FISCAL_DT   ,
+				       Extent1.GL_BATCH_NO   ,
+				       Extent1.GL_BATCH_TYPE_DESC   ,
+				       Extent1.GL_BATCH_TOT   ,
+				       Extent1.GL_RECIPT_NO   ,
+				       Extent1.GL_RECIPT_TYPE_ID   ,
+				       Extent1.GL_RECIPT_BRNCH_ID   ,
+				       Extent1.GL_RECIPT_SETL_ACC_ID   ,
+				       Extent1.GL_RECIPT_ACC_ID   ,
+				       Extent1.GL_RECIPT_ITM_ID   ,
+				       Extent1.GL_RECIPT_ITM_MODE_ID   ,
+				       Extent1.GL_REVRS_RECIPT_ITM_ID   ,
+				       NVL(Extent1.GL_RECIPT_ITM_AMT , 0)  GL_RECIPT_ITM_AMT ,
+				       Extent1.GL_RECIPT_ITM_RCL_STUS   ,
+				       Extent1.GL_JRNL_NO   ,
+				       Extent1.GL_AUDIT_REF   ,
+				       Extent1.GL_CNVR_STUS   ,
+				       Extent1.GL_CNVR_DT   ,
+				       Extent1.GL_RECIPT_ITM_CHRG   
+				  FROM 
+				       PAY0009D Extent1
+				 WHERE  
+				       Extent1.GL_RECIPT_ITM_ID = #{payItmRefItmId} 
+				 AND 
+				    <![CDATA[
+				        ROWNUM <= 1
+				    ]]>
+     </select>
+     
+     <insert id="insertReAccGlRoute" parameterType="Map">
+				INSERT INTO PAY0009D (
+													    ID,
+													    GL_POSTNG_DT,
+													    GL_FISCAL_DT,
+													    GL_BATCH_NO,
+													    GL_BATCH_TYPE_DESC,
+													    GL_BATCH_TOT,
+													    GL_RECIPT_NO,
+													    GL_RECIPT_TYPE_ID,
+													    GL_RECIPT_BRNCH_ID,
+													    GL_RECIPT_SETL_ACC_ID,
+													    GL_RECIPT_ACC_ID,
+													    GL_RECIPT_ITM_ID,
+													    GL_RECIPT_ITM_MODE_ID,
+													    GL_REVRS_RECIPT_ITM_ID,
+													    GL_RECIPT_ITM_AMT,
+													    GL_RECIPT_ITM_CHRG,
+													    GL_RECIPT_ITM_RCL_STUS,
+													    GL_JRNL_NO,
+													    GL_AUDIT_REF,
+													    GL_CNVR_STUS,
+													    GL_CNVR_DT)
+								 VALUES (
+											    #{accGlRouteSeq},
+											    SYSDATE,
+											    TO_DATE(#{glFiscalDt}, 'DD/MM/YYYY'),
+											    #{glBatchNo},
+											    #{glBatchTypeDesc},
+											    #{glBatchTot},
+											    #{glReciptNo},
+											    #{glReciptType},
+											    #{glReciptBrnchId},
+											    #{glReciptSetlAccId},
+											    #{glReciptAccId},
+											    #{glReciptItmId},
+											    #{glReciptItmModeId},
+											    #{glRevrsReciptItmId},
+											    #{glReciptItmAmt},
+											    #{glReciptItmChrg},
+											    #{glReciptItmRclStus},
+											    #{glJrnlNo},
+											    #{glAuditRef},
+											    #{glCnvrStus},
+											    #{glCnvrDt}
+											)
+     </insert>
+     
+     <select id="getPayDetailList" parameterType="Map" resultType="egovMap">
+				SELECT 
+				       Extent2.PAY_ITM_ID   ,
+				       Extent2.PAY_ID   ,
+				       Extent2.PAY_ITM_MODE_ID   ,
+				       Extent3.CODE_NAME,
+				       Extent2.PAY_ITM_REF_NO   ,
+				       Extent2.PAY_ITM_AMT   ,
+				       Extent2.PAY_ITM_ORI_CC_NO   ,
+				       Extent2.PAY_ITM_APPV_NO   ,
+				       Extent2.PAY_ITM_CC_TYPE_ID   ,
+				       Extent6.CODE_NAME   ,
+				       CASE WHEN ( 107 = Extent2.PAY_ITM_MODE_ID ) THEN Extent2.PAY_ITM_CARD_MODE_ID ELSE 0 END C1  ,
+				       CASE WHEN ( 107 = Extent2.PAY_ITM_MODE_ID ) THEN Extent7.CODE_NAME ELSE ' ' END C2  ,
+				       Extent2.PAY_ITM_ISSU_BANK_ID   ,
+				       Extent4.NAME   ,
+				       Extent2.PAY_ITM_BANK_ACC_ID   ,
+				       Extent5.ACC_DESC   ,
+				       TO_CHAR(Extent2.PAY_ITM_REF_DT, 'DD/MM/YYYY') PAY_ITM_REF_DT ,
+				       Extent2.PAY_ITM_REM   
+				  FROM PAY0064D Extent1
+				         JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+				         JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent2.PAY_ITM_MODE_ID
+				         LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = Extent2.PAY_ITM_ISSU_BANK_ID
+				         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent2.PAY_ITM_BANK_ACC_ID
+				         LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent2.PAY_ITM_CC_TYPE_ID
+				         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent2.PAY_ITM_CARD_MODE_ID
+				 WHERE  Extent1.PAY_ID = #{rePayId}   
+     </select>
 </mapper>

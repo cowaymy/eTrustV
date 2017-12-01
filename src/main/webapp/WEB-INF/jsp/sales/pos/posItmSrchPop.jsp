@@ -556,6 +556,12 @@ function fn_initField(){
 	//ComboBox Options
 	//Init -- Item Type ComboBox
 	
+	var tempModule =  $("#_posModuleType").val();
+	var tempSysType = $("#_posSystemType").val();
+	
+	console.log("tempModule : " + tempModule);
+	console.log("tempSysType : " + tempSysType);
+	
 	if($("#_posModuleType").val() == 2390){ //2390 == POS Sales
 	
 	    if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시

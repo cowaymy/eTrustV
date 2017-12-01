@@ -7,8 +7,8 @@ var optionUnit = { isShowChoose: false};
 $(function() {
     $('#_updSmsMsg').keyup(function (e){
         
-    	var content = $(this).val();
-    	
+        var content = $(this).val();
+        
        // $(this).height(((content.split('\n').length + 1) * 2) + 'em');
         
         $('#_charCounter').html('Total Character(s) : '+content.length);
@@ -19,14 +19,17 @@ $(function() {
 
 $(document).ready(function() {
     
-	//to List
-	$("#_btnList").click(function() {
-		//$("#_btnClose").click();
-		window.close();
+    //to List
+    $("#_btnList").click(function() {
+    	window.close();
+    });
+    
+    $("#_btnClose").click(function() {
+    	window.close();
 	});
-	
-	//Init
-	var mst = getMstId();
+    
+    //Init
+    var mst = getMstId();
     var ordUnitSelVal = $("#_ordUnitSelVal").val();
     var rosUnitSelVal = $("#_rosUnitSelVal").val();
     var susUnitSelVal = $("#_susUnitSelVal").val();
@@ -39,33 +42,23 @@ $(document).ready(function() {
    
     //Income Range ComboBox
     var ccpId = $("#_editCcpId").val();
-   // console.log('ccpId : ' + ccpId);
+    
     var rentPayModeId = $("#_rentPayModeId").val();
     var applicantTypeId = $("#_applicantTypeId").val();
     var selVal = '';
     if(rentPayModeId == 131){
         if(applicantTypeId == 964){
-        	selVal = '29';
+            selVal = '29';
         }else{
-        	selVal = '22';
+            selVal = '22';
         }
     }
-    var rangeParam = {editCcpId : ccpId};
-    var optionModule = {
-            type: "S",                  
-            isShowChoose: false  
-    };
-    //doGetCombo('/sales/ccp/getLoadIncomeRange', ccpId , selVal ,'_incomeRangeEdit', 'S');
-    //console.log("rentPayModeId(131) : " + rentPayModeId + " , applicantTypeId(964)  : " + applicantTypeId + " , selVal : " + selVal );
-    CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange', rangeParam, selVal, optionModule);
-    
+    doGetCombo('/sales/ccp/getLoadIncomeRange', ccpId , selVal ,'_incomeRangeEdit', 'S');
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
     doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S'); 
     //Reject
-    var rejSelVal = '${ccpInfoMap.ccpRjStusId}'; //CCP_RJ_STUS_ID
-    console.log("rejSelVal : " + rejSelVal);
-    doGetCombo('/sales/ccp/getCcpRejectCodeList', '', rejSelVal,'_rejectStatusEdit', 'S'); //Status
+    doGetCombo('/sales/ccp/getCcpRejectCodeList', '', '','_rejectStatusEdit', 'S'); //Status
     //Feedback
     var selReasonCode = $("#_ccpResnId").val();
     doGetCombo('/sales/ccp/selectReasonCodeFbList', '', selReasonCode,'_reasonCodeEdit', 'S'); //Reason
@@ -83,9 +76,9 @@ $(document).ready(function() {
     // Consignment Change
     $("#_updSmsChk").change(function() {
         
-    	//Init
-    	$("#_updSmsMsg").val('');
-    	$("#_updSmsMsg").attr("disabled" , "disabled");
+        //Init
+        $("#_updSmsMsg").val('');
+        $("#_updSmsMsg").attr("disabled" , "disabled");
         if($("#_updSmsChk").is(":checked") == true){
             
             if(isAllowSendSMS() == true){
@@ -99,60 +92,60 @@ $(document).ready(function() {
     
     //Save
     $("#_calBtnSave").click(function() {
-	
-    	//Validation
-    	if( null == $("#_statusEdit").val() || '' == $("#_statusEdit").val()){
-    		 Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Status'/>");
-    		 return;
-    	}else{
-    		if( '6' == $("#_statusEdit").val()){
-    			if(null == $("#_rejectStatusEdit").val() || '' == $("#_rejectStatusEdit").val()){
-    				Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Reject Status'/>");
-    				return;
-    			}
+    
+        //Validation
+        if( null == $("#_statusEdit").val() || '' == $("#_statusEdit").val()){
+             Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Status'/>");
+             return;
+        }else{
+            if( '6' == $("#_statusEdit").val()){
+                if(null == $("#_rejectStatusEdit").val() || '' == $("#_rejectStatusEdit").val()){
+                    Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Reject Status'/>");
+                    return;
+                }
             }
-    		if( '6' == $("#_statusEdit").val() || '1' == $("#_statusEdit").val()){
-    			if(null == $("#_reasonCodeEdit").val() || '' == $("#_reasonCodeEdit").val()){
-    				Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Feedback Code'/>");
-    				return;
-    			}
-    		}
-    	}
-    	if( null == $("#_incomeRangeEdit").val() || '' == $("#_incomeRangeEdit").val()){
-    		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Income Range'/>");
-    		return;
-    	}
-    	if( null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()){
-    		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
-    		return;
-    	}else{
-    		if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300 && $("#_ficoScore").val() !=  0){
-    			Common.alert("* Please key in FICO score range between 300 to 850 points.");
-    			return;
-    		}
-    	}
-    	
-    	//Validation (Call Entry Count)
-    	var ccpOrdEditId = $("#_editOrdId").val();
-    	var salData = {salesOrdId : ccpOrdEditId};
-    	console.log(salData);
-    	var callEntCount = 0;
-    	Common.ajax("GET", "/sales/ccp/countCallEntry", salData , function(result) {
+            if( '6' == $("#_statusEdit").val() || '1' == $("#_statusEdit").val()){
+                if(null == $("#_reasonCodeEdit").val() || '' == $("#_reasonCodeEdit").val()){
+                    Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Feedback Code'/>");
+                    return;
+                }
+            }
+        }
+        if( null == $("#_incomeRangeEdit").val() || '' == $("#_incomeRangeEdit").val()){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Income Range'/>");
+            return;
+        }
+        if( null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
+            return;
+        }else{
+            if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300 && $("#_ficoScore").val() !=  0){
+                Common.alert("* Please key in FICO score range between 300 to 850 points.");
+                return;
+            }
+        }
+        
+        //Validation (Call Entry Count)
+        var ccpOrdEditId = $("#_editOrdId").val();
+        var salData = {salesOrdId : ccpOrdEditId};
+        console.log(salData);
+        var callEntCount = 0;
+        Common.ajax("GET", "/sales/ccp/countCallEntry", salData , function(result) {
             callEntCount = result.totCount;
             console.log("Call Entry Count : " + callEntCount);
         });
-    	
-    	if(callEntCount > 0){
-    		Common.alert(" * Order already exists in call entry.");
-    		return;
-    	}
+        
+        if(callEntCount > 0){
+            Common.alert(" * Order already exists in call entry.");
+            return;
+        }
        //Validation Success - Save
        //Check box params Setting 
        //_letterOfUdt
        if($("#_letterOfUdt").is(":checked") == true){
            $("#_letterOfUdt").val("1");
        }else{
-    	   $("#_letterOfUdt").val("0");
+           $("#_letterOfUdt").val("0");
        }
        //_summon  
        if($("#_summon").is(":checked") == true){
@@ -168,43 +161,43 @@ $(document).ready(function() {
        }
        //SMS
        if($("#_updSmsChk").is(":checked") == true){
-    	   $("#_isChkSms").val("1");
-    	   
-    	   //msg setting
-    	   var realMsg =   $("#_updSmsMsg").val();
-    	   $("#_hiddenUpdSmsMsg").val(realMsg); //msg contents
-    	   var salesmanPhNum = $("#_editSalesManTelMobile").val();
-    	   $("#_hiddenSalesMobile").val(salesmanPhNum);
-    	   
+           $("#_isChkSms").val("1");
+           
+           //msg setting
+           var realMsg =   $("#_updSmsMsg").val();
+           $("#_hiddenUpdSmsMsg").val(realMsg); //msg contents
+           var salesmanPhNum = $("#_editSalesManTelMobile").val();
+           $("#_hiddenSalesMobile").val(salesmanPhNum);
+           
        }else{
-    	   $("#_isChkSms").val("0");
+           $("#_isChkSms").val("0");
        }
        calSave();
-    	
-	});//Save End
+        
+    });//Save End
     
-	
+    
 });//Doc Ready Func End
 
 function calSave(){
     
-	var ordUnit = $("#_ordUnit").val();
+    var ordUnit = $("#_ordUnit").val();
     var rosUnit = $("#_ordMth").val();
     var susUnit = $("#_ordSuspen").val();
     var custUnit = $("#_ordExistingCust").val();
-	
-	$("#_saveOrdUnit").val(ordUnit);
-	$("#_saveRosUnit").val(rosUnit);
-	$("#_saveSusUnit").val(susUnit);
-	$("#_saveCustUnit").val(custUnit);
-	
-	Common.ajax("POST", "/sales/ccp/calSave", $("#calSaveForm").serializeJSON() , function(result) {
-		
-		var msg = "";
-		
-		msg += "success <br/>";
-		msg += result.message; //SMS Result
-		
+    
+    $("#_saveOrdUnit").val(ordUnit);
+    $("#_saveRosUnit").val(rosUnit);
+    $("#_saveSusUnit").val(susUnit);
+    $("#_saveCustUnit").val(custUnit);
+    
+    Common.ajax("POST", "/sales/ccp/calSave", $("#calSaveForm").serializeJSON() , function(result) {
+        
+        var msg = "";
+        
+        msg += "success <br/>";
+        msg += result.message; //SMS Result
+        
         Common.alert(msg);
         //Btn Disabled
         $("#_calBtnSave").css("display" , "none");
@@ -231,142 +224,142 @@ function calSave(){
         
         $("#_calSearch").click();
     });
-	
+    
 }
 
 
 
 
 function fn_ccpStatusChangeFunc(getVal){
-	
-	//Init
-	$("#_smsDiv").css("display" , "none");
-	$("#_updSmsChk").attr("checked" , false);
-	$("#_updSmsMsg").val('');
-	$("#_updSmsMsg").attr("disabled" , "disabled");
-	
-	if(getVal != null && getVal != ''){
-		
-		if(getVal == '1'){
-			
-			//field 
-	        $("#_incomeRangeEdit").attr("disabled" , false);
-	        $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-	        $("#_reasonCodeEdit").attr("disabled" , false);
-	        $("#_spcialRem").attr("disabled" , false);
-	        $("#_pncRem").attr("disabled" , false);
-			
-	       if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
-	    	   $("#_ficoScore").attr("disabled" , false);
-	       }else{
-	    	   $("#_ficoScore").val("0");
-	    	   $("#_ficoScore").attr("disabled" , "disabled");
-	       }
-	       
-	         //chkbox
-	        $("#_onHoldCcp").attr("disabled" , false);
-	        $("#_summon").attr("disabled" , false);
-	        $("#_letterOfUdt").attr("disabled" , false);
-	        
-	        if(isAllowSendSMS() == true){
-	            
-	            $("#_smsDiv").css("display" , "");
-	            $("#_updSmsChk").attr("checked" , true);
-	            $("#_updSmsMsg").attr("disabled" , false);
-	            setSMSMessage();
-	        }
-	        
-		}else if(getVal == '5'){
-			
-			 //field //FICO it doesn`t work
-			 $("#_incomeRangeEdit").attr("disabled" , false);
-	         $("#_rejectStatusEdit").val('');
-	         $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-	         $("#_reasonCodeEdit").attr("disabled" , false);
-	         $("#_spcialRem").attr("disabled" , false);
-	         $("#_pncRem").attr("disabled" , false);
-	         
-	          //chkbox
-	         $("#_onHoldCcp").attr("checked" , false);
-	         $("#_onHoldCcp").attr("disabled" , "disabled");
-	         $("#_summon").attr("disabled" , false);
-	         $("#_letterOfUdt").attr("disabled" , false);
-			
-	         //Fico Ajax Call
-	         var ccpid = $("#_editCcpId").val();
-	         var data = {ccpId : ccpid};
-	         Common.ajax("GET", "/sales/ccp/getFicoScoreByAjax", data , function(result) {
-	        	 $("#_ficoScore").val(result.ccpFico);
-	        	 $("#_ficoScore").attr("disabled" , false);
-	         });
-	         
-	         if(isAllowSendSMS() == true){
-	                
-	                $("#_smsDiv").css("display" , "");
-	                $("#_updSmsChk").attr("checked" , true);
-	                $("#_updSmsMsg").attr("disabled" , false);
-	                setSMSMessage();
-	         }
-		}else if(getVal == '6'){
-			
-			//field
-	        $("#_incomeRangeEdit").attr("disabled" , false);
-	        $("#_rejectStatusEdit").attr({"disabled" : false , "class" : "w100p"});
-	        $("#_reasonCodeEdit").attr("disabled" , false);
-	        $("#_spcialRem").attr("disabled" , false);
-	        $("#_pncRem").attr("disabled" , false);
-	        //chkbox
-	        $("#_onHoldCcp").attr("checked" , false);
-	        $("#_onHoldCcp").attr("disabled" , "disabled");
-	        $("#_summon").attr("disabled" , false);
-	        $("#_letterOfUdt").attr("disabled" , false);
-	        
-	        $("#_ficoScore").val("0");
+    
+    //Init
+    $("#_smsDiv").css("display" , "none");
+    $("#_updSmsChk").attr("checked" , false);
+    $("#_updSmsMsg").val('');
+    $("#_updSmsMsg").attr("disabled" , "disabled");
+    
+    if(getVal != null && getVal != ''){
+        
+        if(getVal == '1'){
+            
+            //field 
+            $("#_incomeRangeEdit").attr("disabled" , false);
+            $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_reasonCodeEdit").attr("disabled" , false);
+            $("#_spcialRem").attr("disabled" , false);
+            $("#_pncRem").attr("disabled" , false);
+            
+           if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
+               $("#_ficoScore").attr("disabled" , false);
+           }else{
+               $("#_ficoScore").val("0");
+               $("#_ficoScore").attr("disabled" , "disabled");
+           }
+           
+             //chkbox
+            $("#_onHoldCcp").attr("disabled" , false);
+            $("#_summon").attr("disabled" , false);
+            $("#_letterOfUdt").attr("disabled" , false);
+            
+            if(isAllowSendSMS() == true){
+                
+                $("#_smsDiv").css("display" , "");
+                $("#_updSmsChk").attr("checked" , true);
+                $("#_updSmsMsg").attr("disabled" , false);
+                setSMSMessage();
+            }
+            
+        }else if(getVal == '5'){
+            
+             //field //FICO it doesn`t work
+             $("#_incomeRangeEdit").attr("disabled" , false);
+             $("#_rejectStatusEdit").val('');
+             $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+             $("#_reasonCodeEdit").attr("disabled" , false);
+             $("#_spcialRem").attr("disabled" , false);
+             $("#_pncRem").attr("disabled" , false);
+             
+              //chkbox
+             $("#_onHoldCcp").attr("checked" , false);
+             $("#_onHoldCcp").attr("disabled" , "disabled");
+             $("#_summon").attr("disabled" , false);
+             $("#_letterOfUdt").attr("disabled" , false);
+            
+             //Fico Ajax Call
+             var ccpid = $("#_editCcpId").val();
+             var data = {ccpId : ccpid};
+             Common.ajax("GET", "/sales/ccp/getFicoScoreByAjax", data , function(result) {
+                 $("#_ficoScore").val(result.ccpFico);
+                 $("#_ficoScore").attr("disabled" , false);
+             });
+             
+             if(isAllowSendSMS() == true){
+                    
+                    $("#_smsDiv").css("display" , "");
+                    $("#_updSmsChk").attr("checked" , true);
+                    $("#_updSmsMsg").attr("disabled" , false);
+                    setSMSMessage();
+             }
+        }else if(getVal == '6'){
+            
+            //field
+            $("#_incomeRangeEdit").attr("disabled" , false);
+            $("#_rejectStatusEdit").attr({"disabled" : false , "class" : "w100p"});
+            $("#_reasonCodeEdit").attr("disabled" , false);
+            $("#_spcialRem").attr("disabled" , false);
+            $("#_pncRem").attr("disabled" , false);
+            //chkbox
+            $("#_onHoldCcp").attr("checked" , false);
+            $("#_onHoldCcp").attr("disabled" , "disabled");
+            $("#_summon").attr("disabled" , false);
+            $("#_letterOfUdt").attr("disabled" , false);
+            
+            $("#_ficoScore").val("0");
             $("#_ficoScore").attr("disabled" , "disabled");
-			
-		}
-		
-	}
-	
+            
+        }
+        
+    }
+    
 }
 
 function  bind_RetrieveData(){
 
-	var ccpStus = $("#_ccpStusId").val();
-	//pre Value
-	$("#_isPreVal").val("1");
-	//Fico
-	 if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
+    var ccpStus = $("#_ccpStusId").val();
+    //pre Value
+    $("#_isPreVal").val("1");
+    //Fico
+     if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
          $("#_ficoScore").attr("disabled" , false);
      }else{
          $("#_ficoScore").val("0");
          $("#_ficoScore").attr("disabled" , "disabled");
      }
-	//bind and Setting by CcpStatus
-	if(ccpStus == "1"){
-		
-		//field
-		$("#_incomeRangeEdit").attr("disabled" , false);
-		$("#_rejectStatusEdit").val('');
-		$("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-		$("#_reasonCodeEdit").attr("disabled" , false);
-		$("#_spcialRem").attr("disabled" , false);
-		$("#_pncRem").attr("disabled" , false);
-		//chkbox
-		$("#_onHoldCcp").attr("disabled" , false);
-		$("#_summon").attr("disabled" , false);
-		$("#_letterOfUdt").attr("disabled" , false);
-		
-		if(isAllowSendSMS() == true){
-			
-			$("#_smsDiv").css("display" , "");
-			$("#_updSmsChk").attr("checked" , true);
-			$("#_updSmsMsg").attr("disabled" , false);
-			setSMSMessage();
-		}
-	}else if(ccpStus == "5"){
-		
-		//field
+    //bind and Setting by CcpStatus
+    if(ccpStus == "1"){
+        
+        //field
+        $("#_incomeRangeEdit").attr("disabled" , false);
+        $("#_rejectStatusEdit").val('');
+        $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_reasonCodeEdit").attr("disabled" , false);
+        $("#_spcialRem").attr("disabled" , false);
+        $("#_pncRem").attr("disabled" , false);
+        //chkbox
+        $("#_onHoldCcp").attr("disabled" , false);
+        $("#_summon").attr("disabled" , false);
+        $("#_letterOfUdt").attr("disabled" , false);
+        
+        if(isAllowSendSMS() == true){
+            
+            $("#_smsDiv").css("display" , "");
+            $("#_updSmsChk").attr("checked" , true);
+            $("#_updSmsMsg").attr("disabled" , false);
+            setSMSMessage();
+        }
+    }else if(ccpStus == "5"){
+        
+        //field
         $("#_incomeRangeEdit").attr("disabled" , false);
         $("#_rejectStatusEdit").val('');
         $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -378,7 +371,7 @@ function  bind_RetrieveData(){
         $("#_onHoldCcp").attr("disabled" , "disabled");
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
-		
+        
         if(isAllowSendSMS() == true){
             
             $("#_smsDiv").css("display" , "");
@@ -386,9 +379,9 @@ function  bind_RetrieveData(){
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage();
         }
-	}else if(ccpStus == "6"){
-		
-		//field
+    }else if(ccpStus == "6"){
+        
+        //field
         $("#_incomeRangeEdit").attr("disabled" , false);
         $("#_rejectStatusEdit").attr("disabled" , false);
         $("#_reasonCodeEdit").attr("disabled" , false);
@@ -399,68 +392,68 @@ function  bind_RetrieveData(){
         $("#_onHoldCcp").attr("disabled" , "disabled");
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
-		
-	}
-	
-	//Set Check Box
+        
+    }
+    
+    //Set Check Box
     var ccpIsHold = $("#_ccpIsHold").val() == '1' ? true : false;
     var ccpIsSaman = $("#_ccpIsSaman").val() == '1' ? true : false;
     var ccpIsLou = $("#_ccpIsLou").val() == '1' ? true : false;
     
     
     if(ccpIsHold == true){
-    	$("#_onHoldCcp").attr("checked" , true);
+        $("#_onHoldCcp").attr("checked" , true);
     }
     
     if(ccpIsSaman == true){
-    	$("#_summon").attr("checked" , true);
+        $("#_summon").attr("checked" , true);
     }
     
     if(ccpIsLou == true){
-    	$("#_letterOfUdt").attr("checked" , true);
+        $("#_letterOfUdt").attr("checked" , true);
     }
-	
+    
 }// bindData
 
 
 function setSMSMessage(){
-	
-	var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
-	
-	var custName = $("#_editCustName").val().substr(0 , 15).trim();
-	var ordNo = $("#_editOrdNo").val();
-	var ccpStatus = $("#_statusEdit").val() == '1' ? "Pending" : "Approved";
-	var webSite = salesmanMemTypeID == '1'?  "hp.coway.com.my" : "cody.coway.com.my";
-	
-	var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + ccpStatus + "\n" + "Remark :" + "\n" + webSite;
-	
-	$("#_updSmsMsg").val(message);
-	
-	//Msg Count Init
+    
+    var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
+    
+    var custName = $("#_editCustName").val().substr(0 , 15).trim();
+    var ordNo = $("#_editOrdNo").val();
+    var ccpStatus = $("#_statusEdit").val() == '1' ? "Pending" : "Approved";
+    var webSite = salesmanMemTypeID == '1'?  "hp.coway.com.my" : "cody.coway.com.my";
+    
+    var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + ccpStatus + "\n" + "Remark :" + "\n" + webSite;
+    
+    $("#_updSmsMsg").val(message);
+    
+    //Msg Count Init
     $('#_charCounter').html('Total Character(s) : '+ message.length);
 }
 
 
 function  isValidMobileNo(inputContact){
-	if(isNaN(inputContact) == true){
-		return false;
-	}
+    if(isNaN(inputContact) == true){
+        return false;
+    }
     
     if(inputContact.length != 10 && inputContact.length != 11){
-    	return false;
+        return false;
     }
     if( inputContact.substr(0 , 3) != '010' &&
-   		inputContact.substr(0 , 3) != '011' &&
-   		inputContact.substr(0 , 3) != '012' &&
-   		inputContact.substr(0 , 3) != '013' &&
-   		inputContact.substr(0 , 3) != '014' &&
-   		inputContact.substr(0 , 3) != '015' &&
-   		inputContact.substr(0 , 3) != '016' &&
-   		inputContact.substr(0 , 3) != '017' &&
-   		inputContact.substr(0 , 3) != '018' &&
-   		inputContact.substr(0 , 3) != '019' 
-	  ){
-    	return false;
+        inputContact.substr(0 , 3) != '011' &&
+        inputContact.substr(0 , 3) != '012' &&
+        inputContact.substr(0 , 3) != '013' &&
+        inputContact.substr(0 , 3) != '014' &&
+        inputContact.substr(0 , 3) != '015' &&
+        inputContact.substr(0 , 3) != '016' &&
+        inputContact.substr(0 , 3) != '017' &&
+        inputContact.substr(0 , 3) != '018' &&
+        inputContact.substr(0 , 3) != '019' 
+      ){
+        return false;
     }
     
     return true;
@@ -469,25 +462,25 @@ function  isValidMobileNo(inputContact){
 
 
 function isAllowSendSMS(){
-	
-	var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
-	var editSalesManTelMobile = $("#_editSalesManTelMobile").val();
-	
-	if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2){
-		
-		Common.alert("This order salesman is not HP/Cody.<br />SMS is disallowed.");
-		return false;
-	}else{
-		
-		if(isValidMobileNo(editSalesManTelMobile) == false){
-			
-			Common.alert("Salesman mobile number is invalid.<br />SMS is disallowed.");
-			return false;
-		}
-	}
-	
-	return true;
-	
+    
+    var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
+    var editSalesManTelMobile = $("#_editSalesManTelMobile").val();
+    
+    if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2){
+        
+        Common.alert("This order salesman is not HP/Cody.<br />SMS is disallowed.");
+        return false;
+    }else{
+        
+        if(isValidMobileNo(editSalesManTelMobile) == false){
+            
+            Common.alert("Salesman mobile number is invalid.<br />SMS is disallowed.");
+            return false;
+        }
+    }
+    
+    return true;
+    
 }
 
 
@@ -608,9 +601,15 @@ function chgTab(tabNm) {
 }
 
 </script>
-<section id="content"><!-- content start -->
+<div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>CCP Calculation Edit</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 
-
+<section class="pop_body"><!-- pop_body start -->
 <form id="_editForm">
     <input type="hidden" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
     
@@ -888,3 +887,4 @@ function chgTab(tabNm) {
 </ul>
 
 </section>
+</div>

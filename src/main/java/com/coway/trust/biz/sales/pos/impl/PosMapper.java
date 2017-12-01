@@ -156,4 +156,51 @@ public interface PosMapper {
 	
 	 Map<String, Object> posBookingCallSP_LOGISTIC_REQUEST(Map<String, Object> param);
 	
+	/***** payment ****/
+	 
+	void insertPayTrx(Map<String, Object> params); 
+	
+	int getSeqPay0064D();
+	
+	void insertPayMaster(Map<String, Object> params);
+	
+	int getSeqPay0065D();
+	
+	void insertPayDetail(Map<String, Object> params);
+	
+	List<EgovMap> getpayBranchList (Map<String, Object> params);
+	
+	List<EgovMap> getDebtorAccList(Map<String, Object> params);
+	
+	List<EgovMap> getBankAccountList(Map<String, Object> parmas);
+	
+	EgovMap selectAccountIdByBranchId(Map<String, Object> params);
+	
+	void insertAccGlRoute(Map<String, Object> params);
+	
+	int getSeqPay0009D();
+	
+	List<EgovMap> isPaymentKnowOffByPOSNo(Map<String, Object> params);
+	
+	EgovMap posReversalPayDetail(Map<String, Object> params);
+	
+	EgovMap getPayInfoByPayId(Map<String, Object> params);
+	
+	void insertRePayMaster(Map<String, Object> params);
+	
+	EgovMap getTrxInfo(Map<String, Object> params);
+	
+	void insertRePayTrx(Map<String, Object> params);
+	
+	void updatePayMTrxId(Map<String, Object> params);
+	
+	List<EgovMap> getPayDetailListByPayId(Map<String, Object> params);
+	
+	void insertRePayDetail(Map<String, Object> params);
+	
+	EgovMap getAccGLRoutesInfoByRcpItmId(Map<String, Object> params);
+	
+	void insertReAccGlRoute(Map<String, Object> params);
+	
+	List<EgovMap> getPayDetailList(Map<String, Object> params);
 }

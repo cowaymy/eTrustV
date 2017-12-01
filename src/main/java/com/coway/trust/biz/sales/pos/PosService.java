@@ -58,4 +58,18 @@ public interface PosService {
 	void updatePosMemStatus(PosGridVO pgvo) throws Exception;
 	
 	/*EgovMap chkPosType(Map<String, Object> params) throws Exception;*/
+	
+	List<EgovMap> getpayBranchList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getDebtorAccList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getBankAccountList(Map<String, Object> parmas)throws Exception;
+	
+	EgovMap selectAccountIdByBranchId(Map<String, Object> params)throws Exception;
+	
+	boolean isPaymentKnowOffByPOSNo(Map<String, Object> params)throws Exception;
+	
+	EgovMap posReversalPayDetail(Map<String, Object> params)throws Exception;
+	
+	List<EgovMap> getPayDetailList(Map<String, Object> params) throws Exception;
 }

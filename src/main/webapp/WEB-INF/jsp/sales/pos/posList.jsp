@@ -186,12 +186,21 @@ $(document).ready(function() { //***********************************************
             return;
     	}
     	
-    	
-    	//TODO payment 완료 후 추가 Validation 
     	// IsPaymentKnowOffByPOSNo
+    	var isPay = false; 
+    	var inPosNo = {};
+    	Common.ajax("GET", "/sales/pos/isPaymentKnowOffByPOSNo", inPosNo, function(result) {
+            if(result == true){
+            	isPay = true;
+            }           
+        }, null ,ajaxOtp);
     	
+    	if(isPay == true){
+    		Common.alert("Payment is already knock off.Reversal POS are prohibited!");
+    		return;
+    	}
     	
-    	//TODO Check Auth
+        //TODO Check Auth == ASIS Token > TOBE  
     	
     	//Call controller
     	var reversalForm = { posId : clickChk[0].item.posId };
@@ -391,6 +400,13 @@ $(document).ready(function() { //***********************************************
          return true;
      });
     
+     
+     //Delivery Check
+     function fn_chkDeliveryItems(){
+    	 
+    	 
+    	 
+     }
 });//Doc ready Func End ****************************************************************************************************************************************
 
 

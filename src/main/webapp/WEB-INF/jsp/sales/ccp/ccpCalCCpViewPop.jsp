@@ -9,8 +9,11 @@ $(document).ready(function() {
     
 	//to List
     $("#_btnList").click(function() {
-        //$("#_btnClose").click();
-        window.close();
+    	window.close();
+    });
+    
+    $("#_btnClose").click(function() {
+    	window.close();
     });
     //Init
     var mst = getMstId();
@@ -28,9 +31,7 @@ $(document).ready(function() {
     var ccpStus = $("#_ccpStusId").val();
     CommonCombo.make("_statusEdit", "/sales/ccp/getCcpStusCodeList", '', ccpStus , optionUnit); //Status
     
-    var rejSelVal = '${ccpInfoMap.ccpRjStusId}'; //CCP_RJ_STUS_ID
-    console.log("rejSelVal : " + rejSelVal);
-    CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', rejSelVal , optionUnitCh); //Status 
+    CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', '' , optionUnitCh); //Status 
      
     var selReasonCode = $("#_ccpResnId").val();
     CommonCombo.make("_reasonCodeEdit", "/sales/ccp/selectReasonCodeFbList", '', selReasonCode ,optionUnit ); //Status
@@ -176,12 +177,12 @@ function  isValidMobileNo(inputContact){
     
     if(isNaN(inputContact) == false){
        
-    	return false;
+        return false;
     }
     
     if(inputContact.length != 10 && inputContact != 11){
         
-    	return false;
+        return false;
     }
     
     
@@ -241,9 +242,9 @@ function loadIncomeRange(){
     if(rentPayModeId == 131){
         
         if(applicantTypeId == 964){
-        	selVal = '29';
+            selVal = '29';
         }else{
-        	selVal = '22';
+            selVal = '22';
         }
     }
     //param : editCcpId
@@ -363,12 +364,19 @@ function chgTab(tabNm) {
             }
             break;
     };
+   
 }
 
 </script>
-<section id="content"><!-- content start -->
+<div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>CCP Calculation View</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 
-
+<section class="pop_body"><!-- pop_body start -->
 <form id="_editForm">
     <input type="hidden" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
     
@@ -614,5 +622,5 @@ function chgTab(tabNm) {
 </ul>
 
 
-
-</section><!-- pop_body end -->
+</section>
+</div>
