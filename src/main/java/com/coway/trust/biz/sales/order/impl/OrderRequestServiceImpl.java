@@ -1675,7 +1675,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         	params.put("opt", "1");
         	EgovMap callEntryMap1 = orderRequestMapper.selectCallEntry(params);
         	
-        	LatestOrderCallEntryID = (int)callEntryMap1.get("callEntryId");
+        	LatestOrderCallEntryID = CommonUtils.intNvl(callEntryMap1.get("callEntryId"));
         }
         else {
         	//Complete
@@ -1992,12 +1992,6 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 	@Override
 	public EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params) {
 		return this.selectOrderSimulatorViewByOrderNo2(params);
-	}
-	
-	@Override
-	public EgovMap selectOderOutsInfo(Map<String, Object> params) {
-		EgovMap view = (EgovMap)params.get("p1");
-		return view;
 	}
 
 	private EgovMap selectOrderSimulatorViewByOrderNo2(Map<String, Object> params) {

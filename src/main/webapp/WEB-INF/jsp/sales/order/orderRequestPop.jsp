@@ -1493,18 +1493,19 @@
     }
     
     function fn_getOrderOutstandingInfo() {
-
+        console.log('fn_getOrderOutstandingInfo START');
+        
         var vCurrentOutstanding = 0;
-/*        
-        Common.ajax("GET", "/sales/membership/callOutOutsProcedure", {ORD_ID : ORD_ID}, function(result) {
+        
+        Common.ajaxSync("GET", "/sales/order/selectOderOutsInfo.do", {ordId : ORD_ID}, function(result) {
+            if(result != null && result.length > 0) {
+//                console.log('result.outSuts[0].ordTotOtstnd:'+result.outSuts[0].ordTotOtstnd);
+                console.log('result.outSuts[0].ordTotOtstnd:'+result[0].ordTotOtstnd);
 
-            if(result != null && result.outSuts.length >0 > 0) {
-                console.log('result.outSuts[0].ordTotOtstnd:'+result.outSuts[0].ordTotOtstnd);
-
-                vCurrentOutstanding = result.outSuts[0].ordTotOtstnd;
+                vCurrentOutstanding = result[0].ordTotOtstnd;
             }            
-       }, null, {async : false});
-*/
+       });
+
        return vCurrentOutstanding;
     }
     
@@ -1773,9 +1774,9 @@
                 }
             }
             if($("#cmbRentPaymodeOwnt option:selected").index() <= 0) {
-                Common.ajaxSync("GET", "/sales/order/selectOderOutsInfo.do", {ORD_NO : ORD_ID}, function(result) {
-                    if(result != null) {
-                        if(result.lastBillMth != 60 || result.ordTotOtstnd != 0) {
+                Common.ajaxSync("GET", "/sales/order/selectOderOutsInfo.do", {ordId : ORD_ID}, function(result) {
+                    if(result != null && result.length > 0) {
+                        if(result[0].lastBillMth != 60 || result[0].ordTotOtstnd != 0) {
                             isValid = false;
                             msg += "* Please select the rental paymode.<br>";
                         }                        

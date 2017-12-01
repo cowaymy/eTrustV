@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.OrderLedgerService;
 import com.coway.trust.biz.sales.order.OrderRequestService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -45,6 +46,9 @@ public class OrderRequestController {
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
 
+	@Resource(name = "orderLedgerService")
+	private OrderLedgerService orderLedgerService;
+	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
@@ -174,8 +178,8 @@ public class OrderRequestController {
     }
 	
     @RequestMapping(value = "/selectOderOutsInfo.do", method = RequestMethod.GET)
-    public ResponseEntity<EgovMap> selectOderOutsInfo(@RequestParam Map<String, Object> params)    {
-    	EgovMap rslt = orderRequestService.selectOderOutsInfo(params);
-    	return ResponseEntity.ok(rslt);
+    public ResponseEntity<List<EgovMap>> selectOderOutsInfo(@RequestParam Map<String, Object> params)    {
+    	List<EgovMap> ordOutInfoList = orderLedgerService.getOderOutsInfo(params);
+    	return ResponseEntity.ok(ordOutInfoList);
     }
 }
