@@ -761,15 +761,11 @@
         }
 
         function fn_hsCountForecastListing(){
-            Common.popupDiv("/services/bs/hsCountForecastListingPop.do"  , null, null , true , '');
-        }
-
-        function fn_hsReportGroup(){
-            Common.popupDiv("/services/bs/hsReportGroupPop.do"  , null, null , true , '');
+            Common.popupDiv("/services/bs/report/hsCountForecastListingPop.do"  , null, null , true , '');
         }
 
         function fn_hsReportSingle(){
-            Common.popupDiv("/services/bs/hsReportSinglePop.do"  , null, null , true , '');
+            Common.popupDiv("/services/bs/report/hsReportSinglePop.do"  , null, null , true , '');
         }
 
 
@@ -903,7 +899,6 @@
                 <dd>
                     <ul class="btns">
 				        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsCountForecastListing()">HS Count Forecast Listing</a></p></li>
-				        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportGroup()">HS Report(group)</a></p></li>
 				        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS Report(Single)</a></p></li>
 				    </ul>
 <!--              <ul class="btns">
