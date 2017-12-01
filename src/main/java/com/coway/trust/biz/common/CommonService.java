@@ -192,6 +192,13 @@ public interface CommonService {
 	 */
 	List<EgovMap> getAccountList(Map<String, Object> params);
 
+	/**
+	 * select Bank Account Mapping
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectBankAccountList(Map<String, Object> params);
+	
 	 /**
 	 * Branch ID로 User 정보 조회
 	 * @param params

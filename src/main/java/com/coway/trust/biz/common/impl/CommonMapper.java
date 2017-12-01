@@ -147,6 +147,7 @@ public interface CommonMapper {
     
 
     List<EgovMap> selectBranchList(Map<String, Object> params);
+
     
     List<EgovMap> selectReasonCodeList(Map<String, Object> params);
     
@@ -219,4 +220,11 @@ public interface CommonMapper {
 	 * @return
 	 */
 	List<EgovMap> selectPublicHolidayList(Map<String, Object> params);
+	
+	/**
+	 * select Bank Account Mapping
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectBankAccountList(Map<String, Object> params);
 }

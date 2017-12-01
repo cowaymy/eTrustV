@@ -925,6 +925,11 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public List<EgovMap> selectBankAccountList(Map<String, Object> params) {
+		return commonMapper.selectBankAccountList(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectReasonCodeList(Map<String, Object> params) {
 		return commonMapper.selectReasonCodeList(params);
 	}

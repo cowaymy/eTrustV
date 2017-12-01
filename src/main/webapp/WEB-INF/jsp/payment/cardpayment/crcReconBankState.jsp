@@ -97,6 +97,8 @@
     	mappedGridID = GridCommon.createAUIGrid("grid_wrap_mapped_list", columnMappedLayout, null, gridPros);
     	crcStatementGridID = GridCommon.createAUIGrid("grid_wrap_crc_statement", columnUnMappedCrcLayout, null, gridPros2);
     	bankStatementGridID = GridCommon.createAUIGrid("grid_wrap_bank_statement", columnUnMappedBankLayout, null, gridPros2);
+    	
+    	doGetCombo('/common/getBankAccountList.do', '', '', 'bankAccount', 'S', '');
     });
     
     function fn_searchList(){
@@ -217,14 +219,14 @@
                         <th scope="row">BANK Account</th>
                         <td>
                             <select id="bankAccount" name="bankAccount">
-                                <option value="">Choose One</option>
+                                <!-- <option value="">Choose One</option>
                                 <option value="2749">2720/008 - A</option>
                                 <option value="2748">2720/007</option>
                                 <option value="2747">2720/006</option>
                                 <option value="2745">2720/002</option>
                                 <option value="2752">2720/015</option>
                                 <option value="2751">2720/014</option>
-                                <option value="2750">2720/009</option>
+                                <option value="2750">2720/009</option> -->
                             </select>
                         </td>
                         <th></th>

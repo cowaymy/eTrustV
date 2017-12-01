@@ -169,6 +169,19 @@ public class CommonController {
 		List<EgovMap> resultList = commonService.getAccountList(params);
 		return ResponseEntity.ok(resultList);
 	}
+	
+	/**
+	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
+	 * 
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/getBankAccountList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getBankAccountList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> resultList = commonService.selectBankAccountList(params);
+		return ResponseEntity.ok(resultList);
+	}
+
 
 	/**
 	 * IssuedBank 정보 조회

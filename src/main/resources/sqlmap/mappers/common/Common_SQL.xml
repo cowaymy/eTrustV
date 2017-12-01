@@ -1066,6 +1066,15 @@
         ORDER BY ACC_CODE ASC
     </select>
 
+    <select id ="selectBankAccountList" parameterType="Map" resultType="egovMap">
+        SELECT
+             B.CODE_ID, 
+             B.CODE || '-' || A.ACC_DESC  AS CODE_NAME
+        FROM SYS0001M A 
+        JOIN SYS0013M B ON A.ACC_CODE = B.CODE 
+        WHERE CODE_MASTER_ID = 384
+    </select>
+    
     <select id="selectAddrSelCode" parameterType="Map" resultType="egovMap">
         SELECT
               <choose>
