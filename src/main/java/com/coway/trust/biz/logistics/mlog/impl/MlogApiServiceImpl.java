@@ -261,7 +261,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			insMap.put("requestQty", scgmf.getRequestQty());
 			insMap.put("userId", scgmf.getUserId());
 			insMap.put("gtype", scgmf.getReqStatus());
-			insMap.put("giptdate", scgmf.getRequestDate());
+			insMap.put("giptdate", MlogApiMapper.dateParsing(scgmf.getRequestDate()));
 
 			// 55 insert
 			MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
@@ -291,7 +291,9 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// formMap.put("prgnm", params.get("prgnm"));
 		insMap.put("refdocno", "");
 		insMap.put("salesorder", "");
-
+		
+		logger.debug("insMap    값 : {}", insMap);
+		
 		MlogApiMapper.StockMovementIssue(insMap);
 
 	}
