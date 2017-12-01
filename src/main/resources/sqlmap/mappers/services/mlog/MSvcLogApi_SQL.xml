@@ -10,56 +10,86 @@
 
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
                                 /* By KV -mobile- get job list */
-						SELECT
-						  B.SALES_ORD_NO AS sales_Order_No
-						  , B.APP_TYPE_ID AS app_Type
-						  , D.PROMO_ID AS sales_Promotion
-						  , E.CUST_ACC_BANK_ID AS bank_Code
-						  , E.CUST_ACC_NO AS card_Account_No
-						  , F.TEL_M1 AS handphone_Tel
-						  , F.TEL_O AS home_Tel
-						  , F.TEL_R AS office_Tel
-						  , F.EMAIL AS mail_Address
-						  , F.NRIC AS resultIc_Mobile_No
-						  , G.NAME AS cust_Name
-						  , G.TYPE_ID AS customer_Type
-						  , G.cust_id AS customer_Id
-						  , H.BRNCH_ID AS dsc_Code
-						  , J.SIRIM_NO AS sirim_No
-						  , J.SERIAL_NO AS serial_N
-<!-- 						  , K.REN_COLCT_ID AS rc_Code -->
-						  , K.FAIL_RESN_ID AS fail_Reason_Code
-						  , A.NO AS service_No
-						  , A.STUS_CODE_ID AS job_Status
-				     	  , TO_CHAR(A.APPNT_DT, 'YYYYMMDD') as appointment_Date
-						  , A.APPNT_TM as appointment_Time
-						  , A.YEAR as   plan_Year
-						  , A.MONTH as plan_Month
-						  , M.STK_DESC AS product_Name
-						  , M.STK_CODE AS product_Code
-						  , L.MEM_CODE AS settled_By
-						  , N.CUST_BILL_PAY_REF_NO1 as customer_Jom_Pay_Ref_No
-						  , G.CUST_VA_NO as customer_Va_No
-						  , J.RESULT_CUST_NAME as result_Cust_Name
-						  , J.RESULT_REP_EMAIL_NO as result_Report_Email_No
-						  , J.RESULT_ACEPT_NAME as result_Acceptance_Name
-						  , to_char(P.CODE_ID) as payment_Mode
-						  , P.CODE_NAME as payment_ModeName
-						  , Q.ADDR_DTL as install_Address
-						  , to_char(R.SRV_DUR) as contract_Duration
-						  , to_char(R.SRV_EXPR_DT,'YYYYMMDD') as Membership_Contract_Expiry
-						  , S.STUS_CODE_ID as rental_Status
-						  , K.RESULT_REM as result_Remark
-                          , K.REN_COLCT_ID AS rc_Code
-					      , k.TEMPERATE_SETNG as temperatureSetting
-					      , TO_CHAR(k.NEXT_APPNT_DT, 'YYYYMMDD') as nextAppointmentDate
-					      , k.NEXT_APPNT_TM as nextAppointmentTime
-					      , k.OWNER_CODE as ownerCode
-					      , k.RESULT_CUST_NAME as resultCustName
-					      , k.RESULT_MOBILE_NO as resultIcMobileNo
-					      , k.RESULT_RPT_EMAIL_NO as resultReportEmailNo
-					      , k.RESULT_ACEPT_NAME as resultAcceptanceName
-					      , k.SGN_DT as signData
+						
+  
+						    SELECT    <!-- SVC0008D st -->
+						            TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
+						           A.NO AS service_No,
+						           A.STUS_CODE_ID AS job_Status,
+						           A.APPNT_TM AS appointment_Time,
+						           A.YEAR AS plan_Year,
+						           A.MONTH AS plan_Month,
+						           <!-- SVC0008D end -->
+						<!--          SAL0001D st -->
+						           B.SALES_ORD_NO AS sales_Order_No,
+						           B.APP_TYPE_ID AS app_Type,
+						<!--            SAL0001D end -->           
+						<!--            SAL0017D st -->           
+						           D.PROMO_ID AS sales_Promotion,
+						<!--           SAL0017D end -->           
+						<!--             SAL0022D st -->
+						           E.CUST_ACC_BANK_ID AS bank_Code,
+						           E.CUST_ACC_NO AS card_Account_No,
+						<!--           SAL0022D end -->           
+						<!--             SAL0027D st -->          
+						           F.TEL_M1 AS handphone_Tel,
+						           F.TEL_O AS home_Tel,
+						           F.TEL_R AS office_Tel,
+						           F.EMAIL AS mail_Address,
+						           F.NRIC AS resultIc_Mobile_No,
+						<!--             SAL0027D end -->       
+						<!--            SAL0029D st -->
+						           G.NAME AS cust_Name,
+						           G.TYPE_ID AS customer_Type,
+						           G.cust_id AS customer_Id,
+						           G.CUST_VA_NO AS customer_Va_No,
+						<!--               SAL0029D end -->                
+						<!--               SAL0045D  st -->    
+						           H.BRNCH_ID AS dsc_Code,
+						<!--                 SAL0045D end -->
+						<!--            SAL0047D st -->
+						           J.SIRIM_NO AS sirim_No,
+						           J.SERIAL_NO AS serial_No,
+						           J.RESULT_CUST_NAME AS result_Cust_Name,
+						           J.RESULT_REP_EMAIL_NO AS result_Report_Email_No,
+						           J.RESULT_ACEPT_NAME AS result_Acceptance_Name,
+						<!--           SAL0047D  end -->         
+						<!--           SVC0006D st -->
+						           K.FAIL_RESN_ID AS fail_Reason_Code,           
+						           K.RESULT_REM AS result_Remark,
+						           K.REN_COLCT_ID AS rc_Code,
+						           k.TEMPERATE_SETNG AS temperatureSetting,
+						           k.NEXT_APPNT_TM AS nextAppointmentTime,
+						           k.OWNER_CODE AS ownerCode,
+						           k.RESULT_CUST_NAME AS resultCustName,
+						           k.RESULT_MOBILE_NO AS resultIcMobileNo,
+						           k.RESULT_RPT_EMAIL_NO AS resultReportEmailNo,
+						           k.RESULT_ACEPT_NAME AS resultAcceptanceName,
+						           k.SGN_DT AS signData,
+						           TO_CHAR (k.NEXT_APPNT_DT, 'YYYYMMDD') AS nextAppointmentDate,
+					<!-- 	          SVC0006D end  -->                    
+					<!-- 	          ORG0001D st --> 
+						           L.MEM_CODE AS settled_By,
+						<!--           ORG0001D end -->                            
+						<!--           SYS0026M st -->                
+						           M.STK_DESC AS product_Name,
+						           M.STK_CODE AS product_Code,
+						<!--           SYS0026M end -->         
+						<!--          SAL0024D st --> 
+						           N.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
+						<!--          SAL0024D end -->       
+						<!--           SYS0013M st -->      
+						           P.CODE_NAME AS payment_ModeName,
+						           TO_CHAR (P.CODE_ID) AS payment_Mode,
+						<!--           SYS0013M st -->                      
+						           Q.ADDR_DTL AS install_Address,
+						<!--           SYS0013M end -->                   
+						<!--           SAL0095D at -->   
+						           TO_CHAR (R.SRV_DUR) AS contract_Duration,
+						           TO_CHAR (R.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry,
+						<!--           SAL0071D st -->                      
+						           S.STUS_CODE_ID AS rental_Status
+						<!--          SAL0071D end -->                   
 						  , 'HS' as job_Type
 						  , '1' as job_Session
 						  , '1' as checkIn_Date
