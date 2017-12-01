@@ -438,22 +438,22 @@ function fn_saveApprove(value){
 	</td>
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>
 	<td>
-	<input type="hidden" id="costCentr" name="costCentr" title="" placeholder="" class="" />
-	<input type="text" id="costCentrName" name="costCentrName" title="" placeholder="" class="" readonly="readonly" />
+	<input type="text" id="costCentr" name="costCentr" title="" placeholder="" class="" />
+	<input type="hidden" id="costCentrName" name="costCentrName" title="" placeholder="" class="" readonly="readonly" />
 	<a href="#" class="search_btn" onclick="javascript:fn_costCenterSearchPop();"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 	</td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="expense.GLAccount" /></th>
 	<td>
-	      <input type="hidden" id="glAccCode" name="glAccCode" title="" placeholder="" class="" />
-	      <input type="text" id="glAccCodeName" name="glAccCodeName" title="" placeholder="" class=""  readonly="readonly" />
+	      <input type="text" id="glAccCode" name="glAccCode" title="" placeholder="" class="" />
+	      <input type="hidden" id="glAccCodeName" name="glAccCodeName" title="" placeholder="" class=""  readonly="readonly" />
 	      <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop();"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 	</td>
 	<th scope="row"><spring:message code="expense.Activity" /></th>
 	<td>
-		<input type="hidden" id="budgetCode" name="budgetCode" title="" placeholder="" class="" />
-		<input type="text" id="budgetCodeName" name="budgetCodeName" title="" placeholder="" class=""  readonly="readonly" />
+		<input type="text" id="budgetCode" name="budgetCode" title="" placeholder="" class="" />
+		<input type="hidden" id="budgetCodeName" name="budgetCodeName" title="" placeholder="" class=""  readonly="readonly" />
 		<a href="#" class="search_btn" onclick="javascript:fn_budgetCodePop();"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 	</td>
 </tr>
