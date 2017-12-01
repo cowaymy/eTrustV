@@ -570,8 +570,12 @@ public class CommissionReportController {
 		List<EgovMap> orgGrList = commissionReportService.selectOrgGrList(params);
 		params.put("mstId", CommissionConstants.COMIS_CD_CD);
 		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
+
 		String dt = CommonUtils.getNowDate().substring(0, 6);
-		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+		dt = (Integer.parseInt(dt.substring(4))-1) + "/" + dt.substring(0, 4);
+		if(dt.length()<7){
+			dt = "0"+dt;
+		}
 
 		model.addAttribute("searchDt", dt);
 		model.addAttribute("orgGrList", orgGrList);
@@ -605,43 +609,51 @@ public class CommissionReportController {
 		 * codeid로 하고있는 것들을 code로 변경하고 쿼리고 code가져와서 분기시키기.
 		 * level constants 이용하기.
 		 */
-		if((CommissionConstants.COMIS_CD_CM_CD).equals(params.get("orgCombo").toString()) ){
-			// 조회.
-			rawList = commissionReportService.selectCMRawData(params);
-		}else{
-			String level = "0";
-			if((CommissionConstants.COMIS_CD_CDN_CD).equals(params.get("orgCombo").toString()) ){
-				level = CommissionConstants.COMIS_CD_CD_LEV;
-				params.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
-				
-			}else if((CommissionConstants.COMIS_CD_CDC_CD).equals(params.get("orgCombo").toString())){
-				level = CommissionConstants.COMIS_CD_CD_LEV;
-				params.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
-				
-			}else if((CommissionConstants.COMIS_CD_SCM_CD).equals(params.get("orgCombo").toString())){
-				level = CommissionConstants.COMIS_CD_SCM_LEV;
-				
-			}else if((CommissionConstants.COMIS_CD_GCM_CD).equals(params.get("orgCombo").toString())){
-				level = CommissionConstants.COMIS_CD_GCM_LEV;
-			}
-			
+		String level = "0";
+		if((CommissionConstants.COMIS_CD_CDN_CD).equals(params.get("orgCombo").toString()) ){
+			level = CommissionConstants.COMIS_CD_CD_LEV;
+			params.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
 			params.put("level",level);
 			rawList = commissionReportService.selectCodyRawData(params);
+		}else if((CommissionConstants.COMIS_CD_CDC_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_CD_CD_LEV;
+			params.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
+			params.put("level",level);
+			rawList = commissionReportService.selectCodyRawData(params);
+			
+		}else if((CommissionConstants.COMIS_CD_CM_CD).equals(params.get("orgCombo").toString()) ){
+			level = CommissionConstants.COMIS_CD_CM_LEV;
+			params.put("level",level);
+			rawList = commissionReportService.selectCMRawData(params);
+		}else if((CommissionConstants.COMIS_CD_SCM_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_CD_SCM_LEV;
+			params.put("level",level);
+			rawList = commissionReportService.selectCMRawData(params);
+		}else if((CommissionConstants.COMIS_CD_GCM_CD).equals(params.get("orgCombo").toString())){
+			level = CommissionConstants.COMIS_CD_GCM_LEV;
+			params.put("level",level);
+			rawList = commissionReportService.selectCMRawData(params);
 		}
+		
+		
 		
 		// 데이터 리턴.
 		return ResponseEntity.ok(rawList);
 	}
 
-	@RequestMapping(value = "/commissionHpResultIndex.do")
+	@RequestMapping(value = "/commissionHPResultIndex.do")
 	public String commissionHpResultIndex(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
 		List<EgovMap> orgGrList = commissionReportService.selectOrgGrList(params);
 		params.put("mstId", CommissionConstants.COMIS_HP_CD);
 		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
+
 		String dt = CommonUtils.getNowDate().substring(0, 6);
-		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+		dt = (Integer.parseInt(dt.substring(4))-1) + "/" + dt.substring(0, 4);
+		if(dt.length()<7){
+			dt = "0"+dt;
+		}
 
 		model.addAttribute("searchDt", dt);
 		model.addAttribute("orgGrList", orgGrList);
@@ -706,8 +718,12 @@ public class CommissionReportController {
 		List<EgovMap> orgGrList = commissionReportService.selectOrgGrList(params);
 		params.put("mstId", CommissionConstants.COMIS_CT_CD);
 		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
+
 		String dt = CommonUtils.getNowDate().substring(0, 6);
-		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+		dt = (Integer.parseInt(dt.substring(4))-1) + "/" + dt.substring(0, 4);
+		if(dt.length()<7){
+			dt = "0"+dt;
+		}
 
 		model.addAttribute("searchDt", dt);
 		model.addAttribute("orgGrList", orgGrList);
