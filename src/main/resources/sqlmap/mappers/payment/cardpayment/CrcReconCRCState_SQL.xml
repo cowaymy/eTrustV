@@ -99,7 +99,9 @@
             PAY_ITM_CARD_MODE_ID, 
             CARD_MODE_NAME,
             AMOUNT,
-            CRC_MC_NAME
+            CRC_MC_NAME,
+            OR_NO,
+            ORD_NO
             FROM 
                 (
                 SELECT
@@ -111,13 +113,17 @@
                     B.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID,
                     C.CODE_NAME CARD_MODE_NAME,
                     NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
-                    E.ACC_DESC CRC_MC_NAME
+                    E.ACC_DESC CRC_MC_NAME,
+                    F.OR_NO OR_NO,
+                    G.ORD_NO ORD_NO
                 FROM 
                     PAY0252T A
                     JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
                     JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
                     JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
                     JOIN SYS0001M E ON D.BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+                    JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+                    JOIN PAY0241T G ON A.GROUP_SEQ = G.ITM_SEQ
                 WHERE 
                     A.PAY_ITM_MODE_ID = 107
                     AND A.CRC_STATE_MAPPING_STUS_ID = 1
@@ -135,7 +141,9 @@
                     B.PAY_ITM_CARD_MODE_ID,
                     B.PAY_ITM_BANK_ACC_ID,
                     C.CODE_NAME,
-                    E.ACC_DESC) TB1
+                    E.ACC_DESC,
+                    F.OR_NO,
+                    G.ORD_NO) TB1
                 
                     WHERE 1=1
                     AND (TB1.PAY_ITM_CC_NO,
@@ -176,12 +184,13 @@
         SELECT 
             CRC_TRNSC_ID, 
             CRC_TRNSC_NO, 
-            CRC_TRNSC_DT, 
+            TO_CHAR(CRC_TRNSC_DT , 'DD/MM/YYYY') CRC_TRNSC_DT,
             CRC_TRNSC_APPV, 
             CRDIT_CARD, 
             CRC_STATE_ACC_ID, 
             BANK_ACC_NAME, 
-            GROS_AMT
+            GROS_AMT,
+            CRC_TRNSC_MID
             FROM 
                 (
                     SELECT  
@@ -193,7 +202,8 @@
                         A.CRC_STATE_ACC_ID,
                         C.ACC_DESC BANK_ACC_NAME,
                         NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
-                        C.ACC_DESC
+                        C.ACC_DESC,
+                        B.CRC_TRNSC_MID CRC_TRNSC_MID
                     FROM 
                         PAY0075D A 
                         JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID 
@@ -213,7 +223,8 @@
                         B.CRC_TRNSC_APPV,
                         B.CRDIT_CARD,
                         A.CRC_STATE_ACC_ID,
-                        C.ACC_DESC
+                        C.ACC_DESC,
+                        B.CRC_TRNSC_MID
                     ) TB1
                 WHERE 1=1
                 AND (TB1.CRC_TRNSC_NO,
@@ -301,15 +312,15 @@
             #{userId},          
             TO_CHAR(SYSDATE,'YYYYMMDD'),
             #{bankSeq},
-            1,<!--??  -->
-            2,<!--??  -->
+            #{ordNo},
+            #{orNo},
             #{crcStateAccId},
             #{crcTrnscNo},
             #{crcTrnscAppv},
-            TO_CHAR(#{crcTrnscDt},'YYYYMMDD'),
-            '',<!--MID NO  -->
+            TO_CHAR(TO_DATE(#{crcTrnscDt}, 'DD/MM/YYYY'),'YYYYMMDD'),
+            #{crcTrnscMid},
             #{groupSeq},
-            TO_CHAR(#{crcTrnscDt},'YYYYMMDD'),
+            TO_CHAR(TO_DATE(#{crcTrnscDt}, 'DD/MM/YYYY'),'YYYYMMDD'),
             #{crcTrnscId},
             #{amount}
         )

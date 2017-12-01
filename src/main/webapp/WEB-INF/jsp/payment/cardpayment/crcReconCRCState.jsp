@@ -60,7 +60,7 @@ var mappingLayout = [
                            headerText : "Transaction Date",
                            editable : false,
                            dataType : "date", 
-                           formatString : "yyyy-mm-dd"
+                           formatString : "dd/mm/yyyy"
                        },{
                            dataField : "crcTrnscNo",
                            headerText : "Card No",
@@ -91,6 +91,18 @@ var mappingLayout = [
                            dataField : "crcStateAccId",
                            headerText : "crcStateAccId",
                            visible : false
+                       },{
+                           dataField : "orNo",
+                           headerText : "orNo",
+                           visible : false
+                       },{
+                           dataField : "ordNo",
+                           headerText : "ordNo",
+                           visible : false
+                       },{
+                           dataField : "crcTrnscMid",
+                           headerText : "crcTrnscMid",
+                           visible : false
                        }];
 
 var crcKeyInLayout = [ 
@@ -103,7 +115,7 @@ var crcKeyInLayout = [
                            headerText : "TR Date",
                            editable : false,
                            dataType : "date", 
-                           formatString : "yyyy-mm-dd"
+                           formatString : "dd/mm/yyyy"
                        }, {
                            dataField : "payItmCcNo",
                            headerText : "Card No",
@@ -130,6 +142,14 @@ var crcKeyInLayout = [
                            dataField : "rnum",
                            headerText : "rnum",
                            visible : false
+                       },{
+                           dataField : "orNo",
+                           headerText : "orNo",
+                           visible : false
+                       },{
+                           dataField : "ordNo",
+                           headerText : "ordNo",
+                           visible : false
                        }];
 
 var crcStateLayout = [ 
@@ -142,7 +162,7 @@ var crcStateLayout = [
                           headerText : "TR Date",
                           editable : false,
                           dataType : "date", 
-                          formatString : "yyyy-mm-dd"
+                          formatString : "dd/mm/yyyy"
                       }, {
                           dataField : "crcTrnscNo",
                           headerText : "Card No",
@@ -164,6 +184,10 @@ var crcStateLayout = [
                       }, {
                           dataField : "crcStateAccId",
                           headerText : "crcStateAccId",
+                          visible : false
+                      }, {
+                          dataField : "crcTrnscMid",
+                          headerText : "crcTrnscMid",
                           visible : false
                       }];
 
@@ -205,10 +229,13 @@ var crcStateLayout = [
                 item.crcTrnscNo = stateRowItem.item.crcTrnscNo;
                 item.crcTrnscAppv = stateRowItem.item.crcTrnscAppv;
                 item.amount = stateRowItem.item.grosAmt;
-                item.groupSeq = crcKeyInVal;//hidden key
-                item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden key
-                item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden key
-                    
+                item.groupSeq = crcKeyInVal;//hidden field
+                item.orNo = keyInRowItem.item.orNo;//hidden field
+                item.ordNo = keyInRowItem.item.ordNo;//hidden field
+                item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden field
+                item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden field
+                item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
+                
                 console.log(item);
                 AUIGrid.addRow(mappingGridId, item, "last");
                 AUIGrid.removeCheckedRows(crcKeyInGridId);

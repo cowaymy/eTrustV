@@ -59,15 +59,15 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 		
     	if (paramList.size() > 0) {    		
     		Map<String, Object> hm = null;
-    		//int index = 0;
+    		int index = 0;
     		for (Object map : paramList) {
     			hm = (HashMap<String, Object>) map;  
     			hm.put("userId", userId);
-    			//hm.put("bankSeq", index+1);
+    			hm.put("bankSeq", index+1);
     			crcReconCRCStateMapper.updCrcKeyIn(hm);
     			crcReconCRCStateMapper.updCrcStatement(hm);
-    			//crcReconCRCStateMapper.insertCrcStatementITF(hm);
-    			//index++;
+    			crcReconCRCStateMapper.insertCrcStatementITF(hm);
+    			index++;
     		}
     	}
     	
