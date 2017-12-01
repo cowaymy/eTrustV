@@ -92,6 +92,10 @@
         );
     }
 	
+    function fn_rawData(){
+        Common.alert('The program is under development.');
+    }
+	
     $.fn.clearForm = function() {
         return this.each(function() {
             var type = this.type, tag = this.tagName.toLowerCase();
@@ -182,24 +186,8 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-    </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn type2"><a href="#"  onClick="fn_rawData()">Application Form</a></p></li>
+        <li><p class="link_btn type2"><a href="#"  onClick="fn_rawData()">HP Applicant List</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
