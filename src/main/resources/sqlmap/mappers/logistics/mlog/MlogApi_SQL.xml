@@ -27,7 +27,7 @@
 		'Y' group by loc_id , itm_code ) T5
 		WHERE T1.WH_LOC_GB = T4.CODE
 		AND T1.WH_LOC_ID = T3.LOC_ID
-		AND T3.STK_CODE = T5.itm_code
+		AND T3.STK_CODE = T5.itm_code(+)
 		AND T1.WH_LOC_CODE IN (T2.CDC_CODE, T2.RDC_CODE)
         AND T3.STK_CODE =S26.STK_CODE
 		AND T3.STK_CODE = #{partsCode}
