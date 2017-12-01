@@ -87,7 +87,7 @@
 	        selectionMode : "multipleCells",
 	        headerHeight : 30,
 	        // 그룹핑 패널 사용
-	        useGroupingPanel : true,
+	        useGroupingPanel : false,
 	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        skipReadonlyColumns : true,
 	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
