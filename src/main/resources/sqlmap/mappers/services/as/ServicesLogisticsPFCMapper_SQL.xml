@@ -6,12 +6,8 @@
     <resultMap id="rtnCode" type="egovMap" />   
     <select id="install_Active_SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
             {
-                  call SP_LOGISTIC_REQUEST(   #{ORD_ID},
-                                                           #{RETYPE},
-                                                           #{P_TYPE},
-                                                           #{P_PRGNM},
-                                                           #{USERID},
-                                                           #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+                  call SP_LOGISTIC_REQUEST
+                       ( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
             }
      </select>     
       
