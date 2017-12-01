@@ -28,7 +28,9 @@
        
       //save
         $("#save").click(function() {
+        	if (validationRowCheck()) {
               Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData);
+        	}
        }); 
       
         //excel Download
@@ -57,8 +59,6 @@
         $("#popCountry").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "country"));
         $("#popStatusId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "statusId"));
         $("#popId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "id"));
-        
-        //alert(AUIGrid.getCellValue(myGridID , first.rowIndex , "areaId"));
 
        Common.popupDiv("/common/areaCopyAddressMasterPop.do", $("#popSForm").serializeJSON(), null, true, "areaCopyAddressMasterPop");
     } 
@@ -136,6 +136,24 @@
         headerText : '<spring:message code="sys.source" />',
         editable : false
     }];
+    
+    /*  validation */
+    function validationRowCheck() {
+        var resultChk = true;
+        var rowCount = AUIGrid.getRowCount(myGridID);
+        
+        var EditedList = AUIGrid.getEditedRowItems(myGridID);        
+
+         if (rowCount == 0) {
+        	 Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+        	 return false;
+        } else if (EditedList.length == 0){
+        	Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+        	return false;
+        }
+
+        return resultChk; 
+    }  
 
     
     /*  validation */

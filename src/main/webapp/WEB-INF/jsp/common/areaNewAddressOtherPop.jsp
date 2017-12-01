@@ -53,6 +53,7 @@ function fn_saveGridData_other(){
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
         $("#search").trigger("click");
+        Common.alert("<spring:message code='sys.msg.success'/>");
     }, function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
