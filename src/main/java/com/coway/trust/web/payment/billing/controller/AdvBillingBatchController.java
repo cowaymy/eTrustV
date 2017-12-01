@@ -229,7 +229,6 @@ public class AdvBillingBatchController {
         int total = 0;
         int fail = 0;
         for(EgovMap em : detail){
-        	System.out.println("###em : " + em);
         	if(Integer.parseInt(String.valueOf(em.get("accBatchItmStus"))) == 4)
         		total++;
         	else if(Integer.parseInt(String.valueOf(em.get("accBatchItmStus"))) == 21)
