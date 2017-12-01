@@ -24,6 +24,7 @@ public interface PoMngementMapper
 	List<EgovMap> selectPoApprovalSummaryHidden(Map<String, Object> params);
 	List<EgovMap> selectPoApprovalMainList(Map<String, Object> params);
 	int updatePoApprovalDetail(Map<String, Object> params);
+	String callSpPoApprovalINF155(Map<String, Object> params);
 	
 	
 	/* PO Management - PO Issue */

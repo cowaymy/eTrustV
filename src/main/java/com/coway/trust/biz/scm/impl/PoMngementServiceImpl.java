@@ -89,11 +89,22 @@ public class PoMngementServiceImpl implements PoMngementService {
 		
 		for (Object obj : addList) 
 		{
-			LOGGER.debug(">>>>> updatePoApprovalDetail paramList : {}", addList.toString() );
+			poMngementMapper.updatePoApprovalDetail((Map<String, Object>) obj);
+			
+			LOGGER.debug(" poNo : {}", ((Map<String, Object>) obj).get("poNo"));
+			
+			((Map<String, Object>) obj).put("poNo", ((Map<String, Object>) obj).get("poNo") );
+			((Map<String, Object>) obj).put("poItemNo", ((Map<String, Object>) obj).get("poItmNo") );
+			((Map<String, Object>) obj).put("stockCode", ((Map<String, Object>) obj).get("stockCode") );
+			((Map<String, Object>) obj).put("vender", "" );
+			((Map<String, Object>) obj).put("failINFKey", "");
+			
+			poMngementMapper.callSpPoApprovalINF155((Map<String, Object>) obj);
 			
 			saveCnt++;
 			
-			poMngementMapper.updatePoApprovalDetail((Map<String, Object>) obj);
+			LOGGER.debug(" saveCnt : {} ", saveCnt);
+
 		}
 		
 		return saveCnt;
