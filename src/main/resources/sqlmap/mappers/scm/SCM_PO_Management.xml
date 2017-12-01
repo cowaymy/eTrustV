@@ -177,7 +177,7 @@
  
 <!-- PO Issue --> 
  
-  <select id="selectScmPoView" parameterType="Map" resultType="egovMap">
+<select id="selectScmPoView" parameterType="Map" resultType="egovMap">
 		SELECT
 	       'PDF'||'/ EXCEL' PDF
 	       ,ROWNUM NO
@@ -212,8 +212,10 @@
 	       ,GR_DT   
 	   FROM SCM0041V 
 	  WHERE BAS_YEAR = #{scmYearCbBox}  
-	    AND EST_WEEK = #{scmPeriodCbBox} 
-	    AND CDC = #{cdcCbBox}
+	    AND EST_WEEK = #{scmPeriodCbBox}
+	   <if test='cdcCbBox != null and cdcCbBox !="" '>  
+	    AND CDC = DECODE(#{cdcCbBox},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','')
+	   </if>
 	   <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
 	    AND STOCK_CODE = #{stockCodeCbBox}      
 	   </if>
@@ -221,9 +223,9 @@
 	    AND STK_TYPE_ID = #{scmStockType}    
 	   </if>
       ORDER BY PO_NO DESC
-  </select>
+</select>
  
-  <select id="selectScmPrePoItemView" parameterType="Map" resultType="egovMap">
+<select id="selectScmPrePoItemView" parameterType="Map" resultType="egovMap">
     SELECT
          0 checkFlag
          , PRE_YEAR   
@@ -242,8 +244,10 @@
 		     , FOB_AMT   FOB_AMOUNT
 		  FROM SCM0042V   
 		 WHERE PRE_YEAR    = #{scmYearCbBox}  
-		   AND PRE_WEEK_TH = #{scmPeriodCbBox}  
-		   AND PRE_CDC     = #{cdcCbBox}
+		   AND PRE_WEEK_TH = #{scmPeriodCbBox} 
+		   <if test='cdcCbBox != null and cdcCbBox !="" '>  
+		   AND PRE_CDC     = DECODE(#{cdcCbBox},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','')
+		   </if>
 		   <if test='stockCodeCbBox != null and stockCodeCbBox !="" '> 
 		   AND PRE_STOCK_CODE = #{stockCodeCbBox}      
 		   </if>
@@ -251,7 +255,7 @@
        AND STK_TYPE_ID = #{scmStockType}    
        </if>		   
 
-     </select>
+</select>
  
 <select id="selectScmPoStatusCnt" parameterType="Map" resultType="egovMap">
           SELECT  
@@ -260,7 +264,7 @@
 				            FROM SCM0011D
 				           WHERE PRE_YEAR    = #{scmYearCbBox}  
 				             AND PRE_WEEK_TH = #{scmPeriodCbBox}  
-				             AND PRE_CDC     = #{cdcCbBox}
+				             AND PRE_CDC     = DECODE(#{cdcCbBox},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','')
 				             AND (PRE_QTY - PO_QTY) <![CDATA[ > ]]> 0
 				        ) PRE_POITEM_CNT
 				       ,(
@@ -268,7 +272,7 @@
 				             FROM SCM0009M 
 				            WHERE BAS_YEAR = #{scmYearCbBox}  
 				              AND EST_WEEK = #{scmPeriodCbBox}   
-				              AND CDC      = #{cdcCbBox}
+				              AND CDC      = DECODE(#{cdcCbBox},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','')
 				              AND PO_STUS <![CDATA[ <> ]]> 5 
 				        )  SCMPOMASTER_CNT
 				   FROM DUAL   
@@ -282,12 +286,13 @@
 			   AND PRE_MONTH   = #{preMonth}
 			   AND PRE_WEEK_TH = #{preWeekTh}
 			   AND PRE_STOCK_CODE = #{stockCode}
-			   AND PRE_CDC        = #{preCdc}
+			   AND PRE_CDC        = DECODE(#{preCdc},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','') 
 </update>
 
 <select id="selectPOIssueNewPoNo" parameterType="Map" resultType="egovMap">
-    SELECT 'MY' ||  #{preCdc} || SUBSTR(EXTRACT(year FROM SYSDATE),-2)  ||  EXTRACT(month FROM SYSDATE) 
-                ||  EXTRACT(DAY FROM SYSDATE)  || 'A' || DECODE(AA.PO_NO,NULL,'001',(SUBSTR(AA.PO_NO,-3) +1 ) )  NEW_PONO
+    SELECT 'MY' || DECODE(#{preCdc},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC',#{preCdc})
+                || SUBSTR(EXTRACT(year FROM SYSDATE),-2)  ||  LPAD(EXTRACT(month FROM SYSDATE),2,'0')
+                || LPAD(EXTRACT(DAY FROM SYSDATE),2,'0')  || 'A' || DECODE(AA.PO_NO,NULL,'001',(SUBSTR(AA.PO_NO,-3) +1 ) )  NEW_PONO
       FROM (
              SELECT PO_ID,PO_NO,ROW_NUMBER()  OVER ( ORDER BY PO_ID DESC) RK   
                FROM SCM0009M WHERE PO_NO NOT LIKE '%WJ%' AND TO_CHAR(CRT_DT,'YYYY') = #{preYear}
@@ -379,7 +384,7 @@
                   )
 </insert>
  
-  <select id="selectReportPDFExcel_Temp" parameterType="Map" resultType="egovMap">
+  <select id="selectReportPDFExcel_TEMP" parameterType="Map" resultType="egovMap">
           SELECT T0.PO_NO
 					     , T0.PO_ISSU_DT 
 					     , T1.STOCK_CODE ITEM_CODE_KOR
@@ -503,6 +508,18 @@ SELECT
       AND PO_ITM_NO  = #{poItmNo}
       AND STOCK_CODE = #{stockCode}
 </update>
+
+<resultMap id="poIssueMap" type="egovMap"></resultMap>
+<select id="callSpPoApprovalINF155" statementType="CALLABLE" parameterType="Map">
+    { call SP_SCM_PO_APPROVAL_INF155(
+                                    #{poNo}
+                                  , #{poItemNo}
+                                  , #{stockCode}
+                                  , #{vender}
+                                  , #{failINFKey}
+                                  , #{p1, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=poIssueMap})
+    }
+</select>
  
   
 </mapper>
