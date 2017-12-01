@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper
+     namespace="com.coway.trust.biz.services.report.impl.HSReportMapper">
+     
+     
+        <select id="selectHSReportSingle" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT Distinct1.SCHDUL_ID SCHDUL_ID  ,
+				                       Distinct1.NO NO  ,
+				                       Distinct1.MONTH MONTH  ,
+				                       Distinct1.YEAR YEAR  ,
+				                       Distinct1.CODY_ID CODY_ID  ,
+				                       Distinct1.STUS_CODE_ID STUS_CODE_ID  ,
+				                       Distinct1.CODE CODE  ,
+				                       Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+				                       Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+				                       Distinct1.NAME NAME  ,
+				                       Distinct1.NRIC NRIC  ,
+				                       Distinct1.CODE1 CODE1  ,
+				                       Distinct1.C1 C1  ,
+				                       Distinct1.C2 C2  ,
+				                       Distinct1.C3 C3  ,
+				                       Distinct1.C4 C4  ,
+				                       Distinct1.C5 C5  ,
+				                       Distinct1.C6 C6  ,
+				                       Distinct1.C7 C7  ,
+				                       Distinct1.C8 C8  
+				                FROM ( SELECT DISTINCT Extent1.SCHDUL_ID SCHDUL_ID  ,
+				                                       Extent1.NO NO  ,
+				                                       Extent1.MONTH MONTH  ,
+				                                       Extent1.YEAR YEAR  ,
+				                                       Extent1.CODY_ID CODY_ID  ,
+				                                       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+				                                       Extent2.CODE CODE  ,
+				                                       Extent3.SALES_ORD_ID SALES_ORD_ID  ,
+				                                       Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+				                                       Extent4.NAME NAME  ,
+				                                       Extent4.NRIC NRIC  ,
+				                                       Extent5.CODE CODE1  ,
+				                                       1 C1  ,
+				                                       CASE 
+				                                            WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN Extent7.RESULT_ID
+				                                       ELSE 0
+				                                          END C2  ,
+				                                       CASE 
+				                                            WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN Extent7.NO
+				                                       ELSE ''
+				                                          END C3  ,
+				                                       CASE 
+				                                            WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN Extent8.MEM_TYPE
+				                                       ELSE 0
+				                                          END C4  ,
+				                                       CASE 
+				                                            WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN Extent8.MEM_CODE
+				                                       ELSE ''
+				                                          END C5  ,
+				                                       CASE 
+				                                            WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN Extent8.STUS
+				                                       ELSE 0
+				                                          END C6  ,
+				                                       CASE 
+				                                            WHEN ( Extent6.FIRST_INSTALL_DT IS NOT NULL ) THEN Extent6.FIRST_INSTALL_DT
+				                                       ELSE '1900-01-01'
+				                                          END C7  ,
+				                                       CASE 
+				                                            WHEN ( Extent9.MEM_ID IS NOT NULL ) THEN Extent9.MEM_CODE
+				                                       ELSE ''
+				                                          END C8  
+				                       FROM SVC0008D Extent1
+				                              JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+				                              JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+				                              JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+				                              JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent3.APP_TYPE_ID
+				                              JOIN ( SELECT vOrderInstallationInfo.ORD_ID ORD_ID  ,
+				                                            vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME  ,
+				                                            vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC  ,
+				                                            vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL  ,
+				                                            vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M  ,
+				                                            vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O  ,
+				                                            vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R  ,
+				                                            vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F  ,
+				                                            vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER  ,
+				                                            vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO  ,
+				                                            vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE  ,
+				                                            vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME  ,
+				                                            vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT  ,
+				                                            vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM  ,
+				                                            vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO  ,
+				                                            vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO  ,
+				                                            vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO  ,
+				                                            vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE  ,
+				                                            vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME  ,
+				                                            vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT  ,
+				                                            vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM  ,
+				                                            vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO  ,
+				                                            vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO  ,
+				                                            vOrderInstallationInfo.DSC_ID DSC_ID  ,
+				                                            vOrderInstallationInfo.DSC_CODE DSC_CODE  ,
+				                                            vOrderInstallationInfo.DSC_NAME DSC_NAME  ,
+				                                            vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT  ,
+				                                            vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM  ,
+				                                            vOrderInstallationInfo.VRIFY_REM VRIFY_REM  
+				  FROM SAL1010V vOrderInstallationInfo ) Extent6 ON Extent6.ORD_ID = Extent1.SALES_ORD_ID
+				                              LEFT JOIN SVC0006D Extent7   ON ( Extent7.SCHDUL_ID = Extent1.SCHDUL_ID )
+				                              AND ( 306 = Extent7.TYPE_ID )
+				                              AND ( 1 = Extent7.RESULT_IS_CURR )
+				                              LEFT JOIN ORG0001D Extent8   ON Extent8.MEM_ID = Extent1.CODY_ID
+				                              LEFT JOIN ORG0001D Extent9   ON Extent9.MEM_ID = Extent7.CODY_ID
+				                        WHERE   1=1
+				                        ]]>
+				                        <if test="hsMonth != null and hsMonth != ''">
+                                              AND ( Extent1.YEAR = to_number(to_char(to_date(#{hsMonth},'mm/yyyy'), 'yyyy')) )
+                                              AND ( Extent1.MONTH = to_number(to_char(to_date(#{hsMonth},'mm/yyyy'), 'mm')) )
+                                        </if>
+                                        <if test="hsNumber != null and hsNumber != ''">
+                                             AND Extent1.NO = UPPER(#{hsNumber})
+                                        </if>
+                                        <if test="orderNumber != null and orderNumber != ''">
+                                             AND Extent3.Sales_Ord_No = #{orderNumber}
+                                        </if>
+                                        <if test="memberCode != null and memberCode != ''">
+                                             AND (CASE WHEN (Extent8.Mem_ID IS NOT NULL) THEN Extent8.Mem_Code ELSE '' END) = UPPER(#{memberCode})
+                                        </if>
+                                        <![CDATA[
+                                             AND ROWNUM < 100
+				                                 ) Distinct1 
+				  ORDER BY Distinct1.SCHDUL_ID ASC
+				  ]]>
+        </select>
+     </mapper>
