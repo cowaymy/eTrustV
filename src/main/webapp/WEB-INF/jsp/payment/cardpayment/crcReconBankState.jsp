@@ -150,10 +150,16 @@
     	var gridList = AUIGrid.getGridData(mappedGridID);
     	data.all = gridList;
     	
-    	Common.ajax("POST", "/payment/updateMappingData.do", data, function(result){
-    		Common.alert(result.message);
-    		fn_searchList();
-    	});
+    	if(gridList.length > 0) {
+    		
+    		Common.ajax("POST", "/payment/updateMappingData.do", data, function(result){
+                Common.alert(result.message);
+                fn_searchList();
+            });
+    		
+    	}else{
+    		Common.alert("No Mapping Data");
+    	}
     }
     
     function fn_clear(){
