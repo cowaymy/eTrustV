@@ -44,6 +44,6 @@ public interface CrcReconCRCStateService
 	 * @param model
 	 * @return
 	 */	
-    String updCrcReconState(int userId, List<Object> paramList);
+    boolean updCrcReconState(int userId, List<Object> paramList);
     
 }

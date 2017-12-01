@@ -85,6 +85,10 @@ var mappingLayout = [
                            dataField : "crcTrnscId",
                            headerText : "crcTrnscId",
                            visible : false
+                       },{
+                           dataField : "crcStateAccId",
+                           headerText : "crcStateAccId",
+                           visible : false
                        }];
 
 var crcKeyInLayout = [ 
@@ -155,6 +159,10 @@ var crcStateLayout = [
                           dataField : "crcTrnscId",
                           headerText : "crcTrnscId",
                           visible : false
+                      }, {
+                          dataField : "crcStateAccId",
+                          headerText : "crcStateAccId",
+                          visible : false
                       }];
 
 	
@@ -196,7 +204,8 @@ var crcStateLayout = [
                 item.crcTrnscAppv = stateRowItem.item.crcTrnscAppv;
                 item.amount = stateRowItem.item.grosAmt;
                 item.groupSeq = crcKeyInVal;//hidden key
-                item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden key    
+                item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden key
+                item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden key
                     
                 console.log(item);
                 AUIGrid.addRow(mappingGridId, item, "last");
@@ -218,11 +227,16 @@ var crcStateLayout = [
         var data = {};
         if(gridList.length > 0) {
             data.all = gridList;
-            Common.ajax("POST","/payment/updCrcReconState.do", data , function(result){
-                console.log(result);
-                
-                AUIGrid.clearGridData(mappingGridId);
-                Common.alert(result.message);
+            
+            Common.confirm('<b>Are you sure you want to match this Payment & CRC items?</b>',function (){
+            	
+            	Common.ajax("POST","/payment/updCrcReconState.do", data , function(result){
+                    console.log(result);
+                    
+                    AUIGrid.clearGridData(mappingGridId);
+                    Common.alert(result.message);
+                });
+            	
             });
             
         }else{

@@ -52,5 +52,11 @@ public interface CrcReconCRCStateMapper {
 	 */
 	void updCrcKeyIn(Map<String, Object> params);
 	
+	/**
+	 * insertCrcStatementITF
+	 * @param params
+	 * @return
+	 */
+	void insertCrcStatementITF(Map<String, Object> params);
 	
 }

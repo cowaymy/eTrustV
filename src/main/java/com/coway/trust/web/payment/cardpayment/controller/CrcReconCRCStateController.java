@@ -86,16 +86,15 @@ public class CrcReconCRCStateController {
 	public ResponseEntity<ReturnMessage> updCrcReconState(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
 		
 		ReturnMessage message = new ReturnMessage();
-		//Map<String, Object> resultMap = new HashMap<String, Object>();
-				
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+		boolean updateResult = crcReconCRCStateService.updCrcReconState(sessionVO.getUserId(), gridList);
 		
-		String updateResult = crcReconCRCStateService.updCrcReconState(sessionVO.getUserId(), gridList);
+		if(updateResult){
+			message.setMessage("This Payment form has successfully been approved.");
+		}
 		
 		// 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
-    	//message.setData(resultMap);
-    	message.setMessage(updateResult);
 		
 		return ResponseEntity.ok(message);
 	}

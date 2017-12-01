@@ -55,19 +55,23 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public String updCrcReconState(int userId , List<Object> paramList) {
+	public boolean updCrcReconState(int userId , List<Object> paramList) {
 		
     	if (paramList.size() > 0) {    		
-    		Map<String, Object> hm = null;    		
+    		Map<String, Object> hm = null;
+    		//int index = 0;
     		for (Object map : paramList) {
     			hm = (HashMap<String, Object>) map;  
     			hm.put("userId", userId);
+    			//hm.put("bankSeq", index+1);
     			crcReconCRCStateMapper.updCrcKeyIn(hm);
     			crcReconCRCStateMapper.updCrcStatement(hm);
+    			//crcReconCRCStateMapper.insertCrcStatementITF(hm);
+    			//index++;
     		}
     	}
     	
-    	return "success";
+    	return true;
 	}
 	
 }
