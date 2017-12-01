@@ -2131,8 +2131,6 @@ and cust.cust_id = custCnt.cust_id
 
            </select>
 
-
-
 <select id="getHsFilterHistoryDList" parameterType="Map" resultType="egovMap">
 
                    select     BS_RESULT_PART_ID as filter_Code
@@ -2167,10 +2165,6 @@ and cust.cust_id = custCnt.cust_id
                                <![CDATA[  AND ROWNUM < 4]]>
 
            </select>
-
-
-
-
 
 <select id="getHsPartsHistoryDList" parameterType="Map" resultType="egovMap">
 
@@ -2388,8 +2382,6 @@ and cust.cust_id = custCnt.cust_id
                             )
                 </insert>
 
-
-
                 <insert id="insertHsFailServiceLog" parameterType="Map">
                             INSERT INTO SVC0041T (
                                RESULT_SEQ
@@ -2408,7 +2400,6 @@ and cust.cust_id = custCnt.cust_id
                                , 'N'
                             )
                 </insert>
-
 
                 <insert id="insertAsFailServiceLog" parameterType="Map">
                             INSERT INTO SVC0042T (
@@ -2429,8 +2420,6 @@ and cust.cust_id = custCnt.cust_id
                             )
                 </insert>
 
-
-
                 <insert id="insertInsFailServiceLog" parameterType="Map">
                             INSERT INTO SVC0043T (
                                RESULT_SEQ
@@ -2450,7 +2439,6 @@ and cust.cust_id = custCnt.cust_id
                             )
                 </insert>
 
-
                 <insert id="insertPrFailServiceLog" parameterType="Map">
                             INSERT INTO SVC0044T (
                                RESULT_SEQ
@@ -2469,10 +2457,6 @@ and cust.cust_id = custCnt.cust_id
                                , 'N'
                             )
                 </insert>
-
-
-
-
 
                 <insert id="insertCanSMSServiceLog" parameterType="Map">
                             INSERT INTO SVC0045T (
@@ -2494,8 +2478,6 @@ and cust.cust_id = custCnt.cust_id
                                , 'N'
                             )
                 </insert>
-
-
 
                 <insert id="insertASRequestRegistrationLogs" parameterType="Map">
                             INSERT INTO SVC0049T (
@@ -2522,8 +2504,6 @@ and cust.cust_id = custCnt.cust_id
 
                 </insert>
 
-
-
                <insert id="insertASRequestRegist" parameterType="Map">
 					insert into SVC0001D (
 					                AS_ID,AS_NO,AS_SO_ID
@@ -2541,11 +2521,6 @@ and cust.cust_id = custCnt.cust_id
 
                 </insert>
 
-
-
-
-
-
                   <update id="updateInsReAppointmentReturnResult" parameterType="Map">
                          update SAL0046D
                             set APPNT_DT = to_date(#{appointmentDate},'YYYYMMDD'),
@@ -2562,10 +2537,6 @@ and cust.cust_id = custCnt.cust_id
                                                                                  where sales_ord_no =  #{salesOrderNo})
 
                     </update>
-
-
-
-
 
                    <update id="updateHsReAppointmentReturnResult" parameterType="Map">
                         update SVC0008D
@@ -2685,8 +2656,6 @@ and cust.cust_id = custCnt.cust_id
 					                                           and INSTALL_ENTRY_NO = #{serviceNo})
                     </update>
 
-
-
                    <update id="upDateInstallFailJobResultM" parameterType="Map">
 						 update SAL0046D
 						        set STUS_CODE_ID = '21',
@@ -2701,13 +2670,7 @@ and cust.cust_id = custCnt.cust_id
 						                                       where sales_ord_no =  #{salesOrderNo}  )
                     </update>
 
-
-
-
-
        <select id="getASRequestResultList" parameterType="Map" resultType="egovMap">
-
-
 					SELECT
 					 to_char(B.MEM_CODE) as MEM_CODE
 					 , to_char(F.NAME) AS cust_Name
@@ -2764,11 +2727,7 @@ and cust.cust_id = custCnt.cust_id
 
          </select>
 
-
-
        <select id="getASRequestCustList" parameterType="Map" resultType="egovMap">
-
-
 				SELECT
 				   to_char(C.MEM_CODE) AS USER_ID
 				   , to_char(E.NAME) AS cust_Name
@@ -2811,10 +2770,6 @@ and cust.cust_id = custCnt.cust_id
 				AND A.CUST_ID = E.CUST_ID
 				AND B.SALES_ORD_ID = F.SALES_ORD_ID(+)
 				AND F.INSTALL_ENTRY_ID = J.ENTRY_ID(+)
-				AND C.MEM_ID = (SELECT MEM_ID
-                                        FROM ORG0001D
-                                        WHERE 1=1
-                                        AND MEM_CODE = #{userId})
                 <choose>
                    <when test= 'searchType == "1" and searchType != null and searchType != "" '>
                         AND A.SALES_ORD_NO LIKE '%' ||  (#{searchKeyword})  || '%'
@@ -2846,23 +2801,5 @@ and cust.cust_id = custCnt.cust_id
 
 
                 </choose>
-
-
-
-
-
-
          </select>
-
-
-
-
-
-
-
-
-
-
-
-
 </mapper>
