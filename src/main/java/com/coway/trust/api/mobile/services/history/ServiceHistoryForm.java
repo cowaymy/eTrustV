@@ -13,9 +13,11 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "ServiceHistoryForm", description = "공통코드 Form")
 public class ServiceHistoryForm {
 	
-	
 	@ApiModelProperty(value = "userId [default : '' 전체] 예)  ", example = "1, 2, 3")
 	private String userId;
+	
+//	@ApiModelProperty(value = "userId [default : '' 전체] 예)  ", example = "1, 2, 3")
+//	private String userId;
 
 	@ApiModelProperty(value = "salesOrderNo [default : '' 전체] 예) 1209382", example = "1, 2, 3")
 	private String salesOrderNo;
