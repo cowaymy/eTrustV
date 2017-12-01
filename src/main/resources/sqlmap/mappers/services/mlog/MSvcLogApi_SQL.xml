@@ -427,7 +427,7 @@ and cust.cust_id = custCnt.cust_id
 							                 Decode(svc0001d.as_sesion_code, 'M', '1000',
 							                                                 'A', '1400',
 							                                                 'E', '1900',
-							                                                 'O', '2000')
+							                                                 'O', '2000', '2000')
 							                 ELSE To_char(Replace (Substr (svc0001d.as_appnt_tm, 0, 5), ':')
 							                      )
 							               END
@@ -941,14 +941,14 @@ and cust.cust_id = custCnt.cust_id
 				                     'M', '1000',
 				                     'A', '1400',
 				                     'E', '1900',
-				                     'O', '2000')
+				                     'O', '2000', '2000')
 				          ELSE
 				             TO_CHAR (REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':'))
 				       END
 				          appointment_Time,
 				       TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY') AS plan_Year,
 				       TO_CHAR (SAL0046D.INSTALL_DT, 'MM') AS plan_Month,
-				       SAL0046D.SESION_CODE AS job_Session,
+				       CASE WHEN SAL0046D.SESION_CODE IS NULL THEN 'O' ELSE SAL0046D.SESION_CODE END AS job_Session,
 				       <!--sal0046d e-->
 				       <!--org0001d s-->
 				       ORG0001D.NAME AS hp_Name,
