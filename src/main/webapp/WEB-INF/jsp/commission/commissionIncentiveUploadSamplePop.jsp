@@ -56,7 +56,7 @@ var cdGridID;
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : false,
-            selectionMode : "singleRow",
+            selectionMode : "singleRow"
         };
         
         hpGridID = AUIGrid.create("#grid_wrap_hp", columnLayout,gridPros);
