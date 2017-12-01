@@ -245,7 +245,7 @@
 		  T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE ,T2.MEM_TYPE MEM_TYPE,
 		  nvl(V1,'0') v1,nvl(V2,'0') v2,nvl(V3,'0') v3,nvl(V4,'0') v4,nvl(V5,'0') v5,
 		  nvl(V6,'0') v6,nvl(V7,'0') v7,nvl(V8,'0') v8,nvl(V9,'0') v9,nvl(V10,'0') v10,
-		  nvl(V11,'0') v11,nvl(V12,'0') v12,nvl(V13,'0') v13,nvl(V14,'0') v14 
+		  nvl(V11,'0') v11,nvl(V12,'0') v12,nvl(V13,'0') v13,nvl(V14,'0') v14 ,(nvl(V1,0) + nvl(V5,0) + nvl(V7,0) ) TOTAL_JOB
 		FROM CMM0028D T1 JOIN ORG0001D T2 
 		      ON T1.EMPLY_ID = T2.MEM_ID
 		  JOIN SYS0013M T3
@@ -1174,9 +1174,13 @@
         SELECT 
             nvl(T1.TASK_ID ,'0') TASK_ID,
             nvl(T1.ORD_ID, '0') ORD_ID,
+            nvl(T3.SALES_ORD_NO, '0') ORD_NO,
             nvl(T1.INST_ID ,'0') INST_ID,
+            nvl(T5.INSTALL_ENTRY_NO ,'0') INST_NO,
             nvl(T1.STOCK_ID ,'0') STOCK_ID,
+            nvl(T3.STK_DESC, '0') STOCK_DESC,
             nvl(T1.APP_TYPE_ID ,'0') APP_TYPE_ID,
+            nvl(T4.CODE_DESC,' ') APP_DESC,
 		    nvl(T1.INST_PERSON_ID ,'0') INST_PERSON_ID,
 		    nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
 		    nvl(T1.PRC, '0') PRC,
@@ -1196,6 +1200,15 @@
 		            and s2.EMPLY_CODE LIKE '%'|| #{instPersonCd} ||'%'  
 		        </if>
 		    )T2 ON t1.RUN_ID=t2.RUN_ID 
+		    JOIN ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+                      FROM SAL0001D T1 JOIN SAL0002D T2
+                         ON T1.SALES_ORD_ID = T2.SALES_ORD_ID            
+                      LEFT OUTER JOIN SYS0026M T3
+                         ON T2.ITM_STK_ID=T3.STK_ID
+                      GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+                 )T3 ON T1.ORD_ID=T3.SALES_ORD_ID
+            JOIN SYS0013M T4 ON T1.APP_TYPE_ID = T4.CODE_ID
+            JOIN SAL0046D T5 ON T1.INST_ID = T5.INSTALL_ENTRY_ID
         WHERE T1.TASK_ID= #{taskId}
         <if test="useYnCombo != null and useYnCombo != ''">
           AND T2.IS_EXCLUDE = #{useYnCombo}
@@ -1283,10 +1296,14 @@
     <select id="selectCMM0020T" parameterType="Map" resultType="EgovMap">
        SELECT 
             nvl(T1.ORD_ID, '0') ORD_ID,
+            nvl(T3.SALES_ORD_NO, '0') ORD_NO,
             nvl(T1.AS_ENTRY_ID, '0') AS_ENTRY_ID,
             nvl(T1.ASR_ID, '0') ASR_ID,
+            nvl(T4.AS_NO,'0') AS_NO,
             nvl(T1.STOCK_ID, '0') STOCK_ID,
+            nvl(T3.STK_DESC, '0') STOCK_DESC,
             nvl(T1.APP_TYPE_ID, '0') APP_TYPE_ID,
+            nvl(T5.CODE_DESC,' ') APP_DESC,
 		    nvl(T1.AS_PERSON_ID,'0') AS_PERSON_ID,
 		    nvl(T2.EMPLY_CODE,'0') EMPLY_CODE, 
 		    nvl(T1.PRC, '0') PRC,
@@ -1296,9 +1313,9 @@
 		FROM CMM0020T T1 JOIN (
 		        SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
 		        FROM CMM0020T s1 JOIN CMM0006T s2 
-                  ON s1.AS_PERSON_ID=s2.EMPLY_ID 
-                      AND s2.IS_EXCLUDE=0 
-                      AND s2.COMM_TASK_ID=#{taskId}
+                    ON s1.AS_PERSON_ID=s2.EMPLY_ID 
+	                    AND s2.IS_EXCLUDE=0 
+	                    AND s2.COMM_TASK_ID=#{taskId}
 		        WHERE s1.TASK_ID= #{taskId}
 		        <if test="ordId != null and ordId != ''">
 		            AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'  
@@ -1307,6 +1324,18 @@
 		            AND s2.EMPLY_CODE LIKE '%'|| #{asEntryCd} ||'%'  
 		        </if>
 		    )T2 ON t1.RUN_ID=t2.RUN_ID 
+		    JOIN ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+			          FROM SAL0001D T1 JOIN SAL0002D T2
+	                     ON T1.SALES_ORD_ID = T2.SALES_ORD_ID            
+	                  LEFT OUTER JOIN SYS0026M T3
+	                     ON T2.ITM_STK_ID=T3.STK_ID
+	                  GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+	             )T3 ON T1.ORD_ID=T3.SALES_ORD_ID
+            JOIN (SELECT a.AS_RESULT_ID,b.AS_NO 
+	                FROM SVC0004D a JOIN SVC0001D b 
+	                       ON a.AS_ENTRY_ID=b.AS_ID
+                )T4 ON t1.ASR_ID=T4.AS_RESULT_ID
+            JOIN SYS0013M T5 ON T1.APP_TYPE_ID = T5.CODE_ID
         WHERE T1.TASK_ID = #{taskId}
         <if test="useYnCombo != null and useYnCombo != ''">
             AND T2.IS_EXCLUDE = #{useYnCombo}
@@ -1342,9 +1371,12 @@
     <select id="selectCMM0021T" parameterType="Map" resultType="EgovMap">
         SELECT 
 			nvl(T1.ORD_ID, '0') ORD_ID,
+			nvl(T3.SALES_ORD_NO, '0') ORD_NO,
 			nvl(T1.RET_ID, '0') RET_ID,
+			nvl(T4.RETN_NO, '0') RETN_NO,
 			nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
 			nvl(T1.STOCK_ID, '0') STOCK_ID,
+			nvl(T3.STK_DESC, '0') STOCK_DESC,
 			nvl(T1.APP_TYPE_ID, '0') APP_TYPE_ID,
 			nvl(T1.RET_PERSON_ID,'0') RET_PERSON_ID,
 		    nvl(T1.PRC,0) prc, 
@@ -1368,6 +1400,14 @@
                   AND s2.EMPLY_TYPE_ID = #{codeId}
                 </if>
 		    )T2 ON t1.RUN_ID=t2.RUN_ID 
+			JOIN ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+				     FROM SAL0001D T1 JOIN SAL0002D T2
+				        ON T1.SALES_ORD_ID = T2.SALES_ORD_ID            
+				     LEFT OUTER JOIN SYS0026M T3
+				        ON T2.ITM_STK_ID=T3.STK_ID
+				     GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+				)T3 ON T1.ORD_ID=T3.SALES_ORD_ID
+            JOIN LOG0038D T4 ON T1.RET_ID = T4.STK_RETN_ID
 		WHERE T1.TASK_ID = #{taskId}
 		<if test="useYnCombo != null and useYnCombo != ''">
             AND T2.IS_EXCLUDE = #{useYnCombo}

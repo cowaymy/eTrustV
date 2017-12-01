@@ -88,31 +88,51 @@
 	            unCheckValue : "0"
 	        }
 	    },{
-	        dataField : "ordId",
-	        headerText : "ORD ID",
-	        style : "my-column",
-	        editable : false
-	    },{
-	        dataField : "instId",
-	        headerText : " INST ID",
-	        style : "my-column",
-	        editable : false
-	    },{
+            dataField : "ordId",
+            headerText : "ORD ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "ordNo",
+            headerText : "ORD NO",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "instId",
+            headerText : " INST ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "instNo",
+            headerText : " INST NO",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "emplyCode",
 	        headerText : "INST CODE",
 	        style : "my-column",
 	        editable : false
 	    },{
-	        dataField : "stockId",
-	        headerText : "STOCK ID",
-	        style : "my-column",
-	        editable : false
-	    },{
-	        dataField : "appTypeId",
-	        headerText : "APP TYPE ID",
-	        style : "my-column",
-	        editable : false
-	    },{
+            dataField : "stockId",
+            headerText : "STOCK ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "stockDesc",
+            headerText : "STOCK DESC",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "appTypeId",
+            headerText : "APP TYPE ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "appDesc",
+            headerText : "APP TYPE DESC",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "instPersonId",
 	        headerText : "INST PERSON ID",
 	        style : "my-column",

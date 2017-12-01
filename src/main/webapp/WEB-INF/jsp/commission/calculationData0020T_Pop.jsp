@@ -94,6 +94,11 @@
 	        style : "my-column",
 	        editable : false
 	    },{
+            dataField : "ordNo",
+            headerText : "ORD NO",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "asEntryId",
 	        headerText : " AS ENTRY ID",
 	        style : "my-column",
@@ -104,21 +109,36 @@
 	        style : "my-column",
 	        editable : false
 	    },{
-	        dataField : "asrId",
-	        headerText : "ASR ID",
-	        style : "my-column",
-	        editable : false
-	    },{
-	        dataField : "stockId",
-	        headerText : "STOCK ID",
-	        style : "my-column",
-	        editable : false
-	    },{
+            dataField : "asrId",
+            headerText : "ASR ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "asNo",
+            headerText : "ASR NO",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "stockId",
+            headerText : "STOCK ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "stockDesc",
+            headerText : "STOCK DESC",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "appTypeId",
 	        headerText : "APP TYPE ID",
 	        style : "my-column",
 	        editable : false
 	    },{
+            dataField : "appDesc",
+            headerText : "APP TYPE DESC",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "asPersonId",
 	        headerText : "AS PERSON ID",
 	        style : "my-column",

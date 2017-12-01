@@ -56,9 +56,9 @@ public class CommissionExcelDownloadController {
 				if (codeNm.equals(CommissionConstants.COMIS_CTR_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
-							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
+							"v4", "v5", "v6", "v7", "v8","totalJob", "v9", "v10", "v11", "v12", "v13", "v14" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "AS Count",
-							"AS Sum CP", "BS Count", "BS Sum CP", "Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP",
+							"AS Sum CP", "BS Count", "BS Sum CP", "Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP","TOTAL JOB",
 							"Total Point", "Pro Percent", "Per Percent", "Pro Factor (30%)", "Per Factor (70%)",
 							"Sum Facto" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
@@ -66,9 +66,9 @@ public class CommissionExcelDownloadController {
 				} else if (codeNm.equals(CommissionConstants.COMIS_CTL_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
-							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
+							"v4", "v5", "v6", "v7", "v8","totalJob", "v9", "v10", "v11", "v12", "v13", "v14" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "AS Count",
-							"AS Sum CP", "BS Count", "BS Sum CP", "Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP",
+							"AS Sum CP", "BS Count", "BS Sum CP", "Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP","TOTAL JOB",
 							"Total Point", "Pro Percent", "Per Percent", "Pro Factor (30%)", "Per Factor (70%)",
 							"Sum Facto" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
@@ -76,9 +76,9 @@ public class CommissionExcelDownloadController {
 				} else if (codeNm.equals(CommissionConstants.COMIS_CTM_P01)) {
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
 					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3",
-							"v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
+							"v4", "v5", "v6", "v7", "v8","totalJob", "v9", "v10", "v11", "v12", "v13", "v14" };
 					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "AS Count",
-							"AS Sum CP", "BS Count", "BS Sum CP", "Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP",
+							"AS Sum CP", "BS Count", "BS Sum CP", "Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP","TOTAL JOB",
 							"Total Point", "Pro Percent", "Per Percent", "Pro Factor (30%)", "Per Factor (70%)",
 							"Sum Facto" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
@@ -645,14 +645,37 @@ public class CommissionExcelDownloadController {
 						,"TOT" ,"PV YEAR","PV MONTH","DEPT CODE","GRP CODE","ORG CODE","RUN ID","TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad60T(map, downloadHandler);
-			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P01)) {
+			}else if (codeNm.equals(CommissionConstants.COMIS_BSD_P017)) {
+				map.put("codeId", request.getParameter("codeId"));
+				map.put("emplyCd", request.getParameter("emplyCd"));
+				map.put("useYnCombo", request.getParameter("useYnCombo"));
+
+				columns = new String[] { "grpName","emplyCode","emplyId","neoCnt", "tot", "outrgt", "instlmt", "rental", "pv", "pvYear", "pvMonth",
+						"deptCode", "grpCode", "orgCode", "runId", "taskId", "isExclude" };
+				titles = new String[] { "GRP NAME","EMPLY CODE","EMPLY ID","NEO CNT", "TOT", "OUTRGT", "INSTLMT", "RENTAL", "PV", "PV YEAR", "PV MONTH",
+						"DEPT CODE", "GRP CODE", "ORG CODE", "run Id", "task Id", "is Exclude" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad67T(map, downloadHandler);
+			}else if (codeNm.equals(CommissionConstants.COMIS_BSD_P018)) {
+				map.put("codeId", request.getParameter("codeId"));
+				map.put("emplyCd", request.getParameter("emplyCd"));
+				map.put("useYnCombo", request.getParameter("useYnCombo"));
+
+				columns = new String[] { "grpName","emplyCode","emplyId","tot", "outrgt", "instlmt", "rental", "pv", "pvYear", "pvMonth", "deptCode",
+						"grpCode", "orgCode", "runId", "taskId", "isExclude" };
+				titles = new String[] { "GRP NAME","EMPLY CODE","EMPLY ID","TOT", "OUTRGT", "INSTLMT", "RENTAL", "PV", "PV YEAR", "PV MONTH", "DEPT CODE",
+						"GRP CODE", "ORG CODE", "run Id", "task Id", "is Exclude" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad68T(map, downloadHandler);
+			}
+			else if (codeNm.equals(CommissionConstants.COMIS_CTB_P01)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("instPersonCd", request.getParameter("instPersonCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "taskId", "ordId", "instId", "stockId", "appTypeId", "instPersonId",
+				columns = new String[] { "taskId", "ordId", "ordNo", "instId","instNo", "stockId", "stockDesc", "appTypeId","appDesc", "instPersonId",
 						"emplyCode", "prc", "runId", "isExclude" };
-				titles = new String[] { "TASK ID", "ORD ID", "INST ID", "STOCK ID", "APP TYPE ID", "INST PERSON ID",
+				titles = new String[] { "TASK ID", "ORD ID","ORD NO", "INST ID", "INST NO", "STOCK ID", "STOCK DESC", "APP TYPE ID","APP TYPE DESC", "INST PERSON ID",
 						"EMPLY CODE", "PRC", "RUN ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad18T(map, downloadHandler);
@@ -674,9 +697,9 @@ public class CommissionExcelDownloadController {
 				map.put("asEntryCd", request.getParameter("asEntryCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "ordId", "asEntryId", "asrId", "stockId", "appTypeId", "asPersonId",
+				columns = new String[] { "ordId","ordNo", "asEntryId", "asrId","asNo", "stockId","stockDesc", "appTypeId","appDesc" ,"asPersonId",
 						"emplyCode", "prc", "runId", "taskId", "isExclude" };
-				titles = new String[] { "ORD ID", "AS ENTRY ID", "ASR ID", "STOCK ID", "APP TYPE ID", "AS PERSON ID",
+				titles = new String[] { "ORD ID","ORD NO" ,"AS ENTRY ID", "ASR ID", "ASR NO","STOCK ID", "STOCK DESC", "APP TYPE ID","APP TYPE DESC", "AS PERSON ID",
 						"EMPLY CODE", "PRC", "RUN ID", "TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad20T(map, downloadHandler);
@@ -686,9 +709,9 @@ public class CommissionExcelDownloadController {
 				map.put("retPCd", request.getParameter("retPCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
 
-				columns = new String[] { "ordId", "retId", "emplyCode", "stockId", "appTypeId", "retPersonId", "prc",
+				columns = new String[] { "ordId","ordNo", "retId", "retnNo","emplyCode", "stockId","stockDesc", "appTypeId", "retPersonId", "prc",
 						"taskId", "runId", "isExclude" };
-				titles = new String[] { "ORD ID", "RET ID", "EMPLY CODE", "STOCK ID", "APP TYPE ID", "RET PERSON ID",
+				titles = new String[] { "ORD ID","ORD NO", "RET ID", "RETN NO","EMPLY CODE", "STOCK ID","STOCK DESC", "APP TYPE ID", "RET PERSON ID",
 						"PRC", "TASK ID", "RUN ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad21T(map, downloadHandler);

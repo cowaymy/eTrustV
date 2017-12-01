@@ -88,28 +88,23 @@
 	           unCheckValue : "0"
 	       }
 	   }, {
-	       dataField : "emplyCode",
-	       headerText : "EMPLY CODE",
+           dataField : "grpName",
+           headerText : "GRP NAME",
+           style : "my-column",
+           editable : false
+       }, {
+           dataField : "emplyCode",
+           headerText : "EMPLY CODE",
+           style : "my-column",
+           editable : false
+       }, {
+	       dataField : "emplyId",
+	       headerText : "EMPLY ID",
 	       style : "my-column",
 	       editable : false
 	   }, {
-	       dataField : "orgTypeCode",
-	       headerText : "ORG TYPE",
-	       style : "my-column",
-	       editable : false
-	   }, {
-	       dataField : "mRank",
-	       headerText : "M RANK",
-	       style : "my-column",
-	       editable : false
-	   }, {
-	       dataField : "qRank",
-	       headerText : "Q RANK",
-	       style : "my-column",
-	       editable : false
-	   },{
-	       dataField : "yRank",
-	       headerText : "Y RANK",
+	       dataField : "tot",
+	       headerText : "TOT",
 	       style : "my-column",
 	       editable : false
 	   },{
@@ -125,16 +120,8 @@
 	       headerText : "RENTAL",      
 	       editable : false
 	   },{
-	       dataField : "outrightPlus",
-	       headerText : "OUTRIGHT PLUS",       
-	       editable : false
-	   },{
 	       dataField : "pv",
 	       headerText : "PV",      
-	       editable : false
-	   },{
-	       dataField : "tot",
-	       headerText : "TOTAL",    
 	       editable : false
 	   },{
 	       dataField : "pvYear",

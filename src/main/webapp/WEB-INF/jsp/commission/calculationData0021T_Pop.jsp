@@ -88,28 +88,43 @@
 	            unCheckValue : "0"
 	        }
 	    }, {
-	        dataField : "ordId",
-	        headerText : "ORD_ID",
-	        style : "my-column",
-	        editable : false
-	    },{
+            dataField : "ordId",
+            headerText : "ORD ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "ordNo",
+            headerText : "ORD NO",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "retId",
 	        headerText : "RET ID",
 	        style : "my-column",
 	        editable : false
 	    },{
-	        dataField : "stockId",
-	        headerText : "STOCK_ID",
-	        style : "my-column",
-	        editable : false
-	    },{
-	        dataField : "appTypeId",
-	        headerText : "APP_TYPE_ID",
-	        style : "my-column",
-	        editable : false
-	    },{
+            dataField : "retnNo",
+            headerText : "RET NO",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "stockId",
+            headerText : "STOCK_ID",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "stockDesc",
+            headerText : "STOCK DESC",
+            style : "my-column",
+            editable : false
+        },{
+            dataField : "appTypeId",
+            headerText : "APP TYPE ID",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "retPersonId",
-	        headerText : "RET_PERSON_ID",
+	        headerText : "RET PERSON ID",
 	        style : "my-column",
 	        editable : false
 	    },{

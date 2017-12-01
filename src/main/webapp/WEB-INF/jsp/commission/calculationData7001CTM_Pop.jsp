@@ -101,6 +101,11 @@
         style : "my-column",
         editable : false
     },{
+        dataField : "totalJob",
+        headerText : "Total Job",
+        style : "my-column",
+        editable : false
+    },{
         dataField : "v9",
         headerText : "Total Point",
         style : "my-column",
