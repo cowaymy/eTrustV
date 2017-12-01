@@ -184,7 +184,8 @@
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true,
         
-        headerHeight : 40
+        headerHeight : 40,
+        selectionMode : "singleRow"
 
     };
 	myGridID_7002CDG = AUIGrid.create("#grid_wrap_7002CDG", columnLayout_7002CD,gridPros);

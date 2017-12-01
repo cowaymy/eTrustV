@@ -154,7 +154,8 @@
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true,
         
-        headerHeight : 40
+        headerHeight : 40,
+        selectionMode : "singleRow"
 
     };
 	myGridID_7001CTM = AUIGrid.create("#grid_wrap_7001CTM", columnLayout_7001CT,gridPros);
@@ -262,7 +263,7 @@
 						<td>
 						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7001CT_Dt" class="j_date2" value="${searchDt_pop }" />
 						</td>
-						<th scope="row">Member Code>
+						<th scope="row">Member Code</th>
 						<td>
 						      <input type="text" id="memberCd_7001CT" name="memberCd" style="width: 100px;">
 						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
