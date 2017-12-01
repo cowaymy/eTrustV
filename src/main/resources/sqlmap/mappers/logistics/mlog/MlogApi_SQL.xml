@@ -2,6 +2,61 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
 
+    <select id="StockReceiveList" parameterType="Map" resultType="egovMap">
+	    select L47.REQST_NO,
+	       L54.DELVRY_GI_DT GI_DATE,
+	       L54.DELVRY_GR_DT GR_DATE,
+	       L54.DELVRY_NO SMO_NO,
+	       S28r.WH_LOC_DESC GI_LOCATION_NAME,
+	       S28r.WH_LOC_CODE GI_LOCATION_CODE,
+	       S28Q.WH_LOC_CODE LOCATION_CODE,
+	       S28Q.WH_LOC_DESC,
+	       DECODE (l47.PRIDIC_FRQNCY,'A', 'Auto','M', 'Manual',l47.PRIDIC_FRQNCY) REQ_TYPE,
+	       NVL (S47.USER_FULL_NAME, L54.CRT_USER_ID) GI_CUST_NAME,
+	       L47.REQST_STUS req_Status,
+	       (SELECT WH_LOC_ID FROM sys0028m WHERE WH_LOC_CODE = S28r.rdc_code) rdc_code
+	  from log0054m l54 
+	     , log0047m l47
+	     , sys0028m s28q
+	     , sys0028m s28r 
+	     , sys0047m s47
+	     , (select distinct l48.reqst_no ,l55.delvry_no
+	         from log0048d l48 , log0055d l55
+	         where L48.REQST_NO = l55.reqst_no 
+	           and l48.itm_code= l55.itm_code
+	        ) rd
+	 where 1 = 1
+	   and l47.reqst_no   =  rd.reqst_no
+	   and l54.delvry_no  = rd.delvry_no
+	   AND L54.CRT_USER_ID = S47.user_id(+)
+	   and L47.rciv_CDC_RDC = s28r.wh_loc_id
+	   and L47.REQST_CDC_RDC = s28q.wh_loc_id
+<!-- 	   AND L54.DELVRY_DT >= TO_CHAR (TO_DATE ('20171130', 'YYYY/MM/DD'), 'yyyymmdd') -->
+<!-- 	   AND L54.DELVRY_DT <= TO_CHAR (TO_DATE ('20171202', 'YYYY/MM/DD'), 'yyyymmdd') -->
+	   AND l47.trnsc_type = 'UM'
+	   and s28q.wh_loc_code = #{userId}  
+	    <if test="searchType == 1 ">
+            and l47.pridic_frqncy = 'A'
+        </if>
+        <if test="searchType == 2 ">
+            and l47.pridic_frqncy = 'M'
+        </if>
+        <if test="searchStatus == 1 ">
+               and nvl(L54.DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y' 
+         </if>
+         <if test="searchStatus == 2 ">
+               and nvl(L54.DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'N' 
+         </if>
+	   <if test="searchFromDate !=null and searchFromDate !=''">
+        AND L54.DELVRY_DT <![CDATA[>=]]>  TO_CHAR (TO_DATE (#{searchFromDate},    'YYYY/MM/DD'),'yyyymmdd') 
+        </if>
+        <if test="searchToDate !=null and searchToDate !=''">
+        AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYY/MM/DD'),'yyyymmdd') 
+        </if>       
+    </select>
+
+
+
 
 	<select id="getRDCStockList" parameterType="Map" resultType="egovMap">
 		SELECT
@@ -252,86 +307,6 @@
 <!--             AND UPPER(T1.stk_desc) LIKE UPPER(#{searchKeyword}) || '%' -->
 <!--         </if> -->
 <!-- 	</select> -->
-
-	<select id="StockReceiveList" parameterType="Map" resultType="egovMap">
-		SELECT 
-		L47.REQST_NO,
-		L54.DELVRY_GI_DT GI_DATE,
-		L54.DELVRY_GR_DT GR_DATE,
-		L55.DELVRY_NO SMO_NO,
-		DBMS_LOB.SUBSTR (S28C.WH_LOC_DESC, 4000) GI_LOCATION_NAME,
-		DBMS_LOB.SUBSTR (S28Q.WH_LOC_CODE, 4000) LOCATION_CODE,
-		S28C.WH_LOC_CODE GI_LOCATION_CODE,
-		DECODE (l47.PRIDIC_FRQNCY,
-		'A', 'Auto',
-		'M', 'Manual',
-		l47.PRIDIC_FRQNCY)
-		REQ_TYPE,
-		S28Q.WH_LOC_DESC,
-		 nvl(S47.USER_FULL_NAME,L54.CRT_USER_ID)  GI_CUST_NAME,
-		L47.REQST_STUS req_Status,
-		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28C.rdc_code) rdc_code
-		FROM LOG0047M L47,
-		LOG0048D L48,
-		LOG0054M L54,
-		LOG0055D L55,
-		SYS0047M S47,
-		(SELECT *
-		FROM SYS0013M
-		WHERE CODE_MASTER_ID = 306) TRAN,
-		(SELECT *
-		FROM SYS0013M
-		WHERE CODE_MASTER_ID = 308) TRAND,
-		(SELECT *
-		FROM SYS0013M
-		WHERE CODE_MASTER_ID = 42) UOMT,
-		(SELECT * FROM SYS0028M WHERE WH_LOC_CODE = #{userId}) S28Q, 
-<!-- 		SYS0028M S28Q, -->
-		SYS0028M S28C
-		<!-- SYS0028M S28Q -->
-		WHERE 1 = 1
-		AND L47.TRNSC_TYPE = TRAN.CODE
-		AND L47.TRNSC_TYPE_DTL = TRAND.CODE
-		AND L47.RCIV_CDC_RDC = S28C.WH_LOC_ID
-		AND L47.REQST_CDC_RDC = S28Q.WH_LOC_ID
-		AND L54.CRT_USER_ID=S47.user_id(+)
-		AND L48.UOM = UOMT.CODE_ID
-		AND L48.ITM_CODE = L55.ITM_CODE
-		AND L54.DELVRY_NO = L55.DELVRY_NO
-		AND L48.REQST_NO = L55.REQST_NO
-		AND L47.REQST_NO = L48.REQST_NO
-		AND L48.REQST_NO_ITM= L55.DELVRY_NO_ITM
-		AND L54.DELVRY_GI_CMPLT = 'Y'
-		AND l47.trnsc_type = 'UM'
-		<if test="searchFromDate !=null and searchFromDate !=''">
-		AND L54.DELVRY_DT <![CDATA[>=]]>  TO_CHAR (TO_DATE (#{searchFromDate},    'YYYY/MM/DD'),'yyyymmdd') 
-		</if>
-		<if test="searchToDate !=null and searchToDate !=''">
-		AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYY/MM/DD'),'yyyymmdd') 
-		</if>
-<!--     	<if test="searchFromDate !=null and searchFromDate !=''"> -->
-<!-- 			and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[>=]]> -->
-<!-- 			TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'yyyymmdd') -->
-<!-- 		</if> -->
-<!-- 		<if test="searchToDate !=null and searchToDate !=''"> -->
-<!-- 			and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]> -->
-<!-- 			TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'yyyymmdd') -->
-<!-- 		</if>  -->
-		<if test="searchType == 1 ">
-			and l47.pridic_frqncy = 'A'
-		</if>
-		<if test="searchType == 2 ">
-            and l47.pridic_frqncy = 'M'
-        </if>
-        <if test="searchStatus == 1 ">
-          AND L47.REQST_STUS IN ('P')
-        </if>
-        <if test="searchStatus == 2 ">
-           AND L47.REQST_STUS='C'
-        </if>   
-		GROUP BY  L47.REQST_NO,L54.DELVRY_GI_DT,L54.DELVRY_GR_DT,S28C.WH_LOC_DESC,L55.DELVRY_NO,l47.PRIDIC_FRQNCY,L47.REQST_STUS,S28Q.WH_LOC_CODE,S28C.WH_LOC_CODE,S28Q.WH_LOC_DESC,S47.USER_FULL_NAME,L54.CRT_USER_ID,S28C.rdc_code
-	</select>
-
 
 	<select id="selectStockReceiveSerial" parameterType="Map" resultType="egovMap">
 		SELECT l55d.DELVRY_NO,
