@@ -1057,7 +1057,7 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "Display RC List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/rcList", method = RequestMethod.POST)
-	public ResponseEntity<List<RentalServiceCustomerDto>> rentalCustomerPaymentList(@RequestBody RentalServiceCustomerForm rentalForm)
+	public ResponseEntity<List<RentalServiceCustomerDto>> rentalCustomerPaymentList(@ModelAttribute RentalServiceCustomerForm rentalForm)
 			throws Exception {		
 		String transactionId = "";
 		
@@ -1494,7 +1494,7 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/serviceHistory", method = RequestMethod.POST)
-	public ResponseEntity<List<ServiceHistoryDto>> serviceHistory(@RequestBody ServiceHistoryForm serviceHistoryForm)
+	public ResponseEntity<List<ServiceHistoryDto>> serviceHistory(@ModelAttribute ServiceHistoryForm serviceHistoryForm)
 			throws Exception {		
 		String transactionId = "";
 
@@ -1527,7 +1527,7 @@ public class ServiceApiController {
 								.map(r -> ServiceHistoryPartDetailDto.create(r)).collect(Collectors.toList());
 						hList.get(j).setPartList(partsList);
 					}else{
-//						tmpMap.put("bsResultId", params.get("bsResultId"));
+						tmpMap.put("bsResultId", tmpMap.get("asResultId"));
 						List<EgovMap> historyParts = MSvcLogApiService.getHsPartsHistoryDList(tmpMap);
 
 						List<ServiceHistoryPartDetailDto> partsList = historyParts.stream()
@@ -1549,6 +1549,7 @@ public class ServiceApiController {
 						hList.get(k).setFilterList(filterList);
 					}else {
 //						tmpMap1.put("searchStatus", params.get("searchStatus"));
+						tmpMap1.put("bsResultId", tmpMap1.get("asResultId"));
 						List<EgovMap> historyFilters = MSvcLogApiService.getHsFilterHistoryDList(tmpMap1);
 						
 						List<ServiceHistoryFilterDetailDto> filterList = historyFilters.stream()
