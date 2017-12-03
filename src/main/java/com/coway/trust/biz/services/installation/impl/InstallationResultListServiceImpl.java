@@ -1657,7 +1657,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
             logPram.put("USERID", sessionVO.getUserId());
 
             logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-          // servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////
 
@@ -1672,7 +1672,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
             logPram.put("USERID", sessionVO.getUserId());
 
             logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-            //servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////
       }
