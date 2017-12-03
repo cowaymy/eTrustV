@@ -974,7 +974,6 @@ public class ServiceApiController {
 		int year = cal.get ( cal.YEAR );
 		int month = cal.get ( cal.MONTH ) + 1 ;
 		int date = cal.get ( cal.DATE ) ;
-		String todate2 = (String.valueOf(date) +String.valueOf(month) + String.valueOf(year));
 		
 		
 		List<Map<String, Object>> insTransLogs = null;
@@ -1021,7 +1020,7 @@ public class ServiceApiController {
 			params.put("hidSirimTypeId",String.valueOf(installResult.get("stkCtgryId")));
 			params.put("hiddeninstallEntryNo",String.valueOf(installResult.get("installEntryNo")));
 			params.put("CTID",String.valueOf(userId));
-			params.put("installDate",todate2);
+			params.put("installDate","");
 			params.put("updator", String.valueOf(userId)); 
 			params.put("nextCallDate","01-01-1999"); 
 			params.put("refNo1","0"); 

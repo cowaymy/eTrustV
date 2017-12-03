@@ -1206,9 +1206,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		installResult.put("serialNo", serialNo);
 		installResult.put("failId", failId);
 		installResult.put("nextCallDate", nextCallDate);
-		installResult.put("allowComm", allowComm);
-		installResult.put("inTradeIn", inTradeIn);
-		installResult.put("reqSms", reqSms);
+		
+		installResult.put("allowComm", allowComm  == true ?"1" : "0");
+		installResult.put("inTradeIn", inTradeIn == true ?"1" : "0");
+		installResult.put("reqSms", reqSms == true ?"1" : "0");
+		
 		installResult.put("docRefNo1", refNo1);
 		installResult.put("docRefNo2", refNo2);
 		installResult.put("updated", new Date());
@@ -1315,17 +1317,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		int statusId =  Integer.parseInt( CommonUtils.nvl( params.get("installStatus").toString()));
 		String sirimNo = CommonUtils.nvl( params.get("hidStockIsSirim").toString())!= "0" ? CommonUtils.nvl(  params.get("hidStockIsSirim").toString().toUpperCase() ): "";
 		String serialNo =CommonUtils.nvl(  params.get("serialNo")).toString();
-		int failId =CommonUtils.nvl(  params.get("failReason") )!= null ? Integer.parseInt( CommonUtils.nvl( params.get("failReason").toString())) : 0;
+		int failId   = CommonUtils.nvl(  params.get("failReason")) != ""  ? Integer.parseInt( CommonUtils.nvl( params.get("failReason").toString())) : 0;
 		String nextCallDate =CommonUtils.nvl(  params.get("nextCallDate")).toString();
-		boolean allowComm = CommonUtils.nvl( params.get("checkCommission")) != null ? true : false;
-		boolean inTradeIn =CommonUtils.nvl(  params.get("checkTrade"))!= null ? true : false;
-		boolean reqSms =CommonUtils.nvl(  params.get("reqSms")) != null ? true : false;
+		boolean allowComm = CommonUtils.nvl( params.get("checkCommission")) != ""  ? true : false;
+		boolean inTradeIn =CommonUtils.nvl(  params.get("checkTrade"))!= "" ? true : false;
+		boolean reqSms =CommonUtils.nvl(  params.get("reqSms")) != "" ? true : false;
 		String refNo1 = CommonUtils.nvl( params.get("refNo1")).toString();
 		String refNo2 = CommonUtils.nvl( params.get("refNo2")).toString();
 		String nextDateCall = (String) CommonUtils.nvl( params.get("nextCallDate"));
 		String ApptypeID =CommonUtils.nvl(  params.get("hidAppTypeId")).toString();
-		String strOutrightTotalPrice =   CommonUtils.nvl(  params.get("hidOutright_Price").toString());
-		String callTypeId = CommonUtils.nvl( params.get("hidCallType").toString());
+		String strOutrightTotalPrice =   CommonUtils.nvl(  params.get("hidOutright_Price")).toString();
+		String callTypeId = CommonUtils.nvl(params.get("hidCallType")).toString();
 
 
 		Map tradeamount= new HashMap();
@@ -1364,9 +1366,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		installResult.put("serialNo", serialNo);
     		installResult.put("failId", failId);
     		installResult.put("nextCallDate", nextCallDate);
-    		installResult.put("allowComm", allowComm);
-    		installResult.put("inTradeIn", inTradeIn);
-    		installResult.put("reqSms", reqSms);
+    		
+    		installResult.put("allowComm", allowComm  ==  true ? "1" :"0");
+    		installResult.put("inTradeIn", inTradeIn ==  true ? "1" :"0");
+    		installResult.put("reqSms", reqSms  ==  true ? "1" :"0");
+    		
     		installResult.put("docRefNo1", refNo1);
     		installResult.put("docRefNo2", refNo2);
     		installResult.put("updated", new Date());

@@ -2510,7 +2510,7 @@
 	            , #{entryId}
 	            , #{statusCodeId}
 	            , #{ctid}
-	            , TO_DATE(#{installDate},'DD-MM-YYYY')
+	            , nvl(#{installDate},sysdate)  
 	            , #{remark}
 	            , #{glpost}
 	            , #{creator}
