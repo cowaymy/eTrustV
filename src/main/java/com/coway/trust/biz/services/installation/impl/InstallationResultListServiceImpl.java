@@ -1312,27 +1312,27 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		Map<String,Object> taxInvoiceOutrightSub = new HashMap<String,Object>();
 		Map<String,Object> salesOrderM = new HashMap<String,Object>();
 
-		int statusId =  Integer.parseInt(params.get("installStatus").toString());
-		String sirimNo = params.get("hidStockIsSirim").toString() != "0" ? params.get("hidStockIsSirim").toString().toUpperCase() : "";
-		String serialNo = params.get("serialNo").toString();
-		int failId = params.get("failReason") != null ? Integer.parseInt(params.get("failReason").toString()) : 0;
-		String nextCallDate = params.get("nextCallDate").toString();
-		boolean allowComm = params.get("checkCommission") != null ? true : false;
-		boolean inTradeIn = params.get("checkTrade")!= null ? true : false;
-		boolean reqSms = params.get("reqSms") != null ? true : false;
-		String refNo1 = params.get("refNo1").toString();
-		String refNo2 = params.get("refNo2").toString();
-		String nextDateCall = (String) params.get("nextCallDate");
-		String ApptypeID = params.get("hidAppTypeId").toString();
-		String strOutrightTotalPrice = params.get("hidOutright_Price").toString();
-		String callTypeId = params.get("hidCallType").toString();
+		int statusId =  Integer.parseInt( CommonUtils.nvl( params.get("installStatus").toString()));
+		String sirimNo = CommonUtils.nvl( params.get("hidStockIsSirim").toString())!= "0" ? CommonUtils.nvl(  params.get("hidStockIsSirim").toString().toUpperCase() ): "";
+		String serialNo =CommonUtils.nvl(  params.get("serialNo")).toString();
+		int failId =CommonUtils.nvl(  params.get("failReason") )!= null ? Integer.parseInt( CommonUtils.nvl( params.get("failReason").toString())) : 0;
+		String nextCallDate =CommonUtils.nvl(  params.get("nextCallDate")).toString();
+		boolean allowComm = CommonUtils.nvl( params.get("checkCommission")) != null ? true : false;
+		boolean inTradeIn =CommonUtils.nvl(  params.get("checkTrade"))!= null ? true : false;
+		boolean reqSms =CommonUtils.nvl(  params.get("reqSms")) != null ? true : false;
+		String refNo1 = CommonUtils.nvl( params.get("refNo1")).toString();
+		String refNo2 = CommonUtils.nvl( params.get("refNo2")).toString();
+		String nextDateCall = (String) CommonUtils.nvl( params.get("nextCallDate"));
+		String ApptypeID =CommonUtils.nvl(  params.get("hidAppTypeId")).toString();
+		String strOutrightTotalPrice =   CommonUtils.nvl(  params.get("hidOutright_Price").toString());
+		String callTypeId = CommonUtils.nvl( params.get("hidCallType").toString());
 
 
 		Map tradeamount= new HashMap();
 		tradeamount.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
 		Map outRightAmount = installationResultListMapper.getTradeAmount(tradeamount);
 
-		String tAmt =  String.valueOf( outRightAmount.get("SUMTRADE_AMT"));
+		String tAmt =  String.valueOf( CommonUtils.nvl( outRightAmount.get("SUMTRADE_AMT")));
 		double tradeOutrightPreAmount =  Double.parseDouble(  String.valueOf(tAmt));
 
 		double outrightTotalPrice = Double.parseDouble((String)strOutrightTotalPrice);
@@ -1352,9 +1352,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		EgovMap installResult = new EgovMap();
 
     		installResult.put("resultID", 0);
-    		installResult.put("entryId", Integer.parseInt(params.get("hidEntryId").toString()));
-    		installResult.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-    		installResult.put("CTID", Integer.parseInt(params.get("CTID").toString()));
+    		installResult.put("entryId", Integer.parseInt(CommonUtils.nvl( params.get("hidEntryId")).toString()));
+    		installResult.put("statusCodeId", Integer.parseInt(CommonUtils.nvl( params.get("installStatus")).toString()));
+    		installResult.put("CTID", Integer.parseInt(CommonUtils.nvl( params.get("CTID")).toString()));
     		installResult.put("installDate", params.get("installDate"));
     		installResult.put("remark", params.get("remark").toString().trim());
     		installResult.put("GLPost", 0);
@@ -1653,7 +1653,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
             logPram.put("USERID", sessionVO.getUserId());
 
             logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+          // servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////
 
@@ -1668,7 +1668,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
             logPram.put("USERID", sessionVO.getUserId());
 
             logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+            //servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
             logger.debug("ORDERCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////
       }
