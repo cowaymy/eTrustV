@@ -2805,16 +2805,16 @@ and cust.cust_id = custCnt.cust_id
 				AND F.INSTALL_ENTRY_ID = J.ENTRY_ID(+)
                 <choose>
                    <when test= 'searchType == "1" and searchType != null and searchType != "" '>
-                        AND A.SALES_ORD_NO LIKE '%' ||  (#{searchKeyword})  || '%'
+                        AND A.SALES_ORD_NO LIKE (#{searchKeyword})  || '%'
                    </when>
                    <when test ='searchType == "2" and searchType != null and searchType != "" '>
-                        AND E.NAME LIKE '%' || (#{searchKeyword}) || '%'
+                        AND E.NAME LIKE (#{searchKeyword}) || '%'
                    </when>
                    <when test ='searchType == "3" and searchType != null and searchType != "" '>
-                        AND E.NRIC LIKE '%' || (#{searchKeyword}) || '%'
+                        AND E.NRIC LIKE (#{searchKeyword}) || '%'
                    </when>
                    <when test ='searchType == "4" and searchType != null and searchType != "" '>
-                        AND E.NAME LIKE '%' || (#{searchKeyword}) || '%'
+                        AND E.NAME LIKE (#{searchKeyword}) || '%'
                    </when>
                     <otherwise>
 
