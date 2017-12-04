@@ -52,7 +52,7 @@
             visible: false
         }, {
             dataField: "messageCount",
-            headerText: "MESSAGE_COUNT",
+            headerText: "DETAIL",
             editable: false,
             width: "10%"
         }, {
