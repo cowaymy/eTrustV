@@ -67,7 +67,7 @@
 			<property name="idleTimeout" value="0" />
 			<property name="leakDetectionThreshold" value="0" />
 			<property name="maxLifetime" value="300000" />
-			<property name="maximumPoolSize" value="${spring.datasource.maximumPoolSize}" />
+			<property name="maximumPoolSize" value="${spring.long.datasource.maximumPoolSize}" />
 			<property name="connectionTestQuery" value="${spring.datasource.validation-query}" />
 		</bean>
 
