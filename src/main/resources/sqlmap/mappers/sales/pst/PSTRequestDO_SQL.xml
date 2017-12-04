@@ -948,7 +948,7 @@
 			         CUR_TO,
 			         RATE
 		   FROM   PAY0197M
-		 WHERE   RATE_DT = TO_CHAR (SYSDATE, 'YYYY-MM-DD')   
+		 WHERE   TO_DATE(RATE_DT , 'YYYY/MM/DD') = TO_DATE(SYSDATE , 'YYYY/MM/DD')   
     </select>
     
     <select id="pstTypeCmbList" parameterType="Map" resultType="egovMap">
