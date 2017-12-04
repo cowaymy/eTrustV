@@ -57,20 +57,27 @@ public interface ECashDeductionMapper {
 	 * @param params
 	 * @return
 	 */
-	void deleteECashResultItem(Map<String, Object> params);
+	void deleteECashDeductionResultItem(Map<String, Object> params);
 
 	/**
 	 * EE-Cash - Update eCash Result Item
 	 * @param params
 	 * @return
 	 */
-	void insertECashResultItem(Map<String, Object> params);
+	void insertECashDeductionResultItem(Map<String, Object> params);
 
 	/**
 	 *  E-Cash - Update eCash Result
 	 * @param params
 	 * @return
 	 */
-	void updateECashResult(Map<String, Object> params);
+	void updateECashDeductionResult(Map<String, Object> params);
+
+	/**
+	 *  E-Cash_Sub - List
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectECashDeductSubList(Map<String, Object> params);
 
 }

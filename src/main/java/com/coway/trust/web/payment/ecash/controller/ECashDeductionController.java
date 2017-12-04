@@ -161,8 +161,8 @@ public class ECashDeductionController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/selectECashById.do", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> selectECashById(@ModelAttribute("searchVO") SampleDefaultVO searchVO
+	@RequestMapping(value = "/selectECashDeductionById.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectECashDeductionById(@ModelAttribute("searchVO") SampleDefaultVO searchVO
 				, @RequestParam Map<String, Object> params, ModelMap model) {
 
 		EgovMap returnMap = null;
@@ -180,6 +180,22 @@ public class ECashDeductionController {
 	}
 
 	/**
+	 * E-Cash By Id  (Master Grid) 조회 -
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectECashSubDeductionById.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectECashSubDeductionById(@ModelAttribute("searchVO") SampleDefaultVO searchVO
+				, @RequestParam Map<String, Object> params, ModelMap model) {
+
+        List<EgovMap> resultList = eCashDeductionService.selectECashDeductSubList(params);
+
+        return ResponseEntity.ok(resultList);
+	}
+
+	/**
 	 * E Cash - Deactivate 처리
 	 * @param params
 	 * @param model
@@ -191,7 +207,7 @@ public class ECashDeductionController {
 
 		params.put("userId", sessionVO.getUserId());
     	// 처리.
-		eCashDeductionService.deactivateECashStatus(params);
+		eCashDeductionService.deactivateECashDeductionStatus(params);
 
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
@@ -231,8 +247,8 @@ public class ECashDeductionController {
 //     * @return
 //     * @RequestParam Map<String, Object> params
 //     */
-    @RequestMapping(value = "/updateECashResultItem.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> updateECashResultItem(@RequestBody Map<String, ArrayList<Object>> params,
+    @RequestMapping(value = "/updateECashDeductionResultItem.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateECashDeductionResultItem(@RequestBody Map<String, ArrayList<Object>> params,
     		Model model) {
 
     	List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
@@ -284,7 +300,7 @@ public class ECashDeductionController {
     	eCashMap.put("settleDate", settleDate);
 
     	// 데이터 등록
-    	eCashDeductionService.updateECashResultItem(eCashMap, resultItemList);
+    	eCashDeductionService.updateECashDeductionResultItem(eCashMap, resultItemList);
 
     	// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
@@ -302,8 +318,8 @@ public class ECashDeductionController {
      * @return
      * @RequestParam Map<String, Object> params
      */
-    @RequestMapping(value = "/updateECashResult.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> updateECashResult(@RequestBody Map<String, ArrayList<Object>> params,
+    @RequestMapping(value = "/updateECashDeductionResult.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateECashDeductionResult(@RequestBody Map<String, ArrayList<Object>> params,
     		Model model, SessionVO sessionVO) {
 
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
@@ -313,7 +329,7 @@ public class ECashDeductionController {
 		eCashMap.put("userId", sessionVO.getUserId());
 
 		// 데이터 수정
-		eCashDeductionService.updateECashResult(eCashMap);
+		eCashDeductionService.updateECashDeductionResult(eCashMap);
     	// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);

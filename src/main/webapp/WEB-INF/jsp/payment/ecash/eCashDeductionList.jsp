@@ -4,7 +4,7 @@
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
-var myGridID,updResultGridID,smsGridID;
+var myGridID,updResultGridID,batchDeductionItemId;
 
 //Grid에서 선택된 RowID
 var selectedGridValue;
@@ -19,7 +19,6 @@ var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},{"codeId"
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-
 	//메인 페이지
     doDefCombo(statusData, '' ,'status', 'S', '');                 //Status 생성
     doDefCombo(bankData, '' ,'issueBank', 'S', '');               //Issue Bank 생성
@@ -38,6 +37,8 @@ $(document).ready(function(){
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     updResultGridID = GridCommon.createAUIGrid("updResult_grid_wrap", updResultColLayout,null,gridPros);
+    batchDeductionItemId = GridCommon.createAUIGrid("#batchDeductionItem_grid_wrap", batchDeductionColumnLayout,null,gridPros);
+    AUIGrid.resize(batchDeductionItemId,945, $(".grid_wrap").innerHeight());
 
     // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){
@@ -150,30 +151,23 @@ var columnLayout = [
     ];
 
 var updResultColLayout = [
-                    {
-                        dataField : "0",
-                        headerText : "RefNo",
-                        editable : true
-                    },{
-                        dataField : "1",
-                        headerText : "RefCode",
-                        editable : true
-                    },{
-                        dataField : "2",
-                        headerText : "ItemID.",
-                        editable : true
-                    }];
+                    {dataField : "6",headerText : "itmId", editable : true},
+                    {dataField : "7",headerText : "respnsCode",editable : true},
+                    {dataField : "8",headerText : "appvCode",editable : true}
+                    ];
 
-var smsColLayout = [
-                    { dataField:"bankDtlApprCode" ,headerText:"Approval Code",width: 150 ,editable : false },
-                    { dataField:"salesOrdNo" ,headerText:"Order No",width: 150 ,editable : false },
-                    { dataField:"bankDtlDrAccNo" ,headerText:"Account No",width: 150 ,editable : false },
-                    { dataField:"bankDtlDrName" ,headerText:"Name",width: 150 ,editable : false },
-                    { dataField:"bankDtlDrNric" ,headerText:"NRIC",width: 150 ,editable : false },
-                    { dataField:"bankDtlAmt" ,headerText:"Claim Amt",width: 150 ,editable : false },
-                    { dataField:"bankDtlRenAmt" ,headerText:"Rent Amt",width: 150 ,editable : false },
-                    { dataField:"bankDtlRptAmt" ,headerText:"Penalty Amt",width: 150 ,editable : false }
-                          ];
+var batchDeductionColumnLayout= [
+    {dataField : "fileItmStusName", headerText : "Status", width : '10%'},
+    {dataField : "codeName", headerText : "Type", width : '10%'},
+    {dataField : "salesOrdNo", headerText : "Order No", width : '10%'},
+    {dataField : "fileItmOrNo", headerText : "OR No", width : '10%'},
+    {dataField : "fileItmAmt", headerText : "Amount", width : '10%'},
+    {dataField : "fileItmApprDt", headerText : "Approval Date", width : '10%'},
+    {dataField : "crtUser", headerText : "Creator", width : '10%'},
+    {dataField : "fileItmCrt", headerText : "Creatord", width : '10%'},
+    {dataField : "updUser", headerText : "Updator", width : '10%'},
+    {dataField : "fileItmUpd", headerText : "Updated", width : '10%'},
+    ];
 
 // 리스트 조회.
 function fn_getECashListAjax() {
@@ -184,7 +178,7 @@ function fn_getECashListAjax() {
 
 //View Claim Pop-UP
 function fn_openDivPop(val){
-	if(val == "VIEW" || val == "RESULT" || val == "RESULTNEXT" || val == "FILE" || val == "SMS"){
+	if(val == "VIEW" || val == "RESULT"){
 
 		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
@@ -198,20 +192,12 @@ function fn_openDivPop(val){
 	        if((val == "RESULT") && fileBatchStusId != 1){
                 Common.alert("<b>Batch [" + fileBatchId + "] is under status [" + stusName + "].<br />" +
                         "Only [Active] batch is allowed to update claim result.</b>");
-			}else if(val == "FILE" && fileBatchStusId != 1){
-				Common.alert("<b>Batch [" + fileBatchId + "] is under status [" + stusName + "].<br />" +
-					    "Only [Active] batch is allowed to re-generate claim file.</b>");
-			}else if(val == "SMS" && fileBatchStusId != 4){
-                Common.alert("<b>Batch [" + fileBatchId + "] is under status [" + stusName + "].<br />" +
-                "Only [Completed] batch is allowed to send failed deduction SMS.</b>");
-            }else if(val == "SMS" && smsSend == 1){
-                Common.alert("<b>Failed deduction SMS process for batch [" + fileBatchId + "] was completed.</b>");
-            }else{
+			}else{
+			    Common.ajax("GET", "/payment/selectECashSubDeductionById.do", {"batchId":fileBatchId}, function(result) {
+                    AUIGrid.setGridData(batchDeductionItemId, result);
+                });
 
-            	$('#sms_grid_wrap').hide();
-
-
-            	Common.ajax("GET", "/payment/selectECashById.do", {"batchId":fileBatchId}, function(result) {
+            	Common.ajax("GET", "/payment/selectECashDeductionById.do", {"batchId":fileBatchId}, function(result) {
             		$("#view_wrap").show();
                     $("#new_wrap").hide();
 
@@ -234,7 +220,7 @@ function fn_openDivPop(val){
 
 			//팝업 헤더 TEXT 및 버튼 설정
 			if(val == "VIEW"){
-			    $('#pop_header h1').text('VIEW CLAIM');
+			    $('#pop_header h1').text('VIEW E-DEDUCTION');
 			    $('#center_btns1').hide();
 			    $('#center_btns2').hide();
 			    $('#center_btns3').hide();
@@ -246,28 +232,7 @@ function fn_openDivPop(val){
                 $('#center_btns2').hide();
                 $('#center_btns3').hide();
                 $('#center_btns4').hide();
-
-			}else if(val == "RESULTNEXT"){
-                $('#pop_header h1').text('CLAIM RESULT(NEXT DAY)');
-                $('#center_btns1').hide();
-                $('#center_btns2').show();
-                $('#center_btns3').hide();
-                $('#center_btns4').hide();
-
-            }else if (val == "FILE"){
-                $('#pop_header h1').text('CLAIM FILE GENERATOR');
-                $('#center_btns1').hide();
-                $('#center_btns2').hide();
-                $('#center_btns3').show();
-                $('#center_btns4').hide();
-
-            } else if (val == "SMS"){
-                $('#pop_header h1').text('FAILED DEDUCTION SMS');
-                $('#center_btns1').hide();
-                $('#center_btns2').hide();
-                $('#center_btns3').hide();
-                $('#center_btns4').show();
-            }
+			}
 
         }else{
              Common.alert('No claim record selected.');
@@ -278,16 +243,11 @@ function fn_openDivPop(val){
 		$("#new_wrap").show();
 		//NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
 		$("#newForm")[0].reset();
-		$("#claimDayMust").hide();
-		$("#issueBankMust").hide();
 	}
 }
 
 //Layer close
 hideViewPopup=function(val){
-	//AUIGrid.destroy(updResultGridID);
-	//AUIGrid.destroy(smsGridID);
-	$('#sms_grid_wrap').hide();
     $(val).hide();
 }
 
@@ -305,21 +265,6 @@ function fn_deactivate(){
 	});
 }
 
-//Pop-UP 에서 Fail Deduction SMS 처리
-function fn_sendFailDeduction(){
-	   var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-
-	   Common.ajax("GET", "/payment/sendFaileDeduction.do", {"ctrlId":ctrlId}, function(result) {
-            Common.alert("<b>SMS successfully added into sending list.</b>",function () {fn_openDivPop('VIEW'); });
-
-        },function(result) {
-            Common.alert("<b>Failed to send SMS. Please try again later.</b>");
-        });
-
-}
-
-
-
 var updateResultItemKind = "";      //claim result update시 구분 (LIVE :current / NEXT : batch)
 
 //Pop-UP 에서 Update Result 버튼 클릭시 팝업창 생성
@@ -330,9 +275,7 @@ function fn_updateResult(val){
 
 //Result Update Pop-UP 에서 Upload 버튼 클릭시 처리
 function fn_resultFileUp(){
-
 	var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
-	//var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
 	var fileBatchBankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchBankId");
 
     //param data array
@@ -352,7 +295,7 @@ function fn_resultFileUp(){
     data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId}];
 
     //Ajax 호출
-    Common.ajax("POST", "/payment/updateECashResultItem.do", data, function(result) {
+    Common.ajax("POST", "/payment/updateECashDeductionResultItem.do", data, function(result) {
     	resetUpdatedItems(); // 초기화
 
         var message = "";
@@ -370,7 +313,7 @@ function fn_resultFileUp(){
             var data = {};
             data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId,"settleDate":settleDate,"fileName":fileName}];
 
-            Common.ajax("POST", "/payment/updateECashResult.do", data,
+            Common.ajax("POST", "/payment/updateECashDeductionResult.do", data,
             	function(result) {
                 Common.alert("<b>Deduction results successfully updated.</b>");
                 },
@@ -397,10 +340,8 @@ function resetUpdatedItems() {
      AUIGrid.resetUpdatedItems(updResultGridID, "a");
  }
 
-
 //NEW CLAIM Pop-UP 에서 Generate Claim 처리
 function fn_genClaim(){
-
 	if($("#new_issueBank option:selected").val() == ''){
         Common.alert("* Please select Issue Bank.<br />");
         return;
@@ -412,7 +353,6 @@ function fn_genClaim(){
 
     if(formList.length > 0) data.form = formList;
     else data.form = [];
-
 
 	Common.ajax("POST", "/payment/generateNewEDeduction.do", data,
 			function(result) {
@@ -463,7 +403,6 @@ function fn_createFile(){
                  Common.alert("<b>Failed to generate claim file. Please try again later.</b>");
            }
     );
-
 }
 
 function fn_clear(){
@@ -510,7 +449,7 @@ function fn_clear(){
                     <tr>
                         <th scope="row">Batch ID</th>
                         <td>
-                            <input id="fileBatchId" name="fileBatchId" type="text" title="fileBatchId" placeholder="Batch ID" class="w100p" />
+                            <input id="batchId" name="batchId" type="text" title="batchId" placeholder="Batch ID" class="w100p" />
                         </td>
                         <th scope="row">Creator</th>
                         <td>
@@ -565,6 +504,7 @@ function fn_clear(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View eDeduction</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('NEW');">New eDeduction</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');">eDeduction Result</a></p></li>
                     </ul>
@@ -592,107 +532,129 @@ function fn_clear(){
 </section>
 <!-- content end -->
 
-
 <!-------------------------------------------------------------------------------------
     POP-UP (VIEW CLAIM / RESULT (Live) / RESULT (NEXT DAY) / FILE GENERATOR
 -------------------------------------------------------------------------------------->
 <!-- popup_wrap start -->
-<div class="popup_wrap" id="view_wrap" style="display:none;">
-    <!-- pop_header start -->
-    <header class="pop_header" id="pop_header">
-        <h1></h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#view_wrap')">CLOSE</a></p></li>
-        </ul>
-    </header>
-    <!-- pop_header end -->
+<div class="popup_wrap" id="view_wrap" style="display: none;">
+	<!-- pop_header start -->
+	<header class="pop_header" id="pop_header">
+		<h1></h1>
+		<ul class="right_opt">
+			<li><p class="btn_blue2">
+					<a href="#" onclick="hideViewPopup('#view_wrap')">CLOSE</a>
+				</p></li>
+		</ul>
+	</header>
+	<!-- pop_header end -->
 
-    <!-- pop_body start -->
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-	                <col style="width:165px" />
-	                <col style="width:*" />
-	                <col style="width:165px" />
-	                <col style="width:*" />
-                </colgroup>
-                <tbody>
-	                <tr>
-	                    <th scope="row">Batch ID</th>
-	                    <td id="view_batchId"></td>
-	                    <th scope="row">Status</th>
-	                    <td id="view_status"></td>
-	                </tr>
-	                 <tr>
-	                  <th scope="row">Deduction Date</th>
-                        <td id="view_deductDt"></td>
-	                    <th scope="row">Total Records</th>
-	                    <td id="view_totalItem"></td>
-	                </tr>
-	                 <tr>
-	                    <th scope="row" >Issue Bank</th>
-	                    <td colspan="3" id="view_issueBank"></td>
+	<!-- pop_body start -->
+	<section class="pop_body">
+		<!-- tap_wrap start -->
+		<section class="tap_wrap mt0">
+			<ul class="tap_type1">
+				<li><a href="#" class="on">Batch Deduction Info</a></li>
+				<li><a href="#">Batch Deduction Item</a></li>
+			</ul>
 
-	                </tr>
-	                <tr>
-	                    <th scope="row">Total Amount</th>
-	                    <td id="view_totalAmount"></td>
-	                    <th scope="row">Total Approved Amount</th>
-	                    <td id="view_AppvAmt"></td>
-	                </tr>
-	                <tr>
-	                    <th scope="row">Total Approved</th>
-	                    <td id="view_totalApproved"></td>
-	                    <th scope="row">Total Rejected</th>
-	                    <td id="view_totalRejected"></td>
-	                </tr>
-	                <tr>
-	                    <th scope="row">Created Date</th>
-	                    <td id="view_createDate"></td>
-	                    <th scope="row">Creator</th>
-	                    <td id="view_creator"></td>
-	                </tr>
-	                <tr>
-	                    <th scope="row">Updated Date</th>
-	                    <td id="view_updateDate"></td>
-	                    <th scope="row">Updator</th>
-	                    <td id="view_updator"></td>
-	                </tr>
-                </tbody>
-            </table>
-        </section>
-        <!-- search_table end -->
+    <!-- <section class="search_table"> search_table start -->
+            <!-- #########Batch Deduction Info######### -->
+            <article class="tap_area"><!-- tap_area start -->
+				<!-- table start -->
+				<table class="type1">
+					<caption>table</caption>
+					<colgroup>
+						<col style="width: 165px" />
+						<col style="width: *" />
+						<col style="width: 165px" />
+						<col style="width: *" />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row">Batch ID</th>
+							<td id="view_batchId"></td>
+							<th scope="row">Status</th>
+							<td id="view_status"></td>
+						</tr>
+						<tr>
+							<th scope="row">Deduction Date</th>
+							<td id="view_deductDt"></td>
+							<th scope="row">Total Records</th>
+							<td id="view_totalItem"></td>
+						</tr>
+						<tr>
+							<th scope="row">Issue Bank</th>
+							<td colspan="3" id="view_issueBank"></td>
 
-        <section class="search_result"><!-- search_result start -->
-            <article class="grid_wrap"  id="sms_grid_wrap"></article>
-            <!-- grid_wrap end -->
-        </section><!-- search_result end -->
+						</tr>
+						<tr>
+							<th scope="row">Total Amount</th>
+							<td id="view_totalAmount"></td>
+							<th scope="row">Total Approved Amount</th>
+							<td id="view_AppvAmt"></td>
+						</tr>
+						<tr>
+							<th scope="row">Total Approved</th>
+							<td id="view_totalApproved"></td>
+							<th scope="row">Total Rejected</th>
+							<td id="view_totalRejected"></td>
+						</tr>
+						<tr>
+							<th scope="row">Created Date</th>
+							<td id="view_createDate"></td>
+							<th scope="row">Creator</th>
+							<td id="view_creator"></td>
+						</tr>
+						<tr>
+							<th scope="row">Updated Date</th>
+							<td id="view_updateDate"></td>
+							<th scope="row">Updator</th>
+							<td id="view_updator"></td>
+						</tr>
+					</tbody>
+				</table>
 
-        <ul class="center_btns" id="center_btns1">
-            <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_updateResult('LIVE');">Update Result</a></p></li>
-        </ul>
+				<ul class="center_btns" id="center_btns1">
+				    <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
+					<li><p class="btn_blue2"><a href="javascript:fn_updateResult('LIVE');">Update Result</a></p></li>
+				</ul>
+				<ul class="center_btns" id="center_btns3">
+					<li><p class="btn_blue2"><a href="javascript:fn_createFile();">Generate File</a></p></li>
+				</ul>
 
-        <ul class="center_btns" id="center_btns2">
-            <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_updateResult('NEXT');">Update Result</a></p></li>
-        </ul>
-
-         <ul class="center_btns" id="center_btns3">
-            <li><p class="btn_blue2"><a href="javascript:fn_createFile();">Generate File</a></p></li>
-        </ul>
-         <ul class="center_btns" id="center_btns4">
-            <li><p class="btn_blue2"><a href="javascript:fn_sendFailDeduction();">Send Fail Deduction SMS</a></p></li>
-        </ul>
-    </section>
-    <!-- pop_body end -->
+			</article>
+			<!-- #########Batch Deduction Item######### -->
+			<article class="tap_area">
+				<!-- tap_area start -->
+				<!-- table start -->
+					<!-- grid_wrap start -->
+					<table class="type1">
+						<caption>table</caption>
+						<tbody>
+						  <!-- <tr>
+                                <td>All Transactions</td>
+                                <td>Approved Transactions</td>
+                                <td>Rejected Transactions</td>
+                                <td colspan='2'></td>
+                            </tr> -->
+							<tr>
+								<td colspan='5'>
+									<div id="batchDeductionItem_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- table end -->
+				</article>
+				<!-- grid_wrap end -->
+			<!-- tap_area end -->
+			<!-- </section> search_table end -->
+		</section>
+		<!-- tap_wrap end-->
+	</section>
+	<!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
-
 
 <!---------------------------------------------------------------
     POP-UP (NEW ECASH AUTO DEBIT DEDUCTION)
@@ -747,9 +709,6 @@ function fn_clear(){
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
-
-
-
 
 <!---------------------------------------------------------------
     POP-UP (NEW CLAIM)

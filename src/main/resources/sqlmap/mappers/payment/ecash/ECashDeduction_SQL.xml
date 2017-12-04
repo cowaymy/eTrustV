@@ -51,7 +51,7 @@
             </if>
             <if test="deductDt1 != null and deductDt2 != null and deductDt1 != '' and deductDt2 != '' ">
                 AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
-                AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   <= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') +1
             </if>
             <if test="issueBank != null and issueBank != ''">
                 AND Extent1.FILE_BATCH_BANK_ID = #{issueBank}
@@ -60,6 +60,41 @@
                 AND Extent1.FILE_BATCH_NAME = #{batchName}
             </if>
          ORDER BY Extent1.FILE_BATCH_ID
+    </select>
+
+<select id="selectECashDeductSubList" parameterType="Map" resultType="egovMap">
+	SELECT
+		EXTENT1.FILE_ITM_ID,
+		EXTENT1.FILE_BATCH_ID,
+		EXTENT1.FILE_ITM_STUS_ID,
+		EXTENT3.NAME as FILE_ITM_STUS_NAME,
+		EXTENT4.CODE_NAME,
+		EXTENT2.SALES_ORD_NO,
+		EXTENT1.FILE_ITM_OR_NO,
+		EXTENT1.FILE_ITM_AMT,
+		(CASE WHEN Extent1.FILE_ITM_APPR_DT IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.FILE_ITM_APPR_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_ITM_APPR_DT,
+		EXTENT5.USER_NAME as CRT_USER,
+		NVL(TO_CHAR(Extent1.FILE_ITM_CRT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS FILE_ITM_CRT,
+		EXTENT6.USER_NAME as UPD_USER,
+		 (CASE WHEN Extent1.FILE_ITM_UPD IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.FILE_ITM_UPD,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_ITM_UPD
+	from SAL0152M EXTENT1
+		join SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+		left join SYS0038M EXTENT3 on EXTENT3.STUS_CODE_ID = EXTENT1.FILE_ITM_STUS_ID
+		left join SYS0013M EXTENT4 on EXTENT4.CODE_ID = EXTENT1.FILE_ITM_TYPE_ID
+		left join SYS0047M EXTENT5 on EXTENT5.USER_ID = EXTENT1.FILE_ITM_CRT_USER_ID
+		left join SYS0047M EXTENT6 on EXTENT6.USER_ID =EXTENT1.FILE_ITM_UPD_USER_ID
+	WHERE 1=1
+            <if test="batchId != null and batchId != ''">
+            AND Extent1.FILE_BATCH_ID = #{batchId}
+            </if>
+           <if test="status != null and status != ''">
+                AND Extent1.FILE_BATCH_STUS_ID = #{status}
+            </if>
+         ORDER BY Extent1.FILE_ITM_ID
     </select>
 
     <!-- E-Cash - Deactivate e-AutoDebitDecution -->

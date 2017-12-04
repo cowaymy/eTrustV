@@ -15,6 +15,13 @@ public interface ECashDeductionService
     List<EgovMap> selectECashDeductList(Map<String, Object> params);
 
 	/**
+	 * E-Cash Sub - List
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectECashDeductSubList(Map<String, Object> params);
+
+	/**
      * E-Cash - Create new claim
      * @param params
      */
@@ -24,17 +31,17 @@ public interface ECashDeductionService
      * E-Cash - eCash Deactivate 처리
      * @param params
      */
-    void deactivateECashStatus(Map<String, Object> params);
+    void deactivateECashDeductionStatus(Map<String, Object> params);
 
     /**
      * E Cash - eCash Result Item Update
      * @param params
      */
-    void updateECashResultItem(Map<String, Object> eCashMap, List<Object> resultItemList );
+    void updateECashDeductionResultItem(Map<String, Object> eCashMap, List<Object> resultItemList );
 
     /**
      * E Cash - eCash Result Update
      * @param params
      */
-    void updateECashResult(Map<String, Object> eCashMap);
+    void updateECashDeductionResult(Map<String, Object> eCashMap);
 }

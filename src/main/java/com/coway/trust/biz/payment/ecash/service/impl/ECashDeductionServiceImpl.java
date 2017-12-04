@@ -49,6 +49,16 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	/**
+	 * E-Cash sub - List
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectECashDeductSubList(Map<String, Object> params) {
+		return eCashDeductionMapper.selectECashDeductSubList(params);
+	}
+
+	/**
      * E-Cash - Create new claim
      * @param params
      */
@@ -62,7 +72,7 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
      * @param params
      */
 	@Override
-    public void deactivateECashStatus(Map<String, Object> param){
+    public void deactivateECashDeductionStatus(Map<String, Object> param){
 		eCashDeductionMapper.deactivateEAutoDebitDeduction(param);
 		eCashDeductionMapper.deactivateEAutoDebitDeductionSub(param);
 	}
@@ -72,15 +82,15 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
      * @param params
      */
 	@Override
-    public void updateECashResultItem(Map<String, Object> eCashMap, List<Object> resultItemList ){
+    public void updateECashDeductionResultItem(Map<String, Object> eCashMap, List<Object> resultItemList ){
 
-		eCashDeductionMapper.deleteECashResultItem(eCashMap);
+		eCashDeductionMapper.deleteECashDeductionResultItem(eCashMap);
 
     	if (resultItemList.size() > 0) {
     		Map<String, Object> hm = null;
     		for (Object map : resultItemList) {
     			hm = (HashMap<String, Object>) map;
-    			eCashDeductionMapper.insertECashResultItem(hm);
+    			eCashDeductionMapper.insertECashDeductionResultItem(hm);
     		}
     	}
 	}
@@ -90,7 +100,7 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
      * @param params
      */
 	@Override
-    public void updateECashResult(Map<String, Object> eCashMap){
-		eCashDeductionMapper.updateECashResult(eCashMap);
+    public void updateECashDeductionResult(Map<String, Object> eCashMap){
+		eCashDeductionMapper.updateECashDeductionResult(eCashMap);
 	}
 }
