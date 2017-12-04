@@ -50,7 +50,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.number.min.js"></script>
 
 <script>
-
     (function(w,d,s,uri,fn){
         w[fn] = w[fn] || function(){ var c = {}; c.uri = arguments[0]; c.trackId = arguments[1]; c.opt = arguments[2]; (w[fn].l=w[fn].l||[]).push(c); }; var o = d.createElement(s); var p = d.getElementsByTagName(s)[0]; o.async = 1; o.src = uri; p.parentNode.insertBefore(o,p);
     })(window,document,'script','http://etrustdev.my.coway.com/resources/appinsightor/appinsightor.min.js','ne');
@@ -62,8 +61,7 @@
             n$apm: '${n$apm}'
         },
         session:{type:'cookie',value:'JSESSIONID'}
-    });​
-
+    });
 </script>
 
 <!-- TODO : 성능 측정을 위한 스크립트. 측정 후 제거 필요 -->
