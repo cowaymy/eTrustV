@@ -2607,6 +2607,9 @@ and cust.cust_id = custCnt.cust_id
 					                                        and a.SALES_ORD_ID =  (select sales_ord_id
 					                                                                           from sal0001d
 					                                                                           where sales_ord_no =  #{salesOrderNo})
+                                                            and a.CODY_ID = (select mem_id
+                                                                               from org0001d
+                                                                               where mem_code =#{userId})                                    
 					                                    )a
 					                                    ,  SVC0006D b
 					                             where 1=1
@@ -2648,7 +2651,11 @@ and cust.cust_id = custCnt.cust_id
 						                                                    from sal0001d
 						                                                    where 1=1
 						                                                    and sales_ord_no = #{salesOrderNo})
-						                         and as_no  = #{serviceNo})
+                                                 and as_no  = #{serviceNo}
+                                                 and as_mem_id = (select as_mem_id
+                                                                    from org0001d
+                                                                    where mem_code = #{userId})
+                                                )                    
 
                     </update>
 
@@ -2686,7 +2693,11 @@ and cust.cust_id = custCnt.cust_id
 			                                                                        from sal0001d
 			                                                                        where 1=1
 			                                                                        and sales_ord_no = #{salesOrderNo})
-					                                           and INSTALL_ENTRY_NO = #{serviceNo})
+                                                               and INSTALL_ENTRY_NO = #{serviceNo}
+                                                               and CT_ID = (select mem_id
+                                                                              from org0001d
+                                                                              where mem_code = #{userId})
+                                                                   )
                     </update>
 
                    <update id="upDateInstallFailJobResultM" parameterType="Map">
