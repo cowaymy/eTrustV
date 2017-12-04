@@ -81,11 +81,12 @@ function fn_uploadFile(){
 
 function fn_viewBillingBatch(){
 	if(selectedItem != undefined){
-		   $("#view_batch_pop").show();
+		   
 		   var batchId = AUIGrid.getCellValue(myGridID, selectedItem, "advBillBatchId");
 		    console.log("batchId : " + batchId);
 		    
 		    Common.ajax("GET", "/payment/selectBatchMasterInfo.do", {"batchId" : batchId}, function(result){
+		    	$("#view_batch_pop").show();
 		        $("#popBatchNo").text(result.master.advBillBatchRefNo);
 		        $("#popCreated").text(result.master.advBillBatchCrtDt);
 		        $("#popCreator").text(result.master.userName);
@@ -96,8 +97,10 @@ function fn_viewBillingBatch(){
 		        
 		        if(result.master.advBillBatchStusId == 1){
 		        	$("#popDeactive").show();
+		        	$("#popApprove").show();
 		        }else{
 		        	$("#popDeactive").hide();
+		        	$("#popApprove").hide();
 		        }
 		        
 		        $("#popTotalItem").text(result.master.totalItem);
@@ -114,7 +117,15 @@ function fn_viewBillingBatch(){
 
 function fn_selectDetail(statusId){
 	var batchId = AUIGrid.getCellValue(myGridID, selectedItem, "advBillBatchId");
+	
 	 Common.ajax("GET", "/payment/selectBatchDetailByStatus.do", {"batchId" : batchId, "statusId" : statusId}, function(result){
+		 if(statusId == 0){
+			 $("#itemText").text("All Item");
+		 }else if(statusId == 4){
+		     $("#itemText").text("Success Item");
+		 }else if(statusId == 21){
+		      $("#itemText").text("Fail Item");
+		 }
 		 AUIGrid.setGridData(popGridID, result);
 		 AUIGrid.resize(popGridID, 1200, 280);
 	 });
@@ -123,7 +134,7 @@ function fn_selectDetail(statusId){
 
 function fn_clickDeactivate(){
 	Common.confirm("Are you sure to deactivate this batch conversion.", function(){
-		console.log("ttt");
+		
 		var batchId = AUIGrid.getCellValue(myGridID, selectedItem, "advBillBatchId");
 		
 		Common.ajax("GET", "/payment/doDeactivateAdvanceBillBatach.do", {"batchId" : batchId}, function(result){
@@ -148,6 +159,35 @@ function fn_clickDeactivate(){
 			});
 	     });
 	});
+}
+
+function fn_clickApprove(){
+    /* Common.confirm("Are you sure to deactivate this batch conversion.", function(){
+    	
+        var batchId = AUIGrid.getCellValue(myGridID, selectedItem, "advBillBatchId");
+        
+        Common.ajax("GET", "/payment/doDeactivateAdvanceBillBatach.do", {"batchId" : batchId}, function(result){
+            console.log(result);
+            Common.alert(result.message);
+            $("#popDeactive").hide();
+            
+            Common.ajax("GET", "/payment/selectBatchMasterInfo.do", {"batchId" : batchId}, function(re){
+                $("#popBatchNo").text(re.master.advBillBatchRefNo);
+                $("#popCreated").text(re.master.advBillBatchCrtDt);
+                $("#popCreator").text(re.master.userName);
+                
+                $("#popStatus").text(re.master.advBillBatchStusId);
+                $("#popAmount").text(re.master.advBillBatchTot.toFixed(2));
+                $("#popDiscount").text(re.master.advBillBatchTotDscnt.toFixed(2));
+                
+                if(re.master.advBillBatchStusId == 1){
+                    $("#popApprove").show();
+                }else{
+                    $("#popApprove").hide();
+                }
+            });
+         });
+    }); */
 }
 
 function fn_Clear(){
@@ -177,8 +217,10 @@ function fn_Clear(){
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
-					<col style="width:130px" />
+					<col style="width:180px" />
 					<col style="width:*" />
+					<col style="width:180px" />
+                    <col style="width:*" />
 				</colgroup>
 				<tbody>
 					<tr>
@@ -186,20 +228,21 @@ function fn_Clear(){
 						<td>
 						   <input type="text" id="batchId" name="batchId" title="" placeholder="Bill Batch ID" class="w100p" />
 						</td>
-						<th scope="row">Upload Date From</th>
-						<td>
-						   <input type="text" id="uploadDtFr" name="uploadDtFr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
-						</td>
-						<th scope="row">Upload Date To</th>
-						<td>
-						   <input type="text" id="uploadDtTo" name="uploadDtTo" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
-						</td>
+						<th scope="row">Creator</th>
+                        <td colspan="">
+                          <input type="text" id="creator" name="creator" title="" placeholder="Updator" class="w100p" />
+                        </td>
 					</tr>
 					<tr>
-						<th scope="row">Creator</th>
-						<td colspan="5">
-						  <input type="text" id="creator" name="creator" title="" placeholder="Updator" class="" />
-						</td>
+						
+						<th scope="row">Upload Date From</th>
+                        <td>
+                           <input type="text" id="uploadDtFr" name="uploadDtFr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
+                        </td>
+                        <th scope="row">Upload Date To</th>
+                        <td>
+                           <input type="text" id="uploadDtTo" name="uploadDtTo" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
+                        </td>
 					</tr>
 				</tbody>
 			</table><!-- table end -->
@@ -326,7 +369,7 @@ function fn_Clear(){
               </tr>
             </tbody>
         </table>
-         <p>Batch Item</p>
+         <p id="itemText">Batch Item</p>
          <ul class="right_btns">
             <li><p class="btn_grid"><a href="javascript:fn_selectDetail(0);">All Item</a></p></li>
             <li><p class="btn_grid"><a href="javascript:fn_selectDetail(4);">Success Item</a></p></li>
@@ -334,8 +377,9 @@ function fn_Clear(){
          </ul>
          <article id="pop_batch_grid" class="grid_wrap"><!-- grid_wrap start -->
          </article><!-- grid_wrap end -->
-         <ul class="right_btns">
-            <li><p class="btn_grid" id="popDeactive" style="display:none;"><a href="javascript:fn_clickDeactivate();">Deactivate</a></p></li>
+         <ul class="center_btns">
+            <li><p class="btn_grid" id="popApprove" style="display: none"><a href="javascript:fn_clickApprove();">Approve</a></p></li>
+            <li><p class="btn_grid" id="popDeactive" style="display: none"><a href="javascript:fn_clickDeactivate();">Deactivate</a></p></li>
          </ul>
     </section>
     <!-- pop_body end -->
