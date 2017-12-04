@@ -330,6 +330,7 @@
 							    AND B.PROMO_ITM_STK_ID = C.ITM_STK_ID
 							    AND C.SALES_ORD_ID =  #{SALES_ORD_ID}
 							    AND A.PROMO_SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID}       
+							    AND C.SALES_ORD_ID = D.SALES_ORD_ID 
 							    AND D.CUST_ID = E.CUST_ID
 							    AND (A.PROMO_CUST_TYPE = E.TYPE_ID    OR A.PROMO_CUST_TYPE  =0 )
 							      ]]>
