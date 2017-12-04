@@ -438,16 +438,16 @@ public class ServiceApiController {
 		List<Map<String, Object>> asTransLogs = null;
 		List<Map<String, Object>> asTransLogs1 = null;
 		
+//		Date d = new Date ();
 		Calendar cal = Calendar.getInstance();
-		 
-		//현재 년도, 월, 일
-		int year = cal.get ( cal.YEAR );
-		int month = cal.get ( cal.MONTH ) + 1 ;
-		int date = cal.get ( cal.DATE ) ;
-			
-		String todate2 = (String.valueOf(date) +String.valueOf(month) + String.valueOf(year));
+     	 
+	    StringBuffer today2 = new StringBuffer();
+        today2.append(String.format("%02d", cal.get(cal.DATE)));
+	    today2.append(String.format("%02d", cal.get(cal.MONTH) + 1));
+	    today2.append(String.format("%04d", cal.get(cal.YEAR)));
 
-		
+	    String toSetlDt = today2.toString();
+        
 		Date todate = new Date();
 		Calendar today1 = Calendar.getInstance();
 		
@@ -464,6 +464,14 @@ public class ServiceApiController {
 		String ddMMCurDate =  transFormat.format(new Date());
 		String curDate = transFormatYY.format(new Date());
 		String curTime = transFormatHH.format(new Date());
+		
+		//현재 년도, 월, 일
+		int year = cal.get ( cal.YEAR );
+		int month = cal.get ( cal.MONTH ) + 1 ;
+		int date = cal.get ( cal.DATE ) ;
+		
+//		String todate2 = (String.valueOf(date) +String.valueOf(month) + String.valueOf(year));
+		
 		
 		// mobile 에서 받은 데이터를 로그 테이블에 insert......
 		LOGGER.debug("### IS_INSERT_AS_LOG : {}", RegistrationConstants.IS_INSERT_AS_LOG);
@@ -770,7 +778,8 @@ public class ServiceApiController {
 					params.put("AS_SLUTN_RESN_ID", "");
 				}
 				
-				params.put("AS_SETL_DT", todate2);
+//				params.put("AS_SETL_DT", todate2);
+				params.put("AS_SETL_DT", toSetlDt);
 				params.put("AS_SETL_TM", curTime);
 				
 				
