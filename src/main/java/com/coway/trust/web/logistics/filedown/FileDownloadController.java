@@ -70,13 +70,13 @@ public class FileDownloadController {
 
 		return "logistics/FileDown/fileDownloadList";
 	}
-	
+
 	@RequestMapping(value = "/FileRawData.do")
 	public String filerawdata(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		return "logistics/FileDown/fileDownloadRowData";
 	}
-	
+
 	@RequestMapping(value = "/fileDownloadList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> fileDownloadList(Model model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -101,6 +101,17 @@ public class FileDownloadController {
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/rawdataList.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> rawdataList(@RequestParam Map<String, Object> params) throws Exception {
+
+		List<EgovMap> list = FileDownloadService.rawDataList(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(list);
+		return ResponseEntity.ok(message);
 	}
 
 	@RequestMapping(value = "/selectLabelList.do", method = RequestMethod.GET)

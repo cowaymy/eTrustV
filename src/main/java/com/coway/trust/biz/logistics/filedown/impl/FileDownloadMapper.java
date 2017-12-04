@@ -23,4 +23,6 @@ public interface FileDownloadMapper {
 
 	int existFileCheck(Map<String, Object> params);
 
+	List<EgovMap> rawDataList(Map<String, Object> params);
+
 }
