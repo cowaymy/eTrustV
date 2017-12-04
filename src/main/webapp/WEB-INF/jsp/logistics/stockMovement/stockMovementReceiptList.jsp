@@ -420,8 +420,8 @@ function fn_ViewSerial(str){
                 <tr>
                     <th scope="row">Delivery Number</th>
                     <td>
-                        <select class="w100p" id="seldelno" name="seldelno"></select>
-<!--                         <input type="text" class="w100p" id="seldelno" name="seldelno"> -->
+                       <!--  <select class="w100p" id="seldelno" name="seldelno"></select> -->
+                        <input type="text" class="w100p" id="seldelno" name="seldelno">
                     </td>
                     <th scope="row">Transfer Type</th>
                     <td>
