@@ -845,7 +845,13 @@ $(document).ready(function()
         }
         else if (event.columnIndex == 3 &&  event.value == "N")
         {
-            AUIGrid.setCellValue(transGridID, 0, 4, "");
+        	var myValue_desc1 = AUIGrid.getCellValue(transGridID, 0, 4);
+
+        	if(myValue_desc1.length == 0 ){
+        		AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn1"] );
+        	}else{
+        		AUIGrid.setCellValue(transGridID, 0, 4, "");
+        	}
         }
 
         if (event.columnIndex == 5 &&  event.value == "Y")
@@ -854,7 +860,13 @@ $(document).ready(function()
         }
         else if (event.columnIndex == 5 &&  event.value == "N")
         {
-            AUIGrid.setCellValue(transGridID, 0, 6, "");
+        	var myValue_desc2 = AUIGrid.getCellValue(transGridID, 0, 6);
+
+            if(myValue_desc2.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn2"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 6, "");
+            }
         }
 
         if (event.columnIndex == 7 &&  event.value == "Y")
@@ -863,7 +875,14 @@ $(document).ready(function()
         }
         else if (event.columnIndex == 7 &&  event.value == "N")
         {
-            AUIGrid.setCellValue(transGridID, 0, 8, "");
+            //AUIGrid.setCellValue(transGridID, 0, 8, "");
+            var myValue_desc3 = AUIGrid.getCellValue(transGridID, 0, 8);
+
+            if(myValue_desc3.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn3"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 8, "");
+            }
         }
 
         if (event.columnIndex == 9 &&  event.value == "Y")
@@ -872,7 +891,14 @@ $(document).ready(function()
         }
         else if (event.columnIndex == 9 &&  event.value == "N")
         {
-            AUIGrid.setCellValue(transGridID, 0, 10, "");
+            //AUIGrid.setCellValue(transGridID, 0, 10, "");
+            var myValue_desc4 = AUIGrid.getCellValue(transGridID, 0, 10);
+
+            if(myValue_desc4.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn4"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 10, "");
+            }
         }
 
         if (event.columnIndex == 11 &&  event.value == "Y")
@@ -881,7 +907,14 @@ $(document).ready(function()
         }
         else if (event.columnIndex == 11 &&  event.value == "N")
         {
-            AUIGrid.setCellValue(transGridID, 0, 12, "");
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc5 = AUIGrid.getCellValue(transGridID, 0, 12);
+
+            if(myValue_desc5.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn12"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 12, "");
+            }
         }
     });
 
