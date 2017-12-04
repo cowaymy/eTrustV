@@ -25,6 +25,7 @@ public class PSTSalesMVO implements Serializable{
 	private String pstRefNo;
 	private int pstDealerId;
 	private int pstType;
+	private int pstLocId;
 	private int pstDealerMailCntId;
 	private int pstDealerDelvryCntId;
 	private int pstDealerMailAddId;
@@ -76,6 +77,12 @@ public class PSTSalesMVO implements Serializable{
 	}
 	public void setPstType(int pstType) {
 		this.pstType = pstType;
+	}
+	public int getPstLocId() {
+		return pstLocId;
+	}
+	public void setPstLocId(int pstLocId) {
+		this.pstLocId = pstLocId;
 	}
 	public int getPstDealerMailCntId() {
 		return pstDealerMailCntId;
