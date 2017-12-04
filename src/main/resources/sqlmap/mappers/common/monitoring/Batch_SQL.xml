@@ -37,7 +37,7 @@
         </if>
 
         <if test='exitCode !=null and exitCode != "" '>
-        AND B.EXIT_CODE IN (SELECT     REGEXP_SUBSTR (#{exitCode}, '[^,]+', 1, LEVEL)
+        AND C.EXIT_CODE IN (SELECT     REGEXP_SUBSTR (#{exitCode}, '[^,]+', 1, LEVEL)
                                                               FROM DUAL
                                                         CONNECT BY REGEXP_SUBSTR (#{exitCode}, '[^,]+', 1, LEVEL) IS NOT NULL)
         </if>
