@@ -182,6 +182,12 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getBarcodeCList(invenAdjustLocId);
 	}
+	
+	@Override
+	public List<EgovMap> getUsedPartsList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getUsedPartsList(params);
+	}
 
 	/**
 	 * 현창배 추가

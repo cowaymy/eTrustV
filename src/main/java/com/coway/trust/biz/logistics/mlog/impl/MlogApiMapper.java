@@ -58,6 +58,8 @@ public interface MlogApiMapper {
 	List<EgovMap> getBarcodeDList(String invenAdjustLocId);
 
 	List<EgovMap> getBarcodeCList(String invenAdjustLocId);
+	
+	List<EgovMap> getUsedPartsList(Map<String, Object> params);
 
 	/**
 	 * 현창배 추가
