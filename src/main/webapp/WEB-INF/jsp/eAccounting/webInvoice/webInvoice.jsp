@@ -243,6 +243,7 @@ function fn_getTotalAmount() {
     sum = 0;
     var netAmtList = AUIGrid.getColumnValues(newGridID, "netAmt");
     var taxAmtList = AUIGrid.getColumnValues(newGridID, "taxAmt");
+    var taxNonClmAmtList = AUIGrid.getColumnValues(newGridID, "taxNonClmAmt");
     if(netAmtList.length > 0) {
         for(var i in netAmtList) {
             sum += netAmtList[i];
@@ -253,11 +254,16 @@ function fn_getTotalAmount() {
             sum += taxAmtList[i];
         }
     }
+    if(taxNonClmAmtList.length > 0) {
+        for(var i in taxNonClmAmtList) {
+            sum += taxNonClmAmtList[i];
+        }
+    }
     return sum;
 }
 
 function fn_addRow() {
-    AUIGrid.addRow(newGridID, {cur:"MYR",netAmt:0,taxAmt:0,totAmt:0}, "last");
+    AUIGrid.addRow(newGridID, {cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
 }
 
 function fn_removeRow() {

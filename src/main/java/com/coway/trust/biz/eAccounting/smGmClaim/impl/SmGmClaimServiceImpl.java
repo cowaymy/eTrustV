@@ -62,6 +62,7 @@ public class SmGmClaimServiceImpl implements SmGmClaimService {
 		
 		masterData.put("clmNo", clmNo);
 		masterData.put("allTotAmt", params.get("allTotAmt"));
+		masterData.put("expGrp", params.get("expGrp"));
 		masterData.put("userId", params.get("userId"));
 		masterData.put("userName", params.get("userName"));
 		
@@ -80,8 +81,8 @@ public class SmGmClaimServiceImpl implements SmGmClaimService {
 			// Expense Type Name == Car Mileage Expense
 	        //$("#expTypeName").val() == "Car Mileage Expense"
 	        // WebInvoice Test는 Test
-			LOGGER.debug("expTypeName =====================================>>  " + item.get("expTypeName"));
-			if("Car Mileage Expense".equals(item.get("expTypeName"))) {
+			LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
+			if("1".equals(params.get("expGrp"))) {
 				LOGGER.debug("insertSmGmClaimExpMileage =====================================>>  " + item);
 				smGmClaimMapper.insertSmGmClaimExpMileage(item);
 			}
@@ -131,8 +132,8 @@ public class SmGmClaimServiceImpl implements SmGmClaimService {
 				// Expense Type Name == Car Mileage Expense
 		        //$("#expTypeName").val() == "Car Mileage Expense"
 		        // WebInvoice Test는 Test
-				LOGGER.debug("expTypeName =====================================>>  " + hm.get("expTypeName"));
-				if("Car Mileage Expense".equals(hm.get("expTypeName"))) {
+				LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
+				if("1".equals(params.get("expGrp"))) {
 					LOGGER.debug("insertStaffClaimExpMileage =====================================>>  " + hm);
 					smGmClaimMapper.insertSmGmClaimExpMileage(hm);
 				}
@@ -159,8 +160,8 @@ public class SmGmClaimServiceImpl implements SmGmClaimService {
 				// Expense Type Name == Car Mileage Expense
 		        //$("#expTypeName").val() == "Car Mileage Expense"
 		        // WebInvoice Test는 Test
-				LOGGER.debug("expTypeName =====================================>>  " + hm.get("expTypeName"));
-				if("Car Mileage Expense".equals(hm.get("expTypeName"))) {
+				LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
+				if("1".equals(params.get("expGrp"))) {
 					LOGGER.debug("updateStaffClaimExpMileage =====================================>>  " + hm);
 					smGmClaimMapper.updateSmGmClaimExpMileage(hm);
 				}

@@ -107,6 +107,12 @@ var newGridColumnLayout = [ {
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
+    dataField : "taxNonClmAmt",
+    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
     dataField : "totAmt",
     headerText : '<spring:message code="pettyCashNewExp.totBrAmt" />',
     style : "aui-grid-user-custom-right",
@@ -114,7 +120,7 @@ var newGridColumnLayout = [ {
     formatString : "#,##0.00",
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt + item.gstAmt);
+    	return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
     },
     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
         if(item.yN == "N") {
@@ -319,10 +325,6 @@ var mileageGridColumnLayout = [ {
 
 //그리드 속성 설정
 var mileageGridPros = {
-    // 페이징 사용       
-    usePaging : true,
-    // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20,
     // 헤더 높이 지정
     headerHeight : 20,
     editable : true,
@@ -396,18 +398,21 @@ $(document).ready(function () {
     
     fn_setEvent();
     
-    var expTypeName = "${expTypeName}";
-    console.log(expTypeName);
+    var expGrp = "${expGrp}";
+    console.log(expGrp);
     // Expense Type Name == Car Mileage Expense
     //$("#expTypeName").val() == "Car Mileage Expense"
     // WebInvoice Test는 Test
-    if(expTypeName == "Car Mileage Expense") {
+    if(expGrp == "1") {
         $("#noMileage").hide();
         if(!FormUtil.isEmpty("${appvPrcssNo}")){
         	mileageGridPros.editable = false;
         }
         fn_createAUIGrid();
+        $("#carMileage_radio").attr("checked", "checked");
         $("#mileage_btn").show();
+    } else {
+    	$("#normalExp_radio").attr("checked", "checked");
     }
 });
 
@@ -451,6 +456,7 @@ function fn_tempSave() {
 <input type="hidden" id="budgetCodeName" name="budgetCodeName">
 <input type="hidden" id="glAccCode" name="glAccCode">
 <input type="hidden" id="glAccCodeName" name="glAccCodeName">
+<input type="hidden" id="taxRate">
 
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="right_btns mb10">
@@ -483,8 +489,13 @@ function fn_tempSave() {
 <tr>
 	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
 	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
-	<th scope="row"><spring:message code="pettyCashNewExp.expType" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<!-- 2017/12/03 추가 START -->
+    <th scope="row"><spring:message code="newStaffClaim.expGrp" /></th>
+    <td>
+    <label><input type="radio" id="normalExp_radio" name="expGrp" value="0" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/><span><spring:message code="newStaffClaim.normalExp" /></span></label>
+    <label><input type="radio" id="carMileage_radio" name="expGrp" value="1" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/><span><spring:message code="newStaffClaim.carMileage" /></span></label>
+    </td>
+    <!-- 2017/12/03 추가 END -->
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -498,13 +509,21 @@ function fn_tempSave() {
     <col style="width:*" />
 </colgroup>
 <tbody>
+<!-- 2017/12/03 추가 START -->
 <tr>
     <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="pettyCashNewExp.expType" /></th>
+    <td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
     <th scope="row"><spring:message code="newWebInvoice.taxCode" /></th>
     <%-- <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn" id="taxCode"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
-    <td><select class="" id="taxCode" name="taxCode" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>></select></td>
+    <td><select class="" id="taxCode" name="taxCode" onchange="javascript:fn_selectTaxRate()" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>></select></td>
 </tr>
+<!-- 2017/12/03 추가 END -->
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
     <td><input type="text" title="" placeholder="" class="" id="supplirName" name="supplirName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="sSupplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
@@ -526,13 +545,13 @@ function fn_tempSave() {
     <th scope="row"><spring:message code="pettyCashNewExp.amtBeforeGst" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="gstBeforAmt" name="gstBeforAmt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
     <th scope="row"><spring:message code="pettyCashNewExp.gstRm" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstAmt" name="gstAmt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstAmt" name="gstAmt" /></td>
 </tr>
 <tr>
-    <th scope="row"></th>
-    <td></td>
     <th scope="row"><spring:message code="newWebInvoice.totalAmount" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="totAmt" name="totAmt" /></td>
+    <th scope="row"><spring:message code="pettyCashNewExp.taxNonClmAmt" /></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstNonAmt" name="gstNonAmt" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>

@@ -440,6 +440,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
         TAX_CODE,
         NET_AMT,
         TAX_AMT,
+        TAX_NON_CLM_AMT,
         TOT_AMT,
         ATCH_FILE_GRP_ID,
         EXP_DESC,
@@ -465,6 +466,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{taxCode}
        ,#{netAmt}
        ,#{taxAmt}
+       ,#{taxNonClmAmt}
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
@@ -501,6 +503,7 @@ SELECT T1.CLM_SEQ,
        'MYR'       AS CUR, 
        T1.NET_AMT, 
        T1.TAX_AMT, 
+       T1.TAX_NON_CLM_AMT,
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC, 
@@ -547,6 +550,7 @@ SELECT T1.CLM_SEQ,
        'MYR'       AS CUR, 
        T1.NET_AMT, 
        T1.TAX_AMT, 
+       T1.TAX_NON_CLM_AMT, 
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC 
@@ -606,6 +610,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,TAX_CODE = #{taxCode}
        ,NET_AMT = #{netAmt}
        ,TAX_AMT = #{taxAmt}
+       ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
        ,UPD_DT = SYSDATE
@@ -637,6 +642,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,TAX_CODE
        ,NET_AMT
        ,TAX_AMT
+       ,TAX_NON_CLM_AMT
        ,APPV_AMT
        ,EXP_DESC
        ,ATCH_FILE_GRP_ID
@@ -665,6 +671,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,#{taxCode}
        ,#{netAmt}
        ,#{taxAmt}
+       ,#{taxNonClmAmt}
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}

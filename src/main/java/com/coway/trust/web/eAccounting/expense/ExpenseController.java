@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.eAccounting.expense.ExpenseService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -71,7 +73,13 @@ public class ExpenseController {
 	}	
 	
 	@RequestMapping(value = "/addExpenseTypePop.do")
-	public String addExpenseTypePop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{		
+	public String addExpenseTypePop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		List<EgovMap> taxCodeList = null; 
+		
+		LOGGER.debug("Params =====================================>>  " + params);
+		
+		taxCodeList = expenseService.selectTaxCodeByClmType(params);
+		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
 		return "eAccounting/expense/addExpenseTypePop";
 	}
 	
@@ -105,6 +113,7 @@ public class ExpenseController {
 		model.addAttribute("glAccCodeName", params.get("popGlAccCodeName").toString());
 		model.addAttribute("budgetCode", params.get("popBudgetCode").toString());
 		model.addAttribute("budgetCodeName", params.get("popBudgetCodeName").toString());
+		model.addAttribute("taxCode", params.get("popTaxCode").toString());
 		
 		return "eAccounting/expense/editExpenseTypePop";
 	}
@@ -188,6 +197,19 @@ public class ExpenseController {
 
 		List<EgovMap> codeList = expenseService.selectCodeList(params);
 		return ResponseEntity.ok(codeList);
+	}
+	
+	@RequestMapping(value = "/selectTaxCodeByClmType", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectTaxCodeByClmType (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+		
+		List<EgovMap> taxCodeList = null; 
+		
+		LOGGER.debug("Params =====================================>>  " + params);
+		
+		taxCodeList = expenseService.selectTaxCodeByClmType(params);
+		
+		return ResponseEntity.ok(taxCodeList);
+		
 	}
 }
 

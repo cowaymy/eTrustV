@@ -107,6 +107,12 @@ var newGridColumnLayout = [ {
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
+    dataField : "taxNonClmAmt",
+    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
     dataField : "totAmt",
     headerText : '<spring:message code="pettyCashNewExp.totBrAmt" />',
     style : "aui-grid-user-custom-right",
@@ -114,7 +120,7 @@ var newGridColumnLayout = [ {
     formatString : "#,##0.00",
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt + item.gstAmt);
+        return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
     },
     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
         if(item.yN == "N") {
@@ -315,10 +321,6 @@ var mileageGridColumnLayout = [ {
 
 //그리드 속성 설정
 var mileageGridPros = {
-    // 페이징 사용       
-    usePaging : true,
-    // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20,
     // 헤더 높이 지정
     headerHeight : 20,
     editable : true,
@@ -426,6 +428,7 @@ function fn_tempSave() {
 <input type="hidden" id="budgetCodeName" name="budgetCodeName">
 <input type="hidden" id="glAccCode" name="glAccCode">
 <input type="hidden" id="glAccCodeName" name="glAccCodeName">
+<input type="hidden" id="taxRate">
 
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
@@ -456,8 +459,11 @@ function fn_tempSave() {
 <tr>
 	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
 	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth"/></td>
-	<th scope="row"><spring:message code="pettyCashNewExp.expType" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName"/><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<th scope="row"><spring:message code="newStaffClaim.expGrp" /></th>
+    <td>
+    <label><input type="radio" id="normalExp_radio" name="expGrp" checked="checked" value="0"/><span><spring:message code="newStaffClaim.normalExp" /></span></label>
+    <label><input type="radio" id="carMileage_radio" name="expGrp" value="1" /><span><spring:message code="newStaffClaim.carMileage" /></span></label>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -474,9 +480,15 @@ function fn_tempSave() {
 <tr>
     <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" /></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="pettyCashNewExp.expType" /></th>
+    <td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName"/><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="newWebInvoice.taxCode" /></th>
     <%-- <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn" id="taxCode"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
-    <td><select class="" id="taxCode" name="taxCode"></select></td>
+    <td><select class="" id="taxCode" name="taxCode" onchange="javascript:fn_selectTaxRate()"></select></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
@@ -499,13 +511,13 @@ function fn_tempSave() {
     <th scope="row"><spring:message code="pettyCashNewExp.amtBeforeGst" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="gstBeforAmt" name="gstBeforAmt" /></td>
     <th scope="row"><spring:message code="pettyCashNewExp.gstRm" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstAmt" name="gstAmt" /></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstAmt" name="gstAmt" /></td>
 </tr>
 <tr>
-    <th scope="row"></th>
-    <td></td>
     <th scope="row"><spring:message code="newWebInvoice.totalAmount" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="totAmt" name="totAmt" /></td>
+    <th scope="row"><spring:message code="pettyCashNewExp.taxNonClmAmt" /></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstNonAmt" name="gstNonAmt" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>

@@ -207,6 +207,7 @@ SELECT   T.CLM_NO
        ,BUDGET_CODE
        ,BUDGET_CODE_NAME
        ,TAX_CODE
+       ,TAX_NON_CLM_AMT
        ,NET_AMT
        ,TAX_AMT
        ,TOT_AMT
@@ -227,6 +228,7 @@ SELECT   T.CLM_NO
        ,#{budgetCode}
        ,#{budgetCodeName}
        ,#{taxCode}
+       ,#{taxNonClmAmt}
        ,#{netAmt}
        ,#{taxAmt}
        ,#{totAmt}
@@ -278,9 +280,11 @@ SELECT   T.CLM_NO
                    ,T.BUDGET_CODE_NAME
                    ,T.TAX_CODE
                    ,TT.INDUSTRY_CODE||' '||'('||TT.TAX_NAME||')' AS TAX_NAME
+                   ,TT.TEX_RATE AS TAX_RATE
                    ,'MYR' AS CUR
                    ,T.NET_AMT
                    ,T.TAX_AMT
+                   ,T.TAX_NON_CLM_AMT
                    ,T.TOT_AMT
                    ,T.EXP_DESC
           FROM FCM0003D T LEFT JOIN FCM0007C TT
@@ -353,6 +357,7 @@ SELECT   T.CLM_NO
        ,BUDGET_CODE = #{budgetCode}
        ,BUDGET_CODE_NAME = #{budgetCodeName}
        ,TAX_CODE = #{taxCode}
+       ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
        ,NET_AMT = #{netAmt}
        ,TAX_AMT = #{taxAmt}
        ,TOT_AMT = #{totAmt}
@@ -478,6 +483,7 @@ SELECT   T.CLM_NO
        ,BUDGET_CODE
        ,BUDGET_CODE_NAME
        ,TAX_CODE
+       ,TAX_NON_CLM_AMT
        ,NET_AMT
        ,TAX_AMT
        ,APPV_AMT
@@ -506,6 +512,7 @@ SELECT   T.CLM_NO
        ,#{budgetCode}
        ,#{budgetCodeName}
        ,#{taxCode}
+       ,#{taxNonClmAmt}
        ,#{netAmt}
        ,#{taxAmt}
        ,#{totAmt}
@@ -572,7 +579,8 @@ SELECT T.APPV_PRCSS_NO
                 ,T3.INVC_DT
                 ,T3.MEM_ACC_ID
                 ,T5.MEM_ACC_NAME
-                ,SUM (T3.APPV_AMT) APPV_AMT
+                <!-- ,SUM (T3.APPV_AMT) APPV_AMT -->
+                ,(SELECT SUM(APPV_AMT) FROM FCM0015D WHERE APPV_PRCSS_NO = T1.APPV_PRCSS_NO) AS APPV_AMT
                 , (CASE T2.APPV_STUS
                       WHEN 'R'
                          THEN 'Request'
@@ -589,8 +597,8 @@ SELECT T.APPV_PRCSS_NO
                 ,T6.FILE_EXTSN
                 ,T6.FILE_CNT
                 ,TO_CHAR (T2.APPV_DT, 'DD/MM/YYYY') APPV_PRCSS_DT
-            FROM FCM0004M T1 LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO
-                 LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+            FROM FCM0004M T1 LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO <!-- AND T2.APPV_LINE_SEQ = 1 -->
+                 LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO AND T3.APPV_ITM_SEQ = 1 <!-- AND T3.APPV_ITM_SEQ = 1 추가 -->
                  LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
                  LEFT JOIN FCM0006M T5 ON T3.MEM_ACC_ID = T5.MEM_ACC_ID
                  LEFT JOIN
@@ -614,7 +622,7 @@ SELECT T.APPV_PRCSS_NO
                  AND T2.APPV_STUS = 'R'
               OR T2.APPV_STUS = 'A'
               OR T2.APPV_STUS = 'J'
-        GROUP BY T1.APPV_PRCSS_NO
+        <!-- GROUP BY T1.APPV_PRCSS_NO
                 ,T2.APPV_LINE_SEQ
                 ,T1.APPV_REQ_KEY_NO
                 ,T1.REQST_USER_ID
@@ -633,7 +641,8 @@ SELECT T.APPV_PRCSS_NO
                 ,T6.ATCH_FILE_NAME
                 ,T6.FILE_EXTSN
                 ,T6.FILE_CNT
-                ,T2.APPV_DT) T
+                ,T2.APPV_DT -->
+                ) T
   WHERE 1 = 1   
         <if test="startDt != null and startDt != ''">
         <![CDATA[ 
@@ -717,6 +726,7 @@ ORDER  BY T1.APPV_LINE_SEQ
                       ,'MYR'                                               AS CUR
                       ,T3.NET_AMT
                       ,T3.TAX_AMT
+                      ,T3.TAX_NON_CLM_AMT
                       ,T3.APPV_AMT
                       ,T7.TOT_AMT
                       ,T3.EXP_DESC
@@ -938,6 +948,11 @@ ORDER  BY T1.APPV_LINE_SEQ
          WHERE 1=1
          AND T1.COST_CENTR = #{costCentr}
          AND T1.BUDGET_CODE = #{budgetCode}
+</select>
+
+<select id="selectTaxRate" resultType="egovMap">
+/* webInvoiceMapper.selectTaxRate */
+    SELECT TAX_CODE, TAX_RATE FROM FCM0007C WHERE TAX_CODE = #{taxCode}
 </select>
 
 </mapper>

@@ -337,6 +337,7 @@ SELECT BUDGET_PLAN_YEAR ,
   <select id="selectAdjustmentAmount" parameterType="Map" resultType="egovMap">
   <![CDATA[
       SELECT TO_CHAR(A.UPD_DT, 'dd-mm-yyyy hh24:mi') AS CONFIRM_DATE 
+                  ,B.BUDGET_DOC_NO
                   ,B.BUDGET_ADJ_TYPE
                   ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
                   ,CASE WHEN B.SIGNAL ='+' THEN 'Receiver(+)' ELSE 'Sender(-)' END SIGNAL_TEXT

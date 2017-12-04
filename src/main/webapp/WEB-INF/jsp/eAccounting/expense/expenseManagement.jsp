@@ -106,6 +106,7 @@ function fn_expenseEdit(){
     $("#popBudgetCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCode"));
     $("#popBudgetCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCodeName"));
     $("#popGlAccCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCodeName"));
+    $("#popTaxCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "taxCode"));
 	
     
    Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", $("#popSForm").serializeJSON(), null, true, "editExpenseTypePop");
@@ -178,6 +179,9 @@ function createAUIGrid() {
             headerText : '<spring:message code="expense.ChangeUserID" />',
             width : 100,
             editable : false
+        }, {
+            dataField : "taxCode",
+            visible : false // Color 칼럼은 숨긴채 출력시킴
         }];
    
     //그리드 속성 설정
@@ -225,6 +229,7 @@ function createAUIGrid() {
 <input type="hidden" id="popBudgetCode" name="popBudgetCode"/>
 <input type="hidden" id="popGlAccCodeName" name="popGlAccCodeName"/>
 <input type="hidden" id="popBudgetCodeName" name="popBudgetCodeName"/>
+<input type="hidden" id="popTaxCode" name="popTaxCode"/>
 </form>
 
 

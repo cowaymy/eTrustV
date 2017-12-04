@@ -87,4 +87,6 @@ public interface WebInvoiceMapper {
 	
 	List<EgovMap> selectGlCodeList(Map<String, Object> params);
 	
+	EgovMap selectTaxRate(Map<String, Object> params);
+	
 }

@@ -159,19 +159,66 @@ function fn_setEvent() {
 	               
 	               $(this).val(str);
 	               
-	               var totAmt = 0;
-	               $.each($("#amt :text"), function(i, obj) {
-	                   if(obj.value != null && obj.value != ""){
-	                       console.log(i);
-	                       console.log(obj.value);
-	                       totAmt += Number(obj.value.replace(/,/gi, ""));
-	                       console.log(obj.value.replace(/,/gi, ""));
-	                   }
-	               });
-	               console.log(totAmt);
-	               totAmt = "" + totAmt;
-	               $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-	               console.log(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+	               str = Number(str.replace(/,/gi, ""));
+                   
+                   var taxAmt = 0;
+                   var taxNonAmt = 0;
+                   
+                   var oriTaxAmt = str * (Number($("#taxRate").val()) / 100);
+                   console.log("oriTaxAmt : " + oriTaxAmt);
+                   if($("#invcType").val() == "S") {
+                       if(oriTaxAmt > 30) {
+                           taxAmt = "30.00"
+                           taxNonAmt = oriTaxAmt - 30;
+                           console.log("taxNonAmt : " + taxNonAmt);
+                           taxNonAmt = "" + taxNonAmt;
+                           taxNonAmt = taxNonAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+                           var temp = taxNonAmt.split(".");
+                           if(temp.length == 1){
+                               temp[1] = "00";
+                               taxNonAmt = temp[0]+"."+temp[1];
+                           }
+                       } else {
+                           taxAmt = "" + oriTaxAmt;
+                           taxAmt = taxAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+                           var temp = taxAmt.split(".");
+                           if(temp.length == 1){
+                               temp[1] = "00";
+                               taxAmt = temp[0]+"."+temp[1];
+                           }
+                           taxNonAmt = "0.00"
+                       }
+                   } else {
+                       taxAmt = "" + oriTaxAmt;
+                       taxAmt = taxAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+                       var temp = taxAmt.split(".");
+                       if(temp.length == 1){
+                           temp[1] = "00";
+                           taxAmt = temp[0]+"."+temp[1];
+                       }
+                       taxNonAmt = "0.00";
+                   }
+                   $("#gstAmt").val(taxAmt);
+                   $("#gstNonAmt").val(taxNonAmt);
+                   
+                   var totAmt = 0;
+                   $.each($("#amt :text"), function(i, obj) {
+                       if(obj.value != null && obj.value != ""){
+                           console.log(i);
+                           console.log(obj.value);
+                           totAmt += Number(obj.value.replace(/,/gi, ""));
+                       }
+                   });
+                   console.log(totAmt);
+                   totAmt = totAmt + Number(taxNonAmt.replace(/,/gi, ""));
+                   totAmt = "" + totAmt;
+                   var str3 = totAmt.split(".");
+                   if(str3.length == 1){
+                       str3[1] = "00";
+                       totAmt = str3[0]+"."+str3[1];
+                   }
+                   $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+                   console.log(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	        } else if(id == "newClmMonth") {
 	            var clmMonth = $(this).val();
 	            console.log(clmMonth);
@@ -349,6 +396,7 @@ function fn_addRow() {
                     ,cur : "MYR"
                     ,gstBeforAmt : Number($("#gstBeforAmt").val().replace(/,/gi, ""))
                     ,gstAmt : Number($("#gstAmt").val().replace(/,/gi, ""))
+                    ,taxNonClmAmt : Number($("#gstNonAmt").val().replace(/,/gi, ""))
                     ,expDesc : $("#expDesc").val()
             };
             
@@ -387,6 +435,7 @@ function fn_addRow() {
                     ,cur : "MYR"
                     ,gstBeforAmt : Number($("#gstBeforAmt").val().replace(/,/gi, ""))
                     ,gstAmt : Number($("#gstAmt").val().replace(/,/gi, ""))
+                    ,taxNonClmAmt : Number($("#gstNonAmt").val().replace(/,/gi, ""))
                     ,expDesc : $("#expDesc").val()
             };
             
@@ -456,7 +505,7 @@ function fn_selectStaffClaimItemList() {
     var obj = {
             clmNo : clmNo
     };
-    Common.ajax("GET", "/eAccounting/scmActivityFund/selectScmActivityFundItemList.do", obj, function(result) {
+    Common.ajax("GET", "/eAccounting/scmActivityFund/selectScmActivityFundItemList.do?_cacheId=" + Math.random(), obj, function(result) {
         console.log(result);
         AUIGrid.setGridData(newGridID, result);
     });
@@ -499,10 +548,13 @@ function fn_selectStaffClaimInfo() {
         $("#invcDt").val(result.invcDt);
         $("#gstRgistNo").val(result.gstRgistNo);
         $("#taxCode").val(result.taxCode);
+        fn_selectTaxRate();
         var gstBeforAmt = "" + result.gstBeforAmt;
         $("#gstBeforAmt").val(gstBeforAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
         var gstAmt = "" + result.gstAmt;
         $("#gstAmt").val(gstAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+        var gstNonAmt = "" + result.taxNonClmAmt;
+        $("#gstNonAmt").val(gstNonAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
         var totAmt = "" + result.totAmt;
         $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
         $("#expDesc").val(result.expDesc);
@@ -648,6 +700,16 @@ function fn_deleteStaffClaimExp() {
             console.log(result);
             AUIGrid.setGridData(staffClaimGridID, result);
         });
+    });
+}
+
+function fn_selectTaxRate() {
+    var data = {
+            taxCode : $("#taxCode").val()
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
+        console.log(result);
+        $("#taxRate").val(result.taxRate);
     });
 }
 </script>

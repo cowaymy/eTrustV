@@ -117,6 +117,12 @@ var newGridColumnLayout = [ {
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
+    dataField : "nonClmGstAmt",
+    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
     dataField : "totAmt",
     headerText : '<spring:message code="pettyCashNewExp.totBrAmt" />',
     style : "aui-grid-user-custom-right",
@@ -124,7 +130,7 @@ var newGridColumnLayout = [ {
     formatString : "#,##0.00",
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt + item.gstAmt);
+        return (item.gstBeforAmt + item.gstAmt + item.nonClmGstAmt);
     },
     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
         if(item.yN == "N") {
@@ -241,6 +247,7 @@ function fn_tempSave() {
 <input type="hidden" id="expType" name="expType">
 <input type="hidden" id="budgetCode" name="budgetCode">
 <input type="hidden" id="glAccCode" name="glAccCode">
+<input type="hidden" id="taxRate">
 
 <ul class="right_btns mb10">
     <li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
@@ -299,7 +306,7 @@ function fn_tempSave() {
     <td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" /><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="newWebInvoice.taxCode" /></th>
     <%-- <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn" id="taxCode"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
-    <td><select class="" id="taxCode" name="taxCode"></select></td>
+    <td><select class="" id="taxCode" name="taxCode" onchange="javascript:fn_selectTaxRate()"></select></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.glAcc" /></th>
@@ -328,13 +335,13 @@ function fn_tempSave() {
     <th scope="row"><spring:message code="pettyCashNewExp.amtBeforeGst" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="gstBeforAmt" name="gstBeforAmt" /></td>
     <th scope="row"><spring:message code="pettyCashNewExp.gstRm" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstAmt" name="gstAmt" /></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstAmt" name="gstAmt" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.totalAmount" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="totAmt" name="totAmt" /></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row"><spring:message code="pettyCashNewExp.taxNonClmAmt" /></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstNonAmt" name="gstNonAmt" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>

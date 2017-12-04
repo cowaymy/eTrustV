@@ -477,4 +477,15 @@ public class WebInvoiceController {
 		return ResponseEntity.ok(glCodeList);
 		
 	}
+	
+	@RequestMapping(value = "/selectTaxRate", method = RequestMethod.GET) 
+	public ResponseEntity<EgovMap> selectTaxRate (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+		
+		LOGGER.debug("Params =====================================>>  " + params);
+		
+		EgovMap taxRate = webInvoiceService.selectTaxRate(params); 
+		
+		return ResponseEntity.ok(taxRate);
+		
+	}
 }

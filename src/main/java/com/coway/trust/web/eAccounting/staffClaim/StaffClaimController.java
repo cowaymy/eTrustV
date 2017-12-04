@@ -167,7 +167,7 @@ public class StaffClaimController {
 		model.addAttribute("userName", sessionVO.getUserName());
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
-		model.addAttribute("expTypeName", itemList.get(0).get("expTypeName"));
+		model.addAttribute("expGrp", itemList.get(0).get("expGrp"));
 		if(itemList.size() > 0) {
 			model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
 		}

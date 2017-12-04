@@ -162,6 +162,48 @@ function fn_setEvent() {
 	               
 	               
 	               $(this).val(str);
+
+                   str = Number(str.replace(/,/gi, ""));
+                   
+	               var taxAmt = 0;
+	               var taxNonAmt = 0;
+	               
+	               var oriTaxAmt = str * (Number($("#taxRate").val()) / 100);
+	               console.log("oriTaxAmt : " + oriTaxAmt);
+	               if($("#invcType").val() == "S") {
+	            	   if(oriTaxAmt > 30) {
+	                       taxAmt = "30.00"
+	                       taxNonAmt = oriTaxAmt - 30;
+	                       console.log("taxNonAmt : " + taxNonAmt);
+	                       taxNonAmt = "" + taxNonAmt;
+	                       taxNonAmt = taxNonAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+	                       var temp = taxNonAmt.split(".");
+                           if(temp.length == 1){
+                               temp[1] = "00";
+                               taxNonAmt = temp[0]+"."+temp[1];
+                           }
+	                   } else {
+	                       taxAmt = "" + oriTaxAmt;
+	                       taxAmt = taxAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+	                       var temp = taxAmt.split(".");
+                           if(temp.length == 1){
+                               temp[1] = "00";
+                               taxAmt = temp[0]+"."+temp[1];
+                           }
+	                       taxNonAmt = "0.00"
+	                   }
+	               } else {
+	            	   taxAmt = "" + oriTaxAmt;
+                       taxAmt = taxAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+	            	   var temp = taxAmt.split(".");
+                       if(temp.length == 1){
+                           temp[1] = "00";
+                           taxAmt = temp[0]+"."+temp[1];
+                       }
+                       taxNonAmt = "0.00";
+	               }
+	               $("#gstAmt").val(taxAmt);
+	               $("#gstNonAmt").val(taxNonAmt);
 	               
 	               var totAmt = 0;
 	               $.each($("#amt :text"), function(i, obj) {
@@ -169,11 +211,16 @@ function fn_setEvent() {
 	                       console.log(i);
 	                       console.log(obj.value);
 	                       totAmt += Number(obj.value.replace(/,/gi, ""));
-	                       console.log(obj.value.replace(/,/gi, ""));
 	                   }
 	               });
 	               console.log(totAmt);
+	               totAmt = totAmt + Number(taxNonAmt.replace(/,/gi, ""));
 	               totAmt = "" + totAmt;
+	               var str3 = totAmt.split(".");
+                   if(str3.length == 1){
+                	   str3[1] = "00";
+                	   totAmt = str3[0]+"."+str3[1];
+                   }
 	               $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	               console.log(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	        } else if(id == "newClmMonth") {
@@ -243,6 +290,10 @@ function fn_setEvent() {
 	            atchFileName :  file.name
 	        }, selectRowIdx);
 	    });
+	 
+	 $(":input:radio[name=expGrp]").on('change', function(evt) {
+		 fn_checkExpGrp();
+	 });
 	}
 
 function fn_supplierSearchPop() {
@@ -289,27 +340,14 @@ function fn_setPopExpType() {
     
     $("#glAccCode").val($("#search_glAccCode").val());
     $("#glAccCodeName").val($("#search_glAccCodeName").val());
-    
-    // Expense Type Name == Car Mileage Expense
-    //$("#expTypeName").val() == "Car Mileage Expense"
-    // WebInvoice Test는 Test
-    if($("#expTypeName").val() == "Car Mileage Expense") {
-    	$("#noMileage").hide();
-    	fn_createAUIGrid();
-    	$("#mileage_btn").show();
-    } else {
-    	fn_destroyGrid();
-    	$("#mileage_btn").hide();
-    	$("#noMileage").show();
-    }
 }
 
 //AUIGrid 를 생성합니다.
 function fn_createAUIGrid() {
     // 이미 생성되어 있는 경우
-    console.log("isCreated : " + AUIGrid.isCreated("#mileage_grid_wrap"));
-    /* if(AUIGrid.isCreated("#mileage_grid_wrap")) {
-        return;
+    /* console.log("isCreated : " + AUIGrid.isCreated("#mileage_grid_wrap"));
+    if(AUIGrid.isCreated("#mileage_grid_wrap")) {
+    	fn_destroyGrid();
     } */
 
     // 실제로 #grid_wrap 에 그리드 생성
@@ -369,7 +407,7 @@ function fn_checkEmpty() {
     // Expense Type Name == Car Mileage Expense
     //$("#expTypeName").val() == "Car Mileage Expense"
     // WebInvoice Test는 Test
-    if($("#expTypeName").val() == "Car Mileage Expense"){
+    if($(":input:radio[name=expGrp]:checked").val() == "1"){
     	var length = AUIGrid.getGridData(mileageGridID).length;
         if(length > 0) {
             for(var i = 0; i < length; i++) {
@@ -443,7 +481,7 @@ function fn_addRow() {
         // Expense Type Name == Car Mileage Expense
         //$("#expTypeName").val() == "Car Mileage Expense"
         // WebInvoice Test는 Test
-        if($("#expTypeName").val() == "Car Mileage Expense") {
+        if($(":input:radio[name=expGrp]:checked").val() == "1") {
         	// jQuery Ajax Form 사용
             var formData = new FormData();
             $.each(myFileCaches, function(n, v) {
@@ -463,12 +501,12 @@ function fn_addRow() {
                                 bankCode : $("#bankCode").val(),
                                 bankAccNo : $("#bankAccNo").val(),
                                 clmMonth : $("#newClmMonth").val(),
-                                expType : $("#expType").val(),
-                                expTypeName : $("#expTypeName").val(),
-                                glAccCode : $("#glAccCode").val(),
-                                glAccCodeName : $("#glAccCodeName").val(),
-                                budgetCode : $("#budgetCode").val(),
-                                budgetCodeName : $("#budgetCodeName").val(),
+                                expType : "Z9000",
+                                expTypeName : "Car Mileage Expense",
+                                glAccCode : "9999999999",
+                                glAccCodeName : "Car Mileage Expense",
+                                budgetCode : "99999",
+                                budgetCodeName : "Car Mileage Expense",
                         		carMilagDt : gridDataList[i].carMilagDt,
                         		locFrom : gridDataList[i].locFrom,
                         		locTo : gridDataList[i].locTo,
@@ -480,7 +518,8 @@ function fn_addRow() {
                         		purpose : gridDataList[i].purpose,
                         		expDesc : gridDataList[i].expDesc,
                         		gstBeforAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
-                        		gstAmt : 0
+                        		gstAmt : 0,
+                        		taxNonClmAmt : 0
                         }
                         data.atchFileGrpId = result.data.fileGroupKey
                         console.log(data);
@@ -512,12 +551,12 @@ function fn_addRow() {
                                 bankCode : $("#bankCode").val(),
                                 bankAccNo : $("#bankAccNo").val(),
                                 clmMonth : $("#newClmMonth").val(),
-                                expType : $("#expType").val(),
-                                expTypeName : $("#expTypeName").val(),
-                                glAccCode : $("#glAccCode").val(),
-                                glAccCodeName : $("#glAccCodeName").val(),
-                                budgetCode : $("#budgetCode").val(),
-                                budgetCodeName : $("#budgetCodeName").val(),
+                                expType : "Z9000",
+                                expTypeName : "Car Mileage Expense",
+                                glAccCode : "9999999999",
+                                glAccCodeName : "Car Mileage Expense",
+                                budgetCode : "99999",
+                                budgetCodeName : "Car Mileage Expense",
                                 carMilagDt : gridDataList[i].carMilagDt,
                                 locFrom : gridDataList[i].locFrom,
                                 locTo : gridDataList[i].locTo,
@@ -529,7 +568,8 @@ function fn_addRow() {
                                 purpose : gridDataList[i].purpose,
                                 expDesc : gridDataList[i].expDesc,
                                 gstBeforAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
-                                gstAmt : 0
+                                gstAmt : 0,
+                                taxNonClmAmt : 0
                         }
                         console.log(data);
                         if(FormUtil.isEmpty(gridDataList[i].clmSeq)) {
@@ -578,6 +618,7 @@ function fn_addRow() {
                         ,cur : "MYR"
                         ,gstBeforAmt : Number($("#gstBeforAmt").val().replace(/,/gi, ""))
                         ,gstAmt : Number($("#gstAmt").val().replace(/,/gi, ""))
+                        ,taxNonClmAmt : Number($("#gstNonAmt").val().replace(/,/gi, ""))
                         ,expDesc : $("#expDesc").val()
                 };
                 
@@ -616,6 +657,7 @@ function fn_addRow() {
                         ,cur : "MYR"
                         ,gstBeforAmt : Number($("#gstBeforAmt").val().replace(/,/gi, ""))
                         ,gstAmt : Number($("#gstAmt").val().replace(/,/gi, ""))
+                        ,taxNonClmAmt : Number($("#gstNonAmt").val().replace(/,/gi, ""))
                         ,expDesc : $("#expDesc").val()
                 };
                 
@@ -665,6 +707,7 @@ function fn_insertStaffClaimExp(st) {
         var data = {
                 gridDataList : gridDataList
                 ,allTotAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
+                ,expGrp : $(":input:radio[name=expGrp]:checked").val()
         }
         console.log(data);
         Common.ajax("POST", "/eAccounting/staffClaim/insertStaffClaimExp.do", data, function(result) {
@@ -687,7 +730,7 @@ function fn_selectStaffClaimItemList() {
     var obj = {
             clmNo : clmNo
     };
-    Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimItemList.do", obj, function(result) {
+    Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimItemList.do?_cacheId=" + Math.random(), obj, function(result) {
         console.log(result);
         AUIGrid.setGridData(newGridID, result);
     });
@@ -711,7 +754,7 @@ function fn_selectStaffClaimInfo() {
         // Expense Type Name == Car Mileage Expense
         //$("#expTypeName").val() == "Car Mileage Expense"
         // WebInvoice Test는 Test
-        if(result.expTypeName == "Car Mileage Expense") {
+        if(result.expGrp == 1) {
         	$("#newCostCenter").val(result.costCentr);
             $("#newCostCenterText").val(result.costCentrName);
             $("#newMemAccId").val(result.memAccId);
@@ -801,10 +844,13 @@ function fn_selectStaffClaimInfo() {
             $("#invcDt").val(result.invcDt);
             $("#gstRgistNo").val(result.gstRgistNo);
             $("#taxCode").val(result.taxCode);
+            fn_selectTaxRate();
             var gstBeforAmt = "" + result.gstBeforAmt;
             $("#gstBeforAmt").val(gstBeforAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
             var gstAmt = "" + result.gstAmt;
             $("#gstAmt").val(gstAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+            var gstNonAmt = "" + result.taxNonClmAmt;
+            $("#gstNonAmt").val(gstNonAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
             var totAmt = "" + result.totAmt;
             $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
             $("#expDesc").val(result.expDesc);
@@ -953,6 +999,31 @@ function fn_deleteStaffClaimExp() {
             AUIGrid.setGridData(staffClaimGridID, result);
         });
     });
+}
+
+function fn_selectTaxRate() {
+	var data = {
+			taxCode : $("#taxCode").val()
+	};
+	Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
+        console.log(result);
+        $("#taxRate").val(result.taxRate);
+    });
+}
+
+function fn_checkExpGrp() {
+	// Expense Type Name == Car Mileage Expense
+    //$("#expTypeName").val() == "Car Mileage Expense"
+    // WebInvoice Test는 Test
+    if($(":input:radio[name=expGrp]:checked").val() == "1") {
+        $("#noMileage").hide();
+        fn_createAUIGrid();
+        $("#mileage_btn").show();
+    } else {
+        fn_destroyGrid();
+        $("#mileage_btn").hide();
+        $("#noMileage").show();
+    }
 }
 </script>
 

@@ -553,6 +553,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,TAX_CODE
         ,GST_BEFOR_AMT
         ,GST_AMT
+        ,NON_CLM_GST_AMT
         ,TOT_AMT
         ,ATCH_FILE_GRP_ID
         ,EXP_DESC
@@ -579,6 +580,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{taxCode}
        ,#{gstBeforAmt}
        ,#{gstAmt}
+       ,#{NonClmGstAmt}
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
@@ -617,6 +619,7 @@ SELECT T1.CLM_SEQ,
        'MYR'       AS CUR, 
        T1.GST_BEFOR_AMT, 
        T1.GST_AMT, 
+       T1.NON_CLM_GST_AMT,
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC, 
@@ -663,7 +666,8 @@ SELECT T1.CLM_SEQ,
        T1.TAX_CODE,
        'MYR'       AS CUR, 
        T1.GST_BEFOR_AMT, 
-       T1.GST_AMT, 
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT, 
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC 
@@ -722,6 +726,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,TAX_CODE = #{taxCode}
        ,GST_BEFOR_AMT = #{gstBeforAmt}
        ,GST_AMT = #{gstAmt}
+       ,NON_CLM_GST_AMT = #{nonClmGstAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
        ,UPD_DT = SYSDATE
@@ -753,6 +758,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,TAX_CODE
        ,NET_AMT
        ,TAX_AMT
+       ,TAX_NON_CLM_AMT
        ,APPV_AMT
        ,EXP_DESC
        ,ATCH_FILE_GRP_ID
@@ -781,6 +787,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,#{taxCode}
        ,#{gstBeforAmt}
        ,#{gstAmt}
+       ,#{nonClmGstAmt}
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}

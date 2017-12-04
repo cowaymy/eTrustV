@@ -5,8 +5,13 @@
 .aui-grid-user-custom-left {
     text-align:left;
 }
+/* 특정 칼럼 드랍 리스트 왼쪽 정렬 재정의*/
+#addExpenseGrid-aui-grid-drop-list-taxCode .aui-grid-drop-list-ul {
+     text-align:left;
+ }
 </style>
 <script  type="text/javascript">
+var keyValueList = $.parseJSON('${taxCodeList}');
 
 var expPopGridID;
 
@@ -86,7 +91,16 @@ $(document).ready(function(){
                          }
                      },
         colSpan : -1
-     }];
+     }, {
+    	    dataField : "taxCode",
+    	    headerText : '<spring:message code="newWebInvoice.taxCode" />',
+    	    renderer : {
+    	        type : "DropDownListRenderer",
+    	        list : keyValueList, //key-value Object 로 구성된 리스트
+    	        keyField : "taxCode", // key 에 해당되는 필드명
+    	        valueField : "taxName" // value 에 해당되는 필드명
+    	    }
+    	}];
  
  var options = {
      softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제

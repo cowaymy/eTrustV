@@ -39,9 +39,11 @@ var obj = {
         ,budgetCodeName : "${data.budgetCodeName}"
         ,taxCode : "${data.taxCode}"
         ,taxName : "${data.taxName}"
+        ,taxRate : Number("${data.taxRate}")
         ,cur : "${data.cur}"
         ,netAmt : Number("${data.netAmt}")
         ,taxAmt : Number("${data.taxAmt}")
+        ,taxNonClmAmt : Number("${data.taxNonClmAmt}")
         ,totAmt : Number("${data.totAmt}")
         ,expDesc : "${data.expDesc}"
 };
@@ -126,6 +128,10 @@ var myColumnLayout = [ {
         valueField : "taxName" // value 에 해당되는 필드명
     }
 }, {
+    dataField : "taxRate",
+    dataType: "numeric",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
@@ -142,18 +148,52 @@ var myColumnLayout = [ {
         allowPoint : true // 소수점(.) 입력 가능 설정
     }
 }, {
+    dataField : "oriTaxAmt",
+    dataType: "numeric",
+    visible : false, // Color 칼럼은 숨긴채 출력시킴
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        return (item.netAmt * (item.taxRate / 100));
+    }
+}, {
     dataField : "taxAmt",
     headerText : '<spring:message code="newWebInvoice.taxAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editRenderer : {
-        type : "InputEditRenderer",
-        onlyNumeric : true,
-        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
-        allowPoint : true // 소수점(.) 입력 가능 설정
+    editable : false,
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        var taxAmt = 0;
+        if($("#invcType").val() == "S") {
+            if(item.oriTaxAmt > 30) {
+                taxAmt = 30;
+            } else {
+                taxAmt = item.oriTaxAmt;
+            }
+        } else {
+            taxAmt = item.oriTaxAmt;
+        }
+        return taxAmt;
     }
 }, {
+    dataField : "taxNonClmAmt",
+    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false,
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        var taxNonClmAmt = 0;
+        if($("#invcType").val() == "S") {
+            if(item.oriTaxAmt > 30) {
+                taxNonClmAmt = item.oriTaxAmt - 30;
+            }
+        }
+        return taxNonClmAmt;
+    }
+},{
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
@@ -162,7 +202,7 @@ var myColumnLayout = [ {
     editable : false,
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.netAmt + item.taxAmt);
+        return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
     },
     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
         if(item.yN == "N") {
@@ -222,6 +262,13 @@ var approvalColumnLayout = [ {
     formatString : "#,##0.00",
     editable : false
 }, {
+    dataField : "taxNonClmAmt",
+    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false
+}, {
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
@@ -249,7 +296,9 @@ var myGridPros = {
     enableRestore : true,
     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
     softRemoveRowMode : true,
-    rowIdField : "clmSeq"
+    rowIdField : "clmSeq",
+    headerHeight : 40,
+    height : 160
 
 };
 
@@ -280,6 +329,17 @@ $(document).ready(function () {
             $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
             console.log(totAmt);
             $("#totAmt").val(totAmt);
+        }
+        if(event.dataField == "taxCode") {
+            console.log("taxCode Choice Action");
+            console.log(event.item.taxCode);
+            var data = {
+                    taxCode : event.item.taxCode
+            };
+            Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
+                console.log(result);
+                AUIGrid.setCellValue(newGridID, event.rowIndex, "taxRate", result.taxRate);
+            });
         }
   });
     

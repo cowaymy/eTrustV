@@ -16,6 +16,12 @@ $(document).ready(function() {
         name: "codeName"
     });
     
+    CommonCombo.make("taxCodeCombo", "/eAccounting/expense/selectTaxCodeByClmType.do", null, "${taxCode}", {
+        id: "taxCode",
+        name: "taxName",
+        type:"S"
+    });
+    
     $("#pClmType").val("${popClaimType}");
     $("#pExpType").val("${popExpType}");
     
@@ -167,6 +173,13 @@ function  fn_setBudgetData(){
 	<input type="hidden" id = "glAccCode" name="glAccCode" />
 	<input type="text" id="glAccCodeName"  name="glAccCodeName" title='<spring:message code="expense.GLAccount" />' placeholder="" class="" /><a href="#" onclick="javascript:fn_glAccountSearchPop();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 	</td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="newWebInvoice.taxCode" /></th>
+    <td>
+       <select class="w100p" id="taxCodeCombo" name="taxCode">
+    </select>
+    </td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="expense.Disable" /></th>

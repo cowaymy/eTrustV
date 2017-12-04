@@ -84,6 +84,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,BANK_ACC_NO
         ,CLM_MONTH
         ,TOT_AMT
+        ,EXP_GRP
         ,APPV_PRCSS_NO
         ,CRT_DT
         ,CRT_USER_ID
@@ -101,6 +102,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{bankAccNo}
        ,TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
        ,#{allTotAmt}
+       ,#{expGrp}
        ,#{appvPrcssNo}
        ,SYSDATE
        ,#{userId}
@@ -136,6 +138,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,TAX_CODE
         ,NET_AMT
         ,TAX_AMT
+        ,TAX_NON_CLM_AMT
         ,TOT_AMT
         ,ATCH_FILE_GRP_ID
         ,EXP_DESC
@@ -163,6 +166,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{taxCode}
        ,#{gstBeforAmt}
        ,#{gstAmt}
+       ,#{taxNonClmAmt}
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
@@ -239,11 +243,13 @@ SELECT T1.CLM_SEQ,
        T2.TAX_NAME, 
        'MYR'       AS CUR, 
        T1.NET_AMT AS GST_BEFOR_AMT, 
-       T1.TAX_AMT AS GST_AMT, 
+       T1.TAX_AMT AS GST_AMT,
+       T1.TAX_NON_CLM_AMT,
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC, 
-       T3.TOT_AMT  AS ALL_TOT_AMT, 
+       T3.TOT_AMT  AS ALL_TOT_AMT,
+       T3.EXP_GRP,  
        T3.APPV_PRCSS_NO 
 FROM   FCM0020D T1 
        LEFT JOIN FCM0007C T2 
@@ -268,7 +274,8 @@ SELECT T1.CLM_SEQ,
        T4.BANK_NAME, 
        T3.BANK_ACC_NO, 
        TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
-       T3.TOT_AMT                                          AS ALL_TOT_AMT, 
+       T3.TOT_AMT                                          AS ALL_TOT_AMT,
+       T3.EXP_GRP, 
        T3.APPV_PRCSS_NO,
        T1.EXP_TYPE, 
        T1.EXP_TYPE_NAME, 
@@ -285,7 +292,8 @@ SELECT T1.CLM_SEQ,
        T1.TAX_CODE, 
        'MYR'                                               AS CUR, 
        T1.NET_AMT                                          AS GST_BEFOR_AMT, 
-       T1.TAX_AMT                                          AS GST_AMT, 
+       T1.TAX_AMT                                          AS GST_AMT,
+       T1.TAX_NON_CLM_AMT, 
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC, 
@@ -296,10 +304,10 @@ SELECT T1.CLM_SEQ,
        T2.CAR_MILAG_AMT, 
        T2.TOLL_AMT, 
        T2.PARKING_AMT, 
-       T2.PURPOSE 
+       T2.PURPOSE
 FROM   FCM0020D T1 
        LEFT JOIN FCM0021D T2 
-              ON T1.CLM_NO = T2.CLM_NO 
+              ON T1.CLM_NO = T2.CLM_NO AND T1.CLM_SEQ = T2.CLM_SEQ  
        LEFT JOIN FCM0019M T3 
               ON T1.CLM_NO = T3.CLM_NO 
        LEFT JOIN FCM0006M T4 
@@ -354,6 +362,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,TAX_CODE = #{taxCode}
        ,NET_AMT = #{gstBeforAmt}
        ,TAX_AMT = #{gstAmt}
+       ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
        ,UPD_DT = SYSDATE
@@ -402,6 +411,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,TAX_CODE
        ,NET_AMT
        ,TAX_AMT
+       ,TAX_NON_CLM_AMT
        ,APPV_AMT
        ,EXP_DESC
        ,ATCH_FILE_GRP_ID
@@ -430,6 +440,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,#{taxCode}
        ,#{gstBeforAmt}
        ,#{gstAmt}
+       ,#{taxNonClmAmt}
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}

@@ -11,6 +11,7 @@
 		           ,GL_ACC_CODE_NAME
 		           ,BUDGET_CODE
 		           ,BUDGET_CODE_NAME
+		           ,TAX_CODE
 		           ,DISAB_FLAG
 		           ,TO_CHAR(DISAB_DT, 'dd-mm-yyyy') DISAB_DT
 		           ,DISAB_USER_ID
@@ -58,6 +59,7 @@
        ,GL_ACC_CODE_NAME
        ,BUDGET_CODE
        ,BUDGET_CODE_NAME
+       ,TAX_CODE
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -72,6 +74,7 @@
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
+       ,#{taxCode}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -133,6 +136,7 @@
             ,GL_ACC_CODE_NAME = #{glAccCodeName}
             ,BUDGET_CODE = #{budgetCode}
             ,BUDGET_CODE_NAME = #{budgetCodeName}
+            ,TAX_CODE = #{taxCode}
     </if>    
             ,UPD_USER_ID   = #{userId}
             ,UPD_DT        = SYSDATE
@@ -175,5 +179,11 @@
           </otherwise>
         </choose>
     </select>
+    
+    <select id="selectTaxCodeByClmType" resultType="egovMap">
+    SELECT TAX_CODE ,
+                TAX_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME 
+    FROM FCM0007C
+</select>
 
 </mapper>

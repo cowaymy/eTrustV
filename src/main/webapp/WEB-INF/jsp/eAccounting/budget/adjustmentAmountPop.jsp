@@ -20,6 +20,10 @@ $(document).ready(function(){
          headerText : '<spring:message code="budget.ConfirmDate" />',
          width : 150
      },{
+         dataField : "budgetDocNo",
+         headerText : '<spring:message code="budget.BudgetDocNo" />',
+         width : 150
+     },{
          dataField : "budgetAdjType",
          headerText : '<spring:message code="budget.BudgetChangeType" />',
          visible : false

@@ -425,6 +425,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectGlCodeList(params);
 	}
+
+	@Override
+	public EgovMap selectTaxRate(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectTaxRate(params);
+	}
 	
 	
 	

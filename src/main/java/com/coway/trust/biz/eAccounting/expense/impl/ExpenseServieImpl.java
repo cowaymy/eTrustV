@@ -80,5 +80,11 @@ public class ExpenseServieImpl extends EgovAbstractServiceImpl implements Expens
 		// TODO Auto-generated method stub
 		return expenseMapper.selectCodeList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectTaxCodeByClmType(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return expenseMapper.selectTaxCodeByClmType(params);
+	}
 	
 }

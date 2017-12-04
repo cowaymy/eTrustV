@@ -88,15 +88,15 @@ function comma(str) {
 </tr>
 <tr>
     <th scope="row"><spring:message code="expense.Activity" /></th>
-    <td><input type="text"  id="glAccCode" name ="glAccCode" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.glAccCode }" /></td>
+    <td><input type="text"  id="budgetCode" name ="budgetCode" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.budgetCode }"/></td>
     <th scope="row"><spring:message code="expense.Activity" /> <spring:message code="budget.Description" /></th>
-    <td><input type="text"  id="glAccDesc" name ="glAccDesc" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.glAccDesc }"/></td>
+    <td><input type="text"  id="budgetCodeText" name ="budgetCodeText" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.budgetCodeText }" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="expense.GLAccount" /></th>
-    <td><input type="text"  id="budgetCode" name ="budgetCode" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.budgetCode }"/></td>
+    <td><input type="text"  id="glAccCode" name ="glAccCode" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.glAccCode }" /></td>
     <th scope="row"><spring:message code="expense.GLAccount" /> <spring:message code="budget.Description" /></th>
-    <td><input type="text"  id="budgetCodeText" name ="budgetCodeText" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.budgetCodeText }" /></td>
+    <td><input type="text"  id="glAccDesc" name ="glAccDesc" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.glAccDesc }"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
