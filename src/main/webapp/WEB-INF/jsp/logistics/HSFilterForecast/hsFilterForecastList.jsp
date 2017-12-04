@@ -300,7 +300,7 @@
                            <input id="fcastDate"  name="fcastDate" type="text" title="Forecast Start Date" placeholder="DD/MM/YYYY" class="j_date">
                         </td>
 
-                       <th scope="row">No. of Months</th>
+                       <th scope="row">No of Months</th>
                         <td >
                             <select class="w100p"  id="mthCount" name="mthCount">
                             <option value="1">1 Month</option>
