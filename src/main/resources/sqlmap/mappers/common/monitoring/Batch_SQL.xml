@@ -13,7 +13,6 @@
         SELECT   A.JOB_INSTANCE_ID
             ,A.JOB_NAME
             ,B.JOB_EXECUTION_ID
-            ,C.STEP_EXECUTION_ID
             ,TO_CHAR(B.START_TIME, 'DD-MM-YYYY HH24:MI:SS') AS START_TIME
             ,TO_CHAR(B.END_TIME, 'DD-MM-YYYY HH24:MI:SS') AS END_TIME
             ,B.STATUS
