@@ -68,12 +68,11 @@
     $(document).ready(function () {
         // 워드랩 적용
         var auiGridProps = {
-            wordWrap: true
+            wordWrap: false
         };
         grdBatchID = GridCommon.createAUIGrid("grdBatchID", gridIfColumnLayout, null, auiGridProps);
         AUIGrid.resize(grdBatchID);
         AUIGrid.bind(grdBatchID, "cellDoubleClick", function (event) {
-            console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value);
             var stepExecutionId = AUIGrid.getCellValue(grdBatchID, event.rowIndex, "stepExecutionId");
             var messageCount = AUIGrid.getCellValue(grdBatchID, event.rowIndex, "messageCount");
             if(messageCount > 0){
