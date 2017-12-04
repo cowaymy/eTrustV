@@ -56,7 +56,7 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public boolean updCrcReconState(int userId , List<Object> paramList) {
-		
+		boolean isSucess = false;
     	if (paramList.size() > 0) {    		
     		Map<String, Object> hm = null;
     		int index = 0;
@@ -69,9 +69,10 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
     			crcReconCRCStateMapper.insertCrcStatementITF(hm);
     			index++;
     		}
+    		isSucess = true;
     	}
+    	return isSucess;
     	
-    	return true;
 	}
 	
 }
