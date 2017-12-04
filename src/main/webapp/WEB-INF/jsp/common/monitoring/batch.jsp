@@ -52,7 +52,7 @@
             visible: false
         }, {
             dataField: "messageCount",
-            headerText: "DETAIL",
+            headerText: "DETAIL(dblClick)",
             editable: false,
             width: "10%"
         }, {
