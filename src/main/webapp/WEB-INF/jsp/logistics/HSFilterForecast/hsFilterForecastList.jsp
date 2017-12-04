@@ -164,7 +164,7 @@
         $("#selectedMth").val(colID - 2);
 
         var paramdata = { groupCode : '339', orderValue : 'CODE' };
-
+        AUIGrid.resize(detailGrid);
         fn_searchDetails();
 
         $("#detailWindow").show();
