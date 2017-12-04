@@ -1056,7 +1056,7 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "Display RC List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/rcList", method = RequestMethod.POST)
-	public ResponseEntity<List<RentalServiceCustomerDto>> rentalCustomerPaymentList(@ModelAttribute RentalServiceCustomerForm rentalForm)
+	public ResponseEntity<List<RentalServiceCustomerDto>> rentalCustomerPaymentList(@RequestBody RentalServiceCustomerForm rentalForm)
 			throws Exception {		
 		String transactionId = "";
 		
@@ -1493,7 +1493,7 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/serviceHistory", method = RequestMethod.POST)
-	public ResponseEntity<List<ServiceHistoryDto>> serviceHistory(@ModelAttribute ServiceHistoryForm serviceHistoryForm)
+	public ResponseEntity<List<ServiceHistoryDto>> serviceHistory(@RequestBody ServiceHistoryForm serviceHistoryForm)
 			throws Exception {		
 		String transactionId = "";
 
