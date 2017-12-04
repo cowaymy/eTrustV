@@ -502,6 +502,22 @@ function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrap_asList", "xlsx", "AS Management");
 }
+
+function fn_ASReport(){
+    Common.popupDiv("/services/as/report/asReportPop.do"  , null, null , true , '');
+}
+function fn_asLogBookList(){
+    Common.popupDiv("/services/as/report/asLogBookListPop.do"  , null, null , true , '');
+}
+function fn_asRawData(){
+    Common.popupDiv("/services/as/report/asRawDataPop.do"  , null, null , true , '');
+}
+function fn_asSummaryList(){
+    Common.popupDiv("/services/as/report/asSummaryListPop.do"  , null, null , true , '');
+}
+function fn_asYsList(){
+    Common.popupDiv("/services/as/report/asYellowSheetPop.do"  , null, null , true , '');
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -648,17 +664,16 @@ function fn_excelDown(){
         <li><p class="link_btn"><a href="#">menu7</a></p></li>
         <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
-    <!-- 171110 :: 선한이  -->
-    <!-- <ul class="btns">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_newASPop()">New AS Application</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+    <ul class="btns">
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_ASReport()">AS Report</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asLogBookList()">AS Log Book List</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asRawData()">AS Raw Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asSummaryList()">AS Summary List</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asYsList()">AS YS List</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-    </ul> -->
+    </ul> 
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
