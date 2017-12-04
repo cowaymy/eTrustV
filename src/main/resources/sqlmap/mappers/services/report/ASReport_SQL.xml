@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper
+     namespace="com.coway.trust.biz.services.report.impl.ASReportMapper">
+     
+     <select id="selectMemberCodeList" parameterType="Map" resultType="egovMap">
+		     SELECT Project1.MEM_ID CODE_ID  ,
+		       Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
+		       Project1.NAME NAME  ,
+		       Project1.NRIC NRIC  ,
+		       Project1.MEM_TYPE MEM_TYPE  
+		  FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+		                Extent1.MEM_CODE MEM_CODE  ,
+		                Extent1.MEM_TYPE MEM_TYPE  ,
+		                Extent1.NAME NAME  ,
+		                Extent1.NRIC NRIC  
+		         FROM ORG0001D Extent1
+		          WHERE  ( 1 = Extent1.STUS )
+		                   AND ( Extent1.MEM_TYPE = 3 ) ) Project1
+		  ORDER BY Project1.MEM_CODE ASC
+  </select>
+  <select id="selectOrderNum" parameterType="Map" resultType="egovMap">
+	  SELECT GroupBy1.A1 C1  ,
+	            GroupBy1.A2 C2  
+	  FROM ( SELECT MIN(Extent2.SALES_ORD_NO)  A1  ,
+	                MAX(Extent2.SALES_ORD_NO)  A2  
+	         FROM SVC0001D Extent1
+	                JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.AS_SO_ID ) GroupBy1
+	</select>
+</mapper>
+     
