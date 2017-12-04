@@ -74,6 +74,7 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		params.put("masterbreanch", 42);
 		params.put("curr_dept_id", 38);
 		params.put("curr_user_id", 0);
+		params.put("loginId", loginId);
 
 		AssetMngMapper.insertMasterAsset(params);
 
@@ -82,7 +83,9 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		cardmap.put("newAssetCardId", newAssetCardId);
 		cardmap.put("newAssetId", inassetid);
 		cardmap.put("loginId", loginId);
-
+		
+		Logger.debug("loginId  ??     : {}", loginId);
+		
 		AssetMngMapper.insertCopyAssetCard(cardmap);
 
 		int detailsize = detailAddList.size();
