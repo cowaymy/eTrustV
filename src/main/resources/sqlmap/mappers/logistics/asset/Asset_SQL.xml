@@ -148,7 +148,7 @@
          <![CDATA[  AND E1.CRT_DT   >= TO_CHAR(TO_DATE(#{searchcreatedate1},'DD/MM/YYYY'),'YYYY-MM-DD') 
           AND E1.CRT_DT   <   TO_CHAR(TO_DATE(#{searchcreatedate2},'DD/MM/YYYY'),'YYYY-MM-DD') ]]>
         </if>  
-          order by asset_id
+          order by asset_id desc
     </select>
     
     <select id="selectDetailList" parameterType="Map" resultType="EgovMap">
