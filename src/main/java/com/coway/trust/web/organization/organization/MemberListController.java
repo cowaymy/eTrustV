@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -602,20 +603,7 @@ public class MemberListController {
 		return ResponseEntity.ok(course);
 	}
 
-	/**
-	 * MemberList Edit Pop open
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/memberListEditPop.do")
-	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		// 호출될 화면
-		return "organization/organization/memberListEditPop";
-	}
 
 	@RequestMapping(value = "/traineeUpdate.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage>  traineeUpdate(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
@@ -636,6 +624,128 @@ public class MemberListController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	/**
+	 * MemberList Edit Pop open
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	
+	@RequestMapping(value = "/memberListEditPop.do")
+	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
+		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
+		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
+		logger.debug("PAExpired : {}", PAExpired);
+		logger.debug("selectMemberListView : {}", selectMemberListView);
+		logger.debug("issuedBank : {}", selectIssuedBank);
+		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		model.addAttribute("PAExpired", PAExpired);
+		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
+		model.addAttribute("memberView", selectMemberListView);
+		model.addAttribute("issuedBank", selectIssuedBank);
+		// 호출될 화면
+		return "organization/organization/memberListEditPop";
+	}
+	
+	@RequestMapping(value = "/getMemberListMemberView", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getMemberListMemberView(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug("in  getMemberListMemberView.....");		
+		logger.debug("params : {}", params.toString());
+		
+		
+		List<EgovMap> list = memberListService.getMemberListView(params);
+		logger.debug("return_Values: " + list.toString());
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	@RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateMemberl(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
+		
+		//memberListService.saveDocSubmission(memberListVO,params, sessionVO);
+
+		Boolean success = false;
+		String msg = "";
+		
+
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		//Map<String , Object> formMap1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+		logger.debug("udtList : {}", updList);
+		logger.debug("formMap : {}", formMap);
+		
+		logger.debug("memberNm : {}", formMap.get("memberNm"));
+		logger.debug("memberType : {}", formMap.get("memberType"));
+		logger.debug("joinDate : {}", formMap.get("joinDate"));
+		logger.debug("gender : {}", formMap.get("gender"));
+		logger.debug("update : {}", formMap.get("docType"));
+		logger.debug("myGridID : {}", formMap.get("params"));
+		
+		String memCode = "";
+		boolean update = false;
+		
+		logger.debug("memCode : {}", formMap.get("memCode"));
+		
+		//update = memberListService.updateMember(formMap, updList,sessionVO);
+		
+		//update
+		
+		int resultUpc1 = 0;
+		int resultUpc2 = 0;
+		int resultUpc3 = 0;
+		resultUpc1 = memberListService.memberListUpdate_user(formMap);
+		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
+		resultUpc3 = memberListService.memberListUpdate_member(formMap);
+		logger.debug("result UPC : " + Integer.toString(resultUpc1)+ " , "+ Integer.toString(resultUpc2)+ " , "+ Integer.toString(resultUpc3)+ " , ");
+		
+		// 결과 만들기.
+   	ReturnMessage message = new ReturnMessage();
+//    	message.setCode(AppConstants.SUCCESS);
+//    	message.setData(map);
+   	if(memCode.equals("") && memCode.equals(null)){
+   		message.setMessage("fail saved");
+   	}else{
+   		message.setMessage("Compelete to Create a Member Code : " +memCode);
+   	}
+   	logger.debug("message : {}", message);
+
+   	System.out.println("msg   " + success);
+//
+	return ResponseEntity.ok(message);
+	}
+	/*
+	@RequestMapping(value = "/getMemberListEditPop.do")
+	public String getMemberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
+
+		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
+		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
+		logger.debug("PAExpired : {}", PAExpired);
+		logger.debug("selectMemberListView : {}", selectMemberListView);
+		logger.debug("issuedBank : {}", selectIssuedBank);
+		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		model.addAttribute("PAExpired", PAExpired);
+		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
+		model.addAttribute("memberView", selectMemberListView);
+		model.addAttribute("issuedBank", selectIssuedBank);
+		// 호출될 화면
+		return "organization/organization/memberListEditPop";
+	}
+	*/
 
 
 

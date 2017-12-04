@@ -232,8 +232,12 @@ var gridPros = {
 
 
 function fn_memberEditPop(){
-	     Common.popupDiv("/organization/memberListEditPop.do?isPop=true", "searchForm");
+	     //Common.popupDiv("/organization/memberListEditPop.do?isPop=true", "searchForm");
+	     Common.popupDiv("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&MemberType=" + memberType, "");
+	     //Common.popupDiv("/organization/memberListEditPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
 }
+
+
 
 
 /*By KV start - Position - This is for display Position data only in Position selection.*/

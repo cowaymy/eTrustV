@@ -3,6 +3,8 @@ package com.coway.trust.biz.organization.organization.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -127,8 +129,18 @@ public interface MemberListMapper {
 	
 	int traineeUpdate(Map<String, Object> params);
 	EgovMap afterSelTrainee(Map<String, Object> params);
-
 	
+	List<EgovMap> getMemberListView(Map<String, Object> params);
+
+	int memberListUpdate_user(Map<String, Object> params);
+	
+	int memberListUpdate_memorg(Map<String, Object> params);
+	
+	int memberListUpdate_member(Map<String, Object> params);
+	
+	void saveDocSubmission(DocSubmissionVO docSubmissionVO);
+	
+	void updateDocSubmissionDel(DocSubmissionVO docSubmissionVO);
 	
 
 }

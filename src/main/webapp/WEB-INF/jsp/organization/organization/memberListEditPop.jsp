@@ -11,12 +11,16 @@ var myGridID_Doc;
 function fn_memberSave(){
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
-			    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
-			    jsonObj.form = $("#memberAddForm").serializeJSON();
-			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
-				console.log("message : " + result.message );
-				Common.alert(result.message,fn_close);
-		});
+	            $("#searchSt1").val(insAddressForm.searchSt.value);
+                $("#traineeType").val(($("#traineeType").value));
+                
+                var jsonObj =  GridCommon.getEditData(myGridID_Doc);
+                jsonObj.form = $("#memberAddForm").serializeJSON();
+                Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
+                console.log("message : " + result.message );
+                Common.alert(result.message,fn_close);
+                
+				});
 }
 
 function fn_close(){
@@ -25,6 +29,14 @@ function fn_close(){
 function fn_saveConfirm(){
 	if(fn_saveValidation()){
         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+        /*
+        Common.ajax("GET","/organization/memberListUpdate.do", $("#memberAddForm").serialize(), function(result){
+            console.log(result);              
+            Common.alert("Member Save successfully.",fn_close);
+            
+        });
+        */
+        
     }
 }
 function fn_docSubmission(){
@@ -37,21 +49,26 @@ function fn_docSubmission(){
 }
 
 function fn_departmentCode(value){
-	 if($("#memberType").val() != 2){
+	console.log("fn_departmentCode"); 
+	if($("#memberType").val() != 2){
 	        $("#hideContent").hide();
 	    }else{
 	    	$("#hideContent").show();
 	    }
 	var action = value;
 	switch(action){
-	   case "1" :
+	   case 1 :
+		   $("#groupCode[memberLvl]").val(3);
+		   $("#groupCode[flag]").val("%CRS%");
 		   var jsonObj = {
 	            memberLvl : 3,
 	            flag :  "%CRS%"
 	    };
 		   doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
 		   break;
-	   case "2" :
+	   case 2 :
+		   $("#groupCode[memberLvl]").val(3);
+           $("#groupCode[flag]").val("%CCS%");
            var jsonObj = {
                 memberLvl : 3,
                 flag :  "%CCS%"
@@ -60,7 +77,9 @@ function fn_departmentCode(value){
            doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
            break;
-	   case "3" :
+	   case 3 :
+		   $("#groupCode[memberLvl]").val(3);
+           $("#groupCode[flag]").val("%CTS%");
            var jsonObj = {
                 memberLvl : 3,
                 flag :  "%CTS%"
@@ -70,7 +89,9 @@ function fn_departmentCode(value){
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
            break;
            
-	   case "4" :
+	   case 4 :
+		   $("#groupCode[memberLvl]").val(100);
+           $("#groupCode[flag]").val("-");
            var jsonObj = {
                 memberLvl : 100,
                 flag :  "-"
@@ -78,7 +99,9 @@ function fn_departmentCode(value){
            doGetComboSepa("/common/selectBranchCodeList.do",100 , '-',''   , 'branch' , 'S', '');
            break;
            
-	   case "5" :
+	   case 5 :
+		   $("#groupCode[memberLvl]").val(3);
+           $("#groupCode[flag]").val("%CCS%");
            var jsonObj = {
                 memberLvl : 3,
                 flag :  "%CCS%"
@@ -89,29 +112,67 @@ function fn_departmentCode(value){
            break;
 	}
 }
+
+/*
+$("#cmbRace").load(function() {
+	var race = "${memberView.c40}";
+    var race_no = "${memberView.c61}";
+    
+    alert(race_no);
+    $("#cmbRace option[value="+ race_no +"]").attr("selected", true);
+    //$("#cmbRace").val(race).attr("selected", true);
+    alert($("#cmbRace").val());
+});
+*/
+
 $(document).ready(function() {
   
 	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
 	  
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
     
-    doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S'); 
+    doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S');
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S'); 
-     
-    doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , ''); 
+    doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '4', '','marrital', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
     doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
+
+    /*fill edit field*/
+    /*
+    var memberType = "${memberView.memType}";
+    var gender = "${memberView.gender}";
+    
+    $("#memberType option[value="+ memberType +"]").attr("selected", true);
+    
+    var race_no = "${memberView.c61}";
+    alert(race_no);
+    $("#cmbRace option[value="+ race_no +"]").attr("selected", true);
+    
+    if(gender=="F"){
+        $("#gender_f").prop("checked", true)
+    }
+    if(gender=="M"){
+        $("#gender_m").prop("checked", true)
+    }
+    */
+    //var race = "${memberView.c40}";
+    //var race_no = "${memberView.c61}";
+    //$("#cmbRace option[value="+ String(race_no) +"]").attr("selected", true);
+    //$("#cmbRace option:contains("+race+")").attr('selected',true);
+    //$("#cmbRace").val(race_no).attr("selected", true);
+    /**/
+    
     
     $("#deptCd").change(function (){
     	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
+    
 	createAUIGridDoc();
 	fn_docSubmission();
-	fn_departmentCode();
-	
+	//fn_departmentCode();
 	$("#state").change(function (){
 		var state = $("#state").val();
 		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');  
@@ -123,9 +184,100 @@ $(document).ready(function() {
 	
 	$("#memberType").change(function (){
         var memberType = $("#memberType").val();
-        fn_departmentCode(memberType);
+        //fn_departmentCode(memberType);
      });
+	
+	
+	fn_getMemInfo();
 });
+
+
+
+function fn_getMemInfo(){
+	console.log("fn_setMemInfo. sss");
+    Common.ajax("GET", "/organization/getMemberListMemberView", $("#memberAddForm").serialize(), function(result) {
+        console.log("fn_setMemInfo.");
+        if(result!=null){
+        	fn_setMemInfo(result[0]);
+        }else{
+        	console.log("========result null=========");
+        }
+    });
+}
+
+function fn_setMemInfo(data){
+	console.log("fn_setMemInfo");
+	$("#memberType option[value="+ data.memType +"]").attr("selected", true);
+	console.log("1 : " +data.memType);
+	fn_departmentCode(data.memType);
+	
+	var jsonObj =  GridCommon.getEditData(myGridID_Doc);
+    doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+    doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+    doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
+
+	if(data.gender=="F"){
+        $("#gender_f").prop("checked", true)
+    }
+    if(data.gender=="M"){
+        $("#gender_m").prop("checked", true)
+    }
+
+    $("#cmbRace option[value="+ data.c61 +"]").attr("selected", true);
+    
+    $("#national option[value="+ data.c35 +"]").attr("selected", true);
+    
+    $("#nric").val(data.nric);
+    
+    $("#marrital option[value="+ data.c27 +"]").attr("selected", true);
+    
+    $("#email").val(data.email);
+    
+    $("#mobileNo").val(data.telMobile);
+    
+    $("#officeNo").val(data.telOffice);
+    
+    $("#residenceNo").val(data.telHuse);
+    
+    $("#sponsorCd").val(data.c51);
+    
+    $("#sponsorNm").val(data.c52);
+    
+    $("#sponsorNric").val(data.c53);
+    
+    if(data.c4!=null&&jQuery.trim(data.c4).length>0){
+        $("#branch option[value="+ data.c4 +"]").attr("selected", true);
+    }
+    
+    if(data.c41!=null&&jQuery.trim(data.c41).length>0){
+        $("#deptCd option[value="+ data.c41 +"]").attr("selected", true);
+    }
+    
+    if(data.c62!=null&&jQuery.trim(data.c62).length>0){
+        $("#transportCd option[value="+ data.c62 +"]").attr("selected", true);
+    }
+    
+    if(data.bank!=null&&jQuery.trim(data.bank).length>0){
+        $("#issuedBank option[value="+ data.bank +"]").attr("selected", true);
+    }
+    
+    $("#bankAccNo").val(data.bankAccNo);
+    
+    if(data.c8!=null&&jQuery.trim(data.c8).length>0){
+        $("#educationLvl option[value="+ data.c8 +"]").attr("selected", true);
+    }
+    
+    if(data.c10!=null&&jQuery.trim(data.c10).length>0){
+        $("#language option[value="+ data.c10 +"]").attr("selected", true);
+    }
+    
+    $("#trNo").val(data.trNo);
+    
+    $("#userId").val(data.c64);
+    
+}
+
+
 function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -196,6 +348,7 @@ function createAUIGridDoc() {
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_Doc = AUIGrid.create("#grid_wrap_doc", columnLayout, gridPros);
+    
 }
 
 var gridPros = {
@@ -234,91 +387,309 @@ var gridPros = {
 
 //Validation Check
 function fn_saveValidation(){
+	var message = "";
+	var action = $("#memType").val();
+	var valid = true;
+	var defaultDate = new Date("01/01/1900");
+	var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+	//region Check Basic Info
+	/*
+    if (dpUserValidDate.SelectedDate < DateTime.Now.Date)
+    {
+        valid = false;
+        message += "* Please select equal or bigger than today date.<br />";
+    }
+	*/
+	if($("#joinDate").val() == ''){    
+        valid = false;
+        message += "* Please select joined date. \n ";        
+    }
 	if($("#memberNm").val() == ''){
-        Common.alert("Please key  in Member Name");
-        return false;
+        valid = false;
+        message += "* Please key in member name. \n ";
     }
-	
-	if($("#joinDate").val() == ''){
-        Common.alert("Please select Joined Date");
-        return false;
-    }
-
-	if($('input[name=gender]:checked', '#memberAddForm').val() == null){
-		  Common.alert("Please select Gender");
-	        return false;
-	}
-	
-    /* if(!$("#gender").is(":radio")){
-      
-    } */
-    
-	if($("#Birth").val() == ''){
-        Common.alert("Please select Date of Birth");
-        return false;
-    }
-	
-	if($("#cmbRace").val() == ''){
-        Common.alert("Please select race");
-        return false;
-    }
-	
 	if($("#national").val() == ''){
-        Common.alert("Please select Nationality");
-        return false;
+        valid = false;
+        message += "* Please select the nationality. \n ";
     }
-	
 	if($("#nric").val() == ''){
-        Common.alert("Please key  in NRIC");
-        return false;
+        valid = false;
+        message += "* Please key in the NRIC. \n ";
     }
-	
-	
-	if($("#marrital").val() == ''){
-        Common.alert("Please select marrital");
-        return false;
+    //else
+    //{
+    //    if (this.IsExistingMember())
+    //    {
+    //        valid = false;
+    //        message += "* This is existing member.<br/>";
+    //    }
+    //}
+	if($('input[name=gender]:checked', '#memberAddForm').val() == null){
+        valid = false;
+        message += "* Please select gender. \n ";
     }
-	
-	if($("#issuedBank").val() == ''){
-        Common.alert("Please select the issued bank");
-        return false;
+	if($("#cmbRace").val() == ''){
+        valid = false;
+        message += "* Please select race. \n ";
     }
-	if($("#bankAccNo").val() == ''){
-        Common.alert("Please key in the bank account no");
-        return false;
+	//if($("#marrital").index(this) <=-1){    
+	if($("#marrital").val()==""){
+        valid = false;
+        message += "* Please select marrital. \n ";
     }
-	//type 별로 다르게 해야됨
-	if($("#deptCd").val() == ''){
-        Common.alert("Please select the department code");
-        return false;
+	alert($("#Birth").val());
+    if ($("#Birth").val() == ""){
+        valid = false;
+        message += "* Please select DOB. \n ";
     }
-	
-	if($("#addrDtl").val() == ''){
-        Common.alert("Please key in the address.");
-        return false;
+    else
+    {
+        var DOBDate = new Date();
+        var d = new Date();
+        DOBDate = $("#Birth").val() == "" ? defaultDate : new Date($("#Birth").val());
+        if ($("#Birth").val() == "")
+        {
+            var Age = d.getFullYear() - DOBDate.getFullYear();
+            if (Age < 18)
+            {
+                valid = false;
+                message += "* Member must 18 years old and above. \n ";
+            }
+            if (DOBDate==$("#nric").val().substring(0, 6))
+            {
+                valid = false;
+                message += "* The NRIC is mismatch with member's DOB. \n ";
+            }
+        }
+    }
+    //endregion
+
+    //region Check Address
+    /*
+    if (string.IsNullOrEmpty(txtMemAdd1.Text.Trim()) &&
+        string.IsNullOrEmpty(txtMemAdd2.Text.Trim()) &&
+        string.IsNullOrEmpty(txtMemAdd3.Text.Trim()))
+    {
+        valid = false;
+        message += "* Please key in the address.<br />";
+    }
+    */
+    if ($("#mCountry").val() == "")
+    {
+        valid = false;
+        message += "* Please select the country. \n ";
+    }
+    else
+    {
+    	if ($("#mCountry").val() != "")  //mState
+        {
+    		if ($("#mState").val() == "") //mArea
+            {
+                valid = false;
+                message += "* Please select the state. \n ";
+            }
+    		if ($("#mArea").val() == "")  //mPostCd
+            {
+                valid = false;
+                message += "* Please select the area. \n ";
+            }
+    		if ($("#mPostCd").val() == "")
+            {
+                valid = false;
+                message += "* Please select the postcode. \n ";
+            }
+        }
     }
     
-    if($("#mArea").val() == ''){
-            Common.alert("Please key in the area.");
-            return false;
+    //endregion
+
+    //region Check Phone No
+    if (jQuery.trim($("#mobileNo").val()) &&
+        jQuery.trim($("#officeNo").val()) &&
+        jQuery.trim($("#residenceNo").val()))
+    {
+        valid = false;
+        message += "* Please key in the at least one contact no. \n ";
+    }
+    else
+    {
+        if (jQuery.trim($("#mobileNo").val()))
+        {
+        	
+            if(!jQuery.isNumeric(jQuery.trim($("#mobileNo").val())))            
+            {
+                valid = false;
+                message += "* Invalid telephone number (Mobile).  \n ";
+            }
+        }
+        if (jQuery.trim($("#officeNo").val()))
+        {
+        	if(!jQuery.isNumeric(jQuery.trim($("#officeNo").val())))
+            {
+                valid = false;
+                message += "* Invalid telephone number (Office). \n ";
+            }
+        }
+        if (jQuery.trim($("#residenceNo").val()))
+        {
+        	if(!jQuery.isNumeric(jQuery.trim($("#residenceNo").val())))
+            {
+                valid = false;
+                message += "* Invalid telephone number (Residence). \n ";
+            }
+        }
     }
     
-    if($("#mCity").val() == ''){
-        Common.alert("Please key in the city.");
-        return false;
+    if (jQuery.trim($("#spouseContat").val()))
+    {
+    	if(!jQuery.isNumeric(jQuery.trim($("#spouseContat").val())))
+        {
+            valid = false;
+            message += "* Invalid spouse contant number. \n ";
+        }
+    }
+    //endregion
+
+    //region Check Email
+    if (jQuery.trim($("#email").val()))
+    {
+        if (!regEmail.test($("#email").val()))
+        {
+            valid = false;
+            message += "* Invalid contact person email.\n ";
+        }
+    }
+    //endregion
+
+    //region Check Bank Account && Department && Branch && Transport
+    //issuedBank
+    switch (action)
+    {
+        case "1":
+        	if($("#issuedBank").val()=="")
+            {
+                valid = false;
+                message += "* Please select the issued bank. \n ";
+            }
+            if (!jQuery.trim($("#bankAccNo").val()))
+            {
+                valid = false;
+                message += "* Please key in the bank account no. \n ";
+            }
+        	
+            //if (cmbMemDepCode.SelectedIndex <= -1)
+            //{
+            //    valid = false;
+            //    message += "* Please select the department code.<br />";
+            //}
+            break;
+        case "2":
+        	if($("#issuedBank").val()=="")
+            {
+                valid = false;
+                message += "* Please select the issued bank. \n ";
+            }
+        	if (!jQuery.trim($("#bankAccNo").val()))
+            {
+                valid = false;
+                message += "* Please key in the bank account no. \n ";
+            }
+        	if($("#transportCd").val()=="")
+            {
+                valid = false;
+                message += "* Please select the transport code. \n ";
+            }
+        	if($("#branch").val()=="")   //branch
+            {
+                valid = false;
+                message += "* Please select the branch code. \n ";
+            }
+            //if (cmbMemDepCode.SelectedIndex <= -1)
+            //{
+            //    valid = false;
+            //    message += "* Please select the department code.<br />";
+            //}
+            break;
+        case "3":
+        	if($("#branch").val()=="")   //branch
+            {
+                valid = false;
+                message += "* Please select the branch code. \n ";
+            }
+            //if (cmbMemDepCode.SelectedIndex <= -1)
+            //{
+            //    valid = false;
+            //    message += "* Please select the department code.<br />";
+            //}
+            break;
+        case "4":
+
+        	if($("#branch").val()=="")   //branch
+            {
+                valid = false;
+                message += "* Please select the branch code. \n ";
+            }
+            break;
+        default:
+            break;
+    }
+    //endregion
+
+    //region Document Submission
+    /*
+    if(action !="1"){
+    	
+    }else
+    {
+        RadNumericTextBox RadNumtxt = new RadNumericTextBox();
+        List<CodeDetail> DocSubmission = new List<CodeDetail>();
+        int i = 0;
+        foreach (GridDataItem dataItem in this.RadGrid_Document.MasterTableView.Items)
+        {
+            if ((dataItem.FindControl("chkSubmission") as RadButton).Checked)
+            {
+                RadNumtxt = dataItem.FindControl("txtQty") as RadNumericTextBox;
+                if (RadNumtxt.Text.Trim().Equals("0") || RadNumtxt.Text.Trim().Equals(string.Empty))
+                {
+                    i++;
+                }
+            }
+            else
+            {
+                RadNumtxt = dataItem.FindControl("txtQty") as RadNumericTextBox;
+                if (RadNumtxt.Text.Trim() != "0")
+                {
+                    i++;
+                }
+            }
+        }
+        if (i > 0)
+        {
+            valid = false;
+            message += "* Document submission quantity invalid. <br/>";
+        }
+    }
+    */
+    //endregion
+
+    //region Check Cody PA Date  codyPaExpr
+    if (action == "2") //cyc 01/03/2017
+    {
+    	if (jQuery.trim($("#codyPaExpr").val()))
+        {
+            valid = false;
+            message = "Cody agreement PA date are compulsory";
+        }
+    }
+    //endregion
+    //Display Message
+    if (!valid)
+    {
+        //RadWindowManager1.RadAlert("<b>" + message + "</b>", 450, 160, "Save Member Summary", "callBackFn", null);
+        Common.alert(message);
     }
     
-    if($("#mPostCd").val() == ''){
-        Common.alert("Please key in the postcode.");
-        return false;
-    }
-    
-    if($("#mState").val() == ''){
-        Common.alert("Please key in the state.");
-        return false;
-    }
-    
-	return true;
+	return valid;
 }
 
 function fn_addrSearch(){
@@ -465,7 +836,7 @@ function fn_selectState(selVal){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Member List - Add New Member</h1>
+<h1>Member List - Edit Member</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -473,9 +844,26 @@ function fn_selectState(selVal){
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="memberAddForm" method="post">
-<input type="hidden" id="areaId" name="areaId">
-<input type="hidden" id="streetDtl1" name="streetDtl">
-<input type="hidden" id="addrDtl1" name="addrDtl">
+
+<input type="hidden" id="searchSt1" name="searchSt1">
+<input type="hidden" id="streetDtl1" name="streetDtl1">
+<input type="hidden" id="addrDtl1" name="addrDtl1">
+<input type="hidden" id="traineeType" name="traineeType">
+
+
+<input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memType" name="memType"/>
+<input type="hidden" value="<c:out value="${memberView.gender}"/> "  id="gender" name="gender"/>
+<input type="hidden" value="<c:out value="${memberView.memId}"/>" id="MemberID" name="MemberID"/>
+<input type="hidden" value="<c:out value="${memberView.memCode}"/> "  id="memCode" name="memCode"/>
+<input type="hidden" value="<c:out value="${memberView.c64}"/> "  id="userId" name="userId"/>
+<input type="hidden" value="<c:out value="${memberView.rank}"/> "  id="rank" name="rank"/>
+<input type="hidden" value="<c:out value="${memberView.c65}"/> "  id="fullName" name="fullName"/>
+<input type="hidden" value="<c:out value="${memberView.c66}"/> "  id="agrmntNo" name="agrmntNo"/>
+<input type="hidden" value="<c:out value="${memberView.c67}"/> "  id="syncChk" name="syncChk"/>
+<input type="hidden"   id="groupCode[memberLvl]" name="groupCode[memberLvl]"/>
+<input type="hidden"   id="groupCode[flag]" name="groupCode[flag]"/>
+
+ 
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -526,22 +914,22 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">Member Name<span class="must">*</span></th>
     <td colspan="3">
-    <input type="text" title="" id="memberNm" name="memberNm" placeholder="Member Name" class="w100p" />
+    <input type="text" title="" id="memberNm" name="memberNm" placeholder="Member Name" class="w100p"  value="<c:out value="${memberView.name1}"/>"/>
     </td>
     <th scope="row">Joined Date<span class="must">*</span></th>
     <td>
-    <input type="text" title="Create start Date" id="joinDate" name="joinDate" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" title="Create start Date" id="joinDate" name="joinDate" placeholder="DD/MM/YYYY" class="j_date"  value="<c:out value="${memberView.c30}"/>"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Gender<span class="must">*</span></th>
     <td>
-    <label><input type="radio" name="gender" id="gender" value="M" /><span>Male</span></label>
-    <label><input type="radio" name="gender" id="gender" value="F"/><span>Female</span></label>
+    <label><input type="radio" name="gender" id="gender_m" value="M" /><span>Male</span></label>
+    <label><input type="radio" name="gender" id="gender_f" value="F"/><span>Female</span></label>
     </td>
     <th scope="row">Date of Birth<span class="must">*</span></th>
     <td>
-    <input type="text" title="Create start Date" id="Birth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" title="Create start Date" id="Birth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" value="<c:out value="${memberView.c29}"/>" />
     </td>
     <th scope="row">Race<span class="must">*</span></th>
     <td>

@@ -1,5 +1,6 @@
 package com.coway.trust.biz.organization.organization.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.organization.organization.MemberListService;
+import com.coway.trust.biz.organization.organization.vo.MemberListVO;
+import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
+import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.organization.organization.MemberListController;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -184,9 +189,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("confirmDate","01/01/1900");
 			MemApp.put("deptCode",params.get("deptCd").toString());
 			//addr 주소 가져오기
-			MemApp.put("areaId",params.get("areaId").toString());
-			MemApp.put("streetDtl",params.get("streetDtl").toString());
-			MemApp.put("addrDtl",params.get("addrDtl").toString());
+			MemApp.put("areaId",params.get("searchSt1").toString());
+			MemApp.put("streetDtl",params.get("streetDtl1").toString());
+			MemApp.put("addrDtl",params.get("addrDtl1").toString());
 
 
 			logger.debug("MemApp : {}",MemApp);
@@ -261,12 +266,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("Hospitalization",false);
 		params.put("deptCode",params.get("deptCd")!=null ? params.get("deptCd").toString().trim() : "");
 		params.put("codyPaExpr",params.get("codyPaExpr")!=null ? params.get("codyPaExpr").toString().trim() : "");
-		params.put("traineeType",Integer.parseInt(params.get("traineeType").toString()));
+		//params.put("traineeType",Integer.parseInt(params.get("traineeType").toString()));
 
 		//addr 가져오기
-		params.put("areaId",params.get("areaId").toString());
-		params.put("streetDtl",params.get("streetDtl").toString());
-		params.put("addrDtl",params.get("addrDtl").toString());
+		params.put("areaId",params.get("searchSt1").toString());
+		params.put("streetDtl",params.get("streetDtl1").toString());
+		params.put("addrDtl",params.get("addrDtl1").toString());
 
 
 		//두번째 탭 text 가져오기
@@ -295,6 +300,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		return memCode;
 	}
+	
+	
 
 	public String getRandomNumber(int a){
 		Random random = new Random();
@@ -896,7 +903,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memberListMapper.insertinvWH(invWH);
 			}
 			success=true;
-			String memCode = selectMemberCode.get("docNo").toString();
+			String memCode = "";
+			
+				memCode = selectMemberCode.get("docNo").toString();
 
 		return memCode;
 	}
@@ -1195,6 +1204,195 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 
 		return resultValue;
+	}
+	
+	@Override
+	public List<EgovMap> getMemberListView(Map<String, Object> params) {
+		return memberListMapper.getMemberListView(params);
+	}
+	
+	@Override
+	public  int    memberListUpdate_user(Map<String, Object> params) {
+		return memberListMapper.memberListUpdate_user(params);
+	}
+	
+	@Override
+	public  int    memberListUpdate_memorg(Map<String, Object> params) {
+		return memberListMapper.memberListUpdate_memorg(params);
+	}
+	
+	@Override
+	public  int    memberListUpdate_member(Map<String, Object> params) {
+		return memberListMapper.memberListUpdate_member(params);
+	}
+	
+	@Transactional
+	@Override
+	public boolean updateMember(Map<String, Object> params, List<Object> docType,SessionVO sessionVO) {
+		Date defaultDate = new Date("01/01/1900");
+		Date now = new Date();
+		int userId = sessionVO.getUserId();
+		/*
+		if(Integer.parseInt((String) params.get("memberType")) == 2){
+		MemApp.put("applicationID", 0);
+		MemApp.put("applicantCode", "");
+		MemApp.put("applicantType",Integer.parseInt((String) params.get("memberType")));
+		MemApp.put("applicantName",params.get("memberNm").toString());
+		 */	
+		Boolean success = false;
+		Map<String, Object> det = new HashMap<String, Object>();
+		SimpleDateFormat transFormat = new SimpleDateFormat("YY/MM/dd");
+
+		try{
+		//det.put("MemberID",Integer.parseInt((String) params.get("MemberID")));
+		det.put("MemberID",(String) params.get("MemberID"));
+		det.put("MemberCode",(String) params.get("MemberCode"));
+		det.put("MemberType",0);
+		det.put("Name",((String) params.get("memberNm")).toUpperCase());
+		det.put("FullName",((String) params.get("fullName")).toUpperCase());
+		det.put("Password","");
+		det.put("NRIC","");
+		det.put("DOB",transFormat.parse((String) params.get("birth")));
+		det.put("Gender",(String) params.get("Gender"));
+		det.put("Race",(String) params.get("cmbRace"));
+		det.put("Marital",(String) params.get("marrital"));
+		det.put("Nationality",(String) params.get("national"));
+		det.put("Areal",(String) params.get("mArea"));
+		det.put("PostCode",(String) params.get("mPostCd"));
+		det.put("State",(String) params.get("mState"));
+		det.put("Country",(String) params.get("mCountry"));
+		det.put("TelOffice",(String) params.get("officeNo"));
+		det.put("TelHouse",(String) params.get("residenceNo"));
+		det.put("TelMobile",(String) params.get("mobileNo"));
+		det.put("Email",(String) params.get("email"));
+		det.put("SpuseCode",(String) params.get("spouseCode"));
+		det.put("SpouseName",(String) params.get("spouseName"));
+		det.put("SpouseNRIC",((String) params.get("spouseNRIC")).toUpperCase());
+		det.put("SpouseOccupation",(String) params.get("spouseOcc"));
+		det.put("SpouseTelContact",(String) params.get("spouseContat"));
+		det.put("SpouseDOB",(String) params.get("spouseDOB"));
+		det.put("EducationLevel",(String) params.get("educationLvl"));
+		det.put("Language",(String) params.get("language"));
+		det.put("Bank",(String) params.get("issuedBank"));
+		det.put("BankAccountNo",(String) params.get("bankAccNo"));
+		det.put("SponsorCode",(String) params.get("sponsorCd"));
+		det.put("JoinDate",(String) params.get("joinDate"));
+		det.put("ResignDate","");
+		det.put("TermDate","");
+		det.put("RenewDate","");
+		det.put("AgrmntNo","");
+		det.put("Branch",(String) params.get("branch"));
+		det.put("Status",1);
+		det.put("SyncCheck",false);
+		det.put("Rank",0);
+		det.put("Transport",(String) params.get("transportCd"));
+		det.put("PromoDate",defaultDate);
+		det.put("TRNo",(String) params.get("trNo"));
+		det.put("Created",now.getTime());
+		det.put("Creator",userId);
+		det.put("Updated",now.getTime());
+		det.put("Updator",userId);
+		det.put("memIsOutSource",false);
+		}catch(Exception e){
+			
+		}
+        
+        if (((String) params.get("memberType")).equals("1"))
+        	det.put("Rank",Integer.parseInt((String) params.get("rank")));
+        else
+            det.put("Rank", 0);
+        
+        if(params.get("memberType").toString().equals("1") && docType.size() > 0){
+			for(int i=0; i< docType.size(); i++){
+				Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
+				docSub.put("docSubId", 0);
+				docSub.put("docSubTypeId", 247);
+				docSub.put("docTypeID", docSub.get("typeId"));
+				docSub.put("docSOID", 0);
+				docSub.put("docMemId", (String) params.get("memberType"));
+				docSub.put("docSubDate", new Date());
+				docSub.put("docCopyQty", docSub.get("c1"));
+				docSub.put("statusID", 1);
+				docSub.put("creator", params.get("creator"));
+				docSub.put("Created",  new Date());
+				docSub.put("Updator", params.get("creator"));
+				docSub.put("Updated",  new Date());
+				docSub.put("docSubBatchId",  0);
+
+				logger.debug("docSub : {}",docSub);
+				memberListMapper.insertDocSubmission(docSub);
+			}
+		}
+
+		//Save DocSubmission( For Cody)
+
+		if(params.get("memberType").toString().equals("2") && docType.size() > 0){
+			for(int i=0; i< docType.size(); i++){
+				Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
+				docSub.put("docSubId", 0);
+				docSub.put("docSubTypeId", 1417);
+				docSub.put("docTypeID", docSub.get("typeId"));
+				docSub.put("docSOID", 0);
+				docSub.put("docMemId", (String) params.get("memberType"));
+				docSub.put("docSubDate", new Date());
+				docSub.put("docCopyQty", docSub.get("c1"));
+				docSub.put("statusID", 1);
+				docSub.put("creator", params.get("creator"));
+				docSub.put("Created",  new Date());
+				docSub.put("Updator", params.get("creator"));
+				docSub.put("Updated",  new Date());
+				docSub.put("docSubBatchId",  0);
+
+				logger.debug("docSub : {}",docSub);
+				memberListMapper.insertDocSubmission(docSub);
+			}
+		}
+		
+        
+        return success;
+	}
+	
+	@Override
+	public void saveDocSubmission (MemberListVO memberListVO,Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+		logger.info("!@###### OrderModifyServiceImpl.saveDocSubmission");
+		logger.debug("memberType : {}", params.get("memberType"));
+		GridDataSet<DocSubmissionVO>    documentList     = memberListVO.getDocSubmissionVOList();
+
+		List<DocSubmissionVO> docSubVOList = documentList.getUpdate(); // 수정 리스트 얻기
+		
+		int salesOrdId = memberListVO.getSalesOrdId();
+		
+		int docSubTypeId = 0;
+		
+		if(params.get("memberType").toString().equals("1")){
+			docSubTypeId = 247;
+		}
+		
+		if(params.get("memberType").toString().equals("2") ){
+			docSubTypeId = 1417;
+		}
+		
+		for(DocSubmissionVO docSubVO : docSubVOList) {
+			if(docSubVO.getChkfield() == 1) {
+				
+				docSubVO.setDocSoId(salesOrdId);
+				//docSubVO.setDocSubTypeId(SalesConstants.CCP_DOC_SUB_CODE_ID_ICS);
+				docSubVO.setDocSubTypeId(docSubTypeId);
+				docSubVO.setDocMemId(0);
+				docSubVO.setCrtUserId(sessionVO.getUserId());
+				docSubVO.setUpdUserId(sessionVO.getUserId());
+				
+				memberListMapper.saveDocSubmission(docSubVO);
+			}
+			else {
+				
+				docSubVO.setUpdUserId(sessionVO.getUserId());
+				
+				memberListMapper.updateDocSubmissionDel(docSubVO);
+			}
+		}
+		
 	}
 
 }
