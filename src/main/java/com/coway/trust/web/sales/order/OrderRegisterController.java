@@ -352,4 +352,10 @@ public class OrderRegisterController {
 		List<EgovMap> codeList = orderRegisterService.selectProductCodeList(params);
 		return ResponseEntity.ok(codeList);
 	}
+    
+	@RequestMapping(value = "/selectServicePackageList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectServicePackageList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = orderRegisterService.selectServicePackageList(params);
+		return ResponseEntity.ok(codeList);
+	}
 }

@@ -77,6 +77,15 @@ public class SalesConstants {
     public static final int APP_TYPE_CODE_ID_ITEM_BANK      = 1255; //Item Bank     
     public static final int APP_TYPE_CODE_ID_OUTRIGHTPLUS   = 1412; //Outright Plus 
 	
+	public static final int APP_SUB_TYPE_CODE_ID_RENTAL         = 367;   //Rental          
+    public static final int APP_SUB_TYPE_CODE_ID_OUTRIGHT       = 368;   //Outright        
+    public static final int APP_SUB_TYPE_CODE_ID_INSTALLMENT    = 369;   //Installment   
+    public static final int APP_SUB_TYPE_CODE_ID_SPONSOR        = 371;  //Sponsor         
+    public static final int APP_SUB_TYPE_CODE_ID_SERVICE        = 372;  //Service         
+    public static final int APP_SUB_TYPE_CODE_ID_EDUCATION      = 373;  //Education       
+    public static final int APP_SUB_TYPE_CODE_ID_FREE_TRIAL     = 374;  //Free Trial
+    public static final int APP_SUB_TYPE_CODE_ID_OUTRIGHTPLUS   = 370; //Outright Plus 
+	
     //Promotion Application
 	public static final int PROMO_APP_TYPE_CODE_ID_REN    = 2284; //Rental
     public static final int PROMO_APP_TYPE_CODE_ID_OUT    = 2285; //Outright

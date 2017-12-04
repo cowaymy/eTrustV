@@ -1594,4 +1594,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		return orderRegisterMapper.selectProductCodeList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectServicePackageList(Map<String, Object> params) {
+		// TODO ProductCodeList 호출시 error남 
+		return orderRegisterMapper.selectServicePackageList(params);
+	}
+
 }

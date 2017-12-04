@@ -65,10 +65,6 @@
             }
         });
     }
-    
-    function fn_addOption() {
-        $("#promoCustType option:eq(0)").replaceWith("<option value=''>ALL</option>");
-    }
 
     function createAUIGrid() {
         

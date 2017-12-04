@@ -11,20 +11,25 @@
         //AUIGrid 그리드를 생성합니다.
         createAUIGridStk();
         
-        doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', ${promoInfo.promoAppTypeId},    'promoAppTypeId', 'S'); //Promo Application
-        doGetCombo('/common/selectCodeList.do', '76',  ${promoInfo.promoTypeId},       'promoTypeId',       'S'); //Promo Type
-        doGetCombo('/common/selectCodeList.do', '8',   ${promoInfo.promoCustType},     'promoCustType',     'S', 'fn_addOption'); //Customer Type
-        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', ${promoInfo.promoDiscPeriodTp}, 'promoDiscPeriodTp', 'S'); //Discount period
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, ${promoInfo.exTrade},              'exTrade',              'S'); //EX_Trade
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, ${promoInfo.empChk},               'empChk',               'S'); //EMP_CHK
-        doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, ${promoInfo.promoDiscType},        'promoDiscType',        'S'); //Discount Type
+        doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '${promoInfo.promoAppTypeId}',    'promoAppTypeId', 'S'); //Promo Application
+        doGetCombo('/common/selectCodeList.do', '76',  '${promoInfo.promoTypeId}',       'promoTypeId',       'S'); //Promo Type
+        doGetCombo('/common/selectCodeList.do', '8',   '',     'promoCustType',     'S', 'fn_addOption'); //Customer Type
+        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${promoInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${promoInfo.exTrade}',              'exTrade',              'S'); //EX_Trade
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '${promoInfo.empChk}',               'empChk',               'S'); //EMP_CHK
+        doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '${promoInfo.promoDiscType}',        'promoDiscType',        'S'); //Discount Type
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         
       //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
-        doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : ${promoInfo.promoAppTypeId}}, ${promoInfo.promoSrvMemPacId}, 'promoSrvMemPacId', 'S'); //Common Code
+        doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : '${promoInfo.promoAppTypeId}'}, '${promoInfo.promoSrvMemPacId}', 'promoSrvMemPacId', 'S'); //Common Code
 
         fn_chgPageMode('VIEW');
     });
+
+    function fn_addOption() {
+        $("#promoCustType option:eq(0)").replaceWith("<option value='0'>ALL</option>");
+        $("#promoCustType").val('${promoInfo.promoCustType}');
+    }
     
     function createAUIGridStk() {
         
@@ -103,7 +108,7 @@
         var promotionVO = {
             
             salesPromoMVO : {
-                promoId                 : ${promoInfo.promoId},
+                promoId                 : '${promoInfo.promoId}',
 //              promoCode               : $('#promoCode').val().trim(),
                 promoDesc               : $('#promoDesc').val().trim(),
 //              promoTypeId             : $('#promoTypeId').val(),
@@ -304,7 +309,7 @@
         $('#promoAppTypeId').change(function() {
             fn_chgPromoDetail(null, null, null);
 
-            fn_chgPromoDetail(${promoInfo.promoAppTypeId}, ${promoInfo.promoTypeId}, ${promoInfo.promoCustType});
+            fn_chgPromoDetail('${promoInfo.promoAppTypeId}', '${promoInfo.promoTypeId}', '${promoInfo.promoCustType}');
         });
         $('#promoTypeId').change(function() {
             fn_chgPromoDetail(null, null, null);
@@ -413,10 +418,10 @@
             $('#liFreeGiftAdd').addClass("blind");
             
             //Product List Search
-            fn_selectPromotionPrdListAjax(${promoInfo.promoId});
+            fn_selectPromotionPrdListAjax('${promoInfo.promoId}');
             
             //Free Gift List Search
-            fn_selectPromotionFreeGiftListAjax(${promoInfo.promoId});
+            fn_selectPromotionFreeGiftListAjax('${promoInfo.promoId}');
         
             $('#modifyForm').find(':input').prop("disabled", true);
             
@@ -573,6 +578,20 @@
             $('#exTrade').val('0').prop("disabled", true);
         }
         
+        //Promo Application = Expired Filter(Outright SVM/Rental SVM)
+        if(promoAppVal == '2290' || promoAppVal == '2744') {
+            if($('#promoTypeId option').size() == 3) {
+                $('#promoTypeId option:last').remove();
+            }
+            $('#promoAddDiscPrc').val('').prop("disabled", true);
+        }
+        else {
+            if($('#promoTypeId option').size() == 2) {
+                $('#promoTypeId option:last').after("<option value='2283'>Only FREE GIFT</option>");
+            }
+            $('#promoAddDiscPrc').removeAttr("disabled");
+        }
+        
         //Promo Application <> Expired Filter & Customer = Individual
 //      if(promoAppVal != '2290' && (promoCustVal == '964' || promoCustVal == '')) {
         if(promoCustVal == '964' || promoCustVal == '') {
@@ -662,6 +681,19 @@
             
             $('#sctPromoDetail').addClass("blind");
         }
+        else if(promoAppVal == '2287') {
+            $('#promoDiscType').removeAttr("disabled");
+          //$('#promoDiscValue').removeAttr("disabled");
+            $('#promoRpfDiscAmt').removeAttr("disabled");
+            $('#promoDiscPeriodTp').val('').prop("disabled", true);
+            $('#promoDiscPeriod').val('').prop("disabled", true);
+//          $('#promoFreesvcPeriodTp').removeAttr("disabled");
+//          $('#promoAddDiscPrc').removeAttr("disabled");
+            $('#promoAddDiscPv').removeAttr("disabled");
+//          $('#promoSrvMemPacId').removeAttr("disabled");
+            
+//          $('#sctPromoDetail').removeClass("blind");
+        }
         else {
             console.log('etc');
             
@@ -671,7 +703,7 @@
             $('#promoDiscPeriodTp').removeAttr("disabled");
             $('#promoDiscPeriod').removeAttr("disabled");
 //          $('#promoFreesvcPeriodTp').removeAttr("disabled");
-            $('#promoAddDiscPrc').removeAttr("disabled");
+//          $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').removeAttr("disabled");
 //          $('#promoSrvMemPacId').removeAttr("disabled");
             

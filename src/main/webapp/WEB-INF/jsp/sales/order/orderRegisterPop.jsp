@@ -815,7 +815,10 @@
 
                             break;
                     }
-                    doGetComboData('/common/selectCodeList.do', {groupCode :appSubType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+                    
+                    var pType = $("#appType").val() == '66' ? '1' : '2';
+                    //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+                    doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
 
                     $('#ordProudct ').removeAttr("disabled");
                 }

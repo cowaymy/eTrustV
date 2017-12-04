@@ -22,6 +22,11 @@
         
     });
 
+    function fn_addOption() {
+        $("#promoCustType option:eq(0)").replaceWith("<option value='0'>ALL</option>");
+        $("#promoCustType").val('0');
+    }
+
     function createAUIGridStk() {
         
         //AUIGrid 칼럼 설정
@@ -495,6 +500,20 @@
         else {
             $('#exTrade').val('0').prop("disabled", true);
         }
+
+        //Promo Application = Expired Filter(Outright SVM/Rental SVM)
+        if(promoAppVal == '2290' || promoAppVal == '2744') {
+            if($('#promoTypeId option').size() == 3) {
+                $('#promoTypeId option:last').remove();
+            }
+            $('#promoAddDiscPrc').val('').prop("disabled", true);
+        }
+        else {
+            if($('#promoTypeId option').size() == 2) {
+                $('#promoTypeId option:last').after("<option value='2283'>Only FREE GIFT</option>");
+            }
+            $('#promoAddDiscPrc').removeAttr("disabled");
+        }
         
         //Promo Application <> Expired Filter & Customer = Individual
 //      if(promoAppVal != '2290' && (promoCustVal == '964' || promoCustVal == '')) {
@@ -583,7 +602,20 @@
             $('#promoAddDiscPv').val('').prop("disabled", true);
 //          $('#promoSrvMemPacId').val('').prop("disabled", true);
             
-            $('#sctPromoDetail').addClass("blind");
+//          $('#sctPromoDetail').addClass("blind");
+        }
+        else if(promoAppVal == '2287') {
+            $('#promoDiscType').removeAttr("disabled");
+          //$('#promoDiscValue').removeAttr("disabled");
+            $('#promoRpfDiscAmt').removeAttr("disabled");
+            $('#promoDiscPeriodTp').val('').prop("disabled", true);
+            $('#promoDiscPeriod').val('').prop("disabled", true);
+//          $('#promoFreesvcPeriodTp').removeAttr("disabled");
+//          $('#promoAddDiscPrc').removeAttr("disabled");
+            $('#promoAddDiscPv').removeAttr("disabled");
+//          $('#promoSrvMemPacId').removeAttr("disabled");
+            
+            $('#sctPromoDetail').removeClass("blind");
         }
         else {
             console.log('etc');
@@ -594,7 +626,7 @@
             $('#promoDiscPeriodTp').removeAttr("disabled");
             $('#promoDiscPeriod').removeAttr("disabled");
 //          $('#promoFreesvcPeriodTp').removeAttr("disabled");
-            $('#promoAddDiscPrc').removeAttr("disabled");
+//          $('#promoAddDiscPrc').removeAttr("disabled");
             $('#promoAddDiscPv').removeAttr("disabled");
 //          $('#promoSrvMemPacId').removeAttr("disabled");
             

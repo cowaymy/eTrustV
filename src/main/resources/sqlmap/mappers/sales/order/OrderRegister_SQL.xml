@@ -1872,30 +1872,38 @@
           FROM
              (
             <if test='stkType != null and stkType == "1"'>
-		  	   SELECT DISTINCT T1.STK_ID
-			        , T1.STK_CODE ||' - '||T1.STK_DESC C1
-			        , T3.CODE_NAME
-			     FROM SYS0026M T1
-			        , SAL0082D T2
-			        , SYS0013M T3
+               SELECT DISTINCT T1.STK_ID
+                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                    , CASE WHEN T2.DISCONTINUE = '1' THEN T3.CODE_NAME ||' ('||T5.CODE_NAME||')'
+                           ELSE T3.CODE_NAME 
+                      END CODE_NAME
+                 FROM SYS0026M T1
+                    , SAL0082D T2
+                    , SYS0013M T3
                     , SAL0016M T4
-			    WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
-			      AND T1.STK_CTGRY_ID = T3.CODE_ID
-			      AND 1 != T1.IS_NCV
-			      AND 1 = T2.SRV_PAC_ITM_STUS_ID
-			      AND 61 = T1.STK_TYPE_ID
-			      AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
-			      AND T1.STK_ID = T4.STK_ID
-			      AND T4.AMT &gt; 0
+                    , SYS0013M T5
+                WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
+                  AND T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 1 != T1.IS_NCV
+                  AND 1 = T2.SRV_PAC_ITM_STUS_ID
+                  AND 61 = T1.STK_TYPE_ID
+                  AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
+                  AND T1.STK_ID = T4.STK_ID
+                  AND T4.AMT &gt; 0
+                  AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
+                  AND T5.CODE_MASTER_ID = '381'
             </if>
             <if test='stkType != null and stkType == "2"'>
                 SELECT DISTINCT T1.STK_ID
                     , T1.STK_CODE ||' - '||T1.STK_DESC C1
-                    , T3.CODE_NAME
+                    , CASE WHEN T2.DISCONTINUE = '1' THEN T3.CODE_NAME ||' ('||T5.CODE_NAME||')'
+                           ELSE T3.CODE_NAME 
+                      END CODE_NAME
                  FROM SYS0026M T1
                     , SAL0092M T2
                     , SYS0013M T3
                     , SAL0016M T4
+                    , SYS0013M T5
                 WHERE T1.STK_ID = T2.SRV_MEM_ITM_STK_ID
                   AND T1.STK_CTGRY_ID = T3.CODE_ID
                   AND 1 != T1.IS_NCV
@@ -1904,9 +1912,45 @@
                   AND T2.SRV_MEM_PAC_ID = #{srvPacId}
                   AND T1.STK_ID = T4.STK_ID
                   AND T4.AMT &gt; 0
+                  AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
+                  AND T5.CODE_MASTER_ID = '381'
             </if>
              )
          ORDER BY CODE_NAME ASC, STK_ID ASC
+    </select>
+    
+    <!--ServicePackage 정보 조회 -->
+    <select id="selectServicePackageList" parameterType="Map" resultType="egovMap">
+        SELECT CODE
+             , CODE_NAME
+          FROM
+             (
+            <if test='pType != null and pType == "1"'>
+			   SELECT CODE_ID
+			        , CODE 
+				    , CODE_NAME 
+				    , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+				 FROM SYS0013M T1
+				    , SAL0081D T2
+				WHERE T1.CODE_MASTER_ID = #{appSubType}
+				  AND T1.DISAB = 0
+				  AND T1.CODE = T2.SRV_CNTRCT_PAC_ID
+				  AND T2.PAC_TYPE = 0
+            </if>
+            <if test='pType != null and pType == "2"'>
+               SELECT CODE_ID
+                    , CODE 
+                    , CODE_NAME 
+                    , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+                 FROM SYS0013M T1
+                    , SAL0091M T2
+                WHERE T1.CODE_MASTER_ID = #{appSubType}
+                  AND T1.DISAB = 0
+                  AND T1.CODE = T2.SRV_MEM_PAC_ID
+                  AND T2.PAC_TYPE = 0
+            </if>
+             )
+         ORDER BY CODE_NAME ASC
     </select>
     
     <select id="selectServiceContractPackage" parameterType="Map" resultType="egovMap">

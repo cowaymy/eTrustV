@@ -46,4 +46,6 @@ public interface OrderRegisterService {
 
 	List<EgovMap> selectProductCodeList(Map<String, Object> params);
 
+	List<EgovMap> selectServicePackageList(Map<String, Object> params);
+
 }
