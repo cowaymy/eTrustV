@@ -14,7 +14,7 @@
         [
             {
                 dataField: "stepExecutionId",
-                headerText: "STEP_EXECUTION_ID",
+                headerText: "STEP EXECUTION ID",
                 width: "8%",
                 editable: false,
                 visible: false
@@ -28,40 +28,40 @@
             },
             {
                 dataField: "jobProcName",
-                headerText: "JOB_PROC_NAME",
+                headerText: "JOB PROC NAME",
                 style: "aui-grid-user-custom-left ",
                 editable: false,
                 width: "10%"
             },
             {
                 dataField: "stepProcName",
-                headerText: "STEP_PROC_NAME",
+                headerText: "STEP PROC NAME",
                 editable: false,
                 width: "10%"
             },
             {
                 dataField: "procedureName",
-                headerText: "PROCEDURE_NAME",
+                headerText: "PROCEDURE NAME",
                 style: "aui-grid-user-custom-left ",
                 editable: false,
                 width: "10%"
             },
             {
                 dataField: "msg",
-                headerText: " MSG",
+                headerText: "MSG",
                 style: "aui-grid-user-custom-left ",
                 editable: false
             },
             {
                 dataField: "crtUserId",
-                headerText: "CRT_USER_ID",
+                headerText: "CRT USER ID",
                 style: "aui-grid-user-custom-left ",
                 editable: false,
                 width: "10%"
             },
             {
                 dataField: "crtDt",
-                headerText: "CRT_DT",
+                headerText: "CRT DT",
                 editable: false,
                 width: "10%"
             }

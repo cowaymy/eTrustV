@@ -7,28 +7,28 @@
         [
             {
                 dataField: "jobInstanceId",
-                headerText: "JOB_INSTANCE_ID",
+                headerText: "JOB INSTANCE ID",
                 visible: false
             },
             {
                 dataField: "jobExecutionId",
-                headerText: "JOB_EXECUTION_ID",
+                headerText: "JOB EXECUTION ID",
                 visible: false
             },
             {
                 dataField: "jobName",
-                headerText: "JOB_NAME",
+                headerText: "JOB NAME",
                 editable: false,
                 width: "10%"
             },
             {
                 dataField: "startTime",
-                headerText: "START_TIME",
+                headerText: "START TIME",
                 editable: false,
                 width: "13%"
             }, {
             dataField: "endTime",
-            headerText: "END_TIME",
+            headerText: "END TIME",
             editable: false,
             width: "13%"
         }, {
@@ -38,21 +38,21 @@
             width: "10%"
         }, {
             dataField: "exitCode",
-            headerText: "EXIT_CODE",
+            headerText: "EXIT CODE",
             editable: false,
             width: "10%"
         }, {
             dataField: "exitMessage",
             editable: false,
-            headerText: "EXIT_MESSAGE"
+            headerText: "EXIT MESSAGE"
         }, {
             dataField: "stepName",
-            headerText: "STEP_NAME",
+            headerText: "STEP NAME",
             width: "10%",
             visible: false
         }, {
             dataField: "messageCount",
-            headerText: "DETAIL(dblClick)",
+            headerText: "DETAIL MESSAGE(dblClick)",
             editable: false,
             width: "10%"
         }, {
