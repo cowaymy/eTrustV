@@ -19,6 +19,10 @@
             ,B.EXIT_CODE
             ,B.EXIT_MESSAGE
             ,C.STEP_NAME
+            ,C.STEP_EXECUTION_ID
+            , (SELECT COUNT (1) CNT
+                FROM SYS0084M D
+                WHERE C.STEP_EXECUTION_ID = D.STEP_EXECUTION_ID) MESSAGE_COUNT
         FROM BATCH_JOB_INSTANCE A
                 ,BATCH_JOB_EXECUTION B
                 ,BATCH_STEP_EXECUTION C
@@ -43,6 +47,21 @@
         AND B.START_TIME < TO_DATE(#{searchEndDt}, 'DD/MM/YYYY') + 1
         ]]>
         ORDER BY A.JOB_INSTANCE_ID DESC, B.JOB_EXECUTION_ID DESC
+    </select>
+
+    <select id="selectBatchDetailMonitoring" parameterType="string" resultType="egovMap">
+        SELECT
+              STEP_EXECUTION_ID
+              ,SEQ
+              ,JOB_PROC_NAME
+              ,STEP_PROC_NAME
+              ,PROCEDURE_NAME
+              ,MSG
+              ,CRT_USER_ID
+              ,TO_CHAR(CRT_DT, 'DD-MM-YYYY HH24:MI:SS') AS CRT_DT
+          FROM SYS0084M
+          WHERE STEP_EXECUTION_ID = #{stepexecutionid}
+          ORDER BY SEQ
     </select>
 
 </mapper>

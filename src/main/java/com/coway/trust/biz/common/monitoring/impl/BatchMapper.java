@@ -11,4 +11,6 @@ public interface BatchMapper {
 	List<EgovMap> selectJobNames(Map<String, Object> params);
 
 	List<EgovMap> selectBatchMonitoring(Map<String, Object> params);
+
+	List<EgovMap> selectBatchDetailMonitoring(String stepexecutionid);
 }

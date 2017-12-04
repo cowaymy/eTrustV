@@ -18,45 +18,71 @@
             {
                 dataField: "jobName",
                 headerText: "JOB_NAME",
-                editable : false,
+                editable: false,
                 width: "10%"
             },
             {
                 dataField: "startTime",
                 headerText: "START_TIME",
-                editable : false,
+                editable: false,
                 width: "13%"
             }, {
-                dataField: "endTime",
-                headerText: "END_TIME",
-                editable : false,
-                width: "13%"
-            }, {
-                dataField: "status",
-                headerText: "STATUS",
-                editable : false,
-                width: "10%"
-            }, {
-                dataField: "exitCode",
-                headerText: "EXIT_CODE",
-                editable : false,
-                width: "10%"
-            }, {
-                dataField: "exitMessage",
-                editable : false,
-                headerText: "EXIT_MESSAGE"
-            }, {
-                dataField: "stepName",
-                headerText: "STEP_NAME",
-                width: "10%",
-                visible: false
-            }
+            dataField: "endTime",
+            headerText: "END_TIME",
+            editable: false,
+            width: "13%"
+        }, {
+            dataField: "status",
+            headerText: "STATUS",
+            editable: false,
+            width: "10%"
+        }, {
+            dataField: "exitCode",
+            headerText: "EXIT_CODE",
+            editable: false,
+            width: "10%"
+        }, {
+            dataField: "exitMessage",
+            editable: false,
+            headerText: "EXIT_MESSAGE"
+        }, {
+            dataField: "stepName",
+            headerText: "STEP_NAME",
+            width: "10%",
+            visible: false
+        }, {
+            dataField: "messageCount",
+            headerText: "MESSAGE_COUNT",
+            editable: false,
+            width: "10%"
+        }, {
+            dataField: "stepExecutionId",
+            headerText: "STEP_EXECUTION_ID",
+            width: "10%",
+            editable: false,
+            visible: false
+        }
         ];
 
 
     $(document).ready(function () {
-        grdBatchID = GridCommon.createAUIGrid("grdBatchID", gridIfColumnLayout);
+        // 워드랩 적용
+        var auiGridProps = {
+            wordWrap: true
+        };
+        grdBatchID = GridCommon.createAUIGrid("grdBatchID", gridIfColumnLayout, null, auiGridProps);
         AUIGrid.resize(grdBatchID);
+        AUIGrid.bind(grdBatchID, "cellDoubleClick", function (event) {
+            console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value);
+            var stepExecutionId = AUIGrid.getCellValue(grdBatchID, event.rowIndex, "stepExecutionId");
+            var messageCount = AUIGrid.getCellValue(grdBatchID, event.rowIndex, "messageCount");
+            if(messageCount > 0){
+                Common.popupDiv("/common/monitoring/batchDetailPop.do", {stepExecutionId : stepExecutionId});
+            }else{
+                Common.setMsg("no data.");
+            }
+        });
+
         fn_getJobNames();
 
         $('#searchStartDt').val($.datepicker.formatDate('dd/mm/yy', new Date()));
@@ -69,7 +95,7 @@
 
     function fn_search() {
 
-        if(FormUtil.checkReqValue($("#searchStartDt")) || FormUtil.checkReqValue($("#searchEndDt"))){
+        if (FormUtil.checkReqValue($("#searchStartDt")) || FormUtil.checkReqValue($("#searchEndDt"))) {
             var date = "<spring:message code='sys.msg.date' />";
             Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ date +"'/>");
             return false;
@@ -102,11 +128,13 @@
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
-        <p class="fav"><a href=javascript:void(0); class="click_add_on"><spring:message code='sys.label.monitoring' /></a></p>
-        <h2><spring:message code='sys.label.batch' /> <spring:message code='sys.label.monitoring' /></h2>
+        <p class="fav"><a href=javascript:void(0); class="click_add_on"><spring:message
+                code='sys.label.monitoring'/></a></p>
+        <h2><spring:message code='sys.label.batch'/> <spring:message code='sys.label.monitoring'/></h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-                <li><p class="btn_blue"><a onclick="fn_search()"><span class="search"></span><spring:message code='sys.btn.search' /></a></p></li>
+                <li><p class="btn_blue"><a onclick="fn_search()"><span class="search"></span><spring:message
+                        code='sys.btn.search'/></a></p></li>
             </c:if>
         </ul>
     </aside><!-- title_line end -->
@@ -125,15 +153,17 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <th scope="row"><spring:message code='sys.label.job' /></th>
+                    <th scope="row"><spring:message code='sys.label.job'/></th>
                     <td>
                         <select class="" id="sJobName" name="jobName">
                         </select>
                     </td>
-                    <th scope="row"><spring:message code='sys.label.search' /> <spring:message code='sys.label.date' /></th>
+                    <th scope="row"><spring:message code='sys.label.search'/> <spring:message
+                            code='sys.label.date'/></th>
                     <td colspan="">
                         <div class="date_set"><!-- date_set start -->
-                            <p><input id="searchStartDt" name="searchStartDt" type="text" title="" placeholder="DD/MM/YYYY"
+                            <p><input id="searchStartDt" name="searchStartDt" type="text" title=""
+                                      placeholder="DD/MM/YYYY"
                                       class="j_date" readonly/></p>
                             <span>~</span>
                             <p><input id="searchEndDt" name="searchEndDt" type="text" title="" placeholder="DD/MM/YYYY"
@@ -142,7 +172,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><spring:message code='sys.label.status' /></th>
+                    <th scope="row"><spring:message code='sys.label.status'/></th>
                     <td>
                         <select class="multy_select" multiple="multiple" id="sStatus" name="status">
                             <option value="COMPLETED" selected>COMPLETED</option>
@@ -155,7 +185,7 @@
                             <option value="UNKNOWN" selected>UNKNOWN</option>
                         </select>
                     </td>
-                    <th scope="row"><spring:message code='sys.label.exit' /> <spring:message code='sys.label.code' /></th>
+                    <th scope="row"><spring:message code='sys.label.exit'/> <spring:message code='sys.label.code'/></th>
                     <td>
                         <select class="multy_select" multiple="multiple" id="sExitCode" name="exitCode">
                             <option value="COMPLETED" selected>COMPLETED</option>
@@ -179,7 +209,8 @@
     <section class="search_result"><!-- search_result start -->
         <div class="divine_auto"><!-- divine_auto start -->
             <aside class="title_line"><!-- title_line start -->
-                <h3 class="pt0"><spring:message code='sys.label.batch' /> <spring:message code='sys.label.monitoring' /></h3>
+                <h3 class="pt0"><spring:message code='sys.label.batch'/> <spring:message
+                        code='sys.label.monitoring'/></h3>
             </aside><!-- title_line end -->
 
             <article class="grid_wrap autoHeight"><!-- grid_wrap start -->

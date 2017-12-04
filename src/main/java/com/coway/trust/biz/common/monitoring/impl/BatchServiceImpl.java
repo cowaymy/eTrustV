@@ -23,4 +23,9 @@ public class BatchServiceImpl implements BatchService {
 	public List<EgovMap> getBatchMonitoring(Map<String, Object> params) {
 		return batchMapper.selectBatchMonitoring(params);
 	}
+
+	public List<EgovMap> getBatchDetailMonitoring(Map<String, Object> params) {
+		String stepexecutionid = (String) params.get("stepExecutionId");
+		return batchMapper.selectBatchDetailMonitoring(stepexecutionid);
+	}
 }
