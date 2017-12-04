@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
-
+    
+    <select id="getUsedPartsList" parameterType="Map" resultType="egovMap">
+        SELECT l82.STK_ID parts_Id,s26.STK_CODE parts_Code,s26.STK_DESC parts_Name,s29.NAME cust_Name,l82.QTY used_Qty,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=s26.UOM) currency,l82.OLD_SERIAL serial_No,l82.NEW_SERIAL 
+        FROM log0082m l82, SVC0008D s08, org0001d o01,sys0026m s26, sal0029d s29
+        WHERE     1 = 1
+       AND s08.cody_id = o01.mem_id
+       AND l82.STK_ID=s26.STK_ID
+       AND o01.mem_code = #{userId}
+       AND l82.svc_ord_id = s08.no
+       AND l82.CUST_ID=s29.CUST_ID
+      <if test="searchType == 1 ">
+              and nvl(l82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'N' 
+       </if>
+       <if test="searchType == 2 ">
+              and nvl(l82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'Y' 
+       </if>
+       <if test="searchFromDate !=null and searchFromDate !=''">      
+       AND TO_CHAR (SVC_DT, 'YYYYMMDD')  BETWEEN #{searchFromDate} 
+       </if> 
+       <if test="searchToDate !=null and searchToDate !=''">      
+        AND #{searchToDate}     
+       </if>     
+    </select>
+    
     <select id="StockReceiveList" parameterType="Map" resultType="egovMap">
 	    select L47.REQST_NO,
 	       L54.DELVRY_GI_DT GI_DATE,
