@@ -10,7 +10,7 @@
 		s26.STK_DESC AS stkdesc,
 
 		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = #{fcastDate})
-		        AND (s88.SRV_PRD_EXPR_DT > #{fcastDate})
+
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth1,
 
@@ -65,7 +65,7 @@
 
         <if test="mth9 != 0">
 		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 8))
-			    AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 8))
+			    AND (zs88.SRV_PRD_EXPR_DT > ADD_MONTHS(#{fcastDate}, 8))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth9,
         </if>
