@@ -4,6 +4,14 @@
 	//AUIGrid 생성 후 반환 ID
 	var callLogGridID;
 	
+	var option = {
+            winName : "popup",
+            width : "950px",   // 창 가로 크기
+            height : "700px",    // 창 세로 크기
+            resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+            scrollbars : "yes" // 스크롤바. (yes/no)(default : yes)
+    };
+	
 	$(document).ready(function(){
 	    
 	    // AUIGrid 그리드를 생성합니다.
@@ -249,6 +257,10 @@
     	fn_investCallResultListAjax();
     	$("#_saveClose").click();
     }
+    
+    function fn_goLedger1(){
+        Common.popupWin('gridParam', "/sales/order/orderLedgerViewPop.do", option);
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -274,12 +286,13 @@
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0 mt0">Particular Information</h3>
 <ul class="right_btns top0">
-    <li><p class="btn_blue"><a href="#"><span class="search"></span>View Rent Ledger</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript : fn_goLedger1()"><span class="search"></span>View Order Ledger(1)</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="gridParam" name="gridParam" method="GET">
     <input type="hidden" id="callLogInvId" name="callLogInvId" value="${investCallResultInfo.invId }">
     <input type="hidden" id="salesOrdId" name="salesOrdId" value="${investCallResultInfo.salesOrdId }">
+    <input type="hidden" id="ordId" name="ordId" value="${investCallResultInfo.salesOrdId }">
     <input type="hidden" id="stusParam" name="stusParam" value="${investCallResultInfo.invStusId }">
     <input type="hidden" id="rentalStusParam" name="rentalStusParam" value="${investCallResultCust.stusCodeId }">
 </form>
