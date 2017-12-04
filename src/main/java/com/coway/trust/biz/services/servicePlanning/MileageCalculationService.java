@@ -44,4 +44,6 @@ public interface MileageCalculationService {
 	// 171130 :: 선한이
 	int selectDCPMasterCount(Map<String, Object> params);
 
+	List<EgovMap> selectCity(Map<String, Object> params);
+
 }

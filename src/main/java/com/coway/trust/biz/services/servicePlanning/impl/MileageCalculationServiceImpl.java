@@ -147,6 +147,12 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
 	}
 	
 	@Override
+	public List<EgovMap> selectCity(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return mileageCalculationMapper.selectCity(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectSchemaResultMgmt(Map<String, Object> params) {
 		/*if(params.get("ManuaMyBSMonth") != null) {
     		StringTokenizer str1 = new StringTokenizer(params.get("month").toString());

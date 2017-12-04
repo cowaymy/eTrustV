@@ -306,6 +306,24 @@ public class MileageCalculationController {
 		return ResponseEntity.ok(memberCode);
 	}
 	
+	// 171130 :: 선한이
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCity.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCity( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> cityList = mileageCalculationService.selectCity(params);
+		//model.addAttribute("branchList", branchList);
+		logger.debug("cityList {}", cityList);
+		return ResponseEntity.ok(cityList);
+	}
+	
 	// 171127 :: 선한이
 	/**
 	 * Search rule book management list
@@ -315,7 +333,7 @@ public class MileageCalculationController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/selectDCPFrom", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectDCPFrom.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDCPFrom( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		
 		List<EgovMap> selectDCPFrom = mileageCalculationService.selectDCPFrom(params);
@@ -331,7 +349,7 @@ public class MileageCalculationController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/selectDCPTo", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectDCPTo.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDCPTo( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		
 		List<EgovMap> selectDCPTo = mileageCalculationService.selectDCPTo(params);

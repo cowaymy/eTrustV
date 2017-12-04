@@ -9,27 +9,36 @@ var gridID1;
 var _totalRowCount;
 
 $(document).ready(function(){
-	DCPMasterGrid();
+    DCPMasterGrid();
     AUIGrid.bind(gridID1, "addRow", auiAddRowHandler);
     AUIGrid.bind(gridID1, "removeRow", auiRemoveRowHandler);
     //fn_selectArea();
    
-    //doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'M' ,  'f_multiCombo');
+    //doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'S' ,  '');
     $("#memType").change(function (){
         var memType = $("#memType").val();
+        var brnch = $("#brnch").val();
         if(memType == 2){
              doGetCombo('/services/mileageCileage/selectBranch', 42, '','brnch', 'S' ,  '');
+             doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityFrom', 'S' ,  '');
+             doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityTo', 'S' ,  '');
         }else if(memType == 3){
             doGetCombo('/services/mileageCileage/selectBranch', 43, '','brnch', 'S' ,  '');
+            doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityFrom', 'S' ,  '');
+            doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityTo', 'S' ,  '');
         }else{
-        	doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'S' ,  '');
+            doGetCombo('/services/mileageCileage/selectBranch', '', '','brnch', 'S' ,  '');
+            doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityFrom', 'S' ,  '');
+            doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityTo', 'S' ,  '');
         }
      });
     
     $('#brnch').change(function() {
         var brnch = $("#brnch").val();
-        doGetCombo('/services/mileageCileage/selectDCPFrom', String(brnch), '','mcpFrom', 'S' ,  '');
-        doGetCombo('/services/mileageCileage/selectDCPTo', String(brnch), '','mcpTo', 'S' ,  '');
+        //doGetCombo('/services/mileageCileage/selectDCPFrom.do', String(brnch), '','mcpFrom', 'S' ,  '');
+        //doGetCombo('/services/mileageCileage/selectDCPTo.do', String(brnch), '','mcpTo', 'S' ,  '');
+        doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityFrom', 'S' ,  '');
+        doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityTo', 'S' ,  '');
     });
     
 });
@@ -66,15 +75,15 @@ function auiCellEditingHandler(event) {
 };
 
 function fn_selectArea(){
-	Common.ajax("GET", "/services/mileageCileage/selectArea", '', function(result) {
+    Common.ajax("GET", "/services/mileageCileage/selectArea", '', function(result) {
         console.log("성공.");
         console.log("AREA data : " + result);
         //AUIGrid.setGridData(gridID1, result);
     });
 }
 function getBrnchComboList(){
-	   var list = [ "CDB-04","CDB-02"];
-	    return list;
+       var list = [ "CDB-04","CDB-02"];
+        return list;
 }
 
 function getAreaComboList(){
@@ -83,15 +92,15 @@ function getAreaComboList(){
 }
 function DCPMasterGrid() { 
     var columnLayout = [
-                          { dataField : "memType", headerText  : "Member Type",    width : 100 ,
-	                              editRenderer : {
-	                                  type : "ComboBoxRenderer",
-	                                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-	                                  listFunction : function(rowIndex, columnIndex, item, dataField) {
-	                                      var list = getTypeComboList();
-	                                      return list;
-	                                  },
-	                                  keyField : "id1"
+                          { dataField : "memType", headerText  : "Member Type",    width : 100 , editable: false,
+                                  editRenderer : {
+                                      type : "ComboBoxRenderer",
+                                      showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                      listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                          var list = getTypeComboList();
+                                          return list;
+                                      },
+                                      keyField : "id1"
                               }},
                           { dataField : "brnchCode", headerText  : "Branch",width : 100,
                                   editRenderer : {
@@ -102,10 +111,20 @@ function DCPMasterGrid() {
                                           return list;
                                       },
                                       onchange : function(rowIndex, columnIndex, value, item) {
-                                    	 alert(222); 
+                                         alert(222); 
                                       },
                                       keyField : "id1"
                                   }},
+                          { dataField : "cityFrom", headerText  : "CITY From",  width  : 150,
+                                      editRenderer : {
+                                          type : "ComboBoxRenderer",
+                                          showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                          listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                              var list = getAreaComboList(); // 임의값
+                                              return list;
+                                          },
+                                          keyField : "id1"
+                                      }},
                           { dataField : "dcpFrom", headerText  : "DCP From",  width  : 200,
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
@@ -126,6 +145,16 @@ function DCPMasterGrid() {
                                           },
                                           keyField : "id1"
                                       }},
+                          { dataField : "cityTo", headerText  : "CITY TO",  width  : 150,
+                                          editRenderer : {
+                                              type : "ComboBoxRenderer",
+                                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                              listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                                  var list = getAreaComboList(); // 임의값
+                                                  return list;
+                                              },
+                                              keyField : "id1"
+                                          }},
                           { dataField : "dcpTo",       headerText  : "DCP TO",  width  : 200,
                                           editRenderer : {
                                               type : "ComboBoxRenderer",
@@ -150,7 +179,9 @@ function DCPMasterGrid() {
                           { dataField : "memType1",       headerText  : "memType1",  width  : 0},
                           { dataField : "brnchCode1",       headerText  : "brnchCode1",  width  : 0},
                           { dataField : "dcpFrom1",       headerText  : "dcpFrom1",  width  : 0},
+                          { dataField : "dcpFromId1",       headerText  : "dcpFromId1",  width  : 0},
                           { dataField : "dcpTo1",       headerText  : "dcpTo1",  width  : 0},
+                          { dataField : "dcpToId1",       headerText  : "dcpToId1",  width  : 0},
                           { dataField : "distance1",       headerText  : "distance1",  width  : 0},
        ];
 
@@ -160,7 +191,7 @@ function DCPMasterGrid() {
     }
     
     function addRow(){
-    	var item = new Object();
+        var item = new Object();
         item.memType = "";
         item.brnch = "";
         item.dcpForm = "";
@@ -173,13 +204,13 @@ function DCPMasterGrid() {
         AUIGrid.addRow(gridID1, item, "first");
     }
     function auiAddRowHandler(){
-    	
+        
     }
     function auiRemoveRowHandler(){
-    	
+        
     }
     function save(){
-    	Common.ajax("POST", "/services/mileageCileage/saveDCPMaster.do", GridCommon.getEditData(gridID1), function(result) {
+        Common.ajax("POST", "/services/mileageCileage/saveDCPMaster.do", GridCommon.getEditData(gridID1), function(result) {
             console.log("성공.");
             console.log("data : " + result);
         });
@@ -189,25 +220,25 @@ function DCPMasterGrid() {
     // Search 결과 조회
     // 마스터 그리드 리스트 조회.
     function fn_DCPMasterSearch(goPage){
-    	if($('#memType').val() == '') {
-    		Common.alert("Please Select 'Member Type'");
+        if($('#memType').val() == '') {
+            Common.alert("Please Select 'Member Type'");
             return false;
-    	}
-    	
-    	if($('#Branch').val() == '') {
+        }
+        
+        if($('#brnch').val() == '') {
             Common.alert("Please Select 'Branch'");
             return false;
         }
-    	
-    	if(($('#mcpFrom').val() == '') && ($('#mcpTo').val() == '')) {
+        
+        if(($('#mcpFrom').val() == '') && ($('#mcpTo').val() == '')) {
             Common.alert("Please write 'DCP From' or 'DCP To'");
             return false;
         }
-    	
-    	//페이징 변수 세팅
+        
+        //페이징 변수 세팅
         $("#pageNo").val(goPage);   
-    	
-    	Common.ajax("GET", "/services/mileageCileage/selectDCPMaster.do", $("#DCPMasteForm").serialize(), function(result) {
+        
+        Common.ajax("GET", "/services/mileageCileage/selectDCPMaster.do", $("#DCPMasteForm").serialize(), function(result) {
             console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(gridID1, result.resultList);
@@ -233,7 +264,7 @@ function DCPMasterGrid() {
       
       // selectDCPMasterPaging.do 만드는 거부터 해야댐!!
       Common.ajax("GET", "/services/mileageCileage/selectDCPMasterPaging.do", $("#DCPMasteForm").serialize(), function(result) {
-    	  console.log("성공.");
+          console.log("성공.");
           console.log("data : " + result);
           AUIGrid.setGridData(gridID1, result.resultList);
           
@@ -252,30 +283,62 @@ function DCPMasterGrid() {
         AUIGrid.removeSoftRows(gridID1);
     }
     
-	 // 171123 :: 선한이
-	 // 엑셀 내보내기(Export);
-	 function fn_exportTo() {
-		 GridCommon.exportTo("calculation_DCPMaster_grid_wap", 'xlsx', "Mileage Claim Master");
-	 };
-	 
-	 // 엑셀 업로드
-	 function fn_uploadFile() {
-		 var formData = new FormData();
-		   console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
-		   formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
-		 
-		 Common.ajaxFile("/services/mileageCileage/excel/saveDCPMasterByExcel.do"
-	               , formData
-	               , function (result) 
-	                {
-	                     //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	                     if(result.code == "99"){
-	                         Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
-	                     }else{
-	                         Common.alert(result.message);
-	                     }
-	            });
+     // 171123 :: 선한이
+     // 엑셀 내보내기(Export);
+     function fn_exportTo() {
+         GridCommon.exportTo("calculation_DCPMaster_grid_wap", 'xlsx', "Mileage Claim Master");
      };
+     
+     // 엑셀 업로드
+     function fn_uploadFile() {
+         var formData = new FormData();
+           console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
+           formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+         
+         Common.ajaxFile("/services/mileageCileage/excel/saveDCPMasterByExcel.do"
+                   , formData
+                   , function (result) 
+                    {
+                         //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                         if(result.code == "99"){
+                             Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
+                         }else{
+                             Common.alert(result.message);
+                         }
+                });
+     };
+     
+     // 171204 :: 선한이
+     function fn_AlldownFile() {
+         var data = { "memType" : $("#memType").val() , "brnchCode": $("#brnchCode").val(), 
+                            "cityFrom": $("#cityFrom").val(), "dcpFrom": $("#dcpFrom").val(), 
+                            "cityTo": $("#cityTo").val(), "dcpTo": $("#dcpTo").val() };
+         //var data = { "searchDt" : $("#CMM0006T_Dt").val() , "code": $("#code_06T").val(), "codeId": $("#codeGroupId").val() };
+         Common.ajax("GET", "/services/mileageCileage/excel/downloadExcelFile.do", data, function(result) {
+             var cnt = result;
+             if(cnt > 0){
+                 //var fileName = $("#fileName").val() +"_"+today;
+                 var fileName="Mileage Claim Master.xlsx";
+                 var searchDt = $("#CMM0006T_Dt").val();
+                 var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+                 var month = searchDt.substr(0,searchDt.indexOf("/"));
+                 var code = $("#code_06T").val();
+                 var codeId = $("#codeGroupId").val();
+                 //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+                 
+                 Common.showLoader();
+                 $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId)
+                 .done(function () {
+                     Common.alert('File download a success!');                
+                     Common.removeLoader();            
+                 })
+                 .fail(function () {
+                     Common.alert('File download failed!');                
+                     Common.removeLoader();            
+                  });
+             }
+         });
+     }
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -296,6 +359,7 @@ function DCPMasterGrid() {
     </div><!-- auto_file end -->
     </li>
     <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">Update Request</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_AlldownFile()">EXCEL DW</a></p></li>
 
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_DCPMasterSearch(1)"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
@@ -342,6 +406,10 @@ function DCPMasterGrid() {
     <td></td>
 </tr>
 <tr>
+    <th scope="row">City From</th>
+    <td>
+        <select class="w100p" id="cityFrom" name="cityFrom">
+    </td>
     <th scope="row">DCP From</th>
     <td>
         <input type="text" title="" placeholder="DCP From" class="w100p" id="mcpFrom" name="mcpFrom">
@@ -350,6 +418,14 @@ function DCPMasterGrid() {
              <option value="${list.codeId}">${list.codeName}</option>
          </c:forEach>
         </select> --%>
+    </td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr>
+    <th scope="row">City To</th>
+    <td>
+        <select class="w100p" id="cityTo" name="cityTo">
     </td>
     <th scope="row">DCP To</th>
     <td>
@@ -371,10 +447,10 @@ function DCPMasterGrid() {
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li> -->
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li>
+    <!-- <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">EXCEL DW</a></p></li> -->
+    <!-- <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li> -->
     <li><p class="btn_grid"><a href="#" onclick="javascript:save()">SAVE</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
+    <!-- <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD</a></p></li> -->
 </ul>
 
 <!-- grid_wrap start -->
