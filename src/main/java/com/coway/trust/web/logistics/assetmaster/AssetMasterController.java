@@ -55,15 +55,15 @@ public class AssetMasterController {
 		return "logistics/AssetMng/assetList";
 	}
 
-	@RequestMapping(value = "/assetList.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/assetList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> assetList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
 		// logger.debug("searchassetid 값 : {}", request.getParameter("searchassetid"));
-		// logger.debug("searchstatus 값 : {}", request.getParameterValues("searchstatus"));
-		// logger.debug("searchbrand 값 : {}", request.getParameter("searchbrand"));
-		// logger.debug("searchcategory 값 : {}", request.getParameter("searchcategory"));
-		// logger.debug("searchtype 값 : {}", request.getParameterValues("searchtype"));
+		 logger.debug("searchstatus 값 : {}", request.getParameterValues("searchstatus"));
+		 logger.debug("searchbrand 값 : {}", request.getParameter("searchbrand"));
+		 logger.debug("searchcategory 값 : {}", request.getParameter("searchcategory"));
+		 logger.debug("searchtype 값 : {}", request.getParameterValues("searchtype"));
 		// logger.debug("searchcolor 값 : {}", request.getParameter("searchcolor"));
 		// logger.debug("searchmodelname 값 : {}", request.getParameter("searchmodelname"));
 		// logger.debug("searchpurchasedate1 값 : {}", request.getParameter("searchpurchasedate1"));
