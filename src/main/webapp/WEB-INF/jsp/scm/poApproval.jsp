@@ -860,7 +860,7 @@ function fnMainGridCreate()
   // 전체 체크박스 클릭 이벤트 바인딩
   AUIGrid.bind(MainGridID, "rowAllChkClick", function( event ) 
   {
-	  
+	  /*
     if(event.checked ) {  // name 의 값들 얻기  Active(1)/Approved(5)
       var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "poItmAppvStus");
       // Anna 제거하기
@@ -871,7 +871,7 @@ function fnMainGridCreate()
     } else {
       AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus", []);
     }
-	  
+	  */
   });
   
   
