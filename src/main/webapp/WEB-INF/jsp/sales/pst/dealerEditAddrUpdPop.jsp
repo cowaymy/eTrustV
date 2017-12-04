@@ -11,7 +11,6 @@
     var optionArea = {chooseMessage: "4. Area"};
 
      $(document).ready(function() {
-        
          //Init Field
          var tempCountry = $("#getCountry").val();
          var tempState = $("#getState").val();
@@ -58,18 +57,18 @@
          }) ;
          
         //Enter Event
-        $('#searchSt').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
-                fn_addrSearch();
-            }  
-        });
+//        $('#searchSt').keydown(function (event) {  
+//            if (event.which === 13) {    //enter  
+//                fn_addrSearch();
+//            }  
+//        });
          
     });//Document Ready Func End
     
   //Get Area Id
     function fn_getAreaId(){
         
-    	var countryValue = $("#mCountry").val();
+        var countryValue = $("#mCountry").val();
         var statValue = $("#mState").val();
         var cityValue = $("#mCity").val();
         var postCodeValue = $("#mPostCd").val();
@@ -78,7 +77,7 @@
         if('' != countryValue && '' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
             
             var jsonObj = { countryValue : countryValue ,
-            		              statValue : statValue ,
+                                  statValue : statValue ,
                                   cityValue : cityValue,
                                   postCodeValue : postCodeValue,
                                   areaValue : areaValue
@@ -111,10 +110,10 @@
        var stateJson = {country : tempCountry}; 
          if( '' != tempState && null != tempState){
              
-             CommonCombo.make('mState', "/sales/pst/pstDealerAddrComboList", '' , tempState, optionState);
+             CommonCombo.make('mState', "/sales/pst/pstDealerAddrComboList", stateJson , tempState, optionState);
          }else{
              
-             CommonCombo.make('mState', "/sales/pst/pstDealerAddrComboList", '' , '', optionState);
+             CommonCombo.make('mState', "/sales/pst/pstDealerAddrComboList", stateJson , '', optionState);
              fn_selectState('');
              return;
              
@@ -168,17 +167,13 @@
         });
     }
     
-    function fn_parentReload() {
-        fn_selectPstRequestDOListAjax(); //parent Method (Reload) List
-        $("#_close1").click();
-        $("#_close").click();
-        Common.popupDiv('/sales/pst/editAddrDtPop.do' , $('#getParamForm').serializeJSON(), null , true, '_editDiv2'); 
-//        Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2New'); 
-    }
-    
+   
         /*####### Magic Address #########*/
         function fn_initAddress(){
-        
+
+           $("#mState").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+           $('#mState').val('');
+   
            $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
            $("#mPostCd").val('');
            
@@ -189,7 +184,37 @@
            $("#mArea").val('');
         }
          
-         
+function fn_selectCountry(selVal){
+            
+            var tempVal = selVal;
+            
+            if('' == selVal || null == selVal){
+                //전체 초기화
+                fn_initAddress();   
+                
+            }else{
+                
+                $("#mState").attr({"disabled" : false  , "class" : "w100p"});
+                
+                $('#mCity').append($('<option>', { value: '', text: '3. Post Code' }));
+                $('#mCity').val('');
+                $("#mCity").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+                
+                $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+                $('#mPostCd').val('');
+                $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+                
+                $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+                $('#mArea').val('');
+                $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+                
+                //Call ajax
+                var stateJson = {country : tempVal}; //Condition
+                CommonCombo.make('mState', "/sales/pst/pstDealerAddrComboList", stateJson, '' , optionState);
+            }
+            
+        }
+        
         function fn_selectState(selVal){
             
             var tempVal = selVal;
@@ -267,20 +292,22 @@
      
      
     function fn_parentReload() {
-        fn_selectPstRequestDOListAjax(); //parent Method (Reload) List
+        fn_pstDealerListAjax(); //parent Method (Reload) List
         $("#_close1").click();
-        $("#_close").click();
-        Common.popupDiv('/sales/pst/editAddrDtPop.do' , $('#getParamForm').serializeJSON(), null , true, '_editDiv2'); 
+        $("#autoClose").click();
+        $("#_eClose").click();
+        Common.popupDiv('/sales/pst/pstDealerDetailPop.do' , $('#searchForm').serializeJSON(), null , true, '_editDiv2'); 
 //        Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2New'); 
     }
     
-    function fn_addrSearch(){
-        if($("#searchSt").val() == ''){
-            Common.alert("Please search.");
-            return false;
-        }
-        Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv');
-    }
+    //Dealer Edit는 delete 없음.
+//    function fn_addrSearch(){
+//        if($("#searchSt").val() == ''){
+//            Common.alert("Please search.");
+//            return false;
+//        }
+//        Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv');
+//    }
     
     
     function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
@@ -313,31 +340,29 @@
         }
     }
     
-    
-    
-    //Delete
-    $("#_delBtn").click(function() {
+    //Delete Dealer Edit는 delete 없음.
+//    $("#_delBtn").click(function() {
        
-       Common.confirm("Are you sure want to delete this address ?", fn_deleteAddressAjax);
-    });
+//       Common.confirm("Are you sure want to delete this address ?", fn_deleteAddressAjax);
+//    });
     
     /* ####### delete Func ########### */
     //delete call Ajax
-    function fn_deleteAddressAjax(){
+//    function fn_deleteAddressAjax(){
         
-        Common.ajax("GET", "/sales/pst/delDealerAddress.do", $("#updAddressForm").serialize(), function(result){
+//        Common.ajax("GET", "/sales/pst/delDealerAddress.do", $("#updAddressForm").serialize(), function(result){
             //result alert and closePage
-            Common.alert(result.message, fn_parentReload);
-        });
-    }
+//            Common.alert(result.message, fn_parentReload);
+//        });
+//    }
     
  // Parent Reload And Page Close
-    function fn_closePage(){
-        fn_selectPstRequestDOListAjax(); //parent Method (Reload)
-        $("#_close1").click();
-        $("#_close").click();
+//    function fn_closePage(){
+//        fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+//        $("#_close1").click();
+//        $("#_close").click();
 //        Common.popupDiv('/sales/pst/updateCustomerAddressPop.do' , $('#popForm').serializeJSON(), null , true, '_editDiv2'); 
-    }
+//    }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->

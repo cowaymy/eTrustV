@@ -106,7 +106,7 @@
     }
     
     doGetCombo('/common/selectCodeList.do', '357', ${pstDealerBasicInfo.dealerType},'editDealerType', 'S' , '');     // Dealer Type Combo Box
-    CommonCombo.make('cmbDealerBranch', "/sales/pst/dealerBrnchJsonList", '' , '', optionModule);
+    CommonCombo.make('cmbDealerBranch', "/sales/pst/dealerBrnchJsonList", '' , '${pstDealerBasicInfo.dealerBrnchId}', optionModule);
     
     // 조회조건 combo box
     function f_multiCombo(){

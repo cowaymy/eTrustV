@@ -236,7 +236,7 @@ function createCntGrid(){
     <th scope="row">NRIC/CompanyNo</th>
     <td><span>${pstDealerBasicInfo.dealerNric }</span></td>
     <th scope="row">Branch</th>
-    <td><span>${pstDealerBasicInfo.dealerName }</span></td>
+    <td><span>${pstDealerDtUserInfo.c3 }</span></td>
 </tr>
 <tr>
     <th scope="row">Creator</th>

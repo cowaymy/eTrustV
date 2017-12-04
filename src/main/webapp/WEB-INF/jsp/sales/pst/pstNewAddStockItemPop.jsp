@@ -89,7 +89,19 @@
         $("#autoClose").click();
     }
     
-    
+    var prev = "";
+    var regexp = /^\d*(\.\d{0,2})?$/;
+
+    function fn_inputAmt(obj){
+        
+        if(obj.value.search(regexp) == -1){
+            obj.value = prev;
+        }else{
+            prev = obj.value;
+        }
+        
+        
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -139,11 +151,11 @@
         </tr>
         <tr>
             <th scope="row">Quantity<span class="must">*</span></th>
-            <td><input type="number" id="addStockQty" name="addStockQty" title="" placeholder="" class="" /></td>
+            <td><input type="text" id="addStockQty" name="addStockQty" onkeyup="fn_inputAmt(this)" title="" placeholder="" class="" /></td>
         </tr>
         <tr>
             <th scope="row">Item Price<span class="must">*</span></th>
-            <td><input type="number" id="addItemPrc" name="addItemPrc" title="" placeholder="" class="" /></td>
+            <td><input type="text" id="addItemPrc" name="addItemPrc" onkeyup="fn_inputAmt(this)" title="" placeholder="" class="" /></td>
         </tr>
     </tbody>
     </table><!-- table end -->

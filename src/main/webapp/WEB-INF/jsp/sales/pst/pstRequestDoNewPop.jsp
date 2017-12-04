@@ -21,6 +21,20 @@ isShowChoose: true,
         createAUIGrid();
         doGetCombo('/sales/pst/getInchargeList', '', '','cmbPstIncharge', 'S' , ''); //Incharge Person
         doGetCombo('/common/selectCodeList.do', '357', '','cmbNewDealerType', 'S' , '');     // Dealer Type Combo Box
+        
+        if(insertForm.dealerTypeFlag.value == "REQ"){
+        	CommonCombo.make("cmbLocation", "/common/selectCodeList.do", {groupCode:'361'}, "", {
+                id: "code",
+                name: "codeName",
+                type:"S"
+            });     // WH LOC Combo Box
+        }else{
+        	CommonCombo.make("cmbLocation", "/common/selectCodeList.do", {groupCode:'362'}, "", {
+                id: "code",
+                name: "codeName",
+                type:"S"
+            });     // WH LOC Combo Box
+        }
     });
 
     
@@ -185,6 +199,10 @@ isShowChoose: true,
             Common.alert("* Please select person in charge.");
             return false;
         }
+    	if(insertForm.cmbLocation.value == ""){
+            Common.alert("* Please select WH Location.");
+            return false;
+        }
 //    	if(insertForm.totUnit.value == ""){
 //            Common.alert("* Please select Delivery Stock.");
 //            return false;
@@ -197,6 +215,7 @@ isShowChoose: true,
 //                    cmbNewDealerType : insertForm.cmbNewDealerType.value,
                     pstDealerId : insertForm.cmbDealer.value,
                     pstType : insertForm.pstType.value,
+                    pstLocId : insertForm.cmbLocation.value,
 //                  dealerEmail : insertForm.dealerEmail.value,  //안씀
 //                  cmbPstBranch : insertForm.cmbPstBranch.value,
 //                  dealerNric : insertForm.dealerNric.value,
@@ -377,8 +396,11 @@ isShowChoose: true,
         <select class="w100p" id="cmbPstBranch" name="cmbPstBranch" disabled="disabled">
         </select>
     </td>
-    <th scope="row">NRIC/Company No</th>
-    <td><input type="text" id="dealerNric" name="dealerNric" title="" placeholder="NRIC/Company Number" class="w100p" readonly/></td>
+    <th scope="row">WH LOC</th>
+    <td>
+        <select class="w100p" id="cmbLocation" name="cmbLocation">
+        </select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Person In Charge<span class="must">*</span></th>
@@ -386,12 +408,14 @@ isShowChoose: true,
         <select class="w100p" id="cmbPstIncharge" name="cmbPstIncharge">
         </select>
     </td>
-    <th scope="row">Customer PO</th>
-    <td><input type="text" id="pstNewCustPo" name="pstNewCustPo" title="" placeholder="Customer PO" class="w100p" /></td>
+    <th scope="row">NRIC/Company No</th>
+    <td><input type="text" id="dealerNric" name="dealerNric" title="" placeholder="NRIC/Company Number" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Email</th>
-    <td colspan="3"><input type="text" id="dealerEmail" name="dealerEmail" title="" placeholder="Email Address" class="w100p" readonly/></td>
+    <td><input type="text" id="dealerEmail" name="dealerEmail" title="" placeholder="Email Address" class="w100p" readonly/></td>
+    <th scope="row">Customer PO</th>
+    <td><input type="text" id="pstNewCustPo" name="pstNewCustPo" title="" placeholder="Customer PO" class="w100p" /></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
