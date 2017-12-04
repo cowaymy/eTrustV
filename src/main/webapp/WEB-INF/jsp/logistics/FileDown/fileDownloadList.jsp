@@ -85,8 +85,6 @@ var userSession = ${SESSION_INFO.userId};
                           }
                       , editable : false
                       },
-/*                       {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30 , visible:false} */
                       {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30 , visible:false}
                       ];                     
