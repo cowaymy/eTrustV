@@ -617,18 +617,18 @@
                     <th scope="row"><spring:message code='sys.label.status'/></th>
                     <td>
                         <select class="multy_select w100p" multiple="multiple" id="sStatus" name="status">
-                            <option value="" selected>All</option>
-                            <option value="1">Active</option>
+                            
+                            <option value="1" selected>Active</option>
                             <option value="8">InActive</option>
                         </select>
                     </td>
                     <th scope="row"><spring:message code='sys.label.level'/></th>
                     <td>
                         <select class="multy_select w100p" multiple="multiple" id="sLevel" name="level">
-                            <option value="" selected>All</option>
-                            <option value="1">Level1</option>
-                            <option value="2">Level2</option>
-                            <option value="3">Level3</option>
+                            
+                            <option value="1" selected>Level1</option>
+                            <option value="2" selected>Level2</option>
+                            <option value="3" selected>Level3</option>
                         </select>
                     </td>
                 </tr>

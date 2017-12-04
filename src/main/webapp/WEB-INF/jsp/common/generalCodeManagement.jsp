@@ -674,11 +674,15 @@ $(document).ready(function()
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
+<aside class="title_line"><!-- title_line start -->
+<h3>Master</h3>
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a onclick="addRow();">Add</a></p></li>
-	<li><p class="btn_grid"><a onclick="fnSaveGridMap();">Save</a></p></li>
+    <li><p class="btn_grid"><a onclick="addRow();">Add</a></p></li>
+    <li><p class="btn_grid"><a onclick="fnSaveGridMap();">Save</a></p></li>
 </ul>
+
+</aside><!-- title_line end -->
 
 <article class="grid_wrap">
 <!-- grid_wrap start -->
@@ -686,19 +690,24 @@ $(document).ready(function()
  <div id="grid_wrap"></div>
 </article><!-- grid_wrap end -->
 
+<aside class="title_line"><!-- title_line start -->
+<h3>Detail</h3>
+
 <ul class="right_btns">
-	<li>
-		<span>Disabled</span>
-	<select id="dtailDisabled" name="dtailDisabled">
-	   <option value="" selected>All</option>
-	   <option value="1">Y</option>
-	   <option value="0">N</option>
-	</select>	
-	</li>
-	<li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>FILTER</a></p></li>
-	<li><p class="btn_grid"><a onclick="addRowDetail();">Add</a></p></li>   
-	<li><p class="btn_grid"><a onclick="fnSaveDetailGridMap();">Save</a></p></li>
+    <li>
+        <span>Disabled</span>
+    <select id="dtailDisabled" name="dtailDisabled">
+       <option value="" selected>All</option>
+       <option value="1">Y</option>
+       <option value="0">N</option>
+    </select>   
+    </li>
+    <li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>FILTER</a></p></li>
+    <li><p class="btn_grid"><a onclick="addRowDetail();">Add</a></p></li>   
+    <li><p class="btn_grid"><a onclick="fnSaveDetailGridMap();">Save</a></p></li>
 </ul>
+
+</aside><!-- title_line end -->
 
 <article class="grid_wrap" style="height:200px;"><!-- grid_wrap start -->
 <!--  그리드 영역2  -->

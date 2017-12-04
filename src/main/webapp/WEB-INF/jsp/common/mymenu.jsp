@@ -363,7 +363,6 @@ var gridDetailColumnLayout =
 	{
 	    dataField : "mymenuName",
 	    headerText : "Grp Name",
-	    width : "20%",
 	    editable : false,
 	    style : "aui-grid-user-custom-left"
 	},
@@ -372,7 +371,7 @@ var gridDetailColumnLayout =
         /* dataType : "string", */
         headerText : "Menu Code",
         editable : false,
-        width : "20%",
+        width : "25%",
            renderer : {
                type : "IconRenderer",
                iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
@@ -407,6 +406,7 @@ var gridDetailColumnLayout =
     {
         dataField : "pgmOrd",
         headerText : "Order",
+        width : "15%",
        	editRenderer : {
                type : "InputEditRenderer",
                onlyNumeric : true, // Input 에서 숫자만 가능케 설정
