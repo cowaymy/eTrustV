@@ -14,6 +14,14 @@
         
     	createAUIGrid();
 
+    	
+    	  
+        AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+            console.log(event.rowIndex);
+            fn_doViewQuotation();
+        });
+        
+        
     });
     
     
@@ -46,7 +54,14 @@
                      {dataField :"pacDesc", headerText : "Package", width: 100, editable : false },
                      {dataField :"dur", headerText : "Duration (Mth)",width: 80, editable : false },
                      {dataField :"crtDt", headerText : "Create Date", width: 100,  dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
-                     {dataField :"crtUserId", headerText : "Package" , width: 150, editable : false }
+                     {dataField :"crtUserId", headerText : "Package" , width: 150, editable : false },
+                     {dataField :"hasbill", headerText : "HasBill" , width: 100, editable : false ,
+                    	 renderer : {
+                             type : "CheckBoxEditRenderer",
+                             editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                             checkValue : "1"  
+                         }
+                     }
           ];
 
            //그리드 속성 설정
@@ -104,7 +119,9 @@ function fn_goConvertSale(){
 	   
 	   
 	   var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId +"&MBRSH_ID="+selectedItems[0].item.memId; 
-	   Common.popupDiv("/sales/membership/mConvSale.do"+pram);
+	   Common.popupDiv("/sales/membership/mConvSale.do"+pram,null, null , true , '_mConvSaleDiv1');
+	   
+       
    }
  }
   

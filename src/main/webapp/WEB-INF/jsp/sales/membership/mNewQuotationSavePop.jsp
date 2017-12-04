@@ -9,8 +9,9 @@
     
    function fn_goProcess(){
 	   
-	   fn_DoSaveProcess($("#saveOption").val());
-	   $("#ms_close").click();
+	 fn_DoSaveProcess($("#saveOption").val());
+	 $("#_saveDiv1").remove();
+	   
    }
    
     
@@ -21,7 +22,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Save Option</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="ms_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2" ><a href="#" id="ms_close">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

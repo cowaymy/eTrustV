@@ -206,7 +206,16 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 	 */
 	@Override
 	public int  membershipFree_save(Map<String, Object> params) {
-		return  membershipMapper.membershipFree_save(params);    
+		
+		EgovMap     seq = membershipMapper.getSAL0095d_SEQ(params);
+		params.put("SAVE_SR_MEM_ID", seq.get("seq"));
+		int  saveCnt = membershipMapper.membershipFree_save(params);
+		
+		if(saveCnt> 0){
+			membershipMapper.srvConfigPeriod(params);
+		}
+		 
+		return  saveCnt;
 	}
 	
 	

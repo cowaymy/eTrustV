@@ -231,9 +231,9 @@ function setText(result){
 						            result.installation.instState +" "+ 
 						            result.installation. instCnty;
 								
-			$("#instalationAddress").html(address);
+			//$("#instalationAddress").html(address);
 			$("#firstInstallNo").html(result.installation.firstInstallNo);
-			$("#preferInstDt").html(result.installation.preferInstDt);
+			$("#preferInstDt").html(result.installation.firstInstallDt);  
 			
 			
 			if(result.basic.appTypeCode =="INS"){
@@ -389,7 +389,7 @@ function createAUIGridHList() {
 
 
 function fn_doReset() {
-	 $("#sForm").attr({"target" :"_self" , "action" : "/sales/membership/membershipFreePop.do" }).submit();
+    window.close();
 }
 
 
@@ -443,7 +443,10 @@ function fn_doSave(){
 				 
 				    Common.ajax("GET", "/sales/membership/selectMembershipFree_save", $("#saveForm").serialize(), function(result) {
 				    	
-					    var resultFalge = false;
+	                    var resultFalge = false;
+				    	if(result.resultIntKey  != "0" ) resultFalge=true;
+				    	
+					    
 					    if(resultFalge){
 					    	Common.alert("<b>Free membership successfully given to this order.</b>");
 					    	fn_doConfirm ();
@@ -497,7 +500,7 @@ function fn_validStartDate(){
     aList = selectedDate.split("/");
     selectedDate=aList[1]+""+aList[0];
       
-    console.log("compareDate["+compareDate+"]selectedDate["+selectedDate+"]");
+    console.log("compareDate["+compareDate+"]selectedDate["+selectedDate+"]IS_EXPIRE["+$("#IS_EXPIRE").val()+"]");
       
 	
 	if(  $("#IS_EXPIRE").val() == 0){
@@ -507,6 +510,7 @@ function fn_validStartDate(){
 		 aList = $("#expire").text() .split("-");
 		 compareDate = aList[2]+""+aList[1];
 			 
+		 console.log("IS_EXPIRE   IN ..... compareDate["+compareDate+"]selectedDate["+selectedDate+"]");
 		 if (parseInt(selectedDate,10)  > parseInt(compareDate,10)){
 			 rtnFlag  =true; 
          }
@@ -521,6 +525,11 @@ function fn_validStartDate(){
 }
 
 
+function fn_close(){
+	
+	window.close();
+}
+
 </script>
 
 
@@ -530,7 +539,7 @@ function fn_validStartDate(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>Membership Management - Free Membership</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -600,19 +609,23 @@ function fn_validStartDate(){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-	<li><a href="#" class="on"  id='orderTab' onclick=" javascript:AUIGrid.resize(oListGridID, 1120,300);" >Order Info</a></li>
+    <li><a href="#" class="on">Membership Info</a></li>
+	<li><a href="#"   id='orderTab' onclick=" javascript:AUIGrid.resize(oListGridID, 1120,300);" >Order Info</a></li>
 	<li><a href="#">Contact Person</a></li>
 	<li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 1120,400); " >BS History</a></li>
 	
 </ul>
 
 
+ 
+<!-- inc_membershipInfo  tab  start...-->
+     <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_membershipInfo.do?MBRSH_ID=${MBRSH_ID}'/>   
+<!--  inc_membershipInfotab  end...-->
 
 
 
-<article class="tap_area" style="display:block"><!-- tap_area start -->
 
-        
+<article class="tap_area" ><!-- tap_area start -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -687,7 +700,7 @@ function fn_validStartDate(){
 
  
  <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="oList_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+      <div id="oList_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
  </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->

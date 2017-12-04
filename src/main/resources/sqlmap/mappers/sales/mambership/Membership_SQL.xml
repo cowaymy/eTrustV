@@ -886,14 +886,14 @@
                                            sList.FIRST_INSTALL_NO   ,
                                            sList.FIRST_INSTALL_CT_CODE   ,
                                            sList.FIRST_INSTALL_CT_NAME   ,
-                                           to_date( sList.FIRST_INSTALL_DT ,'dd-mm-yyyy') FIRST_INSTALL_DT  ,
+                                          sList.FIRST_INSTALL_DT  ,
                                            sList.FIRST_INSTALL_REM   ,
                                            sList.FIRST_INSTALL_SIRIM_NO   ,
                                            sList.FIRST_INSTALL_SERIAL_NO   ,
                                            sList.LAST_INSTALL_NO   ,
                                            sList.LAST_INSTALL_CT_CODE   ,
                                            sList.LAST_INSTALL_CT_NAME   ,
-                                           to_date( sList.LAST_INSTALL_DT ,'dd-mm-yyyy') LAST_INSTALL_DT, 
+                                           sList.LAST_INSTALL_DT, 
                                            sList.LAST_INSTALL_REM   ,
                                            sList.LAST_INSTALL_SIRIM_NO   ,
                                            sList.LAST_INSTALL_SERIAL_NO   ,
@@ -901,7 +901,7 @@
                                            sList.DSC_CODE   ,
                                            sList.DSC_NAME   ,
                                            sList.INSTCT   ,
-                                           to_date( sList.PREFER_INST_DT, 'dd-mm-yyyy')   PREFER_INST_DT ,
+                                            sList.PREFER_INST_DT , 
                                            sList.PREFER_INST_TM   ,
                                            sList.INSTALL_ADDR_ID   ,
                                            sList.INSTALL_CNTC_ID   ,
@@ -1140,8 +1140,8 @@
 									       sal91.SRV_MEM_DESC      code_Name
 							  FROM SAL0091M sal91
 							 WHERE  ( 1 = sal91.SRV_MEM_STUS_ID )
-							          AND ( sal91.SRV_MEM_PAC_ID IN ( 10,3,4 )
-							         )
+								AND PAC_TYPE = 0
+								AND FREE_MEM_USE = 1
 							  ORDER BY sal91.SRV_MEM_CODE ASC
            ]]>
     </select>

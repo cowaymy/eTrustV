@@ -640,7 +640,7 @@ function  fn_validRequiredField_Save(){
     }
     
     
-
+/*
     if($("#packpro").prop("checked")){
           if(FormUtil.checkReqValue($("#cPromotionpac"))){
                rtnMsg  +=" Please select the package promotion.<br />" ;
@@ -650,14 +650,14 @@ function  fn_validRequiredField_Save(){
     
     
     
-     if ($("#cPromoCombox").prop("checked")){
-           if(FormUtil.checkReqValue($("#cPromo"))){
-                rtnMsg +="Please select the promotion.<br>";
-                rtnValue =false; 
-           }
-      }
+     //if ($("#cPromoCombox").prop("checked")){
+    //       if(FormUtil.checkReqValue($("#cPromo"))){
+               // rtnMsg +="Please select the promotion.<br>";
+                //rtnValue =false; 
+     //      }
+    //  }
       
-     
+     */
   
     if( ! FormUtil.checkReqValue($("#SALES_PERSON"))){
         if($("#hiddenSalesPersonID").val() ==""){
@@ -743,7 +743,8 @@ function fn_unconfirmSalesPerson(){
          return   false;
     
     }else{
-         Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" , null , true , '_saveDiv1'); 
+         Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" ,null ,null , true , '_saveDiv1'); 
+         
     }
 }
 
@@ -801,17 +802,21 @@ function  fn_DoSaveProcess(_saveOption){
     
     Common.ajax("POST", "/sales/membershipRentalQut/mNewQuotationSave.do",saveForm , function(result) {
         
+        console.log( "mNewQuotationSave.do====>");
         console.log( result);
          
          if(result.code =="00"){
              if(_saveOption == "1"){
                   Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.data.qotatRefNo + "<br/> System will auto redirect to payment process after 3 seconds. ");
-                  setTimeout(function(){ fn_saveResultTrans(result.data.qotatId) ;}, 3000); 
+                  // setTimeout(function(){ fn_saveResultTrans(result.data.qotatId) ;}, 3000); 
+                  $("#_NewQuotDiv1").remove();
+
              }else{
                   Common.alert("Quotation Saved" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br /> Quotation number : " + result.data.qotatRefNo + "<br /> ");
              }
          }else{
               Common.alert("Failed To Save" +DEFAULT_DELIMITER+" b>Failed to save. Please try again later.</b> ");
+              $("#_NewQuotDiv1").remove();
          }
     });
 }
@@ -1570,9 +1575,9 @@ function fn_cTPackageChanged(){
 
         <ul class="center_btns">
             <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
-            <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_back()">Back</a></p></li>
+            <!-- <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_back()">Back</a></p></li>
           
-         <!--  <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_saveResultTrans()">test</a></p></li> -->
+          <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_saveResultTrans()">test</a></p></li> -->
         </ul>
 
 </div>

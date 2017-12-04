@@ -186,8 +186,13 @@
 	  
 	  function  fn_doMFree(){
 		    var _option = {   width : "1200px",  height : "800px"   };
-		    Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do", _option);
+	        
+		    var selectedItems = AUIGrid.getSelectedItems(gridID);
+		    
+		    Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do?MBRSH_ID="+selectedItems[0].item.mbrshId, _option);
 	  }
+	  
+	  
 	  
 	  
 	  function  fn_doMOutSPay(){

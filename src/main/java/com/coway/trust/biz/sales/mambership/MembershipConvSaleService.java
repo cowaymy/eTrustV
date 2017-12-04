@@ -13,7 +13,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *
  */
 public interface MembershipConvSaleService {
-	   
+	
+	int SAL0095D_insert(Map<String, Object> params);
+	
+	EgovMap  getHasBill(Map<String, Object> params);
 	
 	
 }

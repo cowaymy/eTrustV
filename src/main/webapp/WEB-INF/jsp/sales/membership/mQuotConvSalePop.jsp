@@ -27,6 +27,8 @@ $(document).ready(function(){
     $("#resetbt").attr("style" ,"display:none");
     
     AUIGrid.resize(trGridID, 1000,300)
+    
+    fn_getHasBill ();
 });
 
 
@@ -87,7 +89,8 @@ function fn_getPackageInfo (){
     }   
     
 Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT_ID  ,ORD_ID: $("#ORD_ID").val() }, function(result) {
-     console.log( result);
+	   console.log( "selectMembershipQuotInfo==>");
+	console.log( result);
      
      
              fn_doQuotInfoClear();
@@ -122,6 +125,9 @@ Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT
                       $("#inc_cntTelO").html(result[0].cntTelO);
                       $("#inc_cntTelF").html(result[0].cntTelF);
                       $("#inc_cntEmail").html(result[0].cntEmail);
+                      
+                      $("#BranchID").val(result[0].brnchName );
+
                       
                       
                       if(result[0].ordId>0){
@@ -347,11 +353,16 @@ function fn_getConfigDataInfo (){
 }
 
 
+var pMInfo ={};
 //get Last Membership  &   Expire Date
 function fn_getMembershipDataInfo (){ 
     Common.ajax("GET", "/sales/membership/paymentLastMembership", {PAY_LAST_MBRSH_ID : $("#LAST_MBRSH_ID").val() },  function(result) {
-         console.log( result);
-         
+        console.log("paymentLastMembership==>"); 
+    	console.log( result);
+    	
+    	pMInfo =result[0];
+    	
+    	 $("#BranchID").val(result[0].brnchId);
          $("#last_membership_text").html( result[0].pacCode +" "+ result[0].pacName);
          $("#expire_date_text").html( result[0].mbrshExprDt);
     });
@@ -433,27 +444,72 @@ function fn_Sale_processing(){
 	
     
 	var mSaveForm={
-    		                      totalPrice     :packageInfo.totAmt ,    
-    				              packagePrice:packageInfo.pacAmt,
-    				              filterPrice     :packageInfo.filterAmt,
-    				              quotNo        :packageInfo.quotNo,
-    				              cntName      :$("#inc_cntName").text(),
-    				              custName     :'${orderInfoTab.custName}',
-    				              ordId           :$("#ORD_ID").val(),
-    				              lastMbrshId   :$("#LAST_MBRSH_ID").val()
-    				             
+								srvMemQuotId : $("#QUOT_ID").val() ,
+							    srvSalesOrdId: $("#ORD_ID").val() ,
+								srvMemQuotNo:packageInfo.quotNo,
+							    srvMemQuotCntName:pMInfo.cntName,
+							    srvMemQuotCustName:pMInfo.custName,
+								srvMemPacId: packageInfo.pacId,
+								srvMemPacAmt: packageInfo.pacAmt,
+								srvMemBsAmt: packageInfo.totAmt ,
+								srvMemPv: '0',
+								srvFreq: packageInfo.bsFreq,
+								srvStartDt: '01/01/1900',
+								srvExprDt: '01/01/1900',
+								srvStusCodeId: '1',
+								srvDur: packageInfo.dur,
+								srvRem: '',
+								srvMemBs12Amt: '0',
+								srvMemIsSynch : '0',
+								srvMemSalesMemId:'',
+								srvMemCustCntId: packageInfo.cntId   ,
+								srvMemQty : Number(packageInfo.dur) / 12,
+								srvBsQty: ((12 / Number(packageInfo.dur) ) * ( Number(packageInfo.dur)  / 12)),
+								srvMemPromoId : packageInfo.promoId,
+								srvMemPvMonth : '0',
+								srvMemPvYear : '0',
+								srvMemIsMnl : '0',
+								srvMemBrnchId : $("#BranchID").val(),
+								srvMemPacPromoId :packageInfo.pacId,
+								srvMemFormNo:'',
+								trType:  $("#trType").val() ,
+								srvStockCode :  $("#inc_stockCode").text(),
+							    srvStockDesc :  $("#inc_stockDesc").text(),
+								
 	}
    
 	
 	console.log(mSaveForm);
-	//Common.ajax("POST", "/sales/membership/mQuotConvSaleSave", mSaveForm,  function(result) {
-       // console.log( result);
-         
-  // });
-	
-	
-	
+	Common.ajax("POST", "/sales/membership/mQuotConvSaleSave.do", mSaveForm,  function(result) {
+       console.log( result);
+       
+       if(result !="" ){
+           Common.alert("Membership successfully saved.");
+           $("#_mConvSaleDiv1").remove();
+           fn_selectListAjax() ;
+       }
+       
+    
+   });
 }
+
+
+//getHasBill 
+function fn_getHasBill (){ 
+	
+  Common.ajax("GET", "/sales/membership/getHasBill.do", {srvMemQuotId:'${QUOT_ID}' },  function(result) {
+      console.log("getHasBill.do==>"); 
+      console.log("==>["+result+"]");
+      
+      if(null != result ){
+    	   $("#processbt").attr("style","display:none");
+      }
+      
+  });
+}
+
+
+
 </script>
 
 
@@ -466,6 +522,8 @@ function fn_Sale_processing(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>Membership Payment Convert to sale</h1>
 <ul class="right_opt">
+
+    <li  id='processbt'><p class="btn_blue2"><a href="#" onclick="fn_Sale_processing()">PROCESING</a></p></li>
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
@@ -477,19 +535,21 @@ function fn_Sale_processing(){
 <!-- get param Form  -->
 <form id="getParamForm" method="get">
 
-<div  style="display:none">
- ORD_ID:     <input type="text" name="ORD_ID"  id="ORD_ID"  value="${ORD_ID}"/>
- PAY_LAST_MBRSH_ID:     <input type="text" name="LAST_MBRSH_ID"  id="LAST_MBRSH_ID"  />
- 
+<div  style="display:inline">
+<input type="hidden" name="ORD_ID"  id="ORD_ID"  value="${ORD_ID}"/>
+<input type="hidden" name="LAST_MBRSH_ID"  id="LAST_MBRSH_ID"  />
+<input type="hidden" name="BranchID"  id="BranchID"  />
+<input type="hidden" name="aaQUOT_ID"  id="aaQUOT_ID" value=  '${QUOT_ID}'  />
  </div>
     
 </form>
+  
 
 
-
-<section class="tap_wrap"><!-- tap_wrap start -->
+<section class="tap_wrap"><!-- tap_wrap start -->  
 <ul class="tap_type1">
-    <li><a href="#" class="on">Package Info</a></li>
+   <li><a href="#" class="on">Membership Info</a></li>
+    <li><a href="#" >Package Info</a></li>
     <li><a href="#">Order Info</a></li>
     <li><a href="#">Contact Info</a></li>
     <li><a href="#">Filter Charge Info</a></li>
@@ -592,6 +652,11 @@ function fn_Sale_processing(){
  
  
  
+ 
+ <div  id='payments_old' style='display:none'> 
+ 
+ 
+ 
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Payment Item</h3>
@@ -614,11 +679,11 @@ function fn_Sale_processing(){
 <tr>
     <th scope="row">TR Type</th>
     <td>
-	     <select class="w100p"  id="trType" name="trType" >
-	        <option value="1"> 1. Membership Package </option>
-	        <option value="2">2. Filter (1st BS) </option>
-	        <option value="3">3. Membership Package & Filter(1st BS)</option>
-	    </select>
+         <select class="w100p"  id="trType" name="trType" >
+            <option value="1"> 1. Membership Package </option>
+            <option value="2">2. Filter (1st BS) </option>
+            <option value="3">3. Membership Package & Filter(1st BS)</option>
+        </select>
     </td>
     <th scope="row">Pay Mode</th>
     <td>       
@@ -641,8 +706,6 @@ function fn_Sale_processing(){
 </form>
 </section><!-- search_table end -->
  
- 
- <div  id='payments_old' style='display:none'> 
  
 
 
@@ -731,7 +794,7 @@ function fn_Sale_processing(){
     <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
-<tbody>
+<tbody>  
 <tr>
     <th scope="row">Collector Code</th>
     <td><input type="text" title="" placeholder="" class=""  id="COLL_MEM_CODE"  NAME="COLL_MEM_CODE"/>
@@ -741,7 +804,7 @@ function fn_Sale_processing(){
      </td>
     <th scope="row">Collector Name</th>
     <td><span id="COLL_MEM_NAME" NAME="COLL_MEM_NAME">-</span></td>
-</tr> 
+</tr>   
 <tr>
     <th scope="row">Commission</th>
     <td colspan="3">
@@ -770,13 +833,16 @@ function fn_Sale_processing(){
     var quot = $("#QUOT_ID").val();
     console.log(quot);
     
-    if(quot >0){ 
+    if(quot >0){  
          fn_getMembershipQuotInfoAjax(); 
-         fn_getMembershipQuotInfoFilterAjax();
-         
+         fn_getMembershipQuotInfoFilterAjax('${QUOT_ID}');
+          
     }else{
         //auto로 넘어온 경우 
         fn_getMembershipQuotInfoFilterAjax('${QUOT_ID}');
     }
+     
+    
+    
 </script>
 

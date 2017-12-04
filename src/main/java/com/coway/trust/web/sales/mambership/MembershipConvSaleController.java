@@ -28,6 +28,7 @@ import com.coway.trust.biz.sales.mambership.MembershipService;
 import com.coway.trust.biz.sales.mambership.impl.MembershipMapper;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -61,6 +62,7 @@ public class  MembershipConvSaleController {
 		logger.debug("			pram set end  ");
 		
 		model.addAttribute("ORD_ID",params.get("ORD_ID"));
+		model.addAttribute("QUOT_ID",params.get("QUOT_ID"));
 		
 		return "sales/membership/mQuotConvSalePop";  
 	}
@@ -106,12 +108,27 @@ public class  MembershipConvSaleController {
 		params.put("userId", sessionVO.getUserId());
 		
 		
-		
-		//int rtnValue = membershipPackageMService.SAL0081D_insert(params);
-		
 		ReturnMessage message = new ReturnMessage();
+		
+		EgovMap  hasbillMap =membershipConvSaleService.getHasBill(params);
+		
+		
+		
+		if(null !=hasbillMap){
+			
+			 if(! CommonUtils.isEmpty(hasbillMap.get("srvMemLgId"))){
+					message.setCode(AppConstants.FAIL);
+					message.setData("hasBill");
+				 	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+					return ResponseEntity.ok(message);  
+			 }
+		}
+		
+		int rtnValue = membershipConvSaleService.SAL0095D_insert(params);
+		
+	
 		message.setCode(AppConstants.SUCCESS);
-		//message.setData(rtnValue);
+		message.setData(rtnValue);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 				
@@ -121,7 +138,24 @@ public class  MembershipConvSaleController {
 	
 	
 	
+	
+	
+	
 
+	@RequestMapping(value = "/getHasBill.do" ,method = RequestMethod.GET)
+	public ResponseEntity<EgovMap>  getHasBill(@RequestParam Map<String, Object> params, HttpServletRequest request,Model model)	throws Exception {
+
+		logger.debug("in  getHasBill ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		EgovMap  hasbillMap =membershipConvSaleService.getHasBill(params);
+		
+		return ResponseEntity.ok(hasbillMap);
+	}
+	
+	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	

@@ -29,7 +29,7 @@
 <ul class="tap_type1">
     <li><a href="#" class="on">Membership Info</a></li>
     <li><a href="#">Order Info</a></li>
-    <li><a href="#">Contact Info</a></li>1
+    <li><a href="#">Contact Info</a></li>
     <li><a href="#" > Filter Charge Info</a></li>
 </ul>
 

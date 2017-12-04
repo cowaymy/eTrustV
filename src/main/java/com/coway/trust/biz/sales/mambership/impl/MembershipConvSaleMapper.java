@@ -41,5 +41,42 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("membershipConvSaleMapper")
 public interface MembershipConvSaleMapper {
 	
+	int  SAL0095D_insert(Map<String, Object> params);
+	int  SAL0088D_insert(Map<String, Object> params);
+	int  PAY0007D_insert(Map<String, Object> params);
+	int  PAY0024D_insert(Map<String, Object> params);
+	int  PAY0016D_insert(Map<String, Object> params);
+	int  PAY0031D_insert(Map<String, Object> params);
+	int  PAY0032D_insert(Map<String, Object> params);
+	int  PAY0032DFilter_insert(Map<String, Object> params);
+	
+	
+	
+	
+	int  getTaxRate(Map<String, Object> params);
+	EgovMap  getHasBill(Map<String, Object> params);
+	
+	
+	int update_SAL0090D_Stus(Map<String, Object> params);
+	int update_SAL0093D_Stus(Map<String, Object> params);
+	
+	
+	
+	
+	String getDocNo(Map<String, Object> params);
+	EgovMap  getSAL0095D_SEQ(Map<String, Object> params);
+	EgovMap  getSAL0001D_Data(Map<String, Object> params);
+	EgovMap  getSAL0090D_Data(Map<String, Object> params);  
+	EgovMap  getSAL0093D_Data(Map<String, Object> params);
+	
+	List<EgovMap> getFilterListData(Map<String, Object> params);
+	
+	
+
+	
+	
+	
+	
+	
 	
 }

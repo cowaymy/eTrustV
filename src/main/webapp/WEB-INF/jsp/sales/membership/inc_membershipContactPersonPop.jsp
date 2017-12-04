@@ -39,10 +39,16 @@
 </tr>
 <tr>
     <th scope="row">Email</th>
-    <td colspan="7" id="inc_cntEmail" ><span>${membershipInfoTab.cntEmail}</span></td>
+    <td colspan="7" ><span id="inc_cntEmail" >${membershipInfoTab.cntEmail}</span></td>
 </tr>
+
 </tbody>
 </table><!-- table end -->
 </article><!-- tap_area end -->
+ 
+<script>
+ 
+ 
+</script>
 
 

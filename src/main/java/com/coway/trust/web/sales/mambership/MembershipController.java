@@ -304,7 +304,8 @@ public class MembershipController {
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-
+		
+		model.addAttribute("MBRSH_ID", params.get("MBRSH_ID"));
 		return "sales/membership/membershipFreePop";
 	}
 
@@ -484,7 +485,7 @@ public class MembershipController {
 	}
 
 	@RequestMapping(value = "/selectMembershipFree_save", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> selectMembershipFree_save(@RequestParam Map<String, Object> params, ModelMap model,
+	public ResponseEntity<ReturnMessage> selectMembershipFree_save(@RequestParam Map<String, Object> params, ModelMap model,
 			HttpServletRequest request, SessionVO sessionVO) {
 
 		logger.debug("in  selectMembershipFree_save ");
@@ -496,30 +497,19 @@ public class MembershipController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 
-		EgovMap SEQ = null;
-		EgovMap rtnMap = new EgovMap();
 		
-		SEQ = membershipService.getSAL0095d_SEQ(params);
-
-		logger.debug(SEQ.toString());
-
-		if (null != SEQ.get("seq")) {
-			params.put("SAVE_SR_MEM_ID", SEQ.get("seq"));
-			int resultIntKey = membershipService.membershipFree_save(params);
-
-			logger.debug("		resultIntKey[" + resultIntKey + "] ");
-
-			if (resultIntKey > 0) {
-				membershipService.srvConfigPeriod(params);
-			}
-
-			rtnMap.put("result", "ok");
-
-		} else {
-			rtnMap.put("result", "no");
+		int resultIntKey = membershipService.membershipFree_save(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		if(resultIntKey >0){
+    		message.setCode(AppConstants.SUCCESS);
+    		message.setData(resultIntKey);
+    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		}
-
-		return ResponseEntity.ok(rtnMap);
+		
+		
+		return ResponseEntity.ok(message);
 	}
 
 	@RequestMapping(value = "/selectMembershipContatList", method = RequestMethod.GET)

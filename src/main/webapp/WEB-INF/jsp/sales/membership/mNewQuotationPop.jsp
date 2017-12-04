@@ -943,7 +943,6 @@ function fn_save(){
 	
 	 var billMonth = getOrderCurrentBillMonth();
 	 
-	 alert(billMonth);
 	 
 	 if(fn_CheckRentalOrder(billMonth)){
 		  if (fn_CheckSalesPersonCode()){
@@ -1036,12 +1035,12 @@ function  fn_validRequiredField_Save(){
 	
 	
 	
-	 if ($("#cPromoCombox").prop("checked")){
-           if(FormUtil.checkReqValue($("#packpro"))){
-                rtnMsg +="Please select the promotion <br>";
-                rtnValue =false; 
-           }
-      }
+	 //if ($("#cPromoCombox").prop("checked")){
+         //  if(FormUtil.checkReqValue($("#packpro"))){
+               // rtnMsg +="Please select the promotion <br>";
+               // rtnValue =false; 
+          // }
+     // }
       
       
       if( rtnValue ==false ){

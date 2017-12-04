@@ -198,7 +198,7 @@
 							                  </if>
 							                  
 							                   <if test="salesDate != null and salesDate != ''">
-                                                      AND ( FL.SRV_CNTRCT_CRT_DT = to_char(#{salesDate},'dd/mm/yyyy' ) )
+                                                      AND ( FL.SRV_CNTRCT_CRT_DT = to_date(#{salesDate},'dd/mm/yyyy' ) )
                                               </if>
                                               
                                                <if test="orderNo != null and orderNo != ''">
@@ -1059,9 +1059,9 @@
                      SELECT S.QOTAT_ID   ,
 							       S.QOTAT_REF_NO   ,
 							       S.QOTAT_ORD_ID   ,
-							       S.QOTAT_CRT_DT   ,
+							       to_char(S.QOTAT_CRT_DT,'dd/mm/yyyy') QOTAT_CRT_DT  ,
 							       S.USER_NAME   ,
-							       S.QOTAT_VAL_ID_DT   ,
+							       to_char(S.QOTAT_VAL_ID_DT ,'dd/mm/yyyy') QOTAT_VAL_ID_DT ,
 							       S.QOTAT_CNTRCT_DUR   ,
 							       S.QOTAT_PCKG_ID   ,
 							       S.SRV_CNTRCT_PAC_DESC   ,

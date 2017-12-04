@@ -42,13 +42,6 @@ function f_ComboAct(){
 
 
 
-// 리스트 조회.
-function fn_selectListAjax() {        
-   Common.ajax("GET", "/sales/membershipRental/selectList", $("#listSForm").serialize(), function(result) {
-       console.log(result);
-   });
-}
-
 
 
 
@@ -562,8 +555,11 @@ function fn_setSaveForm(){
    Common.ajax("POST", "/sales/membershipRentalChannel/insertRentalChannel.do", rentalChannelSaveForm, function(result) {
 	   
           Common.alert(result.message);
-          fn_DisableControl();
+          fn_selectListAjax();
 
+         $("# _PayChannelDiv1").remove();
+          
+          
       }, function(jqXHR, textStatus, errorThrown) {
           Common.alert("실패하였습니다.");
           console.log("실패하였습니다.");

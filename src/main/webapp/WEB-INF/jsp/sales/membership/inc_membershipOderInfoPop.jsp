@@ -29,9 +29,9 @@
 </tr>
 <tr>
     <th scope="row">Product Code</th>
-    <td><span>${orderInfoTab.stockCode}</span></td>
+    <td><span id="inc_stockCode">${orderInfoTab.stockCode}</span></td>
     <th scope="row">Product Name</th>
-    <td colspan="3"><span>${orderInfoTab.stockDesc}</span></td>
+    <td colspan="3"  id="inc_stockDesc" ><span>${orderInfoTab.stockDesc}</span></td>
 </tr>
 <tr>
     <th scope="row">Customer ID</th>
