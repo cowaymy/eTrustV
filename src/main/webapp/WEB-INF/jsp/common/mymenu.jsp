@@ -364,6 +364,7 @@ var gridDetailColumnLayout =
 	    dataField : "mymenuName",
 	    headerText : "Grp Name",
 	    editable : false,
+	    width : "20%",
 	    style : "aui-grid-user-custom-left"
 	},
     {
@@ -406,7 +407,6 @@ var gridDetailColumnLayout =
     {
         dataField : "pgmOrd",
         headerText : "Order",
-        width : "15%",
        	editRenderer : {
                type : "InputEditRenderer",
                onlyNumeric : true, // Input 에서 숫자만 가능케 설정
