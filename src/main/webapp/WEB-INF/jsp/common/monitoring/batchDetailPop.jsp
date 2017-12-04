@@ -6,19 +6,6 @@
     .aui-grid-user-custom-left {
         text-align: left;
     }
-
-    #textAreaWrap {
-        font-size: 12px;
-        position: absolute;
-        height: 100px;
-        min-width: 100px;
-        background: #fff;
-        border: 1px solid #555;
-        display: none;
-        padding: 4px;
-        text-align: right;
-        z-index: 9999;
-    }
 </style>
 
 <script type="text/javaScript">
