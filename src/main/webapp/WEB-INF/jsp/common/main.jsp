@@ -102,19 +102,25 @@
 		}
 	];
 
-
     var detailColumnLayout =
     [
+	     /* PK , rowid 용 칼럼*/
+	     {
+	         dataField : "divCode",
+	         dataType : "string",
+	         visible : false
+	     },
 		{
-		    dataField: "codeName",
+		    dataField: "divName",
 		    headerText: "Div",
-		    width: "6%",
+		    cellMerge : true,
+		    width: "5%",
 		    editable: false
 		},
 		{
-            dataField: "codeName",
+            dataField: "period",
             headerText: "Period",
-            width: "8%",
+            width: "7.4%",
             editable: false
         },
         {
@@ -125,19 +131,28 @@
 				{
 				    dataField: "keyInQtyToday",
 				    headerText: "Today",
-				    width: "8%",
+				    style: "aui-grid-user-custom-right ",
+				    dataType : "numeric",
+                    formatString : "#,##0",
+				    width: "6.7%",
 				    editable: false
 				},
 				{
 				    dataField: "keyInQtyAccum",
 				    headerText: "Accum.",
-				    width: "8%",
+				    style: "aui-grid-user-custom-right ",
+				    dataType : "numeric",
+                    formatString : "#,##0",
+				    width: "6.7%",
 				    editable: true
 				},
 				{
                     dataField: "keyInQtyMonthEnd",
-                    headerText: "MonthEnd",
-                    width: "8%",
+                    headerText: "M.End",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: true
                 }
             ],
@@ -150,27 +165,39 @@
             children:
             [
                 {
-                    dataField: "byPrdCtgrWpurifier",
-                    headerText: "WPurifier",
-                    width: "8%",
+                    dataField: "byPrdCtgryWpurifier",
+                    headerText: "W.Purf",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: false
                 },
                 {
-                    dataField: "byPrdCtgrApurifier",
-                    headerText: "Apurifier",
-                    width: "8%",
+                    dataField: "byPrdCtgryApurifier",
+                    headerText: "A.purf",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: true
                 },
                 {
-                    dataField: "byPrdCtgrBidet",
+                    dataField: "byPrdCtgryBidet",
                     headerText: "Bidet",
-                    width: "8%",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: true
                 },
                 {
-                    dataField: "byPrdCtgrSoftner",
+                    dataField: "byPrdCtgrySoftner",
                     headerText: "Softner",
-                    width: "8%",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: true
                 }
             ],
@@ -183,27 +210,39 @@
             children:
             [
                 {
-                    dataField: "bySalCtryRental",
+                    dataField: "bySalesCtgryRental",
                     headerText: "Rental",
-                    width: "8%",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: false
                 },
                 {
-                    dataField: "bySalCtryOutIns",
+                    dataField: "bySalesCtgryOutIns",
                     headerText: "Out/Ins",
-                    width: "8%",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: true
                 },
                 {
-                    dataField: "bySalCtryMbrShip",
+                    dataField: "bySalesCtgryMbrShip",
                     headerText: "Mbr.ship",
-                    width: "8%",
+                    style: "aui-grid-user-custom-right gray-field  ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: true
                 },
                 {
-                    dataField: "bySalCtryExtrade",
+                    dataField: "bySalesCtgryExtrade",
                     headerText: "Extrade",
-                    width: "8%",
+                    style: "aui-grid-user-custom-right gray-field ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: true
                 }
             ],
@@ -216,15 +255,21 @@
             children:
             [
                 {
-                    dataField: "netSalAccum",
+                    dataField: "netSalesAccum",
                     headerText: "Accum.",
-                    width: "8%",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: false
                 },
                 {
-                    dataField: "netSalMonthEnd",
-                    headerText: "MonthEnd",
-                    width: "8%",
+                    dataField: "netSalesMonthEnd",
+                    headerText: "M.End",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
+                    formatString : "#,##0",
+                    width: "6.7%",
                     editable: true
                 }
             ],
@@ -262,8 +307,16 @@
         {
             usePaging: false,
             showRowNumColumn: false, // 그리드 넘버링
+            showStateColumn : false,
             useGroupingPanel: false,
             editable: true,
+         // 셀 병합 실행
+            enableCellMerge : true,
+            cellMergePolicy : "withNull",
+
+            rowIdField : "divCode" // PK행 지정
+/*             // 고정 칼럼 1개 적용시킴
+            fixedColumnCount : 2 */
         };
 
         // detailGrid 생성
@@ -275,6 +328,7 @@
             {
                 usePaging: false,
                 useGroupingPanel: false,
+                showStateColumn : false,
                 editable: false,
                 showRowNumColumn: false  // 그리드 넘버링
             };
@@ -283,6 +337,7 @@
         statusCodeGridID = GridCommon.createAUIGrid("tagStatusGrid", tagStatusColumnLayout, "", statusCodeOptions);
 
         fn_selectTagStatusListAjax("Y");
+        fn_selectDailyPerformanceListAjax();
     });   //$(document).ready
 
 
@@ -300,6 +355,13 @@
         });
     }
 
+    // Daily Performance 리스트 조회.
+    function fn_selectDailyPerformanceListAjax() {
+        Common.ajax("GET", "/common/getDailyPerformance.do", {}, function (result) {
+            AUIGrid.setGridData(detailGridID, result);
+        });
+    }
+
     function fn_openPopup_tagStatus() {
         var popUpObj = Common.popupDiv
         (
@@ -311,18 +373,6 @@
         );
    }
 
-    function fn_openPopup_dailyPerformance() {
-        var popUpObj = Common.popupDiv
-        (
-             "/common/userManagement/userManagementNew.do"
-             , ""
-             , null
-             , "false"
-             , "userManagementNewPop"
-        );
-   }
-
-
 </script>
 <style type="text/css">
 	/* 커스텀 칼럼 스타일 정의 */
@@ -331,6 +381,10 @@
 	}
 	.aui-grid-user-custom-right {
 	    text-align:right;
+	}
+	.gray-field {
+		background : #eeeeee;
+		color:#000;
 	}
 </style>
 <section id="content"><!-- content start -->
@@ -366,7 +420,7 @@
 
         <article class="grid_wrap"><!-- grid_wrap start -->
             <!-- 그리드 영역3 -->
-            <div id="detailGrid" style="height:195px;"></div>
+            <div id="detailGrid" style="height:210px;"></div>
         </article><!-- grid_wrap end -->
 
     </form>

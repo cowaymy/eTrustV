@@ -98,8 +98,23 @@
     </select>
 
     <select id="selectDailyPerformance" parameterType="Map" resultType="egovMap">
-        SELECT *
-          FROM DUAL
+        SELECT A.DIV_CODE
+				 , A.DIV_NAME
+				 , A.PERIOD
+                 , A.KEY_IN_QTY_TODAY
+				 , A.KEY_IN_QTY_ACCUM
+				 , A.KEY_IN_QTY_MONTH_END
+				 , A.BY_PRD_CTGRY_WPURIFIER
+				 , A.BY_PRD_CTGRY_APURIFIER
+				 , A.BY_PRD_CTGRY_BIDET
+				 , A.BY_PRD_CTGRY_SOFTNER
+				 , A.BY_SALES_CTGRY_RENTAL
+				 , A.BY_SALES_CTGRY_OUT_INS
+				 , A.BY_SALES_CTGRY_MBR_SHIP
+				 , A.BY_SALES_CTGRY_EXTRADE
+				 , A.NET_SALES_ACCUM
+				 , A.NET_SALES_MONTH_END
+          FROM SYS0083S A
     </select>
 
 </mapper>
