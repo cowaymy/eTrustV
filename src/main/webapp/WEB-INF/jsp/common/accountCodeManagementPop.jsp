@@ -12,14 +12,26 @@ $(function()
   var postId  = "${inputParams.pramAddPostCodeId}";
 
   console.log("parmAddCntyId: " + cntyId +" paramAddStateId: " + stateId + " paramAddAreaId: " + areaId +" pramAddPostCodeId: " + postId )
-                                
-  doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , cntyId      ,'mcountry' , 'S', '');
+      
+  $(document).ready(function() {
+	  doGetCombo('/common/selectCountryList.do', '', '','mcountry' , 'S', '');
 
-  doDefCombo('', '' ,'mstate', 'S', '');
-  doDefCombo('', '' ,'marea', 'S', '');
-  doDefCombo('', '' ,'mpostcd', 'S', ''); 
+  })
+ 
+  $("#mcountry").change(function() {
+	  doGetCombo('/common/selectStateList.do', cntyId, '' ,'mstate', 'S', '');
+  });
+  
+  $("#mstate").change(function() {
+	  doGetCombo('/common/selectAreaList.do', stateId, '' ,'marea', 'S', '');
+  });
+  
+  $("marea").change(function() {
+	  doGetCombo('/common/selectPostCdList.do', areaId, '', 'mpostcd', 'S', '');
+  });
+  
 
-  if (cntyId != "" && cntyId != undefined)
+  /*if (cntyId != "" && cntyId != undefined)
   {
     getAddrRelay('mstate' , cntyId , 'state' , stateId);
   }
@@ -31,7 +43,7 @@ $(function()
 
   if (areaId != "" && areaId != undefined){
       getAddrRelay('mpostcd' , areaId , 'post', postId);
-  }
+  }*/
 
   
 });
@@ -210,22 +222,26 @@ function fnSaveAccount()
 <tr>
   <th scope="row">Country</th>
   <td>
-   <select id="mcountry" name="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select>
+   <!-- <select id="mcountry" name="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select> -->
+   <select id="mcountry" name= "mcountry"></select>
   </td>
   <th scope="row">State</th>
   <td>
-   <select id="mstate" name="mstate" class="msap" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select>
+   <!-- <select id="mstate" name="mstate" class="msap" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select> -->
+   <select id="mstate" name = "mstate"></select>
   </td> 
   
 </tr>
 <tr>
   <th scope="row">Area</th>
   <td>
-   <select id="marea" name="marea" class="msap" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select>
+  <!-- <select id="marea" name="marea" class="msap" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select> -->
+   <select id="marea" name="marea"></select>
   </td>
   <th scope="row">Postcode</th>
   <td>
-    <select id="mpostcd" name="mpostcd"  class="msap" disabled=true><option>Choose One</option></select>
+    <!-- <select id="mpostcd" name="mpostcd"  class="msap" disabled=true><option>Choose One</option></select>  -->
+    <select id="mpostcd" name="mpostcd"></select>
   </td>
 </tr>
 <tr>

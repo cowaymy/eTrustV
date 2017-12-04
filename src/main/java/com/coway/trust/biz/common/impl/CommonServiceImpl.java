@@ -957,6 +957,26 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public List<EgovMap> selectCountryList(Map<String, Object> params) {
+		return commonMapper.selectCountryList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectStateList(Map<String, Object> params) {
+		return commonMapper.selectStateList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectAreaList(Map<String, Object> params) {
+		return commonMapper.selectAreaList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectPostCdList(Map<String, Object> params) {
+		return commonMapper.selectPostCdList(params);
+	}
+
+	@Override
 	public List<EgovMap> selectAddrSelCode(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return commonMapper.selectAddrSelCode(params);

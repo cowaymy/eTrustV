@@ -1075,6 +1075,37 @@
         WHERE CODE_MASTER_ID = 384
     </select>
     
+    <select id="selectCountryList" parameterType="Map" resultType="egovMap">
+       SELECT CNTY_ID CODE_ID, NAME CODE_NAME FROM SYS0015M
+    </select>
+    
+    <select id="selectStateList" parameterType="Map" resultType="egovMap">
+        SELECT STATE_ID CODE_ID, NAME CODE_NAME 
+        FROM SYS0035M
+        WHERE 1=1
+        <if test = "groupCode != null and groupCode != ''">
+         AND CNTY_ID = #{groupCode}
+        </if>
+    </select>
+    
+    <select id="selectAreaList" parameterType="Map" resultType="egovMap">
+        SELECT AREA_ID CODE_ID, area_name CODE_NAME 
+        FROM SYS0039M
+        WHERE 1=1
+        <if test = "groupCode != null and groupCode != ''">
+         AND AREA_STATE_ID = #{groupCode} 
+        </if>
+    </select>
+    
+    <select id="selectPostCdList" parameterType="Map" resultType="egovMap">
+        SELECT post_code CODE_ID, POST_CODE CODE_NAME 
+        FROM SYS0030C
+        WHERE 1=1
+        <if test = "groupCode != null and groupCode != ''">
+         AND AREA_ID = #{groupCode}   
+        </if>
+    </select>
+    
     <select id="selectAddrSelCode" parameterType="Map" resultType="egovMap">
         SELECT
               <choose>

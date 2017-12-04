@@ -206,6 +206,30 @@ public class CommonController {
 		List<EgovMap> resultList = commonService.getUsersByBranch(params);
 		return ResponseEntity.ok(resultList);
 	}
+	
+	@RequestMapping(value = "/selectCountryList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCountryList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> countryList = commonService.selectCountryList(params);
+		return ResponseEntity.ok(countryList);
+	}
+
+	@RequestMapping(value = "/selectStateList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStateList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> stateList = commonService.selectStateList(params);
+		return ResponseEntity.ok(stateList);
+	}
+	
+	@RequestMapping(value = "/selectAreaList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAreaList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> AreaList = commonService.selectAreaList(params);
+		return ResponseEntity.ok(AreaList);
+	}
+	
+	@RequestMapping(value = "/selectPostCdList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPostCdList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> postCdList = commonService.selectPostCdList(params);
+		return ResponseEntity.ok(postCdList);
+	}
 
 	@RequestMapping(value = "/selectAddrSelCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectAddrSelCodeList(@RequestParam Map<String, Object> params) {

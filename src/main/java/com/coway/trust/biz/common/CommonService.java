@@ -206,6 +206,14 @@ public interface CommonService {
 	 */
 	List<EgovMap> getUsersByBranch(Map<String, Object> params);
 
+	List<EgovMap> selectCountryList(Map<String, Object> params);
+	
+	List<EgovMap> selectStateList(Map<String, Object> params);
+
+	List<EgovMap> selectAreaList(Map<String, Object> params);
+
+	List<EgovMap> selectPostCdList(Map<String, Object> params);
+
 	List<EgovMap> selectAddrSelCode(Map<String, Object> params);
 
 	List<EgovMap> selectProductCodeList(Map<String, Object> params);
