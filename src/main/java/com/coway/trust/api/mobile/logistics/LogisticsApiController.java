@@ -81,6 +81,8 @@ import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferRejectSMO
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusDListDto;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusListForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusMListDto;
+import com.coway.trust.api.mobile.logistics.usedparts.UsedPartsDto;
+import com.coway.trust.api.mobile.logistics.usedparts.UsedPartsListForm;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockBarcodeListVo;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockNoneBarcodeListVo;
@@ -627,6 +629,23 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(dto);
 
 	}
+	
+	
+	@ApiOperation(value = "Display of Used Parts & Filter 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/usedParts", method = RequestMethod.GET)
+	public ResponseEntity<List<UsedPartsDto>> getusedPartsList(@ModelAttribute UsedPartsListForm usedPartsListForm)
+			throws Exception {
+
+		Map<String, Object> params = UsedPartsListForm.createMap(usedPartsListForm);
+
+		List<EgovMap> usedpartslist = MlogApiService.getUsedPartsList(params);
+		List<UsedPartsDto> list = usedpartslist.stream().map(r -> UsedPartsDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
 
 	/**
 	 * 아래부분 현창배 추가
