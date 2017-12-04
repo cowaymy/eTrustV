@@ -3,12 +3,12 @@
 <script type="text/javaScript">
 
 $(document).ready(function(){
-	/*  $('.multy_select').on("change", function() {
+	 $('.multy_select').on("change", function() {
          //console.log($(this).val());
-     }).multipleSelect({}); */
+     }).multipleSelect({});
 	 
 	 doGetComboSepa("/common/selectBranchCodeList.do",'1' , '-',''   , 'branch' , 'S', '');
-	 $('#sheetType').multipleSelect("checkAll");
+	  $('#sheetType').multipleSelect("checkAll"); 
 });
 
 function fn_validation(){
@@ -199,7 +199,7 @@ $.fn.clearForm = function() {
 <tr>
     <th scope="row">Type</th>
     <td>
-    <select class="multy_select" multiple="multiple" id="sheetType" name="sheetType">
+    <select class="multy_select"  id="sheetType" name="sheetType">
         <option value="1">YS</option>
         <option value="2">Non-YS</option>
     </select>

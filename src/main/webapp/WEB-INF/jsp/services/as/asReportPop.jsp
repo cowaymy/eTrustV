@@ -2,9 +2,15 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 $(document).ready(function(){
+	$('.multy_select').on("change", function() {
+        //console.log($(this).val());
+    }).multipleSelect({});
+    
+	
 	doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S', '');
 	doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCodeFrom', 'S' ,  '');
 	doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCodeTo', 'S' ,  '');
+	
 });
 
 
