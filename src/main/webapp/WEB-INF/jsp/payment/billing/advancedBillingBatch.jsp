@@ -234,7 +234,6 @@ function fn_Clear(){
                         </td>
 					</tr>
 					<tr>
-						
 						<th scope="row">Upload Date From</th>
                         <td>
                            <input type="text" id="uploadDtFr" name="uploadDtFr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
