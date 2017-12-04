@@ -371,8 +371,14 @@
                     ORG0001D T1 INNER JOIN SYS0047M T2
                 ON 
                     T1.MEM_CODE = T2.USER_NAME
-                WHERE 
-                    T2.USER_ID = #{userId}
+                WHERE 1 = 1
+                    <if test=" userId != null and userId != ''">
+                    AND T2.USER_ID = #{userId}
+                    </if>
+                    
+                    <if test="memCode != null and memCode != '' ">
+                    AND T1.MEM_CODE = #{memCode}
+                    </if>
      </select>
      
      <select id="getReasonCodeList" parameterType="Map" resultType="egovMap">
@@ -2866,4 +2872,6 @@
 				         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent2.PAY_ITM_CARD_MODE_ID
 				 WHERE  Extent1.PAY_ID = #{rePayId}   
      </select>
+     
+     
 </mapper>

@@ -32,6 +32,7 @@ $(document).ready(function() {
     
     //Payment
     CommonCombo.make('_payBrnchCode', "/sales/pos/getpayBranchList", '', selVal, '');
+    //CommonCombo.make('_payBrnchCode', "/sales/pos/selectWhBrnchList", '' , selVal, '');
     
     var debSelVal = "524";
     CommonCombo.make("_payDebtorAcc", "/sales/pos/getDebtorAccList", '', debSelVal, optionModule);

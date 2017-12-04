@@ -673,17 +673,28 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
         else {
            // console.log("멤버정보 가꼬옴");
         	if(isPop == 1){
-        		console.log("팝임");
-        		console.log("memInfo.memId : " + memInfo.memId);
+        	//	console.log("팝임");
+        	//	console.log("memInfo.memId : " + memInfo.memId);
         		$('#hiddenSalesmanPopId').val(memInfo.memId);
                 $('#salesmanPopCd').val(memInfo.memCode);
-               
-                $('#salesmanPopCd').removeClass("readonly");	
+                $('#salesmanPopCd').removeClass("readonly");
+                 
+              /*   Common.ajax("GET", "/sales/pos/getMemCode", {memCode : memCode},function(result){
+                	
+                	if(result != null){
+                		$("#_cmbWhBrnchIdPop").val(result.brnch);
+                		$("#_payBrnchCode").val(result.brnch);
+                        getLocIdByBrnchId(result.brnch);	
+                	}else{
+                		Common.alert("This member has no Brahch.");
+                		return;
+                	}
+                }); */
+                
         	}else{
         	//	console.log("리스트임");
         		$('#hiddenSalesmanId').val(memInfo.memId);
                 $('#salesmanCd').val(memInfo.memCode);
-               
                 $('#salesmanCd').removeClass("readonly");
         	}
         }

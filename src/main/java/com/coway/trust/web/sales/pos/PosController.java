@@ -547,4 +547,14 @@ public class PosController {
 		return ResponseEntity.ok(payDList);
 		
 	}
+	
+	@RequestMapping(value = "/getMemCode")
+	public ResponseEntity<EgovMap> getMemCode(@RequestParam Map<String, Object> params) throws Exception{
+		
+		EgovMap memMap = null;
+		memMap = posService.getMemCode(params);
+		
+		return ResponseEntity.ok(memMap);
+		
+	}
 }
