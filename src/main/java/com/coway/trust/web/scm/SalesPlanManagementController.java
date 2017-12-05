@@ -69,13 +69,15 @@ public class SalesPlanManagementController {
 			
             ((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);
 			
-			LOGGER.debug("selectCalendarHeaderList2 : {}", params.toString());
+			LOGGER.debug("selectCalendarHeaderList : {}", params.toString());
 			
-			List<EgovMap> group_M1_List = salesPlanMngementService.selectSeperation(params);  // WeekCount per month
+			List<EgovMap> seperaionInfo = salesPlanMngementService.selectSeperation(params);  // WeekCount per month
 			List<EgovMap> childFieldList_M0 = salesPlanMngementService.selectChildField(params);
 			
+			LOGGER.debug("seperaionInfo : {}", seperaionInfo.toString());
+			
 			map.put("planInfo",planInfo);
-			map.put("seperaionInfo",group_M1_List);
+			map.put("seperaionInfo",seperaionInfo);
 			map.put("getChildField",childFieldList_M0);			
 		}
 		
