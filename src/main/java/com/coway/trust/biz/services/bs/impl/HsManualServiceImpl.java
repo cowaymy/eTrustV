@@ -944,5 +944,30 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	public List<EgovMap> selectCTMByDSC_id(Map<String, Object> params) {
 		return hsManualMapper.selectCTMByDSC_id(params);
 	}
+	
+	@Override
+	public EgovMap selectCheckMemCode(Map<String, Object> params) {
+		
+		return hsManualMapper. selectCheckMemCode(params);
+	}
+
+	@Override
+	public EgovMap serMember(Map<String, Object> params) {
+		
+		return hsManualMapper.selectSerMember(params);
+	}
+
+	@Override
+	public String getSrvCodyIdbyMemcode(Map<String, Object> params) {
+		
+		return hsManualMapper.selectMemberId(params);
+	}
+
+	@Override
+	public int updateSrvCodyId(Map<String, Object> params) {
+		int cnt =0;
+		hsManualMapper.updateSrvCodyId(params);
+		return cnt;
+	}
 
 }

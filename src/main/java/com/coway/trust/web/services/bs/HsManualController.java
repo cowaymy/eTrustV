@@ -497,7 +497,7 @@ public class HsManualController {
 		//List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
 		EgovMap configBasicInfo = hsManualService.selectConfigBasicInfo(params);
 		//EgovMap configBasicInfo = hsManualService.selectConfigBasicInfo(params);
-
+	//	EgovMap serMember = hsManualService.se ;
 //		EgovMap as_ord_basicInfo = hsManualService.selectOrderBasicInfo(params);
 //		EgovMap asentryInfo =null;
 
@@ -508,6 +508,9 @@ public class HsManualController {
 //		model.put("as_ord_basicInfo", as_ord_basicInfo);
 //		model.put("AS_NO", (String)params.get("AS_NO"));
 		model.put("BRNCH_ID",(String) params.get("brnchId"));
+		
+		//
+		
 
 		return "services/bs/hsConfigBasicPop";
 	}
@@ -539,13 +542,13 @@ public class HsManualController {
 
 
 	@RequestMapping(value = "/getHSCody.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getHSCody(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<EgovMap> getHSCody(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params : {}", params);
+		EgovMap serMember = null ;
+		 serMember = hsManualService.serMember(params);
 
-		logger.debug("params : {}", params.toString());
 
-		List<EgovMap>  serMemList = hsManualService.serMemList(params);
-
-		return ResponseEntity.ok(serMemList);
+		return ResponseEntity.ok(serMember);
 	}
 
 
@@ -573,7 +576,7 @@ public class HsManualController {
 			List<EgovMap>  orderActiveFilter = hsManualService.selectOrderActiveFilter(params);
 
 			model.put("orderActiveFilter", orderActiveFilter);
-			logger.debug("111111111111111 : {}", orderActiveFilter);
+	
 			return ResponseEntity.ok(orderActiveFilter);
 		}
 
@@ -606,11 +609,16 @@ public class HsManualController {
 		ReturnMessage message = new ReturnMessage();
 
 		logger.debug("params : {}", params);
-
-
+        String srvCodyId = "";
+        LinkedHashMap  hsResultM = (LinkedHashMap)params.get("hsResultM");
+        srvCodyId =  hsManualService.getSrvCodyIdbyMemcode(hsResultM);
+        hsResultM.put("cmbServiceMem", srvCodyId);
+        hsResultM.put("hscodyId", srvCodyId);
+        hsManualService.updateSrvCodyId(hsResultM);
+		logger.debug("params111111111 : {}", params);
 //		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
-		LinkedHashMap  hsResultM = (LinkedHashMap)params.get("hsResultM");
+		
 		logger.debug("hsResultM ===>"+hsResultM.toString());
 
 		int resultValue = hsManualService.updateHsConfigBasic(params, sessionVO);
@@ -662,5 +670,25 @@ public class HsManualController {
 		logger.debug("branchList {}", branchList);
 		return ResponseEntity.ok(branchList);
 	}
+	
+	@RequestMapping(value = "/checkMemCode")
+	public  ResponseEntity<ReturnMessage> checkMemberCode(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+
+		logger.debug("params : {}", params.toString());
+	
+		
+		EgovMap checkMemCode = hsManualService.selectCheckMemCode(params);
+		
+		
+		ReturnMessage message = new ReturnMessage();
+		if(checkMemCode != null && checkMemCode.size() != 0){
+			message.setMessage("success");
+		}
+		else {
+			message.setMessage("fail" );
+		}
+		return  ResponseEntity.ok(message);
+	}
+
 
 }

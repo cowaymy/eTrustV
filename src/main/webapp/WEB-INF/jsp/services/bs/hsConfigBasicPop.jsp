@@ -4,10 +4,20 @@
 <script type="text/javaScript" language="javascript">
 
 
-    
+//doGetCombo('/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', '', '','entry_cmbServiceMem', 'S' , '');   
 	    $(document).ready(function() {
-	    	
-           doGetCombo('/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', '', '','entry_cmbServiceMem', 'S' , '');    
+	    	Common.ajax("GET",'/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', ' ',function(result) {
+	              
+	    		if(result != null && result.length != 0 ){
+	              var serMember =result.memCode;
+	              console.log(serMember);
+	           
+	              $('#entry_cmbServiceMem').val(serMember);
+	    		}
+	          }); 
+
+
+           
 	       fn_getHSConfigBasicInfo();
 	    
 	    
@@ -33,12 +43,25 @@
     
      function fn_doSave(){
      
-          if (! fn_validBasicInfo()) {
-                 return ;
-          }
-        
+          Common.ajax("GET", "/services/bs/checkMemCode", { hscodyId : $('#entry_cmbServiceMem').val() }, function(result) {
+              console.log("::::::::::::::ajax::::::::::::::");
+              console.log(result);
+              
+              if ( !fn_validBasicInfo() ) {
+                  return;
+              }
+              
+             var checkSuccess = {code: "00", message: "fail"};
+            
+              if(JSON.stringify(result) === JSON.stringify(checkSuccess) ) {  
+            	  Common.alert("Not Available to entry in the statue of the cody");
+            	  return;
+              
+              }
+              else  fn_doSaveBasicInfo();
+           });
 
-        fn_doSaveBasicInfo();
+  
         
     }
     
@@ -62,14 +85,19 @@
 	          if($('#entry_lstHSDate').val() == "") {
 	                $('#entry_lstHSDate').val("01/01/1900");
 	          }
-	    
-	    
-	          if(!isValid) Common.alert("<b>" + message +  DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 	          
-	          return isValid;
-    
+	          	  
+	        	  
+	        	    if(!isValid) Common.alert("<b>" + message +  DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+	                
+	                return isValid;
+	        	  
+	     
+	     
+  
     } 
     
+ 
     
     
         function  fn_doSaveBasicInfo(){
@@ -85,7 +113,8 @@
                    srvBsWeek:                          $(':input[name=entry_srvBsWeek]:radio:checked').val(),
                    salesOrderId:                        $('#salesOrderId').val(),
                    configId:                             $('#configId').val(),
-                   hscodyId:                             $('#entry_cmbServiceMem').val()
+                   hscodyId:                             $('#entry_cmbServiceMem').val(),
+                   srvSoId:                                 $('#entry_orderNo').val()
         }
     
     
@@ -219,8 +248,7 @@
 <tr>
     <th scope="row">HS Cody Code</th>
     <td>
-    <select class="w100p"  id="entry_cmbServiceMem" name="entry_cmbServiceMem" >
-    </select>
+        <input type="text" id="entry_cmbServiceMem" name="entry_cmbServiceMem" title="Member Code"  class="w100p" />
     </td>
     <th scope="row">Last HS Date</th>
     <td>

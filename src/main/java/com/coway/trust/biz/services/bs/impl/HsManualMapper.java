@@ -122,4 +122,12 @@ public interface HsManualMapper {
 	
 	List<EgovMap> selectCTMByDSC_id(Map<String, Object> params);
 
+	EgovMap selectCheckMemCode(Map<String, Object> params);
+
+	EgovMap selectSerMember(Map<String, Object> params);
+
+	String selectMemberId(Map<String, Object> params);
+
+	void updateSrvCodyId(Map<String, Object> params);
+
 }

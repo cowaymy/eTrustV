@@ -1,6 +1,7 @@
 package com.coway.trust.biz.services.bs;
 
 import java.text.ParseException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +76,14 @@ public interface HsManualService {
 	List<EgovMap> selectBranch_id(Map<String, Object> params);
 
 	List<EgovMap> selectCTMByDSC_id(Map<String, Object> params);
+
+	EgovMap selectCheckMemCode(Map<String, Object> params);
+
+	EgovMap serMember(Map<String, Object> params);
+
+	String getSrvCodyIdbyMemcode(Map<String, Object> params);
+
+	int updateSrvCodyId(Map<String, Object> params);
 
 
 }

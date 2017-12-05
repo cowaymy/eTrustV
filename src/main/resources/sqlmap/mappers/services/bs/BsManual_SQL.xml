@@ -2451,5 +2451,40 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                     </if>
 
                     </select>
+                    
+                    <select id="selectCheckMemCode" parameterType="Map" resultType="egovMap">
+                        SELECT MEM_CODE
+                        FROM ORG0001D
+                        WHERE MEM_CODE = #{hscodyId}
+                        AND STUS = '1' 
+                    </select>
+                    
+                     <select id="selectSerMember" parameterType="Map" resultType="egovMap">
+                            SELECT   SRV_CODY_ID 
+                                        , MEM_CODE
+                                FROM SAL0090D A , SAL0001D B , ORG0001D C
+                                WHERE A.SRV_SO_ID = B.SALES_ORD_ID
+                                AND  A.SRV_CODY_ID = C.MEM_ID
+                                AND B.SALES_ORD_NO =#{SRV_SO_ID}
+                                 ORDER BY MEM_CODE ASC
+                    </select>
+                      <select id="selectMemberId" parameterType="Map" resultType="string">
+                       select mem_id
+                         from ORG0001D
+                        where mem_Code = #{hscodyId}
+                      </select>
+                      
+                      <update id="updateSrvCodyId" parameterType="Map">
+
+                        update 
+                                 (  SELECT SRV_CODY_ID 
+                                    FROM SAL0090D A , SAL0001D B
+                                    WHERE A.SRV_SO_ID = B.SALES_ORD_ID
+                                    AND B.SALES_ORD_NO =#{srvSoId}
+                                 ) a
+                                 SET a.SRV_CODY_ID  = #{hscodyId}
+
+                     </update>
+                    
 
 </mapper>
