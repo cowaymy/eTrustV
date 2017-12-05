@@ -79,6 +79,7 @@
 					       INNER JOIN sys0005m F 
 					               ON F.brnch_id = E.brnch  
 	                   WHERE  1 = 1 
+	                   AND F.TYPE_ID = 43
 				       AND D.mem_id IS NULL 
 				       <if test="cmbbranchId != null and cmbbranchId != '' ">
 				       AND E.brnch = #{cmbbranchId}
@@ -95,6 +96,7 @@
 					       INNER JOIN sys0005m F 
 					               ON F.brnch_id = E.brnch 
 		               WHERE  1 = 1 
+		               AND F.TYPE_ID = 43
 		               <if test="cmbbranchId != null and cmbbranchId != '' ">
                        AND E.brnch = #{cmbbranchId}
                        </if>
@@ -110,6 +112,7 @@
 					       INNER JOIN sys0005m F 
 					               ON F.brnch_id = E.brnch 
 		               WHERE  1 = 1 
+		               AND F.TYPE_ID = 43
 		               <if test="cmbbranchId != null and cmbbranchId != '' ">
                        AND E.brnch = #{cmbbranchId}
                        </if>
