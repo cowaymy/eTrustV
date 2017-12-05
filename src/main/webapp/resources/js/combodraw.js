@@ -297,7 +297,7 @@ function doDefComboAndGroup(data, selCode, obj , type, callbackFn){
             $('<optgroup label="' + value.codeName + '">').appendTo(obj);
         }
 
-        if(selCode==value.c1){
+        if(selCode==value.stkId){
             $('<option />', {value : value.stkId, text:value.c1}).appendTo(obj).attr("selected", "true");
         }else{
             $('<option />', {value : value.stkId, text:value.c1}).appendTo(obj);
